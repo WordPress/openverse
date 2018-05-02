@@ -174,6 +174,7 @@ def main():
     watRDD      = sc.parallelize(watPaths, ccLinks.numPartitions)
     result      = watRDD.mapPartitions(ccLinks.processFile)
     ccLinks.generateParquet(result)
+    sc.stop()
 
 
 
