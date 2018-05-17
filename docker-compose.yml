@@ -1,13 +1,14 @@
 version: '3'
 services:
   db:
-    image: postgres
+    image: postgres:10.3-alpine
     ports:
       - "5432:5432"
     environment:
       POSTGRES_DB: "cccatalog"
       POSTGRES_USER: "deploy"
       POSTGRES_PASSWORD: "deploy"
+      POSTGRES_HOST: "0.0.0.0"
     healthcheck:
       test: "pg_isready -U deploy -d cccatalog"
 
@@ -20,3 +21,8 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    environment:
+      DJANGO_DATABASE_NAME: "cccatalog"
+      DJANGO_DATABASE_USER: "deploy"
+      DJANGO_DATABASE_PASSWORD: "deploy"
+      DJANGO_DATABASE_HOST: "db"
