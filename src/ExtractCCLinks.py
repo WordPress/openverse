@@ -1,5 +1,5 @@
 #Common Crawl data extraction
-#Identify all links to Creative Commons in the web crawl data
+"""Identify all links to Creative Commons in the web crawl data"""
 
 from pyspark import SparkContext
 from pyspark.sql import SQLContext
@@ -27,7 +27,25 @@ class CCLinks:
     logging.basicConfig(format='%(asctime)s: [%(levelname)s - ExtractCCLinks] =======> %(message)s', level=logging.INFO)
 
 
-    def __init__(self, _index, _ptn=500):
+    def __init__(self, _index, _ptn=2500):
+        """
+        CCLinks constructor: Validate the user-defined index based on Common Crawl's expected format.
+        If the pattern is valid, it generates 1) a url for the WAT path and 2) the location to output the results.
+
+        Parameters
+        ------------------
+        _index: string
+            The common crawl index name
+
+        _ptn: integer
+            The number of partitions for the spark job
+
+        Returns
+        ------------------
+        None
+
+        """
+
         self.crawlIndex = _index
 
         #check index format
@@ -44,6 +62,18 @@ class CCLinks:
 
     def loadWATFile(self):
         #load the WAT file paths
+        """
+        Make a request for a WAT file using the url, that was defined in the constructor.
+
+        Parameters
+        ------------------
+        None
+
+        Returns
+        ------------------
+        list
+            A list of WAT path locations.
+        """
         logging.info('Loading file {}'.format(self.url))
 
         try:
@@ -61,16 +91,31 @@ class CCLinks:
         except Exception as e:
             logging.error('There was a problem loading the file.')
             logging.error('{}: {}'.format(type(e).__name__, e))
-            sys.exit()
+            #sys.exit()
 
 
     def processFile(self, _iterator):
+        """
+        Parse each WAT file to identify domains with a hyperlink to creativecommons.org.
+
+        Parameters
+        ------------------
+       _iterator: iterator object
+            The iterator for the RDD partition that was assigned to the current process.
+
+        Returns
+        ------------------
+        list
+            A list of domains and their respective content path and query string, the hyperlink to creative commons (which may reference a license), the location of the domain in the current warc file and a count of the number of links and images.
+        """
+
         logging.basicConfig(format='%(asctime)s: [%(levelname)s - ExtractCCLinks] =======> %(message)s', level=logging.INFO)
 
         bucket = 'commoncrawl'
 
         #connect to s3 using boto3
         s3 = boto3.resource('s3')
+        #s3.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
 
         try:
             #verify bucket
@@ -134,7 +179,7 @@ class CCLinks:
                                         filter(lambda y: 'creativecommons.org' in y['url'], links))
 
                                 except (KeyError, ValueError) as e:
-                                    logging.error('{}:{}, File:{}, Domain:{}'.format(type(e).__name__, e, uri.strip(), targetURI.netloc))
+                                    logging.error('{}:{}, File:{}'.format(type(e).__name__, e, uri.strip()))
                                     pass
 
                                 else:
@@ -144,6 +189,18 @@ class CCLinks:
 
 
     def generateParquet(self, _data):
+        """
+        Create a parquet file with the extracted content.
+
+        Parameters
+        ------------------
+        _data: generator
+            A list containing the extracted domains and their associated meta-data.
+
+        Returns
+        ------------------
+        None
+        """
 
         schema  = StructType([
             StructField('provider_domain', StringType(), True),
@@ -167,12 +224,18 @@ def main():
     args        = sys.argv[1]
     crawlIndex  = args.strip()
 
-    ccLinks     = CCLinks(crawlIndex.upper())
+    sc          = SparkContext(appName='ExtractCCLinks')
+
+    ccLinks     = CCLinks(crawlIndex.upper(), sc.defaultParallelism)
     watPaths    = ccLinks.loadWATFile()
 
-    sc          = SparkContext(appName='ExtractCCLinks')
+    if watPaths is None:
+        sc.stop()
+        sys.exit()
+
     watRDD      = sc.parallelize(watPaths, ccLinks.numPartitions)
     result      = watRDD.mapPartitions(ccLinks.processFile)
+
     ccLinks.generateParquet(result)
     sc.stop()
 
