@@ -4,30 +4,11 @@ provider "aws" {
 
 data "aws_availability_zones" "available" {}
 
-resource "aws_instance" "cccatalog-api-server" {
-  # Amazon Linux 2 LTS Candidate 2
-  ami           = "ami-00d8c660"
-  instance_type = "t2.micro"
-
-  tags {
-    Name        = "cccatalog-api-terraformtest"
-    system      = "cccatalog-backend"
-    Environment = "dev"
-  }
-
-  vpc_security_group_ids = ["${aws_security_group.cccatalog-api-ingress.id}",
-                            "${aws_security_group.cccatalog-sg.id}"
-  ]
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
   image_id        = "ami-00d8c660"
   instance_type   = "t2.micro"
-  security_groups = ["${aws_security_group.cccatalog-sg.id}"]
+  security_groups = ["${aws_security_group.cccatalog-sg.id}",
+                     "${aws_security_group.cccatalog-api-ingress.id}"]
 
   lifecycle {
     create_before_destroy = true
@@ -39,11 +20,16 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
   min_size             = 2
   max_size             = 5
   availability_zones   = ["${data.aws_availability_zones.available.names}"]
-  load_balancers       = ["${aws_alb.cccatalog-api-load-balancer.id}"]
 
   tag {
     key                 = "Name"
-    value               = "cccatalog-api-autoscaling-group"
+    value               = "cccatalog-api-autoscaling-group-dev"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Environment"
+    value               = "dev"
     propagate_at_launch = true
   }
 }
@@ -67,7 +53,6 @@ resource "aws_security_group" "cccatalog-api-ingress" {
   }
 }
 
-
 resource "aws_security_group" "cccatalog-sg" {
   name   = "cccatalog-security-group"
   vpc_id = "vpc-d6b1bfb4"
@@ -84,6 +69,7 @@ resource "aws_alb" "cccatalog-api-load-balancer" {
   load_balancer_type         = "application"
   security_groups            = ["${aws_security_group.cccatalog-sg.id}"]
   enable_deletion_protection = false
+  subnets                    = ["subnet-05bfb167", "subnet-aa2369ec"]
 
   tags {
     Name        = "cccatalog-api-load-balancer-dev"
@@ -91,8 +77,26 @@ resource "aws_alb" "cccatalog-api-load-balancer" {
   }
 }
 
-resource "aws_security_group" "cccatalog-alb-ingress" {
-  name   = "cccatalog-alb-ingress"
+resource "aws_alb_target_group" "ccc-api-asg-target" {
+  name     = "ccc-api-autoscale-target"
+  port     = 8080
+  protocol = "HTTP"
+  vpc_id   = "vpc-d6b1bfb4"
+}
+
+resource "aws_alb_listener" "ccc-api-asg-listener" {
+  load_balancer_arn = "${aws_alb.cccatalog-api-load-balancer.id}"
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = "${aws_alb_target_group.ccc-api-asg-target.id}"
+    type             = "forward"
+  }
+}
+
+resource "aws_security_group" "cccatalog-alb-sg" {
+  name   = "cccatalog-alb-sg"
   vpc_id = "vpc-d6b1bfb4"
 
   ingress {
@@ -100,5 +104,9 @@ resource "aws_security_group" "cccatalog-alb-ingress" {
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name = "cccatalog-alb-sg"
   }
 }
