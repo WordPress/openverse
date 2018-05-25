@@ -48,19 +48,27 @@ resource "aws_security_group" "cccatalog-api-ingress" {
   # N California VPC "default"
   vpc_id = "vpc-d6b1bfb4"
 
+  # Only allow incoming traffic from within the VPC, such as the load balancer
   ingress {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    # Only allow traffic from within the VPC, such as from the load balancer
     cidr_blocks = ["172.31.0.0/16"]
   }
 
-  # Allow SSH
+  # Allow incoming SSH from the internet
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Unrestricted egress
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
