@@ -1,12 +1,8 @@
-provider "aws" {
-  region = "us-west-1"
-}
-
 data "aws_availability_zones" "available" {}
 
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
   image_id        = "ami-00d8c660"
-  instance_type   = "t2.micro"
+  instance_type   = "${var.instance_type}"
   security_groups = ["${aws_security_group.cccatalog-sg.id}",
                      "${aws_security_group.cccatalog-api-ingress.id}"]
 
@@ -17,19 +13,19 @@ resource "aws_launch_configuration" "cccatalog-api-launch-config" {
 
 resource "aws_autoscaling_group" "cccatalog-api-asg" {
   launch_configuration = "${aws_launch_configuration.cccatalog-api-launch-config.id}"
-  min_size             = 2
-  max_size             = 5
+  min_size             = "${var.min_size}"
+  max_size             = "${var.max_size}"
   availability_zones   = ["${data.aws_availability_zones.available.names}"]
 
   tag {
     key                 = "Name"
-    value               = "cccatalog-api-autoscaling-group-dev"
+    value               = "cccatalog-api-autoscaling-group-${var.environment}"
     propagate_at_launch = true
   }
 
   tag {
     key                 = "Environment"
-    value               = "dev"
+    value               = "${var.environment}"
     propagate_at_launch = true
   }
 }
@@ -72,8 +68,8 @@ resource "aws_alb" "cccatalog-api-load-balancer" {
   subnets                    = ["subnet-05bfb167", "subnet-aa2369ec"]
 
   tags {
-    Name        = "cccatalog-api-load-balancer-dev"
-    Environment = "dev"
+    Name        = "cccatalog-api-load-balancer-${var.environment}"
+    Environment = "${var.environment}"
   }
 }
 
