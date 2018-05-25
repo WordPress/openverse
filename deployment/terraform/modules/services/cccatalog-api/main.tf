@@ -1,6 +1,7 @@
 data "aws_availability_zones" "available" {}
 
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
+  name            = "cccatalog-api-asg-${var.environment}"
   image_id        = "ami-00d8c660"
   instance_type   = "${var.instance_type}"
   security_groups = ["${aws_security_group.cccatalog-sg.id}",
