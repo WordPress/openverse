@@ -1,15 +1,16 @@
 data "aws_availability_zones" "available" {}
 
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
-  name            = "cccatalog-api-asg-${var.environment}"
-  image_id        = "ami-00d8c660"
-  instance_type   = "${var.instance_type}"
-  security_groups = ["${aws_security_group.cccatalog-sg.id}",
-                     "${aws_security_group.cccatalog-api-ingress.id}"]
-  enable_monitoring = "${var.enable_monitoring}"
+  name_prefix              = "cccatalog-api-asg-${var.environment}"
+  image_id                 = "ami-00d8c660"
+  instance_type            = "${var.instance_type}"
+  security_groups          = ["${aws_security_group.cccatalog-sg.id}",
+                              "${aws_security_group.cccatalog-api-ingress.id}"]
+  enable_monitoring        = "${var.enable_monitoring}"
+  key_name                 = "${aws_key_pair.cccapi-admin.key_name}"
 
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy  = true
   }
 }
 
@@ -30,6 +31,11 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
     value               = "${var.environment}"
     propagate_at_launch = true
   }
+}
+
+resource "aws_key_pair" "cccapi-admin" {
+  key_name   = "cccapi-admin"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzocO5AKxkGVTtpmtgVd0UrpI2//v6YO8kxKZQ5t99sK0K62QG1PQj+nxFA5wCkiGNJohlvVX+Hl1ZujDLH3/G9yPaUbOA4MeDEUy3JQSxTfMVcPKVTocAldU5A/5LkxIsB+XwDY/JFr7aQq3YlwLikJ2Sb6LFaUACJWzXKMa2zTE7TvHYpJqB4UihAFVuuqQPBH5PzwXjeHJcq/zIZgnB9orMfK0Fci5YRp2wdY/RWqJwDAuTpfvaGCZmghqo0ogAmm+Dz0EPGu9jJrRvlZ7c0c1bP+eWTuHIeiXsuAN6wlkXuu8hRXRwbBdVox7ST8x8eRBUdWZZcaoeZ69dI2HZ webmaster@creativecommons.org"
 }
 
 resource "aws_security_group" "cccatalog-api-ingress" {
