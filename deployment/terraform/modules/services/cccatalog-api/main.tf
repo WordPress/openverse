@@ -31,6 +31,10 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
     value               = "${var.environment}"
     propagate_at_launch = true
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_key_pair" "cccapi-admin" {
