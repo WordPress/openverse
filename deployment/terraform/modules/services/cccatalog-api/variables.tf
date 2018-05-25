@@ -16,3 +16,8 @@ variable "instance_type" {
   description = "The EC2 instance type of API server autoscaled instances."
   default     = "t2.micro"
 }
+
+variable "enable_monitoring" {
+  description = "Whether CloudWatch is enabled for the API server autoscaling launch configuration."
+  default     = "false"
+}

@@ -5,6 +5,7 @@ resource "aws_launch_configuration" "cccatalog-api-launch-config" {
   instance_type   = "${var.instance_type}"
   security_groups = ["${aws_security_group.cccatalog-sg.id}",
                      "${aws_security_group.cccatalog-api-ingress.id}"]
+  enable_monitoring = "${var.enable_monitoring}"
 
   lifecycle {
     create_before_destroy = true
