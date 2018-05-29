@@ -21,3 +21,11 @@ variable "enable_monitoring" {
   description = "Whether CloudWatch is enabled for the API server autoscaling launch configuration."
   default     = "false"
 }
+
+variable "database_host" {
+  description = "The hostname of the PostgreSQL server to connect to."
+}
+
+variable "database_password" {
+  description = "The password of the PostgreSQL server."
+}

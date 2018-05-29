@@ -1,5 +1,18 @@
+# List of availability zones
 data "aws_availability_zones" "available" {}
 
+# A templated bash script file that bootstraps the API server. 
+data "template_file" "init"{
+  template = "${file("${path.module}/init.tpl")}"
+
+  # Pass environment variables to the server
+  vars {
+    database_host     = "${var.database_host}"
+    database_password = "${var.database_password}"
+  }
+}
+
+# API server autoscaling launch configuration
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
   name_prefix              = "cccatalog-api-asg-${var.environment}"
   image_id                 = "ami-00d8c660"
@@ -9,11 +22,14 @@ resource "aws_launch_configuration" "cccatalog-api-launch-config" {
   enable_monitoring        = "${var.enable_monitoring}"
   key_name                 = "${aws_key_pair.cccapi-admin.key_name}"
 
+  user_data                = "${data.template_file.init.rendered}"
+
   lifecycle {
     create_before_destroy  = true
   }
 }
 
+# API server autoscaling group
 resource "aws_autoscaling_group" "cccatalog-api-asg" {
   launch_configuration = "${aws_launch_configuration.cccatalog-api-launch-config.id}"
   min_size             = "${var.min_size}"
