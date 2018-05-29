@@ -23,3 +23,4 @@ uwsgi --chdir=~/cccatalog-api \
       --pidfile=/tmp/cccatalog-api.pid \
       --daemonize=/var/log/uwsgi/cccatalog-api.log \
       --uid=uwsgi
+      --socket=127.0.0.1:8080
