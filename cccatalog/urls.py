@@ -16,8 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
+from cccatalog.api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
+    re_path('secret/', views.ProtectedView.as_view()),
+    re_path('public/', views.PublicView.as_view()),
 ]
