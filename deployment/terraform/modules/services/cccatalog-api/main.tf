@@ -69,8 +69,7 @@ resource "aws_security_group" "cccatalog-api-ingress" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = ["${aws_security_group.cccatalog-alb-sg.id}",
-                       "${aws_security_group.cccatalog-api-ingress.id}"]
+    security_groups = ["${aws_security_group.cccatalog-alb-sg.id}"]
   }
 
   # Allow incoming SSH from the internet
