@@ -25,5 +25,6 @@ uwsgi --chdir=/home/ec2-user/cccatalog-api \
       --pidfile=/tmp/cccatalog-api.pid \
       --daemonize=/var/log/uwsgi/cccatalog-api.log \
       --uid=uwsgi \
-      --http=127.0.0.1:8080 \
+      --http=:8080 \
+      --enable-threads \
       --wsgi-file=./cccatalog/wsgi.py

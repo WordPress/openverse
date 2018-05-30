@@ -25,7 +25,7 @@ SECRET_KEY = 'ny#b__$f6ry4wy8oxre97&-68u_0lk3gw(z=d40_dxey3zw0v1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'cccatalog-api-alb-792133319.us-west-1.elb.amazonaws.com']
 
 
 # Application definition
