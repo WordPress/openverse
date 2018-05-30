@@ -48,6 +48,12 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
     propagate_at_launch = true
   }
 
+  tag {
+    key                 = "service"
+    value               = "cccatalog-api-django"
+    propagate_at_launch = true
+  }
+
   lifecycle {
     create_before_destroy = true
   }
