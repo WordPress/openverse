@@ -29,3 +29,12 @@ variable "database_host" {
 variable "database_password" {
   description = "The password of the PostgreSQL server."
 }
+
+variable "django_debug_enabled" {
+  description = "Whether Django debug mode is enabled. Must be disabled in production."
+  default     = "false"
+}
+
+variable "django_secret_key" {
+  description = "The secret Django key used for miscellaneous authorization tasks."
+}

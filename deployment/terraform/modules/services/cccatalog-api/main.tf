@@ -9,6 +9,8 @@ data "template_file" "init"{
   vars {
     database_host     = "${var.database_host}"
     database_password = "${var.database_password}"
+    django_debug_enabled = "${var.django_debug_enabled}"
+    django_secret_key = "${var.django_secret_key}"
   }
 }
 
