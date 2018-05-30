@@ -64,12 +64,13 @@ resource "aws_security_group" "cccatalog-api-ingress" {
   # N California VPC "default"
   vpc_id = "vpc-d6b1bfb4"
 
-  # Only allow incoming traffic from within the VPC, such as the load balancer
+  # Allow incoming traffic from the load balancer and autoscale clones
   ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["172.31.0.0/16"]
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    security_groups = ["${aws_security_group.cccatalog-alb-sg.id}",
+                       "${aws_security_group.cccatalog-api-ingress.id}"]
   }
 
   # Allow incoming SSH from the internet
@@ -123,11 +124,17 @@ resource "aws_alb_target_group" "ccc-api-asg-target" {
   port     = 8080
   protocol = "HTTP"
   vpc_id   = "vpc-d6b1bfb4"
+
+  health_check {
+    path = "/healthcheck"
+    port = 8080
+    
+  }
 }
 
 resource "aws_alb_listener" "ccc-api-asg-listener" {
   load_balancer_arn = "${aws_alb.cccatalog-api-load-balancer.id}"
-  port              = 8080
+  port              = 80
   protocol          = "HTTP"
 
   default_action {
@@ -141,16 +148,9 @@ resource "aws_security_group" "cccatalog-alb-sg" {
   vpc_id = "vpc-d6b1bfb4"
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 

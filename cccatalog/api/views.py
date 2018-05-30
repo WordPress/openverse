@@ -22,4 +22,4 @@ class PublicView(APIView):
 class HealthCheck(APIView):
 
     def get(self, request, format=None):
-        return Response('alive')
+        return Response('', status=200)
