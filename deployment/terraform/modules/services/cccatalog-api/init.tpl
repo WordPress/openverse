@@ -9,17 +9,18 @@ export DJANGO_DATABASE_HOST="${database_host}"
 
 # Install dependencies
 yum -y install git python3-3.7.0-0.16.b3.amzn2.0.1 gcc python3-setuptools python3-devel postgresql-devel
-git clone https://github.com/creativecommons/cccatalog-api.git ~/cccatalog-api
-pip3 install -r ~/cccatalog-api/requirements.txt
+git clone https://github.com/creativecommons/cccatalog-api.git /home/ec2-user/cccatalog-api
+pip3 install -r /home/ec2-user/cccatalog-api/requirements.txt
 easy_install uwsgi
 
 # Kick off the server
 useradd -m uwsgi
 mkdir -p /var/log/uwsgi/
-touch -p /var/log/uwsgi/cccatalog-api.log
+touch /var/log/uwsgi/cccatalog-api.log
 chown -R uwsgi /var/log/uwsgi
+chown -R uwsgi /home/ec2-user/cccatalog-api
 
-uwsgi --chdir=~/cccatalog-api \
+uwsgi --chdir=/home/ec2-user/cccatalog-api \
       --master \
       --pidfile=/tmp/cccatalog-api.pid \
       --daemonize=/var/log/uwsgi/cccatalog-api.log \
