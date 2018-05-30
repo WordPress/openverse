@@ -17,3 +17,9 @@ class PublicView(APIView):
 
     def get(self, request, format=None):
         return Response('Public view without login')
+
+
+class HealthCheck(APIView):
+
+    def get(self):
+        return Response('alive')
