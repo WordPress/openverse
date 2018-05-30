@@ -26,3 +26,4 @@ services:
       DJANGO_DATABASE_USER: "deploy"
       DJANGO_DATABASE_PASSWORD: "deploy"
       DJANGO_DATABASE_HOST: "db"
+      PYTHONUNBUFFERED: "0"
