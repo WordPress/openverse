@@ -21,7 +21,6 @@ resource "aws_launch_configuration" "cccatalog-api-launch-config" {
                               "${aws_security_group.cccatalog-api-ingress.id}"]
   enable_monitoring        = "${var.enable_monitoring}"
   key_name                 = "${aws_key_pair.cccapi-admin.key_name}"
-
   user_data                = "${data.template_file.init.rendered}"
 
   lifecycle {
@@ -35,6 +34,7 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
   min_size             = "${var.min_size}"
   max_size             = "${var.max_size}"
   availability_zones   = ["${data.aws_availability_zones.available.names}"]
+  target_group_arns    = ["${aws_alb_target_group.ccc-api-asg-target.id}"]
 
   tag {
     key                 = "Name"
@@ -107,7 +107,8 @@ resource "aws_alb" "cccatalog-api-load-balancer" {
   name                       = "cccatalog-api-alb"
   internal                   = false
   load_balancer_type         = "application"
-  security_groups            = ["${aws_security_group.cccatalog-sg.id}"]
+  security_groups            = ["${aws_security_group.cccatalog-sg.id}",
+                                "${aws_security_group.cccatalog-alb-sg.id}"]
   enable_deletion_protection = false
   subnets                    = ["subnet-05bfb167", "subnet-aa2369ec"]
 
@@ -126,7 +127,7 @@ resource "aws_alb_target_group" "ccc-api-asg-target" {
 
 resource "aws_alb_listener" "ccc-api-asg-listener" {
   load_balancer_arn = "${aws_alb.cccatalog-api-load-balancer.id}"
-  port              = 80
+  port              = 8080
   protocol          = "HTTP"
 
   default_action {
@@ -142,6 +143,13 @@ resource "aws_security_group" "cccatalog-alb-sg" {
   ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 8080
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
