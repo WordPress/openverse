@@ -1,3 +1,4 @@
+#cloud-boothook
 #/bin/bash
 
 # Set up environment-specific configuration
