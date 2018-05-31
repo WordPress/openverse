@@ -38,3 +38,7 @@ variable "django_debug_enabled" {
 variable "django_secret_key" {
   description = "The secret Django key used for miscellaneous authorization tasks."
 }
+
+variable "git_revision" {
+  description = "The git commit hash to deploy from."
+}

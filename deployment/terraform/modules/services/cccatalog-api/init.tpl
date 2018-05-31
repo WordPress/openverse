@@ -12,6 +12,8 @@ export DJANGO_SECRET_KEY="${django_secret_key}"
 # Install dependencies
 yum -y install git python3-3.7.0-0.16.b3.amzn2.0.1 gcc python3-setuptools python3-devel postgresql-devel
 git clone https://github.com/creativecommons/cccatalog-api.git /home/ec2-user/cccatalog-api
+cd /home/ec2-user/cccatalog-api
+git checkout ${git_revision}
 pip3 install -r /home/ec2-user/cccatalog-api/requirements.txt
 easy_install uwsgi
 
