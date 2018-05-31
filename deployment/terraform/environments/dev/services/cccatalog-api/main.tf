@@ -22,7 +22,7 @@ module "cccatalog-api" {
 
   # Environment-specific variables
   database_host             = "openledger-db-dev3-nvirginia.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
-  django_debug_enabled      = "true"
+  django_debug_enabled      = "false"
 
   # Secrets not checked into version control. Override with -var-file=secrets.tfvars
   database_password         = "${var.database_password}"
