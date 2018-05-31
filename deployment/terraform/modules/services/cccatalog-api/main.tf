@@ -32,10 +32,13 @@ resource "aws_launch_configuration" "cccatalog-api-launch-config" {
 }
 
 # API server autoscaling group
+# Changes to the launch configuration result in automated zero-downtime redeployment
 resource "aws_autoscaling_group" "cccatalog-api-asg" {
+  name                 = "${aws_launch_configuration.cccatalog-api-launch-config.id}"
   launch_configuration = "${aws_launch_configuration.cccatalog-api-launch-config.id}"
   min_size             = "${var.min_size}"
   max_size             = "${var.max_size}"
+  min_elb_capacity     = "${var.min_size}"
   availability_zones   = ["${data.aws_availability_zones.available.names}"]
   target_group_arns    = ["${aws_alb_target_group.ccc-api-asg-target.id}"]
 
