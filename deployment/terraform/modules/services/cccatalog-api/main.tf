@@ -1,11 +1,11 @@
 # List of availability zones
 data "aws_availability_zones" "available" {}
 
-# A templated bash script file that bootstraps the API server. 
+# A templated bash script that bootstraps the API server.
 data "template_file" "init"{
   template = "${file("${path.module}/init.tpl")}"
 
-  # Pass environment variables to the server
+  # Pass configuration variables to the script
   vars {
     database_host        = "${var.database_host}"
     database_password    = "${var.database_password}"
