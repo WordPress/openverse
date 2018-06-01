@@ -8,6 +8,7 @@ export DJANGO_DATABASE_PASSWORD="${database_password}"
 export DJANGO_DATABASE_HOST="${database_host}"
 export DJANGO_DEBUG_ENABLED="${django_debug_enabled}"
 export DJANGO_SECRET_KEY="${django_secret_key}"
+export LOAD_BALANCER_URL="${load_balancer_url}"
 
 # Install dependencies
 yum -y install git python3-3.7.0-0.16.b3.amzn2.0.1 gcc python3-setuptools python3-devel postgresql-devel
