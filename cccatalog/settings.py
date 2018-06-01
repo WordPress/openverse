@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ny#b__$f6ry4wy8oxre97&-68u_0lk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DJANGO_DEBUG_ENABLED', default=False))
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'cccatalog-api-alb-933953192.us-west-1.elb.amazonaws.com',
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
                  gethostname(), gethostbyname(gethostname())]
 
 
