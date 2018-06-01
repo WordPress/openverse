@@ -12,6 +12,7 @@ data "template_file" "init"{
     django_debug_enabled = "${var.django_debug_enabled}"
     django_secret_key    = "${var.django_secret_key}"
     git_revision         = "${var.git_revision}}"
+    load_balancer_url    = "${aws_alb.cccatalog-api-load-balancer.dns_name}"
   }
 }
 
