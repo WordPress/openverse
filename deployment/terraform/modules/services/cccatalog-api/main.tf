@@ -42,6 +42,7 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
   min_elb_capacity     = "${var.min_size}"
   availability_zones   = ["${data.aws_availability_zones.available.names}"]
   target_group_arns    = ["${aws_alb_target_group.ccc-api-asg-target.id}"]
+  wait_for_capacity_timeout = "8m"
 
   tag {
     key                 = "Name"
@@ -79,9 +80,9 @@ resource "aws_security_group" "cccatalog-api-ingress" {
 
   # Allow incoming traffic from the load balancer and autoscale clones
   ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
     security_groups = ["${aws_security_group.cccatalog-alb-sg.id}"]
   }
 
