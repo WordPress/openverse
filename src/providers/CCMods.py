@@ -4,6 +4,10 @@ import StringIO
 import requests
 import logging
 import re
+from pyspark.sql import SQLContext
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import concat, col, lit
+
 
 logging.getLogger('CCModule')
 logging.basicConfig(format='%(asctime)s: [%(levelname)s - CCModule] =======> %(message)s', level=logging.INFO)
@@ -52,7 +56,17 @@ def getWARCRecord(_file, _offset, _length):
 
         return fh.read()
 
+def getProviderData(_provider, _input):
+    spk          = SparkSession.builder.getOrCreate()
+    dataDF       = spk.read.parquet(_input)
+    providerDF   = dataDF.select(concat('provider_domain', 'content_path').alias('url'), \
+                                 concat('warc_segment', lit('/warc/'), 'warc_filename').alias('warc_filename'), \
+                                 'content_offset', 'deflate_length')\
+                        .where(col('provider_domain').like('%{}'.format(_provider)))\
+                        .drop_duplicates(['url'])
 
-#print getWARCRecord('crawl-data/CC-MAIN-2017-09/segments/1487501172447.23/warc/CC-MAIN-20170219104612-00388-ip-10-171-10-108.ec2.internal.warc.gz', 823569443, 54223)
+    providerData = providerDF.rdd.map(lambda row: '\t'.join([str(col) for col in row])).collect() #convert dataframe into a list of tab delimited elements
 
-#print getLicense('/publicdomain/mark/werw/')
+    return providerData
+
+

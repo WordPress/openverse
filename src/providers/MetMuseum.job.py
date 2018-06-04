@@ -1,5 +1,5 @@
 """
-Data Transformation: Phase 2 - Process the extracted links for the Met Museum.
+Data Transformation: Process the extracted links for the Met Museum.
 
 Identify all licensed content (i.e. images) and their associated meta-data by
 scraping the html from Common Crawl's WARC files.
@@ -36,16 +36,17 @@ class MetMuseum:
 
         """
 
-        pattern = re.compile('CC-MAIN-\d{4}-\d{2}')
+        self.crawlIndex = None
+        pattern         = re.compile('CC-MAIN-\d{4}-\d{2}')
 
         if not pattern.match(_cc_index):
             logging.error('Invalid common crawl index format.')
-            sys.exit()
+
         else:
             self.crawlIndex = _cc_index
 
-        self.input  = 'extracted/{}.met'.format(self.crawlIndex)
-        self.output = self.input.replace('extracted', 'transformed')
+        self.input  = '../output/{}'.format(self.crawlIndex)
+        self.output = 'transformed/{}.met'.format(self.crawlIndex)
 
 
     def getTombstone(self, _html, _url):
@@ -68,8 +69,6 @@ class MetMuseum:
 
         soup                = BeautifulSoup (_html, 'html.parser')
         tombstone           = {}
-        tombstone['source'] = _url
-        domain              = None
         src                 = None
         license             = None
         version             = None
@@ -78,25 +77,24 @@ class MetMuseum:
         try:
             src = [anchor['href'] for anchor in soup.find_all('a', href=True) if 'creativecommons.org' in anchor['href']]
 
-        except Exception as e:
-            logging.warning('No hyperlink(s) to Creative Commons.')
-            logging.warning('{}:{}'.format(type(e).__name__, e))
-
-            return None
-
-        else:
-
             if src:
-                ccInfo                  = urlparse(src[0])
-                license, version        = getLicense(ccInfo.path)
+                ccInfo              = urlparse(src[0])
+                license, version    = getLicense(ccInfo.path)
 
             else:
                 logging.warning('License not detected in url: {}'.format(_url))
                 return None
 
-            imgs               = soup.find_all(attrs = {'ng-src': True})
-            tombstone['image'] = re.search("(?P<url>https?://[^\s]+)", imgs[0]['ng-src']).group("url").replace("')}}", "")
-            tombstone['title'] = soup.select("h1.collection-details__object-title")[0].string.encode('unicode-escape')
+            imgs                = soup.find_all(attrs = {'ng-src': True})
+            tombstone['image']  = re.search("(?P<url>https?://[^\s]+)", imgs[0]['ng-src']).group("url").replace("')}}", "")
+
+        except Exception as e:
+            logging.warning('{}:{} in url:{}'.format(type(e).__name__, e, _url))
+
+            return None
+
+        else:
+            tombstone['title'] = soup.select("h1.collection-details__object-title")[0].string
 
             x = soup.select(".collection-details__tombstone")[0]
             for row in x.find_all("dl"):
@@ -107,25 +105,25 @@ class MetMuseum:
                     tombstone[key] = val
 
                 except Exception as ex:
-                    logging.warning('{}:{}'.format(type(ex).__name__, ex))
+                    logging.warning('{}:{} in url:{}'.format(type(ex).__name__, ex, _url))
 
             try:
                 desc    = soup.select('div.collection-details__label')[0].string
                 details = soup.select('div.collection_details__facets')
 
             except Exception as ex2:
-                logging.warning('{}:{}'.format(type(ex2).__name__, ex2))
+                logging.warning('{}:{} in url:{}'.format(type(ex2).__name__, ex2, _url))
 
             else:
                 if desc:
-                    tombstone['description'] = desc.strip().encode('unicode-escape')
+                    tombstone['description'] = desc.encode('unicode-escape').strip()
 
                 for item in details:
                     lbl = item.select('label')[0].string
                     lbl = re.sub('(\s\/\s)|(\s+)', '_', lbl).lower()
                     obj = item.select('a')
-                    obj = [re.sub('\(.*?\)', '', i.text.encode('unicode-escape')) for i in obj]
-                    obj = ','.join([str(o).strip() for o in obj])
+                    obj = [re.sub('\(.*?\)', '', i.text) for i in obj]
+                    obj = ','.join([str(o.encode('unicode-escape')).strip() for o in obj])
                     tombstone[lbl] = obj
 
             foreign_id = re.search('.*?/(\d+)/?$', _url)
@@ -138,17 +136,30 @@ class MetMuseum:
 
             provider    = 'metmuseum'
             source      = 'commoncrawl'
-            imageURL    = tombstone['image']
-            creator     = tombstone['artist_maker_culture']
-            title       = tombstone['title']
+            imageURL    = ' '
+            creator     = ' '
+            title       = ' '
+            url         = soup.find('meta', {'property': 'og:url'})
+
+            if url:
+                url = url.attrs['content']
+            else:
+                url = _url
+
+            if 'image' in tombstone:
+                imageURL = tombstone['image'].encode('unicode-escape')
+                del tombstone['image']
+
+            if 'artist_maker_culture' in tombstone:
+                creator = tombstone['artist_maker_culture']
+                del tombstone['artist_maker_culture']
+
+            if 'title' in tombstone and tombstone['title'] is not None:
+                title = tombstone['title'].encode('unicode-escape')
+                del tombstone['title']
 
 
-            del tombstone['image']
-            del tombstone['artist_maker_culture']
-            del tombstone['title']
-
-
-            return '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(provider, source, foreign_id, _url, imageURL, license, version, creator, title, json.dumps(tombstone))
+            return '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(provider, source, foreign_id, url, imageURL, license, version, creator, title, json.dumps(tombstone))
 
 
     def extractHTML(self, _iter):
@@ -175,7 +186,7 @@ class MetMuseum:
             data        = row.split('\t')
             metaData    = None
 
-            content  = getWARCRecord(data[1].strip(), data[2].strip(), data[3].strip())
+            content     = getWARCRecord(data[1].strip(), data[2].strip(), data[3].strip())
 
             if content:
                 metaData = self.getTombstone(content.strip(), data[0].strip())
@@ -195,8 +206,22 @@ def main():
 
     met = MetMuseum(crawlIndex.upper())
 
-    sc  = SparkContext(appName='Met Museum Job')
-    rdd = sc.textFile(met.input, sc.defaultParallelism)
+
+    if met.crawlIndex is None:
+        sys.exit()
+
+    sc   = SparkContext(appName='Met Museum Job')
+
+    #load the data
+    data = getProviderData('metmuseum.org', met.input)
+
+    #filter by url to get the collection
+    data = filter(lambda x: 'art/collection/' in x.split('\t')[0], data)
+
+    #create RDD
+    rdd  = sc.parallelize(data, sc.defaultParallelism)
+
+    #begin spark process
     rdd.mapPartitions(met.extractHTML).saveAsTextFile(met.output)
     sc.stop()
 
