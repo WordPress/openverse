@@ -5,25 +5,49 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: "cccatalog"
+      POSTGRES_DB: "openledger"
       POSTGRES_USER: "deploy"
       POSTGRES_PASSWORD: "deploy"
       POSTGRES_HOST: "0.0.0.0"
     healthcheck:
-      test: "pg_isready -U deploy -d cccatalog"
+      test: "pg_isready -U deploy -d openledger"
+
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    ports:
+      - "9200:9200"
+    environment:
+      # disable XPack
+      # https://www.elastic.co/guide/en/elasticsearch/reference/5.3/docker.html#_security_note
+      xpack.security.enabled: "false"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://es:9200"]
 
   web:
-    build: .
+    build: ./cccatalog-api/
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/cccatalog-api
+      - ./cccatalog-api:/cccatalog-api
     ports:
       - "8000:8000"
     depends_on:
       - db
+      - es
     environment:
-      DJANGO_DATABASE_NAME: "cccatalog"
+      DJANGO_DATABASE_NAME: "openledger"
       DJANGO_DATABASE_USER: "deploy"
       DJANGO_DATABASE_PASSWORD: "deploy"
       DJANGO_DATABASE_HOST: "db"
+      PYTHONUNBUFFERED: "0"
+
+
+  es-syncer:
+    build: ./es-syncer/
+    command: bash -c 'sleep 6 && python sync.py'
+    depends_on:
+      - db
+      - es
+    volumes:
+      - ./es-syncer:/es-syncer
+    environment:
       PYTHONUNBUFFERED: "0"
