@@ -51,3 +51,10 @@ services:
       - ./es-syncer:/es-syncer
     environment:
       PYTHONUNBUFFERED: "0"
+      ELASTICSEARCH_URL: 'es'
+      ELASTICSEARCH_PORT: "9200"
+      DATABASE_HOST: 'db'
+      DATABASE_USER: 'deploy'
+      DATABASE_PASSWORD: 'deploy'
+      DATABASE_NAME: 'openledger'
+      DB_BUFFER_SIZE: '100000'

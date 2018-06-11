@@ -2,8 +2,8 @@ import psycopg2
 import os
 import sys
 import logging as log
-import pdb
 import time
+import multiprocessing
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
@@ -17,8 +17,7 @@ AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
 ELASTICSEARCH_PORT = int(os.environ.get('ELASTICSEARCH_PORT'))
-AWS_REGION = os.environ.get('AWS_REGION')
-AWS_SERVICE = 'es'
+AWS_REGION = os.environ.get('AWS_REGION', 'us-west-1')
 
 DATABASE_HOST = os.environ.get('DJANGO_DATABASE_HOST')
 DATABASE_USER = os.environ.get('DJANGO_DATABASE_USER')
@@ -26,7 +25,7 @@ DATABASE_PASSWORD = os.environ.get('DJANGO_DATABASE_PASSWORD')
 DATABASE_NAME = os.environ.get('DJANGO_DATABASE_NAME')
 
 # The number of database records to load in memory at once.
-ITER_BUFFER_SIZE = int(os.environ.get('SYNC_DATABASE_BUFFER_RECORD_COUNT', 100000))
+DB_BUFFER_SIZE = int(os.environ.get('SYNC_DATABASE_BUFFER_RECORD_COUNT', 100000))
 
 # A comma separated list of tables in the Postgres table to replicate to Elasticsearch.
 # Ex: image,docs
@@ -39,7 +38,12 @@ class ElasticsearchSyncer:
     A class for synchronizing Postgres with Elasticsearch. For each table to
     sync, find its largest ID. Find the corresponding largest ID in
     Elasticsearch. If the database ID is greater than the largest corresponding
-    ID in Elasticsearch, copy the missing records over.
+    ID in Elasticsearch, copy the missing records over to Elasticsearch.
+
+    Each table is Postgres corresponds to an identically named index in
+    Elasticsearch. For instance, if Postgres has a table that we would like to
+    replicate called 'image', the syncer will create an Elasticsearch called
+    'image' and populate the index with documents.
     """
 
     def __init__(self, postgres_instance, elasticsearch_instance, tables_to_watch):
@@ -70,25 +74,41 @@ class ElasticsearchSyncer:
             # Select all documents in-between and replicate them to Elasticsearch.
             if last_added_pg_id > last_added_es_id:
                 log.info('Replicating range ' + str(last_added_es_id) + '-' + str(last_added_pg_id))
-                # Query Postgres in chunks. Push each chunk to Elasticsearch in sequence.
+                # Query Postgres in chunks.
                 num_to_sync = last_added_pg_id - last_added_es_id
                 cursor_name = table + '_table_cursor'
                 server_cur = self.pg_conn.cursor(name=cursor_name)
-                server_cur.itersize = ITER_BUFFER_SIZE
+                server_cur.itersize = DB_BUFFER_SIZE
                 server_cur.execute(SQL('SELECT * FROM {} LIMIT %s OFFSET %s').format(Identifier(table)),
                                    (num_to_sync, last_added_es_id,))
                 num_converted_documents = 0
 
-                chunk = 1
+                chunk = True
                 while chunk:
                     chunk = server_cur.fetchmany(server_cur.itersize)
                     es_batch = self.pg_chunk_to_es(chunk, server_cur.description, table)
                     push_start_time = time.time()
                     log.info('Pushing ' + str(len(es_batch)) + ' documents to Elasticsearch.')
-                    helpers.bulk(self.es, es_batch)
+
+                    # Bulk upload to Elasticsearch in parallel.
+                    chunk_size = int(num_to_sync / multiprocessing.cpu_count())
+                    list(helpers.parallel_bulk(self.es,
+                                               es_batch,
+                                               chunk_size=chunk_size))
                     log.info('Pushed in ' + str(time.time() - push_start_time) + ' seconds.')
                     num_converted_documents += len(chunk)
                 log.info('Synchronized ' + str(num_converted_documents) + ' to Elasticsearch')
+
+    def listen(self, poll_interval=5):
+        """
+        Poll the database for changes every poll_interval seconds.
+
+        :arg poll_interval: The number of seconds to wait before polling the database for changes.
+        """
+        while True:
+            log.info('Polling for changes in Postgres...')
+            self.synchronize()
+            time.sleep(poll_interval)
 
     @staticmethod
     def pg_chunk_to_es(pg_chunk, columns, origin_table):
@@ -112,15 +132,15 @@ class ElasticsearchSyncer:
         return documents
 
 
-def elasticsearch_connect(timeout=5):
+def elasticsearch_connect(timeout=30):
     try:
         log.info('Trying to connect to Elasticsearch without authentication. . .')
         # Try to connect to Elasticsearch without credentials.
         es = Elasticsearch(host=ELASTICSEARCH_URL,
                            port=ELASTICSEARCH_PORT,
                            connection_class=RequestsHttpConnection,
-                           timeout=10,
-                           max_retries=3)
+                           timeout=timeout,
+                           max_retries=10)
         log.info(str(es.info()))
         log.info('Connected to Elasticsearch without authentication.')
     except AuthenticationException:
@@ -129,7 +149,7 @@ def elasticsearch_connect(timeout=5):
         auth = AWSRequestsAuth(aws_access_key=AWS_ACCESS_KEY_ID,
                                aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
                                aws_host=ELASTICSEARCH_URL,
-                               aws_region='us-west-1',
+                               aws_region=AWS_REGION,
                                aws_service='es')
         auth.encode = lambda x: bytes(x.encode('utf-8'))
         es = Elasticsearch(host=ELASTICSEARCH_URL,
@@ -152,10 +172,11 @@ def postgres_connect():
 
 if __name__ == '__main__':
     log.basicConfig(stream=sys.stdout, level=log.INFO)
+    log.getLogger(ElasticsearchSyncer.__name__).setLevel(log.DEBUG)
     log.info('Connecting to Postgres')
     postgres = postgres_connect()
     log.info('Connecting to Elasticsearch')
     elasticsearch = elasticsearch_connect()
     syncer = ElasticsearchSyncer(postgres, elasticsearch, monitor_tables)
-    log.info('Beginning synchronization')
-    syncer.synchronize()
+    log.info('Beginning synchronizer')
+    syncer.listen()
