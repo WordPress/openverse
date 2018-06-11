@@ -3,8 +3,9 @@ from elasticsearch_dsl import DocType, Date, Boolean, Text, Integer, Nested
 
 
 class SyncableDocType(DocType):
-    # Aggregations can't be performed on the _id meta-column, which necessitates copying it to this column in the doc.
-    # Aggregation is used to find the last document inserted into Elasticsearch
+    # Aggregations can't be performed on the _id meta-column, which necessitates
+    # copying it to this column in the doc. Aggregation is used to find the last
+    # document inserted into Elasticsearch
     pg_id = Integer()
 
     @staticmethod
@@ -18,7 +19,9 @@ class SyncableDocType(DocType):
         :param schema: A map of each field name to its position in the row.
         :return:
         """
-        raise NotImplemented('Model is missing Postgres -> Elasticsearch translation.')
+        raise NotImplemented(
+            'Model is missing Postgres -> Elasticsearch translation.'
+        )
 
 
 class Image(SyncableDocType):
