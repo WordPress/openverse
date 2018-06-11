@@ -9,6 +9,8 @@ import pdb
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch.exceptions import AuthenticationException, NotFoundError
+from elasticsearch.exceptions \
+    import ConnectionError as ElasticsearchConnectionError
 from elasticsearch_dsl import Search
 from elasticsearch import helpers
 from psycopg2.sql import SQL, Identifier
@@ -76,8 +78,10 @@ class ElasticsearchSyncer:
                     es_res.aggregations['highest_pg_id']['value']
                 )
             except (TypeError, NotFoundError):
-                log.info('No matching documents found in elasticsearch.'
-                         ' Replicating everything.')
+                log.info(
+                    'No matching documents found in elasticsearch. '
+                    'Replicating everything.'
+                )
                 last_added_es_id = 0
 
             # Select all documents in-between and replicate to Elasticsearch.
@@ -128,7 +132,7 @@ class ElasticsearchSyncer:
                 + table + ' to Elasticsearch'
             )
 
-    def listen(self, poll_interval=5):
+    def listen(self, poll_interval=10):
         """
         Poll the database for changes every poll_interval seconds.
 
@@ -142,6 +146,8 @@ class ElasticsearchSyncer:
             except psycopg2.OperationalError:
                 # Reconnect to the database.
                 self.pg_conn = postgres_connect()
+            except ElasticsearchConnectionError:
+                self.es = elasticsearch_connect()
 
             time.sleep(poll_interval)
 
@@ -171,41 +177,64 @@ class ElasticsearchSyncer:
         return documents
 
 
-def elasticsearch_connect(timeout=300):
+def elasticsearch_connect():
+    """
+    If connecting to Elasticsearch fails, retry connecting forever.
+    :return: An Elasticsearch connection object.
+    """
+    while True:
+        try:
+            return _elasticsearch_connect()
+        except ElasticsearchConnectionError as e:
+            log.exception(e)
+            log.error('Reconnecting to Elasticsearch in 5 seconds. . .')
+            time.sleep(5)
+            continue
+
+
+def _elasticsearch_connect(timeout=300):
     """
     Connect to Elasticsearch.
     :param timeout: How long to wait before ANY request to Elasticsearch times
     out. Because we use parallel bulk uploads (which sometimes wait long periods
     of time before beginning execution), a value of at least 30 seconds is
     recommended.
-    :return:
+    :return: An Elasticsearch connection object.
     """
     try:
         log.info('Trying to connect to Elasticsearch without authentication...')
         # Try to connect to Elasticsearch without credentials.
-        es = Elasticsearch(host=ELASTICSEARCH_URL,
-                           port=ELASTICSEARCH_PORT,
-                           connection_class=RequestsHttpConnection,
-                           timeout=timeout,
-                           max_retries=10)
+        es = Elasticsearch(
+            host=ELASTICSEARCH_URL,
+            port=ELASTICSEARCH_PORT,
+            connection_class=RequestsHttpConnection,
+            timeout=timeout,
+            max_retries=10,
+        )
         log.info(str(es.info()))
         log.info('Connected to Elasticsearch without authentication.')
     except AuthenticationException:
         # If that fails, supply AWS authentication object and try again.
-        log.info("Connecting to %s %s with AWS auth", ELASTICSEARCH_URL,
-                 ELASTICSEARCH_PORT)
-        auth = AWSRequestsAuth(aws_access_key=AWS_ACCESS_KEY_ID,
-                               aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-                               aws_host=ELASTICSEARCH_URL,
-                               aws_region=AWS_REGION,
-                               aws_service='es')
+        log.info(
+            'Connecting to %s %s with AWS auth', ELASTICSEARCH_URL,
+            ELASTICSEARCH_PORT
+        )
+        auth = AWSRequestsAuth(
+            aws_access_key=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+            aws_host=ELASTICSEARCH_URL,
+            aws_region=AWS_REGION,
+            aws_service='es'
+        )
         auth.encode = lambda x: bytes(x.encode('utf-8'))
-        es = Elasticsearch(host=ELASTICSEARCH_URL,
-                           port=ELASTICSEARCH_PORT,
-                           connection_class=RequestsHttpConnection,
-                           timeout=timeout,
-                           max_retries=10, retry_on_timeout=True,
-                           http_auth=auth)
+        es = Elasticsearch(
+            host=ELASTICSEARCH_URL,
+            port=ELASTICSEARCH_PORT,
+            connection_class=RequestsHttpConnection,
+            timeout=timeout,
+            max_retries=10, retry_on_timeout=True,
+            http_auth=auth
+        )
         es.info()
     return es
 
