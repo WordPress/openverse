@@ -97,7 +97,8 @@ class ElasticsearchSyncer:
             server_cur.execute(
                 SQL('SELECT * FROM {} LIMIT %s OFFSET %s').format(
                     Identifier(table)
-                ), (num_to_sync, start,)
+                ),
+                (num_to_sync, start,)
             )
 
             num_converted_documents = 0
@@ -136,7 +137,12 @@ class ElasticsearchSyncer:
         """
         while True:
             log.info('Polling Postgres for changes...')
-            self.synchronize()
+            try:
+                self.synchronize()
+            except psycopg2.OperationalError:
+                # Reconnect to the database.
+                self.pg_conn = postgres_connect()
+
             time.sleep(poll_interval)
 
     @staticmethod
@@ -205,12 +211,22 @@ def elasticsearch_connect(timeout=300):
 
 
 def postgres_connect():
-    return psycopg2.connect(dbname=DATABASE_NAME,
-                            user=DATABASE_USER,
-                            password=DATABASE_PASSWORD,
-                            host=DATABASE_HOST,
-                            port=DATABASE_PORT,
-                            connect_timeout=5)
+    while True:
+        try:
+            conn = psycopg2.connect(dbname=DATABASE_NAME,
+                                    user=DATABASE_USER,
+                                    password=DATABASE_PASSWORD,
+                                    host=DATABASE_HOST,
+                                    port=DATABASE_PORT,
+                                    connect_timeout=5)
+        except psycopg2.OperationalError as e:
+            log.exception(e)
+            log.error('Reconnecting to Postgres in 5 seconds. . .')
+            time.sleep(5)
+            continue
+        break
+
+    return conn
 
 
 if __name__ == '__main__':
