@@ -27,5 +27,4 @@ resource "aws_db_instance" "cccsearch-postgres-legacy" {
   db_subnet_group_name       = "default"
   parameter_group_name       = "default.postgres10"
   allocated_storage          = 100
-  snapshot_identifier        = "for-syncing-ccsearch-legacy"
 }
