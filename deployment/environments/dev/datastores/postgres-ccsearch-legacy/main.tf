@@ -18,7 +18,7 @@ resource "aws_db_instance" "cccsearch-postgres-legacy" {
   username                   = "deploy"
   password                   = "${var.database_password}"
   publicly_accessible        = false
-  vpc_security_group_ids     = ["sg-2e7f764c"]
+  vpc_security_group_ids     = ["sg-2e7f764c", "sg-3778d37f"]
   apply_immediately          = false
   backup_retention_period    = 7 # days
   backup_window              = "07:16-07:46" # utc time
