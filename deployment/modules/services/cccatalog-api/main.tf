@@ -1,5 +1,7 @@
-# List of availability zones
-data "aws_availability_zones" "available" {}
+# List of available subnets
+data "aws_subnet_ids" "subnets" {
+  vpc_id = "${var.vpc_id}"
+}
 
 # A templated bash script that bootstraps the API server.
 data "template_file" "init"{
@@ -40,7 +42,7 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
   min_size             = "${var.min_size}"
   max_size             = "${var.max_size}"
   min_elb_capacity     = "${var.min_size}"
-  vpc_zone_identifier  = ["subnet-99d0dcd2", "subnet-8ffebeb0"]
+  vpc_zone_identifier  = ["${data.aws_subnet_ids.subnets.ids}"]
   target_group_arns    = ["${aws_alb_target_group.ccc-api-asg-target.id}"]
   wait_for_capacity_timeout = "8m"
 
@@ -123,7 +125,7 @@ resource "aws_alb" "cccatalog-api-load-balancer" {
   security_groups            = ["${aws_security_group.cccatalog-sg.id}",
                                 "${aws_security_group.cccatalog-alb-sg.id}"]
   enable_deletion_protection = false
-  subnets                    = ["subnet-99d0dcd2", "subnet-8ffebeb0"]
+  subnets                    = ["${data.aws_subnet_ids.subnets.ids}"]
 
   tags {
     Name        = "cccatalog-api-load-balancer-${var.environment}"
