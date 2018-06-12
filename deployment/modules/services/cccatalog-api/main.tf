@@ -123,7 +123,7 @@ resource "aws_alb" "cccatalog-api-load-balancer" {
   security_groups            = ["${aws_security_group.cccatalog-sg.id}",
                                 "${aws_security_group.cccatalog-alb-sg.id}"]
   enable_deletion_protection = false
-  subnets                    = ["subnet-05bfb167", "subnet-aa2369ec"]
+  subnets                    = ["subnet-99d0dcd2", "subnet-8ffebeb0"]
 
   tags {
     Name        = "cccatalog-api-load-balancer-${var.environment}"
