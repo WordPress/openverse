@@ -10,7 +10,7 @@ resource "aws_elasticsearch_domain" "elasticsearch-dev" {
     instance_type            = "m4.large.elasticsearch"
     dedicated_master_count   = "3"
     dedicated_master_enabled = "true"
-    dedicated_master_type    = "m4.large.elasticsearch"
+    dedicated_master_type    = "m3.medium.elasticsearch"
     instance_count           = "3"
   }
 
