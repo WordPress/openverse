@@ -21,7 +21,10 @@ services:
       # https://www.elastic.co/guide/en/elasticsearch/reference/5.3/docker.html#_security_note
       xpack.security.enabled: "false"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://es:9200"]
+      test: ["CMD-SHELL", "curl -si -XGET 'localhost:9200/_cluster/health?pretty' | grep -qE 'yellow|green'"]
+      interval: 10s
+      timeout: 60s
+      retries: 10
 
   web:
     build: ./cccatalog-api/
@@ -43,7 +46,7 @@ services:
 
   es-syncer:
     build: ./es-syncer/
-    command: bash -c 'sleep 6 && python sync.py'
+    command: bash -c 'sleep 20 && supervisord -c config/supervisord.conf'
     depends_on:
       - db
       - es

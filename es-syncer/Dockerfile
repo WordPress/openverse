@@ -6,3 +6,10 @@ RUN mkdir /es-syncer
 WORKDIR /es-syncer
 ADD requirements.txt /es-syncer/
 RUN pip install -r requirements.txt
+
+# Install supervisord (still requires Python 2.7 in 2018 :( )
+RUN apt-get update
+RUN apt-get install -y python-pip
+RUN pip2 install supervisor
+RUN useradd -m supervisord
+USER supervisord

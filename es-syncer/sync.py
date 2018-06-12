@@ -67,9 +67,9 @@ class ElasticsearchSyncer:
             cur = self.pg_conn.cursor()
             # Find the last row added to the Postgres table
             cur.execute(
-                SQL('SELECT id FROM {} ORDER BY id DESC LIMIT 1;').format(
-                    Identifier(table)
-                )
+                SQL(
+                    'SELECT id FROM {} ORDER BY id DESC LIMIT 1;'
+                ).format(Identifier(table))
             )
             last_added_pg_id = cur.fetchone()[0]
             if not last_added_pg_id:
@@ -101,6 +101,7 @@ class ElasticsearchSyncer:
 
     def replicate(self, start, end, table):
         """
+        Replicate all of  the records between `start` and `end`.
 
         :param start: The first ID to replicate
         :param end: The last ID to replicate
@@ -190,7 +191,7 @@ class ElasticsearchSyncer:
 
 def elasticsearch_connect():
     """
-    If connecting to Elasticsearch fails, retry connecting forever.
+    Repeatedly try to connect to Elasticsearch until successful.
     :return: An Elasticsearch connection object.
     """
     while True:
