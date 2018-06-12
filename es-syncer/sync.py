@@ -4,7 +4,6 @@ import sys
 import logging as log
 import time
 import multiprocessing
-import pdb
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
@@ -16,11 +15,12 @@ from elasticsearch import helpers
 from psycopg2.sql import SQL, Identifier
 from elasticsearch_models import postgres_table_to_elasticsearch_model
 
+# For AWS IAM access to Elasticsearch
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
 ELASTICSEARCH_PORT = int(os.environ.get('ELASTICSEARCH_PORT'))
-AWS_REGION = os.environ.get('AWS_REGION', 'us-west-1')
+AWS_REGION = os.environ.get('AWS_REGION', 'us-east-1')
 
 DATABASE_HOST = os.environ.get('DJANGO_DATABASE_HOST')
 DATABASE_USER = os.environ.get('DJANGO_DATABASE_USER')
@@ -36,26 +36,33 @@ DB_BUFFER_SIZE = int(os.environ.get('DB_BUFFER_SIZE', 100000))
 REP_TABLES = os.environ.get('COPY_TABLES', 'image')
 replicate_tables = REP_TABLES.split(',') if ',' in REP_TABLES else [REP_TABLES]
 
+"""
+A daemon for synchronizing Postgres with Elasticsearch. For each table to
+sync, find its largest ID in Postgres. Find the corresponding largest ID in
+Elasticsearch. If the database ID is greater than the largest corresponding
+ID in Elasticsearch, copy the missing records over to Elasticsearch.
+
+Each table is Postgres corresponds to an identically named index in
+Elasticsearch. For instance, if Postgres has a table that we would like to
+replicate called 'image', the syncer will create an Elasticsearch called
+'image' and populate the index with documents.
+
+See elasticsearch_models to change the format of Elasticsearch documents.
+
+This is intended to be daemonized and run by a process supervisor.
+"""
 
 class ElasticsearchSyncer:
-    """
-    A class for synchronizing Postgres with Elasticsearch. For each table to
-    sync, find its largest ID. Find the corresponding largest ID in
-    Elasticsearch. If the database ID is greater than the largest corresponding
-    ID in Elasticsearch, copy the missing records over to Elasticsearch.
-
-    Each table is Postgres corresponds to an identically named index in
-    Elasticsearch. For instance, if Postgres has a table that we would like to
-    replicate called 'image', the syncer will create an Elasticsearch called
-    'image' and populate the index with documents.
-    """
-
     def __init__(self, postgres_instance, elasticsearch_instance, tables):
         self.pg_conn = postgres_instance
         self.es = elasticsearch_instance
         self.tables_to_watch = tables
 
     def synchronize(self):
+        """
+        Check that the database tables are in sync with Elasticsearch. If not,
+        begin replication.
+        """
         for table in self.tables_to_watch:
             cur = self.pg_conn.cursor()
             # Find the last row added to the Postgres table
@@ -93,17 +100,21 @@ class ElasticsearchSyncer:
                 self.replicate(last_added_es_id, last_added_pg_id, table)
 
     def replicate(self, start, end, table):
+        """
+
+        :param start: The first ID to replicate
+        :param end: The last ID to replicate
+        :param table: The table to replicate this range from.
+        :return:
+        """
         # Query Postgres in chunks.
         num_to_sync = end - start
         cursor_name = table + '_table_cursor'
         with self.pg_conn.cursor(name=cursor_name) as server_cur:
             server_cur.itersize = DB_BUFFER_SIZE
-            server_cur.execute(
-                SQL('SELECT * FROM {} LIMIT %s OFFSET %s').format(
-                    Identifier(table)
-                ),
-                (num_to_sync, start,)
-            )
+            select_range = SQL('SELECT * FROM {} LIMIT %s OFFSET %s')\
+                .format(Identifier(table))
+            server_cur.execute(select_range, (num_to_sync, start,))
 
             num_converted_documents = 0
             # Fetch a chunk and push it to Elasticsearch. Repeat until we run
@@ -194,7 +205,8 @@ def elasticsearch_connect():
 
 def _elasticsearch_connect(timeout=300):
     """
-    Connect to Elasticsearch.
+    Connect to configured Elasticsearch domain.
+
     :param timeout: How long to wait before ANY request to Elasticsearch times
     out. Because we use parallel bulk uploads (which sometimes wait long periods
     of time before beginning execution), a value of at least 30 seconds is
@@ -240,14 +252,20 @@ def _elasticsearch_connect(timeout=300):
 
 
 def postgres_connect():
+    """
+    Repeatedly try to connect to Postgres until successful.
+    :return: A Postgres connection object
+    """
     while True:
         try:
-            conn = psycopg2.connect(dbname=DATABASE_NAME,
-                                    user=DATABASE_USER,
-                                    password=DATABASE_PASSWORD,
-                                    host=DATABASE_HOST,
-                                    port=DATABASE_PORT,
-                                    connect_timeout=5)
+            conn = psycopg2.connect(
+                dbname=DATABASE_NAME,
+                user=DATABASE_USER,
+                password=DATABASE_PASSWORD,
+                host=DATABASE_HOST,
+                port=DATABASE_PORT,
+                connect_timeout=5
+            )
         except psycopg2.OperationalError as e:
             log.exception(e)
             log.error('Reconnecting to Postgres in 5 seconds. . .')
