@@ -18,7 +18,7 @@ resource "aws_db_instance" "cccsearch-postgres-legacy" {
   username                   = "deploy"
   password                   = "${var.database_password}"
   publicly_accessible        = false
-  vpc_security_group_ids     = ["sg-2e7f764c", "sg-3778d37f"]
+  vpc_security_group_ids     = ["sg-2e7f764c"]
   apply_immediately          = false
   backup_retention_period    = 7 # days
   backup_window              = "07:16-07:46" # utc time
@@ -27,5 +27,5 @@ resource "aws_db_instance" "cccsearch-postgres-legacy" {
   db_subnet_group_name       = "default"
   parameter_group_name       = "default.postgres10"
   allocated_storage          = 100
-  final_snapshot_identifier  = "deleteme"
+  snapshot_identifier        = "for-syncing-ccsearch-legacy"
 }
