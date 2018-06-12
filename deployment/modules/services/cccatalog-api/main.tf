@@ -40,7 +40,7 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
   min_size             = "${var.min_size}"
   max_size             = "${var.max_size}"
   min_elb_capacity     = "${var.min_size}"
-  availability_zones   = ["${data.aws_availability_zones.available.names}"]
+  vpc_zone_identifier  = ["subnet-99d0dcd2", "subnet-8ffebeb0"]
   target_group_arns    = ["${aws_alb_target_group.ccc-api-asg-target.id}"]
   wait_for_capacity_timeout = "8m"
 
