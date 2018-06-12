@@ -12,4 +12,6 @@ RUN apt-get update
 RUN apt-get install -y python-pip
 RUN pip2 install supervisor
 RUN useradd -m supervisord
+RUN mkdir -p /var/log/supervisord
+RUN chown -R supervisord /var/log/supervisord
 USER supervisord

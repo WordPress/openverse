@@ -4,6 +4,7 @@ import sys
 import logging as log
 import time
 import multiprocessing
+import pdb
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
@@ -133,7 +134,11 @@ class ElasticsearchSyncer:
                 )
                 # Bulk upload to Elasticsearch in parallel.
                 chunk_size = int(num_to_sync / multiprocessing.cpu_count())
-                helpers.parallel_bulk(self.es, es_batch, chunk_size=chunk_size)
+                pdb.set_trace()
+                list(
+                    helpers.parallel_bulk(self.es, es_batch,
+                                          chunk_size=chunk_size)
+                )
 
                 log.info(
                     'Pushed in ' + str(time.time() - push_start_time) + 's.'

@@ -2,10 +2,12 @@
   <dictionary name="alden">
     <words>
       <w>cccatalog</w>
+      <w>daemonized</w>
       <w>elasticsearch</w>
       <w>itersize</w>
       <w>syncable</w>
       <w>syncer</w>
+      <w>synchronizer</w>
     </words>
   </dictionary>
 </component>
