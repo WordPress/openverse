@@ -3,8 +3,8 @@ provider "aws" {
 }
 
 resource "aws_elasticsearch_domain" "elasticsearch-dev" {
-  domain_name           = "cccatalog-elasticsearch"
-  elasticsearch_version = "6.2"
+  domain_name           = "cc-search-large-8"
+  elasticsearch_version = "5.3"
 
   cluster_config {
     instance_type            = "m4.large.elasticsearch"
