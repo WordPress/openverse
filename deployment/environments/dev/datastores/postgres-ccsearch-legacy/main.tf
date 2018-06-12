@@ -9,7 +9,7 @@ variable "database_password" {
 }
 
 resource "aws_db_instance" "cccsearch-postgres-legacy" {
-  name                       = "ccsearch-legacy-dev"
+  identifier                 = "ccsearch-db-legacy-dev"
   instance_class             = "db.t2.small"
   engine                     = "postgres"
   engine_version             = "10.3"
