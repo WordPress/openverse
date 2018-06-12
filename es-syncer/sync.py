@@ -15,6 +15,21 @@ from elasticsearch import helpers
 from psycopg2.sql import SQL, Identifier
 from elasticsearch_models import postgres_table_to_elasticsearch_model
 
+"""
+A daemon for synchronizing Postgres with Elasticsearch. For each table to
+sync, find its largest ID in Postgres. Find the corresponding largest ID in
+Elasticsearch. If the database ID is greater than the largest corresponding
+ID in Elasticsearch, copy the missing records over to Elasticsearch.
+
+Each table is Postgres corresponds to an identically named index in
+Elasticsearch. For instance, if Postgres has a table that we would like to
+replicate called 'image', the syncer will create an Elasticsearch called
+'image' and populate the index with documents. See elasticsearch_models to 
+change the format of Elasticsearch documents.
+
+This is intended to be daemonized and run by a process supervisor.
+"""
+
 # For AWS IAM access to Elasticsearch
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
@@ -36,21 +51,6 @@ DB_BUFFER_SIZE = int(os.environ.get('DB_BUFFER_SIZE', 100000))
 REP_TABLES = os.environ.get('COPY_TABLES', 'image')
 replicate_tables = REP_TABLES.split(',') if ',' in REP_TABLES else [REP_TABLES]
 
-"""
-A daemon for synchronizing Postgres with Elasticsearch. For each table to
-sync, find its largest ID in Postgres. Find the corresponding largest ID in
-Elasticsearch. If the database ID is greater than the largest corresponding
-ID in Elasticsearch, copy the missing records over to Elasticsearch.
-
-Each table is Postgres corresponds to an identically named index in
-Elasticsearch. For instance, if Postgres has a table that we would like to
-replicate called 'image', the syncer will create an Elasticsearch called
-'image' and populate the index with documents.
-
-See elasticsearch_models to change the format of Elasticsearch documents.
-
-This is intended to be daemonized and run by a process supervisor.
-"""
 
 class ElasticsearchSyncer:
     def __init__(self, postgres_instance, elasticsearch_instance, tables):
