@@ -74,9 +74,7 @@ resource "aws_key_pair" "cccapi-admin" {
 
 resource "aws_security_group" "cccatalog-api-ingress" {
   name = "cccatalog-api-ingress"
-
-  # N California VPC "default"
-  vpc_id = "vpc-d6b1bfb4"
+  vpc_id = "${var.vpc_id}"
 
   # Allow incoming traffic from the load balancer and autoscale clones
   ingress {
@@ -109,7 +107,8 @@ resource "aws_security_group" "cccatalog-api-ingress" {
 
 resource "aws_security_group" "cccatalog-sg" {
   name   = "cccatalog-security-group"
-  vpc_id = "vpc-d6b1bfb4"
+  vpc_id = "${var.vpc_id}"
+
 
   lifecycle {
     create_before_destroy = true
@@ -136,7 +135,8 @@ resource "aws_alb_target_group" "ccc-api-asg-target" {
   name     = "ccc-api-autoscale-target"
   port     = 8080
   protocol = "HTTP"
-  vpc_id   = "vpc-d6b1bfb4"
+  vpc_id   = "${var.vpc_id}"
+
 
   health_check {
     path = "/healthcheck"
@@ -158,7 +158,8 @@ resource "aws_alb_listener" "ccc-api-asg-listener" {
 
 resource "aws_security_group" "cccatalog-alb-sg" {
   name   = "cccatalog-alb-sg"
-  vpc_id = "vpc-d6b1bfb4"
+  vpc_id = "${var.vpc_id}"
+
 
   ingress {
     from_port   = 80

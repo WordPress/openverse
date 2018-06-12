@@ -13,6 +13,7 @@ variable "django_secret_key" {
 module "cccatalog-api" {
   source = "../../../../modules/services/cccatalog-api"
 
+  vpc_id                    = "vpc-b741b4cc"
   environment               = "dev"
   min_size                  = 2
   max_size                  = 5

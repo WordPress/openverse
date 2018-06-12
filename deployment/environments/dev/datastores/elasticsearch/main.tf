@@ -34,7 +34,7 @@ resource "aws_elasticsearch_domain" "elasticsearch-dev" {
         "AWS": "arn:aws:iam::664890800379:user/openledger"
       },
       "Action": "es:*",
-      "Resource": "arn:aws:es:us-west-1:664890800379:domain/cc-search-large-8/*"
+      "Resource": "arn:aws:es:us-east-1:664890800379:domain/cccatalog-elasticsearch/*"
     }
   ]
 }
