@@ -19,7 +19,7 @@ data "template_file" "init"{
 # API server autoscaling launch configuration
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
   name_prefix              = "cccatalog-api-asg-${var.environment}"
-  image_id                 = "ami-00d8c660"
+  image_id                 = "ami-afd15ed0"
   instance_type            = "${var.instance_type}"
   security_groups          = ["${aws_security_group.cccatalog-sg.id}",
                               "${aws_security_group.cccatalog-api-ingress.id}"]
