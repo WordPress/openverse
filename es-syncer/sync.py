@@ -4,7 +4,6 @@ import sys
 import logging as log
 import time
 import multiprocessing
-import pdb
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
@@ -79,8 +78,8 @@ class ElasticsearchSyncer:
             s.aggs.bucket('highest_pg_id', 'max', field='pg_id')
             try:
                 es_res = s.execute()
-                last_added_es_id = int(
-                    es_res.aggregations['highest_pg_id']['value'])
+                last_added_es_id = \
+                    int(es_res.aggregations['highest_pg_id']['value'])
             except (TypeError, NotFoundError):
                 log.info('No matching documents found in elasticsearch. '
                          'Replicating everything.')
@@ -106,9 +105,10 @@ class ElasticsearchSyncer:
         cursor_name = table + '_table_cursor'
         with self.pg_conn.cursor(name=cursor_name) as server_cur:
             server_cur.itersize = DB_BUFFER_SIZE
-            select_range = SQL('SELECT * FROM {} LIMIT %s OFFSET %s')\
-                .format(Identifier(table))
-            server_cur.execute(select_range, (num_to_sync, start,))
+            select_range = SQL(
+                'SELECT * FROM {}'
+                ' WHERE id BETWEEN %s AND %s').format(Identifier(table))
+            server_cur.execute(select_range, (start, end,))
 
             num_converted_documents = 0
             # Fetch a chunk and push it to Elasticsearch. Repeat until we run
@@ -124,14 +124,13 @@ class ElasticsearchSyncer:
                          ' docs to Elasticsearch.')
                 # Bulk upload to Elasticsearch in parallel.
                 chunk_size = int(num_to_sync / multiprocessing.cpu_count())
-                pdb.set_trace()
                 list(helpers.parallel_bulk(self.es, es_batch,
                                            chunk_size=chunk_size))
 
                 log.info('Pushed in ' + str(time.time() - push_start_time) +
                          's.')
                 num_converted_documents += len(chunk)
-            log.info('Synchronized ' + str(num_converted_documents) + 'from '
+            log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')
 
     def listen(self, poll_interval=10):
