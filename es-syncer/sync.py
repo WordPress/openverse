@@ -67,11 +67,8 @@ class ElasticsearchSyncer:
         for table in self.tables_to_watch:
             cur = self.pg_conn.cursor()
             # Find the last row added to the Postgres table
-            cur.execute(
-                SQL(
-                    'SELECT id FROM {} ORDER BY id DESC LIMIT 1;'
-                ).format(Identifier(table))
-            )
+            cur.execute(SQL('SELECT id FROM {} ORDER BY id DESC LIMIT 1;')
+                        .format(Identifier(table)))
             last_added_pg_id = cur.fetchone()[0]
             if not last_added_pg_id:
                 log.warning('Tried to sync ' + table + ' but it was empty.')
@@ -83,21 +80,16 @@ class ElasticsearchSyncer:
             try:
                 es_res = s.execute()
                 last_added_es_id = int(
-                    es_res.aggregations['highest_pg_id']['value']
-                )
+                    es_res.aggregations['highest_pg_id']['value'])
             except (TypeError, NotFoundError):
-                log.info(
-                    'No matching documents found in elasticsearch. '
-                    'Replicating everything.'
-                )
+                log.info('No matching documents found in elasticsearch. '
+                         'Replicating everything.')
                 last_added_es_id = 0
 
             # Select all documents in-between and replicate to Elasticsearch.
             if last_added_pg_id > last_added_es_id:
-                log.info(
-                    'Replicating range ' + str(last_added_es_id) + '-' +
-                    str(last_added_pg_id)
-                )
+                log.info('Replicating range ' + str(last_added_es_id) + '-' +
+                         str(last_added_pg_id))
                 self.replicate(last_added_es_id, last_added_pg_id, table)
 
     def replicate(self, start, end, table):
@@ -125,29 +117,22 @@ class ElasticsearchSyncer:
                 chunk = server_cur.fetchmany(server_cur.itersize)
                 if not chunk:
                     break
-                es_batch = self.pg_chunk_to_es(
-                    chunk, server_cur.description, table
-                )
+                es_batch = self.pg_chunk_to_es(chunk, server_cur.description,
+                                               table)
                 push_start_time = time.time()
-                log.info(
-                    'Pushing ' + str(len(es_batch)) + ' docs to Elasticsearch.'
-                )
+                log.info('Pushing ' + str(len(es_batch)) +
+                         ' docs to Elasticsearch.')
                 # Bulk upload to Elasticsearch in parallel.
                 chunk_size = int(num_to_sync / multiprocessing.cpu_count())
                 pdb.set_trace()
-                list(
-                    helpers.parallel_bulk(self.es, es_batch,
-                                          chunk_size=chunk_size)
-                )
+                list(helpers.parallel_bulk(self.es, es_batch,
+                                           chunk_size=chunk_size))
 
-                log.info(
-                    'Pushed in ' + str(time.time() - push_start_time) + 's.'
-                )
+                log.info('Pushed in ' + str(time.time() - push_start_time) +
+                         's.')
                 num_converted_documents += len(chunk)
-            log.info(
-                'Synchronized ' + str(num_converted_documents) + ' from table '
-                + table + ' to Elasticsearch'
-            )
+            log.info('Synchronized ' + str(num_converted_documents) + 'from '
+                     'table \'' + table + '\' to Elasticsearch')
 
     def listen(self, poll_interval=10):
         """
@@ -181,8 +166,7 @@ class ElasticsearchSyncer:
         except KeyError:
             log.error(
                 'Table ' + origin_table +
-                ' is not defined in elasticsearch_models.'
-            )
+                ' is not defined in elasticsearch_models.')
             return []
 
         documents = []
@@ -235,8 +219,7 @@ def _elasticsearch_connect(timeout=300):
         # If that fails, supply AWS authentication object and try again.
         log.info(
             'Connecting to %s %s with AWS auth', ELASTICSEARCH_URL,
-            ELASTICSEARCH_PORT
-        )
+            ELASTICSEARCH_PORT)
         auth = AWSRequestsAuth(
             aws_access_key=AWS_ACCESS_KEY_ID,
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
