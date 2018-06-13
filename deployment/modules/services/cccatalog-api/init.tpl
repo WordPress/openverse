@@ -2,7 +2,7 @@
 #/bin/bash
 
 # Set up environment-specific configuration
-export DJANGO_DATABASE_NAME="cccatalog"
+export DJANGO_DATABASE_NAME="openledger"
 export DJANGO_DATABASE_USER="deploy"
 export DJANGO_DATABASE_PASSWORD="${database_password}"
 export DJANGO_DATABASE_HOST="${database_host}"
