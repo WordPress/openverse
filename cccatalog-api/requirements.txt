@@ -19,6 +19,5 @@ six==1.11.0
 social-auth-app-django==2.1.0
 social-auth-core==1.7.0
 urllib3==1.22
-uWSGI==2.0.17
 WebOb==1.8.2
 wsgi-basic-auth==1.1.0
