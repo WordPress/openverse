@@ -24,7 +24,7 @@ cd /home/ec2-user/cccatalog-api
 
 # Install API server dependencies
 pip3 install -r /home/ec2-user/cccatalog-api/requirements.txt
-easy_install uwsgi
+easy_install-3.7 uwsgi
 
 # Kick off the server
 useradd -m uwsgi

@@ -10,7 +10,7 @@ variable "django_secret_key" {
   type = "string"
 }
 variable "wsgi_auth_credentials" {
-  type    = "string"
+  type = "string"
 }
 
 module "cccatalog-api" {
@@ -22,7 +22,7 @@ module "cccatalog-api" {
   max_size                  = 5
   instance_type             = "t2.micro"
   enable_monitoring         = false
-  git_revision              = "b13b70f3295fdef604d68dd46bea00368ee34bc9"
+  git_revision              = "3a575f43dd64bb98e82f0cf7d1508b1fb44d5748"
 
   # Environment-specific variables
   database_host             = "openledger-db-dev3-nvirginia.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
