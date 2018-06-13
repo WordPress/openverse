@@ -9,6 +9,9 @@ variable "database_password" {
 variable "django_secret_key" {
   type = "string"
 }
+variable "wsgi_auth_credentials" {
+  type    = "string"
+}
 
 module "cccatalog-api" {
   source = "../../../../modules/services/cccatalog-api"
@@ -28,4 +31,5 @@ module "cccatalog-api" {
   # Secrets not checked into version control. Override with -var-file=secrets.tfvars
   database_password         = "${var.database_password}"
   django_secret_key         = "${var.django_secret_key}"
+  wsgi_auth_credentials     = "${var.wsgi_auth_credentials}"
 }
