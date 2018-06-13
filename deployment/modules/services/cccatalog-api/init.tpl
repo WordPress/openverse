@@ -41,3 +41,5 @@ uwsgi --chdir=/home/ec2-user/cccatalog-api \
       --http=:8080 \
       --enable-threads \
       --wsgi-file=./cccatalog/wsgi.py
+
+exit 0
