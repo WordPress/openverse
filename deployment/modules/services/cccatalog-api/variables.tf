@@ -44,5 +44,11 @@ variable "django_secret_key" {
 }
 
 variable "git_revision" {
-  description = "The git commit hash to deploy from."
+  description = "The git commit hash to deploy."
+}
+
+variable "wsgi_auth_credentials" {
+  # Example: "username:password"
+  description = "If defined, the API server will restrict access to all endpoints (except /healthcheck) with basic auth."
+  default = ""
 }
