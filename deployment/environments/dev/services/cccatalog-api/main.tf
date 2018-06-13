@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-west-1"
+  region = "us-east-1"
 }
 
 # Variables passed in from the secrets file get declared here.
@@ -13,6 +13,7 @@ variable "django_secret_key" {
 module "cccatalog-api" {
   source = "../../../../modules/services/cccatalog-api"
 
+  vpc_id                    = "vpc-b741b4cc"
   environment               = "dev"
   min_size                  = 2
   max_size                  = 5

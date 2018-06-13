@@ -1,3 +1,7 @@
+variable "vpc_id" {
+  description = "The ID of the VPC to initialize terraform resources inside of."
+}
+
 variable "environment" {
   description = "The staging environment of a deployment, typically 'dev' or 'prod'."
 }

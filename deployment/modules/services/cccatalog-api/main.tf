@@ -1,5 +1,7 @@
-# List of availability zones
-data "aws_availability_zones" "available" {}
+# List of available subnets
+data "aws_subnet_ids" "subnets" {
+  vpc_id = "${var.vpc_id}"
+}
 
 # A templated bash script that bootstraps the API server.
 data "template_file" "init"{
@@ -19,7 +21,7 @@ data "template_file" "init"{
 # API server autoscaling launch configuration
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
   name_prefix              = "cccatalog-api-asg-${var.environment}"
-  image_id                 = "ami-00d8c660"
+  image_id                 = "ami-afd15ed0"
   instance_type            = "${var.instance_type}"
   security_groups          = ["${aws_security_group.cccatalog-sg.id}",
                               "${aws_security_group.cccatalog-api-ingress.id}"]
@@ -40,7 +42,7 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
   min_size             = "${var.min_size}"
   max_size             = "${var.max_size}"
   min_elb_capacity     = "${var.min_size}"
-  availability_zones   = ["${data.aws_availability_zones.available.names}"]
+  vpc_zone_identifier  = ["${data.aws_subnet_ids.subnets.ids}"]
   target_group_arns    = ["${aws_alb_target_group.ccc-api-asg-target.id}"]
   wait_for_capacity_timeout = "8m"
 
@@ -74,9 +76,7 @@ resource "aws_key_pair" "cccapi-admin" {
 
 resource "aws_security_group" "cccatalog-api-ingress" {
   name = "cccatalog-api-ingress"
-
-  # N California VPC "default"
-  vpc_id = "vpc-d6b1bfb4"
+  vpc_id = "${var.vpc_id}"
 
   # Allow incoming traffic from the load balancer and autoscale clones
   ingress {
@@ -109,7 +109,8 @@ resource "aws_security_group" "cccatalog-api-ingress" {
 
 resource "aws_security_group" "cccatalog-sg" {
   name   = "cccatalog-security-group"
-  vpc_id = "vpc-d6b1bfb4"
+  vpc_id = "${var.vpc_id}"
+
 
   lifecycle {
     create_before_destroy = true
@@ -124,7 +125,7 @@ resource "aws_alb" "cccatalog-api-load-balancer" {
   security_groups            = ["${aws_security_group.cccatalog-sg.id}",
                                 "${aws_security_group.cccatalog-alb-sg.id}"]
   enable_deletion_protection = false
-  subnets                    = ["subnet-05bfb167", "subnet-aa2369ec"]
+  subnets                    = ["${data.aws_subnet_ids.subnets.ids}"]
 
   tags {
     Name        = "cccatalog-api-load-balancer-${var.environment}"
@@ -136,7 +137,8 @@ resource "aws_alb_target_group" "ccc-api-asg-target" {
   name     = "ccc-api-autoscale-target"
   port     = 8080
   protocol = "HTTP"
-  vpc_id   = "vpc-d6b1bfb4"
+  vpc_id   = "${var.vpc_id}"
+
 
   health_check {
     path = "/healthcheck"
@@ -158,7 +160,8 @@ resource "aws_alb_listener" "ccc-api-asg-listener" {
 
 resource "aws_security_group" "cccatalog-alb-sg" {
   name   = "cccatalog-alb-sg"
-  vpc_id = "vpc-d6b1bfb4"
+  vpc_id = "${var.vpc_id}"
+
 
   ingress {
     from_port   = 80

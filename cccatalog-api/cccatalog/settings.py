@@ -34,6 +34,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
 # Application definition
 
 INSTALLED_APPS = [
+    'cccatalog',
+    'cccatalog.api',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
