@@ -15,3 +15,7 @@ RUN useradd -m supervisord
 RUN mkdir -p /var/log/supervisord
 RUN chown -R supervisord /var/log/supervisord
 USER supervisord
+
+COPY config/ /es-syncer/config
+COPY *.py /es-syncer/
+CMD ["supervisord", "-c", "/es-syncer/config/supervisord.conf"]

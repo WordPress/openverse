@@ -100,7 +100,6 @@ class ElasticsearchSyncer:
         :param table: The table to replicate this range from.
         :return:
         """
-        # Query Postgres in chunks.
         num_to_sync = end - start
         cursor_name = table + '_table_cursor'
         with self.pg_conn.cursor(name=cursor_name) as server_cur:

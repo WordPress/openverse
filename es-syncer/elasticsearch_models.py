@@ -67,7 +67,7 @@ class Image(SyncableDocType):
         )
 
 
-# Table name -> Elasticsearch mode
+# Table name -> Elasticsearch model
 postgres_table_to_elasticsearch_model = {
     'image': Image
 }
