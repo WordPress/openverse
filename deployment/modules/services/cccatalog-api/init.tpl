@@ -1,5 +1,5 @@
 #cloud-boothook
-#/bin/bash
+#!/bin/bash
 
 # Set up environment-specific configuration
 export DJANGO_DATABASE_NAME="openledger"
