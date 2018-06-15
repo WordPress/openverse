@@ -25,7 +25,7 @@ module "es-syncer" {
   aws_access_key_id     = "${var.aws_access_key_id}"
   aws_secret_access_key = "${var.aws_secret_access_key}"
   copy_tables           = "image"
-  db_buffer_size        = "1000"
+  db_buffer_size        = "100000"
   aws_region            = "us-east-1"
   environment           = "dev"
   docker_tag            = "0.1"
