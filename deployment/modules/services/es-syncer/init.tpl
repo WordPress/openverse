@@ -19,4 +19,4 @@ docker run -t \
 -e DATABASE_PORT="${database_port}" \
 -e DB_BUFFER_SIZE="${db_buffer_size}" \
 -e COPY_TABLES="${copy_tables}" \
-creativecommons/elasticsearch_syncer
+creativecommons/elasticsearch_syncer &
