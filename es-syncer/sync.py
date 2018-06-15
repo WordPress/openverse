@@ -7,7 +7,8 @@ import multiprocessing
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
-from elasticsearch.exceptions import AuthenticationException, NotFoundError
+from elasticsearch.exceptions import AuthenticationException, \
+    AuthorizationException, NotFoundError
 from elasticsearch.exceptions \
     import ConnectionError as ElasticsearchConnectionError
 from elasticsearch_dsl import Search
@@ -100,7 +101,6 @@ class ElasticsearchSyncer:
         :param table: The table to replicate this range from.
         :return:
         """
-        # Query Postgres in chunks.
         num_to_sync = end - start
         cursor_name = table + '_table_cursor'
         with self.pg_conn.cursor(name=cursor_name) as server_cur:
@@ -214,7 +214,7 @@ def _elasticsearch_connect(timeout=300):
         )
         log.info(str(es.info()))
         log.info('Connected to Elasticsearch without authentication.')
-    except AuthenticationException:
+    except (AuthenticationException, AuthorizationException):
         # If that fails, supply AWS authentication object and try again.
         log.info(
             'Connecting to %s %s with AWS auth', ELASTICSEARCH_URL,
@@ -232,7 +232,8 @@ def _elasticsearch_connect(timeout=300):
             port=ELASTICSEARCH_PORT,
             connection_class=RequestsHttpConnection,
             timeout=timeout,
-            max_retries=10, retry_on_timeout=True,
+            max_retries=10,
+            retry_on_timeout=True,
             http_auth=auth
         )
         es.info()
