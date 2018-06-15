@@ -52,3 +52,7 @@ variable "vpc_id" {
 variable "environment" {
   description = "The name of the deployment environment (such as 'dev')"
 }
+
+variable "docker_tag" {
+  description = "The Docker Hub version of the container to deploy."
+}
