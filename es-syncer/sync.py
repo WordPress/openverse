@@ -123,9 +123,7 @@ class ElasticsearchSyncer:
                 log.info('Pushing ' + str(len(es_batch)) +
                          ' docs to Elasticsearch.')
                 # Bulk upload to Elasticsearch in parallel.
-                chunk_size = int(num_to_sync / multiprocessing.cpu_count())
-                list(helpers.parallel_bulk(self.es, es_batch,
-                                           chunk_size=chunk_size))
+                list(helpers.parallel_bulk(self.es, es_batch, chunk_size=1000))
 
                 log.info('Pushed in ' + str(time.time() - push_start_time) +
                          's.')
