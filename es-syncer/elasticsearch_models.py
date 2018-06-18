@@ -3,6 +3,10 @@ from elasticsearch_dsl import DocType, Date, Boolean, Text, Integer, Nested
 
 
 class SyncableDocType(DocType):
+    """
+    Represents tables in the source-of-truth that will be replicated to
+    Elasticsearch.
+    """
     # Aggregations can't be performed on the _id meta-column, which necessitates
     # copying it to this column in the doc. Aggregation is used to find the last
     # document inserted into Elasticsearch
@@ -36,9 +40,8 @@ class Image(SyncableDocType):
     provider = Text(index="not_analyzed")
     source = Text(index="not_analyzed")
     license = Text(index="not_analyzed")
-    license_version = Text()
+    license_version = Text("not_analyzed")
     foreign_landing_url = Text(index="not_analyzed")
-    removed_from_source = Boolean()
     meta_data = Nested()
 
     class Meta:
@@ -47,7 +50,6 @@ class Image(SyncableDocType):
     @staticmethod
     def postgres_to_elasticsearch(row, schema):
         return Image(
-            _id=row[schema['id']],
             pg_id=row[schema['id']],
             title=row[schema['title']],
             identifier=row[schema['identifier']],
@@ -62,7 +64,6 @@ class Image(SyncableDocType):
             license=row[schema['license']],
             license_version=row[schema['license_version']],
             foreign_landing_url=row[schema['foreign_landing_url']],
-            removed_from_source=row[schema['removed_from_source']],
             meta_data=row[schema['meta_data']],
         )
 
