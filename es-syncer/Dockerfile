@@ -17,5 +17,6 @@ RUN chown -R supervisord /var/log/supervisord
 USER supervisord
 
 COPY config/ /es-syncer/config
-COPY *.py /es-syncer/
+COPY es_syncer/ /es-syncer/
+ENV PYTHONPATH=$PYTHONPATH:/es-syncer/
 CMD ["supervisord", "-c", "/es-syncer/config/supervisord.conf"]
