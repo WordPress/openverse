@@ -5,7 +5,7 @@ yum -y install docker
 service docker start
 
 # Run the synchronizer
-docker pull creativecommons/elasticsearch_syncer
+docker pull creativecommons/elasticsearch_syncer:${docker_tag}
 docker run -t \
 -e AWS_ACCESS_KEY_ID="${aws_access_key_id}" \
 -e AWS_SECRET_ACCESS_KEY="${aws_secret_access_key}" \
@@ -19,4 +19,4 @@ docker run -t \
 -e DATABASE_PORT="${database_port}" \
 -e DB_BUFFER_SIZE="${db_buffer_size}" \
 -e COPY_TABLES="${copy_tables}" \
-creativecommons/elasticsearch_syncer &
+creativecommons/elasticsearch_syncer:${docker_tag} &

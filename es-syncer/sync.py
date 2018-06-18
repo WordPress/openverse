@@ -3,7 +3,6 @@ import os
 import sys
 import logging as log
 import time
-import multiprocessing
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
@@ -90,9 +89,9 @@ class ElasticsearchSyncer:
             if last_added_pg_id > last_added_es_id:
                 log.info('Replicating range ' + str(last_added_es_id) + '-' +
                          str(last_added_pg_id))
-                self.replicate(last_added_es_id, last_added_pg_id, table)
+                self._replicate(last_added_es_id, last_added_pg_id, table)
 
-    def replicate(self, start, end, table):
+    def _replicate(self, start, end, table):
         """
         Replicate all of  the records between `start` and `end`.
 
@@ -101,7 +100,6 @@ class ElasticsearchSyncer:
         :param table: The table to replicate this range from.
         :return:
         """
-        num_to_sync = end - start
         cursor_name = table + '_table_cursor'
         with self.pg_conn.cursor(name=cursor_name) as server_cur:
             server_cur.itersize = DB_BUFFER_SIZE
@@ -123,9 +121,7 @@ class ElasticsearchSyncer:
                 log.info('Pushing ' + str(len(es_batch)) +
                          ' docs to Elasticsearch.')
                 # Bulk upload to Elasticsearch in parallel.
-                chunk_size = int(num_to_sync / multiprocessing.cpu_count())
-                list(helpers.parallel_bulk(self.es, es_batch,
-                                           chunk_size=chunk_size))
+                list(helpers.parallel_bulk(self.es, es_batch, chunk_size=400))
 
                 log.info('Pushed in ' + str(time.time() - push_start_time) +
                          's.')
@@ -141,7 +137,7 @@ class ElasticsearchSyncer:
         database for changes.
         """
         while True:
-            log.info('Polling Postgres for changes...')
+            log.info('Listening for updates...')
             try:
                 self.synchronize()
             except psycopg2.OperationalError:
@@ -266,7 +262,8 @@ def postgres_connect():
 
 
 if __name__ == '__main__':
-    log.basicConfig(stream=sys.stdout, level=log.INFO)
+    fmt = "%(asctime)s %(message)s"
+    log.basicConfig(stream=sys.stdout, level=log.INFO, format=fmt)
     log.getLogger(ElasticsearchSyncer.__name__).setLevel(log.DEBUG)
     log.info('Connecting to Postgres')
     postgres = postgres_connect()

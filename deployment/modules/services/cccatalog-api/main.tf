@@ -144,7 +144,6 @@ resource "aws_alb_target_group" "ccc-api-asg-target" {
   health_check {
     path = "/healthcheck"
     port = 8080
-    
   }
 }
 
