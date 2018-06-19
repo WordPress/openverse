@@ -74,7 +74,7 @@ Read the planned changes carefully. If everything is in order, run the following
 terraform apply /tmp/cccapi-plan.out
 ```
 
-This will result in a zero-downtime deployment of the API server. If the deployment fails, don't panic: the old version of the system will work exactly as before. The servers newly deployed servers will not be registered with the load balancer until they pass a healthcheck. You can reconfigure and redeploy as often as you need.
+This will result in a zero-downtime deployment of the API server. If the deployment fails, don't panic: the old version of the system will work exactly as before. The newly deployed servers will not be registered with the load balancer until they pass a healthcheck. You can reconfigure and redeploy as often as you need.
 
 #### Deploying Elasticsearch Syncer
 The process of deploying Elasticsearch syncer is similar to deploying the API server, with the exception that the Docker tag should be updated instead of the git commit.
