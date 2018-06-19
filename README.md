@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Creative Commons Catalog API ('cccatalog-api') is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of Creative Commons works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to build their own applications.
+The Creative Commons Catalog API ('cccatalog-api') is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of Creative Commons works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to access the digital commons in their own applications.
 
 As of June 2018, this project is in its early stages. For now, assume that the API is unstable and that the REST interface could change dramatically over short periods of time. We have not yet made the production system publicly accessible.
 
