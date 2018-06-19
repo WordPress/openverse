@@ -8,8 +8,6 @@ As of June 2018, this project is in its early stages. For now, assume that the A
 
 This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data (digital media) into this system can be found in the [cccatalog repository](https://github.com/creativecommons/cccatalog).
 
-
-
 ## Getting Started
 
 Ensure that you have installed [Docker](https://docs.docker.com/install/) and that the [Docker daemon is running](https://docs.docker.com/config/daemon/).
@@ -39,9 +37,10 @@ We document API endpoints using OpenAPI. Coming soon.
 ## Operations Guide
 
 ### Deploying
-All deployment and configuration management is handled by Terraform, a declarative infrastructure-as-code tool. This allows fully automated and reproducible zero-downtime deployment to AWS. Although this guide only describes deploying to the staging environment, the same process can be applied to production.
+All deployment and configuration management is handled by Terraform, a declarative infrastructure-as-code tool. This allows fully automated and reproducible zero-downtime deployment to AWS. In addition to deployment automation capabilities, Terraform also serves as a low-level documentation layer for how the system is implemented and configured. Although this guide only describes deploying to the staging environment, the same process can be applied to production.
 
-To learn how to write your own Terraform configuration, start with the [official documentation](https://www.terraform.io/intro/index.html). I also recommend reading the excellent [Terraform: Up and Running](https://www.terraformupandrunning.com/) book by Yevgeniy Brikman, with which you can master Terraform in an afternoon.
+By the end of this guide, you will understand how to quickly deploy the application via Terraform, but further customizing the configuration will require some additional reading. Start with the [official documentation](https://www.terraform.io/intro/index.html). You should also consider reading the excellent [Terraform: Up and Running](https://www.terraformupandrunning.com/) book by Yevgeniy Brikman, with which you can master Terraform in an afternoon.
+
 #### First time setup
 Download and install [Terraform](https://www.terraform.io/downloads.html).
 
@@ -77,7 +76,9 @@ terraform apply /tmp/cccapi-plan.out
 This will result in a zero-downtime deployment of the API server. If the deployment fails, don't panic: the old version of the system will work exactly as before. The newly deployed servers will not be registered with the load balancer until they pass a healthcheck. You can reconfigure and redeploy as often as you need.
 
 #### Deploying Elasticsearch Syncer
-The process of deploying Elasticsearch syncer is similar to deploying the API server, with the exception that the Docker tag should be updated instead of the git commit.
+The process of deploying Elasticsearch syncer is similar to deploying the API server, with the exception that the Docker tag should be updated instead of the git commit. Unlike the API server, the syncer does not use "zero downtime" style deployment, but the site will continue to function if the syncer is down, albeit with temporarily stale Elasticsearch data.
+
+See es-syncer/README.md for additional commentary on operating the Elasticsearch Syncer in production.
 ```
 cd deployment/environments/dev/services/es-syncer
 # Update docker tag
