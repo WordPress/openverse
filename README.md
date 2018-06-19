@@ -26,6 +26,8 @@ After executing this, you will be running:
 * `es-syncer`, a daemon that indexes documents to Elasticsearch in real-time.
 
 ### System Architecture
+![System Architecture](https://raw.githubusercontent.com/creativecommons/cccatalog-api/syncer_tests_and_docs/system_architecture.png)
+
 ## Running the tests
 Coming soon.
 
