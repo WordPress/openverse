@@ -5,7 +5,7 @@ Elasticsearch Syncer is a daemon that automatically replicates data from a datab
 
 Performance is dependent on the size of the target Elasticsearch cluster and the complexity of the document being indexed. Informal tests indicate that the daemon can index 10,000,000 complex documents per hour on a single node Elasticsearch cluster, where a "complex document" is one with multiple analyzed fields, nested documents, and many non-analyzed fields. Simple documents can be indexed at a higher rate.
 
-
+![How it works](https://raw.githubusercontent.com/creativecommons/cccatalog-api/syncer_tests_and_docs/es-syncer/howitworks.png)
 ## Configuration
 All configuration is performed via environment variables.
 
