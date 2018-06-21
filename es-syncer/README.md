@@ -31,10 +31,10 @@ To access a cluster on AWS, define these additional environment variables.
 ## Mapping database tables to Elasticsearch
 In order to synchronize a given table to Elasticsearch, the following requirements must be met:
 * The database table must have an autoincrementing integer primary key named `id`.
-* A SyncableDoctype must be defined in `src/elasticsearch_models`. The SyncableDoctype must implement the function `database_row_to_elasticsearch_model`.
+* A SyncableDoctype must be defined in `es_syncer/elasticsearch_models`. The SyncableDoctype must implement the function `database_row_to_elasticsearch_model`.
 * The table name must be mapped to the corresponding Elasticsearch SyncableDoctype in `database_table_to_elasticsearch_model` map.
 
-Example from `src/elasticsearch_models.py`:
+Example from `es_syncer/elasticsearch_models.py`:
 ```
 class Image(SyncableDocType):
     title = Text(analyzer="english")

@@ -6,7 +6,7 @@ The Creative Commons Catalog API ('cccatalog-api') is a system that allows progr
 
 As of June 2018, this project is in its early stages. For now, assume that the API is unstable and that the REST interface could change dramatically over short periods of time. We have not yet made the production system publicly accessible.
 
-This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data (digital media) into this system can be found in the [cccatalog repository](https://github.com/creativecommons/cccatalog).
+This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [cccatalog repository](https://github.com/creativecommons/cccatalog).
 
 ## Getting Started
 
@@ -37,7 +37,7 @@ We document API endpoints using OpenAPI. Coming soon.
 ## Operations Guide
 
 ### Deploying
-All deployment and configuration management is handled by Terraform, a declarative infrastructure-as-code tool. This allows fully automated and reproducible zero-downtime deployment to AWS. In addition to deployment automation capabilities, Terraform also serves as a low-level documentation layer for how the system is implemented and configured. Although this guide only describes deploying to the staging environment, the same process can be applied to production.
+All deployment and configuration management is handled by Terraform, a declarative infrastructure-as-code tool. This allows fully automated and reproducible zero-downtime deployment to AWS. In addition to deployment automation capabilities, Terraform serves as a low-level documentation layer for how the system is implemented and configured. Although this guide only describes deploying to the staging environment, the same process can be applied to production.
 
 By the end of this guide, you will understand how to quickly deploy the application via Terraform, but further customizing the configuration will require some additional reading. Start with the [official documentation](https://www.terraform.io/intro/index.html). You should also consider reading the excellent [Terraform: Up and Running](https://www.terraformupandrunning.com/) book by Yevgeniy Brikman, with which you can master Terraform in an afternoon.
 
