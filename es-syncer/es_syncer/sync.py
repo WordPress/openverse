@@ -84,7 +84,8 @@ class ElasticsearchSyncer:
                 log.info('No matching documents found in elasticsearch. '
                          'Replicating everything.')
                 last_added_es_id = 0
-
+            log.info('highest_db_id, highest_es_id: ' + str(last_added_pg_id) +
+                     ', ' + str(last_added_es_id))
             # Select all documents in-between and replicate to Elasticsearch.
             if last_added_pg_id > last_added_es_id:
                 log.info('Replicating range ' + str(last_added_es_id) + '-' +
@@ -105,9 +106,9 @@ class ElasticsearchSyncer:
             server_cur.itersize = DB_BUFFER_SIZE
             select_range = SQL(
                 'SELECT * FROM {}'
-                ' WHERE id BETWEEN %s AND %s').format(Identifier(table))
+                ' WHERE id BETWEEN %s AND %s ORDER BY id')\
+                .format(Identifier(table))
             server_cur.execute(select_range, (start, end,))
-
             num_converted_documents = 0
             # Fetch a chunk and push it to Elasticsearch. Repeat until we run
             # out of chunks.
