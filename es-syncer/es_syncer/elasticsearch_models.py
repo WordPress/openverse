@@ -24,7 +24,7 @@ class SyncableDocType(DocType):
         :return:
         """
         raise NotImplemented(
-            'Model is missing Postgres -> Elasticsearch translation.'
+            'Model is missing database -> Elasticsearch translation.'
         )
 
 
