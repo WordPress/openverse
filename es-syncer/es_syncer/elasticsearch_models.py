@@ -14,7 +14,7 @@ class SyncableDocType(DocType):
 
     @staticmethod
     @abstractmethod
-    def postgres_to_elasticsearch(row, schema):
+    def database_row_to_elasticsearch_doc(row, schema):
         """
         Children of this class must have a function mapping a Postgres model
         to an Elasticsearch document.
