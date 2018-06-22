@@ -1,6 +1,6 @@
 # This docker-compose file was generated from ../../../docker-compose.yml. Do
 # not modify this file directly. Your changes will be overwritten. Last update:
-# 2018-06-21 21:58:54.607921
+# 2018-06-21 22:12:37.886335
 
 services:
   integration-db:
@@ -13,20 +13,13 @@ services:
       test: pg_isready -U deploy -d openledger
     image: postgres:10.3-alpine
     ports:
-    - '60000'
+    - 60000:5432
   integration-es:
     environment:
       xpack.security.enabled: 'false'
-    healthcheck:
-      interval: 10s
-      retries: 10
-      test:
-      - CMD-SHELL
-      - curl -si -XGET 'localhost:9200/_cluster/health?pretty' | grep -qE 'yellow|green'
-      timeout: 60s
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
     ports:
-    - '60001'
+    - 60001:9200
     ulimits:
       nofile:
         hard: 65536

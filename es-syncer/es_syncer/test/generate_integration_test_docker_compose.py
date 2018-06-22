@@ -32,11 +32,12 @@ with open(this_dir + parent_docker_compose, 'r') as  docker_compose_file:
         for service in dict(docker_compose['services']):
             if service != 'es' and service != 'db':
                 del docker_compose['services'][service]
+        del docker_compose['services']['es']['healthcheck']
 
         # Expose alternate ports. Use the same internal port defined in the 
         # original docker-compose file.
-        db['ports'][0] = '60000'
-        es['ports'][0] = '60001'
+        db['ports'][0] = '60000' + ':' + db['ports'][0].split(':')[1]
+        es['ports'][0] = '60001' + ':' + es['ports'][0].split(':')[1]
 
         # Rename the services and update ports.
         del docker_compose['services']['db']
