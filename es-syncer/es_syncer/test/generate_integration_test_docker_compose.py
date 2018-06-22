@@ -11,10 +11,9 @@ The generated file is written to the same directory this script resides in.
 
 Q: Why didn't you just use multiple docker-compose files and inheritance?
 
-A: If you are running the development docker-compose file (the one this compose
-   file is based off of) already, running the integration tests will kill it and 
-   recreate it if you use docker-compose inheritance. This approach ensures
-   that:
+A: If you are running the development docker-compose file already, launching 
+   an inherited elasticsearch/postgres service will result in the containers
+   being destroyed and recreated. Using this approach ensures that:
         1) Running the tests doesn't interfere with your development environment.   
         2) The file stays up to date without manual copy-pasting.
 """
