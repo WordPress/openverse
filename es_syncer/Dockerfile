@@ -2,9 +2,9 @@ FROM python:3.6
 
 ENV PYTHONBUFFERED 1
 
-RUN mkdir /es-syncer
-WORKDIR /es-syncer
-ADD requirements.txt /es-syncer/
+RUN mkdir /es_syncer
+WORKDIR /es_syncer
+ADD requirements.txt /es_syncer/
 RUN pip install -r requirements.txt
 
 # Install supervisord (still requires Python 2.7 in 2018 :( )
@@ -16,6 +16,7 @@ RUN mkdir -p /var/log/supervisord
 RUN chown -R supervisord /var/log/supervisord
 USER supervisord
 
-COPY config/ /es-syncer/config
-COPY *.py /es-syncer/
-CMD ["supervisord", "-c", "/es-syncer/config/supervisord.conf"]
+COPY config/ /es_syncer/config
+COPY . /es_syncer/
+ENV PYTHONPATH=$PYTHONPATH:/es_syncer/
+CMD ["supervisord", "-c", "/es_syncer/config/supervisord.conf"]

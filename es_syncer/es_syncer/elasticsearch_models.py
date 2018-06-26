@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from elasticsearch_dsl import DocType, Date, Boolean, Text, Integer, Nested
+from elasticsearch_dsl import DocType, Date, Text, Integer, Nested
 
 
 class SyncableDocType(DocType):
@@ -14,7 +14,7 @@ class SyncableDocType(DocType):
 
     @staticmethod
     @abstractmethod
-    def postgres_to_elasticsearch(row, schema):
+    def database_row_to_elasticsearch_doc(row, schema):
         """
         Children of this class must have a function mapping a Postgres model
         to an Elasticsearch document.
@@ -24,7 +24,7 @@ class SyncableDocType(DocType):
         :return:
         """
         raise NotImplemented(
-            'Model is missing Postgres -> Elasticsearch translation.'
+            'Model is missing database -> Elasticsearch translation.'
         )
 
 
@@ -48,7 +48,7 @@ class Image(SyncableDocType):
         index = 'image'
 
     @staticmethod
-    def postgres_to_elasticsearch(row, schema):
+    def database_row_to_elasticsearch_doc(row, schema):
         return Image(
             pg_id=row[schema['id']],
             title=row[schema['title']],
@@ -69,6 +69,6 @@ class Image(SyncableDocType):
 
 
 # Table name -> Elasticsearch model
-postgres_table_to_elasticsearch_model = {
+database_table_to_elasticsearch_model = {
     'image': Image
 }

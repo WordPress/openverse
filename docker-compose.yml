@@ -25,6 +25,10 @@ services:
       interval: 10s
       timeout: 60s
       retries: 10
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
 
   web:
     build: ./cccatalog-api/
@@ -45,21 +49,21 @@ services:
 
 
   es-syncer:
-    build: ./es-syncer/
+    build: ./es_syncer/
     command: bash -c 'sleep 20 && supervisord -c config/supervisord.conf'
     depends_on:
       - db
       - es
     volumes:
-      - ./es-syncer:/es-syncer
+      - ./es_syncer:/es-syncer
     environment:
       PYTHONUNBUFFERED: "0"
       ELASTICSEARCH_URL: 'es'
       ELASTICSEARCH_PORT: "9200"
-      DJANGO_DATABASE_HOST: 'db'
-      DJANGO_DATABASE_USER: 'deploy'
-      DJANGO_DATABASE_PASSWORD: 'deploy'
-      DJANGO_DATABASE_NAME: 'openledger'
-      DJANGO_DATABASE_PORT: '5432'
+      DATABASE_HOST: 'db'
+      DATABASE_USER: 'deploy'
+      DATABASE_PASSWORD: 'deploy'
+      DATABASE_NAME: 'openledger'
+      DATABASE_PORT: '5432'
       DB_BUFFER_SIZE: '100000'
       COPY_TABLES: 'image'

@@ -13,16 +13,16 @@ from elasticsearch.exceptions \
 from elasticsearch_dsl import Search
 from elasticsearch import helpers
 from psycopg2.sql import SQL, Identifier
-from elasticsearch_models import postgres_table_to_elasticsearch_model
+from es_syncer.elasticsearch_models import database_table_to_elasticsearch_model
 
 """
-A daemon for synchronizing Postgres with Elasticsearch. For each table to
-sync, find its largest ID in Postgres. Find the corresponding largest ID in
+A daemon for synchronizing database with Elasticsearch. For each table to
+sync, find its largest ID in database. Find the corresponding largest ID in
 Elasticsearch. If the database ID is greater than the largest corresponding
 ID in Elasticsearch, copy the missing records over to Elasticsearch.
 
-Each table is Postgres corresponds to an identically named index in
-Elasticsearch. For instance, if Postgres has a table that we would like to
+Each table is database corresponds to an identically named index in
+Elasticsearch. For instance, if database has a table that we would like to
 replicate called 'image', the syncer will create an Elasticsearch called
 'image' and populate the index with documents. See elasticsearch_models to 
 change the format of Elasticsearch documents.
@@ -34,38 +34,40 @@ This is intended to be daemonized and run by a process supervisor.
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
-ELASTICSEARCH_PORT = int(os.environ.get('ELASTICSEARCH_PORT'))
+ELASTICSEARCH_PORT = int(os.environ.get('ELASTICSEARCH_PORT', 9200))
 AWS_REGION = os.environ.get('AWS_REGION', 'us-east-1')
 
-DATABASE_HOST = os.environ.get('DJANGO_DATABASE_HOST')
-DATABASE_USER = os.environ.get('DJANGO_DATABASE_USER')
-DATABASE_PASSWORD = os.environ.get('DJANGO_DATABASE_PASSWORD')
-DATABASE_NAME = os.environ.get('DJANGO_DATABASE_NAME')
-DATABASE_PORT = int(os.environ.get('DJANGO_DATABASE_PORT', 5432))
+DATABASE_HOST = os.environ.get('DATABASE_HOST')
+DATABASE_USER = os.environ.get('DATABASE_USER')
+DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD')
+DATABASE_NAME = os.environ.get('DATABASE_NAME')
+DATABASE_PORT = int(os.environ.get('DATABASE_PORT', 5432))
 
 # The number of database records to load in memory at once.
 DB_BUFFER_SIZE = int(os.environ.get('DB_BUFFER_SIZE', 100000))
 
-# A comma separated list of tables in the Postgres table to replicate to
+SYNCER_POLL_INTERVAL = os.environ.get('SYNCER_POLL_INTERVAL', 10)
+
+# A comma separated list of tables in the database table to replicate to
 # Elasticsearch. Ex: image,docs
 REP_TABLES = os.environ.get('COPY_TABLES', 'image')
 replicate_tables = REP_TABLES.split(',') if ',' in REP_TABLES else [REP_TABLES]
 
 
 class ElasticsearchSyncer:
-    def __init__(self, postgres_instance, elasticsearch_instance, tables):
-        self.pg_conn = postgres_instance
+    def __init__(self, database_instance, elasticsearch_instance, tables):
+        self.pg_conn = database_instance
         self.es = elasticsearch_instance
         self.tables_to_watch = tables
 
-    def synchronize(self):
+    def _synchronize(self):
         """
         Check that the database tables are in sync with Elasticsearch. If not,
         begin replication.
         """
         for table in self.tables_to_watch:
             cur = self.pg_conn.cursor()
-            # Find the last row added to the Postgres table
+            # Find the last row added to the database table
             cur.execute(SQL('SELECT id FROM {} ORDER BY id DESC LIMIT 1;')
                         .format(Identifier(table)))
             last_added_pg_id = cur.fetchone()[0]
@@ -84,7 +86,8 @@ class ElasticsearchSyncer:
                 log.info('No matching documents found in elasticsearch. '
                          'Replicating everything.')
                 last_added_es_id = 0
-
+            log.info('highest_db_id, highest_es_id: ' + str(last_added_pg_id) +
+                     ', ' + str(last_added_es_id))
             # Select all documents in-between and replicate to Elasticsearch.
             if last_added_pg_id > last_added_es_id:
                 log.info('Replicating range ' + str(last_added_es_id) + '-' +
@@ -93,7 +96,7 @@ class ElasticsearchSyncer:
 
     def _replicate(self, start, end, table):
         """
-        Replicate all of  the records between `start` and `end`.
+        Replicate all of the records between `start` and `end`.
 
         :param start: The first ID to replicate
         :param end: The last ID to replicate
@@ -105,9 +108,9 @@ class ElasticsearchSyncer:
             server_cur.itersize = DB_BUFFER_SIZE
             select_range = SQL(
                 'SELECT * FROM {}'
-                ' WHERE id BETWEEN %s AND %s').format(Identifier(table))
+                ' WHERE id BETWEEN %s AND %s ORDER BY id')\
+                .format(Identifier(table))
             server_cur.execute(select_range, (start, end,))
-
             num_converted_documents = 0
             # Fetch a chunk and push it to Elasticsearch. Repeat until we run
             # out of chunks.
@@ -139,10 +142,10 @@ class ElasticsearchSyncer:
         while True:
             log.info('Listening for updates...')
             try:
-                self.synchronize()
+                self._synchronize()
             except psycopg2.OperationalError:
                 # Reconnect to the database.
-                self.pg_conn = postgres_connect()
+                self.pg_conn = database_connect()
             except ElasticsearchConnectionError:
                 self.es = elasticsearch_connect()
 
@@ -157,7 +160,7 @@ class ElasticsearchSyncer:
         # Map column names to locations in the row tuple
         schema = {col[0]: idx for idx, col in enumerate(columns)}
         try:
-            model = postgres_table_to_elasticsearch_model[origin_table]
+            model = database_table_to_elasticsearch_model[origin_table]
         except KeyError:
             log.error(
                 'Table ' + origin_table +
@@ -166,21 +169,21 @@ class ElasticsearchSyncer:
 
         documents = []
         for row in pg_chunk:
-            converted = model.postgres_to_elasticsearch(row, schema) \
+            converted = model.database_row_to_elasticsearch_doc(row, schema) \
                 .to_dict(include_meta=True)
             documents.append(converted)
 
         return documents
 
 
-def elasticsearch_connect():
+def elasticsearch_connect(timeout=300):
     """
     Repeatedly try to connect to Elasticsearch until successful.
     :return: An Elasticsearch connection object.
     """
     while True:
         try:
-            return _elasticsearch_connect()
+            return _elasticsearch_connect(timeout)
         except ElasticsearchConnectionError as e:
             log.exception(e)
             log.error('Reconnecting to Elasticsearch in 5 seconds. . .')
@@ -207,6 +210,7 @@ def _elasticsearch_connect(timeout=300):
             connection_class=RequestsHttpConnection,
             timeout=timeout,
             max_retries=10,
+            wait_for_status='yellow'
         )
         log.info(str(es.info()))
         log.info('Connected to Elasticsearch without authentication.')
@@ -230,16 +234,17 @@ def _elasticsearch_connect(timeout=300):
             timeout=timeout,
             max_retries=10,
             retry_on_timeout=True,
-            http_auth=auth
+            http_auth=auth,
+            wait_for_status='yellow'
         )
         es.info()
     return es
 
 
-def postgres_connect():
+def database_connect():
     """
-    Repeatedly try to connect to Postgres until successful.
-    :return: A Postgres connection object
+    Repeatedly try to connect to database until successful.
+    :return: A database connection object
     """
     while True:
         try:
@@ -253,7 +258,7 @@ def postgres_connect():
             )
         except psycopg2.OperationalError as e:
             log.exception(e)
-            log.error('Reconnecting to Postgres in 5 seconds. . .')
+            log.error('Reconnecting to database in 5 seconds. . .')
             time.sleep(5)
             continue
         break
@@ -265,10 +270,10 @@ if __name__ == '__main__':
     fmt = "%(asctime)s %(message)s"
     log.basicConfig(stream=sys.stdout, level=log.INFO, format=fmt)
     log.getLogger(ElasticsearchSyncer.__name__).setLevel(log.DEBUG)
-    log.info('Connecting to Postgres')
-    postgres = postgres_connect()
+    log.info('Connecting to database')
+    database = database_connect()
     log.info('Connecting to Elasticsearch')
     elasticsearch = elasticsearch_connect()
-    syncer = ElasticsearchSyncer(postgres, elasticsearch, replicate_tables)
+    syncer = ElasticsearchSyncer(database, elasticsearch, replicate_tables)
     log.info('Beginning synchronizer')
-    syncer.listen()
+    syncer.listen(SYNCER_POLL_INTERVAL)
