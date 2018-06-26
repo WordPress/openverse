@@ -2,12 +2,15 @@ import subprocess
 import unittest
 import os
 import es_syncer.sync
+import time
+import logging
 import pdb
-
 from subprocess import DEVNULL
+from multiprocessing import Process
 from elasticsearch_dsl import Search, connections
 
 this_dir = os.path.dirname(__file__)
+ENABLE_DOCKER_LOGS = False
 
 
 class TestReplication(unittest.TestCase):
@@ -29,7 +32,7 @@ class TestReplication(unittest.TestCase):
         connections.connections.add_connection('default', self.es)
         self.db_conn = es_syncer.sync.database_connect()
         self.syncer = es_syncer.sync\
-            .ElasticsearchSyncer(self.db_conn, self.es, 'public.image')
+            .ElasticsearchSyncer(self.db_conn, self.es, ['image'])
 
     def tearDown(self):
         pass
@@ -46,34 +49,40 @@ class TestReplication(unittest.TestCase):
             schema = schema_file.read()
             db_curr.execute(schema)
             self.db_conn.commit()
-            pdb.set_trace()
-            # extra ceremony required to properly escape jsonb CSV dumps
             db_curr\
                 .copy_expert(
                     """
-                    COPY public.image FROM '/mock_data/mocked_images.csv'
+                    COPY image FROM '/mock_data/mocked_images.csv'
                     WITH (FORMAT CSV, DELIMITER ',', QUOTE '"')
                     """, mockfile)
             self.db_conn.commit()
 
+        # Count items we just inserted into the database
         db_curr = self.db_conn.cursor()
-        db_curr.execute('select count(*) from public.image;')
-        num_images = db_curr.fetchone()[0]
+        db_curr.execute('select count(*) from image;')
+        expected_doc_count = db_curr.fetchone()[0]
 
-        s = Search(index='public.image')
-        response = s.execute()
+        # Synchronize with a 100ms poll interval. Give it 10 seconds to sync.
+        print('Starting synchronizer')
+        syncer_proc = Process(target=self.syncer.listen, args=(0.1,))
+        syncer_proc.start()
+        syncer_proc.join(timeout=10)
+        syncer_proc.terminate()
+        print('Syncing finished. Checking doc count.')
 
-        num_images_in_es = response.hits.total
-        self.assertTrue(num_images == num_images_in_es)
+        s = Search(index='image')
+        res = s.execute()
+        es_doc_count = res.hits.total
 
-    def test_indexed_correctly(self):
-        """
-        Check that a single document has the expected schema.
-        """
-        self.fail("Not implemented")
+        self.assertEqual(expected_doc_count, es_doc_count,
+                        'There should be as many documents in Elasticsearch '
+                        'as records Postgres.')
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    docker_stdout = None if ENABLE_DOCKER_LOGS else DEVNULL
+
     # Generate an up-to-date docker-compose integration test file.
     return_code = \
         subprocess.call('test/generate_integration_test_docker_compose.py')
@@ -87,7 +96,7 @@ if __name__ == '__main__':
         os.path.join(this_dir, 'integration-test-docker-compose.yml')
     start_cmd = 'docker-compose -f {} up'\
         .format(integration_compose)
-    subprocess.Popen(start_cmd, shell=True, stdout=DEVNULL)
+    subprocess.Popen(start_cmd, shell=True, stdout=docker_stdout)
 
     # Run tests.
     try:
@@ -101,4 +110,4 @@ if __name__ == '__main__':
 
     # Stop Elasticsearch and database. Delete attached volumes.
     stop_cmd = 'docker-compose -f {} down -v'.format(integration_compose)
-    subprocess.call(stop_cmd, shell=True, stdout=DEVNULL)
+    subprocess.call(stop_cmd, shell=True, stdout=docker_stdout)
