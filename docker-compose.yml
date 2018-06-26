@@ -49,13 +49,13 @@ services:
 
 
   es-syncer:
-    build: ./es-syncer/
+    build: ./es_syncer/
     command: bash -c 'sleep 20 && supervisord -c config/supervisord.conf'
     depends_on:
       - db
       - es
     volumes:
-      - ./es-syncer:/es-syncer
+      - ./es_syncer:/es-syncer
     environment:
       PYTHONUNBUFFERED: "0"
       ELASTICSEARCH_URL: 'es'

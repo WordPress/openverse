@@ -2,9 +2,7 @@ import subprocess
 import unittest
 import os
 import es_syncer.sync
-import time
 import logging
-import pdb
 from subprocess import DEVNULL
 from multiprocessing import Process
 from elasticsearch_dsl import Search, connections
@@ -72,15 +70,15 @@ class TestReplication(unittest.TestCase):
 
         s = Search(index='image')
         res = s.execute()
-        es_doc_count = res.hits.total
+        es_doc_count = s.count()
 
-        self.assertEqual(expected_doc_count, es_doc_count,
-                        'There should be as many documents in Elasticsearch '
-                        'as records Postgres.')
+        self.assertTrue(expected_doc_count <= es_doc_count,
+                        'There should be at least as many documents in'
+                        ' Elasticsearch as records Postgres.')
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.CRITICAL)
     docker_stdout = None if ENABLE_DOCKER_LOGS else DEVNULL
 
     # Generate an up-to-date docker-compose integration test file.
