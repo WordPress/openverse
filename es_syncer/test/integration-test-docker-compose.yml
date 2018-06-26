@@ -1,0 +1,30 @@
+# This docker-compose file was generated from /home/alden/code/cccatalog-
+# api/es_syncer/test/../../docker-compose.yml. Do not modify this file
+# directly. Your changes will be overwritten. Last update: 2018-06-25
+# 22:24:26.422916
+
+services:
+  integration-db:
+    environment:
+      POSTGRES_DB: openledger
+      POSTGRES_HOST: 0.0.0.0
+      POSTGRES_PASSWORD: deploy
+      POSTGRES_USER: deploy
+    healthcheck:
+      test: pg_isready -U deploy -d openledger
+    image: postgres:10.3-alpine
+    ports:
+    - 60000:5432
+    volumes:
+    - ./mock_data:/mock_data
+  integration-es:
+    environment:
+      xpack.security.enabled: 'false'
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    ports:
+    - 60001:9200
+    ulimits:
+      nofile:
+        hard: 65536
+        soft: 65536
+version: '3'
