@@ -46,7 +46,7 @@ DATABASE_PORT = int(os.environ.get('DATABASE_PORT', 5432))
 # The number of database records to load in memory at once.
 DB_BUFFER_SIZE = int(os.environ.get('DB_BUFFER_SIZE', 100000))
 
-SYNCER_POLL_INTERVAL = os.environ.get('SYNCER_POLL_INTERVAL', 10)
+SYNCER_POLL_INTERVAL = int(os.environ.get('SYNCER_POLL_INTERVAL', 60))
 
 # A comma separated list of tables in the database table to replicate to
 # Elasticsearch. Ex: image,docs
@@ -71,6 +71,7 @@ class ElasticsearchSyncer:
             cur.execute(SQL('SELECT id FROM {} ORDER BY id DESC LIMIT 1;')
                         .format(Identifier(table)))
             last_added_pg_id = cur.fetchone()[0]
+            cur.close()
             if not last_added_pg_id:
                 log.warning('Tried to sync ' + table + ' but it was empty.')
                 continue
@@ -104,7 +105,10 @@ class ElasticsearchSyncer:
         :return:
         """
         cursor_name = table + '_table_cursor'
-        with self.pg_conn.cursor(name=cursor_name) as server_cur:
+        # Reconnect to the database with write permission so we can create a
+        # server-side cursor.
+        write_conn = database_connect(readonly=False, autocommit=False)
+        with write_conn.cursor(name=cursor_name) as server_cur:
             server_cur.itersize = DB_BUFFER_SIZE
             select_range = SQL(
                 'SELECT * FROM {}'
@@ -131,6 +135,7 @@ class ElasticsearchSyncer:
                 num_converted_documents += len(chunk)
             log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')
+        write_conn.close()
 
     def listen(self, poll_interval=10):
         """
@@ -241,7 +246,7 @@ def _elasticsearch_connect(timeout=300):
     return es
 
 
-def database_connect():
+def database_connect(readonly, autocommit):
     """
     Repeatedly try to connect to database until successful.
     :return: A database connection object
@@ -263,6 +268,9 @@ def database_connect():
             continue
         break
 
+    if readonly or autocommit:
+        conn.set_session(readonly=readonly, autocommit=autocommit)
+
     return conn
 
 
@@ -271,7 +279,8 @@ if __name__ == '__main__':
     log.basicConfig(stream=sys.stdout, level=log.INFO, format=fmt)
     log.getLogger(ElasticsearchSyncer.__name__).setLevel(log.DEBUG)
     log.info('Connecting to database')
-    database = database_connect()
+    # Use readonly and autocommit to prevent polling from locking tables.
+    database = database_connect(readonly=True, autocommit=True)
     log.info('Connecting to Elasticsearch')
     elasticsearch = elasticsearch_connect()
     syncer = ElasticsearchSyncer(database, elasticsearch, replicate_tables)

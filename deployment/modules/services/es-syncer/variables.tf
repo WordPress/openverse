@@ -56,3 +56,7 @@ variable "environment" {
 variable "docker_tag" {
   description = "The Docker Hub version of the container to deploy."
 }
+
+variable "poll_interval" {
+  description = "The amount of time to wait before checking the state of the database and Elasticsearch."
+}
