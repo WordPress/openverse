@@ -8,7 +8,7 @@ from multiprocessing import Process
 from elasticsearch_dsl import Search, connections
 
 this_dir = os.path.dirname(__file__)
-ENABLE_DOCKER_LOGS = False
+ENABLE_DETAILED_LOGS = False
 
 
 class TestReplication(unittest.TestCase):
@@ -24,11 +24,15 @@ class TestReplication(unittest.TestCase):
         es_syncer.sync.ELASTICSEARCH_PORT = 60001
         es_syncer.sync.ELASTICSEARCH_URL = 'localhost'
         es_syncer.sync.DB_BUFFER_SIZE = 100000
-        es_syncer.sync.SYNCER_POLL_INTERVAL = 0
         print('Waiting for Elasticsearch to start. . .')
         self.es = es_syncer.sync.elasticsearch_connect()
         connections.connections.add_connection('default', self.es)
-        self.db_conn = es_syncer.sync.database_connect()
+        # DB connection used by synchronizer
+        self.db_conn = \
+            es_syncer.sync.database_connect(readonly=True, autocommit=True)
+        # DB connection used to write mock data by this integration test
+        self.write_db_conn = \
+            es_syncer.sync.database_connect(readonly=False, autocommit=False)
         self.syncer = es_syncer.sync\
             .ElasticsearchSyncer(self.db_conn, self.es, ['image'])
 
@@ -43,17 +47,17 @@ class TestReplication(unittest.TestCase):
         # Add some dummy data to the database
         with open(this_dir + "/mock_data/mocked_images.csv") as mockfile,\
                 open(this_dir + "/mock_data/schema.sql") as schema_file:
-            db_curr = self.db_conn.cursor()
+            db_curr = self.write_db_conn.cursor()
             schema = schema_file.read()
             db_curr.execute(schema)
-            self.db_conn.commit()
+            self.write_db_conn.commit()
             db_curr\
                 .copy_expert(
                     """
                     COPY image FROM '/mock_data/mocked_images.csv'
                     WITH (FORMAT CSV, DELIMITER ',', QUOTE '"')
                     """, mockfile)
-            self.db_conn.commit()
+            self.write_db_conn.commit()
 
         # Count items we just inserted into the database
         db_curr = self.db_conn.cursor()
@@ -78,8 +82,9 @@ class TestReplication(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.CRITICAL)
-    docker_stdout = None if ENABLE_DOCKER_LOGS else DEVNULL
+    log_level = logging.INFO if ENABLE_DETAILED_LOGS else logging.CRITICAL
+    logging.basicConfig(level=log_level)
+    docker_stdout = None if ENABLE_DETAILED_LOGS else DEVNULL
 
     # Generate an up-to-date docker-compose integration test file.
     return_code = \
