@@ -46,7 +46,7 @@ DATABASE_PORT = int(os.environ.get('DATABASE_PORT', 5432))
 # The number of database records to load in memory at once.
 DB_BUFFER_SIZE = int(os.environ.get('DB_BUFFER_SIZE', 100000))
 
-SYNCER_POLL_INTERVAL = os.environ.get('SYNCER_POLL_INTERVAL', 10)
+SYNCER_POLL_INTERVAL = int(os.environ.get('SYNCER_POLL_INTERVAL', 60))
 
 # A comma separated list of tables in the database table to replicate to
 # Elasticsearch. Ex: image,docs
