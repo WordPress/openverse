@@ -28,6 +28,6 @@ module "es-syncer" {
   db_buffer_size        = "100000"
   aws_region            = "us-east-1"
   environment           = "dev"
-  docker_tag            = "0.3"
   poll_interval         = "60"
+  docker_tag            = "0.4"
 }
