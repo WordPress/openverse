@@ -19,5 +19,5 @@ docker run -t \
 -e DATABASE_PORT="${database_port}" \
 -e DB_BUFFER_SIZE="${db_buffer_size}" \
 -e COPY_TABLES="${copy_tables}" \
--e SYNCER_POLL_INTERVAL="${poll_interval}"\
+-e SYNCER_POLL_INTERVAL="${poll_interval}" \
 creativecommons/elasticsearch_syncer:${docker_tag} &
