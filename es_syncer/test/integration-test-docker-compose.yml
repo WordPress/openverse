@@ -1,7 +1,7 @@
 # This docker-compose file was generated from /home/alden/code/cccatalog-
 # api/es_syncer/test/../../docker-compose.yml. Do not modify this file
-# directly. Your changes will be overwritten. Last update: 2018-06-26
-# 13:33:28.818596
+# directly. Your changes will be overwritten. Last update: 2018-07-03
+# 14:25:44.185299
 
 services:
   integration-db:
@@ -19,7 +19,7 @@ services:
     - ./mock_data:/mock_data
   integration-es:
     environment:
-      xpack.security.enabled: 'false'
+    - xpack.security.enabled=false
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
     ports:
     - 60001:9200

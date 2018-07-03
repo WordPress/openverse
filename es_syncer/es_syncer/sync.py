@@ -46,7 +46,7 @@ DATABASE_PORT = int(os.environ.get('DATABASE_PORT', 5432))
 # The number of database records to load in memory at once.
 DB_BUFFER_SIZE = int(os.environ.get('DB_BUFFER_SIZE', 100000))
 
-SYNCER_POLL_INTERVAL = os.environ.get('SYNCER_POLL_INTERVAL', 10)
+SYNCER_POLL_INTERVAL = int(os.environ.get('SYNCER_POLL_INTERVAL', 60))
 
 # A comma separated list of tables in the database table to replicate to
 # Elasticsearch. Ex: image,docs
@@ -55,8 +55,7 @@ replicate_tables = REP_TABLES.split(',') if ',' in REP_TABLES else [REP_TABLES]
 
 
 class ElasticsearchSyncer:
-    def __init__(self, database_instance, elasticsearch_instance, tables):
-        self.pg_conn = database_instance
+    def __init__(self, elasticsearch_instance, tables):
         self.es = elasticsearch_instance
         self.tables_to_watch = tables
 
@@ -65,12 +64,17 @@ class ElasticsearchSyncer:
         Check that the database tables are in sync with Elasticsearch. If not,
         begin replication.
         """
+        pg_conn = database_connect()
+
         for table in self.tables_to_watch:
-            cur = self.pg_conn.cursor()
+            pg_conn.set_session(readonly=True)
+            cur = pg_conn.cursor()
             # Find the last row added to the database table
             cur.execute(SQL('SELECT id FROM {} ORDER BY id DESC LIMIT 1;')
                         .format(Identifier(table)))
             last_added_pg_id = cur.fetchone()[0]
+            pg_conn.commit()
+            cur.close()
             if not last_added_pg_id:
                 log.warning('Tried to sync ' + table + ' but it was empty.')
                 continue
@@ -93,6 +97,7 @@ class ElasticsearchSyncer:
                 log.info('Replicating range ' + str(last_added_es_id) + '-' +
                          str(last_added_pg_id))
                 self._replicate(last_added_es_id, last_added_pg_id, table)
+        pg_conn.close()
 
     def _replicate(self, start, end, table):
         """
@@ -104,7 +109,9 @@ class ElasticsearchSyncer:
         :return:
         """
         cursor_name = table + '_table_cursor'
-        with self.pg_conn.cursor(name=cursor_name) as server_cur:
+        # Enable writing to Postgres so we can create a server-side cursor.
+        pg_conn = database_connect()
+        with pg_conn.cursor(name=cursor_name) as server_cur:
             server_cur.itersize = DB_BUFFER_SIZE
             select_range = SQL(
                 'SELECT * FROM {}'
@@ -131,6 +138,8 @@ class ElasticsearchSyncer:
                 num_converted_documents += len(chunk)
             log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')
+        pg_conn.commit()
+        pg_conn.close()
 
     def listen(self, poll_interval=10):
         """
@@ -143,9 +152,6 @@ class ElasticsearchSyncer:
             log.info('Listening for updates...')
             try:
                 self._synchronize()
-            except psycopg2.OperationalError:
-                # Reconnect to the database.
-                self.pg_conn = database_connect()
             except ElasticsearchConnectionError:
                 self.es = elasticsearch_connect()
 
@@ -271,9 +277,9 @@ if __name__ == '__main__':
     log.basicConfig(stream=sys.stdout, level=log.INFO, format=fmt)
     log.getLogger(ElasticsearchSyncer.__name__).setLevel(log.DEBUG)
     log.info('Connecting to database')
-    database = database_connect()
+    # Use readonly and autocommit to prevent polling from locking tables.
     log.info('Connecting to Elasticsearch')
     elasticsearch = elasticsearch_connect()
-    syncer = ElasticsearchSyncer(database, elasticsearch, replicate_tables)
+    syncer = ElasticsearchSyncer(elasticsearch, replicate_tables)
     log.info('Beginning synchronizer')
     syncer.listen(SYNCER_POLL_INTERVAL)

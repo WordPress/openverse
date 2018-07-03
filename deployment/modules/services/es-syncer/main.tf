@@ -14,6 +14,7 @@ data "template_file" "init"{
     database_port         = "${var.database_port}"
     db_buffer_size        = "${var.db_buffer_size}"
     copy_tables           = "${var.copy_tables}"
+    poll_interval         = "${var.poll_interval}"
 
     docker_tag            = "${var.docker_tag}"
   }
