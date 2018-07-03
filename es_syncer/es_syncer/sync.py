@@ -55,8 +55,7 @@ replicate_tables = REP_TABLES.split(',') if ',' in REP_TABLES else [REP_TABLES]
 
 
 class ElasticsearchSyncer:
-    def __init__(self, database_instance, elasticsearch_instance, tables):
-        self.pg_conn = database_instance
+    def __init__(self, elasticsearch_instance, tables):
         self.es = elasticsearch_instance
         self.tables_to_watch = tables
 
@@ -65,15 +64,16 @@ class ElasticsearchSyncer:
         Check that the database tables are in sync with Elasticsearch. If not,
         begin replication.
         """
-        self.pg_conn = database_connect(readonly=True, autocommit=None)
+        pg_conn = database_connect()
+
         for table in self.tables_to_watch:
-            self.pg_conn.set_session(readonly=True)
-            cur = self.pg_conn.cursor()
+            pg_conn.set_session(readonly=True)
+            cur = pg_conn.cursor()
             # Find the last row added to the database table
             cur.execute(SQL('SELECT id FROM {} ORDER BY id DESC LIMIT 1;')
                         .format(Identifier(table)))
             last_added_pg_id = cur.fetchone()[0]
-            self.pg_conn.commit()
+            pg_conn.commit()
             cur.close()
             if not last_added_pg_id:
                 log.warning('Tried to sync ' + table + ' but it was empty.')
@@ -97,7 +97,7 @@ class ElasticsearchSyncer:
                 log.info('Replicating range ' + str(last_added_es_id) + '-' +
                          str(last_added_pg_id))
                 self._replicate(last_added_es_id, last_added_pg_id, table)
-        self.pg_conn.close()
+        pg_conn.close()
 
     def _replicate(self, start, end, table):
         """
@@ -110,8 +110,8 @@ class ElasticsearchSyncer:
         """
         cursor_name = table + '_table_cursor'
         # Enable writing to Postgres so we can create a server-side cursor.
-        self.pg_conn = database_connect(readonly=False, autocommit=False)
-        with self.pg_conn.cursor(name=cursor_name) as server_cur:
+        pg_conn = database_connect()
+        with pg_conn.cursor(name=cursor_name) as server_cur:
             server_cur.itersize = DB_BUFFER_SIZE
             select_range = SQL(
                 'SELECT * FROM {}'
@@ -138,8 +138,8 @@ class ElasticsearchSyncer:
                 num_converted_documents += len(chunk)
             log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')
-        self.pg_conn.commit()
-        self.pg_conn.close()
+        pg_conn.commit()
+        pg_conn.close()
 
     def listen(self, poll_interval=10):
         """
@@ -152,9 +152,6 @@ class ElasticsearchSyncer:
             log.info('Listening for updates...')
             try:
                 self._synchronize()
-            except psycopg2.OperationalError:
-                # Reconnect to the database.
-                self.pg_conn = database_connect()
             except ElasticsearchConnectionError:
                 self.es = elasticsearch_connect()
 
@@ -250,7 +247,7 @@ def _elasticsearch_connect(timeout=300):
     return es
 
 
-def database_connect(readonly, autocommit):
+def database_connect():
     """
     Repeatedly try to connect to database until successful.
     :return: A database connection object
@@ -272,9 +269,6 @@ def database_connect(readonly, autocommit):
             continue
         break
 
-    if readonly or autocommit:
-        conn.set_session(readonly=readonly, autocommit=autocommit)
-
     return conn
 
 
@@ -284,9 +278,8 @@ if __name__ == '__main__':
     log.getLogger(ElasticsearchSyncer.__name__).setLevel(log.DEBUG)
     log.info('Connecting to database')
     # Use readonly and autocommit to prevent polling from locking tables.
-    database = database_connect(readonly=True, autocommit=True)
     log.info('Connecting to Elasticsearch')
     elasticsearch = elasticsearch_connect()
-    syncer = ElasticsearchSyncer(database, elasticsearch, replicate_tables)
+    syncer = ElasticsearchSyncer(elasticsearch, replicate_tables)
     log.info('Beginning synchronizer')
     syncer.listen(SYNCER_POLL_INTERVAL)

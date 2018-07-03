@@ -8,7 +8,7 @@ from multiprocessing import Process
 from elasticsearch_dsl import Search, connections
 
 this_dir = os.path.dirname(__file__)
-ENABLE_DETAILED_LOGS = False
+ENABLE_DETAILED_LOGS = True
 
 
 class TestReplication(unittest.TestCase):
@@ -29,12 +29,12 @@ class TestReplication(unittest.TestCase):
         connections.connections.add_connection('default', self.es)
         # DB connection used by synchronizer
         self.db_conn = \
-            es_syncer.sync.database_connect(readonly=True, autocommit=True)
+            es_syncer.sync.database_connect()
         # DB connection used to write mock data by this integration test
         self.write_db_conn = \
-            es_syncer.sync.database_connect(readonly=False, autocommit=False)
+            es_syncer.sync.database_connect()
         self.syncer = es_syncer.sync\
-            .ElasticsearchSyncer(self.db_conn, self.es, ['image'])
+            .ElasticsearchSyncer(self.es, ['image'])
 
     def tearDown(self):
         pass
