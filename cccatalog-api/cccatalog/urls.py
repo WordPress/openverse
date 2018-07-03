@@ -17,6 +17,22 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
 from cccatalog.api import views
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+import rest_framework.permissions
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Creative Commons Catalog API",
+      default_version='v1',
+      description="Test description",
+      contact=openapi.Contact(email="alden@creativecommons.org"),
+      license=openapi.License(name="MIT License"),
+   ),
+   public=True,
+   permission_classes=(rest_framework.permissions.AllowAny,),
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +40,11 @@ urlpatterns = [
     re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
     re_path('secret/', views.ProtectedView.as_view()),
     re_path('public/', views.PublicView.as_view()),
-    re_path('healthcheck', views.HealthCheck.as_view())
+    re_path('healthcheck', views.HealthCheck.as_view()),
+    re_path(r'^swagger(?P<format>\.json|\.yaml)$',
+        schema_view.without_ui(cache_timeout=None), name='schema-json'),
+    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None),
+        name='schema-swagger-ui'),
+    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None),
+        name='schema-redoc'),
 ]
