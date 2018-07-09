@@ -20,6 +20,7 @@ class SearchImages(APIView):
                 }
             )
         search_results = search_controller.search(search_params, index='image')
+        return Response(status=200, data={'status':'success'})
 
 
 class ProtectedView(APIView):
