@@ -4,25 +4,32 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch.exceptions import AuthenticationException, \
     AuthorizationException
 from elasticsearch_dsl import Q, Search, connections
+from elasticsearch_dsl.response import Response
 from cccatalog import settings
 import logging as log
-import pdb
 
 
-def search(search_params, index):
+def search(search_params, index, page_size, page=1) -> Response:
     """
     Given a set of keywords and an optional set of filters, perform a search.
+    Only up to 10,000 results will be returned.
 
     :param search_params: Search parameters. See
      :func: `~cccatalog.api.search_controller.parse_search_query` for the
      assumed format.
     :param index: The Elasticsearch index to search (e.g. 'image')
-    :return: A paginated list of results.
+    :param page_size: The number of results to return per page.
+    :param page: The results page number.
+    :return: An Elasticsearch Response object.
     """
-
-    # Build the Elasticsearch query.
     s = Search(index=index)
 
+    # Paginate search query.
+    start_slice = page_size * (page - 1)
+    end_slice = page_size * page
+    s = s[start_slice:end_slice]
+
+    # If any filters are specified, add them to the query.
     if 'filters' in search_params:
         filters = search_params['filters']
         if 'licenses' in filters:
@@ -32,6 +39,7 @@ def search(search_params, index):
                 license_queries.append(Q("term", license=_license))
             s = s.filter('bool', should=license_queries, minimum_should_match=1)
 
+    # Search by keyword.
     keywords = ' '.join(search_params['keywords'])
     s = s.query("multi_match",
                 query=keywords,
@@ -39,7 +47,7 @@ def search(search_params, index):
 
     s.extra(track_scores=True)
     search_response = s.execute()
-    print('Hits:', search_response.hits.total)
+    return search_response
 
 
 def parse_search_query(query_params):
@@ -62,13 +70,12 @@ def parse_search_query(query_params):
         result = {
             "keywords": ["test", "search"],
             "filters": {
-                licenses: ["CC0", "CC-BY"]
+                licenses: ["CC0", "BY"]
             }
         }
 
     If any errors occurred, the caller should reject the query.
     """
-
     # TODO: Parsing and validation of query strings should be cleanly separated
     # from validation of licensing requirements.
     # FIXME
@@ -104,7 +111,8 @@ def parse_search_query(query_params):
 
     for _license in licenses:
         if _license not in LICENSE_GROUPS['all']:
-            errors.append('License \'{}\' does not exist.'.format(_license))
+            errors.append('License \'{}\' does not exist. Valid options: {}'
+                          .format(_license, LICENSE_GROUPS['all']))
     result = {
         'keywords': keywords,
     }
@@ -124,7 +132,7 @@ def _elasticsearch_connect():
     try:
         log.info('Trying to connect to Elasticsearch without authentication...')
         # Try to connect to Elasticsearch without credentials.
-        es = Elasticsearch(
+        _es = Elasticsearch(
             host=settings.ELASTICSEARCH_URL,
             port=settings.ELASTICSEARCH_PORT,
             connection_class=RequestsHttpConnection,
@@ -132,7 +140,7 @@ def _elasticsearch_connect():
             max_retries=10,
             wait_for_status='yellow'
         )
-        log.info(str(es.info()))
+        log.info(str(_es.info()))
         log.info('Connected to Elasticsearch without authentication.')
     except (AuthenticationException, AuthorizationException):
         # If that fails, supply AWS authentication object and try again.
@@ -147,7 +155,7 @@ def _elasticsearch_connect():
             aws_service='es'
         )
         auth.encode = lambda x: bytes(x.encode('utf-8'))
-        es = Elasticsearch(
+        _es = Elasticsearch(
             host=settings.ELASTICSEARCH_URL,
             port=settings.ELASTICSEARCH_PORT,
             connection_class=RequestsHttpConnection,
@@ -157,8 +165,8 @@ def _elasticsearch_connect():
             http_auth=auth,
             wait_for_status='yellow'
         )
-        es.info()
-    return es
+        _es.info()
+    return _es
 
 
 es = _elasticsearch_connect()
