@@ -26,7 +26,8 @@ schema_view = get_schema_view(
    openapi.Info(
       title="Creative Commons Catalog API",
       default_version='v1',
-      description="Test description",
+      description="Provides programmatic access to the Creative Commons "
+                  "Catalog.",
       contact=openapi.Contact(email="alden@creativecommons.org"),
       license=openapi.License(name="MIT License"),
    ),
@@ -40,6 +41,7 @@ urlpatterns = [
     re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
     re_path('secret/', views.ProtectedView.as_view()),
     re_path('public/', views.PublicView.as_view()),
+    re_path('image/search', views.SearchImages.as_view()),
     re_path('healthcheck', views.HealthCheck.as_view()),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
         schema_view.without_ui(cache_timeout=None), name='schema-json'),

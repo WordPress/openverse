@@ -22,3 +22,5 @@ urllib3==1.22
 WebOb==1.8.2
 wsgi-basic-auth==1.1.0
 drf-yasg==1.9.1
+elasticsearch_dsl==6.2.1
+aws-requests-auth==0.4.1

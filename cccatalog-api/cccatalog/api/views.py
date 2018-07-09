@@ -2,6 +2,24 @@ from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework_social_oauth2.authentication import SocialAuthentication
+from rest_framework.renderers import JSONRenderer
+import cccatalog.api.search_controller as search_controller
+
+
+class SearchImages(APIView):
+    renderer_classes = (JSONRenderer,)
+
+    def get(self, request, format=None):
+        search_params, parsing_errors = \
+            search_controller.parse_search_query(request.query_params)
+        if parsing_errors:
+            return Response(
+                status=400,
+                data={
+                    "validation_errors": ' '.join(parsing_errors)
+                }
+            )
+        search_results = search_controller.search(search_params, index='image')
 
 
 class ProtectedView(APIView):
