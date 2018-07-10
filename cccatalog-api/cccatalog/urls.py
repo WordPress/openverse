@@ -39,8 +39,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
-    re_path('secret/', views.ProtectedView.as_view()),
-    re_path('public/', views.PublicView.as_view()),
     re_path('image/search', views.SearchImages.as_view()),
     re_path('healthcheck', views.HealthCheck.as_view()),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',

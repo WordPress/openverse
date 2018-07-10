@@ -62,21 +62,6 @@ class SearchImages(APIView):
         return Response(status=200, data=response_data)
 
 
-class ProtectedView(APIView):
-    authentication_classes = (SocialAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get(self, request, format=None):
-        msg = 'You have access!'
-        return Response(msg)
-
-
-class PublicView(APIView):
-
-    def get(self, request, format=None):
-        return Response('Public view without login')
-
-
 class HealthCheck(APIView):
 
     def get(self, request, format=None):
