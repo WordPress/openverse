@@ -8,6 +8,8 @@ from elasticsearch_dsl.response import Response
 from cccatalog import settings
 import logging as log
 
+ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
+
 
 def search(search_params, index, page_size, page=1) -> Response:
     """
@@ -27,6 +29,8 @@ def search(search_params, index, page_size, page=1) -> Response:
     # Paginate search query.
     start_slice = page_size * (page - 1)
     end_slice = page_size * page
+    if start_slice + end_slice > ELASTICSEARCH_MAX_RESULT_WINDOW:
+        raise ValueError("Deep pagination is not allowed.")
     s = s[start_slice:end_slice]
 
     # If any filters are specified, add them to the query.
