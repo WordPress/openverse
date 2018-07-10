@@ -40,7 +40,7 @@ class Image(SyncableDocType):
     provider = Text(index="not_analyzed")
     source = Text(index="not_analyzed")
     license = Text(index="not_analyzed")
-    license_version = Text("not_analyzed")
+    license_version = Text(index="not_analyzed")
     foreign_landing_url = Text(index="not_analyzed")
     meta_data = Nested()
 

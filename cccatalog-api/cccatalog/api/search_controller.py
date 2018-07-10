@@ -13,8 +13,8 @@ ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 
 def search(search_params, index, page_size, page=1) -> Response:
     """
-    Given a set of keywords and an optional set of filters, perform a search.
-    Only up to 10,000 results will be returned.
+    Given a set of keywords and an optional set of filters, perform a ranked
+    paginated search.
 
     :param search_params: Search parameters. See
      :func: `~cccatalog.api.search_controller.parse_search_query` for the
