@@ -1,7 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework import permissions
 from rest_framework.response import Response
-from rest_framework_social_oauth2.authentication import SocialAuthentication
 from rest_framework.renderers import JSONRenderer
 import cccatalog.api.search_controller as search_controller
 
