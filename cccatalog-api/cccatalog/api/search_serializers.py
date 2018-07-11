@@ -64,7 +64,7 @@ class SearchQueryStringSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     "License type \'{}\' does not exist.".format(_type)
                 )
-        return value
+        return value.lower()
 
     def validate_page(self, value):
         if value < 1:
@@ -106,6 +106,7 @@ class ImageSearchResultSerializer(serializers.Serializer):
 class ValidationErrorSerializer(serializers.Serializer):
     """ Returned if invalid query parameters are passed. """
     validation_error = serializers.JSONField()
+
 
 class InternalServerErrorSerializer(serializers.Serializer):
     """ Serializer for error 500"""
