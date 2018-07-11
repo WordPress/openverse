@@ -2,7 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from cccatalog.api.search_serializers import ImageSearchResultSerializer, \
-    ElasticsearchImageResultSerializer
+    ElasticsearchImageResultSerializer, ValidationErrorSerializer,\
+    SearchQueryStringSerializer
 from drf_yasg.utils import swagger_auto_schema
 import cccatalog.api.search_controller as search_controller
 
@@ -10,17 +11,20 @@ import cccatalog.api.search_controller as search_controller
 class SearchImages(APIView):
     renderer_classes = (JSONRenderer,)
 
-    @swagger_auto_schema(
-        responses={200: ImageSearchResultSerializer(many=True)})
+    @swagger_auto_schema(responses={
+                             200: ImageSearchResultSerializer(many=True),
+                             400: ValidationErrorSerializer
+                         },
+                         query_serializer=SearchQueryStringSerializer)
     def get(self, request, format=None):
-        # Read search query string. Ensure search query is valid.
-        search_params, parsing_errors = \
+        # Read query string. Ensure parameter is valid
+        params, validation_errors = \
             search_controller.parse_search_query(request.query_params)
-        if parsing_errors:
+        if validation_errors:
             return Response(
                 status=400,
                 data={
-                    "validation_error": ' '.join(parsing_errors)
+                    "validation_error": ' '.join(validation_errors)
                 }
             )
 
@@ -37,7 +41,7 @@ class SearchImages(APIView):
             page_size = int(page_size)
 
         try:
-            search_results = search_controller.search(search_params,
+            search_results = search_controller.search(params,
                                                       index='image',
                                                       page_size=page_size,
                                                       page=page)

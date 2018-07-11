@@ -1,7 +1,79 @@
 from rest_framework import serializers
+from cccatalog.api.licenses import LICENSES, LICENSE_GROUPS
+
+
+class SearchQueryStringSerializer(serializers.Serializer):
+    """ Parse and validate search query string parameters. """
+    q = serializers.CharField(
+        label="query",
+        help_text="Comma-separated list of keywords."
+    )
+    li = serializers.CharField(
+        label="licenses",
+        help_text="Comma-separated list of licenses. "
+                  "Example: by,cc0",
+        required=False
+    )
+    lt = serializers.CharField(
+        label="license type",
+        help_text="A list of license types. "
+                  "Available options: commercial, modification, all, all-cc.",
+        required=False,
+    )
+    page = serializers.IntegerField(
+        label="page number",
+        help_text="The page number to retrieve.",
+        default=1
+    )
+    pagesize = serializers.IntegerField(
+        label="page size",
+        help_text="The number of results to return in the requested page. "
+                  "Should be an integer between 1 and 500.",
+        default=20
+    )
+
+    def validate(self, data):
+        if data['li'] and data['lt']:
+            raise serializers.ValidationError(
+                "Only license type or individual licenses can be defined, not "
+                "both."
+            )
+        else:
+            return data
+
+    def validate_li(self, value):
+        licenses = [x.upper() for x in value.split(',')]
+        for _license in licenses:
+            if _license not in LICENSE_GROUPS['all']:
+                serializers.ValidationError(
+                    "License \'{}\' does not exist.".format(_license)
+                )
+        return value
+
+    def validate_lt(self, value):
+        license_types = [x.lower() for x in value]
+        for _type in license_types:
+            if _type not in LICENSE_GROUPS:
+                raise serializers.ValidationError(
+                    "License type \'{}\' does not exist.".format(_type)
+                )
+        return value
+
+    def validate_page(self, value):
+        if value < 1:
+            return 1
+        else:
+            return value
+
+    def validate_pagesize(self, value):
+        if 1 <= value < 500:
+            return value
+        else:
+            return 20
 
 
 class ElasticsearchImageResultSerializer(serializers.Serializer):
+    """ A single Elasticsearch result."""
     title = serializers.CharField(required=False)
     identifier = serializers.CharField(required=False)
     creator = serializers.CharField(required=False)
@@ -18,6 +90,12 @@ class ElasticsearchImageResultSerializer(serializers.Serializer):
 
 
 class ImageSearchResultSerializer(serializers.Serializer):
+    """ The full image search response. """
     result_count = serializers.IntegerField()
     page_count = serializers.IntegerField()
     results = ElasticsearchImageResultSerializer(many=True, read_only=True)
+
+
+class ValidationErrorSerializer(serializers.Serializer):
+    """ Returned if invalid query parameters are passed. """
+    validation_error = serializers.JSONField()
