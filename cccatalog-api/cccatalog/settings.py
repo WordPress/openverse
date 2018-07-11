@@ -36,6 +36,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
 INSTALLED_APPS = [
     'cccatalog',
     'cccatalog.api',
+    'drf_yasg',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -150,8 +151,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# API specific configuration
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 SOCIAL_AUTH_GITHUB_SCOPE = ['user:email']
 SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_SOCIAL_CLIENT_ID')
 SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_SOCIAL_CLIENT_SECRET')
+
+ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL', 'localhost')
+ELASTICSEARCH_PORT = int(os.environ.get('ELASTICSEARCH_PORT', 9200))
+
+# Additional settings for dev/prod environments
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+ELASTICSEARCH_AWS_REGION = \
+    os.environ.get('ELASTICSEARCH_AWS_REGION', 'us-east-1')
