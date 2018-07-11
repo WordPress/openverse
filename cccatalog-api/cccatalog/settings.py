@@ -16,6 +16,8 @@ from socket import gethostname, gethostbyname
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Where to collect static files in production/development deployments
+STATIC_ROOT = "/var/api_static_content/static"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/

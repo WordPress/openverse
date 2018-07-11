@@ -9,7 +9,6 @@ from elasticsearch_dsl.response import Response
 from cccatalog import settings
 import logging as log
 
-
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 
 

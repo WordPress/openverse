@@ -29,6 +29,10 @@ cd /home/ec2-user/cccatalog-api
 pip3 install -r /home/ec2-user/cccatalog-api/requirements.txt
 easy_install-3.7 uwsgi
 
+# Set up static content
+mkdir -p /var/api_static_content/static
+chown -R uwsgi /var/api_static_content/static
+
 # Kick off the server
 useradd -m uwsgi
 mkdir -p /var/log/uwsgi/
@@ -43,4 +47,7 @@ uwsgi --chdir=/home/ec2-user/cccatalog-api \
       --uid=uwsgi \
       --http=:8080 \
       --enable-threads \
-      --wsgi-file=./cccatalog/wsgi.py
+      --wsgi-file=./cccatalog/wsgi.py \
+      --static-map = /static=/var/api_static_content/static \
+      --static-expires = /* 7776000 \
+      --offload-threads = %k
