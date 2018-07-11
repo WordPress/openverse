@@ -1,18 +1,18 @@
 from rest_framework import serializers
-from cccatalog.api.licenses import LICENSES, LICENSE_GROUPS
+from cccatalog.api.licenses import LICENSE_GROUPS
 
 
 class SearchQueryStringSerializer(serializers.Serializer):
     """ Parse and validate search query string parameters. """
     q = serializers.CharField(
         label="query",
-        help_text="Comma-separated list of keywords."
+        help_text="A comma-separated list of keywords. Should not exceed 200 "
+                  "characters in length.",
     )
     li = serializers.CharField(
         label="licenses",
-        help_text="Comma-separated list of licenses. "
-                  "Example: by,cc0",
-        required=False
+        help_text="A comma-separated list of licenses. Example: by,cc0",
+        required=False,
     )
     lt = serializers.CharField(
         label="license type",
@@ -33,7 +33,7 @@ class SearchQueryStringSerializer(serializers.Serializer):
     )
 
     def validate(self, data):
-        if data['li'] and data['lt']:
+        if 'li' in data and 'lt' in data:
             raise serializers.ValidationError(
                 "Only license type or individual licenses can be defined, not "
                 "both."
@@ -41,17 +41,23 @@ class SearchQueryStringSerializer(serializers.Serializer):
         else:
             return data
 
+    def validate_q(self, value):
+        if len(value) > 200:
+            return value[0:199]
+        else:
+            return value
+
     def validate_li(self, value):
         licenses = [x.upper() for x in value.split(',')]
         for _license in licenses:
             if _license not in LICENSE_GROUPS['all']:
-                serializers.ValidationError(
+                raise serializers.ValidationError(
                     "License \'{}\' does not exist.".format(_license)
                 )
         return value
 
     def validate_lt(self, value):
-        license_types = [x.lower() for x in value]
+        license_types = [x.lower() for x in value.split(',')]
         for _type in license_types:
             if _type not in LICENSE_GROUPS:
                 raise serializers.ValidationError(
@@ -86,14 +92,14 @@ class ElasticsearchImageResultSerializer(serializers.Serializer):
     license = serializers.CharField()
     license_version = serializers.CharField(required=False)
     foreign_landing_url = serializers.URLField(required=False)
-    meta_data = serializers.JSONField(required=False)
+    meta_data = serializers.CharField(required=False)
 
 
 class ImageSearchResultSerializer(serializers.Serializer):
     """ The full image search response. """
     result_count = serializers.IntegerField()
     page_count = serializers.IntegerField()
-    results = ElasticsearchImageResultSerializer(many=True, read_only=True)
+    results = ElasticsearchImageResultSerializer(many=True)
 
 
 class ValidationErrorSerializer(serializers.Serializer):

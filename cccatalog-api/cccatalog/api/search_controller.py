@@ -1,4 +1,5 @@
 from aws_requests_auth.aws_auth import AWSRequestsAuth
+from cccatalog.api.search_serializers import SearchQueryStringSerializer
 from cccatalog.api.licenses import LICENSE_GROUPS
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch.exceptions import AuthenticationException, \
@@ -7,6 +8,7 @@ from elasticsearch_dsl import Q, Search, connections
 from elasticsearch_dsl.response import Response
 from cccatalog import settings
 import logging as log
+
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 
@@ -80,51 +82,32 @@ def parse_search_query(query_params):
 
     If any errors occurred, the caller should reject the query.
     """
-    # TODO: Parsing and validation of query strings should be cleanly separated
-    # from validation of licensing requirements.
-    # FIXME
-    field_length_limit = 100
-    errors = []
+    serialized_query = SearchQueryStringSerializer(data=query_params)
+    if not serialized_query.is_valid():
+        return [], serialized_query.errors
 
-    raw_keywords = query_params.get('q')
-    raw_license_type = query_params.get('lt')
-    raw_licenses = query_params.get('li')
-
-    keywords = None
-    if not raw_keywords:
-        errors.append('No keywords specified.')
-    else:
-        keywords = raw_keywords.split(',')
-
-    licenses = set()
-    if raw_license_type and raw_licenses:
-        errors.append('Only license type (e.g. \'commercial\' or license '
-                      '(\'CC-BY\') can be defined, not both.')
-    if raw_license_type:
-        try:
-            license_types = [x.lower() for x in raw_license_type.split(',')]
-            for _type in license_types:
-                group = LICENSE_GROUPS[_type]
-                for _license in group:
-                    licenses.add(_license)
-        except KeyError:
-            errors.append('License type does not exist. Valid options: '
-                          + str(list(LICENSE_GROUPS.keys())))
-    elif raw_licenses:
-        licenses = [x.upper() for x in raw_licenses.split(',')]
-
-    for _license in licenses:
-        if _license not in LICENSE_GROUPS['all']:
-            errors.append('License \'{}\' does not exist. Valid options: {}'
-                          .format(_license, LICENSE_GROUPS['all']))
     result = {
-        'keywords': keywords,
+        'keywords': serialized_query.data['q'].split(','),
+        'page': serialized_query.data['page'],
+        'pagesize': serialized_query.data['pagesize']
     }
+
+    licenses = []
+    if 'li' in serialized_query.data:
+        licenses = serialized_query.data['li'].split(',')
+    elif 'lt' in serialized_query.data:
+        license_types = serialized_query.data['lt'].split(',')
+        _licenses = set()
+        for license_type in license_types:
+            resolved_licenses = LICENSE_GROUPS[license_type]
+            for _license in resolved_licenses:
+                _licenses.add(_license.lower())
+        licenses = list(_licenses)
     if len(licenses) > 0:
         result['filters'] = {}
         result['filters']['licenses'] = licenses
 
-    return result, errors
+    return result, None
 
 
 def _elasticsearch_connect():

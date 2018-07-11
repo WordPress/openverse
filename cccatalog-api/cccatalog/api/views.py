@@ -24,22 +24,11 @@ class SearchImages(APIView):
             return Response(
                 status=400,
                 data={
-                    "validation_error": ' '.join(validation_errors)
+                    "validation_error": validation_errors
                 }
             )
-
-        # Validate and clean up pagination parameters
-        page = request.query_params.get('page')
-        if not page or int(page) < 1:
-            page = 1
-        else:
-            page = int(page)
-        page_size = request.query_params.get('pagesize')
-        if not page_size or int(page_size) > 500 or int(page_size) < 1:
-            page_size = 20
-        else:
-            page_size = int(page_size)
-
+        page = params['page']
+        page_size = params['pagesize']
         try:
             search_results = search_controller.search(params,
                                                       index='image',
@@ -68,7 +57,9 @@ class SearchImages(APIView):
             'page_count': page_count,
             'results': serialized_results
         }
-        serialized_response = ImageSearchResultSerializer(response_data)
+        serialized_response = ImageSearchResultSerializer(data=response_data)
+        if not serialized_response.is_valid():
+            return Response(status=500, data=serialized_response.errors)
         return Response(status=200, data=serialized_response.data)
 
 
