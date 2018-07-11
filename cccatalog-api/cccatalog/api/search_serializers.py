@@ -107,6 +107,7 @@ class ValidationErrorSerializer(serializers.Serializer):
     """ Returned if invalid query parameters are passed. """
     validation_error = serializers.JSONField()
 
+
 class InternalServerErrorSerializer(serializers.Serializer):
     """ Serializer for error 500"""
     internal_server_error = serializers.JSONField()
