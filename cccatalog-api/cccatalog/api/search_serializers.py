@@ -83,11 +83,11 @@ class ElasticsearchImageResultSerializer(serializers.Serializer):
     """ A single Elasticsearch result."""
     title = serializers.CharField(required=False)
     identifier = serializers.CharField(required=False)
-    creator = serializers.CharField(required=False)
+    creator = serializers.CharField(required=False, allow_blank=True)
     creator_url = serializers.URLField(required=False)
     tags = serializers.ListField(required=False)
     url = serializers.URLField()
-    thumbnail = serializers.URLField()
+    thumbnail = serializers.URLField(required=False, allow_blank=True)
     provider = serializers.CharField(required=False)
     source = serializers.CharField(required=False)
     license = serializers.CharField()
