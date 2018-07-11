@@ -64,7 +64,7 @@ class SearchQueryStringSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     "License type \'{}\' does not exist.".format(_type)
                 )
-        return value
+        return value.lower()
 
     def validate_page(self, value):
         if value < 1:
