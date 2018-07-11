@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from cccatalog.api.search_serializers import ImageSearchResultSerializer, \
     ElasticsearchImageResultSerializer, ValidationErrorSerializer,\
-    SearchQueryStringSerializer
+    SearchQueryStringSerializer, InternalServerErrorSerializer
 from drf_yasg.utils import swagger_auto_schema
 import cccatalog.api.search_controller as search_controller
 
@@ -13,7 +13,8 @@ class SearchImages(APIView):
 
     @swagger_auto_schema(responses={
                              200: ImageSearchResultSerializer(many=True),
-                             400: ValidationErrorSerializer
+                             400: ValidationErrorSerializer,
+                             500: InternalServerErrorSerializer
                          },
                          query_serializer=SearchQueryStringSerializer)
     def get(self, request, format=None):
@@ -59,7 +60,10 @@ class SearchImages(APIView):
         }
         serialized_response = ImageSearchResultSerializer(data=response_data)
         if not serialized_response.is_valid():
-            return Response(status=500, data=serialized_response.errors)
+            return Response(
+                status=500,
+                data={'internal_server_error': serialized_response.errors}
+            )
         return Response(status=200, data=serialized_response.data)
 
 

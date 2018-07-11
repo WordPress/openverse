@@ -11,13 +11,14 @@ class SearchQueryStringSerializer(serializers.Serializer):
     )
     li = serializers.CharField(
         label="licenses",
-        help_text="A comma-separated list of licenses. Example: by,cc0",
+        help_text="A comma-separated list of licenses. Example: 'by,cc0'."
+                  " Valid inputs: {}".format(list(LICENSE_GROUPS['all'])),
         required=False,
     )
     lt = serializers.CharField(
         label="license type",
         help_text="A list of license types. "
-                  "Available options: commercial, modification, all, all-cc.",
+                  "Valid inputs: {}".format((list(LICENSE_GROUPS.keys()))),
         required=False,
     )
     page = serializers.IntegerField(
@@ -105,3 +106,7 @@ class ImageSearchResultSerializer(serializers.Serializer):
 class ValidationErrorSerializer(serializers.Serializer):
     """ Returned if invalid query parameters are passed. """
     validation_error = serializers.JSONField()
+
+class InternalServerErrorSerializer(serializers.Serializer):
+    """ Serializer for error 500"""
+    internal_server_error = serializers.JSONField()
