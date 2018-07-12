@@ -7,18 +7,18 @@ class SearchQueryStringSerializer(serializers.Serializer):
     q = serializers.CharField(
         label="query",
         help_text="A comma-separated list of keywords. Should not exceed 200 "
-                  "characters in length.",
+                  "characters in length. Example: `hello,world`",
     )
     li = serializers.CharField(
         label="licenses",
-        help_text="A comma-separated list of licenses. Example: 'by,cc0'."
-                  " Valid inputs: {}".format(list(LICENSE_GROUPS['all'])),
+        help_text="A comma-separated list of licenses. Example: `by,cc0`."
+                  " Valid inputs: `{}`".format(list(LICENSE_GROUPS['all'])),
         required=False,
     )
     lt = serializers.CharField(
         label="license type",
         help_text="A list of license types. "
-                  "Valid inputs: {}".format((list(LICENSE_GROUPS.keys()))),
+                  "Valid inputs: `{}`".format((list(LICENSE_GROUPS.keys()))),
         required=False,
     )
     page = serializers.IntegerField(
