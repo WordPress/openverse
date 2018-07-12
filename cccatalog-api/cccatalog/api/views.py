@@ -58,10 +58,8 @@ class SearchImages(APIView):
             'results': serialized_results
         }
         serialized_response = ImageSearchResultSerializer(data=response_data)
-        if not serialized_response.is_valid():
-            pass
 
-        return Response(status=200, data=serialized_response.data)
+        return Response(status=200, data=serialized_response.initial_data)
 
 
 class HealthCheck(APIView):
