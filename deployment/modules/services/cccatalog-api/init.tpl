@@ -8,6 +8,11 @@ export DJANGO_DATABASE_PASSWORD="${database_password}"
 export DJANGO_DATABASE_HOST="${database_host}"
 export DJANGO_DEBUG_ENABLED="${django_debug_enabled}"
 export DJANGO_SECRET_KEY="${django_secret_key}"
+export ELASTICSEARCH_URL="${elasticsearch_url}"
+export ELASTICSEARCH_PORT="${elasticsearch_port}"
+export AWS_REGION="${aws_region}"
+export AWS_ACCESS_KEY_ID="${aws_access_key_id}"
+export AWS_SECRET_ACCESS_KEY="${aws_secret_access_key}"
 export LOAD_BALANCER_URL="${load_balancer_url}"
 export WSGI_AUTH_CREDENTIALS="${wsgi_auth_credentials}"
 export WSGI_AUTH_EXCLUDE_PATHS="/healthcheck"
@@ -31,10 +36,11 @@ easy_install-3.7 uwsgi
 
 # Set up static content
 mkdir -p /var/api_static_content/static
-chown -R uwsgi /var/api_static_content/static
 
 # Kick off the server
 useradd -m uwsgi
+chown -R uwsgi /var/api_static_content/static
+python3 manage.py collectstatic --no-input
 mkdir -p /var/log/uwsgi/
 touch /var/log/uwsgi/cccatalog-api.log
 chown -R uwsgi /var/log/uwsgi
@@ -48,6 +54,5 @@ uwsgi --chdir=/home/ec2-user/cccatalog-api \
       --http=:8080 \
       --enable-threads \
       --wsgi-file=./cccatalog/wsgi.py \
-      --static-map = /static=/var/api_static_content/static \
-      --static-expires = /* 7776000 \
-      --offload-threads = %k
+      --static-map=/static=/var/api_static_content/static \
+      --offload-threads=%k

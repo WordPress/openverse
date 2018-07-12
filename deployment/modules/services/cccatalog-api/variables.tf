@@ -52,3 +52,23 @@ variable "wsgi_auth_credentials" {
   description = "If defined, the API server will restrict access to all endpoints (except /healthcheck) with basic auth."
   default = ""
 }
+
+variable "aws_access_key_id" {
+  description = "The access key ID used to connect to Elasticsearch."
+}
+
+variable "aws_secret_access_key" {
+  description = "The secret access key used to connect to Elasticsearch."
+}
+
+variable "elasticsearch_url" {
+  description = "The URL of the Elasticsearch instance to synchronize."
+}
+
+variable "elasticsearch_port" {
+  description = "The port used to connect to Elasticsearch."
+}
+
+variable "aws_region" {
+  description = "The region of the Elasticsearch instance. Required for IAM auth."
+}
