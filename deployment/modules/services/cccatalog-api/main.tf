@@ -16,6 +16,11 @@ data "template_file" "init"{
     git_revision          = "${var.git_revision}"
     load_balancer_url     = "${aws_alb.cccatalog-api-load-balancer.dns_name}"
     wsgi_auth_credentials = "${var.wsgi_auth_credentials}"
+    aws_access_key_id     = "${var.aws_access_key_id}"
+    aws_secret_access_key = "${var.aws_secret_access_key}"
+    elasticsearch_url     = "${var.elasticsearch_url}"
+    elasticsearch_port    = "${var.elasticsearch_port}"
+    aws_region            = "${var.aws_region}"
   }
 }
 
