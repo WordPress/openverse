@@ -38,9 +38,8 @@ def search(search_params, index, page_size, page=1) -> Response:
     if 'filters' in search_params:
         filters = search_params['filters']
         if 'licenses' in filters:
-            licenses = [_license.lower() for _license in filters['licenses']]
             license_queries = []
-            for _license in licenses:
+            for _license in filters['licenses']:
                 license_queries.append(Q("term", license=_license))
             s = s.filter('bool', should=license_queries, minimum_should_match=1)
 

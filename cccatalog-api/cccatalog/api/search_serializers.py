@@ -62,7 +62,7 @@ class SearchQueryStringSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     "License \'{}\' does not exist.".format(_license)
                 )
-        return value
+        return value.lower()
 
     def validate_lt(self, value):
         license_types = [x.lower() for x in value.split(',')]
