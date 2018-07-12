@@ -12,6 +12,12 @@ variable "django_secret_key" {
 variable "wsgi_auth_credentials" {
   type = "string"
 }
+variable "aws_access_key_id" {
+  type = "string"
+}
+variable "aws_secret_access_key" {
+  type = "string"
+}
 
 module "cccatalog-api" {
   source = "../../../../modules/services/cccatalog-api"
@@ -22,7 +28,7 @@ module "cccatalog-api" {
   max_size                  = 5
   instance_type             = "t2.micro"
   enable_monitoring         = false
-  git_revision              = "30b3255e3e8535714e716879d109415ef6dc7d46"
+  git_revision              = "a39ccc148166c2a6265381a346063d2c594b248b"
 
   # Environment-specific variables
   database_host             = "openledger-db-dev3-nvirginia.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
@@ -32,4 +38,9 @@ module "cccatalog-api" {
   database_password         = "${var.database_password}"
   django_secret_key         = "${var.django_secret_key}"
   wsgi_auth_credentials     = "${var.wsgi_auth_credentials}"
+  aws_access_key_id         = "${var.aws_access_key_id}"
+  aws_secret_access_key     = "${var.aws_secret_access_key}"
+  elasticsearch_port        = "80"
+  aws_region                = "us-east-1"
+  elasticsearch_url         = "search-cccatalog-elasticsearch-vtptjrgtluyamznw6s4kkdtqju.us-east-1.es.amazonaws.com"
 }
