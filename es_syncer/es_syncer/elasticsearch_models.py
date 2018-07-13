@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from elasticsearch_dsl import DocType, Date, Text, Integer, Nested
+from elasticsearch_dsl import Date, Text, Integer, Nested, Keyword, DocType
 
 
 class SyncableDocType(DocType):
@@ -30,22 +30,22 @@ class SyncableDocType(DocType):
 
 class Image(SyncableDocType):
     title = Text(analyzer="english")
-    identifier = Text(index="not_analyzed")
+    identifier = Keyword()
     creator = Text()
-    creator_url = Text(index="not_analyzed")
+    creator_url = Keyword()
     tags = Text(multi=True)
     created_on = Date()
-    url = Text(index="not_analyzed")
-    thumbnail = Text(index="not_analyzed")
-    provider = Text(index="not_analyzed")
-    source = Text(index="not_analyzed")
-    license = Text(index="not_analyzed")
-    license_version = Text(index="not_analyzed")
-    foreign_landing_url = Text(index="not_analyzed")
+    url = Keyword()
+    thumbnail = Keyword()
+    provider = Text(analyzer="keyword")
+    source = Keyword()
+    license = Keyword()
+    license_version = Keyword()
+    foreign_landing_url = Keyword()
     meta_data = Nested()
 
-    class Meta:
-        index = 'image'
+    class Index:
+        name = 'image'
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
