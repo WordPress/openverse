@@ -10,7 +10,7 @@ from elasticsearch.exceptions import AuthenticationException, \
     AuthorizationException, NotFoundError
 from elasticsearch.exceptions \
     import ConnectionError as ElasticsearchConnectionError
-from elasticsearch_dsl import Search
+from elasticsearch_dsl import Search, connections
 from elasticsearch import helpers
 from psycopg2.sql import SQL, Identifier
 from es_syncer.elasticsearch_models import database_table_to_elasticsearch_model
@@ -57,6 +57,7 @@ replicate_tables = REP_TABLES.split(',') if ',' in REP_TABLES else [REP_TABLES]
 class ElasticsearchSyncer:
     def __init__(self, elasticsearch_instance, tables):
         self.es = elasticsearch_instance
+        connections.connections.add_connection('default', self.es)
         self.tables_to_watch = tables
 
     def _synchronize(self):

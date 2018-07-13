@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from cccatalog.api.licenses import LICENSE_GROUPS
+from cccatalog.api.search_controller import get_providers
 
 
 class SearchQueryStringSerializer(serializers.Serializer):
@@ -7,20 +8,28 @@ class SearchQueryStringSerializer(serializers.Serializer):
     q = serializers.CharField(
         label="query",
         help_text="A comma-separated list of keywords. Should not exceed 200 "
-                  "characters in length.",
+                  "characters in length. Example: `hello,world`",
     )
     li = serializers.CharField(
         label="licenses",
-        help_text="A comma-separated list of licenses. Example: 'by,cc0'."
-                  " Valid inputs: {}".format(list(LICENSE_GROUPS['all'])),
+        help_text="A comma-separated list of licenses. Example: `by,cc0`."
+                  " Valid inputs: `{}`".format(list(LICENSE_GROUPS['all'])),
         required=False,
     )
     lt = serializers.CharField(
         label="license type",
         help_text="A list of license types. "
-                  "Valid inputs: {}".format((list(LICENSE_GROUPS.keys()))),
+                  "Valid inputs: `{}`".format((list(LICENSE_GROUPS.keys()))),
         required=False,
     )
+
+    provider = serializers.CharField(
+        label="provider",
+        help_text="A comma separated list of providers to search. Valid inputs:"
+                  " `{}`".format(get_providers('image')),
+        required=False
+    )
+
     page = serializers.IntegerField(
         label="page number",
         help_text="The page number to retrieve.",
@@ -55,16 +64,30 @@ class SearchQueryStringSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     "License \'{}\' does not exist.".format(_license)
                 )
-        return value
+        return value.lower().split(',')
 
     def validate_lt(self, value):
         license_types = [x.lower() for x in value.split(',')]
+        resolved_licenses = set()
         for _type in license_types:
             if _type not in LICENSE_GROUPS:
                 raise serializers.ValidationError(
                     "License type \'{}\' does not exist.".format(_type)
                 )
-        return value.lower()
+            licenses = LICENSE_GROUPS[_type]
+            for _license in licenses:
+                resolved_licenses.add(_license.lower())
+
+        return ','.join(list(resolved_licenses))
+
+    def validate_provider(self, value):
+        allowed_providers = get_providers('image')
+        if value not in allowed_providers:
+            raise serializers.ValidationError(
+                "Provider \'{}\' does not exist.".format(value)
+            )
+        else:
+            return value.lower()
 
     def validate_page(self, value):
         if value < 1:

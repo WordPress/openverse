@@ -1,12 +1,11 @@
 from aws_requests_auth.aws_auth import AWSRequestsAuth
-from cccatalog.api.search_serializers import SearchQueryStringSerializer
-from cccatalog.api.licenses import LICENSE_GROUPS
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch.exceptions import AuthenticationException, \
     AuthorizationException
 from elasticsearch_dsl import Q, Search, connections
 from elasticsearch_dsl.response import Response
 from cccatalog import settings
+
 import logging as log
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
@@ -18,8 +17,7 @@ def search(search_params, index, page_size, page=1) -> Response:
     paginated search.
 
     :param search_params: Search parameters. See
-     :func: `~cccatalog.api.search_controller.parse_search_query` for the
-     assumed format.
+     :class: `~cccatalog.api.search_serializers.SearchQueryStringSerializer`.
     :param index: The Elasticsearch index to search (e.g. 'image')
     :param page_size: The number of results to return per page.
     :param page: The results page number.
@@ -35,17 +33,20 @@ def search(search_params, index, page_size, page=1) -> Response:
     s = s[start_slice:end_slice]
 
     # If any filters are specified, add them to the query.
-    if 'filters' in search_params:
-        filters = search_params['filters']
-        if 'licenses' in filters:
-            licenses = [_license.lower() for _license in filters['licenses']]
-            license_queries = []
-            for _license in licenses:
-                license_queries.append(Q("term", license=_license))
-            s = s.filter('bool', should=license_queries, minimum_should_match=1)
+    if 'li' in search_params.data or 'lt' in search_params.data:
+        license_field = 'li' if 'li' in search_params.data else 'lt'
+        license_filters = []
+        for _license in search_params.data[license_field].split(','):
+            license_filters.append(Q("term", license=_license))
+        s = s.filter('bool', should=license_filters, minimum_should_match=1)
+    if 'provider' in search_params.data:
+        provider_filters = []
+        for provider in search_params.data['provider'].split(','):
+            provider_filters.append(Q("term", provider=provider))
+        s = s.filter('bool', should=provider_filters, minimum_should_match=1)
 
-    # Search by keyword.
-    keywords = ' '.join(search_params['keywords'])
+    # Search for keywords.
+    keywords = ' '.join(search_params.data['q'])
     s = s.query("multi_match",
                 query=keywords,
                 fields=['title', 'tag', 'creator'])
@@ -55,58 +56,29 @@ def search(search_params, index, page_size, page=1) -> Response:
     return search_response
 
 
-def parse_search_query(query_params):
+def get_providers(index):
     """
-    Parse and validate a query for a search.
+    Given an index, find all available providers.
 
-    :param query_params: A Django Rest Framework request.query_params object.
-
-    :return: The response includes a dictionary of the parsed query and a list
-    of any errors that occurred.
-
-    The query dictionary specifying keywords and, optionally,
-    a set of filters to apply to the search. Example:
-
-        result = {
-            "keywords": ["cat", "running"]
-        }
-
-    Another valid example:
-        result = {
-            "keywords": ["test", "search"],
-            "filters": {
-                licenses: ["CC0", "BY"]
+    :param index: An Elasticsearch index, such as `'image'`.
+    :return: A list of providers represented as strings.
+    """
+    elasticsearch_maxint = 2147483647
+    agg_body = {
+        'aggs': {
+            'unique_providers': {
+                'terms': {
+                    'field': 'provider.keyword',
+                             'size': elasticsearch_maxint
+                }
             }
         }
-
-    If any errors occurred, the caller should reject the query.
-    """
-    serialized_query = SearchQueryStringSerializer(data=query_params)
-    if not serialized_query.is_valid():
-        return [], serialized_query.errors
-
-    result = {
-        'keywords': serialized_query.data['q'].split(','),
-        'page': serialized_query.data['page'],
-        'pagesize': serialized_query.data['pagesize']
     }
-
-    licenses = []
-    if 'li' in serialized_query.data:
-        licenses = serialized_query.data['li'].split(',')
-    elif 'lt' in serialized_query.data:
-        license_types = serialized_query.data['lt'].split(',')
-        _licenses = set()
-        for license_type in license_types:
-            resolved_licenses = LICENSE_GROUPS[license_type]
-            for _license in resolved_licenses:
-                _licenses.add(_license.lower())
-        licenses = list(_licenses)
-    if len(licenses) > 0:
-        result['filters'] = {}
-        result['filters']['licenses'] = licenses
-
-    return result, None
+    s = Search.from_dict(agg_body)
+    s.index = index
+    results = s.execute().aggregations['unique_providers']['buckets']
+    providers = [result['key'] for result in results]
+    return providers
 
 
 def _elasticsearch_connect():
