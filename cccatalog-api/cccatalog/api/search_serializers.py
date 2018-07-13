@@ -23,6 +23,7 @@ class SearchQueryStringSerializer(serializers.Serializer):
         required=False,
     )
 
+    # FIXME: Index name should not be assumed.
     provider = serializers.CharField(
         label="provider",
         help_text="A comma separated list of data sources to search. Valid "
@@ -86,6 +87,7 @@ class SearchQueryStringSerializer(serializers.Serializer):
         return ','.join(list(resolved_licenses))
 
     def validate_provider(self, value):
+        # FIXME: Index name should not be assumed.
         allowed_providers = get_providers('image')
         if value not in allowed_providers:
             raise serializers.ValidationError(
