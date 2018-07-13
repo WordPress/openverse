@@ -47,7 +47,7 @@ resource "aws_security_group" "es-syncer-sg" {
 }
 
 resource "aws_instance" "es-syncer-ec2" {
-  ami                    = "ami-afd15ed0"
+  ami                    = "ami-b70554c8"
   instance_type          = "${var.instance_type}"
   user_data              = "${data.template_file.init.rendered}"
   # Launch it on the first available subnet

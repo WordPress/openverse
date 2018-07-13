@@ -25,7 +25,8 @@ class SearchQueryStringSerializer(serializers.Serializer):
 
     provider = serializers.CharField(
         label="provider",
-        help_text="A comma separated list of providers to search. Valid inputs:"
+        help_text="A comma separated list of data sources to search. Valid "
+                  "inputs:"
                   " `{}`".format(get_providers('image')),
         required=False
     )
@@ -67,6 +68,10 @@ class SearchQueryStringSerializer(serializers.Serializer):
         return value.lower().split(',')
 
     def validate_lt(self, value):
+        """
+        Resolves a license type to a list of licenses.
+        Example: commercial -> ['BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM']
+        """
         license_types = [x.lower() for x in value.split(',')]
         resolved_licenses = set()
         for _type in license_types:

@@ -58,10 +58,10 @@ def search(search_params, index, page_size, page=1) -> Response:
 
 def get_providers(index):
     """
-    Given an index, find all available providers.
+    Given an index, find all available data providers.
 
     :param index: An Elasticsearch index, such as `'image'`.
-    :return: A list of providers represented as strings.
+    :return: A list of providers represented as strings. Example: `['met']`
     """
     elasticsearch_maxint = 2147483647
     agg_body = {

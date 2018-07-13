@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Set up Docker daemon
+yum -y update
 yum -y install docker
+# Allows ec2-user to run docker commands
+sudo usermod -a -G docker ec2-user
 service docker start
 
 # Run the synchronizer
