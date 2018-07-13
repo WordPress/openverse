@@ -56,3 +56,4 @@ uwsgi --chdir=/home/ec2-user/cccatalog-api \
       --wsgi-file=./cccatalog/wsgi.py \
       --static-map=/static=/var/api_static_content/static \
       --offload-threads=%k
+
