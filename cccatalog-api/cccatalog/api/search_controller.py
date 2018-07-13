@@ -5,6 +5,7 @@ from elasticsearch.exceptions import AuthenticationException, \
 from elasticsearch_dsl import Q, Search, connections
 from elasticsearch_dsl.response import Response
 from cccatalog import settings
+from django.core.cache import cache
 
 import logging as log
 
@@ -63,21 +64,32 @@ def get_providers(index):
     :param index: An Elasticsearch index, such as `'image'`.
     :return: A list of providers represented as strings. Example: `['met']`
     """
-    elasticsearch_maxint = 2147483647
-    agg_body = {
-        'aggs': {
-            'unique_providers': {
-                'terms': {
-                    'field': 'provider.keyword',
-                             'size': elasticsearch_maxint
+    provider_cache_name = 'providers'
+    cache_timeout = 60 * 60
+    providers = cache.get(key=provider_cache_name)
+    if not providers:
+        elasticsearch_maxint = 2147483647
+        agg_body = {
+            'aggs': {
+                'unique_providers': {
+                    'terms': {
+                        'field': 'provider.keyword',
+                                 'size': elasticsearch_maxint,
+                        "order": {
+                            "_key": "desc"
+                        }
+                    }
                 }
             }
         }
-    }
-    s = Search.from_dict(agg_body)
-    s.index = index
-    results = s.execute().aggregations['unique_providers']['buckets']
-    providers = [result['key'] for result in results]
+        s = Search.from_dict(agg_body)
+        s.index = index
+        results = s.execute().aggregations['unique_providers']['buckets']
+        providers = [result['key'] for result in results]
+        cache.set(key=provider_cache_name,
+                  timeout=cache_timeout,
+                  value=providers)
+
     return providers
 
 
