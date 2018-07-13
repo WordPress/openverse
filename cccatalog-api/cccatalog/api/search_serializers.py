@@ -80,6 +80,15 @@ class SearchQueryStringSerializer(serializers.Serializer):
 
         return ','.join(list(resolved_licenses))
 
+    def validate_provider(self, value):
+        allowed_providers = get_providers('image')
+        if value not in allowed_providers:
+            raise serializers.ValidationError(
+                "Provider \'{}\' does not exist.".format(value)
+            )
+        else:
+            return value.lower()
+
     def validate_page(self, value):
         if value < 1:
             return 1

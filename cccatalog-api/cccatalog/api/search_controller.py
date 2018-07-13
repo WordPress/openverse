@@ -35,12 +35,17 @@ def search(search_params, index, page_size, page=1) -> Response:
     # If any filters are specified, add them to the query.
     if 'li' in search_params.data or 'lt' in search_params.data:
         license_field = 'li' if 'li' in search_params.data else 'lt'
-        license_queries = []
+        license_filters = []
         for _license in search_params.data[license_field].split(','):
-            license_queries.append(Q("term", license=_license))
-        s = s.filter('bool', should=license_queries, minimum_should_match=1)
+            license_filters.append(Q("term", license=_license))
+        s = s.filter('bool', should=license_filters, minimum_should_match=1)
+    if 'provider' in search_params.data:
+        provider_filters = []
+        for provider in search_params.data['provider'].split(','):
+            provider_filters.append(Q("term", provider=provider))
+        s = s.filter('bool', should=provider_filters, minimum_should_match=1)
 
-    # Search by keyword.
+    # Search for keywords.
     keywords = ' '.join(search_params.data['q'])
     s = s.query("multi_match",
                 query=keywords,
