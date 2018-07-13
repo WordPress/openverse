@@ -46,7 +46,7 @@ def search(search_params, index, page_size, page=1) -> Response:
         s = s.filter('bool', should=provider_filters, minimum_should_match=1)
 
     # Search for keywords.
-    keywords = ' '.join(search_params.data['q'])
+    keywords = ' '.join(search_params.data['q'].split(','))
     s = s.query("multi_match",
                 query=keywords,
                 fields=['title', 'tag', 'creator'])
