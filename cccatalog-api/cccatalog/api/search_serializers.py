@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from cccatalog.api.licenses import LICENSE_GROUPS
+from cccatalog.api.search_controller import get_providers
 
 
 class SearchQueryStringSerializer(serializers.Serializer):
@@ -24,7 +25,8 @@ class SearchQueryStringSerializer(serializers.Serializer):
 
     provider = serializers.CharField(
         label="provider",
-        help_text="A comma separated list of providers.",
+        help_text="A comma separated list of providers to search. Valid inputs:"
+                  " `{}`".format(get_providers('image')),
         required=False
     )
 
@@ -62,16 +64,21 @@ class SearchQueryStringSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     "License \'{}\' does not exist.".format(_license)
                 )
-        return value.lower()
+        return value.lower().split(',')
 
     def validate_lt(self, value):
         license_types = [x.lower() for x in value.split(',')]
+        resolved_licenses = set()
         for _type in license_types:
             if _type not in LICENSE_GROUPS:
                 raise serializers.ValidationError(
                     "License type \'{}\' does not exist.".format(_type)
                 )
-        return value.lower()
+            licenses = LICENSE_GROUPS[_type]
+            for _license in licenses:
+                resolved_licenses.add(_license.lower())
+
+        return ','.join(list(resolved_licenses))
 
     def validate_page(self, value):
         if value < 1:

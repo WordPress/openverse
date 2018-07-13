@@ -17,18 +17,17 @@ class SearchImages(APIView):
                          },
                          query_serializer=SearchQueryStringSerializer)
     def get(self, request, format=None):
-        # Read query string. Ensure parameter is valid
-        params, validation_errors = \
-            search_controller.parse_search_query(request.query_params)
-        if validation_errors:
+        # Parse and validate query parameters
+        params = SearchQueryStringSerializer(data=request.query_params)
+        if not params.is_valid():
             return Response(
                 status=400,
                 data={
-                    "validation_error": validation_errors
+                    "validation_error": params.errors
                 }
             )
-        page = params['page']
-        page_size = params['pagesize']
+        page = params.data['page']
+        page_size = params.data['pagesize']
         try:
             search_results = search_controller.search(params,
                                                       index='image',
