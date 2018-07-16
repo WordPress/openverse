@@ -24,13 +24,11 @@ class _SearchQueryStringSerializer(serializers.Serializer):
                   "Valid inputs: `{}`".format((list(LICENSE_GROUPS.keys()))),
         required=False,
     )
-
     provider = serializers.CharField(
         label="provider",
         help_text="A comma separated list of data sources to search.",
         required=False
     )
-
     page = serializers.IntegerField(
         label="page number",
         help_text="The page number to retrieve.",

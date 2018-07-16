@@ -9,13 +9,26 @@ import cccatalog.api.search_controller as search_controller
 
 
 class SearchImages(APIView):
+    """
+    Search for images by keyword. Optionally, filter the results by specific
+    licenses, or license "types" (commercial use allowed, modification allowed,
+    etc). Results are ranked in order of relevance.
+
+    Although there may be millions of relevant records, only the most relevant
+    several thousand records can be viewed. This is by design: the search
+    endpoint should be used to find the top N most relevant results, not for
+    exhaustive search or bulk download of every barely relevant result. As such,
+    the caller should not try to access pages beyond `page_count`, or else the
+    server will reject the query.
+    """
     renderer_classes = (JSONRenderer,)
 
-    @swagger_auto_schema(responses={
+    @swagger_auto_schema(operation_id='image_search',
+                         query_serializer=ImageSearchQueryStringSerializer,
+                         responses={
                              200: ImageSearchResultSerializer(many=True),
                              400: ValidationErrorSerializer,
-                         },
-                         query_serializer=ImageSearchQueryStringSerializer)
+                         })
     def get(self, request, format=None):
         # Parse and validate query parameters
         params = ImageSearchQueryStringSerializer(data=request.query_params)
