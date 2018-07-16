@@ -14,8 +14,8 @@ export AWS_REGION="${aws_region}"
 export AWS_ACCESS_KEY_ID="${aws_access_key_id}"
 export AWS_SECRET_ACCESS_KEY="${aws_secret_access_key}"
 export LOAD_BALANCER_URL="${load_balancer_url}"
-export WSGI_AUTH_CREDENTIALS="${wsgi_auth_credentials}"
-export WSGI_AUTH_EXCLUDE_PATHS="/healthcheck"
+# export WSGI_AUTH_CREDENTIALS="${wsgi_auth_credentials}"
+# export WSGI_AUTH_EXCLUDE_PATHS="/healthcheck"
 
 # Install python and git dependencies
 yum -y install git python3-3.7.0-0.16.b3.amzn2.0.1 gcc python3-setuptools python3-devel postgresql-devel
