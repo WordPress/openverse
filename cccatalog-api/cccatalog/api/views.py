@@ -73,14 +73,14 @@ class SearchImages(APIView):
 
         return Response(status=200, data=serialized_response.initial_data)
 
-
 class HealthCheck(APIView):
     """
-    Returns a 200 OK response if the server is running.
+    Returns a `200 OK` response if the server is running.
 
-    This endpoint is used in production to ensure that the server is healthy. If
-    no response is provided, the server is deregistered from the load balancer
-    and destroyed.
+    This endpoint is used in production to ensure that the server should receive
+    traffic. If no response is provided, the server is deregistered from the
+    load balancer and destroyed.
     """
+    @swagger_auto_schema(operation_id='healthcheck')
     def get(self, request, format=None):
         return Response('', status=200)

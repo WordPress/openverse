@@ -36,6 +36,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path('', schema_view.with_ui('redoc', cache_timeout=None),
+        name='redirect-root-to-redoc'),
     path('admin/', admin.site.urls),
     re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
