@@ -21,13 +21,20 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 import rest_framework.permissions
 
+description = """
+The Creative Commons Catalog API ('cccatalog-api') is a system
+that allows programmatic access to public domain digital media. It is our 
+ambition to index and catalog billions of Creative Commons works, including
+articles, songs, videos, photographs, paintings, and more. Using this API,
+developers will be able to access the digital commons in their own
+applications.
+"""
 
 schema_view = get_schema_view(
    openapi.Info(
       title="Creative Commons Catalog API",
       default_version='v1',
-      description="Provides programmatic access to the Creative Commons "
-                  "Catalog.",
+      description=description,
       contact=openapi.Contact(email="alden@creativecommons.org"),
       license=openapi.License(name="MIT License"),
    ),
