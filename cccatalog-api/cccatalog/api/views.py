@@ -81,6 +81,6 @@ class HealthCheck(APIView):
     traffic. If no response is provided, the server is deregistered from the
     load balancer and destroyed.
     """
-    @swagger_auto_schema(operation_id='healthcheck')
+    swagger_schema = None
     def get(self, request, format=None):
         return Response('', status=200)
