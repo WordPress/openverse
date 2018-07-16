@@ -30,6 +30,8 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ny#b__$f6ry4wy8oxre97&-68u_0lk
 DEBUG = bool(os.environ.get('DJANGO_DEBUG_ENABLED', default=False))
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
+                 'api-dev.creativecommons.engineering',
+                 "api.creativecommons.engineering",
                  gethostname(), gethostbyname(gethostname())]
 
 
