@@ -75,6 +75,12 @@ class SearchImages(APIView):
 
 
 class HealthCheck(APIView):
+    """
+    Returns a 200 OK response if the server is running.
 
+    This endpoint is used in production to ensure that the server is healthy. If
+    no response is provided, the server is deregistered from the load balancer
+    and destroyed.
+    """
     def get(self, request, format=None):
         return Response('', status=200)
