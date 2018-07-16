@@ -3,7 +3,9 @@ from cccatalog.api.licenses import LICENSE_GROUPS
 from cccatalog.api.search_controller import get_providers
 
 
-class SearchQueryStringSerializer(serializers.Serializer):
+class _SearchQueryStringSerializer(serializers.Serializer):
+    """ Base class for search query parameters. """
+
     """ Parse and validate search query string parameters. """
     q = serializers.CharField(
         label="query",
@@ -23,12 +25,9 @@ class SearchQueryStringSerializer(serializers.Serializer):
         required=False,
     )
 
-    # FIXME: Index name should not be assumed.
     provider = serializers.CharField(
         label="provider",
-        help_text="A comma separated list of data sources to search. Valid "
-                  "inputs:"
-                  " `{}`".format(get_providers('image')),
+        help_text="A comma separated list of data sources to search.",
         required=False
     )
 
@@ -86,16 +85,6 @@ class SearchQueryStringSerializer(serializers.Serializer):
 
         return ','.join(list(resolved_licenses))
 
-    def validate_provider(self, value):
-        # FIXME: Index name should not be assumed.
-        allowed_providers = get_providers('image')
-        if value not in allowed_providers:
-            raise serializers.ValidationError(
-                "Provider \'{}\' does not exist.".format(value)
-            )
-        else:
-            return value.lower()
-
     def validate_page(self, value):
         if value < 1:
             return 1
@@ -107,6 +96,26 @@ class SearchQueryStringSerializer(serializers.Serializer):
             return value
         else:
             return 20
+
+
+class ImageSearchQueryStringSerializer(_SearchQueryStringSerializer):
+    """ Query parameters specific to image search."""
+    provider = serializers.CharField(
+        label="provider",
+        help_text="A comma separated list of data sources to search. Valid "
+                  "inputs:"
+                  " `{}`".format(get_providers('image')),
+        required=False
+    )
+
+    def validate_provider(self, value):
+        allowed_providers = get_providers('image')
+        if value not in allowed_providers:
+            raise serializers.ValidationError(
+                "Provider \'{}\' does not exist.".format(value)
+            )
+        else:
+            return value.lower()
 
 
 class ElasticsearchImageResultSerializer(serializers.Serializer):

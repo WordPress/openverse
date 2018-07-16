@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from cccatalog.api.search_serializers import ImageSearchResultSerializer, \
-    ElasticsearchImageResultSerializer, ValidationErrorSerializer,\
-    SearchQueryStringSerializer
+    ElasticsearchImageResultSerializer, ValidationErrorSerializer, \
+    ImageSearchQueryStringSerializer
 from drf_yasg.utils import swagger_auto_schema
 import cccatalog.api.search_controller as search_controller
 
@@ -15,10 +15,10 @@ class SearchImages(APIView):
                              200: ImageSearchResultSerializer(many=True),
                              400: ValidationErrorSerializer,
                          },
-                         query_serializer=SearchQueryStringSerializer)
+                         query_serializer=ImageSearchQueryStringSerializer)
     def get(self, request, format=None):
         # Parse and validate query parameters
-        params = SearchQueryStringSerializer(data=request.query_params)
+        params = ImageSearchQueryStringSerializer(data=request.query_params)
         if not params.is_valid():
             return Response(
                 status=400,
