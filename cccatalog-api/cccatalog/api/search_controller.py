@@ -64,7 +64,7 @@ def get_providers(index):
     :param index: An Elasticsearch index, such as `'image'`.
     :return: A list of providers represented as strings. Example: `['met']`
     """
-    provider_cache_name = 'providers'
+    provider_cache_name = 'providers-' + index
     cache_timeout = 60 * 60
     providers = cache.get(key=provider_cache_name)
     if not providers:
