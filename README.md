@@ -1,6 +1,6 @@
 # cccatalog-frontend
 
-> Common Creative search
+> Creative Commons Search
 
 ## Build Setup
 
