@@ -1,55 +1,56 @@
 
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-import { API_URL } from '@/config'
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+
+const BASE_URL = 'http://api-dev.creativecommons.engineering';
 
 const ApiService = {
-  init (baseUrl = API_URL, authParams) {
+  init(baseUrl = BASE_URL, authParams) {
     Vue.use(VueAxios, axios);
     Vue.axios.defaults.baseURL = baseUrl;
     Vue.axios.defaults.auth = authParams;
   },
 
-  setHeader (headerParams) {
+  setHeader(headerParams) {
     Object.assign(Vue.axios.defaults.headers, headerParams);
   },
 
-  query (resource, params) {
+  query(resource, params) {
     return Vue.axios
-      .get(resource, params)
+      .get(resource, { params })
       .catch((error) => {
-        throw new Error(`[RWV] ApiService ${error}`)
-      })
+        throw new Error(`[RWV] ApiService ${error}`);
+      });
   },
 
-  get (resource, slug = '') {
+  get(resource, slug = '') {
     return Vue.axios
       .get(`${resource}/${slug}`)
       .catch((error) => {
-        throw new Error(`[RWV] ApiService ${error}`)
-      })
+        throw new Error(`[RWV] ApiService ${error}`);
+      });
   },
 
-  post (resource, params) {
+  post(resource, params) {
     return Vue.axios.post(`${resource}`, params);
   },
 
-  update (resource, slug, params) {
+  update(resource, slug, params) {
     return Vue.axios.put(`${resource}/${slug}`, params);
   },
 
-  put (resource, params) {
+  put(resource, params) {
     return Vue.axios.put(`${resource}`, params);
   },
 
-  delete (resource) {
+  delete(resource) {
     return Vue.axios
       .delete(resource)
       .catch((error) => {
-        throw new Error(`[RWV] ApiService ${error}`)
-      })
-  }
-}
+        throw new Error(`[RWV] ApiService ${error}`);
+      });
+  },
+};
 
-export default ApiService
+export default ApiService;
