@@ -1,33 +1,31 @@
 
-import ApiService from './ApiService'
+import ApiService from './ApiService';
 
-export const SocialService = {
+const SocialService = {
   /**
    * Implements an endpoint to convert a provider token to an access token.
    */
-  convertToken () {
-
+  convertToken() {
     return ApiService.post('/social/token/');
   },
   /**
    * Implements an endpoint to provide access tokens.
    */
-  createToken () {
-    
+  createToken() {
     return ApiService.post('/social/convert-token/');
-  }
+  },
   /**
    * Implements an endpoint to an invalidate any live sessions.
    */
-  invalidateSessions () {
-
+  invalidateSessions() {
     return ApiService.post('/social/invalidate-sessions/');
-  }
+  },
   /**
    * Implements an endpoint to revoke access or refresh tokens.
    */
-  revokeToken () {
-
+  revokeToken() {
     return ApiService.post('/social/revoke-token/');
-  }
-}
+  },
+};
+
+export default SocialService;
