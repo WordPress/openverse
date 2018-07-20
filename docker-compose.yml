@@ -52,7 +52,6 @@ services:
     stdin_open: true
     tty: true
 
-
   es-syncer:
     build: ./es_syncer/
     command: bash -c 'sleep 20 && supervisord -c config/supervisord.conf'
