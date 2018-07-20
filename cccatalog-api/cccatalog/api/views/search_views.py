@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
-from cccatalog.api.search_serializers import ImageSearchResultSerializer, \
+from cccatalog.api.serializers.search_serializers import ImageSearchResultSerializer, \
     ElasticsearchImageResultSerializer, ValidationErrorSerializer, \
     ImageSearchQueryStringSerializer
 from drf_yasg.utils import swagger_auto_schema
