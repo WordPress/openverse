@@ -19,7 +19,7 @@ services:
     environment:
       # disable XPack
       # https://www.elastic.co/guide/en/elasticsearch/reference/5.3/docker.html#_security_note
-      - xpack.security.enabled=false
+      xpack.security.enabled: "false"
     healthcheck:
       test: ["CMD-SHELL", "curl -si -XGET 'localhost:9200/_cluster/health?pretty' | grep -qE 'yellow|green'"]
       interval: 10s
@@ -47,10 +47,7 @@ services:
       DJANGO_DATABASE_HOST: "db"
       PYTHONUNBUFFERED: "0"
       DJANGO_DEBUG_ENABLED: "True"
-      ELASTICSEARCH_URL: "es"
-      ELASTICSEARCH_PORT: "9200"
-    stdin_open: true
-    tty: true
+
 
   es-syncer:
     build: ./es_syncer/
@@ -71,6 +68,3 @@ services:
       DATABASE_PORT: '5432'
       DB_BUFFER_SIZE: '100000'
       COPY_TABLES: 'image'
-      SYNCER_POLL_INTERVAL: '10'
-    stdin_open: true
-    tty: true
