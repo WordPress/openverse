@@ -1,9 +1,9 @@
 from cccatalog.api.serializers.list_serializers import ImageListSerializer
 from rest_framework.generics import CreateAPIView
-from rest_framework.throttling import AnonRateThrottle
+from rest_framework.throttling import UserRateThrottle
 
 
-class ListThrottler(AnonRateThrottle):
+class ListThrottler(UserRateThrottle):
     rate = '30/day'
 
 
