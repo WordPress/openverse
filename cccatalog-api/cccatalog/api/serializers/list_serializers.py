@@ -3,8 +3,11 @@ from cccatalog.api.models import ImageList
 
 
 class ImageListSerializer(serializers.ModelSerializer):
+    """
+    Responsible for parsing POST JSON body and persisting to the database.
+    """
+    lookup_field = 'id'
     id = serializers.ReadOnlyField()
-
     class Meta:
         model = ImageList
         fields = ('id', 'title', 'images')

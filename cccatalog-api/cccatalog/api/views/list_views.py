@@ -1,7 +1,10 @@
 from cccatalog.api.serializers.list_serializers import ImageListSerializer
+from cccatalog.api.models import ImageList
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers
-from rest_framework.views import APIView
+from rest_framework.mixins import RetrieveModelMixin
+from rest_framework.generics import GenericAPIView
+from rest_framework.renderers import JSONRenderer
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.decorators import throttle_classes
 from rest_framework.response import Response
@@ -11,15 +14,20 @@ class ListCreateThrottler(UserRateThrottle):
     rate = '30/day'
 
 
-class List(APIView):
-    class _PostResponse(serializers.Serializer):
+class List(GenericAPIView, RetrieveModelMixin):
+    renderer_classes = (JSONRenderer,)
+    serializer_class = ImageListSerializer
+    queryset = ImageList.objects.all()
+    lookup_field = 'id'
+
+    class _CreateResponse(serializers.Serializer):
         id = serializers.IntegerField(
             help_text="The ID of the new list."
         )
 
     @swagger_auto_schema(operation_id="list_create",
                          responses={
-                             201: _PostResponse,
+                             201: _CreateResponse,
                              400: "Bad Request"
                          })
     @throttle_classes([ListCreateThrottler])
@@ -48,5 +56,12 @@ class List(APIView):
             }
         )
 
-    def get(self, request, format=None):
-        pass
+    @swagger_auto_schema(operation_id="list_detail",
+                         responses={
+                             200: ImageListSerializer,
+                             404: 'Not Found'
+                         })
+    def get(self, request, id, format=None):
+        """ Get the details of a single list. """
+
+        return self.retrieve(request, id)
