@@ -3,9 +3,11 @@ from cccatalog.api.models import ImageList
 
 
 class ImageListSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+
     class Meta:
         model = ImageList
-        fields = ('title', 'images')
+        fields = ('id', 'title', 'images')
 
     def validate_images(self, image_keys):
         if len(image_keys) > 500:
@@ -19,5 +21,9 @@ class ImageListSerializer(serializers.ModelSerializer):
         images = self.validated_data['images']
         image_list = ImageList(title=title)
         image_list.save()
+        _id = image_list.id
+
         for image in images:
             image_list.images.add(image)
+
+        return _id
