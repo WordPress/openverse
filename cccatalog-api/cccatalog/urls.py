@@ -18,7 +18,7 @@ from django.urls import path, re_path
 from django.conf.urls import include
 from cccatalog.api.views.search_views import SearchImages
 from cccatalog.api.views.site_views import HealthCheck
-from cccatalog.api.views.list_views import List
+from cccatalog.api.views.list_views import CreateList, DetailList
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 import rest_framework.permissions
@@ -48,8 +48,8 @@ urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=None),
         name='redirect-root-to-redoc'),
     path('admin/', admin.site.urls),
-    path('list', List.as_view()),
-    re_path('^list/(?P<id>\d+)$', List.as_view(), name='list-detail'),
+    path('list', CreateList.as_view()),
+    path('list/<int:id>/', DetailList.as_view(), name='list-detail'),
     re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
     re_path('image/search', SearchImages.as_view()),
@@ -60,4 +60,4 @@ urlpatterns = [
         name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None),
         name='schema-redoc'),
-]
+    ]

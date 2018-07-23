@@ -15,15 +15,18 @@ class ListCreateThrottler(UserRateThrottle):
     rate = '30/day'
 
 
-class List(GenericAPIView, RetrieveModelMixin):
+class _List(GenericAPIView):
     renderer_classes = (JSONRenderer,)
     serializer_class = ImageListSerializer
     queryset = ImageList.objects.all()
     lookup_field = 'id'
 
+
+class CreateList(_List):
+
     class _CreateResponse(serializers.Serializer):
         url = serializers.HyperlinkedRelatedField(
-            view_name='list_detail',
+            view_name='list-detail',
             read_only=True,
             help_text="The URL of the new list."
         )
@@ -60,6 +63,8 @@ class List(GenericAPIView, RetrieveModelMixin):
             }
         )
 
+
+class DetailList(_List, RetrieveModelMixin):
     @swagger_auto_schema(operation_id="list_detail",
                          responses={
                              200: ImageListSerializer,
