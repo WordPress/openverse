@@ -1,11 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
+from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.serializers.search_serializers import ImageSearchResultSerializer, \
     ElasticsearchImageResultSerializer, ValidationErrorSerializer, \
     ImageSearchQueryStringSerializer
-from drf_yasg.utils import swagger_auto_schema
-import cccatalog.api.search_controller as search_controller
+import cccatalog.api.controllers.search_controller as search_controller
 
 
 class SearchImages(APIView):

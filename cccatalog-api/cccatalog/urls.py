@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
-from cccatalog.api import views
+from cccatalog.api.views.search_views import SearchImages, HealthCheck
+from cccatalog.api.views.list_views import List
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 import rest_framework.permissions
@@ -46,10 +47,11 @@ urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=None),
         name='redirect-root-to-redoc'),
     path('admin/', admin.site.urls),
+    path('list', List.as_view()),
     re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
-    re_path('image/search', views.SearchImages.as_view()),
-    re_path('healthcheck', views.HealthCheck.as_view()),
+    re_path('image/search', SearchImages.as_view()),
+    re_path('healthcheck', HealthCheck.as_view()),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
         schema_view.without_ui(cache_timeout=None), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None),
