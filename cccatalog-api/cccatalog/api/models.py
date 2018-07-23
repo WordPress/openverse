@@ -126,8 +126,12 @@ class UserTags(OpenLedgerModel):
 
 
 class ImageList(OpenLedgerModel):
-    title = models.CharField(max_length=2000)
-    images = models.ManyToManyField(Image, related_name="lists")
+    title = models.CharField(max_length=2000, help_text="Display name")
+    images = models.ManyToManyField(
+        Image,
+        related_name="lists",
+        help_text="A list of primary keys corresponding to images."
+    )
 
     class Meta:
         db_table = 'imagelist'

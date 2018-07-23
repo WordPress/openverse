@@ -9,7 +9,10 @@ class ListThrottler(AnonRateThrottle):
 
 class List(CreateAPIView):
     """
-    Create a list of images.
+    Create a public collection of images.
+
+    To prevent abuse, only up to 30 lists can be made by a single user per day,
+    and lists can only have up to 500 items.
     """
     throttle_classes = (ListThrottler,)
     serializer_class = ImageListSerializer
