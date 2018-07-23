@@ -8,6 +8,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.decorators import throttle_classes
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 
 class ListCreateThrottler(UserRateThrottle):
@@ -21,8 +22,10 @@ class List(GenericAPIView, RetrieveModelMixin):
     lookup_field = 'id'
 
     class _CreateResponse(serializers.Serializer):
-        id = serializers.IntegerField(
-            help_text="The ID of the new list."
+        url = serializers.HyperlinkedRelatedField(
+            view_name='list_detail',
+            read_only=True,
+            help_text="The URL of the new list."
         )
 
     @swagger_auto_schema(operation_id="list_create",
@@ -49,10 +52,11 @@ class List(GenericAPIView, RetrieveModelMixin):
             )
 
         list_id = serialized.save()
+        url = request.build_absolute_uri(reverse('list-detail', [list_id]))
         return Response(
             status=200,
             data={
-                'id': list_id
+                'url': url
             }
         )
 
@@ -63,5 +67,4 @@ class List(GenericAPIView, RetrieveModelMixin):
                          })
     def get(self, request, id, format=None):
         """ Get the details of a single list. """
-
         return self.retrieve(request, id)

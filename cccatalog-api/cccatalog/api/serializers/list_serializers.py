@@ -8,6 +8,7 @@ class ImageListSerializer(serializers.ModelSerializer):
     """
     lookup_field = 'id'
     id = serializers.ReadOnlyField()
+
     class Meta:
         model = ImageList
         fields = ('id', 'title', 'images')

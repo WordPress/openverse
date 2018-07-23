@@ -2,9 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from drf_yasg.utils import swagger_auto_schema
-from cccatalog.api.serializers.search_serializers import ImageSearchResultSerializer, \
-    ElasticsearchImageResultSerializer, ValidationErrorSerializer, \
-    ImageSearchQueryStringSerializer
+from cccatalog.api.serializers.search_serializers import\
+    ImageSearchResultSerializer, ElasticsearchImageResultSerializer,\
+    ValidationErrorSerializer, ImageSearchQueryStringSerializer
 import cccatalog.api.controllers.search_controller as search_controller
 
 
@@ -72,15 +72,3 @@ class SearchImages(APIView):
         serialized_response = ImageSearchResultSerializer(data=response_data)
 
         return Response(status=200, data=serialized_response.initial_data)
-
-class HealthCheck(APIView):
-    """
-    Returns a `200 OK` response if the server is running.
-
-    This endpoint is used in production to ensure that the server should receive
-    traffic. If no response is provided, the server is deregistered from the
-    load balancer and destroyed.
-    """
-    swagger_schema = None
-    def get(self, request, format=None):
-        return Response('', status=200)
