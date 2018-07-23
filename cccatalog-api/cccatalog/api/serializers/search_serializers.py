@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from cccatalog.api.licenses import LICENSE_GROUPS
-from cccatalog.api.search_controller import get_providers
+from cccatalog.api.controllers.search_controller import get_providers
 
 
 class _SearchQueryStringSerializer(serializers.Serializer):

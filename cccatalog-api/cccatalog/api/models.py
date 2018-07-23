@@ -108,7 +108,7 @@ class Image(OpenLedgerModel):
 
 class ImageTags(OpenLedgerModel):
     tag = models.ForeignKey('Tag', on_delete=models.CASCADE, blank=True, null=True)
-    image = models.ForeignKey(Image, on_delete=models.CASCADE, blank=True, null=True)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True)
 
     class Meta:
         unique_together = (('tag', 'image'))
@@ -125,26 +125,16 @@ class UserTags(OpenLedgerModel):
         db_table = 'user_tags'
 
 
-class List(OpenLedgerModel):
-    title = models.CharField(max_length=2000)
-    creator_displayname = models.CharField(max_length=2000, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    is_public = models.BooleanField(default=False)
-    slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
-    images = models.ManyToManyField(Image, related_name="lists")
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
+class ImageList(OpenLedgerModel):
+    title = models.CharField(max_length=2000, help_text="Display name")
+    images = models.ManyToManyField(
+        Image,
+        related_name="lists",
+        help_text="A list of primary keys corresponding to images."
+    )
 
     class Meta:
-        db_table = 'list'
-        ordering = ['-updated_on']
-        unique_together = (('title', 'owner',))
-
-    def get_absolute_url(self):
-        return reverse('my-list-update', kwargs={'slug': self.slug})
-
-    def __str__(self):
-        return "'{}' by {} [{}]".format(self.title, self.owner.username if self.owner else 'No owner',
-                                        "public" if self.is_public else "private")
+        db_table = 'imagelist'
 
 
 class Tag(OpenLedgerModel):
@@ -156,28 +146,3 @@ class Tag(OpenLedgerModel):
 
     class Meta:
         db_table = 'tag'
-
-
-class Favorite(OpenLedgerModel):
-    image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="favorites")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = (('user', 'image'))
-        db_table = 'favorite'
-        ordering = ['-updated_on']
-
-
-class ElasticsearchSyncs(models.Model):
-    """
-    Each synchronization between Postgres and Elasticsearch results in a single
-    record getting inserted into this table for auditing.
-    """
-    # The time that the sync job finished.
-    synced_at = models.DateTimeField(auto_now_add=True, null=True)
-
-    # The number of records replicated to Elasticsearch.
-    records_synced = models.IntegerField()
-
-    # Tables replicated to Elasticsearch.
-    tables = models.CharField(max_length=500, blank=True, null=True)

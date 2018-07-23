@@ -50,6 +50,7 @@ class Image(SyncableDocType):
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
         return Image(
+            _id=row[schema['id']],
             pg_id=row[schema['id']],
             title=row[schema['title']],
             identifier=row[schema['identifier']],
