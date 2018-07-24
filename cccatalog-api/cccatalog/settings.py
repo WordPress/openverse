@@ -162,6 +162,13 @@ STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL = True
 
 # API specific configuration
+
+# The version of the API. We follow the semantic versioning specification.
+API_VERSION = os.environ.get(
+    'VERSION',
+    "Not specified. This release is suspect and should not be used."
+)
+
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 SOCIAL_AUTH_GITHUB_SCOPE = ['user:email']
