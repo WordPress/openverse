@@ -21,7 +21,7 @@ data "template_file" "init"{
     elasticsearch_url     = "${var.elasticsearch_url}"
     elasticsearch_port    = "${var.elasticsearch_port}"
     aws_region            = "${var.aws_region}"
-    version               = "${var.version}"
+    api_version           = "${var.api_version}"
   }
 }
 

@@ -73,6 +73,6 @@ variable "aws_region" {
   description = "The region of the Elasticsearch instance. Required for IAM auth."
 }
 
-variable "version" {
+variable "api_version" {
   description = "The current version of the API. Expected to use the semantic version format. X.Y.Z+<SHA COMMIT HASH>. The commit hash is appended for you automatically. \nMore details: https://semver.org/. \n\nExample: 0.1.0"
 }

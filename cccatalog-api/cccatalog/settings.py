@@ -165,7 +165,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # The version of the API. We follow the semantic versioning specification.
 API_VERSION = os.environ.get(
-    'VERSION',
+    'SEMANTIC_VERSION',
     "Not specified. This release is suspect and should not be used."
 )
 
