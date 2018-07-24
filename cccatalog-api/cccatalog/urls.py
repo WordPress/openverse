@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from django.conf.urls import include
+# from django.conf.urls import include
 from cccatalog.api.views.search_views import SearchImages
 from cccatalog.api.views.site_views import HealthCheck
 from cccatalog.api.views.list_views import CreateList, DetailList
@@ -50,8 +50,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('list', CreateList.as_view()),
     path('list/<int:id>/', DetailList.as_view(), name='list-detail'),
-    re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
+    # re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    # re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
     re_path('image/search', SearchImages.as_view()),
     re_path('healthcheck', HealthCheck.as_view()),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
