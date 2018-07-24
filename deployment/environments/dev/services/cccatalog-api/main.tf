@@ -18,9 +18,6 @@ variable "aws_access_key_id" {
 variable "aws_secret_access_key" {
   type = "string"
 }
-variable "version" {
-  type = "string"
-}
 
 module "cccatalog-api" {
   source = "../../../../modules/services/cccatalog-api"
@@ -31,7 +28,7 @@ module "cccatalog-api" {
   max_size                  = 5
   instance_type             = "t2.micro"
   enable_monitoring         = false
-  git_revision              = "a545e691f322da754c4480b5b7b72042bd99b6cf"
+  git_revision              = "81c0eb0f0fe804df2cdfb95a5d3c150ac2dc8db7"
   api_version               = "0.1.0"
 
   # Environment-specific variables
