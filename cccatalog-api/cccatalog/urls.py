@@ -49,7 +49,7 @@ urlpatterns = [
         name='redirect-root-to-redoc'),
     path('admin/', admin.site.urls),
     path('list', CreateList.as_view()),
-    path('list/<int:id>/', DetailList.as_view(), name='list-detail'),
+    path('list/<int:id>', DetailList.as_view(), name='list-detail'),
     # re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     # re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
     re_path('image/search', SearchImages.as_view()),
