@@ -35,7 +35,7 @@ applications.
 schema_view = get_schema_view(
    openapi.Info(
       title="Creative Commons Catalog API",
-      default_version='v1',
+      default_version='0.1.0',
       description=description,
       contact=openapi.Contact(email="alden@creativecommons.org"),
       license=openapi.License(name="MIT License"),
