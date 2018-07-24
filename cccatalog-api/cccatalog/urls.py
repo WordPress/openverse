@@ -19,6 +19,7 @@ from django.urls import path, re_path
 from cccatalog.api.views.search_views import SearchImages
 from cccatalog.api.views.site_views import HealthCheck
 from cccatalog.api.views.list_views import CreateList, DetailList
+from cccatalog.settings import API_VERSION
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 import rest_framework.permissions
@@ -35,7 +36,7 @@ applications.
 schema_view = get_schema_view(
    openapi.Info(
       title="Creative Commons Catalog API",
-      default_version='0.1.0',
+      default_version=API_VERSION,
       description=description,
       contact=openapi.Contact(email="alden@creativecommons.org"),
       license=openapi.License(name="MIT License"),

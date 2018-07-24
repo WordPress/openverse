@@ -14,6 +14,12 @@ export AWS_REGION="${aws_region}"
 export AWS_ACCESS_KEY_ID="${aws_access_key_id}"
 export AWS_SECRET_ACCESS_KEY="${aws_secret_access_key}"
 export LOAD_BALANCER_URL="${load_balancer_url}"
+export VERSION="${version}"
+export REVISION="${git_revision}"
+
+# https://semver.org
+export SEMANTIC_VERSION="$VERSION+${REVISION:0:12}"
+
 # export WSGI_AUTH_CREDENTIALS="${wsgi_auth_credentials}"
 # export WSGI_AUTH_EXCLUDE_PATHS="/healthcheck"
 

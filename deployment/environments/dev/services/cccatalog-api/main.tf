@@ -18,6 +18,9 @@ variable "aws_access_key_id" {
 variable "aws_secret_access_key" {
   type = "string"
 }
+variable "version" {
+  type = "string"
+}
 
 module "cccatalog-api" {
   source = "../../../../modules/services/cccatalog-api"
@@ -28,7 +31,8 @@ module "cccatalog-api" {
   max_size                  = 5
   instance_type             = "t2.micro"
   enable_monitoring         = false
-  git_revision              = "4e831dfb6ec7274ce95b93f1135b18c4e9f5a0e6"
+  git_revision              = "a545e691f322da754c4480b5b7b72042bd99b6cf"
+  api_version               = "0.1.0"
 
   # Environment-specific variables
   database_host             = "openledger-db-dev3-nvirginia.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
