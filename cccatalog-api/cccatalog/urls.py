@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 # from django.conf.urls import include
-from cccatalog.api.views.search_views import SearchImages
+from cccatalog.api.views.image_views import SearchImages
 from cccatalog.api.views.site_views import HealthCheck
 from cccatalog.api.views.list_views import CreateList, DetailList
 from cccatalog.settings import API_VERSION
