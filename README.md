@@ -8,6 +8,10 @@ As of June 2018, this project is in its early stages. For now, assume that the A
 
 This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [cccatalog repository](https://github.com/creativecommons/cccatalog).
 
+## API Documentation
+
+Beta browsable API documentation can be found [here](api-dev.creativecommons.engineering).
+
 ## Getting Started
 
 Ensure that you have installed [Docker](https://docs.docker.com/install/) and that the [Docker daemon is running](https://docs.docker.com/config/daemon/).
@@ -20,7 +24,7 @@ docker-compose up
 After executing this, you will be running:
 * A Django API server
 * PostgreSQL, the source-of-truth database
-* A single-node Elasticsearch cluster
+* Elasticsearch
 * `es-syncer`, a daemon that indexes documents to Elasticsearch in real-time.
 
 ### System Architecture
@@ -28,10 +32,6 @@ After executing this, you will be running:
 
 ## Running the tests
 Coming soon.
-
-## API Documentation
-
-We document API endpoints using OpenAPI. Coming soon.
 
 
 ## Operations Guide
