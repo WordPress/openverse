@@ -2,6 +2,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django_redis import get_redis_connection
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image
 from cccatalog.api.utils.view_count import track_model_views
@@ -95,6 +96,9 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                              404: 'Not Found'
                          })
     @track_model_views(Image)
-    def get(self, request, id, format=None):
+    def get(self, request, id, format=None, view_count=0):
         """ Get the details of a single list. """
-        return self.retrieve(request, id)
+        resp = self.retrieve(request, id)
+        # Add page views to the response.
+        resp.data['view_count'] = view_count
+        return resp

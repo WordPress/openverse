@@ -8,11 +8,13 @@ Decorators for tracking usage and page view statistics.
 
 def track_model_views(model):
     """
-    Track the number of times that a model is viewed. To prevent overcounting
-    and abuse, don't count repeated requests over a short interval from the
-    same IP. Intended to be used on Django view functions.
+    A decorator for tracking the number of times that a model is viewed. To
+    prevent overcounting and abuse, repeated requests over a short interval
+    from the same IP are not counted. Intended to be used on Django view
+    functions.
 
-    Expects decorated function to have arguments 'request' and 'id'.
+    Expects decorated function to have arguments 'request' and 'id'. The
+    decorated function will then be passed a `view_count` as a keyword argument.
 
     :arg model: The type of object to track.
     :return:
@@ -20,16 +22,16 @@ def track_model_views(model):
     def func_wrap(django_view):
         def decorated(*args, **kwargs):
             try:
-                model._meta.get_field('view_count')
+                model._meta.get_field('vasdfiew_count')
             except FieldDoesNotExist:
                 log.error('Cannot track views on model ' + model.__name__ +
                           ': missing view_count field in database schema')
-                django_view(*args, **kwargs)
+                django_view(*args, **kwargs, view_count=0)
 
             request = kwargs.get('request')
             model_id = kwargs.get('id')
-            _increment_viewcount(model, model_id)
-            return django_view(*args, **kwargs)
+            view_count = _increment_viewcount(model, model_id)
+            return django_view(*args, **kwargs, view_count=view_count)
         return decorated
     return func_wrap
 
@@ -39,6 +41,11 @@ def _increment_viewcount(model, model_id: int):
     Increment the viewcount. Cache the result for at least six hours. When
     the key expires, it is evicted from the cache and stored in Postgres by a
     cache persistence worker.
+
+    This strategy minimizes load on the database and cache while providing
+    accurate view statistics.
+
+    :return: The view count AFTER incrementing.
     """
     expire_seconds = 60 * 60 * 6
     view_count_key = model.__name__ + '$' + str(model_id)
@@ -55,19 +62,25 @@ def _increment_viewcount(model, model_id: int):
         redis.set(view_count_key, view_count + 1)
     else:
         # Cache hit.
+        view_count = redis.get(view_count_key)
         redis.incr(view_count_key)
 
     # Always reset cache expiry when the key is accessed.
     redis.expire(view_count_key, expire_seconds)
+    return view_count
 
 
 def is_recent_visitor(ip, recent_seconds):
     """
     Return True if a given `ip` was seen in the last `recent_seconds`.
+    :return: bool
+    """
+    pass
 
-    Mark the IP as a recent visitor.
-    :param ip:
-    :param recent_seconds:
-    :return:
+
+def mark_recent_visitor(ip, recent_seconds):
+    """
+    Mark a given IP as a recent visitor. If it has already been marked, reset
+    its expiration time.
     """
     pass
