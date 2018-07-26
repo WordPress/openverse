@@ -13,6 +13,8 @@ def track_model_views(model):
     from the same IP are not counted. Intended to be used on Django view
     functions.
 
+    It is assumed that the model has a view_count field.
+
     Expects decorated function to have arguments 'request' and 'id'. The
     decorated function will then be passed a `view_count` as a keyword argument.
 
@@ -21,13 +23,6 @@ def track_model_views(model):
     """
     def func_wrap(django_view):
         def decorated(*args, **kwargs):
-            try:
-                model._meta.get_field('vasdfiew_count')
-            except FieldDoesNotExist:
-                log.error('Cannot track views on model ' + model.__name__ +
-                          ': missing view_count field in database schema')
-                django_view(*args, **kwargs, view_count=0)
-
             request = kwargs.get('request')
             model_id = kwargs.get('id')
             view_count = _increment_viewcount(model, model_id)
@@ -42,8 +37,9 @@ def _increment_viewcount(model, model_id: int):
     the key expires, it is evicted from the cache and stored in Postgres by a
     cache persistence worker.
 
-    This strategy minimizes load on the database and cache while providing
-    accurate view statistics.
+    This strategy minimizes write load on the database while providing
+    accurate view statistics. The cache is also kept small as infrequently used
+    data is evicted.
 
     :return: The view count AFTER incrementing.
     """
@@ -59,6 +55,11 @@ def _increment_viewcount(model, model_id: int):
         except ObjectDoesNotExist:
             # If the object doesn't even exist in the database, don't track it.
             return
+        except FieldDoesNotExist:
+            log.error('Cannot track model ' + model.__name__ +
+                      'because it has no view_count field. Page views for this' +
+                      'model will be lost.')
+            return
         redis.set(view_count_key, view_count + 1)
     else:
         # Cache hit.
@@ -70,7 +71,7 @@ def _increment_viewcount(model, model_id: int):
     return view_count
 
 
-def is_recent_visitor(ip, recent_seconds):
+def _is_recent_visitor(ip, recent_seconds):
     """
     Return True if a given `ip` was seen in the last `recent_seconds`.
     :return: bool
@@ -78,7 +79,7 @@ def is_recent_visitor(ip, recent_seconds):
     pass
 
 
-def mark_recent_visitor(ip, recent_seconds):
+def _mark_recent_visitor(ip, recent_seconds):
     """
     Mark a given IP as a recent visitor. If it has already been marked, reset
     its expiration time.
