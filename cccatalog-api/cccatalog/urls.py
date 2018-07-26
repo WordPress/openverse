@@ -53,7 +53,7 @@ urlpatterns = [
     path('list/<int:id>', DetailList.as_view(), name='list-detail'),
     # re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     # re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
-    path('image/<int:id>', ImageDetail.as_view()),
+    path('image/<int:id>', ImageDetail.as_view(), name='image-detail'),
     re_path('image/search', SearchImages.as_view()),
     re_path('healthcheck', HealthCheck.as_view()),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',

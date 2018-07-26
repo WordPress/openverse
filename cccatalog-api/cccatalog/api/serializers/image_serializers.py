@@ -6,10 +6,16 @@ from cccatalog.api.serializers.search_serializers import ImageSerializer
 
 
 class ImageDetailSerializer(ModelSerializer, ImageSerializer):
-    """ A single image with some additional fields, such as view count. Unlike
+    """
+    A single image with some additional fields, such as view count. Unlike
     ImageSerializer, the detail view comes from the database rather than
-    Elasticsearch."""
-    view_count = serializers.IntegerField(required=False)
+    Elasticsearch.
+    """
+    view_count = serializers.IntegerField(
+        required=False,
+        help_text="The number of times that an image has been viewed. "
+                  "This is not updated in real-time; there will be a small "
+                  "delay due to caching implementation details.")
 
     class Meta:
         model = Image

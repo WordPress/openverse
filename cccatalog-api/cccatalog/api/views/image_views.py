@@ -2,9 +2,9 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image
+from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
@@ -83,7 +83,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     - All fields in the database
     - The number of views
 
-    View count gets incremented when this is called.
+    Also increments the view count of the image.
     """
     serializer_class = ImageDetailSerializer
     queryset = Image.objects.all()
@@ -94,6 +94,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                              200: ImageDetailSerializer,
                              404: 'Not Found'
                          })
+    @track_model_views(Image)
     def get(self, request, id, format=None):
         """ Get the details of a single list. """
         return self.retrieve(request, id)

@@ -92,6 +92,9 @@ class Image(OpenLedgerModel):
     # "Tombstone" metadata, only occasionally available
     meta_data = JSONField(blank=True, null=True)
 
+    # The number of views the image has received.
+    view_count = models.IntegerField(default=0)
+
     def __str__(self):
         return '%r by %r from %r [%r %r]' % (
         self.title, self.creator, self.provider, self.license, self.license_version)

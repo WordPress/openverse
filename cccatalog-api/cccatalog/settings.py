@@ -78,13 +78,22 @@ REST_FRAMEWORK = {
 }
 
 CACHES = {
+    # Site cache writes to 'default'
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": os.environ.get('REDIS_CONNECTION_STRING',
-                                   'redis://cache:6379/1'),
+                                   'redis://cache:6379/' + '0'),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
+    },
+    "traffic_stats": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get('REDIS_CONNECTION_STRING',
+                                   'redis://cache:6379/' + '1'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
     }
 }
 
@@ -181,7 +190,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # The version of the API. We follow the semantic versioning specification.
 API_VERSION = os.environ.get(
     'SEMANTIC_VERSION',
-    "Version not specified. This release is suspect and should not be used."
+    "Version not specified."
 )
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
