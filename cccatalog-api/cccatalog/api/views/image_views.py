@@ -91,6 +91,11 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     queryset = Image.objects.all()
     lookup_field = 'id'
 
+    @swagger_auto_schema(operation_id="image_detail",
+                         responses={
+                             200: ImageDetailSerializer,
+                             404: 'Not Found'
+                         })
     def get(self, request, id, format=None):
         """ Get the details of a single list. """
         return self.retrieve(request, id)
