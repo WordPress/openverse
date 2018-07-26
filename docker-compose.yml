@@ -52,6 +52,10 @@ services:
     stdin_open: true
     tty: true
 
+  cache:
+    image: redis:4.0.10
+    ports:
+      - "6379:6379"
 
   es-syncer:
     build: ./es_syncer/

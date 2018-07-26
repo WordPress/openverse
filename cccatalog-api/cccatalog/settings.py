@@ -27,7 +27,7 @@ STATIC_ROOT = "/var/api_static_content/static"
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ny#b__$f6ry4wy8oxre97&-68u_0lk3gw(z=d40_dxey3zw0v1')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-true_strings = ['true', 'True']
+true_strings = ['true', 'True', 't']
 DEBUG = os.environ.get('DJANGO_DEBUG_ENABLED', default=False) in true_strings
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
@@ -75,6 +75,17 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     )
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get('REDIS_CONNECTION_STRING',
+                                   'redis://cache:6379/1'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
 }
 
 AUTHENTICATION_BACKENDS = (
@@ -170,7 +181,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # The version of the API. We follow the semantic versioning specification.
 API_VERSION = os.environ.get(
     'SEMANTIC_VERSION',
-    "Not specified. This release is suspect and should not be used."
+    "Version not specified. This release is suspect and should not be used."
 )
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
