@@ -7,8 +7,8 @@ from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
-    ValidationErrorSerializer, ImageSearchQueryStringSerializer,\
-    ImageDetailSerializer
+    ValidationErrorSerializer, ImageSearchQueryStringSerializer
+from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
 import cccatalog.api.controllers.search_controller as search_controller
 
 
@@ -25,7 +25,6 @@ class SearchImages(APIView):
     the caller should not try to access pages beyond `page_count`, or else the
     server will reject the query.
     """
-    renderer_classes = (JSONRenderer,)
 
     @swagger_auto_schema(operation_id='image_search',
                          query_serializer=ImageSearchQueryStringSerializer,
@@ -86,7 +85,6 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
 
     View count gets incremented when this is called.
     """
-    renderer_classes = (JSONRenderer,)
     serializer_class = ImageDetailSerializer
     queryset = Image.objects.all()
     lookup_field = 'id'

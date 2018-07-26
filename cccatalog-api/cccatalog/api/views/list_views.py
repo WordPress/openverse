@@ -16,7 +16,6 @@ class ListCreateThrottler(UserRateThrottle):
 
 
 class _List(GenericAPIView):
-    renderer_classes = (JSONRenderer,)
     serializer_class = ImageListSerializer
     queryset = ImageList.objects.all()
     lookup_field = 'id'
