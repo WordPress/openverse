@@ -39,7 +39,7 @@ def _increment_viewcount(model, model_id: int):
 
     This strategy minimizes write load on the database while providing
     accurate view statistics. The cache is also kept small as infrequently used
-    data is evicted.
+    data is evicted, reducing the need for memory.
 
     :return: The view count AFTER incrementing.
     """
@@ -63,7 +63,6 @@ def _increment_viewcount(model, model_id: int):
         redis.set(view_count_key, view_count + 1)
     else:
         # Cache hit.
-        view_count = redis.get(view_count_key)
         redis.incr(view_count_key)
 
     # Always reset cache expiry when the key is accessed.
