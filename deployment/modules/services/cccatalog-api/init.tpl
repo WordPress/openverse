@@ -20,6 +20,7 @@ export REVISION="${git_revision}"
 # https://semver.org
 export SEMANTIC_VERSION="$$VERSION+$${REVISION:0:12}"
 
+# Uncomment to password protect all endpoints.
 # export WSGI_AUTH_CREDENTIALS="${wsgi_auth_credentials}"
 # export WSGI_AUTH_EXCLUDE_PATHS="/healthcheck"
 

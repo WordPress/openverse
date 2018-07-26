@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
+from cccatalog.api.models import Image
 from cccatalog.api.licenses import LICENSE_GROUPS
 from cccatalog.api.controllers.search_controller import get_providers
 
@@ -116,8 +118,8 @@ class ImageSearchQueryStringSerializer(_SearchQueryStringSerializer):
             return value.lower()
 
 
-class ElasticsearchImageResultSerializer(serializers.Serializer):
-    """ A single Elasticsearch result."""
+class ImageSerializer(serializers.Serializer):
+    """ A single image. Used in search results."""
     title = serializers.CharField(required=False)
     identifier = serializers.CharField(required=False)
     creator = serializers.CharField(required=False, allow_blank=True)
@@ -133,18 +135,27 @@ class ElasticsearchImageResultSerializer(serializers.Serializer):
     meta_data = serializers.CharField(required=False)
 
 
-class ImageSearchResultSerializer(serializers.Serializer):
+class ImageDetailSerializer(ModelSerializer, ImageSerializer):
+    """ A single image with some additional fields, such as view count. Unlike
+    ImageSerializer, the detail view comes from the database rather than
+    Elasticsearch."""
+    view_count = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = Image
+        fields = ('title', 'identifier', 'creator', 'creator_url', 'tags_list',
+                  'url', 'thumbnail', 'provider', 'source', 'license',
+                  'license_version', 'foreign_landing_url', 'meta_data',
+                  'view_count')
+
+
+class ImageSearchResultsSerializer(serializers.Serializer):
     """ The full image search response. """
     result_count = serializers.IntegerField()
     page_count = serializers.IntegerField()
-    results = ElasticsearchImageResultSerializer(many=True)
+    results = ImageSerializer(many=True)
 
 
 class ValidationErrorSerializer(serializers.Serializer):
     """ Returned if invalid query parameters are passed. """
     validation_error = serializers.JSONField()
-
-
-class InternalServerErrorSerializer(serializers.Serializer):
-    """ Serializer for error 500"""
-    internal_server_error = serializers.JSONField()
