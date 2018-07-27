@@ -44,7 +44,6 @@ def _increment_viewcount(model, model_id: int):
 
     :return: The view count AFTER incrementing.
     """
-    expire_seconds = 60 * 60 * 6
     object_key = model.__name__ + ':' + str(model_id)
 
     redis = get_redis_connection('traffic_stats')
