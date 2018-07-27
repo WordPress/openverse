@@ -18,7 +18,7 @@ variable "aws_access_key_id" {
 variable "aws_secret_access_key" {
   type = "string"
 }
-variable "version" {
+variable "redis_password" {
   type = "string"
 }
 
@@ -31,7 +31,7 @@ module "cccatalog-api" {
   max_size                  = 5
   instance_type             = "t2.micro"
   enable_monitoring         = false
-  git_revision              = "a545e691f322da754c4480b5b7b72042bd99b6cf"
+  git_revision              = "81c0eb0f0fe804df2cdfb95a5d3c150ac2dc8db7"
   api_version               = "0.1.0"
 
   # Environment-specific variables
@@ -47,4 +47,6 @@ module "cccatalog-api" {
   elasticsearch_port        = "80"
   aws_region                = "us-east-1"
   elasticsearch_url         = "search-cccatalog-elasticsearch-vtptjrgtluyamznw6s4kkdtqju.us-east-1.es.amazonaws.com"
+  redis_host                = "ip-172-30-1-215.ec2.internal"
+  redis_password            = "${var.redis_password}"
 }

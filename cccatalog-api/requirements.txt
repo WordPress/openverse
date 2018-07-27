@@ -25,3 +25,4 @@ drf-yasg==1.9.1
 elasticsearch_dsl==6.2.1
 aws-requests-auth==0.4.1
 django-cors-headers==2.4.0
+django-redis==4.9.0

@@ -1,10 +1,15 @@
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
+from django_redis import get_redis_connection
 from drf_yasg.utils import swagger_auto_schema
+from cccatalog.api.models import Image
+from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.search_serializers import\
-    ImageSearchResultSerializer, ElasticsearchImageResultSerializer,\
+    ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
+from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
 import cccatalog.api.controllers.search_controller as search_controller
 
 
@@ -21,12 +26,11 @@ class SearchImages(APIView):
     the caller should not try to access pages beyond `page_count`, or else the
     server will reject the query.
     """
-    renderer_classes = (JSONRenderer,)
 
     @swagger_auto_schema(operation_id='image_search',
                          query_serializer=ImageSearchQueryStringSerializer,
                          responses={
-                             200: ImageSearchResultSerializer(many=True),
+                             200: ImageSearchResultsSerializer(many=True),
                              400: ValidationErrorSerializer,
                          })
     def get(self, request, format=None):
@@ -56,7 +60,7 @@ class SearchImages(APIView):
 
         results = [result for result in search_results]
         serialized_results =\
-            ElasticsearchImageResultSerializer(results, many=True).data
+            ImageSerializer(results, many=True).data
 
         # Elasticsearch does not allow deep pagination of ranked queries.
         # Adjust returned page count to reflect this.
@@ -69,6 +73,32 @@ class SearchImages(APIView):
             'page_count': page_count,
             'results': serialized_results
         }
-        serialized_response = ImageSearchResultSerializer(data=response_data)
+        serialized_response = ImageSearchResultsSerializer(data=response_data)
 
         return Response(status=200, data=serialized_response.initial_data)
+
+
+class ImageDetail(GenericAPIView, RetrieveModelMixin):
+    """
+    Load the details of a particular image ID. Image details include:
+    - All fields in the database
+    - The number of views
+
+    Also increments the view count of the image.
+    """
+    serializer_class = ImageDetailSerializer
+    queryset = Image.objects.all()
+    lookup_field = 'id'
+
+    @swagger_auto_schema(operation_id="image_detail",
+                         responses={
+                             200: ImageDetailSerializer,
+                             404: 'Not Found'
+                         })
+    @track_model_views(Image)
+    def get(self, request, id, format=None, view_count=0):
+        """ Get the details of a single list. """
+        resp = self.retrieve(request, id)
+        # Add page views to the response.
+        resp.data['view_count'] = view_count
+        return resp

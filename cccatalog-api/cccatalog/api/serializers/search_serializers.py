@@ -116,8 +116,8 @@ class ImageSearchQueryStringSerializer(_SearchQueryStringSerializer):
             return value.lower()
 
 
-class ElasticsearchImageResultSerializer(serializers.Serializer):
-    """ A single Elasticsearch result."""
+class ImageSerializer(serializers.Serializer):
+    """ A single image. Used in search results."""
     title = serializers.CharField(required=False)
     identifier = serializers.CharField(required=False)
     creator = serializers.CharField(required=False, allow_blank=True)
@@ -133,18 +133,13 @@ class ElasticsearchImageResultSerializer(serializers.Serializer):
     meta_data = serializers.CharField(required=False)
 
 
-class ImageSearchResultSerializer(serializers.Serializer):
+class ImageSearchResultsSerializer(serializers.Serializer):
     """ The full image search response. """
     result_count = serializers.IntegerField()
     page_count = serializers.IntegerField()
-    results = ElasticsearchImageResultSerializer(many=True)
+    results = ImageSerializer(many=True)
 
 
 class ValidationErrorSerializer(serializers.Serializer):
     """ Returned if invalid query parameters are passed. """
     validation_error = serializers.JSONField()
-
-
-class InternalServerErrorSerializer(serializers.Serializer):
-    """ Serializer for error 500"""
-    internal_server_error = serializers.JSONField()

@@ -4,7 +4,6 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.generics import GenericAPIView
-from rest_framework.renderers import JSONRenderer
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.decorators import throttle_classes
 from rest_framework.response import Response
@@ -16,7 +15,6 @@ class ListCreateThrottler(UserRateThrottle):
 
 
 class _List(GenericAPIView):
-    renderer_classes = (JSONRenderer,)
     serializer_class = ImageListSerializer
     queryset = ImageList.objects.all()
     lookup_field = 'id'

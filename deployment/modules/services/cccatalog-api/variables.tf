@@ -76,3 +76,11 @@ variable "aws_region" {
 variable "api_version" {
   description = "The current version of the API. Expected to use the semantic version format. X.Y.Z+<SHA COMMIT HASH>. The commit hash is appended for you automatically. \nMore details: https://semver.org/. \n\nExample: 0.1.0"
 }
+
+variable "redis_host" {
+  description = "Cache server hostname"
+}
+
+variable "redis_password" {
+  description = "Cache server password"
+}
