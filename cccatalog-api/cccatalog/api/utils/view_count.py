@@ -66,6 +66,7 @@ def _increment_viewcount(model, model_id: int):
         redis.incr(object_key)
 
     # Update the last access time of the timestamp.
+    # Store in a sorted set so we can easily find the oldest keys.
     timestamp = time.time()
     redis.execute_command(
         'ZADD model-last-accessed {} {}'.format(timestamp, object_key)

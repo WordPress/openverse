@@ -81,18 +81,20 @@ CACHES = {
     # Site cache writes to 'default'
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ.get('REDIS_CONNECTION_STRING',
-                                   'redis://cache:6379/' + '0'),
+        "LOCATION": 'redis://' +
+                    os.environ.get('REDIS_HOST','cache') + ':6379/' + '0',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": os.environ.get('REDIS_PASSWORD')
         },
     },
     "traffic_stats": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ.get('REDIS_CONNECTION_STRING',
-                                   'redis://cache:6379/' + '1'),
+        "LOCATION": 'redis://' +
+                    os.environ.get('REDIS_HOST','cache') + ':6379/' + '1',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": os.environ.get('REDIS_PASSWORD')
         },
     }
 }

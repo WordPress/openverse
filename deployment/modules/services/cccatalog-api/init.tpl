@@ -16,6 +16,8 @@ export AWS_SECRET_ACCESS_KEY="${aws_secret_access_key}"
 export LOAD_BALANCER_URL="${load_balancer_url}"
 export VERSION="${api_version}"
 export REVISION="${git_revision}"
+export REDIS_HOST="${redis_host}"
+export REDIS_PASSWORD="${redis_password}"
 
 # https://semver.org
 export SEMANTIC_VERSION="$$VERSION+$${REVISION:0:12}"

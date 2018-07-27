@@ -14,8 +14,7 @@ class ImageDetailSerializer(ModelSerializer, ImageSerializer):
     view_count = serializers.IntegerField(
         required=False,
         help_text="The number of times that an image has been viewed. "
-                  "This is not updated in real-time; there will be a small "
-                  "delay due to caching implementation details.")
+    )
 
     class Meta:
         model = Image
