@@ -18,6 +18,9 @@ variable "aws_access_key_id" {
 variable "aws_secret_access_key" {
   type = "string"
 }
+variable "redis_password" {
+  type = "string"
+}
 
 module "cccatalog-api" {
   source = "../../../../modules/services/cccatalog-api"
@@ -44,4 +47,6 @@ module "cccatalog-api" {
   elasticsearch_port        = "80"
   aws_region                = "us-east-1"
   elasticsearch_url         = "search-cccatalog-elasticsearch-vtptjrgtluyamznw6s4kkdtqju.us-east-1.es.amazonaws.com"
+  redis_host                = "ip-172-30-1-215.ec2.internal"
+  redis_password            = "${var.redis_password}"
 }

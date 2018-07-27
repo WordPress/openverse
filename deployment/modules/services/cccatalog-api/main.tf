@@ -22,6 +22,8 @@ data "template_file" "init"{
     elasticsearch_port    = "${var.elasticsearch_port}"
     aws_region            = "${var.aws_region}"
     api_version           = "${var.api_version}"
+    redis_host            = "${var.redis_host}"
+    redis_password        = "${var.redis_password}"
   }
 }
 
