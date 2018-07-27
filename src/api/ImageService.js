@@ -6,7 +6,7 @@ const ImageService = {
    * Search for images by keyword.
    */
   search(params) {
-    if (typeof params !== 'object' || params.hasOwnProperty('q') === false) {
+    if (typeof params !== 'object' || Object.prototype.hasOwnProperty.call('q') === false) {
       throw new Error('[RWV] ImageService.search() q parameter required to search images.');
     }
 
