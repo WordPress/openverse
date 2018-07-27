@@ -1,6 +1,7 @@
 from django.core.exceptions import FieldDoesNotExist, ObjectDoesNotExist
 from django_redis import get_redis_connection
 import logging as log
+import time
 """
 Decorators for tracking usage and page view statistics.
 """
@@ -44,10 +45,10 @@ def _increment_viewcount(model, model_id: int):
     :return: The view count AFTER incrementing.
     """
     expire_seconds = 60 * 60 * 6
-    view_count_key = model.__name__ + '$' + str(model_id)
+    object_key = model.__name__ + ':' + str(model_id)
 
     redis = get_redis_connection('traffic_stats')
-    view_count = redis.get(view_count_key)
+    view_count = redis.get(object_key)
     if not view_count:
         # Cache miss. Get the view count from the database.
         try:
@@ -57,16 +58,19 @@ def _increment_viewcount(model, model_id: int):
             return
         except FieldDoesNotExist:
             log.error('Cannot track model ' + model.__name__ +
-                      'because it has no view_count field. Page views for this' +
+                      'because it has no view_count field. Views for this' +
                       'model will be lost.')
             return
-        redis.set(view_count_key, view_count + 1)
+        redis.set(object_key, view_count + 1)
     else:
         # Cache hit.
-        redis.incr(view_count_key)
+        redis.incr(object_key)
 
-    # Always reset cache expiry when the key is accessed.
-    redis.expire(view_count_key, expire_seconds)
+    # Update the last access time of the timestamp.
+    timestamp = time.time()
+    redis.execute_command(
+        'ZADD model-last-accessed {} {}'.format(timestamp, object_key)
+    )
     return view_count
 
 
