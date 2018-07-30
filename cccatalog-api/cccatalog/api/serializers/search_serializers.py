@@ -131,6 +131,10 @@ class ImageSerializer(serializers.Serializer):
     license_version = serializers.CharField(required=False)
     foreign_landing_url = serializers.URLField(required=False)
     meta_data = serializers.CharField(required=False)
+    detail = serializers.URLField(
+        required=False,
+        help_text="A direct link to the detail view of an image."
+    )
 
 
 class ImageSearchResultsSerializer(serializers.Serializer):

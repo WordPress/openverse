@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image
 from cccatalog.api.utils.view_count import track_model_views
+from rest_framework.reverse import reverse
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
@@ -57,7 +58,15 @@ class SearchImages(APIView):
                 }
             )
 
-        results = [result for result in search_results]
+        # Fetch each result from Elasticsearch. Resolve links to detail views.
+        results = []
+        for result in search_results:
+            url = request.build_absolute_uri(
+                reverse('image-detail', [result.pg_id])
+            )
+            result.detail = url
+            results.append(result)
+
         serialized_results =\
             ImageSerializer(results, many=True).data
 
