@@ -32,17 +32,22 @@ articles, songs, videos, photographs, paintings, and more. Using this API,
 developers will be able to access the digital commons in their own
 applications.
 """
+x_logo = {
+    "url": "https://mirrors.creativecommons.org/presskit/logos/cc.logo.large.png",
+    "backgroundColor": "#FFFFFF"
+}
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="Creative Commons Catalog API",
-      default_version=API_VERSION,
-      description=description,
-      contact=openapi.Contact(email="alden@creativecommons.org"),
-      license=openapi.License(name="MIT License"),
-   ),
-   public=True,
-   permission_classes=(rest_framework.permissions.AllowAny,),
+    openapi.Info(
+        title="Creative Commons Catalog API",
+        default_version=API_VERSION,
+        description=description,
+        contact=openapi.Contact(email="alden@creativecommons.org"),
+        license=openapi.License(name="MIT License"),
+        x_logo=x_logo
+    ),
+    public=True,
+    permission_classes=(rest_framework.permissions.AllowAny,),
 )
 
 urlpatterns = [
