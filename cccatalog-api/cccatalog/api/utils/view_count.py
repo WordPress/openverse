@@ -57,7 +57,7 @@ def _increment_viewcount(model, model_id: int):
             return
         except FieldDoesNotExist:
             log.error('Cannot track model ' + model.__name__ +
-                      'because it has no view_count field. Views for this' +
+                      'because it has no view_count field. Views for this ' +
                       'model will be lost.')
             return
         redis.set(object_key, view_count + 1)
@@ -65,7 +65,7 @@ def _increment_viewcount(model, model_id: int):
         # Cache hit.
         redis.incr(object_key)
 
-    # Update the last access time of the timestamp.
+    # Update the last access time of the model.
     # Store in a sorted set so we can easily find the oldest keys.
     timestamp = time.time()
     redis.execute_command(
