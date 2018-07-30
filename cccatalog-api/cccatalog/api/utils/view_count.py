@@ -4,6 +4,11 @@ import logging as log
 import time
 """
 Decorators for tracking usage and page view statistics.
+
+In order to protect the privacy of our users, special care must be taken to
+ensure that IPs are retained for the minimum possible amount of time. These 
+statistics must only be used in aggregate and never to identify an individual 
+user.
 """
 
 
@@ -107,7 +112,7 @@ def _is_recent_visitor(ip, object_key):
     """
     redis = get_redis_connection('traffic_stats')
     recent_ips_key = object_key + '-recent-ips'
-    # Delete all IPs that haven't visited the resource in the last 10 minutes.
+    # Delete all IPs that haven't visited the resource in the last 10 hours.
     ten_hours_ago = time.time() - (60 * 60 * 10)
     redis.zremrangebyscore(recent_ips_key, '-inf', ten_hours_ago)
     is_recent = bool(redis.zscore(recent_ips_key, ip))
