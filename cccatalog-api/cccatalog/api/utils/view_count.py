@@ -65,7 +65,7 @@ def _increment_viewcount(model, model_id: int):
         # Cache hit.
         redis.incr(object_key)
 
-    # Update the last access time of the timestamp.
+    # Update the last access time of the model.
     # Store in a sorted set so we can easily find the oldest keys.
     timestamp = time.time()
     redis.execute_command(
