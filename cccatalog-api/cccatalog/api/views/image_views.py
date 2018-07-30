@@ -2,7 +2,6 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django_redis import get_redis_connection
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image
 from cccatalog.api.utils.view_count import track_model_views

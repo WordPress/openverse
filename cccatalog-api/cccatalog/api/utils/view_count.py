@@ -47,7 +47,7 @@ def _increment_viewcount(model, model_id: int, request):
     object_key = model.__name__ + ':' + str(model_id)
 
     redis = get_redis_connection('traffic_stats')
-    view_count = int(redis.get(object_key))
+    view_count = redis.get(object_key)
     if not view_count:
         # Cache miss. Get the view count from the database and cache it.
         try:
