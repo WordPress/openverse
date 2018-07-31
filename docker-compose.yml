@@ -76,6 +76,6 @@ services:
       DATABASE_PORT: '5432'
       DB_BUFFER_SIZE: '100000'
       COPY_TABLES: 'image'
-      SYNCER_POLL_INTERVAL: '10'
+      SYNCER_POLL_INTERVAL: '60'
     stdin_open: true
     tty: true
