@@ -52,7 +52,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=None),
-        name='redirect-root-to-redoc'),
+        name='root'),
     path('admin/', admin.site.urls),
     path('list', CreateList.as_view()),
     path('list/<int:id>', DetailList.as_view(), name='list-detail'),

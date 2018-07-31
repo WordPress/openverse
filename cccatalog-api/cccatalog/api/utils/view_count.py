@@ -66,6 +66,8 @@ def _increment_viewcount(model, model_id: int, request):
                       'model will be lost.')
             return -1
         redis.set(object_key, view_count)
+    else:
+        view_count = int(view_count)
 
     # Only increment the view count if the user has not visited the resource in
     # the last few minutes. Prevents metrics gaming shenanigans.
