@@ -15,4 +15,5 @@ class Migration(migrations.Migration):
             name='view_count',
             field=models.IntegerField(default=0),
         ),
+        migrations.RunSQL('ALTER TABLE image ALTER view_count SET DEFAULT 0')
     ]
