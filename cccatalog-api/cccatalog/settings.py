@@ -209,3 +209,5 @@ AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 ELASTICSEARCH_AWS_REGION = \
     os.environ.get('ELASTICSEARCH_AWS_REGION', 'us-east-1')
+
+ROOT_SHORTENING_URL = os.environ.get('ROOT_SHORTENING_URL', 'dev.shares.cc')

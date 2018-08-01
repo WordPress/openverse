@@ -17,7 +17,7 @@ class ShortenedLinkSerializer(ModelSerializer):
 
     class Meta:
         model = ShortenedLink
-        fields = ('shortened_path', 'full_url')
+        fields = ('full_url',)
 
     def save(self):
         try:
@@ -25,7 +25,7 @@ class ShortenedLinkSerializer(ModelSerializer):
                 ShortenedLink
                     .objects
                     .latest(field_name='created_on')
-                    .shortened_url
+                    .shortened_path
             )
         except ShortenedLink.DoesNotExist:
             # No URLs exist. Create the first one.
@@ -33,6 +33,8 @@ class ShortenedLinkSerializer(ModelSerializer):
 
         shortened_path = get_next_shortened_path(last_url)
         full_url = self.validated_data['full_url']
-        shortened_link_instance = ShortenedLink(shortened_path, full_url)
+        shortened_link_instance = ShortenedLink(
+            shortened_path=shortened_path,
+            full_url=full_url)
         shortened_link_instance.save()
         return shortened_path
