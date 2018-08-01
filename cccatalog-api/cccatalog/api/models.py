@@ -160,3 +160,4 @@ class ShortenedLink(OpenLedgerModel):
         db_index=True
     )
     full_url = models.URLField(unique=True, max_length=1000)
+    created_on = models.DateTimeField(auto_now_add=True, db_index=True)
