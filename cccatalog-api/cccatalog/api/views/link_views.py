@@ -1,7 +1,9 @@
+from django.http import HttpResponsePermanentRedirect
 from rest_framework.views import APIView
 from rest_framework.decorators import throttle_classes
 from cccatalog.api.utils.throttle import PostRequestThrottler
 from cccatalog.api.serializers.link_serializers import ShortenedLinkSerializer
+from cccatalog.api.models import ShortenedLink
 from rest_framework.response import Response
 from rest_framework import serializers
 from drf_yasg.utils import swagger_auto_schema
@@ -40,5 +42,15 @@ class CreateShortenedLink(APIView):
 
 
 class ResolveShortenedLink(APIView):
-    def get(self, request, format=None):
+    @swagger_auto_schema(operation_id="link_resolve",
+                         responses={
+                             200: None,
+                             301: HttpResponsePermanentRedirect,
+                             404: 'Not Found'
+                         })
+    def get(self, request, path, format=None):
+        """
+        Given a shortened URL path, such as 'zb3k0', resolve the full URL
+        and redirect the caller.
+        """
         pass
