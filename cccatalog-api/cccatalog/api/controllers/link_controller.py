@@ -16,6 +16,9 @@ def get_next_shortened_path(last_url):
         next_char_idx = (c_idx + 1) % len(URL_ALPHABET)
         return URL_ALPHABET[next_char_idx]
 
+    if last_url is None:
+        return URL_ALPHABET[0]
+
     last_character = last_url[-1]
     next_character = get_next_char(last_character)
 

@@ -149,3 +149,14 @@ class Tag(OpenLedgerModel):
 
     class Meta:
         db_table = 'tag'
+
+
+class ShortenedLink(OpenLedgerModel):
+    shortened_path = models.CharField(
+        unique=True,
+        max_length=10,
+        help_text="The path to the shortened URL, e.g. tc3n834. The resulting "
+                  "URL will be shares.cc/tc3n834.",
+        db_index=True
+    )
+    full_url = models.URLField(unique=True, max_length=1000)
