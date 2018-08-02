@@ -4,7 +4,7 @@ data "aws_subnet_ids" "subnets" {
 }
 
 # A templated bash script that bootstraps the API server.
-data "template_file" "init"{
+data "template_file" "init" {
   template = "${file("${path.module}/init.tpl")}"
 
   # Pass configuration variables to the script
@@ -25,6 +25,11 @@ data "template_file" "init"{
     redis_host            = "${var.redis_host}"
     redis_password        = "${var.redis_password}"
   }
+}
+
+# Templated bash script for bootstrapping link shortener proxy
+data "template_file" "proxy-init" {
+  template = "${file("${path.module}/proxy-init.tpl")}"
 }
 
 # API server autoscaling launch configuration
@@ -186,5 +191,20 @@ resource "aws_security_group" "cccatalog-alb-sg" {
 
   tags {
     Name = "cccatalog-alb-sg"
+  }
+}
+
+resource "aws_instance" "short-proxy" {
+  ami                    = "ami-b70554c8"
+  instance_type          = "${var.instance_type}"
+  user_data              = "${data.template_file.proxy-init.rendered}"
+  # Launch it on the first available subnet
+  subnet_id              = "${element(data.aws_subnet_ids.subnets.ids, 0)}"
+  key_name               = "cccapi-admin"
+  vpc_security_group_ids = ["${aws_security_group.cccatalog-alb-sg.id}"]
+
+  tags {
+    Name        = "short-proxy-${var.environment}"
+    environment = "${var.environment}"
   }
 }

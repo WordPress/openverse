@@ -1,6 +1,9 @@
-from rest_framework.serializers import ModelSerializer, Serializer, URLField
+from rest_framework.serializers import ModelSerializer, Serializer, URLField,\
+    ValidationError
 from cccatalog.api.controllers.link_controller import get_next_shortened_path
 from cccatalog.api.models import ShortenedLink
+from cccatalog import settings
+from urllib.parse import urlparse
 
 
 class ShortenedLinkResponseSerializer(Serializer):
@@ -18,6 +21,29 @@ class ShortenedLinkSerializer(ModelSerializer):
     class Meta:
         model = ShortenedLink
         fields = ('full_url',)
+
+    def validate_full_url(self, value):
+        parsed_url = urlparse(value)
+        url = '{url.netloc}'.format(url=parsed_url)
+        path = '{url.path}'.format(url=parsed_url)
+        if url not in settings.SHORT_URL_WHITELIST:
+            raise ValidationError(
+                "You can only create a short URL to items inside of the CC "
+                "Catalog. Pointing to other domains is not allowed."
+            )
+
+        found_allowed_path = False
+        for allowed_path in settings.SHORT_URL_PATH_WHITELIST:
+            if path.startswith(allowed_path):
+                found_allowed_path = True
+
+        if not found_allowed_path:
+            raise ValidationError(
+                "Illegal path. Valid paths must start with {}"
+                    .format(str(settings.SHORT_URL_PATH_WHITELIST))
+            )
+        return value
+
 
     def save(self):
         try:
