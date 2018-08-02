@@ -4,6 +4,7 @@ from cccatalog.api.controllers.link_controller import get_next_shortened_path
 from cccatalog.api.models import ShortenedLink
 from cccatalog import settings
 from urllib.parse import urlparse
+from rest_framework import serializers
 
 
 class ShortenedLinkResponseSerializer(Serializer):
@@ -17,6 +18,13 @@ class ShortenedLinkSerializer(ModelSerializer):
     A single shortened URL, mapping a shortened path at shares.cc to a full
     URL elsewhere on the CC Catalog platform.
     """
+    full_url = serializers.URLField(
+        max_length=2083,
+        help_text="The URL to shorten. Only URLs on the CC Catalog domain will"
+                  " be accepted. Valid domains: `{}`. "
+                  "Valid paths: `{}`".format(settings.SHORT_URL_WHITELIST,
+                                           settings.SHORT_URL_PATH_WHITELIST)
+    )
 
     class Meta:
         model = ShortenedLink
@@ -43,7 +51,6 @@ class ShortenedLinkSerializer(ModelSerializer):
                     .format(str(settings.SHORT_URL_PATH_WHITELIST))
             )
         return value
-
 
     def save(self):
         try:
