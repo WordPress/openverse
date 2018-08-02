@@ -35,6 +35,11 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
                  "api.creativecommons.engineering",
                  gethostname(), gethostbyname(gethostname())]
 
+# Domains that shortened links may point to
+SHORT_URL_WHITELIST = {'api-dev.creativecommons.engineering',
+                       'api.creativecommons.engineering'}
+SHORT_URL_PATH_WHITELIST = ['/list', '/image']
+
 
 # Application definition
 
@@ -209,3 +214,5 @@ AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 ELASTICSEARCH_AWS_REGION = \
     os.environ.get('ELASTICSEARCH_AWS_REGION', 'us-east-1')
+
+ROOT_SHORTENING_URL = os.environ.get('ROOT_SHORTENING_URL', 'dev.shares.cc')

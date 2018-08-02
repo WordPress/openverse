@@ -1,17 +1,13 @@
 from cccatalog.api.serializers.list_serializers import ImageListSerializer
 from cccatalog.api.models import ImageList
+from cccatalog.api.utils.throttle import PostRequestThrottler
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.generics import GenericAPIView
-from rest_framework.throttling import UserRateThrottle
 from rest_framework.decorators import throttle_classes
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-
-
-class ListCreateThrottler(UserRateThrottle):
-    rate = '30/day'
 
 
 class _List(GenericAPIView):
@@ -20,21 +16,22 @@ class _List(GenericAPIView):
     lookup_field = 'id'
 
 
-class CreateList(_List):
+class _CreateResponse(serializers.Serializer):
+    url = serializers.HyperlinkedRelatedField(
+        view_name='list-detail',
+        read_only=True,
+        help_text="The URL of the new list."
+    )
 
-    class _CreateResponse(serializers.Serializer):
-        url = serializers.HyperlinkedRelatedField(
-            view_name='list-detail',
-            read_only=True,
-            help_text="The URL of the new list."
-        )
+
+class CreateList(_List):
 
     @swagger_auto_schema(operation_id="list_create",
                          responses={
                              201: _CreateResponse,
                              400: "Bad Request"
                          })
-    @throttle_classes([ListCreateThrottler])
+    @throttle_classes([PostRequestThrottler])
     def post(self, request, format=None):
         """
         Create a public collection of images. Returns the ID of the newly

@@ -2,9 +2,12 @@
 data "aws_subnet_ids" "subnets" {
   vpc_id = "${var.vpc_id}"
 }
+##############
+# API SERVER #
+##############
 
 # A templated bash script that bootstraps the API server.
-data "template_file" "init"{
+data "template_file" "init" {
   template = "${file("${path.module}/init.tpl")}"
 
   # Pass configuration variables to the script
@@ -170,7 +173,6 @@ resource "aws_security_group" "cccatalog-alb-sg" {
   name   = "cccatalog-alb-sg"
   vpc_id = "${var.vpc_id}"
 
-
   ingress {
     from_port   = 80
     to_port     = 80
@@ -187,5 +189,32 @@ resource "aws_security_group" "cccatalog-alb-sg" {
 
   tags {
     Name = "cccatalog-alb-sg"
+  }
+}
+
+#######################
+# URL SHORTENER PROXY #
+#######################
+
+# Templated bash script for bootstrapping link shortener proxy
+data "template_file" "proxy-init" {
+  template = "${file("${path.module}/proxy-init.tpl")}"
+    vars {
+      ccc_api_host = "${var.ccc_api_host}"
+    }
+}
+
+resource "aws_instance" "short-proxy" {
+  ami                    = "ami-b70554c8"
+  instance_type          = "${var.instance_type}"
+  user_data              = "${data.template_file.proxy-init.rendered}"
+  # Launch it on the first available subnet
+  subnet_id              = "${element(data.aws_subnet_ids.subnets.ids, 0)}"
+  key_name               = "cccapi-admin"
+  vpc_security_group_ids = ["${aws_security_group.cccatalog-alb-sg.id}"]
+
+  tags {
+    Name        = "short-proxy-${var.environment}"
+    environment = "${var.environment}"
   }
 }
