@@ -204,6 +204,35 @@ data "template_file" "proxy-init" {
     }
 }
 
+resource "aws_security_group" "short-proxy-sg" {
+  name = "short-proxy-sg"
+  vpc_id = "${var.vpc_id}"
+
+  # Allow incoming traffic from the internet
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+
+  # Allow incoming SSH from the internet
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Unrestricted egress
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_instance" "short-proxy" {
   ami                    = "ami-b70554c8"
   instance_type          = "${var.instance_type}"
@@ -211,7 +240,7 @@ resource "aws_instance" "short-proxy" {
   # Launch it on the first available subnet
   subnet_id              = "${element(data.aws_subnet_ids.subnets.ids, 0)}"
   key_name               = "cccapi-admin"
-  vpc_security_group_ids = ["${aws_security_group.cccatalog-alb-sg.id}"]
+  vpc_security_group_ids = ["${aws_security_group.short-proxy-sg.id}"]
 
   tags {
     Name        = "short-proxy-${var.environment}"
