@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import HeaderSection from '@/components/HeaderSection';
+/*import Vue from 'vue';
+// import HeaderSection from '@/components/HeaderSection';
 
 describe('HeaderSection.vue', () => {
   it('should render correct contents', () => {
@@ -7,3 +7,4 @@ describe('HeaderSection.vue', () => {
     const vm = new Constructor().$mount();
   });
 });
+*/
