@@ -19,7 +19,7 @@ class ShortenedLinkSerializer(ModelSerializer):
     URL elsewhere on the CC Catalog platform.
     """
     full_url = serializers.URLField(
-        max_length=2083,
+        max_length=1000,
         help_text="The URL to shorten. Only URLs on the CC Catalog domain will"
                   " be accepted. Valid domains: `{}`. "
                   "Valid paths: `{}`".format(settings.SHORT_URL_WHITELIST,
@@ -47,8 +47,9 @@ class ShortenedLinkSerializer(ModelSerializer):
 
         if not found_allowed_path:
             raise ValidationError(
-                "Illegal path. Valid paths must start with {}"
-                    .format(str(settings.SHORT_URL_PATH_WHITELIST))
+                "Illegal path. Valid paths must start with {}".format(
+                    str(settings.SHORT_URL_PATH_WHITELIST)
+                )
             )
         return value
 
