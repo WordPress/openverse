@@ -37,6 +37,13 @@ module "cccatalog-api" {
   # Environment-specific variables
   database_host             = "openledger-db-dev3-nvirginia.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
   django_debug_enabled      = "false"
+  elasticsearch_port        = "80"
+  aws_region                = "us-east-1"
+  elasticsearch_url         = "search-cccatalog-elasticsearch-vtptjrgtluyamznw6s4kkdtqju.us-east-1.es.amazonaws.com"
+  redis_host                = "ip-172-30-1-215.ec2.internal"
+  ccc_api_host              = "api-dev.creativecommons.engineering"
+  # The dev shortening URL isn't ready yet; point straight to the box for now
+  root_shortening_url       = "ec2-54-88-175-61.compute-1.amazonaws.com"
 
   # Secrets not checked into version control. Override with -var-file=secrets.tfvars
   database_password         = "${var.database_password}"
@@ -44,10 +51,5 @@ module "cccatalog-api" {
   wsgi_auth_credentials     = "${var.wsgi_auth_credentials}"
   aws_access_key_id         = "${var.aws_access_key_id}"
   aws_secret_access_key     = "${var.aws_secret_access_key}"
-  elasticsearch_port        = "80"
-  aws_region                = "us-east-1"
-  elasticsearch_url         = "search-cccatalog-elasticsearch-vtptjrgtluyamznw6s4kkdtqju.us-east-1.es.amazonaws.com"
-  redis_host                = "ip-172-30-1-215.ec2.internal"
   redis_password            = "${var.redis_password}"
-  ccc_api_host              = "api-dev.creativecommons.engineering"
 }
