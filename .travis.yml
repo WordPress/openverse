@@ -8,8 +8,5 @@ cache:
 node_js:
   - lts/*
 
-script:
-  - npm run unit
-
 notifications:
   email: false
