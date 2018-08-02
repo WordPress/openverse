@@ -50,6 +50,7 @@ http {
           proxy_pass http://${ccc_api_host}/link/;
         }
     }
+}
 EOF
 
-sudo systemctl nginx start
+sudo systemctl start nginx
