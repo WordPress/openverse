@@ -17,6 +17,8 @@
     "axios": "^0.18.0",
     "foundation-sites": "^6.5.0-rc.2",
     "masonry-layout": "^4.2.2",
+    "packery": "^2.1.2",
+    "puex": "^0.5.2",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.2",
     "vue-router": "^3.0.1"

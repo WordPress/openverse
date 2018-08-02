@@ -1,39 +1,56 @@
 <template>
-<form role="search" method="post" @submit.prevent="onSubmit" class="search-form">
-  <div class="search_ctr">
-    <input required="required"
-           autofocus=""
-           class="search_input"
-           type="search"
-           placeholder="Search the commons..."
-           autocapitalize="none"
-           id="searchTerm"
-           v-model.lazy="form.searchTerm">
-    <button class="search_button" title="Search">
-    </button>
+<form role="search"
+      method="post"
+      @submit.prevent="onSubmit"
+      class="search-form search-form__filter">
+  <div class="search-form_ctr grid-x global-nav show-for-smedium">
+      <div class="search-form_inner-ctr medium-6 large-9">
+        <input required="required"
+               autofocus=""
+               class="search-form_input"
+               type="search"
+               placeholder="Search the commons..."
+               autocapitalize="none"
+               id="searchInput"
+               v-model="query">
+        <ul class="search-form_toolbar menu" role="menubar">
+          <li class="menu-button" role="menuitem">
+            <a @click.prevent="onSubmit"
+               href="https://foundation.zurb.com/develop/getting-started.html"
+               class="button">Search</a>
+          </li>
+          <li class="menu-button" role="menuitem">
+            <a href="https://foundation.zurb.com/develop/getting-started.html"
+               class="button">Filter</a>
+          </li>
+        </ul>
+      </div>
   </div>
 </form>
 </template>
 
 <script>
-import ImageService from '@/api/ImageService';
+import { FETCH_IMAGES } from '@/store/action-types';
+
 
 export default {
   name: 'search-form',
-  data: () => ({ form: { searchTerm: null } }),
+  data: () => ({ query: null }),
   methods: {
     onSubmit(e) {
       e.preventDefault();
-      this.getSearchTermResults({ q: this.form.searchTerm });
+      if (this.query) {
+        this.$store.dispatch(FETCH_IMAGES, { q: this.query });
+      }
     },
-    getSearchTermResults(searchTerm) {
-      ImageService.search(searchTerm);
-    },
+  },
+  mounted() {
+    this.query = this.$store.state.query.q;
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .search-form {
   width: 580px;
   max-width: 100%;
@@ -41,53 +58,62 @@ export default {
   margin: 0 30px;
 }
 
-.search_ctr {
+.search-form_ctr {
   position: relative;
+  height: 70px;
 }
 
-.search_input {
+.search-form_input {
   font-size: 24px;
   padding-left: 30px;
   margin-bottom: 0;
-  width: 100%;
+  width: 600px;
   height: 60px;
-  box-shadow: 0 1px 2px rgba(0,0,0,.3);
   outline: 0;
   border-radius: 3px;
   border-width: 0;
-  background: rgba(255, 255, 255, 0.4);
-  color: #fff;
+  color: #000;
 }
 
-.search_input::placeholder {
+.search-form_inner-ctr {
+  display: flex;
+}
+
+.search-form__filter {
+  width: 100%;
+  border-bottom: 1px solid #e6e6e6;
+
+  .search-form_input {
+    width: 100%;
+    height: 100%;
+    outline: 0;
+    border-radius: 0;
+    border-width:  0;
+    color: #000;
+  }
+}
+
+
+.search-form_input::placeholder {
   color: rgba(255, 255, 255, 0.6);
 }
 
-.search_button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: transparent;
-  height: calc( 100% - 3px );
-  width: 60px;
-  margin: 2px;
-  font-size: 24px;
-  cursor: pointer;
-  transition: all .2s ease-in-out;
-  color: #fff;
-  border-radius: 3px;
-}
+.search-form_toolbar {
+  width: 400px;
 
-.search_button:after {
-  content: "";
-  background: url('../assets/search-icon.png') center center no-repeat;
-  background-size: 20px;
-  opacity: 0.5;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-  z-index: 10;
+
+  li {
+    display: flex;
+    flex: 0 0 auto;
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+  }
+
+  .menu-button {
+    height: 100%;
+    margin: 0;
+    color: #000;
+
+  }
 }
 </style>

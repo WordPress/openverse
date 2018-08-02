@@ -14,19 +14,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-nav {
-  height: 0px;
+.nav {
   width: 100%;
-  position: absolute;
-  left: 0;
-  background: transparent;
+  height: 70px;
+  background: #000;
 }
 
 .nav_logo {
   padding-left: 30px;
-  padding-top: 30px;
-  height: 70px;
+  height: 40px;
   float: left;
-  fill: #fff;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>
