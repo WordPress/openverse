@@ -10,44 +10,25 @@
     <div class="search-grid_analytics"></div>
     <div class="search-grid-layout-control"></div>
   </div>
-  <div class="search-grid" ref="gridContainer">
-    <div class="header-grid">
-      <div id="b1" class="block"></div>
-      <div id="b2" class="block"></div>
-      <div id="b3" class="block"></div>
-      <div id="b4" class="block"></div>
-      <div class="bottom-block">
-        <div id="b5" class="block"></div>
-        <div id="b6" class="block"></div>
-        <div id="b7" class="block"></div>
-      </div>
+  <div class="grid-items" ref="gridItems">
+    <div class="grid-item"
+      v-for="(image, index) in data"
+      @click="gotoBrowsePage(image.identifier)"
+      :key="index">
+      <img :src="image.url">
     </div>
   </div>
 </section>
 </template>
 
 <script>
-import MasonryLayout from 'masonry-layout';
+import Packery from 'packery';
 
 export default {
   name: 'search-grid',
-  data: () => ({
-    tags: [
-      {
-        tagName: 'City',
-        tagImageSrc: require('@/assets/london-night_medium.jpg'), // eslint-disable-line global-require
-      }, {
-        tagName: 'Sunset',
-        tagImageSrc: require('@/assets/london-night_medium.jpg'), // eslint-disable-line global-require
-      }, {
-        tagName: 'City',
-        tagImageSrc: require('@/assets/london-night_medium.jpg'), // eslint-disable-line global-require
-      }, {
-        tagName: 'City',
-        tagImageSrc: require('@/assets/london-night_medium.jpg'), // eslint-disable-line global-require
-      },
-    ],
-  }),
+  props: {
+    data: {},
+  },
   methods: {
     addData(data, options = {}) {
       if (options.render) {
@@ -56,10 +37,12 @@ export default {
     },
   },
   mounted() {
-    this.grid = new MasonryLayout(this.$refs.grid, { // eslint-disable-line no-new
-      itemSelector: '.grid-container',
-      columnWidth: 200,
-    });
+    window.setTimeout(() => {
+      this.grid = new Packery('.grid-items', {
+        itemSelector: '.grid-item',
+        gutter: 10,
+      });
+    }, 1000);
   },
 };
 </script>
@@ -68,7 +51,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
   .search-grid {
-    margin: 30px 0 60px 0;
+    margin: 30px 30px 60px 30px;
+    min-height: 600px;
   }
 
   .search-grid_metrics-bar {
@@ -101,43 +85,17 @@ export default {
     "big-bottom big-bottom big-bottom big-bottom big-bottom";
   }
 
-  .block {
-    height: 100%;
-    width: 100%;
-    border: 1px solid white;
-    background: black;
-    opacity: 0.8;
-    transition: opacity 0.2s ease-out;
-
-    &:hover {
-      transition: opacity 0.2s ease-in;
-      opacity: 1;
-
-    }
+  .search-grid:after {
+    content: '';
+    display: block;
+    clear: both;
   }
 
-  #b1 {
-    grid-area: big-top;
-
+  .grid-item {
+    width: 20%;
   }
 
-  #b2 {
-    grid-area :small-top;
+  .grid-item--width2 {
+    width: 50%;
   }
-
-  #b3 {
-    grid-area: small-middle;
-  }
-
-  #b4 {
-    grid-area: big-middle;
-  }
-
-  .bottom-block {
-    grid-area: big-bottom;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-
-  }
-
 </style>

@@ -6,7 +6,8 @@ const ImageService = {
    * Search for images by keyword.
    */
   search(params) {
-    if (typeof params !== 'object' || Object.prototype.hasOwnProperty.call('q') === false) {
+    if (typeof params !== 'object' ||
+      Object.prototype.hasOwnProperty.call(params, 'q') === false) {
       throw new Error('[RWV] ImageService.search() q parameter required to search images.');
     }
 
@@ -15,12 +16,12 @@ const ImageService = {
   /**
    * Retreive image details by Id number.
    */
-  getImageDetail(id) {
-    if (isNaN(id)) {
+  getImageDetail(params) {
+    if (params.id && isNaN(params.id)) {
       throw new Error('[RWV] ImageService.getImageDetail() id parameter required to retreive image details.');
     }
 
-    return ApiService.get('image', `/image//${id}`);
+    return ApiService.get('image', `/image//${params.id}`);
   },
 };
 

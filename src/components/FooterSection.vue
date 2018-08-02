@@ -1,13 +1,13 @@
 <template>
 <footer class="footer callout large secondary">
-   <article class="grid-container">
+   <article class="grid-container full">
       <div class="large-3 cell">
           <ul class="footer_links menu">
             <li><a href="/contact">Contact</a></li>
             <li><a href="/privacy">Privacy</a></li>
             <li><a href="/policies">Policies</a></li>
             <li><a href="/terms">Terms</a></li>
-            <li><a href="/faq">Frequently Asked Questions</a></li>
+            <li><a href="/faq">FAQ</a></li>
           </ul>
       </div>
       <hr>
@@ -73,6 +73,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+
+.footer {
+  margin-bottom: 0;
+
+  hr {
+    max-width: 100%;
+  }
+}
+
 .footer_links {
   font-weight: 700;
   font-size: 1.1em;
