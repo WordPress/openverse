@@ -49,4 +49,5 @@ module "cccatalog-api" {
   elasticsearch_url         = "search-cccatalog-elasticsearch-vtptjrgtluyamznw6s4kkdtqju.us-east-1.es.amazonaws.com"
   redis_host                = "ip-172-30-1-215.ec2.internal"
   redis_password            = "${var.redis_password}"
+  ccc_api_host              = "api-dev.creativecommons.engineering"
 }

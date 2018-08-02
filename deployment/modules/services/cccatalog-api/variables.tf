@@ -84,3 +84,7 @@ variable "redis_host" {
 variable "redis_password" {
   description = "Cache server password"
 }
+
+variable "ccc_api_host" {
+  description = "The hostname of the API server. Used by the URL shortener proxy to locate /link endpoint."
+}
