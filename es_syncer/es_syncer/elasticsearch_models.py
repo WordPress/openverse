@@ -13,7 +13,6 @@ class SyncableDocType(DocType):
     pg_id = Integer()
 
     @staticmethod
-    @abstractmethod
     def database_row_to_elasticsearch_doc(row, schema):
         """
         Children of this class must have a function mapping a Postgres model
@@ -43,12 +42,23 @@ class Image(SyncableDocType):
     license_version = Keyword()
     foreign_landing_url = Keyword()
     meta_data = Nested()
+    view_count = Integer()
+    detailed_tags = Nested()
 
     class Index:
         name = 'image'
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
+        def _parse_detailed_tags(json_tags):
+            parsed_tags = []
+            for tag in json_tags:
+                parsed_tag = {'name': tag['name']}
+                if 'accuracy' in tag:
+                    parsed_tag['accuracy'] = tag['accuracy']
+                parsed_tags.append(parsed_tag)
+            return parsed_tags
+
         return Image(
             _id=row[schema['id']],
             pg_id=row[schema['id']],
@@ -57,6 +67,7 @@ class Image(SyncableDocType):
             creator=row[schema['creator']],
             creator_url=row[schema['creator_url']],
             tags=row[schema['tags_list']],
+            detailed_tags=_parse_detailed_tags(row[schema['tags']]),
             created_on=row[schema['created_on']],
             url=row[schema['url']],
             thumbnail=row[schema['thumbnail']],
@@ -66,6 +77,7 @@ class Image(SyncableDocType):
             license_version=row[schema['license_version']],
             foreign_landing_url=row[schema['foreign_landing_url']],
             meta_data=row[schema['meta_data']],
+            view_count=row[schema['view_count']],
         )
 
 

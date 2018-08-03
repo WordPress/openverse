@@ -176,8 +176,8 @@ class ElasticsearchSyncer:
 
         documents = []
         for row in pg_chunk:
-            converted = model.database_row_to_elasticsearch_doc(row, schema) \
-                .to_dict(include_meta=True)
+            converted = model.database_row_to_elasticsearch_doc(row, schema)
+            converted = converted.to_dict(include_meta=True)
             documents.append(converted)
 
         return documents

@@ -116,6 +116,18 @@ class ImageSearchQueryStringSerializer(_SearchQueryStringSerializer):
             return value.lower()
 
 
+class TagSerializer(serializers.Serializer):
+    name = serializers.CharField(
+        required=True,
+        help_text="The name of a detailed tag."
+    )
+    accuracy = serializers.FloatField(
+        required=False,
+        help_text="The accuracy of a machine-generated tag. Human-generated "
+                  "tags do not have an accuracy field."
+    )
+
+
 class ImageSerializer(serializers.Serializer):
     """ A single image. Used in search results."""
     title = serializers.CharField(required=False)
@@ -123,6 +135,11 @@ class ImageSerializer(serializers.Serializer):
     creator = serializers.CharField(required=False, allow_blank=True)
     creator_url = serializers.URLField(required=False)
     tags = serializers.ListField(required=False)
+    detailed_tags = TagSerializer(
+        required=False,
+        many=True,
+        help_text="Tags with detailed metadata, such as accuracy."
+    )
     url = serializers.URLField()
     thumbnail = serializers.URLField(required=False, allow_blank=True)
     provider = serializers.CharField(required=False)

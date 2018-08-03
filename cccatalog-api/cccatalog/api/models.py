@@ -38,7 +38,7 @@ class Image(OpenLedgerModel):
 
     # The identifier that was defined by the source or provider. This may need
     # to be extended to support multiple values when we begin to reconcile duplicates
-    foreign_identifier = models.CharField(unique=True, max_length=80, blank=True, null=True, db_index=True)
+    foreign_identifier = models.CharField(unique=True, max_length=1000, blank=True, null=True, db_index=True)
 
     # The entry point URL that we got from the external source, such as the
     # HTTP referrer, or the landing page recorded by the provider/source
@@ -80,7 +80,7 @@ class Image(OpenLedgerModel):
     # Denormalized tags as an array, for easier syncing with Elasticsearch
     tags_list = ArrayField(models.CharField(max_length=255), blank=True, null=True)
 
-    tags = models.ManyToManyField('Tag', through='ImageTags')
+    tags = JSONField()
 
     # The last time this image was synced with the URL in `foreign_landing_url`
     # A null value here means we have never synced it
@@ -94,6 +94,8 @@ class Image(OpenLedgerModel):
 
     # The number of views the image has received.
     view_count = models.IntegerField(default=0)
+
+    watermarked = models.BooleanField()
 
     def __str__(self):
         return '%r by %r from %r [%r %r]' % (
