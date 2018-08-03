@@ -27,6 +27,7 @@ data "template_file" "init" {
     api_version           = "${var.api_version}"
     redis_host            = "${var.redis_host}"
     redis_password        = "${var.redis_password}"
+    root_shortening_url   = "${var.root_shortening_url}"
   }
 }
 

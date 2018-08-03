@@ -88,3 +88,7 @@ variable "redis_password" {
 variable "ccc_api_host" {
   description = "The hostname of the API server. Used by the URL shortener proxy to locate /link endpoint."
 }
+
+variable "root_shortening_url" {
+  description = "The domain of the link shortener (e.g. dev.shares.cc)"
+}
