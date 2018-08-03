@@ -51,13 +51,16 @@ class Image(SyncableDocType):
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
         def _parse_detailed_tags(json_tags):
-            parsed_tags = []
-            for tag in json_tags:
-                parsed_tag = {'name': tag['name']}
-                if 'accuracy' in tag:
-                    parsed_tag['accuracy'] = tag['accuracy']
-                parsed_tags.append(parsed_tag)
-            return parsed_tags
+            if json_tags:
+                parsed_tags = []
+                for tag in json_tags:
+                    parsed_tag = {'name': tag['name']}
+                    if 'accuracy' in tag:
+                        parsed_tag['accuracy'] = tag['accuracy']
+                    parsed_tags.append(parsed_tag)
+                return parsed_tags
+            else:
+                return None
 
         return Image(
             _id=row[schema['id']],
