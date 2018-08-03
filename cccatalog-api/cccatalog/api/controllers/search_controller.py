@@ -50,7 +50,7 @@ def search(search_params, index, page_size, page=1) -> Response:
     keywords = ' '.join(search_params.data['q'].lower().split(','))
     s = s.query("multi_match",
                 query=keywords,
-                fields=['tags^3', 'creator^2', 'title'])
+                fields=['detailed_tags^3', 'tags^3', 'creator^2', 'title'])
 
     s.extra(track_scores=True)
     search_response = s.execute()
