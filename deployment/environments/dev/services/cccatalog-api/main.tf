@@ -42,8 +42,7 @@ module "cccatalog-api" {
   elasticsearch_url         = "search-cccatalog-elasticsearch-vtptjrgtluyamznw6s4kkdtqju.us-east-1.es.amazonaws.com"
   redis_host                = "ip-172-30-1-215.ec2.internal"
   ccc_api_host              = "api-dev.creativecommons.engineering"
-  # The dev shortening URL isn't ready yet; point straight to the box for now
-  root_shortening_url       = "ec2-54-88-175-61.compute-1.amazonaws.com"
+  root_shortening_url       = "dev.shares.cc"
 
   # Secrets not checked into version control. Override with -var-file=secrets.tfvars
   database_password         = "${var.database_password}"
