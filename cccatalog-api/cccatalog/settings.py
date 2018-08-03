@@ -37,8 +37,9 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
 
 # Domains that shortened links may point to
 SHORT_URL_WHITELIST = {'api-dev.creativecommons.engineering',
-                       'api.creativecommons.engineering'}
-SHORT_URL_PATH_WHITELIST = ['/list', '/image']
+                       'api.creativecommons.engineering',
+                       'http://ccccatalog.herokuapp.com'}
+SHORT_URL_PATH_WHITELIST = ['/list', '/image/']
 
 
 # Application definition
