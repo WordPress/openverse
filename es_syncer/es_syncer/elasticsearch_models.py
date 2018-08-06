@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from elasticsearch_dsl import Date, Text, Integer, Nested, Keyword, DocType
 
 
@@ -10,7 +9,7 @@ class SyncableDocType(DocType):
     # Aggregations can't be performed on the _id meta-column, which necessitates
     # copying it to this column in the doc. Aggregation is used to find the last
     # document inserted into Elasticsearch
-    pg_id = Integer()
+    id = Integer()
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
@@ -64,7 +63,7 @@ class Image(SyncableDocType):
 
         return Image(
             _id=row[schema['id']],
-            pg_id=row[schema['id']],
+            id=row[schema['id']],
             title=row[schema['title']],
             identifier=row[schema['identifier']],
             creator=row[schema['creator']],
