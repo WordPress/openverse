@@ -31,7 +31,7 @@ module "cccatalog-api" {
   max_size                  = 5
   instance_type             = "t2.micro"
   enable_monitoring         = false
-  git_revision              = "499380c143258fc9e0d55c1f42c724b983dfc2e5"
+  git_revision              = "37d1beddd2b0376e33fdef659f5150653d02f312"
   api_version               = "0.4.0"
 
   # Environment-specific variables

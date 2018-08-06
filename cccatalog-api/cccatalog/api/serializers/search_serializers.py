@@ -134,8 +134,8 @@ class ImageSerializer(serializers.Serializer):
     identifier = serializers.CharField(required=False)
     creator = serializers.CharField(required=False, allow_blank=True)
     creator_url = serializers.URLField(required=False)
-    tags = serializers.ListField(required=False)
-    detailed_tags = TagSerializer(
+    legacy_tags = serializers.ListField(required=False)
+    tags = TagSerializer(
         required=False,
         many=True,
         help_text="Tags with detailed metadata, such as accuracy."
