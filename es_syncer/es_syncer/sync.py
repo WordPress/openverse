@@ -82,7 +82,7 @@ class ElasticsearchSyncer:
 
             # Find the last document inserted into elasticsearch
             s = Search(using=self.es, index=table)
-            s.aggs.bucket('highest_pg_id', 'max', field='pg_id')
+            s.aggs.bucket('highest_pg_id', 'max', field='id')
             try:
                 es_res = s.execute()
                 last_added_es_id = \
