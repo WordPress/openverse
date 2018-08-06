@@ -62,7 +62,7 @@ class SearchImages(APIView):
         results = []
         for result in search_results:
             url = request.build_absolute_uri(
-                reverse('image-detail', [result.pg_id])
+                reverse('image-detail', [result.id])
             )
             result.detail = url
             results.append(result)

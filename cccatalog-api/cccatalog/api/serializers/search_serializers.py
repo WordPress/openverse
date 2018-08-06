@@ -151,6 +151,10 @@ class ImageSerializer(serializers.Serializer):
     detail = serializers.URLField(
         required=False,
         help_text="A direct link to the detail view of an image."
+    ),
+    id = serializers.IntegerField(
+        required=True,
+        help_text="The unique identifier of the image."
     )
 
 
