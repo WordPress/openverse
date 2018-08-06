@@ -18,7 +18,7 @@ class ImageDetailSerializer(ModelSerializer, ImageSerializer):
 
     class Meta:
         model = Image
-        fields = ('title', 'identifier', 'creator', 'creator_url', 'tags_list',
+        fields = ('title', 'identifier', 'creator', 'creator_url', 'tags',
                   'url', 'thumbnail', 'provider', 'source', 'license',
                   'license_version', 'foreign_landing_url', 'meta_data',
                   'view_count')
