@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from cccatalog.api.models import ImageList
+from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
 
 
-class ImageListSerializer(serializers.ModelSerializer):
+class ImageListCreateSerializer(serializers.ModelSerializer):
     """
     Responsible for parsing POST JSON body and persisting to the database.
     """
@@ -31,3 +32,12 @@ class ImageListSerializer(serializers.ModelSerializer):
             image_list.images.add(image)
 
         return _id
+
+
+class ImageListResponseSerializer(serializers.Serializer):
+    """
+    Return a list of fully resolved images.
+    """
+    lookup_field = 'id'
+    id = serializers.ReadOnlyField()
+    images = ImageDetailSerializer(many=True)

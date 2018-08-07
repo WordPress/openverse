@@ -42,7 +42,6 @@ class Image(SyncableDocType):
     foreign_landing_url = Keyword()
     meta_data = Nested()
     view_count = Integer()
-    detailed_tags = Nested()
 
     class Index:
         name = 'image'

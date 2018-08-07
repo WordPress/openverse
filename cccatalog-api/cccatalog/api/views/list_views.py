@@ -1,5 +1,8 @@
-from cccatalog.api.serializers.list_serializers import ImageListSerializer
-from cccatalog.api.models import ImageList
+from cccatalog.api.serializers.list_serializers import\
+    ImageListCreateSerializer, ImageListResponseSerializer
+from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
+from django.forms.models import model_to_dict
+from cccatalog.api.models import ImageList, Image
 from cccatalog.api.utils.throttle import PostRequestThrottler
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers
@@ -11,7 +14,7 @@ from rest_framework.reverse import reverse
 
 
 class _List(GenericAPIView):
-    serializer_class = ImageListSerializer
+    serializer_class = ImageListCreateSerializer
     queryset = ImageList.objects.all()
     lookup_field = 'id'
 
@@ -42,7 +45,7 @@ class CreateList(_List):
         input primary keys must be valid. If any of these constraints are
         violated, a validation error is returned.
         """
-        serialized = ImageListSerializer(data=request.data)
+        serialized = ImageListCreateSerializer(data=request.data)
         if not serialized.is_valid():
             return Response(
                 status=400,
@@ -59,12 +62,21 @@ class CreateList(_List):
         )
 
 
-class DetailList(_List, RetrieveModelMixin):
+class ListDetail(_List, RetrieveModelMixin):
     @swagger_auto_schema(operation_id="list_detail",
                          responses={
-                             200: ImageListSerializer,
+                             200: ImageListCreateSerializer,
                              404: 'Not Found'
                          })
     def get(self, request, id, format=None):
         """ Get the details of a single list. """
-        return self.retrieve(request, id)
+        _list = ImageList.objects.get(id=id)
+        resolved = {
+            'id': id,
+            'images': [model_to_dict(x) for x in _list.images.all()]
+        }
+        serialized = ImageListResponseSerializer(data=resolved)
+        resp = Response(status=200, data=serialized.initial_data)
+        import pdb
+        pdb.set_trace()
+        return resp
