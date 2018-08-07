@@ -65,7 +65,7 @@ class CreateList(_List):
 class ListDetail(_List, RetrieveModelMixin):
     @swagger_auto_schema(operation_id="list_detail",
                          responses={
-                             200: ImageListCreateSerializer,
+                             200: ImageListResponseSerializer,
                              404: 'Not Found'
                          })
     def get(self, request, id, format=None):
