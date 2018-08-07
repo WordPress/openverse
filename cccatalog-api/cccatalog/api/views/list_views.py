@@ -67,11 +67,11 @@ class ListDetail(_List, RetrieveModelMixin):
                              200: ImageListResponseSerializer,
                              404: 'Not Found'
                          })
-    def get(self, request, id, format=None):
+    def get(self, request, slug, format=None):
         """ Get the details of a single list. """
-        _list = ImageList.objects.get(id=id)
+        _list = ImageList.objects.get(slug=slug)
         resolved = {
-            'id': id,
+            'id': slug,
             'images': [model_to_dict(x) for x in _list.images.all()]
         }
         serialized = ImageListResponseSerializer(data=resolved)

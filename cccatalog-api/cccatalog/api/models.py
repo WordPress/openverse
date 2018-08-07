@@ -1,4 +1,4 @@
-from django.urls import reverse
+from uuslug import slugify, uuslug
 from django.db import models
 from django.conf import settings
 from django.utils.safestring import mark_safe
@@ -95,6 +95,7 @@ class Image(OpenLedgerModel):
     # The number of views the image has received.
     view_count = models.IntegerField(default=0)
 
+    # Whether the image has been watermarked.
     watermarked = models.BooleanField()
 
     def __str__(self):
@@ -137,9 +138,19 @@ class ImageList(OpenLedgerModel):
         related_name="lists",
         help_text="A list of primary keys corresponding to images."
     )
+    slug = models.CharField(
+        max_length=200,
+        help_text="A unique identifier used to make a friendly URL for "
+                  "downstream API consumers.",
+        unique=True
+    )
 
     class Meta:
         db_table = 'imagelist'
+
+    def save(self, *args, **kwargs):
+        self.slug = uuslug(self.title, instance=self)
+        super(ImageList, self).save(*args, **kwargs)
 
 
 class Tag(OpenLedgerModel):

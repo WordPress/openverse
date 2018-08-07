@@ -26,7 +26,7 @@ class ImageListCreateSerializer(serializers.ModelSerializer):
         images = self.validated_data['images']
         image_list = ImageList(title=title)
         image_list.save()
-        _id = image_list.id
+        _id = image_list.slug
 
         for image in images:
             image_list.images.add(image)
@@ -38,6 +38,6 @@ class ImageListResponseSerializer(serializers.Serializer):
     """
     Return a list of fully resolved images.
     """
-    lookup_field = 'id'
+    lookup_field = 'slug'
     id = serializers.ReadOnlyField()
     images = ImageDetailSerializer(many=True)
