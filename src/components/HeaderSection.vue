@@ -1,6 +1,7 @@
 <template>
   <header class="header">
     <nav-section></nav-section>
+     <slot></slot>
     <hero-section v-if="showHero === 'true'"></hero-section>
   </header>
 </template>

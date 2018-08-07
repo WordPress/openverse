@@ -1,12 +1,18 @@
 <template>
   <div class="browse-page">
-    <header-section></header-section>
     <div class="search grid-x flexible">
       <div class="cell">
-        <search-form :query="query"></search-form>
+        <header-section>
+          <search-form :query="query"></search-form>
+        </header-section>
       </div>
       <div class="cell">
-        <search-grid :data="images"></search-grid>
+        <search-grid
+          :imagesCount="imagesCount"
+          :images="images"
+          :query="query">
+        </search-grid>
+        <share-bar></share-bar>
       </div>
     </div>
     <footer-section></footer-section>
@@ -14,10 +20,11 @@
 </template>
 
 <script>
-import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
+import FooterSection from '@/components/FooterSection';
 import SearchForm from '@/components/SearchForm';
 import SearchGrid from '@/components/SearchGrid';
+import ShareBar from '@/components/ShareBar';
 import { FETCH_IMAGES } from '@/store/action-types';
 
 const BrowsePage = {
@@ -25,12 +32,16 @@ const BrowsePage = {
   components: {
     HeaderSection,
     SearchForm,
+    ShareBar,
     SearchGrid,
     FooterSection,
   },
   computed: {
     images() {
       return this.$store.state.images;
+    },
+    imagesCount() {
+      return this.$store.state.imagesCount;
     },
     query() {
       return this.$store.state.query.q;
@@ -49,20 +60,4 @@ export default BrowsePage;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
-.search {
-  padding: 0;
-  box-shadow: 0;
-  border-bottom: 1px solid #e6e6e6;
-}
-
-.search-form {
-  width: 100% !important;
-  margin: 0 !important;
-}
-
-.search_input {
-  border-radius: 0 !important;
-  color: #000 !important;
-}
-</style>
+<style lang="scss"></style>

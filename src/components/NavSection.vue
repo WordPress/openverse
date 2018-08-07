@@ -1,6 +1,6 @@
 <template>
   <nav class="nav">
-    <a href=".">
+    <a href="/">
       <img class="nav_logo" src="../assets/cc-logo_white.png">
     </a>
   </nav>
@@ -15,14 +15,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .nav {
+  position: relative;
   width: 100%;
-  height: 70px;
-  background: #000;
+  height: 60px;
+  background: rgba(0,0,0,0.8);
 }
 
 .nav_logo {
   padding-left: 30px;
-  height: 40px;
+  height: 30px;
   float: left;
   position: absolute;
   top: 50%;

@@ -30,9 +30,7 @@
   <div  class="header-grid">
   <div id="b1" class="block">
     <img src="@/assets/mix-tapes_medum.jpg" />
-    <div class="block_overlay">
-
-    </div>
+    <div class="block_overlay"></div>
   </div>
   <div id="b2" class="block"></div>
   <div id="b3" class="block"></div>
@@ -83,9 +81,13 @@ $nav-text-color: $gray;
 $vert-seperate: 4rem;
 
 
-.home-page  .nav {
-  position: absolute;
+.home-page .nav {
+  position: absolute !important;
   background: transparent !important;
+
+  .nav_logo {
+    height: 35px;
+  }
 }
 
 .featured-items {
@@ -210,6 +212,5 @@ $vert-seperate: 4rem;
   grid-area: big-bottom;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-
 }
 </style>
