@@ -8,13 +8,15 @@
       </a>
       <span class="hero_instagram-icon">&nbsp;</span>
     </p>
-    <form role="search" method="post" v-on:submit.prevent="onSubmit"
-          class="search-form search-form__filter">
+    <form class="hero_search-form"
+          role="search"
+          method="post"
+          v-on:submit.prevent="onSubmit">
       <div class="search-form_ctr grid-x">
           <div class="cell large-12">
             <input required="required"
                    autofocus=""
-                   class="search-form_input"
+                   class="hero_search-input"
                    type="search"
                    placeholder="Search the commons..."
                    autocapitalize="none"
@@ -22,8 +24,7 @@
                    v-model.lazy="form.searchTerm">
           </div>
           <div class="cell large-12">
-            <button class="search-form_search-btn" title="Search">
-            </button>
+            <button class="hero_search-btn" title="Search"></button>
           </div>
       </div>
     </form>
@@ -67,7 +68,7 @@ $hero-height: 70vh;
     color: $white;
   }
 
-  .search-form {
+  .hero_search-form {
     position: relative;
     margin-top: 0;
     border-radius: 3px;
@@ -75,7 +76,7 @@ $hero-height: 70vh;
     width: 100%;
   }
 
-  .search-form_input {
+  .hero_search-input {
     font-size: 24px;
     padding-left: 30px;
     margin-bottom: 0;
@@ -89,7 +90,7 @@ $hero-height: 70vh;
     color: #fff;
   }
 
-  .search-form_search-btn {
+  .hero_search-btn {
     position: absolute;
     top: 0;
     right: 0;
@@ -117,7 +118,7 @@ $hero-height: 70vh;
     }
   }
 
-  .search-form_input::placeholder {
+  .hero_search-input::placeholder {
     color: rgba(255, 255, 255, 0.4);
   }
 

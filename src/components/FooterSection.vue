@@ -75,6 +75,7 @@ export default {
 <style lang="scss" scoped>
 
 .footer {
+  padding: 30px;
   margin-bottom: 0;
 
   hr {

@@ -3,8 +3,9 @@ import VueRouter from 'vue-router';
 import HomePage from '@/pages/HomePage';
 import BrowsePage from '@/pages/BrowsePage';
 import PhotoDetailPage from '@/pages/PhotoDetailPage';
+import ShareListPage from '@/pages/ShareListPage';
 import store from '@/store';
-import { SET_QUERY } from '@/store/mutation-types';
+import { SET_QUERY, SET_SHARE_LIST } from '@/store/mutation-types';
 
 
 Vue.use(VueRouter);
@@ -20,7 +21,13 @@ const router = new VueRouter({
       props: route => ({ query: route.query.q }),
     },
     {
-      path: '/photo/:id',
+      path: '/lists/:id',
+      name: 'share-list-page',
+      component: ShareListPage,
+      props: true,
+    },
+    {
+      path: '/photos/:id',
       name: 'photo-detail-page',
       component: PhotoDetailPage,
     },
@@ -35,8 +42,8 @@ const router = new VueRouter({
 router.afterEach((to) => {
   if (to && to.query) {
     store.commit(SET_QUERY, to.query);
+    store.commit(SET_SHARE_LIST, { shareListImages: [] });
   }
 });
-
 
 export default router;

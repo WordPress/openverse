@@ -1,7 +1,11 @@
 
 import ImageService from '@/api/ImageService';
 import { FETCH_IMAGES, FETCH_IMAGE } from './action-types';
-import { FETCH_START, FETCH_END, SET_IMAGES, SET_IMAGE, SET_QUERY } from './mutation-types';
+import { FETCH_START,
+         FETCH_END,
+         SET_IMAGES,
+         SET_IMAGE,
+         SET_QUERY } from './mutation-types';
 
 const state = {
   image: {},

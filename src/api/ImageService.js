@@ -21,7 +21,7 @@ const ImageService = {
       throw new Error('[RWV] ImageService.getImageDetail() id parameter required to retreive image details.');
     }
 
-    return ApiService.get('image', `/image//${params.id}`);
+    return ApiService.get('image', params.id);
   },
 };
 
