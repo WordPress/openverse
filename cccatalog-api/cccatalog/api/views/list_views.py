@@ -1,8 +1,7 @@
 from cccatalog.api.serializers.list_serializers import\
     ImageListCreateSerializer, ImageListResponseSerializer
-from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
 from django.forms.models import model_to_dict
-from cccatalog.api.models import ImageList, Image
+from cccatalog.api.models import ImageList
 from cccatalog.api.utils.throttle import PostRequestThrottler
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import serializers
@@ -76,7 +75,4 @@ class ListDetail(_List, RetrieveModelMixin):
             'images': [model_to_dict(x) for x in _list.images.all()]
         }
         serialized = ImageListResponseSerializer(data=resolved)
-        resp = Response(status=200, data=serialized.initial_data)
-        import pdb
-        pdb.set_trace()
-        return resp
+        return Response(status=200, data=serialized.initial_data)
