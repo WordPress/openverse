@@ -43,6 +43,10 @@ SHORT_URL_WHITELIST = {
 }
 SHORT_URL_PATH_WHITELIST = ['/list', '/image/']
 
+# Intermittently run tasks
+CRON_CLASSES = [
+    'cccatalog.api.utils.scheduled_tasks.SaveCachedTrafficStats'
+]
 
 # Application definition
 
@@ -56,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cron',
     'oauth2_provider',
     'social_django',
     'rest_framework',
