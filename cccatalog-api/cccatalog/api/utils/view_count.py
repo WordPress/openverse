@@ -39,7 +39,7 @@ def track_model_views(model):
 
 def _increment_viewcount(model, model_id: int, request):
     """
-    Increment the viewcount. Cache the result for at least six hours. When
+    Increment the viewcount. Cache the result for at least 24 hours. When
     the key expires, it is evicted from the cache and stored in Postgres by a
     cache persistence worker.
 
