@@ -22,9 +22,9 @@ class SaveCachedTrafficStats(CronJobBase):
     """
     Traffic statistics (view count, API usage) are stored in Redis for fast
     updates and retrieval. In order to ensure durability of statistics and
-    minimal cache memory requirements, they are intermittently replicated to the
-    database in small batches and subsequently evicted from the cache if they
-    exceed a certain age. Recently updated view data is replicated but not
+    minimize cache memory requirements, they are intermittently replicated to
+    the database in small batches and subsequently evicted from the cache if
+    they exceed a certain age. Recently updated view data is replicated but not
     evicted.
 
     After traffic statistics have been stored in the database, they are
@@ -33,7 +33,7 @@ class SaveCachedTrafficStats(CronJobBase):
     RUN_EVERY_MINS = 20
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     # Number of failures before notification is sent
-    MIN_NUM_FAILURES = 1
+    MIN_NUM_FAILURES = 5
     code = 'cccatalog.api.utils.scheduled_tasks.SaveCachedTrafficStats'
 
     def do(self):
@@ -71,6 +71,6 @@ class SaveCachedTrafficStats(CronJobBase):
             else:
                 log.warning('Tried to persist views of non-existent model '
                             + model_name)
-        if evict_from_cache and view_keys:
+        if evict_from_cache:
             redis.delete(*view_keys)
         log.info('Saved ' + str(view_keys))

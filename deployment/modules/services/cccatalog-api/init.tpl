@@ -66,3 +66,31 @@ uwsgi --chdir=/home/ec2-user/cccatalog-api \
       --wsgi-file=./cccatalog/wsgi.py \
       --static-map=/static=/var/api_static_content/static \
       --offload-threads=%k
+
+# Start periodic tasks using systemd timers and django_cron
+# This kicks off a job that intermittently synchronizes traffic statistics
+# with the database.
+# To monitor the job: journalctl -u django_cron.service
+# To monitor the timer: systemctl status django_cron.timer -l
+cat << EOF > /etc/systemd/system/django_cron.service
+Description=Check that any django_cron jobs need to be run.
+
+[Service]
+ExecStart=/usr/bin/python3 /home/ec2-user/cccatalog-api/manage.py runcrons
+EOF
+
+cat << EOF > /etc/systemd/system/django_cron.timer
+[Unit]
+Description=Check that any django_cron jobs need to run. The success status and logs of the jobs are stored in the CC Catalog API database in the django_cron table.
+Requires=django_cron.service
+
+[Timer]
+OnBootSec=10
+OnUnitInactiveSec=1min
+Unit=django_cron.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
+systemctl start django_cron.timer
