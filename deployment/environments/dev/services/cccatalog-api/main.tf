@@ -31,8 +31,8 @@ module "cccatalog-api" {
   max_size                  = 5
   instance_type             = "t2.micro"
   enable_monitoring         = false
-  git_revision              = "425cd2caf86605c0a811d5bd3e2b1fb6fa917ec4"
-  api_version               = "0.7.0"
+  git_revision              = "9e76082ee3022974b911e4834e61bde1ab96621e"
+  api_version               = "0.8.0"
 
   # Environment-specific variables
   database_host             = "openledger-db-dev3-nvirginia.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
