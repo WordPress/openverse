@@ -19,6 +19,7 @@ import StringIO
 import sys
 import re
 import logging
+from datetime import date, datetime, timedelta
 
 
 class CCLinks:
@@ -83,6 +84,8 @@ class CCLinks:
                 content     = StringIO.StringIO(response.content)
                 fh          = gzip.GzipFile(fileobj=content)
                 watPaths    = fh.read().split()
+
+                watPaths    = watPaths[0:2]
 
                 return watPaths
             else:
@@ -223,6 +226,42 @@ class CCLinks:
 def main():
     args        = sys.argv[1]
     crawlIndex  = args.strip()
+
+    if crawlIndex.lower() == '--default':
+        bucket  = 'commoncrawl'
+        s3      = boto3.client('s3')
+
+        #verify bucket
+        contents    = {}
+        prefix      = 'cc-index/collections/CC-MAIN-{}-'.format(datetime.today().year)
+        botoArgs    = {'Bucket': bucket, 'Prefix': prefix}
+
+        while True:
+
+            objects = s3.list_objects_v2(**botoArgs)
+
+            for obj in objects['Contents']:
+                key = obj['Key']
+
+                if 'indexes' in key:
+                    cIndex = key.split('/indexes/')[0].split('/')
+                    cIndex = cIndex[len(cIndex)-1]
+
+                    if cIndex not in contents:
+                        cWeek       = cIndex.split('-')
+                        cWeek       = cWeek[len(cWeek)-1]
+                        contents[cWeek]  = cIndex
+
+            try:
+                botoArgs['ContinuationToken'] = objects['NextContinuationToken']
+            except KeyError:
+                break
+
+        if contents:
+            lastCrawl  = max([int(key) for key in contents.keys()])
+            crawlIndex = contents[str(lastCrawl)]
+
+
 
     sc          = SparkContext(appName='ExtractCCLinks')
 
