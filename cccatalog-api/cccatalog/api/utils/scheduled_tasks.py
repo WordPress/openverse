@@ -18,28 +18,6 @@ model_name_to_instance = {
 }
 
 
-def _save_views_to_db(view_keys, evict_from_cache = False):
-    redis = get_redis_connection('traffic_stats')
-    view_keys = [x.decode('utf-8') for x in view_keys]
-    for obj in view_keys:
-        model_name, model_id = obj.split(':')
-        if model_name in model_name_to_instance:
-            model = model_name_to_instance[model_name]
-            try:
-                instance = model.objects.get(id=model_id)
-                instance.view_count = redis.get(obj)
-                instance.save(update_fields=['view_count'])
-            except ObjectDoesNotExist:
-                log.warning('Tried to save views of non-existent instance.')
-        else:
-            log.warning('Tried to persist views of non-existent model '
-                        + model_name)
-    if evict_from_cache:
-        if view_keys:
-            redis.delete(*view_keys)
-    log.info('Saved ' + str(view_keys))
-
-
 class SaveCachedTrafficStats(CronJobBase):
     """
     Traffic statistics (view count, API usage) are stored in Redis for fast
@@ -69,7 +47,30 @@ class SaveCachedTrafficStats(CronJobBase):
         recent_view_data = redis.zrangebyscore(
             'model-last-accessed', last_save_time, 'inf'
         )
-        _save_views_to_db(old_view_data, evict_from_cache=True)
+        self._save_views_to_db(old_view_data, evict_from_cache=True)
         redis.zremrangebyscore('model-last-accessed', '-inf', one_day_ago)
-        _save_views_to_db(recent_view_data)
+        self._save_views_to_db(recent_view_data)
         log.info('Saved cached traffic stats')
+
+    @staticmethod
+    def _save_views_to_db(view_keys, evict_from_cache=False):
+        if not view_keys:
+            return
+        redis = get_redis_connection('traffic_stats')
+        view_keys = [x.decode('utf-8') for x in view_keys]
+        for obj in view_keys:
+            model_name, model_id = obj.split(':')
+            if model_name in model_name_to_instance:
+                model = model_name_to_instance[model_name]
+                try:
+                    instance = model.objects.get(id=model_id)
+                    instance.view_count = redis.get(obj)
+                    instance.save(update_fields=['view_count'])
+                except ObjectDoesNotExist:
+                    log.warning('Tried to save views of non-existent instance.')
+            else:
+                log.warning('Tried to persist views of non-existent model '
+                            + model_name)
+        if evict_from_cache and view_keys:
+            redis.delete(*view_keys)
+        log.info('Saved ' + str(view_keys))
