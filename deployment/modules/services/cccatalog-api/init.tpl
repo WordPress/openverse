@@ -2,6 +2,10 @@
 #!/bin/bash
 
 # Set up environment-specific configuration
+export VERSION="${api_version}"
+export REVISION="${git_revision}"
+export SEMANTIC_VERSION="$$VERSION+$${REVISION:0:12}"
+cat << EOF > /etc/environment
 export DJANGO_DATABASE_NAME="openledger"
 export DJANGO_DATABASE_USER="deploy"
 export DJANGO_DATABASE_PASSWORD="${database_password}"
@@ -19,13 +23,10 @@ export REVISION="${git_revision}"
 export REDIS_HOST="${redis_host}"
 export REDIS_PASSWORD="${redis_password}"
 export ROOT_SHORTENING_URL="${root_shortening_url}"
-
-# https://semver.org
-export SEMANTIC_VERSION="$$VERSION+$${REVISION:0:12}"
-
-# Uncomment to password protect all endpoints.
-# export WSGI_AUTH_CREDENTIALS="${wsgi_auth_credentials}"
-# export WSGI_AUTH_EXCLUDE_PATHS="/healthcheck"
+export SEMANTIC_VERSION="$${SEMANTIC_VERSION}"
+EOF
+source /etc/environment
+sed 's/^export //' /etc/environment > /etc/systemd_environment
 
 # Install python and git dependencies
 yum -y install git python3-3.7.0-0.16.b3.amzn2.0.1 gcc python3-setuptools python3-devel postgresql-devel
@@ -73,9 +74,10 @@ uwsgi --chdir=/home/ec2-user/cccatalog-api \
 # To monitor the job: journalctl -u django_cron.service
 # To monitor the timer: systemctl status django_cron.timer -l
 cat << EOF > /etc/systemd/system/django_cron.service
+[Unit]
 Description=Check that any django_cron jobs need to be run.
-
 [Service]
+EnvironmentFile=/etc/systemd_environment
 ExecStart=/usr/bin/python3 /home/ec2-user/cccatalog-api/manage.py runcrons
 EOF
 
@@ -92,5 +94,4 @@ Unit=django_cron.service
 [Install]
 WantedBy=timers.target
 EOF
-
 systemctl start django_cron.timer
