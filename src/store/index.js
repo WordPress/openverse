@@ -1,7 +1,7 @@
 import Puex from 'puex';
 import Vue from 'vue';
 import SearchStore from './search-store';
-import ListStore from './list-store';
+import ListStore from './share-list-store';
 
 Vue.use(Puex);
 

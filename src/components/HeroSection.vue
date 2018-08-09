@@ -106,9 +106,9 @@ $hero-height: 70vh;
 
     &:after {
       content: '';
-      background: url('../assets/search-icon.png') center center no-repeat;
+      background: url('../assets/search-icon_white.svg') center center no-repeat;
       background-size: 20px;
-      opacity: 0.5;
+      opacity: 0.2;
       top: 0;
       left: 0;
       bottom: 0;

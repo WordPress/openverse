@@ -18,11 +18,17 @@
       <div v-for="(image, index) in images"
         :class="{ 'search-grid_item': true, 'search-grid_ctr__active': image.isActive }"
         :key="index"
-        @mouseenter="onToggleOverlay(image, true)"
-        @mouseleave="onToggleOverlay(image, false)">
-        <img class="search-grid_image" :src="image.url">
+        @click.prevent="onGotoDetailPage(image)">
+        <span v-if='isActive'>is Active</span>
+        <img class="search-grid_image" :src="image.thumbnail || image.src">
         <div class="search-grid_item-overlay">
-          <a @click.prevent="addToImageList(image)">+</a>
+          <a class="search-grid_overlay-title"
+             @click="addToImageList(image)">
+             {{ image.title }}
+          </a>
+          <a class="search-grid_overlay-add"
+             @click="addToImageList(image)">
+          </a>
         </div>
       </div>
     </div>
@@ -30,7 +36,6 @@
 </template>
 
 <script>
-import { SET_IMAGES } from '@/store/mutation-types';
 import { ADD_IMAGE_TO_LIST } from '@/store/mutation-types';
 
 export default {
@@ -44,12 +49,12 @@ export default {
     isActive: false,
   }),
   methods: {
-    onToggleOverlay(image, isActive) {
-      image.isActive = isActive;
+    onGotoDetailPage(image) {
+      this.$router.push(`photos/${image.id}`);
     },
     addToImageList(image) {
-      this.$store.commit(ADD_IMAGE_TO_LIST, { image: image });
-    }
+      this.$store.commit(ADD_IMAGE_TO_LIST, { image });
+    },
   },
 };
 </script>
@@ -61,21 +66,64 @@ export default {
     min-height: 600px;
   }
 
+  .search-grid_item:hover .search-grid_item-overlay {
+    opacity: 1;
+    bottom: 0%;
+  }
+
   .search-grid_item-overlay {
+    opacity: 0;
+    transition: all .4s ease;
     position: absolute;
     width: 100%;
-    height: 100%;
-    top: 0;
+    height: 20%;
+    bottom: -100%;
     color: #fff;
-    background: rgba( 0, 0, 0, .5);
+    background: linear-gradient(to top, rgba(0,0,0,.5) 0, rgba(0,0,0,0) 100%);
     padding: 10px;
+  }
 
-    a {
-      color: #fff;
+  .search-grid_overlay-title {
+    position: absolute;
+    display: block;
+    bottom: 10px;
+    left: 10px;
+    z-index: 100;
+    color: #fff;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+
+  .search-grid_overlay-add {
+    position: absolute;
+    width:  18px;
+    height: 18px;
+    display: block;
+    bottom: 10px;
+    right: 10px;
+    z-index: 100;
+
+    &:after {
+      height: 100%;
+      width: 100%;
+      display: block;
+      content: '';
+      background: url('../assets/plus-icon.svg') no-repeat;
+      background-size: 18px;
+      opacity: .5;
+    }
+
+    &:hover:after {
+      opacity: .9;
     }
   }
 
   .search-grid_metrics-bar {
+    display: none;
+
     margin: 15px 0 30px 0;
 
     li {
@@ -123,6 +171,7 @@ export default {
     flex: 0 0 auto;
     flex-grow: 1;
     margin: 15px 15px 0 0;
+    cursor: pointer;
   }
 
   .search-grid_image {

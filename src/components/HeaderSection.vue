@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <nav-section></nav-section>
+    <nav-section :showNavSearch="showNavSearch"></nav-section>
      <slot></slot>
     <hero-section v-if="showHero === 'true'"></hero-section>
   </header>
@@ -16,7 +16,7 @@ export default {
     NavSection,
     HeroSection,
   },
-  props: ['showHero'],
+  props: ['showHero', 'showNavSearch', 'fixedNav'],
   data() {
     return {
       msg: 'Share, Collaborate, Remix, Reuse',

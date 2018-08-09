@@ -7,4 +7,5 @@ export const SET_IMAGE = 'SET_IMAGE';
 export const SET_IMAGES = 'SET_IMAGES';
 export const SET_QUERY = 'SET_QUERY';
 export const SET_SHARE_URL = 'SET_SHARE_URL';
+export const SET_SHARE_LIST = 'SET_SHARE_LIST';
 export const UNSET_SHARE_URL = 'UNSET_SHARE_URL';
