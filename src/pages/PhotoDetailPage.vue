@@ -2,7 +2,7 @@
   <div class="photo-detail-page">
     <div class="x-grid">
       <div class="cell">
-         <header-section showNavSearch="true" fixedNav="true"></header-section>
+        <header-section showNavSearch="true" fixedNav="true"></header-section>
       </div>
     </div>
     <div class="photo">
@@ -19,7 +19,7 @@
           <ul>
             <li>
               <h3>Title</h3>
-              <span>{{ image.creator }}</span>
+              <span>{{ image.title }}</span>
             </li>
             <li>
               <h3>Creator</h3>
@@ -30,7 +30,7 @@
             <li>
               <h3>License</h3>
               <a :href="ccLicenseURL">
-                CC {{ image.license}} {{ image.license_version }}
+              CC {{ image.license}} {{ image.license_version }}
               </a>
             </li>
             <li>
@@ -50,18 +50,18 @@
               <a :href="image.creator_url">{{ image.creator }}</a>
               is licensed under
               <a :href="ccLicenseURL">
-                CC {{ image.license}} {{ image.license_version }}
+              CC {{ image.license}} {{ image.license_version }}
               </a>
             </p>
             <button class="button photo_copy-btn
-                           photo_copy-btn__html"
-                    data-type="html">
-              Copy to HTML</button>
+              photo_copy-btn__html"
+              data-type="html">
+            Copy to HTML</button>
             <button class="button
-                           photo_copy-btn
-                           photo_copy-btn__text"
-                    data-type="text">
-              Copy to Text
+              photo_copy-btn
+              photo_copy-btn__text"
+              data-type="text">
+            Copy to Text
             </button>
           </section>
         </div>
@@ -173,19 +173,6 @@ export default PhotoDetailPage;
     .photo_info-header {
       border-top: 1px solid #e7e8e9;
       margin-left: 15px;
-
-      h2 {
-        margin-bottom: 1.07142857em;
-        font-size: .875em;
-        font-weight: 600;
-        letter-spacing: 1px;
-        line-height: 1.25;
-        text-transform: uppercase;
-        display: inline-block;
-        padding-top: .28571429em;
-        border-top: 5px solid rgba(29, 31, 39, .8);
-        margin-top: -3px;
-      }
     }
 
     h4 {
@@ -197,10 +184,23 @@ export default PhotoDetailPage;
     }
 
     h3 {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 500;
       line-height: 1rem;
       margin: 0;
+    }
+
+    h2 {
+      margin-bottom: 1.07142857em;
+      font-size: .875em;
+      font-weight: 600;
+      letter-spacing: 1px;
+      line-height: 1.25;
+      text-transform: uppercase;
+      display: inline-block;
+      padding-top: .28571429em;
+      border-top: 5px solid rgba(29, 31, 39, .8);
+      margin-top: -3px;
     }
 
     ul {

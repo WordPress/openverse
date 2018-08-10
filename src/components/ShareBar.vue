@@ -8,7 +8,7 @@
               v-for="(image, index) in images"
               :key="index">
             <transition name="fade">
-              <img class="share-bar_image" :src="image.url">
+              <img class="share-bar_image" :src="image.thumbnail">
             </transition>
             <span class="share-bar_image-remove-btn"
               @click.prevent="onRemoveImage(image)"></span>
@@ -165,8 +165,11 @@ export default {
     background: $brand-color;
 
     &:before {
-      font-family: "FontAwesome";
-      content: $brand-icon;
+      background: url( '../assets/#{$brand-icon}');
+      content: '';
+      width: 24px;
+      height: 24px;
+      display: inline-block;
     }
     &:hover,
     &:focus {
@@ -203,15 +206,15 @@ export default {
       }
 
       &.facebook {
-        @include social-button($social-brand-facebook, "\f09a")
+        @include social-button($social-brand-facebook, 'facebook-logo_white.svg')
       }
 
       &.twitter {
-        @include social-button($social-brand-twitter, "\f0c4")
+        @include social-button($social-brand-twitter, 'twitter-logo_white.svg')
       }
 
       &.instagram {
-        @include social-button($social-brand-instagram, "\f16d")
+        @include social-button($social-brand-instagram, 'pinterest-logo_white.svg')
       }
     }
   }

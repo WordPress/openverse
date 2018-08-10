@@ -5,9 +5,11 @@ import { FETCH_START,
   FETCH_END,
   SET_IMAGES,
   SET_IMAGE,
+  SET_GRID_FILTER,
   SET_QUERY } from './mutation-types';
 
 const state = {
+  filters: {},
   image: {},
   images: [],
   isFetching: false,
@@ -53,6 +55,9 @@ const mutations = {
   },
   [SET_IMAGE](_state, params) {
     _state.image = params.image;
+  },
+  [SET_GRID_FILTER](_state, params) {
+    _state.filter = params.filter;
   },
   [SET_IMAGES](_state, params) {
     _state.images = params.images;

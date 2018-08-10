@@ -133,7 +133,6 @@ $vert-seperate: 4rem;
   .featured-image-banner {
     background-color: rgba(23, 121, 186, 0.8);
     color: #fefefe;
-    font-weight: 600;
     left: 0;
     padding: 0.25rem;
     position: absolute;
