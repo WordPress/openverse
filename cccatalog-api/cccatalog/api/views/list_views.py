@@ -54,7 +54,7 @@ class CreateList(_List):
         list_id = serialized.save()
         url = request.build_absolute_uri(reverse('list-detail', [list_id]))
         return Response(
-            status=200,
+            status=201,
             data={
                 'url': url
             }
