@@ -1,5 +1,5 @@
-from rest_framework.throttling import UserRateThrottle
+from rest_framework.throttling import AnonRateThrottle
 
 
-class PostRequestThrottler(UserRateThrottle):
+class PostRequestThrottler(AnonRateThrottle):
     rate = '30/day'

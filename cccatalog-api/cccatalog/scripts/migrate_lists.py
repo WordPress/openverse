@@ -8,6 +8,8 @@ Tools for migrating legacy lists from CC Search Beta to the CC Catalog platform.
 
 
 def import_lists_to_catalog(parsed_lists):
+    success = 0
+    errors = []
     for _list in parsed_lists:
         _list = parsed_lists[_list]
         payload = {
@@ -21,11 +23,18 @@ def import_lists_to_catalog(parsed_lists):
         if 300 > response.status_code >= 200:
             json_response = json.loads(response.text)
             new_url = json_response['url']
+            success += 1
             print(_list['email'], new_url, _list['title'], sep=',')
         else:
-            # Ignore bad data.
+            # A handful of lists from the legacy application are empty, which
+            # isn't accepted in the new API. Skip over them and log it.
+            errors.append((_list['title'], response.text))
             continue
-    log.info('Migrated {} lists successfully'.format(len(parsed_lists)))
+    log.info('Migrated {} lists successfully'.format(success))
+    if errors:
+        log.error("The following errors occurred:")
+        for error in errors:
+            log.error(error)
 
 
 if __name__ == '__main__':
