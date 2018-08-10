@@ -28,13 +28,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-@import '../../node_modules/foundation-sites/scss/foundation';
+  @import '../../node_modules/foundation-sites/scss/foundation';
 
-.header {
-  position: relative;
-}
+  .header {
+    position: relative;
+  }
 
-.header nav {
-  z-index: 10;
-}
+  .header nav {
+    z-index: 10;
+  }
 </style>

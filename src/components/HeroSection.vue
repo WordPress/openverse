@@ -143,7 +143,7 @@ $hero-height: 70vh;
   left: 30px;
   bottom: 0;
   z-index: 10;
-  font-weight: 700;
+  font-weight: 500;
   font-size: .8em;
 
   a {

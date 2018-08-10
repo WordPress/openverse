@@ -10,7 +10,8 @@
         <search-grid
           :imagesCount="imagesCount"
           :images="images"
-          :query="query">
+          :query="query"
+          :filter="filter">
         </search-grid>
         <share-bar></share-bar>
       </div>
@@ -26,6 +27,7 @@ import SearchGridForm from '@/components/SearchGridForm';
 import SearchGrid from '@/components/SearchGrid';
 import ShareBar from '@/components/ShareBar';
 import { FETCH_IMAGES } from '@/store/action-types';
+import { SET_GRID_FILTER } from '@/store/mutation-types';
 
 const BrowsePage = {
   name: 'browse-page',
@@ -46,6 +48,9 @@ const BrowsePage = {
     query() {
       return this.$store.state.query.q;
     },
+    filter() {
+      return this.$store.state.query.filter;
+    },
   },
   created() {
     const queryParam = this.$route.query.q;
@@ -53,6 +58,15 @@ const BrowsePage = {
     if (queryParam) {
       this.$store.dispatch(FETCH_IMAGES, { q: queryParam });
     }
+
+    this.unsubscribe = this.$store.subscribe( mutation => {
+      if ( mutation.type === SET_GRID_FILTER ) {
+        this.$store.dispatch(FETCH_IMAGES, { q: this.query, ...mutation.payload.filter });
+      }
+    });
+  },
+  beforeDestroy() {
+    this.unsubscribe();
   },
 };
 

@@ -1,6 +1,6 @@
 <template>
 <footer class="footer callout large secondary">
-   <article class="grid-container full">
+   <div class="grid-container full">
       <div class="large-3 cell">
           <ul class="footer_links menu">
             <li><a href="/contact">Contact</a></li>
@@ -11,8 +11,8 @@
           </ul>
       </div>
       <hr>
-      <div class="grid-x grid-margin-x">
-        <div class="large-3 cell">
+      <div class="grid-x grid-margin-x grid-margin-y">
+        <div class="medium-3 large-3 cell">
           <img class="footer_logo" src="../assets/cc-logo_large_black.png">
             <p>
               We’re changing the way people share around the world
@@ -20,7 +20,7 @@
               content under our simple, easy-to-use open licenses.
             </p>
         </div>
-        <div class="large-3 large-offset-1 cell">
+        <div class="medium-3 large-3 medium-offset-1 large-offset-1 cell">
           <div class="column footer_contact">
             <h6><a href="/about/contact">We'd love to hear from you!</a></h6>
               <address>
@@ -33,7 +33,7 @@
               </ul>
           </div>
         </div>
-        <div class="large-3 large-offset-1 cell footer_license">
+        <div class="medium-3 large-3 medium-offset-1 large-offset-1 cell footer_license">
           <div class="footer_license-icons">
             <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"
                title="Creative Commons Attribution 4.0 International license">
@@ -50,12 +50,12 @@
               <a class="subfoot" href="/website-icons" target="blank">Icons</a>
                by The Noun Project.</p>
             <p class="website-credit">Website by <a class="subfoot" href="http://affinitybridge.com/"
-            target="blank"> Affinity Bridge</a>.</p>
+            target="blank">CC</a>.</p>
           </div>
           </aside>
         </div>
       </div>
-   </article>
+   </div>
 </footer>
 </template>
 
@@ -84,7 +84,7 @@ export default {
 }
 
 .footer_links {
-  font-weight: 700;
+  font-weight: 500;
   font-size: 1.1em;
 
   a:first-child {

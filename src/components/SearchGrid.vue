@@ -16,18 +16,21 @@
     </ul>
     <div class="search-grid_ctr" ref="gridItems">
       <div v-for="(image, index) in images"
-        :class="{ 'search-grid_item': true, 'search-grid_ctr__active': image.isActive }"
+        :class="{ 'search-grid_item': true,
+                  'search-grid_ctr__active': image.isActive
+                }"
         :key="index"
-        @click.prevent="onGotoDetailPage(image)">
+        @click="onGotoDetailPage(image)">
         <span v-if='isActive'>is Active</span>
         <img class="search-grid_image" :src="image.thumbnail || image.src">
         <div class="search-grid_item-overlay">
           <a class="search-grid_overlay-title"
-             @click="addToImageList(image)">
+             :href="image.url"
+             target="new">
              {{ image.title }}
           </a>
           <a class="search-grid_overlay-add"
-             @click="addToImageList(image)">
+             @click.stop="addToImageList(image)">
           </a>
         </div>
       </div>
@@ -44,15 +47,18 @@ export default {
     imagesCount: 0,
     images: {},
     query: null,
+    filters: {}
   },
   data: () => ({
     isActive: false,
   }),
   methods: {
-    onGotoDetailPage(image) {
+    onGotoDetailPage(image, event) {
+      console.log( event )
       this.$router.push(`photos/${image.id}`);
     },
     addToImageList(image) {
+      console.log( this.$store )
       this.$store.commit(ADD_IMAGE_TO_LIST, { image });
     },
   },
@@ -66,9 +72,13 @@ export default {
     min-height: 600px;
   }
 
-  .search-grid_item:hover .search-grid_item-overlay {
-    opacity: 1;
-    bottom: 0%;
+  .search-grid_item {
+    overflow: hidden;
+
+    &:hover .search-grid_item-overlay {
+      opacity: 1;
+      bottom: 0%;
+    }
   }
 
   .search-grid_item-overlay {
@@ -95,7 +105,6 @@ export default {
       text-decoration: underline;
     }
   }
-
 
   .search-grid_overlay-add {
     position: absolute;

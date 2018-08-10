@@ -3,7 +3,8 @@ import ShareListService from '@/api/ShareListService';
 import { FETCH_LIST, CREATE_LIST } from './action-types';
 import { ADD_IMAGE_TO_LIST,
   REMOVE_IMAGE_FROM_LIST,
-  FETCH_START, FETCH_END,
+  FETCH_START,
+  FETCH_END,
   SET_SHARE_LIST,
   SET_SHARE_URL,
   UNSET_SHARE_URL } from './mutation-types';
@@ -47,6 +48,7 @@ const mutations = {
     let UNDEFINED;
 
     if (duplicateImage === UNDEFINED) {
+      console.log(params.image)
       _state.shareListImages.unshift(params.image);
     }
 
@@ -74,7 +76,7 @@ const mutations = {
     _state.isFetching = false;
   },
   [SET_SHARE_URL](_state, params) {
-    const shareID = params.url.match(/(?:list\/)(\d*)/)[1];
+    const shareID = params.url.match(/\/(?:list\/)(.*)/)[1];
     const shareURL = `/lists/${shareID}`;
     _state.shareListURL = location.origin + shareURL;
   },

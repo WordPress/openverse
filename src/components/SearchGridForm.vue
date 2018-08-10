@@ -15,9 +15,10 @@
                v-model="query">
         <ul class="search-form_toolbar menu icons icon-top" role="menubar">
           <li class="menu-button" role="menuitem">
-            <a href="#">
+            <a href="#" @click.prevent="onSubmit">
               <i class="fi-list">
-                  <svg width="24" height="24" version="1.1" viewBox="0 0 50.000001 50.000001" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="24" height="24" version="1.1"
+                       viewBox="0 0 50.000001 50.000001" xmlns="http://www.w3.org/2000/svg">
                    <rect width="24" height="24" fill-opacity="0"/>
                    <path d="m18.623 4.2559c-7.9132 0-14.367 6.454-14.367 14.367 0
                    7.9132 6.454 14.367 14.367 14.367 3.2414 0 6.2283-1.0954
@@ -61,8 +62,8 @@
           </li>
         </ul>
       </div>
-      <div class="medium-12 large-12">
-        <search-grid-filter isVisible="isFilterVisible"></search-grid-filter>
+      <div class="medium-12 large-12 search-grid-filter-ctr">
+          <search-grid-filter :isVisible="isFilterVisible"></search-grid-filter>
       </div>
   </div>
 </form>
@@ -86,7 +87,6 @@ export default {
       }
     },
     onToggleSearchGridFilter() {
-      console.log(this.isFilterVisible);
       this.isFilterVisible = !this.isFilterVisible;
     },
   },
@@ -104,9 +104,11 @@ export default {
 
   .search-form_ctr {
     position: relative;
-    height: 70px;
   }
 
+  .search-grid-filter-ctr {
+    overflow: hidden;
+  }
   .search-form_inner-ctr {
     height: inherit;
     display: flex;
