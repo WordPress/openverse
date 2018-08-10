@@ -28,16 +28,14 @@
 <script>
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
-import SearchForm from '@/components/SearchForm';
-import SearchGrid from '@/components/SearchGrid';
-import ShareBar from '@/components/ShareBar';
+import SearchGridForm from '@/components/SearchGridForm';
 import { FETCH_LIST } from '@/store/action-types';
 
 const ShareListPage = {
   name: 'share-list-page',
   components: {
     HeaderSection,
-    SearchForm,
+    SearchGridForm,
     FooterSection,
   },
   props: {

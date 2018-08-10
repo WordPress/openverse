@@ -5,7 +5,7 @@ import BrowsePage from '@/pages/BrowsePage';
 import PhotoDetailPage from '@/pages/PhotoDetailPage';
 import ShareListPage from '@/pages/ShareListPage';
 import store from '@/store';
-import { SET_QUERY, SET_SHARE_LIST } from '@/store/mutation-types';
+import { SET_QUERY, SET_SHARE_LIST, SET_IMAGE } from '@/store/mutation-types';
 
 
 Vue.use(VueRouter);
@@ -43,6 +43,7 @@ router.afterEach((to) => {
   if (to && to.query) {
     store.commit(SET_QUERY, to.query);
     store.commit(SET_SHARE_LIST, { shareListImages: [] });
+    store.commit(SET_IMAGE, { image: {} });
   }
 });
 

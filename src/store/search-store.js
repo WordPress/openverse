@@ -2,10 +2,10 @@
 import ImageService from '@/api/ImageService';
 import { FETCH_IMAGES, FETCH_IMAGE } from './action-types';
 import { FETCH_START,
-         FETCH_END,
-         SET_IMAGES,
-         SET_IMAGE,
-         SET_QUERY } from './mutation-types';
+  FETCH_END,
+  SET_IMAGES,
+  SET_IMAGE,
+  SET_QUERY } from './mutation-types';
 
 const state = {
   image: {},
@@ -35,7 +35,7 @@ const actions = {
     return ImageService.getImageDetail(params)
       .then(({ data }) => {
         commit(FETCH_END);
-        commit(SET_IMAGE, { image: data.results });
+        commit(SET_IMAGE, { image: data });
       })
       .catch((error) => {
         throw new Error(error);

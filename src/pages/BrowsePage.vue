@@ -3,7 +3,7 @@
     <div class="search grid-x flexible">
       <div class="cell">
         <header-section>
-          <search-form :query="query"></search-form>
+          <search-grid-form :query="query"></search-grid-form>
         </header-section>
       </div>
       <div class="cell">
@@ -22,7 +22,7 @@
 <script>
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
-import SearchForm from '@/components/SearchForm';
+import SearchGridForm from '@/components/SearchGridForm';
 import SearchGrid from '@/components/SearchGrid';
 import ShareBar from '@/components/ShareBar';
 import { FETCH_IMAGES } from '@/store/action-types';
@@ -31,7 +31,7 @@ const BrowsePage = {
   name: 'browse-page',
   components: {
     HeaderSection,
-    SearchForm,
+    SearchGridForm,
     ShareBar,
     SearchGrid,
     FooterSection,

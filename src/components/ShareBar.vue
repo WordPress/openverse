@@ -4,7 +4,9 @@
     <div class="grid-x grid-margin-x">
       <div class="share-bar_images cell medium-6 large-6">
         <ul class="share-bar_images-list">
-          <li class="share-bar_image-item" v-for="(image, index) in images">
+          <li class="share-bar_image-item"
+              v-for="(image, index) in images"
+              :key="index">
             <transition name="fade">
               <img class="share-bar_image" :src="image.url">
             </transition>
@@ -54,11 +56,11 @@
 
 <script>
 import { CREATE_LIST } from '@/store/action-types';
-import { ADD_IMAGE_TO_LIST, REMOVE_IMAGE_FROM_LIST } from '@/store/mutation-types';
+import { REMOVE_IMAGE_FROM_LIST } from '@/store/mutation-types';
 
 export default {
   name: 'share-bar',
-   data:  () => ({
+  data: () => ({
     listTitle: null,
   }),
   computed: {
@@ -75,25 +77,19 @@ export default {
       return this.shareListURL !== '';
     },
   },
-  watch: {
-    shouldShowList: val => console.log(this)
-  },
   methods: {
-    getFacebookURL() {
-
-    },
     onCreateList() {
       const imageIDs = this.$store.state.shareListImages.map(image => image.id);
 
       this.$store.dispatch(CREATE_LIST, {
         listTitle: this.listTitle,
-        images: imageIDs
+        images: imageIDs,
       });
     },
     onRemoveImage(image) {
       this.$store.commit(REMOVE_IMAGE_FROM_LIST, { image });
     },
-  }
+  },
 };
 </script>
 

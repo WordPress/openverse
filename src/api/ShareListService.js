@@ -1,7 +1,7 @@
 
 import ApiService from './ApiService';
 
-const ListService = {
+const ShareListService = {
   /**
    * Implements an endpoint to create a list.
    */
@@ -16,4 +16,4 @@ const ListService = {
   },
 };
 
-export default ListService;
+export default ShareListService;
