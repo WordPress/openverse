@@ -33,7 +33,7 @@ const actions = {
     return ShareListService.getList(params)
       .then(({ data }) => {
         commit(FETCH_END);
-        commit(SET_SHARE_LIST, { shareListImages: data.results });
+        commit(SET_SHARE_LIST, { shareListImages: data.images });
       })
       .catch((error) => {
         throw new Error(error);
@@ -48,7 +48,6 @@ const mutations = {
     let UNDEFINED;
 
     if (duplicateImage === UNDEFINED) {
-      console.log(params.image)
       _state.shareListImages.unshift(params.image);
     }
 

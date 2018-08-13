@@ -56,7 +56,7 @@ const BrowsePage = {
     const queryParam = this.$route.query.q;
 
     if (queryParam) {
-      this.$store.dispatch(FETCH_IMAGES, { q: queryParam });
+      this.$store.dispatch(FETCH_IMAGES, { q: queryParam, filter: this.filter });
     }
 
     this.unsubscribe = this.$store.subscribe( mutation => {

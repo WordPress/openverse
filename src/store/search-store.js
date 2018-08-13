@@ -5,16 +5,21 @@ import { FETCH_START,
   FETCH_END,
   SET_IMAGES,
   SET_IMAGE,
+  SET_IMAGE_PAGE,
   SET_GRID_FILTER,
   SET_QUERY } from './mutation-types';
 
 const state = {
   filters: {},
   image: {},
+  imageCount: 0,
+  imagePage: 1,
   images: [],
   isFetching: false,
   query: { q: '' },
 };
+
+let UNDEFINED;
 
 const actions = {
   [FETCH_IMAGES]({ commit }, params) {
@@ -22,7 +27,16 @@ const actions = {
     return ImageService.search(params)
       .then(({ data }) => {
         commit(FETCH_END);
-        commit(SET_IMAGES, { images: data.results, imagesCount: data.result_count });
+        commit(SET_IMAGES,
+          { images: data.results,
+            imagesCount: data.result_count,
+            shouldPersistImages: params.shouldPersistImages,
+          }
+        );
+
+        if (params.page === UNDEFINED) {
+          commit(SET_IMAGE_PAGE, { imagePage: 1 } );
+        }
 
         if (params.q) {
           commit(SET_QUERY, params);
@@ -56,11 +70,19 @@ const mutations = {
   [SET_IMAGE](_state, params) {
     _state.image = params.image;
   },
+  [SET_IMAGE_PAGE](_state, params) {
+    _state.imagePage = params.imagePage;
+  },
   [SET_GRID_FILTER](_state, params) {
     _state.filter = params.filter;
   },
   [SET_IMAGES](_state, params) {
-    _state.images = params.images;
+    if (params.shouldPersistImages) {
+      _state.images = _state.images.concat(params.images);
+    } else {
+      _state.images = params.images;
+    }
+
     _state.imagesCount = params.imagesCount;
   },
   [SET_QUERY](_state, params) {

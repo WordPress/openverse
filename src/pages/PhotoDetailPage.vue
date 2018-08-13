@@ -67,8 +67,17 @@
         </div>
       </div>
     </div>
-    <div class="photo_related-content">
-      <h5>Related</h5>
+    <div class="photo_related-content cell">
+      <header>
+        <h2>Related Images</h2>
+      </header>
+      <search-grid
+        :imagesCount="imagesCount"
+        :images="images"
+        :query="query"
+        :filter="filter"
+        v-if="query">
+      </search-grid>
     </div>
     <footer-section></footer-section>
   </div>
@@ -77,7 +86,8 @@
 <script>
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
-import { FETCH_IMAGE } from '@/store/action-types';
+import SearchGrid from '@/components/SearchGrid';
+import { FETCH_IMAGE, FETCH_IMAGES} from '@/store/action-types';
 import Clipboard from 'clipboard';
 
 
@@ -85,9 +95,22 @@ const PhotoDetailPage = {
   name: 'photo-detail-page',
   components: {
     HeaderSection,
+    SearchGrid,
     FooterSection,
   },
   computed: {
+    filter() {
+      return this.$store.state.query.filter;
+    },
+    images() {
+      return this.$store.state.images;
+    },
+    imagesCount() {
+      return this.$store.state.imagesCount;
+    },
+    query() {
+      return this.$store.state.query.q;
+    },
     image() {
       return this.$store.state.image;
     },
@@ -139,6 +162,13 @@ const PhotoDetailPage = {
     }
 
     this.initClipboard();
+  },
+  mounted() {
+    const queryParam = this.query;
+
+    if (queryParam) {
+      this.$store.dispatch(FETCH_IMAGES, { q: queryParam, pageSize: 8 });
+    }
   },
 };
 
@@ -221,6 +251,30 @@ export default PhotoDetailPage;
     }
 
     padding: 15px;
+  }
+
+  .photo_related-content {
+
+    margin: 30px;
+    width: calc( 100% - 400px );
+    border-top: 1px solid #e7e8e9;
+
+    h2 {
+      font-size: 1.25em;
+    }
+
+    header {
+      margin-bottom: 1.07142857em;
+      font-size: .875em;
+      font-weight: 600;
+      letter-spacing: 1px;
+      line-height: 1.25;
+      text-transform: uppercase;
+      display: inline-block;
+      padding-top: .28571429em;
+      border-top: 5px solid rgba(29, 31, 39, 0.8);
+      margin-top: -3px;
+    }
   }
 
   .photo_usage-attribution {
