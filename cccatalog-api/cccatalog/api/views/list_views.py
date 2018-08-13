@@ -69,7 +69,10 @@ class ListDetail(_List, RetrieveModelMixin):
                          })
     def get(self, request, slug, format=None):
         """ Get the details of a single list. """
-        _list = ImageList.objects.get(slug=slug)
+        try:
+            _list = ImageList.objects.get(slug=slug)
+        except ImageList.DoesNotExist:
+            return Response(status=404)
         resolved = {
             'id': slug,
             'images': [model_to_dict(x) for x in _list.images.all()]
