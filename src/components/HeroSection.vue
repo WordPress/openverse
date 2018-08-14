@@ -154,4 +154,28 @@ $hero-height: 70vh;
     }
   }
 }
+
+/* Small only */
+@media screen and (max-width: 39.9375em) {
+  .hero {
+    height: 60vh;
+  }
+
+  .hero_image-attribution {
+    left: 15px;
+  }
+
+  .search-form_ctr {
+    padding: 0 .9375rem;
+  }
+
+  .hero .hero_search-input {
+    font-size: 20px;
+    padding-left: 15px;
+  }
+
+  .hero .hero_search-btn {
+    right: 10px;
+  }
+}
 </style>

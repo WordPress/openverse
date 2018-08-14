@@ -93,5 +93,10 @@ export default {
   }
 }
 
-
+/* Small only */
+@media screen and (max-width: 39.9375em) {
+  .nav_logo {
+    padding-left: 15px;
+  }
+}
 </style>

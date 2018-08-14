@@ -1,48 +1,53 @@
 <template>
-<div class="home-page">
+<div class="home-page grid-container full">
   <header-section showHero="true"></header-section>
-  <div class="grid-container">
-    <div class="featured-items">
-      <div class="row align-middle align-justify featured-items-wrapper">
-        <div class="featured-items-brands">
-          <h5 class="featured-items-title">Top Categories:</h5>
-          <div @click="onCategoryClick('people')" class="featured-item-container">
-            <span class="featured-image-banner">People</span>
-            <img src="@/assets/people_small.jpg">
-          </div>
-          <div @click="onCategoryClick('nature')" class="featured-item-container">
-            <span class="featured-image-banner">Nature</span>
-            <img src="@/assets/nature_small.jpg">
-          </div>
-          <div @click="onCategoryClick('landscapes')" class="featured-item-container">
-            <span class="featured-image-banner">Landscapes</span>
-            <img src="@/assets/landscapes_small.jpg">
-          </div>
-          <div @click="onCategoryClick('animals')" class="featured-item-container">
-            <span class="featured-image-banner">Animals</span>
-            <img src="@/assets/animals_small.jpg">
-          </div>
+  <div class="home-page_body">
+    <section class="featured-images">
+      <header class="featured-images_header">
+        <h2 class="featured-items_title">Top Categories:</h2>
+      </header>
+      <div class="featured-images_inner grid-x grid-margin-x grid-margin-y">
+        <div @click="onCategoryClick('people')"
+             class="featured-images_item small-6 medium-3 cell">
+          <span class="featured-images_banner">People</span>
+          <img src="@/assets/people_medium.jpg" alt="">
+        </div>
+        <div @click="onCategoryClick('nature')"
+             class="featured-images_item small-6 medium-3 cell">
+          <span class="featured-images_banner">Nature</span>
+          <img src="@/assets/nature_medium.jpg" alt="">
+        </div>
+        <div @click="onCategoryClick('landscapes')"
+             class="featured-images_item small-6 medium-3 cell">
+          <span class="featured-images_banner">Landscapes</span>
+          <img src="@/assets/landscapes_medium.jpg" alt="">
+        </div>
+        <div @click="onCategoryClick('animals')"
+             class="featured-images_item small-6 medium-3 cell">
+          <span class="featured-images_banner">Animals</span>
+          <img src="@/assets/animals_medium.jpg" alt="">
         </div>
       </div>
+    </section>
+  <section class="grid">
+    <header class="top-images_header">
+      <h2 class="featured-items_title">Top Images:</h2>
+    </header>
+    <div  class="header-grid">
+      <div id="b1" class="block">
+        <img src="@/assets/mix-tapes_medum.jpg" />
+        <div class="block_overlay"></div>
+      </div>
+      <div id="b2" class="block"></div>
+      <div id="b3" class="block"></div>
+      <div id="b4" class="block"></div>
+      <div class="bottom-block">
+        <div id="b5" class="block"></div>
+        <div id="b6" class="block"></div>
+        <div id="b7" class="block"></div>
+      </div>
     </div>
-  <div class="grid">
-  <h4 class="grid_header">Top Images</h4>
-  <div  class="header-grid">
-  <div id="b1" class="block">
-    <img src="@/assets/mix-tapes_medum.jpg" />
-    <div class="block_overlay"></div>
-  </div>
-  <div id="b2" class="block"></div>
-  <div id="b3" class="block"></div>
-  <div id="b4" class="block"></div>
-  <div class="bottom-block">
-    <div id="b5" class="block"></div>
-    <div id="b6" class="block"></div>
-    <div id="b7" class="block"></div>
-  </div>
-
-</div>
-  </div>
+  </section>
   </div>
   <footer-section></footer-section>
 </div>
@@ -80,76 +85,86 @@ $highlight: #4ec6cd;
 $nav-text-color: $gray;
 $vert-seperate: 4rem;
 
-
 .home-page .nav {
   position: absolute !important;
   background: transparent !important;
+}
 
-  .nav_logo {
-    height: 35px;
+.home-page_body {
+  margin: 60px 30px 60px 30px;
+
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    margin: 60px 15px 30px 15px;
   }
 }
 
-.featured-items {
-  border: 1px solid rgba(230, 230, 230, .5);
-  margin-top: $vert-seperate;
-  margin-bottom: $vert-seperate;
-  padding: 1rem 1rem;
+.featured-images {
+  margin: 15px 0 60px 0;
+  background: #f7f8f9;
+  padding: 30px;
+  border: 1px solid #e7e8e9;
 
-  h4 {
-    @media screen and (max-width: 39.9375em) {
-      font-size: 1.5rem;
-    }
-  }
-
-  p {
-    color: $gray;
-  }
-
-  .featured-items-brands {
-    flex: 1 0 auto;
-    display: flex;
-    justify-content: space-around;
-
-    @media screen and (max-width: 39.9375em) {
-      flex-wrap: wrap;
-      width: 100%;
-      }
-    }
-
-  .featured-item-container {
-    position: relative;
-    cursor: pointer;
-
-    a {
-      text-decoration: underline;
-    }
-  }
-
-  .featured-items-title {
-    margin-bottom: 0;
-  }
-
-  .featured-image-banner {
-    background-color: rgba(23, 121, 186, 0.8);
-    color: #fefefe;
-    left: 0;
-    padding: 0.25rem;
-    position: absolute;
-    top: 25%;
-    width: 75%;
-    z-index: 10;
-  }
-
+  /* Small only */
   @media screen and (max-width: 39.9375em) {
-    .featured-items-brands img {
-      flex-basis: 40%;
-      margin-bottom: 1rem;
-    }
+    padding: 30px 15px;
+  }
+}
 
-    .featured-items-title {
-      margin-bottom: 1rem;
-    }
+.featured-images_item {
+  position: relative;
+  cursor: pointer;
+  max-height: 140px;
+  overflow: hidden;
+
+  img {
+    border-radius: 2px;
+  }
+}
+
+.featured-images_banner {
+  background-color: rgba(9, 87, 174, .8);
+  color: #fefefe;
+  font-weight: 600;
+  left: 0;
+  padding: 0.5rem;
+  position: absolute;
+  top: 25%;
+  width: 75%;
+  z-index: 10;
+}
+
+.featured-images_header {
+  border-top: 1px solid #e7e8e9;
+
+  h2 {
+    margin-bottom: 1.07142857em;
+    font-size: .875em;
+    font-weight: 600;
+    letter-spacing: 1px;
+    line-height: 1.25;
+    text-transform: uppercase;
+    display: inline-block;
+    padding-top: .28571429em;
+    border-top: 5px solid rgba(29, 31, 39, 0.8);
+    margin-top: -3px;
+  }
+}
+
+.top-images_header {
+  border-top: 1px solid #e7e8e9;
+
+  h2 {
+    margin-bottom: 1.07142857em;
+    font-size: .875em;
+    font-weight: 600;
+    letter-spacing: 1px;
+    line-height: 1.25;
+    text-transform: uppercase;
+    display: inline-block;
+    padding-top: .28571429em;
+    border-top: 5px solid rgba(29, 31, 39, 0.8);
+    margin-top: -3px;
   }
 }
 
@@ -163,7 +178,7 @@ $vert-seperate: 4rem;
   "big-top big-top big-top small-top small-top"
   "small-middle small-middle big-middle big-middle big-middle"
   "big-bottom big-bottom big-bottom big-bottom big-bottom";
-  margin: 30px 0;
+  margin: 15px 0;
 }
 
 .block {
