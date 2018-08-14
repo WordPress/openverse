@@ -51,6 +51,7 @@ class ShortenedLinkSerializer(ModelSerializer):
                     str(settings.SHORT_URL_PATH_WHITELIST)
                 )
             )
+
         return value
 
     def save(self):

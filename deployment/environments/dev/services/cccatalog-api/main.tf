@@ -31,12 +31,12 @@ module "cccatalog-api" {
   max_size                  = 5
   instance_type             = "t2.micro"
   enable_monitoring         = false
-  git_revision              = "6cb5c1724ddfc9a610d5ca9b0c0fde83d86a157b"
-  api_version               = "0.8.2"
+  git_revision              = "50de56a55ab628f7d323375d7f2ebf305d6c7db1"
+  api_version               = "0.8.4"
 
   # Environment-specific variables
   database_host             = "openledger-db-dev3-nvirginia.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
-  django_debug_enabled      = "false"
+  django_debug_enabled      = "true"
   elasticsearch_port        = "80"
   aws_region                = "us-east-1"
   elasticsearch_url         = "search-cccatalog-elasticsearch-vtptjrgtluyamznw6s4kkdtqju.us-east-1.es.amazonaws.com"
