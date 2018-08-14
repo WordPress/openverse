@@ -15,7 +15,7 @@ __host, __port = __parsed_redis_url.netloc.split(':')
 __db_num = __parsed_redis_url.path[1] if __parsed_redis_url.path else 2
 __password = os.environ.get("REDIS_PASSWORD")
 url_lock = redlock.Redlock(
-    [{"host": __host, "port": __port, "db": __db_num, "password": __password}, ],
+    [{"host": __host, "port": __port, "db": __db_num, "password": __password}],
     retry_count=0
 )
 
