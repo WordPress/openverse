@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import psycopg2
 from socket import gethostname, gethostbyname
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -101,10 +102,22 @@ CACHES = {
             "PASSWORD": os.environ.get('REDIS_PASSWORD')
         },
     },
+    # For rapidly changing stats that we don't want to hammer the database with
     "traffic_stats": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": 'redis://' +
-                    os.environ.get('REDIS_HOST','cache') + ':6379/' + '1',
+                    os.environ.get('REDIS_HOST', 'cache') + ':6379/' + '1',
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": os.environ.get('REDIS_PASSWORD')
+        },
+    },
+    # For ensuring consistency among multiple Django workers and servers.
+    # Used by Redlock.
+    "locks": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": 'redis://' +
+                    os.environ.get('REDIS_HOST', 'cache') + ':6379/' + '2',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PASSWORD": os.environ.get('REDIS_PASSWORD')

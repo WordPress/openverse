@@ -1,3 +1,4 @@
+import redlock
 from rest_framework.serializers import ModelSerializer, Serializer, URLField,\
     ValidationError
 from cccatalog.api.controllers.link_controller import get_next_shortened_path
@@ -5,6 +6,16 @@ from cccatalog.api.models import ShortenedLink
 from cccatalog import settings
 from urllib.parse import urlparse
 from rest_framework import serializers
+
+# Create a lock inside of Redis to ensure that multiple server workers don't
+# try to create the same shortened URL.
+__parsed_redis_url = urlparse(settings.CACHES['locks']['LOCATION'])
+__host, __port = __parsed_redis_url.netloc.split(':')
+__db_num = __parsed_redis_url.path[1] if __parsed_redis_url.path else 2
+url_lock = redlock.Redlock(
+    [{"host": __host, "port": __port, "db": __db_num}, ],
+    retry_count=0
+)
 
 
 class ShortenedLinkResponseSerializer(Serializer):
@@ -23,7 +34,7 @@ class ShortenedLinkSerializer(ModelSerializer):
         help_text="The URL to shorten. Only URLs on the CC Catalog domain will"
                   " be accepted. Valid domains: `{}`. "
                   "Valid paths: `{}`".format(settings.SHORT_URL_WHITELIST,
-                                           settings.SHORT_URL_PATH_WHITELIST)
+                                             settings.SHORT_URL_PATH_WHITELIST)
     )
 
     class Meta:
@@ -67,6 +78,11 @@ class ShortenedLinkSerializer(ModelSerializer):
             last_url = None
 
         shortened_path = get_next_shortened_path(last_url)
+        thirty_seconds_ms = 1000 * 30
+        lock = url_lock.lock(shortened_path, ttl=thirty_seconds_ms)
+        while not lock:
+            shortened_path = get_next_shortened_path(shortened_path)
+            lock = url_lock.lock(shortened_path, ttl=thirty_seconds_ms)
         full_url = self.validated_data['full_url']
         shortened_link_instance = ShortenedLink(
             shortened_path=shortened_path,

@@ -28,3 +28,4 @@ django-cors-headers==2.4.0
 django-redis==4.9.0
 django-uuslug==1.1.8
 django-cron==0.5.1
+redlock-py==1.0.8
