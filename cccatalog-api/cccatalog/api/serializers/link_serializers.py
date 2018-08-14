@@ -88,6 +88,7 @@ class ShortenedLinkSerializer(ModelSerializer):
         full_url = self.validated_data['full_url']
         shortened_link_instance = ShortenedLink(
             shortened_path=shortened_path,
-            full_url=full_url)
+            full_url=full_url
+        )
         shortened_link_instance.save()
         return shortened_path

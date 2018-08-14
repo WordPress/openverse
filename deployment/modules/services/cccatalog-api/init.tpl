@@ -26,6 +26,7 @@ export ROOT_SHORTENING_URL="${root_shortening_url}"
 export SEMANTIC_VERSION="$${SEMANTIC_VERSION}"
 EOF
 source /etc/environment
+# Systemd environment variables file requires a slightly different format
 sed 's/^export //' /etc/environment > /etc/systemd_environment
 
 # Install python and git dependencies
@@ -44,6 +45,7 @@ cd /home/ec2-user/cccatalog-api
 # Install API server dependencies
 pip3 install -r /home/ec2-user/cccatalog-api/requirements.txt
 easy_install-3.7 uwsgi
+pip3 install uwsgitop
 
 # Set up static content
 mkdir -p /var/api_static_content/static
@@ -63,11 +65,9 @@ uwsgi --chdir=/home/ec2-user/cccatalog-api \
       --daemonize=/var/log/uwsgi/cccatalog-api.log \
       --uid=uwsgi \
       --socket=:8081 \
-      --enable-threads \
       --wsgi-file=./cccatalog/wsgi.py \
-      --processes=2 \
-      --threads=2 \
-      --offload-threads=%k
+      --processes=4 \
+      --stats=/tmp/stats.socket
 
 # Put nginx in front of uWSGI for static content serving + SSL encryption
 sudo amazon-linux-extras install nginx1.12

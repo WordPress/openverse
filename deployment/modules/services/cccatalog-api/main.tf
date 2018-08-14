@@ -34,7 +34,7 @@ data "template_file" "init" {
 # API server autoscaling launch configuration
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
   name_prefix              = "cccatalog-api-asg-${var.environment}-"
-  image_id                 = "ami-afd15ed0"
+  image_id                 = "ami-b70554c8"
   instance_type            = "${var.instance_type}"
   security_groups          = ["${aws_security_group.cccatalog-sg.id}",
                               "${aws_security_group.cccatalog-api-ingress.id}"]
@@ -236,7 +236,7 @@ resource "aws_security_group" "short-proxy-sg" {
 
 resource "aws_instance" "short-proxy" {
   ami                    = "ami-b70554c8"
-  instance_type          = "${var.instance_type}"
+  instance_type          = "t2.micro"
   user_data              = "${data.template_file.proxy-init.rendered}"
   # Launch it on the first available subnet
   subnet_id              = "${element(data.aws_subnet_ids.subnets.ids, 0)}"
