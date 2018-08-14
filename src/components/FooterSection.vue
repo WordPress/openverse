@@ -81,6 +81,13 @@ export default {
   hr {
     max-width: 100%;
   }
+
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    & {
+      padding: 15px;
+    }
+  }
 }
 
 .footer_links {
