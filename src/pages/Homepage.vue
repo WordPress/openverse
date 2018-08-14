@@ -91,11 +91,11 @@ $vert-seperate: 4rem;
 }
 
 .home-page_body {
-  margin: 60px 30px 0 30px;
+  margin: 60px 30px 60px 30px;
 
   /* Small only */
   @media screen and (max-width: 39.9375em) {
-    margin: 60px 15px 0 15px;
+    margin: 60px 15px 30px 15px;
   }
 }
 
