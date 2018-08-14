@@ -1,7 +1,6 @@
 <template>
   <div :class="{ 'search-filter': true,
-                 'search-filter__visible': isVisible,
-                 'grid-container full': true, }">
+                 'search-filter__visible': isVisible, }">
     <div class="grid-x grid-margin-x grid-padding-x">
       <div class="search-filter_providers
                   cell
@@ -112,10 +111,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../styles/app';
+
 .search-filter {
+  @include xy-grid-container(100%, 0);
   padding: 20px 0 5px 0;
-  margin-top: -100%;
+  margin: -100% auto 0 auto;
+  max-width: 100%;
   transition: margin .7s ease-in-out;
+
 
   select: {
     margin: 0;
@@ -124,6 +128,7 @@ export default {
   button {
     height: 100%;
     margin: 0;
+    color: #000;
   }
 
   &__visible {

@@ -4,7 +4,7 @@
       <img class="nav_logo" src="../assets/cc-logo_white.png">
     </a>
     <div class="row column medium-5 large-4 align-center nav_search"
-         v-if="showNavSearch==='true'">
+         v-if="showNavSearch ==='true'">
         <form class="hero_search-form"
               role="search"
               method="post"

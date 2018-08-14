@@ -14,7 +14,7 @@
                id="searchInput"
                v-model="query">
         <ul class="search-form_toolbar menu icons icon-top" role="menubar">
-          <li class="menu-button" role="menuitem">
+          <li class="menu-button search-form_search-button" role="menuitem">
             <a href="#" @click.prevent="onSubmit">
               <i class="fi-list">
                   <svg width="24" height="24" version="1.1"
@@ -28,19 +28,19 @@
                    2.918-8.6367 0-7.9132-6.454-14.367-14.367-14.367zm0 3.5898c5.9732
                    0 10.777 4.8042 10.777 10.777 0 5.9732-4.8042 10.777-10.777
                    10.777s-10.777-4.8042-10.777-10.777c2e-7 -5.9732 4.8042-10.777
-                   10.777-10.777z" color="#000000" color-rendering="auto" fill="#d6d6d6" />
+                   10.777-10.777z" color="#000000" color-rendering="auto" fill="#fff" />
                   </svg>
               </i>
               <span class="menu-button_text">Search</span>
             </a>
           </li>
-          <li class="menu-button" role="menuitem">
+          <li class="menu-button search-form_filter-button" role="menuitem">
             <a href="#" @click.prevent="onToggleSearchGridFilter()">
               <i class="fi-list">
                   <svg xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink"
                   xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="1.1"
-                  id="DESIGNS" x="0px" y="0px" width="24px" height="24px"
+                  id="DESIGNS" x="0px" y="0px" width="24px" height="24px" fill="color: #2c3e50"
                   viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
                   <title property="dc:title">to filter</title><desc property="dc:description">
                   An icon for "filter" from the Lines and Angles series on to [icon].
@@ -102,6 +102,15 @@ export default {
     border-bottom: 1px solid #d6d6d6;
   }
 
+  .search-form_search-button a {
+    color: #fff;
+    background: #4DA5EF;
+
+    span {
+      color: #fff;
+    }
+  }
+
   .search-form_ctr {
     position: relative;
   }
@@ -109,6 +118,14 @@ export default {
   .search-grid-filter-ctr {
     overflow: hidden;
   }
+
+  .search-form_filter-button {
+
+    .menu-button_text {
+      color: #d6d6d6;
+    }
+  }
+
   .search-form_inner-ctr {
     height: inherit;
     display: flex;
@@ -122,7 +139,11 @@ export default {
     height: 100%;
     outline: 0;
     border: none;
-    color: #000;
+    box-shadow: none;
+
+    &:focus {
+      border: none;
+    }
   }
 
   .search-form_toolbar {
@@ -134,14 +155,6 @@ export default {
 
       &:last-of-type {
         border-left: none;
-      }
-    }
-
-    .menu-button {
-      color: #d6d6d6;
-
-      &_text {
-        color: #d6d6d6;
       }
     }
   }

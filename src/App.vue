@@ -10,7 +10,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import './styles/app';
+
 body {
   margin: 0;
 }

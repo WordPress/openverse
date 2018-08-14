@@ -26,6 +26,7 @@
         <div class="search-grid_item-overlay">
           <a class="search-grid_overlay-title"
              :href="image.url"
+             @click.stop="() => false"
              target="new">
              {{ image.title }}
           </a>
@@ -34,32 +35,82 @@
           </a>
         </div>
       </div>
+      <infinite-loading @infinite="infiniteHandler"></infinite-loading>
     </div>
   </section>
 </template>
 
 <script>
-import { ADD_IMAGE_TO_LIST } from '@/store/mutation-types';
+import { ADD_IMAGE_TO_LIST, SET_IMAGE_PAGE } from '@/store/mutation-types';
+import { FETCH_IMAGES } from '@/store/action-types';
+import InfiniteLoading from 'vue-infinite-loading';
+
 
 export default {
   name: 'search-grid',
+  components: {
+    InfiniteLoading,
+  },
   props: {
     imagesCount: 0,
     images: {},
     query: null,
     filters: {}
   },
+  computed: {
+    _filters() {
+      return this.$store.state.filters;
+    },
+    imagePage() {
+      return this.$store.state.imagePage;
+    },
+    isFetching() {
+      return this.$store.state.isFetching;
+    },
+  },
+  watch: {
+    isFetching() {
+      this.$state && this.$state.loaded();
+    }
+  },
   data: () => ({
     isActive: false,
   }),
   methods: {
+    created(){
+      this.unsubscribe = this.$store.subscribe( mutation => {
+        if ( mutation.type === SET_GRID_FILTER ) {
+          this.$store.dispatch(FETCH_IMAGES,
+            { q: this.query, ...mutation.payload.filter }
+          );
+        }
+      });
+    },
     onGotoDetailPage(image, event) {
-      console.log( event )
       this.$router.push(`photos/${image.id}`);
     },
     addToImageList(image) {
-      console.log( this.$store )
       this.$store.commit(ADD_IMAGE_TO_LIST, { image });
+    },
+    infiniteHandler($state) {
+      this.$state = $state;
+
+      if( this.isFetching === false ) {
+        this.$store.commit(SET_IMAGE_PAGE,
+          { imagePage: this.imagePage + 1 }
+        );
+
+        this.$nextTick( () => {
+          this.$store.dispatch(
+            FETCH_IMAGES,
+            { q: this.query,
+              page: this.imagePage,
+              shouldPersistImages: true,
+              filter: this._filter
+            }
+          );
+        } );
+      }
     },
   },
 };
@@ -152,6 +203,11 @@ export default {
         content: '';
       }
     }
+  }
+
+  .infinite-loading-container {
+    margin-top: 30px;
+    width: 100%;
   }
 
   .search-grid_ctr__active {
