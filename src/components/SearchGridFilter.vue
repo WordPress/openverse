@@ -31,7 +31,6 @@
         </select>
       </div>
       <div class="search-filter_licenseType
-                  search-filter_license
                   cell
                   medium-4
                   large-2">
@@ -46,9 +45,16 @@
           </option>
         </select>
       </div>
+       <div class="search-filter_licenseType
+                  cell
+                  medium-4
+                  large-2">
+          <a class="button hollow search-filter_clear-btn"
+                  :disabled="hasFilters===false"
+                  @click="clearFilters">clear filters</a>
+      </div>
     </div>
   </div>
-</transition>
 </template>
 
 <script>
@@ -59,12 +65,20 @@ export default {
   props: {
     isVisible: false,
   },
+  computed: {
+    hasFilters() {
+      return Object.keys(this.filter).some(key => this.filter[key]);
+    },
+  },
   methods: {
     onUpdateFilter() {
       const filter = this.filter;
 
-
-      this.$store.commit( SET_GRID_FILTER , { filter })
+      this.$store.commit(SET_GRID_FILTER, { filter });
+    },
+    clearFilters() {
+      console.log('clear')
+      Object.keys(this.filter).forEach(key => this.filter[key] = '');
     },
   },
   data: () => (
@@ -91,7 +105,7 @@ export default {
         'pdm', 'by-nd',
         'by',
         'cc0',
-        'by-nc-sa'
+        'by-nc-sa',
       ],
     licenseTypes:
       [
@@ -105,8 +119,7 @@ export default {
       provider: '',
       li: '',
       lt: '',
-    },
-  }),
+    } }),
 };
 </script>
 
@@ -120,15 +133,8 @@ export default {
   max-width: 100%;
   transition: margin .7s ease-in-out;
 
-
   select: {
     margin: 0;
-  }
-
-  button {
-    height: 100%;
-    margin: 0;
-    color: #000;
   }
 
   &__visible {
@@ -150,5 +156,9 @@ export default {
       margin-top: -3px;
     }
   }
+}
+
+.search-filter_clear-btn {
+  height: auto;
 }
 </style>

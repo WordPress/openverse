@@ -45,8 +45,8 @@
                   <title property="dc:title">to filter</title><desc property="dc:description">
                   An icon for "filter" from the Lines and Angles series on to [icon].
                   Downloaded from http://www.toicon.com/icons/lines-and-angles_filter
-                  by 127.0.0.1 on 2017-07-10. Licensed CC-BY,
-                  see http://toicon.com/license/ for details.</desc>
+                  by 127.0.0.1 on 2017-07-10. Licensed CC-BY, see http://toicon.com/license/
+                  for details.</desc>
                   <path class="linesandangles_een" d="M26,6v0.233l-8.487,9.43L17,
                   16.233V17v7.764l-2-1V17v-0.767l-0.513-0.57L6,6.233V6H26 M28,4H4v3
                   l9,10v8l6,3V17l9-10V4L28,4z" style="fill: #d6d6d6"/>
@@ -70,7 +70,6 @@
 </template>
 
 <script>
-import { FETCH_IMAGES } from '@/store/action-types';
 import SearchGridFilter from '@/components/SearchGridFilter';
 
 export default {
@@ -82,8 +81,9 @@ export default {
   methods: {
     onSubmit(e) {
       e.preventDefault();
+      console.log(this.query)
       if (this.query) {
-        this.$store.dispatch(FETCH_IMAGES, { q: this.query });
+        this.$router.push({ path: 'search', query: { q: this.query } });
       }
     },
     onToggleSearchGridFilter() {

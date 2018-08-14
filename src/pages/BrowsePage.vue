@@ -59,8 +59,8 @@ const BrowsePage = {
       this.$store.dispatch(FETCH_IMAGES, { q: queryParam, filter: this.filter });
     }
 
-    this.unsubscribe = this.$store.subscribe( mutation => {
-      if ( mutation.type === SET_GRID_FILTER ) {
+    this.unsubscribe = this.$store.subscribe((mutation) => {
+      if (mutation.type === SET_GRID_FILTER) {
         this.$store.dispatch(FETCH_IMAGES, { q: this.query, ...mutation.payload.filter });
       }
     });
@@ -74,4 +74,9 @@ export default BrowsePage;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss"></style>
+<style lang="scss">
+  .search-grid {
+    margin: 30px 30px 60px 30px;
+    min-height: 600px;
+  }
+</style>

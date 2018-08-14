@@ -1,16 +1,21 @@
 <template>
-  <div class="photo-detail-page">
-    <div class="x-grid">
-      <div class="cell">
-        <header-section showNavSearch="true" fixedNav="true"></header-section>
-      </div>
+  <div class="photo-detail-page grid-x">
+    <div class="cell">
+      <header-section showNavSearch="true" fixedNav="true"></header-section>
     </div>
-    <div class="photo">
-      <div class="photo_ctr">
-        <div class="photo_image-ctr">
+    <div class="photo grid-x">
+        <div class="photo_image-ctr cell medium-12 large-8">
+          <a href="#" class="photo_paginator photo_paginator__previous"
+             @click.prevent="getPreviousImage()">
+             previous
+          </a>
           <img :src="image.url" />
+          <a class="photo_paginator photo_paginator__next"
+             href="#" @click.prevent="getNextImage()">
+            next
+          </a>
         </div>
-        <div class="photo_info-ctr">
+        <div class="photo_info-ctr cell medium-12 large-4">
           <header class="photo_info-header">
             <h2>
               PHOTO INFO
@@ -64,10 +69,9 @@
             Copy to Text
             </button>
           </section>
-        </div>
       </div>
     </div>
-    <div class="photo_related-content cell">
+    <div class="photo_related-images grid-x" v-if="query">
       <header>
         <h2>Related Images</h2>
       </header>
@@ -76,7 +80,8 @@
         :images="images"
         :query="query"
         :filter="filter"
-        v-if="query">
+        :includeAnalytics="false"
+        :includeAddToList="false">
       </search-grid>
     </div>
     <footer-section></footer-section>
@@ -87,7 +92,7 @@
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 import SearchGrid from '@/components/SearchGrid';
-import { FETCH_IMAGE, FETCH_IMAGES} from '@/store/action-types';
+import { FETCH_IMAGE, FETCH_IMAGES, FETCH_RELATED_IMAGES } from '@/store/action-types';
 import Clipboard from 'clipboard';
 
 
@@ -97,6 +102,9 @@ const PhotoDetailPage = {
     HeaderSection,
     SearchGrid,
     FooterSection,
+  },
+  props: {
+    id: '',
   },
   computed: {
     filter() {
@@ -110,6 +118,9 @@ const PhotoDetailPage = {
     },
     query() {
       return this.$store.state.query.q;
+    },
+    relatedImages() {
+      return this.$store.state.relatedImages;
     },
     image() {
       return this.$store.state.image;
@@ -139,10 +150,15 @@ const PhotoDetailPage = {
               </a>`;
     },
   },
+  beforeRouteUpdate(to, from, next) {
+    this.id = to.params.id;
+    this.loadImage(this.id);
+    next();
+  },
   methods: {
     initClipboard() {
-      new Clipboard('.photo_copy-btn', {
-        text: element => {
+      new Clipboard('.photo_copy-btn', { // eslint-disable-line no-new
+        text: (element) => {
           let attributionContent;
           if (element.getAttribute('data-type') === 'html') {
             attributionContent = this.HTMLAttribution;
@@ -154,20 +170,26 @@ const PhotoDetailPage = {
         },
       });
     },
+    loadImage(id) {
+      if (id) {
+        this.$store.dispatch(FETCH_IMAGE, { id });
+      }
+    },
+    getNextImage(imageId) {
+      console.log(this.images);
+    },
+    getPreviousImage(imageId) {
+      console.log(this);
+    },
   },
   created() {
-    this.id = this.$route.params.id;
-    if (this.id) {
-      this.$store.dispatch(FETCH_IMAGE, { id: this.id });
-    }
-
+    this.loadImage(this.$route.params.id);
     this.initClipboard();
   },
   mounted() {
     const queryParam = this.query;
-
     if (queryParam) {
-      this.$store.dispatch(FETCH_IMAGES, { q: queryParam, pageSize: 8 });
+      this.$store.dispatch(FETCH_IMAGES, { q: queryParam, pagesize: 8 });
     }
   },
 };
@@ -177,28 +199,42 @@ export default PhotoDetailPage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  .photo_ctr {
-    display: flex;
+  .photo-detail-page {
+    width: 100%;
+  }
+
+  .photo_paginator {
+    position: absolute;
+    z-index: 400;
+    top: 50%;
+  }
+
+  .search-grid {
+    margin: 0;
+  }
+
+  .photo {
+    width: 100%;
     border-bottom: 1px solid #d6d6d6;
   }
 
   .photo_image-ctr {
-    width: calc( 100% - 400px );
     text-align: center;
-    margin: 45px;
-    height: 100%;
+    padding: 30px;
     max-height: 640px;
 
     img {
+      position: relative;
       width: auto;
-      max-height: 640px;
+      height: auto;
+      max-height: 100%;
+      max-width: 100%;
     }
   }
 
   .photo_info-ctr {
-    padding: 45px 0;
+    padding: 45px 15px;
     border-left: 1px solid #d6d6d6;
-    width: 400px;
 
     .photo_info-header {
       border-top: 1px solid #e7e8e9;
@@ -253,19 +289,13 @@ export default PhotoDetailPage;
     padding: 15px;
   }
 
-  .photo_related-content {
-
+  .photo_related-images {
     margin: 30px;
-    width: calc( 100% - 400px );
     border-top: 1px solid #e7e8e9;
 
-    h2 {
-      font-size: 1.25em;
-    }
-
-    header {
+    header h2 {
       margin-bottom: 1.07142857em;
-      font-size: .875em;
+      font-size: 1em;
       font-weight: 600;
       letter-spacing: 1px;
       line-height: 1.25;

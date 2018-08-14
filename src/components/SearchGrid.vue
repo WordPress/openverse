@@ -1,7 +1,7 @@
 <template>
   <section class='search-grid'>
     <div class="row">
-      <div class="search-grid_analytics">
+      <div class="search-grid_analytics" v-if="includeAnalytics">
         <span>{{ this.$store.state.imagesCount }}</span>
         <span>{{ query }}</span>
         Photos
@@ -31,17 +31,18 @@
              {{ image.title }}
           </a>
           <a class="search-grid_overlay-add"
-             @click.stop="addToImageList(image)">
+             @click.stop="addToImageList(image)"
+             v-if="includeAddToList">
           </a>
         </div>
       </div>
-      <infinite-loading @infinite="infiniteHandler"></infinite-loading>
+      <infinite-loading @infinite="infiniteHandler" v-if="useInfiniteScroll"></infinite-loading>
     </div>
   </section>
 </template>
 
 <script>
-import { ADD_IMAGE_TO_LIST, SET_IMAGE_PAGE } from '@/store/mutation-types';
+import { ADD_IMAGE_TO_LIST, SET_IMAGE_PAGE, SET_GRID_FILTER } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -55,11 +56,20 @@ export default {
     imagesCount: 0,
     images: {},
     query: null,
-    filters: {}
+    filters: {},
+    useInfiniteScroll: {
+      default: true,
+    },
+    includeAnalytics: {
+      default: true,
+    },
+    includeAddToList: {
+      default: true,
+    },
   },
   computed: {
-    _filters() {
-      return this.$store.state.filters;
+    appliedFilters() {
+      return this.$store.state.filter;
     },
     imagePage() {
       return this.$store.state.imagePage;
@@ -70,24 +80,24 @@ export default {
   },
   watch: {
     isFetching() {
-      this.$state && this.$state.loaded();
-    }
+      if (this.$state) this.$state.loaded();
+    },
   },
   data: () => ({
     isActive: false,
   }),
   methods: {
-    created(){
-      this.unsubscribe = this.$store.subscribe( mutation => {
-        if ( mutation.type === SET_GRID_FILTER ) {
+    created() {
+      this.unsubscribe = this.$store.subscribe((mutation) => {
+        if (mutation.type === SET_GRID_FILTER) {
           this.$store.dispatch(FETCH_IMAGES,
-            { q: this.query, ...mutation.payload.filter }
+            { q: this.query, ...mutation.payload.filter },
           );
         }
       });
     },
-    onGotoDetailPage(image, event) {
-      this.$router.push(`photos/${image.id}`);
+    onGotoDetailPage(image) {
+      this.$router.push(`/photos/${image.id}`);
     },
     addToImageList(image) {
       this.$store.commit(ADD_IMAGE_TO_LIST, { image });
@@ -95,21 +105,24 @@ export default {
     infiniteHandler($state) {
       this.$state = $state;
 
-      if( this.isFetching === false ) {
-        this.$store.commit(SET_IMAGE_PAGE,
-          { imagePage: this.imagePage + 1 }
-        );
 
-        this.$nextTick( () => {
+      if (this.isFetching === false) {
+        if( this.imagesCount < 20 ) {
+          this.$store.commit(SET_IMAGE_PAGE,
+            { imagePage: this.imagePage + 1 },
+          );
+        }
+
+        this.$nextTick(() => {
           this.$store.dispatch(
             FETCH_IMAGES,
             { q: this.query,
               page: this.imagePage,
               shouldPersistImages: true,
-              filter: this._filter
-            }
+              filter: this.appliedFilters,
+            },
           );
-        } );
+        });
       }
     },
   },
@@ -118,11 +131,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  .search-grid {
-    margin: 30px 30px 60px 30px;
-    min-height: 600px;
-  }
-
   .search-grid_item {
     overflow: hidden;
 
