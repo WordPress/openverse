@@ -10,10 +10,11 @@ import { FETCH_START,
   SET_QUERY,
   SET_RELATED_IMAGES, } from './mutation-types';
 
+
 const state = {
-  filters: {},
+  filter: {},
   image: {},
-  imageCount: 0,
+  imagesCount: 0,
   imagePage: 1,
   images: [],
   isFetching: false,
@@ -37,9 +38,7 @@ const actions = {
           },
         );
 
-        if (params.page === UNDEFINED) {
-          commit(SET_IMAGE_PAGE, { imagePage: 1 });
-        }
+        commit(SET_IMAGE_PAGE, { imagePage: params.page || 1 });
 
         if (params.q) {
           commit(SET_QUERY, params);

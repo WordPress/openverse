@@ -1,7 +1,9 @@
 <template>
 <transition name="fade">
-<div class="share-bar" v-if="this.images.length>0">
+{{ this.isVisible }}
+<div class="share-bar" v-if="this.isVisible">
     <div class="grid-x grid-margin-x">
+      <a href="#" @click.prevent="onCloseBar" class="share-bar_close-btn">close</a>
       <div class="share-bar_images cell medium-6 large-6">
         <ul class="share-bar_images-list">
           <li class="share-bar_image-item"
@@ -69,6 +71,7 @@ export default {
   name: 'share-bar',
   data: () => ({
     listTitle: null,
+    _isVisible: false,
   }),
   computed: {
     shareText() {
@@ -86,8 +89,26 @@ export default {
     shouldShowShare() {
       return this.shareListURL !== '';
     },
+    isVisible: {
+      get: function() {
+        console.log(this._isVisible)
+        return this.$data._isVisible;
+      },
+      set: function(value) {
+        this.$data._isVisible = value;
+      }
+    }
+  },
+  watch: {
+    images() {
+      this.$data._isVisible = this.images.length > 0;
+      console.log(this._isVisible);
+    },
   },
   methods: {
+    onCloseBar() {
+      this.$data._isVisible = false;
+    },
     onCreateList() {
       const imageIDs = this.$store.state.shareListImages.map(image => image.id);
 
@@ -129,6 +150,19 @@ export default {
     position: relative;
     padding: 0 5px;
     display: inline-block;
+  }
+
+  .share-bar_close-btn {
+    position: absolute;
+    right: 10px;
+    text-decoration: underline;
+
+    /* Small only */
+    @media screen and (max-width: 39.9375em) {
+      & {
+        bottom: 10px;
+      }
+    }
   }
 
   .share-bar_image-remove-btn {

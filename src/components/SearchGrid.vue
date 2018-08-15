@@ -22,7 +22,7 @@
         :key="index"
         @click="onGotoDetailPage(image)">
         <span v-if='isActive'>is Active</span>
-        <img class="search-grid_image" :src="image.thumbnail || image.src">
+        <img class="search-grid_image" @error="onError" :src="image.thumbnail || image.url">
         <div class="search-grid_item-overlay">
           <a class="search-grid_overlay-title"
              :href="image.url"
@@ -36,13 +36,17 @@
           </a>
         </div>
       </div>
-      <infinite-loading @infinite="infiniteHandler" v-if="useInfiniteScroll"></infinite-loading>
+      <infinite-loading
+        @infinite="infiniteHandler"
+        ref="infiniteLoader"
+        v-if="useInfiniteScroll">
+      </infinite-loading>
     </div>
   </section>
 </template>
 
 <script>
-import { ADD_IMAGE_TO_LIST, SET_IMAGE_PAGE, SET_GRID_FILTER } from '@/store/mutation-types';
+import { ADD_IMAGE_TO_LIST, SET_IMAGE_PAGE, SET_GRID_FILTER, SET_IMAGES } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -68,19 +72,35 @@ export default {
     },
   },
   computed: {
-    appliedFilters() {
+    _filter() {
       return this.$store.state.filter;
     },
     imagePage() {
       return this.$store.state.imagePage;
     },
+    imageCount() {
+      return this.$store.state.imagesCount;
+    },
     isFetching() {
       return this.$store.state.isFetching;
+    },
+    _query() {
+      return this.$store.state.query;
     },
   },
   watch: {
     isFetching() {
       if (this.$state) this.$state.loaded();
+    },
+    _query() {
+      this.searchChanged();
+    },
+    _filter: {
+      handler() {
+        console.log('filter')
+        this.searchChanged();
+      },
+      deep: true,
     },
   },
   data: () => ({
@@ -96,30 +116,41 @@ export default {
         }
       });
     },
+    onError() {
+      console.log(arguments);
+    },
     onGotoDetailPage(image) {
       this.$router.push(`/photos/${image.id}`);
     },
     addToImageList(image) {
       this.$store.commit(ADD_IMAGE_TO_LIST, { image });
     },
+    searchChanged(image) {
+      console.log('reset')
+      this.$store.commit(SET_IMAGES,
+        { images: [] },
+      );
+
+      this.$nextTick(() => {
+        this.$refs.infiniteLoader.$emit('$InfiniteLoading:reset');
+      });
+    },
     infiniteHandler($state) {
       this.$state = $state;
 
-
       if (this.isFetching === false) {
-        if( this.imagesCount < 20 ) {
-          this.$store.commit(SET_IMAGE_PAGE,
-            { imagePage: this.imagePage + 1 },
-          );
+        if( this.imageCount < this.imagePage * 20) {
+          this.$state.complete();
+          return;
         }
 
         this.$nextTick(() => {
           this.$store.dispatch(
             FETCH_IMAGES,
             { q: this.query,
-              page: this.imagePage,
+              page: this.imagePage + 1,
               shouldPersistImages: true,
-              filter: this.appliedFilters,
+              ...this._filter,
             },
           );
         });

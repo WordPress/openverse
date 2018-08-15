@@ -85,7 +85,7 @@ export default {
   /* Small only */
   @media screen and (max-width: 39.9375em) {
     & {
-      padding: 15px;
+      padding: 15px !important;
     }
   }
 }

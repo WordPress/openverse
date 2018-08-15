@@ -50,7 +50,7 @@
                   medium-4
                   large-2">
           <a class="button hollow search-filter_clear-btn"
-                  :disabled="hasFilters===false"
+                  :disabled="hasFilter===false"
                   @click="clearFilters">clear filters</a>
       </div>
     </div>
@@ -66,7 +66,7 @@ export default {
     isVisible: false,
   },
   computed: {
-    hasFilters() {
+    hasFilter() {
       return Object.keys(this.filter).some(key => this.filter[key]);
     },
   },
@@ -77,8 +77,10 @@ export default {
       this.$store.commit(SET_GRID_FILTER, { filter });
     },
     clearFilters() {
-      console.log('clear')
-      Object.keys(this.filter).forEach(key => this.filter[key] = '');
+      if (this.hasFilter) {
+        Object.keys(this.filter).forEach(key => this.filter[key] = '');
+        this.onUpdateFilter();
+      }
     },
   },
   data: () => (

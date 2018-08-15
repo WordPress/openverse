@@ -2,8 +2,11 @@
 import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import es6Promise from 'es6-promise';
+es6Promise.polyfill();
 
 const BASE_URL = 'http://api-dev.creativecommons.engineering';
+
 
 const ApiService = {
   init(baseUrl = BASE_URL, authParams) {

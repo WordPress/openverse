@@ -11,6 +11,7 @@ const ImageService = {
       throw new Error('[RWV] ImageService.search() q parameter required to search images.');
     }
 
+    Object.assign(params, params.filters);
     return ApiService.query('image/search', params);
   },
   /**
