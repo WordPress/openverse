@@ -1,22 +1,26 @@
 
 import ImageService from '@/api/ImageService';
-import { FETCH_IMAGES, FETCH_IMAGE } from './action-types';
+import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from './action-types';
 import { FETCH_START,
   FETCH_END,
   SET_IMAGES,
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_GRID_FILTER,
-  SET_QUERY } from './mutation-types';
+  SET_QUERY,
+  SET_RELATED_IMAGES } from './mutation-types';
+
 
 const state = {
-  filters: {},
+  filter: {},
   image: {},
-  imageCount: 0,
+  imagesCount: 0,
   imagePage: 1,
   images: [],
   isFetching: false,
   query: { q: '' },
+  relatedImages: [],
+  relatedImagesCount: 0,
 };
 
 let UNDEFINED;
@@ -31,12 +35,10 @@ const actions = {
           { images: data.results,
             imagesCount: data.result_count,
             shouldPersistImages: params.shouldPersistImages,
-          }
+          },
         );
 
-        if (params.page === UNDEFINED) {
-          commit(SET_IMAGE_PAGE, { imagePage: 1 } );
-        }
+        commit(SET_IMAGE_PAGE, { imagePage: params.page || 1 });
 
         if (params.q) {
           commit(SET_QUERY, params);
@@ -57,6 +59,29 @@ const actions = {
         throw new Error(error);
       });
   },
+  [FETCH_RELATED_IMAGES]({ commit }, params) {
+    commit(FETCH_START);
+    return ImageService.search(params)
+      .then(({ data }) => {
+        commit(FETCH_END);
+        commit(SET_RELATED_IMAGES,
+          { relatedImages: data.results,
+            relatedImagesCount: data.result_count,
+          },
+        );
+
+        if (params.page === UNDEFINED) {
+          commit(SET_IMAGE_PAGE, { imagePage: 1 });
+        }
+
+        if (params.q) {
+          commit(SET_QUERY, params);
+        }
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+  },
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -72,6 +97,10 @@ const mutations = {
   },
   [SET_IMAGE_PAGE](_state, params) {
     _state.imagePage = params.imagePage;
+  },
+  [SET_RELATED_IMAGES](_state, params) {
+    _state.relatedImages = params.relatedImages;
+    _state.relatedImagesCount = params.relatedImagesCount;
   },
   [SET_GRID_FILTER](_state, params) {
     _state.filter = params.filter;

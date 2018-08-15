@@ -1,14 +1,16 @@
 <template>
 <transition name="fade">
-<div class="share-bar" v-if="this.images.length>0">
+{{ this.isVisible }}
+<div class="share-bar" v-if="this.isVisible">
     <div class="grid-x grid-margin-x">
+      <a href="#" @click.prevent="onCloseBar" class="share-bar_close-btn">close</a>
       <div class="share-bar_images cell medium-6 large-6">
         <ul class="share-bar_images-list">
           <li class="share-bar_image-item"
               v-for="(image, index) in images"
               :key="index">
             <transition name="fade">
-              <img class="share-bar_image" :src="image.thumbnail">
+              <img class="share-bar_image" :src="image.thumbnail || image.url">
             </transition>
             <span class="share-bar_image-remove-btn"
               @click.prevent="onRemoveImage(image)"></span>
@@ -43,10 +45,17 @@
         </div>
         <div class="share-bar_social-items cell medium-6 large-4"
              v-if="this.shouldShowShare">
-
-          <a class="social-button facebook" href="#"></a>
-          <a class="social-button twitter" href="#"></a>
-          <a class="social-button instagram" href="#"></a>
+          <a class="social-button facebook"
+             target="_blank"
+             :href="`https://www.facebook.com/sharer/sharer.php?u=${this.shareListURL}
+              &t==${shareText}&href=${this.shareListURL}`"></a>
+          <a class="social-button twitter"
+             target="_blank"
+             :href="`https://twitter.com/intent/tweet?text=${shareText}`"
+          ></a>
+          <a class="social-button pinterest"
+             target="_blank"
+             :href="`https://www.pinterest.com/pin/create/bookmarklet/?media=${images[0].url}&description=${shareText}`"></a>
         </div>
       </div>
   </div>
@@ -62,8 +71,12 @@ export default {
   name: 'share-bar',
   data: () => ({
     listTitle: null,
+    _isVisible: false,
   }),
   computed: {
+    shareText() {
+      return encodeURI(`I created an image list @creativecommons: ${this.shareListURL}`);
+    },
     images() {
       return this.$store.state.shareListImages;
     },
@@ -76,8 +89,24 @@ export default {
     shouldShowShare() {
       return this.shareListURL !== '';
     },
+    isVisible: {
+      get() {
+        return this.$data._isVisible;
+      },
+      set(value) {
+        this.$data._isVisible = value;
+      },
+    },
+  },
+  watch: {
+    images() {
+      this.$data._isVisible = this.images.length > 0;
+    },
   },
   methods: {
+    onCloseBar() {
+      this.$data._isVisible = false;
+    },
     onCreateList() {
       const imageIDs = this.$store.state.shareListImages.map(image => image.id);
 
@@ -94,7 +123,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
+<style lang="scss" scpoped>
   @import '../../node_modules/foundation-sites/scss/foundation';
 
   .share-bar {
@@ -119,6 +148,19 @@ export default {
     position: relative;
     padding: 0 5px;
     display: inline-block;
+  }
+
+  .share-bar_close-btn {
+    position: absolute;
+    right: 10px;
+    text-decoration: underline;
+
+    /* Small only */
+    @media screen and (max-width: 39.9375em) {
+      & {
+        bottom: 10px;
+      }
+    }
   }
 
   .share-bar_image-remove-btn {
@@ -159,7 +201,7 @@ export default {
 
   $social-brand-facebook: #3b5998;
   $social-brand-twitter: #55acee;
-  $social-brand-instagram: #c32aa3;
+  $social-brand-pinterest: #c32aa3;
 
   @mixin social-button($brand-color, $brand-icon) {
     background: $brand-color;
@@ -170,12 +212,6 @@ export default {
       width: 24px;
       height: 24px;
       display: inline-block;
-    }
-    &:hover,
-    &:focus {
-      color: $brand-color;
-      background: $white;
-      border-color: $brand-color;
     }
   }
 
@@ -200,11 +236,6 @@ export default {
       margin-right: $social-button-margin;
       margin-bottom: $social-button-margin;
 
-      &:hover,
-      &:focus {
-        transform: rotate(360deg);
-      }
-
       &.facebook {
         @include social-button($social-brand-facebook, 'facebook-logo_white.svg')
       }
@@ -213,8 +244,8 @@ export default {
         @include social-button($social-brand-twitter, 'twitter-logo_white.svg')
       }
 
-      &.instagram {
-        @include social-button($social-brand-instagram, 'pinterest-logo_white.svg')
+      &.pinterest {
+        @include social-button($social-brand-pinterest, 'pinterest-logo_white.svg')
       }
     }
   }
@@ -223,7 +254,4 @@ export default {
     transition: opacity .5s;
   }
 
-  .fade-enter, .fade-leave-to {
-    opacity: 0;
-  }
 </style>

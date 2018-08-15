@@ -30,6 +30,7 @@ const router = new VueRouter({
       path: '/photos/:id',
       name: 'photo-detail-page',
       component: PhotoDetailPage,
+      props: true,
     },
     {
       path: '/',
@@ -37,17 +38,17 @@ const router = new VueRouter({
       component: HomePage,
     },
   ],
-  scrollBehavior (to, from, savedPosition) {
-    return { x: 0, y: 0 }
-  }
+  scrollBehavior() {
+    return { x: 0, y: 0 };
+  },
 });
 
 router.afterEach((to) => {
-  if (to && to.query) {
+  if (to && to.query && to.query.q) {
     store.commit(SET_QUERY, to.query);
-    store.commit(SET_SHARE_LIST, { shareListImages: [] });
-    store.commit(SET_IMAGE, { image: {} });
   }
+  store.commit(SET_SHARE_LIST, { shareListImages: [] });
+  store.commit(SET_IMAGE, { image: {} });
 });
 
 export default router;
