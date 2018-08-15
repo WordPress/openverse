@@ -10,7 +10,7 @@
               v-for="(image, index) in images"
               :key="index">
             <transition name="fade">
-              <img class="share-bar_image" :src="image.thumbnail">
+              <img class="share-bar_image" :src="image.thumbnail || image.url">
             </transition>
             <span class="share-bar_image-remove-btn"
               @click.prevent="onRemoveImage(image)"></span>
@@ -90,19 +90,17 @@ export default {
       return this.shareListURL !== '';
     },
     isVisible: {
-      get: function() {
-        console.log(this._isVisible)
+      get() {
         return this.$data._isVisible;
       },
-      set: function(value) {
+      set(value) {
         this.$data._isVisible = value;
-      }
-    }
+      },
+    },
   },
   watch: {
     images() {
       this.$data._isVisible = this.images.length > 0;
-      console.log(this._isVisible);
     },
   },
   methods: {

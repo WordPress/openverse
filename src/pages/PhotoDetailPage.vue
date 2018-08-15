@@ -5,15 +5,9 @@
     </div>
     <div class="photo grid-x">
         <div class="photo_image-ctr cell medium-12 large-8">
-          <a href="#" class="photo_paginator photo_paginator__previous"
-             @click.prevent="getPreviousImage()">
-             previous
-          </a>
-          <img :src="image.url" />
-          <a class="photo_paginator photo_paginator__next"
-             href="#" @click.prevent="getNextImage()">
-            next
-          </a>
+          <img @click="onShowViewer"
+               :class="{ photo_image: true, photo_image__viewer: this.images.length > 0 }"
+               :src="image.url">
         </div>
         <div class="photo_info-ctr cell medium-12 large-4">
           <header class="photo_info-header">
@@ -71,20 +65,36 @@
           </section>
       </div>
     </div>
+    <div class="photo_tags grid-x full" v-if="tags">
+      <header>
+        <h2>Tags</h2>
+      </header>
+      <div class="photo_tags-ctr cell large-12">
+        <button v-for="(tag, index) in image.tags"
+                :key="index" class="photo_tag button">
+                {{ tag.name }}
+        </button>
+      </div>
+    </div>
     <div class="photo_related-images grid-x" v-if="query">
       <header>
         <h2>Related Images</h2>
       </header>
       <search-grid
         :imagesCount="imagesCount"
-        :images="images"
+        :images="relatedImages"
         :query="query"
         :filter="filter"
         :includeAnalytics="false"
-        :includeAddToList="false">
+        :useInfiniteScroll="false">
       </search-grid>
     </div>
     <footer-section></footer-section>
+    <viewer :images="images" ref="imageViewer">
+      <div class="photo_image-viewer" v-viewer="{movable: false}">
+        <img v-for="(image, index) in images" :src="image.url" :key="index">
+      </div>
+    </viewer>
   </div>
 </template>
 
@@ -92,9 +102,13 @@
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 import SearchGrid from '@/components/SearchGrid';
-import { FETCH_IMAGE, FETCH_IMAGES, FETCH_RELATED_IMAGES } from '@/store/action-types';
+import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
 import Clipboard from 'clipboard';
+import 'viewerjs/dist/viewer.css';
+import Viewer from 'v-viewer';
+import Vue from 'vue';
 
+Vue.use(Viewer);
 
 const PhotoDetailPage = {
   name: 'photo-detail-page',
@@ -106,6 +120,16 @@ const PhotoDetailPage = {
   props: {
     id: '',
   },
+  data: () => ({
+    imagecountseparator: 'of',
+    keyinput: true,
+    modalclose: true,
+    mousescroll: true,
+    showcaption: true,
+    showclosebutton: true,
+    showimagecount: true,
+    showthumbnails: true,
+  }),
   computed: {
     filter() {
       return this.$store.state.query.filter;
@@ -121,6 +145,9 @@ const PhotoDetailPage = {
     },
     relatedImages() {
       return this.$store.state.relatedImages;
+    },
+    tags() {
+      return this.$store.state.image.tags;
     },
     image() {
       return this.$store.state.image;
@@ -149,10 +176,13 @@ const PhotoDetailPage = {
                 CC ${image.license} ${image.license_version}
               </a>`;
     },
+    show() {
+      const viewer = this.$el.querySelector('.images').$viewer;
+      viewer.show();
+    },
   },
   beforeRouteUpdate(to, from, next) {
-    this.id = to.params.id;
-    this.loadImage(this.id);
+    this.loadImage(to.params.id);
     next();
   },
   methods: {
@@ -175,11 +205,11 @@ const PhotoDetailPage = {
         this.$store.dispatch(FETCH_IMAGE, { id });
       }
     },
-    getNextImage(imageId) {
-      console.log(this.images);
-    },
-    getPreviousImage(imageId) {
-      console.log(this);
+    onShowViewer() {
+      if (this.images.length > 0) {
+        const viewer = this.$refs.imageViewer.$viewer;
+        viewer.show();
+      }
     },
   },
   created() {
@@ -188,8 +218,9 @@ const PhotoDetailPage = {
   },
   mounted() {
     const queryParam = this.query;
+
     if (queryParam) {
-      this.$store.dispatch(FETCH_IMAGES, { q: queryParam, pagesize: 8 });
+      this.$store.dispatch(FETCH_RELATED_IMAGES, { q: queryParam, pagesize: 8 });
     }
   },
 };
@@ -199,14 +230,37 @@ export default PhotoDetailPage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+
+  .photo_image__viewer {
+    cursor: pointer;
+  }
+
+  .photo_image-viewer {
+    display: none;
+  }
+
   .photo-detail-page {
     width: 100%;
   }
 
   .photo_paginator {
     position: absolute;
+    display: block;
+    width: 50px;
+    height: 50px;
     z-index: 400;
     top: 50%;
+    opacity: .5;
+  }
+
+  .photo_paginator__previous {
+    left: 5px;
+    background: url('../assets/arrow-icon_left.svg') center center no-repeat;
+  }
+
+  .photo_paginator__next {
+    right: 5px;
+    background: url('../assets/arrow-icon_right.svg') center center no-repeat;
   }
 
   .search-grid {
@@ -219,9 +273,11 @@ export default PhotoDetailPage;
   }
 
   .photo_image-ctr {
+    position: relative;
     text-align: center;
     padding: 30px;
     max-height: 640px;
+
 
     img {
       position: relative;
@@ -289,12 +345,14 @@ export default PhotoDetailPage;
     padding: 15px;
   }
 
-  .photo_related-images {
+  .photo_related-images,
+  .photo_tags {
     margin: 30px;
     border-top: 1px solid #e7e8e9;
 
     header h2 {
       margin-bottom: 1.07142857em;
+      width: 100%;
       font-size: 1em;
       font-weight: 600;
       letter-spacing: 1px;
@@ -305,6 +363,13 @@ export default PhotoDetailPage;
       border-top: 5px solid rgba(29, 31, 39, 0.8);
       margin-top: -3px;
     }
+  }
+
+  .photo_tag {
+    margin-right: 15px;
+    color: white;
+    border-radius: 3px;
+    background-color: rgba(212, 18, 190, .8);
   }
 
   .photo_usage-attribution {

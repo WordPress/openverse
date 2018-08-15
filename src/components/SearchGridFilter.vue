@@ -78,7 +78,7 @@ export default {
     },
     clearFilters() {
       if (this.hasFilter) {
-        Object.keys(this.filter).forEach(key => this.filter[key] = '');
+        Object.keys(this.filter).forEach((key) => { this.filter[key] = ''; });
         this.onUpdateFilter();
       }
     },

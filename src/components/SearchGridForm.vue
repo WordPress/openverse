@@ -81,7 +81,6 @@ export default {
   methods: {
     onSubmit(e) {
       e.preventDefault();
-      console.log(this.query)
       if (this.query) {
         this.$router.push({ path: 'search', query: { q: this.query } });
       }

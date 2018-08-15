@@ -20,6 +20,8 @@
     "masonry-layout": "^4.2.2",
     "packery": "^2.1.2",
     "puex": "^0.5.2",
+    "v-viewer": "^1.2.0",
+    "viewerjs": "^1.2.0",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.2",
     "vue-infinite-loading": "^2.3.2",

@@ -52,21 +52,30 @@ const BrowsePage = {
       return this.$store.state.query.filter;
     },
   },
+  methods: {
+    getImages(params) {
+      this.$store.dispatch(FETCH_IMAGES, params);
+    },
+  },
   created() {
     const queryParam = this.$route.query.q;
 
     if (queryParam) {
-      this.$store.dispatch(FETCH_IMAGES, { q: queryParam, filter: this.filter });
+      this.getImages({ q: queryParam, filter: this.filter });
     }
 
     this.unsubscribe = this.$store.subscribe((mutation) => {
       if (mutation.type === SET_GRID_FILTER) {
-        this.$store.dispatch(FETCH_IMAGES, { q: this.query, ...mutation.payload.filter });
+        this.getImages({ q: this.query, ...mutation.payload.filter });
       }
     });
   },
   beforeDestroy() {
     this.unsubscribe();
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.getImages({ q: to.query.q, filter: this.filter });
+    next();
   },
 };
 

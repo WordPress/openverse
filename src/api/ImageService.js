@@ -12,6 +12,7 @@ const ImageService = {
     }
 
     Object.assign(params, params.filters);
+
     return ApiService.query('image/search', params);
   },
   /**

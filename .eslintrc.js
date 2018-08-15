@@ -40,6 +40,7 @@ module.exports = {
         'e' // for e.returnvalue
       ]
     }],
+    'no-underscore-dangle': 'off',
     // allow optionalDependencies
     'import/no-extraneous-dependencies': ['error', {
       optionalDependencies: ['test/unit/index.js']

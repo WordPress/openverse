@@ -8,7 +8,7 @@ import { FETCH_START,
   SET_IMAGE_PAGE,
   SET_GRID_FILTER,
   SET_QUERY,
-  SET_RELATED_IMAGES, } from './mutation-types';
+  SET_RELATED_IMAGES } from './mutation-types';
 
 
 const state = {
@@ -64,7 +64,7 @@ const actions = {
     return ImageService.search(params)
       .then(({ data }) => {
         commit(FETCH_END);
-        commit(SET_RELARED_IMAGES,
+        commit(SET_RELATED_IMAGES,
           { relatedImages: data.results,
             relatedImagesCount: data.result_count,
           },

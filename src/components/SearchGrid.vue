@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { ADD_IMAGE_TO_LIST, SET_IMAGE_PAGE, SET_GRID_FILTER, SET_IMAGES } from '@/store/mutation-types';
+import { ADD_IMAGE_TO_LIST, SET_GRID_FILTER, SET_IMAGES } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -97,7 +97,6 @@ export default {
     },
     _filter: {
       handler() {
-        console.log('filter')
         this.searchChanged();
       },
       deep: true,
@@ -117,7 +116,6 @@ export default {
       });
     },
     onError() {
-      console.log(arguments);
     },
     onGotoDetailPage(image) {
       this.$router.push(`/photos/${image.id}`);
@@ -125,8 +123,7 @@ export default {
     addToImageList(image) {
       this.$store.commit(ADD_IMAGE_TO_LIST, { image });
     },
-    searchChanged(image) {
-      console.log('reset')
+    searchChanged() {
       this.$store.commit(SET_IMAGES,
         { images: [] },
       );
@@ -139,8 +136,9 @@ export default {
       this.$state = $state;
 
       if (this.isFetching === false) {
-        if( this.imageCount < this.imagePage * 20) {
+        if (this.imageCount < this.imagePage * 20) {
           this.$state.complete();
+
           return;
         }
 

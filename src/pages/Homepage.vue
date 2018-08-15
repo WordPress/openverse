@@ -34,17 +34,33 @@
       <h2 class="featured-items_title">Top Images:</h2>
     </header>
     <div  class="header-grid">
-      <div id="b1" class="block">
-        <img src="@/assets/mix-tapes_medum.jpg" />
-        <div class="block_overlay"></div>
-      </div>
-      <div id="b2" class="block"></div>
-      <div id="b3" class="block"></div>
-      <div id="b4" class="block"></div>
+        <div v-for="(image, index) in images" v-if="index < 4"
+             :class="image.class" :key="index"
+             @click="onGotoDetailPage(image)">
+          <img :src="image.src" />
+          <div class="grid_item-overlay">
+            <a class="grid_overlay-title"
+               :href="image.url"
+               @click.stop="() => false"
+               target="new">
+               {{ image.title }}
+            </a>
+          </div>
+        </div>
       <div class="bottom-block">
-        <div id="b5" class="block"></div>
-        <div id="b6" class="block"></div>
-        <div id="b7" class="block"></div>
+        <div v-for="(image, index) in images" v-if="index > 3"
+             :class="image.class" :key="index"
+             @click="onGotoDetailPage(image)">
+          <img :src="image.src" />
+          <div class="grid_item-overlay">
+            <a class="grid_overlay-title"
+               :href="image.url"
+               @click.stop="() => false"
+               target="new">
+               {{ image.title }}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -68,9 +84,62 @@ const HomePage = {
     SearchGrid,
     FooterSection,
   },
+  data: () => ({
+    images: [
+      {
+        title: 'Unpublished-Landscapes',
+        url: 'https://www.behance.net/gallery/41530879/Unpublished-Landscapes',
+        id: 11913497,
+        class: 'grid-item block b1',
+        src: require('@/assets/record_large.jpg'), // eslint-disable-line global-require
+      }, {
+        title: 'Exploded Views',
+        url: 'https://www.flickr.com/photos/posk/7124858335',
+        id: 921892,
+        class: 'grid-item block b2',
+        src: require('@/assets/lights_large.jpg'), // eslint-disable-line global-require
+      }, {
+        title: 'Specific_Media_04',
+        url: 'https://www.flickr.com/photos/k2space/14051210350',
+        id: 7797602,
+        class: 'grid-item block b3',
+        src: require('@/assets/office_medium.jpg'), // eslint-disable-line global-require
+      }, {
+        title: 'Glitched Landscapes',
+        url: 'https://www.behance.net/gallery/36164749/Glitched-Landscapes',
+        id: 11882642,
+        class: 'grid-item block b4',
+        src: require('@/assets/sky_medium.jpg'), // eslint-disable-line global-require
+      },
+      {
+        title: 'the mountain story',
+        url: 'https://www.behance.net/gallery/55404735/the-mountain-story',
+        id: 11859713,
+        class: 'grid-item block b5',
+        src: require('@/assets/mountain_medium.jpg'), // eslint-disable-line global-require
+      },
+      {
+        title: 'Howling Mixed-Breed Brown Dog',
+        url: 'https://www.flickr.com/photos/foundanimalsfoundation/8557041595/',
+        id: 11723785,
+        class: 'grid-item block b6',
+        src: require('@/assets/dog_medium.jpg'), // eslint-disable-line global-require
+      },
+      {
+        title: 'Nike FFF Retouching',
+        url: 'https://www.behance.net/gallery/51974139/Nike-FFF-Retouching',
+        id: 11884100,
+        class: 'grid-item block b7',
+        src: require('@/assets/soccer_medium.jpg'), // eslint-disable-line global-require
+      },
+    ],
+  }),
   methods: {
     onCategoryClick(category) {
       router.push({ path: 'search', query: { q: category } });
+    },
+    onGotoDetailPage(image) {
+      this.$router.push(`/photos/${image.id}`);
     },
   },
 };
@@ -181,6 +250,40 @@ $vert-seperate: 4rem;
   margin: 15px 0;
 }
 
+.grid-item {
+  overflow: hidden;
+
+  &:hover .grid_item-overlay {
+    opacity: 1;
+    bottom: 0;
+  }
+}
+
+.grid_item-overlay {
+  opacity: 0;
+  transition: all .4s ease;
+  position: absolute;
+  width: 100%;
+  height: 20%;
+  bottom: -100%;
+  color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,.5) 0, rgba(0,0,0,0) 100%);
+  padding: 10px;
+}
+
+.grid_overlay-title {
+  position: absolute;
+  display: block;
+  bottom: 10px;
+  left: 10px;
+  z-index: 100;
+  color: #fff;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .block {
   position: relative;
   height: 100%;
@@ -205,20 +308,20 @@ $vert-seperate: 4rem;
   top: 200px;
 }
 
-#b1 {
+.b1 {
   grid-area: big-top;
 
 }
 
-#b2 {
+.b2 {
   grid-area :small-top;
 }
 
-#b3 {
+.b3 {
   grid-area: small-middle;
 }
 
-#b4 {
+.b4 {
   grid-area: big-middle;
 }
 
