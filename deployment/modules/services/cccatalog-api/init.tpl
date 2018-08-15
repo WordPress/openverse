@@ -66,7 +66,9 @@ uwsgi --chdir=/home/ec2-user/cccatalog-api \
       --uid=uwsgi \
       --socket=:8081 \
       --wsgi-file=./cccatalog/wsgi.py \
+      --enable-threads \
       --processes=4 \
+      --threads=2 \
       --stats=/tmp/stats.socket
 
 # Put nginx in front of uWSGI for static content serving + SSL encryption
