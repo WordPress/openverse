@@ -1,5 +1,6 @@
 import redlock
 import os
+import logging as log
 from rest_framework.serializers import ModelSerializer, Serializer, URLField,\
     ValidationError
 from cccatalog.api.controllers.link_controller import get_next_shortened_path
@@ -14,9 +15,10 @@ __parsed_redis_url = urlparse(settings.CACHES['locks']['LOCATION'])
 __host, __port = __parsed_redis_url.netloc.split(':')
 __db_num = __parsed_redis_url.path[1] if __parsed_redis_url.path else 2
 __password = os.environ.get("REDIS_PASSWORD")
+# Clients will attempt to acquire the lock infinitely with a 1 second delay.
 url_lock = redlock.Redlock(
     [{"host": __host, "port": __port, "db": __db_num, "password": __password}],
-    retry_count=0
+    retry_count=1, retry_delay=1000
 )
 
 
@@ -68,27 +70,30 @@ class ShortenedLinkSerializer(ModelSerializer):
         return value
 
     def save(self):
-        try:
-            last_url = str(
-                ShortenedLink
-                    .objects
-                    .latest(field_name='created_on')
-                    .shortened_path
-            )
-        except ShortenedLink.DoesNotExist:
-            # No URLs exist. Create the first one.
-            last_url = None
+        two_seconds_ms = 1000 * 2
+        lock = url_lock.lock('unique_url_lock', ttl=two_seconds_ms)
+        shortened_path = None
+        if lock:
+            try:
+                last_url = str(
+                    ShortenedLink
+                        .objects
+                        .latest(field_name='created_on')
+                        .shortened_path
+                )
+            except ShortenedLink.DoesNotExist:
+                # No URLs exist. Create the first one.
+                last_url = None
 
-        shortened_path = get_next_shortened_path(last_url)
-        thirty_seconds_ms = 1000 * 30
-        lock = url_lock.lock(shortened_path, ttl=thirty_seconds_ms)
-        while not lock:
-            shortened_path = get_next_shortened_path(shortened_path)
-            lock = url_lock.lock(shortened_path, ttl=thirty_seconds_ms)
-        full_url = self.validated_data['full_url']
-        shortened_link_instance = ShortenedLink(
-            shortened_path=shortened_path,
-            full_url=full_url
-        )
-        shortened_link_instance.save()
+            shortened_path = get_next_shortened_path(last_url)
+            full_url = self.validated_data['full_url']
+            shortened_link_instance = ShortenedLink(
+                shortened_path=shortened_path,
+                full_url=full_url
+            )
+            shortened_link_instance.save()
+            url_lock.unlock(lock)
+            return shortened_path
+        else:
+            log.error('Failed to acquire URL lock.')
         return shortened_path

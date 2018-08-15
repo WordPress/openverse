@@ -120,8 +120,9 @@ http {
         }
 
         location / {
-            uwsgi_pass      django;
-            include         /etc/nginx/uwsgi_params;
+            uwsgi_pass          django;
+            uwsgi_read_timeout  60;
+            include             /etc/nginx/uwsgi_params;
         }
     }
 }

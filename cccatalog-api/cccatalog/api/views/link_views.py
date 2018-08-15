@@ -36,14 +36,20 @@ class CreateShortenedLink(GenericAPIView):
             )
 
         shortened_path = serialized.save()
-        shortened_url = settings.ROOT_SHORTENING_URL + '/' + shortened_path
-        return Response(
-            status=200,
-            data={
-                'shortened_url': shortened_url
-            }
-        )
-
+        if shortened_path:
+            shortened_url = settings.ROOT_SHORTENING_URL + '/' + shortened_path
+            return Response(
+                status=200,
+                data={
+                    'shortened_url': shortened_url
+                }
+            )
+        else:
+            return Response(
+                status=500,
+                data='Failed to generate a shortened link due to a server-side '
+                     'error.'
+            )
 
 class ResolveShortenedLink(APIView):
     @swagger_auto_schema(operation_id="link_resolve",
