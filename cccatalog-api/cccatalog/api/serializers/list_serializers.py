@@ -27,9 +27,7 @@ class ImageListCreateSerializer(serializers.ModelSerializer):
         image_list = ImageList(title=title)
         image_list.save()
         _id = image_list.slug
-
-        for image in images:
-            image_list.images.add(image)
+        image_list.images.add(*images)
 
         return _id
 

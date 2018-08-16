@@ -13,7 +13,7 @@ from rest_framework import serializers
 # try to create the same shortened URL.
 __parsed_redis_url = urlparse(settings.CACHES['locks']['LOCATION'])
 __host, __port = __parsed_redis_url.netloc.split(':')
-__db_num = __parsed_redis_url.path[1] if __parsed_redis_url.path else 2
+__db_num = __parsed_redis_url.path[1] if __parsed_redis_url.path else None
 __password = os.environ.get("REDIS_PASSWORD")
 # Clients will attempt to acquire the lock infinitely with a 1 second delay.
 url_lock = redlock.Redlock(
