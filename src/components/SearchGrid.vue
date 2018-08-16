@@ -22,7 +22,7 @@
         :key="index"
         @click="onGotoDetailPage(image)">
         <span v-if='isActive'>is Active</span>
-        <img class="search-grid_image" @error="onError" :src="image.thumbnail || image.url">
+        <img class="search-grid_image" :src="image.thumbnail || image.url">
         <div class="search-grid_item-overlay">
           <a class="search-grid_overlay-title"
              :href="image.url"
@@ -31,7 +31,7 @@
              {{ image.title }}
           </a>
           <a class="search-grid_overlay-add"
-             @click.stop="addToImageList(image)"
+             @click.stop="onAddToImageList(image)"
              v-if="includeAddToList">
           </a>
         </div>
@@ -50,6 +50,7 @@ import { ADD_IMAGE_TO_LIST, SET_GRID_FILTER, SET_IMAGES } from '@/store/mutation
 import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
 
+const DEFAULT_PAGE_SIZE = 20;
 
 export default {
   name: 'search-grid',
@@ -92,8 +93,11 @@ export default {
     isFetching() {
       if (this.$state) this.$state.loaded();
     },
-    _query() {
-      this.searchChanged();
+    _query: {
+      handler() {
+        this.searchChanged();
+      },
+      deep: true,
     },
     _filter: {
       handler() {
@@ -115,12 +119,10 @@ export default {
         }
       });
     },
-    onError() {
-    },
     onGotoDetailPage(image) {
       this.$router.push(`/photos/${image.id}`);
     },
-    addToImageList(image) {
+    onAddToImageList(image) {
       this.$store.commit(ADD_IMAGE_TO_LIST, { image });
     },
     searchChanged() {
@@ -136,7 +138,7 @@ export default {
       this.$state = $state;
 
       if (this.isFetching === false) {
-        if (this.imageCount < this.imagePage * 20) {
+        if (this.imageCount < this.imagePage * DEFAULT_PAGE_SIZE) {
           this.$state.complete();
 
           return;

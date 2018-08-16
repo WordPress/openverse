@@ -6,7 +6,7 @@
     <div class="photo grid-x">
         <div class="photo_image-ctr cell medium-12 large-8">
           <img @click="onShowViewer"
-               :class="{ photo_image: true, photo_image__viewer: this.images.length > 0 }"
+               :class="{ photo_image: true, 'photo_image__has-viewer': this.images.length > 0 }"
                :src="image.url">
         </div>
         <div class="photo_info-ctr cell medium-12 large-4">
@@ -29,7 +29,7 @@
             <li>
               <h3>License</h3>
               <a :href="ccLicenseURL">
-              CC {{ image.license}} {{ image.license_version }}
+              CC {{ image.license }} {{ image.license_version }}
               </a>
             </li>
             <li>
@@ -70,10 +70,11 @@
         <h2>Tags</h2>
       </header>
       <div class="photo_tags-ctr cell large-12">
-        <button v-for="(tag, index) in image.tags"
-                :key="index" class="photo_tag button">
+        <a v-for="(tag, index) in image.tags"
+                :key="index" class="photo_tag button"
+                @click="onGotoSearchPage(tag.name)">
                 {{ tag.name }}
-        </button>
+        </a>
       </div>
     </div>
     <div class="photo_related-images grid-x" v-if="query">
@@ -86,7 +87,8 @@
         :query="query"
         :filter="filter"
         :includeAnalytics="false"
-        :useInfiniteScroll="false">
+        :useInfiniteScroll="false"
+        :includeAddToList="false">
       </search-grid>
     </div>
     <footer-section></footer-section>
@@ -205,6 +207,9 @@ const PhotoDetailPage = {
         this.$store.dispatch(FETCH_IMAGE, { id });
       }
     },
+    onGotoSearchPage(query) {
+      this.$router.push({ name: 'browse-page', query: { q: query } });
+    },
     onShowViewer() {
       if (this.images.length > 0) {
         const viewer = this.$refs.imageViewer.$viewer;
@@ -230,9 +235,8 @@ export default PhotoDetailPage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-
-  .photo_image__viewer {
-    cursor: pointer;
+  .photo_image__has-viewer {
+    cursor: zoom-in;
   }
 
   .photo_image-viewer {

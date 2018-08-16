@@ -10,8 +10,7 @@
         <label><span>Providers</span></label>
         <select v-model="filter.provider" v-on:change="onUpdateFilter">
           <option v-for="(provider, index) in providers"
-                  :key="index"
-                  @click.prevent="onSelectProvider(provider)">
+                  :key="index">
             {{ provider }}
           </option>
         </select>
@@ -39,8 +38,7 @@
                 v-on:change="onUpdateFilter"
                 :disabled="filter.li !== ''">
           <option v-for="(licenseType, index) in licenseTypes"
-                  :key="index"
-                  @change="onSelectProvider(licenseType)">
+                  :key="index">
             {{ licenseType }}
           </option>
         </select>
@@ -51,7 +49,7 @@
                   large-2">
           <a class="button hollow search-filter_clear-btn"
                   :disabled="hasFilter===false"
-                  @click="clearFilters">clear filters</a>
+                  @click="onClearFilters">clear filters</a>
       </div>
     </div>
   </div>
@@ -76,7 +74,7 @@ export default {
 
       this.$store.commit(SET_GRID_FILTER, { filter });
     },
-    clearFilters() {
+    onClearFilters() {
       if (this.hasFilter) {
         Object.keys(this.filter).forEach((key) => { this.filter[key] = ''; });
         this.onUpdateFilter();

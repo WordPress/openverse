@@ -4,7 +4,7 @@
   <div class="home-page_body">
     <section class="featured-images">
       <header class="featured-images_header">
-        <h2 class="featured-items_title">Top Categories:</h2>
+        <h2 class="featured-items_title">Top Categories</h2>
       </header>
       <div class="featured-images_inner grid-x grid-margin-x grid-margin-y">
         <div @click="onCategoryClick('people')"
@@ -29,9 +29,9 @@
         </div>
       </div>
     </section>
-  <section class="grid">
+  <section class="grid top-images">
     <header class="top-images_header">
-      <h2 class="featured-items_title">Top Images:</h2>
+      <h2 class="featured-items_title">Top Images</h2>
     </header>
     <div  class="header-grid">
         <div v-for="(image, index) in images" v-if="index < 4"
@@ -71,7 +71,6 @@
 
 <script>
 import HeaderSection from '@/components/HeaderSection';
-import CardsSection from '@/components/CardsSection';
 import SearchGrid from '@/components/SearchGrid';
 import FooterSection from '@/components/FooterSection';
 import router from '@/router';
@@ -80,7 +79,6 @@ const HomePage = {
   name: 'home-page',
   components: {
     HeaderSection,
-    CardsSection,
     SearchGrid,
     FooterSection,
   },
@@ -160,16 +158,15 @@ $vert-seperate: 4rem;
 }
 
 .home-page_body {
-  margin: 60px 30px 60px 30px;
 
   /* Small only */
   @media screen and (max-width: 39.9375em) {
-    margin: 60px 15px 30px 15px;
+    margin: 60px 0 30px;
   }
 }
 
 .featured-images {
-  margin: 15px 0 60px 0;
+  margin: 30px 0;
   background: #f7f8f9;
   padding: 30px;
   border: 1px solid #e7e8e9;
@@ -179,6 +176,7 @@ $vert-seperate: 4rem;
     padding: 30px 15px;
   }
 }
+
 
 .featured-images_item {
   position: relative;
@@ -217,6 +215,15 @@ $vert-seperate: 4rem;
     padding-top: .28571429em;
     border-top: 5px solid rgba(29, 31, 39, 0.8);
     margin-top: -3px;
+  }
+}
+
+.top-images {
+  padding: 30px;
+
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    padding: 15px;
   }
 }
 
