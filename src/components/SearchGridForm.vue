@@ -28,7 +28,7 @@
                    2.918-8.6367 0-7.9132-6.454-14.367-14.367-14.367zm0 3.5898c5.9732
                    0 10.777 4.8042 10.777 10.777 0 5.9732-4.8042 10.777-10.777
                    10.777s-10.777-4.8042-10.777-10.777c2e-7 -5.9732 4.8042-10.777
-                   10.777-10.777z" color="#000000" color-rendering="auto" fill="#fff" />
+                   10.777-10.777z" color="#1779ba" color-rendering="auto" fill=" #2c3e50" />
                   </svg>
               </i>
               <span class="menu-button_text">Search</span>
@@ -49,7 +49,7 @@
                   for details.</desc>
                   <path class="linesandangles_een" d="M26,6v0.233l-8.487,9.43L17,
                   16.233V17v7.764l-2-1V17v-0.767l-0.513-0.57L6,6.233V6H26 M28,4H4v3
-                  l9,10v8l6,3V17l9-10V4L28,4z" style="fill: #d6d6d6"/>
+                  l9,10v8l6,3V17l9-10V4L28,4z" style="fill: #2c3e50"/>
                   <metadata><work rdf:about=""><format>image/svg+xml</format>
                   <type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
                   <license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
@@ -98,31 +98,28 @@ export default {
 <style lang="scss" scoped>
   .search-form {
     width: 100%;
-    border-bottom: 1px solid #d6d6d6;
+    border-bottom: 1px solid #E6EAEA;
   }
 
-  .search-form_search-button a {
-    color: #fff;
-    background: #4DA5EF;
+  .search-form_search-button {
 
-    span {
-      color: #fff;
+    .menu-button_text {
+      color: #2c3e50;
     }
   }
 
+  .search-form_filter-button {
+
+    .menu-button_text {
+      color: #2c3e50;
+    }
+  }
   .search-form_ctr {
     position: relative;
   }
 
   .search-grid-filter-ctr {
     overflow: hidden;
-  }
-
-  .search-form_filter-button {
-
-    .menu-button_text {
-      color: #d6d6d6;
-    }
   }
 
   .search-form_inner-ctr {
@@ -149,8 +146,8 @@ export default {
     width: 400px;
 
     li {
-      border-left: 1px solid #d6d6d6;
-      border-right: 1px solid #d6d6d6;
+      border-left: 1px solid #E6EAEA;
+      border-right: 1px solid #E6EAEA;
 
       &:last-of-type {
         border-left: none;
