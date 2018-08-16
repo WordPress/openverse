@@ -20,7 +20,7 @@ class BrowseResults(TaskSet):
             ids = [image['id'] for image in selected_images]
             self.client.post("/list", {"title": "Load test", "images": ids})
 
-    @task(1)
+    @task(10)
     def shorten_link(self):
         _unique = str(uuid.uuid4())
         image_link = "http://api-dev.creativecommons.engineering/list/{}"\
