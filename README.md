@@ -10,7 +10,7 @@ This repository is primarily concerned with back end infrastructure like datasto
 
 ## API Documentation
 
-Beta browsable API documentation can be found [here](api-dev.creativecommons.engineering).
+Beta browsable API documentation can be found [here](http://api-dev.creativecommons.engineering).
 
 ## Getting Started
 
