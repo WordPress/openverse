@@ -48,9 +48,9 @@ def search(search_params, index, page_size, page=1) -> Response:
 
     # Search for keywords.
     keywords = ' '.join(search_params.data['q'].lower().split(','))
-    s = s.query("multi_match",
+    s = s.query("constant_score", filter=Q("multi_match",
                 query=keywords,
-                fields=['detailed_tags^3', 'tags^3', 'creator^2', 'title'])
+                fields=['detailed_tags^3', 'tags^3', 'creator', 'title^2']))
 
     s.extra(track_scores=True)
     search_response = s.execute()
