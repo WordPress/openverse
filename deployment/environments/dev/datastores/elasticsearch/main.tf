@@ -21,7 +21,7 @@ resource "aws_elasticsearch_domain" "elasticsearch-dev" {
   ebs_options {
     ebs_enabled = true
     volume_type = "standard"
-    volume_size = 20
+    volume_size = 30
   }
 
   access_policies = <<EOF

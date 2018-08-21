@@ -33,7 +33,7 @@ data "template_file" "init" {
 
 # API server autoscaling launch configuration
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
-  name_prefix              = "cccatalog-api-asg-${var.environment}-"
+  name_prefix              = "cccatalog-api-asg-${var.environment}"
   image_id                 = "ami-b70554c8"
   instance_type            = "${var.instance_type}"
   security_groups          = ["${aws_security_group.cccatalog-sg.id}",
@@ -83,12 +83,12 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
 }
 
 resource "aws_key_pair" "cccapi-admin" {
-  key_name   = "cccapi-admin"
+  key_name   = "cccapi-admin-${var.environment}"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzocO5AKxkGVTtpmtgVd0UrpI2//v6YO8kxKZQ5t99sK0K62QG1PQj+nxFA5wCkiGNJohlvVX+Hl1ZujDLH3/G9yPaUbOA4MeDEUy3JQSxTfMVcPKVTocAldU5A/5LkxIsB+XwDY/JFr7aQq3YlwLikJ2Sb6LFaUACJWzXKMa2zTE7TvHYpJqB4UihAFVuuqQPBH5PzwXjeHJcq/zIZgnB9orMfK0Fci5YRp2wdY/RWqJwDAuTpfvaGCZmghqo0ogAmm+Dz0EPGu9jJrRvlZ7c0c1bP+eWTuHIeiXsuAN6wlkXuu8hRXRwbBdVox7ST8x8eRBUdWZZcaoeZ69dI2HZ webmaster@creativecommons.org"
 }
 
 resource "aws_security_group" "cccatalog-api-ingress" {
-  name = "cccatalog-api-ingress"
+  name = "cccatalog-api-ingress-${var.environment}"
   vpc_id = "${var.vpc_id}"
 
   # Allow incoming traffic from the load balancer and autoscale clones
@@ -121,7 +121,7 @@ resource "aws_security_group" "cccatalog-api-ingress" {
 }
 
 resource "aws_security_group" "cccatalog-sg" {
-  name   = "cccatalog-security-group"
+  name   = "cccatalog-security-group-${var.environment}"
   vpc_id = "${var.vpc_id}"
 
 
@@ -132,7 +132,7 @@ resource "aws_security_group" "cccatalog-sg" {
 
 # Public-facing load balancer
 resource "aws_alb" "cccatalog-api-load-balancer" {
-  name                       = "cccatalog-api-alb"
+  name                       = "cccatalog-api-alb-${var.environment}"
   internal                   = false
   load_balancer_type         = "application"
   security_groups            = ["${aws_security_group.cccatalog-sg.id}",
@@ -147,7 +147,7 @@ resource "aws_alb" "cccatalog-api-load-balancer" {
 }
 
 resource "aws_alb_target_group" "ccc-api-asg-target" {
-  name     = "ccc-api-autoscale-target"
+  name     = "ccc-api-autoscale-target-${var.environment}"
   port     = 8080
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
@@ -171,7 +171,7 @@ resource "aws_alb_listener" "ccc-api-asg-listener" {
 }
 
 resource "aws_security_group" "cccatalog-alb-sg" {
-  name   = "cccatalog-alb-sg"
+  name   = "cccatalog-alb-sg-${var.environment}"
   vpc_id = "${var.vpc_id}"
 
   ingress {
@@ -206,7 +206,7 @@ data "template_file" "proxy-init" {
 }
 
 resource "aws_security_group" "short-proxy-sg" {
-  name = "short-proxy-sg"
+  name = "short-proxy-sg-${var.environment}"
   vpc_id = "${var.vpc_id}"
 
   # Allow incoming traffic from the internet
