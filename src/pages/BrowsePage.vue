@@ -27,7 +27,7 @@ import SearchGridForm from '@/components/SearchGridForm';
 import SearchGrid from '@/components/SearchGrid';
 import ShareBar from '@/components/ShareBar';
 import { FETCH_IMAGES } from '@/store/action-types';
-import { SET_GRID_FILTER } from '@/store/mutation-types';
+import { SET_GRID_FILTER, SET_IMAGES } from '@/store/mutation-types';
 
 const BrowsePage = {
   name: 'browse-page',
@@ -60,6 +60,10 @@ const BrowsePage = {
   created() {
     const queryParam = this.$route.query.q;
 
+    this.$store.commit(SET_IMAGES,
+        { images: [] },
+    );
+
     if (queryParam) {
       this.getImages({ q: queryParam, filter: this.filter });
     }
@@ -87,5 +91,10 @@ export default BrowsePage;
   .search-grid {
     margin: 30px 30px 60px 30px;
     min-height: 600px;
+
+    /* Small only */
+    @media screen and (max-width: 39.9375em) {
+      margin: 30px 15px 30px 15px;
+    }
   }
 </style>

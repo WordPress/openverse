@@ -290,6 +290,11 @@ export default PhotoDetailPage;
       max-height: 100%;
       max-width: 100%;
     }
+
+    /* Small only */
+    @media screen and (max-width: 39.9375em) {
+      padding: 30px 15px;
+    }
   }
 
   .photo_info-ctr {
@@ -339,6 +344,11 @@ export default PhotoDetailPage;
         margin-bottom: 10px;
       }
     }
+
+    /* Small only */
+    @media screen and (max-width: 39.9375em) {
+      padding: 30px 0;
+    }
   }
 
   .photo_usage {
@@ -366,6 +376,11 @@ export default PhotoDetailPage;
       padding-top: .28571429em;
       border-top: 5px solid rgba(29, 31, 39, 0.8);
       margin-top: -3px;
+    }
+
+    /* Small only */
+    @media screen and (max-width: 39.9375em) {
+      margin: 15px;
     }
   }
 

@@ -15,17 +15,18 @@
       <li><a href="/browse/new">new</a></li>
     </ul>
     <div class="search-grid_ctr" ref="gridItems">
-      <div v-for="(image, index) in images"
-        :class="{ 'search-grid_item': true,
-                  'search-grid_ctr__active': image.isActive
-                }"
+      <figure v-for="(image, index) in images"
+        class="search-grid_item"
         :key="index"
         @click="onGotoDetailPage(image)">
-        <span v-if='isActive'>is Active</span>
-        <img class="search-grid_image" :src="image.thumbnail || image.url">
-        <div class="search-grid_item-overlay">
+        <a :href="image.foreign_landing_url"
+             @click.prevent="() => false"
+             target="new">
+          <img class="search-grid_image" :src="image.thumbnail || image.url">
+        </a>
+        <figcaption class="search-grid_item-overlay">
           <a class="search-grid_overlay-title"
-             :href="image.url"
+             :href="image.foreign_landing_url"
              @click.stop="() => false"
              target="new">
              {{ image.title }}
@@ -34,8 +35,8 @@
              @click.stop="onAddToImageList(image)"
              v-if="includeAddToList">
           </a>
-        </div>
-      </div>
+        </figcaption>
+      </figure>
       <infinite-loading
         @infinite="infiniteHandler"
         ref="infiniteLoader"
@@ -106,9 +107,6 @@ export default {
       deep: true,
     },
   },
-  data: () => ({
-    isActive: false,
-  }),
   methods: {
     created() {
       this.unsubscribe = this.$store.subscribe((mutation) => {
@@ -162,6 +160,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+  .infinite-loading-container {
+    margin-top: 30px;
+    width: 100%;
+  }
+
   .search-grid_item {
     overflow: hidden;
 
@@ -172,19 +175,20 @@ export default {
   }
 
   .search-grid_item-overlay {
+    position: absolute;
     opacity: 0;
     transition: all .4s ease;
-    position: absolute;
     width: 100%;
-    height: 20%;
+    height: 30px;
     bottom: -100%;
     color: #fff;
     background: linear-gradient(to top, rgba(0,0,0,.5) 0, rgba(0,0,0,0) 100%);
-    padding: 10px;
+    padding: 0 10px;
+    display: block;
   }
 
   .search-grid_overlay-title {
-    position: absolute;
+    width: calc( 100% - 30px );
     display: block;
     bottom: 10px;
     left: 10px;
@@ -244,15 +248,6 @@ export default {
     }
   }
 
-  .infinite-loading-container {
-    margin-top: 30px;
-    width: 100%;
-  }
-
-  .search-grid_ctr__active {
-    height: 0px !important;
-  }
-
   .search-grid:after {
     content: '';
     display: block;
@@ -300,6 +295,12 @@ export default {
   }
 
   @media screen and (max-width: 600px) {
+    .search-grid_item-overlay {
+      position: absolute;
+      opacity: 1;
+      bottom: 0;
+    }
+
     .search-grid_item {
       width: 100%;
       height: 100%;

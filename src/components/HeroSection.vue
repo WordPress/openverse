@@ -1,10 +1,10 @@
 <template>
   <div class="hero">
     <p class="hero_image-attribution">
-      <a href="https://www.pexels.com/photo/group-of-people-on-road-with-assorted-color-smokes-889545/"
+      <a href="https://pixabay.com/en/agriculture-rice-plantation-thailand-1807581/"
          target="_blank"
          rel="noreferrer">
-        Photo by GEORGE DESIPRIS from Pexels
+        Photo by sasint from Pixabay
       </a>
       <span class="hero_instagram-icon">&nbsp;</span>
     </p>
@@ -55,7 +55,7 @@ $hero-height: 70vh;
 .hero {
   position: relative;
   height: $hero-height;
-  background: url('../assets/street_large.jpg') 50% no-repeat;
+  background: url('../assets/pexels-photo_large.jpg') 50% no-repeat;
   background-size: cover;
   text-align: center;
   display: flex;
@@ -82,12 +82,16 @@ $hero-height: 70vh;
     margin-bottom: 0;
     width: 100%;
     height: 60px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.3);
     outline: 0;
     border-radius: 3px;
     border-width: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.4);
-    color: #fff;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .hero_search-input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
   }
 
   .hero_search-btn {
@@ -101,14 +105,13 @@ $hero-height: 70vh;
     font-size: 24px;
     cursor: pointer;
     transition: all .2s ease-in-out;
-    color: #fff;
     border-radius: 3px;
 
     &:after {
       content: '';
       background: url('../assets/search-icon_white.svg') center center no-repeat;
       background-size: 20px;
-      opacity: 0.2;
+      opacity: 0.5;
       top: 0;
       left: 0;
       bottom: 0;
@@ -116,10 +119,6 @@ $hero-height: 70vh;
       position: absolute;
       z-index: 10;
     }
-  }
-
-  .hero_search-input::placeholder {
-    color: rgba(255, 255, 255, 0.4);
   }
 
   &:before {
