@@ -3,11 +3,11 @@
    <div class="grid-container full">
       <div class="large-3 cell">
           <ul class="footer_links menu">
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/privacy">Privacy</a></li>
-            <li><a href="/policies">Policies</a></li>
-            <li><a href="/terms">Terms</a></li>
-            <li><a href="/faq">FAQ</a></li>
+            <li><a href="https://creativecommons.org/contact">Contact</a></li>
+            <li><a href="https://creativecommons.org/privacy">Privacy</a></li>
+            <li><a href="https://creativecommons.org/policies">Policies</a></li>
+            <li><a href="https://creativecommons.org/terms">Terms</a></li>
+            <li><a href="https://creativecommons.org/faq">FAQ</a></li>
           </ul>
       </div>
       <hr>
@@ -36,9 +36,9 @@
         <div class="medium-3 large-3 medium-offset-1 large-offset-1 cell footer_license">
           <aside>
           <div xmlns:cc="https://creativecommons.org/ns#" about="https://creativecommons.org">
-            <p><a class="subfoot" href="/website-icons" target="blank">Icons</a>
+            <p><a class="subfoot" href="https://creativecommons.org/website-icons" target="blank">Icons</a>
                by The Noun Project.</p>
-            <p class="website-credit">Website by <a class="subfoot" href="http://affinitybridge.com/"
+            <p class="website-credit">Website by <a class="subfoot" href="https://creativecommons.org"
             target="blank">CC</a>.</p>
           </div>
           </aside>
@@ -71,6 +71,7 @@ export default {
 .footer {
   padding: 30px;
   margin-bottom: 0;
+  background-color: #f7f8f9;
 
   hr {
     max-width: 100%;

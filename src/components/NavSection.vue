@@ -1,24 +1,26 @@
 <template>
-  <nav class="nav">
-    <a href="/">
-      <img class="nav_logo" src="../assets/cc-logo_white.png">
-    </a>
-    <div class="row column medium-5 large-4 align-center nav_search"
+  <nav class="nav grid-x grid-padding-x">
+    <div class="cell small-12 medium-12 large-6">
+      <a href="/">
+        <img class="nav_logo" src="../assets/cc-logo_white.png">
+      </a>
+    </div>
+    <div class="cell small-12 medium-12 large-6 align-center nav_search"
          v-if="showNavSearch ==='true'">
-        <form class="hero_search-form"
-              role="search"
-              method="post"
-              v-on:submit.prevent="onSubmit">
-          <div class="input-group input-group-rounded">
-            <input class="input-group-field"
-                   type="search"
-                   placeholder="Search the commons..."
-                   v-model.lazy="form.searchTerm">
-            <div class="input-group-button">
-              <button type="submit" class="button secondary" value="Search"></button>
-            </div>
+      <form class="hero_search-form"
+            role="search"
+            method="post"
+            v-on:submit.prevent="onSubmit">
+        <div class="input-group input-group-rounded">
+          <input class="input-group-field"
+                 type="search"
+                 placeholder="Search the commons..."
+                 v-model.lazy="form.searchTerm">
+          <div class="input-group-button">
+            <button type="submit" class="button secondary" value="Search"></button>
           </div>
-        </form>
+        </div>
+      </form>
     </div>
   </nav>
 </template>
@@ -45,17 +47,23 @@ export default {
 }
 
 .nav_logo {
-  padding-left: 30px;
+  margin: 15px 0 15px 15px;
   height: 30px;
-  margin: 15px 0;
 }
 
-.nav_search {
-  float: right;
+.hero_search-form {
+  margin: 0 15px;
+
+  /* Large and up */
+  @media screen and (min-width: 64em) {
+    float: right;
+  }
 }
+
 .input-group-rounded {
   margin: 9px 0;
   width: 400px;
+  max-width: 100%;
 
   .input-group-field {
     border-radius: 3px;
@@ -93,10 +101,4 @@ export default {
   }
 }
 
-/* Small only */
-@media screen and (max-width: 39.9375em) {
-  .nav_logo {
-    padding-left: 15px;
-  }
-}
 </style>

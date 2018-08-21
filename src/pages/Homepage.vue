@@ -6,7 +6,10 @@
       <header class="featured-images_header">
         <h2 class="featured-items_title">Top Categories</h2>
       </header>
-      <div class="featured-images_inner grid-x grid-margin-x grid-margin-y">
+      <div class="featured-images_inner
+                  grid-x
+                  grid-margin-x
+                  grid-margin-y">
         <div @click="onCategoryClick('people')"
              class="featured-images_item small-6 medium-3 cell">
           <span class="featured-images_banner">People</span>
@@ -34,33 +37,41 @@
       <h2 class="featured-items_title">Top Images</h2>
     </header>
     <div  class="header-grid">
-        <div v-for="(image, index) in images" v-if="index < 4"
-             :class="image.class" :key="index"
-             @click="onGotoDetailPage(image)">
+      <figure v-for="(image, index) in images" v-if="index < 4"
+           :class="image.class" :key="index"
+           @click="onGotoDetailPage(image)">
+         <a :href="image.url"
+             @click.prevent="() => false"
+             target="new">
           <img :src="image.src" />
-          <div class="grid_item-overlay">
-            <a class="grid_overlay-title"
-               :href="image.url"
-               @click.stop="() => false"
-               target="new">
-               {{ image.title }}
-            </a>
-          </div>
-        </div>
+        </a>
+        <figcaption class="grid_item-overlay">
+          <a class="grid_overlay-title"
+             :href="image.url"
+             @click.stop="() => false"
+             target="new">
+             {{ image.title }}
+          </a>
+        </figcaption>
+      </figure>
       <div class="bottom-block">
-        <div v-for="(image, index) in images" v-if="index > 3"
+        <figure v-for="(image, index) in images" v-if="index > 3"
              :class="image.class" :key="index"
              @click="onGotoDetailPage(image)">
-          <img :src="image.src" />
-          <div class="grid_item-overlay">
+           <a :href="image.url"
+             @click.prevent="() => false"
+             target="new">
+            <img :src="image.src" />
+          </a>
+          <figcaption class="grid_item-overlay">
             <a class="grid_overlay-title"
                :href="image.url"
                @click.stop="() => false"
                target="new">
                {{ image.title }}
             </a>
-          </div>
-        </div>
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -190,7 +201,7 @@ $vert-seperate: 4rem;
 }
 
 .featured-images_banner {
-  background-color: rgba(9, 87, 174, .8);
+  background-color: rgba(38, 45, 29, .8);
   color: #fefefe;
   font-weight: 600;
   left: 0;

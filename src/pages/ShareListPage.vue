@@ -16,7 +16,7 @@
           <router-link :to="{ name: 'photo-detail-page', params: { id: image.id }}">
             <article class="article-row">
               <div class="article-row-img">
-                <img class="share-list_image" :src="image.thumbnail">
+                <img class="share-list_image" :src="image.thumbnail || image.url">
               </div>
               <div class="article-row-content">
                 <h2 class="article-row-content-header">{{ image.title }}</h2>
