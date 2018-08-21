@@ -3,7 +3,7 @@ variable "vpc_id" {
 }
 
 variable "environment" {
-  description = "The staging environment of a deployment, typically 'dev' or 'prod'."
+  description = "The environment suffix. Either an empty string for dev or `-prod` in production."
 }
 
 variable "min_size" {
