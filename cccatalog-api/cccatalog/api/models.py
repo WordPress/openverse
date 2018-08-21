@@ -172,5 +172,5 @@ class ShortenedLink(OpenLedgerModel):
                   "URL will be shares.cc/tc3n834.",
         db_index=True
     )
-    full_url = models.URLField(unique=True, max_length=1000)
+    full_url = models.URLField(unique=True, max_length=1000, db_index=True)
     created_on = models.DateTimeField(auto_now_add=True, db_index=True)

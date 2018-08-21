@@ -1,4 +1,5 @@
 from django.http import HttpResponsePermanentRedirect
+from django.db.utils import IntegrityError
 from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
 from rest_framework.decorators import throttle_classes
@@ -35,21 +36,23 @@ class CreateShortenedLink(GenericAPIView):
                 data=serialized.errors
             )
 
-        shortened_path = serialized.save()
-        if shortened_path:
+        try:
+            shortened_path = serialized.save()
             shortened_url = settings.ROOT_SHORTENING_URL + '/' + shortened_path
-            return Response(
-                status=200,
-                data={
-                    'shortened_url': shortened_url
-                }
-            )
-        else:
-            return Response(
-                status=500,
-                data='Failed to generate a shortened link due to a server-side '
-                     'error.'
-            )
+        except IntegrityError:
+            # The full URL has already been shortened. Return the already
+            # existing URL.
+            shortened_path = ShortenedLink \
+                .objects \
+                .get(full_url=full_url) \
+                .shortened_path
+            shortened_url = settings.ROOT_SHORTENING_URL + '/' + shortened_path
+        return Response(
+            status=200,
+            data={
+                'shortened_url': shortened_url
+            }
+        )
 
 class ResolveShortenedLink(APIView):
     @swagger_auto_schema(operation_id="link_resolve",

@@ -43,13 +43,13 @@ class SearchImages(APIView):
                     "validation_error": params.errors
                 }
             )
-        page = params.data['page']
+        page_param = params.data['page']
         page_size = params.data['pagesize']
         try:
             search_results = search_controller.search(params,
                                                       index='image',
                                                       page_size=page_size,
-                                                      page=page)
+                                                      page=page_param)
         except ValueError:
             return Response(
                 status=400,
