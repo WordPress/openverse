@@ -52,7 +52,6 @@ def search(search_params, index, page_size, page=1) -> Response:
                 query=keywords,
                 fields=['detailed_tags^2', 'tags^2', 'creator', 'title^2'],
                 operator='AND'))
-
     s.extra(track_scores=True)
     search_response = s.execute()
     return search_response
