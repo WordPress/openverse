@@ -21,8 +21,9 @@
         @click="onGotoDetailPage(image)">
         <a :href="image.foreign_landing_url"
              @click.prevent="() => false"
-             target="new">
-          <img class="search-grid_image" :src="image.thumbnail || image.url">
+             target="new"
+             class="search-grid_image-ctr">
+          <img class="search-grid_image" :src="image.thumbnail || image.url" >
         </a>
         <figcaption class="search-grid_item-overlay">
           <a class="search-grid_overlay-title"
@@ -163,6 +164,14 @@ export default {
   .infinite-loading-container {
     margin-top: 30px;
     width: 100%;
+  }
+
+  .search-grid_image-ctr {
+    background: #EBECE4;
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
   }
 
   .search-grid_item {

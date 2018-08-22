@@ -1,11 +1,11 @@
 <template>
   <nav class="nav grid-x grid-padding-x">
-    <div class="cell small-12 medium-12 large-6">
+    <div class="cell small-6 medium-12 large-6">
       <a href="/">
         <img class="nav_logo" src="../assets/cc-logo_white.png">
       </a>
     </div>
-    <div class="cell small-12 medium-12 large-6 align-center nav_search"
+    <div class="cell small-6 medium-12 large-6 align-center nav_search"
          v-if="showNavSearch ==='true'">
       <form class="hero_search-form"
             role="search"

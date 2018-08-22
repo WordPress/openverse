@@ -6,8 +6,10 @@
     <div class="photo grid-x">
         <div class="photo_image-ctr cell medium-12 large-8">
           <img @click="onShowViewer"
-               :class="{ photo_image: true, 'photo_image__has-viewer': this.images.length > 0 }"
-               :src="image.url">
+               @load="() => isPrimaryImageLoaded = true"
+               :class="{ photo_image: true,
+                         'photo_image__has-viewer': this.images.length > 0 }"
+                         :src="image.url">
         </div>
         <div class="photo_info-ctr cell medium-12 large-4">
           <header class="photo_info-header">
@@ -71,9 +73,9 @@
       </header>
       <div class="photo_tags-ctr cell large-12">
         <a v-for="(tag, index) in image.tags"
-                :key="index" class="photo_tag button"
-                @click="onGotoSearchPage(tag.name)">
-                {{ tag.name }}
+           :key="index" class="photo_tag button"
+           @click="onGotoSearchPage(tag.name)">
+          {{ tag.name }}
         </a>
       </div>
     </div>
@@ -88,11 +90,12 @@
         :filter="filter"
         :includeAnalytics="false"
         :useInfiniteScroll="false"
-        :includeAddToList="false">
+        :includeAddToList="false"
+        v-if="isPrimaryImageLoaded===true">
       </search-grid>
     </div>
     <footer-section></footer-section>
-    <viewer :images="images" ref="imageViewer">
+    <viewer :images="images" ref="imageViewer" v-if="isPrimaryImageLoaded===true">
       <div class="photo_image-viewer" v-viewer="{movable: false}">
         <img v-for="(image, index) in images" :src="image.url" :key="index">
       </div>
@@ -124,6 +127,7 @@ const PhotoDetailPage = {
   },
   data: () => ({
     imagecountseparator: 'of',
+    isPrimaryImageLoaded: false,
     keyinput: true,
     modalclose: true,
     mousescroll: true,
@@ -216,6 +220,9 @@ const PhotoDetailPage = {
         viewer.show();
       }
     },
+    onImageLoad() {
+      this.loadSupportingImages();
+    },
   },
   created() {
     this.loadImage(this.$route.params.id);
@@ -282,13 +289,13 @@ export default PhotoDetailPage;
     padding: 30px;
     max-height: 640px;
 
-
     img {
       position: relative;
       width: auto;
       height: auto;
       max-height: 100%;
       max-width: 100%;
+      background: #EBECE4;
     }
 
     /* Small only */
