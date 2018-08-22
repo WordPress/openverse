@@ -171,6 +171,19 @@ resource "aws_alb_listener" "ccc-api-asg-listener" {
   }
 }
 
+resource "aws_alb_listener" "ccc-api-asg-listener-ssl" {
+  load_balancer_arn = "${aws_alb.cccatalog-api-load-balancer.id}"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = "arn:aws:acm:us-east-1:664890800379:certificate/813282df-000a-4fa6-b077-22b728b61f6b"
+
+  default_action {
+    target_group_arn = "${aws_alb_target_group.ccc-api-asg-target.id}"
+    type             = "forward"
+  }
+}
+
 resource "aws_security_group" "cccatalog-alb-sg" {
   name   = "cccatalog-alb-sg${var.environment}"
   vpc_id = "${var.vpc_id}"
@@ -178,6 +191,12 @@ resource "aws_security_group" "cccatalog-alb-sg" {
   ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -214,6 +233,12 @@ resource "aws_security_group" "short-proxy-sg" {
   ingress {
     from_port       = 80
     to_port         = 80
+    protocol        = "tcp"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port       = 443
+    to_port         = 443
     protocol        = "tcp"
     cidr_blocks     = ["0.0.0.0/0"]
   }
