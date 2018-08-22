@@ -12,28 +12,29 @@ data "template_file" "init" {
 
   # Pass configuration variables to the script
   vars {
-    database_host         = "${var.database_host}"
-    database_password     = "${var.database_password}"
-    django_debug_enabled  = "${var.django_debug_enabled}"
-    django_secret_key     = "${var.django_secret_key}"
-    git_revision          = "${var.git_revision}"
-    load_balancer_url     = "${aws_alb.cccatalog-api-load-balancer.dns_name}"
-    wsgi_auth_credentials = "${var.wsgi_auth_credentials}"
-    aws_access_key_id     = "${var.aws_access_key_id}"
-    aws_secret_access_key = "${var.aws_secret_access_key}"
-    elasticsearch_url     = "${var.elasticsearch_url}"
-    elasticsearch_port    = "${var.elasticsearch_port}"
-    aws_region            = "${var.aws_region}"
-    api_version           = "${var.api_version}"
-    redis_host            = "${var.redis_host}"
-    redis_password        = "${var.redis_password}"
-    root_shortening_url   = "${var.root_shortening_url}"
+    database_host             = "${var.database_host}"
+    database_password         = "${var.database_password}"
+    django_debug_enabled      = "${var.django_debug_enabled}"
+    django_secret_key         = "${var.django_secret_key}"
+    git_revision              = "${var.git_revision}"
+    load_balancer_url         = "${aws_alb.cccatalog-api-load-balancer.dns_name}"
+    wsgi_auth_credentials     = "${var.wsgi_auth_credentials}"
+    aws_access_key_id         = "${var.aws_access_key_id}"
+    aws_secret_access_key     = "${var.aws_secret_access_key}"
+    elasticsearch_url         = "${var.elasticsearch_url}"
+    elasticsearch_port        = "${var.elasticsearch_port}"
+    aws_region                = "${var.aws_region}"
+    api_version               = "${var.api_version}"
+    redis_host                = "${var.redis_host}"
+    redis_password            = "${var.redis_password}"
+    root_shortening_url       = "${var.root_shortening_url}"
+    disable_global_throttling = "${var.disable_global_throttling}"
   }
 }
 
 # API server autoscaling launch configuration
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
-  name_prefix              = "cccatalog-api-asg-${var.environment}"
+  name_prefix              = "cccatalog-api-asg${var.environment}"
   image_id                 = "ami-b70554c8"
   instance_type            = "${var.instance_type}"
   security_groups          = ["${aws_security_group.cccatalog-sg.id}",
@@ -61,7 +62,7 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
 
   tag {
     key                 = "Name"
-    value               = "cccatalog-api-autoscaling-group-${var.environment}"
+    value               = "cccatalog-api-autoscaling-group${var.environment}"
     propagate_at_launch = true
   }
 

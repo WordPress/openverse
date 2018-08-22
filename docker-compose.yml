@@ -49,6 +49,7 @@ services:
       DJANGO_DEBUG_ENABLED: "True"
       ELASTICSEARCH_URL: "es"
       ELASTICSEARCH_PORT: "9200"
+      DISABLE_GLOBAL_THROTTLING: "True"
     stdin_open: true
     tty: true
 

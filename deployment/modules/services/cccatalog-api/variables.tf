@@ -92,3 +92,8 @@ variable "ccc_api_host" {
 variable "root_shortening_url" {
   description = "The domain of the link shortener (e.g. dev.shares.cc)"
 }
+
+variable "disable_global_throttling" {
+  description = "Disable the global rate limiter. Method-level rate limiters will still apply."
+  default     = "False"
+}

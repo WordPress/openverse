@@ -23,6 +23,7 @@ export REVISION="${git_revision}"
 export REDIS_HOST="${redis_host}"
 export REDIS_PASSWORD="${redis_password}"
 export ROOT_SHORTENING_URL="${root_shortening_url}"
+export DISABLE_GLOBAL_THROTTLING="${disable_global_throttling}"
 export SEMANTIC_VERSION="$${SEMANTIC_VERSION}"
 EOF
 source /etc/environment

@@ -98,6 +98,10 @@ REST_FRAMEWORK = {
     },
 }
 
+if os.environ.get('DISABLE_GLOBAL_THROTTLING', default=False) in true_strings:
+    del REST_FRAMEWORK['DEFAULT_THROTTLE_RATES']
+    del REST_FRAMEWORK['DEFAULT_THROTTLE_CLASSES']
+
 CACHES = {
     # Site cache writes to 'default'
     "default": {
