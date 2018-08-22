@@ -220,9 +220,6 @@ const PhotoDetailPage = {
         viewer.show();
       }
     },
-    onImageLoad() {
-      this.loadSupportingImages();
-    },
   },
   created() {
     this.loadImage(this.$route.params.id);
