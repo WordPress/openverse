@@ -56,18 +56,12 @@
 <script>
 export default {
   name: 'footer-section',
-  data() {
-    return {
-      msg: '',
-    };
-  },
 };
 </script>
 
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-
 .footer {
   padding: 30px;
   margin-bottom: 0;

@@ -17,11 +17,6 @@ export default {
     HeroSection,
   },
   props: ['showHero', 'showNavSearch', 'fixedNav'],
-  data() {
-    return {
-      msg: 'Share, Collaborate, Remix, Reuse',
-    };
-  },
 };
 </script>
 
