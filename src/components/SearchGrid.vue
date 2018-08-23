@@ -225,6 +225,7 @@ export default {
       content: '';
       background: url('../assets/plus-icon.svg') no-repeat;
       background-size: 18px;
+      background-position: center center;
       opacity: .5;
     }
 
@@ -313,6 +314,13 @@ export default {
     .search-grid_item {
       width: 100%;
       height: 100%;
+    }
+
+    .search-grid_overlay-add {
+      position: absolute;
+      width:  44px;
+      height: 44px;
+      bottom: 0;
     }
   }
 </style>

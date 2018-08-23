@@ -1,6 +1,5 @@
 <template>
 <transition name="fade">
-{{ this.isVisible }}
 <div class="share-bar" v-if="this.isVisible">
     <div class="grid-x grid-margin-x">
       <a href="#" @click.prevent="onCloseBar" class="share-bar_close-btn">close</a>
@@ -253,5 +252,4 @@ export default {
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s;
   }
-
 </style>

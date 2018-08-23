@@ -165,30 +165,7 @@ export default ShareListPage;
   color: $dark-gray;
 }
 
-
 .article-row-content-license a:hover {
   text-decoration: underline;
-}
-
-.article-row-reversed {
-  .article-row-content {
-    order: 2;
-    padding: 0 1.5rem 0 0;
-  }
-
-  .article-row-img {
-    order: 1;
-    padding: 0 0 1.5rem 0;
-  }
-
-  @include breakpoint(medium) {
-    .article-row-content {
-      order: 1;
-    }
-
-    .article-row-img {
-      order: 2;
-    }
-  }
 }
 </style>
