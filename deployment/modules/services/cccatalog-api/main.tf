@@ -32,10 +32,28 @@ data "template_file" "init" {
   }
 }
 
+# Web server AMI
+data "aws_ami" "amazon_linux_2" {
+    most_recent = true
+
+    filter {
+        name   = "name"
+        values = ["amzn2-ami-hvm-2.0.*x86_64-gp2"]
+    }
+
+    filter {
+        name   = "virtualization-type"
+        values = ["hvm"]
+    }
+
+    owners = ["137112412989"] # Amazon
+}
+
+
 # API server autoscaling launch configuration
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
   name_prefix              = "cccatalog-api-asg${var.environment}"
-  image_id                 = "ami-b70554c8"
+  image_id                 = "${data.aws_ami.amazon_linux_2.id}"
   instance_type            = "${var.instance_type}"
   security_groups          = ["${aws_security_group.cccatalog-sg.id}",
                               "${aws_security_group.cccatalog-api-ingress.id}"]

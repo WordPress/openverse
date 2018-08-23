@@ -73,7 +73,7 @@ uwsgi --chdir=/home/ec2-user/cccatalog-api \
       --harakiri=30 \
       --stats=/tmp/stats.socket
 
-# Put nginx in front of uWSGI for static content serving + SSL encryption
+# Put nginx in front of uWSGI for static content serving
 sudo amazon-linux-extras install nginx1.12
 sudo cat << EOF > /etc/nginx/nginx.conf
 user nginx;
@@ -100,6 +100,14 @@ http {
     tcp_nodelay         on;
     keepalive_timeout   65;
     types_hash_max_size 2048;
+
+    # Compress large responses to save bandwidth and improve latency
+    gzip on;
+    gzip_min_length 860;
+    gzip_vary on;
+    gzip_proxied expired no-cache no-store private auth;
+    gzip_types application/json text/plain application/javascript;
+    gzip_disable "MSIE [1-6]\.";
 
     include             /etc/nginx/mime.types;
     default_type        application/octet-stream;

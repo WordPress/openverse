@@ -11,14 +11,15 @@ class BrowseResults(TaskSet):
             image_id = random.choice(self.parent.results)['id']
             self.client.get("/image/{}".format(image_id), name="/image/[id]")
 
-    @task(1)
+    @task(10)
     def favorite_images(self):
         pass
         if self.parent.results:
             list_length = random.choice([2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 9])
             selected_images = self.parent.results[0:list_length]
             ids = [image['id'] for image in selected_images]
-            self.client.post("/list", {"title": "Load test", "images": ids})
+            self.client.post("/list",
+                             {"title": "Load test" + str(ids), "images": ids})
 
     @task(10)
     def shorten_link(self):
@@ -53,5 +54,5 @@ class UserBehavior(TaskSet):
 
 class SearchUser(HttpLocust):
     task_set = UserBehavior
-    min_wait = 1000
-    max_wait = 20000
+    min_wait = 3000
+    max_wait = 9000
