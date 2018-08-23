@@ -1,3 +1,11 @@
+"""
+Content Provider:       DeviantArt
+
+ETL Process:            Identify the various artworks that are
+                        available under a Creative Commons license.
+
+Output:                 TSV file containing images of artworks and their respective meta-data.
+"""
 from Provider import Provider
 import logging
 from bs4 import BeautifulSoup
@@ -37,9 +45,11 @@ class DeviantArt(Provider):
         license             = None
         version             = None
         imageURL            = None
+        formatted           = None
 
         self.clearFields()
 
+        #verify the license
         licenseInfo = soup.find('a', {'rel': 'license', 'href': True})
         if licenseInfo:
             ccURL               = urlparse(licenseInfo.attrs['href'].strip())
@@ -57,6 +67,10 @@ class DeviantArt(Provider):
             imgProperty = soup.find('meta', {'property': 'og:image'})
             if imgProperty:
                 imageURL    = self.validateContent('', imgProperty, 'content')
+                if 'main/logo/card_black_large.png' in imageURL:
+                    logger.info('Image not available. Image url: {}'.format(_url))
+                    return None
+
                 imgWidth    = self.validateContent('', soup.find('meta', {'property': 'og:image:width'}), 'content')
                 imgHeight   = self.validateContent('', soup.find('meta', {'property': 'og:image:height'}), 'content')
 
@@ -68,6 +82,7 @@ class DeviantArt(Provider):
                 return None
 
 
+            #get the title
             self.title = self.validateContent('', soup.find('meta', {'property': 'og:title'}), 'content')
 
             #creator
@@ -99,5 +114,7 @@ class DeviantArt(Provider):
                 self.metaData   = otherMetaData
 
 
-            return self.formatOutput()
+            formatted = list(self.formatOutput)
+
+            return formatted
 

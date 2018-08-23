@@ -1,3 +1,12 @@
+"""
+Content Provider:       Flickr
+
+ETL Process:            Identify all images that are available under a Creative
+                        Commons license.
+
+Output:                 TSV file containing images of artworks and their respective meta-data.
+"""
+
 from Provider import Provider
 import logging
 from bs4 import BeautifulSoup
@@ -37,9 +46,11 @@ class Flickr(Provider):
         license             = None
         version             = None
         imageURL            = None
+        formatted           = []
 
         self.clearFields()
 
+        #verify license
         licenseInfo = soup.find('a', {'class': 'photo-license-url', 'href': True})
         if licenseInfo:
             ccURL               = urlparse(licenseInfo.attrs['href'].strip())
@@ -49,14 +60,18 @@ class Flickr(Provider):
                 logger.warning('License not detected in url: {}'.format(_url))
                 return None
 
-            self.license           = license
-            self.licenseVersion   = version
+            self.license            = license
+            self.licenseVersion     = version
 
 
             #get the image
             imgProperty = soup.find('meta', {'property': 'og:image'})
             if imgProperty:
                 imageURL    = self.validateContent('', imgProperty, 'content')
+                if 's.yimg.com/pw/images/photo_unavailable_copyright.gif' in imageURL:
+                    logger.info('Image has been removed due to a claim of copyright / IP infringement. Image url: {}'.format(_url))
+                    return None
+
                 imgWidth    = self.validateContent('', soup.find('meta', {'property': 'og:image:width'}), 'content')
                 imgHeight   = self.validateContent('', soup.find('meta', {'property': 'og:image:height'}), 'content')
 
@@ -120,4 +135,7 @@ class Flickr(Provider):
                 self.metaData = otherMetaData
 
 
-            return self.formatOutput()
+            formatted = list(self.formatOutput)
+
+            return formatted
+

@@ -1,3 +1,13 @@
+"""
+Content Provider:       Geograph - UK
+
+ETL Process:            Identify geographically representative images of
+                        Great Britain and Ireland, that are available under a
+                        Creative Commons license.
+
+Output:                 TSV file containing images of artworks and their respective meta-data.
+"""
+
 from Provider import Provider
 import logging
 from bs4 import BeautifulSoup
@@ -37,9 +47,11 @@ class GeographOrgUK(Provider):
         license             = None
         version             = None
         imageURL            = None
+        formatted           = None
 
         self.clearFields()
 
+        #verify the license
         licenseInfo = soup.find('a', {'rel': 'license', 'href': True})
         if licenseInfo:
             ccURL               = urlparse(licenseInfo.attrs['href'].strip())
@@ -127,5 +139,7 @@ class GeographOrgUK(Provider):
                 self.metaData = otherMetaData
 
 
-            return self.formatOutput()
+            formatted = list(self.formatOutput)
+
+            return formatted
 

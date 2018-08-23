@@ -1,8 +1,10 @@
 """
-Data Transformation: Process the extracted links for the Met Museum.
+Content Provider:       The Metropolitan Museum of Art
 
-Identify all licensed content (i.e. images) and their associated meta-data by
-scraping the html from Common Crawl's WARC files.
+ETL Process:            Identify all public domain artworks, in the Met collection,
+                        by scraping the html from Common Crawl's WARC files.
+
+Output:                 TSV file containing images of artworks and their respective meta-data.
 """
 from Provider import Provider
 import requests
@@ -45,9 +47,12 @@ class MetMuseum(Provider):
         src                 = None
         license             = None
         version             = None
+        formatted           = None
+        extracted           = []
 
         self.clearFields()
 
+        #identify the license
         try:
             src = [anchor['href'] for anchor in soup.find_all('a', href=True) if 'creativecommons.org' in anchor['href']]
 
@@ -62,7 +67,7 @@ class MetMuseum(Provider):
                 return None
 
 
-            collectionImage = soup.find('a', attrs={'name': '#collectionImage'})
+            '''collectionImage = soup.find('a', attrs={'name': '#collectionImage'})
             if collectionImage:
                 img         = collectionImage.findChild('img')
 
@@ -79,7 +84,7 @@ class MetMuseum(Provider):
 
             else:
                 logger.warning('Image not detected in url: {}'.format(_url))
-                return None
+                return None'''
 
 
         except Exception as e:
@@ -101,8 +106,10 @@ class MetMuseum(Provider):
                 return None
 
 
+            #get the title
             tombstone['title'] = soup.select('h1.{}object-title'.format(clsPrefix))[0].string
 
+            #get the tombstone data
             x = soup.select('.{}tombstone'.format(clsPrefix))[0]
             for row in x.find_all("dl"):
                 try:
@@ -114,29 +121,29 @@ class MetMuseum(Provider):
                 except Exception as ex:
                     logger.warning('{}:{} in url:{}'.format(type(ex).__name__, ex, _url))
 
-            try:
-                desc    = soup.select('div.{}label'.format(clsPrefix))[0]
-                details = soup.select('div.{}facets'.format(clsPrefix))
+            desc    = soup.find('div', {'class': '{}label'.format(clsPrefix)})
+            details = soup.find_all('div', {'class': '{}facets'.format(clsPrefix)})
 
-            except Exception as ex2:
-                logger.warning('{}:{} in url:{}'.format(type(ex2).__name__, ex2, _url))
+            #get the summary/description of the artwork
+            if desc and desc.contents[0].strip():
+                desc = desc.contents[0].strip().encode('unicode-escape')
+                tombstone['description'] = desc.encode('unicode-escape')
 
-            else:
-                if desc and desc.text.strip():
-                    tombstone['description'] = desc.text.strip().encode('unicode-escape')
-
-                for item in details:
-                    lbl = item.select('label')[0].string
-                    lbl = re.sub('(\s\/\s)|(\s+)', '_', lbl).lower().strip().encode('unicode-escape')
-                    obj = item.select('a')
-                    obj = [re.sub('\(.*?\)', '', i.text) for i in obj]
-                    obj = ','.join([str(o.encode('unicode-escape')).strip() for o in obj])
-                    tombstone[lbl] = obj
+            #get the meta data
+            for item in details:
+                lbl = item.select('label')[0].string
+                lbl = re.sub('(\s\/\s)|(\s+)', '_', lbl).lower().strip().encode('unicode-escape')
+                obj = item.select('a')
+                obj = [re.sub('\(.*?\)', '', i.text) for i in obj]
+                obj = ','.join([str(o.encode('unicode-escape')).strip() for o in obj])
+                tombstone[lbl] = obj
 
 
+            #obtain the url from the HTML meta tag or default to common crawl's url
             self.foreignLandingURL  = self.validateContent(_url, soup.find('meta', {'property': 'og:url'}), 'content')
             foreignID               = self.getForeignID(self.foreignLandingURL)
 
+            #extract the foreign identifer
             if foreignID:
                 self.foreignIdentifier = foreignID.strip()
             else:
@@ -144,22 +151,62 @@ class MetMuseum(Provider):
                 return None
 
 
-            if 'artist_maker_culture' in tombstone:
-                self.creator = tombstone['artist_maker_culture'].strip().encode('unicode-escape')
-                del tombstone['artist_maker_culture']
+            if 'artist' in tombstone:
+                self.creator = tombstone['artist'].strip().encode('unicode-escape')
+                del tombstone['artist']
 
             if 'title' in tombstone and tombstone['title'] is not None:
                 self.title = tombstone['title'].strip().encode('unicode-escape')
                 del tombstone['title']
 
 
-            if tombstone:
-                self.metaData = tombstone
+            self.provider   = self.name
+            self.source     = 'commoncrawl'
 
 
-            self.provider  = self.name
-            self.source    = 'commoncrawl'
+            #get the images and thumbnails
+            images = soup.find_all('img', {'class': 'met-carousel__item__thumbnail'})
+            if not images:
+                images = soup.find_all('img', {'id': '{}image'.format(clsPrefix)})
+            if images:
+                for img in images:
+                    self.thumbnail  = ''
+                    self.url        = ''
+                    self.metaData   = {}
+
+                    if img:
+                        if len(images) == 1:
+                            if 'src' in img.attrs:
+                                imageURL = self.validateContent('', img, 'src')
+                                self.url = imageURL
+
+                                if '/web-large/' in imageURL:
+                                    self.thumbnail = imageURL.replace('/web-large/', '/web-additional/')
+
+                            if 'alt' in img.attrs:
+                                tombstone['image_alt_text'] = self.validateContent('', img, 'alt')
+
+                        else:
+                            if 'src' in img.attrs:
+                                self.thumbnail = self.validateContent('', img, 'src')
+
+                            if 'data-superjumboimage' in img.attrs:
+                                self.url                = self.validateContent('', img, 'data-superjumboimage')
+                                self.foreignIdentifier  = self.url
+
+                            if 'alt' in img.attrs:
+                                tombstone['image_alt_text'] = self.validateContent('', img, 'alt')
+
+                    else:
+                        logger.warning('Image not detected in url: {}'.format(_url))
+                        continue
 
 
-            return self.formatOutput()
+                    if tombstone:
+                        self.metaData = tombstone
+
+                    extracted.extend(self.formatOutput)
+
+
+            return extracted
 
