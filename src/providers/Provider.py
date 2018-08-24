@@ -7,7 +7,7 @@ import requests
 import logging
 from pyspark.sql import SQLContext
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import concat, col, lit
+from pyspark.sql.functions import concat, col, lit, when
 
 
 logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] =======> %(message)s', level=logging.INFO)
@@ -44,21 +44,22 @@ class Provider:
 
         self.provider               = ''
         self.source                 = ''
-        self.foreign_identifier     = ''
-        self.foreign_landing_url    = ''
+        self.foreignIdentifier      = ''
+        self.foreignLandingURL      = ''
         self.url                    = ''
         self.thumbnail              = ''
         self.width                  = ''
         self.height                 = ''
         self.filesize               = ''
         self.license                = ''
-        self.license_version        = ''
+        self.licenseVersion         = ''
         self.creator                = ''
-        self.creator_url            = ''
+        self.creatorURL             = ''
         self.title                  = ''
-        self.meta_data              = {}
+        self.metaData               = {}
+        self.tags                   = {}
+        self.translationAvailable   = 'f'
         self.watermarked            = 'f'
-        self.translation_available  = 'f'
 
 
 
@@ -96,18 +97,38 @@ class Provider:
         self.creatorURL             = ''
         self.title                  = ''
         self.metaData               = {}
+        self.tags                   = {}
+        self.translationAvailable   = None
         self.watermarked            = 'f'
-        self.translation_available  = 'f'
 
 
+    @property
+    def getTags(self):
+        maxTags = 20
+        if 'tags' in self.metaData:
+            self.tags = self.metaData['tags']
+            del self.metaData['tags']
+
+            return [{'name': tag, 'provider': self.provider} for tag in list(set(self.tags.split(',')))[:maxTags]]
+        else:
+            return self.tags
+
+
+    @property
     def formatOutput(self):
-        return [
-            self.foreignIdentifier,
+        if self.translationAvailable == True:
+            self.metaData['alternate_language_available'] = 't'
+
+        #format the tags
+        self.tags = self.getTags
+
+        yield [
+            self.url if not self.foreignIdentifier else self.foreignIdentifier,
             self.foreignLandingURL,
             self.url,
             self.thumbnail,
-            self.width,
-            self.height,
+            int(float(self.width)) if self.width else '',
+            int(float(self.height)) if self.height else '',
             self.filesize,
             self.license,
             self.licenseVersion,
@@ -115,8 +136,8 @@ class Provider:
             self.creatorURL,
             self.title,
             json.dumps(self.metaData),
+            json.dumps(self.tags),
             self.watermarked,
-            self.translation_available,
             self.provider,
             self.source
             ]
@@ -135,7 +156,7 @@ class Provider:
         if self.crawlIndex is None:
             raise ValueError('Common Crawl index not specified!')
 
-        return 'transformed/{}/{}'.format(self.crawlIndex, self.name.lower())
+        return 'image_data/{}/{}'.format(self.crawlIndex, self.name.lower())
 
 
     def getForeignID(self, _str):
@@ -155,10 +176,10 @@ class Provider:
             return [None, None]
 
         pattern   = re.compile('/(licenses|publicdomain)/([a-z\-?]+)/(\d\.\d)/?(.*?)')
-        if pattern.match(_path):
-            result  = re.search(pattern, _path)
-            license = result.group(2).lower()
-            version = result.group(3)
+        if pattern.match(_path.lower()):
+            result  = re.search(pattern, _path.lower())
+            license = result.group(2).lower().strip()
+            version = result.group(3).strip()
 
             if result.group(1) == 'publicdomain':
                 if license == 'zero':
@@ -169,9 +190,14 @@ class Provider:
                     logger.warning('License not detected!')
                     return [None, None]
 
+            elif (license == ''):
+                logger.warning('License not detected!')
+                return [None, None]
+
+
             return [license, version]
 
-        return None
+        return [None, None]
 
 
     def validateContent(self, _default, _html=None, _property=None):
@@ -192,23 +218,23 @@ class Provider:
 
         try:
             response    = requests.get(uri, headers={'Range': rnge})
-
-        except Exception as e:
-            logger.error('{}: {}'.format(type(e).__name__, e))
-            return None
-
-        else:
             content     = StringIO.StringIO(response.content)
             fh          = gzip.GzipFile(fileobj=content)
 
             return fh.read()
 
+        except (IOError, Exception) as e:
+            logger.error('{}: {}'.format(type(e).__name__, e))
+            return None
+
 
     def getData(self):
         spk         = SparkSession.builder.getOrCreate()
         dataDF      = spk.read.parquet(self.input)
-        providerDF  = dataDF.select(concat('provider_domain', 'content_path').alias('url'), \
-                                     concat('warc_segment', lit('/warc/'), 'warc_filename').alias('warc_filename'), \
+        providerDF  = dataDF.select(concat(concat('provider_domain', 'content_path'), \
+                            when(col('content_query_string') != '', concat(lit('?'), col('content_query_string')))\
+                            .otherwise(lit(''))).alias('url'), \
+                            concat('warc_segment', lit('/warc/'), 'warc_filename').alias('warc_filename'), \
                                      'content_offset', 'deflate_length')\
                             .where(col('provider_domain').like('%{}'.format(self.domain)))\
                             .dropDuplicates(['url'])
@@ -221,7 +247,7 @@ class Provider:
     def filterData(self, _data, _condition=None):
 
         if _condition:
-            data = filter(lambda x: _condition in x.split('\t')[0], _data)
+            data = filter(lambda x: _condition.lower() in x.split('\t')[0].lower(), _data)
             self.data = data
         else:
             self.data = _data
@@ -251,10 +277,23 @@ class Provider:
 
 
     def saveData(self, _data):
-        spk = SparkSession.builder.getOrCreate()
-        df  = spk.createDataFrame(_data)#.map(lambda x: tuple(x.split('\t'))))
-        #df.write.mode('overwrite').options(sep='\t').csv(self.output)
-        df.write.mode('overwrite').options(sep='\t', quote='').csv(self.output)
+        #spk = SparkSession.builder.getOrCreate()
+        #df  = spk.createDataFrame(_data)
+        #df.write.mode('overwrite').options(sep='\t', quote='').csv(self.output)
+
+        dataDF = _data.toDF(['foreign_identifier', 'foreign_landing_url',
+                        'url', 'thumbnail', 'width', 'height', 'filesize', 'license',
+                        'license_version', 'creator', 'creator_url', 'title', 'meta_data',
+                        'tags', 'watermarked', 'provider', 'source'])
+
+        #remove duplicate image urls
+        result = dataDF.dropDuplicates(['provider', 'url'])
+
+        #remove duplicate foreign IDs
+        result = result.dropDuplicates(['provider', 'foreign_identifier'])
+
+        #write to file
+        result.coalesce(1).write.mode('overwrite').options(sep='\t', quote='').csv(self.output)
 
 
     def extractHTML(self, _iter):
@@ -277,6 +316,9 @@ class Provider:
                 and a json string with additional meta-data.
         """
 
+        logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] =======> %(message)s', level=logging.INFO)
+        logger = logging.getLogger(__name__)
+
         for row in _iter:
             data        = row.split('\t')
             metaData    = None
@@ -288,4 +330,6 @@ class Provider:
 
                 if metaData:
                     yield metaData
+                else:
+                    logger.warning('Content not found for url: {}, warc file: {}, offset: {}, length: {}.'.format(data[0].strip(), data[1].strip(), data[2].strip(), data[3].strip()))
 

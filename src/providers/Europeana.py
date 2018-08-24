@@ -126,7 +126,8 @@ class Europeana(Provider):
                 extracted.extend(self.formatOutput)
 
 
-        elif '/record/' in _url:
+        #elif '/record/' in _url:
+        else:
             record = soup.find_all('div', {'class': 'single-item-thumb'})
             if not record:
                 record = soup.find_all('div', {'class': 'mlt-img-div height-to-width'})

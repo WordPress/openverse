@@ -1,3 +1,11 @@
+"""
+Content Provider:       Museums Victoria - Collections of palaeontology, zoology, indigenous cultures etc.
+
+ETL Process:            Identify images and their respective meta data that are available under a
+                        Creative Commons license.
+
+Output:                 TSV file containing images of artworks and their respective meta-data.
+"""
 from Provider import Provider
 import logging
 from bs4 import BeautifulSoup
@@ -16,7 +24,8 @@ class MuseumVictoria(Provider):
 
     def filterData(self, _data, _condition=None):
         #Images can be located in four main content paths: /species, /items, /articles, and /specimens.
-        allowed = map(lambda x: '{}{}'.format(self.domain, x), ['/species/', '/items/', '/articles/', '/specimens/'])
+        #/articles reference existing images. Extracing them will result in duplicates.
+        allowed = map(lambda x: '{}{}'.format(self.domain, x), ['/species/', '/items/', '/specimens/'])
         data    = filter(lambda x: x.split('\t')[0].startswith(tuple(allowed)), _data)
         self.data = data
 
@@ -46,6 +55,8 @@ class MuseumVictoria(Provider):
         license             = None
         version             = None
         imageURL            = None
+        formatted           = []
+        extracted           = []
 
         self.clearFields()
 
@@ -67,14 +78,14 @@ class MuseumVictoria(Provider):
             #get the image
             imgProperty = soup.find('meta', {'property': 'og:image'})
             if imgProperty:
-                imageURL                        = self.validateContent('', imgProperty, 'content')
-                imgWidth                        = self.validateContent('', soup.find('meta', {'property': 'og:image:width'}), 'content')
-                imgHeight                       = self.validateContent('', soup.find('meta', {'property': 'og:image:height'}), 'content')
+                imageURL        = self.validateContent('', imgProperty, 'content')
+                imgWidth        = self.validateContent('', soup.find('meta', {'property': 'og:image:width'}), 'content')
+                imgHeight       = self.validateContent('', soup.find('meta', {'property': 'og:image:height'}), 'content')
 
-                self.url       = imageURL
-                self.thumbnail = [imageURL.replace('-medium', '-thumbnail') if '-medium.' in imageURL else ''][0].encode('unicode-escape')
-                self.width     = imgWidth
-                self.height    = imgHeight
+                self.url        = imageURL
+                self.thumbnail  = [imageURL.replace('-medium', '-thumbnail') if '-medium.' in imageURL else ''][0].encode('unicode-escape')
+                self.width      = imgWidth
+                self.height     = imgHeight
 
             else:
                 logger.warning('Image not detected in url: {}'.format(_url))
@@ -84,6 +95,7 @@ class MuseumVictoria(Provider):
             self.title = self.validateContent('', soup.find('meta', {'property': 'og:title'}), 'content')
 
 
+            #owner/credits
             creatorInfo     = soup.find('div', {'class':'creators'})
             if creatorInfo:
                 creator = creatorInfo.text.strip()
@@ -102,12 +114,12 @@ class MuseumVictoria(Provider):
                 logger.warning('Identifier not detected in: {}'.format(_url))
                 return None
 
-            thumbnails  = soup.find_all('div', {'class': 'thumbnail'})
+            '''thumbnails  = soup.find_all('div', {'class': 'thumbnail'})
             if thumbnails:
                 thumbnails                          = ['{}{}'.format(self.domain, x.img['src'].encode('unicode-escape')) for x in thumbnails]
                 allImages                           = [x.replace('-thumbnail', '-medium') for x in thumbnails]
                 otherMetaData['thumbnails']         = ','.join(thumbnails)
-                otherMetaData['additional_images']  = ','.join(allImages)
+                otherMetaData['additional_images']  = ','.join(allImages)'''
 
 
             #summary
@@ -135,6 +147,7 @@ class MuseumVictoria(Provider):
             self.source                 = 'commoncrawl'
             self.foreignLandingURL      = _url
 
+            #tags
             if otherMetaData:
                 if 'keywords' in otherMetaData:
                     otherMetaData['tags'] = otherMetaData['keywords']
@@ -147,8 +160,39 @@ class MuseumVictoria(Provider):
 
                 self.metaData = otherMetaData
 
+            #get the additional images
+            thumbnails = soup.find_all('div', {'class': 'thumbnail'})
+            if thumbnails and len(thumbnails) > 1:
+                for item in thumbnails:
+                    img                     = item.findChild('img')
+                    self.url                = ''
+                    self.thumbnail          = ''
+                    self.foreignIdentifier  = ''
 
-            return self.formatOutput()
+                    if 'image_alt_text' in otherMetaData:
+                        del otherMetaData['image_alt_text']
+
+                    if 'src' in img.attrs:
+                        self.thumbnail          = '{}{}'.format(self.domain, self.validateContent('', img, 'src'))
+                        self.url                = self.thumbnail.replace('-thumbnail', '-medium')
+                        self.foreignIdentifier  = self.url
+
+                        if 'alt' in img.attrs:
+                            otherMetaData['image_alt_text'] = self.validateContent('', img, 'alt')
+
+                    else:
+                        logger.warning('Image not detected in url: {}'.format(_url))
+                        continue
+
+                    self.metaData = otherMetaData
+                    extracted.extend(self.formatOutput)
+
+
+                return extracted
+            else:
+                formatted = list(self.formatOutput)
+
+                return formatted
 
 
 
