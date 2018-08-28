@@ -10,7 +10,6 @@ SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
---SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -31,7 +30,7 @@ CREATE TABLE public.image (
     perceptual_hash character varying(255),
     provider character varying(80),
     source character varying(80),
-    foreign_identifier character varying(80),
+    foreign_identifier character varying(1000),
     foreign_landing_url character varying(1000),
     url character varying(1000) NOT NULL,
     thumbnail character varying(1000),
@@ -46,7 +45,10 @@ CREATE TABLE public.image (
     tags_list character varying(255)[],
     last_synced_with_source timestamp with time zone,
     removed_from_source boolean NOT NULL,
-    meta_data jsonb
+    meta_data jsonb,
+    view_count integer NOT NULL,
+    tags jsonb NOT NULL,
+    watermarked boolean NOT NULL
 );
 
 

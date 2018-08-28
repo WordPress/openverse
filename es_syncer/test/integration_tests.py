@@ -84,7 +84,7 @@ class TestReplication(unittest.TestCase):
 if __name__ == '__main__':
     log_level = logging.INFO if ENABLE_DETAILED_LOGS else logging.CRITICAL
     logging.basicConfig(level=log_level)
-    docker_stdout = DEVNULL
+    docker_stdout = None if ENABLE_DETAILED_LOGS else DEVNULL
 
     # Generate an up-to-date docker-compose integration test file.
     return_code = \
