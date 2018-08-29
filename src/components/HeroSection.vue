@@ -1,10 +1,10 @@
 <template>
   <div class="hero">
     <p class="hero_image-attribution">
-      <a href="https://www.flickr.com/photos/140462483@N05/36763898452/in/photolist-Y1GAb9-KFbgie-iRNK5P-FwSJtx-r3JwHJ-dmDxZk-2458TsV-sdNGNQ-NiPCqj-HxRj66-21jgWwY-dpcacC-FVoUb7-25LQb3p-DwTY2Q-27khBQQ-HufH3f-229EUc1-HqUu8L-YiecAE-22Xstqx-23q3WXQ-29Zr9UK-23w96zW-27ar4VE-28j1rxF-28GXPmh-25D6ugy-22KJEyo-ihoLz1-22Rg6xT-29FEvvX-EgQ6T1-4xZBHM-CQcEax-9aqoKJ-pfH1iK-qb612F-26zRQdy-218Y6Zo-28PB4Wa-dsYdav-XPFsk9-225xzhN-22eRiqK-XnJxyW-25Gn2yq-27YYYqE-JRw6D2-23rSQWb"
+      <a href="https://www.flickr.com/photos/mtrienke/24336908909/"
          target="_blank"
          rel="noreferrer">
-        Photo by Антон Потемин from flickr
+        Photo by Markus Trienke from flickr
       </a>
       <span class="hero_instagram-icon">&nbsp;</span>
     </p>
