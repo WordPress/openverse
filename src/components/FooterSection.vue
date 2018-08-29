@@ -50,15 +50,15 @@
       </div>
       <div class="large-12 cell">
         <div class="footer_disclaimer callout warning">
-          This is the first release of the new CC Search, aggregating data from publicly available
-          repositories of open content. CC has no control over the results that are returned.
-          Do not assume that the results displayed in this search portal are
-          under a CC license.  You should always verify that the work is actually
-          under a CC license by following the link. Since there is no registration
-          to use a CC license, CC has no way to determine what has and hasn't been
-          placed under the terms of a CC license. If you are in doubt you should
-          contact the copyright holder directly, or try to contact the site where
-          you found the content.
+          This is the first release of the new CC Search, aggregating data from publicly
+          available repositories of open content. CC has no control over the results that
+          are returned. Do not assume that the results displayed in this search portal are
+          under a CC license. You should always follow the link to verify that the work is
+          actually under a CC license and to verify the requirements of that license, including
+          the proper form of attribution. Since there is no registration to use a CC license, CC
+          has no way to determine what has and hasn't been placed under the terms of a CC license.
+          If you are in doubt you should contact the copyright holder directly, or try to contact
+          the site where you found the content.
         </div>
       </div>
    </div>
