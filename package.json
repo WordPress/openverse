@@ -25,6 +25,7 @@
     "vue": "^2.5.2",
     "vue-axios": "^2.1.2",
     "vue-infinite-loading": "^2.3.2",
+    "vue-multiselect": "^2.1.0",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {

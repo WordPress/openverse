@@ -10,8 +10,9 @@
         <label><span>Providers</span></label>
         <select v-model="filter.provider" v-on:change="onUpdateFilter">
           <option v-for="(provider, index) in providers"
-                  :key="index">
-            {{ provider }}
+                  :key="index"
+                  :value="provider.value">
+            {{ provider.text }}
           </option>
         </select>
       </div>
@@ -84,17 +85,17 @@ export default {
   data: () => (
     { providers:
       [
-        '',
-        'rijksmuseum',
-        'nypl',
-        'museumvictoria',
-        'met',
-        'geographorguk',
-        'flickr',
-        'europeana',
-        'deviantart',
-        'behance',
-        '500px',
+        { value: '', text: '' },
+        { value: 'rijksmuseum', text: 'Museum of the Netherlands' },
+        { value: 'nypl', text: 'New York Public Library' },
+        { value: 'museumvictoria', text: 'Museums Victoria' },
+        { value: 'met', text: 'Metropolitan Museum of Art', },
+        { value: 'geographorguk', text: 'Geograph® Britain and Ireland' },
+        { value: 'flickr', text: 'Flickr' },
+        { value: 'europeana', text: 'Europena collections' },
+        { value: 'deviantart', text: 'DeviantArt' },
+        { value: 'behance', text: 'Behance' },
+        { value: '500px', text: '500px' },
       ],
     licenses:
       [
