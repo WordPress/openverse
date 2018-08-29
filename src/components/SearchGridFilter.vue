@@ -89,7 +89,7 @@ export default {
         { value: 'rijksmuseum', text: 'Museum of the Netherlands' },
         { value: 'nypl', text: 'New York Public Library' },
         { value: 'museumvictoria', text: 'Museums Victoria' },
-        { value: 'met', text: 'Metropolitan Museum of Art', },
+        { value: 'met', text: 'Metropolitan Museum of Art' },
         { value: 'geographorguk', text: 'Geograph® Britain and Ireland' },
         { value: 'flickr', text: 'Flickr' },
         { value: 'europeana', text: 'Europena collections' },

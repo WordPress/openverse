@@ -35,10 +35,14 @@
         </div>
         <div class="medium-3 large-3 medium-offset-1 large-offset-1 cell footer_license">
           <aside>
-          <div xmlns:cc="https://creativecommons.org/ns#" about="https://creativecommons.org">
-            <p><a class="subfoot" href="https://creativecommons.org/website-icons" target="blank">Icons</a>
+          <div xmlns:cc="https://creativecommons.org/ns#"
+               about="https://creativecommons.org">
+            <p><a class="subfoot"
+                   href="https://creativecommons.org/website-icons"
+                   target="blank">Icons</a>
                by The Noun Project.</p>
-            <p class="website-credit">Website by <a class="subfoot" href="https://creativecommons.org"
+            <p class="website-credit">Website by <a class="subfoot"
+               href="https://creativecommons.org"
             target="blank">CC</a>.</p>
           </div>
           </aside>
@@ -46,7 +50,15 @@
       </div>
       <div class="large-12 cell">
         <div class="footer_disclaimer callout warning">
-          This is the first release of the new CC Search, aggregating data from publicly available repositories of open content. CC has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. You should always verify that the work is actually under a CC license by following the link. Since there is no registration to use a CC license, CC has no way to determine what has and hasn't been placed under the terms of a CC license. If you are in doubt you should contact the copyright holder directly, or try to contact the site where you found the content.
+          This is the first release of the new CC Search, aggregating data from publicly available
+          repositories of open content. CC has no control over the results that are returned.
+          Do not assume that the results displayed in this search portal are
+          under a CC license.  You should always verify that the work is actually
+          under a CC license by following the link. Since there is no registration
+          to use a CC license, CC has no way to determine what has and hasn't been
+          placed under the terms of a CC license. If you are in doubt you should
+          contact the copyright holder directly, or try to contact the site where
+          you found the content.
         </div>
       </div>
    </div>
