@@ -62,7 +62,7 @@ const BrowsePage = {
     const queryParam = this.$route.query.q;
 
     this.$store.commit(SET_IMAGES,
-        { images: [] },
+      { images: [] },
     );
 
     if (queryParam) {

@@ -39,9 +39,12 @@
                 <i class="fi-list">
                     <svg xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
-                    xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="1.1"
+                    xmlns:dc="http://purl.org/dc/elements/1.1/"
+                    xmlns:cc="http://creativecommons.org/ns#"
+                    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="1.1"
                     id="DESIGNS" x="0px" y="0px" width="24px" height="24px" fill="color: #2c3e50"
-                    viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+                    viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;"
+                    xml:space="preserve">
                     <title property="dc:title">to filter</title><desc property="dc:description">
                     An icon for "filter" from the Lines and Angles series on to [icon].
                     Downloaded from http://www.toicon.com/icons/lines-and-angles_filter
