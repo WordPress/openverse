@@ -178,9 +178,11 @@ $vert-seperate: 4rem;
 
 .featured-images {
   margin: 30px 0;
-  background: #f7f8f9;
   padding: 30px;
-  border: 1px solid #e7e8e9;
+
+  &_header {
+    padding-bottom: 10px;
+  }
 
   /* Small only */
   @media screen and (max-width: 39.9375em) {
@@ -201,7 +203,7 @@ $vert-seperate: 4rem;
 }
 
 .featured-images_banner {
-  background-color: rgba(38, 45, 29, .8);
+  background-color: rgba(12, 10, 14, .7);
   color: #fefefe;
   font-weight: 600;
   left: 0;
@@ -266,6 +268,12 @@ $vert-seperate: 4rem;
   "small-middle small-middle big-middle big-middle big-middle"
   "big-bottom big-bottom big-bottom big-bottom big-bottom";
   margin: 15px 0;
+
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    display: block;
+    height: auto;
+  }
 }
 
 .grid-item {
@@ -287,6 +295,12 @@ $vert-seperate: 4rem;
   color: #fff;
   background: linear-gradient(to top, rgba(0,0,0,.5) 0, rgba(0,0,0,0) 100%);
   padding: 10px;
+
+    /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    bottom: 0;
+    opacity: 1;
+  }
 }
 
 .grid_overlay-title {
@@ -347,5 +361,11 @@ $vert-seperate: 4rem;
   grid-area: big-bottom;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    display: block;
+    height: auto;
+  }
 }
 </style>

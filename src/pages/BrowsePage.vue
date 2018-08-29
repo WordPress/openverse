@@ -29,6 +29,7 @@ import ShareBar from '@/components/ShareBar';
 import { FETCH_IMAGES } from '@/store/action-types';
 import { SET_GRID_FILTER, SET_IMAGES } from '@/store/mutation-types';
 
+
 const BrowsePage = {
   name: 'browse-page',
   components: {
@@ -87,6 +88,8 @@ export default BrowsePage;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
 <style lang="scss">
   .search-grid {
     margin: 30px 30px 60px 30px;
