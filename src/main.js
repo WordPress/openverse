@@ -10,8 +10,6 @@ import store from './store';
 
 Vue.config.productionTip = false;
 
- // register globally
- Vue.component('multiselect', Multiselect)
 
 
 ApiService.init();
