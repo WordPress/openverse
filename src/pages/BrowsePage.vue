@@ -2,7 +2,7 @@
   <div class="browse-page">
     <div class="search grid-x flexible">
       <div class="cell">
-        <header-section>
+        <header-section :isHeaderFixed="isHeaderFixed">
           <search-grid-form :query="query"></search-grid-form>
         </header-section>
       </div>
@@ -39,6 +39,9 @@ const BrowsePage = {
     SearchGrid,
     FooterSection,
   },
+  data: () => ({
+    isHeaderFixed: false,
+  }),
   computed: {
     images() {
       return this.$store.state.images;
@@ -57,6 +60,21 @@ const BrowsePage = {
     getImages(params) {
       this.$store.dispatch(FETCH_IMAGES, params);
     },
+    onScroll() {
+      const scrollYPosition = window.scrollY;
+
+      if (!this.ticking) {
+        window.requestAnimationFrame(() => {
+          if (scrollYPosition > 134) {
+            this.isHeaderFixed = true;
+          } else {
+            this.isHeaderFixed = false;
+          }
+          this.ticking = false;
+        });
+        this.ticking = true;
+      }
+    },
   },
   created() {
     const queryParam = this.$route.query.q;
@@ -74,6 +92,9 @@ const BrowsePage = {
         this.getImages({ q: this.query, ...mutation.payload.filter });
       }
     });
+
+    this.ticking = false;
+    window.addEventListener('scroll', this.onScroll);
   },
   beforeDestroy() {
     this.unsubscribe();

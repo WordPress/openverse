@@ -101,6 +101,7 @@ export default {
 <style lang="scss" scoped>
   .search-form {
     width: 100%;
+    background: #fff;
     border-bottom: 1px solid #E6EAEA;
   }
 
