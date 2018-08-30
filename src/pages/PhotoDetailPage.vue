@@ -263,12 +263,18 @@ export default PhotoDetailPage;
 
   .photo_paginator__previous {
     left: 5px;
-    background: url('../assets/arrow-icon_left.svg') center center no-repeat;
+    background: url('../assets/arrow-icon_left.svg')
+                center
+                center
+                no-repeat;
   }
 
   .photo_paginator__next {
     right: 5px;
-    background: url('../assets/arrow-icon_right.svg') center center no-repeat;
+    background: url('../assets/arrow-icon_right.svg')
+                center
+                center
+                no-repeat;
   }
 
   .search-grid {
