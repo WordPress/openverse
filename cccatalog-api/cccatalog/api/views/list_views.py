@@ -88,6 +88,8 @@ class ListDetail(_List, RetrieveModelMixin):
 
     @staticmethod
     def _authenticated(list_model, request):
+        if 'HTTP_AUTHORIZATION' not in request.META:
+            return False
         return list_model.auth == \
                request.META['HTTP_AUTHORIZATION'].split(' ')[1]
 
@@ -143,7 +145,6 @@ class ListDetail(_List, RetrieveModelMixin):
             _list = ImageList.objects.get(slug=slug)
         except ImageList.DoesNotExist:
             return Response(status=404)
-        supplied_auth = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
         if self._authenticated(_list, request):
             _list.images.clear()
             _list.images.add(*serialized.validated_data['images'])
