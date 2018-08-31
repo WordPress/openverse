@@ -142,7 +142,13 @@ class ImageList(OpenLedgerModel):
         max_length=200,
         help_text="A unique identifier used to make a friendly URL for "
                   "downstream API consumers.",
-        unique=True
+        unique=True,
+        db_index=True
+    )
+    auth = models.CharField(
+        max_length=64,
+        help_text="A randomly generated string assigned upon list creation. "
+                  "Used to authenticate updates and deletions."
     )
 
     class Meta:
