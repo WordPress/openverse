@@ -115,6 +115,14 @@ class ListDetail(_List, RetrieveModelMixin):
         else:
             return Response(status=403)
 
+    @swagger_auto_schema(operation_id="list_update",
+                         request_body=ImageListUpdateSerializer,
+                         responses={
+                             204: 'No Content',
+                             400: 'Validation error',
+                             403: 'Forbidden',
+                             404: 'Not Found'
+                         })
     def put(self, request, slug, format=None):
         """ Update the contents of a list. """
         serialized = ImageListUpdateSerializer(data=request.data)
@@ -123,7 +131,6 @@ class ListDetail(_List, RetrieveModelMixin):
                 status=400,
                 data=serialized.errors
             )
-
         try:
             _list = ImageList.objects.get(slug=slug)
         except ImageList.DoesNotExist:
@@ -135,4 +142,3 @@ class ListDetail(_List, RetrieveModelMixin):
             return Response(status=204)
         else:
             return Response(status=403)
-
