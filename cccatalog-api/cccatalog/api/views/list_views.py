@@ -105,6 +105,10 @@ class ListDetail(_List, RetrieveModelMixin):
                              404: 'Not Found'
                          })
     def delete(self, request, slug, format=None):
+        """
+        Delete an entire list. Requires authentication via a bearer token
+         in the authorization header. See `list_create` for details.
+        """
         try:
             _list = ImageList.objects.get(slug=slug)
         except ImageList.DoesNotExist:
@@ -124,7 +128,11 @@ class ListDetail(_List, RetrieveModelMixin):
                              404: 'Not Found'
                          })
     def put(self, request, slug, format=None):
-        """ Update the contents of a list. """
+        """
+        Replace the contents of the list with a new image set.
+        Requires authentication via a bearer token in the authorization
+        header. See `list_create` for details.
+        """
         serialized = ImageListUpdateSerializer(data=request.data)
         if not serialized.is_valid():
             return Response(
