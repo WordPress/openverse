@@ -45,12 +45,15 @@ def search(search_params, index, page_size, page=1) -> Response:
         for provider in search_params.data['provider'].split(','):
             provider_filters.append(Q("term", provider=provider))
         s = s.filter('bool', should=provider_filters, minimum_should_match=1)
+    if 'creator' in search_params.data:
+        creator_filter = Q("term", creator=search_params.data['creator'])
+        s = s.filter('bool', should=creator_filter, minimum_should_match=1)
 
     # Search for keywords.
     keywords = ' '.join(search_params.data['q'].lower().split(','))
     s = s.query("constant_score", filter=Q("multi_match",
                 query=keywords,
-                fields=['detailed_tags^2', 'tags^2', 'creator', 'title^2'],
+                fields=['detailed_tags', 'tags', 'title'],
                 operator='AND'))
     s.extra(track_scores=True)
     search_response = s.execute()

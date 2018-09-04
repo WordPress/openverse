@@ -40,6 +40,12 @@ class _SearchQueryStringSerializer(serializers.Serializer):
                   "Should be an integer between 1 and 500.",
         default=20
     )
+    creator = serializers.CharField(
+        label="creator",
+        help_text="Filter results so that only those by a certain author will"
+                  " appear.",
+        required=False
+    )
 
     def validate(self, data):
         if 'li' in data and 'lt' in data:
@@ -82,6 +88,14 @@ class _SearchQueryStringSerializer(serializers.Serializer):
                 resolved_licenses.add(_license.lower())
 
         return ','.join(list(resolved_licenses))
+
+    def validate_creator(self, value):
+        if len(value) <= 2000:
+            return value
+        else:
+            raise serializers.ValidationError(
+                "Creator query exceeds 2000 characters."
+            )
 
     def validate_page(self, value):
         if value < 1:
