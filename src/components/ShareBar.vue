@@ -149,17 +149,12 @@ export default {
     display: inline-block;
   }
 
-  .share-bar_close-btn {
+  .share-bar_close-btn,
+  .share-bar_clear-btn {
     position: absolute;
+    bottom: 10px;
     right: 10px;
     text-decoration: underline;
-
-    /* Small only */
-    @media screen and (max-width: 39.9375em) {
-      & {
-        bottom: 10px;
-      }
-    }
   }
 
   .share-bar_image-remove-btn {
