@@ -1,12 +1,44 @@
 
 import ApiService from './ApiService';
 
+const SHARE_LIST_KEY = 'cc-share-lists';
+
 const ShareListService = {
   /**
    * Implements an endpoint to create a list.
    */
   createList(params) {
-    return ApiService.post('/list', { title: params.listTitle, images: params.images });
+    const list = { title: params.listTitle, images: params.images };
+
+    return ApiService.post('/list', list);
+  },
+  /**
+   * Implements an endpoint to gets all lists from local storage.
+   */
+  getListsFromLocalStorage() {
+    const list = JSON.parse(localStorage.getItem(SHARE_LIST_KEY));
+
+    return Promise.resolve(list);
+  },
+  /**
+   * Implements an endpoint to delete the list to local storage.
+   */
+  deleteListToLocalStorage(listID) {
+    let lists = this.getListsFromLocalStorage();
+    delete lists[listID];
+    localStorage.setItem(SHARE_LIST_KEY, JSON.stringify(lists));
+
+    return Promise.resolve(lists);
+  },
+  /**
+   * Implements an endpoint to save the list to local storage.
+   */
+  saveListToLocalStorage(listID, listAuthToken) {
+    let lists = this.getListsFromLocalStorage();
+    lists[listID] = listAuthToken;
+    localStorage.setItem(SHARE_LIST_KEY, JSON.stringify(lists));
+
+    return Promise.resolve(lists);
   },
   /**
    * Implements an endpoint to create a shortened list url.
