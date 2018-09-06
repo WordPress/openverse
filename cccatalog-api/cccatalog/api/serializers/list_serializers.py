@@ -45,6 +45,7 @@ class ImageListResponseSerializer(serializers.Serializer):
     """
     lookup_field = 'slug'
     id = serializers.ReadOnlyField()
+    title = serializers.CharField()
     images = ImageDetailSerializer(many=True)
 
 
