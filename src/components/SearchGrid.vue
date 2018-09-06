@@ -191,7 +191,10 @@ export default {
     height: 30px;
     bottom: -100%;
     color: #fff;
-    background: linear-gradient(to top, rgba(0,0,0,.5) 0, rgba(0,0,0,0) 100%);
+    background: linear-gradient(to top,
+                rgba(0,0,0,.5)
+                0,
+                rgba(0,0,0,0) 100%);
     padding: 0 10px;
     display: block;
   }
