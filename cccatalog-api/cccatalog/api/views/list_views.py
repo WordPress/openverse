@@ -82,6 +82,7 @@ class ListDetail(_List, RetrieveModelMixin):
             return Response(status=404)
         resolved = {
             'id': slug,
+            'title': _list.title,
             'images': [model_to_dict(x) for x in _list.images.all()]
         }
         return Response(status=200, data=resolved)
@@ -96,10 +97,12 @@ class ListDetail(_List, RetrieveModelMixin):
     @swagger_auto_schema(operation_id="list_delete",
                          security=[
                              {
-                                 "anonymous_list": {
-                                     "type": "basic"
+                                 "list key": {
+                                    "type": "apiKey",
+                                    "name": "api_key",
+                                    "in": "header"
                                  }
-                             }
+                             },
                          ],
                          responses={
                              204: '',
