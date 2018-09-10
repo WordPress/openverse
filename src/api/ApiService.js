@@ -6,7 +6,7 @@ import es6Promise from 'es6-promise';
 
 es6Promise.polyfill();
 
-const BASE_URL = 'https://api-dev.creativecommons.engineering';
+const BASE_URL =  process.env.API_URL || 'https://api-dev.creativecommons.engineering';
 
 
 const ApiService = {
