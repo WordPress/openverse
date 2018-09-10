@@ -7,6 +7,6 @@ module "ccsearch" {
 
   vpc_id                    = "vpc-b741b4cc"
   environment               = "-prod"
-  git_revision              = "35331eab680c362a8edc7e7d371b742f0ed2736f"
+  git_revision              = "3b7f2306f1faa7a7ca728ddb112e66bea7a6c065"
   instance_type             = "t2.small"
 }
