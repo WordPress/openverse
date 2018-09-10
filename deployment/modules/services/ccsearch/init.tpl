@@ -13,6 +13,8 @@ sudo npm run build
 sudo mkdir -p /var/www/ccsearch
 sudo cp -r dist/* /var/www/ccsearch/
 
+# Configure frontend
+export API_URL="${api_url}"
 # Serve frontend
 sudo amazon-linux-extras install nginx1.12
 sudo cat << EOF > /etc/nginx/nginx.conf

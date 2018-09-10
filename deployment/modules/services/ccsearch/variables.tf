@@ -14,3 +14,7 @@ variable "environment" {
 variable "git_revision"{
   description = "The git commit hash to deploy."
 }
+
+variable "api_url" {
+  description = "The fully qualified base URL of the API server. Example: https://api-dev.creativecommons.engineering"
+}

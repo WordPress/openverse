@@ -17,7 +17,7 @@ def import_lists_to_catalog(parsed_lists):
             'images': _list['images']
         }
         response = requests.post(
-            'http://api-dev.creativecommons.engineering/list',
+            'http://api.creativecommons.engineering/list',
             data=payload
         )
         if 300 > response.status_code >= 200:
@@ -38,9 +38,9 @@ def import_lists_to_catalog(parsed_lists):
 
 
 if __name__ == '__main__':
-    with open('csvs/lists.csv', 'r') as lists, \
-            open('csvs/list_images.csv', 'r') as list_images, \
-            open('csvs/users.csv', 'r') as users:
+    with open('csvs/prod/lists.csv', 'r') as lists, \
+            open('csvs/prod/list_images.csv', 'r') as list_images, \
+            open('csvs/prod/users.csv', 'r') as users:
         lists = csv.DictReader(lists)
         list_images = csv.DictReader(list_images)
         users = csv.DictReader(users)

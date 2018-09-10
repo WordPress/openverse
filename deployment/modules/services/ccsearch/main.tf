@@ -10,6 +10,7 @@ data "template_file" "init" {
   # Pass configuration variables to the script
   vars {
     git_revision = "${var.git_revision}"
+    api_url      = "${var.api_url}"
   }
 }
 # Web server AMI

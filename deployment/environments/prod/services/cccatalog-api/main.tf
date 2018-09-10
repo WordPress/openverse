@@ -43,6 +43,7 @@ module "cccatalog-api" {
   redis_host                = "ip-172-30-1-251.ec2.internal"
   ccc_api_host              = "api.creativecommons.engineering"
   root_shortening_url       = "shares.cc"
+  disable_global_throttling = "True"
 
   # Secrets not checked into version control. Override with -var-file=secrets.tfvars
   database_password         = "${var.database_password}"
