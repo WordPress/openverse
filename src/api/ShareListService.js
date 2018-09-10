@@ -24,7 +24,7 @@ const ShareListService = {
    * Implements an endpoint to delete the list to local storage.
    */
   deleteListToLocalStorage(listID) {
-    let lists = this.getListsFromLocalStorage();
+    const lists = this.getListsFromLocalStorage();
     delete lists[listID];
     localStorage.setItem(SHARE_LIST_KEY, JSON.stringify(lists));
 
@@ -34,7 +34,7 @@ const ShareListService = {
    * Implements an endpoint to save the list to local storage.
    */
   saveListToLocalStorage(listID, listAuthToken) {
-    let lists = this.getListsFromLocalStorage();
+    const lists = this.getListsFromLocalStorage();
     lists[listID] = listAuthToken;
     localStorage.setItem(SHARE_LIST_KEY, JSON.stringify(lists));
 

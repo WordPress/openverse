@@ -4,5 +4,5 @@ const prodEnv = require('./prod-env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  API_URL: process.env.API_URL
+  API_URL: '"https://api-dev.creativecommons.engineering"',
 })

@@ -4,5 +4,5 @@ const devEnv = require('./dev-env')
 
 module.exports = merge(devEnv, {
   NODE_ENV: '"testing"',
-  API_URL: process.env.API_URL
+  API_URL: '"https://api-dev.creativecommons.engineering"',
 })

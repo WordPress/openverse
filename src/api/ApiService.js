@@ -6,11 +6,9 @@ import es6Promise from 'es6-promise';
 
 es6Promise.polyfill();
 
-const BASE_URL =  process.env.API_URL || 'https://api-dev.creativecommons.engineering';
-
 
 const ApiService = {
-  init(baseUrl = BASE_URL, authParams) {
+  init(baseUrl = process.env.API_URL, authParams) {
     Vue.use(VueAxios, axios);
     Vue.axios.defaults.baseURL = baseUrl;
     Vue.axios.defaults.auth = authParams;
