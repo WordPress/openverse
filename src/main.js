@@ -11,6 +11,7 @@ Vue.config.productionTip = false;
 
 ApiService.init();
 
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
