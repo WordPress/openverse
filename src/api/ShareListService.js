@@ -74,8 +74,8 @@ const ShareListService = {
   updateList(params) {
     return ApiService.update('/list',
       params.id,
-      params.images,
-      { Authorization: `Bearer ${params.auth}` }
+      { images: params.images },
+      { Authorization: `Bearer ${params.auth}` },
     );
   },
   /**
