@@ -24,7 +24,7 @@ def import_lists_to_catalog(parsed_lists):
             json_response = json.loads(response.text)
             new_url = json_response['url']
             success += 1
-            print(_list['email'], new_url, _list['title'], sep=',')
+            print(_list['email'], new_url, _list['title'], sep='||')
         else:
             # A handful of lists from the legacy application are empty, which
             # isn't accepted in the new API. Skip over them and log it.
