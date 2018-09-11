@@ -38,8 +38,8 @@ const ApiService = {
     return Vue.axios.post(`${resource}`, params);
   },
 
-  update(resource, slug, params, header) {
-    return Vue.axios.put(`${resource}/${slug}`, params, { header });
+  update(resource, slug, params, headers) {
+    return Vue.axios.put(`${resource}/${slug}`, params, { headers });
   },
 
   put(resource, params) {

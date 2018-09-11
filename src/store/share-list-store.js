@@ -61,10 +61,10 @@ const actions = {
     commit(FETCH_START);
 
     return ShareListService.getList(params)
-      .then(({ images }) => {
+      .then(({ data })=> {
         let imageIDs;
-        if (images) {
-          imageIDs = images.map(image => image.id);
+        if (data.images) {
+          imageIDs = data.images.map(image => image.id);
         }
 
         return ShareListService.updateList(

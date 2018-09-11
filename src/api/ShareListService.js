@@ -72,7 +72,11 @@ const ShareListService = {
    * Implements an endpoint to update a list.
    */
   updateList(params) {
-    return ApiService.update('/list_update', params.id, params.ids, { auth: params.auth });
+    return ApiService.update('/list',
+      params.id,
+      params.images,
+      { Authorization: `Bearer ${params.auth}` }
+    );
   },
   /**
    * Implements an endpoint to delete a list.
@@ -80,7 +84,7 @@ const ShareListService = {
   deleteList(params) {
     ApiService.setHeader({ auth: params.auth });
 
-    return ApiService.delete('/list_delete', params.id);
+    return ApiService.delete('/list', params.id);
   },
   /**
    * Implements an endpoint to get a list based on ID.
