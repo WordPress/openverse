@@ -63,9 +63,9 @@ const actions = {
 
     return ShareListService.getList(params)
       .then(({ data }) => {
-        let imageIDs;
+        let imageIDs = [params.selectedImageID];
         if (data.images) {
-          imageIDs = data.images.map(image => image.id);
+          imageIDs = imageIDs.concat(data.images.map(image => image.id));
         }
 
         return ShareListService.updateList(

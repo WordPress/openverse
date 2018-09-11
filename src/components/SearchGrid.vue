@@ -121,7 +121,7 @@ export default {
     onGotoDetailPage(image) {
       this.$router.push(`/photos/${image.id}`);
     },
-    onAddToImageList(image) {
+    onAddToImageList(image, event) {
       this.$store.commit(SELECT_IMAGE_FOR_LIST, { image });
     },
     searchChanged() {

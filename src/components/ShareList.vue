@@ -150,7 +150,7 @@ export default {
     onAddToList(list) {
       this.$store.dispatch(UPDATE_LIST, {
         auth: list.auth,
-        selectedImageID: this.selectedImages[0],
+        selectedImageID: this.selectedImages[0].id,
         id: list.listID,
       });
     },
