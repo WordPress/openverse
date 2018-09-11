@@ -15,6 +15,7 @@ import {
 const state = {
   selectedImages: [],
   shareLists: [],
+  shareListImages: [],
   shareListURL: '',
   isFetching: false,
   isListClean: true,
