@@ -13,7 +13,7 @@
           :query="query"
           :filter="filter">
         </search-grid>
-        <share-bar></share-bar>
+        <share-list></share-list>
       </div>
     </div>
     <footer-section></footer-section>
@@ -25,7 +25,7 @@ import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 import SearchGridForm from '@/components/SearchGridForm';
 import SearchGrid from '@/components/SearchGrid';
-import ShareBar from '@/components/ShareBar';
+import ShareList from '@/components/ShareList';
 import { FETCH_IMAGES } from '@/store/action-types';
 import { SET_GRID_FILTER, SET_IMAGES } from '@/store/mutation-types';
 
@@ -35,12 +35,13 @@ const BrowsePage = {
   components: {
     HeaderSection,
     SearchGridForm,
-    ShareBar,
+    ShareList,
     SearchGrid,
     FooterSection,
   },
   data: () => ({
     isHeaderFixed: false,
+    isVisible: false,
   }),
   computed: {
     images() {

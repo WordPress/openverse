@@ -1,16 +1,20 @@
 
 import ShareListService from '@/api/ShareListService';
-import { FETCH_LIST, CREATE_LIST } from './action-types';
-import { ADD_IMAGE_TO_LIST,
-  REMOVE_IMAGE_FROM_LIST,
+import { FETCH_LIST, FETCH_LISTS, CREATE_LIST, UPDATE_LIST } from './action-types';
+import {
+  SELECT_IMAGE_FOR_LIST,
   FETCH_START,
   FETCH_END,
   SET_SHARE_LIST,
+  SET_SHARE_LISTS,
   SET_SHARE_URL,
-  UNSET_SHARE_URL } from './mutation-types';
+  UNSET_SHARE_URL,
+  REMOVE_IMAGE_FROM_LIST,
+} from './mutation-types';
 
 const state = {
-  shareListImages: [],
+  selectedImages: [],
+  shareLists: [],
   shareListURL: '',
   isFetching: false,
   isListClean: true,
@@ -19,10 +23,11 @@ const state = {
 const actions = {
   [CREATE_LIST]({ commit }, params) {
     commit(FETCH_START);
+
     return ShareListService.createList(params)
-      .then(({ data }) => {
+      .then(({ lists }) => {
         commit(FETCH_END);
-        commit(SET_SHARE_URL, { url: data.url });
+        commit(SET_SHARE_LISTS, { shareLists: lists });
       })
       .catch((error) => {
         throw new Error(error);
@@ -30,6 +35,7 @@ const actions = {
   },
   [FETCH_LIST]({ commit }, params) {
     commit(FETCH_START);
+
     return ShareListService.getList(params)
       .then(({ data }) => {
         commit(FETCH_END);
@@ -39,16 +45,46 @@ const actions = {
         throw new Error(error);
       });
   },
+  [FETCH_LISTS]({ commit }) {
+    commit(FETCH_START);
+
+    return ShareListService.getListsFromLocalStorage()
+      .then((lists) => {
+        commit(FETCH_END);
+        commit(SET_SHARE_LISTS, { shareLists: lists });
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+  },
+  [UPDATE_LIST]({ commit }, params) {
+    commit(FETCH_START);
+
+    return ShareListService.getList(params)
+      .then(({ images }) => {
+        let imageIDs;
+        if (images) {
+          imageIDs = images.map(image => image.id);
+        }
+
+        return ShareListService.updateList(
+          { auth: params.auth, id: params.id, images: imageIDs },
+        ).then(() => commit(FETCH_END));
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+  },
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
 const mutations = {
-  [ADD_IMAGE_TO_LIST](_state, params) {
+  [SELECT_IMAGE_FOR_LIST](_state, params) {
     const duplicateImage = _state.shareListImages.find(image => image.id === params.image.id);
     let UNDEFINED;
 
     if (duplicateImage === UNDEFINED) {
-      _state.shareListImages.unshift(params.image);
+      _state.selectedImages.unshift(params.image);
     }
 
     if (_state.shareListURL) {
@@ -84,6 +120,9 @@ const mutations = {
   },
   [SET_SHARE_LIST](_state, params) {
     _state.shareListImages = params.shareListImages;
+  },
+  [SET_SHARE_LISTS](_state, params) {
+    _state.shareLists = params.shareLists;
   },
 };
 

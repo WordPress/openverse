@@ -8,9 +8,29 @@ const ShareListService = {
    * Implements an endpoint to create a list.
    */
   createList(params) {
-    const list = { title: params.listTitle, images: params.images };
+    const imageIDs = params.images.map(image => image.id);
+    const list = { title: params.listTitle, images: imageIDs };
 
-    return ApiService.post('/list', list);
+    return ApiService.post('/list', list)
+      .then(({ data }) => {
+        const listID = this.getShareListID(data.url);
+        const listURL = this.getShareListURL(listID);
+
+        return this.saveListToLocalStorage(
+          listID,
+          data.auth,
+          params.images[0].url,
+          listURL,
+        ).then((lists) => { lists.reverse(); return { lists }; });
+      });
+  },
+  getShareListID(url) {
+    return url.match(/\/(?:list\/)(.*)/)[1];
+  },
+  getShareListURL(listID) {
+    const shareURL = `/lists/${listID}`;
+
+    return location.origin + shareURL;
   },
   /**
    * Implements an endpoint to gets all lists from local storage.
@@ -18,27 +38,29 @@ const ShareListService = {
   getListsFromLocalStorage() {
     const list = JSON.parse(localStorage.getItem(SHARE_LIST_KEY));
 
-    return Promise.resolve(list);
+    if (list) {
+      list.reverse();
+    }
+    return Promise.resolve(list || []);
   },
   /**
-   * Implements an endpoint to delete the list to local storage.
+   * Implements an endpoint to delete the list from local storage.
    */
-  deleteListToLocalStorage(listID) {
-    const lists = this.getListsFromLocalStorage();
-    delete lists[listID];
-    localStorage.setItem(SHARE_LIST_KEY, JSON.stringify(lists));
-
-    return Promise.resolve(lists);
+  deleteListFromLocalStorage() {
+    return this.getListsFromLocalStorage()
+      .then(lists => localStorage.setItem(SHARE_LIST_KEY, JSON.stringify(lists)));
   },
   /**
    * Implements an endpoint to save the list to local storage.
    */
-  saveListToLocalStorage(listID, listAuthToken) {
-    const lists = this.getListsFromLocalStorage();
-    lists[listID] = listAuthToken;
-    localStorage.setItem(SHARE_LIST_KEY, JSON.stringify(lists));
+  saveListToLocalStorage(listID, auth, thumbnail, url) {
+    return this.getListsFromLocalStorage()
+      .then((lists) => {
+        lists.push({ listID, auth, thumbnail, url });
+        localStorage.setItem(SHARE_LIST_KEY, JSON.stringify(lists));
 
-    return Promise.resolve(lists);
+        return lists;
+      });
   },
   /**
    * Implements an endpoint to create a shortened list url.
@@ -47,12 +69,10 @@ const ShareListService = {
     return ApiService.post('/link_create', { url: params.url });
   },
   /**
-   * Implements an endpoint to edit a list.
+   * Implements an endpoint to update a list.
    */
-  editList(params) {
-    ApiService.setHeader({ auth: params.auth });
-
-    return ApiService.update('/list_update', params.id, params.ids);
+  updateList(params) {
+    return ApiService.update('/list_update', params.id, params.ids, { auth: params.auth });
   },
   /**
    * Implements an endpoint to delete a list.

@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { ADD_IMAGE_TO_LIST, SET_GRID_FILTER, SET_IMAGES } from '@/store/mutation-types';
+import { SELECT_IMAGE_FOR_LIST, SET_GRID_FILTER, SET_IMAGES } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -122,7 +122,7 @@ export default {
       this.$router.push(`/photos/${image.id}`);
     },
     onAddToImageList(image) {
-      this.$store.commit(ADD_IMAGE_TO_LIST, { image });
+      this.$store.commit(SELECT_IMAGE_FOR_LIST, { image });
     },
     searchChanged() {
       this.$store.commit(SET_IMAGES,
