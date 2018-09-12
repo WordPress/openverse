@@ -160,8 +160,12 @@ resource "aws_alb_listener" "ccsearch-asg-listener" {
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.ccsearch-asg-target.id}"
-    type             = "forward"
+    type          = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
@@ -170,7 +174,7 @@ resource "aws_alb_listener" "ccsearch-asg-listener-ssl" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:us-east-1:664890800379:certificate/813282df-000a-4fa6-b077-22b728b61f6b"
+  certificate_arn   = "arn:aws:acm:us-east-1:664890800379:certificate/a873ac2b-3aae-43be-a810-678de291d6cd"
 
   default_action {
     target_group_arn = "${aws_alb_target_group.ccsearch-asg-target.id}"
