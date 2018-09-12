@@ -36,12 +36,26 @@ const ShareListService = {
    * Implements an endpoint to gets all lists from local storage.
    */
   getListsFromLocalStorage() {
-    const list = JSON.parse(localStorage.getItem(SHARE_LIST_KEY));
+    const lists = JSON.parse(localStorage.getItem(SHARE_LIST_KEY));
 
-    if (list) {
-      list.reverse();
+    if (lists) {
+      lists.reverse();
     }
-    return Promise.resolve(list || []);
+    return Promise.resolve(lists || []);
+  },
+  /**
+   * Implements a method to get an auth token.
+   */
+  getAuthTokenFromLocalStorage(listID) {
+    const lists = JSON.parse(localStorage.getItem(SHARE_LIST_KEY));
+    const listWithToken = lists.find(list => list.listID === listID);
+    let authToken;
+
+    if(listWithToken) {
+      authToken = listWithToken.auth;
+    }
+
+    return Promise.resolve(authToken);
   },
   /**
    * Implements an endpoint to delete the list from local storage.
@@ -66,7 +80,7 @@ const ShareListService = {
    * Implements an endpoint to create a shortened list url.
    */
   createShortenedListURL(params) {
-    return ApiService.post('/link_create', { url: params.url });
+    return ApiService.post('/link', { url: params.url });
   },
   /**
    * Implements an endpoint to update a list.
@@ -82,9 +96,11 @@ const ShareListService = {
    * Implements an endpoint to delete a list.
    */
   deleteList(params) {
-    ApiService.setHeader({ auth: params.auth });
-
-    return ApiService.delete('/list', params.id);
+    return ApiService.delete('/list',
+      params.id,
+      { images: params.images },
+      { Authorization: `Token ${params.auth}` },
+    );
   },
   /**
    * Implements an endpoint to get a list based on ID.

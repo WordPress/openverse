@@ -13,8 +13,7 @@
           <div v-for="(image, index) in shareListImages"
             :class="{ 'search-list_item': true, 'search-grid_ctr__active': image.isActive }"
             :key="index">
-          <router-link :to="{ name: 'photo-detail-page', params: { id: image.id }}">
-            <article class="article-row">
+            <article class="article-row" @click.stop="onGotoPhotoDetailPage(image)">
               <div class="article-row-img">
                 <img class="share-list_image" :src="image.thumbnail || image.url">
               </div>
@@ -25,9 +24,11 @@
                   License CC {{ image.license}} {{ image.license_version }}
                 </p>
                 <p class="article-row-content-author">Provider {{ image.provider }}</p>
+                <a v-if="authToken"
+                   @click.stop="onRemoveImage(image)"
+                   class="share-list_remove-btn">Remove from list</a>
               </div>
             </article>
-          </router-link>
         </div>
       </div>
     </div>
@@ -39,7 +40,8 @@
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 import SearchGridForm from '@/components/SearchGridForm';
-import { FETCH_LIST } from '@/store/action-types';
+import { FETCH_LIST, REMOVE_IMAGE_FROM_LIST } from '@/store/action-types';
+import ShareListService from '@/api/ShareListService';
 
 const ShareListPage = {
   name: 'share-list-page',
@@ -51,6 +53,9 @@ const ShareListPage = {
   props: {
     id: null,
   },
+  data: () => ({
+    authToken: null,
+  }),
   computed: {
     shareListImages() {
       return this.$store.state.shareListImages;
@@ -58,6 +63,26 @@ const ShareListPage = {
   },
   created() {
     this.$store.dispatch(FETCH_LIST, { id: this.id });
+
+    ShareListService.getAuthTokenFromLocalStorage(this.id)
+    .then(authToken => this.authToken = authToken);
+  },
+  methods: {
+    getList() {
+      this.$store.dispatch(FETCH_LIST, { id: this.id });
+    },
+    onRemoveImage(image) {
+      this.$store.dispatch(REMOVE_IMAGE_FROM_LIST,
+        { auth: this.authToken,
+          id: this.id,
+          imageID: image.id,
+          shareListImages: this.shareListImages,
+        }
+      );
+    },
+    onGotoPhotoDetailPage(image) {
+       this.$router.push(`/photos/${image.id}`);
+    }
   },
 };
 
@@ -69,8 +94,22 @@ export default ShareListPage;
 
 @import '../styles/app';
 
+.share-list_remove-btn {
+  color: red;
+  display: block;
+
+  before: {
+    content: '';
+    background: url('../assets/remove-icon.svg') center center no-repeat;
+  }
+}
+
 .share-list_header {
   border-top: 1px solid #e7e8e9;
+}
+
+.search-list_item {
+  cursor: pointer;
 }
 
 .search-list_item:first-of-type .article-row {
