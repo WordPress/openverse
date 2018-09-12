@@ -27,8 +27,8 @@ module "cccatalog-api" {
 
   vpc_id                    = "vpc-b741b4cc"
   environment               = "-prod"
-  min_size                  = 3
-  max_size                  = 3
+  min_size                  = 5
+  max_size                  = 5
   instance_type             = "c5d.xlarge"
   enable_monitoring         = false
   git_revision              = "ad66c19bca1b472ffc6814d7f87ae84fcbf11e66"
