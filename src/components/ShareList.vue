@@ -1,7 +1,8 @@
 <template>
   <transition name="fade">
 
-    <div class="share-list" v-if="isVisible" :style="{ left: position.x + 'px', top: position.y + 'px' }">
+    <div class="share-list" v-if="isVisible"
+         :style="{ left: position.x + 'px', top: position.y + 'px' }">
         <header class="share-list_header">
           <h5>ADD TO LIST</h5>
           <div class="share-list_close-btn-ctr">
@@ -83,6 +84,7 @@ export default {
         if (this.isVisible === false) {
           this.$store.dispatch(FETCH_LISTS);
         }
+        console.log(mutation.payload.image);
         this.setPosition(mutation.payload.image);
         this.isVisible = true;
       }
@@ -92,8 +94,8 @@ export default {
     lists() {
       return this.$store.state.shareLists;
     },
-    selectedImages() {
-      return this.$store.state.selectedImages;
+    selectedImage() {
+      return this.$store.state.selectedImage;
     },
     isVisible: {
       get() {
@@ -121,7 +123,7 @@ export default {
     onAddToList(list) {
       this.$store.dispatch(ADD_IMAGE_TO_LIST, {
         auth: list.auth,
-        selectedImageID: this.selectedImages[0].id,
+        selectedImageID: this.selectedImage.id,
         id: list.listID,
       });
     },
@@ -131,7 +133,7 @@ export default {
     onCreateList() {
       this.$store.dispatch(CREATE_LIST, {
         listTitle: this.listTitle,
-        images: this.$store.state.selectedImages,
+        images: this.$store.state.selectedImage,
       });
     },
     onGotoListPage(listID) {
@@ -146,17 +148,17 @@ export default {
       let positionX = image.pageX;
       let positionY = image.pageY;
 
-      if(positionX + shareListWidth > pageWidth) {
-        positionX = positionX - shareListWidth;
+      if (positionX + shareListWidth > pageWidth) {
+        positionX -= shareListWidth;
       }
 
-      if(positionY + shareListHeight > pageHeight) {
-        positionY = positionY - shareListHeight;
+      if (positionY + shareListHeight > pageHeight) {
+        positionY -= shareListHeight;
       }
 
       this.position.x = positionX;
       this.position.y = positionY;
-    }
+    },
   },
 };
 </script>

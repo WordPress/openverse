@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     getShareText() {
-      return encodeURI('I created an image list @creativecommons: `${this.shareListURL}`');
+      return encodeURI(`I created an image list @creativecommons: ${this.shareListURL}`);
     },
     getShareListURL() {
       return this.$store.state.shareListURL;

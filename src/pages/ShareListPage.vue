@@ -65,7 +65,7 @@ const ShareListPage = {
     this.$store.dispatch(FETCH_LIST, { id: this.id });
 
     ShareListService.getAuthTokenFromLocalStorage(this.id)
-    .then(authToken => this.authToken = authToken);
+      .then((authToken) => { this.authToken = authToken; });
   },
   methods: {
     getList() {
@@ -77,12 +77,12 @@ const ShareListPage = {
           id: this.id,
           imageID: image.id,
           shareListImages: this.shareListImages,
-        }
+        },
       );
     },
     onGotoPhotoDetailPage(image) {
-       this.$router.push(`/photos/${image.id}`);
-    }
+      this.$router.push(`/photos/${image.id}`);
+    },
   },
 };
 

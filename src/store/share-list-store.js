@@ -19,7 +19,7 @@ import {
 } from './mutation-types';
 
 const state = {
-  selectedImages: [],
+  selectedImage: {},
   shareLists: [],
   shareListImages: [],
   shareListURL: '',
@@ -79,10 +79,10 @@ const actions = {
         return ShareListService.updateList(
           { auth: params.auth, id: params.id, images: imageIDs },
         )
-        .then(() => {
-          actions.FETCH_LIST({ commit }, params);
-          commit(FETCH_END);
-        });
+          .then(() => {
+            actions.FETCH_LIST({ commit }, params);
+            commit(FETCH_END);
+          });
       })
       .catch((error) => {
         throw new Error(error);
@@ -93,7 +93,7 @@ const actions = {
     const images = params.shareListImages;
     const imageIDs = [];
 
-    images.forEach((image, index) => {
+    images.forEach((image) => {
       if (image.id !== params.imageID) {
         imageIDs.push(image.id);
       }
@@ -103,7 +103,7 @@ const actions = {
       { auth: params.auth, id: params.id, images: imageIDs })
       .then(() => {
         actions.FETCH_LIST({ commit }, params);
-        commit(FETCH_END) ;
+        commit(FETCH_END);
       })
       .catch((error) => {
         throw new Error(error);
@@ -114,17 +114,7 @@ const actions = {
 /* eslint no-param-reassign: ["error", { "props": false }] */
 const mutations = {
   [SELECT_IMAGE_FOR_LIST](_state, params) {
-    const duplicateImage = _state.shareListImages.find(image => image.id === params.image.id);
-    let UNDEFINED;
-
-    if (duplicateImage === UNDEFINED) {
-      _state.selectedImages.unshift(params.image);
-    }
-
-    if (_state.shareListURL) {
-      _state.isListClean = false;
-    }
-    _state.shareListURL = '';
+    _state.selectedImage = params.image;
   },
   [FETCH_START](_state) {
     _state.isFetching = true;

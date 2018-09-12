@@ -51,7 +51,7 @@ const ShareListService = {
     const listWithToken = lists.find(list => list.listID === listID);
     let authToken;
 
-    if(listWithToken) {
+    if (listWithToken) {
       authToken = listWithToken.auth;
     }
 

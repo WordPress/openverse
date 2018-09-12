@@ -126,7 +126,7 @@ export default {
       imageWithDimensions.pageX = event.pageX;
       imageWithDimensions.pageY = event.pageY;
 
-      this.$store.commit(SELECT_IMAGE_FOR_LIST, { imageWithDimensions });
+      this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
     },
     searchChanged() {
       this.$store.commit(SET_IMAGES,
