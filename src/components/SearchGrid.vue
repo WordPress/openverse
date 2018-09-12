@@ -33,7 +33,7 @@
              {{ image.title }}
           </a>
           <a class="search-grid_overlay-add"
-             @click.stop="onAddToImageList(image)"
+             @click.stop="onAddToImageList(image, $event)"
              v-if="includeAddToList">
           </a>
         </figcaption>
@@ -122,7 +122,11 @@ export default {
       this.$router.push(`/photos/${image.id}`);
     },
     onAddToImageList(image, event) {
-      this.$store.commit(SELECT_IMAGE_FOR_LIST, { image });
+      const imageWithDimensions = image || {};
+      imageWithDimensions.pageX = event.pageX;
+      imageWithDimensions.pageY = event.pageY;
+
+      this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
     },
     searchChanged() {
       this.$store.commit(SET_IMAGES,
