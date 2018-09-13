@@ -1,3 +1,4 @@
+export const ADD_END = 'ADD_END';
 export const FETCH_END = 'FETCH_END';
 export const FETCH_START = 'FETCH_START';
 export const REMOVE_IMAGE_FROM_LIST = 'REMOVE_IMAGE_FROM_LIST';

@@ -1,47 +1,60 @@
 <template>
   <div class="share-list-page grid-x">
-      <div class="cell">
-        <header-section showNavSearch="true" fixedNav="true"></header-section>
-      </div>
-      <div class="cell small-11 medium-11 large-11 grid-padding-x  share-list">
-        <header class="share-list_header">
-          <h1 class="header-title">
-            {{ id }} list
-          </h1>
-        </header>
-        <div class="share-list_items">
-          <div v-for="(image, index) in shareListImages"
-            :class="{ 'search-list_item': true, 'search-grid_ctr__active': image.isActive }"
-            :key="index">
-            <article class="article-row" @click.stop="onGotoPhotoDetailPage(image)">
-              <div class="article-row-img">
-                <img class="share-list_image" :src="image.thumbnail || image.url">
-              </div>
-              <div class="article-row-content">
-                <h2 class="article-row-content-header">{{ image.title }}</h2>
-                <p class="article-row-content-author">By {{ image.creator }}</p>
-                <p class="article-row-content-license">
-                  License CC {{ image.license}} {{ image.license_version }}
-                </p>
-                <p class="article-row-content-author">Provider {{ image.provider }}</p>
-                <a v-if="authToken"
-                   @click.stop="onRemoveImage(image)"
-                   class="share-list_remove-btn">Remove from list</a>
-              </div>
-            </article>
+    <div class="cell">
+      <header-section showNavSearch="true" fixedNav="true"></header-section>
+    </div>
+    <div class="cell
+                small-11
+                medium-11
+                large-11
+                grid-padding-x
+                share-list">
+      <header class="share-list_header">
+        <h1 class="share-list_header-title">
+          {{ id }} list
+        </h1>
+        <social-share-buttons
+          :imageURL="imageURL"
+          :shareText="shareText"
+          :shareURL="shareURL">
+        </social-share-buttons>
+      </header>
+      <div class="share-list_items">
+        <div v-for="(image, index) in shareListImages"
+          :class="{ 'search-list_item': true,
+                    'search-grid_ctr__active': image.isActive
+                  }"
+          :key="index">
+          <article class="article-row" @click.stop="onGotoPhotoDetailPage(image)">
+            <div class="article-row-img">
+              <img class="share-list_image" :src="image.thumbnail || image.url">
+            </div>
+            <div class="article-row-content">
+              <h2 class="article-row-content-header">{{ image.title }}</h2>
+              <p class="article-row-content-author">By {{ image.creator }}</p>
+              <p class="article-row-content-license">
+                License CC {{ image.license}} {{ image.license_version }}
+              </p>
+              <p class="article-row-content-author">Provider {{ image.provider }}</p>
+              <a v-if="authToken"
+                 @click.stop="onRemoveImage(image)"
+                 class="share-list_remove-btn">Remove from list</a>
+            </div>
+          </article>
         </div>
       </div>
     </div>
-    <footer-section></footer-section>
-  </div>
+  <footer-section></footer-section>
+</div>
 </template>
 
 <script>
-import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
+import HeaderSection from '@/components/HeaderSection';
 import SearchGridForm from '@/components/SearchGridForm';
-import { FETCH_LIST, REMOVE_IMAGE_FROM_LIST } from '@/store/action-types';
 import ShareListService from '@/api/ShareListService';
+import SocialShareButtons from '@/components/SocialShareButtons';
+import { FETCH_LIST, REMOVE_IMAGE_FROM_LIST } from '@/store/action-types';
 
 const ShareListPage = {
   name: 'share-list-page',
@@ -49,16 +62,24 @@ const ShareListPage = {
     HeaderSection,
     SearchGridForm,
     FooterSection,
+    SocialShareButtons,
   },
   props: {
     id: null,
   },
   data: () => ({
     authToken: null,
+    imageURL: '',
   }),
   computed: {
     shareListImages() {
       return this.$store.state.shareListImages;
+    },
+    shareURL() {
+      return window.location;
+    },
+    shareText() {
+      return encodeURI(`I created an image list @creativecommons: ${this.shareURL}`);
     },
   },
   created() {
@@ -66,6 +87,9 @@ const ShareListPage = {
 
     ShareListService.getAuthTokenFromLocalStorage(this.id)
       .then((authToken) => { this.authToken = authToken; });
+  },
+  watch: {
+    shareListImages: newValue => `${window.location}/photos/${newValue[0].id}`,
   },
   methods: {
     getList() {
@@ -94,6 +118,11 @@ export default ShareListPage;
 
 @import '../styles/app';
 
+.share-list {
+  min-height: 450px;
+  margin: 45px auto;
+}
+
 .share-list_remove-btn {
   color: red;
   display: block;
@@ -105,6 +134,7 @@ export default ShareListPage;
 }
 
 .share-list_header {
+  position: relative;
   border-top: 1px solid #e7e8e9;
 }
 
@@ -116,7 +146,8 @@ export default ShareListPage;
   border-top: none;
 }
 
-.header-title {
+.share-list_header-title {
+  position: relative;
   margin-bottom: 1.07142857em;
   font-size: 1em;
   font-weight: 600;
@@ -127,11 +158,20 @@ export default ShareListPage;
   padding-top: .28571429em;
   border-top: 5px solid rgba(29, 31, 39, 0.8);
   margin-top: -3px;
+  margin-right: 60px;
+  vertical-align: text-bottom;
 }
 
-.share-list {
-  min-height: 450px;
-  margin: 45px auto;
+.share-list .social-share {
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  right: 0px;
+}
+
+.share-list_social-items .social-button {
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 .article-row-section {

@@ -8,8 +8,7 @@ const ShareListService = {
    * Implements an endpoint to create a list.
    */
   createList(params) {
-    const imageIDs = params.images.map(image => image.id);
-    const list = { title: params.listTitle, images: imageIDs };
+    const list = { title: params.listTitle, images: [params.image.id] };
 
     return ApiService.post('/list', list)
       .then(({ data }) => {
@@ -19,7 +18,7 @@ const ShareListService = {
         return this.saveListToLocalStorage(
           listID,
           data.auth,
-          params.images[0].url,
+          params.image.url,
           listURL,
         ).then((lists) => { lists.reverse(); return { lists }; });
       });

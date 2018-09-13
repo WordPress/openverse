@@ -9,9 +9,10 @@ import {
 } from './action-types';
 
 import {
-  SELECT_IMAGE_FOR_LIST,
-  FETCH_START,
+  ADD_END,
   FETCH_END,
+  FETCH_START,
+  SELECT_IMAGE_FOR_LIST,
   SET_SHARE_LIST,
   SET_SHARE_LISTS,
   SET_SHARE_URL,
@@ -82,6 +83,7 @@ const actions = {
           .then(() => {
             actions.FETCH_LIST({ commit }, params);
             commit(FETCH_END);
+            commit(ADD_END);
           });
       })
       .catch((error) => {
