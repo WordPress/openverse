@@ -1,7 +1,8 @@
 <template>
   <transition name="fade">
-    <div class="share-list" v-if="isVisible"
-         :style="{ left: position.x + 'px', top: position.y + 'px' }">
+    <div class="share-list"
+         :style="{ left: position.x + 'px', top: position.y + 'px' }"
+         v-if="isVisible">
         <header class="share-list_header">
           <h5>ADD TO LIST</h5>
           <div class="share-list_close-btn-ctr">
@@ -27,6 +28,11 @@
                 </div>
               </div>
             </form>
+          </div>
+          <div :class="{ 'share-list_notification callout small success': true,
+                         'share-list_notification__visible': isNotificationVisible
+                       }">
+            Successfully Added to List
           </div>
         </div>
         <div class="share-list_images-ctr grid-x">
@@ -64,6 +70,7 @@ import {
 } from '@/store/action-types';
 
 import {
+  ADD_END,
   SELECT_IMAGE_FOR_LIST,
   SET_SHARE_LIST_IMAGES,
 } from '@/store/mutation-types';
@@ -73,6 +80,7 @@ export default {
   data: () => ({
     _isVisible: false,
     listTitle: '',
+    isNotificationVisible: false,
     position: {
       x: 0,
       y: 0,
@@ -90,6 +98,10 @@ export default {
         }
         this.setPosition(mutation.payload.image);
         this.isVisible = true;
+      }
+
+      if (mutation.type === ADD_END) {
+        this.showNotification();
       }
     });
   },
@@ -136,11 +148,18 @@ export default {
     onCreateList() {
       this.$store.dispatch(CREATE_LIST, {
         listTitle: this.listTitle,
-        images: this.$store.state.selectedImage,
+        image: this.$store.state.selectedImage,
       });
     },
     onGotoListPage(listID) {
       this.$router.push(`/lists/${listID}`);
+    },
+    showNotification() {
+      this.isNotificationVisible = true;
+      window.setTimeout(() => {
+        this.isNotificationVisible = false;
+        this.isVisible = false;
+      }, 3000);
     },
     setPosition(image) {
       const pageWidth = window.innerWidth;
@@ -187,6 +206,25 @@ export default {
     }
   }
 
+  .share-list_notification {
+    color: green;
+    border-color: green;
+    position: relative;
+    height: 0;
+    opacity: 0;
+    line-height: 0;
+    transition: all 1s;
+    padding: 0;
+
+    &__visible {
+      display: block;
+      opacity: 1;
+      height: auto;
+      line-height: normal;
+      padding: 8px;
+    }
+  }
+
   .share-list_header {
     border-bottom: 1px solid #E6EAEA;
     padding: 10px 15px 10px 15px;
@@ -215,8 +253,14 @@ export default {
   }
 
   .share-list_create-ctr {
+    position: relative;
     padding: 10px;
     border-bottom: 1px solid #E6EAEA;
+  }
+
+  .share-list_notification {
+    width: 100%;
+    margin: 1px 0 0 0;
   }
 
   .share-list_images-ctr {
