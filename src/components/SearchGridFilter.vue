@@ -114,8 +114,8 @@ export default {
       [
         { value: '', text: '' },
         { value: 'all', text: 'All' },
-        { value: 'all-cc', text: 'All-CC' },
-        { value: 'commercial', text: 'Commercial' },
+        { value: 'all-cc', text: 'CC-licensed works only (no PD)' },
+        { value: 'commercial', text: 'Commercial use permitted' },
         { value: 'modification', text: 'Modification' },
       ],
     filter: {
