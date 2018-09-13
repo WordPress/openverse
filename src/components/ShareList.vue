@@ -1,6 +1,5 @@
 <template>
   <transition name="fade">
-
     <div class="share-list" v-if="isVisible"
          :style="{ left: position.x + 'px', top: position.y + 'px' }">
         <header class="share-list_header">
@@ -20,7 +19,7 @@
               <div class="input-group">
                 <input class="input-group-field"
                   type="text"
-                  placeholder="Name your list"
+                  placeholder="Create your list"
                   required="required"
                   v-model="listTitle">
                 <div class="input-group-button">
@@ -50,7 +49,7 @@
                     view
                   </button>
               </li>
-              </transition-group>
+            </transition-group>
           </div>
       </div>
     </div>
@@ -58,10 +57,15 @@
 </template>
 
 <script>
-import { ADD_IMAGE_TO_LIST, CREATE_LIST, FETCH_LISTS } from '@/store/action-types';
 import {
-  SET_SHARE_LIST_IMAGES,
+  ADD_IMAGE_TO_LIST,
+  CREATE_LIST,
+  FETCH_LISTS,
+} from '@/store/action-types';
+
+import {
   SELECT_IMAGE_FOR_LIST,
+  SET_SHARE_LIST_IMAGES,
 } from '@/store/mutation-types';
 
 export default {
@@ -84,7 +88,6 @@ export default {
         if (this.isVisible === false) {
           this.$store.dispatch(FETCH_LISTS);
         }
-        console.log(mutation.payload.image);
         this.setPosition(mutation.payload.image);
         this.isVisible = true;
       }

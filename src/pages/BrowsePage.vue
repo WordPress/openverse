@@ -21,10 +21,10 @@
 </template>
 
 <script>
-import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
-import SearchGridForm from '@/components/SearchGridForm';
+import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
+import SearchGridForm from '@/components/SearchGridForm';
 import ShareList from '@/components/ShareList';
 import { FETCH_IMAGES } from '@/store/action-types';
 import { SET_GRID_FILTER, SET_IMAGES } from '@/store/mutation-types';

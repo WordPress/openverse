@@ -1,17 +1,17 @@
 <template>
-  <div class="social-share">
+  <div :class="{ 'social-share': true, 'social-share__medium': isMedium }">
     <div class="share-list_social-items cell medium-6 large-4">
       <a class="social-button facebook"
          target="_blank"
-         :href="`https://www.facebook.com/sharer/sharer.php?u=${this.getShareListURL()}
-          &t==${shareText}&href=${this.getShareListURL()}`"></a>
+         :href="`https://www.facebook.com/sharer/sharer.php?u=${getShareListURL}
+          &t==${shareText}&href=${getShareListURL}`"></a>
       <a class="social-button twitter"
          target="_blank"
-         :href="`https://twitter.com/intent/tweet?text=${shareText}`"
+         :href="`https://twitter.com/intent/tweet?text=${getShareText}`"
       ></a>
       <a class="social-button pinterest"
          target="_blank"
-         :href="`https://www.pinterest.com/pin/create/bookmarklet/?media=${images[0].url}&description=${getShareText()}`"></a>
+         :href="`https://www.pinterest.com/pin/create/bookmarklet/?media=${shareImageURL}&description=${getShareText}`"></a>
     </div>
   </div>
 </template>
@@ -20,15 +20,20 @@
 export default {
   name: 'social-share-list',
   props: {
-    shareListURL: '',
+    isMedium: '',
+    shareURL: '',
     shareText: '',
+    imageURL: '',
   },
   computed: {
+    shareImageURL() {
+      return this.imageURL;
+    },
     getShareText() {
-      return encodeURI(`I created an image list @creativecommons: ${this.shareListURL}`);
+      return encodeURI(`I created an image list @creativecommons: ${this.shareURL}`);
     },
     getShareListURL() {
-      return this.$store.state.shareListURL;
+      return this.shareURL;
     },
   },
 };
@@ -59,6 +64,18 @@ export default {
       width: 24px;
       height: 24px;
       display: inline-block;
+    }
+  }
+
+  .social-share{
+    &__medium .social-button {
+      width: $social-button-size / 1.5 !important;
+      height: $social-button-size / 1.5 !important;
+      font-size: $social-button-font-size / 2 !important;
+      &:before {
+        width: 12px;
+        height: 12px;
+      }
     }
   }
 
