@@ -102,13 +102,13 @@ export default {
     licenses:
       [
         { value: '', text: '' },
-        { value: 'BY-NC', text: 'BY-NC' },
-        { value: 'BY-SA', text: 'BY-SA' },
-        { value: 'BY-NC-ND', text: 'BY-NC-ND' },
-        { value: 'PDM', text: 'PD' },
-        { value: 'BY', text: 'BY' },
-        { value: 'CC0', text: 'CC0' },
-        { value: 'BY-NC-SA', text: 'BY-NC-SA' },
+        { value: 'by-nc', text: 'BY-NC' },
+        { value: 'by-sa', text: 'BY-SA' },
+        { value: 'by-nc-nd', text: 'BY-NC-ND' },
+        { value: 'pdm', text: 'PD' },
+        { value: 'by', text: 'BY' },
+        { value: 'cc0', text: 'CC0' },
+        { value: 'by-nc-sa', text: 'BY-NC-SA' },
       ],
     licenseTypes:
       [
