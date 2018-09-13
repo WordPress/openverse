@@ -7,7 +7,7 @@
                   medium-4
                   large-2
                   large-offset-3">
-        <label><span>Providers</span></label>
+        <label><span>Collection</span></label>
         <select v-model="filter.provider" v-on:change="onUpdateFilter">
           <option v-for="(provider, index) in providers"
                   :key="index"
@@ -25,8 +25,9 @@
                 v-on:change="onUpdateFilter"
                 :disabled="filter.lt !== ''">
           <option v-for="(license, index) in licenses"
-                  :key="index">
-            {{ license }}
+                  :key="index"
+                  :value="license.value">
+            {{ license.text }}
           </option>
         </select>
       </div>
@@ -39,8 +40,9 @@
                 v-on:change="onUpdateFilter"
                 :disabled="filter.li !== ''">
           <option v-for="(licenseType, index) in licenseTypes"
-                  :key="index">
-            {{ licenseType }}
+                  :key="index"
+                  :value="licenseType.value">
+            {{ licenseType.text }}
           </option>
         </select>
       </div>
@@ -86,9 +88,9 @@ export default {
     { providers:
       [
         { value: '', text: '' },
-        { value: 'rijksmuseum', text: 'Museum of the Netherlands' },
+        { value: 'rijksmuseum', text: 'Rijksmuseum NL' },
         { value: 'nypl', text: 'New York Public Library' },
-        { value: 'museumvictoria', text: 'Museums Victoria' },
+        { value: 'museumsvictoria', text: 'Museums Victoria' },
         { value: 'met', text: 'Metropolitan Museum of Art' },
         { value: 'geographorguk', text: 'Geograph® Britain and Ireland' },
         { value: 'flickr', text: 'Flickr' },
@@ -99,22 +101,22 @@ export default {
       ],
     licenses:
       [
-        '',
-        'by-nc',
-        'by-sa',
-        'by-nc-nd',
-        'pdm', 'by-nd',
-        'by',
-        'cc0',
-        'by-nc-sa',
+        { value: '', text: '' },
+        { value: 'BY-NC', text: 'BY-NC' },
+        { value: 'BY-SA', text: 'BY-SA' },
+        { value: 'BY-NC-ND', text: 'BY-NC-ND' },
+        { value: 'PDM', text: 'PD' },
+        { value: 'BY', text: 'BY' },
+        { value: 'CC0', text: 'CC0' },
+        { value: 'BY-NC-SA', text: 'BY-NC-SA' },
       ],
     licenseTypes:
       [
-        '',
-        'all',
-        'all-cc',
-        'commercial',
-        'modification',
+        { value: '', text: '' },
+        { value: 'all', text: 'All' },
+        { value: 'all-cc', text: 'All-CC' },
+        { value: 'commercial', text: 'Commercial' },
+        { value: 'modification', text: 'Modification' },
       ],
     filter: {
       provider: '',
