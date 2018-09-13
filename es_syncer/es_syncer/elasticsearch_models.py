@@ -78,7 +78,7 @@ class Image(SyncableDocType):
             license=row[schema['license']],
             license_version=row[schema['license_version']],
             foreign_landing_url=row[schema['foreign_landing_url']],
-            meta_data=row[schema['meta_data']],
+            meta_data=None,
             view_count=row[schema['view_count']],
         )
 
