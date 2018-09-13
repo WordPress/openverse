@@ -1,7 +1,7 @@
 # This docker-compose file was generated from /home/alden/code/cccatalog-
 # api/es_syncer/test/../../docker-compose.yml. Do not modify this file
-# directly. Your changes will be overwritten. Last update: 2018-08-28
-# 10:42:44.145223
+# directly. Your changes will be overwritten. Last update: 2018-09-12
+# 22:15:05.386520
 
 services:
   integration-db:

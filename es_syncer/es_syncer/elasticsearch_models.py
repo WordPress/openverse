@@ -52,10 +52,11 @@ class Image(SyncableDocType):
             if json_tags:
                 parsed_tags = []
                 for tag in json_tags:
-                    parsed_tag = {'name': tag['name']}
-                    if 'accuracy' in tag:
-                        parsed_tag['accuracy'] = tag['accuracy']
-                    parsed_tags.append(parsed_tag)
+                    if 'name' in tag:
+                        parsed_tag = {'name': tag['name']}
+                        if 'accuracy' in tag:
+                            parsed_tag['accuracy'] = tag['accuracy']
+                        parsed_tags.append(parsed_tag)
                 return parsed_tags
             else:
                 return None

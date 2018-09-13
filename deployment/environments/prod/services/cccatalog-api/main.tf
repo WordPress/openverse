@@ -35,7 +35,7 @@ module "cccatalog-api" {
   api_version               = "0.14.1"
 
   # Environment-specific variables
-  database_host             = "openledger-db-prod.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
+  database_host             = "preprod-10m.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
   django_debug_enabled      = "false"
   elasticsearch_port        = "80"
   aws_region                = "us-east-1"
