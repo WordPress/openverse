@@ -72,11 +72,24 @@
         <h2>Tags</h2>
       </header>
       <div class="photo_tags-ctr cell large-12">
-        <a v-for="(tag, index) in image.tags"
-           :key="index" class="photo_tag button"
-           @click="onGotoSearchPage(tag.name)">
-          {{ tag.name }}
-        </a>
+        <template v-for="(tag, index) in image.tags">
+          <span class="photo_tag button hollow secondary"
+                :key="index"
+                @click="onGotoSearchPage(tag.name)">
+            <span class="photo_tag-label">
+              <span>{{ tag.name }}</span>
+            </span>
+            <img class="photo_tag-provider-badge"
+                 src="@/assets/clarifai_logo.png"
+                 v-if="isClarifaiTag(tag.provider)">
+          </span>
+        </template>
+        <p class="photo_tags-clarifai-badge" v-if="hasClarifaiTags">
+          <span>Contains tags by</span>
+          <a href="https://clarifai.com/">
+            <img class="photo_tags-clarifai-badge-image" src="../assets/clarifai.svg" >
+          </a>
+        </p>
       </div>
     </div>
     <div class="photo_related-images grid-x" v-if="query">
@@ -126,6 +139,7 @@ const PhotoDetailPage = {
     id: '',
   },
   data: () => ({
+    hasClarifaiTags: false,
     imagecountseparator: 'of',
     isPrimaryImageLoaded: false,
     keyinput: true,
@@ -205,6 +219,16 @@ const PhotoDetailPage = {
           return attributionContent.replace(/\s\s/g, '');
         },
       });
+    },
+    isClarifaiTag(provider) {
+      let isClarifaiTag = false;
+
+      if (provider === 'clarifai') {
+        isClarifaiTag = true;
+        this.hasClarifaiTags = true;
+      }
+
+      return isClarifaiTag;
     },
     loadImage(id) {
       if (id) {
@@ -396,9 +420,22 @@ export default PhotoDetailPage;
 
   .photo_tag {
     margin-right: 15px;
-    color: white;
     border-radius: 3px;
-    background-color: rgba(212, 18, 190, .8);
+    padding: 10px 10px;
+  }
+
+  .photo_tag-label {
+    font-weight: 500;
+  }
+
+  .photo_tag-provider-badge {
+    width: 16px;
+    margin-left: 5px;
+  }
+
+  .photo_tags-clarifai-badge-image {
+    height: 100px;
+    margin-left: -20px;
   }
 
   .photo_usage-attribution {

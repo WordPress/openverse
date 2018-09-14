@@ -4,8 +4,10 @@
       <a href="https://www.flickr.com/photos/mtrienke/24336908909/"
          target="_blank"
          rel="noreferrer">
-        Photo by Markus Trienke from flickr
+        "Sunrise In The Alps"
       </a>
+      by <a href="https://www.flickr.com/photos/mtrienke/">Markus Trienke</a> is licensed under
+      <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>
       <span class="hero_instagram-icon">&nbsp;</span>
     </p>
     <form class="hero_search-form"
@@ -144,6 +146,7 @@ $hero-height: 70vh;
   z-index: 10;
   font-weight: 500;
   font-size: .8em;
+  color: #fff;
 
   a {
     color: #fff;

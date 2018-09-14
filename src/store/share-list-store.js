@@ -20,14 +20,12 @@ import {
 } from './mutation-types';
 
 const state = {
-  selectedImage: {},
-  shareLists: [],
-  shareListImages: [],
-  shareListURL: '',
   isFetching: false,
-  isListClean: true,
+  shareListSelectedImage: {},
+  shareListImages: [],
+  shareLists: [],
+  shareListURL: '',
 };
-
 
 const actions = {
   [CREATE_LIST]({ commit }, params) {
@@ -116,7 +114,7 @@ const actions = {
 /* eslint no-param-reassign: ["error", { "props": false }] */
 const mutations = {
   [SELECT_IMAGE_FOR_LIST](_state, params) {
-    _state.selectedImage = params.image;
+    _state.shareListSelectedImage = params.image;
   },
   [FETCH_START](_state) {
     _state.isFetching = true;

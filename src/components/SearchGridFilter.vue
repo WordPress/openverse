@@ -102,13 +102,13 @@ export default {
     licenses:
       [
         { value: '', text: '' },
-        { value: 'by-nc', text: 'BY-NC' },
-        { value: 'by-sa', text: 'BY-SA' },
-        { value: 'by-nc-nd', text: 'BY-NC-ND' },
-        { value: 'pdm', text: 'PD' },
         { value: 'by', text: 'BY' },
-        { value: 'cc0', text: 'CC0' },
+        { value: 'by-nc', text: 'BY-NC' },
+        { value: 'by-nc-nd', text: 'BY-NC-ND' },
         { value: 'by-nc-sa', text: 'BY-NC-SA' },
+        { value: 'by-sa', text: 'BY-SA' },
+        { value: 'cc0', text: 'CC0' },
+        { value: 'pdm', text: 'Public Domain Mark' },
       ],
     licenseTypes:
       [
@@ -140,11 +140,6 @@ export default {
     margin: 0;
   }
 
-  &__visible {
-    border-top: 1px solid #d6d6d6;
-    margin-top: 0;
-  }
-
   label {
     border-top: 1px solid #d6d6d6;
 
@@ -158,6 +153,11 @@ export default {
       border-top: 5px solid #4DA5EF;
       margin-top: -3px;
     }
+  }
+
+  &__visible {
+    border-top: 1px solid #d6d6d6;
+    margin-top: 0;
   }
 }
 

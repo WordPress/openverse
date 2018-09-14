@@ -110,7 +110,7 @@ export default {
       return this.$store.state.shareLists;
     },
     selectedImage() {
-      return this.$store.state.selectedImage;
+      return this.$store.state.shareListSelectedImage;
     },
     isVisible: {
       get() {
@@ -148,7 +148,7 @@ export default {
     onCreateList() {
       this.$store.dispatch(CREATE_LIST, {
         listTitle: this.listTitle,
-        image: this.$store.state.selectedImage,
+        image: this.selectedImage,
       });
     },
     onGotoListPage(listID) {
