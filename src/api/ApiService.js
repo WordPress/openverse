@@ -26,7 +26,7 @@ const ApiService = {
       });
   },
 
-  get(resource, slug = '') {
+  get(resource, slug) {
     return Vue.axios
       .get(`${resource}/${slug}`)
       .catch((error) => {
@@ -46,9 +46,9 @@ const ApiService = {
     return Vue.axios.put(`${resource}`, params);
   },
 
-  delete(resource) {
+  delete(resource, slug, headers) {
     return Vue.axios
-      .delete(resource)
+      .delete(`${resource}/${slug}`, { headers })
       .catch((error) => {
         throw new Error(`[RWV] ApiService ${error}`);
       });

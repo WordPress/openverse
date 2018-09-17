@@ -5,7 +5,9 @@
     </div>
     <div class="photo grid-x">
         <div class="photo_image-ctr cell medium-12 large-8">
-          <img @click="onShowViewer"
+        <a class="photo_breadcrumb"
+           :href="breadCrumbURL" v-if="shouldShowBreadcrumb">Back to search results</a>
+          <img @click="onShowViewer(image)"
                @load="() => isPrimaryImageLoaded = true"
                :class="{ photo_image: true,
                          'photo_image__has-viewer': this.images.length > 0 }"
@@ -139,6 +141,7 @@ const PhotoDetailPage = {
     id: '',
   },
   data: () => ({
+    breadCrumbURL: '',
     hasClarifaiTags: false,
     imagecountseparator: 'of',
     isPrimaryImageLoaded: false,
@@ -149,6 +152,7 @@ const PhotoDetailPage = {
     showclosebutton: true,
     showimagecount: true,
     showthumbnails: true,
+    shouldShowBreadcrumb: false,
   }),
   computed: {
     filter() {
@@ -205,6 +209,14 @@ const PhotoDetailPage = {
     this.loadImage(to.params.id);
     next();
   },
+  beforeRouteEnter(to, previousPage, nextPage) {
+    nextPage((vm) => {
+      if (previousPage.name === 'browse-page') {
+        vm.shouldShowBreadcrumb = true; // eslint-disable-line no-param-reassign
+        vm.breadCrumbURL = `/search?q=${previousPage.query.q}`; // eslint-disable-line no-param-reassign
+      }
+    });
+  },
   methods: {
     initClipboard() {
       new Clipboard('.photo_copy-btn', { // eslint-disable-line no-new
@@ -240,7 +252,15 @@ const PhotoDetailPage = {
     },
     onShowViewer() {
       if (this.images.length > 0) {
+        const selectedImageID = this.$route.params.id;
+        let selectedImageIndex = 0;
+        this.images.forEach((image, index) => {
+          if (parseInt(selectedImageID, 10) === parseInt(image.id, 10)) {
+            selectedImageIndex = index;
+          }
+        });
         const viewer = this.$refs.imageViewer.$viewer;
+        viewer.view(selectedImageIndex);
         viewer.show();
       }
     },
@@ -308,6 +328,14 @@ export default PhotoDetailPage;
   .photo {
     width: 100%;
     border-bottom: 1px solid #d6d6d6;
+  }
+
+  .photo_breadcrumb {
+    width: 100%;
+    display: block;
+    text-align: left;
+    font-size:.9em;
+    margin-top: -10px;
   }
 
   .photo_image-ctr {

@@ -4,6 +4,7 @@ import HomePage from '@/pages/HomePage';
 import BrowsePage from '@/pages/BrowsePage';
 import PhotoDetailPage from '@/pages/PhotoDetailPage';
 import ShareListPage from '@/pages/ShareListPage';
+import ShareListsPage from '@/pages/ShareListsPage';
 import store from '@/store';
 import { SET_QUERY, SET_SHARE_LIST, SET_IMAGE } from '@/store/mutation-types';
 
@@ -25,6 +26,11 @@ const router = new VueRouter({
       name: 'share-list-page',
       component: ShareListPage,
       props: true,
+    },
+    {
+      path: '/lists',
+      name: 'share-list-page',
+      component: ShareListsPage,
     },
     {
       path: '/photos/:id',

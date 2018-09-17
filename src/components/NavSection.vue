@@ -1,9 +1,15 @@
 <template>
   <nav class="nav grid-x grid-padding-x">
     <div class="cell small-12 medium-12 large-6">
-      <a href="/">
+      <a href="https://creativecommons.org/">
         <img class="nav_logo" src="../assets/cc-logo_white.png">
       </a>
+      <div class="menu_ctr">
+        <ul class="menu">
+          <li class="home"><a href="./">Home</a></li>
+          <li><a href='/lists'>Lists</a></li>
+        </ul>
+      </div>
     </div>
     <div class="cell small-12 medium-12 large-6 align-center nav_search"
          v-if="showNavSearch ==='true'">
@@ -57,6 +63,24 @@ export default {
   /* Large and up */
   @media screen and (min-width: 64em) {
     float: right;
+  }
+}
+
+.menu_ctr {
+  display: inline-block;
+  margin-left: 30px;
+}
+
+.menu a {
+  color: #fefefe;
+  font-weight: 500;
+  padding: 0.7rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #fefefe;
   }
 }
 

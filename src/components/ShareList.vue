@@ -325,11 +325,13 @@ export default {
   }
 
   .share-list_view-btn {
-    padding: 10px;
-    position: absolute;
     right: 10px;
     color: #fff !important;
     border-radius: 2px;
+    top: 50%;
+    height: 30px;
+    position: absolute;
+    transform: translateY(-50%);
   }
 
   .fade-enter-active {

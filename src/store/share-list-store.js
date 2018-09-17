@@ -6,6 +6,7 @@ import {
   FETCH_LIST,
   FETCH_LISTS,
   REMOVE_IMAGE_FROM_LIST,
+  REMOVE_LIST,
 } from './action-types';
 
 import {
@@ -88,6 +89,21 @@ const actions = {
         throw new Error(error);
       });
   },
+  [REMOVE_LIST]({ commit }, params) {
+    commit(FETCH_START);
+    return ShareListService.deleteList(
+      { auth: params.auth, id: params.listID })
+      .then(() => {
+        ShareListService.deleteListFromLocalStorage(params.listID)
+          .then((lists) => {
+            commit(SET_SHARE_LISTS, { shareLists: lists });
+            commit(FETCH_END);
+          });
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+  },
   [REMOVE_IMAGE_FROM_LIST]({ commit }, params) {
     commit(FETCH_START);
     const images = params.shareListImages;
@@ -109,6 +125,7 @@ const actions = {
         throw new Error(error);
       });
   },
+
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
