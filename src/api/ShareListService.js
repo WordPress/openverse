@@ -59,9 +59,33 @@ const ShareListService = {
   /**
    * Implements an endpoint to delete the list from local storage.
    */
-  deleteListFromLocalStorage() {
+  deleteListFromLocalStorage(listID) {
+    function removeList(lists) {
+      const cleanList = lists || [];
+      cleanList.forEach((list, index) => {
+        if (list.listID === listID) {
+          cleanList.splice(index, 1);
+        }
+      });
+
+      return cleanList;
+    }
+
     return this.getListsFromLocalStorage()
-      .then(lists => localStorage.setItem(SHARE_LIST_KEY, JSON.stringify(lists)));
+      .then((lists) => {
+        const removedLists = removeList(lists);
+
+        return this.saveAllListsToLocalStorage(removedLists)
+          .then(newLists => Promise.resolve(newLists));
+      });
+  },
+  /**
+   * Implements an endpoint to save all lists to local storage.
+   */
+  saveAllListsToLocalStorage(lists) {
+    localStorage.setItem(SHARE_LIST_KEY, JSON.stringify(lists));
+
+    return Promise.resolve(lists);
   },
   /**
    * Implements an endpoint to save the list to local storage.
@@ -70,9 +94,8 @@ const ShareListService = {
     return this.getListsFromLocalStorage()
       .then((lists) => {
         lists.push({ listID, auth, thumbnail, url });
-        localStorage.setItem(SHARE_LIST_KEY, JSON.stringify(lists));
 
-        return lists;
+        return this.saveAllListsToLocalStorage(lists);
       });
   },
   /**
@@ -97,7 +120,6 @@ const ShareListService = {
   deleteList(params) {
     return ApiService.delete('/list',
       params.id,
-      { images: params.images },
       { Authorization: `Token ${params.auth}` },
     );
   },

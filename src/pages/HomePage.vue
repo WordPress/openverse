@@ -123,21 +123,21 @@ const HomePage = {
       {
         title: 'the mountain story',
         url: 'https://www.behance.net/gallery/55404735/the-mountain-story',
-        id: 11859713,
+        id: 12759871,
         class: 'grid-item block b5',
         src: require('@/assets/mountain_medium.jpg'), // eslint-disable-line global-require
       },
       {
         title: 'Howling Mixed-Breed Brown Dog',
         url: 'https://www.flickr.com/photos/foundanimalsfoundation/8557041595/',
-        id: 11723785,
+        id: 16375857,
         class: 'grid-item block b6',
         src: require('@/assets/dog_medium.jpg'), // eslint-disable-line global-require
       },
       {
         title: 'Nike FFF Retouching',
         url: 'https://www.behance.net/gallery/51974139/Nike-FFF-Retouching',
-        id: 11884100,
+        id: 15487477,
         class: 'grid-item block b7',
         src: require('@/assets/soccer_medium.jpg'), // eslint-disable-line global-require
       },
