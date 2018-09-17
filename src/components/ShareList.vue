@@ -4,7 +4,7 @@
          :style="{ left: position.x + 'px', top: position.y + 'px' }"
          v-if="isVisible">
         <header class="share-list_header">
-          <h5>ADD TO LIST</h5>
+          <h5>ADD TO PUBLIC LIST</h5>
           <div class="share-list_close-btn-ctr">
             <button @click.prevent="onCloseBar"
                     class="button secondary tiny share-list_close-btn">
