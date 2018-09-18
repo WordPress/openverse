@@ -12,7 +12,8 @@
                  placeholder="Search the commons..."
                  autocapitalize="none"
                  id="searchInput"
-                 v-model="query">
+                 v-model="query"
+                 ref="search">
           <ul class="search-form_toolbar menu icons icon-top" role="menubar">
             <li class="menu-button search-form_search-button" role="menuitem">
               <a href="#" @click.prevent="onSubmit">
@@ -94,6 +95,7 @@ export default {
   },
   mounted() {
     this.query = this.$store.state.query.q;
+    this.$refs.search.focus();
   },
 };
 </script>

@@ -39,12 +39,8 @@ export default {
       position: fixed;
       top: 0;
       left: 0;
-      animation-duration: 1s;
+      animation-duration: .5s;
       animation-name: fadeIn;
-
-      nav {
-        background: #000 !important;
-      }
     }
   }
 

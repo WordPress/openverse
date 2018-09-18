@@ -50,7 +50,7 @@
                   cell
                   medium-4
                   large-2">
-          <a class="button hollow search-filter_clear-btn"
+          <a class="button secondary search-filter_clear-btn"
                   :disabled="hasFilter===false"
                   @click="onClearFilters">clear filters</a>
       </div>
@@ -90,7 +90,7 @@ export default {
         { value: '', text: '' },
         { value: 'rijksmuseum', text: 'Rijksmuseum NL' },
         { value: 'nypl', text: 'New York Public Library' },
-        { value: 'museumsvictoria', text: 'Museums Victoria' },
+        { value: 'museumvictoria', text: 'Museums Victoria' },
         { value: 'met', text: 'Metropolitan Museum of Art' },
         { value: 'geographorguk', text: 'Geograph® Britain and Ireland' },
         { value: 'flickr', text: 'Flickr' },
@@ -150,7 +150,7 @@ export default {
       line-height: 1.25;
       display: inline-block;
       padding-top: .28571429em;
-      border-top: 5px solid #4DA5EF;
+      border-top: 5px solid #373737;
       margin-top: -3px;
     }
   }
@@ -163,5 +163,6 @@ export default {
 
 .search-filter_clear-btn {
   height: auto;
+  border-radius: 2px;
 }
 </style>

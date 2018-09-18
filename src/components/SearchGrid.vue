@@ -291,8 +291,12 @@ export default {
   }
 
   .search-grid_image {
-    width: 100%;
-    height: 100%;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   @media screen and (min-width: 769px) {
