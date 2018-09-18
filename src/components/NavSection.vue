@@ -7,7 +7,15 @@
       <div class="menu_ctr">
         <ul class="menu">
           <li class="home"><a href="./">Home</a></li>
-          <li><a href='/lists'>Lists</a></li>
+          <li>
+            <a href='/lists'>
+              Lists
+              <transition name="slide-fade" mode="out-in">
+                <span class="badge alert" v-if="listsCount"
+                  :key="listsCount">{{ listsCount }}</span>
+              </transition>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
@@ -32,10 +40,20 @@
 </template>
 
 <script>
+import { FETCH_LISTS } from '@/store/action-types';
+
 export default {
   props: ['showNavSearch', 'fixedNav'],
   name: 'nav-section',
   data: () => ({ form: { searchTerm: '' } }),
+  computed: {
+    listsCount() {
+      return this.$store.state.shareLists.length;
+    },
+  },
+  mounted() {
+    this.$store.dispatch(FETCH_LISTS);
+  },
   methods: {
     onSubmit() {
       this.$router.push({ path: '../search', query: { q: this.form.searchTerm } });
@@ -49,7 +67,7 @@ export default {
 .nav {
   position: relative;
   width: 100%;
-  background: rgba(0,0,0,0.8);
+  background-color: #373737;
 }
 
 .nav_logo {
@@ -80,7 +98,14 @@ export default {
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: #fefefe;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .badge {
+    line-height: 1.5em;
+    position: absolute;
+    top: 1px;
+    right: 1px;
   }
 }
 
@@ -123,5 +148,18 @@ export default {
       opacity: .2;
     }
   }
+}
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>

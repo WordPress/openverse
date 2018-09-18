@@ -98,7 +98,7 @@ const HomePage = {
       {
         title: 'Unpublished-Landscapes',
         url: 'https://www.behance.net/gallery/41530879/Unpublished-Landscapes',
-        id: 11913497,
+        id: 15514496,
         class: 'grid-item block b1',
         src: require('@/assets/record_large.jpg'), // eslint-disable-line global-require
       }, {
@@ -166,6 +166,10 @@ $vert-seperate: 4rem;
 .home-page .nav {
   position: absolute !important;
   background: transparent !important;
+
+  .badge {
+   display: none;
+  }
 }
 
 .home-page_body {

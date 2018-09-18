@@ -94,7 +94,7 @@
         </p>
       </div>
     </div>
-    <div class="photo_related-images grid-x" v-if="query">
+    <div class="photo_related-images grid-x full" v-if="query">
       <header>
         <h2>Related Images</h2>
       </header>
@@ -205,6 +205,11 @@ const PhotoDetailPage = {
       viewer.show();
     },
   },
+  watch: {
+    tags: function tags(value) {
+      this.getRelatedImages(value, this.queryParam);
+    },
+  },
   beforeRouteUpdate(to, from, next) {
     this.loadImage(to.params.id);
     next();
@@ -218,6 +223,18 @@ const PhotoDetailPage = {
     });
   },
   methods: {
+    getRelatedImages(tags = [], query) {
+      let queryParam = query;
+      const tagsParam = tags.slice();
+
+      if (tagsParam.length > 0) {
+        queryParam = tagsParam.slice(0, 1).map(tag => tag.name).join(', ');
+      }
+
+      if (queryParam) {
+        this.$store.dispatch(FETCH_RELATED_IMAGES, { q: queryParam, pagesize: 8 });
+      }
+    },
     initClipboard() {
       new Clipboard('.photo_copy-btn', { // eslint-disable-line no-new
         text: (element) => {
@@ -260,7 +277,9 @@ const PhotoDetailPage = {
           }
         });
         const viewer = this.$refs.imageViewer.$viewer;
-        viewer.view(selectedImageIndex);
+        if (selectedImageIndex) {
+          viewer.view(selectedImageIndex);
+        }
         viewer.show();
       }
     },
@@ -268,13 +287,6 @@ const PhotoDetailPage = {
   created() {
     this.loadImage(this.$route.params.id);
     this.initClipboard();
-  },
-  mounted() {
-    const queryParam = this.query;
-
-    if (queryParam) {
-      this.$store.dispatch(FETCH_RELATED_IMAGES, { q: queryParam, pagesize: 8 });
-    }
   },
 };
 
@@ -323,6 +335,7 @@ export default PhotoDetailPage;
 
   .search-grid {
     margin: 0;
+    width: 100%;
   }
 
   .photo {
@@ -425,6 +438,7 @@ export default PhotoDetailPage;
   .photo_tags {
     margin: 30px;
     border-top: 1px solid #e7e8e9;
+    width: 100%;
 
     header h2 {
       margin-bottom: 1.07142857em;
@@ -461,9 +475,12 @@ export default PhotoDetailPage;
     margin-left: 5px;
   }
 
+  .photo_tags-clarifai-badge {
+    margin-top: 30px;
+  }
+
   .photo_tags-clarifai-badge-image {
-    height: 100px;
-    margin-left: -20px;
+    height: 20px;
   }
 
   .photo_usage-attribution {
