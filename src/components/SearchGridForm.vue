@@ -92,6 +92,16 @@ export default {
     onToggleSearchGridFilter() {
       this.isFilterVisible = !this.isFilterVisible;
     },
+    addScrollEvent() {
+      window.addEventListener('scroll', this.removeScrollEvent.bind(this));
+    },
+    removeScrollEvent() {
+      this.isFilterVisible = false;
+      window.removeEventListener('scroll', this.removeScrollEvent);
+    },
+  },
+  created() {
+    this.addScrollEvent();
   },
   mounted() {
     this.query = this.$store.state.query.q;

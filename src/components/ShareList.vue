@@ -70,7 +70,7 @@ import {
 } from '@/store/action-types';
 
 import {
-  ADD_END,
+  ADD_IMAGE_TO_LIST_END,
   SELECT_IMAGE_FOR_LIST,
   SET_SHARE_LIST_IMAGES,
 } from '@/store/mutation-types';
@@ -100,7 +100,7 @@ export default {
         this.isVisible = true;
       }
 
-      if (mutation.type === ADD_END) {
+      if (mutation.type === ADD_IMAGE_TO_LIST_END) {
         this.showNotification();
       }
     });
@@ -159,12 +159,12 @@ export default {
       window.setTimeout(() => {
         this.isNotificationVisible = false;
         this.isVisible = false;
-      }, 3000);
+      }, 2500);
     },
     setPosition(image) {
       const pageWidth = window.innerWidth;
       const pageHeight = window.innerHeight;
-      const shareListHeight = 200;
+      const shareListHeight = 100;
       const shareListWidth = 350;
 
       let positionX = image.pageX;
@@ -172,6 +172,10 @@ export default {
 
       if (positionX + shareListWidth > pageWidth) {
         positionX -= shareListWidth;
+      }
+
+      if(pageWidth < 600) {
+        positionX = 20;
       }
 
       if (positionY + shareListHeight > pageHeight) {

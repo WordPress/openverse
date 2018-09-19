@@ -3,6 +3,18 @@
     <div class="cell">
       <header-section showNavSearch="true" fixedNav="true"></header-section>
     </div>
+    <div class="cell">
+      <div class="share-lists-page_info-notification callout primary" v-if="isNotificationVisible">
+        <h5>We've migrated to public lists</h5>
+        <p>Looking for a private list you created with your CC ID? Shoot us an email at
+          <a href="mailto:info@creativecommons.org">info@creativecommons.org</a> and
+          we are happy to retrieve it for you</p>
+        <button @click="onCloseNotification" class="close-button"
+        aria-label="Dismiss alert" type="button" data-close>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
     <div class="cell
                 small-11
                 medium-11
@@ -28,7 +40,7 @@
           </article>
         </div>
         <div class="callout warning" v-if="lists && lists.length === 0">
-          <h5>You currently don't have any saved lists.</h5>
+        <h5>You currently don't have any saved lists.</h5>
           <p>Start by creating a list on the <a href="/search?q=nature">Search page.</a></p>
         </div>
       </div>
@@ -53,6 +65,7 @@ const ShareListPage = {
   data: () => ({
     authToken: null,
     imageURL: '',
+    isNotificationVisible: true,
   }),
   computed: {
     lists() {
@@ -68,6 +81,13 @@ const ShareListPage = {
   created() {
     this.$store.dispatch(FETCH_LISTS);
   },
+  mounted() {
+    const isNotificationViewed = localStorage.getItem('cc-notification-viewed');
+
+    if (isNotificationViewed === 'true') {
+      this.isNotificationVisible = false;
+    }
+  },
   methods: {
     onGotoListPage(list) {
       this.$router.push(`/lists/${list.listID}`);
@@ -78,6 +98,10 @@ const ShareListPage = {
           listID: list.listID,
         },
       );
+    },
+    onCloseNotification() {
+      localStorage.setItem('cc-notification-viewed', true);
+      this.isNotificationVisible = false;
     },
   },
 };
@@ -93,6 +117,10 @@ export default ShareListPage;
 .share-lists {
   min-height: 450px;
   margin: 45px auto;
+}
+
+.share-lists-page_info-notification {
+  padding: 1rem 2rem;
 }
 
 .share-lists_remove-btn {

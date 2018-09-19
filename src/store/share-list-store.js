@@ -10,7 +10,7 @@ import {
 } from './action-types';
 
 import {
-  ADD_END,
+  ADD_IMAGE_TO_LIST_END,
   FETCH_END,
   FETCH_START,
   SELECT_IMAGE_FOR_LIST,
@@ -36,6 +36,7 @@ const actions = {
       .then(({ lists }) => {
         commit(FETCH_END);
         commit(SET_SHARE_LISTS, { shareLists: lists });
+        commit(ADD_IMAGE_TO_LIST_END);
       })
       .catch((error) => {
         throw new Error(error);
@@ -82,7 +83,7 @@ const actions = {
           .then(() => {
             actions.FETCH_LIST({ commit }, params);
             commit(FETCH_END);
-            commit(ADD_END);
+            commit(ADD_IMAGE_TO_LIST_END);
           });
       })
       .catch((error) => {

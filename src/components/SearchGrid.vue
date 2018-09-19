@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { SELECT_IMAGE_FOR_LIST, SET_GRID_FILTER, SET_IMAGES } from '@/store/mutation-types';
+import { SELECT_IMAGE_FOR_LIST, SET_IMAGES } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -109,15 +109,6 @@ export default {
     },
   },
   methods: {
-    created() {
-      this.unsubscribe = this.$store.subscribe((mutation) => {
-        if (mutation.type === SET_GRID_FILTER) {
-          this.$store.dispatch(FETCH_IMAGES,
-            { q: this.query, ...mutation.payload.filter },
-          );
-        }
-      });
-    },
     onGotoDetailPage(image) {
       this.$router.push(`/photos/${image.id}`);
     },
