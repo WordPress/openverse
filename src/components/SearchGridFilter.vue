@@ -94,7 +94,6 @@ export default {
         { value: 'met', text: 'Metropolitan Museum of Art' },
         { value: 'geographorguk', text: 'Geograph® Britain and Ireland' },
         { value: 'flickr', text: 'Flickr' },
-        { value: 'europeana', text: 'Europena collections' },
         { value: 'deviantart', text: 'DeviantArt' },
         { value: 'behance', text: 'Behance' },
         { value: '500px', text: '500px' },

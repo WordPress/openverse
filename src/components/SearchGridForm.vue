@@ -82,16 +82,31 @@ export default {
   components: {
     SearchGridFilter,
   },
+  computed: {
+    filter() {
+      return this.$store.state.filter;
+    },
+  },
   methods: {
     onSubmit(e) {
       e.preventDefault();
       if (this.query) {
-        this.$router.push({ path: 'search', query: { q: this.query } });
+        this.$router.push({ path: 'search', query: { q: this.query, ...this.filter } });
       }
     },
     onToggleSearchGridFilter() {
       this.isFilterVisible = !this.isFilterVisible;
     },
+    addScrollEvent() {
+      window.addEventListener('scroll', this.removeScrollEvent.bind(this));
+    },
+    removeScrollEvent() {
+      this.isFilterVisible = false;
+      window.removeEventListener('scroll', this.removeScrollEvent);
+    },
+  },
+  created() {
+    this.addScrollEvent();
   },
   mounted() {
     this.query = this.$store.state.query.q;

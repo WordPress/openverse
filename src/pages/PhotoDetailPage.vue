@@ -5,8 +5,9 @@
     </div>
     <div class="photo grid-x">
         <div class="photo_image-ctr cell medium-12 large-8">
-        <a class="photo_breadcrumb"
-           :href="breadCrumbURL" v-if="shouldShowBreadcrumb">Back to search results</a>
+          <a class="photo_breadcrumb"
+             :href="breadCrumbURL"
+             v-if="shouldShowBreadcrumb">&#171; Back to search results</a>
           <img @click="onShowViewer(image)"
                @load="() => isPrimaryImageLoaded = true"
                :class="{ photo_image: true,
@@ -94,7 +95,7 @@
         </p>
       </div>
     </div>
-    <div class="photo_related-images grid-x full" v-if="query">
+    <div class="photo_related-images grid-x full" v-if="relatedImages && relatedImages.length > 0">
       <header>
         <h2>Related Images</h2>
       </header>
@@ -223,9 +224,9 @@ const PhotoDetailPage = {
     });
   },
   methods: {
-    getRelatedImages(tags = [], query) {
+    getRelatedImages(tags, query) {
       let queryParam = query;
-      const tagsParam = tags.slice();
+      const tagsParam = (tags || []).slice();
 
       if (tagsParam.length > 0) {
         queryParam = tagsParam.slice(0, 1).map(tag => tag.name).join(', ');

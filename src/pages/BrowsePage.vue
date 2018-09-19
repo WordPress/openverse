@@ -54,7 +54,7 @@ const BrowsePage = {
       return this.$store.state.query.q;
     },
     filter() {
-      return this.$store.state.query.filter;
+      return this.$store.state.filter;
     },
   },
   methods: {
@@ -85,7 +85,7 @@ const BrowsePage = {
     );
 
     if (queryParam) {
-      this.getImages({ q: queryParam, filter: this.filter });
+      this.getImages({ q: queryParam, ...this.filter });
     }
 
     this.unsubscribe = this.$store.subscribe((mutation) => {
@@ -101,7 +101,7 @@ const BrowsePage = {
     this.unsubscribe();
   },
   beforeRouteUpdate(to, from, next) {
-    this.getImages({ q: to.query.q, filter: this.filter });
+    this.getImages({ q: to.query.q, ...this.filter });
     next();
   },
 };
