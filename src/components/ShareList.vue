@@ -174,7 +174,7 @@ export default {
         positionX -= shareListWidth;
       }
 
-      if(pageWidth < 600) {
+      if (pageWidth < 600) {
         positionX = 20;
       }
 

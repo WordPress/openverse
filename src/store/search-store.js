@@ -40,7 +40,7 @@ const actions = {
 
         commit(SET_IMAGE_PAGE, { imagePage: params.page || 1 });
 
-        if(params.q) {
+        if (params.q) {
           commit(SET_QUERY, params);
         }
       })

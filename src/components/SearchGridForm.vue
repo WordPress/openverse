@@ -82,11 +82,16 @@ export default {
   components: {
     SearchGridFilter,
   },
+  computed: {
+    filter() {
+      return this.$store.state.filter;
+    },
+  },
   methods: {
     onSubmit(e) {
       e.preventDefault();
       if (this.query) {
-        this.$router.push({ path: 'search', query: { q: this.query } });
+        this.$router.push({ path: 'search', query: { q: this.query, ...this.filter } });
       }
     },
     onToggleSearchGridFilter() {
