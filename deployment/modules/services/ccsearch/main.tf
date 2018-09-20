@@ -52,8 +52,8 @@ resource "aws_launch_configuration" "ccsearch-launch-config" {
 resource "aws_autoscaling_group" "ccsearch-asg" {
   name                 = "${aws_launch_configuration.ccsearch-launch-config.id}"
   launch_configuration = "${aws_launch_configuration.ccsearch-launch-config.id}"
-  min_size             = "1"
-  max_size             = "1"
+  min_size             = "3"
+  max_size             = "3"
   min_elb_capacity     = "1"
   vpc_zone_identifier  = ["${data.aws_subnet_ids.subnets.ids}"]
   target_group_arns    = ["${aws_alb_target_group.ccsearch-asg-target.id}"]
