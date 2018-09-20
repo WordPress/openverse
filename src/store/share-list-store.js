@@ -1,8 +1,12 @@
 
+
+import LinkService from '@/api/LinkService';
 import ShareListService from '@/api/ShareListService';
+
 import {
   ADD_IMAGE_TO_LIST,
   CREATE_LIST,
+  CREATE_LIST_SHORTENED_URL,
   FETCH_LIST,
   FETCH_LISTS,
   REMOVE_IMAGE_FROM_LIST,
@@ -37,6 +41,18 @@ const actions = {
         commit(FETCH_END);
         commit(SET_SHARE_LISTS, { shareLists: lists });
         commit(ADD_IMAGE_TO_LIST_END);
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+  },
+  [CREATE_LIST_SHORTENED_URL]({ commit }, params) {
+    commit(FETCH_START);
+
+    return LinkService.createLink(params)
+      .then(({ data }) => {
+        commit(FETCH_END);
+        commit(SET_SHARE_URL, { shortenedURL: data.shortened_url });
       })
       .catch((error) => {
         throw new Error(error);
@@ -141,9 +157,7 @@ const mutations = {
     _state.isFetching = false;
   },
   [SET_SHARE_URL](_state, params) {
-    const shareID = params.url.match(/\/(?:list\/)(.*)/)[1];
-    const shareURL = `/lists/${shareID}`;
-    _state.shareListURL = location.origin + shareURL;
+    _state.shareListURL = `${window.location.protocol}//${params.shortenedURL}`;
   },
   [UNSET_SHARE_URL](_state) {
     _state.shareListURL = '';

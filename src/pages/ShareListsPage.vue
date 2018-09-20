@@ -8,7 +8,7 @@
         <h5>We've migrated to public lists</h5>
         <p>Looking for a private list you created with your CC ID? Shoot us an email at
           <a href="mailto:info@creativecommons.org">info@creativecommons.org</a> and
-          we are happy to retrieve it for you</p>
+          we are happy to retrieve it for you.</p>
         <button @click="onCloseNotification" class="close-button"
         aria-label="Dismiss alert" type="button" data-close>
           <span aria-hidden="true">&times;</span>
