@@ -96,8 +96,8 @@ const ShareListPage = {
     this.$store.dispatch(CREATE_LIST_SHORTENED_URL, { url: window.location.href });
   },
   watch: {
-    shareListImages: (images) => {
-      if (images && images.length > 0) {
+    shareListImages: function shareListImages(images) {
+      if (images) {
         this.imageURL = images[0].url;
       }
     },
