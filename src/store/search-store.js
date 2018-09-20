@@ -8,8 +8,8 @@ import { FETCH_START,
   SET_IMAGE_PAGE,
   SET_GRID_FILTER,
   SET_QUERY,
-  SET_RELATED_IMAGES } from './mutation-types';
-
+  SET_RELATED_IMAGES,
+} from './mutation-types';
 
 const state = {
   filter: {},

@@ -16,7 +16,7 @@
         <social-share-buttons
           :imageURL="imageURL"
           :shareText="shareText"
-          :shareURL="shareURL">
+          :shareURL="shareListURL">
         </social-share-buttons>
       </header>
       <div class="share-list_items">
@@ -54,7 +54,11 @@ import HeaderSection from '@/components/HeaderSection';
 import SearchGridForm from '@/components/SearchGridForm';
 import ShareListService from '@/api/ShareListService';
 import SocialShareButtons from '@/components/SocialShareButtons';
-import { FETCH_LIST, REMOVE_IMAGE_FROM_LIST } from '@/store/action-types';
+import {
+  CREATE_LIST_SHORTENED_URL,
+  FETCH_LIST,
+  REMOVE_IMAGE_FROM_LIST,
+} from '@/store/action-types';
 
 const ShareListPage = {
   name: 'share-list-page',
@@ -72,14 +76,14 @@ const ShareListPage = {
     imageURL: '',
   }),
   computed: {
+    shareListURL() {
+      return this.$store.state.shareListURL || window.location.href;
+    },
     shareListImages() {
       return this.$store.state.shareListImages;
     },
-    shareURL() {
-      return window.location;
-    },
     shareText() {
-      return encodeURI(`I created an image list @creativecommons: ${this.shareURL}`);
+      return encodeURI(`I created an image list @creativecommons: ${this.shareListURL}`);
     },
   },
   created() {
@@ -88,8 +92,15 @@ const ShareListPage = {
     ShareListService.getAuthTokenFromLocalStorage(this.id)
       .then((authToken) => { this.authToken = authToken; });
   },
+  beforeMount() {
+    this.$store.dispatch(CREATE_LIST_SHORTENED_URL, { url: window.location.href });
+  },
   watch: {
-    shareListImages: newValue => `${window.location}/photos/${newValue[0].id}`,
+    shareListImages: (images) => {
+      if (images && images.length > 0) {
+        this.imageURL = images[0].url;
+      }
+    },
   },
   methods: {
     getList() {

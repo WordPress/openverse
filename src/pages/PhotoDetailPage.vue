@@ -33,7 +33,7 @@
             </li>
             <li>
               <h3>License</h3>
-              <a :href="ccLicenseURL">
+              <a class="photo_license" :href="ccLicenseURL">
               CC {{ image.license }} {{ image.license_version }}
               </a>
             </li>
@@ -53,7 +53,7 @@
               by
               <a :href="image.creator_url">{{ image.creator }}</a>
               is licensed under
-              <a :href="ccLicenseURL">
+              <a class="photo_license" :href="ccLicenseURL">
               CC {{ image.license}} {{ image.license_version }}
               </a>
             </p>
@@ -187,7 +187,7 @@ const PhotoDetailPage = {
       const image = this.image;
 
       return `"${image.title}" by ${image.creator}
-              is licensed under CC ${image.license}
+              is licensed under CC ${image.license.toUpperCase()}
               ${image.license_version}`;
     },
     HTMLAttribution() {
@@ -198,7 +198,7 @@ const PhotoDetailPage = {
               <a href="${image.creator_url}">${image.creator}</a>
               is licensed under
               <a href="${this.ccLicenseURL}">
-                CC ${image.license} ${image.license_version}
+                CC ${image.license.toUpperCase()} ${image.license_version}
               </a>`;
     },
     show() {
@@ -332,6 +332,10 @@ export default PhotoDetailPage;
                 center
                 center
                 no-repeat;
+  }
+
+  .photo_license {
+    text-transform: uppercase;
   }
 
   .search-grid {
