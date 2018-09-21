@@ -39,7 +39,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
 SHORT_URL_WHITELIST = {
     'api-dev.creativecommons.engineering',
     'api.creativecommons.engineering',
-    'ccccatalog.herokuapp.com'
+    'ccccatalog.herokuapp.com',
+    'ccsearch.creativecommons.org',
 }
 SHORT_URL_PATH_WHITELIST = ['/list', '/image/']
 
