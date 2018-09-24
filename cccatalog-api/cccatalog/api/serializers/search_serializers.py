@@ -120,14 +120,15 @@ class ImageSearchQueryStringSerializer(_SearchQueryStringSerializer):
         required=False
     )
 
-    def validate_provider(self, value):
+    def validate_provider(self, input_providers):
         allowed_providers = get_providers('image')
-        if value not in allowed_providers:
-            raise serializers.ValidationError(
-                "Provider \'{}\' does not exist.".format(value)
-            )
-        else:
-            return value.lower()
+
+        for input_provider in input_providers.split(','):
+            if input_provider not in allowed_providers:
+                raise serializers.ValidationError(
+                    "Provider \'{}\' does not exist.".format(input_providers)
+                )
+        return input_providers.lower()
 
 
 class TagSerializer(serializers.Serializer):
