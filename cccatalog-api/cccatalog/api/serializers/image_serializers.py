@@ -6,7 +6,7 @@ from cccatalog.api.serializers.search_serializers import ImageSerializer
 
 class ImageDetailTagSerializer(serializers.Serializer):
     name = serializers.CharField(
-        required=True,
+        required=False,
         help_text="The name of a detailed tag."
     )
     accuracy = serializers.FloatField(
