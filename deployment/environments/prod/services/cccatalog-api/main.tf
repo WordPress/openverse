@@ -31,8 +31,8 @@ module "cccatalog-api" {
   max_size                  = 5
   instance_type             = "c5d.xlarge"
   enable_monitoring         = false
-  git_revision              = "2381ae2ca82c797000cebd395f5d8e4e8a7da12f"
-  api_version               = "0.15.2"
+  git_revision              = "1d2e211ae7844c046cd8e56da3a82eacd56e806d"
+  api_version               = "0.15.3"
 
   # Environment-specific variables
   database_host             = "preprod-10m.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
