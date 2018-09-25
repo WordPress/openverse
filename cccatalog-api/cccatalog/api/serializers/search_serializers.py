@@ -69,7 +69,7 @@ class _SearchQueryStringSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     "License \'{}\' does not exist.".format(_license)
                 )
-        return value.lower().split(',')
+        return value.lower()
 
     def validate_lt(self, value):
         """
