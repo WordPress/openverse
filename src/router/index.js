@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-// import AboutPage from '@/pages/AboutPage';
+import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
 import BrowsePage from '@/pages/BrowsePage';
 import PhotoDetailPage from '@/pages/PhotoDetailPage';
@@ -30,7 +30,7 @@ const router = new VueRouter({
     },
     {
       path: '/lists',
-      name: 'share-lists-page',
+      name: 'share-list-page',
       component: ShareListsPage,
     },
     {
@@ -39,11 +39,11 @@ const router = new VueRouter({
       component: PhotoDetailPage,
       props: true,
     },
-    // {
-    //   path: '/about',
-    //   name: 'about-page',
-    //   component: AboutPage,
-    // },
+    {
+      path: '/about',
+      name: 'about-page',
+      component: AboutPage,
+    },
     {
       path: '/',
       name: 'home-page',
