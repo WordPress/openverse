@@ -39,11 +39,11 @@ const router = new VueRouter({
       component: PhotoDetailPage,
       props: true,
     },
-    {
-      path: '/about',
-      name: 'about-page',
-      component: AboutPage,
-    },
+    // {
+    //   path: '/about',
+    //   name: 'about-page',
+    //   component: AboutPage,
+    // },
     {
       path: '/',
       name: 'home-page',
