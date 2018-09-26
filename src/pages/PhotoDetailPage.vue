@@ -73,12 +73,12 @@
           </section>
       </div>
     </div>
-    <div class="photo_tags grid-x full" v-if="tags">
+    <div class="photo_tags grid-x full" v-if="tags && tags.length">
       <header>
         <h2>Tags</h2>
       </header>
       <div class="photo_tags-ctr cell large-12">
-        <template v-for="(tag, index) in image.tags">
+        <template v-for="(tag, index) in image.tags" v-if="tag.name">
           <span class="photo_tag button hollow secondary"
                 :key="index"
                 @click="onGotoSearchPage(tag.name)">
@@ -270,13 +270,6 @@ const PhotoDetailPage = {
         this.$store.dispatch(FETCH_IMAGE, { id });
       }
     },
-    onGetLicenseIcon(license) {
-      let licenses = [];
-      if (license) {
-        licenses = license.split('-');
-      }
-      return licenses;
-    },
     onGotoSearchPage(query) {
       this.$router.push({ name: 'browse-page', query: { q: query } });
     },
@@ -318,6 +311,10 @@ export default PhotoDetailPage;
 
   .photo-detail-page {
     width: 100%;
+  }
+
+  .photo_license {
+    text-transform: uppercase;
   }
 
   .photo_license-icons {
