@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
 import BrowsePage from '@/pages/BrowsePage';
 import PhotoDetailPage from '@/pages/PhotoDetailPage';
@@ -37,6 +38,11 @@ const router = new VueRouter({
       name: 'photo-detail-page',
       component: PhotoDetailPage,
       props: true,
+    },
+    {
+      path: '/about',
+      name: 'about-page',
+      component: AboutPage,
     },
     {
       path: '/',

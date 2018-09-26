@@ -36,6 +36,9 @@
               <a class="photo_license" :href="ccLicenseURL">
               CC {{ image.license }} {{ image.license_version }}
               </a>
+              <a class="photo_license-icons" :href="ccLicenseURL">
+                <license-icons :license="image.license"></license-icons>
+              </a>
             </li>
             <li>
               <h3>Source</h3>
@@ -70,12 +73,12 @@
           </section>
       </div>
     </div>
-    <div class="photo_tags grid-x full" v-if="tags">
+    <div class="photo_tags grid-x full" v-if="tags && tags.length">
       <header>
         <h2>Tags</h2>
       </header>
       <div class="photo_tags-ctr cell large-12">
-        <template v-for="(tag, index) in image.tags">
+        <template v-for="(tag, index) in image.tags" v-if="tag.name">
           <span class="photo_tag button hollow secondary"
                 :key="index"
                 @click="onGotoSearchPage(tag.name)">
@@ -123,6 +126,7 @@
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 import SearchGrid from '@/components/SearchGrid';
+import LicenseIcons from '@/components/LicenseIcons';
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
 import Clipboard from 'clipboard';
 import 'viewerjs/dist/viewer.css';
@@ -137,6 +141,7 @@ const PhotoDetailPage = {
     HeaderSection,
     SearchGrid,
     FooterSection,
+    LicenseIcons,
   },
   props: {
     id: '',
@@ -308,6 +313,14 @@ export default PhotoDetailPage;
     width: 100%;
   }
 
+  .photo_license {
+    text-transform: uppercase;
+  }
+
+  .photo_license-icons {
+    display: block;
+  }
+
   .photo_paginator {
     position: absolute;
     display: block;
@@ -332,10 +345,6 @@ export default PhotoDetailPage;
                 center
                 center
                 no-repeat;
-  }
-
-  .photo_license {
-    text-transform: uppercase;
   }
 
   .search-grid {
