@@ -7,7 +7,7 @@
       <div class="menu_ctr">
         <ul class="menu">
           <li class="home"><a href="./">Home</a></li>
-          <li>
+          <li class="list-option">
             <a href='/lists'>
               Lists
               <transition name="slide-fade" mode="out-in">
@@ -16,6 +16,7 @@
               </transition>
             </a>
           </li>
+          <li><a href="./about">About</a></li>
         </ul>
       </div>
     </div>
@@ -87,6 +88,11 @@ export default {
 .menu_ctr {
   display: inline-block;
   margin-left: 30px;
+
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    margin-left: 5px;
+  }
 }
 
 .menu a {
@@ -107,6 +113,10 @@ export default {
     top: 1px;
     right: 1px;
   }
+}
+
+.list-option {
+  position: relative;
 }
 
 .input-group-rounded {

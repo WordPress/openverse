@@ -23,7 +23,8 @@
              @click.prevent="() => false"
              target="new"
              class="search-grid_image-ctr">
-          <img class="search-grid_image" :src="image.thumbnail || image.url" >
+          <img class="search-grid_image" :src="image.thumbnail || image.url"
+               @error="onImageLoadError">
         </a>
         <figcaption class="search-grid_item-overlay">
           <a class="search-grid_overlay-title"
@@ -127,6 +128,11 @@ export default {
       this.$nextTick(() => {
         this.$refs.infiniteLoader.$emit('$InfiniteLoading:reset');
       });
+    },
+    onImageLoadError(event) {
+      const image = event.target;
+
+      image.src = require('@/assets/404-grid_placeholder.png'); // eslint-disable-line global-require
     },
     infiniteHandler($state) {
       this.$state = $state;

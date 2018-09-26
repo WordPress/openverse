@@ -36,6 +36,9 @@
               <a class="photo_license" :href="ccLicenseURL">
               CC {{ image.license }} {{ image.license_version }}
               </a>
+              <a class="photo_license-icons" :href="ccLicenseURL">
+                <license-icons :license="image.license"></license-icons>
+              </a>
             </li>
             <li>
               <h3>Source</h3>
@@ -123,6 +126,7 @@
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 import SearchGrid from '@/components/SearchGrid';
+import LicenseIcons from '@/components/LicenseIcons';
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
 import Clipboard from 'clipboard';
 import 'viewerjs/dist/viewer.css';
@@ -137,6 +141,7 @@ const PhotoDetailPage = {
     HeaderSection,
     SearchGrid,
     FooterSection,
+    LicenseIcons,
   },
   props: {
     id: '',
@@ -265,6 +270,13 @@ const PhotoDetailPage = {
         this.$store.dispatch(FETCH_IMAGE, { id });
       }
     },
+    onGetLicenseIcon(license) {
+      let licenses = [];
+      if (license) {
+        licenses = license.split('-');
+      }
+      return licenses;
+    },
     onGotoSearchPage(query) {
       this.$router.push({ name: 'browse-page', query: { q: query } });
     },
@@ -308,6 +320,10 @@ export default PhotoDetailPage;
     width: 100%;
   }
 
+  .photo_license-icons {
+    display: block;
+  }
+
   .photo_paginator {
     position: absolute;
     display: block;
@@ -332,10 +348,6 @@ export default PhotoDetailPage;
                 center
                 center
                 no-repeat;
-  }
-
-  .photo_license {
-    text-transform: uppercase;
   }
 
   .search-grid {
