@@ -9,8 +9,8 @@
          growth of the Commons, and the widespread use of the CC licenses and public domain marks,
          there is no simple way to maximize use of, and engagement with, all of that content. There
          is no front door — no tool designed for the general public to facilitate discovery for the
-         purpose of reuse and remix, to simplify the license terms, make attribution easy, or support
-         curation, and crowdsourced metadata.
+         purpose of reuse and remix, to simplify the license terms, make attribution easy, or
+         support curation, and crowdsourced metadata.
       </p>
       <p>
         Creative Commons’ “CC Search” project will develop and release an open online search and
