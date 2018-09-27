@@ -46,13 +46,13 @@
           </option>
         </select>
       </div>
-       <div class="search-filter_licenseType
+      <div class="search-filter_licenseType
                   cell
                   medium-4
                   large-2">
-          <a class="button secondary search-filter_clear-btn"
-                  :disabled="hasFilter===false"
-                  @click="onClearFilters">clear filters</a>
+        <a class="button secondary search-filter_clear-btn"
+                :disabled="hasFilter===false"
+                @click="onClearFilters">clear filters</a>
       </div>
     </div>
   </div>

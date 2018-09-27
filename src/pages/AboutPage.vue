@@ -92,17 +92,12 @@ export default AboutPage;
     margin: 2.5rem auto
   }
   .about-page_body {
+    font-size: 1em;
     margin: 45px !important;
   }
 
   .about-page_lead-paragraph {
     margin-bottom: 1em;
-    font-size: 1.35em;
-    font-weight: normal;
-    letter-spacing: initial;
-    line-height: 1.25;
-    text-transform: initial;
-    margin-top: 1.36363636em;
   }
 
   .photo_tag-provider-badge {

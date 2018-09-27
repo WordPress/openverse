@@ -17,7 +17,7 @@
     <div class="search-grid_ctr" ref="gridItems">
       <figure v-for="(image, index) in images"
         class="search-grid_item"
-        :key="index"
+        :key="image.id"
         @click="onGotoDetailPage(image)">
         <a :href="image.foreign_landing_url"
              @click.prevent="() => false"
