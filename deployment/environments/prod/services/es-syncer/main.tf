@@ -17,7 +17,7 @@ module "es-syncer" {
   source = "../../../../modules/services/es-syncer"
 
   vpc_id                = "vpc-b741b4cc"
-  elasticsearch_url     = "search-cccatalog-elasticsearch-prod-aum273d7t74tidqq7glrdz54uq.us-east-1.es.amazonaws.com"
+  elasticsearch_url     = "search-cccatalog-es-prod2-v426vgj2ksjet5kettvub3tii4.us-east-1.es.amazonaws.com"
   elasticsearch_port    = "80"
   database_host         = "preprod-10m.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
   database_port         = "5432"

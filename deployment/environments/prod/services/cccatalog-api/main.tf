@@ -39,7 +39,7 @@ module "cccatalog-api" {
   django_debug_enabled      = "false"
   elasticsearch_port        = "80"
   aws_region                = "us-east-1"
-  elasticsearch_url         = "search-cccatalog-elasticsearch-prod-aum273d7t74tidqq7glrdz54uq.us-east-1.es.amazonaws.com"
+  elasticsearch_url         = "search-cccatalog-es-prod2-v426vgj2ksjet5kettvub3tii4.us-east-1.es.amazonaws.com"
   redis_host                = "ip-172-30-1-251.ec2.internal"
   ccc_api_host              = "api.creativecommons.engineering"
   root_shortening_url       = "shares.cc"

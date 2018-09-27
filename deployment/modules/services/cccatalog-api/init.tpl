@@ -32,6 +32,10 @@ sed 's/^export //' /etc/environment > /etc/systemd_environment
 
 # Install python and git dependencies
 yum -y install git python3-3.7.0-0.16.b3.amzn2.0.1 gcc python3-setuptools python3-devel postgresql-devel
+# Install PostgreSQL 10 client tools
+sudo yum install -y  https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-redhat10-10-2.noarch.rpm
+sudo sed -i "s/rhel-\$releasever-\$basearch/rhel-latest-x86_64/g" "/etc/yum.repos.d/pgdg-10-redhat.repo"
+sudo yum install -y postgresql10
 
 # Get the API server. Use a sparse checkout so we only clone the cccatalog-api folder.
 mkdir -p /home/ec2-user
