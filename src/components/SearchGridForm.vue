@@ -12,8 +12,9 @@
                  placeholder="Search the commons..."
                  autocapitalize="none"
                  id="searchInput"
-                 v-model="query"
-                 ref="search">
+                 v-model="searchTermsModel"
+                 ref="search"
+                 @keyup.enter="onSubmit">
           <ul class="search-form_toolbar menu icons icon-top" role="menubar">
             <li class="menu-button search-form_search-button" role="menuitem">
               <a href="#" @click.prevent="onSubmit">
@@ -29,7 +30,7 @@
                      2.918-8.6367 0-7.9132-6.454-14.367-14.367-14.367zm0 3.5898c5.9732
                      0 10.777 4.8042 10.777 10.777 0 5.9732-4.8042 10.777-10.777
                      10.777s-10.777-4.8042-10.777-10.777c2e-7 -5.9732 4.8042-10.777
-                     10.777-10.777z" color="#1779ba" color-rendering="auto" fill=" #2c3e50" />
+                     10.777-10.777z" color="#35495e" color-rendering="auto" fill=" #35495e" />
                     </svg>
                 </i>
                 <span class="menu-button_text">Search</span>
@@ -43,9 +44,9 @@
                     xmlns:dc="http://purl.org/dc/elements/1.1/"
                     xmlns:cc="http://creativecommons.org/ns#"
                     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="1.1"
-                    id="DESIGNS" x="0px" y="0px" width="24px" height="24px" fill="color: #2c3e50"
+                    id="DESIGNS" x="0px" y="0px" width="24px" height="24px" fill="color: #35495e"
                     viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;"
-                    xml:space="preserve">
+                    xml:space="preserve" v-if="!isFilterApplied">
                     <title property="dc:title">to filter</title><desc property="dc:description">
                     An icon for "filter" from the Lines and Angles series on to [icon].
                     Downloaded from http://www.toicon.com/icons/lines-and-angles_filter
@@ -60,14 +61,34 @@
                     <attributionname>Shannon E Thomas</attributionname><attributionurl>
                     http://www.toicon.com/icons/lines-and-angles_filter</attributionurl>
                     </work></metadata></svg>
+
+                    <svg enable-background="new 0 0 24 24" version="1.1" width="24"
+                    height="24" viewBox="0 0 1000 1000"
+                    xml:space="preserve" xmlns="http://www.w3.org/2000/svg" v-if="isFilterApplied"
+                    class="search-grid_filter-btn-icon"
+                    fill="#4A69CA">
+                    <g transform="matrix(1 0 0 -1 0 1920)"><path d="m783.6 1530.1c-25.7
+                    0-50.3 5-73.7 15-23.5 10-43.7 23.5-60.7 40.5s-30.5 37.3-40.5 60.7c-10
+                    23.5-15 48.1-15 73.7 0 20.6 3.2 40.6 9.5 59.9 6.4 19.3 15.4 36.8 27.2
+                    52.3 11.7 15.6 25.4 29.2 41 41 15.6 11.7 33 20.8 52.3 27.2s39.3 9.5 59.9
+                    9.5c25.7 0 50.3-5 73.7-15 23.5-10 43.7-23.5 60.7-40.5s30.5-37.3
+                    40.5-60.7c10-23.5 15-48.1
+15-73.7s-5-50.3-15-73.7c-10-23.5-23.5-43.7-40.5-60.7s-37.3-30.5-60.7-40.5-48-15-73.7-15zm-23.4
+88.6c1.5-1.8 3.5-2.6 5.8-2.6s4.2 0.9 5.8 2.6l123.4 123.4c1.5 1.5 2.3 3.5 2.3
+                    5.8s-0.8 4.3-2.3 6.1l-45.8 45.8c-1.5 1.5-3.5 2.3-5.8
+                    2.3s-4.2-0.8-5.8-2.3l-72.1-72.1-27.7 28c-1.5 1.5-3.5 2.3-5.8
+2.3s-4.3-0.8-6.1-2.3l-45.8-45.8c-1.5-1.8-2.3-3.7-2.3-5.9s0.8-4.2
+                    2.3-5.9l79.9-79.4zm-700.8 23.7c-9 0-16.7 3.2-23.2 9.7s-9.7 14.2-9.7
+                    23.2v44.8h483.9c0-26.1 3.8-52 11.5-77.7h-462.5zm230.4-712.4v329.2l-230.4
+                    362.1h469.8c14-36.2 34.8-67.9 62.2-95.1l-169.9-267v-197.5l-131.7-131.7z"/>
+                    </g>
+                    </svg>
                 </i>
                 <span class="menu-button_text">Filter</span>
               </a>
+              <search-grid-filter></search-grid-filter>
             </li>
           </ul>
-        </div>
-        <div class="medium-12 large-12 search-grid-filter-ctr">
-            <search-grid-filter :isVisible="isFilterVisible"></search-grid-filter>
         </div>
     </div>
   </form>
@@ -75,72 +96,127 @@
 
 <script>
 import SearchGridFilter from '@/components/SearchGridFilter';
+import { SET_QUERY, SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
 
 export default {
   name: 'search-grid-form',
-  data: () => ({ query: null, isFilterVisible: false }),
+  data: () => ({ searchTermsModel: null }),
   components: {
     SearchGridFilter,
   },
   computed: {
-    filter() {
-      return this.$store.state.filter;
+    searchTerms() {
+      return this.$store.state.query.q;
+    },
+    isFilterVisible() {
+      return this.$store.state.isFilterVisible;
+    },
+    isFilterApplied() {
+      return this.$store.state.isFilterApplied;
     },
   },
   methods: {
     onSubmit(e) {
       e.preventDefault();
-      if (this.query) {
-        this.$router.push({ path: 'search', query: { q: this.query, ...this.filter } });
+      if (this.searchTermsModel) {
+        this.$store.commit(
+          SET_QUERY,
+          { query: { q: this.searchTermsModel }, shouldNavigate: true },
+        );
       }
     },
     onToggleSearchGridFilter() {
-      this.isFilterVisible = !this.isFilterVisible;
+      this.$store.commit(
+        SET_FILTER_IS_VISIBLE,
+        { isFilterVisible: !this.isFilterVisible },
+      );
     },
     addScrollEvent() {
-      window.addEventListener('scroll', this.removeScrollEvent.bind(this));
+      this.removeScrollEvent = this.removeScrollEvent.bind(this);
+      window.addEventListener('scroll', this.removeScrollEvent);
     },
     removeScrollEvent() {
-      this.isFilterVisible = false;
+      this.$store.commit(SET_FILTER_IS_VISIBLE, { isFilterVisible: false });
       window.removeEventListener('scroll', this.removeScrollEvent);
     },
+    setFormInput() {
+      this.searchTermsModel = this.searchTerms;
+      this.$refs.search.focus();
+    },
   },
-  created() {
-    this.addScrollEvent();
+  watch: {
+    isFilterVisible: function handler(isFilterVisible) {
+      if (isFilterVisible) this.addScrollEvent();
+    },
+    searchTerms: function handler() {
+      this.setFormInput();
+    },
   },
-  mounted() {
-    this.query = this.$store.state.query.q;
-    this.$refs.search.focus();
+  mounted: function handler() {
+    this.setFormInput();
   },
 };
 </script>
 
 <style lang="scss" scoped>
+  .search-filter {
+    position: absolute;
+    top: 82px !important;
+    left: auto !important;
+    right: 0 !important;
+    border: 1px solid #e8e8e8;
+  }
+
   .search-form {
     width: 100%;
     background: #fff;
     border-bottom: 1px solid #E6EAEA;
   }
 
+  .search-filter:after,
+  .search-filter:before {
+    bottom: 100%;
+    right: 30px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .search-filter:after {
+    border-color: rgba(255, 255, 255, 0);
+    border-bottom-color: #fff;
+    border-width: 8px;
+    margin-left: -8px;
+    z-index: 100;
+  }
+
+  .search-filter:before {
+    border-color: rgba(232, 232, 232, 0);
+    border-bottom-color: #e8e8e8;
+    border-width: 10px;
+    margin-left: 0px;
+    right: 28px;
+  }
+
   .search-form_search-button {
 
     .menu-button_text {
-      color: #2c3e50;
+      color: #35495e;
     }
   }
 
   .search-form_filter-button {
+    position: relative;
 
     .menu-button_text {
-      color: #2c3e50;
+      color: #35495e;
     }
   }
   .search-form_ctr {
     position: relative;
-  }
-
-  .search-grid-filter-ctr {
-    overflow: hidden;
   }
 
   .search-form_inner-ctr {

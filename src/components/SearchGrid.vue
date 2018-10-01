@@ -1,28 +1,28 @@
 <template>
   <section class='search-grid'>
-    <div class="row">
-      <div class="search-grid_analytics" v-if="includeAnalytics">
-        <span>{{ this.$store.state.imagesCount }}</span>
-        <span>{{ query }}</span>
+    <div class="grid-x">
+      <div class="search-grid_analytics cell medium-6 large-6" v-if="showGrid && includeAnalytics">
+        <span>{{ _imagesCount }}</span>
+        <span>{{ searchTerm }}</span>
         Photos
       </div>
       <div class="search-grid_layout-control"></div>
     </div>
-    <ul class='search-grid_metrics-bar'>
+    <ul class="search-grid_metrics-bar">
       <li>What's</li>
       <li><a href="/browse/trending">trending</a></li>
       <li><a href="/browse/popular">popular</a></li>
       <li><a href="/browse/new">new</a></li>
     </ul>
     <div class="search-grid_ctr" ref="gridItems">
-      <figure v-for="(image, index) in images"
+      <figure v-for="(image) in _images"
         class="search-grid_item"
         :key="index"
         @click="onGotoDetailPage(image)">
         <a :href="image.foreign_landing_url"
-             @click.prevent="() => false"
-             target="new"
-             class="search-grid_image-ctr">
+          @click.prevent="() => false"
+          target="new"
+          class="search-grid_image-ctr">
           <img class="search-grid_image" :src="image.thumbnail || image.url"
                @error="onImageLoadError">
         </a>
@@ -40,10 +40,13 @@
         </figcaption>
       </figure>
       <infinite-loading
-        @infinite="infiniteHandler"
+        @infinite="onInfiniteHandler"
         ref="infiniteLoader"
-        v-if="useInfiniteScroll">
+        v-if="useInfiniteScroll && isDataInitialized">
       </infinite-loading>
+      <div class="search-grid_notification callout alert" v-if="isFetchingImagesError">
+          <h5>Error fetching images</h5>
+      </div>
     </div>
   </section>
 </template>
@@ -52,6 +55,9 @@
 import { SELECT_IMAGE_FOR_LIST, SET_IMAGES } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
+import SearchGridFilter from '@/components/SearchGridFilter';
+
+const errorImage = require('@/assets/404-grid_placeholder.png');
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -59,12 +65,19 @@ export default {
   name: 'search-grid',
   components: {
     InfiniteLoading,
+    SearchGridFilter,
   },
+  data: () => ({
+    isDataInitialized: false,
+    currentPage: 1,
+    showGrid: false,
+  }),
   props: {
     imagesCount: 0,
-    images: {},
-    query: null,
-    filters: {},
+    images: {
+      default: () => ([]),
+    },
+    query: {},
     useInfiniteScroll: {
       default: true,
     },
@@ -76,33 +89,50 @@ export default {
     },
   },
   computed: {
-    _filter() {
-      return this.$store.state.filter;
-    },
     imagePage() {
       return this.$store.state.imagePage;
     },
-    imageCount() {
-      return this.$store.state.imagesCount;
+    isFetchingImagesError() {
+      return this.$store.state.isFetchingImagesError;
     },
-    isFetching() {
-      return this.$store.state.isFetching;
+    isFetchingImages() {
+      return this.$store.state.isFetchingImages;
+    },
+    searchTerm() {
+      return this.$store.state.query.q;
+    },
+    _images() {
+      return this.useInfiniteScroll ? this.$store.state.images : this.images;
+    },
+    _imagesCount() {
+      return this.useInfiniteScroll ? this.$store.state.imagesCount : this.imagesCount;
     },
     _query() {
-      return this.$store.state.query;
+      return this.useInfiniteScroll ? this.$store.state.query : this.query;
     },
   },
   watch: {
-    isFetching() {
-      if (this.$state) this.$state.loaded();
+    isFetchingImages: function handler(isFetchingImages) {
+      if (isFetchingImages) {
+        this.showGrid = false;
+      } else {
+        this.showGrid = true;
+      }
+    },
+    _images: {
+      handler() {
+        if (this.$state) {
+          this.$state.loaded();
+
+          if (this._imagesCount < this.currentPage * DEFAULT_PAGE_SIZE) {
+            this.$state.complete();
+          }
+        }
+
+        this.isDataInitialized = true;
+      },
     },
     _query: {
-      handler() {
-        this.searchChanged();
-      },
-      deep: true,
-    },
-    _filter: {
       handler() {
         this.searchChanged();
       },
@@ -121,38 +151,29 @@ export default {
       this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
     },
     searchChanged() {
-      this.$store.commit(SET_IMAGES,
-        { images: [] },
-      );
-
+      this.showGrid = false;
+      this.$store.commit(SET_IMAGES, { images: [] });
+      this.currentPage = 0;
       this.$nextTick(() => {
         this.$refs.infiniteLoader.$emit('$InfiniteLoading:reset');
       });
     },
     onImageLoadError(event) {
       const image = event.target;
-
-      image.src = require('@/assets/404-grid_placeholder.png'); // eslint-disable-line global-require
+      image.src = errorImage;
     },
-    infiniteHandler($state) {
+    onInfiniteHandler($state) {
       this.$state = $state;
 
-      if (this.isFetching === false) {
-        if (this.imageCount < this.imagePage * DEFAULT_PAGE_SIZE) {
-          this.$state.complete();
-
-          return;
-        }
+      if (this.isFetchingImages === false) {
+        this.currentPage = this.currentPage + 1;
+        const searchParams = Object.assign(
+          { page: this.currentPage, shouldPersistImages: true },
+          this._query,
+        );
 
         this.$nextTick(() => {
-          this.$store.dispatch(
-            FETCH_IMAGES,
-            { q: this.query,
-              page: this.imagePage + 1,
-              shouldPersistImages: true,
-              ...this._filter,
-            },
-          );
+          this.$store.dispatch(FETCH_IMAGES, searchParams);
         });
       }
     },
@@ -294,6 +315,13 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  .search-grid_notification {
+    width: 50%;
+    margin: auto;
+    font-weight: 500;
+    text-align: center;
   }
 
   @media screen and (min-width: 769px) {

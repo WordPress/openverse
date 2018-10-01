@@ -72,7 +72,7 @@ export default {
 }
 
 .nav_logo {
-  margin: 15px 0 15px 15px;
+  margin: 15px 0 15px 0;
   height: 30px;
 }
 
@@ -112,6 +112,11 @@ export default {
     position: absolute;
     top: 1px;
     right: 1px;
+  }
+
+  /* Small only */
+  @media screen and (max-width: 380px) {
+    padding: 0.7rem .7rem;
   }
 }
 

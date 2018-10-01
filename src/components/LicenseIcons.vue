@@ -1,7 +1,7 @@
 <template>
-  <span class="license-icons">
-    <img class="photo_license-icon" src="@/assets/cc_icon.svg">
-    <img  v-for="(license, index) in onGetLicenseIcon(license)"
+  <span class="photo-license-icons">
+    <img class="photo_license-icon" src="@/assets/cc_icon.svg"><img
+          v-for="(license, index) in onGetLicenseIcon(license)"
           v-if="license" class="photo_license-icon"
           :src="require(`@/assets/cc-${license.toLowerCase()}_icon.svg`)"
           :key="index">
@@ -39,10 +39,6 @@ export default LicenseIcons;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  .photo_license {
-    text-transform: uppercase;
-  }
-
   .photo_license-icons {
     display: block;
     whitespace: none;
