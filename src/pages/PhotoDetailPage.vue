@@ -7,6 +7,7 @@
         <div class="photo_image-ctr cell medium-12 large-8">
           <a class="photo_breadcrumb"
              :href="breadCrumbURL"
+             @click.prevent="onGotoBack"
              v-if="shouldShowBreadcrumb">&#171; Back to search results</a>
           <img @click="onShowViewer(image)"
                @load="() => isPrimaryImageLoaded = true"
@@ -273,6 +274,9 @@ const PhotoDetailPage = {
     onGotoSearchPage(query) {
       this.$router.push({ name: 'browse-page', query: { q: query } });
     },
+    onGotoBack() {
+      this.$router.go(-1);
+    },
     onShowViewer() {
       if (this.images.length > 0) {
         const selectedImageID = this.$route.params.id;
@@ -291,6 +295,10 @@ const PhotoDetailPage = {
     },
   },
   created() {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
     this.loadImage(this.$route.params.id);
     this.initClipboard();
   },

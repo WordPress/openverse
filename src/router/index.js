@@ -7,7 +7,7 @@ import PhotoDetailPage from '@/pages/PhotoDetailPage';
 import ShareListPage from '@/pages/ShareListPage';
 import ShareListsPage from '@/pages/ShareListsPage';
 import store from '@/store';
-import { SET_QUERY, SET_SHARE_LIST, SET_IMAGE } from '@/store/mutation-types';
+import { SET_QUERY, SET_IMAGE, SET_IMAGES } from '@/store/mutation-types';
 
 
 Vue.use(VueRouter);
@@ -57,10 +57,10 @@ const router = new VueRouter({
 
 router.afterEach((to) => {
   if (to && to.query && to.query.q) {
-    store.commit(SET_QUERY, to.query);
+    store.commit(SET_QUERY, { query: to.query, override: true });
   }
-  store.commit(SET_SHARE_LIST, { shareListImages: [] });
   store.commit(SET_IMAGE, { image: {} });
+  store.commit(SET_IMAGES, { images: [] });
 });
 
 export default router;
