@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, re_path
 # from django.conf.urls import include
 from cccatalog.api.views.image_views import SearchImages, ImageDetail
-from cccatalog.api.views.site_views import HealthCheck
+from cccatalog.api.views.site_views import HealthCheck, ImageStats
 from cccatalog.api.views.list_views import CreateList, ListDetail
 from cccatalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
@@ -61,6 +61,7 @@ urlpatterns = [
     # re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     # re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
     path('image/<int:id>', ImageDetail.as_view(), name='image-detail'),
+    path('statistics/image', ImageStats.as_view(), name='about-image'),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
     re_path('image/search', SearchImages.as_view()),

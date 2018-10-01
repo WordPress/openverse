@@ -116,12 +116,12 @@ class ImageSearchQueryStringSerializer(_SearchQueryStringSerializer):
         label="provider",
         help_text="A comma separated list of data sources to search. Valid "
                   "inputs:"
-                  " `{}`".format(get_providers('image')),
+                  " `{}`".format(list(get_providers('image').keys())),
         required=False
     )
 
     def validate_provider(self, input_providers):
-        allowed_providers = get_providers('image')
+        allowed_providers = list(get_providers('image').keys())
 
         for input_provider in input_providers.split(','):
             if input_provider not in allowed_providers:

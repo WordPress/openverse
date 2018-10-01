@@ -62,14 +62,17 @@ def search(search_params, index, page_size, page=1) -> Response:
 
 def get_providers(index):
     """
-    Given an index, find all available data providers.
+    Given an index, find all available data providers and return their counts.
 
     :param index: An Elasticsearch index, such as `'image'`.
-    :return: A list of providers represented as strings. Example: `['met']`
+    :return: A dictionary mapping providers to the count of their images.`
     """
     provider_cache_name = 'providers-' + index
     cache_timeout = 60 * 5
     providers = cache.get(key=provider_cache_name)
+    if type(providers) == list:
+        # Invalidate old provider format.
+        cache.delete(key=provider_cache_name)
     if not providers:
         elasticsearch_maxint = 2147483647
         agg_body = {
@@ -88,11 +91,10 @@ def get_providers(index):
         s = Search.from_dict(agg_body)
         s.index = index
         results = s.execute().aggregations['unique_providers']['buckets']
-        providers = [result['key'] for result in results]
+        providers = {result['key']: result['doc_count'] for result in results}
         cache.set(key=provider_cache_name,
                   timeout=cache_timeout,
                   value=providers)
-
     return providers
 
 
