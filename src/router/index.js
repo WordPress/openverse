@@ -12,7 +12,6 @@ import { SET_QUERY, SET_IMAGE, SET_IMAGES } from '@/store/mutation-types';
 
 Vue.use(VueRouter);
 
-
 const router = new VueRouter({
   mode: 'history',
   routes: [
