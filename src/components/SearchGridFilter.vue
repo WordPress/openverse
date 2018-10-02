@@ -161,7 +161,7 @@ export default {
       [
         { code: 'all-cc', name: 'CC-licensed works only (no PD)' },
         { code: 'commercial', name: 'Commercial use permitted' },
-        { code: 'modification', name: 'Modifications allowed' },
+        { code: 'modification', name: 'Modifications permitted' },
       ],
     filter: {
       provider: [],
