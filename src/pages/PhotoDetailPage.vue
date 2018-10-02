@@ -92,7 +92,7 @@
           </span>
         </template>
         <p class="photo_tags-clarifai-badge" v-if="hasClarifaiTags">
-          <span>Contains tags by</span>
+          <span>Tag by</span>
           <a href="https://clarifai.com/">
             <img class="photo_tags-clarifai-badge-image" src="../assets/clarifai.svg" >
           </a>
@@ -152,13 +152,6 @@ const PhotoDetailPage = {
     hasClarifaiTags: false,
     imagecountseparator: 'of',
     isPrimaryImageLoaded: false,
-    keyinput: true,
-    modalclose: true,
-    mousescroll: true,
-    showcaption: true,
-    showclosebutton: true,
-    showimagecount: true,
-    showthumbnails: true,
     shouldShowBreadcrumb: false,
   }),
   computed: {
@@ -222,10 +215,10 @@ const PhotoDetailPage = {
     next();
   },
   beforeRouteEnter(to, previousPage, nextPage) {
-    nextPage((vm) => {
+    nextPage((_this) => {
       if (previousPage.name === 'browse-page') {
-        vm.shouldShowBreadcrumb = true; // eslint-disable-line no-param-reassign
-        vm.breadCrumbURL = `/search?q=${previousPage.query.q}`; // eslint-disable-line no-param-reassign
+        _this.shouldShowBreadcrumb = true; // eslint-disable-line no-param-reassign
+        _this.breadCrumbURL = `/search?q=${previousPage.query.q}`; // eslint-disable-line no-param-reassign
       }
     });
   },

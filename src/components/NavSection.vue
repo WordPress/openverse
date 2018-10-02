@@ -91,7 +91,7 @@ export default {
 
   /* Small only */
   @media screen and (max-width: 39.9375em) {
-    margin-left: 5px;
+    margin-left: 0 !important;
   }
 }
 

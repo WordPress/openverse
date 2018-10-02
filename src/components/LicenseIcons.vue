@@ -27,11 +27,6 @@ const LicenseIcons = {
       return licenses;
     },
   },
-  computed: {
-    filter() {
-      return this.$store.state.query.filter;
-    },
-  },
 };
 
 export default LicenseIcons;
