@@ -38,7 +38,7 @@ def search(search_params, index, page_size, page=1) -> Response:
         license_field = 'li' if 'li' in search_params.data else 'lt'
         license_filters = []
         for _license in search_params.data[license_field].split(','):
-            license_filters.append(Q("term", license=_license))
+            license_filters.append(Q("term", license__keyword=_license))
         s = s.filter('bool', should=license_filters, minimum_should_match=1)
     if 'provider' in search_params.data:
         provider_filters = []
