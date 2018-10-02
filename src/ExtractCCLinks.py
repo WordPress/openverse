@@ -85,8 +85,6 @@ class CCLinks:
                 fh          = gzip.GzipFile(fileobj=content)
                 watPaths    = fh.read().split()
 
-                watPaths    = watPaths[0:2]
-
                 return watPaths
             else:
                 raise Exception
