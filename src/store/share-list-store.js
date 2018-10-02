@@ -1,5 +1,3 @@
-
-
 import LinkService from '@/api/LinkService';
 import ShareListService from '@/api/ShareListService';
 
@@ -26,9 +24,9 @@ import {
 
 const state = {
   isFetching: false,
-  shareListSelectedImage: {},
   shareListImages: [],
   shareLists: [],
+  shareListSelectedImage: {},
   shareListURL: '',
 };
 
@@ -43,6 +41,7 @@ const actions = {
         commit(ADD_IMAGE_TO_LIST_END);
       })
       .catch((error) => {
+        commit(FETCH_END);
         throw new Error(error);
       });
   },
@@ -55,6 +54,7 @@ const actions = {
         commit(SET_SHARE_URL, { shortenedURL: data.shortened_url });
       })
       .catch((error) => {
+        commit(FETCH_END);
         throw new Error(error);
       });
   },
@@ -67,6 +67,7 @@ const actions = {
         commit(SET_SHARE_LIST, { shareListImages: data.images });
       })
       .catch((error) => {
+        commit(FETCH_END);
         throw new Error(error);
       });
   },
@@ -79,6 +80,7 @@ const actions = {
         commit(SET_SHARE_LISTS, { shareLists: lists });
       })
       .catch((error) => {
+        commit(FETCH_END);
         throw new Error(error);
       });
   },
@@ -103,6 +105,7 @@ const actions = {
           });
       })
       .catch((error) => {
+        commit(FETCH_END);
         throw new Error(error);
       });
   },
@@ -139,6 +142,7 @@ const actions = {
         commit(FETCH_END);
       })
       .catch((error) => {
+        commit(FETCH_END);
         throw new Error(error);
       });
   },

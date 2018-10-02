@@ -4,8 +4,8 @@
     :key="index"
     @click="onGotoDetailPage(image)">
     <a :href="image.foreign_landing_url"
-         @click.prevent="() => false"
-         target="new">
+       @click.prevent="() => false"
+       target="new">
       <img class="search-grid_image" :src="image.thumbnail || image.url">
     </a>
     <figcaption class="search-grid_item-overlay">

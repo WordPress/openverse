@@ -1,126 +1,172 @@
 <template>
-  <div :class="{ 'search-filter': true,
-                 'search-filter__visible': isVisible, }">
-    <div class="grid-x grid-margin-x grid-padding-x">
+  <div :class="{ 'search-filter cell small-12 medium-12 large-12': true,
+                 'search-filter__visible': isFilterVisible, }">
+    <router-view :key="$route.fullPath"></router-view>
+    <div class="grid-x grid-margin-x grid-margin-y">
       <div class="search-filter_providers
                   cell
-                  medium-4
-                  large-2
-                  large-offset-3">
-        <label><span>Collection</span></label>
-        <select v-model="filter.provider" v-on:change="onUpdateFilter">
-          <option v-for="(provider, index) in providers"
-                  :key="index"
-                  :value="provider.value">
-            {{ provider.text }}
-          </option>
-        </select>
+                  small-12
+                  large-12">
+        <multiselect
+          v-model="filter.provider"
+          @input="onUpdateFilter"
+          tag-placeholder="Add this as new tag"
+          placeholder="All Providers"
+          label="name"
+          track-by="code"
+          :options="providers"
+          :multiple="true"
+          :taggable="true"
+          :searchable="false">
+        </multiselect>
       </div>
       <div class="search-filter_license
                   cell
-                  medium-4
-                  large-2">
-        <label><span>Licenses</span></label>
-        <select v-model="filter.li"
-                v-on:change="onUpdateFilter"
-                :disabled="filter.lt !== ''">
-          <option v-for="(license, index) in licenses"
-                  :key="index"
-                  :value="license.value">
-            {{ license.text }}
-          </option>
-        </select>
+                  large-12">
+        <multiselect
+          v-model="filter.li"
+          @input="onUpdateFilter"
+          :disabled="filter.lt.length > 0"
+          tag-placeholder="Add this as new tag"
+          placeholder="All Licenses"
+          label="name"
+          track-by="code"
+          :options="licenses"
+          :multiple="true"
+          :taggable="true"
+          :searchable="false">
+        </multiselect>
       </div>
       <div class="search-filter_licenseType
                   cell
-                  medium-4
-                  large-2">
-        <label><span>License Types</span></label>
-        <select v-model="filter.lt"
-                v-on:change="onUpdateFilter"
-                :disabled="filter.li !== ''">
-          <option v-for="(licenseType, index) in licenseTypes"
-                  :key="index"
-                  :value="licenseType.value">
-            {{ licenseType.text }}
-          </option>
-        </select>
+                  large-12">
+        <multiselect
+          v-model="filter.lt"
+          @input="onUpdateFilter"
+          :disabled="filter.li.length > 0"
+          tag-placeholder="Add this as new tag"
+          placeholder="All License Types"
+          label="name"
+          track-by="code"
+          :options="licenseTypes"
+          :multiple="true"
+          :taggable="true"
+          :searchable="false">
+        </multiselect>
       </div>
       <div class="search-filter_licenseType
                   cell
-                  medium-4
-                  large-2">
-        <a class="button secondary search-filter_clear-btn"
-                :disabled="hasFilter===false"
-                @click="onClearFilters">clear filters</a>
+                  large-12">
+        <a class="button primary medium search-filter_clear-btn"
+                :disabled="isFilterApplied===false"
+                @click="onClearFilters">
+          Clear filters
+        </a>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { SET_GRID_FILTER } from '@/store/mutation-types';
+import { SET_QUERY } from '@/store/mutation-types';
+import Multiselect from 'vue-multiselect';
 
 export default {
   name: 'search-grid-filter',
-  props: {
-    isVisible: false,
+  components: {
+    Multiselect,
+  },
+  mounted() {
+    this.parseQueryFilters();
   },
   computed: {
-    hasFilter() {
-      return Object.keys(this.filter).some(key => this.filter[key]);
+    isFilterApplied() {
+      return this.$store.state.isFilterApplied;
+    },
+    isFilterVisible() {
+      return this.$store.state.isFilterVisible;
+    },
+    query() {
+      return this.$store.state.query;
     },
   },
   methods: {
     onUpdateFilter() {
-      const filter = this.filter;
-
-      this.$store.commit(SET_GRID_FILTER, { filter });
+      const filter = Object.assign({}, this.filter);
+      Object.keys(this.filter).forEach((key) => {
+        filter[key] = filter[key].map(filterItem => filterItem.code).join(',');
+      });
+      this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
     },
     onClearFilters() {
-      if (this.hasFilter) {
-        Object.keys(this.filter).forEach((key) => { this.filter[key] = ''; });
-        this.onUpdateFilter();
+      const filter = Object.assign({}, this.filter);
+      Object.keys(this.filter).forEach((key) => { this.filter[key] = []; });
+      this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
+    },
+    parseQueryFilters() {
+      const filterLookup = {
+        provider: 'providers',
+        li: 'licenses',
+        lt: 'licenseTypes',
+      };
+
+      if (this.query) {
+        Object.keys(this.query).forEach((key) => {
+          if (this[filterLookup[key]]) {
+            const codes = this.query[key].split(',');
+            if (codes.length) {
+              codes.forEach((code) => {
+                const filter = this[filterLookup[key]].find(filterItem => filterItem.code === code);
+                if (filter) {
+                  this.filter[key].push(filter);
+                }
+              });
+            }
+          }
+        });
       }
     },
   },
   data: () => (
     { providers:
       [
-        { value: '', text: '' },
-        { value: 'rijksmuseum', text: 'Rijksmuseum NL' },
-        { value: 'nypl', text: 'New York Public Library' },
-        { value: 'museumvictoria', text: 'Museums Victoria' },
-        { value: 'met', text: 'Metropolitan Museum of Art' },
-        { value: 'geographorguk', text: 'Geograph® Britain and Ireland' },
-        { value: 'flickr', text: 'Flickr' },
-        { value: 'deviantart', text: 'DeviantArt' },
-        { value: 'behance', text: 'Behance' },
-        { value: '500px', text: '500px' },
+        { code: '500px', name: '500px' },
+        { code: 'animaldiversity', name: 'Animal Diversity Web' },
+        { code: 'behance', name: 'Behance' },
+        { code: 'deviantart', name: 'DeviantArt' },
+        { code: 'digitaltmuseum', name: 'Digitalt Museum' },
+        { code: 'eol', name: 'Encyclopedia of Life' },
+        { code: 'flickr', name: 'Flickr' },
+        { code: 'floraon', name: 'Flora-On' },
+        { code: 'geographorguk', name: 'Geograph® Britain and Ireland' },
+        { code: 'iha', name: 'IHA Holiday Ads' },
+        { code: 'mccordmuseum', name: 'Montreal Social History Museum' },
+        { code: 'met', name: 'Metropolitan Museum of Art' },
+        { code: 'museumvictoria', name: 'Museums Victoria' },
+        { code: 'nypl', name: 'New York Public Library' },
+        { code: 'rijksmuseum', name: 'Rijksmuseum NL' },
+        { code: 'sciencemuseum', name: 'Science Museum – UK' },
       ],
     licenses:
       [
-        { value: '', text: '' },
-        { value: 'by', text: 'BY' },
-        { value: 'by-nc', text: 'BY-NC' },
-        { value: 'by-nc-nd', text: 'BY-NC-ND' },
-        { value: 'by-nc-sa', text: 'BY-NC-SA' },
-        { value: 'by-sa', text: 'BY-SA' },
-        { value: 'cc0', text: 'CC0' },
-        { value: 'pdm', text: 'Public Domain Mark' },
+        { code: 'by', name: 'BY' },
+        { code: 'by-nc', name: 'BY-NC' },
+        { code: 'by-nc-nd', name: 'BY-NC-ND' },
+        { code: 'by-nc-sa', name: 'BY-NC-SA' },
+        { code: 'by-sa', name: 'BY-SA' },
+        { code: 'cc0', name: 'CC0' },
+        { code: 'pdm', name: 'Public Domain Mark' },
       ],
     licenseTypes:
       [
-        { value: '', text: '' },
-        { value: 'all', text: 'All' },
-        { value: 'all-cc', text: 'CC-licensed works only (no PD)' },
-        { value: 'commercial', text: 'Commercial use permitted' },
-        { value: 'modification', text: 'Modification' },
+        { code: 'all-cc', name: 'CC-licensed works only (no PD)' },
+        { code: 'commercial', name: 'Commercial use permitted' },
+        { code: 'modification', name: 'Modifications allowed' },
       ],
     filter: {
-      provider: '',
-      li: '',
-      lt: '',
+      provider: [],
+      li: [],
+      lt: [],
     } }),
 };
 </script>
@@ -129,19 +175,20 @@ export default {
 @import '../styles/app';
 
 .search-filter {
-  @include xy-grid-container(100%, 0);
-  padding: 20px 0 5px 0;
-  margin: -100% auto 0 auto;
-  max-width: 100%;
-  transition: margin .7s ease-in-out;
-
-  select: {
-    margin: 0;
-  }
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  visibility: hidden;
+  left: 0;
+  padding: 10px ;
+  position: absolute;
+  right: 0;
+  transition: all .15s ease-in-out;
+  width: 300px;
+  opacity: 0;
+  transform: translate3d(0px, -20px, 0px);
 
   label {
     border-top: 1px solid #d6d6d6;
-
     span {
       margin-bottom: 1.07142857em;
       font-size: .85em;
@@ -155,13 +202,21 @@ export default {
   }
 
   &__visible {
-    border-top: 1px solid #d6d6d6;
+    border-top: 1px solid #e8e8e8;
     margin-top: 0;
+    visibility: visible;
+    opacity: 1;
+    transform: translate3d(0px, 0px, 0px);
   }
 }
 
 .search-filter_clear-btn {
   height: auto;
   border-radius: 2px;
+  margin: auto;
+}
+
+.multiselect__tags {
+  border-radius: 0 !important
 }
 </style>

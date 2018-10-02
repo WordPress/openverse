@@ -91,6 +91,7 @@ export default AboutPage;
   hr {
     margin: 2.5rem auto
   }
+
   .about-page_body {
     font-size: 1em;
     margin: 45px !important;
