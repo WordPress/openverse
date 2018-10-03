@@ -35,10 +35,14 @@ class ImageDetailSerializer(ModelSerializer, ImageSerializer):
         many=True,
         help_text="Tags with detailed metadata, such as accuracy and provider."
     )
+    id = serializers.CharField(
+        help_text='The unique ID of an image.',
+        source='identifier'
+    )
 
     class Meta:
         model = Image
-        fields = ('title', 'identifier', 'creator', 'creator_url', 'tags',
+        fields = ('title', 'id', 'creator', 'creator_url', 'tags',
                   'url', 'thumbnail', 'provider', 'source', 'license',
                   'license_version', 'foreign_landing_url', 'meta_data',
                   'view_count')
