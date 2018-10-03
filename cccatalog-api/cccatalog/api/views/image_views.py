@@ -96,7 +96,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     """
     serializer_class = ImageDetailSerializer
     queryset = Image.objects.all()
-    lookup_field = 'id'
+    lookup_field = 'identifier'
 
     @swagger_auto_schema(operation_id="image_detail",
                          responses={
@@ -104,9 +104,9 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                              404: 'Not Found'
                          })
     @track_model_views(Image)
-    def get(self, request, id, format=None, view_count=0):
+    def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
-        resp = self.retrieve(request, id)
+        resp = self.retrieve(request, identifier)
         # Add page views to the response.
         resp.data['view_count'] = view_count
         return resp

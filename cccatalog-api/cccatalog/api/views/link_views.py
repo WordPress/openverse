@@ -54,6 +54,7 @@ class CreateShortenedLink(GenericAPIView):
             }
         )
 
+
 class ResolveShortenedLink(APIView):
     @swagger_auto_schema(operation_id="link_resolve",
                          responses={

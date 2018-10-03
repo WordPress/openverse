@@ -146,7 +146,10 @@ class TagSerializer(serializers.Serializer):
 class ImageSerializer(serializers.Serializer):
     """ A single image. Used in search results."""
     title = serializers.CharField(required=False)
-    identifier = serializers.CharField(required=False)
+    identifier = serializers.CharField(
+        required=False,
+        help_text="The unique identifier for the image."
+    )
     creator = serializers.CharField(required=False, allow_blank=True)
     creator_url = serializers.URLField(required=False)
     legacy_tags = serializers.ListField(required=False)
@@ -163,10 +166,6 @@ class ImageSerializer(serializers.Serializer):
     license_version = serializers.CharField(required=False)
     foreign_landing_url = serializers.URLField(required=False)
     meta_data = serializers.CharField(required=False)
-    id = serializers.IntegerField(
-        required=True,
-        help_text="The unique identifier of the image."
-    )
     detail = serializers.URLField(
         required=True,
         help_text="A direct link to the detail view of an image."

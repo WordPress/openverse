@@ -1,10 +1,16 @@
 from rest_framework import serializers
-from cccatalog.api.models import ImageList
+from cccatalog.api.models import ImageList, Image
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
 import secrets
 
 
 class ImageListBaseSerializer(serializers.ModelSerializer):
+    images = serializers.SlugRelatedField(
+        many=True,
+        queryset=Image.objects.all(),
+        slug_field='identifier',
+        help_text='A list of unique IDs.'
+    )
     class Meta:
         fields = ('images',)
 
