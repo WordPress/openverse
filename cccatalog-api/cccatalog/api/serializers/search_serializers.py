@@ -147,7 +147,7 @@ class ImageSerializer(serializers.Serializer):
     """ A single image. Used in search results."""
     title = serializers.CharField(required=False)
     identifier = serializers.CharField(
-        required=False,
+        required=True,
         help_text="The unique identifier for the image."
     )
     creator = serializers.CharField(required=False, allow_blank=True)

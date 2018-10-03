@@ -62,11 +62,10 @@ class SearchImages(APIView):
         results = []
         for result in search_results:
             url = request.build_absolute_uri(
-                reverse('image-detail', [result.id])
+                reverse('image-detail', [result.identifier])
             )
             result.detail = url
             results.append(result)
-
         serialized_results =\
             ImageSerializer(results, many=True).data
 
