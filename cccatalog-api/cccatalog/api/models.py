@@ -23,10 +23,7 @@ class OpenLedgerModel(models.Model):
 class Image(OpenLedgerModel):
     # A unique identifier that we assign on ingestion. This is "our" identifier.
     # See the event handler below for the algorithm to generate this value
-    identifier = models.CharField(unique=True, max_length=255, blank=True, null=True, db_index=True)
-
-    # The perceptual hash we generate from the source image TODO
-    perceptual_hash = models.CharField(unique=False, max_length=255, blank=True, null=True, db_index=True)
+    identifier = models.UUIDField(unique=True,db_index=True)
 
     # The provider of the data, typically a partner like Flickr or 500px
     provider = models.CharField(max_length=80, blank=True, null=True, db_index=True)
@@ -36,8 +33,9 @@ class Image(OpenLedgerModel):
     # but provider=Flickr (since all images are Flickr-originated)
     source = models.CharField(max_length=80, blank=True, null=True, db_index=True)
 
-    # The identifier that was defined by the source or provider. This may need
-    # to be extended to support multiple values when we begin to reconcile duplicates
+    # The identifier that was defined by the source or provider. This may
+    # need to be extended to support multiple values when we begin to
+    # reconcile duplicates
     foreign_identifier = models.CharField(unique=True, max_length=1000, blank=True, null=True, db_index=True)
 
     # The entry point URL that we got from the external source, such as the
@@ -136,7 +134,7 @@ class ImageList(OpenLedgerModel):
     images = models.ManyToManyField(
         Image,
         related_name="lists",
-        help_text="A list of primary keys corresponding to images."
+        help_text="A list of identifier keys corresponding to images."
     )
     slug = models.CharField(
         max_length=200,
