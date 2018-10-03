@@ -177,10 +177,22 @@ const PhotoDetailPage = {
       return this.$store.state.image;
     },
     ccLicenseURL() {
-      const image = this.image;
-      const url = 'https://creativecommons.org/licenses';
+      if(!this.image){
+        return;
+      }
 
-      return `${url}/${image.license}/${image.license_version}`;
+      const image = this.image;
+      const BASE_URL = 'https://creativecommons.org';
+      let url = `${BASE_URL}/licenses/${image.license}/${image.license_version}`;
+      const license = image.license.toLowerCase();
+
+      if (license === 'cc0') {
+        url = `${BASE_URL}/publicdomain/zero/1.0/`;
+      } else if (image.license === 'pdm') {
+        url = `${BASE_URL}/publicdomain/mark/1.0/`;
+      }
+
+      return url;
     },
     textAttribution() {
       const image = this.image;
