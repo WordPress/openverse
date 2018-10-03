@@ -11,6 +11,7 @@ class ImageListBaseSerializer(serializers.ModelSerializer):
         slug_field='identifier',
         help_text='A list of unique IDs.'
     )
+
     class Meta:
         fields = ('images',)
 
