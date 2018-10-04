@@ -6,7 +6,7 @@
     <div class="search-form_ctr grid-x global-nav show-for-smedium">
         <div class="search-form_inner-ctr cell medium-12 large-10">
           <input required="required"
-                 autofocus=""
+                 autofocus="true"
                  class="search-form_input"
                  type="search"
                  placeholder="Search the commons..."
@@ -141,7 +141,6 @@ export default {
     },
     setFormInput() {
       this.searchTermsModel = this.searchTerms;
-      this.$refs.search.focus();
     },
   },
   watch: {

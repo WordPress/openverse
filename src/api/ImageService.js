@@ -17,7 +17,7 @@ const ImageService = {
    * Retreive image details by Id number.
    */
   getImageDetail(params) {
-    if (params.id && isNaN(params.id)) {
+    if (!params.id) {
       throw new Error('[RWV] ImageService.getImageDetail() id parameter required to retreive image details.');
     }
 

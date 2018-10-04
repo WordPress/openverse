@@ -6,7 +6,7 @@
       </a>
       <div class="menu_ctr">
         <ul class="menu">
-          <li class="home"><a href="./">Home</a></li>
+          <li class="home"><a href="/">Home</a></li>
           <li class="list-option">
             <a href='/lists'>
               Lists
@@ -16,7 +16,7 @@
               </transition>
             </a>
           </li>
-          <li><a href="./about">About</a></li>
+          <li><a href="/about">About</a></li>
         </ul>
       </div>
     </div>

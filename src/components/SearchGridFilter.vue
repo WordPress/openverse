@@ -20,7 +20,7 @@
           :searchable="false">
         </multiselect>
       </div>
-      <div class="search-filter_license
+      <div class="search-filter_licenses
                   cell
                   large-12">
         <multiselect
@@ -37,7 +37,7 @@
           :searchable="false">
         </multiselect>
       </div>
-      <div class="search-filter_licenseType
+      <div class="search-filter_license-types
                   cell
                   large-12">
         <multiselect
@@ -54,8 +54,7 @@
           :searchable="false">
         </multiselect>
       </div>
-      <div class="search-filter_licenseType
-                  cell
+      <div class="cell
                   large-12">
         <a class="button primary medium search-filter_clear-btn"
                 :disabled="isFilterApplied===false"
@@ -116,7 +115,8 @@ export default {
             const codes = this.query[key].split(',');
             if (codes.length) {
               codes.forEach((code) => {
-                const filter = this[filterLookup[key]].find(filterItem => filterItem.code === code);
+                const filter = this[filterLookup[key]]
+                  .find(filterItem => filterItem.code === code);
                 if (filter) {
                   this.filter[key].push(filter);
                 }
@@ -149,17 +149,19 @@ export default {
       ],
     licenses:
       [
-        { code: 'by', name: 'BY' },
-        { code: 'by-nc', name: 'BY-NC' },
-        { code: 'by-nc-nd', name: 'BY-NC-ND' },
-        { code: 'by-nc-sa', name: 'BY-NC-SA' },
-        { code: 'by-sa', name: 'BY-SA' },
         { code: 'cc0', name: 'CC0' },
         { code: 'pdm', name: 'Public Domain Mark' },
+        { code: 'by', name: 'BY' },
+        { code: 'by-sa', name: 'BY-SA' },
+        { code: 'by-nc', name: 'BY-NC' },
+        { code: 'by-nd', name: 'BY-ND' },
+        { code: 'by-nc-sa', name: 'BY-NC-SA' },
+        { code: 'by-nc-nd', name: 'BY-NC-ND' },
       ],
     licenseTypes:
       [
         { code: 'all-cc', name: 'CC-licensed works only (no PD)' },
+        { code: 'all', name: 'All Public Domain (PD)' },
         { code: 'commercial', name: 'Commercial use permitted' },
         { code: 'modification', name: 'Modifications permitted' },
       ],

@@ -38,6 +38,29 @@
         for each image. With this addition, we’re not just cataloging the commons, we’re making it
         better. Thank you to Clarifai for their support.
       </p>
+      <h2>Providers</h2>
+      <div class="about-page_provider-stats-ctr">
+        <table class="about-page_provider-stats-table">
+          <thead>
+            <th>Provider</th>
+            <th>Domain</th>
+            <th># CC Licensed Works</th>
+          </thead>
+          <tbody>
+            <tr v-for="(imageStat, index) in imageStats"
+                v-if="getProviderName(imageStat.provider_name)"
+                :key="index">
+              <td>{{ getProviderName(imageStat.provider_name) }}</td>
+              <td>
+                <a :href="getProviderURL(imageStat.provider_name)">
+                  {{ getProviderURL(imageStat.provider_name) }}
+                </a>
+              </td>
+              <td>{{ getProviderImageCount(imageStat.image_count) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
   </div>
   <footer-section></footer-section>
 </div>
@@ -46,12 +69,53 @@
 <script>
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
+import { FETCH_IMAGE_STATS } from '@/store/action-types';
+import ImageProviderService from '@/api/ImageProviderService';
 
 const AboutPage = {
   name: 'about-page',
   components: {
     HeaderSection,
     FooterSection,
+  },
+  computed: {
+    imageStats() {
+      return this.$store.state.imageStats.sort((a, b) => {
+        const nameA = a.provider_name.toUpperCase();
+        const nameB = b.provider_name.toUpperCase();
+
+        if (nameA < nameB) {
+          return -1;
+        }
+
+        if (nameA > nameB) {
+          return 1;
+        }
+
+        return 0;
+      });
+    },
+  },
+  methods: {
+    getProviderName(providerName) {
+      const provider = ImageProviderService.getProviderInfo(providerName);
+
+      return provider && provider.name;
+    },
+    getProviderURL(providerName) {
+      const provider = ImageProviderService.getProviderInfo(providerName);
+
+      return provider && provider.url;
+    },
+    getProviderImageCount(imageCount) {
+      return (imageCount).toLocaleString('en');
+    },
+    getSortedStats(imageStats) {
+      return imageStats.sort((a, b) => a.name > b.name);
+    },
+  },
+  beforeMount() {
+    this.$store.dispatch(FETCH_IMAGE_STATS);
   },
 };
 
@@ -76,20 +140,6 @@ export default AboutPage;
     letter-spacing: initial;
     line-height: 1.25;
     text-transform: initial;
-  }
-
-  h3 {
-    margin-top: 1em;
-    margin-bottom: .83333333em;
-    font-size: 1.125em;
-    font-weight: 500;
-    letter-spacing: initial;
-    line-height: 1.25;
-    text-transform: initial;
-  }
-
-  hr {
-    margin: 2.5rem auto
   }
 
   .about-page_body {

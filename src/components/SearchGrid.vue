@@ -23,14 +23,19 @@
           @click.prevent="() => false"
           target="new"
           class="search-grid_image-ctr">
-          <img class="search-grid_image" :src="image.thumbnail || image.url"
+          <img class="search-grid_image" :src="getImageUrl(image)"
                @error="onImageLoadError">
         </a>
-        <figcaption class="search-grid_item-overlay">
-          <a class="search-grid_overlay-title"
+        <figcaption class="search-grid_item-overlay search-grid_item-overlay__top">
+          <license-icons :image="image"></license-icons>
+        </figcaption>
+        <figcaption class="search-grid_item-overlay search-grid_item-overlay__bottom">
+          <a class="search-grid_overlay-provider"
              :href="image.foreign_landing_url"
              @click.stop="() => false"
              target="new">
+             <img class="search-grid_overlay-provider-logo"
+                  :src="getProviderLogo(image.provider)">
              {{ image.title }}
           </a>
           <a class="search-grid_overlay-add"
@@ -54,8 +59,11 @@
 <script>
 import { SELECT_IMAGE_FOR_LIST, SET_IMAGES } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
+import ImageProviderService from '@/api/ImageProviderService';
 import InfiniteLoading from 'vue-infinite-loading';
+import LicenseIcons from '@/components/LicenseIcons';
 import SearchGridFilter from '@/components/SearchGridFilter';
+
 
 const errorImage = require('@/assets/404-grid_placeholder.png');
 
@@ -66,6 +74,7 @@ export default {
   components: {
     InfiniteLoading,
     SearchGridFilter,
+    LicenseIcons,
   },
   data: () => ({
     isDataInitialized: false,
@@ -140,6 +149,25 @@ export default {
     },
   },
   methods: {
+    getImageUrl(image) {
+      if (!image) {
+        return '';
+      }
+
+      let url = image.thumbnail || image.url;
+
+      if (url.indexOf('https') === -1) {
+        url = `https://${url}`;
+      }
+
+      return url;
+    },
+    getProviderLogo(providerName) {
+      const logo = ImageProviderService.getProviderInfo(providerName).logo;
+      const logUrl = require(`@/assets/${logo}`); // eslint-disable-line global-require, import/no-dynamic-require
+
+      return logUrl;
+    },
     onGotoDetailPage(image) {
       this.$router.push(`/photos/${image.id}`);
     },
@@ -201,7 +229,11 @@ export default {
 
     &:hover .search-grid_item-overlay {
       opacity: 1;
-      bottom: 0%;
+      bottom: 0;
+    }
+
+    &:hover .search-grid_item-overlay__top {
+      top: 0;
     }
   }
 
@@ -211,17 +243,32 @@ export default {
     transition: all .4s ease;
     width: 100%;
     height: 30px;
-    bottom: -100%;
     color: #fff;
-    background: linear-gradient(to top,
-                rgba(0,0,0,.5)
-                0,
-                rgba(0,0,0,0) 100%);
     padding: 0 10px;
     display: block;
+    top: -100%;
+
+    &__top {
+      transition: all .5s ease;
+      background: linear-gradient(to bottom,
+                  rgba(0,0,0,.5)
+                  0,
+                  rgba(0,0,0,0) 100%);
+      top: 0;
+    }
+
+    &__bottom {
+      height: 30px;
+      background: linear-gradient(to top,
+                  rgba(0,0,0,.5)
+                  0,
+                  rgba(0,0,0,0) 100%);
+      bottom: -100%;
+      top: auto;
+    }
   }
 
-  .search-grid_overlay-title {
+  .search-grid_overlay-provider {
     width: calc( 100% - 30px );
     display: block;
     bottom: 10px;
@@ -232,6 +279,12 @@ export default {
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  .search-grid_overlay-provider-logo {
+    max-height: 30px;
+    max-width: 40px;
+    margin-right: 5px;
   }
 
   .search-grid_overlay-add {
@@ -280,6 +333,16 @@ export default {
       &:last-of-type:after {
         content: '';
       }
+    }
+  }
+
+  .photo-license-icons {
+    opacity: .7;
+    margin-top: 2px;
+    height: 22px !important;
+
+    &:hover {
+      opacity: 1;
     }
   }
 
