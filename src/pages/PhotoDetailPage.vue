@@ -37,13 +37,14 @@
               <a class="photo_license" :href="ccLicenseURL">
               CC {{ image.license }} {{ image.license_version }}
               </a>
-              <a class="photo_license-icons" :href="ccLicenseURL">
-                <license-icons :license="image.license"></license-icons>
-              </a>
+              <license-icons :image="image"></license-icons>
             </li>
             <li>
               <h3>Source</h3>
-              <a :href="image.foreign_landing_url">{{ image.provider }}</a>
+              <a class="photo_provider"
+                 :href="image.foreign_landing_url"
+                 target="blank"
+                 rel="noopener noreferrer">{{ image.provider }}</a>
             </li>
           </ul>
           <section class="photo_usage">
@@ -177,16 +178,21 @@ const PhotoDetailPage = {
       return this.$store.state.image;
     },
     ccLicenseURL() {
-      if(!this.image){
-        return;
+      if (!this.image) {
+        return '';
       }
 
       const image = this.image;
       const BASE_URL = 'https://creativecommons.org';
       let url = `${BASE_URL}/licenses/${image.license}/${image.license_version}`;
-      const license = image.license.toLowerCase();
+      let license = '';
+
+      if (image.license) {
+        license = image.license;
+      }
 
       if (license === 'cc0') {
+        this.image.license_version = '1.0';
         url = `${BASE_URL}/publicdomain/zero/1.0/`;
       } else if (image.license === 'pdm') {
         url = `${BASE_URL}/publicdomain/mark/1.0/`;
@@ -300,10 +306,6 @@ const PhotoDetailPage = {
     },
   },
   created() {
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-
     this.loadImage(this.$route.params.id);
     this.initClipboard();
   },
@@ -330,8 +332,8 @@ export default PhotoDetailPage;
     text-transform: uppercase;
   }
 
-  .photo_license-icons {
-    display: block;
+  .photo_provider {
+     text-transform: capitalize;
   }
 
   .photo_paginator {

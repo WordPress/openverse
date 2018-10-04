@@ -17,7 +17,7 @@
       <div class="search-form_ctr grid-x">
           <div class="cell large-12">
             <input required="required"
-                   autofocus=""
+                   autofocus="true"
                    class="hero_search-input"
                    type="search"
                    placeholder="Search the commons..."

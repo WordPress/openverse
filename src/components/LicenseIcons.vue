@@ -1,11 +1,15 @@
 <template>
-  <span class="photo-license-icons">
-    <img class="photo_license-icon" src="@/assets/cc_icon.svg"><img
-          v-for="(license, index) in onGetLicenseIcon(license)"
-          v-if="license" class="photo_license-icon"
+  <a :href="getLicenseURL(image)"
+      @click.stop="() => false"
+     class="photo-license-icons"
+     target="_blank"
+     rel="noopener noreferrer">
+    <img class="photo-license-icon" src="@/assets/cc_icon.svg"><img
+          v-for="(license, index) in onGetLicenseIcon(image.license)"
+          v-if="license" class="photo-license-icon"
           :src="require(`@/assets/cc-${license.toLowerCase()}_icon.svg`)"
           :key="index">
-  </span>
+  </a>
 </template>
 
 <script>
@@ -13,11 +17,9 @@ const LicenseIcons = {
   name: 'license-icons',
   components: {},
   props: {
-    license: '',
+    image: '',
+    shouldWrapInLink: false,
   },
-  data: () => ({
-    isLicenseIcons: false,
-  }),
   methods: {
     onGetLicenseIcon(license) {
       let licenses = [];
@@ -25,6 +27,28 @@ const LicenseIcons = {
         licenses = license.split('-');
       }
       return licenses;
+    },
+    getLicenseURL(image) {
+      if (!image) {
+        return '';
+      }
+
+      const BASE_URL = 'https://creativecommons.org';
+      let url = `${BASE_URL}/licenses/${image.license}/${image.license_version}`;
+      let license = '';
+
+      if (image.license) {
+        license = image.license;
+      }
+
+      if (license === 'cc0') {
+        this.image.license_version = '1.0';
+        url = `${BASE_URL}/publicdomain/zero/1.0/`;
+      } else if (image.license === 'pdm') {
+        url = `${BASE_URL}/publicdomain/mark/1.0/`;
+      }
+
+      return url;
     },
   },
 };
@@ -34,12 +58,14 @@ export default LicenseIcons;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  .photo_license-icons {
+  .photo-license-icons {
     display: block;
+    height: 32px;
     whitespace: none;
   }
 
-  .photo_license-icon {
-    height: 32px;
+  .photo-license-icon {
+    height: inherit;
+    margin-right: 3px;
   }
 </style>
