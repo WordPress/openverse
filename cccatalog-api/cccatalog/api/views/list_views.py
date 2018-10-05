@@ -88,6 +88,7 @@ class ListDetail(_List, RetrieveModelMixin):
         }
         for idx, image in enumerate(resolved['images']):
             _uuid = image['identifier']
+            del resolved['images'][idx]['identifier']
             resolved['images'][idx]['id'] = _uuid
         return Response(status=200, data=resolved)
 
