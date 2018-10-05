@@ -80,11 +80,15 @@ class ListDetail(_List, RetrieveModelMixin):
             _list = ImageList.objects.get(slug=slug)
         except ImageList.DoesNotExist:
             return Response(status=404)
+        # TODO: Use a serializer here. Exposes too many low level details.
         resolved = {
             'id': slug,
             'title': _list.title,
             'images': [model_to_dict(x) for x in _list.images.all()]
         }
+        for idx, image in enumerate(resolved['images']):
+            _uuid = image['identifier']
+            resolved['images'][idx]['id'] = _uuid
         return Response(status=200, data=resolved)
 
     @staticmethod
