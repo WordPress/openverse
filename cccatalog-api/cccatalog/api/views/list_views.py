@@ -98,7 +98,7 @@ class ListDetail(_List, RetrieveModelMixin):
         if 'HTTP_AUTHORIZATION' not in request.META:
             return False
         return list_model.auth == \
-               request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+            request.META['HTTP_AUTHORIZATION'].split(' ')[1]
 
     @swagger_auto_schema(operation_id="list_delete",
                          security=[
