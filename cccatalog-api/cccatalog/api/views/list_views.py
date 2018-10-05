@@ -86,6 +86,7 @@ class ListDetail(_List, RetrieveModelMixin):
             'title': _list.title,
             'images': [model_to_dict(x) for x in _list.images.all()]
         }
+        # Expose UUID downstream instead of ID
         for idx, image in enumerate(resolved['images']):
             _uuid = image['identifier']
             del resolved['images'][idx]['identifier']
