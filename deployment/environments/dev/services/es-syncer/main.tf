@@ -29,5 +29,5 @@ module "es-syncer" {
   aws_region            = "us-east-1"
   environment           = "dev"
   poll_interval         = "60"
-  docker_tag            = "1.2"
+  docker_tag            = "2.1"
 }
