@@ -3,8 +3,8 @@
 
 ## Description
 This repository contains the methods used to identify over 1.4 billion Creative Commons licensed works. The challenge is that these works are dispersed throughout the web and identifying them requires a combination of techniques. Two approaches are currently being explored:
-* Web crawl data, and
-* Application Programming Interfaces (APIs)
+1. [Web crawl data](#web-crawl-data)
+2. [Application Programming Interfaces (APIs)](#application-programming-interfaces-apis)
 
 ### Web Crawl Data
 The Common Crawl Foundation provides a repository of free web crawl data that is stored on Amazon Public Datasets. At the begining of each month, we process their most recent meta-data to identify all domains that link to Creative Commons. Due to the volume of data, Apache Spark is used to streamline the processing.
