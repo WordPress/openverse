@@ -96,50 +96,50 @@ const HomePage = {
   data: () => ({
     images: [
       {
-        title: 'Unpublished-Landscapes',
-        url: 'https://www.behance.net/gallery/41530879/Unpublished-Landscapes',
-        id: 15514496,
+        title: 'creepy pumpkins',
+        url: 'https://www.flickr.com/photos/greyworld/6253809589',
+        id: '2a4d0a72-0423-4c1e-b30c-1e13fff30bde',
         class: 'grid-item block b1',
-        src: require('@/assets/record_large.jpg'), // eslint-disable-line global-require
+        src: require('@/assets/pumpkins_medium.jpg'), // eslint-disable-line global-require
       }, {
-        title: 'Exploded Views',
-        url: 'https://www.flickr.com/photos/posk/7124858335',
-        id: 921892,
+        title: 'Trick or Treat',
+        url: 'https://www.flickr.com/photos/larow/10601605916',
+        id: '71bc2f24-a231-4f89-a568-6549d7d39f15',
         class: 'grid-item block b2',
-        src: require('@/assets/lights_large.jpg'), // eslint-disable-line global-require
+        src: require('@/assets/halloween-storefront_large.jpg'), // eslint-disable-line global-require
       }, {
-        title: 'Specific_Media_04',
-        url: 'https://www.flickr.com/photos/k2space/14051210350',
-        id: 7797602,
+        title: 'Halloween Parade 2014',
+        url: 'https://www.flickr.com/photos/gotovan/15390205559/',
+        id: 'f5db1619-7453-49da-8c8d-cb98fbfa849d',
         class: 'grid-item block b3',
-        src: require('@/assets/office_medium.jpg'), // eslint-disable-line global-require
+        src: require('@/assets/halloween_large.jpg'), // eslint-disable-line global-require
       }, {
-        title: 'Glitched Landscapes',
-        url: 'https://www.behance.net/gallery/36164749/Glitched-Landscapes',
-        id: 11882642,
+        title: 'Halloween Comes to Town',
+        url: 'https://500px.com/photo/179448237/halloween-comes-to-town-by-andrei-sokolovski',
+        id: '655f2602-bdbc-412e-960a-88b45e2ec797',
         class: 'grid-item block b4',
-        src: require('@/assets/sky_medium.jpg'), // eslint-disable-line global-require
+        src: require('@/assets/lanterns.jpg'), // eslint-disable-line global-require
       },
       {
-        title: 'the mountain story',
-        url: 'https://www.behance.net/gallery/55404735/the-mountain-story',
-        id: 12759871,
+        title: 'Halloween',
+        url: 'https://www.deviantart.com/vecvex/art/Halloween-102174565',
+        id: '385dca42-8bbd-4d67-9447-357df93d6d5a',
         class: 'grid-item block b5',
-        src: require('@/assets/mountain_medium.jpg'), // eslint-disable-line global-require
+        src: require('@/assets/halloween_by_vecvex.jpg'), // eslint-disable-line global-require
       },
       {
-        title: 'Howling Mixed-Breed Brown Dog',
-        url: 'https://www.flickr.com/photos/foundanimalsfoundation/8557041595/',
-        id: 16375857,
+        title: 'Halloween decorations',
+        url: 'https://www.flickr.com/photos/mdid/6343507061',
+        id: '7b922486-0388-47de-9589-3f8db37e9a65',
         class: 'grid-item block b6',
-        src: require('@/assets/dog_medium.jpg'), // eslint-disable-line global-require
+        src: require('@/assets/halloween-decorations.jpg'), // eslint-disable-line global-require
       },
       {
-        title: 'Nike FFF Retouching',
+        title: 'Haunted House',
         url: 'https://www.behance.net/gallery/51974139/Nike-FFF-Retouching',
-        id: 15487477,
+        id: 'b310a08b-0a9d-4bc4-808b-c532f934e157',
         class: 'grid-item block b7',
-        src: require('@/assets/soccer_medium.jpg'), // eslint-disable-line global-require
+        src: require('@/assets/haunted-house_medium.jpg'), // eslint-disable-line global-require
       },
     ],
   }),
