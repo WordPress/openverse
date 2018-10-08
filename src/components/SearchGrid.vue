@@ -6,7 +6,9 @@
         <span>{{ searchTerm }}</span>
         Photos
       </div>
-      <div class="search-grid_layout-control"></div>
+      <div class="search-grid_layout-control">
+        Grid Options:
+      </div>
     </div>
     <ul class="search-grid_metrics-bar">
       <li>What's</li>
@@ -156,7 +158,7 @@ export default {
 
       let url = image.thumbnail || image.url;
 
-      if (url.indexOf('https') === -1) {
+      if (url.indexOf('http') === -1) {
         url = `https://${url}`;
       }
 
@@ -214,6 +216,10 @@ export default {
   .infinite-loading-container {
     margin-top: 30px;
     width: 100%;
+  }
+
+  .search-grid_layout-control {
+    display: none;
   }
 
   .search-grid_image-ctr {
