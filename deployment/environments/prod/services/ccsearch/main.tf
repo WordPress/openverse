@@ -7,7 +7,7 @@ module "ccsearch" {
 
   vpc_id                    = "vpc-b741b4cc"
   environment               = "-prod"
-  git_revision              = "1997583310568cb8a105f557cc3966ca2f57698b"
+  git_revision              = "84934ad3fadffaad4730f5a3ff44a02c236371df"
   instance_type             = "t2.small"
   api_url                   = "https://api.creativecommons.engineering"
 }
