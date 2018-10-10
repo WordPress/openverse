@@ -77,20 +77,25 @@ resource "aws_security_group" "graylog-frontend-sg" {
 
 
 resource "aws_instance" "graylog-frontend" {
-  ami = "ami-b70554c8"
-  instance_type = "t2.micro"
-  user_data = "${data.template_file.graylog-init.rendered}"
-  subnet_id = "${element(data.aws_subnet_ids.subnets.ids, 0)}"
+  ami                    = "ami-b70554c8"
+  instance_type          = "t2.micro"
+  user_data              = "${data.template_file.graylog-init.rendered}"
+  subnet_id              = "${element(data.aws_subnet_ids.subnets.ids, 0)}"
   key_name               = "cccapi-admin"
   vpc_security_group_ids = ["${aws_security_group.graylog-frontend-sg.id}"]
+
+  tags {
+    Name = "graylog-prod"
+    environment = "prod"
+  }
 }
 
 resource "cloudflare_record" "graylog-cc-engineering" {
   domain = "creativecommons.engineering"
   name   = "graylog"
   value  = "${aws_instance.graylog-frontend.public_ip}"
-  type   = "CNAME"
-  ttl    = 35
+  type   = "A"
+  ttl    = 120
 }
 
 
