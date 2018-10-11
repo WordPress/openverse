@@ -2,8 +2,12 @@ variable "vpc_id" {
   description = "The ID of the VPC to initialize terraform resources inside of."
 }
 
+variable "name_suffix" {
+  description = "The Terraform name suffix. Either an empty string for dev or `-prod` in production."
+}
+
 variable "environment" {
-  description = "The environment suffix. Either an empty string for dev or `-prod` in production."
+  description = "The staging environment. Either dev or prod."
 }
 
 variable "min_size" {

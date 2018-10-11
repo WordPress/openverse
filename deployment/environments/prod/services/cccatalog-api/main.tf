@@ -26,7 +26,8 @@ module "cccatalog-api" {
   source = "../../../../modules/services/cccatalog-api"
 
   vpc_id                    = "vpc-b741b4cc"
-  environment               = "-prod"
+  name_suffix               = "-prod"
+  environment               = "prod"
   min_size                  = 3
   max_size                  = 3
   instance_type             = "c5d.xlarge"

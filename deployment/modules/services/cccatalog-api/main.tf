@@ -29,6 +29,7 @@ data "template_file" "init" {
     redis_password            = "${var.redis_password}"
     root_shortening_url       = "${var.root_shortening_url}"
     disable_global_throttling = "${var.disable_global_throttling}"
+    staging_environment       = "${var.environment}"
   }
 }
 
@@ -52,7 +53,7 @@ data "aws_ami" "amazon_linux_2" {
 
 # API server autoscaling launch configuration
 resource "aws_launch_configuration" "cccatalog-api-launch-config" {
-  name_prefix              = "cccatalog-api-asg${var.environment}"
+  name_prefix              = "cccatalog-api-asg${var.name_suffix}"
   image_id                 = "${data.aws_ami.amazon_linux_2.id}"
   instance_type            = "${var.instance_type}"
   security_groups          = ["${aws_security_group.cccatalog-sg.id}",
@@ -80,13 +81,13 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
 
   tag {
     key                 = "Name"
-    value               = "cccatalog-api-autoscaling-group${var.environment}"
+    value               = "cccatalog-api-autoscaling-group${var.name_suffix}"
     propagate_at_launch = true
   }
 
   tag {
     key                 = "Environment"
-    value               = "${var.environment}"
+    value               = "${var.name_suffix}"
     propagate_at_launch = true
   }
 
@@ -102,12 +103,12 @@ resource "aws_autoscaling_group" "cccatalog-api-asg" {
 }
 
 resource "aws_key_pair" "cccapi-admin" {
-  key_name   = "cccapi-admin${var.environment}"
+  key_name   = "cccapi-admin${var.name_suffix}"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzocO5AKxkGVTtpmtgVd0UrpI2//v6YO8kxKZQ5t99sK0K62QG1PQj+nxFA5wCkiGNJohlvVX+Hl1ZujDLH3/G9yPaUbOA4MeDEUy3JQSxTfMVcPKVTocAldU5A/5LkxIsB+XwDY/JFr7aQq3YlwLikJ2Sb6LFaUACJWzXKMa2zTE7TvHYpJqB4UihAFVuuqQPBH5PzwXjeHJcq/zIZgnB9orMfK0Fci5YRp2wdY/RWqJwDAuTpfvaGCZmghqo0ogAmm+Dz0EPGu9jJrRvlZ7c0c1bP+eWTuHIeiXsuAN6wlkXuu8hRXRwbBdVox7ST8x8eRBUdWZZcaoeZ69dI2HZ webmaster@creativecommons.org"
 }
 
 resource "aws_security_group" "cccatalog-api-ingress" {
-  name = "cccatalog-api-ingress${var.environment}"
+  name = "cccatalog-api-ingress${var.name_suffix}"
   vpc_id = "${var.vpc_id}"
 
   # Allow incoming traffic from the load balancer and autoscale clones
@@ -140,7 +141,7 @@ resource "aws_security_group" "cccatalog-api-ingress" {
 }
 
 resource "aws_security_group" "cccatalog-sg" {
-  name   = "cccatalog-security-group${var.environment}"
+  name   = "cccatalog-security-group${var.name_suffix}"
   vpc_id = "${var.vpc_id}"
 
 
@@ -151,7 +152,7 @@ resource "aws_security_group" "cccatalog-sg" {
 
 # Public-facing load balancer
 resource "aws_alb" "cccatalog-api-load-balancer" {
-  name                       = "cccatalog-api-alb${var.environment}"
+  name                       = "cccatalog-api-alb${var.name_suffix}"
   internal                   = false
   load_balancer_type         = "application"
   security_groups            = ["${aws_security_group.cccatalog-sg.id}",
@@ -160,13 +161,13 @@ resource "aws_alb" "cccatalog-api-load-balancer" {
   subnets                    = ["${data.aws_subnet_ids.subnets.ids}"]
 
   tags {
-    Name        = "cccatalog-api-load-balancer${var.environment}"
-    Environment = "${var.environment}"
+    Name        = "cccatalog-api-load-balancer${var.name_suffix}"
+    Environment = "${var.name_suffix}"
   }
 }
 
 resource "aws_alb_target_group" "ccc-api-asg-target" {
-  name     = "ccc-api-autoscale-target${var.environment}"
+  name     = "ccc-api-autoscale-target${var.name_suffix}"
   port     = 8080
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
@@ -203,7 +204,7 @@ resource "aws_alb_listener" "ccc-api-asg-listener-ssl" {
 }
 
 resource "aws_security_group" "cccatalog-alb-sg" {
-  name   = "cccatalog-alb-sg${var.environment}"
+  name   = "cccatalog-alb-sg${var.name_suffix}"
   vpc_id = "${var.vpc_id}"
 
   ingress {
@@ -244,7 +245,7 @@ data "template_file" "proxy-init" {
 }
 
 resource "aws_security_group" "short-proxy-sg" {
-  name = "short-proxy-sg${var.environment}"
+  name = "short-proxy-sg${var.name_suffix}"
   vpc_id = "${var.vpc_id}"
 
   # Allow incoming traffic from the internet
@@ -288,7 +289,7 @@ resource "aws_instance" "short-proxy" {
   vpc_security_group_ids = ["${aws_security_group.short-proxy-sg.id}"]
 
   tags {
-    Name        = "short-proxy${var.environment}"
-    environment = "${var.environment}"
+    Name        = "short-proxy${var.name_suffix}"
+    environment = "${var.name_suffix}"
   }
 }

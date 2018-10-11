@@ -166,6 +166,9 @@ filebeat.prospectors:
   paths:
     - /var/log/uwsgi/*.log
     - /var/log/nginx/*.log
+  fields:
+    system: cccatalog-api
+    environment: ${staging_environment}
 
 output.logstash:
   hosts: ["graylog.private:5044"]
