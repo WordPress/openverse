@@ -38,17 +38,17 @@ sudo sed -i "s/rhel-\$releasever-\$basearch/rhel-latest-x86_64/g" "/etc/yum.repo
 sudo yum install -y postgresql10
 
 # Get the API server. Use a sparse checkout so we only clone the cccatalog-api folder.
-mkdir -p /home/ec2-user
-cd /home/ec2-user
+mkdir -p /var/www
+cd /var/www
 git init
 git config core.sparseCheckout true
 git remote add -f origin http://github.com/creativecommons/cccatalog-api.git
 echo "cccatalog-api/*" > .git/info/sparse-checkout
 git checkout ${git_revision}
-cd /home/ec2-user/cccatalog-api
+cd /var/www/cccatalog-api
 
 # Install API server dependencies
-sudo pip3 install -r /home/ec2-user/cccatalog-api/requirements.txt
+sudo pip3 install -r /var/www/cccatalog-api/requirements.txt
 sudo easy_install-3.7 uwsgi
 sudo pip3 install uwsgitop
 
@@ -62,10 +62,10 @@ python3 manage.py collectstatic --no-input
 mkdir -p /var/log/uwsgi/
 touch /var/log/uwsgi/cccatalog-api.log
 chown -R uwsgi /var/log/uwsgi
-chown -R uwsgi /home/ec2-user/cccatalog-api
-sudo chmod 777 /home/ec2-user
-sudo chmod +x /home/ec2-user
-sudo uwsgi --chdir=/home/ec2-user/cccatalog-api \
+chown -R uwsgi /var/www/cccatalog-api
+sudo chmod 777 /var/www
+sudo chmod +x /var/www
+sudo uwsgi --chdir=/var/www/cccatalog-api \
       --master \
       --pidfile=/tmp/cccatalog-api.pid \
       --daemonize=/var/log/uwsgi/cccatalog-api.log \
@@ -182,7 +182,7 @@ cat << EOF > /etc/systemd/system/django_cron.service
 Description=Check that any django_cron jobs need to be run.
 [Service]
 EnvironmentFile=/etc/systemd_environment
-ExecStart=/usr/bin/python3 /home/ec2-user/cccatalog-api/manage.py runcrons
+ExecStart=/usr/bin/python3 /var/www/cccatalog-api/manage.py runcrons
 EOF
 
 cat << EOF > /etc/systemd/system/django_cron.timer
@@ -199,5 +199,3 @@ Unit=django_cron.service
 WantedBy=timers.target
 EOF
 systemctl start django_cron.timer
-
-sudo chmod -R 400 /home/ec2-user/.ssh
