@@ -1,5 +1,5 @@
-#cloud-boothook
 #!/bin/bash
+
 
 # Set up environment-specific configuration
 export VERSION="${api_version}"
@@ -48,23 +48,24 @@ git checkout ${git_revision}
 cd /home/ec2-user/cccatalog-api
 
 # Install API server dependencies
-pip3 install -r /home/ec2-user/cccatalog-api/requirements.txt
-easy_install-3.7 uwsgi
-pip3 install uwsgitop
+sudo pip3 install -r /home/ec2-user/cccatalog-api/requirements.txt
+sudo easy_install-3.7 uwsgi
+sudo pip3 install uwsgitop
 
 # Set up static content
-mkdir -p /var/api_static_content/static
+sudo mkdir -p /var/api_static_content/static
 
 # Kick off uWSGI
-useradd -m uwsgi
+sudo useradd -m uwsgi
 chown -R uwsgi /var/api_static_content/static
 python3 manage.py collectstatic --no-input
 mkdir -p /var/log/uwsgi/
 touch /var/log/uwsgi/cccatalog-api.log
 chown -R uwsgi /var/log/uwsgi
 chown -R uwsgi /home/ec2-user/cccatalog-api
-
-uwsgi --chdir=/home/ec2-user/cccatalog-api \
+sudo chmod 777 /home/ec2-user
+sudo chmod +x /home/ec2-user
+sudo uwsgi --chdir=/home/ec2-user/cccatalog-api \
       --master \
       --pidfile=/tmp/cccatalog-api.pid \
       --daemonize=/var/log/uwsgi/cccatalog-api.log \
@@ -145,9 +146,9 @@ http {
 EOF
 sudo systemctl start nginx
 
-# Install filebeat collector for centralized logging via Graylog
+# Install filebeat collector for centralized logging to Graylog
 sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
-sudo cat << EOF > /etc/yum.repos.d/filebeat.repo
+sudo tee /etc/yum.repos.d/filebeat.repo <<EOF
 [elastic-5.x]
 name=Elastic repository for 5.x packages
 baseurl=https://artifacts.elastic.co/packages/5.x/yum
@@ -157,9 +158,11 @@ enabled=1
 autorefresh=1
 type=rpm-md
 EOF
-sudo yum install filebeat
-sudo cat << EOF > /etc/filebeat/filebeat.yml
-- input_type: log
+sudo yum install -y filebeat
+sudo tee /etc/filebeat/filebeat.yml <<EOF
+filebeat.prospectors:
+- type: log
+  enabled: true
   paths:
     - /var/log/uwsgi/*.log
     - /var/log/nginx/*.log
@@ -167,7 +170,7 @@ sudo cat << EOF > /etc/filebeat/filebeat.yml
 output.logstash:
   hosts: ["graylog.private:5044"]
 EOF
-sudo /etc/init.d/filebeat start
+sudo systemctl start filebeat
 
 # Start periodic tasks using systemd timers and django_cron
 # This kicks off a job that intermittently synchronizes traffic statistics
@@ -196,3 +199,5 @@ Unit=django_cron.service
 WantedBy=timers.target
 EOF
 systemctl start django_cron.timer
+
+sudo chmod -R 400 /home/ec2-user/.ssh
