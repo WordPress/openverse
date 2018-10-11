@@ -149,7 +149,7 @@ resource "aws_elasticsearch_domain" "graylog-es-backend" {
       "Resource": "arn:aws:es:us-east-1:664890800379:domain/graylog-es-backend/*",
       "Condition": {
         "IpAddress": {
-          "aws:SourceIp": "18.212.239.196/32"
+          "aws:SourceIp": "34.224.64.90/32"
         }
       }
     }
