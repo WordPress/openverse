@@ -145,6 +145,30 @@ http {
 EOF
 sudo systemctl start nginx
 
+# Install filebeat collector for centralized logging via Graylog
+sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
+sudo cat << EOF > /etc/yum.repos.d/filebeat.repo
+[elastic-5.x]
+name=Elastic repository for 5.x packages
+baseurl=https://artifacts.elastic.co/packages/5.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+EOF
+sudo yum install filebeat
+sudo cat << EOF > /etc/filebeat/filebeat.yml
+- input_type: log
+  paths:
+    - /var/log/uwsgi/*.log
+    - /var/log/nginx/*.log
+
+output.logstash:
+  hosts: ["graylog.private:5044"]
+EOF
+sudo /etc/init.d/filebeat start
+
 # Start periodic tasks using systemd timers and django_cron
 # This kicks off a job that intermittently synchronizes traffic statistics
 # with the database.
