@@ -142,51 +142,58 @@ class CCLinks:
 
                 else:
 
-                    resp = requests.get('https://commoncrawl.s3.amazonaws.com/{}'.format(uri.strip()), stream=True)
-                    for record in ArchiveIterator(resp.raw, arc2warc=True):
-                        if record.rec_headers['Content-Type'] == 'application/json':
+                    try:
+                        resp = requests.get('https://commoncrawl.s3.amazonaws.com/{}'.format(uri.strip()), stream=True)
+                    except Exception as e:
+                        #ConnectionError: HTTPSConnectionPool
+                        logging.error('Exception type: {0}, Message: {1}'.format(type(e).__name__, e))
+                        pass
+                    else:
 
-                            try:
-                                content = json.loads(record.content_stream().read())
-
-                            except Exception as e:
-                                logging.warning('JSON payload file: {0}. Exception type: {1}, Message: {2}'.format(uri.strip(), type(e).__name__, e))
-                                pass
-
-                            else:
-                                if content['Envelope']['WARC-Header-Metadata']['WARC-Type'] != 'response':
-                                    continue
-                                elif 'HTML-Metadata' not in content['Envelope']['Payload-Metadata']['HTTP-Response-Metadata']:
-                                    continue
-                                elif 'Links' not in content['Envelope']['Payload-Metadata']['HTTP-Response-Metadata']['HTML-Metadata']:
-                                    continue
+                        for record in ArchiveIterator(resp.raw, arc2warc=True):
+                            if record.rec_headers['Content-Type'] == 'application/json':
 
                                 try:
-                                    segment     = uri.split('/wat/')[0].strip()
-                                    targetURI   = urlparse(content['Envelope']['WARC-Header-Metadata']['WARC-Target-URI'].strip())
-                                    offset      = int(content['Container']['Offset'].strip())
-                                    filename    = content['Container']['Filename'].strip()
-                                    dftLength   = int(content['Container']['Gzip-Metadata']['Deflate-Length'].strip())
+                                    content = json.loads(record.content_stream().read())
 
-                                    links       = filter(lambda x: 'url' in x, content['Envelope']['Payload-Metadata']['HTTP-Response-Metadata']['HTML-Metadata']['Links'])
-
-                                    result = map(lambda x: (targetURI.netloc, targetURI.path, targetURI.query, urlparse(x['url']).netloc,
-                                        urlparse(x['url']).path, segment, filename, offset, dftLength,
-                                        json.dumps({
-                                            'Images': len(list(set(map(lambda i: i['url'], filter(lambda z: 'IMG@/src' in z['path'], links))))),
-                                            'Links': Counter(map(lambda l: urlparse(l['url']).netloc, filter(lambda z: 'A@/href' in z['path'] and targetURI.netloc not in z['url'] and urlparse(z['url']).netloc != '', links)))
-                                            })
-                                        ),
-                                        filter(lambda y: 'creativecommons.org' in y['url'], links))
-
-                                except (KeyError, ValueError) as e:
-                                    logging.error('{}:{}, File:{}'.format(type(e).__name__, e, uri.strip()))
+                                except Exception as e:
+                                    logging.warning('JSON payload file: {0}. Exception type: {1}, Message: {2}'.format(uri.strip(), type(e).__name__, e))
                                     pass
 
                                 else:
-                                    if result:
-                                        for res in result:
-                                            yield res
+                                    if content['Envelope']['WARC-Header-Metadata']['WARC-Type'] != 'response':
+                                        continue
+                                    elif 'HTML-Metadata' not in content['Envelope']['Payload-Metadata']['HTTP-Response-Metadata']:
+                                        continue
+                                    elif 'Links' not in content['Envelope']['Payload-Metadata']['HTTP-Response-Metadata']['HTML-Metadata']:
+                                        continue
+
+                                    try:
+                                        segment     = uri.split('/wat/')[0].strip()
+                                        targetURI   = urlparse(content['Envelope']['WARC-Header-Metadata']['WARC-Target-URI'].strip())
+                                        offset      = int(content['Container']['Offset'].strip())
+                                        filename    = content['Container']['Filename'].strip()
+                                        dftLength   = int(content['Container']['Gzip-Metadata']['Deflate-Length'].strip())
+
+                                        links       = filter(lambda x: 'url' in x, content['Envelope']['Payload-Metadata']['HTTP-Response-Metadata']['HTML-Metadata']['Links'])
+
+                                        result = map(lambda x: (targetURI.netloc, targetURI.path, targetURI.query, urlparse(x['url']).netloc,
+                                            urlparse(x['url']).path, segment, filename, offset, dftLength,
+                                            json.dumps({
+                                                'Images': len(list(set(map(lambda i: i['url'], filter(lambda z: 'IMG@/src' in z['path'], links))))),
+                                                'Links': Counter(map(lambda l: urlparse(l['url']).netloc, filter(lambda z: 'A@/href' in z['path'] and targetURI.netloc not in z['url'] and urlparse(z['url']).netloc != '', links)))
+                                                })
+                                            ),
+                                            filter(lambda y: 'creativecommons.org' in y['url'], links))
+
+                                    except (KeyError, ValueError) as e:
+                                        logging.error('{}:{}, File:{}'.format(type(e).__name__, e, uri.strip()))
+                                        pass
+
+                                    else:
+                                        if result:
+                                            for res in result:
+                                                yield res
 
 
     def generateParquet(self, _data):
