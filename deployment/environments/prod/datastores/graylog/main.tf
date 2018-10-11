@@ -5,6 +5,7 @@
 variable "cloudflare_email" {}
 variable "cloudflare_token" {}
 variable "graylog_password" {}
+variable "graylog_sha2" {}
 
 # List of available subnets
 data "aws_subnet_ids" "subnets" {
@@ -26,7 +27,8 @@ data "template_file" "graylog-init"{
   # Templated variables passed to initialization script.
   vars {
     graylog_password   = "${var.graylog_password}"
-    elasticsearch_host = "${aws_elasticsearch_domain.graylog-es-backend.domain_name}"
+    graylog_sha2       = "${var.graylog_sha2}"
+    elasticsearch_host = "${aws_elasticsearch_domain.graylog-es-backend.endpoint}"
   }
 }
 
@@ -49,6 +51,15 @@ resource "aws_security_group" "graylog-frontend-sg" {
     protocol        = "tcp"
     cidr_blocks     =  ["172.31.0.0/16"]
   }
+
+  # Allow filebeat traffic internally
+  ingress {
+    from_port       = 5044
+    to_port         = 5044
+    protocol        = "tcp"
+    cidr_blocks     = ["172.31.0.0/16"]
+  }
+
    # Allow internal VPC traffic access to rsyslog port
   ingress {
     from_port       = 514
@@ -75,15 +86,13 @@ resource "aws_security_group" "graylog-frontend-sg" {
   }
 }
 
-
 resource "aws_instance" "graylog-frontend" {
   ami                    = "ami-b70554c8"
-  instance_type          = "t2.micro"
+  instance_type          = "t2.medium"
   user_data              = "${data.template_file.graylog-init.rendered}"
   subnet_id              = "${element(data.aws_subnet_ids.subnets.ids, 0)}"
   key_name               = "cccapi-admin"
   vpc_security_group_ids = ["${aws_security_group.graylog-frontend-sg.id}"]
-
   tags {
     Name = "graylog-prod"
     environment = "prod"
@@ -98,10 +107,10 @@ resource "cloudflare_record" "graylog-cc-engineering" {
   ttl    = 120
 }
 
-
 resource "aws_elasticsearch_domain" "graylog-es-backend" {
   domain_name           = "graylog-es-backend"
-  elasticsearch_version = "6.2"
+  # Graylog doesn't support v6.x yet
+  elasticsearch_version = "5.6"
   cluster_config {
     instance_type            = "m4.large.elasticsearch"
     dedicated_master_enabled = "false"
@@ -118,7 +127,7 @@ resource "aws_elasticsearch_domain" "graylog-es-backend" {
     volume_size = 500
   }
 
-  access_policies = <<EOF
+  access_policies =<<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -129,6 +138,20 @@ resource "aws_elasticsearch_domain" "graylog-es-backend" {
       },
       "Action": "es:*",
       "Resource": "arn:aws:es:us-east-1:664890800379:domain/graylog-es-backend/*"
+    },
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": "es:*",
+      "Resource": "arn:aws:es:us-east-1:664890800379:domain/graylog-es-backend/*",
+      "Condition": {
+        "IpAddress": {
+          "aws:SourceIp": "18.212.239.196/32"
+        }
+      }
     }
   ]
 }
