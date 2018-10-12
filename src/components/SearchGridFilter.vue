@@ -142,7 +142,7 @@ export default {
         { code: 'iha', name: 'IHA Holiday Ads' },
         { code: 'mccordmuseum', name: 'Montreal Social History Museum' },
         { code: 'met', name: 'Metropolitan Museum of Art' },
-        { code: 'museumvictoria', name: 'Museums Victoria' },
+        { code: 'museumsvictoria', name: 'Museums Victoria' },
         { code: 'nypl', name: 'New York Public Library' },
         { code: 'rijksmuseum', name: 'Rijksmuseum NL' },
         { code: 'sciencemuseum', name: 'Science Museum – UK' },
