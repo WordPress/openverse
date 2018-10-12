@@ -1,13 +1,25 @@
 <template>
-  <section class='search-grid'>
-    <div class="grid-x">
-      <div class="search-grid_analytics cell medium-6 large-6" v-if="showGrid && includeAnalytics">
-        <span>{{ _imagesCount }}</span>
-        <span>{{ searchTerm }}</span>
-        Photos
+  <section :class="{ 'search-grid': true, 'search-grid__contain-images': shouldContainImages }"
+           ref="searchGrid">
+    <div class="grid-x" v-show="showGrid && includeAnalytics">
+      <div class="search-grid_analytics cell medium-6 large-6" >
+        <h5>
+          <span>{{ _imagesCount }}</span>
+          <span>{{ searchTerm }}</span>
+          Photos
+        </h5>
       </div>
-      <div class="search-grid_layout-control">
-        Grid Options:
+      <div class="search-grid_layout-control cell medium-6 large-6">
+        <h5>Grid Options:</h5>
+        <fieldset>
+          <input
+            id="watermark"
+            type="checkbox"
+            v-model="shouldContainImages">
+            <label for="watermark">
+              Contain image
+            </label>
+        </fieldset>
       </div>
     </div>
     <ul class="search-grid_metrics-bar">
@@ -80,6 +92,7 @@ export default {
   },
   data: () => ({
     isDataInitialized: false,
+    shouldContainImages: false,
     currentPage: 1,
     showGrid: false,
   }),
@@ -213,13 +226,29 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  .infinite-loading-container {
-    margin-top: 30px;
-    width: 100%;
+
+  .search-grid_analytics h5,
+  .search-grid_layout-control h5 {
+    font-size: 1rem;
+    display: inline-block;
+  }
+
+  .search-grid_layout-control h5 {
+    margin-right: 10px;
   }
 
   .search-grid_layout-control {
-    display: none;
+    text-align: right;
+
+    fieldset {
+      display: inline;
+      margin-right: 5px;
+    }
+  }
+
+  .infinite-loading-container {
+    margin-top: 30px;
+    width: 100%;
   }
 
   .search-grid_image-ctr {
@@ -386,6 +415,10 @@ export default {
     transform: translate(-50%, -50%);
   }
 
+  .search-grid__contain-images .search-grid_image{
+    max-height: 100%;
+  }
+
   .search-grid_notification {
     width: 50%;
     margin: auto;
@@ -426,6 +459,10 @@ export default {
       width:  44px;
       height: 44px;
       bottom: 0;
+    }
+
+     .search-grid_layout-control {
+      text-align: left !important;
     }
   }
 </style>

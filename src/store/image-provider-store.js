@@ -19,7 +19,7 @@ const state = {
 
 const actions = {
   [FETCH_IMAGE_STATS]({ commit }, params) {
-    commit(SET_FETCH_IMAGES_ERROR, { isFetchingImageStatsError: true });
+    commit(SET_FETCH_IMAGES_ERROR, { isFetchingImageStatsError: false });
     commit(FETCH_IMAGE_STATS_START);
     return ImageProviderService.getProviderStats(params)
       .then(({ data }) => {
