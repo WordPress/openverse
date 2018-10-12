@@ -79,7 +79,11 @@ http {
         include /etc/nginx/default.d/*.conf;
 
         location / {
-          access_log off;
+          proxy_set_header Host $http_host;
+          proxy_set_header X-Forwarded-Host $host;
+          proxy_set_header X-Forwarded-Server $host;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Graylog-Server-URL https://$server_name/api;
           proxy_pass http://graylog.private:9000;
         }
     }
