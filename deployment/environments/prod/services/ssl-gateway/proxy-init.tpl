@@ -21,7 +21,7 @@ filebeat.prospectors:
     - /var/log/nginx/*.log
     - /var/log/letsencrypt/*.log*
   fields:
-    system:ssl-proxy
+    system: ssl-proxy
     environment: prod
 
 output.logstash:
