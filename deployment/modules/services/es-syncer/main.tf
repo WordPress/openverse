@@ -15,6 +15,7 @@ data "template_file" "init"{
     db_buffer_size        = "${var.db_buffer_size}"
     copy_tables           = "${var.copy_tables}"
     poll_interval         = "${var.poll_interval}"
+    staging_environment   = "${var.environment}"
 
     docker_tag            = "${var.docker_tag}"
   }

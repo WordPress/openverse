@@ -24,3 +24,31 @@ docker run -t \
 -e COPY_TABLES="${copy_tables}" \
 -e SYNCER_POLL_INTERVAL="${poll_interval}" \
 creativecommons/elasticsearch_syncer:${docker_tag} &
+
+# Install filebeat collector for centralized logging to Graylog
+sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
+sudo tee /etc/yum.repos.d/filebeat.repo <<EOF
+[elastic-5.x]
+name=Elastic repository for 5.x packages
+baseurl=https://artifacts.elastic.co/packages/5.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+EOF
+sudo yum install -y filebeat
+sudo tee /etc/filebeat/filebeat.yml <<EOF
+filebeat.prospectors:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/cloud-init-output.log
+  fields:
+    system: es-syncer
+    environment: ${staging_environment}
+
+output.logstash:
+  hosts: ["graylog.private:5044"]
+EOF
+sudo systemctl start filebeat
