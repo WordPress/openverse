@@ -10,7 +10,7 @@
              @click.prevent="onGotoBack"
              v-if="shouldShowBreadcrumb">&#171; Back to search results</a>
           <img @click="onShowViewer(image)"
-               @load="() => isPrimaryImageLoaded = true"
+               @load="onLoad"
                :class="{ photo_image: true,
                          'photo_image__has-viewer': this.images.length > 0 }"
                          :src="image.url">
@@ -45,6 +45,10 @@
                  :href="image.foreign_landing_url"
                  target="blank"
                  rel="noopener noreferrer">{{ image.provider }}</a>
+            </li>
+            <li>
+              <h3>Dimensions</h3>
+              <span> {{ imageWidth }} <span> X </span> {{ imageHeight }}</span>
             </li>
           </ul>
           <section class="photo_usage">
@@ -134,6 +138,7 @@ import Clipboard from 'clipboard';
 import 'viewerjs/dist/viewer.css';
 import Viewer from 'v-viewer';
 import Vue from 'vue';
+import { SET_IMAGE } from '@/store/mutation-types';
 
 Vue.use(Viewer);
 
@@ -154,6 +159,8 @@ const PhotoDetailPage = {
     imagecountseparator: 'of',
     isPrimaryImageLoaded: false,
     shouldShowBreadcrumb: false,
+    imageWidth: 0,
+    imageHeight: 0,
   }),
   computed: {
     filter() {
@@ -229,6 +236,9 @@ const PhotoDetailPage = {
     },
   },
   beforeRouteUpdate(to, from, next) {
+    this.imageHeight = 0;
+    this.imageWidth = 0;
+    this.$store.commit(SET_IMAGE, { image: {} });
     this.loadImage(to.params.id);
     next();
   },
@@ -241,6 +251,11 @@ const PhotoDetailPage = {
     });
   },
   methods: {
+    onLoad(event) {
+      this.imageWidth = event.target.naturalHeight;
+      this.imageHeight = event.target.naturalWidth;
+      this.isPrimaryImageLoaded = true;
+    },
     getRelatedImages(tags, query) {
       let queryParam = query;
       const tagsParam = (tags || []).slice();
