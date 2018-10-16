@@ -34,7 +34,7 @@
     </section>
   <section class="grid top-images">
     <header class="top-images_header">
-      <h2 class="featured-items_title">Top Images</h2>
+      <h2 class="featured-items_title">Top Picks</h2>
     </header>
     <div  class="header-grid">
       <figure v-for="(image, index) in images" v-if="index < 4"
