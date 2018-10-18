@@ -12,7 +12,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# Public URL for accessing SSL proxy
+# Public URL for accessing Graylog
 resource "cloudflare_record" "graylog-cc-engineering" {
   domain = "creativecommons.engineering"
   name   = "graylog"
@@ -97,4 +97,3 @@ resource "aws_instance" "ssl-gateway" {
     environment = "prod"
   }
 }
-
