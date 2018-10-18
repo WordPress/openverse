@@ -342,6 +342,25 @@ export default {
       opacity: .5;
     }
 
+    &:hover:before {
+      position: absolute;
+      right: -5px;
+      bottom: 25px;
+      height: 20px;
+      line-height: 20px;
+      width: 80px;
+      display: block;
+      content: 'Add image to list';
+      color: #fff;
+      text-shadow: 0 0 2px rgba(0,0,0,.5);
+      text-align:center;
+      font-size: .6em;
+      border-radius: 1px;
+      background: rgba(0,0,0,.7);
+
+      opacity: 1;
+    }
+
     &:hover:after {
       opacity: .9;
     }
