@@ -48,7 +48,7 @@
             </li>
             <li>
               <h3>Dimensions</h3>
-              <span> {{ imageWidth }} <span> X </span> {{ imageHeight }}</span>
+              <span> {{ imageWidth }} <span> X </span> {{ imageHeight }} pixels</span>
             </li>
           </ul>
           <section class="photo_usage">
@@ -252,8 +252,8 @@ const PhotoDetailPage = {
   },
   methods: {
     onLoad(event) {
-      this.imageWidth = event.target.naturalHeight;
-      this.imageHeight = event.target.naturalWidth;
+      this.imageWidth = event.target.naturalWidth;
+      this.imageHeight = event.target.naturalHeight;
       this.isPrimaryImageLoaded = true;
     },
     getRelatedImages(tags, query) {
