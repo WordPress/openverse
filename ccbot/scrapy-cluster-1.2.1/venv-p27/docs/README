@@ -1,0 +1,47 @@
+
+You can install this module by issuing the following command:
+
+    python setup.py install
+
+To build a Python "egg", use the following:
+
+    python seutp.py bdist_egg
+    # Copy the .egg file from under the "dist" folder
+
+
+
+Here is a simple usage example:
+
+    from logging import getLogger, INFO
+    from cloghandler import ConcurrentRotatingFileHandler
+    import os
+    
+    log = getLogger()
+    # Use an absolute path to prevent file rotation trouble.
+    logfile = os.path.abspath("mylogfile.log")
+    # Rotate log after reaching 512K, keep 5 old copies.
+    rotateHandler = ConcurrentRotatingFileHandler(logfile, "a", 512*1024, 5)
+    log.addHandler(rotateHandler)
+    log.setLevel(INFO)
+    
+    log.info("Here is a very exciting log message, just for you")
+
+
+
+To use this module from a logging config file, use a handler entry like this:
+
+    [handler_hand01]
+    class=handlers.ConcurrentRotatingFileHandler
+    level=NOTSET
+    formatter=form01
+    args=("rotating.log", "a", 512*1024, 5)
+
+Note: you must have a "import cloghandler" before you call fileConfig(). For
+more information see http://docs.python.org/lib/logging-config-fileformat.html
+
+
+
+NOTES: This module has not yet be tested in a multi-threaded environment. I see
+no reason why this should be an issue, but no stress-testing has been done in a
+threaded situation. If this is important to you, you could always add threading
+support to the stresstest.py script and send me the patch.

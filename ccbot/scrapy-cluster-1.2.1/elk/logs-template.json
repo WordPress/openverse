@@ -1,0 +1,40 @@
+{
+  "template" : "logs-*",
+  "order" : 0,
+  "settings" : {
+    "index.refresh_interval" : "5s"
+  },
+  "mappings" : {
+    "_default_" : {
+      "dynamic_templates" : [ {
+        "message_field" : {
+          "mapping" : {
+            "omit_norms" : true,
+            "type" : "keyword"
+          },
+          "match_mapping_type" : "keyword",
+          "match" : "message"
+        }
+      }, {
+        "keyword_fields" : {
+          "mapping" : {
+            "omit_norms" : true,
+            "type" : "keyword"
+          },
+          "match_mapping_type" : "keyword",
+          "match" : "*"
+        }
+      } ],
+      "properties" : {
+        "@version" : {
+          "index" : "not_analyzed",
+          "type" : "keyword"
+        }
+      },
+      "_all" : {
+        "enabled" : true
+      }
+    }
+  },
+  "aliases" : { }
+}
