@@ -10,6 +10,9 @@ class LinkValidatorSpider(RedisSpider):
     A crawler that uses HTTP HEAD requests to validate that links exist.
     """
     name = "validator"
+    # Some image hosts redirect users to generic "not found" images; handle
+    # that special case directly in the crawler.
+    handle_httpstatus_list = [301, 302]
 
     def __init__(self, *args, **kwargs):
         super(LinkValidatorSpider, self).__init__(*args, **kwargs)
@@ -36,3 +39,4 @@ class LinkValidatorSpider(RedisSpider):
         # raw response has been processed, yield to item pipeline
         self._logger.debug("Created Item successfully")
         yield item
+
