@@ -124,3 +124,7 @@ crash.log
 # version control.
 #
 # example.tfvars
+
+# Ignore crawler data files
+ccbot/url_dump.csv
+ccbot/plan.yaml
