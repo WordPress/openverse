@@ -1,13 +1,16 @@
 import os
 
 DATABASE_HOST = os.getenv('CCCATALOG_DATABASE_HOST', 'localhost')
-DATABASE_PORT = 5432
+DATABASE_PORT = int(os.getenv('CCCATALOG_DATABASE_PORT', 5432))
 DATABASE_PASSWORD = os.getenv('CCCATALOG_DATABASE_PASSWORD', 'deploy')
 CCCATALOG_API_URL = os.getenv('CCCATALOG_API_URL', 'localhost:8000')
 
-# Maximum per-domain rate limit; this is appropriate for providers with 
-# large amounts of content. Smaller content providers have more conservative
-# rate limits applied. Fine-grained per-spider rate limits are set in the
-# crawler configuration and are not overridden by this setting.
-REQUESTS_PER_SECOND_CEILING = \
-    int(os.getenv('REQUESTS_PER_SECOND_CEILING', 1000))
+# Request-per-second limits for each rate limit strategy.
+VERY_LIGHT_RPS = 1
+LIGHT_RPS = 3
+MODERATE_RPS = 4
+HEAVY_RPS = 5
+# ~1.7MM requests per day
+VERY_HEAVY_RPS = 20
+# ~17MM requests per day. Reserved for the largest content providers.
+MAX_RPS = 200

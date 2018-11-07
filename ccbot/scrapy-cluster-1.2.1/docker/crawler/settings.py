@@ -4,11 +4,18 @@ from __future__ import absolute_import
 # This file houses all default settings for the Crawler
 # to override please use a custom localsettings.py file
 import os
+
+
 def str2bool(v):
     return str(v).lower() in ('true', '1') if type(v) == str else bool(v)
 
+
 # Scrapy Cluster Settings
 # ~~~~~~~~~~~~~~~~~~~~~~~
+USER_AGENT = "ccbot - Cataloging the Commons - https://creativecommons.org/ " \
+             "- Operator contact: alden (at) creativecommons.org." \
+             " This crawler respects robots.txt."
+ROBOTSTXT_OBEY = True
 
 # Specify the host and port to use when connecting to Redis.
 REDIS_HOST = os.getenv('REDIS_HOST', 'redis')
