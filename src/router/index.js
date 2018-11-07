@@ -60,6 +60,8 @@ router.afterEach((to) => {
   }
   store.commit(SET_IMAGE, { image: {} });
   store.commit(SET_IMAGES, { images: [] });
+  window.ga('set', 'page', to.path);
+  window.ga('send', 'pageview');
 });
 
 export default router;
