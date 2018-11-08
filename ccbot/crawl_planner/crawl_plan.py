@@ -166,4 +166,4 @@ if __name__ == '__main__':
     log.info('Created url_dump.csv.')
     log.info('Planning crawl...')
     plan()
-    log.info('Successfully planned a crawl!')
+    log.info('Successfully produced crawl_plan.yml and url_dump.csv!')
