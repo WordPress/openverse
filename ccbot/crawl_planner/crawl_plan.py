@@ -65,6 +65,9 @@ def get_strategy(num_images):
 
 
 def plan():
+    """
+    Synthesize all collected information and produce a crawl plan YAML.
+    """
     log.info('Requesting content provider statistics...')
     stats_request = requests.get(
         settings.CCCATALOG_API_URL + '/statistics/image'
