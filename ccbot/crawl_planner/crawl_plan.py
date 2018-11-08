@@ -28,6 +28,11 @@ class RateLimitStrategies(Enum):
     # MAXIMUM_OVERDRIVE_BABY = 5
 
 
+# Corresponds to Scrapy Cluster QUEUE_WINDOW setting.
+# Do not change this unless you really know what you're doing.
+RATE_LIMIT_WINDOW = 60
+
+
 # Thresholds for rate limit strategies. For example, a content provider with
 # 9,999 images will receive VERY_LIGHT crawler load, while one with 10,000 will
 # receive LIGHT crawler load.
@@ -103,8 +108,8 @@ def plan():
         for domain in provider_domains[provider]:
             plan_config['domains'] = {
                 domain: {
-                    'window': 60,
-                    'hits': STRATEGY_RPS[strategy] * 60
+                    'window': RATE_LIMIT_WINDOW,
+                    'hits': STRATEGY_RPS[strategy] * RATE_LIMIT_WINDOW
                 }
             }
     plan_config['info'] = info
@@ -161,3 +166,4 @@ if __name__ == '__main__':
     log.info('Created url_dump.csv.')
     log.info('Planning crawl...')
     plan()
+    log.info('Successfully planned a crawl!')
