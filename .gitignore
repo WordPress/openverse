@@ -127,4 +127,4 @@ crash.log
 
 # Ignore crawler data files
 ccbot/url_dump.csv
-ccbot/plan.yaml
+ccbot/crawl_plan.yml
