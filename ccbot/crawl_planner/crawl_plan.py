@@ -79,12 +79,21 @@ def plan():
     provider_domains = get_provider_domains("url_dump.csv")
 
     plan_config = {
+        # Extra information for human readers
+        'info': {},
+        # Actual configuration sent to Scrapy Cluster crawlers
         'domains': {}
+    }
+    info = {
+        'providers': {},
     }
     for provider in provider_domains:
         # Choose rate limit strategy based on amount of content
         image_count = stats_dict[provider]
         strategy = get_strategy(image_count)
+        provider_rps = STRATEGY_RPS[strategy]
+        info['providers'][provider] = {}
+        info['providers'][provider]['requests_per_second'] = provider_rps
         for domain in provider_domains[provider]:
             plan_config['domains'] = {
                 domain: {
@@ -92,6 +101,7 @@ def plan():
                     'hits': STRATEGY_RPS[strategy] * 60
                 }
             }
+    plan_config['info'] = info
     with open('crawl_plan.yml', 'w') as plan_file:
         yaml.dump(plan_config, plan_file, default_flow_style=False)
 
