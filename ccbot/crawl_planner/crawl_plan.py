@@ -79,7 +79,8 @@ def plan():
         n_images = pair['image_count']
         stats_dict[provider] = n_images
     log.info("Associating image domain names with providers...")
-    provider_domains = get_provider_domains("url_dump.csv")
+    provider_info = get_provider_info("url_dump.csv")
+    provider_domains, num_urls = provider_info
 
     plan_config = {
         # Extra information for human readers
@@ -89,6 +90,8 @@ def plan():
     }
     info = {
         'providers': {},
+        # Total number of URLs in the URL dump file.
+        'num_urls': num_urls
     }
     for provider in provider_domains:
         # Choose rate limit strategy based on amount of content
@@ -109,13 +112,14 @@ def plan():
         yaml.dump(plan_config, plan_file, default_flow_style=False)
 
 
-def get_provider_domains(filename):
+def get_provider_info(filename):
     """
     Given a URL dump csv, associate each domain with a provider. This is
     necessary because image CDNs are often not on the same domain as the parent
     website.
     """
     provider_domains = defaultdict(set)
+    num_urls = 0
     with open(filename, 'r') as url_file:
         reader = csv.DictReader(url_file)
         for row in reader:
@@ -123,7 +127,8 @@ def get_provider_domains(filename):
             netloc = netloc.replace('www.', "")
             provider = row['provider']
             provider_domains[provider].add(netloc)
-    return provider_domains
+            num_urls += 1
+    return provider_domains, num_urls
 
 
 def dump_urls():
