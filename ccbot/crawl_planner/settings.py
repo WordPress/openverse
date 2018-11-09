@@ -1,5 +1,6 @@
 import os
 
+# Crawl planner settings
 DATABASE_HOST = os.getenv('CCCATALOG_DATABASE_HOST', 'localhost')
 DATABASE_PORT = int(os.getenv('CCCATALOG_DATABASE_PORT', 5432))
 DATABASE_PASSWORD = os.getenv('CCCATALOG_DATABASE_PASSWORD', 'deploy')
@@ -14,3 +15,6 @@ HEAVY_RPS = 5
 VERY_HEAVY_RPS = 20
 # ~17.2MM requests per day. Reserved for the largest content providers.
 # MAX_RPS = 200
+
+# Crawl executor settings
+CLUSTER_REST_URL = os.getenv('CLUSTER_REST_HOST', 'http://localhost:5343')

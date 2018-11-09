@@ -83,6 +83,7 @@ def plan():
         provider = pair['provider_name']
         n_images = pair['image_count']
         stats_dict[provider] = n_images
+
     log.info("Associating image domain names with providers...")
     provider_info = get_provider_info("url_dump.csv")
     provider_domains, num_urls = provider_info
