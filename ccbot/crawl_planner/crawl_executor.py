@@ -4,6 +4,7 @@ import sys
 import settings
 import json
 import logging as log
+from uuid import uuid4
 
 """
 Execute a crawl plan produced by crawl_plan.py.
@@ -21,7 +22,7 @@ def cluster_healthcheck():
             not response['kafka_connected'] or
             not response['redis_connected'] or
             response['node_health'] != 'GREEN'
-        ):
+           ):
             return False
     except requests.exceptions.RequestException as e:
         log.error('Failed to reach Scrapy Cluster REST endpoint.')
@@ -29,7 +30,7 @@ def cluster_healthcheck():
     return True
 
 
-def set_rate_limits(crawl_plan):
+def set_rate_limits(crawl_plan, crawl_uuid):
     """
     Use the Scrapy Cluster REST API to set rate limits for each domain.
     """
@@ -37,8 +38,15 @@ def set_rate_limits(crawl_plan):
     log.info('Setting rate limits...')
     for domain in crawl_plan['domains']:
         req = {
-
+            "appid": "crawl_planner",
+            "uuid": str(uuid4()),
+            "crawl_id": crawl_uuid,
+            "action": "domain-update",
+            "window": crawl_plan['domains'][domain]['window'],
+            "hits": crawl_plan['domains'][domain]['hits']
         }
+        response = requests.post(settings.CLUSTER_REST_URL + '/feed', json=req)
+        status_codes.add(response)
     for code in status_codes:
         if 200 > code > 299:
             log.error('Failed to set rate limits. Aborting crawl.')
@@ -50,10 +58,14 @@ if __name__ == '__main__':
         format='%(asctime)s %(levelname)s: %(message)s',
         level=log.INFO
     )
+    log.info("Performing cluster healthcheck")
     if not cluster_healthcheck():
         log.error("Cluster healthcheck failed. Aborting crawl.")
         sys.exit(1)
-    parsed_plan = None
     with open("crawl_plan.yml") as plan_file:
         parsed_plan = yaml.load(plan_file)
-    set_rate_limits(parsed_plan)
+    # Unique identifier associated with one executed crawl plan.
+    # Used for debugging and audit purposes.
+    crawl_uuid = str(uuid4())
+    log.info('Crawl ID: ' + crawl_uuid)
+    set_rate_limits(parsed_plan, crawl_uuid)
