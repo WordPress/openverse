@@ -47,8 +47,6 @@ def set_rate_limits(crawl_plan):
         }
         response = requests.post(settings.CLUSTER_REST_URL + '/feed', json=req)
         status_codes.add(response)
-        import pdb
-        pdb.set_trace()
 
     for code in status_codes:
         if 200 > code > 299:
