@@ -30,7 +30,7 @@ def cluster_healthcheck():
     return True
 
 
-def set_rate_limits(crawl_plan, crawl_uuid):
+def set_rate_limits(crawl_plan):
     """
     Use the Scrapy Cluster REST API to set rate limits for each domain.
     """
@@ -39,6 +39,7 @@ def set_rate_limits(crawl_plan, crawl_uuid):
     for domain in crawl_plan['domains']:
         req = {
             "appid": "crawl_planner",
+            "uuid": str(uuid4()),
             "domain": domain,
             "action": "domain-update",
             "window": crawl_plan['domains'][domain]['window'],
@@ -46,6 +47,9 @@ def set_rate_limits(crawl_plan, crawl_uuid):
         }
         response = requests.post(settings.CLUSTER_REST_URL + '/feed', json=req)
         status_codes.add(response)
+        import pdb
+        pdb.set_trace()
+
     for code in status_codes:
         if 200 > code > 299:
             log.error('Failed to set rate limits. Aborting crawl.')
@@ -63,8 +67,4 @@ if __name__ == '__main__':
         sys.exit(1)
     with open("crawl_plan.yml") as plan_file:
         parsed_plan = yaml.load(plan_file)
-    # Unique identifier associated with one executed crawl plan.
-    # Used for debugging and audit purposes.
-    crawl_uuid = str(uuid4())
-    log.info('Crawl ID: ' + crawl_uuid)
-    set_rate_limits(parsed_plan, crawl_uuid)
+    set_rate_limits(parsed_plan)

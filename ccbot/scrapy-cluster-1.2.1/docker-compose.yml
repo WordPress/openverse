@@ -20,6 +20,7 @@ services:
     restart: always
     environment:
       LOG_LEVEL: DEBUG
+      KAFKA_TOPIC_PREFIX: ccbot
   crawler:
     build:
       context: .
@@ -32,13 +33,18 @@ services:
     environment:
       SC_LOG_LEVEL: DEBUG
   rest:
-    image: istresearch/scrapy-cluster:rest-1.2.1
+    build:
+      context: .
+      dockerfile: ./docker/rest/Dockerfile
     depends_on:
       - kafka
       - redis
     restart: always
     ports:
       - "5343:5343"
+    environment:
+      KAFKA_PRODUCER_TOPIC: ccbot.incoming
+      KAFKA_TOPIC_PREFIX: ccbot
   redis:
     image: redis
     ports:
