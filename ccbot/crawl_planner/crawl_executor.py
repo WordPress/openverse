@@ -39,11 +39,10 @@ def set_rate_limits(crawl_plan, crawl_uuid):
     for domain in crawl_plan['domains']:
         req = {
             "appid": "crawl_planner",
-            "uuid": str(uuid4()),
-            "crawl_id": crawl_uuid,
+            "domain": domain,
             "action": "domain-update",
             "window": crawl_plan['domains'][domain]['window'],
-            "hits": crawl_plan['domains'][domain]['hits']
+            "hits": crawl_plan['domains'][domain]['hits'],
         }
         response = requests.post(settings.CLUSTER_REST_URL + '/feed', json=req)
         status_codes.add(response)
