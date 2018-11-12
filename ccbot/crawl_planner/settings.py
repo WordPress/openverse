@@ -18,3 +18,6 @@ VERY_HEAVY_RPS = 20
 
 # Crawl executor settings
 CLUSTER_REST_URL = os.getenv('CLUSTER_REST_HOST', 'http://localhost:5343')
+# Kafka brokers
+CLUSTER_BROKER_HOSTS = os.getenv('CLUSTER_KAFKA_HOST', 'http://localhost:9092')
+CLUSTER_INCOMING_TOPIC = os.getenv('CLUSTER_INCOMING_TOPIC', 'ccbot.incoming')
