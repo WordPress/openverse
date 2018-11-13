@@ -78,6 +78,9 @@ def schedule_crawl(url_csv_filename, crawl_id):
                 'attrs': row['identifier']
             }
             p.produce(settings.CLUSTER_INCOMING_TOPIC, msg)
+            if idx % 1000 == 0:
+                log.info('Produced {} messages. Still producing...'.format(idx))
+    log.info('Done producing messages.')
 
 
 if __name__ == '__main__':
@@ -96,3 +99,4 @@ if __name__ == '__main__':
     crawl_name = str(uuid4())
     log.info('Scheduling crawl {}...'.format(crawl_name))
     schedule_crawl('url_dump.csv', crawl_name)
+    log.info('Crawl {} scheduled.'.format(crawl_name))
