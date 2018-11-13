@@ -6,8 +6,11 @@ import csv
 import requests
 import yaml
 from collections import defaultdict
-from urlparse import urlparse
 from enum import Enum
+from tld import get_tld
+from tld.utils import update_tld_names
+from tld.exceptions import TldBadUrl
+update_tld_names()
 
 """
 Produce an image validation crawl plan. A crawl plan determines which URLs need 
@@ -129,10 +132,17 @@ def get_provider_info(filename):
     with open(filename, 'r') as url_file:
         reader = csv.DictReader(url_file)
         for row in reader:
-            netloc = urlparse(row['url']).netloc
-            netloc = netloc.replace('www.', "")
+            url = row['url']
+            # Parse domain and TLD from the URL.
+            try:
+                parsed = get_tld(url, as_object=True)
+                parsed = parsed.domain + '.' + parsed.tld
+                parsed = str(parsed)
+            except TldBadUrl:
+                log.warn('Ignoring malformed url {}'.format(url))
+                continue
             provider = row['provider']
-            provider_domains[provider].add(netloc)
+            provider_domains[provider].add(parsed)
             num_urls += 1
     return provider_domains, num_urls
 
