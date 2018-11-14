@@ -56,7 +56,7 @@ def set_rate_limits(crawl_plan):
 
 
 def delivery_report(err, msg):
-    """ Report failed """
+    """ Report failed delivery of messages."""
     if err is not None:
         log.error('Message delivery failed: {},{}'.format(msg, err))
 
@@ -72,6 +72,7 @@ def schedule_crawl(url_csv_filename, crawl_id):
     producer_config = {
         'bootstrap.servers': settings.CLUSTER_BROKER_HOSTS,
         'metadata.request.timeout.ms': 5000,
+        'queue.buffering.max.messages': 500000,
     }
     p = Producer(**producer_config)
     with open(url_csv_filename, 'r') as url_file:
@@ -91,9 +92,11 @@ def schedule_crawl(url_csv_filename, crawl_id):
                 callback=delivery_report
             )
             if idx > 0 and idx % 500 == 0:
-                log.info('Produced {} messages. Still producing...'.format(idx + 1))
+                log.info(
+                    'Produced {} messages. Still producing...'.format(idx + 1)
+                )
+    log.info('Produced {} messages. Flushing buffer...'.format(idx + 1))
     p.flush()
-    log.info('Produced {} messages. Done!'.format(idx + 1))
 
 
 if __name__ == '__main__':
