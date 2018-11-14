@@ -43,7 +43,6 @@ def set_rate_limits(crawl_plan, crawl_id):
             'uuid': str(uuid4()),
             'domain': domain,
             'action': "domain-update",
-            'crawlid': crawl_id,
             'window': crawl_plan['domains'][domain]['window'],
             'hits': crawl_plan['domains'][domain]['hits'],
         }
@@ -56,6 +55,12 @@ def set_rate_limits(crawl_plan, crawl_id):
             sys.exit(1)
 
 
+def delivery_report(err, msg):
+    """ Report failed """
+    if err is not None:
+        log.error('Message delivery failed: {},{}'.format(msg, err))
+
+
 def schedule_crawl(url_csv_filename, crawl_id):
     """
     Consume a URL dump CSV and produce Kafka messages.
@@ -64,8 +69,11 @@ def schedule_crawl(url_csv_filename, crawl_id):
     :param crawl_id: A UUID identifying the crawl. Used to control the crawl.
     :return:
     """
-
-    p = Producer({'bootstrap.servers': settings.CLUSTER_BROKER_HOSTS})
+    producer_config = {
+        'bootstrap.servers': settings.CLUSTER_BROKER_HOSTS,
+        'metadata.request.timeout.ms': 5000,
+    }
+    p = Producer(**producer_config)
     with open(url_csv_filename, 'r') as url_file:
         reader = csv.DictReader(url_file)
         for idx, row in enumerate(reader):
@@ -75,12 +83,17 @@ def schedule_crawl(url_csv_filename, crawl_id):
                 'appid': "crawl_planner",
                 'crawlid': crawl_id,
                 'spiderid': 'validator',
-                'attrs': row['identifier']
             }
-            p.produce(settings.CLUSTER_INCOMING_TOPIC, msg)
-            if idx % 1000 == 0:
-                log.info('Produced {} messages. Still producing...'.format(idx))
-    log.info('Done producing messages.')
+            encoded_msg = json.dumps(msg).encode('utf8')
+            p.produce(
+                settings.CLUSTER_INCOMING_TOPIC,
+                encoded_msg,
+                callback=delivery_report
+            )
+            if idx > 0 and idx % 500 == 0:
+                log.info('Produced {} messages. Still producing...'.format(idx + 1))
+    p.flush()
+    log.info('Produced {} messages. Done!'.format(idx + 1))
 
 
 if __name__ == '__main__':
@@ -95,8 +108,8 @@ if __name__ == '__main__':
     with open("crawl_plan.yml") as plan_file:
         parsed_plan = yaml.load(plan_file)
     log.info('Setting rate limits...')
-    set_rate_limits(parsed_plan)
     crawl_name = str(uuid4())
+    set_rate_limits(parsed_plan, crawl_name)
     log.info('Scheduling crawl {}...'.format(crawl_name))
     schedule_crawl('url_dump.csv', crawl_name)
     log.info('Crawl {} scheduled.'.format(crawl_name))
