@@ -89,7 +89,7 @@ def plan():
 
     log.info("Associating image domain names with providers...")
     provider_info = get_provider_info("url_dump.csv")
-    provider_domains, num_urls = provider_info
+    provider_domains, total_urls, provider_urls = provider_info
 
     plan_config = {
         # Extra information for human readers
@@ -100,15 +100,21 @@ def plan():
     info = {
         'providers': {},
         # Total number of URLs in the URL dump file.
-        'num_urls': num_urls
+        'total_urls': total_urls
     }
     for provider in provider_domains:
         # Choose rate limit strategy based on amount of content
+        # Populate info fields
         image_count = stats_dict[provider]
         strategy = get_strategy(image_count)
         provider_rps = STRATEGY_RPS[strategy]
         info['providers'][provider] = {}
         info['providers'][provider]['requests_per_second'] = provider_rps
+        provider_num_urls = provider_urls[provider]
+        projected_seconds = provider_num_urls / provider_rps
+        projected_hours = (projected_seconds / 60.0) / 60.0
+        info['providers'][provider]['projected_hours'] = round(projected_hours, 2)
+        info['providers'][provider]['num_urls'] = provider_num_urls
         for domain in provider_domains[provider]:
             plan_config['domains'] = {
                 domain: {
@@ -128,6 +134,7 @@ def get_provider_info(filename):
     website.
     """
     provider_domains = defaultdict(set)
+    provider_url_count = defaultdict(int)
     num_urls = 0
     with open(filename, 'r') as url_file:
         reader = csv.DictReader(url_file)
@@ -142,9 +149,10 @@ def get_provider_info(filename):
                 log.warn('Ignoring malformed url {}'.format(url))
                 continue
             provider = row['provider']
+            provider_url_count[provider] += 1
             provider_domains[provider].add(parsed)
             num_urls += 1
-    return provider_domains, num_urls
+    return provider_domains, num_urls, provider_url_count
 
 
 def dump_urls():
