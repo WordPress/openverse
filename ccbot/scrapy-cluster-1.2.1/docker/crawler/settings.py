@@ -82,7 +82,7 @@ Type and IP - every spider's throttle queue is determined by the spider type AND
     ip address, allowing the most fined grained control over the throttling mechanism
 '''
 # add Spider type to throttle mechanism
-SCHEDULER_TYPE_ENABLED = str2bool(os.getenv('SCHEDULER_TYPE_ENABLED', True))
+SCHEDULER_TYPE_ENABLED = str2bool(os.getenv('SCHEDULER_TYPE_ENABLED', False))
 
 # add ip address to throttle mechanism
 SCHEDULER_IP_ENABLED = str2bool(os.getenv('SCHEDULER_IP_ENABLED', True))
