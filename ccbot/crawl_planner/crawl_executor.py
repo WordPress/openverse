@@ -32,7 +32,7 @@ def cluster_healthcheck():
     return True
 
 
-def set_rate_limits(crawl_plan, crawl_id):
+def set_rate_limits(crawl_plan):
     """
     Use the Scrapy Cluster REST API to set rate limits for each domain.
     """
@@ -47,7 +47,7 @@ def set_rate_limits(crawl_plan, crawl_id):
             'hits': crawl_plan['domains'][domain]['hits'],
         }
         response = requests.post(settings.CLUSTER_REST_URL + '/feed', json=req)
-        status_codes.add(response)
+        status_codes.add(response.status_code)
 
     for code in status_codes:
         if 200 > code > 299:
@@ -109,7 +109,7 @@ if __name__ == '__main__':
         parsed_plan = yaml.load(plan_file)
     log.info('Setting rate limits...')
     crawl_name = str(uuid4())
-    set_rate_limits(parsed_plan, crawl_name)
+    set_rate_limits(parsed_plan)
     log.info('Scheduling crawl {}...'.format(crawl_name))
     schedule_crawl('url_dump.csv', crawl_name)
     log.info('Crawl {} scheduled.'.format(crawl_name))
