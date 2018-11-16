@@ -4,11 +4,18 @@ from __future__ import absolute_import
 # This file houses all default settings for the Crawler
 # to override please use a custom localsettings.py file
 import os
+
+
 def str2bool(v):
     return str(v).lower() in ('true', '1') if type(v) == str else bool(v)
 
+
 # Scrapy Cluster Settings
 # ~~~~~~~~~~~~~~~~~~~~~~~
+USER_AGENT = "ccbot - Cataloging the Commons - https://creativecommons.org/ " \
+             "- Operator contact: alden (at) creativecommons.org." \
+             " This crawler respects robots.txt."
+ROBOTSTXT_OBEY = True
 
 # Specify the host and port to use when connecting to Redis.
 REDIS_HOST = os.getenv('REDIS_HOST', 'redis')
@@ -75,7 +82,7 @@ Type and IP - every spider's throttle queue is determined by the spider type AND
     ip address, allowing the most fined grained control over the throttling mechanism
 '''
 # add Spider type to throttle mechanism
-SCHEDULER_TYPE_ENABLED = str2bool(os.getenv('SCHEDULER_TYPE_ENABLED', True))
+SCHEDULER_TYPE_ENABLED = str2bool(os.getenv('SCHEDULER_TYPE_ENABLED', False))
 
 # add ip address to throttle mechanism
 SCHEDULER_IP_ENABLED = str2bool(os.getenv('SCHEDULER_IP_ENABLED', True))
