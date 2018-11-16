@@ -10,6 +10,18 @@ designed. Run with the `pytest` command from this directory.
 
 
 API_URL = os.getenv('INTEGRATION_TEST_URL', 'http://localhost:8000')
+known_apis = {
+    'http://localhost:8000': 'LOCAL',
+    'https://api.creativecommons.engineering': 'PRODUCTION',
+    'https://api-dev.creativecommons.engineering': 'TESTING'
+}
+
+
+def setup_module():
+    if API_URL in known_apis:
+        print(
+            '\n\033[1;31;40mTesting {} environment'.format(known_apis[API_URL])
+        )
 
 
 @pytest.fixture
