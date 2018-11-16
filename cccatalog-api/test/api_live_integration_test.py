@@ -1,8 +1,9 @@
 import requests
 import json
 import pytest
+import os
 
-API_URL = 'http://localhost:8000'
+API_URL = os.getenv('INTEGRATION_TEST_URL', 'http://localhost:8000')
 
 
 @pytest.fixture
@@ -77,8 +78,6 @@ def test_list_delete(test_list_create):
     list_slug = test_list_create['url'].split('/')[-1]
     token = test_list_create['auth']
     headers = {"Authorization": "Token {}".format(token)}
-    import pdb
-    pdb.set_trace()
     response = requests.delete(
         API_URL + '/list/{}'.format(list_slug),
         headers=headers
