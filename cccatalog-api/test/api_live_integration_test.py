@@ -5,7 +5,7 @@ import os
 
 """
 End-to-end API tests. Can be used to verify a live deployment is functioning as
-designed. Run with the `pytest` command from this directory.
+designed. Run with the `pytest -s` command from this directory.
 """
 
 
