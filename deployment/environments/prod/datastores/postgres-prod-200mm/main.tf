@@ -10,7 +10,7 @@ variable "database_password" {
 }
 
 resource "aws_db_instance" "cccatalog-postgres-prod" {
-  instance_class             = "db.m4.xlarge"
+  instance_class             = "db.m4.4xlarge"
   engine                     = "postgres"
   engine_version             = "10.3"
   port                       = 5432
@@ -26,5 +26,10 @@ resource "aws_db_instance" "cccatalog-postgres-prod" {
   storage_encrypted          = false
   db_subnet_group_name       = "default-vpc-b741b4cc"
   parameter_group_name       = "default.postgres10"
-  snapshot_identifier        = "seed-for-production"
+  snapshot_identifier        = "prod-snapshot-pre-200mm-migration"
+  
+  tags = {
+    name  = "Name"
+    value = "production-api-200mm"
+  }
 }

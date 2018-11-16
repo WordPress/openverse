@@ -17,9 +17,9 @@ module "es-syncer" {
   source = "../../../../modules/services/es-syncer"
 
   vpc_id                = "vpc-b741b4cc"
-  elasticsearch_url     = "search-cccatalog-es-prod3-of6oi33xtrsxp63mxuc47nhxeu.us-east-1.es.amazonaws.com"
+  elasticsearch_url     = "search-cccatalog-es-prod4-200mm-o22hjpa5hxct6qawt6bqk4oo7a.us-east-1.es.amazonaws.com"
   elasticsearch_port    = "80"
-  database_host         = "production-api-v0-17.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
+  database_host         = "production-api-200mm.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
   database_port         = "5432"
   database_password     = "${var.database_password}"
   aws_access_key_id     = "${var.aws_access_key_id}"
@@ -30,4 +30,5 @@ module "es-syncer" {
   environment           = "prod"
   poll_interval         = "60"
   docker_tag            = "2.1"
+  instance_type         = "m5.large"
 }
