@@ -3,6 +3,12 @@ import json
 import pytest
 import os
 
+"""
+End-to-end API tests. Can be used to verify a live deployment is functioning as
+designed. Run with the `pytest` command from this directory.
+"""
+
+
 API_URL = os.getenv('INTEGRATION_TEST_URL', 'http://localhost:8000')
 
 
@@ -17,7 +23,7 @@ def test_search(search_fixture):
     assert search_fixture['result_count'] > 10
 
 
-def test_search_consistency(search_fixture):
+def test_search_consistency():
     """
     Elasticsearch sometimes reaches an inconsistent state, which causes search
     results to appear differently upon page refresh. This can also introduce
