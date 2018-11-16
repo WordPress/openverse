@@ -41,6 +41,7 @@ SHORT_URL_WHITELIST = {
     'api.creativecommons.engineering',
     'ccccatalog.herokuapp.com',
     'ccsearch.creativecommons.org',
+    'localhost:8000'
 }
 SHORT_URL_PATH_WHITELIST = ['/list', '/image/']
 
