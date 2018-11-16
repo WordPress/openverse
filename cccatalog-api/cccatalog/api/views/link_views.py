@@ -36,10 +36,14 @@ class CreateShortenedLink(GenericAPIView):
                 data=serialized.errors
             )
 
-        try:
+        existing_path = ShortenedLink \
+            .objects \
+            .get(full_url=full_url) \
+            .shortened_path
+        if existing_path is None:
             shortened_path = serialized.save()
             shortened_url = settings.ROOT_SHORTENING_URL + '/' + shortened_path
-        except IntegrityError:
+        else:
             # The full URL has already been shortened. Return the already
             # existing URL.
             shortened_path = ShortenedLink \
