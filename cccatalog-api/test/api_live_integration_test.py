@@ -17,6 +17,27 @@ def test_search(search_fixture):
     assert search_fixture['result_count'] > 10
 
 
+def test_search_consistency(search_fixture):
+    """
+    Elasticsearch sometimes reaches an inconsistent state, which causes search
+    results to appear differently upon page refresh. This can also introduce
+    image duplicates in subsequent pages. This test ensures that no duplicates
+    appear in the first few pages of a search query.
+    """
+    searches = [
+        requests.get(API_URL + '/image/search?q=a'),
+        requests.get(API_URL + '/image/search?q=a;page=2'),
+        requests.get(API_URL + '/image/search?q=a;page=3')
+    ]
+    images = set()
+    for response in searches:
+        parsed = json.loads(response.text)
+        for result in parsed['results']:
+            image_id = result['id']
+            assert image_id not in images
+            images.add(image_id)
+
+
 def test_image_detail(search_fixture):
     test_id = search_fixture['results'][0]['id']
     response = requests.get(API_URL + '/image/{}'.format(test_id))
