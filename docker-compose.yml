@@ -50,7 +50,7 @@ services:
       ELASTICSEARCH_URL: "es"
       ELASTICSEARCH_PORT: "9200"
       DISABLE_GLOBAL_THROTTLING: "True"
-      ROOT_SHORTENING_URL: "localhost"
+      ROOT_SHORTENING_URL: "localhost:8000"
     stdin_open: true
     tty: true
 
