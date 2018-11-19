@@ -11,6 +11,15 @@ from cccatalog.api.serializers.search_serializers import\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
 import cccatalog.api.controllers.search_controller as search_controller
+import grequests
+
+
+def validate_images(results, image_urls):
+    reqs = (grequests.head(u) for u in image_urls)
+    verified = grequests.map(reqs)
+    for idx, response in enumerate(verified):
+        if response.status_code != 200:
+            del results[idx]
 
 
 class SearchImages(APIView):
@@ -60,17 +69,19 @@ class SearchImages(APIView):
 
         # Fetch each result from Elasticsearch. Resolve links to detail views.
         results = []
+        to_validate = []
         for result in search_results:
             url = request.build_absolute_uri(
                 reverse('image-detail', [result.identifier])
             )
             result.detail = url
+            to_validate.append(result.url)
             # FIXME Workaround for cccatalog-frontend/#118 thumbnails shown at wrong scale
             result.thumbnail = result.url
             results.append(result)
+        validate_images(results, to_validate)
         serialized_results =\
             ImageSerializer(results, many=True).data
-
         # Elasticsearch does not allow deep pagination of ranked queries.
         # Adjust returned page count to reflect this.
         natural_page_count = int(search_results.hits.total/page_size)

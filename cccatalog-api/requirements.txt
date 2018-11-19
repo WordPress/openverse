@@ -31,3 +31,4 @@ django-uuslug==1.1.8
 django-cron==0.5.1
 redlock-py==1.0.8
 pytest==3.8.1
+grequests
