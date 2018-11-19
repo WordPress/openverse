@@ -65,6 +65,8 @@ class SearchImages(APIView):
                 reverse('image-detail', [result.identifier])
             )
             result.detail = url
+            # FIXME Workaround for cccatalog-frontend/#118 thumbnails shown at wrong scale
+            result.thumbnail = result.url
             results.append(result)
         serialized_results =\
             ImageSerializer(results, many=True).data
