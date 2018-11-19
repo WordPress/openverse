@@ -26,13 +26,14 @@ def setup_module():
 
 @pytest.fixture
 def search_fixture():
-    response = requests.get(API_URL + '/image/search?q=a')
+    response = requests.get(API_URL + '/image/search?q=honey')
     assert response.status_code == 200
-    return json.loads(response.text)
+    parsed = json.loads(response.text)
+    return parsed
 
 
 def test_search(search_fixture):
-    assert search_fixture['result_count'] > 10
+    assert search_fixture['result_count'] > 0
 
 
 def test_search_consistency():
@@ -43,9 +44,9 @@ def test_search_consistency():
     appear in the first few pages of a search query.
     """
     searches = [
-        requests.get(API_URL + '/image/search?q=a'),
-        requests.get(API_URL + '/image/search?q=a;page=2'),
-        requests.get(API_URL + '/image/search?q=a;page=3')
+        requests.get(API_URL + '/image/search?q=honey'),
+        requests.get(API_URL + '/image/search?q=honey;page=2'),
+        requests.get(API_URL + '/image/search?q=honey;page=3')
     ]
     images = set()
     for response in searches:

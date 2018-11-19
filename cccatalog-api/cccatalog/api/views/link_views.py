@@ -1,5 +1,5 @@
 from django.http import HttpResponsePermanentRedirect
-from django.db.utils import IntegrityError
+from cccatalog.api.models import ShortenedLink
 from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
 from rest_framework.decorators import throttle_classes
@@ -36,21 +36,16 @@ class CreateShortenedLink(GenericAPIView):
                 data=serialized.errors
             )
 
-        existing_path = ShortenedLink \
-            .objects \
-            .get(full_url=full_url) \
-            .shortened_path
-        if existing_path is None:
-            shortened_path = serialized.save()
-            shortened_url = settings.ROOT_SHORTENING_URL + '/' + shortened_path
-        else:
-            # The full URL has already been shortened. Return the already
-            # existing URL.
-            shortened_path = ShortenedLink \
+        try:
+            existing_path = ShortenedLink \
                 .objects \
                 .get(full_url=full_url) \
                 .shortened_path
+            shortened_url = settings.ROOT_SHORTENING_URL + '/' + existing_path
+        except ShortenedLink.DoesNotExist:
+            shortened_path = serialized.save()
             shortened_url = settings.ROOT_SHORTENING_URL + '/' + shortened_path
+
         return Response(
             status=200,
             data={
