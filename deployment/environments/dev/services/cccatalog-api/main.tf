@@ -32,15 +32,15 @@ module "cccatalog-api" {
   max_size                  = 3
   instance_type             = "t2.small"
   enable_monitoring         = false
-  git_revision              = "55e9b3b49067b04a7226e046dbd4b4fe614be046"
+  git_revision              = "21af2cb5ab3af78f5222c7e2a726f495a42fde7f"
   api_version               = "0.17.5"
 
   # Environment-specific variables
-  database_host             = "openledger-db-dev3-nvirginia.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
+  database_host             = "ccsearch-intermediary-db.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
   django_debug_enabled      = "False"
   elasticsearch_port        = "80"
   aws_region                = "us-east-1"
-  elasticsearch_url         = "search-cccatalog-elasticsearch-vtptjrgtluyamznw6s4kkdtqju.us-east-1.es.amazonaws.com"
+  elasticsearch_url         = "search-cccatalog-es-prod4-200mm-o22hjpa5hxct6qawt6bqk4oo7a.us-east-1.es.amazonaws.com"
   redis_host                = "ip-172-30-1-215.ec2.internal"
   ccc_api_host              = "api-dev.creativecommons.engineering"
   root_shortening_url       = "dev.shares.cc"

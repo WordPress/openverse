@@ -32,7 +32,7 @@ module "cccatalog-api" {
   max_size                  = 3
   instance_type             = "c5d.xlarge"
   enable_monitoring         = false
-  git_revision              = "4508968b7f4ccb7bfe694277d46515b80c8fece0"
+  git_revision              = "8a26d875124bdd8bdb621ccfebb9c08e7e180e2c"
   api_version               = "0.17.5"
 
   # Environment-specific variables
