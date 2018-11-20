@@ -10,16 +10,46 @@ from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
+from django_redis import get_redis_connection
 import cccatalog.api.controllers.search_controller as search_controller
+import logging
 import grequests
 
 
+logger = logging.getLogger(__name__)
+
+
 def validate_images(results, image_urls):
-    reqs = (grequests.head(u) for u in image_urls)
+    """
+    Make sure images exist before we display them. Treat redirects as broken
+    links since 99% of the time the redirect leads to a generic "not found"
+    placeholder.
+
+    Results are cached in redis and shared amongst all API servers in the
+    cluster.
+    """
+    redis = get_redis_connection("default")
+    cache_prefix = 'valid:'
+    cached_statuses = redis.mget([cache_prefix + url for url in image_urls])
+
+    # Uncached URLs that need to be verified
+    to_verify = {
+        url: idx for idx, url in enumerate(cached_statuses) if url is not None
+    }
+    reqs = (grequests.head(u, allow_redirects=False) for u in to_verify.keys())
     verified = grequests.map(reqs)
+    # Merge newly verified results with cached statuses
     for idx, response in enumerate(verified):
-        if response.status_code != 200:
+        req_url = reqs[idx]
+        req_idx = to_verify[req_url]
+        cached_statuses[req_idx] = response.status_code
+
+    for idx, response in enumerate(verified):
+        if response.status_code == 429:
+            logger.error('Image validation failed due to rate limiting.')
+        elif response.status_code != 200:
             del results[idx]
+            logger.info('Deleted broken link from results.')
 
 
 class SearchImages(APIView):
