@@ -49,7 +49,7 @@ def validate_images(results, image_urls):
             logger.error('Image validation failed due to rate limiting.')
         elif response.status_code != 200:
             del results[idx]
-            logger.info('Deleted broken link from results.')
+            logger.debug('Deleted broken link from results.')
 
 
 class SearchImages(APIView):
