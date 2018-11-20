@@ -30,4 +30,5 @@ module "es-syncer" {
   environment           = "dev"
   poll_interval         = "60"
   docker_tag            = "2.1"
+  instance_type         = "m5.large"
 }
