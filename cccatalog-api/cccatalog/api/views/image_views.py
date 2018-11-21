@@ -27,8 +27,10 @@ def validate_images(results, image_urls):
     placeholder.
 
     Results are cached in redis and shared amongst all API servers in the
-    cluster.
+    cluster.128eebc21c9eec7fbea4d26232043eebb6c18ec0
     """
+    if not image_urls:
+        return
     start_time = time.time()
     # Pull matching images from the cache.
     redis = get_redis_connection("default")
@@ -88,9 +90,11 @@ def validate_images(results, image_urls):
         if status_code == 429:
             print('Image validation failed due to rate limiting.')
         elif status_code != 200:
-            print('deleting {}'.format(del_idx))
+            print(
+                'Deleting broken image with ID {} from results.'
+                    .format(results[del_idx]['identifier'])
+            )
             del results[del_idx]
-            print('Deleted broken link from results.')
     end_time = time.time()
     print('Validated images in {} '.format(end_time - start_time))
 
