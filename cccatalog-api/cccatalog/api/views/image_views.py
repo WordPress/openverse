@@ -1,3 +1,5 @@
+from gevent import monkey
+monkey.patch_all()
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
