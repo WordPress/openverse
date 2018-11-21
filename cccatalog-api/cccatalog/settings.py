@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-
+from gevent import monkey
+monkey.patch_all()
 import os
 from socket import gethostname, gethostbyname
 

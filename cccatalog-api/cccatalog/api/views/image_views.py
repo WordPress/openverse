@@ -1,5 +1,3 @@
-from gevent import monkey
-monkey.patch_all()
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
@@ -20,6 +18,10 @@ import time
 
 
 logger = logging.getLogger(__name__)
+
+
+def validation_failure(request, exception):
+    print('Failed to validate image! Reason: {}'.format(exception))
 
 
 def validate_images(results, image_urls):
@@ -48,7 +50,7 @@ def validate_images(results, image_urls):
         grequests.head(u, allow_redirects=False, timeout=0.2)
         for u in to_verify.keys()
     )
-    verified = grequests.map(reqs)
+    verified = grequests.map(reqs, exception_handler=validation_failure)
     # Cache newly verified image statuses.
     to_cache = {}
     for url in to_verify.keys():
