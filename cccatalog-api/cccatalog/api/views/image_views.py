@@ -14,6 +14,7 @@ from django_redis import get_redis_connection
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
 import grequests
+import time
 
 
 logger = logging.getLogger(__name__)
@@ -28,28 +29,70 @@ def validate_images(results, image_urls):
     Results are cached in redis and shared amongst all API servers in the
     cluster.
     """
+    start_time = time.time()
+    # Pull matching images from the cache.
     redis = get_redis_connection("default")
     cache_prefix = 'valid:'
     cached_statuses = redis.mget([cache_prefix + url for url in image_urls])
-
-    # Uncached URLs that need to be verified
-    to_verify = {
-        url: idx for idx, url in enumerate(cached_statuses) if url is not None
-    }
-    reqs = (grequests.head(u, allow_redirects=False) for u in to_verify.keys())
+    cached_statuses = [b.decode if b is not None else None for b in cached_statuses]
+    # Anything that isn't in the cache needs to be validated via HEAD request.
+    to_verify = {}
+    for idx, url in enumerate(image_urls):
+        if cached_statuses[idx] is None:
+            to_verify[url] = idx
+    reqs = (
+        grequests.head(u, allow_redirects=False, timeout=0.5)
+        for u in to_verify.keys()
+    )
     verified = grequests.map(reqs)
+    # Cache newly verified image statuses.
+    to_cache = {}
+    for url in to_verify.keys():
+        cache_key = cache_prefix + url
+        verified_idx = to_verify[url]
+        if verified[verified_idx]:
+            status = verified[verified_idx].status_code
+        # Response didn't arrive in time. Try again later.
+        else:
+            status = -1
+        to_cache[cache_key] = status
+
+    thirty_minutes = 60 * 30
+    twenty_four_hours_seconds = 60 * 60 * 24
+    pipe = redis.pipeline()
+    if len(to_cache) > 0:
+        pipe.mset(to_cache)
+    for key, status in to_cache.items():
+        # Cache successful links for a day, and broken links for 120 days.
+        if status == 200:
+            pipe.expire(key, twenty_four_hours_seconds)
+        elif status == -1:
+            # Content provider failed to respond; try again in a short interval
+            pipe.expire(key, thirty_minutes)
+        else:
+            pipe.expire(key, twenty_four_hours_seconds * 120)
+    pipe.execute()
+
     # Merge newly verified results with cached statuses
     for idx, response in enumerate(verified):
-        req_url = reqs[idx]
+        req_url = image_urls[idx]
         req_idx = to_verify[req_url]
-        cached_statuses[req_idx] = response.status_code
+        if response is not None:
+            cached_statuses[req_idx] = response.status_code
+        else:
+            cached_statuses[req_idx] = -1
 
-    for idx, response in enumerate(verified):
-        if response.status_code == 429:
-            logger.error('Image validation failed due to rate limiting.')
-        elif response.status_code != 200:
-            del results[idx]
-            logger.debug('Deleted broken link from results.')
+    # Delete broken images from the search results response.
+    for idx, status_code in enumerate(cached_statuses):
+        del_idx = len(cached_statuses) - idx - 1
+        if status_code == 429:
+            print('Image validation failed due to rate limiting.')
+        elif status_code != 200:
+            print('deleting {}'.format(del_idx))
+            del results[del_idx]
+            print('Deleted broken link from results.')
+    end_time = time.time()
+    print('Validated images in {} '.format(end_time - start_time))
 
 
 class SearchImages(APIView):
