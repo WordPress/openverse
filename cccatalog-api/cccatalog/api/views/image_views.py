@@ -89,11 +89,11 @@ def validate_images(results, image_urls):
             cached_statuses[req_idx] = -1
 
     # Delete broken images from the search results response.
-    for idx, status_code in enumerate(cached_statuses):
+    for idx, _ in enumerate(cached_statuses):
         del_idx = len(cached_statuses) - idx - 1
-        if status_code == 429:
+        if cached_statuses[del_idx] == 429:
             print('Image validation failed due to rate limiting.')
-        elif status_code != 200:
+        elif cached_statuses[del_idx] != 200:
             print(
                 'Deleting broken image with ID {} from results.'
                     .format(results[del_idx]['identifier'])
