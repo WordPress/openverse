@@ -27,7 +27,7 @@ def validate_images(results, image_urls):
     placeholder.
 
     Results are cached in redis and shared amongst all API servers in the
-    cluster.128eebc21c9eec7fbea4d26232043eebb6c18ec0
+    cluster.
     """
     if not image_urls:
         return
