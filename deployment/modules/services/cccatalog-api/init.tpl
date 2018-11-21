@@ -74,7 +74,6 @@ sudo uwsgi --chdir=/var/www/cccatalog-api \
       --wsgi-file=./cccatalog/wsgi.py \
       --enable-threads \
       --processes=4 \
-      --threads=2 \
       --harakiri=30 \
       --stats=/tmp/stats.socket
 
