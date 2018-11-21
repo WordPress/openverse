@@ -75,7 +75,8 @@ sudo uwsgi --chdir=/var/www/cccatalog-api \
       --enable-threads \
       --processes=4 \
       --harakiri=30 \
-      --stats=/tmp/stats.socket
+      --stats=/tmp/stats.socket \
+      --gevent-early-monkey-patch
 
 # Put nginx in front of uWSGI for static content serving
 sudo amazon-linux-extras install nginx1.12
