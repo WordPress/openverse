@@ -34,7 +34,7 @@ def validate_images(results, image_urls):
     redis = get_redis_connection("default")
     cache_prefix = 'valid:'
     cached_statuses = redis.mget([cache_prefix + url for url in image_urls])
-    cached_statuses = [b.decode('utf-8') if b is not None else None for b in cached_statuses]
+    cached_statuses = [int(b.decode('utf-8')) if b is not None else None for b in cached_statuses]
     # Anything that isn't in the cache needs to be validated via HEAD request.
     to_verify = {}
     for idx, url in enumerate(image_urls):
