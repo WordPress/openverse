@@ -41,7 +41,7 @@ def validate_images(results, image_urls):
         if cached_statuses[idx] is None:
             to_verify[url] = idx
     reqs = (
-        grequests.head(u, allow_redirects=False, timeout=0.5)
+        grequests.head(u, allow_redirects=False, timeout=0.2)
         for u in to_verify.keys()
     )
     verified = grequests.map(reqs)
