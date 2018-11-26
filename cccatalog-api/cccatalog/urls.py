@@ -53,8 +53,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('', schema_view.with_ui('redoc', cache_timeout=None),
-        name='root'),
+    #path('', schema_view.with_ui('redoc', cache_timeout=None),
+    #    name='root'),
     path('admin/', admin.site.urls),
     path('list', CreateList.as_view()),
     path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
@@ -66,10 +66,10 @@ urlpatterns = [
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
     re_path('healthcheck', HealthCheck.as_view()),
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$',
-        schema_view.without_ui(cache_timeout=None), name='schema-json'),
-    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=15),
-        name='schema-swagger-ui'),
-    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=15),
-        name='schema-redoc'),
-    ]
+    #re_path(r'^swagger(?P<format>\.json|\.yaml)$',
+    #    schema_view.without_ui(cache_timeout=None), name='schema-json'),
+    #re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=15),
+    #    name='schema-swagger-ui'),
+    #re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=15),
+    #    name='schema-redoc'),
+]
