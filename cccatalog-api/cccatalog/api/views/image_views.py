@@ -17,11 +17,11 @@ import grequests
 import time
 
 
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 def validation_failure(request, exception):
-    print('Failed to validate image! Reason: {}'.format(exception))
+    log.warning('Failed to validate image! Reason: {}'.format(exception))
 
 
 def validate_images(results, image_urls):
@@ -40,7 +40,10 @@ def validate_images(results, image_urls):
     redis = get_redis_connection("default")
     cache_prefix = 'valid:'
     cached_statuses = redis.mget([cache_prefix + url for url in image_urls])
-    cached_statuses = [int(b.decode('utf-8')) if b is not None else None for b in cached_statuses]
+    cached_statuses = [
+        int(b.decode('utf-8'))
+        if b is not None else None for b in cached_statuses
+    ]
     # Anything that isn't in the cache needs to be validated via HEAD request.
     to_verify = {}
     for idx, url in enumerate(image_urls):
@@ -91,15 +94,18 @@ def validate_images(results, image_urls):
         del_idx = len(cached_statuses) - idx - 1
         status = cached_statuses[del_idx]
         if status == 429 or status == 403:
-            print('Image validation failed due to rate limiting or blocking.')
+            log.warning(
+                'Image validation failed due to rate limiting or blocking.'
+                'Affected URL: {}'.format(image_urls[idx])
+            )
         elif status != 200:
-            print(
+            log.info(
                 'Deleting broken image with ID {} from results.'
                     .format(results[del_idx]['identifier'])
             )
             del results[del_idx]
     end_time = time.time()
-    print('Validated images in {} '.format(end_time - start_time))
+    log.info('Validated images in {} '.format(end_time - start_time))
 
 
 class SearchImages(APIView):
