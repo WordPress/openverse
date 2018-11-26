@@ -53,11 +53,10 @@ def validate_images(results, image_urls):
     verified = grequests.map(reqs, exception_handler=validation_failure)
     # Cache newly verified image statuses.
     to_cache = {}
-    for url in to_verify.keys():
+    for idx, url in enumerate(to_verify.keys()):
         cache_key = cache_prefix + url
-        verified_idx = to_verify[url]
-        if verified[verified_idx]:
-            status = verified[verified_idx].status_code
+        if verified[idx]:
+            status = verified[idx].status_code
         # Response didn't arrive in time. Try again later.
         else:
             status = -1
@@ -80,20 +79,19 @@ def validate_images(results, image_urls):
     pipe.execute()
 
     # Merge newly verified results with cached statuses
-    for idx, response in enumerate(verified):
-        req_url = image_urls[idx]
-        req_idx = to_verify[req_url]
-        if response is not None:
-            cached_statuses[req_idx] = response.status_code
+    for idx, url in enumerate(to_verify):
+        if verified[idx] is not None:
+            cached_statuses[idx] = verified[idx].status_code
         else:
-            cached_statuses[req_idx] = -1
+            cached_statuses[idx] = -1
 
     # Delete broken images from the search results response.
     for idx, _ in enumerate(cached_statuses):
         del_idx = len(cached_statuses) - idx - 1
-        if cached_statuses[del_idx] == 429:
-            print('Image validation failed due to rate limiting.')
-        elif cached_statuses[del_idx] != 200:
+        status = cached_statuses[del_idx]
+        if status == 429 or status == 403:
+            print('Image validation failed due to rate limiting or blocking.')
+        elif status != 200:
             print(
                 'Deleting broken image with ID {} from results.'
                     .format(results[del_idx]['identifier'])
