@@ -80,10 +80,11 @@ def validate_images(results, image_urls):
 
     # Merge newly verified results with cached statuses
     for idx, url in enumerate(to_verify):
+        cache_idx = to_verify[url]
         if verified[idx] is not None:
-            cached_statuses[idx] = verified[idx].status_code
+            cached_statuses[cache_idx] = verified[idx].status_code
         else:
-            cached_statuses[idx] = -1
+            cached_statuses[cache_idx] = -1
 
     # Delete broken images from the search results response.
     for idx, _ in enumerate(cached_statuses):
