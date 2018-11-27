@@ -32,8 +32,8 @@ module "cccatalog-api" {
   max_size                  = 1
   instance_type             = "t2.small"
   enable_monitoring         = false
-  git_revision              = "7191eb38af301a71fd3cf1a8d885125c4c73dfd3"
-  api_version               = "0.19.0"
+  git_revision              = "280cbed57d7f26ffa3f999545b142b13b7e0913f"
+  api_version               = "0.19.1-preprod"
 
   # Environment-specific variables
   database_host             = "openledger-db-dev3-nvirginia.ctypbfibkuqv.us-east-1.rds.amazonaws.com"
@@ -44,7 +44,7 @@ module "cccatalog-api" {
   redis_host                = "ip-172-30-1-215.ec2.internal"
   ccc_api_host              = "api-dev.creativecommons.engineering"
   root_shortening_url       = "dev.shares.cc"
-  #disable_global_throttling = "True"
+  disable_global_throttling = "True"
 
   # Secrets not checked into version control. Override with -var-file=secrets.tfvars
   database_password         = "${var.database_password}"
