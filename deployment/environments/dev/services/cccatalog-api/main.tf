@@ -28,12 +28,12 @@ module "cccatalog-api" {
   vpc_id                    = "vpc-b741b4cc"
   name_suffix               = ""
   environment               = "dev"
-  min_size                  = 3
-  max_size                  = 3
+  min_size                  = 1
+  max_size                  = 1
   instance_type             = "t2.small"
   enable_monitoring         = false
-  git_revision              = "4508968b7f4ccb7bfe694277d46515b80c8fece0"
-  api_version               = "0.17.5"
+  git_revision              = "7191eb38af301a71fd3cf1a8d885125c4c73dfd3"
+  api_version               = "0.19.0"
 
   # Environment-specific variables
   database_host             = "openledger-db-dev3-nvirginia.ctypbfibkuqv.us-east-1.rds.amazonaws.com"

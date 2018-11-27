@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import os
 import sys
+from gevent import monkey
+monkey.patch_all()
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cccatalog.settings")

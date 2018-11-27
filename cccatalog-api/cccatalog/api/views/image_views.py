@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image
+from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils.view_count import track_model_views
 from rest_framework.reverse import reverse
 from cccatalog.api.serializers.search_serializers import\
@@ -11,6 +12,10 @@ from cccatalog.api.serializers.search_serializers import\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
 import cccatalog.api.controllers.search_controller as search_controller
+import logging
+from urllib.parse import urlparse
+
+log = logging.getLogger(__name__)
 
 
 class SearchImages(APIView):
@@ -60,17 +65,17 @@ class SearchImages(APIView):
 
         # Fetch each result from Elasticsearch. Resolve links to detail views.
         results = []
+        to_validate = []
         for result in search_results:
             url = request.build_absolute_uri(
                 reverse('image-detail', [result.identifier])
             )
             result.detail = url
-            # FIXME Workaround for cccatalog-frontend/#118 thumbnails shown at wrong scale
-            result.thumbnail = result.url
+            to_validate.append(result.url)
             results.append(result)
+        validate_images(results, to_validate)
         serialized_results =\
             ImageSerializer(results, many=True).data
-
         # Elasticsearch does not allow deep pagination of ranked queries.
         # Adjust returned page count to reflect this.
         natural_page_count = int(search_results.hits.total/page_size)
@@ -107,7 +112,22 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     @track_model_views(Image)
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
+
+        def _append_protocol_if_missing(url: str):
+            parsed = urlparse(url)
+            if parsed.scheme == '':
+                return 'https://' + url
+            else:
+                return url
+
         resp = self.retrieve(request, identifier)
         # Add page views to the response.
         resp.data['view_count'] = view_count
+        # Validate links to creator and foreign landing URLs.
+        creator_url = _append_protocol_if_missing(resp.data['creator_url'])
+        foreign_landing_url = \
+            _append_protocol_if_missing(resp.data['foreign_landing_url'])
+        resp.data['creator_url'] = creator_url
+        resp.data['foreign_landing_url'] = foreign_landing_url
+
         return resp

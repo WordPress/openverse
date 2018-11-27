@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-
 import os
 from socket import gethostname, gethostbyname
 
@@ -68,6 +67,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_social_oauth2',
     'corsheaders',
+    'sslserver',
 ]
 
 MIDDLEWARE = [
@@ -207,6 +207,29 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        # root logger
+        '': {
+            'level': 'INFO',
+            'handlers': ['console'],
+        },
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/

@@ -32,7 +32,7 @@ services:
 
   web:
     build: ./cccatalog-api/
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runsslserver 0.0.0.0:8000
     volumes:
       - ./cccatalog-api:/cccatalog-api
     ports:
