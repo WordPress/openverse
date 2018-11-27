@@ -13,6 +13,7 @@ from cccatalog.api.serializers.search_serializers import\
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
+from urllib.parse import urlparse
 
 log = logging.getLogger(__name__)
 
@@ -113,7 +114,22 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     @track_model_views(Image)
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
+
+        def _append_protocol_if_missing(url: str):
+            parsed = urlparse(url)
+            if parsed.scheme == '':
+                return 'https://' + url
+            else:
+                return url
+
         resp = self.retrieve(request, identifier)
         # Add page views to the response.
         resp.data['view_count'] = view_count
+        # Validate links to creator and foreign landing URLs.
+        creator_url = _append_protocol_if_missing(resp.data['creator_url'])
+        foreign_landing_url = \
+            _append_protocol_if_missing(resp.data['foreign_landing_url'])
+        resp.data['creator_url'] = creator_url
+        resp.data['foreign_landing_url'] = foreign_landing_url
+
         return resp
