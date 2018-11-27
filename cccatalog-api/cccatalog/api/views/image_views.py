@@ -72,8 +72,6 @@ class SearchImages(APIView):
             )
             result.detail = url
             to_validate.append(result.url)
-            # FIXME Workaround for cccatalog-frontend/#118 thumbnails shown at wrong scale
-            result.thumbnail = result.url
             results.append(result)
         validate_images(results, to_validate)
         serialized_results =\
