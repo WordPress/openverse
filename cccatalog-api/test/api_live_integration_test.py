@@ -44,11 +44,11 @@ def test_search_consistency():
     appear in the first few pages of a search query.
     """
     n_pages = 5
-    searches = [
+    searches = set(
         requests.get(API_URL + '/image/search?q=honey;page={}'.format(page))
         for page in range(1, n_pages)
-    ]
-    searches.insert(0, requests.get(API_URL + '/image/search?q=honey'))
+    )
+    searches.add(requests.get(API_URL + '/image/search?q=honey'))
 
     images = set()
     for response in searches:
