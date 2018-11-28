@@ -11,6 +11,7 @@ from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
+from cccatalog.api.utils.view_count import _get_user_ip
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
 from urllib.parse import urlparse
@@ -50,10 +51,14 @@ class SearchImages(APIView):
             )
         page_param = params.data['page']
         page_size = params.data['pagesize']
+
+        # Assign Elasticsearch query shard order by user IP address.
+        hashed_ip = hash(_get_user_ip(request))
         try:
             search_results = search_controller.search(params,
                                                       index='image',
                                                       page_size=page_size,
+                                                      ip=hashed_ip,
                                                       page=page_param)
         except ValueError:
             return Response(

@@ -12,7 +12,7 @@ import logging as log
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 
 
-def search(search_params, index, page_size, page=1) -> Response:
+def search(search_params, index, page_size, ip, page=1) -> Response:
     """
     Given a set of keywords and an optional set of filters, perform a ranked
     paginated search.
@@ -22,6 +22,9 @@ def search(search_params, index, page_size, page=1) -> Response:
     :param index: The Elasticsearch index to search (e.g. 'image')
     :param page_size: The number of results to return per page.
     :param page: The results page number.
+    :param ip: The user's  hashed IP. Hashed IPs are used to anonymously but
+    uniquely identify users exclusively for ensuring query consistency across
+    Elasticsearch shards.
     :return: An Elasticsearch Response object.
     """
     s = Search(index=index)
@@ -56,6 +59,7 @@ def search(search_params, index, page_size, page=1) -> Response:
                 fields=['detailed_tags', 'tags', 'title'],
                 operator='AND'))
     s.extra(track_scores=True)
+    s = s.params(preference="{}".format(ip))
     search_response = s.execute()
     return search_response
 
