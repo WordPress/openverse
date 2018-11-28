@@ -39,7 +39,7 @@ class UserBehavior(TaskSet):
             self.common_words = f.read().splitlines()
         super().__init__(parent)
 
-    @task(10)
+    @task(1000)
     def search(self):
         query_length = random.choice([1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 5])
         query = [random.choice(self.common_words) for _ in range(query_length)]

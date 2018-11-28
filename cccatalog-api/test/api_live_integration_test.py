@@ -43,11 +43,13 @@ def test_search_consistency():
     image duplicates in subsequent pages. This test ensures that no duplicates
     appear in the first few pages of a search query.
     """
+    n_pages = 5
     searches = [
-        requests.get(API_URL + '/image/search?q=honey'),
-        requests.get(API_URL + '/image/search?q=honey;page=2'),
-        requests.get(API_URL + '/image/search?q=honey;page=3')
+        requests.get(API_URL + '/image/search?q=honey;page={}'.format(page))
+        for page in range(1, n_pages)
     ]
+    searches.insert(0, requests.get(API_URL + '/image/search?q=honey'))
+
     images = set()
     for response in searches:
         parsed = json.loads(response.text)
