@@ -67,7 +67,7 @@ class EOL(Provider):
         #get the tags
         tags = soup.find('meta', {'name': 'keywords'})
         if tags:
-            self.metaData['tags']   = self.validateContent('', tags, 'content')
+            otherMetaData['tags']   = self.validateContent('', tags, 'content')
 
 
         #title
@@ -83,10 +83,10 @@ class EOL(Provider):
                 self.foreignLandingURL = tmpURL
                 foreignID = self.getForeignID(tmpURL)
                 if foreignID:
-                    self.foreignIdentifier = foreignID.strip().encode('unicode-escape')
+                    self.foreignIdentifier = foreignID.strip()
 
             else:
-                self.metaData['set'] = tmpURL
+                otherMetaData['set'] = tmpURL
 
 
         #description/summary
@@ -94,13 +94,13 @@ class EOL(Provider):
         if overview:
             details = overview.findChild('div', {'class': 'copy'})
             if details:
-                self.metaData['description'] = details.text.split('.')[0].strip().replace('<i>', '').replace('</i>', '').encode('unicode-escape')
+                otherMetaData['description'] = details.text.split('.')[0].strip().replace('<i>', '').replace('</i>', '')
 
                 moreInfo = overview.findChild('div', {'class': 'header'})
                 if moreInfo:
                     infoURL = moreInfo.find('a')
                     if infoURL:
-                        self.metaData['more_information'] = '{}{}'.format(self.domain, infoURL.attrs['href'])
+                        otherMetaData['more_information'] = '{}{}'.format(self.domain, infoURL.attrs['href'])
 
         #get the image
         if '/data_objects/' in _url:
@@ -133,7 +133,7 @@ class EOL(Provider):
                 #credits
                 owner = sourceInfo.find('p', {'title': 'Rights holder'})
                 if owner:
-                    self.metaData['rights_holder'] = owner.text.strip().encode('unicode-escape').replace('\\xa9', '').strip()
+                    otherMetaData['rights_holder'] = owner.text.strip().replace('\\xa9', '').strip()
 
                 articleInfo = sourceInfo.find_all('p', {'title': None})
                 if articleInfo:
@@ -145,29 +145,32 @@ class EOL(Provider):
 
 
                             for tmpInfo in aInfo.find_all('p'):
-                                key = tmpInfo.text.split(':')[0].lower().strip().encode('unicode-escape').replace(' ', '_')
+                                key = tmpInfo.text.split(':')[0].lower().strip().replace(' ', '_')
                                 key = key.replace('view_source', 'source')
 
                                 sourceURL = None
 
                                 if tmpInfo.findChild('a'):
-                                    sourceURL = tmpInfo.findChild('a')['href'].strip().encode('unicode-escape')
+                                    sourceURL = tmpInfo.findChild('a')['href'].strip()
 
                                     if sourceURL[0] == '/':
                                         sourceURL = '{}{}'.format(self.domain, sourceURL)
 
                                 if key in ['supplier', 'source'] and sourceURL is not None:
-                                    self.metaData[key] = sourceURL
+                                    otherMetaData[key] = sourceURL
 
                                 elif key in ['publisher', 'contributor', 'location_created', 'photographer', 'author', 'latitude', 'longitude']:
-                                    self.metaData[key] = tmpInfo.text.split(':')[1].strip().encode('unicode-escape').replace('\\xa9', '').strip()
+                                    otherMetaData[key] = tmpInfo.text.split(':')[1].strip().replace('\\xa9', '').strip()
                                     if sourceURL:
-                                        self.metaData['{}_url'.format(key)] = sourceURL
+                                        otherMetaData['{}_url'.format(key)] = sourceURL
 
                                 elif key == 'creator':
-                                        self.creator = tmpInfo.text.split(':')[1].strip().encode('unicode-escape').replace('\\xa9', '').strip()
+                                        self.creator = tmpInfo.text.split(':')[1].strip().replace('\\xa9', '').strip().encode('unicode-escape')
                                         if sourceURL:
                                             self.creatorURL = sourceURL
+
+            if otherMetaData:
+                self.MetaData = otherMetaData
 
             formatted = list(self.formatOutput)
             return formatted
@@ -179,7 +182,7 @@ class EOL(Provider):
             current = classification.findChild('span', {'class': 'current'})
 
             if current and current.i:
-                self.metaData['classification'] = current.i.text.strip().encode('unicode-escape')
+                otherMetaData['classification'] = current.i.text.strip()
 
 
         dataTable = soup.find('div', {'class': 'data_div'})
@@ -188,8 +191,8 @@ class EOL(Provider):
 
             for row in dataTable:
                 if len(row.find_all('td')) > 1:
-                    key = row.th.text.lower().strip().encode('unicode-escape').replace(' ', '_')
-                    val = row.find_all('td')[1].contents[0].strip().encode('unicode-escape')
+                    key = row.th.text.lower().strip().replace(' ', '_')
+                    val = row.find_all('td')[1].contents[0].strip()
 
 
         #images
@@ -206,33 +209,33 @@ class EOL(Provider):
                 self.licenseVersion     = ''
                 self.creator            = ''
 
-                if 'image_alt_text' in self.metaData:
-                    del self.metaData['image_alt_text']
+                if 'image_alt_text' in otherMetaData:
+                    del otherMetaData['image_alt_text']
 
-                if 'source' in self.metaData:
-                    del self.metaData['source']
+                if 'source' in otherMetaData:
+                    del otherMetaData['source']
 
-                if 'supplier' in self.metaData:
-                    del self.metaData['supplier']
+                if 'supplier' in otherMetaData:
+                    del otherMetaData['supplier']
 
 
                 imgDetails = imageInfo.find('a')
                 if imgDetails:
                     foreignID = self.getForeignID(imgDetails.attrs['href'])
                     if foreignID:
-                        self.foreignIdentifier = foreignID.strip().encode('unicode-escape')
+                        self.foreignIdentifier = foreignID.strip()
 
-                    self.foreignLandingURL = '{}{}'.format(self.domain, imgDetails.attrs['href'].strip().encode('unicode-escape'))
+                    self.foreignLandingURL = '{}{}'.format(self.domain, imgDetails.attrs['href'].strip())
 
                     imgProperty = imgDetails.findChild('img')
                     if imgProperty:
-                        dataID                          = imgProperty.attrs['data-data-object-id'].strip().encode('unicode-escape')
+                        dataID                          = imgProperty.attrs['data-data-object-id'].strip()
 
                         if 'data-thumb' in imgProperty.attrs:
-                            self.thumbnail              = imgProperty.attrs['data-thumb'].strip().encode('unicode-escape')
+                            self.thumbnail              = imgProperty.attrs['data-thumb'].strip()
 
                         if 'src' in imgProperty.attrs:
-                            self.url                        = imgProperty.attrs['src'].strip().encode('unicode-escape')
+                            self.url                        = imgProperty.attrs['src'].strip()
 
                         else:
                             logger.warning('Image not detected in url: {}'.format(_url))
@@ -240,7 +243,7 @@ class EOL(Provider):
 
 
                         if 'alt' in imgProperty.attrs:
-                            self.metaData['image_alt_text'] = imgProperty.attrs['alt'].strip().encode('unicode-escape')
+                            otherMetaData['image_alt_text'] = imgProperty.attrs['alt'].strip()
                     else:
                         logger.warning('Image not detected in url: {}'.format(_url))
                         continue
@@ -272,18 +275,21 @@ class EOL(Provider):
                             ownerInfo = ownerInfo.findChildren('p')
                             for owner in ownerInfo:
                                 if 'class' in owner.attrs:
-                                    self.creator = owner.text.strip().encode('unicode-escape').replace('\\xa9', '').replace('Copyright', '').strip()
+                                    self.creator = owner.text.strip().replace('\\xa9', '').replace('Copyright', '').strip().encode('unicode-escape')
                                 else:
                                     source = owner.findChild('a') #get the image source or supplier
                                     if source:
-                                        srcURL = source.attrs['href'].strip().encode('unicode-escape')
+                                        srcURL = source.attrs['href'].strip()
                                         if srcURL[0] == '/':
                                             srcURL = '{}{}'.format(self.domain, srcURL)
                                         key = owner.contents[0].lower().strip().replace(':', '').replace(' ', '_')
                                         val = srcURL
 
                                         if (key == 'source') or (key == 'supplier'):
-                                            self.metaData[key] = val
+                                            otherMetaData[key] = val
+
+                    if otherMetaData:
+                        self.metaData = otherMetaData
 
                     extracted.extend(self.formatOutput)
 

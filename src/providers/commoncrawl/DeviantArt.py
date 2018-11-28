@@ -89,13 +89,13 @@ class DeviantArt(Provider):
             creator = soup.find('a', {'class':'u regular username', 'href':True})
             if creator:
                 self.creatorURL = self.validateContent('', creator, 'href')
-                self.creator    = creator.text.strip().encode('unicode-escape')
+                self.creator    = creator.text.strip()
 
 
             #description
             description = soup.find('div', {'class': 'text block'})
             if description and description.text.strip():
-                otherMetaData['description'] = description.text.strip().encode('unicode-escape')
+                otherMetaData['description'] = description.text.strip()
 
 
             self.foreignLandingURL = self.validateContent(_url, soup.find('meta', {'property': 'og:url'}), 'content')

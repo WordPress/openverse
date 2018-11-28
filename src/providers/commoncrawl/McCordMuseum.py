@@ -107,8 +107,8 @@ class McCordMuseum(Provider):
         title   = soup.find('h1', {'class': 'vo'})
         if title:
             title       = title.text.split('|')
-            self.title  = title[1].strip().encode('unicode-escape')
-            foreignID   = title[0].strip().encode('unicode-escape')
+            self.title  = title[1].strip()
+            foreignID   = title[0].strip()
 
         if foreignID:
             self.foreignIdentifier = foreignID.strip()
@@ -120,7 +120,7 @@ class McCordMuseum(Provider):
         #tags
         tagInfo = soup.find_all('a', {'title': 'All tagged images'})
         if tagInfo:
-            tags                    = ','.join(tag.text.strip().encode('unicode-escape') for tag in tagInfo)
+            tags                    = ','.join(tag.text.strip() for tag in tagInfo)
             otherMetaData['tags']   = tags
 
 
@@ -129,13 +129,13 @@ class McCordMuseum(Provider):
             artisrtInfo = otherInfo.findChild('a', {'href': re.compile('.*?tablename=artist.*?')})
             if artisrtInfo:
                 artist       = artisrtInfo.text.strip().split(' (')[0]
-                self.creator = artist.encode('unicode-escape')
+                self.creator = artist
 
 
         #description/summary
         description = soup.find('div', {'id': 'descriptions'})
         if description:
-            content = description.text.strip().encode('unicode-escape')
+            content = description.text.strip()
             if content:
                 otherMetaData['description'] = content
 

@@ -48,6 +48,7 @@ class Behance(Provider):
         version             = None
         imageURL            = None
         extracted           = []
+        otherMetaData       = {}
 
         self.clearFields()
 
@@ -95,10 +96,10 @@ class Behance(Provider):
                 creatorInfo = creator.findChild('a', {'class': re.compile('(rf-)?profile-item__name js-mini-profile')})
 
                 if creatorInfo:
-                    creatorName         = creatorInfo.text.strip().encode('unicode-escape')
-                    creatorDict['name'] = creatorName
+                    creatorName         = creatorInfo.text.strip()
+                    creatorDict['name'] = creatorName.encode('unicode-escape')
 
-                    creatorURL                  = creatorInfo.attrs['href'].strip().encode('unicode-escape')
+                    creatorURL                  = creatorInfo.attrs['href'].strip()
                     creatorDict['creator_url']  = creatorURL
 
                 location = creator.findChild('a', {'class': re.compile('(rf-)?profile-item__location beicons-pre beicons-pre-location'), 'href': True})
@@ -111,30 +112,33 @@ class Behance(Provider):
                         for location in locationInfo:
                             if any(loc in location.strip().lower() for loc in ['country', 'state', 'city']):
                                 loc = location.split('=')
-                                creatorDict[loc[0].strip().lower().encode('unicode-escape')] = loc[1].strip().replace('+', ' ').encode('unicode-escape')
+                                creatorDict[loc[0].strip().lower()] = loc[1].strip().replace('+', ' ')
 
                 creatorList.append(creatorDict)
 
             if creatorList:
-                self.metaData['owners'] = creatorList
+                otherMetaData['owners'] = creatorList
 
 
         #tags
         tagInfo = soup.find_all('a', {'class': 'object-tag'})
         if tagInfo:
-            tags                    = ','.join(tag.text.strip().encode('unicode-escape') for tag in tagInfo)
-            self.metaData['tags']   = tags
+            tags                    = ','.join(tag.text.strip() for tag in tagInfo)
+            otherMetaData['tags']   = tags
 
 
         #description
         description = soup.find('meta', {'name': 'description'})
         if description:
-            self.metaData['description'] = self.validateContent('', description, 'content')
+            otherMetaData['description'] = self.validateContent('', description, 'content')
 
 
         self.provider           = self.name
         self.source             = 'commoncrawl'
-        self.metaData['set']   = self.foreignLandingURL
+        otherMetaData['set']   = self.foreignLandingURL
+
+        if otherMetaData:
+            self.metaData = otherMetaData
 
 
         #get the images

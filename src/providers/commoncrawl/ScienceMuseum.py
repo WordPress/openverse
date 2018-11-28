@@ -85,7 +85,7 @@ class ScienceMuseum(Provider):
         #description/summary
         description = soup.find('meta', {'property': 'og:description'})
         if description:
-            self.metaData['description'] = self.validateContent('', description, 'content')
+            otherMetaData['description'] = self.validateContent('', description, 'content')
 
 
         #credits/attribution info
@@ -94,7 +94,7 @@ class ScienceMuseum(Provider):
             maker = makerInfo.findChild('a')
 
             if maker:
-                makerName = maker.text.strip().encode('unicode-escape')
+                makerName = maker.text.strip()
                 if makerName.lower() <> 'unknown':
                     self.creator = makerName
 
@@ -107,22 +107,25 @@ class ScienceMuseum(Provider):
         if timeline:
             timeline = timeline.text.strip().replace('Made:', '').replace('Maker:', '').split('in')
             if len(timeline) > 1:
-                self.metaData['date']       = timeline[0].strip().encode('unicode-escape')
-                self.metaData['geography']  = timeline[1].strip().encode('unicode-escape')
+                otherMetaData['date']       = timeline[0].strip()
+                otherMetaData['geography']  = timeline[1].strip()
 
 
         otherDetails = soup.find_all('dl', {'class': re.compile(r'(record-details.*?)')})
         if otherDetails:
             for detail in otherDetails:
-                key = detail.findChild('dt').text.strip().encode('unicode-escape').lower().replace(' ', '_')
-                val = detail.findChild('dd').text.strip().encode('unicode-escape')
+                key = detail.findChild('dt').text.strip().lower().replace(' ', '_')
+                val = detail.findChild('dd').text.strip()
 
-                self.metaData[key] = val
+                otherMetaData[key] = val
 
 
         records = soup.find_all('img', {'class': 'carousel__image'})
         if not records:
             records = soup.find_all('img', {'class': 'single_image'})
+
+        if otherMetaData:
+            self.metaData = otherMetaData
 
 
         if records:
@@ -130,10 +133,10 @@ class ScienceMuseum(Provider):
                 self.url = ''
 
                 if 'src' in record.attrs:
-                    self.url = record.attrs['src'].strip().encode('unicode-escape')
+                    self.url = record.attrs['src'].strip()
 
                 elif 'data-flickity-lazyload' in record.attrs:
-                    self.url = record.attrs['data-flickity-lazyload'].strip().encode('unicode-escape')
+                    self.url = record.attrs['data-flickity-lazyload'].strip()
 
 
                 if self.url == '':

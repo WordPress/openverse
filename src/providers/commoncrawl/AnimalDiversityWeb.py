@@ -105,10 +105,10 @@ class AnimalDiversityWeb(Provider):
                 for key, item in enumerate(info):
 
                     if item.name == 'h3':
-                        lbl = item.text.strip().lower().replace(' ', '_').encode('unicode-escape')
+                        lbl = item.text.strip().lower().replace(' ', '_')
                         val = info[key + 1]
                         if val:
-                            val                 = val.text.strip().encode('unicode-escape')
+                            val                 = val.text.strip()
                             otherMetaData[lbl]  = val
 
                 if 'conditions_of_use' in otherMetaData:
@@ -121,7 +121,7 @@ class AnimalDiversityWeb(Provider):
             for tag in keywords:
                 element = tag.find('li', {'class': None})
                 if element:
-                    tagsList.extend(ele.strip().encode('unicode-escape') for ele in element.text.split('::'))
+                    tagsList.extend(ele.strip() for ele in element.text.split('::'))
 
             tagsList = list(set(tagsList))
             otherMetaData['tags'] = ','.join(tagsList)
@@ -133,21 +133,21 @@ class AnimalDiversityWeb(Provider):
             if classification:
                 classType = classification.find('h3')
                 if classType:
-                    classType = classType.text.strip().lower().encode('unicode-escape')
+                    classType = classType.text.strip().lower()
                     classInfo = {}
 
                     for item in classification.find_all('li'):
                         rank  = item.find('span', {'class': 'rank'})
                         if rank:
-                            rank = rank.text.strip().lower().encode('unicode-escape')
+                            rank = rank.text.strip().lower()
 
                         taxon = item.find('a', {'class': re.compile('^taxon-name.*?')})
                         if taxon:
-                            taxon = taxon.text.strip().encode('unicode-escape')
+                            taxon = taxon.text.strip()
 
                         vern  = item.find('span', {'class': 'vernacular-name'})
                         if vern:
-                            vern = vern.text.strip().encode('unicode-escape')
+                            vern = vern.text.strip()
 
                         classInfo[rank] = '{} / {}'.format(taxon, vern)
 
@@ -158,21 +158,21 @@ class AnimalDiversityWeb(Provider):
             if related:
                 relTaxa = related.find('h3')
                 if relTaxa:
-                    relTaxa = relTaxa.text.strip().lower().replace(' ', '_').encode('unicode-escape')
+                    relTaxa = relTaxa.text.strip().lower().replace(' ', '_')
                     taxa    = {}
 
                     for item in related.find_all('li'):
                         rank  = item.find('span', {'class': 'rank'})
                         if rank:
-                            rank = rank.text.strip().lower().encode('unicode-escape')
+                            rank = rank.text.strip().lower()
 
                         taxon = item.find('a', {'class': re.compile('^taxon-name.*?')})
                         if taxon:
-                            taxon = taxon.text.strip().encode('unicode-escape')
+                            taxon = taxon.text.strip()
 
                         vern  = item.find('span', {'class': 'vernacular-name'})
                         if vern:
-                            vern = vern.text.strip().encode('unicode-escape')
+                            vern = vern.text.strip()
                         taxa[rank] = '{} / {}'.format(taxon, vern)
 
                     otherMetaData[relTaxa] = taxa

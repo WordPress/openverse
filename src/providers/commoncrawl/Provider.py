@@ -8,7 +8,8 @@ import logging
 from pyspark.sql import SQLContext
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import concat, col, lit, when
-
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] =======> %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -96,8 +97,8 @@ class Provider:
         self.creator                = ''
         self.creatorURL             = ''
         self.title                  = ''
-        self.metaData               = {}
-        self.tags                   = {}
+        self.metaData               = ''
+        self.tags                   = ''
         self.translationAvailable   = None
         self.watermarked            = 'f'
 
@@ -109,7 +110,7 @@ class Provider:
             self.tags = self.metaData['tags']
             del self.metaData['tags']
 
-            return [{'name': tag, 'provider': self.provider} for tag in list(set(self.tags.split(',')))[:maxTags]]
+            return [{'name': tag.strip(), 'provider': self.provider} for tag in list(set(self.tags.split(',')))[:maxTags]]
         else:
             return self.tags
 
@@ -122,6 +123,7 @@ class Provider:
         #format the tags
         self.tags = self.getTags
 
+
         yield [
             self.url if not self.foreignIdentifier else self.foreignIdentifier,
             self.foreignLandingURL,
@@ -132,11 +134,11 @@ class Provider:
             self.filesize,
             self.license,
             self.licenseVersion,
-            self.creator,
+            self.creator.encode('unicode-escape'),
             self.creatorURL,
-            self.title,
-            json.dumps(self.metaData),
-            json.dumps(self.tags),
+            self.title.encode('unicode-escape'),
+            json.dumps(self.metaData) if self.metaData else '',
+            json.dumps(self.tags) if self.tags else '',
             self.watermarked,
             self.provider,
             self.source
@@ -148,7 +150,7 @@ class Provider:
         if self.crawlIndex is None:
             raise ValueError('Common Crawl index not specified!')
 
-        return '../output/{}'.format(self.crawlIndex)
+        return 'data/crawl_index={}'.format(self.crawlIndex)
 
 
     @property

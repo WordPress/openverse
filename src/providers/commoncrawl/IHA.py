@@ -88,14 +88,14 @@ class IHA(Provider):
                 image = imageData.findChild('img')
                 if image:
                     self.thumbnail                  = self.validateContent('', image, 'src')
-                    self.metaData['image_alt_text'] = self.validateContent('', image, 'alt')
+                    otherMetaData['image_alt_text'] = self.validateContent('', image, 'alt')
                     self.width                      = self.validateContent('', image, 'width')
                     self.height                     = self.validateContent('', image, 'height')
                     self.title                      = self.validateContent('', image, 'title')
 
 
                 if 'about' in imageData.attrs:
-                    self.url = imageData.attrs['about'].strip().encode('unicode-escape')
+                    self.url = imageData.attrs['about'].strip()
 
                     if self.url == '':
                         logger.warning('Image not detected in url: {}'.format(_url))
@@ -104,13 +104,16 @@ class IHA(Provider):
                 #get the attribution info
                 author = imageData.find('span', {'class': 'auth'})
                 if author:
-                    self.creator = author.text.strip().encode('unicode-escape').replace('\\xa9', '').strip()
+                    self.creator = author.text.strip().replace('\\xa9', '').strip()
 
 
                 tags = soup.find('meta', {'name': 'keywords'})
                 if tags:
-                    self.metaData['tags']   = self.validateContent('', tags, 'content')
+                    otherMetaData['tags']   = self.validateContent('', tags, 'content')
 
+
+                if otherMetaData:
+                    self.metaData = otherMetaData
 
                 extracted.extend(self.formatOutput)
 

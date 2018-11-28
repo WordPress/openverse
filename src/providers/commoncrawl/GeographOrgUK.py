@@ -84,20 +84,20 @@ class GeographOrgUK(Provider):
             #get the title
             title = soup.find('strong', {'property': 'dct:title'})
             if title:
-                self.title = title.text.strip().encode('unicode-escape')
+                self.title = title.text.strip()
 
 
             #Creator
             creatorInfo = soup.find('a', {'rel': 'author', 'href': True})
             if creatorInfo:
-                self.creator        = creatorInfo.text.strip().encode('unicode-escape')
+                self.creator        = creatorInfo.text.strip()
                 self.creatorURL     = '{}{}'.format(self.domain, creatorInfo.attrs['href'])
 
 
             #Keywords/tags
             tagInfo = soup.find_all('span', {'class': 'tag'})
             if tagInfo:
-                tags                    = ','.join(tag.text.strip().encode('unicode-escape') for tag in tagInfo)
+                tags                    = ','.join(tag.text.strip() for tag in tagInfo)
                 otherMetaData['tags']   = tags
 
 
@@ -112,13 +112,13 @@ class GeographOrgUK(Provider):
             #date taken
             exifData = soup.find('span', {'itemprop': 'exifData'})
             if exifData:
-                otherMetaData['date_taken'] = exifData.text.strip().encode('unicode-escape')
+                otherMetaData['date_taken'] = exifData.text.strip()
 
 
             #description/caption
             caption = soup.find('div', {'itemprop': 'description'})
             if caption:
-                otherMetaData['description'] = caption.text.strip().encode('unicode-escape')
+                otherMetaData['description'] = caption.text.strip()
 
 
             self.foreignLandingURL = self.validateContent(_url, soup.find('link', {'rel': 'canonical', 'href': True}), 'href')

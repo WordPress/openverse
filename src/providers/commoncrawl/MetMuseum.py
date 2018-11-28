@@ -73,7 +73,7 @@ class MetMuseum(Provider):
 
                 if img:
                     if 'ng-src' in img.attrs:
-                        imageURL = re.search("currImage.selectedOrDefaultPreview\('(.*?)'\)", img.attrs['ng-src']).group(1).encode('unicode-escape')
+                        imageURL = re.search("currImage.selectedOrDefaultPreview\('(.*?)'\)", img.attrs['ng-src']).group(1)
                     else:
                         imageURL = self.validateContent('', img, 'src')
 
@@ -113,8 +113,8 @@ class MetMuseum(Provider):
             x = soup.select('.{}tombstone'.format(clsPrefix))[0]
             for row in x.find_all("dl"):
                 try:
-                    val = row.select('.{}tombstone--value'.format(clsPrefix))[0].text.strip().encode('unicode-escape')
-                    key = row.select('.{}tombstone--label'.format(clsPrefix))[0].text.lower().replace (':', '').replace(' ' ,'_').strip().encode('unicode-escape')
+                    val = row.select('.{}tombstone--value'.format(clsPrefix))[0].text.strip()
+                    key = row.select('.{}tombstone--label'.format(clsPrefix))[0].text.lower().replace (':', '').replace(' ' ,'_').strip()
 
                     tombstone[key] = val
 
@@ -126,16 +126,16 @@ class MetMuseum(Provider):
 
             #get the summary/description of the artwork
             if desc and desc.contents[0].strip():
-                desc = desc.contents[0].strip().encode('unicode-escape')
-                tombstone['description'] = desc.encode('unicode-escape')
+                desc = desc.contents[0].strip()
+                tombstone['description'] = desc
 
             #get the meta data
             for item in details:
                 lbl = item.select('label')[0].string
-                lbl = re.sub('(\s\/\s)|(\s+)', '_', lbl).lower().strip().encode('unicode-escape')
+                lbl = re.sub('(\s\/\s)|(\s+)', '_', lbl).lower().strip()
                 obj = item.select('a')
                 obj = [re.sub('\(.*?\)', '', i.text) for i in obj]
-                obj = ','.join([str(o.encode('unicode-escape')).strip() for o in obj])
+                obj = ','.join([str(o).strip() for o in obj])
                 tombstone[lbl] = obj
 
 
@@ -144,19 +144,19 @@ class MetMuseum(Provider):
             foreignID               = self.getForeignID(self.foreignLandingURL)
 
             #extract the foreign identifer
-            if foreignID:
+            '''if foreignID:
                 self.foreignIdentifier = foreignID.strip()
             else:
                 logger.warning('Identifier not detected in: {}'.format(_url))
-                return None
+                return None''' #the foreign ID will be the image url
 
 
             if 'artist' in tombstone:
-                self.creator = tombstone['artist'].strip().encode('unicode-escape')
+                self.creator = tombstone['artist'].strip()
                 del tombstone['artist']
 
             if 'title' in tombstone and tombstone['title'] is not None:
-                self.title = tombstone['title'].strip().encode('unicode-escape')
+                self.title = tombstone['title'].strip()
                 del tombstone['title']
 
 

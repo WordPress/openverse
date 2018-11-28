@@ -97,9 +97,9 @@ class FloraOn(Provider):
                     details = soup.find('div', {'id': 'fic-ecologia'}).find_all('div', {'class': 'fic-detalhe'})
                     if details:
                         for detail in details:
-                            key                 = detail.find('div', {'class': 'head'}).text.strip().lower().replace(' ', '_').encode('unicode-escape')
-                            val                 = detail.find('div', {'class': 'content'}).text.strip().encode('unicode-escape')
-                            self.metaData[key]  = val
+                            key                 = detail.find('div', {'class': 'head'}).text.strip().lower().replace(' ', '_')
+                            val                 = detail.find('div', {'class': 'content'}).text.strip()
+                            otherMetaData[key]  = val
 
 
                     #related species
@@ -107,11 +107,14 @@ class FloraOn(Provider):
                     if species:
                         key = species.find('span', {'class': 'showtooltip big'})
                         if key:
-                            key                 = key.text.strip().lower().replace(' ', '_').encode('unicode-escape')
+                            key                 = key.text.strip().lower().replace(' ', '_')
                             related             = species.find_all('i')
-                            val                 = ','.join([x.text.strip().encode('unicode-escape') for x in related if x.text.strip() <> 'Download'])
-                            self.metaData[key]  = val
+                            val                 = ','.join([x.text.strip() for x in related if x.text.strip() <> 'Download'])
+                            otherMetaData[key]  = val
 
+
+                    if otherMetaData:
+                        self.metaData = otherMetaData
 
                     extracted.extend(self.formatOutput)
 

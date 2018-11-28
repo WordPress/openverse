@@ -70,7 +70,7 @@ class DigitaltMuseum(Provider):
         if description:
             description = description.find_all('p')
             if description:
-                desc = description[0].text.strip().encode('unicode-escape')
+                desc = description[0].text.strip()
                 desc = desc.replace('Expand text', '').strip()
 
         title = ''
@@ -78,7 +78,7 @@ class DigitaltMuseum(Provider):
         if titleInfo:
             titleInfo   = titleInfo.findChild('h1')
             if titleInfo:
-                title  = titleInfo.text.strip().encode('unicode-escape')
+                title  = titleInfo.text.strip()
 
 
         articleInfo = soup.find_all('section', {'class': 'article__metadata'})
@@ -86,9 +86,9 @@ class DigitaltMuseum(Provider):
         if articleInfo:
             for meta in articleInfo:
                 label = meta.findChild('h2')
-                if label and label.text.strip().encode('unicode-escape').lower() == 'metadata':
+                if label and label.text.strip() .lower() == 'metadata':
                     for mData in meta.findChildren('li'):
-                        mData = mData.text.strip().encode('unicode-escape').replace('\\n', '').replace('\\t', '').replace('\s{2,}', '')#.split(':')
+                        mData = mData.text.strip() .replace('\\n', '').replace('\\t', '').replace('\s{2,}', '')#.split(':')
                         mData = re.split('\s{2,}', mData)
                         if len(mData) > 1:
                             key = mData[0].lower().replace(' ', '_')
@@ -156,7 +156,7 @@ class DigitaltMuseum(Provider):
                 if owner:
                     owner = owner.text.split(':')
                     if len(owner) > 1:
-                        self.creator = owner[1].strip().encode('unicode-escape')
+                        self.creator = owner[1].strip()
 
                 if len(media) > 1:
                     self.metaData['set'] = url

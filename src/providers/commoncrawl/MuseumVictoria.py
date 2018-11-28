@@ -24,8 +24,7 @@ class MuseumVictoria(Provider):
 
     def filterData(self, _data, _condition=None):
         #Images can be located in four main content paths: /species, /items, /articles, and /specimens.
-        #/articles reference existing images. Extracing them will result in duplicates.
-        allowed = map(lambda x: '{}{}'.format(self.domain, x), ['/species/', '/items/', '/specimens/'])
+        allowed = map(lambda x: '{}{}'.format(self.domain, x), ['/species/', '/items/', '/specimens/', '/articles/'])
         data    = filter(lambda x: x.split('\t')[0].startswith(tuple(allowed)), _data)
         self.data = data
 
@@ -83,7 +82,7 @@ class MuseumVictoria(Provider):
                 imgHeight       = self.validateContent('', soup.find('meta', {'property': 'og:image:height'}), 'content')
 
                 self.url        = imageURL
-                self.thumbnail  = [imageURL.replace('-medium', '-thumbnail') if '-medium.' in imageURL else ''][0].encode('unicode-escape')
+                self.thumbnail  = [imageURL.replace('-medium', '-thumbnail') if '-medium.' in imageURL else ''][0]
                 self.width      = imgWidth
                 self.height     = imgHeight
 
@@ -101,9 +100,9 @@ class MuseumVictoria(Provider):
                 creator = creatorInfo.text.strip()
 
                 if 'Photographer' in creator:
-                    self.creator = creator.replace('Photographer:', '').strip().encode('unicode-escape')
+                    self.creator = creator.replace('Photographer:', '').strip()
                 elif 'Artist' in creator:
-                    self.creator = creator.replace('Artist:', '').strip().encode('unicode-escape')
+                    self.creator = creator.replace('Artist:', '').strip()
 
 
             foreignID   = self.getForeignID(_url)
@@ -116,7 +115,7 @@ class MuseumVictoria(Provider):
 
             '''thumbnails  = soup.find_all('div', {'class': 'thumbnail'})
             if thumbnails:
-                thumbnails                          = ['{}{}'.format(self.domain, x.img['src'].encode('unicode-escape')) for x in thumbnails]
+                thumbnails                          = ['{}{}'.format(self.domain, x.img['src']) for x in thumbnails]
                 allImages                           = [x.replace('-thumbnail', '-medium') for x in thumbnails]
                 otherMetaData['thumbnails']         = ','.join(thumbnails)
                 otherMetaData['additional_images']  = ','.join(allImages)'''
@@ -127,7 +126,7 @@ class MuseumVictoria(Provider):
             if summary:
                 description = summary.findChild('p')
                 if description:
-                    description = description.text.strip().encode('unicode-escape')
+                    description = description.text.strip()
                     otherMetaData['description'] = description
 
 
@@ -137,8 +136,8 @@ class MuseumVictoria(Provider):
                 details = moreInfo.findChildren('li')
                 for item in details:
                     lbl = item.find('h3').text.strip()
-                    lbl = re.sub('(\s)', '_', lbl).lower().encode('unicode-escape')
-                    val =  ','.join(re.sub(r'\s+', ' ', x.text).strip().encode('unicode-escape') for x in item.find_all('p'))
+                    lbl = re.sub('(\s)', '_', lbl).lower()
+                    val =  ','.join(re.sub(r'\s+', ' ', x.text).strip() for x in item.find_all('p'))
 
                     otherMetaData[lbl] = val
 
