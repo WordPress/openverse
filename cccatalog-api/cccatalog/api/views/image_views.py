@@ -18,6 +18,19 @@ from urllib.parse import urlparse
 log = logging.getLogger(__name__)
 
 
+def _add_protocol(url: str):
+    """
+    Some fields in the database contain incomplete URLs, leading to unexpected
+    behavior in downstream consumers. This helper verifies that we always return
+    fully formed URLs in such situations.
+    """
+    parsed = urlparse(url)
+    if parsed.scheme == '':
+        return 'https://' + url
+    else:
+        return url
+
+
 class SearchImages(APIView):
     """
     Search for images by keyword. Optionally, filter the results by specific
@@ -87,6 +100,12 @@ class SearchImages(APIView):
             'page_count': page_count,
             'results': serialized_results
         }
+        # Correct any malformed URLs in the response.
+        for idx, res in enumerate(serialized_results):
+            landing_url = _add_protocol(res['foreign_landing_url'])
+            creator_url = _add_protocol(res['creator_url'])
+            response_data['results'][idx]['foreign_landing_url'] = landing_url
+            response_data['results'][idx]['creator_url'] = creator_url
         serialized_response = ImageSearchResultsSerializer(data=response_data)
 
         return Response(status=200, data=serialized_response.initial_data)
@@ -112,21 +131,13 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     @track_model_views(Image)
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
-
-        def _append_protocol_if_missing(url: str):
-            parsed = urlparse(url)
-            if parsed.scheme == '':
-                return 'https://' + url
-            else:
-                return url
-
         resp = self.retrieve(request, identifier)
         # Add page views to the response.
         resp.data['view_count'] = view_count
-        # Validate links to creator and foreign landing URLs.
-        creator_url = _append_protocol_if_missing(resp.data['creator_url'])
+        # Fix links to creator and foreign landing URLs.
+        creator_url = _add_protocol(resp.data['creator_url'])
         foreign_landing_url = \
-            _append_protocol_if_missing(resp.data['foreign_landing_url'])
+            _add_protocol(resp.data['foreign_landing_url'])
         resp.data['creator_url'] = creator_url
         resp.data['foreign_landing_url'] = foreign_landing_url
 
