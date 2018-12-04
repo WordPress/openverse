@@ -3,6 +3,9 @@ import os
 import sys
 import logging as log
 import time
+import uuid
+import argparse
+from enum import Enum
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
@@ -10,7 +13,7 @@ from elasticsearch.exceptions import AuthenticationException, \
     AuthorizationException, NotFoundError
 from elasticsearch.exceptions \
     import ConnectionError as ElasticsearchConnectionError
-from elasticsearch_dsl import Search, connections
+from elasticsearch_dsl import Index, Search, connections
 from elasticsearch import helpers
 from psycopg2.sql import SQL, Identifier
 from es_syncer.elasticsearch_models import database_table_to_elasticsearch_model
@@ -54,53 +57,55 @@ REP_TABLES = os.environ.get('COPY_TABLES', 'image')
 replicate_tables = REP_TABLES.split(',') if ',' in REP_TABLES else [REP_TABLES]
 
 
+class IndexerModes(Enum):
+    LISTEN = 1
+    REINDEX = 2
+
+
 class ElasticsearchSyncer:
     def __init__(self, elasticsearch_instance, tables):
         self.es = elasticsearch_instance
         connections.connections.add_connection('default', self.es)
         self.tables_to_watch = tables
 
-    def _synchronize(self):
+    def _synchronize(self, table, dest_idx=None):
         """
         Check that the database tables are in sync with Elasticsearch. If not,
         begin replication.
         """
         pg_conn = database_connect()
-
-        for table in self.tables_to_watch:
-            pg_conn.set_session(readonly=True)
-            cur = pg_conn.cursor()
-            # Find the last row added to the database table
-            cur.execute(SQL('SELECT id FROM {} ORDER BY id DESC LIMIT 1;')
-                        .format(Identifier(table)))
-            last_added_pg_id = cur.fetchone()[0]
-            pg_conn.commit()
-            cur.close()
-            if not last_added_pg_id:
-                log.warning('Tried to sync ' + table + ' but it was empty.')
-                continue
-
-            # Find the last document inserted into elasticsearch
-            s = Search(using=self.es, index=table)
-            s.aggs.bucket('highest_pg_id', 'max', field='id')
-            try:
-                es_res = s.execute()
-                last_added_es_id = \
-                    int(es_res.aggregations['highest_pg_id']['value'])
-            except (TypeError, NotFoundError):
-                log.info('No matching documents found in elasticsearch. '
-                         'Replicating everything.')
-                last_added_es_id = 0
-            log.info('highest_db_id, highest_es_id: ' + str(last_added_pg_id) +
-                     ', ' + str(last_added_es_id))
-            # Select all documents in-between and replicate to Elasticsearch.
-            if last_added_pg_id > last_added_es_id:
-                log.info('Replicating range ' + str(last_added_es_id) + '-' +
-                         str(last_added_pg_id))
-                self._replicate(last_added_es_id, last_added_pg_id, table)
+        pg_conn.set_session(readonly=True)
+        cur = pg_conn.cursor()
+        # Find the last row added to the database table
+        cur.execute(SQL('SELECT id FROM {} ORDER BY id DESC LIMIT 1;')
+                    .format(Identifier(table)))
+        last_added_pg_id = cur.fetchone()[0]
+        pg_conn.commit()
+        cur.close()
+        if not last_added_pg_id:
+            log.warning('Tried to sync ' + table + ' but it was empty.')
+            return
+        # Find the last document inserted into elasticsearch
+        s = Search(using=self.es, index=table)
+        s.aggs.bucket('highest_pg_id', 'max', field='id')
+        try:
+            es_res = s.execute()
+            last_added_es_id = \
+                int(es_res.aggregations['highest_pg_id']['value'])
+        except (TypeError, NotFoundError):
+            log.info('No matching documents found in elasticsearch. '
+                     'Replicating everything.')
+            last_added_es_id = 0
+        log.info('highest_db_id, highest_es_id: ' + str(last_added_pg_id) +
+                 ', ' + str(last_added_es_id))
+        # Select all documents in-between and replicate to Elasticsearch.
+        if last_added_pg_id > last_added_es_id:
+            log.info('Replicating range ' + str(last_added_es_id) + '-' +
+                     str(last_added_pg_id))
+            self._replicate(last_added_es_id, last_added_pg_id, table, dest_idx)
         pg_conn.close()
 
-    def _replicate(self, start, end, table):
+    def _replicate(self, start, end, table, dest_index):
         """
         Replicate all of the records between `start` and `end`.
 
@@ -127,7 +132,7 @@ class ElasticsearchSyncer:
                 if not chunk:
                     break
                 es_batch = self.pg_chunk_to_es(chunk, server_cur.description,
-                                               table)
+                                               table, dest_index)
                 push_start_time = time.time()
                 log.info('Pushing ' + str(len(es_batch)) +
                          ' docs to Elasticsearch.')
@@ -135,12 +140,59 @@ class ElasticsearchSyncer:
                 list(helpers.parallel_bulk(self.es, es_batch, chunk_size=400))
 
                 log.info('Pushed in ' + str(time.time() - push_start_time) +
-                         's.')
+                         ' seconds.')
                 num_converted_documents += len(chunk)
             log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')
         pg_conn.commit()
         pg_conn.close()
+
+    def _go_live(self, write_index, live_index):
+        """
+        Point the live index alias at the index we just created. Delete the
+        previous one.
+        """
+        indices = set(self.es.indices.get('*'))
+        # If the index exists already and it's not an alias, delete it.
+        if live_index in indices:
+            log.warning('Live index already exists. Deleting and realiasing.')
+            self.es.indices.delete(index=live_index)
+        # Create or update the alias so it points to the new index.
+        if self.es.indices.exists_alias(live_index):
+            old = list(self.es.indices.get(live_index).keys())[0]
+            index_update = {
+                'actions': [
+                    {'remove': {'index': old, 'alias': live_index}},
+                    {'add': {'index': write_index, 'alias': live_index} }
+                ]
+            }
+            self.es.indices.update_aliases(index_update)
+            log.info(
+                'Updated {} alias to point to {}'
+                .format(live_index, write_index)
+            )
+            log.info('Deleting old index {}'.format(old))
+            self.es.indices.delete(index=old)
+        else:
+            self.es.indices.put_alias(index=write_index, name=live_index)
+            log.info(
+                'Created {} alias pointing to {}'
+                .format(live_index, write_index)
+            )
+
+    @staticmethod
+    def _create_write_index(index_name: str):
+        suffix = uuid.uuid4().hex
+        write_name = index_name + '-' + suffix
+        try:
+            model = database_table_to_elasticsearch_model[index_name]
+        except KeyError:
+            log.error('Failed to reindex because target index does not exist.')
+
+        write_index = Index(write_name)
+        write_index.doc_type(model)
+        write_index.create()
+        return write_name
 
     def listen(self, poll_interval=10):
         """
@@ -152,14 +204,23 @@ class ElasticsearchSyncer:
         while True:
             log.info('Listening for updates...')
             try:
-                self._synchronize()
+                for table in self.tables_to_watch:
+                    self._synchronize(table)
             except ElasticsearchConnectionError:
                 self.es = elasticsearch_connect()
-
             time.sleep(poll_interval)
 
+    def reindex(self, model_name: str):
+        """
+        Copy contents of the database to a new Elasticsearch index. Create an
+        index alias to make the new index the "live" index when finished.
+        """
+        destination_index = self._create_write_index(model_name)
+        self._synchronize(model_name, dest_idx=destination_index)
+        self._go_live(destination_index, model_name)
+
     @staticmethod
-    def pg_chunk_to_es(pg_chunk, columns, origin_table):
+    def pg_chunk_to_es(pg_chunk, columns, origin_table, dest_index):
         """
         Given a list of psycopg2 results, convert them all to Elasticsearch
         documents.
@@ -178,6 +239,8 @@ class ElasticsearchSyncer:
         for row in pg_chunk:
             converted = model.database_row_to_elasticsearch_doc(row, schema)
             converted = converted.to_dict(include_meta=True)
+            if dest_index:
+                converted['_index'] = dest_index
             documents.append(converted)
 
         return documents
@@ -274,6 +337,15 @@ def database_connect():
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--reindex',
+        default=None,
+        help='Reindex data from a specific model in the database. Data is '
+             'copied to a new index and then made \'live\' using index aliases,'
+             ' making it possible to reindex without downtime.'
+    )
+    parsed = parser.parse_args()
     fmt = "%(asctime)s %(message)s"
     log.basicConfig(stream=sys.stdout, level=log.INFO, format=fmt)
     log.getLogger(ElasticsearchSyncer.__name__).setLevel(log.DEBUG)
@@ -282,5 +354,9 @@ if __name__ == '__main__':
     log.info('Connecting to Elasticsearch')
     elasticsearch = elasticsearch_connect()
     syncer = ElasticsearchSyncer(elasticsearch, replicate_tables)
-    log.info('Beginning synchronizer')
-    syncer.listen(SYNCER_POLL_INTERVAL)
+    if parsed.reindex:
+        log.info('Reindexing {}'.format(parsed.reindex))
+        syncer.reindex(parsed.reindex)
+    else:
+        log.info('Beginning synchronizer')
+        syncer.listen(SYNCER_POLL_INTERVAL)
