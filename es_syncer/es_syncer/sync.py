@@ -264,43 +264,29 @@ def _elasticsearch_connect(timeout=300):
     recommended.
     :return: An Elasticsearch connection object.
     """
-    try:
-        log.info('Trying to connect to Elasticsearch without authentication...')
-        # Try to connect to Elasticsearch without credentials.
-        es = Elasticsearch(
-            host=ELASTICSEARCH_URL,
-            port=ELASTICSEARCH_PORT,
-            connection_class=RequestsHttpConnection,
-            timeout=timeout,
-            max_retries=10,
-            wait_for_status='yellow'
-        )
-        log.info(str(es.info()))
-        log.info('Connected to Elasticsearch without authentication.')
-    except (AuthenticationException, AuthorizationException):
-        # If that fails, supply AWS authentication object and try again.
-        log.info(
-            'Connecting to %s %s with AWS auth', ELASTICSEARCH_URL,
-            ELASTICSEARCH_PORT)
-        auth = AWSRequestsAuth(
-            aws_access_key=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-            aws_host=ELASTICSEARCH_URL,
-            aws_region=AWS_REGION,
-            aws_service='es'
-        )
-        auth.encode = lambda x: bytes(x.encode('utf-8'))
-        es = Elasticsearch(
-            host=ELASTICSEARCH_URL,
-            port=ELASTICSEARCH_PORT,
-            connection_class=RequestsHttpConnection,
-            timeout=timeout,
-            max_retries=10,
-            retry_on_timeout=True,
-            http_auth=auth,
-            wait_for_status='yellow'
-        )
-        es.info()
+
+    log.info(
+        'Connecting to %s %s with AWS auth', ELASTICSEARCH_URL,
+        ELASTICSEARCH_PORT)
+    auth = AWSRequestsAuth(
+        aws_access_key=AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+        aws_host=ELASTICSEARCH_URL,
+        aws_region=AWS_REGION,
+        aws_service='es'
+    )
+    auth.encode = lambda x: bytes(x.encode('utf-8'))
+    es = Elasticsearch(
+        host=ELASTICSEARCH_URL,
+        port=ELASTICSEARCH_PORT,
+        connection_class=RequestsHttpConnection,
+        timeout=timeout,
+        max_retries=10,
+        retry_on_timeout=True,
+        http_auth=auth,
+        wait_for_status='yellow'
+    )
+    es.info()
     return es
 
 
