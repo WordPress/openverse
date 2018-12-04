@@ -57,11 +57,6 @@ REP_TABLES = os.environ.get('COPY_TABLES', 'image')
 replicate_tables = REP_TABLES.split(',') if ',' in REP_TABLES else [REP_TABLES]
 
 
-class IndexerModes(Enum):
-    LISTEN = 1
-    REINDEX = 2
-
-
 class ElasticsearchSyncer:
     def __init__(self, elasticsearch_instance, tables):
         self.es = elasticsearch_instance
