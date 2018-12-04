@@ -134,9 +134,12 @@ class ElasticsearchSyncer:
                          ' docs to Elasticsearch.')
                 # Bulk upload to Elasticsearch in parallel.
                 list(helpers.parallel_bulk(self.es, es_batch, chunk_size=400))
-
-                log.info('Pushed in ' + str(time.time() - push_start_time) +
-                         ' seconds.')
+                upload_time = time.time() - push_start_time
+                upload_rate = len(es_batch) / upload_time
+                log.info(
+                    'Uploaded {} documents at a rate of {} per second'
+                    .format(len(es_batch), upload_rate)
+                )
                 num_converted_documents += len(chunk)
             log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')
