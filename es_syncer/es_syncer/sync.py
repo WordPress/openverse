@@ -34,8 +34,8 @@ This is intended to be daemonized and run by a process supervisor.
 """
 
 # For AWS IAM access to Elasticsearch
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', '')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', '')
 ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
 ELASTICSEARCH_PORT = int(os.environ.get('ELASTICSEARCH_PORT', 9200))
 AWS_REGION = os.environ.get('AWS_REGION', 'us-east-1')
