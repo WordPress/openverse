@@ -86,7 +86,8 @@ class ElasticsearchSyncer:
             log.warning('Tried to sync ' + table + ' but it was empty.')
             return
         # Find the last document inserted into elasticsearch
-        s = Search(using=self.es, index=table)
+        destination = dest_idx if dest_idx else table
+        s = Search(using=self.es, index=destination)
         s.aggs.bucket('highest_pg_id', 'max', field='id')
         try:
             es_res = s.execute()
@@ -184,14 +185,6 @@ class ElasticsearchSyncer:
     def _create_write_index(index_name: str):
         suffix = uuid.uuid4().hex
         write_name = index_name + '-' + suffix
-        try:
-            model = database_table_to_elasticsearch_model[index_name]
-        except KeyError:
-            log.error('Failed to reindex because target index does not exist.')
-
-        write_index = Index(write_name)
-        write_index.doc_type(model)
-        write_index.create()
         return write_name
 
     def listen(self, poll_interval=10):
