@@ -5,15 +5,13 @@ import logging as log
 import time
 import uuid
 import argparse
-from enum import Enum
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
-from elasticsearch.exceptions import AuthenticationException, \
-    AuthorizationException, NotFoundError
+from elasticsearch.exceptions import NotFoundError
 from elasticsearch.exceptions \
     import ConnectionError as ElasticsearchConnectionError
-from elasticsearch_dsl import Index, Search, connections
+from elasticsearch_dsl import Search, connections
 from elasticsearch import helpers
 from psycopg2.sql import SQL, Identifier
 from es_syncer.elasticsearch_models import database_table_to_elasticsearch_model
@@ -36,14 +34,14 @@ This is intended to be daemonized and run by a process supervisor.
 # For AWS IAM access to Elasticsearch
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', '')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', '')
-ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL', 'localhost')
 ELASTICSEARCH_PORT = int(os.environ.get('ELASTICSEARCH_PORT', 9200))
 AWS_REGION = os.environ.get('AWS_REGION', 'us-east-1')
 
-DATABASE_HOST = os.environ.get('DATABASE_HOST')
-DATABASE_USER = os.environ.get('DATABASE_USER')
-DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD')
-DATABASE_NAME = os.environ.get('DATABASE_NAME')
+DATABASE_HOST = os.environ.get('DATABASE_HOST', 'localhost')
+DATABASE_USER = os.environ.get('DATABASE_USER', 'deploy')
+DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD', 'deploy')
+DATABASE_NAME = os.environ.get('DATABASE_NAME', 'openledger')
 DATABASE_PORT = int(os.environ.get('DATABASE_PORT', 5432))
 
 # The number of database records to load in memory at once.
@@ -58,6 +56,7 @@ replicate_tables = REP_TABLES.split(',') if ',' in REP_TABLES else [REP_TABLES]
 
 
 class ElasticsearchSyncer:
+
     def __init__(self, elasticsearch_instance, tables):
         self.es = elasticsearch_instance
         connections.connections.add_connection('default', self.es)
@@ -124,9 +123,15 @@ class ElasticsearchSyncer:
             # Fetch a chunk and push it to Elasticsearch. Repeat until we run
             # out of chunks.
             while True:
+                dl_start_time = time.time()
                 chunk = server_cur.fetchmany(server_cur.itersize)
+                dl_end_time = time.time() - dl_start_time
+                dl_rate = len(chunk) / dl_end_time
                 if not chunk:
                     break
+                log.info('PSQL down: batch_size={}, downloaded_per_second={}'
+                         .format(len(chunk), dl_rate)
+                )
                 es_batch = self.pg_chunk_to_es(chunk, server_cur.description,
                                                table, dest_index)
                 push_start_time = time.time()
@@ -137,7 +142,7 @@ class ElasticsearchSyncer:
                 upload_time = time.time() - push_start_time
                 upload_rate = len(es_batch) / upload_time
                 log.info(
-                    'Uploaded {} documents at a rate of {} per second'
+                    'Elasticsearch up: batch_size={}, uploaded_per_second={}'
                     .format(len(es_batch), upload_rate)
                 )
                 num_converted_documents += len(chunk)
@@ -145,6 +150,23 @@ class ElasticsearchSyncer:
                      'table \'' + table + '\' to Elasticsearch')
         pg_conn.commit()
         pg_conn.close()
+
+    def _sanity_check(self, new_index, old_index):
+        """
+        Indexing can fail for a number of reasons, such as a full disk inside of
+        the Elasticsearch cluster, network errors that occurred during
+        synchronization, and numerous other scenarios. This function does some
+        basic comparison between the new search index and the database. If this
+        check fails, an alert gets raised and the old index will be left in
+        place. An operator must then investigate and either manually set the
+        alias or remediate whatever circumstances interrupted the indexing job
+        before running the indexing job once more.
+
+        :param new_index:
+        :param old_index:
+        :return:
+        """
+        pg_conn = database_connect()
 
     def _go_live(self, write_index, live_index):
         """
@@ -162,12 +184,12 @@ class ElasticsearchSyncer:
             index_update = {
                 'actions': [
                     {'remove': {'index': old, 'alias': live_index}},
-                    {'add': {'index': write_index, 'alias': live_index} }
+                    {'add': {'index': write_index, 'alias': live_index}}
                 ]
             }
             self.es.indices.update_aliases(index_update)
             log.info(
-                'Updated {} alias to point to {}'
+                'Updated \'{}\' index alias to point to {}'
                 .format(live_index, write_index)
             )
             log.info('Deleting old index {}'.format(old))
@@ -175,7 +197,7 @@ class ElasticsearchSyncer:
         else:
             self.es.indices.put_alias(index=write_index, name=live_index)
             log.info(
-                'Created {} alias pointing to {}'
+                'Created \'{}\' index alias pointing to {}'
                 .format(live_index, write_index)
             )
 
