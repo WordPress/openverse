@@ -76,9 +76,9 @@ class ElasticsearchSyncer:
         cur = pg_conn.cursor()
         # Find the last row added to the database table
         cur.execute(
-            SQL('SELECT id, identifier FROM {} ORDER BY id DESC LIMIT 1;')
-            .format(Identifier(table)
-            )
+            SQL(
+                'SELECT id, identifier FROM {} ORDER BY id DESC LIMIT 1;'
+            ).format(Identifier(table))
         )
         last_added_pg_id, last_added_uuid = cur.fetchone()
         cur.close()
@@ -145,8 +145,9 @@ class ElasticsearchSyncer:
                 dl_rate = len(chunk) / dl_end_time
                 if not chunk:
                     break
-                log.info('PSQL down: batch_size={}, downloaded_per_second={}'
-                         .format(len(chunk), dl_rate)
+                log.info(
+                    'PSQL down: batch_size={}, downloaded_per_second={}'
+                    .format(len(chunk), dl_rate)
                 )
                 es_batch = self.pg_chunk_to_es(chunk, server_cur.description,
                                                table, dest_index)
