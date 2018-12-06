@@ -62,20 +62,35 @@ class ElasticsearchSyncer:
         connections.connections.add_connection('default', self.es)
         self.tables_to_watch = tables
 
+    @staticmethod
+    def _get_last_item_ids(table):
+        """
+        Find the last item added to Postgres and return both its sequential ID
+        and its UUID.
+        :param table: The name of the database table to check.
+        :return: A tuple containing a sequential ID and a UUID
+        """
+
+        pg_conn = database_connect()
+        pg_conn.set_session(readonly=True)
+        cur = pg_conn.cursor()
+        # Find the last row added to the database table
+        cur.execute(
+            SQL('SELECT id, identifier FROM {} ORDER BY id DESC LIMIT 1;')
+            .format(Identifier(table)
+            )
+        )
+        last_added_pg_id, last_added_uuid = cur.fetchone()
+        cur.close()
+        pg_conn.close()
+        return last_added_pg_id, last_added_uuid
+
     def _synchronize(self, table, dest_idx=None):
         """
         Check that the database tables are in sync with Elasticsearch. If not,
         begin replication.
         """
-        pg_conn = database_connect()
-        pg_conn.set_session(readonly=True)
-        cur = pg_conn.cursor()
-        # Find the last row added to the database table
-        cur.execute(SQL('SELECT id FROM {} ORDER BY id DESC LIMIT 1;')
-                    .format(Identifier(table)))
-        last_added_pg_id = cur.fetchone()[0]
-        pg_conn.commit()
-        cur.close()
+        last_added_pg_id, _ = self._get_last_item_ids(table)
         if not last_added_pg_id:
             log.warning('Tried to sync ' + table + ' but it was empty.')
             return
@@ -91,14 +106,15 @@ class ElasticsearchSyncer:
             log.info('No matching documents found in elasticsearch. '
                      'Replicating everything.')
             last_added_es_id = 0
-        log.info('highest_db_id, highest_es_id: ' + str(last_added_pg_id) +
-                 ', ' + str(last_added_es_id))
+        log.info(
+            'highest_db_id, highest_es_id: {}, {}'
+            .format(last_added_pg_id, last_added_es_id)
+        )
         # Select all documents in-between and replicate to Elasticsearch.
         if last_added_pg_id > last_added_es_id:
             log.info('Replicating range ' + str(last_added_es_id) + '-' +
                      str(last_added_pg_id))
             self._replicate(last_added_es_id, last_added_pg_id, table, dest_idx)
-        pg_conn.close()
 
     def _replicate(self, start, end, table, dest_index):
         """
@@ -151,7 +167,7 @@ class ElasticsearchSyncer:
         pg_conn.commit()
         pg_conn.close()
 
-    def _sanity_check(self, new_index, old_index):
+    def _consistency_check(self, new_index, live_alias):
         """
         Indexing can fail for a number of reasons, such as a full disk inside of
         the Elasticsearch cluster, network errors that occurred during
@@ -162,43 +178,64 @@ class ElasticsearchSyncer:
         alias or remediate whatever circumstances interrupted the indexing job
         before running the indexing job once more.
 
-        :param new_index:
-        :param old_index:
-        :return:
+        :param new_index: The newly created but not yet live index
+        :param live_alias: The name of the live index
+        :return: bool
         """
-        pg_conn = database_connect()
+        if not self.es.indices.exists(index=live_alias):
+            return True
+        log.info('Refreshing and performing sanity check...')
+        self.es.indices.refresh(index=new_index)
+        _, last_doc_uuid = self._get_last_item_ids(live_alias)
+        query = {
+            "query": {
+                "constant_score": {
+                    "filter": {
+                        "term": {
+                            "identifier": str(last_doc_uuid)
+                        }
+                    }
+                }
+            }
+        }
+        last_doc_es = self.es.search(index=new_index, body=query)
+        return True if last_doc_es['hits']['total'] else False
 
-    def _go_live(self, write_index, live_index):
+    def _go_live(self, write_index, live_alias):
         """
         Point the live index alias at the index we just created. Delete the
         previous one.
         """
+        if not self._consistency_check(write_index, live_alias):
+            msg = 'Reindexing failed; index {} does not appear to have all ' \
+                  'of the documents in the database.'.format(write_index)
+            log.error(msg)
         indices = set(self.es.indices.get('*'))
         # If the index exists already and it's not an alias, delete it.
-        if live_index in indices:
+        if live_alias in indices:
             log.warning('Live index already exists. Deleting and realiasing.')
-            self.es.indices.delete(index=live_index)
+            self.es.indices.delete(index=live_alias)
         # Create or update the alias so it points to the new index.
-        if self.es.indices.exists_alias(live_index):
-            old = list(self.es.indices.get(live_index).keys())[0]
+        if self.es.indices.exists_alias(live_alias):
+            old = list(self.es.indices.get(live_alias).keys())[0]
             index_update = {
                 'actions': [
-                    {'remove': {'index': old, 'alias': live_index}},
-                    {'add': {'index': write_index, 'alias': live_index}}
+                    {'remove': {'index': old, 'alias': live_alias}},
+                    {'add': {'index': write_index, 'alias': live_alias}}
                 ]
             }
             self.es.indices.update_aliases(index_update)
             log.info(
                 'Updated \'{}\' index alias to point to {}'
-                .format(live_index, write_index)
+                .format(live_alias, write_index)
             )
             log.info('Deleting old index {}'.format(old))
             self.es.indices.delete(index=old)
         else:
-            self.es.indices.put_alias(index=write_index, name=live_index)
+            self.es.indices.put_alias(index=write_index, name=live_alias)
             log.info(
                 'Created \'{}\' index alias pointing to {}'
-                .format(live_index, write_index)
+                .format(live_alias, write_index)
             )
 
     @staticmethod
