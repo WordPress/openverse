@@ -193,14 +193,14 @@ class ElasticsearchSyncer:
                 "constant_score": {
                     "filter": {
                         "term": {
-                            "identifier": str(last_doc_uuid)
+                            "identifier.keyword": str(last_doc_uuid)
                         }
                     }
                 }
             }
         }
         last_doc_es = self.es.search(index=new_index, body=query)
-        return True if last_doc_es['hits']['total'] else False
+        return True if last_doc_es['hits']['total'] > 0 else False
 
     def _go_live(self, write_index, live_alias):
         """
