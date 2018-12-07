@@ -14,10 +14,11 @@ class IndexingTaskTypes(Enum):
 
 
 class IndexingTask(Process):
-    def __init__(self, model: str, task_type):
+    def __init__(self, model: str, task_type, since_date: str):
         Process.__init__(self)
         self.model = model
         self.task_type = task_type
+        self.since_date = since_date
 
     def run(self):
         elasticsearch = elasticsearch_connect()
@@ -25,13 +26,18 @@ class IndexingTask(Process):
         if self.task_type == IndexingTaskTypes.REINDEX:
             syncer.reindex(self.model)
             logging.info('Indexing task exited.')
+        elif self.task_type == IndexingTaskTypes.UPDATE:
+            syncer.update(self.model, self.since_date)
 
 
 class CreateIndexingTask:
     def on_post(self, req, resp):
         """ Create an indexing task. """
-        model = 'image'
-        task = IndexingTask(model, IndexingTaskTypes.REINDEX)
+        body = json.loads(req.stream.read().decode('utf-8'))
+        model = body['model']
+        action = body['action']
+        since_date = body['since_date'] if 'since_date' in body else None
+        task = IndexingTask(model, IndexingTaskTypes[action], since_date)
         task.start()
         resp.status = falcon.HTTP_202
         resp.media = {
