@@ -30,8 +30,7 @@ class IndexingTask(Process):
 class CreateIndexingTask:
     def on_post(self, req, resp):
         """ Create an indexing task. """
-        body = req.stream.read()
-        model = body['index']
+        model = 'image'
         task = IndexingTask(model, IndexingTaskTypes.REINDEX)
         task.start()
         resp.status = falcon.HTTP_202
@@ -42,7 +41,7 @@ class CreateIndexingTask:
 
 
 class GetIndexingStatus:
-    def on_get(self, req, resp):
+    def on_get(self, req, resp, pid):
         pass
 
 
@@ -51,7 +50,7 @@ root.setLevel(logging.DEBUG)
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.INFO)
 formatter = logging.Formatter(
-    '%(asctime)s levelname)s %(filename)s:%(lineno)d %(process)d - %(message)s'
+    '%(asctime)s levelname)s %(filename)s:%(lineno)d - %(message)s'
 )
 handler.setFormatter(formatter)
 root.addHandler(handler)

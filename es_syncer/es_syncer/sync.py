@@ -114,15 +114,18 @@ class ElasticsearchSyncer:
         if last_added_pg_id > last_added_es_id:
             log.info('Replicating range ' + str(last_added_es_id) + '-' +
                      str(last_added_pg_id))
-            self._replicate(last_added_es_id, last_added_pg_id, table, dest_idx)
+            query = SQL('SELECT * FROM {}'
+                        ' WHERE id BETWEEN {} AND {} ORDER BY id'
+                        .format(table, last_added_es_id, last_added_pg_id))
+            self._replicate(table, dest_idx, query)
 
-    def _replicate(self, start, end, table, dest_index):
+    def _replicate(self, table, dest_index, query):
         """
         Replicate all of the records between `start` and `end`.
 
-        :param start: The first ID to replicate
-        :param end: The last ID to replicate
-        :param table: The table to replicate this range from.
+        :param table: The table to replicate the data from.
+        :param dest_index: The destination index to copy the data to.
+        :param query: The SQL query used to select data to copy.
         :return:
         """
         cursor_name = table + '_table_cursor'
@@ -130,11 +133,7 @@ class ElasticsearchSyncer:
         pg_conn = database_connect()
         with pg_conn.cursor(name=cursor_name) as server_cur:
             server_cur.itersize = DB_BUFFER_SIZE
-            select_range = SQL(
-                'SELECT * FROM {}'
-                ' WHERE id BETWEEN %s AND %s ORDER BY id')\
-                .format(Identifier(table))
-            server_cur.execute(select_range, (start, end,))
+            server_cur.execute(query)
             num_converted_documents = 0
             # Fetch a chunk and push it to Elasticsearch. Repeat until we run
             # out of chunks.
@@ -149,11 +148,15 @@ class ElasticsearchSyncer:
                     'PSQL down: batch_size={}, downloaded_per_second={}'
                     .format(len(chunk), dl_rate)
                 )
-                es_batch = self.pg_chunk_to_es(chunk, server_cur.description,
-                                               table, dest_index)
+                es_batch = self.pg_chunk_to_es(
+                    pg_chunk=chunk,
+                    columns=server_cur.description,
+                    origin_table=table,
+                    dest_index=dest_index
+                )
                 push_start_time = time.time()
-                log.info('Pushing ' + str(len(es_batch)) +
-                         ' docs to Elasticsearch.')
+                num_docs = len(es_batch)
+                log.info('Pushing {} docs to Elasticsearch.'.format(num_docs))
                 # Bulk upload to Elasticsearch in parallel.
                 list(helpers.parallel_bulk(self.es, es_batch, chunk_size=400))
                 upload_time = time.time() - push_start_time
@@ -243,12 +246,6 @@ class ElasticsearchSyncer:
                 .format(live_alias, write_index)
             )
 
-    @staticmethod
-    def _create_write_index(index_name: str):
-        suffix = uuid.uuid4().hex
-        write_name = index_name + '-' + suffix
-        return write_name
-
     def listen(self, poll_interval=10):
         """
         Poll the database for changes every poll_interval seconds.
@@ -270,9 +267,15 @@ class ElasticsearchSyncer:
         Copy contents of the database to a new Elasticsearch index. Create an
         index alias to make the new index the "live" index when finished.
         """
-        destination_index = self._create_write_index(model_name)
+        suffix = uuid.uuid4().hex
+        destination_index = model_name + '-' + suffix
         self._synchronize(model_name, dest_idx=destination_index)
         self._go_live(destination_index, model_name)
+
+    def update(self, model_name: str, since_date):
+        query = SQL('SELECT * FROM {} WHERE created_on >= \'{}\''
+                    .format(model_name, since_date))
+        self._replicate(model_name, model_name, query)
 
     @staticmethod
     def pg_chunk_to_es(pg_chunk, columns, origin_table, dest_index):
@@ -386,18 +389,28 @@ if __name__ == '__main__':
              'copied to a new index and then made \'live\' using index aliases,'
              ' making it possible to reindex without downtime.'
     )
+    parser.add_argument(
+        '--update',
+        nargs=2,
+        default=None,
+        help='Update the Elasticsearch index with all changes since a UTC date.'
+             'ex: --update image 2018-11-09'
+    )
     parsed = parser.parse_args()
     fmt = "%(asctime)s %(message)s"
     log.basicConfig(stream=sys.stdout, level=log.INFO, format=fmt)
     log.getLogger(ElasticsearchSyncer.__name__).setLevel(log.INFO)
-    log.info('Connecting to database')
-    # Use readonly and autocommit to prevent polling from locking tables.
     log.info('Connecting to Elasticsearch')
     elasticsearch = elasticsearch_connect()
     syncer = ElasticsearchSyncer(elasticsearch, replicate_tables)
     if parsed.reindex:
         log.info('Reindexing {}'.format(parsed.reindex))
         syncer.reindex(parsed.reindex)
+    elif parsed.update:
+        index, date = parsed.update
+        log.info('Updating index {} with changes since {}'.format(index, date))
+        syncer.update(index, date)
+        log.info('Update finished.')
     else:
         log.info('Beginning synchronizer')
         syncer.listen(SYNCER_POLL_INTERVAL)
