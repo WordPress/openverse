@@ -1,6 +1,7 @@
 import subprocess
 import unittest
 import os
+
 import es_syncer.sync
 import logging
 from subprocess import DEVNULL
@@ -33,8 +34,7 @@ class TestReplication(unittest.TestCase):
         # DB connection used to write mock data by this integration test
         self.write_db_conn = \
             es_syncer.sync.database_connect()
-        self.syncer = es_syncer.sync\
-            .ElasticsearchSyncer(self.es, ['image'])
+        self.syncer = es_syncer.sync.TableIndexer(self.es, ['image'])
 
     def tearDown(self):
         pass

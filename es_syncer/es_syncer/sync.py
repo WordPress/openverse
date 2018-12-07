@@ -134,10 +134,12 @@ def database_connect():
 
 class TableIndexer:
 
-    def __init__(self, elasticsearch_instance, tables):
+    def __init__(self, elasticsearch_instance, tables, progress=None):
         self.es = elasticsearch_instance
         connections.connections.add_connection('default', self.es)
         self.tables_to_watch = tables
+        # Optional multiprocessing.Value for examining indexing progress
+        self.progress = progress
 
     @staticmethod
     def _get_last_item_ids(table):
@@ -208,6 +210,7 @@ class TableIndexer:
         cursor_name = table + '_table_cursor'
         # Enable writing to Postgres so we can create a server-side cursor.
         pg_conn = database_connect()
+        total_indexed_so_far = 0
         with pg_conn.cursor(name=cursor_name) as server_cur:
             server_cur.itersize = DB_BUFFER_SIZE
             server_cur.execute(query)
@@ -217,6 +220,7 @@ class TableIndexer:
             while True:
                 dl_start_time = time.time()
                 chunk = server_cur.fetchmany(server_cur.itersize)
+                num_to_index = server_cur.rowcount
                 dl_end_time = time.time() - dl_start_time
                 dl_rate = len(chunk) / dl_end_time
                 if not chunk:
@@ -243,6 +247,10 @@ class TableIndexer:
                     .format(len(es_batch), upload_rate)
                 )
                 num_converted_documents += len(chunk)
+                total_indexed_so_far += len(chunk)
+                if self.progress is not None:
+                    print('num to index', num_to_index)
+                    self.progress.value = (total_indexed_so_far / num_to_index) * 100
             log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')
         pg_conn.commit()
