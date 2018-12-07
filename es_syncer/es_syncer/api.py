@@ -46,6 +46,7 @@ class IndexingTask(Process):
         elif self.task_type == IndexingTaskTypes.UPDATE:
             indexer.update(self.model, self.since_date)
 
+
 class CreateIndexingTask:
     def __init__(self, tracker: TaskTracker):
         self.tracker = tracker
@@ -95,11 +96,11 @@ class GetIndexingTaskStatus:
             active = False
 
         percent_completed = self.tracker.id_to_progress[task_id].value
-        completed = percent_completed < 100 and not active
+        error_status = percent_completed < 100 and not active
         resp.media = {
             'active': active,
             'percent_completed': percent_completed,
-            'error': completed
+            'error': error_status
         }
 
 
