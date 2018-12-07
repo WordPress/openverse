@@ -1,16 +1,28 @@
 import falcon
 import logging
 import sys
-import os
 import json
+import uuid
 from enum import Enum
 from multiprocessing import Process
-from es_syncer.sync import ElasticsearchSyncer, elasticsearch_connect
+from es_syncer.sync import elasticsearch_connect, TableIndexer
 
 
 class IndexingTaskTypes(Enum):
     REINDEX = 0
     UPDATE = 1
+
+
+class TaskTracker:
+    def __init__(self):
+        self.id_to_task = {}
+        self.id_to_action = {}
+
+    def add_task(self, task, action):
+        task_id = str(uuid.uuid4())
+        self.id_to_task[task_id] = task
+        self.id_to_action[task_id] = action
+        return task_id
 
 
 class IndexingTask(Process):
@@ -22,7 +34,7 @@ class IndexingTask(Process):
 
     def run(self):
         elasticsearch = elasticsearch_connect()
-        syncer = ElasticsearchSyncer(elasticsearch, self.model)
+        syncer = TableIndexer(elasticsearch, self.model)
         if self.task_type == IndexingTaskTypes.REINDEX:
             syncer.reindex(self.model)
             logging.info('Indexing task exited.')
@@ -31,6 +43,9 @@ class IndexingTask(Process):
 
 
 class CreateIndexingTask:
+    def __init__(self, tracker: TaskTracker):
+        self.tracker = tracker
+
     def on_post(self, req, resp):
         """ Create an indexing task. """
         body = json.loads(req.stream.read().decode('utf-8'))
@@ -38,11 +53,12 @@ class CreateIndexingTask:
         action = body['action']
         since_date = body['since_date'] if 'since_date' in body else None
         task = IndexingTask(model, IndexingTaskTypes[action], since_date)
+        task_id = self.tracker.add_task(task, action)
         task.start()
         resp.status = falcon.HTTP_202
         resp.media = {
             'message': 'Successfully scheduled indexing job',
-            'task_id': task.pid
+            'task_id': task_id
         }
 
 
@@ -62,5 +78,7 @@ handler.setFormatter(formatter)
 root.addHandler(handler)
 
 api = falcon.API()
-api.add_route('/indexing_task', CreateIndexingTask())
+task_tracker = TaskTracker()
+create_indexing_task = CreateIndexingTask(task_tracker)
+api.add_route('/indexing_task', create_indexing_task)
 api.add_route('/indexing_task/{pid:int}', GetIndexingStatus())

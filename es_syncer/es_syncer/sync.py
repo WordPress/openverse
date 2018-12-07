@@ -1,19 +1,20 @@
+import uuid
+
 import psycopg2
 import os
 import sys
 import logging as log
 import time
-import uuid
 import argparse
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
-from elasticsearch import Elasticsearch, RequestsHttpConnection
-from elasticsearch.exceptions import NotFoundError
+from elasticsearch import Elasticsearch, RequestsHttpConnection, NotFoundError,\
+    helpers
 from elasticsearch.exceptions \
     import ConnectionError as ElasticsearchConnectionError
-from elasticsearch_dsl import Search, connections
-from elasticsearch import helpers
+from elasticsearch_dsl import connections, Search
 from psycopg2.sql import SQL, Identifier
+
 from es_syncer.elasticsearch_models import database_table_to_elasticsearch_model
 
 """
@@ -55,7 +56,83 @@ REP_TABLES = os.environ.get('COPY_TABLES', 'image')
 replicate_tables = REP_TABLES.split(',') if ',' in REP_TABLES else [REP_TABLES]
 
 
-class ElasticsearchSyncer:
+def elasticsearch_connect(timeout=300):
+    """
+    Repeatedly try to connect to Elasticsearch until successful.
+    :return: An Elasticsearch connection object.
+    """
+    while True:
+        try:
+            return _elasticsearch_connect(timeout)
+        except ElasticsearchConnectionError as e:
+            log.exception(e)
+            log.error('Reconnecting to Elasticsearch in 5 seconds. . .')
+            time.sleep(5)
+            continue
+
+
+def _elasticsearch_connect(timeout=300):
+    """
+    Connect to configured Elasticsearch domain.
+
+    :param timeout: How long to wait before ANY request to Elasticsearch times
+    out. Because we use parallel bulk uploads (which sometimes wait long periods
+    of time before beginning execution), a value of at least 30 seconds is
+    recommended.
+    :return: An Elasticsearch connection object.
+    """
+
+    log.info(
+        'Connecting to %s %s with AWS auth', ELASTICSEARCH_URL,
+        ELASTICSEARCH_PORT)
+    auth = AWSRequestsAuth(
+        aws_access_key=AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+        aws_host=ELASTICSEARCH_URL,
+        aws_region=AWS_REGION,
+        aws_service='es'
+    )
+    auth.encode = lambda x: bytes(x.encode('utf-8'))
+    es = Elasticsearch(
+        host=ELASTICSEARCH_URL,
+        port=ELASTICSEARCH_PORT,
+        connection_class=RequestsHttpConnection,
+        timeout=timeout,
+        max_retries=10,
+        retry_on_timeout=True,
+        http_auth=auth,
+        wait_for_status='yellow'
+    )
+    es.info()
+    return es
+
+
+def database_connect():
+    """
+    Repeatedly try to connect to database until successful.
+    :return: A database connection object
+    """
+    while True:
+        try:
+            conn = psycopg2.connect(
+                dbname=DATABASE_NAME,
+                user=DATABASE_USER,
+                password=DATABASE_PASSWORD,
+                host=DATABASE_HOST,
+                port=DATABASE_PORT,
+                connect_timeout=5
+            )
+        except psycopg2.OperationalError as e:
+            log.exception(e)
+            log.error('Reconnecting to database in 5 seconds. . .')
+            time.sleep(5)
+            continue
+        break
+
+    return conn
+
+
+class TableIndexer:
 
     def __init__(self, elasticsearch_instance, tables):
         self.es = elasticsearch_instance
@@ -85,7 +162,7 @@ class ElasticsearchSyncer:
         pg_conn.close()
         return last_added_pg_id, last_added_uuid
 
-    def _synchronize(self, table, dest_idx=None):
+    def _index_table(self, table, dest_idx=None):
         """
         Check that the database tables are in sync with Elasticsearch. If not,
         begin replication.
@@ -257,7 +334,7 @@ class ElasticsearchSyncer:
             log.info('Listening for updates...')
             try:
                 for table in self.tables_to_watch:
-                    self._synchronize(table)
+                    self._index_table(table)
             except ElasticsearchConnectionError:
                 self.es = elasticsearch_connect()
             time.sleep(poll_interval)
@@ -269,10 +346,14 @@ class ElasticsearchSyncer:
         """
         suffix = uuid.uuid4().hex
         destination_index = model_name + '-' + suffix
-        self._synchronize(model_name, dest_idx=destination_index)
+        self._index_table(model_name, dest_idx=destination_index)
         self._go_live(destination_index, model_name)
 
     def update(self, model_name: str, since_date):
+        log.info(
+            'Updating index {} with changes since {}'
+            .format(model_name, since_date)
+        )
         query = SQL('SELECT * FROM {} WHERE created_on >= \'{}\''
                     .format(model_name, since_date))
         self._replicate(model_name, model_name, query)
@@ -304,82 +385,6 @@ class ElasticsearchSyncer:
         return documents
 
 
-def elasticsearch_connect(timeout=300):
-    """
-    Repeatedly try to connect to Elasticsearch until successful.
-    :return: An Elasticsearch connection object.
-    """
-    while True:
-        try:
-            return _elasticsearch_connect(timeout)
-        except ElasticsearchConnectionError as e:
-            log.exception(e)
-            log.error('Reconnecting to Elasticsearch in 5 seconds. . .')
-            time.sleep(5)
-            continue
-
-
-def _elasticsearch_connect(timeout=300):
-    """
-    Connect to configured Elasticsearch domain.
-
-    :param timeout: How long to wait before ANY request to Elasticsearch times
-    out. Because we use parallel bulk uploads (which sometimes wait long periods
-    of time before beginning execution), a value of at least 30 seconds is
-    recommended.
-    :return: An Elasticsearch connection object.
-    """
-
-    log.info(
-        'Connecting to %s %s with AWS auth', ELASTICSEARCH_URL,
-        ELASTICSEARCH_PORT)
-    auth = AWSRequestsAuth(
-        aws_access_key=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-        aws_host=ELASTICSEARCH_URL,
-        aws_region=AWS_REGION,
-        aws_service='es'
-    )
-    auth.encode = lambda x: bytes(x.encode('utf-8'))
-    es = Elasticsearch(
-        host=ELASTICSEARCH_URL,
-        port=ELASTICSEARCH_PORT,
-        connection_class=RequestsHttpConnection,
-        timeout=timeout,
-        max_retries=10,
-        retry_on_timeout=True,
-        http_auth=auth,
-        wait_for_status='yellow'
-    )
-    es.info()
-    return es
-
-
-def database_connect():
-    """
-    Repeatedly try to connect to database until successful.
-    :return: A database connection object
-    """
-    while True:
-        try:
-            conn = psycopg2.connect(
-                dbname=DATABASE_NAME,
-                user=DATABASE_USER,
-                password=DATABASE_PASSWORD,
-                host=DATABASE_HOST,
-                port=DATABASE_PORT,
-                connect_timeout=5
-            )
-        except psycopg2.OperationalError as e:
-            log.exception(e)
-            log.error('Reconnecting to database in 5 seconds. . .')
-            time.sleep(5)
-            continue
-        break
-
-    return conn
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -399,18 +404,17 @@ if __name__ == '__main__':
     parsed = parser.parse_args()
     fmt = "%(asctime)s %(message)s"
     log.basicConfig(stream=sys.stdout, level=log.INFO, format=fmt)
-    log.getLogger(ElasticsearchSyncer.__name__).setLevel(log.INFO)
+    log.getLogger(TableIndexer.__name__).setLevel(log.INFO)
     log.info('Connecting to Elasticsearch')
     elasticsearch = elasticsearch_connect()
-    syncer = ElasticsearchSyncer(elasticsearch, replicate_tables)
+    syncer = TableIndexer(elasticsearch, replicate_tables)
     if parsed.reindex:
         log.info('Reindexing {}'.format(parsed.reindex))
         syncer.reindex(parsed.reindex)
     elif parsed.update:
         index, date = parsed.update
-        log.info('Updating index {} with changes since {}'.format(index, date))
         syncer.update(index, date)
         log.info('Update finished.')
     else:
-        log.info('Beginning synchronizer')
+        log.info('Beginning indexer in daemon mode')
         syncer.listen(SYNCER_POLL_INTERVAL)
