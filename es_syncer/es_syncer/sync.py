@@ -389,7 +389,7 @@ if __name__ == '__main__':
     parsed = parser.parse_args()
     fmt = "%(asctime)s %(message)s"
     log.basicConfig(stream=sys.stdout, level=log.INFO, format=fmt)
-    log.getLogger(ElasticsearchSyncer.__name__).setLevel(log.DEBUG)
+    log.getLogger(ElasticsearchSyncer.__name__).setLevel(log.INFO)
     log.info('Connecting to database')
     # Use readonly and autocommit to prevent polling from locking tables.
     log.info('Connecting to Elasticsearch')
