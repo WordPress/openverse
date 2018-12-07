@@ -4,6 +4,7 @@ import sys
 import json
 import uuid
 import os
+from urllib.parse import urlparse
 from enum import Enum
 from multiprocessing import Process, Value
 from es_syncer.sync import elasticsearch_connect, TableIndexer
@@ -45,10 +46,14 @@ class IndexingTask(Process):
         elif self.task_type == IndexingTaskTypes.UPDATE:
             indexer.update(self.model, self.since_date)
 
-
 class CreateIndexingTask:
     def __init__(self, tracker: TaskTracker):
         self.tracker = tracker
+
+    @staticmethod
+    def _get_base_url(req):
+        parsed = urlparse(req.url)
+        return parsed.scheme + '://' + parsed.netloc
 
     def on_post(self, req, resp):
         """ Create an indexing task. """
@@ -63,12 +68,15 @@ class CreateIndexingTask:
             since_date,
             progress
         )
-        task_id = self.tracker.add_task(task, action, progress)
         task.start()
+        task_id = self.tracker.add_task(task, action, progress)
+        base_url = self._get_base_url(req)
+        status_url = base_url + '/indexing_task/{}'.format(task_id)
         resp.status = falcon.HTTP_202
         resp.media = {
             'message': 'Successfully scheduled indexing job',
-            'task_id': task_id
+            'task_id': task_id,
+            'status_check': status_url
         }
 
 
@@ -87,11 +95,11 @@ class GetIndexingTaskStatus:
             active = False
 
         percent_completed = self.tracker.id_to_progress[task_id].value
-        failed = percent_completed < 100 and not active
+        completed = percent_completed < 100 and not active
         resp.media = {
             'active': active,
             'percent_completed': percent_completed,
-            'error': failed
+            'error': completed
         }
 
 
