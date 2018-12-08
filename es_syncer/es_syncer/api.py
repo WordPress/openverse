@@ -54,7 +54,7 @@ class IndexingTask(Process):
         self.task_type = task_type
         self.since_date = since_date
         self.progress = progress
-        self.task_id = task_id,
+        self.task_id = task_id
         self.tracker = track
 
     def run(self):
