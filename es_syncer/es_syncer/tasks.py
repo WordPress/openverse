@@ -4,6 +4,7 @@ import datetime as dt
 from enum import Enum
 from multiprocessing import Process
 from es_syncer.sync import elasticsearch_connect, TableIndexer
+from collections import OrderedDict
 
 
 class TaskTracker:
@@ -26,23 +27,34 @@ class TaskTracker:
         pass
 
     def list_task_statuses(self):
-        results = {}
+        results = []
         for _id, task in self.id_task.items():
             percent_completed = self.id_progress[_id].value
             active = process_alive(task.pid)
             finish_time = self.id_finish_time[_id].value
-            if finish_time == 0.0:
-                finish_time = None
-            else:
-                finish_time = str(dt.datetime.utcfromtimestamp(finish_time))
-            results[_id] = {
+            results.append({
+                'task_id': _id,
                 'active': active,
                 'action': self.id_action[_id],
                 'progress': percent_completed,
                 'error': percent_completed < 100 and not active,
                 'finish_time': finish_time
-            }
-        return results
+            })
+        sorted_results = sorted(
+            results,
+            key=lambda x: x['finish_time']
+        )
+
+        # Convert date to a readable format
+        for idx, task in enumerate(sorted_results):
+            finish_time = task['finish_time']
+            if finish_time != 0.0:
+                sorted_results[idx]['finish_time'] =\
+                    str(dt.datetime.utcfromtimestamp(finish_time))
+            else:
+                sorted_results[idx]['finish_time'] = None
+
+        return sorted_results
 
 
 class IndexingTask(Process):
