@@ -249,7 +249,6 @@ class TableIndexer:
                 num_converted_documents += len(chunk)
                 total_indexed_so_far += len(chunk)
                 if self.progress is not None:
-                    print('num to index', num_to_index)
                     self.progress.value = (total_indexed_so_far / num_to_index) * 100
             log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')

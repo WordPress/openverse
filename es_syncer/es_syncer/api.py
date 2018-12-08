@@ -3,6 +3,7 @@ import logging
 import sys
 import json
 import uuid
+from datetime import datetime
 import os
 from urllib.parse import urlparse
 from enum import Enum
@@ -17,34 +18,64 @@ class IndexingTaskTypes(Enum):
 
 class TaskTracker:
     def __init__(self):
-        self.id_to_task = {}
-        self.id_to_action = {}
-        self.id_to_progress = {}
+        self.id_task = {}
+        self.id_action = {}
+        self.id_progress = {}
 
-    def add_task(self, task, action, progress):
-        task_id = str(uuid.uuid4())
-        self.id_to_task[task_id] = task
-        self.id_to_action[task_id] = action
-        self.id_to_progress[task_id] = progress
+    def add_task(self, task, task_id, action, progress):
+        self.prune_old_tasks()
+        self.id_task[task_id] = task
+        self.id_action[task_id] = action
+        self.id_progress[task_id] = progress
         return task_id
+
+    def prune_old_tasks(self):
+        # TODO Delete old and irrelevant tasks from the TaskTracker
+        pass
+
+    def list_task_statuses(self):
+        results = {}
+        for _id, task in self.id_task.items():
+            percent_completed = self.id_progress[_id].value
+            active = _process_alive(task.pid)
+            results[_id] = {
+                'active': active,
+                'action': self.id_action[_id],
+                'progress': percent_completed,
+                'error': percent_completed < 100 and not active,
+            }
+        return results
 
 
 class IndexingTask(Process):
-    def __init__(self, model: str, task_type, since_date: str, progress):
+    def __init__(self, model, task_type, since_date, progress, task_id, track):
         Process.__init__(self)
         self.model = model
         self.task_type = task_type
         self.since_date = since_date
         self.progress = progress
+        self.task_id = task_id,
+        self.tracker = track
 
     def run(self):
         elasticsearch = elasticsearch_connect()
         indexer = TableIndexer(elasticsearch, self.model, self.progress)
         if self.task_type == IndexingTaskTypes.REINDEX:
             indexer.reindex(self.model)
-            logging.info('Indexing task exited.')
         elif self.task_type == IndexingTaskTypes.UPDATE:
             indexer.update(self.model, self.since_date)
+        logging.info('Indexing task exited.')
+
+
+def _process_alive(pid: int):
+    active = True
+    if os.path.isdir('/proc/{}'.format(pid)):
+        with open('/proc/{}'.format(pid) + '/status') as procfile:
+            if 'zombie' in procfile.read():
+                active = False
+    else:
+        active = False
+    return active
 
 
 class CreateIndexingTask:
@@ -63,14 +94,17 @@ class CreateIndexingTask:
         action = body['action']
         since_date = body['since_date'] if 'since_date' in body else None
         progress = Value('d', 0.0)
+        task_id = str(uuid.uuid4())
         task = IndexingTask(
             model,
             IndexingTaskTypes[action],
             since_date,
-            progress
+            progress,
+            task_id,
+            self.tracker
         )
         task.start()
-        task_id = self.tracker.add_task(task, action, progress)
+        task_id = self.tracker.add_task(task, task_id, action, progress)
         base_url = self._get_base_url(req)
         status_url = base_url + '/indexing_task/{}'.format(task_id)
         resp.status = falcon.HTTP_202
@@ -80,27 +114,24 @@ class CreateIndexingTask:
             'status_check': status_url
         }
 
+    def on_get(self, req, resp):
+        """ List all indexing tasks. """
+        resp.media = self.tracker.list_task_statuses()
+
 
 class GetIndexingTaskStatus:
     def __init__(self, tracker: TaskTracker):
         self.tracker = tracker
 
     def on_get(self, req, resp, task_id):
-        task = self.tracker.id_to_task[task_id]
-        active = True
-        if os.path.isdir('/proc/{}'.format(task.pid)):
-            with open('/proc/{}'.format(task.pid) + '/status') as procfile:
-                if 'zombie' in procfile.read():
-                    active = False
-        else:
-            active = False
+        task = self.tracker.id_task[task_id]
+        active = _process_alive(task.pid)
 
-        percent_completed = self.tracker.id_to_progress[task_id].value
-        error_status = percent_completed < 100 and not active
+        percent_completed = self.tracker.id_progress[task_id].value
         resp.media = {
             'active': active,
             'percent_completed': percent_completed,
-            'error': error_status
+            'error': percent_completed < 100 and not active
         }
 
 
