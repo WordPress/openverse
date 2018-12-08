@@ -253,12 +253,11 @@ class TableIndexer:
                 if self.progress is not None:
                     self.progress.value =\
                         (total_indexed_so_far / num_to_index) * 100
-                if self.finish_time is not None:
-                    # Can't share DateTime objects directly when using IPC
-                    self.finish_time.value =\
-                        datetime.datetime.utcnow().timestamp()
             log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')
+            if self.finish_time is not None:
+                self.finish_time.value = \
+                    datetime.datetime.utcnow().timestamp()
         pg_conn.commit()
         pg_conn.close()
 

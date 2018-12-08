@@ -1,10 +1,8 @@
 import logging
 import os
+import datetime as dt
 from enum import Enum
 from multiprocessing import Process
-
-import datetime as dt
-
 from es_syncer.sync import elasticsearch_connect, TableIndexer
 
 

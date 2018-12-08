@@ -24,9 +24,10 @@ class IndexingTaskResource:
         model = body['model']
         action = body['action']
         since_date = body['since_date'] if 'since_date' in body else None
+        task_id = str(uuid.uuid4())
+        # Inject shared memory
         progress = Value('d', 0.0)
         finish_time = Value('d', 0.0)
-        task_id = str(uuid.uuid4())
         task = IndexingTask(
             model,
             IndexingTaskTypes[action],
