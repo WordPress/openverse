@@ -9,7 +9,7 @@ from es_syncer.tasks import TaskTracker, IndexingTask, process_alive, \
     IndexingTaskTypes
 
 
-class CreateIndexingTask:
+class IndexingTaskResource:
     def __init__(self, tracker: TaskTracker):
         self.tracker = tracker
 
@@ -52,7 +52,7 @@ class CreateIndexingTask:
         resp.media = self.tracker.list_task_statuses()
 
 
-class GetIndexingTaskStatus:
+class IndexingTaskStatus:
     def __init__(self, tracker: TaskTracker):
         self.tracker = tracker
 
@@ -80,7 +80,7 @@ root.addHandler(handler)
 
 api = falcon.API()
 task_tracker = TaskTracker()
-create_indexing_task = CreateIndexingTask(task_tracker)
-get_task_status = GetIndexingTaskStatus(task_tracker)
-api.add_route('/indexing_task', create_indexing_task)
+indexing_task_resource = IndexingTaskResource(task_tracker)
+get_task_status = IndexingTaskStatus(task_tracker)
+api.add_route('/indexing_task', indexing_task_resource)
 api.add_route('/indexing_task/{task_id}', get_task_status)
