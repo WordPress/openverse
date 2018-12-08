@@ -3,8 +3,8 @@ import logging
 import sys
 import json
 import uuid
-from datetime import datetime
 import os
+import datetime as dt
 from urllib.parse import urlparse
 from enum import Enum
 from multiprocessing import Process, Value
@@ -21,12 +21,14 @@ class TaskTracker:
         self.id_task = {}
         self.id_action = {}
         self.id_progress = {}
+        self.id_finish_time = {}
 
-    def add_task(self, task, task_id, action, progress):
+    def add_task(self, task, task_id, action, progress, finish_time):
         self.prune_old_tasks()
         self.id_task[task_id] = task
         self.id_action[task_id] = action
         self.id_progress[task_id] = progress
+        self.id_finish_time[task_id] = finish_time
         return task_id
 
     def prune_old_tasks(self):
@@ -38,28 +40,37 @@ class TaskTracker:
         for _id, task in self.id_task.items():
             percent_completed = self.id_progress[_id].value
             active = _process_alive(task.pid)
+            finish_time = self.id_finish_time[_id].value
+            if finish_time == 0.0:
+                finish_time = None
+            else:
+                finish_time = str(dt.datetime.utcfromtimestamp(finish_time))
             results[_id] = {
                 'active': active,
                 'action': self.id_action[_id],
                 'progress': percent_completed,
                 'error': percent_completed < 100 and not active,
+                'finish_time': finish_time
             }
         return results
 
 
 class IndexingTask(Process):
-    def __init__(self, model, task_type, since_date, progress, task_id, track):
+    def __init__(self, model, task_type, since_date, progress, task_id,
+                 finish_time):
         Process.__init__(self)
         self.model = model
         self.task_type = task_type
         self.since_date = since_date
         self.progress = progress
         self.task_id = task_id
-        self.tracker = track
+        self.finish_time = finish_time
 
     def run(self):
         elasticsearch = elasticsearch_connect()
-        indexer = TableIndexer(elasticsearch, self.model, self.progress)
+        indexer = TableIndexer(
+            elasticsearch, self.model, self.progress, self.finish_time
+        )
         if self.task_type == IndexingTaskTypes.REINDEX:
             indexer.reindex(self.model)
         elif self.task_type == IndexingTaskTypes.UPDATE:
@@ -94,6 +105,7 @@ class CreateIndexingTask:
         action = body['action']
         since_date = body['since_date'] if 'since_date' in body else None
         progress = Value('d', 0.0)
+        finish_time = Value('d', 0.0)
         task_id = str(uuid.uuid4())
         task = IndexingTask(
             model,
@@ -101,10 +113,11 @@ class CreateIndexingTask:
             since_date,
             progress,
             task_id,
-            self.tracker
+            finish_time
         )
         task.start()
-        task_id = self.tracker.add_task(task, task_id, action, progress)
+        task_id = self.tracker \
+            .add_task(task, task_id, action, progress, finish_time)
         base_url = self._get_base_url(req)
         status_url = base_url + '/indexing_task/{}'.format(task_id)
         resp.status = falcon.HTTP_202

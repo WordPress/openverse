@@ -6,6 +6,7 @@ import sys
 import logging as log
 import time
 import argparse
+import datetime
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection, NotFoundError,\
@@ -134,12 +135,13 @@ def database_connect():
 
 class TableIndexer:
 
-    def __init__(self, elasticsearch_instance, tables, progress=None):
-        self.es = elasticsearch_instance
+    def __init__(self, es_instance, tables, progress=None, finish_time=None):
+        self.es = es_instance
         connections.connections.add_connection('default', self.es)
         self.tables_to_watch = tables
-        # Optional multiprocessing.Value for examining indexing progress
+        # Optional multiprocessing.Values for examining indexing progress
         self.progress = progress
+        self.finish_time = finish_time
 
     @staticmethod
     def _get_last_item_ids(table):
@@ -249,7 +251,12 @@ class TableIndexer:
                 num_converted_documents += len(chunk)
                 total_indexed_so_far += len(chunk)
                 if self.progress is not None:
-                    self.progress.value = (total_indexed_so_far / num_to_index) * 100
+                    self.progress.value =\
+                        (total_indexed_so_far / num_to_index) * 100
+                if self.finish_time is not None:
+                    # Can't share DateTime objects directly when using IPC
+                    self.finish_time.value =\
+                        datetime.datetime.utcnow().timestamp()
             log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')
         pg_conn.commit()
