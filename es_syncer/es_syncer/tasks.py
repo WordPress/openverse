@@ -16,14 +16,14 @@ class TaskTracker:
         self.id_finish_time = {}
 
     def add_task(self, task, task_id, action, progress, finish_time):
-        self.prune_old_tasks()
+        self._prune_old_tasks()
         self.id_task[task_id] = task
         self.id_action[task_id] = action
         self.id_progress[task_id] = progress
         self.id_finish_time[task_id] = finish_time
         return task_id
 
-    def prune_old_tasks(self):
+    def _prune_old_tasks(self):
         # TODO Delete old and irrelevant tasks from the TaskTracker
         pass
 
