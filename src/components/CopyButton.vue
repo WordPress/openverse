@@ -35,6 +35,7 @@ export default {
   destroyed() {
     // unattach our clipboard instance when component is destroyed
     this.clipboard.destroy();
+    this.clipboard = null;
   },
 };
 </script>
