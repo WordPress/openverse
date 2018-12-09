@@ -66,16 +66,8 @@
               CC {{ image.license}} {{ image.license_version }}
               </a>
             </p>
-            <button class="button photo_copy-btn
-              photo_copy-btn__html"
-              data-type="html">
-            Copy to HTML</button>
-            <button class="button
-              photo_copy-btn
-              photo_copy-btn__text"
-              data-type="text">
-            Copy to Text
-            </button>
+            <CopyButton :toCopy="HTMLAttribution">Copy to HTML</CopyButton>
+            <CopyButton :toCopy="textAttribution">Copy to Text</CopyButton>
           </section>
       </div>
     </div>
@@ -129,12 +121,12 @@
 </template>
 
 <script>
+import CopyButton from '@/components/CopyButton';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 import SearchGrid from '@/components/SearchGrid';
 import LicenseIcons from '@/components/LicenseIcons';
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
-import Clipboard from 'clipboard';
 import 'viewerjs/dist/viewer.css';
 import Viewer from 'v-viewer';
 import Vue from 'vue';
@@ -145,6 +137,7 @@ Vue.use(Viewer);
 const PhotoDetailPage = {
   name: 'photo-detail-page',
   components: {
+    CopyButton,
     HeaderSection,
     SearchGrid,
     FooterSection,
@@ -272,20 +265,6 @@ const PhotoDetailPage = {
         this.$store.dispatch(FETCH_RELATED_IMAGES, { q: queryParam, pagesize: 8 });
       }
     },
-    initClipboard() {
-      new Clipboard('.photo_copy-btn', { // eslint-disable-line no-new
-        text: (element) => {
-          let attributionContent;
-          if (element.getAttribute('data-type') === 'html') {
-            attributionContent = this.HTMLAttribution;
-          } else {
-            attributionContent = this.textAttribution;
-          }
-
-          return attributionContent.replace(/\s\s/g, '');
-        },
-      });
-    },
     isClarifaiTag(provider) {
       let isClarifaiTag = false;
 
@@ -326,7 +305,6 @@ const PhotoDetailPage = {
   },
   created() {
     this.loadImage(this.$route.params.id);
-    this.initClipboard();
   },
 };
 
@@ -535,18 +513,5 @@ export default PhotoDetailPage;
     border-left: 1px solid #e7e8e9;;
     padding-left: 10px;
     padding-bottom: 15px
-  }
-
-  .photo_copy-btn {
-    border-radius: 3px;
-    width: 49%;
-  }
-
-  .photo_copy-btn__html {
-    background: #4A69CA;
-  }
-
-  .photo_copy-btn__text {
-    background: #4A69CA;
   }
 </style>
