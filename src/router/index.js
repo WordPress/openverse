@@ -62,6 +62,7 @@ router.afterEach((to) => {
   store.commit(SET_IMAGES, { images: [] });
 
   /* eslint-disable */
+  // disabling eslint because it complains about "ga" not being defined in this file.
   ga('set', 'page', to.path);
   ga('send', 'pageview');
   /* eslint-enable */
