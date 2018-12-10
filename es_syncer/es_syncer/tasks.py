@@ -4,7 +4,6 @@ import datetime as dt
 from enum import Enum
 from multiprocessing import Process
 from es_syncer.sync import elasticsearch_connect, TableIndexer
-from collections import OrderedDict
 
 
 class TaskTracker:

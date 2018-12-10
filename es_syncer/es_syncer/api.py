@@ -3,10 +3,15 @@ import logging
 import sys
 import json
 import uuid
+import time
 from urllib.parse import urlparse
 from multiprocessing import Value
 from es_syncer.tasks import TaskTracker, IndexingTask, process_alive, \
     IndexingTaskTypes
+
+"""
+A small API server for scheduling Elasticsearch indexing tasks.
+"""
 
 
 class IndexingTaskResource:
@@ -18,9 +23,33 @@ class IndexingTaskResource:
         parsed = urlparse(req.url)
         return parsed.scheme + '://' + parsed.netloc
 
+    @staticmethod
+    def _validate_create_task(req_body):
+        """
+        :return: None if valid else a string containing an error message.
+        """
+        if not req_body:
+            return "No request body supplied."
+        if 'model' not in req_body:
+            return "No model supplied in request body."
+        if 'action' not in req_body:
+            return "No action supplied in request body."
+        if req_body['action'] not in [x.name for x in IndexingTaskTypes]:
+            return "Invalid action. Must be UPDATE or REINDEX."
+        if req_body['action'] == 'UPDATE' and 'since_date' not in req_body:
+            return "Received UPDATE request but no since_date."
+        return None
+
     def on_post(self, req, resp):
         """ Create an indexing task. """
         body = json.loads(req.stream.read().decode('utf-8'))
+        request_error = self._validate_create_task(body)
+        if request_error:
+            resp.status = falcon.HTTP_400
+            resp.media = {
+                'message': request_error
+            }
+            return
         model = body['model']
         action = body['action']
         since_date = body['since_date'] if 'since_date' in body else None
@@ -37,16 +66,24 @@ class IndexingTaskResource:
             finish_time
         )
         task.start()
+        time.sleep(0.1)
         task_id = self.tracker \
             .add_task(task, task_id, action, progress, finish_time)
         base_url = self._get_base_url(req)
         status_url = base_url + '/indexing_task/{}'.format(task_id)
         resp.status = falcon.HTTP_202
-        resp.media = {
-            'message': 'Successfully scheduled indexing job',
-            'task_id': task_id,
-            'status_check': status_url
-        }
+        if task.is_alive():
+            resp.media = {
+                'message': 'Successfully scheduled indexing job',
+                'task_id': task_id,
+                'status_check': status_url
+            }
+        else:
+            resp.status = falcon.HTTP_500
+            resp.media = {
+                'message': 'Failed to schedule task due to an internal server '
+                           'error. Check indexing logs.'
+            }
 
     def on_get(self, req, resp):
         """ List all indexing tasks. """
@@ -58,6 +95,7 @@ class IndexingTaskStatus:
         self.tracker = tracker
 
     def on_get(self, req, resp, task_id):
+        """ Check the status of a single task."""
         task = self.tracker.id_task[task_id]
         active = process_alive(task.pid)
 

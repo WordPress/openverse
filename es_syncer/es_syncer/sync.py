@@ -19,7 +19,7 @@ from psycopg2.sql import SQL, Identifier
 from es_syncer.elasticsearch_models import database_table_to_elasticsearch_model
 
 """
-A daemon for synchronizing database with Elasticsearch. For each table to
+A utility for indexing data to Elasticsearch. For each table to
 sync, find its largest ID in database. Find the corresponding largest ID in
 Elasticsearch. If the database ID is greater than the largest corresponding
 ID in Elasticsearch, copy the missing records over to Elasticsearch.
@@ -30,7 +30,9 @@ replicate called 'image', the syncer will create an Elasticsearch called
 'image' and populate the index with documents. See elasticsearch_models to 
 change the format of Elasticsearch documents.
 
-This is intended to be daemonized and run by a process supervisor.
+This can either be run as a command line tool or in daemon mode. In daemon mode,
+it will actively monitor Postgres for updates and index them automatically. This
+is useful for local development environments.
 """
 
 # For AWS IAM access to Elasticsearch
@@ -338,7 +340,8 @@ class TableIndexer:
 
     def listen(self, poll_interval=10):
         """
-        Poll the database for changes every poll_interval seconds.
+        Poll the database for changes every poll_interval seconds. If new data
+        has been added to the database, index it.
 
         :arg poll_interval: The number of seconds to wait before polling the
         database for changes.
