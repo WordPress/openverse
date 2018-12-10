@@ -26,10 +26,11 @@ class TaskTracker:
         pass
 
     def list_task_statuses(self):
+        self._prune_old_tasks()
         results = []
         for _id, task in self.id_task.items():
             percent_completed = self.id_progress[_id].value
-            active = process_alive(task.pid)
+            active = task.is_alive()
             finish_time = self.id_finish_time[_id].value
             results.append({
                 'task_id': _id,
@@ -77,17 +78,6 @@ class IndexingTask(Process):
         elif self.task_type == IndexingTaskTypes.UPDATE:
             indexer.update(self.model, self.since_date)
         logging.info('Indexing task exited.')
-
-
-def process_alive(pid: int):
-    active = True
-    if os.path.isdir('/proc/{}'.format(pid)):
-        with open('/proc/{}'.format(pid) + '/status') as procfile:
-            if 'zombie' in procfile.read():
-                active = False
-    else:
-        active = False
-    return active
 
 
 class IndexingTaskTypes(Enum):

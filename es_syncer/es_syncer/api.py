@@ -99,7 +99,7 @@ class IndexingTaskStatus:
     def on_get(self, req, resp, task_id):
         """ Check the status of a single task."""
         task = self.tracker.id_task[task_id]
-        active = process_alive(task.pid)
+        active = task.is_alive()
 
         percent_completed = self.tracker.id_progress[task_id].value
         resp.media = {
