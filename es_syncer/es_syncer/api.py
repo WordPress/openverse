@@ -26,6 +26,7 @@ class IndexingTaskResource:
     @staticmethod
     def _validate_create_task(req_body):
         """
+        Validate an index creation task.
         :return: None if valid else a string containing an error message.
         """
         if not req_body:
@@ -66,13 +67,14 @@ class IndexingTaskResource:
             finish_time
         )
         task.start()
-        time.sleep(0.1)
         task_id = self.tracker \
             .add_task(task, task_id, action, progress, finish_time)
         base_url = self._get_base_url(req)
         status_url = base_url + '/indexing_task/{}'.format(task_id)
-        resp.status = falcon.HTTP_202
+        # Give the task a moment to start so we can detect immediate failure.
+        time.sleep(0.1)
         if task.is_alive():
+            resp.status = falcon.HTTP_202
             resp.media = {
                 'message': 'Successfully scheduled indexing job',
                 'task_id': task_id,
