@@ -6,8 +6,7 @@ import uuid
 import time
 from urllib.parse import urlparse
 from multiprocessing import Value
-from es_syncer.tasks import TaskTracker, IndexingTask, process_alive, \
-    IndexingTaskTypes
+from es_syncer.tasks import TaskTracker, IndexingTask, IndexingTaskTypes
 
 """
 A small API server for scheduling Elasticsearch indexing tasks.
@@ -29,8 +28,9 @@ class IndexingTaskResource:
         Validate an index creation task.
         :return: None if valid else a string containing an error message.
         """
-        if not req_body:
-            return "No request body supplied."
+        if req_body == b'':
+            return "Expected JSON request body but found nothing."
+        req_body = json.loads(req_body.decode('utf-8'))
         if 'model' not in req_body:
             return "No model supplied in request body."
         if 'action' not in req_body:
@@ -43,14 +43,18 @@ class IndexingTaskResource:
 
     def on_post(self, req, resp):
         """ Create an indexing task. """
-        body = json.loads(req.stream.read().decode('utf-8'))
-        request_error = self._validate_create_task(body)
+        raw_body = req.stream.read()
+        request_error = self._validate_create_task(raw_body)
         if request_error:
+            logging.warning(
+                'Invalid request made. Reason: {}'.format(request_error)
+            )
             resp.status = falcon.HTTP_400
             resp.media = {
                 'message': request_error
             }
             return
+        body = json.loads(raw_body.decode('utf-8'))
         model = body['model']
         action = body['action']
         since_date = body['since_date'] if 'since_date' in body else None
@@ -72,6 +76,8 @@ class IndexingTaskResource:
         base_url = self._get_base_url(req)
         status_url = base_url + '/indexing_task/{}'.format(task_id)
         # Give the task a moment to start so we can detect immediate failure.
+        # TODO: Use IPC to detect if the job launched successfully instead
+        # of giving it 100ms to crash. This is prone to race conditions.
         time.sleep(0.1)
         if task.is_alive():
             resp.status = falcon.HTTP_202
@@ -80,12 +86,14 @@ class IndexingTaskResource:
                 'task_id': task_id,
                 'status_check': status_url
             }
+            return
         else:
             resp.status = falcon.HTTP_500
             resp.media = {
                 'message': 'Failed to schedule task due to an internal server '
                            'error. Check indexing logs.'
             }
+            return
 
     def on_get(self, req, resp):
         """ List all indexing tasks. """

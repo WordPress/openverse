@@ -1,9 +1,8 @@
 import logging
-import os
 import datetime as dt
 from enum import Enum
 from multiprocessing import Process
-from es_syncer.sync import elasticsearch_connect, TableIndexer
+from es_syncer.indexer import elasticsearch_connect, TableIndexer
 
 
 class TaskTracker:

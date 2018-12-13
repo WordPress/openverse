@@ -211,7 +211,7 @@ class TableIndexer:
         :param query: The SQL query used to select data to copy.
         :return:
         """
-        cursor_name = table + '_table_cursor'
+        cursor_name = table + '_indexing_cursor'
         # Enable writing to Postgres so we can create a server-side cursor.
         pg_conn = database_connect()
         total_indexed_so_far = 0
@@ -230,7 +230,7 @@ class TableIndexer:
                 if not chunk:
                     break
                 log.info(
-                    'PSQL down: batch_size={}, downloaded_per_second={}'
+                    'PSQL indexer down: batch_size={}, downloaded_per_second={}'
                     .format(len(chunk), dl_rate)
                 )
                 es_batch = self.pg_chunk_to_es(
@@ -370,7 +370,7 @@ class TableIndexer:
             'Updating index {} with changes since {}'
             .format(model_name, since_date)
         )
-        query = SQL('SELECT * FROM {} WHERE created_on >= \'{}\''
+        query = SQL('SELECT * FROM {} WHERE updated_on >= \'{}\''
                     .format(model_name, since_date))
         self._replicate(model_name, model_name, query)
 

@@ -2,7 +2,7 @@ import subprocess
 import unittest
 import os
 
-import es_syncer.sync
+import es_syncer.indexer
 import logging
 from subprocess import DEVNULL
 from multiprocessing import Process
@@ -17,24 +17,24 @@ class TestReplication(unittest.TestCase):
     def setUp(self):
         super().setUp()
         # Configure synchronizer
-        es_syncer.sync.DATABASE_HOST = 'localhost'
-        es_syncer.sync.DATABASE_PORT = 60000
-        es_syncer.sync.DATABASE_NAME = 'openledger'
-        es_syncer.sync.DATABASE_PASSWORD = 'deploy'
-        es_syncer.sync.DATABASE_USER = 'deploy'
-        es_syncer.sync.ELASTICSEARCH_PORT = 60001
-        es_syncer.sync.ELASTICSEARCH_URL = 'localhost'
-        es_syncer.sync.DB_BUFFER_SIZE = 100000
+        es_syncer.indexer.DATABASE_HOST = 'localhost'
+        es_syncer.indexer.DATABASE_PORT = 60000
+        es_syncer.indexer.DATABASE_NAME = 'openledger'
+        es_syncer.indexer.DATABASE_PASSWORD = 'deploy'
+        es_syncer.indexer.DATABASE_USER = 'deploy'
+        es_syncer.indexer.ELASTICSEARCH_PORT = 60001
+        es_syncer.indexer.ELASTICSEARCH_URL = 'localhost'
+        es_syncer.indexer.DB_BUFFER_SIZE = 100000
         print('Waiting for Elasticsearch to start. . .')
-        self.es = es_syncer.sync.elasticsearch_connect()
+        self.es = es_syncer.indexer.elasticsearch_connect()
         connections.connections.add_connection('default', self.es)
         # DB connection used by synchronizer
         self.db_conn = \
-            es_syncer.sync.database_connect()
+            es_syncer.indexer.database_connect()
         # DB connection used to write mock data by this integration test
         self.write_db_conn = \
-            es_syncer.sync.database_connect()
-        self.syncer = es_syncer.sync.TableIndexer(self.es, ['image'])
+            es_syncer.indexer.database_connect()
+        self.syncer = es_syncer.indexer.TableIndexer(self.es, ['image'])
 
     def tearDown(self):
         pass
