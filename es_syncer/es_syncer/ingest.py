@@ -2,8 +2,7 @@ import os
 import psycopg2
 import time
 import logging as log
-import io
-from es_syncer.indexer import database_connect, DB_BUFFER_SIZE
+from es_syncer.indexer import database_connect
 
 """
 Copy updates from the intermediary database to the API database.
@@ -27,7 +26,7 @@ def _get_shared_cols(conn1, conn2, table_name):
     return conn1_cols.intersection(conn2_cols)
 
 
-def consume(table, since_date):
+def consume(table):
     """
     Import updates from the upstream CC Catalog database into the API.
 
@@ -44,49 +43,30 @@ def consume(table, since_date):
         connect_timeout=5
     )
     query_cols = _get_shared_cols(downstream_db, upstream_db, table)
-    downstream_db.close()
-    upstream_query = 'SELECT {} FROM {} WHERE updated_on >= \'{}\''\
-        .format(','.join(query_cols), table, since_date)
-    cursor_name = table + '_consume_cursor'
-    with upstream_db.cursor(name=cursor_name) as upstream_cur:
-        upstream_cur.itersize = DB_BUFFER_SIZE
-        upstream_cur.execute(upstream_query)
-        while True:
-            dl_start_time = time.time()
-            chunk = upstream_cur.fetchmany(upstream_cur.itersize)
-            dl_end_time = time.time() - dl_start_time
-            dl_rate = len(chunk) / dl_end_time
-            if not chunk:
-                break
-            log.info(
-                'PSQL ingest down: batch_size={}, downloaded_per_second={}'
-                .format(len(chunk), dl_rate)
-            )
-            _import(chunk, upstream_cur.description, table)
     upstream_db.close()
+    # Connect to upstream server and create references to foreign tables.
+    log.info('Initializing foreign data wrapper')
+    init_fdw = '''
+        CREATE EXTENSION IF NOT EXISTS postgres_fdw;
+        CREATE SERVER IF NOT EXISTS upstream FOREIGN DATA WRAPPER postgres_fdw
+        OPTIONS (host '{host}', dbname 'openledger', port '5432');
 
+        CREATE USER MAPPING FOR deploy SERVER upstream
+        OPTIONS (user 'deploy', password '{passwd}')
+        CREATE SCHEMA IF NOT EXISTS upstream_schema AUTHORIZATION deploy;
 
-def _import(chunk, columns, origin_table):
-    """
-    Insert a chunk of data into the downstream database.
+        IMPORT FOREIGN SCHEMA public
+        LIMIT TO {table} FROM SERVER upstream INTO upstream_schema;
+    '''.format(host=UPSTREAM_DB_HOST, passwd=UPSTREAM_DB_PASSWORD, table=table)
+    log.info('Copying upstream data. This may take a while.')
+    copy_data = '''
+        CREATE TABLE importing_{table} (LIKE {table});
+        INSERT INTO importing_{table} ({cols})
+        SELECT {cols} from upstream_schema.{table};
+    '''.format(table=table, cols=query_cols)
 
-    :param chunk: A server-side cursor chunk.
-    :param columns: The columns from the table schema. Order matters.
-    :param origin_table: The name of the original table.
-    :return:
-    """
-    upstream_cols = {idx: col[0] for idx, col in enumerate(columns)}
-    downstream_db = database_connect()
     with downstream_db.cursor() as downstream_cur:
-        downstream_cols = {
-            col[0]: idx for idx, col in enumerate(downstream_cur.description)
-        }
-        csv_items = io.StringIO()
-        for row in chunk:
-            csv_row = [None for _ in row]
-            for idx, col in enumerate(row):
-                col_name = upstream_cols[idx]
-                downstream_idx = downstream_cols[col_name]
-                csv_row[downstream_idx] = col
-
+        downstream_cur.execute(init_fdw)
+        downstream_cur.execute(copy_data)
+        downstream_cur.commit()
     downstream_db.close()
