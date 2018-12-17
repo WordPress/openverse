@@ -78,7 +78,7 @@ class Image(OpenLedgerModel):
     # Denormalized tags as an array, for easier syncing with Elasticsearch
     tags_list = ArrayField(models.CharField(max_length=255), blank=True, null=True)
 
-    tags = JSONField()
+    tags = JSONField(blank=True, null=True)
 
     # The last time this image was synced with the URL in `foreign_landing_url`
     # A null value here means we have never synced it
@@ -94,7 +94,7 @@ class Image(OpenLedgerModel):
     view_count = models.IntegerField(default=0)
 
     # Whether the image has been watermarked.
-    watermarked = models.BooleanField()
+    watermarked = models.NullBooleanField(blank=True, null=True)
 
     def __str__(self):
         return '%r by %r from %r [%r %r]' % (

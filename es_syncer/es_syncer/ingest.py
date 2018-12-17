@@ -8,7 +8,7 @@ from es_syncer.indexer import database_connect
 Copy updates from the intermediary database to the API database.
 """
 
-UPSTREAM_DB_HOST = os.environ.get('UPSTREAM_DB_HOST', 'localhost')
+UPSTREAM_DB_HOST = os.environ.get('UPSTREAM_DB_HOST', 'upstream_db')
 UPSTREAM_DB_PORT = os.environ.get('UPSTREAM_DB_PORT', 5432)
 UPSTREAM_DB_PASSWORD = os.environ.get('UPSTREAM_DB_PASSWORD', 'deploy')
 
@@ -47,37 +47,40 @@ def get_upstream_updates(table, progress, finish_time):
     )
     query_cols = ','.join(_get_shared_cols(downstream_db, upstream_db, table))
     upstream_db.close()
-    from remote_pdb import RemotePdb
-    RemotePdb('127.0.0.1', 4444).set_trace()
     # Connect to upstream server and create references to foreign tables.
     log.info('(Re)initializing foreign data wrapper')
     init_fdw = '''
         CREATE EXTENSION IF NOT EXISTS postgres_fdw;
-        CREATE SERVER IF NOT EXISTS upstream FOREIGN DATA WRAPPER postgres_fdw
-        OPTIONS (host '{host}', dbname 'openledger', port '5432');
+        DROP SERVER IF EXISTS upstream CASCADE;
+        CREATE SERVER upstream FOREIGN DATA WRAPPER postgres_fdw
+        OPTIONS (host '{host}', dbname 'openledger', port '{port}');
 
-        CREATE USER MAPPING FOR deploy SERVER upstream
+        CREATE USER MAPPING IF NOT EXISTS FOR deploy SERVER upstream
         OPTIONS (user 'deploy', password '{passwd}');
-        CREATE SCHEMA IF NOT EXISTS upstream_schema AUTHORIZATION deploy;
+        DROP SCHEMA IF EXISTS upstream_schema CASCADE;
+        CREATE SCHEMA upstream_schema AUTHORIZATION deploy;
 
         IMPORT FOREIGN SCHEMA public
         LIMIT TO ({table}) FROM SERVER upstream INTO upstream_schema;
-    '''.format(host=UPSTREAM_DB_HOST, passwd=UPSTREAM_DB_PASSWORD, table=table)
+    '''.format(host=UPSTREAM_DB_HOST, passwd=UPSTREAM_DB_PASSWORD, table=table,
+               port=UPSTREAM_DB_PORT)
     log.info('Copying upstream data. This may take a while.')
     copy_data = '''
-        CREATE TABLE importing_{table} (LIKE {table});
-        INSERT INTO importing_{table} ({cols})
+        DROP TABLE IF EXISTS temp_importing_{table};
+        CREATE TABLE temp_importing_{table} (LIKE {table});
+        INSERT INTO temp_importing_{table} ({cols})
         SELECT {cols} from upstream_schema.{table};
     '''.format(table=table, cols=query_cols)
-
     with downstream_db.cursor() as downstream_cur:
         downstream_cur.execute(init_fdw)
         downstream_cur.execute(copy_data)
     downstream_db.commit()
     downstream_db.close()
+
     # Postgres doesn't offer progress estimates, so the best we can do is notify
     # the calling process that the task has finished.
     if progress is not None:
         progress.value = 100.0
     if finish_time is not None:
         finish_time.value = datetime.datetime.utcnow().timestamp()
+    return

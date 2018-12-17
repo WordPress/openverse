@@ -12,6 +12,18 @@ services:
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
+  upstream_db:
+    image: postgres:10.3-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: "openledger"
+      POSTGRES_USER: "deploy"
+      POSTGRES_PASSWORD: "deploy"
+      POSTGRES_HOST: "0.0.0.0"
+    healthcheck:
+      test: "pg_isready -U deploy -d openledger"
+
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
     ports:
@@ -78,6 +90,8 @@ services:
       DATABASE_PASSWORD: 'deploy'
       DATABASE_NAME: 'openledger'
       DATABASE_PORT: '5432'
+      UPSTREAM_DB_HOST: 'upstream_db'
+      UPSTREAM_DB_PORT: 5432
       DB_BUFFER_SIZE: '100000'
       COPY_TABLES: 'image'
       SYNCER_POLL_INTERVAL: '60'
