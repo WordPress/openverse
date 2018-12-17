@@ -3,6 +3,7 @@ import datetime as dt
 from enum import Enum
 from multiprocessing import Process
 from es_syncer.indexer import elasticsearch_connect, TableIndexer
+from es_syncer.ingest import get_upstream_updates
 
 
 class TaskTracker:
@@ -56,7 +57,7 @@ class TaskTracker:
         return sorted_results
 
 
-class IndexingTask(Process):
+class Task(Process):
     def __init__(self, model, task_type, since_date, progress, task_id,
                  finish_time):
         Process.__init__(self)
@@ -68,17 +69,26 @@ class IndexingTask(Process):
         self.finish_time = finish_time
 
     def run(self):
-        elasticsearch = elasticsearch_connect()
-        indexer = TableIndexer(
-            elasticsearch, self.model, self.progress, self.finish_time
-        )
-        if self.task_type == IndexingTaskTypes.REINDEX:
-            indexer.reindex(self.model)
-        elif self.task_type == IndexingTaskTypes.UPDATE:
-            indexer.update(self.model, self.since_date)
-        logging.info('Indexing task exited.')
+        es_tasks = {TaskTypes.REINDEX, TaskTypes.UPDATE_INDEX}
+        # Map task types to actions.
+        if self.task_type in es_tasks:
+            elasticsearch = elasticsearch_connect()
+            indexer = TableIndexer(
+                elasticsearch, self.model, self.progress, self.finish_time
+            )
+            if self.task_type == TaskTypes.REINDEX:
+                indexer.reindex(self.model)
+            elif self.task_type == TaskTypes.UPDATE_INDEX:
+                indexer.update(self.model, self.since_date)
+        elif self.task_type == TaskTypes.INGEST_UPSTREAM:
+            get_upstream_updates(self.model, self.progress, self.finish_time)
+        logging.info('Task exited.')
 
 
-class IndexingTaskTypes(Enum):
+class TaskTypes(Enum):
+    # Completely reindex all data for a given model.
     REINDEX = 0
-    UPDATE = 1
+    # Reindex updates to a model from the database since a certain date.
+    UPDATE_INDEX = 1
+    # Download the latest copy of the data from the intermediary database.
+    INGEST_UPSTREAM = 2

@@ -16,6 +16,8 @@ data "template_file" "init"{
     copy_tables           = "${var.copy_tables}"
     poll_interval         = "${var.poll_interval}"
     staging_environment   = "${var.environment}"
+    upstream_db_host      = "${var.upstream_db_host}"
+    upstream_db_password  = "${var.upstream_db_password}"
 
     docker_tag            = "${var.docker_tag}"
   }

@@ -60,3 +60,11 @@ variable "docker_tag" {
 variable "poll_interval" {
   description = "The amount of time to wait before checking the state of the database and Elasticsearch."
 }
+
+variable "upstream_db_host" {
+  description = "The hostname of the Creative Commons Catalog intermediary database, which holds the source-of-truth for search data."
+}
+
+variable "upstream_db_password" {
+  description= "The password of the intermediary database."
+}
