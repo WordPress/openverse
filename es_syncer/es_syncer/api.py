@@ -65,12 +65,12 @@ class TaskResource:
         progress = Value('d', 0.0)
         finish_time = Value('d', 0.0)
         task = Task(
-            model,
-            TaskTypes[action],
-            since_date,
-            progress,
-            task_id,
-            finish_time
+            model=model,
+            task_type=TaskTypes[action],
+            since_date=since_date,
+            progress=progress,
+            task_id=task_id,
+            finish_time=finish_time
         )
         task.start()
         task_id = self.tracker \

@@ -22,7 +22,6 @@ class TaskTracker:
         return task_id
 
     def _prune_old_tasks(self):
-        # TODO Delete old and irrelevant tasks from the TaskTracker
         pass
 
     def list_task_statuses(self):
@@ -82,7 +81,7 @@ class Task(Process):
                 indexer.update(self.model, self.since_date)
         elif self.task_type == TaskTypes.INGEST_UPSTREAM:
             get_upstream_updates(self.model, self.progress, self.finish_time)
-        logging.info('Task exited.')
+        logging.info('Task {} exited.'.format(self.task_id))
 
 
 class TaskTypes(Enum):
