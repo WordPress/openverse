@@ -116,19 +116,23 @@ def get_upstream_updates(table, progress, finish_time):
     '''.format(table=table, cols=query_cols)
     create_index_statements = ';\n'.join(_get_indices(downstream_db, table))
 
+    go_live = '''
+        DROP TABLE {table};
+        ALTER TABLE temp_import_{table} RENAME TO {table};
+    '''.format(table=table)
+
     with downstream_db.cursor() as downstream_cur:
         log.info('Copying upstream data...')
         downstream_cur.execute(init_fdw)
         downstream_cur.execute(copy_data)
-        log.info('Copying finished! Recreating indexes...')
+        log.info('Copying finished! Recreating database indices...')
         progress.value = 70.0
         downstream_cur.execute(create_index_statements)
-        log.info('Done creating indices!')
+        log.info('Done creating indices! Going live...')
+        downstream_cur.execute(go_live)
     downstream_db.commit()
     downstream_db.close()
 
-    # Postgres doesn't offer progress estimates, so the best we can do is notify
-    # the calling process that the task has finished.
     if progress is not None:
         progress.value = 100.0
     if finish_time is not None:
