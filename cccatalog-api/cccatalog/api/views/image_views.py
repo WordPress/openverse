@@ -102,10 +102,12 @@ class SearchImages(APIView):
         }
         # Correct any malformed URLs in the response.
         for idx, res in enumerate(serialized_results):
-            landing_url = _add_protocol(res['foreign_landing_url'])
-            creator_url = _add_protocol(res['creator_url'])
-            response_data['results'][idx]['foreign_landing_url'] = landing_url
-            response_data['results'][idx]['creator_url'] = creator_url
+            if 'foreign_landing_url' in res:
+                foreign = _add_protocol(res['foreign_landing_url'])
+                response_data['results'][idx]['foreign_landing_url'] = foreign
+            if 'creator_url' in res:
+                creator_url = _add_protocol(res['creator_url'])
+                response_data['results'][idx]['creator_url'] = creator_url
         serialized_response = ImageSearchResultsSerializer(data=response_data)
 
         return Response(status=200, data=serialized_response.initial_data)
@@ -135,10 +137,12 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         # Add page views to the response.
         resp.data['view_count'] = view_count
         # Fix links to creator and foreign landing URLs.
-        creator_url = _add_protocol(resp.data['creator_url'])
-        foreign_landing_url = \
-            _add_protocol(resp.data['foreign_landing_url'])
-        resp.data['creator_url'] = creator_url
-        resp.data['foreign_landing_url'] = foreign_landing_url
+        if 'creator_url' in resp.data:
+            creator_url = _add_protocol(resp.data['creator_url'])
+            resp.data['creator_url'] = creator_url
+        if 'foreign_landing_url' in resp.data:
+            foreign_landing_url = \
+                _add_protocol(resp.data['foreign_landing_url'])
+            resp.data['foreign_landing_url'] = foreign_landing_url
 
         return resp
