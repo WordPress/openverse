@@ -4,7 +4,6 @@ import datetime
 import logging as log
 from es_syncer.indexer import database_connect
 from psycopg2.extras import DictCursor
-from collections import defaultdict
 
 """
 Pull the latest copy of a table from the upstream database (aka CC Catalog/the
@@ -101,10 +100,10 @@ def _generate_constraints(conn, table: str):
     '''
     with conn.cursor(cursor_factory=DictCursor) as cur:
         cur.execute(get_all_constraints)
-        # Find all constraints that either exist inside of the table or
-        # reference it from another table.
-        filtered_constraints = []
         all_constraints = cur.fetchall()
+    # Find all constraints that either exist inside of the table or
+    # reference it from another table. Ignore PRIMARY KEY statements.
+    filtered_constraints = []
     for constraint in all_constraints:
         statement = constraint['pg_get_constraintdef']
         _table = constraint['table']
@@ -118,19 +117,19 @@ def _generate_constraints(conn, table: str):
             and 'PRIMARY KEY' not in statement
         ):
             filtered_constraints.append(constraint_dict)
-    # Drop and recreate
+    # Drop old constraints.
     # Create ALTER TABLE ADD CONSTRAINT statements that reference the new table.
     drop_constraints = []
     create_constraints = []
     for constraint in filtered_constraints:
         # Drop the old constraint.
         drop_constraints.append('''
-            ALTER TABLE {table} DROP CONSTRAINT {conname};
+            ALTER TABLE {table} DROP CONSTRAINT {conname}
         '''.format(table=constraint['table'], conname=constraint['name']))
         # Constraint applies to the table
         if table == constraint['table']:
             create_constraints.append('''
-                ALTER TABLE {table} ADD {stmt};
+                ALTER TABLE {table} ADD {stmt}
             '''.format(table=constraint['table'], stmt=constraint['statement'])
             )
         # Constraint references the table
@@ -204,7 +203,7 @@ def get_upstream_updates(table, progress, finish_time):
     remap_constraints = ';\n'.join(_generate_constraints(downstream_db, table))
     go_live = '''
         DROP TABLE {table};
-        ALTER TABLE temp_import_{table} RENAME TO {table};
+        ALTER TABLE temp_import_{table} RENAME TO {table}
     '''.format(table=table)
 
     with downstream_db.cursor() as downstream_cur:
@@ -220,7 +219,7 @@ def get_upstream_updates(table, progress, finish_time):
         downstream_cur.execute(go_live)
     downstream_db.commit()
     downstream_db.close()
-    log.info('Finished refreshing table {}'.format(table))
+    log.info('Finished refreshing table \'{}\'.'.format(table))
 
     if progress is not None:
         progress.value = 100.0
