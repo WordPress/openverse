@@ -68,9 +68,10 @@ class Task(Process):
         self.finish_time = finish_time
 
     def run(self):
-        es_tasks = {TaskTypes.REINDEX, TaskTypes.UPDATE_INDEX}
+        # Set of tasks that require us to instantiate the table indexer.
+        indexing_required = {TaskTypes.REINDEX, TaskTypes.UPDATE_INDEX}
         # Map task types to actions.
-        if self.task_type in es_tasks:
+        if self.task_type in indexing_required:
             elasticsearch = elasticsearch_connect()
             indexer = TableIndexer(
                 elasticsearch, self.model, self.progress, self.finish_time

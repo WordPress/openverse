@@ -3,9 +3,25 @@ import psycopg2
 import datetime
 import logging as log
 from es_syncer.indexer import database_connect
+from psycopg2.extras import DictCursor
+from collections import defaultdict
 
 """
-Copy updates from the intermediary database to the API database.
+Pull the latest copy of a table from the upstream database (aka CC Catalog/the
+intermediary database).
+
+Since some of these tables have hundreds of millions of records and are tens of
+gigabytes in size, there are some performance considerations we need to account
+for. Appending or updating large numbers of records has poor performance due to 
+the number of indices and constraints on the table. These indices and 
+constraints are necessary for good query performance and data consistency,
+so we can't get rid of them. Since the data is being actively queried in 
+production, disabling indices and constraints temporarily isn't an option.
+
+To work around these problems, we need to create a temporary table, import the
+data, and only then create indices and constraints. Then, "promote" the new
+table to replace the old data. This strategy is far faster than updating the 
+data in place, although it comes at the cost of complexity.
 """
 
 UPSTREAM_DB_HOST = os.environ.get('UPSTREAM_DB_HOST', 'upstream_db')
@@ -27,7 +43,7 @@ def _get_shared_cols(conn1, conn2, table):
     return list(conn1_cols.intersection(conn2_cols))
 
 
-def _get_indices(conn, table):
+def _generate_indices(conn, table):
     """
     Using the existing table as a template, generate CREATE INDEX statements for
     the new table.
@@ -66,6 +82,76 @@ def _get_indices(conn, table):
         idxs = cur.fetchall()
     cleaned_idxs = _clean_idxs(idxs)
     return cleaned_idxs
+
+
+def _generate_constraints(conn, table: str):
+    """
+    Using the existing table as a template, generate ALTER TABLE ADD CONSTRAINT
+    statements pointing to the new table.
+
+    :return: A list of ALTER TABLE ... statements.
+    """
+    # List all active constraints across the database.
+    get_all_constraints = '''
+        SELECT conrelid::regclass AS table, conname, pg_get_constraintdef(c.oid)
+        FROM pg_constraint c
+        JOIN pg_namespace n ON n.oid = c.connamespace
+        AND n.nspname = 'public'
+        ORDER BY conrelid::regclass::text, contype DESC;
+    '''
+    with conn.cursor(cursor_factory=DictCursor) as cur:
+        cur.execute(get_all_constraints)
+        # Find all constraints that either exist inside of the table or
+        # reference it from another table.
+        filtered_constraints = []
+        all_constraints = cur.fetchall()
+    for constraint in all_constraints:
+        statement = constraint['pg_get_constraintdef']
+        _table = constraint['table']
+        constraint_dict = {
+            'name': constraint['conname'],
+            'table': _table,
+            'statement': statement
+        }
+        if (
+            (_table == table or 'REFERENCES {}('.format(table) in statement)
+            and 'PRIMARY KEY' not in statement
+        ):
+            filtered_constraints.append(constraint_dict)
+    # Drop and recreate
+    # Create ALTER TABLE ADD CONSTRAINT statements that reference the new table.
+    drop_constraints = []
+    create_constraints = []
+    for constraint in filtered_constraints:
+        # Drop the old constraint.
+        drop_constraints.append('''
+            ALTER TABLE {table} DROP CONSTRAINT {conname};
+        '''.format(table=constraint['table'], conname=constraint['name']))
+        # Constraint applies to the table
+        if table == constraint['table']:
+            create_constraints.append('''
+                ALTER TABLE {table} ADD {stmt};
+            '''.format(table=constraint['table'], stmt=constraint['statement'])
+            )
+        # Constraint references the table
+        else:
+            tokens = constraint['statement'].split(' ')
+            # Point the constraint to the new table.
+            reference_idx = tokens.index('REFERENCES') + 1
+            table_reference = tokens[reference_idx]
+            match_old_ref = '{}('.format(table)
+            new_ref = 'temp_import_{}('.format(table)
+            new_reference = table_reference.replace(match_old_ref, new_ref)
+            tokens[reference_idx] = new_reference
+            con_definition = ' '.join(tokens)
+            create_constraint = '''
+                ALTER TABLE {table} ADD {definition}
+            '''.format(table=constraint['table'], definition=con_definition)
+            create_constraints.append(create_constraint)
+    constraint_statements = []
+    constraint_statements.extend(drop_constraints)
+    constraint_statements.extend(create_constraints)
+    return constraint_statements
 
 
 def get_upstream_updates(table, progress, finish_time):
@@ -114,8 +200,8 @@ def get_upstream_updates(table, progress, finish_time):
         INSERT INTO temp_import_{table} ({cols})
         SELECT {cols} from upstream_schema.{table};
     '''.format(table=table, cols=query_cols)
-    create_index_statements = ';\n'.join(_get_indices(downstream_db, table))
-
+    create_indices = ';\n'.join(_generate_indices(downstream_db, table))
+    remap_constraints = ';\n'.join(_generate_constraints(downstream_db, table))
     go_live = '''
         DROP TABLE {table};
         ALTER TABLE temp_import_{table} RENAME TO {table};
@@ -127,11 +213,14 @@ def get_upstream_updates(table, progress, finish_time):
         downstream_cur.execute(copy_data)
         log.info('Copying finished! Recreating database indices...')
         progress.value = 70.0
-        downstream_cur.execute(create_index_statements)
-        log.info('Done creating indices! Going live...')
+        downstream_cur.execute(create_indices)
+        log.info('Done creating indices! Remapping constraints...')
+        downstream_cur.execute(remap_constraints)
+        log.info('Done remapping constraints! Going live with new table...')
         downstream_cur.execute(go_live)
     downstream_db.commit()
     downstream_db.close()
+    log.info('Finished refreshing table {}'.format(table))
 
     if progress is not None:
         progress.value = 100.0
