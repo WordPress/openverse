@@ -90,6 +90,9 @@ def _generate_constraints(conn, table: str):
 
     :return: A list of ALTER TABLE ... statements.
     """
+    def _is_foreign_key(_statement):
+        return 'REFERENCES {}('.format(table) in _statement
+
     # List all active constraints across the database.
     get_all_constraints = '''
         SELECT conrelid::regclass AS table, conname, pg_get_constraintdef(c.oid)
@@ -104,6 +107,9 @@ def _generate_constraints(conn, table: str):
     # Find all constraints that either exist inside of the table or
     # reference it from another table. Ignore PRIMARY KEY statements.
     filtered_constraints = []
+    # Foreign key relationships need to be validated before reloading, so track
+    # some extra information about them.
+    references = []
     for constraint in all_constraints:
         statement = constraint['pg_get_constraintdef']
         _table = constraint['table']
@@ -112,11 +118,20 @@ def _generate_constraints(conn, table: str):
             'table': _table,
             'statement': statement
         }
-        if (
-            (_table == table or 'REFERENCES {}('.format(table) in statement)
-            and 'PRIMARY KEY' not in statement
-        ):
+        is_fk = _is_foreign_key(statement)
+        if (_table == table or is_fk) and 'PRIMARY KEY' not in statement:
             filtered_constraints.append(constraint_dict)
+            if is_fk:
+                fk_tokens = statement.split(' ')
+                fk_field_idx = fk_tokens.index('KEY') + 1
+                fk_ref_idx = fk_tokens.index('REFERENCES') + 1
+                fk_info = {
+                    'fk_table': _table,
+                    'fk_field': fk_tokens[fk_field_idx],
+                    'fk_reference': fk_tokens[fk_ref_idx]
+                }
+                references.append(fk_info)
+
     # Drop old constraints.
     # Create ALTER TABLE ADD CONSTRAINT statements that reference the new table.
     drop_constraints = []
@@ -147,8 +162,28 @@ def _generate_constraints(conn, table: str):
                 ALTER TABLE {table} ADD {definition}
             '''.format(table=constraint['table'], definition=con_definition)
             create_constraints.append(create_constraint)
+
+    # If upstream data has been deleted, we have to delete all references to the
+    # deleted data (such as orphaned foreign keys in other tables).
+    drop_orphans = []
+    for fk in references:
+        _table = fk['fk_table']
+        field = fk['fk_field']
+        reference = fk['fk_reference']
+        fk_field = field.replace('(', '').replace(')', '')
+        ref_table, parsed_ref_field = reference.split('(')
+        ref_field = parsed_ref_field.replace(')', '')
+        del_orphans = '''
+            DELETE FROM {fk_table} fk_table WHERE not exists
+            (select 1 from temp_import_{ref_table} r
+            where r.{ref_field} = fk_table.{fk_field})
+        '''.format(fk_table=_table, ref_table=ref_table, fk_field=fk_field,
+                   ref_field=ref_field)
+        drop_orphans.append(del_orphans)
+
     constraint_statements = []
     constraint_statements.extend(drop_constraints)
+    constraint_statements.extend(drop_orphans)
     constraint_statements.extend(create_constraints)
     return constraint_statements
 
@@ -211,18 +246,17 @@ def get_upstream_updates(table, progress, finish_time):
         downstream_cur.execute(init_fdw)
         downstream_cur.execute(copy_data)
         log.info('Copying finished! Recreating database indices...')
-        progress.value = 70.0
+        progress.value = 50.0
         downstream_cur.execute(create_indices)
+        progress.value = 70.0
         log.info('Done creating indices! Remapping constraints...')
         downstream_cur.execute(remap_constraints)
+        progress.value = 99.0
         log.info('Done remapping constraints! Going live with new table...')
         downstream_cur.execute(go_live)
     downstream_db.commit()
     downstream_db.close()
     log.info('Finished refreshing table \'{}\'.'.format(table))
-
-    if progress is not None:
-        progress.value = 100.0
-    if finish_time is not None:
-        finish_time.value = datetime.datetime.utcnow().timestamp()
+    progress.value = 100.0
+    finish_time.value = datetime.datetime.utcnow().timestamp()
     return
