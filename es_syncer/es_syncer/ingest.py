@@ -90,32 +90,6 @@ def _generate_constraints(conn, table: str):
 
     :return: A list of ALTER TABLE ... statements.
     """
-    def _is_foreign_key(_statement):
-        return 'REFERENCES {}('.format(table) in _statement
-
-    def _generate_delete_orphans(fk_statement, fk_table):
-        """
-        Sometimes, upstream data is deleted. If there are foreign key
-        references to deleted data, we must delete them before adding
-        constraints back to the table. To accomplish this, parse the
-        foreign key statement and generate the deletion statement.
-        """
-        fk_tokens = statement.split(' ')
-        fk_field_idx = fk_tokens.index('KEY') + 1
-        fk_ref_idx = fk_tokens.index('REFERENCES') + 1
-        fk_field = fk_tokens[fk_field_idx].replace('(', '').replace(')', '')
-        fk_reference = fk_tokens[fk_ref_idx]
-        ref_table, ref_field = fk_reference.split('(')
-        ref_field = ref_field.replace(')', '')
-
-        del_orphans = '''
-            DELETE FROM {fk_table} fk_table WHERE not exists
-            (select 1 from temp_import_{ref_table} r
-            where r.{ref_field} = fk_table.{fk_field})
-        '''.format(fk_table=fk_table, ref_table=ref_table, fk_field=fk_field,
-                   ref_field=ref_field)
-        return del_orphans
-
     # List all active constraints across the database.
     get_all_constraints = '''
         SELECT conrelid::regclass AS table, conname, pg_get_constraintdef(c.oid)
@@ -129,58 +103,83 @@ def _generate_constraints(conn, table: str):
         all_constraints = cur.fetchall()
     # Find all constraints that either exist inside of the table or
     # reference it from another table. Ignore PRIMARY KEY statements.
-    filtered_constraints = []
+    remap_constraints = []
     drop_orphans = []
     for constraint in all_constraints:
         statement = constraint['pg_get_constraintdef']
-        _table = constraint['table']
-        constraint_dict = {
-            'name': constraint['conname'],
-            'table': _table,
-            'statement': statement
-        }
-        is_fk = _is_foreign_key(statement)
-        if (_table == table or is_fk) and 'PRIMARY KEY' not in statement:
-            filtered_constraints.append(constraint_dict)
-            if is_fk:
-                drop_orphans.append(_generate_delete_orphans(statement, _table))
-
-    # Drop old constraints.
-    # Create ALTER TABLE ADD CONSTRAINT statements that reference the new table.
-    drop_constraints = []
-    create_constraints = []
-    for constraint in filtered_constraints:
-        # Drop the old constraint.
-        drop_constraints.append('''
-            ALTER TABLE {table} DROP CONSTRAINT {conname}
-        '''.format(table=constraint['table'], conname=constraint['name']))
-        # Constraint applies to the table
-        if table == constraint['table']:
-            create_constraints.append('''
-                ALTER TABLE {table} ADD {stmt}
-            '''.format(table=constraint['table'], stmt=constraint['statement'])
+        con_table = constraint['table']
+        is_fk = _is_foreign_key(statement, table)
+        if (con_table == table or is_fk) and 'PRIMARY KEY' not in statement:
+            alter_stmnts = _remap_constraint(
+                constraint['conname'], con_table, statement, table
             )
-        # Constraint references the table
-        else:
-            tokens = constraint['statement'].split(' ')
-            # Point the constraint to the new table.
-            reference_idx = tokens.index('REFERENCES') + 1
-            table_reference = tokens[reference_idx]
-            match_old_ref = '{}('.format(table)
-            new_ref = 'temp_import_{}('.format(table)
-            new_reference = table_reference.replace(match_old_ref, new_ref)
-            tokens[reference_idx] = new_reference
-            con_definition = ' '.join(tokens)
-            create_constraint = '''
-                ALTER TABLE {table} ADD {definition}
-            '''.format(table=constraint['table'], definition=con_definition)
-            create_constraints.append(create_constraint)
+            remap_constraints.extend(alter_stmnts)
+            if is_fk:
+                del_orphans = _generate_delete_orphans(statement, con_table)
+                drop_orphans.append(del_orphans)
 
     constraint_statements = []
-    constraint_statements.extend(drop_constraints)
     constraint_statements.extend(drop_orphans)
-    constraint_statements.extend(create_constraints)
+    constraint_statements.extend(remap_constraints)
     return constraint_statements
+
+
+def _is_foreign_key(_statement, table):
+    return 'REFERENCES {}('.format(table) in _statement
+
+
+def _generate_delete_orphans(fk_statement, fk_table):
+    """
+    Sometimes, upstream data is deleted. If there are foreign key
+    references to deleted data, we must delete them before adding
+    constraints back to the table. To accomplish this, parse the
+    foreign key statement and generate the deletion statement.
+    """
+    fk_tokens = fk_statement.split(' ')
+    fk_field_idx = fk_tokens.index('KEY') + 1
+    fk_ref_idx = fk_tokens.index('REFERENCES') + 1
+    fk_field = fk_tokens[fk_field_idx].replace('(', '').replace(')', '')
+    fk_reference = fk_tokens[fk_ref_idx]
+    ref_table, ref_field = fk_reference.split('(')
+    ref_field = ref_field.replace(')', '')
+
+    del_orphans = '''
+        DELETE FROM {fk_table} fk_table WHERE not exists
+        (select 1 from temp_import_{ref_table} r
+        where r.{ref_field} = fk_table.{fk_field})
+    '''.format(fk_table=fk_table, ref_table=ref_table, fk_field=fk_field,
+               ref_field=ref_field)
+    return del_orphans
+
+
+def _remap_constraint(name, con_table, fk_statement, table):
+    """ Produce ALTER TABLE ... statements for each constraint."""
+    alterations = []
+    alterations.append('''
+        ALTER TABLE {_table} DROP CONSTRAINT {conname}
+    '''.format(_table=con_table, conname=name))
+    # Constraint applies to the table we're replacing
+    if con_table == table:
+        alterations.append('''
+            ALTER TABLE {table} ADD {stmnt}
+        '''.format(table=con_table, stmnt=fk_statement))
+    # Constraint references the table we're replacing. Point it at the new
+    # one.
+    else:
+        tokens = fk_statement.split(' ')
+        # Point the constraint to the new table.
+        reference_idx = tokens.index('REFERENCES') + 1
+        table_reference = tokens[reference_idx]
+        match_old_ref = '{}('.format(table)
+        new_ref = 'temp_import_{}('.format(table)
+        new_reference = table_reference.replace(match_old_ref, new_ref)
+        tokens[reference_idx] = new_reference
+        con_definition = ' '.join(tokens)
+        create_constraint = '''
+            ALTER TABLE {table} ADD {definition}
+        '''.format(table=con_table, definition=con_definition)
+        alterations.append(create_constraint)
+    return alterations
 
 
 def reload_upstream(table, progress=None, finish_time=None):
