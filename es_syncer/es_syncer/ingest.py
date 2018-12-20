@@ -154,10 +154,9 @@ def _generate_delete_orphans(fk_statement, fk_table):
 
 def _remap_constraint(name, con_table, fk_statement, table):
     """ Produce ALTER TABLE ... statements for each constraint."""
-    alterations = []
-    alterations.append('''
+    alterations = ['''
         ALTER TABLE {_table} DROP CONSTRAINT {conname}
-    '''.format(_table=con_table, conname=name))
+    '''.format(_table=con_table, conname=name)]
     # Constraint applies to the table we're replacing
     if con_table == table:
         alterations.append('''
