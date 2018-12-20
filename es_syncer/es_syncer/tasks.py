@@ -3,7 +3,17 @@ import datetime as dt
 from enum import Enum
 from multiprocessing import Process
 from es_syncer.indexer import elasticsearch_connect, TableIndexer
-from es_syncer.ingest import get_upstream_updates
+from es_syncer.ingest import reload_upstream
+
+
+class TaskTypes(Enum):
+    # Completely reindex all data for a given model.
+    REINDEX = 0
+    # Reindex updates to a model from the database since a certain date.
+    UPDATE_INDEX = 1
+    # Download the latest copy of the data from the upstream database, then
+    # completely reindex the newly imported data.
+    INGEST_UPSTREAM = 2
 
 
 class TaskTracker:
@@ -68,27 +78,16 @@ class Task(Process):
         self.finish_time = finish_time
 
     def run(self):
-        # Set of tasks that require us to instantiate the table indexer.
-        indexing_required = {TaskTypes.REINDEX, TaskTypes.UPDATE_INDEX}
         # Map task types to actions.
-        if self.task_type in indexing_required:
-            elasticsearch = elasticsearch_connect()
-            indexer = TableIndexer(
-                elasticsearch, self.model, self.progress, self.finish_time
-            )
-            if self.task_type == TaskTypes.REINDEX:
-                indexer.reindex(self.model)
-            elif self.task_type == TaskTypes.UPDATE_INDEX:
-                indexer.update(self.model, self.since_date)
+        elasticsearch = elasticsearch_connect()
+        indexer = TableIndexer(
+            elasticsearch, self.model, self.progress, self.finish_time
+        )
+        if self.task_type == TaskTypes.REINDEX:
+            indexer.reindex(self.model)
+        elif self.task_type == TaskTypes.UPDATE_INDEX:
+            indexer.update(self.model, self.since_date)
         elif self.task_type == TaskTypes.INGEST_UPSTREAM:
-            get_upstream_updates(self.model, self.progress, self.finish_time)
+            reload_upstream(self.model)
+            indexer.reindex(self.model)
         logging.info('Task {} exited.'.format(self.task_id))
-
-
-class TaskTypes(Enum):
-    # Completely reindex all data for a given model.
-    REINDEX = 0
-    # Reindex updates to a model from the database since a certain date.
-    UPDATE_INDEX = 1
-    # Download the latest copy of the data from the intermediary database.
-    INGEST_UPSTREAM = 2
