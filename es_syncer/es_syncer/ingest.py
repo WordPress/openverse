@@ -233,7 +233,8 @@ def reload_upstream(table, progress=None, finish_time=None):
     remap_constraints = ';\n'.join(_generate_constraints(downstream_db, table))
     go_live = '''
         DROP TABLE {table};
-        ALTER TABLE temp_import_{table} RENAME TO {table}
+        ALTER TABLE temp_import_{table} RENAME TO {table};
+        DROP SERVER upstream CASCADE;
     '''.format(table=table)
 
     with downstream_db.cursor() as downstream_cur:
