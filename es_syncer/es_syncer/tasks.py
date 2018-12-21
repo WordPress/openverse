@@ -21,6 +21,7 @@ class TaskTracker:
         self.id_task = {}
         self.id_action = {}
         self.id_progress = {}
+        self.id_start_time = {}
         self.id_finish_time = {}
 
     def add_task(self, task, task_id, action, progress, finish_time):
@@ -28,6 +29,7 @@ class TaskTracker:
         self.id_task[task_id] = task
         self.id_action[task_id] = action
         self.id_progress[task_id] = progress
+        self.id_start_time[task_id] = dt.datetime.utcnow().timestamp()
         self.id_finish_time[task_id] = finish_time
         return task_id
 
@@ -40,6 +42,7 @@ class TaskTracker:
         for _id, task in self.id_task.items():
             percent_completed = self.id_progress[_id].value
             active = task.is_alive()
+            start_time = self.id_start_time[_id]
             finish_time = self.id_finish_time[_id].value
             results.append({
                 'task_id': _id,
@@ -47,6 +50,7 @@ class TaskTracker:
                 'action': self.id_action[_id],
                 'progress': percent_completed,
                 'error': percent_completed < 100 and not active,
+                'start_time': start_time,
                 'finish_time': finish_time
             })
         sorted_results = sorted(
@@ -54,14 +58,16 @@ class TaskTracker:
             key=lambda x: x['finish_time']
         )
 
+        to_utc = dt.datetime.utcfromtimestamp
+
+        def render_date(x): return to_utc(x) if x != 0.0 else None
+
         # Convert date to a readable format
         for idx, task in enumerate(sorted_results):
+            start_time = task['start_time']
             finish_time = task['finish_time']
-            if finish_time != 0.0:
-                sorted_results[idx]['finish_time'] =\
-                    str(dt.datetime.utcfromtimestamp(finish_time))
-            else:
-                sorted_results[idx]['finish_time'] = None
+            sorted_results[idx]['start_time'] = str(render_date(start_time))
+            sorted_results[idx]['finish_time'] = str(render_date(finish_time))
 
         return sorted_results
 

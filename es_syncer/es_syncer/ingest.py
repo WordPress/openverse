@@ -20,7 +20,7 @@ production, disabling indices and constraints temporarily isn't an option.
 To work around these problems, we need to create a temporary table, import the
 data, and only then create indices and constraints. Then, "promote" the new
 table to replace the old data. This strategy is far faster than updating the 
-data in place, although it comes at the cost of complexity.
+data in place.
 """
 
 UPSTREAM_DB_HOST = os.environ.get('UPSTREAM_DB_HOST', 'upstream_db')
@@ -88,7 +88,7 @@ def _generate_constraints(conn, table: str):
     Using the existing table as a template, generate ALTER TABLE ADD CONSTRAINT
     statements pointing to the new table.
 
-    :return: A list of ALTER TABLE ... statements.
+    :return: A list of SQL statements.
     """
     # List all active constraints across the database.
     get_all_constraints = '''
