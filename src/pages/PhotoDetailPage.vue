@@ -13,7 +13,8 @@
                @load="onLoad"
                :class="{ photo_image: true,
                          'photo_image__has-viewer': this.images.length > 0 }"
-                         :src="image.url">
+                         :src="image.url"
+                         :alt="image.title">
         </div>
         <div class="photo_info-ctr cell medium-12 large-4">
           <header class="photo_info-header">
