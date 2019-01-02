@@ -71,16 +71,17 @@ services:
     ports:
       - "6379:6379"
 
-  es-syncer:
-    build: ./es_syncer/
+  ingestion-server:
+    build: ./ingestion_server/
     command: bash -c 'sleep 20 && supervisord -c config/supervisord.conf'
     ports: 
       - "8001:8001"
+      - "4444:4444"
     depends_on:
       - db
       - es
     volumes:
-      - ./es_syncer:/es-syncer
+      - ./ingestion_server:/ingestion-server
     environment:
       PYTHONUNBUFFERED: "0"
       ELASTICSEARCH_URL: 'es'

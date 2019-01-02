@@ -1,0 +1,263 @@
+import os
+import psycopg2
+import datetime
+import logging as log
+from ingestion_server.indexer import database_connect
+from psycopg2.extras import DictCursor
+
+"""
+Pull the latest copy of a table from the upstream database (aka CC Catalog/the
+intermediary database).
+
+Since some of these tables have hundreds of millions of records and are tens of
+gigabytes in size, there are some performance considerations we need to account
+for. Appending or updating large numbers of records has poor performance due to 
+the number of indices and constraints on the table. These indices and 
+constraints are necessary for good query performance and data consistency,
+so we can't get rid of them. Since the data is being actively queried in 
+production, disabling indices and constraints temporarily isn't an option.
+
+To work around these problems, we need to create a temporary table, import the
+data, and only then create indices and constraints. Then, "promote" the new
+table to replace the old data. This strategy is far faster than updating the 
+data in place.
+"""
+
+UPSTREAM_DB_HOST = os.environ.get('UPSTREAM_DB_HOST', 'upstream_db')
+UPSTREAM_DB_PORT = os.environ.get('UPSTREAM_DB_PORT', 5432)
+UPSTREAM_DB_PASSWORD = os.environ.get('UPSTREAM_DB_PASSWORD', 'deploy')
+
+
+def _get_shared_cols(conn1, conn2, table):
+    """
+    Given two database connections and a table name, return the list of columns
+    that the two tables have in common.
+    """
+    with conn1.cursor() as cur1, conn2.cursor() as cur2:
+        get_tables = ("SELECT * FROM {} LIMIT 0".format(table))
+        cur1.execute(get_tables)
+        conn1_cols = set([desc[0] for desc in cur1.description])
+        cur2.execute(get_tables)
+        conn2_cols = set([desc[0] for desc in cur2.description])
+    return list(conn1_cols.intersection(conn2_cols))
+
+
+def _generate_indices(conn, table):
+    """
+    Using the existing table as a template, generate CREATE INDEX statements for
+    the new table.
+
+    :param conn: A connection to the API database.
+    :param table: The table to be updated.
+    :return: A list of CREATE INDEX statements.
+    """
+    def _clean_idxs(indices):
+        # Remove names of indices. We don't want to collide with the old names;
+        # we want the database to generate them for us upon recreating the
+        # table.
+        cleaned = []
+        for index in indices:
+            # The index name is always after CREATE [UNIQUE] INDEX; delete it.
+            tokens = index[0].split(' ')
+            index_idx = tokens.index('INDEX')
+            del tokens[index_idx + 1]
+            # The table name is always after ON. Rename it to match the
+            # temporary copy of the data.
+            on_idx = tokens.index('ON')
+            table_name_idx = on_idx + 1
+            schema_name, table_name = tokens[table_name_idx].split('.')
+            new_table_name = 'temp_import_{}'.format(table_name)
+            tokens[table_name_idx] = schema_name + '.' + new_table_name
+            cleaned.append(' '.join(tokens))
+
+        return cleaned
+
+    # Get all of the old indices from the existing table.
+    get_idxs = "SELECT indexdef FROM pg_indexes WHERE tablename = '{}'"\
+        .format(table)
+
+    with conn.cursor() as cur:
+        cur.execute(get_idxs)
+        idxs = cur.fetchall()
+    cleaned_idxs = _clean_idxs(idxs)
+    return cleaned_idxs
+
+
+def _generate_constraints(conn, table: str):
+    """
+    Using the existing table as a template, generate ALTER TABLE ADD CONSTRAINT
+    statements pointing to the new table.
+
+    :return: A list of SQL statements.
+    """
+    # List all active constraints across the database.
+    get_all_constraints = '''
+        SELECT conrelid::regclass AS table, conname, pg_get_constraintdef(c.oid)
+        FROM pg_constraint c
+        JOIN pg_namespace n ON n.oid = c.connamespace
+        AND n.nspname = 'public'
+        ORDER BY conrelid::regclass::text, contype DESC;
+    '''
+    with conn.cursor(cursor_factory=DictCursor) as cur:
+        cur.execute(get_all_constraints)
+        all_constraints = cur.fetchall()
+    # Find all constraints that either exist inside of the table or
+    # reference it from another table. Ignore PRIMARY KEY statements.
+    remap_constraints = []
+    drop_orphans = []
+    for constraint in all_constraints:
+        statement = constraint['pg_get_constraintdef']
+        con_table = constraint['table']
+        is_fk = _is_foreign_key(statement, table)
+        if (con_table == table or is_fk) and 'PRIMARY KEY' not in statement:
+            alter_stmnts = _remap_constraint(
+                constraint['conname'], con_table, statement, table
+            )
+            remap_constraints.extend(alter_stmnts)
+            if is_fk:
+                del_orphans = _generate_delete_orphans(statement, con_table)
+                drop_orphans.append(del_orphans)
+
+    constraint_statements = []
+    constraint_statements.extend(drop_orphans)
+    constraint_statements.extend(remap_constraints)
+    return constraint_statements
+
+
+def _is_foreign_key(_statement, table):
+    return 'REFERENCES {}('.format(table) in _statement
+
+
+def _generate_delete_orphans(fk_statement, fk_table):
+    """
+    Sometimes, upstream data is deleted. If there are foreign key
+    references to deleted data, we must delete them before adding
+    constraints back to the table. To accomplish this, parse the
+    foreign key statement and generate the deletion statement.
+    """
+    fk_tokens = fk_statement.split(' ')
+    fk_field_idx = fk_tokens.index('KEY') + 1
+    fk_ref_idx = fk_tokens.index('REFERENCES') + 1
+    fk_field = fk_tokens[fk_field_idx].replace('(', '').replace(')', '')
+    fk_reference = fk_tokens[fk_ref_idx]
+    ref_table, ref_field = fk_reference.split('(')
+    ref_field = ref_field.replace(')', '')
+
+    del_orphans = '''
+        DELETE FROM {fk_table} fk_table WHERE not exists
+        (select 1 from temp_import_{ref_table} r
+        where r.{ref_field} = fk_table.{fk_field})
+    '''.format(fk_table=fk_table, ref_table=ref_table, fk_field=fk_field,
+               ref_field=ref_field)
+    return del_orphans
+
+
+def _remap_constraint(name, con_table, fk_statement, table):
+    """ Produce ALTER TABLE ... statements for each constraint."""
+    alterations = ['''
+        ALTER TABLE {_table} DROP CONSTRAINT {conname}
+    '''.format(_table=con_table, conname=name)]
+    # Constraint applies to the table we're replacing
+    if con_table == table:
+        alterations.append('''
+            ALTER TABLE {table} ADD {stmnt}
+        '''.format(table=con_table, stmnt=fk_statement))
+    # Constraint references the table we're replacing. Point it at the new
+    # one.
+    else:
+        tokens = fk_statement.split(' ')
+        # Point the constraint to the new table.
+        reference_idx = tokens.index('REFERENCES') + 1
+        table_reference = tokens[reference_idx]
+        match_old_ref = '{}('.format(table)
+        new_ref = 'temp_import_{}('.format(table)
+        new_reference = table_reference.replace(match_old_ref, new_ref)
+        tokens[reference_idx] = new_reference
+        con_definition = ' '.join(tokens)
+        create_constraint = '''
+            ALTER TABLE {table} ADD {definition}
+        '''.format(table=con_table, definition=con_definition)
+        alterations.append(create_constraint)
+    return alterations
+
+
+def reload_upstream(table, progress=None, finish_time=None):
+    """
+    Import updates from the upstream CC Catalog database into the API.
+
+    :param table: The upstream table to copy.
+    :param progress: multiprocessing.Value float for sharing task progress
+    :param finish_time: multiprocessing.Value int for sharing finish timestamp
+    :return:
+    """
+    downstream_db = database_connect()
+    upstream_db = psycopg2.connect(
+        dbname='openledger',
+        user='deploy',
+        port=UPSTREAM_DB_PORT,
+        password=UPSTREAM_DB_PASSWORD,
+        host=UPSTREAM_DB_HOST,
+        connect_timeout=5
+    )
+    query_cols = ','.join(_get_shared_cols(downstream_db, upstream_db, table))
+    upstream_db.close()
+    # Connect to upstream database and create references to foreign tables.
+    log.info('(Re)initializing foreign data wrapper')
+    init_fdw = '''
+        CREATE EXTENSION IF NOT EXISTS postgres_fdw;
+        DROP SERVER IF EXISTS upstream CASCADE;
+        CREATE SERVER upstream FOREIGN DATA WRAPPER postgres_fdw
+        OPTIONS (host '{host}', dbname 'openledger', port '{port}');
+
+        CREATE USER MAPPING IF NOT EXISTS FOR deploy SERVER upstream
+        OPTIONS (user 'deploy', password '{passwd}');
+        DROP SCHEMA IF EXISTS upstream_schema CASCADE;
+        CREATE SCHEMA upstream_schema AUTHORIZATION deploy;
+
+        IMPORT FOREIGN SCHEMA public
+        LIMIT TO ({table}) FROM SERVER upstream INTO upstream_schema;
+    '''.format(host=UPSTREAM_DB_HOST, passwd=UPSTREAM_DB_PASSWORD, table=table,
+               port=UPSTREAM_DB_PORT)
+    # 1. Import data into a temporary table
+    # 2. Recreate indices from the original table
+    # 3. Recreate constraints from the original table.
+    # 4. Delete orphaned foreign key references.
+    # 5. Promote the temporary table and delete the original.
+    copy_data = '''
+        DROP TABLE IF EXISTS temp_import_{table};
+        CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
+        INSERT INTO temp_import_{table} ({cols})
+        SELECT {cols} from upstream_schema.{table};
+        DROP SERVER upstream CASCADE;
+    '''.format(table=table, cols=query_cols)
+    create_indices = ';\n'.join(_generate_indices(downstream_db, table))
+    remap_constraints = ';\n'.join(_generate_constraints(downstream_db, table))
+    go_live = '''
+        DROP TABLE {table};
+        ALTER TABLE temp_import_{table} RENAME TO {table};
+    '''.format(table=table)
+
+    with downstream_db.cursor() as downstream_cur:
+        log.info('Copying upstream data...')
+        downstream_cur.execute(init_fdw)
+        downstream_cur.execute(copy_data)
+        log.info('Copying finished! Recreating database indices...')
+        if progress:
+            progress.value = 50.0
+        downstream_cur.execute(create_indices)
+        if progress:
+            progress.value = 70.0
+        log.info('Done creating indices! Remapping constraints...')
+        downstream_cur.execute(remap_constraints)
+        if progress:
+            progress.value = 99.0
+        log.info('Done remapping constraints! Going live with new table...')
+        downstream_cur.execute(go_live)
+    downstream_db.commit()
+    downstream_db.close()
+    log.info('Finished refreshing table \'{}\'.'.format(table))
+    if progress:
+        progress.value = 100.0
+    if finish_time:
+        finish_time.value = datetime.datetime.utcnow().timestamp()
+    return
