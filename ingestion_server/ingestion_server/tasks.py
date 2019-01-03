@@ -1,5 +1,6 @@
 import logging
 import datetime as dt
+import requests
 from enum import Enum
 from multiprocessing import Process
 from ingestion_server.indexer import elasticsearch_connect, TableIndexer
@@ -76,7 +77,7 @@ class TaskTracker:
 
 class Task(Process):
     def __init__(self, model, task_type, since_date, progress, task_id,
-                 finish_time):
+                 finish_time, callback_url):
         Process.__init__(self)
         self.model = model
         self.task_type = task_type
@@ -84,6 +85,7 @@ class Task(Process):
         self.progress = progress
         self.task_id = task_id
         self.finish_time = finish_time
+        self.callback_url = callback_url
 
     def run(self):
         # Map task types to actions.
@@ -99,3 +101,9 @@ class Task(Process):
             reload_upstream(self.model)
             indexer.reindex(self.model)
         logging.info('Task {} exited.'.format(self.task_id))
+        try:
+            requests.post(self.callback_url)
+        except requests.exceptions.RequestException as e:
+            logging.error('Failed to send callback!')
+            logging.error(e)
+

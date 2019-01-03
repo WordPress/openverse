@@ -72,7 +72,8 @@ class TaskResource:
             since_date=since_date,
             progress=progress,
             task_id=task_id,
-            finish_time=finish_time
+            finish_time=finish_time,
+            callback_url=callback_url
         )
         task.start()
         task_id = self.tracker \
