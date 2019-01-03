@@ -76,7 +76,6 @@ services:
     command: bash -c 'sleep 20 && supervisord -c config/supervisord.conf'
     ports: 
       - "8001:8001"
-      - "4444:4444"
     depends_on:
       - db
       - es

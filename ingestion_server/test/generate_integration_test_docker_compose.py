@@ -52,6 +52,8 @@ with open(parent_docker_compose, 'r') as docker_compose_file:
         ingestion_server['environment']['DATABASE_HOST'] = 'integration-db'
         ingestion_server['environment']['ELASTICSEARCH_URL'] = 'integration-es'
         ingestion_server['environment']['UPSTREAM_DB_HOST'] = upstream_name
+        del ingestion_server['depends_on']
+        ingestion_server['build'] = '../'
 
         # Create a volume for the mock data
         db['volumes'] = ['./mock_data:/mock_data']

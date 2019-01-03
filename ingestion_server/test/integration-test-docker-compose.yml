@@ -1,7 +1,7 @@
 # This docker-compose file was generated from /home/alden/code/cccatalog-
 # api/ingestion_server/test/../../docker-compose.yml. Do not modify this file
 # directly. Your changes will be overwritten. Last update: 2019-01-03
-# 16:26:50.378937
+# 16:42:15.206168
 
 services:
   integration-db:
@@ -28,11 +28,8 @@ services:
         hard: 65536
         soft: 65536
   integration-ingestion:
-    build: ./ingestion_server/
+    build: ../
     command: bash -c 'sleep 20 && supervisord -c config/supervisord.conf'
-    depends_on:
-    - db
-    - es
     environment:
       COPY_TABLES: image
       DATABASE_HOST: integration-db
@@ -49,7 +46,6 @@ services:
       UPSTREAM_DB_PORT: 5432
     ports:
     - 60002:8001
-    - 4444:4444
     stdin_open: true
     tty: true
     volumes:
