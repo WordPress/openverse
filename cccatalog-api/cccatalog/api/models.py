@@ -119,16 +119,6 @@ class ImageTags(OpenLedgerModel):
         db_table = 'image_tags'
 
 
-class UserTags(OpenLedgerModel):
-    tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name="user_tags")
-    image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="user_tags")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = (('tag', 'image', 'user'))
-        db_table = 'user_tags'
-
-
 class ImageList(OpenLedgerModel):
     title = models.CharField(max_length=2000, help_text="Display name")
     images = models.ManyToManyField(
