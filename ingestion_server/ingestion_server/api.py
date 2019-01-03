@@ -123,17 +123,18 @@ class TaskStatus:
         }
 
 
-def create_api():
+def create_api(log=True):
     """ Create an instance of the Falcon API server. """
-    root = logging.getLogger()
-    root.setLevel(logging.DEBUG)
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.INFO)
-    formatter = logging.Formatter(
-        '%(asctime)s %(levelname)s %(filename)s:%(lineno)d - %(message)s'
-    )
-    handler.setFormatter(formatter)
-    root.addHandler(handler)
+    if log:
+        root = logging.getLogger()
+        root.setLevel(logging.DEBUG)
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setLevel(logging.INFO)
+        formatter = logging.Formatter(
+            '%(asctime)s %(levelname)s %(filename)s:%(lineno)d - %(message)s'
+        )
+        handler.setFormatter(formatter)
+        root.addHandler(handler)
 
     api = falcon.API()
     task_tracker = TaskTracker()
@@ -144,4 +145,4 @@ def create_api():
     return api
 
 
-api = create_api()
+_api = create_api()
