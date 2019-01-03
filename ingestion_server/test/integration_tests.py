@@ -106,11 +106,7 @@ if __name__ == '__main__':
         print('Beginning tests')
         suite = unittest.TestLoader().loadTestsFromTestCase(TestReplication)
         unittest.TextTestRunner(verbosity=2).run(suite)
-    except Exception:
-        # Always continue, even if the tests fail, so we can shut down the
-        # integration test containers.
-        pass
-
-    # Stop Elasticsearch and database. Delete attached volumes.
-    stop_cmd = 'docker-compose -f {} down -v'.format(integration_compose)
-    subprocess.call(stop_cmd, shell=True, stdout=docker_stdout)
+    finally:
+        # Stop Elasticsearch and database. Delete attached volumes.
+        stop_cmd = 'docker-compose -f {} down -v'.format(integration_compose)
+        subprocess.call(stop_cmd, shell=True, stdout=docker_stdout)
