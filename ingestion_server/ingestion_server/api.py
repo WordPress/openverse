@@ -59,6 +59,7 @@ class TaskResource:
         body = json.loads(raw_body.decode('utf-8'))
         model = body['model']
         action = body['action']
+        callback_url = None
         if 'callback_url' in body:
             callback_url = body['callback_url']
         since_date = body['since_date'] if 'since_date' in body else None

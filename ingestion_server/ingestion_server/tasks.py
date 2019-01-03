@@ -101,9 +101,10 @@ class Task(Process):
             reload_upstream(self.model)
             indexer.reindex(self.model)
         logging.info('Task {} exited.'.format(self.task_id))
-        try:
-            requests.post(self.callback_url)
-        except requests.exceptions.RequestException as e:
-            logging.error('Failed to send callback!')
-            logging.error(e)
+        if self.callback_url:
+            try:
+                requests.post(self.callback_url)
+            except requests.exceptions.RequestException as e:
+                logging.error('Failed to send callback!')
+                logging.error(e)
 
