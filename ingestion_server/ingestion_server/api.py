@@ -129,7 +129,7 @@ def create_api():
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.INFO)
     formatter = logging.Formatter(
-        '%(asctime)s levelname)s %(filename)s:%(lineno)d - %(message)s'
+        '%(asctime)s %(levelname)s %(filename)s:%(lineno)d - %(message)s'
     )
     handler.setFormatter(formatter)
     root.addHandler(handler)
