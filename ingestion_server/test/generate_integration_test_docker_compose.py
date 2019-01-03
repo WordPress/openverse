@@ -29,9 +29,11 @@ with open(parent_docker_compose, 'r') as docker_compose_file:
     try:
         db = docker_compose['services']['db']
         es = docker_compose['services']['es']
-        # Delete all services except for the database and Elasticsearch
+        ingestion_server = docker_compose['services']['ingestion-server']
+        # Delete services we're not testing.
+        keep_services = {'es', 'db', 'ingestion-server'}
         for service in dict(docker_compose['services']):
-            if service != 'es' and service != 'db':
+            if service not in keep_services:
                 del docker_compose['services'][service]
         del docker_compose['services']['es']['healthcheck']
 
@@ -39,15 +41,20 @@ with open(parent_docker_compose, 'r') as docker_compose_file:
         # original docker-compose file.
         db['ports'][0] = '60000' + ':' + db['ports'][0].split(':')[1]
         es['ports'][0] = '60001' + ':' + es['ports'][0].split(':')[1]
+        ingestion_api_port = ingestion_server['ports'][0].split(':')[1]
+        ingestion_server['ports'][0] = '60002' + ':' + ingestion_api_port
 
         # Create a volume for the mock data
         db['volumes'] = ['./mock_data:/mock_data']
 
         # Rename the services and update ports.
+
         del docker_compose['services']['db']
         del docker_compose['services']['es']
+        del docker_compose['services']['ingestion-server']
         docker_compose['services']['integration-db'] = db
         docker_compose['services']['integration-es'] = es
+        docker_compose['services']['integration-ingestion'] = ingestion_server
 
         # Start the document with a warning message
         warning_message = '\n'.join(textwrap.wrap(

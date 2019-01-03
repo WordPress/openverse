@@ -59,6 +59,8 @@ class TaskResource:
         body = json.loads(raw_body.decode('utf-8'))
         model = body['model']
         action = body['action']
+        if 'callback_url' in body:
+            callback_url = body['callback_url']
         since_date = body['since_date'] if 'since_date' in body else None
         task_id = str(uuid.uuid4())
         # Inject shared memory
@@ -119,19 +121,25 @@ class TaskStatus:
         }
 
 
-root = logging.getLogger()
-root.setLevel(logging.DEBUG)
-handler = logging.StreamHandler(sys.stdout)
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    '%(asctime)s levelname)s %(filename)s:%(lineno)d - %(message)s'
-)
-handler.setFormatter(formatter)
-root.addHandler(handler)
+def create_api():
+    """ Create an instance of the Falcon API server. """
+    root = logging.getLogger()
+    root.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.INFO)
+    formatter = logging.Formatter(
+        '%(asctime)s levelname)s %(filename)s:%(lineno)d - %(message)s'
+    )
+    handler.setFormatter(formatter)
+    root.addHandler(handler)
 
-api = falcon.API()
-task_tracker = TaskTracker()
-task_resource = TaskResource(task_tracker)
-get_task_status = TaskStatus(task_tracker)
-api.add_route('/task', task_resource)
-api.add_route('/task/{task_id}', get_task_status)
+    api = falcon.API()
+    task_tracker = TaskTracker()
+    task_resource = TaskResource(task_tracker)
+    get_task_status = TaskStatus(task_tracker)
+    api.add_route('/task', task_resource)
+    api.add_route('/task/{task_id}', get_task_status)
+    return api
+
+
+api = create_api()

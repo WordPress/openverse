@@ -28,7 +28,7 @@ UPSTREAM_DB_PORT = os.environ.get('UPSTREAM_DB_PORT', 5432)
 UPSTREAM_DB_PASSWORD = os.environ.get('UPSTREAM_DB_PASSWORD', 'deploy')
 
 
-def _get_shared_cols(conn1, conn2, table):
+def _get_shared_cols(conn1, conn2, table: str):
     """
     Given two database connections and a table name, return the list of columns
     that the two tables have in common.
@@ -42,7 +42,7 @@ def _get_shared_cols(conn1, conn2, table):
     return list(conn1_cols.intersection(conn2_cols))
 
 
-def _generate_indices(conn, table):
+def _generate_indices(conn, table: str):
     """
     Using the existing table as a template, generate CREATE INDEX statements for
     the new table.
