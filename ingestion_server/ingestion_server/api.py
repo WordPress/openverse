@@ -136,13 +136,13 @@ def create_api(log=True):
         handler.setFormatter(formatter)
         root.addHandler(handler)
 
-    api = falcon.API()
+    _api = falcon.API()
     task_tracker = TaskTracker()
     task_resource = TaskResource(task_tracker)
     get_task_status = TaskStatus(task_tracker)
-    api.add_route('/task', task_resource)
-    api.add_route('/task/{task_id}', get_task_status)
-    return api
+    _api.add_route('/task', task_resource)
+    _api.add_route('/task/{task_id}', get_task_status)
+    return _api
 
 
-_api = create_api()
+api = create_api()
