@@ -6,8 +6,8 @@ from multiprocessing import Process
 from ingestion_server.indexer import elasticsearch_connect, TableIndexer
 from ingestion_server.ingest import reload_upstream
 
-
 """ Simple in-memory tracking of executed tasks. """
+
 
 class TaskTypes(Enum):
     # Completely reindex all data for a given model.

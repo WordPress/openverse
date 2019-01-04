@@ -5,18 +5,15 @@ import psycopg2
 import requests
 import logging
 import time
-import sys
 from subprocess import DEVNULL
-from multiprocessing import Process
-from elasticsearch_dsl import Search, connections
 
 this_dir = os.path.dirname(__file__)
 ENABLE_DETAILED_LOGS = True
 
 
 def _get_host_ip():
-    # We need to send callbacks from the Docker network to the host
-    # machine; use the docker0 interface to do this.
+    # We need to send callbacks from the Docker network to the host machine.
+    # Read the docker0 interface to figure out how to reach the host.
     ip_docker0 = subprocess.run(
         ['ip', 'addr', 'show', 'docker0'],
         stdout=subprocess.PIPE
@@ -31,7 +28,9 @@ class TestIngestion(unittest.TestCase):
 
     def setUp(self):
         """
-        Populate the upstream database and wait for ingestion server to start.
+        Wait for integration test dependencies to be started by docker-compose.
+        Populate the upstream database with initial data; add the schema
+        (no data) to the downstream database.
         """
         super().setUp()
         while True:
@@ -107,11 +106,12 @@ class TestIngestion(unittest.TestCase):
         req = {
             'model': 'image',
             'action': 'INGEST_UPSTREAM',
-            'callback': '{}:58000'.format(_get_host_ip())
+            'callback_url': 'http://{}:58000'.format(_get_host_ip())
         }
         logging.info('Sending request to ingestion server')
         res = requests.post('http://localhost:60002/task', json=req)
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 202)
+
         return True
 
     def test_downstream_consistency(self):
