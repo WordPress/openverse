@@ -1,9 +1,11 @@
 import subprocess
 import unittest
 import os
-
-import ingestion_server.indexer
+import psycopg2
+import requests
 import logging
+import time
+import sys
 from subprocess import DEVNULL
 from multiprocessing import Process
 from elasticsearch_dsl import Search, connections
@@ -12,73 +14,108 @@ this_dir = os.path.dirname(__file__)
 ENABLE_DETAILED_LOGS = True
 
 
-class TestReplication(unittest.TestCase):
+def _get_host_ip():
+    # We need to send callbacks from the Docker network to the host
+    # machine; use the docker0 interface to do this.
+    ip_docker0 = subprocess.run(
+        ['ip', 'addr', 'show', 'docker0'],
+        stdout=subprocess.PIPE
+    )
+    docker0_tokens = ip_docker0.stdout.decode('utf-8').split(' ')
+    inet_idx = docker0_tokens.index('inet')
+    host_ip, _ = docker0_tokens[inet_idx + 1].split('/')
+    return host_ip
+
+
+class TestIngestion(unittest.TestCase):
 
     def setUp(self):
+        """
+        Populate the upstream database and wait for ingestion server to start.
+        """
         super().setUp()
-        # Configure synchronizer
-        ingestion_server.indexer.DATABASE_HOST = 'localhost'
-        ingestion_server.indexer.DATABASE_PORT = 60000
-        ingestion_server.indexer.DATABASE_NAME = 'openledger'
-        ingestion_server.indexer.DATABASE_PASSWORD = 'deploy'
-        ingestion_server.indexer.DATABASE_USER = 'deploy'
-        ingestion_server.indexer.ELASTICSEARCH_PORT = 60001
-        ingestion_server.indexer.ELASTICSEARCH_URL = 'localhost'
-        ingestion_server.indexer.DB_BUFFER_SIZE = 100000
-        print('Waiting for Elasticsearch to start. . .')
-        self.es = ingestion_server.indexer.elasticsearch_connect()
-        connections.connections.add_connection('default', self.es)
-        # DB connection used by synchronizer
-        self.db_conn = \
-            ingestion_server.indexer.database_connect()
-        # DB connection used to write mock data by this integration test
-        self.write_db_conn = \
-            ingestion_server.indexer.database_connect()
-        self.syncer = ingestion_server.indexer.TableIndexer(self.es, ['image'])
-
-    def tearDown(self):
-        pass
-
-    def test_bulk_copy(self):
-        """
-        Load 1000 records into Postgres. Make sure that 1000 documents end up
-        in Elasticsearch.
-        """
-        # Add some dummy data to the database
+        while True:
+            try:
+                upstream_db = psycopg2.connect(
+                    dbname='openledger',
+                    user='deploy',
+                    port=59999,
+                    password='deploy',
+                    host='localhost',
+                    connect_timeout=5
+                )
+                downstream_db = psycopg2.connect(
+                    dbname='openledger',
+                    user='deploy',
+                    port=60000,
+                    password='deploy',
+                    host='localhost',
+                    connect_timeout=5
+                )
+            except psycopg2.OperationalError as e:
+                logging.debug(e)
+                logging.info('Databases not ready, reconnecting. . .')
+                time.sleep(5)
+                continue
+            logging.info('Successfully connected to databases')
+            break
+        self.upstream_con = upstream_db
+        self.downstream_con = downstream_db
         with open(this_dir + "/mock_data/mocked_images.csv") as mockfile,\
                 open(this_dir + "/mock_data/schema.sql") as schema_file:
-            db_curr = self.write_db_conn.cursor()
+            upstream_cur = upstream_db.cursor()
+            downstream_cur = downstream_db.cursor()
             schema = schema_file.read()
-            db_curr.execute(schema)
-            self.write_db_conn.commit()
-            db_curr\
+            upstream_cur.execute(schema)
+            downstream_cur.execute(schema)
+            downstream_db.commit()
+            upstream_db.commit()
+            upstream_cur\
                 .copy_expert(
                     """
                     COPY image FROM '/mock_data/mocked_images.csv'
                     WITH (FORMAT CSV, DELIMITER ',', QUOTE '"')
                     """, mockfile)
-            self.write_db_conn.commit()
+            upstream_db.commit()
+        # Wait for ingestion server to come up.
+        max_attempts = 15
+        attempts = 0
+        while True:
+            try:
+                _ = requests.get('http://localhost:60002')
+                attempts += 1
+            except requests.exceptions.ConnectionError:
+                if attempts > max_attempts:
+                    logging.error('Integration server timed out. Giving up.')
+                    return False
+                logging.info('Waiting for ingestion server to come up...')
+                time.sleep(5)
+                continue
+            logging.info('Successfully connected to ingestion server')
+            break
 
-        # Count items we just inserted into the database
-        db_curr = self.db_conn.cursor()
-        db_curr.execute('select count(*) from image;')
-        expected_doc_count = db_curr.fetchone()[0]
+    def tearDown(self):
+        # Delete test data.
+        with self.upstream_con.cursor() as upstream_cur,\
+                self.downstream_con.cursor() as downstream_cur:
+            upstream_cur.execute('DROP TABLE image CASCADE;')
+            downstream_cur.execute('DROP TABLE image CASCADE;')
+            self.upstream_con.commit()
+            self.downstream_con.commit()
 
-        # Synchronize with a 100ms poll interval. Give it 10 seconds to sync.
-        print('Starting synchronizer')
-        syncer_proc = Process(target=self.syncer.listen, args=(0.1,))
-        syncer_proc.start()
-        syncer_proc.join(timeout=10)
-        syncer_proc.terminate()
-        print('Syncing finished. Checking doc count.')
+    def test_ingest(self):
+        req = {
+            'model': 'image',
+            'action': 'INGEST_UPSTREAM',
+            'callback': '{}:58000'.format(_get_host_ip())
+        }
+        logging.info('Sending request to ingestion server')
+        res = requests.post('http://localhost:60002/task', json=req)
+        self.assertEqual(res.status_code, 200)
+        return True
 
-        s = Search(index='image')
-        res = s.execute()
-        es_doc_count = s.count()
-
-        self.assertTrue(expected_doc_count <= es_doc_count,
-                        'There should be at least as many documents in'
-                        ' Elasticsearch as records Postgres.')
+    def test_downstream_consistency(self):
+        return False
 
 
 if __name__ == '__main__':
@@ -97,14 +134,14 @@ if __name__ == '__main__':
     print('Starting integration test datastores. . .')
     integration_compose = \
         os.path.join(this_dir, 'integration-test-docker-compose.yml')
-    start_cmd = 'docker-compose -f {} up'\
+    start_cmd = 'docker-compose -f {} up --build'\
         .format(integration_compose)
     subprocess.Popen(start_cmd, shell=True, stdout=docker_stdout)
 
     # Run tests.
     try:
         print('Beginning tests')
-        suite = unittest.TestLoader().loadTestsFromTestCase(TestReplication)
+        suite = unittest.TestLoader().loadTestsFromTestCase(TestIngestion)
         unittest.TextTestRunner(verbosity=2).run(suite)
     finally:
         # Stop Elasticsearch and database. Delete attached volumes.
