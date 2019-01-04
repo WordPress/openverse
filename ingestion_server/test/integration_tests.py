@@ -13,7 +13,7 @@ from multiprocessing import Process
 from subprocess import DEVNULL
 
 this_dir = os.path.dirname(__file__)
-ENABLE_DETAILED_LOGS = True
+ENABLE_DETAILED_LOGS = False
 
 # Signal when a task has finished.
 callback_received = multiprocessing.Value('i', 0)
@@ -132,26 +132,20 @@ class TestIngestion(unittest.TestCase):
         upstream_db.close()
         downstream_db.close()
 
-    def test_ingest(self):
-        req = {
-            'model': 'image',
-            'action': 'INGEST_UPSTREAM',
-            'callback_url': 'http://{}:58000/task_done'.format(_get_host_ip())
-        }
-        res = requests.post('http://localhost:60002/task', json=req)
-        stat_msg = "The job should launch successfully and return 202 ACCEPTED."
-        self.assertEqual(res.status_code, 202, msg=stat_msg)
-
-        # The job launched. Now, let's wait for the task to send a callback to
-        # us to signal its successful completion.
-        # Start a server to listen for the callback.
+    def _wait_for_callback(self, endpoint_name="/task_done"):
+        """
+        Block until a callback arrives. Not thread-safe.
+        :param endpoint_name:
+        :return:
+        """
         callback_listener = Bottle()
 
-        @callback_listener.route('/task_done', method="post")
+        @callback_listener.route(endpoint_name, method="post")
         def handle_task_callback():
             global callback_received
             callback_received.value = 1
             return HTTPResponse(status=204)
+
         kwargs = {
             'host': _get_host_ip(),
             'port': 58000
@@ -173,6 +167,22 @@ class TestIngestion(unittest.TestCase):
                 cb_listener_process.terminate()
                 self.fail('Timed out waiting for task callback.')
         cb_listener_process.terminate()
+
+    def test_ingest_succeeds(self):
+        """
+        Check that INGEST_UPSTREAM task completes successfully and responds
+        with a callback.
+        """
+        req = {
+            'model': 'image',
+            'action': 'INGEST_UPSTREAM',
+            'callback_url': 'http://{}:58000/task_done'.format(_get_host_ip())
+        }
+        res = requests.post('http://localhost:60002/task', json=req)
+        stat_msg = "The job should launch successfully and return 202 ACCEPTED."
+        self.assertEqual(res.status_code, 202, msg=stat_msg)
+        # Wait for the task to send us a callback.
+        self._wait_for_callback()
 
         return True
 
