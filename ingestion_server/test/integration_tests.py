@@ -15,9 +15,6 @@ from subprocess import DEVNULL
 this_dir = os.path.dirname(__file__)
 ENABLE_DETAILED_LOGS = False
 
-# Signal when a task has finished.
-callback_received = multiprocessing.Value('i', 0)
-
 
 def _get_host_ip():
     # We need to send callbacks from the Docker network to the host machine.
@@ -134,15 +131,16 @@ class TestIngestion(unittest.TestCase):
 
     def _wait_for_callback(self, endpoint_name="/task_done"):
         """
-        Block until a callback arrives. Not thread-safe.
+        Block until a callback arrives.
         :param endpoint_name:
         :return:
         """
         callback_listener = Bottle()
+        # Signal when a callback has been received
+        callback_received = multiprocessing.Value('i', 0)
 
         @callback_listener.route(endpoint_name, method="post")
         def handle_task_callback():
-            global callback_received
             callback_received.value = 1
             return HTTPResponse(status=204)
 
@@ -159,7 +157,6 @@ class TestIngestion(unittest.TestCase):
         timeout_seconds = 15
         poll_time = 0.1
         running_time = 0
-        global callback_received
         while callback_received.value != 1:
             running_time += poll_time
             time.sleep(poll_time)
