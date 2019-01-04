@@ -5,10 +5,18 @@ import psycopg2
 import requests
 import logging
 import time
+import multiprocessing
+# Q: Why yet another microframework? Why not use Falcon?
+# A: This one can be easily run from within the test suite, while Falcon cannot.
+from bottle import Bottle, run, request, route, HTTPResponse
+from multiprocessing import Process
 from subprocess import DEVNULL
 
 this_dir = os.path.dirname(__file__)
 ENABLE_DETAILED_LOGS = True
+
+# Signal when a task has finished.
+callback_received = multiprocessing.Value('i', 0)
 
 
 def _get_host_ip():
@@ -76,6 +84,10 @@ class TestIngestion(unittest.TestCase):
                     WITH (FORMAT CSV, DELIMITER ',', QUOTE '"')
                     """, mockfile)
             upstream_db.commit()
+            downstream_cur.close()
+            upstream_cur.close()
+            upstream_db.close()
+            downstream_db.close()
         # Wait for ingestion server to come up.
         max_attempts = 15
         attempts = 0
@@ -94,28 +106,75 @@ class TestIngestion(unittest.TestCase):
             break
 
     def tearDown(self):
-        # Delete test data.
-        with self.upstream_con.cursor() as upstream_cur,\
-                self.downstream_con.cursor() as downstream_cur:
-            upstream_cur.execute('DROP TABLE image CASCADE;')
-            downstream_cur.execute('DROP TABLE image CASCADE;')
-            self.upstream_con.commit()
-            self.downstream_con.commit()
+        upstream_db = psycopg2.connect(
+            dbname='openledger',
+            user='deploy',
+            port=59999,
+            password='deploy',
+            host='localhost',
+            connect_timeout=5
+        )
+        downstream_db = psycopg2.connect(
+            dbname='openledger',
+            user='deploy',
+            port=60000,
+            password='deploy',
+            host='localhost',
+            connect_timeout=5
+        )
+        with upstream_db.cursor() as upstream_cur, \
+                downstream_db.cursor() as downstream_cur:
+            cleanup = 'DROP TABLE image CASCADE'
+            upstream_cur.execute(cleanup)
+            downstream_cur.execute(cleanup)
+        upstream_db.commit()
+        downstream_db.commit()
+        upstream_db.close()
+        downstream_db.close()
 
     def test_ingest(self):
         req = {
             'model': 'image',
             'action': 'INGEST_UPSTREAM',
-            'callback_url': 'http://{}:58000'.format(_get_host_ip())
+            'callback_url': 'http://{}:58000/task_done'.format(_get_host_ip())
         }
-        logging.info('Sending request to ingestion server')
         res = requests.post('http://localhost:60002/task', json=req)
-        self.assertEqual(res.status_code, 202)
+        stat_msg = "The job should launch successfully and return 202 ACCEPTED."
+        self.assertEqual(res.status_code, 202, msg=stat_msg)
+
+        # The job launched. Now, let's wait for the task to send a callback to
+        # us to signal its successful completion.
+        # Start a server to listen for the callback.
+        callback_listener = Bottle()
+
+        @callback_listener.route('/task_done', method="post")
+        def handle_task_callback():
+            global callback_received
+            callback_received.value = 1
+            return HTTPResponse(status=204)
+        kwargs = {
+            'host': _get_host_ip(),
+            'port': 58000
+        }
+        cb_listener_process = Process(
+            target=run,
+            args=(callback_listener,),
+            kwargs=kwargs
+        )
+        cb_listener_process.start()
+        timeout_seconds = 15
+        poll_time = 0.1
+        running_time = 0
+        global callback_received
+        while callback_received.value != 1:
+            running_time += poll_time
+            time.sleep(poll_time)
+            if running_time >= timeout_seconds:
+                cb_listener_process.terminate()
+                self.fail('Timed out waiting for task callback.')
+        cb_listener_process.terminate()
 
         return True
-
-    def test_downstream_consistency(self):
-        return False
 
 
 if __name__ == '__main__':

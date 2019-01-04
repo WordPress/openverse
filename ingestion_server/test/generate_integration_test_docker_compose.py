@@ -68,6 +68,7 @@ with open(parent_docker_compose, 'r') as docker_compose_file:
         docker_compose['services']['integration-ingestion'] = ingestion_server
         docker_compose['services']['integration-upstream'] = upstream_db
 
+
         # Start the document with a warning message
         warning_message = '\n'.join(textwrap.wrap(
             'This docker-compose file was generated from '
