@@ -4,6 +4,9 @@
 curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
 sudo yum -y install gcc-c++ make nodejs git
 
+# Configure frontend
+export API_URL="${api_url}"
+
 # Clone and build frontend
 git clone https://github.com/creativecommons/cccatalog-frontend.git
 cd cccatalog-frontend
@@ -13,8 +16,6 @@ sudo npm run build
 sudo mkdir -p /var/www/ccsearch
 sudo cp -r dist/* /var/www/ccsearch/
 
-# Configure frontend
-export API_URL="${api_url}"
 # Serve frontend
 sudo amazon-linux-extras install nginx1.12
 sudo cat << EOF > /etc/nginx/nginx.conf
