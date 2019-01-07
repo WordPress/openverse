@@ -20,7 +20,7 @@ copied and indexed downstream.
 """
 
 this_dir = os.path.dirname(__file__)
-ENABLE_DETAILED_LOGS = True
+ENABLE_DETAILED_LOGS = False
 
 
 def _get_host_ip():
@@ -219,7 +219,8 @@ class TestIngestion(unittest.TestCase):
             index="image",
             body=es_query
         )
-        self.assertEquals(search_response['hits']['total'], 1000)
+        msg = 'There should be 1000 documents in Elasticsearch after ingestion.'
+        self.assertEquals(search_response['hits']['total'], 1000, msg)
 
 
 if __name__ == '__main__':
