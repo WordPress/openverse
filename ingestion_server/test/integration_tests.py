@@ -8,9 +8,10 @@ import time
 import multiprocessing
 # Q: Why yet another microframework? Why not use Falcon?
 # A: This one can be easily run from within the test suite, while Falcon cannot.
-from bottle import Bottle, run, request, route, HTTPResponse
+from bottle import Bottle, run, HTTPResponse
 from multiprocessing import Process
 from subprocess import DEVNULL
+from elasticsearch import Elasticsearch, RequestsHttpConnection
 
 """
 An integration test for the Ingestion Server. Spin up Docker containers,
@@ -89,12 +90,17 @@ class TestIngestion(unittest.TestCase):
             upstream_cur.close()
             upstream_db.close()
             downstream_db.close()
-        # Wait for ingestion server to come up.
+        # Wait for ingestion server and Elasticsearch to come up.
+        ready_stats = {'yellow', 'green'}
         max_attempts = 15
         attempts = 0
         while True:
             try:
-                _ = requests.get('http://localhost:60001/_cluster/health')
+                _ = requests.get('http://localhost:60002')
+                es_res = requests.get('http://localhost:60001/_cluster/health')
+                res_json = es_res.json()
+                if res_json['status'] not in ready_stats:
+                    continue
                 attempts += 1
             except requests.exceptions.ConnectionError:
                 if attempts > max_attempts:
@@ -137,7 +143,7 @@ class TestIngestion(unittest.TestCase):
     def _wait_for_callback(self, endpoint_name="/task_done"):
         """
         Block until a callback arrives. Time out if it doesn't arrive within
-        15 seconds.
+        10 seconds.
         :param endpoint_name:
         :return:
         """
@@ -189,19 +195,31 @@ class TestIngestion(unittest.TestCase):
 
         return True
 
-    def test_indexing_consistency(self):
+    def test_upstream_indexed(self):
         """
-        Check that the first and last records in the database end up in
-        Elasticsearch.
-        :return:
+        Check that the data has been successfully indexed in Elasticsearch.
         """
-        pass
-
-    def test_database_consistency(self):
-        """
-        Check that both databases have identical contents.
-        """
-        pass
+        es = Elasticsearch(
+            host='localhost',
+            port=60001,
+            connection_class=RequestsHttpConnection,
+            timeout=10,
+            max_retries=10,
+            retry_on_timeout=True,
+            http_auth=None,
+            wait_for_status='yellow'
+        )
+        es_query = {
+            "query": {
+                "match_all": {}
+            }
+        }
+        es.indices.refresh(index='image')
+        search_response = es.search(
+            index="image",
+            body=es_query
+        )
+        self.assertAlmostEquals(search_response.hits.total, 1000)
 
 
 if __name__ == '__main__':
