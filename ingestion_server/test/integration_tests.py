@@ -159,7 +159,8 @@ class TestIngestion(unittest.TestCase):
 
         kwargs = {
             'host': _get_host_ip(),
-            'port': 58000
+            'port': 58000,
+            'quiet': (not ENABLE_DETAILED_LOGS)
         }
         cb_listener_process = Process(
             target=run,
