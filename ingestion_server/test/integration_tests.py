@@ -20,6 +20,7 @@ copied and indexed downstream.
 """
 
 this_dir = os.path.dirname(__file__)
+local_ingestion_server = 'http://localhost:60002'
 ENABLE_DETAILED_LOGS = False
 
 
@@ -177,7 +178,13 @@ class TestIngestion(unittest.TestCase):
                 self.fail('Timed out waiting for task callback.')
         cb_listener_process.terminate()
 
-    def test_ingest_succeeds(self):
+    def test01_list_tasks_empty(self):
+        resp = requests.get('http://localhost:60002/task')
+        resp_json = resp.json()
+        msg = 'There should be no tasks in the task list'
+        self.assertEqual(resp_json, [], msg)
+
+    def test02_ingest_succeeds(self):
         """
         Check that INGEST_UPSTREAM task completes successfully and responds
         with a callback.
@@ -195,7 +202,7 @@ class TestIngestion(unittest.TestCase):
 
         return True
 
-    def test_upstream_indexed(self):
+    def test03_upstream_indexed(self):
         """
         Check that the data has been successfully indexed in Elasticsearch.
         """
@@ -221,6 +228,12 @@ class TestIngestion(unittest.TestCase):
         )
         msg = 'There should be 1000 documents in Elasticsearch after ingestion.'
         self.assertEquals(search_response['hits']['total'], 1000, msg)
+
+    def test04_last_task_in_status_list(self):
+        resp = requests.get('http://localhost:60002/task')
+        resp_json = resp.json()
+        msg = 'There should be one task in the task list now.'
+        self.assertEqual(1, len(resp_json), msg)
 
 
 if __name__ == '__main__':
