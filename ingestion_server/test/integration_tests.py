@@ -15,7 +15,7 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 
 """
 An integration test for the Ingestion Server. Spin up Docker containers,
-load some data into the upstream database, and ensure that the data has been 
+load 1000 images into the upstream database, and ensure that the data has been 
 copied and indexed downstream.
 """
 
@@ -219,7 +219,7 @@ class TestIngestion(unittest.TestCase):
             index="image",
             body=es_query
         )
-        self.assertAlmostEquals(search_response.hits.total, 1000)
+        self.assertEquals(search_response['hits']['total'], 1000)
 
 
 if __name__ == '__main__':
