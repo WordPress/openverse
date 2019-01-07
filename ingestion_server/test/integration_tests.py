@@ -12,8 +12,14 @@ from bottle import Bottle, run, request, route, HTTPResponse
 from multiprocessing import Process
 from subprocess import DEVNULL
 
+"""
+An integration test for the Ingestion Server. Spin up Docker containers,
+load some data into the upstream database, and ensure that the data has been 
+copied and indexed downstream.
+"""
+
 this_dir = os.path.dirname(__file__)
-ENABLE_DETAILED_LOGS = False
+ENABLE_DETAILED_LOGS = True
 
 
 def _get_host_ip():
@@ -31,13 +37,13 @@ def _get_host_ip():
 
 class TestIngestion(unittest.TestCase):
 
-    def setUp(self):
+    @staticmethod
+    def initialize():
         """
         Wait for integration test dependencies to be started by docker-compose.
         Populate the upstream database with initial data; add the schema
         (no data) to the downstream database.
         """
-        super().setUp()
         while True:
             try:
                 upstream_db = psycopg2.connect(
@@ -63,8 +69,6 @@ class TestIngestion(unittest.TestCase):
                 continue
             logging.info('Successfully connected to databases')
             break
-        self.upstream_con = upstream_db
-        self.downstream_con = downstream_db
         with open(this_dir + "/mock_data/mocked_images.csv") as mockfile,\
                 open(this_dir + "/mock_data/schema.sql") as schema_file:
             upstream_cur = upstream_db.cursor()
@@ -90,11 +94,11 @@ class TestIngestion(unittest.TestCase):
         attempts = 0
         while True:
             try:
-                _ = requests.get('http://localhost:60002')
+                _ = requests.get('http://localhost:60001/_cluster/health')
                 attempts += 1
             except requests.exceptions.ConnectionError:
                 if attempts > max_attempts:
-                    logging.error('Integration server timed out. Giving up.')
+                    logging.error('Ingestion server timed out. Giving up.')
                     return False
                 logging.info('Waiting for ingestion server to come up...')
                 time.sleep(5)
@@ -102,7 +106,8 @@ class TestIngestion(unittest.TestCase):
             logging.info('Successfully connected to ingestion server')
             break
 
-    def tearDown(self):
+    @staticmethod
+    def clean_up():
         upstream_db = psycopg2.connect(
             dbname='openledger',
             user='deploy',
@@ -131,7 +136,8 @@ class TestIngestion(unittest.TestCase):
 
     def _wait_for_callback(self, endpoint_name="/task_done"):
         """
-        Block until a callback arrives.
+        Block until a callback arrives. Time out if it doesn't arrive within
+        15 seconds.
         :param endpoint_name:
         :return:
         """
@@ -154,7 +160,7 @@ class TestIngestion(unittest.TestCase):
             kwargs=kwargs
         )
         cb_listener_process.start()
-        timeout_seconds = 15
+        timeout_seconds = 10
         poll_time = 0.1
         running_time = 0
         while callback_received.value != 1:
@@ -179,9 +185,23 @@ class TestIngestion(unittest.TestCase):
         stat_msg = "The job should launch successfully and return 202 ACCEPTED."
         self.assertEqual(res.status_code, 202, msg=stat_msg)
         # Wait for the task to send us a callback.
-        self._wait_for_callback()
+        self._wait_for_callback('/task_done')
 
         return True
+
+    def test_indexing_consistency(self):
+        """
+        Check that the first and last records in the database end up in
+        Elasticsearch.
+        :return:
+        """
+        pass
+
+    def test_database_consistency(self):
+        """
+        Check that both databases have identical contents.
+        """
+        pass
 
 
 if __name__ == '__main__':
@@ -207,9 +227,11 @@ if __name__ == '__main__':
     # Run tests.
     try:
         print('Beginning tests')
+        TestIngestion.initialize()
         suite = unittest.TestLoader().loadTestsFromTestCase(TestIngestion)
         unittest.TextTestRunner(verbosity=2).run(suite)
     finally:
         # Stop Elasticsearch and database. Delete attached volumes.
+        TestIngestion.clean_up()
         stop_cmd = 'docker-compose -f {} down -v'.format(integration_compose)
         subprocess.call(stop_cmd, shell=True, stdout=docker_stdout)
