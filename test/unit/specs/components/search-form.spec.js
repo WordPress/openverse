@@ -1,9 +1,9 @@
 import Vue from 'vue';
-import SearchForm from '@/components/SearchForm';
+import SearchGridForm from '@/components/SearchGridForm';
 
-describe('SearchForm.vue', () => {
+describe('SearchGridForm.vue', () => {
   it('should render correct contents', () => {
-    const Constructor = Vue.extend(SearchForm);
+    const Constructor = Vue.extend(SearchGridForm);
     const vm = new Constructor().$mount();
   });
 });
