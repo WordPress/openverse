@@ -52,7 +52,7 @@ class CCLinks:
         #check index format
         pattern = re.compile('CC-MAIN-\d{4}-\d{2}')
         if not pattern.match(_index):
-            logging.error('Invalid common crawl index format.')
+            logging.error('Invalid common crawl index format => {}.'.format(_index))
             sys.exit()
 
 
@@ -141,7 +141,6 @@ class CCLinks:
                     pass
 
                 else:
-
                     try:
                         resp = requests.get('https://commoncrawl.s3.amazonaws.com/{}'.format(uri.strip()), stream=True)
                     except Exception as e:
@@ -237,8 +236,8 @@ def main():
         s3      = boto3.client('s3')
 
         #verify bucket
-        contents    = {}
-        prefix      = 'cc-index/collections/CC-MAIN-{}-'.format(datetime.today().year)
+        contents    = []
+        prefix      = 'cc-index/collections/CC-MAIN-'
         botoArgs    = {'Bucket': bucket, 'Prefix': prefix}
 
         while True:
@@ -252,10 +251,8 @@ def main():
                     cIndex = key.split('/indexes/')[0].split('/')
                     cIndex = cIndex[len(cIndex)-1]
 
-                    if cIndex not in contents:
-                        cWeek       = cIndex.split('-')
-                        cWeek       = cWeek[len(cWeek)-1]
-                        contents[cWeek]  = cIndex
+                    if str(cIndex) not in contents:
+                        contents.append(str(cIndex))
 
             try:
                 botoArgs['ContinuationToken'] = objects['NextContinuationToken']
@@ -263,9 +260,7 @@ def main():
                 break
 
         if contents:
-            lastCrawl  = max([int(key) for key in contents.keys()])
-            crawlIndex = contents[str(lastCrawl)]
-
+            crawlIndex = contents[-1]
 
 
     sc          = SparkContext(appName='ExtractCCLinks')
