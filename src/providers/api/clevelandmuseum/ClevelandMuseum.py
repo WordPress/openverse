@@ -22,14 +22,14 @@ sys.setdefaultencoding('utf8')
 LIMIT       = 1000
 LICENSE     = 'cc0'
 DELAY       = 5.0 #seconds
-FILE        = 'cc0.tsv'
+FILE        = 'clevelandmuseum_{}.tsv'.format(int(time.time()))
 
 logging.basicConfig(format='%(asctime)s: [%(levelname)s - Cleveland Museum API] =======> %(message)s', level=logging.INFO)
 
 def delayProcessing(_startTime):
     global DELAY
 
-    waitTime = max(1.0, DELAY - (float(time.time()) - float(_startTime))) #delay between requests.
+    waitTime = min(DELAY, abs(DELAY - (float(time.time()) - float(_startTime)))) #time delay between requests.
     waitTime = round(waitTime, 3)
 
     logging.info('Time delay: {} seconds'.format(waitTime))
@@ -69,7 +69,7 @@ def requestContent(_url):
 
 
 def getMetaData(_data):
-    license     = 'cc0'
+    license     = 'CC0'
     version     = '1.0'
     imgInfo     = ''
     imgURL      = ''
@@ -80,9 +80,10 @@ def getMetaData(_data):
     title       = ''
     creator     = ''
     metaData    = {}
+    key         = None
 
     #verify the license
-    if not ('share_license_status' in _data) and (_data['share_license_status'] == 'CC0'):
+    if (not ('share_license_status' in _data)) or (str(_data['share_license_status']).upper() <> 'CC0'):
         logging.warning('CC0 license not detected!')
         return None
 
@@ -91,17 +92,29 @@ def getMetaData(_data):
 
     #get the image url and dimension
     imgInfo     = _data.get('images')
+
     if imgInfo and imgInfo.get('web'):
-
         imgURL  = imgInfo.get('web', {}).get('url', None)
+        key     = 'web'
 
-        if imgURL:
-            width   = imgInfo['web']['width']
-            height  = imgInfo['web']['height']
+    elif imgInfo and imgInfo.get('print'):
+        imgURL  = imgInfo.get('print', {}).get('url', None)
+        key     = 'print'
+
+    elif imgInfo and imgInfo.get('full'):
+        imgURL  = imgInfo.get('full', {}).get('url', None)
+        key     = 'full'
+
 
     if (not imgInfo) or (not imgURL):
         logging.warning('Image not detected in url {}'.format(foreignURL))
         return None
+
+
+    if imgURL and key:
+        width   = imgInfo[key]['width']
+        height  = imgInfo[key]['height']
+
 
     #provider identifier for the artwork
     foreignID   = _data.get('id', imgURL)
@@ -166,8 +179,8 @@ def main():
 
     while isValid:
         startTime   = time.time()
-        url         = 'http://openaccess-api.clevelandart.org/api/artworks/?cc0=1&limit={0}&skip={1}'.format(LIMIT, offset)
-        batch       = requestContent(url)
+        endpoint    = 'http://openaccess-api.clevelandart.org/api/artworks/?cc0=1&limit={0}&skip={1}'.format(LIMIT, offset)
+        batch       = requestContent(endpoint)
 
         if batch and ('data' in batch):
             extracted = batch['data']
