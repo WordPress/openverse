@@ -1,13 +1,30 @@
-# Elasticsearch Syncer
+# Ingestion Server
 
 ## Introduction
-Elasticsearch Syncer is a daemon that automatically replicates data from a database into Elasticsearch. It polls the database and Elasticsearch at a set interval to find the largest primary key ID in each datastore. If the highest primary key in the database is not present in Elasticsearch, a bulk insert is performed to synchronize Elasticsearch. Because parallel calls are made to the bulk insert API, this is a fast operation.
+Ingestion Server is a small private API for copying data from an upstream source and loading it into the CC Catalog API. This is a two step process:
+1. The data is copied from the upstream CC Catalog database and into the downstream API database.
+2. Data from the downstream API database gets indexed in Elasticsearch.
 
-Performance is dependent on the size of the target Elasticsearch cluster and the complexity of the document being indexed. Informal tests indicate that the daemon can index 10,000,000 complex documents per hour on a single node Elasticsearch cluster, where a "complex document" is one with multiple analyzed fields, nested documents, and many non-analyzed fields. Simple documents can be indexed at a higher rate.
+For example, let's say that I want to download and index all new images.
+`http POST ingestion.private/task <<<'{"model": "image", "action": "INGEST_UPSTREAM"}'`
 
-![How it works](https://raw.githubusercontent.com/creativecommons/cccatalog-api/syncer_tests_and_docs/es_syncer/howitworks.png)
+Performance is dependent on the size of the target Elasticsearch cluster, database throughput, and bandwidth available to the ingestion server. The primary bottleneck is indexing to Elasticsearch.
+
+## Safety
+The server has been designed to fail gracefully in the event of network interruptions, full disks, etc. If a task fails to complete successfully, the whole process is rolled back with zero impact to production.
+
+## Running the tests
+This runs a simulated environment in Docker and ensures that ingestion is working properly.
+```
+mkvirtualenv venv
+source venv/bin/activate
+python test/integration_tests.py
+```
+Set `ENABLE_DETAILED_LOGS` to `True` if more information is needed about the failing test.
+
+![How indexing works](https://raw.githubusercontent.com/creativecommons/cccatalog-api/syncer_tests_and_docs/es_syncer/howitworks.png)
 ## Configuration
-All configuration is performed via environment variables.
+All configuration is performed through environment variables.
 
 #### Required
 * **COPY_TABLES**: A comma-separated list of database tables that should be replicated to Elasticsearch. **Example**: image,text
