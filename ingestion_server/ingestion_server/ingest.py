@@ -42,6 +42,11 @@ def _get_shared_cols(conn1, conn2, table: str):
     return list(conn1_cols.intersection(conn2_cols))
 
 
+def _update_progress(progress, new_value):
+    if progress:
+        progress.value = new_value
+
+
 def _generate_indices(conn, table: str):
     """
     Using the existing table as a template, generate CREATE INDEX statements for
@@ -242,22 +247,20 @@ def reload_upstream(table, progress=None, finish_time=None):
         downstream_cur.execute(init_fdw)
         downstream_cur.execute(copy_data)
         log.info('Copying finished! Recreating database indices...')
-        if progress:
-            progress.value = 50.0
-        downstream_cur.execute(create_indices)
-        if progress:
-            progress.value = 70.0
+        _update_progress(progress, 50.0)
+        if create_indices != '':
+            downstream_cur.execute(create_indices)
+        _update_progress(progress, 70.0)
         log.info('Done creating indices! Remapping constraints...')
-        downstream_cur.execute(remap_constraints)
-        if progress:
-            progress.value = 99.0
+        if remap_constraints != '':
+            downstream_cur.execute(remap_constraints)
+        _update_progress(progress, 99.0)
         log.info('Done remapping constraints! Going live with new table...')
         downstream_cur.execute(go_live)
     downstream_db.commit()
     downstream_db.close()
     log.info('Finished refreshing table \'{}\'.'.format(table))
-    if progress:
-        progress.value = 100.0
+    _update_progress(progress, 100.0)
     if finish_time:
         finish_time.value = datetime.datetime.utcnow().timestamp()
     return

@@ -40,7 +40,7 @@ def _get_host_ip():
 class TestIngestion(unittest.TestCase):
 
     @staticmethod
-    def initialize():
+    def initialize(schemaf='schema.sql'):
         """
         Wait for integration test dependencies to be started by docker-compose.
         Populate the upstream database with initial data; add the schema
@@ -72,7 +72,7 @@ class TestIngestion(unittest.TestCase):
             logging.info('Successfully connected to databases')
             break
         with open(this_dir + "/mock_data/mocked_images.csv") as mockfile,\
-                open(this_dir + "/mock_data/schema.sql") as schema_file:
+                open(this_dir + "/mock_data/{}".format(schemaf)) as schema_file:
             upstream_cur = upstream_db.cursor()
             downstream_cur = downstream_db.cursor()
             schema = schema_file.read()
@@ -93,7 +93,7 @@ class TestIngestion(unittest.TestCase):
             downstream_db.close()
         # Wait for ingestion server and Elasticsearch to come up.
         ready_stats = {'yellow', 'green'}
-        max_attempts = 15
+        max_attempts = 10
         attempts = 0
         while True:
             try:
