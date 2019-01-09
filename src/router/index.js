@@ -61,10 +61,8 @@ router.afterEach((to) => {
   store.commit(SET_IMAGE, { image: {} });
   store.commit(SET_IMAGES, { images: [] });
 
-  /* eslint-disable */
   ga('set', 'page', to.path);
   ga('send', 'pageview');
-  /* eslint-enable */
 });
 
 export default router;
