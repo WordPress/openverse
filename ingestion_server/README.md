@@ -6,15 +6,17 @@ Ingestion Server is a small private API for copying data from an upstream source
 2. Data from the downstream API database gets indexed in Elasticsearch.
 
 For example, let's say that I want to download and index all new images.
-`http POST ingestion.private/task <<<'{"model": "image", "action": "INGEST_UPSTREAM"}'`
+`http POST ingestion.private:8001/task <<<'{"model": "image", "action": "INGEST_UPSTREAM"}'`
 
 Performance is dependent on the size of the target Elasticsearch cluster, database throughput, and bandwidth available to the ingestion server. The primary bottleneck is indexing to Elasticsearch.
 
-## Safety
+## Safety and security considerations
 The server has been designed to fail gracefully in the event of network interruptions, full disks, etc. If a task fails to complete successfully, the whole process is rolled back with zero impact to production.
 
+The server is designed to be run in a private network only. You must not expose the private Ingestion Server API to the public internet.
+
 ## Running the tests
-This runs a simulated environment in Docker and ensures that ingestion is working properly.
+This runs a simulated environment in Docker containers and ensures that ingestion is working properly.
 ```
 mkvirtualenv venv
 source venv/bin/activate

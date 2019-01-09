@@ -21,8 +21,8 @@ docker run -t \
 -e DATABASE_PASSWORD="${database_password}" \
 -e DATABASE_NAME="openledger" \
 -e DATABASE_PORT="${database_port}" \
--e UPSTREAM_DATABASE_HOST="${upstream_db_host}" \
--e UPSTREAM_DATABASE_PASSWORD="${upstream_db_password}" \
+-e UPSTREAM_DB_HOST="${upstream_db_host}" \
+-e UPSTREAM_DB_PASSWORD="${upstream_db_password}" \
 -e DB_BUFFER_SIZE="${db_buffer_size}" \
 -e COPY_TABLES="${copy_tables}" \
 -e SYNCER_POLL_INTERVAL="${poll_interval}" \

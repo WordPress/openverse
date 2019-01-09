@@ -1,7 +1,7 @@
 # This docker-compose file was generated from /home/alden/code/cccatalog-
 # api/ingestion_server/test/../../docker-compose.yml. Do not modify this file
-# directly. Your changes will be overwritten. Last update: 2019-01-07
-# 15:43:12.500347
+# directly. Your changes will be overwritten. Last update: 2019-01-09
+# 11:36:00.858884
 
 services:
   integration-db:

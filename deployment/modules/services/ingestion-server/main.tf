@@ -1,3 +1,17 @@
+# Internal URL for interacting with Ingestion Server API
+resource "aws_route53_zone" "ingestion-private-dns" {
+  name = "ingestion.private"
+  vpc_id = "vpc-b741b4cc"
+}
+
+resource "aws_route53_record" "ingestion-private-a-record" {
+  name    = "ingestion.private"
+  type    = "A"
+  ttl     = 120
+  records = ["${aws_instance.ingestion-server-ec2.private_ip}"]
+  zone_id = "${aws_route53_zone.ingestion-private-dns.id}"
+}
+
 # A templated bash script that bootstraps the docker daemon and runs a container.
 data "template_file" "init"{
   template = "${file("${path.module}/init.tpl")}"
@@ -38,6 +52,14 @@ resource "aws_security_group" "ingestion-server-sg" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow incoming traffic from the internal network
+  ingress {
+    from_port   = 8001
+    to_port     = 8001
+    protocol    = "tcp"
+    cidr_blocks = ["172.30.0.0/16"]
   }
 
   # Unrestricted egress
