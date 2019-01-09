@@ -37,7 +37,7 @@
           @click.prevent="() => false"
           target="new"
           class="search-grid_image-ctr">
-          <img class="search-grid_image" :src="getImageUrl(image)"
+          <img class="search-grid_image" :alt="image.title" :src="getImageUrl(image)"
                @error="onImageLoadError">
         </a>
         <figcaption class="search-grid_item-overlay search-grid_item-overlay__top">
@@ -48,7 +48,7 @@
              :href="image.foreign_landing_url"
              @click.stop="() => false"
              target="new">
-             <img class="search-grid_overlay-provider-logo"
+             <img class="search-grid_overlay-provider-logo" :alt="image.provider"
                   :src="getProviderLogo(image.provider)">
              {{ image.title }}
           </a>
