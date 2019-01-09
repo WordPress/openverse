@@ -61,7 +61,7 @@ router.afterEach((to) => {
   store.commit(SET_IMAGE, { image: {} });
   store.commit(SET_IMAGES, { images: [] });
 
-  ga('set', 'page', to.path);
+  ga('set', 'page', to.fullPath);
   ga('send', 'pageview');
 });
 
