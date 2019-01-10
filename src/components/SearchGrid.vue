@@ -33,7 +33,7 @@
         class="search-grid_item"
         :key="image.id"
         @click="onGotoDetailPage(image)">
-        <a :href="image.foreign_landing_url"
+        <a :href="getImageForeignUrl(image)"
           @click.prevent="() => false"
           target="new"
           class="search-grid_image-ctr">
@@ -45,7 +45,7 @@
         </figcaption>
         <figcaption class="search-grid_item-overlay search-grid_item-overlay__bottom">
           <a class="search-grid_overlay-provider"
-             :href="image.foreign_landing_url"
+             :href="getImageForeignUrl(image)"
              @click.stop="() => false"
              target="new">
              <img class="search-grid_overlay-provider-logo" :alt="image.provider"
@@ -78,10 +78,18 @@ import InfiniteLoading from 'vue-infinite-loading';
 import LicenseIcons from '@/components/LicenseIcons';
 import SearchGridFilter from '@/components/SearchGridFilter';
 
-
 const errorImage = require('@/assets/404-grid_placeholder.png');
 
 const DEFAULT_PAGE_SIZE = 20;
+
+const toAbsolutePath = (url, prefix = 'https://') => {
+  if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
+    return url;
+  }
+  else {
+    return `${prefix}${url}`;
+  }
+}
 
 export default {
   name: 'search-grid',
@@ -171,11 +179,10 @@ export default {
 
       let url = image.thumbnail || image.url;
 
-      if (url.indexOf('http') === -1) {
-        url = `https://${url}`;
-      }
-
-      return url;
+      return toAbsolutePath(url);
+    },
+    getImageForeignUrl(image) {
+      return toAbsolutePath(image.foreign_landing_url);
     },
     getProviderLogo(providerName) {
       const logo = ImageProviderService.getProviderInfo(providerName).logo;
