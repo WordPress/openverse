@@ -2,7 +2,7 @@
   <button type="button"
           class="button photo_copy-btn">
     <slot v-if="!success" default />
-    <template v-if="success">Copied!</template>
+    <template v-else>Copied!</template>
   </button>
 </template>
 
@@ -21,7 +21,6 @@ export default {
   },
   mounted() {
     this.clipboard = new Clipboard(this.$el, {
-      // eslint-disable-line no-new
       text: () => this.toCopy.replace(/\s\s/g, ''),
     });
 
