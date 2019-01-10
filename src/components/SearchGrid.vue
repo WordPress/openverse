@@ -31,11 +31,9 @@
     <div class="search-grid_ctr" ref="gridItems">
       <figure v-for="(image) in _images"
         class="search-grid_item"
-        :key="image.id"
-        @click="onGotoDetailPage(image)">
-        <a :href="getImageForeignUrl(image)"
-          @click.prevent="() => false"
-          target="new"
+        :key="image.id">
+        <a :href="'photos/' + image.id"
+          @click="onGotoDetailPage($event, image)"
           class="search-grid_image-ctr">
           <img class="search-grid_image" :alt="image.title" :src="getImageUrl(image)"
                @error="onImageLoadError">
@@ -188,8 +186,14 @@ export default {
 
       return logUrl;
     },
-    onGotoDetailPage(image) {
-      this.$router.push(`/photos/${image.id}`);
+    onGotoDetailPage(event, image) {
+      // doesn't use router to redirect to photo details page in case the user
+      // has the Command (Mac) or Ctrl Key (Windows) pressed, so that they can
+      // open the page on a new tab with either of those keys pressed.
+      if (!event.metaKey && !event.ctrlKey) {
+        event.preventDefault();
+        this.$router.push(`/photos/${image.id}`);
+      }
     },
     onAddToImageList(image, event) {
       const imageWithDimensions = image || {};
