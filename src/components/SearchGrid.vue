@@ -86,10 +86,8 @@ const toAbsolutePath = (url, prefix = 'https://') => {
   if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
     return url;
   }
-  else {
-    return `${prefix}${url}`;
-  }
-}
+  return `${prefix}${url}`;
+};
 
 export default {
   name: 'search-grid',
@@ -177,7 +175,7 @@ export default {
         return '';
       }
 
-      let url = image.thumbnail || image.url;
+      const url = image.thumbnail || image.url;
 
       return toAbsolutePath(url);
     },
