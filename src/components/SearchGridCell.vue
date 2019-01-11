@@ -91,4 +91,178 @@ export default {
 
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .search-grid_image-ctr {
+    background: #EBECE4;
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+  }
+
+  .search-grid_item {
+    overflow: hidden;
+
+    &:hover .search-grid_item-overlay {
+      opacity: 1;
+      bottom: 0;
+    }
+
+    &:hover .search-grid_item-overlay__top {
+      top: 0;
+    }
+  }
+
+  .search-grid_item-overlay {
+    position: absolute;
+    opacity: 0;
+    transition: all .4s ease;
+    width: 100%;
+    height: 30px;
+    color: #fff;
+    padding: 0 10px;
+    display: block;
+    top: -100%;
+
+    &__top {
+      transition: all .5s ease;
+      background: linear-gradient(to bottom,
+                  rgba(0,0,0,.5)
+                  0,
+                  rgba(0,0,0,0) 100%);
+      top: 0;
+    }
+
+    &__bottom {
+      height: 30px;
+      background: linear-gradient(to top,
+                  rgba(0,0,0,.5)
+                  0,
+                  rgba(0,0,0,0) 100%);
+      bottom: -100%;
+      top: auto;
+    }
+  }
+
+  .search-grid_overlay-provider {
+    width: calc( 100% - 30px );
+    display: block;
+    bottom: 10px;
+    left: 10px;
+    z-index: 100;
+    color: #fff;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .search-grid_overlay-provider-logo {
+    max-height: 30px;
+    max-width: 40px;
+    margin-right: 5px;
+  }
+
+  .search-grid_overlay-add {
+    position: absolute;
+    width:  18px;
+    height: 18px;
+    display: block;
+    bottom: 10px;
+    right: 10px;
+    z-index: 100;
+
+    &:after {
+      height: 100%;
+      width: 100%;
+      display: block;
+      content: '';
+      background: url('../assets/plus-icon.svg') no-repeat;
+      background-size: 18px;
+      background-position: center center;
+      opacity: .5;
+    }
+
+    &:hover:before {
+      position: absolute;
+      right: -5px;
+      bottom: 25px;
+      height: 20px;
+      line-height: 20px;
+      width: 80px;
+      display: block;
+      content: 'Add image to list';
+      color: #fff;
+      text-shadow: 0 0 2px rgba(0,0,0,.5);
+      text-align:center;
+      font-size: .6em;
+      border-radius: 1px;
+      background: rgba(0,0,0,.7);
+
+      opacity: 1;
+    }
+
+    &:hover:after {
+      opacity: .9;
+    }
+  }
+
+  .search-grid_item {
+    position: relative;
+    display: block;
+    float: left;
+    flex: 0 0 auto;
+    flex-grow: 1;
+    margin: 15px 15px 0 0;
+    cursor: pointer;
+  }
+
+  .search-grid_image {
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  @media screen and (min-width: 769px) {
+    .search-grid_item {
+      width: calc(100%/3.5);
+      height: calc(100%/3.5);
+      max-height: 200px;
+      overflow: hidden;
+    }
+  }
+
+  @media screen and (min-width: 601px) and (max-width: 768px) {
+    .search-grid_item {
+      width: calc(100%/2);
+      height: calc(100%/2);
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .search-grid_item-overlay {
+      position: absolute;
+      opacity: 1;
+      bottom: 0;
+    }
+
+    .search-grid_item {
+      width: 100%;
+      height: 100%;
+    }
+
+    .search-grid_overlay-add {
+      position: absolute;
+      width:  44px;
+      height: 44px;
+      bottom: 0;
+    }
+
+     .search-grid_layout-control {
+      text-align: left !important;
+    }
+  }
+</style>
