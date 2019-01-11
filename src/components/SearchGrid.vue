@@ -29,33 +29,10 @@
       <li><a href="/browse/new">new</a></li>
     </ul>
     <div class="search-grid_ctr" ref="gridItems">
-      <figure v-for="(image) in _images"
-        class="search-grid_item"
-        :key="image.id">
-        <a :href="'photos/' + image.id"
-          @click="onGotoDetailPage($event, image)"
-          class="search-grid_image-ctr">
-          <img class="search-grid_image" :alt="image.title" :src="getImageUrl(image)"
-               @error="onImageLoadError">
-        </a>
-        <figcaption class="search-grid_item-overlay search-grid_item-overlay__top">
-          <license-icons :image="image"></license-icons>
-        </figcaption>
-        <figcaption class="search-grid_item-overlay search-grid_item-overlay__bottom">
-          <a class="search-grid_overlay-provider"
-             :href="getImageForeignUrl(image)"
-             @click.stop="() => false"
-             target="new">
-             <img class="search-grid_overlay-provider-logo" :alt="image.provider"
-                  :src="getProviderLogo(image.provider)">
-             {{ image.title }}
-          </a>
-          <a class="search-grid_overlay-add"
-             @click.stop="onAddToImageList(image, $event)"
-             v-if="includeAddToList">
-          </a>
-        </figcaption>
-      </figure>
+      <search-grid-cell v-for="(image) in _images"
+        :key="image.id"
+        :image="image"
+        :includeAddToList="includeAddToList" />
       <infinite-loading
         @infinite="onInfiniteHandler"
         ref="infiniteLoader"
@@ -73,6 +50,7 @@ import { SELECT_IMAGE_FOR_LIST, SET_IMAGES } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
 import ImageProviderService from '@/api/ImageProviderService';
 import InfiniteLoading from 'vue-infinite-loading';
+import SearchGridCell from '@/components/SearchGridCell';
 import LicenseIcons from '@/components/LicenseIcons';
 import SearchGridFilter from '@/components/SearchGridFilter';
 
@@ -92,6 +70,7 @@ export default {
   components: {
     InfiniteLoading,
     SearchGridFilter,
+    SearchGridCell,
     LicenseIcons,
   },
   data: () => ({
@@ -234,7 +213,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
+<style lang="scss">
 
   .search-grid_analytics h5,
   .search-grid_layout-control h5 {
