@@ -16,6 +16,10 @@ import logging
 from urllib.parse import urlparse
 
 log = logging.getLogger(__name__)
+FOREIGN_LANDING_URL = 'foreign_landing_url'
+CREATOR_URL = 'creator_url'
+RESULTS = 'results'
+
 
 
 def _add_protocol(url: str):
@@ -98,16 +102,16 @@ class SearchImages(APIView):
         response_data = {
             'result_count': search_results.hits.total,
             'page_count': page_count,
-            'results': serialized_results
+            RESULTS: serialized_results
         }
         # Correct any malformed URLs in the response.
         for idx, res in enumerate(serialized_results):
-            if 'foreign_landing_url' in res:
-                foreign = _add_protocol(res['foreign_landing_url'])
-                response_data['results'][idx]['foreign_landing_url'] = foreign
-            if 'creator_url' in res:
-                creator_url = _add_protocol(res['creator_url'])
-                response_data['results'][idx]['creator_url'] = creator_url
+            if FOREIGN_LANDING_URL in res:
+                foreign = _add_protocol(res[FOREIGN_LANDING_URL])
+                response_data[RESULTS][idx][FOREIGN_LANDING_URL] = foreign
+            if CREATOR_URL in res:
+                creator_url = _add_protocol(res[CREATOR_URL])
+                response_data[RESULTS][idx][CREATOR_URL] = creator_url
         serialized_response = ImageSearchResultsSerializer(data=response_data)
 
         return Response(status=200, data=serialized_response.initial_data)
@@ -137,12 +141,12 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         # Add page views to the response.
         resp.data['view_count'] = view_count
         # Fix links to creator and foreign landing URLs.
-        if 'creator_url' in resp.data:
-            creator_url = _add_protocol(resp.data['creator_url'])
-            resp.data['creator_url'] = creator_url
-        if 'foreign_landing_url' in resp.data:
+        if CREATOR_URL in resp.data:
+            creator_url = _add_protocol(resp.data[CREATOR_URL])
+            resp.data[CREATOR_URL] = creator_url
+        if FOREIGN_LANDING_URL in resp.data:
             foreign_landing_url = \
-                _add_protocol(resp.data['foreign_landing_url'])
-            resp.data['foreign_landing_url'] = foreign_landing_url
+                _add_protocol(resp.data[FOREIGN_LANDING_URL])
+            resp.data[FOREIGN_LANDING_URL] = foreign_landing_url
 
         return resp
