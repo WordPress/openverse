@@ -46,24 +46,13 @@
 </template>
 
 <script>
-import { SELECT_IMAGE_FOR_LIST, SET_IMAGES } from '@/store/mutation-types';
+import { SET_IMAGES } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
-import ImageProviderService from '@/api/ImageProviderService';
 import InfiniteLoading from 'vue-infinite-loading';
 import SearchGridCell from '@/components/SearchGridCell';
-import LicenseIcons from '@/components/LicenseIcons';
 import SearchGridFilter from '@/components/SearchGridFilter';
 
-const errorImage = require('@/assets/404-grid_placeholder.png');
-
 const DEFAULT_PAGE_SIZE = 20;
-
-const toAbsolutePath = (url, prefix = 'https://') => {
-  if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
-    return url;
-  }
-  return `${prefix}${url}`;
-};
 
 export default {
   name: 'search-grid',
@@ -71,7 +60,6 @@ export default {
     InfiniteLoading,
     SearchGridFilter,
     SearchGridCell,
-    LicenseIcons,
   },
   data: () => ({
     isDataInitialized: false,
@@ -147,40 +135,6 @@ export default {
     },
   },
   methods: {
-    getImageUrl(image) {
-      if (!image) {
-        return '';
-      }
-
-      const url = image.thumbnail || image.url;
-
-      return toAbsolutePath(url);
-    },
-    getImageForeignUrl(image) {
-      return toAbsolutePath(image.foreign_landing_url);
-    },
-    getProviderLogo(providerName) {
-      const logo = ImageProviderService.getProviderInfo(providerName).logo;
-      const logUrl = require(`@/assets/${logo}`); // eslint-disable-line global-require, import/no-dynamic-require
-
-      return logUrl;
-    },
-    onGotoDetailPage(event, image) {
-      // doesn't use router to redirect to photo details page in case the user
-      // has the Command (Mac) or Ctrl Key (Windows) pressed, so that they can
-      // open the page on a new tab with either of those keys pressed.
-      if (!event.metaKey && !event.ctrlKey) {
-        event.preventDefault();
-        this.$router.push(`/photos/${image.id}`);
-      }
-    },
-    onAddToImageList(image, event) {
-      const imageWithDimensions = image || {};
-      imageWithDimensions.pageX = event.pageX;
-      imageWithDimensions.pageY = event.pageY;
-
-      this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
-    },
     searchChanged() {
       this.showGrid = false;
       this.$store.commit(SET_IMAGES, { images: [] });
@@ -188,10 +142,6 @@ export default {
       this.$nextTick(() => {
         this.$refs.infiniteLoader.$emit('$InfiniteLoading:reset');
       });
-    },
-    onImageLoadError(event) {
-      const image = event.target;
-      image.src = errorImage;
     },
     onInfiniteHandler($state) {
       this.$state = $state;
