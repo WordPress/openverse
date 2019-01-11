@@ -1,14 +1,11 @@
 language: python
 python:
-- '3.6'
-before_install:
-  - cd es_syncer
-install:
-  - pip install -r requirements.txt
-before_script:
-  - cd es_syncer
-script:
-  - python test/integration_tests.py
+- '3.7'
 services:
   - docker
-
+install:
+  - pip3 install -r ingestion_server/requirements.txt
+before_script:
+  - cd ingestion_server
+script:
+  - python3 test/integration_tests.py
