@@ -263,4 +263,3 @@ def reload_upstream(table, progress=None, finish_time=None):
     _update_progress(progress, 100.0)
     if finish_time:
         finish_time.value = datetime.datetime.utcnow().timestamp()
-    return
