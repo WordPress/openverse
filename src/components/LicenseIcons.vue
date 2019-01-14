@@ -61,7 +61,14 @@ export default LicenseIcons;
   .photo-license-icons {
     display: block;
     height: 32px;
-    whitespace: none;
+    white-space: none;
+    opacity: .7;
+    margin-top: 2px;
+    height: 22px !important;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 
   .photo-license-icon {
