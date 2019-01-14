@@ -29,25 +29,45 @@ with open(parent_docker_compose, 'r') as docker_compose_file:
     try:
         db = docker_compose['services']['db']
         es = docker_compose['services']['es']
-        # Delete all services except for the database and Elasticsearch
+        ingestion_server = docker_compose['services']['ingestion-server']
+        upstream_db = docker_compose['services']['upstream_db']
+        # Delete services we're not testing.
+        desired_services = {'es', 'db', 'ingestion-server', 'upstream_db'}
         for service in dict(docker_compose['services']):
-            if service != 'es' and service != 'db':
+            if service not in desired_services:
                 del docker_compose['services'][service]
         del docker_compose['services']['es']['healthcheck']
 
         # Expose alternate ports. Use the same internal port defined in the 
         # original docker-compose file.
+        upstream_db_port = upstream_db['ports'][0].split(':')[1]
+        upstream_db['ports'][0] = '59999' + ':' + upstream_db_port
         db['ports'][0] = '60000' + ':' + db['ports'][0].split(':')[1]
         es['ports'][0] = '60001' + ':' + es['ports'][0].split(':')[1]
+        ingestion_api_port = ingestion_server['ports'][0].split(':')[1]
+        ingestion_server['ports'][0] = '60002' + ':' + ingestion_api_port
+
+        # Configure ingestion server to point to integration containers.
+        upstream_name = 'integration-upstream'
+        ingestion_server['environment']['DATABASE_HOST'] = 'integration-db'
+        ingestion_server['environment']['ELASTICSEARCH_URL'] = 'integration-es'
+        ingestion_server['environment']['UPSTREAM_DB_HOST'] = upstream_name
+        ingestion_server['depends_on'] = ['integration-es', 'integration-db']
+        ingestion_server['build'] = '../'
 
         # Create a volume for the mock data
         db['volumes'] = ['./mock_data:/mock_data']
+        upstream_db['volumes'] = ['./mock_data:/mock_data']
 
         # Rename the services and update ports.
-        del docker_compose['services']['db']
-        del docker_compose['services']['es']
+        for service in dict(docker_compose['services']):
+            if service in desired_services:
+                del docker_compose['services'][service]
         docker_compose['services']['integration-db'] = db
         docker_compose['services']['integration-es'] = es
+        docker_compose['services']['integration-ingestion'] = ingestion_server
+        docker_compose['services']['integration-upstream'] = upstream_db
+
 
         # Start the document with a warning message
         warning_message = '\n'.join(textwrap.wrap(

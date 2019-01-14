@@ -1,0 +1,69 @@
+# This docker-compose file was generated from /home/alden/code/cccatalog-
+# api/ingestion_server/test/../../docker-compose.yml. Do not modify this file
+# directly. Your changes will be overwritten. Last update: 2019-01-09
+# 11:36:00.858884
+
+services:
+  integration-db:
+    environment:
+      POSTGRES_DB: openledger
+      POSTGRES_HOST: 0.0.0.0
+      POSTGRES_PASSWORD: deploy
+      POSTGRES_USER: deploy
+    healthcheck:
+      test: pg_isready -U deploy -d openledger
+    image: postgres:10.3-alpine
+    ports:
+    - 60000:5432
+    volumes:
+    - ./mock_data:/mock_data
+  integration-es:
+    environment:
+    - xpack.security.enabled=false
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    ports:
+    - 60001:9200
+    ulimits:
+      nofile:
+        hard: 65536
+        soft: 65536
+  integration-ingestion:
+    build: ../
+    command: bash -c 'sleep 20 && supervisord -c config/supervisord.conf'
+    depends_on:
+    - integration-es
+    - integration-db
+    environment:
+      COPY_TABLES: image
+      DATABASE_HOST: integration-db
+      DATABASE_NAME: openledger
+      DATABASE_PASSWORD: deploy
+      DATABASE_PORT: '5432'
+      DATABASE_USER: deploy
+      DB_BUFFER_SIZE: '100000'
+      ELASTICSEARCH_PORT: '9200'
+      ELASTICSEARCH_URL: integration-es
+      PYTHONUNBUFFERED: '0'
+      SYNCER_POLL_INTERVAL: '60'
+      UPSTREAM_DB_HOST: integration-upstream
+      UPSTREAM_DB_PORT: 5432
+    ports:
+    - 60002:8001
+    stdin_open: true
+    tty: true
+    volumes:
+    - ./ingestion_server:/ingestion-server
+  integration-upstream:
+    environment:
+      POSTGRES_DB: openledger
+      POSTGRES_HOST: 0.0.0.0
+      POSTGRES_PASSWORD: deploy
+      POSTGRES_USER: deploy
+    healthcheck:
+      test: pg_isready -U deploy -d openledger
+    image: postgres:10.3-alpine
+    ports:
+    - 59999:5432
+    volumes:
+    - ./mock_data:/mock_data
+version: '3'

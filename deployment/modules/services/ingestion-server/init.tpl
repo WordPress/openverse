@@ -8,8 +8,9 @@ sudo usermod -a -G docker ec2-user
 service docker start
 
 # Run the synchronizer
-docker pull creativecommons/elasticsearch_syncer:${docker_tag}
+docker pull creativecommons/ingestion_server:${docker_tag}
 docker run -t \
+-p 8001:8001 \
 -e AWS_ACCESS_KEY_ID="${aws_access_key_id}" \
 -e AWS_SECRET_ACCESS_KEY="${aws_secret_access_key}" \
 -e ELASTICSEARCH_URL="${elasticsearch_url}" \
@@ -20,10 +21,12 @@ docker run -t \
 -e DATABASE_PASSWORD="${database_password}" \
 -e DATABASE_NAME="openledger" \
 -e DATABASE_PORT="${database_port}" \
+-e UPSTREAM_DB_HOST="${upstream_db_host}" \
+-e UPSTREAM_DB_PASSWORD="${upstream_db_password}" \
 -e DB_BUFFER_SIZE="${db_buffer_size}" \
 -e COPY_TABLES="${copy_tables}" \
 -e SYNCER_POLL_INTERVAL="${poll_interval}" \
-creativecommons/elasticsearch_syncer:${docker_tag} &
+creativecommons/ingestion_server:${docker_tag} &
 
 # Install filebeat collector for centralized logging to Graylog
 sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
@@ -45,7 +48,7 @@ filebeat.prospectors:
   paths:
     - /var/log/cloud-init-output.log
   fields:
-    system: es-syncer
+    system: ingestion-server
     environment: ${staging_environment}
 
 output.logstash:

@@ -2,10 +2,11 @@ FROM python:3.7
 
 ENV PYTHONBUFFERED 1
 
-RUN mkdir /es_syncer
-WORKDIR /es_syncer
-ADD requirements.txt /es_syncer/
+RUN mkdir /ingestion_server
+WORKDIR /ingestion_server
+ADD requirements.txt /ingestion_server/
 RUN pip install -r requirements.txt
+RUN pip install gunicorn
 
 # Install supervisord (still requires Python 2.7 in 2018 :( )
 RUN apt-get update
@@ -16,7 +17,8 @@ RUN mkdir -p /var/log/supervisord
 RUN chown -R supervisord /var/log/supervisord
 USER supervisord
 
-COPY config/ /es_syncer/config
-COPY . /es_syncer/
-ENV PYTHONPATH=$PYTHONPATH:/es_syncer/
-CMD ["supervisord", "-c", "/es_syncer/config/supervisord.conf"]
+COPY config/ /ingestion_server/config
+COPY . /ingestion_server/
+ENV PYTHONPATH=$PYTHONPATH:/ingestion_server/
+EXPOSE 8001
+CMD ["supervisord", "-c", "/ingestion_server/config/supervisord.conf"]

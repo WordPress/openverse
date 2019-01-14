@@ -1,3 +1,17 @@
+# Internal URL for interacting with Ingestion Server API
+resource "aws_route53_zone" "ingestion-private-dns" {
+  name = "ingestion.private"
+  vpc_id = "vpc-b741b4cc"
+}
+
+resource "aws_route53_record" "ingestion-private-a-record" {
+  name    = "ingestion.private"
+  type    = "A"
+  ttl     = 120
+  records = ["${aws_instance.ingestion-server-ec2.private_ip}"]
+  zone_id = "${aws_route53_zone.ingestion-private-dns.id}"
+}
+
 # A templated bash script that bootstraps the docker daemon and runs a container.
 data "template_file" "init"{
   template = "${file("${path.module}/init.tpl")}"
@@ -16,6 +30,8 @@ data "template_file" "init"{
     copy_tables           = "${var.copy_tables}"
     poll_interval         = "${var.poll_interval}"
     staging_environment   = "${var.environment}"
+    upstream_db_host      = "${var.upstream_db_host}"
+    upstream_db_password  = "${var.upstream_db_password}"
 
     docker_tag            = "${var.docker_tag}"
   }
@@ -26,8 +42,8 @@ data "aws_subnet_ids" "subnets" {
   vpc_id = "${var.vpc_id}"
 }
 
-resource "aws_security_group" "es-syncer-sg" {
-  name_prefix = "es-syncer-sg-${var.environment}"
+resource "aws_security_group" "ingestion-server-sg" {
+  name_prefix = "ingestion-server-sg-${var.environment}"
   vpc_id = "${var.vpc_id}"
 
   # Allow incoming SSH from the internet
@@ -36,6 +52,14 @@ resource "aws_security_group" "es-syncer-sg" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow incoming traffic from the internal network
+  ingress {
+    from_port   = 8001
+    to_port     = 8001
+    protocol    = "tcp"
+    cidr_blocks = ["172.30.0.0/16"]
   }
 
   # Unrestricted egress
@@ -47,17 +71,17 @@ resource "aws_security_group" "es-syncer-sg" {
   }
 }
 
-resource "aws_instance" "es-syncer-ec2" {
+resource "aws_instance" "ingestion-server-ec2" {
   ami                    = "ami-b70554c8"
   instance_type          = "${var.instance_type}"
   user_data              = "${data.template_file.init.rendered}"
   # Launch it on the first available subnet
   subnet_id              = "${element(data.aws_subnet_ids.subnets.ids, 0)}"
   key_name               = "cccapi-admin"
-  vpc_security_group_ids = ["${aws_security_group.es-syncer-sg.id}"]
+  vpc_security_group_ids = ["${aws_security_group.ingestion-server-sg.id}"]
 
   tags {
-    Name        = "elastic-syncer-${var.environment}"
+    Name        = "ingestion-server-${var.environment}"
     environment = "${var.environment}"
   }
 }

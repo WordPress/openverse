@@ -16,6 +16,12 @@ import logging
 from urllib.parse import urlparse
 
 log = logging.getLogger(__name__)
+FOREIGN_LANDING_URL = 'foreign_landing_url'
+CREATOR_URL = 'creator_url'
+RESULTS = 'results'
+PAGE = 'page'
+PAGESIZE = 'pagesize'
+VALIDATION_ERROR = 'validation_error'
 
 
 def _add_protocol(url: str):
@@ -61,8 +67,8 @@ class SearchImages(APIView):
                     "validation_error": params.errors
                 }
             )
-        page_param = params.data['page']
-        page_size = params.data['pagesize']
+        page_param = params.data[PAGE]
+        page_size = params.data[PAGESIZE]
         try:
             search_results = search_controller.search(params,
                                                       index='image',
@@ -72,7 +78,7 @@ class SearchImages(APIView):
             return Response(
                 status=400,
                 data={
-                    'validation_error': 'Deep pagination is not allowed.'
+                    VALIDATION_ERROR: 'Deep pagination is not allowed.'
                 }
             )
 
@@ -98,14 +104,16 @@ class SearchImages(APIView):
         response_data = {
             'result_count': search_results.hits.total,
             'page_count': page_count,
-            'results': serialized_results
+            RESULTS: serialized_results
         }
         # Correct any malformed URLs in the response.
         for idx, res in enumerate(serialized_results):
-            landing_url = _add_protocol(res['foreign_landing_url'])
-            creator_url = _add_protocol(res['creator_url'])
-            response_data['results'][idx]['foreign_landing_url'] = landing_url
-            response_data['results'][idx]['creator_url'] = creator_url
+            if FOREIGN_LANDING_URL in res:
+                foreign = _add_protocol(res[FOREIGN_LANDING_URL])
+                response_data[RESULTS][idx][FOREIGN_LANDING_URL] = foreign
+            if CREATOR_URL in res:
+                creator_url = _add_protocol(res[CREATOR_URL])
+                response_data[RESULTS][idx][CREATOR_URL] = creator_url
         serialized_response = ImageSearchResultsSerializer(data=response_data)
 
         return Response(status=200, data=serialized_response.initial_data)
@@ -135,10 +143,12 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         # Add page views to the response.
         resp.data['view_count'] = view_count
         # Fix links to creator and foreign landing URLs.
-        creator_url = _add_protocol(resp.data['creator_url'])
-        foreign_landing_url = \
-            _add_protocol(resp.data['foreign_landing_url'])
-        resp.data['creator_url'] = creator_url
-        resp.data['foreign_landing_url'] = foreign_landing_url
+        if CREATOR_URL in resp.data:
+            creator_url = _add_protocol(resp.data[CREATOR_URL])
+            resp.data[CREATOR_URL] = creator_url
+        if FOREIGN_LANDING_URL in resp.data:
+            foreign_landing_url = \
+                _add_protocol(resp.data[FOREIGN_LANDING_URL])
+            resp.data[FOREIGN_LANDING_URL] = foreign_landing_url
 
         return resp
