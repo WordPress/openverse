@@ -3,75 +3,13 @@
     <div class="cell">
       <header-section showNavSearch="true" fixedNav="true"></header-section>
     </div>
-    <div class="photo grid-x">
-        <div class="photo_image-ctr cell medium-12 large-8">
-          <a class="photo_breadcrumb"
-             :href="breadCrumbURL"
-             @click.prevent="onGotoBack"
-             v-if="shouldShowBreadcrumb">&#171; Back to search results</a>
-          <img @click="onShowViewer(image)"
-               @load="onLoad"
-               :class="{ photo_image: true,
-                         'photo_image__has-viewer': this.images.length > 0 }"
-                         :src="image.url"
-                         :alt="image.title">
-        </div>
-        <div class="photo_info-ctr cell medium-12 large-4">
-          <header class="photo_info-header">
-            <h2>
-              PHOTO INFO
-            </h2>
-          </header>
-          <ul>
-            <li>
-              <h3>Title</h3>
-              <span>{{ image.title }}</span>
-            </li>
-            <li>
-              <h3>Creator</h3>
-              <span>
-              <a :href="image.creator_url">{{ image.creator }}</a>
-              </span>
-            </li>
-            <li>
-              <h3>License</h3>
-              <a class="photo_license" :href="ccLicenseURL">
-              CC {{ image.license }} {{ image.license_version }}
-              </a>
-              <license-icons :image="image"></license-icons>
-            </li>
-            <li>
-              <h3>Source</h3>
-              <a class="photo_provider"
-                 :href="image.foreign_landing_url"
-                 target="blank"
-                 rel="noopener noreferrer">{{ image.provider }}</a>
-            </li>
-            <li>
-              <h3>Dimensions</h3>
-              <span> {{ imageWidth }} <span> X </span> {{ imageHeight }} pixels</span>
-            </li>
-          </ul>
-          <section class="photo_usage">
-            <header class="photo_info-header">
-              <h2>
-                Photo Attribution
-              </h2>
-            </header>
-            <p class="photo_usage-attribution" ref="photoAttribution">
-              <a :href="image.foreign_landing_url">"{{ image.title }}"</a>
-              by
-              <a :href="image.creator_url">{{ image.creator }}</a>
-              is licensed under
-              <a class="photo_license" :href="ccLicenseURL">
-              CC {{ image.license}} {{ image.license_version }}
-              </a>
-            </p>
-            <CopyButton :toCopy="HTMLAttribution">Copy to HTML</CopyButton>
-            <CopyButton :toCopy="textAttribution">Copy to Text</CopyButton>
-          </section>
-      </div>
-    </div>
+    <photo-details :image="image"
+                   :breadCrumbURL="breadCrumbURL"
+                   :shouldShowBreadcrumb="shouldShowBreadcrumb"
+                   :query="query"
+                   :imageWidth="imageWidth"
+                   :imageHeight="imageHeight"
+                   @onImageLoaded="onImageLoaded" />
     <div class="photo_tags grid-x full" v-if="tags && tags.length">
       <header>
         <h2>Tags</h2>
@@ -122,7 +60,7 @@
 </template>
 
 <script>
-import CopyButton from '@/components/CopyButton';
+import PhotoDetails from '@/components/PhotoDetails';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 import SearchGrid from '@/components/SearchGrid';
@@ -138,11 +76,11 @@ Vue.use(Viewer);
 const PhotoDetailPage = {
   name: 'photo-detail-page',
   components: {
-    CopyButton,
     HeaderSection,
     SearchGrid,
     FooterSection,
     LicenseIcons,
+    PhotoDetails,
   },
   props: {
     id: '',
@@ -249,7 +187,7 @@ const PhotoDetailPage = {
     });
   },
   methods: {
-    onLoad(event) {
+    onImageLoaded(event) {
       this.imageWidth = event.target.naturalWidth;
       this.imageHeight = event.target.naturalHeight;
       this.isPrimaryImageLoaded = true;
