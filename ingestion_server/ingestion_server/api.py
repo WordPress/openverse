@@ -13,10 +13,12 @@ A small API server for scheduling ingestion of upstream data and Elasticsearch
 indexing tasks.
 """
 
+
 MODEL = 'model'
 ACTION = 'action'
 CALLBACK_URL = 'callback_url'
 
+SINCE_DATE = 'since_date'
 
 class TaskResource:
     def __init__(self, tracker: TaskTracker):
@@ -42,7 +44,7 @@ class TaskResource:
             return "No action supplied in request body."
         if request[ACTION] not in [x.name for x in TaskTypes]:
             return "Invalid action."
-        if request[ACTION] == 'UPDATE_INDEX' and 'since_date' not in request:
+        if request[ACTION] in TaskTypes and SINCE_DATE not in request:
             return "Received UPDATE request but no since_date."
 
         return None
@@ -66,7 +68,7 @@ class TaskResource:
         callback_url = None
         if CALLBACK_URL in body:
             callback_url = body[CALLBACK_URL]
-        since_date = body['since_date'] if 'since_date' in body else None
+        since_date = body[SINCE_DATE] if SINCE_DATE in body else None
         task_id = str(uuid.uuid4())
         # Inject shared memory
         progress = Value('d', 0.0)

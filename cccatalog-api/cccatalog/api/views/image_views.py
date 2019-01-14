@@ -19,7 +19,9 @@ log = logging.getLogger(__name__)
 FOREIGN_LANDING_URL = 'foreign_landing_url'
 CREATOR_URL = 'creator_url'
 RESULTS = 'results'
-
+PAGE = 'page'
+PAGESIZE = 'pagesize'
+VALIDATION_ERROR = 'validation_error'
 
 
 def _add_protocol(url: str):
@@ -65,8 +67,8 @@ class SearchImages(APIView):
                     "validation_error": params.errors
                 }
             )
-        page_param = params.data['page']
-        page_size = params.data['pagesize']
+        page_param = params.data[PAGE]
+        page_size = params.data[PAGESIZE]
         try:
             search_results = search_controller.search(params,
                                                       index='image',
@@ -76,7 +78,7 @@ class SearchImages(APIView):
             return Response(
                 status=400,
                 data={
-                    'validation_error': 'Deep pagination is not allowed.'
+                    VALIDATION_ERROR: 'Deep pagination is not allowed.'
                 }
             )
 
