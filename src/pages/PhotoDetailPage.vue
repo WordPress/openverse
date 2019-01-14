@@ -285,7 +285,7 @@ const PhotoDetailPage = {
       this.$router.push({ name: 'browse-page', query: { q: query } });
     },
     onGotoBack() {
-      this.$router.go(-1);
+      this.$router.push({ name: 'browse-page', query: { q: this.query } });
     },
     onShowViewer() {
       if (this.images.length > 0) {
