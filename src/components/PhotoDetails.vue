@@ -133,3 +133,112 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+  .photo_provider {
+     text-transform: capitalize;
+  }
+
+  .photo {
+    width: 100%;
+    border-bottom: 1px solid #d6d6d6;
+  }
+
+  .photo_breadcrumb {
+    width: 100%;
+    display: block;
+    text-align: left;
+    font-size:.9em;
+    margin-top: -10px;
+  }
+
+  .photo_image-ctr {
+    position: relative;
+    text-align: center;
+    padding: 30px;
+    max-height: 640px;
+
+    img {
+      position: relative;
+      width: auto;
+      height: auto;
+      max-height: 100%;
+      max-width: 100%;
+      background: #EBECE4;
+    }
+
+    /* Small only */
+    @media screen and (max-width: 39.9375em) {
+      padding: 30px 15px;
+    }
+  }
+
+  .photo_info-ctr {
+    padding: 45px 15px;
+    border-left: 1px solid #d6d6d6;
+
+    .photo_info-header {
+      border-top: 1px solid #e7e8e9;
+      margin-left: 15px;
+    }
+
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: 1rem;
+      margin: 0;
+      padding: 0 0 0 15px;
+    }
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: 1rem;
+      margin: 0;
+    }
+
+    h2 {
+      margin-bottom: 1.07142857em;
+      font-size: .875em;
+      font-weight: 600;
+      letter-spacing: 1px;
+      line-height: 1.25;
+      text-transform: uppercase;
+      display: inline-block;
+      padding-top: .28571429em;
+      border-top: 5px solid rgba(29, 31, 39, .8);
+      margin-top: -3px;
+    }
+
+    ul {
+      margin: 0;
+      list-style-type: none;
+
+      li {
+        padding-left: 15px;
+        margin-left: 0;
+        margin-bottom: 10px;
+      }
+    }
+
+    /* Small only */
+    @media screen and (max-width: 39.9375em) {
+      padding: 30px 0;
+    }
+  }
+
+  .photo_usage {
+    .photo_info-header {
+      margin-left: 0px;
+    }
+
+    padding: 15px;
+  }
+
+  .photo_usage-attribution {
+    border-left: 1px solid #e7e8e9;;
+    padding-left: 10px;
+    padding-bottom: 15px
+  }
+</style>
+
