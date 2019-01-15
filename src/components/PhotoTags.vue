@@ -4,7 +4,7 @@
       <h2>Tags</h2>
     </header>
     <div class="photo_tags-ctr cell large-12">
-      <template v-for="(tag, index) in tags">
+      <template v-for="(tag, index) in getValidTags()">
         <span class="photo_tag button hollow secondary"
               :key="index"
               @click="searchByTagName(tag.name)">
@@ -43,6 +43,9 @@ export default {
     },
     searchByTagName(query) {
       this.$router.push({ name: 'browse-page', query: { q: query } });
+    },
+    getValidTags() {
+      return this.$props.tags.filter(tag => !!tag.name);
     },
   },
 };

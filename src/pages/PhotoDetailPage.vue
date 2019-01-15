@@ -89,55 +89,10 @@ const PhotoDetailPage = {
       return this.$store.state.relatedImages;
     },
     tags() {
-      return this.$store.state.image.tags.filter(tag => !!tag.name);
+      return this.$store.state.image.tags;
     },
     image() {
       return this.$store.state.image;
-    },
-    ccLicenseURL() {
-      if (!this.image) {
-        return '';
-      }
-
-      const image = this.image;
-      const BASE_URL = 'https://creativecommons.org';
-      let url = `${BASE_URL}/licenses/${image.license}/${image.license_version}`;
-      let license = '';
-
-      if (image.license) {
-        license = image.license;
-      }
-
-      if (license === 'cc0') {
-        this.image.license_version = '1.0';
-        url = `${BASE_URL}/publicdomain/zero/1.0/`;
-      } else if (image.license === 'pdm') {
-        url = `${BASE_URL}/publicdomain/mark/1.0/`;
-      }
-
-      return url;
-    },
-    textAttribution() {
-      const image = this.image;
-      const licenseURL =
-        `<a href="${this.ccLicenseURL}">
-          CC ${image.license.toUpperCase()} ${image.license_version}
-         </a>`;
-
-      return `"${image.title}" by ${image.creator}
-              is licensed under CC ${image.license.toUpperCase()}
-              ${image.license_version} ${licenseURL}`;
-    },
-    HTMLAttribution() {
-      const image = this.image;
-
-      return `<a href="${image.foreign_landing_url}">"${image.title}"</a>
-              by
-              <a href="${image.creator_url}">${image.creator}</a>
-              is licensed under
-              <a href="${this.ccLicenseURL}">
-                CC ${image.license.toUpperCase()} ${image.license_version}
-              </a>`;
     },
     show() {
       const viewer = this.$el.querySelector('.images').$viewer;
@@ -182,23 +137,10 @@ const PhotoDetailPage = {
         this.$store.dispatch(FETCH_RELATED_IMAGES, { q: queryParam, pagesize: 8 });
       }
     },
-    isClarifaiTag(provider) {
-      let isClarifaiTag = false;
-
-      if (provider === 'clarifai') {
-        isClarifaiTag = true;
-        this.hasClarifaiTags = true;
-      }
-
-      return isClarifaiTag;
-    },
     loadImage(id) {
       if (id) {
         this.$store.dispatch(FETCH_IMAGE, { id });
       }
-    },
-    onGotoBack() {
-      this.$router.push({ name: 'browse-page', query: { q: this.query } });
     },
     onShowViewer() {
       if (this.images.length > 0) {
