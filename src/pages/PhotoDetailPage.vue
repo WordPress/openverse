@@ -11,21 +11,11 @@
                    :imageHeight="imageHeight"
                    @onImageLoaded="onImageLoaded" />
     <photo-tags :tags="tags" />
-    <div class="photo_related-images grid-x full" v-if="relatedImages && relatedImages.length > 0">
-      <header>
-        <h2>Related Images</h2>
-      </header>
-      <search-grid
-        :imagesCount="imagesCount"
-        :images="relatedImages"
-        :query="query"
-        :filter="filter"
-        :includeAnalytics="false"
-        :useInfiniteScroll="false"
-        :includeAddToList="false"
-        v-if="isPrimaryImageLoaded===true">
-      </search-grid>
-    </div>
+    <related-images :relatedImages="relatedImages"
+                    :imagesCount="imagesCount"
+                    :query="query"
+                    :filter="filter"
+                    :isPrimaryImageLoaded="isPrimaryImageLoaded" />
     <footer-section></footer-section>
     <viewer :images="images" ref="imageViewer" v-if="isPrimaryImageLoaded===true">
       <div class="photo_image-viewer" v-viewer="{movable: false}">
@@ -38,10 +28,9 @@
 <script>
 import PhotoDetails from '@/components/PhotoDetails';
 import PhotoTags from '@/components/PhotoTags';
+import RelatedImages from '@/components/RelatedImages';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
-import SearchGrid from '@/components/SearchGrid';
-import LicenseIcons from '@/components/LicenseIcons';
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
 import 'viewerjs/dist/viewer.css';
 import Viewer from 'v-viewer';
@@ -54,9 +43,8 @@ const PhotoDetailPage = {
   name: 'photo-detail-page',
   components: {
     HeaderSection,
-    SearchGrid,
+    RelatedImages,
     FooterSection,
-    LicenseIcons,
     PhotoDetails,
     PhotoTags,
   },
@@ -169,46 +157,5 @@ export default PhotoDetailPage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  .photo_image-viewer {
-    display: none;
-  }
 
-  .photo-detail-page {
-    width: 100%;
-  }
-
-  .photo_license {
-    text-transform: uppercase;
-  }
-
-  .photo_paginator {
-    position: absolute;
-    display: block;
-    width: 50px;
-    height: 50px;
-    z-index: 400;
-    top: 50%;
-    opacity: .5;
-  }
-
-  .photo_paginator__previous {
-    left: 5px;
-    background: url('../assets/arrow-icon_left.svg')
-                center
-                center
-                no-repeat;
-  }
-
-  .photo_paginator__next {
-    right: 5px;
-    background: url('../assets/arrow-icon_right.svg')
-                center
-                center
-                no-repeat;
-  }
-
-  .search-grid {
-    margin: 0;
-    width: 100%;
-  }
 </style>

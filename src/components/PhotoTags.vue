@@ -52,53 +52,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .photo_related-images,
-  .photo_tags {
-    margin: 30px;
-    border-top: 1px solid #e7e8e9;
-    width: 100%;
-
-    header h2 {
-      margin-bottom: 1.07142857em;
-      width: 100%;
-      font-size: 1em;
-      font-weight: 600;
-      letter-spacing: 1px;
-      line-height: 1.25;
-      text-transform: uppercase;
-      display: inline-block;
-      padding-top: .28571429em;
-      border-top: 5px solid rgba(29, 31, 39, 0.8);
-      margin-top: -3px;
-    }
-
-    /* Small only */
-    @media screen and (max-width: 39.9375em) {
-      margin: 15px;
-    }
-  }
-
-  .photo_tag {
-    margin-right: 15px;
-    border-radius: 3px;
-    padding: 10px 10px;
-  }
-
-  .photo_tag-label {
-    font-weight: 500;
-  }
-
-  .photo_tag-provider-badge {
-    width: 16px;
-    margin-left: 5px;
-  }
-
-  .photo_tags-clarifai-badge {
-    margin-top: 30px;
-  }
-
-  .photo_tags-clarifai-badge-image {
-    height: 20px;
-  }
+  @import '../styles/photodetails.scss';
 </style>
 
