@@ -17,11 +17,6 @@
                     :filter="filter"
                     :isPrimaryImageLoaded="isPrimaryImageLoaded" />
     <footer-section></footer-section>
-    <viewer :images="images" ref="imageViewer" v-if="isPrimaryImageLoaded===true">
-      <div class="photo_image-viewer" v-viewer="{movable: false}">
-        <img v-for="(image, index) in images" :src="image.url" :key="index">
-      </div>
-    </viewer>
   </div>
 </template>
 
@@ -32,12 +27,7 @@ import RelatedImages from '@/components/RelatedImages';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
-import 'viewerjs/dist/viewer.css';
-import Viewer from 'v-viewer';
-import Vue from 'vue';
 import { SET_IMAGE } from '@/store/mutation-types';
-
-Vue.use(Viewer);
 
 const PhotoDetailPage = {
   name: 'photo-detail-page',
@@ -82,10 +72,6 @@ const PhotoDetailPage = {
     image() {
       return this.$store.state.image;
     },
-    show() {
-      const viewer = this.$el.querySelector('.images').$viewer;
-      viewer.show();
-    },
   },
   watch: {
     tags: function tags(value) {
@@ -128,22 +114,6 @@ const PhotoDetailPage = {
     loadImage(id) {
       if (id) {
         this.$store.dispatch(FETCH_IMAGE, { id });
-      }
-    },
-    onShowViewer() {
-      if (this.images.length > 0) {
-        const selectedImageID = this.$route.params.id;
-        let selectedImageIndex = 0;
-        this.images.forEach((image, index) => {
-          if (parseInt(selectedImageID, 10) === parseInt(image.id, 10)) {
-            selectedImageIndex = index;
-          }
-        });
-        const viewer = this.$refs.imageViewer.$viewer;
-        if (selectedImageIndex) {
-          viewer.view(selectedImageIndex);
-        }
-        viewer.show();
       }
     },
   },
