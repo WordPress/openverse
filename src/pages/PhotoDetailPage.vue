@@ -197,9 +197,6 @@ const PhotoDetailPage = {
         this.$store.dispatch(FETCH_IMAGE, { id });
       }
     },
-    onGotoSearchPage(query) {
-      this.$router.push({ name: 'browse-page', query: { q: query } });
-    },
     onGotoBack() {
       this.$router.push({ name: 'browse-page', query: { q: this.query } });
     },

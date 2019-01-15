@@ -7,7 +7,7 @@
       <template v-for="(tag, index) in tags">
         <span class="photo_tag button hollow secondary"
               :key="index"
-              @click="onGotoSearchPage(tag.name)">
+              @click="searchByTagName(tag.name)">
           <span class="photo_tag-label">
             <span>{{ tag.name }}</span>
           </span>
@@ -40,6 +40,9 @@ export default {
       }
 
       return isClarifaiTag;
+    },
+    searchByTagName(query) {
+      this.$router.push({ name: 'browse-page', query: { q: query } });
     },
   },
 };
