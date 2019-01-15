@@ -109,7 +109,8 @@ const HomePage = {
         src: 'https://c1.staticflickr.com/1/153/433793895_116a0d7739_b.jpg',
         title: '<a href="https://www.flickr.com/photos/pingnews/433793895/">"Released to Public: Hubble Looks at Monocerotis by NASA, ESA, and Hubble Heritage Team  (NASA)"</a>',
         url: 'https://www.flickr.com/photos/pingnews/433793895/',
-      }, {
+      },
+      {
         class: 'grid-item block b2',
         id: '740aec57-acaa-4734-92b4-61bc967fecb9',
         license: 'pdm',
@@ -117,7 +118,8 @@ const HomePage = {
         src: 'https://c1.staticflickr.com/1/83/263570357_e1b9792c7a_b.jpg',
         title: '<a href="https://www.flickr.com/photos/pingnews/263570357/">"Released to Public: Earth, Image by Reto St\xf6ckli  (NASA)"</a>',
         url: 'https://www.flickr.com/photos/pingnews/263570357/',
-      }, {
+      },
+      {
         class: 'grid-item block b3',
         id: 'fb1b5814-e0b4-4fe4-9f57-7cd3b5096404',
         license: 'pdm',
@@ -125,14 +127,15 @@ const HomePage = {
         src: 'https://c1.staticflickr.com/1/118/288983182_2d827a5c12_b.jpg',
         title: '<a href="https://www.flickr.com/photos/pingnews/288983182/">"Released to Public: Wilber and Orville Wright with Flyer II at Huffman Prairie, 1904 (NASA GPN-2002-000126)"</a>',
         url: 'https://www.flickr.com/photos/pingnews/288983182/',
-      }, {
+      },
+      {
         class: 'grid-item block b4',
-        id: 'ea89aea5-c51d-4642-825e-081ace7f6cb7',
+        id: '2cbf4a64-28ea-454a-86e2-ae52c1b93a8a',
         license: 'pdm',
         license_version: '1.0',
-        src: 'https://c2.staticflickr.com/2/1319/1441114164_7704547ff8.jpg',
-        title: '<a href="https://www.flickr.com/photos/pingnews/1441114164/">"Public Domain: Franklin D. Roosevelt on the U.S.S. Houston in Charleston, South Carolina, 03/03/1939 (NARA)"</a>',
-        url: 'https://www.flickr.com/photos/pingnews/1441114164/',
+        src: 'https://c1.staticflickr.com/1/101/288969363_86b1d5272b_b.jpg',
+        title: '<a href="https://www.flickr.com/photos/pingnews/288969363/">"Released to Public: Bald Eagle by Gary Rothstein (NASA KSC-06PD-2063)"</a>',
+        url: 'https://www.flickr.com/photos/pingnews/288969363/',
       },
       {
         class: 'grid-item block b5',
@@ -145,21 +148,21 @@ const HomePage = {
       },
       {
         class: 'grid-item block b6',
+        id: 'ea89aea5-c51d-4642-825e-081ace7f6cb7',
+        license: 'pdm',
+        license_version: '1.0',
+        src: 'https://c2.staticflickr.com/2/1319/1441114164_7704547ff8.jpg',
+        title: '<a href="https://www.flickr.com/photos/pingnews/1441114164/">"Public Domain: Franklin D. Roosevelt on the U.S.S. Houston in Charleston, South Carolina, 03/03/1939 (NARA)"</a>',
+        url: 'https://www.flickr.com/photos/pingnews/1441114164/',
+      },
+      {
+        class: 'grid-item block b7',
         id: 'b80df152-fe77-4f49-a048-f0891184a1c0',
         license: 'pdm',
         license_version: '1.0',
         src: 'https://c1.staticflickr.com/1/183/436664034_9a6e990ca0_b.jpg',
         title: '<a href="https://www.flickr.com/photos/pingnews/436664034/">"Released to Public: Space Shuttle Discovery Catches a Ride by Lori Losey/NASA, August 19, 2005 (NASA)"</a>',
         url: 'https://www.flickr.com/photos/pingnews/436664034/',
-      },
-      {
-        class: 'grid-item block b7',
-        id: '2cbf4a64-28ea-454a-86e2-ae52c1b93a8a',
-        license: 'pdm',
-        license_version: '1.0',
-        src: 'https://c1.staticflickr.com/1/101/288969363_86b1d5272b_b.jpg',
-        title: '<a href="https://www.flickr.com/photos/pingnews/288969363/">"Released to Public: Bald Eagle by Gary Rothstein (NASA KSC-06PD-2063)"</a>',
-        url: 'https://www.flickr.com/photos/pingnews/288969363/',
       },
     ],
   }),
