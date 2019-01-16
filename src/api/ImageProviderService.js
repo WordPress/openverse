@@ -86,7 +86,7 @@ const ImageProviderService = {
         logo: 'museumvictoria_logo.svg',
       },
       nhl: {
-        name: 'Natural History Museum in London',
+        name: 'London Natural History Museum',
         url: 'http://www.nhm.ac.uk/',
         logo: '',
       },
