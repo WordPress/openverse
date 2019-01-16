@@ -145,7 +145,7 @@ export default {
         { code: 'mccordmuseum', name: 'Montreal Social History Museum' },
         { code: 'met', name: 'Metropolitan Museum of Art' },
         { code: 'museumsvictoria', name: 'Museums Victoria' },
-        { code: 'nhl', name: 'TODO' },
+        { code: 'nhl', name: 'London Natural History Museum' },
         { code: 'nypl', name: 'New York Public Library' },
         { code: 'rijksmuseum', name: 'Rijksmuseum NL' },
         { code: 'sciencemuseum', name: 'Science Museum – UK' },
