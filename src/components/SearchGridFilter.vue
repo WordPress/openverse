@@ -133,6 +133,8 @@ export default {
         { code: '500px', name: '500px' },
         { code: 'animaldiversity', name: 'Animal Diversity Web' },
         { code: 'behance', name: 'Behance' },
+        { code: 'brooklynmuseum', name: 'Brooklyn Museum' },
+        { code: 'clevelandmuseum', name: 'Cleveland Museum of Art' },
         { code: 'deviantart', name: 'DeviantArt' },
         { code: 'digitaltmuseum', name: 'Digitalt Museum' },
         { code: 'eol', name: 'Encyclopedia of Life' },
@@ -143,9 +145,12 @@ export default {
         { code: 'mccordmuseum', name: 'Montreal Social History Museum' },
         { code: 'met', name: 'Metropolitan Museum of Art' },
         { code: 'museumsvictoria', name: 'Museums Victoria' },
+        { code: 'nhl', name: 'TODO' },
         { code: 'nypl', name: 'New York Public Library' },
         { code: 'rijksmuseum', name: 'Rijksmuseum NL' },
         { code: 'sciencemuseum', name: 'Science Museum – UK' },
+        { code: 'thingiverse', name: 'Thingiverse' },
+        { code: 'WoRMS', name: 'World Register of Marine Species' },
       ],
     licenses:
       [
