@@ -59,7 +59,7 @@ export default LicenseIcons;
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
   .photo-license-icons {
-    display: block;
+    display: inline-block;
     height: 32px;
     white-space: none;
     opacity: .7;
