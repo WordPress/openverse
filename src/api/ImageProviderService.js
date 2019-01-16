@@ -86,8 +86,8 @@ const ImageProviderService = {
         logo: 'museumvictoria_logo.svg',
       },
       nhl: {
-        name: 'TODO',
-        url: 'https://TODO.org',
+        name: 'Natural History Museum in London',
+        url: 'http://www.nhm.ac.uk/',
         logo: '',
       },
       nypl: {
