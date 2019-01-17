@@ -33,7 +33,7 @@ const ImageProviderService = {
       clevelandmuseum: {
         name: 'Cleveland Museum of Art',
         url: 'http://www.clevelandart.org/',
-        logo: '',
+        logo: 'cleveland.png',
       },
       deviantart: {
         name: 'DeviantArt',
