@@ -21,7 +21,7 @@ export default {
   },
   mounted() {
     this.clipboard = new Clipboard(this.$el, {
-      text: () => this.toCopy.replace(/\s\s/g, ''),
+      text: () => this.toCopy().replace(/\s\s/g, ''),
     });
 
     this.clipboard.on('success', () => {

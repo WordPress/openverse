@@ -6,7 +6,7 @@
            @click.prevent="onGoBackToSearchResults"
            v-if="shouldShowBreadcrumb">&#171; Back to search results</a>
         <img @load="onImageLoad"
-             :class="photo_image"
+             class="photo_image"
              :src="image.url"
              :alt="image.title">
       </div>
@@ -103,26 +103,30 @@ export default {
       return url;
     },
     textAttribution() {
-      const image = this.image;
-      const licenseURL =
-        `<a href="${this.ccLicenseURL}">
-          CC ${image.license.toUpperCase()} ${image.license_version}
-         </a>`;
+      return () => {
+        const image = this.image;
+        const licenseURL =
+          `<a href="${this.ccLicenseURL}">
+            CC ${image.license.toUpperCase()} ${image.license_version}
+          </a>`;
 
-      return `"${image.title}" by ${image.creator}
-              is licensed under CC ${image.license.toUpperCase()}
-              ${image.license_version} ${licenseURL}`;
+        return `"${image.title}" by ${image.creator}
+                is licensed under CC ${image.license.toUpperCase()}
+                ${image.license_version} ${licenseURL}`;
+      };
     },
     HTMLAttribution() {
-      const image = this.image;
+      return () => {
+        const image = this.image;
 
-      return `<a href="${image.foreign_landing_url}">"${image.title}"</a>
-              by
-              <a href="${image.creator_url}">${image.creator}</a>
-              is licensed under
-              <a href="${this.ccLicenseURL}">
-                CC ${image.license.toUpperCase()} ${image.license_version}
-              </a>`;
+        return `<a href="${image.foreign_landing_url}">"${image.title}"</a>
+                by
+                <a href="${image.creator_url}">${image.creator}</a>
+                is licensed under
+                <a href="${this.ccLicenseURL}">
+                  CC ${image.license.toUpperCase()} ${image.license_version}
+                </a>`;
+      };
     },
   },
   methods: {
