@@ -105,14 +105,11 @@ export default {
     textAttribution() {
       return () => {
         const image = this.image;
-        const licenseURL =
-          `<a href="${this.ccLicenseURL}">
-            CC ${image.license.toUpperCase()} ${image.license_version}
-          </a>`;
+        const licenseURL = this.ccLicenseURL;
 
         return `"${image.title}" by ${image.creator}
                 is licensed under CC ${image.license.toUpperCase()}
-                ${image.license_version} ${licenseURL}`;
+                ${image.license_version}. To view a copy of this license, visit: ${licenseURL}`;
       };
     },
     HTMLAttribution() {
