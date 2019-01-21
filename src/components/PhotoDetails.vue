@@ -23,8 +23,11 @@
           </li>
           <li>
             <h3>Creator</h3>
-            <span>
-            <a :href="image.creator_url">{{ image.creator }}</a>
+            <span v-if="image.creator">
+              <a :href="image.creator_url">{{ image.creator }}</a>
+            </span>
+            <span v-else>
+              Not Available
             </span>
           </li>
           <li>
