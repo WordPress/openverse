@@ -237,7 +237,7 @@ $vert-seperate: 4rem;
   padding: 0.5rem;
   position: absolute;
   top: 25%;
-  width: 75%;
+  width: 16.85em;
   z-index: 10;
 }
 
