@@ -28,7 +28,7 @@ const ImageProviderService = {
       brooklynmuseum: {
         name: 'Brooklyn Museum',
         url: 'https://www.brooklynmuseum.org/',
-        logo: 'brooklyn_museum_logo.svg',
+        logo: 'brooklyn_museum_logo.png',
       },
       clevelandmuseum: {
         name: 'Cleveland Museum of Art',
