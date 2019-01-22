@@ -161,6 +161,7 @@ export default {
     max-height: 30px;
     max-width: 40px;
     margin-right: 5px;
+    padding-bottom: 3px;
   }
 
   .search-grid_overlay-add {
