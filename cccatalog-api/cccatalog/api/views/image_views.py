@@ -143,9 +143,9 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         resp = self.retrieve(request, identifier)
         # Get pretty display name for a provider
         provider = resp.data['provider']
-        provider_data = ContentProvider\
-            .objects\
-            .get(provider_identifier=provider)\
+        provider_data = ContentProvider \
+            .objects \
+            .get(provider_identifier=provider) \
             .provider_name
         resp.data['provider'] = provider_data
         # Add page views to the response.

@@ -7,7 +7,7 @@ from cccatalog.api.models import ContentProvider
 
 IDENTIFIER = 'provider_identifier'
 NAME = 'provider_name'
-
+FILTER = 'filter_content'
 
 class HealthCheck(APIView):
     """
@@ -28,6 +28,7 @@ class AboutImageResponse(serializers.Serializer):
     image_count = serializers.IntegerField()
     display_name = serializers.CharField()
 
+
 class ImageStats(APIView):
     """
     List all providers in the Creative Commons image catalog, in addition to the
@@ -38,20 +39,20 @@ class ImageStats(APIView):
                              200: AboutImageResponse(many=True)
                          })
     def get(self, request, format=None):
-        provider_data = ContentProvider \
-            .objects \
-            .values(IDENTIFIER, NAME)
-        id_to_display_name = {
-            rec[IDENTIFIER]: rec[NAME] for rec in provider_data
+        provider_data = ContentProvider.objects.values(IDENTIFIER, NAME, FILTER)
+        provider_table = {
+            rec[IDENTIFIER]: (rec[NAME], rec[FILTER]) for rec in provider_data
         }
         providers = get_providers('image')
         response = []
         for provider in providers:
-            response.append(
-                {
-                    'provider_name': provider,
-                    'image_count': providers[provider],
-                    'display_name': id_to_display_name[provider]
-                }
-            )
+            display_name, filter = provider_table[provider]
+            if not filter:
+                response.append(
+                    {
+                        'provider_name': provider,
+                        'image_count': providers[provider],
+                        'display_name': display_name
+                    }
+                )
         return Response(status=200, data=response)
