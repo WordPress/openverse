@@ -26,6 +26,7 @@ class AboutImageResponse(serializers.Serializer):
     """ The full image search response. """
     provider_name = serializers.CharField()
     image_count = serializers.IntegerField()
+    display_name = serializers.CharField()
 
 class ImageStats(APIView):
     """
