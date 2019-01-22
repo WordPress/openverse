@@ -11,7 +11,8 @@ from cccatalog.api.models import ContentProvider
 import logging as log
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
-CACHE_TIMEOUT = 60 * 5
+CACHE_TIMEOUT = 10
+
 
 def search(search_params, index, page_size, page=1) -> Response:
     """
@@ -60,7 +61,7 @@ def search(search_params, index, page_size, page=1) -> Response:
             .values('provider_identifier')
         cache.set(
             key=filter_cache_key,
-            timeout=10,
+            timeout=CACHE_TIMEOUT,
             value=filtered_providers
         )
     for filtered in filtered_providers:
