@@ -61,9 +61,9 @@ export default {
     },
     getProviderLogo(providerName) {
       const logo = ImageProviderService.getProviderInfo(providerName).logo;
-      const logUrl = require(`@/assets/${logo}`); // eslint-disable-line global-require, import/no-dynamic-require
+      const logoUrl = require(`@/assets/${logo}`); // eslint-disable-line global-require, import/no-dynamic-require
 
-      return logUrl;
+      return logoUrl;
     },
     onGotoDetailPage(event, image) {
       // doesn't use router to redirect to photo details page in case the user
@@ -161,6 +161,7 @@ export default {
     max-height: 30px;
     max-width: 40px;
     margin-right: 5px;
+    padding-bottom: 3px;
   }
 
   .search-grid_overlay-add {

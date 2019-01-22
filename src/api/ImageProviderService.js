@@ -28,7 +28,7 @@ const ImageProviderService = {
       brooklynmuseum: {
         name: 'Brooklyn Museum',
         url: 'https://www.brooklynmuseum.org/',
-        logo: '',
+        logo: 'brooklyn_museum_logo.png',
       },
       clevelandmuseum: {
         name: 'Cleveland Museum of Art',
@@ -78,7 +78,7 @@ const ImageProviderService = {
       met: {
         name: 'Metropolitan Museum of Art',
         url: 'https://www.metmuseum.org',
-        logo: 'mccordmuseum_logo.png',
+        logo: 'met_logo.png',
       },
       museumsvictoria: {
         name: 'Museums Victoria',
@@ -88,7 +88,7 @@ const ImageProviderService = {
       nhl: {
         name: 'London Natural History Museum',
         url: 'http://www.nhm.ac.uk/',
-        logo: '',
+        logo: 'nhm_logo.png',
       },
       nypl: {
         name: 'New York Public Library',
@@ -108,12 +108,12 @@ const ImageProviderService = {
       thingiverse: {
         name: 'Thingiverse',
         url: 'https://www.thingiverse.com/',
-        logo: '',
+        logo: 'thingiverse_logo.png',
       },
       WoRMS: {
         name: 'World Register of Marine Species',
         url: 'http://www.marinespecies.org/',
-        logo: '',
+        logo: 'worms_logo.png',
       },
     };
 
