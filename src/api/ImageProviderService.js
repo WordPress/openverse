@@ -78,7 +78,7 @@ const ImageProviderService = {
       met: {
         name: 'Metropolitan Museum of Art',
         url: 'https://www.metmuseum.org',
-        logo: 'met_logo.svg',
+        logo: 'met_logo.png',
       },
       museumsvictoria: {
         name: 'Museums Victoria',
