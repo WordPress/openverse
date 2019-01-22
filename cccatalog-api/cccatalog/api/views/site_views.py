@@ -8,6 +8,8 @@ from cccatalog.api.models import ContentProvider
 IDENTIFIER = 'provider_identifier'
 NAME = 'provider_name'
 FILTER = 'filter_content'
+URL = 'domain_name'
+
 
 class HealthCheck(APIView):
     """
@@ -27,6 +29,7 @@ class AboutImageResponse(serializers.Serializer):
     provider_name = serializers.CharField()
     image_count = serializers.IntegerField()
     display_name = serializers.CharField()
+    provider_url = serializers.CharField()
 
 
 class ImageStats(APIView):
@@ -39,20 +42,24 @@ class ImageStats(APIView):
                              200: AboutImageResponse(many=True)
                          })
     def get(self, request, format=None):
-        provider_data = ContentProvider.objects.values(IDENTIFIER, NAME, FILTER)
+        provider_data = ContentProvider\
+            .objects\
+            .values(IDENTIFIER, NAME, FILTER, URL)
         provider_table = {
-            rec[IDENTIFIER]: (rec[NAME], rec[FILTER]) for rec in provider_data
+            rec[IDENTIFIER]:
+                (rec[NAME], rec[FILTER], rec[URL]) for rec in provider_data
         }
         providers = get_providers('image')
         response = []
         for provider in providers:
-            display_name, _filter = provider_table[provider]
+            display_name, _filter, provider_url = provider_table[provider]
             if not _filter:
                 response.append(
                     {
                         'provider_name': provider,
                         'image_count': providers[provider],
-                        'display_name': display_name
+                        'display_name': display_name,
+                        'provider_url': provider_url
                     }
                 )
         return Response(status=200, data=response)

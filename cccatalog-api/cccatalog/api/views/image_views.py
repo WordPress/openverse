@@ -145,9 +145,9 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         provider = resp.data['provider']
         provider_data = ContentProvider \
             .objects \
-            .get(provider_identifier=provider) \
-            .provider_name
-        resp.data['provider'] = provider_data
+            .get(provider_identifier=provider)
+        resp.data['provider'] = provider_data.provider_name
+        resp.data['provider_url'] = provider_data.domain_name
         # Add page views to the response.
         resp.data['view_count'] = view_count
         # Fix links to creator and foreign landing URLs.

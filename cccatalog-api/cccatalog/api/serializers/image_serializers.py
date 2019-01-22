@@ -36,8 +36,13 @@ class ImageDetailSerializer(ModelSerializer, ImageSerializer):
         help_text="Tags with detailed metadata, such as accuracy and provider."
     )
     id = serializers.CharField(
-        help_text='The unique ID of an image.',
+        help_text="The unique ID of an image.",
         source='identifier'
+    )
+    provider_url = serializers.CharField(
+        help_text="The homepage of the image provider.",
+        allow_blank=True,
+        allow_null=True
     )
 
     class Meta:
@@ -45,4 +50,4 @@ class ImageDetailSerializer(ModelSerializer, ImageSerializer):
         fields = ('title', 'id', 'creator', 'creator_url', 'tags',
                   'url', 'thumbnail', 'provider', 'source', 'license',
                   'license_version', 'foreign_landing_url', 'meta_data',
-                  'view_count')
+                  'view_count', 'provider_url')
