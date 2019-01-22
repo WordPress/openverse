@@ -46,8 +46,8 @@ class ImageStats(APIView):
         providers = get_providers('image')
         response = []
         for provider in providers:
-            display_name, filter = provider_table[provider]
-            if not filter:
+            display_name, _filter = provider_table[provider]
+            if not _filter:
                 response.append(
                     {
                         'provider_name': provider,
