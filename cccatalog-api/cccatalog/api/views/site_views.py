@@ -20,6 +20,7 @@ class HealthCheck(APIView):
     load balancer and destroyed.
     """
     swagger_schema = None
+
     def get(self, request, format=None):
         return Response('', status=200)
 
@@ -42,8 +43,8 @@ class ImageStats(APIView):
                              200: AboutImageResponse(many=True)
                          })
     def get(self, request, format=None):
-        provider_data = ContentProvider\
-            .objects\
+        provider_data = ContentProvider \
+            .objects \
             .values(IDENTIFIER, NAME, FILTER, URL)
         provider_table = {
             rec[IDENTIFIER]:
