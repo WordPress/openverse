@@ -3,7 +3,7 @@ from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
-from cccatalog.api.models import Image
+from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils.view_count import track_model_views
 from rest_framework.reverse import reverse
@@ -139,7 +139,15 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     @track_model_views(Image)
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
+
         resp = self.retrieve(request, identifier)
+        # Get pretty display name for a provider
+        provider = resp.data['provider']
+        provider_data = ContentProvider\
+            .objects\
+            .get(provider_identifier=provider)\
+            .provider_name
+        resp.data['provider'] = provider_data
         # Add page views to the response.
         resp.data['view_count'] = view_count
         # Fix links to creator and foreign landing URLs.

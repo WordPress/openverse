@@ -3,6 +3,10 @@ from rest_framework.views import APIView
 from rest_framework import serializers
 from cccatalog.api.controllers.search_controller import get_providers
 from drf_yasg.utils import swagger_auto_schema
+from cccatalog.api.models import ContentProvider
+
+IDENTIFIER = 'provider_identifier'
+NAME = 'provider_name'
 
 
 class HealthCheck(APIView):
@@ -33,6 +37,12 @@ class ImageStats(APIView):
                              200: AboutImageResponse(many=True)
                          })
     def get(self, request, format=None):
+        provider_data = ContentProvider \
+            .objects \
+            .values(IDENTIFIER, NAME)
+        id_to_display_name = {
+            rec[IDENTIFIER]: rec[NAME] for rec in provider_data
+        }
         providers = get_providers('image')
         response = []
         for provider in providers:
@@ -40,6 +50,7 @@ class ImageStats(APIView):
                 {
                     'provider_name': provider,
                     'image_count': providers[provider],
+                    'display_name': id_to_display_name[provider]
                 }
             )
         return Response(status=200, data=response)
