@@ -23,8 +23,11 @@
           </li>
           <li>
             <h3>Creator</h3>
-            <span>
-            <a :href="image.creator_url">{{ image.creator }}</a>
+            <span v-if="image.creator">
+              <a :href="image.creator_url">{{ image.creator }}</a>
+            </span>
+            <span v-else>
+              Not Available
             </span>
           </li>
           <li>
@@ -54,8 +57,10 @@
           </header>
           <p class="photo_usage-attribution" ref="photoAttribution">
             <a :href="image.foreign_landing_url">"{{ image.title }}"</a>
-            by
-            <a :href="image.creator_url">{{ image.creator }}</a>
+            <span v-if="image.creator">
+              by
+              <a :href="image.creator_url">{{ image.creator }}</a>
+            </span>
             is licensed under
             <a class="photo_license" :href="ccLicenseURL">
             CC {{ image.license}} {{ image.license_version }}
@@ -106,8 +111,9 @@ export default {
       return () => {
         const image = this.image;
         const licenseURL = this.ccLicenseURL;
+        const byCreator = image.creator ? `by ${image.creator}` : ' ';
 
-        return `"${image.title}" by ${image.creator}
+        return `"${image.title}" ${byCreator}
                 is licensed under CC ${image.license.toUpperCase()}
                 ${image.license_version}. To view a copy of this license, visit: ${licenseURL}`;
       };
@@ -115,10 +121,10 @@ export default {
     HTMLAttribution() {
       return () => {
         const image = this.image;
+        const byCreator = image.creator ? `by <a href="${image.creator_url}">${image.creator}</a>` : ' ';
 
         return `<a href="${image.foreign_landing_url}">"${image.title}"</a>
-                by
-                <a href="${image.creator_url}">${image.creator}</a>
+                ${byCreator}
                 is licensed under
                 <a href="${this.ccLicenseURL}">
                   CC ${image.license.toUpperCase()} ${image.license_version}
