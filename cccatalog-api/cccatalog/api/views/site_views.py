@@ -4,6 +4,7 @@ from rest_framework import serializers
 from cccatalog.api.controllers.search_controller import get_providers
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider
+import logging as log
 
 IDENTIFIER = 'provider_identifier'
 NAME = 'provider_name'
@@ -53,14 +54,19 @@ class ImageStats(APIView):
         providers = get_providers('image')
         response = []
         for provider in providers:
-            display_name, _filter, provider_url = provider_table[provider]
-            if not _filter:
-                response.append(
-                    {
-                        'provider_name': provider,
-                        'image_count': providers[provider],
-                        'display_name': display_name,
-                        'provider_url': provider_url
-                    }
-                )
+            if provider in provider_table:
+                display_name, _filter, provider_url = provider_table[provider]
+                if not _filter:
+                    response.append(
+                        {
+                            'provider_name': provider,
+                            'image_count': providers[provider],
+                            'display_name': display_name,
+                            'provider_url': provider_url
+                        }
+                    )
+            else:
+                msg = 'provider_identifier missing from content_provider' \
+                      ' table: {}. Check for typos/omissions.'.format(provider)
+                log.error(msg)
         return Response(status=200, data=response)

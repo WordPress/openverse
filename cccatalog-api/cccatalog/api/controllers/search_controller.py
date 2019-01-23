@@ -51,7 +51,7 @@ def search(search_params, index, page_size, page=1) -> Response:
         creator_filter = Q("term", creator=search_params.data['creator'])
         s = s.filter('bool', should=creator_filter, minimum_should_match=1)
 
-    # Sometimes, it is desirable to hide content providers from the catalog
+    # It is sometimes desirable to hide content providers from the catalog
     # without scrubbing them from the database or reindexing.
     filter_cache_key = 'filtered_providers'
     filtered_providers = cache.get(key=filter_cache_key)
