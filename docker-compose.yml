@@ -49,6 +49,7 @@ services:
       - ./cccatalog-api:/cccatalog-api
     ports:
       - "8000:8000"
+      - "4444:4444"
     depends_on:
       - db
       - es

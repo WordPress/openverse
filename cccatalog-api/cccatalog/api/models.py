@@ -4,6 +4,7 @@ from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.contrib.postgres.fields import JSONField, ArrayField
 
+
 class OpenLedgerModel(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -109,6 +110,17 @@ class Image(OpenLedgerModel):
         db_table = 'image'
         ordering = ['-created_on']
 
+
+class ContentProvider(models.Model):
+    provider_identifier = models.CharField(max_length=50)
+    provider_name = models.CharField(max_length=250, unique=True)
+    created_on = models.DateTimeField(auto_now=False)
+    domain_name = models.CharField(max_length=500)
+    filter_content = models.BooleanField(null=False, default=False)
+    notes = models.TextField(null=True)
+
+    class Meta:
+        db_table = 'content_provider'
 
 class ImageTags(OpenLedgerModel):
     tag = models.ForeignKey('Tag', on_delete=models.CASCADE, blank=True, null=True)
