@@ -4,15 +4,13 @@
 
 The Creative Commons Catalog API ('cccatalog-api') is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of Creative Commons works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to access the digital commons in their own applications.
 
-As of June 2018, this project is in its early stages. For now, assume that the API is unstable and that the REST interface could change dramatically over short periods of time. We have not yet made the production system publicly accessible.
-
-This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [cccatalog repository](https://github.com/creativecommons/cccatalog).
+This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [cccatalog repository](https://github.com/creativecommons/cccatalog). A front end web application that interfaces with the API can be found at the [cccatalog-frontend repository](https://github.com/creativecommons/cccatalog).
 
 ## API Documentation
 
-Beta browsable API documentation can be found [here](http://api-dev.creativecommons.engineering).
+Browsable API documentation can be found [here](https://api.creativecommons.engineering).
 
-## Getting Started
+## Running the server locally
 
 Ensure that you have installed [Docker](https://docs.docker.com/install/) and that the [Docker daemon is running](https://docs.docker.com/config/daemon/).
 ```
@@ -28,7 +26,16 @@ After executing this, you will be running:
 * Redis
 * Ingestion Server, a microservice for bulk ingesting and indexing search data.
 
-### System Architecture
+Once everything has initialized, load the sample data.
+
+```
+./load_sample_data.sh
+```
+
+You are now ready to start sending the API server requests. Hit the API with a request to make sure it is working:
+`curl localhost:8000/image/search?q=honey`
+
+## System Architecture
 ![System Architecture](https://raw.githubusercontent.com/creativecommons/cccatalog-api/master/system_architecture.png)
 
 ## Running the tests
@@ -55,3 +62,6 @@ pip install -r requirements.txt
 source venv/bin/activate
 python3 test/integration_tests.py
 ```
+
+## Deploying the API
+The API infrastructure is orchestrated using Terraform hosted in creativecommons/ccsearch-infrastructure. More details can be found on the [this wiki page](https://wikijs.creativecommons.org/tech/cc-search/operations).
