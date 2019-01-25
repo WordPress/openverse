@@ -10,7 +10,7 @@
                    :imageWidth="imageWidth"
                    :imageHeight="imageHeight"
                    @onImageLoaded="onImageLoaded" />
-    <share-list></share-list>
+    <share-list :shouldDisappearOnScroll="false"></share-list>
     <photo-tags :tags="tags" />
     <related-images :relatedImages="relatedImages"
                     :imagesCount="imagesCount"
