@@ -8,7 +8,7 @@ This repository is primarily concerned with back end infrastructure like datasto
 
 ## Project Status
 
-The API is still in semantic version 0.*.*, meaning the API interface can be changed without notice. You should [contact us](https://creativecommons.org/about/contact/) if you are interested in using this API in production. No SLAs or warranties are provided to anonymous consumers of the API.
+The API is still in semantic version 0.\*.\*, meaning the API interface can be changed without notice. You should [contact us](https://creativecommons.org/about/contact/) if you are interested in using this API in production. No SLAs or warranties are provided to anonymous consumers of the API.
 
 ## API Documentation
 
