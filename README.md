@@ -25,7 +25,7 @@ docker-compose up
 
 After executing this, you will be running:
 * A Django API server
-* Two PostgreSQL (one simulates the upstream data source, the other serves as the application database)
+* Two PostgreSQL instances (one simulates the upstream data source, the other serves as the application database)
 * Elasticsearch
 * Redis
 * Ingestion Server, a microservice for bulk ingesting and indexing search data.
