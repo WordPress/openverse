@@ -9,7 +9,7 @@ designed. Run with the `pytest -s` command from this directory.
 """
 
 
-API_URL = os.getenv('INTEGRATION_TEST_URL', 'http://localhost:8000')
+API_URL = os.getenv('INTEGRATION_TEST_URL', 'https://localhost:8000')
 known_apis = {
     'http://localhost:8000': 'LOCAL',
     'https://api.creativecommons.engineering': 'PRODUCTION',
@@ -114,7 +114,9 @@ def test_list_create(search_fixture):
 
 def test_list_detail(test_list_create):
     list_slug = test_list_create['url'].split('/')[-1]
-    response = requests.get(API_URL + '/list/{}'.format(list_slug), verify=False)
+    response = requests.get(
+        API_URL + '/list/{}'.format(list_slug), verify=False
+    )
     assert response.status_code == 200
 
 
