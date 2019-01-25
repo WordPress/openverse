@@ -75,7 +75,7 @@
               Actions
             </h2>
           </header>
-          <a class="search-grid_overlay-add"
+          <a class="add-to-list"
              @click.stop="onAddToImageList(image, $event)">
              Add to list
           </a>
@@ -165,7 +165,7 @@ export default {
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
 
-  .search-grid_overlay-add {
+  .add-to-list {
     &:before {
       height: 13px;
       width: 13px;
