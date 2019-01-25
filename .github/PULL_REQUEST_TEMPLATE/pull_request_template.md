@@ -1,0 +1,3 @@
+- Title includes reference to relevant ticket in [issue tracker](https://github.com/creativecommons/cccatalog-api/issues).
+- Description of changes
+- If you are adding new endpoints to the API, please ensure that you have updated the tests and documentation to reflect this.
