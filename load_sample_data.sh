@@ -1,5 +1,5 @@
 #!/bin/bash
-CCCAPI_CONTAINER_NAME="${CCCAPI_CONTAINER_NAME:-cccatalogapi_web_1}"
+CCCAPI_CONTAINER_NAME="${CCCAPI_CONTAINER_NAME:-cccatalog-api_web_1}"
 # Set up databases
 docker exec -ti $CCCAPI_CONTAINER_NAME /bin/bash -c 'python3 manage.py makemigrations'
 docker exec -ti $CCCAPI_CONTAINER_NAME /bin/bash -c 'python3 manage.py migrate'
