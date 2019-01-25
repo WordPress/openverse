@@ -50,7 +50,6 @@ def test_search_consistency():
                      verify=False)
         for page in range(1, n_pages)
     )
-    searches.add(requests.get(API_URL + '/image/search?q=a', verify=False))
 
     images = set()
     for response in searches:
