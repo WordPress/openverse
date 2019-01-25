@@ -63,7 +63,7 @@ virtualenv venv
 pip install -r requirements.txt
 source venv/bin/activate
 cd test
-export INTEGRATION_TEST_URL="http://api.creativecommons.engineering"
+export INTEGRATION_TEST_URL="http://localhost:8000"
 pytest -s
 ```
 
