@@ -143,11 +143,15 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         resp = self.retrieve(request, identifier)
         # Get pretty display name for a provider
         provider = resp.data['provider']
-        provider_data = ContentProvider \
-            .objects \
-            .get(provider_identifier=provider)
-        resp.data['provider'] = provider_data.provider_name
-        resp.data['provider_url'] = provider_data.domain_name
+        try:
+            provider_data = ContentProvider \
+                .objects \
+                .get(provider_identifier=provider)
+            resp.data['provider'] = provider_data.provider_name
+            resp.data['provider_url'] = provider_data.domain_name
+        except ContentProvider.DoesNotExist:
+            resp.data['provider'] = provider
+            resp.data['provider_url'] = 'Unknown'
         # Add page views to the response.
         resp.data['view_count'] = view_count
         # Fix links to creator and foreign landing URLs.
