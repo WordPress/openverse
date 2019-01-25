@@ -33,6 +33,7 @@ After executing this, you will be running:
 Once everything has initialized, load the sample data.
 
 ```
+cd ../
 ./load_sample_data.sh
 ```
 
