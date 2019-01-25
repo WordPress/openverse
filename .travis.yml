@@ -7,5 +7,5 @@ install:
   - pip3 install -r ingestion_server/requirements.txt
   - pip3 install -r cccatalog-api/requirements.txt
 script:
-  - cd ingestion_server && python3 test/integration_tests.py
   - cd cccatalog-api/test && ./run_test.sh
+  - cd ../../ingestion_server && python3 test/integration_tests.py
