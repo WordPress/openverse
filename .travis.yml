@@ -10,7 +10,7 @@ before_script:
   - sudo service postgresql stop
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
   - docker-compose up -d
-  - bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:8000/healthcheck)" != "200" ]]; do sleep 5; done'
+  - bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' https://localhost:8000/healthcheck)" != "200" ]]; do sleep 5; done'
 script:
   - cd cccatalog-api/test && ./run_test.sh
   - cd ../../ingestion_server && python3 test/integration_tests.py
