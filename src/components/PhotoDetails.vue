@@ -164,5 +164,16 @@ export default {
 
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
+
+  .search-grid_overlay-add {
+    &:before {
+      height: 13px;
+      width: 13px;
+      content: '';
+      background: url('../assets/plus-icon-black.svg') no-repeat;
+      opacity: .5;
+      display: inline-block;
+    }
+  }
 </style>
 
