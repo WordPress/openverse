@@ -1,6 +1,7 @@
 language: python
 env:
   - DOCKER_COMPOSE_VERSION=1.21.0
+  - CCCAPI_CONTAINER_NAME=cccatalogapi_web_1
 python:
 - '3.6'
 services:

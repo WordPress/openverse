@@ -1,7 +1,8 @@
 #!/bin/bash
+CCCAPI_CONTAINER_NAME="${CCCAPI_CONTAINER_NAME:-cccatalogapi_web_1}"
 # Set up databases
-docker exec -ti cccatalog_api /bin/bash -c 'python3 manage.py makemigrations'
-docker exec -ti cccatalog_api /bin/bash -c 'python3 manage.py migrate'
+docker exec -ti $CCCAPI_CONTAINER_NAME /bin/bash -c 'python3 manage.py makemigrations'
+docker exec -ti $CCCAPI_CONTAINER_NAME /bin/bash -c 'python3 manage.py migrate'
 PGPASSWORD=deploy pg_dump -s -t image -U deploy -d openledger -h localhost -p 5432 | PGPASSWORD=deploy psql -U deploy -d openledger -p 5433 -h localhost
 # Load sample data
 PGPASSWORD=deploy psql -U deploy -d openledger -h localhost -p 5432 -c "INSERT INTO content_provider (created_on, provider_identifier, provider_name, domain_name, filter_content) VALUES (now(), 'flickr', 'Flickr', 'https://www.flickr.com', false);"
