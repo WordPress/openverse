@@ -6,6 +6,9 @@ services:
 install:
   - pip3 install -r ingestion_server/requirements.txt
   - pip3 install -r cccatalog-api/requirements.txt
+before_script:
+  - docker-compose up
+  - bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:8000/healthcheck)" != "200" ]]; do sleep 5; done'
 script:
   - cd cccatalog-api/test && ./run_test.sh
   - cd ../../ingestion_server && python3 test/integration_tests.py
