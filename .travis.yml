@@ -19,7 +19,7 @@ before_script:
   - docker-compose up -d
   - bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' https://localhost:8000/healthcheck)" != "200" ]]; do sleep 5; done'
   - ./load_sample_data.sh
-  - bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' https://localhost:8000/search?q=test)" != "200" ]]; do sleep 5; done'
+  - bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' https://localhost:8000/image/search?q=test)" != "200" ]]; do sleep 5; done'
 script:
   - cd cccatalog-api/test && ./run_test.sh
   - cd ../../ingestion_server && python3 test/integration_tests.py
