@@ -1,4 +1,9 @@
 language: python
+addons:
+  postgresql: 10
+  apt:
+    packages:
+      - postgresql-client-10
 env:
   - DOCKER_COMPOSE_VERSION=1.21.0
   - CCCAPI_CONTAINER_NAME=cccatalogapi_web_1
