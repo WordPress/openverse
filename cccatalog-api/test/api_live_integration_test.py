@@ -114,7 +114,9 @@ def test_list_create(search_fixture):
 
 def test_list_detail(test_list_create):
     list_slug = test_list_create['url'].split('/')[-1]
-    response = requests.get(API_URL + '/list/{}'.format(list_slug), verify=False)
+    response = requests.get(
+        API_URL + '/list/{}'.format(list_slug), verify=False
+    )
     assert response.status_code == 200
 
 
