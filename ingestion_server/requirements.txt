@@ -5,5 +5,5 @@ psycopg2==2.7.4
 psycopg2-binary==2.7.4
 falcon==1.4.1
 remote_pdb
-pyyaml==3.13
+pyyaml==4.2b1
 bottle==0.12.16
