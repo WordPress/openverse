@@ -42,6 +42,16 @@ You are now ready to start sending the API server requests. Hit the API with a r
 ## System Architecture
 ![System Architecture](https://raw.githubusercontent.com/creativecommons/cccatalog-api/master/system_architecture.png)
 
+### Basic flow of data
+Search data is ingested from upstream sources provided by the [data pipeline](https://github.com/creativecommons/cccatalog). As of the time of writing, this includes data from Common Crawl and multiple 3rd party APIs. Once the data has been scraped and cleaned, it is transferred to the upstream database, indicating that it is ready for production use.
+
+Every week, the latest version of the data is automatically bulk copied ("ingested") from the upstream database to the production database by the Ingestion Server. Once the data has been downloaded and indexed inside of the database, the data is indexed in Elasticsearch, at which point the new data can be served up from the CC Catalog API servers.
+
+### Description of subprojects
+- *cccatalog-api* is a Django Rest Framework API server. For a full description of its capabilities, please see the [browsable documentation](https://api.creativecommons.engineering).
+- *ingestion_server* is a RESTful microservice for downloading and indexing search data once it has been prepared by the CC Catalog.
+- *ccbot* is a slightly customized fork of Scrapy Cluster. The original intent was to find all of the dead links in our database, but it can easily be modified to perform other useful tasks, such as mass downloading images or scraping new content into the CC Catalog. This is not used in production at this time and is included in the repository for historic reasons.
+
 ## Running the tests
 
 ### Running API live integration tests
