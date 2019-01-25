@@ -39,7 +39,7 @@ const PhotoDetailPage = {
     FooterSection,
     PhotoDetails,
     PhotoTags,
-    ShareList
+    ShareList,
   },
   props: {
     id: '',
