@@ -103,8 +103,11 @@ class SearchImages(APIView):
         last_allowed_page = int((5000 + page_size / 2) / page_size)
         page_count = min(natural_page_count, last_allowed_page)
 
+        result_count = search_results.hits.total
+        if len(results) < page_size:
+            result_count = len(results)
         response_data = {
-            'result_count': search_results.hits.total,
+            'result_count': result_count,
             'page_count': page_count,
             RESULTS: serialized_results
         }
