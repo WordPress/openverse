@@ -8,7 +8,7 @@
       </div>
       <div :class="{ 'cell search-grid-ctr': true }">
         <search-grid v-if="query.q"></search-grid>
-        <share-list></share-list>
+        <share-list :shouldDisappearOnScroll="true"></share-list>
       </div>
     </div>
 

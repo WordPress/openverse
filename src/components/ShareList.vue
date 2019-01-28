@@ -77,6 +77,7 @@ import {
 
 export default {
   name: 'share-list',
+  props: ['shouldDisappearOnScroll'],
   data: () => ({
     _isVisible: false,
     listTitle: '',
@@ -120,7 +121,9 @@ export default {
         this.$data._isVisible = isVisible;
         if (isVisible === true) {
           this.listTitle = '';
-          this.addScrollEvent();
+          if (this.$props.shouldDisappearOnScroll) {
+            this.addScrollEvent();
+          }
         } else {
           this.$store.commit(SET_SHARE_LIST_IMAGES, { shareListImages: [] });
         }
