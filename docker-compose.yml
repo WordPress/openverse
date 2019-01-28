@@ -1,0 +1,9 @@
+version: '3'
+services:
+  web:
+    build: .
+    command: npm run dev
+    volumes:
+      - .:/usr/app/
+    ports:
+      - "8443:8443"
