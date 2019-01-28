@@ -104,7 +104,7 @@ class SearchImages(APIView):
         page_count = min(natural_page_count, last_allowed_page)
 
         result_count = search_results.hits.total
-        if len(results) < page_size:
+        if len(results) < page_size and page_count <= 1:
             result_count = len(results)
         response_data = {
             'result_count': result_count,
