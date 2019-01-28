@@ -22,6 +22,7 @@ RESULTS = 'results'
 PAGE = 'page'
 PAGESIZE = 'pagesize'
 VALIDATION_ERROR = 'validation_error'
+FILTER_DEAD = 'filter_dead'
 
 
 def _add_protocol(url: str):
@@ -92,7 +93,8 @@ class SearchImages(APIView):
             result.detail = url
             to_validate.append(result.url)
             results.append(result)
-        validate_images(results, to_validate)
+        if params.data[FILTER_DEAD]:
+            validate_images(results, to_validate)
         serialized_results =\
             ImageSerializer(results, many=True).data
         # Elasticsearch does not allow deep pagination of ranked queries.

@@ -46,6 +46,12 @@ class _SearchQueryStringSerializer(serializers.Serializer):
                   " appear.",
         required=False
     )
+    filter_dead = serializers.BooleanField(
+        label="filter_dead",
+        help_text="Control whether 404 links are filtered out.",
+        required=False,
+        default=True
+    )
 
     def validate(self, data):
         if 'li' in data and 'lt' in data:
