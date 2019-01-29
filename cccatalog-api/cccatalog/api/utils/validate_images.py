@@ -83,7 +83,7 @@ def validate_images(results, image_urls):
         elif status != 200:
             log.info(
                 'Deleting broken image with ID {} from results.'
-                    .format(results[del_idx]['identifier'])
+                .format(results[del_idx]['identifier'])
             )
             del results[del_idx]
     end_time = time.time()

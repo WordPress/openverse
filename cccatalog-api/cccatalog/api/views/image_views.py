@@ -99,7 +99,7 @@ class SearchImages(APIView):
             ImageSerializer(results, many=True).data
         # Elasticsearch does not allow deep pagination of ranked queries.
         # Adjust returned page count to reflect this.
-        natural_page_count = int(search_results.hits.total/page_size)
+        natural_page_count = int(search_results.hits.total / page_size)
         last_allowed_page = int((5000 + page_size / 2) / page_size)
         page_count = min(natural_page_count, last_allowed_page)
 

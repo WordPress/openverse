@@ -104,9 +104,9 @@ class ListDetail(_List, RetrieveModelMixin):
                          security=[
                              {
                                  "list key": {
-                                    "type": "apiKey",
-                                    "name": "api_key",
-                                    "in": "header"
+                                     "type": "apiKey",
+                                     "name": "api_key",
+                                     "in": "header"
                                  }
                              },
                          ],

@@ -5,12 +5,12 @@ from cccatalog.api.models import Image
 import logging as log
 import time
 """
-Cron-like tasks run at a set interval. `python3 manage.py runcrons` will 
-execute any scheduled tasks. This is intended to run on all instances of the 
+Cron-like tasks run at a set interval. `python3 manage.py runcrons` will
+execute any scheduled tasks. This is intended to run on all instances of the
 server.
 
-Even though there may be multiple instances of the server running, a job is 
-guaranteed to execute only once. Jobs are not run unless it can acquire a lock 
+Even though there may be multiple instances of the server running, a job is
+guaranteed to execute only once. Jobs are not run unless it can acquire a lock
 inside of the cache (shared by all instances of cccatalog-api).
 """
 model_name_to_instance = {
@@ -69,8 +69,9 @@ class SaveCachedTrafficStats(CronJobBase):
                 except ObjectDoesNotExist:
                     log.warning('Tried to save views of non-existent instance.')
             else:
-                log.warning('Tried to persist views of non-existent model '
-                            + model_name)
+                log.warning(
+                    'Tried to persist views of non-existent model ' + model_name
+                )
         if evict_from_cache:
             redis.delete(*view_keys)
         log.info('Saved ' + str(view_keys))
