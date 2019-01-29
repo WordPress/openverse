@@ -105,8 +105,7 @@ def get_providers(index):
                 }
             }
         }
-        s = Search.from_dict(agg_body)
-        s.index = index
+        s = Search(index=index).from_dict(agg_body)
         results = s.execute().aggregations['unique_providers']['buckets']
         providers = {result['key']: result['doc_count'] for result in results}
         cache.set(key=provider_cache_name,
