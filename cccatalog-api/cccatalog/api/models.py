@@ -85,12 +85,6 @@ class Image(OpenLedgerModel):
 
     title = models.CharField(max_length=2000, blank=True, null=True)
 
-    tags_list = ArrayField(models.CharField(
-        max_length=255),
-        blank=True,
-        null=True
-    )
-
     tags = JSONField(blank=True, null=True)
 
     last_synced_with_source = models.DateTimeField(

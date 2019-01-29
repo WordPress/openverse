@@ -71,7 +71,7 @@ def search(search_params, index, page_size, page=1) -> Response:
     keywords = ' '.join(search_params.data['q'].lower().split(','))
     s = s.query("constant_score", filter=Q("multi_match",
                 query=keywords,
-                fields=['legacy_tags', 'tags.name', 'title'],
+                fields=['tags.name', 'title'],
                 operator='AND'))
     s.extra(track_scores=True)
     search_response = s.execute()

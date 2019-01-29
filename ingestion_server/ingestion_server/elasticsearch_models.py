@@ -68,7 +68,6 @@ class Image(SyncableDocType):
             identifier=row[schema['identifier']],
             creator=row[schema['creator']],
             creator_url=row[schema['creator_url']],
-            legacy_tags=row[schema['tags_list']],
             tags=_parse_detailed_tags(row[schema['tags']]),
             created_on=row[schema['created_on']],
             url=row[schema['url']],
