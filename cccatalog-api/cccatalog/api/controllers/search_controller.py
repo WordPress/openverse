@@ -1,7 +1,7 @@
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch.exceptions import AuthenticationException, \
-    AuthorizationException
+    AuthorizationException, NotFoundError
 from elasticsearch_dsl import Q, Search, connections
 from elasticsearch_dsl.response import Response
 from cccatalog import settings
@@ -107,7 +107,10 @@ def get_providers(index):
         }
         s = Search.from_dict(agg_body)
         s = s.index(index)
-        results = s.execute().aggregations['unique_providers']['buckets']
+        try:
+            results = s.execute().aggregations['unique_providers']['buckets']
+        except NotFoundError:
+            results = [{'key': 'none_found', 'doc_count': 0}]
         providers = {result['key']: result['doc_count'] for result in results}
         cache.set(
             key=provider_cache_name,
