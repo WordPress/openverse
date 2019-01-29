@@ -114,7 +114,6 @@ def get_providers(index):
             timeout=CACHE_TIMEOUT,
             value=providers
         )
-        print()
     return providers
 
 
