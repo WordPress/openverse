@@ -3,7 +3,7 @@ from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
-from cccatalog.api.models import Image
+from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils.view_count import track_model_views
 from rest_framework.reverse import reverse
@@ -17,6 +17,26 @@ import logging
 from urllib.parse import urlparse
 
 log = logging.getLogger(__name__)
+FOREIGN_LANDING_URL = 'foreign_landing_url'
+CREATOR_URL = 'creator_url'
+RESULTS = 'results'
+PAGE = 'page'
+PAGESIZE = 'pagesize'
+VALIDATION_ERROR = 'validation_error'
+FILTER_DEAD = 'filter_dead'
+
+
+def _add_protocol(url: str):
+    """
+    Some fields in the database contain incomplete URLs, leading to unexpected
+    behavior in downstream consumers. This helper verifies that we always return
+    fully formed URLs in such situations.
+    """
+    parsed = urlparse(url)
+    if parsed.scheme == '':
+        return 'https://' + url
+    else:
+        return url
 
 
 class SearchImages(APIView):
@@ -49,11 +69,11 @@ class SearchImages(APIView):
                     "validation_error": params.errors
                 }
             )
-        page_param = params.data['page']
-        page_size = params.data['pagesize']
 
-        # Assign Elasticsearch query shard order by user IP address.
         hashed_ip = hash(_get_user_ip(request))
+        page_param = params.data[PAGE]
+        page_size = params.data[PAGESIZE]
+
         try:
             search_results = search_controller.search(params,
                                                       index='image',
@@ -64,7 +84,7 @@ class SearchImages(APIView):
             return Response(
                 status=400,
                 data={
-                    'validation_error': 'Deep pagination is not allowed.'
+                    VALIDATION_ERROR: 'Deep pagination is not allowed.'
                 }
             )
 
@@ -78,20 +98,32 @@ class SearchImages(APIView):
             result.detail = url
             to_validate.append(result.url)
             results.append(result)
-        validate_images(results, to_validate)
+        if params.data[FILTER_DEAD]:
+            validate_images(results, to_validate)
         serialized_results =\
             ImageSerializer(results, many=True).data
         # Elasticsearch does not allow deep pagination of ranked queries.
         # Adjust returned page count to reflect this.
-        natural_page_count = int(search_results.hits.total/page_size)
+        natural_page_count = int(search_results.hits.total / page_size)
         last_allowed_page = int((5000 + page_size / 2) / page_size)
         page_count = min(natural_page_count, last_allowed_page)
 
+        result_count = search_results.hits.total
+        if len(results) < page_size and page_count == 0:
+            result_count = len(results)
         response_data = {
-            'result_count': search_results.hits.total,
+            'result_count': result_count,
             'page_count': page_count,
-            'results': serialized_results
+            RESULTS: serialized_results
         }
+        # Correct any malformed URLs in the response.
+        for idx, res in enumerate(serialized_results):
+            if FOREIGN_LANDING_URL in res:
+                foreign = _add_protocol(res[FOREIGN_LANDING_URL])
+                response_data[RESULTS][idx][FOREIGN_LANDING_URL] = foreign
+            if CREATOR_URL in res:
+                creator_url = _add_protocol(res[CREATOR_URL])
+                response_data[RESULTS][idx][CREATOR_URL] = creator_url
         serialized_response = ImageSearchResultsSerializer(data=response_data)
 
         return Response(status=200, data=serialized_response.initial_data)
@@ -118,21 +150,27 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
 
-        def _append_protocol_if_missing(url: str):
-            parsed = urlparse(url)
-            if parsed.scheme == '':
-                return 'https://' + url
-            else:
-                return url
-
         resp = self.retrieve(request, identifier)
+        # Get pretty display name for a provider
+        provider = resp.data['provider']
+        try:
+            provider_data = ContentProvider \
+                .objects \
+                .get(provider_identifier=provider)
+            resp.data['provider'] = provider_data.provider_name
+            resp.data['provider_url'] = provider_data.domain_name
+        except ContentProvider.DoesNotExist:
+            resp.data['provider'] = provider
+            resp.data['provider_url'] = 'Unknown'
         # Add page views to the response.
         resp.data['view_count'] = view_count
-        # Validate links to creator and foreign landing URLs.
-        creator_url = _append_protocol_if_missing(resp.data['creator_url'])
-        foreign_landing_url = \
-            _append_protocol_if_missing(resp.data['foreign_landing_url'])
-        resp.data['creator_url'] = creator_url
-        resp.data['foreign_landing_url'] = foreign_landing_url
+        # Fix links to creator and foreign landing URLs.
+        if CREATOR_URL in resp.data:
+            creator_url = _add_protocol(resp.data[CREATOR_URL])
+            resp.data[CREATOR_URL] = creator_url
+        if FOREIGN_LANDING_URL in resp.data:
+            foreign_landing_url = \
+                _add_protocol(resp.data[FOREIGN_LANDING_URL])
+            resp.data[FOREIGN_LANDING_URL] = foreign_landing_url
 
         return resp

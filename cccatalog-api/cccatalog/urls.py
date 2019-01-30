@@ -28,7 +28,7 @@ import rest_framework.permissions
 
 description = """
 The Creative Commons Catalog API ('cccatalog-api') is a system
-that allows programmatic access to public domain digital media. It is our 
+that allows programmatic access to public domain digital media. It is our
 ambition to index and catalog billions of Creative Commons works, including
 articles, songs, videos, photographs, paintings, and more. Using this API,
 developers will be able to access the digital commons in their own
@@ -36,6 +36,7 @@ applications.
 """
 
 
+logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
 schema_view = get_schema_view(
     openapi.Info(
         title="Creative Commons Catalog API",
@@ -44,7 +45,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="alden@creativecommons.org"),
         license=openapi.License(name="MIT License"),
         x_logo={
-            "url": "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg",
+            "url": logo_url,
             "backgroundColor": "#FFFFFF"
         }
     ),
@@ -53,23 +54,21 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    #path('', schema_view.with_ui('redoc', cache_timeout=None),
+    # path('', schema_view.with_ui('redoc', cache_timeout=None),
     #    name='root'),
     path('admin/', admin.site.urls),
     path('list', CreateList.as_view()),
     path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
-    # re_path(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    # re_path(r'^social/', include('rest_framework_social_oauth2.urls')),
     re_path('image/search', SearchImages.as_view()),
     path('image/<str:identifier>', ImageDetail.as_view(), name='image-detail'),
     path('statistics/image', ImageStats.as_view(), name='about-image'),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
     re_path('healthcheck', HealthCheck.as_view()),
-    #re_path(r'^swagger(?P<format>\.json|\.yaml)$',
+    # re_path(r'^swagger(?P<format>\.json|\.yaml)$',
     #    schema_view.without_ui(cache_timeout=None), name='schema-json'),
-    #re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=15),
+    # re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=15),
     #    name='schema-swagger-ui'),
-    #re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=15),
+    # re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=15),
     #    name='schema-redoc'),
 ]

@@ -1,15 +1,17 @@
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch.exceptions import AuthenticationException, \
-    AuthorizationException
+    AuthorizationException, NotFoundError
 from elasticsearch_dsl import Q, Search, connections
 from elasticsearch_dsl.response import Response
 from cccatalog import settings
 from django.core.cache import cache
+from cccatalog.api.models import ContentProvider
 
 import logging as log
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
+CACHE_TIMEOUT = 10
 
 
 def search(search_params, index, page_size, ip, page=1) -> Response:
@@ -52,11 +54,27 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
         creator_filter = Q("term", creator=search_params.data['creator'])
         s = s.filter('bool', should=creator_filter, minimum_should_match=1)
 
+    # It is sometimes desirable to hide content providers from the catalog
+    # without scrubbing them from the database or reindexing.
+    filter_cache_key = 'filtered_providers'
+    filtered_providers = cache.get(key=filter_cache_key)
+    if not filtered_providers:
+        filtered_providers = ContentProvider.objects\
+            .filter(filter_content=True)\
+            .values('provider_identifier')
+        cache.set(
+            key=filter_cache_key,
+            timeout=CACHE_TIMEOUT,
+            value=filtered_providers
+        )
+    for filtered in filtered_providers:
+        s = s.exclude("match", provider=filtered['provider_identifier'])
+
     # Search for keywords.
     keywords = ' '.join(search_params.data['q'].lower().split(','))
     s = s.query("constant_score", filter=Q("multi_match",
                 query=keywords,
-                fields=['detailed_tags', 'tags', 'title'],
+                fields=['tags.name', 'title'],
                 operator='AND'))
     s.extra(track_scores=True)
     s = s.params(preference="{}".format(ip))
@@ -72,7 +90,6 @@ def get_providers(index):
     :return: A dictionary mapping providers to the count of their images.`
     """
     provider_cache_name = 'providers-' + index
-    cache_timeout = 60 * 5
     providers = cache.get(key=provider_cache_name)
     if type(providers) == list:
         # Invalidate old provider format.
@@ -93,12 +110,17 @@ def get_providers(index):
             }
         }
         s = Search.from_dict(agg_body)
-        s.index = index
-        results = s.execute().aggregations['unique_providers']['buckets']
+        s = s.index(index)
+        try:
+            results = s.execute().aggregations['unique_providers']['buckets']
+        except NotFoundError:
+            results = [{'key': 'none_found', 'doc_count': 0}]
         providers = {result['key']: result['doc_count'] for result in results}
-        cache.set(key=provider_cache_name,
-                  timeout=cache_timeout,
-                  value=providers)
+        cache.set(
+            key=provider_cache_name,
+            timeout=CACHE_TIMEOUT,
+            value=providers
+        )
     return providers
 
 

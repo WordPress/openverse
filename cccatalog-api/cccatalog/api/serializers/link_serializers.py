@@ -1,7 +1,7 @@
 import redlock
 import os
 import logging as log
-from rest_framework.serializers import ModelSerializer, Serializer, URLField,\
+from rest_framework.serializers import ModelSerializer, Serializer, URLField, \
     ValidationError
 from cccatalog.api.controllers.link_controller import get_next_shortened_path
 from cccatalog.api.models import ShortenedLink
@@ -77,9 +77,9 @@ class ShortenedLinkSerializer(ModelSerializer):
             try:
                 last_url = str(
                     ShortenedLink
-                        .objects
-                        .latest(field_name='created_on')
-                        .shortened_path
+                    .objects
+                    .latest(field_name='created_on')
+                    .shortened_path
                 )
             except ShortenedLink.DoesNotExist:
                 # No URLs exist. Create the first one.

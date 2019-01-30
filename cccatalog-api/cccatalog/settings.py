@@ -22,8 +22,9 @@ STATIC_ROOT = "/var/api_static_content/static"
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# The default key is only valid for local configurations and is not suitable for production use.
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ny#b__$f6ry4wy8oxre97&-68u_0lk3gw(z=d40_dxey3zw0v1')
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY', 'ny#b__$f6ry4wy8oxre97&-68u_0lk3gw(z=d40_dxey3zw0v1'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 true_strings = ['true', 'True', 't']
@@ -82,7 +83,7 @@ MIDDLEWARE = [
 ]
 
 SWAGGER_SETTINGS = {
-   'SECURITY_DEFINITIONS': {}
+    'SECURITY_DEFINITIONS': {}
 }
 
 REST_FRAMEWORK = {
@@ -108,12 +109,12 @@ if os.environ.get('DISABLE_GLOBAL_THROTTLING', default=False) in true_strings:
     del REST_FRAMEWORK['DEFAULT_THROTTLE_RATES']
     del REST_FRAMEWORK['DEFAULT_THROTTLE_CLASSES']
 
+REDIS_HOST = os.environ.get('REDIS_HOST', 'cache')
 CACHES = {
     # Site cache writes to 'default'
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": 'redis://' +
-                    os.environ.get('REDIS_HOST','cache') + ':6379/' + '0',
+        "LOCATION": 'redis://' + REDIS_HOST + ':6379/' + '0',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PASSWORD": os.environ.get('REDIS_PASSWORD')
@@ -122,8 +123,7 @@ CACHES = {
     # For rapidly changing stats that we don't want to hammer the database with
     "traffic_stats": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": 'redis://' +
-                    os.environ.get('REDIS_HOST', 'cache') + ':6379/' + '1',
+        "LOCATION": 'redis://' + REDIS_HOST + ':6379/' + '1',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PASSWORD": os.environ.get('REDIS_PASSWORD')
@@ -133,8 +133,7 @@ CACHES = {
     # Used by Redlock.
     "locks": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": 'redis://' +
-                    os.environ.get('REDIS_HOST', 'cache') + ':6379/' + '2',
+        "LOCATION": 'redis://' + REDIS_HOST + ':6379/2',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PASSWORD": os.environ.get('REDIS_PASSWORD')
@@ -173,7 +172,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cccatalog.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
@@ -188,22 +186,25 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation'
+                '.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation'
+                '.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation'
+                '.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation'
+                '.NumericPasswordValidator',
     },
 ]
 
@@ -243,7 +244,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/

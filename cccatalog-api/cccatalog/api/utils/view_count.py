@@ -6,8 +6,8 @@ import time
 Decorators for tracking usage and page view statistics.
 
 In order to protect the privacy of our users, special care must be taken to
-ensure that IPs are retained for the minimum possible amount of time. These 
-statistics must only be used in aggregate and never to identify an individual 
+ensure that IPs are retained for the minimum possible amount of time. These
+statistics must only be used in aggregate and never to identify an individual
 user.
 """
 
@@ -61,9 +61,10 @@ def _increment_viewcount(model, model_id: int, request):
             # If the object doesn't even exist in the database, don't track it.
             return
         except FieldDoesNotExist:
-            log.error('Cannot track model ' + model.__name__ +
-                      'because it has no view_count field. Views for this ' +
-                      'model will be lost.')
+            log.error(
+                'Cannot track model {} because it has no view_count field. '
+                'Views for this model will be lost.'.format(model.__name__)
+            )
             return -1
         redis.set(object_key, view_count)
     else:

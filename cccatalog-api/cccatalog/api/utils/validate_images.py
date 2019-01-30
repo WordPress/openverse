@@ -32,7 +32,7 @@ def validate_images(results, image_urls):
         if cached_statuses[idx] is None:
             to_verify[url] = idx
     reqs = (
-        grequests.head(u, allow_redirects=False, timeout=0.2)
+        grequests.head(u, allow_redirects=False, timeout=0.2, verify=False)
         for u in to_verify.keys()
     )
     verified = grequests.map(reqs, exception_handler=_validation_failure)
@@ -83,7 +83,7 @@ def validate_images(results, image_urls):
         elif status != 200:
             log.info(
                 'Deleting broken image with ID {} from results.'
-                    .format(results[del_idx]['identifier'])
+                .format(results[del_idx]['identifier'])
             )
             del results[del_idx]
     end_time = time.time()
