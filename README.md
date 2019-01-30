@@ -32,6 +32,8 @@ $ docker-compose up
 
 You should now have the application running and accessible at https://localhost:8443 (note: it runs on https://, not http://). Since it runs on HTTPS, you will probably see a invalid certificate privacy notice on your browser when accessing it. Just follow your browser's instructions to continue and access the website anyway.
 
+You don't need to have the CC Search API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [API](https://api.creativecommons.engineering) that's already publicly available. If you wish, you can change the URL of the API that's used during development at https://github.com/creativecommons/cccatalog-frontend/blob/master/config/dev-env.js#L7
+
 ## Running tests
 
 You can run the tests by executing:
