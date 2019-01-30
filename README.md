@@ -2,9 +2,11 @@
 
 ## About
 
-Repository containing the [CC Search](https://ccsearch.creativecommons.org/) frontend code.
+Repository containing the [CC Search](https://ccsearch.creativecommons.org/) frontend application. This web app contains all the UI which communicates with the [CC Search API](https://github.com/creativecommons/cccatalog-api) to get the data that is rendered in the browser.
 
-CC Search aims to private the front door to a comprehensive commons of CC and public domain materials, in order to maximize not only discovery, but use and engagement with all of that content.
+CC Search is an interface to search for content that is licensed under Creative Commons licenses or in the public domain.
+
+
 
 The frontend app is built using [Vue.JS](https://vuejs.org/), [Babel](https://babeljs.io/) and [Webpack](https://webpack.js.org/).
 
