@@ -77,7 +77,7 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
                 fields=['tags.name', 'title'],
                 operator='AND'))
     s.extra(track_scores=True)
-    s = s.params(preference="{}".format(ip))
+    s = s.params(preference=str(ip))
     search_response = s.execute()
     return search_response
 
