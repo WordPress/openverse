@@ -24,7 +24,7 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
     :param index: The Elasticsearch index to search (e.g. 'image')
     :param page_size: The number of results to return per page.
     :param page: The results page number.
-    :param ip: The user's  hashed IP. Hashed IPs are used to anonymously but
+    :param ip: The user's hashed IP. Hashed IPs are used to anonymously but
     uniquely identify users exclusively for ensuring query consistency across
     Elasticsearch shards.
     :return: An Elasticsearch Response object.
