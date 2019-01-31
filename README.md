@@ -1,28 +1,46 @@
 # cccatalog-frontend
 
-> Creative Commons Search
+## About
 
-## Build Setup
+Repository containing the [CC Search](https://ccsearch.creativecommons.org/) frontend application. This web app contains all the UI which communicates with the [CC Search API](https://github.com/creativecommons/cccatalog-api) to get the data that is rendered in the browser.
+
+CC Search is an interface to search for content that is licensed under Creative Commons licenses or in the public domain.
+
+
+
+The frontend app is built using [Vue.JS](https://vuejs.org/), [Babel](https://babeljs.io/) and [Webpack](https://webpack.js.org/).
+
+## Getting Started
+
+Run the following commands in order to have the code up and running on your machine:
 
 ``` bash
-# install dependencies
-npm install
+# installs dependencies
+$ npm install
 
-# serve with hot reload at https://localhost:8443 (important: it runs on https://, not http://)
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
+# Builds and serves assets with hot-reload 
+$ npm run dev
 ```
+
+### Docker setup
+
+Alternatively, you can use Docker to build and run the application. You just have to run:
+
+``` bash
+$ docker-compose up
+```
+
+You should now have the application running and accessible at https://localhost:8443 (note: it runs on https://, not http://). Since it runs on HTTPS, you will probably see a invalid certificate privacy notice on your browser when accessing it. Just follow your browser's instructions to continue and access the website anyway.
+
+You don't need to have the CC Search API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [API](https://api.creativecommons.engineering) that's already publicly available. If you wish, you can change the URL of the API that's used during development at https://github.com/creativecommons/cccatalog-frontend/blob/master/config/dev-env.js#L7
+
+## Running tests
+
+You can run the tests by executing:
+``` bash
+npm run test
+```
+
+## Deployment
+
+Details about how to deploy the frontend code can be found on the [CC Wiki](https://wikijs.creativecommons.org/tech/cc-search/frontend) (Accessible to CC Staff only).
