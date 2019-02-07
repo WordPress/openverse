@@ -41,6 +41,8 @@ def _add_protocol(url: str):
     else:
         return url
 
+def _post_process_results():
+    pass
 
 class SearchImages(APIView):
     """
@@ -122,11 +124,12 @@ class SearchImages(APIView):
         # Post-process the search results to fix malformed URLs and insecure
         # HTTP thumbnails.
         for idx, res in enumerate(serialized_results):
+            #
             to_proxy = THUMBNAIL if THUMBNAIL in res else URL
             if 'http://' in res[to_proxy]:
                 original = res[to_proxy]
                 secure = THUMBNAIL_PROXY_URL + original
-                response_data[RESULTS][idx][to_proxy] = secure
+                response_data[RESULTS][idx][THUMBNAIL] = secure
             if FOREIGN_LANDING_URL in res:
                 foreign = _add_protocol(res[FOREIGN_LANDING_URL])
                 response_data[RESULTS][idx][FOREIGN_LANDING_URL] = foreign
