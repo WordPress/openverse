@@ -141,6 +141,13 @@ CACHES = {
     }
 }
 
+# Width of thumbnils
+THUMB_SIZE_PX = int(os.environ.get('THUMB_SIZE_PX', 600))
+THUMBNAIL_PROXY_URL = os.environ.get(
+    'THUMBNAIL_PROXY_URL',
+    'localhost:8222/{}/'.format(THUMB_SIZE_PX)
+)
+
 AUTHENTICATION_BACKENDS = (
     # GitHub social login
     'social_core.backends.github.GithubOAuth2',
