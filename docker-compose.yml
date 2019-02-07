@@ -12,6 +12,12 @@ services:
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
+  thumbs:
+    image: willnorris/imageproxy
+    ports:
+      - "8222:8222"
+    command: ["-addr", "0.0.0.0:8222"]
+
   upstream_db:
     image: postgres:10.3-alpine
     ports:
