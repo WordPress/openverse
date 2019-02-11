@@ -127,7 +127,7 @@ class SearchImages(APIView):
         # HTTP thumbnails.
         for idx, res in enumerate(serialized_results):
             to_proxy = THUMBNAIL if THUMBNAIL in res else URL
-            if 'http://' in res[to_proxy]:
+            if 'http://' in res[to_proxy] or THUMBNAIL not in res:
                 original = res[to_proxy]
                 secure = THUMBNAIL_PROXY_URL + original
                 response_data[RESULTS][idx][THUMBNAIL] = secure
