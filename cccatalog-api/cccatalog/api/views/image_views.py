@@ -42,10 +42,6 @@ def _add_protocol(url: str):
         return url
 
 
-def _post_process_results():
-    pass
-
-
 class SearchImages(APIView):
     """
     Search for images by keyword. Optionally, filter the results by specific
