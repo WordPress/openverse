@@ -11,7 +11,7 @@ from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
-from cccatalog.settings import THUMBNAIL_PROXY_URL
+from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS
 from cccatalog.api.utils.view_count import _get_user_ip
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
@@ -122,11 +122,12 @@ class SearchImages(APIView):
         # Post-process the search results to fix malformed URLs and insecure
         # HTTP thumbnails.
         for idx, res in enumerate(serialized_results):
-            to_proxy = THUMBNAIL if THUMBNAIL in res else URL
-            if 'http://' in res[to_proxy] or THUMBNAIL not in res:
-                original = res[to_proxy]
-                secure = THUMBNAIL_PROXY_URL + original
-                response_data[RESULTS][idx][THUMBNAIL] = secure
+            if PROXY_THUMBS:
+                to_proxy = THUMBNAIL if THUMBNAIL in res else URL
+                if 'http://' in res[to_proxy]:
+                    original = res[to_proxy]
+                    secure = THUMBNAIL_PROXY_URL + original
+                    response_data[RESULTS][idx][THUMBNAIL] = secure
             if FOREIGN_LANDING_URL in res:
                 foreign = _add_protocol(res[FOREIGN_LANDING_URL])
                 response_data[RESULTS][idx][FOREIGN_LANDING_URL] = foreign
