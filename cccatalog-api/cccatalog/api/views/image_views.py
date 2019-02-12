@@ -27,6 +27,7 @@ VALIDATION_ERROR = 'validation_error'
 FILTER_DEAD = 'filter_dead'
 THUMBNAIL = 'thumbnail'
 URL = 'url'
+THUMBNAIL_WIDTH_PX = 600
 
 
 def _add_protocol(url: str):
@@ -126,7 +127,11 @@ class SearchImages(APIView):
                 to_proxy = THUMBNAIL if THUMBNAIL in res else URL
                 if 'http://' in res[to_proxy]:
                     original = res[to_proxy]
-                    secure = THUMBNAIL_PROXY_URL + original
+                    secure = '{proxy_url}/{width}/{original}'.format(
+                        proxy_url=THUMBNAIL_PROXY_URL,
+                        width=THUMBNAIL_WIDTH_PX,
+                        original=original
+                    )
                     response_data[RESULTS][idx][THUMBNAIL] = secure
             if FOREIGN_LANDING_URL in res:
                 foreign = _add_protocol(res[FOREIGN_LANDING_URL])
@@ -182,5 +187,13 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             foreign_landing_url = \
                 _add_protocol(resp.data[FOREIGN_LANDING_URL])
             resp.data[FOREIGN_LANDING_URL] = foreign_landing_url
+        # Proxy insecure HTTP images at full resolution.
+        if 'http://' in resp.data[URL]:
+            original = resp.data[URL]
+            secure = '{proxy_url}/{original}'.format(
+                proxy_url=THUMBNAIL_PROXY_URL,
+                original=original
+            )
+            resp.data[URL] = secure
 
         return resp

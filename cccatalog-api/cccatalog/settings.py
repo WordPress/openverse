@@ -143,11 +143,8 @@ CACHES = {
 
 # Produce thumbnails on-the-fly when HTTPS is not supported.
 PROXY_THUMBS = bool(os.environ.get('PROXY_THUMBS', False))
-# Width of thumbnils
-THUMB_SIZE_PX = int(os.environ.get('THUMB_SIZE_PX', 600))
 THUMBNAIL_PROXY_URL = os.environ.get(
-    'THUMBNAIL_PROXY_URL',
-    'https://localhost:8222/{}/'.format(THUMB_SIZE_PX)
+    'THUMBNAIL_PROXY_URL', 'https://localhost:8222'
 )
 
 AUTHENTICATION_BACKENDS = (
