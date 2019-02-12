@@ -124,9 +124,9 @@ class SearchImages(APIView):
         # HTTP thumbnails.
         for idx, res in enumerate(serialized_results):
             if PROXY_THUMBS:
-                active_image = THUMBNAIL if THUMBNAIL in res else URL
-                if 'http://' in res[active_image]:
-                    original = res[URL]
+                to_proxy = THUMBNAIL if THUMBNAIL in res else URL
+                if 'http://' in res[to_proxy]:
+                    original = res[to_proxy]
                     secure = '{proxy_url}/{width}/{original}'.format(
                         proxy_url=THUMBNAIL_PROXY_URL,
                         width=THUMBNAIL_WIDTH_PX,
