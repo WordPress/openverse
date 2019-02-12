@@ -1,5 +1,6 @@
 # Creative Commons Catalog API
 [![Build Status](https://travis-ci.org/creativecommons/cccatalog-api.svg?branch=master)](https://travis-ci.org/creativecommons/cccatalog-api)
+![License](https://img.shields.io/github/license/creativecommons/cccatalog-api.svg?style=flat)
 ## Purpose
 
 The Creative Commons Catalog API ('cccatalog-api') is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of Creative Commons works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to access the digital commons in their own applications.
