@@ -3,7 +3,7 @@ from cccatalog.api.licenses import LICENSE_GROUPS
 from cccatalog.api.controllers.search_controller import get_providers
 
 
-class _SearchQueryStringSerializer(serializers.Serializer):
+class ImageSearchQueryStringSerializer(serializers.Serializer):
     """ Base class for search query parameters. """
 
     """ Parse and validate search query string parameters. """
@@ -11,6 +11,7 @@ class _SearchQueryStringSerializer(serializers.Serializer):
         label="query",
         help_text="A comma-separated list of keywords. Should not exceed 200 "
                   "characters in length. Example: `hello,world`",
+        required=False,
     )
     li = serializers.CharField(
         label="licenses",
@@ -23,11 +24,6 @@ class _SearchQueryStringSerializer(serializers.Serializer):
         help_text="A list of license types. "
                   "Valid inputs: `{}`".format((list(LICENSE_GROUPS.keys()))),
         required=False,
-    )
-    provider = serializers.CharField(
-        label="provider",
-        help_text="A comma separated list of data sources to search.",
-        required=False
     )
     page = serializers.IntegerField(
         label="page number",
@@ -42,9 +38,21 @@ class _SearchQueryStringSerializer(serializers.Serializer):
     )
     creator = serializers.CharField(
         label="creator",
-        help_text="Filter results so that only those by a certain author will"
-                  " appear.",
-        required=False
+        help_text="Search by creator.",
+        required=False,
+        max_length=200
+    )
+    tags = serializers.CharField(
+        label="tags",
+        help_text="Search by tag.",
+        required=False,
+        max_length=200
+    )
+    title = serializers.CharField(
+        label="title",
+        help_text="Search by title.",
+        required=False,
+        max_length=200
     )
     filter_dead = serializers.BooleanField(
         label="filter_dead",
@@ -52,21 +60,28 @@ class _SearchQueryStringSerializer(serializers.Serializer):
         required=False,
         default=True
     )
-
-    def validate(self, data):
-        if 'li' in data and 'lt' in data:
-            raise serializers.ValidationError(
-                "Only license type or individual licenses can be defined, not "
-                "both."
-            )
-        else:
-            return data
+    provider = serializers.CharField(
+        label="provider",
+        help_text="A comma separated list of data sources to search. Valid "
+                  "inputs:"
+                  " `{}`".format(list(get_providers('image').keys())),
+        required=False
+    )
 
     def validate_q(self, value):
         if len(value) > 200:
             return value[0:199]
         else:
             return value
+
+    def validate_creator(self, value):
+        return self.validate_q(value)
+
+    def validate_tags(self, value):
+        return self.validate_q(value)
+
+    def validate_title(self, value):
+        return self.validate_q(value)
 
     def validate_li(self, value):
         licenses = [x.upper() for x in value.split(',')]
@@ -95,14 +110,6 @@ class _SearchQueryStringSerializer(serializers.Serializer):
 
         return ','.join(list(resolved_licenses))
 
-    def validate_creator(self, value):
-        if len(value) <= 2000:
-            return value
-        else:
-            raise serializers.ValidationError(
-                "Creator query exceeds 2000 characters."
-            )
-
     def validate_page(self, value):
         if value < 1:
             return 1
@@ -115,17 +122,6 @@ class _SearchQueryStringSerializer(serializers.Serializer):
         else:
             return 20
 
-
-class ImageSearchQueryStringSerializer(_SearchQueryStringSerializer):
-    """ Query parameters specific to image search."""
-    provider = serializers.CharField(
-        label="provider",
-        help_text="A comma separated list of data sources to search. Valid "
-                  "inputs:"
-                  " `{}`".format(list(get_providers('image').keys())),
-        required=False
-    )
-
     def validate_provider(self, input_providers):
         allowed_providers = list(get_providers('image').keys())
 
@@ -135,6 +131,26 @@ class ImageSearchQueryStringSerializer(_SearchQueryStringSerializer):
                     "Provider \'{}\' does not exist.".format(input_providers)
                 )
         return input_providers.lower()
+
+    def validate(self, data):
+        advanced_search = 'creator' in data or 'title' in data or 'tags' in data
+        if 'q' in data and advanced_search:
+            raise serializers.ValidationError(
+                "You cannot use `q` in combination with advanced search "
+                "parameters `title`, `tags`, or `creator`."
+            )
+        elif 'q' not in data and not advanced_search:
+            raise serializers.ValidationError(
+                "You must use either the `q` parameter or an advanced search"
+                "parameter such as `title`, `tags`, or `creator`."
+            )
+        elif 'li' in data and 'lt' in data:
+            raise serializers.ValidationError(
+                "Only license type or individual licenses can be defined, not "
+                "both."
+            )
+        else:
+            return data
 
 
 class TagSerializer(serializers.Serializer):

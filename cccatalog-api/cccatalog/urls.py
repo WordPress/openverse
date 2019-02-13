@@ -33,10 +33,15 @@ ambition to index and catalog billions of Creative Commons works, including
 articles, songs, videos, photographs, paintings, and more. Using this API,
 developers will be able to access the digital commons in their own
 applications.
+
+Please note that there is a rate limit of 60 requests per minute in place. If
+this is insufficient for your use case, please contact us so we can issue you
+an API key with higher throughput enabled.
 """
 
 
 logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
+tos_url = "https://api-dev.creativecommons.engineering/tos"
 schema_view = get_schema_view(
     openapi.Info(
         title="Creative Commons Catalog API",
@@ -44,6 +49,7 @@ schema_view = get_schema_view(
         description=description,
         contact=openapi.Contact(email="alden@creativecommons.org"),
         license=openapi.License(name="MIT License"),
+        terms_of_service=tos_url,
         x_logo={
             "url": logo_url,
             "backgroundColor": "#FFFFFF"
@@ -54,8 +60,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    # path('', schema_view.with_ui('redoc', cache_timeout=None),
-    #    name='root'),
+    path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('admin/', admin.site.urls),
     path('list', CreateList.as_view()),
     path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
@@ -65,10 +70,18 @@ urlpatterns = [
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
     re_path('healthcheck', HealthCheck.as_view()),
-    # re_path(r'^swagger(?P<format>\.json|\.yaml)$',
-    #    schema_view.without_ui(cache_timeout=None), name='schema-json'),
-    # re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=15),
-    #    name='schema-swagger-ui'),
-    # re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=15),
-    #    name='schema-redoc'),
+    re_path(
+        r'^swagger(?P<format>\.json|\.yaml)$',
+        schema_view.without_ui(cache_timeout=None), name='schema-json'
+    ),
+    re_path(
+        r'^swagger/$',
+        schema_view.with_ui('swagger', cache_timeout=15),
+        name='schema-swagger-ui'
+    ),
+    re_path(
+        r'^redoc/$',
+        schema_view.with_ui('redoc', cache_timeout=15),
+        name='schema-redoc'
+    )
 ]
