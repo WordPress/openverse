@@ -34,8 +34,8 @@ articles, songs, videos, photographs, paintings, and more. Using this API,
 developers will be able to access the digital commons in their own
 applications.
 
-Please note that there is a rate limit of 60 requests per minute in place.  If 
-this is insufficient for your use case, please contact us so we can issue you 
+Please note that there is a rate limit of 60 requests per minute in place. If
+this is insufficient for your use case, please contact us so we can issue you
 an API key with higher throughput enabled.
 """
 
