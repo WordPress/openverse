@@ -51,10 +51,6 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
             provider_filters.append(Q('term', provider=provider))
         s = s.filter('bool', should=provider_filters, minimum_should_match=1)
 
-    if 'creator' in search_params.data:
-        creator_filter = Q('term', creator=search_params.data['creator'])
-        s = s.filter('bool', should=creator_filter, minimum_should_match=1)
-
     # It is sometimes desirable to hide content providers from the catalog
     # without scrubbing them from the database or reindexing.
     filter_cache_key = 'filtered_providers'
@@ -99,14 +95,14 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
             )
         if 'tags' in search_params.data:
             tags = ' '.join(search_params.data['tags'].lower().split(','))
-            print('Tags:{}'.format(tags))
-            for tag in tags:
-                s = s.query(
-                    'constant_score',
-                    filter=Q(
-                        'match',
-                        tags__keyword=tags)
+            s = s.query(
+                'constant_score',
+                filter=Q(
+                    'multi_match',
+                    fields=['tags.name'],
+                    query=tags
                 )
+            )
 
     s.extra(track_scores=True)
     s = s.params(preference=str(ip))
