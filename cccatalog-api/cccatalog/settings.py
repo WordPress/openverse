@@ -141,6 +141,12 @@ CACHES = {
     }
 }
 
+# Produce thumbnails on-the-fly when HTTPS is not supported.
+PROXY_THUMBS = bool(os.environ.get('PROXY_THUMBS', False))
+THUMBNAIL_PROXY_URL = os.environ.get(
+    'THUMBNAIL_PROXY_URL', 'https://localhost:8222'
+)
+
 AUTHENTICATION_BACKENDS = (
     # GitHub social login
     'social_core.backends.github.GithubOAuth2',

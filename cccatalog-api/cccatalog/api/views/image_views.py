@@ -11,6 +11,7 @@ from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
+from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS
 from cccatalog.api.utils.view_count import _get_user_ip
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
@@ -24,6 +25,9 @@ PAGE = 'page'
 PAGESIZE = 'pagesize'
 VALIDATION_ERROR = 'validation_error'
 FILTER_DEAD = 'filter_dead'
+THUMBNAIL = 'thumbnail'
+URL = 'url'
+THUMBNAIL_WIDTH_PX = 600
 
 
 def _add_protocol(url: str):
@@ -116,8 +120,19 @@ class SearchImages(APIView):
             'page_count': page_count,
             RESULTS: serialized_results
         }
-        # Correct any malformed URLs in the response.
+        # Post-process the search results to fix malformed URLs and insecure
+        # HTTP thumbnails.
         for idx, res in enumerate(serialized_results):
+            if PROXY_THUMBS:
+                to_proxy = THUMBNAIL if THUMBNAIL in res else URL
+                if 'http://' in res[to_proxy]:
+                    original = res[to_proxy]
+                    secure = '{proxy_url}/{width}/{original}'.format(
+                        proxy_url=THUMBNAIL_PROXY_URL,
+                        width=THUMBNAIL_WIDTH_PX,
+                        original=original
+                    )
+                    response_data[RESULTS][idx][THUMBNAIL] = secure
             if FOREIGN_LANDING_URL in res:
                 foreign = _add_protocol(res[FOREIGN_LANDING_URL])
                 response_data[RESULTS][idx][FOREIGN_LANDING_URL] = foreign
@@ -172,5 +187,13 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             foreign_landing_url = \
                 _add_protocol(resp.data[FOREIGN_LANDING_URL])
             resp.data[FOREIGN_LANDING_URL] = foreign_landing_url
+        # Proxy insecure HTTP images at full resolution.
+        if 'http://' in resp.data[URL]:
+            original = resp.data[URL]
+            secure = '{proxy_url}/{original}'.format(
+                proxy_url=THUMBNAIL_PROXY_URL,
+                original=original
+            )
+            resp.data[URL] = secure
 
         return resp
