@@ -34,8 +34,7 @@ articles, songs, videos, photographs, paintings, and more. Using this API,
 developers will be able to access the digital commons in their own
 applications.
 
-Please note that there is a rate limit of 60 requests per minute in place. We 
-would like to ask that you do not attempt to circumvent this rate limit. If 
+Please note that there is a rate limit of 60 requests per minute in place.  If 
 this is insufficient for your use case, please contact us so we can issue you 
 an API key with higher throughput enabled.
 """
@@ -61,8 +60,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('', schema_view.with_ui('redoc', cache_timeout=None),
-        name='root'),
+    path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('admin/', admin.site.urls),
     path('list', CreateList.as_view()),
     path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
@@ -72,10 +70,18 @@ urlpatterns = [
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
     re_path('healthcheck', HealthCheck.as_view()),
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$',
-        schema_view.without_ui(cache_timeout=None), name='schema-json'),
-    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=15),
-        name='schema-swagger-ui'),
-    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=15),
-        name='schema-redoc'),
+    re_path(
+        r'^swagger(?P<format>\.json|\.yaml)$',
+        schema_view.without_ui(cache_timeout=None), name='schema-json'
+    ),
+    re_path(
+        r'^swagger/$',
+        schema_view.with_ui('swagger', cache_timeout=15),
+        name='schema-swagger-ui'
+    ),
+    re_path(
+        r'^redoc/$',
+        schema_view.with_ui('redoc', cache_timeout=15),
+        name='schema-redoc'
+    )
 ]
