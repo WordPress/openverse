@@ -139,6 +139,11 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
                 "You cannot use `q` in combination with advanced search "
                 "parameters `title`, `tags`, or `creator`."
             )
+        elif 'q' not in data and not advanced_search:
+            raise serializers.ValidationError(
+                "You must use either the `q` parameter or an advanced search"
+                "parameter such as `title`, `tags`, or `creator`."
+            )
         elif 'li' in data and 'lt' in data:
             raise serializers.ValidationError(
                 "Only license type or individual licenses can be defined, not "
