@@ -43,15 +43,16 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
         license_field = 'li' if 'li' in search_params.data else 'lt'
         license_filters = []
         for _license in search_params.data[license_field].split(','):
-            license_filters.append(Q("term", license__keyword=_license))
+            license_filters.append(Q('term', license__keyword=_license))
         s = s.filter('bool', should=license_filters, minimum_should_match=1)
     if 'provider' in search_params.data:
         provider_filters = []
         for provider in search_params.data['provider'].split(','):
-            provider_filters.append(Q("term", provider=provider))
+            provider_filters.append(Q('term', provider=provider))
         s = s.filter('bool', should=provider_filters, minimum_should_match=1)
+
     if 'creator' in search_params.data:
-        creator_filter = Q("term", creator=search_params.data['creator'])
+        creator_filter = Q('term', creator=search_params.data['creator'])
         s = s.filter('bool', should=creator_filter, minimum_should_match=1)
 
     # It is sometimes desirable to hide content providers from the catalog
@@ -68,14 +69,45 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
             value=filtered_providers
         )
     for filtered in filtered_providers:
-        s = s.exclude("match", provider=filtered['provider_identifier'])
+        s = s.exclude('match', provider=filtered['provider_identifier'])
 
-    # Search for keywords.
-    keywords = ' '.join(search_params.data['q'].lower().split(','))
-    s = s.query("constant_score", filter=Q("multi_match",
+    # Search either by generic multimatch or by "advanced search" with
+    # individual field-level queries specified.
+    if 'q' in search_params.data:
+        keywords = ' '.join(search_params.data['q'].lower().split(','))
+        s = s.query(
+            'constant_score',
+            filter=Q(
+                'multi_match',
                 query=keywords,
                 fields=['tags.name', 'title'],
-                operator='AND'))
+                operator='AND'
+            )
+        )
+    else:
+        if 'creator' in search_params.data:
+            creator = search_params.data['creator']
+            s = s.query(
+                'constant_score',
+                filter=Q('match', creator=creator)
+            )
+        if 'title' in search_params.data:
+            title = search_params.data['title']
+            s = s.query(
+                'constant_score',
+                filter=Q('match', title=title)
+            )
+        if 'tags' in search_params.data:
+            tags = ' '.join(search_params.data['tags'].lower().split(','))
+            print('Tags:{}'.format(tags))
+            for tag in tags:
+                s = s.query(
+                    'constant_score',
+                    filter=Q(
+                        'match',
+                        tags__keyword=tags)
+                )
+
     s.extra(track_scores=True)
     s = s.params(preference=str(ip))
     search_response = s.execute()
