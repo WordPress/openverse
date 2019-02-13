@@ -41,7 +41,7 @@ an API key with higher throughput enabled.
 
 
 logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
-tos_url = "https://api-dev.creativecommons.engineering/tos"
+tos_url = "https://api.creativecommons.engineering/terms_of_service.html"
 schema_view = get_schema_view(
     openapi.Info(
         title="Creative Commons Catalog API",
