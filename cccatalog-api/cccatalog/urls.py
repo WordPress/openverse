@@ -33,10 +33,16 @@ ambition to index and catalog billions of Creative Commons works, including
 articles, songs, videos, photographs, paintings, and more. Using this API,
 developers will be able to access the digital commons in their own
 applications.
+
+Please note that there is a rate limit of 60 requests per minute in place. We 
+would like to ask that you do not attempt to circumvent this rate limit. If 
+this is insufficient for your use case, please contact us so we can issue you 
+an API key with higher throughput enabled.
 """
 
 
 logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
+tos_url = "https://api-dev.creativecommons.engineering/tos"
 schema_view = get_schema_view(
     openapi.Info(
         title="Creative Commons Catalog API",
@@ -44,6 +50,7 @@ schema_view = get_schema_view(
         description=description,
         contact=openapi.Contact(email="alden@creativecommons.org"),
         license=openapi.License(name="MIT License"),
+        terms_of_service=tos_url,
         x_logo={
             "url": logo_url,
             "backgroundColor": "#FFFFFF"
