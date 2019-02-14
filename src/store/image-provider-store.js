@@ -1,5 +1,3 @@
-
-import ImageProviderService from '@/api/ImageProviderService';
 import {
   FETCH_IMAGE_STATS,
 } from './action-types';
@@ -17,7 +15,7 @@ const state = {
   isFetchingImageStats: false,
 };
 
-const actions = {
+const actions = ImageProviderService => ({
   [FETCH_IMAGE_STATS]({ commit }, params) {
     commit(SET_FETCH_IMAGES_ERROR, { isFetchingImageStatsError: false });
     commit(FETCH_IMAGE_STATS_START);
@@ -33,7 +31,7 @@ const actions = {
         throw new Error(error);
       });
   },
-};
+});
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
 const mutations = {
