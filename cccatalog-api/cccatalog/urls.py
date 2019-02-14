@@ -42,13 +42,16 @@ an API key with higher throughput enabled.
 
 logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
 tos_url = "https://api.creativecommons.engineering/terms_of_service.html"
+license_url =\
+    "https://github.com/creativecommons/cccatalog-api/blob/master/LICENSE"
 schema_view = get_schema_view(
     openapi.Info(
         title="Creative Commons Catalog API",
         default_version=API_VERSION,
         description=description,
         contact=openapi.Contact(email="alden@creativecommons.org"),
-        license=openapi.License(name="MIT License"),
+        license=openapi.License(
+            name="MIT License", url=license_url),
         terms_of_service=tos_url,
         x_logo={
             "url": logo_url,
