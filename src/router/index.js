@@ -1,14 +1,11 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { commit } from '@/store';
 import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
 import BrowsePage from '@/pages/BrowsePage';
 import PhotoDetailPage from '@/pages/PhotoDetailPage';
 import ShareListPage from '@/pages/ShareListPage';
 import ShareListsPage from '@/pages/ShareListsPage';
-import { SET_QUERY, SET_IMAGE, SET_IMAGES } from '@/store/mutation-types';
-
 
 Vue.use(VueRouter);
 
@@ -55,12 +52,6 @@ const router = new VueRouter({
 });
 
 router.afterEach((to) => {
-  if (to && to.query && to.query.q) {
-    commit(SET_QUERY, { query: to.query, override: true });
-  }
-  commit(SET_IMAGE, { image: {} });
-  commit(SET_IMAGES, { images: [] });
-
   ga('set', 'page', to.fullPath);
   ga('send', 'pageview');
 });
