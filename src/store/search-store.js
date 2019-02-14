@@ -1,6 +1,3 @@
-
-import ImageService from '@/api/ImageService';
-import router from '@/router';
 import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from './action-types';
 import {
   FETCH_END_IMAGES,
@@ -30,7 +27,7 @@ const state = {
   relatedImagesCount: 0,
 };
 
-const actions = {
+const actions = ImageService => ({
   [FETCH_IMAGES]({ commit }, params) {
     commit(FETCH_START_IMAGES);
     return ImageService.search(params)
@@ -81,10 +78,10 @@ const actions = {
         throw new Error(error);
       });
   },
-};
+});
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
-const mutations = {
+const mutations = routePush => ({
   [FETCH_START_IMAGES](_state) {
     _state.isFetchingImages = true;
     _state.isFetchingImagesError = false;
@@ -139,15 +136,15 @@ const mutations = {
     const isFilterApplied = ['li', 'provider', 'lt']
       .some(key => query[key] && query[key].length > 0);
 
-    mutations[SET_FILTER_IS_APPLIED](_state, { isFilterApplied });
+    _state.isFilterApplied = isFilterApplied;
 
     if (params.shouldNavigate === true) {
-      router.push({ path: 'search', query });
+      routePush({ path: 'search', query });
     } else {
       _state.query = query;
     }
   },
-};
+});
 
 export default {
   state,
