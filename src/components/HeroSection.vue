@@ -34,14 +34,14 @@
 </template>
 
 <script>
-import router from '@/router';
+import { SET_QUERY } from '@/store/mutation-types';
 
 export default {
   name: 'hero',
   data: () => ({ form: { searchTerm: '' } }),
   methods: {
     onSubmit() {
-      router.push({ path: 'search', query: { q: this.form.searchTerm } });
+      this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm }, shouldNavigate: true });
     },
   },
 };

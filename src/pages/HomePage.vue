@@ -89,7 +89,7 @@ import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import FooterSection from '@/components/FooterSection';
 import LicenseIcons from '@/components/LicenseIcons';
-import router from '@/router';
+import { SET_QUERY } from '@/store/mutation-types';
 
 const HomePage = {
   name: 'home-page',
@@ -168,7 +168,7 @@ const HomePage = {
   }),
   methods: {
     onCategoryClick(category) {
-      router.push({ path: 'search', query: { q: category } });
+      this.$store.commit(SET_QUERY, { query: { q: category }, shouldNavigate: true });
     },
     onGotoDetailPage(image) {
       this.$router.push(`/photos/${image.id}`);
