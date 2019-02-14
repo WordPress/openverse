@@ -88,6 +88,14 @@ describe('Search Store', () => {
       expect(state.imagePage).toBe(params.imagePage);
     });
 
+    it('SET_RELATED_IMAGES updates state', () => {
+      const params = { relatedImages: ['foo'], relatedImagesCount: 1 };
+      mutations[SET_RELATED_IMAGES](state, params);
+
+      expect(state.relatedImages).toBe(params.relatedImages);
+      expect(state.relatedImagesCount).toBe(params.relatedImagesCount);
+    });
+
     it('SET_IMAGES updates state persisting images', () => {
       state.images = ['img1'];
       const params = { images: ['img2'], imagesCount: 2, page: 2, shouldPersistImages: true };
@@ -123,26 +131,139 @@ describe('Search Store', () => {
 
       expect(state.query.q).toBe(params.query.q);
     });
+
+    it('SET_QUERY updates isFilterApplied with provider', () => {
+      const params = { query: { q: 'foo', provider: 'bar' } };
+      mutations[SET_QUERY](state, params);
+
+      expect(state.query.provider).toBe(params.query.provider);
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('SET_QUERY updates isFilterApplied with license', () => {
+      const params = { query: { q: 'foo', li: 'bar' } };
+      mutations[SET_QUERY](state, params);
+
+      expect(state.query.li).toBe(params.query.li);
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('SET_QUERY updates isFilterApplied with license type', () => {
+      const params = { query: { q: 'foo', lt: 'bar' } };
+      mutations[SET_QUERY](state, params);
+
+      expect(state.query.li).toBe(params.query.li);
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('SET_QUERY pushes route when shouldNavigate is true', () => {
+      const params = { query: { q: 'foo', lt: 'bar' }, shouldNavigate: true };
+      mutations[SET_QUERY](state, params);
+
+      expect(routePushMock).toBeCalledWith({ path: 'search', query: params.query });
+    });
   });
 
   describe('actions', () => {
-    const data = 'foobar';
-    const imageProviderServiceMock = {
-      getProviderStats: jest.fn(() => Promise.resolve({ data })),
+    const searchData = { results: ['foo'], result_count: 1 };
+    const imageDetailData = 'imageDetails';
+    const imageServiceMock = {
+      search: jest.fn(() => Promise.resolve({ data: searchData })),
+      getImageDetail: jest.fn(() => Promise.resolve({ data: imageDetailData })),
     };
     const commit = jest.fn();
-    // it('FETCH_IMAGE_STATS on success', (done) => {
-    //   const action = store.actions(imageProviderServiceMock)[FETCH_IMAGE_STATS];
-    //   action({ commit }, {}).then(() => {
-    //     expect(commit).toBeCalledWith(SET_FETCH_IMAGES_ERROR, { isFetchingImageStatsError: false });
-    //     expect(commit).toBeCalledWith(FETCH_IMAGE_STATS_START);
+    it('FETCH_IMAGES on success', (done) => {
+      const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(commit).toBeCalledWith(FETCH_START_IMAGES);
+        expect(commit).toBeCalledWith(FETCH_END_IMAGES);
 
-    //     expect(imageProviderServiceMock.getProviderStats).toBeCalled();
+        expect(commit).toBeCalledWith(SET_IMAGES, {
+          images: searchData.results,
+          imagesCount: searchData.result_count,
+          shouldPersistImages: params.shouldPersistImages,
+          page: params.page,
+        });
 
-    //     expect(commit).toBeCalledWith(FETCH_IMAGE_STATS_END);
-    //     expect(commit).toBeCalledWith(SET_IMAGE_STATS, { imageStats: data });
-    //     done();
-    //   });
-    // });
+        expect(imageServiceMock.search).toBeCalledWith(params);
+
+        expect(commit).toBeCalledWith(SET_QUERY, { query: params.query });
+        done();
+      });
+    });
+
+    it('FETCH_IMAGES on error', (done) => {
+      const failedMock = {
+        search: jest.fn(() => Promise.reject('error')),
+      };
+      const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
+      const action = store.actions(failedMock)[FETCH_IMAGES];
+      action({ commit }, params).catch(() => {
+        expect(commit).toBeCalledWith(FETCH_START_IMAGES);
+        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
+        done();
+      });
+    });
+
+    it('FETCH_IMAGE on success', (done) => {
+      const params = 'foo';
+      const action = store.actions(imageServiceMock)[FETCH_IMAGE];
+      action({ commit }, params).then(() => {
+        expect(commit).toBeCalledWith(FETCH_START_IMAGES);
+        expect(commit).toBeCalledWith(FETCH_END_IMAGES);
+
+        expect(commit).toBeCalledWith(SET_IMAGE, { image: imageDetailData });
+
+        expect(imageServiceMock.getImageDetail).toBeCalledWith(params);
+
+        done();
+      });
+    });
+
+    it('FETCH_IMAGE on error', (done) => {
+      const failedMock = {
+        getImageDetail: jest.fn(() => Promise.reject('error')),
+      };
+      const params = 'foo';
+      const action = store.actions(failedMock)[FETCH_IMAGE];
+      action({ commit }, params).catch(() => {
+        expect(commit).toBeCalledWith(FETCH_START_IMAGES);
+        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
+
+        done();
+      });
+    });
+
+    it('FETCH_RELATED_IMAGES on success', (done) => {
+      const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_RELATED_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(commit).toBeCalledWith(FETCH_START_IMAGES);
+        expect(commit).toBeCalledWith(FETCH_END_IMAGES);
+
+        expect(commit).toBeCalledWith(SET_RELATED_IMAGES, {
+          relatedImages: searchData.results,
+          relatedImagesCount: searchData.result_count,
+        });
+
+        expect(imageServiceMock.search).toBeCalledWith(params);
+        done();
+      });
+    });
+
+    it('FETCH_RELATED_IMAGES on error', (done) => {
+      const failedMock = {
+        search: jest.fn(() => Promise.reject('error')),
+      };
+      const params = 'foo';
+      const action = store.actions(failedMock)[FETCH_RELATED_IMAGES];
+      action({ commit }, params).catch(() => {
+        expect(commit).toBeCalledWith(FETCH_START_IMAGES);
+        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
+
+        done();
+      });
+    });
   });
 });

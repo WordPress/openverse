@@ -121,12 +121,7 @@ const mutations = routePush => ({
     _state.imagePage = params.page || 1;
   },
   [SET_QUERY](_state, params) {
-    let query;
-    if (params.override) {
-      query = params.query;
-    } else {
-      query = Object.assign({}, _state.query, params.query);
-    }
+    const query = Object.assign({}, _state.query, params.query);
 
     const isFilterApplied = ['li', 'provider', 'lt']
       .some(key => query[key] && query[key].length > 0);
