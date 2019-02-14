@@ -27,6 +27,4 @@ const store = new Puex({
   ),
 });
 
-export const commit = (action, params) => store.commit(action, params);
-
 export default store;

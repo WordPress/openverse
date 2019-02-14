@@ -1,3 +1,4 @@
+// import { routePush } from '@/router';
 import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from './action-types';
 import {
   FETCH_END_IMAGES,
@@ -8,10 +9,10 @@ import {
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_IMAGES,
-  SET_IS_PAGE_CHANGE,
   SET_QUERY,
   SET_RELATED_IMAGES,
 } from './mutation-types';
+
 
 const state = {
   image: {},
@@ -102,12 +103,6 @@ const mutations = routePush => ({
   [SET_FILTER_IS_APPLIED](_state, params) {
     _state.isFilterApplied = params.isFilterApplied;
   },
-  [SET_IS_PAGE_CHANGE](_state, params) {
-    _state.SET_IS_PAGE_CHANGE = params.isPageChange;
-  },
-  [SET_IMAGE_PAGE](_state, params) {
-    _state.imagePage = params.imagePage;
-  },
   [SET_IMAGE_PAGE](_state, params) {
     _state.imagePage = params.imagePage;
   },
@@ -137,11 +132,10 @@ const mutations = routePush => ({
       .some(key => query[key] && query[key].length > 0);
 
     _state.isFilterApplied = isFilterApplied;
+    _state.query = query;
 
     if (params.shouldNavigate === true) {
       routePush({ path: 'search', query });
-    } else {
-      _state.query = query;
     }
   },
 });
