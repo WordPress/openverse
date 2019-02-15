@@ -1,4 +1,4 @@
-// import { routePush } from '@/router';
+import getParameterByName from '@/utils/getParameterByName';
 import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from './action-types';
 import {
   FETCH_END_IMAGES,
@@ -14,7 +14,7 @@ import {
 } from './mutation-types';
 
 
-const state = {
+const state = searchParams => ({
   image: {},
   imagesCount: 0,
   imagePage: 1,
@@ -23,10 +23,15 @@ const state = {
   isFetchingImagesError: true,
   isFilterVisible: false,
   isFilterApplied: false,
-  query: { q: '' },
+  query: {
+    q: getParameterByName('q', searchParams),
+    provider: getParameterByName('provider', searchParams),
+    li: getParameterByName('li', searchParams),
+    lt: getParameterByName('lt', searchParams),
+  },
   relatedImages: [],
   relatedImagesCount: 0,
-};
+});
 
 const actions = ImageService => ({
   [FETCH_IMAGES]({ commit }, params) {

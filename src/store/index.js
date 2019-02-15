@@ -16,7 +16,7 @@ const store = new Puex({
     ImageProviderStore.actions(ImageProviderService),
   ),
   state: Object.assign(
-    SearchStore.state,
+    SearchStore.state(window.location.search),
     ListStore.state,
     ImageProviderStore.state,
   ),

@@ -18,16 +18,34 @@ import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-
 describe('Search Store', () => {
   describe('state', () => {
     it('exports default state', () => {
-      expect(store.state.imagesCount).toBe(0);
-      expect(store.state.imagePage).toBe(1);
-      expect(store.state.images).toHaveLength(0);
-      expect(store.state.isFetchingImages).toBeFalsy();
-      expect(store.state.isFetchingImagesError).toBeTruthy();
-      expect(store.state.isFilterVisible).toBeFalsy();
-      expect(store.state.isFilterApplied).toBeFalsy();
-      expect(store.state.query.q).toBe('');
-      expect(store.state.relatedImages).toHaveLength(0);
-      expect(store.state.relatedImagesCount).toBe(0);
+      const state = store.state('?q=');
+      expect(state.imagesCount).toBe(0);
+      expect(state.imagePage).toBe(1);
+      expect(state.images).toHaveLength(0);
+      expect(state.isFetchingImages).toBeFalsy();
+      expect(state.isFetchingImagesError).toBeTruthy();
+      expect(state.isFilterVisible).toBeFalsy();
+      expect(state.isFilterApplied).toBeFalsy();
+      expect(state.query.q).toBe('');
+      expect(state.relatedImages).toHaveLength(0);
+      expect(state.relatedImagesCount).toBe(0);
+    });
+
+    it('gets query from search params', () => {
+      const state = store.state('?q=landscapes&provider=500px&li=by&lt=');
+      expect(state.imagesCount).toBe(0);
+      expect(state.imagePage).toBe(1);
+      expect(state.images).toHaveLength(0);
+      expect(state.isFetchingImages).toBeFalsy();
+      expect(state.isFetchingImagesError).toBeTruthy();
+      expect(state.isFilterVisible).toBeFalsy();
+      expect(state.isFilterApplied).toBeFalsy();
+      expect(state.query.q).toBe('landscapes');
+      expect(state.query.provider).toBe('500px');
+      expect(state.query.li).toBe('by');
+      expect(state.query.lt).toBe('');
+      expect(state.relatedImages).toHaveLength(0);
+      expect(state.relatedImagesCount).toBe(0);
     });
   });
 
