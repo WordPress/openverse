@@ -47,6 +47,16 @@ describe('Search Store', () => {
       expect(state.relatedImages).toHaveLength(0);
       expect(state.relatedImagesCount).toBe(0);
     });
+
+    it('isFilterApplied is set to true when provider filter is set', () => {
+      const state = store.state('?q=landscapes&provider=500px&li=by&lt=');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to false when no filter is set', () => {
+      const state = store.state('?q=landscapes');
+      expect(state.isFilterApplied).toBeFalsy();
+    });
   });
 
   describe('mutations', () => {

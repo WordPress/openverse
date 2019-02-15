@@ -29,7 +29,7 @@ const state = (searchParams) => {
     isFetchingImages: false,
     isFetchingImagesError: true,
     isFilterVisible: false,
-    isFilterApplied: !!query.q || !!query.provider || !!query.li || !!query.lt,
+    isFilterApplied: !!query.provider || !!query.li || !!query.lt,
     query,
     relatedImages: [],
     relatedImagesCount: 0,
