@@ -1,7 +1,7 @@
 certifi==2018.4.16
 chardet==3.0.4
 defusedxml==0.5.0
-django==2.0.11
+django==2.0.13
 django-braces==1.13.0
 django-oauth-toolkit==1.1.2
 django-rest-framework-social-oauth2==1.1.0
