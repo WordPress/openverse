@@ -14,24 +14,27 @@ import {
 } from './mutation-types';
 
 
-const state = searchParams => ({
-  image: {},
-  imagesCount: 0,
-  imagePage: 1,
-  images: [],
-  isFetchingImages: false,
-  isFetchingImagesError: true,
-  isFilterVisible: false,
-  isFilterApplied: false,
-  query: {
+const state = (searchParams) => {
+  const query = {
     q: getParameterByName('q', searchParams),
     provider: getParameterByName('provider', searchParams),
     li: getParameterByName('li', searchParams),
     lt: getParameterByName('lt', searchParams),
-  },
-  relatedImages: [],
-  relatedImagesCount: 0,
-});
+  };
+  return {
+    image: {},
+    imagesCount: 0,
+    imagePage: 1,
+    images: [],
+    isFetchingImages: false,
+    isFetchingImagesError: true,
+    isFilterVisible: false,
+    isFilterApplied: !!query.q || !!query.provider || !!query.li || !!query.lt,
+    query,
+    relatedImages: [],
+    relatedImagesCount: 0,
+  };
+};
 
 const actions = ImageService => ({
   [FETCH_IMAGES]({ commit }, params) {

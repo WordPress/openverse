@@ -39,7 +39,7 @@ describe('Search Store', () => {
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
       expect(state.isFilterVisible).toBeFalsy();
-      expect(state.isFilterApplied).toBeFalsy();
+      expect(state.isFilterApplied).toBeTruthy();
       expect(state.query.q).toBe('landscapes');
       expect(state.query.provider).toBe('500px');
       expect(state.query.li).toBe('by');
