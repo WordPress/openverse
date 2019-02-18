@@ -29,7 +29,7 @@ const state = (searchParams) => {
     isFetchingImages: false,
     isFetchingImagesError: true,
     isFilterVisible: false,
-    isFilterApplied: !!query.provider || !!query.li || !!query.lt,
+    isFilterApplied: !!query.provider || !!query.li || !!query.lt || !!query.searchBy,
     query,
     relatedImages: [],
     relatedImagesCount: 0,
@@ -131,7 +131,7 @@ const mutations = routePush => ({
   [SET_QUERY](_state, params) {
     const query = Object.assign({}, _state.query, params.query);
 
-    const isFilterApplied = ['li', 'provider', 'lt']
+    const isFilterApplied = ['li', 'provider', 'lt', 'searchBy']
       .some(key => query[key] && query[key].length > 0);
 
     _state.isFilterApplied = isFilterApplied;

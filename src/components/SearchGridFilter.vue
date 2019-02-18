@@ -54,10 +54,25 @@
           :searchable="false">
         </multiselect>
       </div>
-      <div class="cell
+      <div class="search-filter_search-by
+                  cell
                   large-12">
+        <multiselect
+          v-model="filter.searchBy"
+          @input="onUpdateFilter"
+          placeholder="Search by"
+          label="name"
+          track-by="code"
+          :options="searchBy"
+          :multiple="false"
+          :taggable="true"
+          :searchable="false">
+        </multiselect>
+      </div>
+      <div class="cell
+                  large-12"
+           v-if="isFilterApplied">
         <a class="button primary medium search-filter_clear-btn"
-                :disabled="isFilterApplied===false"
                 @click="onClearFilters">
           Clear filters
         </a>
@@ -93,13 +108,14 @@ export default {
     onUpdateFilter() {
       const filter = Object.assign({}, this.filter);
       Object.keys(this.filter).forEach((key) => {
-        filter[key] = filter[key].map(filterItem => filterItem.code).join(',');
+        filter[key] = filter[key].code || filter[key].map(filterItem => filterItem.code).join(',');
       });
       this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
     },
     onClearFilters() {
       const filter = Object.assign({}, this.filter);
-      Object.keys(this.filter).forEach((key) => { this.filter[key] = []; });
+      Object.keys(this.filter).forEach((key) => { filter[key] = []; });
+      this.filter = filter;
       this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
     },
     parseQueryFilters() {
@@ -170,10 +186,16 @@ export default {
         { code: 'commercial', name: 'Commercial use permitted' },
         { code: 'modification', name: 'Modifications permitted' },
       ],
+    searchBy:
+      [
+        { code: 'creator', name: 'Creator' },
+        { code: 'tags', name: 'Tags' },
+      ],
     filter: {
       provider: [],
       li: [],
       lt: [],
+      searchBy: [],
     } }),
 };
 </script>
