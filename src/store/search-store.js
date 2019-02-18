@@ -20,6 +20,7 @@ const state = (searchParams) => {
     provider: getParameterByName('provider', searchParams),
     li: getParameterByName('li', searchParams),
     lt: getParameterByName('lt', searchParams),
+    searchBy: getParameterByName('searchBy', searchParams),
   };
   return {
     image: {},

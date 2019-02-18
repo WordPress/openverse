@@ -123,6 +123,7 @@ export default {
         provider: 'providers',
         li: 'licenses',
         lt: 'licenseTypes',
+        searchBy: 'searchBy',
       };
 
       if (this.query) {
