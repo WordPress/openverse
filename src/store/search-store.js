@@ -1,6 +1,4 @@
-
-import ImageService from '@/api/ImageService';
-import router from '@/router';
+import getParameterByName from '@/utils/getParameterByName';
 import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from './action-types';
 import {
   FETCH_END_IMAGES,
@@ -11,26 +9,34 @@ import {
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_IMAGES,
-  SET_IS_PAGE_CHANGE,
   SET_QUERY,
   SET_RELATED_IMAGES,
 } from './mutation-types';
 
-const state = {
-  image: {},
-  imagesCount: 0,
-  imagePage: 1,
-  images: [],
-  isFetchingImages: false,
-  isFetchingImagesError: true,
-  isFilterVisible: false,
-  isFilterApplied: false,
-  query: { q: '' },
-  relatedImages: [],
-  relatedImagesCount: 0,
+
+const state = (searchParams) => {
+  const query = {
+    q: getParameterByName('q', searchParams),
+    provider: getParameterByName('provider', searchParams),
+    li: getParameterByName('li', searchParams),
+    lt: getParameterByName('lt', searchParams),
+  };
+  return {
+    image: {},
+    imagesCount: 0,
+    imagePage: 1,
+    images: [],
+    isFetchingImages: false,
+    isFetchingImagesError: true,
+    isFilterVisible: false,
+    isFilterApplied: !!query.provider || !!query.li || !!query.lt,
+    query,
+    relatedImages: [],
+    relatedImagesCount: 0,
+  };
 };
 
-const actions = {
+const actions = ImageService => ({
   [FETCH_IMAGES]({ commit }, params) {
     commit(FETCH_START_IMAGES);
     return ImageService.search(params)
@@ -81,10 +87,10 @@ const actions = {
         throw new Error(error);
       });
   },
-};
+});
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
-const mutations = {
+const mutations = routePush => ({
   [FETCH_START_IMAGES](_state) {
     _state.isFetchingImages = true;
     _state.isFetchingImagesError = false;
@@ -105,12 +111,6 @@ const mutations = {
   [SET_FILTER_IS_APPLIED](_state, params) {
     _state.isFilterApplied = params.isFilterApplied;
   },
-  [SET_IS_PAGE_CHANGE](_state, params) {
-    _state.SET_IS_PAGE_CHANGE = params.isPageChange;
-  },
-  [SET_IMAGE_PAGE](_state, params) {
-    _state.imagePage = params.imagePage;
-  },
   [SET_IMAGE_PAGE](_state, params) {
     _state.imagePage = params.imagePage;
   },
@@ -129,25 +129,19 @@ const mutations = {
     _state.imagePage = params.page || 1;
   },
   [SET_QUERY](_state, params) {
-    let query;
-    if (params.override) {
-      query = params.query;
-    } else {
-      query = Object.assign({}, _state.query, params.query);
-    }
+    const query = Object.assign({}, _state.query, params.query);
 
     const isFilterApplied = ['li', 'provider', 'lt']
       .some(key => query[key] && query[key].length > 0);
 
-    mutations[SET_FILTER_IS_APPLIED](_state, { isFilterApplied });
+    _state.isFilterApplied = isFilterApplied;
+    _state.query = query;
 
     if (params.shouldNavigate === true) {
-      router.push({ path: 'search', query });
-    } else {
-      _state.query = query;
+      routePush({ path: 'search', query });
     }
   },
-};
+});
 
 export default {
   state,
