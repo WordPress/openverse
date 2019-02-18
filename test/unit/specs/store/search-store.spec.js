@@ -32,7 +32,7 @@ describe('Search Store', () => {
     });
 
     it('gets query from search params', () => {
-      const state = store.state('?q=landscapes&provider=500px&li=by&lt=');
+      const state = store.state('?q=landscapes&provider=500px&li=by&lt=all&searchBy=creator');
       expect(state.imagesCount).toBe(0);
       expect(state.imagePage).toBe(1);
       expect(state.images).toHaveLength(0);
@@ -43,13 +43,29 @@ describe('Search Store', () => {
       expect(state.query.q).toBe('landscapes');
       expect(state.query.provider).toBe('500px');
       expect(state.query.li).toBe('by');
-      expect(state.query.lt).toBe('');
+      expect(state.query.lt).toBe('all');
+      expect(state.query.searchBy).toBe('creator');
       expect(state.relatedImages).toHaveLength(0);
       expect(state.relatedImagesCount).toBe(0);
     });
 
     it('isFilterApplied is set to true when provider filter is set', () => {
       const state = store.state('?q=landscapes&provider=500px&li=by&lt=');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to true when searchBy filter is set', () => {
+      const state = store.state('?q=landscapes&searchBy=creator');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to true when license filter is set', () => {
+      const state = store.state('?q=landscapes&li=by');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to true when license type filter is set', () => {
+      const state = store.state('?q=landscapes&lt=all');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
@@ -181,6 +197,14 @@ describe('Search Store', () => {
       mutations[SET_QUERY](state, params);
 
       expect(state.query.li).toBe(params.query.li);
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('SET_QUERY updates isFilterApplied with searchBy', () => {
+      const params = { query: { q: 'foo', searchBy: 'creator' } };
+      mutations[SET_QUERY](state, params);
+
+      expect(state.query.searchBy).toBe(params.query.searchBy);
       expect(state.isFilterApplied).toBeTruthy();
     });
 
