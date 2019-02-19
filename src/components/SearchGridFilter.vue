@@ -85,6 +85,18 @@
 import { SET_QUERY } from '@/store/mutation-types';
 import Multiselect from 'vue-multiselect';
 
+const transformFilterValue = (filter, key) => {
+  if (Array.isArray(filter[key])) {
+    return filter[key].map(filterItem => filterItem.code).join(',');
+  }
+  else if (!!filter[key]) {
+    return filter[key].code;
+  }
+  else {
+    return null;
+  }
+}
+
 export default {
   name: 'search-grid-filter',
   components: {
@@ -108,7 +120,7 @@ export default {
     onUpdateFilter() {
       const filter = Object.assign({}, this.filter);
       Object.keys(this.filter).forEach((key) => {
-        filter[key] = filter[key].code || filter[key].map(filterItem => filterItem.code).join(',');
+        filter[key] = transformFilterValue(filter, key);
       });
       this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
     },
