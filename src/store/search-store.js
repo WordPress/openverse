@@ -1,4 +1,5 @@
 import getParameterByName from '@/utils/getParameterByName';
+import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams';
 import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from './action-types';
 import {
   FETCH_END_IMAGES,
@@ -12,7 +13,6 @@ import {
   SET_QUERY,
   SET_RELATED_IMAGES,
 } from './mutation-types';
-
 
 const state = (searchParams) => {
   const query = {
@@ -40,7 +40,8 @@ const state = (searchParams) => {
 const actions = ImageService => ({
   [FETCH_IMAGES]({ commit }, params) {
     commit(FETCH_START_IMAGES);
-    return ImageService.search(params)
+    const queryParams = prepareSearchQueryParams(params);
+    return ImageService.search(queryParams)
       .then(({ data }) => {
         commit(FETCH_END_IMAGES);
         commit(SET_IMAGES,
