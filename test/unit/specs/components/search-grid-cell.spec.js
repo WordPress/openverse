@@ -13,7 +13,7 @@ describe('SearchGridCell', () => {
         foreign_landing_url: 'foo.bar',
       },
     };
-    const wrapper = render(SearchGridCell, props);
+    const wrapper = render(SearchGridCell, { propsData: props });
     expect(wrapper.find('figure').vm).toBeDefined();
   });
 });
