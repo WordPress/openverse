@@ -1,9 +1,9 @@
-import Vue from 'vue';
 import SearchGridForm from '@/components/SearchGridForm';
+import render from '../../test-utils/render';
 
-describe('SearchGridForm.vue', () => {
+describe('SearchGridForm', () => {
   it('should render correct contents', () => {
-    const Constructor = Vue.extend(SearchGridForm);
-    const vm = new Constructor().$mount();
+    const wrapper = render(SearchGridForm);
+    expect(wrapper.find('form').vm).toBeDefined();
   });
 });

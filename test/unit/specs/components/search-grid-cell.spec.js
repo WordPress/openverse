@@ -1,9 +1,19 @@
-import Vue from 'vue';
 import SearchGridCell from '@/components/SearchGridCell';
+import render from '../../test-utils/render';
 
-describe('SearchGridCell.vue', () => {
+describe('SearchGridCell', () => {
   it('should render correct contents', () => {
-    const Constructor = Vue.extend(SearchGridCell);
-    const vm = new Constructor().$mount();
+    const props = {
+      image: {
+        id: 0,
+        title: 'foo',
+        provider: 'flickr',
+        url: 'foo.bar',
+        thumbnail: 'foo.bar',
+        foreign_landing_url: 'foo.bar',
+      },
+    };
+    const wrapper = render(SearchGridCell, props);
+    expect(wrapper.find('figure').vm).toBeDefined();
   });
 });

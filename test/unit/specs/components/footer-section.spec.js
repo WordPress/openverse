@@ -1,9 +1,9 @@
-import Vue from 'vue';
 import FooterSection from '@/components/FooterSection';
+import render from '../../test-utils/render';
 
-describe('FooterSection.vue', () => {
+describe('FooterSection', () => {
   it('should render correct contents', () => {
-    const Constructor = Vue.extend(FooterSection);
-    const vm = new Constructor().$mount();
+    const wrapper = render(FooterSection);
+    expect(wrapper.find('footer').vm).toBeDefined();
   });
 });
