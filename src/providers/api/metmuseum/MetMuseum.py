@@ -14,22 +14,39 @@ import json
 import requests
 import time
 import sys
-import os
 import random
-reload(sys)
-sys.setdefaultencoding('utf8')
+import argparse
+import os
+from datetime import datetime, timedelta
 
-DELAY       = 3.0 #seconds
-FILE        = 'metmuseum_{}.tsv'.format(int(time.time()))
+DELAY   = 3.0 #seconds
+FILE    = 'metmuseum_{}.tsv'.format(int(time.time()))
+PATH    = '../output/'
 
 logging.basicConfig(format='%(asctime)s: [%(levelname)s - Met Museum API] =======> %(message)s', level=logging.INFO)
 
 
-def delayProcessing(_startTime):
-    global DELAY
+def writeToFile(_data, _name):
+    outputFile = '{}{}'.format(PATH, _name)
 
-    waitTime = min(DELAY, abs(DELAY - (float(time.time()) - float(_startTime)))) #time delay between requests.
-    waitTime = round(waitTime, 3)
+    if len(_data) < 1:
+        return None
+
+    logging.info('Writing to file => {}'.format(outputFile))
+
+    with open(outputFile, 'a') as fh:
+        for line in _data:
+            if line:
+                fh.write('\t'.join(line) + '\n')
+
+
+def delayProcessing(_startTime, _maxDelay):
+    minDelay = 1.0
+
+    #subtract time elapsed from the requested delay
+    elapsed       = float(time.time()) - float(_startTime)
+    delayInterval = round(_maxDelay - elapsed, 3)
+    waitTime      = max(minDelay, delayInterval) #time delay between requests.
 
     logging.info('Time delay: {} seconds'.format(waitTime))
     time.sleep(waitTime)
@@ -76,20 +93,6 @@ def getObjectIDs(_date=None):
     return [totalObjects, objectIDs]
 
 
-def writeToFile(_data):
-    global FILE
-
-    if len(_data) < 1:
-        return None
-
-    logging.info('Writing to file')
-
-    with open(FILE, 'a') as fh:
-        for line in _data:
-            if line:
-                fh.write('\t'.join(line) + '\n')
-
-
 def getMetaData(_objectID):
     logging.info('Processing object: {}'.format(_objectID))
     license     = 'CC0'
@@ -134,10 +137,10 @@ def getMetaData(_objectID):
 
 
     #get the title
-    title   = objectData.get('title', '').strip().encode('unicode-escape')
+    title   = objectData.get('title', '').strip()
 
     #get creator info
-    creator = objectData.get('artistDisplayName', '').strip().encode('unicode-escape')
+    creator = objectData.get('artistDisplayName', '').strip()
 
 
     #get the foreign identifier
@@ -197,21 +200,46 @@ def getMetaData(_objectID):
 
         idx += 1
 
-    delayProcessing(startTime)
-    writeToFile(extracted)
+
+    writeToFile(extracted, FILE)
+    delayProcessing(startTime, DELAY)
 
     return len(extracted)
 
 
+
 def main():
     logging.info('Begin: Met API requests')
+    param   = None
+    mode    = 'date: '
 
-    result = getObjectIDs()
+    parser  = argparse.ArgumentParser(description='Met Museum API Job', add_help=True)
+    parser.add_argument('--mode', choices=['default', 'all'],
+            help='Identify all artworks from the previous day [default] or process the entire collection [all].')
+    parser.add_argument('--date', type=lambda dt: datetime.strptime(dt, '%Y-%m-%d'),
+            help='Identify artworks published on a given date (format: YYYY-MM-DD).')
+
+    args = parser.parse_args()
+    if args.date:
+        param = (args.date.strftime('%Y-%m-%d'))
+
+    elif args.mode:
+
+        if str(args.mode) == 'default':
+            param = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')
+        else:
+            mode  = 'all CC0 artworks'
+            param = None
+
+    mode += param if param is not None else ''
+    logging.info('Processing {}'.format(mode))
+
+    result = getObjectIDs(param)
     if result:
         logging.info('Total objects found: {}'.format(result[0]))
 
         extracted = map(lambda obj: getMetaData(obj), result[1])
-        logging.info('Total images: {}'.format(sum(filter(None, extracted))))
+        logging.info('Total CC0 images: {}'.format(sum(filter(None, extracted))))
 
 
     logging.info('Terminated!')
