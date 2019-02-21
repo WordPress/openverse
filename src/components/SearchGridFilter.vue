@@ -62,7 +62,8 @@
                @change="onUpdateFilter">
         <label for="creator-chk">Search by creator</label>
       </div>
-      <div class="cell
+      <div class="clear-filters
+                  cell
                   large-12"
            v-if="isFilterApplied">
         <a class="button primary medium search-filter_clear-btn"
@@ -245,8 +246,9 @@ export default {
   }
 }
 
-.search-filter_search-by {
-  margin-top: 0.3em;
+.search-filter_search-by,
+.clear-filters {
+  margin-top: 0.4em;
 }
 
 .search-filter_clear-btn {
