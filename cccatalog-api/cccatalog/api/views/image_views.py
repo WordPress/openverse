@@ -11,7 +11,7 @@ from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
-from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS
+from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
 from cccatalog.api.utils.view_count import _get_user_ip
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
@@ -127,11 +127,12 @@ class SearchImages(APIView):
             if PROXY_THUMBS:
                 provider = res[PROVIDER]
                 # Proxy either the thumbnail or URL, depending on whether
-                # a thumbnail was provided. Never use MET thumbnails; they're
-                # usually broken.
-                to_proxy = \
-                    THUMBNAIL if THUMBNAIL in res and provider != 'met' else URL
-                if 'http://' in res[to_proxy] or provider == 'met':
+                # a thumbnail was provided.
+                if THUMBNAIL in res and provider not in PROXY_ALL:
+                    to_proxy = THUMBNAIL
+                else:
+                    to_proxy = URL
+                if 'http://' in res[to_proxy] or provider in PROXY_ALL:
                     original = res[to_proxy]
                     secure = '{proxy_url}/{width}/{original}'.format(
                         proxy_url=THUMBNAIL_PROXY_URL,
