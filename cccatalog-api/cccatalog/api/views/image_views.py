@@ -11,7 +11,7 @@ from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
-from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS
+from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
 from cccatalog.api.utils.view_count import _get_user_ip
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
@@ -28,6 +28,7 @@ FILTER_DEAD = 'filter_dead'
 THUMBNAIL = 'thumbnail'
 URL = 'url'
 THUMBNAIL_WIDTH_PX = 600
+PROVIDER = 'provider'
 
 
 def _add_protocol(url: str):
@@ -124,8 +125,14 @@ class SearchImages(APIView):
         # HTTP thumbnails.
         for idx, res in enumerate(serialized_results):
             if PROXY_THUMBS:
-                to_proxy = THUMBNAIL if THUMBNAIL in res else URL
-                if 'http://' in res[to_proxy]:
+                provider = res[PROVIDER]
+                # Proxy either the thumbnail or URL, depending on whether
+                # a thumbnail was provided.
+                if THUMBNAIL in res and provider not in PROXY_ALL:
+                    to_proxy = THUMBNAIL
+                else:
+                    to_proxy = URL
+                if 'http://' in res[to_proxy] or provider in PROXY_ALL:
                     original = res[to_proxy]
                     secure = '{proxy_url}/{width}/{original}'.format(
                         proxy_url=THUMBNAIL_PROXY_URL,
@@ -167,7 +174,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
 
         resp = self.retrieve(request, identifier)
         # Get pretty display name for a provider
-        provider = resp.data['provider']
+        provider = resp.data[PROVIDER]
         try:
             provider_data = ContentProvider \
                 .objects \
