@@ -28,6 +28,7 @@ FILTER_DEAD = 'filter_dead'
 THUMBNAIL = 'thumbnail'
 URL = 'url'
 THUMBNAIL_WIDTH_PX = 600
+PROVIDER = 'provider'
 
 
 def _add_protocol(url: str):
@@ -124,8 +125,13 @@ class SearchImages(APIView):
         # HTTP thumbnails.
         for idx, res in enumerate(serialized_results):
             if PROXY_THUMBS:
-                to_proxy = THUMBNAIL if THUMBNAIL in res else URL
-                if 'http://' in res[to_proxy]:
+                provider = res[PROVIDER]
+                # Proxy either the thumbnail or URL, depending on whether
+                # a thumbnail was provided. Never use MET thumbnails; they're
+                # usually broken.
+                to_proxy = \
+                    THUMBNAIL if THUMBNAIL in res and provider != 'met' else URL
+                if 'http://' in res[to_proxy] or provider == 'met':
                     original = res[to_proxy]
                     secure = '{proxy_url}/{width}/{original}'.format(
                         proxy_url=THUMBNAIL_PROXY_URL,
@@ -167,7 +173,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
 
         resp = self.retrieve(request, identifier)
         # Get pretty display name for a provider
-        provider = resp.data['provider']
+        provider = resp.data[PROVIDER]
         try:
             provider_data = ContentProvider \
                 .objects \
