@@ -60,7 +60,7 @@
         <input type="checkbox" id="creator-chk"
                v-model="filter.searchBy.creator"
                @change="onUpdateFilter">
-        <label for="creator-chk">Search by creator</label>
+        <label for="creator-chk">Search by Creator</label>
       </div>
       <div class="clear-filters
                   cell
