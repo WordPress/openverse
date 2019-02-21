@@ -113,7 +113,8 @@ export default {
 
       if (license === 'cc0') {
         url = `${BASE_URL}/publicdomain/zero/1.0/`;
-      } else if (image.license === 'pdm') {
+      }
+      else if (image.license === 'pdm') {
         url = `${BASE_URL}/publicdomain/mark/1.0/`;
       }
 
@@ -146,7 +147,7 @@ export default {
   },
   methods: {
     onGoBackToSearchResults() {
-      this.$router.push({ name: 'browse-page', query: { q: this.query } });
+      this.$router.push({ name: 'browse-page', query: this.query });
     },
     onImageLoad(event) {
       this.$emit('onImageLoaded', event);

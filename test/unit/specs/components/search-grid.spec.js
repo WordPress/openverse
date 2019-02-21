@@ -1,9 +1,9 @@
-import Vue from 'vue';
 import SearchGrid from '@/components/SearchGrid';
+import render from '../../test-utils/render';
 
-describe('SearchGrid.vue', () => {
+describe('SearchGrid', () => {
   it('should render correct contents', () => {
-    const Constructor = Vue.extend(SearchGrid);
-    const vm = new Constructor().$mount();
+    const wrapper = render(SearchGrid);
+    expect(wrapper.find('section').vm).toBeDefined();
   });
 });

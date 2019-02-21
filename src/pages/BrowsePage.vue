@@ -35,7 +35,6 @@ const BrowsePage = {
   },
   data: () => ({
     isHeaderFixed: false,
-    isVisible: false,
   }),
   computed: {
     images() {

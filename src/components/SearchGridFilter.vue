@@ -54,10 +54,19 @@
           :searchable="false">
         </multiselect>
       </div>
-      <div class="cell
+      <div class="search-filter_search-by
+                  cell
                   large-12">
+        <input type="checkbox" id="creator-chk"
+               v-model="filter.searchBy.creator"
+               @change="onUpdateFilter">
+        <label for="creator-chk">Search by Creator</label>
+      </div>
+      <div class="clear-filters
+                  cell
+                  large-12"
+           v-if="isFilterApplied">
         <a class="button primary medium search-filter_clear-btn"
-                :disabled="isFilterApplied===false"
                 @click="onClearFilters">
           Clear filters
         </a>
@@ -69,6 +78,16 @@
 <script>
 import { SET_QUERY } from '@/store/mutation-types';
 import Multiselect from 'vue-multiselect';
+
+const transformFilterValue = (filter, key) => {
+  if (Array.isArray(filter[key])) {
+    return filter[key].map(filterItem => filterItem.code).join(',');
+  }
+  else if (key === 'searchBy') {
+    return filter.searchBy.creator ? 'creator' : null;
+  }
+  return null;
+};
 
 export default {
   name: 'search-grid-filter',
@@ -93,13 +112,14 @@ export default {
     onUpdateFilter() {
       const filter = Object.assign({}, this.filter);
       Object.keys(this.filter).forEach((key) => {
-        filter[key] = filter[key].map(filterItem => filterItem.code).join(',');
+        filter[key] = transformFilterValue(filter, key);
       });
       this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
     },
     onClearFilters() {
       const filter = Object.assign({}, this.filter);
-      Object.keys(this.filter).forEach((key) => { this.filter[key] = []; });
+      Object.keys(this.filter).forEach((key) => { filter[key] = []; });
+      this.filter = filter;
       this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
     },
     parseQueryFilters() {
@@ -110,8 +130,8 @@ export default {
       };
 
       if (this.query) {
-        Object.keys(this.query).forEach((key) => {
-          if (this[filterLookup[key]]) {
+        Object.keys(filterLookup).forEach((key) => {
+          if (this.query[key]) {
             const codes = this.query[key].split(',');
             if (codes.length) {
               codes.forEach((code) => {
@@ -124,6 +144,11 @@ export default {
             }
           }
         });
+        if (this.query.searchBy) {
+          // searchBy query string term can be "creator" for example
+          const searchByKey = this.query.searchBy;
+          this.filter.searchBy[searchByKey] = true;
+        }
       }
     },
   },
@@ -174,6 +199,9 @@ export default {
       provider: [],
       li: [],
       lt: [],
+      searchBy: {
+        creator: false,
+      },
     } }),
 };
 </script>
@@ -195,7 +223,8 @@ export default {
   transform: translate3d(0px, -20px, 0px);
 
   label {
-    border-top: 1px solid #d6d6d6;
+    font-size: 1em;
+    color: #35495e;
     span {
       margin-bottom: 1.07142857em;
       font-size: .85em;
@@ -215,6 +244,11 @@ export default {
     opacity: 1;
     transform: translate3d(0px, 0px, 0px);
   }
+}
+
+.search-filter_search-by,
+.clear-filters {
+  margin-top: 0.4em;
 }
 
 .search-filter_clear-btn {

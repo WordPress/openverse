@@ -64,7 +64,7 @@ const PhotoDetailPage = {
       return this.$store.state.imagesCount;
     },
     query() {
-      return this.$store.state.query.q;
+      return this.$store.state.query;
     },
     relatedImages() {
       return this.$store.state.relatedImages;

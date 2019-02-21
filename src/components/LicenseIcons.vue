@@ -44,7 +44,8 @@ const LicenseIcons = {
       if (license === 'cc0') {
         this.image.license_version = '1.0';
         url = `${BASE_URL}/publicdomain/zero/1.0/`;
-      } else if (image.license === 'pdm') {
+      }
+      else if (image.license === 'pdm') {
         url = `${BASE_URL}/publicdomain/mark/1.0/`;
       }
 

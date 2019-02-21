@@ -1,9 +1,9 @@
-import Vue from 'vue';
 import NavSection from '@/components/NavSection';
+import render from '../../test-utils/render';
 
-describe('NavSection.vue', () => {
+describe('NavSection', () => {
   it('should render correct contents', () => {
-    const Constructor = Vue.extend(NavSection);
-    const vm = new Constructor().$mount();
+    const wrapper = render(NavSection);
+    expect(wrapper.find('nav').vm).toBeDefined();
   });
 });

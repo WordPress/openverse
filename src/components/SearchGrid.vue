@@ -110,7 +110,8 @@ export default {
     isFetchingImages: function handler(isFetchingImages) {
       if (isFetchingImages) {
         this.showGrid = false;
-      } else {
+      }
+      else {
         this.showGrid = true;
       }
     },

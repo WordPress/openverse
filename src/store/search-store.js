@@ -1,4 +1,5 @@
 import getParameterByName from '@/utils/getParameterByName';
+import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams';
 import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from './action-types';
 import {
   FETCH_END_IMAGES,
@@ -13,13 +14,13 @@ import {
   SET_RELATED_IMAGES,
 } from './mutation-types';
 
-
 const state = (searchParams) => {
   const query = {
     q: getParameterByName('q', searchParams),
     provider: getParameterByName('provider', searchParams),
     li: getParameterByName('li', searchParams),
     lt: getParameterByName('lt', searchParams),
+    searchBy: getParameterByName('searchBy', searchParams),
   };
   return {
     image: {},
@@ -29,7 +30,7 @@ const state = (searchParams) => {
     isFetchingImages: false,
     isFetchingImagesError: true,
     isFilterVisible: false,
-    isFilterApplied: !!query.provider || !!query.li || !!query.lt,
+    isFilterApplied: !!query.provider || !!query.li || !!query.lt || !!query.searchBy,
     query,
     relatedImages: [],
     relatedImagesCount: 0,
@@ -39,7 +40,8 @@ const state = (searchParams) => {
 const actions = ImageService => ({
   [FETCH_IMAGES]({ commit }, params) {
     commit(FETCH_START_IMAGES);
-    return ImageService.search(params)
+    const queryParams = prepareSearchQueryParams(params);
+    return ImageService.search(queryParams)
       .then(({ data }) => {
         commit(FETCH_END_IMAGES);
         commit(SET_IMAGES,
@@ -121,7 +123,8 @@ const mutations = routePush => ({
   [SET_IMAGES](_state, params) {
     if (params.shouldPersistImages) {
       _state.images = _state.images.concat(params.images);
-    } else {
+    }
+    else {
       _state.images = params.images;
     }
 
@@ -131,7 +134,7 @@ const mutations = routePush => ({
   [SET_QUERY](_state, params) {
     const query = Object.assign({}, _state.query, params.query);
 
-    const isFilterApplied = ['li', 'provider', 'lt']
+    const isFilterApplied = ['li', 'provider', 'lt', 'searchBy']
       .some(key => query[key] && query[key].length > 0);
 
     _state.isFilterApplied = isFilterApplied;

@@ -124,7 +124,8 @@ export default {
           if (this.$props.shouldDisappearOnScroll) {
             this.addScrollEvent();
           }
-        } else {
+        }
+        else {
           this.$store.commit(SET_SHARE_LIST_IMAGES, { shareListImages: [] });
         }
       },
