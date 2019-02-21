@@ -57,17 +57,10 @@
       <div class="search-filter_search-by
                   cell
                   large-12">
-        <multiselect
-          v-model="filter.searchBy"
-          @input="onUpdateFilter"
-          placeholder="Search by"
-          label="name"
-          track-by="code"
-          :options="searchBy"
-          :multiple="false"
-          :taggable="true"
-          :searchable="false">
-        </multiselect>
+        <input type="checkbox" id="creator-chk"
+               v-model="filter.searchBy.creator"
+               @change="onUpdateFilter">
+        <label for="creator-chk">Search by creator</label>
       </div>
       <div class="cell
                   large-12"
@@ -89,13 +82,11 @@ const transformFilterValue = (filter, key) => {
   if (Array.isArray(filter[key])) {
     return filter[key].map(filterItem => filterItem.code).join(',');
   }
-  else if (!!filter[key]) {
-    return filter[key].code;
+  else if (key === 'searchBy') {
+    return filter.searchBy.creator ? 'creator' : null;
   }
-  else {
-    return null;
-  }
-}
+  return null;
+};
 
 export default {
   name: 'search-grid-filter',
@@ -135,12 +126,11 @@ export default {
         provider: 'providers',
         li: 'licenses',
         lt: 'licenseTypes',
-        searchBy: 'searchBy',
       };
 
       if (this.query) {
-        Object.keys(this.query).forEach((key) => {
-          if (this[filterLookup[key]]) {
+        Object.keys(filterLookup).forEach((key) => {
+          if (this.query[key]) {
             const codes = this.query[key].split(',');
             if (codes.length) {
               codes.forEach((code) => {
@@ -153,6 +143,11 @@ export default {
             }
           }
         });
+        if (this.query.searchBy) {
+          // searchBy query string term can be "creator" for example
+          const searchByKey = this.query.searchBy;
+          this.filter.searchBy[searchByKey] = true;
+        }
       }
     },
   },
@@ -199,16 +194,13 @@ export default {
         { code: 'commercial', name: 'Commercial use permitted' },
         { code: 'modification', name: 'Modifications permitted' },
       ],
-    searchBy:
-      [
-        { code: 'creator', name: 'Creator' },
-        { code: 'tags', name: 'Tags' },
-      ],
     filter: {
       provider: [],
       li: [],
       lt: [],
-      searchBy: [],
+      searchBy: {
+        creator: false,
+      },
     } }),
 };
 </script>
@@ -230,7 +222,8 @@ export default {
   transform: translate3d(0px, -20px, 0px);
 
   label {
-    border-top: 1px solid #d6d6d6;
+    font-size: 1em;
+    color: #35495e;
     span {
       margin-bottom: 1.07142857em;
       font-size: .85em;
@@ -250,6 +243,10 @@ export default {
     opacity: 1;
     transform: translate3d(0px, 0px, 0px);
   }
+}
+
+.search-filter_search-by {
+  margin-top: 0.3em;
 }
 
 .search-filter_clear-btn {

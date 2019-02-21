@@ -123,7 +123,8 @@ const mutations = routePush => ({
   [SET_IMAGES](_state, params) {
     if (params.shouldPersistImages) {
       _state.images = _state.images.concat(params.images);
-    } else {
+    }
+    else {
       _state.images = params.images;
     }
 
