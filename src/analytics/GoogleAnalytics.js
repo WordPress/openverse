@@ -13,12 +13,17 @@ function isTrackingEnabled() {
   return gaAvailable && !doNotTrackEnabled();
 }
 
+function sendEvent(event) {
+  console.log('Sending GA event: ', event);
+  window.ga('send', event);
+}
+
 function sendPageView() {
-  this.sendEvent('pageview');
+  sendEvent('pageview');
 }
 
 function set(field, params) {
-  ga('set', field, params);
+  window.ga('set', field, params);
 }
 
 function setCurrentPage(page) {
@@ -40,8 +45,7 @@ const GoogleAnalytics = {
   },
   sendEvent(event) {
     if (enabled) {
-      console.log('Sending GA event: ', event);
-      ga('send', event);
+      sendEvent(event);
     }
   },
 };
