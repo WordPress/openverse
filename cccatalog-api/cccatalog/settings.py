@@ -150,7 +150,7 @@ THUMBNAIL_PROXY_URL = os.environ.get(
 
 # Some 3rd party content providers provide low quality or broken thumbnails
 # frequently. We produce our own thumbnails for the worst offenders.
-PROXY_ALL = os.environ.get('PROXY_ALL', 'met,iha').split(',')
+PROXY_ALL = os.environ.get('PROXY_ALL', 'iha').split(',')
 
 AUTHENTICATION_BACKENDS = (
     # GitHub social login
