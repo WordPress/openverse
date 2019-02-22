@@ -86,6 +86,7 @@ SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {}
 }
 
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
@@ -96,12 +97,12 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
     'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle'
+        'cccatalog.api.utils.throttle.BurstRateThrottle',
+        'cccatalog.api.utils.throttle.SustainedRateThrottle'
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '1000/day',
-        'user': '1000/day'
+        'burst': '60/min',
+        'sustained': '7000/day'
     },
 }
 
@@ -149,7 +150,7 @@ THUMBNAIL_PROXY_URL = os.environ.get(
 
 # Some 3rd party content providers provide low quality or broken thumbnails
 # frequently. We produce our own thumbnails for the worst offenders.
-PROXY_ALL = os.environ.get('PROXY_ALL', 'met,iha').split(',')
+PROXY_ALL = os.environ.get('PROXY_ALL', 'iha').split(',')
 
 AUTHENTICATION_BACKENDS = (
     # GitHub social login
