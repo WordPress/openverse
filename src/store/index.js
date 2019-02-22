@@ -3,9 +3,11 @@ import Vue from 'vue';
 import { routePush } from '@/router';
 import ImageProviderService from '@/api/ImageProviderService';
 import ImageService from '@/api/ImageService';
+import GoogleAnalytics from '@/analytics/googleAnalytics';
 import SearchStore from './search-store';
 import ListStore from './share-list-store';
 import ImageProviderStore from './image-provider-store';
+import AttributionStore from './attribution-store';
 
 Vue.use(Puex);
 
@@ -14,6 +16,7 @@ const store = new Puex({
     SearchStore.actions(ImageService),
     ListStore.actions,
     ImageProviderStore.actions(ImageProviderService),
+    AttributionStore.actions(GoogleAnalytics),
   ),
   state: Object.assign(
     SearchStore.state(window.location.search),
