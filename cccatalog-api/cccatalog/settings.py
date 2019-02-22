@@ -97,8 +97,8 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
     'DEFAULT_THROTTLE_CLASSES': (
-        'cccatalog.utils.throttle.BurstRateThrottle',
-        'rest_framework.throttling.SustainedRateThrottle'
+        'cccatalog.api.utils.throttle.BurstRateThrottle',
+        'cccatalog.api.utils.throttle.SustainedRateThrottle'
     ),
     'DEFAULT_THROTTLE_RATES': {
         'burst': '60/min',
