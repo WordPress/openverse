@@ -42,9 +42,6 @@ def validate_images(results, image_urls):
         cache_key = cache_prefix + url
         if verified[idx]:
             status = verified[idx].status_code
-            # In case of weird redirects or incorrect content types in links
-            if 'text/html' in verified[idx].headers['Content-Type']:
-                status = 404
         # Response didn't arrive in time. Try again later.
         else:
             status = -1
