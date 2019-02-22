@@ -86,6 +86,7 @@ SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {}
 }
 
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
@@ -96,12 +97,12 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
     'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle'
+        'cccatalog.utils.throttle.BurstRateThrottle',
+        'rest_framework.throttling.SustainedRateThrottle'
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '1000/day',
-        'user': '1000/day'
+        'burst': '60/min',
+        'sustained': '7000/day'
     },
 }
 
