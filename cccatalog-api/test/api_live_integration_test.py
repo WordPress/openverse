@@ -131,6 +131,7 @@ def test_list_delete(test_list_create):
     )
     assert response.status_code == 204
 
+
 def test_license_type_filtering():
     """
     Ensure that multiple license type filters interact together correctly.
@@ -144,3 +145,11 @@ def test_license_type_filtering():
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert result['license'].upper() in commercial_and_modification
+
+
+def test_single_license_type_filtering():
+    commercial = {'BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM'}
+    response = requests.get(API_URL + '/image/search?q=a&lt=commercial')
+    parsed = json.loads(response.text)
+    for result in parsed['results']:
+        assert result['license'].upper() in commercial
