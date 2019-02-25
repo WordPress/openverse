@@ -26,4 +26,30 @@ describe('GA', () => {
 
     expect(window.ga).toHaveBeenCalledWith('set', 'anonymizeIp', true);
   });
+
+  describe('if doNotTrack is enabled', () => {
+    beforeEach(() => {
+      navigator.doNotTrack = true;
+    });
+
+    it('does not send event', () => {
+      const event = new CopyTextAttribution('foo');
+      analytics().sendEvent(event);
+
+      expect(window.ga).not.toHaveBeenCalled();
+    });
+
+    it('does not send page view', () => {
+      const location = 'foo';
+      analytics().updatePageView(location);
+
+      expect(window.ga).not.toHaveBeenCalled();
+    });
+
+    it('does not send anonymizeIp', () => {
+      analytics().anonymizeIpAddress();
+
+      expect(window.ga).not.toHaveBeenCalled();
+    });
+  });
 });
