@@ -130,3 +130,17 @@ def test_list_delete(test_list_create):
         verify=False
     )
     assert response.status_code == 204
+
+def test_license_type_filtering():
+    """
+    Ensure that multiple license type filters interact together correctly.
+    """
+    commercial = {'BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM'}
+    modification = {'BY', 'BY-SA', 'BY-NC', 'BY-NC-SA', 'CC0', 'PDM'}
+    commercial_and_modification = set.intersection(modification, commercial)
+    response = requests.get(
+        API_URL + '/image/search?q=a&lt=commercial,modification'
+    )
+    parsed = json.loads(response.text)
+    for result in parsed['results']:
+        assert result['license'].upper() in commercial_and_modification
