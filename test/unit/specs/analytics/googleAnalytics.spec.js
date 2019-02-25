@@ -1,4 +1,4 @@
-import GoogleAnalytics from '@/analytics/googleAnalytics';
+import analytics from '@/analytics/GoogleAnalytics';
 import { CopyTextAttribution } from '@/analytics/events';
 
 describe('GA', () => {
@@ -6,7 +6,7 @@ describe('GA', () => {
     window.ga = jest.fn();
 
     const event = new CopyTextAttribution('foo');
-    GoogleAnalytics.sendEvent(event);
+    analytics.sendEvent(event);
 
     expect(window.ga).toHaveBeenCalledWith('send', event);
   });

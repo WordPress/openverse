@@ -3,7 +3,7 @@ import Vue from 'vue';
 import { routePush } from '@/router';
 import ImageProviderService from '@/api/ImageProviderService';
 import ImageService from '@/api/ImageService';
-import GoogleAnalytics from '@/analytics/googleAnalytics';
+import GoogleAnalytics from '@/analytics/GoogleAnalytics';
 import SearchStore from './search-store';
 import ListStore from './share-list-store';
 import ImageProviderStore from './image-provider-store';
