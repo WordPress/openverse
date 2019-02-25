@@ -153,3 +153,11 @@ def test_single_license_type_filtering():
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert result['license'].upper() in commercial
+
+
+def test_specific_license_filter():
+    license = 'by'
+    response = requests.get(API_URL + '/image/search?q=a&li=by')
+    parsed = json.loads(response.text)
+    for result in parsed['results']:
+        assert result['license'] == 'by'
