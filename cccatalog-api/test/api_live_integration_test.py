@@ -2,6 +2,7 @@ import requests
 import json
 import pytest
 import os
+from cccatalog.api.licenses import LICENSE_GROUPS
 
 """
 End-to-end API tests. Can be used to verify a live deployment is functioning as
@@ -136,8 +137,8 @@ def test_license_type_filtering():
     """
     Ensure that multiple license type filters interact together correctly.
     """
-    commercial = {'BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM'}
-    modification = {'BY', 'BY-SA', 'BY-NC', 'BY-NC-SA', 'CC0', 'PDM'}
+    commercial = LICENSE_GROUPS['commercial']
+    modification = LICENSE_GROUPS['modification']
     commercial_and_modification = set.intersection(modification, commercial)
     response = requests.get(
         API_URL + '/image/search?q=a&lt=commercial,modification', verify=False
@@ -148,7 +149,7 @@ def test_license_type_filtering():
 
 
 def test_single_license_type_filtering():
-    commercial = {'BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM'}
+    commercial = LICENSE_GROUPS['commercial']
     response = requests.get(
         API_URL + '/image/search?q=a&lt=commercial', verify=False
     )
