@@ -106,9 +106,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
                 )
             license_groups.append(LICENSE_GROUPS[_type])
         intersected = set.intersection(*license_groups)
-        cleaned = []
-        for _license in intersected:
-            cleaned.append(_license.lower())
+        cleaned = {_license.lower() for _license in intersected}
 
         return ','.join(list(cleaned))
 
