@@ -140,7 +140,7 @@ def test_license_type_filtering():
     modification = {'BY', 'BY-SA', 'BY-NC', 'BY-NC-SA', 'CC0', 'PDM'}
     commercial_and_modification = set.intersection(modification, commercial)
     response = requests.get(
-        API_URL + '/image/search?q=a&lt=commercial,modification'
+        API_URL + '/image/search?q=a&lt=commercial,modification', verify=False
     )
     parsed = json.loads(response.text)
     for result in parsed['results']:
@@ -149,14 +149,16 @@ def test_license_type_filtering():
 
 def test_single_license_type_filtering():
     commercial = {'BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM'}
-    response = requests.get(API_URL + '/image/search?q=a&lt=commercial')
+    response = requests.get(
+        API_URL + '/image/search?q=a&lt=commercial', verify=False
+    )
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert result['license'].upper() in commercial
 
 
 def test_specific_license_filter():
-    response = requests.get(API_URL + '/image/search?q=a&li=by')
+    response = requests.get(API_URL + '/image/search?q=a&li=by', verify=False)
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert result['license'] == 'by'
