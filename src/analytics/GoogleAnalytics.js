@@ -30,25 +30,27 @@ function setCurrentPage(page) {
   set('page', page);
 }
 
-const enabled = isTrackingEnabled();
-const GoogleAnalytics = {
-  anonymizeIpAddress() {
-    if (enabled) {
-      set('anonymizeIp', true);
-    }
-  },
-  updatePageView(location) {
-    if (enabled) {
-      setCurrentPage(location);
-      sendPageView();
-    }
-  },
-  sendEvent(event) {
-    if (enabled) {
-      sendEvent(event);
-    }
-  },
-};
+const GoogleAnalytics = () => {
+  const enabled = isTrackingEnabled();
+  return {
+    anonymizeIpAddress() {
+      if (enabled) {
+        set('anonymizeIp', true);
+      }
+    },
+    updatePageView(location) {
+      if (enabled) {
+        setCurrentPage(location);
+        sendPageView();
+      }
+    },
+    sendEvent(event) {
+      if (enabled) {
+        sendEvent(event);
+      }
+    },
+  };
+}
 
 export default GoogleAnalytics;
 

@@ -16,7 +16,7 @@ const store = new Puex({
     SearchStore.actions(ImageService),
     ListStore.actions,
     ImageProviderStore.actions(ImageProviderService),
-    AttributionStore.actions(GoogleAnalytics),
+    AttributionStore.actions(GoogleAnalytics()),
   ),
   state: Object.assign(
     SearchStore.state(window.location.search),
