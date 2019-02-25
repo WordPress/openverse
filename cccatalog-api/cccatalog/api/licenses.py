@@ -14,7 +14,7 @@ LICENSE_GROUPS = {
     "all": {'BY', 'BY-NC', 'BY-ND', 'BY-SA', 'BY-NC-ND', 'BY-NC-SA', 'PDM',
             'CC0'},
     # All CC licenses
-    "all-cc": {'BY', 'BY-NC', 'BY-ND', 'BY-SA', 'BY-NC-ND', 'BY-NC-SA'},
+    "all-cc": {'BY', 'BY-NC', 'BY-ND', 'BY-SA', 'BY-NC-ND', 'BY-NC-SA', 'CC0'},
     # All licenses allowing commercial use
     "commercial": {'BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM'},
     # All licenses allowing modifications
