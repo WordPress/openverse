@@ -82,10 +82,12 @@ const PhotoDetailPage = {
     },
   },
   beforeRouteUpdate(to, from, next) {
-    this.imageHeight = 0;
-    this.imageWidth = 0;
-    this.$store.commit(SET_IMAGE, { image: {} });
+    this.resetImageOnRouteChanged();
     this.loadImage(to.params.id);
+    next();
+  },
+  beforeRouteLeave(to, from, next) {
+    this.resetImageOnRouteChanged();
     next();
   },
   beforeRouteEnter(to, previousPage, nextPage) {
@@ -97,6 +99,11 @@ const PhotoDetailPage = {
     });
   },
   methods: {
+    resetImageOnRouteChanged() {
+      this.imageHeight = 0;
+      this.imageWidth = 0;
+      this.$store.commit(SET_IMAGE, { image: {} });
+    },
     onImageLoaded(event) {
       this.imageWidth = event.target.naturalWidth;
       this.imageHeight = event.target.naturalHeight;
