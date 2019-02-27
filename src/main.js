@@ -6,16 +6,18 @@ import ApiService from '@/api/ApiService';
 import App from './App';
 import router from './router';
 import store from './store';
+import GoogleAnalytics from './analytics/GoogleAnalytics';
 
 Vue.config.productionTip = false;
 
 ApiService.init();
-
+const analytics = GoogleAnalytics();
+analytics.anonymizeIpAddress();
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  store,
+  store: store(analytics),
   router,
   components: { App },
   template: '<App/>',
