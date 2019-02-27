@@ -30,16 +30,14 @@
 export default {
   name: 'photo-tags',
   props: ['tags'],
+  computed: {
+    hasClarifaiTags() {
+      return this.$props.tags.some(tag => tag.provider === 'clarifai');
+    },
+  },
   methods: {
     isClarifaiTag(provider) {
-      let isClarifaiTag = false;
-
-      if (provider === 'clarifai') {
-        isClarifaiTag = true;
-        this.hasClarifaiTags = true;
-      }
-
-      return isClarifaiTag;
+      return provider === 'clarifai';
     },
     searchByTagName(query) {
       this.$router.push({ name: 'browse-page', query: { q: query } });
