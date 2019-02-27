@@ -25,5 +25,5 @@ before_script:
 script:
   - pycodestyle cccatalog-api/cccatalog --exclude='cccatalog-api/cccatalog/api/migrations' --max-line-length=80 --ignore=E402 
   - pycodestyle ingestion_server/*.py --max-line-length=80 --ignore=E402
-  - cd cccatalog-api/test && ./run_test.sh
+  - cd cccatalog-api && test/run_test.sh
   - cd ../../ingestion_server && python3 test/integration_tests.py
