@@ -46,9 +46,12 @@ def _add_protocol(url: str):
 
 class SearchImages(APIView):
     """
-    Search for images by keyword. Optionally, filter the results by specific
+    Search for images by a query string. Optionally, filter results by specific
     licenses, or license "types" (commercial use allowed, modification allowed,
     etc). Results are ranked in order of relevance.
+
+    Refer to the Lucene syntax guide for information on structuring advanced
+    searches. https://lucene.apache.org/core/2_9_4/queryparsersyntax.html
 
     Although there may be millions of relevant records, only the most relevant
     several thousand records can be viewed. This is by design: the search
