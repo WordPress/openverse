@@ -6,7 +6,6 @@ addons:
       - postgresql-client-10
 env:
   - CCCAPI_CONTAINER_NAME=cccatalogapi_web_1
-  - PYTHONPATH=.
 python:
 - '3.6'
 services:
@@ -14,6 +13,8 @@ services:
 install:
   - pip3 install -r ingestion_server/requirements.txt
   - pip3 install -r cccatalog-api/requirements.txt
+before_install:
+  - "export PYTHONPATH=$PYTHONPATH:$(pwd)"
 before_script:
   - sudo service postgresql stop
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
