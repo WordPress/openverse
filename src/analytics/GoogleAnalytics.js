@@ -14,7 +14,6 @@ function isTrackingEnabled() {
 }
 
 function sendEvent(event) {
-  console.log('Sending GA event: ', event);
   window.ga('send', event);
 }
 
