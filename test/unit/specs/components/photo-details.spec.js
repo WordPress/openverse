@@ -2,23 +2,30 @@ import PhotoDetails from '@/components/PhotoDetails';
 import render from '../../test-utils/render';
 
 describe('PhotoDetails', () => {
-  const props = {
-    image: {
-      id: 0,
-      title: 'foo',
-      provider: 'flickr',
-      url: 'foo.bar',
-      thumbnail: 'http://foo.bar',
-      foreign_landing_url: 'http://foo.bar',
-      license: 'CC-BY',
-      license_version: '1.0',
-      creator: 'John',
-      creator_url: 'http://creator.com',
-    },
-  };
-  const options = {
-    propsData: props,
-  };
+  let options = null;
+  let props = null;
+
+  beforeEach(() => {
+    props = {
+      image: {
+        id: 0,
+        title: 'foo',
+        provider: 'flickr',
+        url: 'foo.bar',
+        thumbnail: 'http://foo.bar',
+        foreign_landing_url: 'http://foo.bar',
+        license: 'BY',
+        license_version: '1.0',
+        creator: 'John',
+        creator_url: 'http://creator.com',
+      },
+    };
+
+    options = {
+      propsData: props,
+    };
+  });
+
   it('should render correct contents', () => {
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.find('.photo_image').element).toBeDefined();
@@ -27,7 +34,30 @@ describe('PhotoDetails', () => {
 
   it('should generate license URL', () => {
     const wrapper = render(PhotoDetails, options);
-    expect(wrapper.vm.ccLicenseURL).toBe('https://creativecommons.org/licenses/CC-BY/1.0');
+    expect(wrapper.vm.ccLicenseURL).toBe('https://creativecommons.org/licenses/BY/1.0');
+  });
+
+  it('should generate CC0 license URL', () => {
+    options.propsData.image.license = 'cc0';
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.vm.ccLicenseURL).toBe('https://creativecommons.org/publicdomain/zero/1.0/');
+  });
+
+  it('should generate CC PDM license URL', () => {
+    options.propsData.image.license = 'pdm';
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.vm.ccLicenseURL).toBe('https://creativecommons.org/publicdomain/mark/1.0/');
+  });
+
+  it('should generate license name', () => {
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.vm.fullLicenseName).toBe('CC BY 1.0');
+  });
+
+  it('should generate CC-0 license name', () => {
+    options.propsData.image.license = 'cc0';
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.vm.fullLicenseName).toBe('cc0 1.0');
   });
 
   it('should generate text attribution', () => {

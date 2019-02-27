@@ -33,7 +33,7 @@
           <li>
             <h3>License</h3>
             <a class="photo_license" :href="ccLicenseURL">
-            CC {{ image.license }} {{ image.license_version }}
+            {{ fullLicenseName }}
             </a>
             <license-icons :image="image"></license-icons>
           </li>
@@ -120,6 +120,12 @@ export default {
 
       return url;
     },
+    fullLicenseName() {
+      const license = this.image.license;
+      const version = this.image.license_version;
+
+      return license === 'cc0' ? `${license} ${version}` : `CC ${license} ${version}`;
+    },
     textAttribution() {
       return () => {
         const image = this.image;
@@ -127,8 +133,7 @@ export default {
         const byCreator = image.creator ? `by ${image.creator}` : ' ';
 
         return `"${image.title}" ${byCreator}
-                is licensed under CC ${image.license.toUpperCase()}
-                ${image.license_version}. To view a copy of this license, visit: ${licenseURL}`;
+                is licensed under ${this.fullLicenseName.toUpperCase()}. To view a copy of this license, visit: ${licenseURL}`;
       };
     },
     HTMLAttribution() {
@@ -140,7 +145,7 @@ export default {
                 ${byCreator}
                 is licensed under
                 <a href="${this.ccLicenseURL}">
-                  CC ${image.license.toUpperCase()} ${image.license_version}
+                  ${this.fullLicenseName.toUpperCase()}
                 </a>`;
       };
     },
