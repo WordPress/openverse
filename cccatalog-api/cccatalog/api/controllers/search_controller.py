@@ -70,14 +70,12 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
     # Search either by generic multimatch or by "advanced search" with
     # individual field-level queries specified.
     if 'q' in search_params.data:
-        keywords = ' '.join(search_params.data['q'].lower().split(','))
         s = s.query(
             'constant_score',
             filter=Q(
-                'multi_match',
-                query=keywords,
+                'query_string',
+                query=search_params.data['q'],
                 fields=['tags.name', 'title'],
-                operator='AND'
             )
         )
     else:
@@ -85,13 +83,13 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
             creator = search_params.data['creator']
             s = s.query(
                 'constant_score',
-                filter=Q('match', creator=creator)
+                filter=Q('query_string', query=creator, default_field='creator')
             )
         if 'title' in search_params.data:
             title = search_params.data['title']
             s = s.query(
                 'constant_score',
-                filter=Q('match', title=title)
+                filter=Q('query_string', query=title, default_field='title')
             )
         if 'tags' in search_params.data:
             tags = ' '.join(search_params.data['tags'].lower().split(','))
