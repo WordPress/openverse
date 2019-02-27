@@ -94,21 +94,21 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
 
     def validate_lt(self, value):
         """
-        Resolves a license type to a list of licenses.
+        Resolves a list of license types to a list of licenses.
         Example: commercial -> ['BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM']
         """
         license_types = [x.lower() for x in value.split(',')]
-        resolved_licenses = set()
+        license_groups = []
         for _type in license_types:
             if _type not in LICENSE_GROUPS:
                 raise serializers.ValidationError(
                     "License type \'{}\' does not exist.".format(_type)
                 )
-            licenses = LICENSE_GROUPS[_type]
-            for _license in licenses:
-                resolved_licenses.add(_license.lower())
+            license_groups.append(LICENSE_GROUPS[_type])
+        intersected = set.intersection(*license_groups)
+        cleaned = {_license.lower() for _license in intersected}
 
-        return ','.join(list(resolved_licenses))
+        return ','.join(list(cleaned))
 
     def validate_page(self, value):
         if value < 1:

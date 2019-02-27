@@ -13,6 +13,8 @@ services:
 install:
   - pip3 install -r ingestion_server/requirements.txt
   - pip3 install -r cccatalog-api/requirements.txt
+before_install:
+  - "export PYTHONPATH=$PYTHONPATH:$(pwd)"
 before_script:
   - sudo service postgresql stop
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
@@ -23,5 +25,5 @@ before_script:
 script:
   - pycodestyle cccatalog-api/cccatalog --exclude='cccatalog-api/cccatalog/api/migrations' --max-line-length=80 --ignore=E402 
   - pycodestyle ingestion_server/*.py --max-line-length=80 --ignore=E402
-  - cd cccatalog-api/test && ./run_test.sh
-  - cd ../../ingestion_server && python3 test/integration_tests.py
+  - cd cccatalog-api && test/run_test.sh
+  - cd ../ingestion_server && python3 test/integration_tests.py
