@@ -92,12 +92,12 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
                 filter=Q('query_string', query=title, default_field='title')
             )
         if 'tags' in search_params.data:
-            tags = ' '.join(search_params.data['tags'].lower().split(','))
+            tags = search_params.data['tags']
             s = s.query(
                 'constant_score',
                 filter=Q(
-                    'multi_match',
-                    fields=['tags.name'],
+                    'query_string',
+                    default_field='tags.name',
                     query=tags
                 )
             )
