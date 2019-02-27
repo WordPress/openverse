@@ -63,7 +63,7 @@
             </span>
             is licensed under
             <a class="photo_license" :href="ccLicenseURL">
-            CC {{ image.license}} {{ image.license_version }}
+            {{ fullLicenseName }}
             </a>
           </p>
           <CopyButton :toCopy="HTMLAttribution">Copy to HTML</CopyButton>
