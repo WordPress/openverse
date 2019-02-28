@@ -31,7 +31,7 @@ After executing this, you will be running:
 * Redis
 * Ingestion Server, a microservice for bulk ingesting and indexing search data.
 
-Once everything has initialized, load the sample data.
+Once everything has initialized, load the sample data. You will need to install PostgreSQL client tools to perform this step. On Debian, the package is called `postgresql-client-common`.
 
 ```
 cd ../
