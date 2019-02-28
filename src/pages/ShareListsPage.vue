@@ -11,7 +11,8 @@
           what you would like to see take its place.
         </p>
         <hr />
-        <p>In the meantime, looking for a private list you created with your CC ID? Shoot us an email at
+        <p>In the meantime, looking for a private list you created with your CC ID
+          from before September 2019? Shoot us an email at
           <a href="mailto:info@creativecommons.org">info@creativecommons.org</a> and
           we are happy to retrieve it for you.
         </p>
