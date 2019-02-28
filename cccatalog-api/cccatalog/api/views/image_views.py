@@ -13,6 +13,7 @@ from cccatalog.api.serializers.search_serializers import\
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
 from cccatalog.api.utils.view_count import _get_user_ip
+from cccatalog.api.licenses import ATTRIBUTION, LICENSE_URL
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
 from urllib.parse import urlparse
@@ -29,6 +30,10 @@ THUMBNAIL = 'thumbnail'
 URL = 'url'
 THUMBNAIL_WIDTH_PX = 600
 PROVIDER = 'provider'
+LICENSE = 'license'
+LICENSE_VERSION = 'license_version'
+TITLE = 'title'
+CREATOR = 'creator'
 
 
 def _add_protocol(url: str):
@@ -173,6 +178,31 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         """ Get the details of a single list. """
 
         resp = self.retrieve(request, identifier)
+        # Generate attribution information
+        _license = resp.data[LICENSE].lower()
+        license_version = str(resp.data[LICENSE_VERSION])
+        license_url = LICENSE_URL.format(
+            _license=_license,
+            version=license_version
+        )
+        try:
+            title = '"' + resp.data[TITLE] + '"'
+        except KeyError:
+            title = 'This work'
+        try:
+            creator = 'by ' + resp.data[CREATOR] + ' '
+        except (KeyError, TypeError):
+            creator = ''
+        attribution = ATTRIBUTION.format(
+            title=title,
+            creator=creator,
+            _license=_license.upper(),
+            version=license_version,
+            license_url=license_url
+        )
+        resp.data['attribution'] = attribution
+        resp.data['license_url'] = license_url
+
         # Get pretty display name for a provider
         provider = resp.data[PROVIDER]
         try:
