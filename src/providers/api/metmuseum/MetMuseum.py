@@ -18,10 +18,12 @@ import random
 import argparse
 import os
 from datetime import datetime, timedelta
+import re
+
 
 DELAY   = 3.0 #seconds
 FILE    = 'metmuseum_{}.tsv'.format(int(time.time()))
-PATH    = '../output/'
+PATH    = os.environ['OUTPUT_DIR']
 
 logging.basicConfig(format='%(asctime)s: [%(levelname)s - Met Museum API] =======> %(message)s', level=logging.INFO)
 
@@ -38,6 +40,14 @@ def writeToFile(_data, _name):
         for line in _data:
             if line:
                 fh.write('\t'.join(line) + '\n')
+
+
+def sanitizeString(_data):
+    _data = _data.strip()
+    _data = _data.replace('"', "'")
+    _data = re.sub(r'\n|\r', ' ', _data)
+
+    return re.sub(r'\s+', ' ', _data)
 
 
 def delayProcessing(_startTime, _maxDelay):
@@ -137,22 +147,23 @@ def getMetaData(_objectID):
 
 
     #get the title
-    title   = objectData.get('title', '').strip()
+    title   = objectData.get('title', '')
+    title   = sanitizeString(title)
 
     #get creator info
-    creator = objectData.get('artistDisplayName', '').strip()
-
+    creator = objectData.get('artistDisplayName', '')
+    creator = sanitizeString(creator)
 
     #get the foreign identifier
     foreignID = _objectID
 
     #accessionNumber
-    metaData['accession_number'] = objectData.get('accessionNumber', '')
-    metaData['classification']   = objectData.get('classification', '')
-    metaData['culture']          = objectData.get('culture', '')
-    metaData['date']             = objectData.get('objectDate', '')
-    metaData['medium']           = objectData.get('medium', '')
-    metaData['credit_line']      = objectData.get('creditLine', '')
+    metaData['accession_number'] = sanitizeString(objectData.get('accessionNumber', ''))
+    metaData['classification']   = sanitizeString(objectData.get('classification', ''))
+    metaData['culture']          = sanitizeString(objectData.get('culture', ''))
+    metaData['date']             = sanitizeString(objectData.get('objectDate', ''))
+    metaData['medium']           = sanitizeString(objectData.get('medium', ''))
+    metaData['credit_line']      = sanitizeString(objectData.get('creditLine', ''))
     #metaData['geography']        = objectData.get('geographyType', '')
 
 
@@ -177,8 +188,8 @@ def getMetaData(_objectID):
 
     extracted.append([
             str(foreignID), foreignURL, imgURL, thumbnail,
-            '', '', '', license, str(version), creator, '',
-            title, json.dumps(metaData), '', 'f', 'met', 'met'
+            '\\N', '\\N', '\\N', license, str(version), creator, '\\N',
+            title, json.dumps(metaData), '\\N', 'f', 'met', 'met'
         ])
 
 
@@ -194,8 +205,8 @@ def getMetaData(_objectID):
 
             extracted.append([
                 str(foreignID), foreignURL, imgURL, thumbnail,
-                '', '', '', license, str(version), creator, '',
-                title, json.dumps(metaData), '', 'f', 'met', 'met'
+                '\\N', '\\N', '\\N', license, str(version), creator, '\\N',
+                title, json.dumps(metaData), '\\N', 'f', 'met', 'met'
             ])
 
         idx += 1
