@@ -163,3 +163,29 @@ def test_specific_license_filter():
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert result['license'] == 'by'
+
+
+def test_creator_quotation_grouping():
+    """
+    Users should be able to group terms together with quotation marks to narrow
+    down their searches more effectively.
+    :return:
+    """
+    no_quotes = json.loads(
+        requests.get(
+            API_URL + '/image/search?creator=claude%20monet',
+            verify=False
+        ).text
+    )
+    quotes = json.loads(
+        requests.get(
+            API_URL + '/image/search?creator="claude%20monet"',
+            verify=False
+        ).text
+    )
+    # Did quotation marks actually narrow down the search?
+    assert len(no_quotes['results']) > len(quotes['results'])
+    # Did we find only Claude Monet works, or did his lesser known brother Jim
+    # Monet sneak into the results?
+    for result in quotes['results']:
+        assert result['creator'] == 'Claude Monet'
