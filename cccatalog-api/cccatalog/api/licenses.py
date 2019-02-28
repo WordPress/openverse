@@ -20,3 +20,8 @@ LICENSE_GROUPS = {
     # All licenses allowing modifications
     "modification": {'BY', 'BY-SA', 'BY-NC', 'BY-NC-SA', 'CC0', 'PDM'},
 }
+
+ATTRIBUTION = \
+    "{title} {creator}is licensed under CC-{_license} {version}. To view a " \
+    "copy of this license, visit {license_url}."
+LICENSE_URL = 'https://creativecommons.org/licenses/{_license}/{version}/'
