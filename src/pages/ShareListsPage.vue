@@ -5,10 +5,17 @@
     </div>
     <div class="cell">
       <div class="share-lists-page_info-notification callout primary" v-if="isNotificationVisible">
-        <h5>We've migrated to public lists</h5>
-        <p>Looking for a private list you created with your CC ID? Shoot us an email at
+        <h5>We're getting rid of public lists on 13 March 2019</h5>
+        <p>Do you care? If so,
+          <a href="https://goo.gl/forms/Mg480jhPt7BlW97n2">tell us why</a> or
+          what you would like to see take its place.
+        </p>
+        <hr />
+        <p>In the meantime, looking for a private list you created with your CC ID
+          from before September 2019? Shoot us an email at
           <a href="mailto:info@creativecommons.org">info@creativecommons.org</a> and
-          we are happy to retrieve it for you.</p>
+          we are happy to retrieve it for you.
+        </p>
         <button @click="onCloseNotification" class="close-button"
         aria-label="Dismiss alert" type="button" data-close>
           <span aria-hidden="true">&times;</span>
@@ -121,6 +128,10 @@ export default ShareListPage;
 
 .share-lists-page_info-notification {
   padding: 1rem 2rem;
+
+  hr {
+    max-width: 100%;
+  }
 }
 
 .share-lists_remove-btn {
