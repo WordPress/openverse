@@ -169,7 +169,6 @@ def test_creator_quotation_grouping():
     """
     Users should be able to group terms together with quotation marks to narrow
     down their searches more effectively.
-    :return:
     """
     no_quotes = json.loads(
         requests.get(
