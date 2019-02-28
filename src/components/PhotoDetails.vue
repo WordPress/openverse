@@ -66,8 +66,8 @@
             {{ fullLicenseName }}
             </a>
           </p>
-          <CopyButton :toCopy="HTMLAttribution">Copy to HTML</CopyButton>
-          <CopyButton :toCopy="textAttribution">Copy to Text</CopyButton>
+          <CopyButton :toCopy="HTMLAttribution" contentType="html">Copy to HTML</CopyButton>
+          <CopyButton :toCopy="textAttribution" contentType="text">Copy to Text</CopyButton>
         </section>
         <section class="photo_usage">
           <header class="photo_info-header">

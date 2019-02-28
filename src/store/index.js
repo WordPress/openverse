@@ -6,14 +6,16 @@ import ImageService from '@/api/ImageService';
 import SearchStore from './search-store';
 import ListStore from './share-list-store';
 import ImageProviderStore from './image-provider-store';
+import AttributionStore from './attribution-store';
 
 Vue.use(Puex);
 
-const store = new Puex({
+const store = GoogleAnalytics => (new Puex({
   actions: Object.assign(
     SearchStore.actions(ImageService),
     ListStore.actions,
     ImageProviderStore.actions(ImageProviderService),
+    AttributionStore.actions(GoogleAnalytics),
   ),
   state: Object.assign(
     SearchStore.state(window.location.search),
@@ -25,6 +27,6 @@ const store = new Puex({
     ListStore.mutations,
     ImageProviderStore.mutations,
   ),
-});
+}));
 
 export default store;
