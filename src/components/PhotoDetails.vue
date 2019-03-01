@@ -151,6 +151,24 @@ export default {
     },
   },
   methods: {
+    decode(data) {
+      if (data) {
+        const r = /\\x([\d\w]{2})/gi;
+        const x = data.replace(r, (match, grp) => String.fromCharCode(parseInt(grp, 16)));
+        const res = decodeURI(x);
+        return res;
+      }
+      return '';
+    },
+    decodeURL(data) {
+      if (data) {
+        const r = /\\u([\d\w]{4})/gi;
+        const x = data.replace(r, (match, grp) => String.fromCharCode(parseInt(grp, 16)));
+        const res = decodeURI(x);
+        return res;
+      }
+      return '';
+    },
     onGoBackToSearchResults() {
       this.$router.push({ name: 'browse-page', query: this.query });
     },
@@ -163,6 +181,21 @@ export default {
       imageWithDimensions.pageY = event.pageY;
 
       this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
+    },
+  },
+  watch: {
+    image() {
+      const decode = this.decode;
+      const image = this.image;
+      const decodeURL = this.decodeURL;
+      image.creator = decode(image.creator);
+      image.title = decode(image.title);
+      image.license = decode(image.license);
+      image.license_version = decode(image.license_version);
+      image.provider = decode(image.provider);
+      image.creator_url = decodeURL(image.creator_url);
+      image.foreign_landing_url = decodeURL(image.foreign_landing_url);
+      image.url = decodeURL(image.url);
     },
   },
 };
