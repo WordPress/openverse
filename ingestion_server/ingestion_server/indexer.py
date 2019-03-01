@@ -396,7 +396,8 @@ class TableIndexer:
             converted = converted.to_dict(include_meta=True)
             if dest_index:
                 converted['_index'] = dest_index
-            documents.append(converted)
+            if not converted['removed_from_source']:
+                documents.append(converted)
 
         return documents
 
