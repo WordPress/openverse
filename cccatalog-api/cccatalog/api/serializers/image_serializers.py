@@ -31,6 +31,16 @@ class ImageDetailSerializer(ModelSerializer, ImageSerializer):
         required=False,
         help_text="The number of times that an image has been viewed. "
     )
+    attribution = serializers.CharField(
+        required=True,
+        help_text="The Creative Commons attribution of the work. Use this to "
+                  "give credit to creators to their works and fulfill "
+                  "legal attribution requirements."
+    )
+    license_url = serializers.URLField(
+        required=True,
+        help_text="The URL leading to the license associated with the work."
+    )
     tags = ImageDetailTagSerializer(
         many=True,
         help_text="Tags with detailed metadata, such as accuracy and provider."
@@ -50,4 +60,4 @@ class ImageDetailSerializer(ModelSerializer, ImageSerializer):
         fields = ('title', 'id', 'creator', 'creator_url', 'tags',
                   'url', 'thumbnail', 'provider', 'source', 'license',
                   'license_version', 'foreign_landing_url', 'meta_data',
-                  'view_count', 'provider_url')
+                  'view_count', 'provider_url', 'license_url', 'attribution')
