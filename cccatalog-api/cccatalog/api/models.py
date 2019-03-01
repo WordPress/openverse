@@ -1,7 +1,8 @@
 from uuslug import uuslug
 from django.db import models
 from django.utils.safestring import mark_safe
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.contrib.postgres.fields import JSONField
+from cccatalog.api.licenses import ATTRIBUTION, LICENSE_URL
 
 
 class OpenLedgerModel(models.Model):
@@ -100,6 +101,36 @@ class Image(OpenLedgerModel):
     view_count = models.IntegerField(default=0)
 
     watermarked = models.NullBooleanField(blank=True, null=True)
+
+    @property
+    def license_url(self):
+        _license = str(self.license)
+        license_version = str(self.license_version)
+        return LICENSE_URL.format(
+            _license=_license,
+            version=license_version
+        )
+
+    @property
+    def attribution(self):
+        _license = str(self.license)
+        license_version = str(self.license_version)
+        if self.title:
+            title = '"' + str(self.title) + '"'
+        else:
+            title = 'This work'
+        if self.creator:
+            creator = 'by ' + str(self.creator) + ' '
+        else:
+            creator = ''
+        attribution = ATTRIBUTION.format(
+            title=title,
+            creator=creator,
+            _license=_license.upper(),
+            version=license_version,
+            license_url=str(self.license_url)
+        )
+        return attribution
 
     def image_tag(self):
         return mark_safe('<img src="%s" width="150" />' % self.url)
