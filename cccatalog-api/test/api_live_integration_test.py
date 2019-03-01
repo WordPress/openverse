@@ -3,6 +3,7 @@ import json
 import pytest
 import os
 from cccatalog.api.licenses import LICENSE_GROUPS
+from cccatalog.api.models import Image
 
 """
 End-to-end API tests. Can be used to verify a live deployment is functioning as
@@ -188,3 +189,45 @@ def test_creator_quotation_grouping():
     # Monet sneak into the results?
     for result in quotes['results']:
         assert result['creator'] == 'Claude Monet'
+
+
+def test_attribution():
+    """
+    The API includes an attribution string. Since there are some works where
+    the title or creator is not known, the format of the attribution string
+    can need to be tweaked slightly.
+    """
+    title_and_creator_missing = Image(
+        identifier="ab80dbe1-414c-4ee8-9543-f9599312aeb8",
+        title=None,
+        creator=None,
+        license="by",
+        license_version="3.0"
+    )
+    print('\nAttribution examples:\n')
+    print(title_and_creator_missing.attribution)
+    assert "This work" in title_and_creator_missing.attribution
+
+    title = "A foo walks into a bar"
+    creator_missing = Image(
+        identifier="ab80dbe1-414c-4ee8-9543-f9599312aeb8",
+        title=title,
+        creator=None,
+        license="by",
+        license_version="3.0"
+    )
+    print(creator_missing.attribution)
+    assert title in creator_missing.attribution
+    assert "by " not in creator_missing.attribution
+
+    creator = "John Doe"
+    title_missing = Image(
+        identifier="ab80dbe1-414c-4ee8-9543-f9599312aeb8",
+        title=None,
+        creator=creator,
+        license="by",
+        license_version="3.0"
+    )
+    print(title_missing.attribution)
+    assert creator in title_missing.attribution
+    assert "This work" in title_missing.attribution
