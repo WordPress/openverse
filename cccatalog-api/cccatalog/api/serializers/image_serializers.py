@@ -32,13 +32,13 @@ class ImageDetailSerializer(ModelSerializer, ImageSerializer):
         help_text="The number of times that an image has been viewed. "
     )
     attribution = serializers.CharField(
-        required=False,
+        required=True,
         help_text="The Creative Commons attribution of the work. Use this to "
                   "give credit to creators to their works and fulfill "
                   "legal attribution requirements."
     )
     license_url = serializers.URLField(
-        required=False,
+        required=True,
         help_text="The URL leading to the license associated with the work."
     )
     tags = ImageDetailTagSerializer(

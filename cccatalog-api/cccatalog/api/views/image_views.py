@@ -178,31 +178,6 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         """ Get the details of a single list. """
 
         resp = self.retrieve(request, identifier)
-        # Generate attribution information
-        _license = resp.data[LICENSE].lower()
-        license_version = str(resp.data[LICENSE_VERSION])
-        license_url = LICENSE_URL.format(
-            _license=_license,
-            version=license_version
-        )
-        try:
-            title = '"' + resp.data[TITLE] + '"'
-        except KeyError:
-            title = 'This work'
-        try:
-            creator = 'by ' + resp.data[CREATOR] + ' '
-        except (KeyError, TypeError):
-            creator = ''
-        attribution = ATTRIBUTION.format(
-            title=title,
-            creator=creator,
-            _license=_license.upper(),
-            version=license_version,
-            license_url=license_url
-        )
-        resp.data['attribution'] = attribution
-        resp.data['license_url'] = license_url
-
         # Get pretty display name for a provider
         provider = resp.data[PROVIDER]
         try:
