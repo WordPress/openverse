@@ -13,7 +13,6 @@ from cccatalog.api.serializers.search_serializers import\
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
 from cccatalog.api.utils.view_count import _get_user_ip
-from cccatalog.api.licenses import ATTRIBUTION, LICENSE_URL
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
 from urllib.parse import urlparse
@@ -30,10 +29,6 @@ THUMBNAIL = 'thumbnail'
 URL = 'url'
 THUMBNAIL_WIDTH_PX = 600
 PROVIDER = 'provider'
-LICENSE = 'license'
-LICENSE_VERSION = 'license_version'
-TITLE = 'title'
-CREATOR = 'creator'
 
 
 def _add_protocol(url: str):
