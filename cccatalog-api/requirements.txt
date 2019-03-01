@@ -35,3 +35,4 @@ grequests
 django-sslserver
 remote-pdb
 pycodestyle
+pytest-django

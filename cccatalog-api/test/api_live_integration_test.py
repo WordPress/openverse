@@ -231,3 +231,14 @@ def test_attribution():
     print(title_missing.attribution)
     assert creator in title_missing.attribution
     assert "This work" in title_missing.attribution
+
+    all_data_present = Image(
+        identifier="ab80dbe1-414c-4ee8-9543-f9599312aeb8",
+        title=title,
+        creator=creator,
+        license="by",
+        license_version="3.0"
+    )
+    print(all_data_present.attribution)
+    assert title in all_data_present.attribution
+    assert creator in all_data_present.attribution
