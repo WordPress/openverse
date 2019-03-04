@@ -21,7 +21,7 @@ copied and indexed downstream.
 
 this_dir = os.path.dirname(__file__)
 local_ingestion_server = 'http://localhost:60002'
-ENABLE_DETAILED_LOGS = False
+ENABLE_DETAILED_LOGS = True
 
 
 def _get_host_ip():
@@ -235,7 +235,33 @@ class TestIngestion(unittest.TestCase):
         resp_json = resp.json()
         msg = 'There should be one task in the task list now.'
         self.assertEqual(1, len(resp_json), msg)
+    
+    def test05_removed_from_source_not_indexed(self):
+        id_to_check = 12119388  #Max of existing ids + 1
+        es = Elasticsearch(
+            host='localhost',
+            port=60001,
+            connection_class=RequestsHttpConnection,
+            timeout=10,
+            max_retries=10,
+            retry_on_timeout=True,
+            http_auth=None,
+            wait_for_status='yellow'
+        )
+        es_query = {
+            "query": {
+                "match_all": {}
+            }
+        }
+        es.indices.refresh(index='image')
+        search_response = es.search(
+            index="image",
+            body=es_query
+        )
 
+        ids = [hit['_id'] for hit in search_response['hits']['hits']]
+        msg = "id {} has removed from source set to False, hence it should not show up in search results."
+        self.assertNotIn(id_to_check, ids, msg)
 
 if __name__ == '__main__':
     log_level = logging.INFO if ENABLE_DETAILED_LOGS else logging.CRITICAL

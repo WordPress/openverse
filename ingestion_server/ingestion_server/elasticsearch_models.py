@@ -1,4 +1,4 @@
-from elasticsearch_dsl import Date, Text, Integer, Nested, Keyword, DocType, Boolean
+from elasticsearch_dsl import Date, Text, Integer, Nested, Keyword, DocType
 
 
 class SyncableDocType(DocType):
@@ -42,7 +42,6 @@ class Image(SyncableDocType):
     foreign_landing_url = Keyword()
     meta_data = Nested()
     view_count = Integer()
-    removed_from_source = Boolean()
 
     class Index:
         name = 'image'
@@ -79,7 +78,6 @@ class Image(SyncableDocType):
             license_version=row[schema['license_version']],
             foreign_landing_url=row[schema['foreign_landing_url']],
             meta_data=None,
-            removed_from_source=row[schema['removed_from_source']],
             view_count=row[schema['view_count']],
         )
 
