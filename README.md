@@ -34,7 +34,6 @@ After executing this, you will be running:
 Once everything has initialized, load the sample data. You will need to install PostgreSQL client tools to perform this step. On Debian, the package is called `postgresql-client-common`.
 
 ```
-cd ../
 ./load_sample_data.sh
 ```
 
@@ -61,8 +60,8 @@ You can check the health of a live deployment of the API by running the live int
 ```
 cd cccatalog-api
 virtualenv venv
-pip install -r requirements.txt
 source venv/bin/activate
+pip install -r requirements.txt
 cd test
 ./run_test.sh
 ```
