@@ -73,8 +73,8 @@ This end-to-end test ingests and indexes some dummy data using the Ingestion Ser
 ```
 cd ingestion_server
 virtualenv venv
-pip install -r requirements.txt
 source venv/bin/activate
+pip install -r requirements.txt
 python3 test/integration_tests.py
 ```
 
