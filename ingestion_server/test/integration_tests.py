@@ -237,7 +237,7 @@ class TestIngestion(unittest.TestCase):
         self.assertEqual(1, len(resp_json), msg)
     
     def test05_removed_from_source_not_indexed(self):
-        id_to_check = 12119388  #Max of existing ids + 1
+        id_to_check = 10494466  #Index for which we changed manually False to True
         es = Elasticsearch(
             host='localhost',
             port=60001,
