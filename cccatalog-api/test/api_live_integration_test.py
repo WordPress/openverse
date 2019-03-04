@@ -188,7 +188,7 @@ def test_creator_quotation_grouping():
     # Did we find only Claude Monet works, or did his lesser known brother Jim
     # Monet sneak into the results?
     for result in quotes['results']:
-        assert result['creator'] == 'Claude Monet'
+        assert 'Claude Monet' in result['creator']
 
 
 def test_attribution():
