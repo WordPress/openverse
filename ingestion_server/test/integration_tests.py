@@ -260,7 +260,7 @@ class TestIngestion(unittest.TestCase):
         )
 
         ids = [hit['_id'] for hit in search_response['hits']['hits']]
-        msg = "id {} has removed from source set to False, hence it should not show up in search results."
+        msg = "id {} has removed from source set to False, hence it should not show up in search results.".format(id_to_check)
         self.assertNotIn(id_to_check, ids, msg)
 
 if __name__ == '__main__':
