@@ -78,8 +78,14 @@ class ImageStats(APIView):
 
 class Register(APIView):
     """
-    Allow a user to register their application for OAuth2 Client Credentials
-    authorization flow.
+    Register for access to the API via OAuth2. Authenticated users have higher
+    rate limits than anonymous users. Additionally, by identifying yourself,
+    you can request Creative Commons to adjust your personal rate limit
+    depending on the needs of your use case.
+
+    Be advised that you can only make up to 3 registration requests per day.
+    Intentional abuse of the registration process can result in your API keys
+    being revoked.
     """
     throttle_classes = (ThreePerDay,)
 
