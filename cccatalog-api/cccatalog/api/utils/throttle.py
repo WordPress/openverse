@@ -11,3 +11,7 @@ class BurstRateThrottle(AnonRateThrottle):
 
 class SustainedRateThrottle(AnonRateThrottle):
     scope = 'sustained'
+
+
+class ThreePerDay(AnonRateThrottle):
+    rate = '3/day'

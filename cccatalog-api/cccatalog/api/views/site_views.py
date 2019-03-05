@@ -8,6 +8,7 @@ from cccatalog.api.serializers.registration_serializers import\
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider
 from oauth2_provider.models import AbstractApplication, Application
+from cccatalog.api.utils.throttle import ThreePerDay
 
 IDENTIFIER = 'provider_identifier'
 NAME = 'provider_name'
@@ -80,6 +81,8 @@ class Register(APIView):
     Allow a user to register their application for OAuth2 Client Credentials
     authorization flow.
     """
+    throttle_classes = (ThreePerDay,)
+
     @swagger_auto_schema(operation_id='register_api_oauth2',
                          responses={
                              200: OAuth2RegistrationSuccessful
