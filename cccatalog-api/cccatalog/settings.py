@@ -64,9 +64,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_cron',
     'oauth2_provider',
-    'social_django',
     'rest_framework',
-    'rest_framework_social_oauth2',
     'corsheaders',
     'sslserver',
 ]
@@ -86,11 +84,18 @@ SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {}
 }
 
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+}
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework_social_oauth2.authentication.SocialAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -153,11 +158,6 @@ THUMBNAIL_PROXY_URL = os.environ.get(
 PROXY_ALL = os.environ.get('PROXY_ALL', 'iha').split(',')
 
 AUTHENTICATION_BACKENDS = (
-    # GitHub social login
-    'social_core.backends.github.GithubOAuth2',
-
-    # django-rest-framework-social-oauth2
-    'rest_framework_social_oauth2.backends.DjangoOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -174,8 +174,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -271,12 +269,6 @@ API_VERSION = os.environ.get(
     'SEMANTIC_VERSION',
     "Version not specified."
 )
-
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
-
-SOCIAL_AUTH_GITHUB_SCOPE = ['user:email']
-SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_SOCIAL_CLIENT_ID')
-SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_SOCIAL_CLIENT_SECRET')
 
 ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL', 'localhost')
 ELASTICSEARCH_PORT = int(os.environ.get('ELASTICSEARCH_PORT', 9200))

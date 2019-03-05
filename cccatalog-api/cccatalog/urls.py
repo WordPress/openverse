@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-# from django.conf.urls import include
+from django.conf.urls import include
 from cccatalog.api.views.image_views import SearchImages, ImageDetail
 from cccatalog.api.views.site_views import HealthCheck, ImageStats
 from cccatalog.api.views.list_views import CreateList, ListDetail
@@ -66,6 +66,10 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('admin/', admin.site.urls),
+    re_path(
+        r'^o/',
+        include('oauth2_provider.urls', namespace='oauth2_provider')
+    ),
     path('list', CreateList.as_view()),
     path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
     re_path('image/search', SearchImages.as_view()),
