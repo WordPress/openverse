@@ -2,8 +2,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers
 from cccatalog.api.controllers.search_controller import get_providers
+from cccatalog.api.serializers.registration_serializers import\
+    OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider
+from oauth2_provider.models import AbstractApplication
 import logging as log
 
 IDENTIFIER = 'provider_identifier'
@@ -70,3 +73,41 @@ class ImageStats(APIView):
                       ' table: {}. Check for typos/omissions.'.format(provider)
                 log.error(msg)
         return Response(status=200, data=response)
+
+
+class Register(APIView):
+    """
+    Allow a user to register their application for OAuth2 Client Credentials
+    authorization flow.
+    """
+    @swagger_auto_schema(operation_id='register_api_oauth2',
+                         responses={
+                             200: OAuth2RegistrationSuccessful
+                         })
+    def post(self, request, format=None):
+        # Store the registration information the developer gave us.
+        serialized = OAuth2RegistrationSerializer(data=request.data)
+        if not serialized.is_valid():
+            return Response(
+                status=400,
+                data=serialized.errors
+            )
+        else:
+            serialized.save()
+        # Authorize the developer's application in our backend.
+        new_application = AbstractApplication(
+            name=serialized.validated_data['name'],
+            skip_authorization=False,
+            client_type="Confidential",
+            authorization_grant_type='client-credentials'
+        )
+        new_application.save()
+        # Give the user their newly created credentials.
+        return Response(
+            status=200,
+            data={
+                'client_id': new_application.client_id,
+                'client_secret': new_application.client_secret,
+                'name': new_application.name
+            }
+        )

@@ -217,7 +217,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-#
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -261,8 +260,6 @@ STATIC_URL = '/static/'
 
 # Allow anybody to access the API from any domain
 CORS_ORIGIN_ALLOW_ALL = True
-
-# API specific configuration
 
 # The version of the API. We follow the semantic versioning specification.
 API_VERSION = os.environ.get(
