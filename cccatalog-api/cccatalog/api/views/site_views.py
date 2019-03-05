@@ -1,3 +1,4 @@
+import logging as log
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers
@@ -6,8 +7,7 @@ from cccatalog.api.serializers.registration_serializers import\
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider
-from oauth2_provider.models import AbstractApplication
-import logging as log
+from oauth2_provider.models import AbstractApplication, Application
 
 IDENTIFIER = 'provider_identifier'
 NAME = 'provider_name'
@@ -95,11 +95,11 @@ class Register(APIView):
         else:
             serialized.save()
         # Authorize the developer's application in our backend.
-        new_application = AbstractApplication(
+        new_application = Application(
             name=serialized.validated_data['name'],
             skip_authorization=False,
             client_type="Confidential",
-            authorization_grant_type='client-credentials'
+            authorization_grant_type=AbstractApplication.GRANT_CLIENT_CREDENTIALS
         )
         new_application.save()
         # Give the user their newly created credentials.
