@@ -91,7 +91,7 @@ class Register(APIView):
 
     @swagger_auto_schema(operation_id='register_api_oauth2',
                          responses={
-                             200: OAuth2RegistrationSuccessful
+                             201: OAuth2RegistrationSuccessful
                          })
     def post(self, request, format=None):
         # Store the registration information the developer gave us.
@@ -113,7 +113,7 @@ class Register(APIView):
         new_application.save()
         # Give the user their newly created credentials.
         return Response(
-            status=200,
+            status=201,
             data={
                 'client_id': new_application.client_id,
                 'client_secret': new_application.client_secret,

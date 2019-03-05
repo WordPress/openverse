@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from cccatalog.api.models import OAuth2Registration
-from oauth2_provider.models import AbstractApplication
+from oauth2_provider.models import Application
 
 
 class OAuth2RegistrationSerializer(serializers.ModelSerializer):
@@ -11,5 +11,5 @@ class OAuth2RegistrationSerializer(serializers.ModelSerializer):
 
 class OAuth2RegistrationSuccessful(serializers.ModelSerializer):
     class Meta:
-        model = AbstractApplication
+        model = Application
         fields = ('name', 'client_id', 'client_secret')

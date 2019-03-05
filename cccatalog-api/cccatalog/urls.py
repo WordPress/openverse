@@ -66,9 +66,9 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('admin/', admin.site.urls),
-    path('o/register', Register.as_view(), name='register'),
+    path('oauth2/register', Register.as_view(), name='register'),
     re_path(
-        r'^o/',
+        r'^oauth2/',
         include('oauth2_provider.urls', namespace='oauth2_provider')
     ),
     path('list', CreateList.as_view()),
