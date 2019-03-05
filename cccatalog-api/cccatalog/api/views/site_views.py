@@ -81,11 +81,12 @@ class Register(APIView):
     Register for access to the API via OAuth2. Authenticated users have higher
     rate limits than anonymous users. Additionally, by identifying yourself,
     you can request Creative Commons to adjust your personal rate limit
-    depending on the needs of your use case.
+    depending on your organization's needs.
 
     Be advised that you can only make up to 3 registration requests per day.
-    Intentional abuse of the registration process can result in your API keys
-    being revoked.
+    We ask that you only use a single API key per application; abuse of the
+    registration process is easily detectable and will result in you losing
+    access to the CC Catalog API.
     """
     throttle_classes = (ThreePerDay,)
 
