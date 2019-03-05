@@ -107,8 +107,8 @@ class Register(APIView):
         new_application = Application(
             name=serialized.validated_data['name'],
             skip_authorization=False,
-            client_type="Confidential",
-            authorization_grant_type=AbstractApplication.GRANT_CLIENT_CREDENTIALS
+            client_type='Confidential',
+            authorization_grant_type='client-credentials'
         )
         new_application.save()
         # Give the user their newly created credentials.
