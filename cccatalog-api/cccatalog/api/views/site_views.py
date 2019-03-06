@@ -83,18 +83,48 @@ class Register(APIView):
     you can request Creative Commons to adjust your personal rate limit
     depending on your organization's needs.
 
-    Be advised that you can only make up to 3 registration requests per day.
+    Upon registering, you will receive a `client_id` and `client_secret`, which
+    you can then use to authenticate using the standard OAuth2 Client
+    Credentials flow. Example:
+
+    First, register for a key.
+    ```
+    curl -XPOST -H "Content-Type: application/json" -d '{"name": "Your Name", "description": "A description", "email": "example@example.com"}' http://localhost:8000/oauth2/register
+
+    ```
+
+    Now, exchange your client credentials for a token.
+    ```
+    $ curl -X POST -d "client_id=pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda&client_secret=YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e&grant_type=client_credentials" https://api.creativecommons.engineering/oauth2/token/
+    {
+       "access_token" : "DLBYIcfnKfolaXKcmMC8RIDCavc2hW",
+       "scope" : "read write groups",
+       "expires_in" : 36000,
+       "token_type" : "Bearer"
+    }
+    ```
+
+    Include the `access_token` in the authorization header to use your key in
+    your future API requests.
+
+    ```
+    $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/image/search?q=test
+    ```
+
+
+    **Be advised** that you can only make up to 3 registration requests per day.
     We ask that you only use a single API key per application; abuse of the
     registration process is easily detectable and will result in you losing
     access to the CC Catalog API.
-    """
+    """  # noqa
     throttle_classes = (ThreePerDay,)
 
     @swagger_auto_schema(operation_id='register_api_oauth2',
+                         query_serializer=OAuth2RegistrationSerializer,
                          responses={
                              201: OAuth2RegistrationSuccessful
                          })
-    def post(self, request, format=None):
+    def post(self, request, format='json'):
         # Store the registration information the developer gave us.
         serialized = OAuth2RegistrationSerializer(data=request.data)
         if not serialized.is_valid():
