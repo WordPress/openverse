@@ -89,7 +89,7 @@ class Register(APIView):
 
     First, register for a key.
     ```
-    $ curl -XPOST -H "Content-Type: application/json" -d '{"name": "Your Name", "description": "A description", "email": "example@example.com"}' http://localhost:8000/oauth2/register
+    $ curl -XPOST -H "Content-Type: application/json" -d '{"name": "Your Name", "description": "A description", "email": "example@example.com"}' https://api.creativecommons.engineering/oauth2/register
     {
         "client_secret" : "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
         "client_id" : "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
