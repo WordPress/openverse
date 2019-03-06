@@ -125,7 +125,7 @@ class Register(APIView):
     throttle_classes = (ThreePerDay,)
 
     @swagger_auto_schema(operation_id='register_api_oauth2',
-                         query_serializer=OAuth2RegistrationSerializer,
+                         request_body=OAuth2RegistrationSerializer,
                          responses={
                              201: OAuth2RegistrationSuccessful
                          })
