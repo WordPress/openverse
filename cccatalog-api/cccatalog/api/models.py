@@ -225,9 +225,10 @@ class ShortenedLink(OpenLedgerModel):
 
 class OAuth2Registration(models.Model):
     name = models.CharField(
-        max_length=200,
-        help_text="A human-readable name for your application or project "
-                  "requiring access to the CC Catalog API."
+        max_length=150,
+        unique=True,
+        help_text="A unique human-readable name for your application or "
+                  "project requiring access to the CC Catalog API."
     )
     description = models.CharField(
         max_length=10000,
@@ -239,3 +240,5 @@ class OAuth2Registration(models.Model):
         help_text="A valid email that we can reach you at if we have any "
                   "questions about your use case or data consumption."
     )
+
+

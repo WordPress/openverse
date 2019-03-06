@@ -174,7 +174,6 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     @track_model_views(Image)
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
-
         resp = self.retrieve(request, identifier)
         # Get pretty display name for a provider
         provider = resp.data[PROVIDER]

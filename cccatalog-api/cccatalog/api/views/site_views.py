@@ -9,6 +9,7 @@ from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider
 from oauth2_provider.models import AbstractApplication, Application
 from cccatalog.api.utils.throttle import ThreePerDay
+from django.contrib.auth.decorators import login_required
 
 IDENTIFIER = 'provider_identifier'
 NAME = 'provider_name'
@@ -89,11 +90,11 @@ class Register(APIView):
 
     First, register for a key.
     ```
-    $ curl -XPOST -H "Content-Type: application/json" -d '{"name": "Your Name", "description": "A description", "email": "example@example.com"}' https://api.creativecommons.engineering/oauth2/register
+    $ curl -XPOST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "A description", "email": "example@example.com"}' https://api.creativecommons.engineering/oauth2/register
     {
         "client_secret" : "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
         "client_id" : "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
-        "name" : "Your Name"
+        "name" : "My amazing project"
     }
 
     ```
@@ -139,7 +140,9 @@ class Register(APIView):
             )
         else:
             serialized.save()
-        # Authorize the developer's application in our backend.
+
+        # Produce a client ID, client secret, and authorize the application in
+        # the OAuth2 backend.
         new_application = Application(
             name=serialized.validated_data['name'],
             skip_authorization=False,
