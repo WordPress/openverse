@@ -74,12 +74,15 @@ def print_attribution_for_image_on_frame(image_info, image, frame):
 
 def watermark(image):
     """
-    creates the watermark for the image
+    creates the watermark for the image.
+    Returns a BytesIO object with the image contents
+
     image: Image DB model
     """
     img = open_image(image.url)
     frame = place_image_inside_frame(img)
     print_attribution_for_image_on_frame(info, img, frame)
-    io = BytesIO()
-    frame.save(io, format="JPEG")
+    image_bytes = BytesIO()
+    frame.save(image_bytes, format="JPEG")
+    return image_bytes
 
