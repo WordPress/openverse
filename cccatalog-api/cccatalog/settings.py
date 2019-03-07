@@ -104,11 +104,15 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_THROTTLE_CLASSES': (
         'cccatalog.api.utils.throttle.BurstRateThrottle',
-        'cccatalog.api.utils.throttle.SustainedRateThrottle'
+        'cccatalog.api.utils.throttle.SustainedRateThrottle',
+        'cccatalog.api.utils.throttle.OAuth2IdRateThrottleSustained',
+        'cccatalog.api.utils.throttle.OAuth2IdRateThrottleBurst'
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'burst': '60/min',
-        'sustained': '7000/day'
+        'anon_burst': '60/min',
+        'anon_sustained': '1000/day',
+        'oauth2_client_credentials_sustained': '10000/day',
+        'oauth2_client_credentials_burst': '100/min'
     },
 }
 

@@ -7,9 +7,8 @@ from cccatalog.api.serializers.registration_serializers import\
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider
-from oauth2_provider.models import AbstractApplication, Application
+from oauth2_provider.models import Application
 from cccatalog.api.utils.throttle import ThreePerDay
-from django.contrib.auth.decorators import login_required
 
 IDENTIFIER = 'provider_identifier'
 NAME = 'provider_name'
