@@ -42,4 +42,14 @@ describe('prepareSearchQueryParams', () => {
     const result = prepareSearchQueryParams(params);
     expect(result.q).toBe('foo');
   });
+
+  it('removes leading and trailing whitespace from "q" key', () => {
+    const params = {
+      q: ' foo ',
+    };
+
+    const result = prepareSearchQueryParams(params);
+    expect(result.q).toBe('foo');
+  });
+
 });
