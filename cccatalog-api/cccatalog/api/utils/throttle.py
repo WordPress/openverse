@@ -6,7 +6,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-def _validate_access_token(token: str):
+def _valid_access_token(token: str):
     """
     Recover an OAuth2 application client ID from an access token.
 
@@ -44,7 +44,7 @@ class AnonRateThrottle(SimpleRateThrottle):
     def get_cache_key(self, request, view):
         # Do not throttle requests with a valid access token.
         if request.auth:
-            if _validate_access_token(str(request.auth)):
+            if _valid_access_token(str(request.auth)):
                 return None
 
         return self.cache_format % {
@@ -75,14 +75,13 @@ class OAuth2IdRateThrottle(SimpleRateThrottle):
     token.
 
     The OAuth2 application ID will be used as a unique cache key if the token
-    is valid.  For anonymous requests, the IP address of the request will
-    be used.
+    is valid. Otherwise, perform no throttling.
     """
     scope = 'oauth2_client_credentials'
 
     def get_cache_key(self, request, view):
         # Find the
-        client_id = _validate_access_token(str(request.auth))
+        client_id = _valid_access_token(str(request.auth))
         if client_id:
             ident = client_id
         else:
@@ -90,8 +89,6 @@ class OAuth2IdRateThrottle(SimpleRateThrottle):
             # throttlers.
             return None
 
-        #from remote_pdb import RemotePdb
-        #RemotePdb('0.0.0.0', 4444).set_trace()
         return self.cache_format % {
             'scope': self.scope,
             'ident': ident

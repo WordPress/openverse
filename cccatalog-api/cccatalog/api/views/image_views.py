@@ -18,6 +18,7 @@ import logging
 from urllib.parse import urlparse
 
 log = logging.getLogger(__name__)
+
 FOREIGN_LANDING_URL = 'foreign_landing_url'
 CREATOR_URL = 'creator_url'
 RESULTS = 'results'
