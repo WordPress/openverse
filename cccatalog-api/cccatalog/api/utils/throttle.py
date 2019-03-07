@@ -13,13 +13,13 @@ def _valid_access_token(token: str):
 
     :param token: An OAuth2 access token.
     :return: If the token is valid, return the client ID associated with the
-    token and its rate limit model as a tuple; else return None.
+    token and its rate limit model as a tuple; else return (None, None).
     """
     try:
         token = AccessToken.objects.get(token=token)
     except AccessToken.DoesNotExist:
         log.warning('Rejected nonexistent access token.')
-        return None
+        return None, None
     if token.expires >= dt.datetime.now(token.expires.tzinfo):
         try:
             application = ThrottledApplication.objects.get(accesstoken=token)
@@ -34,7 +34,7 @@ def _valid_access_token(token: str):
         return client_id, rate_limit_model
     else:
         log.warning('Rejected expired access token.')
-        return None
+        return None, None
 
 
 class AnonRateThrottle(SimpleRateThrottle):
