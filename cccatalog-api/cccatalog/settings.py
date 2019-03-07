@@ -89,10 +89,10 @@ OAUTH2_PROVIDER = {
     'SCOPES': {
         'read': 'Read scope',
         'write': 'Write scope',
-        'groups': 'Access to your groups'
     }
 }
 
+OAUTH2_PROVIDER_APPLICATION_MODEL = 'api.ThrottledApplication'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -105,14 +105,18 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_CLASSES': (
         'cccatalog.api.utils.throttle.BurstRateThrottle',
         'cccatalog.api.utils.throttle.SustainedRateThrottle',
-        'cccatalog.api.utils.throttle.OAuth2IdRateThrottleSustained',
-        'cccatalog.api.utils.throttle.OAuth2IdRateThrottleBurst'
+        'cccatalog.api.utils.throttle.OAuth2IdThrottleSustainedRate',
+        'cccatalog.api.utils.throttle.OAuth2IdThrottleBurstRate',
+        'cccatalog.api.utils.throttle.EnhancedOAuth2IdThrottleSustainedRate',
+        'cccatalog.api.utils.throttle.EnhancedOAuth2IdThrottleBurstRate'
     ),
     'DEFAULT_THROTTLE_RATES': {
         'anon_burst': '60/min',
         'anon_sustained': '1000/day',
         'oauth2_client_credentials_sustained': '10000/day',
-        'oauth2_client_credentials_burst': '100/min'
+        'oauth2_client_credentials_burst': '100/min',
+        'enhanced_oauth2_client_credentials_sustained': '20000/day',
+        'enhanced_oauth2_client_credentials_burst': '200/min'
     },
 }
 
@@ -267,7 +271,7 @@ STATIC_URL = '/static/'
 # Allow anybody to access the API from any domain
 CORS_ORIGIN_ALLOW_ALL = True
 
-# The version of the API. We follow the semantic versioning specification.
+# The version of the API. We follow the semantic version specification.
 API_VERSION = os.environ.get(
     'SEMANTIC_VERSION',
     "Version not specified."

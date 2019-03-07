@@ -7,7 +7,7 @@ from cccatalog.api.serializers.registration_serializers import\
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider
-from oauth2_provider.models import Application
+from cccatalog.api.models import ThrottledApplication
 from cccatalog.api.utils.throttle import ThreePerDay
 
 IDENTIFIER = 'provider_identifier'
@@ -85,7 +85,10 @@ class Register(APIView):
 
     Upon registering, you will receive a `client_id` and `client_secret`, which
     you can then use to authenticate using the standard OAuth2 Client
-    Credentials flow. Example:
+    Credentials flow. You must keep `client_secret` confidential; anybody with
+    your `client_secret` can impersonate your application.
+    
+    Example registration and authentication flow:
 
     First, register for a key.
     ```
@@ -116,11 +119,9 @@ class Register(APIView):
     $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/image/search?q=test
     ```
 
-
     **Be advised** that you can only make up to 3 registration requests per day.
     We ask that you only use a single API key per application; abuse of the
-    registration process is easily detectable and will result in you losing
-    access to the CC Catalog API.
+    registration process is easily detectable.
     """  # noqa
     throttle_classes = (ThreePerDay,)
 
@@ -142,7 +143,7 @@ class Register(APIView):
 
         # Produce a client ID, client secret, and authorize the application in
         # the OAuth2 backend.
-        new_application = Application(
+        new_application = ThrottledApplication(
             name=serialized.validated_data['name'],
             skip_authorization=False,
             client_type='Confidential',

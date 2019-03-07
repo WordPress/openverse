@@ -1,5 +1,6 @@
 from rest_framework.throttling import SimpleRateThrottle
-from oauth2_provider.models import AccessToken, Application
+from oauth2_provider.models import AccessToken
+from cccatalog.api.models import ThrottledApplication
 import datetime as dt
 import logging
 
@@ -12,7 +13,7 @@ def _valid_access_token(token: str):
 
     :param token: An OAuth2 access token.
     :return: If the token is valid, return the client ID associated with the
-    token; else return None
+    token and its rate limit model as a tuple; else return None.
     """
     try:
         token = AccessToken.objects.get(token=token)
@@ -21,13 +22,16 @@ def _valid_access_token(token: str):
         return None
     if token.expires >= dt.datetime.now(token.expires.tzinfo):
         try:
-            client_id = str(
-                Application.objects.get(accesstoken=token).client_id
+            application = ThrottledApplication.objects.get(accesstoken=token)
+            client_id = str(application.client_id)
+            rate_limit_model = application.rate_limit_model
+        except ThrottledApplication.DoesNotExist:
+            log.warning(
+                'Failed to find application associated with access token.'
             )
-        except Application.DoesNotExist:
-            log.warning('Failed to find application associated with token.')
             client_id = None
-        return client_id
+            rate_limit_model = None
+        return client_id, rate_limit_model
     else:
         log.warning('Rejected expired access token.')
         return None
@@ -44,7 +48,8 @@ class AnonRateThrottle(SimpleRateThrottle):
     def get_cache_key(self, request, view):
         # Do not throttle requests with a valid access token.
         if request.auth:
-            if _valid_access_token(str(request.auth)):
+            client_id, _ = _valid_access_token(str(request.auth))
+            if client_id:
                 return None
 
         return self.cache_format % {
@@ -69,24 +74,23 @@ class ThreePerDay(AnonRateThrottle):
     rate = '3/day'
 
 
-class OAuth2IdRateThrottle(SimpleRateThrottle):
+class OAuth2IdThrottleRate(SimpleRateThrottle):
     """
-    Limits the rate of API calls that may be made by a given user's access
-    token.
-
-    The OAuth2 application ID will be used as a unique cache key if the token
-    is valid. Otherwise, perform no throttling.
+    Limits the rate of API calls that may be made by a given user's Oauth2
+    client ID. Can be configured to apply to either standard or enhanced
+    API keys.
     """
     scope = 'oauth2_client_credentials'
+    applies_to_rate_limit_model = 'standard'
 
     def get_cache_key(self, request, view):
-        # Find the
-        client_id = _valid_access_token(str(request.auth))
-        if client_id:
+        # Find the client ID associated with the access token.
+        client_id, rate_limit_model = _valid_access_token(str(request.auth))
+        if client_id and rate_limit_model == self.applies_to_rate_limit_model:
             ident = client_id
         else:
             # Don't throttle invalid tokens; leave that to the anonymous
-            # throttlers.
+            # throttlers. Don't throttle enhanced rate limit tokens either.
             return None
 
         return self.cache_format % {
@@ -95,9 +99,21 @@ class OAuth2IdRateThrottle(SimpleRateThrottle):
         }
 
 
-class OAuth2IdRateThrottleSustained(OAuth2IdRateThrottle):
+class OAuth2IdThrottleSustainedRate(OAuth2IdThrottleRate):
+    applies_to_rate_limit_model = 'standard'
     scope = 'oauth2_client_credentials_sustained'
 
 
-class OAuth2IdRateThrottleBurst(OAuth2IdRateThrottle):
+class OAuth2IdThrottleBurstRate(OAuth2IdThrottleRate):
+    applies_to_rate_limit_model = 'standard'
     scope = 'oauth2_client_credentials_burst'
+
+
+class EnhancedOAuth2IdThrottleSustainedRate(OAuth2IdThrottleRate):
+    applies_to_rate_limit_model = 'enhanced'
+    scope = 'enhanced_oauth2_client_credentials_sustained'
+
+
+class EnhancedOAuth2IdThrottleBurstRate(OAuth2IdThrottleRate):
+    applies_to_rate_limit_model = 'enhanced'
+    scope = 'enhanced_oauth2_client_credentials_burst'

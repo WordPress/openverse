@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.safestring import mark_safe
 from django.contrib.postgres.fields import JSONField, ArrayField
 from cccatalog.api.licenses import ATTRIBUTION, LICENSE_URL
+from oauth2_provider.models import AbstractApplication
 
 
 class OpenLedgerModel(models.Model):
@@ -224,6 +225,9 @@ class ShortenedLink(OpenLedgerModel):
 
 
 class OAuth2Registration(models.Model):
+    """
+    Information about API key applicants.
+    """
     name = models.CharField(
         max_length=150,
         unique=True,
@@ -239,4 +243,20 @@ class OAuth2Registration(models.Model):
     email = models.EmailField(
         help_text="A valid email that we can reach you at if we have any "
                   "questions about your use case or data consumption."
+    )
+
+
+class ThrottledApplication(AbstractApplication):
+    """
+    An OAuth2 application with adjustable rate limits.
+    """
+    RATE_LIMIT_MODELS = [
+        ('standard', 'standard'),  # Default rate limit for all API keys.
+        ('enhanced', 'enhanced')   # Rate limits for "super" keys, granted on a
+                                   # case-by-case basis.
+    ]
+    rate_limit_model = models.CharField(
+        max_length=20,
+        choices=RATE_LIMIT_MODELS,
+        default='standard'
     )
