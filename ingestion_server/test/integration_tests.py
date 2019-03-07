@@ -250,7 +250,9 @@ class TestIngestion(unittest.TestCase):
         )
         es_query = {
             "query": {
-                "match_all": {}
+                "match": {
+                    "_id": id_to_check
+                }
             }
         }
         es.indices.refresh(index='image')
@@ -259,9 +261,9 @@ class TestIngestion(unittest.TestCase):
             body=es_query
         )
 
-        ids = [hit['_id'] for hit in search_response['hits']['hits']]
-        msg = "id {} has removed from source set to False, hence it should not show up in search results.".format(id_to_check)
-        self.assertNotIn(id_to_check, ids, msg)
+        num_hits = search_response['hits']['total']
+        msg = "id {} should not show up in search results.".format(id_to_check)
+        self.assertEqual(0, num_hits, msg)
 
 if __name__ == '__main__':
     log_level = logging.INFO if ENABLE_DETAILED_LOGS else logging.CRITICAL
