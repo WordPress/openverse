@@ -240,5 +240,3 @@ class OAuth2Registration(models.Model):
         help_text="A valid email that we can reach you at if we have any "
                   "questions about your use case or data consumption."
     )
-
-
