@@ -75,10 +75,18 @@
               Actions
             </h2>
           </header>
-          <a class="add-to-list"
-             @click.stop="onAddToImageList(image, $event)">
-             Add to list
-          </a>
+          <div>
+            <a class="add-to-list"
+              @click.stop="onAddToImageList(image, $event)">
+              Add to list
+            </a>
+          </div>
+          <div>
+            <a class="download-watermark"
+              @click.stop="onDownloadWatermark(image, $event)">
+              Download
+            </a>
+          </div>
         </section>
       </section>
     </div>
@@ -165,6 +173,9 @@ export default {
 
       this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
     },
+    onDownloadWatermark(image, event) {
+
+    },
   },
   watch: {
     image() {
@@ -187,6 +198,17 @@ export default {
       background: url('../assets/plus-icon-black.svg') no-repeat;
       opacity: .5;
       display: inline-block;
+    }
+  }
+  .download-watermark {
+    &:before {
+      height: 15px;
+      width: 13px;
+      content: '';
+      background: url('../assets/download-icon.svg') no-repeat;
+      opacity: .5;
+      display: inline-block;
+      background-size: 13px 15px;
     }
   }
 </style>
