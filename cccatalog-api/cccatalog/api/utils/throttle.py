@@ -1,40 +1,9 @@
 from rest_framework.throttling import SimpleRateThrottle
-from oauth2_provider.models import AccessToken
-from cccatalog.api.models import ThrottledApplication
-import datetime as dt
 import logging
 
+from cccatalog.api.utils.oauth2_helper import get_token_info
+
 log = logging.getLogger(__name__)
-
-
-def _valid_access_token(token: str):
-    """
-    Recover an OAuth2 application client ID from an access token.
-
-    :param token: An OAuth2 access token.
-    :return: If the token is valid, return the client ID associated with the
-    token and its rate limit model as a tuple; else return (None, None).
-    """
-    try:
-        token = AccessToken.objects.get(token=token)
-    except AccessToken.DoesNotExist:
-        log.warning('Rejected nonexistent access token.')
-        return None, None
-    if token.expires >= dt.datetime.now(token.expires.tzinfo):
-        try:
-            application = ThrottledApplication.objects.get(accesstoken=token)
-            client_id = str(application.client_id)
-            rate_limit_model = application.rate_limit_model
-        except ThrottledApplication.DoesNotExist:
-            log.warning(
-                'Failed to find application associated with access token.'
-            )
-            client_id = None
-            rate_limit_model = None
-        return client_id, rate_limit_model
-    else:
-        log.warning('Rejected expired access token.')
-        return None, None
 
 
 class AnonRateThrottle(SimpleRateThrottle):
@@ -48,7 +17,7 @@ class AnonRateThrottle(SimpleRateThrottle):
     def get_cache_key(self, request, view):
         # Do not throttle requests with a valid access token.
         if request.auth:
-            client_id, _ = _valid_access_token(str(request.auth))
+            client_id, _ = get_token_info(str(request.auth))
             if client_id:
                 return None
 
@@ -74,6 +43,10 @@ class ThreePerDay(AnonRateThrottle):
     rate = '3/day'
 
 
+class OnePerSecond(AnonRateThrottle):
+    rate = '1/second'
+
+
 class OAuth2IdThrottleRate(SimpleRateThrottle):
     """
     Limits the rate of API calls that may be made by a given user's Oauth2
@@ -85,7 +58,7 @@ class OAuth2IdThrottleRate(SimpleRateThrottle):
 
     def get_cache_key(self, request, view):
         # Find the client ID associated with the access token.
-        client_id, rate_limit_model = _valid_access_token(str(request.auth))
+        client_id, rate_limit_model = get_token_info(str(request.auth))
         if client_id and rate_limit_model == self.applies_to_rate_limit_model:
             ident = client_id
         else:

@@ -8,7 +8,9 @@ from cccatalog.api.serializers.registration_serializers import\
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider
 from cccatalog.api.models import ThrottledApplication
-from cccatalog.api.utils.throttle import ThreePerDay
+from cccatalog.api.utils.throttle import ThreePerDay, OnePerSecond
+from cccatalog.api.utils.oauth2_helper import get_token_info
+from django.core.cache import cache
 
 IDENTIFIER = 'provider_identifier'
 NAME = 'provider_name'
@@ -130,7 +132,7 @@ class Register(APIView):
                          responses={
                              201: OAuth2RegistrationSuccessful
                          })
-    def post(self, request, format='json'):
+    def post(self, request, format=None):
         # Store the registration information the developer gave us.
         serialized = OAuth2RegistrationSerializer(data=request.data)
         if not serialized.is_valid():
@@ -159,3 +161,57 @@ class Register(APIView):
                 'name': new_application.name
             }
         )
+
+
+class CheckRates(APIView):
+    """
+    Return information about the rate limit status of your API key.
+    """
+    throttle_classes = (OnePerSecond,)
+
+    def get(self, request, format=None):
+        if not request.auth:
+            return Response(status=403, data='Forbidden')
+
+        access_token = str(request.auth)
+        client_id, rate_limit_model = get_token_info(access_token)
+
+        if not client_id:
+            return Response(status=403, data='Forbidden')
+
+        throttle_type = rate_limit_model
+
+        throttle_key = 'throttle_{scope}_{client_id}'
+        if throttle_type == 'standard':
+            sustained_throttle_key = throttle_key.format(
+                scope='oauth2_client_credentials_sustained',
+                client_id=client_id
+            )
+            burst_throttle_key = throttle_key.format(
+                scope='oauth2_client_credentials_burst',
+                client_id=client_id
+            )
+        elif throttle_type == 'enhanced':
+            sustained_throttle_key = throttle_key.format(
+                scope='enhanced_oauth2_client_credentials_sustained',
+                client_id=client_id
+            )
+            burst_throttle_key = throttle_key.format(
+                scope='enhanced_oauth2_client_credentials_burst',
+                client_id=client_id
+            )
+        else:
+            return Response(status=500, data='Unknown API key rate limit type')
+
+        sustained_requests_list = cache.get(sustained_throttle_key)
+        sustained_requests = \
+            len(sustained_requests_list) if sustained_requests_list else None
+        burst_requests_list = cache.get(burst_throttle_key)
+        burst_requests = len(burst_requests_list) if burst_requests_list else None
+
+        response_data = {
+            'requests_this_minute': burst_requests,
+            'requests_today': sustained_requests,
+            'rate_limit_model': throttle_type
+        }
+        return Response(status=200, data=response_data)
