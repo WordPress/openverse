@@ -1,4 +1,3 @@
-import json
 import requests
 from io import BytesIO
 from PIL import Image, ImageFont, ImageDraw
@@ -9,7 +8,7 @@ frame_color = '#fff'
 text_color = '#000'
 
 
-def open_image(url):
+def _open_image(url):
     try:
         response = requests.get(url)
         img = Image.open(BytesIO(response.content))
@@ -18,7 +17,7 @@ def open_image(url):
         print('Error loading image data')
 
 
-def create_frame_for_image(image):
+def _create_frame_for_image(image):
     """
     creates an image as a frame for another image
     """
@@ -33,8 +32,8 @@ def create_frame_for_image(image):
     return img
 
 
-def place_image_inside_frame(image):
-    frame = create_frame_for_image(image)
+def _place_image_inside_frame(image):
+    frame = _create_frame_for_image(image)
     copy = image.copy()
     top_margin = int(vertical_margin / 4)
     left_margin = int(horizontal_margin / 2)
@@ -43,14 +42,14 @@ def place_image_inside_frame(image):
     return frame
 
 
-def full_license(image_info):
+def _full_license(image_info):
     _license = image_info['license'].upper()
     license_version = image_info['license_version'].upper()
     license_text = "{0} {1}".format(_license, license_version)
     return license_text if _license == "cc0" else "CC {0}".format(license_text)
 
 
-def print_attribution_for_image_on_frame(image_info, image, frame):
+def _print_attribution_for_image_on_frame(image_info, image, frame):
     vertical_margin_to_image = 16 # vertical margin between image and text
 
     font = ImageFont.truetype('DejaVuSans-Bold.ttf', size=18)
@@ -61,11 +60,11 @@ def print_attribution_for_image_on_frame(image_info, image, frame):
 
     title = image_info['title']
     creator = image_info['creator']
-    license = full_license(image_info)
-
+    _license = _full_license(image_info)
+    text = "{0}\nBy: {1}\nLicensed under: {2}".format(title, creator, _license)
     draw.text(
         xy=(text_position_x, text_position_y),
-        text="{0}\nBy: {1}\nLicensed under: {2}".format(title, creator, license),
+        text=text,
         font=font,
         fill=(0, 0, 0)
     )
@@ -78,8 +77,8 @@ def watermark(image_url, info):
 
     image: Image DB model
     """
-    img = open_image(image_url)
-    frame = place_image_inside_frame(img)
-    print_attribution_for_image_on_frame(info, img, frame)
+    img = _open_image(image_url)
+    frame = _place_image_inside_frame(img)
+    _print_attribution_for_image_on_frame(info, img, frame)
     return frame
 
