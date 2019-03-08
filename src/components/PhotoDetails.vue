@@ -83,7 +83,9 @@
           </div>
           <div>
             <a class="download-watermark"
-              @click.stop="onDownloadWatermark(image, $event)">
+              :href="watermarkURL"
+              target="_blank"
+              rel="noopener noreferrer">
               Download
             </a>
           </div>
@@ -135,6 +137,9 @@ export default {
 
       return license === 'cc0' ? `${license} ${version}` : `CC ${license} ${version}`;
     },
+    watermarkURL() {
+      return `${process.env.API_URL}/watermark/${this.image.id}`;
+    },
     textAttribution() {
       return () => {
         const image = this.image;
@@ -172,9 +177,6 @@ export default {
       imageWithDimensions.pageY = event.pageY;
 
       this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
-    },
-    onDownloadWatermark(image, event) {
-
     },
   },
   watch: {
