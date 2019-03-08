@@ -13,9 +13,11 @@ from cccatalog.api.serializers.search_serializers import\
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
 from cccatalog.api.utils.view_count import _get_user_ip
+from urllib.parse import urlparse
+from cccatalog.api.utils.watermark import watermark
+from django.http.response import HttpResponse
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
-from urllib.parse import urlparse
 
 log = logging.getLogger(__name__)
 FOREIGN_LANDING_URL = 'foreign_landing_url'
@@ -207,3 +209,28 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             resp.data[URL] = secure
 
         return resp
+
+
+class Watermark(GenericAPIView):
+    """
+    Given an image identifier as a URL parameter, produce an attribution
+    watermark.
+    """
+    lookup_field = 'identifier'
+
+    def get(self, request, identifier, format=None):
+        try:
+            image_record = Image.objects.get(identifier=identifier)
+        except Image.DoesNotExist:
+            return Response(status=404, data='Not Found')
+        image_url = str(image_record.url)
+        image_info = {
+            'title': image_record.title,
+            'creator': image_record.creator,
+            'license': image_record.license,
+            'license_version': image_record.license_version
+        }
+        watermarked = watermark(image_url, image_info)
+        response = HttpResponse(content_type='image/jpeg')
+        watermarked.save(response, 'jpeg')
+        return response
