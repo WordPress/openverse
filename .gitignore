@@ -128,3 +128,5 @@ crash.log
 # Ignore crawler data files
 ccbot/url_dump.csv
 ccbot/crawl_plan.yml
+
+.DS_Store

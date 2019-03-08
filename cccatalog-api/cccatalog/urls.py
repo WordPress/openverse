@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 # from django.conf.urls import include
-from cccatalog.api.views.image_views import SearchImages, ImageDetail
+from cccatalog.api.views.image_views import SearchImages, ImageDetail, Watermark
 from cccatalog.api.views.site_views import HealthCheck, ImageStats
 from cccatalog.api.views.list_views import CreateList, ListDetail
 from cccatalog.api.views.link_views import CreateShortenedLink, \
@@ -73,6 +73,7 @@ urlpatterns = [
     path('statistics/image', ImageStats.as_view(), name='about-image'),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
+    path('watermark/<str:identifier>', Watermark.as_view()),
     re_path('healthcheck', HealthCheck.as_view()),
     re_path(
         r'^swagger(?P<format>\.json|\.yaml)$',
