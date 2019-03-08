@@ -19,7 +19,7 @@ def _open_image(url):
 
 def _create_frame_for_image(image):
     """
-    creates an image as a frame for another image
+    Creates an image as a frame from another image.
     """
     size = image.size
     width = size[0]
@@ -72,10 +72,12 @@ def _print_attribution_for_image_on_frame(image_info, image, frame):
 
 def watermark(image_url, info):
     """
-    creates the watermark for the image.
-    Returns a BytesIO object with the image contents
+    Returns a PIL frame with the watermarked image.
 
-    image: Image DB model
+    :param image_url: The URL of the image.
+    :param info: A dictionary with keys title, creator, license, and
+    license_version
+    :returns: A PIL frame
     """
     img = _open_image(image_url)
     frame = _place_image_inside_frame(img)
