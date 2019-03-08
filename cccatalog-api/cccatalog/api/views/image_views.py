@@ -20,6 +20,7 @@ import cccatalog.api.controllers.search_controller as search_controller
 import logging
 
 log = logging.getLogger(__name__)
+
 FOREIGN_LANDING_URL = 'foreign_landing_url'
 CREATOR_URL = 'creator_url'
 RESULTS = 'results'
@@ -176,7 +177,6 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     @track_model_views(Image)
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
-
         resp = self.retrieve(request, identifier)
         # Get pretty display name for a provider
         provider = resp.data[PROVIDER]
