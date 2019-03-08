@@ -34,10 +34,14 @@ articles, songs, videos, photographs, paintings, and more. Using this API,
 developers will be able to access the digital commons in their own
 applications.
 
-Please note that there is a rate limit of 7000 requests per day and
-60 requests per minute rate limit in place. If this is insufficient
-for your use case, please contact us so we can issue you an API key with
-higher throughput enabled.
+Please note that there is a rate limit of 1000 requests per day and
+60 requests per minute rate limit in place for anonymous users. This is fine
+for introducing yourself to the API, but we strongly recommend that you obtain
+an API key as soon as possible. Authorized clients have a higher rate limit
+of 10000 requests per day and 100 requests per minute. Additionally, Creative
+Commons can give your key an even higher limit that fits your application's
+needs. See the `/oauth2/register` endpoint for instructions on obtaining
+an API key.
 """
 
 
