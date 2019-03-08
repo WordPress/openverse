@@ -88,6 +88,7 @@
 import CopyButton from '@/components/CopyButton';
 import LicenseIcons from '@/components/LicenseIcons';
 import { SELECT_IMAGE_FOR_LIST } from '@/store/mutation-types';
+import decodeData from '@/utils/decodeData';
 
 export default {
   name: 'photo-details',
@@ -163,6 +164,13 @@ export default {
       imageWithDimensions.pageY = event.pageY;
 
       this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
+    },
+  },
+  watch: {
+    image() {
+      const image = this.image;
+      image.creator = decodeData(image.creator);
+      image.title = decodeData(image.title);
     },
   },
 };
