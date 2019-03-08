@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers
 from cccatalog.api.controllers.search_controller import get_providers
-from cccatalog.api.serializers.registration_serializers import\
-    OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful
+from cccatalog.api.serializers.oauth2_serializers import\
+    OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider
 from cccatalog.api.models import ThrottledApplication
@@ -169,6 +169,11 @@ class CheckRates(APIView):
     """
     throttle_classes = (OnePerSecond,)
 
+    @swagger_auto_schema(operation_id='key_info',
+                         responses={
+                             200: OAuth2KeyInfo,
+                             403: 'Forbidden'
+                         })
     def get(self, request, format=None):
         if not request.auth:
             return Response(status=403, data='Forbidden')
@@ -180,7 +185,6 @@ class CheckRates(APIView):
             return Response(status=403, data='Forbidden')
 
         throttle_type = rate_limit_model
-
         throttle_key = 'throttle_{scope}_{client_id}'
         if throttle_type == 'standard':
             sustained_throttle_key = throttle_key.format(
@@ -207,7 +211,8 @@ class CheckRates(APIView):
         sustained_requests = \
             len(sustained_requests_list) if sustained_requests_list else None
         burst_requests_list = cache.get(burst_throttle_key)
-        burst_requests = len(burst_requests_list) if burst_requests_list else None
+        burst_requests = \
+            len(burst_requests_list) if burst_requests_list else None
 
         response_data = {
             'requests_this_minute': burst_requests,
