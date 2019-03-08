@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
 from cccatalog.api.views.image_views import SearchImages, ImageDetail
-from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register
+from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
+    CheckRates
 from cccatalog.api.views.list_views import CreateList, ListDetail
 from cccatalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
@@ -71,6 +72,7 @@ urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('admin/', admin.site.urls),
     path('oauth2/register', Register.as_view(), name='register'),
+    path('oauth2/key_info', CheckRates.as_view(), name='key_info'),
     re_path(
         r'^oauth2/',
         include('oauth2_provider.urls', namespace='oauth2_provider')
