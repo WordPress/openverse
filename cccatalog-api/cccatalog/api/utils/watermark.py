@@ -50,7 +50,7 @@ def _full_license(image_info):
 
 
 def _print_attribution_for_image_on_frame(image_info, image, frame):
-    vertical_margin_to_image = 16 # vertical margin between image and text
+    vertical_margin_to_image = 16  # vertical margin between image and text
 
     font = ImageFont.truetype('DejaVuSans-Bold.ttf', size=18)
     draw = ImageDraw.Draw(frame)
@@ -83,4 +83,3 @@ def watermark(image_url, info):
     frame = _place_image_inside_frame(img)
     _print_attribution_for_image_on_frame(info, img, frame)
     return frame
-
