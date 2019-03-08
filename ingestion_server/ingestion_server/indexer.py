@@ -392,11 +392,12 @@ class TableIndexer:
 
         documents = []
         for row in pg_chunk:
-            converted = model.database_row_to_elasticsearch_doc(row, schema)
-            converted = converted.to_dict(include_meta=True)
-            if dest_index:
-                converted['_index'] = dest_index
-            documents.append(converted)
+            if not row[schema['removed_from_source']]:
+                converted = model.database_row_to_elasticsearch_doc(row, schema)
+                converted = converted.to_dict(include_meta=True)
+                if dest_index:
+                    converted['_index'] = dest_index
+                documents.append(converted)
 
         return documents
 
