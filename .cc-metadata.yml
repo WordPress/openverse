@@ -1,7 +1,7 @@
 # Whether this GitHub repo is engineering related
 engineering_project: true
 # Name of the repository/project in English
-name: CC Search
+english_name: CC Search
 # All technologies used
 technologies: JavaScript, Vue.js
 # Whether this repository should be featured on the CC Open Source site
