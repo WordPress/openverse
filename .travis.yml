@@ -12,7 +12,8 @@ services:
   - docker
 install:
   - pip3 install -r ingestion_server/requirements.txt
-  - pip3 install -r cccatalog-api/requirements.txt
+  - pip3 install pipenv
+  - cd cccatalog-api && pipenv install --system --deploy --dev
 before_install:
   - "export PYTHONPATH=$PYTHONPATH:$(pwd)"
 before_script:
