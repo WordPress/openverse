@@ -10,6 +10,9 @@ For example, let's say that I want to download and index all new images.
 
 Performance is dependent on the size of the target Elasticsearch cluster, database throughput, and bandwidth available to the ingestion server. The primary bottleneck is indexing to Elasticsearch.
 
+## How Indexing Works
+![How indexing works](https://github.com/creativecommons/cccatalog-api/blob/master/ingestion_server/howitworks.png)
+
 ## Safety and security considerations
 The server has been designed to fail gracefully in the event of network interruptions, full disks, etc. If a task fails to complete successfully, the whole process is rolled back with zero impact to production.
 
@@ -24,7 +27,6 @@ python test/integration_tests.py
 ```
 Set `ENABLE_DETAILED_LOGS` to `True` if more information is needed about the failing test.
 
-![How indexing works](https://raw.githubusercontent.com/creativecommons/cccatalog-api/syncer_tests_and_docs/es_syncer/howitworks.png)
 ## Configuration
 All configuration is performed through environment variables.
 
