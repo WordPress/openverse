@@ -1,0 +1,43 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+remote-pdb = "*"
+ipython = "*"
+pipdeptree = "*"
+pycodestyle = "*"
+
+[packages]
+future = {version = "*", python_version = "<=2.7"}
+
+psycopg2-binary = "*"
+redlock-py = "*"
+hvac = "*"
+
+pyjwt = "*"
+python3-openid = "*"
+wsgi-basic-auth = "*"
+
+grequests = "*"
+requests-oauthlib = "*"
+aws-requests-auth = "*"
+
+django = "*"
+pillow = "*"
+
+django-cors-headers = "*"
+django-uuslug = "*"
+django-cron = "*"
+django-sslserver = "*"
+django-oauth-toolkit = "*"
+django-braces = "*"
+django-redis = "*"
+pytest-django = "*"
+
+djangorestframework = "*"
+drf-yasg = "*"
+
+elasticsearch-dsl = "*"
+ipaddress = {version = "*", python_version = "<=2.7"}
