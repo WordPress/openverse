@@ -83,6 +83,7 @@
           </div>
           <div>
             <a class="download-watermark"
+              @click="onDownloadWatermark(image, $event)"
               :href="watermarkURL"
               target="_blank"
               rel="noopener noreferrer">
@@ -98,6 +99,7 @@
 import CopyButton from '@/components/CopyButton';
 import LicenseIcons from '@/components/LicenseIcons';
 import { SELECT_IMAGE_FOR_LIST } from '@/store/mutation-types';
+import { DOWNLOAD_WATERMARK } from '@/store/action-types';
 import decodeData from '@/utils/decodeData';
 
 export default {
@@ -177,6 +179,9 @@ export default {
       imageWithDimensions.pageY = event.pageY;
 
       this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
+    },
+    onDownloadWatermark(image) {
+      this.$store.dispatch(DOWNLOAD_WATERMARK, { imageId: image.id });
     },
   },
   watch: {
