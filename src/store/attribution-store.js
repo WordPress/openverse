@@ -1,4 +1,8 @@
-import { CopyTextAttribution, CopyHtmlAttribution } from '@/analytics/events';
+import { 
+  CopyRtfAttribution,
+  CopyTextAttribution, 
+  CopyHtmlAttribution, 
+} from '@/analytics/events';
 import {
   COPY_ATTRIBUTION,
 } from './action-types';
@@ -6,10 +10,18 @@ import {
 const actions = GoogleAnalytics => ({
   // eslint-disable-next-line no-unused-vars
   [COPY_ATTRIBUTION]({ commit }, params) {
-    const event = params.contentType === 'html' ?
-      new CopyHtmlAttribution(params.content) :
-      new CopyTextAttribution(params.content);
-
+    let event;
+    switch(params.contentType) {
+      case "html":
+        event = new CopyHtmlAttribution(params.content);
+        break;
+      case "rtf":
+        event = new CopyRtfAttribution(params.content);
+        break;
+      default:
+        event = new CopyTextAttribution(params.content);
+        break;
+    }
     GoogleAnalytics.sendEvent(event);
   },
 });

@@ -7,3 +7,7 @@ export function CopyTextAttribution(text) {
 export function CopyHtmlAttribution(text) {
   return new Event('Attribution', 'Copy HTML', text);
 }
+
+export function CopyRtfAttribution(text) {
+  return new Event('Attribution', 'Copy RTF', text);
+}
