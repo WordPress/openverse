@@ -66,8 +66,24 @@
             {{ fullLicenseName }}
             </a>
           </p>
-          <CopyButton :toCopy="HTMLAttribution" contentType="html">Copy to HTML</CopyButton>
-          <CopyButton :toCopy="textAttribution" contentType="text">Copy to Text</CopyButton>
+          <h3>
+            Copy
+          </h3>
+          <CopyButton :toCopy="HTMLAttribution"
+                      contentType="html"
+                      title="Can be used in website code">
+            HTML code
+          </CopyButton>
+          <CopyButton :toCopy="textAttribution"
+                      contentType="text"
+                      title="Can be used in static documents">
+            Plain text
+          </CopyButton>
+          <CopyButton :toCopy="HTMLAttribution"
+                      contentType="rtf"
+                      title="Can be used in WYSIWYG editors">
+            Rich text
+          </CopyButton>
         </section>
         <section class="photo_usage">
           <header class="photo_info-header">
