@@ -2,6 +2,7 @@ import requests
 import json
 import pytest
 import os
+import uuid
 from cccatalog.api.licenses import LICENSE_GROUPS
 from cccatalog.api.models import Image
 
@@ -189,6 +190,42 @@ def test_creator_quotation_grouping():
     # Monet sneak into the results?
     for result in quotes['results']:
         assert 'Claude Monet' in result['creator']
+
+
+@pytest.fixture
+def test_oauth2_registration():
+    payload = {
+        'name': 'INTEGRATION TEST APPLICATION {}'.format(uuid.uuid4()),
+        'description': 'A key for testing the OAuth2 registration process.',
+        'email': 'example@example.org'
+    }
+    response = requests.post(
+        API_URL + '/oauth2/register', json=payload, verify=False
+    )
+    parsed_response = json.loads(response.text)
+    assert response.status_code == 201
+    return parsed_response
+
+
+def test_oauth2_token_exchange(test_oauth2_registration):
+    client_id = test_oauth2_registration['client_id']
+    client_secret = test_oauth2_registration['client_secret']
+    token_exchange_request = \
+        'client_id={_id}&client_secret={secret}&grant_type=client_credentials' \
+        .format(_id=client_id, secret=client_secret)
+    headers = {
+        'content-type': "application/x-www-form-urlencoded",
+        'cache-control': "no-cache",
+    }
+    response = json.loads(
+        requests.post(
+            API_URL + '/oauth2/token/',
+            data=token_exchange_request,
+            headers=headers,
+            verify=False
+        ).text
+    )
+    assert 'access_token' in response
 
 
 def test_attribution():

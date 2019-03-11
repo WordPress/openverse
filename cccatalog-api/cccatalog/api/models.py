@@ -1,8 +1,9 @@
 from uuslug import uuslug
 from django.db import models
 from django.utils.safestring import mark_safe
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from cccatalog.api.licenses import ATTRIBUTION, LICENSE_URL
+from oauth2_provider.models import AbstractApplication
 
 
 class OpenLedgerModel(models.Model):
@@ -87,6 +88,10 @@ class Image(OpenLedgerModel):
     title = models.CharField(max_length=2000, blank=True, null=True)
 
     tags = JSONField(blank=True, null=True)
+
+    tags_list = ArrayField(
+        models.CharField(max_length=255), blank=True, null=True
+    )
 
     last_synced_with_source = models.DateTimeField(
         blank=True,
@@ -217,3 +222,41 @@ class ShortenedLink(OpenLedgerModel):
     )
     full_url = models.URLField(unique=True, max_length=1000, db_index=True)
     created_on = models.DateTimeField(auto_now_add=True, db_index=True)
+
+
+class OAuth2Registration(models.Model):
+    """
+    Information about API key applicants.
+    """
+    name = models.CharField(
+        max_length=150,
+        unique=True,
+        help_text="A unique human-readable name for your application or "
+                  "project requiring access to the CC Catalog API."
+    )
+    description = models.CharField(
+        max_length=10000,
+        help_text="A description of what you are trying to achieve with your "
+                  "project using the API. Please provide as much detail as "
+                  "possible!"
+    )
+    email = models.EmailField(
+        help_text="A valid email that we can reach you at if we have any "
+                  "questions about your use case or data consumption."
+    )
+
+
+class ThrottledApplication(AbstractApplication):
+    """
+    An OAuth2 application with adjustable rate limits.
+    """
+    RATE_LIMIT_MODELS = [
+        ('standard', 'standard'),  # Default rate limit for all API keys.
+        ('enhanced', 'enhanced')   # Rate limits for "super" keys, granted on a
+                                   # case-by-case basis.
+    ]
+    rate_limit_model = models.CharField(
+        max_length=20,
+        choices=RATE_LIMIT_MODELS,
+        default='standard'
+    )

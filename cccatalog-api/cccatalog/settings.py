@@ -64,9 +64,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_cron',
     'oauth2_provider',
-    'social_django',
     'rest_framework',
-    'rest_framework_social_oauth2',
     'corsheaders',
     'sslserver',
 ]
@@ -80,17 +78,25 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware'
 ]
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {}
 }
 
+OAUTH2_PROVIDER = {
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+    }
+}
+
+OAUTH2_PROVIDER_APPLICATION_MODEL = 'api.ThrottledApplication'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -98,11 +104,19 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_THROTTLE_CLASSES': (
         'cccatalog.api.utils.throttle.BurstRateThrottle',
-        'cccatalog.api.utils.throttle.SustainedRateThrottle'
+        'cccatalog.api.utils.throttle.SustainedRateThrottle',
+        'cccatalog.api.utils.throttle.OAuth2IdThrottleSustainedRate',
+        'cccatalog.api.utils.throttle.OAuth2IdThrottleBurstRate',
+        'cccatalog.api.utils.throttle.EnhancedOAuth2IdThrottleSustainedRate',
+        'cccatalog.api.utils.throttle.EnhancedOAuth2IdThrottleBurstRate'
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'burst': '60/min',
-        'sustained': '7000/day'
+        'anon_burst': '60/min',
+        'anon_sustained': '1000/day',
+        'oauth2_client_credentials_sustained': '10000/day',
+        'oauth2_client_credentials_burst': '100/min',
+        'enhanced_oauth2_client_credentials_sustained': '20000/day',
+        'enhanced_oauth2_client_credentials_burst': '200/min'
     },
 }
 
@@ -153,11 +167,7 @@ THUMBNAIL_PROXY_URL = os.environ.get(
 PROXY_ALL = os.environ.get('PROXY_ALL', 'iha').split(',')
 
 AUTHENTICATION_BACKENDS = (
-    # GitHub social login
-    'social_core.backends.github.GithubOAuth2',
-
-    # django-rest-framework-social-oauth2
-    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'oauth2_provider.backends.OAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -174,8 +184,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -219,7 +227,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-#
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -264,19 +271,11 @@ STATIC_URL = '/static/'
 # Allow anybody to access the API from any domain
 CORS_ORIGIN_ALLOW_ALL = True
 
-# API specific configuration
-
-# The version of the API. We follow the semantic versioning specification.
+# The version of the API. We follow the semantic version specification.
 API_VERSION = os.environ.get(
     'SEMANTIC_VERSION',
     "Version not specified."
 )
-
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
-
-SOCIAL_AUTH_GITHUB_SCOPE = ['user:email']
-SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_SOCIAL_CLIENT_ID')
-SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_SOCIAL_CLIENT_SECRET')
 
 ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL', 'localhost')
 ELASTICSEARCH_PORT = int(os.environ.get('ELASTICSEARCH_PORT', 9200))

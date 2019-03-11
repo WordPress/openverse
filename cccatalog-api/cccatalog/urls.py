@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-# from django.conf.urls import include
-from cccatalog.api.views.image_views import SearchImages, ImageDetail
-from cccatalog.api.views.site_views import HealthCheck, ImageStats
+from django.conf.urls import include
+from cccatalog.api.views.image_views import SearchImages, ImageDetail, Watermark
+from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
+    CheckRates
 from cccatalog.api.views.list_views import CreateList, ListDetail
 from cccatalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
@@ -34,10 +35,14 @@ articles, songs, videos, photographs, paintings, and more. Using this API,
 developers will be able to access the digital commons in their own
 applications.
 
-Please note that there is a rate limit of 7000 requests per day and
-60 requests per minute rate limit in place. If this is insufficient
-for your use case, please contact us so we can issue you an API key with
-higher throughput enabled.
+Please note that there is a rate limit of 1000 requests per day and
+60 requests per minute rate limit in place for anonymous users. This is fine
+for introducing yourself to the API, but we strongly recommend that you obtain
+an API key as soon as possible. Authorized clients have a higher rate limit
+of 10000 requests per day and 100 requests per minute. Additionally, Creative
+Commons can give your key an even higher limit that fits your application's
+needs. See the `/oauth2/register` endpoint for instructions on obtaining
+an API key.
 """
 
 
@@ -66,6 +71,12 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('admin/', admin.site.urls),
+    path('oauth2/register', Register.as_view(), name='register'),
+    path('oauth2/key_info', CheckRates.as_view(), name='key_info'),
+    re_path(
+        r'^oauth2/',
+        include('oauth2_provider.urls', namespace='oauth2_provider')
+    ),
     path('list', CreateList.as_view()),
     path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
     re_path('image/search', SearchImages.as_view()),
@@ -73,6 +84,7 @@ urlpatterns = [
     path('statistics/image', ImageStats.as_view(), name='about-image'),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
+    path('watermark/<str:identifier>', Watermark.as_view()),
     re_path('healthcheck', HealthCheck.as_view()),
     re_path(
         r'^swagger(?P<format>\.json|\.yaml)$',
