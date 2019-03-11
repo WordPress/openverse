@@ -1,11 +1,15 @@
 import store from '@/store/attribution-store';
-import { CopyTextAttribution, CopyHtmlAttribution } from '@/analytics/events';
+import { CopyTextAttribution, CopyHtmlAttribution, DownloadWatermark } from '@/analytics/events';
 
 describe('Attribution Store', () => {
   describe('actions', () => {
-    const googleAnalyticsMock = {
-      sendEvent: jest.fn(),
-    };
+    let googleAnalyticsMock = null;
+
+    beforeEach(() => {
+      googleAnalyticsMock = {
+        sendEvent: jest.fn(),
+      };
+    });
 
     it('COPY_ATTRIBUTION sends html event', () => {
       const data = {
@@ -28,6 +32,17 @@ describe('Attribution Store', () => {
 
       expect(googleAnalyticsMock.sendEvent).toHaveBeenCalledWith(
         new CopyTextAttribution(data.content),
+      );
+    });
+
+    it('DOWNLOAD_WATERMARK sends event', () => {
+      const data = {
+        imageId: 'foo',
+      };
+      store.actions(googleAnalyticsMock).DOWNLOAD_WATERMARK({}, data);
+
+      expect(googleAnalyticsMock.sendEvent).toHaveBeenCalledWith(
+        new DownloadWatermark(data.imageId),
       );
     });
   });

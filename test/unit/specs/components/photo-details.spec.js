@@ -24,12 +24,19 @@ describe('PhotoDetails', () => {
     options = {
       propsData: props,
     };
+
+    process.env.API_URL = 'https://foo.bar';
   });
 
   it('should render correct contents', () => {
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.find('.photo_image').element).toBeDefined();
     expect(wrapper.find({ name: 'license-icons' }).element).toBeDefined();
+  });
+
+  it('should render watermark link', () => {
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.find('.download-watermark').element).toBeDefined();
   });
 
   it('should generate license URL', () => {
@@ -58,6 +65,11 @@ describe('PhotoDetails', () => {
     options.propsData.image.license = 'cc0';
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.vm.fullLicenseName).toBe('cc0 1.0');
+  });
+
+  it('should generate watermark url', () => {
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.vm.watermarkURL).toBe(`https://foo.bar/watermark/${props.image.id}`);
   });
 
   it('should generate text attribution', () => {
