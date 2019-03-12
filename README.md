@@ -24,7 +24,17 @@ cd cccatalog-api
 docker-compose up
 ```
 
-After executing this, you will be running:
+If ElasticSearch fails to start up due to insufficient max map count, add the following
+line to `/etc/sysctl.conf`.
+```
+vm.max_map_count=262144
+```
+This change may not reflect immediately. Either reboot or run the following command to load the refreshed settings.
+```
+sudo sysctl -p
+```
+
+After executing `docker-compose up`, you will be running:
 * A Django API server
 * Two PostgreSQL instances (one simulates the upstream data source, the other serves as the application database)
 * Elasticsearch
