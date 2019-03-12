@@ -3,15 +3,15 @@
     <div class="share-list_social-items cell medium-6 large-4">
       <a class="social-button facebook"
          target="_blank"
-         :href="`https://www.facebook.com/sharer/sharer.php?u=${getShareListURL}
-          &t==${shareText}&href=${getShareListURL}`"></a>
+         :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}
+          &t==${shareText}&href=${shareURL}`"></a>
       <a class="social-button twitter"
          target="_blank"
-         :href="`https://twitter.com/intent/tweet?text=${getShareText}`"
+         :href="`https://twitter.com/intent/tweet?text=${shareText}`"
       ></a>
       <a class="social-button pinterest"
          target="_blank"
-         :href="`https://www.pinterest.com/pin/create/bookmarklet/?media=${shareImageURL}&description=${getShareText}`"></a>
+         :href="`https://www.pinterest.com/pin/create/bookmarklet/?media=${imageURL}&description=${shareText}`"></a>
     </div>
   </div>
 </template>
@@ -20,21 +20,10 @@
 export default {
   name: 'social-share-list',
   props: {
-    isMedium: '',
+    isMedium: '',  // Refers to slightly smaller sized version
     shareURL: '',
     shareText: '',
     imageURL: '',
-  },
-  computed: {
-    shareImageURL() {
-      return this.imageURL;
-    },
-    getShareText() {
-      return encodeURI(`I created an image list @creativecommons: ${this.shareURL}`);
-    },
-    getShareListURL() {
-      return this.shareURL;
-    },
   },
 };
 </script>
@@ -51,9 +40,9 @@ export default {
   $social-button-transition: all 0.5s ease;
   $social-button-margin: 0.25rem;
 
-  $social-brand-facebook: #3b5998;
-  $social-brand-twitter: #55acee;
-  $social-brand-pinterest: #c32aa3;
+  $social-brand-facebook: #4267b2;
+  $social-brand-twitter: #1da1f2;
+  $social-brand-pinterest: #e60023;
 
   @mixin social-button($brand-color, $brand-icon) {
     background: $brand-color;
