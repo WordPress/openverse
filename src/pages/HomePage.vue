@@ -180,7 +180,7 @@ export default HomePage;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
+<style lang="scss" scoped>
 $gray: #808080;
 $highlight: #4ec6cd;
 $nav-text-color: $gray;

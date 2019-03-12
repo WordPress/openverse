@@ -51,7 +51,8 @@ export default {
 .nav {
   position: relative;
   width: 100%;
-  background-color: #373737;
+  background-image: linear-gradient(90deg,#EE5B32,#FB7928,#EE5B32);
+  height: 7vh;
 }
 .nav_logo {
   margin: 15px 0 15px 0;
@@ -72,15 +73,25 @@ export default {
     margin-left: 0 !important;
   }
 }
+
+.menu {
+  padding: 0.8em;
+  li {
+    border-left: 1px solid rgba(255,255,255,.55);
+  }
+}
+
 .menu a {
   color: #fefefe;
-  font-weight: 500;
-  padding: 0.7rem 1rem;
+  font-size: 1.4em;
+  font-weight: 700;
+  line-height: 1em;
+  padding: .2em .8em .25em;
   border: 1px solid transparent;
   border-radius: 2px;
   transition: all 0.3s ease;
   &:hover {
-    border-color: rgba(255, 255, 255, 0.3);
+    background: #e15803
   }
 
   /* Small only */
@@ -101,7 +112,11 @@ export default {
     border: 1px solid rgba(255, 255, 255, .1);
     box-shadow: none;
     &:focus {
-      border-color: rgba(213, 18, 188, .5);
+      border-color: rgba(255, 255, 255, .1);
+    }
+
+    &::placeholder {
+      color: white
     }
   }
   .input-group-button .button {
