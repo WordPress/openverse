@@ -10,34 +10,27 @@ pipdeptree = "*"
 pycodestyle = "*"
 
 [packages]
-future = {version = "*", python_version = "<=2.7"}
-
+future = {version = "*",python_version = "<=2.7"}
 psycopg2-binary = "*"
 redlock-py = "*"
 hvac = "*"
-
 pyjwt = "*"
 python3-openid = "*"
 wsgi-basic-auth = "*"
-
 grequests = "*"
 requests-oauthlib = "*"
 aws-requests-auth = "*"
-
 django = "*"
 pillow = "*"
-
 django-cors-headers = "*"
 django-uuslug = "*"
 django-cron = "*"
 django-sslserver = "*"
-django-oauth-toolkit = "*"
+django-oauth-toolkit = "==1.1.2"
 django-braces = "*"
 django-redis = "*"
 pytest-django = "*"
-
 djangorestframework = "*"
 drf-yasg = "*"
-
 elasticsearch-dsl = "*"
-ipaddress = {version = "*", python_version = "<=2.7"}
+ipaddress = {version = "*",python_version = "<=2.7"}

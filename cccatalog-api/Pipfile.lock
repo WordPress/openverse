@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6006f02aa1f0ef3538410506ce35a966a7e68dff99fab92198145ffd3148affb"
+            "sha256": "b970d6e53de6c9ab1a650b641f92a2b51b22e07c07da5117dcff0bac51f8a1d9"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -37,10 +37,10 @@
         },
         "certifi": {
             "hashes": [
-                "sha256:47f9c83ef4c0c621eaef743f133f09fa8a74a9b75f037e8624f83bd1b6626cb7",
-                "sha256:993f830721089fef441cdfeb4b2c8c9df86f0c63239f06bd025a76a7daddb033"
+                "sha256:59b7658e26ca9c7339e00f8f4636cdfe59d34fa37b9b04f6f9e9926b3cece1a5",
+                "sha256:b26104d6835d1f5e49452a26eb2ff87fe7090b89dfcaee5ea2212697e1e1d7ae"
             ],
-            "version": "==2018.11.29"
+            "version": "==2019.3.9"
         },
         "chardet": {
             "hashes": [
@@ -109,10 +109,11 @@
         },
         "django-oauth-toolkit": {
             "hashes": [
-                "sha256:ad1b76275950ebbff708222cec57bbdb879f89bac7df6b9dee0f4b9db485c264"
+                "sha256:5eb68432e0869451bad81d127bb2de7a20cb5c5343518bc8d24befe6eaa34e16",
+                "sha256:c006e804ecfdc98ffeb943100dbb0b5e6d82c969c7cb672bc999f1f3a403cb01"
             ],
             "index": "pypi",
-            "version": "==1.2.0"
+            "version": "==1.1.2"
         },
         "django-redis": {
             "hashes": [
