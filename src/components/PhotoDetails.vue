@@ -11,46 +11,48 @@
              :alt="image.title">
       </div>
       <section class="photo_info-ctr cell medium-12 large-4">
-        <header class="photo_info-header">
-          <h2>
-            PHOTO INFO
-          </h2>
-        </header>
-        <ul>
-          <li>
-            <h3>Title</h3>
-            <span>{{ image.title }}</span>
-          </li>
-          <li>
-            <h3>Creator</h3>
-            <span v-if="image.creator">
-              <a :href="image.creator_url">{{ image.creator }}</a>
-            </span>
-            <span v-else>
-              Not Available
-            </span>
-          </li>
-          <li>
-            <h3>License</h3>
-            <a class="photo_license" :href="ccLicenseURL">
-            {{ fullLicenseName }}
-            </a>
-            <license-icons :image="image"></license-icons>
-          </li>
-          <li>
-            <h3>Source</h3>
-            <a class="photo_provider"
-               :href="image.foreign_landing_url"
-               target="blank"
-               rel="noopener noreferrer">{{ image.provider }}</a>
-          </li>
-          <li>
-            <h3>Dimensions</h3>
-            <span> {{ imageWidth }} <span> X </span> {{ imageHeight }} pixels</span>
-          </li>
-        </ul>
-        <section class="photo_usage">
-          <header class="photo_info-header">
+        <section class="sidebar_section">
+          <header class="sidebar_section-header">
+            <h2>
+              PHOTO INFO
+            </h2>
+          </header>
+          <ul>
+            <li>
+              <h3>Title</h3>
+              <span>{{ image.title }}</span>
+            </li>
+            <li>
+              <h3>Creator</h3>
+              <span v-if="image.creator">
+                <a :href="image.creator_url">{{ image.creator }}</a>
+              </span>
+              <span v-else>
+                Not Available
+              </span>
+            </li>
+            <li>
+              <h3>License</h3>
+              <a class="photo_license" :href="ccLicenseURL">
+              {{ fullLicenseName }}
+              </a>
+              <license-icons :image="image"></license-icons>
+            </li>
+            <li>
+              <h3>Source</h3>
+              <a class="photo_provider"
+                :href="image.foreign_landing_url"
+                target="blank"
+                rel="noopener noreferrer">{{ image.provider }}</a>
+            </li>
+            <li>
+              <h3>Dimensions</h3>
+              <span> {{ imageWidth }} <span> &times; </span> {{ imageHeight }} pixels</span>
+            </li>
+          </ul>
+        </section>
+        <section class="sidebar_section">
+          <header class="sidebar_section-header">
             <h2>
               Photo Attribution
             </h2>
@@ -69,8 +71,8 @@
           <CopyButton :toCopy="HTMLAttribution" contentType="html">Copy to HTML</CopyButton>
           <CopyButton :toCopy="textAttribution" contentType="text">Copy to Text</CopyButton>
         </section>
-        <section class="photo_usage">
-          <header class="photo_info-header">
+        <section class="sidebar_section">
+          <header class="sidebar_section-header">
             <h2>
               Actions
             </h2>
@@ -80,6 +82,18 @@
              Add to list
           </a>
         </section>
+        <section class="sidebar_section">
+          <header class="sidebar_section-header">
+            <h2>
+              Share
+            </h2>
+          </header>
+          <social-share-buttons
+            :shareURL="shareURL"
+            :imageURL="imageURL"
+            :shareText="shareText">
+          </social-share-buttons>
+        </section>
       </section>
     </div>
 </template>
@@ -87,6 +101,7 @@
 <script>
 import CopyButton from '@/components/CopyButton';
 import LicenseIcons from '@/components/LicenseIcons';
+import SocialShareButtons from '@/components/SocialShareButtons';
 import { SELECT_IMAGE_FOR_LIST } from '@/store/mutation-types';
 import decodeData from '@/utils/decodeData';
 
@@ -96,6 +111,7 @@ export default {
   components: {
     CopyButton,
     LicenseIcons,
+    SocialShareButtons,
   },
   computed: {
     ccLicenseURL() {
@@ -150,6 +166,15 @@ export default {
                 </a>`;
       };
     },
+    shareURL() {
+      return window.location.href;
+    },
+    imageURL() {
+      return this.image.foreign_landing_url;
+    },
+    shareText() {
+      return encodeURI(`I found an image @creativecommons: ${this.imageURL}`);
+    }
   },
   methods: {
     onGoBackToSearchResults() {
