@@ -2,7 +2,7 @@
   <nav class="nav grid-x grid-padding-x">
     <div class="cell small-12 medium-12 large-6">
       <a href="https://creativecommons.org/">
-        <img class="nav_logo" src="../assets/cc-logo_white.png">
+        <img class="nav_logo" src="../assets/cc-logo_large_black.png">
       </a>
       <div class="menu_ctr">
         <ul class="menu">
@@ -51,8 +51,9 @@ export default {
 .nav {
   position: relative;
   width: 100%;
-  background-image: linear-gradient(90deg,#EE5B32,#FB7928,#EE5B32);
+  background: #fff;
   height: 7vh;
+  border-bottom: 1px solid rgba(0,0,0,0.25);
 }
 .nav_logo {
   margin: 15px 0 15px 0;
@@ -76,22 +77,18 @@ export default {
 
 .menu {
   padding: 0.8em;
-  li {
-    border-left: 1px solid rgba(255,255,255,.55);
-  }
 }
 
 .menu a {
-  color: #fefefe;
+  color: rgb(44, 62, 80);
   font-size: 1.4em;
   font-weight: 700;
   line-height: 1em;
   padding: .2em .8em .25em;
   border: 1px solid transparent;
   border-radius: 2px;
-  transition: all 0.3s ease;
   &:hover {
-    background: #e15803
+    border-bottom: 3px solid rgb(44, 62, 80);
   }
 
   /* Small only */
