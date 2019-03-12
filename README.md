@@ -24,22 +24,22 @@ cd cccatalog-api
 docker-compose up
 ```
 
-If ElasticSearch fails to start up due to insufficient max map count, add the following
-line to `/etc/sysctl.conf`.
-```
-vm.max_map_count=262144
-```
-This change may not reflect immediately. Either reboot or run the following command to load the refreshed settings.
-```
-sudo sysctl -p
-```
-
 After executing `docker-compose up`, you will be running:
 * A Django API server
 * Two PostgreSQL instances (one simulates the upstream data source, the other serves as the application database)
 * Elasticsearch
 * Redis
 * Ingestion Server, a microservice for bulk ingesting and indexing search data.
+
+### Diagnosing local Elasticsearch issues
+If the API server container failed to start, there's a good chance that Elasticsearch failed to start on your machine. Ensure that you have allocated enough memory to Docker applications, otherwise the container will instantly exit with an error. Also, if the logs mention "insufficient max map count", increase the number of open files allowed on your system. For most Linux machines, you can fix this by adding the following line to `/etc/sysctl.conf`:
+```
+vm.max_map_count=262144
+```
+To make this setting take effect, run:
+```
+sudo sysctl -p
+```
 
 Once everything has initialized, with `docker-compose` still running in the background, load the sample data. You will need to install PostgreSQL client tools to perform this step. On Debian, the package is called `postgresql-client-common`.
 
