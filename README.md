@@ -31,6 +31,15 @@ After executing `docker-compose up`, you will be running:
 * Redis
 * Ingestion Server, a microservice for bulk ingesting and indexing search data.
 
+Once everything has initialized, with `docker-compose` still running in the background, load the sample data. You will need to install PostgreSQL client tools to perform this step. On Debian, the package is called `postgresql-client-common`.
+
+```
+./load_sample_data.sh
+```
+
+You are now ready to start sending the API server requests. Hit the API with a request to make sure it is working:
+`curl localhost:8000/image/search?q=honey`
+
 ### Diagnosing local Elasticsearch issues
 If the API server container failed to start, there's a good chance that Elasticsearch failed to start on your machine. Ensure that you have allocated enough memory to Docker applications, otherwise the container will instantly exit with an error. Also, if the logs mention "insufficient max map count", increase the number of open files allowed on your system. For most Linux machines, you can fix this by adding the following line to `/etc/sysctl.conf`:
 ```
@@ -40,15 +49,6 @@ To make this setting take effect, run:
 ```
 sudo sysctl -p
 ```
-
-Once everything has initialized, with `docker-compose` still running in the background, load the sample data. You will need to install PostgreSQL client tools to perform this step. On Debian, the package is called `postgresql-client-common`.
-
-```
-./load_sample_data.sh
-```
-
-You are now ready to start sending the API server requests. Hit the API with a request to make sure it is working:
-`curl localhost:8000/image/search?q=honey`
 
 ## System Architecture
 ![System Architecture](https://raw.githubusercontent.com/creativecommons/cccatalog-api/master/system_architecture.png)
