@@ -77,8 +77,8 @@ urlpatterns = [
         r'^oauth2/',
         include('oauth2_provider.urls', namespace='oauth2_provider')
     ),
-    path('list', CreateList.as_view()),
-    path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
+    # path('list', CreateList.as_view()),
+    # path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
     re_path('image/search', SearchImages.as_view()),
     path('image/<str:identifier>', ImageDetail.as_view(), name='image-detail'),
     path('statistics/image', ImageStats.as_view(), name='about-image'),
