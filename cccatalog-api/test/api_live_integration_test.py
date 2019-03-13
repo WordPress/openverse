@@ -103,6 +103,7 @@ def test_stats():
     assert provider_count > 0
 
 
+@pytest.mark.skip(reason="Disabled feature")
 @pytest.fixture
 def test_list_create(search_fixture):
     payload = {
@@ -115,6 +116,7 @@ def test_list_create(search_fixture):
     return parsed_response
 
 
+@pytest.mark.skip(reason="Disabled feature")
 def test_list_detail(test_list_create):
     list_slug = test_list_create['url'].split('/')[-1]
     response = requests.get(
@@ -123,6 +125,7 @@ def test_list_detail(test_list_create):
     assert response.status_code == 200
 
 
+@pytest.mark.skip(reason="Disabled feature")
 def test_list_delete(test_list_create):
     list_slug = test_list_create['url'].split('/')[-1]
     token = test_list_create['auth']
