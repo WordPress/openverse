@@ -19,9 +19,9 @@ before_script:
   - sudo service postgresql stop
   - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
   - docker-compose up -d
-  - bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' https://localhost:8000/healthcheck)" != "200" ]]; do sleep 10 && docker logs cccatalogapi_web_1; done'
+  - bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8000/healthcheck)" != "200" ]]; do sleep 10 && docker logs cccatalogapi_web_1; done'
   - ./load_sample_data.sh
-  - bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' https://localhost:8000/image/search?q=test)" != "200" ]]; do sleep 5; done'
+  - bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8000/image/search?q=test)" != "200" ]]; do sleep 5; done'
 script:
   - pycodestyle cccatalog-api/cccatalog --exclude='cccatalog-api/cccatalog/api/migrations' --max-line-length=80 --ignore=E402 
   - pycodestyle ingestion_server/*.py --max-line-length=80 --ignore=E402
