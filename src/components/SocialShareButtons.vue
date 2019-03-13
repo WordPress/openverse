@@ -1,17 +1,21 @@
 <template>
   <div :class="{ 'social-share': true, 'social-share__medium': isMedium }">
     <div class="share-list_social-items cell medium-6 large-4">
-      <a class="social-button facebook"
-         target="_blank"
-         :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}
-          &t==${shareText}&href=${shareURL}`"></a>
-      <a class="social-button twitter"
-         target="_blank"
-         :href="`https://twitter.com/intent/tweet?text=${shareText}`"
-      ></a>
-      <a class="social-button pinterest"
-         target="_blank"
-         :href="`https://www.pinterest.com/pin/create/bookmarklet/?media=${imageURL}&description=${shareText}`"></a>
+      <a 
+        class="social-button facebook"
+        target="_blank"
+        :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}&t==${shareText}&href=${shareURL}`">
+      </a>
+      <a 
+        class="social-button twitter"
+        target="_blank"
+        :href="`https://twitter.com/intent/tweet?text=${shareText}`">
+      </a>
+      <a 
+        class="social-button pinterest"
+        target="_blank"
+        :href="`https://www.pinterest.com/pin/create/bookmarklet/?media=${imageURL}&description=${shareText}`">
+      </a>
     </div>
   </div>
 </template>
