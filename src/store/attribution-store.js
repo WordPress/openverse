@@ -15,7 +15,7 @@ const actions = GoogleAnalytics => ({
   },
   // eslint-disable-next-line no-unused-vars
   [DOWNLOAD_WATERMARK]({ commit }, params) {
-    const event = DownloadWatermark(params.imageId);
+    const event = DownloadWatermark(params);
     GoogleAnalytics.sendEvent(event);
   },
 });

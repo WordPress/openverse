@@ -202,7 +202,9 @@ export default {
       this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
     },
     onDownloadWatermark(image) {
-      this.$store.dispatch(DOWNLOAD_WATERMARK, { imageId: image.id });
+      const shouldEmbedMetadata = this.shouldEmbedMetadata;
+      const shouldWatermark = this.shouldWatermark;
+      this.$store.dispatch(DOWNLOAD_WATERMARK, { imageId: image.id, shouldWatermark, shouldEmbedMetadata });
       window.location = this.watermarkURL;
     },
   },
