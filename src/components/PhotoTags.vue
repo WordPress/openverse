@@ -41,6 +41,7 @@ export default {
     },
     searchByTagName(query) {
       this.$router.push({ name: 'browse-page', query: { q: query } });
+      this.$router.go(0);
     },
     getValidTags() {
       return this.$props.tags.filter(tag => !!tag.name);
