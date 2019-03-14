@@ -5,19 +5,20 @@
       <div class="search-grid_analytics cell medium-6 large-6" >
         <h5>
           <span>{{ _imagesCount }}</span>
-          <span>{{ searchTerm }}</span>
-          Photos
+          photos matching
+          <span>'{{ searchTerm }}'</span>
         </h5>
       </div>
       <div class="search-grid_layout-control cell medium-6 large-6">
-        <h5>Grid Options:</h5>
+        <h5>Image options:</h5>
         <fieldset>
           <input
-            id="watermark"
+            id="scaling"
             type="checkbox"
+            v-on:change="handleScalingChange"
             v-model="shouldContainImages">
-            <label for="watermark">
-              Contain image
+            <label for="scaling">
+              Prevent overscaling
             </label>
         </fieldset>
       </div>
@@ -29,28 +30,41 @@
       <li><a href="/browse/new">new</a></li>
     </ul>
     <div class="search-grid_ctr" ref="gridItems">
-      <search-grid-cell v-for="(image) in _images"
-        :key="image.id"
-        :image="image"
-        :includeAddToList="includeAddToList" />
+      <div
+        class="masonry-layout"
+        v-masonry transition-duration="0.3s"
+        item-selector=".item"
+        :fit-width="true"
+        :gutter="20">
+        <search-grid-cell v-for="(image) in _images"
+          v-masonry-tile class="item"
+          :key="image.id"
+          :image="image"
+          :shouldContainImage="shouldContainImages"
+          :includeAddToList="includeAddToList" />
+      </div>
       <infinite-loading
         @infinite="onInfiniteHandler"
         ref="infiniteLoader"
         v-if="useInfiniteScroll && isDataInitialized">
       </infinite-loading>
       <div class="search-grid_notification callout alert" v-if="isFetchingImagesError">
-          <h5>Error fetching images</h5>
+        <h5>Error fetching images</h5>
       </div>
     </div>
   </section>
 </template>
 
 <script>
+import Vue from 'vue'
 import { SET_IMAGES } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
 import SearchGridCell from '@/components/SearchGridCell';
 import SearchGridFilter from '@/components/SearchGridFilter';
+import {VueMasonryPlugin} from 'vue-masonry';
+
+Vue.use(VueMasonryPlugin);
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -136,6 +150,9 @@ export default {
     },
   },
   methods: {
+    handleScalingChange() {
+      this.$redrawVueMasonry() // Some elements end up taking less space
+    },
     searchChanged() {
       this.showGrid = false;
       this.$store.commit(SET_IMAGES, { images: [] });
@@ -214,23 +231,21 @@ export default {
     }
   }
 
+  .search-grid_ctr {
+    .masonry-layout {
+      margin: auto;
+    }
+
+    .item {
+      width: 320px;
+      margin-bottom: 20px;
+    }
+  }
+
   .search-grid:after {
     content: '';
     display: block;
     clear: both;
-  }
-
-  .search-grid_ctr {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-content: stretch;
-    padding: 0;
-  }
-
-  .search-grid__contain-images .search-grid_image{
-    max-height: 100%;
   }
 
   .search-grid_notification {
