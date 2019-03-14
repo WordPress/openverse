@@ -1,29 +1,34 @@
 <template>
-  <figure class="search-grid_item">
-        <a :href="'photos/' + image.id"
-          @click="onGotoDetailPage($event, image)"
-          class="search-grid_image-ctr">
-          <img class="search-grid_image" :alt="image.title" :src="getImageUrl(image)"
-               @error="onImageLoadError">
+  <div>
+    <figure class="search-grid_item">
+      <a
+        :href="'photos/' + image.id"
+        @click="onGotoDetailPage($event, image)"
+        class="search-grid_image-ctr">
+        <img
+          :class="{'search-grid_image': true, 'search-grid_image__fill': !shouldContainImage}" 
+          :alt="image.title" :src="getImageUrl(image)"
+          @error="onImageLoadError">
+      </a>
+      <figcaption class="search-grid_item-overlay search-grid_item-overlay__top">
+        <license-icons :image="image"></license-icons>
+      </figcaption>
+      <figcaption class="search-grid_item-overlay search-grid_item-overlay__bottom">
+        <a class="search-grid_overlay-provider"
+            :href="getImageForeignUrl(image)"
+            @click.stop="() => false"
+            target="new">
+            <img class="search-grid_overlay-provider-logo" :alt="image.provider"
+                :src="getProviderLogo(image.provider)">
+            {{ image.title }}
         </a>
-        <figcaption class="search-grid_item-overlay search-grid_item-overlay__top">
-          <license-icons :image="image"></license-icons>
-        </figcaption>
-        <figcaption class="search-grid_item-overlay search-grid_item-overlay__bottom">
-          <a class="search-grid_overlay-provider"
-             :href="getImageForeignUrl(image)"
-             @click.stop="() => false"
-             target="new">
-             <img class="search-grid_overlay-provider-logo" :alt="image.provider"
-                  :src="getProviderLogo(image.provider)">
-             {{ image.title }}
-          </a>
-          <a class="search-grid_overlay-add"
-             @click.stop="onAddToImageList(image, $event)"
-             v-if="includeAddToList">
-          </a>
-        </figcaption>
-      </figure>
+        <a class="search-grid_overlay-add"
+            @click.stop="onAddToImageList(image, $event)"
+            v-if="includeAddToList">
+        </a>
+      </figcaption>
+    </figure>
+  </div>
 </template>
 
 <script>
@@ -42,7 +47,7 @@ const toAbsolutePath = (url, prefix = 'https://') => {
 
 export default {
   name: 'search-grid-cell',
-  props: ['image', 'includeAddToList'],
+  props: ['image', 'includeAddToList', 'shouldContainImage'],
   components: {
     LicenseIcons,
   },
@@ -96,8 +101,6 @@ export default {
     background: #EBECE4;
     display: block;
     width: 100%;
-    height: 100%;
-    min-height: 200px;
   }
 
   .search-grid_item {
@@ -209,38 +212,22 @@ export default {
   }
 
   .search-grid_item {
+    width: 100%;
     position: relative;
     display: block;
     float: left;
     flex: 0 0 auto;
     flex-grow: 1;
-    margin: 15px 15px 0 0;
     cursor: pointer;
   }
 
   .search-grid_image {
     margin: auto;
     display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
   }
 
-  @media screen and (min-width: 769px) {
-    .search-grid_item {
-      width: calc(100%/3.5);
-      height: calc(100%/3.5);
-      max-height: 200px;
-      overflow: hidden;
-    }
-  }
-
-  @media screen and (min-width: 601px) and (max-width: 768px) {
-    .search-grid_item {
-      width: calc(100%/2);
-      height: calc(100%/2);
-    }
+  .search-grid_image__fill {
+    width: 100%;
   }
 
   @media screen and (max-width: 600px) {
@@ -248,11 +235,6 @@ export default {
       position: absolute;
       opacity: 1;
       bottom: 0;
-    }
-
-    .search-grid_item {
-      width: 100%;
-      height: 100%;
     }
 
     .search-grid_overlay-add {
