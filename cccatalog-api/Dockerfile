@@ -6,4 +6,5 @@ RUN mkdir /cccatalog-api
 RUN mkdir -p /var/log/cccatalog-api/cccatalog-api.log
 WORKDIR /cccatalog-api
 ADD requirements.txt /cccatalog-api/
+ADD cccatalog/api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansPro-Bold.ttf
 RUN pip install -r requirements.txt
