@@ -32,6 +32,10 @@ function setCurrentPage(page) {
 const GoogleAnalytics = () => {
   const enabled = isTrackingEnabled();
   return {
+    /**
+     * uses navigator.sendBeacon to send events even if the page is being unloaded
+     * docs at: https://developers.google.com/analytics/devguides/collection/analyticsjs/sending-hits
+     */
     setTransportBeacon() {
       if (enabled) {
         set('transport', 'beacon');
