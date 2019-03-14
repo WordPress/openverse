@@ -32,6 +32,11 @@ function setCurrentPage(page) {
 const GoogleAnalytics = () => {
   const enabled = isTrackingEnabled();
   return {
+    setTransportBeacon() {
+      if (enabled) {
+        set('transport', 'beacon');
+      }
+    },
     anonymizeIpAddress() {
       if (enabled) {
         set('anonymizeIp', true);
