@@ -18,6 +18,7 @@ from cccatalog.api.utils.watermark import watermark
 from django.http.response import HttpResponse
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
+import piexif
 
 log = logging.getLogger(__name__)
 
@@ -230,7 +231,8 @@ class Watermark(GenericAPIView):
             'license': image_record.license,
             'license_version': image_record.license_version
         }
-        watermarked = watermark(image_url, image_info)
+        watermarked, exif = watermark(image_url, image_info)
+        exif_bytes = piexif.dump(exif)
         response = HttpResponse(content_type='image/jpeg')
-        watermarked.save(response, 'jpeg')
+        watermarked.save(response, 'jpeg', exif=exif_bytes)
         return response
