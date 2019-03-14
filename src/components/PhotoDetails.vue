@@ -75,19 +75,36 @@
               Actions
             </h2>
           </header>
+          <div class="large-12 cell">
+              <fieldset class="large-7 cell">
+                <div>
+                  <input
+                    id="watermark"
+                    type="checkbox"
+                    v-model="shouldWatermark" />
+                  <label for="watermark">
+                    Incude attribution in frame
+                  </label>
+                </div>
+                <div>
+                  <input id="embedAttribution"
+                          type="checkbox"
+                          v-model="shouldEmbedMetadata" />
+                  <label for="embedAttribution">
+                    Embed attribution metadata
+                  </label>
+                </div>
+              </fieldset>
+              <button class="button success download-watermark"
+                      data-type="text"
+                      @click="onDownloadWatermark(image, $event)">
+                  Download Image
+              </button>
+            </div>
           <div>
             <a class="add-to-list"
               @click.stop="onAddToImageList(image, $event)">
               Add to list
-            </a>
-          </div>
-          <div>
-            <a class="download-watermark"
-              @click="onDownloadWatermark(image, $event)"
-              :href="watermarkURL"
-              target="_blank"
-              rel="noopener noreferrer">
-              Download
             </a>
           </div>
         </section>
@@ -109,6 +126,10 @@ export default {
     CopyButton,
     LicenseIcons,
   },
+  data: () => ({
+    shouldEmbedMetadata: false,
+    shouldWatermark: false,
+  }),
   computed: {
     ccLicenseURL() {
       if (!this.image) {
@@ -140,7 +161,7 @@ export default {
       return license === 'cc0' ? `${license} ${version}` : `CC ${license} ${version}`;
     },
     watermarkURL() {
-      return `${process.env.API_URL}/watermark/${this.image.id}`;
+      return `${process.env.API_URL}/watermark/${this.image.id}?embed_metadata=${this.shouldEmbedMetadata}&watermark=${this.shouldWatermark}`;
     },
     textAttribution() {
       return () => {
@@ -182,6 +203,7 @@ export default {
     },
     onDownloadWatermark(image) {
       this.$store.dispatch(DOWNLOAD_WATERMARK, { imageId: image.id });
+      window.location = this.watermarkURL;
     },
   },
   watch: {
