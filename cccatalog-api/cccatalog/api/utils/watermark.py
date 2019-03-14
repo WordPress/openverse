@@ -52,7 +52,7 @@ def _full_license(image_info):
 def _print_attribution_for_image_on_frame(image_info, image, frame):
     vertical_margin_to_image = 16  # vertical margin between image and text
 
-    font = ImageFont.truetype('DejaVuSans-Bold.ttf', size=18)
+    font = ImageFont.truetype('SourceSansPro-Bold.ttf', size=18)
     draw = ImageDraw.Draw(frame)
     text_position_x = int(horizontal_margin / 2)
     text_position_y = \
