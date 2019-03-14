@@ -22,7 +22,7 @@
         </div>
         <div class="medium-3 large-3 medium-offset-1 large-offset-1 cell">
           <div class="column footer_contact">
-            <h6><a href="/about/contact">We'd love to hear from you!</a></h6>
+            <h6><a href="https://creativecommons.org/about/contact/">We'd love to hear from you!</a></h6>
               <address>
                 Creative Commons<br>
                 PO Box 1866, Mountain View, CA 94042
