@@ -1,5 +1,6 @@
 import PhotoDetails from '@/components/PhotoDetails';
 import render from '../../test-utils/render';
+import { wrap } from 'module';
 
 describe('PhotoDetails', () => {
   let options = null;
@@ -69,7 +70,31 @@ describe('PhotoDetails', () => {
 
   it('should generate watermark url', () => {
     const wrapper = render(PhotoDetails, options);
-    expect(wrapper.vm.watermarkURL).toBe(`https://foo.bar/watermark/${props.image.id}`);
+    expect(wrapper.vm.watermarkURL).toContain(`https://foo.bar/watermark/${props.image.id}`);
+  });
+
+  it('should generate watermark url with embed_metadata set to true', () => {
+    const wrapper = render(PhotoDetails, options);
+    wrapper.setData({ shouldEmbedMetadata: true });
+    expect(wrapper.vm.watermarkURL).toContain('embed_metadata=true');
+  });
+
+  it('should generate watermark url with embed_metadata set to false', () => {
+    const wrapper = render(PhotoDetails, options);
+    wrapper.setData({ shouldEmbedMetadata: false });
+    expect(wrapper.vm.watermarkURL).toContain('embed_metadata=false');
+  });
+
+  it('should generate watermark url with watermark set to true', () => {
+    const wrapper = render(PhotoDetails, options);
+    wrapper.setData({ shouldWatermark: true });
+    expect(wrapper.vm.watermarkURL).toContain('watermark=true');
+  });
+
+  it('should generate watermark url with watermark set to false', () => {
+    const wrapper = render(PhotoDetails, options);
+    wrapper.setData({ shouldWatermark: false });
+    expect(wrapper.vm.watermarkURL).toContain('watermark=false');
   });
 
   it('should generate text attribution', () => {
