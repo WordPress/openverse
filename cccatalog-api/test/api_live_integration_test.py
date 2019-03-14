@@ -3,8 +3,6 @@ import json
 import pytest
 import os
 import uuid
-import io
-import exifread
 from cccatalog.api.licenses import LICENSE_GROUPS
 from cccatalog.api.models import Image
 from cccatalog.api.utils.watermark import watermark
