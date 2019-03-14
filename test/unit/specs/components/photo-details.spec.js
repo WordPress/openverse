@@ -1,6 +1,5 @@
 import PhotoDetails from '@/components/PhotoDetails';
 import render from '../../test-utils/render';
-import { wrap } from 'module';
 
 describe('PhotoDetails', () => {
   let options = null;
