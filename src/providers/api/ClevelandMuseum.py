@@ -9,11 +9,6 @@ Notes:                  http://openaccess-api.clevelandart.org/
                         No rate limit specified.
 """
 
-import logging
-import time
-import sys
-import os
-import random
 from modules.etlMods import *
 
 LIMIT       = 1000
@@ -99,7 +94,7 @@ def getMetaData(_data):
     metaData['credit_line']      = sanitizeString(_data.get('creditline', ''))
     metaData['medium']           = sanitizeString(_data.get('technique', ''))
     metaData['classification']   = sanitizeString(_data.get('type', ''))
-    metaData['culture']          = sanitizeString(','.join(_data.get('culture', [])))
+    metaData['culture']          = sanitizeString(','.join(list(filter(None, _data.get('culture', '')))))
     metaData['tombstone']        = sanitizeString(_data.get('tombstone', ''))
 
     #No description of artwork. The digital_description and wall_description are null.
