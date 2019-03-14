@@ -9,13 +9,8 @@ Notes:                  https://metmuseum.github.io/
                         No rate limit specified.
 """
 
-import logging
-import sys
-import random
-import argparse
-import os
-from datetime import datetime, timedelta
 from modules.etlMods import *
+
 
 DELAY   = 1.0 #time delay (in seconds)
 FILE    = 'metmuseum_{}.tsv'.format(int(time.time()))
