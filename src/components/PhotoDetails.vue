@@ -229,16 +229,5 @@ export default {
       display: inline-block;
     }
   }
-  .download-watermark {
-    &:before {
-      height: 15px;
-      width: 13px;
-      content: '';
-      background: url('../assets/download-icon.svg') no-repeat;
-      opacity: .5;
-      display: inline-block;
-      background-size: 13px 15px;
-    }
-  }
 </style>
 
