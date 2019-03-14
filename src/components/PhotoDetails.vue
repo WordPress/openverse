@@ -229,5 +229,10 @@ export default {
       display: inline-block;
     }
   }
+
+  .download-watermark {
+    background: #01a635;
+    color: #fff;
+  }
 </style>
 
