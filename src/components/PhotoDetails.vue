@@ -24,7 +24,8 @@
           <li>
             <h3>Creator</h3>
             <span v-if="image.creator">
-              <a :href="image.creator_url">{{ image.creator }}</a>
+              <a v-if="image.creator_url" :href="image.creator_url">{{ image.creator }}</a>
+              <span v-else>{{ image.creator }}</span>
             </span>
             <span v-else>
               Not Available
@@ -59,7 +60,8 @@
             <a :href="image.foreign_landing_url">"{{ image.title }}"</a>
             <span v-if="image.creator">
               by
-              <a :href="image.creator_url">{{ image.creator }}</a>
+              <a v-if="image.creator_url" :href="image.creator_url">{{ image.creator }}</a>
+              <span v-else>{{ image.creator }}</span>
             </span>
             is licensed under
             <a class="photo_license" :href="ccLicenseURL">
@@ -88,6 +90,7 @@
 import CopyButton from '@/components/CopyButton';
 import LicenseIcons from '@/components/LicenseIcons';
 import { SELECT_IMAGE_FOR_LIST } from '@/store/mutation-types';
+import decodeData from '@/utils/decodeData';
 
 export default {
   name: 'photo-details',
@@ -139,7 +142,17 @@ export default {
     HTMLAttribution() {
       return () => {
         const image = this.image;
-        const byCreator = image.creator ? `by <a href="${image.creator_url}">${image.creator}</a>` : ' ';
+
+        let byCreator;
+        if (image.creator) {
+          if (image.creator_url) {
+            byCreator = `by <a href="${image.creator_url}">${image.creator}</a>`;
+          } else {
+            byCreator = `by ${image.creator}`;
+          }
+        } else {
+          byCreator = ' ';
+        }
 
         return `<a href="${image.foreign_landing_url}">"${image.title}"</a>
                 ${byCreator}
@@ -163,6 +176,13 @@ export default {
       imageWithDimensions.pageY = event.pageY;
 
       this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
+    },
+  },
+  watch: {
+    image() {
+      const image = this.image;
+      image.creator = decodeData(image.creator);
+      image.title = decodeData(image.title);
     },
   },
 };
