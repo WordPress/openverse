@@ -76,6 +76,22 @@ describe('PhotoDetails', () => {
     expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${wrapper.vm.ccLicenseURL}">`);
   });
 
+  it('should generate html attribution without creator URL', () => {
+    options.propsData.image.creator_url = null;
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.vm.HTMLAttribution()).toContain(`by ${props.image.creator}`);
+    expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${props.image.foreign_landing_url}">"${props.image.title}"</a>`);
+    expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${wrapper.vm.ccLicenseURL}">`);
+  });
+
+  it('should generate html attribution without creator URL', () => {
+    options.propsData.image.creator = null;
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.vm.HTMLAttribution()).not.toContain('by');
+    expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${props.image.foreign_landing_url}">"${props.image.title}"</a>`);
+    expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${wrapper.vm.ccLicenseURL}">`);
+  });
+
   it('renders link back to search results if enabled', () => {
     const wrapper = render(PhotoDetails, {
       propsData: {
