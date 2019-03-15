@@ -6,6 +6,7 @@ from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils.view_count import track_model_views
+from cccatalog.api.utils import ccrel
 from rest_framework.reverse import reverse
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
@@ -19,6 +20,8 @@ from django.http.response import HttpResponse
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
 import piexif
+import io
+import libxmp
 
 log = logging.getLogger(__name__)
 
@@ -231,8 +234,27 @@ class Watermark(GenericAPIView):
             'license': image_record.license,
             'license_version': image_record.license_version
         }
+        # Create the actual watermarked image.
         watermarked, exif = watermark(image_url, image_info)
+        # Re-insert EXIF metadata.
         exif_bytes = piexif.dump(exif)
-        response = HttpResponse(content_type='image/jpeg')
-        watermarked.save(response, 'jpeg', exif=exif_bytes)
-        return response
+        img_bytes = io.BytesIO()
+        watermarked.save(img_bytes, 'jpeg', exif=exif_bytes)
+        # Embed ccREL metadata with XMP.
+        work_properties = {
+            'creator': image_record.creator,
+            'license_url': image_record.license_url,
+            'attribution': image_record.attribution,
+            'work_landing_page': image_record.foreign_landing_url,
+        }
+        try:
+            with_xmp = ccrel.embed_xmp_bytes(img_bytes, work_properties)
+            return HttpResponse(with_xmp.getvalue(), content_type='image/jpeg')
+        except (libxmp.XMPError, AttributeError):
+            log.error(
+                'Failed to add XMP metadata to {}'
+                .format(image_record.identifier)
+            )
+            response = HttpResponse(content_type='image/jpeg')
+            watermarked.save(response, 'jpeg', exif=exif_bytes)
+            return response
