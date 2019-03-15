@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { SET_QUERY } from '@/store/mutation-types';
+
 export default {
   name: 'photo-tags',
   props: ['tags'],
@@ -40,8 +42,7 @@ export default {
       return provider === 'clarifai';
     },
     searchByTagName(query) {
-      this.$router.push({ name: 'browse-page', query: { q: query } });
-      this.$router.go(0);
+      this.$store.commit(SET_QUERY, { query: { q: query }, shouldNavigate: true });
     },
     getValidTags() {
       return this.$props.tags.filter(tag => !!tag.name);
@@ -53,4 +54,3 @@ export default {
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
 </style>
-
