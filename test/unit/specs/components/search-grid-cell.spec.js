@@ -14,6 +14,6 @@ describe('SearchGridCell', () => {
       },
     };
     const wrapper = render(SearchGridCell, { propsData: props });
-    expect(wrapper.find('figure').vm).toBeDefined();
+    expect(wrapper.find('div').find('figure').element).toBeDefined();
   });
 });
