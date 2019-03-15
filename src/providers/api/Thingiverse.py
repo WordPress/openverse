@@ -222,13 +222,13 @@ def main():
 
 
     parser  = argparse.ArgumentParser(description='Thingiverse API Job', add_help=True)
-    parser.add_argument('--date', choices=['default', 'newest'],
+    parser.add_argument('--mode', choices=['default', 'newest'],
             help='Identify all CC0 3D models from the previous day [default] or the current date [newest].')
 
     args = parser.parse_args()
-    if args.date:
+    if args.mode:
 
-        if str(args.date) == 'newest':
+        if str(args.mode) == 'newest':
             param = datetime.strftime(datetime.now(), '%Y-%m-%d')
         else:
             param = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')
@@ -238,7 +238,6 @@ def main():
         logging.info('Processing {}'.format(mode))
 
         if param:
-            #param = '2019-03-10'
             execJob(param)
 
     logging.info('Terminated!')
