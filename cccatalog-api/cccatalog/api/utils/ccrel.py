@@ -61,10 +61,8 @@ def embed_xmp_bytes(image: io.BytesIO, work_properties):
         xmp.set_property(XMP_NS_XMP_Rights, 'UsageTerms', usage)
 
         # Serialize back to io.BytesIO.
-        print(xmp)
         xmpfile.put_xmp(xmp)
         xmpfile.close_file()
-        print(xmp_temp.name)
 
     with open(filename, 'r+b') as xmpfile:
         file_with_xmp = io.BytesIO(xmpfile.read())
