@@ -150,8 +150,7 @@ export default {
           } else {
             byCreator = `by ${image.creator}`;
           }
-        } 
-        else {
+        } else {
           byCreator = ' ';
         }
 
