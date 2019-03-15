@@ -10,19 +10,13 @@ Notes:                  https://www.thingiverse.com/developers/getting-started
                         Rate limiting is 300 per 5 minute window.
 """
 
-import logging
-import json
-import requests
-import time
-import sys
-import os
-import random
 from modules.etlMods import *
 
-MAX_THINGS  = 100
+
+MAX_THINGS  = 30
 LICENSE     = 'pd0'
 TOKEN       = os.environ['THINGIVERSE_TOKEN']
-DELAY       = 10.0 #seconds
+DELAY       = 5.0 #seconds
 FILE        = 'thingiverse_{}.tsv'.format(int(time.time()))
 
 
@@ -32,8 +26,7 @@ logging.basicConfig(format='%(asctime)s: [%(levelname)s - Thingiverse API] =====
 
 def requestBatchThings(_page):
 
-    url = 'https://api.thingiverse.com/search/{3}?access_token={1}&per_page={2}&page={0}'.format(_page, TOKEN, MAX_THINGS, LICENSE)
-    logging.info('Processing URL: {}'.format(url))
+    url = 'https://api.thingiverse.com/newest?access_token={1}&per_page={2}&page={0}'.format(_page, TOKEN, MAX_THINGS)
 
     result = requestContent(url)
     if result:
@@ -42,7 +35,7 @@ def requestBatchThings(_page):
     return None
 
 
-def getMetaData(_thing):
+def getMetaData(_thing, _date):
 
     url         = 'https://api.thingiverse.com/things/{0}?access_token={1}'.format(_thing, TOKEN)
     licenseText = 'Creative Commons - Public Domain Dedication'
@@ -58,14 +51,23 @@ def getMetaData(_thing):
 
     result = requestContent(url)
     if result:
+
+        #verify the date
+        modDate   = result.get('modified', '')
+        if modDate:
+            modDate = modDate.split('T')[0].strip()
+            if datetime.strptime(modDate, '%Y-%m-%d') < datetime.strptime(_date, '%Y-%m-%d'):
+                return '-1'
+
         startTime = time.time()
 
         #validate CC0 license
         if not (('license' in result) and (licenseText.lower() in result['license'].lower())):
             logging.warning('License not detected => https://www.thingiverse.com/thing:{}'.format(_thing))
+            delayProcessing(startTime, DELAY)
             return None
         else:
-            license = 'cc0'
+            license = 'CC0'
             version = '1.0'
 
 
@@ -116,6 +118,11 @@ def getMetaData(_thing):
         logging.info('Requesting images for thing: {}'.format(_thing))
 
         imageList = requestContent(url.replace(_thing, '{}/files'.format(_thing)))
+        if imageList is None:
+            logging.warning('Image Not Detected!')
+            delayProcessing(startTime, DELAY)
+            return None
+
         for img in imageList:
             metaData    = {}
             thumbnail   = None
@@ -177,24 +184,63 @@ def getMetaData(_thing):
 
         return len(extracted)
 
-def main():
-    logging.info('Begin: Thingiverse API requests')
-
+def execJob(_date):
     page        = 1
-    totalPages  = 100
     result      = 0
+    isValid     = True
+    tmpCtr      = 0
 
-    for i in range(totalPages): #temporary control flow
+    while isValid: #temporary control flow
 
         batch = requestBatchThings(page)
-        batch = list(batch)
 
         if batch:
-            result += sum(list(filter(None, list(map(lambda thing: getMetaData(str(thing)), batch)))))
+            batch   = list(batch)
+            tmp     = list(filter(None, list(map(lambda thing: getMetaData(str(thing), _date), batch))))
+
+            if '-1' in tmp:
+                isValid = False
+                tmp     = tmp.remove('-1')
+
+            if tmp:
+                tmpCtr  = sum(tmp)
+
+            result += tmpCtr
+            tmpCtr  = 0
 
         page += 1
 
     logging.info('Total CC0 3D Models: {}'.format(result))
+
+
+
+
+def main():
+    logging.info('Begin: Thingiverse API requests')
+    param   = None
+    mode    = 'date: '
+
+
+    parser  = argparse.ArgumentParser(description='Thingiverse API Job', add_help=True)
+    parser.add_argument('--date', choices=['default', 'newest'],
+            help='Identify all CC0 3D models from the previous day [default] or the current date [newest].')
+
+    args = parser.parse_args()
+    if args.date:
+
+        if str(args.date) == 'newest':
+            param = datetime.strftime(datetime.now(), '%Y-%m-%d')
+        else:
+            param = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')
+
+
+        mode += param if param is not None else ''
+        logging.info('Processing {}'.format(mode))
+
+        if param:
+            #param = '2019-03-10'
+            execJob(param)
+
     logging.info('Terminated!')
 
 
