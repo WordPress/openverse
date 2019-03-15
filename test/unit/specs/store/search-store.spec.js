@@ -212,7 +212,7 @@ describe('Search Store', () => {
       const params = { query: { q: 'foo', lt: 'bar' }, shouldNavigate: true };
       mutations[SET_QUERY](state, params);
 
-      expect(routePushMock).toBeCalledWith({ path: 'search', query: params.query });
+      expect(routePushMock).toBeCalledWith({ path: '/search', query: params.query });
     });
   });
 
