@@ -16,7 +16,7 @@ from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
 from cccatalog.api.utils.view_count import _get_user_ip
 from urllib.parse import urlparse
 from cccatalog.api.utils.watermark import watermark
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, FileResponse
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
 import piexif
@@ -249,8 +249,9 @@ class Watermark(GenericAPIView):
         }
         try:
             with_xmp = ccrel.embed_xmp_bytes(img_bytes, work_properties)
-            return HttpResponse(with_xmp.getvalue(), content_type='image/jpeg')
+            return FileResponse(with_xmp, content_type='image/jpeg')
         except (libxmp.XMPError, AttributeError):
+            # Just send the EXIF-ified file if libxmp fails to add metadata.
             log.error(
                 'Failed to add XMP metadata to {}'
                 .format(image_record.identifier)

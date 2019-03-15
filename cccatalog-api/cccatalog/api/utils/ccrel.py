@@ -2,6 +2,8 @@ from tempfile import NamedTemporaryFile
 from libxmp.consts import XMP_NS_CC, XMP_NS_XMP_Rights
 import libxmp
 import io
+import os
+import uuid
 
 """
 Tools for embedding Creative Commons Rights Expression Language (ccREL) data
@@ -32,8 +34,10 @@ def embed_xmp_bytes(image: io.BytesIO, work_properties):
     # `io.BytesIO` object, we have to use a temporary file and then convert it
     # back.
     # https://github.com/python-xmp-toolkit/python-xmp-toolkit/issues/46
-    with NamedTemporaryFile() as xmp_temp:
+    filename = '/tmp/{}'.format(uuid.uuid4())
+    with open(filename, 'w+b') as xmp_temp:
         xmp_temp.write(image.getvalue())
+        xmp_temp.flush()
         xmpfile = libxmp.XMPFiles(file_path=xmp_temp.name, open_forupdate=True)
 
         # Set CC rights.
@@ -57,7 +61,12 @@ def embed_xmp_bytes(image: io.BytesIO, work_properties):
         xmp.set_property(XMP_NS_XMP_Rights, 'UsageTerms', usage)
 
         # Serialize back to io.BytesIO.
+        print(xmp)
         xmpfile.put_xmp(xmp)
         xmpfile.close_file()
-        xmp_temp.seek(0)
-        return io.BytesIO(xmp_temp.read())
+        print(xmp_temp.name)
+
+    with open(filename, 'r+b') as xmpfile:
+        file_with_xmp = io.BytesIO(xmpfile.read())
+    os.remove(filename)
+    return file_with_xmp
