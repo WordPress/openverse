@@ -1,5 +1,4 @@
-from tempfile import NamedTemporaryFile
-from libxmp.consts import XMP_NS_CC, XMP_NS_XMP_Rights
+from libxmp.consts import XMP_NS_CC, XMP_NS_XMP_Rights, XMP_NS_XMP
 import libxmp
 import io
 import os
@@ -7,7 +6,7 @@ import uuid
 
 """
 Tools for embedding Creative Commons Rights Expression Language (ccREL) data
-into files using Extensible Media Platform (XMP).
+into files using Extensible Metadata Platform (XMP).
 
 This implementation is specifically for embedding ccREL inside of images, but it
 could be extended to handle other types of content.
@@ -54,13 +53,18 @@ def embed_xmp_bytes(image: io.BytesIO, work_properties):
                 'attributionURL',
                 work_properties['work_landing_page']
             )
+        if 'identifier' in work_properties:
+            xmp.register_namespace(XMP_NS_XMP, 'xmp')
+            xmp.set_property(
+                XMP_NS_XMP,
+                'Identifier',
+                work_properties['identifier']
+            )
         # Set generic XMP rights.
         xmp.register_namespace(XMP_NS_XMP_Rights, 'xmpRights')
         xmp.set_property_bool(XMP_NS_XMP_Rights, 'Marked', True)
         usage = work_properties['attribution']
         xmp.set_property(XMP_NS_XMP_Rights, 'UsageTerms', usage)
-
-        # Serialize back to io.BytesIO.
         xmpfile.put_xmp(xmp)
         xmpfile.close_file()
 

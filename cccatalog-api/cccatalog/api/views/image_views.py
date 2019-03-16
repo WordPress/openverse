@@ -246,16 +246,18 @@ class Watermark(GenericAPIView):
             'license_url': image_record.license_url,
             'attribution': image_record.attribution,
             'work_landing_page': image_record.foreign_landing_url,
+            'identifier': str(image_record.identifier)
         }
         try:
             with_xmp = ccrel.embed_xmp_bytes(img_bytes, work_properties)
             return FileResponse(with_xmp, content_type='image/jpeg')
-        except (libxmp.XMPError, AttributeError):
+        except (libxmp.XMPError, AttributeError) as e:
             # Just send the EXIF-ified file if libxmp fails to add metadata.
             log.error(
                 'Failed to add XMP metadata to {}'
                 .format(image_record.identifier)
             )
+            log.error(e)
             response = HttpResponse(content_type='image/jpeg')
             watermarked.save(response, 'jpeg', exif=exif_bytes)
             return response
