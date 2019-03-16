@@ -18,7 +18,7 @@ def _open_image(url):
         if 'exif' in img.info:
             exif = piexif.load(img.info['exif'])
         else:
-            exif = {}
+            exif = None
         return img, exif
     except requests.exceptions.RequestException:
         print('Error loading image data')
