@@ -5,6 +5,7 @@ import os
 import uuid
 from cccatalog.api.licenses import LICENSE_GROUPS
 from cccatalog.api.models import Image
+from cccatalog.api.utils.watermark import watermark
 
 """
 End-to-end API tests. Can be used to verify a live deployment is functioning as
@@ -103,6 +104,7 @@ def test_stats():
     assert provider_count > 0
 
 
+@pytest.mark.skip(reason="Disabled feature")
 @pytest.fixture
 def test_list_create(search_fixture):
     payload = {
@@ -115,6 +117,7 @@ def test_list_create(search_fixture):
     return parsed_response
 
 
+@pytest.mark.skip(reason="Disabled feature")
 def test_list_detail(test_list_create):
     list_slug = test_list_create['url'].split('/')[-1]
     response = requests.get(
@@ -123,6 +126,7 @@ def test_list_detail(test_list_create):
     assert response.status_code == 200
 
 
+@pytest.mark.skip(reason="Disabled feature")
 def test_list_delete(test_list_create):
     list_slug = test_list_create['url'].split('/')[-1]
     token = test_list_create['auth']
@@ -226,6 +230,24 @@ def test_oauth2_token_exchange(test_oauth2_registration):
         ).text
     )
     assert 'access_token' in response
+
+
+def test_watermark_preserves_exif():
+    img_with_exif = 'https://raw.githubusercontent.com/ianare/exif-samples/' \
+                    'master/jpg/Canon_PowerShot_S40.jpg'
+    info = {
+        'title': 'test',
+        'creator': 'test',
+        'license': 'test',
+        'license_version': 'test'
+    }
+    _, exif = watermark(image_url=img_with_exif, info=info)
+    assert exif is not None
+
+    img_no_exif = 'https://creativecommons.org/wp-content/uploads/' \
+                  '2019/03/9467312978_64cd5d2f3b_z.jpg'
+    _, no_exif = watermark(image_url=img_no_exif, info=info)
+    assert no_exif is None
 
 
 def test_attribution():

@@ -1,4 +1,5 @@
 import requests
+import piexif
 from io import BytesIO
 from PIL import Image, ImageFont, ImageDraw
 
@@ -12,7 +13,11 @@ def _open_image(url):
     try:
         response = requests.get(url)
         img = Image.open(BytesIO(response.content))
-        return img
+        if 'exif' in img.info:
+            exif = piexif.load(img.info['exif'])
+        else:
+            exif = None
+        return img, exif
     except requests.exceptions.RequestException:
         print('Error loading image data')
 
@@ -52,7 +57,12 @@ def _full_license(image_info):
 def _print_attribution_for_image_on_frame(image_info, image, frame):
     vertical_margin_to_image = 16  # vertical margin between image and text
 
-    font = ImageFont.truetype('DejaVuSans-Bold.ttf', size=18)
+    try:
+        font = ImageFont.truetype('SourceSansPro-Bold.ttf', size=18)
+    except OSError:
+        # If we can't find the font, just fall back to the default.
+        # This path should only be hit in CI tests.
+        font = None
     draw = ImageDraw.Draw(frame)
     text_position_x = int(horizontal_margin / 2)
     text_position_y = \
@@ -72,14 +82,14 @@ def _print_attribution_for_image_on_frame(image_info, image, frame):
 
 def watermark(image_url, info):
     """
-    Returns a PIL frame with the watermarked image.
+    Returns a PIL Image with a watermark and embedded metadata.
 
     :param image_url: The URL of the image.
     :param info: A dictionary with keys title, creator, license, and
     license_version
-    :returns: A PIL frame
+    :returns: A PIL Image and its EXIF data, if included.
     """
-    img = _open_image(image_url)
+    img, exif = _open_image(image_url)
     frame = _place_image_inside_frame(img)
     _print_attribution_for_image_on_frame(info, img, frame)
-    return frame
+    return frame, exif
