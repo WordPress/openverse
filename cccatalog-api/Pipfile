@@ -34,3 +34,4 @@ djangorestframework = "*"
 drf-yasg = "*"
 elasticsearch-dsl = "*"
 ipaddress = {version = "*",python_version = "<=2.7"}
+piexif = "*"
