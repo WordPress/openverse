@@ -77,39 +77,42 @@
               Actions
             </h2>
           </header>
-          <div class="large-12 cell">
-              <fieldset class="large-7 cell">
-                <div>
-                  <input
-                    id="watermark"
-                    type="checkbox"
-                    v-model="shouldWatermark" />
-                  <label for="watermark">
-                    Incude attribution in frame
-                  </label>
-                  <span data-tooltip class="top"
-                        tabindex="1"
-                        title="Wrap image in a white frame and include attribution text">
-                    <img class='help-icon'
-                         src='../assets/help_icon.svg'
-                         alt='Wrap image in a white frame and include attribution text' />
-                  </span>
-                </div>
-                <div>
-                  <input id="embedAttribution"
-                          type="checkbox"
-                          v-model="shouldEmbedMetadata" />
-                  <label for="embedAttribution">
-                    Embed attribution metadata
-                  </label>
-                </div>
-              </fieldset>
-              <button class="button success download-watermark"
-                      data-type="text"
-                      @click="onDownloadWatermark(image, $event)">
-                  Download Image
-              </button>
-            </div>
+          <div v-if="waterMarkEnabled" class="large-12 cell">
+            <fieldset class="large-7 cell">
+              <div>
+                <input
+                  id="watermark"
+                  type="checkbox"
+                  v-model="shouldWatermark" />
+                <label for="watermark">
+                  Incude attribution in frame
+                </label>
+                <span title="Wrap image in a white frame and include attribution text">
+                  <img class='help-icon'
+                        src='../assets/help_icon.svg'
+                        alt='Wrap image in a white frame and include attribution text' />
+                </span>
+              </div>
+              <div>
+                <input id="embedAttribution"
+                        type="checkbox"
+                        v-model="shouldEmbedMetadata" />
+                <label for="embedAttribution">
+                  Embed attribution metadata
+                </label>
+                <span title="Embed attribution in an EXIF metadata attribute in the image file">
+                  <img class='help-icon'
+                        src='../assets/help_icon.svg'
+                        alt='Embed attribution in an EXIF metadata attribute in the image file' />
+                </span>
+              </div>
+            </fieldset>
+            <button class="button success download-watermark"
+                    data-type="text"
+                    @click="onDownloadWatermark(image, $event)">
+                Download Image
+            </button>
+          </div>
           <div>
             <a class="add-to-list"
               @click.stop="onAddToImageList(image, $event)">
@@ -124,9 +127,11 @@
 <script>
 import CopyButton from '@/components/CopyButton';
 import LicenseIcons from '@/components/LicenseIcons';
+import decodeData from '@/utils/decodeData';
+import featureFlags from '@/featureFlags';
 import { SELECT_IMAGE_FOR_LIST } from '@/store/mutation-types';
 import { DOWNLOAD_WATERMARK } from '@/store/action-types';
-import decodeData from '@/utils/decodeData';
+
 
 export default {
   name: 'photo-details',
@@ -138,6 +143,7 @@ export default {
   data: () => ({
     shouldEmbedMetadata: false,
     shouldWatermark: false,
+    waterMarkEnabled: featureFlags.watermark,
   }),
   computed: {
     ccLicenseURL() {
@@ -260,6 +266,10 @@ export default {
   .download-watermark {
     background: #01a635;
     color: #fff;
+  }
+
+  label {
+    margin-right: 8px;
   }
 
   .help-icon {
