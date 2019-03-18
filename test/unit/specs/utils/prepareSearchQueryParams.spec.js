@@ -51,5 +51,4 @@ describe('prepareSearchQueryParams', () => {
     const result = prepareSearchQueryParams(params);
     expect(result.q).toBe('foo');
   });
-
 });
