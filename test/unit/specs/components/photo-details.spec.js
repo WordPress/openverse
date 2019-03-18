@@ -19,13 +19,14 @@ describe('PhotoDetails', () => {
         creator: 'John',
         creator_url: 'http://creator.com',
       },
+      watermarkEnabled: true,
     };
 
     options = {
       propsData: props,
     };
 
-    process.env.API_URL = 'https://foo.bar';
+    process.env.API_URL = 'https://watermark.test';
   });
 
   it('should render correct contents', () => {
@@ -69,7 +70,7 @@ describe('PhotoDetails', () => {
 
   it('should generate watermark url', () => {
     const wrapper = render(PhotoDetails, options);
-    expect(wrapper.vm.watermarkURL).toContain(`https://foo.bar/watermark/${props.image.id}`);
+    expect(wrapper.vm.watermarkURL).toContain(`https://watermark.test/watermark/${props.image.id}`);
   });
 
   it('should generate watermark url with embed_metadata set to true', () => {

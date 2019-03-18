@@ -9,6 +9,7 @@
                    :query="query"
                    :imageWidth="imageWidth"
                    :imageHeight="imageHeight"
+                   :watermarkEnabled="watermarkEnabled"
                    @onImageLoaded="onImageLoaded" />
     <share-list :shouldDisappearOnScroll="false"></share-list>
     <photo-tags :tags="tags" />
@@ -28,6 +29,7 @@ import RelatedImages from '@/components/RelatedImages';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 import ShareList from '@/components/ShareList';
+import featureFlags from '@/featureFlags';
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
 import { SET_IMAGE } from '@/store/mutation-types';
 
@@ -52,6 +54,7 @@ const PhotoDetailPage = {
     shouldShowBreadcrumb: false,
     imageWidth: 0,
     imageHeight: 0,
+    watermarkEnabled: featureFlags.watermark,
   }),
   computed: {
     filter() {

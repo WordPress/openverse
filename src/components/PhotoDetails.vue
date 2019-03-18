@@ -77,7 +77,7 @@
               Actions
             </h2>
           </header>
-          <div v-if="waterMarkEnabled" class="large-12 cell">
+          <div v-if="watermarkEnabled" class="large-12 cell">
             <fieldset class="large-7 cell">
               <div>
                 <input
@@ -128,14 +128,13 @@
 import CopyButton from '@/components/CopyButton';
 import LicenseIcons from '@/components/LicenseIcons';
 import decodeData from '@/utils/decodeData';
-import featureFlags from '@/featureFlags';
 import { SELECT_IMAGE_FOR_LIST } from '@/store/mutation-types';
 import { DOWNLOAD_WATERMARK } from '@/store/action-types';
 
 
 export default {
   name: 'photo-details',
-  props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight'],
+  props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'watermarkEnabled'],
   components: {
     CopyButton,
     LicenseIcons,
@@ -143,7 +142,6 @@ export default {
   data: () => ({
     shouldEmbedMetadata: false,
     shouldWatermark: false,
-    waterMarkEnabled: featureFlags.watermark,
   }),
   computed: {
     ccLicenseURL() {
