@@ -87,6 +87,13 @@
                   <label for="watermark">
                     Incude attribution in frame
                   </label>
+                  <span data-tooltip class="top"
+                        tabindex="1"
+                        title="Wrap image in a white frame and include attribution text">
+                    <img class='help-icon'
+                         src='../assets/help_icon.svg'
+                         alt='Wrap image in a white frame and include attribution text' />
+                  </span>
                 </div>
                 <div>
                   <input id="embedAttribution"
@@ -216,7 +223,11 @@ export default {
     onDownloadWatermark(image) {
       const shouldEmbedMetadata = this.shouldEmbedMetadata;
       const shouldWatermark = this.shouldWatermark;
-      this.$store.dispatch(DOWNLOAD_WATERMARK, { imageId: image.id, shouldWatermark, shouldEmbedMetadata });
+      this.$store.dispatch(DOWNLOAD_WATERMARK, {
+        imageId: image.id,
+        shouldWatermark,
+        shouldEmbedMetadata,
+      });
       window.location = this.watermarkURL;
     },
   },
@@ -247,6 +258,10 @@ export default {
   .download-watermark {
     background: #01a635;
     color: #fff;
+  }
+
+  .help-icon {
+    height: 24px;
   }
 </style>
 
