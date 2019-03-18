@@ -11,6 +11,7 @@
         </figcaption>
         <figcaption class="search-grid_item-overlay search-grid_item-overlay__bottom">
           <a class="search-grid_overlay-provider"
+             :title="image.title"
              :href="getImageForeignUrl(image)"
              @click.stop="() => false"
              target="new">
@@ -151,6 +152,9 @@ export default {
     left: 10px;
     z-index: 100;
     color: #fff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 
     &:hover {
       text-decoration: underline;
