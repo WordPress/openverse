@@ -50,6 +50,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "cross-spawn": "^5.0.1",
     "css-loader": "^0.28.11",
+    "dotenv-webpack": "^1.7.0",
     "es6-promise": "^4.2.5",
     "eslint": "^4.15.0",
     "eslint-config-airbnb-base": "^11.3.0",
