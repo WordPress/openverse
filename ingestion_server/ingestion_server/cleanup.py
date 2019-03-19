@@ -48,45 +48,58 @@ def clean_data(conn, table):
     # field to its cleanup function.
     log.info('Cleaning up data...')
     start_time = time.time()
+    table_config = _cleanup_config['tables'][table]
 
-    temporary_table = 'temp_import_{}'.format(table)
-    providers = _cleanup_config['tables'][table]['providers'].keys()
-    providers = [str(provider) for provider in providers]
+    # Pull data from selected providers only.
+    providers = list(_cleanup_config['tables'][table]['providers'])
+    provider_equals = "provider = '{}'"
+    all_providers_equal = [provider_equals.format(p) for p in providers]
+    provider_condition = ' OR '.join(all_providers_equal)
+
+    # Pull selected fields.
+    fields = set()
+    for p in providers:
+        _fields = list(table_config['providers'][p]['fields'])
+        for f in _fields:
+            fields.add(f)
+
+    cleanup_query = "SELECT id, provider, {fields} from {table}" \
+                    " WHERE {conditions}".format(
+                        fields=','.join(fields),
+                        table='temp_import_{}'.format(table),
+                        conditions=provider_condition
+    )
+    log.info('Running cleanup of "{}"'.format(cleanup_query))
+    write_cur = conn.cursor(cursor_factory=DictCursor)
+    iter_cur = conn.cursor(cursor_factory=DictCursor)
+    iter_cur.execute(cleanup_query)
+
+    # Clean each field as specified in _cleanup_config.
     cleaned_count = 0
-    for provider in providers:
-        cleanup_field_config = \
-            _cleanup_config['tables'][table]['providers'][provider]['fields']
-        cleanup_fields = list(cleanup_field_config.keys())
-        cleanup_query = "SELECT id, {fields} from {table}" \
-                        " where provider = '{provider}'".format(
-                            fields=','.join(cleanup_fields),
-                            table='temp_import_{}'.format(table),
-                            provider=provider
-        )
-        log.info('Running cleanup "{}"'.format(cleanup_query))
-        write_cur = conn.cursor(cursor_factory=DictCursor)
-        iter_cur = conn.cursor(cursor_factory=DictCursor)
-        iter_cur.execute(cleanup_query)
-        for row in iter_cur:
-            for field in cleanup_fields:
-                row_id = row['id']
-                to_clean = row[field]
-                cleanup_function = cleanup_field_config[field]
-                cleaned = cleanup_function(to_clean)
-                if cleaned:
-                    cleaned_count += 1
-                    update_query = '''
-                        UPDATE {temp_table} SET {field} = '{cleaned}'
-                         WHERE id = {id};
-                    '''.format(
-                        temp_table=temporary_table,
-                        field=field,
-                        cleaned=cleaned,
-                        id=row_id
-                    )
-                    write_cur.execute(update_query)
-        iter_cur.close()
-        write_cur.close()
+    provider_config = table_config['providers']
+    for row in iter_cur:
+        for field in fields:
+            row_id = row['id']
+            provider = row['provider']
+            to_clean = row[field]
+
+            cleanup_function = provider_config[provider]['fields'][field]
+            cleaned = cleanup_function(to_clean)
+            if cleaned:
+                cleaned_count += 1
+                temporary_table = 'temp_import_{}'.format(table)
+                update_query = '''
+                    UPDATE {temp_table} SET {field} = '{cleaned}'
+                     WHERE id = {id};
+                '''.format(
+                    temp_table=temporary_table,
+                    field=field,
+                    cleaned=cleaned,
+                    id=row_id
+                )
+                write_cur.execute(update_query)
+    iter_cur.close()
+    write_cur.close()
 
     end_time = time.time()
     cleanup_time = end_time - start_time
