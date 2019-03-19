@@ -1,7 +1,6 @@
-import render from '../../test-utils/render';
 import NavSection from '@/components/NavSection';
 import { SET_QUERY } from '@/store/mutation-types';
-
+import render from '../../test-utils/render';
 
 describe('NavSection', () => {
   it('should render correct contents', () => {
@@ -10,7 +9,7 @@ describe('NavSection', () => {
   });
 
   it('commits a mutation when the form is submitted', () => {
-    const storeMock = {		
+    const storeMock = {
       dispatch: jest.fn(),
       commit: jest.fn(),
       state: {
