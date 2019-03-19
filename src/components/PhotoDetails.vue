@@ -85,7 +85,7 @@
                   type="checkbox"
                   v-model="shouldWatermark" />
                 <label for="watermark">
-                  Incude attribution in frame
+                  Incude attribution frame
                 </label>
                 <span title="Wrap image in a white frame and include attribution text">
                   <img class='help-icon'
