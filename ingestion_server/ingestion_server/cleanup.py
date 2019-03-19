@@ -28,11 +28,6 @@ _cleanup_config = {
                     'fields': {
                         'url': _cleanup_url
                     }
-                },
-                'behance': {
-                    'fields': {
-                        'url': _cleanup_url
-                    }
                 }
             }
         }
