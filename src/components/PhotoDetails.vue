@@ -74,7 +74,7 @@
         <section class="photo_usage">
           <header class="photo_info-header">
             <h2>
-              Actions
+              Photo download
             </h2>
           </header>
           <div v-if="watermarkEnabled" class="large-12 cell">
