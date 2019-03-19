@@ -113,12 +113,6 @@
                 Download Image
             </button>
           </div>
-          <div>
-            <a class="add-to-list"
-              @click.stop="onAddToImageList(image, $event)">
-              Add to list
-            </a>
-          </div>
         </section>
       </section>
     </div>
@@ -128,7 +122,6 @@
 import CopyButton from '@/components/CopyButton';
 import LicenseIcons from '@/components/LicenseIcons';
 import decodeData from '@/utils/decodeData';
-import { SELECT_IMAGE_FOR_LIST } from '@/store/mutation-types';
 import { DOWNLOAD_WATERMARK } from '@/store/action-types';
 
 
@@ -219,13 +212,6 @@ export default {
     onImageLoad(event) {
       this.$emit('onImageLoaded', event);
     },
-    onAddToImageList(image, event) {
-      const imageWithDimensions = image || {};
-      imageWithDimensions.pageX = event.pageX;
-      imageWithDimensions.pageY = event.pageY;
-
-      this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
-    },
     onDownloadWatermark(image) {
       const shouldEmbedMetadata = this.shouldEmbedMetadata;
       const shouldWatermark = this.shouldWatermark;
@@ -249,18 +235,6 @@ export default {
 
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
-
-  .add-to-list {
-    &:before {
-      height: 13px;
-      width: 13px;
-      content: '';
-      background: url('../assets/plus-icon-black.svg') no-repeat;
-      opacity: .5;
-      display: inline-block;
-    }
-  }
-
   .download-watermark {
     background: #01a635;
     color: #fff;
