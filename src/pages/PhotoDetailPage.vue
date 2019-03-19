@@ -10,7 +10,6 @@
                    :imageWidth="imageWidth"
                    :imageHeight="imageHeight"
                    @onImageLoaded="onImageLoaded" />
-    <share-list :shouldDisappearOnScroll="false"></share-list>
     <photo-tags :tags="tags" />
     <related-images :relatedImages="relatedImages"
                     :imagesCount="imagesCount"
@@ -27,7 +26,6 @@ import PhotoTags from '@/components/PhotoTags';
 import RelatedImages from '@/components/RelatedImages';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
-import ShareList from '@/components/ShareList';
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
 import { SET_IMAGE } from '@/store/mutation-types';
 
@@ -39,7 +37,6 @@ const PhotoDetailPage = {
     FooterSection,
     PhotoDetails,
     PhotoTags,
-    ShareList,
   },
   props: {
     id: '',

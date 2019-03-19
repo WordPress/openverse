@@ -19,16 +19,11 @@
                   :src="getProviderLogo(image.provider)">
              {{ image.title }}
           </a>
-          <a class="search-grid_overlay-add"
-             @click.stop="onAddToImageList(image, $event)"
-             v-if="includeAddToList">
-          </a>
         </figcaption>
       </figure>
 </template>
 
 <script>
-import { SELECT_IMAGE_FOR_LIST } from '@/store/mutation-types';
 import ImageProviderService from '@/api/ImageProviderService';
 import LicenseIcons from '@/components/LicenseIcons';
 
@@ -74,13 +69,6 @@ export default {
         event.preventDefault();
         this.$router.push(`/photos/${image.id}`);
       }
-    },
-    onAddToImageList(image, event) {
-      const imageWithDimensions = image || {};
-      imageWithDimensions.pageX = event.pageX;
-      imageWithDimensions.pageY = event.pageY;
-
-      this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
     },
     onImageLoadError(event) {
       const image = event.target;
@@ -166,50 +154,6 @@ export default {
     max-width: 40px;
     margin-right: 5px;
     padding-bottom: 3px;
-  }
-
-  .search-grid_overlay-add {
-    position: absolute;
-    width:  18px;
-    height: 18px;
-    display: block;
-    bottom: 10px;
-    right: 10px;
-    z-index: 100;
-
-    &:after {
-      height: 100%;
-      width: 100%;
-      display: block;
-      content: '';
-      background: url('../assets/plus-icon.svg') no-repeat;
-      background-size: 18px;
-      background-position: center center;
-      opacity: .5;
-    }
-
-    &:hover:before {
-      position: absolute;
-      right: -5px;
-      bottom: 25px;
-      height: 20px;
-      line-height: 20px;
-      width: 80px;
-      display: block;
-      content: 'Add image to list';
-      color: #fff;
-      text-shadow: 0 0 2px rgba(0,0,0,.5);
-      text-align:center;
-      font-size: .6em;
-      border-radius: 1px;
-      background: rgba(0,0,0,.7);
-
-      opacity: 1;
-    }
-
-    &:hover:after {
-      opacity: .9;
-    }
   }
 
   .search-grid_item {
