@@ -68,8 +68,8 @@ def clean_data(conn, table):
                         fields=','.join(fields),
                         table='temp_import_{}'.format(table),
                         conditions=provider_condition
-    )
-    log.info('Running cleanup of "{}"'.format(cleanup_query))
+                    )
+    log.info('Running cleanup on selection "{}"'.format(cleanup_query))
     write_cur = conn.cursor(cursor_factory=DictCursor)
     iter_cur = conn.cursor(cursor_factory=DictCursor)
     iter_cur.execute(cleanup_query)
