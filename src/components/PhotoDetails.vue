@@ -147,10 +147,12 @@ export default {
         if (image.creator) {
           if (image.creator_url) {
             byCreator = `by <a href="${image.creator_url}">${image.creator}</a>`;
-          } else {
+          }
+          else {
             byCreator = `by ${image.creator}`;
           }
-        } else {
+        }
+        else {
           byCreator = ' ';
         }
 
