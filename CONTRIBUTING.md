@@ -8,7 +8,7 @@ By participating in this project, you are expected to uphold our [Code of Conduc
 
 ## Project Documentation
 
-Please consult the `README` if there is one, it should contain or link to project documentation. If there is no `README`, please file a GitHub issue to create one.
+Please consult the [README](./README.md) file at the root of this repository.
 
 ## How to Contribute
 
