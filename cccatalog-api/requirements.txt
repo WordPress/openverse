@@ -35,3 +35,4 @@ remote-pdb
 pycodestyle
 pytest-django
 piexif
+python-xmp-toolkit

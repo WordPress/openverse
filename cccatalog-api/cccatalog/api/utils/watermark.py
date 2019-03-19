@@ -12,7 +12,9 @@ text_color = '#000'
 def _open_image(url):
     try:
         response = requests.get(url)
-        img = Image.open(BytesIO(response.content))
+        img_bytes = BytesIO(response.content)
+        img = Image.open(img_bytes)
+        # Preserve EXIF metadata
         if 'exif' in img.info:
             exif = piexif.load(img.info['exif'])
         else:
