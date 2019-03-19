@@ -51,7 +51,7 @@ def _get_font_path(monospace=False):
     :return: the path to the TTF font file
     """
 
-    font_name = 'SourceSansPro-Bold.ttf' \
+    font_name = 'SourceCodePro-Bold.ttf' \
         if monospace \
         else 'SourceSansPro-Bold.ttf'
     font_path = os.path.join(
