@@ -2,8 +2,12 @@ import os
 import psycopg2
 import datetime
 import logging as log
+import time
+
+from ingestion_server.cleanup import clean_data
 from ingestion_server.indexer import database_connect
 from psycopg2.extras import DictCursor
+from urllib.parse import urlparse
 
 """
 Pull the latest copy of a table from the upstream database (aka CC Catalog/the
@@ -152,8 +156,12 @@ def _generate_delete_orphans(fk_statement, fk_table):
         DELETE FROM {fk_table} fk_table WHERE not exists
         (select 1 from temp_import_{ref_table} r
         where r.{ref_field} = fk_table.{fk_field})
-    '''.format(fk_table=fk_table, ref_table=ref_table, fk_field=fk_field,
-               ref_field=ref_field)
+    '''.format(
+            fk_table=fk_table,
+            ref_table=ref_table,
+            fk_field=fk_field,
+            ref_field=ref_field
+    )
     return del_orphans
 
 
@@ -227,7 +235,8 @@ def reload_upstream(table, progress=None, finish_time=None):
     # 2. Recreate indices from the original table
     # 3. Recreate constraints from the original table.
     # 4. Delete orphaned foreign key references.
-    # 5. Promote the temporary table and delete the original.
+    # 5. Clean the data.
+    # 6. Promote the temporary table and delete the original.
     copy_data = '''
         DROP TABLE IF EXISTS temp_import_{table};
         CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
@@ -246,17 +255,21 @@ def reload_upstream(table, progress=None, finish_time=None):
         log.info('Copying upstream data...')
         downstream_cur.execute(init_fdw)
         downstream_cur.execute(copy_data)
-        log.info('Copying finished! Recreating database indices...')
-        _update_progress(progress, 50.0)
-        if create_indices != '':
-            downstream_cur.execute(create_indices)
-        _update_progress(progress, 70.0)
-        log.info('Done creating indices! Remapping constraints...')
-        if remap_constraints != '':
-            downstream_cur.execute(remap_constraints)
-        _update_progress(progress, 99.0)
-        log.info('Done remapping constraints! Going live with new table...')
-        downstream_cur.execute(go_live)
+        downstream_db.commit()
+        try:
+            clean_data(downstream_db, table)
+        finally:
+            log.info('Copying finished! Recreating database indices...')
+            _update_progress(progress, 50.0)
+            if create_indices != '':
+                downstream_cur.execute(create_indices)
+            _update_progress(progress, 70.0)
+            log.info('Done creating indices! Remapping constraints...')
+            if remap_constraints != '':
+                downstream_cur.execute(remap_constraints)
+            _update_progress(progress, 99.0)
+            log.info('Done remapping constraints! Going live with new table...')
+            downstream_cur.execute(go_live)
     downstream_db.commit()
     downstream_db.close()
     log.info('Finished refreshing table \'{}\'.'.format(table))
