@@ -4,15 +4,50 @@ from psycopg2.extras import DictCursor
 from urllib.parse import urlparse
 
 
+# Filter out automatically generated tags that aren't of any use to us.
+# Note this list is case insensitive.
+TAG_BLACKLIST = {
+    'no person',
+    'squareformat',
+    'uploaded:by=flickrmobile',
+    'uploaded:by=instagram'
+}
+
+# Filter out low-confidence tags, which indicate that the machine-generated tag
+# may be inaccurate.
+TAG_MIN_CONFIDENCE_THRESHOLD = 0.90
+
+
 def _cleanup_url(url):
     """
-    Add protocols to the URI if they are missing, else return none.
-    :param url:
-    :return:
+    Add protocols to the URI if they are missing, else return None.
     """
     parsed = urlparse(url)
     if parsed.scheme == '':
-        return 'https://' + url
+        "'https://{}'".format(url)
+    else:
+        return None
+
+
+def _cleanup_tags(tags):
+    """
+    Delete tags because they have low accuracy or because they are in the
+    blacklist. If no change is made, return None.
+    :return: A SQL fragment, such as
+    """
+    update_required = False
+    tag_output = []
+    for tag in tags:
+        should_filter = (tag['name'].lower() in TAG_BLACKLIST or
+                         tag['accuracy'] < TAG_MIN_CONFIDENCE_THRESHOLD)
+        if not should_filter:
+            tag_output.append(tag)
+            update_required = True
+
+    if update_required:
+        to_sql_tags = str(tag_output)[1:-1]  # Discard list brackets
+        fragment = "jsonb_set(tags, '{}'".format(to_sql_tags)
+        return fragment
     else:
         return None
 
@@ -24,6 +59,12 @@ _cleanup_config = {
     'tables': {
         'image': {
             'providers': {
+                # Applies to all tables.
+                '*': {
+                    'fields': {
+                        'tags': _cleanup_tags
+                    }
+                },
                 'floraon': {
                     'fields': {
                         'url': _cleanup_url
@@ -55,6 +96,15 @@ def clean_data(conn, table):
     provider_equals = "provider = '{}'"
     all_providers_equal = [provider_equals.format(p) for p in providers]
     provider_condition = ' OR '.join(all_providers_equal)
+    # Determine whether we should select every provider.
+    global_fields = set()
+    if '*' in table_config['providers']:
+        _global_fields = list(table_config['providers']['*']['fields'])
+        for f in _global_fields:
+            global_fields.add(f)
+        where_clause = ''
+    else:
+        where_clause = 'WHERE ' + provider_condition
 
     # Pull selected fields.
     fields = set()
@@ -64,10 +114,10 @@ def clean_data(conn, table):
             fields.add(f)
 
     cleanup_query = "SELECT id, provider, {fields} from {table}" \
-                    " WHERE {conditions}".format(
-                        fields=','.join(fields),
+                    " {where_clause}".format(
+                        fields=', '.join(fields),
                         table='temp_import_{}'.format(table),
-                        conditions=provider_condition
+                        where_clause=where_clause
                     )
     log.info('Running cleanup on selection "{}"'.format(cleanup_query))
     write_cur = conn.cursor(cursor_factory=DictCursor)
@@ -83,13 +133,20 @@ def clean_data(conn, table):
             provider = row['provider']
             to_clean = row[field]
 
-            cleanup_function = provider_config[provider]['fields'][field]
+            # Select the right cleanup function.
+            if field in provider_config['*']['fields']:
+                cleanup_function = provider_config['*']['fields'][field]
+            elif field in provider_config[provider]['fields']:
+                cleanup_function = provider_config[provider]['fields'][field]
+            else:
+                continue
+
             cleaned = cleanup_function(to_clean)
             if cleaned:
                 cleaned_count += 1
                 temporary_table = 'temp_import_{}'.format(table)
                 update_query = '''
-                    UPDATE {temp_table} SET {field} = '{cleaned}'
+                    UPDATE {temp_table} SET {field} = {cleaned}
                      WHERE id = {id};
                 '''.format(
                     temp_table=temporary_table,
