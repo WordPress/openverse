@@ -7,15 +7,6 @@
       <div class="menu_ctr">
         <ul class="menu">
           <li class="home"><a href="/">Home</a></li>
-          <li class="list-option">
-            <a href='/lists'>
-              Lists
-              <transition name="slide-fade" mode="out-in">
-                <span class="badge alert" v-if="listsCount"
-                  :key="listsCount">{{ listsCount }}</span>
-              </transition>
-            </a>
-          </li>
           <li><a href="/about">About</a></li>
         </ul>
       </div>
@@ -41,21 +32,12 @@
 </template>
 
 <script>
-import { FETCH_LISTS } from '@/store/action-types';
 import { SET_QUERY } from '@/store/mutation-types';
 
 export default {
   props: ['showNavSearch', 'fixedNav'],
   name: 'nav-section',
   data: () => ({ form: { searchTerm: '' } }),
-  computed: {
-    listsCount() {
-      return this.$store.state.shareLists.length;
-    },
-  },
-  mounted() {
-    this.$store.dispatch(FETCH_LISTS);
-  },
   methods: {
     onSubmit() {
       this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm }, shouldNavigate: true });
@@ -100,20 +82,13 @@ export default {
   &:hover {
     border-color: rgba(255, 255, 255, 0.3);
   }
-  .badge {
-    line-height: 1.5em;
-    position: absolute;
-    top: 1px;
-    right: 1px;
-  }
+
   /* Small only */
   @media screen and (max-width: 380px) {
     padding: 0.7rem .7rem;
   }
 }
-.list-option {
-  position: relative;
-}
+
 .input-group-rounded {
   margin: 9px 0;
   width: 400px;

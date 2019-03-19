@@ -71,17 +71,6 @@
           <CopyButton :toCopy="HTMLAttribution" contentType="html">Copy to HTML</CopyButton>
           <CopyButton :toCopy="textAttribution" contentType="text">Copy to Text</CopyButton>
         </section>
-        <section class="photo_usage">
-          <header class="photo_info-header">
-            <h2>
-              Actions
-            </h2>
-          </header>
-          <a class="add-to-list"
-             @click.stop="onAddToImageList(image, $event)">
-             Add to list
-          </a>
-        </section>
       </section>
     </div>
 </template>
@@ -89,7 +78,6 @@
 <script>
 import CopyButton from '@/components/CopyButton';
 import LicenseIcons from '@/components/LicenseIcons';
-import { SELECT_IMAGE_FOR_LIST } from '@/store/mutation-types';
 import decodeData from '@/utils/decodeData';
 
 export default {
@@ -172,13 +160,6 @@ export default {
     onImageLoad(event) {
       this.$emit('onImageLoaded', event);
     },
-    onAddToImageList(image, event) {
-      const imageWithDimensions = image || {};
-      imageWithDimensions.pageX = event.pageX;
-      imageWithDimensions.pageY = event.pageY;
-
-      this.$store.commit(SELECT_IMAGE_FOR_LIST, { image: imageWithDimensions });
-    },
   },
   watch: {
     image() {
@@ -192,16 +173,5 @@ export default {
 
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
-
-  .add-to-list {
-    &:before {
-      height: 13px;
-      width: 13px;
-      content: '';
-      background: url('../assets/plus-icon-black.svg') no-repeat;
-      opacity: .5;
-      display: inline-block;
-    }
-  }
 </style>
 
