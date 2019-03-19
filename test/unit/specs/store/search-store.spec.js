@@ -8,7 +8,6 @@ import {
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_IMAGES,
-  SET_IS_PAGE_CHANGE,
   SET_QUERY,
   SET_RELATED_IMAGES,
 } from '@/store/mutation-types';
@@ -212,7 +211,7 @@ describe('Search Store', () => {
       const params = { query: { q: 'foo', lt: 'bar' }, shouldNavigate: true };
       mutations[SET_QUERY](state, params);
 
-      expect(routePushMock).toBeCalledWith({ path: 'search', query: params.query });
+      expect(routePushMock).toBeCalledWith({ path: '/search', query: params.query });
     });
   });
 

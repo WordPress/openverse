@@ -1,5 +1,6 @@
 'use strict'
 const path = require('path')
+const Dotenv = require('dotenv-webpack');
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
@@ -38,6 +39,12 @@ module.exports = {
       '@': resolve('src'),
     }
   },
+  plugins: [
+    new Dotenv({
+      path: './config/.env',
+      systemvars: true, // load from system env vars instead of .env file
+    })
+  ],
   module: {
     rules: [
       ...(config.dev.useEslint ? [createLintingRule()] : []),

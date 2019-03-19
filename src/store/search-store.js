@@ -141,7 +141,7 @@ const mutations = routePush => ({
     _state.query = query;
 
     if (params.shouldNavigate === true) {
-      routePush({ path: 'search', query });
+      routePush({ path: '/search', query });
     }
   },
 });
