@@ -145,8 +145,8 @@ def _get_attribution_text(image_info):
     full_license = _full_license(image_info)
 
     return (
-        '{title}'
-        'by {creator}'
+        '{title} '
+        'by {creator} '
         'is licensed under {full_license}.'
     ).format(
         title=title,
