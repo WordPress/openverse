@@ -8,7 +8,6 @@ import {
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_IMAGES,
-  SET_IS_PAGE_CHANGE,
   SET_QUERY,
   SET_RELATED_IMAGES,
 } from '@/store/mutation-types';
