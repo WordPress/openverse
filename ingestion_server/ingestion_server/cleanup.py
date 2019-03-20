@@ -1,6 +1,6 @@
 import logging as log
 import time
-from psycopg2.extras import DictCursor
+from psycopg2.extras import DictCursor, Json
 from urllib.parse import urlparse
 
 
@@ -38,15 +38,17 @@ def _cleanup_tags(tags):
     update_required = False
     tag_output = []
     for tag in tags:
+        below_threshold = False
+        if 'accuracy' in tag and tag['accuracy'] < TAG_MIN_CONFIDENCE_THRESHOLD:
+            below_threshold = True
         should_filter = (tag['name'].lower() in TAG_BLACKLIST or
-                         tag['accuracy'] < TAG_MIN_CONFIDENCE_THRESHOLD)
+                         below_threshold)
         if not should_filter:
             tag_output.append(tag)
             update_required = True
 
     if update_required:
-        to_sql_tags = str(tag_output)[1:-1]  # Discard list brackets
-        fragment = "jsonb_set(tags, '{}'".format(to_sql_tags)
+        fragment = "tags ||  {}".format(Json(tag_output))
         return fragment
     else:
         return None
@@ -136,9 +138,13 @@ def clean_data(conn, table):
             # Select the right cleanup function.
             if field in provider_config['*']['fields']:
                 cleanup_function = provider_config['*']['fields'][field]
-            elif field in provider_config[provider]['fields']:
-                cleanup_function = provider_config[provider]['fields'][field]
+            elif provider in providers:
+                if field in provider_config[provider]['fields']:
+                    cleanup_function = \
+                        provider_config[provider]['fields'][field]
             else:
+                # It's a provider-specific cleaning function, and it doesn't
+                # apply to this provider.
                 continue
 
             cleaned = cleanup_function(to_clean)
