@@ -13,7 +13,7 @@
       <section class="photo_info-ctr cell medium-12 large-4">
         <header class="photo_info-header">
           <h2>
-            PHOTO INFO
+            Image Info
           </h2>
         </header>
         <ul>
@@ -53,7 +53,7 @@
         <section class="photo_usage">
           <header class="photo_info-header">
             <h2>
-              Photo Attribution
+              Image Attribution
             </h2>
           </header>
           <p class="photo_usage-attribution" ref="photoAttribution">
@@ -74,7 +74,7 @@
         <section class="photo_usage">
           <header class="photo_info-header">
             <h2>
-              Photo download
+              Image download
             </h2>
           </header>
           <div v-if="watermarkEnabled" class="large-12 cell">
@@ -87,11 +87,13 @@
                 <label for="watermark">
                   Incude attribution frame
                 </label>
-                <span title="Wrap image in a white frame and include attribution text">
-                  <img class='help-icon'
-                        src='../assets/help_icon.svg'
-                        alt='Wrap image in a white frame and include attribution text' />
-                </span>
+                <tooltip :tooltip="watermarkHelp" tooltipPosition="top">
+                  <span title="watermarkHelp">
+                    <img class='help-icon'
+                          src='../assets/help_icon.svg'
+                          alt='watermarkHelp' />
+                  </span>
+                </tooltip>
               </div>
               <div>
                 <input id="embedAttribution"
@@ -100,11 +102,13 @@
                 <label for="embedAttribution">
                   Embed attribution metadata
                 </label>
-                <span title="Embed attribution in an EXIF metadata attribute in the image file">
-                  <img class='help-icon'
-                        src='../assets/help_icon.svg'
-                        alt='Embed attribution in an EXIF metadata attribute in the image file' />
-                </span>
+                <tooltip :tooltip="metadataHelp" tooltipPosition="top">
+                  <span title="metadataHelp">
+                    <img class='help-icon'
+                          src='../assets/help_icon.svg'
+                          alt='metadataHelp' />
+                  </span>
+                </tooltip>
               </div>
             </fieldset>
             <button class="button success download-watermark"
@@ -121,6 +125,7 @@
 <script>
 import CopyButton from '@/components/CopyButton';
 import LicenseIcons from '@/components/LicenseIcons';
+import Tooltip from '@/components/Tooltip';
 import decodeData from '@/utils/decodeData';
 import { DOWNLOAD_WATERMARK } from '@/store/action-types';
 
@@ -131,10 +136,13 @@ export default {
   components: {
     CopyButton,
     LicenseIcons,
+    Tooltip,
   },
   data: () => ({
     shouldEmbedMetadata: false,
     shouldWatermark: false,
+    watermarkHelp: 'Wrap image in a white frame and include attribution text',
+    metadataHelp: 'Embed attribution in an EXIF metadata attribute in the image file',
   }),
   computed: {
     ccLicenseURL() {
