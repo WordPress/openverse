@@ -85,7 +85,7 @@
                   type="checkbox"
                   v-model="shouldWatermark" />
                 <label for="watermark">
-                  Incude attribution frame
+                  Include attribution frame
                 </label>
                 <tooltip :tooltip="watermarkHelp" tooltipPosition="top">
                   <span title="watermarkHelp">
