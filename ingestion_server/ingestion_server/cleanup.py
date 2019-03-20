@@ -109,15 +109,15 @@ def clean_data(conn, table):
         where_clause = 'WHERE ' + provider_condition
 
     # Pull selected fields.
-    fields = set()
+    fields_to_clean = set()
     for p in providers:
         _fields = list(table_config['providers'][p]['fields'])
         for f in _fields:
-            fields.add(f)
+            fields_to_clean.add(f)
 
     cleanup_query = "SELECT id, provider, {fields} from {table}" \
                     " {where_clause}".format(
-                        fields=', '.join(fields),
+                        fields=', '.join(fields_to_clean),
                         table='temp_import_{}'.format(table),
                         where_clause=where_clause
                     )
@@ -130,7 +130,7 @@ def clean_data(conn, table):
     cleaned_count = 0
     provider_config = table_config['providers']
     for row in iter_cur:
-        for field in fields:
+        for field in fields_to_clean:
             row_id = row['id']
             provider = row['provider']
             to_clean = row[field]
