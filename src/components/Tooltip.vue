@@ -2,6 +2,7 @@
   <div v-if="visible"
        :tooltip="tooltip"
        :tooltip-position="tooltipPosition"
+       class="help-tooltip"
        @click="toggleVisibility">
     <slot></slot>
   </div>
