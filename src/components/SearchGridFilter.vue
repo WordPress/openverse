@@ -1,12 +1,8 @@
 <template>
-  <div :class="{ 'search-filter cell small-12 medium-12 large-12': true,
-                 'search-filter__visible': isFilterVisible, }">
-    <router-view :key="$route.fullPath"></router-view>
-    <div class="grid-x grid-margin-x grid-margin-y">
-      <div class="search-filter_providers
-                  cell
-                  small-12
-                  large-12">
+  <div :class="{ 'search-filters': true,
+                 'search-filters__visible': isFilterVisible, }">
+    <div class="grid-x">
+      <div class="filter-option search-filters_providers">
         <multiselect
           v-model="filter.provider"
           @input="onUpdateFilter"
@@ -20,9 +16,7 @@
           :searchable="false">
         </multiselect>
       </div>
-      <div class="search-filter_licenses
-                  cell
-                  large-12">
+      <div class="filter-option search-filters_licenses">
         <multiselect
           v-model="filter.li"
           @input="onUpdateFilter"
@@ -37,9 +31,7 @@
           :searchable="false">
         </multiselect>
       </div>
-      <div class="search-filter_license-types
-                  cell
-                  large-12">
+      <div class="filter-option search-filters_license-types">
         <multiselect
           v-model="filter.lt"
           @input="onUpdateFilter"
@@ -54,19 +46,15 @@
           :searchable="false">
         </multiselect>
       </div>
-      <div class="search-filter_search-by
-                  cell
-                  large-12">
+      <div class="filter-option search-filters_search-by">
         <input type="checkbox" id="creator-chk"
                v-model="filter.searchBy.creator"
                @change="onUpdateFilter">
         <label for="creator-chk">Search by Creator</label>
       </div>
-      <div class="clear-filters
-                  cell
-                  large-12"
+      <div class="clear-filters"
            v-if="isFilterApplied">
-        <a class="button primary medium search-filter_clear-btn"
+        <a class="button primary medium search-filters_clear-btn"
                 @click="onClearFilters">
           Clear filters
         </a>
@@ -209,18 +197,16 @@ export default {
 <style lang="scss" scoped>
 @import '../styles/app';
 
-.search-filter {
+.search-filters {
   background: #fff;
-  border: 1px solid #e8e8e8;
-  visibility: hidden;
+  display: none;
   left: 0;
   padding: 10px ;
-  position: absolute;
   right: 0;
   transition: all .15s ease-in-out;
-  width: 300px;
   opacity: 0;
   transform: translate3d(0px, -20px, 0px);
+  width: 100%;
 
   label {
     font-size: 1em;
@@ -240,24 +226,24 @@ export default {
   &__visible {
     border-top: 1px solid #e8e8e8;
     margin-top: 0;
-    visibility: visible;
+    display: block;
     opacity: 1;
     transform: translate3d(0px, 0px, 0px);
   }
 }
 
-.search-filter_search-by,
+.filter-option {
+  margin-right: 1vw;
+}
+
+.search-filters_search-by,
 .clear-filters {
   margin-top: 0.4em;
 }
 
-.search-filter_clear-btn {
+.search-filters_clear-btn {
   height: auto;
   border-radius: 2px;
   margin: auto;
-}
-
-.multiselect__tags {
-  border-radius: 0 !important
 }
 </style>
