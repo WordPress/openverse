@@ -226,16 +226,19 @@ def _print_attribution_on_image(img, image_info):
     return frame
 
 
-def watermark(image_url, info):
+def watermark(image_url, info, draw_frame=True):
     """
     Returns a PIL Image with a watermark and embedded metadata.
 
     :param image_url: The URL of the image.
     :param info: A dictionary with keys title, creator, license, and
     license_version
+    :param draw_frame: Whether to draw an attribution frame.
     :returns: A PIL Image and its EXIF data, if included.
     """
 
     img, exif = _open_image(image_url)
+    if not draw_frame:
+        return img, exif
     frame = _print_attribution_on_image(img, info)
     return frame, exif
