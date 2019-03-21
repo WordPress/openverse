@@ -212,4 +212,3 @@ def clean_data(table):
     log.info('Cleaned all records in {} seconds'.format(
         cleanup_time)
     )
-    log.info('Cleaning finished!')
