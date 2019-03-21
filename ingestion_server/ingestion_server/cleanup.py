@@ -93,7 +93,7 @@ def _clean_data_worker(rows, temp_table, providers_config):
         _id = row['id']
         if provider in providers_config:
             provider_field_to_func = providers_config[provider]['fields']
-            # Merge provider-local and global function to field mappings
+            # Merge provider-local and global function field mappings
             fields_to_update = \
                 {**global_field_to_func, **provider_field_to_func}
         else:
@@ -101,7 +101,6 @@ def _clean_data_worker(rows, temp_table, providers_config):
         # Map fields to their cleaned data
         cleaned_data = {}
         for update_field in fields_to_update:
-
             dirty_value = row[update_field]
             cleaning_func = fields_to_update[update_field]
             clean = cleaning_func(dirty_value)
