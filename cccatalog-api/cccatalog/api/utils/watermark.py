@@ -44,24 +44,6 @@ def _smaller_dimension(width, height):
     return smaller_dimension
 
 
-def _get_font_path(monospace=False):
-    """
-    Return the path to the TTF font file
-    :param monospace: True for monospaced font, False for variable-width font
-    :return: the path to the TTF font file
-    """
-
-    font_name = 'SourceCodePro-Bold.ttf' \
-        if monospace \
-        else 'SourceSansPro-Bold.ttf'
-    font_path = os.path.join(
-        os.path.dirname(__file__),
-        'fonts',
-        font_name
-    )
-
-    return font_path
-
 
 def _fit_in_width(text, font, max_width):
     """
@@ -200,7 +182,10 @@ def _print_attribution_on_image(img, image_info):
             if Dimension.WIDTH in smaller_dimension \
             else width
 
-    font = ImageFont.truetype(_get_font_path(), size=font_size)
+    try:
+        font = ImageFont.truetype('SourceSansPro-Bold.ttf', size=font_size)
+    except OSError:
+        font = None
 
     text = _get_attribution_text(image_info)
     text = _fit_in_width(text, font, new_width)
