@@ -44,7 +44,6 @@ def _smaller_dimension(width, height):
     return smaller_dimension
 
 
-
 def _fit_in_width(text, font, max_width):
     """
     Break the given text so that it fits in the given space
