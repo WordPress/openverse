@@ -28,5 +28,7 @@ module.exports = {
     '!src/router/index.js',
     '!**/node_modules/**',
   ],
-  transformIgnorePatterns: ["/node_modules/(?!vue-masonry)"]
+  transformIgnorePatterns: [
+    '/node_modules/(?!vue-masonry)',
+  ],
 };

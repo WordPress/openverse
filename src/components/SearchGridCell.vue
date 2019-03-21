@@ -6,7 +6,7 @@
         @click="onGotoDetailPage($event, image)"
         class="search-grid_image-ctr">
         <img
-          :class="{'search-grid_image': true, 'search-grid_image__fill': !shouldContainImage}" 
+          :class="{'search-grid_image': true, 'search-grid_image__fill': !shouldContainImage}"
           :alt="image.title" :src="getImageUrl(image)"
           @error="onImageLoadError">
       </a>

@@ -56,13 +56,13 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import Vue from 'vue';
 import { SET_IMAGES } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
 import SearchGridCell from '@/components/SearchGridCell';
 import SearchGridFilter from '@/components/SearchGridFilter';
-import {VueMasonryPlugin} from 'vue-masonry';
+import { VueMasonryPlugin } from 'vue-masonry';
 
 Vue.use(VueMasonryPlugin);
 
@@ -151,7 +151,7 @@ export default {
   },
   methods: {
     handleScalingChange() {
-      this.$redrawVueMasonry() // Some elements end up taking less space
+      this.$redrawVueMasonry(); // Some elements end up taking less space
     },
     searchChanged() {
       this.showGrid = false;
