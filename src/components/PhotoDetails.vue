@@ -71,13 +71,13 @@
           <CopyButton :toCopy="HTMLAttribution" contentType="html">Copy to HTML</CopyButton>
           <CopyButton :toCopy="textAttribution" contentType="text">Copy to Text</CopyButton>
         </section>
-        <section class="photo_usage">
+        <section v-if="watermarkEnabled" class="photo_usage">
           <header class="photo_info-header">
             <h2>
               Image download
             </h2>
           </header>
-          <div v-if="watermarkEnabled" class="large-12 cell">
+          <div class="large-12 cell">
             <fieldset class="large-7 cell">
               <div>
                 <input
