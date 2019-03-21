@@ -179,7 +179,6 @@ def clean_data(table):
     iter_cur.execute(cleanup_selection)
 
     # Clean each field as specified in _cleanup_config.
-    cleaned_count = 0
     provider_config = table_config['providers']
 
     batch = iter_cur.fetchmany(size=DB_BUFFER_SIZE)
