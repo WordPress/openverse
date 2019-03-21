@@ -2,12 +2,10 @@ import os
 import psycopg2
 import datetime
 import logging as log
-import time
 
 from ingestion_server.cleanup import clean_data
 from ingestion_server.indexer import database_connect
 from psycopg2.extras import DictCursor
-from urllib.parse import urlparse
 
 """
 Pull the latest copy of a table from the upstream database (aka CC Catalog/the
@@ -256,20 +254,18 @@ def reload_upstream(table, progress=None, finish_time=None):
         downstream_cur.execute(init_fdw)
         downstream_cur.execute(copy_data)
         downstream_db.commit()
-        try:
-            clean_data(downstream_db, table)
-        finally:
-            log.info('Copying finished! Recreating database indices...')
-            _update_progress(progress, 50.0)
-            if create_indices != '':
-                downstream_cur.execute(create_indices)
-            _update_progress(progress, 70.0)
-            log.info('Done creating indices! Remapping constraints...')
-            if remap_constraints != '':
-                downstream_cur.execute(remap_constraints)
-            _update_progress(progress, 99.0)
-            log.info('Done remapping constraints! Going live with new table...')
-            downstream_cur.execute(go_live)
+        clean_data(table)
+        log.info('Copying finished! Recreating database indices...')
+        _update_progress(progress, 50.0)
+        if create_indices != '':
+            downstream_cur.execute(create_indices)
+        _update_progress(progress, 70.0)
+        log.info('Done creating indices! Remapping constraints...')
+        if remap_constraints != '':
+            downstream_cur.execute(remap_constraints)
+        _update_progress(progress, 99.0)
+        log.info('Done remapping constraints! Going live with new table...')
+        downstream_cur.execute(go_live)
     downstream_db.commit()
     downstream_db.close()
     log.info('Finished refreshing table \'{}\'.'.format(table))

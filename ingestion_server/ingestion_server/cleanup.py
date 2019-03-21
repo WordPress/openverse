@@ -1,6 +1,9 @@
 import logging as log
 import time
+import multiprocessing
+import copy
 from psycopg2.extras import DictCursor, Json
+from ingestion_server.indexer import DB_BUFFER_SIZE, database_connect
 from urllib.parse import urlparse
 
 
@@ -78,7 +81,60 @@ _cleanup_config = {
 }
 
 
-def clean_data(conn, table):
+def _clean_data_worker(rows, temp_table, providers_config):
+    log.info('Starting data cleaning worker')
+    global_field_to_func = providers_config['*']['fields']
+    conn = database_connect()
+    log.info('Data cleaning worker connected to database')
+    write_cur = conn.cursor(cursor_factory=DictCursor)
+    log.info('Cleaning {} rows'.format(len(rows)))
+    for row in rows:
+        # Map fields that need updating to their cleaning functions
+        provider = row['provider']
+        _id = row['id']
+        if provider in providers_config:
+            provider_field_to_func = providers_config[provider]['fields']
+            # Merge provider-local and global function to field mappings
+            fields_to_update = \
+                {**global_field_to_func, **provider_field_to_func}
+        else:
+            fields_to_update = global_field_to_func
+        # Map fields to their cleaned data
+        cleaned_data = {}
+        for update_field in fields_to_update:
+
+            dirty_value = row[update_field]
+            cleaning_func = fields_to_update[update_field]
+            clean = cleaning_func(dirty_value)
+            if clean:
+                cleaned_data[update_field] = clean
+        # Generate SQL update for all the fields we just cleaned
+        update_field_expressions = []
+        for field in cleaned_data:
+            update_field_expressions.append(
+                '{field} = {cleaned}'.format(
+                    field=field,
+                    cleaned=cleaned_data[field]
+                )
+            )
+        if len(update_field_expressions) > 0:
+            update_query = '''
+                UPDATE {temp_table} SET {field_expressions} WHERE id = {_id}
+            '''.format(
+                temp_table=temp_table,
+                field_expressions=', '.join(update_field_expressions),
+                _id=_id
+            )
+
+            write_cur.execute(update_query)
+    write_cur.close()
+    conn.commit()
+    conn.close()
+    log.info('Worker finished batch')
+    return
+
+
+def clean_data(table):
     """
     Data from upstream can be unsuitable for production for a number of reasons.
     Clean it up before we go live with the new data.
@@ -99,74 +155,61 @@ def clean_data(conn, table):
     all_providers_equal = [provider_equals.format(p) for p in providers]
     provider_condition = ' OR '.join(all_providers_equal)
     # Determine whether we should select every provider.
-    global_fields = set()
     if '*' in table_config['providers']:
-        _global_fields = list(table_config['providers']['*']['fields'])
-        for f in _global_fields:
-            global_fields.add(f)
         where_clause = ''
     else:
         where_clause = 'WHERE ' + provider_condition
 
-    # Pull selected fields.
+    # Determine which fields will need updating
     fields_to_clean = set()
     for p in providers:
         _fields = list(table_config['providers'][p]['fields'])
         for f in _fields:
             fields_to_clean.add(f)
 
-    cleanup_query = "SELECT id, provider, {fields} from {table}" \
-                    " {where_clause}".format(
-                        fields=', '.join(fields_to_clean),
-                        table='temp_import_{}'.format(table),
-                        where_clause=where_clause
-                    )
-    log.info('Running cleanup on selection "{}"'.format(cleanup_query))
-    write_cur = conn.cursor(cursor_factory=DictCursor)
+    cleanup_selection = "SELECT id, provider, {fields} from {table}" \
+                        " {where_clause}".format(
+                            fields=', '.join(fields_to_clean),
+                            table='temp_import_{}'.format(table),
+                            where_clause=where_clause
+                        )
+    log.info('Running cleanup on selection "{}"'.format(cleanup_selection))
+    conn = database_connect()
     iter_cur = conn.cursor(cursor_factory=DictCursor)
-    iter_cur.execute(cleanup_query)
+    iter_cur.execute(cleanup_selection)
 
     # Clean each field as specified in _cleanup_config.
     cleaned_count = 0
     provider_config = table_config['providers']
-    for row in iter_cur:
-        for field in fields_to_clean:
-            row_id = row['id']
-            provider = row['provider']
-            to_clean = row[field]
 
-            # Select the right cleanup function.
-            if field in provider_config['*']['fields']:
-                cleanup_function = provider_config['*']['fields'][field]
-            elif provider in providers:
-                if field in provider_config[provider]['fields']:
-                    cleanup_function = \
-                        provider_config[provider]['fields'][field]
-            else:
-                # It's a provider-specific cleaning function, and it doesn't
-                # apply to this provider.
-                continue
+    batch = iter_cur.fetchmany(size=DB_BUFFER_SIZE)
+    jobs = []
+    num_cores = multiprocessing.cpu_count()
+    while batch:
+        # Divide updates into jobs for parallel execution.
+        temp_table = 'temp_import_{}'.format(table)
 
-            cleaned = cleanup_function(to_clean)
-            if cleaned:
-                cleaned_count += 1
-                temporary_table = 'temp_import_{}'.format(table)
-                update_query = '''
-                    UPDATE {temp_table} SET {field} = {cleaned}
-                     WHERE id = {id};
-                '''.format(
-                    temp_table=temporary_table,
-                    field=field,
-                    cleaned=cleaned,
-                    id=row_id
-                )
-                write_cur.execute(update_query)
+        job_size = int(len(batch) / num_cores)
+        # Rows of psycopg2 result sets split into separate workloads
+
+        last_end = -1
+        for n in range(1, num_cores + 1):
+            start = last_end + 1
+            end = job_size * n
+            last_end = end
+            # Arguments for parallel _clean_data_worker calls
+            jobs.append(
+                (batch[start:end], temp_table, provider_config)
+            )
+        batch = iter_cur.fetchmany(size=DB_BUFFER_SIZE)
+    pool = multiprocessing.Pool(processes=num_cores)
+    log.info('Starting {} cleaning jobs'.format(len(jobs)))
+    pool.starmap(_clean_data_worker, jobs)
+    pool.close()
     iter_cur.close()
-    write_cur.close()
-
     end_time = time.time()
     cleanup_time = end_time - start_time
-    log.info('Cleaned {} records in {} seconds'.format(
-        cleaned_count,
+    log.info('Cleaned all records in {} seconds'.format(
         cleanup_time)
     )
+    log.info('Cleaning finished!')
