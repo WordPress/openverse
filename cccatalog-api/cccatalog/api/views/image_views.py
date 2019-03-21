@@ -237,9 +237,15 @@ class Watermark(GenericAPIView):
         # Create the actual watermarked image.
         watermarked, exif = watermark(image_url, image_info)
         # Re-insert EXIF metadata.
-        exif_bytes = piexif.dump(exif)
+        if exif:
+            exif_bytes = piexif.dump(exif)
+        else:
+            exif_bytes = None
         img_bytes = io.BytesIO()
-        watermarked.save(img_bytes, 'jpeg', exif=exif_bytes)
+        if exif:
+            watermarked.save(img_bytes, 'jpeg', exif=exif_bytes)
+        else:
+            watermarked.save(img_bytes, 'jpeg')
         # Embed ccREL metadata with XMP.
         work_properties = {
             'creator': image_record.creator,
@@ -259,5 +265,8 @@ class Watermark(GenericAPIView):
             )
             log.error(e)
             response = HttpResponse(content_type='image/jpeg')
-            watermarked.save(response, 'jpeg', exif=exif_bytes)
+            if exif:
+                watermarked.save(response, 'jpeg', exif=exif_bytes)
+            else:
+                watermarked.save(response, 'jpeg')
             return response
