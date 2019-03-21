@@ -1,7 +1,6 @@
 import logging as log
 import time
 import multiprocessing
-import copy
 from psycopg2.extras import DictCursor, Json
 from ingestion_server.indexer import DB_BUFFER_SIZE, database_connect
 from urllib.parse import urlparse
@@ -183,16 +182,13 @@ def clean_data(table):
 
     batch = iter_cur.fetchmany(size=DB_BUFFER_SIZE)
     jobs = []
-    num_cores = multiprocessing.cpu_count()
+    num_workers = multiprocessing.cpu_count() * 2
     while batch:
         # Divide updates into jobs for parallel execution.
         temp_table = 'temp_import_{}'.format(table)
-
-        job_size = int(len(batch) / num_cores)
-        # Rows of psycopg2 result sets split into separate workloads
-
+        job_size = int(len(batch) / num_workers)
         last_end = -1
-        for n in range(1, num_cores + 1):
+        for n in range(1, num_workers + 1):
             start = last_end + 1
             end = job_size * n
             last_end = end
@@ -201,7 +197,7 @@ def clean_data(table):
                 (batch[start:end], temp_table, provider_config)
             )
         batch = iter_cur.fetchmany(size=DB_BUFFER_SIZE)
-    pool = multiprocessing.Pool(processes=num_cores)
+    pool = multiprocessing.Pool(processes=num_workers)
     log.info('Starting {} cleaning jobs'.format(len(jobs)))
     pool.starmap(_clean_data_worker, jobs)
     pool.close()
