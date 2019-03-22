@@ -44,27 +44,32 @@ def embed_xmp_bytes(image: io.BytesIO, work_properties):
         xmp.register_namespace(XMP_NS_CC, 'cc')
         xmp.set_property(XMP_NS_CC, 'license', work_properties['license_url'])
         if 'creator' in work_properties:
-            xmp.set_property(
-                XMP_NS_CC, 'attributionName', work_properties['creator']
-            )
+            if not xmp.does_property_exist(XMP_NS_CC, 'attributionName'):
+                xmp.set_property(
+                    XMP_NS_CC, 'attributionName', work_properties['creator']
+                )
         if 'work_landing_page' in work_properties:
-            xmp.set_property(
-                XMP_NS_CC,
-                'attributionURL',
-                work_properties['work_landing_page']
-            )
+            if not xmp.does_property_exist(XMP_NS_CC, 'attributionURL'):
+                xmp.set_property(
+                    XMP_NS_CC,
+                    'attributionURL',
+                    work_properties['work_landing_page']
+                )
+        xmp.register_namespace(XMP_NS_XMP, 'xmp')
         if 'identifier' in work_properties:
-            xmp.register_namespace(XMP_NS_XMP, 'xmp')
-            xmp.set_property(
-                XMP_NS_XMP,
-                'Identifier',
-                work_properties['identifier']
-            )
+            if not xmp.does_property_exist(XMP_NS_XMP, 'Identifier'):
+                xmp.set_property(
+                    XMP_NS_XMP,
+                    'Identifier',
+                    work_properties['identifier']
+                )
         # Set generic XMP rights.
         xmp.register_namespace(XMP_NS_XMP_Rights, 'xmpRights')
-        xmp.set_property_bool(XMP_NS_XMP_Rights, 'Marked', True)
-        usage = work_properties['attribution']
-        xmp.set_property(XMP_NS_XMP_Rights, 'UsageTerms', usage)
+        if not xmp.does_property_exist(XMP_NS_XMP_Rights, 'XMP_NS_XMP_Rights'):
+            xmp.set_property_bool(XMP_NS_XMP_Rights, 'Marked', True)
+        if not xmp.does_property_exist(XMP_NS_XMP_Rights, 'UsageTerms'):
+            usage = work_properties['attribution']
+            xmp.set_property(XMP_NS_XMP_Rights, 'UsageTerms', usage)
         xmpfile.put_xmp(xmp)
         xmpfile.close_file()
 
