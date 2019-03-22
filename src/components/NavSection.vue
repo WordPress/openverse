@@ -7,15 +7,6 @@
       <div class="menu_ctr">
         <ul class="menu">
           <li class="home"><a href="/">Home</a></li>
-          <li class="list-option">
-            <a href='/lists'>
-              Lists
-              <transition name="slide-fade" mode="out-in">
-                <span class="badge alert" v-if="listsCount"
-                  :key="listsCount">{{ listsCount }}</span>
-              </transition>
-            </a>
-          </li>
           <li><a href="/about">About</a></li>
         </ul>
       </div>
@@ -41,23 +32,15 @@
 </template>
 
 <script>
-import { FETCH_LISTS } from '@/store/action-types';
+import { SET_QUERY } from '@/store/mutation-types';
 
 export default {
   props: ['showNavSearch', 'fixedNav'],
   name: 'nav-section',
   data: () => ({ form: { searchTerm: '' } }),
-  computed: {
-    listsCount() {
-      return this.$store.state.shareLists.length;
-    },
-  },
-  mounted() {
-    this.$store.dispatch(FETCH_LISTS);
-  },
   methods: {
     onSubmit() {
-      this.$router.push({ path: '../search', query: { q: this.form.searchTerm } });
+      this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm }, shouldNavigate: true });
     },
   },
 };
@@ -70,31 +53,25 @@ export default {
   width: 100%;
   background-color: #373737;
 }
-
 .nav_logo {
   margin: 15px 0 15px 0;
   height: 30px;
 }
-
 .hero_search-form {
   margin: 0 15px;
-
   /* Large and up */
   @media screen and (min-width: 64em) {
     float: right;
   }
 }
-
 .menu_ctr {
   display: inline-block;
   margin-left: 30px;
-
   /* Small only */
   @media screen and (max-width: 39.9375em) {
     margin-left: 0 !important;
   }
 }
-
 .menu a {
   color: #fefefe;
   font-weight: 500;
@@ -102,16 +79,8 @@ export default {
   border: 1px solid transparent;
   border-radius: 2px;
   transition: all 0.3s ease;
-
   &:hover {
     border-color: rgba(255, 255, 255, 0.3);
-  }
-
-  .badge {
-    line-height: 1.5em;
-    position: absolute;
-    top: 1px;
-    right: 1px;
   }
 
   /* Small only */
@@ -120,15 +89,10 @@ export default {
   }
 }
 
-.list-option {
-  position: relative;
-}
-
 .input-group-rounded {
   margin: 9px 0;
   width: 400px;
   max-width: 100%;
-
   .input-group-field {
     border-radius: 3px;
     padding-left: 1rem;
@@ -136,12 +100,10 @@ export default {
     color: #fff;
     border: 1px solid rgba(255, 255, 255, .1);
     box-shadow: none;
-
     &:focus {
       border-color: rgba(213, 18, 188, .5);
     }
   }
-
   .input-group-button .button {
     border-radius: 3px;
     font-size: 0.8rem;
@@ -149,7 +111,6 @@ export default {
     position: relative;
     left: calc( -100% - 10px );
     background: none;
-
     &:after {
       content: '';
       background: url('../assets/search-icon.svg') center center no-repeat;
@@ -164,15 +125,12 @@ export default {
     }
   }
 }
-
 .slide-fade-enter-active {
   transition: all .3s ease;
 }
-
 .slide-fade-leave-active {
   transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
-
 .slide-fade-enter, .slide-fade-leave-to {
   transform: translateX(10px);
   opacity: 0;

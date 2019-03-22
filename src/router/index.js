@@ -4,8 +4,6 @@ import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
 import BrowsePage from '@/pages/BrowsePage';
 import PhotoDetailPage from '@/pages/PhotoDetailPage';
-import ShareListPage from '@/pages/ShareListPage';
-import ShareListsPage from '@/pages/ShareListsPage';
 
 Vue.use(VueRouter);
 
@@ -17,17 +15,6 @@ const router = new VueRouter({
       name: 'browse-page',
       component: BrowsePage,
       props: route => ({ query: route.query.q }),
-    },
-    {
-      path: '/lists/:id',
-      name: 'share-list-page',
-      component: ShareListPage,
-      props: true,
-    },
-    {
-      path: '/lists',
-      name: 'share-list-page',
-      component: ShareListsPage,
     },
     {
       path: '/photos/:id',
