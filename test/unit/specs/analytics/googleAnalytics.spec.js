@@ -27,6 +27,12 @@ describe('GA', () => {
     expect(window.ga).toHaveBeenCalledWith('set', 'anonymizeIp', true);
   });
 
+  it('sets transport beacon', () => {
+    analytics().setTransportBeacon();
+
+    expect(window.ga).toHaveBeenCalledWith('set', 'transport', 'beacon');
+  });
+
   describe('if doNotTrack is enabled', () => {
     beforeEach(() => {
       navigator.doNotTrack = true;

@@ -8,7 +8,6 @@
       </div>
       <div :class="{ 'cell search-grid-ctr': true }">
         <search-grid v-if="query.q"></search-grid>
-        <share-list :shouldDisappearOnScroll="true"></share-list>
       </div>
     </div>
 
@@ -21,7 +20,6 @@ import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
-import ShareList from '@/components/ShareList';
 import { FETCH_IMAGES } from '@/store/action-types';
 
 const BrowsePage = {
@@ -29,7 +27,6 @@ const BrowsePage = {
   components: {
     HeaderSection,
     SearchGridForm,
-    ShareList,
     SearchGrid,
     FooterSection,
   },
