@@ -6,19 +6,23 @@ from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils.view_count import track_model_views
+from cccatalog.api.utils import ccrel
 from rest_framework.reverse import reverse
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
-from cccatalog.api.serializers.image_serializers import ImageDetailSerializer
+from cccatalog.api.serializers.image_serializers import ImageDetailSerializer,\
+    WatermarkQueryStringSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
 from cccatalog.api.utils.view_count import _get_user_ip
 from urllib.parse import urlparse
 from cccatalog.api.utils.watermark import watermark
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, FileResponse
 import cccatalog.api.controllers.search_controller as search_controller
 import logging
 import piexif
+import io
+import libxmp
 
 log = logging.getLogger(__name__)
 
@@ -212,14 +216,36 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         return resp
 
 
+def _save_wrapper(pil_img, exif_bytes, destination):
+    """
+    PIL crashes if exif_bytes=None, so we have to wrap it to avoid littering
+    the code with branches.
+    """
+    if exif_bytes:
+        pil_img.save(destination, 'jpeg', exif=exif_bytes)
+    else:
+        pil_img.save(destination, 'jpeg')
+
+
 class Watermark(GenericAPIView):
     """
     Given an image identifier as a URL parameter, produce an attribution
-    watermark.
+    watermark. This entails drawing a frame around the image and embedding
+    ccREL metadata inside of the file.
     """
     lookup_field = 'identifier'
+    serializer_class = WatermarkQueryStringSerializer
 
+    @swagger_auto_schema(query_serializer=WatermarkQueryStringSerializer)
     def get(self, request, identifier, format=None):
+        params = WatermarkQueryStringSerializer(data=request.query_params)
+        if not params.is_valid():
+            return Response(
+                status=400,
+                data={
+                    "validation_error": params.errors
+                }
+            )
         try:
             image_record = Image.objects.get(identifier=identifier)
         except Image.DoesNotExist:
@@ -231,8 +257,40 @@ class Watermark(GenericAPIView):
             'license': image_record.license,
             'license_version': image_record.license_version
         }
-        watermarked, exif = watermark(image_url, image_info)
-        exif_bytes = piexif.dump(exif)
-        response = HttpResponse(content_type='image/jpeg')
-        watermarked.save(response, 'jpeg', exif=exif_bytes)
-        return response
+        # Create the actual watermarked image.
+        watermarked, exif = watermark(
+            image_url, image_info, params.data['watermark']
+        )
+        # Re-insert EXIF metadata.
+        if exif:
+            exif_bytes = piexif.dump(exif)
+        else:
+            exif_bytes = None
+        img_bytes = io.BytesIO()
+        _save_wrapper(watermarked, exif_bytes, img_bytes)
+        if params.data['embed_metadata']:
+            # Embed ccREL metadata with XMP.
+            work_properties = {
+                'creator': image_record.creator,
+                'license_url': image_record.license_url,
+                'attribution': image_record.attribution,
+                'work_landing_page': image_record.foreign_landing_url,
+                'identifier': str(image_record.identifier)
+            }
+            try:
+                with_xmp = ccrel.embed_xmp_bytes(img_bytes, work_properties)
+                return FileResponse(with_xmp, content_type='image/jpeg')
+            except (libxmp.XMPError, AttributeError) as e:
+                # Just send the EXIF-ified file if libxmp fails to add metadata.
+                log.error(
+                    'Failed to add XMP metadata to {}'
+                    .format(image_record.identifier)
+                )
+                log.error(e)
+                response = HttpResponse(content_type='image/jpeg')
+                _save_wrapper(watermarked, exif_bytes, response)
+                return response
+        else:
+            response = HttpResponse(img_bytes, content_type='image/jpeg')
+            _save_wrapper(watermarked, exif_bytes, response)
+            return response

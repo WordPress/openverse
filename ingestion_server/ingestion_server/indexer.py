@@ -112,7 +112,7 @@ def _elasticsearch_connect(timeout=300):
 
 def database_connect():
     """
-    Repeatedly try to connect to database until successful.
+    Repeatedly try to connect to the downstream (API) database until successful.
     :return: A database connection object
     """
     while True:
@@ -135,6 +135,29 @@ def database_connect():
     return conn
 
 
+def get_last_item_ids(table):
+    """
+    Find the last item added to Postgres and return both its sequential ID
+    and its UUID.
+    :param table: The name of the database table to check.
+    :return: A tuple containing a sequential ID and a UUID
+    """
+
+    pg_conn = database_connect()
+    pg_conn.set_session(readonly=True)
+    cur = pg_conn.cursor()
+    # Find the last row added to the database table
+    cur.execute(
+        SQL(
+            'SELECT id, identifier FROM {} ORDER BY id DESC LIMIT 1;'
+        ).format(Identifier(table))
+    )
+    last_added_pg_id, last_added_uuid = cur.fetchone()
+    cur.close()
+    pg_conn.close()
+    return last_added_pg_id, last_added_uuid
+
+
 class TableIndexer:
 
     def __init__(self, es_instance, tables, progress=None, finish_time=None):
@@ -145,35 +168,12 @@ class TableIndexer:
         self.progress = progress
         self.finish_time = finish_time
 
-    @staticmethod
-    def _get_last_item_ids(table):
-        """
-        Find the last item added to Postgres and return both its sequential ID
-        and its UUID.
-        :param table: The name of the database table to check.
-        :return: A tuple containing a sequential ID and a UUID
-        """
-
-        pg_conn = database_connect()
-        pg_conn.set_session(readonly=True)
-        cur = pg_conn.cursor()
-        # Find the last row added to the database table
-        cur.execute(
-            SQL(
-                'SELECT id, identifier FROM {} ORDER BY id DESC LIMIT 1;'
-            ).format(Identifier(table))
-        )
-        last_added_pg_id, last_added_uuid = cur.fetchone()
-        cur.close()
-        pg_conn.close()
-        return last_added_pg_id, last_added_uuid
-
     def _index_table(self, table, dest_idx=None):
         """
         Check that the database tables are in sync with Elasticsearch. If not,
         begin replication.
         """
-        last_added_pg_id, _ = self._get_last_item_ids(table)
+        last_added_pg_id, _ = get_last_item_ids(table)
         if not last_added_pg_id:
             log.warning('Tried to sync ' + table + ' but it was empty.')
             return
@@ -282,7 +282,7 @@ class TableIndexer:
             return True
         log.info('Refreshing and performing sanity check...')
         self.es.indices.refresh(index=new_index)
-        _, last_doc_uuid = self._get_last_item_ids(live_alias)
+        _, last_doc_uuid = get_last_item_ids(live_alias)
         query = {
             "query": {
                 "constant_score": {

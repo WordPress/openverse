@@ -61,3 +61,15 @@ class ImageDetailSerializer(ModelSerializer, ImageSerializer):
                   'url', 'thumbnail', 'provider', 'source', 'license',
                   'license_version', 'foreign_landing_url', 'meta_data',
                   'view_count', 'provider_url', 'license_url', 'attribution')
+
+
+class WatermarkQueryStringSerializer(serializers.Serializer):
+    embed_metadata = serializers.BooleanField(
+        help_text="Whether to embed ccREL metadata via XMP.",
+        default=True
+    )
+    watermark = serializers.BooleanField(
+        help_text="Whether to draw a frame around the image with attribution"
+                  " text at the bottom.",
+        default=True
+    )

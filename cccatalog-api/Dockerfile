@@ -2,10 +2,12 @@ FROM python:3.7
 
 ENV PYTHONBUFFERED 1
 
-ADD cccatalog/api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansPro-Bold.ttf
-
-RUN mkdir /cccatalog-api \
+RUN apt-get update \
+    && apt-get install libexempi3 \
+    && mkdir /cccatalog-api \
     && mkdir -p /var/log/cccatalog-api/cccatalog-api.log
+
+ADD cccatalog/api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansPro-Bold.ttf
 
 WORKDIR /cccatalog-api
 
