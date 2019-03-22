@@ -198,14 +198,9 @@ export default {
 @import '../styles/app';
 
 .search-filters {
-  background: #fff;
+  background: #fafafa;
   display: none;
-  left: 0;
   padding: 10px ;
-  right: 0;
-  transition: all .15s ease-in-out;
-  opacity: 0;
-  transform: translate3d(0px, -20px, 0px);
   width: 100%;
 
   label {
@@ -225,20 +220,28 @@ export default {
 
   &__visible {
     border-top: 1px solid #e8e8e8;
-    margin-top: 0;
     display: block;
-    opacity: 1;
-    transform: translate3d(0px, 0px, 0px);
   }
 }
 
 .filter-option {
   margin-right: 1vw;
+  min-width: 17vw;
+  padding-bottom: 0.5vh;
+  padding-top: 0.5vh;
+}
+
+.grid-x {
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    display: block;
+  }
 }
 
 .search-filters_search-by,
 .clear-filters {
   margin-top: 0.4em;
+  min-width: 10vw;
 }
 
 .search-filters_clear-btn {
