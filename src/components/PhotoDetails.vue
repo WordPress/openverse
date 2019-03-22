@@ -10,11 +10,11 @@
              :src="image.url"
              :alt="image.title">
       </div>
-      <section class="photo_info-ctr cell medium-12 large-4">        
+      <section class="photo_info-ctr cell medium-12 large-4">
         <section class="sidebar_section">
           <header class="sidebar_section-header">
             <h2>
-              PHOTO INFO
+              Image info
             </h2>
           </header>
           <ul>
@@ -55,7 +55,7 @@
         <section class="sidebar_section">
           <header class="sidebar_section-header">
             <h2>
-              Image Attribution
+              Image attribution
             </h2>
           </header>
           <p class="photo_usage-attribution" ref="photoAttribution">
@@ -236,7 +236,7 @@ export default {
     },
     shareText() {
       return encodeURI(`I found an image @creativecommons: ${this.imageURL}`);
-    }
+    },
   },
   methods: {
     onGoBackToSearchResults() {

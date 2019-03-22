@@ -117,8 +117,8 @@ describe('PhotoDetails', () => {
     const wrapper = render(PhotoDetails, options);
     const url = options.propsData.image.foreign_landing_url;
     expect(wrapper.vm.imageURL).toBe(url);
-    expect(wrapper.vm.shareText).toBe(encodeURI(`I found an image @creativecommons: ${url}`))
-  })
+    expect(wrapper.vm.shareText).toBe(encodeURI(`I found an image @creativecommons: ${url}`));
+  });
 
   it('should generate html attribution without creator URL', () => {
     options.propsData.image.creator_url = null;
