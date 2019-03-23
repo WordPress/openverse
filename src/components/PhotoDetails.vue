@@ -13,7 +13,7 @@
       <section class="photo_info-ctr cell medium-12 large-4">
         <header class="photo_info-header">
           <h2>
-            PHOTO INFO
+            Image Info
           </h2>
         </header>
         <ul>
@@ -53,7 +53,7 @@
         <section class="photo_usage">
           <header class="photo_info-header">
             <h2>
-              Photo Attribution
+              Image Attribution
             </h2>
           </header>
           <p class="photo_usage-attribution" ref="photoAttribution">
@@ -71,6 +71,53 @@
           <CopyButton :toCopy="HTMLAttribution" contentType="html">Copy to HTML</CopyButton>
           <CopyButton :toCopy="textAttribution" contentType="text">Copy to Text</CopyButton>
         </section>
+        <section v-if="watermarkEnabled" class="photo_usage">
+          <header class="photo_info-header">
+            <h2>
+              Image download
+            </h2>
+          </header>
+          <div class="large-12 cell">
+            <fieldset class="large-7 cell">
+              <div>
+                <input
+                  id="watermark"
+                  type="checkbox"
+                  v-model="shouldWatermark" />
+                <label for="watermark">
+                  Include attribution frame
+                </label>
+                <tooltip :tooltip="watermarkHelp" tooltipPosition="top">
+                  <span title="watermarkHelp">
+                    <img class='help-icon'
+                          src='../assets/help_icon.svg'
+                          alt='watermarkHelp' />
+                  </span>
+                </tooltip>
+              </div>
+              <div>
+                <input id="embedAttribution"
+                        type="checkbox"
+                        v-model="shouldEmbedMetadata" />
+                <label for="embedAttribution">
+                  Embed attribution metadata
+                </label>
+                <tooltip :tooltip="metadataHelp" tooltipPosition="top">
+                  <span title="metadataHelp">
+                    <img class='help-icon'
+                          src='../assets/help_icon.svg'
+                          alt='metadataHelp' />
+                  </span>
+                </tooltip>
+              </div>
+            </fieldset>
+            <button class="button success download-watermark"
+                    data-type="text"
+                    @click="onDownloadWatermark(image, $event)">
+                Download Image
+            </button>
+          </div>
+        </section>
       </section>
     </div>
 </template>
@@ -78,15 +125,25 @@
 <script>
 import CopyButton from '@/components/CopyButton';
 import LicenseIcons from '@/components/LicenseIcons';
+import Tooltip from '@/components/Tooltip';
 import decodeData from '@/utils/decodeData';
+import { DOWNLOAD_WATERMARK } from '@/store/action-types';
+
 
 export default {
   name: 'photo-details',
-  props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight'],
+  props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'watermarkEnabled'],
   components: {
     CopyButton,
     LicenseIcons,
+    Tooltip,
   },
+  data: () => ({
+    shouldEmbedMetadata: false,
+    shouldWatermark: false,
+    watermarkHelp: 'Wrap image in a white frame and include attribution text',
+    metadataHelp: 'Embed attribution in an EXIF metadata attribute in the image file',
+  }),
   computed: {
     ccLicenseURL() {
       if (!this.image) {
@@ -116,6 +173,9 @@ export default {
       const version = this.image.license_version;
 
       return license === 'cc0' ? `${license} ${version}` : `CC ${license} ${version}`;
+    },
+    watermarkURL() {
+      return `${process.env.API_URL}/watermark/${this.image.id}?embed_metadata=${this.shouldEmbedMetadata}&watermark=${this.shouldWatermark}`;
     },
     textAttribution() {
       return () => {
@@ -160,6 +220,16 @@ export default {
     onImageLoad(event) {
       this.$emit('onImageLoaded', event);
     },
+    onDownloadWatermark(image) {
+      const shouldEmbedMetadata = this.shouldEmbedMetadata;
+      const shouldWatermark = this.shouldWatermark;
+      this.$store.dispatch(DOWNLOAD_WATERMARK, {
+        imageId: image.id,
+        shouldWatermark,
+        shouldEmbedMetadata,
+      });
+      window.location = this.watermarkURL;
+    },
   },
   watch: {
     image() {
@@ -173,5 +243,17 @@ export default {
 
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
+  .download-watermark {
+    background: #01a635;
+    color: #fff;
+  }
+
+  label {
+    margin-right: 8px;
+  }
+
+  .help-icon {
+    height: 24px;
+  }
 </style>
 
