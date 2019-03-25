@@ -168,6 +168,7 @@ export default {
 
   .search-grid_analytics h5,
   .search-grid_layout-control h5 {
+    padding-top: 1.36 vh;
     font-size: 1rem;
     display: inline-block;
   }
@@ -182,6 +183,7 @@ export default {
     fieldset {
       display: inline;
       margin-right: 5px;
+
     }
   }
 
