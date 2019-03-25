@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "clipboard": "^2.0.1",
     "foundation-sites": "^6.5.0-rc.3",
     "masonry-layout": "^4.2.2",
     "packery": "^2.1.2",
@@ -25,6 +24,7 @@
     "vue": "^2.5.17",
     "vue-axios": "^2.1.3",
     "vue-infinite-loading": "^2.3.3",
+    "vue-masonry": "^0.11.7",
     "vue-multiselect": "^2.1.0",
     "vue-router": "^3.0.1"
   },
