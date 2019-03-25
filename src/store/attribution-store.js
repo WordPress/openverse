@@ -1,7 +1,7 @@
-import { 
+import {
   CopyRtfAttribution,
-  CopyTextAttribution, 
-  CopyHtmlAttribution, 
+  CopyTextAttribution,
+  CopyHtmlAttribution,
   DownloadWatermark,
 } from '@/analytics/events';
 import {
@@ -13,11 +13,11 @@ const actions = GoogleAnalytics => ({
   // eslint-disable-next-line no-unused-vars
   [COPY_ATTRIBUTION]({ commit }, params) {
     let event;
-    switch(params.contentType) {
-      case "html":
+    switch (params.contentType) {
+      case 'html':
         event = new CopyHtmlAttribution(params.content);
         break;
-      case "rtf":
+      case 'rtf':
         event = new CopyRtfAttribution(params.content);
         break;
       default:

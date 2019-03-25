@@ -22,30 +22,30 @@ export default {
     },
   },
   methods: {
-    listener: function (clickEvent) {
+    listener(clickEvent) {
       // Prepare the content to copy into the clipboard
-      let content = this.toCopy().replace(/\s\s/g, '');
+      const content = this.toCopy().replace(/\s\s/g, '');
 
       // Load the content into the clipboard
-      let copier = (event) => {
+      const copier = (event) => {
         // If the content type is RTF, paste as rich text into the clipboard
-        if (this.contentType === "rtf") {
-          event.clipboardData.setData("text/html", content);
+        if (this.contentType === 'rtf') {
+          event.clipboardData.setData('text/html', content);
         }
         // Paste as plain text into the clipboard
-        event.clipboardData.setData("text/plain", content);
+        event.clipboardData.setData('text/plain', content);
         // Prevent the default action
         event.preventDefault();
-      }
-      document.addEventListener("copy", copier);
-      document.execCommand("copy");
-      document.removeEventListener("copy", copier);
-      
+      };
+      document.addEventListener('copy', copier);
+      document.execCommand('copy');
+      document.removeEventListener('copy', copier);
+
       // Set the success flag and log the copy action for Analytics
       this.success = true;
       this.$store.dispatch(COPY_ATTRIBUTION, {
         contentType: this.$props.contentType,
-        content: content,
+        content,
       });
 
       // Set a timeout for the success flag to be reset
@@ -58,11 +58,11 @@ export default {
     },
   },
   mounted() {
-    this.$el.addEventListener("click", this.listener);
+    this.$el.addEventListener('click', this.listener);
   },
   destroyed() {
-    this.$el.removeEventListener("click", this.listener);
-  }
+    this.$el.removeEventListener('click', this.listener);
+  },
 };
 </script>
 
