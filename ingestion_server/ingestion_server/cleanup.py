@@ -2,9 +2,12 @@ import logging as log
 import time
 import multiprocessing
 from psycopg2.extras import DictCursor, Json
-from ingestion_server.indexer import DB_BUFFER_SIZE, database_connect
+from ingestion_server.indexer import database_connect
 from urllib.parse import urlparse
 
+
+# Number of records to buffer in memory at once
+CLEANUP_BUFFER_SIZE = 50000
 
 # Filter out automatically generated tags that aren't of any use to us.
 # Note this list is case insensitive.
@@ -36,7 +39,7 @@ def _cleanup_tags(tags):
     """
     Delete tags because they have low accuracy or because they are in the
     blacklist. If no change is made, return None.
-    :return: A SQL fragment, such as
+    :return: A SQL fragment if an update is required or None
     """
     update_required = False
     tag_output = []
@@ -150,8 +153,6 @@ def clean_data(table):
 
     # Pull data from selected providers only.
     providers = list(_cleanup_config['tables'][table]['providers'])
-    provider_equals = "provider = '{}'"
-    all_providers_equal = [provider_equals.format(p) for p in providers]
 
     # Determine which fields will need updating
     fields_to_clean = set()
@@ -172,7 +173,7 @@ def clean_data(table):
     # Clean each field as specified in _cleanup_config.
     provider_config = table_config['providers']
 
-    batch = iter_cur.fetchmany(size=DB_BUFFER_SIZE)
+    batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
     jobs = []
     num_workers = multiprocessing.cpu_count() * 2
     while batch:
@@ -188,7 +189,7 @@ def clean_data(table):
             jobs.append(
                 (batch[start:end], temp_table, provider_config)
             )
-        batch = iter_cur.fetchmany(size=DB_BUFFER_SIZE)
+        batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
     pool = multiprocessing.Pool(processes=num_workers)
     log.info('Starting {} cleaning jobs'.format(len(jobs)))
     pool.starmap(_clean_data_worker, jobs)
