@@ -111,7 +111,6 @@ const PhotoDetailPage = {
     },
     getRelatedImages(tags, query) {
       if (this.query.q) {
-        console.log(this.$store.state.query.q);
         this.$store.dispatch(FETCH_RELATED_IMAGES, { q: this.query.q, pagesize: 8 });
       }
       else {
