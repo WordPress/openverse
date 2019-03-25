@@ -68,24 +68,24 @@
             {{ fullLicenseName }}
             </a>
           </p>
-          <h3>
-            Copy
-          </h3>
-          <CopyButton :toCopy="HTMLAttribution"
-                      contentType="html"
-                      title="Can be used in website code">
-            HTML code
-          </CopyButton>
-          <CopyButton :toCopy="textAttribution"
-                      contentType="text"
-                      title="Can be used in static documents">
-            Plain text
-          </CopyButton>
-          <CopyButton :toCopy="HTMLAttribution"
-                      contentType="rtf"
-                      title="Can be used in WYSIWYG editors">
-            Rich text
-          </CopyButton>
+          <h3>Copy</h3>
+          <div class="attribution-buttons">
+            <CopyButton :toCopy="HTMLAttribution"
+                        contentType="html"
+                        title="Can be used in website code">
+              HTML code
+            </CopyButton>
+            <CopyButton :toCopy="textAttribution"
+                        contentType="text"
+                        title="Can be used in static documents">
+              Plain text
+            </CopyButton>
+            <CopyButton :toCopy="HTMLAttribution"
+                        contentType="rtf"
+                        title="Can be used in WYSIWYG editors">
+              Rich text
+            </CopyButton>
+          </div>
         </section>
         <section v-if="watermarkEnabled" class="photo_usage">
           <header class="photo_info-header">
@@ -270,6 +270,10 @@ export default {
 
   .help-icon {
     height: 24px;
+  }
+
+  .attribution-buttons {
+    margin-top: 8px;
   }
 </style>
 
