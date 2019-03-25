@@ -36,7 +36,7 @@
         item-selector=".item"
         :fit-width="true"
         :gutter="20">
-        <search-grid-cell v-for="(image) in _images"
+        <masonry-search-grid-cell v-for="(image) in _images"
           v-masonry-tile class="item"
           :key="image.id"
           :image="image"
@@ -60,7 +60,7 @@ import Vue from 'vue';
 import { SET_IMAGES } from '@/store/mutation-types';
 import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
-import SearchGridCell from '@/components/SearchGridCell';
+import MasonrySearchGridCell from '@/components/MasonrySearchGridCell';
 import SearchGridFilter from '@/components/SearchGridFilter';
 import { VueMasonryPlugin } from 'vue-masonry';
 
@@ -73,7 +73,7 @@ export default {
   components: {
     InfiniteLoading,
     SearchGridFilter,
-    SearchGridCell,
+    MasonrySearchGridCell,
   },
   data: () => ({
     isDataInitialized: false,
