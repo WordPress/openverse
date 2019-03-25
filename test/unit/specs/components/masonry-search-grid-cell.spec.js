@@ -1,4 +1,4 @@
-import SearchGridCell from '@/components/SearchGridCell';
+import MasonrySearchGridCell from '@/components/MasonrySearchGridCell';
 import render from '../../test-utils/render';
 
 describe('SearchGridCell', () => {
@@ -13,7 +13,7 @@ describe('SearchGridCell', () => {
         foreign_landing_url: 'foo.bar',
       },
     };
-    const wrapper = render(SearchGridCell, { propsData: props });
-    expect(wrapper.find('figure').vm).toBeDefined();
+    const wrapper = render(MasonrySearchGridCell, { propsData: props });
+    expect(wrapper.find('div').find('figure').element).toBeDefined();
   });
 });
