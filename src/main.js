@@ -13,6 +13,7 @@ Vue.config.productionTip = false;
 ApiService.init();
 const analytics = GoogleAnalytics();
 analytics.anonymizeIpAddress();
+analytics.setTransportBeacon();
 
 /* eslint-disable no-new */
 new Vue({

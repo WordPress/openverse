@@ -19,17 +19,25 @@ describe('PhotoDetails', () => {
         creator: 'John',
         creator_url: 'http://creator.com',
       },
+      watermarkEnabled: true,
     };
 
     options = {
       propsData: props,
     };
+
+    process.env.API_URL = 'https://watermark.test';
   });
 
   it('should render correct contents', () => {
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.find('.photo_image').element).toBeDefined();
     expect(wrapper.find({ name: 'license-icons' }).element).toBeDefined();
+  });
+
+  it('should render watermark link', () => {
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.find('.download-watermark').element).toBeDefined();
   });
 
   it('should generate license URL', () => {
@@ -60,6 +68,35 @@ describe('PhotoDetails', () => {
     expect(wrapper.vm.fullLicenseName).toBe('cc0 1.0');
   });
 
+  it('should generate watermark url', () => {
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.vm.watermarkURL).toContain(`https://watermark.test/watermark/${props.image.id}`);
+  });
+
+  it('should generate watermark url with embed_metadata set to true', () => {
+    const wrapper = render(PhotoDetails, options);
+    wrapper.setData({ shouldEmbedMetadata: true });
+    expect(wrapper.vm.watermarkURL).toContain('embed_metadata=true');
+  });
+
+  it('should generate watermark url with embed_metadata set to false', () => {
+    const wrapper = render(PhotoDetails, options);
+    wrapper.setData({ shouldEmbedMetadata: false });
+    expect(wrapper.vm.watermarkURL).toContain('embed_metadata=false');
+  });
+
+  it('should generate watermark url with watermark set to true', () => {
+    const wrapper = render(PhotoDetails, options);
+    wrapper.setData({ shouldWatermark: true });
+    expect(wrapper.vm.watermarkURL).toContain('watermark=true');
+  });
+
+  it('should generate watermark url with watermark set to false', () => {
+    const wrapper = render(PhotoDetails, options);
+    wrapper.setData({ shouldWatermark: false });
+    expect(wrapper.vm.watermarkURL).toContain('watermark=false');
+  });
+
   it('should generate text attribution', () => {
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.vm.textAttribution()).toContain(props.image.title);
@@ -72,6 +109,22 @@ describe('PhotoDetails', () => {
   it('should generate html attribution', () => {
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${props.image.creator_url}">${props.image.creator}</a>`);
+    expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${props.image.foreign_landing_url}">"${props.image.title}"</a>`);
+    expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${wrapper.vm.ccLicenseURL}">`);
+  });
+
+  it('should generate html attribution without creator URL', () => {
+    options.propsData.image.creator_url = null;
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.vm.HTMLAttribution()).toContain(`by ${props.image.creator}`);
+    expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${props.image.foreign_landing_url}">"${props.image.title}"</a>`);
+    expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${wrapper.vm.ccLicenseURL}">`);
+  });
+
+  it('should generate html attribution without creator URL', () => {
+    options.propsData.image.creator = null;
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.vm.HTMLAttribution()).not.toContain('by');
     expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${props.image.foreign_landing_url}">"${props.image.title}"</a>`);
     expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${wrapper.vm.ccLicenseURL}">`);
   });

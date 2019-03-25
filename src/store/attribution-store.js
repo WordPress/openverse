@@ -2,9 +2,11 @@ import {
   CopyRtfAttribution,
   CopyTextAttribution, 
   CopyHtmlAttribution, 
+  DownloadWatermark,
 } from '@/analytics/events';
 import {
   COPY_ATTRIBUTION,
+  DOWNLOAD_WATERMARK,
 } from './action-types';
 
 const actions = GoogleAnalytics => ({
@@ -22,6 +24,11 @@ const actions = GoogleAnalytics => ({
         event = new CopyTextAttribution(params.content);
         break;
     }
+    GoogleAnalytics.sendEvent(event);
+  },
+  // eslint-disable-next-line no-unused-vars
+  [DOWNLOAD_WATERMARK]({ commit }, params) {
+    const event = DownloadWatermark(params);
     GoogleAnalytics.sendEvent(event);
   },
 });
