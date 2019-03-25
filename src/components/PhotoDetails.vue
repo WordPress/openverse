@@ -68,7 +68,7 @@
             {{ fullLicenseName }}
             </a>
           </p>
-          <h3>Copy</h3>
+          <h3>Copy as</h3>
           <div class="attribution-buttons">
             <CopyButton :toCopy="HTMLAttribution"
                         contentType="html"
