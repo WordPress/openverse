@@ -152,12 +152,6 @@ def clean_data(table):
     providers = list(_cleanup_config['tables'][table]['providers'])
     provider_equals = "provider = '{}'"
     all_providers_equal = [provider_equals.format(p) for p in providers]
-    provider_condition = ' OR '.join(all_providers_equal)
-    # Determine whether we should select every provider.
-    if '*' in table_config['providers']:
-        where_clause = ''
-    else:
-        where_clause = 'WHERE ' + provider_condition
 
     # Determine which fields will need updating
     fields_to_clean = set()
@@ -166,11 +160,9 @@ def clean_data(table):
         for f in _fields:
             fields_to_clean.add(f)
 
-    cleanup_selection = "SELECT id, provider, {fields} from {table}" \
-                        " {where_clause}".format(
+    cleanup_selection = "SELECT id, provider, {fields} from {table}".format(
                             fields=', '.join(fields_to_clean),
                             table='temp_import_{}'.format(table),
-                            where_clause=where_clause
                         )
     log.info('Running cleanup on selection "{}"'.format(cleanup_selection))
     conn = database_connect()
