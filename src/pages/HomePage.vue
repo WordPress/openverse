@@ -180,7 +180,7 @@ export default HomePage;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
+<style lang="scss">
 $gray: #808080;
 $highlight: #4ec6cd;
 $nav-text-color: $gray;
@@ -188,7 +188,6 @@ $vert-seperate: 4rem;
 
 .home-page .nav {
   position: absolute !important;
-  background: transparent !important;
 
   .badge {
    display: none;
