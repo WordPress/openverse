@@ -5,6 +5,7 @@
   "author": "sebworks",
   "private": true,
   "scripts": {
+    "dev-insecure": "webpack-dev-server --inline --progress --config build/webpack-dev-conf.js",
     "dev": "webpack-dev-server --https --inline --progress --config build/webpack-dev-conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest-conf.js --coverage",
