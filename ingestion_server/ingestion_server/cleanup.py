@@ -189,11 +189,13 @@ def clean_data(table):
             jobs.append(
                 (batch[start:end], temp_table, provider_config)
             )
+        pool = multiprocessing.Pool(processes=num_workers)
+        log.info('Starting {} cleaning jobs'.format(len(jobs)))
+        pool.starmap(_clean_data_worker, jobs)
+        pool.close()
+        log.info('Fetching next batch')
+        jobs = []
         batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
-    pool = multiprocessing.Pool(processes=num_workers)
-    log.info('Starting {} cleaning jobs'.format(len(jobs)))
-    pool.starmap(_clean_data_worker, jobs)
-    pool.close()
     iter_cur.close()
     end_time = time.time()
     cleanup_time = end_time - start_time
