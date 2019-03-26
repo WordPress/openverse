@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 
 
 # Number of records to buffer in memory at once
-CLEANUP_BUFFER_SIZE = 50000
+CLEANUP_BUFFER_SIZE = 100000
 
 # Filter out automatically generated tags that aren't of any use to us.
 # Note this list is case insensitive.
