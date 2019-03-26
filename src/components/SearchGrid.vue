@@ -9,7 +9,7 @@
           Photos
         </h5>
       </div>
-      <div class="search-grid_layout-control cell medium-6 large-6">
+      <div class="search-grid_layout-control cell medium-6 large-6 shrink">
         <h5>Grid Options:</h5>
         <fieldset>
           <input
