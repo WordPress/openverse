@@ -6,16 +6,10 @@ ETL Process:            Identify artworks that are available under a Creative
 
 Output:                 TSV file containing images of artworks and their respective meta-data.
 """
-from Provider import Provider
-import logging
-from bs4 import BeautifulSoup
-from urlparse import urlparse
-import json
-import re
+from Provider import *
 
 
-logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] =======> %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
+logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s - Science Museum UK] =======> %(message)s', level=logging.INFO)
 
 
 class ScienceMuseum(Provider):
@@ -65,7 +59,7 @@ class ScienceMuseum(Provider):
                 license     = imgLicense.lower()
 
             if not license:
-                logger.warning('License not detected in url: {}'.format(_url))
+                logging.warning('License not detected in url: {}'.format(_url))
                 return None
 
             self.license = license
@@ -95,7 +89,7 @@ class ScienceMuseum(Provider):
 
             if maker:
                 makerName = maker.text.strip()
-                if makerName.lower() <> 'unknown':
+                if makerName.lower() != 'unknown':
                     self.creator = makerName
 
                     if 'href' in maker.attrs:
@@ -140,7 +134,7 @@ class ScienceMuseum(Provider):
 
 
                 if self.url == '':
-                    logger.warning('Image not detected in url: {}'.format(_url))
+                    logging.warning('Image not detected in url: {}'.format(_url))
                     continue
 
                 extracted.extend(self.formatOutput)

@@ -6,11 +6,9 @@ ETL Process:            Identify images of plant species that are available unde
 
 Output:                 TSV file containing images of artworks and their respective meta-data.
 """
-from Provider import Provider
-import logging
-from bs4 import BeautifulSoup
-from urlparse import urlparse
-import re
+from Provider import *
+
+logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s - Flora-On] =======> %(message)s', level=logging.INFO)
 
 class FloraOn(Provider):
 
@@ -55,7 +53,7 @@ class FloraOn(Provider):
                 license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
                 if not license:
-                    logger.warning('License not detected in url: {}'.format(_url))
+                    logging.warning('License not detected in url: {}'.format(_url))
                     continue
 
                 self.license            = license
@@ -69,7 +67,7 @@ class FloraOn(Provider):
                     if self.url:
                         self.url = '{}/{}'.format(self.domain, self.url)
                     else:
-                        logger.warning('Image not detected in url: {}'.format(_url))
+                        logging.warning('Image not detected in url: {}'.format(_url))
                         continue
 
                     imgWidth    = photo.find('input', {'name': 'wid'})
@@ -109,7 +107,7 @@ class FloraOn(Provider):
                         if key:
                             key                 = key.text.strip().lower().replace(' ', '_')
                             related             = species.find_all('i')
-                            val                 = ','.join([x.text.strip() for x in related if x.text.strip() <> 'Download'])
+                            val                 = ','.join([x.text.strip() for x in related if x.text.strip() != 'Download'])
                             otherMetaData[key]  = val
 
 

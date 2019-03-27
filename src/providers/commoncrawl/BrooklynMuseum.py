@@ -1,13 +1,7 @@
-from Provider import Provider
-import logging
-from bs4 import BeautifulSoup
-from urlparse import urlparse
-import json
-import re
+from Provider import *
 
 
-logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] =======> %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
+logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s - Brooklyn Museum] =======> %(message)s', level=logging.INFO)
 
 
 class BrooklynMuseum(Provider):
@@ -55,7 +49,7 @@ class BrooklynMuseum(Provider):
             license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
             if not license:
-                logger.warning('License not detected in url: {}'.format(_url))
+                logging.warning('License not detected in url: {}'.format(_url))
                 return None
 
             self.license            = license
@@ -72,8 +66,8 @@ class BrooklynMuseum(Provider):
         objectInfo = soup.find('div', {'class': re.compile('.*?object-data')})
         if objectInfo:
             titleDiv = objectInfo.findChild('div', {'class': 'row'})
-            if titleDiv:
-                self.title = titleDiv.h1.text.strip().encode('unicode-escape')
+            if titleDiv and titleDiv.h1:
+                self.title = titleDiv.h1.text.strip()
 
 
         tombstoneData = soup.find_all('div', {'class': 'row tombstone-data-row'})
@@ -82,7 +76,7 @@ class BrooklynMuseum(Provider):
                 label = row.findChild('strong')
 
                 if label:
-                    content = row.text.replace('\r', ' ').replace('\n', ' ').strip()#.encode('unicode-escape')
+                    content = row.text.replace('\r', ' ').replace('\n', ' ').strip()
                     content = content.replace(label.text, '')
                     content = re.sub('\s+', ' ', content).strip()
 
@@ -111,7 +105,7 @@ class BrooklynMuseum(Provider):
                                 artistURL = 'https://www.brooklynmuseum.org{}'.format(artistURL)
 
                             if 'unknown' not in artist.lower():
-                                self.creator    = artist.encode('unicode-escape')
+                                self.creator    = artist
                                 self.creatorURL = artistURL
 
                                 continue

@@ -6,16 +6,10 @@ ETL Process:            Identify images, of the various life forms on earth, tha
 
 Output:                 TSV file containing images of artworks and their respective meta-data.
 """
-from Provider import Provider
-import logging
-from bs4 import BeautifulSoup, NavigableString
-from urlparse import urlparse
-import json
-import re
+from Provider import *
 
 
-logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] =======> %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
+logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] - EOL =======> %(message)s', level=logging.INFO)
 
 
 class EOL(Provider):
@@ -100,7 +94,7 @@ class EOL(Provider):
                 if moreInfo:
                     infoURL = moreInfo.find('a')
                     if infoURL:
-                        otherMetaData['more_information'] = '{}{}'.format(self.domain, infoURL.attrs['href'])
+                        otherMetaData['more_information'] = '{}{}'.format(self.domain.strip('%'), infoURL.attrs['href'])
 
         #get the image
         if '/data_objects/' in _url:
@@ -110,7 +104,7 @@ class EOL(Provider):
                 if img:
                     self.url    = self.validateContent('', img, 'href')
                 else:
-                    logger.warning('Image not detected in url: {}'.format(_url))
+                    logging.warning('Image not detected in url: {}'.format(_url))
                     return None
 
 
@@ -123,7 +117,7 @@ class EOL(Provider):
                     license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
                     if not license:
-                        logger.warning('License not detected in url: {}'.format(_url))
+                        logging.warning('License not detected in url: {}'.format(_url))
                         return None
 
                     self.license            = license
@@ -154,7 +148,7 @@ class EOL(Provider):
                                     sourceURL = tmpInfo.findChild('a')['href'].strip()
 
                                     if sourceURL[0] == '/':
-                                        sourceURL = '{}{}'.format(self.domain, sourceURL)
+                                        sourceURL = '{}{}'.format(self.domain.strip('%'), sourceURL)
 
                                 if key in ['supplier', 'source'] and sourceURL is not None:
                                     otherMetaData[key] = sourceURL
@@ -165,7 +159,7 @@ class EOL(Provider):
                                         otherMetaData['{}_url'.format(key)] = sourceURL
 
                                 elif key == 'creator':
-                                        self.creator = tmpInfo.text.split(':')[1].strip().replace('\\xa9', '').strip().encode('unicode-escape')
+                                        self.creator = tmpInfo.text.split(':')[1].strip().replace('\\xa9', '').strip()
                                         if sourceURL:
                                             self.creatorURL = sourceURL
 
@@ -225,7 +219,7 @@ class EOL(Provider):
                     if foreignID:
                         self.foreignIdentifier = foreignID.strip()
 
-                    self.foreignLandingURL = '{}{}'.format(self.domain, imgDetails.attrs['href'].strip())
+                    self.foreignLandingURL = _url#'{}{}'.format(self.domain.strip('%'), imgDetails.attrs['href'].strip())
 
                     imgProperty = imgDetails.findChild('img')
                     if imgProperty:
@@ -238,18 +232,18 @@ class EOL(Provider):
                             self.url                        = imgProperty.attrs['src'].strip()
 
                         else:
-                            logger.warning('Image not detected in url: {}'.format(_url))
+                            logging.warning('Image not detected in url: {}'.format(_url))
                             continue
 
 
                         if 'alt' in imgProperty.attrs:
                             otherMetaData['image_alt_text'] = imgProperty.attrs['alt'].strip()
                     else:
-                        logger.warning('Image not detected in url: {}'.format(_url))
+                        logging.warning('Image not detected in url: {}'.format(_url))
                         continue
 
 
-                        if dataID <> foreignID:
+                        if dataID != foreignID:
                             self.foreignIdentifier = ''
 
 
@@ -262,7 +256,7 @@ class EOL(Provider):
                             license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
                         if not license:
-                            logger.warning('License not detected in url: {}'.format(_url))
+                            logging.warning('License not detected in url: {}'.format(_url))
                             continue
 
                         self.license            = license
@@ -275,13 +269,13 @@ class EOL(Provider):
                             ownerInfo = ownerInfo.findChildren('p')
                             for owner in ownerInfo:
                                 if 'class' in owner.attrs:
-                                    self.creator = owner.text.strip().replace('\\xa9', '').replace('Copyright', '').strip().encode('unicode-escape')
+                                    self.creator = owner.text.strip().replace('\\xa9', '').replace('Copyright', '').strip()
                                 else:
                                     source = owner.findChild('a') #get the image source or supplier
                                     if source:
                                         srcURL = source.attrs['href'].strip()
                                         if srcURL[0] == '/':
-                                            srcURL = '{}{}'.format(self.domain, srcURL)
+                                            srcURL = '{}{}'.format(self.domain.strip('%'), srcURL)
                                         key = owner.contents[0].lower().strip().replace(':', '').replace(' ', '_')
                                         val = srcURL
 
@@ -295,7 +289,7 @@ class EOL(Provider):
 
 
                 else:
-                    logger.warning('Image not detected in url: {}'.format(_url))
+                    logging.warning('Image not detected in url: {}'.format(_url))
                     continue
 
 

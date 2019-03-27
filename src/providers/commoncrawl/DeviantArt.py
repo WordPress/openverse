@@ -6,15 +6,10 @@ ETL Process:            Identify the various artworks that are
 
 Output:                 TSV file containing images of artworks and their respective meta-data.
 """
-from Provider import Provider
-import logging
-from bs4 import BeautifulSoup
-from urlparse import urlparse
-import re
+from Provider import *
 
 
-logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] =======> %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
+logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s - DeviantArt] =======> %(message)s', level=logging.INFO)
 
 class DeviantArt(Provider):
 
@@ -56,7 +51,7 @@ class DeviantArt(Provider):
             license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
             if not license:
-                logger.warning('License not detected in url: {}'.format(_url))
+                logging.warning('License not detected in url: {}'.format(_url))
                 return None
 
             self.license          = license
@@ -68,7 +63,7 @@ class DeviantArt(Provider):
             if imgProperty:
                 imageURL    = self.validateContent('', imgProperty, 'content')
                 if 'main/logo/card_black_large.png' in imageURL:
-                    logger.info('Image not available. Image url: {}'.format(_url))
+                    logging.info('Image not available. Image url: {}'.format(_url))
                     return None
 
                 imgWidth    = self.validateContent('', soup.find('meta', {'property': 'og:image:width'}), 'content')
@@ -78,7 +73,7 @@ class DeviantArt(Provider):
                 self.width      = imgWidth
                 self.height     = imgHeight
             else:
-                logger.warning('Image not detected in url: {}'.format(_url))
+                logging.warning('Image not detected in url: {}'.format(_url))
                 return None
 
 
@@ -104,7 +99,7 @@ class DeviantArt(Provider):
             if foreignID:
                 self.foreignIdentifier = foreignID.attrs['gmi-deviationid'].strip()
             else:
-                logger.warning('Identifier not detected in: {}'.format(_url))
+                logging.warning('Identifier not detected in: {}'.format(_url))
                 return None
 
             self.provider   = self.name

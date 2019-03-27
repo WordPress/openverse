@@ -2,17 +2,16 @@ import re
 import sys
 import gzip
 import json
-import StringIO
+from io import StringIO, BytesIO
 import requests
 import logging
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 from pyspark.sql import SQLContext
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import concat, col, lit, when
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] =======> %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 class Provider:
 
@@ -67,7 +66,7 @@ class Provider:
         pattern = re.compile('CC-MAIN-\d{4}-\d{2}')
 
         if not pattern.match(_cc_index):
-            logger.error('Invalid common crawl index format -> {}'.format(_cc_index))
+            logging.error('Invalid common crawl index format -> {}'.format(_cc_index))
 
         else:
             self.crawlIndex = _cc_index
@@ -110,9 +109,9 @@ class Provider:
             self.tags = self.metaData['tags']
             del self.metaData['tags']
 
-            return [{'name': tag.strip(), 'provider': self.provider} for tag in list(set(self.tags.split(',')))[:maxTags]]
+            return [{'name': self.sanitizeString(tag), 'provider': self.provider} for tag in list(set(self.tags.split(',')))[:maxTags]]
         else:
-            return self.tags
+            return ''
 
 
     @property
@@ -121,7 +120,10 @@ class Provider:
             self.metaData['alternate_language_available'] = 't'
 
         #format the tags
-        self.tags = self.getTags
+        self.tags       = self.getTags
+
+        if self.metaData:
+            self.metaData.update((key, self.sanitizeString(val)) for key,val in self.metaData.items())
 
 
         yield [
@@ -129,16 +131,16 @@ class Provider:
             self.foreignLandingURL,
             self.url,
             self.thumbnail,
-            int(float(self.width)) if self.width else '',
-            int(float(self.height)) if self.height else '',
+            int(float(self.width)) if self.width else '\\N',
+            int(float(self.height)) if self.height else '\\N',
             self.filesize,
             self.license,
             self.licenseVersion,
-            self.creator.encode('unicode-escape'),
+            self.sanitizeString(self.creator) if self.creator else '\\N',
             self.creatorURL,
-            self.title.encode('unicode-escape'),
-            json.dumps(self.metaData) if self.metaData else '',
-            json.dumps(self.tags) if self.tags else '',
+            self.sanitizeString(self.title) if self.title else '\\N',
+            json.dumps(self.metaData) if self.metaData else '\\N',
+            json.dumps(self.tags) if self.tags else '\\N',
             self.watermarked,
             self.provider,
             self.source
@@ -150,7 +152,7 @@ class Provider:
         if self.crawlIndex is None:
             raise ValueError('Common Crawl index not specified!')
 
-        return 'data/crawl_index={}'.format(self.crawlIndex)
+        return '../../output/{}'.format(self.crawlIndex)
 
 
     @property
@@ -167,14 +169,14 @@ class Provider:
         try:
             return foreignID.group(1)
         except:
-            logger.error('Identifier not detected in: {}'.format(_str))
+            logging.error('Identifier not detected in: {}'.format(_str))
             return None
 
 
     def getLicense(self, _domain, _path, _url):
 
         if 'creativecommons.org' not in _domain:
-            logger.warning('The license for the following work -> {} is not issued by Creative Commons.'.format(_url))
+            logging.warning('The license for the following work -> {} is not issued by Creative Commons.'.format(_url))
             return [None, None]
 
         pattern   = re.compile('/(licenses|publicdomain)/([a-z\-?]+)/(\d\.\d)/?(.*?)')
@@ -189,11 +191,11 @@ class Provider:
                 elif license == 'mark':
                     license = 'pdm'
                 else:
-                    logger.warning('License not detected!')
+                    logging.warning('License not detected!')
                     return [None, None]
 
             elif (license == ''):
-                logger.warning('License not detected!')
+                logging.warning('License not detected!')
                 return [None, None]
 
 
@@ -205,9 +207,20 @@ class Provider:
     def validateContent(self, _default, _html=None, _property=None):
 
         if _html:
-            return _html.attrs[_property].strip().encode('unicode-escape')
+            return self.sanitizeString(_html.attrs[_property])
         else:
             return _default
+
+
+    def sanitizeString(self, _data):
+        if _data is None:
+            return ''
+
+        _data = _data.strip()
+        _data = _data.replace('"', "'")
+        _data = re.sub(r'\n|\r', ' ', _data)
+
+        return re.sub(r'\s+', ' ', _data)
 
 
     def getWARCRecord(self, _file, _offset, _length):
@@ -220,13 +233,13 @@ class Provider:
 
         try:
             response    = requests.get(uri, headers={'Range': rnge})
-            content     = StringIO.StringIO(response.content)
+            content     = BytesIO(response.content)
             fh          = gzip.GzipFile(fileobj=content)
 
             return fh.read()
 
         except (IOError, Exception) as e:
-            logger.error('{}: {}'.format(type(e).__name__, e))
+            logging.error('{}: {}'.format(type(e).__name__, e))
             return None
 
 
@@ -249,10 +262,10 @@ class Provider:
     def filterData(self, _data, _condition=None):
 
         if _condition:
-            data = filter(lambda x: _condition.lower() in x.split('\t')[0].lower(), _data)
-            self.data = data
+            data        = filter(lambda x: _condition.lower() in x.split('\t')[0].lower(), _data)
+            self.data   = list(data)
         else:
-            self.data = _data
+            self.data   = _data
 
         return self.data
 
@@ -279,9 +292,6 @@ class Provider:
 
 
     def saveData(self, _data):
-        #spk = SparkSession.builder.getOrCreate()
-        #df  = spk.createDataFrame(_data)
-        #df.write.mode('overwrite').options(sep='\t', quote='').csv(self.output)
 
         dataDF = _data.toDF(['foreign_identifier', 'foreign_landing_url',
                         'url', 'thumbnail', 'width', 'height', 'filesize', 'license',
@@ -295,7 +305,7 @@ class Provider:
         result = result.dropDuplicates(['provider', 'foreign_identifier'])
 
         #write to file
-        result.coalesce(1).write.mode('overwrite').options(sep='\t', quote='').csv(self.output)
+        result.coalesce(1).write.mode('append').options(sep='\t', quote='').csv(self.output)
 
 
     def extractHTML(self, _iter):
@@ -319,7 +329,6 @@ class Provider:
         """
 
         logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] =======> %(message)s', level=logging.INFO)
-        logger = logging.getLogger(__name__)
 
         for row in _iter:
             data        = row.split('\t')
@@ -333,5 +342,5 @@ class Provider:
                 if metaData:
                     yield metaData
                 else:
-                    logger.warning('Content not found for url: {}, warc file: {}, offset: {}, length: {}.'.format(data[0].strip(), data[1].strip(), data[2].strip(), data[3].strip()))
+                    logging.warning('Content not found for url: {}, warc file: {}, offset: {}, length: {}.'.format(data[0].strip(), data[1].strip(), data[2].strip(), data[3].strip()))
 

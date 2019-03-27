@@ -7,15 +7,10 @@ ETL Process:            Identify images of vacation rentals that are available u
 Output:                 TSV file containing images of artworks and their respective meta-data.
 """
 
-from Provider import Provider
-import logging
-from bs4 import BeautifulSoup
-from urlparse import urlparse
-import json
-import re
+from Provider import *
 
 
-logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] =======> %(message)s', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s - IHA] =======> %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -104,7 +99,7 @@ class IHA(Provider):
                 #get the attribution info
                 author = imageData.find('span', {'class': 'auth'})
                 if author:
-                    self.creator = author.text.strip().replace('\\xa9', '').strip()
+                    self.creator = author.text.strip()
 
 
                 tags = soup.find('meta', {'name': 'keywords'})

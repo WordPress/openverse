@@ -6,16 +6,10 @@ ETL Process:            Identify the various artworks and photographs that are i
 
 Output:                 TSV file containing images of artworks and their respective meta-data.
 """
-from Provider import Provider
-import logging
-from bs4 import BeautifulSoup
-from urlparse import urlparse
-import json
-import re
+from Provider import *
 
 
-logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] =======> %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
+logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s] - Digitalt Museum =======> %(message)s', level=logging.INFO)
 
 
 class DigitaltMuseum(Provider):
@@ -120,14 +114,12 @@ class DigitaltMuseum(Provider):
                     license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
                 if not license:
-                    logger.warning('License not detected in url: {}'.format(_url))
+                    logging.warning('License not detected in url: {}'.format(_url))
                     continue
 
                 self.license            = license
                 self.licenseVersion     = version
                 self.title              = title
-                if articleMetaData:
-                    self.metaData           = articleMetaData
 
 
                 #get image
@@ -143,11 +135,11 @@ class DigitaltMuseum(Provider):
                         self.url = self.validateContent('', img, 'src')
 
                     if img and 'alt' in img.attrs:
-                        self.metaData['image_alt_text'] = self.validateContent('', img, 'alt')
+                        articleMetaData['image_alt_text'] = self.validateContent('', img, 'alt')
 
 
                 if self.url == '':
-                    logger.warning('Image not detected in url: {}'.format(_url))
+                    logging.warning('Image not detected in url: {}'.format(_url))
                     continue
 
 
@@ -159,11 +151,14 @@ class DigitaltMuseum(Provider):
                         self.creator = owner[1].strip()
 
                 if len(media) > 1:
-                    self.metaData['set'] = url
+                    articleMetaData['set'] = url
 
                 if description:
-                    self.metaData['description'] = desc
+                    articleMetaData['description'] = desc
 
+
+                if articleMetaData:
+                    self.metaData = articleMetaData
 
                 extracted.extend(self.formatOutput)
 
