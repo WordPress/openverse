@@ -4,7 +4,7 @@
         @submit.prevent="onSubmit"
         class="search-form">
     <div class="search-form_ctr grid-x global-nav show-for-smedium">
-        <div class="search-form_inner-ctr cell medium-12 large-10">
+        <div class="search-form_inner-ctr cell">
           <input required="required"
                  autofocus="true"
                  class="search-form_input"
@@ -239,14 +239,15 @@ export default {
   }
 
   .search-form_toolbar {
-    width: 400px;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
 
     li {
       border-left: 1px solid #E6EAEA;
-      border-right: 1px solid #E6EAEA;
 
-      &:last-of-type {
-        border-left: none;
+      a {
+        width: 80px;
+        text-align: center;
       }
     }
   }
@@ -254,6 +255,10 @@ export default {
   @media screen and (max-width: 600px) {
     .search-form_input {
       font-size: 18px;
+      width: 60%;
+    }
+    .search-form_toolbar {
+      width: 40%;
     }
   }
 </style>
