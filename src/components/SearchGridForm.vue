@@ -255,10 +255,6 @@ export default {
   @media screen and (max-width: 600px) {
     .search-form_input {
       font-size: 18px;
-      width: 60%;
-    }
-    .search-form_toolbar {
-      width: 40%;
     }
   }
 </style>
