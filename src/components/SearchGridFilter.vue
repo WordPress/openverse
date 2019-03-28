@@ -16,21 +16,6 @@
           :searchable="false">
         </multiselect>
       </div>
-      <div class="filter-option search-filters_licenses">
-        <multiselect
-          v-model="filter.li"
-          @input="onUpdateFilter"
-          :disabled="filter.lt.length > 0"
-          tag-placeholder="Add this as new tag"
-          placeholder="All Licenses"
-          label="name"
-          track-by="code"
-          :options="licenses"
-          :multiple="true"
-          :taggable="true"
-          :searchable="false">
-        </multiselect>
-      </div>
       <div class="filter-option search-filters_license-types">
         <multiselect
           v-model="filter.lt"
@@ -41,6 +26,21 @@
           label="name"
           track-by="code"
           :options="licenseTypes"
+          :multiple="true"
+          :taggable="true"
+          :searchable="false">
+        </multiselect>
+      </div>
+      <div class="filter-option search-filters_licenses">
+        <multiselect
+          v-model="filter.li"
+          @input="onUpdateFilter"
+          :disabled="filter.lt.length > 0"
+          tag-placeholder="Add this as new tag"
+          placeholder="All Licenses"
+          label="name"
+          track-by="code"
+          :options="licenses"
           :multiple="true"
           :taggable="true"
           :searchable="false">
