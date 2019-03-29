@@ -9,7 +9,6 @@ describe('Homepage', () => {
     expect(wrapper.find({ name: 'header-section' }).vm).toBeDefined();
     expect(wrapper.find({ name: 'footer-section' }).vm).toBeDefined();
     expect(wrapper.find({ name: 'license-icons' }).vm).toBeDefined();
-
   });
 
   it('should expose correct data values', () => {
@@ -27,11 +26,12 @@ describe('Homepage', () => {
         $store: storeMock,
       },
     };
-  
+
     const wrapper = render(Homepage, opts);
     const category = wrapper.find('.featured-images_banner').text().toLowerCase();
     wrapper.find('.featured-images_item').trigger('click');
-    expect(storeMock.commit).toHaveBeenCalledWith(SET_QUERY, { query: { q: category }, shouldNavigate: true });
+    expect(storeMock.commit).toHaveBeenCalledWith(SET_QUERY,
+      { query: { q: category }, shouldNavigate: true });
   });
 
   it('redirects to detail page when clicking on image in header-grid', () => {
@@ -44,15 +44,15 @@ describe('Homepage', () => {
       },
     };
     const wrapper = render(Homepage, opts);
-    wrapper.setData({ images: [ 
-        { 
-          class: 'grid-item block b1',
-          id: '2b091d94'
-        } 
-      ] 
+    wrapper.setData({ images: [
+      {
+        class: 'grid-item block b1',
+        id: '2b091d94',
+      },
+    ],
     });
 
-    wrapper.find('.grid-item').trigger('click');;
-    expect(routerMock.push).toHaveBeenCalledWith(`/photos/2b091d94`);
+    wrapper.find('.grid-item').trigger('click');
+    expect(routerMock.push).toHaveBeenCalledWith('/photos/2b091d94');
   });
 });

@@ -4,15 +4,15 @@ import render from '../../test-utils/render';
 describe('LicenseIcons', () => {
   let options = null;
   let props = null;
-  
+
   beforeEach(() => {
     props = {
       image: {
         license: 'BY',
         license_version: '1.0',
-      }
+      },
     };
-  
+
     options = {
       propsData: props,
     };
