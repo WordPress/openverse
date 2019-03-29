@@ -1,6 +1,7 @@
 import logging as log
 import time
 import multiprocessing
+import uuid
 from psycopg2.extras import DictCursor, Json
 from ingestion_server.indexer import database_connect
 from urllib.parse import urlparse
@@ -168,44 +169,44 @@ def clean_data(table):
                         )
     log.info('Running cleanup on selection "{}"'.format(cleanup_selection))
     conn = database_connect()
-    iter_cur = conn.cursor(cursor_factory=DictCursor)
-    iter_cur.itersize = CLEANUP_BUFFER_SIZE
-    iter_cur.execute(cleanup_selection)
+    cursor_name = '{}-{}'.format(table, str(uuid.uuid4()))
+    with conn.cursor(name=cursor_name, cursor_factory=DictCursor) as iter_cur:
+        iter_cur.itersize = CLEANUP_BUFFER_SIZE
+        iter_cur.execute(cleanup_selection)
 
-    # Clean each field as specified in _cleanup_config.
-    provider_config = table_config['providers']
+        # Clean each field as specified in _cleanup_config.
+        provider_config = table_config['providers']
 
-    log.info('Fetching first batch')
-    batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
-    jobs = []
-    num_workers = multiprocessing.cpu_count()
-    num_cleaned = 0
-    while batch:
-        # Divide updates into jobs for parallel execution.
-        temp_table = 'temp_import_{}'.format(table)
-        job_size = int(len(batch) / num_workers)
-        last_end = -1
-        log.info('Dividing work')
-        for n in range(1, num_workers + 1):
-            log.info('Scheduling job {}'.format(n))
-            start = last_end + 1
-            end = job_size * n
-            last_end = end
-            # Arguments for parallel _clean_data_worker calls
-            jobs.append(
-                (batch[start:end], temp_table, provider_config)
-            )
-        pool = multiprocessing.Pool(processes=num_workers)
-        log.info('Starting {} cleaning jobs'.format(len(jobs)))
-        pool.starmap(_clean_data_worker, jobs)
-        pool.close()
-        num_cleaned += len(batch)
-        log.info(
-            'Fetching next batch. Num records cleaned so far: {}'
-            .format(num_cleaned))
-        jobs = []
+        log.info('Fetching first batch')
         batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
-    iter_cur.close()
+        jobs = []
+        num_workers = multiprocessing.cpu_count()
+        num_cleaned = 0
+        while batch:
+            # Divide updates into jobs for parallel execution.
+            temp_table = 'temp_import_{}'.format(table)
+            job_size = int(len(batch) / num_workers)
+            last_end = -1
+            log.info('Dividing work')
+            for n in range(1, num_workers + 1):
+                log.info('Scheduling job {}'.format(n))
+                start = last_end + 1
+                end = job_size * n
+                last_end = end
+                # Arguments for parallel _clean_data_worker calls
+                jobs.append(
+                    (batch[start:end], temp_table, provider_config)
+                )
+            pool = multiprocessing.Pool(processes=num_workers)
+            log.info('Starting {} cleaning jobs'.format(len(jobs)))
+            pool.starmap(_clean_data_worker, jobs)
+            pool.close()
+            num_cleaned += len(batch)
+            log.info(
+                'Fetching next batch. Num records cleaned so far: {}'
+                .format(num_cleaned))
+            jobs = []
+            batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
     end_time = time.time()
     cleanup_time = end_time - start_time
     log.info('Cleaned all records in {} seconds'.format(
