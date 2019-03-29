@@ -240,6 +240,7 @@ def reload_upstream(table, progress=None, finish_time=None):
         CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
         INSERT INTO temp_import_{table} ({cols})
         SELECT {cols} from upstream_schema.{table};
+        ALTER TABLE temp_import_{table} ADD PRIMARY KEY (id);
         DROP SERVER upstream CASCADE;
     '''.format(table=table, cols=query_cols)
     create_indices = ';\n'.join(_generate_indices(downstream_db, table))

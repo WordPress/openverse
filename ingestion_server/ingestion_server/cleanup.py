@@ -91,6 +91,7 @@ def _clean_data_worker(rows, temp_table, providers_config):
     log.info('Data cleaning worker connected to database')
     write_cur = conn.cursor(cursor_factory=DictCursor)
     log.info('Cleaning {} rows'.format(len(rows)))
+    start_time = time.time()
     for row in rows:
         # Map fields that need updating to their cleaning functions
         provider = row['provider']
@@ -127,12 +128,12 @@ def _clean_data_worker(rows, temp_table, providers_config):
                 field_expressions=', '.join(update_field_expressions),
                 _id=_id
             )
-
             write_cur.execute(update_query)
     write_cur.close()
     conn.commit()
     conn.close()
-    log.info('Worker finished batch')
+    end_time = time.time()
+    log.info('Worker finished batch in {}'.format(end_time - start_time))
     return
 
 
@@ -168,20 +169,25 @@ def clean_data(table):
     log.info('Running cleanup on selection "{}"'.format(cleanup_selection))
     conn = database_connect()
     iter_cur = conn.cursor(cursor_factory=DictCursor)
+    iter_cur.itersize = CLEANUP_BUFFER_SIZE
     iter_cur.execute(cleanup_selection)
 
     # Clean each field as specified in _cleanup_config.
     provider_config = table_config['providers']
 
+    log.info('Fetching first batch')
     batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
     jobs = []
-    num_workers = multiprocessing.cpu_count() * 2
+    num_workers = multiprocessing.cpu_count()
+    num_cleaned = 0
     while batch:
         # Divide updates into jobs for parallel execution.
         temp_table = 'temp_import_{}'.format(table)
         job_size = int(len(batch) / num_workers)
         last_end = -1
+        log.info('Dividing work')
         for n in range(1, num_workers + 1):
+            log.info('Scheduling job {}'.format(n))
             start = last_end + 1
             end = job_size * n
             last_end = end
@@ -193,7 +199,10 @@ def clean_data(table):
         log.info('Starting {} cleaning jobs'.format(len(jobs)))
         pool.starmap(_clean_data_worker, jobs)
         pool.close()
-        log.info('Fetching next batch')
+        num_cleaned += len(batch)
+        log.info(
+            'Fetching next batch. Num records cleaned so far: {}'
+            .format(num_cleaned))
         jobs = []
         batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
     iter_cur.close()
