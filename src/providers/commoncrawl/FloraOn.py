@@ -65,7 +65,7 @@ class FloraOn(Provider):
                     self.url                        = self.validateContent('', imageInfo, 'src')
                     otherMetaData['image_alt_text'] = self.validateContent('', imageInfo, 'alt')
                     if self.url:
-                        self.url = '{}/{}'.format(self.domain, self.url)
+                        self.url = '{}/{}'.format(self.domain.strip('%'), self.url)
                     else:
                         logging.warning('Image not detected in url: {}'.format(_url))
                         continue

@@ -22,8 +22,8 @@ class AnimalDiversityWeb(Provider):
 
     def filterData(self, _data, _condition=None):
         #Images can be located in three main content paths: /accounts, /collections, and /site.
-        allowed = map(lambda x: '{}{}'.format(self.domain, x), ['/accounts/', '/collections/', '/site/'])
-        data    = filter(lambda x: x.split('\t')[0].startswith(tuple(allowed)), _data)
+        allowed = list(map(lambda x: '{}{}'.format(self.domain, x), ['/accounts/', '/collections/', '/site/']))
+        data    = list(filter(lambda x: x.split('\t')[0].startswith(tuple(allowed)), _data))
         self.data = data
 
         return self.data

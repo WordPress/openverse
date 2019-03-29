@@ -19,8 +19,8 @@ class MuseumVictoria(Provider):
 
     def filterData(self, _data, _condition=None):
         #Images can be located in four main content paths: /species, /items, /articles, and /specimens.
-        allowed = map(lambda x: '{}{}'.format(self.domain, x), ['/species/', '/items/', '/specimens/', '/articles/'])
-        data    = filter(lambda x: x.split('\t')[0].startswith(tuple(allowed)), _data)
+        allowed = list(map(lambda x: '{}{}'.format(self.domain, x), ['/species/', '/items/', '/specimens/', '/articles/']))
+        data    = list(filter(lambda x: x.split('\t')[0].startswith(tuple(allowed)), _data))
         self.data = data
 
         return self.data
@@ -167,7 +167,7 @@ class MuseumVictoria(Provider):
                         del otherMetaData['image_alt_text']
 
                     if 'src' in img.attrs:
-                        self.thumbnail          = '{}{}'.format(self.domain, self.validateContent('', img, 'src'))
+                        self.thumbnail          = '{}{}'.format(self.domain.strip('%'), self.validateContent('', img, 'src'))
                         self.url                = self.thumbnail.replace('-thumbnail', '-medium')
                         self.foreignIdentifier  = self.url
 

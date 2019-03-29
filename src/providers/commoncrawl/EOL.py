@@ -19,7 +19,7 @@ class EOL(Provider):
 
 
     def filterData(self, _data, _condition=None):
-        data        = filter(lambda x: filter(lambda y: y in x.split('\t')[0], ['/pages/', '/data_objects/']), _data)
+        data        = list(filter(lambda x: filter(lambda y: y in x.split('\t')[0], ['/pages/', '/data_objects/']), _data))
         self.data   = data
 
         return self.data

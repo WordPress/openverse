@@ -86,7 +86,7 @@ class GeographOrgUK(Provider):
             creatorInfo = soup.find('a', {'rel': 'author', 'href': True})
             if creatorInfo:
                 self.creator        = creatorInfo.text.strip()
-                self.creatorURL     = '{}{}'.format(self.domain, creatorInfo.attrs['href'])
+                self.creatorURL     = '{}{}'.format(self.domain.strip('%'), creatorInfo.attrs['href'])
 
 
             #Keywords/tags
