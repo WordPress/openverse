@@ -78,6 +78,7 @@ export default BrowsePage;
   }
 
   .search-grid-ctr {
+    background: #e9ebee;
     min-height: 600px;
     margin: 0;
     transition: margin .7s ease-in-out;
