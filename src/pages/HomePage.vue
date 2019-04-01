@@ -186,14 +186,6 @@ $highlight: #4ec6cd;
 $nav-text-color: $gray;
 $vert-seperate: 4rem;
 
-.home-page .nav {
-  position: absolute !important;
-
-  .badge {
-   display: none;
-  }
-}
-
 .home-page_body {
 
   /* Small only */

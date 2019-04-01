@@ -52,7 +52,7 @@ export default {
   position: relative;
   width: 100%;
   background: #fff;
-  height: 7vh;
+  height: 6vh;
   border-bottom: 1px solid rgba(0,0,0,0.25);
 }
 .nav_logo {
@@ -75,16 +75,12 @@ export default {
   }
 }
 
-.menu {
-  padding: 0.8em;
-}
-
 .menu a {
   color: rgb(44, 62, 80);
   font-size: 1.4em;
   font-weight: 700;
   line-height: 1em;
-  padding: 0.5em 0.8em 0.7em;;
+  padding: 0.7em 0.8em 0.6em;;
   border: 1px solid transparent;
   border-radius: 2px;
   &:hover {
