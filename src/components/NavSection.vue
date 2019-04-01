@@ -84,7 +84,7 @@ export default {
   font-size: 1.4em;
   font-weight: 700;
   line-height: 1em;
-  padding: .2em .8em .25em;
+  padding: 0.5em 0.8em 0.7em;;
   border: 1px solid transparent;
   border-radius: 2px;
   &:hover {
