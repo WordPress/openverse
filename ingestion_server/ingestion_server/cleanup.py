@@ -71,7 +71,9 @@ _cleanup_config = {
                 # Applies to all tables.
                 '*': {
                     'fields': {
-                        'tags': _cleanup_tags
+                        'tags': _cleanup_tags,
+                        'url': _cleanup_url,
+                        'creator_url': _cleanup_url
                     }
                 },
                 'floraon': {
@@ -88,9 +90,9 @@ _cleanup_config = {
 def _clean_data_worker(rows, temp_table, providers_config):
     log.info('Starting data cleaning worker')
     global_field_to_func = providers_config['*']['fields']
-    conn = database_connect()
+    worker_conn = database_connect()
     log.info('Data cleaning worker connected to database')
-    write_cur = conn.cursor(cursor_factory=DictCursor)
+    write_cur = worker_conn.cursor(cursor_factory=DictCursor)
     log.info('Cleaning {} rows'.format(len(rows)))
     start_time = time.time()
     for row in rows:
@@ -130,9 +132,10 @@ def _clean_data_worker(rows, temp_table, providers_config):
                 _id=_id
             )
             write_cur.execute(update_query)
+    log.info('Worker committing changes...')
+    worker_conn.commit()
     write_cur.close()
-    conn.commit()
-    conn.close()
+    worker_conn.close()
     end_time = time.time()
     log.info('Worker finished batch in {}'.format(end_time - start_time))
     return
@@ -207,6 +210,8 @@ def clean_data(table):
                 .format(num_cleaned))
             jobs = []
             batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
+    iter_cur.close()
+    conn.close()
     end_time = time.time()
     cleanup_time = end_time - start_time
     log.info('Cleaned all records in {} seconds'.format(
