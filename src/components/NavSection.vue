@@ -1,7 +1,7 @@
 <template>
   <nav class="nav grid-x grid-padding-x">
     <div class="cell small-12 medium-12 large-6">
-      <a href="https://creativecommons.org/">
+      <a href="/">
         <img class="nav_logo" src="../assets/cc-logo_large_black.png">
       </a>
       <div class="menu_ctr">
@@ -80,7 +80,7 @@ export default {
   font-size: 1.4em;
   font-weight: 700;
   line-height: 1em;
-  padding: 0.7em 0.8em 0.6em;;
+  padding: 0.9em 0.8em 0.7em;
   border: 1px solid transparent;
   border-radius: 2px;
   &:hover {
