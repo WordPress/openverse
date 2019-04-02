@@ -148,7 +148,6 @@ $vert-seperate: 4rem;
 }
 
 .featured-images {
-  margin: 30px 0;
   padding: 30px;
 
   &_header {
