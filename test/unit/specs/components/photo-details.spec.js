@@ -113,6 +113,13 @@ describe('PhotoDetails', () => {
     expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${wrapper.vm.ccLicenseURL}">`);
   });
 
+  it('should invoke social share buttons with the right props', () => {
+    const wrapper = render(PhotoDetails, options);
+    const url = options.propsData.image.foreign_landing_url;
+    expect(wrapper.vm.imageURL).toBe(url);
+    expect(wrapper.vm.shareText).toBe(encodeURI(`I found an image @creativecommons: ${url}`));
+  });
+
   it('should generate html attribution without creator URL', () => {
     options.propsData.image.creator_url = null;
     const wrapper = render(PhotoDetails, options);
