@@ -3,7 +3,9 @@
    <div class="grid-container full">
       <div class="grid-x grid-margin-x grid-margin-y">
         <div class="medium-3 cell">
-          <img class="footer_logo" src="../assets/cc-logo_white.png">
+          <a href="https://creativecommons.org/">
+            <img class="footer_logo" src="../assets/cc-logo_white.png">
+          </a>
           <div class="cc-footer-links">
             <div class="menu-footer-links-container">
                 <ul id="menu-footer-links" class="menu">
