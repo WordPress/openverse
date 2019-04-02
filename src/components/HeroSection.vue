@@ -22,7 +22,11 @@
       </div>
     </form>
     <div class="description">
-        <p>Search for free content licensed under the open Creative Commons licenses</p>
+        <p>
+          Search for free content licensed under the open Creative Commons licenses
+          <br />
+          You can learn more about Creative Commons licenses <a href="https://creativecommons.org/licenses/">here</a>
+        </p>
     </div>
   </div>
 </template>
