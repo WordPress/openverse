@@ -1,5 +1,5 @@
 <template>
-<footer class="footer callout large secondary">
+<footer class="footer secondary">
    <div class="grid-container full">
       <div class="grid-x grid-margin-x grid-margin-y">
         <div class="medium-3 cell">
@@ -57,8 +57,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .footer {
-  padding: 30px;
-  margin-bottom: 0;
+  bottom: 0;
+  padding: 4vh;
   background-color: #2b2b2b;
   width: 100%;
 
