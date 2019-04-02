@@ -32,53 +32,6 @@
         </div>
       </div>
     </section>
-  <section class="grid top-images">
-    <header class="top-images_header">
-      <h2 class="featured-items_title">Top Picks</h2>
-    </header>
-    <div  class="header-grid">
-      <figure v-for="(image, index) in images" v-if="index < 4"
-           :class="image.class" :key="index"
-           @click="onGotoDetailPage(image)">
-         <a :href="image.url"
-             @click.prevent="() => false"
-             target="new">
-          <img :src="image.src" />
-        </a>
-        <figcaption class="grid_item-overlay grid_item-overlay__top">
-          <license-icons :image="image"></license-icons>
-        </figcaption>
-        <figcaption class="grid_item-overlay
-                           grid_item-overlay__bottom">
-          <div @click.stop="() => false"
-               class="grid_overlay-title"
-               v-html="image.title"
-               target="new"></div>
-        </figcaption>
-      </figure>
-      <div class="bottom-block">
-        <figure v-for="(image, index) in images" v-if="index > 3"
-             :class="image.class" :key="index"
-             @click="onGotoDetailPage(image)">
-           <a :href="image.url"
-              @click.prevent="() => false"
-              target="new">
-            <img :src="image.src" />
-          </a>
-          <figcaption class="grid_item-overlay
-                             grid_item-overlay__top">
-            <license-icons :image="image"></license-icons>
-          </figcaption>
-          <figcaption class="grid_item-overlay grid_item-overlay__bottom">
-            <div class="grid_overlay-title"
-                 target="new"
-                 @click.stop="() => false"
-                 v-html="image.title"></div>
-          </figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
   </div>
   <footer-section></footer-section>
 </div>
@@ -180,7 +133,7 @@ export default HomePage;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
+<style lang="scss" scoped>
 $gray: #808080;
 $highlight: #4ec6cd;
 $nav-text-color: $gray;
@@ -414,5 +367,9 @@ $vert-seperate: 4rem;
     display: block;
     height: auto;
   }
+}
+
+.footer {
+  position:fixed;
 }
 </style>
