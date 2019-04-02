@@ -21,6 +21,9 @@
           </div>
       </div>
     </form>
+    <div class="description">
+        <p>Search for free content licensed under the open Creative Commons licenses</p>
+    </div>
   </div>
 </template>
 
@@ -119,6 +122,11 @@ $hero-height: 40vh;
                 rgba(0, 0, 0, 0.1) 0%,
                 rgba(17, 17, 17, 0.7) 100%);
   }
+}
+
+.description {
+  margin-top: 2vh;
+  font-style: italic;
 }
 
 /* Small only */
