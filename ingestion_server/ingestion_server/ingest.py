@@ -254,8 +254,12 @@ def reload_upstream(table, progress=None, finish_time=None):
         log.info('Copying upstream data...')
         downstream_cur.execute(init_fdw)
         downstream_cur.execute(copy_data)
-        downstream_db.commit()
-        clean_data(table)
+    downstream_db.commit()
+    downstream_db.close()
+    clean_data(table)
+    log.info('Cleaning step finished.')
+    downstream_db = database_connect()
+    with downstream_db.cursor() as downstream_cur:
         log.info('Copying finished! Recreating database indices...')
         _update_progress(progress, 50.0)
         if create_indices != '':

@@ -110,7 +110,7 @@ def _elasticsearch_connect(timeout=300):
     return es
 
 
-def database_connect():
+def database_connect(autocommit=False):
     """
     Repeatedly try to connect to the downstream (API) database until successful.
     :return: A database connection object
@@ -123,8 +123,10 @@ def database_connect():
                 password=DATABASE_PASSWORD,
                 host=DATABASE_HOST,
                 port=DATABASE_PORT,
-                connect_timeout=5
+                connect_timeout=5,
             )
+            if autocommit:
+                conn.set_session(autocommit=True)
         except psycopg2.OperationalError as e:
             log.exception(e)
             log.error('Reconnecting to database in 5 seconds. . .')

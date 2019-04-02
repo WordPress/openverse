@@ -136,7 +136,7 @@ def _clean_data_worker(rows, temp_table, providers_config):
     worker_conn.close()
     end_time = time.time()
     log.info('Worker finished batch in {}'.format(end_time - start_time))
-    return
+    return True
 
 
 def clean_data(table):
@@ -144,7 +144,6 @@ def clean_data(table):
     Data from upstream can be unsuitable for production for a number of reasons.
     Clean it up before we go live with the new data.
 
-    :param conn: The database connection
     :param table: The staging table for the new data
     :return: None
     """
@@ -171,7 +170,7 @@ def clean_data(table):
     log.info('Running cleanup on selection "{}"'.format(cleanup_selection))
     conn = database_connect()
     cursor_name = '{}-{}'.format(table, str(uuid.uuid4()))
-    with conn.cursor(name=cursor_name, cursor_factory=DictCursor) as iter_cur:
+    with conn.cursor(name=cursor_name, cursor_factory=DictCursor, withhold=True) as iter_cur:
         iter_cur.itersize = CLEANUP_BUFFER_SIZE
         iter_cur.execute(cleanup_selection)
 
@@ -207,6 +206,7 @@ def clean_data(table):
                 'Fetching next batch. Num records cleaned so far: {}'
                 .format(num_cleaned))
             jobs = []
+            conn.commit()
             batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
     iter_cur.close()
     conn.close()
