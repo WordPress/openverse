@@ -9,8 +9,8 @@
           <span>'{{ searchTerm }}'</span>
         </h5>
       </div>
-      <div class="search-grid_layout-control cell medium-6 large-6">
-        <h5>Image options:</h5>
+      <div class="search-grid_layout-control cell medium-6 large-6 shrink">
+        <h5>Grid Options:</h5>
         <fieldset>
           <input
             id="scaling"
@@ -185,6 +185,7 @@ export default {
 
   .search-grid_analytics h5,
   .search-grid_layout-control h5 {
+    padding-top: 1.36vh;
     font-size: 1rem;
     display: inline-block;
   }
