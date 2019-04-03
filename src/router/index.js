@@ -4,6 +4,7 @@ import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
 import BrowsePage from '@/pages/BrowsePage';
 import PhotoDetailPage from '@/pages/PhotoDetailPage';
+import FeedbackPage from '@/pages/FeedbackPage';
 
 Vue.use(VueRouter);
 
@@ -26,6 +27,11 @@ const router = new VueRouter({
       path: '/about',
       name: 'about-page',
       component: AboutPage,
+    },
+    {
+      path: '/feedback',
+      name: 'feedback-page',
+      component: FeedbackPage,
     },
     {
       path: '/',
