@@ -44,6 +44,8 @@ def _cleanup_tags(tags):
     """
     update_required = False
     tag_output = []
+    if not tags:
+        return None
     for tag in tags:
         below_threshold = False
         if 'accuracy' in tag and tag['accuracy'] < TAG_MIN_CONFIDENCE_THRESHOLD:
