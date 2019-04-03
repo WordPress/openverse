@@ -52,7 +52,7 @@ export default {
   position: relative;
   width: 100%;
   background: #fff;
-  height: 6vh;
+  height: 3.9em;
   border-bottom: 1px solid rgba(0,0,0,0.25);
 }
 .nav_logo {
