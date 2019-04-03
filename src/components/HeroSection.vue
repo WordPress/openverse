@@ -90,7 +90,7 @@ $hero-height: 40vh;
   }
 
   .hero_search-input::placeholder {
-    color: rgb(24, 24, 24);
+    color: rgb(130, 130, 130);
   }
 
   .hero_search-btn {
