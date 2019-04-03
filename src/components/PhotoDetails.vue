@@ -173,8 +173,8 @@ export default {
   data: () => ({
     shouldEmbedMetadata: false,
     shouldWatermark: false,
-    watermarkHelp: 'Wrap image in a white frame and include attribution text',
-    metadataHelp: 'Embed attribution in an EXIF metadata attribute in the image file',
+    watermarkHelp: 'This option frames the image in white with a plain text attribution beneath.',
+    metadataHelp: 'This option embeds attribution and CC license metadata in the image file using XMP.',
   }),
   computed: {
     ccLicenseURL() {
