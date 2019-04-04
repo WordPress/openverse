@@ -3,12 +3,12 @@ import time
 import multiprocessing
 import uuid
 from psycopg2.extras import DictCursor, Json
-from ingestion_server.indexer import database_connect
+from ingestion_server.indexer import database_connect, DB_BUFFER_SIZE
 from urllib.parse import urlparse
 
 
 # Number of records to buffer in memory at once
-CLEANUP_BUFFER_SIZE = 100000
+CLEANUP_BUFFER_SIZE = DB_BUFFER_SIZE
 
 # Filter out automatically generated tags that aren't of any use to us.
 # Note this list is case insensitive.
@@ -137,7 +137,8 @@ def _clean_data_worker(rows, temp_table, providers_config):
     write_cur.close()
     worker_conn.close()
     end_time = time.time()
-    log.info('Worker finished batch in {}'.format(end_time - start_time))
+    total_time = end_time - start_time
+    log.info('Worker finished batch in {}'.format(total_time))
     return True
 
 
@@ -170,9 +171,11 @@ def clean_data(table):
                             table='temp_import_{}'.format(table),
                         )
     log.info('Running cleanup on selection "{}"'.format(cleanup_selection))
-    conn = database_connect()
+    conn = database_connect(autocommit=True)
     cursor_name = '{}-{}'.format(table, str(uuid.uuid4()))
-    with conn.cursor(name=cursor_name, cursor_factory=DictCursor, withhold=True) as iter_cur:
+    with conn.cursor(
+            name=cursor_name, cursor_factory=DictCursor, withhold=True
+    ) as iter_cur:
         iter_cur.itersize = CLEANUP_BUFFER_SIZE
         iter_cur.execute(cleanup_selection)
 
@@ -186,6 +189,7 @@ def clean_data(table):
         num_cleaned = 0
         while batch:
             # Divide updates into jobs for parallel execution.
+            start = time.time()
             temp_table = 'temp_import_{}'.format(table)
             job_size = int(len(batch) / num_workers)
             last_end = -1
@@ -201,15 +205,19 @@ def clean_data(table):
                 )
             pool = multiprocessing.Pool(processes=num_workers)
             log.info('Starting {} cleaning jobs'.format(len(jobs)))
+            conn.commit()
             pool.starmap(_clean_data_worker, jobs)
             pool.close()
             num_cleaned += len(batch)
+            end = time.time()
+            rate = len(batch) / (end - start)
+            log.info('Batch finished, records/s: cleanup_rate={}'.format(rate))
             log.info(
                 'Fetching next batch. Num records cleaned so far: {}'
                 .format(num_cleaned))
             jobs = []
-            conn.commit()
             batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
+    conn.commit()
     iter_cur.close()
     conn.close()
     end_time = time.time()
