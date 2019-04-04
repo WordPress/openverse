@@ -370,5 +370,10 @@ $vert-seperate: 4rem;
 
 .footer {
   position:fixed;
+
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    position: relative;
+  }
 }
 </style>
