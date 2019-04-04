@@ -136,7 +136,7 @@
             </button>
           </div>
         </section>
-        <section class="sidebar_section">
+        <section v-if="socialSharingEnabled" class="sidebar_section social-sharing">
           <header class="sidebar_section-header">
             <h2>
               Share
@@ -163,7 +163,7 @@ import { DOWNLOAD_WATERMARK } from '@/store/action-types';
 
 export default {
   name: 'photo-details',
-  props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'watermarkEnabled'],
+  props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'watermarkEnabled', 'socialSharingEnabled'],
   components: {
     CopyButton,
     LicenseIcons,

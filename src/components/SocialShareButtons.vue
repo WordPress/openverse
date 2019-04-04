@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: 'social-share-list',
+  name: 'social-share-buttons',
   props: {
     isMedium: '', // Refers to slightly smaller sized version
     shareURL: '',
