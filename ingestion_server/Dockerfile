@@ -2,23 +2,27 @@ FROM python:3.7
 
 ENV PYTHONBUFFERED 1
 
-RUN mkdir /ingestion_server
-WORKDIR /ingestion_server
-ADD requirements.txt /ingestion_server/
-RUN pip install -r requirements.txt
-RUN pip install gunicorn
+RUN groupadd --system supervisord && useradd --system --gid supervisord supervisord
 
-# Install supervisord (still requires Python 2.7 in 2018 :( )
-RUN apt-get update
-RUN apt-get install -y python-pip
-RUN pip2 install supervisor
-RUN useradd -m supervisord
-RUN mkdir -p /var/log/supervisord
-RUN chown -R supervisord /var/log/supervisord
-USER supervisord
+RUN apt-get update \
+    && apt-get install -y supervisor \
+    && mkdir -p /var/log/supervisord/ \
+    && chown -R supervisord:supervisord /var/log/supervisord
 
-COPY config/ /ingestion_server/config
+# Install Python dependency management tools
+RUN pip install --upgrade pip \
+    && pip install --upgrade setuptools \
+    && pip install --upgrade pipenv
+
+# Copy all files into the container
 COPY . /ingestion_server/
+WORKDIR /ingestion_server
 ENV PYTHONPATH=$PYTHONPATH:/ingestion_server/
+
+# Install the dependencies system-wide
+# TODO: Use build args to avoid installing dev dependencies in production
+RUN pipenv install --deploy --system --dev
+
+USER supervisord
 EXPOSE 8001
 CMD ["supervisord", "-c", "/ingestion_server/config/supervisord.conf"]
