@@ -10,6 +10,7 @@
                    :imageWidth="imageWidth"
                    :imageHeight="imageHeight"
                    :watermarkEnabled="watermarkEnabled"
+                   :socialSharingEnabled="socialSharingEnabled"
                    @onImageLoaded="onImageLoaded" />
     <photo-tags :tags="tags" />
     <related-images :relatedImages="relatedImages"
@@ -52,6 +53,7 @@ const PhotoDetailPage = {
     imageWidth: 0,
     imageHeight: 0,
     watermarkEnabled: featureFlags.watermark,
+    socialSharingEnabled: featureFlags.socialSharing,
   }),
   computed: {
     filter() {

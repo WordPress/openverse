@@ -20,6 +20,7 @@ describe('PhotoDetails', () => {
         creator_url: 'http://creator.com',
       },
       watermarkEnabled: true,
+      socialSharingEnabled: true,
     };
 
     options = {
@@ -38,6 +39,23 @@ describe('PhotoDetails', () => {
   it('should render watermark link', () => {
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.find('.download-watermark').element).toBeDefined();
+  });
+
+  it('should not render watermark link when watermark is disabled', () => {
+    options.propsData.watermarkEnabled = false;
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.find('.download-watermark').element).not.toBeDefined();
+  });
+
+  it('should render social sharing buttons', () => {
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.find({ name: 'social-share-buttons' }).exists()).toBe(true);
+  });
+
+  it('should not render social sharing buttons when social sharing is disabled', () => {
+    options.propsData.socialSharingEnabled = false;
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.find({ name: 'social-share-buttons' }).exists()).toBe(false);
   });
 
   it('should generate license URL', () => {
