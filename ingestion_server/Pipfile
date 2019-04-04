@@ -1,0 +1,19 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+remote-pdb = "*"
+ipython = "*"
+pipdeptree = "*"
+pycodestyle = "*"
+
+[packages]
+aws-requests-auth = "*"
+bottle="*"
+elasticsearch-dsl = "*"
+falcon="*"
+gunicorn="*"
+psycopg2-binary = "*"
+pyyaml="*"
