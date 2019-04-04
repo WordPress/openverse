@@ -67,6 +67,10 @@ $hero-height: 40vh;
   .logo {
     margin-bottom: 4vh;
     height: 7em;
+
+    @media screen and (max-width: 39.9375em) {
+      height: 5.5em;
+    }
   }
 
   .hero_search-form {
@@ -149,6 +153,10 @@ $hero-height: 40vh;
 
   .hero .hero_search-btn {
     right: 10px;
+  }
+
+  .logo {
+    height: 5.5em;
   }
 }
 </style>
