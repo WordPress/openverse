@@ -1,12 +1,11 @@
 <template>
   <nav class="nav grid-x grid-padding-x">
     <div class="cell small-12 medium-12 large-6">
-      <a href="/">
-        <img class="nav_logo" src="../assets/cc-logo_large_black.png">
+      <a class="nav_logo" href="/">
+        <img src="../assets/cc-logo_large_black.png">
       </a>
       <div class="menu_ctr">
         <ul class="menu">
-          <li class="home"><a href="/">Home</a></li>
           <li><a href="/about">About</a></li>
         </ul>
       </div>
@@ -55,7 +54,7 @@ export default {
   height: 3.9em;
   border-bottom: 1px solid rgba(0,0,0,0.25);
 }
-.nav_logo {
+.nav_logo > img {
   margin: 15px 0 15px 0;
   height: 30px;
 }
@@ -90,6 +89,9 @@ export default {
   /* Small only */
   @media screen and (max-width: 380px) {
     padding: 0.7rem .7rem;
+    &:hover {
+      border-bottom: none;
+    }
   }
 }
 
