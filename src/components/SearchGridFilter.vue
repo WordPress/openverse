@@ -12,8 +12,7 @@
           track-by="code"
           :options="providers"
           :multiple="true"
-          :taggable="true"
-          :searchable="false"
+          :searchable="true"
           :closeOnSelect="false"
           :showLabels="false">
         </multiselect>
@@ -29,7 +28,6 @@
           track-by="code"
           :options="licenseTypes"
           :multiple="true"
-          :taggable="true"
           :searchable="false"
           :closeOnSelect="false"
           :showLabels="false">>
@@ -46,7 +44,6 @@
           track-by="code"
           :options="licenses"
           :multiple="true"
-          :taggable="true"
           :searchable="false"
           :closeOnSelect="false"
           :showLabels="false">
