@@ -13,7 +13,9 @@
           :options="providers"
           :multiple="true"
           :taggable="true"
-          :searchable="false">
+          :searchable="false"
+          :closeOnSelect="false"
+          :showLabels="false">
         </multiselect>
       </div>
       <div class="filter-option search-filters_license-types">
@@ -28,7 +30,9 @@
           :options="licenseTypes"
           :multiple="true"
           :taggable="true"
-          :searchable="false">
+          :searchable="false"
+          :closeOnSelect="false"
+          :showLabels="false">>
         </multiselect>
       </div>
       <div class="filter-option search-filters_licenses">
@@ -43,7 +47,9 @@
           :options="licenses"
           :multiple="true"
           :taggable="true"
-          :searchable="false">
+          :searchable="false"
+          :closeOnSelect="false"
+          :showLabels="false">
         </multiselect>
       </div>
       <div class="filter-option search-filters_search-by">
