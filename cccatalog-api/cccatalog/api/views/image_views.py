@@ -163,23 +163,17 @@ class SearchImages(APIView):
 
 
 class ImageDetail(GenericAPIView, RetrieveModelMixin):
-    """
-    Load the details of a particular image ID. Image details include:
-    - All fields in the database
-    - The number of views
-
-    Also increments the view count of the image.
-    """
     serializer_class = ImageDetailSerializer
     queryset = Image.objects.all()
     lookup_field = 'identifier'
 
     @swagger_auto_schema(operation_id="image_detail",
+                         operation_description="Load the details of a"
+                                               " particular image ID.",
                          responses={
                              200: ImageDetailSerializer,
                              404: 'Not Found'
                          })
-    @track_model_views(Image)
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
         resp = self.retrieve(request, identifier)

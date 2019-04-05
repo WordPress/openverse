@@ -9,8 +9,8 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     """ Parse and validate search query string parameters. """
     q = serializers.CharField(
         label="query",
-        help_text="A comma-separated list of keywords. Should not exceed 200 "
-                  "characters in length. Example: `hello,world`",
+        help_text="A query string that should not exceed 200 characters in "
+                  "length",
         required=False,
     )
     li = serializers.CharField(
@@ -38,19 +38,19 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     )
     creator = serializers.CharField(
         label="creator",
-        help_text="Search by creator.",
+        help_text="Search by creator only. Cannot be used with `q`.",
         required=False,
         max_length=200
     )
     tags = serializers.CharField(
         label="tags",
-        help_text="Search by tag.",
+        help_text="Search by tag only. Cannot be used with `q`.",
         required=False,
         max_length=200
     )
     title = serializers.CharField(
         label="title",
-        help_text="Search by title.",
+        help_text="Search by title only. Cannot be used with `q`.",
         required=False,
         max_length=200
     )

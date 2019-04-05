@@ -277,6 +277,8 @@ API_VERSION = os.environ.get(
     "Version not specified."
 )
 
+WATERMARK_ENABLED = os.environ.get('WATERMARK_ENABLED', 'false') in true_strings
+
 ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL', 'localhost')
 ELASTICSEARCH_PORT = int(os.environ.get('ELASTICSEARCH_PORT', 9200))
 

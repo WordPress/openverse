@@ -22,7 +22,7 @@ from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
 from cccatalog.api.views.list_views import CreateList, ListDetail
 from cccatalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
-from cccatalog.settings import API_VERSION
+from cccatalog.settings import API_VERSION, WATERMARK_ENABLED
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 import rest_framework.permissions
@@ -84,7 +84,6 @@ urlpatterns = [
     path('statistics/image', ImageStats.as_view(), name='about-image'),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
-    path('watermark/<str:identifier>', Watermark.as_view()),
     re_path('healthcheck', HealthCheck.as_view()),
     re_path(
         r'^swagger(?P<format>\.json|\.yaml)$',
@@ -101,3 +100,6 @@ urlpatterns = [
         name='schema-redoc'
     )
 ]
+
+if WATERMARK_ENABLED:
+    urlpatterns.append(path('watermark/<str:identifier>', Watermark.as_view()))

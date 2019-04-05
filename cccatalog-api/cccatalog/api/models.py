@@ -23,7 +23,7 @@ class Image(OpenLedgerModel):
     identifier = models.UUIDField(
         unique=True,
         db_index=True,
-        help_text="A unique identifier that we assign on ingestion."
+        help_text="Our unique identifier for a CC work."
     )
 
     provider = models.CharField(
