@@ -185,6 +185,7 @@ export default {
 
   .search-grid_analytics h5,
   .search-grid_layout-control h5 {
+    padding-top: 1.36vh;
     font-size: 1rem;
     display: inline-block;
   }

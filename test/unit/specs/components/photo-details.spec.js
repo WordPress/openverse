@@ -20,6 +20,7 @@ describe('PhotoDetails', () => {
         creator_url: 'http://creator.com',
       },
       watermarkEnabled: true,
+      socialSharingEnabled: true,
     };
 
     options = {
@@ -38,6 +39,23 @@ describe('PhotoDetails', () => {
   it('should render watermark link', () => {
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.find('.download-watermark').element).toBeDefined();
+  });
+
+  it('should not render watermark link when watermark is disabled', () => {
+    options.propsData.watermarkEnabled = false;
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.find('.download-watermark').element).not.toBeDefined();
+  });
+
+  it('should render social sharing buttons', () => {
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.find({ name: 'social-share-buttons' }).exists()).toBe(true);
+  });
+
+  it('should not render social sharing buttons when social sharing is disabled', () => {
+    options.propsData.socialSharingEnabled = false;
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.find({ name: 'social-share-buttons' }).exists()).toBe(false);
   });
 
   it('should generate license URL', () => {
@@ -111,6 +129,13 @@ describe('PhotoDetails', () => {
     expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${props.image.creator_url}">${props.image.creator}</a>`);
     expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${props.image.foreign_landing_url}">"${props.image.title}"</a>`);
     expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${wrapper.vm.ccLicenseURL}">`);
+  });
+
+  it('should invoke social share buttons with the right props', () => {
+    const wrapper = render(PhotoDetails, options);
+    const url = options.propsData.image.foreign_landing_url;
+    expect(wrapper.vm.imageURL).toBe(url);
+    expect(wrapper.vm.shareText).toBe(encodeURI(`I found an image @creativecommons: ${url}`));
   });
 
   it('should generate html attribution without creator URL', () => {
