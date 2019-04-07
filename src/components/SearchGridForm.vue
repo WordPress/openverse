@@ -3,7 +3,7 @@
         method="post"
         @submit.prevent="onSubmit"
         class="search-form">
-    <div class="search-form_ctr grid-x global-nav show-for-smedium">
+    <div class="search-form_ctr grid-container grid-x global-nav show-for-smedium">
         <div class="search-form_inner-ctr cell">
           <input required="required"
                  autofocus="true"
