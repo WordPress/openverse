@@ -1,0 +1,116 @@
+<template>
+  <div>
+    <h1>Report a bug</h1>
+    <p>
+      If you would like to report a bug you are encountering when using the tool,
+      please fill out the form below or
+      <a href="https://github.com/creativecommons/cccatalog-frontend/issues">
+        log the issue directly at Github
+      </a>.
+    </p>
+    <vue-form :state="formstate" @submit.prevent="onSubmit">
+      <validate tag="label">
+        <span>Name</span>
+        <input v-model="model.name" required name="name" />
+
+        <field-messages name="name" show="$submitted">
+          <div class="error-message" slot="required">Name is a required field</div>
+        </field-messages>
+      </validate>
+
+      <validate tag="label">
+        <span>Email</span>
+        <input v-model="model.email" name="email" type="email" required />
+
+        <field-messages name="email" show="$submitted">
+          <div class="error-message" slot="required">Email is a required field</div>
+          <div class="error-message" slot="email">Email is not valid</div>
+        </field-messages>
+      </validate>
+
+      <validate tag="label">
+        <span>
+          What is the bug and how did you encounter it?
+          Please describe what steps you took, and what you expected to happen instead
+        </span>
+        <textarea v-model="model.bugReport" name="bugReport" required />
+
+        <field-messages name="bugReport" show="$submitted">
+          <div class="error-message" slot="required">This is a required field</div>
+        </field-messages>
+      </validate>
+
+      <button class="button">Submit</button>
+    </vue-form>
+  </div>
+</template>
+
+<script>
+import VueForm from 'vue-form';
+
+export default {
+  name: 'bug-report',
+  mixins: [VueForm],
+
+  data: () => ({
+    formstate: {},
+    model: {
+      name: '',
+      email: '',
+      bugDescription: '',
+    },
+  }),
+  methods: {
+    onSubmit() {
+      if (!this.formstate.$invalid) {
+        const bugReportData = {
+          name: this.model.name,
+          email: this.model.email,
+          bug_description: this.model.bugDescription,
+          browser_info: { browser: 'FF' },
+        };
+        this.$store.dispatch(REPORT_BUG, bugReportData);
+      }
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+
+input {
+  display: block;
+  box-sizing: border-box;
+  width: 40rem;
+  height: 2.4375rem;
+  margin: 0 0 0.4rem;
+  padding: .5rem;
+  border: 1px solid #cacaca;
+  border-radius: 0;
+  background-color: #fefefe;
+  box-shadow: inset 0 1px 2px rgba(10,10,10,.1);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #0a0a0a;
+  transition: border-color .25s ease-in-out,-webkit-box-shadow .5s;
+}
+
+textarea {
+  height: 10rem;
+  width: 40rem;
+  margin: 0 0 0.4rem;
+}
+
+button {
+  border-radius: 3px;
+  background: #4a69ca;
+}
+
+.error-message {
+  width: 40rem;
+  font-style: italic;
+  color: #ff0e0e;
+  margin: 0 0 0.4rem;
+}
+</style>

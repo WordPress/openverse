@@ -19,11 +19,7 @@
               Loading...
       </iframe>
 
-      <h1>Report a bug</h1>
-      <p>
-        If you would like to report a bug you are encountering when using the tool, please fill out the form below or
-        <a href="https://github.com/creativecommons/cccatalog-frontend/issues">log the issue directly at Github</a>.
-      </p>
+      <bug-report />
     </div>
     <footer-section></footer-section>
   </div>
@@ -32,12 +28,14 @@
 <script>
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
+import BugReport from '@/components/BugReport';
 
 export default {
   name: 'feedback-page',
   components: {
     HeaderSection,
     FooterSection,
+    BugReport,
   },
 };
 </script>
