@@ -8,10 +8,10 @@
         log the issue directly at Github
       </a>.
     </p>
-    <vue-form :state="formstate" @submit.prevent="onSubmit">
+    <vue-form class="bug-report" :state="formstate" @submit.prevent="onSubmit">
       <validate tag="label">
-        <span>Name</span>
-        <input v-model="model.name" required name="name" />
+        <label for="name">Name</label>
+        <input id="name" v-model="model.name" required name="name" />
 
         <field-messages name="name" show="$submitted && !$focused">
           <div class="error-message" slot="required">Name is a required field</div>
@@ -19,8 +19,8 @@
       </validate>
 
       <validate tag="label">
-        <span>Email</span>
-        <input v-model="model.email" name="email" type="email" required />
+        <label for="email">Email</label>
+        <input id="email" v-model="model.email" name="email" type="email" required />
 
         <field-messages name="email" show="$submitted && !$focused">
           <div class="error-message" slot="required">Email is a required field</div>
@@ -29,18 +29,18 @@
       </validate>
 
       <validate tag="label">
-        <span>
+        <label for="bugReport">
           What is the bug and how did you encounter it?
           Please describe what steps you took, and what you expected to happen instead
-        </span>
-        <textarea v-model="model.bugReport" name="bugReport" required />
+        </label>
+        <textarea id="bugReport" v-model="model.bugReport" name="bugReport" required />
 
         <field-messages name="bugReport" show="$submitted && !$focused">
           <div class="error-message" slot="required">This is a required field</div>
         </field-messages>
       </validate>
 
-      <button class="button">Submit</button>
+      <button class="button submit-form" type="submit">Submit</button>
     </vue-form>
   </div>
 </template>
