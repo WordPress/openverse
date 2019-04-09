@@ -74,10 +74,6 @@ _cleanup_config = {
                 '*': {
                     'fields': {
                         'tags': _cleanup_tags,
-                    }
-                },
-                'floraon': {
-                    'fields': {
                         'url': _cleanup_url
                     }
                 }
