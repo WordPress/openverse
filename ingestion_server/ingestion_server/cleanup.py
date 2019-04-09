@@ -57,7 +57,7 @@ def _cleanup_tags(tags):
             update_required = True
 
     if update_required:
-        fragment = "tags ||  {}".format(Json(tag_output))
+        fragment = Json(tag_output)
         return fragment
     else:
         return None
@@ -74,7 +74,9 @@ _cleanup_config = {
                 '*': {
                     'fields': {
                         'tags': _cleanup_tags,
-                        'url': _cleanup_url
+                        'url': _cleanup_url,
+                        'creator_url': _cleanup_url,
+                        'foreign_landing_url': _cleanup_url
                     }
                 }
             }
