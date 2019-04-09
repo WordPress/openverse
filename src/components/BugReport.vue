@@ -13,7 +13,7 @@
         <span>Name</span>
         <input v-model="model.name" required name="name" />
 
-        <field-messages name="name" show="$submitted">
+        <field-messages name="name" show="$submitted && !$focused">
           <div class="error-message" slot="required">Name is a required field</div>
         </field-messages>
       </validate>
@@ -22,7 +22,7 @@
         <span>Email</span>
         <input v-model="model.email" name="email" type="email" required />
 
-        <field-messages name="email" show="$submitted">
+        <field-messages name="email" show="$submitted && !$focused">
           <div class="error-message" slot="required">Email is a required field</div>
           <div class="error-message" slot="email">Email is not valid</div>
         </field-messages>
@@ -35,7 +35,7 @@
         </span>
         <textarea v-model="model.bugReport" name="bugReport" required />
 
-        <field-messages name="bugReport" show="$submitted">
+        <field-messages name="bugReport" show="$submitted && !$focused">
           <div class="error-message" slot="required">This is a required field</div>
         </field-messages>
       </validate>
