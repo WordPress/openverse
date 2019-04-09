@@ -47,6 +47,8 @@
 
 <script>
 import VueForm from 'vue-form';
+import { REPORT_BUG } from '@/store/action-types';
+import getBrowserInfo from '@/utils/getBrowserInfo';
 
 export default {
   name: 'bug-report',
@@ -57,7 +59,7 @@ export default {
     model: {
       name: '',
       email: '',
-      bugDescription: '',
+      bugReport: '',
     },
   }),
   methods: {
@@ -66,8 +68,8 @@ export default {
         const bugReportData = {
           name: this.model.name,
           email: this.model.email,
-          bug_description: this.model.bugDescription,
-          browser_info: { browser: 'FF' },
+          bug_description: this.model.bugReport,
+          browser_info: getBrowserInfo(),
         };
         this.$store.dispatch(REPORT_BUG, bugReportData);
       }
