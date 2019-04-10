@@ -2,7 +2,7 @@
   <nav class="nav grid-x grid-padding-x">
     <div class="cell small-12 medium-12 large-6">
       <a class="nav_logo" href="/">
-        <img src="../assets/cc-logo_large_black.png">
+        <img src="../assets/cc-search-logo-black.png">
       </a>
       <div class="menu_ctr">
         <ul class="menu">
@@ -55,8 +55,8 @@ export default {
   border-bottom: 1px solid rgba(0,0,0,0.25);
 }
 .nav_logo > img {
-  margin: 15px 0 15px 0;
-  height: 30px;
+  margin: 0px 0 9px 0;
+  height: 42px;
 }
 .hero_search-form {
   margin: 0 15px;
@@ -67,7 +67,7 @@ export default {
 }
 .menu_ctr {
   display: inline-block;
-  margin-left: 30px;
+  margin-left: 10px;
   /* Small only */
   @media screen and (max-width: 39.9375em) {
     margin-left: 0 !important;
