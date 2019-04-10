@@ -40,7 +40,12 @@
         </field-messages>
       </validate>
 
-      <button class="button submit-form" type="submit">Submit</button>
+      <span v-if="bugReported">Thank you!</span>
+      <button v-else class="button submit-form" type="submit" :disabled="isReportingBug">Submit</button>
+
+      <div class="error-message bug-report-failed" v-if="bugReportFailed">
+        There was an error while reporting your bug. Please try again.
+      </div>
     </vue-form>
   </div>
 </template>
@@ -53,7 +58,7 @@ import getBrowserInfo from '@/utils/getBrowserInfo';
 export default {
   name: 'bug-report',
   mixins: [VueForm],
-
+  props: ['isReportingBug', 'bugReported', 'bugReportFailed'],
   data: () => ({
     formstate: {},
     model: {

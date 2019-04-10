@@ -19,7 +19,10 @@
               Loading...
       </iframe>
 
-      <bug-report />
+      <bug-report
+        :isReportingBug="isReportingBug"
+        :bugReported="bugReported"
+        :bugReportFailed="bugReportFailed" />
     </div>
     <footer-section></footer-section>
   </div>
@@ -36,6 +39,17 @@ export default {
     HeaderSection,
     FooterSection,
     BugReport,
+  },
+  computed: {
+    isReportingBug() {
+      return this.$store.state.isReportingBug;
+    },
+    bugReported() {
+      return this.$store.state.bugReported;
+    },
+    bugReportFailed() {
+      return this.$store.state.bugReportFailed;
+    },
   },
 };
 </script>

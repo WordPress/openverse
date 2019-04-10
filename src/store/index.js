@@ -21,10 +21,12 @@ const store = GoogleAnalytics => (new Puex({
   state: Object.assign(
     SearchStore.state(window.location.search),
     ImageProviderStore.state,
+    BugReportStore.state,
   ),
   mutations: Object.assign(
     SearchStore.mutations(routePush),
     ImageProviderStore.mutations,
+    BugReportStore.mutations,
   ),
 }));
 
