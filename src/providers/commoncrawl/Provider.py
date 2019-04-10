@@ -125,7 +125,7 @@ class Provider:
         self.tags       = self.getTags
 
         if self.metaData:
-            self.metaData.update((key, self.sanitizeString(val)) for key,val in self.metaData.items())
+            self.metaData.update((key, self.sanitizeString(val) if isinstance(val, str) else val) for key,val in self.metaData.items())
 
 
         yield [
