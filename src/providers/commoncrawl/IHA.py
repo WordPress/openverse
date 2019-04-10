@@ -93,9 +93,9 @@ class IHA(Provider):
                     self.url                = imageData.attrs['about'].strip()
                     self.foreignIdentifier  = self.url
 
-                    if self.url == '':
-                        logger.warning('Image not detected in url: {}'.format(_url))
-                        continue
+                if self.url.strip() == '':
+                    logger.warning('Image not detected in url: {}'.format(_url))
+                    continue
 
                 #get the attribution info
                 #author = imageData.find('span', {'class': 'auth'})

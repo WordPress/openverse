@@ -117,6 +117,8 @@ class Provider:
     @property
     def formatOutput(self):
         if self.translationAvailable == True:
+            if not self.metaData:
+                self.metaData = dict()
             self.metaData['alternate_language_available'] = 't'
 
         #format the tags
