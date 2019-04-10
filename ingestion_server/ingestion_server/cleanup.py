@@ -108,6 +108,8 @@ def _clean_data_worker(rows, temp_table, providers_config):
         cleaned_data = {}
         for update_field in fields_to_update:
             dirty_value = row[update_field]
+            if not dirty_value:
+                continue
             cleaning_func = fields_to_update[update_field]
             clean = cleaning_func(dirty_value)
             if clean:
