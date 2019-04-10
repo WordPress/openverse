@@ -148,7 +148,7 @@ $vert-seperate: 4rem;
 }
 
 .featured-images {
-  padding: 30px;
+  padding: 1rem;
 
   &_header {
     padding-bottom: 10px;
@@ -195,9 +195,7 @@ $vert-seperate: 4rem;
     line-height: 1.25;
     text-transform: uppercase;
     display: inline-block;
-    padding-top: .28571429em;
     border-top: 5px solid rgba(29, 31, 39, 0.8);
-    margin-top: -3px;
   }
 }
 
