@@ -41,7 +41,9 @@
       </validate>
 
       <span v-if="bugReported">Thank you!</span>
-      <button v-else class="button submit-form" type="submit" :disabled="isReportingBug">Submit</button>
+      <button v-else class="button submit-form" type="submit" :disabled="isReportingBug">
+        Submit
+      </button>
 
       <div class="error-message bug-report-failed" v-if="bugReportFailed">
         There was an error while reporting your bug. Please try again.
