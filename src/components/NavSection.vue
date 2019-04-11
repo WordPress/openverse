@@ -59,8 +59,9 @@ export default {
   border-bottom: 1px solid rgba(0,0,0,0.25);
 }
 .nav_logo > img {
-  margin: 0px 0 11px 0;
+  margin: 0px 0 9px 0;
   height: 42px;
+  padding-right: 11px;
 }
 .hero_search-form {
   margin: 0 15px;
@@ -84,14 +85,14 @@ export default {
 
 .menu a {
   color: rgb(255, 255, 255);
-  font-size: 1.7em;
+  font-size: 1.4em;
   font-weight: 700;
   line-height: 1em;
-  padding: 0.6em 0.8em 0.53em;
-  border: 1px solid transparent;
+  margin-top: 0.5rem;
+  border-right: 1px solid white;
   border-radius: 2px;
   &:hover {
-    border-bottom: 3px solid rgb(255, 255, 255);
+    background: #1e96c2;
   }
 
   /* Small only */
