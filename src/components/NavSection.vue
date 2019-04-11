@@ -67,6 +67,10 @@ export default {
   @media screen and (min-width: 64em) {
     float: right;
   }
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    display: none;
+  }
 }
 .menu_ctr {
   display: inline-block;
@@ -107,14 +111,14 @@ export default {
     padding-left: 1rem;
     background: transparent;
     color: #fff;
-    border: 1px solid rgba(255, 255, 255, .1);
+    border: 1px solid rgba(36, 36, 36, 0.5);;
     box-shadow: none;
     &:focus {
-      border-color: rgba(255, 255, 255, .1);
+      border-color: rgb(255, 255, 255);
     }
 
     &::placeholder {
-      color: white
+      color: #1c1c1c;
     }
   }
   .input-group-button .button {
@@ -126,7 +130,7 @@ export default {
     background: none;
     &:after {
       content: '';
-      background: url('../assets/search-icon.svg') center center no-repeat;
+      background: url('../assets/search-icon_black.svg') center center no-repeat;
       background-size: 20px;
       top: 0;
       left: 0;
