@@ -48,24 +48,28 @@ class Behance(Provider):
 
         #verify license
         licenseInfo = soup.find('div', {'id': 'project-block-copyright'})
+
+        if not licenseInfo:
+            licenseInfo = soup.find('div', {'class': 'ProjectCopyright-tooltipContent-LVf'})
+
         if licenseInfo:
             licenseInfo         = licenseInfo.findChild('a')
             if licenseInfo:
                 ccURL               = urlparse(licenseInfo.attrs['href'].strip())
                 license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
-            if not license:
-                logging.warning('License not detected in url: {}'.format(_url))
-                return None
+        if not license:
+            logging.warning('License not detected in url: {}'.format(_url))
+            return None
 
-            self.license            = license
-            self.licenseVersion     = version
+        self.license            = license
+        self.licenseVersion     = version
 
 
         #title
-        title = soup.find('div', {'class': 'project-title'})
+        title = soup.find('meta', {'property': 'og:title'})
         if title:
-            self.title = title.text.strip()
+            self.title = self.validateContent('', title, 'content')
 
 
         #url
@@ -80,15 +84,17 @@ class Behance(Provider):
             self.creator = self.validateContent('', owner, 'content')
 
 
-        credits = soup.find('div', {'id': 'project-block-footer-credits'})
-        if credits:
-            creators = credits.find_all('div', {'class': re.compile('(rf-)?profile-item ')})
+        creators = soup.find_all('div', {'class': 'rf-profile-item__info'})
+
+        if not creators:
+            creators = soup.find_all('div', {'class': 'ProjectOwnersInfo-userInfo-2WK'})
+
+        if creators:
             creatorList = []
 
-            for creator in creators:
+            for creator in list(set(creators)):
                 creatorDict = {}
-                creatorInfo = creator.findChild('a', {'class': re.compile('(rf-)?profile-item__name js-mini-profile')})
-
+                creatorInfo = creator.find('a', {'class': re.compile('(rf-profile-item__name js-mini-profile)|(ProjectOwnersInfo-userName-2oz js-mini-profile)'), 'href': True})
                 if creatorInfo:
                     creatorName         = creatorInfo.text.strip()
                     creatorDict['name'] = self.sanitizeString(creatorName)
@@ -96,7 +102,12 @@ class Behance(Provider):
                     creatorURL                  = creatorInfo.attrs['href'].strip()
                     creatorDict['creator_url']  = creatorURL
 
-                location = creator.findChild('a', {'class': re.compile('(rf-)?profile-item__location beicons-pre beicons-pre-location'), 'href': True})
+                    if self.creator.strip() == creatorName:
+                        self.creatorURL = creatorURL
+
+
+                location = creator.findChild('a', {'class': re.compile('(rf-profile-item__location beicons-pre beicons-pre-location)|(ProjectOwnersInfo-userLocation-_rE beicons-pre beicons-pre-location)'), 'href': True})
+
                 if location:
                     link = location.attrs['href']
 
@@ -108,28 +119,28 @@ class Behance(Provider):
                                 loc = location.split('=')
                                 creatorDict[loc[0].strip().lower()] = loc[1].strip().replace('+', ' ')
 
-                creatorList.append(creatorDict)
+                if creatorDict not in creatorList:
+                    creatorList.append(creatorDict)
 
             if creatorList:
-                otherMetaData['owners'] = creatorList
+                otherMetaData['owners']  = creatorList
 
 
         #tags
-        tagInfo = soup.find_all('a', {'class': 'object-tag'})
+        tagInfo = soup.find_all('a', {'class': re.compile('(object-tag)|(ProjectTags-tagLink-Hh_)')})
         if tagInfo:
-            tags                    = ','.join(tag.text.strip() for tag in tagInfo)
-            otherMetaData['tags']   = tags
+            otherMetaData['tags'] = ','.join(tag.text.strip() for tag in tagInfo)
 
 
         #description
-        description = soup.find('meta', {'name': 'description'})
+        description = soup.find('meta', {'property': 'og:description'})
         if description:
-            otherMetaData['description'] = self.validateContent('', description, 'content')
+            otherMetaData['description'] = self.sanitizeString(self.validateContent('', description, 'content'))
 
 
         self.provider           = self.name
         self.source             = 'commoncrawl'
-        otherMetaData['set']   = self.foreignLandingURL
+        otherMetaData['set']    = self.foreignLandingURL
 
         if otherMetaData:
             self.metaData = otherMetaData
@@ -151,7 +162,6 @@ class Behance(Provider):
 
                 elif 'img/site/blank.png' not in self.url:
                     extracted.extend(self.formatOutput)
-
 
         return extracted
 
