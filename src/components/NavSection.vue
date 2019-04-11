@@ -89,7 +89,7 @@ export default {
   font-weight: 700;
   line-height: 1em;
   margin-top: 0.5rem;
-  border-right: 1px solid white;
+  border-left: 1px solid white;
   border-radius: 2px;
   &:hover {
     background: #1e96c2;
