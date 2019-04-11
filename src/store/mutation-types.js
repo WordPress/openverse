@@ -18,3 +18,6 @@ export const SET_QUERY = 'SET_QUERY';
 export const SET_RELATED_IMAGES = 'SET_RELATED_IMAGES';
 export const SET_SHARE_URL = 'SET_SHARE_URL';
 export const UNSET_SHARE_URL = 'UNSET_SHARE_URL';
+export const REPORT_BUG_START = 'REPORT_BUG_START';
+export const REPORT_BUG_END = 'REPORT_BUG_END';
+export const REPORT_BUG_FAILED = 'REPORT_BUG_FAILED';
