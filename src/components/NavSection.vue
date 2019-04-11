@@ -2,7 +2,7 @@
   <nav class="nav grid-x grid-padding-x">
     <div class="cell small-12 medium-12 large-6">
       <a class="nav_logo" href="/">
-        <img src="../assets/cc-search-logo-black.png">
+        <img src="../assets/cc-search-logo-white.png">
       </a>
       <div class="menu_ctr">
         <ul class="menu">
@@ -50,12 +50,15 @@ export default {
 .nav {
   position: relative;
   width: 100%;
-  background: #fff;
+  // background: #fff;
+  // background-image: linear-gradient(90deg, #3249EE, #2884FB, #3249EE);
+  // background-image: linear-gradient(90deg,#EE5B32,#FB7928,#EE5B32);
+  background: #34baec;
   height: 3.9em;
   border-bottom: 1px solid rgba(0,0,0,0.25);
 }
 .nav_logo > img {
-  margin: 0px 0 9px 0;
+  margin: 0px 0 11px 0;
   height: 42px;
 }
 .hero_search-form {
@@ -75,15 +78,15 @@ export default {
 }
 
 .menu a {
-  color: rgb(44, 62, 80);
-  font-size: 1.4em;
+  color: rgb(255, 255, 255);
+  font-size: 1.7em;
   font-weight: 700;
   line-height: 1em;
-  padding: 0.9em 0.8em 0.7em;
+  padding: 0.6em 0.8em 0.53em;
   border: 1px solid transparent;
   border-radius: 2px;
   &:hover {
-    border-bottom: 3px solid rgb(44, 62, 80);
+    border-bottom: 3px solid rgb(255, 255, 255);
   }
 
   /* Small only */
