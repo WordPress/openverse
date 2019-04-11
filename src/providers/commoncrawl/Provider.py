@@ -111,7 +111,7 @@ class Provider:
 
             return [{'name': self.sanitizeString(tag), 'provider': self.provider} for tag in list(set(self.tags.split(',')))[:maxTags]]
         else:
-            return ''
+            return self.tags
 
 
     @property
