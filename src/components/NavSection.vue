@@ -7,6 +7,7 @@
       <div class="menu_ctr">
         <ul class="menu">
           <li><a href="/about">About</a></li>
+          <li><a href="/feedback">Feedback</a></li>
         </ul>
       </div>
     </div>
