@@ -17,8 +17,8 @@ indexing tasks.
 MODEL = 'model'
 ACTION = 'action'
 CALLBACK_URL = 'callback_url'
-
 SINCE_DATE = 'since_date'
+
 
 class TaskResource:
     def __init__(self, tracker: TaskTracker):
