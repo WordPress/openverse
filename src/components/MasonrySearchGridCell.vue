@@ -32,7 +32,7 @@
 import ImageProviderService from '@/api/ImageProviderService';
 import LicenseIcons from '@/components/LicenseIcons';
 
-const errorImage = require('@/assets/404-grid_placeholder.png');
+const errorImage = require('@/assets/image_not_available_placeholder.png');
 
 const toAbsolutePath = (url, prefix = 'https://') => {
   if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
@@ -52,9 +52,7 @@ export default {
       if (!image) {
         return '';
       }
-
       const url = image.thumbnail || image.url;
-
       return toAbsolutePath(url);
     },
     getImageForeignUrl(image) {
