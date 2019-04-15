@@ -8,7 +8,7 @@
         <img
           :class="{'search-grid_image': true, 'search-grid_image__fill': !shouldContainImage}"
           :alt="image.title" :src="getImageUrl(image)"
-          @error="onImageLoadError">
+          @error="onImageLoadError($event, image)">
       </a>
       <figcaption class="search-grid_item-overlay search-grid_item-overlay__top">
         <license-icons :image="image"></license-icons>
@@ -73,9 +73,14 @@ export default {
         this.$router.push(`/photos/${image.id}`);
       }
     },
-    onImageLoadError(event) {
-      const image = event.target;
-      image.src = errorImage;
+    onImageLoadError(event, image) {
+      const element = event.target;
+      if (element.src !== image.url) {
+        element.src = image.url;
+      }
+      else {
+        element.src = errorImage;
+      }
     },
   },
 };
