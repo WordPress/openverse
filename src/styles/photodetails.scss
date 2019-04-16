@@ -31,14 +31,15 @@
 .photo_image-ctr {
   position: relative;
   padding: 30px;
-  max-height: 830px;
+  max-height: 800px;
   overflow: auto;
+  text-align: center;
 
   img {
     position: relative;
     width: auto;
     height: auto;
-    max-height: 100%;
+    max-height: 90%;
     max-width: 100%;
     background: #EBECE4;
   }
@@ -110,6 +111,7 @@
   font-size: 0.9rem;
   margin-top: 1rem;
   font-style: italic;
+  text-align: left;
 }
 
 .photo_usage-attribution {
