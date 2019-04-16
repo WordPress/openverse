@@ -116,7 +116,7 @@ def getMetaData(_objectID):
 
     thumbnail = ''
     if '/original/' in imgURL:
-        thumbnail = imgURL.replace('/original/', '/web-additional/')
+        thumbnail = imgURL.replace('/original/', '/web-large/')
 
 
     otherImages = objectData.get('additionalImages')
@@ -140,7 +140,7 @@ def getMetaData(_objectID):
 
         if imgURL:
             if '/original/' in imgURL:
-                thumbnail = imgURL.replace('/original/', '/web-additional/')
+                thumbnail = imgURL.replace('/original/', '/web-large/')
 
             extracted.append([
                 str(foreignID), foreignURL, imgURL, thumbnail,
