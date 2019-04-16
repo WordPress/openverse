@@ -184,9 +184,11 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                 .objects \
                 .get(provider_identifier=provider)
             resp.data['provider'] = provider_data.provider_name
+            resp.data['provider_code'] = provider_data.provider_identifier
             resp.data['provider_url'] = provider_data.domain_name
         except ContentProvider.DoesNotExist:
-            resp.data['provider'] = provider
+            resp.data['provider'] = 'unknown'
+            resp.data['provider_code'] = provider
             resp.data['provider_url'] = 'Unknown'
         # Add page views to the response.
         resp.data['view_count'] = view_count
