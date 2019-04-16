@@ -48,7 +48,7 @@ def _phrase_relevance(index):
         {'name': 'clutter'}
     ]
     target = test_image(
-        'My home office', target_tags, 'John Fooson', TaskTypes.TARGET
+        'My home office', target_tags, 'John Fooson', TaskTypes.TARGET.value
     )
     target.save(index=index)
 
@@ -57,7 +57,7 @@ def _phrase_relevance(index):
         [{'name': 'office'}],
         'Alice Foo'
         ,
-        TaskTypes.LESS_RELEVANT
+        TaskTypes.LESS_RELEVANT.value
     )
     less_relevant1.save(index=index)
 
@@ -65,11 +65,11 @@ def _phrase_relevance(index):
         'My office in my home',
         [{'name': 'office'}, {'name': 'home'}],
         'Gordon',
-        TaskTypes.LESS_RELEVANT
+        TaskTypes.LESS_RELEVANT.value
     )
     less_relevant2.save(index=index)
 
     not_relevant = test_image(
-        'Mastiff', [{'name': 'dog'}], 'Liam', TaskTypes.NOT_RELEVANT
+        'Mastiff', [{'name': 'dog'}], 'Liam', TaskTypes.NOT_RELEVANT.value
     )
     not_relevant.save(index=index)

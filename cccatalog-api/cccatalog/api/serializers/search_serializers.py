@@ -67,6 +67,13 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
                   " `{}`".format(list(get_providers('image').keys())),
         required=False
     )
+    qa = serializers.BooleanField(
+        label='quality_assurance',
+        help_text="If enabled, searches are performed against the quality"
+                  " assurance index instead of production.",
+        required=False,
+        default=False
+    )
 
     def validate_q(self, value):
         if len(value) > 200:

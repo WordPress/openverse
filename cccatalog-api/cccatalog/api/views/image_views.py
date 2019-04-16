@@ -37,6 +37,7 @@ THUMBNAIL = 'thumbnail'
 URL = 'url'
 THUMBNAIL_WIDTH_PX = 600
 PROVIDER = 'provider'
+QA = 'qa'
 
 
 def _add_protocol(url: str):
@@ -89,10 +90,11 @@ class SearchImages(APIView):
         hashed_ip = hash(_get_user_ip(request))
         page_param = params.data[PAGE]
         page_size = params.data[PAGESIZE]
-
+        qa = params.data[QA]
+        search_index = 'search-qa' if qa else 'image'
         try:
             search_results = search_controller.search(params,
-                                                      index='image',
+                                                      index=search_index,
                                                       page_size=page_size,
                                                       ip=hashed_ip,
                                                       page=page_param)
