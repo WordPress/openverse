@@ -17,3 +17,5 @@ def test_phrase_relevance():
     res = requests.get(API_URL + "/search?q=home office&filter_dead=False")
     parsed = json.loads(res.text)
     assert parsed[0]['id'] == TaskTypes.Target.value
+    assert parsed[1]['id'] < TaskTypes.NOT_RELEVANT.value
+    assert parsed[-1]['id'] != TaskTypes.NOT_RELEVANT.value
