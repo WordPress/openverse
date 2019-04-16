@@ -17,113 +17,28 @@
                     :imageWidth="imageWidth"
                     :imageHeight="imageHeight" />
         <section class="sidebar_section">
-          <header class="sidebar_section-header">
-            <h2>
-              Image attribution
-            </h2>
-          </header>
-          <p class="photo_usage-attribution" ref="photoAttribution">
-            <a :href="image.foreign_landing_url">"{{ image.title }}"</a>
-            <span v-if="image.creator">
-              by
-              <a v-if="image.creator_url" :href="image.creator_url">{{ image.creator }}</a>
-              <span v-else>{{ image.creator }}</span>
-            </span>
-            is licensed under
-            <a class="photo_license" :href="ccLicenseURL">
-            {{ fullLicenseName }}
-            </a>
-          </p>
-          <h3>Copy as</h3>
-          <div class="attribution-buttons">
-            <CopyButton :toCopy="HTMLAttribution"
-                        contentType="html"
-                        title="Can be used in website code">
-              HTML code
-            </CopyButton>
-            <CopyButton :toCopy="textAttribution"
-                        contentType="text"
-                        title="Can be used in static documents">
-              Plain text
-            </CopyButton>
-            <CopyButton :toCopy="HTMLAttribution"
-                        contentType="rtf"
-                        title="Can be used in WYSIWYG editors">
-              Rich text
-            </CopyButton>
-          </div>
+          <image-attribution :image="image"
+                             :ccLicenseURL="ccLicenseURL"
+                             :fullLicenseName="fullLicenseName" />
+          <copy-attribution-buttons :image="image"
+                                    :ccLicenseURL="ccLicenseURL"
+                                    :fullLicenseName="fullLicenseName" />
         </section>
-        <section v-if="watermarkEnabled" class="sidebar_section">
-          <header class="sidebar_section-header">
-            <h2>
-              Image download
-            </h2>
-          </header>
-          <div class="large-12 cell">
-            <fieldset class="large-7 cell">
-              <div>
-                <input
-                  id="watermark"
-                  type="checkbox"
-                  v-model="shouldWatermark" />
-                <label for="watermark">
-                  Include attribution frame
-                </label>
-                <tooltip :tooltip="watermarkHelp" tooltipPosition="top">
-                  <span title="watermarkHelp">
-                    <img class='help-icon'
-                          src='../assets/help_icon.svg'
-                          alt='watermarkHelp' />
-                  </span>
-                </tooltip>
-              </div>
-              <div>
-                <input id="embedAttribution"
-                        type="checkbox"
-                        v-model="shouldEmbedMetadata" />
-                <label for="embedAttribution">
-                  Embed attribution metadata
-                </label>
-                <tooltip :tooltip="metadataHelp" tooltipPosition="top">
-                  <span title="metadataHelp">
-                    <img class='help-icon'
-                          src='../assets/help_icon.svg'
-                          alt='metadataHelp' />
-                  </span>
-                </tooltip>
-              </div>
-            </fieldset>
-            <button class="button success download-watermark"
-                    data-type="text"
-                    @click="onDownloadWatermark(image, $event)">
-                Download Image
-            </button>
-          </div>
-        </section>
-        <section v-if="socialSharingEnabled" class="sidebar_section social-sharing">
-          <header class="sidebar_section-header">
-            <h2>
-              Share
-            </h2>
-          </header>
-          <social-share-buttons
-            :shareURL="shareURL"
-            :imageURL="imageURL"
-            :shareText="shareText">
-          </social-share-buttons>
-        </section>
+        <watermark v-if="watermarkEnabled" :image="image" />
+        <image-social-share v-if="socialSharingEnabled" :image="image" />
       </section>
     </div>
 </template>
 
 <script>
 import CopyButton from '@/components/CopyButton';
-import LicenseIcons from '@/components/LicenseIcons';
 import SocialShareButtons from '@/components/SocialShareButtons';
 import ImageInfo from '@/components/ImageInfo';
-import Tooltip from '@/components/Tooltip';
+import Watermark from '@/components/Watermark';
+import ImageAttribution from '@/components/ImageAttribution';
+import CopyAttributionButtons from '@/components/CopyAttributionButtons';
+import ImageSocialShare from '@/components/ImageSocialShare';
 import decodeData from '@/utils/decodeData';
-import { DOWNLOAD_WATERMARK } from '@/store/action-types';
 
 
 export default {
@@ -131,17 +46,13 @@ export default {
   props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'watermarkEnabled', 'socialSharingEnabled'],
   components: {
     CopyButton,
-    LicenseIcons,
     SocialShareButtons,
-    Tooltip,
     ImageInfo,
+    Watermark,
+    ImageAttribution,
+    CopyAttributionButtons,
+    ImageSocialShare,
   },
-  data: () => ({
-    shouldEmbedMetadata: false,
-    shouldWatermark: false,
-    watermarkHelp: 'This option frames the image in white with a plain text attribution beneath.',
-    metadataHelp: 'This option embeds attribution and CC license metadata in the image file using XMP.',
-  }),
   computed: {
     ccLicenseURL() {
       if (!this.image) {
@@ -172,53 +83,6 @@ export default {
 
       return license === 'cc0' ? `${license} ${version}` : `CC ${license} ${version}`;
     },
-    watermarkURL() {
-      return `${process.env.API_URL}/watermark/${this.image.id}?embed_metadata=${this.shouldEmbedMetadata}&watermark=${this.shouldWatermark}`;
-    },
-    textAttribution() {
-      return () => {
-        const image = this.image;
-        const licenseURL = this.ccLicenseURL;
-        const byCreator = image.creator ? `by ${image.creator}` : ' ';
-
-        return `"${image.title}" ${byCreator}
-                is licensed under ${this.fullLicenseName.toUpperCase()}. To view a copy of this license, visit: ${licenseURL}`;
-      };
-    },
-    HTMLAttribution() {
-      return () => {
-        const image = this.image;
-
-        let byCreator;
-        if (image.creator) {
-          if (image.creator_url) {
-            byCreator = `by <a href="${image.creator_url}">${image.creator}</a>`;
-          }
-          else {
-            byCreator = `by ${image.creator}`;
-          }
-        }
-        else {
-          byCreator = ' ';
-        }
-
-        return `<a href="${image.foreign_landing_url}">"${image.title}"</a>
-                ${byCreator}
-                is licensed under
-                <a href="${this.ccLicenseURL}">
-                  ${this.fullLicenseName.toUpperCase()}
-                </a>`;
-      };
-    },
-    shareURL() {
-      return window.location.href;
-    },
-    imageURL() {
-      return this.image.foreign_landing_url;
-    },
-    shareText() {
-      return encodeURI(`I found an image through CC search @creativecommons: ${this.imageURL}`);
-    },
   },
   methods: {
     onGoBackToSearchResults() {
@@ -226,16 +90,6 @@ export default {
     },
     onImageLoad(event) {
       this.$emit('onImageLoaded', event);
-    },
-    onDownloadWatermark(image) {
-      const shouldEmbedMetadata = this.shouldEmbedMetadata;
-      const shouldWatermark = this.shouldWatermark;
-      this.$store.dispatch(DOWNLOAD_WATERMARK, {
-        imageId: image.id,
-        shouldWatermark,
-        shouldEmbedMetadata,
-      });
-      window.location = this.watermarkURL;
     },
   },
   watch: {

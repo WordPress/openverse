@@ -43,9 +43,14 @@
 </template>
 
 <script>
+import LicenseIcons from '@/components/LicenseIcons';
+
 export default {
   name: 'image-info',
   props: ['image', 'ccLicenseURL', 'fullLicenseName', 'imageWidth', 'imageHeight'],
+  components: {
+    LicenseIcons,
+  },
 };
 </script>
 
