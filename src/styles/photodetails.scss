@@ -53,13 +53,13 @@
 .photo_info-ctr {
   padding: 45px 15px;
   border-left: 1px solid #d6d6d6;
-  
+
   .sidebar_section {
     .sidebar_section-header {
       margin-left: 0px;
       border-top: 1px solid #e7e8e9;
     }
-  
+
     padding: 0 15px 15px 15px;
   }
 
@@ -160,4 +160,21 @@
 
 .photo_tags-clarifai-badge-image {
   height: 20px;
+}
+
+.download-watermark {
+  background: #01a635;
+  color: #fff;
+}
+
+label {
+  margin-right: 8px;
+}
+
+.help-icon {
+  height: 24px;
+}
+
+.attribution-buttons {
+  margin-top: 8px;
 }

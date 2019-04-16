@@ -11,47 +11,11 @@
              :alt="image.title">
       </div>
       <section class="photo_info-ctr cell medium-12 large-4">
-        <section class="sidebar_section">
-          <header class="sidebar_section-header">
-            <h2>
-              Image info
-            </h2>
-          </header>
-          <ul>
-            <li>
-              <h3>Title</h3>
-              <span>{{ image.title }}</span>
-            </li>
-            <li>
-              <h3>Creator</h3>
-              <span v-if="image.creator">
-                <a v-if="image.creator_url" :href="image.creator_url">{{ image.creator }}</a>
-                <span v-else>{{ image.creator }}</span>
-              </span>
-              <span v-else>
-                Not Available
-              </span>
-            </li>
-            <li>
-              <h3>License</h3>
-              <a class="photo_license" :href="ccLicenseURL">
-              {{ fullLicenseName }}
-              </a>
-              <license-icons :image="image"></license-icons>
-            </li>
-            <li>
-              <h3>Source</h3>
-              <a class="photo_provider"
-                :href="image.foreign_landing_url"
-                target="blank"
-                rel="noopener noreferrer">{{ image.provider }}</a>
-            </li>
-            <li>
-              <h3>Dimensions</h3>
-              <span> {{ imageWidth }} <span> &times; </span> {{ imageHeight }} pixels</span>
-            </li>
-          </ul>
-        </section>
+        <image-info :image="image"
+                    :ccLicenseURL="ccLicenseURL"
+                    :fullLicenseName="fullLicenseName"
+                    :imageWidth="imageWidth"
+                    :imageHeight="imageHeight" />
         <section class="sidebar_section">
           <header class="sidebar_section-header">
             <h2>
@@ -156,6 +120,7 @@
 import CopyButton from '@/components/CopyButton';
 import LicenseIcons from '@/components/LicenseIcons';
 import SocialShareButtons from '@/components/SocialShareButtons';
+import ImageInfo from '@/components/ImageInfo';
 import Tooltip from '@/components/Tooltip';
 import decodeData from '@/utils/decodeData';
 import { DOWNLOAD_WATERMARK } from '@/store/action-types';
@@ -169,6 +134,7 @@ export default {
     LicenseIcons,
     SocialShareButtons,
     Tooltip,
+    ImageInfo,
   },
   data: () => ({
     shouldEmbedMetadata: false,
@@ -284,21 +250,5 @@ export default {
 
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
-  .download-watermark {
-    background: #01a635;
-    color: #fff;
-  }
-
-  label {
-    margin-right: 8px;
-  }
-
-  .help-icon {
-    height: 24px;
-  }
-
-  .attribution-buttons {
-    margin-top: 8px;
-  }
 </style>
 
