@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="photo-attribution">
     <header class="sidebar_section-header">
-      <h2>
-        Image attribution
-      </h2>
+      <span>
+        Attribution
+      </span>
     </header>
     <p class="photo_usage-attribution" ref="photoAttribution">
       <a :href="image.foreign_landing_url">"{{ image.title }}"</a>

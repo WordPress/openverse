@@ -9,6 +9,10 @@
              class="photo_image"
              :src="image.url"
              :alt="image.title">
+
+        <image-attribution :image="image"
+                           :ccLicenseURL="ccLicenseURL"
+                           :fullLicenseName="fullLicenseName" />
       </div>
       <section class="photo_info-ctr cell medium-12 large-4">
         <image-info :image="image"
@@ -17,9 +21,6 @@
                     :imageWidth="imageWidth"
                     :imageHeight="imageHeight" />
         <section class="sidebar_section">
-          <image-attribution :image="image"
-                             :ccLicenseURL="ccLicenseURL"
-                             :fullLicenseName="fullLicenseName" />
           <copy-attribution-buttons :image="image"
                                     :ccLicenseURL="ccLicenseURL"
                                     :fullLicenseName="fullLicenseName" />
