@@ -31,8 +31,6 @@
 </template>
 
 <script>
-import CopyButton from '@/components/CopyButton';
-import SocialShareButtons from '@/components/SocialShareButtons';
 import ImageInfo from '@/components/ImageInfo';
 import Watermark from '@/components/Watermark';
 import ImageAttribution from '@/components/ImageAttribution';
@@ -45,8 +43,6 @@ export default {
   name: 'photo-details',
   props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'watermarkEnabled', 'socialSharingEnabled'],
   components: {
-    CopyButton,
-    SocialShareButtons,
     ImageInfo,
     Watermark,
     ImageAttribution,
