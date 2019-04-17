@@ -9,25 +9,21 @@
             class="photo_image"
             :src="image.url"
             :alt="image.title">
-
-      <image-attribution :image="image"
-                          :ccLicenseURL="image.license_url"
-                          :fullLicenseName="fullLicenseName" />
     </div>
     <section>
       <ul class="tabs" data-tabs id="example-tabs">
         <li :class="tabClass(0, 'tabs-title')">
           <a href="#panel0" :aria-selected="activeTab == 0" @click.prevent="setActiveTab(0)">
             <img class='tab-icon'
-                 src='../assets/info-icon.svg'
-                 alt='Image Info' />
+                 src='../assets/cc-by-icon_large.png'
+                 alt='Image Attribution' />
           </a>
         </li>
         <li :class="tabClass(1, 'tabs-title')">
           <a href="#panel1" :aria-selected="activeTab == 1" @click.prevent="setActiveTab(1)">
             <img class='tab-icon'
-                 src='../assets/attribute-icon.svg'
-                 alt='Image Attribution' />
+                 src='../assets/info-icon.svg'
+                 alt='Image Info' />
           </a>
         </li>
         <li :class="tabClass(2, 'tabs-title')" v-if="watermarkEnabled">
@@ -48,16 +44,16 @@
     </section>
     <section class="photo_info-ctr tabs-content">
       <div :class="tabClass(0, 'tabs-panel')">
+        <copy-attribution-buttons :image="image"
+                                  :ccLicenseURL="image.license_url"
+                                  :fullLicenseName="fullLicenseName" />
+      </div>
+      <div :class="tabClass(1, 'tabs-panel')">
         <image-info :image="image"
                     :ccLicenseURL="image.license_url"
                     :fullLicenseName="fullLicenseName"
                     :imageWidth="imageWidth"
                     :imageHeight="imageHeight" />
-      </div>
-      <div :class="tabClass(1, 'tabs-panel')">
-        <copy-attribution-buttons :image="image"
-                                  :ccLicenseURL="image.license_url"
-                                  :fullLicenseName="fullLicenseName" />
       </div>
       <div :class="tabClass(2, 'tabs-panel')">
         <watermark v-if="watermarkEnabled" :image="image" />
