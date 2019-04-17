@@ -8,13 +8,18 @@
     <image-attribution :image="image"
                        :ccLicenseURL="image.license_url"
                        :fullLicenseName="fullLicenseName" />
-    <span>Copy the attribution text above. You can then paste it into your blog or document.</span>
+    <span class='copy-description'>
+        Copy the attribution text above. You can then paste it into your blog or document
+      </span>
     <div class="attribution-buttons">
       <CopyButton :toCopy="HTMLAttribution"
                   contentType="rtf"
                   title="Can be used in WYSIWYG editors">
         Copy Attribution
       </CopyButton>
+      <help-tooltip
+            tooltip="Copy the attribution text in rich text format so you can
+                     use it in word processing software or a rich text editor" />
       <a class="more-options-button" href='#' @click.prevent="toggleMoreOptions">
         {{ moreOptionsText }}
       </a>
@@ -25,9 +30,8 @@
                       title="Can be used in website code">
             HTML code
           </CopyButton>
-          <span>
-            Copy the attribution text above in HTML format so you can add it to your website
-          </span>
+          <help-tooltip
+            tooltip="Copy the attribution text in HTML format so you can add it to your website" />
         </div>
         <div>
           <CopyButton :toCopy="textAttribution"
@@ -35,10 +39,9 @@
                       title="Can be used in static documents">
             Plain text
           </CopyButton>
-          <span>
-            Copy the attribution text above in plain text format so you can add it to any digital
-            or printed document
-          </span>
+          <help-tooltip
+            tooltip="Copy the attribution text in plain text format so
+                     you can add it to any digital or printed document" />
         </div>
       </div>
     </div>
@@ -48,6 +51,7 @@
 <script>
 import CopyButton from '@/components/CopyButton';
 import ImageAttribution from '@/components/ImageAttribution';
+import HelpTooltip from '@/components/HelpTooltip';
 
 export default {
   name: 'copy-attribution-buttons',
@@ -55,6 +59,7 @@ export default {
   components: {
     CopyButton,
     ImageAttribution,
+    HelpTooltip,
   },
   data() {
     return {

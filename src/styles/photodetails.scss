@@ -190,16 +190,20 @@ label {
 
 .provider-logo {
   height: 48px;
-  display: block;
+  margin: 6px 0 0px 0;
 }
 
 .more-options {
   box-shadow: -11px -5px 17px -14px rgba(0,0,0,0.31);
   padding: 10px 0 0 10px;
-  width: 58rem;
+  width: 13rem;
   border: 1px solid #ccc;
 }
 
 .more-options-button {
   display: block;
+}
+
+.copy-description {
+  color: #2c3e50;
 }

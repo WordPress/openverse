@@ -15,13 +15,7 @@
           <label for="watermark">
             Include attribution frame
           </label>
-          <tooltip :tooltip="watermarkHelp" tooltipPosition="top">
-            <span title="watermarkHelp">
-              <img class='help-icon'
-                    src='../assets/help_icon.svg'
-                    alt='watermarkHelp' />
-            </span>
-          </tooltip>
+          <help-tooltip :tooltip="watermarkHelp" />
         </div>
         <div>
           <input id="embedAttribution"
@@ -30,13 +24,7 @@
           <label for="embedAttribution">
             Embed attribution metadata
           </label>
-          <tooltip :tooltip="metadataHelp" tooltipPosition="top">
-            <span title="metadataHelp">
-              <img class='help-icon'
-                    src='../assets/help_icon.svg'
-                    alt='metadataHelp' />
-            </span>
-          </tooltip>
+          <help-tooltip :tooltip="metadataHelp" />
         </div>
       </fieldset>
       <button class="button success download-watermark"
@@ -49,14 +37,14 @@
 </template>
 
 <script>
-import Tooltip from '@/components/Tooltip';
+import HelpTooltip from '@/components/HelpTooltip';
 import { DOWNLOAD_WATERMARK } from '@/store/action-types';
 
 export default {
   name: 'watermark',
   props: ['image'],
   components: {
-    Tooltip,
+    HelpTooltip,
   },
   data: () => ({
     shouldEmbedMetadata: false,
