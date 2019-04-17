@@ -15,7 +15,10 @@ class TaskTypes(Enum):
 
 
 def test_phrase_relevance():
-    res = requests.get(API_URL + "/search?q=home office&filter_dead=False")
+    res = requests.get(
+        "{}/search?q=home%20office&filter_dead=false&qa=true"
+        .format(API_URL)
+    )
     parsed = json.loads(res.text)
     assert parsed[0]['id'] == TaskTypes.Target.value
     assert parsed[1]['id'] < TaskTypes.NOT_RELEVANT.value
