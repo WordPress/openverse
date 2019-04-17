@@ -20,28 +20,28 @@
           <a href="#panel0" :aria-selected="activeTab == 0" @click.prevent="setActiveTab(0)">
             <img class='tab-icon'
                  src='../assets/info-icon.svg'
-                 alt='watermarkHelp' />
+                 alt='Image Info' />
           </a>
         </li>
         <li :class="tabClass(1, 'tabs-title')">
           <a href="#panel1" :aria-selected="activeTab == 1" @click.prevent="setActiveTab(1)">
             <img class='tab-icon'
                  src='../assets/attribute-icon.svg'
-                 alt='watermarkHelp' />
+                 alt='Image Attribution' />
           </a>
         </li>
-        <li :class="tabClass(2, 'tabs-title')">
+        <li :class="tabClass(2, 'tabs-title')" v-if="watermarkEnabled">
           <a href="#panel2" :aria-selected="activeTab == 2" @click.prevent="setActiveTab(2)">
             <img class='tab-icon'
                  src='../assets/download-icon.svg'
-                 alt='watermarkHelp' />
+                 alt='Image Download' />
           </a>
         </li>
-        <li :class="tabClass(3, 'tabs-title')">
+        <li :class="tabClass(3, 'tabs-title')" v-if="socialSharingEnabled">
           <a href="#panel3" :aria-selected="activeTab == 3" @click.prevent="setActiveTab(3)">
             <img class='tab-icon'
                  src='../assets/share-icon.svg'
-                 alt='watermarkHelp' />
+                 alt='Share Image' />
           </a>
         </li>
       </ul>
