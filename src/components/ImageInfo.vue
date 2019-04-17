@@ -2,7 +2,7 @@
   <section class="sidebar_section">
     <header class="sidebar_section-header">
       <h2>
-        Image info
+        Image Info
       </h2>
     </header>
     <ul>

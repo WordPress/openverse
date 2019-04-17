@@ -1,6 +1,13 @@
 <template>
-  <div>
-    <h3>Copy as</h3>
+  <section class="sidebar_section">
+    <header class="sidebar_section-header">
+      <h2>
+        Image Attribution
+      </h2>
+    </header>
+    <image-attribution :image="image"
+                       :ccLicenseURL="image.license_url"
+                       :fullLicenseName="fullLicenseName" />
     <div class="attribution-buttons">
       <CopyButton :toCopy="HTMLAttribution"
                   contentType="html"
@@ -18,17 +25,19 @@
         Rich text
       </CopyButton>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
 import CopyButton from '@/components/CopyButton';
+import ImageAttribution from '@/components/ImageAttribution';
 
 export default {
   name: 'copy-attribution-buttons',
   props: ['image', 'ccLicenseURL', 'fullLicenseName'],
   components: {
     CopyButton,
+    ImageAttribution,
   },
   computed: {
     textAttribution() {

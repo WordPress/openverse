@@ -1,10 +1,5 @@
 <template>
   <div class="photo-attribution">
-    <header class="sidebar_section-header">
-      <span>
-        Attribution
-      </span>
-    </header>
     <p class="photo_usage-attribution" ref="photoAttribution">
       <a :href="image.foreign_landing_url">"{{ image.title }}"</a>
       <span v-if="image.creator">

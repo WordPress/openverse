@@ -21,7 +21,6 @@
             <img class='tab-icon'
                  src='../assets/info-icon.svg'
                  alt='watermarkHelp' />
-            Info
           </a>
         </li>
         <li :class="tabClass(1, 'tabs-title')">
@@ -29,7 +28,6 @@
             <img class='tab-icon'
                  src='../assets/attribute-icon.svg'
                  alt='watermarkHelp' />
-            Attribution
           </a>
         </li>
         <li :class="tabClass(2, 'tabs-title')">
@@ -37,7 +35,6 @@
             <img class='tab-icon'
                  src='../assets/download-icon.svg'
                  alt='watermarkHelp' />
-            Download
           </a>
         </li>
         <li :class="tabClass(3, 'tabs-title')">
@@ -45,7 +42,6 @@
             <img class='tab-icon'
                  src='../assets/share-icon.svg'
                  alt='watermarkHelp' />
-            Share
           </a>
         </li>
       </ul>
@@ -59,11 +55,9 @@
                     :imageHeight="imageHeight" />
       </div>
       <div :class="tabClass(1, 'tabs-panel')">
-        <section class="sidebar_section">
-          <copy-attribution-buttons :image="image"
-                                    :ccLicenseURL="image.license_url"
-                                    :fullLicenseName="fullLicenseName" />
-        </section>
+        <copy-attribution-buttons :image="image"
+                                  :ccLicenseURL="image.license_url"
+                                  :fullLicenseName="fullLicenseName" />
       </div>
       <div :class="tabClass(2, 'tabs-panel')">
         <watermark v-if="watermarkEnabled" :image="image" />
