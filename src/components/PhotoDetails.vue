@@ -1,34 +1,78 @@
 <template>
-    <div class="photo grid-x">
-      <div class="photo_image-ctr cell medium-12 large-8">
-        <a class="photo_breadcrumb"
-           :href="breadCrumbURL"
-           @click.prevent="onGoBackToSearchResults"
-           v-if="shouldShowBreadcrumb">&#171; Back to search results</a>
-        <img @load="onImageLoad"
-             class="photo_image"
-             :src="image.url"
-             :alt="image.title">
+  <div class="photo">
+    <div class="photo_image-ctr">
+      <a class="photo_breadcrumb"
+          :href="breadCrumbURL"
+          @click.prevent="onGoBackToSearchResults"
+          v-if="shouldShowBreadcrumb">&#171; Back to search results</a>
+      <img @load="onImageLoad"
+            class="photo_image"
+            :src="image.url"
+            :alt="image.title">
 
-        <image-attribution :image="image"
-                           :ccLicenseURL="ccLicenseURL"
-                           :fullLicenseName="fullLicenseName" />
-      </div>
-      <section class="photo_info-ctr cell medium-12 large-4">
+      <image-attribution :image="image"
+                          :ccLicenseURL="image.license_url"
+                          :fullLicenseName="fullLicenseName" />
+    </div>
+    <section>
+      <ul class="tabs" data-tabs id="example-tabs">
+        <li :class="tabClass(0, 'tabs-title')">
+          <a href="#panel0" :aria-selected="activeTab == 0" @click.prevent="setActiveTab(0)">
+            <img class='tab-icon'
+                 src='../assets/info-icon.svg'
+                 alt='watermarkHelp' />
+            Info
+          </a>
+        </li>
+        <li :class="tabClass(1, 'tabs-title')">
+          <a href="#panel1" :aria-selected="activeTab == 1" @click.prevent="setActiveTab(1)">
+            <img class='tab-icon'
+                 src='../assets/attribute-icon.svg'
+                 alt='watermarkHelp' />
+            Attribution
+          </a>
+        </li>
+        <li :class="tabClass(2, 'tabs-title')">
+          <a href="#panel2" :aria-selected="activeTab == 2" @click.prevent="setActiveTab(2)">
+            <img class='tab-icon'
+                 src='../assets/download-icon.svg'
+                 alt='watermarkHelp' />
+            Download
+          </a>
+        </li>
+        <li :class="tabClass(3, 'tabs-title')">
+          <a href="#panel3" :aria-selected="activeTab == 3" @click.prevent="setActiveTab(3)">
+            <img class='tab-icon'
+                 src='../assets/share-icon.svg'
+                 alt='watermarkHelp' />
+            Share
+          </a>
+        </li>
+      </ul>
+    </section>
+    <section class="photo_info-ctr tabs-content">
+      <div :class="tabClass(0, 'tabs-panel')">
         <image-info :image="image"
-                    :ccLicenseURL="ccLicenseURL"
+                    :ccLicenseURL="image.license_url"
                     :fullLicenseName="fullLicenseName"
                     :imageWidth="imageWidth"
                     :imageHeight="imageHeight" />
+      </div>
+      <div :class="tabClass(1, 'tabs-panel')">
         <section class="sidebar_section">
           <copy-attribution-buttons :image="image"
-                                    :ccLicenseURL="ccLicenseURL"
+                                    :ccLicenseURL="image.license_url"
                                     :fullLicenseName="fullLicenseName" />
         </section>
+      </div>
+      <div :class="tabClass(2, 'tabs-panel')">
         <watermark v-if="watermarkEnabled" :image="image" />
+      </div>
+      <div :class="tabClass(3, 'tabs-panel')">
         <image-social-share v-if="socialSharingEnabled" :image="image" />
-      </section>
-    </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -50,30 +94,12 @@ export default {
     CopyAttributionButtons,
     ImageSocialShare,
   },
+  data() {
+    return {
+      activeTab: 0,
+    };
+  },
   computed: {
-    ccLicenseURL() {
-      if (!this.image) {
-        return '';
-      }
-
-      const image = this.image;
-      const BASE_URL = 'https://creativecommons.org';
-      let url = `${BASE_URL}/licenses/${image.license}/${image.license_version}`;
-      let license = '';
-
-      if (image.license) {
-        license = image.license;
-      }
-
-      if (license === 'cc0') {
-        url = `${BASE_URL}/publicdomain/zero/1.0/`;
-      }
-      else if (image.license === 'pdm') {
-        url = `${BASE_URL}/publicdomain/mark/1.0/`;
-      }
-
-      return url;
-    },
     fullLicenseName() {
       const license = this.image.license;
       const version = this.image.license_version;
@@ -87,6 +113,15 @@ export default {
     },
     onImageLoad(event) {
       this.$emit('onImageLoaded', event);
+    },
+    tabClass(tabIdx, tabClass) {
+      return {
+        [tabClass]: true,
+        'is-active': tabIdx === this.activeTab,
+      };
+    },
+    setActiveTab(tabIdx) {
+      this.activeTab = tabIdx;
     },
   },
   watch: {

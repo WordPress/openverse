@@ -31,7 +31,7 @@
 .photo_image-ctr {
   position: relative;
   padding: 30px;
-  max-height: 800px;
+  height: 800px;
   overflow: auto;
   text-align: center;
 
@@ -51,8 +51,6 @@
 }
 
 .photo_info-ctr {
-  padding: 45px 15px;
-  border-left: 1px solid #d6d6d6;
 
   .sidebar_section {
     .sidebar_section-header {
@@ -182,6 +180,15 @@ label {
   height: 24px;
 }
 
+.tab-icon {
+  height: 16px;
+}
+
 .attribution-buttons {
   margin-top: 8px;
+}
+
+.provider-logo {
+  height: 48px;
+  display: block;
 }

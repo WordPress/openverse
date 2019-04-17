@@ -55,23 +55,6 @@ describe('PhotoDetails', () => {
     expect(wrapper.find({ name: 'image-social-share' }).exists()).toBe(false);
   });
 
-  it('should generate license URL', () => {
-    const wrapper = render(PhotoDetails, options);
-    expect(wrapper.vm.ccLicenseURL).toBe('https://creativecommons.org/licenses/BY/1.0');
-  });
-
-  it('should generate CC0 license URL', () => {
-    options.propsData.image.license = 'cc0';
-    const wrapper = render(PhotoDetails, options);
-    expect(wrapper.vm.ccLicenseURL).toBe('https://creativecommons.org/publicdomain/zero/1.0/');
-  });
-
-  it('should generate CC PDM license URL', () => {
-    options.propsData.image.license = 'pdm';
-    const wrapper = render(PhotoDetails, options);
-    expect(wrapper.vm.ccLicenseURL).toBe('https://creativecommons.org/publicdomain/mark/1.0/');
-  });
-
   it('should generate license name', () => {
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.vm.fullLicenseName).toBe('CC BY 1.0');

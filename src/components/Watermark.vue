@@ -1,10 +1,5 @@
 <template>
   <section class="sidebar_section">
-    <header class="sidebar_section-header">
-      <h2>
-        Image download
-      </h2>
-    </header>
     <div class="large-12 cell">
       <fieldset class="large-7 cell">
         <div>

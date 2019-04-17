@@ -32,7 +32,11 @@
         <a class="photo_provider"
           :href="image.foreign_landing_url"
           target="blank"
-          rel="noopener noreferrer">{{ image.provider }}</a>
+          rel="noopener noreferrer">
+          <img class="provider-logo" :alt="image.provider"
+                  :src="getProviderLogo(image.source)" />
+          {{ image.provider }}
+        </a>
       </li>
       <li>
         <h3>Dimensions</h3>
@@ -44,12 +48,25 @@
 
 <script>
 import LicenseIcons from '@/components/LicenseIcons';
+import ImageProviderService from '@/api/ImageProviderService';
 
 export default {
   name: 'image-info',
   props: ['image', 'ccLicenseURL', 'fullLicenseName', 'imageWidth', 'imageHeight'],
   components: {
     LicenseIcons,
+  },
+  methods: {
+    getProviderLogo(providerName) {
+      const provider = ImageProviderService.getProviderInfo(providerName);
+      if (provider) {
+        const logo = provider.logo;
+        const logoUrl = require(`@/assets/${logo}`); // eslint-disable-line global-require, import/no-dynamic-require
+
+        return logoUrl;
+      }
+      return '';
+    },
   },
 };
 </script>
