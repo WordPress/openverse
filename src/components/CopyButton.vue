@@ -69,7 +69,7 @@ export default {
 <style scoped>
   .photo_copy-btn {
     border-radius: 3px;
-    width: 32%;
+    width: 10rem;
     background: #4a69ca;
   }
 </style>

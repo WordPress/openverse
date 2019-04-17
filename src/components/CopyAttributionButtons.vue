@@ -8,22 +8,39 @@
     <image-attribution :image="image"
                        :ccLicenseURL="image.license_url"
                        :fullLicenseName="fullLicenseName" />
+    <span>Copy the attribution text above. You can then paste it into your blog or document.</span>
     <div class="attribution-buttons">
-      <CopyButton :toCopy="HTMLAttribution"
-                  contentType="html"
-                  title="Can be used in website code">
-        HTML code
-      </CopyButton>
-      <CopyButton :toCopy="textAttribution"
-                  contentType="text"
-                  title="Can be used in static documents">
-        Plain text
-      </CopyButton>
       <CopyButton :toCopy="HTMLAttribution"
                   contentType="rtf"
                   title="Can be used in WYSIWYG editors">
-        Rich text
+        Copy Attribution
       </CopyButton>
+      <a class="more-options-button" href='#' @click.prevent="toggleMoreOptions">
+        {{ moreOptionsText }}
+      </a>
+      <div v-if="showMore" class="more-options">
+        <div>
+          <CopyButton :toCopy="HTMLAttribution"
+                      contentType="html"
+                      title="Can be used in website code">
+            HTML code
+          </CopyButton>
+          <span>
+            Copy the attribution text above in HTML format so you can add it to your website
+          </span>
+        </div>
+        <div>
+          <CopyButton :toCopy="textAttribution"
+                      contentType="text"
+                      title="Can be used in static documents">
+            Plain text
+          </CopyButton>
+          <span>
+            Copy the attribution text above in plain text format so you can add it to any digital
+            or printed document
+          </span>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -38,6 +55,11 @@ export default {
   components: {
     CopyButton,
     ImageAttribution,
+  },
+  data() {
+    return {
+      showMore: false,
+    };
   },
   computed: {
     textAttribution() {
@@ -75,10 +97,20 @@ export default {
                 </a>`;
       };
     },
+    moreOptionsText() {
+      return this.showMore ? 'Less ▲' : 'More ▼';
+    },
+  },
+  methods: {
+    toggleMoreOptions() {
+      this.showMore = !this.showMore;
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
+
+
 </style>
