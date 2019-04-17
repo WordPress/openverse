@@ -30,18 +30,19 @@
 
 .photo_image-ctr {
   position: relative;
-  padding: 30px;
-  height: 800px;
-  overflow: auto;
+  padding-top: 30px;
+  max-height: 800px;
+  overflow: hidden;
   text-align: center;
 
   img {
     position: relative;
     width: auto;
     height: auto;
-    max-height: 90%;
+    max-height: 750px;
     max-width: 100%;
     background: #EBECE4;
+    margin-bottom: 4rem;
   }
 
   /* Small only */
@@ -206,4 +207,9 @@ label {
 
 .copy-description {
   color: #2c3e50;
+}
+
+.center {
+  width: 50%;
+  margin: 0 auto;
 }
