@@ -192,3 +192,14 @@ label {
   height: 48px;
   display: block;
 }
+
+.more-options {
+  box-shadow: -11px -5px 17px -14px rgba(0,0,0,0.31);
+  padding: 10px 0 0 10px;
+  width: 58rem;
+  border: 1px solid #ccc;
+}
+
+.more-options-button {
+  display: block;
+}
