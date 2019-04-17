@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils.validate_images import validate_images
-from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.utils import ccrel
 from rest_framework.reverse import reverse
 from cccatalog.api.serializers.search_serializers import\
