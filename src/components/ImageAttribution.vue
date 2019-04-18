@@ -11,14 +11,20 @@
       <a class="photo_license" :href="ccLicenseURL">
       {{ fullLicenseName }}
       </a>
+      <license-icons :image="image"></license-icons>
     </p>
   </div>
 </template>
 
 <script>
+import LicenseIcons from '@/components/LicenseIcons';
+
 export default {
   name: 'image-attribution',
   props: ['image', 'ccLicenseURL', 'fullLicenseName'],
+  components: {
+    LicenseIcons,
+  },
 };
 </script>
 
