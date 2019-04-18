@@ -1,25 +1,22 @@
 <template>
-<footer class="footer callout large secondary">
+<footer class="footer secondary">
    <div class="grid-container full">
-      <div class="large-3 cell">
-          <ul class="footer_links menu">
-            <li><a href="https://creativecommons.org/contact">Contact</a></li>
-            <li><a href="https://creativecommons.org/privacy">Privacy</a></li>
-            <li><a href="https://creativecommons.org/policies">Policies</a></li>
-            <li><a href="https://creativecommons.org/terms">Terms</a></li>
-            <li><a href="https://creativecommons.org/faq">FAQ</a></li>
-          </ul>
-      </div>
-      <hr>
       <div class="grid-x grid-margin-x grid-margin-y">
-        <div class="medium-3 large-3 cell">
-          <img class="footer_logo" src="../assets/cc-logo_large_black.png">
-            <p>
-              We’re changing the way people share around the world
-              with our Global Community and 1.4 billion pieces of
-              content under our simple, easy-to-use open licenses.
-            </p>
+        <div class="medium-3 cell">
+          <a href="https://creativecommons.org/">
+            <img class="footer_logo" src="../assets/cc-logo_white.png">
+          </a>
+          <div class="cc-footer-links">
+            <div class="menu-footer-links-container">
+                <ul id="menu-footer-links" class="menu">
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/about/contact/">Contact</a></li>
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/privacy/">Privacy</a></li>
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/policies/">Policies</a></li>
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/terms/">Terms</a></li>
+                </ul>
+            </div>
         </div>
+      </div>
         <div class="medium-3 large-3 medium-offset-1 large-offset-1 cell">
           <div class="column footer_contact">
             <h6><a href="https://creativecommons.org/about/contact/">We'd love to hear from you!</a></h6>
@@ -48,19 +45,6 @@
           </aside>
         </div>
       </div>
-      <div class="large-12 cell">
-        <div class="footer_disclaimer callout warning">
-          This is the first release of the new CC Search, aggregating data from publicly
-          available repositories of open content. CC has no control over the results that
-          are returned. Do not assume that the results displayed in this search portal are
-          under a CC license. You should always follow the link to verify that the work is
-          actually under a CC license and to verify the requirements of that license, including
-          the proper form of attribution. Since there is no registration to use a CC license, CC
-          has no way to determine what has and hasn't been placed under the terms of a CC license.
-          If you are in doubt you should contact the copyright holder directly, or try to contact
-          the site where you found the content.
-        </div>
-      </div>
    </div>
 </footer>
 </template>
@@ -75,9 +59,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .footer {
-  padding: 30px;
-  margin-bottom: 0;
-  background-color: #f7f8f9;
+  bottom: 0;
+  padding: 4vh;
+  background-color: #2b2b2b;
+  width: 100%;
 
   hr {
     max-width: 100%;
@@ -102,7 +87,7 @@ export default {
 
 .footer_logo,
 .footer_license-icons img {
-  height: 2em;
+  height: 4em;
   margin-bottom: 1em;
 }
 
@@ -113,14 +98,26 @@ export default {
   }
 
   h6 a {
-    color: #000;
+    color: #fff;
     font-size: 1.1em;
     font-weight: 500;
 
     &:hover {
-      bottom-border: 1px solid black;
+      border-bottom: 1px solid black;
     }
   }
+}
+
+address {
+  color: #999;
+}
+
+.menu-item a {
+  color: #999;
+}
+
+p {
+  color: #999;
 }
 
 .footer_disclaimer {

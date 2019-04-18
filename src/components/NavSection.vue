@@ -1,12 +1,11 @@
 <template>
   <nav class="nav grid-x grid-padding-x">
     <div class="cell small-12 medium-12 large-6">
-      <a href="https://creativecommons.org/">
-        <img class="nav_logo" src="../assets/cc-logo_white.png">
+      <a class="nav_logo" href="/">
+        <img src="../assets/cc-search-logo-white.png">
       </a>
       <div class="menu_ctr">
         <ul class="menu">
-          <li class="home"><a href="/">Home</a></li>
           <li><a href="/about">About</a></li>
           <li><a href="/feedback">Feedback</a></li>
         </ul>
@@ -52,11 +51,14 @@ export default {
 .nav {
   position: relative;
   width: 100%;
-  background-color: #373737;
+  background-image: linear-gradient(90deg, #34baec, #5fd1fc, #34baec);
+  height: 3.9em;
+  border-bottom: 1px solid rgba(0,0,0,0.25);
 }
-.nav_logo {
-  margin: 15px 0 15px 0;
-  height: 30px;
+.nav_logo > img {
+  margin: 0px 0 9px 0;
+  height: 42px;
+  padding-right: 11px;
 }
 .hero_search-form {
   margin: 0 15px;
@@ -64,29 +66,38 @@ export default {
   @media screen and (min-width: 64em) {
     float: right;
   }
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    display: none;
+  }
 }
 .menu_ctr {
   display: inline-block;
-  margin-left: 30px;
+  margin-left: 10px;
   /* Small only */
   @media screen and (max-width: 39.9375em) {
     margin-left: 0 !important;
   }
 }
+
 .menu a {
-  color: #fefefe;
-  font-weight: 500;
-  padding: 0.7rem 1rem;
-  border: 1px solid transparent;
+  color: rgb(255, 255, 255);
+  font-size: 1.4em;
+  font-weight: 700;
+  line-height: 1em;
+  margin-top: 0.5rem;
+  border-left: 1px solid white;
   border-radius: 2px;
-  transition: all 0.3s ease;
   &:hover {
-    border-color: rgba(255, 255, 255, 0.3);
+    background: #1e96c2;
   }
 
   /* Small only */
   @media screen and (max-width: 380px) {
     padding: 0.7rem .7rem;
+    &:hover {
+      border-bottom: none;
+    }
   }
 }
 
@@ -99,10 +110,14 @@ export default {
     padding-left: 1rem;
     background: transparent;
     color: #fff;
-    border: 1px solid rgba(255, 255, 255, .1);
+    border: 1px solid rgba(36, 36, 36, 0.5);;
     box-shadow: none;
     &:focus {
-      border-color: rgba(213, 18, 188, .5);
+      border-color: rgb(255, 255, 255);
+    }
+
+    &::placeholder {
+      color: #1c1c1c;
     }
   }
   .input-group-button .button {
@@ -114,7 +129,7 @@ export default {
     background: none;
     &:after {
       content: '';
-      background: url('../assets/search-icon.svg') center center no-repeat;
+      background: url('../assets/search-icon_black.svg') center center no-repeat;
       background-size: 20px;
       top: 0;
       left: 0;

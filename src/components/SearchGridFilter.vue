@@ -12,8 +12,9 @@
           track-by="code"
           :options="providers"
           :multiple="true"
-          :taggable="true"
-          :searchable="false">
+          :searchable="true"
+          :closeOnSelect="false"
+          :showLabels="false">
         </multiselect>
       </div>
       <div class="filter-option search-filters_license-types">
@@ -27,8 +28,9 @@
           track-by="code"
           :options="licenseTypes"
           :multiple="true"
-          :taggable="true"
-          :searchable="false">
+          :searchable="false"
+          :closeOnSelect="false"
+          :showLabels="false">>
         </multiselect>
       </div>
       <div class="filter-option search-filters_licenses">
@@ -42,8 +44,9 @@
           track-by="code"
           :options="licenses"
           :multiple="true"
-          :taggable="true"
-          :searchable="false">
+          :searchable="false"
+          :closeOnSelect="false"
+          :showLabels="false">
         </multiselect>
       </div>
       <div class="filter-option search-filters_search-by">
