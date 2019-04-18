@@ -8,7 +8,7 @@ By participating in this project, you are expected to uphold our [Code of Conduc
 
 ## Project Documentation
 
-Please consult the [README](./README.md) file at the root of this repository.
+Please consult the [README](./README.md) and [CODEBASE](./CODEBASE.md) files at the root of this repository.
 
 ## How to Contribute
 
