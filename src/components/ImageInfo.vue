@@ -33,8 +33,7 @@
           :href="image.foreign_landing_url"
           target="blank"
           rel="noopener noreferrer">
-          <img class="provider-logo" :alt="image.provider"
-                  :src="getProviderLogo(image.provider_code)" />
+          {{ image.provider }}
         </a>
       </li>
       <li>
