@@ -12,12 +12,13 @@
 }
 
 .photo_provider {
-    text-transform: capitalize;
+  text-transform: capitalize;
 }
 
 .photo {
   width: 100%;
-  border-bottom: 1px solid #d6d6d6;
+  border-bottom: 1px solid #616161;
+  background: #e9ebee;
 }
 
 .photo_breadcrumb {
@@ -41,7 +42,6 @@
     height: auto;
     max-height: 750px;
     max-width: 100%;
-    background: #EBECE4;
     margin-bottom: 4rem;
   }
 
@@ -52,11 +52,9 @@
 }
 
 .photo_info-ctr {
-
   .sidebar_section {
     .sidebar_section-header {
       margin-left: 0px;
-      border-top: 1px solid #e7e8e9;
     }
 
     padding: 0 15px 15px 15px;
@@ -181,6 +179,21 @@ label {
   height: 24px;
 }
 
+.tab-section {
+  border-bottom: 1px solid #616161;
+  background: #fefefe;
+}
+
+.tabs {
+  width: 16.15rem;
+  margin: auto;
+  border-bottom: none;
+}
+
+.tabs-content {
+  border: none;
+}
+
 .tab-icon {
   height: 16px;
 }
@@ -194,10 +207,14 @@ label {
   margin: 6px 0 0px 0;
 }
 
+.button-group {
+  margin-bottom: 0.2rem;
+}
+
 .more-options {
   box-shadow: -11px -5px 17px -14px rgba(0,0,0,0.31);
   padding: 10px 0 0 10px;
-  width: 13rem;
+  width: 12.7rem;
   border: 1px solid #ccc;
 }
 

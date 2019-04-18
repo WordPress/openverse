@@ -10,7 +10,7 @@
             :src="image.url"
             :alt="image.title">
     </div>
-    <section>
+    <section class="tab-section">
       <ul class="tabs" data-tabs id="example-tabs">
         <li :class="tabClass(0, 'tabs-title')">
           <a href="#panel0" :aria-selected="activeTab == 0" @click.prevent="setActiveTab(0)">
