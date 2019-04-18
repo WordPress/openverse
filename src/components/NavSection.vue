@@ -51,10 +51,7 @@ export default {
 .nav {
   position: relative;
   width: 100%;
-  // background: #fff;
-  // background-image: linear-gradient(90deg, #3249EE, #2884FB, #3249EE);
-  // background-image: linear-gradient(90deg,#EE5B32,#FB7928,#EE5B32);
-  background: #34baec;
+  background-image: linear-gradient(90deg, #34baec, #5fd1fc, #34baec);
   height: 3.9em;
   border-bottom: 1px solid rgba(0,0,0,0.25);
 }
