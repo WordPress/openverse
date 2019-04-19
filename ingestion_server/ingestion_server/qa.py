@@ -41,17 +41,6 @@ def test_image(title, tags, creator, relevance):
 
 
 def _phrase_relevance(index):
-    # This should be the top result.
-    target_tags = [
-        {'name': 'home office'},
-        {'name': 'noise'},
-        {'name': 'clutter'}
-    ]
-    target = test_image(
-        'My home office', target_tags, 'John Fooson', QAScores.TARGET.value
-    )
-    target.save(index=index)
-
     less_relevant1 = test_image(
         'A picture of my office',
         [{'name': 'office'}],
@@ -73,3 +62,15 @@ def _phrase_relevance(index):
         'Mastiff', [{'name': 'dog'}], 'Liam', QAScores.NOT_RELEVANT.value
     )
     not_relevant.save(index=index)
+
+    # This should be the top result.
+    target_tags = [
+        {'name': 'home office'},
+        {'name': 'noise'},
+        {'name': 'clutter'}
+    ]
+    target = test_image(
+        'My home office', target_tags, 'John Fooson', QAScores.TARGET.value
+    )
+    target.save(index=index)
+

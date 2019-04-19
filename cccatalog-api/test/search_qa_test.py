@@ -17,7 +17,7 @@ class QAScores(Enum):
 
 def test_phrase_relevance():
     res = requests.get(
-        "{}/image/search?q=home%20office&filter_dead=false&qa=true"
+        "{}/image/search?q=home office&filter_dead=false&qa=true"
         .format(API_URL)
     )
     parsed = json.loads(res.text)
