@@ -19,7 +19,7 @@ describe('getParameterByName', () => {
   });
 
   it('finds "lt"', () => {
-    const query = '?q=landscapes&provider=500px&li=&lt=commercial';
+    const query = '?q=landscapes&provider=met&li=&lt=commercial';
     expect(getParameterByName('lt', query)).toBe('commercial');
   });
 });

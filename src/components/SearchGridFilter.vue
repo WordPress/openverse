@@ -146,7 +146,6 @@ export default {
   data: () => (
     { providers:
       [
-        { code: '500px', name: '500px' },
         { code: 'animaldiversity', name: 'Animal Diversity Web' },
         { code: 'behance', name: 'Behance' },
         { code: 'brooklynmuseum', name: 'Brooklyn Museum' },

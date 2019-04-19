@@ -31,7 +31,7 @@ describe('Search Store', () => {
     });
 
     it('gets query from search params', () => {
-      const state = store.state('?q=landscapes&provider=500px&li=by&lt=all&searchBy=creator');
+      const state = store.state('?q=landscapes&provider=met&li=by&lt=all&searchBy=creator');
       expect(state.imagesCount).toBe(0);
       expect(state.imagePage).toBe(1);
       expect(state.images).toHaveLength(0);
@@ -40,7 +40,7 @@ describe('Search Store', () => {
       expect(state.isFilterVisible).toBeFalsy();
       expect(state.isFilterApplied).toBeTruthy();
       expect(state.query.q).toBe('landscapes');
-      expect(state.query.provider).toBe('500px');
+      expect(state.query.provider).toBe('met');
       expect(state.query.li).toBe('by');
       expect(state.query.lt).toBe('all');
       expect(state.query.searchBy).toBe('creator');
@@ -49,7 +49,7 @@ describe('Search Store', () => {
     });
 
     it('isFilterApplied is set to true when provider filter is set', () => {
-      const state = store.state('?q=landscapes&provider=500px&li=by&lt=');
+      const state = store.state('?q=landscapes&provider=met&li=by&lt=');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
