@@ -5,44 +5,37 @@
         Image Attribution
       </h2>
     </header>
-    <image-attribution :image="image"
+    <image-attribution id= "attribution"
+                       :image="image"
                        :ccLicenseURL="image.license_url"
                        :fullLicenseName="fullLicenseName" />
     <span class='copy-description'>
         Copy the attribution text above. You can then paste it into your blog or document
       </span>
-    <div class="attribution-buttons">
+    <div class="button-group">
       <CopyButton :toCopy="HTMLAttribution"
                   contentType="rtf"
                   title="Can be used in WYSIWYG editors">
         Copy Attribution
       </CopyButton>
+      <a class="dropdown button arrow-only" @click.prevent="toggleMoreOptions">
+        <span class="show-for-sr">More copy options</span>
+      </a>
       <help-tooltip
             tooltip="Copy the attribution text in rich text format so you can
                      use it in word processing software or a rich text editor" />
-      <a class="more-options-button" href='#' @click.prevent="toggleMoreOptions">
-        {{ moreOptionsText }}
-      </a>
-      <div v-if="showMore" class="more-options">
-        <div>
-          <CopyButton :toCopy="HTMLAttribution"
-                      contentType="html"
-                      title="Can be used in website code">
-            HTML code
-          </CopyButton>
-          <help-tooltip
-            tooltip="Copy the attribution text in HTML format so you can add it to your website" />
-        </div>
-        <div>
-          <CopyButton :toCopy="textAttribution"
-                      contentType="text"
-                      title="Can be used in static documents">
-            Plain text
-          </CopyButton>
-          <help-tooltip
-            tooltip="Copy the attribution text in plain text format so
-                     you can add it to any digital or printed document" />
-        </div>
+    </div>
+
+    <div v-if="showMore" class="more-options">
+      <div>
+        <CopyButton :toCopy="textAttribution"
+                    contentType="text"
+                    title="Can be used in static documents">
+          Plain text
+        </CopyButton>
+        <help-tooltip
+          tooltip="Copy the attribution text in plain text format so
+                    you can add it to any digital or printed document" />
       </div>
     </div>
   </section>

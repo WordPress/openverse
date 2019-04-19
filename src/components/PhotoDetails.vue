@@ -44,9 +44,9 @@
     </section>
     <section class="photo_info-ctr tabs-content">
       <div :class="tabClass(0, 'tabs-panel')">
-        <copy-attribution-buttons :image="image"
-                                  :ccLicenseURL="image.license_url"
-                                  :fullLicenseName="fullLicenseName" />
+        <image-attribution :image="image"
+                            :ccLicenseURL="image.license_url"
+                            :fullLicenseName="fullLicenseName" />
       </div>
       <div :class="tabClass(1, 'tabs-panel')">
         <image-info :image="image"
@@ -69,7 +69,6 @@
 import ImageInfo from '@/components/ImageInfo';
 import Watermark from '@/components/Watermark';
 import ImageAttribution from '@/components/ImageAttribution';
-import CopyAttributionButtons from '@/components/CopyAttributionButtons';
 import ImageSocialShare from '@/components/ImageSocialShare';
 import decodeData from '@/utils/decodeData';
 
@@ -81,7 +80,6 @@ export default {
     ImageInfo,
     Watermark,
     ImageAttribution,
-    CopyAttributionButtons,
     ImageSocialShare,
   },
   data() {

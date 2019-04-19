@@ -1,67 +1,52 @@
 <template>
   <button type="button"
-          class="button photo_copy-btn">
+          class="button photo_copy-btn"
+          :data-clipboard-target="el">
     <slot v-if="!success" default />
     <template v-else>Copied!</template>
   </button>
 </template>
 
 <script>
+import Clipboard from 'clipboard';
 import { COPY_ATTRIBUTION } from '@/store/action-types';
+
+let clipboard = null;
 
 export default {
   data: () => ({
     success: false,
   }),
   props: {
-    toCopy: {
-      required: true,
-    },
-    contentType: {
+    el: {
       required: true,
     },
   },
   methods: {
-    listener(clickEvent) {
-      // Prepare the content to copy into the clipboard
-      const content = this.toCopy().replace(/\s\s/g, '');
-
-      // Load the content into the clipboard
-      const copier = (event) => {
-        // If the content type is RTF, paste as rich text into the clipboard
-        if (this.contentType === 'rtf') {
-          event.clipboardData.setData('text/html', content);
-        }
-        // Paste as plain text into the clipboard
-        event.clipboardData.setData('text/plain', content);
-        // Prevent the default action
-        event.preventDefault();
-      };
-      document.addEventListener('copy', copier);
-      document.execCommand('copy');
-      document.removeEventListener('copy', copier);
-
-      // Set the success flag and log the copy action for Analytics
+    onCopySuccess(e) {
       this.success = true;
       this.$store.dispatch(COPY_ATTRIBUTION, {
-        contentType: this.$props.contentType,
-        content,
+        contentType: 'rtf',
+        content: e.text,
       });
 
-      // Set a timeout for the success flag to be reset
       setTimeout(() => {
         this.success = false;
       }, 2000);
 
-      // Prevent the default action
-      clickEvent.preventDefault();
+      e.clearSelection();
+    },
+    onCopyError(e) {
+      e.clearSelection();
     },
   },
   mounted() {
-    this.$el.addEventListener('click', this.listener);
+    clipboard = new Clipboard('.photo_copy-btn');
+    clipboard.on('success', this.onCopySuccess);
+    clipboard.on('error', this.onCopyError);
   },
   destroyed() {
-    this.$el.removeEventListener('click', this.listener);
+    clipboard.destroy();
   },
 };
 </script>

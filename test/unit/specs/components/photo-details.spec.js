@@ -34,8 +34,7 @@ describe('PhotoDetails', () => {
     expect(wrapper.find({ name: 'watermark' }).exists()).toBe(true);
     expect(wrapper.find({ name: 'image-info' }).exists()).toBe(true);
     expect(wrapper.find({ name: 'image-attribution' }).exists()).toBe(true);
-    expect(wrapper.find({ name: 'copy-attribution-buttons' }).exists()).toBe(true);
-    expect(wrapper.find({ name: 'image-info' }).exists()).toBe(true);
+    expect(wrapper.find({ name: 'image-social-share' }).exists()).toBe(true);
   });
 
   it('should not render watermark link when watermark is disabled', () => {
