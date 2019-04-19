@@ -46,7 +46,8 @@
       <div :class="tabClass(0, 'tabs-panel')">
         <image-attribution :image="image"
                             :ccLicenseURL="image.license_url"
-                            :fullLicenseName="fullLicenseName" />
+                            :fullLicenseName="fullLicenseName"
+                            :attributionHtml="attributionHtml()" />
       </div>
       <div :class="tabClass(1, 'tabs-panel')">
         <image-info :image="image"
@@ -72,6 +73,30 @@ import ImageAttribution from '@/components/ImageAttribution';
 import ImageSocialShare from '@/components/ImageSocialShare';
 import decodeData from '@/utils/decodeData';
 
+function attributionHtml(image, ccLicenseURL, fullLicenseName) {
+  if (!image) {
+    return '';
+  }
+  const imgLink = `<a href="${image.foreign_landing_url}">"${image.title}"</a>`;
+  let creator = '';
+  if (image.creator && image.creator_url) {
+    creator = `<span> by <span>${image.creator}</span></span>`;
+  }
+  else if (image.creator && !image.creator_url) {
+    creator = `<span>by <a vhref="${image.creator_url}">${image.creator}</a></span>`;
+  }
+  const licenseLink = ` is licensed under <a href="${ccLicenseURL}">${fullLicenseName.toUpperCase()}</a>`;
+
+  let licenseIcons = `<img style="height: inherit;margin-right: 3px;" src="${require('@/assets/cc_icon.svg')}" />`;
+  if (image.license) {
+    licenseIcons = licenseIcons + image.license.split('-').map(license =>
+      `<img style="height: inherit;margin-right: 3px;" src="${require(`@/assets/cc-${license.toLowerCase()}_icon.svg`)}" />`
+    ).join('');
+  }
+
+  const licenseImgLink = `<a href="${ccLicenseURL}" target="_blank" rel="noopener noreferrer" style="display: inline-block;white-space: none;opacity: .7;margin-top: 2px;margin-left: 3px;height: 22px !important;">${licenseIcons}</a>`;
+  return `<p style="font-size: 0.9rem;font-style: italic;">${imgLink}${creator}${licenseLink}${licenseImgLink}</p>`;
+}
 
 export default {
   name: 'photo-details',
@@ -110,6 +135,9 @@ export default {
     },
     setActiveTab(tabIdx) {
       this.activeTab = tabIdx;
+    },
+    attributionHtml() {
+      return attributionHtml(this.image, this.image.license_url, this.fullLicenseName);
     },
   },
   watch: {
