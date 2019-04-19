@@ -31,7 +31,7 @@ def _cleanup_url(url):
     """
     parsed = urlparse(url)
     if parsed.scheme == '':
-        "'https://{}'".format(url)
+        return "'https://{}'".format(url)
     else:
         return None
 
