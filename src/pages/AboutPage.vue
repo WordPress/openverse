@@ -26,17 +26,15 @@
       <h2>New Release</h2>
       <p>
         This release contains several new features, including AI image tags generated from
-        our collaborator, Clarifai. Clarifai is a best in class image classification software
+        our collaborator, Clarifai. Clarifai is the best-in-class image classification software
         that provides tagging support and visual recognition. Clarifai’s API was integrated
         in the process-flow as a means to automatically generate tags for the new and existing
         images. This means that CC search has machine-generated tags, user-defined tags, and
         platform-defined tags that were obtained from the web crawl data. Collectively,
         these will enhance the user’s search experience and improve the quality of the results.
         Currently, 10.3 million images have their respective Clarifai tags and the outstanding
-        images will be integrated on an ongoing basis. Tags generated via Clarifai are marked with
-        a <img class="photo_tag-provider-badge" src="@/assets/clarifai_logo.png"> on the detail page
-        for each image. With this addition, we’re not just cataloging the commons, we’re making it
-        better. Thank you to Clarifai for their support.
+        images will be integrated on an ongoing basis. With this addition, we’re not just
+        cataloging the commons, we’re making it better. CC thanks Clarifai for their support.
       </p>
       <h2>Providers</h2>
       <div class="about-page_provider-stats-ctr">
