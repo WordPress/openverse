@@ -11,17 +11,8 @@
           <span class="photo_tag-label">
             <span>{{ tag.name }}</span>
           </span>
-          <img class="photo_tag-provider-badge"
-                src="@/assets/clarifai_logo.png"
-                v-if="isClarifaiTag(tag.provider)">
         </span>
       </template>
-      <p class="photo_tags-clarifai-badge" v-if="hasClarifaiTags">
-        <span>Tag by</span>
-        <a href="https://clarifai.com/">
-          <img class="photo_tags-clarifai-badge-image" src="../assets/clarifai.svg" >
-        </a>
-      </p>
     </div>
   </div>
 </template>
