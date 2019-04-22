@@ -17,7 +17,14 @@ TAG_BLACKLIST = {
     'squareformat',
     'uploaded:by=flickrmobile',
     'uploaded:by=instagram',
-    'cc0'
+    'cc0',
+    'by',
+    'by-nc',
+    'by-nd',
+    'by-sa',
+    'by-nc-nd',
+    'by-nc-sa',
+    'pdm'
 }
 
 # Filter out low-confidence tags, which indicate that the machine-generated tag
