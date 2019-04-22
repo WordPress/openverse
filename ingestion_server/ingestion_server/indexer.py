@@ -15,6 +15,7 @@ from elasticsearch.exceptions \
     import ConnectionError as ElasticsearchConnectionError
 from elasticsearch_dsl import connections, Search
 from psycopg2.sql import SQL, Identifier
+from ingestion_server.qa import create_search_qa_index
 
 from ingestion_server.elasticsearch_models import database_table_to_elasticsearch_model
 
@@ -375,6 +376,11 @@ class TableIndexer:
         query = SQL('SELECT * FROM {} WHERE updated_on >= \'{}\''
                     .format(model_name, since_date))
         self._replicate(model_name, model_name, query)
+
+    @staticmethod
+    def load_test_data():
+        """ Create test indices in Elasticsearch for QA. """
+        create_search_qa_index()
 
     @staticmethod
     def pg_chunk_to_es(pg_chunk, columns, origin_table, dest_index):
