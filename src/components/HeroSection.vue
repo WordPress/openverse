@@ -50,7 +50,7 @@ export default {
 <style lang="scss" scoped>
 @import '../../node_modules/foundation-sites/scss/foundation';
 
-$hero-height: 40vh;
+$hero-height: 75vh;
 
 .hero {
   background: #e9ebee;
