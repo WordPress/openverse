@@ -80,17 +80,17 @@ function attributionHtml(image, ccLicenseURL, fullLicenseName) {
   const imgLink = `<a href="${image.foreign_landing_url}">"${image.title}"</a>`;
   let creator = '';
   if (image.creator && image.creator_url) {
-    creator = `<span> by <span>${image.creator}</span></span>`;
+    creator = `<span>by <a href="${image.creator_url}">${image.creator}</a></span>`;
   }
   else if (image.creator && !image.creator_url) {
-    creator = `<span>by <a vhref="${image.creator_url}">${image.creator}</a></span>`;
+    creator = `<span> by <span>${image.creator}</span></span>`;
   }
   const licenseLink = ` is licensed under <a href="${ccLicenseURL}">${fullLicenseName.toUpperCase()}</a>`;
 
-  let licenseIcons = `<img style="height: inherit;margin-right: 3px;" src="${require('@/assets/cc_icon.svg')}" />`;
+  let licenseIcons = `<img style="height: inherit;margin-right: 3px;" src="${require('@/assets/cc_icon.svg')}" />`; // eslint-disable-line global-require, import/no-dynamic-require
   if (image.license) {
-    licenseIcons = licenseIcons + image.license.split('-').map(license =>
-      `<img style="height: inherit;margin-right: 3px;" src="${require(`@/assets/cc-${license.toLowerCase()}_icon.svg`)}" />`
+    licenseIcons += image.license.split('-').map(license =>
+      `<img style="height: inherit;margin-right: 3px;" src="${require(`@/assets/cc-${license.toLowerCase()}_icon.svg`)}" />`, // eslint-disable-line global-require, import/no-dynamic-require
     ).join('');
   }
 
