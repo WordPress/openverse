@@ -29,10 +29,7 @@ export default {
   methods: {
     onCopySuccess(e) {
       this.success = true;
-      this.$store.dispatch(COPY_ATTRIBUTION, {
-        contentType: 'rtf',
-        content: e.text,
-      });
+      this.$emit('copied');
 
       setTimeout(() => {
         this.success = false;
@@ -41,6 +38,7 @@ export default {
       e.clearSelection();
     },
     onCopyError(e) {
+      this.$emit('copyFailed');
       e.clearSelection();
     },
   },

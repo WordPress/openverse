@@ -9,20 +9,13 @@ describe('CopyButton', () => {
     text: 'Foo',
     clearSelection: jest.fn(),
   };
-  let dispatchMock = null;
 
   beforeEach(() => {
-    dispatchMock = jest.fn();
     props = {
       el: '#foo',
     };
     options = {
       propsData: props,
-      mocks: {
-        $store: {
-          dispatch: dispatchMock,
-        },
-      },
     };
   });
 
@@ -62,12 +55,15 @@ describe('CopyButton', () => {
     expect(eventData.clearSelection).toHaveBeenCalled();
   });
 
-  it('should dispatch COPY_ATTRIBUTION', () => {
+  it('should emit copied event', () => {
     const wrapper = render(CopyButton, options);
     wrapper.vm.onCopySuccess(eventData);
-    expect(dispatchMock).toHaveBeenCalledWith(COPY_ATTRIBUTION, {
-      contentType: 'rtf',
-      content: eventData.text,
-    });
+    expect(wrapper.emitted().copied).toBeTruthy();
+  });
+
+  it('should emit copyFailed event', () => {
+    const wrapper = render(CopyButton, options);
+    wrapper.vm.onCopyError(eventData);
+    expect(wrapper.emitted().copyFailed).toBeTruthy();
   });
 });
