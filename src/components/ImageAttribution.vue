@@ -21,7 +21,8 @@
             </a>
             <license-icons :image="image"></license-icons>
           </p>
-          <CopyButton el="#attribution"
+          <CopyButton id="copy-attribution-btn"
+                      el="#attribution"
                       title="Can be used in WYSIWYG editors">
             Copy Attribution
           </CopyButton>
@@ -30,7 +31,8 @@
           <span>Copy the HTML below to embed the attribution in your website</span>
           <textarea id="attribution-html" :value="attributionHtml" cols="30" rows="10" readonly="readonly">
           </textarea>
-          <CopyButton el="#attribution-html"
+          <CopyButton id="embed-attribution-btn"
+                      el="#attribution-html"
                       title="Can be used in websites">
             Copy
           </CopyButton>

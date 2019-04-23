@@ -1,5 +1,6 @@
 <template>
-  <button type="button"
+  <button :id="id"
+          type="button"
           class="button photo_copy-btn"
           :data-clipboard-target="el">
     <slot v-if="!success" default />
@@ -11,16 +12,19 @@
 import Clipboard from 'clipboard';
 import { COPY_ATTRIBUTION } from '@/store/action-types';
 
-let clipboard = null;
 
 export default {
   data: () => ({
     success: false,
+    clipboard: null,
   }),
   props: {
     el: {
       required: true,
     },
+    id: {
+      required: true,
+    }
   },
   methods: {
     onCopySuccess(e) {
@@ -41,12 +45,12 @@ export default {
     },
   },
   mounted() {
-    clipboard = new Clipboard('.photo_copy-btn');
-    clipboard.on('success', this.onCopySuccess);
-    clipboard.on('error', this.onCopyError);
+    this.clipboard = new Clipboard(`#${this.$props.id}`);
+    this.clipboard.on('success', this.onCopySuccess);
+    this.clipboard.on('error', this.onCopyError);
   },
   destroyed() {
-    clipboard.destroy();
+    this.clipboard.destroy();
   },
 };
 </script>
