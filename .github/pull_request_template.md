@@ -1,6 +1,7 @@
-[Short description explaining the high-level reason for the pull request]
+<!-- Please replace #XX below with an existing issue number. Remove the line entirely if none exist. -->
+Fixes #XX
 
-[Link to existing Issue #]
+[Short description explaining the high-level reason for the pull request]
 
 [If this Pull Request contains any UI changes, provide an image or GIF displaying the changes]
 
