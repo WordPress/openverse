@@ -3,8 +3,8 @@
         method="post"
         @submit.prevent="onSubmit"
         class="search-form">
-    <div class="search-form_ctr grid-container grid-x global-nav show-for-smedium">
-        <div class="search-form_inner-ctr cell">
+    <div class="search-form_ctr grid-x global-nav show-for-smedium">
+        <div class="search-form_inner-ctr cell medium-12 large-10">
           <input required="required"
                  autofocus="true"
                  class="search-form_input"
@@ -239,15 +239,14 @@ export default {
   }
 
   .search-form_toolbar {
-    flex-wrap: nowrap;
-    flex-direction: row-reverse;
+    width: 400px;
 
     li {
       border-left: 1px solid #E6EAEA;
+      border-right: 1px solid #E6EAEA;
 
-      a {
-        width: 80px;
-        text-align: center;
+      &:last-of-type {
+        border-left: none;
       }
     }
   }
