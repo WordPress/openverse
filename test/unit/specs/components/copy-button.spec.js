@@ -1,5 +1,4 @@
 import CopyButton from '@/components/CopyButton';
-import { COPY_ATTRIBUTION } from '@/store/action-types';
 import render from '../../test-utils/render';
 
 describe('CopyButton', () => {
