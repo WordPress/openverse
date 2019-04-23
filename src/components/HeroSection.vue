@@ -35,7 +35,7 @@
 import { SET_QUERY } from '@/store/mutation-types';
 
 export default {
-  name: 'hero',
+  name: 'hero-section',
   data: () => ({ form: { searchTerm: '' } }),
   methods: {
     onSubmit() {
