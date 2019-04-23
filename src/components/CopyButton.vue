@@ -24,7 +24,7 @@ export default {
     },
     id: {
       required: true,
-    }
+    },
   },
   methods: {
     onCopySuccess(e) {

@@ -29,7 +29,10 @@
         </div>
         <div class="cell large-6">
           <span>Copy the HTML below to embed the attribution in your website</span>
-          <textarea id="attribution-html" :value="attributionHtml" cols="30" rows="10" readonly="readonly">
+          <textarea id="attribution-html"
+                    :value="attributionHtml"
+                    cols="30" rows="10"
+                    readonly="readonly">
           </textarea>
           <CopyButton id="embed-attribution-btn"
                       el="#attribution-html"
