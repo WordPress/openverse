@@ -32,53 +32,6 @@
         </div>
       </div>
     </section>
-  <section class="grid top-images">
-    <header class="top-images_header">
-      <h2 class="featured-items_title">Top Picks</h2>
-    </header>
-    <div  class="header-grid">
-      <figure v-for="(image, index) in images" v-if="index < 4"
-           :class="image.class" :key="index"
-           @click="onGotoDetailPage(image)">
-         <a :href="image.url"
-             @click.prevent="() => false"
-             target="new">
-          <img :src="image.src" />
-        </a>
-        <figcaption class="grid_item-overlay grid_item-overlay__top">
-          <license-icons :image="image"></license-icons>
-        </figcaption>
-        <figcaption class="grid_item-overlay
-                           grid_item-overlay__bottom">
-          <div @click.stop="() => false"
-               class="grid_overlay-title"
-               v-html="image.title"
-               target="new"></div>
-        </figcaption>
-      </figure>
-      <div class="bottom-block">
-        <figure v-for="(image, index) in images" v-if="index > 3"
-             :class="image.class" :key="index"
-             @click="onGotoDetailPage(image)">
-           <a :href="image.url"
-              @click.prevent="() => false"
-              target="new">
-            <img :src="image.src" />
-          </a>
-          <figcaption class="grid_item-overlay
-                             grid_item-overlay__top">
-            <license-icons :image="image"></license-icons>
-          </figcaption>
-          <figcaption class="grid_item-overlay grid_item-overlay__bottom">
-            <div class="grid_overlay-title"
-                 target="new"
-                 @click.stop="() => false"
-                 v-html="image.title"></div>
-          </figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
   </div>
   <footer-section></footer-section>
 </div>
@@ -180,20 +133,11 @@ export default HomePage;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
+<style lang="scss" scoped>
 $gray: #808080;
 $highlight: #4ec6cd;
 $nav-text-color: $gray;
 $vert-seperate: 4rem;
-
-.home-page .nav {
-  position: absolute !important;
-  background: transparent !important;
-
-  .badge {
-   display: none;
-  }
-}
 
 .home-page_body {
 
@@ -204,8 +148,7 @@ $vert-seperate: 4rem;
 }
 
 .featured-images {
-  margin: 30px 0;
-  padding: 30px;
+  padding: 1rem;
 
   &_header {
     padding-bottom: 10px;
@@ -252,54 +195,7 @@ $vert-seperate: 4rem;
     line-height: 1.25;
     text-transform: uppercase;
     display: inline-block;
-    padding-top: .28571429em;
     border-top: 5px solid rgba(29, 31, 39, 0.8);
-    margin-top: -3px;
-  }
-}
-
-.top-images {
-  padding: 30px;
-
-  /* Small only */
-  @media screen and (max-width: 39.9375em) {
-    padding: 15px;
-  }
-}
-
-.top-images_header {
-  border-top: 1px solid #e7e8e9;
-
-  h2 {
-    margin-bottom: 1.07142857em;
-    font-size: .875em;
-    font-weight: 600;
-    letter-spacing: 1px;
-    line-height: 1.25;
-    text-transform: uppercase;
-    display: inline-block;
-    padding-top: .28571429em;
-    border-top: 5px solid rgba(29, 31, 39, 0.8);
-    margin-top: -3px;
-  }
-}
-
-.header-grid {
-  width: 100%;
-  height: 100vh;
-  display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-areas:
-  "big-top big-top big-top small-top small-top"
-  "small-middle small-middle big-middle big-middle big-middle"
-  "big-bottom big-bottom big-bottom big-bottom big-bottom";
-  margin: 15px 0;
-
-  /* Small only */
-  @media screen and (max-width: 39.9375em) {
-    display: block;
-    height: auto;
   }
 }
 
@@ -391,11 +287,6 @@ $vert-seperate: 4rem;
   }
 }
 
-.block_overlay {
-  position: absolute;
-  top: 200px;
-}
-
 .b1 {
   grid-area: big-top;
 
@@ -422,6 +313,15 @@ $vert-seperate: 4rem;
   @media screen and (max-width: 39.9375em) {
     display: block;
     height: auto;
+  }
+}
+
+.footer {
+  position:fixed;
+
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    position: relative;
   }
 }
 </style>

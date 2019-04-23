@@ -10,11 +10,6 @@ const ImageProviderService = {
   },
   getProviderInfo(providerName) {
     const PROVIDER_NAME_LOOKUP = {
-      '500px': {
-        name: '500px',
-        url: 'https://500px.com',
-        logo: '500px_logo.png',
-      },
       animaldiversity: {
         name: 'Animal Diversity Web',
         url: 'https://animaldiversity.org',

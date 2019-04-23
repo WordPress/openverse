@@ -86,10 +86,10 @@
                 </i>
                 <span class="menu-button_text">Filter</span>
               </a>
-              <search-grid-filter></search-grid-filter>
             </li>
           </ul>
         </div>
+        <search-grid-filter></search-grid-filter>
     </div>
   </form>
 </template>

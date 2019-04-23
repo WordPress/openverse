@@ -142,6 +142,10 @@ export default AboutPage;
     text-transform: initial;
   }
 
+  .about-page {
+    background: #e9ebee;
+  }
+
   .about-page_body {
     font-size: 1em;
     margin: 45px !important;
