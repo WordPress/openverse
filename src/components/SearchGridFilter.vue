@@ -156,7 +156,6 @@ export default {
         { code: 'flickr', name: 'Flickr' },
         { code: 'floraon', name: 'Flora-On' },
         { code: 'geographorguk', name: 'Geograph® Britain and Ireland' },
-        { code: 'iha', name: 'IHA Holiday Ads' },
         { code: 'mccordmuseum', name: 'Montreal Social History Museum' },
         { code: 'met', name: 'Metropolitan Museum of Art' },
         { code: 'museumsvictoria', name: 'Museums Victoria' },
