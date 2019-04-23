@@ -10,8 +10,6 @@
 
 <script>
 import Clipboard from 'clipboard';
-import { COPY_ATTRIBUTION } from '@/store/action-types';
-
 
 export default {
   data: () => ({
