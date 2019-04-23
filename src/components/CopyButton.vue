@@ -27,7 +27,7 @@ export default {
   methods: {
     onCopySuccess(e) {
       this.success = true;
-      this.$emit('copied');
+      this.$emit('copied', { content: e.text });
 
       setTimeout(() => {
         this.success = false;

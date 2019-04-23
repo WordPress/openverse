@@ -23,7 +23,8 @@
           </p>
           <CopyButton id="copy-attribution-btn"
                       el="#attribution"
-                      title="Can be used in WYSIWYG editors">
+                      title="Can be used in WYSIWYG editors"
+                      @copied="onCopyAttribution">
             Copy Attribution
           </CopyButton>
         </div>
@@ -36,7 +37,8 @@
           </textarea>
           <CopyButton id="embed-attribution-btn"
                       el="#attribution-html"
-                      title="Can be used in websites">
+                      title="Can be used in websites"
+                      @copied="onEmbedAttribution">
             Copy
           </CopyButton>
         </div>
@@ -48,6 +50,7 @@
 <script>
 import LicenseIcons from '@/components/LicenseIcons';
 import CopyButton from '@/components/CopyButton';
+import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
 
 export default {
   name: 'image-attribution',
@@ -55,6 +58,16 @@ export default {
   components: {
     LicenseIcons,
     CopyButton,
+  },
+  methods: {
+    onCopyAttribution(e) {
+      this.$store.dispatch(COPY_ATTRIBUTION, {
+        content: e.content,
+      });
+    },
+    onEmbedAttribution() {
+      this.$store.dispatch(EMBED_ATTRIBUTION);
+    },
   },
 };
 </script>
