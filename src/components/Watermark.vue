@@ -27,7 +27,7 @@
           <help-tooltip :tooltip="metadataHelp" />
         </div>
       </fieldset>
-      <button class="button success download-watermark"
+      <button class="button download-watermark"
               data-type="text"
               @click="onDownloadWatermark(image, $event)">
           Download Image
