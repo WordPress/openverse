@@ -4,7 +4,7 @@
     <div class="feedback-page">
       <h1>Feedback</h1>
       <p>
-        Thank you for using CC Search Beta! We welcome your ideas for improving the tool below.
+        Thank you for using CC Search! We welcome your ideas for improving the tool below.
         To provide regular user feedback, join the
         <a href="https://creativecommons.slack.com/messages/CCS9CF2JE/details/">#cc-usability</a> channel on
         <a href="https://wiki.creativecommons.org/wiki/Slack#How_to_join_Slack">CC Slack</a>.

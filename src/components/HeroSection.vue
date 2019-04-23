@@ -35,7 +35,7 @@
 import { SET_QUERY } from '@/store/mutation-types';
 
 export default {
-  name: 'hero',
+  name: 'hero-section',
   data: () => ({ form: { searchTerm: '' } }),
   methods: {
     onSubmit() {
@@ -50,7 +50,7 @@ export default {
 <style lang="scss" scoped>
 @import '../../node_modules/foundation-sites/scss/foundation';
 
-$hero-height: 40vh;
+$hero-height: 75vh;
 
 .hero {
   background: #e9ebee;
