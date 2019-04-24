@@ -22,7 +22,7 @@
         </span>
         <CopyButton id="copy-attribution-btn"
                     el="#attribution"
-                    title="Can be used in WYSIWYG editors"
+                    title="Copy the attribution to paste into your blog or document"
                     @copied="onCopyAttribution">
           Copy
         </CopyButton>
@@ -36,9 +36,9 @@
         </textarea>
         <CopyButton id="embed-attribution-btn"
                     el="#attribution-html"
-                    title="Can be used in websites"
+                    title="Copy the HTML to embed the attribution in your web page"
                     @copied="onEmbedAttribution">
-          Copy
+          Embed Attribution
         </CopyButton>
       </div>
     <legal-disclaimer />
