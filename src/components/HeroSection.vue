@@ -143,8 +143,22 @@ $hero-height: 75vh;
   font-style: italic;
 }
 
+.old-search-link {
+  position: absolute;
+  bottom: 4rem;
+
+  @media screen and (max-width: 52em) {
+    bottom: 9rem;
+  }
+
+  @media screen and (max-width: 40em) {
+    bottom: 2rem;
+    right: 2rem;
+  }
+}
+
 /* Small only */
-@media screen and (max-width: 39.9375em) {
+@media screen and (max-width: 40em) {
   .hero {
     height: 60vh;
   }
@@ -164,16 +178,5 @@ $hero-height: 75vh;
   .logo {
     height: 5.5em;
   }
-
-  .old-search-link {
-    position: absolute;
-    bottom: 2rem;
-    right: 2rem;
-  }
-}
-
-.old-search-link {
-  position: absolute;
-  bottom: 3rem;
 }
 </style>
