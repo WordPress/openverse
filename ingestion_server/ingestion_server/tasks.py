@@ -17,6 +17,10 @@ class TaskTypes(Enum):
     # Download the latest copy of the data from the upstream database, then
     # completely reindex the newly imported data.
     INGEST_UPSTREAM = 2
+    # Create indices in Elasticsearch for QA tests.
+    # This is not intended for production use, but can be safely executed in a
+    # production environment without consequence.
+    LOAD_TEST_DATA = 3
 
 
 class TaskTracker:
@@ -100,6 +104,8 @@ class Task(Process):
         elif self.task_type == TaskTypes.INGEST_UPSTREAM:
             reload_upstream(self.model)
             indexer.reindex(self.model)
+        elif self.task_type == TaskTypes.LOAD_TEST_DATA:
+            indexer.load_test_data()
         logging.info('Task {} exited.'.format(self.task_id))
         if self.callback_url:
             try:

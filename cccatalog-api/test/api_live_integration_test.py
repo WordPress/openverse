@@ -6,14 +6,13 @@ import uuid
 from cccatalog.api.licenses import LICENSE_GROUPS
 from cccatalog.api.models import Image
 from cccatalog.api.utils.watermark import watermark
-
 """
 End-to-end API tests. Can be used to verify a live deployment is functioning as
 designed. Run with the `pytest -s` command from this directory.
 """
 
 
-API_URL = os.getenv('INTEGRATION_TEST_URL', 'https://localhost:8000')
+API_URL = os.getenv('INTEGRATION_TEST_URL', 'http://localhost:8000')
 known_apis = {
     'http://localhost:8000': 'LOCAL',
     'https://api.creativecommons.engineering': 'PRODUCTION',

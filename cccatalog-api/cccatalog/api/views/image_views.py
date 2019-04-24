@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils.validate_images import validate_images
-from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.utils import ccrel
 from rest_framework.reverse import reverse
 from cccatalog.api.serializers.search_serializers import\
@@ -37,6 +36,7 @@ THUMBNAIL = 'thumbnail'
 URL = 'url'
 THUMBNAIL_WIDTH_PX = 600
 PROVIDER = 'provider'
+QA = 'qa'
 
 
 def _add_protocol(url: str):
@@ -89,10 +89,11 @@ class SearchImages(APIView):
         hashed_ip = hash(_get_user_ip(request))
         page_param = params.data[PAGE]
         page_size = params.data[PAGESIZE]
-
+        qa = params.data[QA]
+        search_index = 'search-qa' if qa else 'image'
         try:
             search_results = search_controller.search(params,
-                                                      index='image',
+                                                      index=search_index,
                                                       page_size=page_size,
                                                       ip=hashed_ip,
                                                       page=page_param)
