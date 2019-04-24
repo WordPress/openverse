@@ -82,7 +82,7 @@ export default {
 
 .menu a {
   color: rgb(255, 255, 255);
-  font-size: 1.4em;
+  font-size: 1.6em;
   font-weight: 700;
   line-height: 1em;
   margin-top: 0.5rem;
