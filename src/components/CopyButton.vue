@@ -53,8 +53,7 @@ export default {
 
 <style scoped>
   .photo_copy-btn {
-    border-radius: 3px;
-    width: 10rem;
-    background: #4a69ca;
+    width: 5rem;
+    vertical-align: baseline;
   }
 </style>
