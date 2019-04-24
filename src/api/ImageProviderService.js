@@ -80,11 +80,6 @@ const ImageProviderService = {
         url: 'http://www.nhm.ac.uk/',
         logo: 'nhm_logo.png',
       },
-      nypl: {
-        name: 'New York Public Library',
-        url: 'https://www.nypl.org',
-        logo: 'nypl_logo.svg',
-      },
       rijksmuseum: {
         name: 'Rijksmuseum NL',
         url: 'https://www.rijksmuseum.nl/en/',
