@@ -28,6 +28,12 @@
           Learn more about CC licenses <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">here</a>.
         </p>
     </div>
+    <div class="old-search-link">
+      <span>
+        Looking for the old CC Search portal? Go
+        <a href="https://oldsearch.creativecommons.org/">here</a>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -137,8 +143,14 @@ $hero-height: 75vh;
   font-style: italic;
 }
 
+.old-search-link {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+}
+
 /* Small only */
-@media screen and (max-width: 39.9375em) {
+@media screen and (max-width: 40em) {
   .hero {
     height: 60vh;
   }
