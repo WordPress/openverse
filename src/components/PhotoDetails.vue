@@ -16,7 +16,8 @@
           <a href="#panel0" :aria-selected="activeTab == 0" @click.prevent="setActiveTab(0)">
             <img class='tab-icon'
                  src='../assets/cc-by-icon_large.png'
-                 alt='Image Attribution' />
+                 alt='Image Attribution'>
+            Attribution
           </a>
         </li>
         <li :class="tabClass(1, 'tabs-title')">
@@ -24,6 +25,7 @@
             <img class='tab-icon'
                  src='../assets/info-icon.svg'
                  alt='Image Info' />
+            Info
           </a>
         </li>
         <li :class="tabClass(2, 'tabs-title')" v-if="watermarkEnabled">
@@ -31,6 +33,7 @@
             <img class='tab-icon'
                  src='../assets/download-icon.svg'
                  alt='Image Download' />
+            Download
           </a>
         </li>
         <li :class="tabClass(3, 'tabs-title')" v-if="socialSharingEnabled">
@@ -38,6 +41,7 @@
             <img class='tab-icon'
                  src='../assets/share-icon.svg'
                  alt='Share Image' />
+            Share
           </a>
         </li>
       </ul>
