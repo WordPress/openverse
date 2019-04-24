@@ -28,6 +28,12 @@
           Learn more about CC licenses <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">here</a>.
         </p>
     </div>
+    <div class="old-search-link">
+      <span>
+        Looking for the old CC Search portal? Go
+        <a href="https://search.creativecommons.org/">here</a>.
+      </span>
+    </div>
   </div>
 </template>
 
@@ -158,5 +164,16 @@ $hero-height: 75vh;
   .logo {
     height: 5.5em;
   }
+
+  .old-search-link {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+  }
+}
+
+.old-search-link {
+  position: absolute;
+  bottom: 3rem;
 }
 </style>
