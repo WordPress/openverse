@@ -79,8 +79,7 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
         if 'creator' in search_params.data:
             creator = search_params.data['creator']
             s = s.query(
-                'constant_score',
-                filter=Q('query_string', query=creator, default_field='creator')
+                'query_string', query=creator, default_field='creator'
             )
         if 'title' in search_params.data:
             title = search_params.data['title']
