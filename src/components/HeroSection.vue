@@ -145,16 +145,8 @@ $hero-height: 75vh;
 
 .old-search-link {
   position: absolute;
-  bottom: 4rem;
-
-  @media screen and (max-width: 52em) {
-    bottom: 9rem;
-  }
-
-  @media screen and (max-width: 40em) {
-    bottom: 2rem;
-    right: 2rem;
-  }
+  top: 2rem;
+  right: 2rem;
 }
 
 /* Small only */
