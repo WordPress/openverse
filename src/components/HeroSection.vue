@@ -31,7 +31,7 @@
     <div class="old-search-link">
       <span>
         Looking for the old CC Search portal? Go
-        <a href="https://search.creativecommons.org/">here</a>.
+        <a href="https://search.creativecommons.org/">here</a>
       </span>
     </div>
   </div>
