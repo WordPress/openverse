@@ -167,11 +167,6 @@
   height: 20px;
 }
 
-.download-watermark {
-  background: #01a635;
-  color: #fff;
-}
-
 label {
   margin-right: 8px;
 }
@@ -233,4 +228,13 @@ label {
 #attribution-html {
   background-color: #fff;
   cursor: auto;
+}
+
+.embed-attribution {
+  margin: 1rem 0 1rem;
+}
+
+.legal-disclaimer {
+  font-size: 0.75rem;
+  font-style: italic;
 }
