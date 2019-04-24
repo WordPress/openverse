@@ -83,7 +83,8 @@ _cleanup_config = {
                         'tags': _cleanup_tags,
                         'url': _cleanup_url,
                         'creator_url': _cleanup_url,
-                        'foreign_landing_url': _cleanup_url
+                        'foreign_landing_url': _cleanup_url,
+                        'thumbnail': _cleanup_url
                     }
                 }
             }
