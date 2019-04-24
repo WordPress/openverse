@@ -27,7 +27,7 @@ class SyncableDocType(DocType):
 
 
 class Image(SyncableDocType):
-    title = Text(analyzer="english")
+    title = Text(analyzer="english", similarity='boolean')
     identifier = Keyword()
     creator = Text()
     creator_url = Keyword()
