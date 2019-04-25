@@ -49,13 +49,13 @@
     <section class="photo_info-ctr tabs-content">
       <div :class="tabClass(0, 'tabs-panel')">
         <image-attribution :image="image"
-                            :ccLicenseURL="image.license_url"
+                            :ccLicenseURL="ccLicenseURL"
                             :fullLicenseName="fullLicenseName"
                             :attributionHtml="attributionHtml()" />
       </div>
       <div :class="tabClass(1, 'tabs-panel')">
         <image-info :image="image"
-                    :ccLicenseURL="image.license_url"
+                    :ccLicenseURL="ccLicenseURL"
                     :fullLicenseName="fullLicenseName"
                     :imageWidth="imageWidth"
                     :imageHeight="imageHeight" />
@@ -76,31 +76,7 @@ import Watermark from '@/components/Watermark';
 import ImageAttribution from '@/components/ImageAttribution';
 import ImageSocialShare from '@/components/ImageSocialShare';
 import decodeData from '@/utils/decodeData';
-
-function attributionHtml(image, ccLicenseURL, fullLicenseName) {
-  if (!image) {
-    return '';
-  }
-  const imgLink = `<a href="${image.foreign_landing_url}">"${image.title}"</a>`;
-  let creator = '';
-  if (image.creator && image.creator_url) {
-    creator = `<span>by <a href="${image.creator_url}">${image.creator}</a></span>`;
-  }
-  else if (image.creator && !image.creator_url) {
-    creator = `<span> by <span>${image.creator}</span></span>`;
-  }
-  const licenseLink = ` is licensed under <a href="${ccLicenseURL}">${fullLicenseName.toUpperCase()}</a>`;
-
-  let licenseIcons = `<img style="height: inherit;margin-right: 3px;" src="${require('@/assets/cc_icon.svg')}" />`; // eslint-disable-line global-require, import/no-dynamic-require
-  if (image.license) {
-    licenseIcons += image.license.split('-').map(license =>
-      `<img style="height: inherit;margin-right: 3px;" src="${require(`@/assets/cc-${license.toLowerCase()}_icon.svg`)}" />`, // eslint-disable-line global-require, import/no-dynamic-require
-    ).join('');
-  }
-
-  const licenseImgLink = `<a href="${ccLicenseURL}" target="_blank" rel="noopener noreferrer" style="display: inline-block;white-space: none;opacity: .7;margin-top: 2px;margin-left: 3px;height: 22px !important;">${licenseIcons}</a>`;
-  return `<p style="font-size: 0.9rem;font-style: italic;">${imgLink}${creator}${licenseLink}${licenseImgLink}</p>`;
-}
+import attributionHtml from '@/utils/attributionHtml';
 
 export default {
   name: 'photo-details',
@@ -123,6 +99,9 @@ export default {
 
       return license === 'cc0' ? `${license} ${version}` : `CC ${license} ${version}`;
     },
+    ccLicenseURL() {
+      return `${this.image.license_url}?ref=ccsearch`;
+    },
   },
   methods: {
     onGoBackToSearchResults() {
@@ -141,7 +120,7 @@ export default {
       this.activeTab = tabIdx;
     },
     attributionHtml() {
-      return attributionHtml(this.image, this.image.license_url, this.fullLicenseName);
+      return attributionHtml(this.image, this.ccLicenseURL, this.fullLicenseName);
     },
   },
   watch: {
