@@ -147,6 +147,11 @@ $hero-height: 75vh;
   position: absolute;
   top: 2rem;
   right: 2rem;
+
+  @media screen and (max-width: 320px) {
+    top: 0;
+    font-size: 0.9rem;
+  }
 }
 
 /* Small only */
