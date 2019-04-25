@@ -8,7 +8,7 @@
           @input="onUpdateFilter"
           :disabled="filter.li.length > 0"
           tag-placeholder="Add this as new tag"
-          placeholder="All License Types"
+          placeholder="I want something that I can"
           label="name"
           track-by="code"
           :options="licenseTypes"
@@ -178,10 +178,8 @@ export default {
       ],
     licenseTypes:
       [
-        { code: 'all-cc', name: 'CC-licensed works only (no PD)' },
-        { code: 'all', name: 'All Public Domain (PD)' },
-        { code: 'commercial', name: 'Commercial use permitted' },
-        { code: 'modification', name: 'Modifications permitted' },
+        { code: 'commercial', name: 'Use for commercial purposes' },
+        { code: 'modification', name: 'Modify or adapt' },
       ],
     filter: {
       provider: [],
