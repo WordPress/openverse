@@ -60,11 +60,6 @@ const ImageProviderService = {
         url: 'https://www.geograph.org.uk',
         logo: 'geographorguk_logo.gif',
       },
-      iha: {
-        name: 'IHA Holiday Ads',
-        url: 'https://www.iha.com',
-        logo: 'iha_logo.png',
-      },
       mccordmuseum: {
         name: 'Montreal Social History Museum',
         url: 'https://www.musee-mccord.qc.ca/en/',
@@ -84,11 +79,6 @@ const ImageProviderService = {
         name: 'London Natural History Museum',
         url: 'http://www.nhm.ac.uk/',
         logo: 'nhm_logo.png',
-      },
-      nypl: {
-        name: 'New York Public Library',
-        url: 'https://www.nypl.org',
-        logo: 'nypl_logo.svg',
       },
       rijksmuseum: {
         name: 'Rijksmuseum NL',

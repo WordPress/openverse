@@ -1,20 +1,17 @@
 <template>
-  <header :class="{ header: true, 'header__fixed': isHeaderFixed }">
+  <header :class="header">
     <nav-section :showNavSearch="showNavSearch"></nav-section>
      <slot></slot>
-    <hero-section v-if="showHero === 'true'"></hero-section>
   </header>
 </template>
 
 <script>
 import NavSection from '@/components/NavSection';
-import HeroSection from '@/components/HeroSection';
 
 export default {
   name: 'header-section',
   components: {
     NavSection,
-    HeroSection,
   },
   props: ['showHero', 'showNavSearch', 'isHeaderFixed'],
 };

@@ -2,7 +2,7 @@
   <div class="browse-page">
     <div class="search grid-x flexible">
       <div class="cell">
-        <header-section :isHeaderFixed="true">
+        <header-section>
           <search-grid-form></search-grid-form>
         </header-section>
       </div>
@@ -30,9 +30,6 @@ const BrowsePage = {
     SearchGrid,
     FooterSection,
   },
-  data: () => ({
-    isHeaderFixed: false,
-  }),
   computed: {
     images() {
       return this.$store.state.images;
@@ -68,7 +65,7 @@ export default BrowsePage;
 
 <style lang="scss">
   .search-grid {
-    margin: 165px 30px 60px 30px;
+    margin: 30px 30px 60px 30px;
 
 
     /* Small only */

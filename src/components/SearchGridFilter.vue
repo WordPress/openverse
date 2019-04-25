@@ -2,21 +2,6 @@
   <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
     <div class="grid-x">
-      <div class="filter-option search-filters_providers">
-        <multiselect
-          v-model="filter.provider"
-          @input="onUpdateFilter"
-          tag-placeholder="Add this as new tag"
-          placeholder="All Providers"
-          label="name"
-          track-by="code"
-          :options="providers"
-          :multiple="true"
-          :searchable="true"
-          :closeOnSelect="false"
-          :showLabels="false">
-        </multiselect>
-      </div>
       <div class="filter-option search-filters_license-types">
         <multiselect
           v-model="filter.lt"
@@ -45,6 +30,21 @@
           :options="licenses"
           :multiple="true"
           :searchable="false"
+          :closeOnSelect="false"
+          :showLabels="false">
+        </multiselect>
+      </div>
+      <div class="filter-option search-filters_providers">
+        <multiselect
+          v-model="filter.provider"
+          @input="onUpdateFilter"
+          tag-placeholder="Add this as new tag"
+          placeholder="All Providers"
+          label="name"
+          track-by="code"
+          :options="providers"
+          :multiple="true"
+          :searchable="true"
           :closeOnSelect="false"
           :showLabels="false">
         </multiselect>
@@ -156,12 +156,10 @@ export default {
         { code: 'flickr', name: 'Flickr' },
         { code: 'floraon', name: 'Flora-On' },
         { code: 'geographorguk', name: 'Geograph® Britain and Ireland' },
-        { code: 'iha', name: 'IHA Holiday Ads' },
         { code: 'mccordmuseum', name: 'Montreal Social History Museum' },
         { code: 'met', name: 'Metropolitan Museum of Art' },
         { code: 'museumsvictoria', name: 'Museums Victoria' },
         { code: 'nhl', name: 'London Natural History Museum' },
-        { code: 'nypl', name: 'New York Public Library' },
         { code: 'rijksmuseum', name: 'Rijksmuseum NL' },
         { code: 'sciencemuseum', name: 'Science Museum – UK' },
         { code: 'thingiverse', name: 'Thingiverse' },
