@@ -41,7 +41,7 @@
           Embed Attribution
         </CopyButton>
       </div>
-    <legal-disclaimer />
+    <legal-disclaimer :source="image.provider" :sourceURL="image.foreign_landing_url" />
     </div>
   </section>
 </template>
