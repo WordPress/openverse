@@ -77,7 +77,7 @@ export default {
       color: #fff;
       padding:4px 2px;
       font-size: 12px;
-      min-width: 200px;
+      min-width: 300px;
       border-radius: 5px;
       pointer-events: none;
       padding: 4px 4px;

@@ -1,1 +1,5 @@
-<?xml version="1.0" ?><svg height="19px" version="1.1" viewBox="0 0 14 19" width="14px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1"><g fill="#000000" id="Core" transform="translate(-383.000000, -213.000000)"><g id="file-download" transform="translate(383.000000, 213.500000)"><path d="M14,6 L10,6 L10,0 L4,0 L4,6 L0,6 L7,13 L14,6 L14,6 Z M0,15 L0,17 L14,17 L14,15 L0,15 L0,15 Z" id="Shape"/></g></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;" viewBox="0 0 322 322" x="0px" y="0px" fill-rule="evenodd" clip-rule="evenodd"><defs><style type="text/css">
+
+    .fil0 {fill:black;fill-rule:nonzero}
+
+  </style></defs><g><path class="fil0" d="M96 172c-11,-13 7,-30 19,-17l33 36 0 -94c0,-16 26,-16 26,0l0 94 33 -36c11,-13 30,4 19,17l-54 59c-6,8 -17,8 -22,0l-54 -59z"/><path class="fil0" d="M161 0c89,0 161,72 161,161 0,89 -72,161 -161,161 -89,0 -161,-72 -161,-161 0,-89 72,-161 161,-161zm0 25c-75,0 -136,61 -136,136 0,75 61,135 136,135 75,0 135,-60 135,-135 0,-75 -60,-136 -135,-136z"/></g></svg>

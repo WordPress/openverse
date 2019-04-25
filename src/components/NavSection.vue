@@ -95,9 +95,14 @@ export default {
   /* Small only */
   @media screen and (max-width: 380px) {
     padding: 0.7rem .7rem;
+    font-size: 1.2em;
     &:hover {
       border-bottom: none;
     }
+  }
+
+  @media screen and (max-width: 320px) {
+    font-size: .93em;
   }
 }
 
