@@ -100,6 +100,10 @@ export default {
       border-bottom: none;
     }
   }
+
+  @media screen and (max-width: 320px) {
+    font-size: .93em;
+  }
 }
 
 .input-group-rounded {
