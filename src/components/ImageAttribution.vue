@@ -28,7 +28,7 @@
         </CopyButton>
       </div>
       <div class="embed-attribution">
-        <span>Copy the HTML below to embed the attribution in your website</span>
+        <span>Copy the HTML below to embed the attribution in your web page</span>
         <textarea id="attribution-html"
                   :value="attributionHtml"
                   cols="30" rows="4"
@@ -38,10 +38,11 @@
                     el="#attribution-html"
                     title="Copy the HTML to embed the attribution in your web page"
                     @copied="onEmbedAttribution">
-          Embed Attribution
+          Copy HTML
         </CopyButton>
       </div>
-    <legal-disclaimer :source="image.provider" :sourceURL="image.foreign_landing_url" />
+      <reuse-survey />
+      <legal-disclaimer :source="image.provider" :sourceURL="image.foreign_landing_url" />
     </div>
   </section>
 </template>
@@ -50,6 +51,7 @@
 import LicenseIcons from '@/components/LicenseIcons';
 import CopyButton from '@/components/CopyButton';
 import LegalDisclaimer from '@/components/LegalDisclaimer';
+import ReuseSurvey from '@/components/ReuseSurvey';
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
 
 export default {
@@ -59,6 +61,7 @@ export default {
     LicenseIcons,
     CopyButton,
     LegalDisclaimer,
+    ReuseSurvey,
   },
   methods: {
     onCopyAttribution(e) {
