@@ -66,7 +66,9 @@ describe('Image Provider Store', () => {
     it('FETCH_IMAGE_PROVIDERS on success', (done) => {
       const action = store.actions(imageProviderServiceMock)[FETCH_IMAGE_PROVIDERS];
       action({ commit }, {}).then(() => {
-        expect(commit).toBeCalledWith(SET_FETCH_IMAGES_ERROR, { isFetchingImageProvidersError: false });
+        expect(commit).toBeCalledWith(SET_FETCH_IMAGES_ERROR, {
+          isFetchingImageProvidersError: false,
+        });
         expect(commit).toBeCalledWith(FETCH_IMAGE_PROVIDERS_START);
 
         expect(imageProviderServiceMock.getProviderStats).toBeCalled();
@@ -84,7 +86,9 @@ describe('Image Provider Store', () => {
       const action = store.actions(failedServiceMock)[FETCH_IMAGE_PROVIDERS];
       action({ commit }, {}).catch(() => {
         expect(imageProviderServiceMock.getProviderStats).toBeCalled();
-        expect(commit).toBeCalledWith(SET_FETCH_IMAGES_ERROR, { isFetchingImageProvidersError: true });
+        expect(commit).toBeCalledWith(SET_FETCH_IMAGES_ERROR, {
+          isFetchingImageProvidersError: true,
+        });
         done();
       });
     });
