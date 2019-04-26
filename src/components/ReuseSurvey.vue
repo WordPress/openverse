@@ -1,11 +1,10 @@
 <template>
   <div class="reuse-survey">
     <span>How are you using this image?</span>
-    <span>If you intend to use this image, you can answer</span>
+    <span>Let us know how you use this image in</span>
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSeSApxNMup8Ujt-8Vjv53ngltzhJeaHspMykHCD8VKQ39yXAA/viewform">
-      this quick survey here
+      this quick survey
     </a>
-    <span>to let us know how you are using it.</span>
   </div>
 </template>
 
