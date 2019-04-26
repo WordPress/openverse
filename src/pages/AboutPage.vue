@@ -45,16 +45,15 @@
             <th># CC Licensed Works</th>
           </thead>
           <tbody>
-            <tr v-for="(imageStat, index) in imageStats"
-                v-if="getProviderName(imageStat.provider_name)"
+            <tr v-for="(imageProvider, index) in imageProviders"
                 :key="index">
-              <td>{{ getProviderName(imageStat.provider_name) }}</td>
+              <td>{{ imageProvider.display_name }}</td>
               <td>
-                <a :href="getProviderURL(imageStat.provider_name)">
-                  {{ getProviderURL(imageStat.provider_name) }}
+                <a :href="imageProvider.provider_url">
+                  {{ imageProvider.provider_url }}
                 </a>
               </td>
-              <td>{{ getProviderImageCount(imageStat.image_count) }}</td>
+              <td>{{ getProviderImageCount(imageProvider.image_count) }}</td>
             </tr>
           </tbody>
         </table>
@@ -67,8 +66,6 @@
 <script>
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
-import { FETCH_IMAGE_STATS } from '@/store/action-types';
-import ImageProviderService from '@/api/ImageProviderService';
 
 const AboutPage = {
   name: 'about-page',
@@ -77,43 +74,14 @@ const AboutPage = {
     FooterSection,
   },
   computed: {
-    imageStats() {
-      return this.$store.state.imageStats.sort((a, b) => {
-        const nameA = a.provider_name.toUpperCase();
-        const nameB = b.provider_name.toUpperCase();
-
-        if (nameA < nameB) {
-          return -1;
-        }
-
-        if (nameA > nameB) {
-          return 1;
-        }
-
-        return 0;
-      });
+    imageProviders() {
+      return this.$store.state.imageProviders;
     },
   },
   methods: {
-    getProviderName(providerName) {
-      const provider = ImageProviderService.getProviderInfo(providerName);
-
-      return provider && provider.name;
-    },
-    getProviderURL(providerName) {
-      const provider = ImageProviderService.getProviderInfo(providerName);
-
-      return provider && provider.url;
-    },
     getProviderImageCount(imageCount) {
       return (imageCount).toLocaleString('en');
     },
-    getSortedStats(imageStats) {
-      return imageStats.sort((a, b) => a.name > b.name);
-    },
-  },
-  beforeMount() {
-    this.$store.dispatch(FETCH_IMAGE_STATS);
   },
 };
 

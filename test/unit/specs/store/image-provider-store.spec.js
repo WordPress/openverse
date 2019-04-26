@@ -1,21 +1,21 @@
 import store from '@/store/image-provider-store';
 import {
-  FETCH_IMAGE_STATS_END,
+  FETCH_IMAGE_PROVIDERS_END,
   SET_FETCH_IMAGES_ERROR,
-  FETCH_IMAGE_STATS_START,
-  SET_IMAGE_STATS,
+  FETCH_IMAGE_PROVIDERS_START,
+  SET_IMAGE_PROVIDERS,
 } from '@/store/mutation-types';
 import {
-  FETCH_IMAGE_STATS,
+  FETCH_IMAGE_PROVIDERS,
 } from '@/store/action-types';
 
 
 describe('Image Provider Store', () => {
   describe('state', () => {
     it('exports default state', () => {
-      expect(store.state.imageStats).toHaveLength(0);
-      expect(store.state.isFetchingImageStatsError).toBeFalsy();
-      expect(store.state.isFetchingImageStats).toBeFalsy();
+      expect(store.state.imageProviders).toHaveLength(0);
+      expect(store.state.isFetchingImageProvidersError).toBeFalsy();
+      expect(store.state.isFetchingImageProviders).toBeFalsy();
     });
   });
 
@@ -26,34 +26,34 @@ describe('Image Provider Store', () => {
       state = {};
     });
 
-    it('FETCH_IMAGE_STATS_START sets isFetchingImageStats to true', () => {
-      store.mutations[FETCH_IMAGE_STATS_START](state);
+    it('FETCH_IMAGE_PROVIDERS_START sets isFetchingImageProviders to true', () => {
+      store.mutations[FETCH_IMAGE_PROVIDERS_START](state);
 
-      expect(state.isFetchingImageStats).toBeTruthy();
+      expect(state.isFetchingImageProviders).toBeTruthy();
     });
 
-    it('FETCH_IMAGE_STATS_END sets isFetchingImageStats to false', () => {
-      store.mutations[FETCH_IMAGE_STATS_END](state);
+    it('FETCH_IMAGE_PROVIDERS_END sets isFetchingImageProviders to false', () => {
+      store.mutations[FETCH_IMAGE_PROVIDERS_END](state);
 
-      expect(state.isFetchingImageStats).toBeFalsy();
+      expect(state.isFetchingImageProviders).toBeFalsy();
     });
 
-    it('SET_FETCH_IMAGES_ERROR sets isFetchingImageStatsError', () => {
+    it('SET_FETCH_IMAGES_ERROR sets isFetchingImageProvidersError', () => {
       const params = {
-        isFetchingImageStatsError: true,
+        isFetchingImageProvidersError: true,
       };
       store.mutations[SET_FETCH_IMAGES_ERROR](state, params);
 
-      expect(state.isFetchingImageStatsError).toBe(params.isFetchingImageStatsError);
+      expect(state.isFetchingImageProvidersError).toBe(params.isFetchingImageProvidersError);
     });
 
-    it('SET_IMAGE_STATS sets imageStats', () => {
+    it('SET_IMAGE_PROVIDERS sets imageProviders', () => {
       const params = {
-        imageStats: true,
+        imageProviders: true,
       };
-      store.mutations[SET_IMAGE_STATS](state, params);
+      store.mutations[SET_IMAGE_PROVIDERS](state, params);
 
-      expect(state.imageStats).toBe(params.imageStats);
+      expect(state.imageProviders).toBe(params.imageProviders);
     });
   });
 
@@ -63,28 +63,28 @@ describe('Image Provider Store', () => {
       getProviderStats: jest.fn(() => Promise.resolve({ data })),
     };
     const commit = jest.fn();
-    it('FETCH_IMAGE_STATS on success', (done) => {
-      const action = store.actions(imageProviderServiceMock)[FETCH_IMAGE_STATS];
+    it('FETCH_IMAGE_PROVIDERS on success', (done) => {
+      const action = store.actions(imageProviderServiceMock)[FETCH_IMAGE_PROVIDERS];
       action({ commit }, {}).then(() => {
-        expect(commit).toBeCalledWith(SET_FETCH_IMAGES_ERROR, { isFetchingImageStatsError: false });
-        expect(commit).toBeCalledWith(FETCH_IMAGE_STATS_START);
+        expect(commit).toBeCalledWith(SET_FETCH_IMAGES_ERROR, { isFetchingImageProvidersError: false });
+        expect(commit).toBeCalledWith(FETCH_IMAGE_PROVIDERS_START);
 
         expect(imageProviderServiceMock.getProviderStats).toBeCalled();
 
-        expect(commit).toBeCalledWith(FETCH_IMAGE_STATS_END);
-        expect(commit).toBeCalledWith(SET_IMAGE_STATS, { imageStats: data });
+        expect(commit).toBeCalledWith(FETCH_IMAGE_PROVIDERS_END);
+        expect(commit).toBeCalledWith(SET_IMAGE_PROVIDERS, { imageProviders: data });
         done();
       });
     });
 
-    it('FETCH_IMAGE_STATS on failure', (done) => {
+    it('FETCH_IMAGE_PROVIDERS on failure', (done) => {
       const failedServiceMock = {
         getProviderStats: jest.fn(() => Promise.reject('error')),
       };
-      const action = store.actions(failedServiceMock)[FETCH_IMAGE_STATS];
+      const action = store.actions(failedServiceMock)[FETCH_IMAGE_PROVIDERS];
       action({ commit }, {}).catch(() => {
         expect(imageProviderServiceMock.getProviderStats).toBeCalled();
-        expect(commit).toBeCalledWith(SET_FETCH_IMAGES_ERROR, { isFetchingImageStatsError: true });
+        expect(commit).toBeCalledWith(SET_FETCH_IMAGES_ERROR, { isFetchingImageProvidersError: true });
         done();
       });
     });

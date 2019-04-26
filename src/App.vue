@@ -3,9 +3,15 @@
     <router-view/>
   </div>
 </template>
+
 <script>
+import { FETCH_IMAGE_PROVIDERS } from '@/store/action-types';
+
 export default {
   name: 'App',
+  beforeMount() {
+    this.$store.dispatch(FETCH_IMAGE_PROVIDERS);
+  },
 };
 </script>
 
