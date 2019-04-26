@@ -37,9 +37,6 @@ const ImageProviderService = {
       geographorguk: {
         logo: 'geographorguk_logo.gif',
       },
-      mccordmuseum: {
-        logo: 'mccordmuseum_logo.png',
-      },
       met: {
         logo: 'met_logo.png',
       },
