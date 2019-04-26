@@ -12,6 +12,7 @@ describe('CopyButton', () => {
   beforeEach(() => {
     props = {
       el: '#foo',
+      id: 'foo',
     };
     options = {
       propsData: props,
