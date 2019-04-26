@@ -1,6 +1,14 @@
 from elasticsearch_dsl import Date, Text, Integer, Nested, Keyword, DocType
 
 
+"""
+Provides an ORM-like experience for accessing data in Elasticsearch.
+
+Note the actual schema for Elasticsearch is defined in es_mapping.py; any
+low-level changes to the index must be represented there as well.
+"""
+
+
 class SyncableDocType(DocType):
     """
     Represents tables in the source-of-truth that will be replicated to

@@ -1,6 +1,7 @@
 import requests
 import pprint
 import json
+import pytest
 from enum import Enum
 from .api_live_integration_test import API_URL
 
@@ -15,6 +16,7 @@ class QAScores(Enum):
     NOT_RELEVANT = 3
 
 
+@pytest.mark.skip(reason="This test is nondeterministic")
 def test_phrase_relevance():
     res = requests.get(
         "{}/image/search?q=home office&filter_dead=false&qa=true"

@@ -16,8 +16,9 @@ from elasticsearch.exceptions \
 from elasticsearch_dsl import connections, Search
 from psycopg2.sql import SQL, Identifier
 from ingestion_server.qa import create_search_qa_index
-
-from ingestion_server.elasticsearch_models import database_table_to_elasticsearch_model
+from ingestion_server.elasticsearch_models import \
+    database_table_to_elasticsearch_model
+from ingestion_server.es_mapping import create_mapping
 
 """
 A utility for indexing data to Elasticsearch. For each table to
@@ -203,6 +204,10 @@ class TableIndexer:
             query = SQL('SELECT * FROM {}'
                         ' WHERE id BETWEEN {} AND {} ORDER BY id'
                         .format(table, last_added_es_id, last_added_pg_id))
+            self.es.indices.create(
+                index=dest_idx,
+                body=create_mapping(table)
+            )
             self._replicate(table, dest_idx, query)
 
     def _replicate(self, table, dest_index, query):

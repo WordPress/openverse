@@ -71,35 +71,27 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
     # individual field-level queries specified.
     if 'q' in search_params.data:
         s = s.query(
-            'constant_score',
-            filter=Q(
-                'query_string',
-                query=search_params.data['q'],
-                fields=['tags.name', 'title'],
-            )
+            'query_string',
+            query=search_params.data['q'],
+            fields=['tags.name', 'title'],
         )
     else:
         if 'creator' in search_params.data:
             creator = search_params.data['creator']
             s = s.query(
-                'constant_score',
-                filter=Q('query_string', query=creator, default_field='creator')
+                'query_string', query=creator, default_field='creator'
             )
         if 'title' in search_params.data:
             title = search_params.data['title']
             s = s.query(
-                'constant_score',
-                filter=Q('query_string', query=title, default_field='title')
+                'query_string', query=title, default_field='title'
             )
         if 'tags' in search_params.data:
             tags = search_params.data['tags']
             s = s.query(
-                'constant_score',
-                filter=Q(
-                    'query_string',
-                    default_field='tags.name',
-                    query=tags
-                )
+                'query_string',
+                default_field='tags.name',
+                query=tags
             )
 
     s.extra(track_scores=True)
