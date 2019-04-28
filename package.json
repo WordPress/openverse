@@ -20,7 +20,6 @@
     "foundation-sites": "^6.5.0-rc.3",
     "masonry-layout": "^4.2.2",
     "packery": "^2.1.2",
-    "puex": "^0.5.2",
     "vuex": "^3.0.1",
     "v-viewer": "^1.2.1",
     "viewerjs": "^1.2.0",
