@@ -1,5 +1,5 @@
-import Puex from 'puex';
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { routePush } from '@/router';
 import ImageProviderService from '@/api/ImageProviderService';
 import ImageService from '@/api/ImageService';
@@ -9,9 +9,9 @@ import ImageProviderStore from './image-provider-store';
 import AttributionStore from './attribution-store';
 import BugReportStore from './bug-report-store';
 
-Vue.use(Puex);
+Vue.use(Vuex);
 
-const store = GoogleAnalytics => (new Puex({
+const store = GoogleAnalytics => (new Vuex.Store({
   actions: Object.assign(
     SearchStore.actions(ImageService),
     ImageProviderStore.actions(ImageProviderService),
