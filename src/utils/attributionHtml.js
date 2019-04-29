@@ -11,7 +11,7 @@ function attributionHtml(image, ccLicenseURL, fullLicenseName) {
   else if (image.creator && !image.creator_url) {
     creator = `<span> by <span>${image.creator}</span></span>`;
   }
-  const licenseLink = ` is licensed under <a href="${ccLicenseURL}">${fullLicenseName.toUpperCase()}</a>`;
+  const licenseLink = ` is licensed under <a href="${ccLicenseURL}" style="margin-right: 5px;">${fullLicenseName.toUpperCase()}</a>`;
 
   let licenseIcons = `<img style="height: inherit;margin-right: 3px;" src="${baseAssetsPath}/cc_icon.svg" />`; // eslint-disable-line global-require, import/no-dynamic-require
   if (image.license) {
