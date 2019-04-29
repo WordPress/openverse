@@ -11,22 +11,15 @@
           <span class="photo_tag-label">
             <span>{{ tag.name }}</span>
           </span>
-          <img class="photo_tag-provider-badge"
-                src="@/assets/clarifai_logo.png"
-                v-if="isClarifaiTag(tag.provider)">
         </span>
       </template>
-      <p class="photo_tags-clarifai-badge" v-if="hasClarifaiTags">
-        <span>Tag by</span>
-        <a href="https://clarifai.com/">
-          <img class="photo_tags-clarifai-badge-image" src="../assets/clarifai.svg" >
-        </a>
-      </p>
     </div>
   </div>
 </template>
 
 <script>
+import { SET_QUERY } from '@/store/mutation-types';
+
 export default {
   name: 'photo-tags',
   props: ['tags'],
@@ -40,7 +33,7 @@ export default {
       return provider === 'clarifai';
     },
     searchByTagName(query) {
-      this.$router.push({ name: 'browse-page', query: { q: query } });
+      this.$store.commit(SET_QUERY, { query: { q: query }, shouldNavigate: true });
     },
     getValidTags() {
       return this.$props.tags.filter(tag => !!tag.name);
@@ -52,4 +45,3 @@ export default {
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
 </style>
-

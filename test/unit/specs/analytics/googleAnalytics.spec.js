@@ -1,5 +1,5 @@
 import analytics from '@/analytics/GoogleAnalytics';
-import { CopyTextAttribution } from '@/analytics/events';
+import { CopyAttribution } from '@/analytics/events';
 
 describe('GA', () => {
   beforeEach(() => {
@@ -7,7 +7,7 @@ describe('GA', () => {
   });
 
   it('sends event', () => {
-    const event = new CopyTextAttribution('foo');
+    const event = new CopyAttribution('foo');
     analytics().sendEvent(event);
 
     expect(window.ga).toHaveBeenCalledWith('send', event);
@@ -27,13 +27,19 @@ describe('GA', () => {
     expect(window.ga).toHaveBeenCalledWith('set', 'anonymizeIp', true);
   });
 
+  it('sets transport beacon', () => {
+    analytics().setTransportBeacon();
+
+    expect(window.ga).toHaveBeenCalledWith('set', 'transport', 'beacon');
+  });
+
   describe('if doNotTrack is enabled', () => {
     beforeEach(() => {
       navigator.doNotTrack = true;
     });
 
     it('does not send event', () => {
-      const event = new CopyTextAttribution('foo');
+      const event = new CopyAttribution('foo');
       analytics().sendEvent(event);
 
       expect(window.ga).not.toHaveBeenCalled();

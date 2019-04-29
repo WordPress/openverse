@@ -1,15 +1,6 @@
 <template>
   <div class="hero">
-    <p class="hero_image-attribution">
-      <a href="https://www.flickr.com/photos/mtrienke/24336908909/"
-         target="_blank"
-         rel="noreferrer">
-        "Sunrise In The Alps"
-      </a>
-      by <a href="https://www.flickr.com/photos/mtrienke/">Markus Trienke</a> is licensed under
-      <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>
-      <span class="hero_instagram-icon">&nbsp;</span>
-    </p>
+    <img class="logo" src="../assets/cc-logo_large_black.png">
     <form class="hero_search-form"
           role="search"
           method="post"
@@ -30,6 +21,19 @@
           </div>
       </div>
     </form>
+    <div class="description">
+        <p>
+          Search for free content in the public domain and under Creative Commons licenses.
+          <br />
+          Learn more about CC licenses <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">here</a>.
+        </p>
+    </div>
+    <div class="old-search-link">
+      <span>
+        Looking for the old CC Search portal? Go
+        <a href="https://oldsearch.creativecommons.org/">here</a>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -37,7 +41,7 @@
 import { SET_QUERY } from '@/store/mutation-types';
 
 export default {
-  name: 'hero',
+  name: 'hero-section',
   data: () => ({ form: { searchTerm: '' } }),
   methods: {
     onSubmit() {
@@ -52,12 +56,12 @@ export default {
 <style lang="scss" scoped>
 @import '../../node_modules/foundation-sites/scss/foundation';
 
-$hero-height: 70vh;
+$hero-height: 75vh;
 
 .hero {
+  background: #e9ebee;
   position: relative;
   height: $hero-height;
-  background: url('../assets/mountain_large.jpg') 50% no-repeat;
   background-size: cover;
   text-align: center;
   display: flex;
@@ -66,8 +70,13 @@ $hero-height: 70vh;
   flex-direction: column;
   min-height: 300px;
 
-  .hero-text {
-    color: $white;
+  .logo {
+    margin-bottom: 4vh;
+    height: 7em;
+
+    @media screen and (max-width: 39.9375em) {
+      height: 5.5em;
+    }
   }
 
   .hero_search-form {
@@ -87,20 +96,17 @@ $hero-height: 70vh;
     outline: 0;
     border-radius: 3px;
     border-width: 0;
-    background: rgba(255, 255, 255, 0.4);
     box-shadow: none;
-    color: rgba(255, 255, 255, 0.8);
   }
 
   .hero_search-input::placeholder {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(130, 130, 130);
   }
 
   .hero_search-btn {
     position: absolute;
     top: 0;
     right: 0;
-    background: transparent;
     height: calc( 100% - 3px );
     width: 60px;
     margin: 2px;
@@ -111,7 +117,7 @@ $hero-height: 70vh;
 
     &:after {
       content: '';
-      background: url('../assets/search-icon_white.svg') center center no-repeat;
+      background: url('../assets/search-icon_black.svg') center center no-repeat;
       background-size: 20px;
       opacity: 0.7;
       top: 0;
@@ -132,41 +138,27 @@ $hero-height: 70vh;
   }
 }
 
-.hero_instagram-icon {
-  display: inline-block;
-  width: 32px;
-  height: 32px;
-  background: url('../assets/instagram-icon.png') 50% no-repeat;
+.description {
+  margin-top: 2vh;
+  font-style: italic;
 }
 
-.hero_image-attribution {
+.old-search-link {
   position: absolute;
-  left: 30px;
-  bottom: 0;
-  z-index: 10;
-  font-weight: 500;
-  font-size: .8em;
-  color: #fff;
+  top: 2rem;
+  right: 2rem;
 
-  a {
-    color: #fff;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  @media screen and (max-width: 320px) {
+    top: 0;
+    font-size: 0.9rem;
   }
 }
 
 /* Small only */
-@media screen and (max-width: 39.9375em) {
+@media screen and (max-width: 40em) {
   .hero {
     height: 60vh;
   }
-
-  .hero_image-attribution {
-    left: 15px;
-  }
-
   .search-form_ctr {
     padding: 0 .9375rem;
   }
@@ -178,6 +170,10 @@ $hero-height: 70vh;
 
   .hero .hero_search-btn {
     right: 10px;
+  }
+
+  .logo {
+    height: 5.5em;
   }
 }
 </style>

@@ -3,9 +3,9 @@
     <head>
       <meta charset="utf-8">
       <meta name=viewport content="width=device-width,initial-scale=1">
-      <meta name=description content="The public beta of a new Creative Commons search tool, meant for testing and feedback. For the legacy search tool, please visit search.creativecommons.org.">
       <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
       <meta name="twitter:card" content="summary_large_image">
+      <meta name=description content="A new Creative Commons search tool for creators seeking to discover and reuse free resources with greater ease.">
       <meta name="twitter:site" content="@creativecommons">
       <meta name="twitter:title" content="Creative Commons">
       <meta name="twitter:description" content="Empowering the world to share through 6 simple licenses + a global community of advocates for open. ">
@@ -14,6 +14,7 @@
       <meta property="og:site_name" content="Creative Commons">
       <title>CC Search</title>
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css">
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C600%2C700%7CRoboto+Condensed&amp;ver=4.9.8" type="text/css" media="all">
       <style>
         .feedback-tab {
           display: block;
@@ -39,6 +40,10 @@
           text-decoration: underline;
         }
 
+        .about-page_provider-stats-ctr{
+          overflow-x: auto
+        }
+
         @media screen and (max-width: 670px) {
           .feedback-tab {
             display: none;
@@ -47,11 +52,6 @@
       </style>
     </head>
     <body>
-      <a class="feedback-tab"
-         href="https://docs.google.com/forms/d/1Z_lwUoiTRBw-fr4wQVDZBSq8-T2kr93XezOEU-ISHBU/viewform?edit_requested=true"
-         target="_blank">
-          Feedback
-      </a>
       <div id="app"></div>
 
       <script>

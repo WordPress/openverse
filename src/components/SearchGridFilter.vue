@@ -1,28 +1,24 @@
 <template>
-  <div :class="{ 'search-filter cell small-12 medium-12 large-12': true,
-                 'search-filter__visible': isFilterVisible, }">
-    <router-view :key="$route.fullPath"></router-view>
-    <div class="grid-x grid-margin-x grid-margin-y">
-      <div class="search-filter_providers
-                  cell
-                  small-12
-                  large-12">
+  <div :class="{ 'search-filters': true,
+                 'search-filters__visible': isFilterVisible, }">
+    <div class="grid-x">
+      <div class="filter-option search-filters_license-types">
         <multiselect
-          v-model="filter.provider"
+          v-model="filter.lt"
           @input="onUpdateFilter"
+          :disabled="filter.li.length > 0"
           tag-placeholder="Add this as new tag"
-          placeholder="All Providers"
+          placeholder="I want something that I can"
           label="name"
           track-by="code"
-          :options="providers"
+          :options="licenseTypes"
           :multiple="true"
-          :taggable="true"
-          :searchable="false">
+          :searchable="false"
+          :closeOnSelect="false"
+          :showLabels="false">>
         </multiselect>
       </div>
-      <div class="search-filter_licenses
-                  cell
-                  large-12">
+      <div class="filter-option search-filters_licenses">
         <multiselect
           v-model="filter.li"
           @input="onUpdateFilter"
@@ -33,40 +29,35 @@
           track-by="code"
           :options="licenses"
           :multiple="true"
-          :taggable="true"
-          :searchable="false">
+          :searchable="false"
+          :closeOnSelect="false"
+          :showLabels="false">
         </multiselect>
       </div>
-      <div class="search-filter_license-types
-                  cell
-                  large-12">
+      <div class="filter-option search-filters_providers">
         <multiselect
-          v-model="filter.lt"
+          v-model="filter.provider"
           @input="onUpdateFilter"
-          :disabled="filter.li.length > 0"
           tag-placeholder="Add this as new tag"
-          placeholder="All License Types"
+          placeholder="All Providers"
           label="name"
           track-by="code"
-          :options="licenseTypes"
+          :options="providers"
           :multiple="true"
-          :taggable="true"
-          :searchable="false">
+          :searchable="true"
+          :closeOnSelect="false"
+          :showLabels="false">
         </multiselect>
       </div>
-      <div class="search-filter_search-by
-                  cell
-                  large-12">
+      <div class="filter-option search-filters_search-by">
         <input type="checkbox" id="creator-chk"
                v-model="filter.searchBy.creator"
                @change="onUpdateFilter">
         <label for="creator-chk">Search by Creator</label>
       </div>
-      <div class="clear-filters
-                  cell
-                  large-12"
+      <div class="clear-filters"
            v-if="isFilterApplied">
-        <a class="button primary medium search-filter_clear-btn"
+        <a class="button primary medium search-filters_clear-btn"
                 @click="onClearFilters">
           Clear filters
         </a>
@@ -106,6 +97,14 @@ export default {
     },
     query() {
       return this.$store.state.query;
+    },
+    providers() {
+      const providers = this.$store.state.imageProviders.map(provider => ({
+        code: provider.provider_name,
+        name: provider.display_name,
+      }));
+
+      return providers;
     },
   },
   methods: {
@@ -152,49 +151,21 @@ export default {
       }
     },
   },
-  data: () => (
-    { providers:
-      [
-        { code: '500px', name: '500px' },
-        { code: 'animaldiversity', name: 'Animal Diversity Web' },
-        { code: 'behance', name: 'Behance' },
-        { code: 'brooklynmuseum', name: 'Brooklyn Museum' },
-        { code: 'clevelandmuseum', name: 'Cleveland Museum of Art' },
-        { code: 'deviantart', name: 'DeviantArt' },
-        { code: 'digitaltmuseum', name: 'Digitalt Museum' },
-        { code: 'eol', name: 'Encyclopedia of Life' },
-        { code: 'flickr', name: 'Flickr' },
-        { code: 'floraon', name: 'Flora-On' },
-        { code: 'geographorguk', name: 'Geograph® Britain and Ireland' },
-        { code: 'iha', name: 'IHA Holiday Ads' },
-        { code: 'mccordmuseum', name: 'Montreal Social History Museum' },
-        { code: 'met', name: 'Metropolitan Museum of Art' },
-        { code: 'museumsvictoria', name: 'Museums Victoria' },
-        { code: 'nhl', name: 'London Natural History Museum' },
-        { code: 'nypl', name: 'New York Public Library' },
-        { code: 'rijksmuseum', name: 'Rijksmuseum NL' },
-        { code: 'sciencemuseum', name: 'Science Museum – UK' },
-        { code: 'thingiverse', name: 'Thingiverse' },
-        { code: 'WoRMS', name: 'World Register of Marine Species' },
-      ],
-    licenses:
-      [
-        { code: 'cc0', name: 'CC0' },
-        { code: 'pdm', name: 'Public Domain Mark' },
-        { code: 'by', name: 'BY' },
-        { code: 'by-sa', name: 'BY-SA' },
-        { code: 'by-nc', name: 'BY-NC' },
-        { code: 'by-nd', name: 'BY-ND' },
-        { code: 'by-nc-sa', name: 'BY-NC-SA' },
-        { code: 'by-nc-nd', name: 'BY-NC-ND' },
-      ],
-    licenseTypes:
-      [
-        { code: 'all-cc', name: 'CC-licensed works only (no PD)' },
-        { code: 'all', name: 'All Public Domain (PD)' },
-        { code: 'commercial', name: 'Commercial use permitted' },
-        { code: 'modification', name: 'Modifications permitted' },
-      ],
+  data: () => ({
+    licenses: [
+      { code: 'cc0', name: 'CC0' },
+      { code: 'pdm', name: 'Public Domain Mark' },
+      { code: 'by', name: 'BY' },
+      { code: 'by-sa', name: 'BY-SA' },
+      { code: 'by-nc', name: 'BY-NC' },
+      { code: 'by-nd', name: 'BY-ND' },
+      { code: 'by-nc-sa', name: 'BY-NC-SA' },
+      { code: 'by-nc-nd', name: 'BY-NC-ND' },
+    ],
+    licenseTypes: [
+      { code: 'commercial', name: 'Use for commercial purposes' },
+      { code: 'modification', name: 'Modify or adapt' },
+    ],
     filter: {
       provider: [],
       li: [],
@@ -202,25 +173,19 @@ export default {
       searchBy: {
         creator: false,
       },
-    } }),
+    },
+  }),
 };
 </script>
 
 <style lang="scss" scoped>
 @import '../styles/app';
 
-.search-filter {
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  visibility: hidden;
-  left: 0;
+.search-filters {
+  background: #fafafa;
+  display: none;
   padding: 10px ;
-  position: absolute;
-  right: 0;
-  transition: all .15s ease-in-out;
-  width: 300px;
-  opacity: 0;
-  transform: translate3d(0px, -20px, 0px);
+  width: 100%;
 
   label {
     font-size: 1em;
@@ -239,25 +204,33 @@ export default {
 
   &__visible {
     border-top: 1px solid #e8e8e8;
-    margin-top: 0;
-    visibility: visible;
-    opacity: 1;
-    transform: translate3d(0px, 0px, 0px);
+    display: block;
   }
 }
 
-.search-filter_search-by,
-.clear-filters {
-  margin-top: 0.4em;
+.filter-option {
+  margin-right: 1vw;
+  min-width: 17vw;
+  padding-bottom: 0.5vh;
+  padding-top: 0.5vh;
 }
 
-.search-filter_clear-btn {
+.grid-x {
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+    display: block;
+  }
+}
+
+.search-filters_search-by,
+.clear-filters {
+  margin-top: 0.4em;
+  min-width: 10vw;
+}
+
+.search-filters_clear-btn {
   height: auto;
   border-radius: 2px;
   margin: auto;
-}
-
-.multiselect__tags {
-  border-radius: 0 !important
 }
 </style>

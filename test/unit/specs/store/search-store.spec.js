@@ -8,7 +8,6 @@ import {
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_IMAGES,
-  SET_IS_PAGE_CHANGE,
   SET_QUERY,
   SET_RELATED_IMAGES,
 } from '@/store/mutation-types';
@@ -32,7 +31,7 @@ describe('Search Store', () => {
     });
 
     it('gets query from search params', () => {
-      const state = store.state('?q=landscapes&provider=500px&li=by&lt=all&searchBy=creator');
+      const state = store.state('?q=landscapes&provider=met&li=by&lt=all&searchBy=creator');
       expect(state.imagesCount).toBe(0);
       expect(state.imagePage).toBe(1);
       expect(state.images).toHaveLength(0);
@@ -41,7 +40,7 @@ describe('Search Store', () => {
       expect(state.isFilterVisible).toBeFalsy();
       expect(state.isFilterApplied).toBeTruthy();
       expect(state.query.q).toBe('landscapes');
-      expect(state.query.provider).toBe('500px');
+      expect(state.query.provider).toBe('met');
       expect(state.query.li).toBe('by');
       expect(state.query.lt).toBe('all');
       expect(state.query.searchBy).toBe('creator');
@@ -50,7 +49,7 @@ describe('Search Store', () => {
     });
 
     it('isFilterApplied is set to true when provider filter is set', () => {
-      const state = store.state('?q=landscapes&provider=500px&li=by&lt=');
+      const state = store.state('?q=landscapes&provider=met&li=by&lt=');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
@@ -212,7 +211,7 @@ describe('Search Store', () => {
       const params = { query: { q: 'foo', lt: 'bar' }, shouldNavigate: true };
       mutations[SET_QUERY](state, params);
 
-      expect(routePushMock).toBeCalledWith({ path: 'search', query: params.query });
+      expect(routePushMock).toBeCalledWith({ path: '/search', query: params.query });
     });
   });
 

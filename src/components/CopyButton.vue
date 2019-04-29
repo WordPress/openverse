@@ -1,6 +1,8 @@
 <template>
-  <button type="button"
-          class="button photo_copy-btn">
+  <button :id="id"
+          type="button"
+          class="button photo_copy-btn"
+          :data-clipboard-target="el">
     <slot v-if="!success" default />
     <template v-else>Copied!</template>
   </button>
@@ -8,49 +10,51 @@
 
 <script>
 import Clipboard from 'clipboard';
-import { COPY_ATTRIBUTION } from '@/store/action-types';
 
 export default {
   data: () => ({
-    clipboard: null,
     success: false,
+    clipboard: null,
   }),
   props: {
-    toCopy: {
+    el: {
       required: true,
     },
-    contentType: {
+    id: {
       required: true,
     },
   },
-  mounted() {
-    this.clipboard = new Clipboard(this.$el, {
-      text: () => this.toCopy().replace(/\s\s/g, ''),
-    });
-
-    this.clipboard.on('success', (e) => {
+  methods: {
+    onCopySuccess(e) {
       this.success = true;
-      this.$store.dispatch(COPY_ATTRIBUTION, {
-        contentType: this.$props.contentType,
-        content: e.text,
-      });
+      this.$emit('copied', { content: e.text });
+
       setTimeout(() => {
         this.success = false;
       }, 2000);
-    });
+
+      e.clearSelection();
+    },
+    onCopyError(e) {
+      this.$emit('copyFailed');
+      e.clearSelection();
+    },
+  },
+  mounted() {
+    this.clipboard = new Clipboard(`#${this.$props.id}`);
+    this.clipboard.on('success', this.onCopySuccess);
+    this.clipboard.on('error', this.onCopyError);
   },
   destroyed() {
-    // unattach our clipboard instance when component is destroyed
     this.clipboard.destroy();
-    this.clipboard = null;
   },
 };
 </script>
 
 <style scoped>
   .photo_copy-btn {
-    border-radius: 3px;
-    width: 49%;
-    background: #4a69ca;
+    width: 10rem;
+    display: block;
+    margin-top: 1rem;
   }
 </style>

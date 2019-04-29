@@ -4,6 +4,7 @@
 
 .photo_license {
   text-transform: uppercase;
+  margin-right: 5px;
 }
 
 .search-grid {
@@ -12,35 +13,37 @@
 }
 
 .photo_provider {
-    text-transform: capitalize;
+  text-transform: capitalize;
 }
 
 .photo {
   width: 100%;
-  border-bottom: 1px solid #d6d6d6;
+  border-bottom: 1px solid #616161;
+  background: #e9ebee;
 }
 
 .photo_breadcrumb {
+  padding: 0 0 1rem 2rem;
   width: 100%;
   display: block;
   text-align: left;
-  font-size:.9em;
-  margin-top: -10px;
+  font-size: .9em;
 }
 
 .photo_image-ctr {
   position: relative;
+  padding-top: 15px;
+  max-height: 800px;
+  overflow: hidden;
   text-align: center;
-  padding: 30px;
-  max-height: 720px;
 
   img {
     position: relative;
     width: auto;
     height: auto;
-    max-height: 100%;
+    max-height: 750px;
     max-width: 100%;
-    background: #EBECE4;
+    margin-bottom: 4rem;
   }
 
   /* Small only */
@@ -50,12 +53,10 @@
 }
 
 .photo_info-ctr {
-  padding: 45px 15px;
-  border-left: 1px solid #d6d6d6;
-
-  .photo_info-header {
-    border-top: 1px solid #e7e8e9;
-    margin-left: 15px;
+  .sidebar_section {
+    .sidebar_section-header {
+      margin-left: 0px;
+    }
   }
 
   h4 {
@@ -91,7 +92,6 @@
     list-style-type: none;
 
     li {
-      padding-left: 15px;
       margin-left: 0;
       margin-bottom: 10px;
     }
@@ -103,23 +103,19 @@
   }
 }
 
-.photo_usage {
-  .photo_info-header {
-    margin-left: 0px;
-  }
-
-  padding: 15px;
+.photo-attribution {
+  margin-top: 1rem;
+  font-style: italic;
 }
 
 .photo_usage-attribution {
   border-left: 1px solid #e7e8e9;;
   padding-left: 10px;
-  padding-bottom: 15px
 }
 
 .photo_related-images,
 .photo_tags {
-  margin: 30px;
+  margin-top: 30px;
   border-top: 1px solid #e7e8e9;
   width: 100%;
 
@@ -164,4 +160,76 @@
 
 .photo_tags-clarifai-badge-image {
   height: 20px;
+}
+
+label {
+  margin-right: 8px;
+}
+
+.help-icon {
+  height: 24px;
+}
+
+.tab-section {
+  border-bottom: 1px solid #616161;
+  background: #fefefe;
+}
+
+.tabs {
+  border-bottom: none;
+  border-right: none;
+}
+
+.tabs-panel {
+  padding: 1rem 0 1rem 0;
+}
+
+.tabs-content {
+  border: none;
+}
+
+.tab-icon {
+  height: 16px;
+}
+
+.attribution-buttons {
+  margin-top: 8px;
+}
+
+.button-group {
+  margin-bottom: 0.2rem;
+}
+
+.more-options {
+  box-shadow: -11px -5px 17px -14px rgba(0,0,0,0.31);
+  padding: 10px 0 0 10px;
+  width: 12.7rem;
+  border: 1px solid #ccc;
+}
+
+.more-options-button {
+  display: block;
+}
+
+.copy-description {
+  color: #2c3e50;
+}
+
+.center {
+  width: 50%;
+  margin: 0 auto;
+}
+
+#attribution-html {
+  background-color: #fff;
+  cursor: auto;
+}
+
+.embed-attribution {
+  margin: 1rem 0 1rem;
+}
+
+.legal-disclaimer {
+  font-size: 0.75rem;
+  font-style: italic;
 }

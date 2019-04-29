@@ -2,13 +2,12 @@
   <div class="browse-page">
     <div class="search grid-x flexible">
       <div class="cell">
-        <header-section :isHeaderFixed="true">
+        <header-section>
           <search-grid-form></search-grid-form>
         </header-section>
       </div>
       <div :class="{ 'cell search-grid-ctr': true }">
         <search-grid v-if="query.q"></search-grid>
-        <share-list :shouldDisappearOnScroll="true"></share-list>
       </div>
     </div>
 
@@ -21,7 +20,6 @@ import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
-import ShareList from '@/components/ShareList';
 import { FETCH_IMAGES } from '@/store/action-types';
 
 const BrowsePage = {
@@ -29,13 +27,9 @@ const BrowsePage = {
   components: {
     HeaderSection,
     SearchGridForm,
-    ShareList,
     SearchGrid,
     FooterSection,
   },
-  data: () => ({
-    isHeaderFixed: false,
-  }),
   computed: {
     images() {
       return this.$store.state.images;
@@ -71,7 +65,7 @@ export default BrowsePage;
 
 <style lang="scss">
   .search-grid {
-    margin: 165px 30px 60px 30px;
+    margin: 30px 30px 60px 30px;
 
 
     /* Small only */
@@ -81,6 +75,7 @@ export default BrowsePage;
   }
 
   .search-grid-ctr {
+    background: #e9ebee;
     min-height: 600px;
     margin: 0;
     transition: margin .7s ease-in-out;

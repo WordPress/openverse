@@ -19,6 +19,8 @@ describe('PhotoDetails', () => {
         creator: 'John',
         creator_url: 'http://creator.com',
       },
+      watermarkEnabled: true,
+      socialSharingEnabled: true,
     };
 
     options = {
@@ -29,24 +31,27 @@ describe('PhotoDetails', () => {
   it('should render correct contents', () => {
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.find('.photo_image').element).toBeDefined();
-    expect(wrapper.find({ name: 'license-icons' }).element).toBeDefined();
+    expect(wrapper.find({ name: 'watermark' }).exists()).toBe(true);
+    expect(wrapper.find({ name: 'image-info' }).exists()).toBe(true);
+    expect(wrapper.find({ name: 'image-attribution' }).exists()).toBe(true);
+    expect(wrapper.find({ name: 'image-social-share' }).exists()).toBe(true);
   });
 
-  it('should generate license URL', () => {
+  it('should not render watermark link when watermark is disabled', () => {
+    options.propsData.watermarkEnabled = false;
     const wrapper = render(PhotoDetails, options);
-    expect(wrapper.vm.ccLicenseURL).toBe('https://creativecommons.org/licenses/BY/1.0');
+    expect(wrapper.find({ name: 'watermark' }).element).not.toBeDefined();
   });
 
-  it('should generate CC0 license URL', () => {
-    options.propsData.image.license = 'cc0';
+  it('should render social sharing buttons', () => {
     const wrapper = render(PhotoDetails, options);
-    expect(wrapper.vm.ccLicenseURL).toBe('https://creativecommons.org/publicdomain/zero/1.0/');
+    expect(wrapper.find({ name: 'image-social-share' }).exists()).toBe(true);
   });
 
-  it('should generate CC PDM license URL', () => {
-    options.propsData.image.license = 'pdm';
+  it('should not render social sharing buttons when social sharing is disabled', () => {
+    options.propsData.socialSharingEnabled = false;
     const wrapper = render(PhotoDetails, options);
-    expect(wrapper.vm.ccLicenseURL).toBe('https://creativecommons.org/publicdomain/mark/1.0/');
+    expect(wrapper.find({ name: 'image-social-share' }).exists()).toBe(false);
   });
 
   it('should generate license name', () => {
@@ -58,22 +63,6 @@ describe('PhotoDetails', () => {
     options.propsData.image.license = 'cc0';
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.vm.fullLicenseName).toBe('cc0 1.0');
-  });
-
-  it('should generate text attribution', () => {
-    const wrapper = render(PhotoDetails, options);
-    expect(wrapper.vm.textAttribution()).toContain(props.image.title);
-    expect(wrapper.vm.textAttribution()).toContain('is licensed under CC');
-    expect(wrapper.vm.textAttribution()).toContain(props.image.license.toUpperCase());
-    expect(wrapper.vm.textAttribution()).toContain(props.image.license_version);
-    expect(wrapper.vm.textAttribution()).toContain(wrapper.vm.ccLicenseURL);
-  });
-
-  it('should generate html attribution', () => {
-    const wrapper = render(PhotoDetails, options);
-    expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${props.image.creator_url}">${props.image.creator}</a>`);
-    expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${props.image.foreign_landing_url}">"${props.image.title}"</a>`);
-    expect(wrapper.vm.HTMLAttribution()).toContain(`<a href="${wrapper.vm.ccLicenseURL}">`);
   });
 
   it('renders link back to search results if enabled', () => {

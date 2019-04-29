@@ -3,20 +3,23 @@
     <div class="cell">
       <header-section showNavSearch="true" fixedNav="true"></header-section>
     </div>
-    <photo-details :image="image"
-                   :breadCrumbURL="breadCrumbURL"
-                   :shouldShowBreadcrumb="shouldShowBreadcrumb"
-                   :query="query"
-                   :imageWidth="imageWidth"
-                   :imageHeight="imageHeight"
-                   @onImageLoaded="onImageLoaded" />
-    <share-list :shouldDisappearOnScroll="false"></share-list>
-    <photo-tags :tags="tags" />
-    <related-images :relatedImages="relatedImages"
-                    :imagesCount="imagesCount"
+    <div class="container cell large-11">
+      <photo-details :image="image"
+                    :breadCrumbURL="breadCrumbURL"
+                    :shouldShowBreadcrumb="shouldShowBreadcrumb"
                     :query="query"
-                    :filter="filter"
-                    :isPrimaryImageLoaded="isPrimaryImageLoaded" />
+                    :imageWidth="imageWidth"
+                    :imageHeight="imageHeight"
+                    :watermarkEnabled="watermarkEnabled"
+                    :socialSharingEnabled="socialSharingEnabled"
+                    @onImageLoaded="onImageLoaded" />
+      <photo-tags :tags="tags" />
+      <related-images :relatedImages="relatedImages"
+                      :imagesCount="imagesCount"
+                      :query="query"
+                      :filter="filter"
+                      :isPrimaryImageLoaded="isPrimaryImageLoaded" />
+    </div>
     <footer-section></footer-section>
   </div>
 </template>
@@ -27,7 +30,7 @@ import PhotoTags from '@/components/PhotoTags';
 import RelatedImages from '@/components/RelatedImages';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
-import ShareList from '@/components/ShareList';
+import featureFlags from '@/featureFlags';
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
 import { SET_IMAGE } from '@/store/mutation-types';
 
@@ -39,7 +42,6 @@ const PhotoDetailPage = {
     FooterSection,
     PhotoDetails,
     PhotoTags,
-    ShareList,
   },
   props: {
     id: '',
@@ -52,6 +54,8 @@ const PhotoDetailPage = {
     shouldShowBreadcrumb: false,
     imageWidth: 0,
     imageHeight: 0,
+    watermarkEnabled: featureFlags.watermark,
+    socialSharingEnabled: featureFlags.socialSharing,
   }),
   computed: {
     filter() {
@@ -137,5 +141,10 @@ export default PhotoDetailPage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-
+  .container {
+    margin-left: 4vw;
+    @media screen and (max-width: 1050px) {
+      margin-left: 0;
+    }
+  }
 </style>
