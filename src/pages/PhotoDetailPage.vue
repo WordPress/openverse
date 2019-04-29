@@ -114,15 +114,19 @@ const PhotoDetailPage = {
       this.isPrimaryImageLoaded = true;
     },
     getRelatedImages(tags, query) {
-      let queryParam = query;
-      const tagsParam = (tags || []).slice();
-
-      if (tagsParam.length > 0) {
-        queryParam = tagsParam.slice(0, 1).map(tag => tag.name).join(', ');
+      if (this.query.q) {
+        this.$store.dispatch(FETCH_RELATED_IMAGES, { q: this.query.q, pagesize: 8 });
       }
+      else {
+        let queryParam = query;
+        const tagsParam = (tags || []).slice();
+        if (tagsParam.length > 0) {
+          queryParam = tagsParam.slice(0, 1).map(tag => tag.name).join(', ');
+        }
 
-      if (queryParam) {
-        this.$store.dispatch(FETCH_RELATED_IMAGES, { q: queryParam, pagesize: 8 });
+        if (queryParam) {
+          this.$store.dispatch(FETCH_RELATED_IMAGES, { q: queryParam, pagesize: 8 });
+        }
       }
     },
     loadImage(id) {
