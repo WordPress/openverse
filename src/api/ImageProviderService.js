@@ -19,6 +19,9 @@ const ImageProviderService = {
       brooklynmuseum: {
         logo: 'brooklyn_museum_logo.png',
       },
+      capl: {
+        logo: 'capl_logo.png',
+      },
       clevelandmuseum: {
         logo: 'cleveland.png',
       },
@@ -45,6 +48,9 @@ const ImageProviderService = {
       },
       nhl: {
         logo: 'nhm_logo.png',
+      },
+      rawpixel: {
+        logo: 'rawpixel_logo.png',
       },
       rijksmuseum: {
         logo: 'rijksmuseum_logo.png',
