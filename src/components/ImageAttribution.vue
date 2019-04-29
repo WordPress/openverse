@@ -29,16 +29,18 @@
         </CopyButton>
       </div>
       <div class="embed-attribution">
-        <span>Copy the HTML below to embed the attribution with license icons in your web page</span>
+        <span>
+          Copy the HTML below to embed the attribution with license icons in your web page
+        </span>
         <textarea id="attribution-html"
                   :value="attributionHtml"
                   cols="30" rows="4"
                   readonly="readonly">
         </textarea>
         <CopyButton id="embed-attribution-btn"
-                    el="#attribution-html"
-                    title="Copy the HTML to embed the attribution with license icons in your web page"
-                    @copied="onEmbedAttribution">
+                  el="#attribution-html"
+                  title="Copy the HTML to embed the attribution with license icons in your web page"
+                  @copied="onEmbedAttribution">
           Copy HTML
         </CopyButton>
       </div>
