@@ -1,9 +1,6 @@
 <template>
   <section class="sidebar_section">
-    <!-- TODO: add margin between CC icons and attribution (in the page and in html embed) -->
-    <!-- TODO: move copy rich text button to below the attribution text) -->
     <!-- TODO: try to centralize contents in photo details page) -->
-    <!-- TODO: check https://github.com/creativecommons/cccatalog-frontend/issues/338 -->
     <header class="sidebar_section-header">
       <h2>
         Image Attribution
@@ -32,7 +29,7 @@
         </CopyButton>
       </div>
       <div class="embed-attribution">
-        <span>Copy the HTML below to embed the attribution in your web page</span>
+        <span>Copy the HTML below to embed the attribution with license icons in your web page</span>
         <textarea id="attribution-html"
                   :value="attributionHtml"
                   cols="30" rows="4"
@@ -40,7 +37,7 @@
         </textarea>
         <CopyButton id="embed-attribution-btn"
                     el="#attribution-html"
-                    title="Copy the HTML to embed the attribution in your web page"
+                    title="Copy the HTML to embed the attribution with license icons in your web page"
                     @copied="onEmbedAttribution">
           Copy HTML
         </CopyButton>
