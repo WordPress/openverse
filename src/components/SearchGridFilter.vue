@@ -2,33 +2,20 @@
   <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
     <div class="grid-x">
-      <div class="filter-option search-filters_providers">
-        <multiselect
-          v-model="filter.provider"
-          @input="onUpdateFilter"
-          tag-placeholder="Add this as new tag"
-          placeholder="All Providers"
-          label="name"
-          track-by="code"
-          :options="providers"
-          :multiple="true"
-          :taggable="true"
-          :searchable="false">
-        </multiselect>
-      </div>
       <div class="filter-option search-filters_license-types">
         <multiselect
           v-model="filter.lt"
           @input="onUpdateFilter"
           :disabled="filter.li.length > 0"
           tag-placeholder="Add this as new tag"
-          placeholder="All License Types"
+          placeholder="I want something that I can"
           label="name"
           track-by="code"
           :options="licenseTypes"
           :multiple="true"
-          :taggable="true"
-          :searchable="false">
+          :searchable="false"
+          :closeOnSelect="false"
+          :showLabels="false">>
         </multiselect>
       </div>
       <div class="filter-option search-filters_licenses">
@@ -42,8 +29,24 @@
           track-by="code"
           :options="licenses"
           :multiple="true"
-          :taggable="true"
-          :searchable="false">
+          :searchable="false"
+          :closeOnSelect="false"
+          :showLabels="false">
+        </multiselect>
+      </div>
+      <div class="filter-option search-filters_providers">
+        <multiselect
+          v-model="filter.provider"
+          @input="onUpdateFilter"
+          tag-placeholder="Add this as new tag"
+          placeholder="All Providers"
+          label="name"
+          track-by="code"
+          :options="providers"
+          :multiple="true"
+          :searchable="true"
+          :closeOnSelect="false"
+          :showLabels="false">
         </multiselect>
       </div>
       <div class="filter-option search-filters_search-by">
@@ -95,6 +98,14 @@ export default {
     query() {
       return this.$store.state.query;
     },
+    providers() {
+      const providers = this.$store.state.imageProviders.map(provider => ({
+        code: provider.provider_name,
+        name: provider.display_name,
+      }));
+
+      return providers;
+    },
   },
   methods: {
     onUpdateFilter() {
@@ -140,49 +151,21 @@ export default {
       }
     },
   },
-  data: () => (
-    { providers:
-      [
-        { code: '500px', name: '500px' },
-        { code: 'animaldiversity', name: 'Animal Diversity Web' },
-        { code: 'behance', name: 'Behance' },
-        { code: 'brooklynmuseum', name: 'Brooklyn Museum' },
-        { code: 'clevelandmuseum', name: 'Cleveland Museum of Art' },
-        { code: 'deviantart', name: 'DeviantArt' },
-        { code: 'digitaltmuseum', name: 'Digitalt Museum' },
-        { code: 'eol', name: 'Encyclopedia of Life' },
-        { code: 'flickr', name: 'Flickr' },
-        { code: 'floraon', name: 'Flora-On' },
-        { code: 'geographorguk', name: 'Geograph® Britain and Ireland' },
-        { code: 'iha', name: 'IHA Holiday Ads' },
-        { code: 'mccordmuseum', name: 'Montreal Social History Museum' },
-        { code: 'met', name: 'Metropolitan Museum of Art' },
-        { code: 'museumsvictoria', name: 'Museums Victoria' },
-        { code: 'nhl', name: 'London Natural History Museum' },
-        { code: 'nypl', name: 'New York Public Library' },
-        { code: 'rijksmuseum', name: 'Rijksmuseum NL' },
-        { code: 'sciencemuseum', name: 'Science Museum – UK' },
-        { code: 'thingiverse', name: 'Thingiverse' },
-        { code: 'WoRMS', name: 'World Register of Marine Species' },
-      ],
-    licenses:
-      [
-        { code: 'cc0', name: 'CC0' },
-        { code: 'pdm', name: 'Public Domain Mark' },
-        { code: 'by', name: 'BY' },
-        { code: 'by-sa', name: 'BY-SA' },
-        { code: 'by-nc', name: 'BY-NC' },
-        { code: 'by-nd', name: 'BY-ND' },
-        { code: 'by-nc-sa', name: 'BY-NC-SA' },
-        { code: 'by-nc-nd', name: 'BY-NC-ND' },
-      ],
-    licenseTypes:
-      [
-        { code: 'all-cc', name: 'CC-licensed works only (no PD)' },
-        { code: 'all', name: 'All Public Domain (PD)' },
-        { code: 'commercial', name: 'Commercial use permitted' },
-        { code: 'modification', name: 'Modifications permitted' },
-      ],
+  data: () => ({
+    licenses: [
+      { code: 'cc0', name: 'CC0' },
+      { code: 'pdm', name: 'Public Domain Mark' },
+      { code: 'by', name: 'BY' },
+      { code: 'by-sa', name: 'BY-SA' },
+      { code: 'by-nc', name: 'BY-NC' },
+      { code: 'by-nd', name: 'BY-ND' },
+      { code: 'by-nc-sa', name: 'BY-NC-SA' },
+      { code: 'by-nc-nd', name: 'BY-NC-ND' },
+    ],
+    licenseTypes: [
+      { code: 'commercial', name: 'Use for commercial purposes' },
+      { code: 'modification', name: 'Modify or adapt' },
+    ],
     filter: {
       provider: [],
       li: [],
@@ -190,7 +173,8 @@ export default {
       searchBy: {
         creator: false,
       },
-    } }),
+    },
+  }),
 };
 </script>
 

@@ -39,24 +39,6 @@ describe('PhotoTags', () => {
     expect(wrapper.find('.photo_tags').element).toBeUndefined();
   });
 
-  it('should render tags by clarifai section when atleast one tag provider is clarifai', () => {
-    const wrapper = render(PhotoTags, options);
-    expect(wrapper.find('.photo_tags-clarifai-badge').element).toBeDefined();
-  });
-
-  it('should not render tags by clarifai section when no tag is provided by clarifai', () => {
-    options.propsData.tags[0].provider = 'foo';
-    const wrapper = render(PhotoTags, options);
-    expect(wrapper.find('.photo_tags-clarifai-badge').element).toBeUndefined();
-  });
-
-  it('it should render clarifai logo with a tag only if the tag provider is clarifai', () => {
-    const wrapper = render(PhotoTags, options);
-    const tagsArray = wrapper.findAll('.photo_tag');
-    expect(tagsArray.at(0).find('.photo_tag-provider-badge').element).toBeDefined();
-    expect(tagsArray.at(1).find('.photo_tag-provider-badge').element).toBeUndefined();
-  });
-
   it('commits a mutation when a tag is clicked', () => {
     const storeMock = {
       commit: jest.fn(),

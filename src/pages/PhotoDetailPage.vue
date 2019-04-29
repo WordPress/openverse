@@ -3,20 +3,23 @@
     <div class="cell">
       <header-section showNavSearch="true" fixedNav="true"></header-section>
     </div>
-    <photo-details :image="image"
-                   :breadCrumbURL="breadCrumbURL"
-                   :shouldShowBreadcrumb="shouldShowBreadcrumb"
-                   :query="query"
-                   :imageWidth="imageWidth"
-                   :imageHeight="imageHeight"
-                   :watermarkEnabled="watermarkEnabled"
-                   @onImageLoaded="onImageLoaded" />
-    <photo-tags :tags="tags" />
-    <related-images :relatedImages="relatedImages"
-                    :imagesCount="imagesCount"
+    <div class="container cell large-11">
+      <photo-details :image="image"
+                    :breadCrumbURL="breadCrumbURL"
+                    :shouldShowBreadcrumb="shouldShowBreadcrumb"
                     :query="query"
-                    :filter="filter"
-                    :isPrimaryImageLoaded="isPrimaryImageLoaded" />
+                    :imageWidth="imageWidth"
+                    :imageHeight="imageHeight"
+                    :watermarkEnabled="watermarkEnabled"
+                    :socialSharingEnabled="socialSharingEnabled"
+                    @onImageLoaded="onImageLoaded" />
+      <photo-tags :tags="tags" />
+      <related-images :relatedImages="relatedImages"
+                      :imagesCount="imagesCount"
+                      :query="query"
+                      :filter="filter"
+                      :isPrimaryImageLoaded="isPrimaryImageLoaded" />
+    </div>
     <footer-section></footer-section>
   </div>
 </template>
@@ -52,6 +55,7 @@ const PhotoDetailPage = {
     imageWidth: 0,
     imageHeight: 0,
     watermarkEnabled: featureFlags.watermark,
+    socialSharingEnabled: featureFlags.socialSharing,
   }),
   computed: {
     filter() {
@@ -141,5 +145,10 @@ export default PhotoDetailPage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-
+  .container {
+    margin-left: 4vw;
+    @media screen and (max-width: 1050px) {
+      margin-left: 0;
+    }
+  }
 </style>
