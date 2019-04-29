@@ -16,7 +16,7 @@
             <span v-else>{{ image.creator }}</span>
           </span>
           is licensed under
-          <a class="photo_license" :href="ccLicenseURL">
+          <a class="photo_license" :href="licenseURL">
           {{ fullLicenseName.toUpperCase() }}
           </a>
           <license-icons :image="image"></license-icons>
@@ -65,6 +65,11 @@ export default {
     CopyButton,
     LegalDisclaimer,
     ReuseSurvey,
+  },
+  computed: {
+    licenseURL() {
+      return `${this.ccLicenseURL}&atype=rich`;
+    },
   },
   methods: {
     onCopyAttribution(e) {
