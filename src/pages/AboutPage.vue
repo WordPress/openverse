@@ -20,7 +20,7 @@
         Currently CC Search only searches images, but we plan to add additional media types such as
         open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC
         licensed and public domain works on the web. Learn more about CC’s 2019 vision, strategy
-        and roadmap for CC Search <a href="https://creativecommons.org/2019/03/19/cc-search/">here</a>and
+        and roadmap for CC Search <a href="https://creativecommons.org/2019/03/19/cc-search/">here</a> and
         see what we’re currently working on <a href="https://github.com/orgs/creativecommons/projects/7">here</a>.
         All of our code is open source
         (<a href="https://github.com/creativecommons/cccatalog-frontend/">CC Search</a>,
@@ -32,7 +32,7 @@
         Please note that CC does not verify whether the images are properly CC licensed, or whether
         the attribution and other licensing information we have aggregated is accurate or complete.
         Please independently verify the licensing status and attribution information before reusing
-        the content. For more details, read the<a href="https://creativecommons.org/terms/">CC Terms of Use</a>.
+        the content. For more details, read the <a href="https://creativecommons.org/terms/">CC Terms of Use</a>.
       </p>
       <p>
         Looking for the old CC Search portal? Visit
