@@ -76,6 +76,8 @@ $hero-height: 75vh;
 
     @media screen and (max-width: 39.9375em) {
       height: 5.5em;
+      margin-top: 4vh;
+      padding: 0.5em;
     }
   }
 
@@ -145,7 +147,7 @@ $hero-height: 75vh;
 
 .old-search-link {
   position: absolute;
-  top: 2rem;
+  top: 1rem;
   right: 2rem;
 
   @media screen and (max-width: 320px) {
