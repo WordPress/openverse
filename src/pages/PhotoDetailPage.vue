@@ -3,21 +3,23 @@
     <div class="cell">
       <header-section showNavSearch="true" fixedNav="true"></header-section>
     </div>
-    <photo-details :image="image"
-                   :breadCrumbURL="breadCrumbURL"
-                   :shouldShowBreadcrumb="shouldShowBreadcrumb"
-                   :query="query"
-                   :imageWidth="imageWidth"
-                   :imageHeight="imageHeight"
-                   :watermarkEnabled="watermarkEnabled"
-                   :socialSharingEnabled="socialSharingEnabled"
-                   @onImageLoaded="onImageLoaded" />
-    <photo-tags :tags="tags" />
-    <related-images :relatedImages="relatedImages"
-                    :imagesCount="imagesCount"
+    <div class="container cell large-11">
+      <photo-details :image="image"
+                    :breadCrumbURL="breadCrumbURL"
+                    :shouldShowBreadcrumb="shouldShowBreadcrumb"
                     :query="query"
-                    :filter="filter"
-                    :isPrimaryImageLoaded="isPrimaryImageLoaded" />
+                    :imageWidth="imageWidth"
+                    :imageHeight="imageHeight"
+                    :watermarkEnabled="watermarkEnabled"
+                    :socialSharingEnabled="socialSharingEnabled"
+                    @onImageLoaded="onImageLoaded" />
+      <photo-tags :tags="tags" />
+      <related-images :relatedImages="relatedImages"
+                      :imagesCount="imagesCount"
+                      :query="query"
+                      :filter="filter"
+                      :isPrimaryImageLoaded="isPrimaryImageLoaded" />
+    </div>
     <footer-section></footer-section>
   </div>
 </template>
@@ -112,15 +114,19 @@ const PhotoDetailPage = {
       this.isPrimaryImageLoaded = true;
     },
     getRelatedImages(tags, query) {
-      let queryParam = query;
-      const tagsParam = (tags || []).slice();
-
-      if (tagsParam.length > 0) {
-        queryParam = tagsParam.slice(0, 1).map(tag => tag.name).join(', ');
+      if (this.query.q) {
+        this.$store.dispatch(FETCH_RELATED_IMAGES, { q: this.query.q, pagesize: 8 });
       }
+      else {
+        let queryParam = query;
+        const tagsParam = (tags || []).slice();
+        if (tagsParam.length > 0) {
+          queryParam = tagsParam.slice(0, 1).map(tag => tag.name).join(', ');
+        }
 
-      if (queryParam) {
-        this.$store.dispatch(FETCH_RELATED_IMAGES, { q: queryParam, pagesize: 8 });
+        if (queryParam) {
+          this.$store.dispatch(FETCH_RELATED_IMAGES, { q: queryParam, pagesize: 8 });
+        }
       }
     },
     loadImage(id) {
@@ -139,5 +145,10 @@ export default PhotoDetailPage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-
+  .container {
+    margin-left: 4vw;
+    @media screen and (max-width: 1050px) {
+      margin-left: 0;
+    }
+  }
 </style>

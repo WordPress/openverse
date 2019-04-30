@@ -3,14 +3,14 @@
            ref="searchGrid">
     <div class="grid-x" v-show="showGrid && includeAnalytics">
       <div class="search-grid_analytics cell medium-6 large-6" >
-        <h5>
+        <span>
           <span>{{ _imagesCount }}</span>
           photos matching
           <span>'{{ searchTerm }}'</span>
-        </h5>
+        </span>
       </div>
-      <div class="search-grid_layout-control cell medium-6 large-6 shrink">
-        <h5>Grid Options:</h5>
+      <div class="search-grid_layout-control cell medium-6 large-6">
+        <span>Image options:</span>
         <fieldset>
           <input
             id="scaling"
@@ -254,5 +254,9 @@ export default {
     margin: auto;
     font-weight: 500;
     text-align: center;
+  }
+
+  label {
+    color: #2c3e50;
   }
 </style>
