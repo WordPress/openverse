@@ -19,8 +19,8 @@
           <a class="photo_license" :href="licenseURL">
           {{ fullLicenseName.toUpperCase() }}
           </a>
-          <license-icons :image="image"></license-icons>
         </span>
+        <license-icons :image="image"></license-icons>
         <CopyButton id="copy-attribution-btn"
                     el="#attribution"
                     title="Copy the attribution to paste into your blog or document"

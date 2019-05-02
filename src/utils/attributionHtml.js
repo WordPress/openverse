@@ -13,10 +13,10 @@ function attributionHtml(image, ccLicenseURL, fullLicenseName) {
   }
   const licenseLink = ` is licensed under <a href="${ccLicenseURL}" style="margin-right: 5px;">${fullLicenseName.toUpperCase()}</a>`;
 
-  let licenseIcons = `<img style="height: inherit;margin-right: 3px;" src="${baseAssetsPath}/cc_icon.svg" />`; // eslint-disable-line global-require, import/no-dynamic-require
+  let licenseIcons = `<img style="height: inherit;margin-right: 3px;display: inline-block;" src="${baseAssetsPath}/cc_icon.svg" />`; // eslint-disable-line global-require, import/no-dynamic-require
   if (image.license) {
     licenseIcons += image.license.split('-').map(license =>
-      `<img style="height: inherit;margin-right: 3px;" src="${baseAssetsPath}/cc-${license.toLowerCase()}_icon.svg" />`, // eslint-disable-line global-require, import/no-dynamic-require
+      `<img style="height: inherit;margin-right: 3px;display: inline-block;" src="${baseAssetsPath}/cc-${license.toLowerCase()}_icon.svg" />`, // eslint-disable-line global-require, import/no-dynamic-require
     ).join('');
   }
 
