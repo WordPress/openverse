@@ -24,6 +24,8 @@ After that, don't forget to tag the issue with the "Bug" label.
 
 If you have an idea of a new feature or change to how the CC Search frontend works, please [file an issue](https://github.com/creativecommons/cccatalog-frontend/issues/new?template=feature_request.md) so we can discuss the possibility of that change or new feature being implemented and released in the future. This lets us come to an agreement about the proposed idea before any work is done.
 
+If you'd like to build a new feature but don't have a specific idea, please check our [2019 roadmap](https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/) and choose something from the pipeline of ideas.
+
 ### Pull requests
 
 Before you start writing code, make sure there is an issue open. Pull requests without a link to an existing issue won't be merged.
