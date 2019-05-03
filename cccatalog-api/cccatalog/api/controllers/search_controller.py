@@ -7,7 +7,7 @@ from elasticsearch_dsl.response import Response
 from cccatalog import settings
 from django.core.cache import cache
 from cccatalog.api.models import ContentProvider
-
+from rest_framework import serializers
 import logging as log
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
@@ -107,10 +107,20 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
     return search_response
 
 
+def _validate_provider(input_provider):
+    allowed_providers = list(get_providers('image').keys())
+    if input_provider not in allowed_providers:
+        raise serializers.ValidationError(
+            "Provider \'{}\' does not exist.".format(input_provider)
+        )
+    return input_provider.lower()
+
+
 def browse_by_provider(provider, index, page_size, ip, page=1):
     """
     Allow users to browse image collections without entering a search query.
     """
+    _validate_provider(provider)
     s = Search(index=index)
     s = _paginate_search(s, page_size, page)
     s = s.params(preference=str(ip))

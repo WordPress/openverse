@@ -37,15 +37,6 @@ class BrowseImageQueryStringSerializer(serializers.Serializer):
     )
 
     @staticmethod
-    def validate_provider(input_provider):
-        allowed_providers = list(get_providers('image').keys())
-        if input_provider not in allowed_providers:
-            raise serializers.ValidationError(
-                "Provider \'{}\' does not exist.".format(input_provider)
-            )
-        return input_provider.lower()
-
-    @staticmethod
     def validate_page(value):
         return _validate_page(value)
 
