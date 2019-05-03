@@ -2,6 +2,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import serializers
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils.validate_images import validate_images
@@ -232,6 +233,14 @@ class BrowseImages(APIView):
                 status=400,
                 data={
                     VALIDATION_ERROR: DEEP_PAGINATION_ERROR
+                }
+            )
+        except serializers.ValidationError:
+            return Response(
+                status=400,
+                data={
+                    VALIDATION_ERROR: 'Provider \'{}\' does not exist.'
+                    .format(provider)
                 }
             )
         filter_dead = params.data[FILTER_DEAD]
