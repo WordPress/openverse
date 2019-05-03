@@ -107,14 +107,13 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
     return search_response
 
 
-def browse_by_provider(search_params, index, page_size, ip, page=1):
+def browse_by_provider(provider, index, page_size, ip, page=1):
     """
-    Allow users to browse image collections without entering any search queries.
+    Allow users to browse image collections without entering a search query.
     """
     s = Search(index=index)
     s = _paginate_search(s, page_size, page)
     s = s.params(preference=str(ip))
-    provider = search_params.data['provider']
     provider_filter = Q('term', provider=provider)
     s = s.filter('bool', should=provider_filter, minimum_should_match=1)
     search_response = s.execute()

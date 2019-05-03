@@ -16,10 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
-from cccatalog.api.views.image_views import SearchImages, ImageDetail, Watermark
+from cccatalog.api.views.image_views import SearchImages, ImageDetail,\
+    Watermark, BrowseImages
 from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
     CheckRates
-from cccatalog.api.views.list_views import CreateList, ListDetail
 from cccatalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
 from cccatalog.settings import API_VERSION, WATERMARK_ENABLED
@@ -80,6 +80,7 @@ urlpatterns = [
     # path('list', CreateList.as_view()),
     # path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
     re_path('image/search', SearchImages.as_view()),
+    path('image/browse/<str:provider>', BrowseImages.as_view()),
     path('image/<str:identifier>', ImageDetail.as_view(), name='image-detail'),
     path('statistics/image', ImageStats.as_view(), name='about-image'),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
