@@ -71,10 +71,11 @@ def _get_page_count(search_results, page_size):
     return page_count
 
 
-def _process_results(search_results, request, filter_dead):
+def _post_process_results(search_results, request, filter_dead):
     """
     After fetching the search results from the back end, iterate through the
-    results, add links to detail views, and perform image validation.
+    results, add links to detail views, perform image validation, and route
+    certain thumbnails through out proxy.
     :param search_results: The Elasticsearch response object containing search
     results.
     :param request: The Django request object, used to build a "reversed" URL
@@ -83,33 +84,17 @@ def _process_results(search_results, request, filter_dead):
     """
     results = []
     to_validate = []
-    for result in search_results:
+    for res in search_results:
         url = request.build_absolute_uri(
-            reverse('image-detail', [result.identifier])
+            reverse('image-detail', [res.identifier])
         )
-        result.detail = url
-        to_validate.append(result.url)
-        results.append(result)
-    if filter_dead:
-        validate_images(results, to_validate)
-    return results
-
-
-def _add_thumbnails_to_response(serialized_results, response_data):
-    """
-    Route thumbnails through our own proxy if they're not SSL secured or if
-    they're from a provider that doesn't provide thumbnails of reasonable
-    quality.
-    :param serialized_results:
-    :return:
-    """
-    # Post-process the search results to fix malformed URLs and insecure
-    # HTTP thumbnails.
-    if PROXY_THUMBS:
-        for idx, res in enumerate(serialized_results):
+        res.detail = url
+        to_validate.append(res.url)
+        if PROXY_THUMBS:
+            # Proxy thumbnails from providers who don't provide SSL. We also
+            # have a list of providers that have poor quality or no thumbnails,
+            # so we produce our own on-the-fly.
             provider = res[PROVIDER]
-            # Proxy either the thumbnail or URL, depending on whether
-            # a thumbnail was provided.
             if THUMBNAIL in res and provider not in PROXY_ALL:
                 to_proxy = THUMBNAIL
             else:
@@ -121,7 +106,12 @@ def _add_thumbnails_to_response(serialized_results, response_data):
                     width=THUMBNAIL_WIDTH_PX,
                     original=original
                 )
-                response_data[RESULTS][idx][THUMBNAIL] = secure
+                res[THUMBNAIL] = secure
+        results.append(res)
+
+    if filter_dead:
+        validate_images(results, to_validate)
+    return results
 
 
 class SearchImages(APIView):
@@ -178,7 +168,7 @@ class SearchImages(APIView):
             )
 
         filter_dead = params.data[FILTER_DEAD]
-        results = _process_results(search_results, request, filter_dead)
+        results = _post_process_results(search_results, request, filter_dead)
         serialized_results = ImageSerializer(results, many=True).data
         page_count = _get_page_count(search_results, page_size)
 
@@ -190,7 +180,6 @@ class SearchImages(APIView):
             PAGE_COUNT: page_count,
             RESULTS: serialized_results
         }
-        _add_thumbnails_to_response(serialized_results, response_data)
         serialized_response = ImageSearchResultsSerializer(data=response_data)
         return Response(status=200, data=serialized_response.initial_data)
 
@@ -244,7 +233,7 @@ class BrowseImages(APIView):
                 }
             )
         filter_dead = params.data[FILTER_DEAD]
-        results = _process_results(browse_results, request, filter_dead)
+        results = _post_process_results(browse_results, request, filter_dead)
         serialized_results = ImageSerializer(results, many=True).data
         page_count = _get_page_count(browse_results, page_size)
         response_data = {
@@ -252,7 +241,6 @@ class BrowseImages(APIView):
             'page_count': page_count,
             RESULTS: serialized_results
         }
-        _add_thumbnails_to_response(serialized_results, response_data)
         serialized_response = ImageSearchResultsSerializer(data=response_data)
         return Response(status=200, data=serialized_response.initial_data)
 
