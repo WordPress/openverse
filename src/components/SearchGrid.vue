@@ -153,7 +153,7 @@ export default {
     handleScalingChange() {
       setTimeout(() => {
         this.$redrawVueMasonry(); // Some elements end up taking less space
-      }, 1000); // One second should be sufficient to calculate new height
+      }, 100); // One-tenth of a second should be sufficient to calculate new height
     },
     searchChanged() {
       this.showGrid = false;
