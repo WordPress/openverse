@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a :href="sourceURL">Verify at source - {{ source }}</a>
+    <a :href="sourceURL">Verify at the source: {{ source }}</a>
     <p class="legal-disclaimer">
       CC Search aggregates data from publicly available repositories of open content.
       CC does not host the content and does not verify that the content is properly CC-licensed

@@ -120,7 +120,8 @@ export default {
       this.activeTab = tabIdx;
     },
     attributionHtml() {
-      return attributionHtml(this.image, this.ccLicenseURL, this.fullLicenseName);
+      const licenseURL = `${this.ccLicenseURL}&atype=html`;
+      return attributionHtml(this.image, licenseURL, this.fullLicenseName);
     },
   },
   watch: {
