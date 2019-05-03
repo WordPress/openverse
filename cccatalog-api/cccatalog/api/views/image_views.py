@@ -43,6 +43,7 @@ PAGE_COUNT = 'page_count'
 
 DEEP_PAGINATION_ERROR = 'Deep pagination is not allowed.'
 
+
 def _add_protocol(url: str):
     """
     Some fields in the database contain incomplete URLs, leading to unexpected
@@ -209,6 +210,13 @@ class BrowseImages(APIView):
                          })
     def get(self, request, provider, format=None):
         params = BrowseImageQueryStringSerializer(data=request.query_params)
+        if not params.is_valid():
+            return Response(
+                status=400,
+                data={
+                    "validation_error": params.errors
+                }
+            )
         page_param = params.data[PAGE]
         page_size = params.data[PAGESIZE]
         try:
@@ -228,7 +236,7 @@ class BrowseImages(APIView):
             )
         filter_dead = params.data[FILTER_DEAD]
         results = _process_results(browse_results, request, filter_dead)
-        serialized_results = ImageSerializer(results, many=True)
+        serialized_results = ImageSerializer(results, many=True).data
         page_count = _get_page_count(browse_results, page_size)
         response_data = {
             'result_count': browse_results.hits.total,
@@ -238,7 +246,6 @@ class BrowseImages(APIView):
         _add_thumbnails_to_response(serialized_results, response_data)
         serialized_response = ImageSearchResultsSerializer(data=response_data)
         return Response(status=200, data=serialized_response.initial_data)
-
 
 
 class ImageDetail(GenericAPIView, RetrieveModelMixin):

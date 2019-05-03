@@ -18,12 +18,6 @@ def _validate_pagesize(value):
 
 
 class BrowseImageQueryStringSerializer(serializers.Serializer):
-    provider = serializers.CharField(
-        label="provider",
-        help_text="The provider to browse. Valid inputs:"
-                  " `{}`".format(list(get_providers('image').keys())),
-        required=True
-    )
     page = serializers.IntegerField(
         label="page number",
         help_text="The page number to retrieve.",
