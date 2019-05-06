@@ -19,7 +19,7 @@ const ImageProviderService = {
       brooklynmuseum: {
         logo: 'brooklyn_museum_logo.png',
       },
-      capl: {
+      CAPL: {
         logo: 'capl_logo.png',
       },
       clevelandmuseum: {
