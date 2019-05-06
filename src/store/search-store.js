@@ -37,9 +37,21 @@ const state = (searchParams) => {
   };
 };
 
+/**
+ * hides the search results in case the user is performing a new search.
+ * This prevents results from a previous search from showing while the
+ * new search results are still loading
+ */
+const hideSearchResultsOnNewSearch = (commit, pageNumber) => {
+  if (!pageNumber) {
+    commit(SET_IMAGES, { images: [] });
+  }
+};
+
 const actions = ImageService => ({
   [FETCH_IMAGES]({ commit }, params) {
     commit(FETCH_START_IMAGES);
+    hideSearchResultsOnNewSearch(commit, params.page);
     const queryParams = prepareSearchQueryParams(params);
     return ImageService.search(queryParams)
       .then(({ data }) => {
@@ -63,6 +75,7 @@ const actions = ImageService => ({
   },
   [FETCH_IMAGE]({ commit }, params) {
     commit(FETCH_START_IMAGES);
+    commit(SET_IMAGE, { image: {} });
     return ImageService.getImageDetail(params)
       .then(({ data }) => {
         commit(FETCH_END_IMAGES);

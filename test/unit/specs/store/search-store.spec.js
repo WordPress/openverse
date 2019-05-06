@@ -218,11 +218,17 @@ describe('Search Store', () => {
   describe('actions', () => {
     const searchData = { results: ['foo'], result_count: 1 };
     const imageDetailData = 'imageDetails';
-    const imageServiceMock = {
-      search: jest.fn(() => Promise.resolve({ data: searchData })),
-      getImageDetail: jest.fn(() => Promise.resolve({ data: imageDetailData })),
-    };
-    const commit = jest.fn();
+    let imageServiceMock = null;
+    let commit = null;
+
+    beforeEach(() => {
+      imageServiceMock = {
+        search: jest.fn(() => Promise.resolve({ data: searchData })),
+        getImageDetail: jest.fn(() => Promise.resolve({ data: imageDetailData })),
+      };
+      commit = jest.fn();
+    });
+
     it('FETCH_IMAGES on success', (done) => {
       const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
@@ -257,11 +263,30 @@ describe('Search Store', () => {
       });
     });
 
+    it('FETCH_IMAGES resets images if page is not defined', (done) => {
+      const params = { query: { q: 'foo' }, page: undefined, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(commit).toBeCalledWith(SET_IMAGES, { images: [] });
+        done();
+      });
+    });
+
+    it('FETCH_IMAGES does not reset images if page is defined', (done) => {
+      const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(commit).not.toBeCalledWith(SET_IMAGES, { images: [] });
+        done();
+      });
+    });
+
     it('FETCH_IMAGE on success', (done) => {
       const params = 'foo';
       const action = store.actions(imageServiceMock)[FETCH_IMAGE];
       action({ commit }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
+        expect(commit).toBeCalledWith(SET_IMAGE, { image: {} });
         expect(commit).toBeCalledWith(FETCH_END_IMAGES);
 
         expect(commit).toBeCalledWith(SET_IMAGE, { image: imageDetailData });
