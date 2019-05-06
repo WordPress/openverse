@@ -190,6 +190,10 @@ class BrowseImages(APIView):
     Museum of Art.. See `/statistics/image` for a list of valid
     collections. The `provider_identifier` field should be used to select
     the provider.
+
+    As with the `/image/search` endpoint, this is not intended to be used to
+    bulk download our entire collection of images; only the first ~10,000 images
+    in each collection are accessible.
     """
 
     @swagger_auto_schema(operation_id='image_browse',
