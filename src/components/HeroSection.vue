@@ -74,7 +74,7 @@ $hero-height: 75vh;
     margin-bottom: 4vh;
     height: 7em;
 
-    @media screen and (max-width: 39.9375em) {
+    @media screen and (max-width: 39.9375em), (max-height: 720px) {
       height: 5.5em;
       margin-top: 4vh;
       padding: 0.5em;
