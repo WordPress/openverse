@@ -129,7 +129,7 @@ def getMetaData(_thing, _date):
             imageURL    = None
             foreignID   = None
 
-            metaData['description'] = description
+            #metaData['description'] = description
 
             if ('default_image' in img) and img['default_image']:
                 if 'url' not in img['default_image']:
