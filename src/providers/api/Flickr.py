@@ -12,7 +12,6 @@ Notes:                  https://www.flickr.com/help/terms/api
 from modules.etlMods import *
 import calendar
 from dateutil import rrule
-import sys
 
 logging.getLogger(__name__)
 Ts_RANGE    = int(5) #process job using 5 minute intervals
@@ -205,13 +204,15 @@ def getMetaData(_startTs, _endTs, _license):
         delayProcessing(procTime, DELAY) #throttle requests
         procTime = time.time()
 
-    logging.info('Total pages processed: {} w/ {} images per page'.format(pages, SIZE))
-    logging.info('Total images: {}'.format(numImages))
+    logging.info('Total pages processed: {}'.format(pages))
+
+    return numImages
 
 
 def execJob(_license, _startDate, _duration=1, _mode=None):
-    srtTime = datetime.strptime(_startDate, '%Y-%m-%d %H:%M')
-    endTime = datetime.strptime(_startDate, '%Y-%m-%d %H:%M') + timedelta(hours=_duration)
+    totalImages = 0
+    srtTime     = datetime.strptime(_startDate, '%Y-%m-%d %H:%M')
+    endTime     = datetime.strptime(_startDate, '%Y-%m-%d %H:%M') + timedelta(hours=_duration)
 
     for dt in rrule.rrule(rrule.MINUTELY, dtstart=srtTime, until=endTime):
         elapsed = int((dt - srtTime).seconds/60)
@@ -222,7 +223,9 @@ def execJob(_license, _startDate, _duration=1, _mode=None):
             logging.info('Processing dates: {} to {}, license: {}'.format(curTime, nxtTime, getLicense(_license)[0]))
 
             #get the meta data within the time interval
-            getMetaData(curTime, nxtTime, _license)
+            totalImages += getMetaData(curTime, nxtTime, _license)
+
+    logging.info('Total {} images: {}'.format(getLicense(_license)[0], totalImages))
 
 
 def main():
@@ -255,13 +258,11 @@ def main():
             param = datetime.strftime(datetime.now() - timedelta(hours=1), '%Y-%m-%d %H:00')
         else:
             logging.warning('Invalid option')
-            logging.info('Terminated!')
-            sys.exit()
+            logging.info('Terminating!')
 
-    print (param)
-    sys.exit()
     #run the job and identify images for each CC license
-    list(map(lambda license: execJob(license, param, duration), list(getLicense('all'))))
+    if param:
+        list(map(lambda license: execJob(license, param, duration), list(getLicense('all'))))
 
     logging.info('Terminated!')
 
