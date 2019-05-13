@@ -251,13 +251,15 @@ def main():
 
     elif args.mode:
 
-        if str(args.mode) == 'default':
-            param = datetime.strftime(datetime.now() - timedelta(hours=1), '%Y-%m-%d %H:%M')
+        if str(args.mode) == 'default': #the start of the previous hour
+            param = datetime.strftime(datetime.now() - timedelta(hours=1), '%Y-%m-%d %H:00')
         else:
             logging.warning('Invalid option')
             logging.info('Terminated!')
             sys.exit()
 
+    print (param)
+    sys.exit()
     #run the job and identify images for each CC license
     list(map(lambda license: execJob(license, param, duration), list(getLicense('all'))))
 
