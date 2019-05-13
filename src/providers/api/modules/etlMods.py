@@ -32,7 +32,8 @@ def sanitizeString(_data):
     _data = _data.strip()
     _data = _data.replace('"', "'")
     _data = re.sub(r'\n|\r', ' ', _data)
-    _data = re.escape(_data)
+    #_data = re.escape(_data)
+    _data = _data.replace('\\', '\\\\')
 
     return re.sub(r'\s+', ' ', _data)
 
