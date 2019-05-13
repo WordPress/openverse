@@ -7,6 +7,7 @@ import json
 import argparse
 import random
 from datetime import datetime, timedelta
+import sys
 
 PATH    = os.environ['OUTPUT_DIR']
 
