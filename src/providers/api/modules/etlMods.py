@@ -50,11 +50,11 @@ def delayProcessing(_startTime, _maxDelay):
     time.sleep(waitTime)
 
 
-def requestContent(_url):
+def requestContent(_url, _headers=None):
     logging.info('Processing request: {}'.format(_url))
 
     try:
-        response = requests.get(_url)
+        response = requests.get(_url, headers=_headers)
 
         if response.status_code == requests.codes.ok:
             return response.json()
