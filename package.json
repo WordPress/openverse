@@ -20,7 +20,6 @@
     "foundation-sites": "^6.5.0-rc.3",
     "masonry-layout": "^4.2.2",
     "packery": "^2.1.2",
-    "puex": "^0.5.2",
     "v-viewer": "^1.2.1",
     "viewerjs": "^1.2.0",
     "vue": "^2.5.17",
@@ -29,7 +28,8 @@
     "vue-infinite-loading": "^2.3.3",
     "vue-masonry": "^0.11.7",
     "vue-multiselect": "^2.1.0",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.0.0-beta.29",

@@ -4,7 +4,7 @@ This document will give you a high level overview of the modules and components 
 
 ## Dependencies
 
-The CC Search frontend is built using [Vue.JS](https://vuejs.org/) as its main view library. It uses [Vue-Router](https://router.vuejs.org/) as its routing library and Puex(https://github.com/egoist/puex) as state-management library.
+The CC Search frontend is built using [Vue.JS](https://vuejs.org/) as its main view library. It uses [Vue-Router](https://router.vuejs.org/) as its routing library and Vuex(https://github.com/vuejs/vuex) as state-management library.
 
 The app uses [Foundation for Sites](https://foundation.zurb.com/sites.html) as a base CSS library.
 
@@ -53,4 +53,3 @@ Below is a folder structure in the order recommended to understand how the app a
  |-- assets/
  |     Where the static assets are stored. Assets include mostly image and svg files.
  |
-
