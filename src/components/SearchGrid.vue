@@ -32,7 +32,7 @@
     <div class="search-grid_ctr" ref="gridItems">
       <div
         class="masonry-layout"
-        v-masonry transition-duration="0.3s"
+        v-masonry transition-duration="0s"
         item-selector=".item"
         :fit-width="true"
         :gutter="20">
