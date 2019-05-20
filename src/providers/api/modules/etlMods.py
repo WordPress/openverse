@@ -66,3 +66,34 @@ def requestContent(_url):
         logging.error('There was an error with the request.')
         logging.info('{}: {}'.format(type(e).__name__, e))
         return None
+
+
+def getLicense(self, _domain, _path, _url):
+
+        if 'creativecommons.org' not in _domain:
+            logging.warning('The license for the following work -> {} is not issued by Creative Commons.'.format(_url))
+            return [None, None]
+
+        pattern   = re.compile('/(licenses|publicdomain)/([a-z\-?]+)/(\d\.\d)/?(.*?)')
+        if pattern.match(_path.lower()):
+            result  = re.search(pattern, _path.lower())
+            license = result.group(2).lower().strip()
+            version = result.group(3).strip()
+
+            if result.group(1) == 'publicdomain':
+                if license == 'zero':
+                    license = 'cc0';
+                elif license == 'mark':
+                    license = 'pdm'
+                else:
+                    logging.warning('License not detected!')
+                    return [None, None]
+
+            elif (license == ''):
+                logging.warning('License not detected!')
+                return [None, None]
+
+
+            return [license, version]
+
+        return [None, None]
