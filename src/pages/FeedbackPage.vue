@@ -2,12 +2,15 @@
   <div class="grid-container full">
     <header-section showNavSearch="true"></header-section>
     <div class="feedback-page">
-      <h1>Feedback</h1>
+      <h1 id="feedback">Feedback</h1>
       <p>
-        Thank you for using CC Search Beta! We welcome your ideas for improving the tool below.
+        Thank you for using CC Search! We welcome your ideas for improving the tool below.
         To provide regular user feedback, join the
         <a href="https://creativecommons.slack.com/messages/CCS9CF2JE/details/">#cc-usability</a> channel on
         <a href="https://wiki.creativecommons.org/wiki/Slack#How_to_join_Slack">CC Slack</a>.
+      </p>
+      <p>
+        To report a bug, <a href="#report">click here</a>.
       </p>
 
       <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
@@ -20,7 +23,7 @@
       </iframe>
 
       <div>
-        <h1>Report a bug</h1>
+        <h1><a id="report"></a>Report a bug</h1>
         <p>
           If you would like to report a bug you are encountering when using the tool, please email
           <a href="mailto:support-search@creativecommons.org">

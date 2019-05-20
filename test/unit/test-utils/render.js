@@ -1,14 +1,14 @@
 /* eslint-disable no-param-reassign */
-import Puex from 'puex';
+import Vuex from 'vuex';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import sampleStore from '../sampleStore/';
 
 const localVue = createLocalVue();
-localVue.use(Puex);
+localVue.use(Vuex);
 
 const render = (Component, options = { localVue }) => {
   if (!options.store) {
-    const store = new Puex(sampleStore);
+    const store = new Vuex.Store(sampleStore);
     options.store = store;
   }
 

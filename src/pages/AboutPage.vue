@@ -4,39 +4,39 @@
   <div class="about-page_body">
     <h1>About CC Search</h1>
       <p class="about-page_lead-paragraph">
-        There is no larger compendium of shared human knowledge and creativity than the Commons,
-         including over 1.4 billion digital works available under CC tools. Despite the tremendous
-         growth of the Commons, and the widespread use of the CC licenses and public domain marks,
-         there is no simple way to maximize use of, and engagement with, all of that content. There
-         is no front door — no tool designed for the general public to facilitate discovery for the
-         purpose of reuse and remix, to simplify the license terms, make attribution easy, or
-         support curation, and crowdsourced metadata.
+        CC Search is a tool that allows openly licensed and public domain works to be discovered
+        and used by everyone. Creative Commons, the nonprofit behind CC Search, is the maker of the
+        <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">CC licenses</a>,
+        used over 1.4 billion times to help creators share knowledge and creativity online.
       </p>
       <p>
-        Creative Commons’ “CC Search” project will develop and release an open online search and
-        re-use tool that will allow high-quality content from the commons to surface in a more
-        seamless and accessible way. Our beta relies on open APIs and the Common Crawl dataset
-        and focuses on photos as its first media type. It is meant to elicit discussion and inform
-        our development as we build out the full set of tools. “CC Search” will enable users to
-        curate, tag, and remix that content. It will go beyond simple search to aggregate results
-        from across the hundreds of public repositories into a single catalog, and also facilitate
-        the use and re-use through tools like curated lists, saved searches, one- or no-click
-        attribution, and provenance.
+        CC Search searches across more than 300 million images from open APIs and the
+        <a href="http://commoncrawl.org/">Common Crawl</a> dataset.
+        It goes beyond simple search to aggregate results across multiple public repositories
+         into a single catalog, and facilitates reuse through features like machine-generated tags
+         and one-click attribution.
       </p>
-      <h2>New Release</h2>
       <p>
-        This release contains several new features, including AI image tags generated from
-        our collaborator, Clarifai. Clarifai is a best in class image classification software
-        that provides tagging support and visual recognition. Clarifai’s API was integrated
-        in the process-flow as a means to automatically generate tags for the new and existing
-        images. This means that CC search has machine-generated tags, user-defined tags, and
-        platform-defined tags that were obtained from the web crawl data. Collectively,
-        these will enhance the user’s search experience and improve the quality of the results.
-        Currently, 10.3 million images have their respective Clarifai tags and the outstanding
-        images will be integrated on an ongoing basis. Tags generated via Clarifai are marked with
-        a <img class="photo_tag-provider-badge" src="@/assets/clarifai_logo.png"> on the detail page
-        for each image. With this addition, we’re not just cataloging the commons, we’re making it
-        better. Thank you to Clarifai for their support.
+        Currently CC Search only searches images, but we plan to add additional media types such as
+        open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC
+        licensed and public domain works on the web. Learn more about CC’s 2019 vision, strategy
+        and roadmap for CC Search <a href="https://creativecommons.org/2019/03/19/cc-search/">here</a> and
+        see what we’re currently working on <a href="https://github.com/orgs/creativecommons/projects/7">here</a>.
+        All of our code is open source
+        (<a href="https://github.com/creativecommons/cccatalog-frontend/">CC Search</a>,
+        <a href="https://github.com/creativecommons/cccatalog-api/">CC Catalog API</a>,
+        <a href="https://github.com/creativecommons/cccatalog/">CC Catalog</a>)
+        and we <a href="https://creativecommons.github.io/contributing-code/">welcome community contribution</a>.
+      </p>
+      <p>
+        Please note that CC does not verify whether the images are properly CC licensed, or whether
+        the attribution and other licensing information we have aggregated is accurate or complete.
+        Please independently verify the licensing status and attribution information before reusing
+        the content. For more details, read the <a href="https://creativecommons.org/terms/">CC Terms of Use</a>.
+      </p>
+      <p>
+        Looking for the old CC Search portal? Visit
+        <a href="https://oldsearch.creativecommons.org">https://oldsearch.creativecommons.org</a>.
       </p>
       <h2>Providers</h2>
       <div class="about-page_provider-stats-ctr">
@@ -47,16 +47,15 @@
             <th># CC Licensed Works</th>
           </thead>
           <tbody>
-            <tr v-for="(imageStat, index) in imageStats"
-                v-if="getProviderName(imageStat.provider_name)"
+            <tr v-for="(imageProvider, index) in imageProviders"
                 :key="index">
-              <td>{{ getProviderName(imageStat.provider_name) }}</td>
+              <td>{{ imageProvider.display_name }}</td>
               <td>
-                <a :href="getProviderURL(imageStat.provider_name)">
-                  {{ getProviderURL(imageStat.provider_name) }}
+                <a :href="imageProvider.provider_url">
+                  {{ imageProvider.provider_url }}
                 </a>
               </td>
-              <td>{{ getProviderImageCount(imageStat.image_count) }}</td>
+              <td>{{ getProviderImageCount(imageProvider.image_count) }}</td>
             </tr>
           </tbody>
         </table>
@@ -69,8 +68,6 @@
 <script>
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
-import { FETCH_IMAGE_STATS } from '@/store/action-types';
-import ImageProviderService from '@/api/ImageProviderService';
 
 const AboutPage = {
   name: 'about-page',
@@ -79,43 +76,14 @@ const AboutPage = {
     FooterSection,
   },
   computed: {
-    imageStats() {
-      return this.$store.state.imageStats.sort((a, b) => {
-        const nameA = a.provider_name.toUpperCase();
-        const nameB = b.provider_name.toUpperCase();
-
-        if (nameA < nameB) {
-          return -1;
-        }
-
-        if (nameA > nameB) {
-          return 1;
-        }
-
-        return 0;
-      });
+    imageProviders() {
+      return this.$store.state.imageProviders;
     },
   },
   methods: {
-    getProviderName(providerName) {
-      const provider = ImageProviderService.getProviderInfo(providerName);
-
-      return provider && provider.name;
-    },
-    getProviderURL(providerName) {
-      const provider = ImageProviderService.getProviderInfo(providerName);
-
-      return provider && provider.url;
-    },
     getProviderImageCount(imageCount) {
       return (imageCount).toLocaleString('en');
     },
-    getSortedStats(imageStats) {
-      return imageStats.sort((a, b) => a.name > b.name);
-    },
-  },
-  beforeMount() {
-    this.$store.dispatch(FETCH_IMAGE_STATS);
   },
 };
 
@@ -140,6 +108,10 @@ export default AboutPage;
     letter-spacing: initial;
     line-height: 1.25;
     text-transform: initial;
+  }
+
+  .about-page {
+    background: #e9ebee;
   }
 
   .about-page_body {

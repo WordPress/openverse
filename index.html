@@ -3,16 +3,23 @@
     <head>
       <meta charset="utf-8">
       <meta name=viewport content="width=device-width,initial-scale=1">
-      <meta name=description content="The public beta of a new Creative Commons search tool, meant for testing and feedback. For the legacy search tool, please visit search.creativecommons.org.">
-      <meta name="twitter:card" content="Latest News,Announcements,Images,Videos and features of Creative Commons">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name=description content="A new Creative Commons search tool for creators seeking to discover and reuse free resources with greater ease.">
       <meta name="twitter:site" content="@creativecommons">
-      <meta name="twitter:title" content="Creative Commons">
-      <meta name="twitter:description" content="Empowering the world to share through 6 simple licenses + a global community of advocates for open. ">
+      <meta name="og:title" content="Creative Commons">
+      <meta name="og:description" content="Empowering the world to share through 6 simple licenses + a global community of advocates for open. ">
       <meta name="twitter:site" content="https://creativecommons.org">
       <meta property="og:url" content="https://creativecommons.org">
       <meta property="og:site_name" content="Creative Commons">
+      <% if (process.env.NODE_ENV == 'production') { %>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+      <% } %>
       <title>CC Search</title>
       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css">
+      <link rel="icon" type="image/png" href="https://d15omoko64skxi.cloudfront.net/wp-content/uploads/2016/05/cc-site-icon-150x150.png" sizes="32x32">
+      <link rel="icon" type="image/png" href="https://d15omoko64skxi.cloudfront.net/wp-content/uploads/2016/05/cc-site-icon-300x300.png" sizes="192x192">
+      <link rel="apple-touch-icon-precomposed" href="https://d15omoko64skxi.cloudfront.net/wp-content/uploads/2016/05/cc-site-icon-300x300.png">
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C600%2C700%7CRoboto+Condensed&amp;ver=4.9.8" type="text/css" media="all">
       <style>
         .feedback-tab {
           display: block;
@@ -41,7 +48,7 @@
         .about-page_provider-stats-ctr{
           overflow-x: auto
         }
-        
+
         @media screen and (max-width: 670px) {
           .feedback-tab {
             display: none;
@@ -55,7 +62,7 @@
       <script>
         // Use production Google Analytics ID if ccsearch is in the URL, otherwise use development/staging ID
         // TODO: Refactor this to use environment variables instead of hardcoding IDs here.
-        var gaID = document.location.hostname.indexOf('ccsearch') == -1 ? 'UA-2010376-36' : 'UA-2010376-33';
+        var gaID = document.location.hostname.indexOf('ccsearch') >= 0 ? 'UA-2010376-36' : 'UA-2010376-33';
         /* eslint-disable */
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

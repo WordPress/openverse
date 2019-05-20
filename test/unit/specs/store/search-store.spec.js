@@ -31,7 +31,7 @@ describe('Search Store', () => {
     });
 
     it('gets query from search params', () => {
-      const state = store.state('?q=landscapes&provider=500px&li=by&lt=all&searchBy=creator');
+      const state = store.state('?q=landscapes&provider=met&li=by&lt=all&searchBy=creator');
       expect(state.imagesCount).toBe(0);
       expect(state.imagePage).toBe(1);
       expect(state.images).toHaveLength(0);
@@ -40,7 +40,7 @@ describe('Search Store', () => {
       expect(state.isFilterVisible).toBeFalsy();
       expect(state.isFilterApplied).toBeTruthy();
       expect(state.query.q).toBe('landscapes');
-      expect(state.query.provider).toBe('500px');
+      expect(state.query.provider).toBe('met');
       expect(state.query.li).toBe('by');
       expect(state.query.lt).toBe('all');
       expect(state.query.searchBy).toBe('creator');
@@ -49,7 +49,7 @@ describe('Search Store', () => {
     });
 
     it('isFilterApplied is set to true when provider filter is set', () => {
-      const state = store.state('?q=landscapes&provider=500px&li=by&lt=');
+      const state = store.state('?q=landscapes&provider=met&li=by&lt=');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
@@ -218,11 +218,17 @@ describe('Search Store', () => {
   describe('actions', () => {
     const searchData = { results: ['foo'], result_count: 1 };
     const imageDetailData = 'imageDetails';
-    const imageServiceMock = {
-      search: jest.fn(() => Promise.resolve({ data: searchData })),
-      getImageDetail: jest.fn(() => Promise.resolve({ data: imageDetailData })),
-    };
-    const commit = jest.fn();
+    let imageServiceMock = null;
+    let commit = null;
+
+    beforeEach(() => {
+      imageServiceMock = {
+        search: jest.fn(() => Promise.resolve({ data: searchData })),
+        getImageDetail: jest.fn(() => Promise.resolve({ data: imageDetailData })),
+      };
+      commit = jest.fn();
+    });
+
     it('FETCH_IMAGES on success', (done) => {
       const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
@@ -257,11 +263,30 @@ describe('Search Store', () => {
       });
     });
 
+    it('FETCH_IMAGES resets images if page is not defined', (done) => {
+      const params = { query: { q: 'foo' }, page: undefined, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(commit).toBeCalledWith(SET_IMAGES, { images: [] });
+        done();
+      });
+    });
+
+    it('FETCH_IMAGES does not reset images if page is defined', (done) => {
+      const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(commit).not.toBeCalledWith(SET_IMAGES, { images: [] });
+        done();
+      });
+    });
+
     it('FETCH_IMAGE on success', (done) => {
       const params = 'foo';
       const action = store.actions(imageServiceMock)[FETCH_IMAGE];
       action({ commit }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
+        expect(commit).toBeCalledWith(SET_IMAGE, { image: {} });
         expect(commit).toBeCalledWith(FETCH_END_IMAGES);
 
         expect(commit).toBeCalledWith(SET_IMAGE, { image: imageDetailData });

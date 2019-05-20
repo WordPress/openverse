@@ -1,5 +1,5 @@
 import analytics from '@/analytics/GoogleAnalytics';
-import { CopyTextAttribution } from '@/analytics/events';
+import { CopyAttribution } from '@/analytics/events';
 
 describe('GA', () => {
   beforeEach(() => {
@@ -7,7 +7,7 @@ describe('GA', () => {
   });
 
   it('sends event', () => {
-    const event = new CopyTextAttribution('foo');
+    const event = new CopyAttribution('foo');
     analytics().sendEvent(event);
 
     expect(window.ga).toHaveBeenCalledWith('send', event);
@@ -39,7 +39,7 @@ describe('GA', () => {
     });
 
     it('does not send event', () => {
-      const event = new CopyTextAttribution('foo');
+      const event = new CopyAttribution('foo');
       analytics().sendEvent(event);
 
       expect(window.ga).not.toHaveBeenCalled();
