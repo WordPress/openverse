@@ -8,7 +8,7 @@
         <img
           :class="{'search-grid_image': true, 'search-grid_image__fill': !shouldContainImage}"
           :alt="image.title" :src="getImageUrl(image)"
-          @error="onImageLoadError">
+          @error="onImageLoadError($event, image)">
       </a>
       <figcaption class="search-grid_item-overlay search-grid_item-overlay__top">
         <license-icons :image="image"></license-icons>
@@ -32,7 +32,7 @@
 import ImageProviderService from '@/api/ImageProviderService';
 import LicenseIcons from '@/components/LicenseIcons';
 
-const errorImage = require('@/assets/404-grid_placeholder.png');
+const errorImage = require('@/assets/image_not_available_placeholder.png');
 
 const toAbsolutePath = (url, prefix = 'https://') => {
   if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
@@ -52,9 +52,7 @@ export default {
       if (!image) {
         return '';
       }
-
       const url = image.thumbnail || image.url;
-
       return toAbsolutePath(url);
     },
     getImageForeignUrl(image) {
@@ -80,9 +78,14 @@ export default {
         this.$router.push(`/photos/${image.id}`);
       }
     },
-    onImageLoadError(event) {
-      const image = event.target;
-      image.src = errorImage;
+    onImageLoadError(event, image) {
+      const element = event.target;
+      if (element.src !== image.url) {
+        element.src = image.url;
+      }
+      else {
+        element.src = errorImage;
+      }
     },
   },
 };
