@@ -239,7 +239,7 @@ export default {
   }
 
   .search-form_toolbar {
-    width: 400px;
+    flex-wrap: nowrap;
 
     li {
       border-left: 1px solid #E6EAEA;

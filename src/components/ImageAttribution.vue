@@ -1,5 +1,6 @@
 <template>
   <section class="sidebar_section">
+    <!-- TODO: try to centralize contents in photo details page) -->
     <header class="sidebar_section-header">
       <h2>
         Image Attribution
@@ -15,33 +16,36 @@
             <span v-else>{{ image.creator }}</span>
           </span>
           is licensed under
-          <a class="photo_license" :href="ccLicenseURL">
+          <a class="photo_license" :href="licenseURL">
           {{ fullLicenseName.toUpperCase() }}
           </a>
-          <license-icons :image="image"></license-icons>
         </span>
+        <license-icons :image="image"></license-icons>
         <CopyButton id="copy-attribution-btn"
                     el="#attribution"
                     title="Copy the attribution to paste into your blog or document"
                     @copied="onCopyAttribution">
-          Copy
+          Copy rich text
         </CopyButton>
       </div>
       <div class="embed-attribution">
-        <span>Copy the HTML below to embed the attribution in your website</span>
+        <span>
+          Copy the HTML below to embed the attribution with license icons in your web page
+        </span>
         <textarea id="attribution-html"
                   :value="attributionHtml"
                   cols="30" rows="4"
                   readonly="readonly">
         </textarea>
         <CopyButton id="embed-attribution-btn"
-                    el="#attribution-html"
-                    title="Copy the HTML to embed the attribution in your web page"
-                    @copied="onEmbedAttribution">
-          Embed Attribution
+                  el="#attribution-html"
+                  title="Copy the HTML to embed the attribution with license icons in your web page"
+                  @copied="onEmbedAttribution">
+          Copy HTML
         </CopyButton>
       </div>
-    <legal-disclaimer :source="image.provider" :sourceURL="image.foreign_landing_url" />
+      <reuse-survey />
+      <legal-disclaimer :source="image.provider" :sourceURL="image.foreign_landing_url" />
     </div>
   </section>
 </template>
@@ -50,6 +54,7 @@
 import LicenseIcons from '@/components/LicenseIcons';
 import CopyButton from '@/components/CopyButton';
 import LegalDisclaimer from '@/components/LegalDisclaimer';
+import ReuseSurvey from '@/components/ReuseSurvey';
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
 
 export default {
@@ -59,6 +64,12 @@ export default {
     LicenseIcons,
     CopyButton,
     LegalDisclaimer,
+    ReuseSurvey,
+  },
+  computed: {
+    licenseURL() {
+      return `${this.ccLicenseURL}&atype=rich`;
+    },
   },
   methods: {
     onCopyAttribution(e) {

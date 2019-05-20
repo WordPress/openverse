@@ -2,7 +2,7 @@
 <footer class="footer secondary">
    <div class="grid-container full">
       <div class="grid-x grid-margin-x grid-margin-y">
-        <div class="medium-3 cell">
+        <div class="medium-4 cell">
           <a href="https://creativecommons.org/">
             <img class="footer_logo" src="../assets/cc-logo_white.png">
           </a>
@@ -17,7 +17,7 @@
             </div>
         </div>
       </div>
-        <div class="medium-3 large-3 medium-offset-1 large-offset-1 cell">
+        <div class="medium-4 cell">
           <div class="column footer_contact">
             <h6><a href="https://creativecommons.org/about/contact/">We'd love to hear from you!</a></h6>
               <address>
@@ -30,7 +30,7 @@
               </ul>
           </div>
         </div>
-        <div class="medium-3 large-3 medium-offset-1 large-offset-1 cell footer_license">
+        <div class="medium-4 cell footer_license">
           <aside>
           <div xmlns:cc="https://creativecommons.org/ns#"
                about="https://creativecommons.org">

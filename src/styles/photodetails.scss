@@ -4,6 +4,7 @@
 
 .photo_license {
   text-transform: uppercase;
+  margin-right: 5px;
 }
 
 .search-grid {
@@ -27,7 +28,6 @@
   display: block;
   text-align: left;
   font-size: .9em;
-  margin-top: -10px;
 }
 
 .photo_image-ctr {
@@ -57,8 +57,6 @@
     .sidebar_section-header {
       margin-left: 0px;
     }
-
-    padding: 0 15px 15px 15px;
   }
 
   h4 {
@@ -106,21 +104,18 @@
 }
 
 .photo-attribution {
-  font-size: 0.9rem;
   margin-top: 1rem;
   font-style: italic;
-  text-align: left;
 }
 
 .photo_usage-attribution {
   border-left: 1px solid #e7e8e9;;
   padding-left: 10px;
-  padding-bottom: 15px
 }
 
 .photo_related-images,
 .photo_tags {
-  margin: 30px;
+  margin-top: 30px;
   border-top: 1px solid #e7e8e9;
   width: 100%;
 
@@ -182,6 +177,11 @@ label {
 
 .tabs {
   border-bottom: none;
+  border-right: none;
+}
+
+.tabs-panel {
+  padding: 1rem 0 1rem 0;
 }
 
 .tabs-content {
@@ -194,11 +194,6 @@ label {
 
 .attribution-buttons {
   margin-top: 8px;
-}
-
-.provider-logo {
-  height: 48px;
-  margin: 6px 0 0px 0;
 }
 
 .button-group {
