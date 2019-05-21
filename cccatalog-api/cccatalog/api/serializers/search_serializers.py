@@ -3,6 +3,48 @@ from cccatalog.api.licenses import LICENSE_GROUPS
 from cccatalog.api.controllers.search_controller import get_providers
 
 
+def _validate_page(value):
+    if value < 1:
+        return 1
+    else:
+        return value
+
+
+def _validate_pagesize(value):
+    if 1 <= value < 500:
+        return value
+    else:
+        return 20
+
+
+class BrowseImageQueryStringSerializer(serializers.Serializer):
+    page = serializers.IntegerField(
+        label="page number",
+        help_text="The page number to retrieve.",
+        default=1
+    )
+    pagesize = serializers.IntegerField(
+        label="page size",
+        help_text="The number of results to return in the requested page. "
+                  "Should be an integer between 1 and 500.",
+        default=20
+    )
+    filter_dead = serializers.BooleanField(
+        label="filter_dead",
+        help_text="Control whether 404 links are filtered out.",
+        required=False,
+        default=True
+    )
+
+    @staticmethod
+    def validate_page(value):
+        return _validate_page(value)
+
+    @staticmethod
+    def validate_pagesize(value):
+        return _validate_pagesize(value)
+
+
 class ImageSearchQueryStringSerializer(serializers.Serializer):
     """ Base class for search query parameters. """
 
@@ -75,7 +117,8 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         default=False
     )
 
-    def validate_q(self, value):
+    @staticmethod
+    def validate_q(value):
         if len(value) > 200:
             return value[0:199]
         else:
@@ -90,7 +133,8 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     def validate_title(self, value):
         return self.validate_q(value)
 
-    def validate_li(self, value):
+    @staticmethod
+    def validate_li(value):
         licenses = [x.upper() for x in value.split(',')]
         for _license in licenses:
             if _license not in LICENSE_GROUPS['all']:
@@ -99,7 +143,8 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
                 )
         return value.lower()
 
-    def validate_lt(self, value):
+    @staticmethod
+    def validate_lt(value):
         """
         Resolves a list of license types to a list of licenses.
         Example: commercial -> ['BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM']
@@ -117,19 +162,16 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
 
         return ','.join(list(cleaned))
 
-    def validate_page(self, value):
-        if value < 1:
-            return 1
-        else:
-            return value
+    @staticmethod
+    def validate_page(value):
+        return _validate_page(value)
 
-    def validate_pagesize(self, value):
-        if 1 <= value < 500:
-            return value
-        else:
-            return 20
+    @staticmethod
+    def validate_pagesize(value):
+        return _validate_pagesize(value)
 
-    def validate_provider(self, input_providers):
+    @staticmethod
+    def validate_provider(input_providers):
         allowed_providers = list(get_providers('image').keys())
 
         for input_provider in input_providers.split(','):

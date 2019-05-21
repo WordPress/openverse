@@ -300,3 +300,11 @@ def test_attribution():
     print(all_data_present.attribution)
     assert title in all_data_present.attribution
     assert creator in all_data_present.attribution
+
+
+def test_browse_by_provider():
+    response = requests.get(API_URL + '/image/browse/behance',
+                            verify=False)
+    assert response.status_code == 200
+    parsed = json.loads(response.text)
+    assert parsed['result_count'] > 0
