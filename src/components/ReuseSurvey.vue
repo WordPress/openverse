@@ -2,7 +2,7 @@
   <div class="reuse-survey">
     <span>How are you using this image?</span>
     <span>Let us know how you use this image in</span>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeSApxNMup8Ujt-8Vjv53ngltzhJeaHspMykHCD8VKQ39yXAA/viewform">
+    <a :href="formLink">
       this quick survey
     </a>
   </div>
@@ -11,6 +11,12 @@
 <script>
 export default {
   name: 'reuse-survey',
+  computed: {
+    formLink() {
+      const location = window.location.href;
+      return `https://docs.google.com/forms/d/e/1FAIpQLSeNTNdcq8_UI1OiWGKwvnA58ydy0HVHsRmSmRUAc_he-CDa0A/viewform?usp=pp_url&entry.1409847454=${location}`;
+    },
+  },
 };
 </script>
 
