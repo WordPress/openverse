@@ -124,7 +124,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
             return value
 
     def validate_pagesize(self, value):
-        if 1 <= value < 500:
+        if 1 <= value <= 500:
             return value
         else:
             return 20
