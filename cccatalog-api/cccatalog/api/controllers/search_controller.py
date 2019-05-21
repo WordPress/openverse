@@ -7,11 +7,24 @@ from elasticsearch_dsl.response import Response
 from cccatalog import settings
 from django.core.cache import cache
 from cccatalog.api.models import ContentProvider
-
+from rest_framework import serializers
 import logging as log
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 CACHE_TIMEOUT = 10
+
+
+def _paginate_search(s: Search, page_size: int, page: int):
+    """
+    Select the start and end of the search results for this query.
+    """
+    # Paginate search query.
+    start_slice = page_size * (page - 1)
+    end_slice = page_size * page
+    if start_slice + end_slice > ELASTICSEARCH_MAX_RESULT_WINDOW:
+        raise ValueError("Deep pagination is not allowed.")
+    s = s[start_slice:end_slice]
+    return s
 
 
 def search(search_params, index, page_size, ip, page=1) -> Response:
@@ -30,13 +43,7 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
     :return: An Elasticsearch Response object.
     """
     s = Search(index=index)
-
-    # Paginate search query.
-    start_slice = page_size * (page - 1)
-    end_slice = page_size * page
-    if start_slice + end_slice > ELASTICSEARCH_MAX_RESULT_WINDOW:
-        raise ValueError("Deep pagination is not allowed.")
-    s = s[start_slice:end_slice]
+    s = _paginate_search(s, page_size, page)
 
     # If any filters are specified, add them to the query.
     if 'li' in search_params.data or 'lt' in search_params.data:
@@ -96,6 +103,29 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
 
     s.extra(track_scores=True)
     s = s.params(preference=str(ip))
+    search_response = s.execute()
+    return search_response
+
+
+def _validate_provider(input_provider):
+    allowed_providers = list(get_providers('image').keys())
+    if input_provider not in allowed_providers:
+        raise serializers.ValidationError(
+            "Provider \'{}\' does not exist.".format(input_provider)
+        )
+    return input_provider.lower()
+
+
+def browse_by_provider(provider, index, page_size, ip, page=1):
+    """
+    Allow users to browse image collections without entering a search query.
+    """
+    _validate_provider(provider)
+    s = Search(index=index)
+    s = _paginate_search(s, page_size, page)
+    s = s.params(preference=str(ip))
+    provider_filter = Q('term', provider=provider)
+    s = s.filter('bool', should=provider_filter, minimum_should_match=1)
     search_response = s.execute()
     return search_response
 

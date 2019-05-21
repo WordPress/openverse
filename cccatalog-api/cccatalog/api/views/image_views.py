@@ -2,6 +2,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import serializers
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils.validate_images import validate_images
@@ -9,7 +10,8 @@ from cccatalog.api.utils import ccrel
 from rest_framework.reverse import reverse
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
-    ValidationErrorSerializer, ImageSearchQueryStringSerializer
+    ValidationErrorSerializer, ImageSearchQueryStringSerializer, \
+    BrowseImageQueryStringSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer,\
     WatermarkQueryStringSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
@@ -37,6 +39,10 @@ URL = 'url'
 THUMBNAIL_WIDTH_PX = 600
 PROVIDER = 'provider'
 QA = 'qa'
+RESULT_COUNT = 'result_count'
+PAGE_COUNT = 'page_count'
+
+DEEP_PAGINATION_ERROR = 'Deep pagination is not allowed.'
 
 
 def _add_protocol(url: str):
@@ -50,6 +56,62 @@ def _add_protocol(url: str):
         return 'https://' + url
     else:
         return url
+
+
+def _get_page_count(search_results, page_size):
+    """
+    Elasticsearch does not allow deep pagination of ranked queries.
+    Adjust returned page count to reflect this.
+    :param search_results: The Elasticsearch response object containing search
+    results.
+    """
+    natural_page_count = int(search_results.hits.total / page_size)
+    last_allowed_page = int((5000 + page_size / 2) / page_size)
+    page_count = min(natural_page_count, last_allowed_page)
+    return page_count
+
+
+def _post_process_results(search_results, request, filter_dead):
+    """
+    After fetching the search results from the back end, iterate through the
+    results, add links to detail views, perform image validation, and route
+    certain thumbnails through out proxy.
+    :param search_results: The Elasticsearch response object containing search
+    results.
+    :param request: The Django request object, used to build a "reversed" URL
+    to detail pages.
+    :param filter_dead: Whether images should be validated.
+    """
+    results = []
+    to_validate = []
+    for res in search_results:
+        url = request.build_absolute_uri(
+            reverse('image-detail', [res.identifier])
+        )
+        res.detail = url
+        to_validate.append(res.url)
+        if PROXY_THUMBS:
+            # Proxy thumbnails from providers who don't provide SSL. We also
+            # have a list of providers that have poor quality or no thumbnails,
+            # so we produce our own on-the-fly.
+            provider = res[PROVIDER]
+            if THUMBNAIL in res and provider not in PROXY_ALL:
+                to_proxy = THUMBNAIL
+            else:
+                to_proxy = URL
+            if 'http://' in res[to_proxy] or provider in PROXY_ALL:
+                original = res[to_proxy]
+                secure = '{proxy_url}/{width}/{original}'.format(
+                    proxy_url=THUMBNAIL_PROXY_URL,
+                    width=THUMBNAIL_WIDTH_PX,
+                    original=original
+                )
+                res[THUMBNAIL] = secure
+        results.append(res)
+
+    if filter_dead:
+        validate_images(results, to_validate)
+    return results
 
 
 class SearchImages(APIView):
@@ -101,65 +163,89 @@ class SearchImages(APIView):
             return Response(
                 status=400,
                 data={
-                    VALIDATION_ERROR: 'Deep pagination is not allowed.'
+                    VALIDATION_ERROR: DEEP_PAGINATION_ERROR
                 }
             )
 
-        # Fetch each result from Elasticsearch. Resolve links to detail views.
-        results = []
-        to_validate = []
-        for result in search_results:
-            url = request.build_absolute_uri(
-                reverse('image-detail', [result.identifier])
-            )
-            result.detail = url
-            to_validate.append(result.url)
-            results.append(result)
-        if params.data[FILTER_DEAD]:
-            validate_images(results, to_validate)
-        serialized_results =\
-            ImageSerializer(results, many=True).data
-        # Elasticsearch does not allow deep pagination of ranked queries.
-        # Adjust returned page count to reflect this.
-        natural_page_count = int(search_results.hits.total / page_size)
-        last_allowed_page = int((5000 + page_size / 2) / page_size)
-        page_count = min(natural_page_count, last_allowed_page)
+        filter_dead = params.data[FILTER_DEAD]
+        results = _post_process_results(search_results, request, filter_dead)
+        serialized_results = ImageSerializer(results, many=True).data
+        page_count = _get_page_count(search_results, page_size)
 
         result_count = search_results.hits.total
         if len(results) < page_size and page_count == 0:
             result_count = len(results)
         response_data = {
-            'result_count': result_count,
+            RESULT_COUNT: result_count,
+            PAGE_COUNT: page_count,
+            RESULTS: serialized_results
+        }
+        serialized_response = ImageSearchResultsSerializer(data=response_data)
+        return Response(status=200, data=serialized_response.initial_data)
+
+
+class BrowseImages(APIView):
+    """
+    Browse a collection of CC images by provider, such as the Metropolitan
+    Museum of Art.. See `/statistics/image` for a list of valid
+    collections. The `provider_identifier` field should be used to select
+    the provider.
+
+    As with the `/image/search` endpoint, this is not intended to be used to
+    bulk download our entire collection of images; only the first ~10,000 images
+    in each collection are accessible.
+    """
+
+    @swagger_auto_schema(operation_id='image_browse',
+                         query_serializer=BrowseImageQueryStringSerializer,
+                         responses={
+                             200: ImageSearchResultsSerializer(many=True),
+                             400: ValidationErrorSerializer,
+                         })
+    def get(self, request, provider, format=None):
+        params = BrowseImageQueryStringSerializer(data=request.query_params)
+        if not params.is_valid():
+            return Response(
+                status=400,
+                data={
+                    "validation_error": params.errors
+                }
+            )
+        page_param = params.data[PAGE]
+        page_size = params.data[PAGESIZE]
+        try:
+            browse_results = search_controller.browse_by_provider(
+                provider,
+                index='image',
+                page_size=page_size,
+                page=page_param,
+                ip=hash(_get_user_ip(request))
+            )
+        except ValueError:
+            return Response(
+                status=400,
+                data={
+                    VALIDATION_ERROR: DEEP_PAGINATION_ERROR
+                }
+            )
+        except serializers.ValidationError:
+            return Response(
+                status=400,
+                data={
+                    VALIDATION_ERROR: 'Provider \'{}\' does not exist.'
+                    .format(provider)
+                }
+            )
+        filter_dead = params.data[FILTER_DEAD]
+        results = _post_process_results(browse_results, request, filter_dead)
+        serialized_results = ImageSerializer(results, many=True).data
+        page_count = _get_page_count(browse_results, page_size)
+        response_data = {
+            'result_count': browse_results.hits.total,
             'page_count': page_count,
             RESULTS: serialized_results
         }
-        # Post-process the search results to fix malformed URLs and insecure
-        # HTTP thumbnails.
-        for idx, res in enumerate(serialized_results):
-            if PROXY_THUMBS:
-                provider = res[PROVIDER]
-                # Proxy either the thumbnail or URL, depending on whether
-                # a thumbnail was provided.
-                if THUMBNAIL in res and provider not in PROXY_ALL:
-                    to_proxy = THUMBNAIL
-                else:
-                    to_proxy = URL
-                if 'http://' in res[to_proxy] or provider in PROXY_ALL:
-                    original = res[to_proxy]
-                    secure = '{proxy_url}/{width}/{original}'.format(
-                        proxy_url=THUMBNAIL_PROXY_URL,
-                        width=THUMBNAIL_WIDTH_PX,
-                        original=original
-                    )
-                    response_data[RESULTS][idx][THUMBNAIL] = secure
-            if FOREIGN_LANDING_URL in res:
-                foreign = _add_protocol(res[FOREIGN_LANDING_URL])
-                response_data[RESULTS][idx][FOREIGN_LANDING_URL] = foreign
-            if CREATOR_URL in res:
-                creator_url = _add_protocol(res[CREATOR_URL])
-                response_data[RESULTS][idx][CREATOR_URL] = creator_url
         serialized_response = ImageSearchResultsSerializer(data=response_data)
-
         return Response(status=200, data=serialized_response.initial_data)
 
 
