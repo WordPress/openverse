@@ -75,7 +75,6 @@ import ImageInfo from '@/components/ImageInfo';
 import Watermark from '@/components/Watermark';
 import ImageAttribution from '@/components/ImageAttribution';
 import ImageSocialShare from '@/components/ImageSocialShare';
-import decodeData from '@/utils/decodeData';
 import attributionHtml from '@/utils/attributionHtml';
 
 export default {
@@ -122,13 +121,6 @@ export default {
     attributionHtml() {
       const licenseURL = `${this.ccLicenseURL}&atype=html`;
       return attributionHtml(this.image, licenseURL, this.fullLicenseName);
-    },
-  },
-  watch: {
-    image() {
-      const image = this.image;
-      image.creator = decodeData(image.creator);
-      image.title = decodeData(image.title);
     },
   },
 };
