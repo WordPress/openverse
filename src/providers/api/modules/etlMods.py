@@ -69,7 +69,7 @@ def requestContent(_url, _headers=None):
         return None
 
 
-def getLicense(self, _domain, _path, _url):
+def getLicense(_domain, _path, _url):
 
         if 'creativecommons.org' not in _domain:
             logging.warning('The license for the following work -> {} is not issued by Creative Commons.'.format(_url))
