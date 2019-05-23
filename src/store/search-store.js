@@ -1,5 +1,6 @@
 import getParameterByName from '@/utils/getParameterByName';
 import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams';
+import decodeImageData from '@/utils/decodeImageData';
 import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from './action-types';
 import {
   FETCH_END_IMAGES,
@@ -118,7 +119,7 @@ const mutations = routePush => ({
     _state.isFetchingImages = false;
   },
   [SET_IMAGE](_state, params) {
-    _state.image = params.image;
+    _state.image = decodeImageData(params.image);
   },
   [SET_FILTER_IS_VISIBLE](_state, params) {
     _state.isFilterVisible = params.isFilterVisible;
@@ -134,12 +135,14 @@ const mutations = routePush => ({
     _state.relatedImagesCount = params.relatedImagesCount;
   },
   [SET_IMAGES](_state, params) {
+    let images = null;
     if (params.shouldPersistImages) {
-      _state.images = _state.images.concat(params.images);
+      images = _state.images.concat(params.images);
     }
     else {
-      _state.images = params.images;
+      images = params.images;
     }
+    _state.images = images.map(image => decodeImageData(image));
 
     _state.imagesCount = params.imagesCount || 0;
     _state.imagePage = params.page || 1;
