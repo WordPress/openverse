@@ -104,10 +104,10 @@ describe('Search Store', () => {
     });
 
     it('SET_IMAGE updates state', () => {
-      const params = { image: 'bar' };
+      const params = { image: { title: 'Foo', creator: 'bar', tags: [] } };
       mutations[SET_IMAGE](state, params);
 
-      expect(state.image).toBe(params.image);
+      expect(state.image).toEqual(params.image);
     });
 
     it('SET_FILTER_IS_VISIBLE updates state', () => {
@@ -125,7 +125,7 @@ describe('Search Store', () => {
     });
 
     it('SET_IMAGE_PAGE updates state', () => {
-      const params = { imagePage: 'bar' };
+      const params = { imagePage: 1 };
       mutations[SET_IMAGE_PAGE](state, params);
 
       expect(state.imagePage).toBe(params.imagePage);
@@ -140,28 +140,32 @@ describe('Search Store', () => {
     });
 
     it('SET_IMAGES updates state persisting images', () => {
-      state.images = ['img1'];
-      const params = { images: ['img2'], imagesCount: 2, page: 2, shouldPersistImages: true };
+      const img1 = { title: 'Foo', creator: 'foo', tags: [] };
+      const img2 = { title: 'Bar', creator: 'bar', tags: [] };
+      state.images = [img1];
+      const params = { images: [img2], imagesCount: 2, page: 2, shouldPersistImages: true };
       mutations[SET_IMAGES](state, params);
 
-      expect(state.images).toEqual(['img1', 'img2']);
+      expect(state.images).toEqual([img1, img2]);
       expect(state.imagesCount).toBe(params.imagesCount);
       expect(state.imagePage).toBe(params.page);
     });
 
     it('SET_IMAGES updates state not persisting images', () => {
+      const img = { title: 'Foo', creator: 'bar', tags: [] };
       state.images = ['img1'];
-      const params = { images: ['img2'], imagesCount: 2, page: 2, shouldPersistImages: false };
+      const params = { images: [img], imagesCount: 2, page: 2, shouldPersistImages: false };
       mutations[SET_IMAGES](state, params);
 
-      expect(state.images).toEqual(['img2']);
+      expect(state.images).toEqual([img]);
       expect(state.imagesCount).toBe(params.imagesCount);
       expect(state.imagePage).toBe(params.page);
     });
 
     it('SET_IMAGES updates state with default count and page', () => {
+      const img = { title: 'Foo', creator: 'bar', tags: [] };
       state.images = ['img1'];
-      const params = { images: ['img2'] };
+      const params = { images: [img] };
       mutations[SET_IMAGES](state, params);
 
       expect(state.imagesCount).toBe(0);

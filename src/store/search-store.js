@@ -1,6 +1,6 @@
 import getParameterByName from '@/utils/getParameterByName';
 import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams';
-import decodeData from '@/utils/decodeData';
+import decodeImageData from '@/utils/decodeImageData';
 import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from './action-types';
 import {
   FETCH_END_IMAGES,
@@ -103,13 +103,6 @@ const actions = ImageService => ({
         throw new Error(error);
       });
   },
-});
-
-const decodeImageData = image => ({
-  ...image,
-  creator: decodeData(image.creator),
-  title: decodeData(image.title),
-  tags: image.tags ? image.tags.map(tag => ({ ...tag, name: decodeData(tag.name) })) : [],
 });
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
