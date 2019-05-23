@@ -8,6 +8,7 @@ import argparse
 import random
 from datetime import datetime, timedelta
 import sys
+from urllib.parse import urlparse
 
 PATH    = os.environ['OUTPUT_DIR']
 
