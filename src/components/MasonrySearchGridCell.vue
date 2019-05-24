@@ -43,7 +43,7 @@ const toAbsolutePath = (url, prefix = 'https://') => {
 
 export default {
   name: 'masonry-search-grid-cell',
-  props: ['image', 'includeAddToList', 'shouldContainImage'],
+  props: ['image', 'shouldContainImage'],
   components: {
     LicenseIcons,
   },

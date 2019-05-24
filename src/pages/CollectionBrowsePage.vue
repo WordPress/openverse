@@ -22,10 +22,11 @@ import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
-import { FETCH_IMAGES } from '@/store/action-types';
+import { FETCH_COLLECTION_IMAGES } from '@/store/action-types';
 
-const BrowsePage = {
-  name: 'browse-page',
+const CollectionBrowsePage = {
+  name: 'collection-browse-page',
+  props: ['provider'],
   components: {
     HeaderSection,
     SearchGridForm,
@@ -39,7 +40,7 @@ const BrowsePage = {
   },
   methods: {
     getImages(params) {
-      this.$store.dispatch(FETCH_IMAGES, params);
+      this.$store.dispatch(FETCH_COLLECTION_IMAGES, params);
     },
     onLoadMoreImages(searchParams) {
       this.getImages(searchParams);
@@ -53,7 +54,7 @@ const BrowsePage = {
   },
 };
 
-export default BrowsePage;
+export default CollectionBrowsePage;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
