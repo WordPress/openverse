@@ -44,7 +44,7 @@ const ImageProviderService = {
         logo: 'met_logo.png',
       },
       museumsvictoria: {
-        logo: 'museumvictoria_logo.svg',
+        logo: 'museumvictoria_logo.png',
       },
       nhl: {
         logo: 'nhm_logo.png',

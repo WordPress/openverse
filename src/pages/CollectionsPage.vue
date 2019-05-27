@@ -1,17 +1,23 @@
 <template>
-  <div class="grid-container full">
+  <div>
     <header-section></header-section>
-    <div class="collections-page">
-        <h1>Browser our providers' collections</h1>
-      <div class="providers-list">
-        <div class="card provider-card" v-for="(provider, index) in providers"
+    <div class="collections-page grid-container full">
+      <h1>Browser our providers' collections</h1>
+      <div class="providers-list grid-x">
+        <div class="card provider-card cell small" v-for="(provider, index) in providers"
             :key="index">
-          <span>{{ provider.display_name }}</span>
-          <a :href="'/collections/'+provider.provider_name">
-            <img class="search-grid_overlay-provider-logo" :alt="provider"
-                    :src="getProviderLogo(provider.provider_name)">
-          </a>
-          <span>Collection size: {{ getProviderImageCount(provider.image_count) }} images</span>
+          <div class="card-divider">
+            <h2 class="provider-name">{{ provider.display_name }}</h2>
+          </div>
+          <div class="provider-logo">
+            <a :href="'/collections/'+provider.provider_name">
+              <img :alt="provider"
+                  :src="getProviderLogo(provider.provider_name)">
+            </a>
+          </div>
+          <div class="card-section">
+            <span>Collection size: {{ getProviderImageCount(provider.image_count) }} images</span>
+          </div>
         </div>
       </div>
     </div>
@@ -72,7 +78,30 @@ export default CollectionsPage;
   }
 
   .provider-card {
-    width: 300px;
+    width: 15em;
     background-color: #dedede;
+    margin: 0.5em;
+  }
+
+  .provider-name {
+    font-size: 1.2em;
+  }
+
+  .provider-logo {
+    height: 16em;
+    line-height: 16em;
+    white-space: nowrap;
+    position: relative;
+
+    a {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    img {
+      width: 100%;
+    }
   }
 </style>
