@@ -2,9 +2,7 @@
   <div class="browse-page">
     <div class="search grid-x flexible">
       <div class="cell">
-        <header-section>
-          <search-grid-form></search-grid-form>
-        </header-section>
+        <header-section showNavSearch="true"></header-section>
       </div>
       <div :class="{ 'cell search-grid-ctr': true }">
         <search-grid v-if="query.q"
@@ -35,7 +33,10 @@ const CollectionBrowsePage = {
   },
   computed: {
     query() {
-      return this.$store.state.query;
+      return {
+        ...this.$store.state.query,
+        q: this.$props.provider,
+      };
     },
   },
   methods: {
