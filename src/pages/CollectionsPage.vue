@@ -88,8 +88,8 @@ export default CollectionsPage;
   }
 
   .provider-logo {
-    height: 16em;
-    line-height: 16em;
+    height: 10em;
+    line-height: 10em;
     white-space: nowrap;
     position: relative;
 
