@@ -4,21 +4,10 @@
     <div class="collections-page grid-container full">
       <h1>Browser our providers' collections</h1>
       <div class="providers-list grid-x">
-        <div class="card provider-card cell small" v-for="(provider, index) in providers"
-            :key="index">
-          <div class="card-divider">
-            <h2 class="provider-name">{{ provider.display_name }}</h2>
-          </div>
-          <div class="provider-logo">
-            <a :href="'/collections/'+provider.provider_name">
-              <img :alt="provider"
-                  :src="getProviderLogo(provider.provider_name)">
-            </a>
-          </div>
-          <div class="card-section">
-            <span>Collection size: {{ getProviderImageCount(provider.image_count) }} images</span>
-          </div>
-        </div>
+        <collection-item class="card provider-card cell small"
+                         v-for="(provider, index) in providers"
+                         :key="index"
+                         :provider="provider" />
       </div>
     </div>
     <footer-section></footer-section>
@@ -26,7 +15,7 @@
 </template>
 
 <script>
-import ImageProviderService from '@/api/ImageProviderService';
+import CollectionItem from '@/components/CollectionItem';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 
@@ -35,26 +24,11 @@ const CollectionsPage = {
   components: {
     HeaderSection,
     FooterSection,
+    CollectionItem,
   },
   computed: {
     providers() {
       return this.$store.state.imageProviders;
-    },
-  },
-  methods: {
-    getProviderImageCount(imageCount) {
-      return (imageCount).toLocaleString('en');
-    },
-    getProviderLogo(providerName) {
-      const provider = ImageProviderService.getProviderInfo(providerName);
-      if (provider) {
-        const logo = provider.logo;
-        const logoUrl = require(`@/assets/${logo}`); // eslint-disable-line global-require, import/no-dynamic-require
-
-        return logoUrl;
-      }
-
-      return '';
     },
   },
 };
@@ -75,33 +49,5 @@ export default CollectionsPage;
 
   .collections-page {
     margin: 45px !important;
-  }
-
-  .provider-card {
-    width: 15em;
-    background-color: #dedede;
-    margin: 0.5em;
-  }
-
-  .provider-name {
-    font-size: 1.2em;
-  }
-
-  .provider-logo {
-    height: 10em;
-    line-height: 10em;
-    white-space: nowrap;
-    position: relative;
-
-    a {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    img {
-      width: 100%;
-    }
   }
 </style>
