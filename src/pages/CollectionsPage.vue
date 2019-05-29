@@ -3,8 +3,8 @@
     <header-section></header-section>
     <div class="collections-page grid-container full">
       <h1>Browser our providers' collections</h1>
+      <h2>Featured providers</h2>
       <div class="providers-list grid-x">
-        <h2>Featured providers</h2>
         <collection-item class="card provider-card cell small"
                         v-for="(provider, index) in featuredProviders"
                         :key="index"
