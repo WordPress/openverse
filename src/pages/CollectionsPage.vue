@@ -4,10 +4,18 @@
     <div class="collections-page grid-container full">
       <h1>Browser our providers' collections</h1>
       <div class="providers-list grid-x">
+        <h2>Featured providers</h2>
         <collection-item class="card provider-card cell small"
-                         v-for="(provider, index) in providers"
-                         :key="index"
-                         :provider="provider" />
+                        v-for="(provider, index) in featuredProviders"
+                        :key="index"
+                        :provider="provider" />
+      </div>
+      <hr />
+      <div class="providers-list grid-x">
+        <collection-item class="card provider-card cell small"
+                          v-for="(provider, index) in otherProviders"
+                          :key="index"
+                          :provider="provider" />
       </div>
     </div>
     <footer-section></footer-section>
@@ -19,6 +27,8 @@ import CollectionItem from '@/components/CollectionItem';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 
+const FEATURED_PROVIDERS = ['flickr', 'behance', 'met', 'clevelandmuseum'];
+
 const CollectionsPage = {
   name: 'collections-page',
   components: {
@@ -27,6 +37,22 @@ const CollectionsPage = {
     CollectionItem,
   },
   computed: {
+    featuredProviders() {
+      if (this.providers) {
+        return this.providers.filter(
+          provider => FEATURED_PROVIDERS.indexOf(provider.provider_name) >= 0,
+        );
+      }
+      return [];
+    },
+    otherProviders() {
+      if (this.providers) {
+        return this.providers.filter(
+          provider => FEATURED_PROVIDERS.indexOf(provider.provider_name) === -1,
+        );
+      }
+      return [];
+    },
     providers() {
       return this.$store.state.imageProviders;
     },
@@ -40,8 +66,6 @@ export default CollectionsPage;
 <style lang="scss" scoped>
   h1 {
     margin-bottom: .44117647em;
-    font-size: 2.125em;
-    font-weight: normal;
     letter-spacing: initial;
     line-height: 1.25;
     text-transform: initial;
