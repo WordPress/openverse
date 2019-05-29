@@ -1,5 +1,5 @@
 <template>
-  <header class="header nav">
+  <nav class="header nav">
     <a class="logo" href="/">
       <img src="../assets/cc-search-logo-white.png">
     </a>
@@ -26,7 +26,7 @@
         </form>
       </li>
     </ul>
-  </header>
+  </nav>
 </template>
 
 <script>
