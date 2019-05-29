@@ -14,7 +14,7 @@ export default {
   computed: {
     formLink() {
       const location = window.location.href;
-      return `https://docs.google.com/forms/d/e/1FAIpQLSeNTNdcq8_UI1OiWGKwvnA58ydy0HVHsRmSmRUAc_he-CDa0A/viewform?usp=pp_url&entry.1409847454=${location}`;
+      return `https://docs.google.com/forms/d/e/1FAIpQLSeSApxNMup8Ujt-8Vjv53ngltzhJeaHspMykHCD8VKQ39yXAA/viewform?usp=pp_url&entry.1690035721=${location}`;
     },
   },
 };
