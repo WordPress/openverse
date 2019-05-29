@@ -64,12 +64,6 @@ export default CollectionBrowsePage;
 <style lang="scss">
   .search-grid {
     margin: 30px 30px 60px 30px;
-
-
-    /* Small only */
-    @media screen and (max-width: 39.9375em) {
-      margin: 165px 15px 30px 15px;
-    }
   }
 
   .search-grid-ctr {

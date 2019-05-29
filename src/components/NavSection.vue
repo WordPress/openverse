@@ -9,7 +9,7 @@
       <li><a href="/collections">Collections</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="/feedback">Feedback</a></li>
-      <li v-if="showNavSearch ==='true'">
+      <li class="nav_search" v-if="showNavSearch ==='true'">
         <form class="hero_search-form"
               role="search"
               method="post"
@@ -55,7 +55,6 @@ export default {
 }
 
 .logo > img {
-  margin: 0px 0 9px 0;
   height: 42px;
   padding-right: 11px;
 }
@@ -82,7 +81,7 @@ export default {
   display: block;
   float: left;
   font-size: 2em;
-  padding: 10px 20px;
+  padding: 3px 20px;
   text-decoration: none;
 }
 
@@ -98,7 +97,6 @@ export default {
 
 .header .menu_icon {
   cursor: pointer;
-  display: inline-block;
   float: right;
   padding: 28px 20px;
   position: relative;
@@ -168,6 +166,9 @@ export default {
   .menu {
     display: inline;
   }
+  .header .nav_search {
+    float: right;
+  }
   .header li {
     float: left;
   }
@@ -189,6 +190,58 @@ export default {
   border-radius: 2px;
   &:hover {
     background: #1e96c2;
+  }
+}
+
+.hero_search-form {
+  margin: 0 15px;
+  /* Large and up */
+  @media screen and (min-width: 64em) {
+    float: right;
+  }
+  @media screen and (max-width: 63em) {
+    display: none;
+  }
+}
+
+.input-group-rounded {
+  margin: 9px 0;
+  width: 315px;
+  max-width: 100%;
+  .input-group-field {
+    border-radius: 3px;
+    padding-left: 1rem;
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(36, 36, 36, 0.5);;
+    box-shadow: none;
+    &:focus {
+      border-color: rgb(255, 255, 255);
+    }
+
+    &::placeholder {
+      color: #1c1c1c;
+    }
+  }
+  .input-group-button .button {
+    border-radius: 3px;
+    font-size: 0.8rem;
+    height: 100%;
+    position: relative;
+    left: calc( -100% - 10px );
+    background: none;
+    &:after {
+      content: '';
+      background: url('../assets/search-icon_black.svg') center center no-repeat;
+      background-size: 20px;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      position: absolute;
+      z-index: 10;
+      opacity: .2;
+    }
   }
 }
 </style>
