@@ -3,14 +3,15 @@
     <header-section></header-section>
     <div class="collections-page grid-container full">
       <h1>Browser our providers' collections</h1>
-      <h2>Featured providers</h2>
+      <h2>Museum Collections</h2>
       <div class="providers-list grid-x">
         <collection-item class="card provider-card cell small"
-                        v-for="(provider, index) in featuredProviders"
+                        v-for="(provider, index) in museumProviders"
                         :key="index"
                         :provider="provider" />
       </div>
       <hr />
+      <h2>Other Collections</h2>
       <div class="providers-list grid-x">
         <collection-item class="card provider-card cell small"
                           v-for="(provider, index) in otherProviders"
@@ -27,7 +28,10 @@ import CollectionItem from '@/components/CollectionItem';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 
-const FEATURED_PROVIDERS = ['flickr', 'behance', 'met', 'clevelandmuseum'];
+const MUSEUM_PROVIDERS = [
+  'brooklynmuseum', 'clevelandmuseum', 'digitaltmuseum', 'met', 'museumsvictoria',
+  'nhl', 'rijksmuseum', 'sciencemuseum', 'thorvaldsensmuseum',
+];
 
 const CollectionsPage = {
   name: 'collections-page',
@@ -37,10 +41,10 @@ const CollectionsPage = {
     CollectionItem,
   },
   computed: {
-    featuredProviders() {
+    museumProviders() {
       if (this.providers) {
         return this.providers.filter(
-          provider => FEATURED_PROVIDERS.indexOf(provider.provider_name) >= 0,
+          provider => MUSEUM_PROVIDERS.indexOf(provider.provider_name) >= 0,
         );
       }
       return [];
@@ -48,7 +52,7 @@ const CollectionsPage = {
     otherProviders() {
       if (this.providers) {
         return this.providers.filter(
-          provider => FEATURED_PROVIDERS.indexOf(provider.provider_name) === -1,
+          provider => MUSEUM_PROVIDERS.indexOf(provider.provider_name) === -1,
         );
       }
       return [];
