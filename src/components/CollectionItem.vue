@@ -5,7 +5,7 @@
     </div>
     <div class="provider-logo">
       <a :href="'/collections/'+provider.provider_name">
-        <img :alt="provider"
+        <img :alt="provider.display_name"
             :src="getProviderLogo(provider.provider_name)">
       </a>
     </div>
