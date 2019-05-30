@@ -11,7 +11,7 @@ import {
   SET_QUERY,
   SET_RELATED_IMAGES,
 } from '@/store/mutation-types';
-import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
+import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES, FETCH_COLLECTION_IMAGES } from '@/store/action-types';
 
 
 describe('Search Store', () => {
@@ -228,6 +228,7 @@ describe('Search Store', () => {
     beforeEach(() => {
       imageServiceMock = {
         search: jest.fn(() => Promise.resolve({ data: searchData })),
+        getProviderCollection: jest.fn(() => Promise.resolve({ data: searchData })),
         getImageDetail: jest.fn(() => Promise.resolve({ data: imageDetailData })),
       };
       commit = jest.fn();
@@ -254,12 +255,44 @@ describe('Search Store', () => {
       });
     });
 
+    it('FETCH_COLLECTION_IMAGES on success', (done) => {
+      const params = { query: { q: 'met' }, page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(commit).toBeCalledWith(FETCH_START_IMAGES);
+        expect(commit).toBeCalledWith(FETCH_END_IMAGES);
+
+        expect(commit).toBeCalledWith(SET_IMAGES, {
+          images: searchData.results,
+          imagesCount: searchData.result_count,
+          shouldPersistImages: params.shouldPersistImages,
+          page: params.page,
+        });
+
+        expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
+        done();
+      });
+    });
+
     it('FETCH_IMAGES on error', (done) => {
       const failedMock = {
         search: jest.fn(() => Promise.reject('error')),
       };
       const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
       const action = store.actions(failedMock)[FETCH_IMAGES];
+      action({ commit }, params).catch(() => {
+        expect(commit).toBeCalledWith(FETCH_START_IMAGES);
+        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
+        done();
+      });
+    });
+
+    it('FETCH_COLLECTION_IMAGES on error', (done) => {
+      const failedMock = {
+        getProviderCollection: jest.fn(() => Promise.reject('error')),
+      };
+      const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
+      const action = store.actions(failedMock)[FETCH_COLLECTION_IMAGES];
       action({ commit }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
