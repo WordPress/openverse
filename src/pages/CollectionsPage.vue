@@ -2,7 +2,7 @@
   <div>
     <header-section></header-section>
     <div class="collections-page grid-container full">
-      <h1>Browser our providers' collections</h1>
+      <h1>Browse collections</h1>
       <h2>Museum Collections</h2>
       <div class="providers-list grid-x">
         <collection-item class="card provider-card cell small"
