@@ -2,9 +2,7 @@
   <div class="browse-page">
     <div class="search grid-x flexible">
       <div class="cell">
-        <header-section>
-          <search-grid-form></search-grid-form>
-        </header-section>
+        <header-section showNavSearch="true"></header-section>
       </div>
       <div :class="{ 'cell search-grid-ctr': true }">
         <search-grid v-if="query.q"
@@ -22,10 +20,11 @@ import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
-import { FETCH_IMAGES } from '@/store/action-types';
+import { FETCH_COLLECTION_IMAGES } from '@/store/action-types';
 
-const BrowsePage = {
-  name: 'browse-page',
+const CollectionBrowsePage = {
+  name: 'collection-browse-page',
+  props: ['provider'],
   components: {
     HeaderSection,
     SearchGridForm,
@@ -34,12 +33,15 @@ const BrowsePage = {
   },
   computed: {
     query() {
-      return this.$store.state.query;
+      return {
+        ...this.$store.state.query,
+        q: this.$props.provider,
+      };
     },
   },
   methods: {
     getImages(params) {
-      this.$store.dispatch(FETCH_IMAGES, params);
+      this.$store.dispatch(FETCH_COLLECTION_IMAGES, params);
     },
     onLoadMoreImages(searchParams) {
       this.getImages(searchParams);
@@ -53,7 +55,7 @@ const BrowsePage = {
   },
 };
 
-export default BrowsePage;
+export default CollectionBrowsePage;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

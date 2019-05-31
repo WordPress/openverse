@@ -8,6 +8,11 @@ const ImageService = {
   search(params) {
     return ApiService.query('image/search', params);
   },
+
+  getProviderCollection(params) {
+    return ApiService.query(`image/browse/${params.q}`, params);
+  },
+
   /**
    * Retreive image details by Id number.
    */

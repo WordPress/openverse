@@ -23,12 +23,6 @@
         </fieldset>
       </div>
     </div>
-    <ul class="search-grid_metrics-bar">
-      <li>What's</li>
-      <li><a href="/browse/trending">trending</a></li>
-      <li><a href="/browse/popular">popular</a></li>
-      <li><a href="/browse/new">new</a></li>
-    </ul>
     <div class="search-grid_ctr" ref="gridItems">
       <div
         class="masonry-layout"
@@ -40,8 +34,7 @@
           v-masonry-tile class="item"
           :key="image.id"
           :image="image"
-          :shouldContainImage="shouldContainImages"
-          :includeAddToList="includeAddToList" />
+          :shouldContainImage="shouldContainImages" />
       </div>
       <infinite-loading
         @infinite="onInfiniteHandler"
@@ -58,7 +51,7 @@
 <script>
 import Vue from 'vue';
 import { SET_IMAGES } from '@/store/mutation-types';
-import { FETCH_IMAGES } from '@/store/action-types';
+// import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
 import MasonrySearchGridCell from '@/components/MasonrySearchGridCell';
 import SearchGridFilter from '@/components/SearchGridFilter';
@@ -108,7 +101,7 @@ export default {
       return this.$store.state.isFetchingImages;
     },
     searchTerm() {
-      return this.$store.state.query.q;
+      return this.$props.query.q;
     },
     _images() {
       return this.useInfiniteScroll ? this.$store.state.images : this.images;
@@ -117,7 +110,7 @@ export default {
       return this.useInfiniteScroll ? this.$store.state.imagesCount : this.imagesCount;
     },
     _query() {
-      return this.useInfiniteScroll ? this.$store.state.query : this.query;
+      return this.$props.query;
     },
   },
   watch: {
@@ -174,7 +167,8 @@ export default {
         );
 
         this.$nextTick(() => {
-          this.$store.dispatch(FETCH_IMAGES, searchParams);
+          this.$emit('onLoadMoreImages', searchParams);
+          // this.$store.dispatch(FETCH_IMAGES, searchParams);
         });
       }
     },
@@ -208,30 +202,6 @@ export default {
   .infinite-loading-container {
     margin-top: 30px;
     width: 100%;
-  }
-
-  .search-grid_metrics-bar {
-    display: none;
-
-    margin: 15px 0 30px 0;
-
-    li {
-      display: inline-block;
-      padding: 0;
-      margin: 0;
-
-      a:hover {
-        border-bottom: 1px solid #1779ba;
-      }
-
-      &:after {
-        content: ' | ';
-      }
-
-      &:last-of-type:after {
-        content: '';
-      }
-    }
   }
 
   .search-grid_ctr {

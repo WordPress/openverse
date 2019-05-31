@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header>
     <nav-section :showNavSearch="showNavSearch"></nav-section>
      <slot></slot>
   </header>

@@ -5,6 +5,8 @@ import HomePage from '@/pages/HomePage';
 import BrowsePage from '@/pages/BrowsePage';
 import PhotoDetailPage from '@/pages/PhotoDetailPage';
 import FeedbackPage from '@/pages/FeedbackPage';
+import CollectionsPage from '@/pages/CollectionsPage';
+import CollectionBrowsePage from '@/pages/CollectionBrowsePage';
 
 Vue.use(VueRouter);
 
@@ -32,6 +34,17 @@ const router = new VueRouter({
       path: '/feedback',
       name: 'feedback-page',
       component: FeedbackPage,
+    },
+    {
+      path: '/collections',
+      name: 'collections-page',
+      component: CollectionsPage,
+    },
+    {
+      path: '/collections/:provider',
+      name: 'collections-browse-page',
+      component: CollectionBrowsePage,
+      props: true,
     },
     {
       path: '/',

@@ -1,33 +1,31 @@
 <template>
-  <nav class="nav grid-x grid-padding-x">
-    <div class="cell small-12 medium-12 large-6">
-      <a class="nav_logo" href="/">
-        <img src="../assets/cc-search-logo-white.png">
-      </a>
-      <div class="menu_ctr">
-        <ul class="menu">
-          <li><a href="/about">About</a></li>
-          <li><a href="/feedback">Feedback</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="cell small-12 medium-12 large-6 align-center nav_search"
-         v-if="showNavSearch ==='true'">
-      <form class="hero_search-form"
-            role="search"
-            method="post"
-            v-on:submit.prevent="onSubmit">
-        <div class="input-group input-group-rounded">
-          <input class="input-group-field"
-                 type="search"
-                 placeholder="Search the commons..."
-                 v-model.lazy="form.searchTerm">
-          <div class="input-group-button">
-            <button type="submit" class="button secondary" value="Search"></button>
+  <nav class="header nav">
+    <a class="logo" href="/">
+      <img src="../assets/cc-search-logo-white.png">
+    </a>
+    <input class="menu-btn" type="checkbox" id="menu-btn" />
+    <label class="menu_icon" for="menu-btn"><span class="navicon"></span></label>
+    <ul class="menu">
+      <li><a href="/collections">Collections</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/feedback">Feedback</a></li>
+      <li class="nav_search" v-if="showNavSearch ==='true'">
+        <form class="hero_search-form"
+              role="search"
+              method="post"
+              v-on:submit.prevent="onSubmit">
+          <div class="input-group input-group-rounded">
+            <input class="input-group-field"
+                  type="search"
+                  placeholder="Search the commons..."
+                  v-model.lazy="form.searchTerm">
+            <div class="input-group-button">
+              <button type="submit" class="button secondary" value="Search"></button>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </li>
+    </ul>
   </nav>
 </template>
 
@@ -48,35 +46,137 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+
+/* header */
+
 .nav {
-  position: relative;
-  width: 100%;
   background-image: linear-gradient(90deg, #34baec, #5fd1fc, #34baec);
-  height: 3.9em;
   border-bottom: 1px solid rgba(0,0,0,0.25);
 }
-.nav_logo > img {
-  margin: 0px 0 9px 0;
+
+.logo > img {
   height: 42px;
   padding-right: 11px;
 }
-.hero_search-form {
-  margin: 0 15px;
-  /* Large and up */
-  @media screen and (min-width: 64em) {
+
+.header {
+  box-shadow: 1px 1px 4px 0 rgba(0,0,0,.1);
+  width: 100%;
+  z-index: 3;
+}
+
+.header ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+.header li a {
+  display: block;
+  text-decoration: none;
+}
+
+.header .logo {
+  display: block;
+  float: left;
+  font-size: 2em;
+  padding: 3px 20px;
+  text-decoration: none;
+}
+
+/* menu */
+
+.header .menu {
+  clear: both;
+  max-height: 0;
+  transition: max-height .2s ease-out;
+}
+
+/* menu icon */
+
+.header .menu_icon {
+  cursor: pointer;
+  float: right;
+  padding: 28px 20px;
+  position: relative;
+  user-select: none;
+}
+
+.header .menu_icon .navicon {
+  background: #333;
+  display: block;
+  height: 2px;
+  position: relative;
+  transition: background .2s ease-out;
+  width: 18px;
+}
+
+.header .menu_icon .navicon:before,
+.header .menu_icon .navicon:after {
+  background: #333;
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  transition: all .2s ease-out;
+  width: 100%;
+}
+
+.header .menu_icon .navicon:before {
+  top: 5px;
+}
+
+.header .menu_icon .navicon:after {
+  top: -5px;
+}
+
+/* menu btn */
+
+.header .menu-btn {
+  display: none;
+}
+
+.header .menu-btn:checked ~ .menu {
+  max-height: 240px;
+}
+
+.header .menu-btn:checked ~ .menu_icon .navicon {
+  background: transparent;
+}
+
+.header .menu-btn:checked ~ .menu_icon .navicon:before {
+  transform: rotate(-45deg);
+}
+
+.header .menu-btn:checked ~ .menu_icon .navicon:after {
+  transform: rotate(45deg);
+}
+
+.header .menu-btn:checked ~ .menu_icon:not(.steps) .navicon:before,
+.header .menu-btn:checked ~ .menu_icon:not(.steps) .navicon:after {
+  top: 0;
+}
+
+/* 48em = 768px */
+@media (min-width: 48em) {
+  .header {
+    height: 3.9em;
+  }
+  .menu {
+    display: inline;
+  }
+  .header .nav_search {
     float: right;
   }
-  /* Small only */
-  @media screen and (max-width: 39.9375em) {
-    display: none;
+  .header li {
+    float: left;
   }
-}
-.menu_ctr {
-  display: inline-block;
-  margin-left: 10px;
-  /* Small only */
-  @media screen and (max-width: 39.9375em) {
-    margin-left: 0 !important;
+  .header li a {
+    padding: 10px 30px;
+  }
+  .header .menu_icon {
+    display: none;
   }
 }
 
@@ -91,24 +191,22 @@ export default {
   &:hover {
     background: #1e96c2;
   }
+}
 
-  /* Small only */
-  @media screen and (max-width: 380px) {
-    padding: 0.7rem .7rem;
-    font-size: 1.2em;
-    &:hover {
-      border-bottom: none;
-    }
+.hero_search-form {
+  margin: 0 15px;
+  /* Large and up */
+  @media screen and (min-width: 64em) {
+    float: right;
   }
-
-  @media screen and (max-width: 320px) {
-    font-size: .93em;
+  @media screen and (max-width: 63em) {
+    display: none;
   }
 }
 
 .input-group-rounded {
   margin: 9px 0;
-  width: 400px;
+  width: 315px;
   max-width: 100%;
   .input-group-field {
     border-radius: 3px;
@@ -145,15 +243,5 @@ export default {
       opacity: .2;
     }
   }
-}
-.slide-fade-enter-active {
-  transition: all .3s ease;
-}
-.slide-fade-leave-active {
-  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.slide-fade-enter, .slide-fade-leave-to {
-  transform: translateX(10px);
-  opacity: 0;
 }
 </style>

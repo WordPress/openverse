@@ -1,7 +1,12 @@
 import getParameterByName from '@/utils/getParameterByName';
 import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams';
 import decodeImageData from '@/utils/decodeImageData';
-import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES } from './action-types';
+import {
+  FETCH_IMAGES,
+  FETCH_IMAGE,
+  FETCH_RELATED_IMAGES,
+  FETCH_COLLECTION_IMAGES,
+} from './action-types';
 import {
   FETCH_END_IMAGES,
   FETCH_IMAGES_ERROR,
@@ -95,6 +100,25 @@ const actions = ImageService => ({
         commit(SET_RELATED_IMAGES,
           { relatedImages: data.results,
             relatedImagesCount: data.result_count,
+          },
+        );
+      })
+      .catch((error) => {
+        commit(FETCH_IMAGES_ERROR);
+        throw new Error(error);
+      });
+  },
+  [FETCH_COLLECTION_IMAGES]({ commit }, params) {
+    commit(FETCH_START_IMAGES);
+    hideSearchResultsOnNewSearch(commit, params.page);
+    return ImageService.getProviderCollection(params)
+      .then(({ data }) => {
+        commit(FETCH_END_IMAGES);
+        commit(SET_IMAGES,
+          { images: data.results,
+            imagesCount: data.result_count,
+            shouldPersistImages: params.shouldPersistImages,
+            page: params.page,
           },
         );
       })
