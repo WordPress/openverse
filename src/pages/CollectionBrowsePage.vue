@@ -4,8 +4,11 @@
       <div class="cell">
         <header-section showNavSearch="true"></header-section>
       </div>
+      <div class="cell">
+        <search-grid-form></search-grid-form>
+      </div>
       <div :class="{ 'cell search-grid-ctr': true }">
-        <search-grid v-if="query.q"
+        <search-grid v-if="query.provider"
                      :query="query"
                      @onLoadMoreImages="onLoadMoreImages"></search-grid>
       </div>
@@ -35,7 +38,7 @@ const CollectionBrowsePage = {
     query() {
       return {
         ...this.$store.state.query,
-        q: this.$props.provider,
+        provider: this.$props.provider,
       };
     },
   },
@@ -49,7 +52,7 @@ const CollectionBrowsePage = {
   },
   created() {
     this.ticking = false;
-    if (this.query.q) {
+    if (this.query.provider) {
       this.getImages(this.query);
     }
   },

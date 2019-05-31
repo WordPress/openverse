@@ -129,6 +129,19 @@ const actions = ImageService => ({
   },
 });
 
+function setQuery(_state, params, path, routePush) {
+  const query = Object.assign({}, _state.query, params.query);
+  const isFilterApplied = ['li', 'provider', 'lt', 'searchBy']
+    .some(key => query[key] && query[key].length > 0);
+
+  _state.isFilterApplied = isFilterApplied;
+  _state.query = query;
+
+  if (params.shouldNavigate === true) {
+    routePush({ path, query });
+  }
+}
+
 /* eslint no-param-reassign: ["error", { "props": false }] */
 const mutations = routePush => ({
   [FETCH_START_IMAGES](_state) {
@@ -172,17 +185,7 @@ const mutations = routePush => ({
     _state.imagePage = params.page || 1;
   },
   [SET_QUERY](_state, params) {
-    const query = Object.assign({}, _state.query, params.query);
-
-    const isFilterApplied = ['li', 'provider', 'lt', 'searchBy']
-      .some(key => query[key] && query[key].length > 0);
-
-    _state.isFilterApplied = isFilterApplied;
-    _state.query = query;
-
-    if (params.shouldNavigate === true) {
-      routePush({ path: '/search', query });
-    }
+    setQuery(_state, params, '/search', routePush);
   },
 });
 
