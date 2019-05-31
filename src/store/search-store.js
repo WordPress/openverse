@@ -17,6 +17,7 @@ import {
   SET_IMAGE_PAGE,
   SET_IMAGES,
   SET_QUERY,
+  SET_COLLECTION_QUERY,
   SET_RELATED_IMAGES,
 } from './mutation-types';
 
@@ -186,6 +187,9 @@ const mutations = routePush => ({
   },
   [SET_QUERY](_state, params) {
     setQuery(_state, params, '/search', routePush);
+  },
+  [SET_COLLECTION_QUERY](_state, params) {
+    setQuery(_state, params, `/collections/${params.provider}`, routePush);
   },
 });
 

@@ -96,7 +96,7 @@
 
 <script>
 import SearchGridFilter from '@/components/SearchGridFilter';
-import { SET_QUERY, SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
+import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
 
 export default {
   name: 'search-grid-form',
@@ -119,10 +119,7 @@ export default {
     onSubmit(e) {
       e.preventDefault();
       if (this.searchTermsModel) {
-        this.$store.commit(
-          SET_QUERY,
-          { query: { q: this.searchTermsModel }, shouldNavigate: true },
-        );
+        this.$emit('onSearchFormSubmit', { query: { q: this.searchTermsModel }, shouldNavigate: true });
       }
     },
     onToggleSearchGridFilter() {
