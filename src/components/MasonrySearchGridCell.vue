@@ -2,7 +2,7 @@
   <div>
     <figure class="search-grid_item">
       <a
-        :href="'photos/' + image.id"
+        :href="'/photos/' + image.id"
         @click="onGotoDetailPage($event, image)"
         class="search-grid_image-ctr">
         <img
