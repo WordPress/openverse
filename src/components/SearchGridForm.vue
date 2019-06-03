@@ -89,7 +89,8 @@
             </li>
           </ul>
         </div>
-        <search-grid-filter :showProvidersFilter="showProvidersFilter" />
+        <search-grid-filter :showProvidersFilter="showProvidersFilter"
+                            @onSearchFilterChanged="onSearchFilterChanged"/>
     </div>
   </form>
 </template>
@@ -128,6 +129,9 @@ export default {
         SET_FILTER_IS_VISIBLE,
         { isFilterVisible: !this.isFilterVisible },
       );
+    },
+    onSearchFilterChanged(query) {
+      this.$emit('onSearchFormSubmit', query);
     },
     addScrollEvent() {
       this.removeScrollEvent = this.removeScrollEvent.bind(this);
