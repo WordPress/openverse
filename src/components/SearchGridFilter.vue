@@ -34,7 +34,7 @@
           :showLabels="false">
         </multiselect>
       </div>
-      <div class="filter-option search-filters_providers">
+      <div v-if="showProvidersFilter" class="filter-option search-filters_providers">
         <multiselect
           v-model="filter.provider"
           @input="onUpdateFilter"
@@ -82,6 +82,7 @@ const transformFilterValue = (filter, key) => {
 
 export default {
   name: 'search-grid-filter',
+  props: ['showProvidersFilter'],
   components: {
     Multiselect,
   },

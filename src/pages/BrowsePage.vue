@@ -3,7 +3,7 @@
     <div class="search grid-x flexible">
       <div class="cell">
         <header-section>
-          <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
+          <search-grid-form showProvidersFilter="true" @onSearchFormSubmit="onSearchFormSubmit" />
         </header-section>
       </div>
       <div :class="{ 'cell search-grid-ctr': true }">
