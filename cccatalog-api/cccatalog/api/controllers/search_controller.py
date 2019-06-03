@@ -27,6 +27,17 @@ def _paginate_search(s: Search, page_size: int, page: int):
     return s
 
 
+def _filter_licenses(s: Search, licenses):
+    """
+    Select the type of licenses that should appear in the results.
+    """
+    license_filters = []
+    for _license in licenses.split(','):
+        license_filters.append(Q('term', license__keyword=_license))
+    s = s.filter('bool', should=license_filters, minimum_should_match=1)
+    return s
+
+
 def search(search_params, index, page_size, ip, page=1) -> Response:
     """
     Given a set of keywords and an optional set of filters, perform a ranked
@@ -46,12 +57,11 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
     s = _paginate_search(s, page_size, page)
 
     # If any filters are specified, add them to the query.
-    if 'li' in search_params.data or 'lt' in search_params.data:
-        license_field = 'li' if 'li' in search_params.data else 'lt'
-        license_filters = []
-        for _license in search_params.data[license_field].split(','):
-            license_filters.append(Q('term', license__keyword=_license))
-        s = s.filter('bool', should=license_filters, minimum_should_match=1)
+    if 'li' in search_params.data:
+        s = _filter_licenses(s, search_params.data['li'])
+    elif 'lt' in search_params.data:
+        s = _filter_licenses(s, search_params.data['lt'])
+
     if 'provider' in search_params.data:
         provider_filters = []
         for provider in search_params.data['provider'].split(','):
@@ -116,7 +126,8 @@ def _validate_provider(input_provider):
     return input_provider.lower()
 
 
-def browse_by_provider(provider, index, page_size, ip, page=1):
+def browse_by_provider(
+        provider, index, page_size, ip, page=1, lt=None, li=None):
     """
     Allow users to browse image collections without entering a search query.
     """
@@ -126,6 +137,10 @@ def browse_by_provider(provider, index, page_size, ip, page=1):
     s = s.params(preference=str(ip))
     provider_filter = Q('term', provider=provider)
     s = s.filter('bool', should=provider_filter, minimum_should_match=1)
+    if lt:
+        s = _filter_licenses(s, lt)
+    elif li:
+        s = _filter_licenses(s, li)
     search_response = s.execute()
     return search_response
 

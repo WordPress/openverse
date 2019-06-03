@@ -213,12 +213,21 @@ class BrowseImages(APIView):
             )
         page_param = params.data[PAGE]
         page_size = params.data[PAGESIZE]
+        lt = None
+        li = None
+        if 'lt' in params.data:
+            lt = params.data['lt']
+        elif 'li' in params.data:
+            li = params.data['li']
+
         try:
             browse_results = search_controller.browse_by_provider(
                 provider,
                 index='image',
                 page_size=page_size,
                 page=page_param,
+                lt=lt,
+                li=li,
                 ip=hash(_get_user_ip(request))
             )
         except ValueError:
