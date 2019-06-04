@@ -55,6 +55,30 @@ const hideSearchResultsOnNewSearch = (commit, pageNumber) => {
   }
 };
 
+const allKeysUndefinedExcept = (value, keyName) => {
+  const keys = Object.keys(value);
+  return keys.reduce((matchedUndefinedCriteria, key) => {
+    const shouldBeUndefined = key !== keyName;
+    const isUndefined = !value[key];
+
+    return matchedUndefinedCriteria && shouldBeUndefined === isUndefined;
+  }, true);
+};
+
+const fetchCollectionImages = (commit, params, imageService) => {
+  hideSearchResultsOnNewSearch(commit, params.page);
+
+  const queryParams = {
+    q: params.q,
+    provider: params.provider,
+    li: params.li,
+    lt: params.lt,
+    searchBy: params.searchBy,
+  };
+  const searchMethod = allKeysUndefinedExcept(queryParams, 'provider') ? imageService.getProviderCollection : imageService.search;
+  return searchMethod(params);
+};
+
 const actions = ImageService => ({
   [FETCH_IMAGES]({ commit }, params) {
     commit(FETCH_START_IMAGES);
@@ -70,10 +94,6 @@ const actions = ImageService => ({
             page: params.page,
           },
         );
-
-        if (params.query) {
-          commit(SET_QUERY, { query: params.query });
-        }
       })
       .catch((error) => {
         commit(FETCH_IMAGES_ERROR);
@@ -111,8 +131,7 @@ const actions = ImageService => ({
   },
   [FETCH_COLLECTION_IMAGES]({ commit }, params) {
     commit(FETCH_START_IMAGES);
-    hideSearchResultsOnNewSearch(commit, params.page);
-    return ImageService.getProviderCollection(params)
+    return fetchCollectionImages(commit, params, ImageService)
       .then(({ data }) => {
         commit(FETCH_END_IMAGES);
         commit(SET_IMAGES,
