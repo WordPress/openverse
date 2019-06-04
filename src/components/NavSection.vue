@@ -104,7 +104,7 @@ export default {
 }
 
 .header .menu_icon .navicon {
-  background: #333;
+  background: #fff;
   display: block;
   height: 2px;
   position: relative;
@@ -114,7 +114,7 @@ export default {
 
 .header .menu_icon .navicon:before,
 .header .menu_icon .navicon:after {
-  background: #333;
+  background: #fff;
   content: '';
   display: block;
   height: 100%;
