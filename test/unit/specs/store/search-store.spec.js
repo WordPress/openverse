@@ -273,6 +273,16 @@ describe('Search Store', () => {
       });
     });
 
+    it('FETCH_COLLECTION_IMAGES calls search API if other query params exist', (done) => {
+      const params = { q: 'nature', provider: 'met', page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(imageServiceMock.search).toBeCalledWith(params);
+
+        done();
+      });
+    });
+
     it('FETCH_IMAGES on error', (done) => {
       const failedMock = {
         search: jest.fn(() => Promise.reject('error')),
