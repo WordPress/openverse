@@ -75,6 +75,9 @@ const fetchCollectionImages = (commit, params, imageService) => {
     lt: params.lt,
     searchBy: params.searchBy,
   };
+  // the provider collection API doesn't support the `q` parameter.
+  // so if the `q`, or any other search filter is provided, and
+  // since the `provider` parameter is passed, we can just call the search API instead
   const searchMethod = allKeysUndefinedExcept(queryParams, 'provider') ? imageService.getProviderCollection : imageService.search;
   return searchMethod(params);
 };
