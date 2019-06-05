@@ -88,6 +88,9 @@ export default {
     includeAddToList: {
       default: true,
     },
+    searchTerm: {
+      default: '',
+    },
   },
   computed: {
     imagePage() {
@@ -98,9 +101,6 @@ export default {
     },
     isFetchingImages() {
       return this.$store.state.isFetchingImages;
-    },
-    searchTerm() {
-      return this.$props.query.q;
     },
     _images() {
       return this.useInfiniteScroll ? this.$store.state.images : this.images;
