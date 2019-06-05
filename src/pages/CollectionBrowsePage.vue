@@ -2,7 +2,7 @@
   <div class="browse-page">
     <div class="search grid-x flexible">
       <div class="cell">
-        <header-section showNavSearch="true"></header-section>
+        <header-section></header-section>
       </div>
       <div class="cell">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
