@@ -51,7 +51,6 @@
 <script>
 import Vue from 'vue';
 import { SET_IMAGES } from '@/store/mutation-types';
-// import { FETCH_IMAGES } from '@/store/action-types';
 import InfiniteLoading from 'vue-infinite-loading';
 import MasonrySearchGridCell from '@/components/MasonrySearchGridCell';
 import SearchGridFilter from '@/components/SearchGridFilter';
