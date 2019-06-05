@@ -1,3 +1,4 @@
+import isEmpty from 'lodash.isempty';
 import getParameterByName from '@/utils/getParameterByName';
 import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams';
 import decodeImageData from '@/utils/decodeImageData';
@@ -59,7 +60,7 @@ const allKeysUndefinedExcept = (value, keyName) => {
   const keys = Object.keys(value);
   return keys.reduce((matchedUndefinedCriteria, key) => {
     const shouldBeUndefined = key !== keyName;
-    const isUndefined = !value[key];
+    const isUndefined = isEmpty(value[key]);
 
     return matchedUndefinedCriteria && shouldBeUndefined === isUndefined;
   }, true);
@@ -71,8 +72,6 @@ const fetchCollectionImages = (commit, params, imageService) => {
   const queryParams = {
     q: params.q,
     provider: params.provider,
-    li: params.li,
-    lt: params.lt,
     searchBy: params.searchBy,
   };
   // the provider collection API doesn't support the `q` parameter.
