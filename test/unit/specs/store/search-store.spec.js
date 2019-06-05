@@ -273,7 +273,37 @@ describe('Search Store', () => {
       });
     });
 
-    it('FETCH_COLLECTION_IMAGES calls search API if other query params exist', (done) => {
+    it('FETCH_COLLECTION_IMAGES calls search API if q param exist', (done) => {
+      const params = { q: 'nature', provider: 'met', page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(imageServiceMock.search).toBeCalledWith(params);
+
+        done();
+      });
+    });
+
+    it('FETCH_COLLECTION_IMAGES calls getProviderCollection API if li param exist', (done) => {
+      const params = { li: 'by', provider: 'met', page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
+
+        done();
+      });
+    });
+
+    it('FETCH_COLLECTION_IMAGES calls getProviderCollection API if lt param exist', (done) => {
+      const params = { lt: 'commercial', provider: 'met', page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
+
+        done();
+      });
+    });
+
+    it('FETCH_COLLECTION_IMAGES calls search API if q param exist', (done) => {
       const params = { q: 'nature', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
       action({ commit }, params).then(() => {
