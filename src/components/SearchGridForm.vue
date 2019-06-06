@@ -89,17 +89,19 @@
             </li>
           </ul>
         </div>
-        <search-grid-filter></search-grid-filter>
+        <search-grid-filter :showProvidersFilter="showProvidersFilter"
+                            @onSearchFilterChanged="onSearchFilterChanged"/>
     </div>
   </form>
 </template>
 
 <script>
 import SearchGridFilter from '@/components/SearchGridFilter';
-import { SET_QUERY, SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
+import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
 
 export default {
   name: 'search-grid-form',
+  props: ['showProvidersFilter'],
   data: () => ({ searchTermsModel: null }),
   components: {
     SearchGridFilter,
@@ -119,10 +121,7 @@ export default {
     onSubmit(e) {
       e.preventDefault();
       if (this.searchTermsModel) {
-        this.$store.commit(
-          SET_QUERY,
-          { query: { q: this.searchTermsModel }, shouldNavigate: true },
-        );
+        this.$emit('onSearchFormSubmit', { query: { q: this.searchTermsModel }, shouldNavigate: true });
       }
     },
     onToggleSearchGridFilter() {
@@ -130,6 +129,9 @@ export default {
         SET_FILTER_IS_VISIBLE,
         { isFilterVisible: !this.isFilterVisible },
       );
+    },
+    onSearchFilterChanged(query) {
+      this.$emit('onSearchFormSubmit', query);
     },
     addScrollEvent() {
       this.removeScrollEvent = this.removeScrollEvent.bind(this);

@@ -235,7 +235,7 @@ describe('Search Store', () => {
     });
 
     it('FETCH_IMAGES on success', (done) => {
-      const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
+      const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
       action({ commit }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
@@ -250,13 +250,12 @@ describe('Search Store', () => {
 
         expect(imageServiceMock.search).toBeCalledWith(params);
 
-        expect(commit).toBeCalledWith(SET_QUERY, { query: params.query });
         done();
       });
     });
 
     it('FETCH_COLLECTION_IMAGES on success', (done) => {
-      const params = { query: { q: 'met' }, page: 1, shouldPersistImages: false };
+      const params = { provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
       action({ commit }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
@@ -274,11 +273,51 @@ describe('Search Store', () => {
       });
     });
 
+    it('FETCH_COLLECTION_IMAGES calls search API if q param exist', (done) => {
+      const params = { q: 'nature', provider: 'met', page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(imageServiceMock.search).toBeCalledWith(params);
+
+        done();
+      });
+    });
+
+    it('FETCH_COLLECTION_IMAGES calls getProviderCollection API if li param exist', (done) => {
+      const params = { li: 'by', provider: 'met', page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
+
+        done();
+      });
+    });
+
+    it('FETCH_COLLECTION_IMAGES calls getProviderCollection API if lt param exist', (done) => {
+      const params = { lt: 'commercial', provider: 'met', page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
+
+        done();
+      });
+    });
+
+    it('FETCH_COLLECTION_IMAGES calls search API if q param exist', (done) => {
+      const params = { q: 'nature', provider: 'met', page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
+      action({ commit }, params).then(() => {
+        expect(imageServiceMock.search).toBeCalledWith(params);
+
+        done();
+      });
+    });
+
     it('FETCH_IMAGES on error', (done) => {
       const failedMock = {
         search: jest.fn(() => Promise.reject('error')),
       };
-      const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
+      const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(failedMock)[FETCH_IMAGES];
       action({ commit }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
@@ -290,8 +329,9 @@ describe('Search Store', () => {
     it('FETCH_COLLECTION_IMAGES on error', (done) => {
       const failedMock = {
         getProviderCollection: jest.fn(() => Promise.reject('error')),
+        search: jest.fn(() => Promise.reject('error')),
       };
-      const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
+      const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(failedMock)[FETCH_COLLECTION_IMAGES];
       action({ commit }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
@@ -301,7 +341,7 @@ describe('Search Store', () => {
     });
 
     it('FETCH_IMAGES resets images if page is not defined', (done) => {
-      const params = { query: { q: 'foo' }, page: undefined, shouldPersistImages: false };
+      const params = { q: 'foo', page: undefined, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
       action({ commit }, params).then(() => {
         expect(commit).toBeCalledWith(SET_IMAGES, { images: [] });
@@ -310,7 +350,7 @@ describe('Search Store', () => {
     });
 
     it('FETCH_IMAGES does not reset images if page is defined', (done) => {
-      const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
+      const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
       action({ commit }, params).then(() => {
         expect(commit).not.toBeCalledWith(SET_IMAGES, { images: [] });

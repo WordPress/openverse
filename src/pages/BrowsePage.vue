@@ -3,12 +3,13 @@
     <div class="search grid-x flexible">
       <div class="cell">
         <header-section>
-          <search-grid-form></search-grid-form>
+          <search-grid-form showProvidersFilter="true" @onSearchFormSubmit="onSearchFormSubmit" />
         </header-section>
       </div>
       <div :class="{ 'cell search-grid-ctr': true }">
         <search-grid v-if="query.q"
                      :query="query"
+                     :searchTerm="query.q"
                      @onLoadMoreImages="onLoadMoreImages"></search-grid>
       </div>
     </div>
@@ -23,6 +24,7 @@ import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
 import { FETCH_IMAGES } from '@/store/action-types';
+import { SET_QUERY } from '@/store/mutation-types';
 
 const BrowsePage = {
   name: 'browse-page',
@@ -43,6 +45,9 @@ const BrowsePage = {
     },
     onLoadMoreImages(searchParams) {
       this.getImages(searchParams);
+    },
+    onSearchFormSubmit(searchParams) {
+      this.$store.commit(SET_QUERY, searchParams);
     },
   },
   created() {

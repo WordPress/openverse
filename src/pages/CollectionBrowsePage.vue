@@ -4,9 +4,13 @@
       <div class="cell">
         <header-section showNavSearch="true"></header-section>
       </div>
+      <div class="cell">
+        <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
+      </div>
       <div :class="{ 'cell search-grid-ctr': true }">
-        <search-grid v-if="query.q"
+        <search-grid v-if="query.provider"
                      :query="query"
+                     :searchTerm="providerName"
                      @onLoadMoreImages="onLoadMoreImages"></search-grid>
       </div>
     </div>
@@ -21,6 +25,8 @@ import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
 import { FETCH_COLLECTION_IMAGES } from '@/store/action-types';
+import { SET_COLLECTION_QUERY } from '@/store/mutation-types';
+import getProviderName from '@/utils/getProviderName';
 
 const CollectionBrowsePage = {
   name: 'collection-browse-page',
@@ -35,8 +41,11 @@ const CollectionBrowsePage = {
     query() {
       return {
         ...this.$store.state.query,
-        q: this.$props.provider,
+        provider: this.$props.provider,
       };
+    },
+    providerName() {
+      return getProviderName(this.$store.state.imageProviders, this.$props.provider);
     },
   },
   methods: {
@@ -46,10 +55,16 @@ const CollectionBrowsePage = {
     onLoadMoreImages(searchParams) {
       this.getImages(searchParams);
     },
+    onSearchFormSubmit(searchParams) {
+      this.$store.commit(SET_COLLECTION_QUERY, {
+        ...searchParams,
+        provider: this.$props.provider,
+      });
+    },
   },
   created() {
     this.ticking = false;
-    if (this.query.q) {
+    if (this.query.provider) {
       this.getImages(this.query);
     }
   },

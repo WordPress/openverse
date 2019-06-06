@@ -34,7 +34,7 @@
           :showLabels="false">
         </multiselect>
       </div>
-      <div class="filter-option search-filters_providers">
+      <div v-if="showProvidersFilter" class="filter-option search-filters_providers">
         <multiselect
           v-model="filter.provider"
           @input="onUpdateFilter"
@@ -67,7 +67,6 @@
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types';
 import Multiselect from 'vue-multiselect';
 
 const transformFilterValue = (filter, key) => {
@@ -82,6 +81,7 @@ const transformFilterValue = (filter, key) => {
 
 export default {
   name: 'search-grid-filter',
+  props: ['showProvidersFilter'],
   components: {
     Multiselect,
   },
@@ -113,13 +113,15 @@ export default {
       Object.keys(this.filter).forEach((key) => {
         filter[key] = transformFilterValue(filter, key);
       });
-      this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
+      this.$emit('onSearchFilterChanged', { query: filter, shouldNavigate: true });
+      // this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
     },
     onClearFilters() {
       const filter = Object.assign({}, this.filter);
       Object.keys(this.filter).forEach((key) => { filter[key] = []; });
       this.filter = filter;
-      this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
+      this.$emit('onSearchFilterChanged', { query: filter, shouldNavigate: true });
+      // this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
     },
     parseQueryFilters() {
       const filterLookup = {

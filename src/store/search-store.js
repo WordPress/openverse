@@ -1,3 +1,4 @@
+import isEmpty from 'lodash.isempty';
 import getParameterByName from '@/utils/getParameterByName';
 import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams';
 import decodeImageData from '@/utils/decodeImageData';
@@ -17,6 +18,7 @@ import {
   SET_IMAGE_PAGE,
   SET_IMAGES,
   SET_QUERY,
+  SET_COLLECTION_QUERY,
   SET_RELATED_IMAGES,
 } from './mutation-types';
 
@@ -54,6 +56,31 @@ const hideSearchResultsOnNewSearch = (commit, pageNumber) => {
   }
 };
 
+const allKeysUndefinedExcept = (value, keyName) => {
+  const keys = Object.keys(value);
+  return keys.reduce((matchedUndefinedCriteria, key) => {
+    const shouldBeUndefined = key !== keyName;
+    const isUndefined = isEmpty(value[key]);
+
+    return matchedUndefinedCriteria && shouldBeUndefined === isUndefined;
+  }, true);
+};
+
+const fetchCollectionImages = (commit, params, imageService) => {
+  hideSearchResultsOnNewSearch(commit, params.page);
+
+  const queryParams = {
+    q: params.q,
+    provider: params.provider,
+    searchBy: params.searchBy,
+  };
+  // the provider collection API doesn't support the `q` parameter.
+  // so if the `q`, or any other search filter is provided, and
+  // since the `provider` parameter is passed, we can just call the search API instead
+  const searchMethod = allKeysUndefinedExcept(queryParams, 'provider') ? imageService.getProviderCollection : imageService.search;
+  return searchMethod(prepareSearchQueryParams(params));
+};
+
 const actions = ImageService => ({
   [FETCH_IMAGES]({ commit }, params) {
     commit(FETCH_START_IMAGES);
@@ -69,10 +96,6 @@ const actions = ImageService => ({
             page: params.page,
           },
         );
-
-        if (params.query) {
-          commit(SET_QUERY, { query: params.query });
-        }
       })
       .catch((error) => {
         commit(FETCH_IMAGES_ERROR);
@@ -110,8 +133,7 @@ const actions = ImageService => ({
   },
   [FETCH_COLLECTION_IMAGES]({ commit }, params) {
     commit(FETCH_START_IMAGES);
-    hideSearchResultsOnNewSearch(commit, params.page);
-    return ImageService.getProviderCollection(params)
+    return fetchCollectionImages(commit, params, ImageService)
       .then(({ data }) => {
         commit(FETCH_END_IMAGES);
         commit(SET_IMAGES,
@@ -128,6 +150,19 @@ const actions = ImageService => ({
       });
   },
 });
+
+function setQuery(_state, params, path, routePush) {
+  const query = Object.assign({}, _state.query, params.query);
+  const isFilterApplied = ['li', 'provider', 'lt', 'searchBy']
+    .some(key => query[key] && query[key].length > 0);
+
+  _state.isFilterApplied = isFilterApplied;
+  _state.query = query;
+
+  if (params.shouldNavigate === true) {
+    routePush({ path, query });
+  }
+}
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
 const mutations = routePush => ({
@@ -172,17 +207,10 @@ const mutations = routePush => ({
     _state.imagePage = params.page || 1;
   },
   [SET_QUERY](_state, params) {
-    const query = Object.assign({}, _state.query, params.query);
-
-    const isFilterApplied = ['li', 'provider', 'lt', 'searchBy']
-      .some(key => query[key] && query[key].length > 0);
-
-    _state.isFilterApplied = isFilterApplied;
-    _state.query = query;
-
-    if (params.shouldNavigate === true) {
-      routePush({ path: '/search', query });
-    }
+    setQuery(_state, params, '/search', routePush);
+  },
+  [SET_COLLECTION_QUERY](_state, params) {
+    setQuery(_state, params, `/collections/${params.provider}`, routePush);
   },
 });
 

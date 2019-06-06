@@ -6,8 +6,8 @@
     <input class="menu-btn" type="checkbox" id="menu-btn" />
     <label class="menu_icon" for="menu-btn"><span class="navicon"></span></label>
     <ul class="menu">
-      <li><a href="/collections">Collections</a></li>
       <li><a href="/about">About</a></li>
+      <li><a href="/collections">Browse by Collection</a></li>
       <li><a href="/feedback">Feedback</a></li>
       <li class="nav_search" v-if="showNavSearch ==='true'">
         <form class="hero_search-form"
@@ -104,7 +104,7 @@ export default {
 }
 
 .header .menu_icon .navicon {
-  background: #333;
+  background: #fff;
   display: block;
   height: 2px;
   position: relative;
@@ -114,7 +114,7 @@ export default {
 
 .header .menu_icon .navicon:before,
 .header .menu_icon .navicon:after {
-  background: #333;
+  background: #fff;
   content: '';
   display: block;
   height: 100%;
