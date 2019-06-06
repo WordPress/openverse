@@ -1,29 +1,11 @@
 <template>
   <section :class="{ 'search-grid': true, 'search-grid__contain-images': shouldContainImages }"
            ref="searchGrid">
-    <div class="grid-x" v-show="showGrid && includeAnalytics">
-      <div class="search-grid_analytics cell medium-6 large-6" >
-        <span>
-          <span>{{ _imagesCount }}</span>
-          photos matching
-          <span>'{{ searchTerm }}'</span>
-        </span>
-      </div>
-      <div class="search-grid_layout-control cell medium-6 large-6">
-        <span>Image options:</span>
-        <fieldset>
-          <input
-            id="scaling"
-            type="checkbox"
-            v-on:change="handleScalingChange"
-            v-model="shouldContainImages">
-            <label for="scaling">
-              Prevent overscaling
-            </label>
-        </fieldset>
-      </div>
-    </div>
     <div class="search-grid_ctr" ref="gridItems">
+      <div v-show="showGrid && includeAnalytics" class="search-grid_analytics" >
+        <h2>{{ searchTerm }}</h2>
+        <span>{{ _imagesCount }} photos</span>
+      </div>
       <div
         class="masonry-layout"
         v-masonry transition-duration="0s"
@@ -106,7 +88,8 @@ export default {
       return this.useInfiniteScroll ? this.$store.state.images : this.images;
     },
     _imagesCount() {
-      return this.useInfiniteScroll ? this.$store.state.imagesCount : this.imagesCount;
+      const count = this.useInfiniteScroll ? this.$store.state.imagesCount : this.imagesCount;
+      return count.toLocaleString('en');
     },
     _query() {
       return this.$props.query;
@@ -206,6 +189,7 @@ export default {
   .search-grid_ctr {
     .masonry-layout {
       margin: auto;
+      margin-top: 1rem;
     }
 
     .item {
@@ -229,5 +213,9 @@ export default {
 
   label {
     color: #2c3e50;
+  }
+
+  h2 {
+    font-size: 2rem;
   }
 </style>
