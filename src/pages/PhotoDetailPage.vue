@@ -1,7 +1,7 @@
 <template>
   <div class="photo-detail-page grid-x">
     <div class="cell">
-      <header-section showNavSearch="true" fixedNav="true"></header-section>
+      <header-section showNavSearch="true" />
     </div>
     <div class="container cell large-11">
       <photo-details :image="image"

@@ -2,10 +2,11 @@
   <div class="browse-page">
     <div class="search grid-x flexible">
       <div class="cell">
-        <header-section showNavSearch="true"></header-section>
+        <header-section showNavSearch="true" />
       </div>
       <div class="cell">
-        <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
+        <search-grid-form @onSearchFormSubmit="onSearchFormSubmit"
+                          searchBoxPlaceholder="Search this collection" />
       </div>
       <div :class="{ 'cell search-grid-ctr': true }">
         <search-grid v-if="query.provider"

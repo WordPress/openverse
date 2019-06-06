@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav-section :showNavSearch="showNavSearch"></nav-section>
+    <nav-section :showNavSearch="showNavSearch" :navSearchPlaceholder="navSearchPlaceholder"/>
      <slot></slot>
   </header>
 </template>
@@ -13,7 +13,7 @@ export default {
   components: {
     NavSection,
   },
-  props: ['showHero', 'showNavSearch', 'isHeaderFixed'],
+  props: ['showHero', 'showNavSearch', 'isHeaderFixed', 'navSearchPlaceholder'],
 };
 </script>
 

@@ -5,11 +5,11 @@
         class="search-form">
     <div class="search-form_ctr grid-x global-nav show-for-smedium">
         <div class="search-form_inner-ctr cell medium-12 large-10">
-          <input required="required"
+          <input :placeholder="searchBoxPlaceholder"
+                 required="required"
                  autofocus="true"
                  class="search-form_input"
                  type="search"
-                 placeholder="Search the commons..."
                  autocapitalize="none"
                  id="searchInput"
                  v-model="searchTermsModel"
@@ -101,7 +101,14 @@ import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
 
 export default {
   name: 'search-grid-form',
-  props: ['showProvidersFilter'],
+  props: {
+    showProvidersFilter: {
+      default: false,
+    },
+    searchBoxPlaceholder: {
+      default: 'Search all images',
+    },
+  },
   data: () => ({ searchTermsModel: null }),
   components: {
     SearchGridFilter,
