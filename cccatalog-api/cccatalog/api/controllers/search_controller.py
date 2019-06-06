@@ -29,8 +29,11 @@ def _paginate_search(s: Search, page_size: int, page: int):
 
 def _filter_licenses(s: Search, licenses):
     """
-    Select the type of licenses that should appear in the results.
+    Filter out all licenses except for those provided in the `licenses`
+    parameter.
     """
+    if not licenses:
+        return s
     license_filters = []
     for _license in licenses.split(','):
         license_filters.append(Q('term', license__keyword=_license))
@@ -55,7 +58,6 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
     """
     s = Search(index=index)
     s = _paginate_search(s, page_size, page)
-
     # If any filters are specified, add them to the query.
     if 'li' in search_params.data:
         s = _filter_licenses(s, search_params.data['li'])
@@ -137,10 +139,8 @@ def browse_by_provider(
     s = s.params(preference=str(ip))
     provider_filter = Q('term', provider=provider)
     s = s.filter('bool', should=provider_filter, minimum_should_match=1)
-    if lt:
-        s = _filter_licenses(s, lt)
-    elif li:
-        s = _filter_licenses(s, li)
+    licenses = lt if lt else li
+    s = _filter_licenses(s, licenses)
     search_response = s.execute()
     return search_response
 
