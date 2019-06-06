@@ -17,6 +17,31 @@ def _validate_pagesize(value):
         return 20
 
 
+def _validate_lt(value):
+    license_types = [x.lower() for x in value.split(',')]
+    license_groups = []
+    for _type in license_types:
+        if _type not in LICENSE_GROUPS:
+            raise serializers.ValidationError(
+                "License type \'{}\' does not exist.".format(_type)
+            )
+        license_groups.append(LICENSE_GROUPS[_type])
+    intersected = set.intersection(*license_groups)
+    cleaned = {_license.lower() for _license in intersected}
+
+    return ','.join(list(cleaned))
+
+
+def _validate_li(value):
+    licenses = [x.upper() for x in value.split(',')]
+    for _license in licenses:
+        if _license not in LICENSE_GROUPS['all']:
+            raise serializers.ValidationError(
+                "License \'{}\' does not exist.".format(_license)
+            )
+    return value.lower()
+
+
 class BrowseImageQueryStringSerializer(serializers.Serializer):
     page = serializers.IntegerField(
         label="page number",
@@ -35,6 +60,18 @@ class BrowseImageQueryStringSerializer(serializers.Serializer):
         required=False,
         default=True
     )
+    li = serializers.CharField(
+        label="licenses",
+        help_text="A comma-separated list of licenses. Example: `by,cc0`."
+                  " Valid inputs: `{}`".format(list(LICENSE_GROUPS['all'])),
+        required=False,
+    )
+    lt = serializers.CharField(
+        label="license type",
+        help_text="A list of license types. "
+                  "Valid inputs: `{}`".format((list(LICENSE_GROUPS.keys()))),
+        required=False,
+    )
 
     @staticmethod
     def validate_page(value):
@@ -43,6 +80,27 @@ class BrowseImageQueryStringSerializer(serializers.Serializer):
     @staticmethod
     def validate_pagesize(value):
         return _validate_pagesize(value)
+
+    @staticmethod
+    def validate_li(value):
+        return _validate_li(value)
+
+    @staticmethod
+    def validate_lt(value):
+        """
+        Resolves a list of license types to a list of licenses.
+        Example: commercial -> ['BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM']
+        """
+        return _validate_lt(value)
+
+    def validate(self, data):
+        if 'li' in data and 'lt' in data:
+            raise serializers.ValidationError(
+                "Only license type or individual licenses can be defined, not "
+                "both."
+            )
+        else:
+            return data
 
 
 class ImageSearchQueryStringSerializer(serializers.Serializer):
@@ -135,13 +193,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
 
     @staticmethod
     def validate_li(value):
-        licenses = [x.upper() for x in value.split(',')]
-        for _license in licenses:
-            if _license not in LICENSE_GROUPS['all']:
-                raise serializers.ValidationError(
-                    "License \'{}\' does not exist.".format(_license)
-                )
-        return value.lower()
+        return _validate_li(value)
 
     @staticmethod
     def validate_lt(value):
@@ -149,18 +201,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         Resolves a list of license types to a list of licenses.
         Example: commercial -> ['BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM']
         """
-        license_types = [x.lower() for x in value.split(',')]
-        license_groups = []
-        for _type in license_types:
-            if _type not in LICENSE_GROUPS:
-                raise serializers.ValidationError(
-                    "License type \'{}\' does not exist.".format(_type)
-                )
-            license_groups.append(LICENSE_GROUPS[_type])
-        intersected = set.intersection(*license_groups)
-        cleaned = {_license.lower() for _license in intersected}
-
-        return ','.join(list(cleaned))
+        return _validate_lt(value)
 
     @staticmethod
     def validate_page(value):
