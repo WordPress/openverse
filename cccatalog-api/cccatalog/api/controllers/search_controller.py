@@ -93,6 +93,7 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
             'query_string',
             query=search_params.data['q'],
             fields=['tags.name', 'title'],
+            type='most_fields'
         )
     else:
         if 'creator' in search_params.data:
