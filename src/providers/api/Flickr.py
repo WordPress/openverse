@@ -189,9 +189,9 @@ def getMetaData(_startTs, _endTs, _license):
             status = imgData['stat']
             if status == 'ok':
                 result  = imgData['photos']
-                total   = int(result['total'])  #total results
-                pages   = int(result['pages'])  #number of pages
-                curPage = int(result['page'])   #current page
+                total   = result['total']  #total results
+                pages   = result['pages']  #number of pages
+                curPage = result['page']   #current page
                 photos  = result['photo']       #image meta data for the current page
 
                 if photos:
