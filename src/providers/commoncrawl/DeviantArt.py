@@ -92,7 +92,7 @@ class DeviantArt(Provider):
             #description
             description = soup.find('div', {'class': 'text block'})
             if description and description.text.strip():
-                otherMetaData['description'] = description.text.strip()
+                otherMetaData['description'] = self.sanitizeString(description.text.strip())
 
 
             self.foreignLandingURL = self.validateContent(_url, soup.find('meta', {'property': 'og:url'}), 'content')
