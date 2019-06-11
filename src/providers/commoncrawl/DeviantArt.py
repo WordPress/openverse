@@ -81,10 +81,12 @@ class DeviantArt(Provider):
             self.title = self.validateContent('', soup.find('meta', {'property': 'og:title'}), 'content')
 
             #creator
-            creator = soup.find('a', {'class':'u regular username', 'href':True})
-            if creator:
-                self.creatorURL = self.validateContent('', creator, 'href')
-                self.creator    = creator.text.strip()
+            creatorInfo = soup.find('small', {'class': 'author'})
+            if creatorInfo:
+                creator             = creatorInfo.findChild('a', {'class': re.compile('username$'), 'href':True})
+                if creator:
+                    self.creatorURL = self.validateContent('', creator, 'href')
+                    self.creator    = creator.text.strip()
 
 
             #description
