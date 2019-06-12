@@ -11,7 +11,7 @@
                    autofocus="true"
                    class="hero_search-input"
                    type="search"
-                   placeholder="Search the commons..."
+                   placeholder="Search for images..."
                    autocapitalize="none"
                    id="searchTerm"
                    v-model.lazy="form.searchTerm">

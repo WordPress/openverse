@@ -17,7 +17,7 @@
           <div class="input-group input-group-rounded">
             <input class="input-group-field"
                   type="search"
-                  placeholder="Search the commons..."
+                  :placeholder="navSearchPlaceholder"
                   v-model.lazy="form.searchTerm">
             <div class="input-group-button">
               <button type="submit" class="button secondary" value="Search"></button>
@@ -33,7 +33,14 @@
 import { SET_QUERY } from '@/store/mutation-types';
 
 export default {
-  props: ['showNavSearch', 'fixedNav'],
+  props: {
+    showNavSearch: {
+      default: false,
+    },
+    navSearchPlaceholder: {
+      default: 'Search all images',
+    },
+  },
   name: 'nav-section',
   data: () => ({ form: { searchTerm: '' } }),
   methods: {
