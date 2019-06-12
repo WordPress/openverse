@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import ImageProviderService from '@/api/ImageProviderService';
 import LicenseIcons from '@/components/LicenseIcons';
+import getProviderLogo from '@/utils/getProviderLogo';
 
 const errorImage = require('@/assets/image_not_available_placeholder.png');
 
@@ -59,15 +59,7 @@ export default {
       return toAbsolutePath(image.foreign_landing_url);
     },
     getProviderLogo(providerName) {
-      const provider = ImageProviderService.getProviderInfo(providerName);
-      if (provider) {
-        const logo = provider.logo;
-        const logoUrl = require(`@/assets/${logo}`); // eslint-disable-line global-require, import/no-dynamic-require
-
-        return logoUrl;
-      }
-
-      return '';
+      return getProviderLogo(providerName);
     },
     onGotoDetailPage(event, image) {
       // doesn't use router to redirect to photo details page in case the user
