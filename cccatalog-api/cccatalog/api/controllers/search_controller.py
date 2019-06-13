@@ -129,6 +129,34 @@ def _validate_provider(input_provider):
     return input_provider.lower()
 
 
+def related_images(uuid, index):
+    """
+    Given a UUID, find related search results.
+    """
+    # Convert UUID to sequential ID.
+    item = Search(index=index)
+    item = item.query(
+        'match',
+        identifier=uuid
+    )
+    _id = item.execute().hits[0].id
+
+    s = Search(index=index)
+    s = s.query(
+        'more_like_this',
+        fields=['tags.name', 'title', 'creator'],
+        like={
+            '_index': index,
+            '_id': _id
+        },
+        min_term_freq=1,
+        max_query_terms=50
+    )
+    response = s.execute()
+
+    return response
+
+
 def browse_by_provider(
         provider, index, page_size, ip, page=1, lt=None, li=None):
     """
