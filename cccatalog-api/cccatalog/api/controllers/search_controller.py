@@ -122,7 +122,8 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
 
 def _validate_provider(input_provider):
     allowed_providers = list(get_providers('image').keys())
-    if input_provider not in allowed_providers:
+    lowercase_providers = [x.lower() for x in allowed_providers]
+    if input_provider.lower() not in lowercase_providers:
         raise serializers.ValidationError(
             "Provider \'{}\' does not exist.".format(input_provider)
         )
@@ -166,7 +167,7 @@ def browse_by_provider(
     s = Search(index=index)
     s = _paginate_search(s, page_size, page)
     s = s.params(preference=str(ip))
-    provider_filter = Q('term', provider=provider)
+    provider_filter = Q('term', provider=provider.lower())
     s = s.filter('bool', should=provider_filter, minimum_should_match=1)
     licenses = lt if lt else li
     s = _filter_licenses(s, licenses)
