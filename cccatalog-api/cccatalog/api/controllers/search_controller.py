@@ -144,15 +144,16 @@ def related_images(uuid, index):
     s = Search(index=index)
     s = s.query(
         'more_like_this',
-        fields=['tags.name', 'title', 'creator', 'provider'],
+        fields=['tags.name', 'title', 'creator'],
         like={
             '_index': index,
             '_id': _id
         },
         min_term_freq=1,
-        max_query_terms=20
+        max_query_terms=50
     )
     response = s.execute()
+
     return response
 
 
