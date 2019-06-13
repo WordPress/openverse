@@ -33,6 +33,9 @@
           :href="image.foreign_landing_url"
           target="blank"
           rel="noopener noreferrer">
+          <img class="provider-logo"
+               :alt="image.provider"
+               :src="getProviderLogo(image.provider_code)" />
           {{ image.provider }}
         </a>
       </li>
@@ -46,7 +49,7 @@
 
 <script>
 import LicenseIcons from '@/components/LicenseIcons';
-import ImageProviderService from '@/api/ImageProviderService';
+import getProviderLogo from '@/utils/getProviderLogo';
 
 export default {
   name: 'image-info',
@@ -56,14 +59,7 @@ export default {
   },
   methods: {
     getProviderLogo(providerName) {
-      const provider = ImageProviderService.getProviderInfo(providerName);
-      if (provider) {
-        const logo = provider.logo;
-        const logoUrl = require(`@/assets/${logo}`); // eslint-disable-line global-require, import/no-dynamic-require
-
-        return logoUrl;
-      }
-      return '';
+      return getProviderLogo(providerName);
     },
   },
 };
