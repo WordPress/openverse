@@ -11,7 +11,7 @@ from rest_framework.reverse import reverse
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer, \
-    BrowseImageQueryStringSerializer
+    BrowseImageQueryStringSerializer, RelatedImagesResultsSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer,\
     WatermarkQueryStringSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
@@ -255,6 +255,25 @@ class BrowseImages(APIView):
             RESULTS: serialized_results
         }
         serialized_response = ImageSearchResultsSerializer(data=response_data)
+        return Response(status=200, data=serialized_response.initial_data)
+
+
+class RelatedImage(APIView):
+    """
+    Given a UUID, return images related to the result.
+    """
+    def get(self, request, identifier, format=None):
+        related = search_controller.related_images(
+            uuid=identifier,
+            index='image'
+        )
+        filtered = _post_process_results(related, request, True)
+        serialized_related = ImageSerializer(filtered, many=True).data
+        response_data = {
+            'result_count': related.hits.total,
+            RESULTS: serialized_related
+        }
+        serialized_response = RelatedImagesResultsSerializer(data=response_data)
         return Response(status=200, data=serialized_response.initial_data)
 
 

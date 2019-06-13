@@ -268,7 +268,6 @@ class ImageSerializer(serializers.Serializer):
     )
     creator = serializers.CharField(required=False, allow_blank=True)
     creator_url = serializers.URLField(required=False)
-    legacy_tags = serializers.ListField(required=False)
     tags = TagSerializer(
         required=False,
         many=True,
@@ -286,6 +285,11 @@ class ImageSerializer(serializers.Serializer):
         required=True,
         help_text="A direct link to the detail view of an image."
     )
+
+
+class RelatedImagesResultsSerializer(serializers.Serializer):
+    result_count = serializers.IntegerField(),
+    results = ImageSerializer(many=True)
 
 
 class ImageSearchResultsSerializer(serializers.Serializer):
