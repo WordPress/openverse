@@ -1,0 +1,31 @@
+h1 {
+  font-size: 2.125em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.2em;
+}
+
+.page {
+  background: #e9ebee;
+}
+
+.page_body {
+  font-size: 1em;
+  margin: 45px !important;
+}
+
+.page_lead-paragraph {
+  margin-bottom: 1em;
+}
+
+/* Small only */
+@media screen and (max-width: 39.9375em) {
+  .page_body {
+    margin: 30px 15px 15px 15px !important;
+  }
+}

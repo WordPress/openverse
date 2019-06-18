@@ -1,5 +1,5 @@
 <template>
-<div class="grid-container full">
+<div class="page grid-container full">
   <header-section showNavSearch="true"></header-section>
   <div class="page_body">
     <h1>CC Search Advanced Search User Guide</h1>
@@ -55,8 +55,8 @@
     code of every provider in our collection.
     </p>
 
-    <div class="about-page_provider-stats-ctr">
-      <table class="about-page_provider-stats-table">
+    <div class="page_provider-stats-ctr">
+      <table class="page_provider-stats-table">
         <thead>
           <th>Provider Name</th>
           <th>Provider Code</th>
@@ -140,7 +140,7 @@
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
 
-const AboutPage = {
+const SearchHelpPage = {
   name: 'search-help-page',
   components: {
     HeaderSection,
@@ -158,26 +158,10 @@ const AboutPage = {
   },
 };
 
-export default AboutPage;
+export default SearchHelpPage;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  h1 {
-    margin-bottom: .44117647em;
-    font-size: 2.125em;
-    font-weight: normal;
-    letter-spacing: initial;
-    line-height: 1.25;
-    text-transform: initial;
-  }
-
-  h2 {
-    margin-bottom: .57692308em;
-    font-size: 1.5em;
-    font-weight: normal;
-    letter-spacing: initial;
-    line-height: 1.25;
-    text-transform: initial;
-  }
+  @import '../styles/text-only-page.scss';
 </style>
