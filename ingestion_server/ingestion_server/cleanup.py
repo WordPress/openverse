@@ -183,6 +183,8 @@ class TlsTest:
                 "Provider '{}' TLS support: {}"
                 .format(p, provider_tls_supported[p])
             )
+        cur.close()
+        conn.close()
         return provider_tls_supported
 
 
