@@ -32,7 +32,7 @@ const router = new VueRouter({
       component: AboutPage,
     },
     {
-      path: '/help',
+      path: '/search-help',
       name: 'search-help-page',
       component: SearchHelpPage,
     },
