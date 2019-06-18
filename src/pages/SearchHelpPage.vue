@@ -19,25 +19,21 @@
 
     <h2>Search by title</h2>
     <p>
-      Searching by title is possible by entering the following term on the search box:
+      You can search by title by putting "<em>title:</em>" in front of the query.
     </p>
-    <em>title: cats</em>
     <p>Example:
     <a href="https://search.creativecommons.org/search?q=title%3A%20cats">
-      https://search.creativecommons.org/search?q=title%3A%20cats
+      <em>title: cats</em>
     </a>
-    <br />
-    This might lead to similar search results as simply searching for "cats".
     </p>
 
     <h2>Search by license</h2>
     <p>
-      It's possible to filter by the existing Creative Commons licenses.
+      You can search by license by putting "<em>license:</em>" in front of the query.
     </p>
-    <em>license: "by"</em>
     <p>Example:
     <a href='https://search.creativecommons.org/search?q=license%3A%20"by"'>
-      https://search.creativecommons.org/search?q=license%3A%20"by"
+      <em>license: "by"</em>
     </a>
     <br />
     The results will be images licensed under the CC-BY license.
@@ -47,12 +43,11 @@
 
     <h2>Search by provider</h2>
     <p>
-      To search by provider, use the following syntax:
+      You can search by provider by putting "<em>provider:</em>" in front of the query.
     </p>
-    <em>provider: "met"</em>
     <p>Example:
     <a href='https://search.creativecommons.org/search?q=provider%3A%20"met"'>
-      https://search.creativecommons.org/search?q=provider%3A%20"met"
+      <em>provider: "met"</em>
     </a>
     <br />
     Notice that we don't accept  "Metropolitan Museum of Art". We accept the provider code when
@@ -82,30 +77,30 @@
 
     <h2>Search by tags</h2>
     <p>
-      To search by provider, use the following syntax:
+      You can search by tags by putting "<em>tags.name:</em>" in front of the query.
     </p>
-    <em>tags.name:"sky"</em>
     <p>Example:
     <a href='https://search.creativecommons.org/search?q=tags.name%3A"sky"'>
-      https://search.creativecommons.org/search?q=tags.name%3A"sky"
+      <em>tags.name:"sky"</em>
     </a>
-    <br />
-    If you want to combine tags, you can use the AND operator, or the OR operator, depending on
-    your search preference. For example:
+    </p>
 
-    <em>tags.name:"sky" AND tags.name:"airplane"</em>
+    <p>
+    If you want to combine tags, you can use the AND operator, or the OR operator, depending on
+    your search preference.
+    </p>
+
     <p>Example:
     <a href='https://search.creativecommons.org/search?q=tags.name%3A"sky"%20AND%20tags.name%3A"airplane"'>
-      https://search.creativecommons.org/search?q=tags.name%3A"sky"%20AND%20tags.name%3A"airplane"
+      <em>tags.name:"sky" AND tags.name:"airplane"</em>
     </a>
     <br />
     This will search for images with both tags, sky and airplane.
     </p>
 
-    <em>tags.name: "phone" OR tags.name: "sky"</em>
     <p>Example:
     <a href='https://search.creativecommons.org/search?q=tags.name%3A%20"phone"%20OR%20tags.name%3A%20"sky"'>
-      https://search.creativecommons.org/search?q=tags.name%3A%20"phone"%20OR%20tags.name%3A%20"sky"
+      <em>tags.name: "phone" OR tags.name: "sky"</em>
     </a>
     <br />
     This will search for images tagged with sky or with phone, but not necessarily both.
@@ -118,10 +113,9 @@
     </p>
 
     <h3>Provider and license</h3>
-    <em>provider: "flickr" AND license: "by"</em>
     <p>Example:
     <a href='https://search.creativecommons.org/search?q=provider%3A%20"flickr"%20AND%20license%3A%20"by"'>
-      https://search.creativecommons.org/search?q=provider%3A%20"flickr"%20AND%20license%3A%20"by"
+      <em>provider: "flickr" AND license: "by"</em>
     </a>
     <br />
     Will search for all images from Flickr licensed under CC-BY. Refer to the Licenses section
@@ -129,10 +123,9 @@
     </p>
 
     <h3>Title and provider</h3>
-    <em>title: "nature" AND provider: "met"</em>
     <p>Example:
     <a href='https://search.creativecommons.org/search?q=title%3A%20"nature"%20AND%20provider%3A%20"met"'>
-      https://search.creativecommons.org/search?q=title%3A%20"nature"%20AND%20provider%3A%20"met"
+      <em>title: "nature" AND provider: "met"</em>
     </a>
     <br />
     Will search for all images containing the word "nature" in their title in the MET collection.
