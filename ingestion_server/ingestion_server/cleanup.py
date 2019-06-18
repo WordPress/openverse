@@ -2,10 +2,14 @@ import logging as log
 import time
 import multiprocessing
 import uuid
+import requests as re
 from psycopg2.extras import DictCursor, Json
 from ingestion_server.indexer import database_connect, DB_BUFFER_SIZE
 from urllib.parse import urlparse
-
+"""
+Functions for processing data when it is imported into the CC Catalog. This 
+includes cleaning up malformed URLs and filtering out undesirable tags.
+"""
 
 # Number of records to buffer in memory at once
 CLEANUP_BUFFER_SIZE = DB_BUFFER_SIZE
@@ -17,6 +21,7 @@ TAG_BLACKLIST = {
     'squareformat',
     'uploaded:by=flickrmobile',
     'uploaded:by=instagram',
+    'flickriosapp:filter=flamingo',
     'cc0',
     'by',
     'by-nc',
@@ -29,45 +34,60 @@ TAG_BLACKLIST = {
 
 # Filter out low-confidence tags, which indicate that the machine-generated tag
 # may be inaccurate.
-TAG_MIN_CONFIDENCE_THRESHOLD = 0.90
+TAG_MIN_CONFIDENCE = 0.90
 
 
-def _cleanup_url(url):
+class CleanupFunctions:
     """
-    Add protocols to the URI if they are missing, else return None.
-    """
-    parsed = urlparse(url)
-    if parsed.scheme == '':
-        return "'https://{}'".format(url)
-    else:
-        return None
+    A cleanup function takes one parameter and returns the "cleaned" version if
+    an update is required, otherwise None.
 
-
-def _cleanup_tags(tags):
+    Cleanup functions are dispatched in the _cleanup_config dictionary.
     """
-    Delete tags because they have low accuracy or because they are in the
-    blacklist. If no change is made, return None.
-    :return: A SQL fragment if an update is required or None
-    """
-    update_required = False
-    tag_output = []
-    if not tags:
-        return None
-    for tag in tags:
-        below_threshold = False
-        if 'accuracy' in tag and tag['accuracy'] < TAG_MIN_CONFIDENCE_THRESHOLD:
-            below_threshold = True
-        should_filter = (tag['name'].lower() in TAG_BLACKLIST or
-                         below_threshold)
-        if not should_filter:
-            tag_output.append(tag)
-            update_required = True
+    @staticmethod
+    def cleanup_url(**kwargs):
+        """
+        Add protocols to the URI if they are missing, else return None.
+        """
+        provider = kwargs.get('provider')
+        tls_support = kwargs.get('tls')
+        url = kwargs.get('url')
+        parsed = urlparse(url)
+        if parsed.scheme == '':
+            tls_supported = tls_support[provider]
+            if tls_supported:
+                return "'https://{}'".format(url)
+            else:
+                return "'http://{}'".format(url)
+        else:
+            return None
 
-    if update_required:
-        fragment = Json(tag_output)
-        return fragment
-    else:
-        return None
+    @staticmethod
+    def cleanup_tags(tags):
+        """
+        Delete tags because they have low accuracy or because they are in the
+        blacklist. If no change is made, return None.
+        :return: A SQL fragment if an update is required or None
+        """
+        update_required = False
+        tag_output = []
+        if not tags:
+            return None
+        for tag in tags:
+            below_threshold = False
+            if 'accuracy' in tag and tag['accuracy'] < TAG_MIN_CONFIDENCE:
+                below_threshold = True
+            should_filter = (tag['name'].lower() in TAG_BLACKLIST or
+                             below_threshold)
+            if not should_filter:
+                tag_output.append(tag)
+                update_required = True
+
+        if update_required:
+            fragment = Json(tag_output)
+            return fragment
+        else:
+            return None
 
 
 # Define which tables, providers, and fields require cleanup. Map the field
@@ -77,14 +97,14 @@ _cleanup_config = {
     'tables': {
         'image': {
             'providers': {
-                # Applies to all tables.
+                # Applies to all providers.
                 '*': {
                     'fields': {
-                        'tags': _cleanup_tags,
-                        'url': _cleanup_url,
-                        'creator_url': _cleanup_url,
-                        'foreign_landing_url': _cleanup_url,
-                        'thumbnail': _cleanup_url
+                        'tags': CleanupFunctions.cleanup_tags,
+                        'url': CleanupFunctions.cleanup_url,
+                        'creator_url': CleanupFunctions.cleanup_url,
+                        'foreign_landing_url': CleanupFunctions.cleanup_url,
+                        'thumbnail': CleanupFunctions.cleanup_url
                     }
                 }
             }
@@ -93,7 +113,80 @@ _cleanup_config = {
 }
 
 
-def _clean_data_worker(rows, temp_table, providers_config):
+class TlsTest:
+    """
+    URLs crawled from upstream are often lacking protocol information, or
+    use HTTP when HTTPS is available. We have to test a small sample of the
+    URLs to determine what protocol should be appended to each URL in the
+    event that it is missing or incorrect.
+    """
+    @classmethod
+    def _test_tls_supported(cls, url):
+        # No protocol provided
+        if 'https://' not in url and 'http://' not in url:
+            fixed_url = 'http://' + url
+            return cls._test_tls_supported(fixed_url)
+        # HTTP provided, but we want to check if HTTPS is supported as well.
+        elif 'http://' in url:
+            https = url.replace('http://', 'https://')
+            try:
+                res = re.get(https, timeout=2)
+                log.info('{}:{}'.format(https, res.status_code))
+                return 200 <= res.status_code < 400
+            except re.RequestException:
+                return False
+        # If HTTPS is in the URL already, we're going to trust that HTTPS is
+        # supported.
+        else:
+            return True
+
+    @staticmethod
+    def test_provider_tls_images_available(table):
+        """
+        Given a table, find 10 sample images and test whether HTTPS is
+        available. If the majority supports TLS, we assume TLS is supported by
+        the provider for all items.
+
+        :return: A dict with key "provider" mapped to value True if TLS is
+        available, else False.
+        """
+        provider_tls_supported = {}
+        conn = database_connect()
+        cur = conn.cursor(cursor_factory=DictCursor)
+        provider_query = 'SELECT provider_identifier FROM content_provider;'
+        cur.execute(provider_query)
+        providers = cur.fetchall()
+
+        for p in providers:
+            p = p[0]
+            sample_query = "SELECT thumbnail, url FROM temp_import_{table}" \
+                           " WHERE provider='{provider}' LIMIT 10" \
+                           .format(provider=p, table=table)
+            cur.execute(sample_query)
+            img_list = [
+                r['thumbnail'] if r['thumbnail'] else r['url'] for r in cur
+            ]
+
+            http_score = 0
+            https_score = 0
+            for thumb in img_list:
+                tls_supported = TlsTest._test_tls_supported(thumb)
+                if tls_supported:
+                    https_score += 1
+                else:
+                    http_score += 1
+            if https_score >= http_score:
+                provider_tls_supported[p] = True
+            else:
+                provider_tls_supported[p] = False
+            log.info(
+                "Provider '{}' TLS support: {}"
+                .format(p, provider_tls_supported[p])
+            )
+        return provider_tls_supported
+
+
+def _clean_data_worker(rows, temp_table, providers_config, tls_support):
     log.info('Starting data cleaning worker')
     global_field_to_func = providers_config['*']['fields']
     worker_conn = database_connect()
@@ -119,7 +212,12 @@ def _clean_data_worker(rows, temp_table, providers_config):
             if not dirty_value:
                 continue
             cleaning_func = fields_to_update[update_field]
-            clean = cleaning_func(dirty_value)
+            if cleaning_func == CleanupFunctions.cleanup_url:
+                clean = cleaning_func(
+                    url=dirty_value, tls=tls_support, provider=provider
+                )
+            else:
+                clean = cleaning_func(dirty_value)
             if clean:
                 cleaned_data[update_field] = clean
         # Generate SQL update for all the fields we just cleaned
@@ -150,7 +248,7 @@ def _clean_data_worker(rows, temp_table, providers_config):
     return True
 
 
-def clean_data(table):
+def clean_image_data(table):
     """
     Data from upstream can be unsuitable for production for a number of reasons.
     Clean it up before we go live with the new data.
@@ -158,6 +256,8 @@ def clean_data(table):
     :param table: The staging table for the new data
     :return: None
     """
+    log.info('Testing TLS support for each provider...')
+    tls_support = TlsTest.test_provider_tls_images_available(table)
     # Map each table to the fields that need to be cleaned up. Then, map each
     # field to its cleanup function.
     log.info('Cleaning up data...')
@@ -209,7 +309,7 @@ def clean_data(table):
                 last_end = end
                 # Arguments for parallel _clean_data_worker calls
                 jobs.append(
-                    (batch[start:end], temp_table, provider_config)
+                    (batch[start:end], temp_table, provider_config, tls_support)
                 )
             pool = multiprocessing.Pool(processes=num_workers)
             log.info('Starting {} cleaning jobs'.format(len(jobs)))
