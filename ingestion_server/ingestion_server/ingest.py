@@ -3,7 +3,7 @@ import psycopg2
 import datetime
 import logging as log
 
-from ingestion_server.cleanup import clean_data
+from ingestion_server.cleanup import clean_image_data
 from ingestion_server.indexer import database_connect
 from psycopg2.extras import DictCursor
 
@@ -261,7 +261,7 @@ def reload_upstream(table, progress=None, finish_time=None):
         downstream_cur.execute(copy_data)
     downstream_db.commit()
     downstream_db.close()
-    clean_data(table)
+    clean_image_data(table)
     log.info('Cleaning step finished.')
     downstream_db = database_connect()
     with downstream_db.cursor() as downstream_cur:
