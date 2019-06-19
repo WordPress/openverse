@@ -137,8 +137,7 @@ class TlsTest:
                 return False
         # If HTTPS is in the URL already, we're going to trust that HTTPS is
         # supported.
-        else:
-            return True
+        return True
 
     @staticmethod
     def test_provider_tls_images_available(table):
