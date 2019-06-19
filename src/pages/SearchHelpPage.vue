@@ -2,57 +2,53 @@
 <div class="page grid-container full">
   <header-section showNavSearch="true"></header-section>
   <div class="page_body">
-    <h1>CC Search Advanced Search User Guide</h1>
+    <h1>CC Search Syntax Guide</h1>
     <p>
-      When using CC Search, users can search for things like
-      <a href="https://ccsearch.creativecommons.org/search?q=cats">"cats"</a> and
-      <a href="https://ccsearch.creativecommons.org/search?q=dogs">"dogs"</a>.
-      Users can filter the search query for
-      <a href="https://search.creativecommons.org/search?q=dogs&provider=&li=&lt=commercial&searchBy">
-      photos of "dogs" that I can use commercially
+      When you search, you can enter special symbols or words to your search term
+      to make your search results more precise.
+    </p>
+
+    <h2>Search for an exact match</h2>
+    <p>
+      Put a word or phrase inside quotes. For example,
+      <a href='https://search.creativecommons.org/search?q="Claude%20Monet"'>
+        <em>"Claude Monet"</em>
       </a>.
-      In addition to that, it also supports using a special search syntax that lets users apply
-      those filters directly on the search input box, without having to use the provided filter
-      user interface. The following guide explains how you can take advantage of that special
-      search syntax to enjoy a more powerful search capability.
     </p>
 
     <h2>Search by title</h2>
     <p>
-      You can search by title by putting "<em>title:</em>" in front of the query.
-    </p>
-    <p>Example:
-    <a href="https://search.creativecommons.org/search?q=title%3A%20cats">
-      <em>title: cats</em>
-    </a>
+      Put <em>title:</em> in front of your search term to see only results whose
+      title contains the specified term. For example,
+      <a href='https://search.creativecommons.org/search?q=title%3A%20"cats"'>
+        <em>title:"cats"</em>
+      </a>.
     </p>
 
     <h2>Search by license</h2>
     <p>
-      You can search by license by putting "<em>license:</em>" in front of the query.
-    </p>
-    <p>Example:
-    <a href='https://search.creativecommons.org/search?q=license%3A%20"by"'>
-      <em>license: "by"</em>
-    </a>
-    <br />
-    The results will be images licensed under the CC-BY license.
-    You can use any of the other CC licenses: "by", "by-sa", "by-nc", "by-nd", "by-nc-sa",
-    "by-nc-nd", "cc0", "pdm".
+      Put <em>license:</em> in front of your search term to see only results
+      from the specified source. For example,
+      <a href='https://search.creativecommons.org/search?q=license%3A%20"by"'>
+        <em>license: "by"</em>
+      </a>
+      <br />
+      The results will be images licensed under the CC-BY license.
+      You can use any of the other CC licenses: "by", "by-sa", "by-nc", "by-nd", "by-nc-sa",
+      "by-nc-nd", "cc0", "pdm".
     </p>
 
     <h2>Search by provider</h2>
     <p>
-      You can search by provider by putting "<em>provider:</em>" in front of the query.
-    </p>
-    <p>Example:
-    <a href='https://search.creativecommons.org/search?q=provider%3A%20"met"'>
-      <em>provider: "met"</em>
-    </a>
-    <br />
-    Notice that we don't accept  "Metropolitan Museum of Art". We accept the provider code when
-    searching by provider using this syntax. Use the following table with the provider
-    code of every provider in our collection.
+      Put <em>provider:</em> in front of your search term to see only results from the
+      specified source. For example,
+      <a href='https://search.creativecommons.org/search?q=provider%3A%20"met"'>
+        <em>provider: "met"</em>
+      </a>
+      <br />
+      Note that you must use one of the provider codes specified below, searching for
+      something like <em>provider:"Metropolitan Museum of Art"</em> will not return any results.
+      Use the following table with the provider code of every provider in our collection.
     </p>
 
     <div class="page_provider-stats-ctr">
@@ -77,18 +73,16 @@
 
     <h2>Search by tags</h2>
     <p>
-      You can search by tags by putting "<em>tags.name:</em>" in front of the query.
-    </p>
-    <p>Example:
+      Put <em>tags.name:</em> in front of your search term to see only results that are
+      tagged with the specified tag. For example,
     <a href='https://search.creativecommons.org/search?q=tags.name%3A"sky"'>
       <em>tags.name:"sky"</em>
     </a>
-    </p>
-
-    <p>
+    <br />
     If you want to combine tags, you can use the AND operator, or the OR operator, depending on
     your search preference.
-    </p>
+
+    <br />
 
     <p>Example:
     <a href='https://search.creativecommons.org/search?q=tags.name%3A"sky"%20AND%20tags.name%3A"airplane"'>
@@ -106,30 +100,64 @@
     This will search for images tagged with sky or with phone, but not necessarily both.
     </p>
 
-    <h2>Combining filters</h2>
+    <h2>Combining keywords</h2>
+
     <p>
-      Users can get a lot more interesting results when combining these filters.
-      Let's get to a few examples.
+      Put <em>AND</em> in between two queries to see only results that match both queries.
+      For example:
+      <ul>
+        <li>
+          <a href='https://ccsearch.creativecommons.org/search?q=title%3A%20"nature"%20AND%20provider%3A%20"met"'>
+            <em>title: "nature" AND provider: "met"</em>
+          </a>
+          will return images from the MET and whose title contains nature.
+        </li>
+        <li>
+          <a href='https://ccsearch.creativecommons.org/search?q=tags.name%3A"sky"AND%20tags.name%3A"airplane"'>
+            <em>tags.name:"sky"AND tags.name:"airplane"</em>
+          </a>
+          will return images tagged both sky and  airplane.
+        </li>
+      </ul>
     </p>
 
-    <h3>Provider and license</h3>
-    <p>Example:
-    <a href='https://search.creativecommons.org/search?q=provider%3A%20"flickr"%20AND%20license%3A%20"by"'>
-      <em>provider: "flickr" AND license: "by"</em>
-    </a>
-    <br />
-    Will search for all images from Flickr licensed under CC-BY. Refer to the Licenses section
-    above for filtering by other licenses.
+    <p>
+      Put <em>OR</em> in between two queries to see only results that match either query.
+      For example:
+      <ul>
+        <li>
+          <a href='https://ccsearch.creativecommons.org/search?q=title%3A%20"nature"%20AND%20provider%3A%20"met"'>
+            <em>provider:"met" OR provider:"flickr"</em>
+          </a>
+          will return images which are either from MET or from Flickr.
+        </li>
+        <li>
+          <a href='https://ccsearch.creativecommons.org/search?q=tags.name%3A"phone"%20OR%20tags.name%3A"tablet"'>
+            <em>tags.name:"phone" OR tags.name:"tablet"</em>
+          </a>
+          will return images tagged either phone or  tablet.
+        </li>
+      </ul>
     </p>
 
-    <h3>Title and provider</h3>
-    <p>Example:
-    <a href='https://search.creativecommons.org/search?q=title%3A%20"nature"%20AND%20provider%3A%20"met"'>
-      <em>title: "nature" AND provider: "met"</em>
-    </a>
-    <br />
-    Will search for all images containing the word "nature" in their title in the MET collection.
-    Refer to the Provider section above for filtering by other providers.
+    <p>
+      Put <em>NOT</em> in between two queries to see only results that match the first query
+      and do not match the second query. You can also use parentheses to combine more than one
+      of these operations For example:
+      <ul>
+        <li>
+          <a href='https://ccsearch.creativecommons.org/search?q=license%3A"by"%20AND%20%28NOT%20provider%3A"flickr"%29'>
+            <em>license:"by" AND (NOT provider:"flickr")</em>
+          </a>
+          will return images licensed under CC BY from all providers except from Flickr.
+        </li>
+        <li>
+          <a href='https://ccsearch.creativecommons.org/search?q=tags.name%3A"bird"%20AND%20%28NOT%20tags.name%3A"flamingo"%29'>
+            <em>tags.name:"bird" AND (NOT tags.name:"flamingo")</em>
+          </a>
+          will return all images tagged bird except images also tagged  flamingo.
+        </li>
+      </ul>
     </p>
   </div>
   <footer-section></footer-section>

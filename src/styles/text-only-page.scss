@@ -23,6 +23,19 @@ h3 {
   margin-bottom: 1em;
 }
 
+p > em {
+  font-family: 'Courier New', Courier, monospace;
+  color: #188038;
+  font-style: normal;
+  font-weight: 600;
+}
+
+a > em {
+  font-family: 'Courier New', Courier, monospace;
+  font-style: normal;
+  font-weight: 600;
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
   .page_body {
