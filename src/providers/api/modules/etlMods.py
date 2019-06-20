@@ -30,11 +30,14 @@ def sanitizeString(_data):
     if _data is None:
         return ''
 
-    _data = _data.strip()
-    _data = _data.replace('"', "'")
-    _data = re.sub(r'\n|\r', ' ', _data)
-    #_data = re.escape(_data)
-    _data = _data.replace('\\', '\\\\')
+    _data       = _data.strip()
+    _data       = _data.replace('"', "'")
+    _data       = re.sub(r'\n|\r', ' ', _data)
+    #_data      = re.escape(_data)
+
+    backspaces  = re.compile('\b+')
+    _data       = backspaces.sub('', _data)
+    _data       = _data.replace('\\', '\\\\')
 
     return re.sub(r'\s+', ' ', _data)
 

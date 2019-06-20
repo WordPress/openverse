@@ -141,8 +141,8 @@ class Provider:
             self.sanitizeString(self.creator) if self.creator else '\\N',
             self.creatorURL if self.creatorURL else '\\N',
             self.sanitizeString(self.title) if self.title else '\\N',
-            json.dumps(self.metaData) if self.metaData else '\\N',
-            json.dumps(self.tags) if self.tags else '\\N',
+            json.dumps(self.metaData, ensure_ascii=False) if self.metaData else '\\N',
+            json.dumps(self.tags, ensure_ascii=False) if self.tags else '\\N',
             self.watermarked,
             self.provider,
             self.source
@@ -218,9 +218,13 @@ class Provider:
         if _data is None:
             return ''
 
-        _data = _data.strip()
-        _data = _data.replace('"', "'")
-        _data = re.sub(r'\n|\r', ' ', _data)
+        _data       = _data.strip()
+        _data       = _data.replace('"', "'")
+        _data       = re.sub(r'\n|\r', ' ', _data)
+
+        backspaces  = re.compile('\b+')
+        _data       = backspaces.sub('', _data)
+        _data       = _data.replace('\\', '\\\\')
 
         return re.sub(r'\s+', ' ', _data)
 

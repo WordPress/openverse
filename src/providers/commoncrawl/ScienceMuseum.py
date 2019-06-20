@@ -73,13 +73,13 @@ class ScienceMuseum(Provider):
         #get the title
         title = soup.find('meta', {'property': 'og:title'})
         if title:
-            self.title = self.validateContent('', title, 'content')
+            self.title = self.sanitizeString(self.validateContent('', title, 'content'))
 
 
         #description/summary
         description = soup.find('meta', {'property': 'og:description'})
         if description:
-            otherMetaData['description'] = self.validateContent('', description, 'content')
+            otherMetaData['description'] = self.sanitizeString(self.validateContent('', description, 'content'))
 
 
         #credits/attribution info
@@ -88,7 +88,7 @@ class ScienceMuseum(Provider):
             maker = makerInfo.findChild('a')
 
             if maker:
-                makerName = maker.text.strip()
+                makerName = self.sanitizeString(maker.text.strip())
                 if makerName.lower() != 'unknown':
                     self.creator = makerName
 
@@ -109,7 +109,8 @@ class ScienceMuseum(Provider):
         if otherDetails:
             for detail in otherDetails:
                 key = detail.findChild('dt').text.strip().lower().replace(' ', '_')
-                val = detail.findChild('dd').text.strip()
+                key = key.rstrip(':')
+                val = self.sanitizeString(detail.findChild('dd').text.strip())
 
                 otherMetaData[key] = val
 

@@ -128,7 +128,7 @@ def getMetaData(_objectID):
     extracted.append([
             str(foreignID), foreignURL, imgURL, thumbnail,
             '\\N', '\\N', '\\N', license, str(version), creator, '\\N',
-            title, json.dumps(metaData), '\\N', 'f', 'met', 'met'
+            title, json.dumps(metaData, ensure_ascii=False), '\\N', 'f', 'met', 'met'
         ])
 
 
@@ -145,7 +145,7 @@ def getMetaData(_objectID):
             extracted.append([
                 str(foreignID), foreignURL, imgURL, thumbnail,
                 '\\N', '\\N', '\\N', license, str(version), creator, '\\N',
-                title, json.dumps(metaData), '\\N', 'f', 'met', 'met'
+                title, json.dumps(metaData, ensure_ascii=False), '\\N', 'f', 'met', 'met'
             ])
 
         idx += 1

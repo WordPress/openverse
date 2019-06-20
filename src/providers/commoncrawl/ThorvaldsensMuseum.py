@@ -73,7 +73,7 @@ class ThorvaldsensMuseum(Provider):
             if imgDimensions:
                 self.width  = self.validateContent('', imgDimensions, 'width')
                 self.height = self.validateContent('', imgDimensions, 'height')
-                self.title  = self.validateContent('', imgDimensions, 'alt')
+                self.title  = self.sanitizeString(self.validateContent('', imgDimensions, 'alt'))
 
         #get title info
         #titleInfo = soup.find('a', {'class': 'enlarge'})
@@ -86,7 +86,7 @@ class ThorvaldsensMuseum(Provider):
         #get creator info
         artistInfo = soup.find('div', {'class': 'artists'})
         if artistInfo:
-            self.creator    = artistInfo.contents[0]
+            self.creator    = self.sanitizeString(artistInfo.contents[0])
             self.creatorURL = self.validateContent('', artistInfo.findChild('a', {'class': 'standard', 'href': True}), 'href')
 
 

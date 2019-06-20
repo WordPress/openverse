@@ -36,6 +36,8 @@ class WoRMS(Provider):
         version             = None
         imageURL            = None
         formatted           = []
+        width               = ''
+        height              = ''
 
         self.clearFields()
         self.provider       = self.name
@@ -81,17 +83,32 @@ class WoRMS(Provider):
                     self.url        = imgDetails.attrs['src']
 
                     if 'width' in imgDetails.attrs:
-                        self.width      = imgDetails.attrs['width']
+                        width           = self.sanitizeString(self.validateContent('', imgDetails, 'width'))
 
                     if 'height' in imgDetails.attrs:
-                        self.height     = imgDetails.attrs['height']
+                        height          = self.sanitizeString(self.validateContent('', imgDetails, 'height'))
+
 
                     self.thumbnail  = self.url.replace('resized', 'thumbs')
-                    self.title      = imgDetails.attrs['title'].strip()
+                    self.title      = self.sanitizeString(imgDetails.attrs['title'].strip())
 
                 else:
                     logging.warning('Image not detected in url: {}'.format(_url))
                     return None
+
+            try:
+                self.width  = int(float(str(width)))
+
+            except ValueError:
+                logging.warning('Error extracting the image dimensions => {}'.format(imgDetails))
+                self.width  = '0' #temporary bug fix
+
+            try:
+                self.height = int(float(str(height)))
+
+            except ValueError:
+                logging.warning('Error extracting the image dimensions => {}'.format(imgDetails))
+                self.height  = '0' #temporary bug fix
 
 
             #get the meta-data
@@ -104,7 +121,7 @@ class WoRMS(Provider):
             if desc:
                 descText = desc.findChild('span', {'class': 'photogallery_caption photogallery_text'})
                 if descText and descText.text.strip():
-                    otherMetaData['description'] = descText.text.strip()
+                    otherMetaData['description'] = self.sanitizeString(descText.text.strip())
 
 
             authorInfo = soup.find('span', {'class': 'photogallery_caption photogallery_author'})
@@ -112,7 +129,7 @@ class WoRMS(Provider):
                 author = authorInfo.findChild('a')
 
                 if author:
-                    self.creator    = author.text.strip()
+                    self.creator    = self.sanitizeString(author.text.strip())
                     self.creatorURL = author.attrs['href']
 
                 else:

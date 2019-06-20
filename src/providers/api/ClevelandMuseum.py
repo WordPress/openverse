@@ -112,7 +112,7 @@ def getMetaData(_data):
             creator if creator else '\\N',
             '\\N',
             title if title else '\\N',
-            '\\N' if not metaData else json.dumps(metaData),
+            '\\N' if not metaData else json.dumps(metaData, ensure_ascii=False),
             '\\N',
             'f',
             'clevelandmuseum',

@@ -72,7 +72,7 @@ class DigitaltMuseum(Provider):
         if titleInfo:
             titleInfo   = titleInfo.findChild('h1')
             if titleInfo:
-                title  = titleInfo.text.strip()
+                title  = self.sanitizeString(titleInfo.text.strip())
 
 
         articleInfo = soup.find_all('section', {'class': 'article__metadata'})
@@ -87,7 +87,7 @@ class DigitaltMuseum(Provider):
                         if len(mData) > 1:
                             key = mData[0].lower().replace(' ', '_')
                             val = mData[1]
-                            articleMetaData[key] = val
+                            articleMetaData[key] = self.sanitizeString(val)
 
 
         #get tags - NA
@@ -135,7 +135,7 @@ class DigitaltMuseum(Provider):
                         self.url = self.validateContent('', img, 'src')
 
                     if img and 'alt' in img.attrs:
-                        articleMetaData['image_alt_text'] = self.validateContent('', img, 'alt')
+                        articleMetaData['image_alt_text'] = self.sanitizeString(self.validateContent('', img, 'alt'))
 
 
                 if self.url == '':
@@ -148,13 +148,13 @@ class DigitaltMuseum(Provider):
                 if owner:
                     owner = owner.text.split(':')
                     if len(owner) > 1:
-                        self.creator = owner[1].strip()
+                        self.creator = self.sanitizeString(owner[1].strip())
 
                 if len(media) > 1:
                     articleMetaData['set'] = url
 
                 if description:
-                    articleMetaData['description'] = desc
+                    articleMetaData['description'] = self.sanitizeString(desc)
 
 
                 if articleMetaData:

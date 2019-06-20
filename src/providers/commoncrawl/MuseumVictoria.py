@@ -86,13 +86,13 @@ class MuseumVictoria(Provider):
                 return None
 
 
-            self.title = self.validateContent('', soup.find('meta', {'property': 'og:title'}), 'content')
+            self.title = self.sanitizeString(self.validateContent('', soup.find('meta', {'property': 'og:title'}), 'content'))
 
 
             #owner/credits
             creatorInfo     = soup.find('div', {'class':'creators'})
             if creatorInfo:
-                creator = creatorInfo.text.strip()
+                creator = self.sanitizeString(creatorInfo.text.strip())
 
                 if 'Photographer' in creator:
                     self.creator = creator.replace('Photographer:', '').strip()
@@ -122,7 +122,7 @@ class MuseumVictoria(Provider):
                 description = summary.findChild('p')
                 if description:
                     description = description.text.strip()
-                    otherMetaData['description'] = description
+                    otherMetaData['description'] = self.sanitizeString(description)
 
 
             #more information/details

@@ -79,20 +79,20 @@ class GeographOrgUK(Provider):
             #get the title
             title = soup.find('strong', {'property': 'dct:title'})
             if title:
-                self.title = title.text.strip()
+                self.title = self.sanitizeString(title.text.strip())
 
 
             #Creator
             creatorInfo = soup.find('a', {'rel': 'author', 'href': True})
             if creatorInfo:
-                self.creator        = creatorInfo.text.strip()
+                self.creator        = self.sanitizeString(creatorInfo.text.strip())
                 self.creatorURL     = '{}{}'.format(self.domain.strip('%'), creatorInfo.attrs['href'])
 
 
             #Keywords/tags
             tagInfo = soup.find_all('span', {'class': 'tag'})
             if tagInfo:
-                tags                    = ','.join(tag.text.strip() for tag in tagInfo)
+                tags                    = ','.join(self.sanitizeString(tag.text.strip()) for tag in tagInfo)
                 otherMetaData['tags']   = tags
 
 
@@ -113,7 +113,7 @@ class GeographOrgUK(Provider):
             #description/caption
             caption = soup.find('div', {'itemprop': 'description'})
             if caption:
-                otherMetaData['description'] = caption.text.strip()
+                otherMetaData['description'] = self.sanitizeString(caption.text.strip())
 
 
             self.foreignLandingURL = self.validateContent(_url, soup.find('link', {'rel': 'canonical', 'href': True}), 'href')

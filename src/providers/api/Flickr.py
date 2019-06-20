@@ -162,8 +162,8 @@ def extractData(_data):
             creator if creator else '\\N',
             creatorURL if creatorURL else '\\N',
             title if title else '\\N',
-            json.dumps(metaData) if metaData else '\\N',
-            json.dumps(tagData) if tagData else '\\N',
+            json.dumps(metaData, ensure_ascii=False) if metaData else '\\N',
+            json.dumps(tagData, ensure_ascii=False) if tagData else '\\N',
             'f',
             'flickr',
             'flickr'

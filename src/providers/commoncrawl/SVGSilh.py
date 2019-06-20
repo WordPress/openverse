@@ -93,13 +93,13 @@ class SVGSilh(Provider):
                 tagInfo = item.findChild('p', {'property': 'dct:title'})
                 if tagInfo:
                     tagsList                = tagInfo.findChildren('a', text=True) #find_all('a', {'class': 'text-muted', 'text': True})
-                    tags                    = ','.join(list(tag.text for tag in tagsList))
+                    tags                    = ','.join(list(self.sanitizeString(tag.text) for tag in tagsList))
                     self.metaData['tags']   = tags
 
                 titleInfo = soup.find('meta', {'property': 'og:description'})
                 if titleInfo:
                     title       = self.validateContent('', titleInfo, 'content').split(' - ')[0]
-                    self.title  = title.split('(')[0]
+                    self.title  = self.sanitizeString(title.split('(')[0])
 
 
                 extracted.extend(self.formatOutput)

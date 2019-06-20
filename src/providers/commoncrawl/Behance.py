@@ -69,7 +69,7 @@ class Behance(Provider):
         #title
         title = soup.find('meta', {'property': 'og:title'})
         if title:
-            self.title = self.validateContent('', title, 'content')
+            self.title = self.sanitizeString(self.validateContent('', title, 'content'))
 
 
         #url
@@ -81,7 +81,7 @@ class Behance(Provider):
         #creator info
         owner = soup.find('meta', {'property': 'og:owners'})
         if owner:
-            self.creator = self.validateContent('', owner, 'content')
+            self.creator = self.sanitizeString(self.validateContent('', owner, 'content'))
 
 
         creators = soup.find_all('div', {'class': 'rf-profile-item__info'})
@@ -96,13 +96,13 @@ class Behance(Provider):
                 creatorDict = {}
                 creatorInfo = creator.find('a', {'class': re.compile('(rf-profile-item__name js-mini-profile)|(ProjectOwnersInfo-userName-2oz js-mini-profile)'), 'href': True})
                 if creatorInfo:
-                    creatorName         = creatorInfo.text.strip()
-                    creatorDict['name'] = self.sanitizeString(creatorName)
-
+                    creatorName                 = creatorInfo.text.strip()
+                    creatorName                 = self.sanitizeString(self.sanitizeString(creatorName))
+                    creatorDict['name']         = creatorName
                     creatorURL                  = creatorInfo.attrs['href'].strip()
                     creatorDict['creator_url']  = creatorURL
 
-                    if self.creator.strip() == creatorName:
+                    if self.creator.lower() == creatorName:
                         self.creatorURL = creatorURL
 
 
@@ -119,7 +119,7 @@ class Behance(Provider):
                                 loc = location.split('=')
                                 creatorDict[loc[0].strip().lower()] = loc[1].strip().replace('+', ' ')
 
-                if creatorDict not in creatorList:
+                if creatorDict and creatorDict not in creatorList:
                     creatorList.append(creatorDict)
 
             if creatorList:
@@ -129,13 +129,14 @@ class Behance(Provider):
         #tags
         tagInfo = soup.find_all('a', {'class': re.compile('(object-tag)|(ProjectTags-tagLink-Hh_)')})
         if tagInfo:
-            otherMetaData['tags'] = ','.join(tag.text.strip() for tag in tagInfo)
+            otherMetaData['tags'] = ','.join(self.sanitizeString(tag.text.strip()) for tag in tagInfo)
 
 
         #description
         description = soup.find('meta', {'property': 'og:description'})
         if description:
-            otherMetaData['description'] = self.sanitizeString(self.validateContent('', description, 'content'))
+            desc                         = self.sanitizeString(self.validateContent('', description, 'content'))
+            otherMetaData['description'] = desc
 
 
         self.provider           = self.name

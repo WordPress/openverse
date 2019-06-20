@@ -83,10 +83,10 @@ class IHA(Provider):
                 image = imageData.findChild('img')
                 if image:
                     self.thumbnail                  = self.validateContent('', image, 'src')
-                    otherMetaData['image_alt_text'] = self.validateContent('', image, 'alt')
+                    otherMetaData['image_alt_text'] = self.sanitizeString(self.validateContent('', image, 'alt'))
                     self.width                      = self.validateContent('', image, 'width')
                     self.height                     = self.validateContent('', image, 'height')
-                    self.title                      = self.validateContent('', image, 'title')
+                    self.title                      = self.sanitizeString(self.validateContent('', image, 'title'))
 
 
                 if 'about' in imageData.attrs:

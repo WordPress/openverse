@@ -81,14 +81,29 @@ class McCordMuseum(Provider):
 
 
             self.width      = self.validateContent('', imgSRC, 'width')
+
             self.height     = self.validateContent('', imgSRC, 'height')
             self.thumbnail  = self.url.replace('/ObjView/', '/ListView/')
             #self.url        = self.url.replace('/ObjView/', '/largeimages/') #removed because of inconsistent dimensions.
 
+            try:
+                self.width  = int(float(str(self.width)))
+
+            except ValueError:
+                logging.warning('Error extracting the image dimensions => {}'.format(imgSRC))
+                self.width  = '0' #temporary bug fix
+
+            try:
+                self.height = int(float(str(self.height)))
+
+            except ValueError:
+                logging.warning('Error extracting the image dimensions => {}'.format(imgSRC))
+                self.height  = '0' #temporary bug fix
+
 
             imgAltText  = self.validateContent('', imgSRC, 'alt')
             if imgAltText:
-                otherMetaData['image_alt_text'] = imgAltText
+                otherMetaData['image_alt_text'] = self.sanitizeString(imgAltText)
 
 
         else:
@@ -102,7 +117,7 @@ class McCordMuseum(Provider):
         title   = soup.find('h1', {'class': 'vo'})
         if title:
             title       = title.text.split('|')
-            self.title  = title[1].strip()
+            self.title  = self.sanitizeString(title[1].strip())
             foreignID   = title[0].strip()
 
         if foreignID:
@@ -115,7 +130,7 @@ class McCordMuseum(Provider):
         #tags
         tagInfo = soup.find_all('a', {'title': 'All tagged images'})
         if tagInfo:
-            tags                    = ','.join(tag.text.strip() for tag in tagInfo)
+            tags                    = ','.join(self.sanitizeString(tag.text.strip()) for tag in tagInfo)
             if tags.strip():
                 otherMetaData['tags']   = tags
 
@@ -125,7 +140,7 @@ class McCordMuseum(Provider):
             artisrtInfo = otherInfo.findChild('a', {'href': re.compile('.*?tablename=artist.*?')})
             if artisrtInfo:
                 artist       = artisrtInfo.text.strip().split(' (')[0]
-                self.creator = artist
+                self.creator = self.sanitizeString(artist)
 
 
         #description/summary
@@ -133,7 +148,7 @@ class McCordMuseum(Provider):
         if description:
             content = description.text.strip()
             if content:
-                otherMetaData['description'] = content
+                otherMetaData['description'] = self.sanitizeString(content)
 
 
         self.provider   = self.name
