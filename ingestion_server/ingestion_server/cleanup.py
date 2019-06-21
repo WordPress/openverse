@@ -3,6 +3,7 @@ import time
 import multiprocessing
 import uuid
 import requests as re
+import psycopg2
 from psycopg2.extras import DictCursor, Json
 from ingestion_server.indexer import database_connect, DB_BUFFER_SIZE
 from urllib.parse import urlparse
@@ -54,7 +55,13 @@ class CleanupFunctions:
         url = kwargs.get('url')
         parsed = urlparse(url)
         if parsed.scheme == '':
-            tls_supported = tls_support[provider]
+            try:
+                tls_supported = tls_support[provider]
+            except KeyError:
+                # The upstream content provider table is missing this provider,
+                # so it wasn't tested for TLS support.
+                tls_supported = TlsTest.test_tls_supported(url)
+                tls_support[provider] = tls_supported
             if tls_supported:
                 return "'https://{}'".format(url)
             else:
@@ -121,11 +128,11 @@ class TlsTest:
     event that it is missing or incorrect.
     """
     @classmethod
-    def _test_tls_supported(cls, url):
+    def test_tls_supported(cls, url):
         # No protocol provided
         if 'https://' not in url and 'http://' not in url:
             fixed_url = 'http://' + url
-            return cls._test_tls_supported(fixed_url)
+            return cls.test_tls_supported(fixed_url)
         # HTTP provided, but we want to check if HTTPS is supported as well.
         elif 'http://' in url:
             https = url.replace('http://', 'https://')
@@ -140,7 +147,7 @@ class TlsTest:
         return True
 
     @staticmethod
-    def test_provider_tls_images_available(table):
+    def test_provider_tls_images_available(table, upstream_db):
         """
         Given a table, find 10 sample images and test whether HTTPS is
         available. If the majority supports TLS, we assume TLS is supported by
@@ -150,26 +157,37 @@ class TlsTest:
         available, else False.
         """
         provider_tls_supported = {}
-        conn = database_connect()
-        cur = conn.cursor(cursor_factory=DictCursor)
+        down_conn = database_connect()
+        down_cur = down_conn.cursor(cursor_factory=DictCursor)
+        up_conn = psycopg2.connect(
+            dbname='openledger',
+            user='deploy',
+            port=upstream_db['port'],
+            password=upstream_db['password'],
+            host=upstream_db['host'],
+            connect_timeout=5
+        )
+        up_cur = up_conn.cursor(cursor_factory=DictCursor)
         provider_query = 'SELECT provider_identifier FROM content_provider;'
-        cur.execute(provider_query)
-        providers = cur.fetchall()
+        up_cur.execute(provider_query)
+        providers = up_cur.fetchall()
+        up_cur.close()
+        up_conn.close()
 
         for p in providers:
             p = p[0]
             sample_query = "SELECT thumbnail, url FROM temp_import_{table}" \
                            " WHERE provider='{provider}' LIMIT 10" \
                            .format(provider=p, table=table)
-            cur.execute(sample_query)
+            down_cur.execute(sample_query)
             img_list = [
-                r['thumbnail'] if r['thumbnail'] else r['url'] for r in cur
+                r['thumbnail'] if r['thumbnail'] else r['url'] for r in down_cur
             ]
 
             http_score = 0
             https_score = 0
             for thumb in img_list:
-                tls_supported = TlsTest._test_tls_supported(thumb)
+                tls_supported = TlsTest.test_tls_supported(thumb)
                 if tls_supported:
                     https_score += 1
                 else:
@@ -182,8 +200,8 @@ class TlsTest:
                 "Provider '{}' TLS support: {}"
                 .format(p, provider_tls_supported[p])
             )
-        cur.close()
-        conn.close()
+        down_conn.close()
+        down_cur.close()
         return provider_tls_supported
 
 
@@ -249,16 +267,18 @@ def _clean_data_worker(rows, temp_table, providers_config, tls_support):
     return True
 
 
-def clean_image_data(table):
+def clean_image_data(table, upstream_db):
     """
     Data from upstream can be unsuitable for production for a number of reasons.
     Clean it up before we go live with the new data.
 
     :param table: The staging table for the new data
+    :param upstream_db: A dict specifying the connection details of the upstream
+    database.
     :return: None
     """
     log.info('Testing TLS support for each provider...')
-    tls_support = TlsTest.test_provider_tls_images_available(table)
+    tls_support = TlsTest.test_provider_tls_images_available(table, upstream_db)
     # Map each table to the fields that need to be cleaned up. Then, map each
     # field to its cleanup function.
     log.info('Cleaning up data...')
