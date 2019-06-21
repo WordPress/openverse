@@ -157,8 +157,6 @@ class TlsTest:
         available, else False.
         """
         provider_tls_supported = {}
-        down_conn = database_connect()
-        down_cur = down_conn.cursor(cursor_factory=DictCursor)
         up_conn = psycopg2.connect(
             dbname='openledger',
             user='deploy',
@@ -171,17 +169,15 @@ class TlsTest:
         provider_query = 'SELECT provider_identifier FROM content_provider;'
         up_cur.execute(provider_query)
         providers = up_cur.fetchall()
-        up_cur.close()
-        up_conn.close()
 
         for p in providers:
             p = p[0]
             sample_query = "SELECT thumbnail, url FROM temp_import_{table}" \
                            " WHERE provider='{provider}' LIMIT 10" \
                            .format(provider=p, table=table)
-            down_cur.execute(sample_query)
+            up_cur.execute(sample_query)
             img_list = [
-                r['thumbnail'] if r['thumbnail'] else r['url'] for r in down_cur
+                r['thumbnail'] if r['thumbnail'] else r['url'] for r in up_cur
             ]
 
             http_score = 0
@@ -200,8 +196,8 @@ class TlsTest:
                 "Provider '{}' TLS support: {}"
                 .format(p, provider_tls_supported[p])
             )
-        down_conn.close()
-        down_cur.close()
+        up_cur.close()
+        up_conn.close()
         return provider_tls_supported
 
 
