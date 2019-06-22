@@ -14,10 +14,10 @@ Conduct][code_of_conduct].
 
 ## Project Documentation
 
-Please consult the `README` if there is one, it should contain or link to
-project documentation. If there is no `README`, please file a GitHub issue to
-create one.
-
+The `README` in the root of the repository should contain or link to
+project documentation. If you cannot find the documentation you're
+looking for, please file a GitHub issue with details of what
+you'd like to see documented.
 
 ## How to Contribute
 
@@ -40,6 +40,6 @@ If you'd like to build a new feature but don't have a specific idea, please chec
 
 ## Questions or Thoughts?
 
-Talk to us on [our developer mailing list or Slack community][community].
+Talk to us on [one of our community forums][community].
 
 [community]:https://creativecommons.github.io/community/
