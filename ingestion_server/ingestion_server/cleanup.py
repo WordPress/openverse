@@ -172,7 +172,7 @@ class TlsTest:
 
         for p in providers:
             p = p[0]
-            sample_query = "SELECT thumbnail, url FROM temp_import_{table}" \
+            sample_query = "SELECT thumbnail, url FROM {table}" \
                            " WHERE provider='{provider}' LIMIT 10" \
                            .format(provider=p, table=table)
             up_cur.execute(sample_query)
