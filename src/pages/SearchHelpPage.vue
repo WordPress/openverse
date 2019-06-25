@@ -30,7 +30,7 @@
       Put <em>license:</em> in front of your search term to see only results
       from the specified source. For example,
       <a href='https://search.creativecommons.org/search?q=license%3A%20"by"'>
-        <em>license: "by"</em>
+        <em>license:"by"</em>
       </a>
       <br />
       The results will be images licensed under the CC-BY license.
@@ -43,7 +43,7 @@
       Put <em>provider:</em> in front of your search term to see only results from the
       specified source. For example,
       <a href='https://search.creativecommons.org/search?q=provider%3A%20"met"'>
-        <em>provider: "met"</em>
+        <em>provider:"met"</em>
       </a>
       <br />
       Note that you must use one of the provider codes specified below, searching for
@@ -94,7 +94,7 @@
 
     <p>Example:
     <a href='https://search.creativecommons.org/search?q=tags.name%3A%20"phone"%20OR%20tags.name%3A%20"sky"'>
-      <em>tags.name: "phone" OR tags.name: "sky"</em>
+      <em>tags.name:"phone" OR tags.name:"sky"</em>
     </a>
     <br />
     This will search for images tagged with sky or with phone, but not necessarily both.
@@ -108,7 +108,7 @@
       <ul>
         <li>
           <a href='https://ccsearch.creativecommons.org/search?q=title%3A%20"nature"%20AND%20provider%3A%20"met"'>
-            <em>title: "nature" AND provider: "met"</em>
+            <em>title:"nature" AND provider:"met"</em>
           </a>
           will return images from the MET and whose title contains nature.
         </li>
