@@ -7,6 +7,10 @@ import psycopg2
 from psycopg2.extras import DictCursor, Json
 from ingestion_server.indexer import database_connect, DB_BUFFER_SIZE
 from urllib.parse import urlparse
+from tld import get_tld
+from tld.utils import update_tld_names
+from tld.exceptions import TldBadUrl
+update_tld_names()
 """
 Functions for processing data when it is imported into the CC Catalog. This 
 includes cleaning up malformed URLs and filtering out undesirable tags.
@@ -46,22 +50,26 @@ class CleanupFunctions:
     Cleanup functions are dispatched in the _cleanup_config dictionary.
     """
     @staticmethod
-    def cleanup_url(**kwargs):
+    def cleanup_url(url, tls_support):
         """
         Add protocols to the URI if they are missing, else return None.
         """
-        provider = kwargs.get('provider')
-        tls_support = kwargs.get('tls')
-        url = kwargs.get('url')
         parsed = urlparse(url)
         if parsed.scheme == '':
             try:
-                tls_supported = tls_support[provider]
+                _tld = get_tld('https://' + url, as_object=True)
+                _tld = _tld.subdomain + '.' + _tld.domain + '.' + _tld.tld
+                _tld = str(_tld)
+            except TldBadUrl:
+                _tld = 'unknown'
+                log.info('Failed to parse url {}'.format(url))
+            try:
+                tls_supported = tls_support[_tld]
             except KeyError:
-                # The upstream content provider table is missing this provider,
-                # so it wasn't tested for TLS support.
                 tls_supported = TlsTest.test_tls_supported(url)
-                tls_support[provider] = tls_supported
+                tls_support[_tld] = tls_supported
+                log.info('Tested domain {}'.format(_tld))
+
             if tls_supported:
                 return "'https://{}'".format(url)
             else:
@@ -146,68 +154,15 @@ class TlsTest:
         # supported.
         return True
 
-    @staticmethod
-    def test_provider_tls_images_available(table, upstream_db):
-        """
-        Given a table, find 10 sample images and test whether HTTPS is
-        available. If the majority supports TLS, we assume TLS is supported by
-        the provider for all items.
 
-        :return: A dict with key "provider" mapped to value True if TLS is
-        available, else False.
-        """
-        provider_tls_supported = {}
-        up_conn = psycopg2.connect(
-            dbname='openledger',
-            user='deploy',
-            port=upstream_db['port'],
-            password=upstream_db['password'],
-            host=upstream_db['host'],
-            connect_timeout=5
-        )
-        up_cur = up_conn.cursor(cursor_factory=DictCursor)
-        provider_query = 'SELECT provider_identifier FROM content_provider;'
-        up_cur.execute(provider_query)
-        providers = up_cur.fetchall()
-
-        for p in providers:
-            p = p[0]
-            sample_query = "SELECT thumbnail, url FROM {table}" \
-                           " WHERE provider='{provider}' LIMIT 10" \
-                           .format(provider=p, table=table)
-            up_cur.execute(sample_query)
-            img_list = [
-                r['thumbnail'] if r['thumbnail'] else r['url'] for r in up_cur
-            ]
-
-            http_score = 0
-            https_score = 0
-            for thumb in img_list:
-                tls_supported = TlsTest.test_tls_supported(thumb)
-                if tls_supported:
-                    https_score += 1
-                else:
-                    http_score += 1
-            if https_score >= http_score:
-                provider_tls_supported[p] = True
-            else:
-                provider_tls_supported[p] = False
-            log.info(
-                "Provider '{}' TLS support: {}"
-                .format(p, provider_tls_supported[p])
-            )
-        up_cur.close()
-        up_conn.close()
-        return provider_tls_supported
-
-
-def _clean_data_worker(rows, temp_table, providers_config, tls_support):
+def _clean_data_worker(rows, temp_table, providers_config):
     log.info('Starting data cleaning worker')
     global_field_to_func = providers_config['*']['fields']
     worker_conn = database_connect()
     log.info('Data cleaning worker connected to database')
     write_cur = worker_conn.cursor(cursor_factory=DictCursor)
     log.info('Cleaning {} rows'.format(len(rows)))
+    tls_cache = {}
     start_time = time.time()
     for row in rows:
         # Map fields that need updating to their cleaning functions
@@ -228,9 +183,7 @@ def _clean_data_worker(rows, temp_table, providers_config, tls_support):
                 continue
             cleaning_func = fields_to_update[update_field]
             if cleaning_func == CleanupFunctions.cleanup_url:
-                clean = cleaning_func(
-                    url=dirty_value, tls=tls_support, provider=provider
-                )
+                clean = cleaning_func(url=dirty_value, tls_support=tls_cache)
             else:
                 clean = cleaning_func(dirty_value)
             if clean:
@@ -253,6 +206,7 @@ def _clean_data_worker(rows, temp_table, providers_config, tls_support):
                 _id=_id
             )
             write_cur.execute(update_query)
+    log.info('TLS cache: {}'.format(tls_cache))
     log.info('Worker committing changes...')
     worker_conn.commit()
     write_cur.close()
@@ -273,8 +227,6 @@ def clean_image_data(table, upstream_db):
     database.
     :return: None
     """
-    log.info('Testing TLS support for each provider...')
-    tls_support = TlsTest.test_provider_tls_images_available(table, upstream_db)
     # Map each table to the fields that need to be cleaned up. Then, map each
     # field to its cleanup function.
     log.info('Cleaning up data...')
@@ -326,7 +278,7 @@ def clean_image_data(table, upstream_db):
                 last_end = end
                 # Arguments for parallel _clean_data_worker calls
                 jobs.append(
-                    (batch[start:end], temp_table, provider_config, tls_support)
+                    (batch[start:end], temp_table, provider_config)
                 )
             pool = multiprocessing.Pool(processes=num_workers)
             log.info('Starting {} cleaning jobs'.format(len(jobs)))
