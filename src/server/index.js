@@ -1,17 +1,11 @@
-import Vue from 'vue';
 import express from 'express';
 import vueServerRenderer from 'vue-server-renderer';
+import app from '../main';
 
 const server = express();
 const renderer = vueServerRenderer.createRenderer();
 
 server.get('*', (req, res) => {
-  const app = new Vue({
-    data: {
-      url: req.url,
-    },
-    template: '<div>The visited URL is: {{ url }}</div>',
-  });
 
   renderer.renderToString(app, (err, html) => {
     if (err) {

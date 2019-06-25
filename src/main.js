@@ -16,10 +16,12 @@ analytics.anonymizeIpAddress();
 analytics.setTransportBeacon();
 
 /* eslint-disable no-new */
-new Vue({
+const app = new Vue({
   el: '#app',
   store: store(analytics),
   router,
   components: { App },
   template: '<App/>',
 });
+
+export default app;
