@@ -19,7 +19,8 @@ test_queries = [
     "cat",
     "WW2",
     "Monet",
-    "Edvard Munch"
+    "Edvard Munch",
+    "flamingo"
 ]
 
 
@@ -34,6 +35,7 @@ class DriverOps:
             (By.CLASS_NAME, 'search-grid_image-ctr')
         )
         WebDriverWait(driver, 10).until(search_item_rendered)
+        driver.execute_script("window.scrollTo(0, 200)")
         driver.save_screenshot(name)
 
     @staticmethod
