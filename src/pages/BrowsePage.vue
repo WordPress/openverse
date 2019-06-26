@@ -9,7 +9,7 @@
       <div :class="{ 'cell search-grid-ctr': true }">
         <search-grid v-if="query.q"
                      :query="query"
-                     :searchTerm="query.q"
+                     searchTerm=""
                      @onLoadMoreImages="onLoadMoreImages"></search-grid>
       </div>
     </div>
