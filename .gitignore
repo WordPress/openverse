@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 /test/unit/coverage/
 /test/e2e/reports/
+/test/selenium/geckodriver.log
 selenium-debug.log
 
 # Editor directories and files
