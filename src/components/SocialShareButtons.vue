@@ -1,19 +1,22 @@
 <template>
-  <div :class="{ 'social-share': true, 'social-share__medium': isMedium }">
+  <div class="social-share">
     <div class="share-list_social-items cell medium-6 large-4">
       <a
         class="social-button facebook"
         target="_blank"
+        @click="onSocialMediaLinkClick('Facebook')"
         :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}&t==${shareText}&href=${shareURL}`">
       </a>
       <a
         class="social-button twitter"
         target="_blank"
+        @click="onSocialMediaLinkClick('Twitter')"
         :href="`https://twitter.com/intent/tweet?text=${shareText}`">
       </a>
       <a
         class="social-button pinterest"
         target="_blank"
+        @click="onSocialMediaLinkClick('Pinterest')"
         :href="`https://www.pinterest.com/pin/create/bookmarklet/?media=${imageURL}&description=${shareText}`">
       </a>
     </div>
@@ -21,13 +24,19 @@
 </template>
 
 <script>
+import { SOCIAL_MEDIA_SHARE } from '@/store/action-types';
+
 export default {
   name: 'social-share-buttons',
   props: {
-    isMedium: '', // Refers to slightly smaller sized version
     shareURL: '',
     shareText: '',
     imageURL: '',
+  },
+  methods: {
+    onSocialMediaLinkClick(site) {
+      this.$store.dispatch(SOCIAL_MEDIA_SHARE, { site });
+    },
   },
 };
 </script>

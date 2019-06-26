@@ -19,9 +19,11 @@
       <p>
         Currently CC Search only searches images, but we plan to add additional media types such as
         open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC
-        licensed and public domain works on the web. Learn more about CC’s 2019 vision, strategy
-        and roadmap for CC Search <a href="https://creativecommons.org/2019/03/19/cc-search/">here</a> and
-        see what we’re currently working on <a href="https://github.com/orgs/creativecommons/projects/7">here</a>.
+        licensed and public domain works on the web. Learn more about CC’s
+        <a href="https://creativecommons.org/2019/03/19/cc-search/">2019 vision, strategy</a> and
+        <a href="https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/edit#heading=h.jih78emira0r">roadmap</a>
+        for CC Search and see what
+        <a href="https://github.com/orgs/creativecommons/projects/7">we’re currently working on</a>.
         All of our code is open source
         (<a href="https://github.com/creativecommons/cccatalog-frontend/">CC Search</a>,
         <a href="https://github.com/creativecommons/cccatalog-api/">CC Catalog API</a>,
