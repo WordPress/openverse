@@ -1,4 +1,5 @@
 import os
+import requests as rs
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -7,8 +8,10 @@ from selenium.webdriver.common.by import By
 
 
 SCREEN_DIR = './screenshots'
-
-
+TARGET_URL = 'https://search.creativecommons.org'
+release = rs.get('https://api-dev.creativecommons.engineering/version').json()
+VERSION = release['release']
+ENVIRONMENT = release['environment']
 test_queries = [
     "dog",
     "DNA",
@@ -35,11 +38,14 @@ class DriverOps:
 
     @staticmethod
     def test_query(driver, query):
+        results_dir = os.path.join(SCREEN_DIR, '{}-{}'.format(ENVIRONMENT, VERSION))
+        if not os.path.exists(results_dir):
+            os.makedirs(results_dir)
         driver.get(
-            "https://ccsearch.creativecommons.org/search?q={}".format(query)
+            "{}/search?q={}".format(TARGET_URL, query)
         )
         DriverOps._screenshot(
-            driver, os.path.join(SCREEN_DIR, '{}.png'.format(query))
+            driver, os.path.join(results_dir, '{}.png'.format(query))
         )
 
 
