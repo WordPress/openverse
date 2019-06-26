@@ -34,6 +34,18 @@
         <a href="https://oldsearch.creativecommons.org/">here</a>
       </span>
     </div>
+
+    <div class="search-help-link">
+      <span>
+        See our Search Syntax Guide
+        <a href="/search-help">
+          here
+          <img class='help-icon'
+              src='../assets/help_icon.svg'
+              alt='Help' />
+        </a>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -56,7 +68,7 @@ export default {
 <style lang="scss" scoped>
 @import '../../node_modules/foundation-sites/scss/foundation';
 
-$hero-height: 75vh;
+$hero-height: 71vh;
 
 .hero {
   background: #e9ebee;
@@ -154,6 +166,21 @@ $hero-height: 75vh;
     top: 0;
     font-size: 0.9rem;
   }
+}
+
+.search-help-link {
+  position: absolute;
+  bottom: 1rem;
+  right: 2rem;
+
+  @media screen and (max-width: 320px) {
+    font-size: 0.9rem;
+    bottom: 0;
+  }
+}
+
+.help-icon {
+  height: 32px;
 }
 
 /* Small only */
