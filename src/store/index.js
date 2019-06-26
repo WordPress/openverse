@@ -8,6 +8,7 @@ import SearchStore from './search-store';
 import ImageProviderStore from './image-provider-store';
 import AttributionStore from './attribution-store';
 import BugReportStore from './bug-report-store';
+import SocialMediaStore from './social-store';
 
 Vue.use(Vuex);
 
@@ -17,6 +18,7 @@ const store = GoogleAnalytics => (new Vuex.Store({
     ImageProviderStore.actions(ImageProviderService),
     AttributionStore.actions(GoogleAnalytics),
     BugReportStore.actions(BugReportService),
+    SocialMediaStore.actions(GoogleAnalytics),
   ),
   state: Object.assign(
     SearchStore.state(window.location.search),
