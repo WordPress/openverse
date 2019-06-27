@@ -63,8 +63,12 @@ class DriverOps:
             (By.CLASS_NAME, 'search-grid_image-ctr')
         )
         WebDriverWait(driver, 10).until(search_item_rendered)
+        # Scroll down so the header isn't visible.
         driver.execute_script("window.scrollTo(0, 200)")
-        driver.save_screenshot(name)
+        driver.save_screenshot(name + '.png')
+        # Take a screenshot of the second page of results.
+        driver.execute_script("window.scrollTo(0, 1080)")
+        driver.save_screenshot(name + '_2.png')
 
     @staticmethod
     def test_query(driver, query):
@@ -75,7 +79,7 @@ class DriverOps:
             "{}/search?q={}".format(TARGET_URL, query)
         )
         DriverOps._screenshot(
-            driver, os.path.join(results_dir, '{}.png'.format(query))
+            driver, os.path.join(results_dir, query)
         )
 
 
