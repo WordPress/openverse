@@ -19,8 +19,7 @@ includes cleaning up malformed URLs and filtering out undesirable tags.
 # Number of records to buffer in memory at once
 CLEANUP_BUFFER_SIZE = DB_BUFFER_SIZE
 
-# Filter out automatically generated tags that aren't of any use to us.
-# Note this list is case insensitive.
+# Filter out tags that exactly match these terms. All terms should be lowercase.
 TAG_BLACKLIST = {
     'no person',
     'squareformat',
@@ -37,9 +36,28 @@ TAG_BLACKLIST = {
     'pdm'
 }
 
+# Filter out tags that contain the following terms. All entrees should be
+# lowercase.
+TAG_CONTAINS_BLACKLIST = {
+    'flickriosapp',
+    'uploaded',
+    ':',
+    '='
+}
+
 # Filter out low-confidence tags, which indicate that the machine-generated tag
 # may be inaccurate.
 TAG_MIN_CONFIDENCE = 0.90
+
+
+def _tag_blacklisted(tag):
+    """ Tag is banned or contains a banned substring. """
+    if tag in TAG_BLACKLIST:
+        return True
+    for blacklisted_substring in TAG_CONTAINS_BLACKLIST:
+        if blacklisted_substring in tag:
+            return True
+    return False
 
 
 class CleanupFunctions:
@@ -92,8 +110,8 @@ class CleanupFunctions:
             below_threshold = False
             if 'accuracy' in tag and tag['accuracy'] < TAG_MIN_CONFIDENCE:
                 below_threshold = True
-            should_filter = (tag['name'].lower() in TAG_BLACKLIST or
-                             below_threshold)
+            lower_tag = tag['name'].lower()
+            should_filter = _tag_blacklisted(lower_tag) or below_threshold
             if not should_filter:
                 tag_output.append(tag)
                 update_required = True
