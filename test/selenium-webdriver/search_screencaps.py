@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 
 SCREEN_DIR = './screenshots'
 TARGET_URL = 'https://search.creativecommons.org'
-release = rs.get('https://api-dev.creativecommons.engineering/version').json()
+release = rs.get('https://api.creativecommons.engineering/version').json()
 VERSION = release['release']
 ENVIRONMENT = release['environment']
 test_queries = [
