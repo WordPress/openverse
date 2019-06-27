@@ -117,7 +117,7 @@ const actions = ImageService => ({
   },
   [FETCH_RELATED_IMAGES]({ commit }, params) {
     commit(FETCH_START_IMAGES);
-    return ImageService.search(params)
+    return ImageService.getRelatedImages(params)
       .then(({ data }) => {
         commit(FETCH_END_IMAGES);
         commit(SET_RELATED_IMAGES,

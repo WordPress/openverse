@@ -228,6 +228,7 @@ describe('Search Store', () => {
     beforeEach(() => {
       imageServiceMock = {
         search: jest.fn(() => Promise.resolve({ data: searchData })),
+        getRelatedImages: jest.fn(() => Promise.resolve({ data: searchData })),
         getProviderCollection: jest.fn(() => Promise.resolve({ data: searchData })),
         getImageDetail: jest.fn(() => Promise.resolve({ data: imageDetailData })),
       };
@@ -389,7 +390,7 @@ describe('Search Store', () => {
     });
 
     it('FETCH_RELATED_IMAGES on success', (done) => {
-      const params = { query: { q: 'foo' }, page: 1, shouldPersistImages: false };
+      const params = { id: 'foo' };
       const action = store.actions(imageServiceMock)[FETCH_RELATED_IMAGES];
       action({ commit }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
@@ -400,16 +401,16 @@ describe('Search Store', () => {
           relatedImagesCount: searchData.result_count,
         });
 
-        expect(imageServiceMock.search).toBeCalledWith(params);
+        expect(imageServiceMock.getRelatedImages).toBeCalledWith(params);
         done();
       });
     });
 
     it('FETCH_RELATED_IMAGES on error', (done) => {
       const failedMock = {
-        search: jest.fn(() => Promise.reject('error')),
+        getRelatedImages: jest.fn(() => Promise.reject('error')),
       };
-      const params = 'foo';
+      const params = { id: 'foo' };
       const action = store.actions(failedMock)[FETCH_RELATED_IMAGES];
       action({ commit }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
