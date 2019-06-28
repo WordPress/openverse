@@ -20,6 +20,9 @@
             <button class="hero_search-btn" title="Search"></button>
           </div>
       </div>
+      <div>
+        <home-license-filter />
+      </div>
     </form>
     <div class="description">
         <p>
@@ -51,9 +54,13 @@
 
 <script>
 import { SET_QUERY } from '@/store/mutation-types';
+import HomeLicenseFilter from './HomeLicenseFilter';
 
 export default {
   name: 'hero-section',
+  components: {
+    HomeLicenseFilter,
+  },
   data: () => ({ form: { searchTerm: '' } }),
   methods: {
     onSubmit() {
