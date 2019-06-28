@@ -20,9 +20,7 @@
             <button class="hero_search-btn" title="Search"></button>
           </div>
       </div>
-      <div>
-        <home-license-filter />
-      </div>
+      <home-license-filter />
     </form>
     <div class="description">
         <p>
@@ -128,7 +126,7 @@ $hero-height: 71vh;
     position: absolute;
     top: 0;
     right: 0;
-    height: calc( 100% - 3px );
+    height: 60px;
     width: 60px;
     margin: 2px;
     font-size: 24px;
@@ -160,7 +158,6 @@ $hero-height: 71vh;
 }
 
 .description {
-  margin-top: 2vh;
   font-style: italic;
 }
 

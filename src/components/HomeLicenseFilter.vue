@@ -1,13 +1,13 @@
 <template>
-  <div>
+  <div class="home-license-filter">
     <span>I want something I can</span>
 
-    <div v-for="licenseType in licenseTypes">
-      <label :for="licenseType.code">{{ licenseType.name }}</label>
+    <div class="license-filters" v-for="(licenseType, index) in licenseTypes" :key="index">
       <input :id="licenseType.code"
               type="checkbox"
               :checked="licenseType.checked"
               @input="onFilterChanged(licenseType.code)" />
+      <label :for="licenseType.code">{{ licenseType.name }}</label>
     </div>
   </div>
 </template>
@@ -48,5 +48,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.home-license-filter {
+  margin-top: 0.5em;
+  text-align: left;
+}
+span {
+  display: block;
+}
+.license-filters {
+  display: inline-block;
+}
 </style>
