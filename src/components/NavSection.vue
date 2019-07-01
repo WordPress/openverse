@@ -8,6 +8,7 @@
     <ul class="menu">
       <li><a href="/about">About</a></li>
       <li><a href="/collections">Browse by Collection</a></li>
+      <li id="search-help"><a href="/search-help">Search Guide</a></li>
       <li><a href="/feedback">Feedback</a></li>
       <li class="nav_search" v-if="showNavSearch ==='true'">
         <form class="hero_search-form"
@@ -77,6 +78,10 @@ export default {
   padding: 0;
   list-style: none;
   overflow: hidden;
+}
+
+li {
+  display: block;
 }
 
 .header li a {
@@ -165,8 +170,12 @@ export default {
   top: 0;
 }
 
+#search-help {
+  display: inline-block;
+}
+
 /* 48em = 768px */
-@media (min-width: 48em) {
+@media (min-width: 49em) {
   .header {
     height: 3.9em;
   }
@@ -177,7 +186,7 @@ export default {
     float: right;
   }
   .header li {
-    float: left;
+    display: inline-block;
   }
   .header li a {
     padding: 10px 30px;
@@ -185,6 +194,10 @@ export default {
   .header .menu_icon {
     display: none;
   }
+
+  #search-help {
+  display: none;
+}
 }
 
 .menu a {

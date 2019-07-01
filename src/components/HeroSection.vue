@@ -177,9 +177,8 @@ $hero-height: 71vh;
   bottom: 1rem;
   right: 2rem;
 
-  @media screen and (max-width: 320px) {
-    font-size: 0.9rem;
-    bottom: 0;
+  @media screen and (max-width: 768px) {
+    display: none;
   }
 }
 
