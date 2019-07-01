@@ -15,7 +15,7 @@
           :multiple="true"
           :searchable="false"
           :closeOnSelect="false"
-          :showLabels="false">>
+          :showLabels="false">
         </multiselect>
       </div>
       <div class="filter-option search-filters_licenses">
