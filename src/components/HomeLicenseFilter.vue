@@ -21,6 +21,7 @@ export default {
     onFilterChanged(code) {
       this.licenseTypes.forEach((lt) => {
         if (lt.code === code) {
+          // eslint-disable-next-line no-param-reassign
           lt.checked = true;
         }
       });
