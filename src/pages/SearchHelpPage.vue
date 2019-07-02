@@ -114,7 +114,7 @@
         </li>
         <li>
           <a href='https://ccsearch.creativecommons.org/search?q=tags.name%3A"sky"AND%20tags.name%3A"airplane"'>
-            <em>tags.name:"sky"AND tags.name:"airplane"</em>
+            <em>tags.name:"sky" AND tags.name:"airplane"</em>
           </a>
           will return images tagged both sky and  airplane.
         </li>
