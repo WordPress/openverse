@@ -59,7 +59,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .footer {
-  bottom: 0;
   padding: 4vh;
   background-color: #2b2b2b;
   width: 100%;
