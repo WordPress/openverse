@@ -6,7 +6,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "server": "node --experimental-modules src/server/index.js",
+    "server": "node --experimental-modules dist/server.js",
     "dev-insecure": "webpack-dev-server --inline --progress --config build/webpack-dev-conf.js",
     "dev": "webpack-dev-server --https --inline --progress --config build/webpack-dev-conf.js",
     "start": "npm run dev",
@@ -14,7 +14,8 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "build-server": "webpack -p --config build/webpack-server-conf.js --progress"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -97,7 +98,8 @@
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.11.3",
-    "webpack-merge": "^4.1.4"
+    "webpack-merge": "^4.1.4",
+    "webpack-node-externals": "^1.7.2"
   },
   "engines": {
     "node": ">= 6.0.0",
