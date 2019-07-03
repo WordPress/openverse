@@ -6,7 +6,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "server": "node --experimental-modules dist/server.js",
+    "server": "node --experimental-modules src/server/index.js",
     "dev-insecure": "webpack-dev-server --inline --progress --config build/webpack-dev-conf.js",
     "dev": "webpack-dev-server --https --inline --progress --config build/webpack-dev-conf.js",
     "start": "npm run dev",

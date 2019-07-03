@@ -1,15 +1,15 @@
 import express from 'express';
 import vueServerRenderer from 'vue-server-renderer';
-import app from '../main';
+import bundle from '../../dist/server-bundle.json';
 
 const server = express();
-const renderer = vueServerRenderer.createRenderer();
+const renderer = vueServerRenderer.createBundleRenderer(bundle);
 
 server.get('*', (req, res) => {
-
-  renderer.renderToString(app, (err, html) => {
+  renderer.renderToString({}, (err, html) => {
     if (err) {
       res.status(500).end('Internal Server Error');
+      console.log(err);
       return;
     }
     res.end(`

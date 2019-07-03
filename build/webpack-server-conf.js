@@ -5,7 +5,6 @@ const baseConfig = require('./webpack-base-conf.js');
 
 module.exports = merge(baseConfig, {
   // Point entry to your app's server entry file
-  entry: './src/server/index.js',
 
   // This allows webpack to handle dynamic imports in a Node-appropriate
   // fashion, and also tells `vue-loader` to emit server-oriented code when
@@ -36,7 +35,7 @@ module.exports = merge(baseConfig, {
   // `vue-ssr-server-bundle.json`
   plugins: [
     new VueSSRServerPlugin({
-      filename: 'server.js'
+      filename: 'server-bundle.json'
     })
   ]
 });
