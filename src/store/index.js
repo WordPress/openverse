@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import isUndefined from 'lodash.isundefined';
 import { routePush } from '@/router';
 import ImageProviderService from '@/api/ImageProviderService';
 import ImageService from '@/api/ImageService';
@@ -12,6 +13,8 @@ import SocialMediaStore from './social-store';
 
 Vue.use(Vuex);
 
+const queryParams = !(typeof window === 'undefined') ? window.location.search : '';
+
 const store = GoogleAnalytics => (new Vuex.Store({
   actions: Object.assign(
     SearchStore.actions(ImageService),
@@ -21,7 +24,7 @@ const store = GoogleAnalytics => (new Vuex.Store({
     SocialMediaStore.actions(GoogleAnalytics),
   ),
   state: Object.assign(
-    SearchStore.state(window.location.search),
+    SearchStore.state(queryParams),
     ImageProviderStore.state,
     BugReportStore.state,
   ),
