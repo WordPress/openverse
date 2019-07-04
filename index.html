@@ -20,45 +20,11 @@
       <link rel="icon" type="image/png" href="https://d15omoko64skxi.cloudfront.net/wp-content/uploads/2016/05/cc-site-icon-300x300.png" sizes="192x192">
       <link rel="apple-touch-icon-precomposed" href="https://d15omoko64skxi.cloudfront.net/wp-content/uploads/2016/05/cc-site-icon-300x300.png">
       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C600%2C700%7CRoboto+Condensed&amp;ver=4.9.8" type="text/css" media="all">
-      <style>
-        .feedback-tab {
-          display: block;
-          position: fixed;
-          right: -20px;
-          top: 50%;
-          background: #049bce;
-          transform: rotate(270deg);
-          transform-origin: top;
-          border-top: 5px solid #fff;
-          border-left: 5px solid #fff;
-          border-right: 5px solid #fff;
-          border-radius: 20px 20px 0 0;
-          box-shadow: 0 0 10px 0 rgba(0,0,0,.8);
-          z-index: 1000;
-          padding: .5rem 1rem;
-          color: #fff;
-          font-size: 20px;
-        }
-
-        .feedback-tab:hover {
-          color: white;
-          text-decoration: underline;
-        }
-
-        .about-page_provider-stats-ctr{
-          overflow-x: auto
-        }
-
-        @media screen and (max-width: 670px) {
-          .feedback-tab {
-            display: none;
-          }
-        }
-      </style>
     </head>
     <body>
-      <div id="app"></div>
-
+      <div id="app" data-server-rendered="true">
+        <!--vue-ssr-outlet-->
+      </div>
       <script>
         // Use production Google Analytics ID if ccsearch is in the URL, otherwise use development/staging ID
         // TODO: Refactor this to use environment variables instead of hardcoding IDs here.

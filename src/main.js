@@ -8,20 +8,25 @@ import router from './router';
 import store from './store';
 import GoogleAnalytics from './analytics/GoogleAnalytics';
 
-Vue.config.productionTip = false;
+function createApp() {
+  Vue.config.productionTip = false;
 
-ApiService.init();
-const analytics = GoogleAnalytics();
-analytics.anonymizeIpAddress();
-analytics.setTransportBeacon();
+  ApiService.init();
+  const analytics = GoogleAnalytics();
+  analytics.anonymizeIpAddress();
+  analytics.setTransportBeacon();
 
-/* eslint-disable no-new */
-const app = new Vue({
-  el: '#app',
-  store: store(analytics),
-  router,
-  components: { App },
-  template: '<App/>',
-});
+  const appStore = store(analytics);
 
-export default app;
+  const app = new Vue({
+    el: '#app',
+    store: appStore,
+    router,
+    render: h => h(App),
+  });
+
+  return { app, store: appStore, router };
+}
+
+
+export default createApp;

@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import isUndefined from 'lodash.isundefined';
 import { routePush } from '@/router';
 import ImageProviderService from '@/api/ImageProviderService';
 import ImageService from '@/api/ImageService';
