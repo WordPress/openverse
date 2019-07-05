@@ -64,8 +64,10 @@ const router = new VueRouter({
 });
 
 router.afterEach((to) => {
-  ga('set', 'page', to.fullPath);
-  ga('send', 'pageview');
+  if (typeof ga !== 'undefined') {
+    ga('set', 'page', to.fullPath);
+    ga('send', 'pageview');
+  }
 });
 
 export const routePush = location => router.push(location);
