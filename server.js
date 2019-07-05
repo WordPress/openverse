@@ -21,11 +21,11 @@ const renderer = createRenderer(bundle, {
   template,
 });
 
-// const serve = (path, cache) => express.static(resolve(path), {
-//   maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0
-// })
+const serve = path => express.static(resolve(path), {
+  maxAge: 1000 * 60 * 60 * 24 * 30
+})
 
-// server.use('/dist', serve('./dist', true));
+server.use('/static', serve('./dist/static', true));
 
 function render (req, res) {
   const s = Date.now()
