@@ -14,7 +14,7 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue . test/unit",
-    "build": "node build/build.js",
+    "build": "node build/build.js && npm run build-server",
     "build-server": "webpack -p --config build/webpack-server-conf.js --progress"
   },
   "dependencies": {

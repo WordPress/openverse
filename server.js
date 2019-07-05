@@ -8,6 +8,7 @@ const server = express();
 const resolve = file => path.resolve(__dirname, file);
 const templatePath = resolve('./index.html');
 const template = fs.readFileSync(templatePath, 'utf-8');
+const clientManifest = require('./dist/vue-ssr-client-manifest.json')
 
 function createRenderer (bundle, options) {
   // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
@@ -19,6 +20,7 @@ function createRenderer (bundle, options) {
 
 const renderer = createRenderer(bundle, {
   template,
+  clientManifest,
 });
 
 const serve = path => express.static(resolve(path), {
