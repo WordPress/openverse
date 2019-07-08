@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
 // import BrowsePage from '@/pages/BrowsePage';
-// import PhotoDetailPage from '@/pages/PhotoDetailPage';
+import PhotoDetailPage from '@/pages/server/PhotoDetailPage';
 import FeedbackPage from '@/pages/FeedbackPage';
 import CollectionsPage from '@/pages/CollectionsPage';
 // import CollectionBrowsePage from '@/pages/CollectionBrowsePage';
@@ -20,12 +20,12 @@ const router = new VueRouter({
     //   component: BrowsePage,
     //   props: route => ({ query: route.query.q }),
     // },
-    // {
-    //   path: '/photos/:id',
-    //   name: 'photo-detail-page',
-    //   component: PhotoDetailPage,
-    //   props: true,
-    // },
+    {
+      path: '/photos/:id',
+      name: 'photo-detail-page',
+      component: PhotoDetailPage,
+      props: true,
+    },
     {
       path: '/about',
       name: 'about-page',
