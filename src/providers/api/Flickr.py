@@ -170,7 +170,7 @@ def extractData(_data):
     ]
 
 
-def getMetaData(_startTs, _endTs, _license):
+def getMetaData(_startTs, _endTs, _license, _switchDate=False):
     procTime    = time.time()
     pages       = 1
     curPage     = 1
@@ -184,15 +184,18 @@ def getMetaData(_startTs, _endTs, _license):
 
         queryStr    = '{0}&api_key={1}&min_upload_date={2}&max_upload_date={3}&license={5}&media=photos&content_type=1&extras=description,license,date_upload,date_taken,owner_name,tags,o_dims,url_t,url_s,url_m,url_l&per_page={4}&format=json&nojsoncallback=1&page={6}'.format(endpoint, API_KEY, _startTs, _endTs, SIZE, _license, curPage)
 
+        if _switchDate:
+            queryStr = queryStr.replace('upload_date', 'taken_date')
+
         imgData     = requestContent(queryStr)
         if imgData:
             status = imgData['stat']
             if status == 'ok':
                 result  = imgData['photos']
-                total   = result['total']  #total results
-                pages   = result['pages']  #number of pages
-                curPage = result['page']   #current page
-                photos  = result['photo']       #image meta data for the current page
+                total   = result['total']   #total results
+                pages   = result['pages']   #number of pages
+                curPage = result['page']    #current page
+                photos  = result['photo']   #image meta data for the current page
 
                 if photos:
                     extracted = list(map(lambda photo: extractData(photo), photos))
@@ -223,7 +226,8 @@ def execJob(_license, _startDate, _duration=1, _mode=None):
             logging.info('Processing dates: {} to {}, license: {}'.format(curTime, nxtTime, getLicense(_license)[0]))
 
             #get the meta data within the time interval
-            totalImages += getMetaData(curTime, nxtTime, _license)
+            totalImages += getMetaData(curTime, nxtTime, _license) #check upload_date
+            totalImages += getMetaData(curTime, nxtTime, _license, True) #check taken_date
 
     logging.info('Total {} images: {}'.format(getLicense(_license)[0], totalImages))
 
