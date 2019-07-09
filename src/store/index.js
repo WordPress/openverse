@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { routePush } from '@/router';
+// import { routePush } from '@/router';
 import ImageProviderService from '@/api/ImageProviderService';
 import ImageService from '@/api/ImageService';
 import BugReportService from '@/api/BugReportService';
@@ -28,7 +28,7 @@ const store = GoogleAnalytics => (new Vuex.Store({
     BugReportStore.state,
   ),
   mutations: Object.assign(
-    SearchStore.mutations(routePush),
+    SearchStore.mutations(() => {}),
     ImageProviderStore.mutations,
     BugReportStore.mutations,
   ),

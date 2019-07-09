@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import router from './router/client';
 import createApp from './main';
 
 // a global mixin that calls `asyncData` when a route component's params change
@@ -17,7 +18,7 @@ Vue.mixin({
   },
 });
 
-const { app, router, store } = createApp();
+const { app, store } = createApp(router);
 
 // prime the store with server-initialized state.
 // the state is determined during SSR and inlined in the page markup.

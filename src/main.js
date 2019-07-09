@@ -4,11 +4,10 @@
 import Vue from 'vue';
 import ApiService from '@/api/ApiService';
 import App from './App';
-import router from './router';
 import store from './store';
 import GoogleAnalytics from './analytics/GoogleAnalytics';
 
-function createApp() {
+function createApp(router) {
   Vue.config.productionTip = false;
 
   ApiService.init();
