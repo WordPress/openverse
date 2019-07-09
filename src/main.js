@@ -15,7 +15,7 @@ function createApp(router) {
   analytics.anonymizeIpAddress();
   analytics.setTransportBeacon();
 
-  const appStore = store(analytics);
+  const appStore = store(analytics, router);
 
   const app = new Vue({
     el: '#app',
