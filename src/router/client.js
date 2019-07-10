@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
-import BrowsePage from '@/pages/BrowsePage';
+import BrowsePage from '@/pages/client/BrowsePage';
 import PhotoDetailPage from '@/pages/client/PhotoDetailPage';
 import FeedbackPage from '@/pages/FeedbackPage';
 import CollectionsPage from '@/pages/CollectionsPage';

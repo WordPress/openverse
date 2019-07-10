@@ -2,11 +2,11 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
-// import BrowsePage from '@/pages/BrowsePage';
+import BrowsePage from '@/pages/server/BrowsePage';
 import PhotoDetailPage from '@/pages/server/PhotoDetailPage';
 import FeedbackPage from '@/pages/FeedbackPage';
 import CollectionsPage from '@/pages/CollectionsPage';
-// import CollectionBrowsePage from '@/pages/CollectionBrowsePage';
+import CollectionBrowsePage from '@/pages/server/CollectionBrowsePage';
 import SearchHelpPage from '@/pages/SearchHelpPage';
 
 Vue.use(VueRouter);
@@ -14,12 +14,12 @@ Vue.use(VueRouter);
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    // {
-    //   path: '/search',
-    //   name: 'browse-page',
-    //   component: BrowsePage,
-    //   props: route => ({ query: route.query.q }),
-    // },
+    {
+      path: '/search',
+      name: 'browse-page',
+      component: BrowsePage,
+      props: route => ({ query: route.query.q }),
+    },
     {
       path: '/photos/:id',
       name: 'photo-detail-page',
@@ -46,12 +46,12 @@ const router = new VueRouter({
       name: 'collections-page',
       component: CollectionsPage,
     },
-    // {
-    //   path: '/collections/:provider',
-    //   name: 'collections-browse-page',
-    //   component: CollectionBrowsePage,
-    //   props: true,
-    // },
+    {
+      path: '/collections/:provider',
+      name: 'collections-browse-page',
+      component: CollectionBrowsePage,
+      props: true,
+    },
     {
       path: '/',
       name: 'home-page',
