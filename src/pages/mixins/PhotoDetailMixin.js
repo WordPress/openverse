@@ -80,13 +80,14 @@ const PhotoDetailPage = {
       }
     },
     loadImage(id) {
-      if (id) {
-        this.$store.dispatch(FETCH_IMAGE, { id });
-      }
+      return this.$store.dispatch(FETCH_IMAGE, { id });
     },
   },
-  created() {
-    this.loadImage(this.$route.params.id);
+  mounted() {
+    return this.loadImage(this.$route.params.id);
+  },
+  serverPrefetch() {
+    return this.loadImage(this.$route.params.id);
   },
 };
 
