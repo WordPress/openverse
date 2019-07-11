@@ -47,6 +47,7 @@ router.onReady(() => {
     if (!asyncDataHooks.length) {
       return next();
     }
+    return 0;
   });
 
   // actually mount to DOM

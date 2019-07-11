@@ -21,7 +21,7 @@ export default context => new Promise((resolve, reject) => {
   router.push(url);
 
   // wait until router has resolved possible async hooks
-  router.onReady(() => {
+  return router.onReady(() => {
     const matchedComponents = router.getMatchedComponents();
     // no matched routes
     if (!matchedComponents.length) {
