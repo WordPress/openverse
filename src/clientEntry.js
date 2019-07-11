@@ -22,8 +22,12 @@ const { app, store } = createApp(router);
 
 // prime the store with server-initialized state.
 // the state is determined during SSR and inlined in the page markup.
+// doesn't replace query values from __INITIAL_STATE__
+// query values are initialized from URL inside store (see search store state definition)
 if (window.__INITIAL_STATE__) {
-  store.replaceState(window.__INITIAL_STATE__);
+  const { query, ...initialState } = window.__INITIAL_STATE__;
+  initialState.query = store.state.query;
+  store.replaceState(initialState);
 }
 
 // wait until router has resolved all async before hooks
