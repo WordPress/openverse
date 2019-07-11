@@ -6,7 +6,7 @@ import BrowsePage from '@/pages/client/BrowsePage';
 import PhotoDetailPage from '@/pages/client/PhotoDetailPage';
 import FeedbackPage from '@/pages/FeedbackPage';
 import CollectionsPage from '@/pages/CollectionsPage';
-import CollectionBrowsePage from '@/pages/CollectionBrowsePage';
+import CollectionBrowsePage from '@/pages/client/CollectionBrowsePage';
 import SearchHelpPage from '@/pages/SearchHelpPage';
 
 Vue.use(VueRouter);
