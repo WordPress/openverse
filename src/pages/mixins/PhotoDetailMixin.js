@@ -84,7 +84,9 @@ const PhotoDetailPage = {
     },
   },
   mounted() {
-    return this.loadImage(this.$route.params.id);
+    if (!this.$store.state.image.id) {
+      this.loadImage(this.$route.params.id);
+    }
   },
   serverPrefetch() {
     return this.loadImage(this.$route.params.id);

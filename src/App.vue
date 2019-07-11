@@ -15,7 +15,9 @@ export default {
     },
   },
   beforeMount() {
-    return this.fetchProviders();
+    if (!this.$store.state.imageProviders) {
+      this.fetchProviders();
+    }
   },
   serverPrefetch() {
     return this.fetchProviders();
