@@ -14,7 +14,7 @@ function createRenderer (bundle, options) {
   // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
   return createBundleRenderer(bundle, Object.assign(options, {
     // recommended for performance
-    // runInNewContext: false,
+    runInNewContext: false,
   }));
 }
 
@@ -24,16 +24,12 @@ const renderer = createRenderer(bundle, {
 });
 
 const serve = path => express.static(resolve(path), {
-  maxAge: 1000 * 60 * 60 * 24 * 30
+  maxAge: 1000 * 60 * 60 * 24 * 30,
 })
 
-server.use('/static', serve('./dist/static', true));
+server.use('/static', serve('./dist/static'));
 
 function render (req, res) {
-  const s = Date.now()
-
-  res.setHeader("Content-Type", "text/html")
-
   const handleError = err => {
     if (err.url) {
       res.redirect(err.url);
@@ -50,7 +46,6 @@ function render (req, res) {
   }
 
   const context = {
-    title: 'Vue HN 2.0', // default title
     url: req.url,
   };
   renderer.renderToString(context, (err, html) => {
@@ -58,9 +53,6 @@ function render (req, res) {
       return handleError(err);
     }
     res.send(html);
-    if (!isProd) {
-      console.log(`whole request: ${Date.now() - s}ms`);
-    }
   });
 }
 
