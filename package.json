@@ -9,6 +9,7 @@
     "dev": "webpack-dev-server --https --inline --progress --config build/webpack-dev-conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest-conf.js --coverage",
+    "qa-install": "brew install geckodriver && brew install pipenv",
     "qa": "cd test/selenium-webdriver && pipenv run python search_screencaps.py",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
