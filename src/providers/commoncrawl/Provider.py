@@ -58,6 +58,7 @@ class Provider:
         self.title                  = ''
         self.metaData               = {}
         self.tags                   = {}
+        self.popularityMetrics      = {}
         self.translationAvailable   = 'f'
         self.watermarked            = 'f'
 
@@ -98,6 +99,7 @@ class Provider:
         self.title                  = ''
         self.metaData               = ''
         self.tags                   = ''
+        self.popularityMetrics      = ''
         self.translationAvailable   = None
         self.watermarked            = 'f'
 
@@ -143,6 +145,7 @@ class Provider:
             self.sanitizeString(self.title) if self.title else '\\N',
             json.dumps(self.metaData, ensure_ascii=False) if self.metaData else '\\N',
             json.dumps(self.tags, ensure_ascii=False) if self.tags else '\\N',
+            #json.dumps(self.popularityMetrics, ensure_ascii=False) if self.popularityMetrics else '\\N',
             self.watermarked,
             self.provider,
             self.source

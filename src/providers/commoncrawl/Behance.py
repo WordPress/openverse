@@ -147,6 +147,29 @@ class Behance(Provider):
             self.metaData = otherMetaData
 
 
+        #get the popularity metrics
+        '''popInfo = soup.find('div', {'class': 'Project-projectInfo-1yh'})
+        if not popInfo:
+            popInfo = soup.find('div', {'id': 'project-stats'})
+
+
+        if popInfo:
+            self.popularityMetrics = {}
+
+            likes = popInfo.find('div', {'class': re.compile(r'beicons-pre-thumb$')})
+            views = popInfo.find('div', {'class': re.compile(r'beicons-pre-eye$')})
+            cmmts = popInfo.find('div', {'class': re.compile(r'beicons-pre-comment$')})
+
+            if likes:
+                self.popularityMetrics['likes'] = self.sanitizeString(likes.text)
+
+            if views:
+                self.popularityMetrics['views'] = self.sanitizeString(views.text)
+
+            if cmmts:
+                self.popularityMetrics['comments'] = self.sanitizeString(cmmts.text)'''
+
+
         #get the images
         images = soup.find('div', {'id': 'project-modules'})
         if images:
