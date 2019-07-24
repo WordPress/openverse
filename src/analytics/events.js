@@ -20,3 +20,7 @@ export function DownloadWatermark(params) {
 
   return new Event('Download', label, params.imageId);
 }
+
+export function SocialMediaShare(site) {
+  return new Event('Social Media', 'Share', site);
+}

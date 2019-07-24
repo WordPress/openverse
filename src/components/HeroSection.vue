@@ -20,6 +20,7 @@
             <button class="hero_search-btn" title="Search"></button>
           </div>
       </div>
+      <home-license-filter />
     </form>
     <div class="description">
         <p>
@@ -34,14 +35,30 @@
         <a href="https://oldsearch.creativecommons.org/">here</a>
       </span>
     </div>
+
+    <div class="search-help-link">
+      <span>
+        See our Search Syntax Guide
+        <a href="/search-help">
+          here
+          <img class='help-icon'
+              src='../assets/help_icon.svg'
+              alt='Help' />
+        </a>
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
 import { SET_QUERY } from '@/store/mutation-types';
+import HomeLicenseFilter from './HomeLicenseFilter';
 
 export default {
   name: 'hero-section',
+  components: {
+    HomeLicenseFilter,
+  },
   data: () => ({ form: { searchTerm: '' } }),
   methods: {
     onSubmit() {
@@ -56,7 +73,7 @@ export default {
 <style lang="scss" scoped>
 @import '../../node_modules/foundation-sites/scss/foundation';
 
-$hero-height: 75vh;
+$hero-height: 71vh;
 
 .hero {
   background: #e9ebee;
@@ -109,7 +126,7 @@ $hero-height: 75vh;
     position: absolute;
     top: 0;
     right: 0;
-    height: calc( 100% - 3px );
+    height: 60px;
     width: 60px;
     margin: 2px;
     font-size: 24px;
@@ -141,7 +158,6 @@ $hero-height: 75vh;
 }
 
 .description {
-  margin-top: 2vh;
   font-style: italic;
 }
 
@@ -154,6 +170,20 @@ $hero-height: 75vh;
     top: 0;
     font-size: 0.9rem;
   }
+}
+
+.search-help-link {
+  position: absolute;
+  bottom: 1rem;
+  right: 2rem;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
+
+.help-icon {
+  height: 32px;
 }
 
 /* Small only */

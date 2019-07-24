@@ -81,8 +81,8 @@ const PhotoDetailPage = {
     },
   },
   watch: {
-    tags: function tags(value) {
-      this.getRelatedImages(value, this.queryParam);
+    image() {
+      this.getRelatedImages();
     },
   },
   beforeRouteUpdate(to, from, next) {
@@ -113,20 +113,9 @@ const PhotoDetailPage = {
       this.imageHeight = event.target.naturalHeight;
       this.isPrimaryImageLoaded = true;
     },
-    getRelatedImages(tags, query) {
-      if (this.query.q) {
-        this.$store.dispatch(FETCH_RELATED_IMAGES, { q: this.query.q, pagesize: 8 });
-      }
-      else {
-        let queryParam = query;
-        const tagsParam = (tags || []).slice();
-        if (tagsParam.length > 0) {
-          queryParam = tagsParam.slice(0, 1).map(tag => tag.name).join(', ');
-        }
-
-        if (queryParam) {
-          this.$store.dispatch(FETCH_RELATED_IMAGES, { q: queryParam, pagesize: 8 });
-        }
+    getRelatedImages() {
+      if (this.image && this.image.id) {
+        this.$store.dispatch(FETCH_RELATED_IMAGES, { id: this.image.id });
       }
     },
     loadImage(id) {

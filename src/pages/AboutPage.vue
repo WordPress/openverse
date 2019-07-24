@@ -1,9 +1,9 @@
 <template>
-<div class="about-page grid-container full">
+<div class="page grid-container full">
   <header-section showNavSearch="true"></header-section>
-  <div class="about-page_body">
+  <div class="page_body">
     <h1>About CC Search</h1>
-      <p class="about-page_lead-paragraph">
+      <p class="page_lead-paragraph">
         CC Search is a tool that allows openly licensed and public domain works to be discovered
         and used by everyone. Creative Commons, the nonprofit behind CC Search, is the maker of the
         <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">CC licenses</a>,
@@ -19,9 +19,11 @@
       <p>
         Currently CC Search only searches images, but we plan to add additional media types such as
         open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC
-        licensed and public domain works on the web. Learn more about CC’s 2019 vision, strategy
-        and roadmap for CC Search <a href="https://creativecommons.org/2019/03/19/cc-search/">here</a> and
-        see what we’re currently working on <a href="https://github.com/orgs/creativecommons/projects/7">here</a>.
+        licensed and public domain works on the web. Learn more about CC’s
+        <a href="https://creativecommons.org/2019/03/19/cc-search/">2019 vision, strategy</a> and
+        <a href="https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/edit#heading=h.jih78emira0r">roadmap</a>
+        for CC Search and see what
+        <a href="https://github.com/orgs/creativecommons/projects/7">we’re currently working on</a>.
         All of our code is open source
         (<a href="https://github.com/creativecommons/cccatalog-frontend/">CC Search</a>,
         <a href="https://github.com/creativecommons/cccatalog-api/">CC Catalog API</a>,
@@ -39,8 +41,8 @@
         <a href="https://oldsearch.creativecommons.org">https://oldsearch.creativecommons.org</a>.
       </p>
       <h2>Providers</h2>
-      <div class="about-page_provider-stats-ctr">
-        <table class="about-page_provider-stats-table">
+      <div class="page_provider-stats-ctr">
+        <table class="page_provider-stats-table">
           <thead>
             <th>Provider</th>
             <th>Domain</th>
@@ -92,45 +94,5 @@ export default AboutPage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  h1 {
-    margin-bottom: .44117647em;
-    font-size: 2.125em;
-    font-weight: normal;
-    letter-spacing: initial;
-    line-height: 1.25;
-    text-transform: initial;
-  }
-
-  h2 {
-    margin-bottom: .57692308em;
-    font-size: 1.5em;
-    font-weight: normal;
-    letter-spacing: initial;
-    line-height: 1.25;
-    text-transform: initial;
-  }
-
-  .about-page {
-    background: #e9ebee;
-  }
-
-  .about-page_body {
-    font-size: 1em;
-    margin: 45px !important;
-  }
-
-  .about-page_lead-paragraph {
-    margin-bottom: 1em;
-  }
-
-  .photo_tag-provider-badge {
-    height: 24px;
-  }
-
-  /* Small only */
-  @media screen and (max-width: 39.9375em) {
-    .about-page_body {
-      margin: 30px 15px 15px 15px !important;
-    }
-  }
+  @import '../styles/text-only-page.scss';
 </style>

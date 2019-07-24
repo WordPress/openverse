@@ -23,6 +23,14 @@ const ImageService = {
 
     return ApiService.get('image', params.id);
   },
+
+  getRelatedImages(params) {
+    if (!params.id) {
+      throw new Error('[RWV] ImageService.getRelatedImages() id parameter required to retreive related images.');
+    }
+
+    return ApiService.get('image/related', params.id);
+  },
 };
 
 export default ImageService;
