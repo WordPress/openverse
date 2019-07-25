@@ -6,7 +6,7 @@ const bundle = require('./dist/server-bundle.json');
 
 const server = express();
 const resolve = file => path.resolve(__dirname, file);
-const templatePath = resolve('./index.html');
+const templatePath = resolve('./index-server.html');
 const template = fs.readFileSync(templatePath, 'utf-8');
 const clientManifest = require('./dist/vue-ssr-client-manifest.json')
 
