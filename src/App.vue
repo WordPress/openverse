@@ -15,7 +15,7 @@ export default {
     },
   },
   beforeMount() {
-    if (!this.$store.state.imageProviders) {
+    if (!this.$store.state.imageProviders || !this.$store.state.imageProviders.length) {
       this.fetchProviders();
     }
   },
