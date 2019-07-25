@@ -10,6 +10,7 @@ class EventBase(Base):
     id = Column(Integer, primary_key=True)
     date = Column(DateTime, server_default=func.now())
 
+
 class SearchEvent(EventBase):
     """
     Store searches linked to a session UUID.
@@ -56,4 +57,5 @@ class DetailPageEvent(EventBase):
     """
     __tablename__ = "detail_page_event"
 
+    result_uuid = Column(UUID)
     event_type = Column(Enum(DetailPageEvents))
