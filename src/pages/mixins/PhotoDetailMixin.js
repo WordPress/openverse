@@ -1,48 +1,9 @@
-<template>
-  <div class="photo-detail-page grid-x">
-    <div class="cell">
-      <header-section showNavSearch="true" />
-    </div>
-    <div class="container cell large-11">
-      <photo-details :image="image"
-                    :breadCrumbURL="breadCrumbURL"
-                    :shouldShowBreadcrumb="shouldShowBreadcrumb"
-                    :query="query"
-                    :imageWidth="imageWidth"
-                    :imageHeight="imageHeight"
-                    :watermarkEnabled="watermarkEnabled"
-                    :socialSharingEnabled="socialSharingEnabled"
-                    @onImageLoaded="onImageLoaded" />
-      <photo-tags :tags="tags" />
-      <related-images :relatedImages="relatedImages"
-                      :imagesCount="imagesCount"
-                      :query="query"
-                      :filter="filter"
-                      :isPrimaryImageLoaded="isPrimaryImageLoaded" />
-    </div>
-    <footer-section></footer-section>
-  </div>
-</template>
-
-<script>
-import PhotoDetails from '@/components/PhotoDetails';
-import PhotoTags from '@/components/PhotoTags';
-import RelatedImages from '@/components/RelatedImages';
-import HeaderSection from '@/components/HeaderSection';
-import FooterSection from '@/components/FooterSection';
 import featureFlags from '@/featureFlags';
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
 import { SET_IMAGE } from '@/store/mutation-types';
 
 const PhotoDetailPage = {
   name: 'photo-detail-page',
-  components: {
-    HeaderSection,
-    RelatedImages,
-    FooterSection,
-    PhotoDetails,
-    PhotoTags,
-  },
   props: {
     id: '',
   },
@@ -119,25 +80,18 @@ const PhotoDetailPage = {
       }
     },
     loadImage(id) {
-      if (id) {
-        this.$store.dispatch(FETCH_IMAGE, { id });
-      }
+      return this.$store.dispatch(FETCH_IMAGE, { id });
     },
   },
-  created() {
-    this.loadImage(this.$route.params.id);
+  mounted() {
+    if (!this.$store.state.image.id) {
+      return this.loadImage(this.$route.params.id);
+    }
+    return this.getRelatedImages();
+  },
+  serverPrefetch() {
+    return this.loadImage(this.$route.params.id);
   },
 };
 
 export default PhotoDetailPage;
-</script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
-  .container {
-    margin-left: 4vw;
-    @media screen and (max-width: 1050px) {
-      margin-left: 0;
-    }
-  }
-</style>

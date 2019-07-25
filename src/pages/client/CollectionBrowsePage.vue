@@ -2,14 +2,16 @@
   <div class="browse-page">
     <div class="search grid-x flexible">
       <div class="cell">
-        <header-section>
-          <search-grid-form showProvidersFilter="true" @onSearchFormSubmit="onSearchFormSubmit" />
-        </header-section>
+        <header-section showNavSearch="true" />
+      </div>
+      <div class="cell">
+        <search-grid-form @onSearchFormSubmit="onSearchFormSubmit"
+                          searchBoxPlaceholder="Search this collection" />
       </div>
       <div :class="{ 'cell search-grid-ctr': true }">
-        <search-grid v-if="query.q"
+        <search-grid v-if="query.provider"
                      :query="query"
-                     searchTerm=""
+                     :searchTerm="providerName"
                      @onLoadMoreImages="onLoadMoreImages"></search-grid>
       </div>
     </div>
@@ -23,42 +25,19 @@ import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
-import { FETCH_IMAGES } from '@/store/action-types';
-import { SET_QUERY } from '@/store/mutation-types';
+import CollectionBrowseMixin from '@/pages/mixins/CollectionBrowseMixin';
 
-const BrowsePage = {
-  name: 'browse-page',
+const CollectionBrowsePage = {
   components: {
     HeaderSection,
     SearchGridForm,
     SearchGrid,
     FooterSection,
   },
-  computed: {
-    query() {
-      return this.$store.state.query;
-    },
-  },
-  methods: {
-    getImages(params) {
-      this.$store.dispatch(FETCH_IMAGES, params);
-    },
-    onLoadMoreImages(searchParams) {
-      this.getImages(searchParams);
-    },
-    onSearchFormSubmit(searchParams) {
-      this.$store.commit(SET_QUERY, searchParams);
-    },
-  },
-  created() {
-    this.ticking = false;
-    if (this.query.q) {
-      this.getImages(this.query);
-    }
-  },
+  mixins: [CollectionBrowseMixin],
 };
 
-export default BrowsePage;
+export default CollectionBrowsePage;
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

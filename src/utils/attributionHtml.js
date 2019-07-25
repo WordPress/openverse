@@ -2,7 +2,7 @@ function attributionHtml(image, ccLicenseURL, fullLicenseName) {
   if (!image) {
     return '';
   }
-  const baseAssetsPath = `${window.location.origin}/static/img`;
+  const baseAssetsPath = 'https://search.creativecommons.org/static/img';
   const imgLink = `<a href="${image.foreign_landing_url}">"${image.title}"</a>`;
   let creator = '';
   if (image.creator && image.creator_url) {

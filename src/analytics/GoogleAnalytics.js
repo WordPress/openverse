@@ -4,6 +4,8 @@ function doNotTrackEnabled() {
 }
 
 function isTrackingEnabled() {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') { return false; }
+
   const gaAvailable = window.ga !== null && window.ga !== undefined;
 
   if (!gaAvailable) {
