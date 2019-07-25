@@ -15,6 +15,7 @@ const ImageService = {
 
   /**
    * Retreive image details by Id number.
+   * SSR-called
    */
   getImageDetail(params) {
     if (!params.id) {

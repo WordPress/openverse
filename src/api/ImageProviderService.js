@@ -4,6 +4,7 @@ import ApiService from './ApiService';
 const ImageProviderService = {
   /**
    * Implements an endpoint to get image provider statistics.
+   * SSR-called
   */
   getProviderStats() {
     return ApiService.get('statistics', 'image');

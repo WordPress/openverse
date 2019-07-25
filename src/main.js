@@ -4,22 +4,38 @@
 import Vue from 'vue';
 import ApiService from '@/api/ApiService';
 import App from './App';
-import router from './router';
 import store from './store';
 import GoogleAnalytics from './analytics/GoogleAnalytics';
 
-Vue.config.productionTip = false;
+function createApp(router, __INITIAL_STATE__) {
+  Vue.config.productionTip = false;
 
-ApiService.init();
-const analytics = GoogleAnalytics();
-analytics.anonymizeIpAddress();
-analytics.setTransportBeacon();
+  ApiService.init();
+  const analytics = GoogleAnalytics();
+  analytics.anonymizeIpAddress();
+  analytics.setTransportBeacon();
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  store: store(analytics),
-  router,
-  components: { App },
-  template: '<App/>',
-});
+  const appStore = store(analytics, router);
+
+  // prime the store with server-initialized state.
+  // the state is determined during SSR and inlined in the page markup.
+  // doesn't replace query values from __INITIAL_STATE__
+  // query values are initialized from URL inside store (see search store state definition)
+  if (__INITIAL_STATE__) {
+    const { query, ...initialState } = __INITIAL_STATE__;
+    initialState.query = appStore.state.query;
+    appStore.replaceState(initialState);
+  }
+
+  const app = new Vue({
+    el: '#app',
+    store: appStore,
+    router,
+    render: h => h(App),
+  });
+
+  return { app, store: appStore, router };
+}
+
+
+export default createApp;

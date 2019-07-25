@@ -10,6 +10,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -110,7 +111,13 @@ const webpackConfig = merge(baseWebpackConfig, {
         from: path.resolve(__dirname, '../src/assets'),
         to: config.build.assetsSubDirectory + '/img',
       }
-    ])
+    ]),
+    // extract webpack runtime & manifest to avoid vendor chunk hash changing
+    // on every build.
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest'
+    }),
+    new VueSSRClientPlugin()
   ]
 })
 
