@@ -13,8 +13,7 @@
     "unit": "jest --config test/unit/jest-conf.js --coverage",
     "qa-install": "brew install geckodriver && brew install pipenv && cd test/selenium-webdriver && pipenv install",
     "qa": "cd test/selenium-webdriver && pipenv run python search_screencaps.py",
-    "e2e": "node test/e2e/runner.js",
-    "test": "npm run unit && npm run e2e",
+    "test": "npm run unit",
     "lint": "eslint --ext .js,.vue . test/unit",
     "build": "node build/build.js && npm run build-server",
     "build-server": "webpack -p --config build/webpack-server-conf.js --progress"
