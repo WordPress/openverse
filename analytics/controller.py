@@ -1,15 +1,16 @@
 from models import SearchEvent, SearchRatingEvent, ResultClickedEvent, \
     DetailPageEvent, DetailPageEvents
-from sqlalachemy import create_engine
-from sqlalachemy.orm import sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from settings import DATABASE_CONNECTION
 
 class EventController:
     def __init__(self):
         self.engine = create_engine(DATABASE_CONNECTION)
 
-    def _persist(_object):
-        session = sessionmaker(bind=self.engine)
+    def _persist(self, _object):
+        Session = sessionmaker(bind=self.engine)
+        session = Session()
         session.add(_object)
         session.commit()
 
@@ -37,8 +38,12 @@ class EventController:
         self._persist(result_click)
 
     def create_detail_event(self, event, result_uuid):
+        _event = DetailPageEvents[event]
         detail_event = DetailPageEvent(
-            event_type=event,
+            event_type=_event,
             result_uuid=result_uuid
         )
         self._persist(detail_event)
+
+    def list_valid_detail_events(self):
+        return [k.name for k in DetailPageEvents]

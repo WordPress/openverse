@@ -10,6 +10,7 @@ falcon = "*"
 sqlalchemy = "*"
 psycopg2 = "*"
 alembic = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
