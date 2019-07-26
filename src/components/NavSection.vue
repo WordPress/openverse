@@ -196,8 +196,8 @@ li {
   }
 
   #search-help {
-  display: none;
-}
+    display: none;
+  }
 }
 
 .menu a {
@@ -219,7 +219,7 @@ li {
   @media screen and (min-width: 64em) {
     float: right;
   }
-  @media screen and (max-width: 63em) {
+  @media screen and (max-width: 70.250em) {
     display: none;
   }
 }
