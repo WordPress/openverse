@@ -1,45 +1,48 @@
 import enum
-from sqlalchemy import Integer, Column, UUID, Enum, String, DateTime
+from sqlalchemy import Integer, Column, Enum, String, DateTime
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
 
-class EventBase(Base):
-    id = Column(Integer, primary_key=True)
-    date = Column(DateTime, server_default=func.now())
-
-
-class SearchEvent(EventBase):
+class SearchEvent(Base):
     """
     Store searches linked to a session UUID.
     """
     __tablename__ = "search_event"
 
-    query = Column(String)
-    session_uuid = Column(UUID)
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime, server_default=func.now(), index=True)
+    query = Column(String, index=True)
+    session_uuid = Column(UUID, index=True)
 
 
-class SearchRatingEvent(EventBase):
+class SearchRatingEvent(Base):
     """
     Users can provide feedback about the quality of search results.
     """
     __tablename__= "search_rating_event"
 
-    query = Column(String)
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime, server_default=func.now(), index=True)
+    query = Column(String, index=True)
     rating = Column(Integer)
 
 
-class ResultClickedEvent(EventBase):
+class ResultClickedEvent(Base):
     """
     Link result clicks to search sessions.
     """
     __tablename__ = "result_clicked_event"
 
-    session_uuid = Column(UUID)
-    result_uuid = Column(UUID)
-    query = Column(String)
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime, server_default=func.now(), index=True)
+    session_uuid = Column(UUID, index=True)
+    result_uuid = Column(UUID, index=True)
+    query = Column(String, index=True)
+    result_rank = Column(Integer)
 
 
 class DetailPageEvents(enum.Enum):
@@ -50,12 +53,15 @@ class DetailPageEvents(enum.Enum):
     SHARED_SOCIAL = enum.auto()
 
 
-class DetailPageEvent(EventBase):
+class DetailPageEvent(Base):
     """
     Events that happen on result pages, such as clicking an attribution button
     or sharing the result on social media.
+
     """
     __tablename__ = "detail_page_event"
 
-    result_uuid = Column(UUID)
-    event_type = Column(Enum(DetailPageEvents))
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime, server_default=func.now(), index=True)
+    result_uuid = Column(UUID, index=True)
+    event_type = Column(Enum(DetailPageEvents), index=True)
