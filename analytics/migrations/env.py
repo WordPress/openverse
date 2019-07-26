@@ -6,12 +6,12 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from analytics.settings import DATABASE_CONNECTION
-from analytics.models import Base
+from settings import DATABASE_CONNECTION
+from models import *
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-
+config.set_main_option('sqlalchemy.url', DATABASE_CONNECTION)
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
