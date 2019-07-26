@@ -10,6 +10,7 @@ class SearchEventResource:
             query=j['query'],
             session_uuid=j['session_uuid']
         )
+        resp.status = falcon.HTTP_201
 
 
 class SearchRatingEventResource:
@@ -19,6 +20,7 @@ class SearchRatingEventResource:
             query=j['query'],
             rating=j['rating']
         )
+        resp.status = falcon.HTTP_201
 
 
 class ResultClickEventResource:
@@ -30,6 +32,7 @@ class ResultClickEventResource:
             query=j['query'],
             rank=j['result_rank']
         )
+        resp.status = falcon.HTTP_201
 
 
 class DetailEventResource:
@@ -40,6 +43,7 @@ class DetailEventResource:
                 event=j['event_type'],
                 result_uuid=j['result_uuid']
             )
+            resp.status = falcon.HTTP_201
         except KeyError:
             valid_events = event_controller.list_valid_detail_events()
             resp.body = \
