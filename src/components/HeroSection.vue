@@ -1,52 +1,49 @@
 <template>
-  <div class='hero'>
-    <img class='logo' src='../assets/cc-logo_large_black.png' />
-    <form class='hero_search-form' role='search' method='post' v-on:submit.prevent='onSubmit'>
-      <div class='search-form_ctr grid-x'>
-        <div class='cell large-12'>
-          <input
-            required='required'
-            autofocus='true'
-            class='hero_search-input'
-            type='search'
-            placeholder='Search for images...'
-            autocapitalize='none'
-            id='searchTerm'
-            v-model.lazy='form.searchTerm'
-          />
-        </div>
-        <div class='cell large-12'>
-          <button class='hero_search-btn' title='Search'></button>
-        </div>
+  <div class="hero">
+    <img class="logo" src="../assets/cc-logo_large_black.png">
+    <form class="hero_search-form"
+          role="search"
+          method="post"
+          v-on:submit.prevent="onSubmit">
+      <div class="search-form_ctr grid-x">
+          <div class="cell large-12">
+            <input required="required"
+                   autofocus="true"
+                   class="hero_search-input"
+                   type="search"
+                   placeholder="Search for images..."
+                   autocapitalize="none"
+                   id="searchTerm"
+                   v-model.lazy="form.searchTerm">
+          </div>
+          <div class="cell large-12">
+            <button class="hero_search-btn" title="Search"></button>
+          </div>
       </div>
       <home-license-filter />
     </form>
-    <div class='description'>
-      <p>
-        Search for free content in the public domain and under Creative Commons licenses.
-        <br />Learn more about CC licenses
-        <a
-          href='https://creativecommons.org/share-your-work/licensing-types-examples/'
-          target='_blank'
-          rel='noopener'
-        >here</a>.
-      </p>
+    <div class="description">
+        <p>
+          Search for free content in the public domain and under Creative Commons licenses.
+          <br />
+          Learn more about CC licenses <a href="https://creativecommons.org/share-your-work/licensing-types-examples/" target="_blank" rel="noopener">here</a>.
+        </p>
     </div>
-    <div class='old-search-link'>
+    <div class="old-search-link">
       <span>
         Looking for the old CC Search portal? Go
-        <a
-          href='https://oldsearch.creativecommons.org/'
-        >here</a>
+        <a href="https://oldsearch.creativecommons.org/">here</a>
       </span>
     </div>
 
-    <div class='search-help-link'>
+    <div class="search-help-link">
       <span>
         See our Search Syntax Guide
-        <a href='/search-help'>
+        <a href="/search-help">
           here
-          <img class='help-icon' src='../assets/help_icon.svg' alt='Help' />
+          <img class='help-icon'
+              src='../assets/help_icon.svg'
+              alt='Help' />
         </a>
       </span>
     </div>
@@ -65,18 +62,15 @@ export default {
   data: () => ({ form: { searchTerm: '' } }),
   methods: {
     onSubmit() {
-      this.$store.commit(SET_QUERY, {
-        query: { q: this.form.searchTerm },
-        shouldNavigate: true,
-      });
+      this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm }, shouldNavigate: true });
     },
   },
 };
 </script>
 
 
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang='scss' scoped>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="scss" scoped>
 @import '../../node_modules/foundation-sites/scss/foundation';
 
 $hero-height: 71vh;
@@ -137,7 +131,7 @@ $hero-height: 71vh;
     margin: 2px;
     font-size: 24px;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition: all .2s ease-in-out;
     border-radius: 3px;
 
     &:after {
@@ -157,11 +151,9 @@ $hero-height: 71vh;
   &:before {
     content: '';
     position: absolute;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.1) 0%,
-      rgba(17, 17, 17, 0.7) 100%
-    );
+    background: linear-gradient(to top,
+                rgba(0, 0, 0, 0.1) 0%,
+                rgba(17, 17, 17, 0.7) 100%);
   }
 }
 
@@ -200,7 +192,7 @@ $hero-height: 71vh;
     height: 60vh;
   }
   .search-form_ctr {
-    padding: 0 0.9375rem;
+    padding: 0 .9375rem;
   }
 
   .hero .hero_search-input {
