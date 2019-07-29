@@ -16,11 +16,15 @@ class SearchEventResource:
 class SearchRatingEventResource:
     def on_post(self, req, resp):
         j = req.media
-        event_controller.create_search_rating(
-            query=j['query'],
-            rating=j['rating']
-        )
-        resp.status = falcon.HTTP_201
+        try:
+            event_controller.create_search_rating(
+                query=j['query'],
+                rating=j['rating']
+            )
+            resp.status = falcon.HTTP_201
+        except ValueError:
+            resp.body = '{"message": "Rating must be between 1 and 5"}'
+            resp.status = falcon.HTTP_400
 
 
 class ResultClickEventResource:
