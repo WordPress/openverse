@@ -96,7 +96,10 @@ export default {
       const license = this.image.license;
       const version = this.image.license_version;
 
-      return license === 'cc0' ? `${license} ${version}` : `CC ${license} ${version}`;
+      if (license) {
+        return license.toLowerCase() === 'cc0' ? `${license} ${version}` : `CC ${license} ${version}`;
+      }
+      return '';
     },
     ccLicenseURL() {
       return `${this.image.license_url}?ref=ccsearch`;

@@ -22,16 +22,21 @@ export default {
   components: {
     SocialShareButtons,
   },
+  data: () => ({
+    // for SSR, initiates it as an empty value
+    shareURL: '',
+  }),
   computed: {
-    shareURL() {
-      return window.location.href;
-    },
     imageURL() {
       return this.image.foreign_landing_url;
     },
     shareText() {
       return encodeURI(`I found an image through CC search @creativecommons: ${this.imageURL}`);
     },
+  },
+  mounted() {
+    // for SSR, sets the value with window.location, which is only available on client
+    this.shareURL = window.location.href;
   },
 };
 </script>

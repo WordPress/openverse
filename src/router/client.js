@@ -2,11 +2,11 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
-import BrowsePage from '@/pages/BrowsePage';
-import PhotoDetailPage from '@/pages/PhotoDetailPage';
+import BrowsePage from '@/pages/client/BrowsePage';
+import PhotoDetailPage from '@/pages/client/PhotoDetailPage';
 import FeedbackPage from '@/pages/FeedbackPage';
 import CollectionsPage from '@/pages/CollectionsPage';
-import CollectionBrowsePage from '@/pages/CollectionBrowsePage';
+import CollectionBrowsePage from '@/pages/client/CollectionBrowsePage';
 import SearchHelpPage from '@/pages/SearchHelpPage';
 
 Vue.use(VueRouter);
@@ -64,10 +64,10 @@ const router = new VueRouter({
 });
 
 router.afterEach((to) => {
-  ga('set', 'page', to.fullPath);
-  ga('send', 'pageview');
+  if (typeof ga !== 'undefined') {
+    ga('set', 'page', to.fullPath);
+    ga('send', 'pageview');
+  }
 });
-
-export const routePush = location => router.push(location);
 
 export default router;

@@ -11,11 +11,19 @@
 <script>
 export default {
   name: 'reuse-survey',
+  data: () => ({
+    // for SSR, initiates it as an empty value
+    location: '',
+  }),
   computed: {
     formLink() {
-      const location = window.location.href;
+      const location = this.location;
       return `https://docs.google.com/forms/d/e/1FAIpQLSeSApxNMup8Ujt-8Vjv53ngltzhJeaHspMykHCD8VKQ39yXAA/viewform?usp=pp_url&entry.1690035721=${location}`;
     },
+  },
+  mounted() {
+    // for SSR, sets the value with window.location, which is only available on client
+    this.location = window.location.href;
   },
 };
 </script>

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { routePush } from '@/router';
+import redirectTo from '@/router/redirectTo';
 import ImageProviderService from '@/api/ImageProviderService';
 import ImageService from '@/api/ImageService';
 import BugReportService from '@/api/BugReportService';
@@ -12,7 +12,9 @@ import SocialMediaStore from './social-store';
 
 Vue.use(Vuex);
 
-const store = GoogleAnalytics => (new Vuex.Store({
+const queryParams = !(typeof window === 'undefined') ? window.location.search : '';
+
+const store = (GoogleAnalytics, router) => (new Vuex.Store({
   actions: Object.assign(
     SearchStore.actions(ImageService),
     ImageProviderStore.actions(ImageProviderService),
@@ -21,12 +23,12 @@ const store = GoogleAnalytics => (new Vuex.Store({
     SocialMediaStore.actions(GoogleAnalytics),
   ),
   state: Object.assign(
-    SearchStore.state(window.location.search),
+    SearchStore.state(queryParams),
     ImageProviderStore.state,
     BugReportStore.state,
   ),
   mutations: Object.assign(
-    SearchStore.mutations(routePush),
+    SearchStore.mutations(redirectTo(router)),
     ImageProviderStore.mutations,
     BugReportStore.mutations,
   ),

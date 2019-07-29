@@ -65,6 +65,12 @@ describe('PhotoDetails', () => {
     expect(wrapper.vm.fullLicenseName).toBe('cc0 1.0');
   });
 
+  it('should generate CC-0 license name when license is CC0 uppercase', () => {
+    options.propsData.image.license = 'CC0';
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.vm.fullLicenseName).toBe('CC0 1.0');
+  });
+
   it('renders link back to search results if enabled', () => {
     const wrapper = render(PhotoDetails, {
       propsData: {

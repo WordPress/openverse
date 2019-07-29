@@ -114,14 +114,12 @@ export default {
         filter[key] = transformFilterValue(filter, key);
       });
       this.$emit('onSearchFilterChanged', { query: filter, shouldNavigate: true });
-      // this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
     },
     onClearFilters() {
       const filter = Object.assign({}, this.filter);
       Object.keys(this.filter).forEach((key) => { filter[key] = []; });
       this.filter = filter;
       this.$emit('onSearchFilterChanged', { query: filter, shouldNavigate: true });
-      // this.$store.commit(SET_QUERY, { query: filter, shouldNavigate: true });
     },
     parseQueryFilters() {
       const filterLookup = {

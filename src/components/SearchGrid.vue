@@ -150,7 +150,6 @@ export default {
 
         this.$nextTick(() => {
           this.$emit('onLoadMoreImages', searchParams);
-          // this.$store.dispatch(FETCH_IMAGES, searchParams);
         });
       }
     },

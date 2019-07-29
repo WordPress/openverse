@@ -4,6 +4,7 @@ import ApiService from './ApiService';
 const ImageProviderService = {
   /**
    * Implements an endpoint to get image provider statistics.
+   * SSR-called
   */
   getProviderStats() {
     return ApiService.get('statistics', 'image');
@@ -40,6 +41,9 @@ const ImageProviderService = {
       geographorguk: {
         logo: 'geographorguk_logo.gif',
       },
+      mccordmuseum: {
+        logo: 'mccordmuseum_logo.png',
+      },
       met: {
         logo: 'met_logo.png',
       },
@@ -48,6 +52,9 @@ const ImageProviderService = {
       },
       nhl: {
         logo: 'nhm_logo.png',
+      },
+      phylopic: {
+        logo: 'phylopic_logo.png',
       },
       rawpixel: {
         logo: 'rawpixel_logo.png',
@@ -66,6 +73,9 @@ const ImageProviderService = {
       },
       thorvaldsensmuseum: {
         logo: 'thorvaldsensmuseum_logo.png',
+      },
+      wikimedia: {
+        logo: 'wikimedia_logo.png',
       },
       WoRMS: {
         logo: 'worms_logo.png',

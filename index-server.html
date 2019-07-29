@@ -23,7 +23,10 @@
       <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C600%2C700%7CRoboto+Condensed&amp;ver=4.9.8" type="text/css" media="all">
     </head>
     <body>
-      <div id="app">
+      <div data-server-rendered="true">
+        <!--vue-ssr-outlet-->
+        {{{ renderState() }}}
+        {{{ renderScripts() }}}
       </div>
       <script>
         // Use production Google Analytics ID if ccsearch is in the URL, otherwise use development/staging ID
