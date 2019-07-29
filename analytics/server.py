@@ -56,7 +56,25 @@ class DetailEventResource:
             resp.status = falcon.HTTP_400
 
 
+class RedocResource:
+    def on_get(self, req, resp):
+        resp.status = falcon.HTTP_200
+        resp.content_type = 'text/html'
+        with open('redoc.html', 'r') as f:
+            resp.body = f.read()
+
+
+class OpenAPISpecResource:
+    def on_get(self, req, resp):
+        resp.status = falcon.HTTP_200
+        resp.content_type = 'text/html'
+        with open('swagger.yaml', 'r') as f:
+            resp.body = f.read()
+
+
 api = falcon.API()
+api.add_route('/', RedocResource())
+api.add_route('/swagger.yaml', OpenAPISpecResource())
 api.add_route('/search_event', SearchEventResource())
 api.add_route('/search_rating_event', SearchRatingEventResource())
 api.add_route('/result_click_event', ResultClickEventResource())

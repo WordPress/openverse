@@ -1,9 +1,8 @@
 swagger: "2.0"
 info:
-  description: "An API for registering anonymous usage data events in CC Search, which we intend to use to improve the quality of the search results.\n
-  "
+  description: "An API for registering anonymous usage data events in CC Search, which we intend to use to improve the quality of the search results."
   version: "1.0.0"
-  title: "Swagger Petstore"
+  title: "CC Search Usage Data API"
   termsOfService: "http://swagger.io/terms/"
   contact:
     email: "alden@creativecommons.org"
@@ -108,18 +107,6 @@ paths:
         400:
           description: "Invalid input"
 
-securityDefinitions:
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
-    flow: "implicit"
-    scopes:
-      write:pets: "modify pets in your account"
-      read:pets: "read your pets"
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
 definitions:
   CreateSearchEvent:
     type: "object"

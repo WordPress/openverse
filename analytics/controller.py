@@ -22,6 +22,8 @@ class EventController:
         self._persist(search)
 
     def create_search_rating(self, query, rating):
+        if rating > 5 or rating < 1:
+            raise ValueError('Invalid rating')
         search_rating = SearchRatingEvent(
             query=query,
             rating=rating
