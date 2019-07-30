@@ -1,7 +1,8 @@
 #!/bin/bash
 CCCAPI_CONTAINER_NAME="${CCCAPI_CONTAINER_NAME:-cccatalog-api_web_1}"
-# Set up databases
+# Set up API database and upstream
 docker exec -ti $CCCAPI_CONTAINER_NAME /bin/bash -c 'python3 manage.py migrate --noinput'
+docker exec -ti cccatalog-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run alembic upgrade head'
 PGPASSWORD=deploy pg_dump -s -t image -U deploy -d openledger -h localhost -p 5432 | PGPASSWORD=deploy psql -U deploy -d openledger -p 5433 -h localhost
 # Load sample data
 PGPASSWORD=deploy psql -U deploy -d openledger -h localhost -p 5432 -c "INSERT INTO content_provider (created_on, provider_identifier, provider_name, domain_name, filter_content) VALUES (now(), 'flickr', 'Flickr', 'https://www.flickr.com', false), (now(), 'behance', 'Behance', 'https://www.behance.net', false);"

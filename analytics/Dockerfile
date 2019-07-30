@@ -1,7 +1,7 @@
 FROM python:3.7
 
 ENV PYTHONBUFFERED 1
-
+ENV PYTHONPATH .
 WORKDIR /analytics
 
 # Install Python dependency management tools
