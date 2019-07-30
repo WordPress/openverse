@@ -6,6 +6,7 @@ addons:
       - postgresql-client-10
 env:
   - CCCAPI_CONTAINER_NAME=cccatalog-api_web_1
+  - ANALYTICS_CONTAINER_NAME=cccatalogapi_analytics_1
 python:
 - '3.6'
 services:
