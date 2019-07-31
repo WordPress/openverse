@@ -58,7 +58,7 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
     """
     s = Search(index=index)
     s = _paginate_search(s, page_size, page)
-    # If any filters are specified, add them to the query.
+    # Add requested filters.
     if 'li' in search_params.data:
         s = _filter_licenses(s, search_params.data['li'])
     elif 'lt' in search_params.data:
@@ -88,11 +88,12 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
 
     # Search either by generic multimatch or by "advanced search" with
     # individual field-level queries specified.
+    search_fields = ['tags.name', 'title', 'description']
     if 'q' in search_params.data:
         s = s.query(
             'query_string',
             query=search_params.data['q'],
-            fields=['tags.name', 'title'],
+            fields=search_fields,
             type='most_fields'
         )
     else:
@@ -114,7 +115,13 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
                 query=tags
             )
 
+    # Use highlighting to determine which fields contribute to the selection of
+    # top results.
+    s = s.highlight(*search_fields)
+    s = s.highlight_options(order='score')
     s.extra(track_scores=True)
+    # Route users to the same Elasticsearch worker node to reduce
+    # pagination inconsistencies and increase cache hits.
     s = s.params(preference=str(ip))
     search_response = s.execute()
     return search_response

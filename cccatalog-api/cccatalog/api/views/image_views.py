@@ -84,11 +84,13 @@ def _post_process_results(search_results, request, filter_dead):
     """
     results = []
     to_validate = []
-    for res in search_results:
+    for idx, res in enumerate(search_results):
         url = request.build_absolute_uri(
             reverse('image-detail', [res.identifier])
         )
         res.detail = url
+        if hasattr(res.meta, 'highlight'):
+            res.fields_matched = dir(res.meta.highlight)
         to_validate.append(res.url)
         if PROXY_THUMBS:
             # Proxy thumbnails from providers who don't provide SSL. We also
@@ -108,7 +110,6 @@ def _post_process_results(search_results, request, filter_dead):
                 )
                 res[THUMBNAIL] = secure
         results.append(res)
-
     if filter_dead:
         validate_images(results, to_validate)
     return results
