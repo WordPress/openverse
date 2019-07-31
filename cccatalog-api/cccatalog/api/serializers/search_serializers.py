@@ -287,7 +287,7 @@ class ImageSerializer(serializers.Serializer):
     )
     fields_matched = serializers.ListField(
         required=False,
-        help_text="Highlight the data that made this search result relevant."
+        help_text="List the fields that matched the query for this result."
     )
 
 
