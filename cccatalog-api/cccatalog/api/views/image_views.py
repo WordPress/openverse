@@ -84,7 +84,7 @@ def _post_process_results(search_results, request, filter_dead):
     """
     results = []
     to_validate = []
-    for idx, res in enumerate(search_results):
+    for res in search_results:
         url = request.build_absolute_uri(
             reverse('image-detail', [res.identifier])
         )
@@ -155,11 +155,13 @@ class SearchImages(APIView):
         qa = params.data[QA]
         search_index = 'search-qa' if qa else 'image'
         try:
-            search_results = search_controller.search(params,
-                                                      index=search_index,
-                                                      page_size=page_size,
-                                                      ip=hashed_ip,
-                                                      page=page_param)
+            search_results = search_controller.search(
+                params,
+                index=search_index,
+                page_size=page_size,
+                ip=hashed_ip,
+                page=page_param
+            )
         except ValueError:
             return Response(
                 status=400,
