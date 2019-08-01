@@ -106,3 +106,11 @@ services:
       SYNCER_POLL_INTERVAL: '60'
     stdin_open: true
     tty: true
+
+  analytics:
+    build: ./analytics/
+    image: analytics
+    ports:
+      - "8090:8090"
+    environment:
+      DATABASE_CONN: 'postgres+psycopg2://deploy:deploy@db/openledger'
