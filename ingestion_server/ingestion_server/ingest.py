@@ -43,9 +43,6 @@ def _get_shared_cols(conn1, conn2, table: str):
         conn2_cols = set([desc[0] for desc in cur2.description])
 
     shared = conn1_cols.intersection(conn2_cols)
-    # Don't copy metadata; we don't use it yet and it takes up a
-    # disproportionate amount of space.
-    shared.remove('meta_data')
     return list(shared)
 
 

@@ -285,6 +285,10 @@ class ImageSerializer(serializers.Serializer):
         required=True,
         help_text="A direct link to the detail view of an image."
     )
+    fields_matched = serializers.ListField(
+        required=False,
+        help_text="List the fields that matched the query for this result."
+    )
 
 
 class RelatedImagesResultsSerializer(serializers.Serializer):

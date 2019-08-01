@@ -70,7 +70,8 @@ def create_mapping(table_name):
                                      "type": "keyword",
                                      "ignore_above": 256
                                   }
-                               }
+                               },
+                               "analyzer": "english"
                             }
                          }
                       },
@@ -103,7 +104,8 @@ def create_mapping(table_name):
                                "type": "keyword",
                                "ignore_above": 256
                             }
-                         }
+                         },
+                         "analyzer": "english"
                       },
                       "creator": {
                          "type": "text",
@@ -116,6 +118,15 @@ def create_mapping(table_name):
                       },
                       "created_on": {
                          "type": "date"
+                      },
+                      "description": {
+                         "fields": {
+                            "keyword": {
+                               "type": "keyword"
+                            }
+                         },
+                         "type": "text",
+                         "analyzer": "english"
                       }
                    }
                }
