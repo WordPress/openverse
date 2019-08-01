@@ -29,7 +29,9 @@ After executing `docker-compose up`, you will be running:
 * Two PostgreSQL instances (one simulates the upstream data source, the other serves as the application database)
 * Elasticsearch
 * Redis
-* Ingestion Server, a microservice for bulk ingesting and indexing search data.
+* A thumbnail-generating image proxy
+* `ingestion-server`, a service for bulk ingesting and indexing search data.
+* `analytics`, a REST API server for collecting search usage data
 
 Once everything has initialized, with `docker-compose` still running in the background, load the sample data. You will need to install PostgreSQL client tools to perform this step. On Debian, the package is called `postgresql-client-common`.
 
@@ -60,7 +62,8 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 
 ### Description of subprojects
 - *cccatalog-api* is a Django Rest Framework API server. For a full description of its capabilities, please see the [browsable documentation](https://api.creativecommons.engineering).
-- *ingestion_server* is a RESTful microservice for downloading and indexing search data once it has been prepared by the CC Catalog.
+- *ingestion-server* is a service for downloading and indexing search data once it has been prepared by the CC Catalog.
+- *analytics* is a Falcon REST API for collecting usage data.
 - *ccbot* is a slightly customized fork of Scrapy Cluster. The original intent was to find all of the dead links in our database, but it can easily be modified to perform other useful tasks, such as mass downloading images or scraping new content into the CC Catalog. This is not used in production at this time and is included in the repository for historic reasons.
 
 ## Running the tests
