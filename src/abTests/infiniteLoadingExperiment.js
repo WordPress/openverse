@@ -12,7 +12,7 @@ const EXPERIMENT_CASE_TWO = 'manual_loading';
 const joinExperiment = (session) => {
   const resultPromise = new Promise((resolve, reject) => {
     session.participate(EXPERIMENT_NAME, [EXPERIMENT_CASE_ONE, EXPERIMENT_CASE_TWO], (err, res) => {
-      if (err) {
+      if (err || res.error) {
         reject({
           error: err,
           name: EXPERIMENT_NAME,
