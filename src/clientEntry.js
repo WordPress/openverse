@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import router from './router/client';
 import createApp from './main';
+import abTests from './abTests';
 
 // a global mixin that calls `asyncData` when a route component's params change
 Vue.mixin({
@@ -18,7 +19,9 @@ Vue.mixin({
   },
 });
 
-const { app } = createApp(router, window.__INITIAL_STATE__);
+const { app, store } = createApp(router, window.__INITIAL_STATE__);
+
+abTests(store);
 
 // wait until router has resolved all async before hooks
 // and async components...
