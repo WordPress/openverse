@@ -15,7 +15,7 @@ data (along with session UUIDs) will be promptly deleted.
 
 ## Running the server
 
-Analytics server is automatically started by `docker-compose` in the parent
+The analytics server is automatically started by `docker-compose` in the parent
 directory. Before analytics endpoints can be called, the database needs to
 be set up with `../load_sample_data.sh`.
 
