@@ -1,11 +1,10 @@
-import uuid from 'uuid/v5';
+import uuid from 'uuid/v4';
 import Cookie from 'js-cookie';
 
-const UUID_NAMESPACE = 'ccsearch.creativecommons.org';
 const COOKIE_NAME = 'SESSION_ID';
 const COOKIE_EXPIRY_DAYS = 7;
 
-const generateSessionId = () => uuid(UUID_NAMESPACE, uuid.DNS);
+const generateSessionId = () => uuid();
 
 const saveSessionIdInCookie = sessionId =>
   Cookie.set(COOKIE_NAME, sessionId, { expires: COOKIE_EXPIRY_DAYS });
