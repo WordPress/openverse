@@ -19,7 +19,7 @@ class AnonRateThrottle(SimpleRateThrottle):
     scope = 'anon'
 
     def get_cache_key(self, request, view):
-        if _from_internal_network:
+        if _from_internal_network(self.get_ident(request)):
             return None
         # Do not throttle requests with a valid access token.
         if request.auth:
@@ -63,7 +63,7 @@ class OAuth2IdThrottleRate(SimpleRateThrottle):
     applies_to_rate_limit_model = 'standard'
 
     def get_cache_key(self, request, view):
-        if _from_internal_network:
+        if _from_internal_network(self.get_ident(request)):
             return None
         # Find the client ID associated with the access token.
         client_id, rate_limit_model = get_token_info(str(request.auth))
