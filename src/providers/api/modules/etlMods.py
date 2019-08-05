@@ -55,6 +55,8 @@ def delayProcessing(_startTime, _maxDelay):
 
 
 def requestContent(_url, _headers=None):
+    #TODO: pass the request headers and params in a dictionary
+
     logging.info('Processing request: {}'.format(_url))
 
     try:
