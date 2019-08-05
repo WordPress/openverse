@@ -1,7 +1,13 @@
 <template>
   <div>
-    <search-grid-infinite-load v-if="renderInfiniteLoad()" />
-    <search-grid-manual-load v-else-if="renderManualLoad()" />
+    <search-grid-infinite-load v-if="renderInfiniteLoad()"
+                               :query="query"
+                               :searchTerm="searchTerm"
+                               @onLoadMoreImages="onLoadMoreImages" />
+    <search-grid-manual-load v-else-if="renderManualLoad()"
+                             :query="query"
+                             :searchTerm="searchTerm"
+                             @onLoadMoreImages="onLoadMoreImages" />
   </div>
 </template>
 
@@ -16,6 +22,7 @@ export default {
     SearchGridInfiniteLoad,
     SearchGridManualLoad,
   },
+  props: ['query', 'searchTerm'],
   methods: {
     renderInfiniteLoad() {
       return this.$store.state.experiments.some(experiment =>
@@ -28,6 +35,9 @@ export default {
         experiment.name === InfiniteLoadingExperiment.EXPERIMENT_NAME &&
         experiment.case === InfiniteLoadingExperiment.MANUAL_LOADING_EXPERIMENT,
       );
+    },
+    onLoadMoreImages(searchParams) {
+      this.$emit('onLoadMoreImages', searchParams);
     },
   },
 };
