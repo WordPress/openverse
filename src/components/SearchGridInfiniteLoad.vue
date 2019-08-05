@@ -43,7 +43,7 @@ Vue.use(VueMasonryPlugin);
 const DEFAULT_PAGE_SIZE = 20;
 
 export default {
-  name: 'search-grid',
+  name: 'search-grid-infinite-load',
   components: {
     InfiniteLoading,
     SearchGridFilter,
