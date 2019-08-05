@@ -19,6 +19,7 @@ const joinExperiment = (session) => {
             error: err,
             name: EXPERIMENT_NAME,
             case: INFINITE_LOADING_EXPERIMENT,
+            session,
           });
         }
 
@@ -27,6 +28,7 @@ const joinExperiment = (session) => {
         resolve({
           name: EXPERIMENT_NAME,
           case: experimentCase,
+          session,
         });
       });
   });

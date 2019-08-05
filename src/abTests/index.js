@@ -13,11 +13,13 @@ const setupExperiments = (store) => {
     store.commit(JOINED_AB_TEST_EXPERIMENT, {
       name: experiment.name,
       case: experiment.case,
+      session: experiment.session,
     }),
   )).catch(error =>
     store.commit(JOINED_AB_TEST_EXPERIMENT, {
       name: error.name,
       case: error.case,
+      session: error.session,
     }),
   );
 };
