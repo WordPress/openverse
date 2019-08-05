@@ -1,9 +1,13 @@
 from rest_framework.throttling import SimpleRateThrottle
 import logging
-
+from cccatalog.settings import TRUSTED_NETWORK
 from cccatalog.api.utils.oauth2_helper import get_token_info
 
 log = logging.getLogger(__name__)
+
+
+def _from_internal_network(ip):
+    return ip.startswith(TRUSTED_NETWORK)
 
 
 class AnonRateThrottle(SimpleRateThrottle):
@@ -15,6 +19,8 @@ class AnonRateThrottle(SimpleRateThrottle):
     scope = 'anon'
 
     def get_cache_key(self, request, view):
+        if _from_internal_network:
+            return None
         # Do not throttle requests with a valid access token.
         if request.auth:
             client_id, _ = get_token_info(str(request.auth))
@@ -57,6 +63,8 @@ class OAuth2IdThrottleRate(SimpleRateThrottle):
     applies_to_rate_limit_model = 'standard'
 
     def get_cache_key(self, request, view):
+        if _from_internal_network:
+            return None
         # Find the client ID associated with the access token.
         client_id, rate_limit_model = get_token_info(str(request.auth))
         if client_id and rate_limit_model == self.applies_to_rate_limit_model:
