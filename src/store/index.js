@@ -22,6 +22,7 @@ const store = (GoogleAnalytics, router) => (new Vuex.Store({
     AttributionStore.actions(GoogleAnalytics),
     BugReportStore.actions(BugReportService),
     SocialMediaStore.actions(GoogleAnalytics),
+    ABTestStore.actions,
   ),
   state: Object.assign(
     SearchStore.state(queryParams),

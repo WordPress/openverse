@@ -1,10 +1,10 @@
 <template>
   <div>
-    <search-grid-infinite-load v-if="renderInfiniteLoad()"
+    <search-grid-infinite-load v-if="renderInfiniteLoad"
                                :query="query"
                                :searchTerm="searchTerm"
                                @onLoadMoreImages="onLoadMoreImages" />
-    <search-grid-manual-load v-else-if="renderManualLoad()"
+    <search-grid-manual-load v-else-if="renderManualLoad"
                              :query="query"
                              :searchTerm="searchTerm"
                              @onLoadMoreImages="onLoadMoreImages" />
@@ -15,6 +15,7 @@
 import SearchGridInfiniteLoad from '@/components/SearchGridInfiniteLoad';
 import SearchGridManualLoad from '@/components/SearchGridManualLoad';
 import { ExperimentData as InfiniteLoadingExperiment } from '@/abTests/infiniteLoadingExperiment';
+import { CONVERT_AB_TEST_EXPERIMENT } from '@/store/action-types';
 
 export default {
   name: 'search-grid',
@@ -23,7 +24,7 @@ export default {
     SearchGridManualLoad,
   },
   props: ['query', 'searchTerm'],
-  methods: {
+  computed: {
     renderInfiniteLoad() {
       return this.$store.state.experiments.some(experiment =>
         experiment.name === InfiniteLoadingExperiment.EXPERIMENT_NAME &&
@@ -36,7 +37,13 @@ export default {
         experiment.case === InfiniteLoadingExperiment.MANUAL_LOADING_EXPERIMENT,
       );
     },
+  },
+  methods: {
     onLoadMoreImages(searchParams) {
+      this.$store.dispatch(
+        CONVERT_AB_TEST_EXPERIMENT,
+        { experimentName: InfiniteLoadingExperiment.EXPERIMENT_NAME },
+      );
       this.$emit('onLoadMoreImages', searchParams);
     },
   },
