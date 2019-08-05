@@ -1,6 +1,6 @@
 const EXPERIMENT_NAME = 'infinite_loading_experiment';
-const EXPERIMENT_CASE_ONE = 'infinite_loading';
-const EXPERIMENT_CASE_TWO = 'manual_loading';
+const INFINITE_LOADING_EXPERIMENT = 'infinite_loading';
+const MANUAL_LOADING_EXPERIMENT = 'manual_loading';
 
 /**
  * Joins the experiment.
@@ -11,22 +11,24 @@ const EXPERIMENT_CASE_TWO = 'manual_loading';
  */
 const joinExperiment = (session) => {
   const resultPromise = new Promise((resolve, reject) => {
-    session.participate(EXPERIMENT_NAME, [EXPERIMENT_CASE_ONE, EXPERIMENT_CASE_TWO], (err, res) => {
-      if (err || res.error) {
-        reject({
-          error: err,
+    session.participate(EXPERIMENT_NAME,
+      [INFINITE_LOADING_EXPERIMENT, MANUAL_LOADING_EXPERIMENT],
+      (err, res) => {
+        if (err || res.error) {
+          reject({
+            error: err,
+            name: EXPERIMENT_NAME,
+            case: INFINITE_LOADING_EXPERIMENT,
+          });
+        }
+
+        const experimentCase = res.alternative.name;
+
+        resolve({
           name: EXPERIMENT_NAME,
-          case: EXPERIMENT_CASE_ONE,
+          case: experimentCase,
         });
-      }
-
-      const experimentCase = res.alternative.name;
-
-      resolve({
-        name: EXPERIMENT_NAME,
-        case: experimentCase,
       });
-    });
   });
 
   return resultPromise;
@@ -35,6 +37,6 @@ const joinExperiment = (session) => {
 export default joinExperiment;
 export const ExperimentData = {
   EXPERIMENT_NAME,
-  EXPERIMENT_CASE_ONE,
-  EXPERIMENT_CASE_TWO,
+  INFINITE_LOADING_EXPERIMENT,
+  MANUAL_LOADING_EXPERIMENT,
 };
