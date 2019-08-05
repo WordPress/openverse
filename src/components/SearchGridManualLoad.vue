@@ -19,7 +19,10 @@
           :shouldContainImage="shouldContainImages" />
       </div>
       <div>
-        <button class="clear button" type="button" @click="onLoadMoreImages">
+        <button v-show="showGrid && includeAnalytics"
+                class="clear button"
+                type="button"
+                @click="onLoadMoreImages">
           Load more
         </button>
       </div>
