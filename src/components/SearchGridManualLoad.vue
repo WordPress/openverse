@@ -18,7 +18,7 @@
           :image="image"
           :shouldContainImage="shouldContainImages" />
       </div>
-      <div>
+      <div class="load-more">
         <button v-show="showGrid && includeAnalytics"
                 class="clear button"
                 type="button"
@@ -215,5 +215,13 @@ export default {
 
   h2 {
     font-size: 2rem;
+  }
+
+  .load-more {
+    text-align: center;
+
+    button {
+      font-size: 1.2em;
+    }
   }
 </style>
