@@ -1,4 +1,4 @@
-import SearchGrid from '@/components/SearchGrid';
+import SearchGrid from '@/components/SearchGridManualLoad';
 import render from '../../test-utils/render';
 
 describe('SearchGrid', () => {
