@@ -2,7 +2,7 @@
   <section :class="{ 'search-grid': true, 'search-grid__contain-images': shouldContainImages }"
            ref="searchGrid">
     <div class="search-grid_ctr" ref="gridItems">
-      <div v-show="showGrid && includeAnalytics" class="search-grid_analytics" >
+      <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics" >
         <h2>{{ searchTerm }}</h2>
         <span>{{ _imagesCount }} photos</span>
       </div>
@@ -19,7 +19,7 @@
           :shouldContainImage="shouldContainImages" />
       </div>
       <div class="load-more">
-        <button v-show="showGrid && includeAnalytics"
+        <button v-show="!isFetchingImages && includeAnalytics"
                 class="clear button"
                 type="button"
                 @click="onLoadMoreImages">
@@ -56,7 +56,6 @@ export default {
     isDataInitialized: false,
     shouldContainImages: false,
     currentPage: 1,
-    showGrid: false,
   }),
   props: {
     imagesCount: 0,
@@ -99,24 +98,14 @@ export default {
     },
   },
   watch: {
-    isFetchingImages: function handler(isFetchingImages) {
-      if (isFetchingImages) {
-        this.showGrid = false;
-      }
-      else {
-        this.showGrid = true;
-      }
-    },
     _images: {
       handler() {
         if (this.$state) {
           this.$state.loaded();
-
           if (this._imagesCount < this.currentPage * DEFAULT_PAGE_SIZE) {
             this.$state.complete();
           }
         }
-
         this.isDataInitialized = true;
       },
     },
@@ -134,7 +123,6 @@ export default {
       }, 100); // One-tenth of a second should be sufficient to calculate new height
     },
     searchChanged() {
-      this.showGrid = false;
       this.$store.commit(SET_IMAGES, { images: [] });
       this.currentPage = 0;
     },
