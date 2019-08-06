@@ -20,7 +20,11 @@ const BrowsePage = {
     },
   },
   mounted() {
-    this.ticking = false;
+    if (this.query.q) {
+      this.getImages(this.query);
+    }
+  },
+  updated() {
     if (this.query.q) {
       this.getImages(this.query);
     }

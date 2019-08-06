@@ -31,7 +31,11 @@ const CollectionBrowsePage = {
     },
   },
   created() {
-    this.ticking = false;
+    if (this.query.provider) {
+      this.getImages(this.query);
+    }
+  },
+  updated() {
     if (this.query.provider) {
       this.getImages(this.query);
     }
