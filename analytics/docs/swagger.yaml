@@ -144,7 +144,6 @@ definitions:
     properties:
       query:
         type: "string"
-        example: "12345678-1234-1234-1234-1234567890ab"
       result_rank:
         type: "integer"
         example: 2
