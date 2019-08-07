@@ -19,6 +19,8 @@
     "build-server": "webpack -p --config build/webpack-server-conf.js --progress"
   },
   "dependencies": {
+    "@sentry/browser": "^5.6.0",
+    "@sentry/node": "^5.6.0",
     "axios": "^0.18.0",
     "clipboard": "^2.0.4",
     "express": "^4.17.1",
