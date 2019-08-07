@@ -135,9 +135,7 @@ export default {
           ...this._query,
         };
 
-        this.$nextTick(() => {
-          this.$emit('onLoadMoreImages', searchParams);
-        });
+        this.$emit('onLoadMoreImages', searchParams);
       }
     },
   },
