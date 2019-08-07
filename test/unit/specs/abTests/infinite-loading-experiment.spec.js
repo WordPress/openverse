@@ -1,6 +1,6 @@
 import joinExperiment, { ExperimentData } from '@/abTests/infiniteLoadingExperiment';
 
-describe('GA', () => {
+describe('Infinite Loading Experiment', () => {
   let session = {};
 
   beforeEach(() => {
