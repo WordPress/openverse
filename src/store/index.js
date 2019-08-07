@@ -9,6 +9,7 @@ import ImageProviderStore from './image-provider-store';
 import AttributionStore from './attribution-store';
 import BugReportStore from './bug-report-store';
 import SocialMediaStore from './social-store';
+import ABTestStore from './abtest-store';
 
 Vue.use(Vuex);
 
@@ -21,16 +22,19 @@ const store = (GoogleAnalytics, router) => (new Vuex.Store({
     AttributionStore.actions(GoogleAnalytics),
     BugReportStore.actions(BugReportService),
     SocialMediaStore.actions(GoogleAnalytics),
+    ABTestStore.actions,
   ),
   state: Object.assign(
     SearchStore.state(queryParams),
     ImageProviderStore.state,
     BugReportStore.state,
+    ABTestStore.state,
   ),
   mutations: Object.assign(
     SearchStore.mutations(redirectTo(router)),
     ImageProviderStore.mutations,
     BugReportStore.mutations,
+    ABTestStore.mutations,
   ),
 }));
 

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import SearchGrid from '@/components/SearchGrid';
+import SearchGrid from '@/components/SearchGridManualLoad';
 
 export default {
   name: 'related-images',
