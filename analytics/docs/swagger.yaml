@@ -3,7 +3,7 @@ info:
   description: "An API for registering anonymous usage data events in CC Search, which we intend to use to improve the quality of the search results."
   version: "1.0.0"
   title: "CC Search Usage Data API"
-  termsOfService: "http://swagger.io/terms/"
+  termsOfService: "https://api.creativecommons.engineering/terms_of_service.html"
   contact:
     email: "alden@creativecommons.org"
   license:
