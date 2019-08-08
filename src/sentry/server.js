@@ -1,5 +1,5 @@
-import Sentry from '@sentry/node';
+import initSentry from './initSentry';
 
-const init = () => Sentry.init({ dsn: process.env.SSR_SENTRY_DSN });
+const init = () => initSentry(process.env.SSR_SENTRY_DSN);
 
 export default init;

@@ -1,10 +1,5 @@
-import * as Sentry from '@sentry/browser';
+import initSentry from './initSentry';
 
-const init = () => {
-  const options = { dsn: process.env.BROWSER_SENTRY_DSN };
-  if (options.dsn) {
-    Sentry.init(options);
-  }
-};
+const init = () => initSentry(process.env.BROWSER_SENTRY_DSN);
 
 export default init;
