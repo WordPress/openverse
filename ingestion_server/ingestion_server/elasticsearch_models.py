@@ -44,9 +44,7 @@ def _parse_description(metadata_field):
     try:
         if 'description' in metadata_field:
             return metadata_field['description'][:2000]
-    except json.decoder.JSONDecodeError as e:
-        logging.error('Failed to parse json {}'.format(metadata_field))
-        logging.error(e)
+    except TypeError:
         return None
 
 
