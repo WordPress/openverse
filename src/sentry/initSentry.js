@@ -1,5 +1,5 @@
 const initSentry = (Sentry, dsn) => {
-  if (dsn) {
+  if (Sentry && dsn) {
     Sentry.init({ dsn });
   }
 };
