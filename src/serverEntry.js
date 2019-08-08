@@ -1,5 +1,6 @@
 import router from './router/server';
 import createApp from './main';
+import sentryInit from './sentry/server';
 
 
 // This exported function will be called by `bundleRenderer`.
@@ -8,6 +9,8 @@ import createApp from './main';
 // Since data fetching is async, this function is expected to
 // return a Promise that resolves to the app instance.
 export default context => new Promise((resolve, reject) => {
+  sentryInit();
+
   const { app, store } = createApp(router);
 
   const { url } = context;

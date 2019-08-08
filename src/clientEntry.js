@@ -2,6 +2,9 @@ import Vue from 'vue';
 import router from './router/client';
 import createApp from './main';
 import abTests from './abTests';
+import sentryInit from './sentry/browser';
+
+sentryInit();
 
 // a global mixin that calls `asyncData` when a route component's params change
 Vue.mixin({
