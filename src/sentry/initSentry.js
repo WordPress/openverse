@@ -1,6 +1,4 @@
-import Sentry from '@sentry/node';
-
-const initSentry = (dsn) => {
+const initSentry = (Sentry, dsn) => {
   if (dsn) {
     Sentry.init({ dsn });
   }
