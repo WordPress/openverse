@@ -35,12 +35,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
                  "api.creativecommons.engineering",
                  gethostname(), gethostbyname(gethostname())]
 
-# Rate limits are not applied to requests that originate from whitelisted
-# internal networks. This is matched against the start of request IPs (e.g.
-# for the setting '172.30', a request from 172.30.0.3 will be accepted while
-# 172.25.0.1 will be rejected)
-TRUSTED_NETWORK = os.environ.get('TRUSTED_NETWORK', '172.30')
-
 # Domains that shortened links may point to
 SHORT_URL_WHITELIST = {
     'api-dev.creativecommons.engineering',

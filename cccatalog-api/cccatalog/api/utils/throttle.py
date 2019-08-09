@@ -1,13 +1,14 @@
 from rest_framework.throttling import SimpleRateThrottle
 import logging
-from cccatalog.settings import TRUSTED_NETWORK
 from cccatalog.api.utils.oauth2_helper import get_token_info
+from django_redis import get_redis_connection
 
 log = logging.getLogger(__name__)
 
 
 def _from_internal_network(ip):
-    return ip.startswith(TRUSTED_NETWORK)
+    redis = get_redis_connection('default')
+    return redis.sismember('ip-whitelist', ip)
 
 
 class AnonRateThrottle(SimpleRateThrottle):
