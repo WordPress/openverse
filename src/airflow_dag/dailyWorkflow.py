@@ -27,11 +27,12 @@ def branchTask(**kwargs):
 
 #TODO: Use airflow scheduled timestamp as the default date in the API scripts, instead of the system time, so that airflow can backfill any missing dag run instances.
 schedTasks = {
-    '11:00': 'PhyloPic',
-    '09:00': 'MetMuseum',
-    #'@monthly': 'ClevelandMuseum',
-    '07:00': 'Thingiverse',
     #'@hourly': 'Flickr'
+    '07:00': 'Thingiverse',
+    '09:00': 'MetMuseum',
+    '11:00': 'PhyloPic',
+    '13:00': 'WikimediaCommons'
+    #'@monthly': 'ClevelandMuseum',
 }
 
 
@@ -68,7 +69,11 @@ flickrTask  = BashOperator(task_id='Flickr',
                 priority_weight=7,
                 dag=dag)
 
+wmcTask     = BashOperator(task_id='WikimediaCommons',
+                bash_command='python {0}/dags/api/WikimediaCommons.py --mode default'.format(airflowHome),
+                dag=dag)
+
 endTask    = BashOperator(task_id='End', trigger_rule=TriggerRule.ALL_DONE, bash_command='echo Terminating API workflows', dag=dag)
 
 beginTask >> hourlyTask >> [flickrTask] >> endTask #schedule the flickr task to run hourly
-beginTask >> forkTask >> [metTask, tvTask, ppTask] >> endTask #schedule the other API tasks to run based on the schdeuled time.
+beginTask >> forkTask >> [metTask, tvTask, ppTask, wmcTask] >> endTask #schedule the other API tasks to run based on the schdeuled time.
