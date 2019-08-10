@@ -40,7 +40,7 @@ flickrTask  = BashOperator(task_id='Flickr_Monthly',
 
 #sync the common crawl  AWS ETL data to the OUTPUT_DIR
 s3SyncTask = BashOperator(task_id='Sync_Common_Crawl_Image_Data',
-                bash_command='python {0}/dags/commoncrawl/SyncImageProviders.py'.format(airflowHome),
+                bash_command='python {0}/dags/commoncrawl_s3_syncer/SyncImageProviders.py'.format(airflowHome),
                 dag=dag)
 
 #reprocess Rawpixel
