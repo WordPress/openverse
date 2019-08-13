@@ -20,6 +20,7 @@ import {
   SET_QUERY,
   SET_COLLECTION_QUERY,
   SET_RELATED_IMAGES,
+  IMAGE_NOT_FOUND,
 } from './mutation-types';
 
 const state = (searchParams) => {
@@ -111,8 +112,13 @@ const actions = ImageService => ({
         commit(SET_IMAGE, { image: data });
       })
       .catch((error) => {
-        commit(FETCH_IMAGES_ERROR);
-        throw new Error(error);
+        if (error.response && error.response.status === 404) {
+          commit(IMAGE_NOT_FOUND);
+        }
+        else {
+          commit(FETCH_IMAGES_ERROR);
+          throw new Error(error);
+        }
       });
   },
   [FETCH_RELATED_IMAGES]({ commit }, params) {
@@ -151,7 +157,7 @@ const actions = ImageService => ({
   },
 });
 
-function setQuery(_state, params, path, routePush) {
+function setQuery(_state, params, path, redirect) {
   const query = Object.assign({}, _state.query, params.query);
   const isFilterApplied = ['li', 'provider', 'lt', 'searchBy']
     .some(key => query[key] && query[key].length > 0);
@@ -160,12 +166,12 @@ function setQuery(_state, params, path, routePush) {
   _state.query = query;
 
   if (params.shouldNavigate === true) {
-    routePush({ path, query });
+    redirect({ path, query });
   }
 }
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
-const mutations = routePush => ({
+const mutations = redirect => ({
   [FETCH_START_IMAGES](_state) {
     _state.isFetchingImages = true;
     _state.isFetchingImagesError = false;
@@ -207,10 +213,13 @@ const mutations = routePush => ({
     _state.imagePage = params.page || 1;
   },
   [SET_QUERY](_state, params) {
-    setQuery(_state, params, '/search', routePush);
+    setQuery(_state, params, '/search', redirect);
   },
   [SET_COLLECTION_QUERY](_state, params) {
-    setQuery(_state, params, `/collections/${params.provider}`, routePush);
+    setQuery(_state, params, `/collections/${params.provider}`, redirect);
+  },
+  [IMAGE_NOT_FOUND]() {
+    redirect({ path: '/not-found' }, true);
   },
 });
 
