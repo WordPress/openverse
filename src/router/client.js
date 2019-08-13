@@ -8,6 +8,7 @@ import FeedbackPage from '@/pages/FeedbackPage';
 import CollectionsPage from '@/pages/CollectionsPage';
 import CollectionBrowsePage from '@/pages/client/CollectionBrowsePage';
 import SearchHelpPage from '@/pages/SearchHelpPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 Vue.use(VueRouter);
 
@@ -56,6 +57,11 @@ const router = new VueRouter({
       path: '/',
       name: 'home-page',
       component: HomePage,
+    },
+    {
+      path: '*',
+      name: 'not-found',
+      component: NotFoundPage,
     },
   ],
   scrollBehavior() {

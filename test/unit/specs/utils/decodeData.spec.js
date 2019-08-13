@@ -30,4 +30,10 @@ describe('decodeData', () => {
 
     expect(decodeData(data)).toBe('s\u1234\xe9');
   });
+
+  it('shouldnt throw exception', () => {
+    const data = 'Classic Twill - SlipcoverFabrics.com 100% Cotton';
+
+    expect(decodeData(data)).toBe(data);
+  });
 });
