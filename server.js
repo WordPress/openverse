@@ -56,6 +56,11 @@ function render (req, res) {
   });
 }
 
+function healthcheck (req, res) {
+    res.send('healthy')
+}
+
+server.get('/healthcheck', healthcheck)
 server.get('*', render);
 
 const port = process.env.PORT || 8080
