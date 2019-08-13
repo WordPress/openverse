@@ -10,6 +10,7 @@ import {
   SET_IMAGES,
   SET_QUERY,
   SET_RELATED_IMAGES,
+  IMAGE_NOT_FOUND,
 } from '@/store/mutation-types';
 import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES, FETCH_COLLECTION_IMAGES } from '@/store/action-types';
 
@@ -217,6 +218,12 @@ describe('Search Store', () => {
 
       expect(routePushMock).toBeCalledWith({ path: '/search', query: params.query });
     });
+
+    it('IMAGE_NOT_FOUND redirects to /not-found', () => {
+      mutations[IMAGE_NOT_FOUND]();
+
+      expect(routePushMock).toBeCalledWith({ path: '/not-found' }, true);
+    });
   });
 
   describe('actions', () => {
@@ -384,6 +391,20 @@ describe('Search Store', () => {
       action({ commit }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
+
+        done();
+      });
+    });
+
+    it('FETCH_IMAGE on 404 doesnt break and commits IMAGE_NOT_FOUND', (done) => {
+      const failedMock = {
+        getImageDetail: jest.fn(() => Promise.reject({ response: { status: 404 } })),
+      };
+      const params = 'foo';
+      const action = store.actions(failedMock)[FETCH_IMAGE];
+      action({ commit }, params).then(() => {
+        expect(commit).toBeCalledWith(FETCH_START_IMAGES);
+        expect(commit).toBeCalledWith(IMAGE_NOT_FOUND);
 
         done();
       });
