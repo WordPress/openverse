@@ -29,7 +29,7 @@ def setup_module():
 
 @pytest.fixture
 def search_fixture():
-    response = requests.get(API_URL + '/image/search?q=a',
+    response = requests.get(API_URL + '/image/search?q=honey',
                             verify=False)
     assert response.status_code == 200
     parsed = json.loads(response.text)
@@ -49,7 +49,7 @@ def test_search_consistency():
     """
     n_pages = 5
     searches = set(
-        requests.get(API_URL + '/image/search?q=a;page={}'.format(page),
+        requests.get(API_URL + '/image/search?q=honey;page={}'.format(page),
                      verify=False)
         for page in range(1, n_pages)
     )
@@ -146,7 +146,7 @@ def test_license_type_filtering():
     modification = LICENSE_GROUPS['modification']
     commercial_and_modification = set.intersection(modification, commercial)
     response = requests.get(
-        API_URL + '/image/search?q=a&lt=commercial,modification', verify=False
+        API_URL + '/image/search?q=honey&lt=commercial,modification', verify=False
     )
     parsed = json.loads(response.text)
     for result in parsed['results']:
@@ -156,7 +156,7 @@ def test_license_type_filtering():
 def test_single_license_type_filtering():
     commercial = LICENSE_GROUPS['commercial']
     response = requests.get(
-        API_URL + '/image/search?q=a&lt=commercial', verify=False
+        API_URL + '/image/search?q=honey&lt=commercial', verify=False
     )
     parsed = json.loads(response.text)
     for result in parsed['results']:
@@ -164,7 +164,7 @@ def test_single_license_type_filtering():
 
 
 def test_specific_license_filter():
-    response = requests.get(API_URL + '/image/search?q=a&li=by', verify=False)
+    response = requests.get(API_URL + '/image/search?q=honey&li=by', verify=False)
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert result['license'] == 'by'
