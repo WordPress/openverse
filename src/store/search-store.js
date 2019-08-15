@@ -1,4 +1,5 @@
 import isEmpty from 'lodash.isempty';
+import findIndex from 'lodash.findindex';
 import getParameterByName from '@/utils/getParameterByName';
 import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams';
 import decodeImageData from '@/utils/decodeImageData';
@@ -22,7 +23,7 @@ import {
   SET_RELATED_IMAGES,
   IMAGE_NOT_FOUND,
 } from './mutation-types';
-import { SEND_SEARCH_QUERY_EVENT } from './usage-data-analytics-types';
+import { SEND_SEARCH_QUERY_EVENT, SEND_RESULT_CLICKED_EVENT } from './usage-data-analytics-types';
 
 const initialState = (searchParams) => {
   const query = {
@@ -106,7 +107,14 @@ const actions = ImageService => ({
         throw new Error(error);
       });
   },
-  [FETCH_IMAGE]({ commit }, params) {
+  [FETCH_IMAGE]({ commit, dispatch, state }, params) {
+    dispatch(SEND_RESULT_CLICKED_EVENT, {
+      query: state.query.q,
+      resultUuid: params.id,
+      resultRank: findIndex(state.images, img => img.id === params.id),
+      sessionId: state.sessionId,
+    });
+
     commit(FETCH_START_IMAGES);
     commit(SET_IMAGE, { image: {} });
     return ImageService.getImageDetail(params)
