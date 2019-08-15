@@ -231,6 +231,8 @@ describe('Search Store', () => {
     const imageDetailData = 'imageDetails';
     let imageServiceMock = null;
     let commit = null;
+    let dispatch = null;
+    let state = {};
 
     beforeEach(() => {
       imageServiceMock = {
@@ -240,12 +242,16 @@ describe('Search Store', () => {
         getImageDetail: jest.fn(() => Promise.resolve({ data: imageDetailData })),
       };
       commit = jest.fn();
+      dispatch = jest.fn();
+      state = {
+        sessionId: 'foo',
+      }
     });
 
     it('FETCH_IMAGES on success', (done) => {
       const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch, state }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(FETCH_END_IMAGES);
 
@@ -327,7 +333,7 @@ describe('Search Store', () => {
       };
       const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(failedMock)[FETCH_IMAGES];
-      action({ commit }, params).catch(() => {
+      action({ commit, dispatch, state }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
         done();
@@ -351,7 +357,7 @@ describe('Search Store', () => {
     it('FETCH_IMAGES resets images if page is not defined', (done) => {
       const params = { q: 'foo', page: undefined, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch, state }, params).then(() => {
         expect(commit).toBeCalledWith(SET_IMAGES, { images: [] });
         done();
       });
@@ -360,7 +366,7 @@ describe('Search Store', () => {
     it('FETCH_IMAGES does not reset images if page is defined', (done) => {
       const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch, state }, params).then(() => {
         expect(commit).not.toBeCalledWith(SET_IMAGES, { images: [] });
         done();
       });
