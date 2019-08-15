@@ -112,7 +112,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_THROTTLE_RATES': {
         'anon_burst': '60/min',
-        'anon_sustained': '1000/day',
+        'anon_sustained': '5000/day',
         'oauth2_client_credentials_sustained': '10000/day',
         'oauth2_client_credentials_burst': '100/min',
         'enhanced_oauth2_client_credentials_sustained': '20000/day',
