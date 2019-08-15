@@ -22,8 +22,9 @@ import {
   SET_RELATED_IMAGES,
   IMAGE_NOT_FOUND,
 } from './mutation-types';
+import { SEND_SEARCH_QUERY_EVENT } from './usage-data-analytics-types';
 
-const state = (searchParams) => {
+const initialState = (searchParams) => {
   const query = {
     q: getParameterByName('q', searchParams),
     provider: getParameterByName('provider', searchParams),
@@ -83,7 +84,9 @@ const fetchCollectionImages = (commit, params, imageService) => {
 };
 
 const actions = ImageService => ({
-  [FETCH_IMAGES]({ commit }, params) {
+  [FETCH_IMAGES]({ commit, dispatch, state }, params) {
+    dispatch(SEND_SEARCH_QUERY_EVENT, { query: params.q, sessionId: state.sessionId });
+
     commit(FETCH_START_IMAGES);
     hideSearchResultsOnNewSearch(commit, params.page);
     const queryParams = prepareSearchQueryParams(params);
@@ -224,7 +227,7 @@ const mutations = redirect => ({
 });
 
 export default {
-  state,
+  state: initialState,
   actions,
   mutations,
 };
