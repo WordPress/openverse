@@ -16,10 +16,10 @@ const UsageDataService = {
     );
   },
 
-  sendDetailPageEvent({ eventType, resultUuid, sessionId }) {
+  sendDetailPageEvent({ eventType, resultUuid }) {
     return this.post(
       'detail_page_event',
-      { event_type: eventType, result_uuid: resultUuid, session_uuid: sessionId },
+      { event_type: eventType, result_uuid: resultUuid },
     );
   },
 };
