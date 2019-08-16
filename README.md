@@ -2,7 +2,7 @@
 *Mapping the commons towards an open ledger and cc search.*
 
 ## Description
-This repository contains the methods used to identify over 1.4 billion Creative Commons licensed works. The challenge is that these works are dispersed throughout the web and identifying them requires a combination of techniques. Two approaches are currently being explored:
+This repository contains the methods used to identify over 1.4 billion Creative Commons licensed works. The challenge is that these works are dispersed throughout the web and identifying them requires a combination of techniques. Two approaches are currently explored:
 1. [Web crawl data](#web-crawl-data)
 2. [Application Programming Interfaces (APIs)](#application-programming-interfaces-apis)
 
