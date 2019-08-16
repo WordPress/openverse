@@ -277,7 +277,7 @@ describe('Search Store', () => {
 
       expect(dispatch).toHaveBeenLastCalledWith(
         'SEND_SEARCH_QUERY_EVENT',
-        { query: params.q, sessionId: state.sessionId }
+        { query: params.q, sessionId: state.sessionId },
       );
     });
 
