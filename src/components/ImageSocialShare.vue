@@ -8,7 +8,8 @@
     <social-share-buttons
       :shareURL="shareURL"
       :imageURL="imageURL"
-      :shareText="shareText">
+      :shareText="shareText"
+      :image="image">
     </social-share-buttons>
   </section>
 </template>

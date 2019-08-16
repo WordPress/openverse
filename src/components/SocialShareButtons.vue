@@ -25,6 +25,7 @@
 
 <script>
 import { SOCIAL_MEDIA_SHARE } from '@/store/action-types';
+import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-analytics-types';
 
 export default {
   name: 'social-share-buttons',
@@ -32,10 +33,15 @@ export default {
     shareURL: '',
     shareText: '',
     imageURL: '',
+    image: {},
   },
   methods: {
     onSocialMediaLinkClick(site) {
       this.$store.dispatch(SOCIAL_MEDIA_SHARE, { site });
+      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+        eventType: DETAIL_PAGE_EVENTS.SHARED_SOCIAL,
+        resultUuid: this.$props.image.id,
+      });
     },
   },
 };
