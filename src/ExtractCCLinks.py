@@ -9,13 +9,13 @@ import boto3
 import botocore
 from botocore.handlers import disable_signing
 import gzip
-from urlparse import urlparse
+from urllib.parse import urlparse
 import requests
 from collections import Counter
 import random
 from warcio.archiveiterator import ArchiveIterator
 import ujson as json
-import StringIO
+from io import StringIO
 import sys
 import re
 import logging
@@ -81,7 +81,7 @@ class CCLinks:
             response = requests.get(self.url)
 
             if response.status_code == requests.codes.ok:
-                content     = StringIO.StringIO(response.content)
+                content     = StringIO(response.content)
                 fh          = gzip.GzipFile(fileobj=content)
                 watPaths    = fh.read().split()
 
