@@ -30,8 +30,9 @@ The steps above are performed in [ExtractCCLinks.py](https://github.com/creative
 ### Prerequisites
 ```
 JDK 9.0.1
-Python 2.7
-Spark 2.2.0
+Python 3.6
+Spark 2.2.1
+Airflow 1.10.4
 
 pip install -r requirements.txt
 ```
