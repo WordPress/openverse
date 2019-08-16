@@ -43,6 +43,11 @@ Manages the monthly jobs that are scheduled to run on the 15th day of each month
 #### DB_Loader
 Scheduled to load data into the upstream database every four hours. It includes data preprocessing steps.
 
+#### Other API Jobs (not in the workflow)
+- [Brooklyn Museum](https://github.com/creativecommons/cccatalog/blob/master/src/providers/api/BrooklynMuseum.py)
+- [NYPL](https://github.com/creativecommons/cccatalog/blob/master/src/providers/api/NYPL.py)
+- Cleveland Public Library 
+
 ## Getting Started
 
 ### Prerequisites
