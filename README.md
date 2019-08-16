@@ -23,7 +23,25 @@ CC Catalog uses AWS Data Pipeline service to automatically create an EMR cluster
 The steps above are performed in [ExtractCCLinks.py](https://github.com/creativecommons/cccatalog/blob/master/src/ExtractCCLinks.py)
 
 ### Application Programming Interfaces (APIs)
+[Apache Airflow](https://airflow.apache.org/) is used to manage the workflow for the various API ETL jobs. There are three workflows: 1) [Daily_ETL_Workflow](https://github.com/creativecommons/cccatalog/blob/master/src/airflow_dag/dailyWorkflow.py), 2) [Monthly_Workflow](https://github.com/creativecommons/cccatalog/blob/master/src/airflow_dag/monthlyWorkflow.py) and 3) [DB_Loader](https://github.com/creativecommons/cccatalog/blob/master/src/airflow_dag/loaderWorkflow.py).
 
+#### Daily_ETL_Workflow
+This manages the daily ETL jobs for the following platforms:
+- [Flickr](https://github.com/creativecommons/cccatalog/blob/master/src/providers/api/Flickr.py)
+- [Wikimedia Commons](https://github.com/creativecommons/cccatalog/blob/master/src/providers/api/WikimediaCommons.py)
+- [Thingiverse](https://github.com/creativecommons/cccatalog/blob/master/src/providers/api/Thingiverse.py)
+- [Met Museum](https://github.com/creativecommons/cccatalog/blob/master/src/providers/api/MetMuseum.py)
+- [PhyloPic](https://github.com/creativecommons/cccatalog/blob/master/src/providers/api/PhyloPic.py)
+
+#### Monthly_Workflow
+Manages the monthly jobs that are scheduled to run on the 15th day of each month at 16:00 UTC. This workflow is reserved for long-running jobs or APIs that do not have date filtering capabilities so the data is reprocessed monthly to keep the catalog updated. The following tasks are performed:
+- [Cleveland Museum of Art](https://github.com/creativecommons/cccatalog/blob/master/src/providers/api/ClevelandMuseum.py)
+- [RawPixel](https://github.com/creativecommons/cccatalog/blob/master/src/providers/api/RawPixel.py)
+- [Flickr](https://github.com/creativecommons/cccatalog/blob/master/src/providers/api/Flickr.py)
+- [Common Crawl Syncer](https://github.com/creativecommons/cccatalog/blob/master/src/airflow_dag/commoncrawl_s3_syncer/SyncImageProviders.py)
+
+#### DB_Loader
+Scheduled to load data into the upstream database every four hours. It includes data preprocessing steps.
 
 ## Getting Started
 
