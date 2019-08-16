@@ -51,7 +51,7 @@
           Copy HTML
         </CopyButton>
       </div>
-      <reuse-survey />
+      <reuse-survey :image="image" />
       <legal-disclaimer :source="image.provider" :sourceURL="image.foreign_landing_url" />
     </div>
   </section>

@@ -13,6 +13,7 @@ import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-a
 
 export default {
   name: 'reuse-survey',
+  props: ['image'],
   data: () => ({
     // for SSR, initiates it as an empty value
     location: '',
