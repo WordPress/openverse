@@ -2,13 +2,15 @@
   <div class="reuse-survey">
     <span>How are you using this image?</span>
     <span>Let us know how you use this image in</span>
-    <a :href="formLink">
+    <a :href="formLink" target="_blank" rel="noopener" @click="onReuseSurveyClick">
       this quick survey
     </a>
   </div>
 </template>
 
 <script>
+import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-analytics-types';
+
 export default {
   name: 'reuse-survey',
   data: () => ({
@@ -24,6 +26,14 @@ export default {
   mounted() {
     // for SSR, sets the value with window.location, which is only available on client
     this.location = window.location.href;
+  },
+  methods: {
+    onReuseSurveyClick() {
+      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+        eventType: DETAIL_PAGE_EVENTS.REUSE_SURVEY,
+        resultUuid: this.$props.image.id,
+      });
+    },
   },
 };
 </script>
