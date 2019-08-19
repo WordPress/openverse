@@ -7,6 +7,9 @@ describe('AB Tests', () => {
   beforeEach(() => {
     store = {
       commit: jest.fn(),
+      state: {
+        sessionId: 'foo',
+      },
     };
   });
 

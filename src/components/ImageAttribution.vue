@@ -9,14 +9,21 @@
     <div >
       <div class="photo-attribution">
         <span id="attribution" class="photo_usage-attribution" ref="photoAttribution">
-          <a :href="image.foreign_landing_url">"{{ image.title }}"</a>
+          <a :href="image.foreign_landing_url"
+             target="_blank"
+             rel="noopener"
+             @click="onPhotoSourceLinkClicked">"{{ image.title }}"</a>
           <span v-if="image.creator">
             by
-            <a v-if="image.creator_url" :href="image.creator_url">{{ image.creator }}</a>
+            <a v-if="image.creator_url"
+               :href="image.creator_url"
+               target="_blank"
+               rel="noopener"
+               @click="onPhotoCreatorLinkClicked">{{ image.creator }}</a>
             <span v-else>{{ image.creator }}</span>
           </span>
           is licensed under
-          <a class="photo_license" :href="licenseURL">
+          <a class="photo_license" :href="licenseURL" target="_blank" rel="noopener">
           {{ fullLicenseName.toUpperCase() }}
           </a>
         </span>
@@ -44,7 +51,7 @@
           Copy HTML
         </CopyButton>
       </div>
-      <reuse-survey />
+      <reuse-survey :image="image" />
       <legal-disclaimer :source="image.provider" :sourceURL="image.foreign_landing_url" />
     </div>
   </section>
@@ -56,6 +63,7 @@ import CopyButton from '@/components/CopyButton';
 import LegalDisclaimer from '@/components/LegalDisclaimer';
 import ReuseSurvey from '@/components/ReuseSurvey';
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
+import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-analytics-types';
 
 export default {
   name: 'image-attribution',
@@ -72,13 +80,29 @@ export default {
     },
   },
   methods: {
+    sendDetailPageEvent(eventType) {
+      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+        eventType,
+        resultUuid: this.$props.image.id,
+      });
+    },
     onCopyAttribution(e) {
       this.$store.dispatch(COPY_ATTRIBUTION, {
         content: e.content,
       });
+
+      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED);
     },
     onEmbedAttribution() {
       this.$store.dispatch(EMBED_ATTRIBUTION);
+
+      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED);
+    },
+    onPhotoSourceLinkClicked() {
+      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.SOURCE_CLICKED);
+    },
+    onPhotoCreatorLinkClicked() {
+      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.CREATOR_CLICKED);
     },
   },
 };

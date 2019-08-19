@@ -3,7 +3,7 @@ import createSixpackSession from './createSixpackSession';
 import InfiniteLoadingExperiment from './infiniteLoadingExperiment';
 
 const setupExperiments = (store) => {
-  const session = createSixpackSession();
+  const session = createSixpackSession(store.state.sessionId);
 
   const experimentPromises = [
     InfiniteLoadingExperiment(session),

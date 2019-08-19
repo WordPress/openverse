@@ -1,5 +1,6 @@
 import ImageAttribution from '@/components/ImageAttribution';
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
+import { DETAIL_PAGE_EVENTS, SEND_DETAIL_PAGE_EVENT } from '@/store/usage-data-analytics-types';
 import render from '../../test-utils/render';
 
 describe('ImageAttribution', () => {
@@ -51,5 +52,41 @@ describe('ImageAttribution', () => {
     const wrapper = render(ImageAttribution, options);
     wrapper.vm.onEmbedAttribution();
     expect(dispatchMock).toHaveBeenCalledWith(EMBED_ATTRIBUTION);
+  });
+
+  it('should dispatch SEND_DETAIL_PAGE_EVENT on copy attribution', () => {
+    const wrapper = render(ImageAttribution, options);
+    wrapper.vm.onCopyAttribution(eventData);
+    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
+      eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
+      resultUuid: props.image.id,
+    });
+  });
+
+  it('should dispatch SEND_DETAIL_PAGE_EVENT on embed attribution', () => {
+    const wrapper = render(ImageAttribution, options);
+    wrapper.vm.onEmbedAttribution();
+    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
+      eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
+      resultUuid: props.image.id,
+    });
+  });
+
+  it('should dispatch SOURCE_CLICKED on source link clicked', () => {
+    const wrapper = render(ImageAttribution, options);
+    wrapper.vm.onPhotoSourceLinkClicked();
+    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
+      eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
+      resultUuid: props.image.id,
+    });
+  });
+
+  it('should dispatch SOURCE_CLICKED on creator link clicked', () => {
+    const wrapper = render(ImageAttribution, options);
+    wrapper.vm.onPhotoCreatorLinkClicked();
+    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
+      eventType: DETAIL_PAGE_EVENTS.CREATOR_CLICKED,
+      resultUuid: props.image.id,
+    });
   });
 });

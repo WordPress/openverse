@@ -231,6 +231,8 @@ describe('Search Store', () => {
     const imageDetailData = 'imageDetails';
     let imageServiceMock = null;
     let commit = null;
+    let dispatch = null;
+    let state = {};
 
     beforeEach(() => {
       imageServiceMock = {
@@ -240,12 +242,18 @@ describe('Search Store', () => {
         getImageDetail: jest.fn(() => Promise.resolve({ data: imageDetailData })),
       };
       commit = jest.fn();
+      dispatch = jest.fn();
+      state = {
+        sessionId: 'foo session id',
+        images: [{ id: 'foo' }, { id: 'bar' }, { id: 'zeta' }],
+        query: { q: 'foo query' },
+      };
     });
 
     it('FETCH_IMAGES on success', (done) => {
       const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch, state }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(FETCH_END_IMAGES);
 
@@ -260,6 +268,17 @@ describe('Search Store', () => {
 
         done();
       });
+    });
+
+    it('FETCH_IMAGES dispatches SEND_SEARCH_QUERY_EVENT', () => {
+      const params = { q: 'foo', page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_IMAGES];
+      action({ commit, dispatch, state }, params);
+
+      expect(dispatch).toHaveBeenLastCalledWith(
+        'SEND_SEARCH_QUERY_EVENT',
+        { query: params.q, sessionId: state.sessionId },
+      );
     });
 
     it('FETCH_COLLECTION_IMAGES on success', (done) => {
@@ -327,7 +346,7 @@ describe('Search Store', () => {
       };
       const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(failedMock)[FETCH_IMAGES];
-      action({ commit }, params).catch(() => {
+      action({ commit, dispatch, state }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
         done();
@@ -351,7 +370,7 @@ describe('Search Store', () => {
     it('FETCH_IMAGES resets images if page is not defined', (done) => {
       const params = { q: 'foo', page: undefined, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch, state }, params).then(() => {
         expect(commit).toBeCalledWith(SET_IMAGES, { images: [] });
         done();
       });
@@ -360,16 +379,16 @@ describe('Search Store', () => {
     it('FETCH_IMAGES does not reset images if page is defined', (done) => {
       const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch, state }, params).then(() => {
         expect(commit).not.toBeCalledWith(SET_IMAGES, { images: [] });
         done();
       });
     });
 
     it('FETCH_IMAGE on success', (done) => {
-      const params = 'foo';
+      const params = { id: 'foo' };
       const action = store.actions(imageServiceMock)[FETCH_IMAGE];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch, state }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(SET_IMAGE, { image: {} });
         expect(commit).toBeCalledWith(FETCH_END_IMAGES);
@@ -382,13 +401,23 @@ describe('Search Store', () => {
       });
     });
 
+    it('FETCH_IMAGE dispatches SEND_RESULT_CLICKED_EVENT', () => {
+      const params = { id: 'foo' };
+      const action = store.actions(imageServiceMock)[FETCH_IMAGE];
+      action({ commit, dispatch, state }, params);
+
+      expect(dispatch).toHaveBeenLastCalledWith(
+        'SEND_RESULT_CLICKED_EVENT',
+        { query: state.query.q, resultUuid: 'foo', resultRank: 0, sessionId: state.sessionId });
+    });
+
     it('FETCH_IMAGE on error', (done) => {
       const failedMock = {
         getImageDetail: jest.fn(() => Promise.reject('error')),
       };
-      const params = 'foo';
+      const params = { id: 'foo' };
       const action = store.actions(failedMock)[FETCH_IMAGE];
-      action({ commit }, params).catch(() => {
+      action({ commit, dispatch, state }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
 
@@ -400,9 +429,9 @@ describe('Search Store', () => {
       const failedMock = {
         getImageDetail: jest.fn(() => Promise.reject({ response: { status: 404 } })),
       };
-      const params = 'foo';
+      const params = { id: 'foo' };
       const action = store.actions(failedMock)[FETCH_IMAGE];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch, state }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(IMAGE_NOT_FOUND);
 
