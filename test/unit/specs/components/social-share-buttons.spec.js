@@ -1,5 +1,6 @@
 import SocialShareButtons from '@/components/SocialShareButtons';
 import { SOCIAL_MEDIA_SHARE } from '@/store/action-types';
+import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-analytics-types';
 import render from '../../test-utils/render';
 
 describe('SocialShareButtons', () => {
@@ -9,6 +10,9 @@ describe('SocialShareButtons', () => {
 
   beforeEach(() => {
     props = {
+      image: {
+        id: 0,
+      },
       shareURL: 'http://share.url',
       imageURL: 'http://image.url',
       shareText: 'share text',
@@ -39,6 +43,11 @@ describe('SocialShareButtons', () => {
     expect(storeMock.dispatch).toHaveBeenCalledWith(SOCIAL_MEDIA_SHARE, {
       site: 'Facebook',
     });
+
+    expect(storeMock.dispatch).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
+      eventType: DETAIL_PAGE_EVENTS.SHARED_SOCIAL,
+      resultUuid: props.image.id,
+    });
   });
 
   it('dispatches social media share event when Twitter link is clicked', () => {
@@ -47,6 +56,11 @@ describe('SocialShareButtons', () => {
     expect(storeMock.dispatch).toHaveBeenCalledWith(SOCIAL_MEDIA_SHARE, {
       site: 'Twitter',
     });
+
+    expect(storeMock.dispatch).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
+      eventType: DETAIL_PAGE_EVENTS.SHARED_SOCIAL,
+      resultUuid: props.image.id,
+    });
   });
 
   it('dispatches social media share event when pinterest link is clicked', () => {
@@ -54,6 +68,11 @@ describe('SocialShareButtons', () => {
     wrapper.find('.pinterest').trigger('click');
     expect(storeMock.dispatch).toHaveBeenCalledWith(SOCIAL_MEDIA_SHARE, {
       site: 'Pinterest',
+    });
+
+    expect(storeMock.dispatch).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
+      eventType: DETAIL_PAGE_EVENTS.SHARED_SOCIAL,
+      resultUuid: props.image.id,
     });
   });
 });
