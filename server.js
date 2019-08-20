@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const express = require('express')
+const microcache = require('route-cache');
 const { createBundleRenderer } = require('vue-server-renderer')
 const bundle = require('./dist/server-bundle.json');
 
@@ -59,6 +60,14 @@ function render (req, res) {
 function healthcheck (req, res) {
     res.send('healthy')
 }
+
+// since this app has no user-specific content, every page is micro-cacheable.
+// if your app involves user-specific content, you need to implement custom
+// logic to determine whether a request is cacheable based on its url and
+// headers.
+// 1-second microcache.
+// https://www.nginx.com/blog/benefits-of-microcaching-nginx/
+server.use(microcache.cacheSeconds(30, req => req.originalUrl))
 
 server.get('/healthcheck', healthcheck)
 server.get('*', render);

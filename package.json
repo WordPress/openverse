@@ -30,6 +30,7 @@
     "lodash.isempty": "^4.4.0",
     "masonry-layout": "^4.2.2",
     "packery": "^2.1.2",
+    "route-cache": "^0.4.4",
     "sixpack-client": "^2.1.0",
     "uuid": "^3.3.2",
     "v-viewer": "^1.2.1",
