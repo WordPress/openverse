@@ -19,9 +19,6 @@ export default {
       this.fetchProviders();
     }
   },
-  serverPrefetch() {
-    return this.fetchProviders();
-  },
 };
 </script>
 

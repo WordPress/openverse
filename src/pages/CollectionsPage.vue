@@ -27,6 +27,7 @@
 import CollectionItem from '@/components/CollectionItem';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
+import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin';
 
 const MUSEUM_PROVIDERS = [
   'brooklynmuseum', 'clevelandmuseum', 'digitaltmuseum', 'met', 'museumsvictoria',
@@ -35,6 +36,7 @@ const MUSEUM_PROVIDERS = [
 
 const CollectionsPage = {
   name: 'collections-page',
+  mixins: [ServerPrefetchProvidersMixin],
   components: {
     HeaderSection,
     FooterSection,
