@@ -13,6 +13,7 @@ alembic = "*"
 gunicorn = "*"
 requests = "*"
 pytest = "*"
+falcon-cors = "*"
 
 [requires]
 python_version = "3.7"

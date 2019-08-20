@@ -1,4 +1,5 @@
 import falcon
+from falcon_cors import CORS
 from controller import EventController
 
 event_controller = EventController()
@@ -71,7 +72,12 @@ class OpenAPISpecResource:
         with open('docs/swagger.yaml', 'r') as f:
             resp.body = f.read()
 
-
+origins = [
+    'https://ccsearch.creativecommons.org',
+    'https://ccsearch-dev.creativecommons.org',
+    'https://search.creativecommons.org'
+]
+cors = CORS(allow_origins_list=origins)
 api = falcon.API()
 api.add_route('/', RedocResource())
 api.add_route('/swagger.yaml', OpenAPISpecResource())
