@@ -19,6 +19,7 @@ import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGridForm from '@/components/SearchGridForm';
 import BrowsePageMixin from '@/pages/mixins/BrowsePageMixin';
+import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin';
 
 const BrowsePage = {
   components: {
@@ -26,7 +27,7 @@ const BrowsePage = {
     SearchGridForm,
     FooterSection,
   },
-  mixins: [BrowsePageMixin],
+  mixins: [BrowsePageMixin, ServerPrefetchProvidersMixin],
 };
 
 export default BrowsePage;
