@@ -41,6 +41,18 @@ def _filter_licenses(s: Search, licenses):
     return s
 
 
+def _quote_escape(query_string):
+    """
+    If there are any unmatched quotes in the query supplied by the user, ignore
+    them.
+    """
+    num_quotes = query_string.count('"')
+    if num_quotes % 2 == 1:
+        return query_string.replace('"', '\\"')
+    else:
+        return query_string
+
+
 def search(search_params, index, page_size, ip, page=1) -> Response:
     """
     Given a set of keywords and an optional set of filters, perform a ranked
@@ -90,25 +102,26 @@ def search(search_params, index, page_size, ip, page=1) -> Response:
     # individual field-level queries specified.
     search_fields = ['tags.name', 'title', 'description']
     if 'q' in search_params.data:
+        query = _quote_escape(search_params.data['q'])
         s = s.query(
             'query_string',
-            query=search_params.data['q'],
+            query=query,
             fields=search_fields,
             type='most_fields'
         )
     else:
         if 'creator' in search_params.data:
-            creator = search_params.data['creator']
+            creator = _quote_escape(search_params.data['creator'])
             s = s.query(
                 'query_string', query=creator, default_field='creator'
             )
         if 'title' in search_params.data:
-            title = search_params.data['title']
+            title = _quote_escape(search_params.data['title'])
             s = s.query(
                 'query_string', query=title, default_field='title'
             )
         if 'tags' in search_params.data:
-            tags = search_params.data['tags']
+            tags = _quote_escape(search_params.data['tags'])
             s = s.query(
                 'query_string',
                 default_field='tags.name',
