@@ -42,6 +42,10 @@ def _filter_licenses(s: Search, licenses):
 
 
 def _quote_escape(query_string):
+    """
+    If there are any unmatched quotes in the query supplied by the user, ignore
+    them.
+    """
     num_quotes = query_string.count('"')
     if num_quotes % 2 == 1:
         return query_string.replace('"', '\\"')
