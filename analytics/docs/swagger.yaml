@@ -62,7 +62,7 @@ paths:
           description: "Created"
         400:
           description: "Invalid input"
-  /result_clicked_event:
+  /result_click_event:
     post:
       tags:
       - "Register events"
