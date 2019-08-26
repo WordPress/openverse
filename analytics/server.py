@@ -78,7 +78,7 @@ origins = [
     'https://search.creativecommons.org'
 ]
 cors = CORS(allow_origins_list=origins)
-api = falcon.API()
+api = falcon.API(middleware=[cors.middleware])
 api.add_route('/', RedocResource())
 api.add_route('/swagger.yaml', OpenAPISpecResource())
 api.add_route('/search_event', SearchEventResource())
