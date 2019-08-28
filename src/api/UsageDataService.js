@@ -11,7 +11,7 @@ const UsageDataService = {
 
   sendResultClickedEvent({ query, resultRank, resultUuid, sessionId }) {
     return this.post(
-      'result_clicked_event',
+      'result_click_event',
       { query, result_rank: resultRank, result_uuid: resultUuid, session_uuid: sessionId },
     );
   },
