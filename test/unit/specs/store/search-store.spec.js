@@ -11,6 +11,7 @@ import {
   SET_QUERY,
   SET_RELATED_IMAGES,
   IMAGE_NOT_FOUND,
+  RESET_QUERY,
 } from '@/store/mutation-types';
 import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES, FETCH_COLLECTION_IMAGES } from '@/store/action-types';
 
@@ -217,6 +218,18 @@ describe('Search Store', () => {
       mutations[SET_QUERY](state, params);
 
       expect(routePushMock).toBeCalledWith({ path: '/search', query: params.query });
+    });
+
+    it('RESET_QUERY resets query to empty state', () => {
+      state.query = {
+        q: 'foo',
+        lt: 'commercial',
+      };
+      mutations[RESET_QUERY](state);
+
+      expect(state.query.q).toBeNull();
+      expect(state.query.lt).toBeNull();
+      expect(state.isFilterApplied).toBeFalsy();
     });
 
     it('IMAGE_NOT_FOUND redirects to /not-found', () => {
