@@ -9,4 +9,17 @@ describe('Homepage', () => {
     expect(wrapper.find({ name: 'hero-section' }).vm).toBeDefined();
     expect(wrapper.find({ name: 'footer-section' }).vm).toBeDefined();
   });
+
+  it('commits RESET QUERY on mounted', () => {
+    const options = {
+      mocks: {
+        $store: {
+          commit: jest.fn(),
+        },
+      },
+    };
+    render(Homepage, options);
+
+    expect(options.mocks.$store.commit).toHaveBeenCalledWith('RESET_QUERY');
+  });
 });

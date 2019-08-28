@@ -10,6 +10,7 @@
 import HeaderSection from '@/components/HeaderSection';
 import HeroSection from '@/components/HeroSection';
 import FooterSection from '@/components/FooterSection';
+import { RESET_QUERY } from '@/store/mutation-types';
 
 const HomePage = {
   name: 'home-page',
@@ -17,6 +18,9 @@ const HomePage = {
     HeaderSection,
     HeroSection,
     FooterSection,
+  },
+  mounted() {
+    this.$store.commit(RESET_QUERY);
   },
 };
 
