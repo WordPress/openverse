@@ -87,7 +87,10 @@ const fetchCollectionImages = (commit, params, imageService) => {
 
 const actions = ImageService => ({
   [FETCH_IMAGES]({ commit, dispatch, state }, params) {
-    dispatch(SEND_SEARCH_QUERY_EVENT, { query: params.q, sessionId: state.sessionId });
+    // does not send event if user is paginating for more results
+    if (!params.page) {
+      dispatch(SEND_SEARCH_QUERY_EVENT, { query: params.q, sessionId: state.sessionId });
+    }
 
     commit(FETCH_START_IMAGES);
     hideSearchResultsOnNewSearch(commit, params.page);
