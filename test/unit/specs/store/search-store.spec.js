@@ -284,11 +284,22 @@ describe('Search Store', () => {
     });
 
     it('FETCH_IMAGES dispatches SEND_SEARCH_QUERY_EVENT', () => {
-      const params = { q: 'foo', page: 1, shouldPersistImages: false };
+      const params = { q: 'foo', shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_IMAGES];
       action({ commit, dispatch, state }, params);
 
       expect(dispatch).toHaveBeenLastCalledWith(
+        'SEND_SEARCH_QUERY_EVENT',
+        { query: params.q, sessionId: state.sessionId },
+      );
+    });
+
+    it('does not dispatch SEND_SEARCH_QUERY_EVENT if page param is available', () => {
+      const params = { q: 'foo', page: 1, shouldPersistImages: false };
+      const action = store.actions(imageServiceMock)[FETCH_IMAGES];
+      action({ commit, dispatch, state }, params);
+
+      expect(dispatch).not.toHaveBeenLastCalledWith(
         'SEND_SEARCH_QUERY_EVENT',
         { query: params.q, sessionId: state.sessionId },
       );
