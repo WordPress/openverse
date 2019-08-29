@@ -7,6 +7,7 @@ from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils import ccrel
+from cccatalog.api.utils.view_count import track_model_views
 from rest_framework.reverse import reverse
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
@@ -292,6 +293,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                              200: ImageDetailSerializer,
                              404: 'Not Found'
                          })
+    @track_model_views(Image)
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
         resp = self.retrieve(request, identifier)
