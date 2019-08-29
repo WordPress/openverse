@@ -30,7 +30,7 @@ def track_model_views(model):
     def func_wrap(django_view):
         def decorated(*args, **kwargs):
             request = args[1]
-            model_id = kwargs.get('id')
+            model_id = kwargs.get('identifier')
             view_count = _increment_viewcount(model, model_id, request)
             return django_view(*args, **kwargs, view_count=view_count)
         return decorated
@@ -56,7 +56,7 @@ def _increment_viewcount(model, model_id: int, request):
     if not view_count:
         # Cache miss. Get the view count from the database and cache it.
         try:
-            view_count = int(model.objects.get(id=model_id).view_count)
+            view_count = int(model.objects.get(identifier=model_id).view_count)
         except ObjectDoesNotExist:
             # If the object doesn't even exist in the database, don't track it.
             return
