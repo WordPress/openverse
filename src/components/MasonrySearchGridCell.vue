@@ -48,6 +48,9 @@ export default {
     LicenseIcons,
   },
   methods: {
+    // getImageTitle(title) {
+    //   return title || "Untitled Image"
+    // },
     getImageUrl(image) {
       if (!image) {
         return '';
