@@ -5,17 +5,15 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider
-from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils import ccrel
 from cccatalog.api.utils.view_count import track_model_views
-from rest_framework.reverse import reverse
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer, \
     BrowseImageQueryStringSerializer, RelatedImagesResultsSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer,\
     WatermarkQueryStringSerializer
-from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
+from cccatalog.settings import THUMBNAIL_PROXY_URL
 from cccatalog.api.utils.view_count import _get_user_ip
 from urllib.parse import urlparse
 from cccatalog.api.utils.watermark import watermark
@@ -59,63 +57,6 @@ def _add_protocol(url: str):
         return url
 
 
-def _get_page_count(search_results, page_size):
-    """
-    Elasticsearch does not allow deep pagination of ranked queries.
-    Adjust returned page count to reflect this.
-    :param search_results: The Elasticsearch response object containing search
-    results.
-    """
-    natural_page_count = int(search_results.hits.total / page_size)
-    last_allowed_page = int((5000 + page_size / 2) / page_size)
-    page_count = min(natural_page_count, last_allowed_page)
-    return page_count
-
-
-def _post_process_results(search_results, request, filter_dead):
-    """
-    After fetching the search results from the back end, iterate through the
-    results, add links to detail views, perform image validation, and route
-    certain thumbnails through out proxy.
-    :param search_results: The Elasticsearch response object containing search
-    results.
-    :param request: The Django request object, used to build a "reversed" URL
-    to detail pages.
-    :param filter_dead: Whether images should be validated.
-    """
-    results = []
-    to_validate = []
-    for res in search_results:
-        url = request.build_absolute_uri(
-            reverse('image-detail', [res.identifier])
-        )
-        res.detail = url
-        if hasattr(res.meta, 'highlight'):
-            res.fields_matched = dir(res.meta.highlight)
-        to_validate.append(res.url)
-        if PROXY_THUMBS:
-            # Proxy thumbnails from providers who don't provide SSL. We also
-            # have a list of providers that have poor quality or no thumbnails,
-            # so we produce our own on-the-fly.
-            provider = res[PROVIDER]
-            if THUMBNAIL in res and provider not in PROXY_ALL:
-                to_proxy = THUMBNAIL
-            else:
-                to_proxy = URL
-            if 'http://' in res[to_proxy] or provider in PROXY_ALL:
-                original = res[to_proxy]
-                secure = '{proxy_url}/{width}/{original}'.format(
-                    proxy_url=THUMBNAIL_PROXY_URL,
-                    width=THUMBNAIL_WIDTH_PX,
-                    original=original
-                )
-                res[THUMBNAIL] = secure
-        results.append(res)
-    if filter_dead:
-        validate_images(results, to_validate)
-    return results
-
-
 class SearchImages(APIView):
     """
     Search for images by a query string. Optionally, filter results by specific
@@ -154,13 +95,16 @@ class SearchImages(APIView):
         page_param = params.data[PAGE]
         page_size = params.data[PAGESIZE]
         qa = params.data[QA]
+        filter_dead = params.data[FILTER_DEAD]
         search_index = 'search-qa' if qa else 'image'
         try:
-            search_results = search_controller.search(
+            results, page_count, result_count = search_controller.search(
                 params,
-                index=search_index,
-                page_size=page_size,
-                ip=hashed_ip,
+                search_index,
+                page_size,
+                hashed_ip,
+                request,
+                filter_dead,
                 page=page_param
             )
         except ValueError:
@@ -171,12 +115,8 @@ class SearchImages(APIView):
                 }
             )
 
-        filter_dead = params.data[FILTER_DEAD]
-        results = _post_process_results(search_results, request, filter_dead)
         serialized_results = ImageSerializer(results, many=True).data
-        page_count = _get_page_count(search_results, page_size)
 
-        result_count = search_results.hits.total
         if len(results) < page_size and page_count == 0:
             result_count = len(results)
         response_data = {
@@ -217,6 +157,7 @@ class BrowseImages(APIView):
             )
         page_param = params.data[PAGE]
         page_size = params.data[PAGESIZE]
+        filter_dead = params.data[FILTER_DEAD]
         lt = None
         li = None
         if 'lt' in params.data:
@@ -225,14 +166,16 @@ class BrowseImages(APIView):
             li = params.data['li']
 
         try:
-            browse_results = search_controller.browse_by_provider(
+            results, page_count, result_count = search_controller.browse_by_provider(
                 provider,
-                index='image',
-                page_size=page_size,
+                'image',
+                page_size,
+                hash(_get_user_ip(request)),
+                request,
+                filter_dead,
                 page=page_param,
                 lt=lt,
-                li=li,
-                ip=hash(_get_user_ip(request))
+                li=li
             )
         except ValueError:
             return Response(
@@ -249,12 +192,12 @@ class BrowseImages(APIView):
                     .format(provider)
                 }
             )
-        filter_dead = params.data[FILTER_DEAD]
-        results = _post_process_results(browse_results, request, filter_dead)
+
+
         serialized_results = ImageSerializer(results, many=True).data
-        page_count = _get_page_count(browse_results, page_size)
+
         response_data = {
-            'result_count': browse_results.hits.total,
+            'result_count': result_count,
             'page_count': page_count,
             RESULTS: serialized_results
         }

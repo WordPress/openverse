@@ -2,11 +2,12 @@ import time
 import grequests
 import logging
 from django_redis import get_redis_connection
+from cccatalog.api.utils.dead_link_filter import get_query_mask, save_new_query_mask
 
 log = logging.getLogger(__name__)
 
 
-def validate_images(results, image_urls):
+def validate_images(query_hash, start_slice, end_slice, results, image_urls):
     """
     Make sure images exist before we display them. Treat redirects as broken
     links since 99% of the time the redirect leads to a generic "not found"
@@ -71,6 +72,8 @@ def validate_images(results, image_urls):
         else:
             cached_statuses[cache_idx] = -1
 
+    # Create a new dead link mask
+    new_mask = [1] * len(results)
     # Delete broken images from the search results response.
     for idx, _ in enumerate(cached_statuses):
         del_idx = len(cached_statuses) - idx - 1
@@ -86,6 +89,14 @@ def validate_images(results, image_urls):
                 .format(results[del_idx]['identifier'])
             )
             del results[del_idx]
+            new_mask[del_idx] = 0
+
+    # Cache the new mask
+    mask = get_query_mask(query_hash)
+    if mask:
+        new_mask = mask[:start_slice] + new_mask
+    save_new_query_mask(query_hash, new_mask)
+
     end_time = time.time()
     log.info('Validated images in {} '.format(end_time - start_time))
 
