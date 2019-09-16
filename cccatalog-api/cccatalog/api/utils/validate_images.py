@@ -2,7 +2,7 @@ import time
 import grequests
 import logging
 from django_redis import get_redis_connection
-from cccatalog.api.utils.dead_link_filter import get_query_mask, save_new_query_mask
+from cccatalog.api.utils.dead_link_mask import get_query_mask, save_query_mask
 
 log = logging.getLogger(__name__)
 
@@ -91,11 +91,11 @@ def validate_images(query_hash, start_slice, end_slice, results, image_urls):
             del results[del_idx]
             new_mask[del_idx] = 0
 
-    # Cache the new mask
+    # Merge and cache the new mask
     mask = get_query_mask(query_hash)
     if mask:
         new_mask = mask[:start_slice] + new_mask
-    save_new_query_mask(query_hash, new_mask)
+    save_query_mask(query_hash, new_mask)
 
     end_time = time.time()
     log.info('Validated images in {} '.format(end_time - start_time))

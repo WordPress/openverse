@@ -96,6 +96,7 @@ class SearchImages(APIView):
         page_size = params.data[PAGESIZE]
         qa = params.data[QA]
         filter_dead = params.data[FILTER_DEAD]
+
         search_index = 'search-qa' if qa else 'image'
         try:
             results, page_count, result_count = search_controller.search(

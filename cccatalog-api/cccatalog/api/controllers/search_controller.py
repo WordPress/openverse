@@ -3,7 +3,7 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch.exceptions import AuthenticationException, \
     AuthorizationException, NotFoundError
 from elasticsearch_dsl import Q, Search, connections
-from elasticsearch_dsl.response import Hit
+from elasticsearch_dsl.response import Response, Hit
 from cccatalog import settings
 from django.core.cache import cache
 from cccatalog.api.models import ContentProvider
@@ -11,7 +11,7 @@ from rest_framework import serializers
 import logging as log
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
 from cccatalog.api.utils.validate_images import validate_images
-from cccatalog.api.utils.dead_link_filter import get_query_mask
+from cccatalog.api.utils.dead_link_mask import get_query_mask
 from rest_framework.reverse import reverse
 from itertools import accumulate
 from typing import Tuple, List
@@ -23,9 +23,16 @@ CACHE_TIMEOUT = 10
 DEAD_LINK_RATIO = 1/2
 
 
-def _paginate_search_with_dead_link_filter(s: Search, page_size: int, page: int) -> Search:
+def _paginate_search_with_dead_link_filter(
+    s: Search, page_size: int, page: int) -> Tuple[int, int]:
     '''
-    # TODO: Complete
+    Given a query, a page and pagesize, it returns the start and end
+    of the slice of results.
+
+    :param s: The elasticsearch Search object
+    :param page_size: How big the page should be.
+    :param page: The page number.
+    :return: Tuple of start and end.
     '''
     query_hash = _get_query_hash(s)
     query_mask = get_query_mask(query_hash)
@@ -50,7 +57,8 @@ def _paginate_search_with_dead_link_filter(s: Search, page_size: int, page: int)
     return start, end
 
 
-def _get_query_slice(s: Search, page_size: int, page: int, filter_dead: bool=False) -> Tuple[int, int]:
+def _get_query_slice(s: Search, page_size: int, page: int,
+                     filter_dead: bool=False) -> Tuple[int, int]:
     """
     Select the start and end of the search results for this query.
     """
@@ -92,19 +100,22 @@ def _quote_escape(query_string):
         return query_string
 
 
-def _post_process_results(s, start_slice, end_slice, search_results, request, filter_dead):
+def _post_process_results(s, start, end, page_size, search_results,
+                          request, filter_dead) -> List[Hit]:
     """
     After fetching the search results from the back end, iterate through the
     results, add links to detail views, perform image validation, and route
     certain thumbnails through out proxy.
+
     :param s: The Elasticsearch Search object.
-    :param start_slice: # TODO: Complete
-    :param end_slice: # TODO: Complete
+    :param start: The start if the slice of results.
+    :param end: The end of the slice of results.
     :param search_results: The Elasticsearch response object containing search
     results.
     :param request: The Django request object, used to build a "reversed" URL
     to detail pages.
     :param filter_dead: Whether images should be validated.
+    :return: List of results.
     """
     results = []
     to_validate = []
@@ -134,26 +145,33 @@ def _post_process_results(s, start_slice, end_slice, search_results, request, fi
                 )
                 res[THUMBNAIL] = secure
         results.append(res)
+
     if filter_dead:
         query_hash = _get_query_hash(s)
-        validate_images(query_hash, start_slice, end_slice, results, to_validate)
+        validate_images(query_hash, start, end, results, to_validate)
+
+        if len(results) < page_size:
+            end += int(end / 2)
+            if start + end > ELASTICSEARCH_MAX_RESULT_WINDOW:
+                return results
+
+            s = s[start:end]
+            search_response = s.execute()
+
+            return _post_process_results(
+                s,
+                start,
+                end,
+                page_size,
+                search_response,
+                request,
+                filter_dead
+            )
     return results
 
 
-def _get_page_count(search_results, page_size):
-    """
-    Elasticsearch does not allow deep pagination of ranked queries.
-    Adjust returned page count to reflect this.
-    :param search_results: The Elasticsearch response object containing search
-    results.
-    """
-    natural_page_count = int(search_results.hits.total / page_size)
-    last_allowed_page = int((5000 + page_size / 2) / page_size)
-    page_count = min(natural_page_count, last_allowed_page)
-    return page_count
-
-
-def search(search_params, index, page_size, ip, request, filter_dead, page=1) -> Tuple[List[Hit], int, int]:
+def search(search_params, index, page_size, ip, request,
+           filter_dead, page=1) -> Tuple[List[Hit], int, int]:
     """
     Given a set of keywords and an optional set of filters, perform a ranked
     paginated search.
@@ -241,38 +259,24 @@ def search(search_params, index, page_size, ip, request, filter_dead, page=1) ->
     # pagination inconsistencies and increase cache hits.
     s = s.params(preference=str(ip))
     # Paginate
-    start_slice, end_slice = _get_query_slice(s, page_size, page, filter_dead)
-    s = s[start_slice:end_slice]
+    start, end = _get_query_slice(s, page_size, page, filter_dead)
+    s = s[start:end]
     search_response = s.execute()
     results = _post_process_results(
         s,
-        start_slice,
-        end_slice,
+        start,
+        end,
+        page_size,
         search_response,
         request,
         filter_dead
     )
 
-    if filter_dead:
-        while len(results) < page_size:
-            end_slice += int(end_slice / 2)
-            if start_slice + end_slice > ELASTICSEARCH_MAX_RESULT_WINDOW:
-                break
-            s = s[start_slice:end_slice]
-            search_response = s.execute()
-            results = _post_process_results(
-                s,
-                start_slice,
-                end_slice,
-                search_response,
-                request,
-                filter_dead
-            )
-
-    page_count = _get_page_count(search_response, page_size)
-    result_count = search_response.hits.total
-    if len(results) < page_size and page_count == 0:
-        result_count = len(results)
+    result_count, page_count = _get_result_and_page_count(
+        search_response,
+        results,
+        page_size
+    )
 
     return results[:page_size], page_count, result_count
 
@@ -334,31 +338,17 @@ def browse_by_provider(provider, index, page_size, ip, request, filter_dead,
         s,
         start_slice,
         end_slice,
+        page_size,
         search_response,
         request,
         filter_dead
     )
 
-    if filter_dead:
-        while len(results) < page_size:
-            end_slice += int(end_slice / 2)
-            if start_slice + end_slice > ELASTICSEARCH_MAX_RESULT_WINDOW:
-                break
-            s = s[start_slice:end_slice]
-            search_response = s.execute()
-            results = _post_process_results(
-                s,
-                start_slice,
-                end_slice,
-                search_response,
-                request,
-                filter_dead
-            )
-
-    page_count = _get_page_count(search_response, page_size)
-    result_count = search_response.hits.total
-    if len(results) < page_size and page_count == 0:
-        result_count = len(results)
+    result_count, page_count = _get_result_and_page_count(
+        search_response,
+        results,
+        page_size
+    )
 
     return results[:page_size], page_count, result_count
 
@@ -469,3 +459,23 @@ def _get_query_hash(s: Search) -> str:
     serialized_search_obj.pop('size', None)
     deep_hash = DeepHash(serialized_search_obj)[serialized_search_obj]
     return deep_hash
+
+
+def _get_result_and_page_count(response_obj: Response, results: List[Hit],
+                               page_size: int) -> Tuple[int, int]:
+    """
+    Elasticsearch does not allow deep pagination of ranked queries.
+    Adjust returned page count to reflect this.
+
+    :param search_obj: The original Elasticsearch response object.
+    :param results: The list of filtered result Hits.
+    :return: Result and page count.
+    """
+    result_count = response_obj.hits.total
+    natural_page_count = int(result_count / page_size)
+    last_allowed_page = int((5000 + page_size / 2) / page_size)
+    page_count = min(natural_page_count, last_allowed_page)
+    if len(results) < page_size and page_count == 0:
+        result_count = len(results)
+
+    return result_count, page_count
