@@ -55,6 +55,8 @@ export default {
   background-color: #5fd1fc;
   color: #fff;
   border-radius: 50%;
+  outline: none;
+  cursor: pointer;
   transition: all 5s ease-in;
 }
 
