@@ -127,6 +127,12 @@ def create_mapping(table_name):
                          },
                          "type": "text",
                          "analyzer": "english"
+                      },
+                      "height": {
+                         "type": "integer"
+                      },
+                      "width": {
+                         "type": "integer"
                       }
                    }
                }
