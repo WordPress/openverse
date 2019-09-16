@@ -133,7 +133,16 @@ def create_mapping(table_name):
                       },
                       "width": {
                          "type": "integer"
-                      }
+                      },
+                      "extension": {
+                         "fields": {
+                            "keyword": {
+                               "ignore_above": 8,
+                               "type": "keyword"
+                            }
+                         },
+                         "type": "text"
+                      },
                    }
                }
            }
