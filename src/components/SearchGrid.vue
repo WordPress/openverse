@@ -4,16 +4,18 @@
                                :query="query"
                                :searchTerm="searchTerm"
                                @onLoadMoreImages="onLoadMoreImages" />
-    <search-grid-manual-load v-else-if="renderManualLoad"
+    <search-grid-manual-load v-else
                              :query="query"
                              :searchTerm="searchTerm"
                              @onLoadMoreImages="onLoadMoreImages" />
+    <ScrollButton :showBtn="renderInfiniteLoad && showScrollButton " />
   </div>
 </template>
 
 <script>
 import SearchGridInfiniteLoad from '@/components/SearchGridInfiniteLoad';
 import SearchGridManualLoad from '@/components/SearchGridManualLoad';
+import ScrollButton from '@/components/ScrollButton';
 import { ExperimentData as InfiniteLoadingExperiment } from '@/abTests/infiniteLoadingExperiment';
 import { CONVERT_AB_TEST_EXPERIMENT } from '@/store/action-types';
 
@@ -22,8 +24,12 @@ export default {
   components: {
     SearchGridInfiniteLoad,
     SearchGridManualLoad,
+    ScrollButton,
   },
   props: ['query', 'searchTerm'],
+  data: () => ({
+    showScrollButton: false,
+  }),
   computed: {
     renderInfiniteLoad() {
       return this.$store.state.experiments.some(experiment =>
@@ -46,6 +52,16 @@ export default {
       );
       this.$emit('onLoadMoreImages', searchParams);
     },
+    checkScrollLength() {
+      if (window.scrollY > 50) this.showScrollButton = true;
+      else this.showScrollButton = false;
+    },
+  },
+  mounted() {
+    document.addEventListener('scroll', this.checkScrollLength);
+  },
+  beforeDestroy() {
+    document.removeEventListener('scroll', this.checkScrollLength);
   },
 };
 </script>
