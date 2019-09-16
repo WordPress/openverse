@@ -8,7 +8,7 @@
                              :query="query"
                              :searchTerm="searchTerm"
                              @onLoadMoreImages="onLoadMoreImages" />
-    <ScrollButton :showBtn="renderInfiniteLoad && showScrollButton " />
+    <ScrollButton :showBtn="showScrollButton " />
   </div>
 </template>
 
@@ -53,7 +53,7 @@ export default {
       this.$emit('onLoadMoreImages', searchParams);
     },
     checkScrollLength() {
-      if (window.scrollY > 50) this.showScrollButton = true;
+      if (window.scrollY > 70) this.showScrollButton = true;
       else this.showScrollButton = false;
     },
   },
