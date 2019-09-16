@@ -289,6 +289,14 @@ class ImageSerializer(serializers.Serializer):
         required=False,
         help_text="List the fields that matched the query for this result."
     )
+    height = serializers.IntegerField(
+        required=False,
+        help_text="The height of the image in pixels. Not always available."
+    )
+    width = serializers.IntegerField(
+        required=False,
+        help_text="The width of the image in pixels. Not always available."
+    )
 
 
 class RelatedImagesResultsSerializer(serializers.Serializer):

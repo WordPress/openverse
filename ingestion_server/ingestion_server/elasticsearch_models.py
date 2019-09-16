@@ -65,6 +65,8 @@ class Image(SyncableDocType):
     meta_data = Nested()
     view_count = Integer()
     description = Text(analyzer="english")
+    height = Integer()
+    width = Integer()
 
     class Index:
         name = 'image'
@@ -102,7 +104,9 @@ class Image(SyncableDocType):
             foreign_landing_url=row[schema['foreign_landing_url']],
             meta_data=None,
             view_count=row[schema['view_count']],
-            description=_parse_description(row[schema['meta_data']])
+            description=_parse_description(row[schema['meta_data']]),
+            height=row[schema['height']],
+            width=row[schema['width']]
         )
 
 

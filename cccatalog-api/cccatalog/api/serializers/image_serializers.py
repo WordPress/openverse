@@ -60,7 +60,8 @@ class ImageDetailSerializer(ModelSerializer, ImageSerializer):
         fields = ('title', 'id', 'creator', 'creator_url', 'tags',
                   'url', 'thumbnail', 'provider', 'source', 'license',
                   'license_version', 'foreign_landing_url', 'meta_data',
-                  'view_count', 'provider_url', 'license_url', 'attribution')
+                  'view_count', 'provider_url', 'license_url', 'attribution',
+                  'height', 'width')
 
 
 class WatermarkQueryStringSerializer(serializers.Serializer):
