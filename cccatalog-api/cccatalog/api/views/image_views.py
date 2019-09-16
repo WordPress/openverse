@@ -167,17 +167,18 @@ class BrowseImages(APIView):
             li = params.data['li']
 
         try:
-            results, page_count, result_count = search_controller.browse_by_provider(
-                provider,
-                'image',
-                page_size,
-                hash(_get_user_ip(request)),
-                request,
-                filter_dead,
-                page=page_param,
-                lt=lt,
-                li=li
-            )
+            results, page_count, result_count = \
+                search_controller.browse_by_provider(
+                    provider,
+                    'image',
+                    page_size,
+                    hash(_get_user_ip(request)),
+                    request,
+                    filter_dead,
+                    page=page_param,
+                    lt=lt,
+                    li=li
+                )
         except ValueError:
             return Response(
                 status=400,
@@ -193,7 +194,6 @@ class BrowseImages(APIView):
                     .format(provider)
                 }
             )
-
 
         serialized_results = ImageSerializer(results, many=True).data
 

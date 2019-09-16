@@ -14,17 +14,17 @@ from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils.dead_link_mask import get_query_mask
 from rest_framework.reverse import reverse
 from itertools import accumulate
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 from deepdiff import DeepHash
 from math import ceil
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 CACHE_TIMEOUT = 10
-DEAD_LINK_RATIO = 1/2
+DEAD_LINK_RATIO = 1 / 2
 
 
-def _paginate_search_with_dead_link_filter(
-    s: Search, page_size: int, page: int) -> Tuple[int, int]:
+def _paginate_search_with_dead_link_filter(s: Search, page_size: int,
+                                           page: int) -> Tuple[int, int]:
     '''
     Given a query, a page and pagesize, it returns the start and end
     of the slice of results.
@@ -58,7 +58,7 @@ def _paginate_search_with_dead_link_filter(
 
 
 def _get_query_slice(s: Search, page_size: int, page: int,
-                     filter_dead: bool=False) -> Tuple[int, int]:
+                     filter_dead: Optional[bool] = False) -> Tuple[int, int]:
     """
     Select the start and end of the search results for this query.
     """
@@ -177,7 +177,7 @@ def search(search_params, index, page_size, ip, request,
     paginated search.
 
     :param search_params: Search parameters. See
-     :class: `~cccatalog.api.search_serializers.ImageSearchQueryStringSerializer`.
+     :class: `ImageSearchQueryStringSerializer`.
     :param index: The Elasticsearch index to search (e.g. 'image')
     :param page_size: The number of results to return per page.
     :param page: The results page number.
