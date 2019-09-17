@@ -1,9 +1,26 @@
 
 from typing import List
 from django_redis import get_redis_connection
+from deepdiff import DeepHash
 
 # 3 hours minutes (in seconds)
 DEAD_LINK_MASK_TTL = 60 * 60 * 3
+
+
+def get_query_hash(s: Search) -> str:
+    '''
+    Generates a deterministic Murmur3 or SHA256 hash from the serialized Search
+    object using DeepHash so that two Search objects with the same content will
+    produce the same hash.
+
+    :param s: Search object to be serialized and hashed.
+    :return: Serialized Search object hash.
+    '''
+    serialized_search_obj = s.to_dict()
+    serialized_search_obj.pop('from', None)
+    serialized_search_obj.pop('size', None)
+    deep_hash = DeepHash(serialized_search_obj)[serialized_search_obj]
+    return deep_hash
 
 
 def get_query_mask(query_hash: str) -> List[int]:

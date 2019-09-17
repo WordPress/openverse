@@ -11,11 +11,10 @@ from rest_framework import serializers
 import logging as log
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
 from cccatalog.api.utils.validate_images import validate_images
-from cccatalog.api.utils.dead_link_mask import get_query_mask
+from cccatalog.api.utils.dead_link_mask import get_query_mask, get_query_hash
 from rest_framework.reverse import reverse
 from itertools import accumulate
 from typing import Tuple, List, Optional
-from deepdiff import DeepHash
 from math import ceil
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
@@ -23,8 +22,8 @@ CACHE_TIMEOUT = 10
 DEAD_LINK_RATIO = 1 / 2
 
 
-def _paginate_search_with_dead_link_filter(s: Search, page_size: int,
-                                           page: int) -> Tuple[int, int]:
+def _paginate_with_dead_link_mask(s: Search, page_size: int,
+                                  page: int) -> Tuple[int, int]:
     '''
     Given a query, a page and pagesize, it returns the start and end
     of the slice of results.
@@ -34,7 +33,7 @@ def _paginate_search_with_dead_link_filter(s: Search, page_size: int,
     :param page: The page number.
     :return: Tuple of start and end.
     '''
-    query_hash = _get_query_hash(s)
+    query_hash = get_query_hash(s)
     query_mask = get_query_mask(query_hash)
     if not query_mask:
         start = 0
@@ -64,7 +63,7 @@ def _get_query_slice(s: Search, page_size: int, page: int,
     """
     if filter_dead:
         start_slice, end_slice = \
-            _paginate_search_with_dead_link_filter(s, page_size, page)
+            _paginate_with_dead_link_mask(s, page_size, page)
     else:
         # Paginate search query.
         start_slice = page_size * (page - 1)
@@ -147,7 +146,7 @@ def _post_process_results(s, start, end, page_size, search_results,
         results.append(res)
 
     if filter_dead:
-        query_hash = _get_query_hash(s)
+        query_hash = get_query_hash(s)
         validate_images(query_hash, start, end, results, to_validate)
 
         if len(results) < page_size:
@@ -443,22 +442,6 @@ def _elasticsearch_connect():
 
 es = _elasticsearch_connect()
 connections.connections.add_connection('default', es)
-
-
-def _get_query_hash(s: Search) -> str:
-    '''
-    Generates a deterministic Murmur3 or SHA256 hash from the serialized Search
-    object using DeepHash so that two Search objects with the same content will
-    produce the same hash.
-
-    :param s: Search object to be serialized and hashed.
-    :return: Serialized Search object hash.
-    '''
-    serialized_search_obj = s.to_dict()
-    serialized_search_obj.pop('from', None)
-    serialized_search_obj.pop('size', None)
-    deep_hash = DeepHash(serialized_search_obj)[serialized_search_obj]
-    return deep_hash
 
 
 def _get_result_and_page_count(response_obj: Response, results: List[Hit],
