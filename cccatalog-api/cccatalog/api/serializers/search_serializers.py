@@ -167,6 +167,11 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
                   " `{}`".format(list(get_providers('image').keys())),
         required=False
     )
+    extension = serializers.CharField(
+        label="extension",
+        help_text="Filter by file extension, such as JPG or GIF.",
+        required=False
+    )
     qa = serializers.BooleanField(
         label='quality_assurance',
         help_text="If enabled, searches are performed against the quality"
@@ -224,6 +229,10 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
                     "Provider \'{}\' does not exist.".format(input_providers)
                 )
         return input_providers.lower()
+
+    @staticmethod
+    def validate_extension(value):
+        return value.lower()
 
     def validate(self, data):
         advanced_search = 'creator' in data or 'title' in data or 'tags' in data

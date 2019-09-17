@@ -315,3 +315,10 @@ def test_browse_by_provider():
     assert response.status_code == 200
     parsed = json.loads(response.text)
     assert parsed['result_count'] > 0
+
+
+def test_extension_filter():
+    response = requests.get(API_URL + '/image/search?q=honey&extension=jpg')
+    parsed = json.loads(response.text)
+    for result in parsed['results']:
+        assert '.jpg' in result['url']
