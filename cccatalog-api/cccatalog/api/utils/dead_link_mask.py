@@ -2,6 +2,7 @@
 from typing import List
 from django_redis import get_redis_connection
 from deepdiff import DeepHash
+from elasticsearch_dsl import Search
 
 # 3 hours minutes (in seconds)
 DEAD_LINK_MASK_TTL = 60 * 60 * 3
