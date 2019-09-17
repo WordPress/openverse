@@ -55,7 +55,7 @@ schema_view = get_schema_view(
         title="Creative Commons Catalog API",
         default_version=API_VERSION,
         description=description,
-        contact=openapi.Contact(email="alden@creativecommons.org"),
+        contact=openapi.Contact(email="ccsearch-api@creativecommons.org"),
         license=openapi.License(name="MIT License", url=license_url),
         terms_of_service=tos_url,
 
