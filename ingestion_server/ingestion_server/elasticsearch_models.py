@@ -48,6 +48,15 @@ def _parse_description(metadata_field):
         return None
 
 
+def _get_extension(url):
+    extension = url.split('.')[-1].lower()
+    if '/' in extension or extension is None:
+        logging.warning('URL {} has no extension.'.format(url))
+        return None
+    else:
+        return extension
+
+
 class Image(SyncableDocType):
     title = Text(analyzer="english")
     identifier = Keyword()
@@ -67,6 +76,7 @@ class Image(SyncableDocType):
     description = Text(analyzer="english")
     height = Integer()
     width = Integer()
+    extension = Keyword()
 
     class Index:
         name = 'image'
@@ -106,7 +116,8 @@ class Image(SyncableDocType):
             view_count=row[schema['view_count']],
             description=_parse_description(row[schema['meta_data']]),
             height=row[schema['height']],
-            width=row[schema['width']]
+            width=row[schema['width']],
+            extension=_get_extension(row[schema['url']])
         )
 
 
