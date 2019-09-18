@@ -322,3 +322,104 @@ def test_extension_filter():
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert '.jpg' in result['url']
+
+
+@pytest.fixture
+def search_factory():
+    '''
+    Allows passing url parameters along with a search request.
+    '''
+    def _parameterized_search(**kwargs):
+        response = requests.get(
+            API_URL + '/image/search',
+            params=kwargs,
+            verify=False
+        )
+        assert response.status_code == 200
+        parsed = response.json()
+        return parsed
+    return _parameterized_search
+
+
+@pytest.fixture
+def search_with_dead_links(search_factory):
+    '''
+    Here we pass filter_dead = False.
+    '''
+    def _search_with_dead_links(**kwargs):
+        return search_factory(filter_dead=False, **kwargs)
+    return _search_with_dead_links
+
+
+@pytest.fixture
+def search_without_dead_links(search_factory):
+    '''
+    Here we pass filter_dead = True.
+    '''
+    def _search_without_dead_links(**kwargs):
+        return search_factory(filter_dead=True, **kwargs)
+    return _search_without_dead_links
+
+
+def test_page_size_removing_dead_links(search_without_dead_links):
+    '''
+    We have about 500 dead links in the sample data and should have around
+    8 dead links in the first 100 results on a query composed of a single
+    wildcard operator.
+
+    Test whether the number of results returned is equal to the requested
+    pagesize of 100.
+    '''
+    data = search_without_dead_links(q='*', pagesize=100)
+    assert len(data['results']) == 100
+
+
+def test_dead_links_are_correctly_filtered(search_with_dead_links,
+                                           search_without_dead_links):
+    '''
+    Test the results for the same query with and without dead links are
+    actually different.
+
+    We use the results' id to compare them.
+    '''
+    data_with_dead_links = search_with_dead_links(q='*', pagesize=100)
+    data_without_dead_links = search_without_dead_links(q='*', pagesize=100)
+
+    comparisons = []
+    for result_1 in data_with_dead_links['results']:
+        for result_2 in data_without_dead_links['results']:
+            comparisons.append(result_1['id'] == result_2['id'])
+
+    # Some results should be different
+    # so we should have less than 100 True comparisons
+    assert comparisons.count(True) < 100
+
+
+def test_page_consistency_removing_dead_links(search_without_dead_links):
+    '''
+    Test the results returned in consecutive pages are never repeated when
+    filtering out dead links.
+    '''
+    total_pages = 100
+    pagesize = 5
+
+    page_results = []
+    for page in range(1, total_pages + 1):
+        page_data = search_without_dead_links(
+            q='*',
+            pagesize=pagesize,
+            page=page
+        )
+        page_results += page_data['results']
+
+    def no_duplicates(l):
+        s = set()
+        for x in l:
+            if x in s:
+                return False
+            s.add(x)
+        return True
+
+    ids = list(map(lambda x: x['id'], page_results))
+    # No results should be repeated so we should have no True
+    assert no_duplicates(ids)
