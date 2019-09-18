@@ -24,8 +24,8 @@ class AnonRateThrottle(SimpleRateThrottle):
             return None
         # Do not throttle requests with a valid access token.
         if request.auth:
-            client_id, _, _ = get_token_info(str(request.auth))
-            if client_id:
+            client_id, _, verified = get_token_info(str(request.auth))
+            if client_id and verified:
                 return None
 
         return self.cache_format % {
