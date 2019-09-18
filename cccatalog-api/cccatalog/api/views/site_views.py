@@ -11,7 +11,7 @@ from cccatalog.api.serializers.oauth2_serializers import\
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider
 from cccatalog.api.models import ThrottledApplication, OAuth2Verification
-from cccatalog.api.utils.throttle import ThreePerDay, OnePerSecond
+from cccatalog.api.utils.throttle import TenPerDay, OnePerSecond
 from cccatalog.api.utils.oauth2_helper import get_token_info
 from django.core.cache import cache
 
@@ -131,7 +131,7 @@ class Register(APIView):
     We ask that you only use a single API key per application; abuse of the
     registration process is easily detectable.
     """  # noqa
-    throttle_classes = (ThreePerDay,)
+    throttle_classes = (TenPerDay,)
 
     @swagger_auto_schema(operation_id='register_api_oauth2',
                          request_body=OAuth2RegistrationSerializer,
@@ -202,6 +202,9 @@ class VerifyEmail(APIView):
     When the user follows the verification link sent to their email, enable
     their OAuth2 key.
     """
+    swagger_schema = None
+    throttle_classes = (TenPerDay,)
+
     def get(self, request, code, format=None):
         try:
             verification = OAuth2Verification.objects.get(code=code)
@@ -221,7 +224,6 @@ class VerifyEmail(APIView):
                 status=500,
                 data={'msg': 'Invalid verification code.'}
             )
-
 
 
 class CheckRates(APIView):

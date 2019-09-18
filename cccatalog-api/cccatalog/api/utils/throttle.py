@@ -46,8 +46,8 @@ class SustainedRateThrottle(AnonRateThrottle):
     scope = 'anon_sustained'
 
 
-class ThreePerDay(AnonRateThrottle):
-    rate = '3/day'
+class TenPerDay(AnonRateThrottle):
+    rate = '10/day'
 
 
 class OnePerSecond(AnonRateThrottle):
