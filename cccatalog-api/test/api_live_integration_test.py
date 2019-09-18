@@ -421,5 +421,5 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
         return True
 
     ids = list(map(lambda x: x['id'], page_results))
-    # No results should be repeated so we should have no True
+    # No results should be repeated so we should have no duplicate ids
     assert no_duplicates(ids)
