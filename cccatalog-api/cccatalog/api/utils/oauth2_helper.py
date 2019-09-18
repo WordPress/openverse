@@ -24,13 +24,15 @@ def get_token_info(token: str):
             application = ThrottledApplication.objects.get(accesstoken=token)
             client_id = str(application.client_id)
             rate_limit_model = application.rate_limit_model
+            verified = application.verified
         except ThrottledApplication.DoesNotExist:
             log.warning(
                 'Failed to find application associated with access token.'
             )
             client_id = None
             rate_limit_model = None
-        return client_id, rate_limit_model
+            verified = None
+        return client_id, rate_limit_model, verified
     else:
         log.warning('Rejected expired access token.')
         return None, None

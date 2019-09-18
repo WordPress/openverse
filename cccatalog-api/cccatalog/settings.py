@@ -287,8 +287,13 @@ ELASTICSEARCH_AWS_REGION = \
 
 ROOT_SHORTENING_URL = os.environ.get('ROOT_SHORTENING_URL', 'dev.shares.cc')
 
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
 EMAIL_PORT = os.environ.get('EMAIL_PORT', 25)
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_SUBJECT_PREFIX = '[noreply]'
+
+if EMAIL_HOST_USER or EMAIL_HOST_PASSWORD:
+    pass
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

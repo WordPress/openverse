@@ -127,9 +127,8 @@ class Register(APIView):
     $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/image/search?q=test
     ```
 
-    **Be advised** that you can only make up to 3 registration requests per day.
-    We ask that you only use a single API key per application; abuse of the
-    registration process is easily detectable.
+    **Be advised** that your token will be throttled like an anonymous user
+    until the email address has been verified.
     """  # noqa
     throttle_classes = (TenPerDay,)
 
@@ -242,7 +241,7 @@ class CheckRates(APIView):
             return Response(status=403, data='Forbidden')
 
         access_token = str(request.auth)
-        client_id, rate_limit_model = get_token_info(access_token)
+        client_id, rate_limit_model, verified = get_token_info(access_token)
 
         if not client_id:
             return Response(status=403, data='Forbidden')
@@ -280,6 +279,7 @@ class CheckRates(APIView):
         response_data = {
             'requests_this_minute': burst_requests,
             'requests_today': sustained_requests,
-            'rate_limit_model': throttle_type
+            'rate_limit_model': throttle_type,
+            'verified': verified
         }
         return Response(status=200, data=response_data)
