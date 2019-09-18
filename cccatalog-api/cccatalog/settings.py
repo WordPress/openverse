@@ -294,6 +294,6 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_SUBJECT_PREFIX = '[noreply]'
 
 if EMAIL_HOST_USER or EMAIL_HOST_PASSWORD:
-    pass
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
