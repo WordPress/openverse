@@ -167,7 +167,6 @@ class Register(APIView):
         )
         verification.save()
         token = verification.code
-        log.info('token {}'.format(token))
         link = f'https://api.creativecommons.engineering/oauth2/verify/{token}'
         verification_msg = f"""
         To verify your CC Catalog API credentials, click on the following link.
@@ -222,7 +221,8 @@ class VerifyEmail(APIView):
         except OAuth2Verification.DoesNotExist:
             return Response(
                 status=500,
-                data={'msg': 'Invalid verification code.'}
+                data={'msg': 'Invalid verification code. Did you validate your '
+                             'credentials already?'}
             )
 
 
