@@ -19,7 +19,7 @@ def get_token_info(token: str):
     try:
         token = AccessToken.objects.get(token=token)
     except AccessToken.DoesNotExist:
-        return None, None
+        return None, None, None
     if token.expires >= dt.datetime.now(token.expires.tzinfo):
         try:
             application = ThrottledApplication.objects.get(accesstoken=token)
@@ -36,4 +36,4 @@ def get_token_info(token: str):
         return client_id, rate_limit_model, verified
     else:
         log.warning('Rejected expired access token.')
-        return None, None
+        return None, None, None
