@@ -13,7 +13,8 @@ def get_token_info(token: str):
 
     :param token: An OAuth2 access token.
     :return: If the token is valid, return the client ID associated with the
-    token and its rate limit model as a tuple; else return (None, None).
+    token, rate limit model, and email verification status as a tuple; else
+    return (None, None, None).
     """
     try:
         token = AccessToken.objects.get(token=token)
