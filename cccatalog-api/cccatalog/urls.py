@@ -76,7 +76,7 @@ urlpatterns = [
     path(
         'oauth2/verify/<str:code>',
         VerifyEmail.as_view(),
-        name='verify_email'
+        name='verify-email'
     ),
     re_path(
         r'^oauth2/',

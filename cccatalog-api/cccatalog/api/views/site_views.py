@@ -3,6 +3,7 @@ import secrets
 import smtplib
 from django.core.mail import send_mail
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework import serializers
 from cccatalog.api.controllers.search_controller import get_providers
@@ -166,7 +167,9 @@ class Register(APIView):
         )
         verification.save()
         token = verification.code
-        link = f'https://api.creativecommons.engineering/oauth2/verify/{token}'
+        link = request.build_absolute_uri(
+            reverse('verify-email', [token])
+        )
         verification_msg = f"""
         To verify your CC Catalog API credentials, click on the following link.
         If you believe you received this message in error, please disregard it. 
