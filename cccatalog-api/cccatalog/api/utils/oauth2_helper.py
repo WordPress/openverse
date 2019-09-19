@@ -13,24 +13,27 @@ def get_token_info(token: str):
 
     :param token: An OAuth2 access token.
     :return: If the token is valid, return the client ID associated with the
-    token and its rate limit model as a tuple; else return (None, None).
+    token, rate limit model, and email verification status as a tuple; else
+    return (None, None, None).
     """
     try:
         token = AccessToken.objects.get(token=token)
     except AccessToken.DoesNotExist:
-        return None, None
+        return None, None, None
     if token.expires >= dt.datetime.now(token.expires.tzinfo):
         try:
             application = ThrottledApplication.objects.get(accesstoken=token)
             client_id = str(application.client_id)
             rate_limit_model = application.rate_limit_model
+            verified = application.verified
         except ThrottledApplication.DoesNotExist:
             log.warning(
                 'Failed to find application associated with access token.'
             )
             client_id = None
             rate_limit_model = None
-        return client_id, rate_limit_model
+            verified = None
+        return client_id, rate_limit_model, verified
     else:
         log.warning('Rejected expired access token.')
-        return None, None
+        return None, None, None

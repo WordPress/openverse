@@ -19,7 +19,7 @@ from django.conf.urls import include
 from cccatalog.api.views.image_views import SearchImages, ImageDetail,\
     Watermark, BrowseImages, RelatedImage
 from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
-    CheckRates
+    CheckRates, VerifyEmail
 from cccatalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
 from cccatalog.settings import API_VERSION, WATERMARK_ENABLED
@@ -73,6 +73,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('oauth2/register', Register.as_view(), name='register'),
     path('oauth2/key_info', CheckRates.as_view(), name='key_info'),
+    path(
+        'oauth2/verify/<str:code>',
+        VerifyEmail.as_view(),
+        name='verify-email'
+    ),
     re_path(
         r'^oauth2/',
         include('oauth2_provider.urls', namespace='oauth2_provider')

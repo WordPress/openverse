@@ -260,3 +260,17 @@ class ThrottledApplication(AbstractApplication):
         choices=RATE_LIMIT_MODELS,
         default='standard'
     )
+    verified = models.BooleanField(default=False)
+
+
+class OAuth2Verification(models.Model):
+    """
+    An email verification code sent by noreply-cccatalog. After verification
+    occurs, the entry should be deleted.
+    """
+    associated_application = models.ForeignKey(
+        ThrottledApplication,
+        on_delete=models.CASCADE
+    )
+    email = models.EmailField()
+    code = models.CharField(max_length=256, db_index=True)

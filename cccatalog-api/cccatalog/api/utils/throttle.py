@@ -24,8 +24,8 @@ class AnonRateThrottle(SimpleRateThrottle):
             return None
         # Do not throttle requests with a valid access token.
         if request.auth:
-            client_id, _ = get_token_info(str(request.auth))
-            if client_id:
+            client_id, _, verified = get_token_info(str(request.auth))
+            if client_id and verified:
                 return None
 
         return self.cache_format % {
@@ -46,8 +46,8 @@ class SustainedRateThrottle(AnonRateThrottle):
     scope = 'anon_sustained'
 
 
-class ThreePerDay(AnonRateThrottle):
-    rate = '3/day'
+class TenPerDay(AnonRateThrottle):
+    rate = '10/day'
 
 
 class OnePerSecond(AnonRateThrottle):
@@ -67,7 +67,8 @@ class OAuth2IdThrottleRate(SimpleRateThrottle):
         if _from_internal_network(self.get_ident(request)):
             return None
         # Find the client ID associated with the access token.
-        client_id, rate_limit_model = get_token_info(str(request.auth))
+        auth = str(request.auth)
+        client_id, rate_limit_model, verified = get_token_info(auth)
         if client_id and rate_limit_model == self.applies_to_rate_limit_model:
             ident = client_id
         else:

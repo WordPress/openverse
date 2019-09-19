@@ -1,5 +1,9 @@
 import logging as log
+import secrets
+import smtplib
+from django.core.mail import send_mail
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework import serializers
 from cccatalog.api.controllers.search_controller import get_providers
@@ -7,8 +11,8 @@ from cccatalog.api.serializers.oauth2_serializers import\
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider
-from cccatalog.api.models import ThrottledApplication
-from cccatalog.api.utils.throttle import ThreePerDay, OnePerSecond
+from cccatalog.api.models import ThrottledApplication, OAuth2Verification
+from cccatalog.api.utils.throttle import TenPerDay, OnePerSecond
 from cccatalog.api.utils.oauth2_helper import get_token_info
 from django.core.cache import cache
 
@@ -114,6 +118,9 @@ class Register(APIView):
     }
     ```
 
+    Check your email for a verification link. After you have followed the link,
+    your API key will be activated.
+
     Include the `access_token` in the authorization header to use your key in
     your future API requests.
 
@@ -121,11 +128,10 @@ class Register(APIView):
     $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/image/search?q=test
     ```
 
-    **Be advised** that you can only make up to 3 registration requests per day.
-    We ask that you only use a single API key per application; abuse of the
-    registration process is easily detectable.
+    **Be advised** that your token will be throttled like an anonymous user
+    until the email address has been verified.
     """  # noqa
-    throttle_classes = (ThreePerDay,)
+    throttle_classes = (TenPerDay,)
 
     @swagger_auto_schema(operation_id='register_api_oauth2',
                          request_body=OAuth2RegistrationSerializer,
@@ -149,18 +155,76 @@ class Register(APIView):
             name=serialized.validated_data['name'],
             skip_authorization=False,
             client_type='Confidential',
-            authorization_grant_type='client-credentials'
+            authorization_grant_type='client-credentials',
+            verified=False
         )
         new_application.save()
+        # Send a verification email.
+        verification = OAuth2Verification(
+            email=serialized.validated_data['email'],
+            code=secrets.token_urlsafe(64),
+            associated_application=new_application
+        )
+        verification.save()
+        token = verification.code
+        link = request.build_absolute_uri(reverse('verify-email', [token]))
+        verification_msg = f"""
+To verify your CC Catalog API credentials, click on the following link:
+
+{link}
+
+If you believe you received this message in error, please disregard it.
+        """
+        try:
+            send_mail(
+                subject='Verify your API credentials',
+                message=verification_msg,
+                from_email='noreply-cccatalog@creativecommons.engineering',
+                recipient_list=[verification.email],
+                fail_silently=False
+            )
+        except smtplib.SMTPException as e:
+            log.error('Failed to send API verification email!')
+            log.error(e)
         # Give the user their newly created credentials.
         return Response(
             status=201,
             data={
                 'client_id': new_application.client_id,
                 'client_secret': new_application.client_secret,
-                'name': new_application.name
+                'name': new_application.name,
+                'msg': 'Check your email for a verification link.'
             }
         )
+
+
+class VerifyEmail(APIView):
+    """
+    When the user follows the verification link sent to their email, enable
+    their OAuth2 key.
+    """
+    swagger_schema = None
+
+    def get(self, request, code, format=None):
+        try:
+            verification = OAuth2Verification.objects.get(code=code)
+            application_pk = verification.associated_application.pk
+            ThrottledApplication\
+                .objects\
+                .filter(pk=application_pk)\
+                .update(verified=True)
+            verification.delete()
+            return Response(
+                status=200,
+                data={'msg': 'Successfully verified email. Your OAuth2 '
+                             'credentials are now active.'}
+            )
+        except OAuth2Verification.DoesNotExist:
+            return Response(
+                status=500,
+                data={'msg': 'Invalid verification code. Did you validate your '
+                             'credentials already?'}
+            )
 
 
 class CheckRates(APIView):
@@ -179,7 +243,7 @@ class CheckRates(APIView):
             return Response(status=403, data='Forbidden')
 
         access_token = str(request.auth)
-        client_id, rate_limit_model = get_token_info(access_token)
+        client_id, rate_limit_model, verified = get_token_info(access_token)
 
         if not client_id:
             return Response(status=403, data='Forbidden')
@@ -217,6 +281,7 @@ class CheckRates(APIView):
         response_data = {
             'requests_this_minute': burst_requests,
             'requests_today': sustained_requests,
-            'rate_limit_model': throttle_type
+            'rate_limit_model': throttle_type,
+            'verified': verified
         }
         return Response(status=200, data=response_data)
