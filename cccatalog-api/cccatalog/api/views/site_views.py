@@ -169,9 +169,9 @@ class Register(APIView):
         token = verification.code
         link = request.build_absolute_uri(reverse('verify-email', [token]))
         verification_msg = f"""
-        To verify your CC Catalog API credentials, click on the following link.
+        To verify your CC Catalog API credentials, click on the following link:
+        {link}
         If you believe you received this message in error, please disregard it.
-         {link}
         """
         try:
             send_mail(
