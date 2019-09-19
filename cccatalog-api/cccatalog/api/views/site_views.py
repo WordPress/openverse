@@ -202,7 +202,6 @@ class VerifyEmail(APIView):
     their OAuth2 key.
     """
     swagger_schema = None
-    throttle_classes = (TenPerDay,)
 
     def get(self, request, code, format=None):
         try:
