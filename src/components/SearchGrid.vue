@@ -4,7 +4,7 @@
                                :query="query"
                                :searchTerm="searchTerm"
                                @onLoadMoreImages="onLoadMoreImages" />
-    <search-grid-manual-load v-else
+    <search-grid-manual-load v-else-if="renderManualLoad"
                              :query="query"
                              :searchTerm="searchTerm"
                              @onLoadMoreImages="onLoadMoreImages" />
