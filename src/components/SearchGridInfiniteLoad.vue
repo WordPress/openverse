@@ -133,7 +133,7 @@ export default {
     searchChanged() {
       this.showGrid = false;
       this.$store.commit(SET_IMAGES, { images: [] });
-      this.currentPage = 0;
+      this.currentPage = 1;
       this.$nextTick(() => {
         this.$refs.infiniteLoader.$emit('$InfiniteLoading:reset');
       });
