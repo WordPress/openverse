@@ -124,7 +124,7 @@ export default {
     },
     searchChanged() {
       this.$store.commit(SET_IMAGES, { images: [] });
-      this.currentPage = 0;
+      this.currentPage = 1;
     },
     onLoadMoreImages() {
       if (this.isFetchingImages === false) {
