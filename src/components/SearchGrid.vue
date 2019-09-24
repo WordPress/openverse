@@ -1,11 +1,6 @@
 <template>
   <div>
-    <search-grid-infinite-load v-if="renderInfiniteLoad"
-                               :query="query"
-                               :searchTerm="searchTerm"
-                               @onLoadMoreImages="onLoadMoreImages" />
-    <search-grid-manual-load v-else-if="renderManualLoad"
-                             :query="query"
+    <search-grid-manual-load :query="query"
                              :searchTerm="searchTerm"
                              @onLoadMoreImages="onLoadMoreImages" />
     <ScrollButton :showBtn="showScrollButton " />
@@ -13,7 +8,6 @@
 </template>
 
 <script>
-import SearchGridInfiniteLoad from '@/components/SearchGridInfiniteLoad';
 import SearchGridManualLoad from '@/components/SearchGridManualLoad';
 import ScrollButton from '@/components/ScrollButton';
 import { ExperimentData as InfiniteLoadingExperiment } from '@/abTests/infiniteLoadingExperiment';
@@ -22,7 +16,6 @@ import { CONVERT_AB_TEST_EXPERIMENT } from '@/store/action-types';
 export default {
   name: 'search-grid',
   components: {
-    SearchGridInfiniteLoad,
     SearchGridManualLoad,
     ScrollButton,
   },

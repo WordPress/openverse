@@ -25,6 +25,7 @@
                 @click="onLoadMoreImages">
           Load more
         </button>
+        <loading-icon v-show="isFetchingImages" />
       </div>
       <div class="search-grid_notification callout alert" v-if="isFetchingImagesError">
         <h5>Error fetching images</h5>
@@ -36,9 +37,9 @@
 <script>
 import Vue from 'vue';
 import { SET_IMAGES } from '@/store/mutation-types';
-import InfiniteLoading from 'vue-infinite-loading';
 import MasonrySearchGridCell from '@/components/MasonrySearchGridCell';
 import SearchGridFilter from '@/components/SearchGridFilter';
+import LoadingIcon from '@/components/LoadingIcon';
 import { VueMasonryPlugin } from 'vue-masonry';
 
 Vue.use(VueMasonryPlugin);
@@ -48,9 +49,9 @@ const DEFAULT_PAGE_SIZE = 20;
 export default {
   name: 'search-grid-manual-load',
   components: {
-    InfiniteLoading,
     SearchGridFilter,
     MasonrySearchGridCell,
+    LoadingIcon,
   },
   data: () => ({
     isDataInitialized: false,
