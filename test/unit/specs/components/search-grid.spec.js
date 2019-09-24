@@ -26,9 +26,21 @@ describe('SearchGrid', () => {
     expect(wrapper.find('.load-more').element).toBeDefined();
   });
 
+  it('doesnt render load more button if not loading images', () => {
+    options.propsData.isFetchingImages = false;
+    const wrapper = render(SearchGrid, options);
+    expect(wrapper.find('.load-more').element).toBeDefined();
+  });
+
   it('doesnt render load more button if is loading images', () => {
     options.propsData.isFetchingImages = true;
     const wrapper = render(SearchGrid, options);
     expect(wrapper.find('.load-more').vm).not.toBeDefined();
+  });
+
+  it('shows loading icon if is loading images', () => {
+    options.propsData.isFetchingImages = true;
+    const wrapper = render(SearchGrid, options);
+    expect(wrapper.find({ name: 'loading-icon' }).vm).toBeDefined();
   });
 });
