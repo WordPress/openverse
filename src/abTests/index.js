@@ -1,5 +1,5 @@
 import { JOINED_AB_TEST_EXPERIMENT } from '@/store/mutation-types';
-import createSixpackSession from './createSixpackSession';
+// import createSixpackSession from './createSixpackSession';
 
 const setupExperiments = (store) => {
   // const session = createSixpackSession(store.state.sessionId);
