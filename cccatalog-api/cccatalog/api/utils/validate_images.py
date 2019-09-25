@@ -7,7 +7,7 @@ from cccatalog.api.utils.dead_link_mask import get_query_mask, save_query_mask
 log = logging.getLogger(__name__)
 
 
-def validate_images(query_hash, start_slice, end_slice, results, image_urls):
+def validate_images(query_hash, start_slice, results, image_urls):
     """
     Make sure images exist before we display them. Treat redirects as broken
     links since 99% of the time the redirect leads to a generic "not found"

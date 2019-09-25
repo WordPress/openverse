@@ -33,10 +33,6 @@ PAGE = 'page'
 PAGESIZE = 'pagesize'
 VALIDATION_ERROR = 'validation_error'
 FILTER_DEAD = 'filter_dead'
-THUMBNAIL = 'thumbnail'
-URL = 'url'
-THUMBNAIL_WIDTH_PX = 600
-PROVIDER = 'provider'
 QA = 'qa'
 RESULT_COUNT = 'result_count'
 PAGE_COUNT = 'page_count'
@@ -211,14 +207,16 @@ class RelatedImage(APIView):
     Given a UUID, return images related to the result.
     """
     def get(self, request, identifier, format=None):
-        related = search_controller.related_images(
+        related, result_count = search_controller.related_images(
             uuid=identifier,
-            index='image'
+            index='image',
+            request=request,
+            filter_dead=True
         )
-        filtered = _post_process_results(related, request, True)
-        serialized_related = ImageSerializer(filtered, many=True).data
+
+        serialized_related = ImageSerializer(related, many=True).data
         response_data = {
-            'result_count': related.hits.total,
+            'result_count': result_count,
             RESULTS: serialized_related
         }
         serialized_response = RelatedImagesResultsSerializer(data=response_data)
@@ -242,7 +240,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         """ Get the details of a single list. """
         resp = self.retrieve(request, identifier)
         # Get pretty display name for a provider
-        provider = resp.data[PROVIDER]
+        provider = resp.data[search_controller.PROVIDER]
         try:
             provider_data = ContentProvider \
                 .objects \
@@ -265,13 +263,13 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                 _add_protocol(resp.data[FOREIGN_LANDING_URL])
             resp.data[FOREIGN_LANDING_URL] = foreign_landing_url
         # Proxy insecure HTTP images at full resolution.
-        if 'http://' in resp.data[URL]:
-            original = resp.data[URL]
+        if 'http://' in resp.data[search_controller.URL]:
+            original = resp.data[search_controller.URL]
             secure = '{proxy_url}/{original}'.format(
                 proxy_url=THUMBNAIL_PROXY_URL,
                 original=original
             )
-            resp.data[URL] = secure
+            resp.data[search_controller.URL] = secure
 
         return resp
 

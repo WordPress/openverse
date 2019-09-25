@@ -326,9 +326,9 @@ def test_extension_filter():
 
 @pytest.fixture
 def search_factory():
-    '''
+    """
     Allows passing url parameters along with a search request.
-    '''
+    """
     def _parameterized_search(**kwargs):
         response = requests.get(
             API_URL + '/image/search',
@@ -343,9 +343,9 @@ def search_factory():
 
 @pytest.fixture
 def search_with_dead_links(search_factory):
-    '''
+    """
     Here we pass filter_dead = False.
-    '''
+    """
     def _search_with_dead_links(**kwargs):
         return search_factory(filter_dead=False, **kwargs)
     return _search_with_dead_links
@@ -353,35 +353,35 @@ def search_with_dead_links(search_factory):
 
 @pytest.fixture
 def search_without_dead_links(search_factory):
-    '''
+    """
     Here we pass filter_dead = True.
-    '''
+    """
     def _search_without_dead_links(**kwargs):
         return search_factory(filter_dead=True, **kwargs)
     return _search_without_dead_links
 
 
 def test_page_size_removing_dead_links(search_without_dead_links):
-    '''
+    """
     We have about 500 dead links in the sample data and should have around
     8 dead links in the first 100 results on a query composed of a single
     wildcard operator.
 
     Test whether the number of results returned is equal to the requested
     pagesize of 100.
-    '''
+    """
     data = search_without_dead_links(q='*', pagesize=100)
     assert len(data['results']) == 100
 
 
 def test_dead_links_are_correctly_filtered(search_with_dead_links,
                                            search_without_dead_links):
-    '''
+    """
     Test the results for the same query with and without dead links are
     actually different.
 
     We use the results' id to compare them.
-    '''
+    """
     data_with_dead_links = search_with_dead_links(q='*', pagesize=100)
     data_without_dead_links = search_without_dead_links(q='*', pagesize=100)
 
@@ -396,10 +396,10 @@ def test_dead_links_are_correctly_filtered(search_with_dead_links,
 
 
 def test_page_consistency_removing_dead_links(search_without_dead_links):
-    '''
+    """
     Test the results returned in consecutive pages are never repeated when
     filtering out dead links.
-    '''
+    """
     total_pages = 100
     pagesize = 5
 
@@ -423,3 +423,28 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
     ids = list(map(lambda x: x['id'], page_results))
     # No results should be repeated so we should have no duplicate ids
     assert no_duplicates(ids)
+
+
+@pytest.fixture
+def related_factory():
+    """
+    Allows passing url parameters along with a related images request.
+    """
+    def _parameterized_search(identifier, **kwargs):
+        response = requests.get(
+            API_URL + f'/image/related/{identifier}',
+            params=kwargs,
+            verify=False
+        )
+        assert response.status_code == 200
+        parsed = response.json()
+        return parsed
+    return _parameterized_search
+
+
+def test_related_image_search_page_consistency(related_factory, search_without_dead_links):
+    initial_images = search_without_dead_links(q='*', pagesize=10)
+    for image in initial_images['results']:
+        related = related_factory(image['id'])
+        assert related['result_count'] > 0
+        assert len(related['results']) == 10

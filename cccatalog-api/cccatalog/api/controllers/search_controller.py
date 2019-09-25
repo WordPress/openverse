@@ -20,11 +20,15 @@ from math import ceil
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 CACHE_TIMEOUT = 10
 DEAD_LINK_RATIO = 1 / 2
+THUMBNAIL = 'thumbnail'
+URL = 'url'
+THUMBNAIL_WIDTH_PX = 600
+PROVIDER = 'provider'
 
 
 def _paginate_with_dead_link_mask(s: Search, page_size: int,
                                   page: int) -> Tuple[int, int]:
-    '''
+    """
     Given a query, a page and pagesize, it returns the start and end
     of the slice of results.
 
@@ -32,7 +36,7 @@ def _paginate_with_dead_link_mask(s: Search, page_size: int,
     :param page_size: How big the page should be.
     :param page: The page number.
     :return: Tuple of start and end.
-    '''
+    """
     query_hash = get_query_hash(s)
     query_mask = get_query_mask(query_hash)
     if not query_mask:
@@ -107,8 +111,8 @@ def _post_process_results(s, start, end, page_size, search_results,
     certain thumbnails through out proxy.
 
     :param s: The Elasticsearch Search object.
-    :param start: The start if the slice of results.
-    :param end: The end of the slice of results.
+    :param start: The start of the result slice.
+    :param end: The end of the result slice.
     :param search_results: The Elasticsearch response object containing search
     results.
     :param request: The Django request object, used to build a "reversed" URL
@@ -147,7 +151,7 @@ def _post_process_results(s, start, end, page_size, search_results,
 
     if filter_dead:
         query_hash = get_query_hash(s)
-        validate_images(query_hash, start, end, results, to_validate)
+        validate_images(query_hash, start, results, to_validate)
 
         if len(results) < page_size:
             end += int(end / 2)
@@ -166,7 +170,7 @@ def _post_process_results(s, start, end, page_size, search_results,
                 request,
                 filter_dead
             )
-    return results
+    return results[:page_size]
 
 
 def search(search_params, index, page_size, ip, request,
@@ -179,10 +183,12 @@ def search(search_params, index, page_size, ip, request,
      :class: `ImageSearchQueryStringSerializer`.
     :param index: The Elasticsearch index to search (e.g. 'image')
     :param page_size: The number of results to return per page.
-    :param page: The results page number.
     :param ip: The user's hashed IP. Hashed IPs are used to anonymously but
     uniquely identify users exclusively for ensuring query consistency across
     Elasticsearch shards.
+    :param request: Django's request object.
+    :param filter_dead: Whether dead links should be removed.
+    :param page: The results page number.
     :return: Tuple with a List of Hits from elasticsearch, the total count of
     pages and results.
     """
@@ -277,7 +283,7 @@ def search(search_params, index, page_size, ip, request,
         page_size
     )
 
-    return results[:page_size], page_count, result_count
+    return results, page_count, result_count
 
 
 def _validate_provider(input_provider):
@@ -290,7 +296,7 @@ def _validate_provider(input_provider):
     return input_provider.lower()
 
 
-def related_images(uuid, index):
+def related_images(uuid, index, request, filter_dead):
     """
     Given a UUID, find related search results.
     """
@@ -313,9 +319,28 @@ def related_images(uuid, index):
         min_term_freq=1,
         max_query_terms=50
     )
+    page_size = 10
+    page = 1
+    start, end = _get_query_slice(s, page_size, page, filter_dead)
+    s = s[start:end]
     response = s.execute()
+    results = _post_process_results(
+        s,
+        start,
+        end,
+        page_size,
+        response,
+        request,
+        filter_dead
+    )
 
-    return response
+    result_count, _ = _get_result_and_page_count(
+        response,
+        results,
+        page_size
+    )
+
+    return results, result_count
 
 
 def browse_by_provider(provider, index, page_size, ip, request, filter_dead,
@@ -349,7 +374,7 @@ def browse_by_provider(provider, index, page_size, ip, request, filter_dead,
         page_size
     )
 
-    return results[:page_size], page_count, result_count
+    return results, page_count, result_count
 
 
 def get_providers(index):
@@ -450,7 +475,7 @@ def _get_result_and_page_count(response_obj: Response, results: List[Hit],
     Elasticsearch does not allow deep pagination of ranked queries.
     Adjust returned page count to reflect this.
 
-    :param search_obj: The original Elasticsearch response object.
+    :param response_obj: The original Elasticsearch response object.
     :param results: The list of filtered result Hits.
     :return: Result and page count.
     """
