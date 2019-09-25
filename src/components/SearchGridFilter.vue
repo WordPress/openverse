@@ -39,7 +39,7 @@
           v-model="filter.provider"
           @input="onUpdateFilter"
           tag-placeholder="Add this as new tag"
-          placeholder="All Providers"
+          placeholder="All Sources"
           label="name"
           track-by="code"
           :options="providers"
