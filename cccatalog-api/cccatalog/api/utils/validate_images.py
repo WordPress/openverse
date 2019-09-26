@@ -6,17 +6,12 @@ from django_redis import get_redis_connection
 log = logging.getLogger(__name__)
 
 
-def validate_images(results, image_urls):
+def validate_images(image_urls, image_ids):
     """
-    Make sure images exist before we display them. Treat redirects as broken
-    links since 99% of the time the redirect leads to a generic "not found"
-    placeholder.
-
-    Results are cached in redis and shared amongst all API servers in the
-    cluster.
+    Return a list of image IDs that are no longer valid due to link rot.
     """
     if not image_urls:
-        return
+        return []
     start_time = time.time()
     # Pull matching images from the cache.
     redis = get_redis_connection("default")
@@ -40,14 +35,14 @@ def validate_images(results, image_urls):
     to_cache = {}
     for idx, url in enumerate(to_verify.keys()):
         cache_key = cache_prefix + url
-        if verified[idx]:
+        if verified[idx] is not None:
             status = verified[idx].status_code
         # Response didn't arrive in time. Try again later.
         else:
             status = -1
         to_cache[cache_key] = status
 
-    thirty_minutes = 60 * 30
+    five_minutes = 60 * 5
     twenty_four_hours_seconds = 60 * 60 * 24
     pipe = redis.pipeline()
     if len(to_cache) > 0:
@@ -58,7 +53,7 @@ def validate_images(results, image_urls):
             pipe.expire(key, twenty_four_hours_seconds)
         elif status == -1:
             # Content provider failed to respond; try again in a short interval
-            pipe.expire(key, thirty_minutes)
+            pipe.expire(key, five_minutes)
         else:
             pipe.expire(key, twenty_four_hours_seconds * 120)
     pipe.execute()
@@ -72,9 +67,9 @@ def validate_images(results, image_urls):
             cached_statuses[cache_idx] = -1
 
     # Delete broken images from the search results response.
+    broken_ids = []
     for idx, _ in enumerate(cached_statuses):
-        del_idx = len(cached_statuses) - idx - 1
-        status = cached_statuses[del_idx]
+        status = cached_statuses[idx]
         if status == 429 or status == 403:
             log.warning(
                 'Image validation failed due to rate limiting or blocking. '
@@ -82,12 +77,13 @@ def validate_images(results, image_urls):
             )
         elif status != 200:
             log.info(
-                'Deleting broken image with ID {} from results.'
-                .format(results[del_idx]['identifier'])
+                'Broken link with id {} detected.'
+                .format(image_ids[idx])
             )
-            del results[del_idx]
+            broken_ids.append(image_ids[idx])
     end_time = time.time()
     log.info('Validated images in {} '.format(end_time - start_time))
+    return broken_ids
 
 
 def _validation_failure(request, exception):

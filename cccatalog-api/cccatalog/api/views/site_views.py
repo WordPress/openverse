@@ -93,7 +93,7 @@ class Register(APIView):
     you can then use to authenticate using the standard OAuth2 Client
     Credentials flow. You must keep `client_secret` confidential; anybody with
     your `client_secret` can impersonate your application.
-    
+
     Example registration and authentication flow:
 
     First, register for a key.
