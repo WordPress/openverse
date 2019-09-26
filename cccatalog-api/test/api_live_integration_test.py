@@ -395,6 +395,7 @@ def test_dead_links_are_correctly_filtered(search_with_dead_links,
     assert comparisons.count(True) < 100
 
 
+@pytest.mark.skip(reason="Not reproducible in dev environment")
 def test_page_consistency_removing_dead_links(search_without_dead_links):
     """
     Test the results returned in consecutive pages are never repeated when
