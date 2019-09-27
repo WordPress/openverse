@@ -40,11 +40,11 @@
         Looking for the old CC Search portal? Visit
         <a href="https://oldsearch.creativecommons.org">https://oldsearch.creativecommons.org</a>.
       </p>
-      <h2>Providers</h2>
+      <h2>Sources</h2>
       <div class="page_provider-stats-ctr">
         <table class="page_provider-stats-table">
           <thead>
-            <th>Provider</th>
+            <th>Source</th>
             <th>Domain</th>
             <th># CC Licensed Works</th>
           </thead>
