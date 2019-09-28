@@ -107,7 +107,7 @@ export default {
   },
   methods: {
     onGoBackToSearchResults() {
-      this.$router.push({ name: 'browse-page', query: this.query });
+      this.$router.push({ name: 'browse-page', query: this.query, params: { location: this.$route.params.location } });
     },
     onImageLoad(event) {
       this.$emit('onImageLoaded', event);
