@@ -67,7 +67,6 @@ export default {
       // open the page on a new tab with either of those keys pressed.
       if (!event.metaKey && !event.ctrlKey) {
         event.preventDefault();
-        // this.$router.push(`/photos/${image.id}`);
         this.$router.push({ name: 'photo-detail-page', params: { id: image.id, location: window.scrollY } });
       }
     },

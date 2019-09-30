@@ -95,6 +95,11 @@ describe('PhotoDetails', () => {
     const routerMock = {
       push: jest.fn(),
     };
+    const routeMock = {
+      params: {
+        location: window.scrollY,
+      },
+    };
     const opts = {
       propsData: {
         ...props,
@@ -105,11 +110,12 @@ describe('PhotoDetails', () => {
       },
       mocks: {
         $router: routerMock,
+        $route: routeMock,
       },
     };
     const wrapper = render(PhotoDetails, opts);
     const link = wrapper.find('.photo_breadcrumb');
     link.trigger('click');
-    expect(routerMock.push).toHaveBeenCalledWith({ name: 'browse-page', query: opts.propsData.query });
+    expect(routerMock.push).toHaveBeenCalledWith({ name: 'browse-page', query: opts.propsData.query, params: { location: routeMock.params.location } });
   });
 });
