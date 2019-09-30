@@ -23,3 +23,5 @@ COPY Pipfile.lock /cccatalog-api/
 # Install the dependencies system-wide
 # TODO: Use build args to avoid installing dev dependencies in production
 RUN pipenv install --deploy --system --dev
+
+ENTRYPOINT ["./run.sh"]
