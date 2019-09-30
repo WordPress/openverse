@@ -2,16 +2,22 @@ import time
 import grequests
 import logging
 from django_redis import get_redis_connection
+from cccatalog.api.utils.dead_link_mask import get_query_mask, save_query_mask
 
 log = logging.getLogger(__name__)
 
 
-def validate_images(image_urls, image_ids):
+def validate_images(query_hash, start_slice, results, image_urls):
     """
-    Return a list of image IDs that are no longer valid due to link rot.
+    Make sure images exist before we display them. Treat redirects as broken
+    links since 99% of the time the redirect leads to a generic "not found"
+    placeholder.
+
+    Results are cached in redis and shared amongst all API servers in the
+    cluster.
     """
     if not image_urls:
-        return []
+        return
     start_time = time.time()
     # Pull matching images from the cache.
     redis = get_redis_connection("default")
@@ -35,14 +41,14 @@ def validate_images(image_urls, image_ids):
     to_cache = {}
     for idx, url in enumerate(to_verify.keys()):
         cache_key = cache_prefix + url
-        if verified[idx] is not None:
+        if verified[idx]:
             status = verified[idx].status_code
         # Response didn't arrive in time. Try again later.
         else:
             status = -1
         to_cache[cache_key] = status
 
-    five_minutes = 60 * 5
+    thirty_minutes = 60 * 30
     twenty_four_hours_seconds = 60 * 60 * 24
     pipe = redis.pipeline()
     if len(to_cache) > 0:
@@ -53,7 +59,7 @@ def validate_images(image_urls, image_ids):
             pipe.expire(key, twenty_four_hours_seconds)
         elif status == -1:
             # Content provider failed to respond; try again in a short interval
-            pipe.expire(key, five_minutes)
+            pipe.expire(key, thirty_minutes)
         else:
             pipe.expire(key, twenty_four_hours_seconds * 120)
     pipe.execute()
@@ -66,10 +72,12 @@ def validate_images(image_urls, image_ids):
         else:
             cached_statuses[cache_idx] = -1
 
+    # Create a new dead link mask
+    new_mask = [1] * len(results)
     # Delete broken images from the search results response.
-    broken_ids = []
     for idx, _ in enumerate(cached_statuses):
-        status = cached_statuses[idx]
+        del_idx = len(cached_statuses) - idx - 1
+        status = cached_statuses[del_idx]
         if status == 429 or status == 403:
             log.warning(
                 'Image validation failed due to rate limiting or blocking. '
@@ -77,13 +85,20 @@ def validate_images(image_urls, image_ids):
             )
         elif status != 200:
             log.info(
-                'Broken link with id {} detected.'
-                .format(image_ids[idx])
+                'Deleting broken image with ID {} from results.'
+                .format(results[del_idx]['identifier'])
             )
-            broken_ids.append(image_ids[idx])
+            del results[del_idx]
+            new_mask[del_idx] = 0
+
+    # Merge and cache the new mask
+    mask = get_query_mask(query_hash)
+    if mask:
+        new_mask = mask[:start_slice] + new_mask
+    save_query_mask(query_hash, new_mask)
+
     end_time = time.time()
     log.info('Validated images in {} '.format(end_time - start_time))
-    return broken_ids
 
 
 def _validation_failure(request, exception):
