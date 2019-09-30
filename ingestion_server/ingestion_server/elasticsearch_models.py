@@ -51,7 +51,6 @@ def _parse_description(metadata_field):
 def _get_extension(url):
     extension = url.split('.')[-1].lower()
     if '/' in extension or extension is None:
-        logging.warning('URL {} has no extension.'.format(url))
         return None
     else:
         return extension
