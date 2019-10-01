@@ -10,7 +10,6 @@
 <script>
 import SearchGridManualLoad from '@/components/SearchGridManualLoad';
 import ScrollButton from '@/components/ScrollButton';
-import { ExperimentData as InfiniteLoadingExperiment } from '@/abTests/infiniteLoadingExperiment';
 import { CONVERT_AB_TEST_EXPERIMENT } from '@/store/action-types';
 
 export default {
@@ -23,20 +22,6 @@ export default {
   data: () => ({
     showScrollButton: false,
   }),
-  computed: {
-    renderInfiniteLoad() {
-      return this.$store.state.experiments.some(experiment =>
-        experiment.name === InfiniteLoadingExperiment.EXPERIMENT_NAME &&
-        experiment.case === InfiniteLoadingExperiment.INFINITE_LOADING_EXPERIMENT,
-      );
-    },
-    renderManualLoad() {
-      return this.$store.state.experiments.some(experiment =>
-        experiment.name === InfiniteLoadingExperiment.EXPERIMENT_NAME &&
-        experiment.case === InfiniteLoadingExperiment.MANUAL_LOADING_EXPERIMENT,
-      );
-    },
-  },
   methods: {
     onLoadMoreImages(searchParams) {
       this.$store.dispatch(

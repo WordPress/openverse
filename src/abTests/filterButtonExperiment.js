@@ -1,6 +1,6 @@
-const EXPERIMENT_NAME = 'infinite_loading_experiment';
-const INFINITE_LOADING_EXPERIMENT = 'infinite_loading';
-const MANUAL_LOADING_EXPERIMENT = 'manual_loading';
+const EXPERIMENT_NAME = 'filter_experiment';
+const ORIGINAL_FILTER_BUTTON_EXPERIMENT = 'original_filter_button_experiment';
+const FILTER_BUTTON_NEW_POSITION_EXPERIMENT = 'filter_button_new_position_experiment';
 
 /**
  * Joins the experiment.
@@ -12,13 +12,13 @@ const MANUAL_LOADING_EXPERIMENT = 'manual_loading';
 const joinExperiment = (session) => {
   const resultPromise = new Promise((resolve, reject) => {
     session.participate(EXPERIMENT_NAME,
-      [INFINITE_LOADING_EXPERIMENT, MANUAL_LOADING_EXPERIMENT],
+      [ORIGINAL_FILTER_BUTTON_EXPERIMENT, FILTER_BUTTON_NEW_POSITION_EXPERIMENT],
       (err, res) => {
         if (err || res.error) {
           reject({
             error: err,
             name: EXPERIMENT_NAME,
-            case: INFINITE_LOADING_EXPERIMENT,
+            case: ORIGINAL_FILTER_BUTTON_EXPERIMENT,
             session,
           });
         }
@@ -39,6 +39,6 @@ const joinExperiment = (session) => {
 export default joinExperiment;
 export const ExperimentData = {
   EXPERIMENT_NAME,
-  INFINITE_LOADING_EXPERIMENT,
-  MANUAL_LOADING_EXPERIMENT,
+  ORIGINAL_FILTER_BUTTON_EXPERIMENT,
+  FILTER_BUTTON_NEW_POSITION_EXPERIMENT,
 };
