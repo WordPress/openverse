@@ -43,6 +43,9 @@ of 10000 requests per day and 100 requests per minute. Additionally, Creative
 Commons can give your key an even higher limit that fits your application's
 needs. See the `/oauth2/register` endpoint for instructions on obtaining
 an API key.
+
+Pull requests are welcome!
+[Contribute on GitHub](https://github.com/creativecommons/cccatalog-api)
 """
 
 
