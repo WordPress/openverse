@@ -98,6 +98,8 @@
 <script>
 import SearchGridFilter from '@/components/SearchGridFilter';
 import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
+import { CONVERT_AB_TEST_EXPERIMENT } from '@/store/action-types';
+import { ExperimentData as FilterButtonExperiment } from '@/abTests/filterButtonExperiment';
 
 export default {
   name: 'search-grid-form-original',
@@ -135,6 +137,11 @@ export default {
       this.$store.commit(
         SET_FILTER_IS_VISIBLE,
         { isFilterVisible: !this.isFilterVisible },
+      );
+
+      this.$store.dispatch(
+        CONVERT_AB_TEST_EXPERIMENT,
+        { experimentName: FilterButtonExperiment.EXPERIMENT_NAME },
       );
     },
     onSearchFilterChanged(query) {
