@@ -1,4 +1,4 @@
-import SearchGridForm from '@/components/SearchGridForm';
+import SearchGridForm from '@/components/SearchGridFormNewFilter';
 import render from '../../test-utils/render';
 
 describe('SearchGridForm', () => {
