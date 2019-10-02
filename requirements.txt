@@ -1,5 +1,5 @@
-boto3 \
-warcio \
-ujson \
-requests \
+boto3
+warcio
+ujson
+requests
 BeautifulSoup4
