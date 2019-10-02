@@ -10,7 +10,6 @@
 <script>
 import SearchGridManualLoad from '@/components/SearchGridManualLoad';
 import ScrollButton from '@/components/ScrollButton';
-import { CONVERT_AB_TEST_EXPERIMENT } from '@/store/action-types';
 
 export default {
   name: 'search-grid',
@@ -24,10 +23,6 @@ export default {
   }),
   methods: {
     onLoadMoreImages(searchParams) {
-      this.$store.dispatch(
-        CONVERT_AB_TEST_EXPERIMENT,
-        { experimentName: InfiniteLoadingExperiment.EXPERIMENT_NAME },
-      );
       this.$emit('onLoadMoreImages', searchParams);
     },
     checkScrollLength() {
