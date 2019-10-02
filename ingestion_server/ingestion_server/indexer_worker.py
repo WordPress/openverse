@@ -1,6 +1,6 @@
 """
-Accept an HTTP request specifying a range of image IDs to reindex. This can be
-used to distribute indexing tasks across multiple machines.
+Accept an HTTP request specifying a range of image IDs to reindex. After the
+data has been indexed, notify Ingestion Server and stop the instance.
 """
 import falcon
 from multiprocessing import Value
@@ -42,7 +42,11 @@ def _execute_indexing_task(target_index, start_id, end_id):
 
 def _self_destruct():
     """
-    Shut down this instance once the task is complete (or if it is disrupted by
-    an error).
+    Stop (not terminate) this instance once the task is finished.
     """
     pass
+
+
+api = falcon.API()
+api.add_route('/indexing_job', IndexingJobResource())
+api.add_route('/healthcheck', HealthcheckResource())
