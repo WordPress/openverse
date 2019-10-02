@@ -202,17 +202,17 @@ class TableIndexer:
             log.info('Replicating range ' + str(last_added_es_id) + '-' +
                      str(last_added_pg_id))
             query = SQL('SELECT * FROM {}'
-                        ' WHERE id BETWEEN {} AND {} ORDER BY id'
+                        ' WHERE id BETWEEN {} AND {}'
                         .format(table, last_added_es_id, last_added_pg_id))
             self.es.indices.create(
                 index=dest_idx,
                 body=create_mapping(table)
             )
-            self._replicate(table, dest_idx, query)
+            self.replicate(table, dest_idx, query)
 
-    def _replicate(self, table, dest_index, query):
+    def replicate(self, table, dest_index, query):
         """
-        Replicate all of the records between `start` and `end`.
+        Replicate records from a given query.
 
         :param table: The table to replicate the data from.
         :param dest_index: The destination index to copy the data to.
@@ -363,15 +363,18 @@ class TableIndexer:
                 self.es = elasticsearch_connect()
             time.sleep(poll_interval)
 
-    def reindex(self, model_name: str):
+    def reindex(self, model_name: str, distributed=False):
         """
         Copy contents of the database to a new Elasticsearch index. Create an
         index alias to make the new index the "live" index when finished.
         """
         suffix = uuid.uuid4().hex
         destination_index = model_name + '-' + suffix
-        self._index_table(model_name, dest_idx=destination_index)
-        self._go_live(destination_index, model_name)
+        if distributed:
+            pass
+        else:
+            self._index_table(model_name, dest_idx=destination_index)
+            self._go_live(destination_index, model_name)
 
     def update(self, model_name: str, since_date):
         log.info(
@@ -380,7 +383,7 @@ class TableIndexer:
         )
         query = SQL('SELECT * FROM {} WHERE updated_on >= \'{}\''
                     .format(model_name, since_date))
-        self._replicate(model_name, model_name, query)
+        self.replicate(model_name, model_name, query)
 
     @staticmethod
     def load_test_data():
