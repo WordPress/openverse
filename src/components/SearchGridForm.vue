@@ -13,7 +13,7 @@
 <script>
 import SearchGridFormNewFilter from '@/components/SearchGridFormNewFilter';
 import SearchGridFormOriginal from '@/components/SearchGridFormOriginal';
-import { ExperimentData as InfiniteLoadingExperiment } from '@/abTests/filterButtonExperiment';
+import { ExperimentData as FilterButtonExperiment } from '@/abTests/filterButtonExperiment';
 
 export default {
   name: 'search-grid-form',
@@ -32,14 +32,14 @@ export default {
   computed: {
     renderOriginalFilter() {
       return this.$store.state.experiments.some(experiment =>
-        experiment.name === InfiniteLoadingExperiment.EXPERIMENT_NAME &&
-        experiment.case === InfiniteLoadingExperiment.ORIGINAL_FILTER_BUTTON_EXPERIMENT,
+        experiment.name === FilterButtonExperiment.EXPERIMENT_NAME &&
+        experiment.case === FilterButtonExperiment.ORIGINAL_FILTER_BUTTON_EXPERIMENT,
       );
     },
     renderNewFilter() {
       return this.$store.state.experiments.some(experiment =>
-        experiment.name === InfiniteLoadingExperiment.EXPERIMENT_NAME &&
-        experiment.case === InfiniteLoadingExperiment.FILTER_BUTTON_NEW_POSITION_EXPERIMENT,
+        experiment.name === FilterButtonExperiment.EXPERIMENT_NAME &&
+        experiment.case === FilterButtonExperiment.FILTER_BUTTON_NEW_POSITION_EXPERIMENT,
       );
     },
   },
@@ -47,7 +47,7 @@ export default {
     onSearchFormSubmit(query) {
       this.$emit('onSearchFormSubmit', query);
     },
-  }
+  },
 };
 </script>
 
