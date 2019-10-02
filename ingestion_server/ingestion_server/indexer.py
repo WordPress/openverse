@@ -19,7 +19,8 @@ from ingestion_server.qa import create_search_qa_index
 from ingestion_server.elasticsearch_models import \
     database_table_to_elasticsearch_model
 from ingestion_server.es_mapping import create_mapping
-from ingestion_server.distributed_reindex_scheduler import allocate_hardware
+from ingestion_server.distributed_reindex_scheduler import \
+    schedule_distributed_crawl
 
 """
 A utility for indexing data to Elasticsearch. For each table to
