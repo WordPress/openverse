@@ -12,7 +12,7 @@
           <a :href="image.foreign_landing_url"
              target="_blank"
              rel="noopener"
-             @click="onPhotoSourceLinkClicked">"{{ image.title }}"</a>
+             @click="onPhotoSourceLinkClicked">{{ imageTitle }}</a>
           <span v-if="image.creator">
             by
             <a v-if="image.creator_url"
@@ -77,6 +77,10 @@ export default {
   computed: {
     licenseURL() {
       return `${this.ccLicenseURL}&atype=rich`;
+    },
+    imageTitle() {
+      const title = this.$props.image.title;
+      return title !== 'Image' ? `"${title}"` : 'Image';
     },
   },
   methods: {
