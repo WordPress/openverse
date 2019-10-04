@@ -41,7 +41,7 @@ const initialState = (searchParams) => {
     images: [],
     isFetchingImages: false,
     isFetchingImagesError: true,
-    isFilterVisible: false,
+    isFilterVisible: true,
     isFilterApplied: !!query.provider || !!query.li || !!query.lt || !!query.searchBy,
     query,
     relatedImages: [],
