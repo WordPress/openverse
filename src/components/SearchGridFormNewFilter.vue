@@ -36,7 +36,9 @@
                 <span class="menu-button_text">Search</span>
               </a>
             </li>
-            <li :class="{ 'menu-button': true, 'search-form_filter-button': true, isActive: isFilterVisible }"
+            <li :class="{'menu-button': true,
+                         'search-form_filter-button': true,
+                         isActive: isFilterVisible }"
                 role="menuitem">
               <a href="#" @click.prevent="onToggleSearchGridFilter()">
                 <i class="fi-list">
@@ -196,10 +198,11 @@ export default {
       color: #35495e;
     }
   }
+
   .isActive {
     background-color: #fafafa;
   }
-  
+
   .search-form_ctr {
     position: relative;
   }
