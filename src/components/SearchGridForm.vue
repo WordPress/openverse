@@ -1,11 +1,11 @@
 <template>
   <div>
     <search-grid-form-original v-if="renderOriginalFilter"
-                               v-bind="$attrs"
+                               v-bind="$props"
                                @onSearchFormSubmit="onSearchFormSubmit" />
 
     <search-grid-form-new-filter v-if="renderNewFilter"
-                                 v-bind="$attrs"
+                                 v-bind="$props"
                                  @onSearchFormSubmit="onSearchFormSubmit" />
   </div>
 </template>
