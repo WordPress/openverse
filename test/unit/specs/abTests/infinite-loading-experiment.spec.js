@@ -1,4 +1,4 @@
-import joinExperiment, { ExperimentData } from '@/abTests/infiniteLoadingExperiment';
+import joinExperiment, { ExperimentData } from '@/abTests/filterButtonExperiment';
 
 describe('Infinite Loading Experiment', () => {
   let session = {};
@@ -8,7 +8,7 @@ describe('Infinite Loading Experiment', () => {
       participate: jest.fn().mockImplementation((name, alternatives, callback) =>
         callback(null, {
           alternative: {
-            name: ExperimentData.MANUAL_LOADING_EXPERIMENT,
+            name: ExperimentData.FILTER_BUTTON_NEW_POSITION_EXPERIMENT,
           },
         })),
     };
@@ -18,7 +18,7 @@ describe('Infinite Loading Experiment', () => {
     const result = joinExperiment(session);
     result.then((res) => {
       expect(res.name).toBe(ExperimentData.EXPERIMENT_NAME);
-      expect(res.case).toBe(ExperimentData.MANUAL_LOADING_EXPERIMENT);
+      expect(res.case).toBe(ExperimentData.FILTER_BUTTON_NEW_POSITION_EXPERIMENT);
       expect(res.session).toBe(session);
       done();
     });
@@ -32,7 +32,7 @@ describe('Infinite Loading Experiment', () => {
     const result = joinExperiment(session);
     result.catch((res) => {
       expect(res.name).toBe(ExperimentData.EXPERIMENT_NAME);
-      expect(res.case).toBe(ExperimentData.INFINITE_LOADING_EXPERIMENT);
+      expect(res.case).toBe(ExperimentData.ORIGINAL_FILTER_BUTTON_EXPERIMENT);
       expect(res.session).toBe(session);
       done();
     });
