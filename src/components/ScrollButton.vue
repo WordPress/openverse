@@ -33,6 +33,7 @@ export default {
   },
   methods: {
     scrollToTop() {
+      this.$router.push({ name: 'browse-page' });
       window.scrollTo({
         top: 0,
         left: 0,
