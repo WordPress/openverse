@@ -25,7 +25,7 @@ const renderer = createRenderer(bundle, {
 });
 
 const serve = path => express.static(resolve(path), {
-  maxAge: 1000 * 60 * 60 * 24 * 30,
+  maxAge: 1000 * 60 * 60 // 1h static assets cache
 })
 
 server.use('/static', serve('./dist/static'));
@@ -65,7 +65,7 @@ function healthcheck (req, res) {
 // if your app involves user-specific content, you need to implement custom
 // logic to determine whether a request is cacheable based on its url and
 // headers.
-// 1-second microcache.
+// 30-second url response microcache.
 // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
 server.use(microcache.cacheSeconds(30, req => req.originalUrl))
 
