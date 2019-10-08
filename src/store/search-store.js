@@ -34,6 +34,8 @@ const initialState = (searchParams) => {
     provider: getParameterByName('provider', searchParams),
     li: getParameterByName('li', searchParams),
     lt: getParameterByName('lt', searchParams),
+    imageType: getParameterByName('imageType', searchParams),
+    extension: getParameterByName('extension', searchParams),
     searchBy: getParameterByName('searchBy', searchParams),
   };
   return {
@@ -198,7 +200,7 @@ const actions = ImageService => ({
 
 function setQuery(_state, params, path, redirect) {
   const query = Object.assign({}, _state.query, params.query);
-  const isFilterApplied = ['li', 'provider', 'lt', 'searchBy']
+  const isFilterApplied = ['li', 'provider', 'lt', 'imageType', 'extension', 'searchBy']
     .some(key => query[key] && query[key].length > 0);
 
   _state.isFilterApplied = isFilterApplied;

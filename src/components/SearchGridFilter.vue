@@ -2,7 +2,7 @@
   <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
     <div class="grid-x">
-      <div class="filter-option search-filters_license-types">
+      <div class="filter-option">
         <multiselect
           v-model="filter.lt"
           @input="onUpdateFilter"
@@ -18,7 +18,7 @@
           :showLabels="false">
         </multiselect>
       </div>
-      <div class="filter-option search-filters_licenses">
+      <div class="filter-option">
         <multiselect
           v-model="filter.li"
           @input="onUpdateFilter"
@@ -34,7 +34,7 @@
           :showLabels="false">
         </multiselect>
       </div>
-      <div v-if="showProvidersFilter" class="filter-option search-filters_providers">
+      <div v-if="showProvidersFilter" class="filter-option">
         <multiselect
           v-model="filter.provider"
           @input="onUpdateFilter"
@@ -45,6 +45,36 @@
           :options="providers"
           :multiple="true"
           :searchable="true"
+          :closeOnSelect="false"
+          :showLabels="false">
+        </multiselect>
+      </div>
+      <div class="filter-option small-filter">
+        <multiselect
+          v-model="filter.imageType"
+          @input="onUpdateFilter"
+          tag-placeholder="Add this as new tag"
+          placeholder="Image Type"
+          label="name"
+          track-by="code"
+          :options="imageTypes"
+          :multiple="true"
+          :searchable="false"
+          :closeOnSelect="false"
+          :showLabels="false">
+        </multiselect>
+      </div>
+      <div class="filter-option small-filter">
+        <multiselect
+          v-model="filter.extension"
+          @input="onUpdateFilter"
+          tag-placeholder="Add this as new tag"
+          placeholder="File Type"
+          label="name"
+          track-by="code"
+          :options="extensions"
+          :multiple="true"
+          :searchable="false"
           :closeOnSelect="false"
           :showLabels="false">
         </multiselect>
@@ -84,6 +114,15 @@ const filterData = {
   licenseTypes: [
     { code: 'commercial', name: 'Use for commercial purposes' },
     { code: 'modification', name: 'Modify or adapt' },
+  ],
+  imageTypes: [
+    { code: 'photo', name: 'Photographs' },
+    { code: 'illustration', name: 'Illustrations' },
+    { code: 'vector', name: 'Vector Graphics' },
+  ],
+  extensions: [
+    { code: 'jpg', name: 'JPEGs' },
+    { code: 'png', name: 'PNGs' },
   ],
   filter: {
     provider: [],
@@ -154,6 +193,8 @@ export default {
         provider: 'providers',
         li: 'licenses',
         lt: 'licenseTypes',
+        imageType: 'imageTypes',
+        extension: 'extensions',
       };
 
       if (this.query) {
@@ -218,6 +259,10 @@ export default {
   min-width: 17vw;
   padding-bottom: 0.5vh;
   padding-top: 0.5vh;
+}
+
+.small-filter {
+  min-width: 10vw;
 }
 
 .grid-x {
