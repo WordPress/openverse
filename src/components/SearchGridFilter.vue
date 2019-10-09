@@ -6,7 +6,8 @@
         <multiselect
           v-model="filter.lt"
           @input="onUpdateFilter"
-          :disabled="filter.li.length > 0"
+          @select="onItemSelected"
+          @remove="onItemRemoved"
           tag-placeholder="Add this as new tag"
           placeholder="I want something that I can"
           label="name"
@@ -16,22 +17,10 @@
           :searchable="false"
           :closeOnSelect="false"
           :showLabels="false">
-        </multiselect>
-      </div>
-      <div class="filter-option">
-        <multiselect
-          v-model="filter.li"
-          @input="onUpdateFilter"
-          :disabled="filter.lt.length > 0"
-          tag-placeholder="Add this as new tag"
-          placeholder="All Licenses"
-          label="name"
-          track-by="code"
-          :options="licenses"
-          :multiple="true"
-          :searchable="false"
-          :closeOnSelect="false"
-          :showLabels="false">
+          <template slot="option" slot-scope="props">
+            <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
+            <span>{{props.option.name}}</span>
+          </template>
         </multiselect>
       </div>
       <div v-if="showProvidersFilter" class="filter-option">
@@ -101,16 +90,6 @@ import Multiselect from 'vue-multiselect';
 import clonedeep from 'lodash.clonedeep';
 
 const filterData = {
-  licenses: [
-    { code: 'cc0', name: 'CC0' },
-    { code: 'pdm', name: 'Public Domain Mark' },
-    { code: 'by', name: 'BY' },
-    { code: 'by-sa', name: 'BY-SA' },
-    { code: 'by-nc', name: 'BY-NC' },
-    { code: 'by-nd', name: 'BY-ND' },
-    { code: 'by-nc-sa', name: 'BY-NC-SA' },
-    { code: 'by-nc-nd', name: 'BY-NC-ND' },
-  ],
   licenseTypes: [
     { code: 'commercial', name: 'Use for commercial purposes' },
     { code: 'modification', name: 'Modify or adapt' },
@@ -126,7 +105,6 @@ const filterData = {
   ],
   filter: {
     provider: [],
-    li: [],
     lt: [],
     searchBy: {
       creator: false,
@@ -173,6 +151,14 @@ export default {
     },
   },
   methods: {
+    onItemSelected(option) {
+      // eslint-disable-next-line no-param-reassign
+      option.checked = true;
+    },
+    onItemRemoved(option) {
+      // eslint-disable-next-line no-param-reassign
+      option.checked = false;
+    },
     onUpdateFilter() {
       const filter = Object.assign({}, this.filter);
       Object.keys(this.filter).forEach((key) => {
@@ -191,7 +177,6 @@ export default {
     parseQueryFilters() {
       const filterLookup = {
         provider: 'providers',
-        li: 'licenses',
         lt: 'licenseTypes',
         imageType: 'imageTypes',
         extension: 'extensions',
@@ -255,19 +240,19 @@ export default {
 }
 
 .filter-option {
-  margin-right: 1vw;
-  min-width: 17vw;
-  padding-bottom: 0.5vh;
-  padding-top: 0.5vh;
+  margin-right: 1em;
+  width: 17em;
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
 }
 
 .small-filter {
-  min-width: 10vw;
+  width: 10em;
 }
 
 .grid-x {
   /* Small only */
-  @media screen and (max-width: 39.9375em) {
+  @media screen and (width: 39.9375em) {
     display: block;
   }
 }
