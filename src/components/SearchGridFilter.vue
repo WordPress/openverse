@@ -5,18 +5,17 @@
       <div class="filter-option">
         <multiselect
           v-model="filter.lt"
-          @input="onUpdateFilter"
-          @select="onItemSelected"
-          @remove="onItemRemoved"
-          tag-placeholder="Add this as new tag"
           placeholder="I want something that I can"
           label="name"
           track-by="code"
           :options="licenseTypes"
           :multiple="true"
-          :searchable="false"
+          :searchable="true"
           :closeOnSelect="false"
-          :showLabels="false">
+          :showLabels="false"
+          @input="onUpdateFilter"
+          @select="onItemSelected"
+          @remove="onItemRemoved">
           <template slot="option" slot-scope="props">
             <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
             <span>{{props.option.name}}</span>
@@ -26,8 +25,6 @@
       <div v-if="showProvidersFilter" class="filter-option">
         <multiselect
           v-model="filter.provider"
-          @input="onUpdateFilter"
-          tag-placeholder="Add this as new tag"
           placeholder="All Sources"
           label="name"
           track-by="code"
@@ -35,14 +32,19 @@
           :multiple="true"
           :searchable="true"
           :closeOnSelect="false"
-          :showLabels="false">
+          :showLabels="false"
+          @input="onUpdateFilter"
+          @select="onItemSelected"
+          @remove="onItemRemoved">
+          <template slot="option" slot-scope="props">
+            <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
+            <span>{{props.option.name}}</span>
+          </template>
         </multiselect>
       </div>
       <div class="filter-option small-filter">
         <multiselect
           v-model="filter.imageType"
-          @input="onUpdateFilter"
-          tag-placeholder="Add this as new tag"
           placeholder="Image Type"
           label="name"
           track-by="code"
@@ -50,14 +52,19 @@
           :multiple="true"
           :searchable="false"
           :closeOnSelect="false"
-          :showLabels="false">
+          :showLabels="false"
+          @input="onUpdateFilter"
+          @select="onItemSelected"
+          @remove="onItemRemoved">
+          <template slot="option" slot-scope="props">
+            <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
+            <span>{{props.option.name}}</span>
+          </template>
         </multiselect>
       </div>
       <div class="filter-option small-filter">
         <multiselect
           v-model="filter.extension"
-          @input="onUpdateFilter"
-          tag-placeholder="Add this as new tag"
           placeholder="File Type"
           label="name"
           track-by="code"
@@ -65,10 +72,17 @@
           :multiple="true"
           :searchable="false"
           :closeOnSelect="false"
-          :showLabels="false">
+          :showLabels="false"
+          @input="onUpdateFilter"
+          @select="onItemSelected"
+          @remove="onItemRemoved">
+          <template slot="option" slot-scope="props">
+            <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
+            <span>{{props.option.name}}</span>
+          </template>
         </multiselect>
       </div>
-      <div class="filter-option search-filters_search-by">
+      <div class="filter-option small-filter search-filters_search-by">
         <input type="checkbox" id="creator-chk"
                v-model="filter.searchBy.creator"
                @change="onUpdateFilter">
@@ -172,6 +186,9 @@ export default {
       Object.keys(this.filter).forEach((key) => {
         filter[key] = transformFilterValue(this.filter, key);
       });
+      ['providers', 'licenseTypes', 'imageTypes', 'extensions']
+        // eslint-disable-next-line no-param-reassign
+        .forEach(key => this[key].forEach((value) => { value.checked = false; }));
       this.$emit('onSearchFilterChanged', { query: filter, shouldNavigate: true });
     },
     parseQueryFilters() {
@@ -241,13 +258,13 @@ export default {
 
 .filter-option {
   margin-right: 1em;
-  width: 17em;
+  min-width: 18em;
   padding-bottom: 0.5em;
   padding-top: 0.5em;
 }
 
 .small-filter {
-  width: 10em;
+  min-width: 10em;
 }
 
 .grid-x {
