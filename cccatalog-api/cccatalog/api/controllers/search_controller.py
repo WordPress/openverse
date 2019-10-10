@@ -205,9 +205,12 @@ def search(search_params, index, page_size, ip, request,
             provider_filters.append(Q('term', provider=provider))
         s = s.filter('bool', should=provider_filters, minimum_should_match=1)
     if 'extension' in search_params.data:
-        extension = search_params.data['extension']
-        extension_filter = Q('term', extension=extension)
-        s = s.filter('bool', should=extension_filter, minimum_should_match=1)
+        extensions = search_params.data['extension'].split(',')
+        extension_filters = []
+        for extension in extensions:
+            extension_filter = Q('term', extension=extension)
+            extension_filters.append(extension_filter)
+        s = s.filter('bool', should=extension_filters, minimum_should_match=1)
 
     # It is sometimes desirable to hide content providers from the catalog
     # without scrubbing them from the database or reindexing.

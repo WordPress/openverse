@@ -169,7 +169,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     )
     extension = serializers.CharField(
         label="extension",
-        help_text="Filter by file extension, such as JPG or GIF.",
+        help_text="A comma separated list of desired file extensions.",
         required=False
     )
     qa = serializers.BooleanField(
