@@ -44,7 +44,6 @@ describe('Search Store', () => {
       expect(state.isFilterApplied).toBeTruthy();
       expect(state.query.q).toBe('landscapes');
       expect(state.query.provider).toBe('met');
-      expect(state.query.li).toBe('by');
       expect(state.query.lt).toBe('all');
       expect(state.query.searchBy).toBe('creator');
       expect(state.relatedImages).toHaveLength(0);
@@ -62,7 +61,7 @@ describe('Search Store', () => {
     });
 
     it('isFilterApplied is set to true when license filter is set', () => {
-      const state = store.state('?q=landscapes&li=by');
+      const state = store.state('?q=landscapes&lt=commercial');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
@@ -188,14 +187,6 @@ describe('Search Store', () => {
       mutations[SET_QUERY](state, params);
 
       expect(state.query.provider).toBe(params.query.provider);
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    it('SET_QUERY updates isFilterApplied with license', () => {
-      const params = { query: { q: 'foo', li: 'bar' } };
-      mutations[SET_QUERY](state, params);
-
-      expect(state.query.li).toBe(params.query.li);
       expect(state.isFilterApplied).toBeTruthy();
     });
 
