@@ -269,7 +269,7 @@ export default {
 
 .grid-x {
   /* Small only */
-  @media screen and (width: 39.9375em) {
+  @media screen and (max-width: 49em) {
     display: block;
   }
 }
