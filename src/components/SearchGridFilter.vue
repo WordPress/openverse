@@ -10,7 +10,7 @@
           track-by="code"
           :options="licenseTypes"
           :multiple="true"
-          :searchable="true"
+          :searchable="false"
           :closeOnSelect="false"
           :showLabels="false"
           @input="onUpdateFilter"
