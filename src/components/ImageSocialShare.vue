@@ -32,7 +32,7 @@ export default {
       return this.image.foreign_landing_url;
     },
     shareText() {
-      return encodeURI(`I found an image through CC search @creativecommons: ${this.imageURL}`);
+      return encodeURI(`I found an image through CC Search @creativecommons: ${this.imageURL}`);
     },
   },
   mounted() {
