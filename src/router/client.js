@@ -73,10 +73,9 @@ const router = new VueRouter({
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve({ x: 0, y: to.params.location });
-        }, 1500);
+        }, 600);
       });
     }
-    // console.log(to);
     return { x: 0, y: 0 };
   },
 });
