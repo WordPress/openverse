@@ -4,8 +4,8 @@ import render from '../../test-utils/render';
 describe('Search Grid Wrapper', () => {
   it('renders correct content', () => {
     const wrapper = render(SearchGrid);
-    expect(wrapper.find({ name: 'search-grid-manual-load' })).toBeDefined();
-    expect(wrapper.find({ name: 'scroll-button' })).toBeDefined();
+    expect(wrapper.find({ name: 'search-grid-manual-load' }).vm).toBeDefined();
+    expect(wrapper.find({ name: 'ScrollButton' }).vm).toBeDefined();
   });
 
   it('renders the scroll button when the page scrolls down', () => {
