@@ -122,7 +122,8 @@ def create_mapping(table_name):
                       "description": {
                          "fields": {
                             "keyword": {
-                               "type": "keyword"
+                               "type": "keyword",
+                               "similarity": "boolean"
                             }
                          },
                          "type": "text",
