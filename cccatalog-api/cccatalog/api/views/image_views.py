@@ -37,8 +37,6 @@ QA = 'qa'
 RESULT_COUNT = 'result_count'
 PAGE_COUNT = 'page_count'
 
-DEEP_PAGINATION_ERROR = 'Deep pagination is not allowed.'
-
 
 def _add_protocol(url: str):
     """
@@ -104,11 +102,11 @@ class SearchImages(APIView):
                 filter_dead,
                 page=page_param
             )
-        except ValueError:
+        except ValueError as value_error_message:
             return Response(
                 status=400,
                 data={
-                    VALIDATION_ERROR: DEEP_PAGINATION_ERROR
+                    VALIDATION_ERROR: str(value_error_message)
                 }
             )
 
@@ -175,11 +173,11 @@ class BrowseImages(APIView):
                     lt=lt,
                     li=li
                 )
-        except ValueError:
+        except ValueError as value_error_message:
             return Response(
                 status=400,
                 data={
-                    VALIDATION_ERROR: DEEP_PAGINATION_ERROR
+                    VALIDATION_ERROR: str(value_error_message)
                 }
             )
         except serializers.ValidationError:
