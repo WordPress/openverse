@@ -20,7 +20,7 @@ const BrowsePage = {
     },
   },
   mounted() {
-    if (this.query.q) {
+    if (this.query.q && !this.$store.state.images.length) {
       this.getImages(this.query);
     }
   },
