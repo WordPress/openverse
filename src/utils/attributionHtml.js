@@ -20,7 +20,7 @@ function attributionHtml(image, ccLicenseURL, fullLicenseName) {
     ).join('');
   }
 
-  const licenseImgLink = `<a href="${ccLicenseURL}" target="_blank" rel="noopener noreferrer" style="display: inline-block;white-space: none;opacity: 1.0;margin-top: 2px;margin-left: 3px;height: 22px !important;">${licenseIcons}</a>`;
+  const licenseImgLink = `<a href="${ccLicenseURL}" target="_blank" rel="noopener noreferrer" style="display: inline-block;white-space: none;margin-top: 2px;margin-left: 3px;height: 22px !important;">${licenseIcons}</a>`;
   return `<p style="font-size: 0.9rem;font-style: italic;">${imgLink}${creator}${licenseLink}${licenseImgLink}</p>`;
 }
 
