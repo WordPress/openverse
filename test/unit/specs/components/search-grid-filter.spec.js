@@ -1,6 +1,5 @@
 import SearchGridFilter from '@/components/SearchGridFilter';
 import render from '../../test-utils/render';
-import store from '../../sampleStore';
 
 describe('SearchGridFilter', () => {
   let options = {};
