@@ -61,4 +61,17 @@ describe('Watermark', () => {
     wrapper.setData({ shouldWatermark: false });
     expect(wrapper.vm.watermarkURL).toContain('watermark=false');
   });
+
+  it('should dispatch to the store when button is clicked', () => {
+    const storeMock = {
+      dispatch: jest.fn(),
+    };
+    const wrapper = render(Watermark, { ...options, mocks: { $store: storeMock } });
+    wrapper.find('.download-watermark').trigger('click');
+    expect(storeMock.dispatch).toHaveBeenCalledWith('DOWNLOAD_WATERMARK', {
+      imageId: props.image.id,
+      shouldWatermark: wrapper.vm.shouldWatermark,
+      shouldEmbedMetadata: wrapper.vm.shouldEmbedMetadata,
+    });
+  });
 });
