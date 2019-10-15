@@ -17,7 +17,7 @@ Browsable API documentation can be found [here](https://api.creativecommons.engi
 
 ## Running the server locally
 
-Ensure that you have installed [Docker](https://docs.docker.com/install/) and that the [Docker daemon is running](https://docs.docker.com/config/daemon/).
+Ensure that you have installed [Docker](https://docs.docker.com/install/) (with [Docker Compose](https://docs.docker.com/compose/install/)) and that the [Docker daemon is running](https://docs.docker.com/config/daemon/).
 ```
 git clone https://github.com/creativecommons/cccatalog-api.git
 cd cccatalog-api
