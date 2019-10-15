@@ -18,7 +18,7 @@
           <ul class="search-form_toolbar menu icons icon-top" role="menubar">
             <li class="menu-button search-form_search-button" role="menuitem">
               <a href="#" @click.prevent="onSubmit">
-                <i class="fi-list">
+                <i class="fi-list" aria-hidden="true" role="presentation">
                     <svg width="24" height="24" version="1.1"
                          viewBox="0 0 50.000001 50.000001" xmlns="http://www.w3.org/2000/svg">
                      <rect width="24" height="24" fill-opacity="0"/>
@@ -41,7 +41,7 @@
                          isActive: isFilterVisible }"
                 role="menuitem">
               <a href="#" @click.prevent="onToggleSearchGridFilter()">
-                <i class="fi-list">
+                <i class="fi-list" aria-hidden="true" role="presentation">
                     <img v-if="!isFilterApplied"
                          width="24"
                          height="24"
