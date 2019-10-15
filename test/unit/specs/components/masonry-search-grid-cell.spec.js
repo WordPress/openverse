@@ -41,6 +41,9 @@ describe('SearchGridCell', () => {
   it('links to the details page', () => {
     const routerMock = {
       push: jest.fn(),
+      params: {
+        location: window.scrollY,
+      },
     };
     const wrapper = render(MasonrySearchGridCell, {
       propsData: props,
@@ -48,6 +51,9 @@ describe('SearchGridCell', () => {
     });
     const link = wrapper.find('.search-grid_image-ctr');
     link.trigger('click');
-    expect(routerMock.push).toHaveBeenCalledWith(`/photos/${props.image.id}`);
+    expect(routerMock.push).toHaveBeenCalledWith({
+      name: 'photo-detail-page',
+      params: { id: 0, location: routerMock.params.location },
+    });
   });
 });
