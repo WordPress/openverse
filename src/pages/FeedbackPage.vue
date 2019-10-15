@@ -18,12 +18,13 @@
               height="998"
               frameborder="0"
               marginheight="0"
-              marginwidth="0">
+              marginwidth="0"
+              title="feedback form">
               Loading...
       </iframe>
 
       <div>
-        <h1><a id="report"></a>Report a bug</h1>
+        <h2><a id="report"></a>Report a bug</h2>
         <p>
           If you would like to report a bug you are encountering when using the tool, please email
           <a href="mailto:support-search@creativecommons.org">
@@ -65,7 +66,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  h1 {
+  h1, h2 {
     margin-bottom: .44117647em;
     font-size: 2.125em;
     font-weight: normal;
