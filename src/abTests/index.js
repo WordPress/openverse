@@ -1,10 +1,13 @@
 import { JOINED_AB_TEST_EXPERIMENT } from '@/store/mutation-types';
-// import createSixpackSession from './createSixpackSession';
+import createSixpackSession from './createSixpackSession';
+import filterButtonExperiment from './filterButtonExperiment';
 
 const setupExperiments = (store) => {
-  // const session = createSixpackSession(store.state.sessionId);
+  const session = createSixpackSession(store.state.sessionId);
 
-  const experimentPromises = [];
+  const experimentPromises = [
+    filterButtonExperiment(session),
+  ];
 
   return Promise.all(experimentPromises).then(experiments => experiments.map(experiment =>
     store.commit(JOINED_AB_TEST_EXPERIMENT, {

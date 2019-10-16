@@ -39,7 +39,7 @@
           v-model="filter.provider"
           @input="onUpdateFilter"
           tag-placeholder="Add this as new tag"
-          placeholder="All Providers"
+          placeholder="All Sources"
           label="name"
           track-by="code"
           :options="providers"
@@ -68,6 +68,32 @@
 
 <script>
 import Multiselect from 'vue-multiselect';
+import clonedeep from 'lodash.clonedeep';
+
+const filterData = {
+  licenses: [
+    { code: 'cc0', name: 'CC0' },
+    { code: 'pdm', name: 'Public Domain Mark' },
+    { code: 'by', name: 'BY' },
+    { code: 'by-sa', name: 'BY-SA' },
+    { code: 'by-nc', name: 'BY-NC' },
+    { code: 'by-nd', name: 'BY-ND' },
+    { code: 'by-nc-sa', name: 'BY-NC-SA' },
+    { code: 'by-nc-nd', name: 'BY-NC-ND' },
+  ],
+  licenseTypes: [
+    { code: 'commercial', name: 'Use for commercial purposes' },
+    { code: 'modification', name: 'Modify or adapt' },
+  ],
+  filter: {
+    provider: [],
+    li: [],
+    lt: [],
+    searchBy: {
+      creator: false,
+    },
+  },
+};
 
 const transformFilterValue = (filter, key) => {
   if (Array.isArray(filter[key])) {
@@ -116,9 +142,11 @@ export default {
       this.$emit('onSearchFilterChanged', { query: filter, shouldNavigate: true });
     },
     onClearFilters() {
-      const filter = Object.assign({}, this.filter);
-      Object.keys(this.filter).forEach((key) => { filter[key] = []; });
-      this.filter = filter;
+      this.filter = clonedeep(filterData.filter);
+      const filter = {};
+      Object.keys(this.filter).forEach((key) => {
+        filter[key] = transformFilterValue(this.filter, key);
+      });
       this.$emit('onSearchFilterChanged', { query: filter, shouldNavigate: true });
     },
     parseQueryFilters() {
@@ -151,30 +179,7 @@ export default {
       }
     },
   },
-  data: () => ({
-    licenses: [
-      { code: 'cc0', name: 'CC0' },
-      { code: 'pdm', name: 'Public Domain Mark' },
-      { code: 'by', name: 'BY' },
-      { code: 'by-sa', name: 'BY-SA' },
-      { code: 'by-nc', name: 'BY-NC' },
-      { code: 'by-nd', name: 'BY-ND' },
-      { code: 'by-nc-sa', name: 'BY-NC-SA' },
-      { code: 'by-nc-nd', name: 'BY-NC-ND' },
-    ],
-    licenseTypes: [
-      { code: 'commercial', name: 'Use for commercial purposes' },
-      { code: 'modification', name: 'Modify or adapt' },
-    ],
-    filter: {
-      provider: [],
-      li: [],
-      lt: [],
-      searchBy: {
-        creator: false,
-      },
-    },
-  }),
+  data: () => clonedeep(filterData),
 };
 </script>
 

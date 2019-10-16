@@ -10,7 +10,7 @@ function attributionHtml(image, ccLicenseURL, fullLicenseName) {
     imageTag = `<img style="display: block;" src="${image.url}" alt="${image.title}">`;
   }
   if (image.creator && image.creator_url) {
-    creator = `<span>by <a href="${image.creator_url}">${image.creator}</a></span>`;
+    creator = `<span> by <a href="${image.creator_url}">${image.creator}</a></span>`;
   }
   else if (image.creator && !image.creator_url) {
     creator = `<span> by <span>${image.creator}</span></span>`;
@@ -24,7 +24,7 @@ function attributionHtml(image, ccLicenseURL, fullLicenseName) {
     ).join('');
   }
 
-  const licenseImgLink = `<a href="${ccLicenseURL}" target="_blank" rel="noopener noreferrer" style="display: inline-block;white-space: none;opacity: .7;margin-top: 2px;margin-left: 3px;height: 22px !important;">${licenseIcons}</a>`;
+  const licenseImgLink = `<a href="${ccLicenseURL}" target="_blank" rel="noopener noreferrer" style="display: inline-block;white-space: none;margin-top: 2px;margin-left: 3px;height: 22px !important;">${licenseIcons}</a>`;
   return `<p style="font-size: 0.9rem;font-style: italic;">${imageTag}${imgLink}${creator}${licenseLink}${licenseImgLink}</p>`;
 }
 

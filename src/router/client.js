@@ -64,7 +64,18 @@ const router = new VueRouter({
       component: NotFoundPage,
     },
   ],
-  scrollBehavior() {
+  scrollBehavior(to) {
+    if (to.name === 'browse-page' && to.params.location) {
+      // the setTimeout is for the time it takes it get the images
+      // Else the page scrolls up after the images are fetched
+      // Disabling linting for the reject argument that isn't used
+      // eslint-disable-next-line
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve({ x: 0, y: to.params.location });
+        }, 600);
+      });
+    }
     return { x: 0, y: 0 };
   },
 });

@@ -25,7 +25,7 @@ describe('Search Store', () => {
       expect(state.images).toHaveLength(0);
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
-      expect(state.isFilterVisible).toBeFalsy();
+      expect(state.isFilterVisible).toBeTruthy();
       expect(state.isFilterApplied).toBeFalsy();
       expect(state.query.q).toBe('');
       expect(state.relatedImages).toHaveLength(0);
@@ -39,7 +39,7 @@ describe('Search Store', () => {
       expect(state.images).toHaveLength(0);
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
-      expect(state.isFilterVisible).toBeFalsy();
+      expect(state.isFilterVisible).toBeTruthy();
       expect(state.isFilterApplied).toBeTruthy();
       expect(state.query.q).toBe('landscapes');
       expect(state.query.provider).toBe('met');

@@ -37,4 +37,23 @@ describe('SearchGridCell', () => {
     const wrapper = render(MasonrySearchGridCell, { propsData: props });
     expect(wrapper.vm.getImageForeignUrl(props.image)).toBe('https://foreign_foo.bar');
   });
+
+  it('links to the details page', () => {
+    const routerMock = {
+      push: jest.fn(),
+      params: {
+        location: window.scrollY,
+      },
+    };
+    const wrapper = render(MasonrySearchGridCell, {
+      propsData: props,
+      mocks: { $router: routerMock },
+    });
+    const link = wrapper.find('.search-grid_image-ctr');
+    link.trigger('click');
+    expect(routerMock.push).toHaveBeenCalledWith({
+      name: 'photo-detail-page',
+      params: { id: 0, location: routerMock.params.location },
+    });
+  });
 });
