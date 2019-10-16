@@ -42,7 +42,7 @@ def _execute_indexing_task(target_index, start_id, end_id):
 
 def _self_destruct():
     """
-    Stop (not terminate) this instance once the task is finished.
+    Stop this instance once the task is finished.
     """
     pass
 
