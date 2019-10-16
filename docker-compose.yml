@@ -107,6 +107,34 @@ services:
     stdin_open: true
     tty: true
 
+  indexer-worker:
+    build:
+      context: ./ingestion_server/
+      dockerfile: Dockerfile-worker
+    ports: 
+      - "8002:8002"
+    depends_on:
+      - db
+      - es
+    volumes:
+      - ./ingestion_server:/ingestion-server
+    environment:
+      PYTHONUNBUFFERED: "0"
+      ELASTICSEARCH_URL: 'es'
+      ELASTICSEARCH_PORT: "9200"
+      DATABASE_HOST: 'db'
+      DATABASE_USER: 'deploy'
+      DATABASE_PASSWORD: 'deploy'
+      DATABASE_NAME: 'openledger'
+      DATABASE_PORT: '5432'
+      UPSTREAM_DB_HOST: 'upstream_db'
+      UPSTREAM_DB_PORT: 5432
+      DB_BUFFER_SIZE: '100000'
+      COPY_TABLES: 'image'
+      SYNCER_POLL_INTERVAL: '60'
+    stdin_open: true
+    tty: true
+
   analytics:
     build: ./analytics/
     image: analytics
