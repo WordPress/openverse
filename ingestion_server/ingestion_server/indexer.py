@@ -20,7 +20,7 @@ from ingestion_server.elasticsearch_models import \
     database_table_to_elasticsearch_model
 from ingestion_server.es_mapping import create_mapping
 from ingestion_server.distributed_reindex_scheduler import \
-    schedule_distributed_crawl
+    schedule_distributed_index
 
 """
 A utility for indexing data to Elasticsearch. For each table to
@@ -373,7 +373,7 @@ class TableIndexer:
         suffix = uuid.uuid4().hex
         destination_index = model_name + '-' + suffix
         if distributed:
-            schedule_distributed_crawl()
+            schedule_distributed_index(database_connect())
         else:
             self._index_table(model_name, dest_idx=destination_index)
             self._go_live(destination_index, model_name)
