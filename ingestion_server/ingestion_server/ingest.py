@@ -246,6 +246,7 @@ def reload_upstream(table, progress=None, finish_time=None):
     copy_data = '''
         DROP TABLE IF EXISTS temp_import_{table};
         CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
+        CREATE TEMP SEQUENCE IF NOT EXISTS image_id_seq;
         INSERT INTO temp_import_{table} ({cols})
         SELECT {insert_cols} from upstream_schema.{table};
         ALTER TABLE temp_import_{table} ADD PRIMARY KEY (id);

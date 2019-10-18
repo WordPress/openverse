@@ -9,12 +9,14 @@ and self destruct.
 """
 import math
 import requests
+import pprint
+import logging as log
 from boto3 import ec2
 
 
 def schedule_distributed_index(db_conn):
     _start_workers()
-    _assign_work(db_conn)
+    _assign_work(db_conn, ['foo'])
 
 
 def _assign_work(db_conn, workers):
@@ -26,8 +28,15 @@ def _assign_work(db_conn, workers):
         estimated_records = cur.fetchone()[0]
     records_per_worker = math.floor(estimated_records / len(workers))
 
-    for worker in workers:
-        print(worker)
+    for idx, worker in enumerate(workers):
+        worker_url = 'http://indexer-worker:8002/indexing_task'
+        params = {
+            'start_id': idx * records_per_worker,
+            'end_id': (1 + idx) * records_per_worker,
+            'target_index': 'distributed-indexing-test'
+        }
+        log.info(pprint.pprint(params))
+        requests.post(worker_url, json=params)
 
 
 def _start_workers():

@@ -63,5 +63,5 @@ formatter = log.Formatter(
 handler.setFormatter(formatter)
 root.addHandler(handler)
 api = falcon.API()
-api.add_route('/indexing_job', IndexingJobResource())
+api.add_route('/indexing_task', IndexingJobResource())
 api.add_route('/healthcheck', HealthcheckResource())
