@@ -94,4 +94,4 @@ python3 test/integration_tests.py
 The API infrastructure is orchestrated using Terraform hosted in creativecommons/ccsearch-infrastructure. More details can be found on the [this wiki page](https://wikijs.creativecommons.org/tech/cc-search/operations).
 
 ## Contributing
-Pull requests are welcome! Feel free to [join us on Slack](https://slack-signup.creativecommons.org/) and discuss the project with the engineers on #cc-developers. You are welcome to take any open issue in the tracker (particularly those labeled 'help wanted'); there's no need to ask for permission in advance.
+Pull requests are welcome! Feel free to [join us on Slack](https://slack-signup.creativecommons.org/) and discuss the project with the engineers on #cc-developers. You are welcome to take any open issue in the tracker (particularly those labeled 'help wanted' or 'good first issue'); there's no need to ask for permission in advance.
