@@ -5,9 +5,19 @@ data has been indexed, notify Ingestion Server and stop the instance.
 import falcon
 import sys
 import logging as log
+import os
+import boto3
 from multiprocessing import Value
 from psycopg2.sql import SQL
 from ingestion_server.indexer import elasticsearch_connect, TableIndexer
+
+
+client = boto3.client(
+        'ec2',
+        region_name=os.getenv('AWS_REGION', 'us-east-1'),
+        aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID', None),
+        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY', None)
+    )
 
 
 class IndexingJobResource:

@@ -82,7 +82,7 @@ def _prepare_workers():
     return servers
 
 
-def _wait_for_healthcheck(endpoint, attempts=30, wait=5):
+def _wait_for_healthcheck(endpoint, attempts=20, wait=5):
     """
     Wait for the instance at `endpoint` to become healthy before assigning work.
 
@@ -93,14 +93,18 @@ def _wait_for_healthcheck(endpoint, attempts=30, wait=5):
     """
     num_attempts = 0
     healthcheck_passed = False
-    while not healthcheck_passed or num_attempts < attempts:
+    while not healthcheck_passed and num_attempts < attempts:
         try:
-            requests.get(endpoint)
+            log.info(f'Checking {endpoint}. . .')
+            response = requests.get(endpoint, timeout=3)
+            if response.status_code == 200:
+                healthcheck_passed = True
+                break
         except requests.exceptions.RequestException:
             pass
         time.sleep(wait)
-        attempts += 1
-    if num_attempts >= attempts:
-        log.error('Timed out waiting for indexer workers to start.')
+        num_attempts += 1
+    if num_attempts >= attempts or not healthcheck_passed:
+        log.error(f'Timed out waiting for {endpoint}.')
     else:
         log.info(f'{endpoint} passed healthcheck')
