@@ -13,6 +13,7 @@ import logging as log
 import os
 import time
 import boto3
+from ingestion_server.state import register_indexing_job
 
 
 client = boto3.client(
@@ -23,12 +24,14 @@ client = boto3.client(
     )
 
 
-def schedule_distributed_index(db_conn):
+def schedule_distributed_index(db_conn, target_index):
     workers = _prepare_workers()
-    _assign_work(db_conn, workers)
+    registered = register_indexing_job(workers, target_index)
+    if registered:
+        _assign_work(db_conn, workers, target_index)
 
 
-def _assign_work(db_conn, workers):
+def _assign_work(db_conn, workers, target_index):
     est_records_query = "SELECT n_live_tup" \
                         "  FROM pg_stat_all_tables" \
                         "  WHERE relname='image';"
@@ -43,7 +46,7 @@ def _assign_work(db_conn, workers):
         params = {
             'start_id': idx * records_per_worker,
             'end_id': (1 + idx) * records_per_worker,
-            'target_index': 'distributed-indexing-test'
+            'target_index': target_index
         }
         requests.post(worker_url + '/indexing_task', json=params)
 
@@ -73,7 +76,7 @@ def _prepare_workers():
     ids = []
     for reservation in response['Reservations']:
         instance = reservation['Instances'][0]
-        server = instance['PrivateDnsName']
+        server = instance['PrivateIPAddress']
         _id = instance['InstanceId']
         servers.append(server)
         ids.append(_id)

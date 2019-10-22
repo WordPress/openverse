@@ -7,10 +7,12 @@ import time
 from urllib.parse import urlparse
 from multiprocessing import Value
 from ingestion_server.tasks import TaskTracker, Task, TaskTypes
+from ingestion_server.state import worker_finished, clear_state
+import ingestion_server.indexer as indexer
 
 """
-A small API server for scheduling ingestion of upstream data and Elasticsearch 
-indexing tasks.
+A small RPC API server for scheduling ingestion of upstream data and
+Elasticsearch indexing tasks.
 """
 
 
@@ -129,6 +131,25 @@ class TaskStatus:
         }
 
 
+class WorkerFinishedResource:
+    """
+    For notifying ingestion server that an indexing worker has finished its
+    task.
+    """
+    def on_post(self, req, resp):
+        target_index = worker_finished(str(req.remote_addr))
+        if target_index:
+            indexer.TableIndexer.go_live(target_index, 'image')
+
+
+class StateResource:
+    def on_delete(self, req, resp):
+        """
+        Forget about the last scheduled indexing job.
+        """
+        clear_state()
+
+
 def create_api(log=True):
     """ Create an instance of the Falcon API server. """
     if log:
@@ -148,6 +169,9 @@ def create_api(log=True):
     get_task_status = TaskStatus(task_tracker)
     _api.add_route('/task', task_resource)
     _api.add_route('/task/{task_id}', get_task_status)
+    _api.add_route('/worker_finished', WorkerFinishedResource())
+    _api.add_route('/state', StateResource())
+
     return _api
 
 
