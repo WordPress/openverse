@@ -60,6 +60,7 @@ def worker_finished(worker_ip):
     """
     with FileLock('lock'), shelve.open('db', writeback=True) as db:
         try:
+            _ = db['worker_statuses'][worker_ip]
             db['worker_statuses'][worker_ip] = WorkerStatus.FINISHED
         except KeyError:
             log.error(
@@ -68,6 +69,7 @@ def worker_finished(worker_ip):
             )
         for worker_key in db['worker_statuses']:
             if db['worker_statuses'][worker_key] == WorkerStatus.RUNNING:
+                log.info(f'{worker_key} is still indexing')
                 return False
         return db['target_index']
 
@@ -78,5 +80,6 @@ def clear_state():
     """
     with FileLock('lock'), shelve.open('db', writeback=True) as db:
         for key in db:
+            log.info('Deleting ' + str(db[key]))
             del db[key]
     log.info('Cleared indexing state.')

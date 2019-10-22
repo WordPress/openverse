@@ -27,7 +27,7 @@ class IndexingJobResource:
         start_id = j['start_id']
         end_id = j['end_id']
         target_index = j['target_index']
-        notify_url = f'http://{req.remote_addr}/worker_finished'
+        notify_url = f'http://{req.remote_addr}:8001/worker_finished'
         _execute_indexing_task(target_index, start_id, end_id, notify_url)
         resp.status = falcon.HTTP_201
 

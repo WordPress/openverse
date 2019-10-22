@@ -13,6 +13,7 @@ import logging as log
 import os
 import time
 import boto3
+import socket
 from ingestion_server.state import register_indexing_job
 
 
@@ -60,7 +61,7 @@ def _prepare_workers():
     """
     environment = os.getenv('ENVIRONMENT', 'local')
     if environment == 'local':
-        return ['indexer-worker']
+        return [socket.gethostbyname('indexer-worker')]
     instance_filters = [
         {
             'Name': 'tag:Name',
