@@ -1,6 +1,16 @@
 <template>
   <div>
-    <a :href="sourceURL">Verify at the source: {{ source }}</a>
+    <div v-if="sourceURL && sourceProviderCode" class="verify-source">
+      <span>Verify at the source:</span>
+      <div>
+        <a :href="sourceURL">
+          <img class="provider-logo"
+              :src="getProviderLogo(sourceProviderCode)" />
+          <span>{{source}}</span>
+        </a>
+      </div>
+    </div>
+
     <p class="legal-disclaimer">
       CC Search aggregates data from publicly available repositories of open content.
       CC does not host the content and does not verify that the content is properly CC-licensed
@@ -12,16 +22,37 @@
 
 <script>
 import Tooltip from '@/components/Tooltip';
+import getProviderLogo from '@/utils/getProviderLogo';
 
 export default {
   name: 'legal-disclaimer',
-  props: ['source', 'sourceURL'],
+  props: ['source', 'sourceProviderCode', 'sourceURL'],
   components: {
     Tooltip,
+  },
+  methods: {
+    getProviderLogo(providerName) {
+      return getProviderLogo(providerName);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
+
+  .verify-source {
+    font-weight: 600;
+    font-size: 1.1em;
+
+    a {
+      max-width: fit-content;
+      display: flex;
+      align-items: center;
+    }
+
+    img {
+      margin-right: 10px;
+    }
+  }
 </style>
