@@ -7,7 +7,8 @@ import sys
 import logging as log
 import os
 import boto3
-from multiprocessing import Value
+import requests
+from multiprocessing import Value, Process
 from psycopg2.sql import SQL
 from ingestion_server.indexer import elasticsearch_connect, TableIndexer
 
@@ -26,10 +27,8 @@ class IndexingJobResource:
         start_id = j['start_id']
         end_id = j['end_id']
         target_index = j['target_index']
-        try:
-            _execute_indexing_task(target_index, start_id, end_id)
-        finally:
-            _self_destruct()
+        notify_url = f'http://{req.remote_addr}/worker_finished'
+        _execute_indexing_task(target_index, start_id, end_id, notify_url)
         resp.status = falcon.HTTP_201
 
 
@@ -38,7 +37,7 @@ class HealthcheckResource:
         resp.status = falcon.HTTP_200
 
 
-def _execute_indexing_task(target_index, start_id, end_id):
+def _execute_indexing_task(target_index, start_id, end_id, notify_url):
     table = 'image'
     elasticsearch = elasticsearch_connect()
     progress = Value('d', 0.0)
@@ -50,9 +49,21 @@ def _execute_indexing_task(target_index, start_id, end_id):
     indexer = TableIndexer(
         elasticsearch, table, progress, finish_time
     )
-    log.info('Starting indexing task')
-    indexer.replicate(table, target_index, query)
-    log.info('Finished replication')
+    p = Process(
+        target=_launch_reindex,
+        args=(table, target_index, query, indexer, notify_url)
+    )
+    p.start()
+    log.info('Started indexing task')
+
+
+def _launch_reindex(table, target_index, query, indexer, notify_url):
+    try:
+        indexer.replicate(table, target_index, query)
+    finally:
+        log.info(f'Notifying {notify_url}')
+        requests.post(notify_url)
+        _self_destruct()
 
 
 def _self_destruct():

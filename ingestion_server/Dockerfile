@@ -17,6 +17,7 @@ RUN pip install --upgrade pip \
 # Copy all files into the container
 COPY . /ingestion_server/
 WORKDIR /ingestion_server
+RUN chown -R supervisord:supervisord /ingestion_server
 ENV PYTHONPATH=$PYTHONPATH:/ingestion_server/
 
 # Install the dependencies system-wide

@@ -56,7 +56,7 @@ def worker_finished(worker_ip):
     The scheduler received a notification indicating an indexing worker has
     finished its task.
     :param worker_ip: The private IP of the worker.
-    :return: True if all workers have finished indexing else False
+    :return: The target index if all workers are finished, else False.
     """
     with FileLock('lock'), shelve.open('db', writeback=True) as db:
         try:
