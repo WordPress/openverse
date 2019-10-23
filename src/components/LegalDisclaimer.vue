@@ -3,7 +3,9 @@
     <div v-if="sourceURL && sourceProviderCode" class="verify-source">
       <span>Verify at the source:</span>
       <div>
-        <a :href="sourceURL">
+        <a :href="sourceURL"
+            target="blank"
+            rel="noopener noreferrer">
           <img class="provider-logo"
               :src="getProviderLogo(sourceProviderCode)" />
           <span>{{source}}</span>
