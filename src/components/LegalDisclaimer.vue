@@ -2,7 +2,7 @@
   <div>
     <div v-if="sourceURL" class="verify-source">
       <span>Verify at the source:</span>
-      <div>
+      <div class="provider-container">
         <a :href="sourceURL"
             target="blank"
             rel="noopener noreferrer">
@@ -43,4 +43,9 @@ export default {
 
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
+
+  .verify-source {
+    font-weight: 600;
+    font-size: 1.1em;
+  }
 </style>
