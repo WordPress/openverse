@@ -39,7 +39,7 @@ describe('Image Info', () => {
     const wrapper = render(ImageInfo, options);
     expect(wrapper.html()).toContain(props.image.title);
     expect(wrapper.find('.photo_license').text()).toBe(props.fullLicenseName);
-    expect(wrapper.find('.photo_provider').text()).toBe(props.image.provider);
+    expect(wrapper.find('.provider-container').text()).toBe(props.image.provider);
   });
 
   it('should contain display not available if there is no image creator', () => {
