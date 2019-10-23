@@ -2,7 +2,6 @@ import os
 import psycopg2
 import datetime
 import logging as log
-import copy
 
 from ingestion_server.cleanup import clean_image_data
 from ingestion_server.indexer import database_connect
@@ -217,7 +216,7 @@ def reload_upstream(table, progress=None, finish_time=None):
     cols = _get_shared_cols(downstream_db, upstream_db, table)
     query_cols = ','.join(cols)
     id_idx = cols.index('id')
-    cols[id_idx] = "nextval('image_id_seq'::regclass)"
+    cols[id_idx] = "nextval('image_id_temp_seq'::regclass)"
     query_cols_nextval = ','.join(cols)
     upstream_db.close()
     # Connect to upstream database and create references to foreign tables.
@@ -246,7 +245,7 @@ def reload_upstream(table, progress=None, finish_time=None):
     copy_data = '''
         DROP TABLE IF EXISTS temp_import_{table};
         CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
-        CREATE TEMP SEQUENCE IF NOT EXISTS image_id_seq;
+        CREATE TEMP SEQUENCE IF NOT EXISTS image_id_temp_seq;
         INSERT INTO temp_import_{table} ({cols})
         SELECT {insert_cols} from upstream_schema.{table};
         ALTER TABLE temp_import_{table} ADD PRIMARY KEY (id);

@@ -41,9 +41,12 @@ def _assign_work(db_conn, workers, target_index):
         estimated_records = cur.fetchone()[0]
     records_per_worker = math.floor(estimated_records / len(workers))
 
+    worker_url_template = 'http://{}:8002'
     for idx, worker in enumerate(workers):
-        worker_url = f'http://{worker}:8002'
+        worker_url = worker_url_template.format(worker)
         _wait_for_healthcheck(worker_url + '/healthcheck')
+    for idx, worker in enumerate(workers):
+        worker_url = worker_url_template.format(worker)
         params = {
             'start_id': idx * records_per_worker,
             'end_id': (1 + idx) * records_per_worker,
@@ -77,7 +80,7 @@ def _prepare_workers():
     ids = []
     for reservation in response['Reservations']:
         instance = reservation['Instances'][0]
-        server = instance['PrivateIPAddress']
+        server = instance['PrivateIpAddress']
         _id = instance['InstanceId']
         servers.append(server)
         ids.append(_id)

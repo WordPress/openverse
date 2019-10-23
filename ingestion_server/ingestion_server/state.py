@@ -62,6 +62,7 @@ def worker_finished(worker_ip):
         try:
             _ = db['worker_statuses'][worker_ip]
             db['worker_statuses'][worker_ip] = WorkerStatus.FINISHED
+            log.info(f'Received worker_finished signal from {worker_ip}')
         except KeyError:
             log.error(
                 'An indexer worker notified us it finished its task, but '
