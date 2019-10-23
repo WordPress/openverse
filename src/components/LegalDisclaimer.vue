@@ -1,12 +1,13 @@
 <template>
   <div>
-    <div v-if="sourceURL && sourceProviderCode" class="verify-source">
+    <div v-if="sourceURL" class="verify-source">
       <span>Verify at the source:</span>
       <div>
         <a :href="sourceURL"
             target="blank"
             rel="noopener noreferrer">
           <img class="provider-logo"
+              :alt="source"
               :src="getProviderLogo(sourceProviderCode)" />
           <span>{{source}}</span>
         </a>
