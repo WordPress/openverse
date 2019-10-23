@@ -27,7 +27,6 @@ const LicenseIcons = {
       if (license) {
         licenses = license.split('-');
       }
-      console.log('license 00', licenses);
       return licenses;
     },
     getLicenseURL(image) {
