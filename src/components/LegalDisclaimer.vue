@@ -40,19 +40,4 @@ export default {
 
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
-
-  .verify-source {
-    font-weight: 600;
-    font-size: 1.1em;
-
-    a {
-      max-width: fit-content;
-      display: flex;
-      align-items: center;
-    }
-
-    img {
-      margin-right: 10px;
-    }
-  }
 </style>
