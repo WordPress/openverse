@@ -4,7 +4,7 @@
       <div class="grid-x grid-margin-x grid-margin-y">
         <div class="medium-4 cell">
           <a href="https://creativecommons.org/">
-            <img class="footer_logo" src="../assets/cc-logo_white.png">
+            <img class="footer_logo" alt="Footer Logo" src="../assets/cc-logo_white.png">
           </a>
           <div class="cc-footer-links">
             <div class="menu-footer-links-container">

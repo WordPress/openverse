@@ -45,11 +45,13 @@
                     <img v-if="!isFilterApplied"
                          width="24"
                          height="24"
+                         alt="No filter"
                          src="../assets/filter_icon_new.svg" />
 
                     <img v-else
                          width="24"
                          height="24"
+                         alt="Filter applied"
                          src="../assets/filter_icon_new_applied.svg" />
                 </i>
                 <span class="menu-button_text">Filter</span>
