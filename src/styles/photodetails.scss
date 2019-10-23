@@ -12,10 +12,6 @@
   width: 100%;
 }
 
-.photo_provider {
-  text-transform: capitalize;
-}
-
 .photo {
   width: 100%;
   border-bottom: 1px solid #616161;
@@ -244,6 +240,7 @@ label {
 .provider-container {
   font-weight: 600;
   font-size: 1.1em;
+  text-transform: capitalize;
 
   a {
     max-width: fit-content;
