@@ -2,7 +2,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import serializers
+from rest_framework import serializers, status
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils import ccrel
@@ -270,6 +270,14 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             resp.data[search_controller.URL] = secure
 
         return resp
+
+    @swagger_auto_schema(operation_id="image_delete")
+    def delete(self, request, identifier, format=None):
+        image = Image.objects.get(identifier=identifier)
+        image.delete()
+        content = {'status': 'NO CONTENT'}
+
+        return Response(content, status=status.HTTP_204_NO_CONTENT)
 
 
 def _save_wrapper(pil_img, exif_bytes, destination):
