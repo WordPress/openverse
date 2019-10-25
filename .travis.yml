@@ -29,4 +29,5 @@ script:
   - pycodestyle ingestion_server/*.py --max-line-length=80 --ignore=E402
   - cd cccatalog-api && test/run_test.sh
   - cd ../ingestion_server && python3 test/integration_tests.py
-  - cd ../analytics && API_URL='analytics:8090' pytest tests.py --disable-pytest-warnings && docker-compose logs analytics
+  - cd ../ && docker-compose logs analytics
+  - cd ./analytics && API_URL='analytics:8090' pytest tests.py --disable-pytest-warnings
