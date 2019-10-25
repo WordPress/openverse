@@ -31,3 +31,4 @@ script:
   - cd ../ingestion_server && python3 test/integration_tests.py
   - cd ../ && docker-compose logs analytics
   - cd ./analytics && API_URL='analytics:8090' pytest tests.py --disable-pytest-warnings
+  - cd ../ && docker-compose logs analytics
