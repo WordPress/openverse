@@ -284,7 +284,7 @@ def clean_image_data(table, upstream_db):
         num_cleaned = 0
         while batch:
             # Divide updates into jobs for parallel execution.
-            start = time.time()
+            start_time = time.time()
             temp_table = 'temp_import_{}'.format(table)
             job_size = int(len(batch) / num_workers)
             last_end = -1
@@ -304,8 +304,8 @@ def clean_image_data(table, upstream_db):
             pool.starmap(_clean_data_worker, jobs)
             pool.close()
             num_cleaned += len(batch)
-            end = time.time()
-            rate = len(batch) / (end - start)
+            end_time = time.time()
+            rate = len(batch) / (end_time - start_time)
             log.info('Batch finished, records/s: cleanup_rate={}'.format(rate))
             log.info(
                 'Fetching next batch. Num records cleaned so far: {}'
