@@ -138,6 +138,7 @@ services:
   analytics:
     build: ./analytics/
     image: analytics
+    container_name: cccatalog-api_analytics_1
     ports:
       - "8090:8090"
     environment:

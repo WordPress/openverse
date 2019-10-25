@@ -1,7 +1,7 @@
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch.exceptions import AuthenticationException, \
-    AuthorizationException, NotFoundError
+    AuthorizationException, NotFoundError, RequestError
 from elasticsearch_dsl import Q, Search, connections
 from elasticsearch_dsl.response import Response, Hit
 from cccatalog import settings
@@ -24,6 +24,9 @@ THUMBNAIL = 'thumbnail'
 URL = 'url'
 THUMBNAIL_WIDTH_PX = 600
 PROVIDER = 'provider'
+
+DEEP_PAGINATION_ERROR = 'Deep pagination is not allowed.'
+QUERY_SPECIAL_CHARACTER_ERROR = 'Unescaped special characters are not allowed.'
 
 
 def _paginate_with_dead_link_mask(s: Search, page_size: int,
@@ -73,7 +76,7 @@ def _get_query_slice(s: Search, page_size: int, page: int,
         start_slice = page_size * (page - 1)
         end_slice = page_size * page
     if start_slice + end_slice > ELASTICSEARCH_MAX_RESULT_WINDOW:
-        raise ValueError("Deep pagination is not allowed.")
+        raise ValueError(DEEP_PAGINATION_ERROR)
     return start_slice, end_slice
 
 
@@ -205,9 +208,12 @@ def search(search_params, index, page_size, ip, request,
             provider_filters.append(Q('term', provider=provider))
         s = s.filter('bool', should=provider_filters, minimum_should_match=1)
     if 'extension' in search_params.data:
-        extension = search_params.data['extension']
-        extension_filter = Q('term', extension=extension)
-        s = s.filter('bool', should=extension_filter, minimum_should_match=1)
+        extensions = search_params.data['extension'].split(',')
+        extension_filters = []
+        for extension in extensions:
+            extension_filter = Q('term', extension=extension)
+            extension_filters.append(extension_filter)
+        s = s.filter('bool', should=extension_filters, minimum_should_match=1)
 
     # It is sometimes desirable to hide content providers from the catalog
     # without scrubbing them from the database or reindexing.
@@ -266,7 +272,10 @@ def search(search_params, index, page_size, ip, request,
     # Paginate
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
-    search_response = s.execute()
+    try:
+        search_response = s.execute()
+    except RequestError:
+        raise ValueError(QUERY_SPECIAL_CHARACTER_ERROR)
     results = _post_process_results(
         s,
         start,
