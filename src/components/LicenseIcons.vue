@@ -6,7 +6,7 @@
      rel="noopener noreferrer">
     <img class="photo-license-icon" alt="cc-icon" src="@/assets/cc_icon.svg"><img
           v-for="(license, index) in onGetLicenseIcon(image.license)"
-          v-if="license" class="photo-license-icon" 
+          v-if="license" class="photo-license-icon"
           :alt="`${license} license icon`"
           :src="require(`@/assets/cc-${license.toLowerCase()}_icon.svg`)"
           :key="index">
