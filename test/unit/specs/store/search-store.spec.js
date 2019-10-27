@@ -30,6 +30,7 @@ describe('Search Store', () => {
       expect(state.query.q).toBe('');
       expect(state.relatedImages).toHaveLength(0);
       expect(state.relatedImagesCount).toBe(0);
+      expect(state.errorMsg).toBe(null);
     });
 
     it('gets query from search params', () => {
@@ -99,10 +100,11 @@ describe('Search Store', () => {
     });
 
     it('FETCH_IMAGES_ERROR updates state', () => {
-      mutations[FETCH_IMAGES_ERROR](state);
+      mutations[FETCH_IMAGES_ERROR](state, { errorMsg: 'error' });
 
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
+      expect(state.errorMsg).toBe('error');
     });
 
     it('SET_IMAGE updates state', () => {
@@ -372,7 +374,7 @@ describe('Search Store', () => {
       const action = store.actions(failedMock)[FETCH_IMAGES];
       action({ commit, dispatch, state }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
-        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
+        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR, { errorMsg: undefined });
         done();
       });
     });
@@ -386,7 +388,7 @@ describe('Search Store', () => {
       const action = store.actions(failedMock)[FETCH_COLLECTION_IMAGES];
       action({ commit }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
-        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
+        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR, { errorMessage: undefined });
         done();
       });
     });
@@ -443,8 +445,7 @@ describe('Search Store', () => {
       const action = store.actions(failedMock)[FETCH_IMAGE];
       action({ commit, dispatch, state }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
-        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
-
+        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR, { errorMessage: undefined });
         done();
       });
     });
@@ -488,7 +489,7 @@ describe('Search Store', () => {
       const action = store.actions(failedMock)[FETCH_RELATED_IMAGES];
       action({ commit }, params).catch(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
-        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
+        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR, { errorMessage: undefined });
 
         done();
       });

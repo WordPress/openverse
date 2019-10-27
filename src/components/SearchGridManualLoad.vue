@@ -28,7 +28,7 @@
         <loading-icon v-show="isFetchingImages" />
       </div>
       <div class="search-grid_notification callout alert" v-if="isFetchingImagesError">
-        <h5>Error fetching images</h5>
+        <h5>Error fetching images: {{_errorMessage }}</h5>
       </div>
     </div>
   </section>
@@ -96,6 +96,9 @@ export default {
     },
     _query() {
       return this.$props.query;
+    },
+    _errorMessage() {
+      return this.$store.state.errorMsg;
     },
   },
   watch: {

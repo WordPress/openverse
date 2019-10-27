@@ -35,6 +35,7 @@ const initialState = (searchParams) => {
     searchBy: getParameterByName('searchBy', searchParams),
   };
   return {
+    errorMsg: null,
     image: {},
     imagesCount: 0,
     imagePage: 1,
@@ -107,7 +108,19 @@ const actions = ImageService => ({
         );
       })
       .catch((error) => {
-        commit(FETCH_IMAGES_ERROR);
+        if (error.response) {
+          if (error.response.status === 500) {
+            commit(FETCH_IMAGES_ERROR, { errorMsg: 'There was a problem with our servers' });
+          }
+          else if (error.response.status === 404) {
+            commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this image' });
+          }
+          else {
+            commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message });
+          }
+          return;
+        }
+        commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
         throw new Error(error);
       });
   },
@@ -131,7 +144,19 @@ const actions = ImageService => ({
           commit(IMAGE_NOT_FOUND);
         }
         else {
-          commit(FETCH_IMAGES_ERROR);
+          if (error.response) {
+            if (error.response.status === 500) {
+              commit(FETCH_IMAGES_ERROR, { errorMsg: 'There was a problem with our servers' });
+            }
+            else if (error.response.status === 404) {
+              commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this image' });
+            }
+            else {
+              commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message });
+            }
+            return;
+          }
+          commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
           throw new Error(error);
         }
       });
@@ -148,7 +173,19 @@ const actions = ImageService => ({
         );
       })
       .catch((error) => {
-        commit(FETCH_IMAGES_ERROR);
+        if (error.response) {
+          if (error.response.status === 500) {
+            commit(FETCH_IMAGES_ERROR, { errorMsg: 'There was a problem with our servers' });
+          }
+          else if (error.response.status === 404) {
+            commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this image' });
+          }
+          else {
+            commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message });
+          }
+          return;
+        }
+        commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
         throw new Error(error);
       });
   },
@@ -166,7 +203,19 @@ const actions = ImageService => ({
         );
       })
       .catch((error) => {
-        commit(FETCH_IMAGES_ERROR);
+        if (error.response) {
+          if (error.response.status === 500) {
+            commit(FETCH_IMAGES_ERROR, { errorMsg: 'There was a problem with our servers' });
+          }
+          else if (error.response.status === 404) {
+            commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this image' });
+          }
+          else {
+            commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message });
+          }
+          return;
+        }
+        commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
         throw new Error(error);
       });
   },
@@ -194,9 +243,10 @@ const mutations = redirect => ({
   [FETCH_END_IMAGES](_state) {
     _state.isFetchingImages = false;
   },
-  [FETCH_IMAGES_ERROR](_state) {
+  [FETCH_IMAGES_ERROR](_state, params) {
     _state.isFetchingImagesError = true;
     _state.isFetchingImages = false;
+    _state.errorMsg = params.errorMsg;
   },
   [SET_IMAGE](_state, params) {
     _state.image = decodeImageData(params.image);
