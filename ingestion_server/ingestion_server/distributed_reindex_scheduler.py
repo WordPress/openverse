@@ -33,9 +33,7 @@ def schedule_distributed_index(db_conn, target_index):
 
 
 def _assign_work(db_conn, workers, target_index):
-    est_records_query = "SELECT n_live_tup" \
-                        "  FROM pg_stat_all_tables" \
-                        "  WHERE relname='image';"
+    est_records_query = 'SELECT id FROM image ORDER BY id desc limit 1'
     with db_conn.cursor() as cur:
         cur.execute(est_records_query)
         estimated_records = cur.fetchone()[0]
