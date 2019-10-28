@@ -1,6 +1,6 @@
 <template>
   <div class="hero">
-    <img class="logo" src="../assets/cc-logo_large_black.png">
+    <img class="logo" alt="Logo" src="../assets/cc-logo_large_black.png">
     <form class="hero_search-form"
           role="search"
           method="post"

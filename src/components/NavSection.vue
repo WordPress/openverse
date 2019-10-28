@@ -1,7 +1,7 @@
 <template>
   <nav class="header nav">
     <a class="logo" href="/">
-      <img src="../assets/cc-search-logo-white.png">
+      <img alt="Logo" src="../assets/cc-search-logo-white.png">
     </a>
     <input class="menu-btn" type="checkbox" id="menu-btn" />
     <label class="menu_icon" for="menu-btn"><span class="navicon"></span></label>
