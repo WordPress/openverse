@@ -324,6 +324,7 @@ class TableIndexer:
                   'taking corrective action. The production index has NOT ' \
                   'been impacted. '.format(write_index, live_alias, write_index)
             log.error(msg)
+            return
         indices = set(es.indices.get('*'))
         # If the index exists already and it's not an alias, delete it.
         if live_alias in indices:
