@@ -1,4 +1,7 @@
 """
+A single worker responsible for indexing a subset of the records stored in the
+database.
+
 Accept an HTTP request specifying a range of image IDs to reindex. After the
 data has been indexed, notify Ingestion Server and stop the instance.
 """
@@ -13,7 +16,7 @@ from psycopg2.sql import SQL
 from ingestion_server.indexer import elasticsearch_connect, TableIndexer
 
 
-client = boto3.client(
+ec2_client = boto3.client(
         'ec2',
         region_name=os.getenv('AWS_REGION', 'us-east-1'),
         aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID', None),
@@ -68,10 +71,19 @@ def _launch_reindex(table, target_index, query, indexer, notify_url):
 
 def _self_destruct():
     """
-    Stop this instance once the task is finished.
+    Stop this EC2 instance once the task is finished.
     """
+    # Get instance ID from AWS metadata service
+    if os.getenv('ENVIRONMENT', 'local') == 'local':
+        log.info(
+            'Skipping self destruction because worker is in local environment'
+        )
+        return
+    endpoint = 'http://169.254.169.254/latest/meta-data/instance-id'
+    response = requests.get(endpoint)
+    instance_id = response.content.decode('utf8')
     log.info('Shutting self down')
-    pass
+    ec2_client.stop_instances(InstanceIds=[instance_id])
 
 
 root = log.getLogger()

@@ -10,7 +10,7 @@ workers have finished their tasks. To that end, we need to track the state of
 each worker, and be notified when the job has finished.
 
 State is persisted to the disk using shelve. Concurrent writes aren't allowed,
-so all operations need a lock.
+so all operations need to acquire a lock.
 """
 
 

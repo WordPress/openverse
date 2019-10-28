@@ -6,8 +6,8 @@ import sys
 import logging as log
 import time
 import argparse
+import requests
 import datetime
-
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection, NotFoundError,\
     helpers
@@ -293,21 +293,18 @@ class TableIndexer:
         if not es.indices.exists(index=live_alias):
             return True
         log.info('Refreshing and performing sanity check...')
+        # Make sure there are roughly as many documents in Elasticsearch
+        # as there are in our database.
         es.indices.refresh(index=new_index)
-        _, last_doc_uuid = get_last_item_ids(live_alias)
-        query = {
-            "query": {
-                "constant_score": {
-                    "filter": {
-                        "term": {
-                            "identifier.keyword": str(last_doc_uuid)
-                        }
-                    }
-                }
-            }
-        }
-        last_doc_es = es.search(index=new_index, body=query)
-        return True if last_doc_es['hits']['total'] > 0 else False
+        _id, _ = get_last_item_ids(live_alias)
+        url = f'http://{ELASTICSEARCH_URL}:{ELASTICSEARCH_PORT}' \
+              f'/{new_index}/_count'
+        resp = requests.get(url).json()
+        max_delta = 100
+        new_count = resp['count']
+        delta = abs(_id - new_count)
+        log.info(f'delta, max_delta: {delta}, {max_delta}')
+        return delta < max_delta
 
     @staticmethod
     def go_live(write_index, live_alias):

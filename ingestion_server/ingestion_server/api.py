@@ -139,7 +139,10 @@ class WorkerFinishedResource:
     def on_post(self, req, resp):
         target_index = worker_finished(str(req.remote_addr))
         if target_index:
-            logging.info('All indexer workers finished! Going live. . .')
+            logging.info(
+                'All indexer workers finished! Attempting to promote index '
+                f'{target_index}'
+            )
             indexer.TableIndexer.go_live(target_index, 'image')
 
 
