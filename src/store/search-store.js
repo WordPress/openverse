@@ -8,6 +8,7 @@ import {
   FETCH_IMAGE,
   FETCH_RELATED_IMAGES,
   FETCH_COLLECTION_IMAGES,
+  HANDLE_IMAGE_ERROR,
 } from './action-types';
 import {
   FETCH_END_IMAGES,
@@ -108,20 +109,7 @@ const actions = ImageService => ({
         );
       })
       .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 500) {
-            commit(FETCH_IMAGES_ERROR, { errorMsg: 'There was a problem with our servers' });
-          }
-          else if (error.response.status === 404) {
-            commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this image' });
-          }
-          else {
-            commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message });
-          }
-          return;
-        }
-        commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
-        throw new Error(error);
+        dispatch(HANDLE_IMAGE_ERROR, error);
       });
   },
   [FETCH_IMAGE]({ commit, dispatch, state }, params) {
@@ -144,24 +132,11 @@ const actions = ImageService => ({
           commit(IMAGE_NOT_FOUND);
         }
         else {
-          if (error.response) {
-            if (error.response.status === 500) {
-              commit(FETCH_IMAGES_ERROR, { errorMsg: 'There was a problem with our servers' });
-            }
-            else if (error.response.status === 404) {
-              commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this image' });
-            }
-            else {
-              commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message });
-            }
-            return;
-          }
-          commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
-          throw new Error(error);
+          dispatch(HANDLE_IMAGE_ERROR, error);
         }
       });
   },
-  [FETCH_RELATED_IMAGES]({ commit }, params) {
+  [FETCH_RELATED_IMAGES]({ commit, dispatch }, params) {
     commit(FETCH_START_IMAGES);
     return ImageService.getRelatedImages(params)
       .then(({ data }) => {
@@ -173,23 +148,10 @@ const actions = ImageService => ({
         );
       })
       .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 500) {
-            commit(FETCH_IMAGES_ERROR, { errorMsg: 'There was a problem with our servers' });
-          }
-          else if (error.response.status === 404) {
-            commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this image' });
-          }
-          else {
-            commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message });
-          }
-          return;
-        }
-        commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
-        throw new Error(error);
+        dispatch(HANDLE_IMAGE_ERROR, error);
       });
   },
-  [FETCH_COLLECTION_IMAGES]({ commit }, params) {
+  [FETCH_COLLECTION_IMAGES]({ commit, dispatch }, params) {
     commit(FETCH_START_IMAGES);
     return fetchCollectionImages(commit, params, ImageService)
       .then(({ data }) => {
@@ -203,21 +165,24 @@ const actions = ImageService => ({
         );
       })
       .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 500) {
-            commit(FETCH_IMAGES_ERROR, { errorMsg: 'There was a problem with our servers' });
-          }
-          else if (error.response.status === 404) {
-            commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this image' });
-          }
-          else {
-            commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message });
-          }
-          return;
-        }
-        commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
-        throw new Error(error);
+        dispatch(HANDLE_IMAGE_ERROR, error);
       });
+  },
+  [HANDLE_IMAGE_ERROR]({ commit }, error) {
+    if (error.response) {
+      if (error.response.status === 500) {
+        commit(FETCH_IMAGES_ERROR, { errorMsg: 'There was a problem with our servers' });
+      }
+      else if (error.response.status === 404) {
+        commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this image' });
+      }
+      else {
+        commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message });
+      }
+      return;
+    }
+    commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
+    throw new Error(error);
   },
 });
 
