@@ -173,16 +173,14 @@ const actions = ImageService => ({
       if (error.response.status === 500) {
         commit(FETCH_IMAGES_ERROR, { errorMsg: 'There was a problem with our servers' });
       }
-      else if (error.response.status === 404) {
-        commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this image' });
-      }
       else {
         commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message });
       }
-      return;
     }
-    commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
-    throw new Error(error);
+    else {
+      commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
+      throw new Error(error);
+    }
   },
 });
 
