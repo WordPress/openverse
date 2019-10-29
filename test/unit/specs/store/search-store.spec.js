@@ -310,7 +310,7 @@ describe('Search Store', () => {
     it('FETCH_COLLECTION_IMAGES on success', (done) => {
       const params = { provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(FETCH_END_IMAGES);
 
@@ -329,7 +329,7 @@ describe('Search Store', () => {
     it('FETCH_COLLECTION_IMAGES calls search API if q param exist', (done) => {
       const params = { q: 'nature', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(imageServiceMock.search).toBeCalledWith(params);
 
         done();
@@ -339,7 +339,7 @@ describe('Search Store', () => {
     it('FETCH_COLLECTION_IMAGES calls getProviderCollection API if li param exist', (done) => {
       const params = { li: 'by', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
 
         done();
@@ -349,7 +349,7 @@ describe('Search Store', () => {
     it('FETCH_COLLECTION_IMAGES calls getProviderCollection API if lt param exist', (done) => {
       const params = { lt: 'commercial', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
 
         done();
@@ -359,7 +359,7 @@ describe('Search Store', () => {
     it('FETCH_COLLECTION_IMAGES calls search API if q param exist', (done) => {
       const params = { q: 'nature', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(imageServiceMock.search).toBeCalledWith(params);
 
         done();
@@ -467,7 +467,7 @@ describe('Search Store', () => {
     it('FETCH_RELATED_IMAGES on success', (done) => {
       const params = { id: 'foo' };
       const action = store.actions(imageServiceMock)[FETCH_RELATED_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(FETCH_END_IMAGES);
 
@@ -487,7 +487,7 @@ describe('Search Store', () => {
       };
       const params = { id: 'foo' };
       const action = store.actions(failedMock)[FETCH_RELATED_IMAGES];
-      action({ commit, dispatch }, params).catch((error) => {
+      action({ commit }, params).catch((error) => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(dispatch).toBeCalledWith('HANDLE_IMAGE_ERROR', error);
       });
