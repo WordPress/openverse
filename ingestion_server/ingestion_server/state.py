@@ -24,8 +24,10 @@ def register_indexing_job(worker_ips, target_index):
     Track the hosts that are running indexing jobs. Only one indexing job can
     run at a time.
 
-    :param worker_ips:
-    :param target_index: The
+    :param worker_ips: A list of private IP addresses corresponding to the pool
+    of relevant indexer-worker instances.
+    :param target_index: The name of the Elasticsearch index that will be
+    promoted to production after indexing is complete
     :return: Return True if scheduling succeeds
     """
     with FileLock('lock'), shelve.open('db', writeback=True) as db:

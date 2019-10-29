@@ -6,7 +6,6 @@ import sys
 import logging as log
 import time
 import argparse
-import requests
 import datetime
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection, NotFoundError,\
