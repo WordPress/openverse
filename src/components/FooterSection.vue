@@ -4,7 +4,7 @@
       <div class="grid-x grid-margin-x grid-margin-y">
         <div class="medium-4 cell">
           <a href="https://creativecommons.org/">
-            <img class="footer_logo" src="../assets/cc-logo_white.png">
+            <img class="footer_logo" alt="Footer Logo" src="../assets/cc-logo_white.png">
           </a>
           <div class="cc-footer-links">
             <div class="menu-footer-links-container">
@@ -40,7 +40,8 @@
                by The Noun Project.</p>
             <p class="website-credit">Website by <a class="subfoot"
                href="https://creativecommons.org"
-            target="blank">CC</a>.</p>
+               target="blank">CC</a>.</p>
+            <p>Contribute on <a href="https://github.com/creativecommons/cccatalog-frontend">GitHub</a>.</p>
           </div>
           </aside>
         </div>
