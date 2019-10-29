@@ -24,6 +24,7 @@ import {
   SET_RELATED_IMAGES,
   IMAGE_NOT_FOUND,
   RESET_QUERY,
+  HANDLE_NO_IMAGES,
 } from './mutation-types';
 import { SEND_SEARCH_QUERY_EVENT, SEND_RESULT_CLICKED_EVENT } from './usage-data-analytics-types';
 
@@ -107,6 +108,7 @@ const actions = ImageService => ({
             page: params.page,
           },
         );
+        dispatch(HANDLE_NO_IMAGES, data.results);
       })
       .catch((error) => {
         dispatch(HANDLE_IMAGE_ERROR, error);
@@ -146,6 +148,7 @@ const actions = ImageService => ({
             relatedImagesCount: data.result_count,
           },
         );
+        dispatch(HANDLE_NO_IMAGES, data.results);
       })
       .catch((error) => {
         dispatch(HANDLE_IMAGE_ERROR, error);
@@ -163,6 +166,7 @@ const actions = ImageService => ({
             page: params.page,
           },
         );
+        dispatch(HANDLE_NO_IMAGES, data.results);
       })
       .catch((error) => {
         dispatch(HANDLE_IMAGE_ERROR, error);
@@ -180,6 +184,11 @@ const actions = ImageService => ({
     else {
       commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
       throw new Error(error);
+    }
+  },
+  [HANDLE_NO_IMAGES]({ commit }, data) {
+    if (!data.length) {
+      commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this query' });
     }
   },
 });
