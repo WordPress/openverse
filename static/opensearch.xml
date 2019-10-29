@@ -5,7 +5,7 @@
     <Description>Creative Commons search tool</Description>
     <InputEncoding>UTF-8</InputEncoding>
     <Image height="16" width="16" type="image/x-icon">
-        "https://ccsearch.creativecommons.org/static/img/cc-icon_large.443ce99.png"
+        "https://ccsearch.creativecommons.org/static/img/cc-icon_large.png"
     </Image>
     <Url type="text/html"
         template="https://ccsearch.creativecommons.org/search?q={searchTerms}"/>
