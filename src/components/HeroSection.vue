@@ -11,6 +11,7 @@
                    autofocus="true"
                    class="hero_search-input"
                    type="search"
+                   name="q"
                    placeholder="Search for images..."
                    autocapitalize="none"
                    id="searchTerm"
