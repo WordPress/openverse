@@ -226,6 +226,8 @@ label {
 }
 
 .legal-disclaimer {
+  margin: 0px 20px;
+
   font-size: 0.75rem;
   font-style: italic;
 }
@@ -238,17 +240,17 @@ label {
 }
 
 .provider-container {
-  font-weight: 600;
-  font-size: 1.1em;
-  text-transform: capitalize;
-
-  a {
-    max-width: fit-content;
+  div {
     display: flex;
     align-items: center;
   }
 
+  span {
+    font-weight: 600;
+    font-size: 1.1em;
+  }
+
   img {
-    margin-right: 10px;
+    height: 32px;
   }
 }

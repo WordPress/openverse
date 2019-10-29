@@ -29,14 +29,13 @@
       </li>
       <li>
         <h3>Source</h3>
-        <div class="provider-container">
+        <div>
           <a :href="image.foreign_landing_url"
               target="blank"
               rel="noopener noreferrer">
             <img class="provider-logo"
                 :alt="image.provider"
                 :src="getProviderLogo(image.provider_code)" />
-            <span>{{image.provider}}</span>
           </a>
       </div>
       </li>

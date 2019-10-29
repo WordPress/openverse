@@ -1,25 +1,21 @@
 <template>
-  <div>
-    <div v-if="sourceURL" class="verify-source">
-      <span>Verify at the source:</span>
-      <div class="provider-container">
-        <a :href="sourceURL"
-            target="blank"
-            rel="noopener noreferrer">
-          <img class="provider-logo"
-              :alt="source"
-              :src="getProviderLogo(sourceProviderCode)" />
-          <span>{{source}}</span>
-        </a>
-      </div>
+  <div v-if="sourceURL" class="provider-container">
+    <span>Verify at the source:</span>
+    <div>
+      <a :href="sourceURL"
+          target="blank"
+          rel="noopener noreferrer">
+        <img class="provider-logo"
+            :alt="source"
+            :src="getProviderLogo(sourceProviderCode)" />
+      </a>
+      <p class="legal-disclaimer">
+        CC Search aggregates data from publicly available repositories of open content.<br />
+        CC does not host the content and does not verify that the content is properly CC-licensed
+        or that the attribution information is accurate or complete.<br />
+        Please follow the link to the source of the content to independently verify before reuse.
+      </p>
     </div>
-
-    <p class="legal-disclaimer">
-      CC Search aggregates data from publicly available repositories of open content.
-      CC does not host the content and does not verify that the content is properly CC-licensed
-      or that the attribution information is accurate or complete. Please follow the link to the
-      source of the content to independently verify before reuse.
-    </p>
   </div>
 </template>
 
@@ -43,9 +39,4 @@ export default {
 
 <style lang="scss" scoped>
   @import '../styles/photodetails.scss';
-
-  .verify-source {
-    font-weight: 600;
-    font-size: 1.1em;
-  }
 </style>
