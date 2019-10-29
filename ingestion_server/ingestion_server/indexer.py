@@ -297,11 +297,8 @@ class TableIndexer:
         # as there are in our database.
         es.indices.refresh(index=new_index)
         _id, _ = get_last_item_ids(live_alias)
-        url = f'http://{ELASTICSEARCH_URL}:{ELASTICSEARCH_PORT}' \
-              f'/{new_index}/_count'
-        resp = requests.get(url).json()
+        new_count = Search(using=es, index=new_index).count()
         max_delta = 100
-        new_count = resp['count']
         delta = abs(_id - new_count)
         log.info(f'delta, max_delta: {delta}, {max_delta}')
         return delta < max_delta
