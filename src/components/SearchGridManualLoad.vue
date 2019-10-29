@@ -100,7 +100,7 @@ export default {
       return this.$props.query;
     },
     isFinished() {
-      return this.currentPage * 20 >= this.$store.state.imagesCount;
+      return this.currentPage >= this.$store.state.pageCount;
     },
   },
   watch: {

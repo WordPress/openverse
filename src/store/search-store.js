@@ -37,6 +37,7 @@ const initialState = (searchParams) => {
   return {
     image: {},
     imagesCount: 0,
+    pageCount: 0,
     imagePage: 1,
     images: [],
     isFetchingImages: false,
@@ -101,6 +102,7 @@ const actions = ImageService => ({
         commit(SET_IMAGES,
           { images: data.results,
             imagesCount: data.result_count,
+            pageCount: data.page_count,
             shouldPersistImages: params.shouldPersistImages,
             page: params.page,
           },
@@ -159,6 +161,7 @@ const actions = ImageService => ({
         commit(FETCH_END_IMAGES);
         commit(SET_IMAGES,
           { images: data.results,
+            pageCount: data.page_count,
             imagesCount: data.result_count,
             shouldPersistImages: params.shouldPersistImages,
             page: params.page,
@@ -223,7 +226,7 @@ const mutations = redirect => ({
       images = params.images;
     }
     _state.images = images.map(image => decodeImageData(image));
-
+    _state.pageCount = params.pageCount;
     _state.imagesCount = params.imagesCount || 0;
     _state.imagePage = params.page || 1;
   },
