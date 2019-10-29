@@ -14,7 +14,6 @@ import os
 import time
 import boto3
 import socket
-from elasticsearch_dsl import Search
 from ingestion_server.state import register_indexing_job
 
 
