@@ -309,15 +309,6 @@ class TableIndexer:
         previous one.
         """
         es = elasticsearch_connect()
-        if not TableIndexer.consistency_check(write_index, live_alias):
-            msg = 'Reindexing failed; index {} does not appear to have all ' \
-                  'of the documents from Postgres. An operator should ' \
-                  'investigate why the job failed and either manually alias ' \
-                  '\'{}\' to point to \'{}\' or rerun the reindex job after ' \
-                  'taking corrective action. The production index has NOT ' \
-                  'been impacted. '.format(write_index, live_alias, write_index)
-            log.error(msg)
-            return
         indices = set(es.indices.get('*'))
         # If the index exists already and it's not an alias, delete it.
         if live_alias in indices:
