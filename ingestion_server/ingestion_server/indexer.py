@@ -7,7 +7,6 @@ import logging as log
 import time
 import argparse
 import datetime
-
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection, NotFoundError,\
     helpers
@@ -19,6 +18,8 @@ from ingestion_server.qa import create_search_qa_index
 from ingestion_server.elasticsearch_models import \
     database_table_to_elasticsearch_model
 from ingestion_server.es_mapping import create_mapping
+from ingestion_server.distributed_reindex_scheduler import \
+    schedule_distributed_index
 
 """
 A utility for indexing data to Elasticsearch. For each table to
@@ -202,17 +203,17 @@ class TableIndexer:
             log.info('Replicating range ' + str(last_added_es_id) + '-' +
                      str(last_added_pg_id))
             query = SQL('SELECT * FROM {}'
-                        ' WHERE id BETWEEN {} AND {} ORDER BY id'
+                        ' WHERE id BETWEEN {} AND {}'
                         .format(table, last_added_es_id, last_added_pg_id))
             self.es.indices.create(
                 index=dest_idx,
                 body=create_mapping(table)
             )
-            self._replicate(table, dest_idx, query)
+            self.replicate(table, dest_idx, query)
 
-    def _replicate(self, table, dest_index, query):
+    def replicate(self, table, dest_index, query):
         """
-        Replicate all of the records between `start` and `end`.
+        Replicate records from a given query.
 
         :param table: The table to replicate the data from.
         :param dest_index: The destination index to copy the data to.
@@ -271,7 +272,8 @@ class TableIndexer:
         pg_conn.commit()
         pg_conn.close()
 
-    def _consistency_check(self, new_index, live_alias):
+    @staticmethod
+    def consistency_check(new_index, live_alias):
         """
         Indexing can fail for a number of reasons, such as a full disk inside of
         the Elasticsearch cluster, network errors that occurred during
@@ -286,61 +288,50 @@ class TableIndexer:
         :param live_alias: The name of the live index
         :return: bool
         """
-        if not self.es.indices.exists(index=live_alias):
+        es = elasticsearch_connect()
+        if not es.indices.exists(index=live_alias):
             return True
         log.info('Refreshing and performing sanity check...')
-        self.es.indices.refresh(index=new_index)
-        _, last_doc_uuid = get_last_item_ids(live_alias)
-        query = {
-            "query": {
-                "constant_score": {
-                    "filter": {
-                        "term": {
-                            "identifier.keyword": str(last_doc_uuid)
-                        }
-                    }
-                }
-            }
-        }
-        last_doc_es = self.es.search(index=new_index, body=query)
-        return True if last_doc_es['hits']['total'] > 0 else False
+        # Make sure there are roughly as many documents in Elasticsearch
+        # as there are in our database.
+        es.indices.refresh(index=new_index)
+        _id, _ = get_last_item_ids(live_alias)
+        new_count = Search(using=es, index=new_index).count()
+        max_delta = 100
+        delta = abs(_id - new_count)
+        log.info(f'delta, max_delta: {delta}, {max_delta}')
+        return delta < max_delta
 
-    def _go_live(self, write_index, live_alias):
+    @staticmethod
+    def go_live(write_index, live_alias):
         """
         Point the live index alias at the index we just created. Delete the
         previous one.
         """
-        if not self._consistency_check(write_index, live_alias):
-            msg = 'Reindexing failed; index {} does not appear to have all ' \
-                  'of the documents from Postgres. An operator should ' \
-                  'investigate why the job failed and either manually alias ' \
-                  '\'{}\' to point to \'{}\' or rerun the reindex job after ' \
-                  'taking corrective action. The production index has NOT ' \
-                  'been impacted. '.format(write_index, live_alias, write_index)
-            log.error(msg)
-        indices = set(self.es.indices.get('*'))
+        es = elasticsearch_connect()
+        indices = set(es.indices.get('*'))
         # If the index exists already and it's not an alias, delete it.
         if live_alias in indices:
             log.warning('Live index already exists. Deleting and realiasing.')
-            self.es.indices.delete(index=live_alias)
+            es.indices.delete(index=live_alias)
         # Create or update the alias so it points to the new index.
-        if self.es.indices.exists_alias(live_alias):
-            old = list(self.es.indices.get(live_alias).keys())[0]
+        if es.indices.exists_alias(live_alias):
+            old = list(es.indices.get(live_alias).keys())[0]
             index_update = {
                 'actions': [
                     {'remove': {'index': old, 'alias': live_alias}},
                     {'add': {'index': write_index, 'alias': live_alias}}
                 ]
             }
-            self.es.indices.update_aliases(index_update)
+            es.indices.update_aliases(index_update)
             log.info(
                 'Updated \'{}\' index alias to point to {}'
                 .format(live_alias, write_index)
             )
             log.info('Deleting old index {}'.format(old))
-            self.es.indices.delete(index=old)
+            es.indices.delete(index=old)
         else:
-            self.es.indices.put_alias(index=write_index, name=live_alias)
+            es.indices.put_alias(index=write_index, name=live_alias)
             log.info(
                 'Created \'{}\' index alias pointing to {}'
                 .format(live_alias, write_index)
@@ -363,15 +354,18 @@ class TableIndexer:
                 self.es = elasticsearch_connect()
             time.sleep(poll_interval)
 
-    def reindex(self, model_name: str):
+    def reindex(self, model_name: str, distributed=True):
         """
         Copy contents of the database to a new Elasticsearch index. Create an
         index alias to make the new index the "live" index when finished.
         """
         suffix = uuid.uuid4().hex
         destination_index = model_name + '-' + suffix
-        self._index_table(model_name, dest_idx=destination_index)
-        self._go_live(destination_index, model_name)
+        if distributed:
+            schedule_distributed_index(database_connect(), destination_index)
+        else:
+            self._index_table(model_name, dest_idx=destination_index)
+            self.go_live(destination_index, model_name)
 
     def update(self, model_name: str, since_date):
         log.info(
@@ -380,7 +374,7 @@ class TableIndexer:
         )
         query = SQL('SELECT * FROM {} WHERE updated_on >= \'{}\''
                     .format(model_name, since_date))
-        self._replicate(model_name, model_name, query)
+        self.replicate(model_name, model_name, query)
 
     @staticmethod
     def load_test_data():

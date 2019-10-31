@@ -77,7 +77,8 @@ def _generate_indices(conn, table: str):
             schema_name, table_name = tokens[table_name_idx].split('.')
             new_table_name = 'temp_import_{}'.format(table_name)
             tokens[table_name_idx] = schema_name + '.' + new_table_name
-            cleaned.append(' '.join(tokens))
+            if 'id' not in index:
+                cleaned.append(' '.join(tokens))
 
         return cleaned
 
@@ -212,7 +213,11 @@ def reload_upstream(table, progress=None, finish_time=None):
         host=UPSTREAM_DB_HOST,
         connect_timeout=5
     )
-    query_cols = ','.join(_get_shared_cols(downstream_db, upstream_db, table))
+    cols = _get_shared_cols(downstream_db, upstream_db, table)
+    query_cols = ','.join(cols)
+    id_idx = cols.index('id')
+    cols[id_idx] = "nextval('image_id_temp_seq'::regclass)"
+    query_cols_nextval = ','.join(cols)
     upstream_db.close()
     # Connect to upstream database and create references to foreign tables.
     log.info('(Re)initializing foreign data wrapper')
@@ -240,11 +245,12 @@ def reload_upstream(table, progress=None, finish_time=None):
     copy_data = '''
         DROP TABLE IF EXISTS temp_import_{table};
         CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
+        CREATE TEMP SEQUENCE IF NOT EXISTS image_id_temp_seq;
         INSERT INTO temp_import_{table} ({cols})
-        SELECT {cols} from upstream_schema.{table};
+        SELECT {insert_cols} from upstream_schema.{table};
         ALTER TABLE temp_import_{table} ADD PRIMARY KEY (id);
         DROP SERVER upstream CASCADE;
-    '''.format(table=table, cols=query_cols)
+    '''.format(table=table, cols=query_cols, insert_cols=query_cols_nextval)
     create_indices = ';\n'.join(_generate_indices(downstream_db, table))
     remap_constraints = ';\n'.join(_generate_constraints(downstream_db, table))
     go_live = '''
