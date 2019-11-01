@@ -12,10 +12,6 @@
   width: 100%;
 }
 
-.photo_provider {
-  text-transform: capitalize;
-}
-
 .photo {
   width: 100%;
   border-bottom: 1px solid #616161;
@@ -230,6 +226,8 @@ label {
 }
 
 .legal-disclaimer {
+  margin: 0px 20px;
+
   font-size: 0.75rem;
   font-style: italic;
 }
@@ -239,4 +237,20 @@ label {
   margin-bottom: 8px;
   height: 64px;
   display: block;
+}
+
+.provider-container {
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  span {
+    font-weight: 600;
+    font-size: 1.1em;
+  }
+
+  img {
+    height: 32px;
+  }
 }

@@ -29,15 +29,15 @@
       </li>
       <li>
         <h3>Source</h3>
-        <a class="photo_provider"
-          :href="image.foreign_landing_url"
-          target="blank"
-          rel="noopener noreferrer">
-          <img class="provider-logo"
-               :alt="image.provider"
-               :src="getProviderLogo(image.provider_code)" />
-          {{ image.provider }}
-        </a>
+        <div>
+          <a :href="image.foreign_landing_url"
+              target="blank"
+              rel="noopener noreferrer">
+            <img class="provider-logo"
+                :alt="image.provider"
+                :src="getProviderLogo(image.provider_code)" />
+          </a>
+      </div>
       </li>
       <li>
         <h3>Dimensions</h3>

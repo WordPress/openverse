@@ -52,7 +52,10 @@
         </CopyButton>
       </div>
       <reuse-survey :image="image" />
-      <legal-disclaimer :source="image.provider" :sourceURL="image.foreign_landing_url" />
+      <legal-disclaimer
+          :source="image.provider"
+          :sourceProviderCode="image.provider_code"
+          :sourceURL="image.foreign_landing_url" />
     </div>
   </section>
 </template>
