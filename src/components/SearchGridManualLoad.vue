@@ -22,8 +22,10 @@
         <button v-show="!isFetchingImages && includeAnalytics"
                 class="clear button"
                 type="button"
+                :disabled="isFinished"
                 @click="onLoadMoreImages">
-          Load more
+          <p v-if="isFinished">No more images :(</p>
+          <p v-else>Load more</p>
         </button>
         <loading-icon v-show="isFetchingImages" />
       </div>
@@ -100,6 +102,9 @@ export default {
     _errorMessage() {
       return this.$store.state.errorMsg;
     },
+    isFinished() {
+      return this.currentPage >= this.$store.state.pageCount;
+    },
   },
   watch: {
     _images: {
@@ -148,6 +153,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+
+  .button[disabled] {
+    opacity: 1;
+  }
 
   .search-grid_analytics h5,
   .search-grid_layout-control h5 {

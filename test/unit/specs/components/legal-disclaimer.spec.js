@@ -24,7 +24,6 @@ describe('Legal Disclaimer', () => {
   it('displays source', () => {
     const wrapper = render(LegalDisclaimer, options);
     const link = wrapper.find('a');
-    expect(link.text()).toContain(props.source);
     expect(link.attributes().href).toBe(props.sourceURL);
   });
 });
