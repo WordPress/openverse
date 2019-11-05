@@ -108,7 +108,7 @@ class Image(SyncableDocType):
             views = int(metrics['views'])
             likes = int(metrics['likes'])
             comments = int(metrics['comments'])
-        except KeyError:
+        except (KeyError, TypeError):
             pass
         return Image(
             _id=row[schema['id']],
