@@ -280,8 +280,8 @@ ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL', 'localhost')
 ELASTICSEARCH_PORT = int(os.environ.get('ELASTICSEARCH_PORT', 9200))
 
 # Additional settings for dev/prod environments
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', '')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', '')
 ELASTICSEARCH_AWS_REGION = \
     os.environ.get('ELASTICSEARCH_AWS_REGION', 'us-east-1')
 
