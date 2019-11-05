@@ -24,9 +24,9 @@ THUMBNAIL = 'thumbnail'
 URL = 'url'
 THUMBNAIL_WIDTH_PX = 600
 PROVIDER = 'provider'
-
 DEEP_PAGINATION_ERROR = 'Deep pagination is not allowed.'
 QUERY_SPECIAL_CHARACTER_ERROR = 'Unescaped special characters are not allowed.'
+POPULARITY_BOOST = False
 
 
 def _paginate_with_dead_link_mask(s: Search, page_size: int,
@@ -269,6 +269,21 @@ def search(search_params, index, page_size, ip, request,
     # Route users to the same Elasticsearch worker node to reduce
     # pagination inconsistencies and increase cache hits.
     s = s.params(preference=str(ip))
+    # Boost by popularity metrics
+    if POPULARITY_BOOST:
+        rank_feature_query = Q(
+            'rank_feature',
+            fields=['comments', 'views', 'likes'],
+            boost=100
+        )
+        s = Search().query(
+            Q(
+                'bool',
+                must=s.query,
+                should=rank_feature_query,
+                minimum_should_match=1
+            )
+        )
     # Paginate
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
@@ -488,7 +503,7 @@ def _get_result_and_page_count(response_obj: Response, results: List[Hit],
     :param results: The list of filtered result Hits.
     :return: Result and page count.
     """
-    result_count = response_obj.hits.total
+    result_count = response_obj.hits.total.value
     natural_page_count = int(result_count / page_size)
     last_allowed_page = int((5000 + page_size / 2) / page_size)
     page_count = min(natural_page_count, last_allowed_page)

@@ -1,6 +1,5 @@
 from elasticsearch_dsl import Date, Text, Integer, Nested, Keyword, DocType
-import json
-import logging
+from elasticsearch_dsl.query import Query
 
 """
 Provides an ORM-like experience for accessing data in Elasticsearch.
@@ -8,6 +7,10 @@ Provides an ORM-like experience for accessing data in Elasticsearch.
 Note the actual schema for Elasticsearch is defined in es_mapping.py; any
 low-level changes to the index must be represented there as well.
 """
+
+
+class RankFeature(Query):
+    name = 'rank_feature'
 
 
 class SyncableDocType(DocType):
@@ -70,12 +73,14 @@ class Image(SyncableDocType):
     license = Keyword()
     license_version = Keyword()
     foreign_landing_url = Keyword()
-    meta_data = Nested()
     view_count = Integer()
     description = Text(analyzer="english")
     height = Integer()
     width = Integer()
     extension = Keyword()
+    views = RankFeature()
+    comments = RankFeature()
+    likes = RankFeature()
 
     class Index:
         name = 'image'
@@ -95,6 +100,16 @@ class Image(SyncableDocType):
             else:
                 return None
 
+        views = None
+        comments = None
+        likes = None
+        try:
+            metrics = row[schema['meta_data']]['popularity_metrics']
+            views = int(metrics['views'])
+            likes = int(metrics['likes'])
+            comments = int(metrics['comments'])
+        except KeyError:
+            pass
         return Image(
             _id=row[schema['id']],
             id=row[schema['id']],
@@ -111,12 +126,14 @@ class Image(SyncableDocType):
             license=row[schema['license']].lower(),
             license_version=row[schema['license_version']],
             foreign_landing_url=row[schema['foreign_landing_url']],
-            meta_data=None,
             view_count=row[schema['view_count']],
             description=_parse_description(row[schema['meta_data']]),
             height=row[schema['height']],
             width=row[schema['width']],
-            extension=_get_extension(row[schema['url']])
+            extension=_get_extension(row[schema['url']]),
+            views=views,
+            comments=comments,
+            likes=likes,
         )
 
 

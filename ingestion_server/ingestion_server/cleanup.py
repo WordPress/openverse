@@ -3,7 +3,6 @@ import time
 import multiprocessing
 import uuid
 import requests as re
-import psycopg2
 from psycopg2.extras import DictCursor, Json
 from ingestion_server.indexer import database_connect, DB_BUFFER_SIZE
 from urllib.parse import urlparse
@@ -235,7 +234,7 @@ def _clean_data_worker(rows, temp_table, providers_config):
     return True
 
 
-def clean_image_data(table, upstream_db):
+def clean_image_data(table):
     """
     Data from upstream can be unsuitable for production for a number of reasons.
     Clean it up before we go live with the new data.
