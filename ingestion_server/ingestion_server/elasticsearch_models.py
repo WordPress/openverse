@@ -1,5 +1,4 @@
-from elasticsearch_dsl import Date, Text, Integer, Nested, Keyword, DocType
-from elasticsearch_dsl.query import Query
+from elasticsearch_dsl import Date, Text, Integer, Keyword, DocType, Field
 
 """
 Provides an ORM-like experience for accessing data in Elasticsearch.
@@ -9,7 +8,7 @@ low-level changes to the index must be represented there as well.
 """
 
 
-class RankFeature(Query):
+class RankFeature(Field):
     name = 'rank_feature'
 
 
@@ -100,14 +99,12 @@ class Image(SyncableDocType):
             else:
                 return None
 
-        views = None
-        comments = None
-        likes = None
+        views, comments, likes = None, None, None
         try:
             metrics = row[schema['meta_data']]['popularity_metrics']
-            views = int(metrics['views'])
-            likes = int(metrics['likes'])
-            comments = int(metrics['comments'])
+            views = int(metrics['views']) + 1
+            likes = int(metrics['likes']) + 1
+            comments = int(metrics['comments']) + 1
         except (KeyError, TypeError):
             pass
         return Image(

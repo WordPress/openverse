@@ -1,14 +1,13 @@
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
-from elasticsearch.exceptions import AuthenticationException, \
-    AuthorizationException, NotFoundError, RequestError
+from elasticsearch.exceptions import NotFoundError, RequestError
 from elasticsearch_dsl import Q, Search, connections
 from elasticsearch_dsl.response import Response, Hit
+from elasticsearch_dsl.query import Query
 from cccatalog import settings
 from django.core.cache import cache
 from cccatalog.api.models import ContentProvider
 from rest_framework import serializers
-import logging as log
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
 from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils.dead_link_mask import get_query_mask, get_query_hash
@@ -27,6 +26,10 @@ PROVIDER = 'provider'
 DEEP_PAGINATION_ERROR = 'Deep pagination is not allowed.'
 QUERY_SPECIAL_CHARACTER_ERROR = 'Unescaped special characters are not allowed.'
 POPULARITY_BOOST = False
+
+
+class RankFeature(Query):
+    name = 'rank_feature'
 
 
 def _paginate_with_dead_link_mask(s: Search, page_size: int,
@@ -260,6 +263,26 @@ def search(search_params, index, page_size, ip, request,
                 default_field='tags.name',
                 query=tags
             )
+    # Boost by popularity metrics
+    if POPULARITY_BOOST:
+        queries = []
+        factors = ['comments', 'views', 'likes']
+        boost_factor = 100 / len(factors)
+        for factor in factors:
+            rank_feature_query = Q(
+                'rank_feature',
+                field=factor,
+                boost=boost_factor
+            )
+            queries.append(rank_feature_query)
+        s = Search().query(
+            Q(
+                'bool',
+                must=s.query,
+                should=queries,
+                minimum_should_match=1
+            )
+        )
 
     # Use highlighting to determine which fields contribute to the selection of
     # top results.
@@ -269,28 +292,13 @@ def search(search_params, index, page_size, ip, request,
     # Route users to the same Elasticsearch worker node to reduce
     # pagination inconsistencies and increase cache hits.
     s = s.params(preference=str(ip))
-    # Boost by popularity metrics
-    if POPULARITY_BOOST:
-        rank_feature_query = Q(
-            'rank_feature',
-            fields=['comments', 'views', 'likes'],
-            boost=100
-        )
-        s = Search().query(
-            Q(
-                'bool',
-                must=s.query,
-                should=rank_feature_query,
-                minimum_should_match=1
-            )
-        )
     # Paginate
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
     try:
         search_response = s.execute()
-    except RequestError:
-        raise ValueError(QUERY_SPECIAL_CHARACTER_ERROR)
+    except RequestError as e:
+        raise ValueError(e)
     results = _post_process_results(
         s,
         start,
