@@ -113,7 +113,6 @@ const actions = ImageService => ({
         dispatch(HANDLE_NO_IMAGES, data.results);
       })
       .catch((error) => {
-        console.log(dispatch);
         dispatch(HANDLE_IMAGE_ERROR, error);
       });
   },
@@ -158,8 +157,6 @@ const actions = ImageService => ({
       });
   },
   [FETCH_COLLECTION_IMAGES]({ commit, dispatch }, params) {
-    console.log('collect', dispatch);
-
     commit(FETCH_START_IMAGES);
     return fetchCollectionImages(commit, params, ImageService)
       .then(({ data }) => {
@@ -175,7 +172,6 @@ const actions = ImageService => ({
         dispatch(HANDLE_NO_IMAGES, data.results);
       })
       .catch((error) => {
-        console.log('collect', dispatch);
         dispatch(HANDLE_IMAGE_ERROR, error);
       });
   },
