@@ -286,7 +286,7 @@ class ImageSerializer(serializers.Serializer):
     thumbnail = serializers.URLField(required=False, allow_blank=True)
     provider = serializers.CharField(required=False)
     source = serializers.CharField(required=False)
-    license = serializers.CharField()
+    license = serializers.SerializerMethodField()
     license_version = serializers.CharField(required=False)
     foreign_landing_url = serializers.URLField(required=False)
     meta_data = serializers.CharField(required=False)
@@ -306,6 +306,9 @@ class ImageSerializer(serializers.Serializer):
         required=False,
         help_text="The width of the image in pixels. Not always available."
     )
+
+    def get_license(self, obj):
+        return obj.license.lower()
 
 
 class RelatedImagesResultsSerializer(serializers.Serializer):
