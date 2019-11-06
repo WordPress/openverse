@@ -8,6 +8,7 @@ import {
   FETCH_IMAGE,
   FETCH_RELATED_IMAGES,
   FETCH_COLLECTION_IMAGES,
+  HANDLE_IMAGE_ERROR,
 } from './action-types';
 import {
   FETCH_END_IMAGES,
@@ -23,6 +24,7 @@ import {
   SET_RELATED_IMAGES,
   IMAGE_NOT_FOUND,
   RESET_QUERY,
+  HANDLE_NO_IMAGES,
 } from './mutation-types';
 import { SEND_SEARCH_QUERY_EVENT, SEND_RESULT_CLICKED_EVENT } from './usage-data-analytics-types';
 
@@ -35,6 +37,7 @@ const initialState = (searchParams) => {
     searchBy: getParameterByName('searchBy', searchParams),
   };
   return {
+    errorMsg: null,
     image: {},
     imagesCount: 0,
     pageCount: 0,
@@ -107,10 +110,10 @@ const actions = ImageService => ({
             page: params.page,
           },
         );
+        dispatch(HANDLE_NO_IMAGES, data.results);
       })
       .catch((error) => {
-        commit(FETCH_IMAGES_ERROR);
-        throw new Error(error);
+        dispatch(HANDLE_IMAGE_ERROR, error);
       });
   },
   [FETCH_IMAGE]({ commit, dispatch, state }, params) {
@@ -133,12 +136,11 @@ const actions = ImageService => ({
           commit(IMAGE_NOT_FOUND);
         }
         else {
-          commit(FETCH_IMAGES_ERROR);
-          throw new Error(error);
+          dispatch(HANDLE_IMAGE_ERROR, error);
         }
       });
   },
-  [FETCH_RELATED_IMAGES]({ commit }, params) {
+  [FETCH_RELATED_IMAGES]({ commit, dispatch }, params) {
     commit(FETCH_START_IMAGES);
     return ImageService.getRelatedImages(params)
       .then(({ data }) => {
@@ -148,13 +150,13 @@ const actions = ImageService => ({
             relatedImagesCount: data.result_count,
           },
         );
+        dispatch(HANDLE_NO_IMAGES, data.results);
       })
       .catch((error) => {
-        commit(FETCH_IMAGES_ERROR);
-        throw new Error(error);
+        dispatch(HANDLE_IMAGE_ERROR, error);
       });
   },
-  [FETCH_COLLECTION_IMAGES]({ commit }, params) {
+  [FETCH_COLLECTION_IMAGES]({ commit, dispatch }, params) {
     commit(FETCH_START_IMAGES);
     return fetchCollectionImages(commit, params, ImageService)
       .then(({ data }) => {
@@ -167,11 +169,30 @@ const actions = ImageService => ({
             page: params.page,
           },
         );
+        dispatch(HANDLE_NO_IMAGES, data.results);
       })
       .catch((error) => {
-        commit(FETCH_IMAGES_ERROR);
-        throw new Error(error);
+        dispatch(HANDLE_IMAGE_ERROR, error);
       });
+  },
+  [HANDLE_IMAGE_ERROR]({ commit }, error) {
+    if (error.response) {
+      if (error.response.status === 500) {
+        commit(FETCH_IMAGES_ERROR, { errorMsg: 'There was a problem with our servers' });
+      }
+      else {
+        commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message });
+      }
+    }
+    else {
+      commit(FETCH_IMAGES_ERROR, { errorMsg: error.message });
+      throw new Error(error);
+    }
+  },
+  [HANDLE_NO_IMAGES]({ commit }, data) {
+    if (!data.length) {
+      commit(FETCH_IMAGES_ERROR, { errorMsg: 'No images were found for this query' });
+    }
   },
 });
 
@@ -197,9 +218,10 @@ const mutations = redirect => ({
   [FETCH_END_IMAGES](_state) {
     _state.isFetchingImages = false;
   },
-  [FETCH_IMAGES_ERROR](_state) {
+  [FETCH_IMAGES_ERROR](_state, params) {
     _state.isFetchingImagesError = true;
     _state.isFetchingImages = false;
+    _state.errorMsg = params.errorMsg;
   },
   [SET_IMAGE](_state, params) {
     _state.image = decodeImageData(params.image);

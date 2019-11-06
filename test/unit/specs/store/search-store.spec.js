@@ -30,6 +30,7 @@ describe('Search Store', () => {
       expect(state.query.q).toBe('');
       expect(state.relatedImages).toHaveLength(0);
       expect(state.relatedImagesCount).toBe(0);
+      expect(state.errorMsg).toBe(null);
     });
 
     it('gets query from search params', () => {
@@ -99,10 +100,11 @@ describe('Search Store', () => {
     });
 
     it('FETCH_IMAGES_ERROR updates state', () => {
-      mutations[FETCH_IMAGES_ERROR](state);
+      mutations[FETCH_IMAGES_ERROR](state, { errorMsg: 'error' });
 
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
+      expect(state.errorMsg).toBe('error');
     });
 
     it('SET_IMAGE updates state', () => {
@@ -308,7 +310,7 @@ describe('Search Store', () => {
     it('FETCH_COLLECTION_IMAGES on success', (done) => {
       const params = { provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(FETCH_END_IMAGES);
 
@@ -327,7 +329,7 @@ describe('Search Store', () => {
     it('FETCH_COLLECTION_IMAGES calls search API if q param exist', (done) => {
       const params = { q: 'nature', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(imageServiceMock.search).toBeCalledWith(params);
 
         done();
@@ -337,7 +339,7 @@ describe('Search Store', () => {
     it('FETCH_COLLECTION_IMAGES calls getProviderCollection API if li param exist', (done) => {
       const params = { li: 'by', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
 
         done();
@@ -347,7 +349,7 @@ describe('Search Store', () => {
     it('FETCH_COLLECTION_IMAGES calls getProviderCollection API if lt param exist', (done) => {
       const params = { lt: 'commercial', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
 
         done();
@@ -357,7 +359,7 @@ describe('Search Store', () => {
     it('FETCH_COLLECTION_IMAGES calls search API if q param exist', (done) => {
       const params = { q: 'nature', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(imageServiceMock.search).toBeCalledWith(params);
 
         done();
@@ -370,11 +372,11 @@ describe('Search Store', () => {
       };
       const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(failedMock)[FETCH_IMAGES];
-      action({ commit, dispatch, state }, params).catch(() => {
+      action({ commit, dispatch, state }, params).catch((error) => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
-        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
-        done();
+        expect(dispatch).toBeCalledWith('HANDLE_IMAGE_ERROR', error);
       });
+      done();
     });
 
     it('FETCH_COLLECTION_IMAGES on error', (done) => {
@@ -384,11 +386,11 @@ describe('Search Store', () => {
       };
       const params = { q: 'foo', page: 1, shouldPersistImages: false };
       const action = store.actions(failedMock)[FETCH_COLLECTION_IMAGES];
-      action({ commit }, params).catch(() => {
+      action({ commit, dispatch }, params).catch((error) => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
-        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
-        done();
+        expect(dispatch).toBeCalledWith('HANDLE_IMAGE_ERROR', error);
       });
+      done();
     });
 
     it('FETCH_IMAGES resets images if page is not defined', (done) => {
@@ -441,12 +443,11 @@ describe('Search Store', () => {
       };
       const params = { id: 'foo' };
       const action = store.actions(failedMock)[FETCH_IMAGE];
-      action({ commit, dispatch, state }, params).catch(() => {
+      action({ commit, dispatch, state }, params).catch((error) => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
-        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
-
-        done();
+        expect(dispatch).toBeCalledWith('HANDLE_IMAGE_ERROR', error);
       });
+      done();
     });
 
     it('FETCH_IMAGE on 404 doesnt break and commits IMAGE_NOT_FOUND', (done) => {
@@ -466,7 +467,7 @@ describe('Search Store', () => {
     it('FETCH_RELATED_IMAGES on success', (done) => {
       const params = { id: 'foo' };
       const action = store.actions(imageServiceMock)[FETCH_RELATED_IMAGES];
-      action({ commit }, params).then(() => {
+      action({ commit, dispatch }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
         expect(commit).toBeCalledWith(FETCH_END_IMAGES);
 
@@ -486,12 +487,11 @@ describe('Search Store', () => {
       };
       const params = { id: 'foo' };
       const action = store.actions(failedMock)[FETCH_RELATED_IMAGES];
-      action({ commit }, params).catch(() => {
+      action({ commit }, params).catch((error) => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES);
-        expect(commit).toBeCalledWith(FETCH_IMAGES_ERROR);
-
-        done();
+        expect(dispatch).toBeCalledWith('HANDLE_IMAGE_ERROR', error);
       });
+      done();
     });
   });
 });
