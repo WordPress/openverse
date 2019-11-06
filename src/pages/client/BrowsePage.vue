@@ -3,10 +3,13 @@
     <div class="search grid-x flexible">
       <div class="cell">
         <header-section>
-          <search-grid-form showProvidersFilter="true" @onSearchFormSubmit="onSearchFormSubmit" />
         </header-section>
       </div>
-      <div :class="{ 'cell search-grid-ctr': true }">
+      <div class="cell small-3">
+        <search-grid-filter showProvidersFilter="true" @onSearchFilterChanged="onSearchFormSubmit"/>
+      </div>
+      <div class="cell auto search-grid-ctr">
+        <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
         <search-grid v-if="query.q"
                      :query="query"
                      searchTerm=""
@@ -23,12 +26,14 @@ import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
+import SearchGridFilter from '@/components/SearchGridFilter';
 import BrowsePageMixin from '@/pages/mixins/BrowsePageMixin';
 
 const BrowsePage = {
   components: {
     HeaderSection,
     SearchGridForm,
+    SearchGridFilter,
     SearchGrid,
     FooterSection,
   },

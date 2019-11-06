@@ -57,8 +57,6 @@
             </li>
           </ul>
         </div>
-        <search-grid-filter :showProvidersFilter="showProvidersFilter"
-                            @onSearchFilterChanged="onSearchFilterChanged"/>
     </div>
   </form>
 </template>

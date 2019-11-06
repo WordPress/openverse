@@ -4,11 +4,11 @@
       <div class="cell">
         <header-section showNavSearch="true" />
       </div>
-      <div class="cell">
+      <div class="cell small-4">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit"
                           searchBoxPlaceholder="Search this collection" />
       </div>
-      <div :class="{ 'cell search-grid-ctr': true }">
+      <div class="cell auto search-grid-ctr">
         <search-grid v-if="query.provider"
                      :query="query"
                      :searchTerm="providerName"
