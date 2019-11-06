@@ -1,5 +1,6 @@
 import csv
 import json
+import random
 import seaborn as sbn
 import numpy as np
 
@@ -18,7 +19,7 @@ def gen_dist(_max):
 
 likes, views, comments = gen_dist(1000000), gen_dist(4000000), gen_dist(30000)
 
-with open('sample_data.csv') as _csv, open('enriched.csv', 'w+') as out:
+with open('../sample_data.csv') as _csv, open('enriched.csv', 'w+') as out:
     reader = csv.DictReader(_csv)
     writer = csv.DictWriter(out, fieldnames=reader.fieldnames)
     writer.writeheader()
@@ -26,7 +27,9 @@ with open('sample_data.csv') as _csv, open('enriched.csv', 'w+') as out:
     for idx, row in enumerate(reader):
         metadata = json.loads(row['meta_data'])
         fake = {'likes': likes[idx], 'views': views[idx], 'comments': comments[idx]}
-        metadata['popularity_metrics'] = fake
-        row['meta_data'] = json.dumps(metadata)
+        # In the real world, this data is missing frequently. Omit it for some records.
+        if random.choice([True, False]):
+            metadata['popularity_metrics'] = fake
+            row['meta_data'] = json.dumps(metadata)
         writer.writerow(row)
 
