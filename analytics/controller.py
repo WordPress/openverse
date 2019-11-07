@@ -21,12 +21,12 @@ class EventController:
         )
         self._persist(search)
 
-    def create_search_rating(self, query, rating):
-        if rating > 5 or rating < 1:
-            raise ValueError('Invalid rating')
+    def create_search_rating(self, query, relevant):
+        if type(relevant) != bool:
+            raise ValueError('Invalid rating; must be a boolean.')
         search_rating = SearchRatingEvent(
             query=query,
-            rating=rating
+            relevant=relevant
         )
         self._persist(search_rating)
 

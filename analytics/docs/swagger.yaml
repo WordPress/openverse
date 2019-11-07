@@ -124,14 +124,14 @@ definitions:
     type: "object"
     required:
       - query
-      - rating
+      - relevant
     properties:
       query:
         type: "string"
         description: "A unique identifier labeling an anonymous user's session."
-      rating:
-        type: "integer"
-        example: 5
+      relevant:
+        type: "boolean"
+        example: true
       
   CreateResultClickEvent:
     type: "object"
