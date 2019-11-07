@@ -143,4 +143,4 @@ services:
     ports:
       - "8090:8090"
     environment:
-      DATABASE_CONN: 'postgres+psycopg2://deploy:deploy@db/openledger'
+      DATABASE_CONN: 'postgres+psycopg2://deploy:deploy@db/analytics'

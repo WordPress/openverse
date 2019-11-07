@@ -1,8 +1,8 @@
-"""Regenerate initial migration with 'timestamp' instead of date
+"""Regenerate initial migration
 
-Revision ID: 2887aa378b20
+Revision ID: 54e56668b66a
 Revises: 
-Create Date: 2019-08-01 15:33:03.213601
+Create Date: 2019-11-07 13:57:47.146441
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '2887aa378b20'
+revision = '54e56668b66a'
 down_revision = None
 branch_labels = None
 depends_on = None

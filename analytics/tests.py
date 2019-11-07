@@ -25,7 +25,7 @@ def test_search_event():
 def test_search_rating():
     body = {
         'query': test_query,
-        'rating': 5
+        'relevant': True
     }
     response = requests.post(
         API_URL + '/search_rating_event', json=body, verify=False
@@ -34,7 +34,7 @@ def test_search_rating():
 
     invalid_rating = {
         'query': test_query,
-        'rating': 6
+        'relevant': 6
     }
     bad_response = requests.post(
         API_URL + '/search_rating_event', json=invalid_rating, verify=False
