@@ -4,10 +4,10 @@
       <header-section />
     </div>
     <div class="search grid-x flexible">
-      <div class="cell medium-6 large-4">
+      <div class="cell medium-4 large-3">
         <search-grid-filter showProvidersFilter="true" @onSearchFilterChanged="onSearchFormSubmit"/>
       </div>
-      <div class="cell medium-6 large-8 search-grid-ctr">
+      <div class="cell medium-8 large-9 search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
         <search-grid v-if="query.q"
                      :query="query"
