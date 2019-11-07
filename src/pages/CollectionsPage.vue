@@ -5,16 +5,14 @@
       <h1>Browse collections</h1>
       <h2>Museum Collections</h2>
       <div class="providers-list grid-x">
-        <collection-item class="card provider-card cell small"
-                        v-for="(provider, index) in museumProviders"
+        <collection-item v-for="(provider, index) in museumProviders"
                         :key="index"
                         :provider="provider" />
       </div>
       <hr />
       <h2>Other Collections</h2>
       <div class="providers-list grid-x">
-        <collection-item class="card provider-card cell small"
-                          v-for="(provider, index) in otherProviders"
+        <collection-item v-for="(provider, index) in otherProviders"
                           :key="index"
                           :provider="provider" />
       </div>
