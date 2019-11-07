@@ -1,100 +1,98 @@
 <template>
   <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
-    <div class="grid-x">
-      <div class="filter-option">
-        <multiselect
-          v-model="filter.lt"
-          placeholder="I want something that I can"
-          label="name"
-          track-by="code"
-          :options="licenseTypes"
-          :multiple="true"
-          :searchable="false"
-          :closeOnSelect="false"
-          :showLabels="false"
-          @input="onUpdateFilter"
-          @select="onItemSelected"
-          @remove="onItemRemoved">
-          <template slot="option" slot-scope="props">
-            <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
-            <span>{{props.option.name}}</span>
-          </template>
-        </multiselect>
-      </div>
-      <div v-if="showProvidersFilter" class="filter-option">
-        <multiselect
-          v-model="filter.provider"
-          placeholder="All Sources"
-          label="name"
-          track-by="code"
-          :options="providers"
-          :multiple="true"
-          :searchable="true"
-          :closeOnSelect="false"
-          :showLabels="false"
-          @input="onUpdateFilter"
-          @select="onItemSelected"
-          @remove="onItemRemoved">
-          <template slot="option" slot-scope="props">
-            <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
-            <span>{{props.option.name}}</span>
-          </template>
-        </multiselect>
-      </div>
-      <div class="filter-option small-filter">
-        <multiselect
-          v-model="filter.imageType"
-          placeholder="Image Type"
-          label="name"
-          track-by="code"
-          :options="imageTypes"
-          :multiple="true"
-          :searchable="false"
-          :closeOnSelect="false"
-          :showLabels="false"
-          @input="onUpdateFilter"
-          @select="onItemSelected"
-          @remove="onItemRemoved">
-          <template slot="option" slot-scope="props">
-            <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
-            <span>{{props.option.name}}</span>
-          </template>
-        </multiselect>
-      </div>
-      <div class="filter-option small-filter">
-        <multiselect
-          v-model="filter.extension"
-          placeholder="File Type"
-          label="name"
-          track-by="code"
-          :options="extensions"
-          :multiple="true"
-          :searchable="false"
-          :closeOnSelect="false"
-          :showLabels="false"
-          @input="onUpdateFilter"
-          @select="onItemSelected"
-          @remove="onItemRemoved">
-          <template slot="option" slot-scope="props">
-            <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
-            <span>{{props.option.name}}</span>
-          </template>
-        </multiselect>
-      </div>
-      <div class="filter-option small-filter search-filters_search-by">
-        <input type="checkbox" id="creator-chk"
-               v-model="filter.searchBy.creator"
-               @change="onUpdateFilter">
-        <label for="creator-chk">Search by Creator</label>
-      </div>
-      <div class="clear-filters"
-           v-if="isFilterApplied">
-        <a class="button primary medium search-filters_clear-btn"
-                @click="onClearFilters">
-          Clear filters
-        </a>
-      </div>
+    <div class="filter-option">
+      <multiselect
+        v-model="filter.lt"
+        placeholder="I want something that I can"
+        label="name"
+        track-by="code"
+        :options="licenseTypes"
+        :multiple="true"
+        :searchable="false"
+        :closeOnSelect="false"
+        :showLabels="false"
+        @input="onUpdateFilter"
+        @select="onItemSelected"
+        @remove="onItemRemoved">
+        <template slot="option" slot-scope="props">
+          <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
+          <span>{{props.option.name}}</span>
+        </template>
+      </multiselect>
+    </div>
+    <div v-if="showProvidersFilter" class="filter-option">
+      <multiselect
+        v-model="filter.provider"
+        placeholder="All Sources"
+        label="name"
+        track-by="code"
+        :options="providers"
+        :multiple="true"
+        :searchable="true"
+        :closeOnSelect="false"
+        :showLabels="false"
+        @input="onUpdateFilter"
+        @select="onItemSelected"
+        @remove="onItemRemoved">
+        <template slot="option" slot-scope="props">
+          <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
+          <span>{{props.option.name}}</span>
+        </template>
+      </multiselect>
+    </div>
+    <div class="filter-option small-filter">
+      <multiselect
+        v-model="filter.imageType"
+        placeholder="Image Type"
+        label="name"
+        track-by="code"
+        :options="imageTypes"
+        :multiple="true"
+        :searchable="false"
+        :closeOnSelect="false"
+        :showLabels="false"
+        @input="onUpdateFilter"
+        @select="onItemSelected"
+        @remove="onItemRemoved">
+        <template slot="option" slot-scope="props">
+          <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
+          <span>{{props.option.name}}</span>
+        </template>
+      </multiselect>
+    </div>
+    <div class="filter-option small-filter">
+      <multiselect
+        v-model="filter.extension"
+        placeholder="File Type"
+        label="name"
+        track-by="code"
+        :options="extensions"
+        :multiple="true"
+        :searchable="false"
+        :closeOnSelect="false"
+        :showLabels="false"
+        @input="onUpdateFilter"
+        @select="onItemSelected"
+        @remove="onItemRemoved">
+        <template slot="option" slot-scope="props">
+          <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
+          <span>{{props.option.name}}</span>
+        </template>
+      </multiselect>
+    </div>
+    <div class="filter-option small-filter search-filters_search-by">
+      <input type="checkbox" id="creator-chk"
+              v-model="filter.searchBy.creator"
+              @change="onUpdateFilter">
+      <label for="creator-chk">Search by Creator</label>
+    </div>
+    <div class="clear-filters"
+          v-if="isFilterApplied">
+      <a class="button primary medium search-filters_clear-btn"
+              @click="onClearFilters">
+        Clear filters
+      </a>
     </div>
   </div>
 </template>
@@ -233,7 +231,7 @@ export default {
   background: #fafafa;
   display: none;
   padding: 10px ;
-  width: 100%;
+  height: 100%;
 
   label {
     font-size: 1em;
@@ -258,14 +256,10 @@ export default {
 
 .filter-option {
   margin-right: 1em;
-  min-width: 18em;
   padding-bottom: 0.5em;
   padding-top: 0.5em;
 }
 
-.small-filter {
-  min-width: 10em;
-}
 
 .grid-x {
   /* Small only */
@@ -277,7 +271,6 @@ export default {
 .search-filters_search-by,
 .clear-filters {
   margin-top: 0.4em;
-  min-width: 10vw;
 }
 
 .search-filters_clear-btn {
