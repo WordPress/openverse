@@ -1,14 +1,13 @@
 <template>
-  <div class="browse-page">
+  <div class="browse-page grid-container full">
+    <div>
+      <header-section />
+    </div>
     <div class="search grid-x flexible">
-      <div class="cell">
-        <header-section>
-        </header-section>
-      </div>
-      <div class="cell small-3">
+      <div class="cell medium-6 large-4">
         <search-grid-filter showProvidersFilter="true" @onSearchFilterChanged="onSearchFormSubmit"/>
       </div>
-      <div class="cell auto search-grid-ctr">
+      <div class="cell medium-6 large-8 search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
         <search-grid v-if="query.q"
                      :query="query"
