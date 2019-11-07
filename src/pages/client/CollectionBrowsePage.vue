@@ -4,11 +4,12 @@
       <div class="cell">
         <header-section showNavSearch="true" />
       </div>
-      <div class="cell small-4">
-        <search-grid-form @onSearchFormSubmit="onSearchFormSubmit"
-                          searchBoxPlaceholder="Search this collection" />
+      <div class="cell small-3">
+        <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit"/>
       </div>
       <div class="cell auto search-grid-ctr">
+        <search-grid-form @onSearchFormSubmit="onSearchFormSubmit"
+                          searchBoxPlaceholder="Search this collection" />
         <search-grid v-if="query.provider"
                      :query="query"
                      :searchTerm="providerName"
@@ -25,12 +26,14 @@ import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
+import SearchGridFilter from '@/components/SearchGridFilter';
 import CollectionBrowseMixin from '@/pages/mixins/CollectionBrowseMixin';
 
 const CollectionBrowsePage = {
   components: {
     HeaderSection,
     SearchGridForm,
+    SearchGridFilter,
     SearchGrid,
     FooterSection,
   },
