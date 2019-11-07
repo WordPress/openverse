@@ -32,7 +32,7 @@ django-redis = "*"
 pytest-django = ">=3.5"
 djangorestframework = "*"
 drf-yasg = "*"
-elasticsearch-dsl = "*"
+elasticsearch-dsl = "==7.0.0"
 ipaddress = {version = "*",python_version = "<=2.7"}
 piexif = "*"
 python-xmp-toolkit = "*"

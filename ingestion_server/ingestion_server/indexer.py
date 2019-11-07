@@ -362,6 +362,10 @@ class TableIndexer:
         suffix = uuid.uuid4().hex
         destination_index = model_name + '-' + suffix
         if distributed:
+            self.es.indices.create(
+                index=destination_index,
+                body=create_mapping(model_name)
+            )
             schedule_distributed_index(database_connect(), destination_index)
         else:
             self._index_table(model_name, dest_idx=destination_index)

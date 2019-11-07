@@ -264,12 +264,7 @@ def reload_upstream(table, progress=None, finish_time=None):
         downstream_cur.execute(copy_data)
     downstream_db.commit()
     downstream_db.close()
-    upstream_info = {
-        'port': UPSTREAM_DB_PORT,
-        'password': UPSTREAM_DB_PASSWORD,
-        'host': UPSTREAM_DB_HOST
-    }
-    clean_image_data(table, upstream_info)
+    clean_image_data(table)
     log.info('Cleaning step finished.')
     downstream_db = database_connect()
     with downstream_db.cursor() as downstream_cur:
