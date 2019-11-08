@@ -271,12 +271,20 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
 
         return resp
 
-    @swagger_auto_schema(operation_id="image_delete")
+    @swagger_auto_schema(operation_id="image_delete",
+                         operation_description="Delete image of given ID.",
+                         responses={
+                             204: '',
+                             404: 'Not Found'
+                         })
     def delete(self, request, identifier, format=None):
-        image = Image.objects.get(identifier=identifier)
-        es = search_controller.es
-        es.delete(index='image', doc_type='doc', id=image.id)
-        image.delete()
+        try:
+            image = Image.objects.get(identifier=identifier)
+            es = search_controller.es
+            es.delete(index='image', doc_type='doc', id=image.id)
+            image.delete()
+        except Image.DoesNotExist:
+            return Response(status=404, data='Not Found')
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
