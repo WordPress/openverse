@@ -1,86 +1,13 @@
 <template>
   <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
-    <div class="filter-option">
-      <multiselect
-        v-model="filter.lt"
-        placeholder="I want something that I can"
-        label="name"
-        track-by="code"
-        :options="licenseTypes"
-        :multiple="true"
-        :searchable="false"
-        :closeOnSelect="false"
-        :showLabels="false"
-        @input="onUpdateFilter"
-        @select="onItemSelected"
-        @remove="onItemRemoved">
-        <template slot="option" slot-scope="props">
-          <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
-          <span>{{props.option.name}}</span>
-        </template>
-      </multiselect>
-    </div>
-    <div v-if="showProvidersFilter" class="filter-option">
-      <multiselect
-        v-model="filter.provider"
-        placeholder="All Sources"
-        label="name"
-        track-by="code"
-        :options="providers"
-        :multiple="true"
-        :searchable="true"
-        :closeOnSelect="false"
-        :showLabels="false"
-        @input="onUpdateFilter"
-        @select="onItemSelected"
-        @remove="onItemRemoved">
-        <template slot="option" slot-scope="props">
-          <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
-          <span>{{props.option.name}}</span>
-        </template>
-      </multiselect>
-    </div>
-    <div class="filter-option small-filter">
-      <multiselect
-        v-model="filter.imageType"
-        placeholder="Image Type"
-        label="name"
-        track-by="code"
-        :options="imageTypes"
-        :multiple="true"
-        :searchable="false"
-        :closeOnSelect="false"
-        :showLabels="false"
-        @input="onUpdateFilter"
-        @select="onItemSelected"
-        @remove="onItemRemoved">
-        <template slot="option" slot-scope="props">
-          <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
-          <span>{{props.option.name}}</span>
-        </template>
-      </multiselect>
-    </div>
-    <div class="filter-option small-filter">
-      <multiselect
-        v-model="filter.extension"
-        placeholder="File Type"
-        label="name"
-        track-by="code"
-        :options="extensions"
-        :multiple="true"
-        :searchable="false"
-        :closeOnSelect="false"
-        :showLabels="false"
-        @input="onUpdateFilter"
-        @select="onItemSelected"
-        @remove="onItemRemoved">
-        <template slot="option" slot-scope="props">
-          <input type="checkbox" :id="props.option.code" :checked="props.option.checked" />
-          <span>{{props.option.name}}</span>
-        </template>
-      </multiselect>
-    </div>
+    <form class="filter-option" role="filter">
+      <filter-check-list :options="licenseTypes" title="I want something that I can"/>
+      <filter-check-list :options="providers" title="All Sources"/>
+      <filter-check-list :options="imageTypes" title="Image Type"/>
+      <filter-check-list :options="extensions" title="File Type"/>
+    </form>
+    
     <div class="filter-option small-filter search-filters_search-by">
       <input type="checkbox" id="creator-chk"
               v-model="filter.searchBy.creator"
@@ -100,6 +27,7 @@
 <script>
 import Multiselect from 'vue-multiselect';
 import clonedeep from 'lodash.clonedeep';
+import FilterCheckList from './FilterChecklist';
 
 const filterData = {
   licenseTypes: [
@@ -139,6 +67,7 @@ export default {
   props: ['showProvidersFilter'],
   components: {
     Multiselect,
+    FilterCheckList,
   },
   mounted() {
     this.parseQueryFilters();
