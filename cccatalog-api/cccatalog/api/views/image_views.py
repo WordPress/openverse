@@ -274,10 +274,11 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     @swagger_auto_schema(operation_id="image_delete")
     def delete(self, request, identifier, format=None):
         image = Image.objects.get(identifier=identifier)
+        es = search_controller.es
+        es.delete(index='image', doc_type='doc', id=image.id)
         image.delete()
-        content = {'status': 'NO CONTENT'}
 
-        return Response(content, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 def _save_wrapper(pil_img, exif_bytes, destination):
