@@ -2,7 +2,9 @@
   <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
     <form class="filter-option" role="filter">
-      <filter-check-list :options="licenseTypes" title="I want something that I can"/>
+      <filter-check-list :options="licenseTypes"
+                         title="I want something that I can"
+                         @filterChanged="onUpdateFilter" />
       <filter-check-list :options="providers" title="All Sources"/>
       <filter-check-list :options="imageTypes" title="Image Type"/>
       <filter-check-list :options="extensions" title="File Type"/>
