@@ -2,7 +2,7 @@ from uuslug import uuslug
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.contrib.postgres.fields import JSONField, ArrayField
-from cccatalog.api.licenses import ATTRIBUTION, LICENSE_URL
+from cccatalog.api.licenses import ATTRIBUTION, get_license_url
 from oauth2_provider.models import AbstractApplication
 
 
@@ -111,10 +111,7 @@ class Image(OpenLedgerModel):
     def license_url(self):
         _license = str(self.license)
         license_version = str(self.license_version)
-        return LICENSE_URL.format(
-            _license=_license,
-            version=license_version
-        )
+        return get_license_url(_license, license_version)
 
     @property
     def attribution(self):

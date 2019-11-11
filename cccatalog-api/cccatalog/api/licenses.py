@@ -25,3 +25,10 @@ ATTRIBUTION = \
     "{title} {creator}is licensed under CC-{_license} {version}. To view a " \
     "copy of this license, visit {license_url}."
 LICENSE_URL = 'https://creativecommons.org/licenses/{_license}/{version}/'
+
+
+def get_license_url(_license, version):
+    if _license.lower() == 'pdm':
+        return 'https://creativecommons.org/publicdomain/mark/1.0/'
+    else:
+        return f'https://creativecommons.org/licenses/{_license}/{version}/'
