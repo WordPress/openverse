@@ -24,7 +24,6 @@ LICENSE_GROUPS = {
 ATTRIBUTION = \
     "{title} {creator}is licensed under CC-{_license} {version}. To view a " \
     "copy of this license, visit {license_url}."
-LICENSE_URL = 'https://creativecommons.org/licenses/{_license}/{version}/'
 
 
 def get_license_url(_license, version):
