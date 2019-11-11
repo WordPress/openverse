@@ -131,3 +131,4 @@ ccbot/crawl_plan.yml
 
 .DS_Store
 *.iml
+.idea
