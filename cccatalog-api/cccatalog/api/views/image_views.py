@@ -285,6 +285,10 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             image.delete()
         except Image.DoesNotExist:
             return Response(status=404, data='Not Found')
+        # Mark as removed in upstream database
+        image = Image.objects.using('upstream').get(identifier=identifier)
+        image.removed_from_source = True
+        image.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
