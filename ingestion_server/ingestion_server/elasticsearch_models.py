@@ -1,4 +1,5 @@
 from elasticsearch_dsl import Date, Text, Integer, Keyword, DocType, Field
+from ingestion_server.categorize import get_categories
 
 """
 Provides an ORM-like experience for accessing data in Elasticsearch.
@@ -80,6 +81,7 @@ class Image(SyncableDocType):
     views = RankFeature()
     comments = RankFeature()
     likes = RankFeature()
+    categories = Text(multi=True)
 
     class Index:
         name = 'image'
@@ -107,6 +109,8 @@ class Image(SyncableDocType):
             comments = int(metrics['comments']) + 1
         except (KeyError, TypeError):
             pass
+        provider = row[schema['provider']]
+        extension = _get_extension(row[schema['url']])
         return Image(
             _id=row[schema['id']],
             id=row[schema['id']],
@@ -131,6 +135,7 @@ class Image(SyncableDocType):
             views=views,
             comments=comments,
             likes=likes,
+            categories=get_categories(extension, provider)
         )
 
 
