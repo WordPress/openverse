@@ -52,6 +52,15 @@ const initialState = (searchParams) => {
   parseQueryString(searchParams, 'imageTypes', 'imageTypes', filters);
   parseQueryString(searchParams, 'extensions', 'extensions', filters);
 
+  const searchBy = getParameterByName('searchBy', searchParams);
+  if (searchBy === 'creator') {
+    filters.searchBy.creator = true;
+  }
+
+  filters.isFilterVisible = true;
+  filters.isFilterApplied = !!filters.provider ||
+                            !!filters.licenseTypes ||
+                            !!filters.searchBy.creator;
   return {
     filters,
   };
