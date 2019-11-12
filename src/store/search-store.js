@@ -14,7 +14,6 @@ import {
   FETCH_END_IMAGES,
   FETCH_IMAGES_ERROR,
   FETCH_START_IMAGES,
-  SET_FILTER_IS_APPLIED,
   SET_FILTER_IS_VISIBLE,
   SET_IMAGE,
   SET_IMAGE_PAGE,
@@ -229,9 +228,6 @@ const mutations = redirect => ({
   },
   [SET_FILTER_IS_VISIBLE](_state, params) {
     _state.isFilterVisible = params.isFilterVisible;
-  },
-  [SET_FILTER_IS_APPLIED](_state, params) {
-    _state.isFilterApplied = params.isFilterApplied;
   },
   [SET_IMAGE_PAGE](_state, params) {
     _state.imagePage = params.imagePage;

@@ -3,7 +3,6 @@ import {
   FETCH_END_IMAGES,
   FETCH_IMAGES_ERROR,
   FETCH_START_IMAGES,
-  SET_FILTER_IS_APPLIED,
   SET_FILTER_IS_VISIBLE,
   SET_IMAGE,
   SET_IMAGE_PAGE,
@@ -118,13 +117,6 @@ describe('Search Store', () => {
       mutations[SET_FILTER_IS_VISIBLE](state, params);
 
       expect(state.isFilterVisible).toBe(params.isFilterVisible);
-    });
-
-    it('SET_FILTER_IS_APPLIED updates state', () => {
-      const params = { isFilterApplied: 'bar' };
-      mutations[SET_FILTER_IS_APPLIED](state, params);
-
-      expect(state.isFilterApplied).toBe(params.isFilterApplied);
     });
 
     it('SET_IMAGE_PAGE updates state', () => {
