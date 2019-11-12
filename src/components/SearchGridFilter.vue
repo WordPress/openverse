@@ -9,7 +9,7 @@
       <filter-check-list :options="imageTypes" title="Image Type"/>
       <filter-check-list :options="extensions" title="File Type"/>
     </form>
-    
+
     <div class="filter-option small-filter search-filters_search-by">
       <input type="checkbox" id="creator-chk"
               v-model="filter.searchBy.creator"
