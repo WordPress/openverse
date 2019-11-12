@@ -220,8 +220,8 @@ describe('Search Store', () => {
       };
       mutations[RESET_QUERY](state);
 
-      expect(state.query.q).toBeNull();
-      expect(state.query.lt).toBeNull();
+      expect(state.query.q).toBe('');
+      expect(state.query.lt).toBe('');
       expect(state.isFilterApplied).toBeFalsy();
     });
 
