@@ -13,6 +13,7 @@ import SocialMediaStore from './social-store';
 import ABTestStore from './abtest-store';
 import UserStore from './user-store';
 import UsageDataStore from './usage-data-store';
+import FilterStore from './filter-store';
 
 
 Vue.use(Vuex);
@@ -31,6 +32,7 @@ const store = (GoogleAnalytics, router) => (new Vuex.Store({
   ),
   state: Object.assign(
     SearchStore.state(queryParams),
+    FilterStore.state(queryParams),
     ImageProviderStore.state,
     BugReportStore.state,
     ABTestStore.state,
