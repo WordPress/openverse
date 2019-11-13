@@ -9,6 +9,7 @@ export const FETCH_START = 'FETCH_START';
 export const FETCH_START_IMAGES = 'FETCH_START_IMAGES';
 export const SET_FILTER = 'SET_FILTER';
 export const SET_FILTER_IS_VISIBLE = 'SET_FILTER_IS_VISIBLE';
+export const SET_FILTER = 'SET_FILTER';
 export const SET_GRID_FILTER = 'SET_GRID_FILTER';
 export const SET_IMAGE = 'SET_IMAGE';
 export const SET_IMAGE_PAGE = 'SET_IMAGE_PAGE';

@@ -17,13 +17,10 @@
 <script>
 export default {
   name: 'filter-check-list',
-  props: ['options', 'title'],
+  props: ['options', 'title', 'filterType'],
   methods: {
     onValueChange(e) {
-      const option = this.$props.options.filter(opt => opt.code === e.target.id);
-      if (option) {
-        this.$emit('filterChanged', { option: option[0] });
-      }
+      this.$emit('filterChanged', { code: e.target.id, filterType: this.$props.filterType });
     },
   },
 };

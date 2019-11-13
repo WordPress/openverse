@@ -24,6 +24,7 @@ const store = (GoogleAnalytics, router) => (new Vuex.Store({
   actions: Object.assign(
     UsageDataStore.actions(UsageDataService),
     SearchStore.actions(ImageService),
+    FilterStore.actions,
     ImageProviderStore.actions(ImageProviderService),
     AttributionStore.actions(GoogleAnalytics),
     BugReportStore.actions(BugReportService),
@@ -40,6 +41,7 @@ const store = (GoogleAnalytics, router) => (new Vuex.Store({
   ),
   mutations: Object.assign(
     SearchStore.mutations(redirectTo(router)),
+    FilterStore.mutations,
     ImageProviderStore.mutations,
     BugReportStore.mutations,
     ABTestStore.mutations,

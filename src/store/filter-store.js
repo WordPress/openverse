@@ -1,6 +1,8 @@
 import findIndex from 'lodash.findindex';
 import clonedeep from 'lodash.clonedeep';
 import getParameterByName from '@/utils/getParameterByName';
+import { TOGGLE_FILTER } from './action-types';
+import { SET_FILTER } from './mutation-types';
 
 const filterData = {
   licenses: [
@@ -44,7 +46,7 @@ const parseQueryString = (queryString, queryStringParamKey, filterKey, data) => 
 const initialState = (searchParams) => {
   const filters = clonedeep(filterData);
   filters.provider = getParameterByName('provider', searchParams).split(',').map(provider => ({
-    provider_name: provider,
+    code: provider,
     checked: true,
   }));
   parseQueryString(searchParams, 'lt', 'licenseTypes', filters);
@@ -66,6 +68,27 @@ const initialState = (searchParams) => {
   };
 };
 
+const actions = {
+  [TOGGLE_FILTER]({ commit, state }, params) {
+    const filters = state.filters[params.filterType];
+    const codeIdx = findIndex(filters, f => f.code === params.code);
+
+    commit(SET_FILTER, {
+      filterType: params.filterType,
+      codeIdx,
+    });
+  },
+};
+
+const mutations = {
+  [SET_FILTER](state, params) {
+    const filters = state.filters[params.filterType];
+    filters[params.codeIdx].checked = !filters[params.codeIdx].checked;
+  },
+};
+
 export default {
   state: initialState,
+  actions,
+  mutations,
 };
