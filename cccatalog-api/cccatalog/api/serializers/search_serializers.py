@@ -258,7 +258,6 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
                 )
         return value.lower()
 
-
     def validate(self, data):
         advanced_search = 'creator' in data or 'title' in data or 'tags' in data
         if 'q' in data and advanced_search:
