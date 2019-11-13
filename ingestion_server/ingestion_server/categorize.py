@@ -40,7 +40,7 @@ provider_category = {
 
 
 def get_categories(extension, provider):
-    if extension.lower() == 'svg':
+    if extension and extension.lower() == 'svg':
         categories = [Category.VECTOR, Category.ILLUSTRATION]
     elif provider in provider_category:
         categories = provider_category[provider]
