@@ -19,51 +19,23 @@ class Category(enum.Enum):
 provider_category = {
     '__default': [Category.ILLUSTRATION],
     'thorvaldsenmuseum': [
-        Category.PHOTOGRAPH, Category.ILLUSTRATION, Category.DIGITIZED_ARTWORK
+        Category.DIGITIZED_ARTWORK
     ],
     'svgsilh': [Category.VECTOR, Category.ILLUSTRATION],
-    'thingiverse': [Category.ILLUSTRATION],
-    'sciencemuseum': [Category.PHOTOGRAPH, Category.PHOTOGRAPH],
-    'rijksmuseum': [
-        Category.ILLUSTRATION, Category.PHOTOGRAPH, Category.DIGITIZED_ARTWORK
-    ],
-    'rawpixel': [
-        Category.PHOTOGRAPH, Category.DIGITIZED_ARTWORK, Category.VECTOR
-    ],
     'phylopic': [Category.VECTOR, Category.ILLUSTRATION],
-    'museumsvictoria': [
-        Category.PHOTOGRAPH, Category.DIGITIZED_ARTWORK, Category.ILLUSTRATION
-    ],
-    'met': [
-        Category.PHOTOGRAPH, Category.ILLUSTRATION, Category.DIGITIZED_ARTWORK
-    ],
-    'mccordmuseum': [
-        Category.PHOTOGRAPH, Category.ILLUSTRATION, Category.DIGITIZED_ARTWORK
-    ],
-    'geographorguk': [Category.PHOTOGRAPH],
-    'flickr': [
-        Category.PHOTOGRAPH, Category.ILLUSTRATION, Category.DIGITIZED_ARTWORK
-    ],
     'floraon': [Category.PHOTOGRAPH],
-    'digitaltmuseum': [
-        Category.PHOTOGRAPH, Category.DIGITIZED_ARTWORK, Category.ILLUSTRATION
-    ],
-    'deviantart': [
-        Category.PHOTOGRAPH, Category.DIGITIZED_ARTWORK, Category.ILLUSTRATION,
-        Category.VECTOR
-    ],
-    'clevelandmuseum': [
-        Category.PHOTOGRAPH, Category.ILLUSTRATION, Category.DIGITIZED_ARTWORK
-    ],
-    'brooklynmuseum': [
-        Category.PHOTOGRAPH, Category.ILLUSTRATION, Category.DIGITIZED_ARTWORK
-    ],
-    'behance': [
-        Category.PHOTOGRAPH, Category.ILLUSTRATION, Category.DIGITIZED_ARTWORK
-    ],
     'animaldiversity': [Category.PHOTOGRAPH],
     'WoRMS': [Category.PHOTOGRAPH],
-    'CAPL': [Category.PHOTOGRAPH]
+    'clevelandmuseum': [Category.DIGITIZED_ARTWORK],
+    'CAPL': [Category.PHOTOGRAPH],
+    'sciencemuseum': [Category.PHOTOGRAPH],
+    'rijksmuseum': [Category.DIGITIZED_ARTWORK],
+    'museumsvictoria': [Category.DIGITIZED_ARTWORK],
+    'met': [Category.DIGITIZED_ARTWORK],
+    'mccordmuseum': [Category.DIGITIZED_ARTWORK],
+    'digitaltmuseum': [Category.DIGITIZED_ARTWORK],
+    'deviantart': [Category.DIGITIZED_ARTWORK],
+    'brooklynmuseum': [Category.DIGITIZED_ARTWORK]
 }
 
 
@@ -82,4 +54,3 @@ def get_categories(extension, provider):
     else:
         categories = provider_category['__default']
     return _serialize(categories)
-
