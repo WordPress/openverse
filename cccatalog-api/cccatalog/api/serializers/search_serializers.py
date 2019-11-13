@@ -172,6 +172,13 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         help_text="A comma separated list of desired file extensions.",
         required=False
     )
+    categories = serializers.CharField(
+        label="categories",
+        help_text="A comma separated list of categories; available categories "
+                  "include `vector`, `illustration`, `photograph`, and "
+                  "`digitized_artwork`.",
+        required=False
+    )
     qa = serializers.BooleanField(
         label='quality_assurance',
         help_text="If enabled, searches are performed against the quality"
@@ -233,6 +240,24 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     @staticmethod
     def validate_extension(value):
         return value.lower()
+
+    @staticmethod
+    def validate_categories(value):
+        valid_categories = {
+            'vector',
+            'illustration',
+            'digitized_artwork',
+            'photograph'
+        }
+        input_categories = [x.lower() for x in value.split(',')]
+        for category in input_categories:
+            if category not in valid_categories:
+                raise serializers.ValidationError(
+                    f'Invalid category: {category}.'
+                    f' Available options: {valid_categories}'
+                )
+        return value.lower()
+
 
     def validate(self, data):
         advanced_search = 'creator' in data or 'title' in data or 'tags' in data
