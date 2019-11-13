@@ -39,13 +39,6 @@ provider_category = {
 }
 
 
-def _serialize(categories):
-    """
-    Convert enum to an appropriate representation for storage in Elasticsearch.
-    """
-    return [x.name for x in categories]
-
-
 def get_categories(extension, provider):
     if extension.lower() == 'svg':
         categories = [Category.VECTOR, Category.ILLUSTRATION]
@@ -53,4 +46,4 @@ def get_categories(extension, provider):
         categories = provider_category[provider]
     else:
         categories = provider_category['__default']
-    return _serialize(categories)
+    return [x.name for x in categories]
