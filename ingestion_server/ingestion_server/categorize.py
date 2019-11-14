@@ -18,9 +18,7 @@ class Category(enum.Enum):
 # Map each provider to a set of categories..
 provider_category = {
     '__default': [],
-    'thorvaldsenmuseum': [
-        Category.DIGITIZED_ARTWORK
-    ],
+    'thorvaldsenmuseum': [Category.DIGITIZED_ARTWORK],
     'svgsilh': [Category.VECTOR, Category.ILLUSTRATION],
     'phylopic': [Category.VECTOR, Category.ILLUSTRATION],
     'floraon': [Category.PHOTOGRAPH],
