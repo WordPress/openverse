@@ -113,6 +113,7 @@ export default {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
         filterType,
+        shouldNavigate: true,
       });
     },
     onClearFilters() {

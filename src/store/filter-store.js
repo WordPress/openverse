@@ -3,6 +3,7 @@ import clonedeep from 'lodash.clonedeep';
 import getParameterByName from '@/utils/getParameterByName';
 import { TOGGLE_FILTER } from './action-types';
 import { SET_FILTER } from './mutation-types';
+import filterToQueryData from '../utils/filterToQueryData';
 
 const filterData = {
   licenses: [
@@ -72,20 +73,35 @@ const actions = {
   [TOGGLE_FILTER]({ commit, state }, params) {
     const filters = state.filters[params.filterType];
     const codeIdx = findIndex(filters, f => f.code === params.code);
+    const shouldNavigate = params.shouldNavigate;
 
     commit(SET_FILTER, {
       filterType: params.filterType,
       codeIdx,
+      shouldNavigate,
     });
   },
 };
 
-const mutations = {
+const mutations = redirect => ({
   [SET_FILTER](state, params) {
     const filters = state.filters[params.filterType];
     filters[params.codeIdx].checked = !filters[params.codeIdx].checked;
+
+    const query = filterToQueryData(state.filters);
+    state.isFilterApplied = ['provider', 'lt', 'imageType', 'extension', 'searchBy']
+      .some(key => query[key] && query[key].length > 0);
+
+    state.query = {
+      q: state.query.q,
+      ...query,
+    };
+
+    if (params.shouldNavigate === true) {
+      redirect({ path: '/search', query });
+    }
   },
-};
+});
 
 export default {
   state: initialState,
