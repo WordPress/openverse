@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import Multiselect from 'vue-multiselect';
 import clonedeep from 'lodash.clonedeep';
 import { TOGGLE_FILTER } from '@/store/action-types';
 import FilterCheckList from './FilterChecklist';
@@ -79,7 +78,6 @@ export default {
   name: 'search-grid-filter',
   props: ['showProvidersFilter'],
   components: {
-    Multiselect,
     FilterCheckList,
   },
   mounted() {
@@ -105,20 +103,7 @@ export default {
     },
   },
   methods: {
-    onItemSelected(option) {
-      // eslint-disable-next-line no-param-reassign
-      option.checked = true;
-    },
-    onItemRemoved(option) {
-      // eslint-disable-next-line no-param-reassign
-      option.checked = false;
-    },
     onUpdateFilter({ code, filterType }) {
-      const filter = Object.assign({}, this.filter);
-      Object.keys(this.filter).forEach((key) => {
-        filter[key] = transformFilterValue(filter, key);
-      });
-      this.$emit('onSearchFilterChanged', { query: filter, shouldNavigate: true });
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
         filterType,
