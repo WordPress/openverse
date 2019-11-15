@@ -83,23 +83,24 @@ const actions = {
   },
 };
 
+function setFilter(state, params, path, redirect) {
+  const filters = state.filters[params.filterType];
+  filters[params.codeIdx].checked = !filters[params.codeIdx].checked;
+  const query = filterToQueryData(state.filters);
+  state.isFilterApplied = ['providers', 'lt', 'imageType', 'extension', 'searchBy']
+    .some(key => query[key] && query[key].length > 0);
+  state.query = {
+    q: state.query.q,
+    ...query,
+  };
+  if (params.shouldNavigate === true) {
+    redirect({ path, query: state.query });
+  }
+}
+
 const mutations = redirect => ({
   [SET_FILTER](state, params) {
-    const filters = state.filters[params.filterType];
-    filters[params.codeIdx].checked = !filters[params.codeIdx].checked;
-
-    const query = filterToQueryData(state.filters);
-    state.isFilterApplied = ['providers', 'lt', 'imageType', 'extension', 'searchBy']
-      .some(key => query[key] && query[key].length > 0);
-
-    state.query = {
-      q: state.query.q,
-      ...query,
-    };
-
-    if (params.shouldNavigate === true) {
-      redirect({ path: '/search', query: state.query });
-    }
+    return setFilter(state, params, '/search', redirect);
   },
   [SET_PROVIDERS_FILTERS](state, params) {
     const providers = params.imageProviders;
