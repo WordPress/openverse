@@ -2,19 +2,19 @@
   <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
     <form class="filter-option" role="filter">
-      <filter-check-list :options="licenseTypes"
+      <filter-check-list :options="filters.licenseTypes"
                          title="I want something that I can"
                          filterType="licenseTypes"
                          @filterChanged="onUpdateFilter" />
-      <filter-check-list :options="providers"
+      <filter-check-list :options="filters.providers"
                          title="All Sources"
                          filterType="providers"
                          @filterChanged="onUpdateFilter" />
-      <filter-check-list :options="imageTypes"
+      <filter-check-list :options="filters.imageTypes"
                          title="Image Type"
                          filterType="imageTypes"
                          @filterChanged="onUpdateFilter" />
-      <filter-check-list :options="extensions"
+      <filter-check-list :options="filters.extensions"
                          title="File Type"
                          filterType="extensions"
                          @filterChanged="onUpdateFilter" />
@@ -22,7 +22,7 @@
 
     <div class="filter-option small-filter search-filters_search-by">
       <input type="checkbox" id="creator-chk"
-              v-model="filter.searchBy.creator"
+              v-model="filters.searchBy.creator"
               @change="onUpdateFilter">
       <label for="creator-chk">Search by Creator</label>
     </div>
@@ -64,24 +64,11 @@ const filterData = {
   },
 };
 
-const transformFilterValue = (filter, key) => {
-  if (Array.isArray(filter[key])) {
-    return filter[key].map(filterItem => filterItem.code).join(',');
-  }
-  else if (key === 'searchBy') {
-    return filter.searchBy.creator ? 'creator' : null;
-  }
-  return null;
-};
-
 export default {
   name: 'search-grid-filter',
   props: ['showProvidersFilter'],
   components: {
     FilterCheckList,
-  },
-  mounted() {
-    this.parseQueryFilters();
   },
   computed: {
     isFilterApplied() {
@@ -93,13 +80,8 @@ export default {
     query() {
       return this.$store.state.query;
     },
-    providers() {
-      const providers = this.$store.state.imageProviders.map(provider => ({
-        code: provider.provider_name,
-        name: provider.display_name,
-      }));
-
-      return providers;
+    filters() {
+      return this.$store.state.filters;
     },
   },
   methods: {
@@ -152,7 +134,6 @@ export default {
       }
     },
   },
-  data: () => clonedeep(filterData),
 };
 </script>
 
