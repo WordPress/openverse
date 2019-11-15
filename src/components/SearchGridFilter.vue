@@ -6,9 +6,18 @@
                          title="I want something that I can"
                          filterType="licenseTypes"
                          @filterChanged="onUpdateFilter" />
-      <filter-check-list :options="providers" title="All Sources"/>
-      <filter-check-list :options="imageTypes" title="Image Type"/>
-      <filter-check-list :options="extensions" title="File Type"/>
+      <filter-check-list :options="providers"
+                         title="All Sources"
+                         filterType="providers"
+                         @filterChanged="onUpdateFilter" />
+      <filter-check-list :options="imageTypes"
+                         title="Image Type"
+                         filterType="imageTypes"
+                         @filterChanged="onUpdateFilter" />
+      <filter-check-list :options="extensions"
+                         title="File Type"
+                         filterType="extensions"
+                         @filterChanged="onUpdateFilter" />
     </form>
 
     <div class="filter-option small-filter search-filters_search-by">
