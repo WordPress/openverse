@@ -98,7 +98,7 @@ const mutations = redirect => ({
     };
 
     if (params.shouldNavigate === true) {
-      redirect({ path: '/search', query });
+      redirect({ path: '/search', query: state.query });
     }
   },
 });
