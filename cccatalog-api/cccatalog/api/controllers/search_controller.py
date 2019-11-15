@@ -209,15 +209,21 @@ def search(search_params, index, page_size, ip, request,
         provider_filters = []
         for provider in search_params.data['provider'].split(','):
             provider_filters.append(Q('term', provider=provider))
-        s = s.filter('bool', should=provider_filters, minimum_should_match=1)
+        s = s.filter('bool', should=provider_filters)
     if 'extension' in search_params.data:
         extensions = search_params.data['extension'].split(',')
         extension_filters = []
         for extension in extensions:
             extension_filter = Q('term', extension=extension)
             extension_filters.append(extension_filter)
-        s = s.filter('bool', should=extension_filters, minimum_should_match=1)
-
+        s = s.filter('bool', should=extension_filters)
+    if 'categories' in search_params.data:
+        category_filters = []
+        categories = search_params.data['categories'].split(',')
+        for category in categories:
+            category_filter = Q('term', categories=category)
+            category_filters.append(category_filter)
+        s = s.filter('bool', should=category_filters)
     # It is sometimes desirable to hide content providers from the catalog
     # without scrubbing them from the database or reindexing.
     filter_cache_key = 'filtered_providers'
@@ -263,6 +269,7 @@ def search(search_params, index, page_size, ip, request,
                 default_field='tags.name',
                 query=tags
             )
+
     # Boost by popularity metrics
     if POPULARITY_BOOST:
         queries = []
