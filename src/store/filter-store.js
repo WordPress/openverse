@@ -2,7 +2,7 @@ import findIndex from 'lodash.findindex';
 import clonedeep from 'lodash.clonedeep';
 import getParameterByName from '@/utils/getParameterByName';
 import { TOGGLE_FILTER } from './action-types';
-import { SET_FILTER } from './mutation-types';
+import { SET_FILTER, SET_PROVIDERS_FILTERS } from './mutation-types';
 import filterToQueryData from '../utils/filterToQueryData';
 
 const filterData = {
@@ -46,14 +46,14 @@ const parseQueryString = (queryString, queryStringParamKey, filterKey, data) => 
 
 const initialState = (searchParams) => {
   const filters = clonedeep(filterData);
-  filters.provider = getParameterByName('provider', searchParams).split(',').map(provider => ({
+  filters.providers = getParameterByName('provider', searchParams).split(',').map(provider => ({
     code: provider,
     checked: true,
   }));
   parseQueryString(searchParams, 'lt', 'licenseTypes', filters);
   parseQueryString(searchParams, 'li', 'licenses', filters);
-  parseQueryString(searchParams, 'imageTypes', 'imageTypes', filters);
-  parseQueryString(searchParams, 'extensions', 'extensions', filters);
+  parseQueryString(searchParams, 'imageType', 'imageTypes', filters);
+  parseQueryString(searchParams, 'extension', 'extensions', filters);
 
   const searchBy = getParameterByName('searchBy', searchParams);
   if (searchBy === 'creator') {
@@ -61,7 +61,7 @@ const initialState = (searchParams) => {
   }
 
   filters.isFilterVisible = true;
-  filters.isFilterApplied = !!filters.provider ||
+  filters.isFilterApplied = !!filters.providers ||
                             !!filters.licenseTypes ||
                             !!filters.searchBy.creator;
   return {
@@ -89,7 +89,7 @@ const mutations = redirect => ({
     filters[params.codeIdx].checked = !filters[params.codeIdx].checked;
 
     const query = filterToQueryData(state.filters);
-    state.isFilterApplied = ['provider', 'lt', 'imageType', 'extension', 'searchBy']
+    state.isFilterApplied = ['providers', 'lt', 'imageType', 'extension', 'searchBy']
       .some(key => query[key] && query[key].length > 0);
 
     state.query = {
@@ -100,6 +100,27 @@ const mutations = redirect => ({
     if (params.shouldNavigate === true) {
       redirect({ path: '/search', query: state.query });
     }
+  },
+  [SET_PROVIDERS_FILTERS](state, params) {
+    const providers = params.imageProviders;
+    // merge providers from API response with the filters that came from the
+    // browse URL search query string and match the checked properties
+    // in the store
+    state.filters.providers = providers.map((provider) => {
+      const existingProviderFilterIdx = findIndex(
+        state.filters.providers,
+        p => p.code === provider.provider_name);
+
+      const checked = existingProviderFilterIdx >= 0 ?
+        state.filters.providers[existingProviderFilterIdx].checked :
+        false;
+
+      return {
+        code: provider.provider_name,
+        name: provider.display_name,
+        checked,
+      };
+    });
   },
 });
 

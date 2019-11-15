@@ -5,7 +5,7 @@ const filterToString = filter =>
     .join(',');
 
 const filterToQueryData = filterData => ({
-  provider: filterToString(filterData.provider),
+  provider: filterToString(filterData.providers),
   lt: filterToString(filterData.licenseTypes),
   imageType: filterToString(filterData.imageTypes),
   extension: filterToString(filterData.extensions),
