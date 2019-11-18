@@ -22,8 +22,8 @@
 
     <div class="filter-option small-filter search-filters_search-by">
       <input type="checkbox" id="creator-chk"
-              v-model="filters.searchBy.creator"
-              @change="onUpdateFilter">
+              :checked="filters.searchBy.creator"
+              @change="onUpdateSearchByCreator">
       <label for="creator-chk">Search by Creator</label>
     </div>
     <div class="clear-filters"
@@ -89,6 +89,12 @@ export default {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
         filterType,
+        shouldNavigate: true,
+      });
+    },
+    onUpdateSearchByCreator() {
+      this.$store.dispatch(TOGGLE_FILTER, {
+        filterType: 'searchBy',
         shouldNavigate: true,
       });
     },

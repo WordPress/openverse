@@ -84,8 +84,14 @@ const actions = {
 };
 
 function setFilter(state, params, path, redirect) {
-  const filters = state.filters[params.filterType];
-  filters[params.codeIdx].checked = !filters[params.codeIdx].checked;
+  if (params.filterType === 'searchBy') {
+    state.filters.searchBy.creator = !state.filters.searchBy.creator;
+  }
+  else {
+    const filters = state.filters[params.filterType];
+    filters[params.codeIdx].checked = !filters[params.codeIdx].checked;
+  }
+
   const query = filterToQueryData(state.filters);
   state.isFilterApplied = ['providers', 'lt', 'imageType', 'extension', 'searchBy']
     .some(key => query[key] && query[key].length > 0);
@@ -93,6 +99,7 @@ function setFilter(state, params, path, redirect) {
     q: state.query.q,
     ...query,
   };
+
   if (params.shouldNavigate === true) {
     redirect({ path, query: state.query });
   }

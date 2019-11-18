@@ -9,6 +9,7 @@ const filterToQueryData = filterData => ({
   lt: filterToString(filterData.licenseTypes),
   imageType: filterToString(filterData.imageTypes),
   extension: filterToString(filterData.extensions),
+  searchBy: filterData.searchBy.creator ? 'creator' : '',
 });
 
 export default filterToQueryData;
