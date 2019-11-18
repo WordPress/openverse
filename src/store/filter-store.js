@@ -2,7 +2,7 @@ import findIndex from 'lodash.findindex';
 import clonedeep from 'lodash.clonedeep';
 import getParameterByName from '@/utils/getParameterByName';
 import { TOGGLE_FILTER } from './action-types';
-import { SET_FILTER, SET_PROVIDERS_FILTERS } from './mutation-types';
+import { SET_FILTER, SET_PROVIDERS_FILTERS, CLEAR_FILTERS } from './mutation-types';
 import filterToQueryData from '../utils/filterToQueryData';
 
 const filterData = {
@@ -83,6 +83,19 @@ const actions = {
   },
 };
 
+function setQuery(state, params, redirect, path) {
+  const query = filterToQueryData(state.filters);
+  state.isFilterApplied = ['providers', 'lt', 'imageType', 'extension', 'searchBy']
+    .some(key => query[key] && query[key].length > 0);
+  state.query = {
+    q: state.query.q,
+    ...query,
+  };
+  if (params.shouldNavigate === true) {
+    redirect({ path, query: state.query });
+  }
+}
+
 function setFilter(state, params, path, redirect) {
   if (params.filterType === 'searchBy') {
     state.filters.searchBy.creator = !state.filters.searchBy.creator;
@@ -92,22 +105,24 @@ function setFilter(state, params, path, redirect) {
     filters[params.codeIdx].checked = !filters[params.codeIdx].checked;
   }
 
-  const query = filterToQueryData(state.filters);
-  state.isFilterApplied = ['providers', 'lt', 'imageType', 'extension', 'searchBy']
-    .some(key => query[key] && query[key].length > 0);
-  state.query = {
-    q: state.query.q,
-    ...query,
-  };
-
-  if (params.shouldNavigate === true) {
-    redirect({ path, query: state.query });
-  }
+  setQuery(state, params, redirect, path);
 }
 
 const mutations = redirect => ({
   [SET_FILTER](state, params) {
     return setFilter(state, params, '/search', redirect);
+  },
+  [CLEAR_FILTERS](state, params) {
+    const initialFilters = initialState('').filters;
+    const resetProviders = state.filters.providers.map(provider => ({
+      ...provider,
+      checked: false,
+    }));
+    state.filters = {
+      ...initialFilters,
+      providers: resetProviders,
+    };
+    return setQuery(state, params, '/search', redirect);
   },
   [SET_PROVIDERS_FILTERS](state, params) {
     const providers = params.imageProviders;
@@ -137,3 +152,4 @@ export default {
   actions,
   mutations,
 };
+

@@ -37,32 +37,9 @@
 </template>
 
 <script>
-import clonedeep from 'lodash.clonedeep';
 import { TOGGLE_FILTER } from '@/store/action-types';
+import { CLEAR_FILTERS } from '@/store/mutation-types';
 import FilterCheckList from './FilterChecklist';
-
-const filterData = {
-  licenseTypes: [
-    { code: 'commercial', name: 'Use for commercial purposes' },
-    { code: 'modification', name: 'Modify or adapt' },
-  ],
-  imageTypes: [
-    { code: 'photo', name: 'Photographs' },
-    { code: 'illustration', name: 'Illustrations' },
-    { code: 'vector', name: 'Vector Graphics' },
-  ],
-  extensions: [
-    { code: 'jpg', name: 'JPEGs' },
-    { code: 'png', name: 'PNGs' },
-  ],
-  filter: {
-    provider: [],
-    lt: [],
-    searchBy: {
-      creator: false,
-    },
-  },
-};
 
 export default {
   name: 'search-grid-filter',
@@ -76,9 +53,6 @@ export default {
     },
     isFilterVisible() {
       return this.$store.state.isFilterVisible;
-    },
-    query() {
-      return this.$store.state.query;
     },
     filters() {
       return this.$store.state.filters;
@@ -99,45 +73,9 @@ export default {
       });
     },
     onClearFilters() {
-      this.filter = clonedeep(filterData.filter);
-      const filter = {};
-      Object.keys(this.filter).forEach((key) => {
-        filter[key] = transformFilterValue(this.filter, key);
+      this.$store.commit(CLEAR_FILTERS, {
+        shouldNavigate: true,
       });
-      ['providers', 'licenseTypes', 'imageTypes', 'extensions']
-        // eslint-disable-next-line no-param-reassign
-        .forEach(key => this[key].forEach((value) => { value.checked = false; }));
-      this.$emit('onSearchFilterChanged', { query: filter, shouldNavigate: true });
-    },
-    parseQueryFilters() {
-      const filterLookup = {
-        provider: 'providers',
-        lt: 'licenseTypes',
-        imageType: 'imageTypes',
-        extension: 'extensions',
-      };
-
-      if (this.query) {
-        Object.keys(filterLookup).forEach((key) => {
-          if (this.query[key]) {
-            const codes = this.query[key].split(',');
-            if (codes.length) {
-              codes.forEach((code) => {
-                const filter = this[filterLookup[key]]
-                  .find(filterItem => filterItem.code === code);
-                if (filter) {
-                  this.filter[key].push(filter);
-                }
-              });
-            }
-          }
-        });
-        if (this.query.searchBy) {
-          // searchBy query string term can be "creator" for example
-          const searchByKey = this.query.searchBy;
-          this.filter.searchBy[searchByKey] = true;
-        }
-      }
     },
   },
 };
