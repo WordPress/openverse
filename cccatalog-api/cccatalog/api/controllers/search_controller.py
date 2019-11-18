@@ -1,14 +1,13 @@
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
-from elasticsearch.exceptions import AuthenticationException, \
-    AuthorizationException, NotFoundError, RequestError
+from elasticsearch.exceptions import NotFoundError, RequestError
 from elasticsearch_dsl import Q, Search, connections
 from elasticsearch_dsl.response import Response, Hit
+from elasticsearch_dsl.query import Query
 from cccatalog import settings
 from django.core.cache import cache
 from cccatalog.api.models import ContentProvider
 from rest_framework import serializers
-import logging as log
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
 from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils.dead_link_mask import get_query_mask, get_query_hash
@@ -24,9 +23,13 @@ THUMBNAIL = 'thumbnail'
 URL = 'url'
 THUMBNAIL_WIDTH_PX = 600
 PROVIDER = 'provider'
-
 DEEP_PAGINATION_ERROR = 'Deep pagination is not allowed.'
 QUERY_SPECIAL_CHARACTER_ERROR = 'Unescaped special characters are not allowed.'
+POPULARITY_BOOST = False
+
+
+class RankFeature(Query):
+    name = 'rank_feature'
 
 
 def _paginate_with_dead_link_mask(s: Search, page_size: int,
@@ -206,15 +209,21 @@ def search(search_params, index, page_size, ip, request,
         provider_filters = []
         for provider in search_params.data['provider'].split(','):
             provider_filters.append(Q('term', provider=provider))
-        s = s.filter('bool', should=provider_filters, minimum_should_match=1)
+        s = s.filter('bool', should=provider_filters)
     if 'extension' in search_params.data:
         extensions = search_params.data['extension'].split(',')
         extension_filters = []
         for extension in extensions:
             extension_filter = Q('term', extension=extension)
             extension_filters.append(extension_filter)
-        s = s.filter('bool', should=extension_filters, minimum_should_match=1)
-
+        s = s.filter('bool', should=extension_filters)
+    if 'categories' in search_params.data:
+        category_filters = []
+        categories = search_params.data['categories'].split(',')
+        for category in categories:
+            category_filter = Q('term', categories=category)
+            category_filters.append(category_filter)
+        s = s.filter('bool', should=category_filters)
     # It is sometimes desirable to hide content providers from the catalog
     # without scrubbing them from the database or reindexing.
     filter_cache_key = 'filtered_providers'
@@ -261,6 +270,27 @@ def search(search_params, index, page_size, ip, request,
                 query=tags
             )
 
+    # Boost by popularity metrics
+    if POPULARITY_BOOST:
+        queries = []
+        factors = ['comments', 'views', 'likes']
+        boost_factor = 100 / len(factors)
+        for factor in factors:
+            rank_feature_query = Q(
+                'rank_feature',
+                field=factor,
+                boost=boost_factor
+            )
+            queries.append(rank_feature_query)
+        s = Search().query(
+            Q(
+                'bool',
+                must=s.query,
+                should=queries,
+                minimum_should_match=1
+            )
+        )
+
     # Use highlighting to determine which fields contribute to the selection of
     # top results.
     s = s.highlight(*search_fields)
@@ -274,8 +304,8 @@ def search(search_params, index, page_size, ip, request,
     s = s[start:end]
     try:
         search_response = s.execute()
-    except RequestError:
-        raise ValueError(QUERY_SPECIAL_CHARACTER_ERROR)
+    except RequestError as e:
+        raise ValueError(e)
     results = _post_process_results(
         s,
         start,
@@ -434,43 +464,25 @@ def _elasticsearch_connect():
 
     :return: An Elasticsearch connection object.
     """
-    try:
-        log.info('Trying to connect to Elasticsearch without authentication...')
-        # Try to connect to Elasticsearch without credentials.
-        _es = Elasticsearch(
-            host=settings.ELASTICSEARCH_URL,
-            port=settings.ELASTICSEARCH_PORT,
-            connection_class=RequestsHttpConnection,
-            timeout=10,
-            max_retries=99,
-            wait_for_status='yellow'
-        )
-        log.info(str(_es.info()))
-        log.info('Connected to Elasticsearch without authentication.')
-    except (AuthenticationException, AuthorizationException):
-        # If that fails, supply AWS authentication object and try again.
-        log.info(
-            'Connecting to %s %s with AWS auth', settings.ELASTICSEARCH_URL,
-            settings.ELASTICSEARCH_PORT)
-        auth = AWSRequestsAuth(
-            aws_access_key=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            aws_host=settings.ELASTICSEARCH_URL,
-            aws_region=settings.ELASTICSEARCH_AWS_REGION,
-            aws_service='es'
-        )
-        auth.encode = lambda x: bytes(x.encode('utf-8'))
-        _es = Elasticsearch(
-            host=settings.ELASTICSEARCH_URL,
-            port=settings.ELASTICSEARCH_PORT,
-            connection_class=RequestsHttpConnection,
-            timeout=10,
-            max_retries=99,
-            retry_on_timeout=True,
-            http_auth=auth,
-            wait_for_status='yellow'
-        )
-        _es.info()
+    auth = AWSRequestsAuth(
+        aws_access_key=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        aws_host=settings.ELASTICSEARCH_URL,
+        aws_region=settings.ELASTICSEARCH_AWS_REGION,
+        aws_service='es'
+    )
+    auth.encode = lambda x: bytes(x.encode('utf-8'))
+    _es = Elasticsearch(
+        host=settings.ELASTICSEARCH_URL,
+        port=settings.ELASTICSEARCH_PORT,
+        connection_class=RequestsHttpConnection,
+        timeout=10,
+        max_retries=99,
+        retry_on_timeout=True,
+        http_auth=auth,
+        wait_for_status='yellow'
+    )
+    _es.info()
     return _es
 
 
@@ -488,7 +500,7 @@ def _get_result_and_page_count(response_obj: Response, results: List[Hit],
     :param results: The list of filtered result Hits.
     :return: Result and page count.
     """
-    result_count = response_obj.hits.total
+    result_count = response_obj.hits.total.value
     natural_page_count = int(result_count / page_size)
     last_allowed_page = int((5000 + page_size / 2) / page_size)
     page_count = min(natural_page_count, last_allowed_page)

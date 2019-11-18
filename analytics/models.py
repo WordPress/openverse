@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Integer, Column, Enum, String, DateTime
+from sqlalchemy import Integer, Column, Enum, String, DateTime, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
@@ -29,7 +29,7 @@ class SearchRatingEvent(Base, EventMixin):
     __tablename__= "search_rating_event"
 
     query = Column(String, index=True)
-    rating = Column(Integer)
+    relevant = Column(Boolean, index=True)
 
 
 class ResultClickedEvent(Base, EventMixin):

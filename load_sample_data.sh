@@ -3,6 +3,8 @@ CCCAPI_CONTAINER_NAME="${CCCAPI_CONTAINER_NAME:-cccatalog-api_web_1}"
 ANALYTICS_CONTAINER_NAME="${ANALYTICS_CONTAINER_NAME:-cccatalog-api_analytics_1}"
 # Set up API database and upstream
 docker exec -ti $CCCAPI_CONTAINER_NAME /bin/bash -c 'python3 manage.py migrate --noinput'
+# Create analytics database
+PGPASSWORD=deploy createdb -h localhost -U deploy analytics
 docker exec -ti $ANALYTICS_CONTAINER_NAME /bin/bash -c 'PYTHONPATH=. pipenv run alembic upgrade head'
 PGPASSWORD=deploy pg_dump -s -t image -U deploy -d openledger -h localhost -p 5432 | PGPASSWORD=deploy psql -U deploy -d openledger -p 5433 -h localhost
 # Load sample data

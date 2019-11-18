@@ -31,13 +31,14 @@ services:
       test: "pg_isready -U deploy -d openledger"
 
   es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.0
     ports:
       - "9200:9200"
     environment:
       # disable XPack
       # https://www.elastic.co/guide/en/elasticsearch/reference/5.3/docker.html#_security_note
       - xpack.security.enabled=false
+      - discovery.type=single-node
     healthcheck:
       test: ["CMD-SHELL", "curl -si -XGET 'localhost:9200/_cluster/health?pretty' | grep -qE 'yellow|green'"]
       interval: 10s
@@ -108,10 +109,39 @@ services:
     stdin_open: true
     tty: true
 
+  indexer-worker:
+    build:
+      context: ./ingestion_server/
+      dockerfile: Dockerfile-worker
+    ports: 
+      - "8002:8002"
+    depends_on:
+      - db
+      - es
+    volumes:
+      - ./ingestion_server:/ingestion-server
+    environment:
+      PYTHONUNBUFFERED: "0"
+      ELASTICSEARCH_URL: 'es'
+      ELASTICSEARCH_PORT: "9200"
+      DATABASE_HOST: 'db'
+      DATABASE_USER: 'deploy'
+      DATABASE_PASSWORD: 'deploy'
+      DATABASE_NAME: 'openledger'
+      DATABASE_PORT: '5432'
+      UPSTREAM_DB_HOST: 'upstream_db'
+      UPSTREAM_DB_PORT: 5432
+      DB_BUFFER_SIZE: '100000'
+      COPY_TABLES: 'image'
+      SYNCER_POLL_INTERVAL: '60'
+    stdin_open: true
+    tty: true
+
   analytics:
     build: ./analytics/
     image: analytics
+    container_name: cccatalog-api_analytics_1
     ports:
       - "8090:8090"
     environment:
-      DATABASE_CONN: 'postgres+psycopg2://deploy:deploy@db/openledger'
+      DATABASE_CONN: 'postgres+psycopg2://deploy:deploy@db/analytics'

@@ -20,11 +20,11 @@ class SearchRatingEventResource:
         try:
             event_controller.create_search_rating(
                 query=j['query'],
-                rating=j['rating']
+                relevant=j['relevant']
             )
             resp.status = falcon.HTTP_201
         except ValueError:
-            resp.body = '{"message": "Rating must be between 1 and 5"}'
+            resp.body = '{"message": "Rating must be True or False"}'
             resp.status = falcon.HTTP_400
 
 
