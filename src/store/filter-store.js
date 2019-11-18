@@ -21,13 +21,13 @@ const filterData = {
     { code: 'modification', name: 'Modify or adapt', checked: false },
   ],
   imageTypes: [
-    { code: 'photo', name: 'Photographs' },
-    { code: 'illustration', name: 'Illustrations' },
-    { code: 'vector', name: 'Vector Graphics' },
+    { code: 'photo', name: 'Photographs', checked: false },
+    { code: 'illustration', name: 'Illustrations', checked: false },
+    { code: 'vector', name: 'Vector Graphics', checked: false },
   ],
   extensions: [
-    { code: 'jpg', name: 'JPEGs' },
-    { code: 'png', name: 'PNGs' },
+    { code: 'jpg', name: 'JPEGs', checked: false },
+    { code: 'png', name: 'PNGs', checked: false },
   ],
   searchBy: {
     creator: false,
@@ -83,7 +83,7 @@ const actions = {
   },
 };
 
-function setQuery(state, params, redirect, path) {
+function setQuery(state, params, path, redirect) {
   const query = filterToQueryData(state.filters);
   state.isFilterApplied = ['providers', 'lt', 'imageType', 'extension', 'searchBy']
     .some(key => query[key] && query[key].length > 0);
@@ -105,7 +105,7 @@ function setFilter(state, params, path, redirect) {
     filters[params.codeIdx].checked = !filters[params.codeIdx].checked;
   }
 
-  setQuery(state, params, redirect, path);
+  setQuery(state, params, path, redirect);
 }
 
 const mutations = redirect => ({
