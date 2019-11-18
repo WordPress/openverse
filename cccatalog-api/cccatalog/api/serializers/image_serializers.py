@@ -37,10 +37,6 @@ class ImageDetailSerializer(ModelSerializer, ImageSerializer):
                   "give credit to creators to their works and fulfill "
                   "legal attribution requirements."
     )
-    license_url = serializers.URLField(
-        required=True,
-        help_text="The URL leading to the license associated with the work."
-    )
     tags = ImageDetailTagSerializer(
         many=True,
         help_text="Tags with detailed metadata, such as accuracy and provider."
