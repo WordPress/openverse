@@ -73,12 +73,10 @@ const actions = {
   [TOGGLE_FILTER]({ commit, state }, params) {
     const filters = state.filters[params.filterType];
     const codeIdx = findIndex(filters, f => f.code === params.code);
-    const shouldNavigate = params.shouldNavigate;
 
     commit(SET_FILTER, {
-      filterType: params.filterType,
       codeIdx,
-      shouldNavigate,
+      ...params,
     });
   },
 };
@@ -108,9 +106,11 @@ function setFilter(state, params, path, redirect) {
   setQuery(state, params, path, redirect);
 }
 
+const redirectUrl = params => (params.isCollectionsPage ? `/collections/${params.provider}` : '/search');
+
 const mutations = redirect => ({
   [SET_FILTER](state, params) {
-    return setFilter(state, params, '/search', redirect);
+    return setFilter(state, params, redirectUrl(params), redirect);
   },
   [CLEAR_FILTERS](state, params) {
     const initialFilters = initialState('').filters;
@@ -122,7 +122,7 @@ const mutations = redirect => ({
       ...initialFilters,
       providers: resetProviders,
     };
-    return setQuery(state, params, '/search', redirect);
+    return setQuery(state, params, redirectUrl(params), redirect);
   },
   [SET_PROVIDERS_FILTERS](state, params) {
     const providers = params.imageProviders;
