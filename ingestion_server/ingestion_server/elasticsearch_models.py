@@ -124,7 +124,7 @@ class Image(SyncableDocType):
         elif height < width:
             aspect_ratio = Image.AspectRatios.WIDE.name
         else:
-            aspect_ratio = Image.AspectRatios.SQUARE
+            aspect_ratio = Image.AspectRatios.SQUARE.name
         return aspect_ratio.lower()
 
     @staticmethod
