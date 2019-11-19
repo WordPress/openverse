@@ -1,5 +1,6 @@
+import cccatalog.api.licenses as license_helpers
 from rest_framework import serializers
-from cccatalog.api.licenses import LICENSE_GROUPS
+from cccatalog.api.licenses import LICENSE_GROUPS, get_license_url
 from cccatalog.api.controllers.search_controller import get_providers
 
 
@@ -21,11 +22,11 @@ def _validate_lt(value):
     license_types = [x.lower() for x in value.split(',')]
     license_groups = []
     for _type in license_types:
-        if _type not in LICENSE_GROUPS:
+        if _type not in license_helpers.LICENSE_GROUPS:
             raise serializers.ValidationError(
                 "License type \'{}\' does not exist.".format(_type)
             )
-        license_groups.append(LICENSE_GROUPS[_type])
+        license_groups.append(license_helpers.LICENSE_GROUPS[_type])
     intersected = set.intersection(*license_groups)
     cleaned = {_license.lower() for _license in intersected}
 
@@ -35,7 +36,7 @@ def _validate_lt(value):
 def _validate_li(value):
     licenses = [x.upper() for x in value.split(',')]
     for _license in licenses:
-        if _license not in LICENSE_GROUPS['all']:
+        if _license not in license_helpers.LICENSE_GROUPS['all']:
             raise serializers.ValidationError(
                 "License \'{}\' does not exist.".format(_license)
             )
@@ -63,13 +64,15 @@ class BrowseImageQueryStringSerializer(serializers.Serializer):
     li = serializers.CharField(
         label="licenses",
         help_text="A comma-separated list of licenses. Example: `by,cc0`."
-                  " Valid inputs: `{}`".format(list(LICENSE_GROUPS['all'])),
+                  " Valid inputs: `{}`"
+                  .format(list(license_helpers.LICENSE_GROUPS['all'])),
         required=False,
     )
     lt = serializers.CharField(
         label="license type",
         help_text="A list of license types. "
-                  "Valid inputs: `{}`".format((list(LICENSE_GROUPS.keys()))),
+                  "Valid inputs: `{}`"
+                  .format((list(license_helpers.LICENSE_GROUPS.keys()))),
         required=False,
     )
 
@@ -116,13 +119,15 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     li = serializers.CharField(
         label="licenses",
         help_text="A comma-separated list of licenses. Example: `by,cc0`."
-                  " Valid inputs: `{}`".format(list(LICENSE_GROUPS['all'])),
+                  " Valid inputs: `{}`"
+                  .format(list(license_helpers.LICENSE_GROUPS['all'])),
         required=False,
     )
     lt = serializers.CharField(
         label="license type",
         help_text="A list of license types. "
-                  "Valid inputs: `{}`".format((list(LICENSE_GROUPS.keys()))),
+                  "Valid inputs: `{}`"
+                  .format((list(license_helpers.LICENSE_GROUPS.keys()))),
         required=False,
     )
     page = serializers.IntegerField(
@@ -312,6 +317,7 @@ class ImageSerializer(serializers.Serializer):
     source = serializers.CharField(required=False)
     license = serializers.SerializerMethodField()
     license_version = serializers.CharField(required=False)
+    license_url = serializers.SerializerMethodField()
     foreign_landing_url = serializers.URLField(required=False)
     meta_data = serializers.CharField(required=False)
     detail = serializers.URLField(
@@ -333,6 +339,9 @@ class ImageSerializer(serializers.Serializer):
 
     def get_license(self, obj):
         return obj.license.lower()
+
+    def get_license_url(self, obj):
+        return license_helpers.get_license_url(obj.license, obj.license_version)
 
 
 class RelatedImagesResultsSerializer(serializers.Serializer):
