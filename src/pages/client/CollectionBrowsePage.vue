@@ -5,7 +5,7 @@
         <header-section showNavSearch="true" />
       </div>
       <div class="cell small-3">
-        <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit"/>
+        <search-grid-filter isCollectionsPage="true" @onSearchFilterChanged="onSearchFormSubmit"/>
       </div>
       <div class="cell auto search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit"

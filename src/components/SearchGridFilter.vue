@@ -6,7 +6,8 @@
                          title="I want something that I can"
                          filterType="licenseTypes"
                          @filterChanged="onUpdateFilter" />
-      <filter-check-list :options="filters.providers"
+      <filter-check-list v-if="renderProvidersFilter"
+                         :options="filters.providers"
                          title="All Sources"
                          filterType="providers"
                          @filterChanged="onUpdateFilter" />
@@ -43,7 +44,7 @@ import FilterCheckList from './FilterChecklist';
 
 export default {
   name: 'search-grid-filter',
-  props: ['showProvidersFilter'],
+  props: ['isCollectionsPage'],
   components: {
     FilterCheckList,
   },
@@ -57,23 +58,29 @@ export default {
     filters() {
       return this.$store.state.filters;
     },
+    renderProvidersFilter() {
+      return !this.$props.isCollectionsPage;
+    },
   },
   methods: {
     onUpdateFilter({ code, filterType }) {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
         filterType,
+        isCollectionsPage: this.$props.isCollectionsPage,
         shouldNavigate: true,
       });
     },
     onUpdateSearchByCreator() {
       this.$store.dispatch(TOGGLE_FILTER, {
         filterType: 'searchBy',
+        isCollectionsPage: this.$props.isCollectionsPage,
         shouldNavigate: true,
       });
     },
     onClearFilters() {
       this.$store.commit(CLEAR_FILTERS, {
+        isCollectionsPage: this.$props.isCollectionsPage,
         shouldNavigate: true,
       });
     },
