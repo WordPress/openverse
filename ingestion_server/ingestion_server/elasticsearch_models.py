@@ -40,6 +40,10 @@ class SyncableDocType(DocType):
 
 
 class Image(SyncableDocType):
+    """
+    Represents an image in Elasticsearch. Note that actual mappings are defined
+    in es_mapping;
+    """
     class AspectRatios(enum.Enum):
         TALL = 0
         WIDE = 1
@@ -72,7 +76,8 @@ class Image(SyncableDocType):
     class Index:
         name = 'image'
 
-    def database_row_to_elasticsearch_doc(self, row, schema):
+    @staticmethod
+    def database_row_to_elasticsearch_doc(row, schema):
         views, comments, likes = None, None, None
         try:
             metrics = row[schema['meta_data']]['popularity_metrics']
@@ -82,7 +87,7 @@ class Image(SyncableDocType):
         except (KeyError, TypeError):
             pass
         provider = row[schema['provider']]
-        extension = self._get_extension(row[schema['url']])
+        extension = Image._get_extension(row[schema['url']])
         height = row[schema['height']]
         width = row[schema['width']]
         return Image(
@@ -92,7 +97,7 @@ class Image(SyncableDocType):
             identifier=row[schema['identifier']],
             creator=row[schema['creator']],
             creator_url=row[schema['creator_url']],
-            tags=self._parse_detailed_tags(row[schema['tags']]),
+            tags=Image._parse_detailed_tags(row[schema['tags']]),
             created_on=row[schema['created_on']],
             url=row[schema['url']],
             thumbnail=row[schema['thumbnail']],
@@ -102,15 +107,15 @@ class Image(SyncableDocType):
             license_version=row[schema['license_version']],
             foreign_landing_url=row[schema['foreign_landing_url']],
             view_count=row[schema['view_count']],
-            description=self._parse_description(row[schema['meta_data']]),
+            description=Image._parse_description(row[schema['meta_data']]),
             height=height,
             width=width,
-            extension=self._get_extension(row[schema['url']]),
+            extension=Image._get_extension(row[schema['url']]),
             views=views,
             comments=comments,
             likes=likes,
-            categories=get_categories(extension, provider),
-            aspect_ratio=self._get_aspect_ratio(height, width)
+            categories=Image.get_categories(extension, provider),
+            aspect_ratio=Image._get_aspect_ratio(height, width)
         )
 
     @staticmethod
