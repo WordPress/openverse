@@ -224,8 +224,14 @@ def search(search_params, index, page_size, ip, request,
             category_filter = Q('term', categories=category)
             category_filters.append(category_filter)
         s = s.filter('bool', should=category_filters)
-    # It is sometimes desirable to hide content providers from the catalog
-    # without scrubbing them from the database or reindexing.
+    if 'aspect_ratio' in search_params.data:
+        aspect_ratio_filters = []
+        aspect_ratios = search_params.data['aspect_ratio'].split(',')
+        for aspect_ratio in aspect_ratios:
+            aspect_ratio_filter = Q('term', aspect_ratio=aspect_ratio)
+            aspect_ratio_filters.append(aspect_ratio_filter)
+        s = s.filter('bool', should=aspect_ratio_filters)
+    # Hide data sources from the catalog dynamically.
     filter_cache_key = 'filtered_providers'
     filtered_providers = cache.get(key=filter_cache_key)
     if not filtered_providers:

@@ -32,6 +32,23 @@ def _validate_lt(value):
     return ','.join(list(cleaned))
 
 
+def _validate_enum(enum_name, valid_values: set, given_values: str):
+    """
+
+    :param valid_values: Allowed values for an enum
+    :param given_values: A comma separated list of values.
+    :return:
+    """
+    input_values = [x.lower() for x in given_values.split(',')]
+    for category in input_values:
+        if category not in valid_values:
+            raise serializers.ValidationError(
+                f'Invalid {enum_name}: {category}.'
+                f' Available options: {valid_values}'
+            )
+    return given_values.lower()
+
+
 def _validate_li(value):
     licenses = [x.upper() for x in value.split(',')]
     for _license in licenses:
@@ -179,6 +196,12 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
                   "`digitized_artwork`.",
         required=False
     )
+    aspect_ratio = serializers.CharField(
+        label='aspect_ratio',
+        help_text="A comma separated list of aspect ratios; available aspect "
+                  "ratios include `tall`, `wide`, and `square`.",
+        required=False
+    )
     qa = serializers.BooleanField(
         label='quality_assurance',
         help_text="If enabled, searches are performed against the quality"
@@ -249,13 +272,13 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
             'digitized_artwork',
             'photograph'
         }
-        input_categories = [x.lower() for x in value.split(',')]
-        for category in input_categories:
-            if category not in valid_categories:
-                raise serializers.ValidationError(
-                    f'Invalid category: {category}.'
-                    f' Available options: {valid_categories}'
-                )
+        _validate_enum('category', valid_categories, value)
+        return value.lower()
+
+    @staticmethod
+    def validate_aspect_ratio(value):
+        valid_ratios = {'tall', 'wide', 'square'}
+        _validate_enum('aspect ratio', valid_ratios, value)
         return value.lower()
 
     def validate(self, data):

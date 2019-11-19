@@ -1,3 +1,4 @@
+import enum
 from elasticsearch_dsl import Date, Text, Integer, Keyword, DocType, Field
 from ingestion_server.categorize import get_categories
 
@@ -7,6 +8,12 @@ Provides an ORM-like experience for accessing data in Elasticsearch.
 Note the actual schema for Elasticsearch is defined in es_mapping.py; any
 low-level changes to the index must be represented there as well.
 """
+
+
+class AspectRatios(enum.Enum):
+    TALL = 0
+    WIDE = 1
+    SQUARE = 1
 
 
 class RankFeature(Field):
@@ -59,6 +66,32 @@ def _get_extension(url):
         return extension
 
 
+def _get_aspect_ratio(height, width):
+    if height is None or width is None:
+        return None
+    elif height > width:
+        aspect_ratio = AspectRatios.TALL.name
+    elif height < width:
+        aspect_ratio = AspectRatios.WIDE.name
+    else:
+        aspect_ratio = AspectRatios.SQUARE
+    return aspect_ratio.lower()
+
+
+def _parse_detailed_tags(json_tags):
+    if json_tags:
+        parsed_tags = []
+        for tag in json_tags:
+            if 'name' in tag:
+                parsed_tag = {'name': tag['name']}
+                if 'accuracy' in tag:
+                    parsed_tag['accuracy'] = tag['accuracy']
+                parsed_tags.append(parsed_tag)
+        return parsed_tags
+    else:
+        return None
+
+
 class Image(SyncableDocType):
     title = Text(analyzer="english")
     identifier = Keyword()
@@ -82,25 +115,13 @@ class Image(SyncableDocType):
     comments = RankFeature()
     likes = RankFeature()
     categories = Text(multi=True)
+    aspect_ratio = Text(multi=True)
 
     class Index:
         name = 'image'
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
-        def _parse_detailed_tags(json_tags):
-            if json_tags:
-                parsed_tags = []
-                for tag in json_tags:
-                    if 'name' in tag:
-                        parsed_tag = {'name': tag['name']}
-                        if 'accuracy' in tag:
-                            parsed_tag['accuracy'] = tag['accuracy']
-                        parsed_tags.append(parsed_tag)
-                return parsed_tags
-            else:
-                return None
-
         views, comments, likes = None, None, None
         try:
             metrics = row[schema['meta_data']]['popularity_metrics']
@@ -111,6 +132,8 @@ class Image(SyncableDocType):
             pass
         provider = row[schema['provider']]
         extension = _get_extension(row[schema['url']])
+        height = row[schema['height']]
+        width = row[schema['width']]
         return Image(
             _id=row[schema['id']],
             id=row[schema['id']],
@@ -135,7 +158,8 @@ class Image(SyncableDocType):
             views=views,
             comments=comments,
             likes=likes,
-            categories=get_categories(extension, provider)
+            categories=get_categories(extension, provider),
+            aspect_ratio=_get_aspect_ratio(height, width)
         )
 
 
