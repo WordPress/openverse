@@ -87,7 +87,7 @@ class Image(SyncableDocType):
         except (KeyError, TypeError):
             pass
         provider = row[schema['provider']]
-        extension = Image._get_extension(row[schema['url']])
+        extension = Image.get_extension(row[schema['url']])
         height = row[schema['height']]
         width = row[schema['width']]
         return Image(
@@ -97,7 +97,7 @@ class Image(SyncableDocType):
             identifier=row[schema['identifier']],
             creator=row[schema['creator']],
             creator_url=row[schema['creator_url']],
-            tags=Image._parse_detailed_tags(row[schema['tags']]),
+            tags=Image.parse_detailed_tags(row[schema['tags']]),
             created_on=row[schema['created_on']],
             url=row[schema['url']],
             thumbnail=row[schema['thumbnail']],
@@ -107,19 +107,19 @@ class Image(SyncableDocType):
             license_version=row[schema['license_version']],
             foreign_landing_url=row[schema['foreign_landing_url']],
             view_count=row[schema['view_count']],
-            description=Image._parse_description(row[schema['meta_data']]),
+            description=Image.parse_description(row[schema['meta_data']]),
             height=height,
             width=width,
-            extension=Image._get_extension(row[schema['url']]),
+            extension=Image.get_extension(row[schema['url']]),
             views=views,
             comments=comments,
             likes=likes,
-            categories=Image.get_categories(extension, provider),
-            aspect_ratio=Image._get_aspect_ratio(height, width)
+            categories=get_categories(extension, provider),
+            aspect_ratio=Image.get_aspect_ratio(height, width)
         )
 
     @staticmethod
-    def _parse_description(metadata_field):
+    def parse_description(metadata_field):
         """
         Parse the description field from the metadata if available.
 
@@ -132,7 +132,7 @@ class Image(SyncableDocType):
             return None
 
     @staticmethod
-    def _get_extension(url):
+    def get_extension(url):
         extension = url.split('.')[-1].lower()
         if '/' in extension or extension is None:
             return None
@@ -140,7 +140,7 @@ class Image(SyncableDocType):
             return extension
 
     @staticmethod
-    def _get_aspect_ratio(height, width):
+    def get_aspect_ratio(height, width):
         if height is None or width is None:
             return None
         elif height > width:
@@ -152,7 +152,7 @@ class Image(SyncableDocType):
         return aspect_ratio.lower()
 
     @staticmethod
-    def _parse_detailed_tags(json_tags):
+    def parse_detailed_tags(json_tags):
         if json_tags:
             parsed_tags = []
             for tag in json_tags:
