@@ -10,12 +10,6 @@ low-level changes to the index must be represented there as well.
 """
 
 
-class AspectRatios(enum.Enum):
-    TALL = 0
-    WIDE = 1
-    SQUARE = 1
-
-
 class RankFeature(Field):
     name = 'rank_feature'
 
@@ -45,51 +39,10 @@ class SyncableDocType(DocType):
         )
 
 
-def _parse_description(metadata_field):
-    """
-    Parse the description field from the metadata if available.
-
-    Limit to the first 2000 characters.
-    """
-    try:
-        if 'description' in metadata_field:
-            return metadata_field['description'][:2000]
-    except TypeError:
-        return None
-
-
-def _get_extension(url):
-    extension = url.split('.')[-1].lower()
-    if '/' in extension or extension is None:
-        return None
-    else:
-        return extension
-
-
-def _get_aspect_ratio(height, width):
-    if height is None or width is None:
-        return None
-    elif height > width:
-        aspect_ratio = AspectRatios.TALL.name
-    elif height < width:
-        aspect_ratio = AspectRatios.WIDE.name
-    else:
-        aspect_ratio = AspectRatios.SQUARE
-    return aspect_ratio.lower()
-
-
-def _parse_detailed_tags(json_tags):
-    if json_tags:
-        parsed_tags = []
-        for tag in json_tags:
-            if 'name' in tag:
-                parsed_tag = {'name': tag['name']}
-                if 'accuracy' in tag:
-                    parsed_tag['accuracy'] = tag['accuracy']
-                parsed_tags.append(parsed_tag)
-        return parsed_tags
-    else:
-        return None
+class AspectRatios(enum.Enum):
+    TALL = 0
+    WIDE = 1
+    SQUARE = 2
 
 
 class Image(SyncableDocType):
@@ -120,8 +73,7 @@ class Image(SyncableDocType):
     class Index:
         name = 'image'
 
-    @staticmethod
-    def database_row_to_elasticsearch_doc(row, schema):
+    def database_row_to_elasticsearch_doc(self, row, schema):
         views, comments, likes = None, None, None
         try:
             metrics = row[schema['meta_data']]['popularity_metrics']
@@ -131,7 +83,7 @@ class Image(SyncableDocType):
         except (KeyError, TypeError):
             pass
         provider = row[schema['provider']]
-        extension = _get_extension(row[schema['url']])
+        extension = self._get_extension(row[schema['url']])
         height = row[schema['height']]
         width = row[schema['width']]
         return Image(
@@ -141,7 +93,7 @@ class Image(SyncableDocType):
             identifier=row[schema['identifier']],
             creator=row[schema['creator']],
             creator_url=row[schema['creator_url']],
-            tags=_parse_detailed_tags(row[schema['tags']]),
+            tags=self._parse_detailed_tags(row[schema['tags']]),
             created_on=row[schema['created_on']],
             url=row[schema['url']],
             thumbnail=row[schema['thumbnail']],
@@ -151,16 +103,63 @@ class Image(SyncableDocType):
             license_version=row[schema['license_version']],
             foreign_landing_url=row[schema['foreign_landing_url']],
             view_count=row[schema['view_count']],
-            description=_parse_description(row[schema['meta_data']]),
+            description=self._parse_description(row[schema['meta_data']]),
             height=height,
             width=width,
-            extension=_get_extension(row[schema['url']]),
+            extension=self._get_extension(row[schema['url']]),
             views=views,
             comments=comments,
             likes=likes,
             categories=get_categories(extension, provider),
-            aspect_ratio=_get_aspect_ratio(height, width)
+            aspect_ratio=self._get_aspect_ratio(height, width)
         )
+
+    @staticmethod
+    def _parse_description(metadata_field):
+        """
+        Parse the description field from the metadata if available.
+
+        Limit to the first 2000 characters.
+        """
+        try:
+            if 'description' in metadata_field:
+                return metadata_field['description'][:2000]
+        except TypeError:
+            return None
+
+    @staticmethod
+    def _get_extension(url):
+        extension = url.split('.')[-1].lower()
+        if '/' in extension or extension is None:
+            return None
+        else:
+            return extension
+
+    @staticmethod
+    def _get_aspect_ratio(height, width):
+        if height is None or width is None:
+            return None
+        elif height > width:
+            aspect_ratio = AspectRatios.TALL.name
+        elif height < width:
+            aspect_ratio = AspectRatios.WIDE.name
+        else:
+            aspect_ratio = AspectRatios.SQUARE
+        return aspect_ratio.lower()
+
+    @staticmethod
+    def _parse_detailed_tags(json_tags):
+        if json_tags:
+            parsed_tags = []
+            for tag in json_tags:
+                if 'name' in tag:
+                    parsed_tag = {'name': tag['name']}
+                    if 'accuracy' in tag:
+                        parsed_tag['accuracy'] = tag['accuracy']
+                    parsed_tags.append(parsed_tag)
+            return parsed_tags
+        else:
+            return None
 
 
 # Table name -> Elasticsearch model
