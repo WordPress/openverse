@@ -42,36 +42,12 @@ class SyncableDocType(DocType):
 class Image(SyncableDocType):
     """
     Represents an image in Elasticsearch. Note that actual mappings are defined
-    in es_mapping;
+    in `ingestion_server.es_mapping`.
     """
     class AspectRatios(enum.Enum):
         TALL = 0
         WIDE = 1
         SQUARE = 2
-
-    title = Text(analyzer="english")
-    identifier = Keyword()
-    creator = Text()
-    creator_url = Keyword()
-    tags = Text(multi=True)
-    created_on = Date()
-    url = Keyword()
-    thumbnail = Keyword()
-    provider = Text(analyzer="keyword")
-    source = Keyword()
-    license = Keyword()
-    license_version = Keyword()
-    foreign_landing_url = Keyword()
-    view_count = Integer()
-    description = Text(analyzer="english")
-    height = Integer()
-    width = Integer()
-    extension = Keyword()
-    views = RankFeature()
-    comments = RankFeature()
-    likes = RankFeature()
-    categories = Text(multi=True)
-    aspect_ratio = Text(multi=True)
 
     class Index:
         name = 'image'
