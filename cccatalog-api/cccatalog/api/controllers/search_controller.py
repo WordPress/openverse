@@ -93,7 +93,7 @@ def _filter_licenses(s: Search, licenses):
     license_filters = []
     for _license in licenses.split(','):
         license_filters.append(Q('term', license__keyword=_license))
-    s = s.filter('bool', should=license_filters, minimum_should_match=1)
+    s = s.filter('bool', should=license_filters)
     return s
 
 
@@ -179,6 +179,27 @@ def _post_process_results(s, start, end, page_size, search_results,
     return results[:page_size]
 
 
+def _apply_filter(param_name, search_params, s: Search):
+    """
+    Parse and apply a filter from the search parameters.
+    :param param_name: The name of the parameter in search_params.
+    :param search_params: Parameters passed from the search serializer.
+    :param s: The Search object to apply the filter to.
+    :return: A Search object with the filter applied.
+    """
+    if param_name in search_params.data:
+        filters = []
+        for arg in search_params.data[param_name].split(','):
+            args = {
+                'name_or_query': 'term',
+                str(param_name): arg
+            }
+            filters.append(Q(**args))
+        return s.filter('bool', should=filters)
+    else:
+        return s
+
+
 def search(search_params, index, page_size, ip, request,
            filter_dead, page=1) -> Tuple[List[Hit], int, int]:
     """
@@ -205,32 +226,10 @@ def search(search_params, index, page_size, ip, request,
     elif 'lt' in search_params.data:
         s = _filter_licenses(s, search_params.data['lt'])
 
-    if 'provider' in search_params.data:
-        provider_filters = []
-        for provider in search_params.data['provider'].split(','):
-            provider_filters.append(Q('term', provider=provider))
-        s = s.filter('bool', should=provider_filters)
-    if 'extension' in search_params.data:
-        extensions = search_params.data['extension'].split(',')
-        extension_filters = []
-        for extension in extensions:
-            extension_filter = Q('term', extension=extension)
-            extension_filters.append(extension_filter)
-        s = s.filter('bool', should=extension_filters)
-    if 'categories' in search_params.data:
-        category_filters = []
-        categories = search_params.data['categories'].split(',')
-        for category in categories:
-            category_filter = Q('term', categories=category)
-            category_filters.append(category_filter)
-        s = s.filter('bool', should=category_filters)
-    if 'aspect_ratio' in search_params.data:
-        aspect_ratio_filters = []
-        aspect_ratios = search_params.data['aspect_ratio'].split(',')
-        for aspect_ratio in aspect_ratios:
-            aspect_ratio_filter = Q('term', aspect_ratio=aspect_ratio)
-            aspect_ratio_filters.append(aspect_ratio_filter)
-        s = s.filter('bool', should=aspect_ratio_filters)
+    filters = ['provider', 'extension', 'categories', 'aspect_ratio']
+    for _filter in filters:
+        s = _apply_filter(_filter, search_params, s)
+
     # Hide data sources from the catalog dynamically.
     filter_cache_key = 'filtered_providers'
     filtered_providers = cache.get(key=filter_cache_key)
