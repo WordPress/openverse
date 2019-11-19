@@ -1,5 +1,5 @@
 import enum
-from elasticsearch_dsl import Date, Text, Integer, Keyword, DocType, Field
+from elasticsearch_dsl import Integer, DocType, Field
 from ingestion_server.categorize import get_categories
 
 """
