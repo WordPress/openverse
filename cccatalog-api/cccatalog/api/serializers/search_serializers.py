@@ -40,10 +40,10 @@ def _validate_enum(enum_name, valid_values: set, given_values: str):
     :return:
     """
     input_values = [x.lower() for x in given_values.split(',')]
-    for category in input_values:
-        if category not in valid_values:
+    for value in input_values:
+        if value not in valid_values:
             raise serializers.ValidationError(
-                f'Invalid {enum_name}: {category}.'
+                f'Invalid {enum_name}: {value}.'
                 f' Available options: {valid_values}'
             )
     return given_values.lower()
