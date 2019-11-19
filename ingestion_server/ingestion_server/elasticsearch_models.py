@@ -39,13 +39,12 @@ class SyncableDocType(DocType):
         )
 
 
-class AspectRatios(enum.Enum):
-    TALL = 0
-    WIDE = 1
-    SQUARE = 2
-
-
 class Image(SyncableDocType):
+    class AspectRatios(enum.Enum):
+        TALL = 0
+        WIDE = 1
+        SQUARE = 2
+
     title = Text(analyzer="english")
     identifier = Keyword()
     creator = Text()
@@ -140,11 +139,11 @@ class Image(SyncableDocType):
         if height is None or width is None:
             return None
         elif height > width:
-            aspect_ratio = AspectRatios.TALL.name
+            aspect_ratio = Image.AspectRatios.TALL.name
         elif height < width:
-            aspect_ratio = AspectRatios.WIDE.name
+            aspect_ratio = Image.AspectRatios.WIDE.name
         else:
-            aspect_ratio = AspectRatios.SQUARE
+            aspect_ratio = Image.AspectRatios.SQUARE
         return aspect_ratio.lower()
 
     @staticmethod
