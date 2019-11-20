@@ -230,7 +230,7 @@ def search(search_params, index, page_size, ip, request,
         s = _filter_licenses(s, search_params.data['lt'])
 
     # Apply term filters.
-    filters = ['provider', 'extension', 'categories', 'aspect_ratio']
+    filters = ['provider', 'extension', 'categories', 'aspect_ratio', 'size']
     for _filter in filters:
         s = _apply_filter(_filter, search_params, s)
 
