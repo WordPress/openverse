@@ -209,12 +209,13 @@ export default {
     outline: 0;
     border: none;
     box-shadow: none;
+    min-width: 0;
 
     &:focus {
       border: none;
     }
 
-    @media screen and (max-width: 720px) {
+    @media (max-width: 49em) {
       width: 100%;
     }
   }
