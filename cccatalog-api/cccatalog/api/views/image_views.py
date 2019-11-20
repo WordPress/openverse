@@ -281,7 +281,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         try:
             image = Image.objects.get(identifier=identifier)
             es = search_controller.es
-            es.delete(index='image', doc_type='doc', id=image.id)
+            es.delete(index='image', id=image.id)
             image.delete()
         except Image.DoesNotExist:
             return Response(status=404, data='Not Found')
