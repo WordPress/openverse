@@ -198,10 +198,6 @@ const actions = ImageService => ({
 
 function setQuery(_state, params, path, redirect) {
   const query = Object.assign({}, _state.query, params.query);
-  const isFilterApplied = ['provider', 'lt', 'imageType', 'extension', 'searchBy']
-    .some(key => query[key] && query[key].length > 0);
-
-  _state.isFilterApplied = isFilterApplied;
   _state.query = query;
 
   if (params.shouldNavigate === true) {
