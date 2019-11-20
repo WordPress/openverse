@@ -53,15 +53,26 @@ def create_mock_image(override=None):
 
 def test_size():
     small = create_mock_image({'height': 600, 'width': 300})
-    assert small.size == 'small'
+    assert small.size == Image.ImageSizes.SMALL.name.lower()
     huge = create_mock_image({'height': 4096, 'width': 4096})
-    assert huge.size == 'large'
+    assert huge.size == Image.ImageSizes.LARGE.name.lower()
 
 
 def test_aspect_ratio():
     square = create_mock_image({'height': 300, 'width': 300})
-    assert square.aspect_ratio == 'square'
+    assert square.aspect_ratio == Image.AspectRatios.SQUARE.name.lower()
     tall = create_mock_image({'height': 500, 'width': 200})
-    assert tall.aspect_ratio == 'tall'
+    assert tall.aspect_ratio == Image.AspectRatios.TALL.name.lower()
     wide = create_mock_image({'height': 200, 'width': 500})
-    assert wide.aspect_ratio == 'wide'
+    assert wide.aspect_ratio == Image.AspectRatios.WIDE.name.lower()
+
+
+def test_extension():
+    no_extension = create_mock_image({
+        'url': 'https://creativecommons.org/hello'
+    })
+    assert no_extension.extension is None
+    jpg = create_mock_image({
+        'url': 'https://creativecommons.org/hello.jpg'
+    })
+    assert jpg.extension == 'jpg'

@@ -49,7 +49,7 @@ class Image(SyncableDocType):
         WIDE = auto()
         SQUARE = auto()
 
-    class ImageSize(Enum):
+    class ImageSizes(Enum):
         """
         Maximum threshold for each image size band
         """
@@ -141,7 +141,7 @@ class Image(SyncableDocType):
         if height is None or width is None:
             return None
         resolution = height * width
-        for size in Image.ImageSize:
+        for size in Image.ImageSizes:
             if resolution < size.value:
                 return size.name.lower()
 
