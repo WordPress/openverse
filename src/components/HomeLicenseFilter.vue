@@ -20,7 +20,7 @@ export default {
   computed: {
     licenseTypes() {
       return this.$store.state.filters.licenseTypes;
-    }
+    },
   },
   methods: {
     onFilterChanged(code) {
