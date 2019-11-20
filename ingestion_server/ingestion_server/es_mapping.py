@@ -143,6 +143,14 @@ def create_mapping(table_name):
                      },
                      "type": "text"
                   },
+                  "aspect_ratio": {
+                       "fields": {
+                           "keyword": {
+                               "type": "keyword"
+                           }
+                       },
+                       "type": "text"
+                   },
                   "views": {
                      "type": "rank_feature"
                   },
