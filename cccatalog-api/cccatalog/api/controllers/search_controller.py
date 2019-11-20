@@ -182,8 +182,9 @@ def _post_process_results(s, start, end, page_size, search_results,
 def _apply_filter(param_name: str, search_params, s: Search):
     """
     Parse and apply a filter from the search parameters serializer. The
-    parameter is assumed to have the same name as the corresponding
-    Elasticsearch property.
+    parameter key is assumed to have the same name as the corresponding
+    Elasticsearch property. Each parameter value is assumed to be a comma
+    separated list encoded as a string.
 
     :param param_name: The name of the parameter in search_params.
     :param search_params: A serializer containing user input.
