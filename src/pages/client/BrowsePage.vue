@@ -4,10 +4,10 @@
       <header-section />
     </div>
     <div class="search grid-x flexible">
-      <div class="cell medium-4 large-3">
+      <div class="cell grid-sidebar">
         <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit"/>
       </div>
-      <div class="cell medium-8 large-9 search-grid-ctr">
+      <div class="cell search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
         <search-grid v-if="query.q"
                      :query="query"
@@ -55,9 +55,25 @@ export default BrowsePage;
     min-height: 600px;
     margin: 0;
     transition: margin .7s ease-in-out;
+    flex: 1 1 0px;
+
+    /* 48em = 768px */
+    @media (max-width: 49em) {
+      width: 100%;
+      flex: none;
+    }
   }
 
   .search-grid-ctr__filter-visible {
     margin-top: 30px;
+  }
+
+  .grid-sidebar {
+    width: 350px;
+
+    /* 48em = 768px */
+    @media (max-width: 49em) {
+      width: 100%;
+    }
   }
 </style>
