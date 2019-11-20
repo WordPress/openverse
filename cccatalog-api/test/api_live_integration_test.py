@@ -35,6 +35,7 @@ def search_fixture():
     parsed = json.loads(response.text)
     return parsed
 
+
 def test_search_quotes():
     """
     We want to return a response even if the user messes up quote matching.
