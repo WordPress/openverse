@@ -4,24 +4,32 @@ import render from '../../test-utils/render';
 describe('SearchGridFilter', () => {
   let options = {};
   let storeMock = null;
+  let dispatchMock = null;
   let props = null;
   beforeEach(() => {
+    dispatchMock = jest.fn();
     storeMock = {
+      dispatch: dispatchMock,
       state: {
         isFilterApplied: true,
         isFilterVisible: true,
-        imageProviders: [
-          {
-            provider_name: 'FLickr',
-            provider_code: 'flickr',
+        filters: {
+          licenseTypes: [{ code: 'commercial', name: 'Commercial usage' }],
+          licenses: [{ code: 'by', name: 'CC-BY' }],
+          imageTypes: [{ code: 'photo', name: 'Photographs' }],
+          extensions: [{ code: 'jpg', name: 'JPG' }],
+          searchBy: {
+            creator: false,
           },
-        ],
+        },
         query: 'me',
       },
     };
 
     props = {
       showProvidersFilter: true,
+      isCollectionsPage: false,
+      provider: undefined,
     };
 
     options = {
@@ -65,6 +73,11 @@ describe('SearchGridFilter', () => {
     const wrapper = render(SearchGridFilter, options);
     const checkbox = wrapper.find('#creator-chk');
     checkbox.trigger('click');
-    expect(wrapper.emitted().onSearchFilterChanged).toBeTruthy();
+    expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
+      filterType: 'searchBy',
+      isCollectionsPage: props.isCollectionsPage,
+      provider: props.provider,
+      shouldNavigate: true,
+    });
   });
 });

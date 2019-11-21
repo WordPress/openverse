@@ -3,13 +3,21 @@ import render from '../../test-utils/render';
 
 describe('HomeLicenseFilter', () => {
   let options = {};
-  let commitMock = null;
+  let dispatchMock = null;
   beforeEach(() => {
-    commitMock = jest.fn();
+    dispatchMock = jest.fn();
     options = {
       mocks: {
         $store: {
-          commit: commitMock,
+          dispatch: dispatchMock,
+          state: {
+            filters: {
+              licenseTypes: [
+                { code: 'commercial', name: 'Commercial usage' },
+                { code: 'modification', name: 'Allows modification' },
+              ],
+            },
+          },
         },
       },
     };
@@ -27,12 +35,12 @@ describe('HomeLicenseFilter', () => {
     const modificationChk = wrapper.find('#modification');
 
     commercialChk.trigger('click');
-    modificationChk.trigger('click');
+    // modificationChk.trigger('click');
 
-    expect(commitMock).toHaveBeenCalledWith('SET_QUERY', {
-      query: {
-        lt: 'commercial,modification',
-      },
+    expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
+      code: 'commercial',
+      filterType: 'licenseTypes',
+      shouldNavigate: false,
     });
   });
 });
