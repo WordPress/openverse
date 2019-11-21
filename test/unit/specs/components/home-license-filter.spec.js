@@ -32,10 +32,8 @@ describe('HomeLicenseFilter', () => {
   it('renders checkboxes', () => {
     const wrapper = render(HomeLicenseFilter, options);
     const commercialChk = wrapper.find('#commercial');
-    const modificationChk = wrapper.find('#modification');
 
     commercialChk.trigger('click');
-    // modificationChk.trigger('click');
 
     expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
       code: 'commercial',
