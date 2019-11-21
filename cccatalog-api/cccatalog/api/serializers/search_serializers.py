@@ -207,6 +207,11 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
                   "ratios include `tall`, `wide`, and `square`.",
         required=False
     )
+    size = serializers.CharField(
+        label='size',
+        help_text="A comma separated list of image sizes; available sizes"
+                  "include `small`, medium, or `large`."
+    )
     qa = serializers.BooleanField(
         label='quality_assurance',
         help_text="If enabled, searches are performed against the quality"
