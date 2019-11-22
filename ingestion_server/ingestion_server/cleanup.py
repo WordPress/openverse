@@ -111,9 +111,10 @@ class CleanupFunctions:
                 below_threshold = True
             lower_tag = tag['name'].lower()
             should_filter = _tag_blacklisted(lower_tag) or below_threshold
-            if not should_filter:
-                tag_output.append(tag)
+            if should_filter:
                 update_required = True
+            else:
+                tag_output.append(tag)
 
         if update_required:
             fragment = Json(tag_output)
