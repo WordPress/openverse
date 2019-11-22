@@ -210,7 +210,8 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     size = serializers.CharField(
         label='size',
         help_text="A comma separated list of image sizes; available sizes"
-                  "include `small`, medium, or `large`."
+                  "include `small`, medium, or `large`.",
+        required=False
     )
     qa = serializers.BooleanField(
         label='quality_assurance',
