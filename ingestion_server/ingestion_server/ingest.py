@@ -13,15 +13,15 @@ intermediary database).
 
 Since some of these tables have hundreds of millions of records and are tens of
 gigabytes in size, there are some performance considerations we need to account
-for. Appending or updating large numbers of records has poor performance due to 
-the number of indices and constraints on the table. These indices and 
+for. Appending or updating large numbers of records has poor performance due to
+the number of indices and constraints on the table. These indices and
 constraints are necessary for good query performance and data consistency,
-so we can't get rid of them. Since the data is being actively queried in 
+so we can't get rid of them. Since the data is being actively queried in
 production, disabling indices and constraints temporarily isn't an option.
 
 To work around these problems, we need to create a temporary table, import the
 data, and only then create indices and constraints. Then, "promote" the new
-table to replace the old data. This strategy is far faster than updating the 
+table to replace the old data. This strategy is far faster than updating the
 data in place.
 """
 
@@ -158,10 +158,10 @@ def _generate_delete_orphans(fk_statement, fk_table):
         (select 1 from temp_import_{ref_table} r
         where r.{ref_field} = fk_table.{fk_field})
     '''.format(
-            fk_table=fk_table,
-            ref_table=ref_table,
-            fk_field=fk_field,
-            ref_field=ref_field
+        fk_table=fk_table,
+        ref_table=ref_table,
+        fk_field=fk_field,
+        ref_field=ref_field
     )
     return del_orphans
 

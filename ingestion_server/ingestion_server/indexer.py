@@ -30,7 +30,7 @@ ID in Elasticsearch, copy the missing records over to Elasticsearch.
 Each table is database corresponds to an identically named index in
 Elasticsearch. For instance, if database has a table that we would like to
 replicate called 'image', the indexer will create an Elasticsearch called
-'image' and populate the index with documents. See elasticsearch_models.py to 
+'image' and populate the index with documents. See elasticsearch_models.py to
 change the format of Elasticsearch documents.
 
 This can either be run as a module, CLI, or in daemon mode. In daemon mode,

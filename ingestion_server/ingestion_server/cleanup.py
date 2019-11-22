@@ -11,7 +11,7 @@ from tld.utils import update_tld_names
 from tld.exceptions import TldBadUrl
 update_tld_names()
 """
-Functions for processing data when it is imported into the CC Catalog. This 
+Functions for processing data when it is imported into the CC Catalog. This
 includes cleaning up malformed URLs and filtering out undesirable tags.
 """
 
@@ -262,9 +262,9 @@ def clean_image_data(table):
             fields_to_clean.add(f)
 
     cleanup_selection = "SELECT id, provider, {fields} from {table}".format(
-                            fields=', '.join(fields_to_clean),
-                            table='temp_import_{}'.format(table),
-                        )
+        fields=', '.join(fields_to_clean),
+        table='temp_import_{}'.format(table),
+    )
     log.info('Running cleanup on selection "{}"'.format(cleanup_selection))
     conn = database_connect(autocommit=True)
     cursor_name = '{}-{}'.format(table, str(uuid.uuid4()))

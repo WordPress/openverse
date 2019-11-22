@@ -4,9 +4,9 @@ import enum
 import logging as log
 from filelock import FileLock
 """
-Indexing is distributed across multiple independent hosts. We don't want to 
-"go live" in production with the newly indexed data until all of the indexing 
-workers have finished their tasks. To that end, we need to track the state of 
+Indexing is distributed across multiple independent hosts. We don't want to
+"go live" in production with the newly indexed data until all of the indexing
+workers have finished their tasks. To that end, we need to track the state of
 each worker, and be notified when the job has finished.
 
 State is persisted to the disk using shelve. Concurrent writes aren't allowed,

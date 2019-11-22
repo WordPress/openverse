@@ -67,7 +67,8 @@ class TaskTracker:
 
         to_utc = dt.datetime.utcfromtimestamp
 
-        def render_date(x): return to_utc(x) if x != 0.0 else None
+        def render_date(x):
+            return to_utc(x) if x != 0.0 else None
 
         # Convert date to a readable format
         for idx, task in enumerate(sorted_results):
@@ -113,4 +114,3 @@ class Task(Process):
             except requests.exceptions.RequestException as e:
                 logging.error('Failed to send callback!')
                 logging.error(e)
-
