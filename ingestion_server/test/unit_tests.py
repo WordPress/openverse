@@ -101,8 +101,8 @@ class TestCleanup:
             }
         ]
         result = str(CleanupFunctions.cleanup_tags(tags))
-        expected = str(Json([{
-            'name': 'valid', 'accuracy': 0.99},
+        expected = str(Json([
+            {'name': 'valid', 'accuracy': 0.99},
             {'name': 'valid_no_accuracy'}
         ]))
         assert result == expected
