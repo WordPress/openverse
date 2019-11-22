@@ -1,6 +1,8 @@
 import pytest
 import datetime
 from uuid import uuid4
+from psycopg2.extras import Json
+from ingestion_server.cleanup import CleanupFunctions
 from ingestion_server.elasticsearch_models import Image
 
 
@@ -51,28 +53,80 @@ def create_mock_image(override=None):
     return Image.database_row_to_elasticsearch_doc(row, schema)
 
 
-def test_size():
-    small = create_mock_image({'height': 600, 'width': 300})
-    assert small.size == Image.ImageSizes.SMALL.name.lower()
-    huge = create_mock_image({'height': 4096, 'width': 4096})
-    assert huge.size == Image.ImageSizes.LARGE.name.lower()
+class TestImage:
+    @staticmethod
+    def test_size():
+        small = create_mock_image({'height': 600, 'width': 300})
+        assert small.size == Image.ImageSizes.SMALL.name.lower()
+        huge = create_mock_image({'height': 4096, 'width': 4096})
+        assert huge.size == Image.ImageSizes.LARGE.name.lower()
+
+    @staticmethod
+    def test_aspect_ratio():
+        square = create_mock_image({'height': 300, 'width': 300})
+        assert square.aspect_ratio == Image.AspectRatios.SQUARE.name.lower()
+        tall = create_mock_image({'height': 500, 'width': 200})
+        assert tall.aspect_ratio == Image.AspectRatios.TALL.name.lower()
+        wide = create_mock_image({'height': 200, 'width': 500})
+        assert wide.aspect_ratio == Image.AspectRatios.WIDE.name.lower()
+
+    @staticmethod
+    def test_extension():
+        no_extension = create_mock_image({
+            'url': 'https://creativecommons.org/hello'
+        })
+        assert no_extension.extension is None
+        jpg = create_mock_image({
+            'url': 'https://creativecommons.org/hello.jpg'
+        })
+        assert jpg.extension == 'jpg'
 
 
-def test_aspect_ratio():
-    square = create_mock_image({'height': 300, 'width': 300})
-    assert square.aspect_ratio == Image.AspectRatios.SQUARE.name.lower()
-    tall = create_mock_image({'height': 500, 'width': 200})
-    assert tall.aspect_ratio == Image.AspectRatios.TALL.name.lower()
-    wide = create_mock_image({'height': 200, 'width': 500})
-    assert wide.aspect_ratio == Image.AspectRatios.WIDE.name.lower()
+class TestCleanup:
+    @staticmethod
+    def test_tag_blacklist():
+        tags = [
+            {
+                'name': 'cc0'
+            },
+            {
+                'name': 'valid',
+                'accuracy': 0.99
+            },
+            {
+                'name': 'valid_no_accuracy'
+            },
+            {
+                'name': 'garbage:=metacrap',
+            }
+        ]
+        result = str(CleanupFunctions.cleanup_tags(tags))
+        expected = str(Json([
+            {'name': 'valid', 'accuracy': 0.99},
+            {'name': 'valid_no_accuracy'}
+        ]))
+        assert result == expected
 
+    @staticmethod
+    def test_accuracy_filter():
+        tags = [
+            {
+                'name': 'inaccurate',
+                'accuracy': 0.5
+            },
+            {
+                'name': 'accurate',
+                'accuracy': 0.999
+            }
+        ]
+        result = str(CleanupFunctions.cleanup_tags(tags))
+        expected = str(Json([{'name': 'accurate', 'accuracy': 0.999}]))
+        assert result == expected
 
-def test_extension():
-    no_extension = create_mock_image({
-        'url': 'https://creativecommons.org/hello'
-    })
-    assert no_extension.extension is None
-    jpg = create_mock_image({
-        'url': 'https://creativecommons.org/hello.jpg'
-    })
-    assert jpg.extension == 'jpg'
+    @staticmethod
+    def test_url_protocol_fix():
+        bad_url = 'flickr.com'
+        tls_support_cache = {}
+        result = CleanupFunctions.cleanup_url(bad_url, tls_support_cache)
+        expected = "'https://flickr.com'"
+        assert result == expected
