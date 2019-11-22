@@ -7,6 +7,7 @@ const filterToString = filter =>
 const filterToQueryData = filterData => ({
   provider: filterToString(filterData.providers),
   lt: filterToString(filterData.licenseTypes),
+  li: filterToString(filterData.licenses),
   imageType: filterToString(filterData.imageTypes),
   extension: filterToString(filterData.extensions),
   searchBy: filterData.searchBy.creator ? 'creator' : '',

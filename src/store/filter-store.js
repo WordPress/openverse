@@ -5,7 +5,7 @@ import { TOGGLE_FILTER } from './action-types';
 import { SET_FILTER, SET_PROVIDERS_FILTERS, CLEAR_FILTERS } from './mutation-types';
 import filterToQueryData from '../utils/filterToQueryData';
 
-const filterData = {
+export const filterData = {
   licenses: [
     { code: 'cc0', name: 'CC0', checked: false },
     { code: 'pdm', name: 'Public Domain Mark', checked: false },
@@ -83,7 +83,7 @@ const actions = {
 
 function setQuery(state, params, path, redirect) {
   const query = filterToQueryData(state.filters);
-  state.isFilterApplied = ['providers', 'lt', 'imageType', 'extension', 'searchBy']
+  state.isFilterApplied = ['providers', 'lt', 'li', 'imageType', 'extension', 'searchBy']
     .some(key => query[key] && query[key].length > 0);
   state.query = {
     q: state.query.q,
