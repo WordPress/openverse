@@ -29,6 +29,8 @@ def writeToFile(_data, _name):
 def sanitizeString(_data):
     if _data is None:
         return ''
+    else:
+        _data = str(_data)
 
     _data       = _data.strip()
     _data       = _data.replace('"', "'")
