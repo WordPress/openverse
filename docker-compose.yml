@@ -89,6 +89,7 @@ services:
     depends_on:
       - db
       - es
+      - indexer-worker
     volumes:
       - ./ingestion_server:/ingestion-server
     environment:
