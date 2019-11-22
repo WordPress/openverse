@@ -141,4 +141,9 @@ class TestCleanup:
         tls_support_cache = {}
         result = CleanupFunctions.cleanup_url(bad_url, tls_support_cache)
         expected = "'https://flickr.com'"
+
+        bad_http = 'neverssl.com'
+        result_http = CleanupFunctions.cleanup_url(bad_http, tls_support_cache)
+        expected_http = "'http://neverssl.com'"
         assert result == expected
+        assert result_http == expected_http
