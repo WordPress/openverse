@@ -200,8 +200,7 @@ class TableIndexer:
         )
         # Select all documents in-between and replicate to Elasticsearch.
         if last_added_pg_id > last_added_es_id:
-            log.info('Replicating range ' + str(last_added_es_id) + '-' +
-                     str(last_added_pg_id))
+            log.info(f'Replicating range {last_added_es_id}-{last_added_pg_id}')
             query = SQL('SELECT * FROM {}'
                         ' WHERE id BETWEEN {} AND {}'
                         .format(table, last_added_es_id, last_added_pg_id))
