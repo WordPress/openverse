@@ -105,7 +105,19 @@ class TestCleanup:
             {'name': 'valid', 'accuracy': 0.99},
             {'name': 'valid_no_accuracy'}
         ]))
+
         assert result == expected
+
+    @staticmethod
+    def test_tag_no_update():
+        tags = [
+            {
+                'name': 'valid',
+                'accuracy': 0.92
+            }
+        ]
+        result = CleanupFunctions.cleanup_tags(tags)
+        assert result is None
 
     @staticmethod
     def test_accuracy_filter():
