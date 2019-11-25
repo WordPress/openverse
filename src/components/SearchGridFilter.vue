@@ -3,8 +3,14 @@
                  'search-filters__visible': isFilterVisible, }">
     <form class="filters-form" role="filter">
       <filter-check-list :options="filters.licenseTypes"
+                         :disabled="licenseTypesDisabled"
                          title="I want something that I can"
                          filterType="licenseTypes"
+                         @filterChanged="onUpdateFilter" />
+      <filter-check-list :options="filters.licenses"
+                         :disabled="licensesDisabled"
+                         title="All licenses"
+                         filterType="licenses"
                          @filterChanged="onUpdateFilter" />
       <filter-check-list v-if="renderProvidersFilter"
                          :options="filters.providers"
@@ -60,6 +66,12 @@ export default {
     },
     renderProvidersFilter() {
       return !this.$props.isCollectionsPage;
+    },
+    licensesDisabled() {
+      return this.$store.state.filters.licenseTypes.some(li => li.checked);
+    },
+    licenseTypesDisabled() {
+      return this.$store.state.filters.licenses.some(li => li.checked);
     },
   },
   methods: {

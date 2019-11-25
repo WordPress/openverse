@@ -14,6 +14,7 @@
              :id="item.code"
              :key="index"
              :checked="item.checked"
+             :disabled="disabled"
              @change="onValueChange" />
       <label class="filter-label" :for="item.code">{{ item.name }}</label>
     </div>
@@ -23,7 +24,7 @@
 <script>
 export default {
   name: 'filter-check-list',
-  props: ['options', 'title', 'filterType'],
+  props: ['options', 'title', 'filterType', 'disabled'],
   data() {
     return { filtersVisible: false };
   },
