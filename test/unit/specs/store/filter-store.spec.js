@@ -169,8 +169,8 @@ describe('Filter Store', () => {
       ];
 
       const providers = [
-        { provider_name: 'met', display_name: 'Metropolitan'},
-        { provider_name: 'flickr', display_name: 'Flickr'},
+        { provider_name: 'met', display_name: 'Metropolitan' },
+        { provider_name: 'flickr', display_name: 'Flickr' },
       ];
 
       state.filters.providers = existingProviderFilters;
