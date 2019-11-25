@@ -1,10 +1,14 @@
 <template>
-  <div>
+  <div class="search-grid_item-container"
+    :style="`width: ${containerAspect * 165}px;
+    flex-grow: ${containerAspect * 165}`">
     <figure class="search-grid_item">
+      <i :style="`padding-bottom:${iPadding}%`"></i>
       <a
         :href="'/photos/' + image.id"
         @click="onGotoDetailPage($event, image)"
-        class="search-grid_image-ctr">
+        class="search-grid_image-ctr"
+        :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`">
         <img
           :class="{'search-grid_image': true, 'search-grid_image__fill': !shouldContainImage}"
           :alt="image.title" :src="getImageUrl(image)"
@@ -34,6 +38,10 @@ import getProviderLogo from '@/utils/getProviderLogo';
 
 const errorImage = require('@/assets/image_not_available_placeholder.png');
 
+const minAspect = 3 / 4;
+const maxAspect = 16 / 9;
+const panaromaAspect = 21 / 9;
+
 const toAbsolutePath = (url, prefix = 'https://') => {
   if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
     return url;
@@ -42,16 +50,45 @@ const toAbsolutePath = (url, prefix = 'https://') => {
 };
 
 export default {
-  name: 'masonry-search-grid-cell',
+  name: 'search-grid-cell',
   props: ['image', 'shouldContainImage'],
   components: {
     LicenseIcons,
+  },
+  computed: {
+    imageAspect() {
+      return this.image.width / this.image.height;
+    },
+    containerAspect() {
+      if (this.imageAspect > maxAspect) return maxAspect;
+      if (this.imageAspect < minAspect) return minAspect;
+      return this.imageAspect;
+    },
+    iPadding() {
+      if (this.imageAspect < minAspect) return (1 / minAspect) * 100;
+      if (this.imageAspect > maxAspect) return (1 / maxAspect) * 100;
+      return (1 / this.imageAspect) * 100;
+    },
+    imageWidth() {
+      if (this.imageAspect < maxAspect) return 100;
+      return (this.imageAspect / maxAspect) * 100;
+    },
+    imageTop() {
+      if (this.imageAspect > minAspect) return 0;
+      return ((minAspect - this.imageAspect) / (this.imageAspect * minAspect * minAspect)) * -50;
+    },
+    imageLeft() {
+      if (this.imageAspect < maxAspect) return 0;
+      return ((this.imageAspect - maxAspect) / maxAspect) * -50;
+    },
   },
   methods: {
     getImageUrl(image) {
       if (!image) {
         return '';
       }
+      // fix for blurry panaroma thumbnails
+      if (this.imageAspect > panaromaAspect) return toAbsolutePath(image.url);
       const url = image.thumbnail || image.url;
       return toAbsolutePath(url);
     },
@@ -92,8 +129,26 @@ export default {
     width: 100%;
   }
 
+  .search-grid_item-container {
+    margin: 10px;
+  }
+
   .search-grid_item {
+    position: relative;
+    width: 100%;
     overflow: hidden;
+
+    i {
+      display: block;
+    }
+
+    a {
+      position: absolute;
+      vertical-align: bottom;
+      img {
+        width: 100%;
+      }
+    }
 
     &:hover .search-grid_item-overlay {
       opacity: 1;
