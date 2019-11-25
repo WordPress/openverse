@@ -396,8 +396,8 @@ class TableIndexer:
             model = database_table_to_elasticsearch_model[origin_table]
         except KeyError:
             log.error(
-                'Table ' + origin_table +
-                ' is not defined in elasticsearch_models.')
+                f'Table {origin_table} is not defined in elasticsearch_models.'
+            )
             return []
 
         documents = []
