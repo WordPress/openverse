@@ -29,6 +29,7 @@ export const filterData = {
     { code: 'jpg', name: 'JPEGs', checked: false },
     { code: 'png', name: 'PNGs', checked: false },
   ],
+  providers: [],
   searchBy: {
     creator: false,
   },
@@ -46,7 +47,8 @@ const parseQueryString = (queryString, queryStringParamKey, filterKey, data) => 
 
 const initialState = (searchParams) => {
   const filters = clonedeep(filterData);
-  filters.providers = getParameterByName('provider', searchParams).split(',').map(provider => ({
+  const providerParameter = getParameterByName('provider', searchParams);
+  filters.providers = providerParameter === '' ? [] : providerParameter.split(',').map(provider => ({
     code: provider,
     checked: true,
   }));
