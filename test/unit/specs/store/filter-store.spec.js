@@ -1,7 +1,6 @@
-import { default as store, filterData} from '@/store/filter-store';
+import store, { filterData } from '@/store/filter-store';
 import { TOGGLE_FILTER } from '@/store/action-types';
 import { SET_FILTER, SET_PROVIDERS_FILTERS, CLEAR_FILTERS } from '@/store/mutation-types';
-import { notDeepEqual } from 'assert';
 
 describe('Filter Store', () => {
   describe('state', () => {
@@ -29,6 +28,12 @@ describe('Filter Store', () => {
       expect(defaultState.filters.extensions).toEqual(filterData.extensions);
     });
 
+    it('state contains empty providers list', () => {
+      const defaultState = store.state('');
+
+      expect(defaultState.filters.providers).toEqual([]);
+    });
+
     it('state contains search by author', () => {
       const defaultState = store.state('');
 
@@ -46,14 +51,16 @@ describe('Filter Store', () => {
 
   describe('mutations', () => {
     let state = null;
-    const routePushMock = jest.fn();
-    const mutations = store.mutations(routePushMock);
+    let routePushMock = null;
+    let mutations = null;
 
     beforeEach(() => {
       state = {
         query: { q: 'foo' },
         ...store.state(''),
       };
+      routePushMock = jest.fn();
+      mutations = store.mutations(routePushMock);
     });
 
     it('SET_FILTER updates license state', () => {
@@ -115,5 +122,117 @@ describe('Filter Store', () => {
         searchBy: '',
       });
     });
+
+    it('SET_FILTER updates search by creator', () => {
+      mutations[SET_FILTER](state, { filterType: 'searchBy' });
+
+      expect(state.filters.searchBy.creator).toBeTruthy();
+      expect(state.query).toEqual({
+        q: 'foo',
+        li: '',
+        extension: '',
+        imageType: '',
+        lt: '',
+        provider: '',
+        searchBy: 'creator',
+      });
+    });
+
+    it('SET_FILTER redirects to search path and with query object', () => {
+      mutations[SET_FILTER](state, { filterType: 'imageTypes', codeIdx: 0, shouldNavigate: true });
+
+      expect(routePushMock).toHaveBeenCalledWith({
+        path: '/search',
+        query: state.query,
+      });
+    });
+
+    it('SET_FILTER redirects to collections path and with query object', () => {
+      mutations[SET_FILTER](state, {
+        filterType: 'imageTypes',
+        codeIdx: 0,
+        isCollectionsPage: true,
+        provider: 'met',
+        shouldNavigate: true,
+      });
+
+      expect(routePushMock).toHaveBeenCalledWith({
+        path: '/collections/met',
+        query: state.query,
+      });
+    });
+
+
+    it('SET_PROVIDERS_FILTERS merges with existing provider filters', () => {
+      const existingProviderFilters = [
+        { code: 'met', checked: true },
+      ];
+
+      const providers = [
+        { provider_name: 'met', display_name: 'Metropolitan'},
+        { provider_name: 'flickr', display_name: 'Flickr'},
+      ];
+
+      state.filters.providers = existingProviderFilters;
+
+      mutations[SET_PROVIDERS_FILTERS](state, { imageProviders: providers });
+
+      expect(state.filters.providers).toEqual([
+        { code: 'met', name: 'Metropolitan', checked: true },
+        { code: 'flickr', name: 'Flickr', checked: false },
+      ]);
+    });
+
+    it('CLEAR_FILTERS resets filters to initial state', () => {
+      mutations[CLEAR_FILTERS](state, { shouldNavigate: false });
+
+      expect(state.filters).toEqual(store.state('').filters);
+    });
+
+    it('CLEAR_FILTERS sets providers filters checked to false', () => {
+      state.filters.providers = [
+        { code: 'met', name: 'Metropolitan', checked: true },
+        { code: 'flickr', name: 'Flickr', checked: false },
+      ];
+
+      mutations[CLEAR_FILTERS](state, { shouldNavigate: false });
+
+      expect(state.filters.providers).toEqual([
+        { code: 'met', name: 'Metropolitan', checked: false },
+        { code: 'flickr', name: 'Flickr', checked: false },
+      ]);
+    });
+  });
+
+  describe('actions', () => {
+    let state = null;
+    let commitMock = null;
+    let actions = null;
+
+    beforeEach(() => {
+      state = {
+        query: { q: 'foo' },
+        ...store.state(''),
+      };
+      commitMock = jest.fn();
+      actions = store.actions;
+    });
+
+    it('TOGGLE_FILTER commits SET_FILTER with filter index', () => {
+      state.filters.providers = [
+        { code: 'met', name: 'Metropolitan', checked: true },
+        { code: 'flickr', name: 'Flickr', checked: false },
+      ];
+
+      const params = { filterType: 'providers', code: 'flickr' };
+
+      actions[TOGGLE_FILTER]({ commit: commitMock, state }, params);
+
+      expect(commitMock).toHaveBeenCalledWith(SET_FILTER, {
+        codeIdx: 1,
+        ...params,
+      });
+    });
   });
 });
+
