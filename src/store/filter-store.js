@@ -28,6 +28,8 @@ export const filterData = {
   extensions: [
     { code: 'jpg', name: 'JPEGs', checked: false },
     { code: 'png', name: 'PNGs', checked: false },
+    { code: 'gif', name: 'GIFs', checked: false },
+    { code: 'svg', name: 'SVGs', checked: false },
   ],
   providers: [],
   searchBy: {
