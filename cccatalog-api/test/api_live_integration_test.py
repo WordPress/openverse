@@ -443,7 +443,7 @@ def related_factory():
     return _parameterized_search
 
 
-@pytest.skip(reason="Generally, we don't paginate related images, so "
+@pytest.mark.skip(reason="Generally, we don't paginate related images, so "
                     "consistency is less of an issue.")
 def test_related_image_search_page_consistency(related_factory, search_without_dead_links):
     initial_images = search_without_dead_links(q='*', pagesize=10)
