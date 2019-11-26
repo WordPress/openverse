@@ -27,10 +27,12 @@ const BrowsePage = {
       this.getImages(this.query);
     }
   },
-  updated() {
-    if (this.query.q) {
-      this.getImages(this.query);
-    }
+  watch: {
+    query(newQuery) {
+      if (newQuery) {
+        this.getImages(newQuery);
+      }
+    },
   },
 };
 

@@ -38,10 +38,12 @@ const CollectionBrowsePage = {
       this.getImages(this.query);
     }
   },
-  updated() {
-    if (this.query.provider) {
-      this.getImages(this.query);
-    }
+  watch: {
+    query(newQuery) {
+      if (newQuery) {
+        this.getImages(newQuery);
+      }
+    },
   },
 };
 
