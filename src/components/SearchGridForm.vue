@@ -103,22 +103,11 @@ export default {
     onSearchFilterChanged(query) {
       this.$emit('onSearchFormSubmit', query);
     },
-    addScrollEvent() {
-      this.removeScrollEvent = this.removeScrollEvent.bind(this);
-      window.addEventListener('scroll', this.removeScrollEvent);
-    },
-    removeScrollEvent() {
-      this.$store.commit(SET_FILTER_IS_VISIBLE, { isFilterVisible: false });
-      window.removeEventListener('scroll', this.removeScrollEvent);
-    },
     setFormInput() {
       this.searchTermsModel = this.searchTerms;
     },
   },
   watch: {
-    isFilterVisible: function handler(isFilterVisible) {
-      if (isFilterVisible) this.addScrollEvent();
-    },
     searchTerms: function handler() {
       this.setFormInput();
     },
