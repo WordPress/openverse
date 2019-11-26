@@ -32,6 +32,16 @@ export const filterData = {
     { code: 'gif', name: 'GIFs', checked: false },
     { code: 'svg', name: 'SVGs', checked: false },
   ],
+  aspectRatios: [
+    { code: 'tall', name: 'Tall', checked: false },
+    { code: 'wide', name: 'Wide', checked: false },
+    { code: 'square', name: 'Square', checked: false },
+  ],
+  sizes: [
+    { code: 'small', name: 'Small', checked: false },
+    { code: 'medium', name: 'Medium', checked: false },
+    { code: 'large', name: 'Large', checked: false },
+  ],
   providers: [],
   searchBy: {
     creator: false,

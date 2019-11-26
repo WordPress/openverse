@@ -25,6 +25,14 @@
                          title="File Type"
                          filterType="extensions"
                          @filterChanged="onUpdateFilter" />
+      <filter-check-list :options="filters.aspectRatios"
+                         title="Aspect Ratio"
+                         filterType="aspectRatios"
+                         @filterChanged="onUpdateFilter" />
+      <filter-check-list :options="filters.sizes"
+                         title="Image Size"
+                         filterType="sizes"
+                         @filterChanged="onUpdateFilter" />
     </form>
 
     <div class="filter-option small-filter search-filters_search-by">
