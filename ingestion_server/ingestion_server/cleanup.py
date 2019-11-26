@@ -24,15 +24,7 @@ TAG_BLACKLIST = {
     'squareformat',
     'uploaded:by=flickrmobile',
     'uploaded:by=instagram',
-    'flickriosapp:filter=flamingo',
-    'cc0',
-    'by',
-    'by-nc',
-    'by-nd',
-    'by-sa',
-    'by-nc-nd',
-    'by-nc-sa',
-    'pdm'
+    'flickriosapp:filter=flamingo'
 }
 
 # Filter out tags that contain the following terms. All entrees should be
@@ -41,7 +33,15 @@ TAG_CONTAINS_BLACKLIST = {
     'flickriosapp',
     'uploaded',
     ':',
-    '='
+    '=',
+    'cc0',
+    'by',
+    'by-nc',
+    'by-nd',
+    'by-sa',
+    'by-nc-nd',
+    'by-nc-sa',
+    'pdm'
 }
 
 # Filter out low-confidence tags, which indicate that the machine-generated tag
