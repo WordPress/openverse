@@ -7,6 +7,9 @@ const BrowsePage = {
     query() {
       return this.$store.state.query;
     },
+    isFilterVisible() {
+      return this.$store.state.isFilterVisible;
+    },
   },
   methods: {
     getImages(params) {

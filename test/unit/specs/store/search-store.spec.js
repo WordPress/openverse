@@ -3,7 +3,6 @@ import {
   FETCH_END_IMAGES,
   FETCH_IMAGES_ERROR,
   FETCH_START_IMAGES,
-  SET_FILTER_IS_VISIBLE,
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_IMAGES,
@@ -24,7 +23,6 @@ describe('Search Store', () => {
       expect(state.images).toHaveLength(0);
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
-      expect(state.isFilterVisible).toBeTruthy();
       expect(state.isFilterApplied).toBeFalsy();
       expect(state.query.q).toBe('');
       expect(state.relatedImages).toHaveLength(0);
@@ -39,7 +37,6 @@ describe('Search Store', () => {
       expect(state.images).toHaveLength(0);
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
-      expect(state.isFilterVisible).toBeTruthy();
       expect(state.isFilterApplied).toBeTruthy();
       expect(state.query.q).toBe('landscapes');
       expect(state.query.provider).toBe('met');
@@ -110,13 +107,6 @@ describe('Search Store', () => {
       mutations[SET_IMAGE](state, params);
 
       expect(state.image).toEqual(params.image);
-    });
-
-    it('SET_FILTER_IS_VISIBLE updates state', () => {
-      const params = { isFilterVisible: 'bar' };
-      mutations[SET_FILTER_IS_VISIBLE](state, params);
-
-      expect(state.isFilterVisible).toBe(params.isFilterVisible);
     });
 
     it('SET_IMAGE_PAGE updates state', () => {

@@ -2,7 +2,7 @@ import findIndex from 'lodash.findindex';
 import clonedeep from 'lodash.clonedeep';
 import getParameterByName from '@/utils/getParameterByName';
 import { TOGGLE_FILTER } from './action-types';
-import { SET_FILTER, SET_PROVIDERS_FILTERS, CLEAR_FILTERS } from './mutation-types';
+import { SET_FILTER, SET_PROVIDERS_FILTERS, CLEAR_FILTERS, SET_FILTER_IS_VISIBLE } from './mutation-types';
 import filterToQueryData from '../utils/filterToQueryData';
 
 export const filterData = {
@@ -64,12 +64,14 @@ const initialState = (searchParams) => {
     filters.searchBy.creator = true;
   }
 
-  filters.isFilterVisible = true;
-  filters.isFilterApplied = !!filters.providers ||
-                            !!filters.licenseTypes ||
-                            !!filters.searchBy.creator;
+  const isFilterVisible = true;
+  const isFilterApplied = !!filters.providers ||
+                          !!filters.licenseTypes ||
+                          !!filters.searchBy.creator;
   return {
     filters,
+    isFilterVisible,
+    isFilterApplied,
   };
 };
 
@@ -148,6 +150,9 @@ const mutations = redirect => ({
         checked,
       };
     });
+  },
+  [SET_FILTER_IS_VISIBLE](state, params) {
+    state.isFilterVisible = params.isFilterVisible;
   },
 });
 

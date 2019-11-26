@@ -14,7 +14,6 @@ import {
   FETCH_END_IMAGES,
   FETCH_IMAGES_ERROR,
   FETCH_START_IMAGES,
-  SET_FILTER_IS_VISIBLE,
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_IMAGES,
@@ -45,7 +44,6 @@ const initialState = (searchParams) => {
     images: [],
     isFetchingImages: false,
     isFetchingImagesError: true,
-    isFilterVisible: true,
     isFilterApplied: !!query.provider || !!query.lt || !!query.searchBy,
     query,
     relatedImages: [],
@@ -221,9 +219,6 @@ const mutations = redirect => ({
   },
   [SET_IMAGE](_state, params) {
     _state.image = decodeImageData(params.image);
-  },
-  [SET_FILTER_IS_VISIBLE](_state, params) {
-    _state.isFilterVisible = params.isFilterVisible;
   },
   [SET_IMAGE_PAGE](_state, params) {
     _state.imagePage = params.imagePage;

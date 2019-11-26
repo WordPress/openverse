@@ -15,6 +15,9 @@ const CollectionBrowsePage = {
     providerName() {
       return getProviderName(this.$store.state.imageProviders, this.$props.provider);
     },
+    isFilterVisible() {
+      return this.$store.state.isFilterVisible;
+    },
   },
   methods: {
     getImages(params) {

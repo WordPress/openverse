@@ -4,7 +4,7 @@
       <div class="cell">
         <header-section showNavSearch="true" />
       </div>
-      <div class="cell small-3">
+      <div class="cell small-3" v-if="isFilterVisible">
         <search-grid-filter isCollectionsPage="true"
                             :provider="provider"
                             @onSearchFilterChanged="onSearchFormSubmit"/>

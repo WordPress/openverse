@@ -1,6 +1,6 @@
 import store, { filterData } from '@/store/filter-store';
 import { TOGGLE_FILTER } from '@/store/action-types';
-import { SET_FILTER, SET_PROVIDERS_FILTERS, CLEAR_FILTERS } from '@/store/mutation-types';
+import { SET_FILTER, SET_PROVIDERS_FILTERS, CLEAR_FILTERS, SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
 
 describe('Filter Store', () => {
   describe('state', () => {
@@ -46,6 +46,12 @@ describe('Filter Store', () => {
       expect(state.filters.licenses.find(x => x.code === 'by').checked).toBeTruthy();
       expect(state.filters.licenseTypes.find(x => x.code === 'commercial').checked).toBeTruthy();
       expect(state.filters.searchBy.creator).toBeTruthy();
+    });
+
+    it('state has filter visible', () => {
+      const defaultState = store.state('');
+
+      expect(defaultState.isFilterVisible).toBeTruthy();
     });
   });
 
@@ -201,6 +207,13 @@ describe('Filter Store', () => {
         { code: 'met', name: 'Metropolitan', checked: false },
         { code: 'flickr', name: 'Flickr', checked: false },
       ]);
+    });
+
+    it('SET_FILTER_IS_VISIBLE updates state', () => {
+      const params = { isFilterVisible: 'bar' };
+      mutations[SET_FILTER_IS_VISIBLE](state, params);
+
+      expect(state.isFilterVisible).toBe(params.isFilterVisible);
     });
   });
 

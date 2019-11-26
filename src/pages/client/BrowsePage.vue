@@ -4,7 +4,7 @@
       <header-section />
     </div>
     <div class="search grid-x flexible">
-      <div class="cell grid-sidebar">
+      <div class="cell grid-sidebar" v-if="isFilterVisible">
         <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit"/>
       </div>
       <div class="cell search-grid-ctr">
