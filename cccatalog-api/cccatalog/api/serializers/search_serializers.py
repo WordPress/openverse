@@ -197,7 +197,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     categories = serializers.CharField(
         label="categories",
         help_text="A comma separated list of categories; available categories "
-                  "include `vector`, `illustration`, `photograph`, and "
+                  "include `illustration`, `photograph`, and "
                   "`digitized_artwork`.",
         required=False
     )
@@ -210,7 +210,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     size = serializers.CharField(
         label='size',
         help_text="A comma separated list of image sizes; available sizes"
-                  "include `small`, medium, or `large`.",
+                  "include `small`, `medium`, or `large`.",
         required=False
     )
     qa = serializers.BooleanField(
@@ -278,7 +278,6 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     @staticmethod
     def validate_categories(value):
         valid_categories = {
-            'vector',
             'illustration',
             'digitized_artwork',
             'photograph'

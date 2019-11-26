@@ -90,6 +90,9 @@ class TestCleanup:
                 'name': 'cc0'
             },
             {
+                'name': ' cc0'
+            },
+            {
                 'name': 'valid',
                 'accuracy': 0.99
             },
