@@ -31,7 +31,7 @@ const initialState = (searchParams) => {
     q: getParameterByName('q', searchParams),
     provider: getParameterByName('provider', searchParams),
     lt: getParameterByName('lt', searchParams),
-    imageType: getParameterByName('imageType', searchParams),
+    categories: getParameterByName('categories', searchParams),
     extension: getParameterByName('extension', searchParams),
     searchBy: getParameterByName('searchBy', searchParams),
   };

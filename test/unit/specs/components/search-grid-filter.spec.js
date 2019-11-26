@@ -16,7 +16,7 @@ describe('SearchGridFilter', () => {
         filters: {
           licenseTypes: [{ code: 'commercial', name: 'Commercial usage' }],
           licenses: [{ code: 'by', name: 'CC-BY' }],
-          imageTypes: [{ code: 'photo', name: 'Photographs' }],
+          categories: [{ code: 'photo', name: 'Photographs' }],
           extensions: [{ code: 'jpg', name: 'JPG' }],
           searchBy: {
             creator: false,

@@ -19,7 +19,7 @@ describe('Filter Store', () => {
     it('state contains image types', () => {
       const defaultState = store.state('');
 
-      expect(defaultState.filters.imageTypes).toEqual(filterData.imageTypes);
+      expect(defaultState.filters.categories).toEqual(filterData.categories);
     });
 
     it('state contains extensions', () => {
@@ -77,7 +77,7 @@ describe('Filter Store', () => {
         q: 'foo',
         li: state.filters.licenses[0].code,
         extension: '',
-        imageType: '',
+        categories: '',
         lt: '',
         provider: '',
         searchBy: '',
@@ -92,7 +92,7 @@ describe('Filter Store', () => {
         q: 'foo',
         li: '',
         extension: '',
-        imageType: '',
+        categories: '',
         lt: state.filters.licenseTypes[0].code,
         provider: '',
         searchBy: '',
@@ -107,7 +107,7 @@ describe('Filter Store', () => {
         q: 'foo',
         li: '',
         extension: state.filters.extensions[0].code,
-        imageType: '',
+        categories: '',
         lt: '',
         provider: '',
         searchBy: '',
@@ -115,14 +115,14 @@ describe('Filter Store', () => {
     });
 
     it('SET_FILTER updates image types state', () => {
-      mutations[SET_FILTER](state, { filterType: 'imageTypes', codeIdx: 0 });
+      mutations[SET_FILTER](state, { filterType: 'categories', codeIdx: 0 });
 
-      expect(state.filters.imageTypes[0].checked).toBeTruthy();
+      expect(state.filters.categories[0].checked).toBeTruthy();
       expect(state.query).toEqual({
         q: 'foo',
         li: '',
         extension: '',
-        imageType: state.filters.imageTypes[0].code,
+        categories: state.filters.categories[0].code,
         lt: '',
         provider: '',
         searchBy: '',
@@ -137,7 +137,7 @@ describe('Filter Store', () => {
         q: 'foo',
         li: '',
         extension: '',
-        imageType: '',
+        categories: '',
         lt: '',
         provider: '',
         searchBy: 'creator',
@@ -145,7 +145,7 @@ describe('Filter Store', () => {
     });
 
     it('SET_FILTER redirects to search path and with query object', () => {
-      mutations[SET_FILTER](state, { filterType: 'imageTypes', codeIdx: 0, shouldNavigate: true });
+      mutations[SET_FILTER](state, { filterType: 'categories', codeIdx: 0, shouldNavigate: true });
 
       expect(routePushMock).toHaveBeenCalledWith({
         path: '/search',
@@ -155,7 +155,7 @@ describe('Filter Store', () => {
 
     it('SET_FILTER redirects to collections path and with query object', () => {
       mutations[SET_FILTER](state, {
-        filterType: 'imageTypes',
+        filterType: 'categories',
         codeIdx: 0,
         isCollectionsPage: true,
         provider: 'met',

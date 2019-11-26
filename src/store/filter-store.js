@@ -20,10 +20,11 @@ export const filterData = {
     { code: 'commercial', name: 'Use for commercial purposes', checked: false },
     { code: 'modification', name: 'Modify or adapt', checked: false },
   ],
-  imageTypes: [
-    { code: 'photo', name: 'Photographs', checked: false },
+  categories: [
+    { code: 'photograph', name: 'Photographs', checked: false },
     { code: 'illustration', name: 'Illustrations', checked: false },
     { code: 'vector', name: 'Vector Graphics', checked: false },
+    { code: 'digitized_artwork', name: 'Digitized Artworks', checked: false },
   ],
   extensions: [
     { code: 'jpg', name: 'JPEGs', checked: false },
@@ -56,7 +57,7 @@ const initialState = (searchParams) => {
   }));
   parseQueryString(searchParams, 'lt', 'licenseTypes', filters);
   parseQueryString(searchParams, 'li', 'licenses', filters);
-  parseQueryString(searchParams, 'imageType', 'imageTypes', filters);
+  parseQueryString(searchParams, 'categories', 'categories', filters);
   parseQueryString(searchParams, 'extension', 'extensions', filters);
 
   const searchBy = getParameterByName('searchBy', searchParams);
@@ -89,7 +90,7 @@ const actions = {
 
 function setQuery(state, params, path, redirect) {
   const query = filterToQueryData(state.filters);
-  state.isFilterApplied = ['providers', 'lt', 'li', 'imageType', 'extension', 'searchBy']
+  state.isFilterApplied = ['providers', 'lt', 'li', 'categories', 'extension', 'searchBy']
     .some(key => query[key] && query[key].length > 0);
   state.query = {
     q: state.query.q,

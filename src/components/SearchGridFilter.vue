@@ -17,9 +17,9 @@
                          title="All Sources"
                          filterType="providers"
                          @filterChanged="onUpdateFilter" />
-      <filter-check-list :options="filters.imageTypes"
+      <filter-check-list :options="filters.categories"
                          title="Image Type"
-                         filterType="imageTypes"
+                         filterType="categories"
                          @filterChanged="onUpdateFilter" />
       <filter-check-list :options="filters.extensions"
                          title="File Type"
