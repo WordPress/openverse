@@ -1,9 +1,7 @@
 import findIndex from 'lodash.findindex';
-import clonedeep from 'lodash.clonedeep';
-import getParameterByName from '@/utils/getParameterByName';
 import { TOGGLE_FILTER } from './action-types';
 import { SET_FILTER, SET_PROVIDERS_FILTERS, CLEAR_FILTERS, SET_FILTER_IS_VISIBLE } from './mutation-types';
-import filterToQueryData from '../utils/filterToQueryData';
+import { queryToFilterData, filtersToQueryData } from '../utils/searchQueryTransform';
 
 export const filterData = {
   licenses: [
@@ -47,32 +45,8 @@ export const filterData = {
   },
 };
 
-const parseQueryString = (queryString, queryStringParamKey, filterKey, data) => {
-  const queryStringFilters = getParameterByName(queryStringParamKey, queryString).split(',');
-  data[filterKey].forEach((filter) => {
-    if (findIndex(queryStringFilters, f => f === filter.code) >= 0) {
-      // eslint-disable-next-line no-param-reassign
-      filter.checked = true;
-    }
-  });
-};
-
 const initialState = (searchParams) => {
-  const filters = clonedeep(filterData);
-  const providerParameter = getParameterByName('provider', searchParams);
-  filters.providers = providerParameter === '' ? [] : providerParameter.split(',').map(provider => ({
-    code: provider,
-    checked: true,
-  }));
-  parseQueryString(searchParams, 'lt', 'licenseTypes', filters);
-  parseQueryString(searchParams, 'li', 'licenses', filters);
-  parseQueryString(searchParams, 'categories', 'categories', filters);
-  parseQueryString(searchParams, 'extension', 'extensions', filters);
-
-  const searchBy = getParameterByName('searchBy', searchParams);
-  if (searchBy === 'creator') {
-    filters.searchBy.creator = true;
-  }
+  const filters = queryToFilterData(searchParams);
 
   const isFilterVisible = true;
   const isFilterApplied = !!filters.providers ||
@@ -98,7 +72,7 @@ const actions = {
 };
 
 function setQuery(state, params, path, redirect) {
-  const query = filterToQueryData(state.filters);
+  const query = filtersToQueryData(state.filters);
   state.isFilterApplied = ['providers', 'lt', 'li', 'categories', 'extension', 'searchBy']
     .some(key => query[key] && query[key].length > 0);
   state.query = {
