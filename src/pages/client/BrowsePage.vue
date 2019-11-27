@@ -42,10 +42,7 @@ const BrowsePage = {
 export default BrowsePage;
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-
-<style lang="scss">
+<style lang="scss" scoped>
   .search-grid {
     margin: 30px 30px 60px 30px;
   }
