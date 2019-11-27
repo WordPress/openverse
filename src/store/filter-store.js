@@ -23,7 +23,6 @@ export const filterData = {
   categories: [
     { code: 'photograph', name: 'Photographs', checked: false },
     { code: 'illustration', name: 'Illustrations', checked: false },
-    { code: 'vector', name: 'Vector Graphics', checked: false },
     { code: 'digitized_artwork', name: 'Digitized Artworks', checked: false },
   ],
   extensions: [
