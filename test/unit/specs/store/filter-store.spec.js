@@ -81,6 +81,8 @@ describe('Filter Store', () => {
         lt: '',
         provider: '',
         searchBy: '',
+        aspect_ratio: '',
+        size: '',
       });
     });
 
@@ -96,6 +98,8 @@ describe('Filter Store', () => {
         lt: state.filters.licenseTypes[0].code,
         provider: '',
         searchBy: '',
+        aspect_ratio: '',
+        size: '',
       });
     });
 
@@ -111,6 +115,8 @@ describe('Filter Store', () => {
         lt: '',
         provider: '',
         searchBy: '',
+        aspect_ratio: '',
+        size: '',
       });
     });
 
@@ -126,6 +132,8 @@ describe('Filter Store', () => {
         lt: '',
         provider: '',
         searchBy: '',
+        aspect_ratio: '',
+        size: '',
       });
     });
 
@@ -141,6 +149,42 @@ describe('Filter Store', () => {
         lt: '',
         provider: '',
         searchBy: 'creator',
+        aspect_ratio: '',
+        size: '',
+      });
+    });
+
+    it('SET_FILTER updates aspect ratio', () => {
+      mutations[SET_FILTER](state, { filterType: 'aspectRatios', codeIdx: 0 });
+
+      expect(state.filters.aspectRatios[0].checked).toBeTruthy();
+      expect(state.query).toEqual({
+        q: 'foo',
+        li: '',
+        extension: '',
+        categories: '',
+        lt: '',
+        provider: '',
+        searchBy: '',
+        aspect_ratio: state.filters.aspectRatios[0].code,
+        size: '',
+      });
+    });
+
+    it('SET_FILTER updates size', () => {
+      mutations[SET_FILTER](state, { filterType: 'sizes', codeIdx: 0 });
+
+      expect(state.filters.sizes[0].checked).toBeTruthy();
+      expect(state.query).toEqual({
+        q: 'foo',
+        li: '',
+        extension: '',
+        categories: '',
+        lt: '',
+        provider: '',
+        searchBy: '',
+        aspect_ratio: '',
+        size: state.filters.sizes[0].code,
       });
     });
 
