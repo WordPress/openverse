@@ -53,6 +53,52 @@ describe('Filter Store', () => {
 
       expect(defaultState.isFilterVisible).toBeTruthy();
     });
+
+    it('state has isFilterApplied default as false', () => {
+      const defaultState = store.state('');
+
+      expect(defaultState.isFilterApplied).toBeFalsy();
+    });
+
+    it('isFilterApplied is set to true when provider filter is set', () => {
+      const state = store.state('?q=landscapes&provider=met&li=by&lt=');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to true when searchBy filter is set', () => {
+      const state = store.state('?q=landscapes&searchBy=creator');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to true when license type filter is set', () => {
+      const state = store.state('?q=landscapes&lt=commercial');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to true when license filter is set', () => {
+      const state = store.state('?q=landscapes&li=by');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to true when categories filter is set', () => {
+      const state = store.state('?q=landscapes&categories=photograph');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to true when size filter is set', () => {
+      const state = store.state('?q=landscapes&size=large');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to true when aspect ratio filter is set', () => {
+      const state = store.state('?q=landscapes&aspect_ratio=tall');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to false when no filter is set', () => {
+      const state = store.state('?q=landscapes');
+      expect(state.isFilterApplied).toBeFalsy();
+    });
   });
 
   describe('mutations', () => {
@@ -210,6 +256,25 @@ describe('Filter Store', () => {
         path: '/collections/met',
         query: state.query,
       });
+    });
+
+    it('SET_FILTER updates isFilterApplied with provider', () => {
+      state.filters.providers = [{ code: 'met', checked: false }];
+      mutations[SET_FILTER](state, { filterType: 'providers', codeIdx: 0 });
+
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('SET_FILTER updates isFilterApplied with license type', () => {
+      mutations[SET_FILTER](state, { filterType: 'licenseTypes', codeIdx: 0 });
+
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('SET_FILTER updates isFilterApplied with searchBy', () => {
+      mutations[SET_FILTER](state, { filterType: 'searchBy' });
+
+      expect(state.isFilterApplied).toBeTruthy();
     });
 
 

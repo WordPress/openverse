@@ -45,17 +45,23 @@ export const filterData = {
   },
 };
 
+const isFilterApplied = (filters) => {
+  return Object.keys(filters).some((filterKey) => {
+    if (filterKey === 'searchBy') { return filters.searchBy.creator; }
+
+    return filters[filterKey].some(filter => filter.checked);
+  });
+};
+
 const initialState = (searchParams) => {
   const filters = queryToFilterData(searchParams);
 
   const isFilterVisible = true;
-  const isFilterApplied = !!filters.providers ||
-                          !!filters.licenseTypes ||
-                          !!filters.searchBy.creator;
+  const filtersApplied = isFilterApplied(filters);
   return {
     filters,
     isFilterVisible,
-    isFilterApplied,
+    isFilterApplied: filtersApplied,
   };
 };
 
@@ -73,8 +79,7 @@ const actions = {
 
 function setQuery(state, params, path, redirect) {
   const query = filtersToQueryData(state.filters);
-  state.isFilterApplied = ['providers', 'lt', 'li', 'categories', 'extension', 'searchBy']
-    .some(key => query[key] && query[key].length > 0);
+  state.isFilterApplied = isFilterApplied(state.filters);
   state.query = {
     q: state.query.q,
     ...query,

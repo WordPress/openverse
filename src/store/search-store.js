@@ -240,7 +240,6 @@ const mutations = redirect => ({
   },
   [RESET_QUERY](_state) {
     _state.query = initialState('').query;
-    _state.isFilterApplied = false;
   },
   [IMAGE_NOT_FOUND]() {
     redirect({ path: '/not-found' }, true);

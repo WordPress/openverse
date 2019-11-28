@@ -46,31 +46,6 @@ describe('Search Store', () => {
       expect(state.relatedImages).toHaveLength(0);
       expect(state.relatedImagesCount).toBe(0);
     });
-
-    xit('isFilterApplied is set to true when provider filter is set', () => {
-      const state = store.state('?q=landscapes&provider=met&li=by&lt=');
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    xit('isFilterApplied is set to true when searchBy filter is set', () => {
-      const state = store.state('?q=landscapes&searchBy=creator');
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    xit('isFilterApplied is set to true when license filter is set', () => {
-      const state = store.state('?q=landscapes&lt=commercial');
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    xit('isFilterApplied is set to true when license type filter is set', () => {
-      const state = store.state('?q=landscapes&lt=all');
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    xit('isFilterApplied is set to false when no filter is set', () => {
-      const state = store.state('?q=landscapes');
-      expect(state.isFilterApplied).toBeFalsy();
-    });
   });
 
   describe('mutations', () => {
@@ -163,30 +138,6 @@ describe('Search Store', () => {
       mutations[SET_QUERY](state, params);
 
       expect(state.query.q).toBe(params.query.q);
-    });
-
-    xit('SET_QUERY updates isFilterApplied with provider', () => {
-      const params = { query: { q: 'foo', provider: 'bar' } };
-      mutations[SET_QUERY](state, params);
-
-      expect(state.query.provider).toBe(params.query.provider);
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    xit('SET_QUERY updates isFilterApplied with license type', () => {
-      const params = { query: { q: 'foo', lt: 'bar' } };
-      mutations[SET_QUERY](state, params);
-
-      expect(state.query.li).toBe(params.query.li);
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    xit('SET_QUERY updates isFilterApplied with searchBy', () => {
-      const params = { query: { q: 'foo', searchBy: 'creator' } };
-      mutations[SET_QUERY](state, params);
-
-      expect(state.query.searchBy).toBe(params.query.searchBy);
-      expect(state.isFilterApplied).toBeTruthy();
     });
 
     it('SET_QUERY pushes route when shouldNavigate is true', () => {
