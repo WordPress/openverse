@@ -45,13 +45,11 @@ export const filterData = {
   },
 };
 
-const isFilterApplied = (filters) => {
-  return Object.keys(filters).some((filterKey) => {
-    if (filterKey === 'searchBy') { return filters.searchBy.creator; }
+const isFilterApplied = filters => Object.keys(filters).some((filterKey) => {
+  if (filterKey === 'searchBy') { return filters.searchBy.creator; }
 
-    return filters[filterKey].some(filter => filter.checked);
-  });
-};
+  return filters[filterKey].some(filter => filter.checked);
+});
 
 const initialState = (searchParams) => {
   const filters = queryToFilterData(searchParams);
