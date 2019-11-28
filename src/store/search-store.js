@@ -1,6 +1,6 @@
 import isEmpty from 'lodash.isempty';
 import findIndex from 'lodash.findindex';
-import getParameterByName from '@/utils/getParameterByName';
+import { queryStringToQueryData } from '@/utils/searchQueryTransform';
 import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams';
 import decodeImageData from '@/utils/decodeImageData';
 import {
@@ -27,14 +27,7 @@ import {
 import { SEND_SEARCH_QUERY_EVENT, SEND_RESULT_CLICKED_EVENT } from './usage-data-analytics-types';
 
 const initialState = (searchParams) => {
-  const query = {
-    q: getParameterByName('q', searchParams),
-    provider: getParameterByName('provider', searchParams),
-    lt: getParameterByName('lt', searchParams),
-    categories: getParameterByName('categories', searchParams),
-    extension: getParameterByName('extension', searchParams),
-    searchBy: getParameterByName('searchBy', searchParams),
-  };
+  const query = queryStringToQueryData(searchParams);
   return {
     errorMsg: null,
     image: {},
@@ -44,7 +37,6 @@ const initialState = (searchParams) => {
     images: [],
     isFetchingImages: false,
     isFetchingImagesError: true,
-    isFilterApplied: !!query.provider || !!query.lt || !!query.searchBy,
     query,
     relatedImages: [],
     relatedImagesCount: 0,

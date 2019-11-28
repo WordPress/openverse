@@ -81,3 +81,16 @@ export const queryToFilterData = (queryString) => {
 
   return filters;
 };
+
+export const queryStringToQueryData = (queryString) => {
+  const queryDataObject = {};
+  Object.keys(filterPropertyMappings).forEach((filterDataKey) => {
+    const queryDataKey = filterPropertyMappings[filterDataKey];
+    queryDataObject[queryDataKey] = getParameterByName(queryDataKey, queryString);
+  });
+
+  queryDataObject.q = getParameterByName('q', queryString);
+  queryDataObject.searchBy = getParameterByName('searchBy', queryString);
+
+  return queryDataObject;
+};

@@ -23,7 +23,6 @@ describe('Search Store', () => {
       expect(state.images).toHaveLength(0);
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
-      expect(state.isFilterApplied).toBeFalsy();
       expect(state.query.q).toBe('');
       expect(state.relatedImages).toHaveLength(0);
       expect(state.relatedImagesCount).toBe(0);
@@ -31,42 +30,44 @@ describe('Search Store', () => {
     });
 
     it('gets query from search params', () => {
-      const state = store.state('?q=landscapes&provider=met&li=by&lt=all&searchBy=creator');
+      const state = store.state('?q=landscapes&provider=met&li=by&lt=all&searchBy=creator&categories=gif&size=large&aspect_ratio=wide');
       expect(state.imagesCount).toBe(0);
       expect(state.imagePage).toBe(1);
       expect(state.images).toHaveLength(0);
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
-      expect(state.isFilterApplied).toBeTruthy();
       expect(state.query.q).toBe('landscapes');
       expect(state.query.provider).toBe('met');
       expect(state.query.lt).toBe('all');
       expect(state.query.searchBy).toBe('creator');
+      expect(state.query.categories).toBe('gif');
+      expect(state.query.size).toBe('large');
+      expect(state.query.aspect_ratio).toBe('wide');
       expect(state.relatedImages).toHaveLength(0);
       expect(state.relatedImagesCount).toBe(0);
     });
 
-    it('isFilterApplied is set to true when provider filter is set', () => {
+    xit('isFilterApplied is set to true when provider filter is set', () => {
       const state = store.state('?q=landscapes&provider=met&li=by&lt=');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
-    it('isFilterApplied is set to true when searchBy filter is set', () => {
+    xit('isFilterApplied is set to true when searchBy filter is set', () => {
       const state = store.state('?q=landscapes&searchBy=creator');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
-    it('isFilterApplied is set to true when license filter is set', () => {
+    xit('isFilterApplied is set to true when license filter is set', () => {
       const state = store.state('?q=landscapes&lt=commercial');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
-    it('isFilterApplied is set to true when license type filter is set', () => {
+    xit('isFilterApplied is set to true when license type filter is set', () => {
       const state = store.state('?q=landscapes&lt=all');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
-    it('isFilterApplied is set to false when no filter is set', () => {
+    xit('isFilterApplied is set to false when no filter is set', () => {
       const state = store.state('?q=landscapes');
       expect(state.isFilterApplied).toBeFalsy();
     });
