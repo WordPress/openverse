@@ -1,4 +1,5 @@
 import SearchGridFilter from '@/components/SearchGridFilter';
+import { filterData } from '@/store/filter-store';
 import render from '../../test-utils/render';
 
 describe('SearchGridFilter', () => {
@@ -56,10 +57,9 @@ describe('SearchGridFilter', () => {
     expect(wrapper.find('.search-filters').classes()).not.toContain('search-filters__visible');
   });
 
-  // TODO: fix for new filter components
-  xit('display providers filter', () => {
+  it('display filters', () => {
     const wrapper = render(SearchGridFilter, options);
-    expect(wrapper.find('.search-filters_providers').element).toBeDefined();
+    expect(wrapper.findAll({ name: 'filter-check-list' }).length).toBe(Object.keys(filterData).length - 1);
   });
 
   it('should not display providers filter when props is set to false', () => {
