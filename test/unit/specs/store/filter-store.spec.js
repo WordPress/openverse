@@ -99,6 +99,24 @@ describe('Filter Store', () => {
       const state = store.state('?q=landscapes');
       expect(state.isFilterApplied).toBeFalsy();
     });
+
+    it('isFilterVisible should be false when innerWidth property is undefined', () => {
+      window.innerWidth = undefined;
+      const state = store.state('');
+      expect(state.isFilterVisible).toBeFalsy();
+    });
+
+    it('isFilterVisible should be true when window width is over 800', () => {
+      window.innerWidth = 850;
+      const state = store.state('');
+      expect(state.isFilterVisible).toBeTruthy();
+    });
+
+    it('isFilterVisible should be false when window width is less then 800', () => {
+      window.innerWidth = 500;
+      const state = store.state('');
+      expect(state.isFilterVisible).toBeFalsy();
+    });
   });
 
   describe('mutations', () => {

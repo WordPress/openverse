@@ -2,6 +2,7 @@ import findIndex from 'lodash.findindex';
 import { TOGGLE_FILTER } from './action-types';
 import { SET_FILTER, SET_PROVIDERS_FILTERS, CLEAR_FILTERS, SET_FILTER_IS_VISIBLE } from './mutation-types';
 import { queryToFilterData, filtersToQueryData } from '../utils/searchQueryTransform';
+import { screenWidth } from '../utils/getBrowserInfo';
 
 export const filterData = {
   licenses: [
@@ -45,6 +46,9 @@ export const filterData = {
   },
 };
 
+const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 800;
+const hideFiltersIfMobileScreen = () => screenWidth() > MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT;
+
 const isFilterApplied = filters => Object.keys(filters).some((filterKey) => {
   if (filterKey === 'searchBy') { return filters.searchBy.creator; }
 
@@ -54,7 +58,7 @@ const isFilterApplied = filters => Object.keys(filters).some((filterKey) => {
 const initialState = (searchParams) => {
   const filters = queryToFilterData(searchParams);
 
-  const isFilterVisible = true;
+  const isFilterVisible = hideFiltersIfMobileScreen();
   const filtersApplied = isFilterApplied(filters);
   return {
     filters,
