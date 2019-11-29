@@ -14,4 +14,11 @@ const exportBrowserInfo = () => {
   return browserInfo;
 };
 
+export const screenWidth = () => {
+  if (typeof window === 'undefined') {
+    return NaN;
+  }
+  return window.innerWidth;
+};
+
 export default exportBrowserInfo;

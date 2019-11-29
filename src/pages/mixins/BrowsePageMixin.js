@@ -7,6 +7,9 @@ const BrowsePage = {
     query() {
       return this.$store.state.query;
     },
+    isFilterVisible() {
+      return this.$store.state.isFilterVisible;
+    },
   },
   methods: {
     getImages(params) {
@@ -24,10 +27,12 @@ const BrowsePage = {
       this.getImages(this.query);
     }
   },
-  updated() {
-    if (this.query.q) {
-      this.getImages(this.query);
-    }
+  watch: {
+    query(newQuery) {
+      if (newQuery) {
+        this.getImages(newQuery);
+      }
+    },
   },
 };
 

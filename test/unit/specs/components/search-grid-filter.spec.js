@@ -1,27 +1,36 @@
 import SearchGridFilter from '@/components/SearchGridFilter';
+import { filterData } from '@/store/filter-store';
 import render from '../../test-utils/render';
 
 describe('SearchGridFilter', () => {
   let options = {};
   let storeMock = null;
+  let dispatchMock = null;
   let props = null;
   beforeEach(() => {
+    dispatchMock = jest.fn();
     storeMock = {
+      dispatch: dispatchMock,
       state: {
         isFilterApplied: true,
         isFilterVisible: true,
-        imageProviders: [
-          {
-            provider_name: 'FLickr',
-            provider_code: 'flickr',
+        filters: {
+          licenseTypes: [{ code: 'commercial', name: 'Commercial usage' }],
+          licenses: [{ code: 'by', name: 'CC-BY' }],
+          categories: [{ code: 'photo', name: 'Photographs' }],
+          extensions: [{ code: 'jpg', name: 'JPG' }],
+          searchBy: {
+            creator: false,
           },
-        ],
+        },
         query: 'me',
       },
     };
 
     props = {
       showProvidersFilter: true,
+      isCollectionsPage: false,
+      provider: undefined,
     };
 
     options = {
@@ -48,9 +57,9 @@ describe('SearchGridFilter', () => {
     expect(wrapper.find('.search-filters').classes()).not.toContain('search-filters__visible');
   });
 
-  it('display providers filter', () => {
+  it('display filters', () => {
     const wrapper = render(SearchGridFilter, options);
-    expect(wrapper.find('.search-filters_providers').element).toBeDefined();
+    expect(wrapper.findAll({ name: 'filter-check-list' }).length).toBe(Object.keys(filterData).length - 1);
   });
 
   it('should not display providers filter when props is set to false', () => {
@@ -64,6 +73,11 @@ describe('SearchGridFilter', () => {
     const wrapper = render(SearchGridFilter, options);
     const checkbox = wrapper.find('#creator-chk');
     checkbox.trigger('click');
-    expect(wrapper.emitted().onSearchFilterChanged).toBeTruthy();
+    expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
+      filterType: 'searchBy',
+      isCollectionsPage: props.isCollectionsPage,
+      provider: props.provider,
+      shouldNavigate: true,
+    });
   });
 });

@@ -7,6 +7,7 @@ import {
   SET_FETCH_IMAGES_ERROR,
   FETCH_IMAGE_PROVIDERS_START,
   SET_IMAGE_PROVIDERS,
+  SET_PROVIDERS_FILTERS,
 } from './mutation-types';
 
 const state = {
@@ -37,6 +38,9 @@ const actions = ImageProviderService => ({
         });
         commit(FETCH_IMAGE_PROVIDERS_END);
         commit(SET_IMAGE_PROVIDERS,
+          { imageProviders: sortedProviders },
+        );
+        commit(SET_PROVIDERS_FILTERS,
           { imageProviders: sortedProviders },
         );
       })

@@ -13,37 +13,23 @@
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types';
+import { TOGGLE_FILTER } from '@/store/action-types';
 
 export default {
   name: 'license-filter',
-  methods: {
-    onFilterChanged(code) {
-      this.licenseTypes.forEach((lt) => {
-        if (lt.code === code) {
-          // eslint-disable-next-line no-param-reassign
-          lt.checked = true;
-        }
-      });
-      const filter = this.licenseTypes
-        .filter(lt => lt.checked)
-        .map(filterItem => filterItem.code)
-        .join(',');
-
-      this.$store.commit(SET_QUERY, {
-        query: {
-          lt: filter,
-        },
-      });
+  computed: {
+    licenseTypes() {
+      return this.$store.state.filters.licenseTypes;
     },
   },
-  data() {
-    return {
-      licenseTypes: [
-        { code: 'commercial', name: 'Use for commercial purposes', checked: false },
-        { code: 'modification', name: 'Modify or adapt', checked: false },
-      ],
-    };
+  methods: {
+    onFilterChanged(code) {
+      this.$store.dispatch(TOGGLE_FILTER, {
+        code,
+        filterType: 'licenseTypes',
+        shouldNavigate: false,
+      });
+    },
   },
 };
 </script>
