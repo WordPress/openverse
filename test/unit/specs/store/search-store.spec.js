@@ -3,8 +3,6 @@ import {
   FETCH_END_IMAGES,
   FETCH_IMAGES_ERROR,
   FETCH_START_IMAGES,
-  SET_FILTER_IS_APPLIED,
-  SET_FILTER_IS_VISIBLE,
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_IMAGES,
@@ -25,8 +23,6 @@ describe('Search Store', () => {
       expect(state.images).toHaveLength(0);
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
-      expect(state.isFilterVisible).toBeTruthy();
-      expect(state.isFilterApplied).toBeFalsy();
       expect(state.query.q).toBe('');
       expect(state.relatedImages).toHaveLength(0);
       expect(state.relatedImagesCount).toBe(0);
@@ -34,46 +30,21 @@ describe('Search Store', () => {
     });
 
     it('gets query from search params', () => {
-      const state = store.state('?q=landscapes&provider=met&li=by&lt=all&searchBy=creator');
+      const state = store.state('?q=landscapes&provider=met&li=by&lt=all&searchBy=creator&categories=gif&size=large&aspect_ratio=wide');
       expect(state.imagesCount).toBe(0);
       expect(state.imagePage).toBe(1);
       expect(state.images).toHaveLength(0);
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
-      expect(state.isFilterVisible).toBeTruthy();
-      expect(state.isFilterApplied).toBeTruthy();
       expect(state.query.q).toBe('landscapes');
       expect(state.query.provider).toBe('met');
-      expect(state.query.li).toBe('by');
       expect(state.query.lt).toBe('all');
       expect(state.query.searchBy).toBe('creator');
+      expect(state.query.categories).toBe('gif');
+      expect(state.query.size).toBe('large');
+      expect(state.query.aspect_ratio).toBe('wide');
       expect(state.relatedImages).toHaveLength(0);
       expect(state.relatedImagesCount).toBe(0);
-    });
-
-    it('isFilterApplied is set to true when provider filter is set', () => {
-      const state = store.state('?q=landscapes&provider=met&li=by&lt=');
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    it('isFilterApplied is set to true when searchBy filter is set', () => {
-      const state = store.state('?q=landscapes&searchBy=creator');
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    it('isFilterApplied is set to true when license filter is set', () => {
-      const state = store.state('?q=landscapes&li=by');
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    it('isFilterApplied is set to true when license type filter is set', () => {
-      const state = store.state('?q=landscapes&lt=all');
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    it('isFilterApplied is set to false when no filter is set', () => {
-      const state = store.state('?q=landscapes');
-      expect(state.isFilterApplied).toBeFalsy();
     });
   });
 
@@ -112,20 +83,6 @@ describe('Search Store', () => {
       mutations[SET_IMAGE](state, params);
 
       expect(state.image).toEqual(params.image);
-    });
-
-    it('SET_FILTER_IS_VISIBLE updates state', () => {
-      const params = { isFilterVisible: 'bar' };
-      mutations[SET_FILTER_IS_VISIBLE](state, params);
-
-      expect(state.isFilterVisible).toBe(params.isFilterVisible);
-    });
-
-    it('SET_FILTER_IS_APPLIED updates state', () => {
-      const params = { isFilterApplied: 'bar' };
-      mutations[SET_FILTER_IS_APPLIED](state, params);
-
-      expect(state.isFilterApplied).toBe(params.isFilterApplied);
     });
 
     it('SET_IMAGE_PAGE updates state', () => {
@@ -183,38 +140,6 @@ describe('Search Store', () => {
       expect(state.query.q).toBe(params.query.q);
     });
 
-    it('SET_QUERY updates isFilterApplied with provider', () => {
-      const params = { query: { q: 'foo', provider: 'bar' } };
-      mutations[SET_QUERY](state, params);
-
-      expect(state.query.provider).toBe(params.query.provider);
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    it('SET_QUERY updates isFilterApplied with license', () => {
-      const params = { query: { q: 'foo', li: 'bar' } };
-      mutations[SET_QUERY](state, params);
-
-      expect(state.query.li).toBe(params.query.li);
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    it('SET_QUERY updates isFilterApplied with license type', () => {
-      const params = { query: { q: 'foo', lt: 'bar' } };
-      mutations[SET_QUERY](state, params);
-
-      expect(state.query.li).toBe(params.query.li);
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
-    it('SET_QUERY updates isFilterApplied with searchBy', () => {
-      const params = { query: { q: 'foo', searchBy: 'creator' } };
-      mutations[SET_QUERY](state, params);
-
-      expect(state.query.searchBy).toBe(params.query.searchBy);
-      expect(state.isFilterApplied).toBeTruthy();
-    });
-
     it('SET_QUERY pushes route when shouldNavigate is true', () => {
       const params = { query: { q: 'foo', lt: 'bar' }, shouldNavigate: true };
       mutations[SET_QUERY](state, params);
@@ -229,8 +154,8 @@ describe('Search Store', () => {
       };
       mutations[RESET_QUERY](state);
 
-      expect(state.query.q).toBeNull();
-      expect(state.query.lt).toBeNull();
+      expect(state.query.q).toBe('');
+      expect(state.query.lt).toBe('');
       expect(state.isFilterApplied).toBeFalsy();
     });
 

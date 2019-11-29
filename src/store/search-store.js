@@ -1,6 +1,6 @@
 import isEmpty from 'lodash.isempty';
 import findIndex from 'lodash.findindex';
-import getParameterByName from '@/utils/getParameterByName';
+import { queryStringToQueryData } from '@/utils/searchQueryTransform';
 import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams';
 import decodeImageData from '@/utils/decodeImageData';
 import {
@@ -14,8 +14,6 @@ import {
   FETCH_END_IMAGES,
   FETCH_IMAGES_ERROR,
   FETCH_START_IMAGES,
-  SET_FILTER_IS_APPLIED,
-  SET_FILTER_IS_VISIBLE,
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_IMAGES,
@@ -29,13 +27,7 @@ import {
 import { SEND_SEARCH_QUERY_EVENT, SEND_RESULT_CLICKED_EVENT } from './usage-data-analytics-types';
 
 const initialState = (searchParams) => {
-  const query = {
-    q: getParameterByName('q', searchParams),
-    provider: getParameterByName('provider', searchParams),
-    li: getParameterByName('li', searchParams),
-    lt: getParameterByName('lt', searchParams),
-    searchBy: getParameterByName('searchBy', searchParams),
-  };
+  const query = queryStringToQueryData(searchParams);
   return {
     errorMsg: null,
     image: {},
@@ -45,8 +37,6 @@ const initialState = (searchParams) => {
     images: [],
     isFetchingImages: false,
     isFetchingImagesError: true,
-    isFilterVisible: true,
-    isFilterApplied: !!query.provider || !!query.li || !!query.lt || !!query.searchBy,
     query,
     relatedImages: [],
     relatedImagesCount: 0,
@@ -198,10 +188,6 @@ const actions = ImageService => ({
 
 function setQuery(_state, params, path, redirect) {
   const query = Object.assign({}, _state.query, params.query);
-  const isFilterApplied = ['li', 'provider', 'lt', 'searchBy']
-    .some(key => query[key] && query[key].length > 0);
-
-  _state.isFilterApplied = isFilterApplied;
   _state.query = query;
 
   if (params.shouldNavigate === true) {
@@ -225,12 +211,6 @@ const mutations = redirect => ({
   },
   [SET_IMAGE](_state, params) {
     _state.image = decodeImageData(params.image);
-  },
-  [SET_FILTER_IS_VISIBLE](_state, params) {
-    _state.isFilterVisible = params.isFilterVisible;
-  },
-  [SET_FILTER_IS_APPLIED](_state, params) {
-    _state.isFilterApplied = params.isFilterApplied;
   },
   [SET_IMAGE_PAGE](_state, params) {
     _state.imagePage = params.imagePage;
@@ -260,7 +240,6 @@ const mutations = redirect => ({
   },
   [RESET_QUERY](_state) {
     _state.query = initialState('').query;
-    _state.isFilterApplied = false;
   },
   [IMAGE_NOT_FOUND]() {
     redirect({ path: '/not-found' }, true);

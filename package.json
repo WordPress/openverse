@@ -7,8 +7,8 @@
   "type": "module",
   "scripts": {
     "server": "node server.js",
-    "dev-insecure": "webpack-dev-server --inline --progress --config build/webpack-dev-conf.js",
-    "dev": "webpack-dev-server --https --inline --progress --config build/webpack-dev-conf.js",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack-dev-conf.js",
+    "dev-secure": "webpack-dev-server --https --inline --progress --config build/webpack-dev-conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest-conf.js --coverage",
     "qa-install": "brew install geckodriver && brew install pipenv && cd test/selenium-webdriver && pipenv install",
