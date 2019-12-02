@@ -6,6 +6,8 @@
       <input :id="licenseType.code"
               type="checkbox"
               :checked="licenseType.checked"
+              name="lt"
+              :value="licenseType.code"
               @input="onFilterChanged(licenseType.code)" />
       <label :for="licenseType.code">{{ licenseType.name }}</label>
     </div>
