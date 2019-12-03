@@ -179,7 +179,8 @@ def _post_process_results(s, start, end, page_size, search_results,
     return results[:page_size]
 
 
-def _apply_filter(param_name: str, search_params, s: Search):
+def _apply_filter(
+        param_name: str, search_params, s: Search, renamed_param=None):
     """
     Parse and apply a filter from the search parameters serializer. The
     parameter key is assumed to have the same name as the corresponding
@@ -189,14 +190,18 @@ def _apply_filter(param_name: str, search_params, s: Search):
     :param param_name: The name of the parameter in search_params.
     :param search_params: A serializer containing user input.
     :param s: The Search object to apply the filter to.
+    :param renamed_param: In some cases, the param name in the backend is not
+    the same as the param we want to expose to the outside world. Use this to
+    set the corresponding parameter name in Elasticsearch.
     :return: A Search object with the filter applied.
     """
     if param_name in search_params.data:
         filters = []
         for arg in search_params.data[param_name].split(','):
+            _param = renamed_param if renamed_param else param_name
             args = {
                 'name_or_query': 'term',
-                param_name: arg
+                _param: arg
             }
             filters.append(Q(**args))
         return s.filter('bool', should=filters)
@@ -224,15 +229,18 @@ def search(search_params, index, page_size, ip, request,
     pages and results.
     """
     s = Search(index=index)
-    if 'li' in search_params.data:
-        s = _filter_licenses(s, search_params.data['li'])
-    elif 'lt' in search_params.data:
-        s = _filter_licenses(s, search_params.data['lt'])
-
     # Apply term filters.
-    filters = ['provider', 'extension', 'categories', 'aspect_ratio', 'size']
+    filters = [
+        'extension',
+        'categories',
+        'aspect_ratio',
+        'size',
+        'license',
+        'license_type'
+    ]
     for _filter in filters:
         s = _apply_filter(_filter, search_params, s)
+    s = _apply_filter('source', search_params, s, 'provider')
 
     # Hide data sources from the catalog dynamically.
     filter_cache_key = 'filtered_providers'

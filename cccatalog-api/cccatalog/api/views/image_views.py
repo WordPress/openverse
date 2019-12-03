@@ -2,7 +2,6 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import serializers
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils import ccrel
@@ -10,7 +9,7 @@ from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer, \
-    BrowseImageQueryStringSerializer, RelatedImagesResultsSerializer
+    RelatedImagesResultsSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer,\
     WatermarkQueryStringSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL
@@ -117,83 +116,6 @@ class SearchImages(APIView):
         response_data = {
             RESULT_COUNT: result_count,
             PAGE_COUNT: page_count,
-            RESULTS: serialized_results
-        }
-        serialized_response = ImageSearchResultsSerializer(data=response_data)
-        return Response(status=200, data=serialized_response.initial_data)
-
-
-class BrowseImages(APIView):
-    """
-    Browse a collection of CC images by provider, such as the Metropolitan
-    Museum of Art.. See `/statistics/image` for a list of valid
-    collections. The `provider_identifier` field should be used to select
-    the provider.
-
-    As with the `/image/search` endpoint, this is not intended to be used to
-    bulk download our entire collection of images; only the first ~10,000 images
-    in each collection are accessible.
-    """
-
-    @swagger_auto_schema(operation_id='image_browse',
-                         query_serializer=BrowseImageQueryStringSerializer,
-                         responses={
-                             200: ImageSearchResultsSerializer(many=True),
-                             400: ValidationErrorSerializer,
-                         })
-    def get(self, request, provider, format=None):
-        params = BrowseImageQueryStringSerializer(data=request.query_params)
-        if not params.is_valid():
-            return Response(
-                status=400,
-                data={
-                    "validation_error": params.errors
-                }
-            )
-        page_param = params.data[PAGE]
-        page_size = params.data[PAGESIZE]
-        filter_dead = params.data[FILTER_DEAD]
-        lt = None
-        li = None
-        if 'lt' in params.data:
-            lt = params.data['lt']
-        elif 'li' in params.data:
-            li = params.data['li']
-
-        try:
-            results, page_count, result_count = \
-                search_controller.browse_by_provider(
-                    provider,
-                    'image',
-                    page_size,
-                    hash(_get_user_ip(request)),
-                    request,
-                    filter_dead,
-                    page=page_param,
-                    lt=lt,
-                    li=li
-                )
-        except ValueError as value_error_message:
-            return Response(
-                status=400,
-                data={
-                    VALIDATION_ERROR: str(value_error_message)
-                }
-            )
-        except serializers.ValidationError:
-            return Response(
-                status=400,
-                data={
-                    VALIDATION_ERROR: 'Provider \'{}\' does not exist.'
-                    .format(provider)
-                }
-            )
-
-        serialized_results = ImageSerializer(results, many=True).data
-
-        response_data = {
-            'result_count': result_count,
-            'page_count': page_count,
             RESULTS: serialized_results
         }
         serialized_response = ImageSearchResultsSerializer(data=response_data)

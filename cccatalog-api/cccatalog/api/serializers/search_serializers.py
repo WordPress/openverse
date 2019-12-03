@@ -60,69 +60,6 @@ def _validate_li(value):
     return value.lower()
 
 
-class BrowseImageQueryStringSerializer(serializers.Serializer):
-    page = serializers.IntegerField(
-        label="page number",
-        help_text="The page number to retrieve.",
-        default=1
-    )
-    pagesize = serializers.IntegerField(
-        label="page size",
-        help_text="The number of results to return in the requested page. "
-                  "Should be an integer between 1 and 500.",
-        default=20
-    )
-    filter_dead = serializers.BooleanField(
-        label="filter_dead",
-        help_text="Control whether 404 links are filtered out.",
-        required=False,
-        default=True
-    )
-    li = serializers.CharField(
-        label="licenses",
-        help_text="A comma-separated list of licenses. Example: `by,cc0`."
-                  " Valid inputs: `{}`"
-                  .format(list(license_helpers.LICENSE_GROUPS['all'])),
-        required=False,
-    )
-    lt = serializers.CharField(
-        label="license type",
-        help_text="A list of license types. "
-                  "Valid inputs: `{}`"
-                  .format((list(license_helpers.LICENSE_GROUPS.keys()))),
-        required=False,
-    )
-
-    @staticmethod
-    def validate_page(value):
-        return _validate_page(value)
-
-    @staticmethod
-    def validate_pagesize(value):
-        return _validate_pagesize(value)
-
-    @staticmethod
-    def validate_li(value):
-        return _validate_li(value)
-
-    @staticmethod
-    def validate_lt(value):
-        """
-        Resolves a list of license types to a list of licenses.
-        Example: commercial -> ['BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM']
-        """
-        return _validate_lt(value)
-
-    def validate(self, data):
-        if 'li' in data and 'lt' in data:
-            raise serializers.ValidationError(
-                "Only license type or individual licenses can be defined, not "
-                "both."
-            )
-        else:
-            return data
-
-
 class ImageSearchQueryStringSerializer(serializers.Serializer):
     """ Base class for search query parameters. """
 
@@ -133,14 +70,14 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
                   "length",
         required=False,
     )
-    li = serializers.CharField(
+    license = serializers.CharField(
         label="licenses",
         help_text="A comma-separated list of licenses. Example: `by,cc0`."
                   " Valid inputs: `{}`"
                   .format(list(license_helpers.LICENSE_GROUPS['all'])),
         required=False,
     )
-    lt = serializers.CharField(
+    license_type = serializers.CharField(
         label="license type",
         help_text="A list of license types. "
                   "Valid inputs: `{}`"
@@ -182,7 +119,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         required=False,
         default=True
     )
-    provider = serializers.CharField(
+    source = serializers.CharField(
         label="provider",
         help_text="A comma separated list of data sources to search. Valid "
                   "inputs:"
@@ -238,11 +175,11 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         return self.validate_q(value)
 
     @staticmethod
-    def validate_li(value):
+    def validate_license(value):
         return _validate_li(value)
 
     @staticmethod
-    def validate_lt(value):
+    def validate_license_type(value):
         """
         Resolves a list of license types to a list of licenses.
         Example: commercial -> ['BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM']
@@ -291,25 +228,10 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         _validate_enum('aspect ratio', valid_ratios, value)
         return value.lower()
 
+    # TODO: Do not accept search query without parameters.
+    # XXX To the reviewer: do not accept a PR until this is addressed.
     def validate(self, data):
-        advanced_search = 'creator' in data or 'title' in data or 'tags' in data
-        if 'q' in data and advanced_search:
-            raise serializers.ValidationError(
-                "You cannot use `q` in combination with advanced search "
-                "parameters `title`, `tags`, or `creator`."
-            )
-        elif 'q' not in data and not advanced_search:
-            raise serializers.ValidationError(
-                "You must use either the `q` parameter or an advanced search"
-                "parameter such as `title`, `tags`, or `creator`."
-            )
-        elif 'li' in data and 'lt' in data:
-            raise serializers.ValidationError(
-                "Only license type or individual licenses can be defined, not "
-                "both."
-            )
-        else:
-            return data
+        return data
 
 
 class TagSerializer(serializers.Serializer):
