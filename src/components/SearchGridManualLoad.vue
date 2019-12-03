@@ -200,7 +200,10 @@ export default {
   .search-grid-cells {
     display: flex;
     flex-wrap: wrap;
+<<<<<<< HEAD
     margin: 10px;
+=======
+>>>>>>> 11c5b3d65bf280bb54a3a3319c6dfbf045f8ef77
 
     @media screen and (min-width: 600px) {
       &:after {

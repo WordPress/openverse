@@ -1,7 +1,12 @@
 <template>
   <div class="search-grid_item-container"
+<<<<<<< HEAD:src/components/SearchGridCell.vue
     :style="`width: ${containerAspect * widthBasis}px;
     flex-grow: ${containerAspect * widthBasis}`">
+=======
+    :style="`width: ${containerAspect * 165}px;
+    flex-grow: ${containerAspect * 165}`">
+>>>>>>> 11c5b3d65bf280bb54a3a3319c6dfbf045f8ef77:src/components/SearchGridCell.vue
     <figure class="search-grid_item">
       <i :style="`padding-bottom:${iPadding}%`"></i>
       <a
@@ -41,7 +46,10 @@ const errorImage = require('@/assets/image_not_available_placeholder.png');
 const minAspect = 3 / 4;
 const maxAspect = 16 / 9;
 const panaromaAspect = 21 / 9;
+<<<<<<< HEAD:src/components/SearchGridCell.vue
 const minRowWidth = 280;
+=======
+>>>>>>> 11c5b3d65bf280bb54a3a3319c6dfbf045f8ef77:src/components/SearchGridCell.vue
 
 const toAbsolutePath = (url, prefix = 'https://') => {
   if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
@@ -56,11 +64,14 @@ export default {
   components: {
     LicenseIcons,
   },
+<<<<<<< HEAD:src/components/SearchGridCell.vue
   data() {
     return {
       widthBasis: minRowWidth / maxAspect,
     };
   },
+=======
+>>>>>>> 11c5b3d65bf280bb54a3a3319c6dfbf045f8ef77:src/components/SearchGridCell.vue
   computed: {
     imageAspect() {
       return this.image.width / this.image.height;
