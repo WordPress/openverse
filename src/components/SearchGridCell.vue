@@ -1,7 +1,7 @@
 <template>
   <div class="search-grid_item-container"
-    :style="`width: ${containerAspect * 165}px;
-    flex-grow: ${containerAspect * 165}`">
+    :style="`width: ${containerAspect * widthBasis}px;
+    flex-grow: ${containerAspect * widthBasis}`">
     <figure class="search-grid_item">
       <i :style="`padding-bottom:${iPadding}%`"></i>
       <a
@@ -41,6 +41,7 @@ const errorImage = require('@/assets/image_not_available_placeholder.png');
 const minAspect = 3 / 4;
 const maxAspect = 16 / 9;
 const panaromaAspect = 21 / 9;
+const minRowWidth = 280;
 
 const toAbsolutePath = (url, prefix = 'https://') => {
   if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
@@ -54,6 +55,11 @@ export default {
   props: ['image', 'shouldContainImage'],
   components: {
     LicenseIcons,
+  },
+  data() {
+    return {
+      widthBasis: minRowWidth / maxAspect,
+    };
   },
   computed: {
     imageAspect() {
@@ -209,7 +215,7 @@ export default {
 
   .search-grid_overlay-provider-logo {
     max-height: 30px;
-    max-width: 40px;
+    max-width: 30px;
     margin-right: 5px;
     padding-bottom: 3px;
   }
