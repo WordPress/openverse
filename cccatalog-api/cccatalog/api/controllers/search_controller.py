@@ -15,6 +15,7 @@ from rest_framework.reverse import reverse
 from itertools import accumulate
 from typing import Tuple, List, Optional
 from math import ceil
+import logging
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 CACHE_TIMEOUT = 10
@@ -81,20 +82,6 @@ def _get_query_slice(s: Search, page_size: int, page: int,
     if start_slice + end_slice > ELASTICSEARCH_MAX_RESULT_WINDOW:
         raise ValueError(DEEP_PAGINATION_ERROR)
     return start_slice, end_slice
-
-
-def _filter_licenses(s: Search, licenses):
-    """
-    Filter out all licenses except for those provided in the `licenses`
-    parameter.
-    """
-    if not licenses:
-        return s
-    license_filters = []
-    for _license in licenses.split(','):
-        license_filters.append(Q('term', license__keyword=_license))
-    s = s.filter('bool', should=license_filters)
-    return s
 
 
 def _quote_escape(query_string):
@@ -234,13 +221,20 @@ def search(search_params, index, page_size, ip, request,
         'extension',
         'categories',
         'aspect_ratio',
-        'size',
-        'license',
-        'license_type'
+        'size'
     ]
     for _filter in filters:
         s = _apply_filter(_filter, search_params, s)
-    s = _apply_filter('source', search_params, s, 'provider')
+    # Apply special-case term filters, where the parameter name does not exactly
+    # correspond to an identically named field in Elasticsearch.
+    renamed_filters = [
+        ('source', 'provider'),
+        ('license', 'license_keyword'),
+        ('license_type', 'license__keyword')
+    ]
+    for tup in renamed_filters:
+        original_name, new_name = tup
+        _apply_filter(original_name, search_params, s, new_name)
 
     # Hide data sources from the catalog dynamically.
     filter_cache_key = 'filtered_providers'
@@ -397,40 +391,6 @@ def related_images(uuid, index, request, filter_dead):
     )
 
     return results, result_count
-
-
-def browse_by_provider(provider, index, page_size, ip, request, filter_dead,
-                       page=1, lt=None, li=None):
-    """
-    Allow users to browse image collections without entering a search query.
-    """
-    _validate_provider(provider)
-    s = Search(index=index)
-    s = s.params(preference=str(ip))
-    provider_filter = Q('term', provider=provider.lower())
-    s = s.filter('bool', should=provider_filter, minimum_should_match=1)
-    licenses = lt if lt else li
-    s = _filter_licenses(s, licenses)
-    start_slice, end_slice = _get_query_slice(s, page_size, page)
-    s = s[start_slice:end_slice]
-    search_response = s.execute()
-    results = _post_process_results(
-        s,
-        start_slice,
-        end_slice,
-        page_size,
-        search_response,
-        request,
-        filter_dead
-    )
-
-    result_count, page_count = _get_result_and_page_count(
-        search_response,
-        results,
-        page_size
-    )
-
-    return results, page_count, result_count
 
 
 def get_providers(index):
