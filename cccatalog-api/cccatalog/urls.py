@@ -74,30 +74,29 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('admin/', admin.site.urls),
-    path('oauth2/register', Register.as_view(), name='register'),
-    path('oauth2/key_info', CheckRates.as_view(), name='key_info'),
+    path('v1/oauth2/register', Register.as_view(), name='register'),
+    path('v1/oauth2/rate_limit', CheckRates.as_view(), name='key_info'),
     path(
-        'oauth2/verify/<str:code>',
+        'v1/oauth2/verify/<str:code>',
         VerifyEmail.as_view(),
         name='verify-email'
     ),
     re_path(
-        r'^oauth2/',
+        r'/v1/^oauth2/',
         include('oauth2_provider.urls', namespace='oauth2_provider')
     ),
     # path('list', CreateList.as_view()),
     # path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
-    re_path('image/search', SearchImages.as_view()),
-    path('image/browse/<str:provider>', BrowseImages.as_view()),
-    path('image/<str:identifier>', ImageDetail.as_view(), name='image-detail'),
+    re_path('v1/images', SearchImages.as_view()),
+    path('v1/images/<str:identifier>', ImageDetail.as_view(), name='image-detail'),
     path(
-        'image/related/<str:identifier>',
+        'v1/recommendations',
         RelatedImage.as_view(),
         name='related-images'
     ),
-    path('statistics/image', ImageStats.as_view(), name='about-image'),
-    path('link', CreateShortenedLink.as_view(), name='make-link'),
-    path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
+    path('v1/sources/images', ImageStats.as_view(), name='about-image'),
+    path('v1/link', CreateShortenedLink.as_view(), name='make-link'),
+    path('v1/link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
     re_path('healthcheck', HealthCheck.as_view()),
     re_path(
         r'^swagger(?P<format>\.json|\.yaml)$',
@@ -116,4 +115,6 @@ urlpatterns = [
 ]
 
 if WATERMARK_ENABLED:
-    urlpatterns.append(path('watermark/<str:identifier>', Watermark.as_view()))
+    urlpatterns.append(
+        path('v1/watermark/<str:identifier>', Watermark.as_view())
+    )
