@@ -22,4 +22,9 @@ describe('getParameterByName', () => {
     const query = '?q=landscapes&provider=met&li=&lt=commercial';
     expect(getParameterByName('lt', query)).toBe('commercial');
   });
+
+  it('finds multiple "lt" parameter values', () => {
+    const query = '?q=cat&lt=commercial&lt=modification';
+    expect(getParameterByName('lt', query)).toBe('commercial,modification');
+  });
 });
