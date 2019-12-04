@@ -3,7 +3,8 @@
     <img class="logo" alt="Logo" src="../assets/cc-logo_large_black.png">
     <form class="hero_search-form"
           role="search"
-          method="post"
+          method="get"
+          action="/search"
           v-on:submit.prevent="onSubmit">
       <div class="search-form_ctr grid-x">
           <div class="cell large-12">
