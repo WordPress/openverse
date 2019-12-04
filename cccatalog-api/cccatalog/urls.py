@@ -94,7 +94,11 @@ urlpatterns = [
         RelatedImage.as_view(),
         name='related-images'
     ),
-    path('v1/sources/images', ImageStats.as_view(), name='about-image'),
+    path(
+        'v1/sources',
+        ImageStats.as_view(),
+        name='about-image'
+    ),
     path('v1/link', CreateShortenedLink.as_view(), name='make-link'),
     path('v1/link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
     re_path('healthcheck', HealthCheck.as_view()),

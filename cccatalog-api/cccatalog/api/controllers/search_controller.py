@@ -166,17 +166,16 @@ def _post_process_results(s, start, end, page_size, search_results,
     return results[:page_size]
 
 
-def _apply_filter(
-        param_name: str, search_params, s: Search, renamed_param=None):
+def _apply_filter(s: Search, search_params, param_name, renamed_param=None):
     """
     Parse and apply a filter from the search parameters serializer. The
     parameter key is assumed to have the same name as the corresponding
     Elasticsearch property. Each parameter value is assumed to be a comma
     separated list encoded as a string.
 
-    :param param_name: The name of the parameter in search_params.
-    :param search_params: A serializer containing user input.
     :param s: The Search object to apply the filter to.
+    :param search_params: A serializer containing user input.
+    :param param_name: The name of the parameter in search_params.
     :param renamed_param: In some cases, the param name in the backend is not
     the same as the param we want to expose to the outside world. Use this to
     set the corresponding parameter name in Elasticsearch.
@@ -224,17 +223,17 @@ def search(search_params, index, page_size, ip, request,
         'size'
     ]
     for _filter in filters:
-        s = _apply_filter(_filter, search_params, s)
+        s = _apply_filter(s, search_params, _filter)
     # Apply special-case term filters, where the parameter name does not exactly
     # correspond to an identically named field in Elasticsearch.
     renamed_filters = [
         ('source', 'provider'),
-        ('license', 'license_keyword'),
+        ('license', 'license__keyword'),
         ('license_type', 'license__keyword')
     ]
     for tup in renamed_filters:
         original_name, new_name = tup
-        _apply_filter(original_name, search_params, s, new_name)
+        s = _apply_filter(s, search_params, original_name, new_name)
 
     # Hide data sources from the catalog dynamically.
     filter_cache_key = 'filtered_providers'
