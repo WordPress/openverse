@@ -89,7 +89,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         help_text="The page number to retrieve.",
         default=1
     )
-    pagesize = serializers.IntegerField(
+    page_size = serializers.IntegerField(
         label="page size",
         help_text="The number of results to return in the requested page. "
                   "Should be an integer between 1 and 500.",
@@ -269,7 +269,6 @@ class ImageSerializer(serializers.Serializer):
     license_version = serializers.CharField(required=False)
     license_url = serializers.SerializerMethodField()
     foreign_landing_url = serializers.URLField(required=False)
-    meta_data = serializers.CharField(required=False)
     detail = serializers.URLField(
         required=True,
         help_text="A direct link to the detail view of an image."
@@ -292,11 +291,6 @@ class ImageSerializer(serializers.Serializer):
 
     def get_license_url(self, obj):
         return license_helpers.get_license_url(obj.license, obj.license_version)
-
-
-class RelatedImagesResultsSerializer(serializers.Serializer):
-    result_count = serializers.IntegerField(),
-    results = ImageSerializer(many=True)
 
 
 class ImageSearchResultsSerializer(serializers.Serializer):

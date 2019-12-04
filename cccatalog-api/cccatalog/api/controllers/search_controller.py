@@ -36,7 +36,7 @@ class RankFeature(Query):
 def _paginate_with_dead_link_mask(s: Search, page_size: int,
                                   page: int) -> Tuple[int, int]:
     """
-    Given a query, a page and pagesize, it returns the start and end
+    Given a query, a page and page_size, return the start and end
     of the slice of results.
 
     :param s: The elasticsearch Search object

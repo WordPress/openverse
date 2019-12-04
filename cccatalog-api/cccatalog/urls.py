@@ -61,7 +61,6 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="cccatalog-api@creativecommons.org"),
         license=openapi.License(name="MIT License", url=license_url),
         terms_of_service=tos_url,
-
         x_logo={
             "url": logo_url,
             "backgroundColor": "#FFFFFF"
@@ -90,7 +89,7 @@ urlpatterns = [
     re_path('v1/images', SearchImages.as_view()),
     path('v1/images/<str:identifier>', ImageDetail.as_view(), name='image-detail'),
     path(
-        'v1/recommendations',
+        'v1/recommendations/images/<str:identifier>',
         RelatedImage.as_view(),
         name='related-images'
     ),

@@ -8,8 +8,7 @@ from cccatalog.api.utils import ccrel
 from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
-    ValidationErrorSerializer, ImageSearchQueryStringSerializer, \
-    RelatedImagesResultsSerializer
+    ValidationErrorSerializer, ImageSearchQueryStringSerializer
 from cccatalog.api.serializers.image_serializers import ImageDetailSerializer,\
     WatermarkQueryStringSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL
@@ -29,7 +28,7 @@ FOREIGN_LANDING_URL = 'foreign_landing_url'
 CREATOR_URL = 'creator_url'
 RESULTS = 'results'
 PAGE = 'page'
-PAGESIZE = 'pagesize'
+PAGESIZE = 'page_size'
 VALIDATION_ERROR = 'validation_error'
 FILTER_DEAD = 'filter_dead'
 QA = 'qa'
@@ -136,10 +135,11 @@ class RelatedImage(APIView):
 
         serialized_related = ImageSerializer(related, many=True).data
         response_data = {
-            'result_count': result_count,
+            RESULT_COUNT: result_count,
+            PAGE_COUNT: 0,
             RESULTS: serialized_related
         }
-        serialized_response = RelatedImagesResultsSerializer(data=response_data)
+        serialized_response = ImageSearchResultsSerializer(data=response_data)
         return Response(status=200, data=serialized_response.initial_data)
 
 
