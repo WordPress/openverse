@@ -228,11 +228,6 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         _validate_enum('aspect ratio', valid_ratios, value)
         return value.lower()
 
-    # TODO: Do not accept search query without parameters.
-    # XXX To the reviewer: do not accept a PR until this is addressed.
-    def validate(self, data):
-        return data
-
 
 class TagSerializer(serializers.Serializer):
     name = serializers.CharField(
