@@ -81,7 +81,8 @@ def test_image_detail(search_fixture):
 def link_shortener_fixture(search_fixture):
     link_to_shorten = search_fixture['results'][0]['detail']
     payload = {"full_url": link_to_shorten}
-    response = requests.post(API_URL + '/link', json=payload, verify=False)
+    response = requests.post(API_URL + '/v1/link', json=payload, verify=False)
+    print(response.text)
     assert response.status_code == 200
     return json.loads(response.text)
 
@@ -92,7 +93,7 @@ def test_link_shortener_create(link_shortener_fixture):
 
 def test_link_shortener_resolve(link_shortener_fixture):
     path = link_shortener_fixture['shortened_url'].split('/')[-1]
-    response = requests.get(API_URL + '/link/' + path, allow_redirects=False,
+    response = requests.get(API_URL + '/v1/link/' + path, allow_redirects=False,
                             verify=False)
     assert response.status_code == 301
 
@@ -154,7 +155,8 @@ def test_license_type_filtering():
     modification = LICENSE_GROUPS['modification']
     commercial_and_modification = set.intersection(modification, commercial)
     response = requests.get(
-        API_URL + '/v1/images?q=honey&lt=commercial,modification', verify=False
+        API_URL + '/v1/images?q=honey&license_type=commercial,modification',
+        verify=False
     )
     parsed = json.loads(response.text)
     for result in parsed['results']:
@@ -164,7 +166,7 @@ def test_license_type_filtering():
 def test_single_license_type_filtering():
     commercial = LICENSE_GROUPS['commercial']
     response = requests.get(
-        API_URL + '/v1/images?q=honey&lt=commercial', verify=False
+        API_URL + '/v1/images?q=honey&license_type=commercial', verify=False
     )
     parsed = json.loads(response.text)
     for result in parsed['results']:
@@ -172,7 +174,9 @@ def test_single_license_type_filtering():
 
 
 def test_specific_license_filter():
-    response = requests.get(API_URL + '/v1/images?q=honey&li=by', verify=False)
+    response = requests.get(
+        API_URL + '/v1/images?q=honey&license=by', verify=False
+    )
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert result['license'] == 'by'
@@ -211,7 +215,7 @@ def test_oauth2_registration():
         'email': 'example@example.org'
     }
     response = requests.post(
-        API_URL + '/oauth2/register', json=payload, verify=False
+        API_URL + '/v1/oauth2/register', json=payload, verify=False
     )
     parsed_response = json.loads(response.text)
     assert response.status_code == 201
@@ -230,7 +234,7 @@ def test_oauth2_token_exchange(test_oauth2_registration):
     }
     response = json.loads(
         requests.post(
-            API_URL + '/oauth2/token/',
+            API_URL + '/v1/oauth2/token/',
             data=token_exchange_request,
             headers=headers,
             verify=False
@@ -401,7 +405,7 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
     Test the results returned in consecutive pages are never repeated when
     filtering out dead links.
     """
-    total_pages = 100
+    total_pages = 30
     pagesize = 5
 
     page_results = []

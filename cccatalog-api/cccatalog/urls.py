@@ -82,7 +82,7 @@ urlpatterns = [
         name='verify-email'
     ),
     re_path(
-        r'/v1/^oauth2/',
+        r'v1/oauth2/',
         include('oauth2_provider.urls', namespace='oauth2_provider')
     ),
     # path('list', CreateList.as_view()),
