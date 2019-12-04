@@ -92,6 +92,7 @@ export default {
       e.preventDefault();
       if (this.searchTermsModel) {
         this.$emit('onSearchFormSubmit', { query: { q: this.searchTermsModel }, shouldNavigate: true });
+        this.$refs.search.blur();
       }
     },
     onToggleSearchGridFilter() {
