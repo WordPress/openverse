@@ -12,8 +12,8 @@ from urllib.parse import urlparse
 
 PATH    = os.environ['OUTPUT_DIR']
 
-def writeToFile(_data, _name):
-    outputFile = '{}{}'.format(PATH, _name)
+def writeToFile(_data, _name, output_dir=PATH):
+    outputFile = '{}{}'.format(output_dir, _name)
 
     if len(_data) < 1:
         return None

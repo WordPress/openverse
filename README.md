@@ -50,7 +50,8 @@ Scheduled to load data into the upstream database every four hours. It includes 
 
 ## Getting Started
 
-### Prerequisites
+## PySpark development
+### Prerequesites
 ```
 JDK 9.0.1
 Python 3.6
@@ -61,10 +62,38 @@ Airflow 1.10.4
 pip install -r requirements.txt
 ```
 
-## Running the tests
+### Running the tests
 ```
 python -m pytest tests/test_ExtractCCLinks.py
 ```
+## Provider API puller module development
+There are a number of scripts in the directory `src/providers/api` which pull image data from various restful apis, and format it into files which are eventually loaded into a database to be indexed for searching on CC Search.  These run in a different environment than the PySpark portion of the project, and so have their own dependency requirements.
+
+### Setup the easy way
+There is a Dockerfile provided in the `src/providers/api` directory.  With docker installed, navigate to that directory and run
+```
+docker build -t cccdev -f Dockerfile.localdev .
+```
+This results in a docker image named `cccdev` with some helpful pieces installed (the right version of python, all dependencies, vim, ipython, and tmux).  To run that image, and sync the directory containing the source files, run
+```
+docker run -it -v $(pwd):/cccatalog_api_scripts cccdev
+```
+from the `src/providers/api` directory.  The source files are then available at `/cccatalog_api_scripts` in the running container.  Edits to the source files can be made on your local machine, then tests can be run in the container to see the effects.
+
+### Setup the other way
+The advantage of this method is that you don't have to install docker.  You will, however need to install a number of other dependencies, including a specific version of Python.  Furthermore, the tests are unlikely to pass on a windows machine (unless you're using WSL).
+
+1. To begin, install Python 3.7.4, and `pip`.  Use of `virtualenv` is recommended.
+1. Navigate to `src/providers/api` and run `pip install -r requirements.txt`.
+1. If that succeeds, set the `OUTPUT_DIR` and `FLICKR_API_KEY` variables to whatever you like (they won't be used by the tests), start `python` (3.7.4), and try to import `Flickr`.  
+
+If you make it that far, the tests (for the api provider modules) should pass on your local setup.
+
+### Running the tests
+
+From the `/cccatalog_api_scripts` directory in the docker container, or the `src/providers/api` directory on your local machine, run `pytest`.  (on your local machine, don't forget to set the environment variables mentioned above).
+
+### Running the tests
 
 ## Authors
 See the list of [contributors](https://github.com/creativecommons/cccatalog/contributors) who participated in this project.
