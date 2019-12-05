@@ -1,6 +1,7 @@
 import cccatalog.api.licenses as license_helpers
 from rest_framework import serializers
 from cccatalog.api.licenses import LICENSE_GROUPS, get_license_url
+from collections import namedtuple
 from cccatalog.api.controllers.search_controller import get_providers
 
 
@@ -64,6 +65,14 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     """ Base class for search query parameters. """
 
     """ Parse and validate search query string parameters. """
+    DeprecatedParam = namedtuple('DeprecatedParam', ['original', 'successor'])
+    deprecated_params = [
+        DeprecatedParam('li', 'license'),
+        DeprecatedParam('lt', 'license_type'),
+        DeprecatedParam('pagesize', 'page_size'),
+        DeprecatedParam('provider', 'source')
+    ]
+
     q = serializers.CharField(
         label="query",
         help_text="A query string that should not exceed 200 characters in "
@@ -227,6 +236,17 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         valid_ratios = {'tall', 'wide', 'square'}
         _validate_enum('aspect ratio', valid_ratios, value)
         return value.lower()
+
+    def validate(self, data):
+        for deprecated in self.deprecated_params:
+            param, successor = deprecated
+            if param in self.initial_data:
+                raise serializers.ValidationError(
+                    f"Parameter '{param}' is deprecated in this release of"
+                    f" the API. Use '{successor}' instead."
+                )
+        return data
+
 
 
 class TagSerializer(serializers.Serializer):
