@@ -9,11 +9,10 @@ from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.search_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     ValidationErrorSerializer, ImageSearchQueryStringSerializer
-from cccatalog.api.serializers.image_serializers import ImageDetailSerializer,\
+from cccatalog.api.serializers.image_serializers import \
     WatermarkQueryStringSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL
 from cccatalog.api.utils.view_count import _get_user_ip
-from urllib.parse import urlparse
 from cccatalog.api.utils.watermark import watermark
 from django.http.response import HttpResponse, FileResponse
 import cccatalog.api.controllers.search_controller as search_controller
@@ -35,19 +34,6 @@ QA = 'qa'
 RESULT_COUNT = 'result_count'
 PAGE_COUNT = 'page_count'
 PAGE_SIZE = 'page_size'
-
-
-def _add_protocol(url: str):
-    """
-    Some fields in the database contain incomplete URLs, leading to unexpected
-    behavior in downstream consumers. This helper verifies that we always return
-    fully formed URLs in such situations.
-    """
-    parsed = urlparse(url)
-    if parsed.scheme == '':
-        return 'https://' + url
-    else:
-        return url
 
 
 class SearchImages(APIView):
@@ -109,7 +95,10 @@ class SearchImages(APIView):
                 }
             )
 
-        serialized_results = ImageSerializer(results, many=True).data
+        context = {'request': request}
+        serialized_results = ImageSerializer(
+            results, many=True, context=context
+        ).data
 
         if len(results) < page_size and page_count == 0:
             result_count = len(results)
@@ -135,7 +124,10 @@ class RelatedImage(APIView):
             filter_dead=True
         )
 
-        serialized_related = ImageSerializer(related, many=True).data
+        context = {'request': request}
+        serialized_related = ImageSerializer(
+            related, many=True, context=context
+        ).data
         response_data = {
             RESULT_COUNT: result_count,
             PAGE_COUNT: 0,
@@ -146,7 +138,7 @@ class RelatedImage(APIView):
 
 
 class ImageDetail(GenericAPIView, RetrieveModelMixin):
-    serializer_class = ImageDetailSerializer
+    serializer_class = ImageSerializer
     queryset = Image.objects.all()
     lookup_field = 'identifier'
 
@@ -154,36 +146,14 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                          operation_description="Load the details of a"
                                                " particular image ID.",
                          responses={
-                             200: ImageDetailSerializer,
+                             200: ImageSerializer,
                              404: 'Not Found'
                          })
     @track_model_views(Image)
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
         resp = self.retrieve(request, identifier)
-        # Get pretty display name for a provider
-        provider = resp.data[search_controller.PROVIDER]
-        try:
-            provider_data = ContentProvider \
-                .objects \
-                .get(provider_identifier=provider)
-            resp.data['provider'] = provider_data.provider_name
-            resp.data['provider_code'] = provider_data.provider_identifier
-            resp.data['provider_url'] = provider_data.domain_name
-        except ContentProvider.DoesNotExist:
-            resp.data['provider'] = 'unknown'
-            resp.data['provider_code'] = provider
-            resp.data['provider_url'] = 'Unknown'
-        # Add page views to the response.
-        resp.data['view_count'] = view_count
         # Fix links to creator and foreign landing URLs.
-        if CREATOR_URL in resp.data:
-            creator_url = _add_protocol(resp.data[CREATOR_URL])
-            resp.data[CREATOR_URL] = creator_url
-        if FOREIGN_LANDING_URL in resp.data:
-            foreign_landing_url = \
-                _add_protocol(resp.data[FOREIGN_LANDING_URL])
-            resp.data[FOREIGN_LANDING_URL] = foreign_landing_url
         # Proxy insecure HTTP images at full resolution.
         if 'http://' in resp.data[search_controller.URL]:
             original = resp.data[search_controller.URL]

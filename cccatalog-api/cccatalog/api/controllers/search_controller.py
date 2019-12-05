@@ -100,8 +100,8 @@ def _post_process_results(s, start, end, page_size, search_results,
                           request, filter_dead) -> List[Hit]:
     """
     After fetching the search results from the back end, iterate through the
-    results, add links to detail views, perform image validation, and route
-    certain thumbnails through out proxy.
+    results, perform image validation, and route certain thumbnails through our
+    proxy.
 
     :param s: The Elasticsearch Search object.
     :param start: The start of the result slice.
@@ -116,10 +116,6 @@ def _post_process_results(s, start, end, page_size, search_results,
     results = []
     to_validate = []
     for res in search_results:
-        url = request.build_absolute_uri(
-            reverse('image-detail', [res.identifier])
-        )
-        res.detail = url
         if hasattr(res.meta, 'highlight'):
             res.fields_matched = dir(res.meta.highlight)
         to_validate.append(res.url)

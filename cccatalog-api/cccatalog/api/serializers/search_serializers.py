@@ -1,6 +1,7 @@
 import cccatalog.api.licenses as license_helpers
 from rest_framework import serializers
 from cccatalog.api.licenses import LICENSE_GROUPS, get_license_url
+from urllib.parse import urlparse
 from collections import namedtuple
 from cccatalog.api.controllers.search_controller import get_providers
 
@@ -248,7 +249,6 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         return data
 
 
-
 class TagSerializer(serializers.Serializer):
     name = serializers.CharField(
         required=True,
@@ -259,6 +259,19 @@ class TagSerializer(serializers.Serializer):
         help_text="The accuracy of a machine-generated tag. Human-generated "
                   "tags do not have an accuracy field."
     )
+
+
+def _add_protocol(url: str):
+    """
+    Some fields in the database contain incomplete URLs, leading to unexpected
+    behavior in downstream consumers. This helper verifies that we always return
+    fully formed URLs in such situations.
+    """
+    parsed = urlparse(url)
+    if parsed.scheme == '':
+        return 'https://' + url
+    else:
+        return url
 
 
 class ImageSerializer(serializers.Serializer):
@@ -278,15 +291,22 @@ class ImageSerializer(serializers.Serializer):
     )
     url = serializers.URLField()
     thumbnail = serializers.URLField(required=False, allow_blank=True)
-    provider = serializers.CharField(required=False)
-    source = serializers.CharField(required=False)
+    source = serializers.CharField(required=False, source='provider')
     license = serializers.SerializerMethodField()
     license_version = serializers.CharField(required=False)
     license_url = serializers.SerializerMethodField()
     foreign_landing_url = serializers.URLField(required=False)
-    detail = serializers.URLField(
-        required=True,
-        help_text="A direct link to the detail view of an image."
+    detail_url = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='image-detail',
+        lookup_field='identifier',
+        help_text="A direct link to the detail view of this image."
+    )
+    related_url = serializers.HyperlinkedIdentityField(
+        view_name='related-images',
+        lookup_field='identifier',
+        read_only=True,
+        help_text="A link to an endpoint that provides similar images."
     )
     fields_matched = serializers.ListField(
         required=False,
@@ -300,12 +320,27 @@ class ImageSerializer(serializers.Serializer):
         required=False,
         help_text="The width of the image in pixels. Not always available."
     )
+    attribution = serializers.CharField(
+        required=False,
+        help_text="The Creative Commons attribution of the work. Use this to "
+                  "give credit to creators to their works and fulfill "
+                  "legal attribution requirements."
+    )
 
     def get_license(self, obj):
         return obj.license.lower()
 
     def get_license_url(self, obj):
         return license_helpers.get_license_url(obj.license, obj.license_version)
+
+    def validate_url(self, value):
+        return _add_protocol(value)
+
+    def validate_creator_url(self, value):
+        return _add_protocol(value)
+
+    def validate_foreign_landing_url(self, value):
+        return _add_protocol(value)
 
 
 class ImageSearchResultsSerializer(serializers.Serializer):

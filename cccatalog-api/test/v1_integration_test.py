@@ -79,7 +79,7 @@ def test_image_detail(search_fixture):
 
 @pytest.fixture
 def link_shortener_fixture(search_fixture):
-    link_to_shorten = search_fixture['results'][0]['detail']
+    link_to_shorten = search_fixture['results'][0]['detail_url']
     payload = {"full_url": link_to_shorten}
     response = requests.post(API_URL + '/v1/link', json=payload, verify=False)
     assert response.status_code == 200
