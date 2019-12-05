@@ -215,25 +215,21 @@ def search(search_params, index, page_size, ip, request,
     pages and results.
     """
     s = Search(index=index)
-    # Apply term filters.
+    # Apply term filters. Each tuple pairs a filter's parameter name in the API
+    # with its corresponding field in Elasticsearch. "None" means that the
+    # names are identical.
     filters = [
-        'extension',
-        'categories',
-        'aspect_ratio',
-        'size'
-    ]
-    for _filter in filters:
-        s = _apply_filter(s, search_params, _filter)
-    # Apply special-case term filters, where the parameter name does not exactly
-    # correspond to an identically named field in Elasticsearch.
-    renamed_filters = [
+        ('extension', None),
+        ('categories', None),
+        ('aspect_ratio', None),
+        ('size', None),
         ('source', 'provider'),
         ('license', 'license__keyword'),
         ('license_type', 'license__keyword')
     ]
-    for tup in renamed_filters:
-        original_name, new_name = tup
-        s = _apply_filter(s, search_params, original_name, new_name)
+    for tup in filters:
+        api_field, elasticsearch_field = tup
+        s = _apply_filter(s, search_params, api_field, elasticsearch_field)
 
     # Hide data sources from the catalog dynamically.
     filter_cache_key = 'filtered_providers'

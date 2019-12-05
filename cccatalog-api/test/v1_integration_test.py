@@ -82,7 +82,6 @@ def link_shortener_fixture(search_fixture):
     link_to_shorten = search_fixture['results'][0]['detail']
     payload = {"full_url": link_to_shorten}
     response = requests.post(API_URL + '/v1/link', json=payload, verify=False)
-    print(response.text)
     assert response.status_code == 200
     return json.loads(response.text)
 
@@ -274,8 +273,6 @@ def test_attribution():
         license="by",
         license_version="3.0"
     )
-    print('\nAttribution examples:\n')
-    print(title_and_creator_missing.attribution)
     assert "This work" in title_and_creator_missing.attribution
 
     title = "A foo walks into a bar"
@@ -286,7 +283,6 @@ def test_attribution():
         license="by",
         license_version="3.0"
     )
-    print(creator_missing.attribution)
     assert title in creator_missing.attribution
     assert "by " not in creator_missing.attribution
 
@@ -298,7 +294,6 @@ def test_attribution():
         license="by",
         license_version="3.0"
     )
-    print(title_missing.attribution)
     assert creator in title_missing.attribution
     assert "This work" in title_missing.attribution
 
@@ -309,7 +304,6 @@ def test_attribution():
         license="by",
         license_version="3.0"
     )
-    print(all_data_present.attribution)
     assert title in all_data_present.attribution
     assert creator in all_data_present.attribution
 
@@ -373,9 +367,9 @@ def test_page_size_removing_dead_links(search_without_dead_links):
     wildcard operator.
 
     Test whether the number of results returned is equal to the requested
-    pagesize of 100.
+    page_size of 100.
     """
-    data = search_without_dead_links(q='*', pagesize=100)
+    data = search_without_dead_links(q='*', page_size=100)
     assert len(data['results']) == 100
 
 
@@ -387,8 +381,8 @@ def test_dead_links_are_correctly_filtered(search_with_dead_links,
 
     We use the results' id to compare them.
     """
-    data_with_dead_links = search_with_dead_links(q='*', pagesize=100)
-    data_without_dead_links = search_without_dead_links(q='*', pagesize=100)
+    data_with_dead_links = search_with_dead_links(q='*', page_size=100)
+    data_without_dead_links = search_without_dead_links(q='*', page_size=100)
 
     comparisons = []
     for result_1 in data_with_dead_links['results']:
@@ -406,13 +400,13 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
     filtering out dead links.
     """
     total_pages = 30
-    pagesize = 5
+    page_size = 5
 
     page_results = []
     for page in range(1, total_pages + 1):
         page_data = search_without_dead_links(
             q='*',
-            pagesize=pagesize,
+            page_size=page_size,
             page=page
         )
         page_results += page_data['results']
@@ -450,7 +444,7 @@ def related_factory():
 @pytest.mark.skip(reason="Generally, we don't paginate related images, so "
                     "consistency is less of an issue.")
 def test_related_image_search_page_consistency(related_factory, search_without_dead_links):
-    initial_images = search_without_dead_links(q='*', pagesize=10)
+    initial_images = search_without_dead_links(q='*', page_size=10)
     for image in initial_images['results']:
         related = related_factory(image['id'])
         assert related['result_count'] > 0
