@@ -86,8 +86,10 @@ urlpatterns = [
     ),
     # path('list', CreateList.as_view()),
     # path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
+    path(
+        'v1/images/<str:identifier>', ImageDetail.as_view(), name='image-detail'
+    ),
     re_path('v1/images', SearchImages.as_view()),
-    path('v1/images/<str:identifier>', ImageDetail.as_view(), name='image-detail'),
     path(
         'v1/recommendations/images/<str:identifier>',
         RelatedImage.as_view(),
