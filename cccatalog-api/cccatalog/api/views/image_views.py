@@ -6,10 +6,9 @@ from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider
 from cccatalog.api.utils import ccrel
 from cccatalog.api.utils.view_count import track_model_views
-from cccatalog.api.serializers.search_serializers import\
+from cccatalog.api.serializers.image_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
-    ValidationErrorSerializer, ImageSearchQueryStringSerializer
-from cccatalog.api.serializers.image_serializers import \
+    ValidationErrorSerializer, ImageSearchQueryStringSerializer,\
     WatermarkQueryStringSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL
 from cccatalog.api.utils.view_count import _get_user_ip
