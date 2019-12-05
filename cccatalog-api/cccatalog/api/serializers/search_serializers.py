@@ -292,6 +292,7 @@ class ImageSearchResultsSerializer(serializers.Serializer):
     """ The full image search response. """
     result_count = serializers.IntegerField()
     page_count = serializers.IntegerField()
+    page_size = serializers.IntegerField()
     results = ImageSerializer(many=True)
 
 

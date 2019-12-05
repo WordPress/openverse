@@ -34,6 +34,7 @@ FILTER_DEAD = 'filter_dead'
 QA = 'qa'
 RESULT_COUNT = 'result_count'
 PAGE_COUNT = 'page_count'
+PAGE_SIZE = 'page_size'
 
 
 def _add_protocol(url: str):
@@ -115,6 +116,7 @@ class SearchImages(APIView):
         response_data = {
             RESULT_COUNT: result_count,
             PAGE_COUNT: page_count,
+            PAGE_SIZE: len(results),
             RESULTS: serialized_results
         }
         serialized_response = ImageSearchResultsSerializer(data=response_data)
