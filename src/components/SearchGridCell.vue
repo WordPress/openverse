@@ -10,6 +10,7 @@
         class="search-grid_image-ctr"
         :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`">
         <img
+          ref="img"
           :class="{'search-grid_image': true, 'search-grid_image__fill': !shouldContainImage}"
           :alt="image.title" :src="getImageUrl(image)"
           @error="onImageLoadError($event, image)">
@@ -23,8 +24,9 @@
             :href="getImageForeignUrl(image)"
             @click.stop="() => false"
             target="new">
-            <img class="search-grid_overlay-provider-logo" :alt="image.provider"
-                :src="getProviderLogo(image.provider)">
+            <img class="search-grid_overlay-provider-logo"
+              :alt="image.provider"
+              :src="getProviderLogo(image.provider)">
             {{ image.title }}
         </a>
       </figcaption>
@@ -59,11 +61,13 @@ export default {
   data() {
     return {
       widthBasis: minRowWidth / maxAspect,
+      imgHeight: this.image.height || 100,
+      imgWidth: this.image.width || 100,
     };
   },
   computed: {
     imageAspect() {
-      return this.image.width / this.image.height;
+      return this.imgWidth / this.imgHeight;
     },
     containerAspect() {
       if (this.imageAspect > maxAspect) return maxAspect;
@@ -122,6 +126,13 @@ export default {
         element.src = errorImage;
       }
     },
+    getImgDimension() {
+      this.imgHeight = this.$refs.img.naturalHeight;
+      this.imgWidth = this.$refs.img.naturalWidth;
+    },
+  },
+  mounted() {
+    if (!this.image.width) this.getImgDimension();
   },
 };
 </script>
