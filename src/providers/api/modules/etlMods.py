@@ -12,6 +12,60 @@ from urllib.parse import urlparse
 
 PATH    = os.environ['OUTPUT_DIR']
 
+def _prepare_output_string(unknown_input):
+    if not unknown_input:
+        return '\\N'
+    elif type(unknown_input) in [dict, list]:
+        return json.dumps(unknown_input)
+    else:
+        return sanitizeString(unknown_input)
+
+
+def create_tsv_list_row(
+        foreign_identifier = None,
+        foreign_landing_url = None,
+        image_url = None,
+        thumbnail = None,
+        width = None,
+        height = None,
+        filesize = None,
+        license = None,
+        license_version = None,
+        creator = None,
+        creator_url = None,
+        title = None,
+        meta_data = None,
+        tags = None,
+        watermarked = 'f',
+        provider = None,
+        source = None):
+
+    raw_output_list = [
+        foreign_identifier,
+        foreign_landing_url,
+        image_url,
+        thumbnail,
+        width,
+        height,
+        filesize,
+        license,
+        license_version,
+        creator,
+        creator_url,
+        title,
+        meta_data,
+        tags,
+        watermarked,
+        provider,
+        source
+    ]
+
+    if foreign_landing_url and image_url and license:
+        return [_prepare_output_string(item) for item in raw_output_list]
+    else:
+        return None
+
+
 def writeToFile(_data, _name, output_dir=PATH):
     outputFile = '{}{}'.format(output_dir, _name)
 

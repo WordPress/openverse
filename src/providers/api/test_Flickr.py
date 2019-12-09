@@ -84,3 +84,240 @@ def test_getMetaData(monkeypatch):
     with open(output_fullpath) as f:
         actual_filestring = f.read()
     assert expected_filestring == actual_filestring
+
+
+def test_extractData_returns_Nonetype_if_no_image():
+    data = {
+        "id": "456",
+        "owner": "456@N04",
+        "title": "233 Ordesa sept 2019",
+        "license": "3",
+        "description": {
+            "_content": "OLYMPUS DIGITAL CAMERA"
+        },
+        "dateupload": "1571326372",
+        "datetaken": "2019-09-07 16:26:44",
+        "ownername": "RADIOfotoGRAFIANDO",
+        "tags": "amarilla",
+        "url_t": "https://live.staticflickr.com/456_t.jpg",
+        "height_t": 75,
+        "width_t": 100,
+    }
+    actual_row = Flickr.extractData(data)
+    expect_row = None
+    assert expect_row == actual_row
+
+
+def test_get_image_url_returns_Nonetype_tuple_if_no_image():
+    data = {
+        "id": "456",
+        "owner": "456@N04",
+        "title": "233 Ordesa sept 2019",
+        "license": "3",
+        "description": {
+            "_content": "OLYMPUS DIGITAL CAMERA"
+        },
+        "dateupload": "1571326372",
+        "datetaken": "2019-09-07 16:26:44",
+        "ownername": "RADIOfotoGRAFIANDO",
+        "tags": "amarilla",
+        "url_t": "https://live.staticflickr.com/456_t.jpg",
+        "height_t": 75,
+        "width_t": 100,
+    }
+    actual_tuple = Flickr.get_image_url(data)
+    expect_tuple = (None, None, None)
+    assert expect_tuple == actual_tuple
+
+
+def test_get_image_url_returns_large_tuple_when_avail():
+    data = {
+        "id": "456",
+        "owner": "456@N04",
+        "title": "233 Ordesa sept 2019",
+        "license": "3",
+        "description": {
+            "_content": "OLYMPUS DIGITAL CAMERA"
+        },
+        "dateupload": "1571326372",
+        "datetaken": "2019-09-07 16:26:44",
+        "ownername": "RADIOfotoGRAFIANDO",
+        "tags": "amarilla",
+        "url_t": "https://live.staticflickr.com/456_t.jpg",
+        "height_t": 75,
+        "width_t": 100,
+        "url_s": "https://live.staticflickr.com/456_m.jpg",
+        "height_s": 180,
+        "width_s": 240,
+        "url_m": "https://live.staticflickr.com/456.jpg",
+        "height_m": 375,
+        "width_m": 500,
+        "url_l": "https://live.staticflickr.com/456_b.jpg",
+        "height_l": 768,
+        "width_l": 1024
+    }
+    actual_tuple = Flickr.get_image_url(data)
+    expect_tuple = ('https://live.staticflickr.com/456_b.jpg', 768, 1024)
+    assert expect_tuple == actual_tuple
+
+
+def test_get_image_url_returns_medium_tuple_when_large_not_avail():
+    data = {
+        "id": "456",
+        "owner": "456@N04",
+        "title": "233 Ordesa sept 2019",
+        "license": "3",
+        "description": {
+            "_content": "OLYMPUS DIGITAL CAMERA"
+        },
+        "dateupload": "1571326372",
+        "datetaken": "2019-09-07 16:26:44",
+        "ownername": "RADIOfotoGRAFIANDO",
+        "tags": "amarilla",
+        "url_t": "https://live.staticflickr.com/456_t.jpg",
+        "height_t": 75,
+        "width_t": 100,
+        "url_s": "https://live.staticflickr.com/456_m.jpg",
+        "height_s": 180,
+        "width_s": 240,
+        "url_m": "https://live.staticflickr.com/456.jpg",
+        "height_m": 375,
+        "width_m": 500,
+    }
+    actual_tuple = Flickr.get_image_url(data)
+    expect_tuple = ('https://live.staticflickr.com/456.jpg', 375, 500)
+    assert expect_tuple == actual_tuple
+
+
+def test_get_image_url_falls_to_small_tuple():
+    data = {
+        "id": "456",
+        "owner": "456@N04",
+        "title": "233 Ordesa sept 2019",
+        "license": "3",
+        "description": {
+            "_content": "OLYMPUS DIGITAL CAMERA"
+        },
+        "dateupload": "1571326372",
+        "datetaken": "2019-09-07 16:26:44",
+        "ownername": "RADIOfotoGRAFIANDO",
+        "tags": "amarilla",
+        "url_t": "https://live.staticflickr.com/456_t.jpg",
+        "height_t": 75,
+        "width_t": 100,
+        "url_s": "https://live.staticflickr.com/456_m.jpg",
+        "height_s": 180,
+        "width_s": 240,
+    }
+    actual_tuple = Flickr.get_image_url(data)
+    expect_tuple = ('https://live.staticflickr.com/456_m.jpg', 180, 240)
+    assert expect_tuple == actual_tuple
+
+
+def test_extractData_returns_Nonetype_when_no_license():
+    data = {
+        "id": "456",
+        "owner": "456@N04",
+        "title": "233 Ordesa sept 2019",
+        "description": {
+            "_content": "OLYMPUS DIGITAL CAMERA"
+        },
+        "dateupload": "1571326372",
+        "datetaken": "2019-09-07 16:26:44",
+        "ownername": "RADIOfotoGRAFIANDO",
+        "tags": "amarilla",
+        "url_t": "https://live.staticflickr.com/456_t.jpg",
+        "height_t": 75,
+        "width_t": 100,
+        "url_l": "https://live.staticflickr.com/456_b.jpg",
+        "height_l": 768,
+        "width_l": 1024
+    }
+    actual_row = Flickr.extractData(data)
+    expect_row = None
+    assert expect_row == actual_row
+
+
+def test_create_meta_data_fills_meta_data_dict():
+    data = {
+        "title": "233 Ordesa sept 2019",
+        "description": {
+            "_content": "OLYMPUS DIGITAL CAMERA"
+        },
+        "dateupload": "1571326372",
+        "datetaken": "2019-09-07 16:26:44",
+        "ownername": "RADIOfotoGRAFIANDO",
+        "tags": "amarilla",
+    }
+    actual_dict = Flickr.create_meta_data_dict(data)
+    expect_dict = {
+        'pub_date': '1571326372',
+        'date_taken': '2019-09-07 16:26:44',
+        'description': 'OLYMPUS DIGITAL CAMERA'
+    }
+    assert expect_dict == actual_dict
+
+
+def test_create_meta_data_fills_partial_meta_data_dict():
+    data = {
+        "title": "233 Ordesa sept 2019",
+        "dateupload": "1571326372",
+        "datetaken": "2019-09-07 16:26:44",
+        "ownername": "RADIOfotoGRAFIANDO",
+        "tags": "amarilla",
+    }
+    actual_dict = Flickr.create_meta_data_dict(data)
+    expect_dict = {
+        'pub_date': '1571326372',
+        'date_taken': '2019-09-07 16:26:44'
+    }
+    assert expect_dict == actual_dict
+
+
+def test_create_meta_data_makes_empty_meta_data_dict():
+    data = {
+        "ownername": "RADIOfotoGRAFIANDO",
+        "tags": "amarilla",
+    }
+    actual_dict = Flickr.create_meta_data_dict(data)
+    expect_dict = {}
+    assert expect_dict == actual_dict
+
+
+def test_create_tags_list_makes_tags_list():
+    data = {
+        "id": "456",
+        "tags": "tag1 tag2   tag3  tag3 ",
+        "width_l": 1024
+    }
+    actual_tags_list = Flickr.create_tags_list(data)
+    expect_tags_list = [
+        {
+            'name': 'tag1',
+            'provider': 'flickr'
+        },
+        {
+            'name': 'tag2',
+            'provider': 'flickr'
+        },
+        {
+            'name': 'tag3',
+            'provider': 'flickr'
+        }
+    ]
+    assert len(actual_tags_list) == len(expect_tags_list)
+    assert all(
+        [element in actual_tags_list for element in expect_tags_list]
+    )
+
+
+def test_create_tags_list_returns_falsy_no_tag_key():
+    data = {'id': 'aslkjb'}
+    tags_list = Flickr.create_tags_list(data)
+    assert not tags_list
+
+
+def test_create_tags_list_returns_falsy_empty_tags():
+    data = {'id': 'aslkjb', 'tags': ''}
+    tags_list = Flickr.create_tags_list(data)
+    assert not tags_list

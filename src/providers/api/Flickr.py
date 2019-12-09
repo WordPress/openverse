@@ -19,6 +19,7 @@ DELAY       = 1.0 #time delay (in seconds)
 FILE        = 'flickr_{}.tsv'.format(int(time.time()))
 SIZE        = 500
 API_KEY     = os.environ['FLICKR_API_KEY']
+FLICKR      = 'flickr'
 
 
 URL      = None
@@ -40,7 +41,6 @@ def getLicense(_index):
         10: 'PDM'
     }
 
-
     if _index == 'all':
         return ccLicense.keys()
     else:
@@ -48,7 +48,7 @@ def getLicense(_index):
 
 
     if (_index <= 0) or (_index in [7, 8]) or (_index > 10):
-        logging.warning('Invalid license')
+        logging.warning('License not detected!')
         return None, None
 
 
@@ -60,114 +60,84 @@ def getLicense(_index):
     return license, version
 
 
-def extractData(_data):
-    creator         = ''
-    creatorURL      = ''
-    title           = ''
-    foreignURL      = ''
-    foreignID       = ''
-    thumbnail       = ''
-    imageURL        = ''
-    width           = ''
-    height          = ''
-    license         = ''
-    version         = ''
-    tags            = ''
-    metaData        = {}
-    tagData         = ''
+def get_image_url(_data):
+    for size in ['l', 'm', 's']: # prefer large, then medium, then small images
+        url_key = 'url_{}'.format(size)
+        height_key = 'height_{}'.format(size)
+        width_key = 'width_{}'.format(size)
+        if url_key in _data:
+            return (
+                _data.get(url_key), _data.get(height_key), _data.get(width_key))
+
+    logging.warning('Image not detected!')
+    return (None, None, None)
 
 
-    title = sanitizeString(_data.get('title', '\\N'))
-    creator = sanitizeString(_data.get('ownername', '\\N'))
-
-    if 'owner' in _data:
-        creatorURL = 'www.flickr.com/photos/{}'.format(_data['owner'])
-        creatorURL = creatorURL.strip()
-
-    foreignID = sanitizeString(_data.get('id', '\\N'))
-
-    if foreignID not in ['', '\\N'] and creatorURL != '':
-        foreignURL = '{}/{}'.format(creatorURL, foreignID)
-
-    if foreignURL is None:
-        logging.warning('Landing page not detected!')
-        return None
-
-
-    #get the image URL
-    imageURL    = sanitizeString(_data.get('url_l', ''))
-    height      = sanitizeString(_data.get('height_l', ''))
-    width       = sanitizeString(_data.get('width_l', ''))
-    thumbnail   = sanitizeString(_data.get('url_s', ''))
-
-
-    if imageURL == '':
-        if 'url_m' in _data:
-            imageURL = sanitizeString(_data.get('url_m', ''))
-            height   = sanitizeString(_data.get('height_m', ''))
-            width    = sanitizeString(_data.get('width_m', ''))
-
-        elif 'url_s' in _data:
-            imageURL = sanitizeString(_data.get('url_s', ''))
-            height   = sanitizeString(_data.get('height_s', ''))
-            width    = sanitizeString(_data.get('width_s', ''))
-
-        else:
-            logging.warning('Image not detected!')
-            return None
-
-
-    license, version = getLicense(_data.get('license'))
-
-    if license is None:
-        logging.warning('License not detected!')
-        return None
-
+def create_meta_data_dict(_data):
+    meta_data = {}
     if 'dateupload' in _data:
-        metaData['pub_date'] = sanitizeString(_data.get('dateupload'))
+        meta_data['pub_date'] = sanitizeString(_data.get('dateupload'))
 
     if 'datetaken' in _data:
-        metaData['date_taken'] = sanitizeString(_data.get('datetaken'))
+        meta_data['date_taken'] = sanitizeString(_data.get('datetaken'))
 
-    if 'description' in _data:
-        desc = _data.get('description', '')
-        content = None
+    description = sanitizeString(_data.get('description', {}).get('_content'))
+    if description:
+        meta_data['description'] = description
 
-        if '_content' in desc and desc['_content'] is not None:
-            content = sanitizeString(desc.get('_content', ''))
-
-        if content:
-            metaData['description'] = content
+    return meta_data
 
 
-    if 'tags' in _data and _data['tags'] is not None:
-        tags = _data.get('tags', '').strip()
+def create_tags_list(_data):
+    max_tags = 20
+    raw_tag_string = _data.get('tags', '').strip()
+    if raw_tag_string:
+        raw_tag_list = list(set(raw_tag_string.split()))[:max_tags]
+        return [{'name': tag.strip(), 'provider': FLICKR} for tag in raw_tag_list]
+    else:
+        return None
 
-        if tags:
-            maxTags = 20
-            tagData = {}
-            tagData = [{'name': tag.strip(), 'provider': 'flickr'} for tag in list(set(tags.split(' ')))[:maxTags]]
+
+def extractData(_data):
+    title = _data.get('title')
+    creator = _data.get('ownername')
+    imageURL, height, width = get_image_url(_data)
+    thumbnail = _data.get('url_s')
+    license, version = getLicense(_data.get('license', -1))
+    metaData = create_meta_data_dict(_data)
+    tagData = create_tags_list(_data)
+
+    if 'owner' in _data:
+        creatorURL = 'www.flickr.com/photos/{}'.format(_data['owner']).strip()
+    else:
+        creatorURL = None
+
+    foreignID = _data.get('id')
+
+    if foreignID and creatorURL:
+        foreignURL = '{}/{}'.format(creatorURL, foreignID)
+    else:
+        foreignURL = None
 
 
-    return [
-            imageURL if not foreignID else foreignID,
-            foreignURL,
-            imageURL,
-            thumbnail if thumbnail else '\\N',
-            str(int(float(width))) if width else '\\N',
-            str(int(float(height))) if height else '\\N',
-            '\\N',
-            license,
-            str(version) if version else '\\N',
-            creator if creator else '\\N',
-            creatorURL if creatorURL else '\\N',
-            title if title else '\\N',
-            json.dumps(metaData, ensure_ascii=False) if metaData else '\\N',
-            json.dumps(tagData, ensure_ascii=False) if tagData else '\\N',
-            'f',
-            'flickr',
-            'flickr'
-    ]
+    return create_tsv_list_row(
+        foreign_identifier=imageURL if not foreignID else foreignID,
+        foreign_landing_url=foreignURL,
+        image_url=imageURL,
+        thumbnail=thumbnail,
+        width=width,
+        height=height,
+        license=license,
+        license_version=version,
+        creator=creator,
+        creator_url=creatorURL,
+        title=title,
+        meta_data=metaData,
+        tags=tagData,
+        watermarked='f',
+        provider=FLICKR,
+        source=FLICKR
+    )
 
 
 def getMetaData(_startTs, _endTs, _license, _switchDate=False):
