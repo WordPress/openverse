@@ -28,7 +28,7 @@
         <p>
           Search for free content in the public domain and under Creative Commons licenses.
           <br />
-          Learn more about CC licenses <a href="https://creativecommons.org/share-your-work/licensing-types-examples/" target="_blank" rel="noopener">here</a>.
+          Learn more about CC licenses <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">here</a>.
         </p>
     </div>
     <div class="old-search-link">
