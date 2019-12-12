@@ -29,7 +29,7 @@ def create_tsv_list_row(
         width = None,
         height = None,
         filesize = None,
-        license = None,
+        license_ = None,
         license_version = None,
         creator = None,
         creator_url = None,
@@ -48,7 +48,7 @@ def create_tsv_list_row(
         width,
         height,
         filesize,
-        license,
+        license_,
         license_version,
         creator,
         creator_url,
@@ -60,7 +60,7 @@ def create_tsv_list_row(
         source
     ]
 
-    if foreign_landing_url and image_url and license:
+    if foreign_landing_url and image_url and license_:
         return [_prepare_output_string(item) for item in raw_output_list]
     else:
         return None
