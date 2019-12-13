@@ -61,6 +61,7 @@ fieldset {
 
 .filter-dropdown-visibility-button {
   float: right;
+  cursor: pointer;
 }
 
 label {
