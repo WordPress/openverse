@@ -9,9 +9,15 @@ Notes:                  https://www.flickr.com/help/terms/api
                         Rate limit: 3600 queries per hour.
 """
 
-from modules.etlMods import *
+import argparse
 import calendar
+import logging
+import os
+import time
+from datetime import datetime, timedelta
 from dateutil import rrule
+
+import modules.etlMods as etl_mods
 
 logging.getLogger(__name__)
 Ts_RANGE    = int(5) #process job using 5 minute intervals
@@ -19,17 +25,16 @@ DELAY       = 1.0 #time delay (in seconds)
 FILE        = 'flickr_{}.tsv'.format(int(time.time()))
 SIZE        = 500
 API_KEY     = os.environ['FLICKR_API_KEY']
+FLICKR      = 'flickr'
+ENDPOINT    = 'https://api.flickr.com/services/rest/?method=flickr.photos.search'
 
+logging.basicConfig(
+    format='%(asctime)s: [%(levelname)s - Flickr API] =======> %(message)s',
+    level=logging.INFO)
 
-URL      = None
-#QUERY    = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&min_upload_date={1}&max_upload_date={2}&license=1&media=photos&content_type=1&extras=description,license,date_upload,date_taken,owner_name,tags,o_dims,url_t,url_s,url_m,url_l&per_page={3}&format=json&nojsoncallback=1'.format(API, MIN_DATE, MAX_DATE, SIZE)
-
-logging.basicConfig(format='%(asctime)s: [%(levelname)s - Flickr API] =======> %(message)s', level=logging.INFO)
-#logging.info('processing date range: {} - {}'.format(MIN_DATE, MAX_DATE))
-
-def getLicense(_index):
-    version     = 2.0
-    ccLicense   = {
+def get_license(_index):
+    version = 2.0
+    cc_license = {
         1:  'by-nc-sa',
         2:  'by-nc',
         3:  'by-nc-nd',
@@ -40,196 +45,184 @@ def getLicense(_index):
         10: 'PDM'
     }
 
-
     if _index == 'all':
-        return ccLicense.keys()
+        return cc_license.keys()
     else:
         _index  = int(_index)
 
 
     if (_index <= 0) or (_index in [7, 8]) or (_index > 10):
-        logging.warning('Invalid license')
+        logging.warning('License not detected!')
         return None, None
 
 
-    license = ccLicense[_index]
+    license_ = cc_license[_index]
 
     if _index in [9, 10]:
         version = 1.0
 
-    return license, version
+    return license_, version
 
 
-def extractData(_data):
-    creator         = ''
-    creatorURL      = ''
-    title           = ''
-    foreignURL      = ''
-    foreignID       = ''
-    thumbnail       = ''
-    imageURL        = ''
-    width           = ''
-    height          = ''
-    license         = ''
-    version         = ''
-    tags            = ''
-    metaData        = {}
-    tagData         = ''
+def get_image_url(_data):
+    for size in ['l', 'm', 's']: # prefer large, then medium, then small images
+        url_key = 'url_{}'.format(size)
+        height_key = 'height_{}'.format(size)
+        width_key = 'width_{}'.format(size)
+        if url_key in _data:
+            return (
+                _data.get(url_key), _data.get(height_key), _data.get(width_key))
+
+    logging.warning('Image not detected!')
+    return (None, None, None)
 
 
-    title = sanitizeString(_data.get('title', '\\N'))
-    creator = sanitizeString(_data.get('ownername', '\\N'))
-
-    if 'owner' in _data:
-        creatorURL = 'www.flickr.com/photos/{}'.format(_data['owner'])
-        creatorURL = creatorURL.strip()
-
-    foreignID = sanitizeString(_data.get('id', '\\N'))
-
-    if foreignID not in ['', '\\N'] and creatorURL != '':
-        foreignURL = '{}/{}'.format(creatorURL, foreignID)
-
-    if foreignURL is None:
-        logging.warning('Landing page not detected!')
-        return None
-
-
-    #get the image URL
-    imageURL    = sanitizeString(_data.get('url_l', ''))
-    height      = sanitizeString(_data.get('height_l', ''))
-    width       = sanitizeString(_data.get('width_l', ''))
-    thumbnail   = sanitizeString(_data.get('url_s', ''))
-
-
-    if imageURL == '':
-        if 'url_m' in _data:
-            imageURL = sanitizeString(_data.get('url_m', ''))
-            height   = sanitizeString(_data.get('height_m', ''))
-            width    = sanitizeString(_data.get('width_m', ''))
-
-        elif 'url_s' in _data:
-            imageURL = sanitizeString(_data.get('url_s', ''))
-            height   = sanitizeString(_data.get('height_s', ''))
-            width    = sanitizeString(_data.get('width_s', ''))
-
-        else:
-            logging.warning('Image not detected!')
-            return None
-
-
-    license, version = getLicense(_data.get('license'))
-
-    if license is None:
-        logging.warning('License not detected!')
-        return None
-
+def create_meta_data_dict(_data):
+    meta_data = {}
     if 'dateupload' in _data:
-        metaData['pub_date'] = sanitizeString(_data.get('dateupload'))
+        meta_data['pub_date'] = etl_mods.sanitizeString(_data.get('dateupload'))
 
     if 'datetaken' in _data:
-        metaData['date_taken'] = sanitizeString(_data.get('datetaken'))
+        meta_data['date_taken'] = etl_mods.sanitizeString(_data.get('datetaken'))
 
-    if 'description' in _data:
-        desc = _data.get('description', '')
-        content = None
+    description = etl_mods.sanitizeString(_data.get('description', {}).get('_content'))
+    if description:
+        meta_data['description'] = description
 
-        if '_content' in desc and desc['_content'] is not None:
-            content = sanitizeString(desc.get('_content', ''))
-
-        if content:
-            metaData['description'] = content
+    return meta_data
 
 
-    if 'tags' in _data and _data['tags'] is not None:
-        tags = _data.get('tags', '').strip()
-
-        if tags:
-            maxTags = 20
-            tagData = {}
-            tagData = [{'name': tag.strip(), 'provider': 'flickr'} for tag in list(set(tags.split(' ')))[:maxTags]]
-
-
-    return [
-            imageURL if not foreignID else foreignID,
-            foreignURL,
-            imageURL,
-            thumbnail if thumbnail else '\\N',
-            str(int(float(width))) if width else '\\N',
-            str(int(float(height))) if height else '\\N',
-            '\\N',
-            license,
-            str(version) if version else '\\N',
-            creator if creator else '\\N',
-            creatorURL if creatorURL else '\\N',
-            title if title else '\\N',
-            json.dumps(metaData, ensure_ascii=False) if metaData else '\\N',
-            json.dumps(tagData, ensure_ascii=False) if tagData else '\\N',
-            'f',
-            'flickr',
-            'flickr'
-    ]
+def create_tags_list(_data):
+    max_tags = 20
+    raw_tag_string = _data.get('tags', '').strip()
+    if raw_tag_string:
+        raw_tag_list = list(set(raw_tag_string.split()))[:max_tags]
+        return [{'name': tag.strip(), 'provider': FLICKR} for tag in raw_tag_list]
+    else:
+        return None
 
 
-def getMetaData(_startTs, _endTs, _license, _switchDate=False):
-    procTime    = time.time()
+def extract_data(_data):
+    title = _data.get('title')
+    creator = _data.get('ownername')
+    image_url, height, width = get_image_url(_data)
+    thumbnail = _data.get('url_s')
+    license_, version = get_license(_data.get('license', -1))
+    meta_data = create_meta_data_dict(_data)
+    tags = create_tags_list(_data)
+
+    if 'owner' in _data:
+        creator_url = 'www.flickr.com/photos/{}'.format(_data['owner']).strip()
+    else:
+        creator_url = None
+
+    foreign_id = _data.get('id')
+
+    if foreign_id and creator_url:
+        foreign_url = '{}/{}'.format(creator_url, foreign_id)
+    else:
+        foreign_url = None
+
+
+    return etl_mods.create_tsv_list_row(
+        foreign_identifier=image_url if not foreign_id else foreign_id,
+        foreign_landing_url=foreign_url,
+        image_url=image_url,
+        thumbnail=thumbnail,
+        width=width,
+        height=height,
+        license_=license_,
+        license_version=version,
+        creator=creator,
+        creator_url=creator_url,
+        title=title,
+        meta_data=meta_data,
+        tags=tags,
+        watermarked='f',
+        provider=FLICKR,
+        source=FLICKR
+    )
+
+
+def construct_api_query_string(
+        start_ts,
+        end_ts,
+        license_,
+        cur_page,
+        switch_date=False):
+    date_type = 'taken' if switch_date else 'upload'
+    api_query_string = (
+        '{0}&api_key={1}&min_{7}_date={2}&max_{7}_date={3}&license={5}'
+        '&media=photos&content_type=1&extras=description,license,date_upload,'
+        'date_taken,owner_name,tags,o_dims,url_t,url_s,url_m,url_l'
+        '&per_page={4}&format=json&nojsoncallback=1&page={6}'
+    ).format(
+        ENDPOINT, API_KEY, start_ts, end_ts, SIZE, license_, cur_page, date_type)
+
+    return api_query_string
+
+
+def process_images(start_ts, end_ts, license_, switch_date=False):
+    proc_time    = time.time()
     pages       = 1
-    curPage     = 1
-    numImages   = 0
-    endpoint    = 'https://api.flickr.com/services/rest/?method=flickr.photos.search'
+    cur_page     = 1
+    num_images   = 0
 
 
-    while curPage <= pages:
+    while cur_page <= pages:
         #loop through each page of data
-        logging.info('Processing page: {}'.format(curPage))
+        logging.info('Processing page: {}'.format(cur_page))
 
-        queryStr    = '{0}&api_key={1}&min_upload_date={2}&max_upload_date={3}&license={5}&media=photos&content_type=1&extras=description,license,date_upload,date_taken,owner_name,tags,o_dims,url_t,url_s,url_m,url_l&per_page={4}&format=json&nojsoncallback=1&page={6}'.format(endpoint, API_KEY, _startTs, _endTs, SIZE, _license, curPage)
+        api_query_string = construct_api_query_string(
+            start_ts,
+            end_ts,
+            license_,
+            cur_page,
+            switch_date
+        )
 
-        if _switchDate:
-            queryStr = queryStr.replace('upload_date', 'taken_date')
+        img_data = etl_mods.requestContent(api_query_string)
+        if img_data and img_data.get('stat') == 'ok':
+            result  = img_data.get('photos', {})
+            pages   = result.get('pages')   #number of pages
+            cur_page = result.get('page')    #current page
+            photos  = result.get('photo')   #image meta data for the current page
 
-        imgData     = requestContent(queryStr)
-        if imgData:
-            status = imgData['stat']
-            if status == 'ok':
-                result  = imgData['photos']
-                total   = result['total']   #total results
-                pages   = result['pages']   #number of pages
-                curPage = result['page']    #current page
-                photos  = result['photo']   #image meta data for the current page
+            if photos:
+                # TODO update to >= python3.8, use walrus assignment
+                extracted = [r for r in (extract_data(p) for p in photos) if r]
+                num_images += len(extracted)
+                etl_mods.writeToFile(extracted, FILE)
 
-                if photos:
-                    extracted = list(map(lambda photo: extractData(photo), photos))
-                    extracted = list(filter(None, extracted))
-                    numImages += len(extracted)
-                    writeToFile(extracted, FILE)
-
-        curPage += 1
-        delayProcessing(procTime, DELAY) #throttle requests
-        procTime = time.time()
+        cur_page += 1
+        etl_mods.delayProcessing(proc_time, DELAY) #throttle requests
+        proc_time = time.time()
 
     logging.info('Total pages processed: {}'.format(pages))
 
-    return numImages
+    return num_images
 
 
-def execJob(_license, _startDate, _duration=1, _mode=None):
-    totalImages = 0
-    srtTime     = datetime.strptime(_startDate, '%Y-%m-%d %H:%M')
-    endTime     = datetime.strptime(_startDate, '%Y-%m-%d %H:%M') + timedelta(hours=_duration)
+def exec_job(license_, start_date, _duration=1, _mode=None):
+    total_images = 0
+    start_time = datetime.strptime(start_date, '%Y-%m-%d %H:%M')
+    end_time = datetime.strptime(start_date, '%Y-%m-%d %H:%M') + timedelta(hours=_duration)
 
-    for dt in rrule.rrule(rrule.MINUTELY, dtstart=srtTime, until=endTime):
-        elapsed = int((dt - srtTime).seconds/60)
+    for dt in rrule.rrule(rrule.MINUTELY, dtstart=start_time, until=end_time):
+        elapsed = int((dt - start_time).seconds/60)
 
         if elapsed % Ts_RANGE == 0:
-            curTime = dt
-            nxtTime = curTime + timedelta(minutes=Ts_RANGE)
-            logging.info('Processing dates: {} to {}, license: {}'.format(curTime, nxtTime, getLicense(_license)[0]))
+            cur_time = dt
+            nxt_time = cur_time + timedelta(minutes=Ts_RANGE)
+            logging.info(
+                'Processing dates: {} to {}, license: {}'\
+                    .format(cur_time, nxt_time, get_license(license_)[0]))
 
             #get the meta data within the time interval
-            totalImages += getMetaData(curTime, nxtTime, _license) #check upload_date
-            totalImages += getMetaData(curTime, nxtTime, _license, True) #check taken_date
+            total_images += process_images(cur_time, nxt_time, license_)
+            total_images += process_images(cur_time, nxt_time, license_, True)
 
-    logging.info('Total {} images: {}'.format(getLicense(_license)[0], totalImages))
+    logging.info('Total {} images: {}'.format(get_license(license_)[0], total_images))
 
 
 def main():
@@ -266,7 +259,8 @@ def main():
 
     #run the job and identify images for each CC license
     if param:
-        list(map(lambda license: execJob(license, param, duration), list(getLicense('all'))))
+        for license_ in get_license('all'):
+            exec_job(license_, param, duration)
 
     logging.info('Terminated!')
 
