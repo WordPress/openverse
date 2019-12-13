@@ -17,7 +17,7 @@ import time
 from datetime import datetime, timedelta
 from dateutil import rrule
 
-import modules.etlMods as em
+import modules.etlMods as etl_mods
 
 logging.getLogger(__name__)
 Ts_RANGE    = int(5) #process job using 5 minute intervals
@@ -80,12 +80,12 @@ def get_image_url(_data):
 def create_meta_data_dict(_data):
     meta_data = {}
     if 'dateupload' in _data:
-        meta_data['pub_date'] = em.sanitizeString(_data.get('dateupload'))
+        meta_data['pub_date'] = etl_mods.sanitizeString(_data.get('dateupload'))
 
     if 'datetaken' in _data:
-        meta_data['date_taken'] = em.sanitizeString(_data.get('datetaken'))
+        meta_data['date_taken'] = etl_mods.sanitizeString(_data.get('datetaken'))
 
-    description = em.sanitizeString(_data.get('description', {}).get('_content'))
+    description = etl_mods.sanitizeString(_data.get('description', {}).get('_content'))
     if description:
         meta_data['description'] = description
 
@@ -124,7 +124,7 @@ def extract_data(_data):
         foreign_url = None
 
 
-    return em.create_tsv_list_row(
+    return etl_mods.create_tsv_list_row(
         foreign_identifier=image_url if not foreign_id else foreign_id,
         foreign_landing_url=foreign_url,
         image_url=image_url,
@@ -181,7 +181,7 @@ def process_images(start_ts, end_ts, license_, switch_date=False):
             switch_date
         )
 
-        img_data = em.requestContent(api_query_string)
+        img_data = etl_mods.requestContent(api_query_string)
         if img_data and img_data.get('stat') == 'ok':
             result  = img_data.get('photos', {})
             pages   = result.get('pages')   #number of pages
@@ -192,10 +192,10 @@ def process_images(start_ts, end_ts, license_, switch_date=False):
                 # TODO update to >= python3.8, use walrus assignment
                 extracted = [r for r in (extract_data(p) for p in photos) if r]
                 num_images += len(extracted)
-                em.writeToFile(extracted, FILE)
+                etl_mods.writeToFile(extracted, FILE)
 
         cur_page += 1
-        em.delayProcessing(proc_time, DELAY) #throttle requests
+        etl_mods.delayProcessing(proc_time, DELAY) #throttle requests
         proc_time = time.time()
 
     logging.info('Total pages processed: {}'.format(pages))
@@ -212,13 +212,15 @@ def exec_job(license_, start_date, _duration=1, _mode=None):
         elapsed = int((dt - start_time).seconds/60)
 
         if elapsed % Ts_RANGE == 0:
-            curTime = dt
-            nxtTime = curTime + timedelta(minutes=Ts_RANGE)
-            logging.info('Processing dates: {} to {}, license: {}'.format(curTime, nxtTime, get_license(license_)[0]))
+            cur_time = dt
+            nxt_time = cur_time + timedelta(minutes=Ts_RANGE)
+            logging.info(
+                'Processing dates: {} to {}, license: {}'\
+                    .format(cur_time, nxt_time, get_license(license_)[0]))
 
             #get the meta data within the time interval
-            total_images += process_images(curTime, nxtTime, license_) #check upload_date
-            total_images += process_images(curTime, nxtTime, license_, True) #check taken_date
+            total_images += process_images(cur_time, nxt_time, license_)
+            total_images += process_images(cur_time, nxt_time, license_, True)
 
     logging.info('Total {} images: {}'.format(get_license(license_)[0], total_images))
 

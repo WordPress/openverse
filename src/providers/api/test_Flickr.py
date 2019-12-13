@@ -69,8 +69,8 @@ def test_process_images(monkeypatch):
         }
     tmp_directory = '/tmp/'
     output_filename = 'flickr_test.tsv'
-    monkeypatch.setattr(Flickr.em, "requestContent", mockresult)
-    monkeypatch.setattr(Flickr.em.writeToFile, '__defaults__', (tmp_directory,))
+    monkeypatch.setattr(Flickr.etl_mods, "requestContent", mockresult)
+    monkeypatch.setattr(Flickr.etl_mods.writeToFile, '__defaults__', (tmp_directory,))
     monkeypatch.setattr(Flickr, "FILE", output_filename)
     output_fullpath = os.path.join(tmp_directory, output_filename)
     try:
@@ -152,8 +152,8 @@ def test_process_images_handles_missing_required_info(monkeypatch):
         }
     tmp_directory = '/tmp/'
     output_filename = 'flickr_test.tsv'
-    monkeypatch.setattr(Flickr.em, "requestContent", mockresult)
-    monkeypatch.setattr(Flickr.em.writeToFile, '__defaults__', (tmp_directory,))
+    monkeypatch.setattr(Flickr.etl_mods, "requestContent", mockresult)
+    monkeypatch.setattr(Flickr.etl_mods.writeToFile, '__defaults__', (tmp_directory,))
     monkeypatch.setattr(Flickr, "FILE", output_filename)
     output_fullpath = os.path.join(tmp_directory, output_filename)
     try:
@@ -174,7 +174,7 @@ def test_process_images_handles_empty_json(monkeypatch):
     nxt_time = datetime.strptime('2019-12-02', '%Y-%m-%d')
     def mockresult(a_url):
         return {}
-    monkeypatch.setattr(Flickr.em, "requestContent", mockresult)
+    monkeypatch.setattr(Flickr.etl_mods, "requestContent", mockresult)
     expected_records = 0
     actual_records = Flickr.process_images(cur_time, nxt_time, 'potato')
     assert expected_records == actual_records
