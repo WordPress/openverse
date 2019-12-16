@@ -37,10 +37,9 @@ def _validate_lt(value):
 
 def _validate_enum(enum_name, valid_values: set, given_values: str):
     """
-
     :param valid_values: Allowed values for an enum
     :param given_values: A comma separated list of values.
-    :return:
+    :return: whether the input is valid
     """
     input_values = [x.lower() for x in given_values.split(',')]
     for value in input_values:
@@ -63,8 +62,6 @@ def _validate_li(value):
 
 
 class ImageSearchQueryStringSerializer(serializers.Serializer):
-    """ Base class for search query parameters. """
-
     """ Parse and validate search query string parameters. """
     DeprecatedParam = namedtuple('DeprecatedParam', ['original', 'successor'])
     deprecated_params = [

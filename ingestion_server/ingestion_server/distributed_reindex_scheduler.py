@@ -40,6 +40,7 @@ def _assign_work(db_conn, workers, target_index):
     records_per_worker = math.floor(estimated_records / len(workers))
 
     worker_url_template = 'http://{}:8002'
+    # Wait for the workers to start.
     for worker in workers:
         worker_url = worker_url_template.format(worker)
         _wait_for_healthcheck(worker_url + '/healthcheck')
