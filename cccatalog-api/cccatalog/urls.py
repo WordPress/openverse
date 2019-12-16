@@ -73,6 +73,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
+    path('v0/', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('admin/', admin.site.urls),
     path('oauth2/register', Register.as_view(), name='register'),
     path('oauth2/key_info', CheckRates.as_view(), name='key_info'),
