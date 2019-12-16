@@ -28,6 +28,10 @@ from drf_yasg import openapi
 import rest_framework.permissions
 
 description = """
+*This is the documentation for version 1.0 of the Creative Commons API.* 
+Visit https://api.creativecommons.engineering/v0/ to view the legacy
+documentation.
+
 The Creative Commons Catalog API ('cccatalog-api') is a system
 that allows programmatic access to public domain digital media. It is our
 ambition to index and catalog billions of Creative Commons works, including
@@ -41,7 +45,7 @@ for introducing yourself to the API, but we strongly recommend that you obtain
 an API key as soon as possible. Authorized clients have a higher rate limit
 of 10000 requests per day and 100 requests per minute. Additionally, Creative
 Commons can give your key an even higher limit that fits your application's
-needs. See the `/oauth2/register` endpoint for instructions on obtaining
+needs. See the `/v1/oauth2/register` endpoint for instructions on obtaining
 an API key.
 
 Pull requests are welcome!
