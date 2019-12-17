@@ -82,6 +82,7 @@ export default {
 
 li {
   display: block;
+  font-family: 'Roboto', sans-serif;
 }
 
 .header li a {

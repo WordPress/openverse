@@ -1,6 +1,6 @@
 <template>
   <div class="hero">
-    <img class="logo" alt="Logo" src="../assets/cc-logo_large_black.png">
+    <h1>Search for free and public domain content</h1>
     <form class="hero_search-form"
           role="search"
           method="get"
@@ -22,15 +22,14 @@
             <button class="hero_search-btn" title="Search"></button>
           </div>
       </div>
-      <home-license-filter />
-    </form>
-    <div class="description">
+      <div class="description">
         <p>
-          Search for free content in the public domain and under Creative Commons licenses.
-          <br />
-          Learn more about CC licenses <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">here</a>.
+          All our content is under Creative Commons licenses.
+          <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">Learn more</a> about CC licenses.
         </p>
     </div>
+      <home-license-filter />
+    </form>
     <div class="old-search-link">
       <span>
         Looking for the old CC Search portal? Go
@@ -75,10 +74,16 @@ export default {
 <style lang="scss" scoped>
 @import '../../node_modules/foundation-sites/scss/foundation';
 
+h1 {
+  font-family: Roboto;
+  font-size: 2.375em;
+  color: #333333;
+}
+
 $hero-height: 71vh;
 
 .hero {
-  background: #e9ebee;
+  background: #fff;
   position: relative;
   height: $hero-height;
   background-size: cover;
@@ -114,14 +119,16 @@ $hero-height: 71vh;
     margin-bottom: 0;
     width: 100%;
     height: 60px;
-    outline: 0;
-    border-radius: 3px;
-    border-width: 0;
-    box-shadow: none;
+    border-radius: 4px;
+    box-shadow: 0 3px 8px 0 rgba(51, 51, 51, 0.13);
+    border: solid 1px #d8d8d8;
   }
 
   .hero_search-input::placeholder {
-    color: rgb(130, 130, 130);
+    color: #333;
+    font-size: 25px;
+    font-weight: 600;
+     font-family: Source Sans Pro;
   }
 
   .hero_search-btn {
@@ -161,6 +168,8 @@ $hero-height: 71vh;
 
 .description {
   font-style: italic;
+  font-size: 0.8125em;
+  margin-top: 1em;
 }
 
 .old-search-link {
