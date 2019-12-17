@@ -6,7 +6,8 @@ def test_create_tsv_list_row_returns_none_if_missing_foreign_landing_url():
     actual_row = etlMods.create_tsv_list_row(
         foreign_identifier='a',
         image_url = 'a',
-        license_ = 'abc'
+        license_ = 'abc',
+        license_version = '123'
     )
     assert expect_row == actual_row
 
@@ -15,6 +16,17 @@ def test_create_tsv_list_row_returns_none_if_missing_license():
     actual_row = etlMods.create_tsv_list_row(
         foreign_identifier='a',
         image_url = 'a',
+        license_version = '123',
+        foreign_landing_url = 'www.testurl.com'
+    )
+    assert expect_row == actual_row
+
+def test_create_tsv_list_row_returns_none_if_missing_license_version():
+    expect_row = None
+    actual_row = etlMods.create_tsv_list_row(
+        foreign_identifier='a',
+        image_url = 'a',
+        license_ = 'abc',
         foreign_landing_url = 'www.testurl.com'
     )
     assert expect_row == actual_row
@@ -41,6 +53,7 @@ def test_create_tsv_list_row_casts_to_strings():
         foreign_landing_url = 'www.testurl.comk',
         image_url = 'a',
         license_ = 'abc',
+        license_version = '234',
         width = width,
         height = height,
         meta_data = meta_data,
@@ -57,6 +70,7 @@ def test_create_tsv_list_row_handles_empty_dict_and_tags():
         foreign_landing_url = 'www.testurl.comk',
         image_url = 'a',
         license_ = 'abc',
+        license_version = '123',
         meta_data = meta_data,
         tags = tags
     )

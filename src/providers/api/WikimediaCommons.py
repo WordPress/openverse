@@ -11,12 +11,16 @@ Notes:                  https://www.mediawiki.org/wiki/API:Main_page
 
 from modules.etlMods import *
 import calendar
+import lxml.html as html
+from urllib.parse import urlparse
 
 logging.basicConfig(format='%(asctime)s: [%(levelname)s - MediaWiki API] =======> %(message)s', level=logging.INFO)
 
 LIMIT   = 40
 DELAY   = 5.0 #time delay (in seconds)
 FILE    = 'wmc_{}.tsv'.format(int(time.time()))
+WM_HOST = 'commons.wikimedia.org'
+SOURCE  = 'wikimedia'
 
 
 def getImageBatch(_startDate, _endDate, _continue=None):
@@ -29,13 +33,39 @@ def getImageBatch(_startDate, _endDate, _continue=None):
 
     request      = requestContent(endpoint)
     if request.get('query'):
-        cntToken = request.get('continue', {}).get('gaicontinue') #gaicontinue
+        cntToken = request.get('continue', {}).get('gaicontinue')
         result   = request.get('query', {}).get('pages')
 
         return [cntToken, result]
 
     return [None, None]
 
+
+def cleanse_url(url_string):
+    """
+    Check to make sure that a url is valid, and prepend a protocol if needed
+    """
+
+    parse_result = urlparse(url_string)
+
+    if parse_result.netloc == WM_HOST:
+        parse_result = urlparse(url_string, scheme='https')
+    elif not parse_result.scheme:
+        parse_result = urlparse(url_string, scheme='http')
+
+    if parse_result.netloc or parse_result.path:
+        return parse_result.geturl()
+
+
+def extract_creator_info(artist_string):
+    if not artist_string:
+        return (None, None)
+    artist_elem = html.fromstring(artist_string)
+    # We take all text to replicate what is shown on Wikimedia Commons
+    artist_text = ''.join(artist_elem.xpath('//text()')).strip()
+    url_list = list(artist_elem.iterlinks())
+    artist_url = cleanse_url(url_list[0][2]) if url_list else None
+    return (artist_text, artist_url)
 
 def getMetaData(_imgData):
     foreignID   = ''
@@ -51,13 +81,10 @@ def getMetaData(_imgData):
     ownerURL    = ''
     title       = ''
 
-    foreignID = _imgData.get('pageid', '')
-    foreignID = sanitizeString(str(foreignID))
-
+    foreignID = _imgData.get('pageid')
     logging.info('Processing page ID: {}'.format(foreignID))
 
     imageInfo = _imgData.get('imageinfo', {})
-
     if type(imageInfo) is list:
         imageInfo = imageInfo[0]
 
@@ -81,7 +108,11 @@ def getMetaData(_imgData):
         logging.warning('Image not detected in page ID: {}'.format(foreignID))
         return None
 
-    owner = imageInfo.get('user')
+    artist_string = imageInfo\
+        .get('extmetadata', {})\
+        .get('Artist', {})\
+        .get('value', '')
+    owner, ownerURL = extract_creator_info(artist_string)
     if owner:
         ownerURL = 'https://commons.wikimedia.org/wiki/User:{}'.format(owner)
 
@@ -95,19 +126,22 @@ def getMetaData(_imgData):
 
     title = sanitizeString(_imgData.get('title', ''))
 
-    return [
-            str(foreignID), foreignURL, imgURL,
-            thumbnail if thumbnail else '\\N',
-            str(width) if width else '\\N',
-            str(height) if height else '\\N', '\\N',
-            license, str(version),
-            owner if owner else '\\N',
-            ownerURL if ownerURL else '\\N',
-            title if title else '\\N',
-            json.dumps(metaData, ensure_ascii=False) if bool(metaData) else '\\N',
-            '\\N',
-            'f', 'wikimedia', 'wikimedia'
-        ]
+    return create_tsv_list_row(
+        foreign_identifier=foreignID,
+        foreign_landing_url=foreignURL,
+        image_url=imgURL,
+        thumbnail=thumbnail,
+        width=width,
+        height=height,
+        license_=license,
+        license_version=version,
+        creator=owner,
+        creator_url=ownerURL,
+        title=title,
+        meta_data=metaData,
+        provider=SOURCE,
+        source=SOURCE
+    )
 
 
 def execJob(_param):
