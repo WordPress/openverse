@@ -28,7 +28,7 @@ from drf_yasg import openapi
 import rest_framework.permissions
 
 description = """
-*This is the documentation for version 1.0 of the Creative Commons API.* 
+*This is the documentation for version 1.0 of the Creative Commons API.*
 Visit https://api.creativecommons.engineering/v0/ to view the legacy
 documentation.
 
