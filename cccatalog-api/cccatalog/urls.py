@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
+from django.views.generic.base import RedirectView
 from cccatalog.api.views.image_views import SearchImages, ImageDetail,\
     Watermark, BrowseImages, RelatedImage
 from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
@@ -72,7 +73,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
+    path('', RedirectView.as_view(url='v1/', permanent=False)),
     path('v0/', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('admin/', admin.site.urls),
     path('oauth2/register', Register.as_view(), name='register'),
