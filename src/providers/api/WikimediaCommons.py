@@ -57,9 +57,15 @@ def cleanse_url(url_string):
         return parse_result.geturl()
 
 
-def extract_creator_info(artist_string):
+def extract_creator_info(image_info):
+    artist_string = image_info\
+        .get('extmetadata', {})\
+        .get('Artist', {})\
+        .get('value', '')
+
     if not artist_string:
         return (None, None)
+
     artist_elem = html.fromstring(artist_string)
     # We take all text to replicate what is shown on Wikimedia Commons
     artist_text = ''.join(artist_elem.xpath('//text()')).strip()
@@ -67,78 +73,73 @@ def extract_creator_info(artist_string):
     artist_url = cleanse_url(url_list[0][2]) if url_list else None
     return (artist_text, artist_url)
 
-def getMetaData(_imgData):
-    foreignID   = ''
-    foreignURL  = ''
-    imgURL      = ''
-    thumbnail   = ''
-    width       = ''
-    height      = ''
-    metaData    = {}
-    license     = ''
-    version     = ''
-    owner       = ''
-    ownerURL    = ''
-    title       = ''
 
-    foreignID = _imgData.get('pageid')
-    logging.info('Processing page ID: {}'.format(foreignID))
-
-    imageInfo = _imgData.get('imageinfo', {})
-    if type(imageInfo) is list:
-        imageInfo = imageInfo[0]
-
-    if imageInfo:
-        licenseInfo = imageInfo.get('extmetadata', {}).get('LicenseUrl', {}).get('value')
-
-        if licenseInfo:
-            ccURL               = urlparse(licenseInfo.strip())
-            license, version    = getLicense(ccURL.netloc, ccURL.path, foreignID)
-
-        if not license:
-            logging.warning('License not detected in page ID: {}'.format(foreignID))
-            return None
-
-    imgURL = imageInfo.get('url', '')
-    if imgURL:
-        width       = sanitizeString(str(imageInfo.get('width', '')))
-        height      = sanitizeString(str(imageInfo.get('height', '')))
-        thumbnail   = imageInfo.get('thumburl', '')
+def get_image_info_dict(image_data):
+    image_info_list = image_data.get('imageinfo')
+    if image_info_list:
+        image_info = image_info_list[0]
     else:
-        logging.warning('Image not detected in page ID: {}'.format(foreignID))
-        return None
+        image_info = {}
+    return image_info
 
-    artist_string = imageInfo\
+
+def create_meta_data_dict(image_data):
+    meta_data = {}
+    image_info = get_image_info_dict(image_data)
+    description = image_info\
         .get('extmetadata', {})\
-        .get('Artist', {})\
-        .get('value', '')
-    owner, ownerURL = extract_creator_info(artist_string)
-    if owner:
-        ownerURL = 'https://commons.wikimedia.org/wiki/User:{}'.format(owner)
+        .get('ImageDescription', {})\
+        .get('value')
+    if description:
+        meta_data['description'] = description
+    return meta_data
 
-    descr = imageInfo.get('extmetadata', {}).get('ImageDescription', {}).get('value')
-    if descr:
-        metaData['description'] = sanitizeString(descr)
 
-    foreignURL = imageInfo.get('descriptionshorturl', '')
-    if foreignURL == '':
-        return None
+def get_license(image_info, image_url):
+    license_url = image_info\
+        .get('extmetadata', {})\
+        .get('LicenseUrl', {})\
+        .get('value', '')\
+        .strip()
+    if license_url:
+        parsed_license_url = urlparse(license_url)
+        license, version    = getLicense(
+            parsed_license_url.netloc, parsed_license_url.path, image_url)
+    else:
+        license, version = None, None
+    return (license, version)
 
-    title = sanitizeString(_imgData.get('title', ''))
+
+
+def process_image_data(image_data):
+    foreign_id = image_data.get('pageid')
+    logging.info('Processing page ID: {}'.format(foreign_id))
+
+    image_info = get_image_info_dict(image_data)
+
+    foreign_landing_url = image_info.get('descriptionshorturl')
+    image_url = image_info.get('url')
+    thumbnail   = image_info.get('thumburl')
+    width       = image_info.get('width')
+    height      = image_info.get('height')
+    license, license_version = get_license(image_info, image_url)
+    creator, creator_url = extract_creator_info(image_info)
+    title = image_data.get('title')
+    meta_data = create_meta_data_dict(image_data)
 
     return create_tsv_list_row(
-        foreign_identifier=foreignID,
-        foreign_landing_url=foreignURL,
-        image_url=imgURL,
+        foreign_identifier=foreign_id,
+        foreign_landing_url=foreign_landing_url,
+        image_url=image_url,
         thumbnail=thumbnail,
         width=width,
         height=height,
         license_=license,
-        license_version=version,
-        creator=owner,
-        creator_url=ownerURL,
+        license_version=license_version,
+        creator=creator,
+        creator_url=creator_url,
         title=title,
-        meta_data=metaData,
+        meta_data=meta_data,
         provider=SOURCE,
         source=SOURCE
     )
@@ -155,7 +156,7 @@ def execJob(_param):
 
     while isValid and imgBatch:
         startTime   = time.time()
-        extracted   = list(map(lambda img: getMetaData(img[1]), imgBatch.items()))
+        extracted   = list(map(lambda img: process_image_data(img[1]), imgBatch.items()))
         extracted   = list(filter(None, extracted))
         totalImages += len(extracted)
 
