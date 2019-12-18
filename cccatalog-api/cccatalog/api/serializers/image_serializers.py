@@ -13,13 +13,6 @@ def _validate_page(value):
         return value
 
 
-def _validate_pagesize(value):
-    if 1 <= value < 500:
-        return value
-    else:
-        return 20
-
-
 def _validate_lt(value):
     license_types = [x.lower() for x in value.split(',')]
     license_groups = []
@@ -198,7 +191,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         return _validate_page(value)
 
     @staticmethod
-    def validate_pagesize(value):
+    def validate_page_size(value):
         if 1 <= value <= 500:
             return value
         else:
