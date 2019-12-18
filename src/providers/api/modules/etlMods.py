@@ -21,6 +21,15 @@ def _prepare_output_string(unknown_input):
         return sanitizeString(unknown_input)
 
 
+def _check_all_arguments_exist(**kwargs):
+    all_truthy = True
+    for arg in kwargs:
+        if not kwargs[arg]:
+            logging.warning('Missing {}'.format(arg))
+            all_truthy = False
+    return all_truthy
+
+
 def create_tsv_list_row(
         foreign_identifier = None,
         foreign_landing_url = None,
@@ -60,7 +69,11 @@ def create_tsv_list_row(
         source
     ]
 
-    if foreign_landing_url and image_url and license_ and license_version:
+    if _check_all_arguments_exist(
+            foreign_landing_url=foreign_landing_url,
+            image_url=image_url,
+            license_=license_,
+            license_version=license_version):
         return [_prepare_output_string(item) for item in raw_output_list]
     else:
         return None
