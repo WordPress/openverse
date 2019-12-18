@@ -6,28 +6,24 @@
           method="get"
           action="/search"
           v-on:submit.prevent="onSubmit">
-      <div class="search-form_ctr grid-x">
-          <div class="cell large-12">
-            <input required="required"
-                   autofocus="true"
-                   class="hero_search-input"
-                   type="search"
-                   name="q"
-                   placeholder="Search for images..."
-                   autocapitalize="none"
-                   id="searchTerm"
-                   v-model.lazy="form.searchTerm">
-          </div>
-          <div class="cell large-12">
-            <button class="hero_search-btn" title="Search"></button>
-          </div>
+      <div>
+        <input required="required"
+                autofocus="true"
+                class="hero_search-input"
+                type="search"
+                name="q"
+                placeholder="Search for images..."
+                autocapitalize="none"
+                id="searchTerm"
+                v-model.lazy="form.searchTerm" />
+        <button class="hero_search-btn" title="Search">Search</button>
       </div>
       <div class="description">
         <p>
           All our content is under Creative Commons licenses.
           <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">Learn more</a> about CC licenses.
         </p>
-    </div>
+      </div>
       <home-license-filter />
     </form>
     <div class="old-search-link">
@@ -87,7 +83,6 @@ $hero-height: 71vh;
   position: relative;
   height: $hero-height;
   background-size: cover;
-  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,52 +104,42 @@ $hero-height: 71vh;
     position: relative;
     margin-top: 0;
     border-radius: 3px;
-    max-width: 580px;
+    max-width: 750px;
     width: 100%;
+    padding: 0 0.5em 0 0.5em;
   }
 
   .hero_search-input {
     font-size: 24px;
     padding-left: 30px;
     margin-bottom: 0;
-    width: 100%;
-    height: 60px;
+    width: 75%;
+    height: 70px;
     border-radius: 4px;
     box-shadow: 0 3px 8px 0 rgba(51, 51, 51, 0.13);
     border: solid 1px #d8d8d8;
+    float: left;
   }
 
   .hero_search-input::placeholder {
-    color: #333;
+    color: rgb(192, 192, 192);
     font-size: 25px;
     font-weight: 600;
      font-family: Source Sans Pro;
   }
 
   .hero_search-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 60px;
-    width: 60px;
-    margin: 2px;
+    width: 25%;
+    height: 70px;
+    border-radius: 4px;
+    background-color: #fb7729;
     font-size: 24px;
     cursor: pointer;
-    transition: all .2s ease-in-out;
     border-radius: 3px;
-
-    &:after {
-      content: '';
-      background: url('../assets/search-icon_black.svg') center center no-repeat;
-      background-size: 20px;
-      opacity: 0.7;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      position: absolute;
-      z-index: 10;
-    }
+    font-family: Roboto;
+    font-size: 1.5625em;
+    color: #fff;
+    text-transform: capitalize;
   }
 
   &:before {
@@ -167,9 +152,9 @@ $hero-height: 71vh;
 }
 
 .description {
-  font-style: italic;
   font-size: 0.8125em;
   margin-top: 1em;
+  text-align: center;
 }
 
 .old-search-link {
