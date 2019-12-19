@@ -45,7 +45,7 @@ for introducing yourself to the API, but we strongly recommend that you obtain
 an API key as soon as possible. Authorized clients have a higher rate limit
 of 10000 requests per day and 100 requests per minute. Additionally, Creative
 Commons can give your key an even higher limit that fits your application's
-needs. See the `/v1/oauth2/register` endpoint for instructions on obtaining
+needs. See the `/v1/auth_tokens/register` endpoint for instructions on obtaining
 an API key.
 
 Pull requests are welcome!
@@ -78,15 +78,15 @@ urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('v1/', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('admin/', admin.site.urls),
-    path('v1/oauth2/register', Register.as_view(), name='register'),
+    path('v1/auth_rokens/register', Register.as_view(), name='register'),
     path('v1/rate_limit', CheckRates.as_view(), name='key_info'),
     path(
-        'v1/oauth2/verify/<str:code>',
+        'v1/auth_tokens/verify/<str:code>',
         VerifyEmail.as_view(),
         name='verify-email'
     ),
     re_path(
-        r'v1/oauth2/',
+        r'v1/auth_tokens/',
         include('oauth2_provider.urls', namespace='oauth2_provider')
     ),
     # path('list', CreateList.as_view()),

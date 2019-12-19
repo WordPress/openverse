@@ -214,7 +214,7 @@ def test_oauth2_registration():
         'email': 'example@example.org'
     }
     response = requests.post(
-        API_URL + '/v1/oauth2/register', json=payload, verify=False
+        API_URL + '/v1/auth_tokens/register', json=payload, verify=False
     )
     parsed_response = json.loads(response.text)
     assert response.status_code == 201
@@ -233,7 +233,7 @@ def test_oauth2_token_exchange(test_oauth2_registration):
     }
     response = json.loads(
         requests.post(
-            API_URL + '/v1/oauth2/token/',
+            API_URL + '/v1/auth_tokens/token/',
             data=token_exchange_request,
             headers=headers,
             verify=False
