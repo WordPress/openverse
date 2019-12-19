@@ -90,8 +90,6 @@ versioned_paths = [
         r'auth_tokens/',
         include('oauth2_provider.urls', namespace='oauth2_provider')
     ),
-    # path('list', CreateList.as_view()),
-    # path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
     path(
         'images/<str:identifier>', ImageDetail.as_view(), name='image-detail'
     ),
