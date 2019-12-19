@@ -80,6 +80,34 @@ def test_extract_creator_info_handles_link_as_partial_text():
     assert expect_creator_url == actual_creator_url
 
 
+def test_create_meta_data_scrapes_text_from_html_description():
+    description_field = "<br><br><big><b>Identificatie</b></big><br><b>Titel(s): </b>Allegorie op kunstenaar Francesco Mazzoli, bekend als Parmigianino"
+    image_data = {
+        "pageid": 81754323,
+        "title": "File:20120925 PlozevetBretagne LoneTree DSC07971 PtrQs.jpg",
+        "imageinfo": [
+            {
+                "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=81754323",
+                "extmetadata": {
+                    "ImageDescription": {
+                        "value": description_field,
+                        "source": "commons-desc-page"
+                    },
+                    "Artist": {
+                        "value": "<a href=\"//commons.wikimedia.org/wiki/User:PtrQs\" title=\"User:PtrQs\">PtrQs</a>",
+                        "source": "commons-desc-page"
+                    }
+                }
+            }
+        ]
+    }
+    actual_meta_data_dict = wmc.create_meta_data_dict(image_data)
+    expected_meta_data_dict = {
+        'description': 'Identificatie Titel(s):  Allegorie op kunstenaar Francesco Mazzoli, bekend als Parmigianino'
+    }
+    assert expected_meta_data_dict == actual_meta_data_dict
+
+
 def test_process_image_data_handles_example_dict():
     """
     This test is just a basic snapshot, here to make refactoring slightly safer

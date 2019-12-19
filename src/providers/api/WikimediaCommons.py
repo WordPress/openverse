@@ -106,7 +106,9 @@ def create_meta_data_dict(image_data):
         .get('ImageDescription', {})\
         .get('value')
     if description:
-        meta_data['description'] = description
+        description_text = ' '.join(
+            html.fromstring(description).xpath('//text()')).strip()
+        meta_data['description'] = description_text
     return meta_data
 
 
