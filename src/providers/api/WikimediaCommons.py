@@ -32,28 +32,28 @@ WM_HOST = 'commons.wikimedia.org'
 SOURCE = 'wikimedia'
 
 
-def getImageBatch(_startDate, _endDate, _continue=None):
+def get_image_batch(start_date, end_date, continue_=None):
     logging.info(
-        'Processing image batch, continue token: {}'.format(_continue))
+        'Processing image batch, continue token: {}'.format(continue_))
 
     endpoint = (
-        'https://www.mediawiki.org/w/api.php?action=query&generator=allimages'
-        '&prop=imageinfo&gailimit={0}&gaisort=timestamp&gaistart={1}T00:00:00Z'
-        '&gaiend={2}T00:00:00Z&iiprop=url|user|dimensions|extmetadata'
+        'https://{0}/w/api.php?action=query&generator=allimages'
+        '&prop=imageinfo&gailimit={1}&gaisort=timestamp&gaistart={2}T00:00:00Z'
+        '&gaiend={3}T00:00:00Z&iiprop=url|user|dimensions|extmetadata'
         '&iiurlwidth=300&format=json'
-    ).format(LIMIT, _startDate, _endDate)
+    ).format(WM_HOST, LIMIT, start_date, end_date)
 
-    if _continue:
-        endpoint = '{}&gaicontinue={}'.format(endpoint, _continue)
+    if continue_:
+        endpoint = '{}&gaicontinue={}'.format(endpoint, continue_)
 
     request = etl_mods.requestContent(endpoint)
-    if request.get('query'):
-        cntToken = request.get('continue', {}).get('gaicontinue')
+    if request and request.get('query'):
+        continue_token = request.get('continue', {}).get('gaicontinue')
         result = request.get('query', {}).get('pages')
 
-        return [cntToken, result]
+        return continue_token, result
 
-    return [None, None]
+    return None, None
 
 
 def cleanse_url(url_string):
@@ -159,39 +159,42 @@ def process_image_data(image_data):
     )
 
 
-def execJob(_param):
-    totalImages = 0
-    isValid = True
-    cntToken = None
+def exec_job(param):
+    total_images = 0
+    is_valid = True
+    continue_token = None
 
     logging.info(
         'Processing date: {} to {}'.format(
-            _param.get('start'), _param.get('end')))
+            param.get('start'), param.get('end')))
 
-    cntToken, imgBatch = getImageBatch(_param.get('start'), _param.get('end'))
+    continue_token, image_batch = get_image_batch(
+        param.get('start'), param.get('end'))
 
-    while isValid and imgBatch:
+    while is_valid and image_batch:
         startTime = time.time()
-        extracted = list(
-            map(lambda img: process_image_data(img[1]), imgBatch.items()))
-        extracted = list(filter(None, extracted))
-        totalImages += len(extracted)
+        extracted = [
+            r for r in (
+                process_image_data(i) for i in image_batch.values()
+            ) if r
+        ]
+        total_images += len(extracted)
 
         logging.info(
             'Extracted {} CC licensed images. Total images: {}'.format(
-                len(extracted), totalImages))
+                len(extracted), total_images))
 
         etl_mods.writeToFile(extracted, FILE)
         etl_mods.delayProcessing(startTime, DELAY)
 
-        if not cntToken:
-            isValid = False
+        if not continue_token:
+            is_valid = False
             break
 
-        cntToken, imgBatch = getImageBatch(
-            _param.get('start'), _param.get('end'), cntToken)
+        continue_token, image_batch = get_image_batch(
+            param.get('start'), param.get('end'), continue_token)
 
-    logging.info('Total images: {}'.format(totalImages))
+    logging.info('Total images: {}'.format(total_images))
 
 
 def main():
@@ -248,7 +251,7 @@ def main():
 
     # run the job and identify all CC licensed images
     if param:
-        execJob(param)
+        exec_job(param)
 
     logging.info('Terminated!')
 
