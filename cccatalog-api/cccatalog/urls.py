@@ -78,7 +78,7 @@ urlpatterns = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('v1/', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('admin/', admin.site.urls),
-    path('v1/auth_rokens/register', Register.as_view(), name='register'),
+    path('v1/auth_tokens/register', Register.as_view(), name='register'),
     path('v1/rate_limit', CheckRates.as_view(), name='key_info'),
     path(
         'v1/auth_tokens/verify/<str:code>',
