@@ -111,7 +111,7 @@ versioned_paths = [
 ]
 if WATERMARK_ENABLED:
     versioned_paths.append(
-        path('v1/watermark/<str:identifier>', Watermark.as_view())
+        path('watermark/<str:identifier>', Watermark.as_view())
     )
 
 urlpatterns = [
