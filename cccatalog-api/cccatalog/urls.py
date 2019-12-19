@@ -133,4 +133,3 @@ urlpatterns = [
     ),
     path('v1/', include(versioned_paths))
 ]
-
