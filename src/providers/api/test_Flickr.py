@@ -2,9 +2,11 @@ import Flickr
 from datetime import datetime
 import os
 
+
 def test_process_images(monkeypatch):
     cur_time = datetime.strptime('2019-12-01', '%Y-%m-%d')
     nxt_time = datetime.strptime('2019-12-02', '%Y-%m-%d')
+
     def mockresult(a_url):
         return {
             "photos": {
@@ -67,10 +69,15 @@ def test_process_images(monkeypatch):
             },
             "stat": "ok"
         }
+
+    def mock_delay(proc_time, delay):
+        pass
     tmp_directory = '/tmp/'
     output_filename = 'flickr_test.tsv'
     monkeypatch.setattr(Flickr.etl_mods, "requestContent", mockresult)
-    monkeypatch.setattr(Flickr.etl_mods.writeToFile, '__defaults__', (tmp_directory,))
+    monkeypatch.setattr(Flickr.etl_mods, "delayProcessing", mock_delay)
+    monkeypatch.setattr(
+        Flickr.etl_mods.writeToFile, '__defaults__', (tmp_directory,))
     monkeypatch.setattr(Flickr, "FILE", output_filename)
     output_fullpath = os.path.join(tmp_directory, output_filename)
     try:
@@ -89,6 +96,7 @@ def test_process_images(monkeypatch):
 def test_process_images_handles_missing_required_info(monkeypatch):
     cur_time = datetime.strptime('2019-12-01', '%Y-%m-%d')
     nxt_time = datetime.strptime('2019-12-02', '%Y-%m-%d')
+
     def mockresult(a_url):
         return {
             "photos": {
@@ -150,10 +158,15 @@ def test_process_images_handles_missing_required_info(monkeypatch):
             },
             "stat": "ok"
         }
+
+    def mock_delay(proc_time, delay):
+        pass
     tmp_directory = '/tmp/'
     output_filename = 'flickr_test.tsv'
     monkeypatch.setattr(Flickr.etl_mods, "requestContent", mockresult)
-    monkeypatch.setattr(Flickr.etl_mods.writeToFile, '__defaults__', (tmp_directory,))
+    monkeypatch.setattr(Flickr.etl_mods, "delayProcessing", mock_delay)
+    monkeypatch.setattr(
+        Flickr.etl_mods.writeToFile, '__defaults__', (tmp_directory,))
     monkeypatch.setattr(Flickr, "FILE", output_filename)
     output_fullpath = os.path.join(tmp_directory, output_filename)
     try:
@@ -172,9 +185,15 @@ def test_process_images_handles_missing_required_info(monkeypatch):
 def test_process_images_handles_empty_json(monkeypatch):
     cur_time = datetime.strptime('2019-12-01', '%Y-%m-%d')
     nxt_time = datetime.strptime('2019-12-02', '%Y-%m-%d')
+
     def mockresult(a_url):
         return {}
+
+    def mock_delay(proc_time, delay):
+        pass
+
     monkeypatch.setattr(Flickr.etl_mods, "requestContent", mockresult)
+    monkeypatch.setattr(Flickr.etl_mods, "delayProcessing", mock_delay)
     expected_records = 0
     actual_records = Flickr.process_images(cur_time, nxt_time, 'potato')
     assert expected_records == actual_records
@@ -183,16 +202,25 @@ def test_process_images_handles_empty_json(monkeypatch):
 def test_process_images_handles_Nonetype(monkeypatch):
     cur_time = datetime.strptime('2019-12-01', '%Y-%m-%d')
     nxt_time = datetime.strptime('2019-12-02', '%Y-%m-%d')
+
     def mockresult(a_url):
         return None
+
+    def mock_delay(proc_time, delay):
+        pass
+
+    monkeypatch.setattr(Flickr.etl_mods, "requestContent", mockresult)
+    monkeypatch.setattr(Flickr.etl_mods, "delayProcessing", mock_delay)
     expected_records = 0
     actual_records = Flickr.process_images(cur_time, nxt_time, 'potato')
     assert expected_records == actual_records
 
 
-def test_construct_api_query_string_default():
+def test_construct_api_query_string_default(monkeypatch):
     cur_time = datetime.strptime('2019-12-01', '%Y-%m-%d')
     nxt_time = datetime.strptime('2019-12-02', '%Y-%m-%d')
+    flickr_api_key = 'notset'
+    monkeypatch.setattr(Flickr, 'API_KEY', flickr_api_key)
     actual_url = Flickr.construct_api_query_string(
         cur_time,
         nxt_time,
@@ -203,9 +231,11 @@ def test_construct_api_query_string_default():
     assert actual_url == expected_url
 
 
-def test_construct_api_query_string_with_switch():
+def test_construct_api_query_string_with_switch(monkeypatch):
     cur_time = datetime.strptime('2019-12-01', '%Y-%m-%d')
     nxt_time = datetime.strptime('2019-12-02', '%Y-%m-%d')
+    flickr_api_key = 'notset'
+    monkeypatch.setattr(Flickr, 'API_KEY', flickr_api_key)
     actual_url = Flickr.construct_api_query_string(
         cur_time,
         nxt_time,
@@ -215,7 +245,6 @@ def test_construct_api_query_string_with_switch():
     )
     expected_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=notset&min_taken_date=2019-12-01 00:00:00&max_taken_date=2019-12-02 00:00:00&license=3&media=photos&content_type=1&extras=description,license,date_upload,date_taken,owner_name,tags,o_dims,url_t,url_s,url_m,url_l&per_page=500&format=json&nojsoncallback=1&page=1'
     assert actual_url == expected_url
-
 
 
 def test_extract_data_returns_Nonetype_if_no_image():
