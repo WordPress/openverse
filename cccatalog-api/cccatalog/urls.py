@@ -23,6 +23,7 @@ from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
 from cccatalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
 from cccatalog.settings import API_VERSION, WATERMARK_ENABLED
+from rest_framework import routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 import rest_framework.permissions
@@ -74,39 +75,47 @@ schema_view = get_schema_view(
     permission_classes=(rest_framework.permissions.AllowAny,),
 )
 
-urlpatterns = [
+router = routers.SimpleRouter()
+
+versioned_paths = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
-    path('v1/', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
-    path('admin/', admin.site.urls),
-    path('v1/auth_tokens/register', Register.as_view(), name='register'),
-    path('v1/rate_limit', CheckRates.as_view(), name='key_info'),
+    path('auth_tokens/register', Register.as_view(), name='register'),
+    path('rate_limit', CheckRates.as_view(), name='key_info'),
     path(
-        'v1/auth_tokens/verify/<str:code>',
+        'auth_tokens/verify/<str:code>',
         VerifyEmail.as_view(),
         name='verify-email'
     ),
     re_path(
-        r'v1/auth_tokens/',
+        r'auth_tokens/',
         include('oauth2_provider.urls', namespace='oauth2_provider')
     ),
     # path('list', CreateList.as_view()),
     # path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
     path(
-        'v1/images/<str:identifier>', ImageDetail.as_view(), name='image-detail'
+        'images/<str:identifier>', ImageDetail.as_view(), name='image-detail'
     ),
-    re_path('v1/images', SearchImages.as_view()),
+    re_path('images', SearchImages.as_view()),
     path(
-        'v1/recommendations/images/<str:identifier>',
+        'recommendations/images/<str:identifier>',
         RelatedImage.as_view(),
         name='related-images'
     ),
     path(
-        'v1/sources',
+        'sources',
         ImageStats.as_view(),
         name='about-image'
     ),
-    path('v1/link', CreateShortenedLink.as_view(), name='make-link'),
-    path('v1/link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
+    path('link', CreateShortenedLink.as_view(), name='make-link'),
+    path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
+]
+if WATERMARK_ENABLED:
+    versioned_paths.append(
+        path('v1/watermark/<str:identifier>', Watermark.as_view())
+    )
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
     re_path('healthcheck', HealthCheck.as_view()),
     re_path(
         r'^swagger(?P<format>\.json|\.yaml)$',
@@ -121,10 +130,7 @@ urlpatterns = [
         r'^redoc/$',
         schema_view.with_ui('redoc', cache_timeout=15),
         name='schema-redoc'
-    )
+    ),
+    path('v1/', include(versioned_paths))
 ]
 
-if WATERMARK_ENABLED:
-    urlpatterns.append(
-        path('v1/watermark/<str:identifier>', Watermark.as_view())
-    )
