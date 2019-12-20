@@ -210,7 +210,7 @@ def test_creator_quotation_grouping():
 
 
 @pytest.fixture
-def test_oauth2_registration():
+def test_auth_tokens_registration():
     payload = {
         'name': 'INTEGRATION TEST APPLICATION {}'.format(uuid.uuid4()),
         'description': 'A key for testing the OAuth2 registration process.',
@@ -225,9 +225,9 @@ def test_oauth2_registration():
 
 
 @pytest.fixture
-def test_oauth2_token(test_oauth2_registration):
-    client_id = test_oauth2_registration['client_id']
-    client_secret = test_oauth2_registration['client_secret']
+def test_auth_token_exchange(test_auth_tokens_registration):
+    client_id = test_auth_tokens_registration['client_id']
+    client_secret = test_auth_tokens_registration['client_secret']
     token_exchange_request = \
         'client_id={_id}&client_secret={secret}&grant_type=client_credentials' \
         .format(_id=client_id, secret=client_secret)
@@ -247,11 +247,11 @@ def test_oauth2_token(test_oauth2_registration):
     return response
 
 
-def test_oauth2_rate_limit_reporting(test_oauth2_token, verified=False):
+def test_auth_rate_limit_reporting(test_auth_token_exchange, verified=False):
     # We're anonymous still, so we need to wait a second before exchanging
     # the token.
     time.sleep(1)
-    token = test_oauth2_token['access_token']
+    token = test_auth_token_exchange['access_token']
     headers = {
         'Authorization': f'Bearer {token}'
     }
@@ -280,7 +280,7 @@ def django_db_setup():
 
 
 @pytest.mark.django_db
-def test_oauth2_verification(test_oauth2_token, django_db_setup):
+def test_auth_email_verification(test_auth_token_exchange, django_db_setup):
         # This test needs to cheat by looking in the database, so it will be
         # skipped in non-local environments.
         if API_URL == 'http://localhost:8000':
@@ -290,7 +290,9 @@ def test_oauth2_verification(test_oauth2_token, django_db_setup):
             url = f'{API_URL}/v1/auth_tokens/verify/{code}'
             response = requests.get(url)
             assert response.status_code == 200
-            test_oauth2_rate_limit_reporting(test_oauth2_token, verified=True)
+            test_auth_rate_limit_reporting(
+                test_auth_token_exchange, verified=True
+            )
 
 
 def test_watermark_preserves_exif():
@@ -359,7 +361,7 @@ def test_attribution():
     assert creator in all_data_present.attribution
 
 
-def test_browse_by_provider():
+def test_source_search():
     response = requests.get(API_URL + '/v1/images?source=behance',
                             verify=False)
     assert response.status_code == 200
@@ -476,7 +478,7 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
 
 
 @pytest.fixture
-def related_factory():
+def recommendation_factory():
     """
     Allows passing url parameters along with a related images request.
     """
@@ -494,9 +496,9 @@ def related_factory():
 
 @pytest.mark.skip(reason="Generally, we don't paginate related images, so "
                     "consistency is less of an issue.")
-def test_related_image_search_page_consistency(related_factory, search_without_dead_links):
+def test_related_image_search_page_consistency(recommendation, search_without_dead_links):
     initial_images = search_without_dead_links(q='*', page_size=10)
     for image in initial_images['results']:
-        related = related_factory(image['id'])
+        related = recommendation_factory(image['id'])
         assert related['result_count'] > 0
         assert len(related['results']) == 10
