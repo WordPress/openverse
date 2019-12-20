@@ -8,13 +8,14 @@ from cccatalog.api.utils import ccrel
 from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.image_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
-    ValidationErrorSerializer, ImageSearchQueryStringSerializer,\
+    InputErrorSerializer, ImageSearchQueryStringSerializer,\
     WatermarkQueryStringSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL
 from cccatalog.api.utils.view_count import _get_user_ip
 from cccatalog.api.utils.watermark import watermark
 from django.http.response import HttpResponse, FileResponse
 import cccatalog.api.controllers.search_controller as search_controller
+from cccatalog.api.utils.exceptions import input_error_response
 import logging
 import piexif
 import io
@@ -27,7 +28,6 @@ CREATOR_URL = 'creator_url'
 RESULTS = 'results'
 PAGE = 'page'
 PAGESIZE = 'page_size'
-VALIDATION_ERROR = 'validation_error'
 FILTER_DEAD = 'filter_dead'
 QA = 'qa'
 RESULT_COUNT = 'result_count'
@@ -56,18 +56,13 @@ class SearchImages(APIView):
                          query_serializer=ImageSearchQueryStringSerializer,
                          responses={
                              200: ImageSearchResultsSerializer(many=True),
-                             400: ValidationErrorSerializer,
+                             400: InputErrorSerializer,
                          })
     def get(self, request, format=None):
         # Parse and validate query parameters
         params = ImageSearchQueryStringSerializer(data=request.query_params)
         if not params.is_valid():
-            return Response(
-                status=400,
-                data={
-                    "validation_error": params.errors
-                }
-            )
+            return input_error_response(params.errors)
 
         hashed_ip = hash(_get_user_ip(request))
         page_param = params.data[PAGE]
@@ -86,13 +81,8 @@ class SearchImages(APIView):
                 filter_dead,
                 page=page_param
             )
-        except ValueError as value_error_message:
-            return Response(
-                status=400,
-                data={
-                    VALIDATION_ERROR: str(value_error_message)
-                }
-            )
+        except ValueError as value_error:
+            return input_error_response(str(value_error))
 
         context = {'request': request}
         serialized_results = ImageSerializer(
@@ -189,12 +179,7 @@ class Watermark(GenericAPIView):
     def get(self, request, identifier, format=None):
         params = WatermarkQueryStringSerializer(data=request.query_params)
         if not params.is_valid():
-            return Response(
-                status=400,
-                data={
-                    "validation_error": params.errors
-                }
-            )
+            return input_error_response()
         try:
             image_record = Image.objects.get(identifier=identifier)
         except Image.DoesNotExist:

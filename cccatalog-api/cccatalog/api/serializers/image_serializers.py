@@ -198,7 +198,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
             return 20
 
     @staticmethod
-    def validate_provider(input_providers):
+    def validate_source(input_providers):
         allowed_providers = list(get_providers('image').keys())
 
         for input_provider in input_providers.split(','):
@@ -341,9 +341,12 @@ class ImageSearchResultsSerializer(serializers.Serializer):
     results = ImageSerializer(many=True)
 
 
-class ValidationErrorSerializer(serializers.Serializer):
+class InputErrorSerializer(serializers.Serializer):
     """ Returned if invalid query parameters are passed. """
-    validation_error = serializers.JSONField()
+    detail = serializers.CharField()
+    fields = serializers.ListField()
+    error = serializers.CharField()
+
 
 
 class WatermarkQueryStringSerializer(serializers.Serializer):
