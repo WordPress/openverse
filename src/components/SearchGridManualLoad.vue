@@ -4,7 +4,8 @@
     <div class="search-grid_ctr" ref="gridItems">
       <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics" >
         <h2>{{ searchTerm }}</h2>
-        <span>{{ _imagesCount }} photos</span>
+        <span v-if="_imagesCount === '10,000'"> Over {{ _imagesCount }} images</span>
+        <span v-else>{{ _imagesCount }} images</span>
       </div>
       <div
         class="masonry-layout"
