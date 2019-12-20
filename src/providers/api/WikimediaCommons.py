@@ -6,7 +6,7 @@ ETL Process:            Use the API to identify all CC-licensed images.
 Output:                 TSV file containing the image, the respective
                         meta-data.
 
-Notes:                  https://www.mediawiki.org/wiki/API:Main_page
+Notes:                  https://commons.wikimedia.org/wiki/API:Main_page
                         No rate limit specified.
 """
 
