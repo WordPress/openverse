@@ -3,14 +3,17 @@ import json
 import pytest
 import os
 import uuid
+import time
+import cccatalog.settings
+from django.db.models import Max
 from cccatalog.api.licenses import LICENSE_GROUPS
-from cccatalog.api.models import Image
+from cccatalog.api.models import Image, OAuth2Verification
 from cccatalog.api.utils.watermark import watermark
+
 """
 End-to-end API tests. Can be used to verify a live deployment is functioning as
 designed. Run with the `pytest -s` command from this directory.
 """
-
 
 API_URL = os.getenv('INTEGRATION_TEST_URL', 'http://localhost:8000')
 known_apis = {
@@ -221,7 +224,8 @@ def test_oauth2_registration():
     return parsed_response
 
 
-def test_oauth2_token_exchange(test_oauth2_registration):
+@pytest.fixture
+def test_oauth2_token(test_oauth2_registration):
     client_id = test_oauth2_registration['client_id']
     client_secret = test_oauth2_registration['client_secret']
     token_exchange_request = \
@@ -240,6 +244,53 @@ def test_oauth2_token_exchange(test_oauth2_registration):
         ).text
     )
     assert 'access_token' in response
+    return response
+
+
+def test_oauth2_rate_limit_reporting(test_oauth2_token, verified=False):
+    # We're anonymous still, so we need to wait a second before exchanging
+    # the token.
+    time.sleep(1)
+    token = test_oauth2_token['access_token']
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    response = json.loads(
+        requests.get(f'{API_URL}/v1/rate_limit', headers=headers).text
+    )
+    if verified:
+        assert response['rate_limit_model'] == 'standard'
+        assert response['verified'] is True
+    else:
+        assert response['rate_limit_model'] == 'standard'
+        assert response['verified'] is False
+
+
+@pytest.fixture(scope='session')
+def django_db_setup():
+    if API_URL == 'http://localhost:8000':
+        cccatalog.settings.DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '127.0.0.1',
+            'NAME': 'openledger',
+            'PASSWORD': 'deploy',
+            'USER': 'deploy',
+            'PORT': 5432
+        }
+
+
+@pytest.mark.django_db
+def test_oauth2_verification(test_oauth2_token, django_db_setup):
+        # This test needs to cheat by looking in the database, so it will be
+        # skipped in non-local environments.
+        if API_URL == 'http://localhost:8000':
+            _id = OAuth2Verification.objects.aggregate(Max('id'))['id__max']
+            verify = OAuth2Verification.objects.get(id=_id)
+            code = verify.code
+            url = f'{API_URL}/v1/auth_tokens/verify/{code}'
+            response = requests.get(url)
+            assert response.status_code == 200
+            test_oauth2_rate_limit_reporting(test_oauth2_token, verified=True)
 
 
 def test_watermark_preserves_exif():
