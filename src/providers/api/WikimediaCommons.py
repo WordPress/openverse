@@ -175,11 +175,8 @@ def exec_job(param):
 
     while is_valid and image_batch:
         startTime = time.time()
-        extracted = [
-            r for r in (
-                process_image_data(i) for i in image_batch.values()
-            ) if r
-        ]
+        row_generator = (process_image_data(i) for i in image_batch.values())
+        extracted = [row for row in row_generator if row]
         total_images += len(extracted)
 
         logging.info(
