@@ -93,7 +93,7 @@ versioned_paths = [
     path(
         'images/<str:identifier>', ImageDetail.as_view(), name='image-detail'
     ),
-    re_path('images', SearchImages.as_view()),
+    re_path('images', SearchImages.as_view(), name='images'),
     path(
         'recommendations/images/<str:identifier>',
         RelatedImage.as_view(),

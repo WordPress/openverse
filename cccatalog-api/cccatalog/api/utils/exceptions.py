@@ -4,11 +4,12 @@ from rest_framework.response import Response
 
 def input_error_response(errors):
     fields = [f for f in errors]
-    messages = ''
+    messages = []
     for field in errors:
         error = errors[field]
         for e in error:
-            messages += e + ' '
+            messages.append(e)
+    messages = ' '.join(messages)
 
     # Don't return "non field errors" in deprecation exceptions. There is no
     # other way to recover the affected fields other than parsing the error.

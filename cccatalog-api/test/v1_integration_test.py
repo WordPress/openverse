@@ -6,6 +6,7 @@ import uuid
 import time
 import cccatalog.settings
 from django.db.models import Max
+from django.urls import reverse
 from cccatalog.api.licenses import LICENSE_GROUPS
 from cccatalog.api.models import Image, OAuth2Verification
 from cccatalog.api.utils.watermark import watermark
@@ -287,7 +288,8 @@ def test_auth_email_verification(test_auth_token_exchange, django_db_setup):
             _id = OAuth2Verification.objects.aggregate(Max('id'))['id__max']
             verify = OAuth2Verification.objects.get(id=_id)
             code = verify.code
-            url = f'{API_URL}/v1/auth_tokens/verify/{code}'
+            path = reverse('verify-email', args=[code])
+            url = f'{API_URL}{path}'
             response = requests.get(url)
             assert response.status_code == 200
             test_auth_rate_limit_reporting(
