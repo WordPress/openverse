@@ -162,7 +162,7 @@ def test_get_image_batch_returns_correctly_without_continue(monkeypatch):
         resp_dict = json.load(f)
 
     def mock_response(endpoint):
-        expect_endpoint = "https://testhost.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=12345&gaisort=timestamp&gaistart=2019-01-01T00:00:00Z&gaiend=2019-01-02T00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json"
+        expect_endpoint = 'https://testhost.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=12345&gaisort=timestamp&gaistart=2019-01-01T00:00:00Z&gaiend=2019-01-02T00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json'
         if endpoint == expect_endpoint:
             return resp_dict
         else:
@@ -172,9 +172,9 @@ def test_get_image_batch_returns_correctly_without_continue(monkeypatch):
     monkeypatch.setattr(wmc, 'WM_HOST', 'testhost.org')
     monkeypatch.setattr(wmc.etl_mods, 'requestContent', mock_response)
     expected_result = {
-        "84798633": {
-            "pageid": 84798633,
-            "title": "File:Ambassade1.jpg"
+        '84798633': {
+            'pageid': 84798633,
+            'title': 'File:Ambassade1.jpg'
         }
     }
 
@@ -192,7 +192,7 @@ def test_get_image_batch_returns_correctly_with_continue(monkeypatch):
         resp_dict = json.load(f)
 
     def mock_response(endpoint):
-        expect_endpoint = "https://testhost.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=12345&gaisort=timestamp&gaistart=2019-01-01T00:00:00Z&gaiend=2019-01-02T00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json"
+        expect_endpoint = 'https://testhost.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=12345&gaisort=timestamp&gaistart=2019-01-01T00:00:00Z&gaiend=2019-01-02T00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json'
         if endpoint == expect_endpoint:
             return resp_dict
         else:
@@ -202,9 +202,9 @@ def test_get_image_batch_returns_correctly_with_continue(monkeypatch):
     monkeypatch.setattr(wmc, 'WM_HOST', 'testhost.org')
     monkeypatch.setattr(wmc.etl_mods, 'requestContent', mock_response)
     expect_result = {
-        "84798633": {
-            "pageid": 84798633,
-            "title": "File:Ambassade1.jpg"
+        '84798633': {
+            'pageid': 84798633,
+            'title': 'File:Ambassade1.jpg'
         }
     }
     expect_continue_token = 'next.jpg'
@@ -223,7 +223,7 @@ def test_get_image_batch_returns_correctly_when_given_continue(monkeypatch):
         resp_dict = json.load(f)
 
     def mock_response(endpoint):
-        expect_endpoint = "https://testhost.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=12345&gaisort=timestamp&gaistart=2019-01-01T00:00:00Z&gaiend=2019-01-02T00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json&gaicontinue=next.jpg"
+        expect_endpoint = 'https://testhost.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=12345&gaisort=timestamp&gaistart=2019-01-01T00:00:00Z&gaiend=2019-01-02T00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json&gaicontinue=next.jpg'
         if endpoint == expect_endpoint:
             return resp_dict
         else:
@@ -234,9 +234,9 @@ def test_get_image_batch_returns_correctly_when_given_continue(monkeypatch):
     monkeypatch.setattr(wmc.etl_mods, 'requestContent', mock_response)
     expect_continue_token = 'next2jpg'
     expect_result = {
-        "84798633": {
-            "pageid": 84798633,
-            "title": "File:Ambassade1.jpg"
+        '84798633': {
+            'pageid': 84798633,
+            'title': 'File:Ambassade1.jpg'
         }
     }
     actual_continue_token, actual_result = wmc.get_image_batch(
@@ -269,8 +269,8 @@ def test_exec_job(monkeypatch):
         pass
 
     def mock_response(endpoint):
-        expect_endpoint_0 = "https://testhost.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=12345&gaisort=timestamp&gaistart=2019-01-01T00:00:00Z&gaiend=2019-01-02T00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json"
-        expect_endpoint_1 = "https://testhost.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=12345&gaisort=timestamp&gaistart=2019-01-01T00:00:00Z&gaiend=2019-01-02T00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json&gaicontinue=next.jpg"
+        expect_endpoint_0 = 'https://testhost.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=12345&gaisort=timestamp&gaistart=2019-01-01T00:00:00Z&gaiend=2019-01-02T00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json'
+        expect_endpoint_1 = 'https://testhost.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=12345&gaisort=timestamp&gaistart=2019-01-01T00:00:00Z&gaiend=2019-01-02T00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json&gaicontinue=next.jpg'
         if endpoint == expect_endpoint_0:
             return resp_dict_0
         elif endpoint == expect_endpoint_1:
@@ -280,23 +280,23 @@ def test_exec_job(monkeypatch):
 
     tmp_directory = '/tmp/'
     output_filename = 'wikimedia_test.tsv'
-    monkeypatch.setattr(wmc.etl_mods, "requestContent", mock_response)
-    monkeypatch.setattr(wmc.etl_mods, "delayProcessing", mock_delay)
+    monkeypatch.setattr(wmc.etl_mods, 'requestContent', mock_response)
+    monkeypatch.setattr(wmc.etl_mods, 'delayProcessing', mock_delay)
     monkeypatch.setattr(
         wmc.etl_mods.writeToFile, '__defaults__', (tmp_directory,))
     output_fullpath = os.path.join(tmp_directory, output_filename)
     try:
         os.remove(output_fullpath)
     except:
-        print("Could not delete old output.  Perhaps it does not exist yet.")
+        print('Could not delete old output.  Perhaps it does not exist yet.')
     expected_records = 3
 
-    monkeypatch.setattr(wmc.etl_mods, "requestContent", mock_response)
-    monkeypatch.setattr(wmc.etl_mods, "delayProcessing", mock_delay)
+    monkeypatch.setattr(wmc.etl_mods, 'requestContent', mock_response)
+    monkeypatch.setattr(wmc.etl_mods, 'delayProcessing', mock_delay)
 
     monkeypatch.setattr(
         wmc.etl_mods.writeToFile, '__defaults__', (tmp_directory,))
-    monkeypatch.setattr(wmc, "FILE", output_filename)
+    monkeypatch.setattr(wmc, 'FILE', output_filename)
     monkeypatch.setattr(wmc, 'LIMIT', 12345)
     monkeypatch.setattr(wmc, 'WM_HOST', 'testhost.org')
 
