@@ -34,7 +34,8 @@ SOURCE = 'wikimedia'
 
 def get_image_batch(start_date, end_date, continue_=None):
     logging.info(
-        'Processing image batch, continue token: {}'.format(continue_))
+        'Processing image batch, continue token: {}'.format(continue_)
+    )
 
     endpoint = (
         'https://{0}/w/api.php?action=query&generator=allimages'
@@ -73,10 +74,12 @@ def cleanse_url(url_string):
 
 
 def extract_creator_info(image_info):
-    artist_string = image_info\
-        .get('extmetadata', {})\
-        .get('Artist', {})\
+    artist_string = (
+        image_info
+        .get('extmetadata', {})
+        .get('Artist', {})
         .get('value', '')
+    )
 
     if not artist_string:
         return (None, None)
@@ -101,27 +104,33 @@ def get_image_info_dict(image_data):
 def create_meta_data_dict(image_data):
     meta_data = {}
     image_info = get_image_info_dict(image_data)
-    description = image_info\
-        .get('extmetadata', {})\
-        .get('ImageDescription', {})\
+    description = (
+        image_info
+        .get('extmetadata', {})
+        .get('ImageDescription', {})
         .get('value')
+    )
     if description:
         description_text = ' '.join(
-            html.fromstring(description).xpath('//text()')).strip()
+            html.fromstring(description).xpath('//text()')
+        ).strip()
         meta_data['description'] = description_text
     return meta_data
 
 
 def get_license(image_info, image_url):
-    license_url = image_info\
-        .get('extmetadata', {})\
-        .get('LicenseUrl', {})\
-        .get('value', '')\
+    license_url = (
+        image_info
+        .get('extmetadata', {})
+        .get('LicenseUrl', {})
+        .get('value', '')
         .strip()
+    )
     if license_url:
         parsed_license_url = urlparse(license_url)
         license, version = etl_mods.getLicense(
-            parsed_license_url.netloc, parsed_license_url.path, image_url)
+            parsed_license_url.netloc, parsed_license_url.path, image_url
+        )
     else:
         license, version = None, None
     return (license, version)
@@ -167,11 +176,14 @@ def exec_job(param):
     continue_token = None
 
     logging.info(
-        'Processing date: {} to {}'.format(
-            param.get('start'), param.get('end')))
+        'Processing date: {} to {}'
+        .format(param.get('start'), param.get('end'))
+    )
 
     continue_token, image_batch = get_image_batch(
-        param.get('start'), param.get('end'))
+        param.get('start'),
+        param.get('end')
+    )
 
     while is_valid and image_batch:
         startTime = time.time()
@@ -180,8 +192,9 @@ def exec_job(param):
         total_images += len(extracted)
 
         logging.info(
-            'Extracted {} CC licensed images. Total images: {}'.format(
-                len(extracted), total_images))
+            'Extracted {} CC licensed images. Total images: {}'
+            .format(len(extracted), total_images)
+        )
 
         etl_mods.writeToFile(extracted, FILE)
         etl_mods.delayProcessing(startTime, DELAY)
