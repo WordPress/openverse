@@ -4,8 +4,7 @@
     <div class="search-grid_ctr" ref="gridItems">
       <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics" >
         <h2>{{ searchTerm }}</h2>
-        <span v-if="_imagesCount === '10,000'"> Over {{ _imagesCount }} images</span>
-        <span v-else>{{ _imagesCount }} images</span>
+        <span> {{ _imagesCount }}</span>
       </div>
       <div
         class="masonry-layout"
@@ -95,7 +94,8 @@ export default {
     },
     _imagesCount() {
       const count = this.useInfiniteScroll ? this.$store.state.imagesCount : this.imagesCount;
-      return count.toLocaleString('en');
+      const localeCount = count.toLocaleString('en');
+      return localeCount === '10,000' ? `Over ${localeCount} images` : `${localeCount} images`;
     },
     _query() {
       return this.$props.query;
