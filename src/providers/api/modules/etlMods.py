@@ -10,7 +10,8 @@ from datetime import datetime, timedelta
 import sys
 from urllib.parse import urlparse
 
-PATH    = os.environ['OUTPUT_DIR']
+PATH = os.environ['OUTPUT_DIR']
+
 
 def _prepare_output_string(unknown_input):
     if not unknown_input:
@@ -21,24 +22,33 @@ def _prepare_output_string(unknown_input):
         return sanitizeString(unknown_input)
 
 
+def _check_all_arguments_exist(**kwargs):
+    all_truthy = True
+    for arg in kwargs:
+        if not kwargs[arg]:
+            logging.warning('Missing {}'.format(arg))
+            all_truthy = False
+    return all_truthy
+
+
 def create_tsv_list_row(
-        foreign_identifier = None,
-        foreign_landing_url = None,
-        image_url = None,
-        thumbnail = None,
-        width = None,
-        height = None,
-        filesize = None,
-        license_ = None,
-        license_version = None,
-        creator = None,
-        creator_url = None,
-        title = None,
-        meta_data = None,
-        tags = None,
-        watermarked = 'f',
-        provider = None,
-        source = None):
+        foreign_identifier=None,
+        foreign_landing_url=None,
+        image_url=None,
+        thumbnail=None,
+        width=None,
+        height=None,
+        filesize=None,
+        license_=None,
+        license_version=None,
+        creator=None,
+        creator_url=None,
+        title=None,
+        meta_data=None,
+        tags=None,
+        watermarked='f',
+        provider=None,
+        source=None):
 
     raw_output_list = [
         foreign_identifier,
@@ -60,7 +70,11 @@ def create_tsv_list_row(
         source
     ]
 
-    if foreign_landing_url and image_url and license_:
+    if _check_all_arguments_exist(
+            foreign_landing_url=foreign_landing_url,
+            image_url=image_url,
+            license_=license_,
+            license_version=license_version):
         return [_prepare_output_string(item) for item in raw_output_list]
     else:
         return None
