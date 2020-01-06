@@ -3,7 +3,7 @@ import json
 
 import WikimediaCommons as wmc
 
-RESOURCES = 'tests/resources/wikimedia'
+RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'tests/resources/wikimedia')
 
 
 def test_extract_creator_info_handles_plaintext():
