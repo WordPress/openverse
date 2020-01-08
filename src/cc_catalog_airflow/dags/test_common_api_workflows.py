@@ -4,7 +4,12 @@ import subprocess
 
 from airflow.models import DagBag
 
-import common_api_workflows
+import common_api_workflows as caw
+import util.config as conf
+
+SCRIPT = conf.SCRIPT
+CRONTAB_STR = conf.CRONTAB_STR
+RESOURCES = os.path.join(conf.api_script_path, 'tests/resources')
 
 subprocess.call(['airflow', 'resetdb', '-y'])
 
@@ -16,7 +21,7 @@ def test_dags_load_with_no_errors():
 
 
 def test_create_dag_creates_correct_dependencies():
-    dag = common_api_workflows.create_dag(
+    dag = caw.create_dag(
         'test_source',
         'test_script_location',
         'test_dag_id'
@@ -36,11 +41,94 @@ def test_create_dag_creates_correct_dependencies():
 
 
 def test_create_dag_adds_schedule_interval():
-    cron_str = '0 * * * *'
-    dag = common_api_workflows.create_dag(
+    crontab_str = '0 * * * *'
+    dag = caw.create_dag(
         'test_source',
         'test_script_location',
         'test_dag_id',
-        cron_str=cron_str
+        crontab_str=crontab_str
     )
-    assert dag.schedule_interval == cron_str
+    assert dag.schedule_interval == crontab_str
+
+
+def test_load_dag_conf_handles_missing_script():
+    source = 'test_source'
+    dag_variables = {
+        'test_source': { }
+    }
+    script_location, dag_id, crontab_str = caw.load_dag_conf(
+        source,
+        dag_variables
+    )
+    assert script_location is None
+
+
+def test_load_dag_conf_validates_script_location():
+    source = 'test_source'
+    dag_variables = {
+        'test_source': {
+            SCRIPT: '/this/path/does/not/exist/hopefully'
+        }
+    }
+    script_location, dag_id, crontab_str = caw.load_dag_conf(
+        source,
+        dag_variables
+    )
+    assert script_location is None
+
+
+def test_load_dag_conf_returns_valid_script_location():
+    source = 'test_source'
+    expected_script_location = os.path.join(RESOURCES, 'FakeSource.py')
+    dag_variables = {
+        'test_source': {
+            SCRIPT: expected_script_location
+        }
+    }
+    script_location, dag_id, crontab_str = caw.load_dag_conf(
+        source,
+        dag_variables
+    )
+    assert script_location == expected_script_location
+
+
+def test_load_dag_conf_validates_crontab_str():
+    source = 'test_source'
+    bad_crontab_str = 'abc123'
+    dag_variables = {
+        'test_source': {
+            CRONTAB_STR: bad_crontab_str
+        }
+    }
+    script_location, dag_id, crontab_str = caw.load_dag_conf(
+        source,
+        dag_variables
+    )
+    assert crontab_str is None
+
+
+def test_load_dag_conf_handles_missing_crontab_str():
+    source = 'test_source'
+    dag_variables = {
+        'test_source': { }
+    }
+    script_location, dag_id, crontab_str = caw.load_dag_conf(
+        source,
+        dag_variables
+    )
+    assert crontab_str is None
+
+
+def test_load_dag_conf_uses_proper_crontab_str():
+    source = 'test_source'
+    good_crontab_str = '0 * * * *'
+    dag_variables = {
+        'test_source': {
+            CRONTAB_STR: good_crontab_str
+        }
+    }
+    script_location, dag_id, crontab_str = caw.load_dag_conf(
+        source,
+        dag_variables
+    )
+    assert crontab_str == good_crontab_str

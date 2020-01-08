@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
 import os
 
+CRONTAB_STR = 'crontab_str'
+SCRIPT = 'script'
+
 dag_default_args = {
     'owner': 'data-eng-admin',
     'depends_on_past': False,
@@ -11,10 +14,6 @@ dag_default_args = {
     'retries': 3,
     'retry_delay': timedelta(minutes=15),
 }
-
-airflow_home = os.getenv('AIRFLOW_HOME')
-print(airflow_home)
-api_script_path = os.path.join(airflow_home, 'dags/provider_api_scripts')
 
 # The dag_variables dict holds variables that differentiate the dags
 # between API sources. The entry for each source should have the
@@ -29,21 +28,26 @@ api_script_path = os.path.join(airflow_home, 'dags/provider_api_scripts')
 # https://airflow.apache.org/docs/stable/scheduler.html). Omitting that
 # key results in a DAG that runs only when the user clicks 'play' in the
 # airflow interface.
+
+airflow_home = os.getenv('AIRFLOW_HOME')
+api_script_path = os.path.join(airflow_home, 'dags/provider_api_scripts')
+
+
 dag_variables = {
     'flickr': {
-        'script': os.path.join(api_script_path, 'Flickr.py'),
+        SCRIPT: os.path.join(api_script_path, 'Flickr.py'),
     },
     'met_museum': {
-        'script': os.path.join(api_script_path, 'MetMuseum.py'),
+        SCRIPT: os.path.join(api_script_path, 'MetMuseum.py'),
     },
     'phylo_pic': {
-        'script': os.path.join(api_script_path, 'PhyloPic.py'),
+        SCRIPT: os.path.join(api_script_path, 'PhyloPic.py'),
     },
     'thingiverse': {
-        'script': os.path.join(api_script_path, 'Thingiverse.py'),
+        SCRIPT: os.path.join(api_script_path, 'Thingiverse.py'),
     },
     'wikimedia_commons': {
-        'script': os.path.join(api_script_path, 'WikimediaCommons.py'),
-        'crontab_str': '0 13 * * *'
+        SCRIPT: os.path.join(api_script_path, 'WikimediaCommons.py'),
+        CRONTAB_STR: '0 13 * * *'
     },
 }
