@@ -8,8 +8,8 @@ dag_default_args = {
     'owner': 'data-eng-admin',
     'depends_on_past': False,
     'start_date': datetime(2019, 1, 15),
-    #'email': 'data-engineer@creativecommons.org', #not configured
-    #'email_on_failure': True,
+    # 'email': 'data-engineer@creativecommons.org', #not configured
+    # 'email_on_failure': True,
     'email_on_retry': False,
     'retries': 3,
     'retry_delay': timedelta(minutes=15),

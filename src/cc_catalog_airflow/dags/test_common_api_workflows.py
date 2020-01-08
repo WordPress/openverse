@@ -54,7 +54,7 @@ def test_create_dag_adds_schedule_interval():
 def test_load_dag_conf_handles_missing_script():
     source = 'test_source'
     dag_variables = {
-        'test_source': { }
+        'test_source': {}
     }
     script_location, dag_id, crontab_str = caw.load_dag_conf(
         source,
@@ -110,7 +110,7 @@ def test_load_dag_conf_validates_crontab_str():
 def test_load_dag_conf_handles_missing_crontab_str():
     source = 'test_source'
     dag_variables = {
-        'test_source': { }
+        'test_source': {}
     }
     script_location, dag_id, crontab_str = caw.load_dag_conf(
         source,

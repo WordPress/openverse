@@ -4,6 +4,7 @@ from airflow import DAG
 from datetime import datetime
 import util.operator_util as o
 
+
 def test_get_runner_operator_creates_valid_string():
     dag = DAG(
         dag_id='test_dag',
