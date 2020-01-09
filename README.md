@@ -8,8 +8,8 @@ Commons licensed works. The challenge is that these works are dispersed
 throughout the web and identifying them requires a combination of techniques.
 Two approaches are currently explored:
 
-1. [Web crawl data](#web-crawl-data)
-2. [Application Programming Interfaces (APIs)](#application-programming-interfaces-apis)
+1. Web crawl data
+2. Application Programming Interfaces (API Data)
 
 ## Web Crawl Data
 
@@ -17,11 +17,15 @@ The Common Crawl Foundation provides an open repository of petabyte-scale web
 crawl data. A new dataset is published at the end of each month comprising over
 200 TiB of uncompressed data.
 
-The data is available in three formats:
+The data is available in three file formats:
 
-- WARC: the entire raw data, including HTTP response metadata, WARC metadata, etc.
+- WARC (Web ARChive): the entire raw data, including HTTP response metadata,
+  WARC metadata, etc.
 - WET: extracted plaintext from each webpage.
 - WAT: extracted html metadata, e.g. HTTP headers and hyperlinks, etc.
+
+For more information about these formats, please see the
+[Common Crawl documentation][ccrawl_doc].
 
 CC Catalog uses AWS Data Pipeline service to automatically create an Amazon EMR
 cluster of 100 c4.8xlarge instances that will parse the WAT archives to identify
@@ -37,8 +41,10 @@ series of parquet files that contain:
 - the location of the webpage in the WARC file so that the page contents can be
   found.
 
-The steps above are performed in
-[ExtractCCLinks.py](https://github.com/creativecommons/cccatalog/blob/master/src/ExtractCCLinks.py)
+The steps above are performed in [`ExtractCCLinks.py`][ex_cc_links].
+
+[ccrawl_doc]: https://commoncrawl.org/the-data/get-started/
+[ex_cc_links]: src/ExtractCCLinks.py
 
 ## API Data
 
@@ -46,10 +52,10 @@ The steps above are performed in
 various API ETL jobs which pull and process data from a number of open APIs on
 the internet.
 
-### [Common API Workflows](src/cc_catalog_airflow/dags/common_api_workflows.py)
+### Common API Workflows
 
 The Airflow DAGs defined in
-[`common_api_workflows.py`](src/cc_catalog_airflow/dags/common_api_workflows.py)
+[`common_api_workflows.py`][api_flows]
 manage the daily ETL jobs for the following platforms:
 
 - [Flickr](src/cc_catalog_airflow/dags/provider_api_scripts/Flickr.py)
@@ -58,25 +64,30 @@ manage the daily ETL jobs for the following platforms:
 - [Thingiverse](src/cc_catalog_airflow/dags/provider_api_scripts/Thingiverse.py)
 - [Wikimedia Commons](src/cc_catalog_airflow/dags/provider_api_scripts/WikimediaCommons.py)
 
-### [Monthly_Workflow](src/cc_catalog_airflow/dags/monthlyWorkflow.py)
+[api_flows]: src/cc_catalog_airflow/dags/common_api_workflows.py
 
-The Airflow DAG defined in
-[`monthlyWorkflow.py`](src/cc_catalog_airflow/monthlyWorkflow.py)
+### Monthly Workflow
 
-the monthly jobs that are scheduled to run on the 15th day of each month
-at 16:00 UTC. This workflow is reserved for long-running jobs or APIs that do
-not have date filtering capabilities so the data is reprocessed monthly to keep
-the catalog updated. The following tasks are performed:
+The Airflow DAG defined in [`monthlyWorkflow.py`][mon_flow] handles the monthly
+jobs that are scheduled to run on the 15th day of each month at 16:00 UTC. This
+workflow is reserved for long-running jobs or APIs that do not have date
+filtering capabilities so the data is reprocessed monthly to keep the catalog
+updated. The following tasks are performed:
 
 - [Cleveland Museum of Art](src/cc_catalog_airflow/dags/provider_api_scripts/ClevelandMuseum.py)
 - [RawPixel](src/cc_catalog_airflow/dags/provider_api_scripts/RawPixel.py)
 - [Flickr](src/cc_catalog_airflow/dags/provider_api_scripts/Flickr.py)
 - [Common Crawl Syncer](src/cc_catalog_airflow/dags/commoncrawl_s3_syncer/SyncImageProviders.py)
 
-### [DB_Loader](src/cc_catalog_airflow/dags/loaderWorkflow.py)
+[mon_flow]: src/cc_catalog_airflow/monthlyWorkflow.py
 
-Scheduled to load data into the upstream database every four hours. It includes
-data preprocessing steps.
+### DB_Loader
+
+The Airflow DAG defined in [`loaderWorkflow.py`][db_loader] is scheduled to load
+data into the upstream database every four hours. It includes data preprocessing
+steps.
+
+[db_loader]: src/cc_catalog_airflow/dags/loaderWorkflow.py
 
 ### Other API Jobs (not in the workflow)
 
@@ -87,29 +98,30 @@ data preprocessing steps.
 ## Development setup for Airflow and API puller scripts
 
 There are a number of scripts in the directory
-[`src/cc_catalog_airflow/dags/provider_api_scripts`](src/cc_catalog_airflow/dags/provider_api_scripts)
-eventually loaded into a database to be indexed for searching on CC Search.
-These run in a different environment than the PySpark portion of the project,
-and so have their own dependency requirements.
+[`src/cc_catalog_airflow/dags/provider_api_scripts`][api_scripts] eventually
+loaded into a database to be indexed for searching on CC Search. These run in a
+different environment than the PySpark portion of the project, and so have their
+own dependency requirements.
+
+[api_scripts]: src/cc_catalog_airflow/dags/provider_api_scripts
 
 ### Setup the Docker way
 
 The advantage of this method is that it recreates the same environment for your
 testing as is on production.
 
-There is a [Dockerfile](src/cc_catalog_airflow/Dockerfile) provided in the
-`src/cc_catalog_airflow` directory. With docker installed, navigate to that directory
-and run
+There is a [`Dockerfile`][dockerfile] provided in the `src/cc_catalog_airflow`
+directory. With docker installed, navigate to that directory and run
 
-```
+```shell
 docker build -t cc-catalog-etl  .
 ```
 
-This results in a docker image named `cc-catalog-etl` with some helpful pieces installed
-(the right version of python, all dependencies, pytest). To run that image, and
-sync the directory containing the source files, run
+This results in a docker image named `cc-catalog-etl` with some helpful pieces
+installed (the right version of python, all dependencies, pytest). To run that
+image, and sync the directory containing the source files, run
 
-```
+```shell
 docker run -d -p 8080:8080 -v $(pwd)/dags:/usr/local/airflow/dags --name cc-catalog-etl-ws  cc-catalog-etl webserver
 ```
 
@@ -132,6 +144,8 @@ upon login), run the following commands:
 
 Edits to the source files or tests can be made on your local machine, then tests
 can be run in the container to see the effects.
+
+[dockerfile]: src/cc_catalog_airflow/Dockerfile
 
 ### Setup the other way
 The advantage of this method is that you don't have to install docker. You will,
@@ -168,10 +182,13 @@ python -m pytest tests/test_ExtractCCLinks.py
 ```
 
 ## Authors
-See the list of
-[contributors](https://github.com/creativecommons/cccatalog/contributors) who
-participated in this project.
+
+See the list of [contributors][contrib] who participated in this project.
+
+[contrib]: https://github.com/creativecommons/cccatalog/contributors
 
 ## License
-This project is licensed under the MIT license - see the [LICENSE](LICENSE) file
-for details.
+
+- [`LICENSE`](LICENSE) (Expat/[MIT][mit] License)
+
+[mit]: http://www.opensource.org/licenses/MIT "The MIT License | Open Source Initiative"
