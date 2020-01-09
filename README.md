@@ -23,9 +23,9 @@ The data is available in three formats:
 - WET: extracted plaintext from each webpage.
 - WAT: extracted html metadata, e.g. HTTP headers and hyperlinks, etc.
 
-CC Catalog uses AWS Data Pipeline service to automatically create an EMR cluster
-of 100 c4.8xlarge instances that will parse the WAT archives to identify all
-domains that link to creativecommons.org. Due to the volume of data, Apache
+CC Catalog uses AWS Data Pipeline service to automatically create an Amazon EMR
+cluster of 100 c4.8xlarge instances that will parse the WAT archives to identify
+all domains that link to creativecommons.org. Due to the volume of data, Apache
 Spark is used to streamline the processing. The output of this methodology is a
 series of parquet files that contain:
 
