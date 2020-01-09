@@ -128,3 +128,12 @@ dmypy.json
 .vscode/
 .idea/
 *.sublime-workspace
+
+# environment file which may have keys
+env.sh
+
+# airflow testing detritus
+airflow.cfg
+airflow.db
+logs/
+unittests.cfg
