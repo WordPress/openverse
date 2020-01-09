@@ -14,10 +14,7 @@ import requests
 PATH = os.environ['OUTPUT_DIR']
 
 
-def _sanitize_json_values(
-        unknown_input,
-        recursion_limit=100,
-    ):
+def _sanitize_json_values(unknown_input, recursion_limit=100):
     """
     This function recursively sanitizes the non-dict values of an input
     dictionary in preparation for dumping to JSON string.
