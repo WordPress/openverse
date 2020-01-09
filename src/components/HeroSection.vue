@@ -16,7 +16,7 @@
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <button class="hero_search-btn" title="Search">Search</button>
+        <Button roundness="slight" brand="tomato" size="huge">SEARCH</Button>
       </div>
       <div class="description">
         <p>
@@ -48,12 +48,15 @@
 </template>
 
 <script>
+import { Button } from '@creativecommons/vue-vocabulary';
 import { SET_QUERY } from '@/store/mutation-types';
 import HomeLicenseFilter from './HomeLicenseFilter';
+
 
 export default {
   name: 'hero-section',
   components: {
+    Button,
     HomeLicenseFilter,
   },
   data: () => ({ form: { searchTerm: '' } }),
@@ -114,7 +117,7 @@ $hero-height: 71vh;
     padding-left: 30px;
     margin-bottom: 0;
     width: 75%;
-    height: 70px;
+    height: 75px;
     border-radius: 4px;
     box-shadow: 0 3px 8px 0 rgba(51, 51, 51, 0.13);
     border: solid 1px #d8d8d8;
