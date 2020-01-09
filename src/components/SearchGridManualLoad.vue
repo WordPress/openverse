@@ -94,8 +94,7 @@ export default {
     },
     _imagesCount() {
       const count = this.useInfiniteScroll ? this.$store.state.imagesCount : this.imagesCount;
-      const localeCount = count.toLocaleString('en');
-      return localeCount === '10,000' ? `Over ${localeCount} images` : `${localeCount} images`;
+      return count >= 10000 ? `Over ${count.toLocaleString('en')} images` : `${count.toLocaleString('en')} images`;
     },
     _query() {
       return this.$props.query;
