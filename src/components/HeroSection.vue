@@ -16,7 +16,7 @@
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <Button roundness="slight" brand="tomato" size="huge">SEARCH</Button>
+        <Button class="hero_search-btn" roundness="slight" brand="tomato" size="huge">Search</Button>
       </div>
       <div class="description">
         <p>
@@ -133,15 +133,6 @@ $hero-height: 71vh;
 
   .hero_search-btn {
     width: 25%;
-    height: 70px;
-    border-radius: 4px;
-    background-color: #fb7729;
-    font-size: 24px;
-    cursor: pointer;
-    border-radius: 3px;
-    font-family: Roboto;
-    font-size: 1.5625em;
-    color: #fff;
     text-transform: capitalize;
   }
 
