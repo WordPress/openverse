@@ -4,18 +4,16 @@ import os
 CRONTAB_STR = 'crontab_str'
 SCRIPT = 'script'
 
-dag_default_args = {
+DAG_DEFAULT_ARGS = {
     'owner': 'data-eng-admin',
     'depends_on_past': False,
     'start_date': datetime(2019, 1, 15),
-    # 'email': 'data-engineer@creativecommons.org', #not configured
-    # 'email_on_failure': True,
     'email_on_retry': False,
     'retries': 3,
     'retry_delay': timedelta(minutes=15),
 }
 
-# The dag_variables dict holds variables that differentiate the dags
+# The DAG_VARIABLES dict holds variables that differentiate the dags
 # between API sources. The entry for each source should have the
 # following format:
 #   <source>: {
@@ -29,25 +27,25 @@ dag_default_args = {
 # key results in a DAG that runs only when the user clicks 'play' in the
 # airflow interface.
 
-airflow_home = os.getenv('AIRFLOW_HOME')
-api_script_path = os.path.join(airflow_home, 'dags/provider_api_scripts')
+AIRFLOW_HOME = os.getenv('AIRFLOW_HOME')
+API_SCRIPT_PATH = os.path.join(AIRFLOW_HOME, 'dags/provider_api_scripts')
 
 
-dag_variables = {
+DAG_VARIABLES = {
     'flickr': {
-        SCRIPT: os.path.join(api_script_path, 'Flickr.py'),
+        SCRIPT: os.path.join(API_SCRIPT_PATH, 'Flickr.py'),
     },
     'met_museum': {
-        SCRIPT: os.path.join(api_script_path, 'MetMuseum.py'),
+        SCRIPT: os.path.join(API_SCRIPT_PATH, 'MetMuseum.py'),
     },
     'phylo_pic': {
-        SCRIPT: os.path.join(api_script_path, 'PhyloPic.py'),
+        SCRIPT: os.path.join(API_SCRIPT_PATH, 'PhyloPic.py'),
     },
     'thingiverse': {
-        SCRIPT: os.path.join(api_script_path, 'Thingiverse.py'),
+        SCRIPT: os.path.join(API_SCRIPT_PATH, 'Thingiverse.py'),
     },
     'wikimedia_commons': {
-        SCRIPT: os.path.join(api_script_path, 'WikimediaCommons.py'),
+        SCRIPT: os.path.join(API_SCRIPT_PATH, 'WikimediaCommons.py'),
         CRONTAB_STR: '0 13 * * *'
     },
 }

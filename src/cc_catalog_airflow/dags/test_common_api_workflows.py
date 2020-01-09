@@ -1,6 +1,4 @@
-from datetime import datetime
 import os
-import subprocess
 
 from airflow.models import DagBag
 
@@ -9,9 +7,7 @@ import util.config as conf
 
 SCRIPT = conf.SCRIPT
 CRONTAB_STR = conf.CRONTAB_STR
-RESOURCES = os.path.join(conf.api_script_path, 'tests/resources')
-
-subprocess.call(['airflow', 'resetdb', '-y'])
+RESOURCES = os.path.join(conf.API_SCRIPT_PATH, 'tests/resources')
 
 
 def test_dags_load_with_no_errors():

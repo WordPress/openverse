@@ -13,17 +13,17 @@ logging.basicConfig(
 
 CRONTAB_STR = conf.CRONTAB_STR
 SCRIPT = conf.SCRIPT
-dag_default_args = conf.dag_default_args
-dag_variables = conf.dag_variables
+DAG_DEFAULT_ARGS = conf.DAG_DEFAULT_ARGS
+DAG_VARIABLES = conf.DAG_VARIABLES
 
 
-def load_dag_conf(source, dag_variables):
+def load_dag_conf(source, DAG_VARIABLES):
     """Validate and load configuration variables"""
     logging.info('Loading configuration for {}'.format(source))
-    logging.debug('dag_variables: {}'.format(dag_variables))
+    logging.debug('DAG_VARIABLES: {}'.format(DAG_VARIABLES))
     dag_id = '{}_workflow'.format(source)
 
-    script_location = dag_variables[source].get(SCRIPT)
+    script_location = DAG_VARIABLES[source].get(SCRIPT)
     try:
         assert os.path.exists(script_location)
     except Exception as e:
@@ -33,7 +33,7 @@ def load_dag_conf(source, dag_variables):
         )
         script_location = None
 
-    crontab_str = dag_variables[source].get(CRONTAB_STR)
+    crontab_str = DAG_VARIABLES[source].get(CRONTAB_STR)
     try:
         croniter(crontab_str)
     except Exception as e:
@@ -50,7 +50,7 @@ def create_dag(
         script_location,
         dag_id,
         crontab_str=None,
-        default_args=dag_default_args):
+        default_args=DAG_DEFAULT_ARGS):
 
     dag = DAG(
         dag_id=dag_id,
@@ -69,8 +69,8 @@ def create_dag(
     return dag
 
 
-for source in dag_variables:
-    script_location, dag_id, crontab_str = load_dag_conf(source, dag_variables)
+for source in DAG_VARIABLES:
+    script_location, dag_id, crontab_str = load_dag_conf(source, DAG_VARIABLES)
     if script_location:
         globals()[dag_id] = create_dag(
             source,
