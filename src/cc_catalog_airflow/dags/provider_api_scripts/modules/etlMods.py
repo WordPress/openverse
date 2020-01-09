@@ -1,23 +1,53 @@
+import argparse
+import json
 import logging
 import os
-import re
-import requests
-import time
-import json
-import argparse
 import random
-from datetime import datetime, timedelta
+import re
 import sys
+import time
+from datetime import datetime, timedelta
 from urllib.parse import urlparse
 
+import requests
+
 PATH = os.environ['OUTPUT_DIR']
+
+
+def _sanitize_json_values(
+        unknown_input,
+        recursion_limit=100,
+    ):
+    """
+    This function recursively sanitizes the non-dict values of an input
+    dictionary in preparation for dumping to JSON string.
+    """
+    input_type = type(unknown_input)
+    if input_type not in [dict, list] or recursion_limit <= 0:
+        return sanitizeString(unknown_input)
+    elif input_type == list:
+        return [
+            _sanitize_json_values(
+                item,
+                recursion_limit=recursion_limit - 1
+            )
+            for item in unknown_input
+        ]
+    else:
+        return {
+            key: _sanitize_json_values(
+                val,
+                recursion_limit=recursion_limit - 1
+            )
+            for key, val in unknown_input.items()
+        }
 
 
 def _prepare_output_string(unknown_input):
     if not unknown_input:
         return '\\N'
     elif type(unknown_input) in [dict, list]:
-        return json.dumps(unknown_input)
+        return json.dumps(_sanitize_json_values(unknown_input))
     else:
         return sanitizeString(unknown_input)
 
