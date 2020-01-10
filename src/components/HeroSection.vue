@@ -16,7 +16,9 @@
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <Button class="hero_search-btn" roundness="slight" brand="tomato" size="huge">Search</Button>
+        <Button class="hero_search-btn" roundness="slight" brand="tomato" size="huge">
+          Search
+        </Button>
       </div>
       <div class="description">
         <p>
