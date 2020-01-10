@@ -77,6 +77,11 @@ h1 {
   font-family: Roboto;
   font-size: 2.375em;
   color: #333333;
+  text-align: center;
+
+  @media screen and (max-width: 40em) {
+    font-size: 1.5em;
+  }
 }
 
 $hero-height: 71vh;
@@ -156,9 +161,8 @@ $hero-height: 71vh;
   top: 1rem;
   right: 2rem;
 
-  @media screen and (max-width: 320px) {
-    top: 0;
-    font-size: 0.9rem;
+  @media screen and (max-width: 40em) {
+    display: none;
   }
 }
 
@@ -167,7 +171,7 @@ $hero-height: 71vh;
   bottom: 1rem;
   right: 2rem;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 40em) {
     display: none;
   }
 }
