@@ -1,6 +1,6 @@
 <template>
   <div class="hero">
-    <h1>Search for free and public domain content</h1>
+    <h1>Search for free content</h1>
     <form class="hero_search-form"
           role="search"
           method="get"
@@ -16,9 +16,7 @@
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <Button class="hero_search-btn" roundness="slight" brand="tomato" size="huge">
-          Search
-        </Button>
+        <button class="hero_search-btn" title="Search">Search</button>
       </div>
       <div class="description">
         <p>
@@ -82,7 +80,7 @@ h1 {
   text-align: center;
 
   @media screen and (max-width: 40em) {
-    font-size: 1.5em;
+    font-size: 1.8em;
   }
 }
 
@@ -113,7 +111,7 @@ $hero-height: 71vh;
     padding-left: 30px;
     margin-bottom: 0;
     width: 75%;
-    height: 75px;
+    height: 70px;
     border-radius: 4px;
     box-shadow: 0 3px 8px 0 rgba(51, 51, 51, 0.13);
     border: solid 1px #d8d8d8;
@@ -129,6 +127,14 @@ $hero-height: 71vh;
 
   .hero_search-btn {
     width: 25%;
+    height: 70px;
+    border-radius: 4px;
+    background-color: #fb7729;
+    font-size: 24px;
+    cursor: pointer;
+    font-family: Roboto;
+    font-size: 1.5625em;
+    color: #fff;
     text-transform: capitalize;
   }
 
