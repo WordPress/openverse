@@ -24,8 +24,6 @@ export default {
 
 <style lang="scss">
 @import './styles/app';
-@import '@creativecommons/vue-vocabulary/css/root.css';
-@import '@creativecommons/vue-vocabulary/css/vocabulary.css';
 
 body {
   margin: 0;
