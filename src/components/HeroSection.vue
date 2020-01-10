@@ -1,6 +1,6 @@
 <template>
   <div class="hero">
-    <h1>Search for free content</h1>
+    <h1>Search for open content</h1>
     <form class="hero_search-form"
           role="search"
           method="get"
