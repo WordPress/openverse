@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import { Button } from '@creativecommons/vue-vocabulary';
 import { SET_QUERY } from '@/store/mutation-types';
 import HomeLicenseFilter from './HomeLicenseFilter';
 
@@ -56,7 +55,6 @@ import HomeLicenseFilter from './HomeLicenseFilter';
 export default {
   name: 'hero-section',
   components: {
-    Button,
     HomeLicenseFilter,
   },
   data: () => ({ form: { searchTerm: '' } }),
