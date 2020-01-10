@@ -99,17 +99,6 @@ $hero-height: 71vh;
   flex-direction: column;
   min-height: 300px;
 
-  .logo {
-    margin-bottom: 4vh;
-    height: 7em;
-
-    @media screen and (max-width: 39.9375em), (max-height: 720px) {
-      height: 5.5em;
-      margin-top: 4vh;
-      padding: 0.5em;
-    }
-  }
-
   .hero_search-form {
     position: relative;
     margin-top: 0;
@@ -185,7 +174,7 @@ $hero-height: 71vh;
 /* Small only */
 @media screen and (max-width: 40em) {
   .hero {
-    height: 60vh;
+    height: 80vh;
   }
   .search-form_ctr {
     padding: 0 .9375rem;
@@ -198,10 +187,6 @@ $hero-height: 71vh;
 
   .hero .hero_search-btn {
     right: 10px;
-  }
-
-  .logo {
-    height: 5.5em;
   }
 }
 </style>
