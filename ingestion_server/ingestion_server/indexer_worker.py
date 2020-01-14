@@ -67,6 +67,7 @@ def _launch_reindex(table, target_index, query, indexer, notify_url):
         log.info(f'Notifying {notify_url}')
         requests.post(notify_url)
         _self_destruct()
+        return
 
 
 def _self_destruct():
