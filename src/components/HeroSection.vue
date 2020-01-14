@@ -1,6 +1,6 @@
 <template>
   <div class="hero">
-    <h1>Search for open content</h1>
+    <h1>Search for content to reuse</h1>
     <form class="hero_search-form"
           role="search"
           method="get"
@@ -20,8 +20,9 @@
       </div>
       <div class="description">
         <p>
-          All our content is under Creative Commons licenses.
-          <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">Learn more</a> about CC licenses.
+          All content here is marked as being available for reuse
+          under a Creative Commons legal tool. Learn more
+          <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">here</a>.
         </p>
       </div>
       <home-license-filter />
