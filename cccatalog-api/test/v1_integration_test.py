@@ -297,6 +297,7 @@ def test_auth_email_verification(test_auth_token_exchange, django_db_setup):
             )
 
 
+@pytest.mark.skip(reason="Unmaintained feature/grequests ssl recursion bug")
 def test_watermark_preserves_exif():
     img_with_exif = 'https://raw.githubusercontent.com/ianare/exif-samples/' \
                     'master/jpg/Canon_PowerShot_S40.jpg'
