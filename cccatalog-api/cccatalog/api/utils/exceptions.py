@@ -23,7 +23,7 @@ def input_error_response(errors):
         data={
             'error': 'InputError',
             'detail': f'Invalid input given for field(s) {fields}.'
-                      f' Hint: {messages}',
+            f' Hint: {messages}',
             'fields': fields
         }
     )

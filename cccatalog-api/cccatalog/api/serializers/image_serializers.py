@@ -348,7 +348,6 @@ class InputErrorSerializer(serializers.Serializer):
     error = serializers.CharField()
 
 
-
 class WatermarkQueryStringSerializer(serializers.Serializer):
     embed_metadata = serializers.BooleanField(
         help_text="Whether to embed ccREL metadata via XMP.",
