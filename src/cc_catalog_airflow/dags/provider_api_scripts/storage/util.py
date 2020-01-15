@@ -25,7 +25,7 @@ def ensure_int(unknown_input):
     try:
         number = int(float(unknown_input))
     except Exception as e:
-        logging.warning(
+        logger.warning(
             'input {} is not castable to an int.  The error was {}'
             .format(unknown_input, e)
         )
@@ -37,7 +37,18 @@ def ensure_sql_bool(bool_str, default=None):
     if bool_str in ['t', 'f']:
         return bool_str
     else:
+        logger.warning('{} is not a valid PostgreSQL bool'.format(bool_str))
         return default
+
+
+def enforce_char_limit(string, limit, truncate=True):
+    if len(string) > limit:
+        logger.warning(
+            'String over char limit of {}\n{}'.format(limit, string)
+        )
+        return string[:limit] if truncate else None
+    else:
+        return string
 
 
 def choose_license_and_version(

@@ -73,6 +73,72 @@ def test_choose_license_and_version_with_missing_derived_version(monkeypatch):
     assert actual_version == expected_version
 
 
+def test_ensure_int_nones_non_number_strings():
+    actual_int = util.ensure_int('abc123')
+    expect_int = None
+    assert actual_int == expect_int
+
+
+def test_ensure_int_truncates_floats():
+    actual_int = util.ensure_int(2.34)
+    expect_int = 2
+    assert actual_int == expect_int
+
+
+def test_ensure_int_casts_and_truncates_float_strings():
+    actual_int = util.ensure_int('3.45')
+    expect_int = 3
+    assert actual_int == expect_int
+
+
+def test_ensure_int_leaves_ints():
+    actual_int = util.ensure_int(4)
+    expect_int = 4
+    assert actual_int == expect_int
+
+
+def test_ensure_int_casts_int_strings():
+    actual_int = util.ensure_int('5')
+    expect_int = 5
+    assert actual_int == expect_int
+
+
+def test_ensure_sql_bool_defaults_to_none():
+    actual_bool = util.ensure_sql_bool('g')
+    expect_bool = None
+    assert actual_bool == expect_bool
+
+
+def test_ensure_sql_bool_leaves_t():
+    actual_bool = util.ensure_sql_bool('t')
+    expect_bool = 't'
+    assert actual_bool == expect_bool
+
+
+def test_ensure_sql_bool_leaves_f():
+    actual_bool = util.ensure_sql_bool('f')
+    expect_bool = 'f'
+    assert actual_bool == expect_bool
+
+
+def test_enforce_char_limit_leaves_shorter_strings_unchanged():
+    actual_string = util.enforce_char_limit('abcde', 5)
+    expect_string = 'abcde'
+    assert actual_string == expect_string
+
+
+def test_enforce_char_limit_truncates_long_strings_by_default():
+    actual_string = util.enforce_char_limit('abcdef', 5)
+    expect_string = 'abcde'
+    assert actual_string == expect_string
+
+
+def test_enforce_char_limit_nones_long_strings_with_flag():
+    actual_string = util.enforce_char_limit('abcdef', 5, truncate=False)
+    expect_string = None
+    assert actual_string == expect_string
+
+
 def test_validate_url_string_discards_without_scheme():
     url_string = 'creativecomons.org'
     actual_validated_url = util.validate_url_string(url_string)
@@ -172,33 +238,3 @@ def test_validate_license_pair_nones_missing_license():
     expect_license, expect_version = None, None
     assert actual_license == expect_license
     assert actual_version == expect_version
-
-
-def test_ensure_int_nones_non_number_strings():
-    actual_int = util.ensure_int('abc123')
-    expect_int = None
-    assert actual_int == expect_int
-
-
-def test_ensure_int_truncates_floats():
-    actual_int = util.ensure_int(2.34)
-    expect_int = 2
-    assert actual_int == expect_int
-
-
-def test_ensure_int_casts_and_truncates_float_strings():
-    actual_int = util.ensure_int('3.45')
-    expect_int = 3
-    assert actual_int == expect_int
-
-
-def test_ensure_int_leaves_ints():
-    actual_int = util.ensure_int(4)
-    expect_int = 4
-    assert actual_int == expect_int
-
-
-def test_ensure_int_casts_int_strings():
-    actual_int = util.ensure_int('5')
-    expect_int = 5
-    assert actual_int == expect_int
