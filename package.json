@@ -19,6 +19,7 @@
     "build-server": "webpack -p --config build/webpack-server-conf.js --progress"
   },
   "dependencies": {
+    "@creativecommons/vue-vocabulary": "0.0.0-alpha.1",
     "@sentry/browser": "^5.6.0",
     "@sentry/node": "^5.6.0",
     "axios": "^0.18.0",
