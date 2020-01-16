@@ -2,6 +2,7 @@
 This module has a number of public methods which are useful for storage
 operations.
 """
+import json
 import logging
 from urllib.parse import urlparse
 
@@ -64,9 +65,16 @@ def ensure_sql_bool(bool_str, default=None):
 
 
 def enforce_char_limit(string, limit, truncate=True):
+    if not type(string) == str:
+        logger.warning(
+            'Cannot limit characters on non-string type {}.  Input was {}.'
+            .format(type(string), string)
+        )
+        return None
     if len(string) > limit:
         logger.warning(
-            'String over char limit of {}\n{}'.format(limit, string)
+            'String over char limit of {}.  Input was {}.'
+            .format(limit, string)
         )
         return string[:limit] if truncate else None
     else:
@@ -91,10 +99,62 @@ def enforce_all_arguments_truthy(**kwargs):
     return all_truthy
 
 
+def prepare_output_field_string(unknown_input):
+    if not unknown_input:
+        return '\\N'
+    elif type(unknown_input) in [dict, list]:
+        return json.dumps(_sanitize_json_values(unknown_input))
+    else:
+        return _sanitize_string(unknown_input)
+
+
+def _sanitize_json_values(unknown_input, recursion_limit=100):
+    """
+    Recursively sanitizes the non-dict, non-list values of an input
+    dictionary or list in preparation for dumping to JSON string.
+    """
+    input_type = type(unknown_input)
+    if input_type not in [dict, list] or recursion_limit <= 0:
+        return _sanitize_string(unknown_input)
+    elif input_type == list:
+        return [
+            _sanitize_json_values(
+                item,
+                recursion_limit=recursion_limit - 1
+            )
+            for item in unknown_input
+        ]
+    else:
+        return {
+            key: _sanitize_json_values(
+                val,
+                recursion_limit=recursion_limit - 1
+            )
+            for key, val in unknown_input.items()
+        }
+
+
+def _sanitize_string(data):
+    if data is None:
+        return ''
+    else:
+        # We join a split string because it removes all whitespace
+        # characters
+        return ' '.join(
+            str(data)
+            .replace('"', "'")
+            .replace('\b', '')
+            .replace('\\', '\\\\')
+            .split()
+        )
+
+
 def _get_license_from_url(license_url, path_map=LICENSE_PATH_MAP):
     license_url = validate_url_string(license_url)
     if license_url:
         parsed_license_url = urlparse(license_url)
+    else:
+        return None, None
 
     license_, license_version = None, None
     if parsed_license_url.netloc != 'creativecommons.org':
