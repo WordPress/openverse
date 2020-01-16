@@ -77,6 +77,12 @@ def test_image_detail(search_fixture):
 
 def test_image_delete(search_fixture):
     test_id = search_fixture['results'][0]['id']
+    should_fail = requests.delete(
+        f'{API_URL}/image/{test_id}',
+        auth=('invalid', 'credentials'),
+        verify=False
+    )
+    assert should_fail.status_code == 401
     response = requests.delete(
         f'{API_URL}/image/{test_id}',
         auth=('continuous_integration', 'deploydeploy'),
