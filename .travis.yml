@@ -4,6 +4,7 @@ addons:
   apt:
     packages:
       - postgresql-client-10
+      - libexempi3
 env:
   - CCCAPI_CONTAINER_NAME=cccatalog-api_web_1 ANALYTICS_CONTAINER_NAME=cccatalog-api_analytics_1
 python:
