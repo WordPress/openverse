@@ -12,6 +12,28 @@ logger = logging.getLogger(__name__)
 LICENSE_PATH_MAP = constants.LICENSE_PATH_MAP
 
 
+def choose_license_and_version(
+        license_url=None, license_=None, license_version=None
+):
+    derived_license, derived_version = _get_license_from_url(license_url)
+    if derived_license and derived_version:
+        # We prefer license and version derived from the license_url, when
+        # possible, since we have more control over the string
+        # (capitalization, etc.)
+        logger.debug(
+            'Using derived_license {} and derived_version {}'
+            .format(derived_license, derived_version)
+        )
+        license_, license_version = derived_license, derived_version
+    else:
+        logger.debug(
+            'Using given license_ {} and license_version {}'
+            .format(license_, license_version)
+        )
+
+    return _validate_license_pair(license_, license_version)
+
+
 def validate_url_string(url_string):
     parse_result = urlparse(url_string)
     if type(url_string) == str and parse_result.scheme and parse_result.netloc:
@@ -51,26 +73,22 @@ def enforce_char_limit(string, limit, truncate=True):
         return string
 
 
-def choose_license_and_version(
-        license_url=None, license_=None, license_version=None
-):
-    derived_license, derived_version = _get_license_from_url(license_url)
-    if derived_license and derived_version:
-        # We prefer license and version derived from the license_url, when
-        # possible, since we have more control over the string
-        # (capitalization, etc.)
-        logger.debug(
-            'Using derived_license {} and derived_version {}'
-            .format(derived_license, derived_version)
-        )
-        license_, license_version = derived_license, derived_version
-    else:
-        logger.debug(
-            'Using given license_ {} and license_version {}'
-            .format(license_, license_version)
-        )
+def get_provider_and_source(provider, source, default=None):
+    if not provider:
+        provider = default
+    if not source:
+        source = provider
 
-    return _validate_license_pair(license_, license_version)
+    return provider, source
+
+
+def enforce_all_arguments_truthy(**kwargs):
+    all_truthy = True
+    for arg in kwargs:
+        if not kwargs[arg]:
+            logging.warning('Missing {}'.format(arg))
+            all_truthy = False
+    return all_truthy
 
 
 def _get_license_from_url(license_url, path_map=LICENSE_PATH_MAP):

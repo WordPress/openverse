@@ -73,6 +73,20 @@ def test_choose_license_and_version_with_missing_derived_version(monkeypatch):
     assert actual_version == expected_version
 
 
+def test_validate_url_string_discards_without_scheme():
+    url_string = 'creativecomons.org'
+    actual_validated_url = util.validate_url_string(url_string)
+    expect_validated_url = None
+    assert actual_validated_url == expect_validated_url
+
+
+def test_validate_url_string_discards_without_domain():
+    url_string = 'https:/abcd'
+    actual_validated_url = util.validate_url_string(url_string)
+    expect_validated_url = None
+    assert actual_validated_url == expect_validated_url
+
+
 def test_ensure_int_nones_non_number_strings():
     actual_int = util.ensure_int('abc123')
     expect_int = None
@@ -139,18 +153,121 @@ def test_enforce_char_limit_nones_long_strings_with_flag():
     assert actual_string == expect_string
 
 
-def test_validate_url_string_discards_without_scheme():
-    url_string = 'creativecomons.org'
-    actual_validated_url = util.validate_url_string(url_string)
-    expect_validated_url = None
-    assert actual_validated_url == expect_validated_url
+def test_get_provider_and_source_preserves_given_both():
+    expect_provider, expect_source = 'Provider', 'Source'
+    actual_provider, actual_source = util.get_provider_and_source(
+        expect_provider, expect_source
+    )
+    assert actual_provider == expect_provider
+    assert actual_source == expect_source
 
 
-def test_validate_url_string_discards_without_domain():
-    url_string = 'https:/abcd'
-    actual_validated_url = util.validate_url_string(url_string)
-    expect_validated_url = None
-    assert actual_validated_url == expect_validated_url
+def test_get_provider_and_source_preserves_given_both_and_default():
+    expect_provider, expect_source = 'Provider', 'Source'
+    actual_provider, actual_source = util.get_provider_and_source(
+        expect_provider, expect_source, default='default_provider'
+    )
+    assert actual_provider == expect_provider
+    assert actual_source == expect_source
+
+
+def test_get_provider_and_source_preserves_source_without_provider():
+    input_provider, expect_source = None, 'Source'
+    actual_provider, actual_source = util.get_provider_and_source(
+        input_provider, expect_source
+    )
+    assert actual_source == expect_source
+
+
+def test_get_provider_and_source_keeps_source_without_provider_with_default():
+    input_provider, expect_source = None, 'Source'
+    actual_provider, actual_source = util.get_provider_and_source(
+        input_provider, expect_source, default='Default Provider'
+    )
+    assert actual_source == expect_source
+
+
+def test_get_provider_and_source_fills_source_if_none_given():
+    input_provider, input_source = 'Provider', None
+    actual_provider, actual_source = util.get_provider_and_source(
+        input_provider, input_source
+    )
+    expect_provider, expect_source = 'Provider', 'Provider'
+    assert actual_provider == expect_provider
+    assert actual_source == expect_source
+
+
+def test_get_provider_and_source_fills_both_from_default_if_none_given():
+    input_provider, input_source = None, None
+    actual_provider, actual_source = util.get_provider_and_source(
+        input_provider, input_source, default='Default'
+    )
+    expect_provider, expect_source = 'Default', 'Default'
+    assert actual_provider == expect_provider
+    assert actual_source == expect_source
+
+
+def test_enforce_all_arguments_truthy_false_when_one_argument_is_empty_str():
+    truthy = util.enforce_all_arguments_truthy(
+        dog='dog',
+        cat=''
+    )
+    assert truthy is False
+
+
+def test_enforce_all_arguments_truthy_false_when_one_argument_is_nonetype():
+    truthy = util.enforce_all_arguments_truthy(
+        dog='dog',
+        cat='cat',
+        rat=None
+    )
+    assert truthy is False
+
+
+def test_enforce_all_arguments_truthy_false_when_truthy_is_last():
+    truthy = util.enforce_all_arguments_truthy(
+        dog='dog',
+        cat=None,
+        rat='rat'
+    )
+    assert truthy is False
+
+
+def test_enforce_all_arguments_truthy_false_when_one_is_empty_list():
+    truthy = util.enforce_all_arguments_truthy(
+        dog='dog',
+        cat=[],
+        rat='rat'
+    )
+    assert truthy is False
+
+
+def test_enforce_all_arguments_truthy_false_when_one_is_empty_dict():
+    truthy = util.enforce_all_arguments_truthy(
+        dog='dog',
+        cat={},
+        rat='rat'
+    )
+    assert truthy is False
+
+
+def test_enforce_all_arguments_truthy_false_when_one_is_zero():
+    truthy = util.enforce_all_arguments_truthy(
+        dog='dog',
+        cat=0,
+        rat='rat'
+    )
+    assert truthy is False
+
+
+def test_enforce_all_arguments_truthy_true_with_different_types():
+    truthy = util.enforce_all_arguments_truthy(
+        ant=2,
+        bat={'animal': 'bat'},
+        dog='dog',
+        cat=['cat'],
+    )
+    assert truthy is True
 
 
 def test_get_license_from_url_finds_info_from_path():
