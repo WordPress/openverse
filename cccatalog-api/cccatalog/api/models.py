@@ -144,9 +144,6 @@ class Image(OpenLedgerModel):
         ordering = ['-created_on']
 
 
-
-
-
 class DeletedImages(OpenLedgerModel):
     deleted_id = models.UUIDField(
         unique=True,
