@@ -144,6 +144,21 @@ class Image(OpenLedgerModel):
         ordering = ['-created_on']
 
 
+
+
+
+class DeletedImages(OpenLedgerModel):
+    deleted_id = models.UUIDField(
+        unique=True,
+        db_index=True,
+        help_text="The identifier of the deleted image."
+    )
+    deleting_user = models.CharField(
+        max_length=50,
+        help_text="The user that deleted the image."
+    )
+
+
 class ContentProvider(models.Model):
     provider_identifier = models.CharField(max_length=50)
     provider_name = models.CharField(max_length=250, unique=True)

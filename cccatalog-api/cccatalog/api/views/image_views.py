@@ -3,8 +3,10 @@ from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers, status
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
-from cccatalog.api.models import Image, ContentProvider
+from cccatalog.api.models import Image, ContentProvider, DeletedImages
 from cccatalog.api.utils import ccrel
 from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.search_serializers import\
@@ -225,6 +227,8 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     serializer_class = ImageDetailSerializer
     queryset = Image.objects.all()
     lookup_field = 'identifier'
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     @swagger_auto_schema(operation_id="image_detail",
                          operation_description="Load the details of a"
@@ -282,7 +286,12 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             image = Image.objects.get(identifier=identifier)
             es = search_controller.es
             es.delete(index='image', id=image.id)
+            delete_log = DeletedImages(
+                deleted_id=image.identifier,
+                deleting_user=request.user
+            )
             image.delete()
+            delete_log.save()
         except Image.DoesNotExist:
             return Response(status=404, data='Not Found')
         # Mark as removed in upstream database

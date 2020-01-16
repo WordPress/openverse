@@ -75,6 +75,17 @@ def test_image_detail(search_fixture):
     response = requests.get(API_URL + '/image/{}'.format(test_id), verify=False)
     assert response.status_code == 200
 
+def test_image_delete(search_fixture):
+    test_id = search_fixture['results'][0]['id']
+    response = requests.delete(
+        f'{API_URL}/image/{test_id}',
+        auth=('continous_integration', 'deploydeploy'),
+        verify=False
+    )
+    assert response.status_code == 204
+    deleted_response = requests.get(f'{API_URL}/image/{test_id}')
+    assert deleted_response.status_code == 404
+
 
 @pytest.fixture
 def link_shortener_fixture(search_fixture):
