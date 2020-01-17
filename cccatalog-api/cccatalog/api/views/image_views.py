@@ -2,8 +2,11 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import serializers, status
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
-from cccatalog.api.models import Image, ContentProvider
+from cccatalog.api.models import Image, ContentProvider, DeletedImages
 from cccatalog.api.utils import ccrel
 from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.image_serializers import\
@@ -130,6 +133,8 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     serializer_class = ImageSerializer
     queryset = Image.objects.all()
     lookup_field = 'identifier'
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     @swagger_auto_schema(operation_id="image_detail",
                          operation_description="Load the details of a"
@@ -153,6 +158,32 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             resp.data[search_controller.URL] = secure
 
         return resp
+
+    @swagger_auto_schema(operation_id="image_delete",
+                         operation_description="Delete image of given ID.",
+                         responses={
+                             204: '',
+                             404: 'Not Found'
+                         })
+    def delete(self, request, identifier, format=None):
+        try:
+            image = Image.objects.get(identifier=identifier)
+            es = search_controller.es
+            es.delete(index='image', id=image.id)
+            delete_log = DeletedImages(
+                deleted_id=image.identifier,
+                deleting_user=request.user
+            )
+            image.delete()
+            delete_log.save()
+        except Image.DoesNotExist:
+            return Response(status=404, data='Not Found')
+        # Mark as removed in upstream database
+        image = Image.objects.using('upstream').get(identifier=identifier)
+        image.removed_from_source = True
+        image.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 def _save_wrapper(pil_img, exif_bytes, destination):
