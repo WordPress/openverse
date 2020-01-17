@@ -7,6 +7,9 @@ from cccatalog.api.licenses import LICENSE_GROUPS
 from cccatalog.api.models import Image
 from cccatalog.api.utils.watermark import watermark
 """
+**These are the LEGACY API integration tests; do not add further tests here.**
+New tests should be added in v1_integration_test.
+
 End-to-end API tests. Can be used to verify a live deployment is functioning as
 designed. Run with the `pytest -s` command from this directory.
 """
