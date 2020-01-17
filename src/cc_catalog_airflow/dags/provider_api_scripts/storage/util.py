@@ -2,7 +2,6 @@
 This module has a number of public methods which are useful for storage
 operations.
 """
-import json
 import logging
 from urllib.parse import urlparse
 
@@ -11,6 +10,17 @@ from storage import constants
 logger = logging.getLogger(__name__)
 
 LICENSE_PATH_MAP = constants.LICENSE_PATH_MAP
+
+
+def prepare_table_field_string(unknown_input, column):
+    output_field = None
+
+    if not unknown_input:
+        logger.debug('Falsy input {}. Returning None.'.format(unknown_input))
+    else:
+        output_field = column.prepare_string(unknown_input)
+
+    return output_field
 
 
 def choose_license_and_version(
@@ -44,43 +54,6 @@ def validate_url_string(url_string):
         return None
 
 
-def ensure_int(unknown_input):
-    try:
-        number = int(float(unknown_input))
-    except Exception as e:
-        logger.warning(
-            'input {} is not castable to an int.  The error was {}'
-            .format(unknown_input, e)
-        )
-        number = None
-    return number
-
-
-def ensure_sql_bool(bool_str, default=None):
-    if bool_str in ['t', 'f']:
-        return bool_str
-    else:
-        logger.warning('{} is not a valid PostgreSQL bool'.format(bool_str))
-        return default
-
-
-def enforce_char_limit(string, limit, truncate=True):
-    if not type(string) == str:
-        logger.warning(
-            'Cannot limit characters on non-string type {}.  Input was {}.'
-            .format(type(string), string)
-        )
-        return None
-    if len(string) > limit:
-        logger.warning(
-            'String over char limit of {}.  Input was {}.'
-            .format(limit, string)
-        )
-        return string[:limit] if truncate else None
-    else:
-        return string
-
-
 def get_provider_and_source(provider, source, default=None):
     if not provider:
         provider = default
@@ -97,56 +70,6 @@ def enforce_all_arguments_truthy(**kwargs):
             logging.warning('Missing {}'.format(arg))
             all_truthy = False
     return all_truthy
-
-
-def prepare_output_field_string(unknown_input):
-    if not unknown_input:
-        return '\\N'
-    elif type(unknown_input) in [dict, list]:
-        return json.dumps(_sanitize_json_values(unknown_input))
-    else:
-        return _sanitize_string(unknown_input)
-
-
-def _sanitize_json_values(unknown_input, recursion_limit=100):
-    """
-    Recursively sanitizes the non-dict, non-list values of an input
-    dictionary or list in preparation for dumping to JSON string.
-    """
-    input_type = type(unknown_input)
-    if input_type not in [dict, list] or recursion_limit <= 0:
-        return _sanitize_string(unknown_input)
-    elif input_type == list:
-        return [
-            _sanitize_json_values(
-                item,
-                recursion_limit=recursion_limit - 1
-            )
-            for item in unknown_input
-        ]
-    else:
-        return {
-            key: _sanitize_json_values(
-                val,
-                recursion_limit=recursion_limit - 1
-            )
-            for key, val in unknown_input.items()
-        }
-
-
-def _sanitize_string(data):
-    if data is None:
-        return ''
-    else:
-        # We join a split string because it removes all whitespace
-        # characters
-        return ' '.join(
-            str(data)
-            .replace('"', "'")
-            .replace('\b', '')
-            .replace('\\', '\\\\')
-            .split()
-        )
 
 
 def _get_license_from_url(license_url, path_map=LICENSE_PATH_MAP):
