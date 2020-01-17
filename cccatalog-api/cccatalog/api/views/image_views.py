@@ -9,18 +9,16 @@ from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider, DeletedImages
 from cccatalog.api.utils import ccrel
 from cccatalog.api.utils.view_count import track_model_views
-from cccatalog.api.serializers.search_serializers import\
+from cccatalog.api.serializers.image_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
-    ValidationErrorSerializer, ImageSearchQueryStringSerializer, \
-    BrowseImageQueryStringSerializer, RelatedImagesResultsSerializer
-from cccatalog.api.serializers.image_serializers import ImageDetailSerializer,\
+    InputErrorSerializer, ImageSearchQueryStringSerializer,\
     WatermarkQueryStringSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL
 from cccatalog.api.utils.view_count import _get_user_ip
-from urllib.parse import urlparse
 from cccatalog.api.utils.watermark import watermark
 from django.http.response import HttpResponse, FileResponse
 import cccatalog.api.controllers.search_controller as search_controller
+from cccatalog.api.utils.exceptions import input_error_response
 import logging
 import piexif
 import io
@@ -32,25 +30,12 @@ FOREIGN_LANDING_URL = 'foreign_landing_url'
 CREATOR_URL = 'creator_url'
 RESULTS = 'results'
 PAGE = 'page'
-PAGESIZE = 'pagesize'
-VALIDATION_ERROR = 'validation_error'
+PAGESIZE = 'page_size'
 FILTER_DEAD = 'filter_dead'
 QA = 'qa'
 RESULT_COUNT = 'result_count'
 PAGE_COUNT = 'page_count'
-
-
-def _add_protocol(url: str):
-    """
-    Some fields in the database contain incomplete URLs, leading to unexpected
-    behavior in downstream consumers. This helper verifies that we always return
-    fully formed URLs in such situations.
-    """
-    parsed = urlparse(url)
-    if parsed.scheme == '':
-        return 'https://' + url
-    else:
-        return url
+PAGE_SIZE = 'page_size'
 
 
 class SearchImages(APIView):
@@ -74,18 +59,13 @@ class SearchImages(APIView):
                          query_serializer=ImageSearchQueryStringSerializer,
                          responses={
                              200: ImageSearchResultsSerializer(many=True),
-                             400: ValidationErrorSerializer,
+                             400: InputErrorSerializer,
                          })
     def get(self, request, format=None):
         # Parse and validate query parameters
         params = ImageSearchQueryStringSerializer(data=request.query_params)
         if not params.is_valid():
-            return Response(
-                status=400,
-                data={
-                    "validation_error": params.errors
-                }
-            )
+            return input_error_response(params.errors)
 
         hashed_ip = hash(_get_user_ip(request))
         page_param = params.data[PAGE]
@@ -104,98 +84,20 @@ class SearchImages(APIView):
                 filter_dead,
                 page=page_param
             )
-        except ValueError as value_error_message:
-            return Response(
-                status=400,
-                data={
-                    VALIDATION_ERROR: str(value_error_message)
-                }
-            )
+        except ValueError as value_error:
+            return input_error_response(str(value_error))
 
-        serialized_results = ImageSerializer(results, many=True).data
+        context = {'request': request}
+        serialized_results = ImageSerializer(
+            results, many=True, context=context
+        ).data
 
         if len(results) < page_size and page_count == 0:
             result_count = len(results)
         response_data = {
             RESULT_COUNT: result_count,
             PAGE_COUNT: page_count,
-            RESULTS: serialized_results
-        }
-        serialized_response = ImageSearchResultsSerializer(data=response_data)
-        return Response(status=200, data=serialized_response.initial_data)
-
-
-class BrowseImages(APIView):
-    """
-    Browse a collection of CC images by provider, such as the Metropolitan
-    Museum of Art.. See `/statistics/image` for a list of valid
-    collections. The `provider_identifier` field should be used to select
-    the provider.
-
-    As with the `/image/search` endpoint, this is not intended to be used to
-    bulk download our entire collection of images; only the first ~10,000 images
-    in each collection are accessible.
-    """
-
-    @swagger_auto_schema(operation_id='image_browse',
-                         query_serializer=BrowseImageQueryStringSerializer,
-                         responses={
-                             200: ImageSearchResultsSerializer(many=True),
-                             400: ValidationErrorSerializer,
-                         })
-    def get(self, request, provider, format=None):
-        params = BrowseImageQueryStringSerializer(data=request.query_params)
-        if not params.is_valid():
-            return Response(
-                status=400,
-                data={
-                    "validation_error": params.errors
-                }
-            )
-        page_param = params.data[PAGE]
-        page_size = params.data[PAGESIZE]
-        filter_dead = params.data[FILTER_DEAD]
-        lt = None
-        li = None
-        if 'lt' in params.data:
-            lt = params.data['lt']
-        elif 'li' in params.data:
-            li = params.data['li']
-
-        try:
-            results, page_count, result_count = \
-                search_controller.browse_by_provider(
-                    provider,
-                    'image',
-                    page_size,
-                    hash(_get_user_ip(request)),
-                    request,
-                    filter_dead,
-                    page=page_param,
-                    lt=lt,
-                    li=li
-                )
-        except ValueError as value_error_message:
-            return Response(
-                status=400,
-                data={
-                    VALIDATION_ERROR: str(value_error_message)
-                }
-            )
-        except serializers.ValidationError:
-            return Response(
-                status=400,
-                data={
-                    VALIDATION_ERROR: 'Provider \'{}\' does not exist.'
-                    .format(provider)
-                }
-            )
-
-        serialized_results = ImageSerializer(results, many=True).data
-
-        response_data = {
-            'result_count': result_count,
-            'page_count': page_count,
+            PAGE_SIZE: len(results),
             RESULTS: serialized_results
         }
         serialized_response = ImageSearchResultsSerializer(data=response_data)
@@ -214,17 +116,21 @@ class RelatedImage(APIView):
             filter_dead=True
         )
 
-        serialized_related = ImageSerializer(related, many=True).data
+        context = {'request': request}
+        serialized_related = ImageSerializer(
+            related, many=True, context=context
+        ).data
         response_data = {
-            'result_count': result_count,
+            RESULT_COUNT: result_count,
+            PAGE_COUNT: 0,
             RESULTS: serialized_related
         }
-        serialized_response = RelatedImagesResultsSerializer(data=response_data)
+        serialized_response = ImageSearchResultsSerializer(data=response_data)
         return Response(status=200, data=serialized_response.initial_data)
 
 
 class ImageDetail(GenericAPIView, RetrieveModelMixin):
-    serializer_class = ImageDetailSerializer
+    serializer_class = ImageSerializer
     queryset = Image.objects.all()
     lookup_field = 'identifier'
     authentication_classes = [BasicAuthentication]
@@ -234,36 +140,14 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                          operation_description="Load the details of a"
                                                " particular image ID.",
                          responses={
-                             200: ImageDetailSerializer,
+                             200: ImageSerializer,
                              404: 'Not Found'
                          })
     @track_model_views(Image)
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
         resp = self.retrieve(request, identifier)
-        # Get pretty display name for a provider
-        provider = resp.data[search_controller.PROVIDER]
-        try:
-            provider_data = ContentProvider \
-                .objects \
-                .get(provider_identifier=provider)
-            resp.data['provider'] = provider_data.provider_name
-            resp.data['provider_code'] = provider_data.provider_identifier
-            resp.data['provider_url'] = provider_data.domain_name
-        except ContentProvider.DoesNotExist:
-            resp.data['provider'] = 'unknown'
-            resp.data['provider_code'] = provider
-            resp.data['provider_url'] = 'Unknown'
-        # Add page views to the response.
-        resp.data['view_count'] = view_count
         # Fix links to creator and foreign landing URLs.
-        if CREATOR_URL in resp.data:
-            creator_url = _add_protocol(resp.data[CREATOR_URL])
-            resp.data[CREATOR_URL] = creator_url
-        if FOREIGN_LANDING_URL in resp.data:
-            foreign_landing_url = \
-                _add_protocol(resp.data[FOREIGN_LANDING_URL])
-            resp.data[FOREIGN_LANDING_URL] = foreign_landing_url
         # Proxy insecure HTTP images at full resolution.
         if 'http://' in resp.data[search_controller.URL]:
             original = resp.data[search_controller.URL]
@@ -326,12 +210,7 @@ class Watermark(GenericAPIView):
     def get(self, request, identifier, format=None):
         params = WatermarkQueryStringSerializer(data=request.query_params)
         if not params.is_valid():
-            return Response(
-                status=400,
-                data={
-                    "validation_error": params.errors
-                }
-            )
+            return input_error_response()
         try:
             image_record = Image.objects.get(identifier=identifier)
         except Image.DoesNotExist:

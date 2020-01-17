@@ -40,7 +40,7 @@ Once everything has initialized, with `docker-compose` still running in the back
 ```
 
 You are now ready to start sending the API server requests. Hit the API with a request to make sure it is working:
-`curl localhost:8000/image/search?q=honey`
+`curl localhost:8000/v1/images?q=honey`
 
 ### Diagnosing local Elasticsearch issues
 If the API server container failed to start, there's a good chance that Elasticsearch failed to start on your machine. Ensure that you have allocated enough memory to Docker applications, otherwise the container will instantly exit with an error. Also, if the logs mention "insufficient max map count", increase the number of open files allowed on your system. For most Linux machines, you can fix this by adding the following line to `/etc/sysctl.conf`:
@@ -73,10 +73,9 @@ You can check the health of a live deployment of the API by running the live int
 ```
 cd cccatalog-api
 virtualenv venv
-source venv/bin/activate
-pip install -r requirements.txt
-cd test
-./run_test.sh
+pipenv install
+pipenv shell
+./test/run_test.sh
 ```
 
 ### Running Ingestion Server test
@@ -84,9 +83,8 @@ This end-to-end test ingests and indexes some dummy data using the Ingestion Ser
 
 ```
 cd ingestion_server
-virtualenv venv
-source venv/bin/activate
-pip install -r requirements.txt
+pipenv install
+pipenv shell
 python3 test/integration_tests.py
 ```
 

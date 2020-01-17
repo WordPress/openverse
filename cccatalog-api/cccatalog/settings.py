@@ -43,7 +43,7 @@ SHORT_URL_WHITELIST = {
     'ccsearch.creativecommons.org',
     'localhost:8000'
 }
-SHORT_URL_PATH_WHITELIST = ['/list', '/image/']
+SHORT_URL_PATH_WHITELIST = ['/v1/list', '/v1/images/']
 
 # Intermittently run tasks
 CRON_CLASSES = [

@@ -18,17 +18,22 @@ from django.urls import path, re_path
 from django.conf.urls import include
 from django.views.generic.base import RedirectView
 from cccatalog.api.views.image_views import SearchImages, ImageDetail,\
-    Watermark, BrowseImages, RelatedImage
+    Watermark, RelatedImage
 from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
     CheckRates, VerifyEmail
 from cccatalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
 from cccatalog.settings import API_VERSION, WATERMARK_ENABLED
+from rest_framework import routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 import rest_framework.permissions
 
 description = """
+*This is the documentation for version 1.0 of the Creative Commons API.
+Visit https://api.creativecommons.engineering/v0/ to view the legacy
+documentation.*
+
 The Creative Commons Catalog API ('cccatalog-api') is a system
 that allows programmatic access to public domain digital media. It is our
 ambition to index and catalog billions of Creative Commons works, including
@@ -42,7 +47,7 @@ for introducing yourself to the API, but we strongly recommend that you obtain
 an API key as soon as possible. Authorized clients have a higher rate limit
 of 10000 requests per day and 100 requests per minute. Additionally, Creative
 Commons can give your key an even higher limit that fits your application's
-needs. See the `/oauth2/register` endpoint for instructions on obtaining
+needs. See the `/v1/auth_tokens/register` endpoint for instructions on obtaining
 an API key.
 
 Pull requests are welcome!
@@ -62,7 +67,6 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="cccatalog-api@creativecommons.org"),
         license=openapi.License(name="MIT License", url=license_url),
         terms_of_service=tos_url,
-
         x_logo={
             "url": logo_url,
             "backgroundColor": "#FFFFFF"
@@ -72,34 +76,43 @@ schema_view = get_schema_view(
     permission_classes=(rest_framework.permissions.AllowAny,),
 )
 
-urlpatterns = [
-    path('', RedirectView.as_view(url='v1/', permanent=False)),
-    path('v0/', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
-    path('admin/', admin.site.urls),
-    path('oauth2/register', Register.as_view(), name='register'),
-    path('oauth2/key_info', CheckRates.as_view(), name='key_info'),
+versioned_paths = [
+    path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
+    path('auth_tokens/register', Register.as_view(), name='register'),
+    path('rate_limit', CheckRates.as_view(), name='key_info'),
     path(
-        'oauth2/verify/<str:code>',
+        'auth_tokens/verify/<str:code>',
         VerifyEmail.as_view(),
         name='verify-email'
     ),
     re_path(
-        r'^oauth2/',
+        r'auth_tokens/',
         include('oauth2_provider.urls', namespace='oauth2_provider')
     ),
-    # path('list', CreateList.as_view()),
-    # path('list/<str:slug>', ListDetail.as_view(), name='list-detail'),
-    re_path('image/search', SearchImages.as_view()),
-    path('image/browse/<str:provider>', BrowseImages.as_view()),
-    path('image/<str:identifier>', ImageDetail.as_view(), name='image-detail'),
     path(
-        'image/related/<str:identifier>',
+        'images/<str:identifier>', ImageDetail.as_view(), name='image-detail'
+    ),
+    re_path('images', SearchImages.as_view(), name='images'),
+    path(
+        'recommendations/images/<str:identifier>',
         RelatedImage.as_view(),
         name='related-images'
     ),
-    path('statistics/image', ImageStats.as_view(), name='about-image'),
+    path(
+        'sources',
+        ImageStats.as_view(),
+        name='about-image'
+    ),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
+]
+if WATERMARK_ENABLED:
+    versioned_paths.append(
+        path('watermark/<str:identifier>', Watermark.as_view())
+    )
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
     re_path('healthcheck', HealthCheck.as_view()),
     re_path(
         r'^swagger(?P<format>\.json|\.yaml)$',
@@ -114,8 +127,6 @@ urlpatterns = [
         r'^redoc/$',
         schema_view.with_ui('redoc', cache_timeout=15),
         name='schema-redoc'
-    )
+    ),
+    path('v1/', include(versioned_paths))
 ]
-
-if WATERMARK_ENABLED:
-    urlpatterns.append(path('watermark/<str:identifier>', Watermark.as_view()))
