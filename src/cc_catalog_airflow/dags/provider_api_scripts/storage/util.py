@@ -54,13 +54,11 @@ def validate_url_string(url_string):
         return None
 
 
-def get_provider_and_source(provider, source, default=None):
-    if not provider:
-        provider = default
+def get_source(source, provider):
     if not source:
         source = provider
 
-    return provider, source
+    return source
 
 
 def enforce_all_arguments_truthy(**kwargs):
@@ -104,6 +102,7 @@ def _validate_license_pair(
         license_version,
         path_map=LICENSE_PATH_MAP
 ):
+    logger.debug('Path Map: {}'.format(path_map))
     pairs = ((item['license'], item['version']) for item in path_map.values())
     if (license_, license_version) not in pairs:
         logger.warning(

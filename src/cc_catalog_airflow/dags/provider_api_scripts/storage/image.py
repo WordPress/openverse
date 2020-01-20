@@ -1,6 +1,7 @@
 from collections import namedtuple
 from datetime import datetime
 import logging
+import os
 
 from storage import util
 from storage import columns
@@ -73,10 +74,18 @@ _Image = namedtuple(
 
 class ImageStore:
 
-    def __init__(self, provider=None, output_file_name=None):
-        logging.info('Initialized with provider {}'.format(provider))
+    def __init__(
+            self,
+            provider=None,
+            output_file_name=None,
+            output_dir=os.getenv('OUTPUT_DIR'),
+            buffer_length=100
+    ):
+        logger.info('Initialized with provider {}'.format(provider))
         self._image_buffer = []
+        self._total_images = 0
         self._PROVIDER = provider
+        self._BUFFER_LENGTH = buffer_length
         self._NOW = datetime.now()
         if output_file_name:
             self._OUTPUT_FILE = output_file_name
@@ -84,7 +93,17 @@ class ImageStore:
             self._OUTPUT_FILE = '{}_{}.tsv'.format(
                 provider, datetime.strftime(self._NOW, '%Y%m%d%H%M%S')
             )
-        logging.info('Output file: {}'.format(self._OUTPUT_FILE))
+        try:
+            self._OUTPUT_PATH = os.path.join(output_dir, self._OUTPUT_FILE)
+        except Exception as e:
+            logger.warning(
+                'Could not output path!  '
+                'Exception was {} '
+                'Outputting to temporary location.  '
+                .format(e)
+            )
+            self._OUTPUT_PATH = os.path.join('/tmp', self._OUTPUT_FILE)
+        logger.info('Output path: {}'.format(self._OUTPUT_PATH))
 
     def add_item(
             self,
@@ -104,67 +123,68 @@ class ImageStore:
             meta_data=None,
             raw_tags=None,
             watermarked='f',
-            provider=None,
-            source=None,
+            source=None
     ):
         image = self._get_image(
-            foreign_landing_url=foreign_landing_url,
-            image_url=image_url,
-            thumbnail_url=thumbnail_url,
-            license_url=license_url,
-            license_=license_,
-            license_version=license_version,
-            foreign_identifier=foreign_identifier,
-            width=width,
-            height=height,
-            filesize=filesize,
-            creator=creator,
-            creator_url=creator_url,
-            title=title,
-            meta_data=meta_data,
-            raw_tags=raw_tags,
-            watermarked=watermarked,
-            provider=provider,
-            source=source
-        )
-        if image:
-            self._image_buffer.append(self._create_tsv_row(image))
+                foreign_landing_url=foreign_landing_url,
+                image_url=image_url,
+                thumbnail_url=thumbnail_url,
+                license_url=license_url,
+                license_=license_,
+                license_version=license_version,
+                foreign_identifier=foreign_identifier,
+                width=width,
+                height=height,
+                filesize=filesize,
+                creator=creator,
+                creator_url=creator_url,
+                title=title,
+                meta_data=meta_data,
+                raw_tags=raw_tags,
+                watermarked=watermarked,
+                source=source
+            )
+        tsv_row = self._create_tsv_row(image)
+        if tsv_row:
+            self._image_buffer.append(tsv_row)
+        if len(self._image_buffer) >= self._BUFFER_LENGTH:
+            self._flush_buffer()
+
+        return self._total_images
 
     def commit(self):
-        pass
+        self._flush_buffer()
+
+        return self._total_images
 
     def _get_image(
             self,
-            foreign_identifier=None,
-            foreign_landing_url=None,
-            image_url=None,
-            thumbnail_url=None,
-            width=None,
-            height=None,
-            filesize=None,
-            license_url=None,
-            license_=None,
-            license_version=None,
-            creator=None,
-            creator_url=None,
-            title=None,
-            meta_data=None,  # TODO: Check if dict
-            raw_tags=None,  # TODO: change to correct format
-            watermarked='f',
-            provider=None,
-            source=None,
+            foreign_identifier,
+            foreign_landing_url,
+            image_url,
+            thumbnail_url,
+            width,
+            height,
+            filesize,
+            license_url,
+            license_,
+            license_version,
+            creator,
+            creator_url,
+            title,
+            meta_data,
+            raw_tags,
+            watermarked,
+            source,
     ):
         license_, license_version = util.choose_license_and_version(
             license_url=license_url,
             license_=license_,
             license_version=license_version
         )
-
-        provider, source = util.get_provider_and_source(
-            source,
-            provider,
-            default=self._PROVIDER
-        )
+        source = util.get_source(source, self._PROVIDER)
+        meta_data = self._validate_meta_data_dict(meta_data)
+        tags = self._get_enriched_tags(raw_tags)
 
         return _Image(
                 foreign_identifier=foreign_identifier,
@@ -179,10 +199,10 @@ class ImageStore:
                 creator=creator,
                 creator_url=creator_url,
                 title=title,
-                meta_data=meta_data,  # TODO: Enforce JSON
-                tags=raw_tags,  # TODO: format tag list
+                meta_data=meta_data,
+                tags=tags,
                 watermarked=watermarked,
-                provider=provider,
+                provider=self._PROVIDER,
                 source=source
             )
 
@@ -195,6 +215,7 @@ class ImageStore:
         prepared_strings = [
             columns[i].prepare_string(image[i]) for i in range(row_length)
         ]
+        logger.debug('Prepared strings list:\n{}'.format(prepared_strings))
         for i in range(row_length):
             if columns[i].REQUIRED and prepared_strings[i] is None:
                 return None
@@ -202,3 +223,41 @@ class ImageStore:
             return '\t'.join(
                 [s if s is not None else '\\N' for s in prepared_strings]
             ) + '\n'
+
+    def _flush_buffer(self):
+        buffer_length = len(self._image_buffer)
+        logger.debug(
+            'Writing {} lines from buffer to disk.'
+            .format(buffer_length)
+        )
+        with open(self._OUTPUT_PATH, 'a') as f:
+            f.writelines(self._image_buffer)
+        self._image_buffer = []
+        self._total_images += buffer_length
+        logger.debug(
+            'Total Images Processed so far:  {}'
+            .format(self._total_images)
+        )
+        return buffer_length
+
+    def _validate_meta_data_dict(self, meta_data):
+        if type(meta_data) != dict:
+            logger.debug('`meta_data` is not a dictionary.')
+            return None
+        else:
+            return meta_data
+
+    def _get_enriched_tags(self, raw_tags):
+        if type(raw_tags) != list:
+            logger.debug('`tags` is not a list.')
+            return None
+        else:
+            return [
+                self._format_raw_tag(tag) for tag in raw_tags
+            ]
+
+    def _format_raw_tag(self, tag):
+        if type(tag) == dict and tag.get('name') and tag.get('provider'):
+            return tag
+        else:
+            return {'name': tag, 'provider': self._PROVIDER}

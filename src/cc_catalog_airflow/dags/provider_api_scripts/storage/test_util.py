@@ -87,58 +87,28 @@ def test_validate_url_string_discards_without_domain():
     assert actual_validated_url == expect_validated_url
 
 
-def test_get_provider_and_source_preserves_given_both():
-    expect_provider, expect_source = 'Provider', 'Source'
-    actual_provider, actual_source = util.get_provider_and_source(
-        expect_provider, expect_source
-    )
-    assert actual_provider == expect_provider
+def test_get_source_preserves_given_both():
+    expect_source = 'Source'
+    actual_source = util.get_source(expect_source, 'test_provider')
     assert actual_source == expect_source
 
 
-def test_get_provider_and_source_preserves_given_both_and_default():
-    expect_provider, expect_source = 'Provider', 'Source'
-    actual_provider, actual_source = util.get_provider_and_source(
-        expect_provider, expect_source, default='default_provider'
-    )
-    assert actual_provider == expect_provider
-    assert actual_source == expect_source
-
-
-def test_get_provider_and_source_preserves_source_without_provider():
+def test_get_source_preserves_source_without_provider():
     input_provider, expect_source = None, 'Source'
-    actual_provider, actual_source = util.get_provider_and_source(
-        input_provider, expect_source
-    )
+    actual_source = util.get_source(expect_source, input_provider)
     assert actual_source == expect_source
 
 
-def test_get_provider_and_source_keeps_source_without_provider_with_default():
-    input_provider, expect_source = None, 'Source'
-    actual_provider, actual_source = util.get_provider_and_source(
-        input_provider, expect_source, default='Default Provider'
-    )
-    assert actual_source == expect_source
-
-
-def test_get_provider_and_source_fills_source_if_none_given():
+def test_get_source_fills_source_if_none_given():
     input_provider, input_source = 'Provider', None
-    actual_provider, actual_source = util.get_provider_and_source(
-        input_provider, input_source
-    )
-    expect_provider, expect_source = 'Provider', 'Provider'
-    assert actual_provider == expect_provider
+    actual_source = util.get_source(input_source, input_provider)
+    expect_source = 'Provider'
     assert actual_source == expect_source
 
 
-def test_get_provider_and_source_fills_both_from_default_if_none_given():
-    input_provider, input_source = None, None
-    actual_provider, actual_source = util.get_provider_and_source(
-        input_provider, input_source, default='Default'
-    )
-    expect_provider, expect_source = 'Default', 'Default'
-    assert actual_provider == expect_provider
-    assert actual_source == expect_source
+def test_get_source_nones_if_none_given():
+    actual_source = util.get_source(None, None)
+    assert actual_source is None
 
 
 def test_enforce_all_arguments_truthy_false_when_one_argument_is_empty_str():
