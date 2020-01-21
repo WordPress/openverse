@@ -111,69 +111,6 @@ def test_get_source_nones_if_none_given():
     assert actual_source is None
 
 
-def test_enforce_all_arguments_truthy_false_when_one_argument_is_empty_str():
-    truthy = util.enforce_all_arguments_truthy(
-        dog='dog',
-        cat=''
-    )
-    assert truthy is False
-
-
-def test_enforce_all_arguments_truthy_false_when_one_argument_is_nonetype():
-    truthy = util.enforce_all_arguments_truthy(
-        dog='dog',
-        cat='cat',
-        rat=None
-    )
-    assert truthy is False
-
-
-def test_enforce_all_arguments_truthy_false_when_truthy_is_last():
-    truthy = util.enforce_all_arguments_truthy(
-        dog='dog',
-        cat=None,
-        rat='rat'
-    )
-    assert truthy is False
-
-
-def test_enforce_all_arguments_truthy_false_when_one_is_empty_list():
-    truthy = util.enforce_all_arguments_truthy(
-        dog='dog',
-        cat=[],
-        rat='rat'
-    )
-    assert truthy is False
-
-
-def test_enforce_all_arguments_truthy_false_when_one_is_empty_dict():
-    truthy = util.enforce_all_arguments_truthy(
-        dog='dog',
-        cat={},
-        rat='rat'
-    )
-    assert truthy is False
-
-
-def test_enforce_all_arguments_truthy_false_when_one_is_zero():
-    truthy = util.enforce_all_arguments_truthy(
-        dog='dog',
-        cat=0,
-        rat='rat'
-    )
-    assert truthy is False
-
-
-def test_enforce_all_arguments_truthy_true_with_different_types():
-    truthy = util.enforce_all_arguments_truthy(
-        ant=2,
-        bat={'animal': 'bat'},
-        dog='dog',
-        cat=['cat'],
-    )
-    assert truthy is True
-
-
 def test_get_license_from_url_finds_info_from_path():
     path_map = {
         'by/1.0': {'license': 'by', 'version': '1.0'},

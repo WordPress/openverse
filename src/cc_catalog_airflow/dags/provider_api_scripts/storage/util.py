@@ -50,15 +50,6 @@ def get_source(source, provider):
     return source
 
 
-def enforce_all_arguments_truthy(**kwargs):
-    all_truthy = True
-    for arg in kwargs:
-        if not kwargs[arg]:
-            logging.warning('Missing {}'.format(arg))
-            all_truthy = False
-    return all_truthy
-
-
 def _get_license_from_url(license_url, path_map=LICENSE_PATH_MAP):
     license_url = validate_url_string(license_url)
     if license_url:
