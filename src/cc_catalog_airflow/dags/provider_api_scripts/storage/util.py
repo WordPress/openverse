@@ -15,6 +15,16 @@ LICENSE_PATH_MAP = constants.LICENSE_PATH_MAP
 def choose_license_and_version(
         license_url=None, license_=None, license_version=None
 ):
+    """
+    Returns a valid license pair, preferring one derived from license_url.
+
+    If no such pair can be found, returns None, None.
+
+    Three optional arguments:
+    license_url:      String URL to a CC license page.
+    license_:         String representing a CC license.
+    license_version:  string URL to a CC license page.  (Will cast floats)
+    """
     derived_license, derived_version = _get_license_from_url(license_url)
     if derived_license and derived_version:
         # We prefer license and version derived from the license_url, when
@@ -35,6 +45,11 @@ def choose_license_and_version(
 
 
 def validate_url_string(url_string):
+    """
+    Checks given `url_string` can be parsed into a URL with scheme and domain
+
+    If not, returns None
+    """
     parse_result = urlparse(url_string)
     if type(url_string) == str and parse_result.scheme and parse_result.netloc:
         return url_string
@@ -44,6 +59,9 @@ def validate_url_string(url_string):
 
 
 def get_source(source, provider):
+    """
+    Returns `source` if given, otherwise `provider`
+    """
     if not source:
         source = provider
 
@@ -84,10 +102,19 @@ def _validate_license_pair(
 ):
     logger.debug('Path Map: {}'.format(path_map))
     pairs = ((item['license'], item['version']) for item in path_map.values())
+    try:
+        license_version = str(float(license_version))
+    except Exception as e:
+        logger.warning(
+            'Could not recover license_version from {}!\n{}'
+            .format(license_version, e)
+        )
+        return None, None
     if (license_, license_version) not in pairs:
         logger.warning(
-            '{}, {} is not a valid license, license_version pair'
-            .format(license_, license_version)
+            '{}, {} is not a valid license, license_version pair!\n'
+            'Valid pairs are:  {}'
+            .format(license_, license_version, pairs)
         )
         license_, license_version = None, None
     return license_, license_version

@@ -187,7 +187,6 @@ def test_get_license_from_url_nones_invalid_license():
 
 
 def test_get_license_from_url_nones_missing_url():
-    path_map = {'by/1.0': {'license': 'by', 'version': '1.0'}}
     actual_license, actual_version = util._get_license_from_url(None)
     expect_license, expect_version = None, None
     assert actual_license == expect_license
@@ -202,5 +201,41 @@ def test_validate_license_pair_nones_missing_license():
         path_map
     )
     expect_license, expect_version = None, None
+    assert actual_license == expect_license
+    assert actual_version == expect_version
+
+
+def test_validate_license_pair_nones_missing_version():
+    path_map = {'by/1.0': {'license': 'by', 'version': '1.0'}}
+    actual_license, actual_version = util._validate_license_pair(
+        'by',
+        None,
+        path_map
+    )
+    expect_license, expect_version = None, None
+    assert actual_license == expect_license
+    assert actual_version == expect_version
+
+
+def test_validate_license_pair_handles_float_version():
+    path_map = {'by/1.0': {'license': 'by', 'version': '1.0'}}
+    actual_license, actual_version = util._validate_license_pair(
+        'by',
+        1.0,
+        path_map
+    )
+    expect_license, expect_version = 'by', '1.0'
+    assert actual_license == expect_license
+    assert actual_version == expect_version
+
+
+def test_validate_license_pair_handles_int_version():
+    path_map = {'by/1.0': {'license': 'by', 'version': '1.0'}}
+    actual_license, actual_version = util._validate_license_pair(
+        'by',
+        1,
+        path_map
+    )
+    expect_license, expect_version = 'by', '1.0'
     assert actual_license == expect_license
     assert actual_version == expect_version
