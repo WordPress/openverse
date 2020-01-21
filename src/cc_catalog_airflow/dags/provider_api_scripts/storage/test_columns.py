@@ -161,6 +161,18 @@ def test_BooleanColumn_prepare_string_leaves_f():
     assert actual_bool == expect_bool
 
 
+def test_BooleanColumn_prepare_string_casts_truthlike():
+    bc = columns.BooleanColumn('test', False)
+    truthlike_values = [True, 'true', 'True', 't', 'T']
+    assert all([bc.prepare_string(v) == 't' for v in truthlike_values])
+
+
+def test_BooleanColumn_prepare_string_casts_falselike():
+    bc = columns.BooleanColumn('test', False)
+    falselike_values = [False, 'false', 'False', 'f', 'F']
+    assert all([bc.prepare_string(v) == 'f' for v in falselike_values])
+
+
 def test_JSONColumn_prepare_string_nones_empty_list(monkeypatch):
     jc = columns.JSONColumn('test', False)
     L = []
