@@ -73,6 +73,17 @@ _Image = namedtuple(
 
 
 class ImageStore:
+    """
+    A class that stores image information from a given provider.
+
+    Optional init arguments:
+    provider:       String marking the provider in the `image` table of the DB.
+    output_file:    String giving a temporary .tsv filename (*not* the
+                    full path) where the image info should be stored.
+    output_dir:     String giving a path where `output_file` should be placed.
+    buffer_length:  Integer giving the maximum number of image information rows
+                    to store in memory before writing them to disk.
+    """
 
     def __init__(
             self,
@@ -129,7 +140,6 @@ class ImageStore:
             foreign_identifier=None,
             width=None,
             height=None,
-            filesize=None,
             creator=None,
             creator_url=None,
             title=None,
@@ -138,6 +148,56 @@ class ImageStore:
             watermarked='f',
             source=None
     ):
+        """
+        Add information for a single image to the ImageStore.
+
+        Required Arguments:
+
+        foreign_landing_url:  URL of page where the image lives on the
+                              source website.
+        image_url:            Direct link to the image file
+
+        Semi-Required Arguments
+
+        license_url:      URL of the license for the image on the
+                          Creative Commons website.
+        license_:         String representation of a Creative Commons
+                          license.  For valid options, see
+                          `storage.constants.LICENSE_PATH_MAP`
+        license_version:  Version of the given license.
+
+        Note on license arguments: These are 'semi-required' in that
+        either a valid `license_url` must be given, or a valid
+        `license_`, `license_version` pair must be given. Otherwise, the
+        image data will be discarded.
+
+        Optional Arguments:
+
+        thumbnail_url:       Direct link to a thumbnail-sized version of
+                             the image
+        foreign_identifier:  Unique identifier for the image on the
+                             source site.
+        width:               in pixels
+        height:              in pixels
+        creator:             The creator of the image.
+        creator_url:         The user page, or home page of the creator.
+        title:               Title of the image.
+        meta_data:           Dictionary of meta_data about the image.
+                             Currently, a key that we prefer to have is
+                             `description`
+        raw_tags:            List of tags associated with the image
+        watermarked:         A boolean, or 't' or 'f' string; whether or
+                             not the image has a noticeable watermark.
+        source:              If different from the provider.  This might
+                             be the case when we get information from
+                             some aggregation of images.  In this case,
+                             the `source` argument gives the aggregator,
+                             and the `provider` argument in the
+                             ImageStore init function is the specific
+                             provider of the image.
+        """
+        filesize = None
+
         image = self._get_image(
                 foreign_landing_url=foreign_landing_url,
                 image_url=image_url,
@@ -166,6 +226,7 @@ class ImageStore:
         return self._total_images
 
     def commit(self):
+        """Writes all remaining images in the buffer to disk."""
         self._flush_buffer()
 
         return self._total_images
