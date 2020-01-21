@@ -12,17 +12,6 @@ logger = logging.getLogger(__name__)
 LICENSE_PATH_MAP = constants.LICENSE_PATH_MAP
 
 
-def prepare_table_field_string(unknown_input, column):
-    output_field = None
-
-    if not unknown_input:
-        logger.debug('Falsy input {}. Returning None.'.format(unknown_input))
-    else:
-        output_field = column.prepare_string(unknown_input)
-
-    return output_field
-
-
 def choose_license_and_version(
         license_url=None, license_=None, license_version=None
 ):

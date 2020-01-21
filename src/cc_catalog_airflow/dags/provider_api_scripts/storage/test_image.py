@@ -1,5 +1,5 @@
-import pytest
 import logging
+import pytest
 
 from storage import image
 
@@ -8,13 +8,127 @@ logging.basicConfig(
     level=logging.DEBUG)
 
 
-def test_init_includes_provider_in_output_files_string():
+@pytest.fixture
+def setup_env(monkeypatch):
+    monkeypatch.setenv('OUTPUT_DIR', '/tmp')
+
+
+def test_ImageStore_uses_OUTPUT_DIR_variable(
+        monkeypatch,
+):
+    testing_output_dir = '/my_output_dir'
+    monkeypatch.setenv('OUTPUT_DIR', testing_output_dir)
+    image_store = image.ImageStore()
+    assert testing_output_dir in image_store._OUTPUT_PATH
+
+
+def test_ImageStore_falls_back_to_tmp_output_dir_variable(
+        monkeypatch,
+        setup_env,
+):
+    monkeypatch.delenv('OUTPUT_DIR')
+    image_store = image.ImageStore()
+    assert '/tmp' in image_store._OUTPUT_PATH
+
+
+def test_ImageStore_includes_provider_in_output_file_string(
+        setup_env,
+):
     image_store = image.ImageStore('test_provider')
-    assert type(image_store._OUTPUT_FILE) == str
-    assert 'test_provider' in image_store._OUTPUT_FILE
+    assert type(image_store._OUTPUT_PATH) == str
+    assert 'test_provider' in image_store._OUTPUT_PATH
 
 
-def test_ImageStore_get_image_correctly_places_given_args(monkeypatch):
+def test_ImageStore_add_item_adds_realistic_image_to_buffer(
+        setup_env,
+):
+    image_store = image.ImageStore(provider='testing_provider')
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image01',
+        image_url='https://images.org/image01.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    assert len(image_store._image_buffer) == 1
+
+
+def test_ImageStore_add_item_adds_multiple_images_to_buffer(
+        setup_env,
+):
+    image_store = image.ImageStore(provider='testing_provider')
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image01',
+        image_url='https://images.org/image01.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image02',
+        image_url='https://images.org/image02.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image03',
+        image_url='https://images.org/image03.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image04',
+        image_url='https://images.org/image04.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    assert len(image_store._image_buffer) == 4
+
+
+def test_ImageStore_add_item_flushes_buffer(
+        tmpdir,
+        setup_env,
+):
+    output_file = 'testing.tsv'
+    tmp_directory = tmpdir
+    output_dir = str(tmp_directory)
+    tmp_file = tmp_directory.join(output_file)
+    tmp_path_full = str(tmp_file)
+
+    image_store = image.ImageStore(
+        provider='testing_provider',
+        output_file=output_file,
+        output_dir=output_dir,
+        buffer_length=3
+    )
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image01',
+        image_url='https://images.org/image01.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image02',
+        image_url='https://images.org/image02.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image03',
+        image_url='https://images.org/image03.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image04',
+        image_url='https://images.org/image04.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    assert len(image_store._image_buffer) == 1
+    with open(tmp_path_full) as f:
+        lines = f.read().split('\n')
+    assert len(lines) == 4  # recall the last '\n' will create an empty line.
+
+
+def test_ImageStore_commit_writes_nothing_if_no_lines_in_buffer():
+    image_store = image.ImageStore(output_dir='/path/does/not/exist')
+    image_store.commit()
+
+
+def test_ImageStore_get_image_places_given_args(
+        monkeypatch,
+        setup_env
+):
     image_store = image.ImageStore(provider='testing_provider')
     args_dict = {
         'foreign_landing_url': 'https://landing_page.com',
@@ -69,6 +183,7 @@ def test_ImageStore_get_image_correctly_places_given_args(monkeypatch):
 
 def test_ImageStore_get_image_calls_license_chooser(
         monkeypatch,
+        setup_env,
 ):
     image_store = image.ImageStore()
 
@@ -102,7 +217,10 @@ def test_ImageStore_get_image_calls_license_chooser(
     assert actual_image.license_ == 'diff_license'
 
 
-def test_ImageStore_get_image_gets_source(monkeypatch):
+def test_ImageStore_get_image_gets_source(
+        monkeypatch,
+        setup_env,
+):
     image_store = image.ImageStore()
 
     def mock_get_source(source, provider):
@@ -131,7 +249,9 @@ def test_ImageStore_get_image_gets_source(monkeypatch):
     assert actual_image.source == 'diff_source'
 
 
-def test_ImageStore_get_image_nones_non_dict_meta_data():
+def test_ImageStore_get_image_nones_non_dict_meta_data(
+        setup_env,
+):
     image_store = image.ImageStore()
 
     actual_image = image_store._get_image(
@@ -156,7 +276,9 @@ def test_ImageStore_get_image_nones_non_dict_meta_data():
     assert actual_image.meta_data is None
 
 
-def test_ImageStore_get_image_leaves_dict_meta_data():
+def test_ImageStore_get_image_leaves_dict_meta_data(
+        setup_env,
+):
     image_store = image.ImageStore()
 
     actual_image = image_store._get_image(
@@ -181,7 +303,9 @@ def test_ImageStore_get_image_leaves_dict_meta_data():
     assert actual_image.meta_data == {'key1': 'val1'}
 
 
-def test_ImageStore_get_image_enriches_singleton_tags():
+def test_ImageStore_get_image_enriches_singleton_tags(
+        setup_env,
+):
     image_store = image.ImageStore('test_provider')
 
     actual_image = image_store._get_image(
@@ -207,7 +331,9 @@ def test_ImageStore_get_image_enriches_singleton_tags():
     assert actual_image.tags == [{'name': 'lone', 'provider': 'test_provider'}]
 
 
-def test_ImageStore_get_image_enriches_multiple_tags():
+def test_ImageStore_get_image_enriches_multiple_tags(
+        setup_env,
+):
     image_store = image.ImageStore('test_provider')
     actual_image = image_store._get_image(
         license_url='https://license/url',
@@ -236,7 +362,9 @@ def test_ImageStore_get_image_enriches_multiple_tags():
     ]
 
 
-def test_ImageStore_get_image_leaves_preenriched_tags():
+def test_ImageStore_get_image_leaves_preenriched_tags(
+        setup_env
+):
     image_store = image.ImageStore('test_provider')
     tags = [
         {'name': 'tagone', 'provider': 'test_provider'},
@@ -259,7 +387,7 @@ def test_ImageStore_get_image_leaves_preenriched_tags():
         creator_url=None,
         title=None,
         meta_data=None,
-        raw_tags=['tagone', 'tag2', 'tag3'],
+        raw_tags=tags,
         watermarked=None,
         source=None,
     )
@@ -267,7 +395,9 @@ def test_ImageStore_get_image_leaves_preenriched_tags():
     assert actual_image.tags == tags
 
 
-def test_ImageStore_get_image_nones_nonlist_tags():
+def test_ImageStore_get_image_nones_nonlist_tags(
+        setup_env,
+):
     image_store = image.ImageStore('test_provider')
     tags = 'notalist'
 
@@ -295,7 +425,9 @@ def test_ImageStore_get_image_nones_nonlist_tags():
 
 
 @pytest.fixture
-def default_image_args():
+def default_image_args(
+        setup_env,
+):
     return dict(
         foreign_identifier=None,
         foreign_landing_url='https://image.org',
@@ -317,14 +449,20 @@ def default_image_args():
     )
 
 
-def test_create_tsv_row_non_none_if_required_fields(default_image_args):
+def test_create_tsv_row_non_none_if_req_fields(
+        default_image_args,
+        setup_env,
+):
     image_store = image.ImageStore()
     test_image = image._Image(**default_image_args)
     actual_row = image_store._create_tsv_row(test_image)
     assert actual_row is not None
 
 
-def test_create_tsv_row_none_if_no_foreign_landing_url(default_image_args):
+def test_create_tsv_row_none_if_no_foreign_landing_url(
+        default_image_args,
+        setup_env,
+):
     image_store = image.ImageStore()
     image_args = default_image_args
     image_args['foreign_landing_url'] = None
@@ -334,7 +472,10 @@ def test_create_tsv_row_none_if_no_foreign_landing_url(default_image_args):
     assert expect_row == actual_row
 
 
-def test_create_tsv_row_none_if_no_license(default_image_args):
+def test_create_tsv_row_none_if_no_license(
+        default_image_args,
+        setup_env,
+):
     image_store = image.ImageStore()
     image_args = default_image_args
     image_args['license_'] = None
@@ -344,7 +485,10 @@ def test_create_tsv_row_none_if_no_license(default_image_args):
     assert expect_row == actual_row
 
 
-def test_create_tsv_row_none_if_no_license_version(default_image_args):
+def test_create_tsv_row_none_if_no_license_version(
+        default_image_args,
+        setup_env,
+):
     image_store = image.ImageStore()
     image_args = default_image_args
     image_args['license_version'] = None
@@ -354,7 +498,10 @@ def test_create_tsv_row_none_if_no_license_version(default_image_args):
     assert expect_row == actual_row
 
 
-def test_create_tsv_row_returns_none_if_missing_image_url(default_image_args):
+def test_create_tsv_row_returns_none_if_missing_image_url(
+        default_image_args,
+        setup_env,
+):
     image_store = image.ImageStore()
     image_args = default_image_args
     image_args['image_url'] = None
@@ -364,7 +511,10 @@ def test_create_tsv_row_returns_none_if_missing_image_url(default_image_args):
     assert expect_row == actual_row
 
 
-def test_create_tsv_row_handles_empty_dict_and_tags(default_image_args):
+def test_create_tsv_row_handles_empty_dict_and_tags(
+        default_image_args,
+        setup_env,
+):
     image_store = image.ImageStore()
     meta_data = {}
     tags = []
@@ -380,7 +530,10 @@ def test_create_tsv_row_handles_empty_dict_and_tags(default_image_args):
     assert expect_tags == actual_tags
 
 
-def test_create_tsv_row_turns_empty_into_nullchar(default_image_args):
+def test_create_tsv_row_turns_empty_into_nullchar(
+        default_image_args,
+        setup_env,
+):
     image_store = image.ImageStore()
     image_args = default_image_args
     test_image = image._Image(**image_args)
@@ -395,7 +548,9 @@ def test_create_tsv_row_turns_empty_into_nullchar(default_image_args):
     assert actual_row[-1] == '\\N\n'
 
 
-def test_create_tsv_row_properly_places_entries():
+def test_create_tsv_row_properly_places_entries(
+        setup_env,
+):
     image_store = image.ImageStore()
     req_args_dict = {
         'foreign_landing_url': 'https://landing_page.com',

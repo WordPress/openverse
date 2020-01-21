@@ -77,8 +77,8 @@ class ImageStore:
     def __init__(
             self,
             provider=None,
-            output_file_name=None,
-            output_dir=os.getenv('OUTPUT_DIR'),
+            output_file=None,
+            output_dir=None,
             buffer_length=100
     ):
         logger.info('Initialized with provider {}'.format(provider))
@@ -87,23 +87,36 @@ class ImageStore:
         self._PROVIDER = provider
         self._BUFFER_LENGTH = buffer_length
         self._NOW = datetime.now()
-        if output_file_name:
-            self._OUTPUT_FILE = output_file_name
+        self._OUTPUT_PATH = self._initialize_output_path(
+            output_dir,
+            output_file,
+            provider,
+        )
+
+    def _initialize_output_path(self, output_dir, output_file, provider):
+        if output_dir is None:
+            logger.info(
+                'No given output directory.  '
+                'Using OUTPUT_DIR from environment.'
+            )
+            output_dir = os.getenv('OUTPUT_DIR')
+        if output_dir is None:
+            logger.warning(
+                'OUTPUT_DIR is not set in the enivronment.  '
+                'Output will go to /tmp.'
+            )
+            output_dir = '/tmp'
+
+        if output_file is not None:
+            output_file = str(output_file)
         else:
-            self._OUTPUT_FILE = '{}_{}.tsv'.format(
+            output_file = '{}_{}.tsv'.format(
                 provider, datetime.strftime(self._NOW, '%Y%m%d%H%M%S')
             )
-        try:
-            self._OUTPUT_PATH = os.path.join(output_dir, self._OUTPUT_FILE)
-        except Exception as e:
-            logger.warning(
-                'Could not output path!  '
-                'Exception was {} '
-                'Outputting to temporary location.  '
-                .format(e)
-            )
-            self._OUTPUT_PATH = os.path.join('/tmp', self._OUTPUT_FILE)
-        logger.info('Output path: {}'.format(self._OUTPUT_PATH))
+
+        output_path = os.path.join(output_dir, output_file)
+        logger.info('Output path: {}'.format(output_path))
+        return output_path
 
     def add_item(
             self,
@@ -226,18 +239,21 @@ class ImageStore:
 
     def _flush_buffer(self):
         buffer_length = len(self._image_buffer)
-        logger.debug(
-            'Writing {} lines from buffer to disk.'
-            .format(buffer_length)
-        )
-        with open(self._OUTPUT_PATH, 'a') as f:
-            f.writelines(self._image_buffer)
-        self._image_buffer = []
-        self._total_images += buffer_length
-        logger.debug(
-            'Total Images Processed so far:  {}'
-            .format(self._total_images)
-        )
+        if buffer_length > 0:
+            logger.debug(
+                'Writing {} lines from buffer to disk.'
+                .format(buffer_length)
+            )
+            with open(self._OUTPUT_PATH, 'a') as f:
+                f.writelines(self._image_buffer)
+                self._image_buffer = []
+                self._total_images += buffer_length
+                logger.debug(
+                    'Total Images Processed so far:  {}'
+                    .format(self._total_images)
+                )
+        else:
+            logger.debug('Empty buffer!  Nothing to write.')
         return buffer_length
 
     def _validate_meta_data_dict(self, meta_data):
@@ -258,6 +274,8 @@ class ImageStore:
 
     def _format_raw_tag(self, tag):
         if type(tag) == dict and tag.get('name') and tag.get('provider'):
+            logger.debug('Tag already enriched: {}'.format(tag))
             return tag
         else:
+            logger.debug('Enriching tag: {}'.format(tag))
             return {'name': tag, 'provider': self._PROVIDER}
