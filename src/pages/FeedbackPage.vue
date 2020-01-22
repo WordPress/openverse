@@ -10,18 +10,8 @@
         <a href="https://wiki.creativecommons.org/wiki/Slack#How_to_join_Slack">CC Slack</a>.
       </p>
       <p>
-        To report a bug, <a href="#report">click here</a>.
+        To give Feedback, <a href="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true" target="_blank">click here</a>.
       </p>
-
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
-              width="640"
-              height="998"
-              frameborder="0"
-              marginheight="0"
-              marginwidth="0"
-              title="feedback form">
-              Loading...
-      </iframe>
 
       <div>
         <h2><a id="report"></a>Report a bug</h2>
