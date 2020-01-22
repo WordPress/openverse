@@ -11,7 +11,7 @@ from tld.utils import update_tld_names
 from tld.exceptions import TldBadUrl
 update_tld_names()
 """
-Functions for processing data when it is imported into the CC Catalog. This 
+Functions for processing data when it is imported into the CC Catalog. This
 includes cleaning up malformed URLs and filtering out undesirable tags.
 """
 
@@ -24,15 +24,7 @@ TAG_BLACKLIST = {
     'squareformat',
     'uploaded:by=flickrmobile',
     'uploaded:by=instagram',
-    'flickriosapp:filter=flamingo',
-    'cc0',
-    'by',
-    'by-nc',
-    'by-nd',
-    'by-sa',
-    'by-nc-nd',
-    'by-nc-sa',
-    'pdm'
+    'flickriosapp:filter=flamingo'
 }
 
 # Filter out tags that contain the following terms. All entrees should be
@@ -41,7 +33,15 @@ TAG_CONTAINS_BLACKLIST = {
     'flickriosapp',
     'uploaded',
     ':',
-    '='
+    '=',
+    'cc0',
+    'by',
+    'by-nc',
+    'by-nd',
+    'by-sa',
+    'by-nc-nd',
+    'by-nc-sa',
+    'pdm'
 }
 
 # Filter out low-confidence tags, which indicate that the machine-generated tag
@@ -111,9 +111,10 @@ class CleanupFunctions:
                 below_threshold = True
             lower_tag = tag['name'].lower()
             should_filter = _tag_blacklisted(lower_tag) or below_threshold
-            if not should_filter:
-                tag_output.append(tag)
+            if should_filter:
                 update_required = True
+            else:
+                tag_output.append(tag)
 
         if update_required:
             fragment = Json(tag_output)
@@ -261,9 +262,9 @@ def clean_image_data(table):
             fields_to_clean.add(f)
 
     cleanup_selection = "SELECT id, provider, {fields} from {table}".format(
-                            fields=', '.join(fields_to_clean),
-                            table='temp_import_{}'.format(table),
-                        )
+        fields=', '.join(fields_to_clean),
+        table='temp_import_{}'.format(table),
+    )
     log.info('Running cleanup on selection "{}"'.format(cleanup_selection))
     conn = database_connect(autocommit=True)
     cursor_name = '{}-{}'.format(table, str(uuid.uuid4()))

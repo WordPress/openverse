@@ -1,4 +1,4 @@
-import enum
+from enum import Enum, auto
 from elasticsearch_dsl import Integer, DocType, Field
 from ingestion_server.categorize import get_categories
 
@@ -44,10 +44,18 @@ class Image(SyncableDocType):
     Represents an image in Elasticsearch. Note that actual mappings are defined
     in `ingestion_server.es_mapping`.
     """
-    class AspectRatios(enum.Enum):
-        TALL = 0
-        WIDE = 1
-        SQUARE = 2
+    class AspectRatios(Enum):
+        TALL = auto()
+        WIDE = auto()
+        SQUARE = auto()
+
+    class ImageSizes(Enum):
+        """
+        Maximum threshold for each image size band
+        """
+        SMALL = 640 * 480
+        MEDIUM = 1600 * 900
+        LARGE = float("inf")
 
     class Index:
         name = 'image'
@@ -91,7 +99,8 @@ class Image(SyncableDocType):
             comments=comments,
             likes=likes,
             categories=get_categories(extension, provider),
-            aspect_ratio=Image.get_aspect_ratio(height, width)
+            aspect_ratio=Image.get_aspect_ratio(height, width),
+            size=Image.get_size(height, width)
         )
 
     @staticmethod
@@ -126,6 +135,15 @@ class Image(SyncableDocType):
         else:
             aspect_ratio = Image.AspectRatios.SQUARE.name
         return aspect_ratio.lower()
+
+    @staticmethod
+    def get_size(height, width):
+        if height is None or width is None:
+            return None
+        resolution = height * width
+        for size in Image.ImageSizes:
+            if resolution < size.value:
+                return size.name.lower()
 
     @staticmethod
     def parse_detailed_tags(json_tags):

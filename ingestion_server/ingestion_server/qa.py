@@ -44,8 +44,7 @@ def _phrase_relevance(index):
     less_relevant1 = test_image(
         'A picture of my office',
         [{'name': 'office'}],
-        'Alice Foo'
-        ,
+        'Alice Foo',
         QAScores.LESS_RELEVANT.value
     )
     less_relevant1.save(index=index)
@@ -73,4 +72,3 @@ def _phrase_relevance(index):
         'My home office', target_tags, 'John Fooson', QAScores.TARGET.value
     )
     target.save(index=index)
-
