@@ -64,7 +64,6 @@ export default {
   background-color: #2b2b2b;
   width: 100%;
   bottom: 0;
-  position: fixed;
 
   hr {
     max-width: 100%;
