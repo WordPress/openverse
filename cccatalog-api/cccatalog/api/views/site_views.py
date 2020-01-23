@@ -98,7 +98,7 @@ class Register(APIView):
 
     First, register for a key.
     ```
-    $ curl -XPOST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "A description", "email": "example@example.com"}' https://api.creativecommons.engineering/oauth2/register
+    $ curl -XPOST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "A description", "email": "example@example.com"}' https://api.creativecommons.engineering/v1/auth_tokens/register
     {
         "client_secret" : "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
         "client_id" : "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
@@ -109,7 +109,7 @@ class Register(APIView):
 
     Now, exchange your client credentials for a token.
     ```
-    $ curl -X POST -d "client_id=pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda&client_secret=YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e&grant_type=client_credentials" https://api.creativecommons.engineering/oauth2/token/
+    $ curl -X POST -d "client_id=pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda&client_secret=YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e&grant_type=client_credentials" https://api.creativecommons.engineering/v1/auth_tokens/token/
     {
        "access_token" : "DLBYIcfnKfolaXKcmMC8RIDCavc2hW",
        "scope" : "read write groups",
@@ -125,7 +125,7 @@ class Register(APIView):
     your future API requests.
 
     ```
-    $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/image/search?q=test
+    $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
     ```
 
     **Be advised** that your token will be throttled like an anonymous user

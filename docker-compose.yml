@@ -90,6 +90,7 @@ services:
     depends_on:
       - db
       - es
+      - indexer-worker
     volumes:
       - ./ingestion_server:/ingestion-server
     environment:
@@ -113,6 +114,7 @@ services:
     build:
       context: ./ingestion_server/
       dockerfile: Dockerfile-worker
+    container_name: indexer-worker
     ports: 
       - "8002:8002"
     depends_on:

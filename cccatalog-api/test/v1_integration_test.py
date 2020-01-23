@@ -3,17 +3,18 @@ import json
 import pytest
 import os
 import uuid
+import time
+import cccatalog.settings
+from django.db.models import Max
+from django.urls import reverse
 from cccatalog.api.licenses import LICENSE_GROUPS
-from cccatalog.api.models import Image
+from cccatalog.api.models import Image, OAuth2Verification
 from cccatalog.api.utils.watermark import watermark
-"""
-**These are the LEGACY API integration tests; do not add further tests here.**
-New tests should be added in v1_integration_test.
 
+"""
 End-to-end API tests. Can be used to verify a live deployment is functioning as
 designed. Run with the `pytest -s` command from this directory.
 """
-
 
 API_URL = os.getenv('INTEGRATION_TEST_URL', 'http://localhost:8000')
 known_apis = {
@@ -32,7 +33,7 @@ def setup_module():
 
 @pytest.fixture
 def search_fixture():
-    response = requests.get(API_URL + '/image/search?q=honey',
+    response = requests.get(API_URL + '/v1/images?q=honey',
                             verify=False)
     assert response.status_code == 200
     parsed = json.loads(response.text)
@@ -43,7 +44,7 @@ def test_search_quotes():
     """
     We want to return a response even if the user messes up quote matching.
     """
-    response = requests.get(API_URL + '/image/search?q="test', verify=False)
+    response = requests.get(API_URL + '/v1/images?q="test', verify=False)
     assert response.status_code == 200
 
 
@@ -60,7 +61,7 @@ def test_search_consistency():
     """
     n_pages = 5
     searches = set(
-        requests.get(API_URL + '/image/search?q=honey;page={}'.format(page),
+        requests.get(API_URL + '/v1/images?q=honey;page={}'.format(page),
                      verify=False)
         for page in range(1, n_pages)
     )
@@ -76,14 +77,14 @@ def test_search_consistency():
 
 def test_image_detail(search_fixture):
     test_id = search_fixture['results'][0]['id']
-    response = requests.get(API_URL + '/image/{}'.format(test_id), verify=False)
+    response = requests.get(API_URL + '/v1/images/{}'.format(test_id), verify=False)
     assert response.status_code == 200
 
 
 def test_image_delete_invalid_creds(search_fixture):
     test_id = search_fixture['results'][0]['id']
     should_fail = requests.delete(
-        f'{API_URL}/image/{test_id}',
+        f'{API_URL}/v1/images/{test_id}',
         auth=('invalid', 'credentials'),
         verify=False
     )
@@ -93,7 +94,7 @@ def test_image_delete_invalid_creds(search_fixture):
 def test_image_delete(search_fixture):
     test_id = search_fixture['results'][0]['id']
     response = requests.delete(
-        f'{API_URL}/image/{test_id}',
+        f'{API_URL}/v1/images/{test_id}',
         auth=('continuous_integration', 'deploydeploy'),
         verify=False
     )
@@ -104,9 +105,9 @@ def test_image_delete(search_fixture):
 
 @pytest.fixture
 def link_shortener_fixture(search_fixture):
-    link_to_shorten = search_fixture['results'][0]['detail']
+    link_to_shorten = search_fixture['results'][0]['detail_url']
     payload = {"full_url": link_to_shorten}
-    response = requests.post(API_URL + '/link', json=payload, verify=False)
+    response = requests.post(API_URL + '/v1/link', json=payload, verify=False)
     assert response.status_code == 200
     return json.loads(response.text)
 
@@ -117,13 +118,13 @@ def test_link_shortener_create(link_shortener_fixture):
 
 def test_link_shortener_resolve(link_shortener_fixture):
     path = link_shortener_fixture['shortened_url'].split('/')[-1]
-    response = requests.get(API_URL + '/link/' + path, allow_redirects=False,
+    response = requests.get(API_URL + '/v1/link/' + path, allow_redirects=False,
                             verify=False)
     assert response.status_code == 301
 
 
 def test_stats():
-    response = requests.get(API_URL + '/statistics/image', verify=False)
+    response = requests.get(API_URL + '/v1/sources?type=images', verify=False)
     parsed_response = json.loads(response.text)
     assert response.status_code == 200
     num_images = 0
@@ -179,7 +180,8 @@ def test_license_type_filtering():
     modification = LICENSE_GROUPS['modification']
     commercial_and_modification = set.intersection(modification, commercial)
     response = requests.get(
-        API_URL + '/image/search?q=honey&lt=commercial,modification', verify=False
+        API_URL + '/v1/images?q=honey&license_type=commercial,modification',
+        verify=False
     )
     parsed = json.loads(response.text)
     for result in parsed['results']:
@@ -189,7 +191,7 @@ def test_license_type_filtering():
 def test_single_license_type_filtering():
     commercial = LICENSE_GROUPS['commercial']
     response = requests.get(
-        API_URL + '/image/search?q=honey&lt=commercial', verify=False
+        API_URL + '/v1/images?q=honey&license_type=commercial', verify=False
     )
     parsed = json.loads(response.text)
     for result in parsed['results']:
@@ -197,7 +199,9 @@ def test_single_license_type_filtering():
 
 
 def test_specific_license_filter():
-    response = requests.get(API_URL + '/image/search?q=honey&li=by', verify=False)
+    response = requests.get(
+        API_URL + '/v1/images?q=honey&license=by', verify=False
+    )
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert result['license'] == 'by'
@@ -210,13 +214,13 @@ def test_creator_quotation_grouping():
     """
     no_quotes = json.loads(
         requests.get(
-            API_URL + '/image/search?creator=claude%20monet',
+            API_URL + '/v1/images?creator=claude%20monet',
             verify=False
         ).text
     )
     quotes = json.loads(
         requests.get(
-            API_URL + '/image/search?creator="claude%20monet"',
+            API_URL + '/v1/images?creator="claude%20monet"',
             verify=False
         ).text
     )
@@ -229,23 +233,24 @@ def test_creator_quotation_grouping():
 
 
 @pytest.fixture
-def test_oauth2_registration():
+def test_auth_tokens_registration():
     payload = {
         'name': 'INTEGRATION TEST APPLICATION {}'.format(uuid.uuid4()),
         'description': 'A key for testing the OAuth2 registration process.',
         'email': 'example@example.org'
     }
     response = requests.post(
-        API_URL + '/oauth2/register', json=payload, verify=False
+        API_URL + '/v1/auth_tokens/register', json=payload, verify=False
     )
     parsed_response = json.loads(response.text)
     assert response.status_code == 201
     return parsed_response
 
 
-def test_oauth2_token_exchange(test_oauth2_registration):
-    client_id = test_oauth2_registration['client_id']
-    client_secret = test_oauth2_registration['client_secret']
+@pytest.fixture
+def test_auth_token_exchange(test_auth_tokens_registration):
+    client_id = test_auth_tokens_registration['client_id']
+    client_secret = test_auth_tokens_registration['client_secret']
     token_exchange_request = \
         'client_id={_id}&client_secret={secret}&grant_type=client_credentials' \
         .format(_id=client_id, secret=client_secret)
@@ -255,15 +260,66 @@ def test_oauth2_token_exchange(test_oauth2_registration):
     }
     response = json.loads(
         requests.post(
-            API_URL + '/oauth2/token/',
+            API_URL + '/v1/auth_tokens/token/',
             data=token_exchange_request,
             headers=headers,
             verify=False
         ).text
     )
     assert 'access_token' in response
+    return response
 
 
+def test_auth_rate_limit_reporting(test_auth_token_exchange, verified=False):
+    # We're anonymous still, so we need to wait a second before exchanging
+    # the token.
+    time.sleep(1)
+    token = test_auth_token_exchange['access_token']
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    response = json.loads(
+        requests.get(f'{API_URL}/v1/rate_limit', headers=headers).text
+    )
+    if verified:
+        assert response['rate_limit_model'] == 'standard'
+        assert response['verified'] is True
+    else:
+        assert response['rate_limit_model'] == 'standard'
+        assert response['verified'] is False
+
+
+@pytest.fixture(scope='session')
+def django_db_setup():
+    if API_URL == 'http://localhost:8000':
+        cccatalog.settings.DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '127.0.0.1',
+            'NAME': 'openledger',
+            'PASSWORD': 'deploy',
+            'USER': 'deploy',
+            'PORT': 5432
+        }
+
+
+@pytest.mark.django_db
+def test_auth_email_verification(test_auth_token_exchange, django_db_setup):
+        # This test needs to cheat by looking in the database, so it will be
+        # skipped in non-local environments.
+        if API_URL == 'http://localhost:8000':
+            _id = OAuth2Verification.objects.aggregate(Max('id'))['id__max']
+            verify = OAuth2Verification.objects.get(id=_id)
+            code = verify.code
+            path = reverse('verify-email', args=[code])
+            url = f'{API_URL}{path}'
+            response = requests.get(url)
+            assert response.status_code == 200
+            test_auth_rate_limit_reporting(
+                test_auth_token_exchange, verified=True
+            )
+
+
+@pytest.mark.skip(reason="Unmaintained feature/grequests ssl recursion bug")
 def test_watermark_preserves_exif():
     img_with_exif = 'https://raw.githubusercontent.com/ianare/exif-samples/' \
                     'master/jpg/Canon_PowerShot_S40.jpg'
@@ -295,8 +351,6 @@ def test_attribution():
         license="by",
         license_version="3.0"
     )
-    print('\nAttribution examples:\n')
-    print(title_and_creator_missing.attribution)
     assert "This work" in title_and_creator_missing.attribution
 
     title = "A foo walks into a bar"
@@ -307,7 +361,6 @@ def test_attribution():
         license="by",
         license_version="3.0"
     )
-    print(creator_missing.attribution)
     assert title in creator_missing.attribution
     assert "by " not in creator_missing.attribution
 
@@ -319,7 +372,6 @@ def test_attribution():
         license="by",
         license_version="3.0"
     )
-    print(title_missing.attribution)
     assert creator in title_missing.attribution
     assert "This work" in title_missing.attribution
 
@@ -330,13 +382,12 @@ def test_attribution():
         license="by",
         license_version="3.0"
     )
-    print(all_data_present.attribution)
     assert title in all_data_present.attribution
     assert creator in all_data_present.attribution
 
 
-def test_browse_by_provider():
-    response = requests.get(API_URL + '/image/browse/behance',
+def test_source_search():
+    response = requests.get(API_URL + '/v1/images?source=behance',
                             verify=False)
     assert response.status_code == 200
     parsed = json.loads(response.text)
@@ -344,7 +395,7 @@ def test_browse_by_provider():
 
 
 def test_extension_filter():
-    response = requests.get(API_URL + '/image/search?q=honey&extension=jpg')
+    response = requests.get(API_URL + '/v1/images?q=honey&extension=jpg')
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert '.jpg' in result['url']
@@ -357,7 +408,7 @@ def search_factory():
     """
     def _parameterized_search(**kwargs):
         response = requests.get(
-            API_URL + '/image/search',
+            API_URL + '/v1/images',
             params=kwargs,
             verify=False
         )
@@ -394,9 +445,9 @@ def test_page_size_removing_dead_links(search_without_dead_links):
     wildcard operator.
 
     Test whether the number of results returned is equal to the requested
-    pagesize of 100.
+    page_size of 100.
     """
-    data = search_without_dead_links(q='*', pagesize=100)
+    data = search_without_dead_links(q='*', page_size=100)
     assert len(data['results']) == 100
 
 
@@ -408,8 +459,8 @@ def test_dead_links_are_correctly_filtered(search_with_dead_links,
 
     We use the results' id to compare them.
     """
-    data_with_dead_links = search_with_dead_links(q='*', pagesize=100)
-    data_without_dead_links = search_without_dead_links(q='*', pagesize=100)
+    data_with_dead_links = search_with_dead_links(q='*', page_size=100)
+    data_without_dead_links = search_without_dead_links(q='*', page_size=100)
 
     comparisons = []
     for result_1 in data_with_dead_links['results']:
@@ -426,14 +477,14 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
     Test the results returned in consecutive pages are never repeated when
     filtering out dead links.
     """
-    total_pages = 100
-    pagesize = 5
+    total_pages = 30
+    page_size = 5
 
     page_results = []
     for page in range(1, total_pages + 1):
         page_data = search_without_dead_links(
             q='*',
-            pagesize=pagesize,
+            page_size=page_size,
             page=page
         )
         page_results += page_data['results']
@@ -452,13 +503,13 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
 
 
 @pytest.fixture
-def related_factory():
+def recommendation_factory():
     """
     Allows passing url parameters along with a related images request.
     """
     def _parameterized_search(identifier, **kwargs):
         response = requests.get(
-            API_URL + f'/image/related/{identifier}',
+            API_URL + f'/v1/recommendations?type=images&id={identifier}',
             params=kwargs,
             verify=False
         )
@@ -470,9 +521,9 @@ def related_factory():
 
 @pytest.mark.skip(reason="Generally, we don't paginate related images, so "
                     "consistency is less of an issue.")
-def test_related_image_search_page_consistency(related_factory, search_without_dead_links):
-    initial_images = search_without_dead_links(q='*', pagesize=10)
+def test_related_image_search_page_consistency(recommendation, search_without_dead_links):
+    initial_images = search_without_dead_links(q='*', page_size=10)
     for image in initial_images['results']:
-        related = related_factory(image['id'])
+        related = recommendation_factory(image['id'])
         assert related['result_count'] > 0
         assert len(related['results']) == 10

@@ -1,4 +1,4 @@
-import enum
+from enum import Enum, auto
 
 """
 https://github.com/creativecommons/cccatalog-api/issues/340
@@ -8,19 +8,18 @@ digitized artwork) based on its source and file extension.
 """
 
 
-class Category(enum.Enum):
-    VECTOR = 0
-    PHOTOGRAPH = 1
-    DIGITIZED_ARTWORK = 2
-    ILLUSTRATION = 3
+class Category(Enum):
+    PHOTOGRAPH = auto()
+    DIGITIZED_ARTWORK = auto()
+    ILLUSTRATION = auto()
 
 
 # Map each provider to a set of categories..
 provider_category = {
     '__default': [],
     'thorvaldsenmuseum': [Category.DIGITIZED_ARTWORK],
-    'svgsilh': [Category.VECTOR, Category.ILLUSTRATION],
-    'phylopic': [Category.VECTOR, Category.ILLUSTRATION],
+    'svgsilh': [Category.ILLUSTRATION],
+    'phylopic': [Category.ILLUSTRATION],
     'floraon': [Category.PHOTOGRAPH],
     'animaldiversity': [Category.PHOTOGRAPH],
     'WoRMS': [Category.PHOTOGRAPH],
@@ -39,7 +38,7 @@ provider_category = {
 
 def get_categories(extension, provider):
     if extension and extension.lower() == 'svg':
-        categories = [Category.VECTOR, Category.ILLUSTRATION]
+        categories = [Category.ILLUSTRATION]
     elif provider in provider_category:
         categories = provider_category[provider]
     else:

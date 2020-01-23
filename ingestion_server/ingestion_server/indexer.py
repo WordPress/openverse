@@ -30,7 +30,7 @@ ID in Elasticsearch, copy the missing records over to Elasticsearch.
 Each table is database corresponds to an identically named index in
 Elasticsearch. For instance, if database has a table that we would like to
 replicate called 'image', the indexer will create an Elasticsearch called
-'image' and populate the index with documents. See elasticsearch_models.py to 
+'image' and populate the index with documents. See elasticsearch_models.py to
 change the format of Elasticsearch documents.
 
 This can either be run as a module, CLI, or in daemon mode. In daemon mode,
@@ -178,8 +178,8 @@ class TableIndexer:
         Check that the database tables are in sync with Elasticsearch. If not,
         begin replication.
         """
-        last_added_pg_id, _ = get_last_item_ids(table)
-        if not last_added_pg_id:
+        last_pg_id, _ = get_last_item_ids(table)
+        if not last_pg_id:
             log.warning('Tried to sync ' + table + ' but it was empty.')
             return
         # Find the last document inserted into elasticsearch
@@ -188,23 +188,25 @@ class TableIndexer:
         s.aggs.bucket('highest_pg_id', 'max', field='id')
         try:
             es_res = s.execute()
-            last_added_es_id = \
+            last_es_id = \
                 int(es_res.aggregations['highest_pg_id']['value'])
         except (TypeError, NotFoundError):
             log.info('No matching documents found in elasticsearch. '
                      'Replicating everything.')
-            last_added_es_id = 0
+            last_es_id = 0
         log.info(
             'highest_db_id, highest_es_id: {}, {}'
-            .format(last_added_pg_id, last_added_es_id)
+            .format(last_pg_id, last_es_id)
         )
         # Select all documents in-between and replicate to Elasticsearch.
-        if last_added_pg_id > last_added_es_id:
-            log.info('Replicating range ' + str(last_added_es_id) + '-' +
-                     str(last_added_pg_id))
-            query = SQL('SELECT * FROM {}'
-                        ' WHERE id BETWEEN {} AND {}'
-                        .format(table, last_added_es_id, last_added_pg_id))
+        if last_pg_id > last_es_id:
+            log.info(f'Replicating range {last_es_id}-{last_pg_id}')
+            query_text = f'''
+                SELECT * FROM {table}
+                WHERE id BETWEEN {last_es_id} AND {last_pg_id}
+                AND license_version IS NOT NULL
+            '''
+            query = SQL(query_text)
             self.es.indices.create(
                 index=dest_idx,
                 body=create_mapping(table)
@@ -397,8 +399,8 @@ class TableIndexer:
             model = database_table_to_elasticsearch_model[origin_table]
         except KeyError:
             log.error(
-                'Table ' + origin_table +
-                ' is not defined in elasticsearch_models.')
+                f'Table {origin_table} is not defined in elasticsearch_models.'
+            )
             return []
 
         documents = []

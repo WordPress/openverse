@@ -15,6 +15,7 @@ from rest_framework.reverse import reverse
 from itertools import accumulate
 from typing import Tuple, List, Optional
 from math import ceil
+import logging
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 CACHE_TIMEOUT = 10
@@ -35,7 +36,7 @@ class RankFeature(Query):
 def _paginate_with_dead_link_mask(s: Search, page_size: int,
                                   page: int) -> Tuple[int, int]:
     """
-    Given a query, a page and pagesize, it returns the start and end
+    Given a query, a page and page_size, return the start and end
     of the slice of results.
 
     :param s: The elasticsearch Search object
@@ -83,20 +84,6 @@ def _get_query_slice(s: Search, page_size: int, page: int,
     return start_slice, end_slice
 
 
-def _filter_licenses(s: Search, licenses):
-    """
-    Filter out all licenses except for those provided in the `licenses`
-    parameter.
-    """
-    if not licenses:
-        return s
-    license_filters = []
-    for _license in licenses.split(','):
-        license_filters.append(Q('term', license__keyword=_license))
-    s = s.filter('bool', should=license_filters)
-    return s
-
-
 def _quote_escape(query_string):
     """
     If there are any unmatched quotes in the query supplied by the user, ignore
@@ -113,8 +100,8 @@ def _post_process_results(s, start, end, page_size, search_results,
                           request, filter_dead) -> List[Hit]:
     """
     After fetching the search results from the back end, iterate through the
-    results, add links to detail views, perform image validation, and route
-    certain thumbnails through out proxy.
+    results, perform image validation, and route certain thumbnails through our
+    proxy.
 
     :param s: The Elasticsearch Search object.
     :param start: The start of the result slice.
@@ -129,10 +116,6 @@ def _post_process_results(s, start, end, page_size, search_results,
     results = []
     to_validate = []
     for res in search_results:
-        url = request.build_absolute_uri(
-            reverse('image-detail', [res.identifier])
-        )
-        res.detail = url
         if hasattr(res.meta, 'highlight'):
             res.fields_matched = dir(res.meta.highlight)
         to_validate.append(res.url)
@@ -179,24 +162,28 @@ def _post_process_results(s, start, end, page_size, search_results,
     return results[:page_size]
 
 
-def _apply_filter(param_name: str, search_params, s: Search):
+def _apply_filter(s: Search, search_params, param_name, renamed_param=None):
     """
     Parse and apply a filter from the search parameters serializer. The
     parameter key is assumed to have the same name as the corresponding
     Elasticsearch property. Each parameter value is assumed to be a comma
     separated list encoded as a string.
 
-    :param param_name: The name of the parameter in search_params.
-    :param search_params: A serializer containing user input.
     :param s: The Search object to apply the filter to.
+    :param search_params: A serializer containing user input.
+    :param param_name: The name of the parameter in search_params.
+    :param renamed_param: In some cases, the param name in the backend is not
+    the same as the param we want to expose to the outside world. Use this to
+    set the corresponding parameter name in Elasticsearch.
     :return: A Search object with the filter applied.
     """
     if param_name in search_params.data:
         filters = []
         for arg in search_params.data[param_name].split(','):
+            _param = renamed_param if renamed_param else param_name
             args = {
                 'name_or_query': 'term',
-                param_name: arg
+                _param: arg
             }
             filters.append(Q(**args))
         return s.filter('bool', should=filters)
@@ -224,15 +211,21 @@ def search(search_params, index, page_size, ip, request,
     pages and results.
     """
     s = Search(index=index)
-    if 'li' in search_params.data:
-        s = _filter_licenses(s, search_params.data['li'])
-    elif 'lt' in search_params.data:
-        s = _filter_licenses(s, search_params.data['lt'])
-
-    # Apply term filters.
-    filters = ['provider', 'extension', 'categories', 'aspect_ratio']
-    for _filter in filters:
-        s = _apply_filter(_filter, search_params, s)
+    # Apply term filters. Each tuple pairs a filter's parameter name in the API
+    # with its corresponding field in Elasticsearch. "None" means that the
+    # names are identical.
+    filters = [
+        ('extension', None),
+        ('categories', None),
+        ('aspect_ratio', None),
+        ('size', None),
+        ('source', 'provider'),
+        ('license', 'license__keyword'),
+        ('license_type', 'license__keyword')
+    ]
+    for tup in filters:
+        api_field, elasticsearch_field = tup
+        s = _apply_filter(s, search_params, api_field, elasticsearch_field)
 
     # Hide data sources from the catalog dynamically.
     filter_cache_key = 'filtered_providers'
@@ -389,40 +382,6 @@ def related_images(uuid, index, request, filter_dead):
     )
 
     return results, result_count
-
-
-def browse_by_provider(provider, index, page_size, ip, request, filter_dead,
-                       page=1, lt=None, li=None):
-    """
-    Allow users to browse image collections without entering a search query.
-    """
-    _validate_provider(provider)
-    s = Search(index=index)
-    s = s.params(preference=str(ip))
-    provider_filter = Q('term', provider=provider.lower())
-    s = s.filter('bool', should=provider_filter, minimum_should_match=1)
-    licenses = lt if lt else li
-    s = _filter_licenses(s, licenses)
-    start_slice, end_slice = _get_query_slice(s, page_size, page)
-    s = s[start_slice:end_slice]
-    search_response = s.execute()
-    results = _post_process_results(
-        s,
-        start_slice,
-        end_slice,
-        page_size,
-        search_response,
-        request,
-        filter_dead
-    )
-
-    result_count, page_count = _get_result_and_page_count(
-        search_response,
-        results,
-        page_size
-    )
-
-    return results, page_count, result_count
 
 
 def get_providers(index):
