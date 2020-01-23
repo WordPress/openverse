@@ -176,7 +176,7 @@ li {
 }
 
 /* 48em = 768px */
-@media (min-width: 49em) {
+@media (min-width: 55em) {
   .header {
     height: 3.9em;
   }
