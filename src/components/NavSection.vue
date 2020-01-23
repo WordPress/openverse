@@ -220,7 +220,7 @@ li {
   @media screen and (min-width: 64em) {
     float: right;
   }
-  @media screen and (max-width: 70.250em) {
+  @media screen and (max-width: 74.250em) {
     display: none;
   }
 }
