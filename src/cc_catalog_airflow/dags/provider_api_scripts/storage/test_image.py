@@ -165,12 +165,12 @@ def test_ImageStore_get_image_places_given_args(
         mock_get_source
     )
 
-    def mock_get_enriched_tags(tags):
+    def mock_enrich_tags(tags):
         return tags
     monkeypatch.setattr(
         image_store,
-        '_get_enriched_tags',
-        mock_get_enriched_tags
+        '_enrich_tags',
+        mock_enrich_tags
     )
 
     actual_image = image_store._get_image(**args_dict)
@@ -247,13 +247,13 @@ def test_ImageStore_get_image_gets_source(
     assert actual_image.source == 'diff_source'
 
 
-def test_ImageStore_get_image_nones_non_dict_meta_data(
+def test_ImageStore_get_image_replaces_non_dict_meta_data_with_no_license_url(
         setup_env,
 ):
     image_store = image.ImageStore()
 
     actual_image = image_store._get_image(
-        license_url='https://license/url',
+        license_url=None,
         license_='license',
         license_version='1.5',
         foreign_landing_url=None,
@@ -270,10 +270,37 @@ def test_ImageStore_get_image_nones_non_dict_meta_data(
         watermarked=None,
         source=None,
     )
-    assert actual_image.meta_data is None
+    assert actual_image.meta_data == {'license_url': None}
 
 
-def test_ImageStore_get_image_leaves_dict_meta_data(
+def test_ImageStore_get_image_creates_meta_data_with_license_url(
+        setup_env,
+):
+    license_url = 'https://my.license.url'
+    image_store = image.ImageStore()
+
+    actual_image = image_store._get_image(
+        license_url=license_url,
+        license_='license',
+        license_version='1.5',
+        foreign_landing_url=None,
+        image_url=None,
+        thumbnail_url=None,
+        foreign_identifier=None,
+        width=None,
+        height=None,
+        creator=None,
+        creator_url=None,
+        title=None,
+        meta_data=None,
+        raw_tags=None,
+        watermarked=None,
+        source=None,
+    )
+    assert actual_image.meta_data == {'license_url': license_url}
+
+
+def test_ImageStore_get_image_adds_license_url_to_dict_meta_data(
         setup_env,
 ):
     image_store = image.ImageStore()
@@ -296,8 +323,10 @@ def test_ImageStore_get_image_leaves_dict_meta_data(
         watermarked=None,
         source=None,
     )
-    assert actual_image.meta_data == {'key1': 'val1'}
-
+    assert actual_image.meta_data == {
+        'key1': 'val1',
+        'license_url': 'https://license/url'
+    }
 
 def test_ImageStore_get_image_enriches_singleton_tags(
         setup_env,

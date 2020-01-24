@@ -184,7 +184,10 @@ class ImageStore:
         title:               Title of the image.
         meta_data:           Dictionary of meta_data about the image.
                              Currently, a key that we prefer to have is
-                             `description`
+                             `description`. If 'license_url' is included
+                             in this dictionary, and `license_url` is
+                             given as an argument, the argument will
+                             replace the one given in the dictionary.
         raw_tags:            List of tags associated with the image
         watermarked:         A boolean, or 't' or 'f' string; whether or
                              not the image has a noticeable watermark.
@@ -253,8 +256,11 @@ class ImageStore:
             license_version=license_version
         )
         source = util.get_source(source, self._PROVIDER)
-        meta_data = self._validate_meta_data_dict(meta_data)
-        tags = self._get_enriched_tags(raw_tags)
+        meta_data = self._enrich_meta_data(
+            meta_data,
+            license_url=license_url
+        )
+        tags = self._enrich_tags(raw_tags)
 
         return _Image(
                 foreign_identifier=foreign_identifier,
@@ -313,14 +319,18 @@ class ImageStore:
             logger.debug('Empty buffer!  Nothing to write.')
         return buffer_length
 
-    def _validate_meta_data_dict(self, meta_data):
+    def _enrich_meta_data(self, meta_data, license_url):
         if type(meta_data) != dict:
-            logger.debug('`meta_data` is not a dictionary.')
-            return None
+            logger.debug(
+                '`meta_data` is not a dictionary: {}'.format(meta_data)
+            )
+            enriched_meta_data = {'license_url': license_url}
         else:
-            return meta_data
+            enriched_meta_data = meta_data
+            enriched_meta_data.update(license_url=license_url)
+        return enriched_meta_data
 
-    def _get_enriched_tags(self, raw_tags):
+    def _enrich_tags(self, raw_tags):
         if type(raw_tags) != list:
             logger.debug('`tags` is not a list.')
             return None
