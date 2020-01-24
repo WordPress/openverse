@@ -85,7 +85,7 @@ class SearchImages(APIView):
                 page=page_param
             )
         except ValueError as value_error:
-            return input_error_response(str(value_error))
+            return input_error_response(value_error)
 
         context = {'request': request}
         serialized_results = ImageSerializer(
