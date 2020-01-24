@@ -196,8 +196,6 @@ class ImageStore:
                              ImageStore init function is the specific
                              provider of the image.
         """
-        filesize = None
-
         image = self._get_image(
                 foreign_landing_url=foreign_landing_url,
                 image_url=image_url,
@@ -208,7 +206,6 @@ class ImageStore:
                 foreign_identifier=foreign_identifier,
                 width=width,
                 height=height,
-                filesize=filesize,
                 creator=creator,
                 creator_url=creator_url,
                 title=title,
@@ -239,7 +236,6 @@ class ImageStore:
             thumbnail_url,
             width,
             height,
-            filesize,
             license_url,
             license_,
             license_version,
@@ -269,7 +265,7 @@ class ImageStore:
                 license_version=license_version,
                 width=width,
                 height=height,
-                filesize=filesize,
+                filesize=None,
                 creator=creator,
                 creator_url=creator_url,
                 title=title,

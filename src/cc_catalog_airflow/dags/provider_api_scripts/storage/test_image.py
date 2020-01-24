@@ -140,7 +140,6 @@ def test_ImageStore_get_image_places_given_args(
         'thumbnail_url': 'http://thumbnail.com',
         'width': 200,
         'height': 500,
-        'filesize': None,
         'creator': 'tyler',
         'creator_url': 'https://creatorurl.com',
         'title': 'agreatpicture',
@@ -178,6 +177,7 @@ def test_ImageStore_get_image_places_given_args(
     args_dict['tags'] = args_dict.pop('raw_tags')
     args_dict.pop('license_url')
     args_dict['provider'] = 'testing_provider'
+    args_dict['filesize'] = None
     assert actual_image == image._Image(**args_dict)
 
 
@@ -205,7 +205,6 @@ def test_ImageStore_get_image_calls_license_chooser(
         foreign_identifier=None,
         width=None,
         height=None,
-        filesize=None,
         creator=None,
         creator_url=None,
         title=None,
@@ -237,7 +236,6 @@ def test_ImageStore_get_image_gets_source(
         foreign_identifier=None,
         width=None,
         height=None,
-        filesize=None,
         creator=None,
         creator_url=None,
         title=None,
@@ -264,7 +262,6 @@ def test_ImageStore_get_image_nones_non_dict_meta_data(
         foreign_identifier=None,
         width=None,
         height=None,
-        filesize=None,
         creator=None,
         creator_url=None,
         title=None,
@@ -291,7 +288,6 @@ def test_ImageStore_get_image_leaves_dict_meta_data(
         foreign_identifier=None,
         width=None,
         height=None,
-        filesize=None,
         creator=None,
         creator_url=None,
         title=None,
@@ -318,7 +314,6 @@ def test_ImageStore_get_image_enriches_singleton_tags(
         foreign_identifier=None,
         width=None,
         height=None,
-        filesize=None,
         creator=None,
         creator_url=None,
         title=None,
@@ -345,7 +340,6 @@ def test_ImageStore_get_image_enriches_multiple_tags(
         foreign_identifier=None,
         width=None,
         height=None,
-        filesize=None,
         creator=None,
         creator_url=None,
         title=None,
@@ -382,7 +376,6 @@ def test_ImageStore_get_image_leaves_preenriched_tags(
         foreign_identifier=None,
         width=None,
         height=None,
-        filesize=None,
         creator=None,
         creator_url=None,
         title=None,
@@ -411,7 +404,6 @@ def test_ImageStore_get_image_nones_nonlist_tags(
         foreign_identifier=None,
         width=None,
         height=None,
-        filesize=None,
         creator=None,
         creator_url=None,
         title=None,
