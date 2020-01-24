@@ -101,7 +101,7 @@ def _validate_license_pair(
         path_map=LICENSE_PATH_MAP
 ):
     logger.debug('Path Map: {}'.format(path_map))
-    pairs = ((item['license'], item['version']) for item in path_map.values())
+    pairs = [(item['license'], item['version']) for item in path_map.values()]
     try:
         license_version = str(float(license_version))
     except Exception as e:
