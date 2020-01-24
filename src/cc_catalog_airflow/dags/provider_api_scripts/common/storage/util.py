@@ -5,7 +5,7 @@ operations.
 import logging
 from urllib.parse import urlparse
 
-from storage import constants
+from common.storage import constants
 
 logger = logging.getLogger(__name__)
 

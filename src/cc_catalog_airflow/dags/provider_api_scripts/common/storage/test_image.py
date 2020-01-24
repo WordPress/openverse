@@ -1,7 +1,7 @@
 import logging
 import pytest
 
-from storage import image
+from common.storage import image
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',

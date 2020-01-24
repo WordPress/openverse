@@ -1,4 +1,4 @@
-from storage import util
+from common.storage import util
 
 from abc import ABC, abstractmethod
 import json

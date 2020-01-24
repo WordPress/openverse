@@ -3,8 +3,8 @@ from datetime import datetime
 import logging
 import os
 
-from storage import util
-from storage import columns
+from common.storage import util
+from common.storage import columns
 
 logger = logging.getLogger(__name__)
 
