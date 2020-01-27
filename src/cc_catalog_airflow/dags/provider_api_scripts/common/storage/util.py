@@ -101,6 +101,8 @@ def _validate_license_pair(
         path_map=LICENSE_PATH_MAP
 ):
     logger.debug('Path Map: {}'.format(path_map))
+    if license_ is None or license_version is None:
+        return None, None
     pairs = [(item['license'], item['version']) for item in path_map.values()]
     try:
         license_version = str(float(license_version))
