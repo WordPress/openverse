@@ -9,7 +9,13 @@ production web server configuration, and not reproducible locally.
 """
 
 
-def input_error_response(errors):
+def parse_value_errors(errors):
+    field = 'q'
+    message = errors.args[0].info['error']['root_cause'][0]['reason']
+    return field, message
+
+
+def parse_non_value_errors(errors):
     field = [f for f in errors]
     messages = []
     for _field in errors:
@@ -24,6 +30,15 @@ def input_error_response(errors):
         split_error = messages.split(' ')
         field_idx = messages.index('Parameter') + 1
         field = [split_error[field_idx].replace("'", '')][0]
+
+    return field, messages
+
+
+def input_error_response(errors):
+    if isinstance(errors, ValueError):
+        field, messages = parse_value_errors(errors)
+    else:
+        field, messages = parse_non_value_errors(errors)
 
     return Response(
         status=status.HTTP_400_BAD_REQUEST,
