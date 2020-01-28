@@ -1,7 +1,7 @@
 <template>
   <div class="hero">
-    <h1>Search for content to reuse</h1>
-    <form class="hero_search-form"
+    <h2>Search for content to reuse</h2>
+    <form class="hero_search-form margin-top-normal"
           role="search"
           method="get"
           action="/search"
@@ -16,9 +16,9 @@
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <button class="hero_search-btn" title="Search">Search</button>
+        <button class="button is-primary big" title="Search">Search</button>
       </div>
-      <div class="description">
+      <div class="caption has-text-centered">
         <p>
           All content here is marked as being available for reuse
           under a Creative Commons legal tool. Learn more
@@ -70,18 +70,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import '../../node_modules/foundation-sites/scss/foundation';
 
-h1 {
-  font-family: Roboto;
-  font-size: 2.375em;
-  color: #333333;
-  text-align: center;
-
-  @media screen and (max-width: 40em) {
-    font-size: 1.8em;
-  }
-}
 
 $hero-height: 71vh;
 
@@ -98,7 +87,6 @@ $hero-height: 71vh;
 
   .hero_search-form {
     position: relative;
-    margin-top: 0;
     border-radius: 3px;
     max-width: 750px;
     width: 100%;
@@ -124,19 +112,6 @@ $hero-height: 71vh;
      font-family: Source Sans Pro;
   }
 
-  .hero_search-btn {
-    width: 25%;
-    height: 70px;
-    border-radius: 4px;
-    background-color: #fb7729;
-    font-size: 24px;
-    cursor: pointer;
-    font-family: Roboto;
-    font-size: 1.5625em;
-    color: #fff;
-    text-transform: capitalize;
-  }
-
   &:before {
     content: '';
     position: absolute;
@@ -144,12 +119,6 @@ $hero-height: 71vh;
                 rgba(0, 0, 0, 0.1) 0%,
                 rgba(17, 17, 17, 0.7) 100%);
   }
-}
-
-.description {
-  font-size: 0.8125em;
-  margin-top: 1em;
-  text-align: center;
 }
 
 .old-search-link {
