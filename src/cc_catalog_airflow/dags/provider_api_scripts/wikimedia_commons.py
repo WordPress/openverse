@@ -11,7 +11,7 @@ Notes:                  https://commons.wikimedia.org/wiki/API:Main_page
 """
 
 import argparse
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import logging
 import os
 from urllib.parse import urlparse
@@ -58,42 +58,80 @@ image_store = image.ImageStore(provider=PROVIDER)
 def main(date):
     logger.info(f'Processing Wikimedia Commons API for date: {date}')
 
-    continue_token = None
+    continue_token = {}
     total_images = 0
-    start_ts, end_ts = _get_timestamp_pair(date)
+    start_ts, end_ts = _derive_timestamp_pair(date)
 
-    while continue_token != 'STOP':
-        query_params = _build_query_params(start_ts, end_ts, continue_token)
-        response_json = _get_response_json(query_params, retries=5)
-        image_batch, continue_token = _get_image_batch(response_json)
-        if image_batch:
-            total_images = _process_image_batch(image_batch)
+    while True:
+        image_batch = _get_image_batch(
+            start_ts,
+            end_ts,
+            continue_token=continue_token)
+        image_pages, continue_token = _get_image_pages(image_batch)
+        if image_pages:
+            total_images = _process_image_pages(image_pages)
         logger.info(f'Total Images so far: {total_images}')
+        if not continue_token:
+            break
 
     total_images = image_store.commit()
     logger.info('Total images: {}'.format(total_images))
     logger.info('Terminated!')
 
 
-def _get_timestamp_pair(date):
+def _derive_timestamp_pair(date):
     date_obj = datetime.strptime(date, '%Y-%m-%d')
-    start_ts = datetime.strftime(date_obj, '%s')
-    end_ts = datetime.strftime(date_obj + timedelta(days=1), '%s')
+    utc_date = date_obj.replace(tzinfo=timezone.utc)
+    start_ts = str(int(utc_date.timestamp()))
+    end_ts = str(int((utc_date + timedelta(days=1)).timestamp()))
     return start_ts, end_ts
+
+
+def _get_image_batch(start_ts, end_ts, continue_token, retries=5):
+    query_params = _build_query_params(
+        start_ts,
+        end_ts,
+        continue_token=continue_token,
+    )
+    image_batch = _get_response_json(query_params, retries=retries)
+    return image_batch
+
+
+def _get_image_pages(image_batch):
+    image_pages = None
+    continue_token = {}
+
+    if image_batch is not None and image_batch.get('query'):
+        continue_token = image_batch.get('continue', {})
+        image_pages = image_batch['query'].get('pages')
+
+        logger.info(f'Got {len(image_pages)} pages')
+        logger.info(f'Continue Token: {continue_token}')
+
+    if not continue_token:
+        logger.debug(f'Final image_batch: {image_batch}')
+
+    return image_pages, continue_token
+
+
+def _process_image_pages(image_pages):
+    for i in image_pages.values():
+        total_images = _process_image_data(i)
+    return total_images
 
 
 def _build_query_params(
         start_date,
         end_date,
-        continue_token,
+        continue_token={},
         default_query_params=DEFAULT_QUERY_PARAMS,
 ):
     query_params = default_query_params.copy()
     query_params.update(
         gaistart=start_date,
         gaiend=end_date,
-        gaicontinue=continue_token,
     )
+    query_params.update(continue_token)
     return query_params
 
 
@@ -142,31 +180,6 @@ def _get_response_json(
         )
 
     return response_json
-
-
-def _get_image_batch(response_json):
-    image_batch = None
-    continue_token = 'STOP'
-
-    if response_json is not None and response_json.get('query'):
-        continue_token = response_json.get(
-            'continue', {}
-        ).get('gaicontinue', 'STOP')
-        image_batch = response_json['query'].get('pages')
-
-        logger.info(f'Got a batch with {len(image_batch)} pages')
-        logger.info(f'Continue Token: {continue_token}')
-
-    if continue_token == 'STOP':
-        logger.debug(f'Final response_json: {response_json}')
-
-    return image_batch, continue_token
-
-
-def _process_image_batch(image_batch):
-    for i in image_batch.values():
-        total_images = _process_image_data(i)
-    return total_images
 
 
 def _process_image_data(image_data):
