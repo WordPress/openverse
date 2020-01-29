@@ -321,7 +321,20 @@ class ImageSerializer(serializers.Serializer):
         return obj.license.lower()
 
     def get_license_url(self, obj):
-        return license_helpers.get_license_url(obj.license, obj.license_version)
+        import logging as log
+        if hasattr(obj, 'meta_data'):
+            log.info('found license in metadata')
+            return license_helpers.get_license_url(
+                obj.license, obj.license_version, obj.meta_data
+            )
+        elif hasattr(obj, 'license_url') and obj.license_url is not None:
+            log.info(f'found license url in obj {obj.license_url}')
+            return obj.license_url
+        else:
+            log.info('no metadata')
+            return license_helpers.get_license_url(
+                obj.license, obj.license_version, None
+            )
 
     def validate_url(self, value):
         return _add_protocol(value)

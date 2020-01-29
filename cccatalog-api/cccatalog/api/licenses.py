@@ -26,7 +26,9 @@ ATTRIBUTION = \
     "copy of this license, visit {license_url}."
 
 
-def get_license_url(_license, version):
+def get_license_url(_license, version, meta_data=None):
+    if meta_data and 'license_url' in meta_data:
+        return meta_data['license_url']
     if _license.lower() == 'pdm':
         return 'https://creativecommons.org/publicdomain/mark/1.0/'
     else:

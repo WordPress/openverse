@@ -100,7 +100,8 @@ class Image(SyncableDocType):
             likes=likes,
             categories=get_categories(extension, provider),
             aspect_ratio=Image.get_aspect_ratio(height, width),
-            size=Image.get_size(height, width)
+            size=Image.get_size(height, width),
+            license_url=Image.get_license_url(row[schema['meta_data']])
         )
 
     @staticmethod
@@ -144,6 +145,17 @@ class Image(SyncableDocType):
         for size in Image.ImageSizes:
             if resolution < size.value:
                 return size.name.lower()
+
+    @staticmethod
+    def get_license_url(meta_data):
+        """
+        If the license_url is not provided, we'll try to generate it elsewhere
+        from the `license` and `license_version`.
+        """
+        if 'license_url' in meta_data:
+            return meta_data['license_url']
+        else:
+            return None
 
     @staticmethod
     def parse_detailed_tags(json_tags):
