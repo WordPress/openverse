@@ -21,6 +21,11 @@ def create_mock_image(override=None):
         'likes': 3,
         'comments': 1
     }
+    license_url = 'https://creativecommons.org/licenses/by/2.0/fr/legalcode'
+    meta_data = {
+        'popularity_metrics': test_popularity,
+        'license_url': license_url
+    }
     test_data = {
         'id': 0,
         'title': 'Unit test title',
@@ -39,7 +44,7 @@ def create_mock_image(override=None):
         'view_count': 0,
         'height': 500,
         'width': 500,
-        'meta_data': {'popularity_metrics': test_popularity}
+        'meta_data': meta_data
     }
     for k, v in override.items():
         test_data[k] = v

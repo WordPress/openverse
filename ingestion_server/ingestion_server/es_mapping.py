@@ -57,6 +57,15 @@ def create_mapping(table_name):
                         },
                         "type": "text"
                     },
+                    "license_url": {
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        },
+                        "type": "text"
+                    },
                     "tags": {
                         "properties": {
                             "accuracy": {
