@@ -228,8 +228,6 @@ def test_merge_image_pages_both_have_gu():
     assert actual_merged_page == expect_merged_page
 
 
-
-
 def test_get_response_json_retries_with_none_response():
     with patch.object(
             wmc.delayed_requester,
