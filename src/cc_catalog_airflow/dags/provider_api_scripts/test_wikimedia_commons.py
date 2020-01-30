@@ -24,25 +24,6 @@ def test_derive_timestamp_pair():
     assert actual_end_ts == '1516060800'
 
 
-def test_get_image_pages_returns_correctly_without_continue():
-    with open(
-            os.path.join(RESOURCES, 'response_small_missing_continue.json')
-    ) as f:
-        resp_dict = json.load(f)
-
-    expect_result = {
-        '84798633': {
-            'pageid': 84798633,
-            'title': 'File:Ambassade1.jpg'
-        }
-    }
-    expect_continue = {}
-
-    actual_result, actual_continue = wmc._get_image_pages(resp_dict)
-    assert actual_continue == expect_continue
-    assert actual_result == expect_result
-
-
 def test_get_image_pages_returns_correctly_with_continue():
     with open(
             os.path.join(RESOURCES, 'response_small_with_continue.json')
@@ -55,18 +36,14 @@ def test_get_image_pages_returns_correctly_with_continue():
             'title': 'File:Ambassade1.jpg'
         }
     }
-    expect_continue = {"gaicontinue": "next.jpg", "continue": "gaicontinue||"}
-    actual_result, actual_continue = wmc._get_image_pages(resp_dict)
+    actual_result = wmc._get_image_pages(resp_dict)
     assert actual_result == expect_result
-    assert actual_continue == expect_continue
 
 
 def test_get_image_pages_returns_correctly_with_none_json():
     expect_result = None
-    expect_continue = {}
-    actual_result, actual_continue = wmc._get_image_pages(None)
+    actual_result = wmc._get_image_pages(None)
     assert actual_result == expect_result
-    assert actual_continue == expect_continue
 
 
 def test_build_query_params_adds_start_and_end():
@@ -92,6 +69,165 @@ def test_build_query_params_adds_continue():
         default_query_params={'test': 'value'}
     )
     assert actual_qp['continuetoken'] == 'next.jpg'
+
+
+def test_get_image_batch(monkeypatch):
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'wmc_pretty1.json')
+    ) as f:
+        first_response = json.load(f)
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'wmc_pretty2.json')
+    ) as f:
+        second_response = json.load(f)
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'wmc_pretty3.json')
+    ) as f:
+        third_response = json.load(f)
+
+    def mock_get_response_json(query_params, retries=0):
+        continue_one = 'Edvard_Munch_-_Night_in_Nice_(1891).jpg|nowiki|1281339'
+        continue_two = 'Niedercunnersdorf_Gartenweg_12.JPG|dewiki|9849507'
+        if 'continue' not in query_params:
+            return first_response
+        elif query_params['gucontinue'] == continue_one:
+            return second_response
+        elif query_params['gucontinue'] == continue_two:
+            return third_response
+        else:
+            return None
+
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'wmc_pretty123.json')
+    ) as f:
+        expect_image_batch = json.load(f)
+    expect_image_batch.pop('continue')
+    expect_continue_token = {
+        'gaicontinue': "20151031230201|Lancelot_'Capability'_BROWN_-_Wilderness_House_Moat_Lane_Hampton_Court_Palace_Hampton_Court_London_KT8_9AR.jpg",
+        'continue': 'gaicontinue||'
+    }
+
+    monkeypatch.setattr(wmc, '_get_response_json', mock_get_response_json)
+    actual_image_batch, actual_continue_token = wmc._get_image_batch(
+        '2019-01-01', '2019-01-02'
+    )
+    assert actual_image_batch == expect_image_batch
+    assert actual_continue_token == expect_continue_token
+
+
+def test_get_image_batch_returns_correctly_without_continue(monkeypatch):
+    with open(
+            os.path.join(RESOURCES, 'response_small_missing_continue.json')
+    ) as f:
+        resp_dict = json.load(f)
+
+    with patch.object(
+            wmc,
+            '_get_response_json',
+            return_value=resp_dict
+    ) as mock_response_json:
+        actual_result, actual_continue = wmc._get_image_batch(
+            '2019-01-01', '2019-01-02', retries=2
+        )
+
+    expect_result = resp_dict
+    expect_continue = {}
+
+    mock_response_json.assert_called_once()
+    assert actual_continue == expect_continue
+    assert actual_result == expect_result
+
+
+def test_merge_response_jsons():
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'wmc_pretty1.json')
+    ) as f:
+        left_response = json.load(f)
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'wmc_pretty2.json')
+    ) as f:
+        right_response = json.load(f)
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'wmc_pretty1plus2.json')
+    ) as f:
+        expect_merged_response = json.load(f)
+
+    actual_merged_response = wmc._merge_response_jsons(
+        left_response,
+        right_response,
+    )
+    assert actual_merged_response == expect_merged_response
+
+
+def test_merge_image_pages_left_only_with_gu():
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'page_44672185_left.json')
+    ) as f:
+        left_page = json.load(f)
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'page_44672185_right.json')
+    ) as f:
+        right_page = json.load(f)
+    actual_merged_page = wmc._merge_image_pages(left_page, right_page)
+    assert actual_merged_page == left_page
+
+
+def test_merge_image_pages_left_only_with_gu_backwards():
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'page_44672185_left.json')
+    ) as f:
+        left_page = json.load(f)
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'page_44672185_right.json')
+    ) as f:
+        right_page = json.load(f)
+    actual_merged_page = wmc._merge_image_pages(right_page, left_page)
+    assert actual_merged_page == left_page
+
+
+def test_merge_image_pages_neither_have_gu():
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'page_44672210_left.json')
+    ) as f:
+        left_page = json.load(f)
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'page_44672210_right.json')
+    ) as f:
+        right_page = json.load(f)
+    actual_merged_page = wmc._merge_image_pages(left_page, right_page)
+    assert actual_merged_page == left_page
+
+
+def test_merge_image_pages_neigher_have_gu_backwards():
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'page_44672210_left.json')
+    ) as f:
+        left_page = json.load(f)
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'page_44672210_right.json')
+    ) as f:
+        right_page = json.load(f)
+    actual_merged_page = wmc._merge_image_pages(right_page, left_page)
+    assert actual_merged_page == left_page
+
+
+def test_merge_image_pages_both_have_gu():
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'page_44672212_left.json')
+    ) as f:
+        left_page = json.load(f)
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'page_44672212_right.json')
+    ) as f:
+        right_page = json.load(f)
+    with open(
+            os.path.join(RESOURCES, 'continuation', 'page_44672212_merged.json')
+    ) as f:
+        expect_merged_page = json.load(f)
+    actual_merged_page = wmc._merge_image_pages(left_page, right_page)
+    assert actual_merged_page == expect_merged_page
+
+
 
 
 def test_get_response_json_retries_with_none_response():
@@ -170,7 +306,7 @@ def test_process_image_data_handles_example_dict():
         creator='PtrQs',
         creator_url='https://commons.wikimedia.org/wiki/User:PtrQs',
         title='File:20120925 PlozevetBretagne LoneTree DSC07971 PtrQs.jpg',
-        meta_data={"description": "SONY DSC"}
+        meta_data={'description': 'SONY DSC', 'global_usage_count': 0}
     )
 
 
@@ -265,11 +401,35 @@ def test_get_license_url_handles_missing_license_url():
 
 def test_create_meta_data_scrapes_text_from_html_description():
     with open(
-            os.path.join(RESOURCES, 'image_info_html_description.json')
+            os.path.join(RESOURCES, 'image_data_html_description.json')
     ) as f:
-        image_info = json.load(f)
-    actual_meta_data_dict = wmc._create_meta_data_dict(image_info)
-    expected_meta_data_dict = {
-        'description': 'Identificatie Titel(s):  Allegorie op kunstenaar Francesco Mazzoli, bekend als Parmigianino'
-    }
-    assert expected_meta_data_dict == actual_meta_data_dict
+        image_data = json.load(f)
+    expect_description = 'Identificatie Titel(s):  Allegorie op kunstenaar Francesco Mazzoli, bekend als Parmigianino'
+    actual_description = wmc._create_meta_data_dict(image_data)['description']
+    assert actual_description == expect_description
+
+
+def test_create_meta_data_tallies_global_usage_count():
+    with open(
+            os.path.join(
+                RESOURCES,
+                'continuation',
+                'page_44672185_left.json')
+    ) as f:
+        image_data = json.load(f)
+    actual_gu = wmc._create_meta_data_dict(image_data)['global_usage_count']
+    expect_gu = 3
+    assert actual_gu == expect_gu
+
+
+def test_create_meta_data_tallies_zero_global_usage_count():
+    with open(
+            os.path.join(
+                RESOURCES,
+                'continuation',
+                'page_44672185_right.json')
+    ) as f:
+        image_data = json.load(f)
+    actual_gu = wmc._create_meta_data_dict(image_data)['global_usage_count']
+    expect_gu = 0
+    assert actual_gu == expect_gu

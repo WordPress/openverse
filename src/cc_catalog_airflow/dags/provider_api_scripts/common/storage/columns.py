@@ -134,8 +134,8 @@ class JSONColumn(Column):
         """
         Returns a json string as appropriate to input.
 
-        Also sanitizes values within the json to ensure they are loadable into
-        a PostgreSQL table.
+        Also sanitizes values within the json to ensure they are
+        loadable into a PostgreSQL table.
 
         If given empty input, returns None.
 
