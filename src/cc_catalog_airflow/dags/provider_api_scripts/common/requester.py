@@ -6,6 +6,18 @@ logger = logging.getLogger(__name__)
 
 
 class DelayedRequester:
+    """
+    Provides a method `get` that is a wrapper around `get` from the
+    `requests` module (i.e., it simply passes along whatever arguments it
+    receives).  The difference is that when this class is initialized
+    with a non-zero `delay` parameter, it waits for at least that number
+    of seconds between consecutive requests. This is to avoid hitting
+    rate limits of APIs.
+
+    Optional Arguments:
+    delay:  an integer giving the minimum number of seconds to wait
+            between consecutive requests via the `get` method.
+    """
     def __init__(self, delay=0):
         self._DELAY = delay
         self._last_request = 0
