@@ -1,6 +1,6 @@
 import logging
 
-from storage import util
+from common.storage import util
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',

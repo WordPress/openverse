@@ -1,7 +1,7 @@
 import logging
 import string
 
-from storage import columns
+from common.storage import columns
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',

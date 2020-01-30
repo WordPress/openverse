@@ -1,7 +1,7 @@
 import logging
 import pytest
 
-from storage import image
+from common.storage import image
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -327,6 +327,7 @@ def test_ImageStore_get_image_adds_license_url_to_dict_meta_data(
         'key1': 'val1',
         'license_url': 'https://license/url'
     }
+
 
 def test_ImageStore_get_image_enriches_singleton_tags(
         setup_env,

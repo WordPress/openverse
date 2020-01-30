@@ -3,8 +3,8 @@ from datetime import datetime
 import logging
 import os
 
-from storage import util
-from storage import columns
+from common.storage import util
+from common.storage import columns
 
 logger = logging.getLogger(__name__)
 
@@ -104,31 +104,6 @@ class ImageStore:
             provider,
         )
 
-    def _initialize_output_path(self, output_dir, output_file, provider):
-        if output_dir is None:
-            logger.info(
-                'No given output directory.  '
-                'Using OUTPUT_DIR from environment.'
-            )
-            output_dir = os.getenv('OUTPUT_DIR')
-        if output_dir is None:
-            logger.warning(
-                'OUTPUT_DIR is not set in the enivronment.  '
-                'Output will go to /tmp.'
-            )
-            output_dir = '/tmp'
-
-        if output_file is not None:
-            output_file = str(output_file)
-        else:
-            output_file = '{}_{}.tsv'.format(
-                provider, datetime.strftime(self._NOW, '%Y%m%d%H%M%S')
-            )
-
-        output_path = os.path.join(output_dir, output_file)
-        logger.info('Output path: {}'.format(output_path))
-        return output_path
-
     def add_item(
             self,
             foreign_landing_url=None,
@@ -220,6 +195,7 @@ class ImageStore:
         tsv_row = self._create_tsv_row(image)
         if tsv_row:
             self._image_buffer.append(tsv_row)
+            self._total_images += 1
         if len(self._image_buffer) >= self._BUFFER_LENGTH:
             self._flush_buffer()
 
@@ -230,6 +206,31 @@ class ImageStore:
         self._flush_buffer()
 
         return self._total_images
+
+    def _initialize_output_path(self, output_dir, output_file, provider):
+        if output_dir is None:
+            logger.info(
+                'No given output directory.  '
+                'Using OUTPUT_DIR from environment.'
+            )
+            output_dir = os.getenv('OUTPUT_DIR')
+        if output_dir is None:
+            logger.warning(
+                'OUTPUT_DIR is not set in the enivronment.  '
+                'Output will go to /tmp.'
+            )
+            output_dir = '/tmp'
+
+        if output_file is not None:
+            output_file = str(output_file)
+        else:
+            output_file = '{}_{}.tsv'.format(
+                provider, datetime.strftime(self._NOW, '%Y%m%d%H%M%S')
+            )
+
+        output_path = os.path.join(output_dir, output_file)
+        logger.info('Output path: {}'.format(output_path))
+        return output_path
 
     def _get_image(
             self,
@@ -303,14 +304,13 @@ class ImageStore:
     def _flush_buffer(self):
         buffer_length = len(self._image_buffer)
         if buffer_length > 0:
-            logger.debug(
+            logger.info(
                 'Writing {} lines from buffer to disk.'
                 .format(buffer_length)
             )
             with open(self._OUTPUT_PATH, 'a') as f:
                 f.writelines(self._image_buffer)
                 self._image_buffer = []
-                self._total_images += buffer_length
                 logger.debug(
                     'Total Images Processed so far:  {}'
                     .format(self._total_images)
