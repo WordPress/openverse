@@ -1,15 +1,15 @@
 <template>
   <div class="hero">
-    <h2>Search for content to reuse</h2>
+    <h2 class="has-text-centered">Search for content to reuse</h2>
     <form class="hero_search-form margin-top-normal"
           role="search"
           method="get"
           action="/search"
           v-on:submit.prevent="onSubmit">
-      <div>
+      <div class="is-hidden-touch">
         <input required="required"
                 autofocus="true"
-                class="hero_search-input"
+                class="hero_search-input input is-large"
                 type="search"
                 name="q"
                 placeholder="Search for images..."
@@ -17,6 +17,18 @@
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
         <button class="button is-primary big" title="Search">Search</button>
+      </div>
+      <div class="is-hidden-desktop">
+        <input required="required"
+                autofocus="true"
+                class="hero_search-input input"
+                type="search"
+                name="q"
+                placeholder="Search for images..."
+                autocapitalize="none"
+                id="searchTerm"
+                v-model.lazy="form.searchTerm" />
+        <button class="button is-primary" title="Search">Search</button>
       </div>
       <div class="caption has-text-centered">
         <p>
@@ -87,37 +99,14 @@ $hero-height: 71vh;
 
   .hero_search-form {
     position: relative;
-    border-radius: 3px;
     max-width: 750px;
     width: 100%;
     padding: 0 0.5em 0 0.5em;
   }
 
   .hero_search-input {
-    font-size: 24px;
-    padding-left: 30px;
-    margin-bottom: 0;
-    width: 75%;
-    height: 70px;
-    border-radius: 4px;
-    box-shadow: 0 3px 8px 0 rgba(51, 51, 51, 0.13);
-    border: solid 1px #d8d8d8;
+    width: 70%;
     float: left;
-  }
-
-  .hero_search-input::placeholder {
-    color: rgb(192, 192, 192);
-    font-size: 25px;
-    font-weight: 600;
-     font-family: Source Sans Pro;
-  }
-
-  &:before {
-    content: '';
-    position: absolute;
-    background: linear-gradient(to top,
-                rgba(0, 0, 0, 0.1) 0%,
-                rgba(17, 17, 17, 0.7) 100%);
   }
 }
 
@@ -153,14 +142,9 @@ $hero-height: 71vh;
   .search-form_ctr {
     padding: 0 .9375rem;
   }
+}
 
-  .hero .hero_search-input {
-    font-size: 20px;
-    padding-left: 15px;
-  }
-
-  .hero .hero_search-btn {
-    right: 10px;
-  }
+.is-large {
+  height: 70px;
 }
 </style>
