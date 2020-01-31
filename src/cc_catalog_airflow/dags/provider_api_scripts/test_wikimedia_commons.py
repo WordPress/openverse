@@ -221,7 +221,11 @@ def test_merge_image_pages_both_have_gu():
     ) as f:
         right_page = json.load(f)
     with open(
-            os.path.join(RESOURCES, 'continuation', 'page_44672212_merged.json')
+            os.path.join(
+                RESOURCES,
+                'continuation',
+                'page_44672212_merged.json'
+            )
     ) as f:
         expect_merged_page = json.load(f)
     actual_merged_page = wmc._merge_image_pages(left_page, right_page)

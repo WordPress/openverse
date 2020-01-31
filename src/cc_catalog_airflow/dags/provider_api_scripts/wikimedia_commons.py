@@ -103,25 +103,24 @@ def _get_image_batch(
         end_ts,
         continue_token=continue_token
     )
-    response_json = _get_response_json(query_params, retries=retries)
-    if response_json is None:
-        image_batch = None
-        new_continue_token = None
-    elif 'batchcomplete' in response_json:
-        logger.debug('Found batchcomplete')
-        image_batch = response_json
-        new_continue_token = response_json.pop('continue', {})
-    else:
-        remaining_image_batch, new_continue_token = _get_image_batch(
-            start_ts, end_ts, continue_token=response_json.pop('continue', {})
-        )
-        image_batch = _merge_response_jsons(
-            response_json, remaining_image_batch
-        )
-    logger.debug(f'new_continue_token: {new_continue_token}')
-    if not new_continue_token:
-        logger.info('Final image batch!')
-        logger.debug(f'{image_batch}')
+    image_batch = None
+    # The 10000 is arbitrary, chosen to avoid over-recursion.
+    for i in range(10000):
+        response_json = _get_response_json(query_params, retries=retries)
+        if response_json is None:
+            image_batch = None
+            new_continue_token = None
+            break
+        else:
+            new_continue_token = response_json.pop('continue', {})
+            logger.debug(f'new_continue_token: {new_continue_token}')
+            query_params.update(new_continue_token)
+            image_batch = _merge_response_jsons(image_batch, response_json)
+
+        if 'batchcomplete' in response_json:
+            logger.debug('Found batchcomplete')
+            break
+
     return image_batch, new_continue_token
 
 
@@ -161,6 +160,9 @@ def _merge_response_jsons(left_json, right_json):
     # Note that we will keep the continue value from the right json in
     # the merged output!  This is because we assume the right json is
     # the later one in the sequence of responses.
+    if left_json is None:
+        return right_json
+
     left_pages = _get_image_pages(left_json)
     right_pages = _get_image_pages(right_json)
 
@@ -210,7 +212,8 @@ def _get_response_json(
     response = delayed_requester.get(
         endpoint,
         params=query_params,
-        headers=request_headers
+        headers=request_headers,
+        timeout=15
     )
     if response is not None and response.status_code == 200:
         try:
