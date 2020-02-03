@@ -30,6 +30,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 LIMIT = 500
+# The 10000 is a bit arbitrary, but needs to be larger than the mean
+# number of uses per file (globally) in the response_json, or we will
+# fail without a continuation token.  The largest example seen so far
+# had a little over 1000 uses
+MEAN_GLOBAL_USAGE_LIMIT = 10000
 DELAY = 1
 HOST = 'commons.wikimedia.org'
 ENDPOINT = f'https://{HOST}/w/api.php'
@@ -104,8 +109,7 @@ def _get_image_batch(
         continue_token=continue_token
     )
     image_batch = None
-    # The 10000 is arbitrary, chosen to avoid over-recursion.
-    for i in range(10000):
+    for _ in range(MEAN_GLOBAL_USAGE_LIMIT):
         response_json = _get_response_json(query_params, retries=retries)
         if response_json is None:
             image_batch = None
