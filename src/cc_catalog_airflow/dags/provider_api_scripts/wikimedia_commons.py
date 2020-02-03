@@ -65,16 +65,27 @@ image_store = image.ImageStore(provider=PROVIDER)
 
 
 def main(date):
+    """
+    This script pulls the data for a given date from the Wikimedia
+    Commons API, and writes it into a .TSV file to be eventually read
+    into our DB.
+
+    Required Arguments:
+
+    date:  Date String in the form YYYY-MM-DD.  This is the date for
+           which running the script will pull data.
+    """
+
     logger.info(f'Processing Wikimedia Commons API for date: {date}')
 
     continue_token = {}
     total_images = 0
-    start_ts, end_ts = _derive_timestamp_pair(date)
+    start_timestamp, end_timestamp = _derive_timestamp_pair(date)
 
     while True:
         image_batch, continue_token = _get_image_batch(
-            start_ts,
-            end_ts,
+            start_timestamp,
+            end_timestamp,
             continue_token=continue_token)
         logger.info(f'Continue Token: {continue_token}')
         image_pages = _get_image_pages(image_batch)
@@ -92,20 +103,20 @@ def main(date):
 def _derive_timestamp_pair(date):
     date_obj = datetime.strptime(date, '%Y-%m-%d')
     utc_date = date_obj.replace(tzinfo=timezone.utc)
-    start_ts = str(int(utc_date.timestamp()))
-    end_ts = str(int((utc_date + timedelta(days=1)).timestamp()))
-    return start_ts, end_ts
+    start_timestamp = str(int(utc_date.timestamp()))
+    end_timestamp = str(int((utc_date + timedelta(days=1)).timestamp()))
+    return start_timestamp, end_timestamp
 
 
 def _get_image_batch(
-        start_ts,
-        end_ts,
+        start_timestamp,
+        end_timestamp,
         continue_token={},
         retries=5
 ):
     query_params = _build_query_params(
-        start_ts,
-        end_ts,
+        start_timestamp,
+        end_timestamp,
         continue_token=continue_token
     )
     image_batch = None
