@@ -113,7 +113,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       }
     ]),
     // copy opensearch xml file
-new CopyWebpackPlugin([
+    new CopyWebpackPlugin([
   {
     from: path.resolve(__dirname, '../static/opensearch.xml'),
     to: config.build.assetsSubDirectory
