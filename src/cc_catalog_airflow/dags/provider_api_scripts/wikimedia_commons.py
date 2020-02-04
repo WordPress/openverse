@@ -30,6 +30,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 LIMIT = 500
+# The 10000 is a bit arbitrary, but needs to be larger than the mean
+# number of uses per file (globally) in the response_json, or we will
+# fail without a continuation token.  The largest example seen so far
+# had a little over 1000 uses
+MEAN_GLOBAL_USAGE_LIMIT = 10000
 DELAY = 1
 HOST = 'commons.wikimedia.org'
 ENDPOINT = f'https://{HOST}/w/api.php'
@@ -60,16 +65,27 @@ image_store = image.ImageStore(provider=PROVIDER)
 
 
 def main(date):
+    """
+    This script pulls the data for a given date from the Wikimedia
+    Commons API, and writes it into a .TSV file to be eventually read
+    into our DB.
+
+    Required Arguments:
+
+    date:  Date String in the form YYYY-MM-DD.  This is the date for
+           which running the script will pull data.
+    """
+
     logger.info(f'Processing Wikimedia Commons API for date: {date}')
 
     continue_token = {}
     total_images = 0
-    start_ts, end_ts = _derive_timestamp_pair(date)
+    start_timestamp, end_timestamp = _derive_timestamp_pair(date)
 
     while True:
         image_batch, continue_token = _get_image_batch(
-            start_ts,
-            end_ts,
+            start_timestamp,
+            end_timestamp,
             continue_token=continue_token)
         logger.info(f'Continue Token: {continue_token}')
         image_pages = _get_image_pages(image_batch)
@@ -87,41 +103,39 @@ def main(date):
 def _derive_timestamp_pair(date):
     date_obj = datetime.strptime(date, '%Y-%m-%d')
     utc_date = date_obj.replace(tzinfo=timezone.utc)
-    start_ts = str(int(utc_date.timestamp()))
-    end_ts = str(int((utc_date + timedelta(days=1)).timestamp()))
-    return start_ts, end_ts
+    start_timestamp = str(int(utc_date.timestamp()))
+    end_timestamp = str(int((utc_date + timedelta(days=1)).timestamp()))
+    return start_timestamp, end_timestamp
 
 
 def _get_image_batch(
-        start_ts,
-        end_ts,
+        start_timestamp,
+        end_timestamp,
         continue_token={},
         retries=5
 ):
     query_params = _build_query_params(
-        start_ts,
-        end_ts,
+        start_timestamp,
+        end_timestamp,
         continue_token=continue_token
     )
-    response_json = _get_response_json(query_params, retries=retries)
-    if response_json is None:
-        image_batch = None
-        new_continue_token = None
-    elif 'batchcomplete' in response_json:
-        logger.debug('Found batchcomplete')
-        image_batch = response_json
-        new_continue_token = response_json.pop('continue', {})
-    else:
-        remaining_image_batch, new_continue_token = _get_image_batch(
-            start_ts, end_ts, continue_token=response_json.pop('continue', {})
-        )
-        image_batch = _merge_response_jsons(
-            response_json, remaining_image_batch
-        )
-    logger.debug(f'new_continue_token: {new_continue_token}')
-    if not new_continue_token:
-        logger.info('Final image batch!')
-        logger.debug(f'{image_batch}')
+    image_batch = None
+    for _ in range(MEAN_GLOBAL_USAGE_LIMIT):
+        response_json = _get_response_json(query_params, retries=retries)
+        if response_json is None:
+            image_batch = None
+            new_continue_token = None
+            break
+        else:
+            new_continue_token = response_json.pop('continue', {})
+            logger.debug(f'new_continue_token: {new_continue_token}')
+            query_params.update(new_continue_token)
+            image_batch = _merge_response_jsons(image_batch, response_json)
+
+        if 'batchcomplete' in response_json:
+            logger.debug('Found batchcomplete')
+            break
+
     return image_batch, new_continue_token
 
 
@@ -161,6 +175,9 @@ def _merge_response_jsons(left_json, right_json):
     # Note that we will keep the continue value from the right json in
     # the merged output!  This is because we assume the right json is
     # the later one in the sequence of responses.
+    if left_json is None:
+        return right_json
+
     left_pages = _get_image_pages(left_json)
     right_pages = _get_image_pages(right_json)
 
@@ -210,7 +227,8 @@ def _get_response_json(
     response = delayed_requester.get(
         endpoint,
         params=query_params,
-        headers=request_headers
+        headers=request_headers,
+        timeout=15
     )
     if response is not None and response.status_code == 200:
         try:

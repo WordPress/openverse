@@ -48,8 +48,4 @@ DAG_VARIABLES = {
         SCRIPT: os.path.join(API_SCRIPT_PATH, 'Thingiverse.py'),
         CRONTAB_STR: '0 7 * * *'
     },
-    'wikimedia_commons': {
-        SCRIPT: os.path.join(API_SCRIPT_PATH, 'WikimediaCommons.py'),
-        CRONTAB_STR: '0 13 * * *'
-    },
 }
