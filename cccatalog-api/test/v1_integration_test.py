@@ -33,7 +33,7 @@ def setup_module():
 
 @pytest.fixture
 def search_fixture():
-    response = requests.get(API_URL + '/v1/images?q=honey',
+    response = requests.get(API_URL + '/v1/images?q=dog',
                             verify=False)
     assert response.status_code == 200
     parsed = json.loads(response.text)
@@ -45,6 +45,11 @@ def test_search_quotes():
     We want to return a response even if the user messes up quote matching.
     """
     response = requests.get(API_URL + '/v1/images?q="test', verify=False)
+    assert response.status_code == 200
+
+
+def test_search_with_special_characters():
+    response = requests.get(API_URL + '/v1/images?q=dog!', verify=False)
     assert response.status_code == 200
 
 
@@ -61,7 +66,7 @@ def test_search_consistency():
     """
     n_pages = 5
     searches = set(
-        requests.get(API_URL + '/v1/images?q=honey;page={}'.format(page),
+        requests.get(API_URL + '/v1/images?q=dog;page={}'.format(page),
                      verify=False)
         for page in range(1, n_pages)
     )
@@ -180,7 +185,7 @@ def test_license_type_filtering():
     modification = LICENSE_GROUPS['modification']
     commercial_and_modification = set.intersection(modification, commercial)
     response = requests.get(
-        API_URL + '/v1/images?q=honey&license_type=commercial,modification',
+        API_URL + '/v1/images?q=dog&license_type=commercial,modification',
         verify=False
     )
     parsed = json.loads(response.text)
@@ -191,7 +196,7 @@ def test_license_type_filtering():
 def test_single_license_type_filtering():
     commercial = LICENSE_GROUPS['commercial']
     response = requests.get(
-        API_URL + '/v1/images?q=honey&license_type=commercial', verify=False
+        API_URL + '/v1/images?q=dog&license_type=commercial', verify=False
     )
     parsed = json.loads(response.text)
     for result in parsed['results']:
@@ -200,7 +205,7 @@ def test_single_license_type_filtering():
 
 def test_specific_license_filter():
     response = requests.get(
-        API_URL + '/v1/images?q=honey&license=by', verify=False
+        API_URL + '/v1/images?q=dog&license=by', verify=False
     )
     parsed = json.loads(response.text)
     for result in parsed['results']:
@@ -395,7 +400,7 @@ def test_source_search():
 
 
 def test_extension_filter():
-    response = requests.get(API_URL + '/v1/images?q=honey&extension=jpg')
+    response = requests.get(API_URL + '/v1/images?q=dog&extension=jpg')
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert '.jpg' in result['url']
