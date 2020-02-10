@@ -32,7 +32,7 @@ You should now have the application running and accessible at https://localhost:
 
 If you absolutely need a non-HTTP version, run `npm run dev-insecure` instead of `npm run dev`. This is not recommended for most uses.
 
-You don't need to have the CC Search API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [API](https://api.creativecommons.engineering) that's already publicly available. If you wish, you can change the URL of the API that's used during development at https://github.com/creativecommons/cccatalog-frontend/blob/master/config/dev-env.js#L7
+You don't need to have the CC Search API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [API](https://api.creativecommons.engineering) that's already publicly available. If you wish, you can change the URL of the API that's used during development at https://github.com/creativecommons/cccatalog-frontend/blob/develop/config/.env#L5
 
 ## Running tests
 
