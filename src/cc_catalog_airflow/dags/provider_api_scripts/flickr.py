@@ -79,7 +79,7 @@ def _derive_timestamp_pair(date):
     date_obj = datetime.strptime(date, '%Y-%m-%d')
     utc_date = date_obj.replace(tzinfo=timezone.utc)
     start_timestamp = str(int(utc_date.timestamp()))
-    end_timestamp = str(int((utc_date + timedelta(days=1)).timestamp()))
+    end_timestamp = str(int((utc_date + timedelta(minutes=10)).timestamp()))
     return start_timestamp, end_timestamp
 
 
@@ -291,7 +291,7 @@ def _create_meta_data_dict(image_data):
         'date_taken': image_data.get('datetaken'),
         'views': image_data.get('views'),
     }
-    description = image_data.get('description', {}) .get('_content')
+    description = image_data.get('description', {}) .get('_content', '')
     logger.debug(f'description: {description}')
     if description.strip():
         try:
