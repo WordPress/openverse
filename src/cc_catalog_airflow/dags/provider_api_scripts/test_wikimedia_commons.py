@@ -4,6 +4,8 @@ import os
 import requests
 from unittest.mock import patch, MagicMock
 
+import pytest
+
 import wikimedia_commons as wmc
 
 RESOURCES = os.path.join(
@@ -238,7 +240,8 @@ def test_get_response_json_retries_with_none_response():
             'get',
             return_value=None
     ) as mock_get:
-        wmc._get_response_json({}, retries=2)
+        with pytest.raises(Exception):
+            assert wmc._get_response_json({}, retries=2)
 
     assert mock_get.call_count == 3
 
@@ -252,7 +255,8 @@ def test_get_response_json_retries_with_non_ok():
             'get',
             return_value=r
     ) as mock_get:
-        wmc._get_response_json({}, retries=2)
+        with pytest.raises(Exception):
+            assert wmc._get_response_json({}, retries=2)
 
     assert mock_get.call_count == 3
 
@@ -266,7 +270,8 @@ def test_get_response_json_retries_with_error_json():
             'get',
             return_value=r
     ) as mock_get:
-        wmc._get_response_json({}, retries=2)
+        with pytest.raises(Exception):
+            assert wmc._get_response_json({}, retries=2)
 
     assert mock_get.call_count == 3
 
