@@ -228,7 +228,7 @@ def _get_response_json(
         endpoint,
         params=query_params,
         headers=request_headers,
-        timeout=15
+        timeout=60
     )
     if response is not None and response.status_code == 200:
         try:
