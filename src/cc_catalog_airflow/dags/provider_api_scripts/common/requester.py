@@ -36,7 +36,6 @@ class DelayedRequester:
         logger.info(f'Using query parameters {params}')
         logger.info(f'Using headers {kwargs.get("headers")}')
         self._delay_processing()
-        response = requests.get(url, params, **kwargs)
         self._last_request = time.time()
         try:
             response = requests.get(url, params=params, **kwargs)
