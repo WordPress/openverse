@@ -18,3 +18,13 @@ def test_get_waits_before_getting(monkeypatch):
     start = time.time()
     dq.get('https://google.com')
     assert time.time() - start >= delay
+
+
+def test_get_handles_exception(monkeypatch):
+    def mock_requests_get(url, params, **kwargs):
+        raise requests.exceptions.ReadTimeout('test timeout!')
+
+    monkeypatch.setattr(requester.requests, 'get', mock_requests_get)
+
+    dq = requester.DelayedRequester(1)
+    dq.get('https://google.com/')
