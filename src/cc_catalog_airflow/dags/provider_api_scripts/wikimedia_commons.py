@@ -221,8 +221,8 @@ def _get_response_json(
     response_json = None
 
     if retries < 0:
-        logger.warning('No retries remaining.  Returning Nonetype.')
-        return response_json
+        logger.error('No retries remaining.  Failure.')
+        raise Exception('Retries exceeded')
 
     response = delayed_requester.get(
         endpoint,
