@@ -34,7 +34,7 @@ MAX_DESCRIPTION_LENGTH = 2000
 PROVIDER = 'flickr'
 API_KEY = os.getenv('FLICKR_API_KEY')
 ENDPOINT = 'https://api.flickr.com/services/rest/?method=flickr.photos.search'
-PHOTO_URL_BASE='https://www.flickr.com/photos/'
+PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
 DATE_TYPES = ['taken', 'upload']
 
 LICENSE_INFO = {
