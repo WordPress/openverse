@@ -31,13 +31,6 @@ cmaTask   = BashOperator(task_id='ClevelandMuseum',
                 bash_command='python {0}/dags/api/ClevelandMuseum.py'.format(airflowHome),
                 dag=dag)
 
-#schedule the flickr task to reprocess data from the previous month
-curMonth    = datetime.now().replace(day=1)
-prevMonth   = curMonth - timedelta(days=1)
-flickrTask  = BashOperator(task_id='Flickr_Monthly',
-                bash_command='python {0}/dags/api/Flickr.py --month {1}'.format(airflowHome, prevMonth.strftime('%Y-%m')),
-                dag=dag)
-
 #sync the common crawl  AWS ETL data to the OUTPUT_DIR
 s3SyncTask = BashOperator(task_id='Sync_Common_Crawl_Image_Data',
                 bash_command='python {0}/dags/commoncrawl_s3_syncer/SyncImageProviders.py'.format(airflowHome),
@@ -50,4 +43,4 @@ rawpixelTask = BashOperator(task_id='RawPixel',
 
 endTask      = BashOperator(task_id='End', trigger_rule=TriggerRule.ALL_DONE, bash_command='echo Terminating monthly workflow', dag=dag)
 
-beginTask >> [cmaTask, rawpixelTask, flickrTask, s3SyncTask] >> endTask
+beginTask >> [cmaTask, rawpixelTask, s3SyncTask] >> endTask
