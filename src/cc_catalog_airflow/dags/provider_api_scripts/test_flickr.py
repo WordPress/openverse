@@ -1,7 +1,8 @@
 import json
 import logging
 import os
-from unittest.mock import patch
+import requests
+from unittest.mock import patch, MagicMock
 
 import flickr
 
@@ -21,6 +22,25 @@ def _get_resource_json(json_name):
     return resource_json
 
 
+def test_derive_timestamp_pair():
+    # Note that the timestamps are derived as if input was in UTC.
+    start_ts, end_ts = flickr._derive_timestamp_pair('2018-01-15')
+    assert start_ts == '1515974400'
+    assert end_ts == '1516060800'
+
+
+def test_process_date_skips_bad_pages():
+    with patch.object(
+            flickr,
+            '_get_image_list',
+            return_value=(None, 5)
+    ) as mock_get_image_list:
+        flickr._process_date('1234', '5678', 'test')
+
+    assert mock_get_image_list.call_count == 5
+    assert mock_get_image_list.called_with('1234', '5678', 'test', 5)
+
+
 def test_get_image_list_retries_with_none_response():
     with patch.object(
             flickr.delayed_requester,
@@ -30,6 +50,41 @@ def test_get_image_list_retries_with_none_response():
         flickr._get_image_list('1234', '5678', 'test', 4, retries=2)
 
     assert mock_get.call_count == 3
+
+
+def test_get_image_list_retries_with_non_ok_response():
+    response_json = _get_resource_json('flickr_example_pretty.json')
+    r = requests.Response()
+    r.status_code = 504
+    r.json = MagicMock(return_value=response_json)
+    with patch.object(
+            flickr.delayed_requester,
+            'get',
+            return_value=r
+    ) as mock_get:
+        flickr._get_image_list('1234', '5678', 'test', 4, retries=2)
+
+    assert mock_get.call_count == 3
+
+
+def test_get_image_list_with_realistic_response():
+    response_json = _get_resource_json('flickr_example_pretty.json')
+    r = requests.Response()
+    r.status_code = 200
+    r.json = MagicMock(return_value=response_json)
+    with patch.object(
+            flickr.delayed_requester,
+            'get',
+            return_value=r
+    ) as mock_get:
+        image_list, total_pages = flickr._get_image_list(
+            '1234', '5678', 'test', 4, retries=2
+        )
+    expect_image_list = _get_resource_json('flickr_example_photo_list.json')
+
+    assert mock_get.call_count == 1
+    assert image_list == expect_image_list
+    assert total_pages == 1
 
 
 # This test will fail if default constants change.
@@ -99,8 +154,6 @@ def test_extract_image_list_from_json_handles_realistic_input():
     test_dict = _get_resource_json('flickr_example_pretty.json')
     expect_image_list = _get_resource_json('flickr_example_photo_list.json')
     expect_total_pages = 1
-    for item in expect_image_list:
-        print(item)
     actual_image_list, actual_total_pages = (
         flickr._extract_image_list_from_json(test_dict)
     )
