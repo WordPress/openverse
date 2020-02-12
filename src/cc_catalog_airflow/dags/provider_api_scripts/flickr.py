@@ -11,9 +11,9 @@ Notes:                  https://www.flickr.com/help/terms/api
 """
 
 import argparse
+from datetime import datetime, timedelta, timezone
 import logging
 import os
-from datetime import datetime, timedelta, timezone
 
 import lxml.html as html
 
@@ -29,10 +29,12 @@ logger = logging.getLogger(__name__)
 
 DELAY = 1.0
 LIMIT = 500
-MAX_TAGS = 40
+MAX_TAG_STRING_LENGTH = 2000
+MAX_DESCRIPTION_LENGTH = 2000
 PROVIDER = 'flickr'
 API_KEY = os.getenv('FLICKR_API_KEY')
 ENDPOINT = 'https://api.flickr.com/services/rest/?method=flickr.photos.search'
+PHOTO_URL_BASE='https://www.flickr.com/photos/'
 DATE_TYPES = ['taken', 'upload']
 
 LICENSE_INFO = {
@@ -193,13 +195,13 @@ def _extract_image_list_from_json(response_json):
             response_json is None
             or response_json.get('stat') != 'ok'
     ):
-        image_data = None
+        image_page = None
     else:
-        image_data = response_json.get('photos')
+        image_page = response_json.get('photos')
 
-    if image_data is not None:
-        image_list = image_data.get('photo')
-        total_pages = image_data.get('pages')
+    if image_page is not None:
+        image_list = image_page.get('photo')
+        total_pages = image_page.get('pages')
     else:
         image_list, total_pages = None, None
 
@@ -217,27 +219,11 @@ def _process_image_data(image_data):
     logger.debug(f'Processing image data: {image_data}')
     image_url, height, width = _get_image_url(image_data)
     license_, license_version = _get_license(image_data.get('license'))
-
-    if 'owner' in image_data:
-        creator_url = (
-            f'https://www.flickr.com/photos/{image_data["owner"].strip()}'
-        )
-    else:
-        creator_url = None
-
-    if creator_url is None:
-        logger.warning('No creator_url constructed!')
-
+    creator_url = _build_creator_url(image_data)
     foreign_id = image_data.get('id')
     if foreign_id is None:
         logger.warning('No foreign_id in image_data!')
-
-    if foreign_id and creator_url:
-        foreign_landing_url = '{}/{}'.format(creator_url, foreign_id)
-    else:
-        foreign_landing_url = None
-
-    logger.debug(f'foreign_landing_url: {foreign_landing_url}')
+    foreign_landing_url = _build_foreign_landing_url(creator_url, foreign_id)
 
     return image_store.add_item(
         foreign_landing_url=foreign_landing_url,
@@ -253,6 +239,35 @@ def _process_image_data(image_data):
         title=image_data.get('title'),
         meta_data=_create_meta_data_dict(image_data),
         raw_tags=_create_tags_list(image_data),
+    )
+
+
+def _build_creator_url(image_data, photo_url_base=PHOTO_URL_BASE):
+    owner = image_data.get('owner')
+    if owner is not None:
+        creator_url = _url_join(photo_url_base, owner.strip())
+        logger.debug(f'creator_url: {creator_url}')
+    else:
+        logger.warning('No creator_url constructed!')
+        creator_url = None
+
+    return creator_url
+
+
+def _build_foreign_landing_url(creator_url, foreign_id):
+    if creator_url and foreign_id:
+        foreign_landing_url = _url_join(creator_url, foreign_id)
+        logger.debug(f'foreign_landing_url: {foreign_landing_url}')
+    else:
+        logger.warning('No foreign_landing_url constructed!')
+        foreign_landing_url = None
+
+    return foreign_landing_url
+
+
+def _url_join(*args):
+    return '/'.join(
+        [s.strip('/') for s in args]
     )
 
 
@@ -273,7 +288,6 @@ def _get_image_url(image_data):
     return None, None, None
 
 
-# TODO write tests for this
 def _get_license(license_id, license_info=LICENSE_INFO):
     license_id = str(license_id)
 
@@ -285,7 +299,10 @@ def _get_license(license_id, license_info=LICENSE_INFO):
     return license_, license_version
 
 
-def _create_meta_data_dict(image_data):
+def _create_meta_data_dict(
+        image_data,
+        max_description_length=MAX_DESCRIPTION_LENGTH
+):
     meta_data = {
         'pub_date': image_data.get('dateupload'),
         'date_taken': image_data.get('datetaken'),
@@ -297,7 +314,7 @@ def _create_meta_data_dict(image_data):
         try:
             description_text = ' '.join(
                 html.fromstring(description).xpath('//text()')
-            ).strip()[:2000]  # We don't want arbitrarily long descriptions.
+            ).strip()[:max_description_length]
             meta_data['description'] = description_text
         except Exception as e:
             logger.warning(f'Could not parse description {description}!\n{e}')
@@ -305,11 +322,19 @@ def _create_meta_data_dict(image_data):
     return {k: v for k, v in meta_data.items() if v is not None}
 
 
-def _create_tags_list(image_data, max_tags=MAX_TAGS):
+def _create_tags_list(
+        image_data,
+        max_tag_string_length=MAX_TAG_STRING_LENGTH
+):
     raw_tags = None
-    raw_tag_string = image_data.get('tags', '').strip()
+    # We limit the input tag string length, not the number of tags,
+    # since tags could otherwise be arbitrarily long, resulting in
+    # arbitrarily large data in the DB.
+    raw_tag_string = image_data.get('tags', '').strip()[:max_tag_string_length]
     if raw_tag_string:
-        raw_tags = list(set(raw_tag_string.split()))[:max_tags]
+        # We sort for further consistency between runs, saving on
+        # inserts into the DB later.
+        raw_tags = sorted(list(set(raw_tag_string.split())))
 
     return raw_tags
 
