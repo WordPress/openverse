@@ -295,6 +295,7 @@ class ImageStore:
         logger.debug('Prepared strings list:\n{}'.format(prepared_strings))
         for i in range(row_length):
             if columns[i].REQUIRED and prepared_strings[i] is None:
+                logger.warning(f'Row missing required {columns[i].NAME}')
                 return None
         else:
             return '\t'.join(
