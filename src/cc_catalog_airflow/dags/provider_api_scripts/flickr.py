@@ -81,7 +81,7 @@ def _derive_timestamp_pair(date):
     date_obj = datetime.strptime(date, '%Y-%m-%d')
     utc_date = date_obj.replace(tzinfo=timezone.utc)
     start_timestamp = str(int(utc_date.timestamp()))
-    end_timestamp = str(int((utc_date + timedelta(minutes=10)).timestamp()))
+    end_timestamp = str(int((utc_date + timedelta(days=1)).timestamp()))
     return start_timestamp, end_timestamp
 
 
@@ -141,16 +141,7 @@ def _get_image_list(
         )
 
     logger.debug('response.status_code: {response.status_code}')
-
-    if response is not None and response.status_code == 200:
-        try:
-            response_json = response.json()
-        except Exception as e:
-            logger.warning(f'Could not get image_data json.\n{e}')
-            response_json = None
-    else:
-        response_json = None
-
+    response_json = _extract_response_json(response)
     image_list, total_pages = _extract_image_list_from_json(response_json)
 
     if image_list is None or total_pages is None:
@@ -163,6 +154,19 @@ def _get_image_list(
         )
 
     return image_list, total_pages
+
+
+def _extract_response_json(response):
+    if response is not None and response.status_code == 200:
+        try:
+            response_json = response.json()
+        except Exception as e:
+            logger.warning(f'Could not get image_data json.\n{e}')
+            response_json = None
+    else:
+        response_json = None
+
+    return response_json
 
 
 def _build_query_param_dict(
