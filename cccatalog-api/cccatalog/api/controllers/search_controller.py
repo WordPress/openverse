@@ -120,22 +120,21 @@ def _post_process_results(s, start, end, page_size, search_results,
             res.fields_matched = dir(res.meta.highlight)
         to_validate.append(res.url)
         if PROXY_THUMBS:
-            # Proxy thumbnails from providers who don't provide SSL. We also
-            # have a list of providers that have poor quality or no thumbnails,
-            # so we produce our own on-the-fly.
-            provider = res[PROVIDER]
-            if THUMBNAIL in res and provider not in PROXY_ALL:
+            # Route all images through a dynamically resizing caching proxy.
+            # If a 3rd party thumbnail is available, in order to save limited
+            # bandwidth and memory resources required for resizing, we'll
+            # proxy the 3rd party thumbnail instead of the full-sized image.
+            if THUMBNAIL in res:
                 to_proxy = THUMBNAIL
             else:
                 to_proxy = URL
-            if 'http://' in res[to_proxy] or provider in PROXY_ALL:
-                original = res[to_proxy]
-                secure = '{proxy_url}/{width}/{original}'.format(
-                    proxy_url=THUMBNAIL_PROXY_URL,
-                    width=THUMBNAIL_WIDTH_PX,
-                    original=original
-                )
-                res[THUMBNAIL] = secure
+            original = res[to_proxy]
+            proxied = '{proxy_url}/{width}/{original}'.format(
+                proxy_url=THUMBNAIL_PROXY_URL,
+                width=THUMBNAIL_WIDTH_PX,
+                original=original
+            )
+            res[THUMBNAIL] = proxied
         results.append(res)
 
     if filter_dead:

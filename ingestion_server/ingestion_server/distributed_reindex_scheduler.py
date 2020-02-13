@@ -89,7 +89,7 @@ def _prepare_workers():
     return servers
 
 
-def _wait_for_healthcheck(endpoint, attempts=20, wait=5):
+def _wait_for_healthcheck(endpoint, attempts=40, wait=5):
     """
     Wait for the instance at `endpoint` to become healthy before assigning work.
 

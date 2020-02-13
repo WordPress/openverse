@@ -160,10 +160,6 @@ THUMBNAIL_PROXY_URL = os.environ.get(
     'THUMBNAIL_PROXY_URL', 'https://localhost:8222'
 )
 
-# Some 3rd party content providers provide low quality or broken thumbnails
-# frequently. We produce our own thumbnails for the worst offenders.
-PROXY_ALL = os.environ.get('PROXY_ALL', 'iha').split(',')
-
 AUTHENTICATION_BACKENDS = (
     'oauth2_provider.backends.OAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',
