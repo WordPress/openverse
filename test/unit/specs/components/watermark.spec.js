@@ -30,7 +30,7 @@ describe('Watermark', () => {
 
   it('should render watermark link', () => {
     const wrapper = render(Watermark, options);
-    expect(wrapper.find('.download-watermark').element).toBeDefined();
+    expect(wrapper.find('.button').element).toBeDefined();
   });
 
   it('should generate watermark url', () => {
@@ -67,7 +67,7 @@ describe('Watermark', () => {
       dispatch: jest.fn(),
     };
     const wrapper = render(Watermark, { ...options, mocks: { $store: storeMock } });
-    wrapper.find('.download-watermark').trigger('click');
+    wrapper.find('.button').trigger('click');
     expect(storeMock.dispatch).toHaveBeenCalledWith('DOWNLOAD_WATERMARK', {
       imageId: props.image.id,
       shouldWatermark: wrapper.vm.shouldWatermark,
