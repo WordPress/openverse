@@ -8,10 +8,9 @@ from cccatalog import settings
 from django.core.cache import cache
 from cccatalog.api.models import ContentProvider
 from rest_framework import serializers
-from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS, PROXY_ALL
+from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS
 from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils.dead_link_mask import get_query_mask, get_query_hash
-from rest_framework.reverse import reverse
 from itertools import accumulate
 from typing import Tuple, List, Optional
 from math import ceil

@@ -154,7 +154,7 @@ CACHES = {
     }
 }
 
-# Produce thumbnails on-the-fly when HTTPS is not supported.
+# Produce CC-hosted thumbnails dynamically through a proxy.
 PROXY_THUMBS = bool(os.environ.get('PROXY_THUMBS', False))
 THUMBNAIL_PROXY_URL = os.environ.get(
     'THUMBNAIL_PROXY_URL', 'https://localhost:8222'
