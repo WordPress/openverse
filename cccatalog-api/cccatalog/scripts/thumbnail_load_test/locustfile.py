@@ -15,7 +15,7 @@ been warmed up. You want to test dynamic resizing performance, not cache
 retrieval, so empty the thumbnail S3 bucket before running this against a live
 server.
 """
-PROXY_URL = "https://api-dev.creativecommons.engineering/t/600"
+PROXY_URL = "https://api-dev.creativecommons.engineering/t/600/"
 url_queue = gevent.queue.Queue()
 provider_counts = defaultdict(int)
 url_provider = {}
@@ -32,17 +32,13 @@ with open('url_dump.csv') as urls_csv:
         provider_counts[provider] += 1
 
 
-def _thumb_failure(request, exception):
-    print(f'Failed to load thumbnail! Req, reason: {request}, {exception}')
-
-
 def _print_current_stats():
     mean_response_time = statistics.mean(response_times)
     failed = 0
     successful = 0
     for status in thumb_statuses:
         num_statuses = thumb_statuses[status]
-        if status >= 300:
+        if status >= 300 and status != 404:
             failed += num_statuses
         else:
             successful += num_statuses
@@ -51,7 +47,8 @@ def _print_current_stats():
         'timestamp': str(datetime.datetime.now()),
         'mean_response_time': mean_response_time,
         'successful': successful,
-        'failed': failed
+        'failed': failed,
+        'statuses': thumb_statuses
     }
     print(json.dumps(out))
 
@@ -64,10 +61,9 @@ class ThumbTask(TaskSet):
         for _ in range(20):
             base_url, provider = url_queue.get()
             providers.append(provider)
-            proxied_url = f'{PROXY_URL}/{base_url}'
-            print(proxied_url)
+            proxied_url = f'{PROXY_URL}{base_url}'
             reqs.append(grequests.get(proxied_url))
-        thumb_responses = grequests.map(reqs, exception_handler=_thumb_failure)
+        thumb_responses = grequests.map(reqs)
         for resp in thumb_responses:
             response_times.append(resp.elapsed.total_seconds())
             thumb_statuses[resp.status_code] += 1
