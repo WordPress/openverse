@@ -112,7 +112,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/app';
 
 .search-filters {
   background: #fafafa;
