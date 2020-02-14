@@ -10,21 +10,28 @@ from collections import defaultdict
 """
 Swarm the API server with requests for thumbnails.
 
-Bear in mind that performance will be dramatically different if the cache has
-been warmed up. You want to test dynamic resizing performance, not cache 
-retrieval, so empty the thumbnail S3 bucket before running this against a live
-server.
+To prepare the server for testing:
+    - Ensure that the hardware allocation matches production.
+    - Disable referer origin limiting in the Imageproxy server.
+    - Empty the S3 thumbnail cache bucket.
+
+Optionally rerun the test after the cache has been warmed up.
 """
 PROXY_URL = "https://api-dev.creativecommons.engineering/t/600/"
+
 url_queue = gevent.queue.Queue()
 provider_counts = defaultdict(int)
 url_provider = {}
 thumb_statuses = defaultdict(int)
+statuses_by_provider = {}
 response_times = []
+
 
 with open('url_dump.csv') as urls_csv:
     reader = csv.reader(urls_csv)
     for row in reader:
+        if row[0] == 'url':
+            continue
         url = row[0]
         provider = row[1]
         url_queue.put((url, provider))
@@ -32,7 +39,7 @@ with open('url_dump.csv') as urls_csv:
         provider_counts[provider] += 1
 
 
-def _print_current_stats():
+def print_current_stats():
     mean_response_time = statistics.mean(response_times)
     failed = 0
     successful = 0
@@ -48,9 +55,22 @@ def _print_current_stats():
         'mean_response_time': mean_response_time,
         'successful': successful,
         'failed': failed,
-        'statuses': thumb_statuses
+        'statuses': thumb_statuses,
+        'provider_statuses': statuses_by_provider
     }
     print(json.dumps(out))
+
+
+def record_stats(responses, providers):
+    for idx, resp in enumerate(responses):
+        response_times.append(resp.elapsed.total_seconds())
+        thumb_statuses[resp.status_code] += 1
+        provider = providers[idx]
+        if provider in statuses_by_provider:
+            statuses_by_provider[provider][resp.status_code] += 1
+        else:
+            statuses_by_provider[provider] = defaultdict(int)
+            statuses_by_provider[provider][resp.status_code] += 1
 
 
 class ThumbTask(TaskSet):
@@ -64,12 +84,13 @@ class ThumbTask(TaskSet):
             proxied_url = f'{PROXY_URL}{base_url}'
             reqs.append(grequests.get(proxied_url))
         thumb_responses = grequests.map(reqs)
-        for resp in thumb_responses:
-            response_times.append(resp.elapsed.total_seconds())
-            thumb_statuses[resp.status_code] += 1
-        _print_current_stats()
+        record_stats(thumb_responses, providers)
+        print_current_stats()
 
 
 class ThumbLocust(HttpLocust):
-    wait_time = between(5, 10)
+    """
+    Load a page's worth of thumbnails every 3 to 10 seconds.
+    """
+    wait_time = between(3, 10)
     task_set = ThumbTask
