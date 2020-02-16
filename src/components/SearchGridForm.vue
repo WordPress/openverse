@@ -132,6 +132,9 @@ export default {
     width: 100%;
     background: #fff;
     border-bottom: 1px solid #E6EAEA;
+    z-index: 1;
+    top: 0;
+    position: sticky;
   }
 
   .search-filter:after,
