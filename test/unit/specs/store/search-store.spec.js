@@ -30,15 +30,15 @@ describe('Search Store', () => {
     });
 
     it('gets query from search params', () => {
-      const state = store.state('?q=landscapes&provider=met&li=by&lt=all&searchBy=creator&categories=gif&size=large&aspect_ratio=wide');
+      const state = store.state('?q=landscapes&source=met&license=by&license_type=all&searchBy=creator&categories=gif&size=large&aspect_ratio=wide');
       expect(state.imagesCount).toBe(0);
       expect(state.imagePage).toBe(1);
       expect(state.images).toHaveLength(0);
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
       expect(state.query.q).toBe('landscapes');
-      expect(state.query.provider).toBe('met');
-      expect(state.query.lt).toBe('all');
+      expect(state.query.source).toBe('met');
+      expect(state.query.license_type).toBe('all');
       expect(state.query.searchBy).toBe('creator');
       expect(state.query.categories).toBe('gif');
       expect(state.query.size).toBe('large');
@@ -155,7 +155,7 @@ describe('Search Store', () => {
       mutations[RESET_QUERY](state);
 
       expect(state.query.q).toBe('');
-      expect(state.query.lt).toBe('');
+      expect(state.query.license_type).toBe('');
       expect(state.isFilterApplied).toBeFalsy();
     });
 
@@ -246,7 +246,9 @@ describe('Search Store', () => {
           page: params.page,
         });
 
-        expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
+        const newParams = { ...params, source: params.provider };
+        delete newParams.provider;
+        expect(imageServiceMock.getProviderCollection).toBeCalledWith(newParams);
         done();
       });
     });
@@ -255,7 +257,9 @@ describe('Search Store', () => {
       const params = { q: 'nature', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
       action({ commit, dispatch }, params).then(() => {
-        expect(imageServiceMock.search).toBeCalledWith(params);
+        const newParams = { ...params, source: params.provider };
+        delete newParams.provider;
+        expect(imageServiceMock.search).toBeCalledWith(newParams);
 
         done();
       });
@@ -265,7 +269,9 @@ describe('Search Store', () => {
       const params = { li: 'by', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
       action({ commit, dispatch }, params).then(() => {
-        expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
+        const newParams = { ...params, source: params.provider };
+        delete newParams.provider;
+        expect(imageServiceMock.getProviderCollection).toBeCalledWith(newParams);
 
         done();
       });
@@ -275,7 +281,9 @@ describe('Search Store', () => {
       const params = { lt: 'commercial', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
       action({ commit, dispatch }, params).then(() => {
-        expect(imageServiceMock.getProviderCollection).toBeCalledWith(params);
+        const newParams = { ...params, source: params.provider };
+        delete newParams.provider;
+        expect(imageServiceMock.getProviderCollection).toBeCalledWith(newParams);
 
         done();
       });
@@ -285,7 +293,9 @@ describe('Search Store', () => {
       const params = { q: 'nature', provider: 'met', page: 1, shouldPersistImages: false };
       const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES];
       action({ commit, dispatch }, params).then(() => {
-        expect(imageServiceMock.search).toBeCalledWith(params);
+        const newParams = { ...params, source: params.provider };
+        delete newParams.provider;
+        expect(imageServiceMock.search).toBeCalledWith(newParams);
 
         done();
       });
