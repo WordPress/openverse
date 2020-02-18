@@ -43,7 +43,7 @@ const errorImage = require('@/assets/image_not_available_placeholder.png');
 const minAspect = 3 / 4;
 const maxAspect = 16 / 9;
 const panaromaAspect = 21 / 9;
-const minRowWidth = 280;
+const minRowWidth = 450;
 
 const toAbsolutePath = (url, prefix = 'https://') => {
   if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
