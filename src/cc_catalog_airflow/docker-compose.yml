@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  postgres:
+    build: ./local_postgres
+    environment:
+      - POSTGRES_USER=deploy
+      - POSTGRES_PASSWORD=deploy
+      - POSTGRES_DB=openledger
+    ports:
+      - "5432:5432"
+    volumes:
+      - /tmp/data:/var/lib/postgresql/data
+
+  airflow:
+    build: .
+    env_file: .env
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - ./dags:/usr/local/airflow/dags
+    ports:
+      - "9090:8080"
+    command: webserver
