@@ -6,7 +6,7 @@
       <p class="page_lead-paragraph">
         CC Search is a tool that allows openly licensed and public domain works to be discovered
         and used by everyone. Creative Commons, the nonprofit behind CC Search, is the maker of the
-        <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">CC licenses</a>,
+        <a href="https://creativecommons.org/share-your-work/licensing-examples/">CC licenses</a>,
         used over 1.4 billion times to help creators share knowledge and creativity online.
       </p>
       <p>

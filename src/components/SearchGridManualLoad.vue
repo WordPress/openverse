@@ -4,7 +4,7 @@
     <div class="search-grid_ctr" ref="gridItems">
       <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics" >
         <h2>{{ searchTerm }}</h2>
-        <span>{{ _imagesCount }} photos</span>
+        <span> {{ _imagesCount }}</span>
       </div>
       <div class="search-grid-cells">
         <search-grid-cell
@@ -83,7 +83,7 @@ export default {
     },
     _imagesCount() {
       const count = this.useInfiniteScroll ? this.$store.state.imagesCount : this.imagesCount;
-      return count.toLocaleString('en');
+      return count >= 10000 ? `Over ${count.toLocaleString('en')} images` : `${count.toLocaleString('en')} images`;
     },
     _query() {
       return this.$props.query;

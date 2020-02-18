@@ -41,7 +41,7 @@ describe('Filter Store', () => {
     });
 
     it('gets query from search params', () => {
-      const state = store.state('?q=landscapes&provider=met&li=by&lt=commercial&searchBy=creator');
+      const state = store.state('?q=landscapes&source=met&license=by&license_type=commercial&searchBy=creator');
       expect(state.filters.providers.find(x => x.code === 'met').checked).toBeTruthy();
       expect(state.filters.licenses.find(x => x.code === 'by').checked).toBeTruthy();
       expect(state.filters.licenseTypes.find(x => x.code === 'commercial').checked).toBeTruthy();
@@ -61,7 +61,7 @@ describe('Filter Store', () => {
     });
 
     it('isFilterApplied is set to true when provider filter is set', () => {
-      const state = store.state('?q=landscapes&provider=met&li=by&lt=');
+      const state = store.state('?q=landscapes&source=met&license=by&license_type=');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
@@ -71,12 +71,12 @@ describe('Filter Store', () => {
     });
 
     it('isFilterApplied is set to true when license type filter is set', () => {
-      const state = store.state('?q=landscapes&lt=commercial');
+      const state = store.state('?q=landscapes&license_type=commercial');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
     it('isFilterApplied is set to true when license filter is set', () => {
-      const state = store.state('?q=landscapes&li=by');
+      const state = store.state('?q=landscapes&license=by');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
@@ -139,11 +139,11 @@ describe('Filter Store', () => {
       expect(state.filters.licenses[0].checked).toBeTruthy();
       expect(state.query).toEqual({
         q: 'foo',
-        li: state.filters.licenses[0].code,
+        license: state.filters.licenses[0].code,
         extension: '',
         categories: '',
-        lt: '',
-        provider: '',
+        license_type: '',
+        source: '',
         searchBy: '',
         aspect_ratio: '',
         size: '',
@@ -156,11 +156,11 @@ describe('Filter Store', () => {
       expect(state.filters.licenseTypes[0].checked).toBeTruthy();
       expect(state.query).toEqual({
         q: 'foo',
-        li: '',
+        license: '',
         extension: '',
         categories: '',
-        lt: state.filters.licenseTypes[0].code,
-        provider: '',
+        license_type: state.filters.licenseTypes[0].code,
+        source: '',
         searchBy: '',
         aspect_ratio: '',
         size: '',
@@ -173,11 +173,11 @@ describe('Filter Store', () => {
       expect(state.filters.extensions[0].checked).toBeTruthy();
       expect(state.query).toEqual({
         q: 'foo',
-        li: '',
+        license: '',
         extension: state.filters.extensions[0].code,
         categories: '',
-        lt: '',
-        provider: '',
+        license_type: '',
+        source: '',
         searchBy: '',
         aspect_ratio: '',
         size: '',
@@ -190,11 +190,11 @@ describe('Filter Store', () => {
       expect(state.filters.categories[0].checked).toBeTruthy();
       expect(state.query).toEqual({
         q: 'foo',
-        li: '',
+        license: '',
         extension: '',
         categories: state.filters.categories[0].code,
-        lt: '',
-        provider: '',
+        license_type: '',
+        source: '',
         searchBy: '',
         aspect_ratio: '',
         size: '',
@@ -207,11 +207,11 @@ describe('Filter Store', () => {
       expect(state.filters.searchBy.creator).toBeTruthy();
       expect(state.query).toEqual({
         q: 'foo',
-        li: '',
+        license: '',
         extension: '',
         categories: '',
-        lt: '',
-        provider: '',
+        license_type: '',
+        source: '',
         searchBy: 'creator',
         aspect_ratio: '',
         size: '',
@@ -224,11 +224,11 @@ describe('Filter Store', () => {
       expect(state.filters.aspectRatios[0].checked).toBeTruthy();
       expect(state.query).toEqual({
         q: 'foo',
-        li: '',
+        license: '',
         extension: '',
         categories: '',
-        lt: '',
-        provider: '',
+        license_type: '',
+        source: '',
         searchBy: '',
         aspect_ratio: state.filters.aspectRatios[0].code,
         size: '',
@@ -241,11 +241,11 @@ describe('Filter Store', () => {
       expect(state.filters.sizes[0].checked).toBeTruthy();
       expect(state.query).toEqual({
         q: 'foo',
-        li: '',
+        license: '',
         extension: '',
         categories: '',
-        lt: '',
-        provider: '',
+        license_type: '',
+        source: '',
         searchBy: '',
         aspect_ratio: '',
         size: state.filters.sizes[0].code,

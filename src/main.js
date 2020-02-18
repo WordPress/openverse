@@ -23,9 +23,11 @@ function createApp(router, __INITIAL_STATE__) {
   // query values are initialized from URL inside store (see search store state definition)
   // isFilterVisible is always false on server, but can be true on the client (browser desktops)
   if (__INITIAL_STATE__) {
-    const { query, isFilterVisible, ...initialState } = __INITIAL_STATE__;
+    const { query, filters, isFilterVisible, isFilterApplied, ...initialState } = __INITIAL_STATE__;
     initialState.query = appStore.state.query;
     initialState.isFilterVisible = appStore.state.isFilterVisible;
+    initialState.isFilterApplied = appStore.state.isFilterApplied;
+    initialState.filters = appStore.state.filters;
     appStore.replaceState(initialState);
   }
 

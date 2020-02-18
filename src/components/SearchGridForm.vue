@@ -92,6 +92,7 @@ export default {
       e.preventDefault();
       if (this.searchTermsModel) {
         this.$emit('onSearchFormSubmit', { query: { q: this.searchTermsModel }, shouldNavigate: true });
+        this.$refs.search.blur();
       }
     },
     onToggleSearchGridFilter() {
@@ -131,6 +132,9 @@ export default {
     width: 100%;
     background: #fff;
     border-bottom: 1px solid #E6EAEA;
+    z-index: 1;
+    top: 0;
+    position: sticky;
   }
 
   .search-filter:after,

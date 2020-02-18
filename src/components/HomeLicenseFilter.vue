@@ -6,6 +6,8 @@
       <input :id="licenseType.code"
               type="checkbox"
               :checked="licenseType.checked"
+              name="lt"
+              :value="licenseType.code"
               @input="onFilterChanged(licenseType.code)" />
       <label :for="licenseType.code">{{ licenseType.name }}</label>
     </div>
@@ -38,9 +40,12 @@ export default {
 .home-license-filter {
   margin-top: 0.5em;
   text-align: left;
+  text-align: center;
 }
 span {
   display: block;
+  font-size: 1.25em;
+  font-weight: 600;
 }
 .license-filters {
   display: inline-block;

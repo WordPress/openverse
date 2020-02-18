@@ -14,7 +14,7 @@
       </p>
 
       <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
-              width="640"
+              width="100%"
               height="998"
               frameborder="0"
               marginheight="0"

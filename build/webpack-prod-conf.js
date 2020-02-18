@@ -112,6 +112,13 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory + '/img',
       }
     ]),
+    // copy opensearch xml file
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../static/opensearch.xml'),
+        to: config.build.assetsSubDirectory
+      }
+    ]),
     // extract webpack runtime & manifest to avoid vendor chunk hash changing
     // on every build.
     new webpack.optimize.CommonsChunkPlugin({

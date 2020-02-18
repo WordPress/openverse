@@ -1,35 +1,32 @@
 <template>
   <div class="hero">
-    <img class="logo" alt="Logo" src="../assets/cc-logo_large_black.png">
+    <h1>Search for content to reuse</h1>
     <form class="hero_search-form"
           role="search"
-          method="post"
+          method="get"
+          action="/search"
           v-on:submit.prevent="onSubmit">
-      <div class="search-form_ctr grid-x">
-          <div class="cell large-12">
-            <input required="required"
-                   autofocus="true"
-                   class="hero_search-input"
-                   type="search"
-                   name="q"
-                   placeholder="Search for images..."
-                   autocapitalize="none"
-                   id="searchTerm"
-                   v-model.lazy="form.searchTerm">
-          </div>
-          <div class="cell large-12">
-            <button class="hero_search-btn" title="Search"></button>
-          </div>
+      <div>
+        <input required="required"
+                autofocus="true"
+                class="hero_search-input"
+                type="search"
+                name="q"
+                placeholder="Search for images..."
+                autocapitalize="none"
+                id="searchTerm"
+                v-model.lazy="form.searchTerm" />
+        <button class="hero_search-btn" title="Search">Search</button>
+      </div>
+      <div class="description">
+        <p>
+          All content here is marked as being available for reuse
+          under a Creative Commons legal tool. Learn more
+          <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">here</a>.
+        </p>
       </div>
       <home-license-filter />
     </form>
-    <div class="description">
-        <p>
-          Search for free content in the public domain and under Creative Commons licenses.
-          <br />
-          Learn more about CC licenses <a href="https://creativecommons.org/share-your-work/licensing-types-examples/" target="_blank" rel="noopener">here</a>.
-        </p>
-    </div>
     <div class="old-search-link">
       <span>
         Looking for the old CC Search portal? Go
@@ -55,6 +52,7 @@
 import { SET_QUERY } from '@/store/mutation-types';
 import HomeLicenseFilter from './HomeLicenseFilter';
 
+
 export default {
   name: 'hero-section',
   components: {
@@ -74,79 +72,69 @@ export default {
 <style lang="scss" scoped>
 @import '../../node_modules/foundation-sites/scss/foundation';
 
+h1 {
+  font-family: Roboto;
+  font-size: 2.375em;
+  color: #333333;
+  text-align: center;
+
+  @media screen and (max-width: 40em) {
+    font-size: 1.8em;
+  }
+}
+
 $hero-height: 71vh;
 
 .hero {
-  background: #e9ebee;
+  background: #fff;
   position: relative;
   height: $hero-height;
   background-size: cover;
-  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   min-height: 300px;
 
-  .logo {
-    margin-bottom: 4vh;
-    height: 7em;
-
-    @media screen and (max-width: 39.9375em), (max-height: 720px) {
-      height: 5.5em;
-      margin-top: 4vh;
-      padding: 0.5em;
-    }
-  }
-
   .hero_search-form {
     position: relative;
     margin-top: 0;
     border-radius: 3px;
-    max-width: 580px;
+    max-width: 750px;
     width: 100%;
+    padding: 0 0.5em 0 0.5em;
   }
 
   .hero_search-input {
     font-size: 24px;
     padding-left: 30px;
     margin-bottom: 0;
-    width: 100%;
-    height: 60px;
-    outline: 0;
-    border-radius: 3px;
-    border-width: 0;
-    box-shadow: none;
+    width: 75%;
+    height: 70px;
+    border-radius: 4px;
+    box-shadow: 0 3px 8px 0 rgba(51, 51, 51, 0.13);
+    border: solid 1px #d8d8d8;
+    float: left;
   }
 
   .hero_search-input::placeholder {
-    color: rgb(130, 130, 130);
+    color: rgb(192, 192, 192);
+    font-size: 25px;
+    font-weight: 600;
+     font-family: Source Sans Pro;
   }
 
   .hero_search-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 60px;
-    width: 60px;
-    margin: 2px;
+    width: 25%;
+    height: 70px;
+    border-radius: 4px;
+    background-color: #fb7729;
     font-size: 24px;
     cursor: pointer;
-    transition: all .2s ease-in-out;
-    border-radius: 3px;
-
-    &:after {
-      content: '';
-      background: url('../assets/search-icon_black.svg') center center no-repeat;
-      background-size: 20px;
-      opacity: 0.7;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      position: absolute;
-      z-index: 10;
-    }
+    font-family: Roboto;
+    font-size: 1.5625em;
+    color: #fff;
+    text-transform: capitalize;
   }
 
   &:before {
@@ -159,7 +147,9 @@ $hero-height: 71vh;
 }
 
 .description {
-  font-style: italic;
+  font-size: 0.8125em;
+  margin-top: 1em;
+  text-align: center;
 }
 
 .old-search-link {
@@ -167,18 +157,17 @@ $hero-height: 71vh;
   top: 1rem;
   right: 2rem;
 
-  @media screen and (max-width: 320px) {
-    top: 0;
-    font-size: 0.9rem;
+  @media screen and (max-width: 40em) {
+    display: none;
   }
 }
 
 .search-help-link {
   position: absolute;
-  bottom: 1rem;
+  bottom: 2rem;
   right: 2rem;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 40em) {
     display: none;
   }
 }
@@ -190,7 +179,7 @@ $hero-height: 71vh;
 /* Small only */
 @media screen and (max-width: 40em) {
   .hero {
-    height: 60vh;
+    height: 80vh;
   }
   .search-form_ctr {
     padding: 0 .9375rem;
@@ -203,10 +192,6 @@ $hero-height: 71vh;
 
   .hero .hero_search-btn {
     right: 10px;
-  }
-
-  .logo {
-    height: 5.5em;
   }
 }
 </style>

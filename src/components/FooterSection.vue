@@ -63,6 +63,7 @@ export default {
   padding: 4vh;
   background-color: #2b2b2b;
   width: 100%;
+  bottom: 0;
 
   hr {
     max-width: 100%;

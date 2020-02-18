@@ -1,7 +1,7 @@
 <template>
   <nav class="header nav">
     <a class="logo" href="/">
-      <img alt="Logo" src="../assets/cc-search-logo-white.png">
+      <img alt="Logo" src="../assets/cc-search-logo-black.png">
     </a>
     <input class="menu-btn" type="checkbox" id="menu-btn" />
     <label class="menu_icon" for="menu-btn"><span class="navicon"></span></label>
@@ -58,7 +58,7 @@ export default {
 /* header */
 
 .nav {
-  background-image: linear-gradient(90deg, #34baec, #5fd1fc, #34baec);
+  background-image: #fff;
   border-bottom: 1px solid rgba(0,0,0,0.25);
 }
 
@@ -82,6 +82,7 @@ export default {
 
 li {
   display: block;
+  font-family: 'Roboto', sans-serif;
 }
 
 .header li a {
@@ -116,7 +117,7 @@ li {
 }
 
 .header .menu_icon .navicon {
-  background: #fff;
+  background: #333;
   display: block;
   height: 2px;
   position: relative;
@@ -126,7 +127,7 @@ li {
 
 .header .menu_icon .navicon:before,
 .header .menu_icon .navicon:after {
-  background: #fff;
+  background: #333;
   content: '';
   display: block;
   height: 100%;
@@ -175,7 +176,7 @@ li {
 }
 
 /* 48em = 768px */
-@media (min-width: 49em) {
+@media (min-width: 52em) {
   .header {
     height: 3.9em;
   }
@@ -201,7 +202,7 @@ li {
 }
 
 .menu a {
-  color: rgb(255, 255, 255);
+  color: #333;
   font-size: 1.6em;
   font-weight: 700;
   line-height: 1em;
@@ -209,7 +210,7 @@ li {
   border-left: 1px solid white;
   border-radius: 2px;
   &:hover {
-    background: #1e96c2;
+    background-color: #eee;
   }
 }
 
@@ -219,7 +220,7 @@ li {
   @media screen and (min-width: 64em) {
     float: right;
   }
-  @media screen and (max-width: 70.250em) {
+  @media screen and (max-width: 74.250em) {
     display: none;
   }
 }
