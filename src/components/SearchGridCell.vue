@@ -1,11 +1,16 @@
 <template>
-  <div>
+  <div class="search-grid_item-container"
+    :style="`width: ${containerAspect * widthBasis}px;
+    flex-grow: ${containerAspect * widthBasis}`">
     <figure class="search-grid_item">
+      <i :style="`padding-bottom:${iPadding}%`"></i>
       <a
         :href="'/photos/' + image.id"
         @click="onGotoDetailPage($event, image)"
-        class="search-grid_image-ctr">
+        class="search-grid_image-ctr"
+        :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`">
         <img
+          ref="img"
           :class="{'search-grid_image': true, 'search-grid_image__fill': !shouldContainImage}"
           :alt="image.title" :src="getImageUrl(image)"
           @error="onImageLoadError($event, image)">
@@ -19,8 +24,9 @@
             :href="getImageForeignUrl(image)"
             @click.stop="() => false"
             target="new">
-            <img class="search-grid_overlay-provider-logo" :alt="image.provider"
-                :src="getProviderLogo(image.provider)">
+            <img class="search-grid_overlay-provider-logo"
+              :alt="image.provider"
+              :src="getProviderLogo(image.provider)">
             {{ image.title }}
         </a>
       </figcaption>
@@ -34,6 +40,11 @@ import getProviderLogo from '@/utils/getProviderLogo';
 
 const errorImage = require('@/assets/image_not_available_placeholder.png');
 
+const minAspect = 3 / 4;
+const maxAspect = 16 / 9;
+const panaromaAspect = 21 / 9;
+const minRowWidth = 450;
+
 const toAbsolutePath = (url, prefix = 'https://') => {
   if (url.indexOf('http://') >= 0 || url.indexOf('https://') >= 0) {
     return url;
@@ -42,16 +53,52 @@ const toAbsolutePath = (url, prefix = 'https://') => {
 };
 
 export default {
-  name: 'masonry-search-grid-cell',
+  name: 'search-grid-cell',
   props: ['image', 'shouldContainImage'],
   components: {
     LicenseIcons,
+  },
+  data() {
+    return {
+      widthBasis: minRowWidth / maxAspect,
+      imgHeight: this.image.height || 100,
+      imgWidth: this.image.width || 100,
+    };
+  },
+  computed: {
+    imageAspect() {
+      return this.imgWidth / this.imgHeight;
+    },
+    containerAspect() {
+      if (this.imageAspect > maxAspect) return maxAspect;
+      if (this.imageAspect < minAspect) return minAspect;
+      return this.imageAspect;
+    },
+    iPadding() {
+      if (this.imageAspect < minAspect) return (1 / minAspect) * 100;
+      if (this.imageAspect > maxAspect) return (1 / maxAspect) * 100;
+      return (1 / this.imageAspect) * 100;
+    },
+    imageWidth() {
+      if (this.imageAspect < maxAspect) return 100;
+      return (this.imageAspect / maxAspect) * 100;
+    },
+    imageTop() {
+      if (this.imageAspect > minAspect) return 0;
+      return ((minAspect - this.imageAspect) / (this.imageAspect * minAspect * minAspect)) * -50;
+    },
+    imageLeft() {
+      if (this.imageAspect < maxAspect) return 0;
+      return ((this.imageAspect - maxAspect) / maxAspect) * -50;
+    },
   },
   methods: {
     getImageUrl(image) {
       if (!image) {
         return '';
       }
+      // fix for blurry panaroma thumbnails
+      if (this.imageAspect > panaromaAspect) return toAbsolutePath(image.url);
       const url = image.thumbnail || image.url;
       return toAbsolutePath(url);
     },
@@ -79,6 +126,13 @@ export default {
         element.src = errorImage;
       }
     },
+    getImgDimension() {
+      this.imgHeight = this.$refs.img.naturalHeight;
+      this.imgWidth = this.$refs.img.naturalWidth;
+    },
+  },
+  mounted() {
+    if (!this.image.width) this.getImgDimension();
   },
 };
 </script>
@@ -92,8 +146,26 @@ export default {
     width: 100%;
   }
 
+  .search-grid_item-container {
+    margin: 10px;
+  }
+
   .search-grid_item {
+    position: relative;
+    width: 100%;
     overflow: hidden;
+
+    i {
+      display: block;
+    }
+
+    a {
+      position: absolute;
+      vertical-align: bottom;
+      img {
+        width: 100%;
+      }
+    }
 
     &:hover .search-grid_item-overlay {
       opacity: 1;
@@ -154,7 +226,7 @@ export default {
 
   .search-grid_overlay-provider-logo {
     max-height: 30px;
-    max-width: 40px;
+    max-width: 30px;
     margin-right: 5px;
     padding-bottom: 3px;
   }
