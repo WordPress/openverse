@@ -122,9 +122,9 @@ def _get_image_list(
         date_type,
         page_number,
         endpoint=ENDPOINT,
-        tries=6  # one original try, plus 5 retries
+        max_tries=6  # one original try, plus 5 retries
 ):
-    for try_number in range(tries-1,-1,-1):
+    for try_number in range(max_tries-1,-1,-1):
         query_param_dict = _build_query_param_dict(
             start_timestamp,
             end_timestamp,
