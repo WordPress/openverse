@@ -7,7 +7,7 @@ const ImageProviderService = {
    * SSR-called
   */
   getProviderStats() {
-    return ApiService.get('statistics', 'image');
+    return ApiService.get('', 'sources');
   },
   getProviderInfo(providerName) {
     const PROVIDER_NAME_LOOKUP = {

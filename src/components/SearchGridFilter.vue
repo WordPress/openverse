@@ -114,9 +114,10 @@ export default {
 <style lang="scss" scoped>
 
 .search-filters {
-  background: #fafafa;
   display: none;
-  height: 100%;
+  height: auto;
+  top: 0;
+  position: sticky;
 
   label {
     color: #333333;
