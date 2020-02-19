@@ -8,12 +8,23 @@ import datetime
 from locust import HttpLocust, TaskSet, task, between
 from collections import defaultdict
 """
-Swarm the API server with requests for thumbnails.
+Swarm the API server with async requests for thumbnails. Requires `url_dump.csv`
+in the same directory as the script. It is intentionally omitted from source
+control.
+
+The format of the csv is:
+url,provider
+https://example.com,exampleprovider
+http://secondexample.com,secondprovider
+. . .
 
 To prepare the server for testing:
     - Ensure that the hardware allocation matches production.
-    - Disable referer origin limiting in the Imageproxy server.
+    - Disable referer origin limiting in the imageproxy server.
     - Empty the S3 thumbnail cache bucket.
+
+To run the test:
+`locust`
 
 Optionally rerun the test after the cache has been warmed up.
 """
@@ -40,6 +51,9 @@ with open('url_dump.csv') as urls_csv:
 
 
 def print_current_stats():
+    """
+    Re-compute and print current thumbnail statistics.
+    """
     mean_response_time = statistics.mean(response_times)
     failed = 0
     successful = 0
@@ -66,11 +80,9 @@ def record_stats(responses, providers):
         response_times.append(resp.elapsed.total_seconds())
         thumb_statuses[resp.status_code] += 1
         provider = providers[idx]
-        if provider in statuses_by_provider:
-            statuses_by_provider[provider][resp.status_code] += 1
-        else:
+        if provider not in statuses_by_provider:
             statuses_by_provider[provider] = defaultdict(int)
-            statuses_by_provider[provider][resp.status_code] += 1
+        statuses_by_provider[provider][resp.status_code] += 1
 
 
 class ThumbTask(TaskSet):
