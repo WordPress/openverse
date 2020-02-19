@@ -47,7 +47,7 @@ def test_get_image_list_retries_with_none_response():
             'get',
             return_value=None
     ) as mock_get:
-        flickr._get_image_list('1234', '5678', 'test', 4, retries=2)
+        flickr._get_image_list('1234', '5678', 'test', 4, tries=3)
 
     assert mock_get.call_count == 3
 
@@ -62,7 +62,7 @@ def test_get_image_list_retries_with_non_ok_response():
             'get',
             return_value=r
     ) as mock_get:
-        flickr._get_image_list('1234', '5678', 'test', 4, retries=2)
+        flickr._get_image_list('1234', '5678', 'test', 4, tries=3)
 
     assert mock_get.call_count == 3
 
@@ -78,7 +78,7 @@ def test_get_image_list_with_realistic_response():
             return_value=r
     ) as mock_get:
         image_list, total_pages = flickr._get_image_list(
-            '1234', '5678', 'test', 4, retries=2
+            '1234', '5678', 'test', 4, tries=3
         )
     expect_image_list = _get_resource_json('flickr_example_photo_list.json')
 
