@@ -246,27 +246,26 @@ def search(search_params, index, page_size, ip, request,
     if 'q' in search_params.data:
         query = _quote_escape(search_params.data['q'])
         s = s.query(
-            'query_string',
+            'simple_query_string',
             query=query,
-            fields=search_fields,
-            type='most_fields'
+            fields=search_fields
         )
     else:
         if 'creator' in search_params.data:
             creator = _quote_escape(search_params.data['creator'])
             s = s.query(
-                'query_string', query=creator, default_field='creator'
+                'simple_query_string', query=creator, fields=['creator']
             )
         if 'title' in search_params.data:
             title = _quote_escape(search_params.data['title'])
             s = s.query(
-                'query_string', query=title, default_field='title'
+                'simple_query_string', query=title, fields=['title']
             )
         if 'tags' in search_params.data:
             tags = _quote_escape(search_params.data['tags'])
             s = s.query(
-                'query_string',
-                default_field='tags.name',
+                'simple_query_string',
+                fields=['tags.name'],
                 query=tags
             )
 
