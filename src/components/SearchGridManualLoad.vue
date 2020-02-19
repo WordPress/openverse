@@ -14,11 +14,10 @@
       <div class="load-more">
         <button v-show="!isFetchingImages && includeAnalytics"
                 class="clear button"
-                type="button"
                 :disabled="isFinished"
                 @click="onLoadMoreImages">
-          <p v-if="isFinished">No more images :(</p>
-          <p v-else>Load more</p>
+          <span v-if="isFinished">No more images :(</span>
+          <span v-else>Load more</span>
         </button>
         <loading-icon v-show="isFetchingImages" />
       </div>

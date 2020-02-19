@@ -40,6 +40,7 @@
           Copy the HTML below to embed the attribution with license icons in your web page
         </span>
         <textarea id="attribution-html"
+                  class="is-family-code"
                   :value="attributionHtml"
                   cols="30" rows="4"
                   readonly="readonly">
