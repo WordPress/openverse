@@ -115,7 +115,6 @@ export default {
 @import '../styles/app';
 
 .search-filters {
-  background: #fafafa;
   display: none;
   height: auto;
   top: 0;

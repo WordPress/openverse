@@ -66,6 +66,7 @@ export default BrowsePage;
   }
 
   .grid-sidebar {
+    background: #fafafa;
     width: 350px;
 
     /* 48em = 768px */
