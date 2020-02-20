@@ -102,7 +102,7 @@ class ThumbTask(TaskSet):
 
 class ThumbLocust(HttpLocust):
     """
-    Load a page's worth of thumbnails every 3 to 10 seconds.
+    Load a page's worth of thumbnails every 3 to 6 seconds.
     """
-    wait_time = between(3, 10)
+    wait_time = between(3, 6)
     task_set = ThumbTask
