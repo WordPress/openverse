@@ -143,7 +143,7 @@ def _get_image_list(
         if (image_list is not None) or (total_pages is not None):
             break
 
-    if try_number == 0:
+    if try_number == 0 and ((image_list is None) or (total_pages is None)):
         logger.warning('No more tries remaining.  Returning Nonetypes.')
         return None, None
     else:
