@@ -23,8 +23,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import './styles/app';
-
 @import "@creativecommons/vocabulary/scss/vocabulary.scss";
 
 body {
