@@ -25,6 +25,9 @@ To prepare the server for testing:
 
 To run the test:
 `locust`
+Open the web interface and start a test with the desired number of workers.
+Watch the console for updates on the progress of the test and the number of 
+successful vs failed thumbnails.
 
 Optionally rerun the test after the cache has been warmed up.
 """
