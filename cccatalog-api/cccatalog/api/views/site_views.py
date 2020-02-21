@@ -69,10 +69,10 @@ class ImageStats(APIView):
                 if not _filter:
                     response.append(
                         {
-                            'provider_name': provider,
+                            'source_name': provider,
                             'image_count': providers[provider],
                             'display_name': display_name,
-                            'provider_url': provider_url
+                            'source_url': provider_url
                         }
                     )
             else:
