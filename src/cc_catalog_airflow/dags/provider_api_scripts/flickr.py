@@ -124,7 +124,7 @@ def _get_image_list(
         endpoint=ENDPOINT,
         max_tries=6  # one original try, plus 5 retries
 ):
-    for try_number in range(max_tries-1,-1,-1):
+    for try_number in range(max_tries):
         query_param_dict = _build_query_param_dict(
             start_timestamp,
             end_timestamp,
@@ -143,7 +143,8 @@ def _get_image_list(
         if (image_list is not None) or (total_pages is not None):
             break
 
-    if try_number == 0 and ((image_list is None) or (total_pages is None)):
+    if try_number == max_tries - 1 and (
+            (image_list is None) or (total_pages is None)):
         logger.warning('No more tries remaining.  Returning Nonetypes.')
         return None, None
     else:
