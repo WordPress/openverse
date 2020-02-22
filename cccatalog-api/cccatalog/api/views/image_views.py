@@ -76,7 +76,7 @@ class SearchImages(APIView):
 
         search_index = 'search-qa' if qa else 'image'
         try:
-            results, page_count, result_count = search_controller.search(
+            results, page_count, result_count, suggestion = search_controller.search(
                 params,
                 search_index,
                 page_size,
@@ -96,7 +96,7 @@ class SearchImages(APIView):
         if len(results) < page_size and page_count == 0:
             result_count = len(results)
         response_data = {
-            SUGGESTIONS: request.query_params,
+            SUGGESTIONS: suggestion,
             RESULT_COUNT: result_count,
             PAGE_COUNT: page_count,
             PAGE_SIZE: len(results),

@@ -270,7 +270,8 @@ def search(search_params, index, page_size, ip, request,
                 fields=['tags.name'],
                 query=tags
             )
-
+    # Get suggestions
+    suggestion = _query_suggestions(s,index,query)
     # Boost by popularity metrics
     if POPULARITY_BOOST:
         queries = []
@@ -323,7 +324,7 @@ def search(search_params, index, page_size, ip, request,
         page_size
     )
 
-    return results, page_count, result_count
+    return results, page_count, result_count, suggestion
 
 
 def _validate_provider(input_provider):
@@ -335,6 +336,20 @@ def _validate_provider(input_provider):
         )
     return input_provider.lower()
 
+def _query_suggestions(s,index,request):
+    """
+    Get suggestions on a misspelt query
+    """
+    s = s.suggest(
+        'get_suggestion',
+        request,
+        term={'field':'tags.name'}
+    )
+    response = s.execute()
+    obj_suggestion = response.to_dict()['suggest']
+    get_suggestion = obj_suggestion['get_suggestion'][0]
+    suggestions = get_suggestion['options']
+    return suggestions
 
 def related_images(uuid, index, request, filter_dead):
     """
