@@ -135,8 +135,7 @@ def _get_total_images():
     # Get the total number of PhyloPic images
     total = 0
     endpoint = 'http://phylopic.org/api/a/image/count'
-    request = delayed_requester.get(endpoint, timeout=60)
-    result = request.json()
+    result = _get_response_json(endpoint=endpoint, retries=2)
 
     if result and result.get('success') is True:
         total = result.get('result')
@@ -166,8 +165,7 @@ def _get_image_IDs(**args):
                        endpoint, args))
         return [None]
 
-    response = delayed_requester.get(endpoint, timeout=60)
-    result = response.json()
+    result = _get_response_json(endpoint=endpoint, retries=2)
     image_IDs = []
 
     if result and result.get('success') is True:
@@ -202,8 +200,7 @@ def _get_meta_data(_uuid):
     endpoint = "http://phylopic.org/api/a/image/{}?options=credit+" \
                "licenseURL+pngFiles+submitted+submitter+taxa+canonicalName" \
                "+string+firstName+lastName".format(_uuid)
-    get_request = delayed_requester.get(endpoint, timeout=60)
-    request = get_request.json()
+    request = _get_response_json(endpoint=endpoint, retries=2)
 
     if request and request.get('success') is True:
         result = request['result']
@@ -292,6 +289,46 @@ def _get_image_info(result):
         return None
     else:
         return [img_URL, width, height, thumbnail]
+
+
+def _get_response_json(
+        endpoint=ENDPOINT,
+        retries=0,
+):
+    response_json = None
+
+    if retries < 0:
+        logger.error('No retries remaining.  Failure.')
+        raise Exception('Retries exceeded')
+
+    response = delayed_requester.get(
+        endpoint,
+        timeout=60
+    )
+    if response is not None and response.status_code == 200:
+        try:
+            response_json = response.json()
+        except Exception as e:
+            logger.warning(f'Could not get response_json.\n{e}')
+            response_json = None
+
+    if (
+            response_json is None
+            or response_json.get('error') is not None
+    ):
+        logger.warning(f'Bad response_json:  {response_json}')
+        logger.warning(
+            'Retrying:\n_get_response_json(\n'
+            f'    {endpoint},\n'
+            f'    retries={retries - 1}'
+            ')'
+        )
+        response_json = _get_response_json(
+            endpoint=endpoint,
+            retries=retries - 1
+        )
+
+    return response_json
 
 
 if __name__ == '__main__':
