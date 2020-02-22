@@ -38,10 +38,10 @@ class HealthCheck(APIView):
 
 class AboutImageResponse(serializers.Serializer):
     """ The full image search response. """
-    provider_name = serializers.CharField()
+    source_name = serializers.CharField()
     image_count = serializers.IntegerField()
     display_name = serializers.CharField()
-    provider_url = serializers.CharField()
+    source_url = serializers.CharField()
 
 
 class ImageStats(APIView):
