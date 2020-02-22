@@ -33,6 +33,7 @@ PAGE = 'page'
 PAGESIZE = 'page_size'
 FILTER_DEAD = 'filter_dead'
 QA = 'qa'
+SUGGESTIONS = 'suggestions'
 RESULT_COUNT = 'result_count'
 PAGE_COUNT = 'page_count'
 PAGE_SIZE = 'page_size'
@@ -95,6 +96,7 @@ class SearchImages(APIView):
         if len(results) < page_size and page_count == 0:
             result_count = len(results)
         response_data = {
+            SUGGESTIONS: request.query_params,
             RESULT_COUNT: result_count,
             PAGE_COUNT: page_count,
             PAGE_SIZE: len(results),
