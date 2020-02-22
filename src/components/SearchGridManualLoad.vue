@@ -3,8 +3,8 @@
            ref="searchGrid">
     <div class="search-grid_ctr" ref="gridItems">
       <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics" >
+         <div class="count">
         <h2>{{ searchTerm }}</h2>
-        <div class="count">
         <span> {{ _imagesCount }}</span>
         </div>
       </div>
