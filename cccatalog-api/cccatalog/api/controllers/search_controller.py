@@ -271,7 +271,11 @@ def search(search_params, index, page_size, ip, request,
                 query=tags
             )
     # Get suggestions
-    suggestion = _query_suggestions(s,index,query)
+    s = s.suggest(
+        'get_suggestion',
+        query,
+        term={'field':'creator'}
+    )
     # Boost by popularity metrics
     if POPULARITY_BOOST:
         queries = []
@@ -318,6 +322,8 @@ def search(search_params, index, page_size, ip, request,
         filter_dead
     )
 
+    suggestion = _query_suggestions(search_response)
+
     result_count, page_count = _get_result_and_page_count(
         search_response,
         results,
@@ -336,20 +342,19 @@ def _validate_provider(input_provider):
         )
     return input_provider.lower()
 
-def _query_suggestions(s,index,request):
+def _query_suggestions(response: Response):
     """
     Get suggestions on a misspelt query
     """
-    s = s.suggest(
-        'get_suggestion',
-        request,
-        term={'field':'tags.name'}
-    )
-    response = s.execute()
     obj_suggestion = response.to_dict()['suggest']
     get_suggestion = obj_suggestion['get_suggestion'][0]
     suggestions = get_suggestion['options']
-    return suggestions
+    if not suggestions:
+        suggestion = None
+        return suggestion
+    else:
+        suggestion = suggestions[0]['text']
+        return suggestion
 
 def related_images(uuid, index, request, filter_dead):
     """
