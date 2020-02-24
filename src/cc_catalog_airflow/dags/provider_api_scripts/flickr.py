@@ -140,12 +140,12 @@ def _get_image_list(
         response_json = _extract_response_json(response)
         image_list, total_pages = _extract_image_list_from_json(response_json)
 
-        if (image_list is not None) or (total_pages is not None):
+        if (image_list is not None) and (total_pages is not None):
             break
 
     if try_number == max_tries - 1 and (
             (image_list is None) or (total_pages is None)):
-        logger.warning('No more tries remaining.  Returning Nonetypes.')
+        logger.warning('No more tries remaining. Returning Nonetypes.')
         return None, None
     else:
         return image_list, total_pages
