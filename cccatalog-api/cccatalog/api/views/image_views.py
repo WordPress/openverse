@@ -51,9 +51,9 @@ class SearchImages(APIView):
     Although there may be millions of relevant records, only the most relevant
     several thousand records can be viewed. This is by design: the search
     endpoint should be used to find the top N most relevant results, not for
-    exhaustive search or bulk download of every barely relevant result. As such,
-    the caller should not try to access pages beyond `page_count`, or else the
-    server will reject the query.
+    exhaustive search or bulk download of every barely relevant result.
+    As such, the caller should not try to access pages beyond `page_count`,
+    or else the server will reject the query.
     """
 
     @swagger_auto_schema(operation_id='image_search',
@@ -76,10 +76,10 @@ class SearchImages(APIView):
 
         search_index = 'search-qa' if qa else 'image'
         try:
-            (results, 
-            page_count, 
-            result_count, 
-            suggestion) = search_controller.search(
+            (results,
+                page_count,
+                result_count,
+                suggestion) = search_controller.search(
                 params,
                 search_index,
                 page_size,
@@ -251,7 +251,8 @@ class Watermark(GenericAPIView):
                 with_xmp = ccrel.embed_xmp_bytes(img_bytes, work_properties)
                 return FileResponse(with_xmp, content_type='image/jpeg')
             except (libxmp.XMPError, AttributeError) as e:
-                # Just send the EXIF-ified file if libxmp fails to add metadata.
+                # Just send the EXIF-ified file
+                # if libxmp fails to add metadata.
                 log.error(
                     'Failed to add XMP metadata to {}'
                     .format(image_record.identifier)

@@ -274,7 +274,7 @@ def search(search_params, index, page_size, ip, request,
     s = s.suggest(
         'get_suggestion',
         query,
-        term={'field':'creator'}
+        term={'field': 'creator'}
     )
     # Boost by popularity metrics
     if POPULARITY_BOOST:
@@ -356,7 +356,7 @@ def _query_suggestions(response: Response):
     else:
         suggestion = suggestions[0]['text']
         return suggestion
-        
+
 
 def related_images(uuid, index, request, filter_dead):
     """
