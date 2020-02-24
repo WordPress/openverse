@@ -25,3 +25,11 @@ def test_get_response_json():
     assert response['artistAlphaSort'] == 'United States Pottery Company'
     assert response['artistBeginDate'] == '1852'
 
+def test_create_meta_data():
+    response = mma._get_response_json(None,endpoint)
+    meta_data = mma.create_meta_data(response)
+    assert meta_data['accession_number'] == '14.11.3'
+    assert meta_data['classification'] == 'Ceramics'
+    assert meta_data['credit_line'] == 'Rogers Fund, 1914'
+    assert meta_data['culture'] == 'American'
+
