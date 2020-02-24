@@ -226,7 +226,12 @@ def search(search_params, index, page_size, ip, request,
     for tup in filters:
         api_field, elasticsearch_field = tup
         s = _apply_filter(s, search_params, api_field, elasticsearch_field)
-
+    # Get suggestions for any route
+    s = s.suggest(
+        'get_suggestion',
+        '',
+        term={'field': 'creator'}
+    )
     # Hide data sources from the catalog dynamically.
     filter_cache_key = 'filtered_providers'
     filtered_providers = cache.get(key=filter_cache_key)
@@ -252,7 +257,7 @@ def search(search_params, index, page_size, ip, request,
             query=query,
             fields=search_fields
         )
-        # Get suggestions
+        # Get suggestions for term query
         s = s.suggest(
             'get_suggestion',
             query,
@@ -264,7 +269,7 @@ def search(search_params, index, page_size, ip, request,
             s = s.query(
                 'simple_query_string', query=creator, fields=['creator']
             )
-            # Get suggestions
+            # Get suggestions for creator
             s = s.suggest(
                 'get_suggestion',
                 creator,
@@ -275,7 +280,7 @@ def search(search_params, index, page_size, ip, request,
             s = s.query(
                 'simple_query_string', query=title, fields=['title']
             )
-            # Get suggestions
+            # Get suggestions for title
             s = s.suggest(
                 'get_suggestion',
                 title,
@@ -288,7 +293,7 @@ def search(search_params, index, page_size, ip, request,
                 fields=['tags.name'],
                 query=tags
             )
-            # Get suggestions
+            # Get suggestions for tags
             s = s.suggest(
                 'get_suggestion',
                 tags,
@@ -366,14 +371,16 @@ def _query_suggestions(response: Response):
     Get suggestions on a misspelt query
     """
     obj_suggestion = response.to_dict()['suggest']
-    get_suggestion = obj_suggestion['get_suggestion'][0]
-    suggestions = get_suggestion['options']
-    if not suggestions:
+    if not obj_suggestion['get_suggestion']:
         suggestion = None
-        return suggestion
     else:
-        suggestion = suggestions[0]['text']
-        return suggestion
+        get_suggestion = obj_suggestion['get_suggestion'][0]
+        suggestions = get_suggestion['options']
+        if not suggestions:
+            suggestion = None
+        else:
+            suggestion = suggestions[0]['text']
+    return suggestion
 
 
 def related_images(uuid, index, request, filter_dead):
