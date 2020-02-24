@@ -252,16 +252,34 @@ def search(search_params, index, page_size, ip, request,
             query=query,
             fields=search_fields
         )
+        # Get suggestions
+        s = s.suggest(
+            'get_suggestion',
+            query,
+            term={'field': 'creator'}
+        )
     else:
         if 'creator' in search_params.data:
             creator = _quote_escape(search_params.data['creator'])
             s = s.query(
                 'simple_query_string', query=creator, fields=['creator']
             )
+            # Get suggestions
+            s = s.suggest(
+                'get_suggestion',
+                creator,
+                term={'field': 'creator'}
+            )
         if 'title' in search_params.data:
             title = _quote_escape(search_params.data['title'])
             s = s.query(
                 'simple_query_string', query=title, fields=['title']
+            )
+            # Get suggestions
+            s = s.suggest(
+                'get_suggestion',
+                title,
+                term={'field': 'title'}
             )
         if 'tags' in search_params.data:
             tags = _quote_escape(search_params.data['tags'])
@@ -270,12 +288,12 @@ def search(search_params, index, page_size, ip, request,
                 fields=['tags.name'],
                 query=tags
             )
-    # Get suggestions
-    s = s.suggest(
-        'get_suggestion',
-        query,
-        term={'field': 'creator'}
-    )
+            # Get suggestions
+            s = s.suggest(
+                'get_suggestion',
+                tags,
+                term={'field': 'tags.name'}
+            )
     # Boost by popularity metrics
     if POPULARITY_BOOST:
         queries = []
