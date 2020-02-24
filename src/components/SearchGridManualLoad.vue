@@ -5,7 +5,6 @@
       <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics count" >
         <h2>{{ searchTerm }}</h2>
         <span> {{ _imagesCount }}</span>
-        </div>
       </div>
       <div
         class="masonry-layout"
