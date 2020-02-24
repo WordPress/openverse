@@ -9,200 +9,258 @@ Notes:                  https://metmuseum.github.io/
                         No rate limit specified.
 """
 
-from modules.etlMods import *
 import argparse
 import os
-import ImageStore from common.storage.image
-import DelayedRequester from common.requester
+import common.requester as requester
+import common.storage.image as image
 import logging
 from datetime import datetime, timedelta, timezone
 
 
 DELAY   = 1.0 #time delay (in seconds)
-FILE    = 'metmuseum_{}.tsv'.format(int(time.time()))
+FILE    = 'metmuseum_{}.tsv'.format(int(datetime))
+LIMIT = 500
+MEAN_GLOBAL_USAGE_LIMIT = 10000
+PROVIDER = 'Metropolitan museum of Art'
+CONTACT_EMAIL = os.getenv('WM_SCRIPT_CONTACT')
+UA_STRING = (
+    f'CC-Catalog/0.1 (https://creativecommons.org; {CONTACT_EMAIL})'
+)
+DEFAULT_REQUEST_HEADERS = {
+    'User-Agent': UA_STRING
+}
 
 logging.basicConfig(format='%(asctime)s: [%(levelname)s - Met Museum API] =======> %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+delayed_requester = requester.DelayedRequester(DELAY)
+image_store = image.ImageStore(provider=PROVIDER)
 
 
-def getObjectIDs(_date=None):
-    #Get a list of recently updated/uploaded objects. if no date is specified return all objects.
+def main(date=None):
+    logger.info(f'Begin: Met Museum API requests')
 
-    objectDate = ''
+    fetch_the_object_id = get_object_ids(date)
+    if fetch_the_object_id:
+        logger.info(f'Total object found {fetch_the_object_id[0]}')
+        extract_the_data(fetch_the_object_id[1])
 
-    if _date:
-        objectDate = '?metadataDate={}'.format(_date)
+    total_images = image_store.commit()
+    logger.info(f'Total CC0 images recieved {total_images}')
 
-    endpoint = 'https://collectionapi.metmuseum.org/public/collection/v1/objects{}'.format(objectDate)
-    result   = requestContent(endpoint)
 
-    if result:
-        totalObjects = result['total']
-        objectIDs    = result['objectIDs']
 
+def get_object_ids(date):
+    query_date = ''
+    if date:
+        query_date = '?metadataDate={}'.format(date)
+
+    endpoint = 'https://collectionapi.metmuseum.org/public/collection/v1/objects{}'.format(query_date)
+    response = _get_response_json(None, endpoint)
+
+    if response:
+        total_object_ids = response['total']
+        object_ids = response['objectIDs']
     else:
-        logging.warning('Content not available!')
-
+        logger.warning(f'No content available')
         return None
 
-    return [totalObjects, objectIDs]
+    return [total_object_ids, object_ids]
 
 
-def getMetaData(_objectID):
-    logging.info('Processing object: {}'.format(_objectID))
+def _get_response_json(
+        query_params,
+        endpoint,
+        request_headers=DEFAULT_REQUEST_HEADERS,
+        retries=5,
+):
+    response_json = None
 
-    license     = 'CC0'
-    version     = '1.0'
-    imgInfo     = ''
-    imgURL      = ''
-    width       = ''
-    height      = ''
-    foreignID   = ''
-    foreignURL  = ''
-    title       = ''
-    creator     = ''
-    metaData    = {}
-    extracted   = []
-    startTime   = time.time()
-    idx         = 0
+    if retries < 0:
+        logger.error('No retries remaining.  Failure.')
+        raise Exception('Retries exceeded')
 
-    endpoint    = 'https://collectionapi.metmuseum.org/public/collection/v1/objects/{}'.format(_objectID)
-    objectData  = requestContent(endpoint)
+    response = delayed_requester.get(
+        endpoint,
+        params=query_params,
+        headers=request_headers,
+        timeout=60
+    )
+    if response is not None and response.status_code == 200:
+        try:
+            response_json = response.json()
+        except Exception as e:
+            logger.warning(f'Could not get response_json.\n{e}')
+            response_json = None
 
-    if objectData is None:
-        logging.error('Unable to process object ID: {}'.format(_objectID))
+    if (
+            response_json is None
+            or response_json.get('error') is not None
+    ):
+        logger.warning(f'Bad response_json:  {response_json}')
+        logger.warning(
+            'Retrying:\n_get_response_json(\n'
+            f'    {endpoint},\n'
+            f'    {query_params},\n'
+            f'    {request_headers}'
+            f'    retries={retries - 1}'
+            ')'
+        )
+        response_json = _get_response_json(
+            query_params,
+            endpoint=endpoint,
+            request_headers=request_headers,
+            retries=retries - 1
+        )
+
+    return response_json
+
+
+def extract_the_data(object_ids):
+    for i in object_ids:
+        get_data_for_each_image(i)
+
+
+def get_data_for_each_image(object_id):
+
+    endpoint = 'https://collectionapi.metmuseum.org/public/collection/v1/objects/{}'.format(object_id)
+
+    object_json = _get_response_json(None, endpoint)
+
+    if object_json is None:
+        logger.error('Unable to process object ID : {}'.format(object_id))
         return None
 
-    message  = objectData.get('message')
+    message = object_json.get('message')
     if message:
-        logging.warning('{}: {}'.format(message, _objectID))
+        logger.warning(f'{message} : {object_id}')
         return None
 
-
-    #validate CC0 license
-    isCC0 = objectData.get('isPublicDomain')
-    if (isCC0 is None) or (isCC0 == False):
-        logging.warning('CC0 license not detected!')
+    isCC0 = object_json.get('isPublicDomain')
+    if (isCC0 is None) or isCC0 is False:
+        logger.warning('CC0 license not detected')
         return None
 
-    #get the landing page
-    foreignURL  = objectData.get('objectURL', None)
-    if foreignURL is None:
-        logging.warning('Landing page not detected!')
+    foreign_url = object_json.get('objectURL', None)
+    if foreign_url is None:
+        logger.warning(f'No landing page detected for: {object_id}')
         return None
 
-
-    #get the title
-    title   = objectData.get('title', '')
-    title   = sanitizeString(title)
-
-    #get creator info
-    creator = objectData.get('artistDisplayName', '')
-    creator = sanitizeString(creator)
-
-    #get the foreign identifier
-    foreignID = _objectID
-
-    #accessionNumber
-    metaData['accession_number'] = sanitizeString(objectData.get('accessionNumber', ''))
-    metaData['classification']   = sanitizeString(objectData.get('classification', ''))
-    metaData['culture']          = sanitizeString(objectData.get('culture', ''))
-    metaData['date']             = sanitizeString(objectData.get('objectDate', ''))
-    metaData['medium']           = sanitizeString(objectData.get('medium', ''))
-    metaData['credit_line']      = sanitizeString(objectData.get('creditLine', ''))
-    #metaData['geography']        = objectData.get('geographyType', '')
-
-
-    #get the image url and thumbnail
-    imgInfo     = objectData.get('primaryImage')
-    if imgInfo is None:
-        logging.warning('Image not detected in url {}'.format(foreignURL))
+    image_info = object_json.get('primaryImage', None)
+    if image_info is None:
+        logger.warning(f'No image found for {object_id}')
         return None
 
-    imgURL = imgInfo
+    title = object_json.get('title')
+    creator_name = object_json.get('artistDisplayName')
+    foreign_id = object_id
+    meta_data = create_meta_data(object_json)
+    image_url = image_info
 
     thumbnail = ''
-    if '/original/' in imgURL:
-        thumbnail = imgURL.replace('/original/', '/web-large/')
+    if '/origina/' in image_url:
+        thumbnail = image_url.replace('/original/', '/web-large/')
+
+    other_images = object_json.get('additionalImages', None)
+
+    if other_images is not None and len(other_images)>1:
+        extra_image_index = 1
+        meta_data['set'] = foreign_url
+
+    image_store.add_item(
+        foreign_url,  # foreign url of image
+        image_url,  # image url
+        thumbnail,  # thubnail url
+        None,  # license URl
+        'cc0',  # license
+        '1.0',  # license verion
+        foreign_id,  # foreign identifier
+        None,  # width
+        None,  # height
+        creator_name,  # creator name
+        None,  # creator url
+        title,  # title
+        meta_data,  # meta data
+        None,
+        'f',
+        None
+    )
+
+    for image in other_images:
+        foreign_id = '{}-{}'.format(object_id, extra_image_index)
+        image_url = image
+        thumbnail = ''
+
+        if image_url:
+            if '/original/' in image_url:
+                image_url.replace('/original/', '/web-image/')
+
+        image_store.add_item(
+            foreign_url,  # foreign url of image
+            image_url,  # image url
+            thumbnail,  # thubnail url
+            None,  # license URl
+            'cc0',  # license
+            '1.0',  # license verion
+            foreign_id,  # foreign identifier
+            None,  # width
+            None,  # height
+            creator_name,  # creator name
+            None,  # creator url
+            title,  # title
+            meta_data,  # meta data
+            None,
+            'f',
+            None
+    )
 
 
-    otherImages = objectData.get('additionalImages')
-    if len(otherImages) > 0:
-        idx = 1
-        metaData['set'] = foreignURL
 
+def create_meta_data(object_json):
+    meta_data = {}
 
-    extracted.append([
-            str(foreignID), foreignURL, imgURL, thumbnail,
-            '\\N', '\\N', '\\N', license, str(version), creator, '\\N',
-            title, json.dumps(metaData, ensure_ascii=False), '\\N', 'f', 'met', 'met'
-        ])
+    meta_data['accession_number'] = object_json.get('accessionNumber', None)
+    meta_data['classification'] = object_json.get('classification', None)
+    meta_data['culture'] = object_json.get('culture', None)
+    meta_data['date'] = object_json.get('objectDate', None)
+    meta_data['medium'] = object_json.get('medium', None)
+    meta_data['credit_line'] = object_json.get('creditLine', None)
 
-
-    #extract the additional images
-    for img in otherImages:
-        foreignID   = '{}-{}'.format(_objectID, idx)
-        imgURL      = img
-        thumbnail   = ''
-
-        if imgURL:
-            if '/original/' in imgURL:
-                thumbnail = imgURL.replace('/original/', '/web-large/')
-
-            extracted.append([
-                str(foreignID), foreignURL, imgURL, thumbnail,
-                '\\N', '\\N', '\\N', license, str(version), creator, '\\N',
-                title, json.dumps(metaData, ensure_ascii=False), '\\N', 'f', 'met', 'met'
-            ])
-
-        idx += 1
-
-
-    writeToFile(extracted, FILE)
-    delayProcessing(startTime, DELAY)
-
-    return len(extracted)
-
-
-def execJob(_param=None):
-
-    result = getObjectIDs(_param)
-    if result:
-        logging.info('Total objects found: {}'.format(result[0]))
-
-        extracted = map(lambda obj: getMetaData(obj), result[1])
-        logging.info('Total CC0 images: {}'.format(sum(filter(None, extracted))))
-
-
-def main():
-    logging.info('Begin: Met Museum API requests')
-    param   = None
-    mode    = 'date: '
-
-    parser  = argparse.ArgumentParser(description='Met Museum API Job', add_help=True)
-    parser.add_argument('--mode', choices=['default', 'all'],
-            help='Identify all artworks from the previous day [default] or process the entire collection [all].')
-    parser.add_argument('--date', type=lambda dt: datetime.strptime(dt, '%Y-%m-%d'),
-            help='Identify artworks published on a given date (format: YYYY-MM-DD).')
-
-    args = parser.parse_args()
-    if args.date:
-        param = (args.date.strftime('%Y-%m-%d'))
-
-    elif args.mode:
-
-        if str(args.mode) == 'default':
-            param = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')
-        else:
-            mode  = 'all CC0 artworks'
-            param = None
-
-    mode += param if param is not None else ''
-    logging.info('Processing {}'.format(mode))
-
-    execJob(param)
-
-    logging.info('Terminated!')
+    return meta_data
 
 
 if __name__ == '__main__':
-    main()
+    mode = 'date :'
+    parser = argparse.ArgumentParser(
+        description='Metropolitan Museum of Art API',
+        add_help=True
+    )
+    parser.add_argument(
+        '--date',
+        help='Fetches all the artwork uploaded after given date'
+    )
+    parser.add_argument(
+        '--mode',
+        choices=['default', 'all'],
+        help='Identify all artworks from the previous day [default]'
+         'or process the entire collection [all].'
+    )
+    args = parser.parse_args()
+    if args.date:
+        date = args.date
+
+    elif args.mode:
+        if str(args.mode) == 'default':
+            date_obj = datetime.now() - timedelta(days=1)
+            date = datetime.strftime(date_obj, '%Y-%m-%d')
+        else:
+            date = None
+            mode = 'All CC0 Artworks'
+    else:
+        date_obj = datetime.now() - timedelta(days=1)
+        date = datetime.strftime(date_obj, '%Y-%m-%d')
+
+    mode += date if date is not None else ''
+    logger.info(f'Processing for {mode}')
+
+    main(date)
