@@ -18,7 +18,7 @@ from datetime import datetime, timedelta, timezone
 
 
 DELAY   = 1.0 #time delay (in seconds)
-FILE    = 'metmuseum_{}.tsv'.format(int(datetime))
+FILE    = 'metmuseum_{}.tsv'.format(datetime.now())
 LIMIT = 500
 MEAN_GLOBAL_USAGE_LIMIT = 10000
 PROVIDER = 'Metropolitan museum of Art'
@@ -38,7 +38,18 @@ image_store = image.ImageStore(provider=PROVIDER)
 
 
 def main(date=None):
-    logger.info(f'Begin: Met Museum API requests')
+    """
+    This script pulls the data for a given date from the Wikimedia
+    Commons API, and writes it into a .TSV file to be eventually read
+    into our DB.
+
+    Required Arguments:
+
+    date:  Date String in the form YYYY-MM-DD.  This is the date for
+           which running the script will pull data.
+    """
+
+    logger.info(f'Begin: Met Museum API requests for date: {date}')
 
     fetch_the_object_id = get_object_ids(date)
     if fetch_the_object_id:
@@ -64,7 +75,6 @@ def get_object_ids(date):
     else:
         logger.warning(f'No content available')
         return None
-
     return [total_object_ids, object_ids]
 
 
@@ -72,7 +82,7 @@ def _get_response_json(
         query_params,
         endpoint,
         request_headers=DEFAULT_REQUEST_HEADERS,
-        retries=5,
+        retries=5, 
 ):
     response_json = None
 
@@ -242,7 +252,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--mode',
         choices=['default', 'all'],
-        help='Identify all artworks from the previous day [default]'
+        help='Identify all artworks from the previous to previous day [default]'
          'or process the entire collection [all].'
     )
     args = parser.parse_args()
@@ -251,13 +261,13 @@ if __name__ == '__main__':
 
     elif args.mode:
         if str(args.mode) == 'default':
-            date_obj = datetime.now() - timedelta(days=1)
+            date_obj = datetime.now() - timedelta(days=2)
             date = datetime.strftime(date_obj, '%Y-%m-%d')
         else:
             date = None
             mode = 'All CC0 Artworks'
     else:
-        date_obj = datetime.now() - timedelta(days=1)
+        date_obj = datetime.now() - timedelta(days=2)
         date = datetime.strftime(date_obj, '%Y-%m-%d')
 
     mode += date if date is not None else ''
