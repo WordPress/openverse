@@ -30,7 +30,9 @@ DEFAULT_REQUEST_HEADERS = {
     'User-Agent': UA_STRING
 }
 
-logging.basicConfig(format='%(asctime)s: [%(levelname)s - Met Museum API] =======> %(message)s', level=logging.INFO)
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s', 
+    level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 delayed_requester = requester.DelayedRequester(DELAY)
