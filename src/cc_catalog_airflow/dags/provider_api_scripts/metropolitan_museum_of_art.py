@@ -122,7 +122,7 @@ def _get_response_json(
             request_headers=request_headers,
             retries=retries - 1
         )
-
+        
     return response_json
 
 
@@ -176,6 +176,7 @@ def get_data_for_each_image(object_id):
     if other_images is not None and len(other_images)>1:
         extra_image_index = 1
         meta_data['set'] = foreign_url
+
 
     image_store.add_item(
         foreign_url,  # foreign url of image
