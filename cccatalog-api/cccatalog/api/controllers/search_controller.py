@@ -342,6 +342,7 @@ def _validate_provider(input_provider):
         )
     return input_provider.lower()
 
+
 def _query_suggestions(response: Response):
     """
     Get suggestions on a misspelt query
@@ -355,6 +356,7 @@ def _query_suggestions(response: Response):
     else:
         suggestion = suggestions[0]['text']
         return suggestion
+        
 
 def related_images(uuid, index, request, filter_dead):
     """
