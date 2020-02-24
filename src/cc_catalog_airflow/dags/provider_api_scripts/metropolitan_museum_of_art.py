@@ -53,17 +53,17 @@ def main(date=None):
 
     logger.info(f'Begin: Met Museum API requests for date: {date}')
 
-    fetch_the_object_id = get_object_ids(date)
+    fetch_the_object_id = _get_object_ids(date)
     if fetch_the_object_id:
         logger.info(f'Total object found {fetch_the_object_id[0]}')
-        extract_the_data(fetch_the_object_id[1])
+        _extract_the_data(fetch_the_object_id[1])
 
     total_images = image_store.commit()
     logger.info(f'Total CC0 images recieved {total_images}')
 
 
 
-def get_object_ids(date):
+def _get_object_ids(date):
     query_date = ''
     if date:
         query_date = '?metadataDate={}'.format(date)
@@ -128,12 +128,12 @@ def _get_response_json(
     return response_json
 
 
-def extract_the_data(object_ids):
+def _extract_the_data(object_ids):
     for i in object_ids:
-        get_data_for_each_image(i)
+        _get_data_for_each_image(i)
 
 
-def get_data_for_each_image(object_id):
+def _get_data_for_each_image(object_id):
 
     endpoint = 'https://collectionapi.metmuseum.org/public/collection/v1/objects/{}'.format(object_id)
 
@@ -166,7 +166,7 @@ def get_data_for_each_image(object_id):
     title = object_json.get('title')
     creator_name = object_json.get('artistDisplayName')
     foreign_id = object_id
-    meta_data = create_meta_data(object_json)
+    meta_data = _create_meta_data(object_json)
     image_url = image_info
 
     thumbnail = ''
@@ -229,7 +229,7 @@ def get_data_for_each_image(object_id):
 
 
 
-def create_meta_data(object_json):
+def _create_meta_data(object_json):
     meta_data = {}
 
     meta_data['accession_number'] = object_json.get('accessionNumber', None)

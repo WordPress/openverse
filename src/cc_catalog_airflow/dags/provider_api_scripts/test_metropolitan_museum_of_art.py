@@ -16,7 +16,7 @@ logging.basicConfig(format='%(asctime)s: [%(levelname)s - Met Museum API] ======
 logger = logging.getLogger(__name__)
 
 def test_get_object_ids():
-    total_objects = mma.get_object_ids('2019-02-01')
+    total_objects = mma._get_object_ids('2019-02-01')
     assert total_objects[0] == 333893
 
 def test_get_response_json():
@@ -27,7 +27,7 @@ def test_get_response_json():
 
 def test_create_meta_data():
     response = mma._get_response_json(None,endpoint)
-    meta_data = mma.create_meta_data(response)
+    meta_data = mma._create_meta_data(response)
     assert meta_data['accession_number'] == '14.11.3'
     assert meta_data['classification'] == 'Ceramics'
     assert meta_data['credit_line'] == 'Rogers Fund, 1914'
