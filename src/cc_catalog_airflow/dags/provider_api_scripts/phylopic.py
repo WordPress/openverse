@@ -14,8 +14,6 @@ Notes:                  http://phylopic.org/api/
 import argparse
 from datetime import datetime, timedelta
 import logging
-import json
-import time
 
 import common.requester as requester
 import common.storage.image as image
@@ -28,12 +26,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-DELAY = 5
+DELAY = 1
 HOST = 'phylopic.org'
 ENDPOINT = f'http://{HOST}/api/a'
 PROVIDER = 'phylopic'
-FILE = 'phylopic_{}.tsv'.format(int(time.time()))
-LIMIT = 5
+LIMIT = 100
 
 
 delayed_requester = requester.DelayedRequester(DELAY)
@@ -65,50 +62,26 @@ def main(date):
         logger.info('Total images: {}'.format(image_count))
 
         while offset <= image_count:
-            _commit_to_file_all(**param)
+            _add_data_to_buffer(**param)
             offset += LIMIT
             param = {'offset': offset}
 
     else:
         param = {'date': date}
         logger.info('Processing date: {}'.format(date))
-        _commit_to_file_date(**param)
+        _add_data_to_buffer(**param)
+
+    image_store.commit()
 
     logger.info('Terminated!')
 
 
-def _commit_to_file_all(**args):
-    start_time = time.time()
+def _add_data_to_buffer(**args):
     IDs = _get_image_IDs(**args)
 
-    if IDs:
-        for id in IDs:
-            if id is not None:
-                details = _get_meta_data(id)
-
-                if details is not None:
-                    image_store.add_item(foreign_landing_url=details[1],
-                                         image_url=details[2],
-                                         thumbnail_url=details[3],
-                                         license_url=details[6],
-                                         width=details[4],
-                                         height=details[5],
-                                         creator=details[7],
-                                         title=details[8],
-                                         meta_data=details[9],
-                                         )
-        image_store.commit()
-        logger.info('Flushed current buffer to file.')
-
-
-def _commit_to_file_date(**args):
-    start_time = time.time()
-    IDs = _get_image_IDs(**args)
-
-    ctr = 1
-    while ctr <= len(IDs):
-        if IDs[ctr - 1] is not None:
-            details = _get_meta_data(IDs[ctr - 1])
+    for id in IDs:
+        if id is not None:
+            details = _get_meta_data(id)
 
             if details is not None:
                 image_store.add_item(foreign_landing_url=details[1],
@@ -122,14 +95,6 @@ def _commit_to_file_date(**args):
                                      meta_data=details[9],
                                      )
 
-        if ctr % LIMIT == 0:
-            # Add 5 images at a time to file
-            image_store.commit()
-            logger.info('Flushed current buffer to file.')
-        ctr += 1
-
-    image_store.commit()
-
 
 def _get_total_images():
     # Get the total number of PhyloPic images
@@ -140,7 +105,7 @@ def _get_total_images():
     if result and result.get('success') is True:
         total = result.get('result')
 
-    return total
+        return total if (total is not None) else 0
 
 
 def _get_image_IDs(**args):
@@ -161,8 +126,6 @@ def _get_image_IDs(**args):
                   offset, limit)
 
     if endpoint == '':
-        logger.warning('Unable to parse endpoint: {}, args: {}'.format(
-                       endpoint, args))
         return [None]
 
     result = _get_response_json(endpoint=endpoint, retries=2)
@@ -185,9 +148,8 @@ def _get_image_IDs(**args):
 def _get_meta_data(_uuid):
     logger.info('Processing UUID: {}'.format(_uuid))
 
-    start_time = time.time()
-    base_URL = 'http://phylopic.org'
-    img_URL = ''
+    base_url = 'http://phylopic.org'
+    img_url = ''
     thumbnail = ''
     width = ''
     height = ''
@@ -206,26 +168,31 @@ def _get_meta_data(_uuid):
         result = request['result']
 
     license_url = result.get('licenseURL')
-    img_info = _get_image_info(result)
 
-    if img_info is not None:
-        img_URL = img_info[0]
-        width = img_info[1]
-        height = img_info[2]
-        thumbnail = img_info[3]
+    meta_data['taxa'] = _get_taxa_details(result)
 
-    else:
-        logger.warning('Image not detected in url: {}/image/{}'.format(
-                       base_URL, _uuid))
+    img_url, width, height, thumbnail = _get_image_info(result, _uuid)
+    if img_url is None:
         return None
 
-    foreign_id = img_URL
-    foreign_url = '{}/image/{}'.format(base_URL, _uuid)
+    foreign_id = img_url
+    foreign_url = '{}/image/{}'.format(base_url, _uuid)
 
     first_name = result.get('submitter', {}).get('firstName')
     last_name = result.get('submitter', {}).get('lastName')
     creator = '{} {}'.format(first_name, last_name).strip()
 
+    if result.get('credit'):
+        meta_data['credit_line'] = result.get('credit').strip()
+        meta_data['pub_date'] = result.get('submitted').strip()
+
+    return [
+            foreign_id, foreign_url, img_url, thumbnail, str(width),
+            str(height), license_url, creator, title, meta_data
+        ]
+
+
+def _get_taxa_details(result):
     taxa = result.get('taxa', [])
     # [0].get('canonicalName', {}).get('string')
     taxa_list = None
@@ -239,29 +206,12 @@ def _get_meta_data(_uuid):
         title = taxa_list[0]
 
         if len(taxa_list) > 1:
-            meta_data['taxa'] = taxa_list
-
-    if result.get('credit'):
-        meta_data['credit_line'] = result.get('credit').strip()
-        meta_data['pub_date'] = result.get('submitted').strip()
-
-    return [
-            foreign_id, foreign_url, img_URL,
-            thumbnail if thumbnail else '\\N',
-            str(width) if width else '\\N',
-            str(height) if height else '\\N',
-            license_url,
-            creator if creator else '\\N',
-            title if title else '\\N',
-            json.dumps(
-                meta_data, ensure_ascii=False) if bool(meta_data) else '\\N',
-            '\\N', 'f', 'phylopic', 'phylopic'
-        ]
+            return taxa_list
 
 
-def _get_image_info(result):
-    base_URL = 'http://phylopic.org'
-    img_URL = ''
+def _get_image_info(result, _uuid):
+    base_url = 'http://phylopic.org'
+    img_url = ''
     thumbnail = ''
     width = ''
     height = ''
@@ -274,21 +224,23 @@ def _get_image_info(result):
         thb = list(filter(lambda x: str(
             x.get('width', '')) == '256', image_info))
 
-        if img:
-            img_URL = img[0].get('url')
-            img_URL = '{}{}'.format(base_URL, img_URL)
-            width = img[0].get('width')
-            height = img[0].get('height')
+    if len(img) > 0:
+        img_url = img[0].get('url')
+        img_url = '{}{}'.format(base_url, img_url)
+        width = img[0].get('width')
+        height = img[0].get('height')
 
-            if thb:
-                thumbnail_info = thb[0].get('url')
-                if thumbnail_info:
-                    thumbnail = '{}{}'.format(base_URL, thumbnail_info)
+    if len(thb) > 0:
+        thumbnail_info = thb[0].get('url')
+        if thumbnail_info is not None:
+            thumbnail = '{}{}'.format(base_url, thumbnail_info)
 
-    if not img_URL:
-        return None
+    if not img_url:
+        logging.warning(
+            'Image not detected in url: {}/image/{}'.format(base_url, _uuid))
+        return None, None, None, None
     else:
-        return [img_URL, width, height, thumbnail]
+        return (img_url, width, height, thumbnail)
 
 
 def _get_response_json(
@@ -312,10 +264,7 @@ def _get_response_json(
             logger.warning(f'Could not get response_json.\n{e}')
             response_json = None
 
-    if (
-            response_json is None
-            or response_json.get('error') is not None
-    ):
+    if response_json is None:
         logger.warning(f'Bad response_json:  {response_json}')
         logger.warning(
             'Retrying:\n_get_response_json(\n'
