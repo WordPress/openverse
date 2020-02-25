@@ -33,6 +33,7 @@ PAGE = 'page'
 PAGESIZE = 'page_size'
 FILTER_DEAD = 'filter_dead'
 QA = 'qa'
+SUGGESTIONS = 'suggestions'
 RESULT_COUNT = 'result_count'
 PAGE_COUNT = 'page_count'
 PAGE_SIZE = 'page_size'
@@ -50,9 +51,9 @@ class SearchImages(APIView):
     Although there may be millions of relevant records, only the most relevant
     several thousand records can be viewed. This is by design: the search
     endpoint should be used to find the top N most relevant results, not for
-    exhaustive search or bulk download of every barely relevant result. As such,
-    the caller should not try to access pages beyond `page_count`, or else the
-    server will reject the query.
+    exhaustive search or bulk download of every barely relevant result.
+    As such, the caller should not try to access pages beyond `page_count`,
+    or else the server will reject the query.
     """
 
     @swagger_auto_schema(operation_id='image_search',
@@ -75,7 +76,7 @@ class SearchImages(APIView):
 
         search_index = 'search-qa' if qa else 'image'
         try:
-            results, page_count, result_count = search_controller.search(
+            results, num_pages, num_results, suggest = search_controller.search(
                 params,
                 search_index,
                 page_size,
@@ -92,11 +93,12 @@ class SearchImages(APIView):
             results, many=True, context=context
         ).data
 
-        if len(results) < page_size and page_count == 0:
-            result_count = len(results)
+        if len(results) < page_size and num_pages == 0:
+            num_results = len(results)
         response_data = {
-            RESULT_COUNT: result_count,
-            PAGE_COUNT: page_count,
+            SUGGESTIONS: suggest,
+            RESULT_COUNT: num_results,
+            PAGE_COUNT: num_pages,
             PAGE_SIZE: len(results),
             RESULTS: serialized_results
         }
