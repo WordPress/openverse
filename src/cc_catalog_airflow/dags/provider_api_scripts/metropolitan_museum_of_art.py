@@ -54,12 +54,14 @@ def main(date=None):
 
 
 def _get_object_ids(date):
-    query_date = ''
+    query_params = ''
     if date:
-        query_date = '?metadataDate={}'.format(date)
+        query_params = { 
+            'metadataDate': date
+            }
 
-    endpoint = 'https://collectionapi.metmuseum.org/public/collection/v1/objects{}'.format(query_date)
-    response = _get_response_json(None, endpoint)
+    endpoint = 'https://collectionapi.metmuseum.org/public/collection/v1/objects'
+    response = _get_response_json(query_params, endpoint)
 
     if response:
         total_object_ids = response['total']
@@ -73,7 +75,6 @@ def _get_object_ids(date):
 def _get_response_json(
         query_params,
         endpoint,
-        request_headers=DEFAULT_REQUEST_HEADERS,
         retries=5, 
 ):
     response_json = None
