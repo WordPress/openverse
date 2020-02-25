@@ -123,7 +123,7 @@ def main():
 
     while isValid:
         startTime   = time.time()
-        endpoint    = 'http://openaccess-api.clevelandart.org/api/artworks/?cc0=1&has_image=1&limit={0}&skip={1}'.format(LIMIT, offset)  ##############
+        endpoint    = 'http://openaccess-api.clevelandart.org/api/artworks/?cc0=1&has_image=1&limit={0}&skip={1}'.format(LIMIT, offset)
         batch       = requestContent(endpoint)
 
         if batch and ('data' in batch):

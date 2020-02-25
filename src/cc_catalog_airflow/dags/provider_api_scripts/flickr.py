@@ -122,38 +122,33 @@ def _get_image_list(
         date_type,
         page_number,
         endpoint=ENDPOINT,
-        retries=5
+        max_tries=6  # one original try, plus 5 retries
 ):
-    query_param_dict = _build_query_param_dict(
-        start_timestamp,
-        end_timestamp,
-        page_number,
-        date_type,
-    )
-
-    if retries < 0:
-        logger.warning('No retries remaining.  Returning Nonetypes.')
-        return None, None
-    else:
+    for try_number in range(max_tries):
+        query_param_dict = _build_query_param_dict(
+            start_timestamp,
+            end_timestamp,
+            page_number,
+            date_type,
+        )
         response = delayed_requester.get(
             endpoint,
             params=query_param_dict,
         )
 
-    logger.debug('response.status_code: {response.status_code}')
-    response_json = _extract_response_json(response)
-    image_list, total_pages = _extract_image_list_from_json(response_json)
+        logger.debug('response.status_code: {response.status_code}')
+        response_json = _extract_response_json(response)
+        image_list, total_pages = _extract_image_list_from_json(response_json)
 
-    if image_list is None or total_pages is None:
-        image_list, total_pages = _get_image_list(
-            start_timestamp,
-            end_timestamp,
-            date_type,
-            page_number,
-            retries=retries - 1
-        )
+        if (image_list is not None) and (total_pages is not None):
+            break
 
-    return image_list, total_pages
+    if try_number == max_tries - 1 and (
+            (image_list is None) or (total_pages is None)):
+        logger.warning('No more tries remaining. Returning Nonetypes.')
+        return None, None
+    else:
+        return image_list, total_pages
 
 
 def _extract_response_json(response):
