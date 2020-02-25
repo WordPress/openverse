@@ -18,17 +18,7 @@ from datetime import datetime, timedelta, timezone
 
 
 DELAY   = 1.0 #time delay (in seconds)
-FILE    = 'metmuseum_{}.tsv'.format(datetime.now())
-LIMIT = 500
-MEAN_GLOBAL_USAGE_LIMIT = 10000
-PROVIDER = 'Metropolitan museum of Art'
-CONTACT_EMAIL = os.getenv('WM_SCRIPT_CONTACT')
-UA_STRING = (
-    f'CC-Catalog/0.1 (https://creativecommons.org; {CONTACT_EMAIL})'
-)
-DEFAULT_REQUEST_HEADERS = {
-    'User-Agent': UA_STRING
-}
+PROVIDER = 'met'
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s', 
@@ -41,9 +31,9 @@ image_store = image.ImageStore(provider=PROVIDER)
 
 def main(date=None):
     """
-    This script pulls the data for a given date from the Wikimedia
-    Commons API, and writes it into a .TSV file to be eventually read
-    into our DB.
+    This script pulls the data for a given date from the Metropolitan
+    Museum of Art API, and writes it into a .TSV file to be eventually
+    read into our DB.
 
     Required Arguments:
 
@@ -95,7 +85,6 @@ def _get_response_json(
     response = delayed_requester.get(
         endpoint,
         params=query_params,
-        headers=request_headers,
         timeout=60
     )
     if response is not None and response.status_code == 200:
@@ -105,23 +94,18 @@ def _get_response_json(
             logger.warning(f'Could not get response_json.\n{e}')
             response_json = None
 
-    if (
-            response_json is None
-            or response_json.get('error') is not None
-    ):
+    if response_json is None:
         logger.warning(f'Bad response_json:  {response_json}')
         logger.warning(
             'Retrying:\n_get_response_json(\n'
             f'    {endpoint},\n'
             f'    {query_params},\n'
-            f'    {request_headers}'
             f'    retries={retries - 1}'
             ')'
         )
         response_json = _get_response_json(
             query_params,
             endpoint=endpoint,
-            request_headers=request_headers,
             retries=retries - 1
         )
         
@@ -149,16 +133,16 @@ def _get_data_for_each_image(object_id):
         return None
 
     isCC0 = object_json.get('isPublicDomain')
-    if (isCC0 is None) or isCC0 is False:
+    if isCC0 is None or isCC0 is False:
         logger.warning('CC0 license not detected')
         return None
 
-    foreign_url = object_json.get('objectURL', None)
+    foreign_url = object_json.get('objectURL')
     if foreign_url is None:
         logger.warning(f'No landing page detected for: {object_id}')
         return None
 
-    image_info = object_json.get('primaryImage', None)
+    image_info = object_json.get('primaryImage')
     if image_info is None:
         logger.warning(f'No image found for {object_id}')
         return None
@@ -170,7 +154,7 @@ def _get_data_for_each_image(object_id):
     image_url = image_info
 
     thumbnail = ''
-    if '/origina/' in image_url:
+    if '/original/' in image_url:
         thumbnail = image_url.replace('/original/', '/web-large/')
 
     other_images = object_json.get('additionalImages', None)
@@ -184,19 +168,12 @@ def _get_data_for_each_image(object_id):
         foreign_url,  # foreign url of image
         image_url,  # image url
         thumbnail,  # thubnail url
-        None,  # license URl
         'cc0',  # license
         '1.0',  # license verion
         foreign_id,  # foreign identifier
-        None,  # width
-        None,  # height
         creator_name,  # creator name
-        None,  # creator url
         title,  # title
         meta_data,  # meta data
-        None,
-        'f',
-        None
     )
 
     for image in other_images:
@@ -212,19 +189,12 @@ def _get_data_for_each_image(object_id):
             foreign_url,  # foreign url of image
             image_url,  # image url
             thumbnail,  # thubnail url
-            None,  # license URl
             'cc0',  # license
             '1.0',  # license verion
             foreign_id,  # foreign identifier
-            None,  # width
-            None,  # height
             creator_name,  # creator name
-            None,  # creator url
             title,  # title
             meta_data,  # meta data
-            None,
-            'f',
-            None
     )
 
 
@@ -270,8 +240,7 @@ if __name__ == '__main__':
             date = None
             mode = 'All CC0 Artworks'
     else:
-        date_obj = datetime.now() - timedelta(days=2)
-        date = datetime.strftime(date_obj, '%Y-%m-%d')
+        date = None
 
     mode += date if date is not None else ''
     logger.info(f'Processing for {mode}')
