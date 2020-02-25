@@ -158,12 +158,10 @@ def _get_meta_data(_uuid):
     meta_data = {}
     creator = ''
     title = ''
-
     endpoint = "http://phylopic.org/api/a/image/{}?options=credit+" \
                "licenseURL+pngFiles+submitted+submitter+taxa+canonicalName" \
                "+string+firstName+lastName".format(_uuid)
     request = _get_response_json(endpoint=endpoint, retries=2)
-
     if request and request.get('success') is True:
         result = request['result']
 
@@ -171,25 +169,35 @@ def _get_meta_data(_uuid):
 
     meta_data['taxa'] = _get_taxa_details(result)
 
+    foreign_id = img_url
+    foreign_url = '{}/image/{}'.format(base_url, _uuid)
+
+    (creator, meta_data['credit_line'],
+     meta_data['pub_date']) = _get_creator_details(result)
+
     img_url, width, height, thumbnail = _get_image_info(result, _uuid)
     if img_url is None:
         return None
 
-    foreign_id = img_url
-    foreign_url = '{}/image/{}'.format(base_url, _uuid)
+    return [
+            foreign_id, foreign_url, img_url, thumbnail, str(width),
+            str(height), license_url, creator, title, meta_data
+        ]
+
+
+def _get_creator_details(result):
+    credit_line = None
+    pub_date = None
 
     first_name = result.get('submitter', {}).get('firstName')
     last_name = result.get('submitter', {}).get('lastName')
     creator = '{} {}'.format(first_name, last_name).strip()
 
     if result.get('credit'):
-        meta_data['credit_line'] = result.get('credit').strip()
-        meta_data['pub_date'] = result.get('submitted').strip()
+        credit_line = result.get('credit').strip()
+        pub_date = result.get('submitted').strip()
 
-    return [
-            foreign_id, foreign_url, img_url, thumbnail, str(width),
-            str(height), license_url, creator, title, meta_data
-        ]
+    return (creator, credit_line, pub_date)
 
 
 def _get_taxa_details(result):
