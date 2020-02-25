@@ -67,6 +67,23 @@ def test_get_image_list_retries_with_non_ok_response():
     assert mock_get.call_count == 3
 
 
+def test_get_image_list_with_partial_response():
+    response_json = _get_resource_json('total_pages_but_no_image_list.json')
+    r = requests.Response()
+    r.status_code = 200
+    r.json = MagicMock(return_value=response_json)
+    with patch.object(
+            flickr.delayed_requester,
+            'get',
+            return_value=r
+    ) as mock_get:
+        image_list, total_pages = flickr._get_image_list(
+            '1234', '5678', 'test', 4, max_tries=3
+        )
+
+    assert mock_get.call_count == 3
+
+
 def test_get_image_list_with_realistic_response():
     response_json = _get_resource_json('flickr_example_pretty.json')
     r = requests.Response()
