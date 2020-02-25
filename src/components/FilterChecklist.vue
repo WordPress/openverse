@@ -3,8 +3,11 @@
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
 
-      <button class="filter-dropdown-visibility-button">
-        <img src="@/assets/arrow-bottom.svg" class="arrow-bottom" alt="toggle filters visibility" />
+      <button class="filter-dropdown-visibility-button" v-if="!filtersVisible">
+        <img src="@/assets/arrow-down.png" class="arrow-bottom" alt="toggle filters visibility" />
+      </button>
+      <button class="filter-dropdown-visibility-button" v-if="filtersVisible">
+        <img src="@/assets/arrow-up.png" class="arrow-up" alt="toggle filters visibility" />
       </button>
     </div>
 
@@ -49,7 +52,6 @@ fieldset {
   margin-top: 20px;
   margin-bottom: 10px;
 }
-
 .filters-title {
   font-size: 1.250em;
   font-weight: 600;
@@ -60,12 +62,10 @@ fieldset {
   cursor: pointer;
   margin-bottom: 16px;
 }
-
 .filter-dropdown-visibility-button {
   float: right;
   cursor: pointer;
 }
-
 label {
   color: #333333;
 }
