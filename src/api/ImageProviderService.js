@@ -65,6 +65,9 @@ const ImageProviderService = {
       sciencemuseum: {
         logo: 'sciencemuseum_logo.svg',
       },
+      sketchfab: {
+        logo: 'sketchfab_logo.png',
+      },
       svgsilh: {
         logo: 'svg-silh_logo.png',
       },
