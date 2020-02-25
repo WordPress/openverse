@@ -76,7 +76,10 @@ class SearchImages(APIView):
 
         search_index = 'search-qa' if qa else 'image'
         try:
-            results, page_count, result_count, suggestion = search_controller.search(
+            (results,
+                page_count,
+                result_count,
+                suggestion) = search_controller.search(
                 params,
                 search_index,
                 page_size,
@@ -248,8 +251,7 @@ class Watermark(GenericAPIView):
                 with_xmp = ccrel.embed_xmp_bytes(img_bytes, work_properties)
                 return FileResponse(with_xmp, content_type='image/jpeg')
             except (libxmp.XMPError, AttributeError) as e:
-                # Just send the EXIF-ified file
-                # if libxmp fails to add metadata.
+                # Just send the EXIF-ified file if libxmp fail to add metadata.
                 log.error(
                     'Failed to add XMP metadata to {}'
                     .format(image_record.identifier)
