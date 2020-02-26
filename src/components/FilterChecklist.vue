@@ -4,10 +4,10 @@
       <span>{{ title }}</span>
 
       <button class="filter-dropdown-visibility-button" v-if="!filtersVisible">
-        <img src="@/assets/arrow-down.png" class="arrow-bottom" alt="toggle filters visibility" />
+        <img src="@/assets/arrow-bottom.svg" class="arrow-bottom" alt="toggle filters visibility" />
       </button>
       <button class="filter-dropdown-visibility-button" v-if="filtersVisible">
-        <img src="@/assets/arrow-up.png" class="arrow-up" alt="toggle filters visibility" />
+        <img src="@/assets/arrow-up.svg" class="arrow-up" alt="toggle filters visibility" />
       </button>
     </div>
 
