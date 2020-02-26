@@ -53,7 +53,7 @@
                 :key="index">
               <td>{{ imageProvider.display_name }}</td>
               <td>
-                <a :href="imageProvider.provider_url">
+                <a :href="imageProvider.source_url">
                   {{ imageProvider.source_url }}
                 </a>
               </td>
