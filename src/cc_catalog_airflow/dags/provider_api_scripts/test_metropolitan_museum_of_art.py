@@ -7,20 +7,23 @@ import pytest
 import metropolitan_museum_of_art as mma
 
 RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), 'tests/resources/metropolitan_museum_of_art'
+    os.path.abspath(os.path.dirname(__file__)),
+    'tests/resources/metropolitan_museum_of_art'
 )
 
-endpoint = 'https://collectionapi.metmuseum.org/public/collection/v1/objects/{}'.format(553)
-
-logging.basicConfig(format='%(asctime)s: [%(levelname)s - Met Museum API] =======> %(message)s', level=logging.INFO)
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
+    level=logging.INFO
+)
 logger = logging.getLogger(__name__)
+
 
 def test_get_object_ids():
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value={
         'total': 4,
-        'objectIDs': [153,1578,465,546]
+        'objectIDs': [153, 1578, 465, 546]
         })
     with patch.object(
         mma.delayed_requester,
@@ -29,7 +32,8 @@ def test_get_object_ids():
     ) as mock_get:
         total_objects = mma._get_object_ids('')
     assert total_objects[0] == 4
-    assert total_objects[1] == [153,1578,465,546]
+    assert total_objects[1] == [153, 1578, 465, 546]
+
 
 def test_get_response_json_retries_with_none_response():
     with patch.object(
@@ -41,6 +45,7 @@ def test_get_response_json_retries_with_none_response():
             assert mma._get_response_json(None, '', retries=2)
 
     assert mock_get.call_count == 3
+
 
 def test_get_response_json_retries_with_non_ok():
     r = requests.Response()
@@ -56,11 +61,12 @@ def test_get_response_json_retries_with_non_ok():
 
     assert mock_get.call_count == 3
 
+
 def test_get_response_json_returns_response_json_when_all_ok():
     expect_response_json = {
-        'accession_number': '14.11.3',
-        'artistAphaSort': 'United States Pottery Company',
-        'artistBeginDate': '1852'
+        'accessionNumber': '36.100.45',
+        'artistAlphaSort': 'Kiyohara Yukinobu',
+        'artistBeginDate': '1643'
     }
     r = requests.Response()
     r.status_code = 200
@@ -75,12 +81,15 @@ def test_get_response_json_returns_response_json_when_all_ok():
     assert mock_get.call_count == 1
     assert actual_response_json == expect_response_json
 
+
 def test_create_meta_data():
     exact_response = {
-        'accession_number': '14.11.3',
-        'classification': 'Ceramics',
-        'credit_line': 'Rogers Fund, 1914',
-        'culture': 'American'
+        'accession_number': '36.100.45',
+        'classification': 'Paintings',
+        'credit_line': (
+            'The Howard Mansfield Collection, Purchase, Rogers Fund, 1936'
+            ),
+        'culture': 'Japan'
     }
     r = requests.Response()
     r.status_code = 200
@@ -91,5 +100,42 @@ def test_create_meta_data():
         return_value=r
     ) as mock_get:
         response = mma._get_response_json(None, '', retries=2)
-    
+
     assert response == exact_response
+
+
+def test_process_image_data_handles_example_dict():
+    with open(os.path.join(RESOURCES, 'sample_image_data.json')) as f:
+        image_data = json.load(f)
+
+    with patch.object(
+        mma.image_store,
+        'add_item',
+        return_value=1
+    ) as mock_add:
+        mma._process_image_data(image_data)
+
+    mock_add.assert_called_once_with(
+        foreign_landing_url=(
+            "https://wwwstg.metmuseum.org/art/collection/search/45734"
+            ),
+        image_url=(
+            "https://images.metmuseum.org/CRDImages/as/original/DP251139.jpg"
+            ),
+        thumbnail_url=(
+            "https://images.metmuseum.org/CRDImages/as/web-large/DP251139.jpg"
+            ),
+        license="cc0",
+        license_version="1.0",
+        foreign_identifier=45734,
+        creator="Kiyohara Yukinobu",
+        title="Quail and Millet",
+        meta_data={
+            "accession_number": "36.100.45",
+            "classification": "Paintings",
+            "credit_line": (
+                "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936"
+                ),
+            "culture": "Japan"
+        }
+    )

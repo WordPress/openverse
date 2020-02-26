@@ -169,17 +169,17 @@ def _get_data_for_each_image(object_id):
         extra_image_index = 1
         meta_data['set'] = foreign_url
 
-    image_store.add_item(
-        foreign_landing_url=foreign_url,  # foreign url of image
-        image_url=image_url,  # image url
-        thumbnail_url=thumbnail,  # thubnail url
-        license_='cc0',  # license
-        license_version='1.0',  # license verion
-        foreign_identifier=foreign_id,  # foreign identifier
-        creator=creator_name,  # creator name
-        title=title,  # title
-        meta_data=meta_data,  # meta data
-    )
+    image_data = {
+        'foreign_landing_url': foreign_url,
+        'image_url': image_url,
+        'thumbnail_url': thumbnail,
+        'foreign_identifier': foreign_id,
+        'creator': creator_name,
+        'title': title,
+        'meta_data': meta_data
+    }
+
+    _process_image_data(image_data)
 
     if other_images is not None and len(other_images) > 1:
         for image in other_images:
@@ -191,17 +191,36 @@ def _get_data_for_each_image(object_id):
                 if '/original/' in image_url:
                     image_url.replace('/original/', '/web-image/')
 
-            image_store.add_item(
-                foreign_landing_url=foreign_url,  # foreign url of image
-                image_url=image_url,  # image url
-                thumbnail_url=thumbnail,  # thubnail url
-                license_='cc0',  # license
-                license_version='1.0',  # license verion
-                foreign_identifier=foreign_id,  # foreign identifier
-                creator=creator_name,  # creator name
-                title=title,  # title
-                meta_data=meta_data,  # meta data
-            )
+            image_data = {
+                'foreign_landing_url': foreign_url,
+                'image_url': image_url,
+                'thumbnail_url': thumbnail,
+                'foreign_identifier': foreign_id,
+                'creator': creator_name,
+                'title': title,
+                'meta_data': meta_data
+            }
+
+            _process_image_data(image_data)
+
+
+def _process_image_data(image_data):
+    foreign_id = image_data.get('foreign_identifier')
+    logger.debug(f'Processing object ID: {foreign_id}')
+
+    image_store.add_item(
+        foreign_landing_url=image_data.get(
+            'foreign_landing_url'
+        ),  # foreign url of image
+        image_url=image_data.get('image_url'),  # image url
+        thumbnail_url=image_data.get('thumbnail_url'),  # thubnail url
+        license='cc0',  # license
+        license_version='1.0',  # license verion
+        foreign_identifier=foreign_id,  # foreign identifier
+        creator=image_data.get('creator'),  # creator name
+        title=image_data.get('title'),  # title
+        meta_data=image_data.get('meta_data'),  # meta data
+    )
 
 
 def _create_meta_data(object_json):
