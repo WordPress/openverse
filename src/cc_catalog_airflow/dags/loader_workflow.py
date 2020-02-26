@@ -8,8 +8,21 @@ from datetime import datetime, timedelta
 import os
 
 DB_NAME = 'postgres_openledger_upstream'
-FILE_CHANGE_WAIT = 5
-FAILURE_DIRECTORY = 'failures'
+FILE_CHANGE_WAIT = 1
+
+OUTPUT_DIR_PATH = os.path.realpath(os.environ['OUTPUT_DIR'])
+FAILURE_SUB_DIRECTORY = 'db_loader_failures'
+FAILURE_DIR_PATH = os.path.join(OUTPUT_DIR_PATH, FAILURE_SUB_DIRECTORY)
+STAGING_SUB_DIRECTORY = 'db_loader_staging'
+STAGING_DIR_PATH = os.path.join(OUTPUT_DIR_PATH, STAGING_SUB_DIRECTORY)
+
+
+def _stage_oldest_tsv_file(staging_directory=STAGING_DIR_PATH):
+    tsv_file_name = _get_oldest_file()
+    tsv_found = tsv_file_name is not None
+    if tsv_found:
+        _move_file(tsv_file_name, staging_directory)
+    return tsv_found
 
 
 def _create_if_not_exists_loading_table():
@@ -57,21 +70,28 @@ def _create_if_not_exists_loading_table():
     )
 
 
-def _load_data():
-    tsv_file_name = _get_oldest_file()
+def _load_data(staging_directory=STAGING_DIR_PATH):
+    tsv_file_name = _get_staged_file()
     _import_data_to_intermediate_table(tsv_file_name)
     _upsert_records_to_image_table()
 
 
-def _get_oldest_file(minimum_age_minutes=FILE_CHANGE_WAIT):
+def _delete_old_records_and_file():
+    postgres = PostgresHook(postgres_conn_id=DB_NAME)
+    tsv_file_name = _get_staged_file()
+
+    postgres.run('DELETE FROM provider_image_data;')
+    print(f'Deleting {tsv_file_name}')
+    os.remove(tsv_file_name)
+
+
+def _get_oldest_file(
+        minimum_age_minutes=FILE_CHANGE_WAIT,
+        output_dir=OUTPUT_DIR_PATH
+):
     oldest_file_name = None
-    output_dir = os.environ['OUTPUT_DIR']
     print(f'getting files from {output_dir}')
-    path_list = [
-        os.path.join(output_dir, f)
-        for f in os.listdir(output_dir)
-        if f[-4:] == '.tsv'
-    ]
+    path_list = _get_full_tsv_paths(output_dir)
     print(f'found files:\n{path_list}')
     last_modified_list = [(p, os.stat(p).st_mtime) for p in path_list]
     print(f'last_modified_list:\n{last_modified_list}')
@@ -88,6 +108,29 @@ def _get_oldest_file(minimum_age_minutes=FILE_CHANGE_WAIT):
         print(f'no file found older than {minimum_age_minutes} minutes.')
 
     return oldest_file_name
+
+
+def _get_staged_file(staging_directory=STAGING_DIR_PATH):
+    path_list = _get_full_tsv_paths(staging_directory)
+    assert len(path_list) == 1
+    return path_list[0]
+
+
+def _get_full_tsv_paths(directory):
+    return [
+        os.path.join(directory, f)
+        for f in os.listdir(directory)
+        if f[-4:] == '.tsv'
+    ]
+
+
+def _move_staged_files_to_failure_directory(
+        staging_directory=STAGING_DIR_PATH,
+        failure_directory=FAILURE_DIR_PATH
+):
+    staged_file_list = _get_full_tsv_paths(staging_directory)
+    for file_path in staged_file_list:
+        _move_file(file_path, failure_directory)
 
 
 def _import_data_to_intermediate_table(tsv_file_name):
@@ -155,33 +198,16 @@ def _upsert_records_to_image_table():
     )
 
 
-def _delete_old_records_and_file():
-    postgres = PostgresHook(postgres_conn_id=DB_NAME)
-    tsv_file_name = _get_oldest_file()
-    postgres.run('DELETE FROM provider_image_data;')
-    print(f'Deleting {tsv_file_name}')
-    os.remove(tsv_file_name)
+def _create_directory_if_not_exists(directory):
+    if not os.path.exists(directory):
+        os.mkdir(directory)
 
 
-def _create_if_not_exists_failure_directory():
-    output_dir = os.environ['OUTPUT_DIR']
-    if not os.path.exists(os.path.join(output_dir, FAILURE_DIRECTORY)):
-        os.mkdir(os.path.join(output_dir, FAILURE_DIRECTORY))
-
-
-def _move_failure():
-    output_dir = os.environ['OUTPUT_DIR']
-    tsv_file_name = _get_oldest_file(),
-    os.rename(
-        tsv_file_name,
-        os.path.join(
-            output_dir,
-            FAILURE_DIRECTORY,
-            os.path.basename(tsv_file_name)
-        )
-    )
-    if not os.path.exists(os.path.join(output_dir, FAILURE_DIRECTORY)):
-        os.mkdir(os.path.join(output_dir, FAILURE_DIRECTORY))
+def _move_file(file_path, new_directory):
+    _create_directory_if_not_exists(new_directory)
+    new_file_path = os.path.join(new_directory, os.path.basename(file_path))
+    print(f'Moving {file_path} to {new_file_path}')
+    os.rename(file_path, new_file_path)
 
 
 args = {
@@ -202,9 +228,9 @@ dag = DAG(
     catchup=False
 )
 
-check_for_oldest_file = ShortCircuitOperator(
-    task_id='check_for_oldest_file',
-    python_callable=_get_oldest_file,
+stage_oldest_tsv_file = ShortCircuitOperator(
+    task_id='stage_oldest_tsv_file',
+    python_callable=_stage_oldest_tsv_file,
     dag=dag
 )
 
@@ -227,23 +253,17 @@ delete_file = PythonOperator(
     dag=dag,
 )
 
-create_failure_directory = PythonOperator(
-    task_id='create_failure_directory_task',
-    python_callable=_create_if_not_exists_failure_directory,
+move_failures = PythonOperator(
+    task_id='move_failures',
+    python_callable=_move_staged_files_to_failure_directory,
     trigger_rule=TriggerRule.ONE_FAILED,
-    dag=dag,
-)
-
-move_failure = PythonOperator(
-    task_id='move_failure',
-    python_callable=_move_failure,
     dag=dag
 )
 
 (
-    check_for_oldest_file
+    stage_oldest_tsv_file
     >> create_table
     >> load_data
-    >> [delete_file, create_failure_directory]
+    >> delete_file
 )
-create_failure_directory >> move_failure
+[stage_oldest_tsv_file, create_table, load_data, delete_file] >> move_failures
