@@ -224,7 +224,7 @@ export default {
     }
   }
   .count{
-    padding-top: 10px;
-    padding-left: 20px;
+    padding-top: 0.6rem;
+    padding-left: 1.3rem;
   }
 </style>
