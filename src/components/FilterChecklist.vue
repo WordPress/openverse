@@ -2,12 +2,8 @@
   <fieldset>
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
-
-      <button class="filter-dropdown-visibility-button" v-if="!filtersVisible">
-        <img src="@/assets/arrow-bottom.svg" class="arrow-bottom" alt="toggle filters visibility" />
-      </button>
-      <button class="filter-dropdown-visibility-button" v-if="filtersVisible">
-        <img src="@/assets/arrow-up.svg" class="arrow-up" alt="toggle filters visibility" />
+  <button v-bind:class="[filtersVisible ? 'rotImg' : 'filter-dropdown-visibility-button']">
+        <img src="@/assets/arrow.svg" class="arrow-up" alt="toggle filters visibility" />
       </button>
     </div>
 
@@ -64,6 +60,11 @@ fieldset {
 }
 .filter-dropdown-visibility-button {
   float: right;
+  cursor: pointer;
+}
+.rotImg{
+  transform: rotate(180deg);
+   float: right;
   cursor: pointer;
 }
 label {
