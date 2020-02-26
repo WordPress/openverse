@@ -54,7 +54,7 @@
               <td>{{ imageProvider.display_name }}</td>
               <td>
                 <a :href="imageProvider.provider_url">
-                  {{ imageProvider.provider_url }}
+                  {{ imageProvider.source_url }}
                 </a>
               </td>
               <td>{{ getProviderImageCount(imageProvider.image_count) }}</td>
