@@ -25,8 +25,8 @@
             @click.stop="() => false"
             target="new">
             <img class="search-grid_overlay-provider-logo"
-              :alt="image.provider"
-              :src="getProviderLogo(image.provider)">
+              :alt="image.source"
+              :src="getProviderLogo(image.source)">
             {{ image.title }}
         </a>
       </figcaption>

@@ -58,7 +58,7 @@ describe('Image Provider Store', () => {
   });
 
   describe('actions', () => {
-    const data = [{ provider_name: 'foo' }, { provider_name: 'bar' }];
+    const data = [{ source_name: 'foo' }, { source_name: 'bar' }];
     const imageProviderServiceMock = {
       getProviderStats: jest.fn(() => Promise.resolve({ data })),
     };
