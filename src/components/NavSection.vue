@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { SET_QUERY,SET_IMAGES } from '@/store/mutation-types';
+import { SET_QUERY, SET_IMAGES } from '@/store/mutation-types';
 
 export default {
   props: {
