@@ -2,11 +2,11 @@
   <fieldset>
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
-  <button v-bind:class="[filtersVisible ? 'rotImg' : 'filter-dropdown-visibility-button']">
-        <img src="@/assets/arrow.svg" class="arrow-up" alt="toggle filters visibility" />
+  <button class="filter-dropdown-visibility-button">
+    <!-- eslint-disable-next-line -->
+      <img src="@/assets/arrow.svg" v-bind:class="{rotImg:filtersVisible}" alt="toggle filters visibility"/>
       </button>
     </div>
-
     <template v-if="filtersVisible">
     <div v-for="(item, index) in options" :key="index">
       <input type="checkbox"
@@ -21,7 +21,6 @@
     </template>
   </fieldset>
 </template>
-
 <script>
 export default {
   name: 'filter-check-list',
@@ -64,8 +63,6 @@ fieldset {
 }
 .rotImg{
   transform: rotate(180deg);
-   float: right;
-  cursor: pointer;
 }
 label {
   color: #333333;
