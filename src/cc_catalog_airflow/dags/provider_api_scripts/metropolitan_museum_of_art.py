@@ -3,7 +3,8 @@ Content Provider:       Metropolitan Museum of Art
 
 ETL Process:            Use the API to identify all CC0 artworks.
 
-Output:                 TSV file containing the image, their respective meta-data.
+Output:                 TSV file containing the image, their respective
+                        meta-data.
 
 Notes:                  https://metmuseum.github.io/
                         No rate limit specified.
@@ -14,14 +15,14 @@ import os
 import common.requester as requester
 import common.storage.image as image
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
 
-DELAY   = 1.0 #time delay (in seconds)
+DELAY = 1.0  # time delay (in seconds)
 PROVIDER = 'met'
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s', 
+    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
     level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -52,15 +53,16 @@ def main(date=None):
     logger.info(f'Total CC0 images recieved {total_images}')
 
 
-
 def _get_object_ids(date):
     query_params = ''
     if date:
-        query_params = { 
+        query_params = {
             'metadataDate': date
             }
 
-    endpoint = 'https://collectionapi.metmuseum.org/public/collection/v1/objects'
+    endpoint = (
+        'https://collectionapi.metmuseum.org/public/collection/v1/objects'
+    )
     response = _get_response_json(query_params, endpoint)
 
     if response:
@@ -75,7 +77,7 @@ def _get_object_ids(date):
 def _get_response_json(
         query_params,
         endpoint,
-        retries=5, 
+        retries=5,
 ):
     response_json = None
 
@@ -109,7 +111,7 @@ def _get_response_json(
             endpoint=endpoint,
             retries=retries - 1
         )
-        
+
     return response_json
 
 
@@ -120,7 +122,10 @@ def _extract_the_data(object_ids):
 
 def _get_data_for_each_image(object_id):
 
-    endpoint = 'https://collectionapi.metmuseum.org/public/collection/v1/objects/{}'.format(object_id)
+    endpoint = (
+        'https://collectionapi.metmuseum.org/public/collection/v1/objects/{}'
+        .format(object_id)
+    )
 
     object_json = _get_response_json(None, endpoint)
 
@@ -160,44 +165,43 @@ def _get_data_for_each_image(object_id):
 
     other_images = object_json.get('additionalImages', None)
 
-    if other_images is not None and len(other_images)>1:
+    if other_images is not None and len(other_images) > 1:
         extra_image_index = 1
         meta_data['set'] = foreign_url
 
-
     image_store.add_item(
-        foreign_url,  # foreign url of image
-        image_url,  # image url
-        thumbnail,  # thubnail url
-        'cc0',  # license
-        '1.0',  # license verion
-        foreign_id,  # foreign identifier
-        creator_name,  # creator name
-        title,  # title
-        meta_data,  # meta data
+        foreign_landing_url=foreign_url,  # foreign url of image
+        image_url=image_url,  # image url
+        thumbnail_url=thumbnail,  # thubnail url
+        license_='cc0',  # license
+        license_version='1.0',  # license verion
+        foreign_identifier=foreign_id,  # foreign identifier
+        creator=creator_name,  # creator name
+        title=title,  # title
+        meta_data=meta_data,  # meta data
     )
 
-    for image in other_images:
-        foreign_id = '{}-{}'.format(object_id, extra_image_index)
-        image_url = image
-        thumbnail = ''
+    if other_images is not None and len(other_images) > 1:
+        for image in other_images:
+            foreign_id = '{}-{}'.format(object_id, extra_image_index)
+            image_url = image
+            thumbnail = ''
 
-        if image_url:
-            if '/original/' in image_url:
-                image_url.replace('/original/', '/web-image/')
+            if image_url:
+                if '/original/' in image_url:
+                    image_url.replace('/original/', '/web-image/')
 
-        image_store.add_item(
-            foreign_url,  # foreign url of image
-            image_url,  # image url
-            thumbnail,  # thubnail url
-            'cc0',  # license
-            '1.0',  # license verion
-            foreign_id,  # foreign identifier
-            creator_name,  # creator name
-            title,  # title
-            meta_data,  # meta data
-    )
-
+            image_store.add_item(
+                foreign_landing_url=foreign_url,  # foreign url of image
+                image_url=image_url,  # image url
+                thumbnail_url=thumbnail,  # thubnail url
+                license_='cc0',  # license
+                license_version='1.0',  # license verion
+                foreign_identifier=foreign_id,  # foreign identifier
+                creator=creator_name,  # creator name
+                title=title,  # title
+                meta_data=meta_data,  # meta data
+            )
 
 
 def _create_meta_data(object_json):
@@ -223,27 +227,12 @@ if __name__ == '__main__':
         '--date',
         help='Fetches all the artwork uploaded after given date'
     )
-    parser.add_argument(
-        '--mode',
-        choices=['default', 'all'],
-        help='Identify all artworks from the previous to previous day [default]'
-         'or process the entire collection [all].'
-    )
     args = parser.parse_args()
     if args.date:
         date = args.date
 
-    elif args.mode:
-        if str(args.mode) == 'default':
-            date_obj = datetime.now() - timedelta(days=2)
-            date = datetime.strftime(date_obj, '%Y-%m-%d')
-        else:
-            date = None
-            mode = 'All CC0 Artworks'
     else:
         date = None
-
-    mode += date if date is not None else ''
-    logger.info(f'Processing for {mode}')
+    logger.info(f'Processing images')
 
     main(date)
