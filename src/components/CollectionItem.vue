@@ -4,9 +4,9 @@
       <span class="provider-name">{{ provider.display_name }}</span>
     </div>
     <div class="provider-logo">
-      <a :href="'/collections/'+provider.provider_name">
+      <a :href="'/collections/'+provider.source_name">
         <img :alt="provider.display_name"
-            :src="getProviderLogo(provider.provider_name)">
+            :src="getProviderLogo(provider.source_name)">
       </a>
     </div>
     <div class="card-section">

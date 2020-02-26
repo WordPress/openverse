@@ -44,7 +44,7 @@ const CollectionsPage = {
     museumProviders() {
       if (this.providers) {
         return this.providers.filter(
-          provider => MUSEUM_PROVIDERS.indexOf(provider.provider_name) >= 0,
+          provider => MUSEUM_PROVIDERS.indexOf(provider.source_name) >= 0,
         );
       }
       return [];
@@ -52,7 +52,7 @@ const CollectionsPage = {
     otherProviders() {
       if (this.providers) {
         return this.providers.filter(
-          provider => MUSEUM_PROVIDERS.indexOf(provider.provider_name) === -1,
+          provider => MUSEUM_PROVIDERS.indexOf(provider.source_name) === -1,
         );
       }
       return [];
