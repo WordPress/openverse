@@ -1,15 +1,18 @@
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python_operator import ShortCircuitOperator
 from airflow.hooks.postgres_hook import PostgresHook
-# from airflow.utils.trigger_rule import TriggerRule
+from airflow.utils.trigger_rule import TriggerRule
 from datetime import datetime, timedelta
 import os
 
 DB_NAME = 'postgres_openledger_upstream'
+FILE_CHANGE_WAIT = 5
+FAILURE_DIRECTORY = 'failures'
 
 
-def verify_loading_table():
+def _create_if_not_exists_loading_table():
     """
     Create intermediary table and indices if they do not exist
     """
@@ -54,15 +57,13 @@ def verify_loading_table():
     )
 
 
-def load_data():
-    tsv_file_name = get_oldest_file(5)
-    if tsv_file_name is not None:
-        import_data_to_intermediate_table(tsv_file_name)
-        upsert_records_to_image_table()
-        delete_old_records_and_file(tsv_file_name)
+def _load_data():
+    tsv_file_name = _get_oldest_file()
+    _import_data_to_intermediate_table(tsv_file_name)
+    _upsert_records_to_image_table()
 
 
-def get_oldest_file(minimum_age_minutes):
+def _get_oldest_file(minimum_age_minutes=FILE_CHANGE_WAIT):
     oldest_file_name = None
     output_dir = os.environ['OUTPUT_DIR']
     print(f'getting files from {output_dir}')
@@ -72,9 +73,13 @@ def get_oldest_file(minimum_age_minutes):
         if f[-4:] == '.tsv'
     ]
     print(f'found files:\n{path_list}')
-    path_last_modified_list = [(p, os.stat(p).st_mtime) for p in path_list]
-    print(f'last_modified_list:\n{path_list}')
-    oldest_file_modified = min(path_last_modified_list, key=lambda t: t[1])
+    last_modified_list = [(p, os.stat(p).st_mtime) for p in path_list]
+    print(f'last_modified_list:\n{last_modified_list}')
+
+    if not last_modified_list:
+        return
+
+    oldest_file_modified = min(last_modified_list, key=lambda t: t[1])
     cutoff_time = datetime.now() - timedelta(minutes=minimum_age_minutes)
 
     if datetime.fromtimestamp(oldest_file_modified[1]) <= cutoff_time:
@@ -85,7 +90,7 @@ def get_oldest_file(minimum_age_minutes):
     return oldest_file_name
 
 
-def import_data_to_intermediate_table(tsv_file_name):
+def _import_data_to_intermediate_table(tsv_file_name):
     print(f'Loading {tsv_file_name} into intermediate table')
 
     postgres = PostgresHook(postgres_conn_id=DB_NAME)
@@ -111,7 +116,7 @@ def import_data_to_intermediate_table(tsv_file_name):
     )
 
 
-def upsert_records_to_image_table():
+def _upsert_records_to_image_table():
     print('Upserting new records into image table.')
     postgres = PostgresHook(postgres_conn_id=DB_NAME)
     postgres.run(
@@ -150,10 +155,33 @@ def upsert_records_to_image_table():
     )
 
 
-def delete_old_records_and_file(tsv_file_name):
+def _delete_old_records_and_file():
     postgres = PostgresHook(postgres_conn_id=DB_NAME)
+    tsv_file_name = _get_oldest_file()
     postgres.run('DELETE FROM provider_image_data;')
+    print(f'Deleting {tsv_file_name}')
     os.remove(tsv_file_name)
+
+
+def _create_if_not_exists_failure_directory():
+    output_dir = os.environ['OUTPUT_DIR']
+    if not os.path.exists(os.path.join(output_dir, FAILURE_DIRECTORY)):
+        os.mkdir(os.path.join(output_dir, FAILURE_DIRECTORY))
+
+
+def _move_failure():
+    output_dir = os.environ['OUTPUT_DIR']
+    tsv_file_name = _get_oldest_file(),
+    os.rename(
+        tsv_file_name,
+        os.path.join(
+            output_dir,
+            FAILURE_DIRECTORY,
+            os.path.basename(tsv_file_name)
+        )
+    )
+    if not os.path.exists(os.path.join(output_dir, FAILURE_DIRECTORY)):
+        os.mkdir(os.path.join(output_dir, FAILURE_DIRECTORY))
 
 
 args = {
@@ -174,30 +202,48 @@ dag = DAG(
     catchup=False
 )
 
-begin_task = BashOperator(
-    task_id='Begin',
-    dag=dag,
-    bash_command='echo Begin DB Loader'
-)
-
-end_task = BashOperator(
-    task_id='End',
-    dag=dag,
-    bash_command='echo Terminating DB Loader'
-)
-
-verify_task = PythonOperator(
-    task_id='Verify',
-    provide_context=False,
-    python_callable=verify_loading_table,
+check_for_oldest_file = ShortCircuitOperator(
+    task_id='check_for_oldest_file',
+    python_callable=_get_oldest_file,
     dag=dag
 )
 
-load_task = PythonOperator(
-    task_id='Load',
-    provide_context=False,
-    python_callable=load_data,
+create_table = PythonOperator(
+    task_id='create_table',
+    python_callable=_create_if_not_exists_loading_table,
     dag=dag
 )
 
-begin_task >> verify_task >> load_task >> end_task
+load_data = PythonOperator(
+    task_id='load_data',
+    python_callable=_load_data,
+    dag=dag
+)
+
+delete_file = PythonOperator(
+    task_id='delete_file',
+    python_callable=_delete_old_records_and_file,
+    trigger_rule=TriggerRule.ALL_SUCCESS,
+    dag=dag,
+)
+
+create_failure_directory = PythonOperator(
+    task_id='create_failure_directory_task',
+    python_callable=_create_if_not_exists_failure_directory,
+    trigger_rule=TriggerRule.ONE_FAILED,
+    dag=dag,
+)
+
+move_failure = PythonOperator(
+    task_id='move_failure',
+    python_callable=_move_failure,
+    dag=dag
+)
+
+(
+    check_for_oldest_file
+    >> create_table
+    >> load_data
+    >> [delete_file, create_failure_directory]
+)
+create_failure_directory >> move_failure
