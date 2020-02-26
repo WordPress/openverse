@@ -77,7 +77,8 @@ def main(date):
 
 
 def _add_data_to_buffer(**args):
-    IDs = _get_image_IDs(**args)
+    endpoint = _create_endpoint_for_IDs(**args)
+    IDs = _get_image_IDs(endpoint)
 
     for id in IDs:
         if id is not None:
@@ -105,10 +106,10 @@ def _get_total_images():
     if result and result.get('success') is True:
         total = result.get('result')
 
-        return total if (total is not None) else 0
+    return total if (total is not None) else 0
 
 
-def _get_image_IDs(**args):
+def _create_endpoint_for_IDs(**args):
     limit = LIMIT
     offset = 0
     endpoint = ''
@@ -124,11 +125,11 @@ def _get_image_IDs(**args):
         offset = args['offset']
         endpoint = 'http://phylopic.org/api/a/image/list/{}/{}'.format(
                   offset, limit)
+    return endpoint
 
-    if endpoint == '':
-        return [None]
 
-    result = _get_response_json(endpoint=endpoint, retries=2)
+def _get_image_IDs(_endpoint):
+    result = _get_response_json(endpoint=_endpoint, retries=2)
     image_IDs = []
 
     if result and result.get('success') is True:
@@ -156,26 +157,26 @@ def _get_meta_data(_uuid):
     foreign_id = ''
     foreign_url = ''
     meta_data = {}
-    creator = ''
-    title = ''
     endpoint = "http://phylopic.org/api/a/image/{}?options=credit+" \
                "licenseURL+pngFiles+submitted+submitter+taxa+canonicalName" \
                "+string+firstName+lastName".format(_uuid)
     request = _get_response_json(endpoint=endpoint, retries=2)
     if request and request.get('success') is True:
         result = request['result']
+    else:
+        return None
 
     license_url = result.get('licenseURL')
 
-    meta_data['taxa'] = _get_taxa_details(result)
+    meta_data['taxa'], title = _get_taxa_details(result)
 
-    foreign_id = img_url
     foreign_url = '{}/image/{}'.format(base_url, _uuid)
 
     (creator, meta_data['credit_line'],
      meta_data['pub_date']) = _get_creator_details(result)
 
     img_url, width, height, thumbnail = _get_image_info(result, _uuid)
+    foreign_id = img_url
     if img_url is None:
         return None
 
@@ -188,6 +189,7 @@ def _get_meta_data(_uuid):
 def _get_creator_details(result):
     credit_line = None
     pub_date = None
+    creator = ''
 
     first_name = result.get('submitter', {}).get('firstName')
     last_name = result.get('submitter', {}).get('lastName')
@@ -204,6 +206,7 @@ def _get_taxa_details(result):
     taxa = result.get('taxa', [])
     # [0].get('canonicalName', {}).get('string')
     taxa_list = None
+    title = ''
     if taxa:
         taxa = list(filter(
             lambda x: x.get('canonicalName') is not None, taxa))
@@ -213,8 +216,7 @@ def _get_taxa_details(result):
     if taxa_list:
         title = taxa_list[0]
 
-        if len(taxa_list) > 1:
-            return taxa_list
+    return (taxa_list, title)
 
 
 def _get_image_info(result, _uuid):
@@ -243,7 +245,7 @@ def _get_image_info(result, _uuid):
         if thumbnail_info is not None:
             thumbnail = '{}{}'.format(base_url, thumbnail_info)
 
-    if not img_url:
+    if img_url == '':
         logging.warning(
             'Image not detected in url: {}/image/{}'.format(base_url, _uuid))
         return None, None, None, None
