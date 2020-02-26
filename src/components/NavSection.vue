@@ -14,7 +14,7 @@
         <form class="hero_search-form"
               role="search"
               method="post"
-              v-on:submit="onSubmit">
+              v-on:submit.prevent="onSubmit">
           <div class="input-group input-group-rounded">
             <input class="input input-group-field"
                   type="search"
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types';
+import { SET_QUERY,SET_IMAGES } from '@/store/mutation-types';
 
 export default {
   props: {
@@ -47,6 +47,7 @@ export default {
   methods: {
     onSubmit() {
       this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm }, shouldNavigate: true });
+      this.$store.commit(SET_IMAGES, { images: [] });
     },
   },
 };
