@@ -43,23 +43,17 @@ def getMetaData(_data):
     #get the image url and dimension
     imgInfo     = _data.get('images')
 
-    if imgInfo and imgInfo.get('web'):
+    if imgInfo.get('web'):
         imgURL  = imgInfo.get('web', {}).get('url', None)
         key     = 'web'
 
-    elif imgInfo and imgInfo.get('print'):
+    elif imgInfo.get('print'):
         imgURL  = imgInfo.get('print', {}).get('url', None)
         key     = 'print'
 
-    elif imgInfo and imgInfo.get('full'):
+    elif imgInfo.get('full'):
         imgURL  = imgInfo.get('full', {}).get('url', None)
         key     = 'full'
-
-
-    if (not imgInfo) or (not imgURL):
-        logging.warning('Image not detected in url {}'.format(foreignURL))
-        return None
-
 
     if imgURL and key:
         width   = imgInfo[key]['width']
@@ -129,7 +123,7 @@ def main():
 
     while isValid:
         startTime   = time.time()
-        endpoint    = 'http://openaccess-api.clevelandart.org/api/artworks/?cc0=1&limit={0}&skip={1}'.format(LIMIT, offset)
+        endpoint    = 'http://openaccess-api.clevelandart.org/api/artworks/?cc0=1&has_image=1&limit={0}&skip={1}'.format(LIMIT, offset)
         batch       = requestContent(endpoint)
 
         if batch and ('data' in batch):
