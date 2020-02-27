@@ -15,9 +15,9 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-DAG_ID = 'DB_loader'
+DAG_ID = 'tsv_to_postgres_loader'
 DB_CONN_ID = 'postgres_openledger_upstream'
-FILE_CHANGE_WAIT = 1
+FILE_CHANGE_WAIT = 15
 
 OUTPUT_DIR_PATH = os.path.realpath(os.environ['OUTPUT_DIR'])
 FAILURE_SUB_DIRECTORY = 'db_loader_failures'

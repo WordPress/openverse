@@ -12,7 +12,7 @@ services:
     volumes:
       - /tmp/data:/var/lib/postgresql/data
 
-  airflow:
+  webserver:
     build: .
     env_file: .env
     restart: always
