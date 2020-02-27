@@ -6,26 +6,18 @@
         <h2>{{ searchTerm }}</h2>
         <span> {{ _imagesCount }}</span>
       </div>
-      <div
-        class="masonry-layout"
-        v-masonry transition-duration="0s"
-        item-selector=".item"
-        :fit-width="true"
-        :gutter="20">
-        <masonry-search-grid-cell v-for="(image) in _images"
-          v-masonry-tile class="item"
-          :key="image.id"
-          :image="image"
-          :shouldContainImage="shouldContainImages" />
+      <div class="search-grid-cells">
+        <search-grid-cell
+          v-for="(image, index) in _images" :key="index" :image="image">
+        </search-grid-cell>
       </div>
       <div class="load-more">
         <button v-show="!isFetchingImages && includeAnalytics"
                 class="clear button"
-                type="button"
                 :disabled="isFinished"
                 @click="onLoadMoreImages">
-          <p v-if="isFinished">No more images :(</p>
-          <p v-else>Load more</p>
+          <span v-if="isFinished">No more images :(</span>
+          <span v-else>Load more</span>
         </button>
         <loading-icon v-show="isFetchingImages" />
       </div>
@@ -37,14 +29,10 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import { SET_IMAGES } from '@/store/mutation-types';
-import MasonrySearchGridCell from '@/components/MasonrySearchGridCell';
+import SearchGridCell from '@/components/SearchGridCell';
 import SearchGridFilter from '@/components/SearchGridFilter';
 import LoadingIcon from '@/components/LoadingIcon';
-import { VueMasonryPlugin } from 'vue-masonry';
-
-Vue.use(VueMasonryPlugin);
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -52,7 +40,7 @@ export default {
   name: 'search-grid-manual-load',
   components: {
     SearchGridFilter,
-    MasonrySearchGridCell,
+    SearchGridCell,
     LoadingIcon,
   },
   data: () => ({
@@ -152,7 +140,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
+<style lang="scss" scoped>
 
   .button[disabled] {
     opacity: 1;
@@ -206,6 +194,19 @@ export default {
     margin: auto;
     font-weight: 500;
     text-align: center;
+  }
+
+  .search-grid-cells {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px;
+
+    @media screen and (min-width: 600px) {
+      &:after {
+        content: '';
+        flex-grow: 999999999;
+      }
+    }
   }
 
   label {

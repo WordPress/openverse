@@ -1,49 +1,42 @@
-
-import Vue from 'vue';
 import axios from 'axios';
-import VueAxios from 'vue-axios';
 import es6Promise from 'es6-promise';
 
 es6Promise.polyfill();
 
+const DEFAULT_REQUEST_TIMEOUT = 5000;
 
-const ApiService = {
-  init(baseUrl = process.env.API_URL, authParams) {
-    Vue.use(VueAxios, axios);
-    Vue.axios.defaults.baseURL = baseUrl;
-    Vue.axios.defaults.auth = authParams;
-  },
+export const createApiService = (baseUrl = process.env.API_URL) => {
+  const client = axios.create({
+    baseURL: baseUrl,
+    timeout: DEFAULT_REQUEST_TIMEOUT,
+  });
 
-  setHeader(headerParams) {
-    Object.assign(Vue.axios.defaults.headers, headerParams);
-  },
+  return {
+    query(resource, params) {
+      return client.get(resource, { params });
+    },
 
-  query(resource, params) {
-    return Vue.axios
-      .get(resource, { params });
-  },
+    get(resource, slug) {
+      return client.get(`${resource}/${slug}`);
+    },
 
-  get(resource, slug) {
-    return Vue.axios
-      .get(`${resource}/${slug}`);
-  },
+    post(resource, params) {
+      return client.post(`${resource}`, params);
+    },
 
-  post(resource, params) {
-    return Vue.axios.post(`${resource}`, params);
-  },
+    update(resource, slug, params, headers) {
+      return client.put(`${resource}/${slug}`, params, { headers });
+    },
 
-  update(resource, slug, params, headers) {
-    return Vue.axios.put(`${resource}/${slug}`, params, { headers });
-  },
+    put(resource, params) {
+      return client.put(`${resource}`, params);
+    },
 
-  put(resource, params) {
-    return Vue.axios.put(`${resource}`, params);
-  },
-
-  delete(resource, slug, headers) {
-    return Vue.axios
-      .delete(`${resource}/${slug}`, { headers });
-  },
+    delete(resource, slug, headers) {
+      return client.delete(`${resource}/${slug}`, { headers });
+    },
+  };
 };
 
+const ApiService = createApiService();
 export default ApiService;

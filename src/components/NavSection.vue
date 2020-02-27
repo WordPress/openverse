@@ -16,7 +16,7 @@
               method="post"
               v-on:submit.prevent="onSubmit">
           <div class="input-group input-group-rounded">
-            <input class="input-group-field"
+            <input class="input input-group-field"
                   type="search"
                   :placeholder="navSearchPlaceholder"
                   v-model.lazy="form.searchTerm">
@@ -82,7 +82,7 @@ export default {
 
 li {
   display: block;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
 }
 
 .header li a {
@@ -176,7 +176,7 @@ li {
 }
 
 /* 48em = 768px */
-@media (min-width: 49em) {
+@media (min-width: 52em) {
   .header {
     height: 3.9em;
   }
@@ -220,7 +220,7 @@ li {
   @media screen and (min-width: 64em) {
     float: right;
   }
-  @media screen and (max-width: 70.250em) {
+  @media screen and (max-width: 74.250em) {
     display: none;
   }
 }
@@ -229,21 +229,6 @@ li {
   margin: 9px 0;
   width: 315px;
   max-width: 100%;
-  .input-group-field {
-    border-radius: 3px;
-    padding-left: 1rem;
-    background: transparent;
-    color: #fff;
-    border: 1px solid rgba(36, 36, 36, 0.5);;
-    box-shadow: none;
-    &:focus {
-      border-color: rgb(255, 255, 255);
-    }
-
-    &::placeholder {
-      color: #1c1c1c;
-    }
-  }
   .input-group-button .button {
     border-radius: 3px;
     font-size: 0.8rem;
@@ -251,6 +236,7 @@ li {
     position: relative;
     left: calc( -100% - 10px );
     background: none;
+    border: none;
     &:after {
       content: '';
       background: url('../assets/search-icon_black.svg') center center no-repeat;

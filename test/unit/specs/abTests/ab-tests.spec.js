@@ -1,6 +1,8 @@
 import abTests from '@/abTests';
 // import { JOINED_AB_TEST_EXPERIMENT } from '@/store/mutation-types';
 
+process.env.API_URL = 'http://api.cc.org/v1/';
+
 describe('AB Tests', () => {
   let store = {};
 

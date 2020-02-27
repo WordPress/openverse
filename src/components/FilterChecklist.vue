@@ -8,7 +8,8 @@
       </button>
     </div>
 
-    <div v-for="(item, index) in options" :key="index" v-if="filtersVisible">
+    <template v-if="filtersVisible">
+    <div v-for="(item, index) in options" :key="index">
       <input type="checkbox"
              class="filter-checkbox"
              :id="item.code"
@@ -18,6 +19,7 @@
              @change="onValueChange" />
       <label class="filter-label" :for="item.code">{{ item.name }}</label>
     </div>
+    </template>
   </fieldset>
 </template>
 
