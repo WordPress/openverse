@@ -43,7 +43,9 @@ def _assign_work(db_conn, workers, target_index):
     # Wait for the workers to start.
     for worker in workers:
         worker_url = worker_url_template.format(worker)
-        _wait_for_healthcheck(worker_url + '/healthcheck')
+        succeeded = _wait_for_healthcheck(worker_url + '/healthcheck')
+        if not succeeded:
+            return False
     for idx, worker in enumerate(workers):
         worker_url = worker_url_template.format(worker)
         params = {
@@ -89,14 +91,14 @@ def _prepare_workers():
     return servers
 
 
-def _wait_for_healthcheck(endpoint, attempts=20, wait=5):
+def _wait_for_healthcheck(endpoint, attempts=60, wait=5):
     """
     Wait for the instance at `endpoint` to become healthy before assigning work.
 
     :param endpoint: The URL to test
     :param attempts: Number of attempts at reaching healthcheck
     :param wait: Amount of time to wait between each attempt
-    :return:
+    :return: True if the healthcheck succeeded
     """
     num_attempts = 0
     healthcheck_passed = False
@@ -113,5 +115,7 @@ def _wait_for_healthcheck(endpoint, attempts=20, wait=5):
         num_attempts += 1
     if num_attempts >= attempts or not healthcheck_passed:
         log.error(f'Timed out waiting for {endpoint}.')
+        return False
     else:
         log.info(f'{endpoint} passed healthcheck')
+        return True
