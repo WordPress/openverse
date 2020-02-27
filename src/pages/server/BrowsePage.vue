@@ -1,12 +1,12 @@
 <template>
   <div class="browse-page">
-    <div class="search grid-x flexible">
-      <div class="cell">
-        <header-section>
-          <search-grid-form showProvidersFilter="true" @onSearchFormSubmit="onSearchFormSubmit" />
-        </header-section>
+    <header-section />
+    <div class="search columns">
+      <div class="column is-narrow grid-sidebar" v-if="isFilterVisible">
+        <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit"/>
       </div>
-      <div :class="{ 'cell search-grid-ctr': true }">
+      <div class="column search-grid-ctr">
+        <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
       </div>
     </div>
 
@@ -37,11 +37,12 @@ export default BrowsePage;
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style lang="scss">
-  .search-grid {
-    margin: 30px 30px 60px 30px;
+  .search {
+    margin-top: 0;
   }
 
   .search-grid-ctr {
+    padding: 0;
     background: #e9ebee;
     min-height: 600px;
     margin: 0;
@@ -50,5 +51,16 @@ export default BrowsePage;
 
   .search-grid-ctr__filter-visible {
     margin-top: 30px;
+  }
+
+  .grid-sidebar {
+    padding-top: 0;
+    background: #fafafa;
+    width: 21.875rem;
+
+    /* 48em = 768px */
+    @media (max-width: 49em) {
+      width: 100%;
+    }
   }
 </style>
