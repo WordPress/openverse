@@ -152,7 +152,7 @@ class Image(SyncableDocType):
         If the license_url is not provided, we'll try to generate it elsewhere
         from the `license` and `license_version`.
         """
-        if 'license_url' in meta_data:
+        if meta_data and 'license_url' in meta_data:
             return meta_data['license_url']
         else:
             return None
