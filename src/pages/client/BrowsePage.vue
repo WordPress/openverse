@@ -51,8 +51,6 @@ export default BrowsePage;
     background: #e9ebee;
     min-height: 600px;
     margin: 0;
-    transition: margin .7s ease-in-out;
-    flex: 1 1 0px;
 
     /* 48em = 768px */
     @media (max-width: 49em) {
