@@ -43,7 +43,7 @@ def _assign_work(db_conn, workers, target_index):
     # Wait for the workers to start.
     for worker in workers:
         worker_url = worker_url_template.format(worker)
-        succeeded = _wait_for_healthcheck(worker_url + '/healthcheck')
+        succeeded = _wait_for_healthcheck(f'{worker_url}/healthcheck')
         if not succeeded:
             return False
     for idx, worker in enumerate(workers):
