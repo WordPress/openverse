@@ -2,7 +2,7 @@
 name: Image Provider API Integration Request
 about: Tell us about an API providing CC-licensed images
 title: "[API Integration] Provider name here"
-labels: enhancement, not ready for work, providers
+labels: enhancement, not ready for work, ticket work required, providers
 assignees: ''
 
 ---
@@ -20,6 +20,18 @@ assignees: ''
 <!-- Please provide any technical details that might be useful for -->
 <!-- implementation, e.g., rate limits, filtering options, overall volume, -->
 <!-- etc. -->
+
+## Checklist to complete before beginning development
+<!-- please do not modify this section -->
+
+No development should be done on a Provider API Script until the following info is gathered:
+
+- [ ] Verify there is a way to retrieve the entire relevant portion of the provider's collection in a systematic way via their API.
+- [ ] Verify the API provides license info (license type and version; license URL provides both, and is preferred)
+- [ ] Verify the API provides stable direct links to individual works.
+- [ ] Verify the API provides a stable landing page URL to individual works.
+- [ ] Note other info the API provides, such as thumbnails, dimensions, attribution info (required if non-CC0 licenses will be kept), title, description, other meta data, tags, etc.
+- [ ] Attach example responses to API queries that have the relevant info.
 
 ## General Recommendations for implementation
 <!-- modify this section if necessary -->
