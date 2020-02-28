@@ -5,7 +5,7 @@ import json
 import uuid
 import time
 from urllib.parse import urlparse
-from multiprocessing import Value
+from multiprocessing import Value, Process
 from ingestion_server.tasks import TaskTracker, Task, TaskTypes
 from ingestion_server.state import worker_finished, clear_state
 import ingestion_server.indexer as indexer
@@ -143,7 +143,9 @@ class WorkerFinishedResource:
                 'All indexer workers finished! Attempting to promote index '
                 f'{target_index}'
             )
-            indexer.TableIndexer.go_live(target_index, 'image')
+            f = indexer.TableIndexer.go_live
+            p = Process(target=f, args=(target_index, 'image'))
+            p.start()
 
 
 class StateResource:
