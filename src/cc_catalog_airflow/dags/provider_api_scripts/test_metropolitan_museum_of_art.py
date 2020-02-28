@@ -84,12 +84,24 @@ def test_get_response_json_returns_response_json_when_all_ok():
 
 def test_create_meta_data():
     exact_response = {
+        'accessionNumber': '36.100.45',
+        'classification': 'Paintings',
+        'creditLine': (
+            'The Howard Mansfield Collection, Purchase, Rogers Fund, 1936'
+            ),
+        'culture': 'Japan',
+        'objectDate': 'late 17th century',
+        'medium': 'Hanging scroll; ink and color on silk'
+    }
+    exact_meta_data = {
         'accession_number': '36.100.45',
         'classification': 'Paintings',
         'credit_line': (
             'The Howard Mansfield Collection, Purchase, Rogers Fund, 1936'
             ),
-        'culture': 'Japan'
+        'culture': 'Japan',
+        'date': 'late 17th century',
+        'medium': 'Hanging scroll; ink and color on silk'
     }
     r = requests.Response()
     r.status_code = 200
@@ -100,8 +112,9 @@ def test_create_meta_data():
         return_value=r
     ) as mock_get:
         response = mma._get_response_json(None, '', retries=2)
+        meta_data = mma._create_meta_data(response)
 
-    assert response == exact_response
+    assert exact_meta_data == meta_data
 
 
 def test_process_image_data_handles_example_dict():
@@ -125,7 +138,7 @@ def test_process_image_data_handles_example_dict():
         thumbnail_url=(
             "https://images.metmuseum.org/CRDImages/as/web-large/DP251139.jpg"
             ),
-        license="cc0",
+        license_="cc0",
         license_version="1.0",
         foreign_identifier=45734,
         creator="Kiyohara Yukinobu",

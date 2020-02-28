@@ -15,7 +15,6 @@ import os
 import common.requester as requester
 import common.storage.image as image
 import logging
-from datetime import datetime, timedelta
 
 
 DELAY = 1.0  # time delay (in seconds)
@@ -134,30 +133,18 @@ def _get_data_for_each_image(object_id):
         return None
 
     message = object_json.get('message')
-    if message:
-        logger.warning(f'{message} : {object_id}')
-        return None
 
     isCC0 = object_json.get('isPublicDomain')
     if isCC0 is None or isCC0 is False:
         logger.warning('CC0 license not detected')
         return None
 
-    foreign_url = object_json.get('objectURL')
-    if foreign_url is None:
-        logger.warning(f'No landing page detected for: {object_id}')
-        return None
-
-    image_info = object_json.get('primaryImage')
-    if image_info is None:
-        logger.warning(f'No image found for {object_id}')
-        return None
-
     title = object_json.get('title')
     creator_name = object_json.get('artistDisplayName')
     foreign_id = object_id
     meta_data = _create_meta_data(object_json)
-    image_url = image_info
+    image_url = object_json.get('primaryImage')
+    foreign_url = object_json.get('objectWikidata_URL')
 
     thumbnail = ''
     if '/original/' in image_url:
@@ -167,7 +154,7 @@ def _get_data_for_each_image(object_id):
 
     if other_images is not None and len(other_images) > 1:
         extra_image_index = 1
-        meta_data['set'] = foreign_url
+        meta_data['foreign_url'] = foreign_url
 
     image_data = {
         'foreign_landing_url': foreign_url,
@@ -182,9 +169,9 @@ def _get_data_for_each_image(object_id):
     _process_image_data(image_data)
 
     if other_images is not None and len(other_images) > 1:
-        for image in other_images:
+        for other_image in other_images:
             foreign_id = '{}-{}'.format(object_id, extra_image_index)
-            image_url = image
+            image_url = other_image
             thumbnail = ''
 
             if image_url:
@@ -209,17 +196,15 @@ def _process_image_data(image_data):
     logger.debug(f'Processing object ID: {foreign_id}')
 
     image_store.add_item(
-        foreign_landing_url=image_data.get(
-            'foreign_landing_url'
-        ),  # foreign url of image
-        image_url=image_data.get('image_url'),  # image url
-        thumbnail_url=image_data.get('thumbnail_url'),  # thubnail url
-        license='cc0',  # license
-        license_version='1.0',  # license verion
-        foreign_identifier=foreign_id,  # foreign identifier
-        creator=image_data.get('creator'),  # creator name
-        title=image_data.get('title'),  # title
-        meta_data=image_data.get('meta_data'),  # meta data
+        foreign_landing_url=image_data.get('foreign_landing_url'),
+        image_url=image_data.get('image_url'),
+        thumbnail_url=image_data.get('thumbnail_url'),
+        license_='cc0',
+        license_version='1.0',
+        foreign_identifier=foreign_id,
+        creator=image_data.get('creator'),
+        title=image_data.get('title'),
+        meta_data=image_data.get('meta_data'),
     )
 
 
@@ -232,6 +217,7 @@ def _create_meta_data(object_json):
     meta_data['date'] = object_json.get('objectDate', None)
     meta_data['medium'] = object_json.get('medium', None)
     meta_data['credit_line'] = object_json.get('creditLine', None)
+    meta_data['foreign_url'] = object_json.get('primaryImage', None)
 
     return meta_data
 
