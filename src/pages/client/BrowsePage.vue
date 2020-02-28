@@ -41,7 +41,6 @@ export default BrowsePage;
 </script>
 
 <style lang="scss" scoped>
-
   .search {
     margin-top: 0;
   }
