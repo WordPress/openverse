@@ -38,10 +38,10 @@ class HealthCheck(APIView):
 
 class AboutImageResponse(serializers.Serializer):
     """ The full image search response. """
-    provider_name = serializers.CharField()
+    source_name = serializers.CharField()
     image_count = serializers.IntegerField()
     display_name = serializers.CharField()
-    provider_url = serializers.CharField()
+    source_url = serializers.CharField()
 
 
 class ImageStats(APIView):
@@ -69,10 +69,10 @@ class ImageStats(APIView):
                 if not _filter:
                     response.append(
                         {
-                            'provider_name': provider,
+                            'source_name': provider,
                             'image_count': providers[provider],
                             'display_name': display_name,
-                            'provider_url': provider_url
+                            'source_url': provider_url
                         }
                     )
             else:
