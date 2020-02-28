@@ -2,9 +2,10 @@
   <fieldset>
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
-  <button class="filter-dropdown-visibility-button">
-    <!-- eslint-disable-next-line -->
-      <img src="@/assets/arrow.svg" v-bind:class="{rotImg:filtersVisible}" alt="toggle filters visibility"/>
+      <button class="filter-dropdown-visibility-button">
+        <img src="@/assets/arrow.svg"
+          v-bind:class="{rotImg:filtersVisible}"
+          alt="toggle filters visibility"/>
       </button>
     </div>
     <template v-if="filtersVisible">
