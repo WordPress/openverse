@@ -1,5 +1,5 @@
 <template>
-  <div class="card provider-card cell small">
+  <div class="column is-2 card provider-card">
     <div class="card-divider">
       <span class="provider-name">{{ provider.display_name }}</span>
     </div>
@@ -42,7 +42,6 @@ export default {
 
 <style lang="scss" scoped>
   .provider-card {
-    width: 18em;
     background-color: #dedede;
     margin: 0.5em;
   }

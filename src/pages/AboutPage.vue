@@ -1,5 +1,5 @@
 <template>
-<div class="page grid-container full">
+<div class="page">
   <header-section showNavSearch="true"></header-section>
   <div class="page_body">
     <h1>About CC Search</h1>
