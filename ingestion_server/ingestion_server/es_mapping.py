@@ -7,6 +7,13 @@ def create_mapping(table_name):
     """
     mapping = {
         'image': {
+            "settings": {
+                "index": {
+                    "number_of_shards": 12,
+                    "number_of_replicas": 0,
+                    "refresh_interval": "-1"
+                }
+            },
             "mappings": {
                 "properties": {
                     "license_version": {

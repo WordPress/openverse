@@ -64,11 +64,13 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
 def _launch_reindex(table, target_index, query, indexer, notify_url):
     try:
         indexer.replicate(table, target_index, query)
-    finally:
-        log.info(f'Notifying {notify_url}')
-        requests.post(notify_url)
-        _self_destruct()
-        return
+    except Exception:
+        log.error("Indexing error occurred: ", exc_info=True)
+
+    log.info(f'Notifying {notify_url}')
+    requests.post(notify_url)
+    _self_destruct()
+    return
 
 
 def _self_destruct():

@@ -312,6 +312,22 @@ class TableIndexer:
         """
         es = elasticsearch_connect()
         indices = set(es.indices.get('*'))
+        # Re-enable replicas and refresh.
+        es.indices.refresh(index=write_index)
+        es.indices.put_settings(
+            index=write_index,
+            body={
+                "index": {
+                    "number_of_replicas": 1
+                }
+            }
+        )
+        log.info('Waiting for replica shards. . .')
+        es.cluster.health(
+            index=write_index,
+            wait_for_no_initializing_shards=True,
+            timeout="2h"
+        )
         # If the index exists already and it's not an alias, delete it.
         if live_alias in indices:
             log.warning('Live index already exists. Deleting and realiasing.')
