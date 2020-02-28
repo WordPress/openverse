@@ -2,26 +2,14 @@ import stringToBoolean from '@/utils/stringToBoolean';
 
 describe('stringToBoolean', () => {
   it('returns true', () => {
-    let flag = 'true';
-    let result = stringToBoolean(flag);
-    expect(result).toBe(true);
-    flag = 'yes';
-    result = stringToBoolean(flag);
-    expect(result).toBe(true);
-    flag = '1';
-    result = stringToBoolean(flag);
-    expect(result).toBe(true);
+    expect(stringToBoolean('true')).toBe(true);
+    expect(stringToBoolean('yes')).toBe(true);
+    expect(stringToBoolean('1')).toBe(true);
   });
 
   it('returns false', () => {
-    let flag = 'false';
-    let result = stringToBoolean(flag);
-    expect(result).toBe(false);
-    flag = 'no';
-    result = stringToBoolean(flag);
-    expect(result).toBe(false);
-    flag = '0';
-    result = stringToBoolean(flag);
-    expect(result).toBe(false);
+    expect(stringToBoolean('false')).toBe(false);
+    expect(stringToBoolean('no')).toBe(false);
+    expect(stringToBoolean('0')).toBe(false);
   });
 });
