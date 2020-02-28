@@ -91,7 +91,7 @@ def test_create_meta_data():
             ),
         'culture': 'Japan',
         'objectDate': 'late 17th century',
-        'medium': 'Hanging scroll; ink and color on silk'
+        'medium': 'Hanging scroll; ink and color on silk',
     }
     exact_meta_data = {
         'accession_number': '36.100.45',
@@ -101,7 +101,7 @@ def test_create_meta_data():
             ),
         'culture': 'Japan',
         'date': 'late 17th century',
-        'medium': 'Hanging scroll; ink and color on silk'
+        'medium': 'Hanging scroll; ink and color on silk',
     }
     r = requests.Response()
     r.status_code = 200

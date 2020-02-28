@@ -119,7 +119,7 @@ def _extract_the_data(object_ids):
         _get_data_for_each_image(i)
 
 
-def _get_data_for_each_image(object_id):
+def _get_data_for_image(object_id):
 
     endpoint = (
         'https://collectionapi.metmuseum.org/public/collection/v1/objects/{}'
@@ -144,7 +144,7 @@ def _get_data_for_each_image(object_id):
     foreign_id = object_id
     meta_data = _create_meta_data(object_json)
     image_url = object_json.get('primaryImage')
-    foreign_url = object_json.get('objectWikidata_URL')
+    foreign_url = object_json.get('objectURL')
 
     thumbnail = ''
     if '/original/' in image_url:
@@ -154,7 +154,6 @@ def _get_data_for_each_image(object_id):
 
     if other_images is not None and len(other_images) > 1:
         extra_image_index = 1
-        meta_data['foreign_url'] = foreign_url
 
     image_data = {
         'foreign_landing_url': foreign_url,
@@ -217,7 +216,6 @@ def _create_meta_data(object_json):
     meta_data['date'] = object_json.get('objectDate', None)
     meta_data['medium'] = object_json.get('medium', None)
     meta_data['credit_line'] = object_json.get('creditLine', None)
-    meta_data['foreign_url'] = object_json.get('primaryImage', None)
 
     return meta_data
 
