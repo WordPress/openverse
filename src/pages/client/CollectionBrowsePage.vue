@@ -44,7 +44,7 @@ export default CollectionBrowsePage;
 
 <style lang="scss" scoped>
   .search {
-    margin-top: 0;
+    margin: 0;
   }
 
   .search-grid-ctr {

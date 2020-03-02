@@ -10,7 +10,7 @@
         <search-grid v-if="query.q"
                      :query="query"
                      searchTerm=""
-                     @onLoadMoreImages="onLoadMoreImages"></search-grid>
+                     @onLoadMoreImages="onLoadMoreImages" />
       </div>
     </div>
 
@@ -42,14 +42,13 @@ export default BrowsePage;
 
 <style lang="scss" scoped>
   .search {
-    margin-top: 0;
+    margin: 0;
   }
 
   .search-grid-ctr {
     padding: 0;
     background: #e9ebee;
     min-height: 600px;
-    margin: 0;
 
     /* 48em = 768px */
     @media (max-width: 49em) {

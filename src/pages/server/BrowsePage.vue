@@ -40,7 +40,7 @@ export default BrowsePage;
 
 <style lang="scss">
   .search {
-    margin-top: 0;
+    margin: 0;
   }
 
   .search-grid-ctr {
