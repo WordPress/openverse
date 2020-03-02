@@ -1,6 +1,6 @@
 <template>
-  <div class="column is-2 card provider-card">
-    <div class="card-divider">
+  <div class="column is-2 provider-card">
+    <div>
       <span class="provider-name">{{ provider.display_name }}</span>
     </div>
     <div class="provider-logo">
@@ -9,7 +9,7 @@
             :src="getProviderLogo(provider.source_name)">
       </a>
     </div>
-    <div class="card-section">
+    <div>
       <span>Collection size: {{ getProviderImageCount(provider.image_count) }} images</span>
     </div>
   </div>
@@ -41,9 +41,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "@creativecommons/vocabulary/scss/colors.scss";
   .provider-card {
-    background-color: #dedede;
     margin: 0.5em;
+    border: 1px solid $color-light-gray;
   }
 
   .provider-name {
