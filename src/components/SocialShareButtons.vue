@@ -49,8 +49,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  @import '../../node_modules/foundation-sites/scss/foundation';
-
   $social-button-size: 3.125rem;
   $social-button-border-width: 0.125rem;
   $social-button-font-size: 1.5625rem;
@@ -98,7 +96,6 @@ export default {
       padding: 0;
       text-decoration: none;
       text-align: center;
-      color: $white;
       font-size: $social-button-font-size;
       font-weight: normal;
       line-height: $social-button-line-height;
