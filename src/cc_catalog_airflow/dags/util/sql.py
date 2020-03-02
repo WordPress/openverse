@@ -131,3 +131,8 @@ def upsert_records_to_image_table(
 def delete_load_table_data(postgres_conn_id, load_table=LOAD_TABLE_NAME):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(f'DELETE FROM {load_table};')
+
+
+def drop_load_table(postgres_conn_id, load_table=LOAD_TABLE_NAME):
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    postgres.run(f'DROP TABLE {load_table};')

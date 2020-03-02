@@ -17,7 +17,9 @@ logger = logging.getLogger(__name__)
 
 DAG_ID = 'tsv_to_postgres_loader'
 DB_CONN_ID = 'postgres_openledger_upstream'
-FILE_CHANGE_WAIT = 15
+FILE_CHANGE_WAIT = 1
+
+LOAD_TABLE_NAME_STUB = 'provider_image_data'
 
 OUTPUT_DIR_PATH = os.path.realpath(os.environ['OUTPUT_DIR'])
 FAILURE_SUB_DIRECTORY = 'db_loader_failures'
@@ -69,6 +71,7 @@ def get_file_staging_operator(dag):
     return ShortCircuitOperator(
         task_id='stage_oldest_tsv_file',
         python_callable=_stage_oldest_tsv_file,
+        op_kwargs={'staging_directory': _get_staging_directory_template()},
         dag=dag
     )
 
@@ -78,6 +81,7 @@ def get_table_creator_operator(dag):
         task_id='create_table',
         python_callable=sql.create_if_not_exists_loading_table,
         op_args=[DB_CONN_ID],
+        op_kwargs={'load_table': _get_load_table_name_template()},
         dag=dag
     )
 
@@ -86,6 +90,10 @@ def get_loader_operator(dag):
     return PythonOperator(
         task_id='load_data',
         python_callable=_load_data,
+        op_kwargs={
+            'staging_directory': _get_staging_directory_template(),
+            'load_table': _get_load_table_name_template()
+        },
         dag=dag
     )
 
@@ -94,6 +102,10 @@ def get_file_deletion_operator(dag):
     return PythonOperator(
         task_id='delete_file',
         python_callable=_delete_old_records_and_file,
+        op_kwargs={
+            'staging_directory': _get_staging_directory_template(),
+            'load_table': _get_load_table_name_template()
+        },
         trigger_rule=TriggerRule.ALL_SUCCESS,
         dag=dag,
     )
@@ -108,6 +120,18 @@ def get_failure_moving_operator(dag):
     )
 
 
+def _get_load_table_name_template(load_table_name_stub=LOAD_TABLE_NAME_STUB):
+    return load_table_name_stub + '{{ ts_nodash }}'
+
+
+def _get_staging_directory_template(staging_dir_path=STAGING_DIR_PATH):
+    return os.path.join(staging_dir_path, '{{ ts_nodash }}')
+
+
+def _get_failure_directory_template(failure_dir_path=FAILURE_DIR_PATH):
+    return os.path.join(failure_dir_path, '{{ ts_nodash }}')
+
+
 def _stage_oldest_tsv_file(staging_directory=STAGING_DIR_PATH):
     tsv_file_name = _get_oldest_file()
     tsv_found = tsv_file_name is not None
@@ -118,19 +142,30 @@ def _stage_oldest_tsv_file(staging_directory=STAGING_DIR_PATH):
 
 def _load_data(
         staging_directory=STAGING_DIR_PATH,
-        postgres_conn_id=DB_CONN_ID
+        postgres_conn_id=DB_CONN_ID,
+        load_table=LOAD_TABLE_NAME_STUB
 ):
-    tsv_file_name = _get_staged_file()
-    sql.import_data_to_intermediate_table(postgres_conn_id, tsv_file_name)
-    sql.upsert_records_to_image_table(postgres_conn_id)
+    tsv_file_name = _get_staged_file(staging_directory=staging_directory)
+    sql.import_data_to_intermediate_table(
+        postgres_conn_id,
+        tsv_file_name,
+        load_table=load_table
+    )
+    sql.upsert_records_to_image_table(postgres_conn_id, load_table=load_table)
 
 
-def _delete_old_records_and_file(postgres_conn_id=DB_CONN_ID):
-    sql.delete_load_table_data(postgres_conn_id)
+def _delete_old_records_and_file(
+        staging_directory=STAGING_DIR_PATH,
+        postgres_conn_id=DB_CONN_ID,
+        load_table=LOAD_TABLE_NAME_STUB
+):
+    sql.drop_load_table(postgres_conn_id, load_table=load_table)
 
-    tsv_file_name = _get_staged_file()
+    tsv_file_name = _get_staged_file(staging_directory=staging_directory)
     logger.info(f'Deleting {tsv_file_name}')
     os.remove(tsv_file_name)
+    logger.info(f'Deleting {staging_directory}')
+    os.rmdir(staging_directory)
 
 
 def _get_oldest_file(
