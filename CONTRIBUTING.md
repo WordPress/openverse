@@ -28,7 +28,7 @@ If you'd like to build a new feature but don't have a specific idea, please chec
 
 ### Pull requests
 
-Before you start writing code, make sure there is an issue open. Pull requests without a link to an existing issue won't be merged.
+Before you start writing code, make sure there is an issue open. Pull requests without a link to an existing issue won't be merged. All pull requests _must_ target the `develop` branch of the repository.
 
 If you want to get started contributing code to this project but don't know exactly what to work on, we compiled a good list of issues labeled as [Good first issues](https://github.com/creativecommons/cccatalog-frontend/labels/good%20first%20issue) which are small in scope and not so complex to solve. There is also issues labeld as [Help wanted](https://github.com/creativecommons/cccatalog-frontend/labels/help%20wanted) which can be a bit more complex but are good examples of thigns we are currently accepting help from the community.
 
