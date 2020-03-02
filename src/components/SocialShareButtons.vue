@@ -1,6 +1,6 @@
 <template>
   <div class="social-share">
-    <div class="share-list_social-items cell medium-6 large-4">
+    <div class="share-list_social-items">
       <a
         class="social-button facebook"
         target="_blank"
