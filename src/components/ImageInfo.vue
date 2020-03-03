@@ -34,8 +34,9 @@
               target="blank"
               rel="noopener noreferrer">
             <img class="provider-logo"
-                :alt="image.provider"
-                :src="getProviderLogo(image.provider_code)" />
+                :alt="image.source"
+                :title="image.source"
+                :src="getProviderLogo(image.source)" />
           </a>
       </div>
       </li>

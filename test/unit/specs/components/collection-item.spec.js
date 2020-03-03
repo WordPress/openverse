@@ -4,7 +4,7 @@ import render from '../../test-utils/render';
 describe('CollectionItem', () => {
   const provider = {
     display_name: 'Met',
-    provider_name: 'met',
+    source_name: 'met',
     image_count: 10000,
   };
   it('should render correct contents', () => {
@@ -31,7 +31,7 @@ describe('CollectionItem', () => {
         provider,
       },
     });
-    expect(wrapper.vm.getProviderLogo(provider.provider_name)).not.toBe('');
+    expect(wrapper.vm.getProviderLogo(provider.source_name)).not.toBe('');
   });
 
   it('should not get unkown logo', () => {
