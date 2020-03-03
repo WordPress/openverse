@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 DAG_ID = 'tsv_to_postgres_loader'
 DB_CONN_ID = 'postgres_openledger_upstream'
-FILE_CHANGE_WAIT = 1
+FILE_CHANGE_WAIT = 15
 
 LOAD_TABLE_NAME_STUB = 'provider_image_data'
 
@@ -41,8 +41,8 @@ def create_dag(args=DAG_DEFAULT_ARGS, dag_id=DAG_ID):
     dag = DAG(
         dag_id=dag_id,
         default_args=args,
-        concurrency=1,
-        max_active_runs=1,
+        concurrency=5,
+        max_active_runs=5,
         schedule_interval='* * * * *',
         catchup=False
     )
@@ -115,6 +115,10 @@ def get_failure_moving_operator(dag):
     return PythonOperator(
         task_id='move_failures',
         python_callable=_move_staged_files_to_failure_directory,
+        op_kwargs={
+            'staging_directory': _get_staging_directory_template(),
+            'failure_directory': _get_failure_directory_template()
+        },
         trigger_rule=TriggerRule.ONE_FAILED,
         dag=dag
     )
@@ -214,15 +218,12 @@ def _move_staged_files_to_failure_directory(
     staged_file_list = _get_full_tsv_paths(staging_directory)
     for file_path in staged_file_list:
         _move_file(file_path, failure_directory)
-
-
-def _create_directory_if_not_exists(directory):
-    if not os.path.exists(directory):
-        os.mkdir(directory)
+    logger.info(f'Deleting {staging_directory}')
+    os.rmdir(staging_directory)
 
 
 def _move_file(file_path, new_directory):
-    _create_directory_if_not_exists(new_directory)
+    os.makedirs(new_directory, exist_ok=True)
     new_file_path = os.path.join(new_directory, os.path.basename(file_path))
     logger.info(f'Moving {file_path} to {new_file_path}')
     os.rename(file_path, new_file_path)
