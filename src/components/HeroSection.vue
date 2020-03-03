@@ -8,7 +8,6 @@
           v-on:submit.prevent="onSubmit">
       <div class="is-hidden-touch">
         <input required="required"
-                autofocus="true"
                 class="hero_search-input input is-large"
                 type="search"
                 name="q"
@@ -20,7 +19,6 @@
       </div>
       <div class="is-hidden-desktop">
         <input required="required"
-                autofocus="true"
                 class="hero_search-input input"
                 type="search"
                 name="q"
