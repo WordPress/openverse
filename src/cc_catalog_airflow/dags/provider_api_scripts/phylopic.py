@@ -12,7 +12,6 @@ Notes:                  http://phylopic.org/api/
 
 
 import argparse
-from datetime import datetime, timedelta
 import logging
 
 import common.requester as requester
@@ -26,11 +25,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-DELAY = 1
+DELAY = 5.0
 HOST = 'phylopic.org'
 ENDPOINT = f'http://{HOST}/api/a'
 PROVIDER = 'phylopic'
-LIMIT = 100
+LIMIT = 5
 
 
 delayed_requester = requester.DelayedRequester(DELAY)
@@ -80,9 +79,9 @@ def _add_data_to_buffer(**args):
     endpoint = _create_endpoint_for_IDs(**args)
     IDs = _get_image_IDs(endpoint)
 
-    for id in IDs:
-        if id is not None:
-            details = _get_meta_data(id)
+    for id_ in IDs:
+        if id_ is not None:
+            details = _get_meta_data(id_)
 
             if details is not None:
                 image_store.add_item(foreign_landing_url=details[1],
@@ -104,9 +103,9 @@ def _get_total_images():
     result = _get_response_json(endpoint=endpoint, retries=2)
 
     if result and result.get('success') is True:
-        total = result.get('result')
+        total = result.get('result', 0)
 
-    return total if (total is not None) else 0
+    return total
 
 
 def _create_endpoint_for_IDs(**args):
@@ -115,7 +114,7 @@ def _create_endpoint_for_IDs(**args):
     endpoint = ''
 
     if args.get('date'):
-        # Get a list of recently updated/uploaded objects.
+        # Get a list of objects uploaded/updated on a given date.
         date = args['date']
         endpoint = 'http://phylopic.org/api/a/image/list/modified/{}'.format(
                   date)
@@ -291,26 +290,15 @@ def _get_response_json(
 
 
 if __name__ == '__main__':
-    date = ''
+    date = 'all'
 
     parser = argparse.ArgumentParser(description='PhyloPic API Job',
                                      add_help=True)
-    parser.add_argument('--mode', choices=['default', 'all'],
-                        help='Identify all images from the previous day'
-                             ' [default]'
-                             ' or process the entire collection [all].')
     parser.add_argument('--date', default=False, help='Identify all images'
                         ' from a particular date (YYYY-MM-DD).')
     args = parser.parse_args()
 
-    if str(args.mode) == 'all':
-        date = 'all'
-
-    elif args.date is not False:
+    if args.date is not False:
         date = str(args.date)
-
-    else:
-        date = str(
-            datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d'))
 
     main(date)

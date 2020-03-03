@@ -47,7 +47,7 @@ def test_create_endpoint_for_IDs_by_date():
 
 def test_create_endpoint_for_IDs_all():
     actual_endpoint = pp._create_endpoint_for_IDs(**{'offset': 0})
-    expect_endpoint = 'http://phylopic.org/api/a/image/list/0/100'
+    expect_endpoint = 'http://phylopic.org/api/a/image/list/0/5'
     assert actual_endpoint == expect_endpoint
 
 
