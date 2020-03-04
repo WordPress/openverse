@@ -5,7 +5,7 @@
         class="social-button facebook"
         target="_blank"
         @click="onSocialMediaLinkClick('Facebook')"
-        :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}&t==${shareText}&href=${shareURL}`">
+        :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}&description=${shareText}&href=${shareURL}`">
       </a>
       <a
         class="social-button twitter"
