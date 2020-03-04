@@ -160,6 +160,23 @@ def test_get_image_info_with_no_img_url():
         assert actual_img_info == expect_img_info
 
 
+def test_create_args():
+    id_ = 'e6014244-4dd5-4785-bf2e-c67dc4d05ca8'
+    d = ['http://phylopic.org/assets/images/submissions/e6014244-4dd5-4785-bf2e-c67dc4d05ca8.1024.png', 'http://phylopic.org/image/e6014244-4dd5-4785-bf2e-c67dc4d05ca8',
+         'http://phylopic.org/assets/images/submissions/e6014244-4dd5-4785-bf2e-c67dc4d05ca8.1024.png', 'http://phylopic.org/assets/images/submissions/e6014244-4dd5-4785-bf2e-c67dc4d05ca8.256.png', '1024', '1024', 'http://creativecommons.org/publicdomain/zero/1.0/', 'Jonathan Wells', 'Apicomplexa',
+         {'taxa': ['Apicomplexa', 'Plasmodiidae Mesnil 1903', 'Sporozoa', 'Plasmodium Marchiafava & Celli 1885', 'Plasmodium falciparum', 'Plasmodium (Laverania)', 'Haemospororida Danilewsky', 'Aconoidasida Mehlhorn, Peters & Haberkorn 1980'], 'credit_line': 'Jonathan Wells', 'pub_date': '2020-02-26 13:07:08'}
+         ]
+    actual_args = pp._create_args(d, id_)
+    expect_args = {'foreign_landing_url': 'http://phylopic.org/image/e6014244-4dd5-4785-bf2e-c67dc4d05ca8', 'image_url': 'http://phylopic.org/assets/images/submissions/e6014244-4dd5-4785-bf2e-c67dc4d05ca8.1024.png',
+                   'thumbnail_url': 'http://phylopic.org/assets/images/submissions/e6014244-4dd5-4785-bf2e-c67dc4d05ca8.256.png', 'license_url': 'http://creativecommons.org/publicdomain/zero/1.0/',
+                   'width': '1024', 'height': '1024', 'creator': 'Jonathan Wells', 'title': 'Apicomplexa',
+                   'meta_data': {'taxa': ['Apicomplexa', 'Plasmodiidae Mesnil 1903', 'Sporozoa', 'Plasmodium Marchiafava & Celli 1885', 'Plasmodium falciparum', 'Plasmodium (Laverania)', 'Haemospororida Danilewsky', 'Aconoidasida Mehlhorn, Peters & Haberkorn 1980'], 'credit_line': 'Jonathan Wells', 'pub_date': '2020-02-26 13:07:08'},
+                   'foreign_identifier': 'e6014244-4dd5-4785-bf2e-c67dc4d05ca8'
+                   }
+    assert actual_args == expect_args
+    assert len(actual_args) == 10
+
+
 def test_get_response_json_retries_with_none_response():
     with patch.object(
             pp.delayed_requester,

@@ -36,7 +36,7 @@ delayed_requester = requester.DelayedRequester(DELAY)
 image_store = image.ImageStore(provider=PROVIDER)
 
 
-def main(date):
+def main(date='all'):
     """
     This script pulls the data for a given date from the PhyloPic
     API, and writes it into a .TSV file to be eventually read
@@ -82,18 +82,24 @@ def _add_data_to_buffer(**args):
     for id_ in IDs:
         if id_ is not None:
             details = _get_meta_data(id_)
-
             if details is not None:
-                image_store.add_item(foreign_landing_url=details[1],
-                                     image_url=details[2],
-                                     thumbnail_url=details[3],
-                                     license_url=details[6],
-                                     width=details[4],
-                                     height=details[5],
-                                     creator=details[7],
-                                     title=details[8],
-                                     meta_data=details[9],
-                                     )
+                args = _create_args(details, id_)
+                image_store.add_item(**args)
+
+
+def _create_args(details, id_):
+    args = {'foreign_landing_url': details[1],
+            'image_url': details[2],
+            'thumbnail_url': details[3],
+            'license_url': details[6],
+            'width': details[4],
+            'height': details[5],
+            'creator': details[7],
+            'title': details[8],
+            'meta_data': details[9],
+            'foreign_identifier': id_
+            }
+    return args
 
 
 def _get_total_images():
@@ -290,15 +296,11 @@ def _get_response_json(
 
 
 if __name__ == '__main__':
-    date = 'all'
-
     parser = argparse.ArgumentParser(description='PhyloPic API Job',
                                      add_help=True)
-    parser.add_argument('--date', default=False, help='Identify all images'
+    parser.add_argument('--date', default='all', help='Identify all images'
                         ' from a particular date (YYYY-MM-DD).')
-    args = parser.parse_args()
 
-    if args.date is not False:
-        date = str(args.date)
+    date = parser.parse_args().date
 
     main(date)
