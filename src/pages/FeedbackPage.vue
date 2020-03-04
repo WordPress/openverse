@@ -9,32 +9,35 @@
         <a href="https://creativecommons.slack.com/messages/CCS9CF2JE/details/">#cc-usability</a> channel on
         <a href="https://wiki.creativecommons.org/wiki/Slack#How_to_join_Slack">CC Slack</a>.
       </p>
-      <p>
-        To report a bug, <a href="#report">click here</a>.
-      </p>
-
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
-              width="100%"
-              height="998"
-              frameborder="0"
-              marginheight="0"
-              marginwidth="0"
-              title="feedback form">
-              Loading...
-      </iframe>
-
-      <div>
-        <h2><a id="report"></a>Report a bug</h2>
-        <p>
-          If you would like to report a bug you are encountering when using the tool, please email
-          <a href="mailto:support-search@creativecommons.org">
-            support-search@creativecommons.org
-          </a>
-          or
-          <a href="https://github.com/creativecommons/cccatalog-frontend/issues">
-            log the issue directly at Github
-          </a>.
-        </p>
+      <div class="tabs" id="tabs">
+        <div class="tabs-triggers">
+          <div :class="[index === activeTab ? 'tabs-trigger--active' : '']"
+               @click="activateTab(index)" class="tabs-trigger"
+               v-for="(item, index) in categories" :key="index">{{categories[index]}}
+          </div>
+        </div>
+        <div class="tabs-content" v-show="activeTab === 0">
+          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
+                  width="100%"
+                  height="998"
+                  frameborder="0"
+                  marginheight="0"
+                  marginwidth="0"
+                  title="feedback form">
+            Loading...
+          </iframe>
+        </div>
+        <div class="tabs-content" v-show="activeTab === 1">
+          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeSN1AIG8LrdgIdKpBj4IlPDhu6T5ndZ7z_QcISBu-ITCU0Yw/viewform?embedded=true"
+                  width="100%"
+                  height="998"
+                  frameborder="0"
+                  marginheight="0"
+                  marginwidth="0"
+                  title="feedback form">
+            Loading...
+          </iframe>
+        </div>
       </div>
     </div>
     <footer-section></footer-section>
@@ -51,6 +54,20 @@ export default {
     HeaderSection,
     FooterSection,
   },
+  data() {
+    return {
+      activeTab: 0,
+      categories: [
+        'Help us Improve',
+        'Report a Bug',
+      ],
+    };
+  },
+  methods: {
+    activateTab(index) {
+      this.activeTab = index;
+    },
+  },
   computed: {
     isReportingBug() {
       return this.$store.state.isReportingBug;
@@ -66,7 +83,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  h1, h2 {
+  h1{
     margin-bottom: .44117647em;
     font-size: 2.125em;
     font-weight: normal;
@@ -77,5 +94,40 @@ export default {
 
   .feedback-page {
     margin: 45px !important;
+  }
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+    outline: none;
+  }
+
+  .tabs {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    text-align: center;
+    margin-top: 2rem;
+    &-triggers {
+      display: flex;
+    }
+    &-trigger {
+      flex: 1 0 auto;
+      margin: 0;
+      padding: 1rem;
+      background-color: #eee;
+      font-weight: bold;
+      transition: 100ms linear all;
+      cursor: pointer;
+      &--active {
+        background-color: #fff;
+        color: #333;
+      }
+    }
+    &-content {
+      padding: 1rem;
+    }
   }
 </style>
