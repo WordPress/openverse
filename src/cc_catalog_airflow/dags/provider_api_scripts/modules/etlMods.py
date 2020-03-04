@@ -177,7 +177,7 @@ def getLicense(_domain, _path, _url):
         logging.warning('The license for the following work -> {} is not issued by Creative Commons.'.format(_url))
         return [None, None]
 
-    pattern   = re.compile('/(licenses|publicdomain)/([a-z\-?]+)/(\d\.\d)/?(.*?)')
+    pattern   = re.compile(r'/(licenses|publicdomain)/([a-z\-?]+)/(\d\.\d)/?(.*?)')
     if pattern.match(_path.lower()):
         result  = re.search(pattern, _path.lower())
         license = result.group(2).lower().strip()
