@@ -313,8 +313,8 @@ def test_process_image_data_handles_example_dict():
         creator='PtrQs',
         creator_url='https://commons.wikimedia.org/wiki/User:PtrQs',
         title='File:20120925 PlozevetBretagne LoneTree DSC07971 PtrQs.jpg',
-        meta_data={'description': 'SONY DSC', 'global_usage_count': 0, 'date_uploaded': '2019-09-01 00:38:47',
-                   'date_taken': '2012-09-25 16:23:02'}
+        meta_data={'description': 'SONY DSC', 'global_usage_count': 0, 'last_modified_at_source': '2019-09-01 00:38:47',
+                   'date_originally_created': '2012-09-25 16:23:02'}
     )
 
 
