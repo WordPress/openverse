@@ -1,4 +1,9 @@
-import ApiService from './ApiService';
+import { createApiService } from './ApiService';
+
+const baseUrl = process.env.API_URL;
+// Analytics API is available at `http://api.creativecommons.engineering/analytics/`
+// and not `http://api-dev.creativecommons.engineering/v1/analytics
+const ApiService = createApiService(baseUrl.replace('/v1', ''));
 
 const UsageDataService = {
   post(endpoint, params) {

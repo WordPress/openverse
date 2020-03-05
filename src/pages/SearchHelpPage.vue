@@ -28,7 +28,7 @@
     <h2>Search by license</h2>
     <p>
       Put <em>license:</em> in front of your search term to see only results
-      from the specified source. For example,
+      with the specified license. For example,
       <a href='https://search.creativecommons.org/search?q=license%3A%20"by"'>
         <em>license:"by"</em>
       </a>
@@ -62,8 +62,8 @@
               :key="index">
             <td>{{ imageProvider.display_name }}</td>
             <td>
-              <a :href="providerSearchLink(imageProvider.provider_name)">
-                {{ imageProvider.provider_name }}
+              <a :href="providerSearchLink(imageProvider.source_name)">
+                {{ imageProvider.source_name }}
               </a>
             </td>
           </tr>

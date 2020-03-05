@@ -3,12 +3,12 @@
         method="post"
         @submit.prevent="onSubmit"
         class="search-form">
-    <div class="search-form_ctr grid-x global-nav show-for-smedium">
-        <div class="search-form_inner-ctr cell medium-12 large-10">
+    <div class="search-form_ctr">
+        <div class="search-form_inner-ctr">
           <input :placeholder="searchBoxPlaceholder"
                  required="required"
                  autofocus="true"
-                 class="search-form_input"
+                 class="input search-form_input"
                  type="search"
                  autocapitalize="none"
                  id="searchInput"
@@ -132,6 +132,9 @@ export default {
     width: 100%;
     background: #fff;
     border-bottom: 1px solid #E6EAEA;
+    z-index: 1;
+    top: 0;
+    position: sticky;
   }
 
   .search-filter:after,
@@ -192,10 +195,9 @@ export default {
 
   .search-form_input {
     font-size: 24px;
-    padding-left: 30px;
     margin-bottom: 0;
     width: 45%;
-    height: 100%;
+    height: inherit;
     outline: 0;
     border: none;
     box-shadow: none;

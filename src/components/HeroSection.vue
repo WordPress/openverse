@@ -1,24 +1,34 @@
 <template>
   <div class="hero">
-    <h1>Search for content to reuse</h1>
-    <form class="hero_search-form"
+    <h2 class="has-text-centered">Search for content to reuse</h2>
+    <form class="hero_search-form margin-top-normal"
           role="search"
           method="get"
           action="/search"
           v-on:submit.prevent="onSubmit">
-      <div>
+      <div class="is-hidden-touch is-flex centered-search-box">
         <input required="required"
-                autofocus="true"
-                class="hero_search-input"
+                class="hero_search-input input is-large"
                 type="search"
                 name="q"
                 placeholder="Search for images..."
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <button class="hero_search-btn" title="Search">Search</button>
+        <button class="button is-primary big" title="Search">Search</button>
       </div>
-      <div class="description">
+      <div class="is-hidden-desktop is-flex centered-search-box">
+        <input required="required"
+                class="hero_search-input input"
+                type="search"
+                name="q"
+                placeholder="Search for images..."
+                autocapitalize="none"
+                id="searchTerm"
+                v-model.lazy="form.searchTerm" />
+        <button class="button is-primary" title="Search">Search</button>
+      </div>
+      <div class="caption has-text-centered">
         <p>
           All content here is marked as being available for reuse
           under a Creative Commons legal tool. Learn more
@@ -70,18 +80,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import '../../node_modules/foundation-sites/scss/foundation';
 
-h1 {
-  font-family: Roboto;
-  font-size: 2.375em;
-  color: #333333;
-  text-align: center;
-
-  @media screen and (max-width: 40em) {
-    font-size: 1.8em;
-  }
-}
 
 $hero-height: 71vh;
 
@@ -98,58 +97,18 @@ $hero-height: 71vh;
 
   .hero_search-form {
     position: relative;
-    margin-top: 0;
-    border-radius: 3px;
     max-width: 750px;
     width: 100%;
     padding: 0 0.5em 0 0.5em;
   }
 
+  .centered-search-box {
+    justify-content: center;
+  }
+
   .hero_search-input {
-    font-size: 24px;
-    padding-left: 30px;
-    margin-bottom: 0;
-    width: 75%;
-    height: 70px;
-    border-radius: 4px;
-    box-shadow: 0 3px 8px 0 rgba(51, 51, 51, 0.13);
-    border: solid 1px #d8d8d8;
-    float: left;
+    width: 70%;
   }
-
-  .hero_search-input::placeholder {
-    color: rgb(192, 192, 192);
-    font-size: 25px;
-    font-weight: 600;
-     font-family: Source Sans Pro;
-  }
-
-  .hero_search-btn {
-    width: 25%;
-    height: 70px;
-    border-radius: 4px;
-    background-color: #fb7729;
-    font-size: 24px;
-    cursor: pointer;
-    font-family: Roboto;
-    font-size: 1.5625em;
-    color: #fff;
-    text-transform: capitalize;
-  }
-
-  &:before {
-    content: '';
-    position: absolute;
-    background: linear-gradient(to top,
-                rgba(0, 0, 0, 0.1) 0%,
-                rgba(17, 17, 17, 0.7) 100%);
-  }
-}
-
-.description {
-  font-size: 0.8125em;
-  margin-top: 1em;
-  text-align: center;
 }
 
 .old-search-link {
@@ -184,14 +143,9 @@ $hero-height: 71vh;
   .search-form_ctr {
     padding: 0 .9375rem;
   }
+}
 
-  .hero .hero_search-input {
-    font-size: 20px;
-    padding-left: 15px;
-  }
-
-  .hero .hero_search-btn {
-    right: 10px;
-  }
+.is-large {
+  height: 70px;
 }
 </style>

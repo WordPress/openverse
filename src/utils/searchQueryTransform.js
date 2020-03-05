@@ -4,13 +4,13 @@ import { filterData } from '@/store/filter-store';
 import getParameterByName from './getParameterByName';
 
 const filterPropertyMappings = {
-  licenses: 'li',
-  licenseTypes: 'lt',
+  licenses: 'license',
+  licenseTypes: 'license_type',
   categories: 'categories',
   extensions: 'extension',
   aspectRatios: 'aspect_ratio',
   sizes: 'size',
-  providers: 'provider',
+  providers: 'source',
 };
 
 /**
