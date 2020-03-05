@@ -82,7 +82,7 @@ $vert-seperate: 4rem;
   position:fixed;
 
   /* Small only */
-  @media screen and (max-width: 39.9375em), (max-height: 720px) {
+  @media screen and (max-width: 48rem) {
     position: relative;
   }
 }
