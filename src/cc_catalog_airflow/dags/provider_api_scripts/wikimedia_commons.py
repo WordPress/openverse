@@ -340,7 +340,8 @@ def _create_meta_data_dict(image_data):
     meta_data = {}
     global_usage_length = len(image_data.get('globalusage', []))
     image_info = _get_image_info_dict(image_data)
-    date_originally_created, last_modified_at_source = _extract_date_info(image_info)
+    date_originally_created, last_modified_at_source = _extract_date_info(
+        image_info)
     description = (
         image_info
         .get('extmetadata', {})
