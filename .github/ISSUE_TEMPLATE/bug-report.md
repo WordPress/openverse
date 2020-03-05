@@ -1,7 +1,8 @@
 ---
 name: Bug Report
 about: Create a report to help us improve
-labels: bug
+labels: bug, not ready for work
+title: "[Bug] Replace with Title"
 ---
 
 ## Bug Description

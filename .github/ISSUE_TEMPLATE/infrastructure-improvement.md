@@ -1,7 +1,7 @@
 ---
 name: Infrastructure Improvement Suggestion
 about: Suggest a way to improve our infrastructure
-labels: enhancement
+labels: enhancement, not ready for work
 title: "[Infrastructure] Replace with Title"
 ---
 
