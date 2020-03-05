@@ -1,4 +1,4 @@
-name: A New GitHub Project card linked to a GitHub issue/pr to the specified project column
+name: Automation of Project Board
 on: [issues, pull_request]
 jobs:
   github-actions-automate-projects:
@@ -17,4 +17,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_PROJECT_URL: https://github.com/orgs/creativecommons/projects/7
-        GITHUB_PROJECT_COLUMN_NAME: In Progress (Community)
+        GITHUB_PROJECT_COLUMN_NAME: In Progress
