@@ -1,9 +1,9 @@
 <template>
-  <div class="photo_tags grid-x full" v-if="tags && tags.length">
+  <div class="photo_tags" v-if="tags && tags.length">
     <header>
       <h2>Tags</h2>
     </header>
-    <div class="photo_tags-ctr cell large-12">
+    <div class="photo_tags-ctr">
       <template v-for="(tag, index) in getValidTags()">
         <span class="photo_tag button hollow secondary"
               :key="index"

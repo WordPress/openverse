@@ -1,52 +1,50 @@
 <template>
 <footer class="footer secondary">
-   <div class="grid-container full">
-      <div class="grid-x grid-margin-x grid-margin-y">
-        <div class="medium-4 cell">
-          <a href="https://creativecommons.org/">
-            <img class="footer_logo" alt="Footer Logo" src="../assets/cc-logo_white.png">
-          </a>
-          <div class="cc-footer-links">
-            <div class="menu-footer-links-container">
-                <ul id="menu-footer-links" class="menu">
-                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/about/contact/">Contact</a></li>
-                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/privacy/">Privacy</a></li>
-                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/policies/">Policies</a></li>
-                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/terms/">Terms</a></li>
-                </ul>
-            </div>
+  <div class="columns">
+    <div class="column">
+      <a href="https://creativecommons.org/">
+        <img class="footer_logo" alt="Footer Logo" src="../assets/cc-logo_white.png">
+      </a>
+      <div class="cc-footer-links">
+        <div class="menu-footer-links-container">
+            <ul id="menu-footer-links" class="menu">
+                <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/about/contact/">Contact</a></li>
+                <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/privacy/">Privacy</a></li>
+                <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/policies/">Policies</a></li>
+                <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/terms/">Terms</a></li>
+            </ul>
         </div>
+    </div>
+  </div>
+    <div class="column">
+      <div class="column footer_contact">
+        <h6><a href="https://creativecommons.org/about/contact/">We'd love to hear from you!</a></h6>
+          <address>
+            Creative Commons<br>
+            PO Box 1866, Mountain View, CA 94042
+          </address>
+          <ul>
+            <li><a href="mailto:info@creativecommons.org">info@creativecommons.org</a></li>
+            <li><a href="tel:1-415-429-6753">1-415-429-6753</a></li>
+          </ul>
       </div>
-        <div class="medium-4 cell">
-          <div class="column footer_contact">
-            <h6><a href="https://creativecommons.org/about/contact/">We'd love to hear from you!</a></h6>
-              <address>
-                Creative Commons<br>
-                PO Box 1866, Mountain View, CA 94042
-              </address>
-              <ul>
-                <li><a href="mailto:info@creativecommons.org">info@creativecommons.org</a></li>
-                <li><a href="tel:1-415-429-6753">1-415-429-6753</a></li>
-              </ul>
-          </div>
-        </div>
-        <div class="medium-4 cell footer_license">
-          <aside>
-          <div xmlns:cc="https://creativecommons.org/ns#"
-               about="https://creativecommons.org">
-            <p><a class="subfoot"
-                   href="https://creativecommons.org/website-icons"
-                   target="blank">Icons</a>
-               by The Noun Project.</p>
-            <p class="website-credit">Website by <a class="subfoot"
-               href="https://creativecommons.org"
-               target="blank">CC</a>.</p>
-            <p>Contribute on <a href="https://github.com/creativecommons/cccatalog-frontend">GitHub</a>.</p>
-          </div>
-          </aside>
-        </div>
+    </div>
+    <div class="column footer_license">
+      <aside>
+      <div xmlns:cc="https://creativecommons.org/ns#"
+            about="https://creativecommons.org">
+        <p><a class="subfoot"
+                href="https://creativecommons.org/website-icons"
+                target="blank">Icons</a>
+            by The Noun Project.</p>
+        <p class="website-credit">Website by <a class="subfoot"
+            href="https://creativecommons.org"
+            target="blank">CC</a>.</p>
+        <p>Contribute on <a href="https://github.com/creativecommons/cccatalog-frontend">GitHub</a>.</p>
       </div>
-   </div>
+      </aside>
+    </div>
+  </div>
 </footer>
 </template>
 

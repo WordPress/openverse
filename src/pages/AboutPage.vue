@@ -1,5 +1,5 @@
 <template>
-<div class="page grid-container full">
+<div class="page">
   <header-section showNavSearch="true"></header-section>
   <div class="page_body">
     <h1>About CC Search</h1>
@@ -53,8 +53,8 @@
                 :key="index">
               <td>{{ imageProvider.display_name }}</td>
               <td>
-                <a :href="imageProvider.provider_url">
-                  {{ imageProvider.provider_url }}
+                <a :href="imageProvider.source_url">
+                  {{ imageProvider.source_url }}
                 </a>
               </td>
               <td>{{ getProviderImageCount(imageProvider.image_count) }}</td>

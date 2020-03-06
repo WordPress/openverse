@@ -6,9 +6,8 @@
           method="get"
           action="/search"
           v-on:submit.prevent="onSubmit">
-      <div class="is-hidden-touch">
+      <div class="is-hidden-touch is-flex centered-search-box">
         <input required="required"
-                autofocus="true"
                 class="hero_search-input input is-large"
                 type="search"
                 name="q"
@@ -18,9 +17,8 @@
                 v-model.lazy="form.searchTerm" />
         <button class="button is-primary big" title="Search">Search</button>
       </div>
-      <div class="is-hidden-desktop">
+      <div class="is-hidden-desktop is-flex centered-search-box">
         <input required="required"
-                autofocus="true"
                 class="hero_search-input input"
                 type="search"
                 name="q"
@@ -104,9 +102,12 @@ $hero-height: 71vh;
     padding: 0 0.5em 0 0.5em;
   }
 
+  .centered-search-box {
+    justify-content: center;
+  }
+
   .hero_search-input {
     width: 70%;
-    float: left;
   }
 }
 
