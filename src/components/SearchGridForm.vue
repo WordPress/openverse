@@ -2,61 +2,44 @@
   <form role="search"
         method="post"
         @submit.prevent="onSubmit"
-        class="search-form">
-    <div class="search-form_ctr">
-        <div class="search-form_inner-ctr">
-          <input :placeholder="searchBoxPlaceholder"
-                 required="required"
-                 autofocus="true"
-                 class="input search-form_input"
-                 type="search"
-                 autocapitalize="none"
-                 id="searchInput"
-                 v-model="searchTermsModel"
-                 ref="search"
-                 @keyup.enter="onSubmit">
-          <ul class="search-form_toolbar menu icons icon-top" role="menubar">
-            <li class="menu-button search-form_search-button" role="menuitem">
-              <a href="#" @click.prevent="onSubmit">
-                <i class="fi-list">
-                    <svg width="24" height="24" version="1.1"
-                         viewBox="0 0 50.000001 50.000001" xmlns="http://www.w3.org/2000/svg">
-                     <rect width="24" height="24" fill-opacity="0"/>
-                     <path d="m18.623 4.2559c-7.9132 0-14.367 6.454-14.367 14.367 0
-                     7.9132 6.454 14.367 14.367 14.367 3.2414 0 6.2283-1.0954
-                     8.6367-2.918a2.0002 2.0002 0 0 0 0.15039 0.16602l14.898
-                     14.898a2.0002 2.0002 0 1 0 2.8281 -2.8281l-14.898-14.898a2.0002
-                     2.0002 0 0 0 -0.16602 -0.15039c1.8225-2.4084 2.918-5.3953
-                     2.918-8.6367 0-7.9132-6.454-14.367-14.367-14.367zm0 3.5898c5.9732
-                     0 10.777 4.8042 10.777 10.777 0 5.9732-4.8042 10.777-10.777
-                     10.777s-10.777-4.8042-10.777-10.777c2e-7 -5.9732 4.8042-10.777
-                     10.777-10.777z" color="#35495e" color-rendering="auto" fill=" #35495e" />
-                    </svg>
-                </i>
-                <span class="menu-button_text">Search</span>
-              </a>
-            </li>
-            <li :class="{'menu-button': true,
-                         'search-form_filter-button': true,
-                         isActive: isFilterVisible }"
-                role="menuitem">
-              <a href="#" @click.prevent="onToggleSearchGridFilter()">
-                <i class="fi-list">
-                    <img v-if="!isFilterApplied"
-                         width="24"
-                         height="24"
-                         src="../assets/filter_icon_new.svg" />
+        class="search-form margin-vertical-normal margin-horizontal-normal">
+    <div class="is-flex">
+      <input :placeholder="searchBoxPlaceholder"
+              required="required"
+              autofocus="true"
+              class="input is-large search-form_input"
+              type="search"
+              autocapitalize="none"
+              id="searchInput"
+              v-model="searchTermsModel"
+              ref="search"
+              @keyup.enter="onSubmit">
+      <ul class="search-form_toolbar menu icons icon-top" role="menubar">
+        <li class="menu-button search-form_search-button" role="menuitem">
+          <button class="button is-primary medium" @click.prevent="onSubmit">
+            Search
+          </button>
+        </li>
+        <li :class="{'menu-button': true,
+                      'search-form_filter-button': true,
+                      isActive: isFilterVisible }"
+            role="menuitem">
+          <a href="#" @click.prevent="onToggleSearchGridFilter()">
+            <i class="fi-list">
+                <img v-if="!isFilterApplied"
+                      width="24"
+                      height="24"
+                      src="../assets/filter_icon_new.svg" />
 
-                    <img v-else
-                         width="24"
-                         height="24"
-                         src="../assets/filter_icon_new_applied.svg" />
-                </i>
-                <span class="menu-button_text">Filter</span>
-              </a>
-            </li>
-          </ul>
-        </div>
+                <img v-else
+                      width="24"
+                      height="24"
+                      src="../assets/filter_icon_new_applied.svg" />
+            </i>
+            <span class="menu-button_text">Filter</span>
+          </a>
+        </li>
+      </ul>
     </div>
   </form>
 </template>
@@ -130,9 +113,6 @@ export default {
 
   .search-form {
     width: 100%;
-    background: #fff;
-    border-bottom: 1px solid #E6EAEA;
-    z-index: 1;
     top: 0;
     position: sticky;
   }
@@ -184,28 +164,8 @@ export default {
     background-color: #fafafa;
   }
 
-  .search-form_ctr {
-    position: relative;
-  }
-
-  .search-form_inner-ctr {
-    height: inherit;
-    display: flex;
-  }
-
   .search-form_input {
-    font-size: 24px;
-    margin-bottom: 0;
     width: 45%;
-    height: inherit;
-    outline: 0;
-    border: none;
-    box-shadow: none;
-    min-width: 0;
-
-    &:focus {
-      border: none;
-    }
 
     @media (max-width: 49em) {
       width: 100%;
