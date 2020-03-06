@@ -2,7 +2,7 @@
   <section :class="{ 'search-grid': true, 'search-grid__contain-images': shouldContainImages }"
            ref="searchGrid">
     <div class="search-grid_ctr" ref="gridItems">
-      <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics" >
+      <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics count" >
         <h2>{{ searchTerm }}</h2>
         <span> {{ _imagesCount }}</span>
       </div>
@@ -223,5 +223,9 @@ export default {
     button {
       font-size: 1.2em;
     }
+  }
+  .count{
+    padding-top: 0.6rem;
+    padding-left: 1.3rem;
   }
 </style>
