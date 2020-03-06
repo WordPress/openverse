@@ -43,10 +43,10 @@
     </div>
     <div class="clear-filters"
           v-if="isFilterApplied">
-      <a class="button primary medium search-filters_clear-btn"
+      <button class="button"
               @click="onClearFilters">
         Clear filters
-      </a>
+      </button>
     </div>
   </div>
 </template>
@@ -135,9 +135,4 @@ export default {
   margin-left: 24px;
 }
 
-.search-filters_clear-btn {
-  height: auto;
-  border-radius: 2px;
-  margin: auto;
-}
 </style>
