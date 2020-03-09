@@ -57,3 +57,38 @@ class DelayedRequester:
         if wait >= 0:
             logging.debug(f'Waiting {wait} second(s)')
             time.sleep(wait)
+
+    def get_response_json(self, endpoint, retries=0, query_params=None,
+                          **kwargs):
+        response_json = None
+
+        if retries < 0:
+            logger.error('No retries remaining.  Failure.')
+            raise Exception('Retries exceeded')
+
+        response = self.get(endpoint, params=query_params, **kwargs)
+        if response is not None and response.status_code == 200:
+            try:
+                response_json = response.json()
+            except Exception as e:
+                logger.warning(f'Could not get response_json.\n{e}')
+                response_json = None
+
+        if (
+                response_json is None
+                or response_json.get('error') is not None
+        ):
+            logger.warning(f'Bad response_json:  {response_json}')
+            logger.warning(
+                'Retrying:\n_get_response_json(\n'
+                f'    {endpoint},\n'
+                f'    {query_params},\n'
+                f'    retries={retries - 1}'
+                ')'
+            )
+            response_json = self.get_response_json(endpoint,
+                                                   retries=retries - 1,
+                                                   query_params=query_params,
+                                                   **kwargs)
+
+        return response_json
