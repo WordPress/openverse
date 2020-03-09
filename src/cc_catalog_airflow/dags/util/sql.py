@@ -3,13 +3,12 @@ from airflow.hooks.postgres_hook import PostgresHook
 
 logger = logging.getLogger(__name__)
 
-LOAD_TABLE_NAME = 'provider_image_data'
 IMAGE_TABLE_NAME = 'image'
 
 
 def create_if_not_exists_loading_table(
         postgres_conn_id,
-        load_table=LOAD_TABLE_NAME
+        load_table
 ):
     """
     Create intermediary table and indices if they do not exist
@@ -58,7 +57,7 @@ def create_if_not_exists_loading_table(
 def import_data_to_intermediate_table(
         postgres_conn_id,
         tsv_file_name,
-        load_table=LOAD_TABLE_NAME
+        load_table
 ):
     logger.info(f'Loading {tsv_file_name} into {load_table}')
 
@@ -87,7 +86,7 @@ def import_data_to_intermediate_table(
 
 def upsert_records_to_image_table(
         postgres_conn_id,
-        load_table=LOAD_TABLE_NAME,
+        load_table,
         image_table=IMAGE_TABLE_NAME
 ):
     logger.info(f'Upserting new records into {image_table}.')
@@ -128,11 +127,6 @@ def upsert_records_to_image_table(
     )
 
 
-def delete_load_table_data(postgres_conn_id, load_table=LOAD_TABLE_NAME):
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    postgres.run(f'DELETE FROM {load_table};')
-
-
-def drop_load_table(postgres_conn_id, load_table=LOAD_TABLE_NAME):
+def drop_load_table(postgres_conn_id, load_table):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(f'DROP TABLE {load_table};')
