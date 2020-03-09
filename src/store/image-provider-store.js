@@ -22,9 +22,9 @@ const actions = ImageProviderService => ({
     commit(FETCH_IMAGE_PROVIDERS_START);
     return ImageProviderService.getProviderStats(params)
       .then(({ data }) => {
-        const sortedProviders = data.sort((a, b) => {
-          const nameA = a.provider_name.toUpperCase();
-          const nameB = b.provider_name.toUpperCase();
+        const sortedProviders = data.sort((sourceObjectA, sourceObjectB) => {
+          const nameA = sourceObjectA.source_name.toUpperCase();
+          const nameB = sourceObjectB.source_name.toUpperCase();
 
           if (nameA < nameB) {
             return -1;

@@ -25,8 +25,8 @@
             @click.stop="() => false"
             target="new">
             <img class="search-grid_overlay-provider-logo"
-              :alt="image.provider"
-              :src="getProviderLogo(image.provider)">
+              :alt="image.source"
+              :src="getProviderLogo(image.source)">
             {{ image.title }}
         </a>
       </figcaption>
@@ -213,7 +213,6 @@ export default {
     display: block;
     bottom: 10px;
     left: 10px;
-    z-index: 100;
     color: #fff;
     text-overflow: ellipsis;
     white-space: nowrap;
