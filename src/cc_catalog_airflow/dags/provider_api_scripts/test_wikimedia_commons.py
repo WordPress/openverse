@@ -108,7 +108,8 @@ def test_get_image_batch(monkeypatch):
         'continue': 'gaicontinue||'
     }
 
-    monkeypatch.setattr(wmc, '_get_response_json', mock_get_response_json)
+    monkeypatch.setattr(wmc.delayed_requester, 'get_response_json',
+                        mock_get_response_json)
     actual_image_batch, actual_continue_token = wmc._get_image_batch(
         '2019-01-01', '2019-01-02'
     )
@@ -123,8 +124,8 @@ def test_get_image_batch_returns_correctly_without_continue(monkeypatch):
         resp_dict = json.load(f)
 
     with patch.object(
-            wmc,
-            '_get_response_json',
+            wmc.delayed_requester,
+            'get_response_json',
             return_value=resp_dict
     ) as mock_response_json:
         actual_result, actual_continue = wmc._get_image_batch(
@@ -240,7 +241,9 @@ def test_get_response_json_retries_with_none_response():
             return_value=None
     ) as mock_get:
         with pytest.raises(Exception):
-            assert wmc._get_response_json({}, retries=2)
+            assert wmc.delayed_requester.get_response_json(wmc.ENDPOINT,
+                                                           retries=2,
+                                                           query_params={})
 
     assert mock_get.call_count == 3
 
@@ -255,7 +258,9 @@ def test_get_response_json_retries_with_non_ok():
             return_value=r
     ) as mock_get:
         with pytest.raises(Exception):
-            assert wmc._get_response_json({}, retries=2)
+            assert wmc.delayed_requester.get_response_json(wmc.ENDPOINT,
+                                                           retries=2,
+                                                           query_params={})
 
     assert mock_get.call_count == 3
 
@@ -270,7 +275,9 @@ def test_get_response_json_retries_with_error_json():
             return_value=r
     ) as mock_get:
         with pytest.raises(Exception):
-            assert wmc._get_response_json({}, retries=2)
+            assert wmc.delayed_requester.get_response_json(wmc.ENDPOINT,
+                                                           retries=2,
+                                                           query_params={})
 
     assert mock_get.call_count == 3
 
@@ -285,7 +292,8 @@ def test_get_response_json_returns_response_json_when_all_ok():
             'get',
             return_value=r
     ) as mock_get:
-        actual_response_json = wmc._get_response_json({}, retries=2)
+        actual_response_json = wmc.delayed_requester.\
+            get_response_json(wmc.ENDPOINT, retries=2, query_params={})
 
     assert mock_get.call_count == 1
     assert actual_response_json == expect_response_json
