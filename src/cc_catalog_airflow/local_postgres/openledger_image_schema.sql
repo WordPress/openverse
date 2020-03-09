@@ -143,4 +143,3 @@ CREATE INDEX uuid_index ON public.image USING btree (identifier);
 --
 -- PostgreSQL database dump complete
 --
-
