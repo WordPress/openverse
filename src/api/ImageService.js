@@ -6,11 +6,11 @@ const ImageService = {
    * Search for images by keyword.
    */
   search(params) {
-    return ApiService.query('image/search', params);
+    return ApiService.query('images', params);
   },
 
   getProviderCollection(params) {
-    return ApiService.query(`image/browse/${params.provider}`, params);
+    return ApiService.query('images', params);
   },
 
   /**
@@ -22,7 +22,7 @@ const ImageService = {
       throw new Error('[RWV] ImageService.getImageDetail() id parameter required to retreive image details.');
     }
 
-    return ApiService.get('image', params.id);
+    return ApiService.get('images', params.id);
   },
 
   getRelatedImages(params) {
@@ -30,7 +30,7 @@ const ImageService = {
       throw new Error('[RWV] ImageService.getRelatedImages() id parameter required to retreive related images.');
     }
 
-    return ApiService.get('image/related', params.id);
+    return ApiService.get('recommendations/images', params.id);
   },
 };
 

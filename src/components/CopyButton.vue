@@ -1,7 +1,7 @@
 <template>
   <button :id="id"
           type="button"
-          class="button photo_copy-btn"
+          class="button is-info is-block margin-top-small"
           :data-clipboard-target="el">
     <slot v-if="!success" default />
     <template v-else>Copied!</template>
@@ -51,10 +51,3 @@ export default {
 };
 </script>
 
-<style scoped>
-  .photo_copy-btn {
-    width: 10rem;
-    display: block;
-    margin-top: 1rem;
-  }
-</style>

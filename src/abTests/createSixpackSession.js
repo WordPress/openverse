@@ -1,9 +1,10 @@
 import sixpack from 'sixpack-client';
 import SessionId from './sessionId';
 
-const SIXPACK_URL = `${process.env.API_URL}/sixpack`;
-
 const createSixpackSession = (existingSessionId) => {
+  const baseUrl = process.env.API_URL.replace('/v1/', '');
+  const SIXPACK_URL = `${baseUrl}/sixpack`;
+
   const sessionId = existingSessionId || SessionId();
   const session = new sixpack.Session({
     client_id: sessionId,
