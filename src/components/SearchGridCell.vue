@@ -213,7 +213,6 @@ export default {
     display: block;
     bottom: 10px;
     left: 10px;
-    z-index: 0;
     color: #fff;
     text-overflow: ellipsis;
     white-space: nowrap;
