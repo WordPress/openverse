@@ -86,7 +86,7 @@ def test_get_image_batch(monkeypatch):
     ) as f:
         third_response = json.load(f)
 
-    def mock_get_response_json(query_params, retries=0):
+    def mock_get_response_json(endpoint, retries, query_params, **kwargs):
         continue_one = 'Edvard_Munch_-_Night_in_Nice_(1891).jpg|nowiki|1281339'
         continue_two = 'Niedercunnersdorf_Gartenweg_12.JPG|dewiki|9849507'
         if 'continue' not in query_params:
