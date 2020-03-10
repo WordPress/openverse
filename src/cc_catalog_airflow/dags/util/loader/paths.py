@@ -21,7 +21,7 @@ def stage_oldest_tsv_file(
     return tsv_found
 
 
-def delete_old_file(output_dir, identifier):
+def delete_staged_file(output_dir, identifier):
     tsv_file_name = get_staged_file(output_dir, identifier)
     staging_directory = _get_staging_directory(output_dir, identifier)
     logger.info(f'Deleting {tsv_file_name}')
