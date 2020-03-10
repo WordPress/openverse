@@ -17,7 +17,7 @@ def create_if_not_exists_loading_table(
     load_table = _get_load_table_name(identifier)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(
-        f'CREATE TABLE IF NOT EXISTS public.{load_table} ('
+        f'CREATE TABLE public.{load_table} ('
         f'foreign_identifier character varying(3000), '
         f'foreign_landing_url character varying(1000), '
         f'url character varying(3000), '
