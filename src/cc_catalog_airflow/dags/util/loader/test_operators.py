@@ -9,9 +9,10 @@ import pytest
 
 from util.loader import operators
 
+
+TEST_ID = 'testing'
 POSTGRES_CONN_ID = os.getenv('TEST_CONN_ID')
 POSTGRES_TEST_URI = os.getenv('AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING')
-TEST_ID = 'testing'
 TEST_LOAD_TABLE = f'provider_image_data{TEST_ID}'
 
 
@@ -27,77 +28,6 @@ TEST_LOAD_TABLE = f'provider_image_data{TEST_ID}'
 #     cur.close()
 #     conn.commit()
 #     conn.close()
-# 
-# 
-# def test_stager_stages_file(tmpdir):
-#     tmp_directory = str(tmpdir)
-#     staging_subdirectory = operators.STAGING_SUBDIRECTORY
-#     identifier = TEST_ID
-#     test_tsv = 'test.tsv'
-#     path = tmpdir.join(test_tsv)
-#     path.write('')
-#     dag = DAG(
-#         dag_id='test_dag',
-#         start_date=datetime.strptime('2019-01-01', '%Y-%m-%d')
-#     )
-#     stager = operators.get_file_staging_operator(
-#         dag, tmp_directory, 0, identifier=identifier
-#     )
-#     stager_ti = TaskInstance(task=stager, execution_date=datetime.now())
-#     stager.execute(stager_ti.get_template_context())
-#     staged_path = tmpdir.join(staging_subdirectory, identifier, test_tsv)
-#     assert staged_path.check(file=1)
-# 
-# 
-# def test_stager_stages_older_file(tmpdir):
-#     tmp_directory = str(tmpdir)
-#     staging_subdirectory = operators.STAGING_SUBDIRECTORY
-#     identifier = TEST_ID
-#     test_one_tsv = 'test1.tsv'
-#     test_two_tsv = 'test2.tsv'
-#     path_one = tmpdir.join(test_one_tsv)
-#     path_one.write('')
-#     time.sleep(0.01)
-#     path_two = tmpdir.join(test_two_tsv)
-#     path_two.write('')
-#     dag = DAG(
-#         dag_id='test_dag',
-#         start_date=datetime.strptime('2019-01-01', '%Y-%m-%d')
-#     )
-#     stager = operators.get_file_staging_operator(
-#         dag, tmp_directory, 0, identifier=identifier
-#     )
-#     stager_ti = TaskInstance(task=stager, execution_date=datetime.now())
-#     stager.execute(stager_ti.get_template_context())
-#     staged_path = tmpdir.join(staging_subdirectory, identifier, test_one_tsv)
-#     assert staged_path.check(file=1)
-#     staged_path_two = tmpdir.join(
-#         staging_subdirectory, identifier, test_two_tsv
-#     )
-#     assert staged_path_two.check(file=0)
-#     assert path_one.check(file=0)
-#     assert path_two.check(file=1)
-# 
-# 
-# def test_stager_ignores_non_tsv(tmpdir):
-#     tmp_directory = str(tmpdir)
-#     staging_subdirectory = operators.STAGING_SUBDIRECTORY
-#     identifier = TEST_ID
-#     test = 't'
-#     path = tmpdir.join(test)
-#     path.write('')
-#     dag = DAG(
-#         dag_id='test_dag',
-#         start_date=datetime.strptime('2019-01-01', '%Y-%m-%d')
-#     )
-#     stager = operators.get_file_staging_operator(
-#         dag, tmp_directory, 0, identifier=identifier
-#     )
-#     stager_ti = TaskInstance(task=stager, execution_date=datetime.now())
-#     stager.execute(stager_ti.get_template_context())
-#     staged_path = tmpdir.join(staging_subdirectory, identifier, test)
-#     assert staged_path.check(file=0)
-#     assert path.check(file=1)
 # 
 # 
 # def test_table_creator_creates_table(postgres_cursor):
