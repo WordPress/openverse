@@ -31,7 +31,7 @@ def get_table_creator_operator(
         identifier=TIMESTAMP_TEMPLATE
 ):
     return PythonOperator(
-        task_id='create_table',
+        task_id='create_loading_table',
         python_callable=sql.create_if_not_exists_loading_table,
         op_args=[postgres_conn_id, identifier],
         dag=dag
@@ -58,8 +58,8 @@ def get_file_deletion_operator(
         identifier=TIMESTAMP_TEMPLATE
 ):
     return PythonOperator(
-        task_id='delete_file',
-        python_callable=paths.delete_old_file,
+        task_id='delete_staged_file',
+        python_callable=paths.delete_staged_file,
         op_args=[output_dir, identifier],
         trigger_rule=TriggerRule.ALL_SUCCESS,
         dag=dag,
@@ -72,7 +72,7 @@ def get_drop_table_operator(
         identifier=TIMESTAMP_TEMPLATE
 ):
     return PythonOperator(
-        task_id='drop_table',
+        task_id='drop_loading_table',
         python_callable=sql.drop_load_table,
         op_args=[postgres_conn_id, identifier],
         trigger_rule=TriggerRule.ALL_DONE,
@@ -86,7 +86,7 @@ def get_failure_moving_operator(
         identifier=TIMESTAMP_TEMPLATE
 ):
     return PythonOperator(
-        task_id='move_failures',
+        task_id='move_staged_failures',
         python_callable=paths.move_staged_files_to_failure_directory,
         op_args=[output_dir, identifier],
         trigger_rule=TriggerRule.ONE_FAILED,

@@ -57,7 +57,7 @@ def create_dag(
             output_dir,
             minimum_file_age_minutes
         )
-        create_table = operators.get_table_creator_operator(
+        create_loading_table = operators.get_table_creator_operator(
             dag,
             postgres_conn_id
         )
@@ -66,28 +66,31 @@ def create_dag(
             output_dir,
             postgres_conn_id
         )
-        delete_file = operators.get_file_deletion_operator(
+        delete_staged_file = operators.get_file_deletion_operator(
             dag,
             output_dir
         )
-        drop_table = operators.get_drop_table_operator(
+        drop_loading_table = operators.get_drop_table_operator(
             dag,
             postgres_conn_id
         )
-        move_failures = operators.get_failure_moving_operator(
+        move_staged_failures = operators.get_failure_moving_operator(
             dag,
             output_dir
         )
         (
             stage_oldest_tsv_file
-            >> create_table
+            >> create_loading_table
             >> load_data
-            >> [delete_file, drop_table]
+            >> [delete_staged_file, drop_loading_table]
         )
         [
-            stage_oldest_tsv_file, create_table, load_data,
-            delete_file, drop_table
-        ] >> move_failures
+            stage_oldest_tsv_file,
+            create_loading_table,
+            load_data,
+            delete_staged_file,
+            drop_loading_table
+        ] >> move_staged_failures
     return dag
 
 
