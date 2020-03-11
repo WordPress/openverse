@@ -1,10 +1,10 @@
 name: "Project Board Automation"
 
 on:
-  issues :
-    types : [ opened ]
-  pull_request :
-    types : [ opened ]
+  issues:
+    types: [ opened ]
+  pull_request:
+    types: [ opened ]
 jobs:
   join_issue_pr_to_project:
     runs-on: ubuntu-latest
