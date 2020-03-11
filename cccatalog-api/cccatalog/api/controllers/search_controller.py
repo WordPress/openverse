@@ -6,6 +6,7 @@ from elasticsearch_dsl.response import Response, Hit
 from elasticsearch_dsl.query import Query
 from cccatalog import settings
 from django.core.cache import cache
+from django.urls import reverse
 from cccatalog.api.models import ContentProvider
 from rest_framework import serializers
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS
@@ -128,10 +129,12 @@ def _post_process_results(s, start, end, page_size, search_results,
             else:
                 to_proxy = URL
             original = res[to_proxy]
-            proxied = '{proxy_url}/{width}/{original}'.format(
-                proxy_url=THUMBNAIL_PROXY_URL,
-                width=THUMBNAIL_WIDTH_PX,
-                original=original
+            ext = res["url"].split(".")[-1]
+            proxied = "https://{}{}".format(
+                request.get_host(),
+                reverse('thumbs', kwargs={
+                    'path': "{}.{}".format(res["identifier"], ext)
+                })
             )
             res[THUMBNAIL] = proxied
         results.append(res)
