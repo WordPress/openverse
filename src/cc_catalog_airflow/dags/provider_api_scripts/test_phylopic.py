@@ -19,7 +19,8 @@ logging.basicConfig(
 
 
 def test_get_total_images_giving_zero():
-    with patch.object(pp, '_get_response_json', return_value=None):
+    with patch.object(pp.delayed_requester, 'get_response_json',
+                      return_value=None):
         img_count = pp._get_total_images()
         assert img_count == 0
 
@@ -30,8 +31,8 @@ def test_get_total_images_correct():
     ) as f:
         r = json.load(f)
     with patch.object(
-            pp,
-            '_get_response_json',
+            pp.delayed_requester,
+            'get_response_json',
             return_value=r
     ):
         img_count = pp._get_total_images()
@@ -52,7 +53,8 @@ def test_create_endpoint_for_IDs_all():
 
 
 def test_get_image_IDs_for_no_content():
-    with patch.object(pp, '_get_response_json', return_value=None):
+    with patch.object(pp.delayed_requester, 'get_response_json',
+                      return_value=None):
         image_ids = pp._get_image_IDs('')
         expect_image_ids = [None]
         assert image_ids == expect_image_ids
@@ -61,7 +63,8 @@ def test_get_image_IDs_for_no_content():
 def test_get_img_IDs_correct():
     with open(os.path.join(RESOURCES, 'image_ids_example.json')) as f:
         r = json.load(f)
-    with patch.object(pp, '_get_response_json', return_value=r):
+    with patch.object(pp.delayed_requester, 'get_response_json',
+                      return_value=r):
         actual_img_ids = pp._get_image_IDs('')
         expect_img_ids = ["863694ac-9f36-40f5-9452-1b435337d9cc",
                           "329ff574-4bec-4f94-9dd6-9acfec2a6275",
@@ -75,13 +78,15 @@ def test_get_meta_data_with_no_img_url():
             os.path.join(RESOURCES, 'no_image_url_example.json')
     ) as f:
         r = json.load(f)
-    with patch.object(pp, '_get_response_json', return_value=r):
+    with patch.object(pp.delayed_requester, 'get_response_json',
+                      return_value=r):
         meta_data = pp._get_meta_data('')
         assert meta_data is None
 
 
 def test_get_meta_data_for_none_response():
-    with patch.object(pp, '_get_response_json', return_value=None):
+    with patch.object(pp.delayed_requester, 'get_response_json',
+                      return_value=None):
         meta_data = pp._get_meta_data('')
         assert meta_data is None
 
@@ -91,7 +96,8 @@ def test_get_meta_data_correct():
             os.path.join(RESOURCES, 'correct_meta_data_example.json')
     ) as f:
         r = json.load(f)
-    with patch.object(pp, '_get_response_json', return_value=r):
+    with patch.object(pp.delayed_requester, 'get_response_json',
+                      return_value=r):
         actual_meta_data = pp._get_meta_data(
             'e9df48fe-68ea-419e-b9df-441e0b208335')
         expect_meta_data = [
@@ -111,7 +117,8 @@ def test_get_creator_details():
             os.path.join(RESOURCES, 'correct_meta_data_example.json')
     ) as f:
         r = json.load(f)
-    with patch.object(pp, '_get_response_json', return_value=r):
+    with patch.object(pp.delayed_requester, 'get_response_json',
+                      return_value=r):
         result = r['result']
         actual_creator_details = pp._get_creator_details(result)
         expect_creator_details = ('Jonathan Wells',
@@ -124,7 +131,8 @@ def test_get_taxa_details():
             os.path.join(RESOURCES, 'correct_meta_data_example.json')
     ) as f:
         r = json.load(f)
-    with patch.object(pp, '_get_response_json', return_value=r):
+    with patch.object(pp.delayed_requester, 'get_response_json',
+                      return_value=r):
         result = r['result']
         actual_taxa = pp._get_taxa_details(result)
         expect_taxa = (['Chondrus crispus NODC Taxonomic Code, database (version 8.0) 1996'],
@@ -138,7 +146,7 @@ def test_get_image_info():
             os.path.join(RESOURCES, 'correct_meta_data_example.json')
     ) as f:
         r = json.load(f)
-    with patch.object(pp, '_get_response_json', return_value=r):
+    with patch.object(pp.delayed_requester, 'get_response_json', return_value=r):
         result = r['result']
         actual_img_info = pp._get_image_info(
             result, 'e9df48fe-68ea-419e-b9df-441e0b208335')
@@ -152,7 +160,7 @@ def test_get_image_info_with_no_img_url():
             os.path.join(RESOURCES, 'no_image_url_example.json')
     ) as f:
         r = json.load(f)
-    with patch.object(pp, '_get_response_json', return_value=r):
+    with patch.object(pp.delayed_requester, 'get_response_json', return_value=r):
         result = r['result']
         actual_img_info = list(pp._get_image_info(result,
                                '7f7431c6-8f78-498b-92e2-ebf8882a8923'))
@@ -184,7 +192,7 @@ def test_get_response_json_retries_with_none_response():
             return_value=None
     ) as mock_get:
         with pytest.raises(Exception):
-            assert pp._get_response_json({}, retries=2)
+            assert pp.delayed_requester.get_response_json({}, retries=2)
 
     assert mock_get.call_count == 3
 
@@ -198,7 +206,7 @@ def test_get_response_json_retries_with_non_ok():
             return_value=r
     ) as mock_get:
         with pytest.raises(Exception):
-            assert pp._get_response_json({}, retries=2)
+            assert pp.delayed_requester.get_response_json({}, retries=2)
 
     assert mock_get.call_count == 3
 
@@ -216,7 +224,8 @@ def test_get_response_json_returns_response_json_when_all_ok():
             'get',
             return_value=r
     ) as mock_get:
-        actual_response_json = pp._get_response_json({}, retries=2)
+        actual_response_json = pp.delayed_requester.\
+            get_response_json({}, retries=2)
 
     assert mock_get.call_count == 1
     assert actual_response_json == expect_response_json
