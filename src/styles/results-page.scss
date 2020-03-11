@@ -1,0 +1,31 @@
+@import "@creativecommons/vocabulary/scss/colors.scss";
+.search {
+  margin: 0;
+}
+
+.search-grid-ctr {
+  padding: 0;
+  background: #e9ebee;
+  min-height: 600px;
+
+  /* 48em = 768px */
+  @media (max-width: 49em) {
+    width: 100%;
+    flex: none;
+  }
+}
+
+.search-grid-ctr__filter-visible {
+  margin-top: 30px;
+}
+
+.grid-sidebar {
+  padding-top: 0;
+  background-color: $color-white;
+  width: 21.875rem;
+
+  /* 48em = 768px */
+  @media (max-width: 49em) {
+    width: 100%;
+  }
+}
