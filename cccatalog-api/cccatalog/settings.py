@@ -155,9 +155,9 @@ CACHES = {
 }
 
 # Produce CC-hosted thumbnails dynamically through a proxy.
-PROXY_THUMBS = bool(os.environ.get('PROXY_THUMBS', False))
+PROXY_THUMBS = bool(os.environ.get('PROXY_THUMBS', True))
 THUMBNAIL_PROXY_URL = os.environ.get(
-    'THUMBNAIL_PROXY_URL', 'https://localhost:8222'
+    'THUMBNAIL_PROXY_URL', 'http://thumbs:8222'
 )
 
 THUMBNAIL_WIDTH_PX = 600
