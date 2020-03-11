@@ -144,8 +144,4 @@ $hero-height: 71vh;
     padding: 0 .9375rem;
   }
 }
-
-.is-large {
-  height: 70px;
-}
 </style>
