@@ -18,6 +18,7 @@ class DelayedRequester:
     delay:  an integer giving the minimum number of seconds to wait
             between consecutive requests via the `get` method.
     """
+
     def __init__(self, delay=0):
         self._DELAY = delay
         self._last_request = 0

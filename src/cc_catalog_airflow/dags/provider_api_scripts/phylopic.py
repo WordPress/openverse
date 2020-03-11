@@ -10,13 +10,11 @@ Notes:                  http://phylopic.org/api/
                         No rate limit specified.
 """
 
-
 import argparse
 import logging
 
 import common.requester as requester
 import common.storage.image as image
-
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -24,13 +22,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
 DELAY = 5.0
 HOST = 'phylopic.org'
 ENDPOINT = f'http://{HOST}/api/a'
 PROVIDER = 'phylopic'
 LIMIT = 5
-
 
 delayed_requester = requester.DelayedRequester(DELAY)
 image_store = image.ImageStore(provider=PROVIDER)

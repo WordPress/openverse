@@ -292,7 +292,7 @@ def test_get_response_json_returns_response_json_when_all_ok():
             'get',
             return_value=r
     ) as mock_get:
-        actual_response_json = wmc.delayed_requester.\
+        actual_response_json = wmc.delayed_requester. \
             get_response_json(wmc.ENDPOINT, retries=2, query_params={})
 
     assert mock_get.call_count == 1

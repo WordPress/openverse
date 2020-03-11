@@ -121,7 +121,7 @@ def _get_image_batch(
     )
     image_batch = None
     for _ in range(MEAN_GLOBAL_USAGE_LIMIT):
-        response_json = delayed_requester.\
+        response_json = delayed_requester. \
             get_response_json(ENDPOINT, retries=retries,
                               query_params=query_params,
                               headers=DEFAULT_REQUEST_HEADERS,

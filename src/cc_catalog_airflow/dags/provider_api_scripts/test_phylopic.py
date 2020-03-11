@@ -11,7 +11,6 @@ RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'tests/resources/phylopic'
 )
 
-
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
     level=logging.DEBUG,
@@ -146,7 +145,8 @@ def test_get_image_info():
             os.path.join(RESOURCES, 'correct_meta_data_example.json')
     ) as f:
         r = json.load(f)
-    with patch.object(pp.delayed_requester, 'get_response_json', return_value=r):
+    with patch.object(pp.delayed_requester, 'get_response_json',
+                      return_value=r):
         result = r['result']
         actual_img_info = pp._get_image_info(
             result, 'e9df48fe-68ea-419e-b9df-441e0b208335')
@@ -160,7 +160,8 @@ def test_get_image_info_with_no_img_url():
             os.path.join(RESOURCES, 'no_image_url_example.json')
     ) as f:
         r = json.load(f)
-    with patch.object(pp.delayed_requester, 'get_response_json', return_value=r):
+    with patch.object(pp.delayed_requester, 'get_response_json',
+                      return_value=r):
         result = r['result']
         actual_img_info = list(pp._get_image_info(result,
                                '7f7431c6-8f78-498b-92e2-ebf8882a8923'))
@@ -224,7 +225,7 @@ def test_get_response_json_returns_response_json_when_all_ok():
             'get',
             return_value=r
     ) as mock_get:
-        actual_response_json = pp.delayed_requester.\
+        actual_response_json = pp.delayed_requester. \
             get_response_json({}, retries=2)
 
     assert mock_get.call_count == 1
