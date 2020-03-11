@@ -129,7 +129,7 @@ def _post_process_results(s, start, end, page_size, search_results,
                 to_proxy = URL
             original = res[to_proxy]
             ext = res["url"].split(".")[-1]
-            proxied = "https://{}{}".format(
+            proxied = "http://{}{}".format(
                 request.get_host(),
                 reverse('thumbs', kwargs={
                     'path': "{}.{}".format(res["identifier"], ext)
