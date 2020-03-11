@@ -10,11 +10,13 @@ from cccatalog.api.controllers.search_controller import get_providers
 from cccatalog.api.serializers.oauth2_serializers import\
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
 from drf_yasg.utils import swagger_auto_schema
-from cccatalog.api.models import ContentProvider
+from cccatalog.api.models import ContentProvider, Image
 from cccatalog.api.models import ThrottledApplication, OAuth2Verification
 from cccatalog.api.utils.throttle import TenPerDay, OnePerSecond
 from cccatalog.api.utils.oauth2_helper import get_token_info
+from cccatalog.settings import THUMBNAIL_PROXY_URL, THUMBNAIL_WIDTH_PX
 from django.core.cache import cache
+from django.shortcuts import redirect
 
 IDENTIFIER = 'provider_identifier'
 NAME = 'provider_name'
@@ -285,3 +287,35 @@ class CheckRates(APIView):
             'verified': verified
         }
         return Response(status=200, data=response_data)
+
+
+class Thumbs(APIView):
+
+    @swagger_auto_schema(operation_id="thumb_lookup",
+                         responses={
+                             200: None,
+                             301: 'Moved Permanently',
+                             400: 'Bad Request',
+                             404: 'Not Found'
+                         })
+
+    def get(self, request, path, format=None):
+        path_element = path.split(".")
+        identifier = path_element[0]
+        extname = ""
+        if len(path_element) == 2:
+            extname = path_element[1]
+        elif len(path_element) > 2:
+            return Response(status=400)
+        try:
+            image = Image.objects.get(identifier=identifier)
+            if extname and image.url.split(".")[-1] != extname:
+                return Response(status=404, data='Not Found')
+        except Image.DoesNotExist:
+            return Response(status=404, data='Not Found')
+        proxied = '{proxy_url}/{width}/{original}'.format(
+                proxy_url=THUMBNAIL_PROXY_URL,
+                width=THUMBNAIL_WIDTH_PX,
+                original=image.url
+            )
+        return redirect(proxied)
