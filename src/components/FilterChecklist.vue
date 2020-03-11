@@ -2,7 +2,7 @@
   <div class="filters padding-vertical-big padding-left-big padding-right-normal">
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
-      <button class="filter-dropdown-visibility-button">
+      <button class="filter-visibility-toggle is-white">
         <img src="@/assets/arrow.svg"
           v-bind:class="{rotImg:filtersVisible}"
           alt="toggle filters visibility"/>
@@ -55,9 +55,11 @@ export default {
   letter-spacing: normal;
   cursor: pointer;
 }
-.filter-dropdown-visibility-button {
+.filter-visibility-toggle {
   float: right;
   cursor: pointer;
+  background: none;
+  border: none;
 }
 .rotImg{
   transform: rotate(180deg);

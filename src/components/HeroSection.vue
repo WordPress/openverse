@@ -1,7 +1,7 @@
 <template>
   <div class="hero">
     <h2 class="has-text-centered">Search for content to reuse</h2>
-    <form class="hero_search-form margin-top-normal"
+    <form class="hero_search-form margin-top-bigger"
           role="search"
           method="get"
           action="/search"
@@ -26,13 +26,13 @@
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <button class="button is-primary" title="Search">Search</button>
+        <button class="button is-primary small" title="Search">Search</button>
       </div>
-      <div class="caption has-text-centered">
+      <div class="caption has-text-centered margin-top-big">
         <p>
-          All content here is marked as being available for reuse
-          under a Creative Commons legal tool. Learn more
-          <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">here</a>.
+          All our content is under Creative Commons licenses.
+          <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">Learn more</a>
+          about CC licenses.
         </p>
       </div>
       <home-license-filter />
