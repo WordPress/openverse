@@ -1,0 +1,28 @@
+name: Create task on issue and pull request created
+
+on:
+  issues:
+    types: [ opened ]
+  pull_request:
+jobs:
+  addIssueToProjectBoard:
+    runs-on: ubuntu-latest
+    steps:
+    - name: add-new-issues-to-organization-based-project-column
+      uses: docker://takanabe/github-actions-automate-projects:v0.0.1
+      if: github.event_name == 'issues' && github.event.action == 'opened'
+      env:
+        GITHUB_TOKEN: ${{ secrets.repositoryToken }}
+        GITHUB_PROJECT_URL: https://github.com/orgs/creativecommons/projects/10
+        GITHUB_PROJECT_COLUMN_NAME: Pending Review
+        
+  addPullRequestToProjectBoard:
+    runs-on: ubuntu-latest
+    steps:
+    - name: add-new-pull-request-to-organization-based-project-column
+      uses: docker://takanabe/github-actions-automate-projects:v0.0.1
+      if: github.event_name == 'pull_request' && github.event.action == 'opened'
+      env:
+        GITHUB_TOKEN: ${{ secrets.repositoryToken }}
+        GITHUB_PROJECT_URL: https://github.com/orgs/creativecommons/projects/7
+        GITHUB_PROJECT_COLUMN_NAME: Ticket Work Required
