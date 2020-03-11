@@ -10,14 +10,16 @@
     </div>
     <template v-if="filtersVisible">
     <div v-for="(item, index) in options" :key="index" class="margin-top-small">
-      <input type="checkbox"
+      <label class="checkbox" :for="item.code">
+        <input type="checkbox"
              class="filter-checkbox"
              :id="item.code"
              :key="index"
              :checked="item.checked"
              :disabled="disabled"
              @change="onValueChange" />
-      <label class="filter-label" :for="item.code">{{ item.name }}</label>
+        {{ item.name }}
+      </label>
     </div>
     </template>
   </div>
