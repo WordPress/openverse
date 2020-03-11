@@ -1,5 +1,5 @@
 <template>
-  <fieldset>
+  <div class="filters padding-vertical-big padding-left-big padding-right-normal">
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
       <button class="filter-dropdown-visibility-button">
@@ -9,7 +9,7 @@
       </button>
     </div>
     <template v-if="filtersVisible">
-    <div v-for="(item, index) in options" :key="index">
+    <div v-for="(item, index) in options" :key="index" class="margin-top-small">
       <input type="checkbox"
              class="filter-checkbox"
              :id="item.code"
@@ -20,7 +20,7 @@
       <label class="filter-label" :for="item.code">{{ item.name }}</label>
     </div>
     </template>
-  </fieldset>
+  </div>
 </template>
 <script>
 export default {
@@ -41,12 +41,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-fieldset {
-  padding-left: 24px;
-  padding-right: 34px;
-  border-bottom: 1px solid #d8d8d8;
-  margin-top: 20px;
-  margin-bottom: 10px;
+@import "@creativecommons/vocabulary/scss/colors.scss";
+
+.filters {
+  border-bottom: 2px solid $color-lighter-gray;
 }
 .filters-title {
   font-size: 1.250em;
@@ -56,7 +54,6 @@ fieldset {
   line-height: 1.5;
   letter-spacing: normal;
   cursor: pointer;
-  margin-bottom: 16px;
 }
 .filter-dropdown-visibility-button {
   float: right;
