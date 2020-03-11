@@ -300,7 +300,6 @@ class Thumbs(APIView):
                              400: 'Bad Request',
                              404: 'Not Found'
                          })
-
     def get(self, request, path, format=None):
         path_element = path.split(".")
         identifier = path_element[0]
@@ -320,6 +319,6 @@ class Thumbs(APIView):
         content_type = upstream_response.headers.get('Content-Type')
 
         response = HttpResponse(upstream_response.read(), status=status,
-                                    content_type=content_type)
+                                content_type=content_type)
 
         return response
