@@ -43,7 +43,7 @@
     </div>
     <div class="clear-filters"
           v-if="isFilterApplied">
-      <button class="button"
+      <button class="button tiny"
               @click="onClearFilters">
         Clear filters
       </button>
