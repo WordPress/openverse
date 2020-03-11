@@ -22,7 +22,6 @@ CACHE_TIMEOUT = 10
 DEAD_LINK_RATIO = 1 / 2
 THUMBNAIL = 'thumbnail'
 URL = 'url'
-THUMBNAIL_WIDTH_PX = 600
 PROVIDER = 'provider'
 DEEP_PAGINATION_ERROR = 'Deep pagination is not allowed.'
 QUERY_SPECIAL_CHARACTER_ERROR = 'Unescaped special characters are not allowed.'

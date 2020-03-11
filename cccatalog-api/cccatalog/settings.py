@@ -160,6 +160,8 @@ THUMBNAIL_PROXY_URL = os.environ.get(
     'THUMBNAIL_PROXY_URL', 'https://localhost:8222'
 )
 
+THUMBNAIL_WIDTH_PX = 600
+
 AUTHENTICATION_BACKENDS = (
     'oauth2_provider.backends.OAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',
