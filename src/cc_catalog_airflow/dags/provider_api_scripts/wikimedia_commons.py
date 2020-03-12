@@ -290,6 +290,23 @@ def _get_image_info_dict(image_data):
     return image_info
 
 
+def _extract_date_info(image_info):
+    date_originally_created = (
+        image_info
+        .get('extmetadata', {})
+        .get('DateTimeOriginal', {})
+        .get('value', '')
+    )
+
+    last_modified_at_source = (
+        image_info
+        .get('extmetadata', {})
+        .get('DateTime', {})
+        .get('value', '')
+    )
+    return (date_originally_created, last_modified_at_source)
+
+
 def _extract_creator_info(image_info):
     artist_string = (
         image_info
@@ -323,6 +340,8 @@ def _create_meta_data_dict(image_data):
     meta_data = {}
     global_usage_length = len(image_data.get('globalusage', []))
     image_info = _get_image_info_dict(image_data)
+    date_originally_created, last_modified_at_source = _extract_date_info(
+        image_info)
     description = (
         image_info
         .get('extmetadata', {})
@@ -335,6 +354,8 @@ def _create_meta_data_dict(image_data):
         ).strip()
         meta_data['description'] = description_text
     meta_data['global_usage_count'] = global_usage_length
+    meta_data['date_originally_created'] = date_originally_created
+    meta_data['last_modified_at_source'] = last_modified_at_source
     return meta_data
 
 

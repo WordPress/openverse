@@ -24,7 +24,7 @@ class DelayedRequester:
 
     def get(self, url, params=None, **kwargs):
         """
-        Make a get request, and return the response json if it exists.
+        Make a get request, and return the response object if it exists.
 
         Required Arguments:
 

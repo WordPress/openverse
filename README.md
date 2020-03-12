@@ -58,11 +58,11 @@ The Airflow DAGs defined in
 [`common_api_workflows.py`][api_flows]
 manage the daily ETL jobs for the following platforms:
 
-- [Flickr](src/cc_catalog_airflow/dags/provider_api_scripts/Flickr.py)
+- [Flickr](src/cc_catalog_airflow/dags/provider_api_scripts/flickr.py)
 - [Met Museum](src/cc_catalog_airflow/dags/provider_api_scripts/MetMuseum.py)
 - [PhyloPic](src/cc_catalog_airflow/dags/provider_api_scripts/PhyloPic.py)
 - [Thingiverse](src/cc_catalog_airflow/dags/provider_api_scripts/Thingiverse.py)
-- [Wikimedia Commons](src/cc_catalog_airflow/dags/provider_api_scripts/WikimediaCommons.py)
+- [Wikimedia Commons](src/cc_catalog_airflow/dags/provider_api_scripts/wikimedia_commons.py)
 
 [api_flows]: src/cc_catalog_airflow/dags/common_api_workflows.py
 
@@ -76,10 +76,10 @@ updated. The following tasks are performed:
 
 - [Cleveland Museum of Art](src/cc_catalog_airflow/dags/provider_api_scripts/ClevelandMuseum.py)
 - [RawPixel](src/cc_catalog_airflow/dags/provider_api_scripts/RawPixel.py)
-- [Flickr](src/cc_catalog_airflow/dags/provider_api_scripts/Flickr.py)
+- [Flickr](src/cc_catalog_airflow/dags/provider_api_scripts/flickr.py)
 - [Common Crawl Syncer](src/cc_catalog_airflow/dags/commoncrawl_s3_syncer/SyncImageProviders.py)
 
-[mon_flow]: src/cc_catalog_airflow/monthlyWorkflow.py
+[mon_flow]: src/cc_catalog_airflow/dags/monthlyWorkflow.py
 
 ### DB_Loader
 
@@ -110,7 +110,7 @@ own dependency requirements.
 The advantage of this method is that it recreates the same environment for your
 testing as is on production.
 
-There is a [`Dockerfile`][dockerfile] provided in the `src/cc_catalog_airflow`
+There is a [`Dockerfile`][dockerfile] provided in the [`src/cc_catalog_airflow`][cc_airflow]
 directory. With docker installed, navigate to that directory and run
 
 ```shell
@@ -125,11 +125,11 @@ image, and sync the directory containing the source files, run
 docker run -d -p 8080:8080 -v $(pwd)/dags:/usr/local/airflow/dags --name cc-catalog-etl-ws  cc-catalog-etl webserver
 ```
 
-from the `src/cc_catalog_airflow` directory (i.e., the one containing the
+from the [`src/cc_catalog_airflow`][cc_airflow] directory (i.e., the one containing the
 Dockerfile). This results in a Docker container running the airflow webserver,
 and syncs the directory containing all dags, as well as dependencies to the
 `usr/local/airflow/dags` directory in the container (named `cc-catalog-etl-ws`).
-To run the tests, run the following commands from the `src/cc_catalog_airflow`
+To run the tests, run the following commands from the [`src/cc_catalog_airflow`][cc_airflow]
 directory:
 
 1. `docker cp env.sh.template cc-catalog-etl-ws:/usr/local/airflow/env.sh`
@@ -146,6 +146,7 @@ Edits to the source files or tests can be made on your local machine, then tests
 can be run in the container to see the effects.
 
 [dockerfile]: src/cc_catalog_airflow/Dockerfile
+[cc_airflow]: src/cc_catalog_airflow/
 
 ### Setup the other way
 The advantage of this method is that you don't have to install docker. You will,
@@ -153,7 +154,7 @@ however need to install a number of other dependencies, including a specific
 version of Python. Furthermore, the tests are unlikely to pass on a windows
 machine (unless you're using WSL). To begin with, install Python 3.7, and `pip`.
 Use of `virtualenv` is recommended. Then, run the following commands in sequence
-from the `src/cc_catalog_airflow` directory (with your `venv` activated, should
+from the [`src/cc_catalog_airflow`][cc_airflow] directory (with your `venv` activated, should
 you use it):
 
 1. `pip install -r requirements.txt`

@@ -1,0 +1,51 @@
+{
+  "result": {
+    "uid": "7f7431c6-8f78-498b-92e2-ebf8882a8923",
+    "taxa": [
+      {
+        "canonicalName": {
+          "uid": "add61d86-ae83-4f65-978f-7ecaf51bbfde",
+          "string": "Martes Pinel, 1792"
+        }
+      },
+      {
+        "canonicalName": {
+          "uid": "cf99c5f9-0f06-42ec-bc55-9795f4f0e485",
+          "string": "Martes foina (Erxleben, 1777)"
+        }
+      },
+      {
+        "canonicalName": {
+          "uid": "82b42c9d-91b3-4048-8f73-f54891c93a59",
+          "string": "Guloninae Gray 1825"
+        }
+      }
+    ],
+    "submitted": "2020-01-28 04:31:19",
+    "credit": "Ferran Sayol",
+    "pngFiles": [
+      {
+        "url": "/assets/images/submissions/7f7431c6-8f78-498b-92e2-ebf8882a8923.64.png",
+        "width": 64,
+        "height": 28
+      },
+      {
+        "url": "/assets/images/submissions/7f7431c6-8f78-498b-92e2-ebf8882a8923.128.png",
+        "width": 128,
+        "height": 57
+      },
+      {
+        "url": "/assets/images/submissions/7f7431c6-8f78-498b-92e2-ebf8882a8923.original.png",
+        "width": 160,
+        "height": 72
+      }
+    ],
+    "licenseURL": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "submitter": {
+      "lastName": "Sayol",
+      "uid": "9fc252de-ba65-45a6-9d1f-42c45bdfab88",
+      "firstName": "Ferran"
+    }
+  },
+  "success": true
+}
