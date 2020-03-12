@@ -261,3 +261,32 @@ class Watermark(GenericAPIView):
             response = HttpResponse(img_bytes, content_type='image/jpeg')
             _save_wrapper(watermarked, exif_bytes, response)
             return response
+
+
+class OembedView(APIView):
+
+    def get(self, request):
+        url = request.query_params.get('url', '')
+        width = request.query_params.get('width', 0)
+        height = request.query_params.get('height', 0)
+        resp_format = request.query_params.get('format', '')
+
+        if not url:
+            return Response(data={}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            identifier = url.rsplit('/',1)[1]
+            image_record = Image.objects.get(identifier=identifier)
+        except:
+            return Response(data={}, status=status.HTTP_404_NOT_FOUND)
+        resp = {
+            'version': 1.0,
+            'type': 'photo',
+            'width': width if width else image_record.width,
+            'height': height if height else image_record.height,
+            'title': image_record.title,
+            'author_name': image_record.creator,
+            'author_url': image_record.creator_url,
+            'licence_url': image_record.license_url
+        }
+
+        return Response(data=resp, status=status.HTTP_200_OK)
