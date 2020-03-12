@@ -152,3 +152,63 @@ def test_process_image_data_handles_example_dict():
             "culture": "Japan"
         }
     )
+
+def test_get_data_for_image_with_none_response():
+    with patch.object(
+            mma.delayed_requester,
+            'get',
+            return_value=None
+    ) as mock_get:
+        with pytest.raises(Exception):
+            assert mma._get_data_for_image(10)
+
+    assert mock_get.call_count == 6
+
+def test_get_data_for_image_with_non_ok():
+    r = requests.Response()
+    r.status_code = 504
+    r.json = MagicMock(return_value={})
+    with patch.object(
+            mma.delayed_requester,
+            'get',
+            return_value=r
+    ) as mock_get:
+        with pytest.raises(Exception):
+            assert mma._get_data_for_image(10)
+
+    assert mock_get.call_count == 6
+
+def test_get_image_data_returns_response_json_when_all_ok():
+    with open(os.path.join(RESOURCES, 'sample_image_data.json')) as f:
+        image_data = json.load(f)
+
+    r = requests.Response()
+    r.status_code = 200
+    r.json = MagicMock(return_value=image_data)
+    with patch.object(
+        mma.image_store,
+        'add_item',
+        return_value=image_data
+    ) as mock_add:
+        mma._get_data_for_image(45734)
+
+    mock_add.assert_called_with(
+        creator="Kiyohara Yukinobu",
+        foreign_identifier="45734-1",
+        foreign_landing_url="https://www.metmuseum.org/art/collection/search/45734",
+        image_url="https://images.metmuseum.org/CRDImages/as/original/DP251120.jpg",
+        license_="cc0",
+        license_version="1.0",
+        meta_data={
+            "accession_number": "36.100.45",
+            "classification": "Paintings",
+            "culture": "Japan",
+            "date": "late 17th century",
+            "medium": "Hanging scroll; ink and color on silk",
+            "credit_line": (
+                "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936"
+                )
+            },
+        thumbnail_url="", 
+        title="Quail and Millet"
+    )
