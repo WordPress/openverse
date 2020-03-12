@@ -11,7 +11,6 @@ Notes:                  https://metmuseum.github.io/
 """
 
 import argparse
-import os
 import common.requester as requester
 import common.storage.image as image
 import logging
@@ -116,7 +115,7 @@ def _get_response_json(
 
 def _extract_the_data(object_ids):
     for i in object_ids:
-        _get_data_for_each_image(i)
+        _get_data_for_image(i)
 
 
 def _get_data_for_image(object_id):
@@ -131,8 +130,6 @@ def _get_data_for_image(object_id):
     if object_json is None:
         logger.error('Unable to process object ID : {}'.format(object_id))
         return None
-
-    message = object_json.get('message')
 
     isCC0 = object_json.get('isPublicDomain')
     if isCC0 is None or isCC0 is False:
