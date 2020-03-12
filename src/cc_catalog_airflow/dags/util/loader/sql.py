@@ -7,7 +7,7 @@ LOAD_TABLE_NAME_STUB = 'provider_image_data'
 IMAGE_TABLE_NAME = 'image'
 
 
-def create_if_not_exists_loading_table(
+def create_loading_table(
         postgres_conn_id,
         identifier
 ):

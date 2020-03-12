@@ -155,11 +155,11 @@ def postgres_with_load_and_image_table():
     conn.close()
 
 
-def test_create_if_not_exists_loading_table_creates_table(postgres):
+def test_create_loading_table_creates_table(postgres):
     postgres_conn_id = POSTGRES_CONN_ID
     identifier = TEST_ID
     load_table = TEST_LOAD_TABLE
-    sql.create_if_not_exists_loading_table(postgres_conn_id, identifier)
+    sql.create_loading_table(postgres_conn_id, identifier)
 
     check_query = (
         f"SELECT EXISTS ("
@@ -167,16 +167,15 @@ def test_create_if_not_exists_loading_table_creates_table(postgres):
     )
     postgres.cursor.execute(check_query)
     check_result = postgres.cursor.fetchone()[0]
-    print(check_result)
     assert check_result
 
 
-def test_create_if_not_exists_errors_if_run_twice_with_same_id(postgres):
+def test_create_loading_table_errors_if_run_twice_with_same_id(postgres):
     postgres_conn_id = POSTGRES_CONN_ID
     identifier = TEST_ID
-    sql.create_if_not_exists_loading_table(postgres_conn_id, identifier)
+    sql.create_loading_table(postgres_conn_id, identifier)
     with pytest.raises(Exception):
-        sql.create_if_not_exists_loading_table(postgres_conn_id, identifier)
+        sql.create_loading_table(postgres_conn_id, identifier)
 
 
 def test_import_data_loads_good_tsv(postgres_with_load_table, tmpdir):
@@ -534,8 +533,6 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
     updated_last_synced = updated_row[20]
 
     assert len(updated_result) == 1
-    print('original_updated_on: ', original_updated_on)
-    print('updated_updated_on: ', updated_updated_on)
     assert updated_updated_on > original_updated_on
     assert updated_last_synced > original_last_synced
 
@@ -631,3 +628,17 @@ def test_upsert_records_replaces_data(
     assert actual_row[17] == CREATOR_URL_B
     assert actual_row[18] == TITLE_B
     assert actual_row[22] == json.loads(META_DATA_B)
+
+
+def test_drop_load_table_drops_table(postgres_with_load_table):
+    postgres_conn_id = POSTGRES_CONN_ID
+    identifier = TEST_ID
+    load_table = TEST_LOAD_TABLE
+    sql.drop_load_table(postgres_conn_id, identifier)
+    check_query = (
+        f"SELECT EXISTS ("
+        f"SELECT FROM pg_tables WHERE tablename='{load_table}');"
+    )
+    postgres_with_load_table.cursor.execute(check_query)
+    check_result = postgres_with_load_table.cursor.fetchone()[0]
+    assert not check_result

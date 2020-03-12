@@ -32,7 +32,7 @@ def get_table_creator_operator(
 ):
     return PythonOperator(
         task_id='create_loading_table',
-        python_callable=sql.create_if_not_exists_loading_table,
+        python_callable=sql.create_loading_table,
         op_args=[postgres_conn_id, identifier],
         dag=dag
     )
