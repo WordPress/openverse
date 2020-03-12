@@ -57,23 +57,7 @@ def get_image_list(_page=1):
         return [None, None]
 
 
-def process_image_data(_image):
-    start_time = time.time()
-
-    # verify the license and extract the metadata
-    foreign_id = ""
-    foreign_url = ""
-    img_url = ""
-    width = ""
-    height = ""
-    thumbnail = ""
-    tags = ""
-    title = ""
-    owner = ""
-    license = "cc0"
-    version = "1.0"
-    tags = {}
-
+def get_foreign_id_url(_image):
     if _image.get("freecc0"):
         # get the image identifier
         foreign_id = _image.get("id", "")
@@ -85,40 +69,67 @@ def process_image_data(_image):
             logging.warning(
                 "Landing page not detected for image ID: {}".format(foreign_id)
             )
-            return None
+        return [foreign_id, foreign_url]
+    else:
+        return [None, None]
 
-        img_url = _image.get("image_opengraph")
-        if img_url:
-            # extract the dimensions from the query params because
-            # the dimensions in the metadata are at times
-            # inconsistent with the rescaled images
-            query_params = urlparse(img_url)
-            width = parse_qs(query_params.query).get("w", [])[0]  # width
-            height = parse_qs(query_params.query).get("h", [])[0]  # height
 
-            thumbnail = _image.get("image_400", "")
-        else:
-            logging.warning(f"Image not detected in URL: {foreign_url}")
-            return None
+def get_image_properties(_image, foreign_url):
+    img_url = _image.get("image_opengraph")
+    if img_url:
+        # extract the dimensions from the query params because
+        # the dimensions in the metadata are at times
+        # inconsistent with the rescaled images
+        query_params = urlparse(img_url)
+        width = parse_qs(query_params.query).get("w", [])[0]  # width
+        height = parse_qs(query_params.query).get("h", [])[0]  # height
+        thumbnail = _image.get("image_400", "")
+        return [img_url, width, height, thumbnail]
+    else:
+        logging.warning(f"Image not detected in URL: {foreign_url}")
+        return [None, None, None, None]
 
-        title = _image.get("image_title", "")
 
-        owner = _image.get("artist_names", "")
-        owner = owner.replace("(Source)", "").strip()
+def get_title_owner(_image):
+    title = _image.get("image_title", "")
+    owner = _image.get("artist_names", "")
+    owner = owner.replace("(Source)", "").strip()
+    return [title, owner]
 
-        keywords = _image.get("keywords_raw")
-        if keywords:
-            keyword_list = keywords.split(",")
-            keyword_list = [
-                word.strip()
-                for word in keyword_list
-                if word.strip()
-                not in ["cc0", "creative commons", "creative commons 0"]
-            ]
 
-            tags = [
-                {"name": tag, "provider": "rawpixel"} for tag in keyword_list
-            ]
+def get_tags(_image):
+    keywords = _image.get("keywords_raw")
+    if keywords:
+        keyword_list = keywords.split(",")
+        keyword_list = [
+            word.strip()
+            for word in keyword_list
+            if word.strip()
+            not in ["cc0", "creative commons", "creative commons 0"]
+        ]
+        tags = [
+            {"name": tag, "provider": "rawpixel"} for tag in keyword_list
+        ]
+        return tags
+    else:
+        return {}
+
+
+def process_image_data(_image):
+    start_time = time.time()
+
+    # verify the license and extract the metadata
+    license = "cc0"
+    version = "1.0"
+
+    foreign_id, foreign_url = get_foreign_id_url(_image)
+    if not foreign_url:
+        return None
+    img_url, width, height, thumbnail = get_image_properties(_image, foreign_url)
+    if not img_url:
+        return None
+    title, owner = get_title_owner(_image)
+    tags = get_tags(_image)
 
     # TODO: How to get license_url, creator, creator_url, source?
     return image_store.add_item(
