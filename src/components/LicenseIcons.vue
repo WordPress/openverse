@@ -4,11 +4,11 @@
      class="photo-license-icons"
      target="_blank"
      rel="noopener noreferrer">
-    <img class="photo-license-icon" alt="cc-icon" src="@/assets/cc_icon.svg" />
+    <img class="photo-license-icon" alt="CC" src="@/assets/cc_icon.svg" />
     <template v-for="(license, index) in onGetLicenseIcon(image.license)">
       <img
           v-if="license" class="photo-license-icon"
-          :alt="`${license} license icon`"
+          :alt="`${license.toUpperCase()}`"
           :src="require(`@/assets/cc-${license.toLowerCase()}_icon.svg`)"
           :key="index" />
     </template>
