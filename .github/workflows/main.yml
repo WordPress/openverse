@@ -12,7 +12,7 @@ jobs:
       uses: docker://takanabe/github-actions-automate-projects:v0.0.1
       if: github.event_name == 'issues' && github.event.action == 'opened'
       env:
-        GITHUB_TOKEN: ${{ secrets.repositoryToken }}
+        GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
         GITHUB_PROJECT_URL: https://github.com/orgs/creativecommons/projects/10
         GITHUB_PROJECT_COLUMN_NAME: Pending Review
         
@@ -23,6 +23,6 @@ jobs:
       uses: docker://takanabe/github-actions-automate-projects:v0.0.1
       if: github.event_name == 'pull_request' && github.event.action == 'opened'
       env:
-        GITHUB_TOKEN: ${{ secrets.repositoryToken }}
+        GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
         GITHUB_PROJECT_URL: https://github.com/orgs/creativecommons/projects/7
-        GITHUB_PROJECT_COLUMN_NAME: Ticket Work Required
+        GITHUB_PROJECT_COLUMN_NAME: In Progress
