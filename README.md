@@ -7,10 +7,6 @@ The Creative Commons Catalog API ('cccatalog-api') is a system that allows progr
 
 This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [cccatalog repository](https://github.com/creativecommons/cccatalog). A front end web application that interfaces with the API can be found at the [cccatalog-frontend repository](https://github.com/creativecommons/cccatalog).
 
-## Project Status
-
-The API is still in [semantic version](https://semver.org/) 0.\*.\*, meaning the API can be changed without notice. You should [contact us](https://creativecommons.org/about/contact/) if you are interested in using this API in production. No SLAs or warranties are provided to anonymous consumers of the API.
-
 ## API Documentation
 
 Browsable API documentation can be found [here](https://api.creativecommons.engineering).
