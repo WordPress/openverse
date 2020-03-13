@@ -35,7 +35,7 @@ PROVIDER = 'flickr'
 API_KEY = os.getenv('FLICKR_API_KEY')
 ENDPOINT = 'https://api.flickr.com/services/rest/?method=flickr.photos.search'
 PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
-DATE_TYPES = ['taken', 'upload']
+DATE_TYPE = 'upload'
 
 LICENSE_INFO = {
     '1': ('by-nc-sa', '2.0'),
@@ -66,10 +66,10 @@ image_store = image.ImageStore(provider=PROVIDER)
 def main(date):
     logger.info(f'Processing Flickr API for date: {date}')
 
-    start_timestamp, end_timestamp = _derive_timestamp_pair(date)
+    timestamp_pairs = _derive_timestamp_pair_list(date)
+    date_type = DATE_TYPE
 
-    for date_type in DATE_TYPES:
-        logger.info(f'processing date type {date_type}')
+    for start_timestamp, end_timestamp in timestamp_pairs:
         total_images = _process_date(start_timestamp, end_timestamp, date_type)
 
     total_images = image_store.commit()
@@ -77,12 +77,17 @@ def main(date):
     logger.info('Terminated!')
 
 
-def _derive_timestamp_pair(date):
+def _derive_timestamp_pair_list(date):
     date_obj = datetime.strptime(date, '%Y-%m-%d')
     utc_date = date_obj.replace(tzinfo=timezone.utc)
-    start_timestamp = str(int(utc_date.timestamp()))
-    end_timestamp = str(int((utc_date + timedelta(days=1)).timestamp()))
-    return start_timestamp, end_timestamp
+    pair_list = [
+        (
+            str(int((utc_date + timedelta(hours=i)).timestamp())),
+            str(int((utc_date + timedelta(hours=i + 0.5)).timestamp()))
+        )
+        for i in [j / 2 for j in range(48)]
+    ]
+    return pair_list
 
 
 def _process_date(start_timestamp, end_timestamp, date_type):
