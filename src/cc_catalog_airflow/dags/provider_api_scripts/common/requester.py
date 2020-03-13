@@ -59,8 +59,13 @@ class DelayedRequester:
             logging.debug(f'Waiting {wait} second(s)')
             time.sleep(wait)
 
-    def get_response_json(self, endpoint, retries=0, query_params=None,
-                          **kwargs):
+    def get_response_json(
+            self,
+            endpoint,
+            retries=0,
+            query_params=None,
+            **kwargs
+    ):
         response_json = None
 
         if retries < 0:
@@ -87,9 +92,11 @@ class DelayedRequester:
                 f'    retries={retries - 1}'
                 ')'
             )
-            response_json = self.get_response_json(endpoint,
-                                                   retries=retries - 1,
-                                                   query_params=query_params,
-                                                   **kwargs)
+            response_json = self.get_response_json(
+                endpoint,
+                retries=retries - 1,
+                query_params=query_params,
+                **kwargs
+            )
 
         return response_json
