@@ -1,10 +1,5 @@
 <template>
   <section class="sidebar_section">
-    <header class="sidebar_section-header">
-      <h2>
-        Image Info
-      </h2>
-    </header>
     <ul>
       <li>
         <h3>Title</h3>

@@ -1,11 +1,6 @@
 <template>
   <section class="sidebar_section">
     <!-- TODO: try to centralize contents in photo details page) -->
-    <header class="sidebar_section-header">
-      <h2>
-        Image Attribution
-      </h2>
-    </header>
     <div >
       <div class="photo-attribution">
         <span id="attribution" class="photo_usage-attribution" ref="photoAttribution">
@@ -49,7 +44,7 @@
                   el="#attribution-html"
                   title="Copy the HTML to embed the attribution with license icons in your web page"
                   @copied="onEmbedAttribution">
-          Copy HTML
+          Copy html
         </CopyButton>
       </div>
       <reuse-survey :image="image" />
