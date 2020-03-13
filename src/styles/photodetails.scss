@@ -14,7 +14,7 @@
 
 .photo {
   width: 100%;
-  background: #e9ebee;
+  background: rgb(245, 245, 245);
 }
 
 .photo_breadcrumb {
@@ -88,19 +88,6 @@ label {
   height: 24px;
 }
 
-.tab-section {
-  border-bottom: 1px solid #616161;
-  background: #fefefe;
-}
-
-.tabs {
-  border-bottom: none;
-  border-right: none;
-}
-
-.tabs-panel {
-  padding: 1rem 0 1rem 0;
-}
 
 .tabs-content {
   border: none;

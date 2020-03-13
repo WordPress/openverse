@@ -11,37 +11,25 @@
             :alt="image.title">
     </div>
     <div class="column image-info">
-      <section class="tab-section">
-        <ul class="tabs" data-tabs id="example-tabs">
-          <li :class="tabClass(0, 'tabs-title')">
+      <section class="tabs" >
+        <ul>
+          <li :class="tabClass(0, 'a')">
             <a href="#panel0" :aria-selected="activeTab == 0" @click.prevent="setActiveTab(0)">
-              <img class='tab-icon'
-                  src='../assets/cc-by-icon_large.png'
-                  alt='Image Attribution'>
               Attribution
             </a>
           </li>
-          <li :class="tabClass(1, 'tabs-title')">
+          <li :class="tabClass(1, 'a')">
             <a href="#panel1" :aria-selected="activeTab == 1" @click.prevent="setActiveTab(1)">
-              <img class='tab-icon'
-                  src='../assets/info-icon.svg'
-                  alt='Image Info' />
               Info
             </a>
           </li>
-          <li :class="tabClass(2, 'tabs-title')" v-if="watermarkEnabled">
+          <li :class="tabClass(2, 'a')" v-if="watermarkEnabled">
             <a href="#panel2" :aria-selected="activeTab == 2" @click.prevent="setActiveTab(2)">
-              <img class='tab-icon'
-                  src='../assets/download-icon.svg'
-                  alt='Image Download' />
               Download
             </a>
           </li>
-          <li :class="tabClass(3, 'tabs-title')" v-if="socialSharingEnabled">
+          <li :class="tabClass(3, 'a')" v-if="socialSharingEnabled">
             <a href="#panel3" :aria-selected="activeTab == 3" @click.prevent="setActiveTab(3)">
-              <img class='tab-icon'
-                  src='../assets/share-icon.svg'
-                  alt='Share Image' />
               Share
             </a>
           </li>
