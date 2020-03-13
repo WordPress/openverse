@@ -48,15 +48,15 @@ const PhotoDetailPage = {
   },
   beforeRouteUpdate(to, from, next) {
     // this is called when users navigate to this page.
-    // To avoid having previously loaded image being displayed
-    // we reset the image data and then load the actual image that
+    // To avoid having previously loaded image being displayed,
+    // this resets the image data and then load the actual image that
     // is supposed to be displayed.
     this.resetImageOnRouteChanged();
     this.loadImage(to.params.id);
     next();
   },
   beforeRouteLeave(to, from, next) {
-    // we reset the image once the user navigates away from the page
+    // this resets the image once the user navigates away from the page
     this.resetImageOnRouteChanged();
     next();
   },
