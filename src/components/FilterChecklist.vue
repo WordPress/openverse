@@ -43,7 +43,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@creativecommons/vocabulary/scss/colors.scss";
+@import "@creativecommons/vocabulary/scss/color.scss";
 
 .filters {
   border-bottom: 2px solid $color-lighter-gray;

@@ -41,7 +41,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "@creativecommons/vocabulary/scss/colors.scss";
+  @import "@creativecommons/vocabulary/scss/color.scss";
   .provider-card {
     margin: 0.5em;
     border: 1px solid $color-light-gray;
