@@ -102,7 +102,10 @@ def _get_total_images():
     # Get the total number of PhyloPic images
     total = 0
     endpoint = 'http://phylopic.org/api/a/image/count'
-    result = delayed_requester.get_response_json(endpoint, retries=2)
+    result = delayed_requester.get_response_json(
+        endpoint,
+        retries=2
+    )
 
     if result and result.get('success') is True:
         total = result.get('result', 0)
@@ -130,7 +133,10 @@ def _create_endpoint_for_IDs(**args):
 
 
 def _get_image_IDs(_endpoint):
-    result = delayed_requester.get_response_json(_endpoint, retries=2)
+    result = delayed_requester.get_response_json(
+        _endpoint,
+        retries=2
+    )
     image_IDs = []
 
     if result and result.get('success') is True:
@@ -161,7 +167,10 @@ def _get_meta_data(_uuid):
     endpoint = "http://phylopic.org/api/a/image/{}?options=credit+" \
                "licenseURL+pngFiles+submitted+submitter+taxa+canonicalName" \
                "+string+firstName+lastName".format(_uuid)
-    request = delayed_requester.get_response_json(endpoint, retries=2)
+    request = delayed_requester.get_response_json(
+        endpoint,
+        retries=2
+    )
     if request and request.get('success') is True:
         result = request['result']
     else:
