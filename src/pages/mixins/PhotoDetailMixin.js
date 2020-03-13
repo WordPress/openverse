@@ -47,15 +47,23 @@ const PhotoDetailPage = {
     },
   },
   beforeRouteUpdate(to, from, next) {
+    // this is called when users navigate to this page.
+    // To avoid having previously loaded image being displayed,
+    // this resets the image data and then load the actual image that
+    // is supposed to be displayed.
     this.resetImageOnRouteChanged();
     this.loadImage(to.params.id);
     next();
   },
   beforeRouteLeave(to, from, next) {
+    // this resets the image once the user navigates away from the page
     this.resetImageOnRouteChanged();
     next();
   },
   beforeRouteEnter(to, previousPage, nextPage) {
+    // sets the internal value shouldShowBreadcrumb so that the
+    // "back to search results" link is rendered with the correct link
+    // to the results page the user was before.
     nextPage((_this) => {
       if (previousPage.name === 'browse-page') {
         _this.shouldShowBreadcrumb = true; // eslint-disable-line no-param-reassign
