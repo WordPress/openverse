@@ -1,20 +1,24 @@
-name: Automation of Project Board
-on: [issues, pull_request]
+name: "Project Board Automation"
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
 jobs:
-  github-actions-automate-projects:
+  join_issue_pr_to_project:
     runs-on: ubuntu-latest
     steps:
-    - name: add-new-issues-to-repository-based-project-column
+    - name: "Automate adding issues to Backlog"
       uses: docker://takanabe/github-actions-automate-projects:v0.0.1
-      if: github.event_name == 'issues' && github.event.action == 'opened'
+      if: github.event_name == 'issues'
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
         GITHUB_PROJECT_URL: https://github.com/orgs/creativecommons/projects/10
-        GITHUB_PROJECT_COLUMN_NAME: Pending Review
-    - name: add-new-prs-to-repository-based-project-column
+        GITHUB_PROJECT_COLUMN_NAME: "Pending Review"
+    - name: "Automate adding PRs to Active Sprint"
       uses: docker://takanabe/github-actions-automate-projects:v0.0.1
-      if: github.event_name == 'pull_request' && github.event.action == 'opened'
+      if: github.event_name == 'pull_request'
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
         GITHUB_PROJECT_URL: https://github.com/orgs/creativecommons/projects/7
-        GITHUB_PROJECT_COLUMN_NAME: In Progress
+        GITHUB_PROJECT_COLUMN_NAME: "In Progress"
