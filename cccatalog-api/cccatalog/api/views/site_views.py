@@ -1,6 +1,7 @@
 import logging as log
 import secrets
 import smtplib
+from urllib.request import urlopen
 from django.core.mail import send_mail
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -16,6 +17,7 @@ from cccatalog.api.utils.throttle import TenPerDay, OnePerSecond
 from cccatalog.api.utils.oauth2_helper import get_token_info
 from cccatalog.settings import THUMBNAIL_PROXY_URL, THUMBNAIL_WIDTH_PX
 from django.core.cache import cache
+from django.http import HttpResponse
 from django.shortcuts import redirect
 
 IDENTIFIER = 'provider_identifier'
@@ -313,9 +315,11 @@ class Thumbs(APIView):
                 return Response(status=404, data='Not Found')
         except Image.DoesNotExist:
             return Response(status=404, data='Not Found')
-        proxied = '{proxy_url}/{width}/{original}'.format(
-                proxy_url=THUMBNAIL_PROXY_URL,
-                width=THUMBNAIL_WIDTH_PX,
-                original=image.url
-            )
-        return redirect(proxied)
+
+        status = upstream_response.status
+        content_type = upstream_response.headers.get('Content-Type')
+
+        response = HttpResponse(upstream_response.read(), status=status,
+                                    content_type=content_type)
+
+        return response
