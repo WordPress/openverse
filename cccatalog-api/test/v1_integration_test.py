@@ -107,6 +107,12 @@ def test_image_delete(search_fixture):
     deleted_response = requests.get(f'{API_URL}/image/{test_id}')
     assert deleted_response.status_code == 404
 
+@pytest.fixture
+def test_image_thumb(search_fixture):
+    thumbnail_url = search_fixture['results'][0]['thumbnail']
+    thumbnail_response = requests.get(thumbnail_url)
+    assert thumbnail_response.status_code == 200
+    assert thumbnail_response.headers["Content-Type"].startswith("image/")
 
 @pytest.fixture
 def link_shortener_fixture(search_fixture):
