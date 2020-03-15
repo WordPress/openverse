@@ -18,7 +18,6 @@ from cccatalog.api.utils.oauth2_helper import get_token_info
 from cccatalog.settings import THUMBNAIL_PROXY_URL, THUMBNAIL_WIDTH_PX
 from django.core.cache import cache
 from django.http import HttpResponse
-from django.shortcuts import redirect
 
 IDENTIFIER = 'provider_identifier'
 NAME = 'provider_name'
