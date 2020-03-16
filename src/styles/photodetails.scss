@@ -38,7 +38,6 @@
     height: auto;
     max-height: 750px;
     max-width: 100%;
-    margin-bottom: 4rem;
   }
 
   /* Small only */
@@ -70,50 +69,12 @@
   }
 }
 
-.photo-attribution {
-  margin-top: 1rem;
-  font-style: italic;
-}
-
-.photo_usage-attribution {
-  border-left: 1px solid #e7e8e9;;
-  padding-left: 10px;
-}
-
 label {
   margin-right: 8px;
 }
 
 .help-icon {
   height: 24px;
-}
-
-
-.tabs-content {
-  border: none;
-}
-
-.tab-icon {
-  height: 16px;
-}
-
-.attribution-buttons {
-  margin-top: 8px;
-}
-
-.button-group {
-  margin-bottom: 0.2rem;
-}
-
-.more-options {
-  box-shadow: -11px -5px 17px -14px rgba(0,0,0,0.31);
-  padding: 10px 0 0 10px;
-  width: 12.7rem;
-  border: 1px solid #ccc;
-}
-
-.more-options-button {
-  display: block;
 }
 
 .copy-description {
