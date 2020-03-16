@@ -1,7 +1,7 @@
 <template>
   <button :id="id"
           type="button"
-          class="button tiny is-info is-block margin-top-small"
+          class="button tiny is-info is-block margin-top-normal"
           :data-clipboard-target="el">
     <slot v-if="!success" default />
     <template v-else>Copied!</template>

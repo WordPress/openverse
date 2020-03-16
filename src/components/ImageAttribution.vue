@@ -31,11 +31,8 @@
         </CopyButton>
       </div>
       <div class="embed-attribution">
-        <span>
-          Copy the HTML below to embed the attribution with license icons in your web page
-        </span>
         <textarea id="attribution-html"
-                  class="is-family-code"
+                  class="textarea is-family-monospace"
                   :value="attributionHtml"
                   cols="30" rows="4"
                   readonly="readonly">

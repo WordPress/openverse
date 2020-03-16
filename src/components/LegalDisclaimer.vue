@@ -1,20 +1,19 @@
 <template>
-  <div v-if="sourceURL" class="provider-container">
-    <span>Verify at the source:</span>
-    <div>
-      <a :href="sourceURL"
-          target="blank"
-          rel="noopener noreferrer">
-        <img class="provider-logo"
-            :alt="source"
-            :src="getProviderLogo(sourceProviderCode)" />
-      </a>
-      <p class="legal-disclaimer">
-        CC Search aggregates data from publicly available repositories of open content.<br />
-        CC does not host the content and does not verify that the content is properly CC-licensed
-        or that the attribution information is accurate or complete.<br />
-        Please follow the link to the source of the content to independently verify before reuse.
-      </p>
+  <div v-if="sourceURL" class="margin-top-normal">
+    <h4 class="b-header">Verify at the source</h4>
+    <div class="margin-top-normal">
+      <ul>
+        <li class="caption">
+          CC Search aggregates data from publicly available repositories of open content.
+        </li>
+        <li class="caption">
+          CC does not host the content and does not verify that the content is properly
+          CC-licensed or that the attribution information is accurate or complete.
+        </li>
+        <li class="caption">
+          Please follow the link to the source of the content to independently verify before reuse.
+        </li>
+      </ul>
     </div>
   </div>
 </template>
