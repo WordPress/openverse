@@ -1,5 +1,5 @@
 <template>
-  <div v-if="sourceURL" class="margin-top-normal">
+  <div v-if="sourceURL" class="legal-disclaimer margin-top-normal">
     <h4 class="b-header">Verify at the source</h4>
     <div class="margin-top-normal">
       <ul>

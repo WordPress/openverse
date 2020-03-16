@@ -1,7 +1,7 @@
 <template>
   <div class="photo_tags margin-normal" v-if="tags && tags.length">
     <h3>Tags</h3>
-    <div class="photo_tags-ctr margin-top-normal">
+    <div class="margin-top-normal">
       <template v-for="(tag, index) in getValidTags()">
         <button class="button tag margin-left-small"
               :key="index"
