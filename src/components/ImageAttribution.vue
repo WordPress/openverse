@@ -1,7 +1,6 @@
 <template>
   <section class="sidebar_section">
-    <!-- TODO: try to centralize contents in photo details page) -->
-    <div >
+    <div>
       <div class="photo-attribution">
         <span id="attribution" class="photo_usage-attribution" ref="photoAttribution">
           <a :href="image.foreign_landing_url"
