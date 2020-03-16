@@ -20,7 +20,7 @@
                   type="search"
                   :placeholder="navSearchPlaceholder"
                   v-model.lazy="form.searchTerm">
-            <div class="input-group-button">
+            <div class="input-group-button is-sr-only">
               <button type="submit" class="button secondary" value="Search"></button>
             </div>
           </div>
@@ -229,26 +229,5 @@ li {
   margin: 9px 0;
   width: 315px;
   max-width: 100%;
-  .input-group-button .button {
-    border-radius: 3px;
-    font-size: 0.8rem;
-    height: 100%;
-    position: relative;
-    left: calc( -100% - 10px );
-    background: none;
-    border: none;
-    &:after {
-      content: '';
-      background: url('../assets/search-icon_black.svg') center center no-repeat;
-      background-size: 20px;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      position: absolute;
-      z-index: 10;
-      opacity: .2;
-    }
-  }
 }
 </style>
