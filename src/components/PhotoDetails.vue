@@ -1,6 +1,6 @@
 <template>
   <div class="photo columns is-desktop is-marginless">
-    <div class="column is-three-fifths photo_image-ctr">
+    <div class="column is-three-fifths photo_image-ctr margin-top-normal">
       <a class="photo_breadcrumb"
           :href="breadCrumbURL"
           @click.prevent="onGoBackToSearchResults"

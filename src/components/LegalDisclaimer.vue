@@ -3,14 +3,14 @@
     <h4 class="b-header">Verify at the source</h4>
     <div class="margin-top-normal">
       <ul>
-        <li class="caption">
+        <li class="caption margin-bottom-normal">
           CC Search aggregates data from publicly available repositories of open content.
         </li>
-        <li class="caption">
+        <li class="caption margin-bottom-normal">
           CC does not host the content and does not verify that the content is properly
           CC-licensed or that the attribution information is accurate or complete.
         </li>
-        <li class="caption">
+        <li class="caption margin-bottom-normal">
           Please follow the link to the source of the content to independently verify before reuse.
         </li>
       </ul>

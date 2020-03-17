@@ -17,7 +17,7 @@
             <span v-else>{{ image.creator }}</span>
           </span>
           is licensed under
-          <a class="photo_license" :href="licenseURL" target="_blank" rel="noopener">
+          <a class="photo_license margin-right-small" :href="licenseURL" target="_blank" rel="noopener">
           {{ fullLicenseName.toUpperCase() }}
           </a>
         </span>
