@@ -44,7 +44,6 @@ def test_get_response_json_retries_with_none_response():
             assert dq.get_response_json(
                 'https://google.com/',
                 retries=2,
-                query_params={}
             )
 
     assert mock_get.call_count == 3
@@ -64,7 +63,6 @@ def test_get_response_json_retries_with_non_ok():
             assert dq.get_response_json(
                 'https://google.com/',
                 retries=2,
-                query_params={}
             )
 
     assert mock_get.call_count == 3
@@ -84,7 +82,6 @@ def test_get_response_json_retries_with_error_json():
             assert dq.get_response_json(
                 'https://google.com/',
                 retries=2,
-                query_params={}
             )
 
     assert mock_get.call_count == 3
@@ -104,7 +101,6 @@ def test_get_response_json_returns_response_json_when_all_ok():
         actual_response_json = dq.get_response_json(
             'https://google.com/',
             retries=2,
-            query_params={}
         )
 
     assert mock_get.call_count == 1
