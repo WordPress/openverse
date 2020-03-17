@@ -230,6 +230,7 @@ def test_merge_image_pages_both_have_gu():
     actual_merged_page = wmc._merge_image_pages(left_page, right_page)
     assert actual_merged_page == expect_merged_page
 
+
 def test_process_image_data_handles_example_dict():
     with open(os.path.join(RESOURCES, 'image_data_example.json')) as f:
         image_data = json.load(f)
