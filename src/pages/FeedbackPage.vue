@@ -1,7 +1,7 @@
 <template>
   <div class="grid-container full">
     <header-section showNavSearch="true"></header-section>
-    <div class="feedback-page">
+    <div class="margin-larger">
       <h1 id="feedback">Feedback</h1>
       <p>
         Thank you for using CC Search! We welcome your ideas for improving the tool below.
@@ -64,18 +64,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-  h1, h2 {
-    margin-bottom: .44117647em;
-    font-size: 2.125em;
-    font-weight: normal;
-    letter-spacing: initial;
-    line-height: 1.25;
-    text-transform: initial;
-  }
-
-  .feedback-page {
-    margin: 45px !important;
-  }
-</style>
