@@ -1,10 +1,7 @@
 import json
 import logging
 import os
-import requests
-from unittest.mock import patch, MagicMock
-
-import pytest
+from unittest.mock import patch
 
 import wikimedia_commons as wmc
 
@@ -232,72 +229,6 @@ def test_merge_image_pages_both_have_gu():
         expect_merged_page = json.load(f)
     actual_merged_page = wmc._merge_image_pages(left_page, right_page)
     assert actual_merged_page == expect_merged_page
-
-
-def test_get_response_json_retries_with_none_response():
-    with patch.object(
-            wmc.delayed_requester,
-            'get',
-            return_value=None
-    ) as mock_get:
-        with pytest.raises(Exception):
-            assert wmc.delayed_requester.get_response_json(wmc.ENDPOINT,
-                                                           retries=2,
-                                                           query_params={})
-
-    assert mock_get.call_count == 3
-
-
-def test_get_response_json_retries_with_non_ok():
-    r = requests.Response()
-    r.status_code = 504
-    r.json = MagicMock(return_value={'batchcomplete': ''})
-    with patch.object(
-            wmc.delayed_requester,
-            'get',
-            return_value=r
-    ) as mock_get:
-        with pytest.raises(Exception):
-            assert wmc.delayed_requester.get_response_json(wmc.ENDPOINT,
-                                                           retries=2,
-                                                           query_params={})
-
-    assert mock_get.call_count == 3
-
-
-def test_get_response_json_retries_with_error_json():
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value={'error': ''})
-    with patch.object(
-            wmc.delayed_requester,
-            'get',
-            return_value=r
-    ) as mock_get:
-        with pytest.raises(Exception):
-            assert wmc.delayed_requester.get_response_json(wmc.ENDPOINT,
-                                                           retries=2,
-                                                           query_params={})
-
-    assert mock_get.call_count == 3
-
-
-def test_get_response_json_returns_response_json_when_all_ok():
-    expect_response_json = {'batchcomplete': ''}
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=expect_response_json)
-    with patch.object(
-            wmc.delayed_requester,
-            'get',
-            return_value=r
-    ) as mock_get:
-        actual_response_json = wmc.delayed_requester. \
-            get_response_json(wmc.ENDPOINT, retries=2, query_params={})
-
-    assert mock_get.call_count == 1
-    assert actual_response_json == expect_response_json
-
 
 def test_process_image_data_handles_example_dict():
     with open(os.path.join(RESOURCES, 'image_data_example.json')) as f:

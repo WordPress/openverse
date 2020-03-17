@@ -1,9 +1,7 @@
 import json
 import logging
 import os
-import requests
-from unittest.mock import patch, MagicMock
-import pytest
+from unittest.mock import patch
 
 import phylo_pic as pp
 
@@ -184,49 +182,3 @@ def test_create_args():
                    }
     assert actual_args == expect_args
     assert len(actual_args) == 10
-
-
-def test_get_response_json_retries_with_none_response():
-    with patch.object(
-            pp.delayed_requester,
-            'get',
-            return_value=None
-    ) as mock_get:
-        with pytest.raises(Exception):
-            assert pp.delayed_requester.get_response_json({}, retries=2)
-
-    assert mock_get.call_count == 3
-
-
-def test_get_response_json_retries_with_non_ok():
-    r = requests.Response()
-    r.status_code = 504
-    with patch.object(
-            pp.delayed_requester,
-            'get',
-            return_value=r
-    ) as mock_get:
-        with pytest.raises(Exception):
-            assert pp.delayed_requester.get_response_json({}, retries=2)
-
-    assert mock_get.call_count == 3
-
-
-def test_get_response_json_returns_response_json_when_all_ok():
-    with open(
-            os.path.join(RESOURCES, 'total_images_example.json')
-    ) as f:
-        expect_response_json = json.load(f)
-    r = requests.Response()
-    r.status_code = 200
-    r.json = MagicMock(return_value=expect_response_json)
-    with patch.object(
-            pp.delayed_requester,
-            'get',
-            return_value=r
-    ) as mock_get:
-        actual_response_json = pp.delayed_requester. \
-            get_response_json({}, retries=2)
-
-    assert mock_get.call_count == 1
-    assert actual_response_json == expect_response_json
