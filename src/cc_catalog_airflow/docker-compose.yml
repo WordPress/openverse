@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - /tmp/data:/var/lib/postgresql/data
+      - /tmp/docker_postgres_data:/var/lib/postgresql/data
 
   webserver:
     build: .
