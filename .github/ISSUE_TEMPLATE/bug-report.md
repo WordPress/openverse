@@ -1,7 +1,7 @@
 ---
 name: Bug Report
 about: Create a report to help us improve
-labels: bug, not ready for work
+labels: bug, awaiting triage
 title: "[Bug] Replace with Title"
 ---
 
