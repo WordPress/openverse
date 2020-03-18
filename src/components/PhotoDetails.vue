@@ -111,9 +111,8 @@ export default {
     onGoBackToSearchResults() {
       this.$router.push({ name: 'browse-page', query: this.query, params: { location: this.$route.params.location } });
     },
-    onGoBack(e) {
-      console.log("abhi");
-      this.onGoBackToSearchResults()
+    onGoBack() {
+      this.onGoBackToSearchResults();
     },
     onImageLoad(event) {
       this.$emit('onImageLoaded', event);
@@ -132,13 +131,12 @@ export default {
       return attributionHtml(this.image, licenseURL, this.fullLicenseName);
     },
   },
-  mounted () {
-  let vm = this;
-  window.addEventListener('popstate', this.onGoBack)
-},
-  beforeDestroy () {
-  window.removeEventListener('popstate', this.onGoBack);
-},
+  mounted() {
+    window.addEventListener('popstate', this.onGoBack);
+  },
+  beforeDestroy() {
+    window.removeEventListener('popstate', this.onGoBack);
+  },
 };
 
 
