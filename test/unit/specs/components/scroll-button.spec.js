@@ -27,7 +27,7 @@ describe('Scroll button', () => {
   });
 
   it('should scroll the window up when clicked', () => {
-    const mockMethods =  jest.fn();
+    const mockMethods = jest.fn();
     global.scrollTo = mockMethods;
     const opts = {
       propsData: {
