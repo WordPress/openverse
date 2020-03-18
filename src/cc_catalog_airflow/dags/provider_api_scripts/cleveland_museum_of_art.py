@@ -58,40 +58,34 @@ def _build_query_param(offset):
 def _get_response(
                 query_param,
                 endpoint=ENDPOINT,
-                retires=RETRIES
+                retries=RETRIES
                 ):
-    if retires < 0:
-        total_images = 0
-        logger.error('Max retries exceeded. Failure')
-        raise Exception('retries exceeded')
-        return None, total_images
+    response_json, total_images = None, 0
+    for tries in range(RETRIES):
+        response = delay_request.get(
+                    endpoint,
+                    query_param
+                    )
+        if response.status_code == 200 and response is not None:
+            logger.info('Response status 200')
+            try:
+                response_json = response.json()
+                total_images = len(response_json['data'])
+            except Exception as e:
+                logger.warning(f'response not captured due to {e}')
+                response_json = None
+            if response_json is not None and total_images is not None:
+                break
 
-    response = delay_request.get(
-                endpoint,
-                query_param
-                )
-
-    if response.status_code == 200 and response is not None:
-        logger.info('Response status 200')
-        try:
-            response_json = response.json()
-            total_images = len(response_json['data'])
-            return response_json, total_images
-        except Exception as e:
-            logger.warning(f'response not captured due to {e}')
-            response_json = None
-
-    if response_json is None or response_json.get('error') is not None:
-        logger.warning('Bad response_json')
         logger.info('Retrying \n'
                     f'endpoint -- {ENDPOINT} \t'
                     f' with parameters -- {query_param} ')
-
-        _get_response(
-            query_param,
-            endpoint,
-            retries=retries - 1
-            )
+    if tries == RETRIES-1 and ((response_json is None) or
+                               (total_images is None)):
+        logger.warning('No more tries remaining. Returning Nonetypes.')
+        return None, 0
+    else:
+        return response_json, total_images
 
 
 def _handle_response(
