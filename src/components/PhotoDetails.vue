@@ -106,9 +106,14 @@ export default {
       return `${this.image.license_url}?ref=ccsearch`;
     },
   },
+
   methods: {
     onGoBackToSearchResults() {
       this.$router.push({ name: 'browse-page', query: this.query, params: { location: this.$route.params.location } });
+    },
+    onGoBack(e) {
+      console.log("abhi");
+      this.onGoBackToSearchResults()
     },
     onImageLoad(event) {
       this.$emit('onImageLoaded', event);
@@ -125,13 +130,15 @@ export default {
     attributionHtml() {
       const licenseURL = `${this.ccLicenseURL}&atype=html`;
       return attributionHtml(this.image, licenseURL, this.fullLicenseName);
-    }, 
+    },
   },
-    mounted() {
-    window.addEventListener('popstate', (event) => {
-    this.onGoBackToSearchResults()
-}); 
-  }
+  mounted () {
+  let vm = this;
+  window.addEventListener('popstate', this.onGoBack)
+},
+  beforeDestroy () {
+  window.removeEventListener('popstate', this.onGoBack);
+},
 };
 
 
