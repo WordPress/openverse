@@ -2,7 +2,7 @@
   <form role="search"
         method="post"
         @submit.prevent="onSubmit"
-        class="search-form margin-vertical-normal margin-horizontal-normal">
+        class="search-form padding-normal">
     <div class="is-flex">
       <button class="button toggle-filter"  @click.prevent="onToggleSearchGridFilter()">
         <i class="fi-list">
@@ -102,6 +102,8 @@ export default {
     width: 100%;
     top: 0;
     position: sticky;
+    background-color: #e9ebee;
+    z-index: 10;
   }
 
   .search-form_input {
