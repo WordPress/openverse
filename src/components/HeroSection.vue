@@ -133,6 +133,7 @@ $hero-height: 71vh;
 
 .help-icon {
   height: 32px;
+  vertical-align: middle;
 }
 
 /* Small only */
