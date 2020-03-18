@@ -27,7 +27,7 @@
       </div>
       <div class="navbar-end">
         <a class="navbar-item" href="/about">About</a>
-        <a class="navbar-item" href="/collections">Browse by Collection</a>
+        <a class="navbar-item" href="/collections">Collections</a>
         <a class="navbar-item is-hidden-desktop" href="/search-help">Search Guide</a>
         <a class="navbar-item" href="/feedback">Feedback</a>
       </div>
