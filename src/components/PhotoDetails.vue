@@ -77,6 +77,7 @@ import ImageAttribution from '@/components/ImageAttribution';
 import ImageSocialShare from '@/components/ImageSocialShare';
 import attributionHtml from '@/utils/attributionHtml';
 
+
 export default {
   name: 'photo-details',
   props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'watermarkEnabled', 'socialSharingEnabled'],
@@ -124,9 +125,16 @@ export default {
     attributionHtml() {
       const licenseURL = `${this.ccLicenseURL}&atype=html`;
       return attributionHtml(this.image, licenseURL, this.fullLicenseName);
-    },
+    }, 
   },
+    mounted() {
+    window.addEventListener('popstate', (event) => {
+    this.onGoBackToSearchResults()
+}); 
+  }
 };
+
+
 </script>
 
 <style lang="scss" scoped>
