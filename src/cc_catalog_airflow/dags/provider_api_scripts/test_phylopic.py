@@ -5,7 +5,7 @@ import requests
 from unittest.mock import patch, MagicMock
 import pytest
 
-import phylo_pic as pp
+import phylopic as pp
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'tests/resources/phylopic'
