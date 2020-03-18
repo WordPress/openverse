@@ -1,7 +1,7 @@
 ---
 name: Code Quality Improvement Suggestion
 about: Suggest a change that does not add a feature
-labels: not ready for work
+labels: awaiting triage
 title: "[Quality] Replace with Title"
 ---
 
