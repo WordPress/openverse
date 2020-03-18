@@ -172,6 +172,18 @@ container, (but keep it running), press `Ctrl-C` on *nix platforms
 
 To see the Airflow web UI, point your browser to `localhost:9090`.
 
+If you'd like to bring down the containers, run
+```shell
+docker-compose down
+```
+from the [`src/cc_catalog_airflow`][cc_airflow] directory.
+
+To reset the test DB (wiping out all databases, schemata, and tables), run
+```shell
+docker-compose down
+rm -r /tmp/docker_postgres_data/
+```
+
 [dockercompose]: src/cc_catalog_airflow/docker-compose.yml
 [cc_airflow]: src/cc_catalog_airflow/
 

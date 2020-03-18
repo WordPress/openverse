@@ -11,7 +11,10 @@ USER airflow
 
 WORKDIR  /usr/local/airflow
 ADD ./requirements.txt /usr/local/airflow
+ADD ./wait_for_db.py /usr/local/airflow
 
 RUN pip install --user -r requirements.txt
 
-CMD airflow initdb && airflow scheduler & airflow webserver
+CMD python wait_for_db.py && \
+  airflow initdb && \
+  (airflow scheduler & airflow webserver)
