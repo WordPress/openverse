@@ -4,13 +4,17 @@
       <a class="logo" href="/">
         <img alt="Logo" src="../assets/cc-search-logo-black.png">
       </a>
-      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <a role="button"
+         :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
+         aria-label="menu"
+         aria-expanded="false"
+         @click="toggleBurgerActive">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
       </a>
     </div>
-    <div class="navbar-menu">
+    <div :class="{ ['navbar-menu']: true, ['is-active']: isBurgerMenuActive }">
       <div class="margin-left-big"  v-if="showNavSearch ==='true'">
         <form class="hero_search-form"
               role="search"
@@ -48,10 +52,13 @@ export default {
     },
   },
   name: 'nav-section',
-  data: () => ({ form: { searchTerm: '' } }),
+  data: () => ({ form: { searchTerm: '' }, isBurgerMenuActive: false }),
   methods: {
     onSubmit() {
       this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm }, shouldNavigate: true });
+    },
+    toggleBurgerActive() {
+      this.isBurgerMenuActive = !this.isBurgerMenuActive;
     },
   },
 };
