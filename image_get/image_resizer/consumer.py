@@ -66,11 +66,11 @@ async def consume(kafka_topic):
         if tasks:
             log.info('Processing image batch of size {}'.format(len(tasks)))
             total += len(tasks)
+            await asyncio.gather(*tasks)
             total_time = (dt.datetime.now() - start).total_seconds()
             log.info(f'Last batch took {total_time}s. Total resized so far:'
                      f' {total}')
-        await asyncio.gather(*tasks)
-        consumer.commit_offsets()
+            consumer.commit_offsets()
 
 
 def thumbnail_image(img: Image):
