@@ -15,8 +15,8 @@ def kafka_connect():
 
 
 def _parse_message(message):
-    log.debug(f'Received {message}')
-    return str(message.value, 'utf-8')
+    decoded = str(message.value, 'utf-8')
+    return decoded
 
 
 async def poll_consumer(consumer, batch_size):
@@ -29,14 +29,20 @@ async def poll_consumer(consumer, batch_size):
     batch = []
     # Track how much time has passed since the last message arrived.
     # If too much time passes, we don't need to keep waiting for a full batch.
-    last_iteration = dt.datetime.now()
-    max_wait = 3
-    for idx, message in enumerate(consumer):
-        parsed = _parse_message(message)
-        batch.append(parsed)
-        elapsed_time = dt.datetime.now() - last_iteration
-        if idx >= batch_size or elapsed_time.total_seconds() > max_wait:
-            break
+    max_wait_seconds = 3
+    elapsed_time = 0
+    last_msg_time = dt.datetime.now()
+    count = 0
+    while count < batch_size and elapsed_time < max_wait_seconds:
+        message = consumer.consume(block=False)
+        if message:
+            parsed = _parse_message(message)
+            log.debug(f'Received {parsed}')
+            batch.append(parsed)
+            last_msg_time = dt.datetime.now()
+            count += 1
+        elapsed_time = (dt.datetime.now() - last_msg_time).total_seconds()
+    log.debug(f'Firing event batch. count, time: {count}, {elapsed_time}')
     return batch
 
 
