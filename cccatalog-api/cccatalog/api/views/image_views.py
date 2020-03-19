@@ -23,6 +23,8 @@ import logging
 import piexif
 import io
 import libxmp
+import requests
+from PIL import Image as img
 
 log = logging.getLogger(__name__)
 
@@ -267,22 +269,25 @@ class OembedView(APIView):
 
     def get(self, request):
         url = request.query_params.get('url', '')
-        width = request.query_params.get('width', 0)
-        height = request.query_params.get('height', 0)
         resp_format = request.query_params.get('format', '')
 
         if not url:
-            return Response(data={}, status=status.HTTP_404_NOT_FOUND)
+            return Response(status=404, data='Not Found')
         try:
             identifier = url.rsplit('/',1)[1]
             image_record = Image.objects.get(identifier=identifier)
-        except:
-            return Response(data={}, status=status.HTTP_404_NOT_FOUND)
+        except Image.DoesNotExist:
+            return Response(status=404, data='Not Found')
+        if not image_record.height or image_record.width:
+            image = requests.get(image_record.url)
+            width, height = img.open(io.BytesIO(image.content)).size
+        else:
+            width, height = image_record.width, image_record.height
         resp = {
             'version': 1.0,
             'type': 'photo',
-            'width': width if width else image_record.width,
-            'height': height if height else image_record.height,
+            'width': width,
+            'height': height,
             'title': image_record.title,
             'author_name': image_record.creator,
             'author_url': image_record.creator_url,
