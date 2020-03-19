@@ -3,6 +3,7 @@ import logging as log
 import asyncio
 import aiohttp
 import datetime as dt
+import time
 from functools import partial
 from pykafka import KafkaClient
 from io import BytesIO
@@ -71,6 +72,8 @@ async def consume(kafka_topic):
             log.info(f'Last batch took {total_time}s. Total resized so far:'
                      f' {total}')
             consumer.commit_offsets()
+        else:
+            time.sleep(1)
 
 
 def thumbnail_image(img: Image):
