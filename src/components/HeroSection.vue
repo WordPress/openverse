@@ -37,21 +37,16 @@
       </div>
       <home-license-filter />
     </form>
-    <div class="old-search-link">
-      <span>
-        Looking for the old CC Search portal? Go
-        <a href="https://oldsearch.creativecommons.org/">here</a>
+    <div class="help-links">
+      <span class="margin-right-bigger">
+        Go to the
+        <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
       </span>
-    </div>
 
-    <div class="search-help-link">
       <span>
-        See our Search Syntax Guide
+        See our
         <a href="/search-help">
-          here
-          <img class='help-icon'
-              src='../assets/help_icon.svg'
-              alt='Help' />
+          Search Syntax Guide
         </a>
       </span>
     </div>
@@ -111,20 +106,10 @@ $hero-height: 71vh;
   }
 }
 
-.old-search-link {
+.help-links {
   position: absolute;
-  top: 1rem;
-  right: 2rem;
-
-  @media screen and (max-width: 40em) {
-    display: none;
-  }
-}
-
-.search-help-link {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 5rem;
+  left: 2rem;
 
   @media screen and (max-width: 40em) {
     display: none;
