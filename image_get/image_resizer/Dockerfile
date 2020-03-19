@@ -1,8 +1,8 @@
 FROM python:3.7
 RUN pip install pipenv
 
-WORKDIR /image_spider
-COPY . /image_spider/
-RUN pipenv install --system --deploy
+WORKDIR /image_resizer
+COPY . /image_resizer/
+RUN pipenv install
 
-CMD pipenv run scrapy crawl image
+CMD pipenv run python consumer.py 

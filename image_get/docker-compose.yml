@@ -25,7 +25,7 @@ services:
       - zookeeper
     restart: always
   spider: 
-    build: ./image_spider/
+    build: ./image_resizer/
     depends_on:
       - redis
       - zookeeper
