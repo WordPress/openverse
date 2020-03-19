@@ -2,7 +2,7 @@
 name: General Feature Request
 about: Suggest an idea for this project
 title: "[Feature] Replace with Title"
-labels: enhancement, not ready for work
+labels: enhancement, awaiting triage
 ---
 
 ## Problem Description
