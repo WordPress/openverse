@@ -6,7 +6,8 @@ name = "pypi"
 [packages]
 Scrapy = "*"
 pykafka = "*"
-requests = "*"
+aiohttp = "*"
+pillow = "*"
 
 [dev-packages]
 
