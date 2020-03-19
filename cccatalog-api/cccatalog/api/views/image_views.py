@@ -267,9 +267,8 @@ class Watermark(GenericAPIView):
 
 class OembedView(APIView):
 
-    def get(self, request):
+    def get(self, request, format=None):
         url = request.query_params.get('url', '')
-        resp_format = request.query_params.get('format', '')
 
         if not url:
             return Response(status=404, data='Not Found')
