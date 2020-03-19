@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-container full">
+  <div class="feedback-page">
     <header-section showNavSearch="true"></header-section>
     <div class="margin-larger">
       <h1 id="feedback">Feedback</h1>

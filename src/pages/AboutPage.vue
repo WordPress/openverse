@@ -1,5 +1,5 @@
 <template>
-<div class="page">
+<div class="about-page">
   <header-section showNavSearch="true"></header-section>
   <div class="margin-larger">
     <h2>About CC Search</h2>
