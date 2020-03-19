@@ -1,7 +1,7 @@
 <template>
   <div class="hero">
     <h2 class="has-text-centered">Search for content to reuse</h2>
-    <form class="hero_search-form margin-top-normal"
+    <form class="hero_search-form margin-top-bigger"
           role="search"
           method="get"
           action="/search"
@@ -26,32 +26,27 @@
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <button class="button is-primary" title="Search">Search</button>
+        <button class="button is-primary small" title="Search">Search</button>
       </div>
-      <div class="caption has-text-centered">
+      <div class="caption has-text-centered margin-top-big">
         <p>
-          All content here is marked as being available for reuse
-          under a Creative Commons legal tool. Learn more
-          <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">here</a>.
+          All our content is under Creative Commons licenses.
+          <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">Learn more</a>
+          about CC licenses.
         </p>
       </div>
       <home-license-filter />
     </form>
-    <div class="old-search-link">
-      <span>
-        Looking for the old CC Search portal? Go
-        <a href="https://oldsearch.creativecommons.org/">here</a>
+    <div class="help-links">
+      <span class="margin-right-bigger">
+        Go to the
+        <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
       </span>
-    </div>
 
-    <div class="search-help-link">
       <span>
-        See our Search Syntax Guide
+        See our
         <a href="/search-help">
-          here
-          <img class='help-icon'
-              src='../assets/help_icon.svg'
-              alt='Help' />
+          Search Syntax Guide
         </a>
       </span>
     </div>
@@ -111,20 +106,10 @@ $hero-height: 71vh;
   }
 }
 
-.old-search-link {
+.help-links {
   position: absolute;
-  top: 1rem;
-  right: 2rem;
-
-  @media screen and (max-width: 40em) {
-    display: none;
-  }
-}
-
-.search-help-link {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 5rem;
+  left: 2rem;
 
   @media screen and (max-width: 40em) {
     display: none;
@@ -133,6 +118,7 @@ $hero-height: 71vh;
 
 .help-icon {
   height: 32px;
+  vertical-align: middle;
 }
 
 /* Small only */
@@ -143,9 +129,5 @@ $hero-height: 71vh;
   .search-form_ctr {
     padding: 0 .9375rem;
   }
-}
-
-.is-large {
-  height: 70px;
 }
 </style>

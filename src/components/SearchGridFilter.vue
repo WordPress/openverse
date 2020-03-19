@@ -9,12 +9,12 @@
                          @filterChanged="onUpdateFilter" />
       <filter-check-list :options="filters.licenses"
                          :disabled="licensesDisabled"
-                         title="All licenses"
+                         title="Licenses"
                          filterType="licenses"
                          @filterChanged="onUpdateFilter" />
       <filter-check-list v-if="renderProvidersFilter"
                          :options="filters.providers"
-                         title="All Sources"
+                         title="Collections"
                          filterType="providers"
                          @filterChanged="onUpdateFilter" />
       <filter-check-list :options="filters.categories"
@@ -43,10 +43,10 @@
     </div>
     <div class="clear-filters"
           v-if="isFilterApplied">
-      <a class="button primary medium search-filters_clear-btn"
+      <button class="button tiny"
               @click="onClearFilters">
         Clear filters
-      </a>
+      </button>
     </div>
   </div>
 </template>
@@ -135,9 +135,4 @@ export default {
   margin-left: 24px;
 }
 
-.search-filters_clear-btn {
-  height: auto;
-  border-radius: 2px;
-  margin: auto;
-}
 </style>

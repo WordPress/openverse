@@ -1,10 +1,5 @@
 <template>
   <section class="sidebar_section">
-    <header class="sidebar_section-header">
-      <h2>
-        Image Download
-      </h2>
-    </header>
     <div>
       <input
         id="watermark"
@@ -23,7 +18,7 @@
         Embed attribution metadata
       </label>
       <help-tooltip :tooltip="metadataHelp" />
-      <button class="button is-info margin-top-small is-block"
+      <button class="button tiny is-info margin-top-small is-block"
               data-type="text"
               @click="onDownloadWatermark(image, $event)">
           Download Image

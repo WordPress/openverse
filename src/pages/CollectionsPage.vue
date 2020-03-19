@@ -3,14 +3,14 @@
     <header-section></header-section>
     <div class="collections-page ">
       <h1>Browse collections</h1>
-      <h2>Museum Collections</h2>
+      <h2 class="margin-bottom-normal">Museum Collections</h2>
       <div class="providers-list columns is-multiline">
         <collection-item v-for="(provider, index) in museumProviders"
                         :key="index"
                         :provider="provider" />
       </div>
       <hr />
-      <h2>Other Collections</h2>
+      <h2 class="margin-bottom-normal">Other Collections</h2>
       <div class="providers-list columns is-multiline">
         <collection-item v-for="(provider, index) in otherProviders"
                           :key="index"

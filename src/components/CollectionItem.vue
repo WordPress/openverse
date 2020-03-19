@@ -1,7 +1,9 @@
 <template>
-  <div class="column is-2 provider-card">
+  <div class="column is-2 margin-small provider-card">
     <div>
-      <span class="provider-name">{{ provider.display_name }}</span>
+      <a :href="'/collections/'+provider.source_name" class="provider-name">
+        {{ provider.display_name }}
+      </a>
     </div>
     <div class="provider-logo">
       <a :href="'/collections/'+provider.source_name">
@@ -41,10 +43,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "@creativecommons/vocabulary/scss/colors.scss";
+  @import "@creativecommons/vocabulary/scss/color.scss";
   .provider-card {
-    margin: 0.5em;
-    border: 1px solid $color-light-gray;
+    border: 2px solid $color-light-gray;
   }
 
   .provider-name {
@@ -52,8 +53,7 @@ export default {
   }
 
   .provider-logo {
-    height: 10em;
-    line-height: 10em;
+    height: 12rem;
     white-space: nowrap;
     position: relative;
 
@@ -65,7 +65,7 @@ export default {
     }
 
     img {
-      width: 100%;
+      max-height: 10rem;
     }
   }
 </style>

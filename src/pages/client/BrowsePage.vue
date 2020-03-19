@@ -2,7 +2,7 @@
   <div class="browse-page">
     <header-section />
     <div class="search columns">
-      <div class="column is-narrow grid-sidebar" v-if="isFilterVisible">
+      <div class="column is-narrow grid-sidebar is-paddingless" v-if="isFilterVisible">
         <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit"/>
       </div>
       <div class="column search-grid-ctr">
@@ -41,34 +41,5 @@ export default BrowsePage;
 </script>
 
 <style lang="scss" scoped>
-  .search {
-    margin: 0;
-  }
-
-  .search-grid-ctr {
-    padding: 0;
-    background: #e9ebee;
-    min-height: 600px;
-
-    /* 48em = 768px */
-    @media (max-width: 49em) {
-      width: 100%;
-      flex: none;
-    }
-  }
-
-  .search-grid-ctr__filter-visible {
-    margin-top: 30px;
-  }
-
-  .grid-sidebar {
-    padding-top: 0;
-    background: #fafafa;
-    width: 21.875rem;
-
-    /* 48em = 768px */
-    @media (max-width: 49em) {
-      width: 100%;
-    }
-  }
+  @import "../../styles/results-page.scss";
 </style>
