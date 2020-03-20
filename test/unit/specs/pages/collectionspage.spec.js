@@ -7,8 +7,8 @@ describe('CollectionsPage', () => {
       $store: {
         state: {
           imageProviders: [
-            { provider_name: 'met' },
-            { provider_name: 'flickr' },
+            { source_name: 'met' },
+            { source_name: 'flickr' },
           ],
         },
         dispatch: jest.fn(),
@@ -23,13 +23,13 @@ describe('CollectionsPage', () => {
   it('should get museum providers', () => {
     const wrapper = render(CollectionsPage, options);
     const museumProviders = wrapper.vm.museumProviders;
-    expect(museumProviders[0].provider_name).toBe('met');
+    expect(museumProviders[0].source_name).toBe('met');
   });
 
   it('should get museum providers', () => {
     const wrapper = render(CollectionsPage, options);
     const museumProviders = wrapper.vm.otherProviders;
-    expect(museumProviders[0].provider_name).toBe('flickr');
+    expect(museumProviders[0].source_name).toBe('flickr');
   });
 
   it('should get all providers', () => {

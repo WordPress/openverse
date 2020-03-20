@@ -1,15 +1,17 @@
 <template>
-  <div class="card provider-card cell small">
-    <div class="card-divider">
-      <span class="provider-name">{{ provider.display_name }}</span>
-    </div>
-    <div class="provider-logo">
-      <a :href="'/collections/'+provider.provider_name">
-        <img :alt="provider.display_name"
-            :src="getProviderLogo(provider.provider_name)">
+  <div class="column is-2 margin-small provider-card">
+    <div>
+      <a :href="'/collections/'+provider.source_name" class="provider-name">
+        {{ provider.display_name }}
       </a>
     </div>
-    <div class="card-section">
+    <div class="provider-logo">
+      <a :href="'/collections/'+provider.source_name">
+        <img :alt="provider.display_name"
+            :src="getProviderLogo(provider.source_name)">
+      </a>
+    </div>
+    <div>
       <span>Collection size: {{ getProviderImageCount(provider.image_count) }} images</span>
     </div>
   </div>
@@ -41,10 +43,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "@creativecommons/vocabulary/scss/color.scss";
   .provider-card {
-    width: 18em;
-    background-color: #dedede;
-    margin: 0.5em;
+    border: 2px solid $color-light-gray;
   }
 
   .provider-name {
@@ -52,8 +53,7 @@ export default {
   }
 
   .provider-logo {
-    height: 10em;
-    line-height: 10em;
+    height: 12rem;
     white-space: nowrap;
     position: relative;
 
@@ -65,7 +65,7 @@ export default {
     }
 
     img {
-      width: 100%;
+      max-height: 10rem;
     }
   }
 </style>

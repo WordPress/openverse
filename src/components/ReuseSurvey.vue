@@ -1,9 +1,8 @@
 <template>
   <div class="reuse-survey">
     <span>How are you using this image?</span>
-    <span>Let us know how you use this image in</span>
     <a :href="formLink" target="_blank" rel="noopener" @click="onReuseSurveyClick">
-      this quick survey
+      Take a quick survey
     </a>
   </div>
 </template>
@@ -40,15 +39,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '../styles/photodetails.scss';
-
-  .reuse-survey {
-    margin: 2rem 0 2rem;
-
-    span:first-child {
-      font-size: 1.1rem;
-      font-weight: 600;
-      display: block;
-    }
-  }
 </style>
