@@ -68,7 +68,7 @@ export default LicenseIcons;
 
   .photo-license-icon {
     height: inherit;
-    margin-right: .5rem;
+    margin-right: .3rem;
     vertical-align: middle;
   }
 </style>
