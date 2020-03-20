@@ -171,8 +171,6 @@ describe('Search Store', () => {
       expect(state.isFilterApplied).toBeFalsy();
     });
 
-
-
     it('IMAGE_NOT_FOUND redirects to /not-found', () => {
       mutations[IMAGE_NOT_FOUND]();
 
