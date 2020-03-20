@@ -147,6 +147,18 @@ describe('Search Store', () => {
       expect(routePushMock).toBeCalledWith({ path: '/search', query: params.query });
     });
 
+    it('SET_QUERY resets images to empty array', () => {
+      const params = { query: { q: 'bar' } };
+      state.query = {
+        q: 'foo',
+        images: [{ id: 'foo' }],
+      };
+      mutations[SET_QUERY](state, params);
+
+      expect(state.query.q).toBe('bar');
+      expect(state.images).toEqual([]);
+    });
+
     it('RESET_QUERY resets query to empty state', () => {
       state.query = {
         q: 'foo',
@@ -158,6 +170,8 @@ describe('Search Store', () => {
       expect(state.query.license_type).toBe('');
       expect(state.isFilterApplied).toBeFalsy();
     });
+
+
 
     it('IMAGE_NOT_FOUND redirects to /not-found', () => {
       mutations[IMAGE_NOT_FOUND]();
