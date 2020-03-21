@@ -178,8 +178,42 @@ def test_get_data_for_image_with_non_ok():
 
     assert mock_get.call_count == 6
 
-def test_get_image_data_returns_response_json_when_all_ok():
-    with open(os.path.join(RESOURCES, 'sample_image_data.json')) as f:
+def test_get_data_for_image_returns_response_json_when_all_ok():
+    with open(os.path.join(RESOURCES, 'sample_response_image.json')) as f:
+        image_data = json.load(f)
+
+    r = requests.Response()
+    r.status_code = 200
+    r.json = MagicMock(return_value=image_data)
+    with patch.object(
+        mma.image_store,
+        'add_item',
+        return_value=1
+    ) as mock_add:
+        mma._get_data_for_image(45733)
+
+    mock_add.assert_called_with(
+        creator='Hanabusa Itchō',
+        foreign_identifier=45733,
+        foreign_landing_url='https://www.metmuseum.org/art/collection/search/45733',
+        image_url='https://images.metmuseum.org/CRDImages/as/original/DT2585.jpg',
+        license_='cc0',
+        license_version='1.0',
+        meta_data={
+            'accession_number': '36.100.33',
+            'classification': 'Paintings',
+            'culture': 'Japan', 'date': '1667–98',
+            'medium': 'Hanging scroll; ink, color, and gold paint on paper',
+            'credit_line': 'The Howard Mansfield Collection, Purchase, Rogers Fund, 1936'
+        },
+        thumbnail_url='https://images.metmuseum.org/CRDImages/as/web-large/DT2585.jpg',
+        title='Jizō Bosatsu'
+    )
+
+    assert mock_add.call_count == 1
+
+def test_get_data_for_image_returns_response_json_when_all_ok_with_additional_images():
+    with open(os.path.join(RESOURCES, 'sample_additional_image_data.json')) as f:
         image_data = json.load(f)
 
     r = requests.Response()
@@ -212,3 +246,5 @@ def test_get_image_data_returns_response_json_when_all_ok():
         thumbnail_url="", 
         title="Quail and Millet"
     )
+
+    assert mock_add.call_count == 3
