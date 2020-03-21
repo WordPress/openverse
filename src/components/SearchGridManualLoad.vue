@@ -2,7 +2,7 @@
   <section :class="{ 'search-grid': true, 'search-grid__contain-images': shouldContainImages }"
            ref="searchGrid">
     <div class="search-grid_ctr" ref="gridItems">
-      <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics" >
+      <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics count" >
         <h2>{{ searchTerm }}</h2>
         <span> {{ _imagesCount }}</span>
       </div>
@@ -13,11 +13,11 @@
       </div>
       <div class="load-more">
         <button v-show="!isFetchingImages && includeAnalytics"
-                class="clear button"
+                class="button"
                 :disabled="isFinished"
                 @click="onLoadMoreImages">
           <span v-if="isFinished">No more images :(</span>
-          <span v-else>Load more</span>
+          <span v-else>Load more results</span>
         </button>
         <loading-icon v-show="isFetchingImages" />
       </div>
@@ -213,15 +213,15 @@ export default {
     color: #2c3e50;
   }
 
-  h2 {
-    font-size: 2rem;
-  }
-
   .load-more {
     text-align: center;
 
     button {
       font-size: 1.2em;
     }
+  }
+  .count{
+    padding-top: 0.6rem;
+    padding-left: 1.3rem;
   }
 </style>

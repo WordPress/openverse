@@ -1,14 +1,14 @@
 <template>
-<div class="page grid-container full">
+<div class="page">
   <header-section showNavSearch="true"></header-section>
-  <div class="page_body">
-    <h1>CC Search Syntax Guide</h1>
+  <div class="margin-larger">
+    <h2 class="margin-vertical-normal">CC Search Syntax Guide</h2>
     <p>
       When you search, you can enter special symbols or words to your search term
       to make your search results more precise.
     </p>
 
-    <h2>Search for an exact match</h2>
+    <h3  class="margin-vertical-normal">Search for an exact match</h3>
     <p>
       Put a word or phrase inside quotes. For example,
       <a href='https://search.creativecommons.org/search?q="Claude%20Monet"'>
@@ -16,7 +16,7 @@
       </a>.
     </p>
 
-    <h2>Search by title</h2>
+    <h3  class="margin-vertical-normal">Search by title</h3>
     <p>
       Put <em>title:</em> in front of your search term to see only results whose
       title contains the specified term. For example,
@@ -25,7 +25,7 @@
       </a>.
     </p>
 
-    <h2>Search by license</h2>
+    <h3  class="margin-vertical-normal">Search by license</h3>
     <p>
       Put <em>license:</em> in front of your search term to see only results
       with the specified license. For example,
@@ -38,7 +38,7 @@
       "by-nc-nd", "cc0", "pdm".
     </p>
 
-    <h2>Search by provider</h2>
+    <h3  class="margin-vertical-normal">Search by provider</h3>
     <p>
       Put <em>provider:</em> in front of your search term to see only results from the
       specified source. For example,
@@ -51,27 +51,25 @@
       Use the following table with the provider code of every provider in our collection.
     </p>
 
-    <div class="page_provider-stats-ctr">
-      <table class="page_provider-stats-table">
-        <thead>
-          <th>Provider Name</th>
-          <th>Provider Code</th>
-        </thead>
-        <tbody>
-          <tr v-for="(imageProvider, index) in imageProviders"
-              :key="index">
-            <td>{{ imageProvider.display_name }}</td>
-            <td>
-              <a :href="providerSearchLink(imageProvider.provider_name)">
-                {{ imageProvider.provider_name }}
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="table is-bordered is-striped">
+      <thead>
+        <th>Provider Name</th>
+        <th>Provider Code</th>
+      </thead>
+      <tbody>
+        <tr v-for="(imageProvider, index) in imageProviders"
+            :key="index">
+          <td>{{ imageProvider.display_name }}</td>
+          <td>
+            <a :href="providerSearchLink(imageProvider.source_name)">
+              {{ imageProvider.source_name }}
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-    <h2>Search by tags</h2>
+    <h3  class="margin-vertical-normal">Search by tags</h3>
     <p>
       Put <em>tags.name:</em> in front of your search term to see only results that are
       tagged with the specified tag. For example,
@@ -100,7 +98,7 @@
     This will search for images tagged with sky or with phone, but not necessarily both.
     </p>
 
-    <h2>Combining keywords</h2>
+    <h3  class="margin-vertical-normal">Combining keywords</h3>
 
     <p>
       Put <em>AND</em> in between two queries to see only results that match both queries.

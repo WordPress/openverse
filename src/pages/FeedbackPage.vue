@@ -1,7 +1,7 @@
 <template>
-  <div class="grid-container full">
+  <div class="feedback-page">
     <header-section showNavSearch="true"></header-section>
-    <div class="feedback-page">
+    <div class="margin-larger">
       <h1 id="feedback">Feedback</h1>
       <p>
         Thank you for using CC Search! We welcome your ideas for improving the tool below.
@@ -16,28 +16,28 @@
                v-for="(item, index) in categories" :key="index">{{categories[index]}}
           </div>
         </div>
-        <div class="tabs-content" v-show="activeTab === 0">
-          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
-                  width="100%"
-                  height="998"
-                  frameborder="0"
-                  marginheight="0"
-                  marginwidth="0"
-                  title="feedback form">
-            Loading...
-          </iframe>
-        </div>
-        <div class="tabs-content" v-show="activeTab === 1">
-          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeSN1AIG8LrdgIdKpBj4IlPDhu6T5ndZ7z_QcISBu-ITCU0Yw/viewform?embedded=true"
-                  width="100%"
-                  height="998"
-                  frameborder="0"
-                  marginheight="0"
-                  marginwidth="0"
-                  title="feedback form">
-            Loading...
-          </iframe>
-        </div>
+      </div>
+      <div class="tabs-content" v-show="activeTab === 0">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
+                width="100%"
+                height="998"
+                frameborder="0"
+                marginheight="0"
+                marginwidth="0"
+                title="feedback form">
+          Loading...
+        </iframe>
+      </div>
+      <div class="tabs-content" v-show="activeTab === 1">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeSN1AIG8LrdgIdKpBj4IlPDhu6T5ndZ7z_QcISBu-ITCU0Yw/viewform?embedded=true"
+                width="100%"
+                height="998"
+                frameborder="0"
+                marginheight="0"
+                marginwidth="0"
+                title="feedback form">
+          Loading...
+        </iframe>
       </div>
     </div>
     <footer-section></footer-section>
@@ -83,26 +83,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  h1{
-    margin-bottom: .44117647em;
-    font-size: 2.125em;
-    font-weight: normal;
-    letter-spacing: initial;
-    line-height: 1.25;
-    text-transform: initial;
-  }
-
-  .feedback-page {
-    margin: 45px !important;
-  }
-
   *,
   *:before,
   *:after {
     box-sizing: border-box;
     outline: none;
   }
-
   .tabs {
     position: relative;
     width: 100%;
@@ -112,6 +98,8 @@ export default {
     margin-top: 2rem;
     &-triggers {
       display: flex;
+      width: 100%;
+      height: auto;
     }
     &-trigger {
       flex: 1 0 auto;

@@ -15,7 +15,7 @@
           :alt="image.title" :src="getImageUrl(image)"
           @error="onImageLoadError($event, image)">
       </a>
-      <figcaption class="search-grid_item-overlay search-grid_item-overlay__top">
+      <figcaption class="search-grid_item-overlay search-grid_item-overlay__top padding-top-small">
         <license-icons :image="image"></license-icons>
       </figcaption>
       <figcaption class="search-grid_item-overlay search-grid_item-overlay__bottom">
@@ -213,7 +213,6 @@ export default {
     display: block;
     bottom: 10px;
     left: 10px;
-    z-index: 100;
     color: #fff;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -227,8 +226,7 @@ export default {
   .search-grid_overlay-provider-logo {
     max-height: 30px;
     max-width: 30px;
-    margin-right: 5px;
-    padding-bottom: 3px;
+    vertical-align: middle;
   }
 
   .search-grid_item {

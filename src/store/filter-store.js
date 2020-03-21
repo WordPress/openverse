@@ -129,14 +129,14 @@ const mutations = redirect => ({
     state.filters.providers = providers.map((provider) => {
       const existingProviderFilterIdx = findIndex(
         state.filters.providers,
-        p => p.code === provider.provider_name);
+        p => p.code === provider.source_name);
 
       const checked = existingProviderFilterIdx >= 0 ?
         state.filters.providers[existingProviderFilterIdx].checked :
         false;
 
       return {
-        code: provider.provider_name,
+        code: provider.source_name,
         name: provider.display_name,
         checked,
       };

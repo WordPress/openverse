@@ -1,8 +1,6 @@
 <template>
-  <div class="photo_related-images grid-x full" v-if="relatedImages && relatedImages.length > 0">
-    <header>
-      <h2>Related Images</h2>
-    </header>
+  <div class="photo_related-images margin-normal" v-if="relatedImages && relatedImages.length > 0">
+    <h3>Related Images</h3>
     <search-grid
       :imagesCount="imagesCount"
       :images="relatedImages"

@@ -4,12 +4,14 @@
      class="photo-license-icons"
      target="_blank"
      rel="noopener noreferrer">
-    <img class="photo-license-icon" alt="cc-icon" src="@/assets/cc_icon.svg"><img
-          v-for="(license, index) in onGetLicenseIcon(image.license)"
+    <img class="photo-license-icon" alt="CC" src="@/assets/cc_icon.svg" />
+    <template v-for="(license, index) in onGetLicenseIcon(image.license)">
+      <img
           v-if="license" class="photo-license-icon"
-          :alt="`${license} license icon`"
+          :alt="`${license.toUpperCase()}`"
           :src="require(`@/assets/cc-${license.toLowerCase()}_icon.svg`)"
-          :key="index">
+          :key="index" />
+    </template>
   </a>
 </template>
 
@@ -61,20 +63,12 @@ export default LicenseIcons;
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
   .photo-license-icons {
-    display: inline-block;
-    height: 32px;
-    white-space: none;
-    opacity: .7;
-    margin-top: 2px;
-    height: 22px !important;
-
-    &:hover {
-      opacity: 1;
-    }
+    height: 1.6rem;
   }
 
   .photo-license-icon {
     height: inherit;
-    margin-right: 3px;
+    margin-right: .3rem;
+    vertical-align: middle;
   }
 </style>

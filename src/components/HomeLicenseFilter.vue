@@ -2,15 +2,17 @@
   <div class="home-license-filter">
     <span>I want something I can</span>
 
-    <div class="license-filters" v-for="(licenseType, index) in licenseTypes" :key="index">
-      <input :id="licenseType.code"
+    <template v-for="(licenseType, index) in licenseTypes" >
+      <label class="checkbox margin-right-big" :for="licenseType.code" :key="index">
+        <input :id="licenseType.code"
               type="checkbox"
               :checked="licenseType.checked"
               name="lt"
               :value="licenseType.code"
               @input="onFilterChanged(licenseType.code)" />
-      <label :for="licenseType.code">{{ licenseType.name }}</label>
-    </div>
+        {{ licenseType.name }}
+      </label>
+    </template>
   </div>
 </template>
 

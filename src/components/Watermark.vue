@@ -1,33 +1,24 @@
 <template>
   <section class="sidebar_section">
-    <header class="sidebar_section-header">
-      <h2>
-        Image Download
-      </h2>
-    </header>
-    <div class="large-12 cell">
-      <fieldset class="large-7 cell">
-        <div>
-          <input
-            id="watermark"
-            type="checkbox"
-            v-model="shouldWatermark" />
-          <label for="watermark">
-            Include attribution frame
-          </label>
-          <help-tooltip :tooltip="watermarkHelp" />
-        </div>
-        <div>
-          <input id="embedAttribution"
-                  type="checkbox"
-                  v-model="shouldEmbedMetadata" />
-          <label for="embedAttribution">
-            Embed attribution metadata
-          </label>
-          <help-tooltip :tooltip="metadataHelp" />
-        </div>
-      </fieldset>
-      <button class="button is-info margin-top-small"
+    <div>
+      <input
+        id="watermark"
+        type="checkbox"
+        v-model="shouldWatermark" />
+      <label for="watermark">
+        Include attribution frame
+      </label>
+      <help-tooltip :tooltip="watermarkHelp" />
+    </div>
+    <div>
+      <input id="embedAttribution"
+              type="checkbox"
+              v-model="shouldEmbedMetadata" />
+      <label for="embedAttribution">
+        Embed attribution metadata
+      </label>
+      <help-tooltip :tooltip="metadataHelp" />
+      <button class="button tiny is-info margin-top-small is-block"
               data-type="text"
               @click="onDownloadWatermark(image, $event)">
           Download Image

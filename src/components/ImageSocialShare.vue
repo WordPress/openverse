@@ -1,10 +1,5 @@
 <template>
   <section class="sidebar_section social-sharing">
-    <header class="sidebar_section-header">
-      <h2>
-        Share
-      </h2>
-    </header>
     <social-share-buttons
       :shareURL="shareURL"
       :imageURL="imageURL"
