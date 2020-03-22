@@ -159,8 +159,7 @@ export default {
 }
 button {
   padding: 7px;
-  margin-top: 10px;
-  margin-left: 370px;
+  margin-top: 5px;
   background-color: green;
   color: white;
   font-size: 1.1rem;
