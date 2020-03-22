@@ -1,7 +1,6 @@
 <template>
-  
     <transition name="modal">
-        <div class="overlay" @click.self="">
+        <div class="overlay">
           <div class="modal" ref="progressbar">
          <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
@@ -62,9 +61,8 @@
 </template>
 
 <script>
-import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
+import { SET_FILTER_IS_VISIBLE, CLEAR_FILTERS } from '@/store/mutation-types';
 import { TOGGLE_FILTER } from '@/store/action-types';
-import { CLEAR_FILTERS } from '@/store/mutation-types';
 import FilterCheckList from './FilterChecklist';
 
 export default {
@@ -73,11 +71,11 @@ export default {
   components: {
     FilterCheckList,
   },
-  data: function() {
+  data() {
     return {
       SET_FILTER_IS_VISIBLE: false,
-      percentage:0,
-   
+      percentage: 0,
+
     };
   },
   computed: {
@@ -102,10 +100,11 @@ export default {
   },
   methods: {
     close() {
-        this.$store.commit(
+      this.$store.commit(
         SET_FILTER_IS_VISIBLE,
         { isFilterVisible: !this.isFilterVisible },
-      );  },
+      );
+    },
     onUpdateFilter({ code, filterType }) {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
@@ -130,18 +129,25 @@ export default {
         shouldNavigate: true,
       });
     },
-    chceckScrollBar () {
-      const element = this.$refs.progressbar
-      const clientHeight = element.clientHeight
-      const scrollHeight = element.scrollHeight
-      const scrollTop = element.scrollTop
-      const res = (scrollTop / (scrollHeight - clientHeight)) * 100
+    checkScrollBar() {
+      const element = this.$refs.progressbar;
+      const clientHeight = element.clientHeight;
+      const scrollHeight = element.scrollHeight;
+      const scrollTop = element.scrollTop;
+      const res = (scrollTop / (scrollHeight - clientHeight)) * 100;
       if (scrollHeight <= clientHeight) {
-        this.percentage = 100
-      } else {
-        this.percentage = res.toFixed(2)
+        this.percentage = 100;
       }
-   }
+      else {
+        this.percentage = res.toFixed(2);
+      }
+    },
+    mounted() {
+      this.$refs.progressbar.addEventListener('scroll', this.checkScrollBar);
+    },
+    beforeDestroy() {
+      this.$refs.progressbar.removeEventListener('scroll', this.checkScrollBar);
+    },
   },
 };
 </script>
@@ -194,7 +200,5 @@ button {
   z-index: 999;
   transition: opacity 0.2s ease;
 }
-
-
 
 </style>
