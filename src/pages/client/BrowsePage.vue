@@ -2,11 +2,11 @@
   <div class="browse-page">
     <header-section />
     <div class="search columns">
-      <div class="column is-narrow grid-sidebar is-paddingless" v-if="isFilterVisible">
-        <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit"/>
-      </div>
       <div class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
+        <div class="column is-narrow grid-sidebar is-paddingless" v-if="isFilterVisible">
+        <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit"/>
+        </div>
         <search-grid v-if="query.q"
                      :query="query"
                      searchTerm=""

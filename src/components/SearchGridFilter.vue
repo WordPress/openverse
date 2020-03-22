@@ -1,7 +1,13 @@
 <template>
-  <div :class="{ 'search-filters': true,
+  
+    <transition name="modal">
+        <div class="overlay" @click.self="">
+          <div class="modal">
+         <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
+    <slot>
     <form class="filters-form" role="filter">
+    <button @click.prevent="close()">Close </button>
       <filter-check-list :options="filters.licenseTypes"
                          :disabled="licenseTypesDisabled"
                          title="I want something that I can"
@@ -48,10 +54,15 @@
         Clear filters
       </button>
     </div>
+        </slot>
+   </div>
   </div>
+</div>
+ </transition>
 </template>
 
 <script>
+import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
 import { TOGGLE_FILTER } from '@/store/action-types';
 import { CLEAR_FILTERS } from '@/store/mutation-types';
 import FilterCheckList from './FilterChecklist';
@@ -61,6 +72,11 @@ export default {
   props: ['isCollectionsPage', 'provider'],
   components: {
     FilterCheckList,
+  },
+  data: function() {
+    return {
+      SET_FILTER_IS_VISIBLE: false
+    };
   },
   computed: {
     isFilterApplied() {
@@ -83,6 +99,11 @@ export default {
     },
   },
   methods: {
+    close() {
+        this.$store.commit(
+        SET_FILTER_IS_VISIBLE,
+        { isFilterVisible: !this.isFilterVisible },
+      );  },
     onUpdateFilter({ code, filterType }) {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
@@ -113,26 +134,51 @@ export default {
 
 <style lang="scss" scoped>
 
-.search-filters {
-  display: none;
-  height: auto;
+.modal {
+  width: 500px;
+  margin: 0px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px 3px;
+  transition: all 0.2s ease-in;
+  font-family: Helvetica, Arial, sans-serif;
+}
+.fadeIn-enter {
+  opacity: 0;
+}
+
+.fadeIn-leave-active {
+  opacity: 0;
+  transition: all 0.2s step-end;
+}
+
+.fadeIn-enter .modal,
+.fadeIn-leave-active.modal {
+  transform: scale(1.1);
+}
+button {
+  padding: 7px;
+  margin-top: 10px;
+  background-color: green;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.overlay {
+  position: fixed;
   top: 0;
-  position: sticky;
-
-  label {
-    color: #333333;
-  }
-
-  &__visible {
-    border-top: 1px solid #e8e8e8;
-    display: block;
-  }
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: #00000094;
+  z-index: 999;
+  transition: opacity 0.2s ease;
 }
 
-.search-filters_search-by,
-.clear-filters {
-  margin-top: 0.4em;
-  margin-left: 24px;
-}
+
 
 </style>

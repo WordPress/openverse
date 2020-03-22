@@ -69,6 +69,7 @@ export default {
       }
     },
     onToggleSearchGridFilter() {
+      console.log(this);
       this.$store.commit(
         SET_FILTER_IS_VISIBLE,
         { isFilterVisible: !this.isFilterVisible },
