@@ -2,7 +2,7 @@
   
     <transition name="modal">
         <div class="overlay" @click.self="">
-          <div class="modal">
+          <div class="modal" ref="progressbar">
          <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
     <slot>
@@ -75,7 +75,9 @@ export default {
   },
   data: function() {
     return {
-      SET_FILTER_IS_VISIBLE: false
+      SET_FILTER_IS_VISIBLE: false,
+      percentage:0,
+   
     };
   },
   computed: {
@@ -128,6 +130,18 @@ export default {
         shouldNavigate: true,
       });
     },
+    chceckScrollBar () {
+      const element = this.$refs.progressbar
+      const clientHeight = element.clientHeight
+      const scrollHeight = element.scrollHeight
+      const scrollTop = element.scrollTop
+      const res = (scrollTop / (scrollHeight - clientHeight)) * 100
+      if (scrollHeight <= clientHeight) {
+        this.percentage = 100
+      } else {
+        this.percentage = res.toFixed(2)
+      }
+   }
   },
 };
 </script>
@@ -136,10 +150,12 @@ export default {
 
 .modal {
   width: 500px;
+  max-height: 600px;
   margin: 0px auto;
   padding: 20px;
   background-color: #fff;
   border-radius: 2px;
+  overflow-y: scroll;
   box-shadow: 0 2px 8px 3px;
   transition: all 0.2s ease-in;
   font-family: Helvetica, Arial, sans-serif;
