@@ -8,4 +8,4 @@ ZOOKEEPER_HOST = os.getenv('ZOOKEEPER_HOST', 'zookeeper:2181')
 TARGET_RESOLUTION = (640, 480)
 
 # Number of images to download and resize simultaneously
-BATCH_SIZE = 300
+BATCH_SIZE = 1000
