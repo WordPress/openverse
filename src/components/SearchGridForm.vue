@@ -4,7 +4,7 @@
         @submit.prevent="onSubmit"
         class="search-form padding-normal">
     <div class="is-flex is-hidden-touch">
-      <button class="button toggle-filter"  @click.prevent="onToggleSearchGridFilter()">
+      <button class="button toggle-filter padding-normal"  @click.prevent="onToggleSearchGridFilter()">
         <img v-if="!isFilterApplied" width="24" src="../assets/filter_icon_new.svg" />
         <img v-else width="24" src="../assets/filter_icon_new_applied.svg" />
       </button>
@@ -21,7 +21,7 @@
       </button>
     </div>
     <div class="is-flex is-hidden-desktop">
-      <button class="button small toggle-filter-small"  @click.prevent="onToggleSearchGridFilter()">
+      <button class="button small toggle-filter-small padding-small"  @click.prevent="onToggleSearchGridFilter()">
         <img v-if="!isFilterApplied" width="64" src="../assets/filter_icon_new.svg" />
         <img v-else width="64" src="../assets/filter_icon_new_applied.svg" />
       </button>
@@ -100,14 +100,12 @@ export default {
 
 <style lang="scss" scoped>
   .toggle-filter {
-    padding: 1rem;
     height: 3.875rem;
   }
 
   .toggle-filter-small {
     width: 4rem;
-    padding: 0.5rem;
-    padding-top: 0.3rem;
+    padding-top: 0.35rem !important;
 
     img {
       max-width: 1.5rem;
