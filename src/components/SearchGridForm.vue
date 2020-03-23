@@ -4,7 +4,8 @@
         @submit.prevent="onSubmit"
         class="search-form padding-normal">
     <div class="is-flex is-hidden-touch">
-      <button class="button toggle-filter padding-normal"  @click.prevent="onToggleSearchGridFilter()">
+      <button class="button toggle-filter padding-normal"
+              @click.prevent="onToggleSearchGridFilter()">
         <img v-if="!isFilterApplied" width="24" src="../assets/filter_icon_new.svg" />
         <img v-else width="24" src="../assets/filter_icon_new_applied.svg" />
       </button>
