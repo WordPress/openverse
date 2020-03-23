@@ -21,7 +21,8 @@
       </button>
     </div>
     <div class="is-flex is-hidden-desktop">
-      <button class="button small toggle-filter-small padding-small"  @click.prevent="onToggleSearchGridFilter()">
+      <button class="button small toggle-filter-small padding-small"
+              @click.prevent="onToggleSearchGridFilter()">
         <img v-if="!isFilterApplied" width="64" src="../assets/filter_icon_new.svg" />
         <img v-else width="64" src="../assets/filter_icon_new_applied.svg" />
       </button>
