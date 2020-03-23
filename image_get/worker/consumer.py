@@ -2,7 +2,7 @@ import settings
 import logging as log
 import asyncio
 import aiohttp
-import datetime as dt
+import boto3
 import pykafka
 import time
 from functools import partial
@@ -38,26 +38,27 @@ async def poll_consumer(consumer, batch_size):
     # wait time has occurred.
     max_wait_seconds = 3
     elapsed_time = 0
-    last_msg_time = dt.datetime.now()
+    last_msg_time = timer()
     msg_count = 0
     while msg_count < batch_size and elapsed_time < max_wait_seconds:
         message = consumer.consume(block=False)
         if message:
             parsed = _parse_message(message)
             batch.append(parsed)
-            last_msg_time = dt.datetime.now()
+            last_msg_time = timer()
             msg_count += 1
-        elapsed_time = (dt.datetime.now() - last_msg_time).total_seconds()
+        elapsed_time = timer() - last_msg_time
     return batch
 
 
-async def consume(kafka_topic, img_persister):
+async def consume(kafka_topic, img_persister, s3):
     """
     Listen for inbound image URLs and process them.
 
     :param kafka_topic:
     :param img_persister: A function that takes an image as a parameter and
     saves the image to the desired location.
+    :param s3: A boto3 s3 client.
     :return:
     """
     consumer = kafka_topic.get_balanced_consumer(
@@ -78,11 +79,12 @@ async def consume(kafka_topic, img_persister):
             )
         if tasks:
             batch_size = len(tasks)
-            log.info(f'Processing image batch of size {batch_size}')
-            total += len(tasks)
+            log.info(f'batch_size={batch_size}')
+            total += batch_size
             await asyncio.gather(*tasks)
             total_time = timer() - start
             log.info(f'resize_rate={batch_size/total_time}/s')
+            log.info(f'batch_time={total_time}s')
             consumer.commit_offsets()
         else:
             time.sleep(1)
@@ -90,13 +92,16 @@ async def consume(kafka_topic, img_persister):
 
 def thumbnail_image(img: Image):
     img.thumbnail(size=settings.TARGET_RESOLUTION, resample=Image.NEAREST)
+    output = BytesIO()
+    img.save(output, format="JPEG")
+    return output
 
 
-def save_thumbnail_s3(img):
+async def save_thumbnail_s3(img: BytesIO):
     pass
 
 
-def save_thumbnail_local(img):
+async def save_thumbnail_local(img: BytesIO):
     pass
 
 
@@ -114,18 +119,20 @@ async def process_image(persister, session, url):
     img_resp = await session.get(url)
     buffer = BytesIO(await img_resp.read())
     img = await loop.run_in_executor(None, partial(Image.open, buffer))
-    await loop.run_in_executor(
+    thumb = await loop.run_in_executor(
         None, partial(thumbnail_image, img)
     )
-    await loop.run_in_executor(None, partial(persister, img))
+    await persister(thumb)
 
 
 if __name__ == '__main__':
     log.basicConfig(level=log.DEBUG)
     kafka_client = kafka_connect()
+    s3 = boto3.resource('s3')
     inbound_images = kafka_client.topics['inbound_images']
     main = consume(
         kafka_topic=inbound_images,
-        img_persister=save_thumbnail_local
+        img_persister=save_thumbnail_local,
+        s3=s3
     )
     asyncio.run(main)
