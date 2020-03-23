@@ -3,7 +3,6 @@ import logging as log
 import asyncio
 import aiohttp
 import boto3
-import botocore
 import pykafka
 import time
 from functools import partial
@@ -86,12 +85,14 @@ def thumbnail_image(img: Image):
     img.thumbnail(size=settings.TARGET_RESOLUTION, resample=Image.NEAREST)
     output = BytesIO()
     img.save(output, format="JPEG")
-    img.seek(0)
+    output.seek(0)
     return output
 
 
-def save_thumbnail_s3(s3_client, img: BytesIO):
-    s3_client.Bucket('cc-image-analysis').put_object(Key='test.jpg', Body=img)
+def save_thumbnail_s3(s3_client, img: BytesIO, identifier):
+    s3_client\
+        .Bucket('cc-image-analysis')\
+        .put_object(Key=f'{identifier}.jpg', Body=img)
 
 
 def save_thumbnail_local(img: BytesIO):
