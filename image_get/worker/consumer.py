@@ -3,6 +3,7 @@ import logging as log
 import asyncio
 import aiohttp
 import boto3
+import botocore
 import pykafka
 import time
 from functools import partial
@@ -54,7 +55,8 @@ async def poll_consumer(consumer, batch_size):
 async def consume(consumer, image_processor):
     """
     Listen for inbound image URLs and process them.
-
+    :param consumer: A Kafka consumer listening to the inbound images topic.
+    :param image_processor: A partial function that handles an image.
     """
     session = aiohttp.ClientSession()
     total = 0
@@ -84,14 +86,15 @@ def thumbnail_image(img: Image):
     img.thumbnail(size=settings.TARGET_RESOLUTION, resample=Image.NEAREST)
     output = BytesIO()
     img.save(output, format="JPEG")
+    img.seek(0)
     return output
 
 
-async def save_thumbnail_s3(img: BytesIO):
-    pass
+def save_thumbnail_s3(s3_client, img: BytesIO):
+    s3_client.Bucket('cc-image-analysis').put_object(Key='test.jpg', Body=img)
 
 
-async def save_thumbnail_local(img: BytesIO):
+def save_thumbnail_local(img: BytesIO):
     pass
 
 
@@ -112,13 +115,17 @@ async def process_image(persister, session, url, s3=None):
     thumb = await loop.run_in_executor(
         None, partial(thumbnail_image, img)
     )
-    await persister(thumb)
+    await loop.run_in_executor(None, partial(persister, s3, thumb))
 
 
 if __name__ == '__main__':
-    log.basicConfig(level=log.DEBUG)
+    log.basicConfig(level=log.INFO)
     kafka_client = kafka_connect()
-    s3 = boto3.resource('s3')
+    session = boto3.Session(
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    )
+    s3 = session.resource('s3')
     inbound_images = kafka_client.topics['inbound_images']
     consumer = inbound_images.get_balanced_consumer(
         consumer_group='image_resizers',
@@ -127,7 +134,7 @@ if __name__ == '__main__':
     )
     image_processor = partial(
         process_image,
-        persister=save_thumbnail_local,
+        persister=save_thumbnail_s3,
         s3=s3
     )
     main = consume(consumer, image_processor)
