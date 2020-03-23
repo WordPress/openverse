@@ -51,21 +51,11 @@ async def poll_consumer(consumer, batch_size):
     return batch
 
 
-async def consume(kafka_topic, img_persister, s3):
+async def consume(consumer, image_processor):
     """
     Listen for inbound image URLs and process them.
 
-    :param kafka_topic:
-    :param img_persister: A function that takes an image as a parameter and
-    saves the image to the desired location.
-    :param s3: A boto3 s3 client.
-    :return:
     """
-    consumer = kafka_topic.get_balanced_consumer(
-        consumer_group='image_spiders',
-        auto_commit_enable=True,
-        zookeeper_connect=settings.ZOOKEEPER_HOST
-    )
     session = aiohttp.ClientSession()
     total = 0
     while True:
@@ -75,7 +65,7 @@ async def consume(kafka_topic, img_persister, s3):
         start = timer()
         for msg in messages:
             tasks.append(
-                process_image(img_persister, session, msg)
+                image_processor(session=session, url=msg)
             )
         if tasks:
             batch_size = len(tasks)
@@ -105,7 +95,7 @@ async def save_thumbnail_local(img: BytesIO):
     pass
 
 
-async def process_image(persister, session, url):
+async def process_image(persister, session, url, s3=None):
     """
     Get an image, resize it, and persist it.
     :param persister: The function defining image persistence. It
@@ -130,9 +120,15 @@ if __name__ == '__main__':
     kafka_client = kafka_connect()
     s3 = boto3.resource('s3')
     inbound_images = kafka_client.topics['inbound_images']
-    main = consume(
-        kafka_topic=inbound_images,
-        img_persister=save_thumbnail_local,
+    consumer = inbound_images.get_balanced_consumer(
+        consumer_group='image_resizers',
+        auto_commit_enable=True,
+        zookeeper_connect=settings.ZOOKEEPER_HOST
+    )
+    image_processor = partial(
+        process_image,
+        persister=save_thumbnail_local,
         s3=s3
     )
+    main = consume(consumer, image_processor)
     asyncio.run(main)
