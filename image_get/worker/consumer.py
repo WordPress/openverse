@@ -3,8 +3,10 @@ import logging as log
 import asyncio
 import aiohttp
 import boto3
+import botocore.client
 import pykafka
 import time
+import json
 from functools import partial
 from io import BytesIO
 from PIL import Image
@@ -22,7 +24,7 @@ def kafka_connect():
 
 
 def _parse_message(message):
-    decoded = str(message.value, 'utf-8')
+    decoded = json.loads(str(message.value, 'utf-8'))
     return decoded
 
 
@@ -66,7 +68,11 @@ async def consume(consumer, image_processor):
         start = timer()
         for msg in messages:
             tasks.append(
-                image_processor(session=session, url=msg)
+                image_processor(
+                    session=session,
+                    url=msg['url'],
+                    identifier=msg['uuid']
+                )
             )
         if tasks:
             batch_size = len(tasks)
@@ -90,16 +96,18 @@ def thumbnail_image(img: Image):
 
 
 def save_thumbnail_s3(s3_client, img: BytesIO, identifier):
-    s3_client\
-        .Bucket('cc-image-analysis')\
-        .put_object(Key=f'{identifier}.jpg', Body=img)
+    s3_client.put_object(
+        Bucket='cc-image-analysis',
+        Key=f'{identifier}.jpg',
+        Body=img
+    )
 
 
 def save_thumbnail_local(img: BytesIO):
     pass
 
 
-async def process_image(persister, session, url, s3=None):
+async def process_image(persister, session, url, identifier):
     """
     Get an image, resize it, and persist it.
     :param persister: The function defining image persistence. It
@@ -116,17 +124,19 @@ async def process_image(persister, session, url, s3=None):
     thumb = await loop.run_in_executor(
         None, partial(thumbnail_image, img)
     )
-    await loop.run_in_executor(None, partial(persister, s3, thumb))
+    await loop.run_in_executor(
+        None, partial(persister, img=thumb, identifier=identifier)
+    )
 
 
 if __name__ == '__main__':
     log.basicConfig(level=log.INFO)
     kafka_client = kafka_connect()
-    session = boto3.Session(
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    s3 = boto3.client(
+        's3',
+        settings.AWS_DEFAULT_REGION,
+        config=botocore.client.Config(max_pool_connections=settings.BATCH_SIZE)
     )
-    s3 = session.resource('s3')
     inbound_images = kafka_client.topics['inbound_images']
     consumer = inbound_images.get_balanced_consumer(
         consumer_group='image_resizers',
@@ -135,8 +145,7 @@ if __name__ == '__main__':
     )
     image_processor = partial(
         process_image,
-        persister=save_thumbnail_s3,
-        s3=s3
+        persister=partial(save_thumbnail_s3, s3_client=s3)
     )
     main = consume(consumer, image_processor)
     asyncio.run(main)
