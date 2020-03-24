@@ -90,7 +90,7 @@ async def consume(consumer, image_processor):
 def thumbnail_image(img: Image):
     img.thumbnail(size=settings.TARGET_RESOLUTION, resample=Image.NEAREST)
     output = BytesIO()
-    img.save(output, format="JPEG")
+    img.save(output, format="JPEG", quality=30)
     output.seek(0)
     return output
 
