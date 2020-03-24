@@ -1,11 +1,13 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack-base.conf with an alias.
-
 import Vue from 'vue';
 import App from './App';
 import store from './store';
 import GoogleAnalytics from './analytics/GoogleAnalytics';
 
+if ('scrollRestoration' in window.history) {
+  window.history.scrollRestoration = 'manual';
+}
 function createApp(router, __INITIAL_STATE__) {
   Vue.config.productionTip = false;
 

@@ -77,7 +77,6 @@ import ImageAttribution from '@/components/ImageAttribution';
 import ImageSocialShare from '@/components/ImageSocialShare';
 import attributionHtml from '@/utils/attributionHtml';
 
-
 export default {
   name: 'photo-details',
   props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'watermarkEnabled', 'socialSharingEnabled'],
@@ -106,13 +105,9 @@ export default {
       return `${this.image.license_url}?ref=ccsearch`;
     },
   },
-
   methods: {
     onGoBackToSearchResults() {
       this.$router.push({ name: 'browse-page', query: this.query, params: { location: this.$route.params.location } });
-    },
-    onGoBack() {
-      this.onGoBackToSearchResults();
     },
     onImageLoad(event) {
       this.$emit('onImageLoaded', event);
@@ -131,15 +126,7 @@ export default {
       return attributionHtml(this.image, licenseURL, this.fullLicenseName);
     },
   },
-  mounted() {
-    window.addEventListener('popstate', this.onGoBack);
-  },
-  beforeDestroy() {
-    window.removeEventListener('popstate', this.onGoBack);
-  },
 };
-
-
 </script>
 
 <style lang="scss" scoped>
