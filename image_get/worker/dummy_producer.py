@@ -24,4 +24,3 @@ topic = client.topics['inbound_images']
 with topic.get_sync_producer() as producer:
     for url in islice(cycle(encoded_msgs), 2000):
         producer.produce(bytes(url, 'utf-8'))
-
