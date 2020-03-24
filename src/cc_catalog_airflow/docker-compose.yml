@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  postgres:
+    build: ./local_postgres
+    environment:
+      - POSTGRES_USER=deploy
+      - POSTGRES_PASSWORD=deploy
+      - POSTGRES_DB=openledger
+    ports:
+      - "5432:5432"
+    volumes:
+      - /tmp/docker_postgres_data:/var/lib/postgresql/data
+
+  webserver:
+    build: .
+    env_file: .env
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - ./dags:/usr/local/airflow/dags
+    ports:
+      # This prevents conflicting with locally running airflow webserver
+      - "9090:8080"
