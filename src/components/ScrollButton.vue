@@ -33,6 +33,7 @@ export default {
   },
   methods: {
     scrollToTop() {
+      /* istanbul ignore next */
       window.scrollTo({
         top: 0,
         left: 0,
