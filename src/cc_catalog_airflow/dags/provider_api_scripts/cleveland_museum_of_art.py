@@ -34,7 +34,6 @@ def main():
         query_param = _build_query_param(offset)
         response_json, total_images = _get_response(query_param)
         if response_json is not None and total_images != 0:
-            logger.info('Successful response')
             batch = response_json['data']
             image_count = _handle_response(batch)
             logger.info(f'Total images till now {image_count}')
@@ -47,8 +46,10 @@ def main():
     logger.info(f'Total number of images received {image_count}')
 
 
-def _build_query_param(offset):
-    query_param = DEFAULT_QUERY_PARAM.copy()
+def _build_query_param(offset=0,
+                       default_query_param=DEFAULT_QUERY_PARAM
+                       ):
+    query_param = default_query_param.copy()
     query_param.update(
         skip=offset
     )
@@ -61,13 +62,12 @@ def _get_response(
                 retries=RETRIES
                 ):
     response_json, total_images = None, 0
-    for tries in range(RETRIES):
+    for tries in range(retries):
         response = delay_request.get(
                     endpoint,
                     query_param
                     )
         if response.status_code == 200 and response is not None:
-            logger.info('Response status 200')
             try:
                 response_json = response.json()
                 total_images = len(response_json['data'])
@@ -78,9 +78,9 @@ def _get_response(
                 break
 
         logger.info('Retrying \n'
-                    f'endpoint -- {ENDPOINT} \t'
+                    f'endpoint -- {endpoint} \t'
                     f' with parameters -- {query_param} ')
-    if tries == RETRIES-1 and ((response_json is None) or
+    if tries == retries-1 and ((response_json is None) or
                                (total_images is None)):
         logger.warning('No more tries remaining. Returning Nonetypes.')
         return None, 0
@@ -130,7 +130,6 @@ def _handle_response(
                         title=title,
                         creator=creator_name,
                         meta_data=metadata,
-                        source=PROVIDER
                         )
     return total_images
 
