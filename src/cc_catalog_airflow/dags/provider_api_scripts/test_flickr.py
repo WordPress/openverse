@@ -117,6 +117,7 @@ def test_build_query_param_dict_default():
         api_key=flickr_api_key
     )
     expect_query_param_dict = {
+        'method': 'flickr.photos.search',
         'media': 'photos',
         'content_type': 1,
         'extras': 'description,license,date_upload,date_taken,owner_name,tags,o_dims,url_t,url_s,url_m,url_l,views',
@@ -148,12 +149,14 @@ def test_build_query_param_dict_with_givens():
         },
         limit=10,
         default_query_param={
+            'method': 'flickr.photos.search',
             'media': 'photos',
             'extras': 'url_t,url_s,url_m,url_l,views',
             'nojsoncallback': 1,
         }
     )
     expect_query_param_dict = {
+        'method': 'flickr.photos.search',
         'media': 'photos',
         'extras': 'url_t,url_s,url_m,url_l,views',
         'nojsoncallback': 1,
