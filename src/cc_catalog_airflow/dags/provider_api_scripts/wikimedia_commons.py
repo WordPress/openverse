@@ -121,7 +121,17 @@ def _get_image_batch(
     )
     image_batch = None
     for _ in range(MEAN_GLOBAL_USAGE_LIMIT):
-        response_json = _get_response_json(query_params, retries=retries)
+        response_json = (
+            delayed_requester.
+            get_response_json(
+                ENDPOINT,
+                retries=retries,
+                query_params=query_params,
+                headers=DEFAULT_REQUEST_HEADERS,
+                timeout=60
+            )
+        )
+
         if response_json is None:
             image_batch = None
             new_continue_token = None
@@ -212,54 +222,6 @@ def _merge_image_pages(left_page, right_page):
     return merged_page
 
 
-def _get_response_json(
-        query_params,
-        endpoint=ENDPOINT,
-        request_headers=DEFAULT_REQUEST_HEADERS,
-        retries=0,
-):
-    response_json = None
-
-    if retries < 0:
-        logger.error('No retries remaining.  Failure.')
-        raise Exception('Retries exceeded')
-
-    response = delayed_requester.get(
-        endpoint,
-        params=query_params,
-        headers=request_headers,
-        timeout=60
-    )
-    if response is not None and response.status_code == 200:
-        try:
-            response_json = response.json()
-        except Exception as e:
-            logger.warning(f'Could not get response_json.\n{e}')
-            response_json = None
-
-    if (
-            response_json is None
-            or response_json.get('error') is not None
-    ):
-        logger.warning(f'Bad response_json:  {response_json}')
-        logger.warning(
-            'Retrying:\n_get_response_json(\n'
-            f'    {endpoint},\n'
-            f'    {query_params},\n'
-            f'    {request_headers}'
-            f'    retries={retries - 1}'
-            ')'
-        )
-        response_json = _get_response_json(
-            query_params,
-            endpoint=endpoint,
-            request_headers=request_headers,
-            retries=retries - 1
-        )
-
-    return response_json
-
-
 def _process_image_data(image_data):
     foreign_id = image_data.get('pageid')
     logger.debug(f'Processing page ID: {foreign_id}')
@@ -288,6 +250,23 @@ def _get_image_info_dict(image_data):
     else:
         image_info = {}
     return image_info
+
+
+def _extract_date_info(image_info):
+    date_originally_created = (
+        image_info
+        .get('extmetadata', {})
+        .get('DateTimeOriginal', {})
+        .get('value', '')
+    )
+
+    last_modified_at_source = (
+        image_info
+        .get('extmetadata', {})
+        .get('DateTime', {})
+        .get('value', '')
+    )
+    return (date_originally_created, last_modified_at_source)
 
 
 def _extract_creator_info(image_info):
@@ -323,6 +302,8 @@ def _create_meta_data_dict(image_data):
     meta_data = {}
     global_usage_length = len(image_data.get('globalusage', []))
     image_info = _get_image_info_dict(image_data)
+    date_originally_created, last_modified_at_source = _extract_date_info(
+        image_info)
     description = (
         image_info
         .get('extmetadata', {})
@@ -335,6 +316,8 @@ def _create_meta_data_dict(image_data):
         ).strip()
         meta_data['description'] = description_text
     meta_data['global_usage_count'] = global_usage_length
+    meta_data['date_originally_created'] = date_originally_created
+    meta_data['last_modified_at_source'] = last_modified_at_source
     return meta_data
 
 

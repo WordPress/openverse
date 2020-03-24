@@ -1,8 +1,8 @@
 ---
 name: General Feature Request
 about: Suggest an idea for this project
-title: "[General] Replace with Title"
-labels: enhancement
+title: "[Feature] Replace with Title"
+labels: enhancement, awaiting triage
 ---
 
 ## Problem Description
