@@ -184,5 +184,4 @@ async def mock_listen():
 
 @pytest.mark.asyncio
 async def test_congestion_handling():
-    print('----')
     await mock_listen()

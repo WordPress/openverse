@@ -17,6 +17,7 @@ pipenv install
 pipenv shell
 pytest
 ```
+Use `pytest -s` to include logs.
 
 ## How do I feed images to it?
 See `dummy_producer.py` for an example.
