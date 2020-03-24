@@ -90,6 +90,7 @@ class AioNetworkSimulatingSession:
         self.requests_last_second.append(time.time())
 
     def update_load(self):
+        original_utilization = self.load
         load = len(self.requests_last_second) / self.max_requests_per_second
         if load <= 0.8:
             self.load = self.Load.LOW
@@ -97,6 +98,8 @@ class AioNetworkSimulatingSession:
             self.load = self.Load.HIGH
         else:
             self.load = self.Load.OVERLOADED
+        if self.load != original_utilization:
+            log.debug(f'Changed load to {self.load}')
 
     def lag(self):
         """ Determine how long a request should lag based on load. """
@@ -107,7 +110,6 @@ class AioNetworkSimulatingSession:
         # Overloaded
         else:
             wait = random.uniform(2, 5)
-        log.debug(f'Lagging {wait}s')
         return wait
 
     async def get(self, url):
