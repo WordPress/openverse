@@ -77,10 +77,11 @@ class AioNetworkSimulatingSession:
     # When overloaded, there's a 4/5 chance of an error being returned.
     overloaded_status_choices = [500, 403, 501, 400, 200]
 
-    def __init__(self, max_requests_per_second=10):
+    def __init__(self, max_requests_per_second=10, fail_if_overloaded=False):
         self.max_requests_per_second = max_requests_per_second
         self.requests_last_second = deque()
         self.load = self.Load.LOW
+        self.fail_if_overloaded = fail_if_overloaded
 
     def record_request(self):
         """ Record a request and flush out expired records. """
@@ -98,8 +99,10 @@ class AioNetworkSimulatingSession:
             self.load = self.Load.HIGH
         else:
             self.load = self.Load.OVERLOADED
+            if self.fail_if_overloaded:
+                assert False
         if self.load != original_utilization:
-            log.debug(f'Changed load to {self.load}')
+            log.debug(f'Changed simulator load status to {self.load}')
 
     def lag(self):
         """ Determine how long a request should lag based on load. """
@@ -109,7 +112,7 @@ class AioNetworkSimulatingSession:
             wait = random.uniform(0.15, 0.6)
         # Overloaded
         else:
-            wait = random.uniform(2, 5)
+            wait = random.uniform(2, 10)
         return wait
 
     async def get(self, url):
@@ -157,7 +160,7 @@ async def test_pipeline():
     )
 
 
-async def get_mock_consumer():
+async def get_mock_consumer(msg_count=1000):
     """ Create a mock consumer with a bunch of fake messages in it. """
     consumer = FakeConsumer()
     msgs = [
@@ -165,7 +168,7 @@ async def get_mock_consumer():
             'url': 'https://example.gov/hewwo.jpg',
             'uuid': '96136357-6f32-4174-b4ca-ae67e963bc55'
         }
-    ]*1000
+    ]*msg_count
     encoded_msgs = [json.dumps(msg) for msg in msgs]
     for msg in encoded_msgs:
         consumer.insert(msg)
@@ -179,7 +182,7 @@ async def get_mock_consumer():
 
 
 async def mock_listen():
-    consumer = await get_mock_consumer()
+    consumer = await get_mock_consumer(msg_count=1000)
     log.debug('Starting consumer')
     await consumer
 
