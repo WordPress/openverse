@@ -9,6 +9,7 @@ pykafka = "*"
 aiohttp = "*"
 Pillow = "*"
 boto3 = "*"
+pytest-asyncio = "*"
 
 [dev-packages]
 

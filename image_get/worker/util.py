@@ -1,6 +1,8 @@
+import asyncio
 import json
 import logging as log
 import time
+from functools import partial
 from io import BytesIO
 
 import pykafka
@@ -42,3 +44,24 @@ def save_thumbnail_s3(s3_client, img: BytesIO, identifier):
 
 def save_thumbnail_local(img: BytesIO):
     pass
+
+
+async def process_image(persister, session, url, identifier):
+    """
+    Get an image, resize it, and persist it.
+    :param persister: The function defining image persistence. It
+    should do something like save an image to disk, or upload it to
+    S3.
+    :param session: An aiohttp client session.
+    :param url: The URL of the image.
+    """
+    loop = asyncio.get_event_loop()
+    img_resp = await session.get(url)
+    buffer = BytesIO(await img_resp.read())
+    img = await loop.run_in_executor(None, partial(Image.open, buffer))
+    thumb = await loop.run_in_executor(
+        None, partial(thumbnail_image, img)
+    )
+    await loop.run_in_executor(
+        None, partial(persister, img=thumb, identifier=identifier)
+    )

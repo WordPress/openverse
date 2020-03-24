@@ -6,15 +6,12 @@ import boto3
 import botocore.client
 import time
 from functools import partial
-from io import BytesIO
-from PIL import Image
 from timeit import default_timer as timer
 
-from util import kafka_connect, parse_message, thumbnail_image,\
-    save_thumbnail_s3
+from util import kafka_connect, parse_message, save_thumbnail_s3, process_image
 
 
-async def poll_consumer(consumer, batch_size):
+def poll_consumer(consumer, batch_size):
     """
     Poll the Kafka consumer for a batch of messages and parse them.
     :param consumer:
@@ -47,16 +44,13 @@ async def consume(consumer, image_processor):
     """
     total = 0
     while True:
-        messages = await poll_consumer(consumer, settings.BATCH_SIZE)
+        messages = poll_consumer(consumer, settings.BATCH_SIZE)
         # Schedule resizing tasks
         tasks = []
         start = timer()
         for msg in messages:
             tasks.append(
-                image_processor(
-                    url=msg['url'],
-                    identifier=msg['uuid']
-                )
+                image_processor(url=msg['url'], identifier=msg['uuid'])
             )
         if tasks:
             batch_size = len(tasks)
@@ -68,29 +62,7 @@ async def consume(consumer, image_processor):
             log.info(f'batch_time={total_time}s')
             consumer.commit_offsets()
         else:
-            time.sleep(1)
-
-
-async def process_image(persister, session, url, identifier):
-    """
-    Get an image, resize it, and persist it.
-    :param persister: The function defining image persistence. It
-    should do something like save an image to disk, or upload it to
-    S3.
-    :param session: An aiohttp client session.
-    :param url: The URL of the image.
-    :return: None
-    """
-    loop = asyncio.get_event_loop()
-    img_resp = await session.get(url)
-    buffer = BytesIO(await img_resp.read())
-    img = await loop.run_in_executor(None, partial(Image.open, buffer))
-    thumb = await loop.run_in_executor(
-        None, partial(thumbnail_image, img)
-    )
-    await loop.run_in_executor(
-        None, partial(persister, img=thumb, identifier=identifier)
-    )
+            time.sleep(10)
 
 
 async def setup_consumer():
