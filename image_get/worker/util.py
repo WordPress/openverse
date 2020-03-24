@@ -2,13 +2,11 @@ import asyncio
 import json
 import logging as log
 import time
+import pykafka
+import settings
 from functools import partial
 from io import BytesIO
-
-import pykafka
 from PIL import Image
-
-import settings
 
 
 def kafka_connect():
@@ -40,10 +38,6 @@ def save_thumbnail_s3(s3_client, img: BytesIO, identifier):
         Key=f'{identifier}.jpg',
         Body=img
     )
-
-
-def save_thumbnail_local(img: BytesIO):
-    pass
 
 
 async def process_image(persister, session, url, identifier):
