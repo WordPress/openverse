@@ -7,7 +7,6 @@ import botocore.client
 import time
 from functools import partial
 from timeit import default_timer as timer
-
 from util import kafka_connect, parse_message, save_thumbnail_s3, process_image
 
 
@@ -36,11 +35,12 @@ def poll_consumer(consumer, batch_size):
     return batch
 
 
-async def consume(consumer, image_processor):
+async def consume(consumer, image_processor, terminate=False):
     """
     Listen for inbound image URLs and process them.
     :param consumer: A Kafka consumer listening to the inbound images topic.
     :param image_processor: A partial function that handles an image.
+    :param terminate: Whether to terminate when there are no more messages.
     """
     total = 0
     while True:
@@ -62,6 +62,8 @@ async def consume(consumer, image_processor):
             log.info(f'batch_time={total_time}s')
             consumer.commit_offsets()
         else:
+            if terminate:
+                return
             time.sleep(10)
 
 
