@@ -4,28 +4,14 @@ import asyncio
 import aiohttp
 import boto3
 import botocore.client
-import pykafka
 import time
-import json
 from functools import partial
 from io import BytesIO
 from PIL import Image
 from timeit import default_timer as timer
 
-
-def kafka_connect():
-    try:
-        client = pykafka.KafkaClient(hosts=settings.KAFKA_HOSTS)
-    except pykafka.exceptions.NoBrokersAvailableError:
-        log.info('Retrying Kafka connection. . .')
-        time.sleep(3)
-        return kafka_connect()
-    return client
-
-
-def _parse_message(message):
-    decoded = json.loads(str(message.value, 'utf-8'))
-    return decoded
+from util import kafka_connect, parse_message, thumbnail_image,\
+    save_thumbnail_s3
 
 
 async def poll_consumer(consumer, batch_size):
@@ -45,7 +31,7 @@ async def poll_consumer(consumer, batch_size):
     while msg_count < batch_size and elapsed_time < max_wait_seconds:
         message = consumer.consume(block=False)
         if message:
-            parsed = _parse_message(message)
+            parsed = parse_message(message)
             batch.append(parsed)
             last_msg_time = timer()
             msg_count += 1
@@ -59,7 +45,6 @@ async def consume(consumer, image_processor):
     :param consumer: A Kafka consumer listening to the inbound images topic.
     :param image_processor: A partial function that handles an image.
     """
-    session = aiohttp.ClientSession()
     total = 0
     while True:
         messages = await poll_consumer(consumer, settings.BATCH_SIZE)
@@ -69,7 +54,6 @@ async def consume(consumer, image_processor):
         for msg in messages:
             tasks.append(
                 image_processor(
-                    session=session,
                     url=msg['url'],
                     identifier=msg['uuid']
                 )
@@ -85,26 +69,6 @@ async def consume(consumer, image_processor):
             consumer.commit_offsets()
         else:
             time.sleep(1)
-
-
-def thumbnail_image(img: Image):
-    img.thumbnail(size=settings.TARGET_RESOLUTION, resample=Image.NEAREST)
-    output = BytesIO()
-    img.save(output, format="JPEG", quality=30)
-    output.seek(0)
-    return output
-
-
-def save_thumbnail_s3(s3_client, img: BytesIO, identifier):
-    s3_client.put_object(
-        Bucket='cc-image-analysis',
-        Key=f'{identifier}.jpg',
-        Body=img
-    )
-
-
-def save_thumbnail_local(img: BytesIO):
-    pass
 
 
 async def process_image(persister, session, url, identifier):
@@ -129,8 +93,10 @@ async def process_image(persister, session, url, identifier):
     )
 
 
-if __name__ == '__main__':
-    log.basicConfig(level=log.INFO)
+async def setup_consumer():
+    """
+    Set up all IO used by the consumer.
+    """
     kafka_client = kafka_connect()
     s3 = boto3.client(
         's3',
@@ -143,9 +109,21 @@ if __name__ == '__main__':
         auto_commit_enable=True,
         zookeeper_connect=settings.ZOOKEEPER_HOST
     )
+    aiosession = aiohttp.ClientSession()
     image_processor = partial(
-        process_image,
+        process_image, session=aiosession,
         persister=partial(save_thumbnail_s3, s3_client=s3)
     )
-    main = consume(consumer, image_processor)
-    asyncio.run(main)
+    return consume(consumer, image_processor)
+
+
+async def listen():
+    """
+    Listen for image events forever.
+    """
+    consumer = await setup_consumer()
+    await consumer
+
+if __name__ == '__main__':
+    log.basicConfig(level=log.INFO)
+    asyncio.run(listen())
