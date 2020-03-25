@@ -1,0 +1,19 @@
+name: Automated testing workflow
+on: pull_request
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+        working-directory: ./src/
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the stack
+        run: docker build -t cc-catalog-etl
+      - name: Run Container
+        run: docker run -d -p 8080:8080 -v $(pwd)/dags:/usr/local/airflow/dags --name cc-catalog-etl-ws  cc-catalog-etl webserver
+      - name: Test
+        run: |
+          docker cp env.sh.template cc-catalog-etl-ws:/usr/local/airflow/env.sh
+          docker exec -it cc-catalog-etl-ws /bin/bash
+          source env.sh
+          pytest
