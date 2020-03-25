@@ -15,6 +15,7 @@ install:
   - pip3 install pipenv
   - cd cccatalog-api && pipenv install --system --deploy --dev && cd ..
   - cd ingestion_server && pipenv install --system --deploy --dev && cd ..
+  - cd image_get/worker && pipenv install --system --deploy && cd ../../
   - cd analytics && pipenv install && cd ..
 before_install:
   - "export PYTHONPATH=$PYTHONPATH:$(pwd)"
