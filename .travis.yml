@@ -8,7 +8,7 @@ addons:
 env:
   - CCCAPI_CONTAINER_NAME=cccatalog-api_web_1 ANALYTICS_CONTAINER_NAME=cccatalog-api_analytics_1
 python:
-- '3.6'
+- '3.7'
 services:
   - docker
 install:
