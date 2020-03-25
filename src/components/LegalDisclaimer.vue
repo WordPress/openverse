@@ -35,3 +35,13 @@ export default {
   },
 };
 </script>
+<style>
+  li:before{
+    content: "\2022";
+    color: #CCC;
+    font-weight: bold;
+    display: inline-block; 
+    width: 1em;
+    margin-left: 1em;
+  }
+</style>
