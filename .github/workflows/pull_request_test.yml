@@ -4,7 +4,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-        working-directory: ./src/
+        working-directory: ./src/cc_catalog_airflow
     steps:
       - uses: actions/checkout@v2
       - name: Build the stack
