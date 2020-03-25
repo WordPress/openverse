@@ -1,7 +1,8 @@
 <template>
-  <div class="column is-2 margin-small provider-card">
+  <div class="column is-3 margin-small has-background-white provider-card">
     <div>
-      <a :href="'/collections/'+provider.source_name" class="provider-name">
+      <a :href="'/collections/'+provider.source_name"
+         class="provider-name has-text-weight-normal has-text-black">
         {{ provider.display_name }}
       </a>
     </div>
@@ -12,7 +13,9 @@
       </a>
     </div>
     <div>
-      <span>Collection size: {{ getProviderImageCount(provider.image_count) }} images</span>
+      <span class="has-text-grey-light has-text-weight-semibold">
+        Collection size: {{ getProviderImageCount(provider.image_count) }} images
+      </span>
     </div>
   </div>
 </template>
@@ -46,6 +49,10 @@ export default {
   @import "@creativecommons/vocabulary/scss/color.scss";
   .provider-card {
     border: 2px solid $color-light-gray;
+    cursor: pointer;
+    &:hover{
+      box-shadow: 10px 10px 2px -5px #E7E7E7;
+    }
   }
 
   .provider-name {
