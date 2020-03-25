@@ -65,4 +65,8 @@ export default {
     background: none;
   }
 }
+
+span {
+  vertical-align: middle;
+}
 </style>
