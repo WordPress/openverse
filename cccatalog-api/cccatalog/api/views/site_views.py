@@ -291,16 +291,21 @@ class CheckRates(APIView):
 
 
 class Thumbs(APIView):
+    """
+    Return the thumb of an image.
+    """
+
+    lookup_field = 'identifier'
+    queryset = Image.objects.all()
 
     @swagger_auto_schema(operation_id="thumb_lookup",
                          responses={
-                             200: None,
-                             301: 'Moved Permanently',
+                             200: 'The thumb of an image',
                              400: 'Bad Request',
                              404: 'Not Found'
                          })
-    def get(self, request, path, format=None):
-        path_element = path.split(".")
+    def get(self, request, identifier, format=None):
+        path_element = identifier.split(".")
         identifier = path_element[0]
         extname = ""
         if len(path_element) == 2:

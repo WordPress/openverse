@@ -132,7 +132,7 @@ def _post_process_results(s, start, end, page_size, search_results,
             proxied = "http://{}{}".format(
                 request.get_host(),
                 reverse('thumbs', kwargs={
-                    'path': "{}.{}".format(res["identifier"], ext)
+                    'identifier': "{}.{}".format(res["identifier"], ext)
                 })
             )
             res[THUMBNAIL] = proxied

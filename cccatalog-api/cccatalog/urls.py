@@ -105,7 +105,7 @@ versioned_paths = [
     ),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
-    path('thumbs/<str:path>', Thumbs.as_view(), name='thumbs')
+    path('thumbs/<str:identifier>', Thumbs.as_view(), name='thumbs')
 ]
 if WATERMARK_ENABLED:
     versioned_paths.append(
