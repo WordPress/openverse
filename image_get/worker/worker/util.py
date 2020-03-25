@@ -3,7 +3,7 @@ import json
 import logging as log
 import time
 import pykafka
-import settings
+import worker.settings as settings
 from functools import partial
 from io import BytesIO
 from PIL import Image, UnidentifiedImageError
@@ -43,7 +43,7 @@ def save_thumbnail_s3(s3_client, img: BytesIO, identifier):
 async def _handle_error(url, msg):
     # Todo: retries
     # Todo: penalize token bucket
-    pass
+    log.debug(msg)
 
 
 async def process_image(persister, session, url, identifier):

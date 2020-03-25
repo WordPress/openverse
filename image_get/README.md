@@ -26,6 +26,6 @@ If you are running `docker-compose`, you must run the producer from within
 the docker-compose network. Enter the worker container and run it from
 there.
 ```
-sudo docker exec -it image_get_worker_1 /bin/bash
+docker exec -it image_get_worker_1 /bin/bash
 pipenv run python dummy_producer.py
 ```

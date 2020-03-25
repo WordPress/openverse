@@ -1,4 +1,4 @@
-import settings
+import worker.settings as settings
 import logging as log
 import asyncio
 import aiohttp
@@ -7,7 +7,7 @@ import botocore.client
 import time
 from functools import partial
 from timeit import default_timer as timer
-from util import kafka_connect, parse_message, save_thumbnail_s3, process_image
+from worker.util import kafka_connect, parse_message, save_thumbnail_s3, process_image
 
 
 def poll_consumer(consumer, batch_size):

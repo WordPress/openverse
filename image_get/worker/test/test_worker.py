@@ -4,8 +4,8 @@ import asyncio
 import time
 import random
 import logging as log
-from consumer import poll_consumer, consume
-from util import process_image
+from worker.consumer import poll_consumer, consume
+from worker.util import process_image
 from PIL import Image
 from collections import deque
 from enum import Enum, auto
@@ -39,18 +39,26 @@ class FakeConsumer:
 
 
 class FakeImageResponse:
-    def __init__(self, status=200):
+    def __init__(self, status=200, corrupt=False):
         self.status = status
+        self.corrupt = False
 
     async def read(self):
         # 1024 x 768 sample image
-        with open('test_image.jpg', 'rb') as f:
-            return f.read()
+        if self.corrupt:
+            log.debug('returning corrupt)')
+            return bytes(':) @@@@#%*^&(@#*&$')
+        else:
+            with open('test/test_image.jpg', 'rb') as f:
+                return f.read()
 
 
 class FakeAioSession:
+    def __init__(self, corrupt=False):
+        self.corrupt = corrupt
+
     async def get(self, url):
-        return FakeImageResponse()
+        return FakeImageResponse(self.corrupt)
 
 
 class AioNetworkSimulatingSession:
@@ -157,6 +165,16 @@ async def test_pipeline():
     await process_image(
         persister=validate_thumbnail,
         session=FakeAioSession(),
+        url='fake_url',
+        identifier='4bbfe191-1cca-4b9e-aff0-1d3044ef3f2d'
+    )
+
+
+@pytest.mark.asyncio
+async def test_handles_corrupt_images_gracefully():
+    await process_image(
+        persister=validate_thumbnail,
+        session=FakeAioSession(corrupt=True),
         url='fake_url',
         identifier='4bbfe191-1cca-4b9e-aff0-1d3044ef3f2d'
     )
