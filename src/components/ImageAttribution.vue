@@ -2,6 +2,7 @@
   <section class="sidebar_section">
     <div>
       <div class="photo-attribution">
+        <h5>Image attribution</h5>
         <span id="attribution" class="photo_usage-attribution" ref="photoAttribution">
           <a :href="image.foreign_landing_url"
              target="_blank"

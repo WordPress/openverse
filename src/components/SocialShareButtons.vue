@@ -1,5 +1,6 @@
 <template>
   <div class="social-share">
+    <h5>Share</h5>
     <div class="share-list_social-items">
       <a
         class="social-button facebook"
