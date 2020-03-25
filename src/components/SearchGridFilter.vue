@@ -131,8 +131,9 @@ export default {
 
 .search-filters_search-by,
 .clear-filters {
-  margin-top: 0.4em;
-  margin-left: 24px;
+  margin: 24px;
+  border-bottom: 2px solid whitesmoke;
+  padding-bottom: 1rem;
 }
 
 </style>
