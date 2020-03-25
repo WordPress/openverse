@@ -8,12 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the stack
-        run: docker build -t cc-catalog-etl
-      - name: Run Container
-        run: docker run -d -p 8080:8080 -v $(pwd)/dags:/usr/local/airflow/dags --name cc-catalog-etl-ws  cc-catalog-etl webserver
+        run: |
+          cp env.template .env
+          docker-compose up -d
       - name: Test
         run: |
-          docker cp env.sh.template cc-catalog-etl-ws:/usr/local/airflow/env.sh
-          docker exec -it cc-catalog-etl-ws /bin/bash
-          source env.sh
-          pytest
+          docker exec cc_catalog_airflow_webserver_1 /usr/local/airflow/.local/bin/pytest
