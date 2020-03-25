@@ -40,7 +40,7 @@ export default {
     content: "\2022";
     color: #CCC;
     font-weight: bold;
-    display: inline-block; 
+    display: inline-block;
     width: 1em;
     margin-left: 1em;
   }
