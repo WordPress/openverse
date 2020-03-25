@@ -40,7 +40,7 @@ export default {
 
 <style lang="scss" scoped>
 .home-license-filter {
-  margin-top: 0.5em;
+  margin-top: 1.5em;
   text-align: left;
   text-align: center;
 }
