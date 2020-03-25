@@ -33,7 +33,7 @@ MAX_TAG_STRING_LENGTH = 2000
 MAX_DESCRIPTION_LENGTH = 2000
 PROVIDER = 'flickr'
 API_KEY = os.getenv('FLICKR_API_KEY')
-ENDPOINT = 'https://api.flickr.com/services/rest/?method=flickr.photos.search'
+ENDPOINT = 'https://api.flickr.com/services/rest/'
 PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
 DATE_TYPES = ['taken', 'upload']
 
@@ -49,6 +49,7 @@ LICENSE_INFO = {
 }
 
 DEFAULT_QUERY_PARAMS = {
+    'method': 'flickr.photos.search',
     'media': 'photos',
     'content_type': 1,
     'extras': (
