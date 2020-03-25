@@ -3,31 +3,39 @@
         method="post"
         @submit.prevent="onSubmit"
         class="search-form padding-normal">
-    <div class="is-flex">
-      <button class="button toggle-filter"  @click.prevent="onToggleSearchGridFilter()">
-        <i class="fi-list">
-          <img v-if="!isFilterApplied"
-                width="24"
-                height="24"
-                src="../assets/filter_icon_new.svg" />
-
-          <img v-else
-                width="24"
-                height="24"
-                src="../assets/filter_icon_new_applied.svg" />
-        </i>
+    <div class="is-flex is-hidden-touch">
+      <button class="button toggle-filter padding-normal"
+              @click.prevent="onToggleSearchGridFilter()">
+        <img v-if="!isFilterApplied" width="24" src="../assets/filter_icon_new.svg" />
+        <img v-else width="24" src="../assets/filter_icon_new_applied.svg" />
       </button>
-      <input :placeholder="searchBoxPlaceholder"
+      <input id="searchInput"
               required="required"
-              autofocus="true"
               class="input is-medium search-form_input margin-left-small"
               type="search"
-              autocapitalize="none"
-              id="searchInput"
-              v-model="searchTermsModel"
               ref="search"
+              :placeholder="searchBoxPlaceholder"
+              v-model="searchTermsModel"
               @keyup.enter="onSubmit">
       <button class="button is-primary" @click.prevent="onSubmit">
+        Search
+      </button>
+    </div>
+    <div class="is-flex is-hidden-desktop">
+      <button class="button small toggle-filter-small padding-small"
+              @click.prevent="onToggleSearchGridFilter()">
+        <img v-if="!isFilterApplied" width="64" src="../assets/filter_icon_new.svg" />
+        <img v-else width="64" src="../assets/filter_icon_new_applied.svg" />
+      </button>
+      <input id="searchInput"
+              required="required"
+              class="input search-form_input margin-left-small"
+              type="search"
+              ref="search"
+              :placeholder="searchBoxPlaceholder"
+              v-model="searchTermsModel"
+              @keyup.enter="onSubmit">
+      <button class="button is-primary small" @click.prevent="onSubmit">
         Search
       </button>
     </div>
@@ -94,8 +102,16 @@ export default {
 
 <style lang="scss" scoped>
   .toggle-filter {
-    padding: 1rem;
     height: 3.875rem;
+  }
+
+  .toggle-filter-small {
+    width: 4rem;
+    padding-top: 0.35rem !important;
+
+    img {
+      max-width: 1.5rem;
+    }
   }
 
   .search-form {
@@ -109,14 +125,8 @@ export default {
   .search-form_input {
     width: 45%;
 
-    @media (max-width: 49em) {
+    @media (max-width: 48em) {
       width: 100%;
-    }
-  }
-
-  @media screen and (max-width: 600px) {
-    .search-form_input {
-      font-size: 18px;
     }
   }
 </style>

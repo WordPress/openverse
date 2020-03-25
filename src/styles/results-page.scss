@@ -9,7 +9,7 @@
   min-height: 600px;
 
   /* 48em = 768px */
-  @media (max-width: 49em) {
+  @media (max-width: 48em) {
     width: 100%;
     flex: none;
   }
@@ -21,7 +21,7 @@
   width: 21.875rem;
 
   /* 48em = 768px */
-  @media (max-width: 49em) {
+  @media (max-width: 48em) {
     width: 100%;
   }
 }
