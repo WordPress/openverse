@@ -2,6 +2,11 @@ import json
 from pykafka import KafkaClient
 from itertools import cycle, islice
 
+"""
+This is a sample image resize event producer.
+"""
+
+
 msgs = [
     {
         'url': 'https://live.staticflickr.com/7454/8728178381_00be690ebc_b.jpg',

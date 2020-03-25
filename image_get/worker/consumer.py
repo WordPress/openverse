@@ -99,5 +99,5 @@ async def listen():
     await consumer
 
 if __name__ == '__main__':
-    log.basicConfig(level=log.INFO)
+    log.basicConfig(level=log.DEBUG)
     asyncio.run(listen())

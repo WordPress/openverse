@@ -10,6 +10,7 @@ aiohttp = "*"
 Pillow = "*"
 boto3 = "*"
 pytest-asyncio = "*"
+tldextract = "*"
 
 [dev-packages]
 

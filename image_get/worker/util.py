@@ -6,7 +6,7 @@ import pykafka
 import settings
 from functools import partial
 from io import BytesIO
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 
 def kafka_connect():
@@ -40,6 +40,12 @@ def save_thumbnail_s3(s3_client, img: BytesIO, identifier):
     )
 
 
+async def _handle_error(url, msg):
+    # Todo: retries
+    # Todo: penalize token bucket
+    pass
+
+
 async def process_image(persister, session, url, identifier):
     """
     Get an image, resize it, and persist it.
@@ -51,8 +57,15 @@ async def process_image(persister, session, url, identifier):
     """
     loop = asyncio.get_event_loop()
     img_resp = await session.get(url)
+    if img_resp.status >= 400:
+        await _handle_error(url, f'status {img_resp.status}')
+        return
     buffer = BytesIO(await img_resp.read())
-    img = await loop.run_in_executor(None, partial(Image.open, buffer))
+    try:
+        img = await loop.run_in_executor(None, partial(Image.open, buffer))
+    except UnidentifiedImageError:
+        await _handle_error(url, 'Failed to open image; it may be corrupt.')
+        return
     thumb = await loop.run_in_executor(
         None, partial(thumbnail_image, img)
     )

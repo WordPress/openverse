@@ -38,13 +38,6 @@ class FakeConsumer:
         pass
 
 
-def validate_thumbnail(img, identifier):
-    """ Check that the image was resized. """
-    i = Image.open(img)
-    width, height = i.size
-    assert width <= 640 and height <= 480
-
-
 class FakeImageResponse:
     def __init__(self, status=200):
         self.status = status
@@ -102,8 +95,7 @@ class AioNetworkSimulatingSession:
         else:
             self.load = self.Load.OVERLOADED
             if self.fail_if_overloaded:
-                log.info('Your crawler DDoS\'d the website :(')
-                assert False
+                assert False, "You DDoS'd the server!"
         if self.load != original_load:
             log.debug(f'Changed simulator load status to {self.load}')
 
@@ -149,6 +141,13 @@ def test_poll():
         consumer.insert(msg)
     res = poll_consumer(consumer=consumer, batch_size=2)
     assert len(res) == 2
+
+
+def validate_thumbnail(img, identifier):
+    """ Check that the image was resized. """
+    i = Image.open(img)
+    width, height = i.size
+    assert width <= 640 and height <= 480
 
 
 @pytest.mark.asyncio
