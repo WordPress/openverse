@@ -81,7 +81,6 @@ class AioNetworkSimulatingSession:
         self.max_requests_per_second = max_requests_per_second
         self.requests_last_second = deque()
         self.load = self.Load.LOW
-        self.utilization = 0
         self.fail_if_overloaded = fail_if_overloaded
 
     def record_request(self):
@@ -103,7 +102,7 @@ class AioNetworkSimulatingSession:
         else:
             self.load = self.Load.OVERLOADED
             if self.fail_if_overloaded:
-                log.info('You DDoS\'d the website :(')
+                log.info('Your crawler DDoS\'d the website :(')
                 assert False
         if self.load != original_load:
             log.debug(f'Changed simulator load status to {self.load}')
@@ -164,7 +163,7 @@ async def test_pipeline():
     )
 
 
-async def get_mock_consumer(msg_count=1000):
+async def get_mock_consumer(msg_count=1000, max_rps=10):
     """ Create a mock consumer with a bunch of fake messages in it. """
     consumer = FakeConsumer()
     msgs = [
@@ -177,7 +176,10 @@ async def get_mock_consumer(msg_count=1000):
     for msg in encoded_msgs:
         consumer.insert(msg)
 
-    aiosession = AioNetworkSimulatingSession()
+    aiosession = AioNetworkSimulatingSession(
+        max_requests_per_second=max_rps,
+        fail_if_overloaded=True
+    )
     image_processor = partial(
         process_image, session=aiosession,
         persister=validate_thumbnail
@@ -186,11 +188,15 @@ async def get_mock_consumer(msg_count=1000):
 
 
 async def mock_listen():
-    consumer = await get_mock_consumer(msg_count=1000)
+    consumer = await get_mock_consumer(msg_count=1000, max_rps=10)
     log.debug('Starting consumer')
     await consumer
 
 
+@pytest.mark.skip(reason="Rate limiting needs to be implemented.")
 @pytest.mark.asyncio
-async def test_congestion_handling():
+async def test_rate_limiting():
+    """
+    Fails if we crawl aggressively enough to kill the simulated server.
+    """
     await mock_listen()
