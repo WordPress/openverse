@@ -81,27 +81,31 @@ class AioNetworkSimulatingSession:
         self.max_requests_per_second = max_requests_per_second
         self.requests_last_second = deque()
         self.load = self.Load.LOW
+        self.utilization = 0
         self.fail_if_overloaded = fail_if_overloaded
 
     def record_request(self):
         """ Record a request and flush out expired records. """
         if self.requests_last_second:
-            while self.requests_last_second[0] - time.time() > 1:
+            while (self.requests_last_second
+                   and time.time() - self.requests_last_second[0] > 1):
                 self.requests_last_second.popleft()
         self.requests_last_second.append(time.time())
 
     def update_load(self):
-        original_utilization = self.load
-        load = len(self.requests_last_second) / self.max_requests_per_second
-        if load <= 0.8:
+        original_load = self.load
+        utilization =\
+            len(self.requests_last_second) / self.max_requests_per_second
+        if utilization <= 0.8:
             self.load = self.Load.LOW
-        elif 0.8 < load < 1:
+        elif 0.8 < utilization < 1:
             self.load = self.Load.HIGH
         else:
             self.load = self.Load.OVERLOADED
             if self.fail_if_overloaded:
+                log.info('You DDoS\'d the website :(')
                 assert False
-        if self.load != original_utilization:
+        if self.load != original_load:
             log.debug(f'Changed simulator load status to {self.load}')
 
     def lag(self):
