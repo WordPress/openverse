@@ -58,7 +58,7 @@ async def consume(consumer, image_processor, terminate=False):
             total += batch_size
             await asyncio.gather(*tasks)
             total_time = timer() - start
-            log.info(f'resize_rate={batch_size/total_time}/s')
+            log.info(f'event_processing_rate={batch_size/total_time}/s')
             log.info(f'batch_time={total_time}s')
             consumer.commit_offsets()
         else:

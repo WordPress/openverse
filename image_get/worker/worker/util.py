@@ -42,8 +42,8 @@ def save_thumbnail_s3(s3_client, img: BytesIO, identifier):
 
 async def _handle_error(url, msg):
     # Todo: retries
-    # Todo: penalize token bucket
-    log.debug(msg)
+    # Todo: penalize rate limit
+    pass
 
 
 async def process_image(persister, session, url, identifier):
@@ -64,7 +64,6 @@ async def process_image(persister, session, url, identifier):
     try:
         img = await loop.run_in_executor(None, partial(Image.open, buffer))
     except UnidentifiedImageError:
-        await _handle_error(url, 'Failed to open image; it may be corrupt.')
         return
     thumb = await loop.run_in_executor(
         None, partial(thumbnail_image, img)

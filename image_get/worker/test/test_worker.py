@@ -46,11 +46,11 @@ class FakeImageResponse:
     async def read(self):
         # 1024 x 768 sample image
         if self.corrupt:
-            log.debug('returning corrupt)')
-            return bytes(':) @@@@#%*^&(@#*&$')
+            location = 'test/corrupt.jpg'
         else:
-            with open('test/test_image.jpg', 'rb') as f:
-                return f.read()
+            location = 'test/test_image.jpg'
+        with open(location, 'rb') as f:
+            return f.read()
 
 
 class FakeAioSession:

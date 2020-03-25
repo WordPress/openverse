@@ -13,11 +13,12 @@ count to at least the total number of worker processes across all machines.
 
 ## How do I run the tests?
 ```
+cd worker
 pipenv install
 pipenv shell
 pytest
 ```
-Use `pytest -s` to include logs.
+Use `pytest -s` to include debug logs.
 
 ## How do I feed images to it?
 See `dummy_producer.py` for an example.
