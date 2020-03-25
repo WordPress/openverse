@@ -18,8 +18,5 @@ services:
     restart: always
     depends_on:
       - postgres
-    volumes:
-      - ./dags:/usr/local/airflow/dags
     ports:
-      # This prevents conflicting with locally running airflow webserver
-      - "9090:8080"
+      - "${AIRFLOW_PORT}:8080"

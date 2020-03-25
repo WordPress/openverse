@@ -12,6 +12,7 @@ USER airflow
 WORKDIR  /usr/local/airflow
 ADD ./requirements.txt /usr/local/airflow
 ADD ./wait_for_db.py /usr/local/airflow
+ADD ./dags /usr/local/airflow/dags
 
 RUN pip install --user -r requirements.txt
 
