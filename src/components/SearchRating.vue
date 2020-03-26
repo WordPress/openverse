@@ -51,7 +51,7 @@ export default {
 <style lang="scss" scoped>
 .rating {
   vertical-align: middle;
-  color: rgb(5, 181, 218) !important;;
+  color: rgb(5, 181, 218) !important;
   font-size: 0.8rem !important;
   text-decoration: none !important;
   text-transform: none !important;
