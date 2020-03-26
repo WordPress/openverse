@@ -30,3 +30,15 @@ there.
 docker exec -it image_get_worker_1 /bin/bash
 pipenv run python dummy_producer.py
 ```
+
+### Current message format
+The consumer expects a JSON message with the following structure:
+```
+{
+    'url': 'https://example.gov/example.jpg',
+    'uuid': '7563efd4-58d0-41eb-9a4f-3903d36a5225'
+}
+```
+
+*url*: The URL of the image
+*uuid*: Our unique identifier for an image.
