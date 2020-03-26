@@ -30,14 +30,14 @@ describe('SearchRating', () => {
     expect(wrapper.find('.rating').element).toBeUndefined();
   });
 
-  it('dispatches SEND_SEARCH_RATING_EVENT when cliking rating button', () => {
+  it('dispatches SEND_SEARCH_RATING_EVENT when clicking rating button', () => {
     const wrapper = render(SearchRating, options);
     const button = wrapper.find('.rating');
     button.trigger('click');
     expect(dispatchMock).toHaveBeenLastCalledWith('SEND_SEARCH_RATING_EVENT', { query: 'foo', relevant: true });
   });
 
-  it('dispatches SEND_SEARCH_RATING_EVENT when cliking rating button with relevant as false', () => {
+  it('dispatches SEND_SEARCH_RATING_EVENT when clicking rating button with relevant as false', () => {
     const wrapper = render(SearchRating, options);
     const button = wrapper.findAll('.rating').wrappers[1];
     button.trigger('click');
