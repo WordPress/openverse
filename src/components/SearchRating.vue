@@ -49,20 +49,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@creativecommons/vocabulary/scss/color.scss";
-
 .rating {
   vertical-align: middle;
-  color: $color-dark-turquoise;
-  font-size: 0.8rem;
-  text-decoration: none;
+  color: rgb(5, 181, 218) !important;
+  font-size: 0.8rem !important;
+  text-decoration: none !important;
+  text-transform: none !important;
 
   &:hover {
-    background: none;
+    background: none !important;
   }
 
   &:focus {
-    background: none;
+    background: none !important;
   }
 }
 
