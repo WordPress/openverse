@@ -1,5 +1,5 @@
 <template>
-  <div class="caption">
+  <div class="caption has-text-weight-semibold">
     <div v-if="status == 'NOT_SENT'">
       <span>Are these results relevant?</span>
       <button class="button is-text tiny is-paddingless rating is-shadowless"

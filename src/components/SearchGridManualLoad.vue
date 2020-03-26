@@ -4,7 +4,7 @@
     <div class="search-grid_ctr" ref="gridItems">
       <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics count">
         <h2>{{ searchTerm }}</h2>
-        <span class="caption"> {{ _imagesCount }}</span>
+        <span class="caption has-text-weight-semibold"> {{ _imagesCount }}</span>
         <div class="is-pulled-right padding-right-big is-hidden-touch">
           <search-rating :searchTerm="_query.q" />
         </div>
