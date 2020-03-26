@@ -1,9 +1,7 @@
 <template>
-  <div class="photo-detail-page grid-x">
-    <div class="cell">
+  <div class="photo-detail-page">
       <header-section showNavSearch="true" />
-    </div>
-    <div class="container cell large-11">
+    <div>
       <photo-details :image="image"
                     :breadCrumbURL="breadCrumbURL"
                     :shouldShowBreadcrumb="shouldShowBreadcrumb"
@@ -38,13 +36,3 @@ const PhotoDetailPage = {
 
 export default PhotoDetailPage;
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
-  .container {
-    margin-left: 4vw;
-    @media screen and (max-width: 1050px) {
-      margin-left: 0;
-    }
-  }
-</style>

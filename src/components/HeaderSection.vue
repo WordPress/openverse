@@ -19,8 +19,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  @import '../../node_modules/foundation-sites/scss/foundation';
-
   .header {
     position: relative;
     z-index: 200;

@@ -191,6 +191,7 @@ const actions = ImageService => ({
 function setQuery(_state, params, path, redirect) {
   const query = Object.assign({}, _state.query, params.query);
   _state.query = query;
+  _state.images = [];
 
   if (params.shouldNavigate === true) {
     redirect({ path, query });

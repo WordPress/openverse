@@ -20,10 +20,4 @@ describe('Legal Disclaimer', () => {
     const wrapper = render(LegalDisclaimer, options);
     expect(wrapper.find('.legal-disclaimer').element).toBeDefined();
   });
-
-  it('displays source', () => {
-    const wrapper = render(LegalDisclaimer, options);
-    const link = wrapper.find('a');
-    expect(link.attributes().href).toBe(props.sourceURL);
-  });
 });
