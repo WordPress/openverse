@@ -5,4 +5,4 @@ WORKDIR /worker
 COPY . /worker/
 RUN pipenv install
 
-CMD pipenv run python worker/consumer.py 
+CMD PYTHONPATH=. pipenv run python worker/consumer.py 

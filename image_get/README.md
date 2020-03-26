@@ -16,7 +16,7 @@ count to at least the total number of worker processes across all machines.
 cd worker
 pipenv install
 pipenv shell
-pytest
+PYTHONPATH=. pytest
 ```
 Use `pytest -s` to include debug logs.
 

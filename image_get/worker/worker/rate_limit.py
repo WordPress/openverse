@@ -15,4 +15,17 @@ manage the token buckets. Race conditions are prevented with distributed locks.
 To minimize contention and blocking, we should lock optimistically whenever
 feasible.
 """
-pass
+
+
+class RateLimitedClientSession:
+    """
+    Wraps aiohttp.ClientSession and enforces rate limits.
+    """
+    def __init__(self, client):
+        self.client = client
+
+    async def _get_token(self, tld):
+        pass
+
+    async def get(self, url):
+        return await self.client.get(url)

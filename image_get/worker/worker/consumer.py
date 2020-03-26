@@ -7,7 +7,9 @@ import botocore.client
 import time
 from functools import partial
 from timeit import default_timer as timer
-from worker.util import kafka_connect, parse_message, save_thumbnail_s3, process_image
+from worker.util import kafka_connect, parse_message, save_thumbnail_s3,\
+    process_image
+from worker.rate_limit import RateLimitedClientSession
 
 
 def poll_consumer(consumer, batch_size):
@@ -83,7 +85,7 @@ async def setup_consumer():
         auto_commit_enable=True,
         zookeeper_connect=settings.ZOOKEEPER_HOST
     )
-    aiosession = aiohttp.ClientSession()
+    aiosession = RateLimitedClientSession(aiohttp.ClientSession())
     image_processor = partial(
         process_image, session=aiosession,
         persister=partial(save_thumbnail_s3, s3_client=s3)

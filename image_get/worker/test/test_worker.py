@@ -6,6 +6,7 @@ import random
 import logging as log
 from worker.consumer import poll_consumer, consume
 from worker.util import process_image
+from worker.rate_limit import RateLimitedClientSession
 from PIL import Image
 from collections import deque
 from enum import Enum, auto
@@ -193,9 +194,11 @@ async def get_mock_consumer(msg_count=1000, max_rps=10):
     for msg in encoded_msgs:
         consumer.insert(msg)
 
-    aiosession = AioNetworkSimulatingSession(
-        max_requests_per_second=max_rps,
-        fail_if_overloaded=True
+    aiosession = RateLimitedClientSession(
+        AioNetworkSimulatingSession(
+            max_requests_per_second=max_rps,
+            fail_if_overloaded=False
+        )
     )
     image_processor = partial(
         process_image, session=aiosession,
@@ -210,7 +213,6 @@ async def mock_listen():
     await consumer
 
 
-@pytest.mark.skip(reason="Rate limiting needs to be implemented.")
 @pytest.mark.asyncio
 async def test_rate_limiting():
     """
