@@ -12,6 +12,7 @@ describe('Usage Data Store Store', () => {
         sendSearchQueryEvent: jest.fn(),
         sendResultClickedEvent: jest.fn(),
         sendDetailPageEvent: jest.fn(),
+        sendSearchRatingEvent: jest.fn(),
       };
     });
 
@@ -31,6 +32,12 @@ describe('Usage Data Store Store', () => {
       store.actions(usageDataServiceMock).SEND_DETAIL_PAGE_EVENT({}, data);
 
       expect(usageDataServiceMock.sendDetailPageEvent).toHaveBeenCalledWith(data);
+    });
+
+    it('SEND_SEARCH_RATING_EVENT sends result clicked event', () => {
+      store.actions(usageDataServiceMock).SEND_SEARCH_RATING_EVENT({}, data);
+
+      expect(usageDataServiceMock.sendSearchRatingEvent).toHaveBeenCalledWith(data);
     });
   });
 });
