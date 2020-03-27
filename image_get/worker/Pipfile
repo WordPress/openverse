@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+Scrapy = "*"
+pykafka = "*"
+aiohttp = "*"
+Pillow = "*"
+boto3 = "*"
+pytest-asyncio = "*"
+tldextract = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"

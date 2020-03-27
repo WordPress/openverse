@@ -10,42 +10,44 @@ production web server configuration, and not reproducible locally.
 
 
 def parse_value_errors(errors):
-    field = 'q'
-    message = errors.args[0].info['error']['root_cause'][0]['reason']
-    return field, message
+    fields = ['q']
+    messages = [errors.args[0].info['error']['root_cause'][0]['reason']]
+    return fields, messages
 
 
 def parse_non_value_errors(errors):
-    field = [f for f in errors]
+    fields = [f for f in errors]
     messages = []
     for _field in errors:
         error = errors[_field]
         for e in error:
             messages.append(e)
-    messages = ' '.join(messages)
 
     # Don't return "non field errors" in deprecation exceptions. There is no
     # other way to recover the affected fields other than parsing the error.
-    if field == ['non_field_errors']:
-        split_error = messages.split(' ')
-        field_idx = messages.index('Parameter') + 1
-        field = [split_error[field_idx].replace("'", '')][0]
+    if fields == ['non_field_errors']:
+        split_error = list(messages)
+        field_idx = ' '.join(messages).index('Parameter') + 1
+        fields = [split_error[field_idx].replace("'", '')][0]
 
-    return field, messages
+    return fields, messages
 
 
 def input_error_response(errors):
     if isinstance(errors, ValueError):
-        field, messages = parse_value_errors(errors)
+        fields, messages = parse_value_errors(errors)
     else:
-        field, messages = parse_non_value_errors(errors)
+        fields, messages = parse_non_value_errors(errors)
+
+    detail = "Invalid input given for fields."
+    for i, _ in enumerate(fields):
+        detail += f" '{fields[i]}' -> {messages[i]}"
 
     return Response(
         status=status.HTTP_400_BAD_REQUEST,
         data={
-            'error_type': 'InputError',
-            'detail': f'Invalid input given for field {field}.'
-            f' Hint: {messages}',
-            'field': field
+            'error': 'InputError',
+            'detail': detail,
+            'fields': fields
         }
     )

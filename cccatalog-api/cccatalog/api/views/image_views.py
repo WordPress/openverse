@@ -267,13 +267,13 @@ class Watermark(GenericAPIView):
 
 class OembedView(APIView):
 
-    def get(self, request, format=None):
+    def get(self, request):
         url = request.query_params.get('url', '')
 
         if not url:
             return Response(status=404, data='Not Found')
         try:
-            identifier = url.rsplit('/',1)[1]
+            identifier = url.rsplit('/', 1)[1]
             image_record = Image.objects.get(identifier=identifier)
         except Image.DoesNotExist:
             return Response(status=404, data='Not Found')
@@ -290,7 +290,7 @@ class OembedView(APIView):
             'title': image_record.title,
             'author_name': image_record.creator,
             'author_url': image_record.creator_url,
-            'licence_url': image_record.license_url
+            'license_url': image_record.license_url
         }
 
         return Response(data=resp, status=status.HTTP_200_OK)

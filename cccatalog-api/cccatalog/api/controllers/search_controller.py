@@ -325,7 +325,7 @@ def search(search_params, index, page_size, ip, request,
     s.extra(track_scores=True)
     # Route users to the same Elasticsearch worker node to reduce
     # pagination inconsistencies and increase cache hits.
-    s = s.params(preference=str(ip))
+    s = s.params(preference=str(ip), request_timeout=7)
     # Paginate
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
