@@ -5,11 +5,7 @@
 
 The Creative Commons Catalog API ('cccatalog-api') is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of Creative Commons works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to access the digital commons in their own applications.
 
-This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [cccatalog repository](https://github.com/creativecommons/cccatalog). A front end web application that interfaces with the API can be found at the [cccatalog-frontend repository](https://github.com/creativecommons/cccatalog).
-
-## Project Status
-
-The API is still in [semantic version](https://semver.org/) 0.\*.\*, meaning the API can be changed without notice. You should [contact us](https://creativecommons.org/about/contact/) if you are interested in using this API in production. No SLAs or warranties are provided to anonymous consumers of the API.
+This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [cccatalog repository](https://github.com/creativecommons/cccatalog). A front end web application that interfaces with the API can be found at the [cccatalog-frontend repository](https://github.com/creativecommons/cccatalog-frontend).
 
 ## API Documentation
 
@@ -92,4 +88,4 @@ python3 test/integration_tests.py
 The API infrastructure is orchestrated using Terraform hosted in creativecommons/ccsearch-infrastructure. More details can be found on the [this wiki page](https://wikijs.creativecommons.org/tech/cc-search/operations).
 
 ## Contributing
-Pull requests are welcome! Feel free to [join us on Slack](https://slack-signup.creativecommons.org/) and discuss the project with the engineers on #cc-developers. You are welcome to take any open issue in the tracker labeled 'help wanted' or 'good first issue'; **there's no need to ask for permission in advance**. Other issues are open for contribution as well, but may be less accessible or well defined in comparison to those that are explicitly labeled; you should consider reaching out to us if you are interested in implementing these tickets.
+Pull requests are welcome! Feel free to [join us on Slack](https://slack-signup.creativecommons.org/) and discuss the project with the engineers on #cc-search. You are welcome to take any open issue in the tracker labeled 'help wanted' or 'good first issue'; **there's no need to ask for permission in advance**. See the [CONTRIBUTORS](https://github.com/creativecommons/cccatalog-api/blob/master/CONTRIBUTING.md) file for details. Other issues are open for contribution as well, but may be less accessible or well defined in comparison to those that are explicitly labeled; you should consider reaching out to us if you are interested in implementing these tickets.
