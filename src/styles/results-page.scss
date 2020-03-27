@@ -1,4 +1,3 @@
-@import "@creativecommons/vocabulary/scss/color.scss";
 .search {
   margin: 0;
 }
@@ -9,7 +8,7 @@
   min-height: 600px;
 
   /* 48em = 768px */
-  @media (max-width: 49em) {
+  @media (max-width: 48em) {
     width: 100%;
     flex: none;
   }
@@ -17,11 +16,11 @@
 
 .grid-sidebar {
   padding-top: 0;
-  background-color: $color-white;
+  background-color: #fff;
   width: 21.875rem;
 
   /* 48em = 768px */
-  @media (max-width: 49em) {
+  @media (max-width: 48em) {
     width: 100%;
   }
 }
