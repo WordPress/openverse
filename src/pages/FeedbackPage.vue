@@ -9,35 +9,45 @@
         <a href="https://creativecommons.slack.com/messages/CCS9CF2JE/details/">#cc-usability</a> channel on
         <a href="https://wiki.creativecommons.org/wiki/Slack#How_to_join_Slack">CC Slack</a>.
       </p>
-      <div class="tabs" id="tabs">
-        <div class="tabs-triggers">
-          <div :class="[index === activeTab ? 'tabs-trigger--active' : '']"
-               @click="activateTab(index)" class="tabs-trigger"
-               v-for="(item, index) in categories" :key="index">{{categories[index]}}
+      <div class="column">
+        <section class="tabs margin-top-big">
+          <ul>
+            <li :class="tabClass(0, 'a')">
+              <a href="#panel0" :aria-selected="activeTab == 0" @click.prevent="setActiveTab(0)">
+                Help us Improve
+              </a>
+            </li>
+            <li :class="tabClass(1, 'a')">
+              <a href="#panel1" :aria-selected="activeTab == 1" @click.prevent="setActiveTab(1)">
+                Report a Bug
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="tabs-content">
+          <div :class="tabClass(0, 'tabs-panel')">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
+                    width="100%"
+                    height="998"
+                    frameborder="0"
+                    marginheight="0"
+                    marginwidth="0"
+                    title="feedback form">
+              Loading...
+            </iframe>
           </div>
-        </div>
-      </div>
-      <div class="tabs-content" v-show="activeTab === 0">
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
-                width="100%"
-                height="998"
-                frameborder="0"
-                marginheight="0"
-                marginwidth="0"
-                title="feedback form">
-          Loading...
-        </iframe>
-      </div>
-      <div class="tabs-content" v-show="activeTab === 1">
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeSN1AIG8LrdgIdKpBj4IlPDhu6T5ndZ7z_QcISBu-ITCU0Yw/viewform?embedded=true"
-                width="100%"
-                height="998"
-                frameborder="0"
-                marginheight="0"
-                marginwidth="0"
-                title="feedback form">
-          Loading...
-        </iframe>
+          <div :class="tabClass(1, 'tabs-panel')">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeSN1AIG8LrdgIdKpBj4IlPDhu6T5ndZ7z_QcISBu-ITCU0Yw/viewform?embedded=true"
+                    width="100%"
+                    height="998"
+                    frameborder="0"
+                    marginheight="0"
+                    marginwidth="0"
+                    title="feedback form">
+              Loading...
+            </iframe>
+          </div>
+        </section>
       </div>
     </div>
     <footer-section></footer-section>
@@ -57,15 +67,17 @@ export default {
   data() {
     return {
       activeTab: 0,
-      categories: [
-        'Help us Improve',
-        'Report a Bug',
-      ],
     };
   },
   methods: {
-    activateTab(index) {
-      this.activeTab = index;
+    tabClass(tabIdx, tabClass) {
+      return {
+        [tabClass]: true,
+        'is-active': tabIdx === this.activeTab,
+      };
+    },
+    setActiveTab(tabIdx) {
+      this.activeTab = tabIdx;
     },
   },
   computed: {
@@ -82,40 +94,3 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-  *,
-  *:before,
-  *:after {
-    box-sizing: border-box;
-    outline: none;
-  }
-  .tabs {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    text-align: center;
-    margin-top: 2rem;
-    &-triggers {
-      display: flex;
-      width: 100%;
-      height: auto;
-    }
-    &-trigger {
-      flex: 1 0 auto;
-      margin: 0;
-      padding: 1rem;
-      background-color: #eee;
-      font-weight: bold;
-      transition: 100ms linear all;
-      cursor: pointer;
-      &--active {
-        background-color: #fff;
-        color: #333;
-      }
-    }
-    &-content {
-      padding: 1rem;
-    }
-  }
-</style>
