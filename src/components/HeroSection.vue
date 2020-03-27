@@ -11,7 +11,7 @@
                 class="hero_search-input input is-large"
                 type="search"
                 name="q"
-                placeholder="I'd like to see..."
+                placeholder="I would like to see..."
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
@@ -22,7 +22,7 @@
                 class="hero_search-input input"
                 type="search"
                 name="q"
-                placeholder="I'd like to see..."
+                placeholder="I would like to see..."
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
