@@ -63,7 +63,7 @@ export default LicenseIcons;
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
   .photo-license-icons {
-    height: 30px;
+    height: 1.875rem;
   }
 
   .photo-license-icon {
