@@ -2,9 +2,15 @@
   <section :class="{ 'search-grid': true, 'search-grid__contain-images': shouldContainImages }"
            ref="searchGrid">
     <div class="search-grid_ctr" ref="gridItems">
-      <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics count" >
+      <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics count">
         <h2>{{ searchTerm }}</h2>
-        <span> {{ _imagesCount }}</span>
+        <span class="caption has-text-weight-semibold"> {{ _imagesCount }}</span>
+        <div class="is-pulled-right padding-right-big is-hidden-touch">
+          <search-rating :searchTerm="_query.q" />
+        </div>
+        <div class="is-hidden-desktop is-block">
+          <search-rating :searchTerm="searchTerm" />
+        </div>
       </div>
       <div class="search-grid-cells">
         <search-grid-cell
@@ -13,7 +19,7 @@
       </div>
       <div class="load-more">
         <button v-show="!isFetchingImages && includeAnalytics"
-                class="button"
+                class="button margin-bottom-big"
                 :disabled="isFinished"
                 @click="onLoadMoreImages">
           <span v-if="isFinished">No more images :(</span>
@@ -33,6 +39,7 @@ import { SET_IMAGES } from '@/store/mutation-types';
 import SearchGridCell from '@/components/SearchGridCell';
 import SearchGridFilter from '@/components/SearchGridFilter';
 import LoadingIcon from '@/components/LoadingIcon';
+import SearchRating from '@/components/SearchRating';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -42,6 +49,7 @@ export default {
     SearchGridFilter,
     SearchGridCell,
     LoadingIcon,
+    SearchRating,
   },
   data: () => ({
     isDataInitialized: false,
