@@ -43,10 +43,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@creativecommons/vocabulary/scss/color.scss";
+
 
 .filters {
-  border-bottom: 2px solid $color-lighter-gray;
+  border-bottom: 2px solid rgb(245, 245, 245);
 }
 .filters-title {
   font-size: 1.250em;
