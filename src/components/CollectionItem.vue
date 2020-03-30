@@ -46,9 +46,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "@creativecommons/vocabulary/scss/color.scss";
   .provider-card {
-    border: 2px solid $color-light-gray;
+    border: 2px solid rgb(216, 216, 216);
     &:hover{
       box-shadow: 10px 10px 2px -5px #E7E7E7;
     }

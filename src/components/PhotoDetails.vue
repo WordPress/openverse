@@ -13,22 +13,22 @@
     <div class="column image-info">
       <section class="tabs" >
         <ul>
-          <li :class="tabClass(0, 'a')">
+          <li :class="tabClass(0, 'tab')">
             <a href="#panel0" :aria-selected="activeTab == 0" @click.prevent="setActiveTab(0)">
               Attribution
             </a>
           </li>
-          <li :class="tabClass(1, 'a')">
+          <li :class="tabClass(1, 'tab')">
             <a href="#panel1" :aria-selected="activeTab == 1" @click.prevent="setActiveTab(1)">
               Info
             </a>
           </li>
-          <li :class="tabClass(2, 'a')" v-if="watermarkEnabled">
+          <li :class="tabClass(2, 'tab')" v-if="watermarkEnabled">
             <a href="#panel2" :aria-selected="activeTab == 2" @click.prevent="setActiveTab(2)">
               Download
             </a>
           </li>
-          <li :class="tabClass(3, 'a')" v-if="socialSharingEnabled">
+          <li :class="tabClass(3, 'tab')" v-if="socialSharingEnabled">
             <a href="#panel3" :aria-selected="activeTab == 3" @click.prevent="setActiveTab(3)">
               Share
             </a>
