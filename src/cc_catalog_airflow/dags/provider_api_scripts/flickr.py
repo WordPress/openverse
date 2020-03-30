@@ -36,6 +36,12 @@ API_KEY = os.getenv('FLICKR_API_KEY')
 ENDPOINT = 'https://api.flickr.com/services/rest/'
 PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
 DATE_TYPE = 'upload'
+# DAY_DIVISION is an integer that gives how many equal portions we should
+# divide a 24-hour period into for requesting photo data.  For example,
+# DAY_DIVISION = 24 would mean dividing the day into hours, and requesting the
+# photo data for each hour of the day separately.  This is necessary because
+# if we request too much at once, the API will return fallacious results.
+DAY_DIVISION = 48 # divide into half hour increments
 
 LICENSE_INFO = {
     '1': ('by-nc-sa', '2.0'),
@@ -71,27 +77,48 @@ def main(date):
     date_type = DATE_TYPE
 
     for start_timestamp, end_timestamp in timestamp_pairs:
-        total_images = _process_date(start_timestamp, end_timestamp, date_type)
+        total_images = _process_interval(
+            start_timestamp,
+            end_timestamp,
+            date_type
+        )
 
     total_images = image_store.commit()
     logger.info(f'Total images: {total_images}')
     logger.info('Terminated!')
 
 
-def _derive_timestamp_pair_list(date):
-    date_obj = datetime.strptime(date, '%Y-%m-%d')
-    utc_date = date_obj.replace(tzinfo=timezone.utc)
+def _derive_timestamp_pair_list(date, day_division=DAY_DIVISION):
+    day_seconds = 86400
+    default_day_division = 48
+    portion = int(day_seconds / day_division)
+    # We double check the day can be evenly divided by the requested division
+    try:
+        assert portion == day_seconds / day_division
+    except AssertionError:
+        logger.warning(
+            f'day_division {day_division} does not divide the day evenly!  '
+            f'Using the default of {default_day_division}'
+        )
+        day_division = default_day_division
+        portion = int(day_seconds / day_division)
+
+    utc_date = datetime.strptime(date, '%Y-%m-%d').replace(tzinfo=timezone.utc)
+
+    def _ts_string(d):
+        return str(int(d.timestamp()))
+
     pair_list = [
         (
-            str(int((utc_date + timedelta(hours=i)).timestamp())),
-            str(int((utc_date + timedelta(hours=i + 0.5)).timestamp()))
+            _ts_string(utc_date + timedelta(seconds=i * portion)),
+            _ts_string(utc_date + timedelta(seconds=(i+1) * portion))
         )
-        for i in [j / 2 for j in range(48)]
+        for i in range(day_division)
     ]
     return pair_list
 
 
-def _process_date(start_timestamp, end_timestamp, date_type):
+def _process_interval(start_timestamp, end_timestamp, date_type):
     total_pages = 1
     page_number = 1
     total_images = 0
