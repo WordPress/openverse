@@ -48,7 +48,6 @@
                               :ccLicenseURL="ccLicenseURL"
                               :fullLicenseName="fullLicenseName"
                               :attributionHtml="attributionHtml()" />
-          
         </div>
         <div :class="tabClass(2, 'tabs-panel')">
           <image-social-share v-if="socialSharingEnabled" :image="image" />
