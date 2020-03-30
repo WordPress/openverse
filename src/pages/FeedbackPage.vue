@@ -12,12 +12,12 @@
       <div class="column">
         <section class="tabs margin-top-big">
           <ul>
-            <li :class="tabClass(0, 'a')">
+            <li :class="tabClass(0, 'tab')">
               <a href="#panel0" :aria-selected="activeTab == 0" @click.prevent="setActiveTab(0)">
                 Help us Improve
               </a>
             </li>
-            <li :class="tabClass(1, 'a')">
+            <li :class="tabClass(1, 'tab')">
               <a href="#panel1" :aria-selected="activeTab == 1" @click.prevent="setActiveTab(1)">
                 Report a Bug
               </a>
