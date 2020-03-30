@@ -23,7 +23,7 @@
               Attribution
             </a>
           </li>
-          <li :class="tabClass(2, 'a')" v-if="socialSharingEnabled">\
+          <li :class="tabClass(2, 'a')" v-if="socialSharingEnabled">
             <a href="#panel2" :aria-selected="activeTab == 2" @click.prevent="setActiveTab(2)">
               Share
             </a>
