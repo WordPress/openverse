@@ -97,9 +97,9 @@ export default {
       if (!image) {
         return '';
       }
-      // fix for blurry panaroma thumbnails
-      if (this.imageAspect > panaromaAspect) return toAbsolutePath(image.url);
       const url = image.thumbnail || image.url;
+      // fix for blurry panaroma thumbnails
+      if (this.imageAspect > panaromaAspect) return toAbsolutePath(url);
       return toAbsolutePath(url);
     },
     getImageForeignUrl(image) {
