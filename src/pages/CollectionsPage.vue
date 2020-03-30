@@ -1,7 +1,7 @@
 <template>
   <div>
     <header-section></header-section>
-    <div class="collections-page ">
+    <div class="collections-page padding-larger">
       <h1>Browse collections</h1>
       <h2 class="margin-bottom-normal">Museum Collections</h2>
       <div class="providers-list columns is-multiline">
@@ -76,7 +76,6 @@ export default CollectionsPage;
   }
 
   .collections-page {
-    padding: 45px !important;
     background-color: #F5F5F5;
   }
 </style>
