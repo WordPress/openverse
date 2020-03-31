@@ -13,47 +13,47 @@
     <div class="column image-info">
       <section class="tabs" >
         <ul>
-          <li :class="tabClass(0, 'a')">
+          <li :class="tabClass(0, 'tab')">
             <a href="#panel0" :aria-selected="activeTab == 0" @click.prevent="setActiveTab(0)">
-              Attribution
-            </a>
-          </li>
-          <li :class="tabClass(1, 'a')">
-            <a href="#panel1" :aria-selected="activeTab == 1" @click.prevent="setActiveTab(1)">
               Info
             </a>
           </li>
-          <li :class="tabClass(2, 'a')" v-if="watermarkEnabled">
-            <a href="#panel2" :aria-selected="activeTab == 2" @click.prevent="setActiveTab(2)">
-              Download
+          <li :class="tabClass(1, 'tab')">
+            <a href="#panel1" :aria-selected="activeTab == 1" @click.prevent="setActiveTab(1)">
+              Attribution
             </a>
           </li>
-          <li :class="tabClass(3, 'a')" v-if="socialSharingEnabled">
-            <a href="#panel3" :aria-selected="activeTab == 3" @click.prevent="setActiveTab(3)">
+          <li :class="tabClass(2, 'a')" v-if="socialSharingEnabled">
+            <a href="#panel2" :aria-selected="activeTab == 2" @click.prevent="setActiveTab(2)">
               Share
+            </a>
+          </li>
+          <li :class="tabClass(3, 'a')" v-if="watermarkEnabled">
+            <a href="#panel3" :aria-selected="activeTab == 3" @click.prevent="setActiveTab(3)">
+              Download
             </a>
           </li>
         </ul>
       </section>
       <section class="photo_info-ctr tabs-content">
         <div :class="tabClass(0, 'tabs-panel')">
-          <image-attribution :image="image"
-                              :ccLicenseURL="ccLicenseURL"
-                              :fullLicenseName="fullLicenseName"
-                              :attributionHtml="attributionHtml()" />
-        </div>
-        <div :class="tabClass(1, 'tabs-panel')">
           <image-info :image="image"
                       :ccLicenseURL="ccLicenseURL"
                       :fullLicenseName="fullLicenseName"
                       :imageWidth="imageWidth"
                       :imageHeight="imageHeight" />
         </div>
+        <div :class="tabClass(1, 'tabs-panel')">
+          <image-attribution :image="image"
+                              :ccLicenseURL="ccLicenseURL"
+                              :fullLicenseName="fullLicenseName"
+                              :attributionHtml="attributionHtml()" />
+        </div>
         <div :class="tabClass(2, 'tabs-panel')">
-          <watermark v-if="watermarkEnabled" :image="image" />
+          <image-social-share v-if="socialSharingEnabled" :image="image" />
         </div>
         <div :class="tabClass(3, 'tabs-panel')">
-          <image-social-share v-if="socialSharingEnabled" :image="image" />
+          <watermark v-if="watermarkEnabled" :image="image" />
         </div>
       </section>
     </div>
