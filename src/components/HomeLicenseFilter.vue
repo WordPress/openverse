@@ -39,10 +39,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@creativecommons/vocabulary/scss/spacing.scss";
+
 .home-license-filter {
-  margin-top: 1.5em;
+  margin-top: 0.5em;
   text-align: left;
   text-align: center;
+
+  @media (min-width:1025px) {
+  margin-top: $space-large;
+  }
 }
 span {
   display: block;
