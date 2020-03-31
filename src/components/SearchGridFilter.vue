@@ -112,6 +112,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@creativecommons/vocabulary/scss/spacing.scss";
 
 .search-filters {
   display: none;
@@ -131,8 +132,7 @@ export default {
 
 .search-filters_search-by,
 .clear-filters {
-  margin: 24px;
-  border-bottom: 2px solid whitesmoke;
+  margin: $space-big;
   padding-bottom: 1rem;
 }
 
