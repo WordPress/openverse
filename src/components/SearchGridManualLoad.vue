@@ -218,7 +218,7 @@ export default {
   }
 
   label {
-    color: #2c3e50;
+    color: #333333;
   }
 
   .load-more {
