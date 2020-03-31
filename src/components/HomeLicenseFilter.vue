@@ -1,5 +1,5 @@
 <template>
-  <div class="home-license-filter">
+  <div class="home-license-filter margin-top-xl">
     <span>I want something I can</span>
 
     <template v-for="(licenseType, index) in licenseTypes" >
@@ -39,16 +39,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@creativecommons/vocabulary/scss/spacing.scss";
-
 .home-license-filter {
-  margin-top: 0.5em;
   text-align: left;
   text-align: center;
-
-  @media (min-width:1025px) {
-  margin-top: $space-large;
-  }
 }
 span {
   display: block;
