@@ -1,4 +1,4 @@
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
@@ -10,7 +10,7 @@ from util.operator_util import get_log_operator
 DAG_DEFAULT_ARGS = {
     'owner': 'data-eng-admin',
     'depends_on_past': False,
-    'start_date': datetime(2020, 1, 15, 16),
+    'start_date': datetime(2020, 1, 15),
     'email_on_retry': False,
     'retries': 3,
     'retry_delay': timedelta(days=1),
@@ -32,7 +32,7 @@ def create_dag():
     dag = DAG(
         dag_id=DAG_ID,
         default_args=DAG_DEFAULT_ARGS,
-        start_date=datetime(2020, 1, 15, 16),
+        start_date=datetime(2020, 1, 15),
         schedule_interval="@monthly",
         catchup=False
     )
