@@ -25,7 +25,6 @@ def _request_content(url, query_params=None, headers=None):
     logging.info("Processing request: {}".format(url))
 
     response = delayed_requester.get(url, params=query_params, headers=headers)
-
     try:
         if response.status_code == requests.codes.ok:
             return response.json()
@@ -48,7 +47,7 @@ def _get_image_list(page=1):
     query_params = {"freecc0": 1, "html": 0, "page": page}
     request = _request_content(endpoint, query_params=query_params)
 
-    if request.get("results"):
+    if request and request.get("results"):
         return [request.get("total"), request.get("results")]
 
     else:
@@ -127,7 +126,7 @@ def _process_image_data(image):
     title, owner = _get_title_owner(image)
     tags = _get_tags(image)
 
-    # TODO: How to get license_url, creator, creator_url, source?
+    # TODO:How to get license_url, creator_url, meta_data, source, watermarked?
     return image_store.add_item(
         foreign_landing_url=foreign_url,
         image_url=img_url,
@@ -138,12 +137,19 @@ def _process_image_data(image):
         height=str(height) if height else None,
         title=title if title else None,
         raw_tags=json.dumps(tags, ensure_ascii=False) if bool(tags) else None,
+        creator=owner,
+        thumbnail_url=thumbnail,
     )
 
 
 def _process_pages(total, result, page):
     img_ctr = 0
     is_valid = True
+
+    if not total:
+        total = 0
+        is_valid = False
+
     while (img_ctr < total) and is_valid:
         logging.info("Processing page: {}".format(page))
 
