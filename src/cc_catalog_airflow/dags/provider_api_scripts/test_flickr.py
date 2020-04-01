@@ -22,20 +22,73 @@ def _get_resource_json(json_name):
     return resource_json
 
 
-def test_derive_timestamp_pair():
+def test_derive_timestamp_pair_list_with_undivided_day():
     # Note that the timestamps are derived as if input was in UTC.
-    start_ts, end_ts = flickr._derive_timestamp_pair('2018-01-15')
-    assert start_ts == '1515974400'
-    assert end_ts == '1516060800'
+    actual_pair_list = flickr._derive_timestamp_pair_list(
+        '2018-01-15', day_division=1
+    )
+    expect_pair_list = [('1515974400', '1516060800')]
+    assert expect_pair_list == actual_pair_list
 
 
-def test_process_date_skips_bad_pages():
+def test_derive_timestamp_pair_list_with_three_divided_day():
+    actual_pair_list = flickr._derive_timestamp_pair_list(
+        '2018-01-15', day_division=3
+    )
+    expect_pair_list = [
+        ('1515974400', '1516003200'),
+        ('1516003200', '1516032000'),
+        ('1516032000', '1516060800')
+    ]
+    assert expect_pair_list == actual_pair_list
+
+
+def test_derive_timestamp_pair_list_with_sub_hourly_day_divisions():
+    actual_pair_list = flickr._derive_timestamp_pair_list(
+        '2018-01-15', day_division=40
+    )
+    expect_pair_list = [
+        ('1515974400', '1515976560'), ('1515976560', '1515978720'),
+        ('1515978720', '1515980880'), ('1515980880', '1515983040'),
+        ('1515983040', '1515985200'), ('1515985200', '1515987360'),
+        ('1515987360', '1515989520'), ('1515989520', '1515991680'),
+        ('1515991680', '1515993840'), ('1515993840', '1515996000'),
+        ('1515996000', '1515998160'), ('1515998160', '1516000320'),
+        ('1516000320', '1516002480'), ('1516002480', '1516004640'),
+        ('1516004640', '1516006800'), ('1516006800', '1516008960'),
+        ('1516008960', '1516011120'), ('1516011120', '1516013280'),
+        ('1516013280', '1516015440'), ('1516015440', '1516017600'),
+        ('1516017600', '1516019760'), ('1516019760', '1516021920'),
+        ('1516021920', '1516024080'), ('1516024080', '1516026240'),
+        ('1516026240', '1516028400'), ('1516028400', '1516030560'),
+        ('1516030560', '1516032720'), ('1516032720', '1516034880'),
+        ('1516034880', '1516037040'), ('1516037040', '1516039200'),
+        ('1516039200', '1516041360'), ('1516041360', '1516043520'),
+        ('1516043520', '1516045680'), ('1516045680', '1516047840'),
+        ('1516047840', '1516050000'), ('1516050000', '1516052160'),
+        ('1516052160', '1516054320'), ('1516054320', '1516056480'),
+        ('1516056480', '1516058640'), ('1516058640', '1516060800')
+    ]
+    assert expect_pair_list == actual_pair_list
+
+
+def test_derive_timestamp_pair_list_fall_back_to_48_day_divisions():
+    fallback_pair_list = flickr._derive_timestamp_pair_list(
+        '2018-01-15', day_division=49
+    )
+    correct_pair_list = flickr._derive_timestamp_pair_list(
+        '2018-01-15', day_division=48
+    )
+    assert fallback_pair_list == correct_pair_list
+
+
+def test_process_interval_skips_bad_pages():
     with patch.object(
             flickr,
             '_get_image_list',
             return_value=(None, 5)
     ) as mock_get_image_list:
-        flickr._process_date('1234', '5678', 'test')
+        flickr._process_interval('1234', '5678', 'test')
 
     assert mock_get_image_list.call_count == 5
     assert mock_get_image_list.called_with('1234', '5678', 'test', 5)
