@@ -10,6 +10,7 @@ RUN useradd -m -d ${AIRFLOW_HOME} airflow
 USER airflow
 
 WORKDIR  /usr/local/airflow
+RUN mkdir /usr/local/airflow/output
 ADD ./requirements.txt /usr/local/airflow
 ADD ./wait_for_db.py /usr/local/airflow
 ADD ./dags /usr/local/airflow/dags
