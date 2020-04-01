@@ -1,11 +1,14 @@
+import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.bash_operator import BashOperator
 
 from commoncrawl_s3_syncer import SyncImageProviders
 from util.operator_util import get_log_operator
 
+
+airflowHome = os.environ['AIRFLOW_HOME']
 
 DAG_DEFAULT_ARGS = {
     'owner': 'data-eng-admin',
@@ -16,16 +19,14 @@ DAG_DEFAULT_ARGS = {
     'retry_delay': timedelta(days=1)
 }
 
-DAG_ID = "commoncrawl_workflow"
+DAG_ID = "sync_commoncrawl_workflow"
 
 
 def get_runner_operator(dag):
-    return PythonOperator(
-        task_id="sync_commoncrawl",
-        python_callable=SyncImageProviders.main,
-        depends_on_past=False,
-        dag=dag
-    )
+    return BashOperator(task_id="sync_commoncrawl_workflow",
+                        bash_command=f"python {airflowHome}/dags/"
+                        "commoncrawl_s3_syncer/SyncImageProviders.py",
+                        dag=dag)
 
 
 def create_dag():
