@@ -41,7 +41,7 @@ export default {
     color: #CCC;
     font-weight: bold;
     display: inline-block;
-    width: 1em;
-    margin-left: 1em;
+    margin-right: .5rem;
+    font-size: 1rem;
   }
 </style>
