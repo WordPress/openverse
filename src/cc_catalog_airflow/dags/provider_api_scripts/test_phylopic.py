@@ -3,7 +3,7 @@ import logging
 import os
 from unittest.mock import patch
 
-import phylo_pic as pp
+import phylopic as pp
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'tests/resources/phylopic'
