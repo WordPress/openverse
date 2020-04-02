@@ -50,7 +50,6 @@ DEFAULT_QUERY_PARAMS = {
     'profile': 'rich',
     'reusability': ['open', 'restricted'],
     'sort': ['europeana_id+desc', 'timestamp_created_epoch+desc'],
-    'cursor': '*',
     'rows': RESOURCES_PER_REQUEST,
     'media': 'true',
     'start': 1,
@@ -65,7 +64,7 @@ def main(date):
     logger.info(f'Processing Europeana API for date: {date}')
 
     start_timestamp, end_timestamp = _derive_timestamp_pair(date)
-    _get_image_list(start_timestamp, end_timestamp)
+    _get_pagewise(start_timestamp, end_timestamp)
 
     logger.info('Terminated!')
 
@@ -73,27 +72,31 @@ def main(date):
 def _get_pagewise(start_timestamp, end_timestamp):
     cursor = '*'
     prev_cursor = ''
-    pageCount = 1
-    logger.info(f'Processing page: {pageCount}')
+    total_number_of_images = 0
+    images_retrieved = 0
+
     while cursor != prev_cursor:
-        image_list, next_cursor = _get_image_list(
+        image_list, next_cursor, total_number_of_images = _get_image_list(
             start_timestamp,
             end_timestamp,
+            cursor
         )
 
         if image_list is not None:
-            # TO BE COMPLETED
-            pass
+            images_retrieved += len(image_list)
+            logger.info(
+                f'Images retrieved: {images_retrieved} of {total_number_of_images}')
+            prev_cursor = cursor
+            cursor = next_cursor
+
         else:
             logger.warning('No image data!  Attempting to continue')
-
-        prev_cursor = cursor
-        cursor = next_cursor
 
 
 def _get_image_list(
         start_timestamp,
         end_timestamp,
+        cursor,
         endpoint=ENDPOINT,
         max_tries=6  # one original try, plus 5 retries
 ):
@@ -102,6 +105,7 @@ def _get_image_list(
         query_param_dict = _build_query_param_dict(
             start_timestamp,
             end_timestamp,
+            cursor
         )
 
         response = delayed_requester.get(
@@ -111,19 +115,18 @@ def _get_image_list(
 
         logger.debug('response.status_code: {response.status_code}')
         response_json = _extract_response_json(response)
-        image_list, next_cursor = _extract_image_list_from_json(response_json)
-        
+        image_list, next_cursor, total_number_of_images = _extract_image_list_from_json(
+            response_json)
+
         if (image_list is not None) and (next_cursor is not None):
             break
-        
+
     if try_number == max_tries - 1 and (
             (image_list is None) or (next_cursor is None)):
         logger.warning('No more tries remaining. Returning None types.')
         return None, None
     else:
-        print("Next Cursor = ",next_cursor)
-        return image_list, next_cursor
-
+        return image_list, next_cursor, total_number_of_images
 
 
 def _extract_response_json(response):
@@ -148,19 +151,23 @@ def _extract_image_list_from_json(response_json):
     else:
         image_list = response_json.get('items')
         next_cursor = response_json.get('nextCursor')
+        total_number_of_images = response_json.get('totalResults')
 
-    return image_list, next_cursor
+    return image_list, next_cursor, total_number_of_images
+
 
 def _build_query_param_dict(
         start_timestamp,
         end_timestamp,
+        cursor,
         api_key=API_KEY,
         default_query_param=DEFAULT_QUERY_PARAMS,
 ):
     query_param_dict = default_query_param.copy()
     query_param_dict.update(
         {
-            'timestamp_created_epoch': f'{start_timestamp}TO{end_timestamp}'
+            'timestamp_created_epoch': f'{start_timestamp}TO{end_timestamp}',
+            'cursor': cursor,
         }
     )
 
