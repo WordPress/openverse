@@ -4,7 +4,7 @@
      class="photo-license-icons"
      target="_blank"
      rel="noopener noreferrer">
-    <i class="icon cc-logo is-size-4 margin-right-small has-text-black" title="CC"></i>
+    <i class="icon cc-logo is-size-4 has-text-black" title="CC"></i>
     <template v-for="(license, index) in getLicenseIcon(image.license)">
       <i
           v-if="license"
@@ -12,7 +12,6 @@
             icon: true,
             ['has-text-black']: true,
             ['is-size-4']: true,
-            ['margin-right-small']: true,
             [`cc-${license}`]: true,
           }"
           :alt="`${license.toUpperCase()}`"
@@ -80,5 +79,6 @@ export default LicenseIcons;
 <style lang="scss" scoped>
   .icon {
     vertical-align: middle;
+    margin-right: .3rem;
   }
 </style>
