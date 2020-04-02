@@ -8,17 +8,15 @@ set -o errexit
 set -o errtrace
 set -o nounset
 
-echo ${BASH_COMMAND}
+trap '_es=${?};
+    printf "${0}: line ${LINENO}: \"${BASH_COMMAND}\"";
+    printf " exited with a status of ${_es}\n";
+    exit ${_es}' ERR
 
 deploy_with_docker_compose() {
     docker-compose -f docker-compose.yml build webserver
     docker-compose -f docker-compose.yml up -d webserver
 }
-
-trap '_es=${?};
-    printf "${0}: line ${LINENO}: \"${BASH_COMMAND}\"";
-    printf " exited with a status of ${_es}\n";
-    exit ${_es}' ERR
 
 git status
 
