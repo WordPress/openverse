@@ -64,3 +64,10 @@ label {
   height: 64px;
   display: block;
 }
+
+.button.tag {
+  /* Small only */
+  @media screen and (max-width: 39.9375em) {
+     height: 1.32rem;
+  }
+}
