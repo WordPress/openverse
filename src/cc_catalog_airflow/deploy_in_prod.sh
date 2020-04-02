@@ -1,10 +1,33 @@
 #!/bin/bash
+#
+# This script shows git status, asks for confirmation, then runs the steps
+# necessary to deploy the Apache Airflow webserver container (and dependencies)
+# to production.
 
-read -r -p "Have you set up .env? [y/N] " response
-if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
-then
+set -o errexit
+set -o errtrace
+set -o nounset
+
+echo ${BASH_COMMAND}
+
+deploy_with_docker_compose() {
     docker-compose -f docker-compose.yml build webserver
     docker-compose -f docker-compose.yml up -d webserver
+}
+
+trap '_es=${?};
+    printf "${0}: line ${LINENO}: \"${BASH_COMMAND}\"";
+    printf " exited with a status of ${_es}\n";
+    exit ${_es}' ERR
+
+git status
+
+echo "Are you sure you want to deploy a production Airflow container?"
+read -r -p "Type 'YES' in all caps to confirm >  " response
+if [[ "$response" == "YES" && -f .env ]]; then
+    echo "Typed YES, and .env exists.  Deploying..."
+    deploy_with_docker_compose
 else
-    echo "Please set up the environment first."
+    echo "Canceling"
 fi
+
