@@ -9,14 +9,19 @@
         <img v-if="!isFilterApplied" width="24" src="../assets/filter_icon_new.svg" />
         <img v-else width="24" src="../assets/filter_icon_new_applied.svg" />
       </button>
-      <input id="searchInput"
-              required="required"
-              class="input is-medium search-form_input margin-left-small"
-              type="search"
-              ref="search"
-              :placeholder="searchBoxPlaceholder"
-              v-model="searchTermsModel"
-              @keyup.enter="onSubmit">
+      <div class="control has-icons-left search-form_input">
+        <input id="searchInput"
+                required="required"
+                class="input is-medium margin-left-small"
+                type="search"
+                ref="search"
+                :placeholder="searchBoxPlaceholder"
+                v-model="searchTermsModel"
+                @keyup.enter="onSubmit" />
+        <span class="icon is-medium is-left">
+          <i class="icon search"></i>
+        </span>
+      </div>
       <button class="button is-primary" @click.prevent="onSubmit">
         Search
       </button>
