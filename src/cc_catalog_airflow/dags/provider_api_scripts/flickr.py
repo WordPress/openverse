@@ -241,6 +241,7 @@ def _extract_image_list_from_json(response_json):
 
 
 def _process_image_list(image_list):
+    total_images = 0
     for image_data in image_list:
         total_images = _process_image_data(image_data)
 

@@ -1,6 +1,7 @@
 FROM python:3.7-buster
 
 ENV AIRFLOW_HOME=/usr/local/airflow
+ARG OUTPUT_DIR=/tmp/
 ENV PATH=/usr/local/airflow/.local/bin:$PATH
 
 RUN apt-get -yqq update \
@@ -9,9 +10,11 @@ RUN apt-get -yqq update \
 RUN useradd -m -d ${AIRFLOW_HOME} airflow
 USER airflow
 
-WORKDIR  /usr/local/airflow
-ADD ./requirements.txt /usr/local/airflow
-ADD ./wait_for_db.py /usr/local/airflow
+RUN mkdir -p ${OUTPUT_DIR}
+WORKDIR  ${AIRFLOW_HOME}
+ADD ./requirements.txt ${AIRFLOW_HOME}
+ADD ./wait_for_db.py ${AIRFLOW_HOME}
+ADD ./dags ${AIRFLOW_HOME}/dags
 
 RUN pip install --user -r requirements.txt
 
