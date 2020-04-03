@@ -1,10 +1,8 @@
 import json
 import logging
 import os
-import requests
-from unittest.mock import patch
 
-import pytest
+from unittest.mock import patch
 
 import raw_pixel as rwp
 

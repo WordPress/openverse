@@ -1,14 +1,12 @@
 from common.storage.image import ImageStore
 from common.requester import DelayedRequester
 import requests
-import time
 import logging
 import json
 from urllib.parse import urlparse, parse_qs
 
 DELAY = 1.0  # time delay (in seconds)
 PROVIDER = "rawpixel"
-FILE = "rawpixel_{}.tsv".format(int(time.time()))
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
@@ -18,18 +16,18 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 delayed_requester = DelayedRequester(DELAY)
-image_store = ImageStore(provider=PROVIDER, output_file=FILE)
+image_store = ImageStore(provider=PROVIDER)
 
 
 def _request_content(url, query_params=None, headers=None):
-    logging.info("Processing request: {}".format(url))
+    logger.info("Processing request: {}".format(url))
 
     response = delayed_requester.get(url, params=query_params, headers=headers)
     try:
         if response.status_code == requests.codes.ok:
             return response.json()
         else:
-            logging.warning(
+            logger.warning(
                 "Unable to request URL: {}. Status code: {}".format(
                     url, response.status_code
                 )
@@ -37,8 +35,8 @@ def _request_content(url, query_params=None, headers=None):
             return None
 
     except Exception as e:
-        logging.error("There was an error with the request.")
-        logging.info("{}: {}".format(type(e).__name__, e))
+        logger.error("There was an error with the request.")
+        logger.info("{}: {}".format(type(e).__name__, e))
         return None
 
 
@@ -63,7 +61,7 @@ def _get_foreign_id_url(image):
         foreign_url = image.get("url")
 
         if not foreign_url:
-            logging.warning(
+            logger.warning(
                 "Landing page not detected for image ID: {}".format(foreign_id)
             )
         return [foreign_id, foreign_url]
@@ -78,12 +76,12 @@ def _get_image_properties(image, foreign_url):
         # the dimensions in the metadata are at times
         # inconsistent with the rescaled images
         query_params = urlparse(img_url)
-        width = parse_qs(query_params.query).get("w", [])[0]  # width
-        height = parse_qs(query_params.query).get("h", [])[0]  # height
+        width = parse_qs(query_params.query).get("w", [])[0]
+        height = parse_qs(query_params.query).get("h", [])[0]
         thumbnail = image.get("image_400", "")
         return [img_url, width, height, thumbnail]
     else:
-        logging.warning(f"Image not detected in URL: {foreign_url}")
+        logger.warning(f"Image not detected in URL: {foreign_url}")
         return [None, None, None, None]
 
 
@@ -107,7 +105,7 @@ def _get_tags(image):
         tags = [{"name": tag, "provider": "rawpixel"} for tag in keyword_list]
         return tags
     else:
-        return {}
+        return []
 
 
 def _process_image_data(image):
@@ -157,8 +155,6 @@ def _process_pages(total, result, page):
             total_images = _process_image_data(img)
             img_ctr = total_images if total_images else img_ctr
 
-        total_images = image_store.commit()
-
         page += 1
         total, result = _get_image_list(page)
 
@@ -182,6 +178,9 @@ def main():
     img_ctr = _process_pages(total, result, page=page)
 
     logging.info("Total images: {}".format(img_ctr))
+
+    image_store.commit()
+
     logging.info("Terminated!")
 
 
