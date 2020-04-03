@@ -23,6 +23,8 @@ import logging
 import piexif
 import io
 import libxmp
+import requests
+from PIL import Image as img
 
 log = logging.getLogger(__name__)
 
@@ -261,3 +263,34 @@ class Watermark(GenericAPIView):
             response = HttpResponse(img_bytes, content_type='image/jpeg')
             _save_wrapper(watermarked, exif_bytes, response)
             return response
+
+
+class OembedView(APIView):
+
+    def get(self, request):
+        url = request.query_params.get('url', '')
+
+        if not url:
+            return Response(status=404, data='Not Found')
+        try:
+            identifier = url.rsplit('/', 1)[1]
+            image_record = Image.objects.get(identifier=identifier)
+        except Image.DoesNotExist:
+            return Response(status=404, data='Not Found')
+        if not image_record.height or image_record.width:
+            image = requests.get(image_record.url)
+            width, height = img.open(io.BytesIO(image.content)).size
+        else:
+            width, height = image_record.width, image_record.height
+        resp = {
+            'version': 1.0,
+            'type': 'photo',
+            'width': width,
+            'height': height,
+            'title': image_record.title,
+            'author_name': image_record.creator,
+            'author_url': image_record.creator_url,
+            'license_url': image_record.license_url
+        }
+
+        return Response(data=resp, status=status.HTTP_200_OK)

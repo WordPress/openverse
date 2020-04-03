@@ -37,3 +37,4 @@ ipaddress = {version = "*",python_version = "<=2.7"}
 piexif = "*"
 python-xmp-toolkit = "*"
 deepdiff = "*"
+djangorestframework-xml = "*"

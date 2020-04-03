@@ -5,6 +5,7 @@ import os
 import uuid
 import time
 import cccatalog.settings
+import xml.etree.ElementTree as ET
 from django.db.models import Max
 from django.urls import reverse
 from cccatalog.api.licenses import LICENSE_GROUPS
@@ -532,3 +533,28 @@ def test_related_image_search_page_consistency(recommendation, search_without_de
         related = recommendation_factory(image['id'])
         assert related['result_count'] > 0
         assert len(related['results']) == 10
+
+
+def test_oembed_endpoint_for_json():
+    response = requests.get(
+        API_URL + '/v1/oembed?url=https%3A//search.creativecommons.org/photos/dac5f6b0-e07a-44a0-a444-7f43d71f9beb'
+    )
+    assert response.status_code == 200
+    assert response.headers['Content-Type'] == "application/json"
+    parsed = response.json()
+    assert parsed['width'] == 1400
+    assert parsed['height'] == 656
+    assert parsed['license_url'] == 'https://creativecommons.org/licenses/by-nc-nd/4.0/'
+
+
+def test_oembed_endpoint_for_xml():
+    response = requests.get(
+        API_URL + '/v1/oembed?url=https%3A//search.creativecommons.org/photos/dac5f6b0-e07a-44a0-a444-7f43d71f9beb&format=xml'
+    )
+    assert response.status_code == 200
+    assert response.headers['Content-Type'] == "application/xml; charset=utf-8"
+    response_body_as_xml = ET.fromstring(response.content)
+    xml_tree = ET.ElementTree(response_body_as_xml)
+    assert xml_tree.find("width").text == '1400'
+    assert xml_tree.find("height").text == '656'
+    assert xml_tree.find("license_url").text == 'https://creativecommons.org/licenses/by-nc-nd/4.0/'
