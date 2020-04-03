@@ -4,10 +4,10 @@
         @submit.prevent="onSubmit"
         class="search-form padding-normal">
     <div class="is-flex is-hidden-touch">
-      <button class="button toggle-filter padding-normal"
+      <button class="button toggle-filter padding-vertical-normal padding-horizontal-big"
               @click.prevent="onToggleSearchGridFilter()">
-        <img v-if="!isFilterApplied" width="24" src="../assets/filter_icon_new.svg" />
-        <img v-else width="24" src="../assets/filter_icon_new_applied.svg" />
+        <i v-if="!isFilterApplied" class="icon sliders" />
+        <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
       </button>
       <div class="control has-icons-left search-form_input margin-left-small">
         <input id="searchInput"
@@ -29,8 +29,8 @@
     <div class="is-flex is-hidden-desktop">
       <button class="button small toggle-filter-small padding-small"
               @click.prevent="onToggleSearchGridFilter()">
-        <img v-if="!isFilterApplied" width="64" src="../assets/filter_icon_new.svg" />
-        <img v-else width="64" src="../assets/filter_icon_new_applied.svg" />
+        <i v-if="!isFilterApplied" class="icon sliders" />
+        <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
       </button>
       <div class="control has-icons-left search-form_input margin-left-small">
         <input id="searchInput"
@@ -138,6 +138,9 @@ export default {
     @media (max-width: 64em) {
       width: 100%;
     }
+  }
+  .button .icon {
+    height: auto;
   }
 
   .icon .search {
