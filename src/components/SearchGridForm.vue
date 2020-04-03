@@ -9,17 +9,17 @@
         <img v-if="!isFilterApplied" width="24" src="../assets/filter_icon_new.svg" />
         <img v-else width="24" src="../assets/filter_icon_new_applied.svg" />
       </button>
-      <div class="control has-icons-left search-form_input">
+      <div class="control has-icons-left search-form_input margin-left-small">
         <input id="searchInput"
                 required="required"
-                class="input is-medium margin-left-small"
+                class="input is-medium"
                 type="search"
                 ref="search"
                 :placeholder="searchBoxPlaceholder"
                 v-model="searchTermsModel"
                 @keyup.enter="onSubmit" />
         <span class="icon is-medium is-left">
-          <i class="icon search"></i>
+          <i class="icon search is-size-5"></i>
         </span>
       </div>
       <button class="button is-primary" @click.prevent="onSubmit">
@@ -32,14 +32,19 @@
         <img v-if="!isFilterApplied" width="64" src="../assets/filter_icon_new.svg" />
         <img v-else width="64" src="../assets/filter_icon_new_applied.svg" />
       </button>
-      <input id="searchInput"
-              required="required"
-              class="input search-form_input margin-left-small"
-              type="search"
-              ref="search"
-              :placeholder="searchBoxPlaceholder"
-              v-model="searchTermsModel"
-              @keyup.enter="onSubmit">
+      <div class="control has-icons-left search-form_input margin-left-small">
+        <input id="searchInput"
+                required="required"
+                class="input search-form_input"
+                type="search"
+                ref="search"
+                :placeholder="searchBoxPlaceholder"
+                v-model="searchTermsModel"
+                @keyup.enter="onSubmit">
+        <span class="icon is-left">
+          <i class="icon search is-size-6"></i>
+        </span>
+      </div>
       <button class="button is-primary small" @click.prevent="onSubmit">
         Search
       </button>
@@ -130,8 +135,16 @@ export default {
   .search-form_input {
     width: 45%;
 
-    @media (max-width: 48em) {
+    @media (max-width: 64em) {
       width: 100%;
+    }
+  }
+
+  .icon .search {
+    padding: 1.3rem;
+
+    @media (max-width: 64em) {
+      padding: .8rem;
     }
   }
 </style>
