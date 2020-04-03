@@ -4,13 +4,14 @@
      class="photo-license-icons"
      target="_blank"
      rel="noopener noreferrer">
-    <i class="icon cc-logo is-size-4 has-text-black" title="CC"></i>
+    <i class="icon cc-logo is-size-4 has-text-black has-background-white" title="CC"></i>
     <template v-for="(license, index) in getLicenseIcon(image.license)">
       <i
           v-if="license"
           :class="{
             icon: true,
             ['has-text-black']: true,
+            ['has-background-white']: true,
             ['is-size-4']: true,
             [`cc-${license}`]: true,
           }"
