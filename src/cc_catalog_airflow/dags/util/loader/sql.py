@@ -1,4 +1,5 @@
 import logging
+from psycopg2.errors import InvalidTextRepresentation
 from airflow.hooks.postgres_hook import PostgresHook
 
 logger = logging.getLogger(__name__)
@@ -59,13 +60,31 @@ def create_loading_table(
 def import_data_to_intermediate_table(
         postgres_conn_id,
         tsv_file_name,
-        identifier
+        identifier,
+        max_rows_to_skip=2
 ):
     load_table = _get_load_table_name(identifier)
     logger.info(f'Loading {tsv_file_name} into {load_table}')
 
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    postgres.bulk_load(f'{load_table}', tsv_file_name)
+    load_successful = False
+
+    while not load_successful and max_rows_to_skip >= 0:
+        try:
+            postgres.bulk_load(f'{load_table}', tsv_file_name)
+            load_successful = True
+
+        except InvalidTextRepresentation as e:
+          line_number = _get_malformed_row_in_file(str(e))
+          _delete_malformed_row_in_file(tsv_file_name, line_number)
+
+        finally:
+            max_rows_to_skip = max_rows_to_skip - 1
+
+    if not load_successful:
+        raise InvalidTextRepresentation(
+            'Exceeded the maximum number of allowed defective rows')
+
     postgres.run(
         f'DELETE FROM {load_table} WHERE url IS NULL;'
     )
@@ -142,3 +161,25 @@ def _get_load_table_name(
         load_table_name_stub=LOAD_TABLE_NAME_STUB,
 ):
     return f'{load_table_name_stub}{identifier}'
+
+
+def _get_malformed_row_in_file(error_msg):
+    error_list = error_msg.splitlines()
+    copy_error = error_list[3]
+    assert copy_error.startswith('COPY'), copy_error
+
+    copy_error_info_list = copy_error.split(',')
+    line_number = int(copy_error_info_list[1].split(' ')[-1])
+
+    return line_number
+
+
+def _delete_malformed_row_in_file(tsv_file_name, line_number):
+    with open(tsv_file_name, "r") as read_obj:
+        lines = read_obj.readlines()
+
+    with open(tsv_file_name, "w") as write_obj:
+        for index, line in enumerate(lines):
+            if index + 1 != line_number:
+                write_obj.write(line)
+
