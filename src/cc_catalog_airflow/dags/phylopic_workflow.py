@@ -3,26 +3,26 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 
-from provider_api_scripts import wikimedia_commons
+from provider_api_scripts import phylopic
 from util.operator_util import get_log_operator
 
 
 DAG_DEFAULT_ARGS = {
     'owner': 'data-eng-admin',
     'depends_on_past': False,
-    'start_date': datetime(2003, 7, 1),
+    'start_date': datetime(2011, 1, 1),
     'email_on_retry': False,
     'retries': 3,
     'retry_delay': timedelta(minutes=15),
 }
 
-DAG_ID = 'wikimedia_commons_workflow'
+DAG_ID = 'phylopic_workflow'
 
 
 def get_runner_operator(dag):
     return PythonOperator(
-        task_id='pull_wikimedia_commons_data',
-        python_callable=wikimedia_commons.main,
+        task_id='pull_phylopic_data',
+        python_callable=phylopic.main,
         op_args=['{{ ds }}'],
         depends_on_past=False,
         dag=dag
@@ -33,9 +33,9 @@ def create_dag():
     dag = DAG(
         dag_id=DAG_ID,
         default_args=DAG_DEFAULT_ARGS,
-        concurrency=3,
-        max_active_runs=3,
-        start_date=datetime(2003, 7, 1),
+        concurrency=1,
+        max_active_runs=1,
+        start_date=datetime(2011, 1, 1),
         schedule_interval='@daily',
         catchup=False,
     )
