@@ -8,6 +8,8 @@ import pytest
 
 from util.loader import sql
 
+from psycopg2.errors import InvalidTextRepresentation
+
 TEST_ID = 'testing'
 POSTGRES_CONN_ID = os.getenv('TEST_CONN_ID')
 POSTGRES_TEST_URI = os.getenv('AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING')
@@ -199,6 +201,73 @@ def test_import_data_loads_good_tsv(postgres_with_load_table, tmpdir):
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
     assert num_rows == 10
+
+
+def test_delete_one_malformed_row(postgres_with_load_table, tmpdir):
+    postgres_conn_id = POSTGRES_CONN_ID
+    identifier = TEST_ID
+    load_table = TEST_LOAD_TABLE
+    tsv_file_name = os.path.join(RESOURCES, 'malformed_one_row.tsv')
+    with open(tsv_file_name) as f:
+        f_data = f.read()
+
+    test_tsv = 'test.tsv'
+    path = tmpdir.join(test_tsv)
+    path.write(f_data)
+
+    sql.import_data_to_intermediate_table(
+        postgres_conn_id,
+        str(path),
+        identifier
+    )
+
+    check_query = f'SELECT COUNT (*) FROM {load_table};'
+    postgres_with_load_table.cursor.execute(check_query)
+    num_rows = postgres_with_load_table.cursor.fetchone()[0]
+    assert num_rows == 9
+
+
+def test_delete_two_malformed_rows(postgres_with_load_table, tmpdir):
+    postgres_conn_id = POSTGRES_CONN_ID
+    identifier = TEST_ID
+    load_table = TEST_LOAD_TABLE
+    tsv_file_name = os.path.join(RESOURCES, 'malformed_two_rows.tsv')
+    with open(tsv_file_name) as f:
+        f_data = f.read()
+
+    test_tsv = 'test.tsv'
+    path = tmpdir.join(test_tsv)
+    path.write(f_data)
+
+    sql.import_data_to_intermediate_table(
+        postgres_conn_id,
+        str(path),
+        identifier
+    )
+
+    check_query = f'SELECT COUNT (*) FROM {load_table};'
+    postgres_with_load_table.cursor.execute(check_query)
+    num_rows = postgres_with_load_table.cursor.fetchone()[0]
+    assert num_rows == 8
+
+
+def test_delete_multiple_malformed_rows(postgres_with_load_table, tmpdir):
+    postgres_conn_id = POSTGRES_CONN_ID
+    identifier = TEST_ID
+    tsv_file_name = os.path.join(RESOURCES, 'malformed_multiple_rows.tsv')
+    with open(tsv_file_name) as f:
+        f_data = f.read()
+
+    test_tsv = 'test.tsv'
+    path = tmpdir.join(test_tsv)
+    path.write(f_data)
+
+    with pytest.raises(InvalidTextRepresentation):
+        sql.import_data_to_intermediate_table(
+            postgres_conn_id,
+            str(path),
+            identifier
+        )
 
 
 def test_import_data_deletes_null_url_rows(postgres_with_load_table, tmpdir):
