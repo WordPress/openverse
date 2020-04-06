@@ -3,8 +3,12 @@
   <div class="container">
     <div class="columns">
       <div class="column">
-        <a href="https://creativecommons.org" class="main-logo margin-bottom-bigger">
-          <img class="footer_logo" alt="Footer Logo" src="../assets/cc-logo_white.png">
+        <a href="https://creativecommons.org" class="main-logo margin-bottom-bigger has-text-white">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               preserveAspectRatio="xMidyMid meet"
+               viewBox="0 0 304 73">
+            <use :href="logoUrl"></use>
+          </svg>
         </a>
         <address class="margin-bottom-normal">
           <span class="is-block">Creative Commons</span>
@@ -53,6 +57,13 @@
 <script>
 export default {
   name: 'footer-section',
+  computed: {
+    logoUrl() {
+      // eslint-disable-next-line global-require
+      const logo = require('@creativecommons/vocabulary/assets/logos/cc/logomark.svg');
+      return `${logo}#logomark`;
+    },
+  },
 };
 </script>
 
