@@ -5,6 +5,7 @@
         class="search-form padding-normal">
     <div class="is-flex is-hidden-touch">
       <button class="button toggle-filter padding-vertical-normal padding-horizontal-big"
+              type="button"
               @click.prevent="onToggleSearchGridFilter()">
         <i v-if="!isFilterApplied" class="icon sliders" />
         <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
@@ -22,12 +23,11 @@
           <i class="icon search is-size-5"></i>
         </span>
       </div>
-      <button class="button is-primary" @click.prevent="onSubmit">
-        Search
-      </button>
+      <input type="submit" class="button is-primary" @click.prevent="onSubmit" value="Search" />
     </div>
     <div class="is-flex is-hidden-desktop">
       <button class="button small toggle-filter-small padding-small"
+              type="button"
               @click.prevent="onToggleSearchGridFilter()">
         <i v-if="!isFilterApplied" class="icon sliders" />
         <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
@@ -45,9 +45,7 @@
           <i class="icon search is-size-6"></i>
         </span>
       </div>
-      <button class="button is-primary small" @click.prevent="onSubmit">
-        Search
-      </button>
+      <input type="submit" class="button is-primary small" value="Search" />
     </div>
   </form>
 </template>
