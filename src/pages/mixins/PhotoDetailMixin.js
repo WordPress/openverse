@@ -15,7 +15,6 @@ const PhotoDetailPage = {
     shouldShowBreadcrumb: false,
     imageWidth: 0,
     imageHeight: 0,
-    watermarkEnabled: featureFlags.watermark,
     socialSharingEnabled: featureFlags.socialSharing,
   }),
   computed: {
