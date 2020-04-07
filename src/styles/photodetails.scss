@@ -12,11 +12,9 @@
 }
 
 .photo_breadcrumb {
-  padding: 0 0 1rem 2rem;
-  width: 100%;
-  display: block;
-  text-align: left;
-  font-size: .9em;
+  .icon {
+    vertical-align: middle;
+  }
 }
 
 .photo_image-ctr {
