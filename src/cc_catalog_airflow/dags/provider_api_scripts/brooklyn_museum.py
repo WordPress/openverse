@@ -9,7 +9,7 @@ DELAY = 5.0
 RETRIES = 3
 PROVIDER = "brooklynmuseum"
 ENDPOINT = "https://www.brooklynmuseum.org/api/v2/object/"
-API_KEY = os.environ["BROOKLYN_MUSEUM_API_KEY"]
+API_KEY = os.getenv("BROOKLYN_MUSEUM_API_KEY", "nokeyprovided")
 
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
