@@ -45,6 +45,7 @@
           <h5>Our work relies on you!</h5>
           <p>Help us keep the internet free and open.</p>
           <a class="button small donate" href="http://creativecommons.org/donate">
+            <i class="icon cc-letterheart margin-right-small is-size-5 padding-top-smaller" />
             Donate now
           </a>
         </aside>
@@ -70,5 +71,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+.donate {
+  &:hover {
+    text-decoration: none;
+  }
+}
 
+.icon {
+  vertical-align: middle;
+}
 </style>
