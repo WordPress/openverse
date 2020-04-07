@@ -29,7 +29,7 @@ def test_get_object_ids():
         mma.delayed_requester,
         'get',
         return_value=r
-    ) as mock_get:
+    ):
         total_objects = mma._get_object_ids('')
     assert total_objects[0] == 4
     assert total_objects[1] == [153, 1578, 465, 546]
@@ -110,7 +110,7 @@ def test_create_meta_data():
         mma.delayed_requester,
         'get',
         return_value=r
-    ) as mock_get:
+    ):
         response = mma._get_response_json(None, '', retries=2)
         meta_data = mma._create_meta_data(response)
 
@@ -153,6 +153,7 @@ def test_process_image_data_handles_example_dict():
         }
     )
 
+
 def test_get_data_for_image_with_none_response():
     with patch.object(
             mma.delayed_requester,
@@ -163,6 +164,7 @@ def test_get_data_for_image_with_none_response():
             assert mma._get_data_for_image(10)
 
     assert mock_get.call_count == 6
+
 
 def test_get_data_for_image_with_non_ok():
     r = requests.Response()
@@ -178,15 +180,20 @@ def test_get_data_for_image_with_non_ok():
 
     assert mock_get.call_count == 6
 
+
 def test_get_data_for_image_returns_response_json_when_all_ok(monkeypatch):
-    with open(os.path.join(RESOURCES, 'sample_response_without_additional.json')) as f:
+    with open(
+        os.path.join(RESOURCES, 'sample_response_without_additional.json')
+    ) as f:
         actual_response_json = json.load(f)
-    
+
     def mock_get_response_json(query_params, retries=0):
         return actual_response_json
-    
+
     monkeypatch.setattr(mma, '_get_response_json', mock_get_response_json)
-    with open(os.path.join(RESOURCES, 'sample_additional_image_data.json')) as f:
+    with open(
+        os.path.join(RESOURCES, 'sample_additional_image_data.json')
+    ) as f:
         image_data = json.load(f)
 
     r = requests.Response()
@@ -220,15 +227,20 @@ def test_get_data_for_image_returns_response_json_when_all_ok(monkeypatch):
 
     assert mock_add.call_count == 1
 
-def test_get_data_for_image_returns_response_json_when_all_ok_with_additional_images(monkeypatch):
+
+def test_get_data_for_image_returns_response_json_with_additional_images(
+    monkeypatch
+):
     with open(os.path.join(RESOURCES, 'sample_response.json')) as f:
         actual_response_json = json.load(f)
-    
+
     def mock_get_response_json(query_params, retries=0):
         return actual_response_json
-    
+
     monkeypatch.setattr(mma, '_get_response_json', mock_get_response_json)
-    with open(os.path.join(RESOURCES, 'sample_additional_image_data.json')) as f:
+    with open(
+        os.path.join(RESOURCES, 'sample_additional_image_data.json')
+    ) as f:
         image_data = json.load(f)
 
     r = requests.Response()
@@ -258,7 +270,7 @@ def test_get_data_for_image_returns_response_json_when_all_ok_with_additional_im
                 "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936"
                 )
             },
-        thumbnail_url="", 
+        thumbnail_url="",
         title="Quail and Millet"
     )
 
