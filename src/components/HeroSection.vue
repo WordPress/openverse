@@ -77,7 +77,7 @@ export default {
 <style lang="scss" scoped>
 
 
-$hero-height: 71vh;
+$hero-height: 74vh;
 
 .hero {
   background: #fff;
