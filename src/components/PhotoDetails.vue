@@ -1,10 +1,12 @@
 <template>
   <div class="photo columns is-desktop is-marginless">
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
-      <a class="photo_breadcrumb"
+      <a class="photo_breadcrumb is-block has-text-left margin-normal has-text-grey"
           :href="breadCrumbURL"
           @click.prevent="onGoBackToSearchResults"
-          v-if="shouldShowBreadcrumb">&#171; Back to search results</a>
+          v-if="shouldShowBreadcrumb">
+          <i class="icon chevron-left margin-right-small"></i> Back to search results
+      </a>
       <img @load="onImageLoad"
             class="photo_image"
             :src="image.url"

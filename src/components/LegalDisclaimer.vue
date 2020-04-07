@@ -35,7 +35,8 @@ export default {
   },
 };
 </script>
-<style>
+
+<style lang="scss" scoped>
   li:before{
     content: "\2022";
     color: #CCC;
