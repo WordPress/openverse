@@ -30,11 +30,6 @@
               Share
             </a>
           </li>
-          <li :class="tabClass(3, 'a')" v-if="watermarkEnabled">
-            <a href="#panel3" :aria-selected="activeTab == 3" @click.prevent="setActiveTab(3)">
-              Download
-            </a>
-          </li>
         </ul>
       </section>
       <section class="photo_info-ctr tabs-content">
@@ -54,9 +49,6 @@
         <div :class="tabClass(2, 'tabs-panel')">
           <image-social-share v-if="socialSharingEnabled" :image="image" />
         </div>
-        <div :class="tabClass(3, 'tabs-panel')">
-          <watermark v-if="watermarkEnabled" :image="image" />
-        </div>
       </section>
     </div>
   </div>
@@ -71,7 +63,7 @@ import attributionHtml from '@/utils/attributionHtml';
 
 export default {
   name: 'photo-details',
-  props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'watermarkEnabled', 'socialSharingEnabled'],
+  props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'socialSharingEnabled'],
   components: {
     ImageInfo,
     Watermark,

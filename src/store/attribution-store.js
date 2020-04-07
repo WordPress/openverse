@@ -1,12 +1,10 @@
 import {
   CopyAttribution,
   EmbedAttribution,
-  DownloadWatermark,
 } from '@/analytics/events';
 import {
   COPY_ATTRIBUTION,
   EMBED_ATTRIBUTION,
-  DOWNLOAD_WATERMARK,
 } from './action-types';
 
 const actions = GoogleAnalytics => ({
@@ -17,11 +15,6 @@ const actions = GoogleAnalytics => ({
   },
   [EMBED_ATTRIBUTION]() {
     const event = EmbedAttribution();
-    GoogleAnalytics.sendEvent(event);
-  },
-  // eslint-disable-next-line no-unused-vars
-  [DOWNLOAD_WATERMARK]({ commit }, params) {
-    const event = DownloadWatermark(params);
     GoogleAnalytics.sendEvent(event);
   },
 });
