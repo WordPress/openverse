@@ -56,7 +56,7 @@ def main(date):
     logger.info(f'Processing Europeana API for date: {date}')
 
     start_timestamp, end_timestamp = _derive_timestamp_pair(date)
-    _get_pagewise(start_timestamp, end_timestamp)
+    images_stored = _get_pagewise(start_timestamp, end_timestamp)
 
     total_images = image_store.commit()
     logger.info(f'Total images: {total_images}')
@@ -77,15 +77,16 @@ def _get_pagewise(start_timestamp, end_timestamp):
         )
 
         if image_list is not None:
-            _process_image_list(image_list)
-            images_retrieved += len(image_list)
+            images_stored = _process_image_list(image_list)
             logger.info(
-                f'Images retrieved: {images_retrieved} of {total_number_of_images}')
+                f'Images stored: {images_stored} of {total_number_of_images}')
             prev_cursor = cursor
             cursor = next_cursor
 
         else:
             logger.warning('No image data!  Attempting to continue')
+
+    return images_stored
 
 
 def _get_image_list(
