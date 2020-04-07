@@ -18,6 +18,21 @@
           info@creativecommons.org
         </a>
         <a href="tel://+1-415-429-6753" class="phone">+1-415-429-6753</a>
+
+        <div class="margin-vertical-large">
+          <a href="https://www.instagram.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
+             <i class="icon instagram margin-right-small is-size-4" />
+          </a>
+          <a href="https://www.twitter.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
+             <i class="icon twitter margin-right-small is-size-4" />
+          </a>
+          <a href="https://www.facebook.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
+             <i class="icon facebook margin-right-small is-size-4" />
+          </a>
+          <a href="https://www.linkedin.com/company/creative-commons/" class="social has-text-white" target="_blank" rel="noopener">
+             <i class="icon linkedin margin-right-small is-size-4" />
+          </a>
+        </div>
       </div>
       <div class="column is-half">
         <nav class="footer-navigation">
@@ -37,7 +52,23 @@
           </ul>
         </nav>
         <div class="attribution margin-top-bigger">
-          <p class="caption">Except where otherwise <a href="https://creativecommons.org/policies#license" target="_blank">noted</a>, content on this site is licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International license</a>. <a href="https://creativecommons.org/website-icons" target="_blank">Icons</a> by Noun Project.</p>
+          <p class="caption">
+            Except where otherwise
+            <a href="https://creativecommons.org/policies#license" target="_blank" rel="noopener">noted</a>,
+            content on this site is licensed under a
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">
+              Creative Commons Attribution 4.0 International license
+            </a>.
+            <a href="https://creativecommons.org/website-icons" target="_blank" rel="noopener">
+              Icons
+            </a>
+            by Noun Project.
+          </p>
+
+          <div class="margin-top-smaller">
+            <i class="icon cc-logo margin-right-small is-size-4 is-color-white" />
+            <i class="icon cc-by margin-right-small is-size-4 is-color-white" />
+          </div>
         </div>
       </div>
       <div class="column">
@@ -71,7 +102,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.donate {
+.donate, .social {
   &:hover {
     text-decoration: none;
   }
