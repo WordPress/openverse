@@ -94,11 +94,11 @@
     </p>
 
     <p class="margin-vertical-normal">Example:
-      <a href='https://search.creativecommons.org/search?q=dogs%20%2B%20%28corgies%20%7C%20labrador%29'>
-        <em>dogs + (corgies | labrador)</em>
+      <a href='https://search.creativecommons.org/search?q=dogs%20%2B%20%28corgis%20%7C%20labrador%29'>
+        <em>dogs + (corgis | labrador)</em>
       </a>
       <br />
-      This will search for images that match dogs that are either corgies or labrador.
+      This will search for images that match dogs that are either corgis or labrador.
     </p>
 
     <p class="margin-vertical-normal">
