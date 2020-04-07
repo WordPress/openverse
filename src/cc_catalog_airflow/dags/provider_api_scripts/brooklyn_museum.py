@@ -112,7 +112,7 @@ def _handle_response(data):
             continue
         height, width = _get_image_sizes(image)
 
-        total_images = image_store.add_item(
+        image_count = image_store.add_item(
                 foreign_landing_url=foreign_url,
                 image_url=image_url,
                 license_url=license_url,
@@ -124,8 +124,8 @@ def _handle_response(data):
                 meta_data=metadata,
                 creator=creators
             )
-        logger.debug(total_images)
-        image_count += total_images
+        logger.debug(image_count)
+
     return image_count
 
 
