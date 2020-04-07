@@ -1,5 +1,5 @@
 import store from '@/store/attribution-store';
-import { CopyAttribution, EmbedAttribution, DownloadWatermark } from '@/analytics/events';
+import { CopyAttribution, EmbedAttribution } from '@/analytics/events';
 
 describe('Attribution Store', () => {
   describe('actions', () => {
