@@ -13,6 +13,7 @@ import argparse
 from datetime import datetime, timedelta, timezone
 import logging
 import os
+import re
 
 from common.requester import DelayedRequester
 from common.storage import image
@@ -25,30 +26,21 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 DELAY = 1.0
-RESOURCES_PER_REQUEST = '10'
+RESOURCES_PER_REQUEST = '20'
 PROVIDER = 'europeana'
 API_KEY = os.getenv('EUROPEANA_API_KEY')
 ENDPOINT = 'https://www.europeana.eu/api/v2/search.json?'
-RESOURCE_TYPE = 'IMAGE'
-# DATE_TYPES = ['created', 'update']
 
-LICENSE_INFO = {
-    '1': ('by-nc-sa', '2.0'),
-    '2': ('by-nc', '2.0'),
-    '3': ('by-nc-nd', '2.0'),
-    '4': ('by', '2.0'),
-    '5': ('by-sa', '2.0'),
-    '6': ('by-nd', '2.0'),
-    '9': ('cc0', '1.0'),
-    '10': ('pdm', '1.0'),
-    # '11': ('ooc-nc', '1.0'),
-}
+
+RESOURCE_TYPE = 'IMAGE'
+REUSE_TERMS = ['open', 'restricted']
+# DATE_TYPES = ['created', 'update']
 
 DEFAULT_QUERY_PARAMS = {
     'wskey': API_KEY,
     'query': '*',
     'profile': 'rich',
-    'reusability': ['open', 'restricted'],
+    'reusability': REUSE_TERMS,
     'sort': ['europeana_id+desc', 'timestamp_created_epoch+desc'],
     'rows': RESOURCES_PER_REQUEST,
     'media': 'true',
@@ -66,6 +58,8 @@ def main(date):
     start_timestamp, end_timestamp = _derive_timestamp_pair(date)
     _get_pagewise(start_timestamp, end_timestamp)
 
+    total_images = image_store.commit()
+    logger.info(f'Total images: {total_images}')
     logger.info('Terminated!')
 
 
@@ -83,6 +77,7 @@ def _get_pagewise(start_timestamp, end_timestamp):
         )
 
         if image_list is not None:
+            _process_image_list(image_list)
             images_retrieved += len(image_list)
             logger.info(
                 f'Images retrieved: {images_retrieved} of {total_number_of_images}')
@@ -154,6 +149,71 @@ def _extract_image_list_from_json(response_json):
         total_number_of_images = response_json.get('totalResults')
 
     return image_list, next_cursor, total_number_of_images
+
+
+def _process_image_list(image_list):
+    prev_total = 0
+    for image_data in image_list:
+        total_images = _process_image_data(image_data)
+        if total_images == None:
+            total_images = prev_total
+        else:
+            prev_total = total_images
+
+    return total_images
+
+
+def _process_image_data(image_data):
+    logger.debug(f'Processing image data: {image_data}')
+    license_url = _get_license_url(image_data.get('rights')[0])
+    if license_url == None:
+        return None
+
+    image_url = image_data.get('edmIsShownBy')[0]
+    foreign_landing_url = _get_foreign_landing_url(image_data)
+    foreign_id = image_data.get('id')
+    thumbnail_url = image_data.get('edmPreview')[0]
+    meta_data = _create_meta_data_dict(image_data),
+
+    return image_store.add_item(
+        foreign_landing_url=foreign_landing_url,
+        image_url=image_url,
+        license_url=license_url,
+        thumbnail_url=thumbnail_url,
+        foreign_identifier=foreign_id,
+        title=image_data.get('title'),
+        meta_data=meta_data,
+    )
+
+
+def _get_license_url(license_field):
+    cc_license_search = re.search("creativecommons", license_field)
+    if cc_license_search == None:
+        return None
+    return license_field
+
+
+def _get_foreign_landing_url(image_data):
+    original_url = image_data.get('edmIsShownAt')[0]
+    if original_url != None:
+        return original_url
+    europeana_url = image_data.get('guid')[0]
+    return europeana_url
+
+
+def _create_meta_data_dict(
+        image_data
+):
+    meta_data = {
+        'country': image_data.get('country'),
+        'dataProvider': image_data.get('dataProvider'),
+    }
+    description = image_data.get('dcDescription')
+    logger.debug(f'description: {description}')
+    meta_data['description'] = description[0].strip(
+    ) if description != None else ''
+
+    return {k: v for k, v in meta_data.items() if v is not None}
 
 
 def _build_query_param_dict(
