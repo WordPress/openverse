@@ -35,14 +35,14 @@ describe('FilterChecklist', () => {
 
   it('visibility toggle button should be in collapsed state by default', () => {
     const wrapper = render(FilterChecklist, options);
-    expect(wrapper.find('.rotImg').element).toBeUndefined();
+    expect(wrapper.find('.angle-down').element).toBeDefined();
   });
 
   it('shows checklist when visibility toggle button clicked', () => {
     const wrapper = render(FilterChecklist, options);
     wrapper.find('.filter-visibility-toggle').trigger('click');
     expect(wrapper.find('.filter-checkbox').element).toBeDefined();
-    expect(wrapper.find('.rotImg').element).toBeDefined(); // toggle image should point up now
+    expect(wrapper.find('.angle-up').element).toBeDefined(); // toggle image should point up now
   });
 
   it('hides checklist when visibility toggle button pressed twice', () => {
@@ -50,7 +50,7 @@ describe('FilterChecklist', () => {
     wrapper.find('.filter-visibility-toggle').trigger('click'); // should open
     wrapper.find('.filter-visibility-toggle').trigger('click'); // should close
     expect(wrapper.find('.filter-checkbox').element).toBeUndefined();
-    expect(wrapper.find('.rotImg').element).toBeUndefined();
+    expect(wrapper.find('.angle-down').element).toBeDefined();
   });
 
   it('should call filterChanged event', () => {
