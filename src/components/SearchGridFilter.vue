@@ -245,7 +245,7 @@ export default {
   transform: scale(1.1);
 }
 button {
-  margin-left: 60px;
+  margin-left: 61px;
   background-color: grey;
   color: white;
   font-size: 1.1rem;
