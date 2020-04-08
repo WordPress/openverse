@@ -1,9 +1,8 @@
 /* eslint-disable no-useless-escape */
-/* eslint-disable no-useless-escape */
 <template>
 <div>
   <div v-if="isMobile()">
-    <transition name="modal" v-if="isMobile()">
+    <transition name="modal">
         <div class="overlay">
           <div class="modal" ref="progressbar">
           <div class="is-flex">
