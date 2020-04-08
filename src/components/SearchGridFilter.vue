@@ -1,4 +1,5 @@
 /* eslint-disable no-useless-escape */
+/* eslint-disable no-useless-escape */
 <template>
 <div>
   <div v-if="isMobile()">
@@ -64,7 +65,6 @@
 </div>
 </transition>
 </div>
-<div v-if="!isMobile()">
  <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
     <form class="filters-form" role="filter">
@@ -100,7 +100,6 @@
                          filterType="sizes"
                          @filterChanged="onUpdateFilter" />
     </form>
-
     <div class="filter-option small-filter search-filters_search-by">
       <input type="checkbox" id="creator-chk"
               :checked="filters.searchBy.creator"
@@ -115,7 +114,6 @@
       </button>
     </div>
   </div>
-</div>
 </div>
 </template>
 
@@ -178,6 +176,7 @@ export default {
       provider: this.$props.provider,
       shouldNavigate: true,
     });
+    console.log('abhi');
   },
   onUpdateSearchByCreator() {
     this.$store.dispatch(TOGGLE_FILTER, {
@@ -245,7 +244,7 @@ export default {
   transform: scale(1.1);
 }
 button {
-  margin-left: 62px;
+  margin-left: 60px;
   background-color: grey;
   color: white;
   font-size: 1.1rem;
@@ -279,7 +278,6 @@ button {
 .search-filters_search-by,
 .clear-filters {
   margin-top: 0.4em;
-  margin-left: 24px;
 }
 .search-filters_search-by,
 .apply-filters {
