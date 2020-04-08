@@ -26,7 +26,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 DELAY = 1.0
-RESOURCES_PER_REQUEST = '20'
+RESOURCES_PER_REQUEST = '100'
 PROVIDER = 'europeana'
 API_KEY = os.getenv('EUROPEANA_API_KEY')
 ENDPOINT = 'https://www.europeana.eu/api/v2/search.json?'
@@ -41,7 +41,7 @@ DEFAULT_QUERY_PARAMS = {
     'query': '*',
     'profile': 'rich',
     'reusability': REUSE_TERMS,
-    'sort': ['europeana_id+desc', 'timestamp_created_epoch+desc'],
+    'sort': ['europeana_id+desc', 'timestamp_created+desc'],
     'rows': RESOURCES_PER_REQUEST,
     'media': 'true',
     'start': 1,
@@ -65,23 +65,25 @@ def main(date):
 
 def _get_pagewise(start_timestamp, end_timestamp):
     cursor = '*'
-    prev_cursor = ''
     total_number_of_images = 0
     images_retrieved = 0
 
-    while cursor != prev_cursor:
+    while cursor != None:
         image_list, next_cursor, total_number_of_images = _get_image_list(
             start_timestamp,
             end_timestamp,
             cursor
         )
-
+        
+        if next_cursor == None:
+            break
+        
+        cursor=next_cursor
+        
         if image_list is not None:
             images_stored = _process_image_list(image_list)
             logger.info(
                 f'Images stored: {images_stored} of {total_number_of_images}')
-            prev_cursor = cursor
-            cursor = next_cursor
 
         else:
             logger.warning('No image data!  Attempting to continue')
@@ -114,13 +116,13 @@ def _get_image_list(
         image_list, next_cursor, total_number_of_images = _extract_image_list_from_json(
             response_json)
 
-        if (image_list is not None) and (next_cursor is not None):
+        if (image_list is not None) or (next_cursor is None):
             break
 
     if try_number == max_tries - 1 and (
             (image_list is None) or (next_cursor is None)):
         logger.warning('No more tries remaining. Returning None types.')
-        return None, None
+        return None, None, None
     else:
         return image_list, next_cursor, total_number_of_images
 
@@ -227,7 +229,7 @@ def _build_query_param_dict(
     query_param_dict = default_query_param.copy()
     query_param_dict.update(
         {
-            'timestamp_created_epoch': f'{start_timestamp}TO{end_timestamp}',
+            'query': f'timestamp_created:[{start_timestamp} TO {end_timestamp}]',
             'cursor': cursor,
         }
     )
@@ -238,8 +240,11 @@ def _build_query_param_dict(
 def _derive_timestamp_pair(date):
     date_obj = datetime.strptime(date, '%Y-%m-%d')
     utc_date = date_obj.replace(tzinfo=timezone.utc)
-    start_timestamp = str(int(utc_date.timestamp()))
-    end_timestamp = str(int((utc_date + timedelta(days=1)).timestamp()))
+    start_timestamp = utc_date.isoformat()
+    end_timestamp = (utc_date + timedelta(days=1)).isoformat()
+    start_timestamp = start_timestamp.replace('+00:00', 'Z')
+    end_timestamp = end_timestamp.replace('+00:00', 'Z')
+
     return start_timestamp, end_timestamp
 
 
