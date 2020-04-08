@@ -2,7 +2,7 @@
   <nav class="navbar small">
     <div class="navbar-brand">
       <a class="logo" href="/">
-        <img alt="Logo" src="../assets/cc-search-logo-black.png">
+        <img alt="Logo" src="@creativecommons/vocabulary/assets/logos/products/search.svg">
       </a>
       <a role="button"
          :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
