@@ -174,7 +174,7 @@ def _process_image_data(image_data):
     foreign_landing_url = _get_foreign_landing_url(image_data)
     foreign_id = image_data.get('id')
     thumbnail_url = image_data.get('edmPreview')[0]
-    meta_data = _create_meta_data_dict(image_data),
+    meta_data = _create_meta_data_dict(image_data)
 
     return image_store.add_item(
         foreign_landing_url=foreign_landing_url,
@@ -182,7 +182,7 @@ def _process_image_data(image_data):
         license_url=license_url,
         thumbnail_url=thumbnail_url,
         foreign_identifier=foreign_id,
-        title=image_data.get('title'),
+        title=image_data.get('title')[0],
         meta_data=meta_data,
     )
 
