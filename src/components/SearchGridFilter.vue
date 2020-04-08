@@ -210,11 +210,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .icon, .text {
   display:inline;
   font-size: 25px;
   margin-left: 10px;
 }
+
 .modal {
   width: 500px;
   max-height: 600px;
@@ -226,23 +228,28 @@ export default {
   transition: all 0.2s ease-in;
   font-family: Helvetica, Arial, sans-serif;
 }
+
 .fadeIn-enter {
   opacity: 0;
 }
+
 .fadeIn-leave-active {
   opacity: 0;
   transition: all 0.2s step-end;
 }
+
 .fadeIn-enter .modal,
 .fadeIn-leave-active.modal {
   transform: scale(1.1);
 }
+
 button {
   margin-left: 200px;
   background-color: grey;
   color: white;
   font-size: 1.1rem;
 }
+
 .overlay {
   position: fixed;
   top: 0;
@@ -256,6 +263,7 @@ button {
   z-index: 999;
   transition: opacity 0.2s ease;
 }
+
 .search-filters {
   display: none;
   height: auto;
@@ -269,17 +277,21 @@ button {
     display: block;
   }
 }
+
 .search-filters_search-by,
 .clear-filters {
   margin-top: 0.4em;
 }
+
 .search-filters_search-by,
 .apply-filters {
   margin-top: 0.4em;
 }
+
 .is-flex {
   padding:15px;
 }
+
 .filter-down {
   background: white;
   position:sticky;
@@ -287,4 +299,5 @@ button {
   bottom:.1rem;
   padding:10px;
     }
+
 </style>
