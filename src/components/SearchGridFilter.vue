@@ -11,7 +11,7 @@
     <form class="filters-form" role="filter">
       <filter-check-list :options="filters.licenseTypes"
                          :disabled="licenseTypesDisabled"
-                         title="I want something that I can"
+                         title="Use"
                          filterType="licenseTypes"
                          @filterChanged="onUpdateFilter" />
       <filter-check-list :options="filters.licenses"
