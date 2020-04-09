@@ -6,8 +6,6 @@ on:
     paths:
       # Changes in python files
       - '*.py'
-    branches:
-      - master
   pull_request:
     # Only run if,
     paths:
