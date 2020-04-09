@@ -1,6 +1,13 @@
 <template>
   <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
+    <h4 class="padding-top-big padding-left-big padding-right-normal">
+      Filter results by
+      <i class="icon sliders filter-visibility-toggle padding-vertical-small has-text-grey-light"
+          title="toggle filters bar visibility"
+          @click.prevent="onToggleSearchGridFilter()" />
+    </h4>
+
     <form class="filters-form" role="filter">
       <filter-check-list :options="filters.licenseTypes"
                          :disabled="licenseTypesDisabled"
@@ -53,7 +60,7 @@
 
 <script>
 import { TOGGLE_FILTER } from '@/store/action-types';
-import { CLEAR_FILTERS } from '@/store/mutation-types';
+import { CLEAR_FILTERS, SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
 import FilterCheckList from './FilterChecklist';
 
 export default {
@@ -107,11 +114,24 @@ export default {
         shouldNavigate: true,
       });
     },
+    onToggleSearchGridFilter() {
+      this.$store.commit(
+        SET_FILTER_IS_VISIBLE,
+        { isFilterVisible: !this.isFilterVisible },
+      );
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+
+.filter-visibility-toggle {
+  float: right;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
 
 .search-filters {
   display: none;
