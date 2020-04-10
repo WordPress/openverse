@@ -2,10 +2,13 @@
   <div class="filters padding-vertical-big padding-left-big padding-right-normal">
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
-      <button class="filter-visibility-toggle is-white" v-if="!isMobile()">
-        <img src="@/assets/arrow.svg"
-          v-bind:class="{rotImg:filtersVisible}"
-          alt="toggle filters visibility"/>
+      <button class="filter-visibility-toggle is-white padding-vertical-small" v-if="!isMobile()">
+        <i v-if="filtersVisible"
+           class="icon angle-up rotImg is-size-5 has-text-grey-light"
+           title="toggle filters visibility" />
+        <i v-else
+           class="icon angle-down is-size-5 has-text-grey-light"
+           title="toggle filters visibility" />
       </button>
     </div>
     <template v-if="filtersVisible">

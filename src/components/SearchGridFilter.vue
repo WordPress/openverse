@@ -5,10 +5,11 @@
     <transition name="modal" v-if="isMobile()">
         <div class="overlay">
           <div class="modal" ref="progressbar">
-          <div class="is-flex">
-          <div class="text"><h4> Filters </h4></div>
-          <button id="#close" class="button tiny" @click.prevent="close()">Close</button>
-          </div>
+          <h4 class="padding-top-big padding-left-big padding-bottom-big padding-right-normal">
+           Filters
+          <i class="icon cross close" @click.prevent="close()" />
+           </h4>
+
          <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
     <slot>
@@ -46,13 +47,12 @@
                          @filterChanged="onUpdateFilter" />
     </form>
     </slot>
-    <div class="is-flex filter-down">
-    <div class="clear-filters">
+    <div class="clear-filters filter-down padding-top-normal
+         padding-left-large padding-bottom-normal padding-right-normal">
       <button class="button tiny"
               @click="onClearFilters">
         Clear filters
       </button>
-    </div>
     </div>
    </div>
   </div>
@@ -211,10 +211,9 @@ export default {
 
 <style lang="scss" scoped>
 
-.icon, .text {
-  display:inline;
-  font-size: 25px;
-  margin-left: 10px;
+.close {
+  float: right;
+  background: none;
 }
 
 .modal {
@@ -241,13 +240,6 @@ export default {
 .fadeIn-enter .modal,
 .fadeIn-leave-active.modal {
   transform: scale(1.1);
-}
-
-button {
-  margin-left: 200px;
-  background-color: grey;
-  color: white;
-  font-size: 1.1rem;
 }
 
 .overlay {
@@ -283,20 +275,11 @@ button {
   margin-top: 0.4em;
 }
 
-.search-filters_search-by,
-.apply-filters {
-  margin-top: 0.4em;
-}
-
-.is-flex {
-  padding:15px;
-}
-
 .filter-down {
   background: white;
   position:sticky;
   align-self:flex-end;
-  bottom:.1rem;
+  bottom:0rem;
   padding:10px;
     }
 
