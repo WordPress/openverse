@@ -10,12 +10,10 @@
 
     <form class="filters-form" role="filter">
       <filter-check-list :options="filters.licenseTypes"
-                         :disabled="licenseTypesDisabled"
                          title="Use"
                          filterType="licenseTypes"
                          @filterChanged="onUpdateFilter" />
       <filter-check-list :options="filters.licenses"
-                         :disabled="licensesDisabled"
                          title="Licenses"
                          filterType="licenses"
                          @filterChanged="onUpdateFilter" />
@@ -81,12 +79,6 @@ export default {
     },
     renderProvidersFilter() {
       return !this.$props.isCollectionsPage;
-    },
-    licensesDisabled() {
-      return this.$store.state.filters.licenseTypes.some(li => li.checked);
-    },
-    licenseTypesDisabled() {
-      return this.$store.state.filters.licenses.some(li => li.checked);
     },
   },
   methods: {
