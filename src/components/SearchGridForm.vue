@@ -4,40 +4,48 @@
         @submit.prevent="onSubmit"
         class="search-form padding-normal">
     <div class="is-flex is-hidden-touch">
-      <button class="button toggle-filter padding-normal"
+      <button class="button toggle-filter padding-vertical-normal padding-horizontal-big"
+              type="button"
               @click.prevent="onToggleSearchGridFilter()">
-        <img v-if="!isFilterApplied" width="24" src="../assets/filter_icon_new.svg" />
-        <img v-else width="24" src="../assets/filter_icon_new_applied.svg" />
+        <i v-if="!isFilterApplied" class="icon sliders" />
+        <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
       </button>
-      <input id="searchInput"
-              required="required"
-              class="input is-medium search-form_input margin-left-small"
-              type="search"
-              ref="search"
-              :placeholder="searchBoxPlaceholder"
-              v-model="searchTermsModel"
-              @keyup.enter="onSubmit">
-      <button class="button is-primary" @click.prevent="onSubmit">
-        Search
-      </button>
+      <div class="control has-icons-left search-form_input margin-left-small">
+        <input id="searchInput"
+                required="required"
+                class="input is-medium"
+                type="search"
+                ref="search"
+                :placeholder="searchBoxPlaceholder"
+                v-model="searchTermsModel"
+                @keyup.enter="onSubmit" />
+        <span class="icon is-medium is-left">
+          <i class="icon search is-size-5"></i>
+        </span>
+      </div>
+      <input type="submit" class="button is-primary" @click.prevent="onSubmit" value="Search" />
     </div>
     <div class="is-flex is-hidden-desktop">
       <button class="button small toggle-filter-small padding-small"
+              type="button"
               @click.prevent="onToggleSearchGridFilter()">
-        <img v-if="!isFilterApplied" width="64" src="../assets/filter_icon_new.svg" />
-        <img v-else width="64" src="../assets/filter_icon_new_applied.svg" />
+        <i v-if="!isFilterApplied" class="icon sliders" />
+        <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
       </button>
-      <input id="searchInput"
-              required="required"
-              class="input search-form_input margin-left-small"
-              type="search"
-              ref="search"
-              :placeholder="searchBoxPlaceholder"
-              v-model="searchTermsModel"
-              @keyup.enter="onSubmit">
-      <button class="button is-primary small" @click.prevent="onSubmit">
-        Search
-      </button>
+      <div class="control has-icons-left search-form_input margin-left-small">
+        <input id="searchInput"
+                required="required"
+                class="input search-form_input"
+                type="search"
+                ref="search"
+                :placeholder="searchBoxPlaceholder"
+                v-model="searchTermsModel"
+                @keyup.enter="onSubmit">
+        <span class="icon is-left">
+          <i class="icon search is-size-6"></i>
+        </span>
+      </div>
+      <input type="submit" class="button is-primary small" value="Search" />
     </div>
   </form>
 </template>
@@ -118,15 +126,26 @@ export default {
     width: 100%;
     top: 0;
     position: sticky;
-    background-color: #e9ebee;
+    background-color: #f5f5f5;
     z-index: 10;
   }
 
   .search-form_input {
     width: 45%;
 
-    @media (max-width: 48em) {
+    @media (max-width: 64em) {
       width: 100%;
+    }
+  }
+  .button .icon {
+    height: auto;
+  }
+
+  .icon .search {
+    padding: 1.3rem;
+
+    @media (max-width: 64em) {
+      padding: .8rem;
     }
   }
 </style>

@@ -11,7 +11,7 @@
                 class="hero_search-input input is-large"
                 type="search"
                 name="q"
-                placeholder="Search for images..."
+                placeholder="I would like to see..."
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
@@ -22,7 +22,7 @@
                 class="hero_search-input input"
                 type="search"
                 name="q"
-                placeholder="Search for images..."
+                placeholder="I would like to see..."
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
@@ -77,7 +77,7 @@ export default {
 <style lang="scss" scoped>
 
 
-$hero-height: 71vh;
+$hero-height: 74vh;
 
 .hero {
   background: #fff;
