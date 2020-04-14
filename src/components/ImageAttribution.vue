@@ -1,55 +1,53 @@
 <template>
   <section class="sidebar_section">
-    <div>
-      <div class="photo-attribution">
-        <h5 class="b-header margin-bottom-normal">Image attribution</h5>
-        <span id="attribution" class="photo_usage-attribution" ref="photoAttribution">
-          <a :href="image.foreign_landing_url"
-             target="_blank"
-             rel="noopener"
-             @click="onPhotoSourceLinkClicked">{{ imageTitle }}</a>
-          <span v-if="image.creator">
-            by
-            <a v-if="image.creator_url"
-               :href="image.creator_url"
-               target="_blank"
-               rel="noopener"
-               @click="onPhotoCreatorLinkClicked">{{ image.creator }}</a>
-            <span v-else>{{ image.creator }}</span>
-          </span>
-          is licensed under
-          <a class="photo_license" :href="licenseURL" target="_blank" rel="noopener">
-          {{ fullLicenseName.toUpperCase() }}
-          </a>
+    <div class="photo-attribution margin-bottom-big">
+      <h5 class="b-header margin-bottom-big">Image attribution</h5>
+      <span id="attribution" class="photo_usage-attribution" ref="photoAttribution">
+        <a :href="image.foreign_landing_url"
+            target="_blank"
+            rel="noopener"
+            @click="onPhotoSourceLinkClicked">{{ imageTitle }}</a>
+        <span v-if="image.creator">
+          by
+          <a v-if="image.creator_url"
+              :href="image.creator_url"
+              target="_blank"
+              rel="noopener"
+              @click="onPhotoCreatorLinkClicked">{{ image.creator }}</a>
+          <span v-else>{{ image.creator }}</span>
         </span>
-        <license-icons :image="image"></license-icons>
-        <CopyButton id="copy-attribution-btn"
-                    el="#attribution"
-                    title="Copy the attribution to paste into your blog or document"
-                    @copied="onCopyAttribution">
-          Copy rich text
-        </CopyButton>
-      </div>
-      <div class="embed-attribution">
-        <textarea id="attribution-html"
-                  class="textarea is-family-monospace"
-                  :value="attributionHtml"
-                  cols="30" rows="4"
-                  readonly="readonly">
-        </textarea>
-        <CopyButton id="embed-attribution-btn"
-                  el="#attribution-html"
-                  title="Copy the HTML to embed the attribution with license icons in your web page"
-                  @copied="onEmbedAttribution">
-          Copy html
-        </CopyButton>
-      </div>
-      <reuse-survey :image="image" />
-      <legal-disclaimer
-          :source="image.provider"
-          :sourceProviderCode="image.provider_code"
-          :sourceURL="image.foreign_landing_url" />
+        is licensed under
+        <a class="photo_license" :href="licenseURL" target="_blank" rel="noopener">
+        {{ fullLicenseName.toUpperCase() }}
+        </a>
+      </span>
+      <license-icons :image="image"></license-icons>
+      <CopyButton id="copy-attribution-btn"
+                  el="#attribution"
+                  title="Copy the attribution to paste into your blog or document"
+                  @copied="onCopyAttribution">
+        Copy rich text
+      </CopyButton>
     </div>
+    <div class="embed-attribution margin-bottom-big">
+      <textarea id="attribution-html"
+                class="textarea is-family-monospace"
+                :value="attributionHtml"
+                cols="30" rows="4"
+                readonly="readonly">
+      </textarea>
+      <CopyButton id="embed-attribution-btn"
+                el="#attribution-html"
+                title="Copy the HTML to embed the attribution with license icons in your web page"
+                @copied="onEmbedAttribution">
+        Copy html
+      </CopyButton>
+    </div>
+    <reuse-survey :image="image" />
+    <legal-disclaimer
+        :source="image.provider"
+        :sourceProviderCode="image.provider_code"
+        :sourceURL="image.foreign_landing_url" />
   </section>
 </template>
 
