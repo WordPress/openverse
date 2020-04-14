@@ -112,7 +112,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@creativecommons/vocabulary/scss/spacing.scss";
 
 .search-filters {
   display: none;
