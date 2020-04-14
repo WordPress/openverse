@@ -35,13 +35,13 @@
                          @filterChanged="onUpdateFilter" />
     </form>
 
-    <div class="filter-option small-filter search-filters_search-by">
+    <div class="margin-normal filter-option small-filter search-filters_search-by">
       <input type="checkbox" id="creator-chk"
               :checked="filters.searchBy.creator"
               @change="onUpdateSearchByCreator">
       <label for="creator-chk">Search by Creator</label>
     </div>
-    <div class="clear-filters"
+    <div class="margin-big padding-botton-normal clear-filters"
           v-if="isFilterApplied">
       <button class="button tiny"
               @click="onClearFilters">
@@ -128,12 +128,6 @@ export default {
     border-top: 1px solid #e8e8e8;
     display: block;
   }
-}
-
-.search-filters_search-by,
-.clear-filters {
-  margin: $space-big;
-  padding-bottom: 1rem;
 }
 
 </style>
