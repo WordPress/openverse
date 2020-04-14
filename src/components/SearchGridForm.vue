@@ -8,8 +8,8 @@
               class="button toggle-filter padding-vertical-normal padding-horizontal-big"
               type="button"
               @click.prevent="onToggleSearchGridFilter()">
-        <i v-if="!isFilterApplied" class="icon sliders" />
-        <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
+        <i v-if="!isFilterApplied" class="icon filter" />
+        <i v-else class="icon filter has-color-dark-slate-blue has-text-weight-semibold" />
       </button>
       <div class="control has-icons-left search-form_input margin-left-small">
         <input id="searchInput"
@@ -27,11 +27,12 @@
       <input type="submit" class="button is-primary" @click.prevent="onSubmit" value="Search" />
     </div>
     <div class="is-flex is-hidden-desktop">
-      <button class="button small toggle-filter-small padding-small"
+      <button v-if="!isFilterVisible"
+              class="button small toggle-filter-small padding-small"
               type="button"
               @click.prevent="onToggleSearchGridFilter()">
-        <i v-if="!isFilterApplied" class="icon sliders" />
-        <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
+        <i v-if="!isFilterApplied" class="icon filter" />
+        <i v-else class="icon filter has-color-dark-slate-blue has-text-weight-semibold" />
       </button>
       <div class="control has-icons-left search-form_input margin-left-small">
         <input id="searchInput"

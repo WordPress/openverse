@@ -3,7 +3,9 @@
                  'search-filters__visible': isFilterVisible, }">
     <h4 class="padding-top-big padding-left-big padding-right-normal">
       Filter results by
-      <i class="icon sliders filter-visibility-toggle padding-vertical-small has-text-grey-light"
+      <i :class="{ 'has-text-grey-light': !isFilterApplied,
+                   'icon filter filter-visibility-toggle padding-vertical-small': true,
+                   'has-color-dark-slate-blue has-text-weight-semibold': isFilterApplied }"
           title="toggle filters bar visibility"
           @click.prevent="onToggleSearchGridFilter()" />
     </h4>
