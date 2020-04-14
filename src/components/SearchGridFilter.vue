@@ -41,7 +41,7 @@
               @change="onUpdateSearchByCreator">
       <label for="creator-chk">Search by Creator</label>
     </div>
-    <div class="margin-big padding-botton-normal clear-filters"
+    <div class="margin-big padding-bottom-normal clear-filters"
           v-if="isFilterApplied">
       <button class="button tiny"
               @click="onClearFilters">
