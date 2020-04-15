@@ -92,7 +92,11 @@ versioned_paths = [
     path(
         'images/<str:identifier>', ImageDetail.as_view(), name='image-detail'
     ),
-    path('images/<str:identifier>/report', ReportImageView.as_view(), name='report-image'),
+    path(
+        'images/<str:identifier>/report',
+        ReportImageView.as_view(),
+        name='report-image'
+    ),
     path(
         'recommendations/images/<str:identifier>',
         RelatedImage.as_view(),

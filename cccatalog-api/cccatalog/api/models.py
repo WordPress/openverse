@@ -292,8 +292,8 @@ class ReportImage(models.Model):
         ('other', 'other')
     ]
     identifier = models.UUIDField()
-    reason = models.CharField(max_length= 10,choices= REPORT_CHOICES)
-    description = models.TextField(max_length= 500, blank= True, null= True)
+    reason = models.CharField(max_length=10, choices=REPORT_CHOICES)
+    description = models.TextField(max_length=500, blank=True, null=True)
 
     class Meta:
         db_table = 'nsfw_reports'

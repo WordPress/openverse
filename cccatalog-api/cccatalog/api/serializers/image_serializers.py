@@ -6,6 +6,7 @@ from collections import namedtuple
 from cccatalog.api.controllers.search_controller import get_providers
 from cccatalog.api.models import ReportImage
 
+
 def _validate_page(value):
     if value < 1:
         return 1
@@ -380,7 +381,10 @@ class ReportImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        if validated_data['reason'] == 'other' and (
-                 'description' not in validated_data or len(validated_data['description'])) < 20:
-            raise serializers.ValidationError("Description must be at least be 20 characters long")
+        if validated_data['reason'] == "other" and \
+                ('description' not in validated_data or len(
+                    validated_data['description'])) < 20:
+            raise serializers.ValidationError(
+                "Description must be at least be 20 characters long"
+            )
         return ReportImage.objects.create(**validated_data)
