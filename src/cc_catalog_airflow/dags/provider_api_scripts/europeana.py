@@ -67,6 +67,7 @@ def _get_pagewise(start_timestamp, end_timestamp):
     cursor = '*'
     total_number_of_images = 0
     images_retrieved = 0
+    images_stored = 0
 
     while cursor != None:
         image_list, next_cursor, total_number_of_images = _get_image_list(
@@ -74,12 +75,12 @@ def _get_pagewise(start_timestamp, end_timestamp):
             end_timestamp,
             cursor
         )
-        
+
         if next_cursor == None:
             break
-        
-        cursor=next_cursor
-        
+
+        cursor = next_cursor
+
         if image_list is not None:
             images_stored = _process_image_list(image_list)
             logger.info(
@@ -116,7 +117,7 @@ def _get_image_list(
         image_list, next_cursor, total_number_of_images = _extract_image_list_from_json(
             response_json)
 
-        if (image_list is not None) or (next_cursor is None):
+        if (image_list is not None):
             break
 
     if try_number == max_tries - 1 and (
@@ -143,9 +144,9 @@ def _extract_response_json(response):
 def _extract_image_list_from_json(response_json):
     if (
             response_json is None
-            or response_json.get('success') != True
+            or str(response_json.get('success')) != "True"
     ):
-        image_list, next_cursor = None, None
+        image_list, next_cursor, total_number_of_images = None, None, None
     else:
         image_list = response_json.get('items')
         next_cursor = response_json.get('nextCursor')
@@ -197,9 +198,9 @@ def _get_license_url(license_field):
 
 
 def _get_foreign_landing_url(image_data):
-    original_url = image_data.get('edmIsShownAt')[0]
+    original_url = image_data.get('edmIsShownAt')
     if original_url != None:
-        return original_url
+        return original_url[0]
     europeana_url = image_data.get('guid')[0]
     return europeana_url
 
