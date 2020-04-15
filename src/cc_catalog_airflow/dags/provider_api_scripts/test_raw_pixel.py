@@ -97,4 +97,4 @@ def test_get_tags():
         result = rwp._get_image_list()[1]
         tags = rwp._get_tags(image=result[0])
         assert len(tags) == 47
-        assert tags[0] == {"name": "america", "provider": "rawpixel"}
+        assert tags[0] == "america"
