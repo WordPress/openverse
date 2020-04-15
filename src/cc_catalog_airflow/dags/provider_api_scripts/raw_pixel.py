@@ -102,8 +102,7 @@ def _get_tags(image):
             if word.strip()
             not in ["cc0", "creative commons", "creative commons 0"]
         ]
-        tags = [{"name": tag, "provider": "rawpixel"} for tag in keyword_list]
-        return tags
+        return keyword_list
     else:
         return []
 
@@ -149,7 +148,7 @@ def _process_pages(total, result, page):
         is_valid = False
 
     while (img_ctr < total) and is_valid:
-        logging.info("Processing page: {}".format(page))
+        logger.info("Processing page: {}".format(page))
 
         for img in result:
             total_images = _process_image_data(img)
