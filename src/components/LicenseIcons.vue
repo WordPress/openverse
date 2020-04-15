@@ -4,16 +4,34 @@
      class="photo-license-icons"
      target="_blank"
      rel="noopener noreferrer">
-    <img class="photo-license-icon" alt="cc-icon" src="@/assets/cc_icon.svg"><img
-          v-for="(license, index) in onGetLicenseIcon(image.license)"
-          v-if="license" class="photo-license-icon"
-          :alt="`${license} license icon`"
-          :src="require(`@/assets/cc-${license.toLowerCase()}_icon.svg`)"
-          :key="index">
+    <i class="icon cc-logo is-size-4 has-text-black has-background-white" title="CC"></i>
+    <template v-for="(license, index) in getLicenseIcon(image.license)">
+      <i
+          v-if="license"
+          :class="{
+            icon: true,
+            ['has-text-black']: true,
+            ['has-background-white']: true,
+            ['is-size-4']: true,
+            [`cc-${license}`]: true,
+          }"
+          :alt="`${license.toUpperCase()}`"
+          :key="index" />
+    </template>
   </a>
 </template>
 
 <script>
+
+const APItoIconNameMap = {
+  by: 'by',
+  nc: 'nc',
+  nd: 'nd',
+  sa: 'sa',
+  cc0: 'zero',
+  pdm: 'pd',
+};
+
 const LicenseIcons = {
   name: 'license-icons',
   components: {},
@@ -22,12 +40,12 @@ const LicenseIcons = {
     shouldWrapInLink: false,
   },
   methods: {
-    onGetLicenseIcon(license) {
+    getLicenseIcon(license) {
       let licenses = [];
       if (license) {
         licenses = license.split('-');
       }
-      return licenses;
+      return licenses.map(l => APItoIconNameMap[l]);
     },
     getLicenseURL(image) {
       if (!image) {
@@ -60,21 +78,8 @@ export default LicenseIcons;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  .photo-license-icons {
-    display: inline-block;
-    height: 32px;
-    white-space: none;
-    opacity: .7;
-    margin-top: 2px;
-    height: 22px !important;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-
-  .photo-license-icon {
-    height: inherit;
-    margin-right: 3px;
+  .icon {
+    vertical-align: middle;
+    margin-right: .3rem;
   }
 </style>

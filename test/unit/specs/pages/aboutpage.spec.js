@@ -7,6 +7,6 @@ describe('AboutPage', () => {
 
     expect(wrapper.find({ name: 'header-section' }).vm).toBeDefined();
     expect(wrapper.find({ name: 'footer-section' }).vm).toBeDefined();
-    expect(wrapper.find('.page_lead-paragraph').element).toBeDefined();
+    expect(wrapper.find('.table').element).toBeDefined();
   });
 });

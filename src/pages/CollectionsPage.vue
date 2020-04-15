@@ -1,17 +1,17 @@
 <template>
   <div>
     <header-section></header-section>
-    <div class="collections-page grid-container full">
+    <div class="collections-page padding-larger">
       <h1>Browse collections</h1>
-      <h2>Museum Collections</h2>
-      <div class="providers-list grid-x">
+      <h2 class="margin-bottom-normal">Museum Collections</h2>
+      <div class="providers-list columns is-multiline">
         <collection-item v-for="(provider, index) in museumProviders"
                         :key="index"
                         :provider="provider" />
       </div>
       <hr />
-      <h2>Other Collections</h2>
-      <div class="providers-list grid-x">
+      <h2 class="margin-bottom-normal">Other Collections</h2>
+      <div class="providers-list columns is-multiline">
         <collection-item v-for="(provider, index) in otherProviders"
                           :key="index"
                           :provider="provider" />
@@ -44,7 +44,7 @@ const CollectionsPage = {
     museumProviders() {
       if (this.providers) {
         return this.providers.filter(
-          provider => MUSEUM_PROVIDERS.indexOf(provider.provider_name) >= 0,
+          provider => MUSEUM_PROVIDERS.indexOf(provider.source_name) >= 0,
         );
       }
       return [];
@@ -52,7 +52,7 @@ const CollectionsPage = {
     otherProviders() {
       if (this.providers) {
         return this.providers.filter(
-          provider => MUSEUM_PROVIDERS.indexOf(provider.provider_name) === -1,
+          provider => MUSEUM_PROVIDERS.indexOf(provider.source_name) === -1,
         );
       }
       return [];
@@ -76,6 +76,6 @@ export default CollectionsPage;
   }
 
   .collections-page {
-    margin: 45px !important;
+    background-color: #F5F5F5;
   }
 </style>

@@ -1,28 +1,32 @@
 <template>
-  <fieldset>
+  <div class="filters padding-vertical-big padding-left-big padding-right-normal">
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
-
-      <button class="filter-dropdown-visibility-button">
-        <img src="@/assets/arrow-bottom.svg" class="arrow-bottom" alt="toggle filters visibility" />
+      <button class="filter-visibility-toggle is-white padding-vertical-small">
+        <i v-if="filtersVisible"
+           class="icon angle-up rotImg is-size-5 has-text-grey-light"
+           title="toggle filters visibility" />
+        <i v-else
+           class="icon angle-down is-size-5 has-text-grey-light"
+           title="toggle filters visibility" />
       </button>
     </div>
-
     <template v-if="filtersVisible">
-    <div v-for="(item, index) in options" :key="index">
-      <input type="checkbox"
+    <div v-for="(item, index) in options" :key="index" class="margin-top-small">
+      <label class="checkbox" :for="item.code">
+        <input type="checkbox"
              class="filter-checkbox"
              :id="item.code"
              :key="index"
              :checked="item.checked"
              :disabled="disabled"
              @change="onValueChange" />
-      <label class="filter-label" :for="item.code">{{ item.name }}</label>
+        {{ item.name }}
+      </label>
     </div>
     </template>
-  </fieldset>
+  </div>
 </template>
-
 <script>
 export default {
   name: 'filter-check-list',
@@ -42,14 +46,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-fieldset {
-  padding-left: 24px;
-  padding-right: 34px;
-  border-bottom: 1px solid #d8d8d8;
-  margin-top: 20px;
-  margin-bottom: 10px;
+.filters {
+  border-bottom: 2px solid rgb(245, 245, 245);
 }
-
 .filters-title {
   font-size: 1.250em;
   font-weight: 600;
@@ -58,14 +57,13 @@ fieldset {
   line-height: 1.5;
   letter-spacing: normal;
   cursor: pointer;
-  margin-bottom: 16px;
 }
-
-.filter-dropdown-visibility-button {
+.filter-visibility-toggle {
   float: right;
   cursor: pointer;
+  background: none;
+  border: none;
 }
-
 label {
   color: #333333;
 }

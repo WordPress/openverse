@@ -1,16 +1,18 @@
 <template>
-  <div class="home-license-filter">
+  <div class="home-license-filter margin-top-xl">
     <span>I want something I can</span>
 
-    <div class="license-filters" v-for="(licenseType, index) in licenseTypes" :key="index">
-      <input :id="licenseType.code"
+    <template v-for="(licenseType, index) in licenseTypes" >
+      <label class="checkbox margin-right-big" :for="licenseType.code" :key="index">
+        <input :id="licenseType.code"
               type="checkbox"
               :checked="licenseType.checked"
               name="lt"
               :value="licenseType.code"
               @input="onFilterChanged(licenseType.code)" />
-      <label :for="licenseType.code">{{ licenseType.name }}</label>
-    </div>
+        {{ licenseType.name }}
+      </label>
+    </template>
   </div>
 </template>
 
@@ -38,7 +40,6 @@ export default {
 
 <style lang="scss" scoped>
 .home-license-filter {
-  margin-top: 0.5em;
   text-align: left;
   text-align: center;
 }
