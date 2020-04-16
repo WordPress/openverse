@@ -30,7 +30,7 @@ describe('FilterDisplay', () => {
             sizes: [{ code: 'foo', name: 'bar', checked: false }],
             providers: [{ code: 'foo', name: 'bar', checked: false }],
             searchBy: { creator: true },
-          }
+          },
         },
         dispatch: jest.fn(),
       },
@@ -41,4 +41,4 @@ describe('FilterDisplay', () => {
     expect(wrapper.find('.filter-display'));
     expect(wrapper.find({ name: 'filter-block' }).vm).toBeDefined();
   });
-  });
+});
