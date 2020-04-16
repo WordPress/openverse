@@ -37,9 +37,6 @@ const CollectionBrowsePage = {
 export default CollectionBrowsePage;
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-
 <style lang="scss">
   @import "../../styles/results-page.scss";
 </style>
