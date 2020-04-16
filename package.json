@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "server": "node server.js",
-    "dev": "webpack-dev-server --inline --progress --config build/webpack-dev-conf.js",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --progress",
     "dev-secure": "webpack-dev-server --https --inline --progress --config build/webpack-dev-conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest-conf.js --coverage",
