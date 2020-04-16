@@ -126,11 +126,15 @@ def test_object_response_success():
 
 def test_process_objects_batch_success():
     batch_objects = _get_resource_json("batch_objects.json")
+    response_json = _get_resource_json("object_data.json")
     with patch.object(bkm,
-                      '_handle_object_data',
-                      return_value=1) as mock_get:
-
-        actual_image_count = bkm._process_objects_batch(batch_objects)
+                      '_get_object_json',
+                      return_value=response_json) as mock_get:
+        with patch.object(bkm,
+                          '_handle_object_data',
+                          return_value=1) as mock_image:
+        
+            actual_image_count = bkm._process_objects_batch(batch_objects)
     expected_image_count = 1
     assert actual_image_count == expected_image_count
 
