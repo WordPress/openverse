@@ -29,7 +29,7 @@ const webpackConfig = merge(commonConfig, {
     compress: true,
     historyApiFallback: true,
     hot: true,
-    open: true,
+    open: false,
     overlay: true,
     port: 8443,
     stats: {
