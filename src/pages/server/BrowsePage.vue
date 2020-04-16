@@ -29,6 +29,7 @@ const BrowsePage = {
     HeaderSection,
     SearchGridForm,
     FooterSection,
+    FilterDisplay,
     SearchGridFilter,
   },
   mixins: [BrowsePageMixin, ServerPrefetchProvidersMixin],
