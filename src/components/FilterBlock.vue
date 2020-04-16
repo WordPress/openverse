@@ -1,22 +1,22 @@
 <template>
-    <span class="filter-block button tag margin-horizontal-smaller"
+    <button class="filter-block button tiny tag margin-horizontal-smaller"
           v-if="filterType === 'searchByCreator'"
           aria-label="creator"
           role="filter">
       <span>Creator</span>
-      <span class="close"
+      <span class="close margin-left-small"
             tabindex="0"
-            @click="onClickCreator">&#x2715;</span>
-    </span>
-    <span class="filter-block button tag margin-horizontal-smaller"
+            @click="onClickCreator"><i class="icon cross" /></span>
+    </button>
+    <button class="filter-block button tiny tag margin-horizontal-smaller"
           role="filter"
           :aria-label="filter.name"
           v-else>
       <span>{{ filter.name }}</span>
-      <span class="close"
+      <span class="close padding-left-normal"
             tabindex="0"
-            @click="onClick">&#x2715;</span>
-    </span>
+            @click="onClick"><i class="icon cross" /></span>
+    </button>
 </template>
 <script>
 export default {
@@ -32,9 +32,4 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-  .close {
-    margin-left: 8px;
-    margin-right: -6px;
-  }
-</style>
+
