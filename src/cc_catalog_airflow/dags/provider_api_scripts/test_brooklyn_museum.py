@@ -59,7 +59,7 @@ def test_get_response_failure():
                       'get',
                       return_value=r) as mock_get:
 
-        actual_data = bkm._get_response(query_param=param)
+        actual_data = bkm._get_object_json(query_param=param)
     expected_data = None
 
     assert mock_get.call_count == 3
@@ -81,7 +81,7 @@ def test_get_response_success():
                       'get',
                       return_value=r) as mock_get:
 
-        actual_data = bkm._get_response(query_param=param)
+        actual_data = bkm._get_object_json(query_param=param)
     expected_data = response_json["data"]
     assert mock_get.call_count == 1
     assert actual_data == expected_data
@@ -102,7 +102,7 @@ def test_get_response_nodata():
                       'get',
                       return_value=r) as mock_get:
 
-        actual_data = bkm._get_response(query_param=param)
+        actual_data = bkm._get_object_json(query_param=param)
 
     assert len(actual_data) == 0
     assert mock_get.call_count == 1
@@ -117,25 +117,46 @@ def test_object_response_success():
                       'get',
                       return_value=r) as mock_get:
 
-        actual_data = bkm._get_response(bkm.ENDPOINT+str(1))
+        actual_data = bkm._get_object_json(endpoint=bkm.ENDPOINT+str(1))
     expected_data = response_json["data"]
 
     assert mock_get.call_count == 1
     assert actual_data == expected_data
 
 
-def test_handle_response():
+def test_process_objects_batch_success():
+    batch_objects = _get_resource_json("batch_objects.json")
+    with patch.object(bkm,
+                      '_handle_object_data',
+                      return_value=1) as mock_get:
+
+        actual_image_count = bkm._process_objects_batch(batch_objects)
+    expected_image_count = 1
+    assert actual_image_count == expected_image_count
+
+
+def test_process_objects_batch_failure():
+    batch_objects = _get_resource_json("no_batch_objects.json")
+    actual_image_count = bkm._process_objects_batch(batch_objects)
+    expected_image_count = None
+
+    assert actual_image_count == expected_image_count
+
+
+def test_handle_object_data():
     response_json = _get_resource_json("object_data.json")
-    actual_image_count = bkm._handle_response(response_json)
+    license_url = "https://creativecommons.org/licenses/by/3.0/"
+    actual_image_count = bkm._handle_object_data(response_json, license_url)
     expected_image_count = 1
 
     assert actual_image_count == expected_image_count
 
 
-def test_handle_response_nodata():
-    response_json = None
-    actual_image_count = bkm._handle_response(response_json)
-    expected_image_count = 0
+def test_handle_object_noimage_info():
+    response_json = _get_resource_json("object_data_noimage.json")
+    license_url = "https://creativecommons.org/licenses/by/3.0/"
+    actual_image_count = bkm._handle_object_data(response_json, license_url)
+    expected_image_count = None
 
     assert actual_image_count == expected_image_count
 
@@ -217,4 +238,4 @@ def test_get_no_images():
     expected_thumbnail_url = None
 
     assert actual_image_url == expected_image_url
-    assert actual_thumbnail_url == expected_image_url
+    assert actual_thumbnail_url == expected_thumbnail_url
