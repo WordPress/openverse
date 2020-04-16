@@ -7,7 +7,7 @@
       </div>
       <div class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
-        <filter-display :query="query"/>
+        <filter-display :query="query" />
         <search-grid v-if="query.q"
                      :query="query"
                      searchTerm=""
