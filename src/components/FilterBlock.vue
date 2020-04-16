@@ -1,9 +1,10 @@
 <template>
-    <span class="button tag margin-horizontal-smaller" v-if="filterType === 'searchByCreator'">
+    <span class="filter-block button tag margin-horizontal-smaller"
+          v-if="filterType === 'searchByCreator'">
       <span>Creator</span>
       <span class="close" @click="onClickCreator">&#x2715;</span>
     </span>
-    <span class="button tag margin-horizontal-smaller" v-else>
+    <span class="filter-block button tag margin-horizontal-smaller" v-else>
       <span>{{ filter.name }}</span>
       <span class="close" @click="onClick">&#x2715;</span>
     </span>

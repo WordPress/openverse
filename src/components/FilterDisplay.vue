@@ -1,37 +1,37 @@
 <template>
-    <div class="padding-horizontal-normal">
+    <div class="filter-display padding-horizontal-normal">
         <span class="caption has-text-weight-semibold">Filter By</span>
-        <span v-for="filter in getFilters('licenses')" :key="filter">
+        <span v-for="filter in getFilters('licenses')" :key="filter.code">
           <filter-block :filter="filter"
                         filterType="licenses"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in getFilters('licenseTypes')" :key="filter">
+        <span v-for="filter in getFilters('licenseTypes')" :key="filter.code">
           <filter-block :filter="filter"
                         filterType="licenseTypes"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in getFilters('categories')" :key="filter">
+        <span v-for="filter in getFilters('categories')" :key="filter.code">
           <filter-block :filter="filter"
                         filterType="categories"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in getFilters('extensions')" :key="filter">
+        <span v-for="filter in getFilters('extensions')" :key="filter.code">
           <filter-block :filter="filter"
                         filterType="extensions"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in getFilters('aspectRatios')" :key="filter">
+        <span v-for="filter in getFilters('aspectRatios')" :key="filter.code">
           <filter-block :filter="filter"
                         filterType="aspectRatios"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in getFilters('sizes')" :key="filter">
+        <span v-for="filter in getFilters('sizes')" :key="filter.code">
           <filter-block :filter="filter"
                         filterType="sizes"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in getFilters('providers')" :key="filter">
+        <span v-for="filter in getFilters('providers')" :key="filter.code">
           <filter-block :filter="filter"
                         filterType="providers"
                         @filterChanged="onUpdateFilter" />
@@ -71,7 +71,7 @@ export default {
         providers: 'source',
       };
       const filterTags = [];
-      this.query[filterMap[filterType]].split(',').forEach((filter) => {
+      this.$props.query[filterMap[filterType]].split(',').forEach((filter) => {
         const filterObj = this.$store.state.filters[filterType].find(o => o.code === filter);
         if (filterObj) {
           filterTags.push(filterObj);
