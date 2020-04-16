@@ -1,12 +1,21 @@
 <template>
     <span class="filter-block button tag margin-horizontal-smaller"
-          v-if="filterType === 'searchByCreator'">
+          v-if="filterType === 'searchByCreator'"
+          aria-label="creator"
+          role="filter">
       <span>Creator</span>
-      <span class="close" @click="onClickCreator">&#x2715;</span>
+      <span class="close"
+            tabindex="0"
+            @click="onClickCreator">&#x2715;</span>
     </span>
-    <span class="filter-block button tag margin-horizontal-smaller" v-else>
+    <span class="filter-block button tag margin-horizontal-smaller"
+          role="filter"
+          :aria-label="filter.name"
+          v-else>
       <span>{{ filter.name }}</span>
-      <span class="close" @click="onClick">&#x2715;</span>
+      <span class="close"
+            tabindex="0"
+            @click="onClick">&#x2715;</span>
     </span>
 </template>
 <script>
