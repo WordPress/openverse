@@ -10,7 +10,7 @@ from util.operator_util import get_log_operator
 DAG_DEFAULT_ARGS = {
     'owner': 'data-eng-admin',
     'depends_on_past': False,
-    'start_date': datetime(1970, 1, 1),
+    'start_date': datetime(2020, 1, 1),
     'email_on_retry': False,
     'retries': 3,
     'retry_delay': timedelta(minutes=15),
@@ -35,7 +35,7 @@ def create_dag():
         default_args=DAG_DEFAULT_ARGS,
         concurrency=1,
         max_active_runs=1,
-        start_date=datetime(1970, 1, 1),
+        start_date=datetime(2020, 1, 1),
         schedule_interval='@daily',
         catchup=False,
     )
