@@ -1,11 +1,11 @@
 <template>
-    <span class="button tag" v-if="filterType === 'searchByCreator'">
+    <span class="button tag margin-horizontal-smaller" v-if="filterType === 'searchByCreator'">
       <span>Creator</span>
-      <span @click="onClickCreator">&times;</span>
+      <span class="close" @click="onClickCreator">&#x2715;</span>
     </span>
-    <span class="button tag" v-else>
+    <span class="button tag margin-horizontal-smaller" v-else>
       <span>{{ filter.name }}</span>
-      <span @click="onClick">&times;</span>
+      <span class="close" @click="onClick">&#x2715;</span>
     </span>
 </template>
 <script>
@@ -22,3 +22,9 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+  .close {
+    margin-left: 8px;
+    margin-right: -6px;
+  }
+</style>

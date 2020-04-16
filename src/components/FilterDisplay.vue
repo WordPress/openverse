@@ -1,37 +1,37 @@
 <template>
     <div class="padding-horizontal-normal">
         <span class="caption has-text-weight-semibold">Filter By</span>
-        <span v-for="filter in licenseFilters" :key="filter">
+        <span v-for="filter in getFilters('licenses')" :key="filter">
           <filter-block :filter="filter"
                         filterType="licenses"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in licenseTypeFilters" :key="filter">
+        <span v-for="filter in getFilters('licenseTypes')" :key="filter">
           <filter-block :filter="filter"
                         filterType="licenseTypes"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in categoryFilters" :key="filter">
+        <span v-for="filter in getFilters('categories')" :key="filter">
           <filter-block :filter="filter"
                         filterType="categories"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in extensionFilters" :key="filter">
+        <span v-for="filter in getFilters('extensions')" :key="filter">
           <filter-block :filter="filter"
                         filterType="extensions"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in aspectRatioFilters" :key="filter">
+        <span v-for="filter in getFilters('aspectRatios')" :key="filter">
           <filter-block :filter="filter"
                         filterType="aspectRatios"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in sizeFilters" :key="filter">
+        <span v-for="filter in getFilters('sizes')" :key="filter">
           <filter-block :filter="filter"
                         filterType="sizes"
                         @filterChanged="onUpdateFilter" />
         </span>
-        <span v-for="filter in sourceFilters" :key="filter">
+        <span v-for="filter in getFilters('providers')" :key="filter">
           <filter-block :filter="filter"
                         filterType="providers"
                         @filterChanged="onUpdateFilter" />
@@ -55,81 +55,30 @@ export default {
     FilterBlock,
   },
   computed: {
-    licenseFilters() {
-      const filterTags = [];
-      this.query.license.split(',').forEach((filter) => {
-        const filterObj = this.$store.state.filters.licenses.find(o => o.code === filter);
-        if (filterObj) {
-          filterTags.push(filterObj);
-        }
-      });
-      return filterTags;
-    },
-    licenseTypeFilters() {
-      const filterTags = [];
-      this.query.license_type.split(',').forEach((filter) => {
-        const filterObj = this.$store.state.filters.licenseTypes.find(o => o.code === filter);
-        if (filterObj) {
-          filterTags.push(filterObj);
-        }
-      });
-      return filterTags;
-    },
-    categoryFilters() {
-      const filterTags = [];
-      this.query.categories.split(',').forEach((filter) => {
-        const filterObj = this.$store.state.filters.categories.find(o => o.code === filter);
-        if (filterObj) {
-          filterTags.push(filterObj);
-        }
-      });
-      return filterTags;
-    },
-    extensionFilters() {
-      const filterTags = [];
-      this.query.extension.split(',').forEach((filter) => {
-        const filterObj = this.$store.state.filters.extensions.find(o => o.code === filter);
-        if (filterObj) {
-          filterTags.push(filterObj);
-        }
-      });
-      return filterTags;
-    },
-    aspectRatioFilters() {
-      const filterTags = [];
-      this.query.aspect_ratio.split(',').forEach((filter) => {
-        const filterObj = this.$store.state.filters.aspectRatios.find(o => o.code === filter);
-        if (filterObj) {
-          filterTags.push(filterObj);
-        }
-      });
-      return filterTags;
-    },
-    sizeFilters() {
-      const filterTags = [];
-      this.query.size.split(',').forEach((filter) => {
-        const filterObj = this.$store.state.filters.sizes.find(o => o.code === filter);
-        if (filterObj) {
-          filterTags.push(filterObj);
-        }
-      });
-      return filterTags;
-    },
-    sourceFilters() {
-      const filterTags = [];
-      this.query.source.split(',').forEach((filter) => {
-        const filterObj = this.$store.state.filters.providers.find(o => o.code === filter);
-        if (filterObj) {
-          filterTags.push(filterObj);
-        }
-      });
-      return filterTags;
-    },
     searchByFilters() {
       return this.$store.state.filters.searchBy.creator ? this.$store.state.filters.searchBy : null;
     },
   },
   methods: {
+    getFilters(filterType) {
+      const filterMap = {
+        licenses: 'license',
+        licenseTypes: 'license_type',
+        categories: 'categories',
+        extensions: 'extension',
+        aspectRatios: 'aspect_ratio',
+        sizes: 'size',
+        providers: 'source',
+      };
+      const filterTags = [];
+      this.query[filterMap[filterType]].split(',').forEach((filter) => {
+        const filterObj = this.$store.state.filters[filterType].find(o => o.code === filter);
+        if (filterObj) {
+          filterTags.push(filterObj);
+        }
+      });
+      return filterTags;
+    },
     onUpdateFilter({ code, filterType }) {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
