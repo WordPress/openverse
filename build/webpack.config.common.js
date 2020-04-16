@@ -59,7 +59,8 @@ const webpackConfig = {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            name: helpers.assetsPath('img/[name].[ext]')
+            name: helpers.assetsPath('img/[name].[ext]'),
+            esModule: false,
           }
         }
       },
@@ -69,7 +70,8 @@ const webpackConfig = {
           loader: 'file-loader',
           options: {
             limit: 10000,
-            name: helpers.assetsPath('img/[name].[ext]')
+            name: helpers.assetsPath('img/[name].[ext]'),
+            esModule: false,
           }
         }
       },
