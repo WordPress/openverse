@@ -59,7 +59,7 @@ const webpackConfig = {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            name: helpers.assetsPath('img/[name].[hash:7].[ext]')
+            name: helpers.assetsPath('img/[name].[ext]')
           }
         }
       },
@@ -69,7 +69,7 @@ const webpackConfig = {
           loader: 'file-loader',
           options: {
             limit: 10000,
-            name: helpers.assetsPath('img/[name].[hash:7].[ext]')
+            name: helpers.assetsPath('img/[name].[ext]')
           }
         }
       },
