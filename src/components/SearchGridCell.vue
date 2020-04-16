@@ -188,6 +188,13 @@ export default {
       overflow: hidden;
       max-width: 100%;
     }
+
+    // Show on touch devices
+    @media (hover: none) {
+      position: absolute;
+      opacity: 1;
+      bottom: 0;
+    }
   }
 
   .search-grid_item {
@@ -207,13 +214,5 @@ export default {
 
   .search-grid_image__fill {
     width: 100%;
-  }
-
-  @media screen and (max-width: 600px) {
-    .overlay {
-      position: absolute;
-      opacity: 1;
-      bottom: 0;
-    }
   }
 </style>

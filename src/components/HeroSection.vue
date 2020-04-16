@@ -49,7 +49,7 @@
       </div>
       <home-license-filter />
     </form>
-    <div class="help-links">
+    <div class="help-links is-hidden-mobile">
       <span class="margin-right-bigger">
         Go to the
         <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
@@ -88,7 +88,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 
-
 $hero-height: 74vh;
 
 .hero {
@@ -126,10 +125,6 @@ $hero-height: 74vh;
   position: absolute;
   bottom: 5rem;
   left: 2rem;
-
-  @media screen and (max-width: 40em) {
-    display: none;
-  }
 }
 
 .help-icon {
