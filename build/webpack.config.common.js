@@ -5,11 +5,16 @@ const HtmlPlugin = require('html-webpack-plugin');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const Dotenv = require('dotenv-webpack');
 const helpers = require('./helpers');
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV !== 'production';
 
 const webpackConfig = {
   entry: {
     main: helpers.root('src', 'clientEntry'),
+  },
+  output: {
+    path: helpers.root('dist'),
+    publicPath: '/',
+    filename: 'js/[name].js',
   },
   resolve: {
     extensions: ['.js', '.vue'],
@@ -34,23 +39,23 @@ const webpackConfig = {
         test: /\.css$/,
         use: [
           isDev ? 'vue-style-loader' : MiniCSSExtractPlugin.loader,
-          { loader: 'css-loader', options: { sourceMap: isDev } },
+          { loader: 'css-loader', options: { sourceMap: true } },
         ]
       },
       {
         test: /\.scss$/,
         use: [
           isDev ? 'vue-style-loader' : MiniCSSExtractPlugin.loader,
-          { loader: 'css-loader', options: { sourceMap: isDev } },
-          { loader: 'sass-loader', options: { sourceMap: isDev } }
+          { loader: 'css-loader', options: { sourceMap: true } },
+          { loader: 'sass-loader', options: { sourceMap: true } }
         ]
       },
       {
         test: /\.sass$/,
         use: [
           isDev ? 'vue-style-loader' : MiniCSSExtractPlugin.loader,
-          { loader: 'css-loader', options: { sourceMap: isDev } },
-          { loader: 'sass-loader', options: { sourceMap: isDev } }
+          { loader: 'css-loader', options: { sourceMap: true } },
+          { loader: 'sass-loader', options: { sourceMap: true } }
         ]
       },
       {

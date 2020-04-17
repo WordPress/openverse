@@ -14,8 +14,8 @@ const webpackConfig = merge(commonConfig, {
   output: {
     path: helpers.root('dist'),
     publicPath: '/',
-    filename: 'js/[hash].js',
-    chunkFilename: 'js/[id].[hash].chunk.js'
+    filename: 'js/[name].[hash].js',
+    chunkFilename: 'js/[id].[hash].js'
   },
   optimization: {
     runtimeChunk: 'single',

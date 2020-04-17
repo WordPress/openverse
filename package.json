@@ -16,6 +16,7 @@
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue . test/unit",
     "build": "cross-env NODE_ENV=production webpack",
+    "build-server": "webpack --config build/webpack.config.server.js",
     "build-old": "node build/build.js && npm run build-server",
     "build-server-old": "webpack -p --config build/webpack-server-conf.js --progress"
   },
