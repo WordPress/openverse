@@ -6,6 +6,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 const helpers = require('./helpers');
 const commonConfig = require('./webpack.config.common');
 const isProd = process.env.NODE_ENV === 'production';
@@ -59,7 +60,8 @@ const webpackConfig = merge(commonConfig, {
       filename: 'css/[name].[hash].css',
       chunkFilename: 'css/[id].[hash].css'
     }),
-    new webpack.HashedModuleIdsPlugin()
+    new webpack.HashedModuleIdsPlugin(),
+    new VueSSRClientPlugin()
   ]
 });
 
