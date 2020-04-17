@@ -47,12 +47,24 @@
                          @filterChanged="onUpdateFilter" />
     </form>
     </slot>
-    <div class="clear-filters filter-down padding-top-normal
-         padding-left-large padding-bottom-normal padding-right-normal">
+    <div class="is-flex">
+    <div class="clear-filters padding-top-normal
+         padding-left-larger padding-bottom-normal
+         padding-right-normal margin-top-small">
       <button class="button tiny"
               @click="onClearFilters">
         Clear filters
       </button>
+    </div>
+    <div class="apply-filters padding-top-normal
+         padding-left-large padding-bottom-normal
+         padding-right-larger margin-top-small"
+         v-if="isFilterApplied">
+      <button class="button is-primary tiny"
+              @click.prevent="close()">
+        Apply filters
+      </button>
+    </div>
     </div>
    </div>
   </div>
@@ -220,7 +232,7 @@ export default {
   width: 500px;
   max-height: 600px;
   margin: 0px auto;
-  background-color: #fff;
+  background-color: #F5F5F5;
   border-radius: 2px;
   overflow-y: scroll;
   box-shadow: 0 2px 8px 3px;
@@ -255,7 +267,9 @@ export default {
   z-index: 999;
   transition: opacity 0.2s ease;
 }
-
+h4 {
+  text-transform: none;
+}
 .search-filters {
   display: none;
   height: auto;
@@ -275,7 +289,7 @@ export default {
   margin-top: 0.4em;
 }
 
-.filter-down {
+.is-flex {
   background: white;
   position:sticky;
   align-self:flex-end;
