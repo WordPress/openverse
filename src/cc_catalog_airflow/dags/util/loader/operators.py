@@ -52,6 +52,20 @@ def get_loader_operator(
     )
 
 
+def get_s3_loader_operator(
+        dag,
+        output_dir,
+        aws_conn_id,
+        identifier=TIMESTAMP_TEMPLATE
+):
+    return PythonOperator(
+        task_id='load_data_to_s3',
+        python_callable=loader.load_data_to_s3,
+        op_args=[output_dir, identifier, aws_conn_id],
+        dag=dag
+    )
+
+
 def get_file_deletion_operator(
         dag,
         output_dir,

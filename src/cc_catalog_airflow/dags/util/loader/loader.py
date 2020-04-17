@@ -1,4 +1,4 @@
-from util.loader import paths, sql
+from util.loader import paths, s3, sql
 
 
 def load_data(output_dir, postgres_conn_id, identifier):
@@ -9,3 +9,8 @@ def load_data(output_dir, postgres_conn_id, identifier):
         identifier
     )
     sql.upsert_records_to_image_table(postgres_conn_id, identifier)
+
+
+def load_data_to_s3(output_dir, identifier, aws_conn_id):
+    tsv_file_name = paths.get_staged_file(output_dir, identifier)
+    s3.copy_file_to_s3_staging(identifier, tsv_file_name, aws_conn_id)
