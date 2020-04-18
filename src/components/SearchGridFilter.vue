@@ -246,9 +246,11 @@ export default {
   z-index: 999;
   transition: opacity 0.2s ease;
 }
+
 h4 {
   text-transform: none;
 }
+
 .search-filters {
   display: none;
   height: auto;
