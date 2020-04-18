@@ -216,7 +216,8 @@ export default {
   overflow-y: scroll;
   box-shadow: 0 2px 8px 3px;
   transition: all 0.2s ease-in;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
+  color: #000000;
 }
 
 .fadeIn-enter {
