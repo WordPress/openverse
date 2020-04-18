@@ -210,7 +210,7 @@ export default {
     flex-wrap: wrap;
     margin: 10px;
 
-    @include from(600px) {
+    @include tablet {
       &:after {
         content: '';
         flex-grow: 999999999;

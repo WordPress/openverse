@@ -29,6 +29,8 @@ export default HomePage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "node_modules/bulma/sass/utilities/_all";
+
 $gray: #808080;
 $highlight: #4ec6cd;
 $nav-text-color: $gray;
@@ -37,7 +39,7 @@ $vert-seperate: 4rem;
 .home-page_body {
 
   /* Small only */
-  @media screen and (max-width: 39.9375em) {
+  @include mobile {
     margin: 60px 0 30px;
   }
 }
@@ -82,7 +84,7 @@ $vert-seperate: 4rem;
   position:fixed;
 
   /* Small only */
-  @media screen and (max-width: 48rem) {
+  @include mobile {
     position: relative;
   }
 }

@@ -1,3 +1,5 @@
+@import "bulma/sass/utilities/_all.sass";
+
 .photo-detail-page {
   width: 100%;
 }
@@ -31,7 +33,7 @@
   }
 
   /* Small only */
-  @media screen and (max-width: 39.9375em) {
+  @include mobile {
     padding: 30px 15px;
   }
 }
@@ -39,7 +41,7 @@
 .photo_info-ctr {
 
   /* Small only */
-  @media screen and (max-width: 39.9375em) {
+  @include mobile {
     padding: 30px 0;
   }
 }
