@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 <template>
 <div>
   <div v-if="isMobile()">
