@@ -60,7 +60,7 @@
          padding-right-larger margin-top-small"
          v-if="isFilterApplied">
       <button class="button is-primary tiny"
-              @click.prevent="close()">
+              @click.prevent="apply()">
         Apply filters
       </button>
     </div>
@@ -190,6 +190,12 @@ export default {
         { isFilterVisible: !this.isFilterVisible },
       );
     },
+    apply() {
+      this.$store.commit(
+        SET_FILTER_IS_VISIBLE,
+        { isFilterVisible: !this.isFilterVisible },
+      );
+    },
     isMobile() {
       let check = false;
       // eslint-disable-next-line
@@ -216,7 +222,6 @@ export default {
   overflow-y: scroll;
   box-shadow: 0 2px 8px 3px;
   transition: all 0.2s ease-in;
-  font-family: 'Source Sans Pro', sans-serif;
   color: #000000;
 }
 
