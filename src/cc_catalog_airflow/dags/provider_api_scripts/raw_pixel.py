@@ -133,7 +133,7 @@ def _process_image_data(image):
         width=str(width) if width else None,
         height=str(height) if height else None,
         title=title if title else None,
-        raw_tags=json.dumps(tags, ensure_ascii=False) if bool(tags) else None,
+        raw_tags=tags,
         creator=owner,
         thumbnail_url=thumbnail,
     )
@@ -170,17 +170,17 @@ def _process_pages(total, result, page):
 def main():
     page = 1
 
-    logging.info("Begin: RawPixel API requests")
+    logger.info("Begin: RawPixel API requests")
 
     total, result = _get_image_list(page)
 
     img_ctr = _process_pages(total, result, page=page)
 
-    logging.info("Total images: {}".format(img_ctr))
+    logger.info("Total images: {}".format(img_ctr))
 
     image_store.commit()
 
-    logging.info("Terminated!")
+    logger.info("Terminated!")
 
 
 if __name__ == "__main__":
