@@ -88,11 +88,8 @@ def create_dag(
             output_dir
         )
         stage_oldest_tsv_file >> [create_loading_table, load_data_to_s3]
-        (
-            create_loading_table
-            >> load_data
-            >> [delete_staged_file, drop_loading_table]
-        )
+        [create_loading_table, load_data_to_s3] >> load_data
+        load_data >> [delete_staged_file, drop_loading_table]
         [
             stage_oldest_tsv_file,
             create_loading_table,
