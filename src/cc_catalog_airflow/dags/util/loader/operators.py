@@ -48,6 +48,7 @@ def get_loader_operator(
         task_id='load_data',
         python_callable=loader.load_data,
         op_args=[output_dir, postgres_conn_id, identifier],
+        trigger_rule=TriggerRule.ALL_DONE,
         dag=dag
     )
 
