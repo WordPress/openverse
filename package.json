@@ -17,7 +17,7 @@
     "lint": "eslint --ext .js,.vue . test/unit",
     "build": "npm run build:app && npm run build:server",
     "build:app": "cross-env NODE_ENV=production webpack",
-    "build:server": "webpack --config build/webpack.config.server.js",
+    "build:server": "webpack --config build/webpack.config.server.js"
   },
   "dependencies": {
     "@creativecommons/vocabulary": "1.0.0-beta.9",
