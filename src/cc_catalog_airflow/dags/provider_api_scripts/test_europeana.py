@@ -30,19 +30,34 @@ def test_derive_timestamp_pair():
     assert end_ts == '2018-01-16T00:00:00Z'
 
 
-def test_get_image_list_retries_with_empty_response():
+def test_get_image_list_retries_with_none_response():
+    with patch.object(
+            europeana.delayed_requester,
+            'get',
+            return_value=None
+    ) as mock_get:
+        europeana._get_image_list('1234', '5678', 'test_cursor', max_tries=3)
+
+    assert mock_get.call_count == 3
+
+
+def test_get_image_list_for_last_page():
     response_json = _get_resource_json('europeana_example.json')
     response_json['items'] = []
+    response_json.pop('nextCursor', None)
+
     r = requests.Response()
+    r.status_code = 200
     r.json = MagicMock(return_value=response_json)
+
     with patch.object(
             europeana.delayed_requester,
             'get',
             return_value=r
     ) as mock_get:
-        europeana._get_image_list('1234', '5678', 'test_cursor', max_tries=3)
+        europeana._get_image_list('1234', '5678', 'test_cursor')
 
-    assert mock_get.call_count == 3
+    mock_get.assert_called_once()
 
 
 def test_get_image_list_retries_with_non_ok_response():
@@ -97,7 +112,6 @@ def test_build_query_param_dict_default():
     )
     expect_query_param_dict = {
         'wskey': europeana_api_key,
-        'query': '*',
         'profile': 'rich',
         'reusability': reuse_terms,
         'sort': ['europeana_id+desc', 'timestamp_created+desc'],
@@ -172,7 +186,14 @@ def test_get_license_url_with_real_example():
 def test_get_license_url_with_non_cc_license():
     rights_field = ["http://noncc.org/"]
 
-    assert europeana._get_license_url(rights_field) == None
+    assert europeana._get_license_url(rights_field) is None
+
+
+def test_get_license_url_with_multiple_license():
+    rights_field = ["http://noncc.org/",
+                    "http://creativecommons.org/publicdomain/zero/1.0/"]
+    expect_license = "http://creativecommons.org/publicdomain/zero/1.0/"
+    assert europeana._get_license_url(rights_field) == expect_license
 
 
 def test_get_foreign_landing_url_with_edmIsShownAt():
@@ -184,7 +205,65 @@ def test_get_foreign_landing_url_with_edmIsShownAt():
 
 def test_get_foreign_landing_url_without_edmIsShownAt():
     image_data = _get_resource_json('image_data_example.json')
-    image_data.pop('edmIsShownAt',None)
+    image_data.pop('edmIsShownAt', None)
     expect_url = "https://www.europeana.eu/item/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1?utm_source=api&utm_medium=api&utm_campaign=test_key"
 
     assert europeana._get_foreign_landing_url(image_data) == expect_url
+
+
+def test_create_meta_data_dict():
+    image_data = _get_resource_json('image_data_example.json')
+
+    expect_meta_data = {
+        'country': ["Spain"],
+        'dataProvider': ["Biblioteca Digital de Castilla y León"],
+        'description': "Sello en seco: España artística y monumental."
+    }
+
+    assert europeana._create_meta_data_dict(image_data) == expect_meta_data
+
+
+def test_create_meta_data_dict_without_country():
+    image_data = _get_resource_json('image_data_example.json')
+    image_data.pop('country', None)
+
+    expect_meta_data = {
+        'dataProvider': ["Biblioteca Digital de Castilla y León"],
+        'description': "Sello en seco: España artística y monumental."
+    }
+
+    assert europeana._create_meta_data_dict(image_data) == expect_meta_data
+
+
+def test_get_description_with_langaware_en():
+    image_data = _get_resource_json('image_data_example.json')
+    image_data['dcDescriptionLangAware']['en'] = [
+        'First English Description', 'Second English Description']
+    expect_description = "First English Description"
+
+    assert europeana._get_description(image_data) == expect_description
+
+
+def test_get_description_with_langaware_def():
+    image_data = _get_resource_json('image_data_example.json')
+
+    expect_description = "Sello en seco: España artística y monumental."
+
+    assert europeana._get_description(image_data) == expect_description
+
+
+def test_get_description_without_langaware():
+    image_data = _get_resource_json('image_data_example.json')
+    image_data.pop('dcDescriptionLangAware', None)
+    expect_description = "Sello en seco: España artística y monumental."
+
+    assert europeana._get_description(image_data) == expect_description
+
+
+def test_get_description_without_description():
+    image_data = _get_resource_json('image_data_example.json')
+    image_data.pop('dcDescriptionLangAware', None)
+    image_data.pop('dcDescription', None)
+    expect_description = ""
+
+    assert europeana._get_description(image_data) == expect_description

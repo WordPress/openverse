@@ -34,7 +34,6 @@ ENDPOINT = 'https://www.europeana.eu/api/v2/search.json?'
 
 RESOURCE_TYPE = 'IMAGE'
 REUSE_TERMS = ['open', 'restricted']
-# DATE_TYPES = ['created', 'update']
 
 DEFAULT_QUERY_PARAMS = {
     'profile': 'rich',
@@ -114,7 +113,7 @@ def _get_image_list(
         image_list, next_cursor, total_number_of_images = _extract_image_list_from_json(
             response_json)
 
-        if (image_list is not None):
+        if image_list is not None:
             break
 
     if try_number == max_tries - 1 and (
@@ -174,6 +173,7 @@ def _process_image_data(image_data):
     foreign_landing_url = _get_foreign_landing_url(image_data)
     foreign_id = image_data.get('id')
     thumbnail_url = image_data.get('edmPreview')[0]
+    title = image_data.get('title')[0]
     meta_data = _create_meta_data_dict(image_data)
 
     return image_store.add_item(
@@ -182,12 +182,14 @@ def _process_image_data(image_data):
         license_url=license_url,
         thumbnail_url=thumbnail_url,
         foreign_identifier=foreign_id,
-        title=image_data.get('title')[0],
+        title=title,
         meta_data=meta_data,
     )
 
 
 def _get_license_url(license_field):
+    if len(license_field) > 1:
+        logger.warning('More than one license field found')
     for license in license_field:
         cc_license_search = re.search("creativecommons", license)
         if cc_license_search is not None:
@@ -217,8 +219,7 @@ def _create_meta_data_dict(
 
 def _get_description(image_data):
     if image_data.get('dcDescriptionLangAware') is not None and image_data.get('dcDescriptionLangAware').get('en') is not None:
-        description = max(image_data.get(
-            'dcDescriptionLangAware').get('en'), key=len)
+        description = image_data.get('dcDescriptionLangAware').get('en')[0]
     elif image_data.get('dcDescriptionLangAware') is not None and image_data.get('dcDescriptionLangAware').get('def') is not None:
         description = image_data.get('dcDescriptionLangAware').get('def')[0]
     elif image_data.get('dcDescription') is not None:
@@ -256,6 +257,7 @@ def _derive_timestamp_pair(date):
     utc_date = date_obj.replace(tzinfo=timezone.utc)
     start_timestamp = utc_date.isoformat()
     end_timestamp = (utc_date + timedelta(days=1)).isoformat()
+
     start_timestamp = start_timestamp.replace('+00:00', 'Z')
     end_timestamp = end_timestamp.replace('+00:00', 'Z')
 
