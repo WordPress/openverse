@@ -23,7 +23,6 @@ ENV PYTHONPATH=$PYTHONPATH:/ingestion_server/
 # Install the dependencies system-wide
 # TODO: Use build args to avoid installing dev dependencies in production
 RUN pipenv install --deploy --system --dev
-RUN chmod 777 /usr/local/lib/python3.7/site-packages/tld/res/effective_tld_names.dat.txt
 USER supervisord
 EXPOSE 8001
 CMD ["supervisord", "-c", "/ingestion_server/config/supervisord.conf"]
