@@ -1,4 +1,5 @@
 import logging
+import sys
 import time
 
 import boto3
@@ -22,7 +23,16 @@ S3 = boto3.resource(
 BUCKET_NAME = 'cccatalog-storage'
 
 
-def create_local_s3_bucket(tries=TRIES, s3=S3, bucket_name=BUCKET_NAME):
+def main():
+    success = _create_local_s3_bucket()
+    if not success:
+        logger.error(f'Could not create bucket in local S3')
+        sys.exit(1)
+    else:
+        sys.exit(0)
+
+
+def _create_local_s3_bucket(tries=TRIES, s3=S3, bucket_name=BUCKET_NAME):
     success = False
     for i in range(1, TRIES + 1):
         try:
@@ -44,4 +54,4 @@ def create_local_s3_bucket(tries=TRIES, s3=S3, bucket_name=BUCKET_NAME):
 
 
 if __name__ == '__main__':
-    create_local_s3_bucket()
+    main()
