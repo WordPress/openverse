@@ -37,8 +37,6 @@ REUSE_TERMS = ['open', 'restricted']
 # DATE_TYPES = ['created', 'update']
 
 DEFAULT_QUERY_PARAMS = {
-    'wskey': API_KEY,
-    'query': '*',
     'profile': 'rich',
     'reusability': REUSE_TERMS,
     'sort': ['europeana_id+desc', 'timestamp_created+desc'],
@@ -66,17 +64,16 @@ def main(date):
 def _get_pagewise(start_timestamp, end_timestamp):
     cursor = '*'
     total_number_of_images = 0
-    images_retrieved = 0
     images_stored = 0
 
-    while cursor != None:
+    while cursor is not None:
         image_list, next_cursor, total_number_of_images = _get_image_list(
             start_timestamp,
             end_timestamp,
             cursor
         )
 
-        if next_cursor == None:
+        if next_cursor is None:
             break
 
         cursor = next_cursor
@@ -159,7 +156,7 @@ def _process_image_list(image_list):
     prev_total = 0
     for image_data in image_list:
         total_images = _process_image_data(image_data)
-        if total_images == None:
+        if total_images is None:
             total_images = prev_total
         else:
             prev_total = total_images
@@ -169,8 +166,8 @@ def _process_image_list(image_list):
 
 def _process_image_data(image_data):
     logger.debug(f'Processing image data: {image_data}')
-    license_url = _get_license_url(image_data.get('rights')[0])
-    if license_url == None:
+    license_url = _get_license_url(image_data.get('rights'))
+    if license_url is None:
         return None
 
     image_url = image_data.get('edmIsShownBy')[0]
@@ -191,17 +188,18 @@ def _process_image_data(image_data):
 
 
 def _get_license_url(license_field):
-    cc_license_search = re.search("creativecommons", license_field)
-    if cc_license_search == None:
-        return None
-    return license_field
+    for license in license_field:
+        cc_license_search = re.search("creativecommons", license)
+        if cc_license_search is not None:
+            return license
+    return None
 
 
 def _get_foreign_landing_url(image_data):
     original_url = image_data.get('edmIsShownAt')
-    if original_url != None:
+    if original_url is not None:
         return original_url[0]
-    europeana_url = image_data.get('guid')[0]
+    europeana_url = image_data.get('guid')
     return europeana_url
 
 
@@ -211,13 +209,27 @@ def _create_meta_data_dict(
     meta_data = {
         'country': image_data.get('country'),
         'dataProvider': image_data.get('dataProvider'),
+        'description': _get_description(image_data)
     }
-    description = image_data.get('dcDescription')
-    logger.debug(f'description: {description}')
-    meta_data['description'] = description[0].strip(
-    ) if description != None else ''
 
     return {k: v for k, v in meta_data.items() if v is not None}
+
+
+def _get_description(image_data):
+    if image_data.get('dcDescriptionLangAware') is not None and image_data.get('dcDescriptionLangAware').get('en') is not None:
+        description = max(image_data.get(
+            'dcDescriptionLangAware').get('en'), key=len)
+    elif image_data.get('dcDescriptionLangAware') is not None and image_data.get('dcDescriptionLangAware').get('def') is not None:
+        description = image_data.get('dcDescriptionLangAware').get('def')[0]
+    elif image_data.get('dcDescription') is not None:
+        description = image_data.get('dcDescription')[0]
+    else:
+        description = None
+
+    description = description.strip(
+    ) if description is not None else ''
+
+    return description
 
 
 def _build_query_param_dict(
@@ -230,6 +242,7 @@ def _build_query_param_dict(
     query_param_dict = default_query_param.copy()
     query_param_dict.update(
         {
+            'wskey': api_key,
             'query': f'timestamp_created:[{start_timestamp} TO {end_timestamp}]',
             'cursor': cursor,
         }
