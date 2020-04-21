@@ -1,12 +1,10 @@
 'use strict';
-const path = require('path')
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 const helpers = require('./helpers');
 const commonConfig = require('./webpack.config.common');
@@ -61,12 +59,6 @@ const webpackConfig = merge(commonConfig, {
       filename: helpers.assetsPath('css/[name].[hash].css'),
       chunkFilename: helpers.assetsPath('css/[id].[hash].css')
     }),
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, '../static/opensearch.xml'),
-        to: helpers.assetsPath('/')
-      }
-    ]),
     new webpack.HashedModuleIdsPlugin(),
     new VueSSRClientPlugin()
   ]

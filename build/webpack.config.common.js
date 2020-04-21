@@ -1,8 +1,9 @@
 'use strict';
-
+const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HtmlPlugin = require('html-webpack-plugin');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const helpers = require('./helpers');
 const isDev = process.env.NODE_ENV !== 'production';
@@ -92,7 +93,19 @@ const webpackConfig = {
     new Dotenv({
       path: './config/.env',
       systemvars: true, // load from system env vars instead of .env file
-    })
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../static/opensearch.xml'),
+        to: helpers.assetsPath('/')
+      }
+    ]),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../node_modules/@creativecommons/vocabulary/assets/logos/'),
+        to: helpers.assetsPath('/logos')
+      }
+    ]),
   ]
 };
 
