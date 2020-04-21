@@ -10,16 +10,14 @@
     "dev": "cross-env NODE_ENV=development webpack-dev-server --progress",
     "dev-secure": "webpack-dev-server --https --inline --progress --config build/webpack-dev-conf.js",
     "start": "npm run dev",
-    "unit": "jest --config test/unit/jest-conf.js --coverage",
+    "unit": "jest --config test/unit/jest-conf.js --runInBand",
     "qa-install": "brew install geckodriver && brew install pipenv && cd test/selenium-webdriver && pipenv install",
     "qa": "cd test/selenium-webdriver && pipenv run python search_screencaps.py",
-    "test": "npm run unit",
+    "test": "jest --config test/unit/jest-conf.js",
     "lint": "eslint --ext .js,.vue . test/unit",
     "build": "npm run build:app && npm run build:server",
     "build:app": "cross-env NODE_ENV=production webpack",
     "build:server": "webpack --config build/webpack.config.server.js",
-    "build-old": "node build/build.js && npm run build-server",
-    "build-server-old": "webpack -p --config build/webpack-server-conf.js --progress"
   },
   "dependencies": {
     "@creativecommons/vocabulary": "1.0.0-beta.9",
