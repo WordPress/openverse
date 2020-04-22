@@ -39,6 +39,8 @@ class SyncableDocType(DocType):
         )
 
 
+
+
 class Image(SyncableDocType):
     """
     Represents an image in Elasticsearch. Note that actual mappings are defined
@@ -74,6 +76,7 @@ class Image(SyncableDocType):
         extension = Image.get_extension(row[schema['url']])
         height = row[schema['height']]
         width = row[schema['width']]
+        mature = row[schema['mature']]
         return Image(
             _id=row[schema['id']],
             id=row[schema['id']],
