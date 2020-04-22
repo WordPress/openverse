@@ -18,18 +18,22 @@ const webpackConfig = merge(commonConfig, {
     filename: helpers.assetsPath('/js/[name].[hash].js'),
     chunkFilename: helpers.assetsPath('js/[id].[hash].js')
   },
+  devtool: 'source-map',
   optimization: {
     runtimeChunk: 'single',
     minimizer: [
       new OptimizeCSSAssetsPlugin({
         cssProcessorPluginOptions: {
           preset: ['default', { discardComments: { removeAll: true } }],
+        },
+        cssProcessorOptions: {
+          map: { inline: false }
         }
       }),
       new UglifyJSPlugin({
         cache: true,
         parallel: true,
-        sourceMap: !isProd
+        sourceMap: true,
       })
     ],
     splitChunks: {
@@ -63,7 +67,8 @@ const webpackConfig = merge(commonConfig, {
     new CleanWebpackPlugin(),
     new MiniCSSExtractPlugin({
       filename: helpers.assetsPath('css/[name].[hash].css'),
-      chunkFilename: helpers.assetsPath('css/[id].[hash].css')
+      chunkFilename: helpers.assetsPath('css/[id].[hash].css'),
+      sourceMap: true,
     }),
     new webpack.HashedModuleIdsPlugin(),
     new VueSSRClientPlugin()
