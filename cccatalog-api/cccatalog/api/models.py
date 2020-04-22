@@ -145,14 +145,10 @@ class Image(OpenLedgerModel):
 
 
 class DeletedImages(OpenLedgerModel):
-    deleted_id = models.UUIDField(
+    identifier = models.UUIDField(
         unique=True,
-        db_index=True,
+        primary_key=True,
         help_text="The identifier of the deleted image."
-    )
-    deleting_user = models.CharField(
-        max_length=50,
-        help_text="The user that deleted the image."
     )
 
 
@@ -289,8 +285,7 @@ class MatureImages(models.Model):
     """ Stores all images that have been flagged as 'mature'. """
     identifier = models.UUIDField(
         unique=True,
-        db_index=True,
-        help_text="Our unique identifier for a CC work."
+        primary_key=True
     )
     created_on = models.DateTimeField(auto_now_add=True)
 

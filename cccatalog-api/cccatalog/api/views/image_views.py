@@ -176,8 +176,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             es = search_controller.es
             es.delete(index='image', id=image.id)
             delete_log = DeletedImages(
-                deleted_id=image.identifier,
-                deleting_user=request.user
+                identifier=image.identifier
             )
             image.delete()
             delete_log.save()

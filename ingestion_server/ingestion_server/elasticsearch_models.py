@@ -102,7 +102,9 @@ class Image(SyncableDocType):
             aspect_ratio=Image.get_aspect_ratio(height, width),
             size=Image.get_size(height, width),
             license_url=Image.get_license_url(row[schema['meta_data']]),
-            mature=Image.get_maturity(row[schema['meta_data']])
+            mature=Image.get_maturity(
+                row[schema['meta_data']], row[schema['mature']]
+            )
         )
 
     @staticmethod
@@ -159,11 +161,25 @@ class Image(SyncableDocType):
             return None
 
     @staticmethod
-    def get_maturity(meta_data):
+    def get_maturity(meta_data, api_maturity_flag):
+        """
+        Determine whether a work has been labeled for mature audiences only.
+        :param meta_data: The metadata column, which may have a 'mature'
+        flag.
+        :param api_maturity_flag: An API layer flag that indicates we have
+        manually labeled a work as mature ourselves. If it is True,
+        we will ignore the meta_data column and mark the work 'mature'.
+        :return:
+        """
+        # aka NSFW
+        # Maturity can be discovered in the catalog layer from an upstream
+        # source or can be labeled manually by us in the API layer.
+        _mature = False
         if meta_data and 'mature' in meta_data:
-            return meta_data['mature']
-        else:
-            return False
+            _mature = meta_data['mature']
+        if api_maturity_flag:
+            _mature = True
+        return _mature
 
     @staticmethod
     def parse_detailed_tags(json_tags):
