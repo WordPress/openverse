@@ -407,6 +407,8 @@ def related_images(uuid, index, request, filter_dead):
         min_term_freq=1,
         max_query_terms=50
     )
+    # Never show mature content in recommendations.
+    s = s.exclude('term', mature=True)
     page_size = 10
     page = 1
     start, end = _get_query_slice(s, page_size, page, filter_dead)
