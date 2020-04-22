@@ -38,7 +38,7 @@ def _create_local_s3_bucket(tries=TRIES, s3=S3, bucket_name=BUCKET_NAME):
         try:
             logger.info(
                 f'Attempting to create bucket {bucket_name}'
-                f' using local s3 connection'
+                ' using local s3 connection'
             )
             s3.create_bucket(Bucket=bucket_name)
             success = True
