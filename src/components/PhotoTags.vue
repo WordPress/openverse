@@ -3,7 +3,7 @@
     <h3>Tags</h3>
     <div class="margin-top-normal">
       <template v-for="(tag, index) in getValidTags()">
-        <button class="button tag margin-vertical-normal"
+        <button class="button tag margin-smaller"
               :key="index"
               @click="searchByTagName(tag.name)">
           {{ tag.name }}
