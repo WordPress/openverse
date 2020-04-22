@@ -15,8 +15,8 @@ const webpackConfig = merge(commonConfig, {
   output: {
     path: helpers.root('dist'),
     publicPath: '/',
-    filename: helpers.assetsPath('/js/[name].[hash].js'),
-    chunkFilename: helpers.assetsPath('js/[id].[hash].js')
+    filename: helpers.assetsPath('/js/[name].[contenthash].js'),
+    chunkFilename: helpers.assetsPath('js/[id].[contenthash].js')
   },
   devtool: 'source-map',
   optimization: {
@@ -66,8 +66,8 @@ const webpackConfig = merge(commonConfig, {
   plugins: [
     new CleanWebpackPlugin(),
     new MiniCSSExtractPlugin({
-      filename: helpers.assetsPath('css/[name].[hash].css'),
-      chunkFilename: helpers.assetsPath('css/[id].[hash].css'),
+      filename: helpers.assetsPath('css/[name].[contenthash].css'),
+      chunkFilename: helpers.assetsPath('css/[id].[contenthash].css'),
       sourceMap: true,
     }),
     new webpack.HashedModuleIdsPlugin(),
