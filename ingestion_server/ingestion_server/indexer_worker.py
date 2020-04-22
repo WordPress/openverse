@@ -46,16 +46,14 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
     elasticsearch = elasticsearch_connect()
     progress = Value('d', 0.0)
     finish_time = Value('d', 0.0)
-    query = SQL(
-                f'''
+    query = SQL(f'''
                 SELECT *,
                 exists(
                   SELECT 1 FROM api_matureimages
                     WHERE identifier = image.identifier
                 ) AS "mature" FROM image
                 WHERE id BETWEEN {start_id} AND {end_id}
-                '''
-            )
+                ''')
     log.info('Querying {}'.format(query))
     indexer = TableIndexer(
         elasticsearch, table, progress, finish_time
