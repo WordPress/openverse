@@ -283,3 +283,13 @@ class OAuth2Verification(models.Model):
     )
     email = models.EmailField()
     code = models.CharField(max_length=256, db_index=True)
+
+
+class MatureImages(models.Model):
+    """ Stores all images that have been flagged as 'mature'. """
+    identifier = models.UUIDField(
+        unique=True,
+        db_index=True,
+        help_text="Our unique identifier for a CC work."
+    )
+    created_on = models.DateTimeField(auto_now_add=True)

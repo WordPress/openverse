@@ -183,6 +183,9 @@ def create_mapping(table_name):
                     },
                     "comments": {
                         "type": "rank_feature"
+                    },
+                    "mature": {
+                        "type": "boolean"
                     }
                 }
             }

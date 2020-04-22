@@ -101,7 +101,8 @@ class Image(SyncableDocType):
             categories=get_categories(extension, provider),
             aspect_ratio=Image.get_aspect_ratio(height, width),
             size=Image.get_size(height, width),
-            license_url=Image.get_license_url(row[schema['meta_data']])
+            license_url=Image.get_license_url(row[schema['meta_data']]),
+            mature=Image.get_maturity(row[schema['meta_data']])
         )
 
     @staticmethod
@@ -156,6 +157,13 @@ class Image(SyncableDocType):
             return meta_data['license_url']
         else:
             return None
+
+    @staticmethod
+    def get_maturity(meta_data):
+        if meta_data and 'mature' in meta_data:
+            return meta_data['mature']
+        else:
+            return False
 
     @staticmethod
     def parse_detailed_tags(json_tags):
