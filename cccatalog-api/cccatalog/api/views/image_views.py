@@ -1,4 +1,4 @@
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,13 +6,14 @@ from rest_framework import serializers, status
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
-from cccatalog.api.models import Image, ContentProvider, DeletedImages
+from cccatalog.api.models import Image, ContentProvider, DeletedImages, \
+    ReportImage
 from cccatalog.api.utils import ccrel
 from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.image_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     InputErrorSerializer, ImageSearchQueryStringSerializer,\
-    WatermarkQueryStringSerializer
+    WatermarkQueryStringSerializer, ReportImageSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL
 from cccatalog.api.utils.view_count import _get_user_ip
 from cccatalog.api.utils.watermark import watermark
@@ -294,3 +295,8 @@ class OembedView(APIView):
         }
 
         return Response(data=resp, status=status.HTTP_200_OK)
+
+
+class ReportImageView(CreateAPIView):
+    queryset = ReportImage.objects.all()
+    serializer_class = ReportImageSerializer

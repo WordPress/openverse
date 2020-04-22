@@ -283,3 +283,17 @@ class OAuth2Verification(models.Model):
     )
     email = models.EmailField()
     code = models.CharField(max_length=256, db_index=True)
+
+
+class ReportImage(models.Model):
+    REPORT_CHOICES = [
+        ('adult', 'adult'),
+        ('dmca', 'dmca'),
+        ('other', 'other')
+    ]
+    identifier = models.UUIDField()
+    reason = models.CharField(max_length=10, choices=REPORT_CHOICES)
+    description = models.TextField(max_length=500, blank=True, null=True)
+
+    class Meta:
+        db_table = 'nsfw_reports'
