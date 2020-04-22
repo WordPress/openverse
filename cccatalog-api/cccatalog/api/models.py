@@ -302,4 +302,3 @@ class ReportImage(models.Model):
 
     class Meta:
         db_table = 'nsfw_reports'
-
