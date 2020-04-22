@@ -94,13 +94,13 @@ class TestImage:
             'mature': True
         }
         mature_metadata = create_mock_image({'meta_data': meta})
-        assert mature_metadata['mature'] == True
+        assert mature_metadata['mature']
 
     @staticmethod
     def test_mature_api():
         # Manually flagged work as mature ourselves
         mature_work = create_mock_image({'mature': True})
-        assert mature_work['mature'] == True
+        assert mature_work['mature']
 
 
 class TestCleanup:
