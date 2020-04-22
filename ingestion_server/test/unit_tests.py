@@ -47,8 +47,9 @@ def create_mock_image(override=None):
         'mature': False,
         'meta_data': meta_data
     }
-    for k, v in override.items():
-        test_data[k] = v
+    if override:
+        for k, v in override.items():
+            test_data[k] = v
     schema = {}
     row = []
     idx = 0
@@ -101,6 +102,12 @@ class TestImage:
         # Manually flagged work as mature ourselves
         mature_work = create_mock_image({'mature': True})
         assert mature_work['mature']
+
+    @staticmethod
+    def test_default_maturity():
+        # Default to not flagged
+        sfw = create_mock_image()
+        assert not sfw['mature']
 
 
 class TestCleanup:
