@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='deletedimages',
             name='identifier',
-            field=models.UUIDField(default='f', help_text='The identifier of the deleted image.', primary_key=True, serialize=False, unique=True),
+            field=models.UUIDField(help_text='The identifier of the deleted image.', primary_key=True, serialize=False, unique=True),
             preserve_default=False,
         ),
     ]

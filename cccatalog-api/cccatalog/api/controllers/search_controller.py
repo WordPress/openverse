@@ -230,6 +230,9 @@ def search(search_params, index, page_size, ip, request,
         '',
         term={'field': 'creator'}
     )
+    # Exclude mature content unless explicitly enabled by the requester
+    if not search_params.data['mature']:
+        s = s.exclude('term', mature=True)
     # Hide data sources from the catalog dynamically.
     filter_cache_key = 'filtered_providers'
     filtered_providers = cache.get(key=filter_cache_key)

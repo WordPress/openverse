@@ -150,6 +150,12 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         help_text="A comma separated list of image sizes; available sizes"
                   "include `small`, `medium`, or `large`.",
         required=False
+    ),
+    mature = serializers.BooleanField(
+        label='mature',
+        default=False,
+        required=False,
+        help_text="Whether to include content for mature audiences."
     )
     qa = serializers.BooleanField(
         label='quality_assurance',
