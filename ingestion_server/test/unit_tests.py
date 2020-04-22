@@ -87,6 +87,21 @@ class TestImage:
         })
         assert jpg.extension == 'jpg'
 
+    @staticmethod
+    def test_mature_metadata():
+        # Received upstream indication the work is mature
+        meta = {
+            'mature': True
+        }
+        mature_metadata = create_mock_image({'meta_data': meta})
+        assert mature_metadata['mature'] == True
+
+    @staticmethod
+    def test_mature_api():
+        # Manually flagged work as mature ourselves
+        mature_work = create_mock_image({'mature': True})
+        assert mature_work['mature'] == True
+
 
 class TestCleanup:
     @staticmethod
