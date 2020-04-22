@@ -39,8 +39,6 @@ class SyncableDocType(DocType):
         )
 
 
-
-
 class Image(SyncableDocType):
     """
     Represents an image in Elasticsearch. Note that actual mappings are defined
