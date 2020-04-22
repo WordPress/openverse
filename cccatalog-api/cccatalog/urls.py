@@ -18,7 +18,7 @@ from django.urls import path, re_path
 from django.conf.urls import include
 from django.views.generic.base import RedirectView
 from cccatalog.api.views.image_views import SearchImages, ImageDetail,\
-    Watermark, RelatedImage, OembedView
+    Watermark, RelatedImage, OembedView, ReportImageView
 from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
     CheckRates, VerifyEmail
 from cccatalog.api.views.link_views import CreateShortenedLink, \
@@ -91,6 +91,11 @@ versioned_paths = [
     ),
     path(
         'images/<str:identifier>', ImageDetail.as_view(), name='image-detail'
+    ),
+    path(
+        'images/<str:identifier>/report',
+        ReportImageView.as_view(),
+        name='report-image'
     ),
     path(
         'recommendations/images/<str:identifier>',

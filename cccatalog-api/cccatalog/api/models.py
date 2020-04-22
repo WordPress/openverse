@@ -293,3 +293,18 @@ class MatureImages(models.Model):
         help_text="Our unique identifier for a CC work."
     )
     created_on = models.DateTimeField(auto_now_add=True)
+
+
+class ReportImage(models.Model):
+    REPORT_CHOICES = [
+        ('adult', 'adult'),
+        ('dmca', 'dmca'),
+        ('other', 'other')
+    ]
+    identifier = models.UUIDField()
+    reason = models.CharField(max_length=10, choices=REPORT_CHOICES)
+    description = models.TextField(max_length=500, blank=True, null=True)
+
+    class Meta:
+        db_table = 'nsfw_reports'
+
