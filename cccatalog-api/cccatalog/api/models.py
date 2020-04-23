@@ -1,12 +1,11 @@
 from uuslug import uuslug
 from django.db import models
-from django.urls import reverse
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.contrib.postgres.fields import JSONField, ArrayField
 from cccatalog.api.licenses import ATTRIBUTION, get_license_url
 from oauth2_provider.models import AbstractApplication
 import cccatalog.api.controllers.search_controller as search_controller
-import cccatalog.settings as settings
 
 
 class OpenLedgerModel(models.Model):
@@ -329,7 +328,8 @@ class ImageReport(models.Model):
 
     @property
     def image_url(self):
-        return f'https://search.creativecommons.org/photos/{self.identifier}'
+        url = f'https://search.creativecommons.org/photos/{self.identifier}'
+        return format_html(f'<a href={url}>{url}</a>')
 
     def save(self, *args, **kwargs):
         update_required = {'mature_filtered', 'deindexed'}
