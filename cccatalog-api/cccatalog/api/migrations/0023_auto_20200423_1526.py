@@ -48,6 +48,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='imagereport',
             name='reason',
-            field=models.CharField(choices=[('adult', 'adult'), ('dmca', 'dmca'), ('other', 'other')], max_length=20),
+            field=models.CharField(choices=[('mature', 'mature'), ('dmca', 'dmca'), ('other', 'other')], max_length=20),
         ),
     ]
