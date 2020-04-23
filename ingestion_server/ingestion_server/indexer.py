@@ -422,8 +422,7 @@ class TableIndexer:
         documents = []
         for row in pg_chunk:
             if not (
-                    row[schema['removed_from_source']]
-                    or row[schema['deleted']]
+                row[schema['removed_from_source']] or row[schema['deleted']]
             ):
                 converted = model.database_row_to_elasticsearch_doc(row, schema)
                 converted = converted.to_dict(include_meta=True)
