@@ -4,8 +4,7 @@ from django.utils.safestring import mark_safe
 from django.contrib.postgres.fields import JSONField, ArrayField
 from cccatalog.api.licenses import ATTRIBUTION, get_license_url
 from oauth2_provider.models import AbstractApplication
-from django.contrib import admin
-
+import cccatalog.api.controllers.search_controller as search_controller
 class OpenLedgerModel(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -144,7 +143,7 @@ class Image(OpenLedgerModel):
         ordering = ['-created_on']
 
 
-class DeletedImages(OpenLedgerModel):
+class DeletedImage(OpenLedgerModel):
     identifier = models.UUIDField(
         unique=True,
         primary_key=True,
@@ -281,7 +280,7 @@ class OAuth2Verification(models.Model):
     code = models.CharField(max_length=256, db_index=True)
 
 
-class MatureImages(models.Model):
+class MatureImage(models.Model):
     """ Stores all images that have been flagged as 'mature'. """
     identifier = models.UUIDField(
         unique=True,
@@ -298,9 +297,10 @@ class ImageReport(models.Model):
     ]
 
     STATUS_CHOICES = [
-        ('pending', 'pending'),
-        ('confirmed', 'confirmed'),
-        ('rejected', 'rejected')
+        ('pending_review', 'pending_review'),
+        ('mature_filter', 'mature_filter'),
+        ('deindex', 'deindex'),
+        ('do_nothing', 'do_nothing')
     ]
     identifier = models.UUIDField()
     reason = models.CharField(max_length=20, choices=REPORT_CHOICES)
@@ -311,3 +311,23 @@ class ImageReport(models.Model):
 
     class Meta:
         db_table = 'nsfw_reports'
+
+    def save(self, *args, **kwargs):
+        update_required = {'mature_filter', 'deindex'}
+        if self.status in update_required:
+            es = search_controller.es
+            img = Image.objects.get(identifier=self.identifier)
+            es_id = img.id
+            if self.status == 'mature_filter':
+                MatureImage(identifier=self.identifier).save()
+                es.update(
+                    index='image',
+                    id=es_id,
+                    body={'doc': {'mature': True}}
+                )
+            elif self.status == 'deindex':
+                img.delete()
+                DeletedImage(identifier=self.identifier).save()
+                es.delete(index='image', id=es_id)
+            es.indices.refresh(index='image')
+        super(ImageReport, self).save(*args, **kwargs)

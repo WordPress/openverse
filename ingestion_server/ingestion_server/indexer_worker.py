@@ -49,7 +49,7 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
     query = SQL(f'''
                 SELECT *,
                 exists(
-                  SELECT 1 FROM api_matureimages
+                  SELECT 1 FROM api_matureimage
                     WHERE identifier = image.identifier
                 ) AS "mature" FROM image
                 WHERE id BETWEEN {start_id} AND {end_id}

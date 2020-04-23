@@ -6,7 +6,7 @@ from rest_framework import serializers, status
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
-from cccatalog.api.models import Image, ContentProvider, DeletedImages, \
+from cccatalog.api.models import Image, ContentProvider, DeletedImage, \
     ImageReport
 from cccatalog.api.utils import ccrel
 from cccatalog.api.utils.view_count import track_model_views
@@ -175,7 +175,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             image = Image.objects.get(identifier=identifier)
             es = search_controller.es
             es.delete(index='image', id=image.id)
-            delete_log = DeletedImages(
+            delete_log = DeletedImage(
                 identifier=image.identifier
             )
             image.delete()

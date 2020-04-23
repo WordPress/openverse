@@ -6,7 +6,7 @@ from elasticsearch_dsl.response import Response, Hit
 from elasticsearch_dsl.query import Query
 from cccatalog import settings
 from django.core.cache import cache
-from cccatalog.api.models import ContentProvider
+import cccatalog.api.models as models
 from rest_framework import serializers
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS
 from cccatalog.api.utils.validate_images import validate_images
@@ -237,7 +237,7 @@ def search(search_params, index, page_size, ip, request,
     filter_cache_key = 'filtered_providers'
     filtered_providers = cache.get(key=filter_cache_key)
     if not filtered_providers:
-        filtered_providers = ContentProvider.objects\
+        filtered_providers = models.ContentProvider.objects\
             .filter(filter_content=True)\
             .values('provider_identifier')
         cache.set(
