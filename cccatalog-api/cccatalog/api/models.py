@@ -1,10 +1,12 @@
 from uuslug import uuslug
 from django.db import models
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.contrib.postgres.fields import JSONField, ArrayField
 from cccatalog.api.licenses import ATTRIBUTION, get_license_url
 from oauth2_provider.models import AbstractApplication
 import cccatalog.api.controllers.search_controller as search_controller
+import cccatalog.settings as settings
 
 
 class OpenLedgerModel(models.Model):
@@ -288,7 +290,7 @@ class MatureImage(models.Model):
         unique=True,
         primary_key=True
     )
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(auto_now=True)
 
 
 class ImageReport(models.Model):
@@ -300,9 +302,9 @@ class ImageReport(models.Model):
 
     STATUS_CHOICES = [
         ('pending_review', 'pending_review'),
-        ('mature_filter', 'mature_filter'),
-        ('deindex', 'deindex'),
-        ('do_nothing', 'do_nothing')
+        ('mature_filtered', 'mature_filtered'),
+        ('deindexed', 'deindexed'),
+        ('no_action', 'no_action')
     ]
     identifier = models.UUIDField()
     reason = models.CharField(max_length=20, choices=REPORT_CHOICES)
@@ -313,6 +315,10 @@ class ImageReport(models.Model):
 
     class Meta:
         db_table = 'nsfw_reports'
+
+    @property
+    def image_url(self):
+        return f'https://search.creativecommons.org/photos/{self.identifier}'
 
     def save(self, *args, **kwargs):
         update_required = {'mature_filter', 'deindex'}
@@ -328,8 +334,12 @@ class ImageReport(models.Model):
                     body={'doc': {'mature': True}}
                 )
             elif self.status == 'deindex':
+                # Delete from the API database (we'll still have a copy of the
+                # metadata upstream in the catalog)
                 img.delete()
+                # Add to the deleted images table so we don't reindex it later
                 DeletedImage(identifier=self.identifier).save()
+                # Remove from search results
                 es.delete(index='image', id=es_id)
             es.indices.refresh(index='image')
         super(ImageReport, self).save(*args, **kwargs)

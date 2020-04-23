@@ -371,7 +371,10 @@ def _query_suggestions(response: Response):
     """
     Get suggestions on a misspelt query
     """
-    obj_suggestion = response.to_dict()['suggest']
+    res = response.to_dict()
+    if 'suggest' not in res:
+        return None
+    obj_suggestion = res['suggest']
     if not obj_suggestion['get_suggestion']:
         suggestion = None
     else:

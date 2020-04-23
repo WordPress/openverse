@@ -46,12 +46,18 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
     elasticsearch = elasticsearch_connect()
     progress = Value('d', 0.0)
     finish_time = Value('d', 0.0)
+    exists_in_table = \
+        'exists(SELECT 1 FROM {table} ' \
+        'WHERE identifier = image.identifier) as "{name}"'
+    exists_in_deleted_table = exists_in_table.format(
+        table='api_deletedimage', name='deleted'
+    )
+    exists_in_mature_table = exists_in_table.format(
+        table='api_matureimage', name='mature'
+    )
     query = SQL(f'''
-                SELECT *,
-                exists(
-                  SELECT 1 FROM api_matureimage
-                    WHERE identifier = image.identifier
-                ) AS "mature" FROM image
+                SELECT *, {exists_in_deleted_table}, {exists_in_mature_table}
+                FROM image
                 WHERE id BETWEEN {start_id} AND {end_id}
                 ''')
     log.info('Querying {}'.format(query))

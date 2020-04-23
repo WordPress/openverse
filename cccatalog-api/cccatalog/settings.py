@@ -26,6 +26,12 @@ SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY', 'ny#b__$f6ry4wy8oxre97&-68u_0lk3gw(z=d40_dxey3zw0v1'
 )
 
+try:
+    HOSTNAME = gethostname()
+except:
+    HOSTNAME = 'localhost'
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 true_strings = ['true', 'True', 't']
 DEBUG = os.environ.get('DJANGO_DEBUG_ENABLED', default=False) in true_strings
