@@ -7,7 +7,7 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider, DeletedImages, \
-    ReportImage
+    ImageReport
 from cccatalog.api.utils import ccrel
 from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.image_serializers import\
@@ -297,5 +297,5 @@ class OembedView(APIView):
 
 
 class ReportImageView(CreateAPIView):
-    queryset = ReportImage.objects.all()
+    queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer

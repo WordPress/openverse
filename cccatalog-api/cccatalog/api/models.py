@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 from django.contrib.postgres.fields import JSONField, ArrayField
 from cccatalog.api.licenses import ATTRIBUTION, get_license_url
 from oauth2_provider.models import AbstractApplication
-
+from django.contrib import admin
 
 class OpenLedgerModel(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
@@ -290,7 +290,7 @@ class MatureImages(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
 
-class ReportImage(models.Model):
+class ImageReport(models.Model):
     REPORT_CHOICES = [
         ('adult', 'adult'),
         ('dmca', 'dmca'),

@@ -1,3 +1,6 @@
 from django.contrib import admin
+from cccatalog.api.models import ImageReport
 
-# Register your models here.
+@admin.register(ImageReport)
+class AuthorAdmin(admin.ModelAdmin):
+    pass

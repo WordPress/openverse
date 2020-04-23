@@ -74,7 +74,6 @@ class Image(SyncableDocType):
         extension = Image.get_extension(row[schema['url']])
         height = row[schema['height']]
         width = row[schema['width']]
-        mature = row[schema['mature']]
         return Image(
             _id=row[schema['id']],
             id=row[schema['id']],
@@ -172,9 +171,6 @@ class Image(SyncableDocType):
         we will ignore the meta_data column and mark the work 'mature'.
         :return:
         """
-        # aka NSFW
-        # Maturity can be discovered in the catalog layer from an upstream
-        # source or can be labeled manually by us in the API layer.
         _mature = False
         if meta_data and 'mature' in meta_data:
             _mature = meta_data['mature']
