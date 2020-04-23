@@ -292,6 +292,17 @@ class MatureImage(models.Model):
     )
     created_on = models.DateTimeField(auto_now=True)
 
+    def delete(self, *args, **kwargs):
+        es = search_controller.es
+        img = Image.objects.get(identifier=self.identifier)
+        es_id = img.id
+        es.update(
+            index='image',
+            id=es_id,
+            body={'doc': {'mature': False}}
+        )
+        super(MatureImage, self).delete(*args, **kwargs)
+
 
 class ImageReport(models.Model):
     REPORT_CHOICES = [
@@ -321,19 +332,19 @@ class ImageReport(models.Model):
         return f'https://search.creativecommons.org/photos/{self.identifier}'
 
     def save(self, *args, **kwargs):
-        update_required = {'mature_filter', 'deindex'}
+        update_required = {'mature_filtered', 'deindex'}
         if self.status in update_required:
             es = search_controller.es
             img = Image.objects.get(identifier=self.identifier)
             es_id = img.id
-            if self.status == 'mature_filter':
+            if self.status == 'mature_filtered':
                 MatureImage(identifier=self.identifier).save()
                 es.update(
                     index='image',
                     id=es_id,
                     body={'doc': {'mature': True}}
                 )
-            elif self.status == 'deindex':
+            elif self.status == 'deindexed':
                 # Delete from the API database (we'll still have a copy of the
                 # metadata upstream in the catalog)
                 img.delete()
