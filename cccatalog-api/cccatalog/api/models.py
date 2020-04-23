@@ -332,7 +332,7 @@ class ImageReport(models.Model):
         return f'https://search.creativecommons.org/photos/{self.identifier}'
 
     def save(self, *args, **kwargs):
-        update_required = {'mature_filtered', 'deindex'}
+        update_required = {'mature_filtered', 'deindexed'}
         if self.status in update_required:
             es = search_controller.es
             img = Image.objects.get(identifier=self.identifier)
