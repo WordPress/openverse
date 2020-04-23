@@ -296,9 +296,18 @@ class ImageReport(models.Model):
         ('dmca', 'dmca'),
         ('other', 'other')
     ]
+
+    STATUS_CHOICES = [
+        ('pending', 'pending'),
+        ('confirmed', 'confirmed'),
+        ('rejected', 'rejected')
+    ]
     identifier = models.UUIDField()
-    reason = models.CharField(max_length=10, choices=REPORT_CHOICES)
+    reason = models.CharField(max_length=20, choices=REPORT_CHOICES)
     description = models.TextField(max_length=500, blank=True, null=True)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='pending'
+    )
 
     class Meta:
         db_table = 'nsfw_reports'

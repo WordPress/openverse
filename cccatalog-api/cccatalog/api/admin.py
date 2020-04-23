@@ -3,4 +3,4 @@ from cccatalog.api.models import ImageReport
 
 @admin.register(ImageReport)
 class AuthorAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('reason', 'identifier', 'description')
