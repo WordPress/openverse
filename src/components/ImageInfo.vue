@@ -41,11 +41,24 @@
         {{ imageWidth }} &times;  {{ imageHeight }} pixels
       </span>
     </div>
+
+    <div class="margin-bottom-big">
+      <button class="button is-text tiny is-paddingless report is-shadowless"
+              @click="toggleReportFormVisibility()">
+        <i class="icon flag"></i>
+        <span class="margin-left-normal">Report this content</span>
+      </button>
+    </div>
+    <div class="margin-bottom-big">
+      <content-report-form v-if="isReportFormVisible" :imageId="image.id" />
+    </div>
   </section>
 </template>
 
 <script>
+import { TOGGLE_REPORT_FORM_VISIBILITY } from '@/store/mutation-types';
 import LicenseIcons from '@/components/LicenseIcons';
+import ContentReportForm from '@/components/ContentReportForm';
 import getProviderLogo from '@/utils/getProviderLogo';
 
 export default {
@@ -53,11 +66,35 @@ export default {
   props: ['image', 'ccLicenseURL', 'fullLicenseName', 'imageWidth', 'imageHeight'],
   components: {
     LicenseIcons,
+    ContentReportForm,
+  },
+  computed: {
+    isReportFormVisible() {
+      return this.$store.state.isReportFormVisible;
+    },
   },
   methods: {
     getProviderLogo(providerName) {
       return getProviderLogo(providerName);
     },
+    toggleReportFormVisibility() {
+      this.$store.commit(TOGGLE_REPORT_FORM_VISIBILITY);
+    },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.report {
+  font-size: 0.8rem !important;
+  text-transform: none !important;
+
+  &:hover {
+    background: none !important;
+  }
+
+  &:focus {
+    background: none !important;
+  }
+}
+</style>
