@@ -295,7 +295,7 @@ class MatureImage(models.Model):
 
 class ImageReport(models.Model):
     REPORT_CHOICES = [
-        ('adult', 'adult'),
+        ('mature', 'mature'),
         ('dmca', 'dmca'),
         ('other', 'other')
     ]
