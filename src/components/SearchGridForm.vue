@@ -10,20 +10,24 @@
         <i v-if="!isFilterApplied" class="icon sliders" />
         <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
       </button>
-      <div class="control has-icons-left search-form_input margin-left-small">
-        <input id="searchInput"
-                required="required"
-                class="input is-medium"
-                type="search"
-                ref="search"
-                :placeholder="searchBoxPlaceholder"
-                v-model="searchTermsModel"
-                @keyup.enter="onSubmit" />
-        <span class="icon is-medium is-left">
-          <i class="icon search is-size-5"></i>
-        </span>
+      <div class="field has-addons search-input">
+        <div class="control has-icons-left margin-left-small">
+          <input id="searchInput"
+                  required="required"
+                  class="input is-medium"
+                  type="search"
+                  ref="search"
+                  :placeholder="searchBoxPlaceholder"
+                  v-model="searchTermsModel"
+                  @keyup.enter="onSubmit" />
+          <span class="icon is-medium is-left">
+            <i class="icon search is-size-5"></i>
+          </span>
+        </div>
+        <div class="control">
+          <input type="submit" class="button is-primary" @click.prevent="onSubmit" value="Search" />
+        </div>
       </div>
-      <input type="submit" class="button is-primary" @click.prevent="onSubmit" value="Search" />
     </div>
     <div class="is-flex is-hidden-desktop">
       <button class="button small toggle-filter-small padding-small"
@@ -32,20 +36,24 @@
         <i v-if="!isFilterApplied" class="icon sliders" />
         <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
       </button>
-      <div class="control has-icons-left search-form_input margin-left-small">
-        <input id="searchInput"
-                required="required"
-                class="input search-form_input"
-                type="search"
-                ref="search"
-                :placeholder="searchBoxPlaceholder"
-                v-model="searchTermsModel"
-                @keyup.enter="onSubmit">
-        <span class="icon is-left">
-          <i class="icon search is-size-6"></i>
-        </span>
+      <div class="field has-addons search-input">
+        <div class="control has-icons-left margin-left-small">
+          <input id="searchInput"
+                  required="required"
+                  class="input"
+                  type="search"
+                  ref="search"
+                  :placeholder="searchBoxPlaceholder"
+                  v-model="searchTermsModel"
+                  @keyup.enter="onSubmit">
+          <span class="icon is-left">
+            <i class="icon search is-size-6"></i>
+          </span>
+        </div>
+        <div class="control">
+          <input type="submit" class="button is-primary small" value="Search" />
+        </div>
       </div>
-      <input type="submit" class="button is-primary small" value="Search" />
     </div>
   </form>
 </template>
@@ -130,10 +138,14 @@ export default {
     z-index: 10;
   }
 
-  .search-form_input {
-    width: 45%;
+  .search-input {
+    width: 70%;
 
     @media (max-width: 64em) {
+      width: 100%;
+    }
+
+    .control:first-child {
       width: 100%;
     }
   }
