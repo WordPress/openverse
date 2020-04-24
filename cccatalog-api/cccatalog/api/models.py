@@ -369,8 +369,8 @@ class ImageReport(models.Model):
                 es.delete(index='image', id=es_id)
             es.indices.refresh(index='image')
         # All other reports on the same image with the same reason need to be
-        # given the same status. Deindexing an image results in all reports on the
-        # image being marked 'deindexed' regardless of the reason.
+        # given the same status. Deindexing an image results in all reports on
+        # the image being marked 'deindexed' regardless of the reason.
         same_img_reports = ImageReport \
             .objects \
             .filter(identifier=self.identifier)
