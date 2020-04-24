@@ -5,9 +5,9 @@
       <div class="column">
         <a href="https://creativecommons.org" class="main-logo margin-bottom-bigger has-text-white">
           <svg xmlns="http://www.w3.org/2000/svg"
-               preserveAspectRatio="xMidyMid meet"
+               preserveAspectRatio="xMidYMid meet"
                viewBox="0 0 304 73">
-            <use :href="logoUrl"></use>
+            <use href="/static/logos/cc/logomark.svg#logomark"></use>
           </svg>
         </a>
         <address class="margin-bottom-normal">
@@ -89,13 +89,6 @@
 <script>
 export default {
   name: 'footer-section',
-  computed: {
-    logoUrl() {
-      // eslint-disable-next-line global-require
-      const logo = require('@creativecommons/vocabulary/assets/logos/cc/logomark.svg');
-      return `${logo}#logomark`;
-    },
-  },
 };
 </script>
 

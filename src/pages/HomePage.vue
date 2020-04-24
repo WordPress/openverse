@@ -29,11 +29,6 @@ export default HomePage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-$gray: #808080;
-$highlight: #4ec6cd;
-$nav-text-color: $gray;
-$vert-seperate: 4rem;
-
 .home-page_body {
 
   /* Small only */
