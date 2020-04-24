@@ -6,6 +6,7 @@ from django.contrib.postgres.fields import JSONField, ArrayField
 from cccatalog.api.licenses import ATTRIBUTION, get_license_url
 from oauth2_provider.models import AbstractApplication
 import cccatalog.api.controllers.search_controller as search_controller
+import enum
 
 
 class OpenLedgerModel(models.Model):
@@ -303,6 +304,12 @@ class MatureImage(models.Model):
         super(MatureImage, self).delete(*args, **kwargs)
 
 
+PENDING = 'pending_review'
+MATURE_FILTERED = 'mature_filtered'
+DEINDEXED = 'deindexed'
+NO_ACTION = 'no_action'
+
+
 class ImageReport(models.Model):
     REPORT_CHOICES = [
         ('mature', 'mature'),
@@ -311,10 +318,10 @@ class ImageReport(models.Model):
     ]
 
     STATUS_CHOICES = [
-        ('pending_review', 'pending_review'),
-        ('mature_filtered', 'mature_filtered'),
-        ('deindexed', 'deindexed'),
-        ('no_action', 'no_action')
+        (PENDING, PENDING),
+        (MATURE_FILTERED, MATURE_FILTERED),
+        (DEINDEXED, DEINDEXED),
+        (NO_ACTION, NO_ACTION)
     ]
     identifier = models.UUIDField()
     reason = models.CharField(max_length=20, choices=REPORT_CHOICES)
@@ -337,14 +344,14 @@ class ImageReport(models.Model):
             es = search_controller.es
             img = Image.objects.get(identifier=self.identifier)
             es_id = img.id
-            if self.status == 'mature_filtered':
+            if self.status == MATURE_FILTERED:
                 MatureImage(identifier=self.identifier).save()
                 es.update(
                     index='image',
                     id=es_id,
                     body={'doc': {'mature': True}}
                 )
-            elif self.status == 'deindexed':
+            elif self.status == DEINDEXED:
                 # Delete from the API database (we'll still have a copy of the
                 # metadata upstream in the catalog)
                 img.delete()

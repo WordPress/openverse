@@ -1,5 +1,5 @@
 from django.contrib import admin
-from cccatalog.api.models import ImageReport, MatureImage
+from cccatalog.api.models import ImageReport, MatureImage, PENDING
 
 
 @admin.register(ImageReport)
@@ -13,7 +13,7 @@ class ImageReportAdmin(admin.ModelAdmin):
         if obj is None:
             return []
         always_readonly = ['reason', 'image_url', 'description', 'identifier']
-        if obj.status == 'pending_review':
+        if obj.status == PENDING:
             return always_readonly
         else:
             status_readonly = ['status']

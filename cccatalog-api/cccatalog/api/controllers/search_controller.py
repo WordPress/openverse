@@ -14,7 +14,6 @@ from cccatalog.api.utils.dead_link_mask import get_query_mask, get_query_hash
 from itertools import accumulate
 from typing import Tuple, List, Optional
 from math import ceil
-import logging
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 CACHE_TIMEOUT = 10
