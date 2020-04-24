@@ -50,7 +50,9 @@
       </button>
     </div>
     <div class="margin-bottom-big">
-      <content-report-form v-if="isReportFormVisible" :imageId="image.id" />
+      <content-report-form v-if="isReportFormVisible"
+                           :imageId="image.id"
+                           :imageURL="image.foreign_landing_url" />
     </div>
   </section>
 </template>
@@ -58,7 +60,7 @@
 <script>
 import { TOGGLE_REPORT_FORM_VISIBILITY } from '@/store/mutation-types';
 import LicenseIcons from '@/components/LicenseIcons';
-import ContentReportForm from '@/components/ContentReportForm';
+import ContentReportForm from '@/components/ContentReport/ContentReportForm';
 import getProviderLogo from '@/utils/getProviderLogo';
 
 export default {

@@ -1,16 +1,17 @@
 <template>
   <div class="card padding-normal is-clearfix">
-    <copyright-notice v-if="selectedCopyright"
+    <dcma-notice v-if="selectedCopyright && isReportSent"
                       :imageURL="imageURL"
                       :dcmaFormUrl="dcmaFormUrl" />
+    <done-message v-else-if="!selectedCopyright && isReportSent" :imageURL="imageURL" />
     <form v-else-if="!selectedOther">
       <h4 class="b-header">Report this content</h4>
       <fieldset>
         <legend class="margin-bottom-small">What's the issue?</legend>
 
         <div>
-          <input type="radio" name="type" id="copyright" value="copyright" v-model="selectedReason">
-          <label for="copyright" class="margin-left-small">Infringes copyright</label>
+          <input type="radio" name="type" id="dcma" value="dcma" v-model="selectedReason">
+          <label for="dcma" class="margin-left-small">Infringes Copyright</label>
         </div>
 
         <div>
@@ -23,7 +24,10 @@
           <label for="other" class="margin-left-small">Other</label>
         </div>
 
-        <span class="caption has-text-weight-semibold has-text-grey">For security purposes, CC collects and retains anonymized IP addresses of those who complete and submit this form.</span>
+        <span class="caption has-text-weight-semibold has-text-grey">
+          For security purposes, CC collects and retains anonymized IP
+          addresses of those who complete and submit this form.
+        </span>
       </fieldset>
 
       <button type="button"
@@ -37,7 +41,6 @@
       <textarea class="reason"
                 v-model="otherReasonDescription"
                 placeholder="Issue description required" />
-
       <div>
         <button class="button is-text tiny padding-top-normal is-shadowless"
                 @click="onBackClick()">
@@ -55,33 +58,18 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import { SEND_CONTENT_REPORT } from '@/store/action-types';
+import DcmaNotice from './DcmaNotice';
+import DoneMessage from './DoneMessage';
 
 const DCMA_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform';
-
-const CopyrightNotice = Vue.component('copyright-notice', {
-  props: ['dcmaFormUrl', 'imageURL'],
-  template: `<div>
-    <span class="is-block">Please fill out <a href={{ this.DCMA_FORM_URL }} target="_blank" rel="noopener">this DMCA form</a> to report copyright infringement.</span>
-    <span>We recommend doing the same <a href={{ this.imageURL }} target="_blank" rel="noopener">at the source</a>.</span>
-  </div>`,
-});
-
-const DoneMessage = Vue.component('done-message', {
-  props: ['imageURL'],
-  template: `<div>
-    <span class="is-block">Thank you for reporting an issue with the results of CC Search!</span>
-    <span>We recommend doing the same <a href={{ this.imageURL }} target="_blank" rel="noopener">at the source</a>.</span>
-  </div>`,
-});
 
 export default {
   name: 'content-report-form',
   props: ['imageId', 'imageURL'],
   components: {
-    CopyrightNotice,
     DoneMessage,
+    DcmaNotice,
   },
   data() {
     return {
@@ -93,17 +81,17 @@ export default {
     };
   },
   computed: {
-
+    isReportSent() {
+      return this.$store.state.isReportSent;
+    },
   },
   methods: {
     onIssueSelected() {
-      if (this.selectedReason === 'copyright') {
-        this.selectedCopyright = true;
-      }
       if (this.selectedReason === 'other') {
         this.selectedOther = true;
       }
       else {
+        this.selectedCopyright = this.selectedReason === 'dcma';
         this.sendContentReport();
       }
     },
