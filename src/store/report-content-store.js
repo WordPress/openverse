@@ -9,7 +9,7 @@ import { SEND_CONTENT_REPORT } from './action-types';
 const state = {
   isReportFormVisible: false,
   isReportSent: false,
-  error: false,
+  reportFailed: false,
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -21,10 +21,10 @@ const mutations = {
     _state.isReportSent = true;
   },
   [REPORT_ERROR](_state) {
-    _state.error = true;
+    _state.reportFailed = true;
   },
   [BACK_FROM_REPORT_ERROR](_state) {
-    _state.error = false;
+    _state.reportFailed = false;
   },
   [REPORT_FORM_CLOSED](_state) {
     _state.isReportSent = false;

@@ -8,6 +8,7 @@
                       :imageURL="imageURL"
                       :dcmaFormUrl="dcmaFormUrl" />
     <done-message v-else-if="!selectedCopyright && isReportSent" :imageURL="imageURL" />
+    <report-error v-else-if="reportFailed"/>
     <form v-else-if="!selectedOther">
       <h4 class="b-header">Report this content</h4>
       <fieldset>
@@ -66,6 +67,7 @@ import { SEND_CONTENT_REPORT } from '@/store/action-types';
 import { REPORT_FORM_CLOSED } from '@/store/mutation-types';
 import DcmaNotice from './DcmaNotice';
 import DoneMessage from './DoneMessage';
+import ReportError from './ReportError';
 
 const DCMA_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform';
 
@@ -75,6 +77,7 @@ export default {
   components: {
     DoneMessage,
     DcmaNotice,
+    ReportError,
   },
   data() {
     return {
@@ -88,6 +91,9 @@ export default {
   computed: {
     isReportSent() {
       return this.$store.state.isReportSent;
+    },
+    reportFailed() {
+      return this.$store.state.reportFailed;
     },
   },
   methods: {
