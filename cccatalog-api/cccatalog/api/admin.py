@@ -1,5 +1,6 @@
 from django.contrib import admin
-from cccatalog.api.models import ImageReport, MatureImage, PENDING
+from cccatalog.api.models import ImageReport, MatureImage, DeletedImage, \
+    PENDING
 
 
 @admin.register(ImageReport)
@@ -7,6 +8,7 @@ class ImageReportAdmin(admin.ModelAdmin):
     list_display = ('reason', 'status', 'image_url', 'description')
     list_filter = ('status', 'reason')
     list_display_links = ('status',)
+    search_fields = ('description',)
     actions = None
 
     def get_readonly_fields(self, request, obj=None):
@@ -23,4 +25,9 @@ class ImageReportAdmin(admin.ModelAdmin):
 
 @admin.register(MatureImage)
 class MatureImageAdmin(admin.ModelAdmin):
+    search_fields = ('identifier',)
+
+
+@admin.register(DeletedImage)
+class DeletedImage(admin.ModelAdmin):
     search_fields = ('identifier',)

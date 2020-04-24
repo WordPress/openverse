@@ -339,10 +339,14 @@ class ImageReport(models.Model):
         return format_html(f'<a href={url}>{url}</a>')
 
     def save(self, *args, **kwargs):
-        update_required = {'mature_filtered', 'deindexed'}
+        update_required = {MATURE_FILTERED, DEINDEXED}
         if self.status in update_required:
             es = search_controller.es
-            img = Image.objects.get(identifier=self.identifier)
+            try:
+                img = Image.objects.get(identifier=self.identifier)
+            except Image.DoesNotExist:
+                super(ImageReport, self).save(*args, **kwargs)
+                return
             es_id = img.id
             if self.status == MATURE_FILTERED:
                 MatureImage(identifier=self.identifier).save()
@@ -360,4 +364,10 @@ class ImageReport(models.Model):
                 # Remove from search results
                 es.delete(index='image', id=es_id)
             es.indices.refresh(index='image')
+        # All other reports on the same image with the same `reason` need to be
+        # given the same status.
+        ImageReport.objects.filter(
+            identifier=self.identifier,
+            reason=self.reason
+        ).update(status=self.status)
         super(ImageReport, self).save(*args, **kwargs)
