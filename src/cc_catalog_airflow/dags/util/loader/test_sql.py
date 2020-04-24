@@ -179,49 +179,21 @@ def test_create_loading_table_errors_if_run_twice_with_same_id(postgres):
 
 
 def test_import_data_loads_good_tsv(postgres_with_load_table, tmpdir):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'none_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
-    check_query = f'SELECT COUNT (*) FROM {load_table};'
+    _load_local_tsv(tmpdir, 'none_missing.tsv')
+    check_query = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
     assert num_rows == 10
 
 
 def test_import_data_deletes_null_url_rows(postgres_with_load_table, tmpdir):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'url_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
+    _load_local_tsv(tmpdir, 'url_missing.tsv')
+    null_url_check = (
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} WHERE url IS NULL;'
     )
-    null_url_check = f'SELECT COUNT (*) FROM {load_table} WHERE url IS NULL;'
     postgres_with_load_table.cursor.execute(null_url_check)
     null_url_num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -232,28 +204,13 @@ def test_import_data_deletes_null_url_rows(postgres_with_load_table, tmpdir):
 def test_import_data_deletes_null_license_rows(
         postgres_with_load_table, tmpdir
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'license_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    _load_local_tsv(tmpdir, 'license_missing.tsv')
     license_check = (
-        f'SELECT COUNT (*) FROM {load_table} WHERE license IS NULL;'
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} WHERE license IS NULL;'
     )
     postgres_with_load_table.cursor.execute(license_check)
     null_license_num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -264,31 +221,16 @@ def test_import_data_deletes_null_license_rows(
 def test_import_data_deletes_null_foreign_landing_url_rows(
         postgres_with_load_table, tmpdir
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'foreign_landing_url_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    _load_local_tsv(tmpdir, 'foreign_landing_url_missing.tsv')
     foreign_landing_url_check = (
-        f'SELECT COUNT (*) FROM {load_table} '
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} '
         f'WHERE foreign_landing_url IS NULL;'
     )
     postgres_with_load_table.cursor.execute(foreign_landing_url_check)
     null_foreign_landing_url_num_rows = (
         postgres_with_load_table.cursor.fetchone()[0]
     )
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -299,31 +241,16 @@ def test_import_data_deletes_null_foreign_landing_url_rows(
 def test_import_data_deletes_null_foreign_identifier_rows(
         postgres_with_load_table, tmpdir
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'foreign_identifier_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    _load_local_tsv(tmpdir, 'foreign_identifier_missing.tsv')
     foreign_identifier_check = (
-        f'SELECT COUNT (*) FROM {load_table} '
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} '
         f'WHERE foreign_identifier IS NULL;'
     )
     postgres_with_load_table.cursor.execute(foreign_identifier_check)
     null_foreign_identifier_num_rows = (
         postgres_with_load_table.cursor.fetchone()[0]
     )
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -334,36 +261,41 @@ def test_import_data_deletes_null_foreign_identifier_rows(
 def test_import_data_deletes_duplicate_foreign_identifier_rows(
         postgres_with_load_table, tmpdir
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'foreign_identifier_duplicate.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    _load_local_tsv(tmpdir, 'foreign_identifier_duplicate.tsv')
     foreign_id_duplicate_check = (
-        f"SELECT COUNT (*) FROM {load_table} "
+        f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE} "
         f"WHERE foreign_identifier='135257';"
     )
     postgres_with_load_table.cursor.execute(foreign_id_duplicate_check)
     foreign_id_duplicate_num_rows = (
         postgres_with_load_table.cursor.fetchone()[0]
     )
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
     assert foreign_id_duplicate_num_rows == 1
     assert remaining_rows == 3
+
+
+def _load_local_tsv(tmpdir, tsv_file_name):
+    """
+    This wraps sql.load_local_data_to_intermediate_table so we can test it
+    under various conditions.
+    """
+    tsv_file_path = os.path.join(RESOURCES, tsv_file_name)
+    with open(tsv_file_path) as f:
+        f_data = f.read()
+
+    test_tsv = 'test.tsv'
+    path = tmpdir.join(test_tsv)
+    path.write(f_data)
+
+    sql.load_local_data_to_intermediate_table(
+        POSTGRES_CONN_ID,
+        str(path),
+        TEST_ID
+    )
 
 
 def test_upsert_records_inserts_one_record_to_empty_image_table(

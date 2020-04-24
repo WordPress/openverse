@@ -3,7 +3,7 @@ from util.loader import paths, s3, sql
 
 def load_local_data(output_dir, postgres_conn_id, identifier):
     tsv_file_name = paths.get_staged_file(output_dir, identifier)
-    sql.import_data_to_intermediate_table(
+    sql.load_local_data_to_intermediate_table(
         postgres_conn_id,
         tsv_file_name,
         identifier
