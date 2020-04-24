@@ -8,8 +8,8 @@ import time
 import argparse
 import datetime
 from aws_requests_auth.aws_auth import AWSRequestsAuth
-from elasticsearch import Elasticsearch, RequestsHttpConnection, NotFoundError,\
-    helpers
+from elasticsearch import Elasticsearch, RequestsHttpConnection, \
+    NotFoundError, helpers
 from elasticsearch.exceptions \
     import ConnectionError as ElasticsearchConnectionError
 from elasticsearch_dsl import connections, Search
@@ -264,7 +264,7 @@ class TableIndexer:
                 num_converted_documents += len(chunk)
                 total_indexed_so_far += len(chunk)
                 if self.progress is not None:
-                    self.progress.value =\
+                    self.progress.value = \
                         (total_indexed_so_far / num_to_index) * 100
             log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')
@@ -421,7 +421,9 @@ class TableIndexer:
 
         documents = []
         for row in pg_chunk:
-            if not row[schema['removed_from_source']]:
+            if not (
+                row[schema['removed_from_source']] or row[schema['deleted']]
+            ):
                 converted = model.database_row_to_elasticsearch_doc(row, schema)
                 converted = converted.to_dict(include_meta=True)
                 if dest_index:

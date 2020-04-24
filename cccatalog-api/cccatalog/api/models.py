@@ -1,9 +1,12 @@
 from uuslug import uuslug
 from django.db import models
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.contrib.postgres.fields import JSONField, ArrayField
 from cccatalog.api.licenses import ATTRIBUTION, get_license_url
 from oauth2_provider.models import AbstractApplication
+import cccatalog.api.controllers.search_controller as search_controller
+import enum
 
 
 class OpenLedgerModel(models.Model):
@@ -144,15 +147,11 @@ class Image(OpenLedgerModel):
         ordering = ['-created_on']
 
 
-class DeletedImages(OpenLedgerModel):
-    deleted_id = models.UUIDField(
+class DeletedImage(OpenLedgerModel):
+    identifier = models.UUIDField(
         unique=True,
-        db_index=True,
+        primary_key=True,
         help_text="The identifier of the deleted image."
-    )
-    deleting_user = models.CharField(
-        max_length=50,
-        help_text="The user that deleted the image."
     )
 
 
@@ -285,15 +284,98 @@ class OAuth2Verification(models.Model):
     code = models.CharField(max_length=256, db_index=True)
 
 
-class ReportImage(models.Model):
+class MatureImage(models.Model):
+    """ Stores all images that have been flagged as 'mature'. """
+    identifier = models.UUIDField(
+        unique=True,
+        primary_key=True
+    )
+    created_on = models.DateTimeField(auto_now=True)
+
+    def delete(self, *args, **kwargs):
+        es = search_controller.es
+        img = Image.objects.get(identifier=self.identifier)
+        es_id = img.id
+        es.update(
+            index='image',
+            id=es_id,
+            body={'doc': {'mature': False}}
+        )
+        super(MatureImage, self).delete(*args, **kwargs)
+
+
+PENDING = 'pending_review'
+MATURE_FILTERED = 'mature_filtered'
+DEINDEXED = 'deindexed'
+NO_ACTION = 'no_action'
+
+MATURE = 'mature'
+DMCA = 'dmca'
+OTHER = 'other'
+
+
+class ImageReport(models.Model):
     REPORT_CHOICES = [
-        ('adult', 'adult'),
-        ('dmca', 'dmca'),
-        ('other', 'other')
+        (MATURE, MATURE),
+        (DMCA, DMCA),
+        (OTHER, OTHER)
+    ]
+
+    STATUS_CHOICES = [
+        (PENDING, PENDING),
+        (MATURE_FILTERED, MATURE_FILTERED),
+        (DEINDEXED, DEINDEXED),
+        (NO_ACTION, NO_ACTION)
     ]
     identifier = models.UUIDField()
-    reason = models.CharField(max_length=10, choices=REPORT_CHOICES)
+    reason = models.CharField(max_length=20, choices=REPORT_CHOICES)
     description = models.TextField(max_length=500, blank=True, null=True)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default=PENDING
+    )
 
     class Meta:
         db_table = 'nsfw_reports'
+
+    @property
+    def image_url(self):
+        url = f'https://search.creativecommons.org/photos/{self.identifier}'
+        return format_html(f'<a href={url}>{url}</a>')
+
+    def save(self, *args, **kwargs):
+        update_required = {MATURE_FILTERED, DEINDEXED}
+        if self.status in update_required:
+            es = search_controller.es
+            try:
+                img = Image.objects.get(identifier=self.identifier)
+            except Image.DoesNotExist:
+                super(ImageReport, self).save(*args, **kwargs)
+                return
+            es_id = img.id
+            if self.status == MATURE_FILTERED:
+                MatureImage(identifier=self.identifier).save()
+                es.update(
+                    index='image',
+                    id=es_id,
+                    body={'doc': {'mature': True}}
+                )
+            elif self.status == DEINDEXED:
+                # Delete from the API database (we'll still have a copy of the
+                # metadata upstream in the catalog)
+                img.delete()
+                # Add to the deleted images table so we don't reindex it later
+                DeletedImage(identifier=self.identifier).save()
+                # Remove from search results
+                es.delete(index='image', id=es_id)
+            es.indices.refresh(index='image')
+        # All other reports on the same image with the same reason need to be
+        # given the same status. Deindexing an image results in all reports on
+        # the image being marked 'deindexed' regardless of the reason.
+        same_img_reports = ImageReport.objects.filter(
+            identifier=self.identifier,
+            status=PENDING
+        )
+        if self.status != DEINDEXED:
+            same_img_reports = same_img_reports.filter(reason=self.reason)
+        same_img_reports.update(status=self.status)
+        super(ImageReport, self).save(*args, **kwargs)

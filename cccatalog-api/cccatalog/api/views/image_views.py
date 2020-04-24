@@ -6,8 +6,8 @@ from rest_framework import serializers, status
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
-from cccatalog.api.models import Image, ContentProvider, DeletedImages, \
-    ReportImage
+from cccatalog.api.models import Image, ContentProvider, DeletedImage, \
+    ImageReport
 from cccatalog.api.utils import ccrel
 from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.image_serializers import\
@@ -175,9 +175,8 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             image = Image.objects.get(identifier=identifier)
             es = search_controller.es
             es.delete(index='image', id=image.id)
-            delete_log = DeletedImages(
-                deleted_id=image.identifier,
-                deleting_user=request.user
+            delete_log = DeletedImage(
+                identifier=image.identifier
             )
             image.delete()
             delete_log.save()
@@ -298,5 +297,5 @@ class OembedView(APIView):
 
 
 class ReportImageView(CreateAPIView):
-    queryset = ReportImage.objects.all()
+    queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer

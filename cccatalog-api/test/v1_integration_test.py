@@ -564,7 +564,7 @@ def test_report_endpoint():
     identifier = 'dac5f6b0-e07a-44a0-a444-7f43d71f9beb'
     payload = {
         'identifier': identifier,
-        'reason': 'adult'
+        'reason': 'mature'
     }
     response = requests.post(API_URL + '/v1/images/{}/report'.format(identifier), json=payload, verify=False)
     assert response.status_code == 201

@@ -6,7 +6,7 @@ from elasticsearch_dsl.response import Response, Hit
 from elasticsearch_dsl.query import Query
 from cccatalog import settings
 from django.core.cache import cache
-from cccatalog.api.models import ContentProvider
+import cccatalog.api.models as models
 from rest_framework import serializers
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS
 from cccatalog.api.utils.validate_images import validate_images
@@ -14,7 +14,6 @@ from cccatalog.api.utils.dead_link_mask import get_query_mask, get_query_hash
 from itertools import accumulate
 from typing import Tuple, List, Optional
 from math import ceil
-import logging
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 CACHE_TIMEOUT = 10
@@ -230,11 +229,14 @@ def search(search_params, index, page_size, ip, request,
         '',
         term={'field': 'creator'}
     )
+    # Exclude mature content unless explicitly enabled by the requester
+    if not search_params.data['mature']:
+        s = s.exclude('term', mature=True)
     # Hide data sources from the catalog dynamically.
     filter_cache_key = 'filtered_providers'
     filtered_providers = cache.get(key=filter_cache_key)
     if not filtered_providers:
-        filtered_providers = ContentProvider.objects\
+        filtered_providers = models.ContentProvider.objects\
             .filter(filter_content=True)\
             .values('provider_identifier')
         cache.set(
@@ -368,7 +370,10 @@ def _query_suggestions(response: Response):
     """
     Get suggestions on a misspelt query
     """
-    obj_suggestion = response.to_dict()['suggest']
+    res = response.to_dict()
+    if 'suggest' not in res:
+        return None
+    obj_suggestion = res['suggest']
     if not obj_suggestion['get_suggestion']:
         suggestion = None
     else:
@@ -404,6 +409,8 @@ def related_images(uuid, index, request, filter_dead):
         min_term_freq=1,
         max_query_terms=50
     )
+    # Never show mature content in recommendations.
+    s = s.exclude('term', mature=True)
     page_size = 10
     page = 1
     start, end = _get_query_slice(s, page_size, page, filter_dead)

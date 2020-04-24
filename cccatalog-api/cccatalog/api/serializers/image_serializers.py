@@ -4,7 +4,7 @@ from cccatalog.api.licenses import LICENSE_GROUPS, get_license_url
 from urllib.parse import urlparse
 from collections import namedtuple
 from cccatalog.api.controllers.search_controller import get_providers
-from cccatalog.api.models import ReportImage
+from cccatalog.api.models import ImageReport
 
 
 def _validate_page(value):
@@ -150,6 +150,12 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         help_text="A comma separated list of image sizes; available sizes"
                   "include `small`, `medium`, or `large`.",
         required=False
+    ),
+    mature = serializers.BooleanField(
+        label='mature',
+        default=False,
+        required=False,
+        help_text="Whether to include content for mature audiences."
     )
     qa = serializers.BooleanField(
         label='quality_assurance',
@@ -377,7 +383,7 @@ class WatermarkQueryStringSerializer(serializers.Serializer):
 class ReportImageSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = ReportImage
+        model = ImageReport
         fields = '__all__'
 
     def create(self, validated_data):
@@ -387,4 +393,4 @@ class ReportImageSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Description must be at least be 20 characters long"
             )
-        return ReportImage.objects.create(**validated_data)
+        return ImageReport.objects.create(**validated_data)
