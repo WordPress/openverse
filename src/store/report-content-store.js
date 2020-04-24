@@ -15,7 +15,6 @@ const mutations = {
     _state.isReportSent = true;
   },
   [REPORT_FORM_CLOSED](_state) {
-    _state.isReportSent = false;
     _state.isReportFormVisible = false;
   },
 };

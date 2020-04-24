@@ -42,7 +42,7 @@
       </span>
     </div>
 
-    <div class="margin-bottom-big">
+    <div v-if="!isReportSent || (isReportSent && isReportFormVisible)" class="margin-bottom-big">
       <button class="button is-text tiny is-paddingless report is-shadowless"
               @click="toggleReportFormVisibility()">
         <i class="icon flag"></i>
@@ -73,6 +73,9 @@ export default {
   computed: {
     isReportFormVisible() {
       return this.$store.state.isReportFormVisible;
+    },
+    isReportSent() {
+      return this.$store.state.isReportSent;
     },
   },
   methods: {

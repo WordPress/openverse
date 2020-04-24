@@ -1,5 +1,9 @@
 <template>
   <div class="card padding-normal is-clearfix">
+    <button class="button is-text tiny is-shadowless is-pulled-right"
+            @click="closeForm()">
+      <i class="icon cross"></i>
+    </button>
     <dcma-notice v-if="selectedCopyright && isReportSent"
                       :imageURL="imageURL"
                       :dcmaFormUrl="dcmaFormUrl" />
@@ -59,6 +63,7 @@
 
 <script>
 import { SEND_CONTENT_REPORT } from '@/store/action-types';
+import { REPORT_FORM_CLOSED } from '@/store/mutation-types';
 import DcmaNotice from './DcmaNotice';
 import DoneMessage from './DoneMessage';
 
@@ -104,6 +109,9 @@ export default {
         reason: this.selectedReason,
         description: this.otherReasonDescription,
       });
+    },
+    closeForm() {
+      this.$store.commit(REPORT_FORM_CLOSED);
     },
   },
 };
