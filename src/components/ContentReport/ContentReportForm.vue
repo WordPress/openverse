@@ -46,9 +46,9 @@
                 v-model="otherReasonDescription"
                 placeholder="Issue description required" />
       <div>
-        <button class="button is-text tiny padding-top-normal is-shadowless"
+        <button class="button is-text tiny margin-top-normal is-shadowless"
                 @click="onBackClick()">
-          <i class="icon chevron-left margin-right-small"></i> Back
+          <span><i class="icon chevron-left margin-right-small"></i> Back</span>
         </button>
 
         <button type="button"
