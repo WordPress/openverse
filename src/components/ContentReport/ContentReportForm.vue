@@ -1,5 +1,5 @@
 <template>
-  <div class="card padding-normal is-clearfix">
+  <div class="card padding-normal is-clearfix report-form">
     <button class="button is-text tiny is-shadowless is-pulled-right"
             @click="closeForm()">
       <i class="icon cross"></i>
