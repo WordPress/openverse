@@ -8,7 +8,7 @@ class ImageReportAdmin(admin.ModelAdmin):
     list_display = ('reason', 'status', 'image_url', 'description')
     list_filter = ('status', 'reason')
     list_display_links = ('status',)
-    search_fields = ('description',)
+    search_fields = ('description', 'identifier')
     actions = None
 
     def get_readonly_fields(self, request, obj=None):

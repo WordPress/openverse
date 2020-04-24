@@ -309,12 +309,16 @@ MATURE_FILTERED = 'mature_filtered'
 DEINDEXED = 'deindexed'
 NO_ACTION = 'no_action'
 
+MATURE = 'mature'
+DMCA = 'dmca'
+OTHER = 'other'
+
 
 class ImageReport(models.Model):
     REPORT_CHOICES = [
-        ('mature', 'mature'),
-        ('dmca', 'dmca'),
-        ('other', 'other')
+        (MATURE, MATURE),
+        (DMCA, DMCA),
+        (OTHER, OTHER)
     ]
 
     STATUS_CHOICES = [
@@ -364,10 +368,13 @@ class ImageReport(models.Model):
                 # Remove from search results
                 es.delete(index='image', id=es_id)
             es.indices.refresh(index='image')
-        # All other reports on the same image with the same `reason` need to be
-        # given the same status.
-        ImageReport.objects.filter(
-            identifier=self.identifier,
-            reason=self.reason
-        ).update(status=self.status)
+        # All other reports on the same image with the same reason need to be
+        # given the same status. Deindexing an image results in all reports on the
+        # image being marked 'deindexed' regardless of the reason.
+        same_img_reports = ImageReport \
+            .objects \
+            .filter(identifier=self.identifier)
+        if self.status != DEINDEXED:
+            same_img_reports = same_img_reports.filter(reason=self.reason)
+        same_img_reports.update(status=self.status)
         super(ImageReport, self).save(*args, **kwargs)
