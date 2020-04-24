@@ -69,6 +69,29 @@ def load_local_data_to_intermediate_table(
     _clean_intermediate_table_data(postgres, load_table)
 
 
+def load_s3_data_to_intermediate_table(
+        postgres_conn_id,
+        bucket,
+        s3_key,
+        identifier
+):
+    load_table = _get_load_table_name(identifier)
+    logger.info(f'Loading {s3_key} from S3 Bucket {bucket} into {load_table}')
+
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    postgres.run(
+        f"SELECT aws_s3.table_import_from_s3("
+        f"'{load_table}',"
+        f"'',"
+        f"'DELIMITER E''\t''',"
+        f"'{bucket}',"
+        f"'{s3_key}',"
+        f"'us-east-1'"
+        f");"
+    )
+    _clean_intermediate_table_data(postgres, load_table)
+
+
 def _clean_intermediate_table_data(
         postgres_hook,
         load_table
