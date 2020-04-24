@@ -42,10 +42,10 @@
       </span>
     </div>
 
-    <div v-if="!isReportSent || (isReportSent && isReportFormVisible)" class="margin-bottom-smaller">
+    <div class="margin-bottom-smaller">
       <button class="button is-text tiny is-paddingless report is-shadowless"
               @click="toggleReportFormVisibility()">
-        <span>
+        <span class="has-color-tomato">
           <i class="icon flag margin-right-small"></i>Report this content
         </span>
       </button>
