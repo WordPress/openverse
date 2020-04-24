@@ -371,9 +371,10 @@ class ImageReport(models.Model):
         # All other reports on the same image with the same reason need to be
         # given the same status. Deindexing an image results in all reports on
         # the image being marked 'deindexed' regardless of the reason.
-        same_img_reports = ImageReport \
-            .objects \
-            .filter(identifier=self.identifier)
+        same_img_reports = ImageReport.objects.filter(
+            identifier=self.identifier,
+            status=PENDING
+        )
         if self.status != DEINDEXED:
             same_img_reports = same_img_reports.filter(reason=self.reason)
         same_img_reports.update(status=self.status)
