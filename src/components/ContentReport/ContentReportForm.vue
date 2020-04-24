@@ -36,6 +36,7 @@
       </fieldset>
 
       <button type="button"
+              :disabled="selectedReason === null"
               class="button tiny is-info is-block margin-top-normal is-pulled-right"
               @click="onIssueSelected()">
         Next
@@ -53,6 +54,7 @@
         </button>
 
         <button type="button"
+                :disabled="otherReasonDescription === ''"
                 class="button tiny is-info is-block margin-top-normal is-pulled-right"
                 @click="sendContentReport()">
           Submit report
