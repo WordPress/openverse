@@ -45,7 +45,7 @@
     <div class="margin-bottom-smaller">
       <button class="button is-text tiny is-paddingless report is-shadowless"
               @click="toggleReportFormVisibility()">
-        <span class="has-color-tomato">
+        <span class="has-color-tomato margin-left-small">
           <i class="icon flag margin-right-small"></i>Report this content
         </span>
       </button>
