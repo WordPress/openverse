@@ -384,7 +384,7 @@ class ReportImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ImageReport
-        fields = '__all__'
+        fields = ('reason', 'identifier', 'description')
 
     def create(self, validated_data):
         if validated_data['reason'] == "other" and \
