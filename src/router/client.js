@@ -19,6 +19,10 @@ const router = new VueRouter({
       path: '/search',
       name: 'browse-page',
       component: BrowsePage,
+      // a meta field
+      meta: {
+        requireParams: true,
+      },
       props: route => ({ query: route.query.q }),
     },
     {
@@ -78,6 +82,26 @@ const router = new VueRouter({
     }
     return { x: 0, y: 0 };
   },
+});
+
+// eslint-disable-next-line
+router.beforeEach((to, from, next) => {
+
+  if (to.matched.some(record => record.meta.requireParams)) {
+    // this route requires params, check if any
+    // if not, redirect to home page.
+    if (!to.query.q) {
+      next({
+        name: 'home-page',
+      });
+    }
+    else {
+      next();
+    }
+  }
+  else {
+    next();
+  }
 });
 
 router.afterEach((to) => {
