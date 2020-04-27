@@ -35,7 +35,7 @@
         <a class="navbar-item is-hidden-desktop" href="/search-help">Search Guide</a>
         <a class="navbar-item" href="/feedback">Feedback</a>
         <a class="navbar-item" href="https://opensource.creativecommons.org/ccsearch-browser-extension/" target="_blank">
-        <img src="../assets/external-link.svg" />
+        <i class="icon external-link" />
         </a>
       </div>
     </div>
