@@ -2,7 +2,6 @@ from common.storage.image import ImageStore
 from common.requester import DelayedRequester
 import requests
 import logging
-import json
 from urllib.parse import urlparse, parse_qs
 
 DELAY = 1.0  # time delay (in seconds)
