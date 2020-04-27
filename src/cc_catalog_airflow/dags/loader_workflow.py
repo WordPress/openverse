@@ -68,6 +68,7 @@ def create_dag(
         copy_to_s3 = operators.get_copy_to_s3_operator(
             dag,
             output_dir,
+            storage_bucket,
             aws_conn_id
         )
         load_s3_data = operators.get_load_s3_data_operator(

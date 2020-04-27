@@ -57,13 +57,14 @@ def get_load_local_data_operator(
 def get_copy_to_s3_operator(
         dag,
         output_dir,
+        storage_bucket,
         aws_conn_id,
         identifier=TIMESTAMP_TEMPLATE
 ):
     return PythonOperator(
         task_id='copy_to_s3',
         python_callable=loader.copy_to_s3,
-        op_args=[output_dir, identifier, aws_conn_id],
+        op_args=[output_dir, storage_bucket, identifier, aws_conn_id],
         dag=dag
     )
 

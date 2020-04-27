@@ -1,8 +1,6 @@
 import os
 from unittest.mock import patch
 
-import boto3
-
 from util.loader import s3
 
 TEST_ID = 'testing'
@@ -17,11 +15,13 @@ def test_copy_file_to_s3_staging_uses_connection_id():
     staging_prefix = TEST_STAGING_PREFIX
     tsv_file_path = '/test/file/path/to/data.tsv'
     aws_conn_id = 'test_conn_id'
+    test_bucket_name = 'test-bucket'
 
     with patch.object(s3, 'S3Hook') as mock_s3:
         s3.copy_file_to_s3_staging(
             identifier,
             tsv_file_path,
+            test_bucket_name,
             aws_conn_id,
             media_prefix=media_prefix,
             staging_prefix=staging_prefix
@@ -45,6 +45,7 @@ def test_copy_file_to_s3_staging_uses_bucket_environ(monkeypatch):
         s3.copy_file_to_s3_staging(
             identifier,
             tsv_file_path,
+            test_bucket_name,
             aws_conn_id,
             media_prefix=media_prefix,
             staging_prefix=staging_prefix
@@ -73,10 +74,10 @@ def test_copy_file_to_s3_staging_given_bucket_name(monkeypatch):
         s3.copy_file_to_s3_staging(
             identifier,
             tsv_file_path,
+            test_bucket_name,
             aws_conn_id,
             media_prefix=media_prefix,
-            staging_prefix=staging_prefix,
-            s3_bucket=test_bucket_name
+            staging_prefix=staging_prefix
         )
     print(mock_s3_load_file.mock_calls)
     print(mock_s3_load_file.method_calls)
