@@ -21,7 +21,7 @@ const router = new VueRouter({
       component: BrowsePage,
       // a meta field
       meta: {
-        requireParams: true,
+        requiresQuery: true,
       },
       props: route => ({ query: route.query.q }),
     },

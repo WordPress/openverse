@@ -21,7 +21,7 @@ const router = new VueRouter({
       component: BrowsePage,
       // a meta field
       meta: {
-        requireParams: true,
+        requiresQuery: true,
       },
       props: route => ({ query: route.query.q }),
     },
@@ -87,8 +87,8 @@ const router = new VueRouter({
 // eslint-disable-next-line
 router.beforeEach((to, from, next) => {
 
-  if (to.matched.some(record => record.meta.requireParams)) {
-    // this route requires params, check if any
+  if (to.matched.some(record => record.meta.requiresQuery)) {
+    // this route requires query, check if any
     // if not, redirect to home page.
     if (!to.query.q) {
       next({
