@@ -9,12 +9,24 @@
       We recommend doing the same
       <a :href="imageURL" target="_blank" rel="noopener">at the source</a>.
     </span>
+
+    <button class="button is-text tiny margin-top-normal is-shadowless"
+            @click="onBackClick()">
+      <span><i class="icon chevron-left margin-right-small"></i> Back</span>
+    </button>
   </div>
 </template>
 
 <script>
+import { BACK_TO_REPORT_START } from '@/store/mutation-types';
+
 export default {
   name: 'dcma-notice',
   props: ['dcmaFormUrl', 'imageURL'],
+  methods: {
+    onBackClick() {
+      this.$store.commit(BACK_TO_REPORT_START);
+    },
+  },
 };
 </script>

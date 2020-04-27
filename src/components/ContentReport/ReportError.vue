@@ -11,13 +11,13 @@
 </template>
 
 <script>
-import { BACK_FROM_REPORT_ERROR } from '@/store/mutation-types';
+import { BACK_TO_REPORT_START } from '@/store/mutation-types';
 
 export default {
   name: 'report-error',
   methods: {
     onBackClick() {
-      this.$store.commit(BACK_FROM_REPORT_ERROR);
+      this.$store.commit(BACK_TO_REPORT_START);
     },
   },
 };

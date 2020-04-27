@@ -2,7 +2,7 @@ import {
   TOGGLE_REPORT_FORM_VISIBILITY,
   REPORT_SENT, REPORT_FORM_CLOSED,
   REPORT_ERROR,
-  BACK_FROM_REPORT_ERROR,
+  BACK_TO_REPORT_START,
 } from './mutation-types';
 import { SEND_CONTENT_REPORT } from './action-types';
 
@@ -23,11 +23,13 @@ const mutations = {
   [REPORT_ERROR](_state) {
     _state.reportFailed = true;
   },
-  [BACK_FROM_REPORT_ERROR](_state) {
+  [BACK_TO_REPORT_START](_state) {
     _state.reportFailed = false;
+    _state.isReportSent = false;
   },
   [REPORT_FORM_CLOSED](_state) {
     _state.isReportSent = false;
+    _state.reportFailed = false;
     _state.isReportFormVisible = false;
   },
 };
