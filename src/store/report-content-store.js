@@ -37,7 +37,7 @@ const mutations = {
 
 const actions = ReportService => ({
   [SEND_CONTENT_REPORT]({ commit }, params) {
-    ReportService.sendReport(params)
+    return ReportService.sendReport(params)
       .then(() => commit(REPORT_SENT))
       .catch(() => commit(REPORT_ERROR));
   },
