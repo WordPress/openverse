@@ -1,3 +1,4 @@
+import 'delayed-scroll-restoration-polyfill';
 import smoothscroll from 'smoothscroll-polyfill';
 import Vue from 'vue';
 import router from './router/client';

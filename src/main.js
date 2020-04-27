@@ -5,9 +5,6 @@ import App from './App';
 import store from './store';
 import GoogleAnalytics from './analytics/GoogleAnalytics';
 
-if ('scrollRestoration' in window.history) {
-  window.history.scrollRestoration = 'manual';
-}
 function createApp(router, __INITIAL_STATE__) {
   Vue.config.productionTip = false;
 
