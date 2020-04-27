@@ -12,6 +12,12 @@ services:
     volumes:
       - /tmp/docker_postgres_data:/var/lib/postgresql/data
 
+  s3:
+    build:
+      context: ./local_s3
+    ports:
+      - "5000:5000"
+
   webserver:
     build:
       context: .
@@ -21,5 +27,6 @@ services:
     restart: always
     depends_on:
       - postgres
+      - s3
     ports:
       - "${AIRFLOW_PORT}:8080"

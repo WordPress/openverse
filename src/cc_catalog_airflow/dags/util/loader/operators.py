@@ -48,6 +48,21 @@ def get_loader_operator(
         task_id='load_data',
         python_callable=loader.load_data,
         op_args=[output_dir, postgres_conn_id, identifier],
+        trigger_rule=TriggerRule.ALL_DONE,
+        dag=dag
+    )
+
+
+def get_s3_loader_operator(
+        dag,
+        output_dir,
+        aws_conn_id,
+        identifier=TIMESTAMP_TEMPLATE
+):
+    return PythonOperator(
+        task_id='load_data_to_s3',
+        python_callable=loader.load_data_to_s3,
+        op_args=[output_dir, identifier, aws_conn_id],
         dag=dag
     )
 

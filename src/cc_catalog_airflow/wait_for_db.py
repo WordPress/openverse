@@ -10,7 +10,7 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__file__)
 
 TRIES = 10
 CONN_ID = os.getenv('AIRFLOW__CORE__SQL_ALCHEMY_CONN')

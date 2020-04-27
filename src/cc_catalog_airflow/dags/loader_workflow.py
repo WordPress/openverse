@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 DAG_ID = 'tsv_to_postgres_loader'
 DB_CONN_ID = os.getenv('OPENLEDGER_CONN_ID', 'postgres_openledger_testing')
+AWS_CONN_ID = os.getenv('AWS_CONN_ID', 'no_aws_conn_id')
 MINIMUM_FILE_AGE_MINUTES = 1
 CONCURRENCY = 5
 SCHEDULE_CRON = '* * * * *'
@@ -39,6 +40,7 @@ def create_dag(
         max_active_runs=CONCURRENCY,
         schedule_cron=SCHEDULE_CRON,
         postgres_conn_id=DB_CONN_ID,
+        aws_conn_id=AWS_CONN_ID,
         output_dir=OUTPUT_DIR_PATH,
         minimum_file_age_minutes=MINIMUM_FILE_AGE_MINUTES
 ):
@@ -57,6 +59,13 @@ def create_dag(
             output_dir,
             minimum_file_age_minutes
         )
+
+        load_data_to_s3 = operators.get_s3_loader_operator(
+            dag,
+            output_dir,
+            aws_conn_id
+        )
+
         create_loading_table = operators.get_table_creator_operator(
             dag,
             postgres_conn_id
@@ -78,12 +87,9 @@ def create_dag(
             dag,
             output_dir
         )
-        (
-            stage_oldest_tsv_file
-            >> create_loading_table
-            >> load_data
-            >> [delete_staged_file, drop_loading_table]
-        )
+        stage_oldest_tsv_file >> [create_loading_table, load_data_to_s3]
+        [create_loading_table, load_data_to_s3] >> load_data
+        load_data >> [delete_staged_file, drop_loading_table]
         [
             stage_oldest_tsv_file,
             create_loading_table,
