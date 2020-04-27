@@ -1,6 +1,6 @@
 <template>
   <div class="card padding-normal is-clearfix report-form">
-    <button class="button is-text tiny is-shadowless is-pulled-right"
+    <button class="button close-button is-text tiny is-shadowless is-pulled-right"
             @click="closeForm()">
       <i class="icon cross"></i>
     </button>
@@ -37,25 +37,25 @@
 
       <button type="button"
               :disabled="selectedReason === null"
-              class="button tiny is-info is-block margin-top-normal is-pulled-right"
+              class="button next-button tiny is-info margin-top-normal is-pulled-right"
               @click="onIssueSelected()">
         Next
       </button>
     </form>
-    <form v-else-if="selectedOther">
+    <form class="other-form" v-else-if="selectedOther">
       <legend class="margin-bottom-small">Please describe the issue for us</legend>
       <textarea class="reason"
                 v-model="otherReasonDescription"
                 placeholder="Issue description required" />
       <div>
-        <button class="button is-text tiny margin-top-normal is-shadowless"
+        <button class="button other-back-button is-text tiny margin-top-normal is-shadowless"
                 @click="onBackClick()">
           <span><i class="icon chevron-left margin-right-small"></i> Back</span>
         </button>
 
         <button type="button"
                 :disabled="otherReasonDescription === ''"
-                class="button tiny is-info is-block margin-top-normal is-pulled-right"
+                class="button submit-other-button tiny is-info margin-top-normal is-pulled-right"
                 @click="sendContentReport()">
           Submit report
         </button>
