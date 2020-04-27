@@ -1,16 +1,21 @@
 <template>
-  <div class="card provider-card cell small">
-    <div class="card-divider">
-      <span class="provider-name">{{ provider.display_name }}</span>
-    </div>
-    <div class="provider-logo">
-      <a :href="'/collections/'+provider.provider_name">
-        <img :alt="provider.display_name"
-            :src="getProviderLogo(provider.provider_name)">
+  <div class="column is-narrow margin-normal has-background-white provider-card">
+    <div>
+      <a :href="'/collections/'+provider.source_name"
+         class="provider-name has-text-weight-normal has-text-black">
+        {{ provider.display_name }}
       </a>
     </div>
-    <div class="card-section">
-      <span>Collection size: {{ getProviderImageCount(provider.image_count) }} images</span>
+    <div class="provider-logo">
+      <a :href="'/collections/'+provider.source_name">
+        <img :alt="provider.display_name"
+            :src="getProviderLogo(provider.source_name)">
+      </a>
+    </div>
+    <div>
+      <span class="has-text-grey-light has-text-weight-semibold">
+        Collection size: {{ getProviderImageCount(provider.image_count) }} images
+      </span>
     </div>
   </div>
 </template>
@@ -42,9 +47,11 @@ export default {
 
 <style lang="scss" scoped>
   .provider-card {
-    width: 18em;
-    background-color: #dedede;
-    margin: 0.5em;
+    width: 16.5rem;
+    border: 2px solid rgb(216, 216, 216);
+    &:hover{
+      box-shadow: 10px 10px 2px -5px #E7E7E7;
+    }
   }
 
   .provider-name {
@@ -52,8 +59,7 @@ export default {
   }
 
   .provider-logo {
-    height: 10em;
-    line-height: 10em;
+    height: 12rem;
     white-space: nowrap;
     position: relative;
 
@@ -65,7 +71,7 @@ export default {
     }
 
     img {
-      width: 100%;
+      max-height: 10rem;
     }
   }
 </style>

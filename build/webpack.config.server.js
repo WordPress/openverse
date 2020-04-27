@@ -1,12 +1,13 @@
 const merge = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
-const baseConfig = require('./webpack-base-conf.js');
+const baseConfig = require('./webpack.config.common.js');
+const helpers = require('./helpers');
 
 module.exports = merge(baseConfig, {
   // Point entry to your app's server entry file
   entry: {
-    app: './src/serverEntry.js'
+    main: helpers.root('src', 'serverEntry'),
   },
   // This allows webpack to handle dynamic imports in a Node-appropriate
   // fashion, and also tells `vue-loader` to emit server-oriented code when

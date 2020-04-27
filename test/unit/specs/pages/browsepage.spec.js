@@ -7,6 +7,7 @@ describe('BrowsePage', () => {
     const wrapper = render(ClientBrowsePage);
     expect(wrapper.find({ name: 'header-section' }).vm).toBeDefined();
     expect(wrapper.find({ name: 'footer-section' }).vm).toBeDefined();
+    expect(wrapper.find({ name: 'filter-display' }).vm).toBeDefined();
     expect(wrapper.find({ name: 'search-grid' }).vm).toBeDefined();
   });
 

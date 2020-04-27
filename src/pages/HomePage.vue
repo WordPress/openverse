@@ -29,11 +29,6 @@ export default HomePage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-$gray: #808080;
-$highlight: #4ec6cd;
-$nav-text-color: $gray;
-$vert-seperate: 4rem;
-
 .home-page_body {
 
   /* Small only */
@@ -82,7 +77,7 @@ $vert-seperate: 4rem;
   position:fixed;
 
   /* Small only */
-  @media screen and (max-width: 39.9375em), (max-height: 720px) {
+  @media screen and (max-width: 48rem) {
     position: relative;
   }
 }

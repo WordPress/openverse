@@ -2,9 +2,15 @@
   <section :class="{ 'search-grid': true, 'search-grid__contain-images': shouldContainImages }"
            ref="searchGrid">
     <div class="search-grid_ctr" ref="gridItems">
-      <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics" >
+      <div v-show="!isFetchingImages && includeAnalytics" class="search-grid_analytics count">
         <h2>{{ searchTerm }}</h2>
-        <span> {{ _imagesCount }}</span>
+        <span class="caption has-text-weight-semibold"> {{ _imagesCount }}</span>
+        <div class="is-pulled-right padding-right-big is-hidden-touch">
+          <search-rating :searchTerm="_query.q" />
+        </div>
+        <div class="is-hidden-desktop is-block">
+          <search-rating :searchTerm="searchTerm" />
+        </div>
       </div>
       <div class="search-grid-cells">
         <search-grid-cell
@@ -13,11 +19,11 @@
       </div>
       <div class="load-more">
         <button v-show="!isFetchingImages && includeAnalytics"
-                class="clear button"
+                class="button margin-bottom-big"
                 :disabled="isFinished"
                 @click="onLoadMoreImages">
           <span v-if="isFinished">No more images :(</span>
-          <span v-else>Load more</span>
+          <span v-else>Load more results</span>
         </button>
         <loading-icon v-show="isFetchingImages" />
       </div>
@@ -31,17 +37,17 @@
 <script>
 import { SET_IMAGES } from '@/store/mutation-types';
 import SearchGridCell from '@/components/SearchGridCell';
-import SearchGridFilter from '@/components/SearchGridFilter';
 import LoadingIcon from '@/components/LoadingIcon';
+import SearchRating from '@/components/SearchRating';
 
 const DEFAULT_PAGE_SIZE = 20;
 
 export default {
   name: 'search-grid-manual-load',
   components: {
-    SearchGridFilter,
     SearchGridCell,
     LoadingIcon,
+    SearchRating,
   },
   data: () => ({
     isDataInitialized: false,
@@ -49,7 +55,9 @@ export default {
     currentPage: 1,
   }),
   props: {
-    imagesCount: 0,
+    imagesCount: {
+      default: 0,
+    },
     images: {
       default: () => ([]),
     },
@@ -125,7 +133,7 @@ export default {
     },
     onLoadMoreImages() {
       if (this.isFetchingImages === false) {
-        this.currentPage = this.currentPage + 1;
+        this.currentPage += 1;
         const searchParams = {
           page: this.currentPage,
           shouldPersistImages: true,
@@ -210,11 +218,7 @@ export default {
   }
 
   label {
-    color: #2c3e50;
-  }
-
-  h2 {
-    font-size: 2rem;
+    color: #333333;
   }
 
   .load-more {
@@ -223,5 +227,9 @@ export default {
     button {
       font-size: 1.2em;
     }
+  }
+  .count{
+    padding-top: 0.6rem;
+    padding-left: 1.3rem;
   }
 </style>

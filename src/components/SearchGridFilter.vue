@@ -9,12 +9,12 @@
                          @filterChanged="onUpdateFilter" />
       <filter-check-list :options="filters.licenses"
                          :disabled="licensesDisabled"
-                         title="All licenses"
+                         title="Licenses"
                          filterType="licenses"
                          @filterChanged="onUpdateFilter" />
       <filter-check-list v-if="renderProvidersFilter"
                          :options="filters.providers"
-                         title="All Sources"
+                         title="Collections"
                          filterType="providers"
                          @filterChanged="onUpdateFilter" />
       <filter-check-list :options="filters.categories"
@@ -35,18 +35,18 @@
                          @filterChanged="onUpdateFilter" />
     </form>
 
-    <div class="filter-option small-filter search-filters_search-by">
+    <div class="margin-normal filter-option small-filter search-filters_search-by">
       <input type="checkbox" id="creator-chk"
               :checked="filters.searchBy.creator"
               @change="onUpdateSearchByCreator">
       <label for="creator-chk">Search by Creator</label>
     </div>
-    <div class="clear-filters"
+    <div class="margin-big padding-bottom-normal clear-filters"
           v-if="isFilterApplied">
-      <a class="button primary medium search-filters_clear-btn"
+      <button class="button tiny"
               @click="onClearFilters">
         Clear filters
-      </a>
+      </button>
     </div>
   </div>
 </template>
@@ -129,15 +129,4 @@ export default {
   }
 }
 
-.search-filters_search-by,
-.clear-filters {
-  margin-top: 0.4em;
-  margin-left: 24px;
-}
-
-.search-filters_clear-btn {
-  height: auto;
-  border-radius: 2px;
-  margin: auto;
-}
 </style>

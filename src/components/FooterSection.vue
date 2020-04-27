@@ -1,52 +1,88 @@
 <template>
-<footer class="footer secondary">
-   <div class="grid-container full">
-      <div class="grid-x grid-margin-x grid-margin-y">
-        <div class="medium-4 cell">
-          <a href="https://creativecommons.org/">
-            <img class="footer_logo" alt="Footer Logo" src="../assets/cc-logo_white.png">
+<footer class="main-footer">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <a href="https://creativecommons.org" class="main-logo margin-bottom-bigger has-text-white">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               preserveAspectRatio="xMidYMid meet"
+               viewBox="0 0 304 73">
+            <use href="/static/logos/cc/logomark.svg#logomark"></use>
+          </svg>
+        </a>
+        <address class="margin-bottom-normal">
+          <span class="is-block">Creative Commons</span>
+          <span>PO Box 1866, Mountain View CA 94042</span>
+        </address>
+        <a href="mailto:info@creativecommons.org" class="mail is-block">
+          info@creativecommons.org
+        </a>
+        <a href="tel://+1-415-429-6753" class="phone">+1-415-429-6753</a>
+
+        <div class="margin-vertical-large">
+          <a href="https://www.instagram.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
+             <i class="icon instagram margin-right-small is-size-4" />
           </a>
-          <div class="cc-footer-links">
-            <div class="menu-footer-links-container">
-                <ul id="menu-footer-links" class="menu">
-                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/about/contact/">Contact</a></li>
-                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/privacy/">Privacy</a></li>
-                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/policies/">Policies</a></li>
-                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://creativecommons.org/terms/">Terms</a></li>
-                </ul>
-            </div>
+          <a href="https://www.twitter.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
+             <i class="icon twitter margin-right-small is-size-4" />
+          </a>
+          <a href="https://www.facebook.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
+             <i class="icon facebook margin-right-small is-size-4" />
+          </a>
+          <a href="https://www.linkedin.com/company/creative-commons/" class="social has-text-white" target="_blank" rel="noopener">
+             <i class="icon linkedin margin-right-small is-size-4" />
+          </a>
         </div>
       </div>
-        <div class="medium-4 cell">
-          <div class="column footer_contact">
-            <h6><a href="https://creativecommons.org/about/contact/">We'd love to hear from you!</a></h6>
-              <address>
-                Creative Commons<br>
-                PO Box 1866, Mountain View, CA 94042
-              </address>
-              <ul>
-                <li><a href="mailto:info@creativecommons.org">info@creativecommons.org</a></li>
-                <li><a href="tel:1-415-429-6753">1-415-429-6753</a></li>
-              </ul>
+      <div class="column is-half">
+        <nav class="footer-navigation">
+          <ul class="menu">
+            <li>
+              <a class="menu-item" href="https://creativecommons.org/about/contact/">Contact</a>
+            </li>
+            <li>
+              <a class="menu-item" href="https://creativecommons.org/privacy/">Privacy</a>
+            </li>
+            <li>
+              <a class="menu-item" href="https://creativecommons.org/policies/">Policies</a>
+            </li>
+            <li>
+              <a class="menu-item" href="https://creativecommons.org/terms/">Terms</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="attribution margin-top-bigger">
+          <p class="caption">
+            Except where otherwise
+            <a href="https://creativecommons.org/policies#license" target="_blank" rel="noopener">noted</a>,
+            content on this site is licensed under a
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">
+              Creative Commons Attribution 4.0 International license
+            </a>.
+            <a href="https://creativecommons.org/website-icons" target="_blank" rel="noopener">
+              Icons
+            </a>
+            by Noun Project.
+          </p>
+
+          <div class="margin-top-smaller">
+            <i class="icon cc-logo margin-right-small is-size-4 is-color-white" />
+            <i class="icon cc-by margin-right-small is-size-4 is-color-white" />
           </div>
-        </div>
-        <div class="medium-4 cell footer_license">
-          <aside>
-          <div xmlns:cc="https://creativecommons.org/ns#"
-               about="https://creativecommons.org">
-            <p><a class="subfoot"
-                   href="https://creativecommons.org/website-icons"
-                   target="blank">Icons</a>
-               by The Noun Project.</p>
-            <p class="website-credit">Website by <a class="subfoot"
-               href="https://creativecommons.org"
-               target="blank">CC</a>.</p>
-            <p>Contribute on <a href="https://github.com/creativecommons/cccatalog-frontend">GitHub</a>.</p>
-          </div>
-          </aside>
         </div>
       </div>
-   </div>
+      <div class="column">
+        <aside class="donate-section">
+          <h5>Our work relies on you!</h5>
+          <p>Help us keep the internet free and open.</p>
+          <a class="button small donate" href="http://creativecommons.org/donate">
+            <i class="icon cc-letterheart margin-right-small is-size-5 padding-top-smaller" />
+            Donate now
+          </a>
+        </aside>
+      </div>
+    </div>
+  </div>
 </footer>
 </template>
 
@@ -59,77 +95,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.footer {
-  padding: 4vh;
-  background-color: #2b2b2b;
-  width: 100%;
-  bottom: 0;
-
-  hr {
-    max-width: 100%;
-  }
-
-  /* Small only */
-  @media screen and (max-width: 39.9375em) {
-    & {
-      padding: 15px !important;
-    }
+.donate, .social {
+  &:hover {
+    text-decoration: none;
   }
 }
 
-.footer_links {
-  font-weight: 500;
-  font-size: 1.1em;
-
-  a:first-child {
-    padding-left: 0;
-  }
-}
-
-.footer_logo,
-.footer_license-icons img {
-  height: 4em;
-  margin-bottom: 1em;
-}
-
-.footer_contact {
-  ul {
-    margin: .25em 0 0 0;
-    list-style-type: none;
-  }
-
-  h6 a {
-    color: #fff;
-    font-size: 1.1em;
-    font-weight: 500;
-
-    &:hover {
-      border-bottom: 1px solid black;
-    }
-  }
-}
-
-address {
-  color: #999;
-}
-
-.menu-item a {
-  color: #999;
-}
-
-p {
-  color: #999;
-}
-
-.footer_disclaimer {
-  font-weight: 500;
-  margin: 0 -15px;
-
-  /* Small only */
-  @media screen and (max-width: 39.9375em) {
-    & {
-      margin: 0 -15px;
-    }
-  }
+.icon {
+  vertical-align: middle;
 }
 </style>

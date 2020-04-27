@@ -1,17 +1,13 @@
 <template>
-  <div class="photo_tags grid-x full" v-if="tags && tags.length">
-    <header>
-      <h2>Tags</h2>
-    </header>
-    <div class="photo_tags-ctr cell large-12">
+  <div class="photo_tags margin-normal" v-if="tags && tags.length">
+    <h3>Tags</h3>
+    <div class="margin-top-normal">
       <template v-for="(tag, index) in getValidTags()">
-        <span class="photo_tag button hollow secondary"
+        <button class="button tag margin-smaller"
               :key="index"
               @click="searchByTagName(tag.name)">
-          <span class="photo_tag-label">
-            <span>{{ tag.name }}</span>
-          </span>
-        </span>
+          {{ tag.name }}
+        </button>
       </template>
     </div>
   </div>

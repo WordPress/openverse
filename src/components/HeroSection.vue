@@ -1,60 +1,58 @@
 <template>
   <div class="hero">
     <h2 class="has-text-centered">Search for content to reuse</h2>
-    <form class="hero_search-form margin-top-normal"
+    <form class="hero_search-form margin-top-bigger"
           role="search"
           method="get"
           action="/search"
           v-on:submit.prevent="onSubmit">
-      <div class="is-hidden-touch">
-        <input required="required"
-                autofocus="true"
+      <div class="is-hidden-touch centered-search-box">
+        <div class="field has-addons">
+          <div class="control">
+            <input required="required"
                 class="hero_search-input input is-large"
                 type="search"
                 name="q"
-                placeholder="Search for images..."
+                placeholder="I would like to see..."
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <button class="button is-primary big" title="Search">Search</button>
+          </div>
+          <div class="control">
+            <button class="button is-primary big" title="Search">Search</button>
+          </div>
+        </div>
       </div>
-      <div class="is-hidden-desktop">
-        <input required="required"
-                autofocus="true"
-                class="hero_search-input input"
+      <div class="is-hidden-desktop centered-search-box">
+        <div class="field has-addons">
+          <div class="control mobile-input">
+            <input required="required"
+                class="input"
                 type="search"
                 name="q"
-                placeholder="Search for images..."
+                placeholder="I would like to see..."
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <button class="button is-primary" title="Search">Search</button>
+          </div>
+          <div class="control">
+            <button class="button is-primary small" title="Search">Search</button>
+          </div>
+        </div>
       </div>
-      <div class="caption has-text-centered">
+      <div class="caption has-text-centered margin-top-big">
         <p>
-          All content here is marked as being available for reuse
-          under a Creative Commons legal tool. Learn more
-          <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">here</a>.
+          All our content is under Creative Commons licenses.
+          <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">Learn more</a>
+          about CC licenses.
         </p>
       </div>
       <home-license-filter />
     </form>
-    <div class="old-search-link">
-      <span>
-        Looking for the old CC Search portal? Go
-        <a href="https://oldsearch.creativecommons.org/">here</a>
-      </span>
-    </div>
-
-    <div class="search-help-link">
-      <span>
-        See our Search Syntax Guide
-        <a href="/search-help">
-          here
-          <img class='help-icon'
-              src='../assets/help_icon.svg'
-              alt='Help' />
-        </a>
+    <div class="help-links is-hidden-mobile">
+      <span class="margin-right-bigger">
+        Go to the
+        <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
       </span>
     </div>
   </div>
@@ -84,7 +82,7 @@ export default {
 <style lang="scss" scoped>
 
 
-$hero-height: 71vh;
+$hero-height: 74vh;
 
 .hero {
   background: #fff;
@@ -104,34 +102,28 @@ $hero-height: 71vh;
     padding: 0 0.5em 0 0.5em;
   }
 
+  .centered-search-box {
+    justify-content: center;
+  }
+
   .hero_search-input {
-    width: 70%;
-    float: left;
+    width: 570px;
+  }
+
+  .mobile-input {
+    width: 100%;
   }
 }
 
-.old-search-link {
+.help-links {
   position: absolute;
-  top: 1rem;
-  right: 2rem;
-
-  @media screen and (max-width: 40em) {
-    display: none;
-  }
-}
-
-.search-help-link {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
-
-  @media screen and (max-width: 40em) {
-    display: none;
-  }
+  bottom: 1rem;
+  left: 1rem;
 }
 
 .help-icon {
   height: 32px;
+  vertical-align: middle;
 }
 
 /* Small only */
@@ -142,9 +134,5 @@ $hero-height: 71vh;
   .search-form_ctr {
     padding: 0 .9375rem;
   }
-}
-
-.is-large {
-  height: 70px;
 }
 </style>
