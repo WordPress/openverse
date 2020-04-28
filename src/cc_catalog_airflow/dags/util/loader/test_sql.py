@@ -1,7 +1,10 @@
 from collections import namedtuple
 import json
 import os
+import socket
 import time
+from urllib.parse import urlparse
+
 
 import boto3
 import psycopg2
@@ -18,6 +21,7 @@ S3_LOCAL_ENDPOINT = os.getenv('S3_LOCAL_ENDPOINT')
 S3_TEST_BUCKET = f'cccatalog-storage-{TEST_ID}'
 ACCESS_KEY = os.getenv('TEST_ACCESS_KEY')
 SECRET_KEY = os.getenv('TEST_SECRET_KEY')
+S3_HOST = socket.gethostbyname(urlparse(S3_LOCAL_ENDPOINT).hostname)
 
 
 RESOURCES = os.path.join(
@@ -161,7 +165,7 @@ def postgres_with_load_and_image_table():
 
 
 @pytest.fixture
-def empty_s3_bucket():
+def empty_s3_bucket(socket_enabled):
     bucket = boto3.resource(
         's3',
         aws_access_key_id=ACCESS_KEY,
@@ -238,6 +242,7 @@ def test_create_loading_table_errors_if_run_twice_with_same_id(postgres):
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
 def test_loaders_load_good_tsv(
         postgres_with_load_table,
         tmpdir,
@@ -252,6 +257,7 @@ def test_loaders_load_good_tsv(
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
 def test_loaders_delete_null_url_rows(
         postgres_with_load_table,
         tmpdir,
@@ -273,6 +279,7 @@ def test_loaders_delete_null_url_rows(
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
 def test_loaders_delete_null_license_rows(
         postgres_with_load_table,
         tmpdir,
@@ -294,6 +301,7 @@ def test_loaders_delete_null_license_rows(
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
 def test_loaders_delete_null_foreign_landing_url_rows(
         postgres_with_load_table,
         tmpdir,
@@ -318,6 +326,7 @@ def test_loaders_delete_null_foreign_landing_url_rows(
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
 def test_data_loaders_delete_null_foreign_identifier_rows(
         postgres_with_load_table,
         tmpdir,
@@ -342,6 +351,7 @@ def test_data_loaders_delete_null_foreign_identifier_rows(
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
 def test_import_data_deletes_duplicate_foreign_identifier_rows(
         postgres_with_load_table,
         tmpdir,
