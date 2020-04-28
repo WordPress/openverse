@@ -53,10 +53,10 @@ describe('ContentReportForm', () => {
     expect(wrapper.find({ name: 'report-error' }).vm).toBeDefined();
   });
 
-  it('should render error message', () => {
+  it('should render dmca notice', () => {
     storeState.$store.state.isReportSent = true;
     const wrapper = render(ContentReportForm, options);
-    wrapper.setData({ selectedCopyright: true, isReportSent: true });
+    wrapper.setData({ selectedCopyright: true });
     expect(wrapper.find({ name: 'dmca-notice' }).vm).toBeDefined();
   });
 
