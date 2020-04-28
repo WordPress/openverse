@@ -10,16 +10,23 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - /tmp/data:/var/lib/postgresql/data
+      - /tmp/docker_postgres_data:/var/lib/postgresql/data
 
-  airflow:
-    build: .
+  s3:
+    build:
+      context: ./local_s3
+    ports:
+      - "5000:5000"
+
+  webserver:
+    build:
+      context: .
+      args:
+        - OUTPUT_DIR=${OUTPUT_DIR}
     env_file: .env
     restart: always
     depends_on:
       - postgres
-    volumes:
-      - ./dags:/usr/local/airflow/dags
+      - s3
     ports:
-      - "9090:8080"
-    command: webserver
+      - "${AIRFLOW_PORT}:8080"

@@ -54,17 +54,24 @@ the internet.
 
 ### Common API Workflows
 
-The Airflow DAGs defined in
-[`common_api_workflows.py`][api_flows]
-manage the daily ETL jobs for the following platforms:
+The Airflow DAGs defined in [`common_api_workflows.py`][api_flows] manage daily
+ETL jobs for the following platforms, by running the linked scripts:
 
-- [Flickr](src/cc_catalog_airflow/dags/provider_api_scripts/Flickr.py)
 - [Met Museum](src/cc_catalog_airflow/dags/provider_api_scripts/MetMuseum.py)
 - [PhyloPic](src/cc_catalog_airflow/dags/provider_api_scripts/PhyloPic.py)
 - [Thingiverse](src/cc_catalog_airflow/dags/provider_api_scripts/Thingiverse.py)
-- [Wikimedia Commons](src/cc_catalog_airflow/dags/provider_api_scripts/WikimediaCommons.py)
 
 [api_flows]: src/cc_catalog_airflow/dags/common_api_workflows.py
+
+### Other Daily API Workflows
+
+Airflow DAGs, defined in their own files, also run the following scripts daily:
+
+- [Flickr](src/cc_catalog_airflow/dags/provider_api_scripts/flickr.py)
+- [Wikimedia Commons](src/cc_catalog_airflow/dags/provider_api_scripts/wikimedia_commons.py)
+
+In the future, we'll migrate to the latter style of Airflow DAGs and
+accompanying Provider API Scripts.
 
 ### Monthly Workflow
 
@@ -76,18 +83,17 @@ updated. The following tasks are performed:
 
 - [Cleveland Museum of Art](src/cc_catalog_airflow/dags/provider_api_scripts/ClevelandMuseum.py)
 - [RawPixel](src/cc_catalog_airflow/dags/provider_api_scripts/RawPixel.py)
-- [Flickr](src/cc_catalog_airflow/dags/provider_api_scripts/Flickr.py)
 - [Common Crawl Syncer](src/cc_catalog_airflow/dags/commoncrawl_s3_syncer/SyncImageProviders.py)
 
-[mon_flow]: src/cc_catalog_airflow/monthlyWorkflow.py
+[mon_flow]: src/cc_catalog_airflow/dags/monthlyWorkflow.py
 
 ### DB_Loader
 
-The Airflow DAG defined in [`loaderWorkflow.py`][db_loader] is scheduled to load
-data into the upstream database every four hours. It includes data preprocessing
-steps.
+The Airflow DAG defined in [`loader_workflow.py`][db_loader] runs every minute,
+and loads the oldest file which has not been modified in the last 15 minutes
+into the upstream database. It includes some data preprocessing steps.
 
-[db_loader]: src/cc_catalog_airflow/dags/loaderWorkflow.py
+[db_loader]: src/cc_catalog_airflow/dags/loader_workflow.py
 
 ### Other API Jobs (not in the workflow)
 
@@ -105,62 +111,81 @@ own dependency requirements.
 
 [api_scripts]: src/cc_catalog_airflow/dags/provider_api_scripts
 
-### Setup the Docker way
+### Development setup
 
-The advantage of this method is that it recreates the same environment for your
-testing as is on production.
+You'll need `docker` and `docker-compose` installed on your machine, with
+versions new enough to use version `3` of Docker Compose `.yml` files.
 
-There is a [`Dockerfile`][dockerfile] provided in the `src/cc_catalog_airflow`
-directory. With docker installed, navigate to that directory and run
+To set up environment variables, navigate to the
+[`src/cc_catalog_airflow`][cc_airflow] directory, and run
+```shell
+cp env.template .env
+```
+If needed, fill in API keys or other secrets and variables in `.env`. This is
+not needed if you only want to run the tests. There is a
+[`docker-compose.yml`][dockercompose] provided in the
+[`src/cc_catalog_airflow`][cc_airflow] directory, so from that directory, run
 
 ```shell
-docker build -t cc-catalog-etl  .
+docker-compose up -d
 ```
 
-This results in a docker image named `cc-catalog-etl` with some helpful pieces
-installed (the right version of python, all dependencies, pytest). To run that
-image, and sync the directory containing the source files, run
+This results, among other things, in the following running containers:
+
+- `cc_catalog_airflow_webserver_1`
+- `cc_catalog_airflow_postgres_1`
+
+and some networking setup so that they can communicate.  Note:
+- `cc_catalog_airflow_webserver_1` is running the Apache Airflow daemon, and also
+has a few development tools (e.g., `pytest`) installed.
+- `cc_catalog_airflow_postgres_1` is running PostgreSQL, and is setup with some
+databases and tables to emulate the production environment. It also provides a
+database for Airflow to store its running state.
+- The directory containing the DAG files, as well as dependencies will be
+mounted to the `usr/local/airflow/dags` directory in the container
+`cc_catalog_airflow_webserver_1`.
+
+At this stage, you can run the tests via:
 
 ```shell
-docker run -d -p 8080:8080 -v $(pwd)/dags:/usr/local/airflow/dags --name cc-catalog-etl-ws  cc-catalog-etl webserver
+docker exec cc_catalog_airflow_webserver_1 /usr/local/airflow/.local/bin/pytest
 ```
-
-from the `src/cc_catalog_airflow` directory (i.e., the one containing the
-Dockerfile). This results in a Docker container running the airflow webserver,
-and syncs the directory containing all dags, as well as dependencies to the
-`usr/local/airflow/dags` directory in the container (named `cc-catalog-etl-ws`).
-To run the tests, run the following commands from the `src/cc_catalog_airflow`
-directory:
-
-1. `docker cp env.sh.template cc-catalog-etl-ws:/usr/local/airflow/env.sh`
-1. `docker exec -it cc-catalog-etl-ws /bin/bash`
-
-You should now have a bash prompt in the running container. From the airflow
-home directory (i.e., the one you should have been automatically placed into
-upon login), run the following commands:
-
-1. `source env.sh`
-1. `pytest`
-
 Edits to the source files or tests can be made on your local machine, then tests
-can be run in the container to see the effects.
+can be run in the container via the above command to see the effects.
 
-[dockerfile]: src/cc_catalog_airflow/Dockerfile
 
-### Setup the other way
-The advantage of this method is that you don't have to install docker. You will,
-however need to install a number of other dependencies, including a specific
-version of Python. Furthermore, the tests are unlikely to pass on a windows
-machine (unless you're using WSL). To begin with, install Python 3.7, and `pip`.
-Use of `virtualenv` is recommended. Then, run the following commands in sequence
-from the `src/cc_catalog_airflow` directory (with your `venv` activated, should
-you use it):
+If you'd like, it's possible to login to the webserver container via
 
-1. `pip install -r requirements.txt`
-1. `cp env.sh.template env.sh`
-1. `echo "export AIRFLOW_HOME=${PWD}" >> env.sh`
-1. `source env.sh`
-1. `pytest`
+```shell
+docker exec -it cc_catalog_airflow_webserver_1 /bin/bash
+```
+
+It's also possible to attach to the running command process of the webserver
+container via
+
+```shell
+docker attach --sig-proxy=false cc_catalog_airflow_webserver_1
+```
+Attaching in this manner lets you see the output from both the Airflow webserver
+and scheduler, which can be useful for debugging purposes.  To leave the 
+container, (but keep it running), press `Ctrl-C` on *nix platforms
+
+To see the Airflow web UI, point your browser to `localhost:9090`.
+
+If you'd like to bring down the containers, run
+```shell
+docker-compose down
+```
+from the [`src/cc_catalog_airflow`][cc_airflow] directory.
+
+To reset the test DB (wiping out all databases, schemata, and tables), run
+```shell
+docker-compose down
+rm -r /tmp/docker_postgres_data/
+```
+
+[dockercompose]: src/cc_catalog_airflow/docker-compose.yml
+[cc_airflow]: src/cc_catalog_airflow/
 
 ## PySpark development setup
 

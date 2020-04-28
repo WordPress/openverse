@@ -1,10 +1,23 @@
-# The sha256 sum is an immutable version of the image tag that's on the
-# production server.
-FROM puckel/docker-airflow@sha256:62f9f5392c31d03a1770ec3705a9de7cc3373930b78b8a4007ed3f31e955cc8f
+FROM python:3.7-buster
+
+ENV AIRFLOW_HOME=/usr/local/airflow
+ARG OUTPUT_DIR=/tmp/
 ENV PATH=/usr/local/airflow/.local/bin:$PATH
-ENV EXECUTOR=Local
-WORKDIR  /usr/local/airflow
-ADD ./requirements.txt /usr/local/airflow
+
+RUN apt-get -yqq update \
+  && apt-get -yqq upgrade \
+  && apt-get -yqq install build-essential libpq-dev libffi-dev
+RUN useradd -m -d ${AIRFLOW_HOME} airflow
+USER airflow
+
+RUN mkdir -p ${OUTPUT_DIR}
+WORKDIR  ${AIRFLOW_HOME}
+ADD ./requirements.txt ${AIRFLOW_HOME}
+ADD ./wait_for_db.py ${AIRFLOW_HOME}
+ADD ./dags ${AIRFLOW_HOME}/dags
+
 RUN pip install --user -r requirements.txt
-RUN rm requirements.txt
-CMD ["webserver"]
+
+CMD python wait_for_db.py && \
+  airflow initdb && \
+  (airflow scheduler & airflow webserver)
