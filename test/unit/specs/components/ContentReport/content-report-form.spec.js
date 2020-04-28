@@ -92,14 +92,14 @@ describe('ContentReportForm', () => {
 
   it('should dispatch SEND_CONTENT_REPORT on next when mature is selected', () => {
     const wrapper = render(ContentReportForm, options);
-    const radio = wrapper.find('#adult');
+    const radio = wrapper.find('#mature');
     radio.setChecked();
 
     const button = wrapper.find('.next-button');
     button.trigger('click');
     expect(dispatchMock).toHaveBeenCalledWith('SEND_CONTENT_REPORT', {
       identifier: props.imageId,
-      reason: 'adult',
+      reason: 'mature',
       description: '',
     });
   });

@@ -20,8 +20,8 @@
         </div>
 
         <div>
-          <input type="radio" name="type" id="adult" value="adult" v-model="selectedReason">
-          <label for="adult" class="margin-left-small">Contains adult content</label>
+          <input type="radio" name="type" id="mature" value="mature" v-model="selectedReason">
+          <label for="mature" class="margin-left-small">Contains mature content</label>
         </div>
 
         <div>
