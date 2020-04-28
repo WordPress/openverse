@@ -20,7 +20,7 @@
     "build:server": "webpack --config build/webpack.config.server.js"
   },
   "dependencies": {
-    "@creativecommons/vocabulary": "1.0.0-beta.12",
+    "@creativecommons/vocabulary": "1.0.0-beta.14",
     "@sentry/browser": "^5.6.0",
     "@sentry/node": "^5.6.0",
     "axios": "^0.18.0",
