@@ -40,6 +40,7 @@ export const filtersToQueryData = (filters) => {
   }, queryDataObject);
 
   queryDataObject.searchBy = filters.searchBy.creator ? 'creator' : '';
+  queryDataObject.mature = filters.mature;
 
   return queryDataObject;
 };
@@ -79,9 +80,24 @@ export const queryToFilterData = (queryString) => {
     filters.searchBy.creator = true;
   }
 
+  const mature = getParameterByName('mature', queryString);
+  if (mature) {
+    filters.mature = Boolean(mature);
+  }
+
   return filters;
 };
 
+/**
+ * converts the url query string to the data format accepted by the API.
+ *
+ * this is slightly different from filtersToQueryData as this converts the
+ * query string and that converts the filter data.
+ *
+ * TODO: we might be able to refactor to eliminate the need for these two
+ * separate functions.
+ * @param {string} query string
+ */
 export const queryStringToQueryData = (queryString) => {
   const queryDataObject = {};
   Object.keys(filterPropertyMappings).forEach((filterDataKey) => {
@@ -91,6 +107,7 @@ export const queryStringToQueryData = (queryString) => {
 
   queryDataObject.q = getParameterByName('q', queryString);
   queryDataObject.searchBy = getParameterByName('searchBy', queryString);
+  queryDataObject.mature = getParameterByName('mature', queryString);
 
   return queryDataObject;
 };
