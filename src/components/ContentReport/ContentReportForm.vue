@@ -46,7 +46,7 @@
       <legend class="margin-bottom-small">Please describe the issue for us</legend>
       <textarea class="reason"
                 v-model="otherReasonDescription"
-                placeholder="Issue description required" />
+                placeholder="Issue description required (with at least 20 words)" />
       <div>
         <button class="button other-back-button is-text tiny margin-top-normal is-shadowless"
                 @click="onBackClick()">
