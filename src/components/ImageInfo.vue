@@ -53,13 +53,15 @@
     <div class="margin-bottom-big">
       <content-report-form v-if="isReportFormVisible"
                            :imageId="image.id"
-                           :imageURL="image.foreign_landing_url" />
+                           :imageURL="image.foreign_landing_url"
+                           :providerName="providerName" />
     </div>
   </section>
 </template>
 
 <script>
 import { TOGGLE_REPORT_FORM_VISIBILITY } from '@/store/mutation-types';
+import getProviderName from '@/utils/getProviderName';
 import LicenseIcons from '@/components/LicenseIcons';
 import ContentReportForm from '@/components/ContentReport/ContentReportForm';
 import getProviderLogo from '@/utils/getProviderLogo';
@@ -77,6 +79,9 @@ export default {
     },
     isReportSent() {
       return this.$store.state.isReportSent;
+    },
+    providerName() {
+      return getProviderName(this.$store.state.imageProviders, this.$props.image.source);
     },
   },
   methods: {

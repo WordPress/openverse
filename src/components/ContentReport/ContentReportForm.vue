@@ -6,8 +6,11 @@
     </button>
     <dmca-notice v-if="selectedCopyright && isReportSent"
                       :imageURL="imageURL"
+                      :providerName="providerName"
                       :dmcaFormUrl="dmcaFormUrl" />
-    <done-message v-else-if="!selectedCopyright && isReportSent" :imageURL="imageURL" />
+    <done-message v-else-if="!selectedCopyright && isReportSent"
+                  :imageURL="imageURL"
+                  :providerName="providerName" />
     <report-error v-else-if="reportFailed"/>
     <form v-else-if="!selectedOther">
       <h4 class="b-header">Report this content</h4>
@@ -75,7 +78,7 @@ const dmcaFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsE
 
 export default {
   name: 'content-report-form',
-  props: ['imageId', 'imageURL'],
+  props: ['imageId', 'imageURL', 'providerName'],
   components: {
     DoneMessage,
     dmcaNotice,
