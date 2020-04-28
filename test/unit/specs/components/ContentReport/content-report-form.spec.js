@@ -111,7 +111,7 @@ describe('ContentReportForm', () => {
     wrapper.setData({ selectedOther: true });
 
     const textarea = wrapper.find('.reason');
-    const description = 'foo bar';
+    const description = 'Lorem Ipsum Lorem Ipsum';
     textarea.setValue(description);
 
     const button = wrapper.find('.submit-other-button');
