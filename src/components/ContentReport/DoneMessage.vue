@@ -3,7 +3,8 @@
     <span class="is-block">Thank you for reporting an issue with the results of CC Search!</span>
     <span>
       We recommend doing the same
-      <a :href="imageURL" target="_blank" rel="noopener">at the source  {{ providerName }}</a>.</span>
+      <a :href="imageURL" target="_blank" rel="noopener">at the source  {{ providerName }}</a>.
+    </span>
   </div>
 </template>
 
