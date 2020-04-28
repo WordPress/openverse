@@ -10,7 +10,7 @@
       <a :href="imageURL" target="_blank" rel="noopener">at the source {{ providerName }}</a>.
     </span>
 
-    <button class="button is-text tiny margin-top-normal is-shadowless"
+    <button class="button is-text is-block tiny margin-top-normal is-shadowless"
             @click="onBackClick()">
       <span><i class="icon chevron-left margin-right-small"></i> Back</span>
     </button>
