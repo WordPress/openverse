@@ -71,7 +71,7 @@ import dmcaNotice from './DmcaNotice';
 import DoneMessage from './DoneMessage';
 import ReportError from './ReportError';
 
-const dmca_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform';
+const dmcaFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform';
 
 export default {
   name: 'content-report-form',
@@ -87,7 +87,7 @@ export default {
       selectedOther: false,
       selectedCopyright: false,
       otherReasonDescription: '',
-      dmcaFormUrl: dmca_FORM_URL,
+      dmcaFormUrl,
     };
   },
   computed: {
