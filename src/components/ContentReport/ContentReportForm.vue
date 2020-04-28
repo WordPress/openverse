@@ -54,7 +54,7 @@
         </button>
 
         <button type="button"
-                :disabled="otherReasonDescription === ''"
+                :disabled="!descriptionHasMoreThan20Chars"
                 class="button submit-other-button tiny is-info margin-top-normal is-pulled-right"
                 @click="sendContentReport()">
           Submit report
@@ -96,6 +96,9 @@ export default {
     },
     reportFailed() {
       return this.$store.state.reportFailed;
+    },
+    descriptionHasMoreThan20Chars() {
+      return this.otherReasonDescription.length >= 20;
     },
   },
   methods: {
