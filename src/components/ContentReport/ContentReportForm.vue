@@ -4,9 +4,9 @@
             @click="closeForm()">
       <i class="icon cross"></i>
     </button>
-    <dcma-notice v-if="selectedCopyright && isReportSent"
+    <dmca-notice v-if="selectedCopyright && isReportSent"
                       :imageURL="imageURL"
-                      :dcmaFormUrl="dcmaFormUrl" />
+                      :dmcaFormUrl="dmcaFormUrl" />
     <done-message v-else-if="!selectedCopyright && isReportSent" :imageURL="imageURL" />
     <report-error v-else-if="reportFailed"/>
     <form v-else-if="!selectedOther">
@@ -15,8 +15,8 @@
         <legend class="margin-bottom-small">What's the issue?</legend>
 
         <div>
-          <input type="radio" name="type" id="dcma" value="dcma" v-model="selectedReason">
-          <label for="dcma" class="margin-left-small">Infringes Copyright</label>
+          <input type="radio" name="type" id="dmca" value="dmca" v-model="selectedReason">
+          <label for="dmca" class="margin-left-small">Infringes Copyright</label>
         </div>
 
         <div>
@@ -67,18 +67,18 @@
 <script>
 import { SEND_CONTENT_REPORT } from '@/store/action-types';
 import { REPORT_FORM_CLOSED } from '@/store/mutation-types';
-import DcmaNotice from './DcmaNotice';
+import dmcaNotice from './DmcaNotice';
 import DoneMessage from './DoneMessage';
 import ReportError from './ReportError';
 
-const DCMA_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform';
+const dmca_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform';
 
 export default {
   name: 'content-report-form',
   props: ['imageId', 'imageURL'],
   components: {
     DoneMessage,
-    DcmaNotice,
+    dmcaNotice,
     ReportError,
   },
   data() {
@@ -87,7 +87,7 @@ export default {
       selectedOther: false,
       selectedCopyright: false,
       otherReasonDescription: '',
-      dcmaFormUrl: DCMA_FORM_URL,
+      dmcaFormUrl: dmca_FORM_URL,
     };
   },
   computed: {
@@ -104,7 +104,7 @@ export default {
         this.selectedOther = true;
       }
       else {
-        this.selectedCopyright = this.selectedReason === 'dcma';
+        this.selectedCopyright = this.selectedReason === 'dmca';
         this.sendContentReport();
       }
     },

@@ -57,7 +57,7 @@ describe('ContentReportForm', () => {
     storeState.$store.state.isReportSent = true;
     const wrapper = render(ContentReportForm, options);
     wrapper.setData({ selectedCopyright: true, isReportSent: true });
-    expect(wrapper.find({ name: 'dcma-notice' }).vm).toBeDefined();
+    expect(wrapper.find({ name: 'dmca-notice' }).vm).toBeDefined();
   });
 
   it('should render other type form', () => {
@@ -76,16 +76,16 @@ describe('ContentReportForm', () => {
     expect(wrapper.find('.other-form').element).toBeDefined();
   });
 
-  it('should dispatch SEND_CONTENT_REPORT on next when dcma is selected', () => {
+  it('should dispatch SEND_CONTENT_REPORT on next when dmca is selected', () => {
     const wrapper = render(ContentReportForm, options);
-    const radio = wrapper.find('#dcma');
+    const radio = wrapper.find('#dmca');
     radio.setChecked();
 
     const button = wrapper.find('.next-button');
     button.trigger('click');
     expect(dispatchMock).toHaveBeenCalledWith('SEND_CONTENT_REPORT', {
       identifier: props.imageId,
-      reason: 'dcma',
+      reason: 'dmca',
       description: '',
     });
   });

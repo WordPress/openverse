@@ -2,8 +2,8 @@
   <div>
     <span class="is-block">
       Please fill out
-      <a :href="dcmaFormUrl" target="_blank" rel="noopener">this DMCA form</a>
-      to report dcma infringement.
+      <a :href="dmcaFormUrl" target="_blank" rel="noopener">this DMCA form</a>
+      to report dmca infringement.
     </span>
     <span>
       We recommend doing the same
@@ -21,8 +21,8 @@
 import { BACK_TO_REPORT_START } from '@/store/mutation-types';
 
 export default {
-  name: 'dcma-notice',
-  props: ['dcmaFormUrl', 'imageURL'],
+  name: 'dmca-notice',
+  props: ['dmcaFormUrl', 'imageURL'],
   methods: {
     onBackClick() {
       this.$store.commit(BACK_TO_REPORT_START);
