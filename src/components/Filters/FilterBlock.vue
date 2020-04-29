@@ -1,18 +1,18 @@
 <template>
     <button class="filter-block button tiny tag margin-horizontal-smaller"
-          v-if="filterType === 'searchByCreator'"
-          aria-label="creator"
-          role="filter">
-      <span>Creator</span>
+            v-if="filterType === 'searchBy' || filterType === 'mature'"
+            role="filter"
+            :aria-label="label">
+      <span>{{ this.$props.label }}</span>
       <span class="close margin-left-small"
             tabindex="0"
-            @click="onClickCreator"><i class="icon cross" /></span>
+            @click="onClickIsolatedFilter"><i class="icon cross" /></span>
     </button>
-    <button class="filter-block button tiny tag margin-horizontal-smaller"
-          role="filter"
-          :aria-label="filter.name"
-          v-else>
-      <span>{{ filter.name }}</span>
+    <button v-else
+            class="filter-block button tiny tag margin-horizontal-smaller"
+            role="filter"
+            :aria-label="label">
+      <span>{{ this.$props.label }}</span>
       <span class="close padding-left-normal"
             tabindex="0"
             @click="onClick"><i class="icon cross" /></span>
@@ -21,13 +21,13 @@
 <script>
 export default {
   name: 'filter-block',
-  props: ['filter', 'filterType'],
+  props: ['code', 'filterType', 'label'],
   methods: {
     onClick() {
-      this.$emit('filterChanged', { code: this.filter.code, filterType: this.$props.filterType });
+      this.$emit('filterChanged', { code: this.$props.code, filterType: this.$props.filterType });
     },
-    onClickCreator() {
-      this.$emit('filterChanged', { code: this.filter.code });
+    onClickIsolatedFilter() {
+      this.$emit('filterChanged', { filterType: this.$props.filterType });
     },
   },
 };
