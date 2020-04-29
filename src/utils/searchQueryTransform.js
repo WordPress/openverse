@@ -82,7 +82,7 @@ export const queryToFilterData = (queryString) => {
 
   const mature = getParameterByName('mature', queryString);
   if (mature) {
-    filters.mature = mature === 'true';
+    filters.mature = mature.toLowerCase() === 'true';
   }
 
   return filters;
