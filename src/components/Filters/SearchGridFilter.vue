@@ -41,6 +41,14 @@
               @change="onUpdateSearchByCreator">
       <label for="creator-chk">Search by Creator</label>
     </div>
+
+    <div class="margin-normal filter-option small-filter search-filters_search-by">
+      <input type="checkbox" id="mature-chk"
+              :checked="filters.mature"
+              @change="onUpdateMature">
+      <label for="mature-chk">Enable Mature Content</label>
+    </div>
+
     <div class="margin-big padding-bottom-normal clear-filters"
           v-if="isFilterApplied">
       <button class="button tiny"
@@ -95,6 +103,14 @@ export default {
     onUpdateSearchByCreator() {
       this.$store.dispatch(TOGGLE_FILTER, {
         filterType: 'searchBy',
+        isCollectionsPage: this.$props.isCollectionsPage,
+        provider: this.$props.provider,
+        shouldNavigate: true,
+      });
+    },
+    onUpdateMature() {
+      this.$store.dispatch(TOGGLE_FILTER, {
+        filterType: 'mature',
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
         shouldNavigate: true,
