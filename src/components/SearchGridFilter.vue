@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'search-filters': true,
+  <div id="content-wrapper" :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
     <form class="filters-form" role="filter">
       <filter-check-list :options="filters.licenseTypes"
@@ -127,6 +127,11 @@ export default {
     border-top: 1px solid #e8e8e8;
     display: block;
   }
+}
+
+#content-wrapper {
+  height: 100vh;
+  overflow-y: scroll;
 }
 
 </style>
