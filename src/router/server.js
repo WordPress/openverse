@@ -74,7 +74,6 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-
   if (to.matched.some(record => record.meta.requiresQuery)) {
     // this route requires query, check if any
     // if not, redirect to home page.
