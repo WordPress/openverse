@@ -1,6 +1,6 @@
 <template>
     <div class="filter-display padding-horizontal-normal" aria-live="polite">
-        <span class="caption has-text-weight-semibold">Filter By</span>
+        <span v-if="anyFilterApplied()" class="caption has-text-weight-semibold">Filter By</span>
         <span v-for="filter in getFilters('licenses')" :key="filter.code">
           <filter-block :filter="filter"
                         filterType="licenses"
@@ -48,6 +48,16 @@
 import { TOGGLE_FILTER } from '@/store/action-types';
 import FilterBlock from '@/components/FilterBlock';
 
+const filterMap = {
+  licenses: 'license',
+  licenseTypes: 'license_type',
+  categories: 'categories',
+  extensions: 'extension',
+  aspectRatios: 'aspect_ratio',
+  sizes: 'size',
+  providers: 'source',
+};
+
 export default {
   name: 'filter-display',
   props: ['query', 'isCollectionsPage', 'provider'],
@@ -61,15 +71,6 @@ export default {
   },
   methods: {
     getFilters(filterType) {
-      const filterMap = {
-        licenses: 'license',
-        licenseTypes: 'license_type',
-        categories: 'categories',
-        extensions: 'extension',
-        aspectRatios: 'aspect_ratio',
-        sizes: 'size',
-        providers: 'source',
-      };
       const filterTags = [];
       this.$props.query[filterMap[filterType]].split(',').forEach((filter) => {
         const filterObj = this.$store.state.filters[filterType].find(o => o.code === filter);
@@ -78,6 +79,11 @@ export default {
         }
       });
       return filterTags;
+    },
+    anyFilterApplied() {
+      const filters = Object.keys(filterMap).map(key => this.getFilters(key));
+
+      return filters.some(f => f.length !== 0);
     },
     onUpdateFilter({ code, filterType }) {
       this.$store.dispatch(TOGGLE_FILTER, {

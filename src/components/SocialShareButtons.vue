@@ -34,9 +34,9 @@ import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-a
 export default {
   name: 'social-share-buttons',
   props: {
-    shareURL: '',
-    shareText: '',
-    imageURL: '',
+    shareURL: { default: '' },
+    shareText: { default: '' },
+    imageURL: { default: '' },
     image: {},
   },
   methods: {
