@@ -10,6 +10,7 @@ Notes:             None
 """
 import logging
 import os
+import sys
 
 from common.storage import image
 from common import requester
@@ -22,8 +23,10 @@ logger = logging.getLogger(__name__)
 
 API_KEY = os.getenv('DATA_GOV_API_KEY')
 DELAY = 5.0
-LIMIT = 200  # number of rows to pull at once
-ENDPOINT = 'https://api.si.edu/openaccess/api/v1.0/search'
+LIMIT = 1000  # number of rows to pull at once
+API_ROOT = 'https://api.si.edu/openaccess/api/v1.0/'
+SEARCH_ENDPOINT = API_ROOT + 'search'
+UNIT_CODE_ENDPOINT = API_ROOT + 'terms/unit_code'
 PROVIDER = 'smithsonian'
 ZERO_URL = 'https://creativecommons.org/publicdomain/zero/1.0/'
 DEFAULT_PARAMS = {
@@ -36,12 +39,29 @@ delayed_requester = requester.DelayedRequester(delay=DELAY)
 
 
 def main():
-    _process_unit_code('ACM')
+    unit_codes = _get_unit_code_list()
+    print(unit_codes)
+    for unit_code in unit_codes:
+        _process_unit_code(unit_code)
     total_images = image_store.commit()
     logger.info(f'Total images:  {total_images}')
 
 
-def _process_unit_code(unit_code, endpoint=ENDPOINT, limit=LIMIT):
+def _get_unit_code_list(endpoint=UNIT_CODE_ENDPOINT, params=DEFAULT_PARAMS):
+    response_json = delayed_requester.get_response_json(
+        endpoint,
+        retries=3,
+        query_params=params
+    )
+    unit_codes = response_json.get('response', {}).get('terms', [])
+    logger.info(f'Found {len(unit_codes)} unit codes')
+    if len(unit_codes) == 0:
+        logger.error('Could not get unit code list!  Aborting...')
+        sys.exit(1)
+    return unit_codes
+
+
+def _process_unit_code(unit_code, endpoint=SEARCH_ENDPOINT, limit=LIMIT):
     logger.info(f'Processing unit code:  {unit_code}')
     row_offset = 0
     total_rows = 1
@@ -52,7 +72,6 @@ def _process_unit_code(unit_code, endpoint=ENDPOINT, limit=LIMIT):
             retries=3,
             query_params=query_params
         )
-        logger.info(f'response:  {response_json.keys()}')
         _process_response_json(response_json)
         total_rows = response_json.get('response', {}).get('rowCount', 0)
         row_offset += limit
@@ -69,20 +88,97 @@ def _process_response_json(response_json):
     logger.info('processing response')
     rows = response_json.get('response', {}).get('rows', [])
     for row in rows:
+        content = row.get('content', {})
+        descriptive_non_repeating = content.get('descriptiveNonRepeating', {})
+        indexed_structured = content.get('indexedStructured', {})
+        freetext = content.get('freetext')
+
+        title = row.get('title')
+        landing_url = _get_foreign_landing_url(descriptive_non_repeating)
+        creator = _get_creator(indexed_structured, freetext)
+        meta_data = _extract_meta_data(descriptive_non_repeating, freetext)
+        tags = _extract_tags(indexed_structured)
+
         image_list = (
-            row
-            .get('content', {})
-            .get('descriptiveNonRepeating', {})
+            descriptive_non_repeating
             .get('online_media', {})
             .get('media')
         )
         if image_list is not None:
-            title = row.get('title')
-            foreign_landing_url = row.get('content', {}).get('descriptiveNonRepeating', {}).get('guid')
-            _process_image_list(title, foreign_landing_url, image_list)
+            _process_image_list(
+                image_list,
+                landing_url,
+                title,
+                creator,
+                meta_data,
+                tags
+            )
 
 
-def _process_image_list(title, foreign_landing_url, image_list, license_url=ZERO_URL):
+def _get_foreign_landing_url(dnr_dict):
+    foreign_landing_url = dnr_dict.get('record_link')
+    if foreign_landing_url is None:
+        foreign_landing_url = dnr_dict.get('guid')
+
+    return foreign_landing_url
+
+
+def _get_creator(indexed_structured, freetext):
+    creator_list = indexed_structured.get('name')
+    if not creator_list:
+        creator_list = freetext.get('name', [])
+    creator = ' '.join(
+        [
+            item if type(item) == str else item.get('content', '')
+            for item in creator_list
+        ]
+    )
+
+    return creator
+
+
+def _extract_meta_data(descriptive_non_repeating, freetext):
+    description = ''
+    label_texts = ''
+    notes = freetext.get('notes', [])
+
+    for note in notes:
+        if note.get('label') == 'Description':
+            description += ' ' + note.get('content', '')
+        elif note.get('label') == 'Label Text':
+            label_texts += ' ' + note.get('content', '')
+
+    meta_data = {
+        'unit_code': descriptive_non_repeating.get('unit_code'),
+        'data_source': descriptive_non_repeating.get('data_source')
+    }
+    if description:
+        meta_data.update(description=description)
+    if label_texts:
+        meta_data.update(label_texts=label_texts)
+
+    return meta_data
+
+
+def _extract_tags(indexed_structured):
+    tags = (
+        indexed_structured.get('date', [])
+        + indexed_structured.get('object_type', [])
+        + indexed_structured.get('topic', [])
+        + indexed_structured.get('place', [])
+    )
+    return tags if tags else None
+
+
+def _process_image_list(
+        image_list,
+        foreign_landing_url,
+        title,
+        creator,
+        meta_data,
+        tags,
+        license_url=ZERO_URL
+):
     for image_data in image_list:
         if (
                 image_data.get('type') == 'Images'
@@ -95,6 +191,9 @@ def _process_image_list(title, foreign_landing_url, image_list, license_url=ZERO
                 license_url=license_url,
                 foreign_identifier=image_data.get('idsId'),
                 title=title,
+                creator=None,
+                meta_data=meta_data,
+                raw_tags=tags
             )
 
 
