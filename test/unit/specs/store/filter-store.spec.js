@@ -52,11 +52,17 @@ describe('Filter Store', () => {
       expect(state.filters.licenses.find(x => x.code === 'by').checked).toBeTruthy();
       expect(state.filters.licenseTypes.find(x => x.code === 'commercial').checked).toBeTruthy();
       expect(state.filters.searchBy.creator).toBeTruthy();
+      expect(state.filters.mature).toBeFalsy();
     });
 
     it('gets mature from search params', () => {
       const state = store.state('?q=mature=true');
       expect(state.filters.mature).toBeTruthy();
+    });
+
+    it('gets mature as false from search params', () => {
+      const state = store.state('?q=mature=false');
+      expect(state.filters.mature).toBeFalsy();
     });
 
     it('state has filter visible', () => {

@@ -82,7 +82,7 @@ export const queryToFilterData = (queryString) => {
 
   const mature = getParameterByName('mature', queryString);
   if (mature) {
-    filters.mature = Boolean(mature);
+    filters.mature = mature === 'true';
   }
 
   return filters;
