@@ -137,11 +137,6 @@ class Image(OpenLedgerModel):
         )
         return attribution
 
-    def image_tag(self):
-        return mark_safe('<img src="%s" width="150" />' % self.url)
-
-    image_tag.short_description = 'Image'
-
     class Meta:
         db_table = 'image'
         ordering = ['-created_on']
@@ -165,20 +160,6 @@ class ContentProvider(models.Model):
 
     class Meta:
         db_table = 'content_provider'
-
-
-class ImageTags(OpenLedgerModel):
-    tag = models.ForeignKey(
-        'Tag',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True
-    )
-    image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True)
-
-    class Meta:
-        unique_together = ('tag', 'image')
-        db_table = 'image_tags'
 
 
 class ImageList(OpenLedgerModel):
@@ -290,7 +271,7 @@ class MatureImage(models.Model):
         unique=True,
         primary_key=True
     )
-    created_on = models.DateTimeField(auto_now=True)
+    created_on = models.DateTimeField(auto_now_add=True)
 
     def delete(self, *args, **kwargs):
         es = search_controller.es
