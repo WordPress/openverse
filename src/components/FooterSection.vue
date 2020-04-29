@@ -59,10 +59,9 @@
             <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">
               Creative Commons Attribution 4.0 International license
             </a>.
-            <a href="https://creativecommons.org/website-icons" target="_blank" rel="noopener">
-              Icons
-            </a>
-            by Noun Project.
+              <a href="https://fontawesome.com/" target="_blank" rel="noopener" class="has-text-white">
+                Icons by Font Awesome.
+             </a>
           </p>
 
           <div class="margin-top-smaller">
