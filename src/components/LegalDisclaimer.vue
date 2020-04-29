@@ -19,15 +19,11 @@
 </template>
 
 <script>
-import Tooltip from '@/components/Tooltip';
 import getProviderLogo from '@/utils/getProviderLogo';
 
 export default {
   name: 'legal-disclaimer',
   props: ['source', 'sourceProviderCode', 'sourceURL'],
-  components: {
-    Tooltip,
-  },
   methods: {
     getProviderLogo(providerName) {
       return getProviderLogo(providerName);

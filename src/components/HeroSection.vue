@@ -49,17 +49,10 @@
       </div>
       <home-license-filter />
     </form>
-    <div class="help-links">
+    <div class="help-links is-hidden-mobile">
       <span class="margin-right-bigger">
         Go to the
         <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
-      </span>
-
-      <span>
-        See our
-        <a href="/search-help">
-          Search Syntax Guide
-        </a>
       </span>
     </div>
   </div>
@@ -124,12 +117,8 @@ $hero-height: 74vh;
 
 .help-links {
   position: absolute;
-  bottom: 5rem;
-  left: 2rem;
-
-  @media screen and (max-width: 40em) {
-    display: none;
-  }
+  bottom: 1rem;
+  left: 1rem;
 }
 
 .help-icon {

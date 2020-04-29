@@ -59,7 +59,6 @@
 </template>
 
 <script>
-import SearchGridFilter from '@/components/SearchGridFilter';
 import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
 
 export default {
@@ -70,9 +69,6 @@ export default {
     },
   },
   data: () => ({ searchTermsModel: null }),
-  components: {
-    SearchGridFilter,
-  },
   computed: {
     searchTerms() {
       return this.$store.state.query.q;
