@@ -356,6 +356,41 @@ def test_ImageStore_get_image_enriches_singleton_tags(
     assert actual_image.tags == [{'name': 'lone', 'provider': 'test_provider'}]
 
 
+def test_ImageStore_get_image_tag_blacklist(
+        setup_env,
+):
+    raw_tags = [
+        'cc0',
+        'valid',
+        'garbage:=metacrap'
+    ]
+
+    image_store = image.ImageStore('test_provider')
+
+    actual_image = image_store._get_image(
+        license_url='https://license/url',
+        license_='license',
+        license_version='1.5',
+        foreign_landing_url=None,
+        image_url=None,
+        thumbnail_url=None,
+        foreign_identifier=None,
+        width=None,
+        height=None,
+        creator=None,
+        creator_url=None,
+        title=None,
+        meta_data=None,
+        raw_tags=raw_tags,
+        watermarked=None,
+        source=None,
+    )
+
+    assert actual_image.tags == [
+        {'name': 'valid', 'provider': 'test_provider'}
+    ]
+
+
 def test_ImageStore_get_image_enriches_multiple_tags(
         setup_env,
 ):

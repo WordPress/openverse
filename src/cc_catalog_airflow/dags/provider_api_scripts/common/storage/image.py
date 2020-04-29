@@ -11,65 +11,91 @@ logger = logging.getLogger(__name__)
 _IMAGE_TSV_COLUMNS = [
     # The order of this list maps to the order of the columns in the TSV.
     columns.StringColumn(
-        name='foreign_identifier',  required=False, size=3000, truncate=False
+        name='foreign_identifier', required=False, size=3000, truncate=False
     ),
     columns.URLColumn(
-        name='foreign_landing_url', required=True,  size=1000
+        name='foreign_landing_url', required=True, size=1000
     ),
     columns.URLColumn(
         # `url` in DB
-        name='image_url',           required=True,  size=3000
+        name='image_url', required=True, size=3000
     ),
     columns.URLColumn(
         # `thumbnail` in DB
-        name='thumbnail_url',       required=False, size=3000
+        name='thumbnail_url', required=False, size=3000
     ),
     columns.IntegerColumn(
-        name='width',               required=False
+        name='width', required=False
     ),
     columns.IntegerColumn(
-        name='height',              required=False
+        name='height', required=False
     ),
     columns.IntegerColumn(
-        name='filesize',            required=False
+        name='filesize', required=False
     ),
     columns.StringColumn(
-        name='license_',            required=True,  size=50,   truncate=False
+        name='license_', required=True, size=50, truncate=False
     ),
     columns.StringColumn(
-        name='license_version',     required=True,  size=25,   truncate=False
+        name='license_version', required=True, size=25, truncate=False
     ),
     columns.StringColumn(
-        name='creator',             required=False, size=2000, truncate=True
+        name='creator', required=False, size=2000, truncate=True
     ),
     columns.URLColumn(
-        name='creator_url',         required=False, size=2000
+        name='creator_url', required=False, size=2000
     ),
     columns.StringColumn(
-        name='title',               required=False, size=5000, truncate=True
+        name='title', required=False, size=5000, truncate=True
     ),
     columns.JSONColumn(
-        name='meta_data',           required=False
+        name='meta_data', required=False
     ),
     columns.JSONColumn(
-        name='tags',                required=False
+        name='tags', required=False
     ),
     columns.BooleanColumn(
-        name='watermarked',         required=False
+        name='watermarked', required=False
     ),
     columns.StringColumn(
-        name='provider',            required=False, size=80,   truncate=False
+        name='provider', required=False, size=80, truncate=False
     ),
     columns.StringColumn(
-        name='source',              required=False, size=80,   truncate=False
+        name='source', required=False, size=80, truncate=False
     )
 ]
-
 
 _Image = namedtuple(
     '_Image',
     [c.NAME for c in _IMAGE_TSV_COLUMNS]
 )
+
+# Filter out tags that exactly match these terms. All terms should be
+# lowercase.
+TAG_BLACKLIST = {
+    'no person',
+    'squareformat',
+    'uploaded:by=flickrmobile',
+    'uploaded:by=instagram',
+    'flickriosapp:filter=flamingo'
+}
+
+# Filter out tags that contain the following terms. All entrees should be
+# lowercase.
+TAG_CONTAINS_BLACKLIST = {
+    'flickriosapp',
+    'uploaded',
+    ':',
+    '=',
+    'cc0',
+    'by',
+    'by-nc',
+    'by-nd',
+    'by-sa',
+    'by-nc-nd',
+    'by-nc-sa',
+    'pdm'
+}
 
 
 class ImageStore:
@@ -175,23 +201,23 @@ class ImageStore:
                              provider of the image.
         """
         image = self._get_image(
-                foreign_landing_url=foreign_landing_url,
-                image_url=image_url,
-                thumbnail_url=thumbnail_url,
-                license_url=license_url,
-                license_=license_,
-                license_version=license_version,
-                foreign_identifier=foreign_identifier,
-                width=width,
-                height=height,
-                creator=creator,
-                creator_url=creator_url,
-                title=title,
-                meta_data=meta_data,
-                raw_tags=raw_tags,
-                watermarked=watermarked,
-                source=source
-            )
+            foreign_landing_url=foreign_landing_url,
+            image_url=image_url,
+            thumbnail_url=thumbnail_url,
+            license_url=license_url,
+            license_=license_,
+            license_version=license_version,
+            foreign_identifier=foreign_identifier,
+            width=width,
+            height=height,
+            creator=creator,
+            creator_url=creator_url,
+            title=title,
+            meta_data=meta_data,
+            raw_tags=raw_tags,
+            watermarked=watermarked,
+            source=source
+        )
         tsv_row = self._create_tsv_row(image)
         if tsv_row:
             self._image_buffer.append(tsv_row)
@@ -264,24 +290,24 @@ class ImageStore:
         tags = self._enrich_tags(raw_tags)
 
         return _Image(
-                foreign_identifier=foreign_identifier,
-                foreign_landing_url=foreign_landing_url,
-                image_url=image_url,
-                thumbnail_url=thumbnail_url,
-                license_=license_,
-                license_version=license_version,
-                width=width,
-                height=height,
-                filesize=None,
-                creator=creator,
-                creator_url=creator_url,
-                title=title,
-                meta_data=meta_data,
-                tags=tags,
-                watermarked=watermarked,
-                provider=self._PROVIDER,
-                source=source
-            )
+            foreign_identifier=foreign_identifier,
+            foreign_landing_url=foreign_landing_url,
+            image_url=image_url,
+            thumbnail_url=thumbnail_url,
+            license_=license_,
+            license_version=license_version,
+            width=width,
+            height=height,
+            filesize=None,
+            creator=creator,
+            creator_url=creator_url,
+            title=title,
+            meta_data=meta_data,
+            tags=tags,
+            watermarked=watermarked,
+            provider=self._PROVIDER,
+            source=source
+        )
 
     def _create_tsv_row(
             self,
@@ -307,18 +333,34 @@ class ImageStore:
         if buffer_length > 0:
             logger.info(
                 'Writing {} lines from buffer to disk.'
-                .format(buffer_length)
+                    .format(buffer_length)
             )
             with open(self._OUTPUT_PATH, 'a') as f:
                 f.writelines(self._image_buffer)
                 self._image_buffer = []
                 logger.debug(
                     'Total Images Processed so far:  {}'
-                    .format(self._total_images)
+                        .format(self._total_images)
                 )
         else:
             logger.debug('Empty buffer!  Nothing to write.')
         return buffer_length
+
+    def _tag_blacklisted(self, tag):
+        """
+        Tag is banned or contains a banned substring.
+        :param tag: the tag to be verified against the blacklist
+        :return: true if tag is blacklisted, else returns false
+        """
+        if type(tag) == dict:  # check if the tag is already enriched
+            return False
+        else:
+            if tag in TAG_BLACKLIST:
+                return True
+            for blacklisted_substring in TAG_CONTAINS_BLACKLIST:
+                if blacklisted_substring in tag:
+                    return True
+            return False
 
     def _enrich_meta_data(self, meta_data, license_url):
         if type(meta_data) != dict:
@@ -338,6 +380,7 @@ class ImageStore:
         else:
             return [
                 self._format_raw_tag(tag) for tag in raw_tags
+                if not self._tag_blacklisted(tag)
             ]
 
     def _format_raw_tag(self, tag):
