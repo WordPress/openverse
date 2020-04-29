@@ -68,7 +68,6 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 You can check the health of a live deployment of the API by running the live integration tests.
 ```
 cd cccatalog-api
-virtualenv venv
 pipenv install
 pipenv shell
 ./test/run_test.sh
