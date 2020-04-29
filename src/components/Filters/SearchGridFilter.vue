@@ -33,21 +33,18 @@
                          title="Image Size"
                          filterType="sizes"
                          @filterChanged="onUpdateFilter" />
+      <filter-check-list title="Settings"
+                         filterType="mature"
+                         :checked="filters.mature"
+                         @filterChanged="onUpdateFilter" />
+
+      <div class="margin-normal filter-option small-filter search-filters_search-by">
+        <input type="checkbox" id="creator-chk"
+                :checked="filters.searchBy.creator"
+                @change="onUpdateSearchByCreator">
+        <label for="creator-chk">Search by Creator</label>
+      </div>
     </form>
-
-    <div class="margin-normal filter-option small-filter search-filters_search-by">
-      <input type="checkbox" id="creator-chk"
-              :checked="filters.searchBy.creator"
-              @change="onUpdateSearchByCreator">
-      <label for="creator-chk">Search by Creator</label>
-    </div>
-
-    <div class="margin-normal filter-option small-filter search-filters_search-by">
-      <input type="checkbox" id="mature-chk"
-              :checked="filters.mature"
-              @change="onUpdateMature">
-      <label for="mature-chk">Enable Mature Content</label>
-    </div>
 
     <div class="margin-big padding-bottom-normal clear-filters"
           v-if="isFilterApplied">
@@ -103,14 +100,6 @@ export default {
     onUpdateSearchByCreator() {
       this.$store.dispatch(TOGGLE_FILTER, {
         filterType: 'searchBy',
-        isCollectionsPage: this.$props.isCollectionsPage,
-        provider: this.$props.provider,
-        shouldNavigate: true,
-      });
-    },
-    onUpdateMature() {
-      this.$store.dispatch(TOGGLE_FILTER, {
-        filterType: 'mature',
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
         shouldNavigate: true,
