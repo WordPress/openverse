@@ -1,4 +1,4 @@
-import FilterChecklist from '@/components/FilterChecklist';
+import FilterChecklist from '@/components/Filters/FilterChecklist';
 import render from '../../test-utils/render';
 
 describe('FilterChecklist', () => {
