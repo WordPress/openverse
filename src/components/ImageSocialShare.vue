@@ -24,7 +24,7 @@ export default {
   }),
   computed: {
     imageURL() {
-      return this.image.foreign_landing_url;
+      return this.image.url;
     },
     shareText() {
       return encodeURI(`I found an image through CC Search @creativecommons: ${this.imageURL}`);
