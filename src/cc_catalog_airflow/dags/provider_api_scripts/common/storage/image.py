@@ -333,14 +333,14 @@ class ImageStore:
         if buffer_length > 0:
             logger.info(
                 'Writing {} lines from buffer to disk.'
-                    .format(buffer_length)
+                  .format(buffer_length)
             )
             with open(self._OUTPUT_PATH, 'a') as f:
                 f.writelines(self._image_buffer)
                 self._image_buffer = []
                 logger.debug(
                     'Total Images Processed so far:  {}'
-                        .format(self._total_images)
+                      .format(self._total_images)
                 )
         else:
             logger.debug('Empty buffer!  Nothing to write.')
