@@ -124,8 +124,6 @@ export default {
   }
 
   &__visible {
-    height: 100vh;
-    overflow-y: scroll;
     border-top: 1px solid #e8e8e8;
     display: block;
   }
