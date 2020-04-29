@@ -84,26 +84,6 @@ const router = new VueRouter({
   },
 });
 
-// eslint-disable-next-line
-router.beforeEach((to, from, next) => {
-
-  if (to.matched.some(record => record.meta.requiresQuery)) {
-    // this route requires query, check if any
-    // if not, redirect to home page.
-    if (!to.query.q) {
-      next({
-        name: 'home-page',
-      });
-    }
-    else {
-      next();
-    }
-  }
-  else {
-    next();
-  }
-});
-
 router.afterEach((to) => {
   if (typeof ga !== 'undefined') {
     ga('set', 'page', to.fullPath);
