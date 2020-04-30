@@ -1,9 +1,9 @@
 <template>
-<div class="page">
+<div class="about-page">
   <header-section showNavSearch="true"></header-section>
-  <div class="page_body">
-    <h1>About CC Search</h1>
-      <p class="page_lead-paragraph">
+  <div class="margin-normal">
+    <h2>About CC Search</h2>
+      <p>
         CC Search is a tool that allows openly licensed and public domain works to be discovered
         and used by everyone. Creative Commons, the nonprofit behind CC Search, is the maker of the
         <a href="https://creativecommons.org/share-your-work/licensing-examples/">CC licenses</a>,
@@ -40,28 +40,26 @@
         Looking for the old CC Search portal? Visit
         <a href="https://oldsearch.creativecommons.org">https://oldsearch.creativecommons.org</a>.
       </p>
-      <h2>Sources</h2>
-      <div class="page_provider-stats-ctr">
-        <table class="page_provider-stats-table">
-          <thead>
-            <th>Source</th>
-            <th>Domain</th>
-            <th># CC Licensed Works</th>
-          </thead>
-          <tbody>
-            <tr v-for="(imageProvider, index) in imageProviders"
-                :key="index">
-              <td>{{ imageProvider.display_name }}</td>
-              <td>
-                <a :href="imageProvider.source_url">
-                  {{ imageProvider.source_url }}
-                </a>
-              </td>
-              <td>{{ getProviderImageCount(imageProvider.image_count) }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <h3 class="margin-vertical-normal">Sources</h3>
+      <table class="table is-bordered is-striped">
+        <thead>
+          <th>Source</th>
+          <th>Domain</th>
+          <th># CC Licensed Works</th>
+        </thead>
+        <tbody>
+          <tr v-for="(imageProvider, index) in imageProviders"
+              :key="index">
+            <td>{{ imageProvider.display_name }}</td>
+            <td>
+              <a :href="imageProvider.source_url">
+                {{ imageProvider.source_url }}
+              </a>
+            </td>
+            <td class="number-cell">{{ getProviderImageCount(imageProvider.image_count) }}</td>
+          </tr>
+        </tbody>
+      </table>
   </div>
   <footer-section></footer-section>
 </div>

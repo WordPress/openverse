@@ -1,7 +1,10 @@
 <template>
-  <div class="column is-2 provider-card">
+  <div class="column is-narrow margin-normal has-background-white provider-card">
     <div>
-      <span class="provider-name">{{ provider.display_name }}</span>
+      <a :href="'/collections/'+provider.source_name"
+         class="provider-name has-text-weight-normal has-text-black">
+        {{ provider.display_name }}
+      </a>
     </div>
     <div class="provider-logo">
       <a :href="'/collections/'+provider.source_name">
@@ -10,7 +13,9 @@
       </a>
     </div>
     <div>
-      <span>Collection size: {{ getProviderImageCount(provider.image_count) }} images</span>
+      <span class="has-text-grey-light has-text-weight-semibold">
+        Collection size: {{ getProviderImageCount(provider.image_count) }} images
+      </span>
     </div>
   </div>
 </template>
@@ -41,10 +46,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "@creativecommons/vocabulary/scss/colors.scss";
   .provider-card {
-    margin: 0.5em;
-    border: 1px solid $color-light-gray;
+    width: 16.5rem;
+    border: 2px solid rgb(216, 216, 216);
+    &:hover{
+      box-shadow: 10px 10px 2px -5px #E7E7E7;
+    }
   }
 
   .provider-name {
@@ -52,8 +59,7 @@ export default {
   }
 
   .provider-logo {
-    height: 10em;
-    line-height: 10em;
+    height: 12rem;
     white-space: nowrap;
     position: relative;
 
@@ -65,7 +71,7 @@ export default {
     }
 
     img {
-      width: 100%;
+      max-height: 10rem;
     }
   }
 </style>

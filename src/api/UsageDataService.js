@@ -2,7 +2,7 @@ import { createApiService } from './ApiService';
 
 const baseUrl = process.env.API_URL;
 // Analytics API is available at `http://api.creativecommons.engineering/analytics/`
-// and not `http://api-dev.creativecommons.engineering/v1/analytics
+// and not `http://api.creativecommons.engineering/v1/analytics
 const ApiService = createApiService(baseUrl.replace('/v1', ''));
 
 const UsageDataService = {
@@ -25,6 +25,13 @@ const UsageDataService = {
     return this.post(
       'detail_page_event',
       { event_type: eventType, result_uuid: resultUuid },
+    );
+  },
+
+  sendSearchRatingEvent({ query, relevant }) {
+    return this.post(
+      'search_rating_event',
+      { query, relevant },
     );
   },
 };

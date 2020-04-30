@@ -1,14 +1,13 @@
 <template>
   <div class="photo-detail-page">
     <header-section showNavSearch="true" />
-    <div class="padding-horizontal-small">
+    <div>
       <photo-details :image="image"
                     :breadCrumbURL="breadCrumbURL"
                     :shouldShowBreadcrumb="shouldShowBreadcrumb"
                     :query="query"
                     :imageWidth="imageWidth"
                     :imageHeight="imageHeight"
-                    :watermarkEnabled="watermarkEnabled"
                     :socialSharingEnabled="socialSharingEnabled"
                     @onImageLoaded="onImageLoaded" />
       <photo-tags :tags="tags" />

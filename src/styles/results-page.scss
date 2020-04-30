@@ -1,0 +1,26 @@
+.search {
+  margin: 0;
+}
+
+.search-grid-ctr {
+  padding: 0;
+  background: #f5f5f5;
+  min-height: 600px;
+
+  /* 48em = 768px */
+  @media (max-width: 48em) {
+    width: 100%;
+    flex: none;
+  }
+}
+
+.grid-sidebar {
+  padding-top: 0;
+  background-color: #fff;
+  width: 21.875rem;
+
+  /* 48em = 768px */
+  @media (max-width: 48em) {
+    width: 100%;
+  }
+}

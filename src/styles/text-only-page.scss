@@ -1,44 +1,22 @@
-h1 {
-  font-size: 2.125em;
-}
-
-h2 {
-  font-size: 1.5em;
-}
-
-h3 {
-  font-size: 1.2em;
-}
-
-.page {
-  background: #fff;
-}
-
-.page_body {
-  font-size: 1em;
-  margin: 45px !important;
-}
-
-.page_lead-paragraph {
-  margin-bottom: 1em;
-}
-
 p > em {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: monospace;
   color: #188038;
   font-style: normal;
   font-weight: 600;
 }
 
 a > em {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: monospace;
   font-style: normal;
   font-weight: 600;
 }
 
-/* Small only */
-@media screen and (max-width: 39.9375em) {
-  .page_body {
-    margin: 30px 15px 15px 15px !important;
-  }
+.table {
+    table-layout: fixed;
+    width: 100%;
 }
+
+.table.is-bordered td {
+	word-break: break-all;
+}
+

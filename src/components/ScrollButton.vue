@@ -59,6 +59,7 @@ export default {
   outline: none;
   cursor: pointer;
   transition: all 5s ease-in;
+  z-index:5;
 }
 
 .scroll:hover {
