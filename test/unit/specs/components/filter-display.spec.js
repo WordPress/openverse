@@ -55,7 +55,7 @@ describe('FilterDisplay', () => {
   });
 
   it('should render filter by caption label', () => {
-    filters.licenses[0].checked = true;
+    options.mocks.$store.state.isFilterApplied = true;
     const wrapper = render(FilterDisplay, options);
     expect(wrapper.find('.caption').element.textContent).toBe('Filter By');
   });

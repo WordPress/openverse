@@ -1,6 +1,6 @@
 <template>
     <div class="filter-display padding-horizontal-normal" aria-live="polite">
-        <span v-if="anyFilterApplied()" class="caption has-text-weight-semibold">Filter By</span>
+        <span v-if="anyFilterApplied" class="caption has-text-weight-semibold">Filter By</span>
         <span v-for="filter in getFilters('licenses')" :key="filter.code">
           <filter-block :code="filter.code"
                         :label="filter.name"
@@ -84,6 +84,9 @@ export default {
     mature() {
       return this.$store.state.filters.mature;
     },
+    anyFilterApplied() {
+      return this.$store.state.isFilterApplied;
+    },
   },
   methods: {
     getFilters(filterType) {
@@ -95,9 +98,6 @@ export default {
         }
       });
       return filterTags;
-    },
-    anyFilterApplied() {
-      return this.$store.state.isFilterApplied;
     },
     onUpdateFilter({ code, filterType }) {
       this.$store.dispatch(TOGGLE_FILTER, {
