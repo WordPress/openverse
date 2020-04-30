@@ -2,7 +2,7 @@
   <nav class="navbar small">
     <div class="navbar-brand">
       <a class="logo" href="/">
-        <img alt="Logo" src="../assets/cc-search-logo-black.png">
+        <img alt="Logo" src="/static/logos/products/search.svg">
       </a>
       <a role="button"
          :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
@@ -32,7 +32,7 @@
       <div class="navbar-end">
         <a class="navbar-item" href="/about">About</a>
         <a class="navbar-item" href="/collections">Collections</a>
-        <a class="navbar-item is-hidden-desktop" href="/search-help">Search Guide</a>
+        <a class="navbar-item" href="/search-help">Search Guide</a>
         <a class="navbar-item" href="/feedback">Feedback</a>
       </div>
     </div>

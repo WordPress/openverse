@@ -27,7 +27,6 @@ describe('ImageSocialShare', () => {
   });
 
   it('should render social buttons', () => {
-    options.propsData.watermarkEnabled = false;
     const wrapper = render(ImageSocialShare, options);
     expect(wrapper.find({ name: 'social-share-buttons' }).exists()).toBeTruthy();
   });

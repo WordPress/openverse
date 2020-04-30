@@ -19,7 +19,6 @@ describe('PhotoDetails', () => {
         creator: 'John',
         creator_url: 'http://creator.com',
       },
-      watermarkEnabled: true,
       socialSharingEnabled: true,
     };
 
@@ -31,16 +30,9 @@ describe('PhotoDetails', () => {
   it('should render correct contents', () => {
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.find('.photo_image').element).toBeDefined();
-    expect(wrapper.find({ name: 'watermark' }).exists()).toBe(true);
     expect(wrapper.find({ name: 'image-info' }).exists()).toBe(true);
     expect(wrapper.find({ name: 'image-attribution' }).exists()).toBe(true);
     expect(wrapper.find({ name: 'image-social-share' }).exists()).toBe(true);
-  });
-
-  it('should not render watermark link when watermark is disabled', () => {
-    options.propsData.watermarkEnabled = false;
-    const wrapper = render(PhotoDetails, options);
-    expect(wrapper.find({ name: 'watermark' }).element).not.toBeDefined();
   });
 
   it('should render social sharing buttons', () => {

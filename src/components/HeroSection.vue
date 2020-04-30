@@ -6,8 +6,10 @@
           method="get"
           action="/search"
           v-on:submit.prevent="onSubmit">
-      <div class="is-hidden-touch is-flex centered-search-box">
-        <input required="required"
+      <div class="is-hidden-touch centered-search-box">
+        <div class="field has-addons">
+          <div class="control">
+            <input required="required"
                 class="hero_search-input input is-large"
                 type="search"
                 name="q"
@@ -15,18 +17,28 @@
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <button class="button is-primary big" title="Search">Search</button>
+          </div>
+          <div class="control">
+            <button class="button is-primary big" title="Search">Search</button>
+          </div>
+        </div>
       </div>
-      <div class="is-hidden-desktop is-flex centered-search-box">
-        <input required="required"
-                class="hero_search-input input"
+      <div class="is-hidden-desktop centered-search-box">
+        <div class="field has-addons">
+          <div class="control mobile-input">
+            <input required="required"
+                class="input"
                 type="search"
                 name="q"
                 placeholder="I would like to see..."
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm" />
-        <button class="button is-primary small" title="Search">Search</button>
+          </div>
+          <div class="control">
+            <button class="button is-primary small" title="Search">Search</button>
+          </div>
+        </div>
       </div>
       <div class="caption has-text-centered margin-top-big">
         <p>
@@ -37,17 +49,10 @@
       </div>
       <home-license-filter />
     </form>
-    <div class="help-links">
+    <div class="help-links is-hidden-mobile">
       <span class="margin-right-bigger">
         Go to the
         <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
-      </span>
-
-      <span>
-        See our
-        <a href="/search-help">
-          Search Syntax Guide
-        </a>
       </span>
     </div>
   </div>
@@ -77,7 +82,7 @@ export default {
 <style lang="scss" scoped>
 
 
-$hero-height: 71vh;
+$hero-height: 74vh;
 
 .hero {
   background: #fff;
@@ -102,18 +107,18 @@ $hero-height: 71vh;
   }
 
   .hero_search-input {
-    width: 70%;
+    width: 570px;
+  }
+
+  .mobile-input {
+    width: 100%;
   }
 }
 
 .help-links {
   position: absolute;
-  bottom: 5rem;
-  left: 2rem;
-
-  @media screen and (max-width: 40em) {
-    display: none;
-  }
+  bottom: 1rem;
+  left: 1rem;
 }
 
 .help-icon {

@@ -1,5 +1,5 @@
 <template>
-  <div class="reuse-survey">
+  <div class="reuse-survey margin-bottom-big">
     <span>How are you using this image?</span>
     <a :href="formLink" target="_blank" rel="noopener" @click="onReuseSurveyClick">
       Take a quick survey
