@@ -2,7 +2,7 @@
   <div class="filters padding-vertical-big padding-left-big padding-right-normal">
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
-      <button class="filter-visibility-toggle is-hidden-touch
+      <button class="is-hidden-touch filter-visibility-toggle
                      is-white padding-vertical-small">
         <i v-if="filtersVisible"
            class="icon angle-up rotImg is-size-5 has-text-grey-light"
