@@ -1,5 +1,5 @@
 <template>
-  <div class="card padding-normal is-clearfix report-form">
+  <div class="padding-normal is-clearfix report-form">
     <button class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
             @click="closeForm()">
       <i class="icon cross"></i>
@@ -132,9 +132,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card {
-  width: 22rem;
-}
 .reason {
   width: 100%;
   height: 6rem;
