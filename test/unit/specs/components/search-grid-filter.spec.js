@@ -57,11 +57,6 @@ describe('SearchGridFilter', () => {
     expect(wrapper.find('.search-filters').classes()).not.toContain('search-filters__visible');
   });
 
-  it('display filters', () => {
-    const wrapper = render(SearchGridFilter, options);
-    expect(wrapper.findAll({ name: 'filter-check-list' }).length).toBe(Object.keys(filterData).length - 1);
-  });
-
   it('should not display providers filter when props is set to false', () => {
     props.showProvidersFilter = false;
     const wrapper = render(SearchGridFilter, options);

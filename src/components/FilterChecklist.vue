@@ -13,7 +13,7 @@
       </button>
     </div>
     <template v-if="filtersVisible">
-    <div v-for="(item, index) in options" :key="index" class="margin-top-small">
+    <div v-for="(item, index) in options" :key="index" class="is-hidden-touch margin-top-small">
       <label class="checkbox" :for="item.code">
         <input type="checkbox"
              class="filter-checkbox"
