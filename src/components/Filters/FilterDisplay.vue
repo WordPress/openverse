@@ -97,9 +97,7 @@ export default {
       return filterTags;
     },
     anyFilterApplied() {
-      const filters = Object.keys(filterMap).map(key => this.getFilters(key));
-
-      return filters.some(f => f.length !== 0);
+      return this.$store.state.isFilterApplied;
     },
     onUpdateFilter({ code, filterType }) {
       this.$store.dispatch(TOGGLE_FILTER, {
