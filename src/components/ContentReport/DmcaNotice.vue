@@ -1,16 +1,16 @@
 <template>
   <div>
-    <span class="is-block">
+    <span class="is-block padding-horizontal-big margin-top-large">
       Please fill out
       <a :href="dmcaFormUrl" target="_blank" rel="noopener">this DMCA form</a>
       to report dmca infringement.
     </span>
-    <span>
+    <span class="is-block padding-horizontal-big margin-top-small">
       We recommend doing the same
       <a :href="imageURL" target="_blank" rel="noopener">at the source {{ providerName }}</a>.
     </span>
 
-    <button class="button is-text is-block tiny margin-top-normal is-shadowless"
+    <button class="button is-text tiny margin-top-normal is-shadowless has-text-grey"
             @click="onBackClick()">
       <span><i class="icon chevron-left margin-right-small"></i> Back</span>
     </button>
