@@ -7,6 +7,7 @@
       </div>
       <div class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
+        <filter-display :query="query" />
       </div>
     </div>
 
@@ -20,6 +21,7 @@ import HeaderSection from '@/components/HeaderSection';
 import SearchGridForm from '@/components/SearchGridForm';
 import SearchGridFilter from '@/components/SearchGridFilter';
 import BrowsePageMixin from '@/pages/mixins/BrowsePageMixin';
+import FilterDisplay from '@/components/FilterDisplay';
 import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin';
 
 const BrowsePage = {
@@ -27,6 +29,7 @@ const BrowsePage = {
     HeaderSection,
     SearchGridForm,
     FooterSection,
+    FilterDisplay,
     SearchGridFilter,
   },
   mixins: [BrowsePageMixin, ServerPrefetchProvidersMixin],
