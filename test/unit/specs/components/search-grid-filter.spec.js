@@ -1,5 +1,4 @@
 import SearchGridFilter from '@/components/SearchGridFilter';
-import { filterData } from '@/store/filter-store';
 import render from '../../test-utils/render';
 
 describe('SearchGridFilter', () => {
