@@ -105,7 +105,6 @@
                          filterType="sizes"
                          @filterChanged="onUpdateFilter" />
     </form>
-    
     <div class="margin-normal filter-option small-filter search-filters_search-by">
       <input type="checkbox" id="creator-chk"
               :checked="filters.searchBy.creator"
