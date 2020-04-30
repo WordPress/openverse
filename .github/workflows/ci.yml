@@ -15,8 +15,7 @@ jobs:
   ci:
     name: Run CI tests
     runs-on: ubuntu-latest
-    needs: setup
-
+    
     steps:
     - uses: actions/checkout@v2
 
