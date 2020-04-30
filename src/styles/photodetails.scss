@@ -11,10 +11,8 @@
   background: rgb(245, 245, 245);
 }
 
-.photo_breadcrumb {
-  .icon {
-    vertical-align: middle;
-  }
+.icon {
+  vertical-align: middle;
 }
 
 .photo_image-ctr {
@@ -44,21 +42,46 @@
   }
 }
 
-label {
-  margin-right: 8px;
-}
-
 .help-icon {
   height: 24px;
 }
 
-.embed-attribution {
-  margin: 1rem 0 1rem;
-}
-
 .provider-logo {
-  margin-top: 8px;
-  margin-bottom: 8px;
   height: 64px;
   display: block;
+}
+
+.back {
+  vertical-align: middle;
+}
+
+// from http://www.cssarrowplease.com/
+.report-form {
+	position: absolute;
+	background: #ffffff;
+  border: 2px solid #D8D8D8;
+  z-index: 10;
+}
+.report-form:after, .report-form:before {
+	bottom: 100%;
+	left: 10%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.report-form:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-bottom-color: #ffffff;
+	border-width: 10px;
+	margin-left: -10px;
+}
+.report-form:before {
+	border-color: rgba(120, 120, 120, 0);
+	border-bottom-color: #D8D8D8;
+	border-width: 13px;
+	margin-left: -13px;
 }
