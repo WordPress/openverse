@@ -33,7 +33,7 @@
                          title="Image Size"
                          filterType="sizes"
                          @filterChanged="onUpdateFilter" />
-      <filter-check-list title="Settings"
+      <filter-check-list title="Search Settings"
                          filterType="mature"
                          :checked="filters.mature"
                          @filterChanged="onUpdateFilter" />

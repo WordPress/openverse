@@ -25,7 +25,7 @@
       </label>
     </div>
     </template>
-    <template v-if="filtersVisible && title === 'Settings'">
+    <template v-if="filtersVisible && filterType === 'mature'">
         <label class="checkbox margin-top-small" for="mature">
           <input id="mature"
                  class="filter-checkbox"
