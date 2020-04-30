@@ -1,5 +1,6 @@
 import logging
 
+from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.python_operator import ShortCircuitOperator
 from airflow.utils.trigger_rule import TriggerRule
@@ -38,32 +39,92 @@ def get_table_creator_operator(
     )
 
 
-def get_loader_operator(
+def get_load_local_data_operator(
         dag,
         output_dir,
         postgres_conn_id,
         identifier=TIMESTAMP_TEMPLATE
 ):
     return PythonOperator(
-        task_id='load_data',
-        python_callable=loader.load_data,
+        task_id='load_local_data',
+        python_callable=loader.load_local_data,
         op_args=[output_dir, postgres_conn_id, identifier],
-        trigger_rule=TriggerRule.ALL_DONE,
+        trigger_rule=TriggerRule.ALL_SUCCESS,
         dag=dag
     )
 
 
-def get_s3_loader_operator(
+def get_copy_to_s3_operator(
         dag,
         output_dir,
+        storage_bucket,
         aws_conn_id,
         identifier=TIMESTAMP_TEMPLATE
 ):
     return PythonOperator(
-        task_id='load_data_to_s3',
-        python_callable=loader.load_data_to_s3,
-        op_args=[output_dir, identifier, aws_conn_id],
+        task_id='copy_to_s3',
+        python_callable=loader.copy_to_s3,
+        op_args=[output_dir, storage_bucket, identifier, aws_conn_id],
         dag=dag
+    )
+
+
+def get_load_s3_data_operator(
+        dag,
+        bucket,
+        aws_conn_id,
+        postgres_conn_id,
+        identifier=TIMESTAMP_TEMPLATE
+):
+    return PythonOperator(
+        task_id='load_s3_data',
+        python_callable=loader.load_s3_data,
+        op_args=[bucket, aws_conn_id, postgres_conn_id, identifier],
+        dag=dag
+    )
+
+
+def get_one_failed_switch(
+        dag,
+        identifer
+):
+    return DummyOperator(
+        task_id=f'one_failed_{identifer}',
+        trigger_rule=TriggerRule.ONE_FAILED,
+        dag=dag,
+    )
+
+
+def get_all_failed_switch(
+        dag,
+        identifer
+):
+    return DummyOperator(
+        task_id=f'all_failed_{identifer}',
+        trigger_rule=TriggerRule.ALL_FAILED,
+        dag=dag,
+    )
+
+
+def get_one_success_switch(
+        dag,
+        identifer
+):
+    return DummyOperator(
+        task_id=f'one_success_{identifer}',
+        trigger_rule=TriggerRule.ONE_SUCCESS,
+        dag=dag,
+    )
+
+
+def get_all_done_switch(
+        dag,
+        identifer
+):
+    return DummyOperator(
+        task_id=f'all_done_{identifer}',
+        trigger_rule=TriggerRule.ALL_DONE,
+        dag=dag,
     )
 
 
@@ -104,6 +165,6 @@ def get_failure_moving_operator(
         task_id='move_staged_failures',
         python_callable=paths.move_staged_files_to_failure_directory,
         op_args=[output_dir, identifier],
-        trigger_rule=TriggerRule.ONE_FAILED,
+        trigger_rule=TriggerRule.ONE_SUCCESS,
         dag=dag
     )
