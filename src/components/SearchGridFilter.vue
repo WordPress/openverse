@@ -3,7 +3,7 @@
   <div class="is-hidden-desktop">
     <transition name="modal">
         <div class="overlay">
-          <div class="is-touch modal">
+          <div class="modal">
           <h4 class="padding-top-big padding-left-big padding-bottom-big padding-right-normal">
            Filters
           <i class="icon cross close" @click.prevent="close()" />
