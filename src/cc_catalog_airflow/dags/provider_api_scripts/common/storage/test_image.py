@@ -362,7 +362,12 @@ def test_ImageStore_get_image_tag_blacklist(
     raw_tags = [
         'cc0',
         'valid',
-        'garbage:=metacrap'
+        'garbage:=metacrap',
+        'uploaded:by=flickrmobile',
+        {
+            'name': 'uploaded:by=instagram',
+            'provider': 'test_provider'
+        }
     ]
 
     image_store = image.ImageStore('test_provider')

@@ -74,10 +74,7 @@ _Image = namedtuple(
 # lowercase.
 TAG_BLACKLIST = {
     'no person',
-    'squareformat',
-    'uploaded:by=flickrmobile',
-    'uploaded:by=instagram',
-    'flickriosapp:filter=flamingo'
+    'squareformat'
 }
 
 # Filter out tags that contain the following terms. All entrees should be
@@ -333,14 +330,14 @@ class ImageStore:
         if buffer_length > 0:
             logger.info(
                 'Writing {} lines from buffer to disk.'
-                  .format(buffer_length)
+                    .format(buffer_length)
             )
             with open(self._OUTPUT_PATH, 'a') as f:
                 f.writelines(self._image_buffer)
                 self._image_buffer = []
                 logger.debug(
                     'Total Images Processed so far:  {}'
-                      .format(self._total_images)
+                        .format(self._total_images)
                 )
         else:
             logger.debug('Empty buffer!  Nothing to write.')
@@ -353,14 +350,13 @@ class ImageStore:
         :return: true if tag is blacklisted, else returns false
         """
         if type(tag) == dict:  # check if the tag is already enriched
-            return False
-        else:
-            if tag in TAG_BLACKLIST:
+            tag = tag.get('name')
+        if tag in TAG_BLACKLIST:
+            return True
+        for blacklisted_substring in TAG_CONTAINS_BLACKLIST:
+            if blacklisted_substring in tag:
                 return True
-            for blacklisted_substring in TAG_CONTAINS_BLACKLIST:
-                if blacklisted_substring in tag:
-                    return True
-            return False
+        return False
 
     def _enrich_meta_data(self, meta_data, license_url):
         if type(meta_data) != dict:
