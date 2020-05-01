@@ -244,8 +244,8 @@ def search(search_params, index, page_size, ip, request,
             timeout=CACHE_TIMEOUT,
             value=filtered_providers
         )
-    for filtered in filtered_providers:
-        s = s.exclude('match', provider=filtered['provider_identifier'])
+    to_exclude = [f['provider_identifier'] for f in filtered_providers]
+    s = s.exclude('terms', provider=to_exclude)
 
     # Search either by generic multimatch or by "advanced search" with
     # individual field-level queries specified.
