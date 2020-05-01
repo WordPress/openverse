@@ -334,7 +334,7 @@ def search(search_params, index, page_size, ip, request,
     s = s[start:end]
     try:
         search_response = s.execute()
-        log.info(f'es_response_ms={search_response.took}')
+        log.info(f'es_took_ms={search_response.took}')
     except RequestError as e:
         raise ValueError(e)
     results = _post_process_results(
