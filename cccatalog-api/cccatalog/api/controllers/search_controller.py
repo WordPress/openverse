@@ -7,6 +7,7 @@ from elasticsearch_dsl.query import Query
 from cccatalog import settings
 from django.core.cache import cache
 import cccatalog.api.models as models
+import logging as log
 from rest_framework import serializers
 from cccatalog.settings import THUMBNAIL_PROXY_URL, PROXY_THUMBS
 from cccatalog.api.utils.validate_images import validate_images
@@ -333,6 +334,7 @@ def search(search_params, index, page_size, ip, request,
     s = s[start:end]
     try:
         search_response = s.execute()
+        log.info(f'es_took_ms={search_response.took}')
     except RequestError as e:
         raise ValueError(e)
     results = _post_process_results(
