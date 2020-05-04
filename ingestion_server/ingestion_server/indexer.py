@@ -322,10 +322,10 @@ class TableIndexer:
                 }
             }
         )
-        # Cluster status will be yellow in development environments because
-        # there will only be one node available. In production, there are many
-        # nodes, and the index should not be promoted until all shards have
-        # been initialized.
+        # Cluster status will always be yellow in development environments
+        # because there will only be one node available. In production, there
+        # are many nodes, and the index should not be promoted until all
+        # shards have been initialized.
         environment = os.getenv('ENVIRONMENT', 'local')
         if environment != 'local':
             log.info('Waiting for replica shards. . .')

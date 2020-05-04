@@ -9,7 +9,7 @@ def create_mapping(table_name):
         'image': {
             "settings": {
                 "index": {
-                    "number_of_shards": 12,
+                    "number_of_shards": 18,
                     "number_of_replicas": 0,
                     "refresh_interval": "-1"
                 }
