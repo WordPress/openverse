@@ -17,7 +17,7 @@ from typing import Tuple, List, Optional
 from math import ceil
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
-CACHE_TIMEOUT = 10
+CACHE_TIMEOUT = 60 * 20
 DEAD_LINK_RATIO = 1 / 2
 THUMBNAIL = 'thumbnail'
 URL = 'url'
