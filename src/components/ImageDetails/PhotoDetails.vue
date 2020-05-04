@@ -12,6 +12,8 @@
             class="photo_image"
             :src="image.url"
             :alt="image.title">
+
+      <legal-disclaimer />
     </div>
     <div class="column image-info">
       <section class="tabs" >
@@ -60,6 +62,7 @@ import attributionHtml from '@/utils/attributionHtml';
 import ImageInfo from './ImageInfo';
 import ImageAttribution from './ImageAttribution';
 import ImageSocialShare from './ImageSocialShare';
+import LegalDisclaimer from './LegalDisclaimer';
 
 export default {
   name: 'photo-details',
@@ -68,6 +71,7 @@ export default {
     ImageInfo,
     ImageAttribution,
     ImageSocialShare,
+    LegalDisclaimer,
   },
   data() {
     return {

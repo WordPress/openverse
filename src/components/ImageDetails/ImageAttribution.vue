@@ -44,10 +44,6 @@
       </CopyButton>
     </div>
     <reuse-survey :image="image" />
-    <legal-disclaimer
-        :source="image.provider"
-        :sourceProviderCode="image.provider_code"
-        :sourceURL="image.foreign_landing_url" />
   </section>
 </template>
 
@@ -57,7 +53,6 @@ import CopyButton from '@/components/CopyButton';
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
 import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-analytics-types';
 import ReuseSurvey from './ReuseSurvey';
-import LegalDisclaimer from './LegalDisclaimer';
 
 export default {
   name: 'image-attribution',
@@ -65,7 +60,6 @@ export default {
   components: {
     LicenseIcons,
     CopyButton,
-    LegalDisclaimer,
     ReuseSurvey,
   },
   computed: {
