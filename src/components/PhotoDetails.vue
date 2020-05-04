@@ -5,7 +5,8 @@
           :href="breadCrumbURL"
           @click.prevent="onGoBackToSearchResults"
           v-if="shouldShowBreadcrumb">
-          <i class="icon chevron-left margin-right-small"></i> Back to search results
+          <img alt="back" class="back margin-right-small" src="@/assets/back_arrow.svg" />
+          Back to search results
       </a>
       <img @load="onImageLoad"
             class="photo_image"
@@ -56,7 +57,6 @@
 
 <script>
 import ImageInfo from '@/components/ImageInfo';
-import Watermark from '@/components/Watermark';
 import ImageAttribution from '@/components/ImageAttribution';
 import ImageSocialShare from '@/components/ImageSocialShare';
 import attributionHtml from '@/utils/attributionHtml';
@@ -66,7 +66,6 @@ export default {
   props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'socialSharingEnabled'],
   components: {
     ImageInfo,
-    Watermark,
     ImageAttribution,
     ImageSocialShare,
   },

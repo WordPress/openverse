@@ -54,13 +54,6 @@
         Go to the
         <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
       </span>
-
-      <span>
-        See our
-        <a href="/search-help">
-          Search Syntax Guide
-        </a>
-      </span>
     </div>
   </div>
 </template>
@@ -131,8 +124,8 @@ $hero-height: 74vh;
 
 .help-links {
   position: absolute;
-  bottom: 5rem;
-  left: 2rem;
+  bottom: 1rem;
+  left: 1rem;
 }
 
 .help-icon {

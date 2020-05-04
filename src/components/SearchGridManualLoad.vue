@@ -37,7 +37,6 @@
 <script>
 import { SET_IMAGES } from '@/store/mutation-types';
 import SearchGridCell from '@/components/SearchGridCell';
-import SearchGridFilter from '@/components/SearchGridFilter';
 import LoadingIcon from '@/components/LoadingIcon';
 import SearchRating from '@/components/SearchRating';
 
@@ -46,7 +45,6 @@ const DEFAULT_PAGE_SIZE = 20;
 export default {
   name: 'search-grid-manual-load',
   components: {
-    SearchGridFilter,
     SearchGridCell,
     LoadingIcon,
     SearchRating,
@@ -57,7 +55,9 @@ export default {
     currentPage: 1,
   }),
   props: {
-    imagesCount: 0,
+    imagesCount: {
+      default: 0,
+    },
     images: {
       default: () => ([]),
     },
@@ -133,7 +133,7 @@ export default {
     },
     onLoadMoreImages() {
       if (this.isFetchingImages === false) {
-        this.currentPage = this.currentPage + 1;
+        this.currentPage += 1;
         const searchParams = {
           page: this.currentPage,
           shouldPersistImages: true,

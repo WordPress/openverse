@@ -31,11 +31,6 @@ export default HomePage;
 <style lang="scss" scoped>
 @import "node_modules/bulma/sass/utilities/_all";
 
-$gray: #808080;
-$highlight: #4ec6cd;
-$nav-text-color: $gray;
-$vert-seperate: 4rem;
-
 .home-page_body {
 
   /* Small only */

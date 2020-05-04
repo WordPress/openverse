@@ -5,6 +5,7 @@ import ImageProviderService from '@/api/ImageProviderService';
 import ImageService from '@/api/ImageService';
 import BugReportService from '@/api/BugReportService';
 import UsageDataService from '@/api/UsageDataService';
+import ReportService from '@/api/ReportService';
 import SearchStore from './search-store';
 import ImageProviderStore from './image-provider-store';
 import AttributionStore from './attribution-store';
@@ -14,7 +15,7 @@ import ABTestStore from './abtest-store';
 import UserStore from './user-store';
 import UsageDataStore from './usage-data-store';
 import FilterStore from './filter-store';
-
+import ReportContentStore from './report-content-store';
 
 Vue.use(Vuex);
 
@@ -30,6 +31,7 @@ const store = (GoogleAnalytics, router) => (new Vuex.Store({
     BugReportStore.actions(BugReportService),
     SocialMediaStore.actions(GoogleAnalytics),
     ABTestStore.actions,
+    ReportContentStore.actions(ReportService),
   ),
   state: Object.assign(
     SearchStore.state(queryParams),
@@ -38,6 +40,7 @@ const store = (GoogleAnalytics, router) => (new Vuex.Store({
     BugReportStore.state,
     ABTestStore.state,
     UserStore.state,
+    ReportContentStore.state,
   ),
   mutations: Object.assign(
     SearchStore.mutations(redirectTo(router)),
@@ -45,6 +48,7 @@ const store = (GoogleAnalytics, router) => (new Vuex.Store({
     ImageProviderStore.mutations,
     BugReportStore.mutations,
     ABTestStore.mutations,
+    ReportContentStore.mutations,
   ),
 }));
 
