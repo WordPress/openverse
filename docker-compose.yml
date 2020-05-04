@@ -79,7 +79,7 @@ services:
 
   cache:
     image: redis:4.0.10
-    container-name: cccatalog-api_cache_1
+    container_name: cccatalog-api_cache_1
     ports:
       - "6379:6379"
 
