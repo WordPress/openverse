@@ -113,6 +113,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "bulma/sass/utilities/_all.sass";
+
   .toggle-filter {
     height: 3.875rem;
   }
@@ -137,7 +139,7 @@ export default {
   .search-input {
     width: 70%;
 
-    @media (max-width: 64em) {
+    @include touch {
       width: 100%;
     }
 
@@ -152,7 +154,7 @@ export default {
   .icon .search {
     padding: 1.3rem;
 
-    @media (max-width: 64em) {
+    @include touch {
       padding: .8rem;
     }
   }

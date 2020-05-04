@@ -80,7 +80,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-
+@import "node_modules/bulma/sass/utilities/initial-variables";
+@import "node_modules/bulma/sass/utilities/derived-variables";
+@import "node_modules/bulma/sass/utilities/mixins";
 
 $hero-height: 74vh;
 
@@ -113,6 +115,11 @@ $hero-height: 74vh;
   .mobile-input {
     width: 100%;
   }
+
+  /* Small only */
+  @include mobile {
+    height: 80vh;
+  }
 }
 
 .help-links {
@@ -124,15 +131,5 @@ $hero-height: 74vh;
 .help-icon {
   height: 32px;
   vertical-align: middle;
-}
-
-/* Small only */
-@media screen and (max-width: 40em) {
-  .hero {
-    height: 80vh;
-  }
-  .search-form_ctr {
-    padding: 0 .9375rem;
-  }
 }
 </style>
