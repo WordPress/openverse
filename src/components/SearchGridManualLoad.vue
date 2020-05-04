@@ -149,6 +149,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+  @import "node_modules/bulma/sass/utilities/_all";
 
   .button[disabled] {
     opacity: 1;
@@ -209,7 +210,7 @@ export default {
     flex-wrap: wrap;
     margin: 10px;
 
-    @media screen and (min-width: 600px) {
+    @include tablet {
       &:after {
         content: '';
         flex-grow: 999999999;

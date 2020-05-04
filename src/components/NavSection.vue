@@ -34,6 +34,10 @@
         <a class="navbar-item" href="/collections">Collections</a>
         <a class="navbar-item" href="/search-help">Search Guide</a>
         <a class="navbar-item" href="/feedback">Feedback</a>
+        <a class="navbar-item" href="https://opensource.creativecommons.org/ccsearch-browser-extension/" target="_blank">
+        Extension
+        <i class="icon external-link" />
+        </a>
       </div>
     </div>
   </nav>

@@ -1,7 +1,7 @@
 <template>
 <div class="about-page">
   <header-section showNavSearch="true"></header-section>
-  <div class="margin-larger">
+  <div class="margin-normal">
     <h2>About CC Search</h2>
       <p>
         CC Search is a tool that allows openly licensed and public domain works to be discovered
