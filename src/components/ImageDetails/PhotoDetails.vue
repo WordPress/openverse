@@ -56,10 +56,10 @@
 </template>
 
 <script>
-import ImageInfo from '@/components/ImageInfo';
-import ImageAttribution from '@/components/ImageAttribution';
-import ImageSocialShare from '@/components/ImageSocialShare';
 import attributionHtml from '@/utils/attributionHtml';
+import ImageInfo from './ImageInfo';
+import ImageAttribution from './ImageAttribution';
+import ImageSocialShare from './ImageSocialShare';
 
 export default {
   name: 'photo-details',
@@ -113,6 +113,6 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../styles/photodetails.scss';
+  @import '../../styles/photodetails.scss';
 </style>
 

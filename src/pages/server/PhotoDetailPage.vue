@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import PhotoDetails from '@/components/PhotoDetails';
+import PhotoDetails from '@/components/ImageDetails/PhotoDetails';
 import PhotoTags from '@/components/PhotoTags';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';

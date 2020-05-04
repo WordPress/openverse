@@ -54,10 +54,10 @@
 <script>
 import LicenseIcons from '@/components/LicenseIcons';
 import CopyButton from '@/components/CopyButton';
-import LegalDisclaimer from '@/components/LegalDisclaimer';
-import ReuseSurvey from '@/components/ReuseSurvey';
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
 import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-analytics-types';
+import ReuseSurvey from './ReuseSurvey';
+import LegalDisclaimer from './LegalDisclaimer';
 
 export default {
   name: 'image-attribution',

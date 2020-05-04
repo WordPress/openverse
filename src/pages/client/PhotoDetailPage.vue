@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import PhotoDetails from '@/components/PhotoDetails';
+import PhotoDetails from '@/components/ImageDetails/PhotoDetails';
 import PhotoTags from '@/components/PhotoTags';
 import RelatedImages from '@/components/RelatedImages';
 import HeaderSection from '@/components/HeaderSection';
