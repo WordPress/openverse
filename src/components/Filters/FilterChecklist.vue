@@ -11,7 +11,7 @@
            title="toggle filters visibility" />
       </button>
     </div>
-    <template v-if="filtersVisible">
+    <template v-if="filtersVisible && options">
     <div v-for="(item, index) in options" :key="index" class="margin-top-small">
       <label class="checkbox" :for="item.code">
         <input type="checkbox"
@@ -25,12 +25,22 @@
       </label>
     </div>
     </template>
+    <template v-if="filtersVisible && filterType === 'mature'">
+        <label class="checkbox margin-top-small" for="mature">
+          <input id="mature"
+                 class="filter-checkbox"
+                 type="checkbox"
+                 :checked="checked"
+                 @change="onValueChange">
+          Enable Mature Content
+        </label>
+    </template>
   </div>
 </template>
 <script>
 export default {
   name: 'filter-check-list',
-  props: ['options', 'title', 'filterType', 'disabled'],
+  props: ['options', 'title', 'filterType', 'disabled', 'checked'],
   data() {
     return { filtersVisible: false };
   },

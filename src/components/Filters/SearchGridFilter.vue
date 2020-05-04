@@ -33,14 +33,19 @@
                          title="Image Size"
                          filterType="sizes"
                          @filterChanged="onUpdateFilter" />
+      <filter-check-list title="Search Settings"
+                         filterType="mature"
+                         :checked="filters.mature"
+                         @filterChanged="onUpdateFilter" />
+
+      <div class="margin-normal filter-option small-filter search-filters_search-by">
+        <input type="checkbox" id="creator-chk"
+                :checked="filters.searchBy.creator"
+                @change="onUpdateSearchByCreator">
+        <label for="creator-chk">Search by Creator</label>
+      </div>
     </form>
 
-    <div class="margin-normal filter-option small-filter search-filters_search-by">
-      <input type="checkbox" id="creator-chk"
-              :checked="filters.searchBy.creator"
-              @change="onUpdateSearchByCreator">
-      <label for="creator-chk">Search by Creator</label>
-    </div>
     <div class="margin-big padding-bottom-normal clear-filters"
           v-if="isFilterApplied">
       <button class="button tiny"
