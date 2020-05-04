@@ -332,7 +332,7 @@ class TableIndexer:
             es.cluster.health(
                 index=write_index,
                 wait_for_status='green',
-                timeout="2h"
+                timeout="3h"
             )
         # If the index exists already and it's not an alias, delete it.
         if live_alias in indices:
