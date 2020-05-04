@@ -44,5 +44,4 @@ describe('Scroll button', () => {
     button.trigger('click');
     expect(mockMethods.scrollToTop).toHaveBeenCalled();
   });
-})
-;
+});

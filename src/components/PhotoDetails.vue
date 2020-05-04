@@ -1,10 +1,13 @@
 <template>
   <div class="photo columns is-desktop is-marginless">
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
-      <a class="photo_breadcrumb"
+      <a class="photo_breadcrumb is-block has-text-left margin-normal has-text-grey"
           :href="breadCrumbURL"
           @click.prevent="onGoBackToSearchResults"
-          v-if="shouldShowBreadcrumb">&#171; Back to search results</a>
+          v-if="shouldShowBreadcrumb">
+          <img alt="back" class="back margin-right-small" src="@/assets/back_arrow.svg" />
+          Back to search results
+      </a>
       <img @load="onImageLoad"
             class="photo_image"
             :src="image.url"
@@ -28,11 +31,6 @@
               Share
             </a>
           </li>
-          <li :class="tabClass(3, 'a')" v-if="watermarkEnabled">
-            <a href="#panel3" :aria-selected="activeTab == 3" @click.prevent="setActiveTab(3)">
-              Download
-            </a>
-          </li>
         </ul>
       </section>
       <section class="photo_info-ctr tabs-content">
@@ -52,9 +50,6 @@
         <div :class="tabClass(2, 'tabs-panel')">
           <image-social-share v-if="socialSharingEnabled" :image="image" />
         </div>
-        <div :class="tabClass(3, 'tabs-panel')">
-          <watermark v-if="watermarkEnabled" :image="image" />
-        </div>
       </section>
     </div>
   </div>
@@ -62,17 +57,15 @@
 
 <script>
 import ImageInfo from '@/components/ImageInfo';
-import Watermark from '@/components/Watermark';
 import ImageAttribution from '@/components/ImageAttribution';
 import ImageSocialShare from '@/components/ImageSocialShare';
 import attributionHtml from '@/utils/attributionHtml';
 
 export default {
   name: 'photo-details',
-  props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'watermarkEnabled', 'socialSharingEnabled'],
+  props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'socialSharingEnabled'],
   components: {
     ImageInfo,
-    Watermark,
     ImageAttribution,
     ImageSocialShare,
   },
