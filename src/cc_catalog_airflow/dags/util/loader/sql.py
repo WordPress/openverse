@@ -56,7 +56,7 @@ def create_loading_table(
     )
 
 
-def import_data_to_intermediate_table(
+def load_local_data_to_intermediate_table(
         postgres_conn_id,
         tsv_file_name,
         identifier
@@ -66,19 +66,49 @@ def import_data_to_intermediate_table(
 
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.bulk_load(f'{load_table}', tsv_file_name)
+    _clean_intermediate_table_data(postgres, load_table)
+
+
+def load_s3_data_to_intermediate_table(
+        postgres_conn_id,
+        bucket,
+        s3_key,
+        identifier
+):
+    load_table = _get_load_table_name(identifier)
+    logger.info(f'Loading {s3_key} from S3 Bucket {bucket} into {load_table}')
+
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(
+        f"SELECT aws_s3.table_import_from_s3("
+        f"'{load_table}',"
+        f"'',"
+        f"'DELIMITER E''\t''',"
+        f"'{bucket}',"
+        f"'{s3_key}',"
+        f"'us-east-1'"
+        f");"
+    )
+    _clean_intermediate_table_data(postgres, load_table)
+
+
+def _clean_intermediate_table_data(
+        postgres_hook,
+        load_table
+):
+    postgres_hook.run(
         f'DELETE FROM {load_table} WHERE url IS NULL;'
     )
-    postgres.run(
+    postgres_hook.run(
         f'DELETE FROM {load_table} WHERE license IS NULL;'
     )
-    postgres.run(
+    postgres_hook.run(
         f'DELETE FROM {load_table} WHERE foreign_landing_url IS NULL;'
     )
-    postgres.run(
+    postgres_hook.run(
         f'DELETE FROM {load_table} WHERE foreign_identifier IS NULL;'
     )
-    postgres.run(
+    postgres_hook.run(
         f'DELETE FROM {load_table} p1'
         f' USING {load_table} p2'
         f' WHERE p1.ctid < p2.ctid'

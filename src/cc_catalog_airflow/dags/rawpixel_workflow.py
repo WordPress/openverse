@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 
-from provider_api_scripts import RawPixel
+from provider_api_scripts import raw_pixel
 from util.operator_util import get_log_operator
 
 
@@ -22,7 +22,7 @@ DAG_ID = "rawpixel_workflow"
 def get_runner_operator(dag):
     return PythonOperator(
         task_id="pull_rawpixel_data",
-        python_callable=RawPixel.main,
+        python_callable=raw_pixel.main,
         depends_on_past=False,
         dag=dag
     )

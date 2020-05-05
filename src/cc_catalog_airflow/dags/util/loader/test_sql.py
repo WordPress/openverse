@@ -1,8 +1,12 @@
 from collections import namedtuple
 import json
 import os
+import socket
 import time
+from urllib.parse import urlparse
 
+
+import boto3
 import psycopg2
 import pytest
 
@@ -13,6 +17,11 @@ POSTGRES_CONN_ID = os.getenv('TEST_CONN_ID')
 POSTGRES_TEST_URI = os.getenv('AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING')
 TEST_LOAD_TABLE = f'provider_image_data{TEST_ID}'
 TEST_IMAGE_TABLE = f'image_{TEST_ID}'
+S3_LOCAL_ENDPOINT = os.getenv('S3_LOCAL_ENDPOINT')
+S3_TEST_BUCKET = f'cccatalog-storage-{TEST_ID}'
+ACCESS_KEY = os.getenv('TEST_ACCESS_KEY')
+SECRET_KEY = os.getenv('TEST_SECRET_KEY')
+S3_HOST = socket.gethostbyname(urlparse(S3_LOCAL_ENDPOINT).hostname)
 
 
 RESOURCES = os.path.join(
@@ -155,6 +164,60 @@ def postgres_with_load_and_image_table():
     conn.close()
 
 
+@pytest.fixture
+def empty_s3_bucket(socket_enabled):
+    bucket = boto3.resource(
+        's3',
+        aws_access_key_id=ACCESS_KEY,
+        aws_secret_access_key=SECRET_KEY,
+        endpoint_url=S3_LOCAL_ENDPOINT
+    ).Bucket(S3_TEST_BUCKET)
+
+    def _delete_all_objects():
+        key_list = [{'Key': obj.key} for obj in bucket.objects.all()]
+        if len(list(bucket.objects.all())) > 0:
+            bucket.delete_objects(Delete={'Objects': key_list})
+
+    if bucket.creation_date:
+        _delete_all_objects()
+    else:
+        bucket.create()
+    yield bucket
+    _delete_all_objects()
+
+
+def _load_local_tsv(tmpdir, bucket, tsv_file_name):
+    """
+    This wraps sql.load_local_data_to_intermediate_table so we can test it
+    under various conditions.
+    """
+    tsv_file_path = os.path.join(RESOURCES, tsv_file_name)
+    with open(tsv_file_path) as f:
+        f_data = f.read()
+
+    test_tsv = 'test.tsv'
+    path = tmpdir.join(test_tsv)
+    path.write(f_data)
+
+    sql.load_local_data_to_intermediate_table(
+        POSTGRES_CONN_ID,
+        str(path),
+        TEST_ID
+    )
+
+
+def _load_s3_tsv(tmpdir, bucket, tsv_file_name):
+    tsv_file_path = os.path.join(RESOURCES, tsv_file_name)
+    key = 'path/to/object/{tsv_file_name}'
+    bucket.upload_file(tsv_file_path, key)
+    sql.load_s3_data_to_intermediate_table(
+        POSTGRES_CONN_ID,
+        S3_TEST_BUCKET,
+        key,
+        TEST_ID
+    )
+
+
 def test_create_loading_table_creates_table(postgres):
     postgres_conn_id = POSTGRES_CONN_ID
     identifier = TEST_ID
@@ -178,50 +241,36 @@ def test_create_loading_table_errors_if_run_twice_with_same_id(postgres):
         sql.create_loading_table(postgres_conn_id, identifier)
 
 
-def test_import_data_loads_good_tsv(postgres_with_load_table, tmpdir):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'none_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
-    check_query = f'SELECT COUNT (*) FROM {load_table};'
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
+def test_loaders_load_good_tsv(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
+):
+    load_function(tmpdir, empty_s3_bucket, 'none_missing.tsv')
+    check_query = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
     assert num_rows == 10
 
 
-def test_import_data_deletes_null_url_rows(postgres_with_load_table, tmpdir):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'url_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
+def test_loaders_delete_null_url_rows(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
+):
+    load_function(tmpdir, empty_s3_bucket, 'url_missing.tsv')
+    null_url_check = (
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} WHERE url IS NULL;'
     )
-    null_url_check = f'SELECT COUNT (*) FROM {load_table} WHERE url IS NULL;'
     postgres_with_load_table.cursor.execute(null_url_check)
     null_url_num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -229,31 +278,21 @@ def test_import_data_deletes_null_url_rows(postgres_with_load_table, tmpdir):
     assert remaining_rows == 2
 
 
-def test_import_data_deletes_null_license_rows(
-        postgres_with_load_table, tmpdir
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
+def test_loaders_delete_null_license_rows(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'license_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    load_function(tmpdir, empty_s3_bucket, 'license_missing.tsv')
     license_check = (
-        f'SELECT COUNT (*) FROM {load_table} WHERE license IS NULL;'
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} WHERE license IS NULL;'
     )
     postgres_with_load_table.cursor.execute(license_check)
     null_license_num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -261,34 +300,24 @@ def test_import_data_deletes_null_license_rows(
     assert remaining_rows == 2
 
 
-def test_import_data_deletes_null_foreign_landing_url_rows(
-        postgres_with_load_table, tmpdir
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
+def test_loaders_delete_null_foreign_landing_url_rows(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'foreign_landing_url_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    load_function(tmpdir, empty_s3_bucket, 'foreign_landing_url_missing.tsv')
     foreign_landing_url_check = (
-        f'SELECT COUNT (*) FROM {load_table} '
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} '
         f'WHERE foreign_landing_url IS NULL;'
     )
     postgres_with_load_table.cursor.execute(foreign_landing_url_check)
     null_foreign_landing_url_num_rows = (
         postgres_with_load_table.cursor.fetchone()[0]
     )
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -296,34 +325,24 @@ def test_import_data_deletes_null_foreign_landing_url_rows(
     assert remaining_rows == 3
 
 
-def test_import_data_deletes_null_foreign_identifier_rows(
-        postgres_with_load_table, tmpdir
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
+def test_data_loaders_delete_null_foreign_identifier_rows(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'foreign_identifier_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    load_function(tmpdir, empty_s3_bucket, 'foreign_identifier_missing.tsv')
     foreign_identifier_check = (
-        f'SELECT COUNT (*) FROM {load_table} '
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} '
         f'WHERE foreign_identifier IS NULL;'
     )
     postgres_with_load_table.cursor.execute(foreign_identifier_check)
     null_foreign_identifier_num_rows = (
         postgres_with_load_table.cursor.fetchone()[0]
     )
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -331,34 +350,24 @@ def test_import_data_deletes_null_foreign_identifier_rows(
     assert remaining_rows == 1
 
 
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
 def test_import_data_deletes_duplicate_foreign_identifier_rows(
-        postgres_with_load_table, tmpdir
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'foreign_identifier_duplicate.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    load_function(tmpdir, empty_s3_bucket, 'foreign_identifier_duplicate.tsv')
     foreign_id_duplicate_check = (
-        f"SELECT COUNT (*) FROM {load_table} "
+        f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE} "
         f"WHERE foreign_identifier='135257';"
     )
     postgres_with_load_table.cursor.execute(foreign_id_duplicate_check)
     foreign_id_duplicate_num_rows = (
         postgres_with_load_table.cursor.fetchone()[0]
     )
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
