@@ -50,7 +50,7 @@
       <legend class="margin-bottom-small">Please describe the issue for us</legend>
       <textarea class="reason padding-small has-text-weight-semibold"
                 v-model="otherReasonDescription"
-                placeholder="Issue description required (with at least 20 words)" />
+                placeholder="Issue description required (with at least 20 letters)" />
       <div>
         <button class="button other-back-button is-text tiny margin-top-normal has-text-grey"
                 @click="onBackClick()">
