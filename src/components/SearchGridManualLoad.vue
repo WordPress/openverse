@@ -19,7 +19,7 @@
       </div>
       <div class="load-more">
         <button v-show="!isFetchingImages && includeAnalytics"
-                class="button margin-bottom-small"
+                class="button margin-bottom-big"
                 :disabled="isFinished"
                 @click="onLoadMoreImages">
           <span v-if="isFinished">No more images :(</span>
@@ -227,20 +227,18 @@ export default {
 
     button {
       font-size: 1.2em;
+
+      @include mobile {
+        padding: .5rem;
+
+        span{
+          font-size: 0.9rem;
+        }
+      }
     }
   }
   .count{
     padding-top: 0.6rem;
     padding-left: 1.3rem;
-  }
-  @media (max-width: 400px) {
-    .button.margin-bottom-small{
-      margin-bottom: 20px !important;
-      padding:10px;
-
-      span{
-        font-size: 0.9rem;
-      }
-    }
   }
 </style>
