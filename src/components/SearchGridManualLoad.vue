@@ -227,6 +227,14 @@ export default {
 
     button {
       font-size: 1.2em;
+
+      @include mobile {
+        padding: .5rem;
+
+        span{
+          font-size: 0.9rem;
+        }
+      }
     }
   }
   .count{
