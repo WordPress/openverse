@@ -4,8 +4,8 @@
       Thank you for reporting an issue with the results of CC Search!
     </span>
     <span class="is-block padding-horizontal-big margin-top-small">
-      We recommend doing the same
-      <a :href="imageURL" target="_blank" rel="noopener">at the source  {{ providerName }}</a>.
+      We recommend doing the same at the source,
+      <a :href="imageURL" target="_blank" rel="noopener">{{ providerName }}</a>.
     </span>
   </div>
 </template>
