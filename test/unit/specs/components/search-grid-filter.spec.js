@@ -1,4 +1,4 @@
-import SearchGridFilter from '@/components/SearchGridFilter';
+import SearchGridFilter from '@/components/Filters/SearchGridFilter';
 import { filterData } from '@/store/filter-store';
 import render from '../../test-utils/render';
 
@@ -22,6 +22,7 @@ describe('SearchGridFilter', () => {
           searchBy: {
             creator: false,
           },
+          mature: false,
         },
         query: 'me',
       },
