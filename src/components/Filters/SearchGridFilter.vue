@@ -1,14 +1,16 @@
 <template>
   <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
-    <h4 class="padding-top-big padding-left-big padding-right-normal">
+    <h4 class="padding-top-big padding-left-big padding-right-normal is-inline-block">
       Filter results by
-      <i :class="{ 'has-text-grey-light': !isFilterApplied,
-                   'icon filter filter-visibility-toggle padding-vertical-small': true,
-                   'has-color-dark-slate-blue has-text-weight-semibold': isFilterApplied }"
-          title="toggle filters bar visibility"
-          @click.prevent="onToggleSearchGridFilter()" />
     </h4>
+
+    <button type="button"
+            class="button is-text tiny is-paddingless margin-top-big
+                   margin-right-small report is-shadowless is-pulled-right"
+            @click="onToggleSearchGridFilter()">
+      <span class="has-color-tomato">Hide filters</span>
+    </button>
 
     <form class="filters-form" role="filter">
       <filter-check-list :options="filters.licenseTypes"

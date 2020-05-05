@@ -8,8 +8,7 @@
               class="button toggle-filter padding-vertical-normal padding-horizontal-big"
               type="button"
               @click.prevent="onToggleSearchGridFilter()">
-        <i v-if="!isFilterApplied" class="icon filter" />
-        <i v-else class="icon filter has-color-dark-slate-blue has-text-weight-semibold" />
+        Filters
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
@@ -35,8 +34,7 @@
               class="button small toggle-filter-small padding-small"
               type="button"
               @click.prevent="onToggleSearchGridFilter()">
-        <i v-if="!isFilterApplied" class="icon filter" />
-        <i v-else class="icon filter has-color-dark-slate-blue has-text-weight-semibold" />
+        Filters
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
@@ -119,6 +117,12 @@ export default {
 
   .toggle-filter {
     height: 3.875rem;
+    text-transform: none;
+    font-size: 13px;
+    border: 2px solid #D8D8D8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    width: 68px;
   }
 
   .toggle-filter-small {
