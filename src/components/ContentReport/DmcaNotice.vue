@@ -1,8 +1,8 @@
 <template>
   <div>
     <span class="is-block padding-horizontal-big margin-top-large has-text-centered">
-      Please fill out
-      <a :href="dmcaFormUrl" target="_blank" rel="noopener">this DMCA form</a>
+      Please fill out this
+      <a :href="dmcaFormUrl" target="_blank" rel="noopener">DMCA form</a>
       to report copyright infringement.
     </span>
     <span class="is-block padding-horizontal-big margin-top-small has-text-centered">
