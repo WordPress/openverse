@@ -168,20 +168,20 @@ def upsert_records_to_image_table(
         + f'md5(({col.DIRECT_URL})::text))\n'
         + 'DO UPDATE SET '
         + f'\n  updated_on = {NOW}'
-        + _newest_non_null('foreign_landing_url')
-        + _newest_non_null('url')
-        + _newest_non_null('thumbnail')
-        + _newest_non_null('width')
-        + _newest_non_null('height')
-        + _newest_non_null('license')
-        + _newest_non_null('license_version')
-        + _newest_non_null('creator')
-        + _newest_non_null('creator_url')
-        + _newest_non_null('title')
+        + _newest('foreign_landing_url')
+        + _newest('url')
+        + _newest('thumbnail')
+        + _newest('width')
+        + _newest('height')
+        + _newest('license')
+        + _newest('license_version')
+        + _newest('creator')
+        + _newest('creator_url')
+        + _newest('title')
         + f',\n  last_synced_with_source = {NOW}'
         + f',\n  removed_from_source = {FALSE}, '
-        + "meta_data = EXCLUDED.meta_data"  # TODO
-        + _newest_non_null('watermarked')
+        + 'meta_data = EXCLUDED.meta_data'
+        + _newest('watermarked')
         + f'\nWHERE {image_table}.{col.FOREIGN_IDENTIFIER} '
         + f'= EXCLUDED.{col.FOREIGN_IDENTIFIER}'
         + f' AND {image_table}.{col.PROVIDER} = EXCLUDED.{col.PROVIDER};'
@@ -201,5 +201,5 @@ def _get_load_table_name(
     return f'{load_table_name_stub}{identifier}'
 
 
-def _newest_non_null(column):
+def _newest(column):
     return f',\n  {column} = EXCLUDED.{column}'
