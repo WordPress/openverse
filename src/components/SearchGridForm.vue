@@ -4,11 +4,11 @@
         @submit.prevent="onSubmit"
         class="search-form padding-normal">
     <div class="is-flex is-hidden-touch">
-      <button class="button toggle-filter padding-vertical-normal padding-horizontal-big"
+      <button v-if="!isFilterVisible"
+              class="button toggle-filter padding-vertical-normal padding-horizontal-big"
               type="button"
               @click.prevent="onToggleSearchGridFilter()">
-        <i v-if="!isFilterApplied" class="icon sliders" />
-        <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
+        Filters
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
@@ -30,11 +30,11 @@
       </div>
     </div>
     <div class="is-flex is-hidden-desktop">
-      <button class="button small toggle-filter-small padding-small"
+      <button v-if="!isFilterVisible"
+              class="button small toggle-filter-small padding-small"
               type="button"
               @click.prevent="onToggleSearchGridFilter()">
-        <i v-if="!isFilterApplied" class="icon sliders" />
-        <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
+        Filters
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
@@ -117,6 +117,12 @@ export default {
 
   .toggle-filter {
     height: 3.875rem;
+    text-transform: none;
+    font-size: 13px;
+    border: 2px solid #D8D8D8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    width: 68px;
   }
 
   .toggle-filter-small {

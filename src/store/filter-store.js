@@ -16,7 +16,7 @@ export const filterData = {
     { code: 'by-nc-nd', name: 'BY-NC-ND', checked: false },
   ],
   licenseTypes: [
-    { code: 'commercial', name: 'Use for commercial purposes', checked: false },
+    { code: 'commercial', name: 'Use commercially', checked: false },
     { code: 'modification', name: 'Modify or adapt', checked: false },
   ],
   categories: [
@@ -157,4 +157,3 @@ export default {
   actions,
   mutations,
 };
-

@@ -1,10 +1,21 @@
 <template>
   <div :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
+    <h4 class="padding-top-big padding-left-big padding-right-normal is-inline-block">
+      Filter results by
+    </h4>
+
+    <button type="button"
+            class="button is-text tiny is-paddingless margin-top-big
+                   margin-right-small report is-shadowless is-pulled-right"
+            @click="onToggleSearchGridFilter()">
+      <span class="has-color-tomato">Hide filters</span>
+    </button>
+
     <form class="filters-form" role="filter">
       <filter-check-list :options="filters.licenseTypes"
                          :disabled="licenseTypesDisabled"
-                         title="I want something that I can"
+                         title="Use"
                          filterType="licenseTypes"
                          @filterChanged="onUpdateFilter" />
       <filter-check-list :options="filters.licenses"
@@ -58,7 +69,7 @@
 
 <script>
 import { TOGGLE_FILTER } from '@/store/action-types';
-import { CLEAR_FILTERS } from '@/store/mutation-types';
+import { CLEAR_FILTERS, SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
 import FilterCheckList from './FilterChecklist';
 
 export default {
@@ -112,11 +123,24 @@ export default {
         shouldNavigate: true,
       });
     },
+    onToggleSearchGridFilter() {
+      this.$store.commit(
+        SET_FILTER_IS_VISIBLE,
+        { isFilterVisible: !this.isFilterVisible },
+      );
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+
+.filter-visibility-toggle {
+  float: right;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
 
 .search-filters {
   display: none;
