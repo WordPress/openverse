@@ -61,7 +61,7 @@
                 :disabled="!descriptionHasMoreThan20Chars"
                 class="button submit-other-button tiny is-info margin-top-normal is-pulled-right"
                 @click="sendContentReport()">
-          Submit report
+          Submit
         </button>
       </div>
     </form>
