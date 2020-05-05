@@ -8,7 +8,6 @@
                     :query="query"
                     :imageWidth="imageWidth"
                     :imageHeight="imageHeight"
-                    :watermarkEnabled="watermarkEnabled"
                     :socialSharingEnabled="socialSharingEnabled"
                     @onImageLoaded="onImageLoaded" />
       <photo-tags :tags="tags" />

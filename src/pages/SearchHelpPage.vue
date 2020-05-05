@@ -8,7 +8,7 @@
       to make your search results more precise.
     </p>
 
-    <h3  class="margin-vertical-normal">Search for an exact match</h3>
+    <h3 class="margin-vertical-normal">Search for an exact match</h3>
     <p>
       Put a word or phrase inside quotes. For example,
       <a href='https://search.creativecommons.org/search?q="Claude%20Monet"'>
@@ -16,146 +16,106 @@
       </a>.
     </p>
 
-    <h3  class="margin-vertical-normal">Search by title</h3>
-    <p>
-      Put <em>title:</em> in front of your search term to see only results whose
-      title contains the specified term. For example,
-      <a href='https://search.creativecommons.org/search?q=title%3A%20"cats"'>
-        <em>title:"cats"</em>
-      </a>.
+    <h3 class="margin-vertical-normal">Combining terms</h3>
+
+    <p class="margin-vertical-normal">
+    If you want to combine terms, you can use the following operators
+    to perform more complex queries
     </p>
 
-    <h3  class="margin-vertical-normal">Search by license</h3>
-    <p>
-      Put <em>license:</em> in front of your search term to see only results
-      with the specified license. For example,
-      <a href='https://search.creativecommons.org/search?q=license%3A%20"by"'>
-        <em>license:"by"</em>
+    <ul >
+      <li class="listitem">
+        <code class="literal">+</code> signifies AND operation
+      </li>
+      <li class="listitem">
+        <code class="literal">|</code> signifies OR operation
+      </li>
+      <li class="listitem">
+        <code class="literal">-</code> negates a single token
+      </li>
+      <li class="listitem">
+        <code class="literal">*</code> at the end of a term signifies a prefix query
+      </li>
+      <li class="listitem">
+        <code class="literal">(</code> and <code class="literal">)</code> signify precedence
+      </li>
+      <li class="listitem">
+        <code class="literal">~N</code> after a word signifies edit distance (fuzziness)
+      </li>
+    </ul>
+
+
+    <p class="margin-vertical-normal">Example:
+    <a href='https://search.creativecommons.org/search?q=dog%2Bcat'>
+      <em>dog+cat</em>
+    </a>
+    <br />
+    This will search for images related to both dog and cat.
+    </p>
+
+    <p class="margin-vertical-normal">Example:
+      <a href='https://search.creativecommons.org/search?q=dog%2Bcat'>
+        <em>dog|cat</em>
       </a>
       <br />
-      The results will be images licensed under the CC-BY license.
-      You can use any of the other CC licenses: "by", "by-sa", "by-nc", "by-nd", "by-nc-sa",
-      "by-nc-nd", "cc0", "pdm".
+      This will search for images related to dog or cat, but not necessarily both.
     </p>
 
-    <h3  class="margin-vertical-normal">Search by provider</h3>
-    <p>
-      Put <em>provider:</em> in front of your search term to see only results from the
-      specified source. For example,
-      <a href='https://search.creativecommons.org/search?q=provider%3A%20"met"'>
-        <em>provider:"met"</em>
+    <p class="margin-vertical-normal">
+      You can use the <em>- operator (signifies NOT)</em>
+      to exclude a search term from the results.
+    </p>
+
+    <p class="margin-vertical-normal">Example:
+      <a href='https://search.creativecommons.org/search?q=dog%20-pug'>
+        <em>dog -pug</em>
       </a>
       <br />
-      Note that you must use one of the provider codes specified below, searching for
-      something like <em>provider:"Metropolitan Museum of Art"</em> will not return any results.
-      Use the following table with the provider code of every provider in our collection.
+      This will search for images related to dog but won't include results related to "pug"
     </p>
 
-    <table class="table is-bordered is-striped">
-      <thead>
-        <th>Provider Name</th>
-        <th>Provider Code</th>
-      </thead>
-      <tbody>
-        <tr v-for="(imageProvider, index) in imageProviders"
-            :key="index">
-          <td>{{ imageProvider.display_name }}</td>
-          <td>
-            <a :href="providerSearchLink(imageProvider.source_name)">
-              {{ imageProvider.source_name }}
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3  class="margin-vertical-normal">Search by tags</h3>
-    <p>
-      Put <em>tags.name:</em> in front of your search term to see only results that are
-      tagged with the specified tag. For example,
-    <a href='https://search.creativecommons.org/search?q=tags.name%3A"sky"'>
-      <em>tags.name:"sky"</em>
-    </a>
-    <br />
-    If you want to combine tags, you can use the AND operator, or the OR operator, depending on
-    your search preference.
-
-    <br />
-
-    <p>Example:
-    <a href='https://search.creativecommons.org/search?q=tags.name%3A"sky"%20AND%20tags.name%3A"airplane"'>
-      <em>tags.name:"sky" AND tags.name:"airplane"</em>
-    </a>
-    <br />
-    This will search for images with both tags, sky and airplane.
+    <p class="margin-vertical-normal">
+      You can use the <em>* operator (wildcard)</em>
+      to mark a prefix term. This will match anything after the *.
     </p>
 
-    <p>Example:
-    <a href='https://search.creativecommons.org/search?q=tags.name%3A%20"phone"%20OR%20tags.name%3A%20"sky"'>
-      <em>tags.name:"phone" OR tags.name:"sky"</em>
-    </a>
-    <br />
-    This will search for images tagged with sky or with phone, but not necessarily both.
+    <p class="margin-vertical-normal">Example:
+      <a href='https://search.creativecommons.org/search?q=net%2a'>
+        <em>net*</em>
+      </a>
+      <br />
+      This will search for images matching anything with "net".
+      This might include "network", "Netflix", "Netherlands", etc..
     </p>
 
-    <h3  class="margin-vertical-normal">Combining keywords</h3>
-
-    <p>
-      Put <em>AND</em> in between two queries to see only results that match both queries.
-      For example:
-      <ul>
-        <li>
-          <a href='https://ccsearch.creativecommons.org/search?q=title%3A%20"nature"%20AND%20provider%3A%20"met"'>
-            <em>title:"nature" AND provider:"met"</em>
-          </a>
-          will return images from the MET and whose title contains nature.
-        </li>
-        <li>
-          <a href='https://ccsearch.creativecommons.org/search?q=tags.name%3A"sky"AND%20tags.name%3A"airplane"'>
-            <em>tags.name:"sky" AND tags.name:"airplane"</em>
-          </a>
-          will return images tagged both sky and  airplane.
-        </li>
-      </ul>
+    <p class="margin-vertical-normal">
+      You can use parentheses <em>( and )</em>
+      to specify precedence of terms or combine more complex queries.
     </p>
 
-    <p>
-      Put <em>OR</em> in between two queries to see only results that match either query.
-      For example:
-      <ul>
-        <li>
-          <a href='https://ccsearch.creativecommons.org/search?q=title%3A%20"nature"%20AND%20provider%3A%20"met"'>
-            <em>provider:"met" OR provider:"flickr"</em>
-          </a>
-          will return images which are either from MET or from Flickr.
-        </li>
-        <li>
-          <a href='https://ccsearch.creativecommons.org/search?q=tags.name%3A"phone"%20OR%20tags.name%3A"tablet"'>
-            <em>tags.name:"phone" OR tags.name:"tablet"</em>
-          </a>
-          will return images tagged either phone or  tablet.
-        </li>
-      </ul>
+    <p class="margin-vertical-normal">Example:
+      <a href='https://search.creativecommons.org/search?q=dogs%20%2B%20%28corgis%20%7C%20labrador%29'>
+        <em>dogs + (corgis | labrador)</em>
+      </a>
+      <br />
+      This will search for images that match dogs that are either corgis or labrador.
     </p>
 
-    <p>
-      Put <em>NOT</em> in between two queries to see only results that match the first query
-      and do not match the second query. You can also use parentheses to combine more than one
-      of these operations For example:
-      <ul>
-        <li>
-          <a href='https://ccsearch.creativecommons.org/search?q=license%3A"by"%20AND%20%28NOT%20provider%3A"flickr"%29'>
-            <em>license:"by" AND (NOT provider:"flickr")</em>
-          </a>
-          will return images licensed under CC BY from all providers except from Flickr.
-        </li>
-        <li>
-          <a href='https://ccsearch.creativecommons.org/search?q=tags.name%3A"bird"%20AND%20%28NOT%20tags.name%3A"flamingo"%29'>
-            <em>tags.name:"bird" AND (NOT tags.name:"flamingo")</em>
-          </a>
-          will return all images tagged bird except images also tagged  flamingo.
-        </li>
-      </ul>
+    <p class="margin-vertical-normal">
+      You can use <em>~N</em>
+      to specify some fuzzy logic to the term according to the
+      <a href="http://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein Edit Distance</a>
+      — the number of one character changes that need to be made to one string to make
+      it the same as another string.
+    </p>
+
+    <p class="margin-vertical-normal">Example:
+      <a href='https://search.creativecommons.org/search?q=theatre~1'>
+        <em>theatre~1</em>
+      </a>
+      <br />
+      This will search for images that match strings close to the term "theatre" with a difference
+      of one character. Results might include terms with different spellings like "theater".
     </p>
   </div>
   <footer-section></footer-section>
@@ -191,5 +151,5 @@ export default SearchHelpPage;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  @import '../styles/text-only-page.scss';
+@import '../styles/text-only-page.scss';
 </style>
