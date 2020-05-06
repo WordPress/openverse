@@ -1,55 +1,31 @@
 <template>
   <section class="sidebar_section">
     <div class="photo-attribution margin-bottom-big">
-      <h5 class="b-header margin-bottom-big">Image attribution</h5>
-      <span id="attribution" class="photo_usage-attribution" ref="photoAttribution">
-        <a :href="image.foreign_landing_url"
-            target="_blank"
-            rel="noopener"
-            @click="onPhotoSourceLinkClicked">{{ imageTitle }}</a>
-        <span v-if="image.creator">
-          by
-          <a v-if="image.creator_url"
-              :href="image.creator_url"
-              target="_blank"
-              rel="noopener"
-              @click="onPhotoCreatorLinkClicked">{{ image.creator }}</a>
-          <span v-else>{{ image.creator }}</span>
-        </span>
-        is licensed under
+      <h5 class="b-header margin-bottom-big">License</h5>
+      <span id="attribution" class="photo_usage-attribution is-block" ref="photoAttribution">
+        This image was marked with a
         <a class="photo_license" :href="licenseURL" target="_blank" rel="noopener">
         {{ fullLicenseName.toUpperCase() }}
         </a>
+        license.
       </span>
-      <license-icons :image="image"></license-icons>
-      <CopyButton id="copy-attribution-btn"
-                  el="#attribution"
-                  title="Copy the attribution to paste into your blog or document"
-                  @copied="onCopyAttribution">
-        Copy rich text
-      </CopyButton>
-    </div>
-    <div class="embed-attribution margin-bottom-big">
-      <textarea id="attribution-html"
-                class="textarea is-family-monospace"
-                :value="attributionHtml"
-                cols="30" rows="4"
-                readonly="readonly">
-      </textarea>
-      <CopyButton id="embed-attribution-btn"
-                el="#attribution-html"
-                title="Copy the HTML to embed the attribution with license icons in your web page"
-                @copied="onEmbedAttribution">
-        Copy html
-      </CopyButton>
+      <template v-for="(license, index) in splitLicenses">
+        <license-explanations :licenseTerm="license" :key="index" />
+      </template>
+
+      <span class="caption has-text-weight-semibold">
+        Read more about the license
+        <a :href="licenseURL" target="_blank" rel="noopener">
+        here
+        </a>
+      </span>
     </div>
     <reuse-survey :image="image" />
   </section>
 </template>
 
 <script>
-import LicenseIcons from '@/components/LicenseIcons';
-import CopyButton from '@/components/CopyButton';
+import LicenseExplanations from '@/components/LicenseExplanations';
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
 import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-analytics-types';
 import ReuseSurvey from './ReuseSurvey';
@@ -58,8 +34,7 @@ export default {
   name: 'image-attribution',
   props: ['id', 'image', 'ccLicenseURL', 'fullLicenseName', 'attributionHtml'],
   components: {
-    LicenseIcons,
-    CopyButton,
+    LicenseExplanations,
     ReuseSurvey,
   },
   computed: {
@@ -69,6 +44,9 @@ export default {
     imageTitle() {
       const title = this.$props.image.title;
       return title !== 'Image' ? `"${title}"` : 'Image';
+    },
+    splitLicenses() {
+      return this.$props.image.license.split('-');
     },
   },
   methods: {
