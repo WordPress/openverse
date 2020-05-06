@@ -8,8 +8,7 @@
         ['margin-right-small']: true,
         [`cc-${getLicenseIcon(licenseTerm)}`]: true,
        }"
-      :alt="`${licenseTerm.toUpperCase()}`"
-      :key="index" />
+      :alt="`${licenseTerm.toUpperCase()}`"/>
       {{ getLicenseDescription(licenseTerm) }}
   </span>
 </template>

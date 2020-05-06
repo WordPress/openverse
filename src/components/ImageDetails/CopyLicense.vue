@@ -34,15 +34,13 @@
           <span id="attribution" class="photo_usage-attribution is-block" ref="photoAttribution">
             <a :href="image.foreign_landing_url"
                 target="_blank"
-                rel="noopener"
-                @click="onPhotoSourceLinkClicked">{{ imageTitle }}</a>
+                rel="noopener">{{ imageTitle }}</a>
             <span v-if="image.creator">
               by
               <a v-if="image.creator_url"
                   :href="image.creator_url"
                   target="_blank"
-                  rel="noopener"
-                  @click="onPhotoCreatorLinkClicked">{{ image.creator }}</a>
+                  rel="noopener">{{ image.creator }}</a>
               <span v-else>{{ image.creator }}</span>
             </span>
             is licensed under
@@ -64,13 +62,13 @@
           </textarea>
           <copy-button id="copy-attribution-btn"
                        el="#attribution-html"
-                       @copied="onCopyAttribution" />
+                       @copied="onEmbedAttribution" />
         </div>
         <div :class="tabClass(2, 'tabs-panel')">
           <p id="attribution-text" class="photo_usage-attribution is-block" ref="photoAttribution">
             {{ imageTitle }}
             <span v-if="image.creator">
-              by {{ image.creator }}</a>
+              by {{ image.creator }}
             </span>
             is licensed under
             {{ fullLicenseName.toUpperCase() }}
@@ -133,12 +131,6 @@ export default {
       this.$store.dispatch(EMBED_ATTRIBUTION);
 
       this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED);
-    },
-    onPhotoSourceLinkClicked() {
-      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.SOURCE_CLICKED);
-    },
-    onPhotoCreatorLinkClicked() {
-      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.CREATOR_CLICKED);
     },
   },
 };

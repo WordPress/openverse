@@ -68,6 +68,19 @@
           <image-social-share v-if="socialSharingEnabled" :image="image" />
         </div>
       </section>
+
+      <a v-if="activeTab < 2"
+          :href="image.foreign_landing_url"
+          target="_blank"
+          rel="noopener"
+          class="button is-success margin-vertical-normal"
+          @click="onPhotoSourceLinkClicked">
+        Go to image's website
+        <i class="icon external-link margin-left-normal is-size-6
+                  padding-top-smaller has-text-grey-lighter" />
+      </a>
+
+      <reuse-survey v-if="activeTab < 2" :image="image" />
     </div>
   </div>
 </template>
@@ -75,11 +88,13 @@
 <script>
 import ContentReportForm from '@/components/ContentReport/ContentReportForm';
 import { TOGGLE_REPORT_FORM_VISIBILITY } from '@/store/mutation-types';
+import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-analytics-types';
 import attributionHtml from '@/utils/attributionHtml';
 import ImageInfo from './ImageInfo';
 import ImageAttribution from './ImageAttribution';
 import ImageSocialShare from './ImageSocialShare';
 import LegalDisclaimer from './LegalDisclaimer';
+import ReuseSurvey from './ReuseSurvey';
 
 export default {
   name: 'photo-details',
@@ -90,6 +105,7 @@ export default {
     ImageSocialShare,
     LegalDisclaimer,
     ContentReportForm,
+    ReuseSurvey,
   },
   data() {
     return {
@@ -135,6 +151,12 @@ export default {
     },
     toggleReportFormVisibility() {
       this.$store.commit(TOGGLE_REPORT_FORM_VISIBILITY);
+    },
+    onPhotoSourceLinkClicked() {
+      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+        eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
+        resultUuid: this.$props.image.id,
+      });
     },
   },
 };

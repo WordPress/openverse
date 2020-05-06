@@ -26,7 +26,6 @@
                     :licenseURL="licenseURL"
                     :attributionHtml="attributionHtml" />
     </div>
-    <reuse-survey :image="image" />
   </section>
 </template>
 
@@ -34,7 +33,6 @@
 import LicenseExplanations from '@/components/LicenseExplanations';
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
 import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-analytics-types';
-import ReuseSurvey from './ReuseSurvey';
 import CopyLicense from './CopyLicense';
 
 export default {
@@ -42,7 +40,6 @@ export default {
   props: ['id', 'image', 'ccLicenseURL', 'fullLicenseName', 'attributionHtml'],
   components: {
     LicenseExplanations,
-    ReuseSurvey,
     CopyLicense,
   },
   computed: {
@@ -50,7 +47,10 @@ export default {
       return `${this.ccLicenseURL}&atype=rich`;
     },
     splitLicenses() {
-      return this.$props.image.license.split('-');
+      if (!!this.$props.image && !!this.$props.image.license) {
+        return this.$props.image.license.split('-');
+      }
+      return '';
     },
   },
   methods: {
