@@ -8,8 +8,8 @@ import time
 import argparse
 import datetime
 from aws_requests_auth.aws_auth import AWSRequestsAuth
-from elasticsearch import Elasticsearch, RequestsHttpConnection, NotFoundError,\
-    helpers
+from elasticsearch import Elasticsearch, RequestsHttpConnection, \
+    NotFoundError, helpers
 from elasticsearch.exceptions \
     import ConnectionError as ElasticsearchConnectionError
 from elasticsearch_dsl import connections, Search
@@ -264,7 +264,7 @@ class TableIndexer:
                 num_converted_documents += len(chunk)
                 total_indexed_so_far += len(chunk)
                 if self.progress is not None:
-                    self.progress.value =\
+                    self.progress.value = \
                         (total_indexed_so_far / num_to_index) * 100
             log.info('Synchronized ' + str(num_converted_documents) + ' from '
                      'table \'' + table + '\' to Elasticsearch')
@@ -322,12 +322,18 @@ class TableIndexer:
                 }
             }
         )
-        log.info('Waiting for replica shards. . .')
-        es.cluster.health(
-            index=write_index,
-            wait_for_no_initializing_shards=True,
-            timeout="2h"
-        )
+        # Cluster status will always be yellow in development environments
+        # because there will only be one node available. In production, there
+        # are many nodes, and the index should not be promoted until all
+        # shards have been initialized.
+        environment = os.getenv('ENVIRONMENT', 'local')
+        if environment != 'local':
+            log.info('Waiting for replica shards. . .')
+            es.cluster.health(
+                index=write_index,
+                wait_for_status='green',
+                timeout="3h"
+            )
         # If the index exists already and it's not an alias, delete it.
         if live_alias in indices:
             log.warning('Live index already exists. Deleting and realiasing.')
@@ -421,7 +427,9 @@ class TableIndexer:
 
         documents = []
         for row in pg_chunk:
-            if not row[schema['removed_from_source']]:
+            if not (
+                row[schema['removed_from_source']] or row[schema['deleted']]
+            ):
                 converted = model.database_row_to_elasticsearch_doc(row, schema)
                 converted = converted.to_dict(include_meta=True)
                 if dest_index:

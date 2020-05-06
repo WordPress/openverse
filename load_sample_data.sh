@@ -22,3 +22,5 @@ PGPASSWORD=deploy psql -U deploy -d openledger -h localhost -p 5433 -c "\copy im
 curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model": "image", "action": "LOAD_TEST_DATA"}'
 # Ingest and index the data
 curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model": "image", "action": "INGEST_UPSTREAM"}'
+# Clear source cache since it's out of date after data has been loaded
+docker exec -it cccatalog-api_cache_1 /bin/bash -c "echo \"del :1:providers-image\" | redis-cli"

@@ -8,13 +8,14 @@ addons:
 env:
   - CCCAPI_CONTAINER_NAME=cccatalog-api_web_1 ANALYTICS_CONTAINER_NAME=cccatalog-api_analytics_1
 python:
-- '3.6'
+- '3.7'
 services:
   - docker
 install:
   - pip3 install pipenv
   - cd cccatalog-api && pipenv install --system --deploy --dev && cd ..
   - cd ingestion_server && pipenv install --system --deploy --dev && cd ..
+  - cd image_get/worker && pipenv install --system --deploy && cd ../../
   - cd analytics && pipenv install && cd ..
 before_install:
   - "export PYTHONPATH=$PYTHONPATH:$(pwd)"
@@ -30,6 +31,7 @@ script:
   - pycodestyle ingestion_server/ingestion_server --max-line-length=80 --ignore=E402
   - cd cccatalog-api && test/run_test.sh
   - cd ../ingestion_server && pytest test/unit_tests.py
-  - cd ../ && docker-compose logs analytics
+  - cd ../image_get/worker && pipenv run pytest
+  - cd ../../ && docker-compose logs analytics
   - cd ./analytics && API_URL='analytics:8090' pytest tests.py --disable-pytest-warnings
   - cd ../ && docker-compose logs analytics

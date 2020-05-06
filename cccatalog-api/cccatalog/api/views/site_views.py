@@ -328,7 +328,10 @@ class Thumbs(APIView):
         status = upstream_response.status
         content_type = upstream_response.headers.get('Content-Type')
 
-        response = HttpResponse(upstream_response.read(), status=status,
-                                content_type=content_type)
+        response = HttpResponse(
+            upstream_response.read(),
+            status=status,
+            content_type=content_type
+        )
 
         return response

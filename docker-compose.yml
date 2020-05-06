@@ -74,11 +74,13 @@ services:
       ELASTICSEARCH_PORT: "9200"
       DISABLE_GLOBAL_THROTTLING: "True"
       ROOT_SHORTENING_URL: "localhost:8000"
+      THUMBNAIL_PROXY_URL: "http://thumbs:8222"
     stdin_open: true
     tty: true
 
   cache:
     image: redis:4.0.10
+    container_name: cccatalog-api_cache_1
     ports:
       - "6379:6379"
 

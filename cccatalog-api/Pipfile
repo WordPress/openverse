@@ -10,7 +10,6 @@ pipdeptree = "*"
 pycodestyle = "*"
 
 [packages]
-future = {version = "*",python_version = "<=2.7"}
 psycopg2-binary = "*"
 redlock-py = "*"
 hvac = "*"
@@ -33,7 +32,10 @@ pytest-django = ">=3.5"
 djangorestframework = "*"
 drf-yasg = "*"
 elasticsearch-dsl = "==7.0.0"
-ipaddress = {version = "*",python_version = "<=2.7"}
 piexif = "*"
 python-xmp-toolkit = "*"
 deepdiff = "*"
+djangorestframework-xml = "*"
+gevent = "*"
+future = {version = "*",python_version = "<=2.7"}
+ipaddress = {version = "*",python_version = "<=2.7"}
