@@ -1,21 +1,6 @@
 <template>
   <section class="sidebar_section">
     <div class="margin-bottom-big">
-      <h4 class="b-header">{{ image.title }}</h4>
-    </div>
-    <div class="margin-bottom-big">
-      <span class="is-block margin-bottom-small">Creator</span>
-      <span v-if="image.creator">
-        <a class="body-big" v-if="image.creator_url" :href="image.creator_url">
-          {{ image.creator }}
-        </a>
-        <span class="body-big" v-else>{{ image.creator }}</span>
-      </span>
-      <span class="body-big" v-else>
-        Not Available
-      </span>
-    </div>
-    <div class="margin-bottom-big">
       <span class="is-block margin-bottom-small">License</span>
       <license-icons :image="image"></license-icons>
       <a class="photo_license body-big" :href="ccLicenseURL">

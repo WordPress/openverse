@@ -1,7 +1,7 @@
 <template>
   <div class="photo columns is-desktop is-marginless">
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
-      <a class="photo_breadcrumb is-block has-text-left margin-normal has-text-grey"
+      <a class="is-block has-text-left margin-left-normal margin-bottom-normal has-text-grey"
           :href="breadCrumbURL"
           @click.prevent="onGoBackToSearchResults"
           v-if="shouldShowBreadcrumb">
@@ -31,6 +31,16 @@
     </div>
     </div>
     <div class="column image-info">
+      <div class="margin-vertical-normal">
+        <h4 class="b-header">{{ image.title }}</h4>
+        <span v-if="image.creator" class="caption has-text-weight-semibold">
+          by
+          <a v-if="image.creator_url" :href="image.creator_url">
+            {{ image.creator }}
+          </a>
+          <span v-else>{{ image.creator }}</span>
+        </span>
+      </div>
       <section class="tabs" >
         <ul>
           <li :class="tabClass(0, 'tab')">
