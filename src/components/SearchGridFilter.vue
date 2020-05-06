@@ -13,44 +13,37 @@
                  'search-filters__visible': isFilterVisible, }" >
             <slot class="is-touch">
               <form class="filters-form" role="filter">
-                <filter-check-list
-                  :options="filters.licenseTypes"
-                  :disabled="licenseTypesDisabled"
-                  title="I want something that I can"
-                  filterType="licenseTypes"
-                  @filterChanged="onUpdateFilter" />
-                <filter-check-list
-                  :options="filters.licenses"
-                  :disabled="licensesDisabled"
-                  title="Licenses"
-                  filterType="licenses"
-                  @filterChanged="onUpdateFilter" />
-                <filter-check-list
-                  v-if="renderProvidersFilter"
-                  :options="filters.providers"
-                  title="Collections"
-                  filterType="providers"
-                  @filterChanged="onUpdateFilter" />
-                <filter-check-list
-                  :options="filters.categories"
-                  title="Image Type"
-                  filterType="categories"
-                  @filterChanged="onUpdateFilter" />
-                <filter-check-list
-                  :options="filters.extensions"
-                  title="File Type"
-                  filterType="extensions"
-                  @filterChanged="onUpdateFilter" />
-                <filter-check-list
-                  :options="filters.aspectRatios"
-                  title="Aspect Ratio"
-                  filterType="aspectRatios"
-                  @filterChanged="onUpdateFilter" />
-                <filter-check-list
-                  :options="filters.sizes"
-                  title="Image Size"
-                  filterType="sizes"
-                  @filterChanged="onUpdateFilter" />
+                <filter-check-list :options="filters.licenseTypes"
+                                   :disabled="licenseTypesDisabled"
+                                   title="I want something that I can"
+                                   filterType="licenseTypes"
+                                   @filterChanged="onUpdateFilter" />
+                <filter-check-list :options="filters.licenses"
+                                   :disabled="licensesDisabled"
+                                   title="Licenses"
+                                   filterType="licenses"
+                                   @filterChanged="onUpdateFilter" />
+                <filter-check-list v-if="renderProvidersFilter"
+                                   :options="filters.providers"
+                                   title="Collections"
+                                   filterType="providers"
+                                   @filterChanged="onUpdateFilter" />
+                <filter-check-list :options="filters.categories"
+                                   title="Image Type"
+                                   filterType="categories"
+                                   @filterChanged="onUpdateFilter" />
+                <filter-check-list :options="filters.extensions"
+                                    title="File Type"
+                                    filterType="extensions"
+                                    @filterChanged="onUpdateFilter" />
+                <filter-check-list :options="filters.aspectRatios"
+                                   title="Aspect Ratio"
+                                   filterType="aspectRatios"
+                                   @filterChanged="onUpdateFilter" />
+                <filter-check-list :options="filters.sizes"
+                                   title="Image Size"
+                                   filterType="sizes"
+                                   @filterChanged="onUpdateFilter" />
               </form>
             </slot>
             <div class="is-flex bottom-filters">
@@ -77,43 +70,36 @@
         :class="{ 'search-filters': true,
                  'search-filters__visible': isFilterVisible, }">
         <form class="filters-form" role="filter">
-          <filter-check-list
-            :options="filters.licenseTypes"
-            title="I want something that I can"
-            filterType="licenseTypes"
-            @filterChanged="onUpdateFilter" />
-          <filter-check-list
-            :options="filters.licenses"
-            :disabled="licensesDisabled"
-            title="Licenses"
-            filterType="licenses"
-            @filterChanged="onUpdateFilter" />
-          <filter-check-list
-            v-if="renderProvidersFilter"
-            :options="filters.providers"
-            title="Collections"
-            filterType="providers"
-            @filterChanged="onUpdateFilter" />
-          <filter-check-list
-            :options="filters.categories"
-            title="Image Type"
-            filterType="categories"
-            @filterChanged="onUpdateFilter" />
-          <filter-check-list
-            :options="filters.extensions"
-            title="File Type"
-            filterType="extensions"
-            @filterChanged="onUpdateFilter" />
-          <filter-check-list
-            :options="filters.aspectRatios"
-            title="Aspect Ratio"
-            filterType="aspectRatios"
-            @filterChanged="onUpdateFilter" />
-          <filter-check-list
-            :options="filters.sizes"
-            title="Image Size"
-            filterType="sizes"
-            @filterChanged="onUpdateFilter" />
+          <filter-check-list :options="filters.licenseTypes"
+                             title="I want something that I can"
+                             filterType="licenseTypes"
+                             @filterChanged="onUpdateFilter" />
+          <filter-check-list :options="filters.licenses"
+                             :disabled="licensesDisabled"
+                             title="Licenses"
+                             filterType="licenses"
+                             @filterChanged="onUpdateFilter" />
+          <filter-check-list v-if="renderProvidersFilter"
+                             :options="filters.providers"
+                             title="Collections"
+                             filterType="providers"
+                             @filterChanged="onUpdateFilter" />
+          <filter-check-list :options="filters.categories"
+                             title="Image Type"
+                             filterType="categories"
+                             @filterChanged="onUpdateFilter" />
+          <filter-check-list :options="filters.extensions"
+                             title="File Type"
+                             filterType="extensions"
+                             @filterChanged="onUpdateFilter" />
+          <filter-check-list :options="filters.aspectRatios"
+                             title="Aspect Ratio"
+                             filterType="aspectRatios"
+                             @filterChanged="onUpdateFilter" />
+          <filter-check-list :options="filters.sizes"
+                             title="Image Size"
+                             filterType="sizes"
+                             @filterChanged="onUpdateFilter" />
         </form>
         <div class="margin-normal filter-option small-filter search-filters_search-by">
           <input
