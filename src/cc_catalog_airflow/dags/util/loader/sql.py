@@ -1,4 +1,5 @@
 import logging
+from textwrap import dedent
 from airflow.hooks.postgres_hook import PostgresHook
 from util.loader import column_names as col
 
@@ -21,42 +22,58 @@ def create_loading_table(
     load_table = _get_load_table_name(identifier)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(
-        f'CREATE TABLE public.{load_table} ('
-        f'\n  {col.FOREIGN_IDENTIFIER} character varying(3000),'
-        f'\n  {col.FOREIGN_LANDING_URL} character varying(1000),'
-        f'\n  {col.DIRECT_URL} character varying(3000),'
-        f'\n  {col.THUMBNAIL} character varying(3000),'
-        f'\n  {col.WIDTH} integer,'
-        f'\n  {col.HEIGHT} integer,'
-        f'\n  {col.FILESIZE} character varying(100),'
-        f'\n  {col.LICENSE} character varying(50),'
-        f'\n  {col.LICENSE_VERSION} character varying(25),'
-        f'\n  {col.CREATOR} character varying(2000),'
-        f'\n  {col.CREATOR_URL} character varying(2000),'
-        f'\n  {col.TITLE} character varying(5000),'
-        f'\n  {col.META_DATA} jsonb,'
-        f'\n  {col.TAGS} jsonb,'
-        f'\n  {col.WATERMARKED} boolean,'
-        f'\n  {col.PROVIDER} character varying(80),'
-        f'\n  {col.SOURCE} character varying(80)'
-        f'\n);'
+        dedent(
+            f'''
+            CREATE TABLE public.{load_table} (
+              {col.FOREIGN_ID} character varying(3000),
+              {col.LANDING_URL} character varying(1000),
+              {col.DIRECT_URL} character varying(3000),
+              {col.THUMBNAIL} character varying(3000),
+              {col.WIDTH} integer,
+              {col.HEIGHT} integer,
+              {col.FILESIZE} character varying(100),
+              {col.LICENSE} character varying(50),
+              {col.LICENSE_VERSION} character varying(25),
+              {col.CREATOR} character varying(2000),
+              {col.CREATOR_URL} character varying(2000),
+              {col.TITLE} character varying(5000),
+              {col.META_DATA} jsonb,
+              {col.TAGS} jsonb,
+              {col.WATERMARKED} boolean,
+              {col.PROVIDER} character varying(80),
+              {col.SOURCE} character varying(80)
+            );
+            '''
+        )
     )
     postgres.run(
         f'ALTER TABLE public.{load_table} OWNER TO {DB_USER_NAME};'
     )
     postgres.run(
-        f'CREATE INDEX IF NOT EXISTS {load_table}_{col.PROVIDER}_key'
-        f' ON public.{load_table} USING btree ({col.PROVIDER});'
+        dedent(
+            f'''
+            CREATE INDEX IF NOT EXISTS {load_table}_{col.PROVIDER}_key
+            ON public.{load_table} USING btree ({col.PROVIDER});
+            '''
+        )
     )
     postgres.run(
-        f'CREATE INDEX IF NOT EXISTS {load_table}_{col.FOREIGN_IDENTIFIER}_key'
-        f' ON public.{load_table}'
-        f' USING btree (provider, md5(({col.FOREIGN_IDENTIFIER})::text));'
+        dedent(
+            f'''
+            CREATE INDEX IF NOT EXISTS {load_table}_{col.FOREIGN_ID}_key
+            ON public.{load_table}
+            USING btree (provider, md5(({col.FOREIGN_ID})::text));
+            '''
+        )
     )
     postgres.run(
-        f'CREATE INDEX IF NOT EXISTS {load_table}_{col.DIRECT_URL}_key'
-        f' ON public.{load_table}'
-        f' USING btree (provider, md5(({col.DIRECT_URL})::text));'
+        dedent(
+            f'''
+            CREATE INDEX IF NOT EXISTS {load_table}_{col.DIRECT_URL}_key
+            ON public.{load_table}
+            USING btree (provider, md5(({col.DIRECT_URL})::text));
+            '''
+        )
     )
 
 
@@ -84,14 +101,18 @@ def load_s3_data_to_intermediate_table(
 
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(
-        f"SELECT aws_s3.table_import_from_s3("
-        f"'{load_table}',"
-        f"'',"
-        f"'DELIMITER E''\t''',"
-        f"'{bucket}',"
-        f"'{s3_key}',"
-        f"'us-east-1'"
-        f");"
+        dedent(
+            f"""
+            SELECT aws_s3.table_import_from_s3(
+              '{load_table}',
+              '',
+              'DELIMITER E''\t''',
+              '{bucket}',
+              '{s3_key}',
+              'us-east-1'
+            );
+            """
+        )
     )
     _clean_intermediate_table_data(postgres, load_table)
 
@@ -107,17 +128,22 @@ def _clean_intermediate_table_data(
         f'DELETE FROM {load_table} WHERE {col.LICENSE} IS NULL;'
     )
     postgres_hook.run(
-        f'DELETE FROM {load_table} WHERE {col.FOREIGN_LANDING_URL} IS NULL;'
+        f'DELETE FROM {load_table} WHERE {col.LANDING_URL} IS NULL;'
     )
     postgres_hook.run(
-        f'DELETE FROM {load_table} WHERE {col.FOREIGN_IDENTIFIER} IS NULL;'
+        f'DELETE FROM {load_table} WHERE {col.FOREIGN_ID} IS NULL;'
     )
     postgres_hook.run(
-        f'DELETE FROM {load_table} p1'
-        f' USING {load_table} p2'
-        f' WHERE p1.ctid < p2.ctid'
-        f' AND p1.{col.PROVIDER} = p2.{col.PROVIDER}'
-        f' AND p1.{col.FOREIGN_IDENTIFIER} = p2.{col.FOREIGN_IDENTIFIER};'
+        dedent(
+            f'''
+            DELETE FROM {load_table} p1
+            USING {load_table} p2
+            WHERE
+              p1.ctid < p2.ctid
+              AND p1.{col.PROVIDER} = p2.{col.PROVIDER}
+              AND p1.{col.FOREIGN_ID} = p2.{col.FOREIGN_ID};
+            '''
+        )
     )
 
 
@@ -129,63 +155,62 @@ def upsert_records_to_image_table(
     load_table = _get_load_table_name(identifier)
     logger.info(f'Upserting new records into {image_table}.')
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    image_columns = [
-            col.CREATED_ON,
-            col.UPDATED_ON,
-            col.PROVIDER,
-            col.SOURCE,
-            col.FOREIGN_IDENTIFIER,
-            col.FOREIGN_LANDING_URL,
-            col.DIRECT_URL,
-            col.THUMBNAIL,
-            col.WIDTH,
-            col.HEIGHT,
-            col.LICENSE,
-            col.LICENSE_VERSION,
-            col.CREATOR,
-            col.CREATOR_URL,
-            col.TITLE,
-            col.LAST_SYNCED,
-            col.REMOVED,
-            col.META_DATA,
-            col.TAGS,
-            col.WATERMARKED
-        ]
-    insert_values = image_columns[:]
-    insert_values[0], insert_values[1], insert_values[15] = NOW, NOW, NOW
-    insert_values[16] = FALSE
-    # print(insert_values)
-    postgres.run(
-        f'INSERT INTO {image_table} ('
-        + ', '.join(image_columns)
-        + ')\n'
-        'SELECT '
-        + ', '.join(insert_values)
-        + f'\nFROM {load_table}\n'
-        + 'ON CONFLICT ('
-        + f'{col.PROVIDER}, '
-        + f' md5(({col.FOREIGN_IDENTIFIER})::text),'
-        + f'md5(({col.DIRECT_URL})::text))\n'
-        + 'DO UPDATE SET '
-        + f'\n  updated_on = {NOW}'
-        + _newest(col.FOREIGN_LANDING_URL)
-        + _newest(col.DIRECT_URL)
-        + _newest(col.THUMBNAIL)
-        + _newest(col.WIDTH)
-        + _newest(col.HEIGHT)
-        + _newest(col.LICENSE)
-        + _newest(col.LICENSE_VERSION)
-        + _newest(col.CREATOR)
-        + _newest(col.CREATOR_URL)
-        + _newest(col.TITLE)
-        + f',\n  {col.LAST_SYNCED} = {NOW}'
-        + f',\n  {col.REMOVED} = {FALSE}'
-        + _newest(col.META_DATA)
-        + _newest(col.WATERMARKED)
-        + f'\nWHERE {image_table}.{col.FOREIGN_IDENTIFIER} '
-        + f'= EXCLUDED.{col.FOREIGN_IDENTIFIER}'
-        + f' AND {image_table}.{col.PROVIDER} = EXCLUDED.{col.PROVIDER};'
+    column_inserts = {
+        col.CREATED_ON: NOW,
+        col.UPDATED_ON: NOW,
+        col.PROVIDER: col.PROVIDER,
+        col.SOURCE: col.SOURCE,
+        col.FOREIGN_ID: col.FOREIGN_ID,
+        col.LANDING_URL: col.LANDING_URL,
+        col.DIRECT_URL: col.DIRECT_URL,
+        col.THUMBNAIL: col.THUMBNAIL,
+        col.WIDTH: col.WIDTH,
+        col.HEIGHT: col.HEIGHT,
+        col.LICENSE: col.LICENSE,
+        col.LICENSE_VERSION: col.LICENSE_VERSION,
+        col.CREATOR: col.CREATOR,
+        col.CREATOR_URL: col.CREATOR_URL,
+        col.TITLE: col.TITLE,
+        col.LAST_SYNCED: NOW,
+        col.REMOVED: FALSE,
+        col.META_DATA: col.META_DATA,
+        col.TAGS: col.TAGS,
+        col.WATERMARKED: col.WATERMARKED
+    }
+    upsert_query = dedent(
+        f'''
+        INSERT INTO {image_table} ({', '.join(column_inserts.keys())})
+        SELECT {', '.join(column_inserts.values())}
+        FROM {load_table}
+        ON CONFLICT (
+          {col.PROVIDER},
+          md5(({col.FOREIGN_ID})::text),
+          md5(({col.DIRECT_URL})::text)
+        )
+        DO UPDATE SET
+          updated_on = {NOW},
+          {_newest(col.LANDING_URL)},
+          {_newest(col.DIRECT_URL)},
+          {_newest(col.THUMBNAIL)},
+          {_newest(col.WIDTH)},
+          {_newest(col.HEIGHT)},
+          {_newest(col.LICENSE)},
+          {_newest(col.LICENSE_VERSION)},
+          {_newest(col.CREATOR)},
+          {_newest(col.CREATOR_URL)},
+          {_newest(col.TITLE)},
+          {col.LAST_SYNCED} = {NOW},
+          {col.REMOVED} = {FALSE},
+          {_newest(col.META_DATA)},
+          {_newest(col.WATERMARKED)}
+        WHERE
+          {image_table}.{col.FOREIGN_ID} = EXCLUDED.{col.FOREIGN_ID}
+        AND
+          {image_table}.{col.PROVIDER} = EXCLUDED.{col.PROVIDER};
+
+        '''
     )
+    postgres.run(upsert_query)
 
 
 def drop_load_table(postgres_conn_id, identifier):
@@ -202,4 +227,4 @@ def _get_load_table_name(
 
 
 def _newest(column):
-    return f',\n  {column} = EXCLUDED.{column}'
+    return f'{column} = EXCLUDED.{column}'
