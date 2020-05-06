@@ -1,6 +1,6 @@
 import os
-import re
 import logging
+import lxml.html as html
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
 
@@ -63,20 +63,18 @@ def _get_object_json(headers=HEADERS,
                      endpoint=ENDPOINT,
                      retries=RETRIES,
                      query_param=None):
-    response_json = None
     for tries in range(retries):
-        try:
-            response = delay_request.get(
-                endpoint,
-                query_param,
-                headers=headers
-            )
-            data = response.json()
-            if data and data.get("message", "").lower() == "success.":
-                response_json = data.get("data", "")
-                break
-        except Exception as e:
-            logger.warning(f"response not captured due to {e}")
+        response = delay_request.get(
+                    endpoint,
+                    query_param,
+                    headers=headers
+                    )
+        data = response.json()
+        if data and data.get("message", "").lower() == "success.":
+            response_json = data.get("data", None)
+            break
+        else:
+            response_json = None
     return response_json
 
 
@@ -89,11 +87,14 @@ def _process_objects_batch(objects_batch):
         if license_url is not None:
             id_ = object_.get("id", "")
             complete_object_data = _get_object_json(
-                endpoint=ENDPOINT+str(id_))
+                endpoint=ENDPOINT+str(id_)
+                )
             if complete_object_data is None:
                 continue
-            image_count = _handle_object_data(data=complete_object_data,
-                                              license_url=license_url)
+            image_count = _handle_object_data(
+                data=complete_object_data,
+                license_url=license_url
+                )
 
     return image_count
 
@@ -144,22 +145,30 @@ def _get_image_sizes(image):
 
 
 def _get_license_url(rights_info):
-    license_url = None
     if "creative commons" in rights_info.get("name").lower():
-        license_url = re.search('https://creativecommons.org/licenses/[^\s]+',
-                                rights_info.get('description'))
-        license_url = license_url.group(0).strip()
+        elements = html.fromstring(rights_info.get("description", ""))
+        cc_links = [
+            elm[2]
+            for elm in elements.iterlinks()
+            if "https://creativecommons.org/licenses/" in elm[2]
+        ]
+        if len(cc_links) == 1:
+            (license_url,) = cc_links
+        else:
+            license_url = None
+    else:
+        license_url = None
     return license_url
 
 
 def _get_metadata(data):
     metadata = {}
-    metadata["accession_number"] = data.get("accession_number", "")
-    metadata["date"] = data.get("object_date", "")
-    metadata["description"] = data.get("description", "")
-    metadata["medium"] = data.get("medium", "")
-    metadata["credit_line"] = data.get("credit_line", "")
-    metadata["classification"] = data.get("classification", "")
+    metadata["accession_number"] = data.get("accession_number", None)
+    metadata["date"] = data.get("object_date", None)
+    metadata["description"] = data.get("description", None)
+    metadata["medium"] = data.get("medium", None)
+    metadata["credit_line"] = data.get("credit_line", None)
+    metadata["classification"] = data.get("classification", None)
     return metadata
 
 

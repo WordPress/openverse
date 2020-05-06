@@ -186,7 +186,7 @@ def test_get_image_no_size():
 def test_get_license_url():
     response_json = _get_resource_json("license_info.json")
     actual_url = bkm._get_license_url(response_json)
-    expected_url = 'https://creativecommons.org/licenses/by/3.0/"'
+    expected_url = 'https://creativecommons.org/licenses/by/3.0/'
 
     assert actual_url == expected_url
 
