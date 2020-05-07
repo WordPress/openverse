@@ -2,7 +2,7 @@
   <nav class="navbar small">
     <div class="navbar-brand">
       <a class="logo" href="/">
-        <img alt="Logo" src="@creativecommons/vocabulary/assets/logos/products/search.svg">
+        <img alt="Logo" src="/static/logos/products/search.svg">
       </a>
       <a role="button"
          :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
@@ -34,6 +34,10 @@
         <a class="navbar-item" href="/collections">Collections</a>
         <a class="navbar-item" href="/search-help">Search Guide</a>
         <a class="navbar-item" href="/feedback">Feedback</a>
+        <a class="navbar-item" href="https://opensource.creativecommons.org/ccsearch-browser-extension/" target="_blank">
+        Extension
+        <i class="icon external-link" />
+        </a>
       </div>
     </div>
   </nav>

@@ -24,8 +24,8 @@ import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
-import SearchGridFilter from '@/components/SearchGridFilter';
-import FilterDisplay from '@/components/FilterDisplay';
+import SearchGridFilter from '@/components/Filters/SearchGridFilter';
+import FilterDisplay from '@/components/Filters/FilterDisplay';
 import BrowsePageMixin from '@/pages/mixins/BrowsePageMixin';
 
 const BrowsePage = {
