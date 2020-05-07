@@ -60,7 +60,6 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 - *cccatalog-api* is a Django Rest Framework API server. For a full description of its capabilities, please see the [browsable documentation](https://api.creativecommons.engineering).
 - *ingestion-server* is a service for downloading and indexing search data once it has been prepared by the CC Catalog.
 - *analytics* is a Falcon REST API for collecting usage data.
-- *ccbot* is a slightly customized fork of Scrapy Cluster. The original intent was to find all of the dead links in our database, but it can easily be modified to perform other useful tasks, such as mass downloading images or scraping new content into the CC Catalog. This is not used in production at this time and is included in the repository for historic reasons.
 
 ## Running the tests
 
