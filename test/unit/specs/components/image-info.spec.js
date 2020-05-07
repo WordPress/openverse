@@ -41,12 +41,6 @@ describe('Image Info', () => {
     expect(wrapper.find('.photo_license').text()).toBe(props.fullLicenseName);
   });
 
-  it('should contain display not available if there is no image creator', () => {
-    props.image.creator = null;
-    const wrapper = render(ImageInfo, options);
-    expect(wrapper.html()).toContain('Not Available');
-  });
-
   it('should display image dimensions', () => {
     const wrapper = render(ImageInfo, options);
     expect(wrapper.html()).toContain(`${props.imageWidth}`);

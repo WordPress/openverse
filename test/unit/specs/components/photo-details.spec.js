@@ -11,7 +11,7 @@ describe('PhotoDetails', () => {
     props = {
       image: {
         id: 0,
-        title: 'foo',
+        title: 'Title foo',
         provider: 'flickr',
         url: 'foo.bar',
         thumbnail: 'http://foo.bar',
@@ -89,6 +89,16 @@ describe('PhotoDetails', () => {
     options.propsData.shouldShowBreadcrumb = false;
     const wrapper = render(PhotoDetails, options);
     expect(wrapper.find('.photo_breadcrumb').element).toBeUndefined();
+  });
+
+  it('renders image title', () => {
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.html()).toContain(props.image.title);
+  });
+
+  it('renders creator name', () => {
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.html()).toContain(props.image.creator);
   });
 
   it('redirects back when clicking on the back to results link', () => {
