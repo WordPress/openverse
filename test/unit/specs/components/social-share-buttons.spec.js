@@ -1,4 +1,4 @@
-import SocialShareButtons from '@/components/SocialShareButtons';
+import SocialShareButtons from '@/components/ImageDetails/SocialShareButtons';
 import { SOCIAL_MEDIA_SHARE } from '@/store/action-types';
 import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-analytics-types';
 import render from '../../test-utils/render';

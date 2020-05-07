@@ -1,7 +1,8 @@
 <template>
   <div class="photo columns is-desktop is-marginless">
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
-      <a class="is-block has-text-left margin-left-normal margin-bottom-normal has-text-grey"
+      <a class="is-block photo_breadcrumb has-text-left margin-left-normal
+                margin-bottom-normal has-text-grey"
           :href="breadCrumbURL"
           @click.prevent="onGoBackToSearchResults"
           v-if="shouldShowBreadcrumb">

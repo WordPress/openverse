@@ -1,4 +1,4 @@
-import ImageAttribution from '@/components/ImageAttribution';
+import ImageAttribution from '@/components/ImageDetails/ImageAttribution';
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
 import { DETAIL_PAGE_EVENTS, SEND_DETAIL_PAGE_EVENT } from '@/store/usage-data-analytics-types';
 import render from '../../test-utils/render';

@@ -1,4 +1,4 @@
-import ReuseSurvey from '@/components/ReuseSurvey';
+import ReuseSurvey from '@/components/ImageDetails/ReuseSurvey';
 import { DETAIL_PAGE_EVENTS, SEND_DETAIL_PAGE_EVENT } from '@/store/usage-data-analytics-types';
 import render from '../../test-utils/render';
 
