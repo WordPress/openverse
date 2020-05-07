@@ -1,14 +1,13 @@
 <template>
   <section class="sidebar_section">
     <div class="margin-bottom-big">
-      <span class="is-block margin-bottom-small">License</span>
-      <license-icons :image="image"></license-icons>
-      <a class="photo_license body-big" :href="ccLicenseURL">
-      {{ fullLicenseName }}
-      </a>
+      <h5 class="is-block margin-bottom-small b-header">Dimensions</h5>
+      <span class="body-big">
+        {{ imageWidth }} &times;  {{ imageHeight }} pixels
+      </span>
     </div>
     <div class="margin-bottom-big">
-      <span class="is-block margin-bottom-small">Source</span>
+      <h5 class="is-block margin-bottom-small b-header">Source</h5>
       <div class="body-big">
         <a :href="image.foreign_landing_url"
             target="blank"
@@ -21,10 +20,11 @@
     </div>
     </div>
     <div class="margin-bottom-big">
-      <span class="is-block margin-bottom-small">Dimensions</span>
-      <span class="body-big">
-        {{ imageWidth }} &times;  {{ imageHeight }} pixels
-      </span>
+      <h5 class="is-block margin-bottom-small b-header">License</h5>
+      <license-icons :image="image"></license-icons>
+      <a class="photo_license body-big" :href="ccLicenseURL">
+      {{ fullLicenseName }}
+      </a>
     </div>
   </section>
 </template>
