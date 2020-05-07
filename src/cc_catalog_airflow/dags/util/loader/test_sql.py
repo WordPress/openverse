@@ -780,16 +780,12 @@ def test_upsert_records_merges_meta_data(
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
     actual_row = actual_rows[0]
     assert len(actual_rows) == 1
-    expected_meta_data = {
-        'description': 'I updated my description',
-        'test': 'should stay'
-    }
     expected_meta_data = json.loads(META_DATA_A)
     expected_meta_data.update(json.loads(META_DATA_B))
     assert actual_row[22] == expected_meta_data
 
 
-def test_upsert_records_does_not_replace_null_values_in_meta_data(
+def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
         postgres_with_load_and_image_table, tmpdir
 ):
     postgres_conn_id = POSTGRES_CONN_ID
@@ -845,14 +841,222 @@ def test_upsert_records_does_not_replace_null_values_in_meta_data(
     actual_row = actual_rows[0]
     assert len(actual_rows) == 1
     expected_meta_data = {
-        'description': 'I updated my description',
-        'test': 'should stay'
-    }
-    expected_meta_data = {
         'description': json.loads(META_DATA_B)['description'],
         'test': json.loads(META_DATA_A)['test']
     }
     assert actual_row[22] == expected_meta_data
+
+
+def test_upsert_records_merges_tags(
+        postgres_with_load_and_image_table, tmpdir
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID = 'a'
+    PROVIDER = 'images_provider'
+    IMG_URL = 'https://images.com/a/img.jpg'
+    LICENSE = 'by'
+
+    TAGS_A = json.dumps(
+        [
+            {'name': 'tagone', 'provider': 'test'},
+            {'name': 'tagtwo', 'provider': 'test'}
+        ]
+
+    )
+    TAGS_B = json.dumps(
+        [
+            {'name': 'tagone', 'provider': 'test'},
+            {'name': 'tagthree', 'provider': 'test'}
+        ]
+
+    )
+
+    load_data_query_a = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,'{TAGS_A}',null,'{PROVIDER}',null"
+        f");"
+    )
+
+    load_data_query_b = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,'{TAGS_B}',null,'{PROVIDER}',null"
+        f");"
+    )
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    actual_row = actual_rows[0]
+    assert len(actual_rows) == 1
+    expect_tags = [
+        {'name': 'tagone', 'provider': 'test'},
+        {'name': 'tagtwo', 'provider': 'test'},
+        {'name': 'tagthree', 'provider': 'test'}
+    ]
+    actual_tags = actual_row[23]
+    print('EXPECT:  ', expect_tags)
+    print('ACTUAL:  ', actual_tags)
+    assert len(actual_tags) == 3
+    assert all([t in expect_tags for t in actual_tags])
+    assert all([t in actual_tags for t in expect_tags])
+
+
+def test_upsert_records_does_not_replace_tags_with_null(
+        postgres_with_load_and_image_table, tmpdir
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID = 'a'
+    PROVIDER = 'images_provider'
+    IMG_URL = 'https://images.com/a/img.jpg'
+    LICENSE = 'by'
+
+    TAGS = [
+        {'name': 'tagone', 'provider': 'test'},
+        {'name': 'tagtwo', 'provider': 'test'}
+    ]
+
+    load_data_query_a = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,'{json.dumps(TAGS)}',null,'{PROVIDER}',null"
+        f");"
+    )
+
+    load_data_query_b = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,null,null,'{PROVIDER}',null"
+        f");"
+    )
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    actual_row = actual_rows[0]
+    assert len(actual_rows) == 1
+    expect_tags = [
+        {'name': 'tagone', 'provider': 'test'},
+        {'name': 'tagtwo', 'provider': 'test'},
+    ]
+    actual_tags = actual_row[23]
+    assert len(actual_tags) == 2
+    assert all([t in expect_tags for t in actual_tags])
+    assert all([t in actual_tags for t in expect_tags])
+
+
+def test_upsert_records_replaces_null_tags(
+        postgres_with_load_and_image_table, tmpdir
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID = 'a'
+    PROVIDER = 'images_provider'
+    IMG_URL = 'https://images.com/a/img.jpg'
+    LICENSE = 'by'
+    TAGS = [
+        {'name': 'tagone', 'provider': 'test'},
+        {'name': 'tagtwo', 'provider': 'test'}
+    ]
+    load_data_query_a = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,null,null,'{PROVIDER}',null"
+        f");"
+    )
+    load_data_query_b = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,'{json.dumps(TAGS)}',null,'{PROVIDER}',null"
+        f");"
+    )
+
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    actual_row = actual_rows[0]
+    assert len(actual_rows) == 1
+    expect_tags = [
+        {'name': 'tagone', 'provider': 'test'},
+        {'name': 'tagtwo', 'provider': 'test'},
+    ]
+    actual_tags = actual_row[23]
+    assert len(actual_tags) == 2
+    assert all([t in expect_tags for t in actual_tags])
+    assert all([t in actual_tags for t in expect_tags])
 
 
 def test_drop_load_table_drops_table(postgres_with_load_table):

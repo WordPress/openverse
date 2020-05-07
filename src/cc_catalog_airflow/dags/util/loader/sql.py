@@ -161,16 +161,22 @@ def upsert_records_to_image_table(
         This function returns SQL that merges the top-level keys of the
         a JSONB column, taking the newest available non-null value.
         """
-        return dedent(
-            f'''
-            {column} = COALESCE(
-              jsonb_strip_nulls(old.{column})
-                || jsonb_strip_nulls(EXCLUDED.{column}),
-              EXCLUDED.{column},
-              old.{column}
-            )
-            '''
-        )
+        return f'''{column} = COALESCE(
+            jsonb_strip_nulls(old.{column})
+              || jsonb_strip_nulls(EXCLUDED.{column}),
+            EXCLUDED.{column},
+            old.{column}
+          )'''
+
+    def _merge_jsonb_arrays(column):
+        return f'''{column} = COALESCE(
+            (
+              SELECT jsonb_agg(DISTINCT x)
+              FROM jsonb_array_elements(old.{column} || EXCLUDED.{column}) t(x)
+            ),
+            EXCLUDED.{column},
+            old.{column}
+          )'''
 
     load_table = _get_load_table_name(identifier)
     logger.info(f'Upserting new records into {image_table}.')
@@ -208,7 +214,9 @@ def upsert_records_to_image_table(
           md5(({col.DIRECT_URL})::text)
         )
         DO UPDATE SET
-          updated_on = {NOW},
+          {col.UPDATED_ON} = {NOW},
+          {col.LAST_SYNCED} = {NOW},
+          {col.REMOVED} = {FALSE},
           {_newest_non_null(col.LANDING_URL)},
           {_newest_non_null(col.DIRECT_URL)},
           {_newest_non_null(col.THUMBNAIL)},
@@ -219,15 +227,9 @@ def upsert_records_to_image_table(
           {_newest_non_null(col.CREATOR)},
           {_newest_non_null(col.CREATOR_URL)},
           {_newest_non_null(col.TITLE)},
-          {col.LAST_SYNCED} = {NOW},
-          {col.REMOVED} = {FALSE},
+          {_newest_non_null(col.WATERMARKED)},
           {_merge_jsonb_objects(col.META_DATA)},
-          {_newest_non_null(col.WATERMARKED)}
-        WHERE
-          old.{col.FOREIGN_ID} = EXCLUDED.{col.FOREIGN_ID}
-        AND
-          old.{col.PROVIDER} = EXCLUDED.{col.PROVIDER};
-
+          {_merge_jsonb_arrays(col.TAGS)}
         '''
     )
     postgres.run(upsert_query)
