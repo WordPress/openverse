@@ -10,7 +10,9 @@
                     :imageHeight="imageHeight"
                     :socialSharingEnabled="socialSharingEnabled"
                     @onImageLoaded="onImageLoaded" />
-      <photo-tags :tags="tags" />
+      <div class="padding-normal margin-vertical-big">
+        <photo-tags :tags="tags" />
+      </div>
     </div>
     <footer-section></footer-section>
   </div>

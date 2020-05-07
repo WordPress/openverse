@@ -26,10 +26,15 @@
       {{ fullLicenseName }}
       </a>
     </div>
+    <div class="margin-bottom-big">
+      <h5 class="is-block margin-bottom-small b-header">Tags</h5>
+      <photo-tags :tags="image.tags" :showHeader="false" />
+    </div>
   </section>
 </template>
 
 <script>
+import PhotoTags from '@/components/PhotoTags';
 import getProviderName from '@/utils/getProviderName';
 import LicenseIcons from '@/components/LicenseIcons';
 import getProviderLogo from '@/utils/getProviderLogo';
@@ -39,6 +44,7 @@ export default {
   props: ['image', 'ccLicenseURL', 'fullLicenseName', 'imageWidth', 'imageHeight'],
   components: {
     LicenseIcons,
+    PhotoTags,
   },
   computed: {
     providerName() {
