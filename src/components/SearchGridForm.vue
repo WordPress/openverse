@@ -3,39 +3,62 @@
         method="post"
         @submit.prevent="onSubmit"
         class="search-form padding-normal">
-    <div class="is-flex">
-      <button class="button toggle-filter"  @click.prevent="onToggleSearchGridFilter()">
-        <i class="fi-list">
-          <img v-if="!isFilterApplied"
-                width="24"
-                height="24"
-                src="../assets/filter_icon_new.svg" />
-
-          <img v-else
-                width="24"
-                height="24"
-                src="../assets/filter_icon_new_applied.svg" />
-        </i>
+    <div class="is-flex is-hidden-touch">
+      <button v-if="!isFilterVisible"
+              class="button toggle-filter padding-vertical-normal padding-horizontal-big"
+              type="button"
+              @click.prevent="onToggleSearchGridFilter()">
+        Filters
       </button>
-      <input :placeholder="searchBoxPlaceholder"
-              required="required"
-              autofocus="true"
-              class="input is-medium search-form_input margin-left-small"
-              type="search"
-              autocapitalize="none"
-              id="searchInput"
-              v-model="searchTermsModel"
-              ref="search"
-              @keyup.enter="onSubmit">
-      <button class="button is-primary" @click.prevent="onSubmit">
-        Search
+      <div class="field has-addons search-input">
+        <div class="control has-icons-left margin-left-small">
+          <input id="searchInput"
+                  required="required"
+                  class="input is-medium"
+                  type="search"
+                  ref="search"
+                  :placeholder="searchBoxPlaceholder"
+                  v-model="searchTermsModel"
+                  @keyup.enter="onSubmit" />
+          <span class="icon is-medium is-left">
+            <i class="icon search is-size-5"></i>
+          </span>
+        </div>
+        <div class="control">
+          <input type="submit" class="button is-primary" @click.prevent="onSubmit" value="Search" />
+        </div>
+      </div>
+    </div>
+    <div class="is-flex is-hidden-desktop">
+      <button v-if="!isFilterVisible"
+              class="button small toggle-filter-small padding-small"
+              type="button"
+              @click.prevent="onToggleSearchGridFilter()">
+        Filters
       </button>
+      <div class="field has-addons search-input">
+        <div class="control has-icons-left margin-left-small">
+          <input id="searchInput"
+                  required="required"
+                  class="input"
+                  type="search"
+                  ref="search"
+                  :placeholder="searchBoxPlaceholder"
+                  v-model="searchTermsModel"
+                  @keyup.enter="onSubmit">
+          <span class="icon is-left">
+            <i class="icon search is-size-6"></i>
+          </span>
+        </div>
+        <div class="control">
+          <input type="submit" class="button is-primary small" value="Search" />
+        </div>
+      </div>
     </div>
   </form>
 </template>
 
 <script>
-import SearchGridFilter from '@/components/SearchGridFilter';
 import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
 
 export default {
@@ -46,9 +69,6 @@ export default {
     },
   },
   data: () => ({ searchTermsModel: null }),
-  components: {
-    SearchGridFilter,
-  },
   computed: {
     searchTerms() {
       return this.$store.state.query.q;
@@ -93,30 +113,55 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "bulma/sass/utilities/_all.sass";
+
   .toggle-filter {
-    padding: 1rem;
     height: 3.875rem;
+    text-transform: none;
+    font-size: 13px;
+    border: 2px solid #D8D8D8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    width: 68px;
+  }
+
+  .toggle-filter-small {
+    width: 4rem;
+    padding-top: 0.35rem !important;
+
+    img {
+      max-width: 1.5rem;
+    }
   }
 
   .search-form {
     width: 100%;
     top: 0;
     position: sticky;
-    background-color: #e9ebee;
+    background-color: #f5f5f5;
     z-index: 10;
   }
 
-  .search-form_input {
-    width: 45%;
+  .search-input {
+    width: 70%;
 
-    @media (max-width: 49em) {
+    @include touch {
+      width: 100%;
+    }
+
+    .control:first-child {
       width: 100%;
     }
   }
+  .button .icon {
+    height: auto;
+  }
 
-  @media screen and (max-width: 600px) {
-    .search-form_input {
-      font-size: 18px;
+  .icon .search {
+    padding: 1.3rem;
+
+    @include touch {
+      padding: .8rem;
     }
   }
 </style>

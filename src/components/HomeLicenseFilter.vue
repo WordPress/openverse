@@ -1,5 +1,5 @@
 <template>
-  <div class="home-license-filter">
+  <div class="home-license-filter margin-top-xl">
     <span>I want something I can</span>
 
     <template v-for="(licenseType, index) in licenseTypes" >
@@ -40,7 +40,6 @@ export default {
 
 <style lang="scss" scoped>
 .home-license-filter {
-  margin-top: 0.5em;
   text-align: left;
   text-align: center;
 }

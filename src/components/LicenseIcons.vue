@@ -4,18 +4,34 @@
      class="photo-license-icons"
      target="_blank"
      rel="noopener noreferrer">
-    <img class="photo-license-icon" alt="CC" src="@/assets/cc_icon.svg" />
-    <template v-for="(license, index) in onGetLicenseIcon(image.license)">
-      <img
-          v-if="license" class="photo-license-icon"
+    <i class="icon cc-logo is-size-4 has-text-black has-background-white" title="CC"></i>
+    <template v-for="(license, index) in getLicenseIcon(image.license)">
+      <i
+          v-if="license"
+          :class="{
+            icon: true,
+            ['has-text-black']: true,
+            ['has-background-white']: true,
+            ['is-size-4']: true,
+            [`cc-${license}`]: true,
+          }"
           :alt="`${license.toUpperCase()}`"
-          :src="require(`@/assets/cc-${license.toLowerCase()}_icon.svg`)"
           :key="index" />
     </template>
   </a>
 </template>
 
 <script>
+
+const APItoIconNameMap = {
+  by: 'by',
+  nc: 'nc',
+  nd: 'nd',
+  sa: 'sa',
+  cc0: 'zero',
+  pdm: 'pd',
+};
+
 const LicenseIcons = {
   name: 'license-icons',
   components: {},
@@ -24,12 +40,12 @@ const LicenseIcons = {
     shouldWrapInLink: false,
   },
   methods: {
-    onGetLicenseIcon(license) {
+    getLicenseIcon(license) {
       let licenses = [];
       if (license) {
         licenses = license.split('-');
       }
-      return licenses;
+      return licenses.map(l => APItoIconNameMap[l]);
     },
     getLicenseURL(image) {
       if (!image) {
@@ -62,13 +78,8 @@ export default LicenseIcons;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-  .photo-license-icons {
-    height: 1.6rem;
-  }
-
-  .photo-license-icon {
-    height: inherit;
-    margin-right: .3rem;
+  .icon {
     vertical-align: middle;
+    margin-right: .3rem;
   }
 </style>

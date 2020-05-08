@@ -15,20 +15,12 @@
           :alt="image.title" :src="getImageUrl(image)"
           @error="onImageLoadError($event, image)">
       </a>
-      <figcaption class="search-grid_item-overlay search-grid_item-overlay__top padding-top-small">
+      <figcaption class="overlay overlay__top padding-small">
         <license-icons :image="image"></license-icons>
       </figcaption>
-      <figcaption class="search-grid_item-overlay search-grid_item-overlay__bottom">
-        <a class="search-grid_overlay-provider"
-            :title="image.title"
-            :href="getImageForeignUrl(image)"
-            @click.stop="() => false"
-            target="new">
-            <img class="search-grid_overlay-provider-logo"
-              :alt="image.source"
-              :src="getProviderLogo(image.source)">
-            {{ image.title }}
-        </a>
+      <figcaption class="overlay overlay__bottom
+                        padding-vertical-smaller padding-horizontal-normal">
+          <span class="caption has-text-weight-semibold">{{ image.title }}</span>
       </figcaption>
     </figure>
   </div>
@@ -97,9 +89,9 @@ export default {
       if (!image) {
         return '';
       }
-      // fix for blurry panaroma thumbnails
-      if (this.imageAspect > panaromaAspect) return toAbsolutePath(image.url);
       const url = image.thumbnail || image.url;
+      // fix for blurry panaroma thumbnails
+      if (this.imageAspect > panaromaAspect) return toAbsolutePath(url);
       return toAbsolutePath(url);
     },
     getImageForeignUrl(image) {
@@ -167,66 +159,42 @@ export default {
       }
     }
 
-    &:hover .search-grid_item-overlay {
+    &:hover .overlay {
       opacity: 1;
       bottom: 0;
     }
-
-    &:hover .search-grid_item-overlay__top {
-      top: 0;
-    }
   }
 
-  .search-grid_item-overlay {
+  .overlay {
     position: absolute;
     opacity: 0;
     transition: all .4s ease;
-    width: 100%;
-    height: 30px;
     color: #fff;
-    padding: 0 10px;
     display: block;
     top: -100%;
 
     &__top {
-      transition: all .5s ease;
-      background: linear-gradient(to bottom,
-                  rgba(0,0,0,.5)
-                  0,
-                  rgba(0,0,0,0) 100%);
       top: 0;
+      width: 100%;
+      height: 2rem;
     }
 
     &__bottom {
-      height: 30px;
-      background: linear-gradient(to top,
-                  rgba(0,0,0,.5)
-                  0,
-                  rgba(0,0,0,0) 100%);
+      background-color: #000;
       bottom: -100%;
       top: auto;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
     }
-  }
 
-  .search-grid_overlay-provider {
-    width: calc( 100% - 30px );
-    display: block;
-    bottom: 10px;
-    left: 10px;
-    color: #fff;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-
-    &:hover {
-      text-decoration: underline;
+    // Show on touch devices
+    @media (hover: none) {
+      position: absolute;
+      opacity: 1;
+      bottom: 0;
     }
-  }
-
-  .search-grid_overlay-provider-logo {
-    max-height: 30px;
-    max-width: 30px;
-    vertical-align: middle;
   }
 
   .search-grid_item {
@@ -246,24 +214,5 @@ export default {
 
   .search-grid_image__fill {
     width: 100%;
-  }
-
-  @media screen and (max-width: 600px) {
-    .search-grid_item-overlay {
-      position: absolute;
-      opacity: 1;
-      bottom: 0;
-    }
-
-    .search-grid_overlay-add {
-      position: absolute;
-      width:  44px;
-      height: 44px;
-      bottom: 0;
-    }
-
-     .search-grid_layout-control {
-      text-align: left !important;
-    }
   }
 </style>

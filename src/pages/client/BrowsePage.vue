@@ -7,6 +7,7 @@
       </div>
       <div class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
+        <filter-display :query="query" />
         <search-grid v-if="query.q"
                      :query="query"
                      searchTerm=""
@@ -21,13 +22,15 @@ import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
-import SearchGridFilter from '@/components/SearchGridFilter';
+import SearchGridFilter from '@/components/Filters/SearchGridFilter';
+import FilterDisplay from '@/components/Filters/FilterDisplay';
 import BrowsePageMixin from '@/pages/mixins/BrowsePageMixin';
 
 const BrowsePage = {
   components: {
     HeaderSection,
     SearchGridForm,
+    FilterDisplay,
     SearchGridFilter,
     SearchGrid,
     FooterSection,

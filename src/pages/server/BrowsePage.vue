@@ -7,6 +7,7 @@
       </div>
       <div class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
+        <filter-display :query="query" />
       </div>
     </div>
 
@@ -18,8 +19,9 @@
 import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGridForm from '@/components/SearchGridForm';
-import SearchGridFilter from '@/components/SearchGridFilter';
+import SearchGridFilter from '@/components/Filters/SearchGridFilter';
 import BrowsePageMixin from '@/pages/mixins/BrowsePageMixin';
+import FilterDisplay from '@/components/Filters/FilterDisplay';
 import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin';
 
 const BrowsePage = {
@@ -27,6 +29,7 @@ const BrowsePage = {
     HeaderSection,
     SearchGridForm,
     FooterSection,
+    FilterDisplay,
     SearchGridFilter,
   },
   mixins: [BrowsePageMixin, ServerPrefetchProvidersMixin],
@@ -34,9 +37,6 @@ const BrowsePage = {
 
 export default BrowsePage;
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style lang="scss">
   @import "../../styles/results-page.scss";

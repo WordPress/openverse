@@ -33,6 +33,7 @@ export default {
   },
   methods: {
     scrollToTop() {
+      /* istanbul ignore next */
       window.scrollTo({
         top: 0,
         left: 0,
@@ -58,6 +59,7 @@ export default {
   outline: none;
   cursor: pointer;
   transition: all 5s ease-in;
+  z-index:5;
 }
 
 .scroll:hover {

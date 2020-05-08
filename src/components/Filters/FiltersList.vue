@@ -1,0 +1,92 @@
+<template>
+<div>
+  <h4 class="padding-top-big padding-left-big padding-right-normal is-inline-block">
+    Filter results by
+  </h4>
+
+  <button type="button"
+          class="button is-text tiny is-paddingless margin-top-big
+                  margin-right-small report is-shadowless is-pulled-right"
+          @click="onToggleSearchGridFilter()">
+    <span class="has-color-tomato">Hide filters</span>
+  </button>
+  <form class="filters-form" role="filter">
+    <filter-check-list :options="filters.licenseTypes"
+                      :disabled="licenseTypesDisabled"
+                      title="Use"
+                      filterType="licenseTypes"
+                      @filterChanged="onUpdateFilter" />
+    <filter-check-list :options="filters.licenses"
+                      :disabled="licensesDisabled"
+                      title="Licenses"
+                      filterType="licenses"
+                      @filterChanged="onUpdateFilter" />
+    <filter-check-list v-if="renderProvidersFilter"
+                      :options="filters.providers"
+                      title="Collections"
+                      filterType="providers"
+                      @filterChanged="onUpdateFilter" />
+    <filter-check-list :options="filters.categories"
+                      title="Image Type"
+                      filterType="categories"
+                      @filterChanged="onUpdateFilter" />
+    <filter-check-list :options="filters.extensions"
+                      title="File Type"
+                      filterType="extensions"
+                      @filterChanged="onUpdateFilter" />
+    <filter-check-list :options="filters.aspectRatios"
+                      title="Aspect Ratio"
+                      filterType="aspectRatios"
+                      @filterChanged="onUpdateFilter" />
+    <filter-check-list :options="filters.sizes"
+                      title="Image Size"
+                      filterType="sizes"
+                      @filterChanged="onUpdateFilter" />
+    <filter-check-list title="Search Settings"
+                      filterType="mature"
+                      :checked="filters.mature"
+                      @filterChanged="onUpdateFilter" />
+
+    <div class="margin-normal filter-option small-filter search-filters_search-by">
+      <input type="checkbox" id="creator-chk"
+              :checked="filters.searchBy.creator"
+              @change="onUpdateSearchByCreator">
+      <label for="creator-chk">Search by Creator</label>
+    </div>
+  </form>
+
+  <div class="margin-big padding-bottom-normal clear-filters"
+        v-if="isFilterApplied">
+    <button class="button tiny"
+            @click="onClearFilters">
+      Clear filters
+    </button>
+  </div>
+</div>
+</template>
+
+<script>
+import FilterCheckList from './FilterChecklist';
+
+export default {
+  name: 'filters-list',
+  props: ['filters', 'isFilterApplied'],
+  components: {
+    FilterCheckList,
+  },
+  methods: {
+    onUpdateFilter({ code, filterType }) {
+      this.$emit('onUpdateFilter', { code, filterType });
+    },
+    onUpdateSearchByCreator() {
+      this.$emit('onUpdateSearchByCreator');
+    },
+    onToggleSearchGridFilter() {
+      this.$emit('onToggleSearchGridFilter');
+    },
+    onClearFilters() {
+      this.$emit('onClearFilters');
+    },
+  },
+}
+</script>
