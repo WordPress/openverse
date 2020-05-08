@@ -3,12 +3,18 @@ import es6Promise from 'es6-promise';
 
 es6Promise.polyfill();
 
-const DEFAULT_REQUEST_TIMEOUT = 5000;
+const DEFAULT_REQUEST_TIMEOUT = 30000;
 
 export const createApiService = (baseUrl = process.env.API_URL) => {
   const client = axios.create({
     baseURL: baseUrl,
     timeout: DEFAULT_REQUEST_TIMEOUT,
+  });
+  client.interceptors.response.use(response => response, (error) => {
+    if (error.code === 'ECONNABORTED') {
+      return Promise.reject({ message: `timeout of ${DEFAULT_REQUEST_TIMEOUT / 1000} seconds exceeded`, ...error });
+    }
+    return Promise.reject(error);
   });
 
   return {
