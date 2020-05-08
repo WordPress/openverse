@@ -31,8 +31,6 @@
 
 <script>
 import LicenseExplanations from '@/components/LicenseExplanations';
-import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
-import { SEND_DETAIL_PAGE_EVENT, DETAIL_PAGE_EVENTS } from '@/store/usage-data-analytics-types';
 import CopyLicense from './CopyLicense';
 
 export default {
@@ -51,32 +49,6 @@ export default {
         return this.$props.image.license.split('-');
       }
       return '';
-    },
-  },
-  methods: {
-    sendDetailPageEvent(eventType) {
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
-        eventType,
-        resultUuid: this.$props.image.id,
-      });
-    },
-    onCopyAttribution(e) {
-      this.$store.dispatch(COPY_ATTRIBUTION, {
-        content: e.content,
-      });
-
-      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED);
-    },
-    onEmbedAttribution() {
-      this.$store.dispatch(EMBED_ATTRIBUTION);
-
-      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED);
-    },
-    onPhotoSourceLinkClicked() {
-      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.SOURCE_CLICKED);
-    },
-    onPhotoCreatorLinkClicked() {
-      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.CREATOR_CLICKED);
     },
   },
 };
