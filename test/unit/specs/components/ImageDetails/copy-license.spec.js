@@ -1,7 +1,7 @@
 import CopyLicense from '@/components/ImageDetails/CopyLicense';
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
 import { DETAIL_PAGE_EVENTS, SEND_DETAIL_PAGE_EVENT } from '@/store/usage-data-analytics-types';
-import render from '../../test-utils/render';
+import render from '../../../test-utils/render';
 
 describe('CopyLicense', () => {
   let options = null;

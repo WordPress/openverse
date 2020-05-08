@@ -1,5 +1,5 @@
 import ImageSocialShare from '@/components/ImageDetails/ImageSocialShare';
-import render from '../../test-utils/render';
+import render from '../../../test-utils/render';
 
 describe('ImageSocialShare', () => {
   let options = null;

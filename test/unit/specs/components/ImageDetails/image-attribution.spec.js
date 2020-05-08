@@ -1,5 +1,5 @@
 import ImageAttribution from '@/components/ImageDetails/ImageAttribution';
-import render from '../../test-utils/render';
+import render from '../../../test-utils/render';
 
 describe('ImageAttribution', () => {
   let options = null;

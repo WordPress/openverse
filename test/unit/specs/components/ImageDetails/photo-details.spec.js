@@ -1,6 +1,6 @@
 import PhotoDetails from '@/components/ImageDetails/PhotoDetails';
 import { DETAIL_PAGE_EVENTS, SEND_DETAIL_PAGE_EVENT } from '@/store/usage-data-analytics-types';
-import render from '../../test-utils/render';
+import render from '../../../test-utils/render';
 
 describe('PhotoDetails', () => {
   let options = null;
