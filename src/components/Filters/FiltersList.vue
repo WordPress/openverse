@@ -73,7 +73,7 @@
     </button>
     <button class="button is-primary tiny"
             @click="onToggleSearchGridFilter()">
-      Apply filters
+      Show results
     </button>
   </div>
 </div>
