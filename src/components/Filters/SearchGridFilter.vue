@@ -7,6 +7,8 @@
                          'search-filters__visible': isFilterVisible, }">
             <filters-list :filters="filters"
                           :isFilterApplied="isFilterApplied"
+                          :licenseTypesDisabled="licenseTypesDisabled"
+                          :licensesDisabled="licensesDisabled"
                           @onUpdateFilter="onUpdateFilter"
                           @onUpdateSearchByCreator="onUpdateSearchByCreator"
                           @onToggleSearchGridFilter="onToggleSearchGridFilter"
@@ -20,6 +22,8 @@
                      'search-filters__visible': isFilterVisible, }">
         <filters-list :filters="filters"
                       :isFilterApplied="isFilterApplied"
+                      :licenseTypesDisabled="licenseTypesDisabled"
+                      :licensesDisabled="licensesDisabled"
                       @onUpdateFilter="onUpdateFilter"
                       @onUpdateSearchByCreator="onUpdateSearchByCreator"
                       @onToggleSearchGridFilter="onToggleSearchGridFilter"

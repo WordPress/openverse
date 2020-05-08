@@ -84,7 +84,7 @@ import FilterCheckList from './FilterChecklist';
 
 export default {
   name: 'filters-list',
-  props: ['filters', 'isFilterApplied'],
+  props: ['filters', 'isFilterApplied', 'licenseTypesDisabled', 'licensesDisabled'],
   components: {
     FilterCheckList,
   },
