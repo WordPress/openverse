@@ -102,5 +102,5 @@ export default {
       this.$emit('onClearFilters');
     },
   },
-}
+};
 </script>
