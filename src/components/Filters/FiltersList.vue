@@ -8,7 +8,10 @@
           class="button is-text tiny is-paddingless margin-top-big
                   margin-right-small report is-shadowless is-pulled-right"
           @click="onToggleSearchGridFilter()">
-    <span class="has-color-tomato">Hide filters</span>
+    <span class="has-color-tomato is-hidden-touch">Hide filters</span>
+    <span class="margin-right-normal is-size-5 is-hidden-desktop">
+      <i class="icon cross" />
+    </span>
   </button>
   <form class="filters-form" role="filter">
     <filter-check-list :options="filters.licenseTypes"
