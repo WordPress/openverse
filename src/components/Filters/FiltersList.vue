@@ -50,7 +50,7 @@
                       :checked="filters.mature"
                       @filterChanged="onUpdateFilter" />
 
-    <div class="margin-normal filter-option small-filter search-filters_search-by">
+    <div class="margin-normal filter-option small-filter margin-bottom-normal">
       <input type="checkbox" id="creator-chk"
               :checked="filters.searchBy.creator"
               @change="onUpdateSearchByCreator">
@@ -58,11 +58,22 @@
     </div>
   </form>
 
-  <div class="margin-big padding-bottom-normal clear-filters"
+  <div class="margin-big padding-bottom-normal clear-filters is-hidden-touch"
         v-if="isFilterApplied">
     <button class="button tiny"
             @click="onClearFilters">
       Clear filters
+    </button>
+  </div>
+
+  <div v-if="isFilterApplied"
+       class="has-background-white padding-big is-hidden-desktop has-text-centered">
+    <button class="button tiny margin-right-normal" @click="onClearFilters">
+      Clear filters
+    </button>
+    <button class="button is-primary tiny"
+            @click="onToggleSearchGridFilter()">
+      Apply filters
     </button>
   </div>
 </div>
