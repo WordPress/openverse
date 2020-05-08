@@ -1,4 +1,5 @@
 import PhotoDetails from '@/components/ImageDetails/PhotoDetails';
+import { DETAIL_PAGE_EVENTS, SEND_DETAIL_PAGE_EVENT } from '@/store/usage-data-analytics-types';
 import render from '../../test-utils/render';
 
 describe('PhotoDetails', () => {
@@ -6,6 +7,7 @@ describe('PhotoDetails', () => {
   let props = null;
   let storeState = null;
   let commitMock = null;
+  let dispatchMock = null;
 
   beforeEach(() => {
     props = {
@@ -25,10 +27,12 @@ describe('PhotoDetails', () => {
     };
 
     commitMock = jest.fn();
+    dispatchMock = jest.fn();
 
     storeState = {
       $store: {
         commit: commitMock,
+        dispatch: dispatchMock,
         state: {
           isReportFormVisible: false,
         },
@@ -149,5 +153,14 @@ describe('PhotoDetails', () => {
     const wrapper = render(PhotoDetails, options);
 
     expect(wrapper.find({ name: 'content-report-form' }).vm).toBeDefined();
+  });
+
+  it('should dispatch SOURCE_CLICKED on source link clicked', () => {
+    const wrapper = render(PhotoDetails, options);
+    wrapper.vm.onPhotoSourceLinkClicked();
+    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
+      eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
+      resultUuid: props.image.id,
+    });
   });
 });
