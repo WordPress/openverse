@@ -96,16 +96,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.close {
-  float: right;
-  background: none;
-}
-
 .modal {
   width: 30rem;
   max-height: 37rem;
   margin: 0px auto;
-  background-color: #f5f5f5;
+  background-color: #fff;
   border-radius: 2px;
   overflow-y: scroll;
   box-shadow: 0 2px 8px 3px;
@@ -124,22 +119,9 @@ export default {
   background: #00000094;
 }
 
-h4 {
-  text-transform: none;
-}
-
-.filter-visibility-toggle {
-  float: right;
-  cursor: pointer;
-  background: none;
-  border: none;
-}
-
 .search-filters {
   display: none;
   height: auto;
-  top: 0;
-  position: sticky;
   label {
     color: #333333;
   }
