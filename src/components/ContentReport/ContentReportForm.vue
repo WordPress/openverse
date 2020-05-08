@@ -46,10 +46,11 @@
       </button>
     </form>
     <form class="other-form" v-else-if="selectedOther">
+      <h4 class="b-header">Report this content</h4>
       <legend class="margin-bottom-small">Please describe the issue for us</legend>
-      <textarea class="reason"
+      <textarea class="reason padding-small has-text-weight-semibold"
                 v-model="otherReasonDescription"
-                placeholder="Issue description required (with at least 20 words)" />
+                placeholder="Issue description required (with at least 20 characters)" />
       <div>
         <button class="button other-back-button is-text tiny margin-top-normal has-text-grey"
                 @click="onBackClick()">
@@ -60,7 +61,7 @@
                 :disabled="!descriptionHasMoreThan20Chars"
                 class="button submit-other-button tiny is-info margin-top-normal is-pulled-right"
                 @click="sendContentReport()">
-          Submit report
+          Submit
         </button>
       </div>
     </form>
@@ -135,5 +136,7 @@ export default {
 .reason {
   width: 100%;
   height: 6rem;
+  font-size: 13px;
+  font-family: Source Sans Pro;
 }
 </style>

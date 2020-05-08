@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span class="is-block">
+    <span class="is-block padding-horizontal-big margin-top-large has-text-centered">
       There was an error with the report submission. Please try again.
     </span>
     <button class="button is-text tiny margin-top-normal is-shadowless"
