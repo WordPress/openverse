@@ -16,7 +16,7 @@ export const filterData = {
     { code: 'by-nc-nd', name: 'BY-NC-ND', checked: false },
   ],
   licenseTypes: [
-    { code: 'commercial', name: 'Use for commercial purposes', checked: false },
+    { code: 'commercial', name: 'Use commercially', checked: false },
     { code: 'modification', name: 'Modify or adapt', checked: false },
   ],
   categories: [
@@ -44,6 +44,7 @@ export const filterData = {
   searchBy: {
     creator: false,
   },
+  mature: false,
 };
 
 const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 800;
@@ -51,6 +52,7 @@ const hideFiltersIfMobileScreen = () => screenWidth() > MIN_SCREEN_WIDTH_FILTER_
 
 const isFilterApplied = filters => Object.keys(filters).some((filterKey) => {
   if (filterKey === 'searchBy') { return filters.searchBy.creator; }
+  else if (filterKey === 'mature') { return filters.mature; }
 
   return filters[filterKey].some(filter => filter.checked);
 });
@@ -94,6 +96,9 @@ function setQuery(state, params, path, redirect) {
 function setFilter(state, params, path, redirect) {
   if (params.filterType === 'searchBy') {
     state.filters.searchBy.creator = !state.filters.searchBy.creator;
+  }
+  else if (params.filterType === 'mature') {
+    state.filters.mature = !state.filters.mature;
   }
   else {
     const filters = state.filters[params.filterType];
@@ -152,4 +157,3 @@ export default {
   actions,
   mutations,
 };
-
