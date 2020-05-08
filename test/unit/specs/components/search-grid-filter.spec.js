@@ -5,11 +5,14 @@ describe('SearchGridFilter', () => {
   let options = {};
   let storeMock = null;
   let dispatchMock = null;
+  let commitMock = null;
   let props = null;
   beforeEach(() => {
     dispatchMock = jest.fn();
+    commitMock = jest.fn();
     storeMock = {
       dispatch: dispatchMock,
+      commit: commitMock,
       state: {
         isFilterApplied: true,
         isFilterVisible: true,
@@ -63,16 +66,44 @@ describe('SearchGridFilter', () => {
     expect(wrapper.find('.search-filters_providers').element).not.toBeDefined();
   });
 
-  it('emits a search event when a filter is clicked', () => {
-    props.showProvidersFilter = false;
+  it('toggles filter', () => {
     const wrapper = render(SearchGridFilter, options);
-    const checkbox = wrapper.find('#creator-chk');
-    checkbox.trigger('click');
+    wrapper.vm.onUpdateFilter({ code: 'foo', filterType: 'bar' });
+    expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
+      code: 'foo',
+      filterType: 'bar',
+      isCollectionsPage: props.isCollectionsPage,
+      provider: props.provider,
+      shouldNavigate: true,
+    });
+  });
+
+  it('toggles filter of search by creator', () => {
+    const wrapper = render(SearchGridFilter, options);
+    wrapper.vm.onUpdateSearchByCreator();
     expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
       filterType: 'searchBy',
       isCollectionsPage: props.isCollectionsPage,
       provider: props.provider,
       shouldNavigate: true,
+    });
+  });
+
+  it('clears filters', () => {
+    const wrapper = render(SearchGridFilter, options);
+    wrapper.vm.onClearFilters();
+    expect(commitMock).toHaveBeenCalledWith('CLEAR_FILTERS', {
+      isCollectionsPage: props.isCollectionsPage,
+      provider: props.provider,
+      shouldNavigate: true,
+    });
+  });
+
+  it('toggles search visibility', () => {
+    const wrapper = render(SearchGridFilter, options);
+    wrapper.vm.onToggleSearchGridFilter();
+    expect(commitMock).toHaveBeenCalledWith('SET_FILTER_IS_VISIBLE', {
+      isFilterVisible: !storeMock.state.isFilterVisible,
     });
   });
 });
