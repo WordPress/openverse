@@ -452,13 +452,15 @@ def get_providers(index):
         # Invalidate old provider format.
         cache.delete(key=provider_cache_name)
     if not providers:
-        elasticsearch_maxint = 100
+        # Don't increase `size` without reading this issue first:
+        # https://github.com/elastic/elasticsearch/issues/18838
+        size = 100
         agg_body = {
             'aggs': {
                 'unique_providers': {
                     'terms': {
                         'field': 'provider.keyword',
-                                 'size': elasticsearch_maxint,
+                        'size': size,
                         "order": {
                             "_key": "desc"
                         }
