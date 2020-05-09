@@ -4,8 +4,9 @@
      class="photo-license-icons"
      target="_blank"
      rel="noopener noreferrer">
-    <i class="icon cc-logo is-size-4 has-text-black has-background-white" title="CC"></i>
-    <template v-for="(license, index) in getLicenseIcon(image.license)">
+    <i class="icon cc-logo is-size-4 has-text-black has-background-white" title="CC">
+      <!-- Closing </i> and opening <template> tags must be on the same line to prevent whitespace -->
+    </i><template v-for="(license, index) in getLicenseIcon(image.license)">
       <i
           v-if="license"
           :class="{
