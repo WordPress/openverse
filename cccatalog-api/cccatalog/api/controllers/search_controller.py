@@ -466,18 +466,18 @@ def get_providers(index):
                 }
             }
         }
-        s = Search.from_dict(agg_body)
-        s = s.index(index)
         try:
-            results = s.execute().aggregations['unique_providers']['buckets']
+            results = es.search(index=index, body=agg_body, request_cache=True)
+            buckets = results['aggregations']['unique_providers']['buckets']
         except NotFoundError:
-            results = [{'key': 'none_found', 'doc_count': 0}]
-        providers = {result['key']: result['doc_count'] for result in results}
+            buckets = [{'key': 'none_found', 'doc_count': 0}]
+        providers = {result['key']: result['doc_count'] for result in buckets}
         cache.set(
             key=provider_cache_name,
             timeout=CACHE_TIMEOUT,
             value=providers
         )
+
     return providers
 
 
