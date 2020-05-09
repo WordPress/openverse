@@ -5,7 +5,7 @@
      target="_blank"
      rel="noopener noreferrer">
     <i class="icon cc-logo is-size-4 has-text-black has-background-white" title="CC">
-      <!-- Closing </i> and opening <template> tags must be on the same line to prevent whitespace -->
+    <!-- Closing i and opening template tag must be adjacent to prevent whitespace -->
     </i><template v-for="(license, index) in getLicenseIcon(image.license)">
       <i
           v-if="license"
