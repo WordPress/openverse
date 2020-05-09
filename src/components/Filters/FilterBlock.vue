@@ -9,7 +9,7 @@
             @click="onClickIsolatedFilter"><i class="icon cross" /></span>
     </button>
     <button v-else
-            class="filter-block button tiny tag margin-horizontal-smaller"
+            class="filter-block button tiny tag margin-horizontal-smaller margin-top-smaller"
             role="filter"
             :aria-label="label">
       <span>{{ this.$props.label }}</span>
