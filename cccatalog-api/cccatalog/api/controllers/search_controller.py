@@ -452,7 +452,7 @@ def get_providers(index):
         # Invalidate old provider format.
         cache.delete(key=provider_cache_name)
     if not providers:
-        elasticsearch_maxint = 2147483647
+        elasticsearch_maxint = 100
         agg_body = {
             'aggs': {
                 'unique_providers': {
