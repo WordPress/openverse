@@ -1,5 +1,7 @@
 import { FETCH_IMAGES } from '@/store/action-types';
-import { SET_QUERY } from '@/store/mutation-types';
+import { SET_QUERY, CLEAR_FILTERS } from '@/store/mutation-types';
+
+const HOME_PAGE_ROUTE = 'home-page';
 
 const BrowsePage = {
   name: 'browse-page',
@@ -10,6 +12,22 @@ const BrowsePage = {
     isFilterVisible() {
       return this.$store.state.isFilterVisible;
     },
+  },
+  beforeRouteLeave(to, from, next) {
+    const isLeavingToHomePage = to.name === HOME_PAGE_ROUTE;
+
+    // We need to check whenever the user is leaving form the browse page
+    // into home page in order to reset and clean previously applied filters
+    // Fixes #896.
+    if (isLeavingToHomePage) {
+      this.$store.commit(CLEAR_FILTERS, {
+        isCollectionsPage: false,
+        provider: null,
+        shouldNavigate: false,
+      });
+    }
+
+    next();
   },
   methods: {
     getImages(params) {
