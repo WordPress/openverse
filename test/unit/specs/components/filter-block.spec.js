@@ -1,4 +1,4 @@
-import FilterBlock from '@/components/FilterBlock';
+import FilterBlock from '@/components/Filters/FilterBlock';
 import render from '../../test-utils/render';
 
 describe('FilterBlock', () => {

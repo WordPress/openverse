@@ -21,7 +21,7 @@
 import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGridForm from '@/components/SearchGridForm';
-import SearchGridFilter from '@/components/SearchGridFilter';
+import SearchGridFilter from '@/components/Filters/SearchGridFilter';
 import CollectionBrowseMixin from '@/pages/mixins/CollectionBrowseMixin';
 
 const CollectionBrowsePage = {
@@ -36,9 +36,6 @@ const CollectionBrowsePage = {
 
 export default CollectionBrowsePage;
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style lang="scss">
   @import "../../styles/results-page.scss";

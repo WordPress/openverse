@@ -57,7 +57,6 @@
 
 <script>
 import ImageInfo from '@/components/ImageInfo';
-import Watermark from '@/components/Watermark';
 import ImageAttribution from '@/components/ImageAttribution';
 import ImageSocialShare from '@/components/ImageSocialShare';
 import attributionHtml from '@/utils/attributionHtml';
@@ -67,7 +66,6 @@ export default {
   props: ['image', 'breadCrumbURL', 'shouldShowBreadcrumb', 'query', 'imageWidth', 'imageHeight', 'socialSharingEnabled'],
   components: {
     ImageInfo,
-    Watermark,
     ImageAttribution,
     ImageSocialShare,
   },
