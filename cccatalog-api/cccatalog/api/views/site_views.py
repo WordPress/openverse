@@ -14,7 +14,8 @@ from cccatalog.api.serializers.oauth2_serializers import\
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider, Image
 from cccatalog.api.models import ThrottledApplication, OAuth2Verification
-from cccatalog.api.utils.throttle import TenPerDay, OnePerSecond, OneThousandPerMinute
+from cccatalog.api.utils.throttle import TenPerDay, OnePerSecond,\
+    OneThousandPerMinute
 from cccatalog.api.utils.oauth2_helper import get_token_info
 from cccatalog.settings import THUMBNAIL_PROXY_URL, THUMBNAIL_WIDTH_PX
 from django.core.cache import cache
