@@ -25,13 +25,6 @@ jobs:
       with:
         node-version: '12.16.1'
 
-    - id: cache-node-modules
-      name: Cache Node.js modules
-      uses: actions/cache@v1
-      with:
-        path: ~/.npm  # npm caches files in ~/.npm
-        key: node-${{ hashFiles('**/package-lock.json') }}
-
     - name: Install dependencies
       run: npm install
 
