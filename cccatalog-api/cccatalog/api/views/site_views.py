@@ -1,6 +1,7 @@
 import logging as log
 import secrets
 import smtplib
+from urllib.error import HTTPError
 from urllib.request import urlopen
 from django.core.mail import send_mail
 from rest_framework.response import Response
@@ -325,9 +326,12 @@ class Thumbs(APIView):
             width=THUMBNAIL_WIDTH_PX,
             original=image.url
         )
-        upstream_response = urlopen(upstream_url)
-        status = upstream_response.status
-        content_type = upstream_response.headers.get('Content-Type')
+        try:
+            upstream_response = urlopen(upstream_url)
+            status = upstream_response.status
+            content_type = upstream_response.headers.get('Content-Type')
+        except HTTPError:
+            return HttpResponse(status=500)
 
         response = HttpResponse(
             upstream_response.read(),
