@@ -4,9 +4,10 @@ on:
   push:
     branches:
     - master
+    - develop
   pull_request:
     branches:
-    - master
+    - develop
 
 env:
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
