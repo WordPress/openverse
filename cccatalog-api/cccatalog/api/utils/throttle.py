@@ -50,6 +50,10 @@ class TenPerDay(AnonRateThrottle):
     rate = '10/day'
 
 
+class OneThousandPerMinute(AnonRateThrottle):
+    rate = '1000/min'
+
+
 class OnePerSecond(AnonRateThrottle):
     rate = '1/second'
 
