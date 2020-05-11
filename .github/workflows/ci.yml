@@ -33,13 +33,13 @@ jobs:
         key: node-${{ hashFiles('**/package-lock.json') }}
 
     - name: Install dependencies
-      run: npm install --prefer-offline --no-audit
+      run: npm install
 
     - name: Run lint
       run: npm run lint
 
     - name: Run tests
-      run: npm run test:unit
+      run: npm run unit
 
     - name: Run build
       run: npm run build
