@@ -1,6 +1,7 @@
 import logging as log
 import secrets
 import smtplib
+from urllib.error import HTTPError
 from urllib.request import urlopen
 from django.core.mail import send_mail
 from rest_framework.response import Response
@@ -13,7 +14,8 @@ from cccatalog.api.serializers.oauth2_serializers import\
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import ContentProvider, Image
 from cccatalog.api.models import ThrottledApplication, OAuth2Verification
-from cccatalog.api.utils.throttle import TenPerDay, OnePerSecond
+from cccatalog.api.utils.throttle import TenPerDay, OnePerSecond,\
+    OneThousandPerMinute
 from cccatalog.api.utils.oauth2_helper import get_token_info
 from cccatalog.settings import THUMBNAIL_PROXY_URL, THUMBNAIL_WIDTH_PX
 from django.core.cache import cache
@@ -297,6 +299,7 @@ class Thumbs(APIView):
 
     lookup_field = 'identifier'
     queryset = Image.objects.all()
+    throttle_classes = [OneThousandPerMinute]
 
     @swagger_auto_schema(operation_id="thumb_lookup",
                          responses={
@@ -324,9 +327,12 @@ class Thumbs(APIView):
             width=THUMBNAIL_WIDTH_PX,
             original=image.url
         )
-        upstream_response = urlopen(upstream_url)
-        status = upstream_response.status
-        content_type = upstream_response.headers.get('Content-Type')
+        try:
+            upstream_response = urlopen(upstream_url)
+            status = upstream_response.status
+            content_type = upstream_response.headers.get('Content-Type')
+        except HTTPError:
+            return HttpResponse(status=500)
 
         response = HttpResponse(
             upstream_response.read(),
