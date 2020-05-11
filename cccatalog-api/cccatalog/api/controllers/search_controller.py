@@ -479,7 +479,6 @@ def get_providers(index):
             timeout=CACHE_TIMEOUT,
             value=providers
         )
-
     return providers
 
 
