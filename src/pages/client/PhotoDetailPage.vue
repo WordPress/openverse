@@ -10,19 +10,23 @@
                     :imageHeight="imageHeight"
                     :socialSharingEnabled="socialSharingEnabled"
                     @onImageLoaded="onImageLoaded" />
-      <photo-tags :tags="tags" />
-      <related-images :relatedImages="relatedImages"
-                      :imagesCount="imagesCount"
-                      :query="query"
-                      :filter="filter"
-                      :isPrimaryImageLoaded="isPrimaryImageLoaded" />
+      <div class="padding-normal margin-vertical-big">
+        <photo-tags :tags="tags" :showHeader="true" />
+      </div>
+      <div class="padding-normal margin-vertical-big">
+        <related-images :relatedImages="relatedImages"
+                        :imagesCount="imagesCount"
+                        :query="query"
+                        :filter="filter"
+                        :isPrimaryImageLoaded="isPrimaryImageLoaded" />
+      </div>
     </div>
     <footer-section></footer-section>
   </div>
 </template>
 
 <script>
-import PhotoDetails from '@/components/PhotoDetails';
+import PhotoDetails from '@/components/ImageDetails/PhotoDetails';
 import PhotoTags from '@/components/PhotoTags';
 import RelatedImages from '@/components/RelatedImages';
 import HeaderSection from '@/components/HeaderSection';

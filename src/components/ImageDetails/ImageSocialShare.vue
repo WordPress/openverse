@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import SocialShareButtons from '@/components/SocialShareButtons';
+import SocialShareButtons from './SocialShareButtons';
 
 export default {
   name: 'image-social-share',
@@ -37,6 +37,3 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-  @import '../styles/photodetails.scss';
-</style>
