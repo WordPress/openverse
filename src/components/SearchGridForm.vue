@@ -4,11 +4,11 @@
         @submit.prevent="onSubmit"
         class="search-form padding-normal">
     <div class="is-flex is-hidden-touch">
-      <button class="button toggle-filter padding-vertical-normal padding-horizontal-big"
+      <button v-if="!isFilterVisible"
+              class="button toggle-filter padding-vertical-normal padding-horizontal-big"
               type="button"
               @click.prevent="onToggleSearchGridFilter()">
-        <i v-if="!isFilterApplied" class="icon sliders" />
-        <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
+        Filters
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
@@ -30,11 +30,11 @@
       </div>
     </div>
     <div class="is-flex is-hidden-desktop">
-      <button class="button small toggle-filter-small padding-small"
+      <button v-if="!isFilterVisible"
+              class="button small toggle-filter padding-small"
               type="button"
               @click.prevent="onToggleSearchGridFilter()">
-        <i v-if="!isFilterApplied" class="icon sliders" />
-        <i v-else class="icon sliders has-color-dark-slate-blue has-text-weight-semibold" />
+        Filters
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
@@ -59,7 +59,6 @@
 </template>
 
 <script>
-import SearchGridFilter from '@/components/SearchGridFilter';
 import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types';
 
 export default {
@@ -70,9 +69,6 @@ export default {
     },
   },
   data: () => ({ searchTermsModel: null }),
-  components: {
-    SearchGridFilter,
-  },
   computed: {
     searchTerms() {
       return this.$store.state.query.q;
@@ -117,16 +113,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "bulma/sass/utilities/_all.sass";
+
   .toggle-filter {
     height: 3.875rem;
-  }
+    text-transform: none;
+    font-size: 13px;
+    border: 2px solid #D8D8D8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    width: 68px;
 
-  .toggle-filter-small {
-    width: 4rem;
-    padding-top: 0.35rem !important;
-
-    img {
-      max-width: 1.5rem;
+    &.small {
+      height: 2.5rem;
     }
   }
 
@@ -141,7 +140,7 @@ export default {
   .search-input {
     width: 70%;
 
-    @media (max-width: 64em) {
+    @include touch {
       width: 100%;
     }
 
@@ -156,7 +155,7 @@ export default {
   .icon .search {
     padding: 1.3rem;
 
-    @media (max-width: 64em) {
+    @include touch {
       padding: .8rem;
     }
   }

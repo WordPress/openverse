@@ -1,4 +1,4 @@
-import FilterChecklist from '@/components/FilterChecklist';
+import FilterChecklist from '@/components/Filters/FilterChecklist';
 import render from '../../test-utils/render';
 
 describe('FilterChecklist', () => {
@@ -49,7 +49,6 @@ describe('FilterChecklist', () => {
     const wrapper = render(FilterChecklist, options);
     wrapper.find('.filter-visibility-toggle').trigger('click'); // should open
     wrapper.find('.filter-visibility-toggle').trigger('click'); // should close
-    expect(wrapper.find('.filter-checkbox').element).toBeUndefined();
     expect(wrapper.find('.angle-down').element).toBeDefined();
   });
 
@@ -75,4 +74,3 @@ describe('FilterChecklist', () => {
     expect(wrapper.emitted().filterChanged).toBeTruthy();
   });
 });
-

@@ -49,17 +49,10 @@
       </div>
       <home-license-filter />
     </form>
-    <div class="help-links">
+    <div class="help-links is-hidden-mobile">
       <span class="margin-right-bigger">
         Go to the
         <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
-      </span>
-
-      <span>
-        See our
-        <a href="/search-help">
-          Search Syntax Guide
-        </a>
       </span>
     </div>
   </div>
@@ -87,7 +80,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-
+@import "node_modules/bulma/sass/utilities/initial-variables";
+@import "node_modules/bulma/sass/utilities/derived-variables";
+@import "node_modules/bulma/sass/utilities/mixins";
 
 $hero-height: 74vh;
 
@@ -120,30 +115,21 @@ $hero-height: 74vh;
   .mobile-input {
     width: 100%;
   }
+
+  /* Small only */
+  @include mobile {
+    height: 80vh;
+  }
 }
 
 .help-links {
   position: absolute;
-  bottom: 5rem;
-  left: 2rem;
-
-  @media screen and (max-width: 40em) {
-    display: none;
-  }
+  bottom: 1rem;
+  left: 1rem;
 }
 
 .help-icon {
   height: 32px;
   vertical-align: middle;
-}
-
-/* Small only */
-@media screen and (max-width: 40em) {
-  .hero {
-    height: 80vh;
-  }
-  .search-form_ctr {
-    padding: 0 .9375rem;
-  }
 }
 </style>

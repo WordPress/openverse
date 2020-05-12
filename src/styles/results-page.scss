@@ -1,3 +1,5 @@
+@import "bulma/sass/utilities/_all.sass";
+
 .search {
   margin: 0;
 }
@@ -7,8 +9,7 @@
   background: #f5f5f5;
   min-height: 600px;
 
-  /* 48em = 768px */
-  @media (max-width: 48em) {
+  @include mobile {
     width: 100%;
     flex: none;
   }
@@ -19,8 +20,7 @@
   background-color: #fff;
   width: 21.875rem;
 
-  /* 48em = 768px */
-  @media (max-width: 48em) {
-    width: 100%;
+  @include touch {
+    width: 0;
   }
 }
