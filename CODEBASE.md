@@ -55,3 +55,34 @@ Below is a folder structure in the order recommended to understand how the app a
  |-- assets/
  |     Where the static assets are stored. Assets include mostly image and svg files.
  |
+
+
+## Server side rendering
+
+CC Search runs on our production environments with a Server Side Rendering (SSR) version of the VueJS app. Reading of the [Vue SSR Guide](https://ssr.vuejs.org/guide/) is recommended to understand how it works and the differences that exist compared to running the app on the client-side only.
+
+In order to run the SSR app locally, you just need to run the following commands.
+
+```
+$ npm install # if you haven't already
+$ npm run build
+$ npm run server
+```
+
+### Points of attention in the codebase for SSR
+
+When you run `npm run server`, Node will run the [server.js](./server.js) script which starts an [Express.JS](https://expressjs.com/) web server, which will start listening on the configured port and accepting requests and rendering the Vue App, as well as serve static assets.
+
+There are also a few cases of different components for server and client side rendering:
+
+The first one is the entry file for webpack. You can find them in [clientEntry.js](./src/clientEntry.js) and [serverEntry.js](./src/serverEntry.js). There are some minor differences between them, like polyfill loading and client-side state hydration are done only on the `clientEntry`.
+
+Because of legacy issues, there are three pages that have separate server and client versions:
+
+* BrowsePage
+* CollectionsBrowsePage
+* PhotoDetailPage
+
+The reason for that is that for some time we used a [JS library](https://www.npmjs.com/package/vue-masonry) to render the image grid. This library used browser specific APIs to render the image grid. Therefore it didn't work on the server renderer. So we had to split those pages into two different versions, one that didn't render the image grid (for the server) and another that did render it (for the client). There is however a [ticket](https://github.com/creativecommons/cccatalog-frontend/issues/934) related to removing this legacy complexity.
+
+
