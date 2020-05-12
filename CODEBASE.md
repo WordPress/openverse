@@ -4,15 +4,17 @@ This document will give you a high level overview of the modules and components 
 
 ## Dependencies
 
-The CC Search frontend is built using [Vue.JS](https://vuejs.org/) as its main view library. It uses [Vue-Router](https://router.vuejs.org/) as its routing library and Vuex(https://github.com/vuejs/vuex) as state-management library.
+The CC Search frontend is built using [Vue.JS](https://vuejs.org/) as its main view library. It uses [Vue-Router](https://router.vuejs.org/) as its routing library and Vuex(https://github.com/vuejs/vuex) as state-management library. On our production environment, we also use [Server Side Rendering](https://ssr.vuejs.org/) of the Vue app.
 
-The app uses [Foundation for Sites](https://foundation.zurb.com/sites.html) as a base CSS library.
+The app uses [CC Vocabulary](https://github.com/creativecommons/vocabulary) as a base CSS library.
 
 [Webpack](https://webpack.js.org/) and [Babel](https://babeljs.io/) are used for build and compilation.
 
 [Jest](https://jestjs.io/) is used for unit tests.
 
 ## Module structure
+
+Caveat: this section doesn't render well on Github (or any other Markdown viewer). It's better to read this in raw format or in a text editor.
 
 Below is a folder structure in the order recommended to understand how the app and its components are initialized.
 
@@ -24,7 +26,7 @@ Below is a folder structure in the order recommended to understand how the app a
  |-- App.vue
  |     App root component. All other components have this component as its parent
  |
- |-- router/index.js
+ |-- router/(client|server).js
  |     Where the routes are defined. This is where the definitions of which page component will render for every route.
  |
  |-- store/*.js
