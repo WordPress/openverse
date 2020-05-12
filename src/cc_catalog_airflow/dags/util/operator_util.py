@@ -40,7 +40,7 @@ def get_log_operator(dag, source, status):
     )
 
 
-def get_wait_till_done_task(dag, task_id):
+def get_wait_till_done_operator(dag, task_id):
     return DummyOperator(
         task_id=task_id,
         trigger_rule=TriggerRule.ALL_DONE,

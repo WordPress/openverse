@@ -91,7 +91,7 @@ def create_day_partitioned_reingestion_meta_dag(
         ]
         end_task = ops.get_log_operator(dag, dag_id, 'Finished')
         for i in range(len(operator_list_list) - 1):
-            wait_operator = ops.get_wait_till_done_task(
+            wait_operator = ops.get_wait_till_done_operator(
                 dag,
                 f'wait_L{i}'
             )
