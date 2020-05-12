@@ -37,6 +37,7 @@
     </template>
   </div>
 </template>
+
 <script>
 export default {
   name: 'filter-check-list',
@@ -59,6 +60,7 @@ export default {
 .filters {
   border-bottom: 2px solid rgb(245, 245, 245);
 }
+
 .filters-title {
   font-size: 1.250em;
   font-weight: 600;
@@ -68,13 +70,16 @@ export default {
   letter-spacing: normal;
   cursor: pointer;
 }
+
 .filter-visibility-toggle {
   float: right;
   cursor: pointer;
   background: none;
   border: none;
 }
+
 label {
   color: #333333;
 }
+
 </style>
