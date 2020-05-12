@@ -4,10 +4,11 @@
             @click="closeForm()">
       <i class="icon cross"></i>
     </button>
-    <dmca-notice v-if="selectedCopyright && isReportSent"
+    <dmca-notice v-if="selectedCopyright"
                       :imageURL="imageURL"
                       :providerName="providerName"
-                      :dmcaFormUrl="dmcaFormUrl" />
+                      :dmcaFormUrl="dmcaFormUrl"
+                      @onDmcaBackClick= "onDmcaBackClick()"/>
     <done-message v-else-if="!selectedCopyright && isReportSent"
                   :imageURL="imageURL"
                   :providerName="providerName" />
@@ -110,13 +111,18 @@ export default {
       if (this.selectedReason === 'other') {
         this.selectedOther = true;
       }
+      else if (this.selectedReason === 'dmca') {
+        this.selectedCopyright = true;
+      }
       else {
-        this.selectedCopyright = this.selectedReason === 'dmca';
         this.sendContentReport();
       }
     },
     onBackClick() {
       this.selectedOther = false;
+    },
+    onDmcaBackClick() {
+      this.selectedCopyright = false;
     },
     sendContentReport() {
       this.$store.dispatch(SEND_CONTENT_REPORT, {
