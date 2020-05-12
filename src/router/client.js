@@ -9,6 +9,7 @@ import CollectionsPage from '@/pages/CollectionsPage';
 import CollectionBrowsePage from '@/pages/client/CollectionBrowsePage';
 import SearchHelpPage from '@/pages/SearchHelpPage';
 import NotFoundPage from '@/pages/NotFoundPage';
+import redirectOnEmptySearch from './redirectOnEmptySearch';
 
 Vue.use(VueRouter);
 
@@ -90,5 +91,7 @@ router.afterEach((to) => {
     ga('send', 'pageview');
   }
 });
+
+redirectOnEmptySearch(router);
 
 export default router;

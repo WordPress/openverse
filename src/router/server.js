@@ -9,6 +9,7 @@ import CollectionsPage from '@/pages/CollectionsPage';
 import CollectionBrowsePage from '@/pages/server/CollectionBrowsePage';
 import SearchHelpPage from '@/pages/SearchHelpPage';
 import NotFoundPage from '@/pages/NotFoundPage';
+import redirectOnEmptySearch from './redirectOnEmptySearch';
 
 Vue.use(VueRouter);
 
@@ -73,22 +74,6 @@ const router = new VueRouter({
   },
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresQuery)) {
-    // this route requires query, check if any
-    // if not, redirect to home page.
-    if (!to.query.q) {
-      next({
-        name: 'home-page',
-      });
-    }
-    else {
-      next();
-    }
-  }
-  else {
-    next();
-  }
-});
+redirectOnEmptySearch(router);
 
 export default router;
