@@ -24,5 +24,5 @@ globals()[DAG_ID] = create_provider_api_workflow(
     concurrency=1,
     schedule_string='@daily',
     dated=True,
-    day_shift=20
+    day_shift=0
 )

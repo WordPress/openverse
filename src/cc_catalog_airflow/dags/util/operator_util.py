@@ -1,5 +1,7 @@
 from airflow.operators.bash_operator import BashOperator
+from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
+from airflow.utils.trigger_rule import TriggerRule
 
 
 def get_runner_operator(dag, source, script_location):
@@ -34,5 +36,13 @@ def get_log_operator(dag, source, status):
     return BashOperator(
         task_id='{}_{}'.format(source, status),
         bash_command='echo {} {} workflow at $(date)'.format(status, source),
+        dag=dag
+    )
+
+
+def get_wait_till_done_task(dag, task_id):
+    return DummyOperator(
+        task_id=task_id,
+        trigger_rule=TriggerRule.ALL_DONE,
         dag=dag
     )
