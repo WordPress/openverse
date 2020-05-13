@@ -1,5 +1,3 @@
-import os
-import sys
 from airflow import DAG
 from datetime import datetime
 import util.operator_util as op_util
