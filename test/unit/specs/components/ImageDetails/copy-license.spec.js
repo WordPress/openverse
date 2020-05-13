@@ -1,9 +1,9 @@
-import ImageAttribution from '@/components/ImageAttribution';
+import CopyLicense from '@/components/ImageDetails/CopyLicense';
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types';
 import { DETAIL_PAGE_EVENTS, SEND_DETAIL_PAGE_EVENT } from '@/store/usage-data-analytics-types';
-import render from '../../test-utils/render';
+import render from '../../../test-utils/render';
 
-describe('ImageAttribution', () => {
+describe('CopyLicense', () => {
   let options = null;
   let props = null;
   const eventData = {
@@ -41,18 +41,12 @@ describe('ImageAttribution', () => {
   });
 
   it('should contain the correct contents', () => {
-    const wrapper = render(ImageAttribution, options);
-    expect(wrapper.find('.sidebar_section')).toBeDefined();
-  });
-
-  it('should return the correct license url', () => {
-    const wrapper = render(ImageAttribution, options);
-    const a = wrapper.find('.photo_license');
-    expect(a.attributes().href).toBe('http://license.com&atype=rich');
+    const wrapper = render(CopyLicense, options);
+    expect(wrapper.find('.copy-license')).toBeDefined();
   });
 
   it('should dispatch COPY_ATTRIBUTION', () => {
-    const wrapper = render(ImageAttribution, options);
+    const wrapper = render(CopyLicense, options);
     wrapper.vm.onCopyAttribution(eventData);
     expect(dispatchMock).toHaveBeenCalledWith(COPY_ATTRIBUTION, {
       content: eventData.content,
@@ -60,13 +54,13 @@ describe('ImageAttribution', () => {
   });
 
   it('should dispatch EMBED_ATTRIBUTION', () => {
-    const wrapper = render(ImageAttribution, options);
+    const wrapper = render(CopyLicense, options);
     wrapper.vm.onEmbedAttribution();
     expect(dispatchMock).toHaveBeenCalledWith(EMBED_ATTRIBUTION);
   });
 
   it('should dispatch SEND_DETAIL_PAGE_EVENT on copy attribution', () => {
-    const wrapper = render(ImageAttribution, options);
+    const wrapper = render(CopyLicense, options);
     wrapper.vm.onCopyAttribution(eventData);
     expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
       eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
@@ -75,28 +69,10 @@ describe('ImageAttribution', () => {
   });
 
   it('should dispatch SEND_DETAIL_PAGE_EVENT on embed attribution', () => {
-    const wrapper = render(ImageAttribution, options);
+    const wrapper = render(CopyLicense, options);
     wrapper.vm.onEmbedAttribution();
     expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
       eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
-      resultUuid: props.image.id,
-    });
-  });
-
-  it('should dispatch SOURCE_CLICKED on source link clicked', () => {
-    const wrapper = render(ImageAttribution, options);
-    wrapper.vm.onPhotoSourceLinkClicked();
-    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
-      eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
-      resultUuid: props.image.id,
-    });
-  });
-
-  it('should dispatch SOURCE_CLICKED on creator link clicked', () => {
-    const wrapper = render(ImageAttribution, options);
-    wrapper.vm.onPhotoCreatorLinkClicked();
-    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
-      eventType: DETAIL_PAGE_EVENTS.CREATOR_CLICKED,
       resultUuid: props.image.id,
     });
   });

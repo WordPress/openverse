@@ -1,6 +1,6 @@
 <template>
-  <div class="photo_tags margin-normal" v-if="tags && tags.length">
-    <h3>Tags</h3>
+  <div class="photo_tags" v-if="tags && tags.length">
+    <h3 v-if="showHeader">Tags</h3>
     <div class="margin-top-normal">
       <template v-for="(tag, index) in getValidTags()">
         <button class="button tag margin-smaller"
@@ -18,7 +18,7 @@ import { SET_QUERY } from '@/store/mutation-types';
 
 export default {
   name: 'photo-tags',
-  props: ['tags'],
+  props: ['tags', 'showHeader'],
   computed: {
     hasClarifaiTags() {
       return this.$props.tags.some(tag => tag.provider === 'clarifai');
