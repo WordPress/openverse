@@ -2,7 +2,6 @@ import logging
 from textwrap import dedent
 from airflow.hooks.postgres_hook import PostgresHook
 from util.loader import column_names as col
-import boto3
 from psycopg2.errors import InvalidTextRepresentation
 
 logger = logging.getLogger(__name__)
