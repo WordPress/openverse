@@ -41,7 +41,7 @@ DATE_TYPE = 'upload'
 # DAY_DIVISION = 24 would mean dividing the day into hours, and requesting the
 # photo data for each hour of the day separately.  This is necessary because
 # if we request too much at once, the API will return fallacious results.
-DAY_DIVISION = 48 # divide into half hour increments
+DAY_DIVISION = 48  # divide into half hour increments
 
 LICENSE_INFO = {
     '1': ('by-nc-sa', '2.0'),

@@ -12,12 +12,19 @@ def get_runner_operator(dag, source, script_location):
     )
 
 
-def get_dated_main_runner_operator(dag, main_function, day_shift=0):
+def get_dated_main_runner_operator(
+        dag,
+        main_function,
+        execution_timeout,
+        day_shift=0,
+        task_id='pull_image_data',
+):
     args_str = f'{{{{ macros.ds_add(ds, -{day_shift}) }}}}'
     return PythonOperator(
-        task_id='pull_image_data',
+        task_id=task_id,
         python_callable=main_function,
         op_args=[args_str],
+        execution_timeout=execution_timeout,
         depends_on_past=False,
         dag=dag
     )
