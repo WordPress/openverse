@@ -2,7 +2,7 @@
   <section class="sidebar_section">
     <div class="photo-attribution margin-bottom-big">
       <h5 class="b-header margin-bottom-big">License</h5>
-      <span id="attribution" class="photo_usage-attribution is-block" ref="photoAttribution">
+      <span class="photo_usage-attribution is-block" ref="photoAttribution">
         This image was marked with a
         <a class="photo_license" :href="licenseURL" target="_blank" rel="noopener">
         {{ fullLicenseName.toUpperCase() }}
