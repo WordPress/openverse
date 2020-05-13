@@ -20,7 +20,7 @@
   background-color: #fff;
   width: 21.875rem;
 
-  @include mobile {
-    width: 100%;
+  @include touch {
+    width: 0;
   }
 }

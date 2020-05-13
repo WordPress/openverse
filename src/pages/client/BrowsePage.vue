@@ -3,7 +3,7 @@
     <header-section />
     <div class="search columns">
       <div class="column is-narrow grid-sidebar is-paddingless" v-if="isFilterVisible">
-        <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit"/>
+        <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
       </div>
       <div class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
@@ -14,11 +14,9 @@
                      @onLoadMoreImages="onLoadMoreImages" />
       </div>
     </div>
-
     <footer-section></footer-section>
   </div>
 </template>
-
 <script>
 import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
@@ -44,5 +42,5 @@ export default BrowsePage;
 </script>
 
 <style lang="scss" scoped>
-  @import "../../styles/results-page.scss";
+@import "../../styles/results-page.scss";
 </style>

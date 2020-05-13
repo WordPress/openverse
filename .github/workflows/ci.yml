@@ -1,0 +1,44 @@
+name: cccatalog-frontend-ci
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+env:
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+
+jobs:
+  ci:
+    name: Run CI tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.16.1'
+
+    - id: cache-node-modules
+      name: Cache Node.js modules
+      uses: actions/cache@v1
+      with:
+        path: ~/.npm  # npm caches files in ~/.npm
+        key: node-${{ hashFiles('**/package-lock.json') }}
+
+    - name: Install dependencies
+      run: npm install --prefer-offline --no-audit
+
+    - name: Run lint
+      run: npm run lint
+
+    - name: Run tests
+      run: npm run test:unit
+
+    - name: Run build
+      run: npm run build
