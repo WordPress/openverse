@@ -53,7 +53,8 @@ Below is a folder structure in the order recommended to understand how the app a
  |     Module responsible for sending real time events to Google Analytics triggered by user interaction with the application.
  |
  |-- assets/
- |     Where the static assets are stored. Assets include mostly image and svg files.
+ |     Where the static assets are stored. Assets include the source providers' logos and the CC license icons SVGs, which are used in the HTML embed feature.
+ |     None of these files should be removed, unless a source provider is forever removed, then its logo image can probably be safely deleted.
  |
 
 
