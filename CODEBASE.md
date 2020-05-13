@@ -75,7 +75,7 @@ When you run `npm run server`, Node will run the [server.js](./server.js) script
 
 There are also a few cases of different components for server and client side rendering:
 
-The first one is the entry file for webpack. You can find them in [clientEntry.js](./src/clientEntry.js) and [serverEntry.js](./src/serverEntry.js). There are some minor differences between them, like polyfill loading and client-side state hydration are done only on the `clientEntry`.
+One is the entry file for webpack. You can find them in [clientEntry.js](./src/clientEntry.js) and [serverEntry.js](./src/serverEntry.js). These files are the point of entry of the application, they start the Vue ppp, the store and the router. There are some minor differences between them, such as polyfill loading and client-side state hydration which are done only on the `clientEntry`.
 
 Because of legacy issues, there are three pages that have separate server and client versions:
 
@@ -85,4 +85,4 @@ Because of legacy issues, there are three pages that have separate server and cl
 
 The reason for that is that for some time we used a [JS library](https://www.npmjs.com/package/vue-masonry) to render the image grid. This library used browser specific APIs to render the image grid. Therefore it didn't work on the server renderer. So we had to split those pages into two different versions, one that didn't render the image grid (for the server) and another that did render it (for the client). There is however a [ticket](https://github.com/creativecommons/cccatalog-frontend/issues/934) related to removing this legacy complexity.
 
-
+For this reason we need to be careful about using client specific APIs (such as `window`, `document`, etc.). If those are necessary, it can only run *only* on the client side, otherwise it will break on the server and the user will end up seeing an error message when loading the page.
