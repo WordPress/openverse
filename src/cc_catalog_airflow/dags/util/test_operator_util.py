@@ -1,6 +1,15 @@
+from datetime import datetime, timedelta, timezone
+from unittest.mock import MagicMock
+
 from airflow import DAG
-from datetime import datetime
+from airflow.models.taskinstance import TaskInstance
+
 import util.operator_util as op_util
+
+
+class PickleMock(MagicMock):
+    def __reduce__(self):
+        return (MagicMock, ())
 
 
 def test_get_runner_operator_creates_valid_string():
@@ -13,3 +22,44 @@ def test_get_runner_operator_creates_valid_string():
     )
     expected_command = 'python /test/script/location.py --mode default'
     assert runner.bash_command == expected_command
+
+
+def test_get_dated_main_runner_handles_zero_shift():
+    dag = DAG(
+        dag_id='test_dag',
+        start_date=datetime.strptime('2019-01-01', '%Y-%m-%d')
+    )
+    execution_date = datetime.strptime(
+        '2019-01-01',
+        '%Y-%m-%d'
+    ).replace(tzinfo=timezone.utc)
+    main_func = PickleMock()
+    runner = op_util.get_dated_main_runner_operator(
+        dag,
+        main_func,
+        timedelta(minutes=1)
+    )
+    ti = TaskInstance(runner, execution_date)
+    ti.run(ignore_task_deps=True, ignore_ti_state=True, test_mode=True)
+    main_func.assert_called_with('2019-01-01')
+
+
+def test_get_dated_main_runner_handles_day_shift():
+    dag = DAG(
+        dag_id='test_dag',
+        start_date=datetime.strptime('2019-01-01', '%Y-%m-%d')
+    )
+    execution_date = datetime.strptime(
+        '2019-01-01',
+        '%Y-%m-%d'
+    ).replace(tzinfo=timezone.utc)
+    main_func = PickleMock()
+    runner = op_util.get_dated_main_runner_operator(
+        dag,
+        main_func,
+        timedelta(minutes=1),
+        day_shift=1
+    )
+    ti = TaskInstance(runner, execution_date)
+    ti.run(ignore_task_deps=True, ignore_ti_state=True, test_mode=True)
+    main_func.assert_called_with('2018-12-31')
