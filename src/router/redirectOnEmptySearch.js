@@ -1,3 +1,7 @@
+/**
+ * redirects the user to home page if the search query params are empty
+ * @param router
+ */
 const redirectOnEmptySearch = (router) => {
   router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresQuery)) {
