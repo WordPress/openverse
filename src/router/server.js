@@ -9,6 +9,7 @@ import CollectionsPage from '@/pages/CollectionsPage';
 import CollectionBrowsePage from '@/pages/server/CollectionBrowsePage';
 import SearchHelpPage from '@/pages/SearchHelpPage';
 import NotFoundPage from '@/pages/NotFoundPage';
+import redirectOnEmptySearch from './redirectOnEmptySearch';
 
 Vue.use(VueRouter);
 
@@ -19,6 +20,10 @@ const router = new VueRouter({
       path: '/search',
       name: 'browse-page',
       component: BrowsePage,
+      // a meta field
+      meta: {
+        requiresQuery: true,
+      },
       props: route => ({ query: route.query.q }),
     },
     {
@@ -68,5 +73,7 @@ const router = new VueRouter({
     return { x: 0, y: 0 };
   },
 });
+
+redirectOnEmptySearch(router);
 
 export default router;

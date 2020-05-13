@@ -31,7 +31,7 @@
     </div>
     <div class="is-flex is-hidden-desktop">
       <button v-if="!isFilterVisible"
-              class="button small toggle-filter-small padding-small"
+              class="button small toggle-filter padding-small"
               type="button"
               @click.prevent="onToggleSearchGridFilter()">
         Filters
@@ -123,14 +123,9 @@ export default {
     box-sizing: border-box;
     border-radius: 4px;
     width: 68px;
-  }
 
-  .toggle-filter-small {
-    width: 4rem;
-    padding-top: 0.35rem !important;
-
-    img {
-      max-width: 1.5rem;
+    &.small {
+      height: 2.5rem;
     }
   }
 
