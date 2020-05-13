@@ -1,10 +1,8 @@
 from copy import deepcopy
-from datetime import timedelta
+from datetime import datetime, timedelta
 import logging
 from airflow import DAG
-from airflow.operators.subdag_operator import SubDagOperator
 from airflow.utils.helpers import cross_downstream
-from airflow.utils.trigger_rule import TriggerRule
 import util.operator_util as ops
 import util.config as conf
 
@@ -15,7 +13,7 @@ def create_provider_api_workflow(
         dag_id,
         main_function,
         default_args=conf.DAG_DEFAULT_ARGS,
-        start_date=None,
+        start_date=datetime(1970, 1, 1),
         concurrency=1,
         schedule_string='@daily',
         dated=True,
@@ -94,7 +92,7 @@ def create_day_partitioned_ingestion_dag(
     dag_id,
     main_function,
     reingestion_day_list_list,
-    start_date=None,
+    start_date=datetime(1970, 1, 1),
     concurrency=1,
     default_args=conf.DAG_DEFAULT_ARGS,
     dagrun_timeout=timedelta(hours=23),
