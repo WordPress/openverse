@@ -21,7 +21,7 @@
 import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGridForm from '@/components/SearchGridForm';
-import SearchGridFilter from '@/components/SearchGridFilter';
+import SearchGridFilter from '@/components/Filters/SearchGridFilter';
 import CollectionBrowseMixin from '@/pages/mixins/CollectionBrowseMixin';
 
 const CollectionBrowsePage = {

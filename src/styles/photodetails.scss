@@ -1,3 +1,5 @@
+@import "bulma/sass/utilities/_all.sass";
+
 .photo-detail-page {
   width: 100%;
 }
@@ -16,7 +18,7 @@
 }
 
 .photo_image-ctr {
-  max-height: 800px;
+  max-height: 55rem;
   overflow: hidden;
   text-align: center;
 
@@ -24,12 +26,12 @@
     position: relative;
     width: auto;
     height: auto;
-    max-height: 750px;
+    max-height: 44rem;
     max-width: 100%;
   }
 
   /* Small only */
-  @media screen and (max-width: 39.9375em) {
+  @include mobile {
     padding: 30px 15px;
   }
 }
@@ -37,7 +39,7 @@
 .photo_info-ctr {
 
   /* Small only */
-  @media screen and (max-width: 39.9375em) {
+  @include mobile {
     padding: 30px 0;
   }
 }
@@ -61,6 +63,7 @@
 	background: #ffffff;
   border: 2px solid #D8D8D8;
   z-index: 10;
+  width: 22rem;
 }
 .report-form:after, .report-form:before {
 	bottom: 100%;

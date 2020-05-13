@@ -19,9 +19,9 @@
 import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGridForm from '@/components/SearchGridForm';
-import SearchGridFilter from '@/components/SearchGridFilter';
+import SearchGridFilter from '@/components/Filters/SearchGridFilter';
 import BrowsePageMixin from '@/pages/mixins/BrowsePageMixin';
-import FilterDisplay from '@/components/FilterDisplay';
+import FilterDisplay from '@/components/Filters/FilterDisplay';
 import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin';
 
 const BrowsePage = {

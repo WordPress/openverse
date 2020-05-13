@@ -1,6 +1,6 @@
 <template>
-  <div class="card padding-normal is-clearfix report-form">
-    <button class="button close-button is-text tiny is-shadowless is-pulled-right"
+  <div class="padding-normal is-clearfix report-form">
+    <button class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
             @click="closeForm()">
       <i class="icon cross"></i>
     </button>
@@ -14,7 +14,7 @@
     <report-error v-else-if="reportFailed"/>
     <form v-else-if="!selectedOther">
       <h4 class="b-header">Report this content</h4>
-      <fieldset>
+      <fieldset class="margin-bottom-normal">
         <legend class="margin-bottom-small">What's the issue?</legend>
 
         <div>
@@ -31,12 +31,12 @@
           <input type="radio" name="type" id="other" value="other" v-model="selectedReason">
           <label for="other" class="margin-left-small">Other</label>
         </div>
-
-        <span class="caption has-text-weight-semibold has-text-grey">
-          For security purposes, CC collects and retains anonymized IP
-          addresses of those who complete and submit this form.
-        </span>
       </fieldset>
+
+      <span class="caption has-text-weight-semibold has-text-grey">
+        For security purposes, CC collects and retains anonymized IP
+        addresses of those who complete and submit this form.
+      </span>
 
       <button type="button"
               :disabled="selectedReason === null"
@@ -46,12 +46,13 @@
       </button>
     </form>
     <form class="other-form" v-else-if="selectedOther">
+      <h4 class="b-header">Report this content</h4>
       <legend class="margin-bottom-small">Please describe the issue for us</legend>
-      <textarea class="reason"
+      <textarea class="reason padding-small has-text-weight-semibold"
                 v-model="otherReasonDescription"
-                placeholder="Issue description required (with at least 20 words)" />
+                placeholder="Issue description required (with at least 20 characters)" />
       <div>
-        <button class="button other-back-button is-text tiny margin-top-normal is-shadowless"
+        <button class="button other-back-button is-text tiny margin-top-normal has-text-grey"
                 @click="onBackClick()">
           <span><i class="icon chevron-left margin-right-small"></i> Back</span>
         </button>
@@ -60,7 +61,7 @@
                 :disabled="!descriptionHasMoreThan20Chars"
                 class="button submit-other-button tiny is-info margin-top-normal is-pulled-right"
                 @click="sendContentReport()">
-          Submit report
+          Submit
         </button>
       </div>
     </form>
@@ -132,11 +133,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card {
-  width: 22rem;
-}
 .reason {
   width: 100%;
   height: 6rem;
+  font-size: 13px;
+  font-family: Source Sans Pro;
 }
 </style>

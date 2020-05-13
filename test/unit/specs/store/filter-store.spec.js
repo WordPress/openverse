@@ -40,12 +40,29 @@ describe('Filter Store', () => {
       expect(defaultState.filters.searchBy.author).toEqual(filterData.searchBy.author);
     });
 
+    it('state contains mature', () => {
+      const defaultState = store.state('');
+
+      expect(defaultState.filters.mature).toEqual(filterData.mature);
+    });
+
     it('gets query from search params', () => {
       const state = store.state('?q=landscapes&source=met&license=by&license_type=commercial&searchBy=creator');
       expect(state.filters.providers.find(x => x.code === 'met').checked).toBeTruthy();
       expect(state.filters.licenses.find(x => x.code === 'by').checked).toBeTruthy();
       expect(state.filters.licenseTypes.find(x => x.code === 'commercial').checked).toBeTruthy();
       expect(state.filters.searchBy.creator).toBeTruthy();
+      expect(state.filters.mature).toBeFalsy();
+    });
+
+    it('gets mature from search params', () => {
+      const state = store.state('?q=mature=true');
+      expect(state.filters.mature).toBeTruthy();
+    });
+
+    it('gets mature as false from search params', () => {
+      const state = store.state('?q=mature=false');
+      expect(state.filters.mature).toBeFalsy();
     });
 
     it('state has filter visible', () => {
@@ -92,6 +109,11 @@ describe('Filter Store', () => {
 
     it('isFilterApplied is set to true when aspect ratio filter is set', () => {
       const state = store.state('?q=landscapes&aspect_ratio=tall');
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('isFilterApplied is set to true when mature filter is set', () => {
+      const state = store.state('?q=landscapes&mature=true');
       expect(state.isFilterApplied).toBeTruthy();
     });
 
@@ -147,6 +169,7 @@ describe('Filter Store', () => {
         searchBy: '',
         aspect_ratio: '',
         size: '',
+        mature: false,
       });
     });
 
@@ -164,6 +187,7 @@ describe('Filter Store', () => {
         searchBy: '',
         aspect_ratio: '',
         size: '',
+        mature: false,
       });
     });
 
@@ -181,6 +205,7 @@ describe('Filter Store', () => {
         searchBy: '',
         aspect_ratio: '',
         size: '',
+        mature: false,
       });
     });
 
@@ -198,6 +223,7 @@ describe('Filter Store', () => {
         searchBy: '',
         aspect_ratio: '',
         size: '',
+        mature: false,
       });
     });
 
@@ -215,7 +241,33 @@ describe('Filter Store', () => {
         searchBy: 'creator',
         aspect_ratio: '',
         size: '',
+        mature: false,
       });
+    });
+
+    it('SET_FILTER updates mature', () => {
+      mutations[SET_FILTER](state, { filterType: 'mature' });
+
+      expect(state.filters.mature).toBeTruthy();
+      expect(state.query).toEqual({
+        q: 'foo',
+        license: '',
+        extension: '',
+        categories: '',
+        license_type: '',
+        source: '',
+        searchBy: '',
+        aspect_ratio: '',
+        size: '',
+        mature: true,
+      });
+    });
+
+    it('SET_FILTER toggles mature', () => {
+      state.filters.mature = true;
+      mutations[SET_FILTER](state, { filterType: 'mature' });
+
+      expect(state.filters.mature).toBeFalsy();
     });
 
     it('SET_FILTER updates aspect ratio', () => {
@@ -232,6 +284,7 @@ describe('Filter Store', () => {
         searchBy: '',
         aspect_ratio: state.filters.aspectRatios[0].code,
         size: '',
+        mature: false,
       });
     });
 
@@ -249,6 +302,7 @@ describe('Filter Store', () => {
         searchBy: '',
         aspect_ratio: '',
         size: state.filters.sizes[0].code,
+        mature: false,
       });
     });
 
@@ -291,6 +345,12 @@ describe('Filter Store', () => {
 
     it('SET_FILTER updates isFilterApplied with searchBy', () => {
       mutations[SET_FILTER](state, { filterType: 'searchBy' });
+
+      expect(state.isFilterApplied).toBeTruthy();
+    });
+
+    it('SET_FILTER updates isFilterApplied mature', () => {
+      mutations[SET_FILTER](state, { filterType: 'mature' });
 
       expect(state.isFilterApplied).toBeTruthy();
     });

@@ -10,14 +10,16 @@
                     :imageHeight="imageHeight"
                     :socialSharingEnabled="socialSharingEnabled"
                     @onImageLoaded="onImageLoaded" />
-      <photo-tags :tags="tags" />
+      <div class="padding-normal margin-vertical-big">
+        <photo-tags :tags="tags" />
+      </div>
     </div>
     <footer-section></footer-section>
   </div>
 </template>
 
 <script>
-import PhotoDetails from '@/components/PhotoDetails';
+import PhotoDetails from '@/components/ImageDetails/PhotoDetails';
 import PhotoTags from '@/components/PhotoTags';
 import HeaderSection from '@/components/HeaderSection';
 import FooterSection from '@/components/FooterSection';
