@@ -283,7 +283,6 @@ class TableIndexer:
                     self._bulk_upload(es_batch)
                 except ValueError:
                     log.error('Failed to index chunk.')
-                    pass
                 upload_time = time.time() - push_start_time
                 upload_rate = len(es_batch) / upload_time
                 log.info(
