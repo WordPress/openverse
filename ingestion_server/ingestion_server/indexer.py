@@ -1,5 +1,4 @@
 import uuid
-
 import psycopg2
 import os
 import sys
@@ -7,6 +6,7 @@ import logging as log
 import time
 import argparse
 import datetime
+import elasticsearch
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection, \
     NotFoundError, helpers
@@ -20,6 +20,7 @@ from ingestion_server.elasticsearch_models import \
 from ingestion_server.es_mapping import create_mapping
 from ingestion_server.distributed_reindex_scheduler import \
     schedule_distributed_index
+from collections import deque
 
 """
 A utility for indexing data to Elasticsearch. For each table to
@@ -213,6 +214,30 @@ class TableIndexer:
             )
             self.replicate(table, dest_idx, query)
 
+    def _bulk_upload(self, es_batch):
+        max_attempts = 4
+        attempts = 0
+        # Initial time to wait between indexing attempts
+        # Grows exponentially
+        cooloff = 5
+        while True:
+            try:
+                deque(helpers.parallel_bulk(self.es, es_batch, chunk_size=400))
+            except elasticsearch.ElasticsearchException:
+                # Something went wrong during indexing.
+                log.warning(
+                    f"Elasticsearch rejected bulk query. We will retry in"
+                    f" {cooloff}s. Attempt {attempts}. Details: ",
+                    exc_info=True
+                )
+                time.sleep(cooloff)
+                cooloff *= 2
+                if attempts >= max_attempts:
+                    raise ValueError('Exceeded maximum bulk index retries')
+                attempts += 1
+                continue
+            break
+
     def replicate(self, table, dest_index, query):
         """
         Replicate records from a given query.
@@ -254,7 +279,10 @@ class TableIndexer:
                 num_docs = len(es_batch)
                 log.info('Pushing {} docs to Elasticsearch.'.format(num_docs))
                 # Bulk upload to Elasticsearch in parallel.
-                list(helpers.parallel_bulk(self.es, es_batch, chunk_size=400))
+                try:
+                    self._bulk_upload(es_batch)
+                except ValueError:
+                    log.error('Failed to index chunk.')
                 upload_time = time.time() - push_start_time
                 upload_rate = len(es_batch) / upload_time
                 log.info(
