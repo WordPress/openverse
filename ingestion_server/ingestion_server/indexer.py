@@ -1,5 +1,4 @@
 import uuid
-
 import psycopg2
 import os
 import sys
@@ -21,6 +20,7 @@ from ingestion_server.elasticsearch_models import \
 from ingestion_server.es_mapping import create_mapping
 from ingestion_server.distributed_reindex_scheduler import \
     schedule_distributed_index
+from collections import deque
 
 """
 A utility for indexing data to Elasticsearch. For each table to
@@ -222,7 +222,7 @@ class TableIndexer:
         cooloff = 5
         while True:
             try:
-                list(helpers.parallel_bulk(self.es, es_batch, chunk_size=400))
+                deque(helpers.parallel_bulk(self.es, es_batch, chunk_size=400))
             except elasticsearch.ElasticsearchException:
                 # Something went wrong during indexing.
                 log.warning(
@@ -282,6 +282,7 @@ class TableIndexer:
                 try:
                     self._bulk_upload(es_batch)
                 except ValueError:
+                    log.error('Failed to index chunk.')
                     pass
                 upload_time = time.time() - push_start_time
                 upload_rate = len(es_batch) / upload_time
