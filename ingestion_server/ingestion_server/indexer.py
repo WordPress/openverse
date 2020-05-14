@@ -226,8 +226,8 @@ class TableIndexer:
             except elasticsearch.ElasticsearchException:
                 # Something went wrong during indexing.
                 log.warning(
-                    "Elasticsearch rejected bulk query. We will retry in a"
-                    " moment. Details: ",
+                    f"Elasticsearch rejected bulk query. We will retry in"
+                    f" {cooloff}s. Attempt {attempts}. Details: ",
                     exc_info=True
                 )
                 time.sleep(cooloff)
