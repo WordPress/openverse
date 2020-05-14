@@ -9,6 +9,7 @@ jobs:
         run: |
           cd ./src/cc_catalog_airflow
           cp env.template .env
+          rm -r /tmp/docker_postgres_data || echo "no old postgres data"
           docker-compose up -d
       - name: Test
         run: |
