@@ -500,8 +500,8 @@ def _elasticsearch_connect():
         host=settings.ELASTICSEARCH_URL,
         port=settings.ELASTICSEARCH_PORT,
         connection_class=RequestsHttpConnection,
-        timeout=10,
-        max_retries=99,
+        timeout=5,
+        max_retries=2,
         retry_on_timeout=True,
         http_auth=auth,
         wait_for_status='yellow'
