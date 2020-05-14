@@ -70,7 +70,7 @@ def elasticsearch_connect(timeout=300):
     """
     while True:
         try:
-            return _elasticsearch_connect(timeout)
+            return _elasticsearch_connect()
         except ElasticsearchConnectionError as e:
             log.exception(e)
             log.error('Reconnecting to Elasticsearch in 5 seconds. . .')
@@ -78,7 +78,7 @@ def elasticsearch_connect(timeout=300):
             continue
 
 
-def _elasticsearch_connect(timeout=300):
+def _elasticsearch_connect():
     """
     Connect to configured Elasticsearch domain.
 
@@ -104,7 +104,6 @@ def _elasticsearch_connect(timeout=300):
         host=ELASTICSEARCH_URL,
         port=ELASTICSEARCH_PORT,
         connection_class=RequestsHttpConnection,
-        timeout=timeout,
         max_retries=10,
         retry_on_timeout=True,
         http_auth=auth,

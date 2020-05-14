@@ -53,7 +53,7 @@ def _assign_work(db_conn, workers, target_index):
             'end_id': (1 + idx) * records_per_worker,
             'target_index': target_index
         }
-        log.info(f'Assigned job: {params}')
+        log.info(f'Assigning job {params} to {worker_url}')
         requests.post(worker_url + '/indexing_task', json=params)
 
 
