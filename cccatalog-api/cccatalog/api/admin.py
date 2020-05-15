@@ -14,7 +14,7 @@ class ImageReportAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj is None:
             return []
-        always_readonly = ['reason', 'image_url', 'description', 'identifier']
+        always_readonly = ['reason', 'image_url', 'description', 'identifier', 'date']
         if obj.status == PENDING:
             return always_readonly
         else:
