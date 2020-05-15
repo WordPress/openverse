@@ -10,7 +10,7 @@
 import HeaderSection from '@/components/HeaderSection';
 import HeroSection from '@/components/HeroSection';
 import FooterSection from '@/components/FooterSection';
-import { RESET_QUERY } from '@/store/mutation-types';
+import { RESET_QUERY, CLEAR_FILTERS } from '@/store/mutation-types';
 
 const HomePage = {
   name: 'home-page',
@@ -21,6 +21,11 @@ const HomePage = {
   },
   mounted() {
     this.$store.commit(RESET_QUERY);
+    this.$store.commit(CLEAR_FILTERS, {
+      isCollectionsPage: false,
+      provider: null,
+      shouldNavigate: false,
+    });
   },
 };
 
