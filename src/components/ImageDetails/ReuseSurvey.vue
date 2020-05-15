@@ -1,9 +1,10 @@
 <template>
-  <div class="reuse-survey margin-bottom-big">
-    <span>How are you using this image?</span>
+  <div class="reuse-survey caption has-text-weight-semibold">
+    How are you using this image?
     <a :href="formLink" target="_blank" rel="noopener" @click="onReuseSurveyClick">
-      Take a quick survey
+      Let us know
     </a>
+    by answering a few questions.
   </div>
 </template>
 
@@ -37,6 +38,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-</style>

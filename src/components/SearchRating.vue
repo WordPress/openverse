@@ -49,19 +49,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.rating {
+.button.rating {
   vertical-align: middle;
-  color: rgb(5, 181, 218) !important;
-  font-size: 0.8rem !important;
-  text-decoration: none !important;
-  text-transform: none !important;
+  color: rgb(5, 181, 218);
+  font-size: 0.8rem;
+  text-decoration: none;
+  text-transform: none;
 
   &:hover {
-    background: none !important;
+    background: none;
   }
 
   &:focus {
-    background: none !important;
+    background: none;
   }
 }
 
