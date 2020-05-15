@@ -5,7 +5,7 @@ from cccatalog.api.models import ImageReport, MatureImage, DeletedImage, \
 
 @admin.register(ImageReport)
 class ImageReportAdmin(admin.ModelAdmin):
-    list_display = ('reason', 'status', 'image_url', 'description')
+    list_display = ('reason', 'status', 'image_url', 'description', 'date')
     list_filter = ('status', 'reason')
     list_display_links = ('status',)
     search_fields = ('description', 'identifier')
