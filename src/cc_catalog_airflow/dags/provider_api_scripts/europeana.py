@@ -110,8 +110,11 @@ def _get_image_list(
 
         logger.debug('response.status_code: {response.status_code}')
         response_json = _extract_response_json(response)
-        image_list, next_cursor, total_number_of_images = _extract_image_list_from_json(
-            response_json)
+        (
+            image_list,
+            next_cursor,
+            total_number_of_images
+        ) = _extract_image_list_from_json(response_json)
 
         if image_list is not None:
             break
@@ -191,8 +194,7 @@ def _get_license_url(license_field):
     if len(license_field) > 1:
         logger.warning('More than one license field found')
     for license in license_field:
-        cc_license_search = re.search("creativecommons", license)
-        if cc_license_search is not None:
+        if 'creativecommons' in license:
             return license
     return None
 
