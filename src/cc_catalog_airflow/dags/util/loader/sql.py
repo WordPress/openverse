@@ -152,6 +152,32 @@ def upsert_records_to_image_table(
         identifier,
         image_table=IMAGE_TABLE_NAME
 ):
+
+    def _newest_non_null(column):
+        return f'{column} = COALESCE(EXCLUDED.{column}, old.{column})'
+
+    def _merge_jsonb_objects(column):
+        """
+        This function returns SQL that merges the top-level keys of the
+        a JSONB column, taking the newest available non-null value.
+        """
+        return f'''{column} = COALESCE(
+            jsonb_strip_nulls(old.{column})
+              || jsonb_strip_nulls(EXCLUDED.{column}),
+            EXCLUDED.{column},
+            old.{column}
+          )'''
+
+    def _merge_jsonb_arrays(column):
+        return f'''{column} = COALESCE(
+            (
+              SELECT jsonb_agg(DISTINCT x)
+              FROM jsonb_array_elements(old.{column} || EXCLUDED.{column}) t(x)
+            ),
+            EXCLUDED.{column},
+            old.{column}
+          )'''
+
     load_table = _get_load_table_name(identifier)
     logger.info(f'Upserting new records into {image_table}.')
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
@@ -179,7 +205,7 @@ def upsert_records_to_image_table(
     }
     upsert_query = dedent(
         f'''
-        INSERT INTO {image_table} ({', '.join(column_inserts.keys())})
+        INSERT INTO {image_table} AS old ({', '.join(column_inserts.keys())})
         SELECT {', '.join(column_inserts.values())}
         FROM {load_table}
         ON CONFLICT (
@@ -188,26 +214,22 @@ def upsert_records_to_image_table(
           md5(({col.DIRECT_URL})::text)
         )
         DO UPDATE SET
-          updated_on = {NOW},
-          {_newest(col.LANDING_URL)},
-          {_newest(col.DIRECT_URL)},
-          {_newest(col.THUMBNAIL)},
-          {_newest(col.WIDTH)},
-          {_newest(col.HEIGHT)},
-          {_newest(col.LICENSE)},
-          {_newest(col.LICENSE_VERSION)},
-          {_newest(col.CREATOR)},
-          {_newest(col.CREATOR_URL)},
-          {_newest(col.TITLE)},
+          {col.UPDATED_ON} = {NOW},
           {col.LAST_SYNCED} = {NOW},
           {col.REMOVED} = {FALSE},
-          {_newest(col.META_DATA)},
-          {_newest(col.WATERMARKED)}
-        WHERE
-          {image_table}.{col.FOREIGN_ID} = EXCLUDED.{col.FOREIGN_ID}
-        AND
-          {image_table}.{col.PROVIDER} = EXCLUDED.{col.PROVIDER};
-
+          {_newest_non_null(col.LANDING_URL)},
+          {_newest_non_null(col.DIRECT_URL)},
+          {_newest_non_null(col.THUMBNAIL)},
+          {_newest_non_null(col.WIDTH)},
+          {_newest_non_null(col.HEIGHT)},
+          {_newest_non_null(col.LICENSE)},
+          {_newest_non_null(col.LICENSE_VERSION)},
+          {_newest_non_null(col.CREATOR)},
+          {_newest_non_null(col.CREATOR_URL)},
+          {_newest_non_null(col.TITLE)},
+          {_newest_non_null(col.WATERMARKED)},
+          {_merge_jsonb_objects(col.META_DATA)},
+          {_merge_jsonb_arrays(col.TAGS)}
         '''
     )
     postgres.run(upsert_query)
@@ -224,7 +246,3 @@ def _get_load_table_name(
         load_table_name_stub=LOAD_TABLE_NAME_STUB,
 ):
     return f'{load_table_name_stub}{identifier}'
-
-
-def _newest(column):
-    return f'{column} = EXCLUDED.{column}'
