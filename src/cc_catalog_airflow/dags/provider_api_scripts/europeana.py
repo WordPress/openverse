@@ -13,7 +13,6 @@ import argparse
 from datetime import datetime, timedelta, timezone
 import logging
 import os
-import re
 
 from common.requester import DelayedRequester
 from common.storage import image
@@ -168,10 +167,8 @@ def _process_image_list(image_list):
 
 def _process_image_data(image_data):
     logger.debug(f'Processing image data: {image_data}')
+    
     license_url = _get_license_url(image_data.get('rights'))
-    if license_url is None:
-        return None
-
     image_url = image_data.get('edmIsShownBy')[0]
     foreign_landing_url = _get_foreign_landing_url(image_data)
     foreign_id = image_data.get('id')
@@ -220,9 +217,11 @@ def _create_meta_data_dict(
 
 
 def _get_description(image_data):
-    if image_data.get('dcDescriptionLangAware') is not None and image_data.get('dcDescriptionLangAware').get('en') is not None:
+    if (image_data.get('dcDescriptionLangAware') is not None and
+    image_data.get('dcDescriptionLangAware').get('en') is not None):
         description = image_data.get('dcDescriptionLangAware').get('en')[0]
-    elif image_data.get('dcDescriptionLangAware') is not None and image_data.get('dcDescriptionLangAware').get('def') is not None:
+    elif (image_data.get('dcDescriptionLangAware') is not None and
+    image_data.get('dcDescriptionLangAware').get('def') is not None):
         description = image_data.get('dcDescriptionLangAware').get('def')[0]
     elif image_data.get('dcDescription') is not None:
         description = image_data.get('dcDescription')[0]
