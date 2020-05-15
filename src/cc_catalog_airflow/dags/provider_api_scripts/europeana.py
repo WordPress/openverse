@@ -245,7 +245,8 @@ def _build_query_param_dict(
     query_param_dict.update(
         {
             'wskey': api_key,
-            'query': f'timestamp_created:[{start_timestamp} TO {end_timestamp}]',
+            'query': 
+                f'timestamp_created:[{start_timestamp} TO {end_timestamp}]',
             'cursor': cursor,
         }
     )
