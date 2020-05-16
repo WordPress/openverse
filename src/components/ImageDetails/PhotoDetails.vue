@@ -84,7 +84,7 @@
           :href="image.foreign_landing_url"
           target="_blank"
           rel="noopener"
-          class="button is-success margin-vertical-normal"
+          class="button is-success margin-vertical-normal margin-horizontal-small"
           @click="onPhotoSourceLinkClicked">
         Go to image's website
         <i class="icon external-link margin-left-normal is-size-6
