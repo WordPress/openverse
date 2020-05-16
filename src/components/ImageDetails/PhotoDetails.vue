@@ -32,7 +32,7 @@
     </div>
     </div>
     <div class="column image-info">
-      <div class="margin-vertical-normal">
+      <div class="margin-bottom-big">
         <h4 class="b-header">{{ image.title }}</h4>
         <span v-if="image.creator" class="caption has-text-weight-semibold">
           by
