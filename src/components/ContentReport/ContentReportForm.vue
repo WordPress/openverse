@@ -33,14 +33,14 @@
         </div>
       </fieldset>
 
-      <p class="caption has-text-weight-semibold has-text-grey">
+      <p class="caption has-text-weight-semibold has-text-grey margin-bottom-normal">
         For security purposes, CC collects and retains anonymized IP
         addresses of those who complete and submit this form.
       </p>
 
       <button type="button"
               :disabled="selectedReason === null"
-              class="button next-button tiny is-info margin-top-normal is-pulled-right has-background-grey-lighter has-text-grey-light"
+              class="button next-button tiny is-info is-pulled-right has-background-grey-lighter has-text-grey-light"
               @click="onIssueSelected()">
         Next
       </button>
