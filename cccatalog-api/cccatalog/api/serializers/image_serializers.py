@@ -394,3 +394,11 @@ class ReportImageSerializer(serializers.ModelSerializer):
                 "Description must be at least be 20 characters long"
             )
         return ImageReport.objects.create(**validated_data)
+
+
+class OembedSerializer(serializers.Serializer):
+    """ Parse and validate Oembed parameters. """
+    url = serializers.URLField()
+
+    def validate_url(self, value):
+        return _add_protocol(value)

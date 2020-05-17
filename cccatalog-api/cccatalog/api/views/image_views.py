@@ -13,7 +13,8 @@ from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.image_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     InputErrorSerializer, ImageSearchQueryStringSerializer,\
-    WatermarkQueryStringSerializer, ReportImageSerializer
+    WatermarkQueryStringSerializer, ReportImageSerializer,\
+    OembedSerializer
 from cccatalog.settings import THUMBNAIL_PROXY_URL
 from cccatalog.api.utils.view_count import _get_user_ip
 from cccatalog.api.utils.watermark import watermark
@@ -267,6 +268,12 @@ class Watermark(GenericAPIView):
 
 class OembedView(APIView):
 
+    @swagger_auto_schema(operation_id="oembed_list",
+                         query_serializer=OembedSerializer,
+                         responses={
+                             200: '',
+                             404: 'Not Found'
+                         })
     def get(self, request):
         url = request.query_params.get('url', '')
 
