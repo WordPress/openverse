@@ -1,7 +1,7 @@
 <template>
   <div class="padding-normal is-clearfix report-form">
     <button class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
-        id="cross-icon"  @click="closeForm()">
+         @click="closeForm()">
       <i class="icon cross" ></i>
     </button>
     <dmca-notice v-if="selectedCopyright && isReportSent"
@@ -54,7 +54,7 @@
       <div>
         <button class="button other-back-button is-text tiny margin-top-normal has-text-grey"
               @click="onBackClick()">
-          <span id="back-button"><i class="icon chevron-left margin-right-small"></i> Back</span>
+          <span><i class="icon chevron-left margin-right-small"></i> Back</span>
         </button>
 
         <button type="button"
@@ -138,11 +138,5 @@ export default {
   height: 6rem;
   font-size: 13px;
   font-family: Source Sans Pro;
-}
-#back-button:hover{
-  color:rgb(73, 73, 73);
-}
-#cross-icon:hover{
-  background-color: grey;
 }
 </style>
