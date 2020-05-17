@@ -1,8 +1,8 @@
 <template>
   <div class="padding-normal is-clearfix report-form">
     <button class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
-         @click="closeForm()">
-      <i class="icon cross" ></i>
+            @click="closeForm()">
+      <i class="icon cross"></i>
     </button>
     <dmca-notice v-if="selectedCopyright && isReportSent"
                       :imageURL="imageURL"
@@ -53,7 +53,7 @@
                 placeholder="Issue description required (with at least 20 characters)" />
       <div>
         <button class="button other-back-button is-text tiny margin-top-normal has-text-grey"
-              @click="onBackClick()">
+                @click="onBackClick()">
           <span><i class="icon chevron-left margin-right-small"></i> Back</span>
         </button>
 
@@ -74,9 +74,7 @@ import { REPORT_FORM_CLOSED } from '@/store/mutation-types';
 import dmcaNotice from './DmcaNotice';
 import DoneMessage from './DoneMessage';
 import ReportError from './ReportError';
-
 const dmcaFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform';
-
 export default {
   name: 'content-report-form',
   props: ['imageId', 'imageURL', 'providerName'],
