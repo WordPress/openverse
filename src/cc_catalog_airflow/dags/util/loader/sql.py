@@ -113,44 +113,26 @@ def load_s3_data_to_intermediate_table(
         postgres_conn_id,
         bucket,
         s3_key,
-        identifier,
-        max_rows_to_skip=2
+        identifier
 ):
     load_table = _get_load_table_name(identifier)
     logger.info(f'Loading {s3_key} from S3 Bucket {bucket} into {load_table}')
 
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    load_successful = False
-
-    while not load_successful and max_rows_to_skip >= 0:
-        try:
-            postgres.run(
-                dedent(
-                    f"""
-                        SELECT aws_s3.table_import_from_s3(
-                          '{load_table}',
-                          '',
-                          'DELIMITER E''\t''',
-                          '{bucket}',
-                          '{s3_key}',
-                          'us-east-1'
-                        );
-                        """
-                )
-            )
-            load_successful = True
-
-        except InvalidTextRepresentation as e:
-            line_number = _get_malformed_row_in_file(str(e))
-            _delete_malformed_row_in_file(s3_key, line_number)
-
-        finally:
-            max_rows_to_skip = max_rows_to_skip - 1
-
-    if not load_successful:
-        raise InvalidTextRepresentation(
-            'Exceeded the maximum number of allowed defective rows')
-
+    postgres.run(
+        dedent(
+            f"""
+            SELECT aws_s3.table_import_from_s3(
+              '{load_table}',
+              '',
+              'DELIMITER E''\t''',
+              '{bucket}',
+              '{s3_key}',
+              'us-east-1'
+            );
+            """
+        )
+    )
     _clean_intermediate_table_data(postgres, load_table)
 
 

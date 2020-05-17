@@ -258,8 +258,7 @@ def test_loaders_load_good_tsv(
     assert num_rows == 10
 
 
-@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
-@pytest.mark.allow_hosts([S3_HOST])
+@pytest.mark.parametrize('load_function', [_load_local_tsv])
 def test_delete_one_malformed_row(
         postgres_with_load_table,
         tmpdir,
@@ -273,8 +272,7 @@ def test_delete_one_malformed_row(
     assert num_rows == 9
 
 
-@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
-@pytest.mark.allow_hosts([S3_HOST])
+@pytest.mark.parametrize('load_function', [_load_local_tsv])
 def test_delete_two_malformed_rows(
         postgres_with_load_table,
         tmpdir,
@@ -288,8 +286,7 @@ def test_delete_two_malformed_rows(
     assert num_rows == 8
 
 
-@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
-@pytest.mark.allow_hosts([S3_HOST])
+@pytest.mark.parametrize('load_function', [_load_local_tsv])
 def test_delete_multiple_malformed_rows(
         postgres_with_load_table,
         tmpdir,
