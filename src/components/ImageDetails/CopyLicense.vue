@@ -55,7 +55,7 @@
         </div>
         <div :class="tabClass(1, 'tabs-panel')">
           <textarea id="attribution-html"
-                    class="textarea is-family-monospace is-paddingless"
+                    class="textarea is-family-JetBrains-Mono is-paddingless has-text-weight-normal"
                     :value="attributionHtml"
                     cols="30" rows="4"
                     readonly="readonly">
