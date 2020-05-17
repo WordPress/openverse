@@ -259,42 +259,43 @@ def test_loaders_load_good_tsv(
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv])
-def test_delete_one_malformed_row(
+def test_delete_less_than_max_malformed_rows(
         postgres_with_load_table,
         tmpdir,
         empty_s3_bucket,
         load_function
 ):
-    load_function(tmpdir, empty_s3_bucket, 'malformed_one_row.tsv')
+    load_function(tmpdir, empty_s3_bucket, 'malformed_less_than_max_rows.tsv')
     check_query = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    assert num_rows == 9
+    assert num_rows == 6
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv])
-def test_delete_two_malformed_rows(
+def test_delete_max_malformed_rows(
         postgres_with_load_table,
         tmpdir,
         empty_s3_bucket,
         load_function
 ):
-    load_function(tmpdir, empty_s3_bucket, 'malformed_two_rows.tsv')
+    load_function(tmpdir, empty_s3_bucket, 'malformed_max_rows.tsv')
     check_query = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    assert num_rows == 8
+    assert num_rows == 3
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv])
-def test_delete_multiple_malformed_rows(
+def test_delete_more_than_max_malformed_rows(
         postgres_with_load_table,
         tmpdir,
         empty_s3_bucket,
         load_function
 ):
     with pytest.raises(InvalidTextRepresentation):
-        load_function(tmpdir, empty_s3_bucket, 'malformed_multiple_rows.tsv')
+        load_function(tmpdir, empty_s3_bucket,
+                      'malformed_more_than_max_rows.tsv')
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])

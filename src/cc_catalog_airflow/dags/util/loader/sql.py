@@ -82,7 +82,7 @@ def load_local_data_to_intermediate_table(
         postgres_conn_id,
         tsv_file_name,
         identifier,
-        max_rows_to_skip=2
+        max_rows_to_skip=10
 ):
     load_table = _get_load_table_name(identifier)
     logger.info(f'Loading {tsv_file_name} into {load_table}')
