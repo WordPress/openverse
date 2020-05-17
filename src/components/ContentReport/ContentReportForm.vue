@@ -74,7 +74,9 @@ import { REPORT_FORM_CLOSED } from '@/store/mutation-types';
 import dmcaNotice from './DmcaNotice';
 import DoneMessage from './DoneMessage';
 import ReportError from './ReportError';
+
 const dmcaFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform';
+
 export default {
   name: 'content-report-form',
   props: ['imageId', 'imageURL', 'providerName'],
