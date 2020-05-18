@@ -133,8 +133,10 @@ def test_process_objects_batch_success():
         with patch.object(bkm,
                           '_handle_object_data',
                           return_value=1) as mock_image:
-        
-            actual_image_count = bkm._process_objects_batch(batch_objects)
+
+            actual_image_count = bkm._process_objects_batch(
+                batch_objects
+                )
     expected_image_count = 1
     assert actual_image_count == expected_image_count
 
@@ -183,19 +185,25 @@ def test_get_image_no_size():
     assert actual_width == expected_width
 
 
-def test_get_license_url():
-    response_json = _get_resource_json("license_info.json")
+def test_get_cc_license_url():
+    response_json = _get_resource_json("cc_license_info.json")
     actual_url = bkm._get_license_url(response_json)
     expected_url = 'https://creativecommons.org/licenses/by/3.0/'
 
     assert actual_url == expected_url
 
 
+def test_get_public_license_url():
+    response_json = _get_resource_json("public_license_info.json")
+    actual_url = bkm._get_license_url(response_json)
+    expected_url = "https://creativecommons.org/publicdomain/zero/1.0/"
+
+    assert actual_url == expected_url
+
+
 def test_get_no_license_url():
-    data = {
-        "name": "Public Domain"
-    }
-    actual_url = bkm._get_license_url(data)
+    response_json = _get_resource_json("no_license_info.json")
+    actual_url = bkm._get_license_url(response_json)
     expected_url = None
 
     assert actual_url == expected_url

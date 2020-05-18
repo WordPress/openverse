@@ -37,45 +37,55 @@ def main():
     offset = 0
     condition = True
     while condition:
-        query_param = _get_query_param(offset)
-        objects_batch = _get_object_json(query_param=query_param)
+        query_param = _get_query_param(offset=offset)
+        objects_batch = _get_object_json(
+            query_param=query_param
+            )
         logger.debug(len(objects_batch))
         if len(objects_batch) > 0:
             image_count = _process_objects_batch(objects_batch)
             logger.debug(f"Images till now {image_count}")
             offset += LIMIT
+            break
         else:
             condition = False
     total_images = image_store.commit()
     logger.info(f"Total images recieved {total_images}")
 
 
-def _get_query_param(offset=0,
-                     default_query_param=DEFAULT_QUERY_PARAM):
+def _get_query_param(
+        offset=0,
+        default_query_param=DEFAULT_QUERY_PARAM
+        ):
     query_param = default_query_param.copy()
-    query_param.update(
-        offset=offset
-    )
+    query_param.update(offset=offset)
     return query_param
 
 
-def _get_object_json(headers=HEADERS,
-                     endpoint=ENDPOINT,
-                     retries=RETRIES,
-                     query_param=None):
+def _get_object_json(
+        headers=HEADERS,
+        endpoint=ENDPOINT,
+        retries=RETRIES,
+        query_param=None
+        ):
     for tries in range(retries):
         response = delay_request.get(
                     endpoint,
                     query_param,
                     headers=headers
                     )
-        data = response.json()
-        if data and data.get("message", "").lower() == "success.":
-            response_json = data.get("data", None)
+        try:
+            response_json = response.json()
+        except Exception as e:
+            logger.error(f"Error due to {e}")
+            response_json = None
+        if (response_json and
+                response_json.get("message", "").lower() == "success."):
+            data = response_json.get("data")
             break
         else:
-            response_json = None
-    return response_json
+            data = None
+    return data
 
 
 def _process_objects_batch(objects_batch):
@@ -101,11 +111,13 @@ def _process_objects_batch(objects_batch):
 
 def _handle_object_data(data, license_url):
     image_count = None
-    image_info = data.get("images", None)
+    image_info = data.get("images")
     if image_info is not None:
         id_ = data.get("id", "")
         title = data.get("title", "")
-        foreign_url = f"https://www.brooklynmuseum.org/opencollection/objects/{id_}"
+        foreign_url = (
+            f"https://www.brooklynmuseum.org/opencollection/objects/{id_}"
+        )
         metadata = _get_metadata(data)
         creators = _get_creators(data)
 
@@ -139,23 +151,20 @@ def _get_image_sizes(image):
         size_type = image.get("largest_derivative", "")
         for size in size_list:
             if size.get("size", "") == size_type:
-                height = size.get("height", None)
-                width = size.get("width", None)
+                height = size.get("height")
+                width = size.get("width")
     return height, width
 
 
 def _get_license_url(rights_info):
-    if "creative commons" in rights_info.get("name").lower():
-        elements = html.fromstring(rights_info.get("description", ""))
-        cc_links = [
-            elm[2]
-            for elm in elements.iterlinks()
-            if "https://creativecommons.org/licenses/" in elm[2]
-        ]
-        if len(cc_links) == 1:
-            (license_url,) = cc_links
-        else:
-            license_url = None
+    elements = html.fromstring(rights_info.get("description", ""))
+    cc_links = [
+        elm[2]
+        for elm in elements.iterlinks()
+        if "https://creativecommons.org/" in elm[2]
+    ]
+    if len(cc_links) == 1:
+        (license_url,) = cc_links
     else:
         license_url = None
     return license_url
@@ -163,18 +172,18 @@ def _get_license_url(rights_info):
 
 def _get_metadata(data):
     metadata = {}
-    metadata["accession_number"] = data.get("accession_number", None)
-    metadata["date"] = data.get("object_date", None)
-    metadata["description"] = data.get("description", None)
-    metadata["medium"] = data.get("medium", None)
-    metadata["credit_line"] = data.get("credit_line", None)
-    metadata["classification"] = data.get("classification", None)
+    metadata["accession_number"] = data.get("accession_number")
+    metadata["date"] = data.get("object_date")
+    metadata["description"] = data.get("description")
+    metadata["medium"] = data.get("medium")
+    metadata["credit_line"] = data.get("credit_line")
+    metadata["classification"] = data.get("classification")
     return metadata
 
 
 def _get_creators(data):
     creators = None
-    artists_info = data.get("artists", None)
+    artists_info = data.get("artists")
     if artists_info is not None:
         creators = ""
         for artists in artists_info:
@@ -185,7 +194,7 @@ def _get_creators(data):
 
 def _get_images(image):
     image_url, thumbnail_url = None, None
-    image_url = image.get("largest_derivative_url", None)
+    image_url = image.get("largest_derivative_url")
     if image_url:
         if "http" not in image_url:
             image_url = "https://" + image_url
