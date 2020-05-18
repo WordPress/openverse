@@ -52,7 +52,6 @@ export default {
   data: () => ({
     isDataInitialized: false,
     shouldContainImages: false,
-    currentPage: 1,
   }),
   props: {
     imagesCount: {
@@ -87,6 +86,9 @@ export default {
     },
     _images() {
       return this.useInfiniteScroll ? this.$store.state.images : this.images;
+    },
+    currentPage() {
+      return this.$store.state.imagePage;
     },
     _imagesCount() {
       const count = this.useInfiniteScroll ? this.$store.state.imagesCount : this.imagesCount;
@@ -128,14 +130,12 @@ export default {
       }, 100); // One-tenth of a second should be sufficient to calculate new height
     },
     searchChanged() {
-      this.$store.commit(SET_IMAGES, { images: [] });
-      this.currentPage = 1;
+      this.$store.commit(SET_IMAGES, { images: [], page: 1 });
     },
     onLoadMoreImages() {
       if (this.isFetchingImages === false) {
-        this.currentPage += 1;
         const searchParams = {
-          page: this.currentPage,
+          page: this.currentPage + 1,
           shouldPersistImages: true,
           ...this._query,
         };
