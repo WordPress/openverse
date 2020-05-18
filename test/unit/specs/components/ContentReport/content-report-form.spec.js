@@ -89,6 +89,16 @@ describe('ContentReportForm', () => {
     });
   });
 
+  it('should not dispatch SEND_CONTENT_REPORT on next when dmca is selected', () => {
+    const wrapper = render(ContentReportForm, options);
+    const radio = wrapper.find('#dmca');
+    radio.setChecked();
+
+    const button = wrapper.find('.next-button');
+    button.trigger('click');
+    expect(dispatchMock).not.toHaveBeenCalled();
+  });
+
   it('should dispatch SEND_CONTENT_REPORT on other form submit', () => {
     const wrapper = render(ContentReportForm, options);
     wrapper.setData({ selectedReason: 'other' });
