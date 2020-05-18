@@ -25,7 +25,7 @@ export default {
   props: ['dmcaFormUrl', 'imageURL', 'providerName'],
   methods: {
     onBackClick() {
-      this.$emit('onDmcaBackClick');
+      this.$emit('onBackClick');
     },
   },
 };
