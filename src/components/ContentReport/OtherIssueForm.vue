@@ -42,7 +42,7 @@ export default {
       this.$emit('sendContentReport', this.otherReasonDescription);
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
