@@ -1,5 +1,7 @@
 # cccatalog-frontend
 
+![cccatalog-frontend-ci](https://github.com/creativecommons/cccatalog-frontend/workflows/cccatalog-frontend-ci/badge.svg)
+
 ## About
 
 Repository containing the [CC Search](https://ccsearch.creativecommons.org/) frontend application. This web app contains all the UI which communicates with the [CC Search API](https://github.com/creativecommons/cccatalog-api) to get the data that is rendered in the browser.
