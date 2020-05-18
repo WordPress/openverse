@@ -133,15 +133,13 @@ export default {
       this.$store.commit(SET_IMAGES, { images: [], page: 1 });
     },
     onLoadMoreImages() {
-      if (this.isFetchingImages === false) {
-        const searchParams = {
-          page: this.currentPage + 1,
-          shouldPersistImages: true,
-          ...this._query,
-        };
+      const searchParams = {
+        page: this.currentPage + 1,
+        shouldPersistImages: true,
+        ...this._query,
+      };
 
-        this.$emit('onLoadMoreImages', searchParams);
-      }
+      this.$emit('onLoadMoreImages', searchParams);
     },
   },
 };
