@@ -1,10 +1,10 @@
 <template>
   <button :id="id"
           type="button"
-          class="button tiny is-info is-block margin-top-normal"
+          class="button tiny donate is-paddingless margin-top-normal padding-horizontal-normal"
           :data-clipboard-target="el">
-    <slot v-if="!success" default />
-    <template v-else>Copied!</template>
+    <span v-if="!success"><i class="icon cc-share margin-right-small"></i> Copy</span>
+    <span v-else><i class="icon cc-share margin-right-small"></i> Copied!</span>
   </button>
 </template>
 
@@ -12,6 +12,7 @@
 import Clipboard from 'clipboard';
 
 export default {
+  name: 'copy-button',
   data: () => ({
     success: false,
     clipboard: null,

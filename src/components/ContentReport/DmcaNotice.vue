@@ -1,13 +1,14 @@
 <template>
   <div>
-    <span class="is-block padding-horizontal-big margin-top-large">
-      Please fill out
-      <a :href="dmcaFormUrl" target="_blank" rel="noopener">this DMCA form</a>
-      to report dmca infringement.
+    <span class="is-block padding-horizontal-big margin-top-large has-text-centered">
+      You must fill out this
+      <a :href="dmcaFormUrl" target="_blank" rel="noopener">DMCA form</a>
+      to report copyright infringement.
+      No action will be taken until the form is filled out and submitted.
     </span>
-    <span class="is-block padding-horizontal-big margin-top-small">
-      We recommend doing the same
-      <a :href="imageURL" target="_blank" rel="noopener">at the source {{ providerName }}</a>.
+    <span class="is-block padding-horizontal-big margin-top-small has-text-centered">
+      We recommend doing the same at the source,
+      <a :href="imageURL" target="_blank" rel="noopener">{{ providerName }}</a>.
     </span>
 
     <button class="button is-text tiny margin-top-normal is-shadowless has-text-grey"
@@ -18,14 +19,13 @@
 </template>
 
 <script>
-import { BACK_TO_REPORT_START } from '@/store/mutation-types';
 
 export default {
   name: 'dmca-notice',
   props: ['dmcaFormUrl', 'imageURL', 'providerName'],
   methods: {
     onBackClick() {
-      this.$store.commit(BACK_TO_REPORT_START);
+      this.$emit('onBackClick');
     },
   },
 };

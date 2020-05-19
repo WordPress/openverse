@@ -1,15 +1,19 @@
-import PhotoDetails from '@/components/PhotoDetails';
-import render from '../../test-utils/render';
+import PhotoDetails from '@/components/ImageDetails/PhotoDetails';
+import { DETAIL_PAGE_EVENTS, SEND_DETAIL_PAGE_EVENT } from '@/store/usage-data-analytics-types';
+import render from '../../../test-utils/render';
 
 describe('PhotoDetails', () => {
   let options = null;
   let props = null;
+  let storeState = null;
+  let commitMock = null;
+  let dispatchMock = null;
 
   beforeEach(() => {
     props = {
       image: {
         id: 0,
-        title: 'foo',
+        title: 'Title foo',
         provider: 'flickr',
         url: 'foo.bar',
         thumbnail: 'http://foo.bar',
@@ -22,8 +26,24 @@ describe('PhotoDetails', () => {
       socialSharingEnabled: true,
     };
 
+    commitMock = jest.fn();
+    dispatchMock = jest.fn();
+
+    storeState = {
+      $store: {
+        commit: commitMock,
+        dispatch: dispatchMock,
+        state: {
+          isReportFormVisible: false,
+        },
+      },
+    };
+
     options = {
       propsData: props,
+      mocks: {
+        ...storeState,
+      },
     };
   });
 
@@ -64,23 +84,25 @@ describe('PhotoDetails', () => {
   });
 
   it('renders link back to search results if enabled', () => {
-    const wrapper = render(PhotoDetails, {
-      propsData: {
-        ...props,
-        shouldShowBreadcrumb: true,
-      },
-    });
+    options.propsData.shouldShowBreadcrumb = true;
+    const wrapper = render(PhotoDetails, options);
     expect(wrapper.find('.photo_breadcrumb').element).toBeDefined();
   });
 
   it('doesnt render link back to search results if disabled', () => {
-    const wrapper = render(PhotoDetails, {
-      propsData: {
-        ...props,
-        shouldShowBreadcrumb: false,
-      },
-    });
+    options.propsData.shouldShowBreadcrumb = false;
+    const wrapper = render(PhotoDetails, options);
     expect(wrapper.find('.photo_breadcrumb').element).toBeUndefined();
+  });
+
+  it('renders image title', () => {
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.html()).toContain(props.image.title);
+  });
+
+  it('renders creator name', () => {
+    const wrapper = render(PhotoDetails, options);
+    expect(wrapper.html()).toContain(props.image.creator);
   });
 
   it('redirects back when clicking on the back to results link', () => {
@@ -103,11 +125,42 @@ describe('PhotoDetails', () => {
       mocks: {
         $router: routerMock,
         $route: routeMock,
+        ...storeState,
       },
     };
     const wrapper = render(PhotoDetails, opts);
     const link = wrapper.find('.photo_breadcrumb');
     link.trigger('click');
     expect(routerMock.push).toHaveBeenCalledWith({ name: 'browse-page', query: opts.propsData.query, params: { location: routeMock.params.location } });
+  });
+
+  it('should toggle visibility of report form on report button click', () => {
+    const wrapper = render(PhotoDetails, options);
+    const button = wrapper.find('.report');
+    button.trigger('click');
+
+    expect(commitMock).toHaveBeenCalledWith('TOGGLE_REPORT_FORM_VISIBILITY');
+  });
+
+  it(' report form should be invisible by default', () => {
+    const wrapper = render(PhotoDetails, options);
+
+    expect(wrapper.find({ name: 'content-report-form' }).vm).not.toBeDefined();
+  });
+
+  it(' report form should be visible when isReportFormVisible is true', () => {
+    storeState.$store.state.isReportFormVisible = true;
+    const wrapper = render(PhotoDetails, options);
+
+    expect(wrapper.find({ name: 'content-report-form' }).vm).toBeDefined();
+  });
+
+  it('should dispatch SOURCE_CLICKED on source link clicked', () => {
+    const wrapper = render(PhotoDetails, options);
+    wrapper.vm.onPhotoSourceLinkClicked();
+    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
+      eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
+      resultUuid: props.image.id,
+    });
   });
 });
