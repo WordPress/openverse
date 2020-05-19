@@ -241,9 +241,6 @@ const mutations = redirect => ({
   [SET_COLLECTION_QUERY](_state, params) {
     setQuery(_state, params, `/collections/${params.provider}`, redirect);
   },
-  [RESET_QUERY](_state) {
-    _state.query = initialState('').query;
-  },
   [IMAGE_NOT_FOUND]() {
     redirect({ path: '/not-found' }, true);
   },
