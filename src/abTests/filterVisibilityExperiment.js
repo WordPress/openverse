@@ -18,7 +18,7 @@ const joinExperiment = (session) => {
           reject({
             error: err,
             name: EXPERIMENT_NAME,
-            case: FILTERS_VISIBLE_EXPERIMENT,
+            case: FILTERS_INVISIBLE_EXPERIMENT,
             session,
           });
         }
