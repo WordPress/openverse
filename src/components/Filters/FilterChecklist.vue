@@ -15,12 +15,13 @@
     <div v-for="(item, index) in options" :key="index" class="margin-top-small">
       <label class="checkbox" :for="item.code">
         <input type="checkbox"
-             class="filter-checkbox"
+             class="filter-checkbox margin-right-small"
              :id="item.code"
              :key="index"
              :checked="item.checked"
              :disabled="disabled"
              @change="onValueChange" />
+        <license-icons v-if="filterType == 'licenses'" :license="item.code" />
         {{ item.name }}
       </label>
     </div>
@@ -39,8 +40,13 @@
 </template>
 
 <script>
+import LicenseIcons from '@/components/LicenseIcons';
+
 export default {
   name: 'filter-check-list',
+  components: {
+    LicenseIcons,
+  },
   props: ['options', 'title', 'filterType', 'disabled', 'checked'],
   data() {
     return { filtersVisible: false };
