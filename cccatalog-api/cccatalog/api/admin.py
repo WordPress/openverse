@@ -5,7 +5,9 @@ from cccatalog.api.models import ImageReport, MatureImage, DeletedImage, \
 
 @admin.register(ImageReport)
 class ImageReportAdmin(admin.ModelAdmin):
-    list_display = ('reason', 'status', 'image_url', 'description', 'created_at')
+    list_display = (
+        'reason', 'status', 'image_url', 'description', 'created_at'
+    )
     list_filter = ('status', 'reason')
     list_display_links = ('status',)
     search_fields = ('description', 'identifier')
@@ -14,7 +16,9 @@ class ImageReportAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj is None:
             return []
-        always_readonly = ['reason', 'image_url', 'description', 'identifier', 'created_at']
+        always_readonly = [
+            'reason', 'image_url', 'description', 'identifier', 'created_at'
+        ]
         if obj.status == PENDING:
             return always_readonly
         else:
