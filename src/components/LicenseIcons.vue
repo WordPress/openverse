@@ -2,18 +2,18 @@
   <span class="photo-license-icons">
     <i class="icon cc-logo is-size-4 has-text-black has-background-white" title="CC">
     <!-- Closing i and opening template tag must be adjacent to prevent whitespace -->
-    </i><template v-for="(license, index) in getLicenseIcon(image.license)">
+    </i><template v-for="(l, i) in getLicenseIcon(license)">
       <i
-          v-if="license"
+          v-if="l"
           :class="{
             icon: true,
             ['has-text-black']: true,
             ['has-background-white']: true,
             ['is-size-4']: true,
-            [`cc-${license}`]: true,
+            [`cc-${l}`]: true,
           }"
-          :alt="`${license.toUpperCase()}`"
-          :key="index" />
+          :alt="`${l.toUpperCase()}`"
+          :key="i" />
     </template>
   </span>
 </template>
@@ -33,7 +33,7 @@ const LicenseIcons = {
   name: 'license-icons',
   components: {},
   props: {
-    image: '',
+    license: '',
   },
   methods: {
     getLicenseIcon(license) {
