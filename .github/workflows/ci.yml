@@ -4,41 +4,41 @@ on:
   push:
     branches:
     - master
+    - develop
   pull_request:
     branches:
-    - master
-
-env:
-  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+    - develop
 
 jobs:
   ci:
     name: Run CI tests
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v2
 
     - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: '12.16.1'
+        node-version: '12.4.0'
 
-    - id: cache-node-modules
-      name: Cache Node.js modules
+    - name: Cache Node.js modules
       uses: actions/cache@v1
       with:
-        path: ~/.npm  # npm caches files in ~/.npm
-        key: node-${{ hashFiles('**/package-lock.json') }}
+        path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-
+          ${{ runner.OS }}-
 
     - name: Install dependencies
-      run: npm install --prefer-offline --no-audit
+      run: npm ci
 
     - name: Run lint
       run: npm run lint
 
     - name: Run tests
-      run: npm run test:unit
+      run: npm run unit
 
     - name: Run build
       run: npm run build
