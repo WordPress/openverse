@@ -60,21 +60,4 @@ describe('LicenseIcons', () => {
     expect(wrapper.find('.cc-logo').element).toBeDefined();
     expect(wrapper.find('.cc-pd').element).toBeDefined();
   });
-
-  it('should generate license URL', () => {
-    const wrapper = render(LicenseIcons, options);
-    expect(wrapper.attributes('href')).toBe('https://creativecommons.org/licenses/by/1.0');
-  });
-
-  it('should generate license URL for cc0', () => {
-    image.license = 'cc0';
-    const wrapper = render(LicenseIcons, options);
-    expect(wrapper.attributes('href')).toBe('https://creativecommons.org/publicdomain/zero/1.0/');
-  });
-
-  it('should generate license URL for PDM', () => {
-    image.license = 'pdm';
-    const wrapper = render(LicenseIcons, options);
-    expect(wrapper.attributes('href')).toBe('https://creativecommons.org/publicdomain/mark/1.0/');
-  });
 });
