@@ -8,84 +8,169 @@ Output:            TSV file containing the images and the respective
 
 Notes:             None
 """
+from datetime import datetime
+import json
 import logging
 import os
-import sys
 
 from common.storage import image
 from common import requester
-
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
-)
 logger = logging.getLogger(__name__)
 
 API_KEY = os.getenv('DATA_GOV_API_KEY')
 DELAY = 5.0
+HASH_PREFIX_LENGTH = 2
 LIMIT = 1000  # number of rows to pull at once
 API_ROOT = 'https://api.si.edu/openaccess/api/v1.0/'
 SEARCH_ENDPOINT = API_ROOT + 'search'
-UNIT_CODE_ENDPOINT = API_ROOT + 'terms/unit_code'
+UNITS_ENDPOINT = API_ROOT + 'terms/unit_code'
 PROVIDER = 'smithsonian'
 ZERO_URL = 'https://creativecommons.org/publicdomain/zero/1.0/'
 DEFAULT_PARAMS = {
     'api_key': API_KEY,
     'rows': LIMIT
 }
+RETRIES = 3
 
 image_store = image.ImageStore(provider=PROVIDER)
 delayed_requester = requester.DelayedRequester(delay=DELAY)
 
 
 def main():
-    unit_codes = _get_unit_code_list()
-    print(unit_codes)
-    for unit_code in unit_codes:
-        _process_unit_code(unit_code)
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
+        level=logging.INFO
+    )
+    for hash_prefix in _get_hash_prefixes(HASH_PREFIX_LENGTH):
+        total_rows = _process_hash_prefix(hash_prefix)
+        logger.info(f'Total rows for {hash_prefix}:  {total_rows}')
     total_images = image_store.commit()
     logger.info(f'Total images:  {total_images}')
 
 
-def _get_unit_code_list(endpoint=UNIT_CODE_ENDPOINT, params=DEFAULT_PARAMS):
-    response_json = delayed_requester.get_response_json(
-        endpoint,
-        retries=3,
-        query_params=params
+def gather_samples(
+        units_endpoint=UNITS_ENDPOINT,
+        default_params=DEFAULT_PARAMS,
+        target_dir='/tmp'
+):
+    """
+    Gather random samples of the rows from each 'unit' at the SI.
+
+    These units are treated separately since they have somewhat different data
+    formats.
+    """
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
+        level=logging.INFO
     )
-    unit_codes = response_json.get('response', {}).get('terms', [])
-    logger.info(f'Found {len(unit_codes)} unit codes')
-    if len(unit_codes) == 0:
-        logger.error('Could not get unit code list!  Aborting...')
-        sys.exit(1)
-    return unit_codes
+    now_str = datetime.strftime(datetime.now(), '%Y%m%d%H%M%S')
+    sample_dir = os.path.join(target_dir, f'si_samples_{now_str}')
+    logger.info(f'Creating sample_dir {sample_dir}')
+    os.mkdir(sample_dir)
+    unit_code_json = delayed_requester.get_response_json(
+        units_endpoint,
+        query_params=default_params
+    )
+    unit_code_list = unit_code_json.get('response', {}).get('terms', [])
+    logger.info(f'found unit codes: {unit_code_list}')
+    for unit in unit_code_list:
+        _gather_unit_sample(unit, sample_dir)
 
 
-def _process_unit_code(unit_code, endpoint=SEARCH_ENDPOINT, limit=LIMIT):
-    logger.info(f'Processing unit code:  {unit_code}')
+def _gather_unit_sample(
+        unit,
+        sample_dir,
+        retries=RETRIES,
+        endpoint=SEARCH_ENDPOINT
+):
+    logger.info(f'gathering sample for unit {unit}')
+    for hash_prefix in [None, 'a', 'aa', 'aaa', 'aaaa', 'aaaaa']:
+        query_params = _build_query_params(
+            0,
+            hash_prefix=hash_prefix,
+            unit_code=unit
+        )
+        response_json = delayed_requester.get_response_json(
+            endpoint,
+            retries=retries,
+            query_params=query_params
+        )
+        if response_json is None:
+            logger.warning(f'response_json is NoneType for {unit}')
+            break
+        elif response_json['response']['rowCount'] == 0:
+            logger.info(
+                f'No rows found for unit_code {unit} with hash {hash_prefix}'
+            )
+            break
+        elif response_json['response']['rowCount'] > 10000:
+            logger.info(
+                f'Too many rows:  {response_json["response"]["rowCount"]}'
+            )
+        else:
+            total_rows = response_json['response']['rowCount']
+            saved_rows = min(total_rows, 1000)
+            logger.info(f'Saving {saved_rows} of {total_rows} rows')
+            with open(os.path.join(sample_dir, f'{unit}.json'), 'w') as f:
+                f.write(json.dumps(response_json, indent=2))
+            break
+
+
+def _get_hash_prefixes(prefix_length):
+    max_prefix = 'f' * prefix_length
+    format_string = f'0{prefix_length}x'
+    for h in range(int(max_prefix, 16) + 1):
+        yield format(h, format_string)
+
+
+def _process_hash_prefix(
+        hash_prefix,
+        endpoint=SEARCH_ENDPOINT,
+        limit=LIMIT,
+        retries=RETRIES
+):
+    logger.info(f'Processing hash_prefix:  {hash_prefix}')
+    total_images = 0
     row_offset = 0
     total_rows = 1
     while row_offset < total_rows:
-        query_params = _build_query_params(unit_code, row_offset)
+        logger.debug(f'Row offset:  {row_offset}')
+        query_params = _build_query_params(row_offset, hash_prefix=hash_prefix)
         response_json = delayed_requester.get_response_json(
             endpoint,
-            retries=3,
+            retries=retries,
             query_params=query_params
         )
-        _process_response_json(response_json)
-        total_rows = response_json.get('response', {}).get('rowCount', 0)
+        if response_json is None:
+            logger.warning('response_json is None!  Continuing...')
+        else:
+            new_total = _process_response_json(response_json)
+            total_images = new_total if new_total is not None else total_images
+            logger.info(f'Total images so far:  {total_images}')
+            total_rows = response_json.get('response', {}).get('rowCount', 0)
         row_offset += limit
+    return total_rows
 
 
-def _build_query_params(unit_code, row_offset, default_params=DEFAULT_PARAMS):
+def _build_query_params(
+        row_offset,
+        hash_prefix=None,
+        default_params=DEFAULT_PARAMS,
+        unit_code=None
+):
     query_params = default_params.copy()
-    query_string = f'unit_code:{unit_code} AND online_media_type:Images'
+    query_string = 'online_media_type:Images AND media_usage:CC0'
+    if hash_prefix is not None:
+        query_string += f' AND hash:{hash_prefix}*'
+    if unit_code is not None:
+        query_string += f' AND unit_code:{unit_code}'
     query_params.update(q=query_string, start=row_offset)
     return query_params
 
 
 def _process_response_json(response_json):
-    logger.info('processing response')
+    logger.debug('processing response')
+    total_images = None
     rows = response_json.get('response', {}).get('rows', [])
     for row in rows:
         content = row.get('content', {})
@@ -105,7 +190,7 @@ def _process_response_json(response_json):
             .get('media')
         )
         if image_list is not None:
-            _process_image_list(
+            total_images = _process_image_list(
                 image_list,
                 landing_url,
                 title,
@@ -113,6 +198,7 @@ def _process_response_json(response_json):
                 meta_data,
                 tags
             )
+    return total_images
 
 
 def _get_foreign_landing_url(dnr_dict):
@@ -127,12 +213,24 @@ def _get_creator(indexed_structured, freetext):
     creator_list = indexed_structured.get('name')
     if not creator_list:
         creator_list = freetext.get('name', [])
-    creator = ' '.join(
-        [
-            item if type(item) == str else item.get('content', '')
+    creator_string_list = [item for item in creator_list if type(item) == str]
+    if not creator_string_list:
+        creator_string_list = [
+            item['content']
             for item in creator_list
+            if type(item) == dict and item.get('type', '') == 'personal_main'
         ]
-    )
+    if not creator_string_list:
+        creator_string_list = [
+            item['content']
+            for item in creator_list
+            if type(item) == dict and (
+                    item.get('label', '') == 'Creator'
+                    or item.get('label', '') == 'Artist'
+            )
+        ]
+
+    creator = ' '.join(creator_string_list)
 
     return creator
 
@@ -144,6 +242,8 @@ def _extract_meta_data(descriptive_non_repeating, freetext):
 
     for note in notes:
         if note.get('label') == 'Description':
+            description += ' ' + note.get('content', '')
+        elif note.get('label') == 'Summary':
             description += ' ' + note.get('content', '')
         elif note.get('label') == 'Label Text':
             label_texts += ' ' + note.get('content', '')
@@ -179,22 +279,24 @@ def _process_image_list(
         tags,
         license_url=ZERO_URL
 ):
+    total_images = None
     for image_data in image_list:
         if (
                 image_data.get('type') == 'Images'
                 and image_data.get('usage', {}).get('access') == 'CC0'
         ):
-            image_store.add_item(
+            total_images = image_store.add_item(
                 foreign_landing_url=foreign_landing_url,
                 image_url=image_data.get('content'),
                 thumbnail_url=image_data.get('thumbnail'),
                 license_url=license_url,
                 foreign_identifier=image_data.get('idsId'),
                 title=title,
-                creator=None,
+                creator=creator,
                 meta_data=meta_data,
                 raw_tags=tags
             )
+    return total_images
 
 
 if __name__ == '__main__':
