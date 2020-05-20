@@ -269,11 +269,12 @@ def _get_load_table_name(
 
 def _get_malformed_row_in_file(error_msg):
     error_list = error_msg.splitlines()
-    copy_error = error_list[3]
-    assert copy_error.startswith('COPY'), copy_error
+    copy_error = next(
+        (line for line in error_list if line.startswith('COPY')), None
+    )
+    assert copy_error is not None
 
-    copy_error_info_list = copy_error.split(',')
-    line_number = int(copy_error_info_list[1].split(' ')[-1])
+    line_number = int(copy_error.split('line ')[1].split(',')[0])
 
     return line_number
 
