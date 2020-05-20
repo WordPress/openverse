@@ -82,6 +82,115 @@ def _get_batch_objects(
     return data
 
 
-def _handle_object_data(batch_data)
-    pass            
+def _handle_object_data(batch_data):
+    """
+    meta_data left
+    """
+    for obj_ in batch_data:
+        id_ = obj_.get("id")
+        links = obj_.get("links")
+        if links:
+            foreign_landing_url = links.get("self")
+        if foreign_landing_url is None:
+            continue
+        obj_attributes = obj_.get("attributes")
+        if obj_attributes is None:
+            continue
+        title = obj_attributes.get("summary_title")
+        creator = _get_creator_info(obj_attributes)
+        multimedia = obj_attributes.get("multimedia")
+        if multimedia is None:
+            continue
+        for image_data in multimedia:
+            processed = image_data.get("processed")
+            source = image_data.get("source")
+            image_url, height, width = _get_image_info(
+                processed
+            )
+            if image_url is None:
+                continue
 
+            license_version = _get_license_version(source)
+            if license_version is None:
+                continue
+            license_, version = license_version.split(" ")
+            thumbnail_url = _get_thumbnail_url(processed)
+
+
+def _get_creator_info(obj_attr):
+    creator_info = None
+    life_cycle = obj_attr.get("lifecycle")
+    if life_cycle:
+        creation = life_cycle.get("creation")
+        if type(creation) == list:
+            maker = creation[0].get("maker")
+            if type(maker) == list:
+                creator_info = maker[0].get("summary_title")
+    return creator_info
+
+
+def _get_image_info(processed):
+    if processed.get("large"):
+        image = processed.get("large").get("location")
+        measurements = processed.get("large").get("measurements")
+    elif processed.get("medium"):
+        image = processed.get("medium").get("location")
+        measurements = processed.get("medium").get("measurements")
+    else:
+        image = None
+        measurements = None
+    image = check_url(image)
+    height, width = _get_dimensions(measurements)
+    return image, height, width
+
+
+def _get_thumbnail_url(processed):
+    if processed.get("large_thumbnail"):
+        image = processed.get("large_thumbnail").get("location")
+    elif processed.get("medium_thumbnail"):
+        image = processed.get("medium_thumbnail").get("location")
+    elif processed.get("small_thumbnail"):
+        image = processed.get("small_thumbnail").get("location")
+    else:
+	    image = None
+    thumbnail_url = check_url(image)
+    return thumbnail_url
+
+
+def check_url(image_url):
+    base_url = "https://coimages.sciencemuseumgroup.org.uk/images/"
+    if image_url:
+        if "http" in image_url:
+            checked_url = image_url
+        else:
+            checked_url = base_url + image_url
+    else:
+        checked_url = None
+    return checked_url
+
+
+def _get_dimensions(measurements):
+    height_width = {}
+    if measurements:
+        dimensions = measurements.get("dimensions")
+        if dimensions:
+            for dim in dimensions:
+                height_width[
+                    dim.get("dimension")
+                ] = dim.get("value")
+    return height_width.get("height"), height_width.get("width")
+
+
+def _get_license_version(source):
+	license_version = None
+	if source:
+		legal = source.get("legal")
+		if legal:
+			rights = legal.get("rights")
+			if type(rights) == list:
+				license_version = rights[0].get("usage_terms")
+	return license_version
+
+
+def _get_metadata(obj_attr):
+    pass
