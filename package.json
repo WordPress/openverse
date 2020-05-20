@@ -4,7 +4,6 @@
   "description": "Common Creative search",
   "author": "sebworks",
   "private": true,
-  "type": "module",
   "scripts": {
     "server": "node server.js",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --progress",
@@ -118,5 +117,8 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "volta": {
+    "node": "8.17.0"
+  }
 }
