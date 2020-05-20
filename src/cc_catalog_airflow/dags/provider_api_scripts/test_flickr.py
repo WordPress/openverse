@@ -256,7 +256,7 @@ def test_extract_image_list_from_json_returns_nones_given_none_json():
 def test_process_image_data_with_real_example():
     image_data = _get_resource_json('image_data_complete_example.json')
     with patch.object(
-            flickr.image_store,
+            flickr.image_store_dict[flickr.DEFAULT_PROVIDER],
             'add_item',
             return_value=100
     ) as mock_add_item:
