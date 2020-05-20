@@ -1,5 +1,6 @@
 <template>
-  <div class="filters padding-vertical-big padding-left-big padding-right-normal">
+  <div class="filters padding-vertical-big padding-left-big padding-right-normal"
+       @click="hideLicenseExplanationVisibility()">
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
       <button class="filter-visibility-toggle is-white padding-vertical-small">
@@ -24,6 +25,15 @@
         <license-icons v-if="filterType == 'licenses'" :license="item.code" />
         {{ item.name }}
       </label>
+      <img  v-if="filterType == 'licenses'"
+            src="@/assets/help_icon.svg"
+            alt="help"
+            class="license-help is-pulled-right padding-top-smallest"
+            @click.stop="toggleLicenseExplanationVisibility(item.code)" />
+
+      <license-explanation-tooltip
+        v-if="shouldRenderLicenseExplanationTooltip(item.code)"
+        :license="licenseExplanationCode" />
     </div>
     </template>
     <template v-if="filtersVisible && filterType === 'mature'">
@@ -41,15 +51,21 @@
 
 <script>
 import LicenseIcons from '@/components/LicenseIcons';
+import LicenseExplanationTooltip from './LicenseExplanationTooltip';
 
 export default {
   name: 'filter-check-list',
   components: {
     LicenseIcons,
+    LicenseExplanationTooltip,
   },
   props: ['options', 'title', 'filterType', 'disabled', 'checked'],
   data() {
-    return { filtersVisible: false };
+    return {
+      filtersVisible: false,
+      licenseExplanationVisible: false,
+      licenseExplanationCode: '',
+    };
   },
   methods: {
     onValueChange(e) {
@@ -57,6 +73,16 @@ export default {
     },
     toggleFilterVisibility() {
       this.filtersVisible = !this.filtersVisible;
+    },
+    toggleLicenseExplanationVisibility(licenseCode) {
+      this.licenseExplanationVisible = !this.licenseExplanationVisible;
+      this.licenseExplanationCode = licenseCode;
+    },
+    hideLicenseExplanationVisibility() {
+      this.licenseExplanationVisible = false;
+    },
+    shouldRenderLicenseExplanationTooltip(licenseCode) {
+      return this.licenseExplanationVisible && this.licenseExplanationCode === licenseCode;
     },
   },
 };
@@ -86,6 +112,10 @@ export default {
 
 label {
   color: #333333;
+}
+
+.license-help {
+  cursor: pointer;
 }
 
 </style>
