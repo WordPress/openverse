@@ -1,5 +1,5 @@
 <template>
-  <div class="license-explanation-tooltip padding-small margin-top-small">
+  <div class="license-explanation-tooltip padding-small">
     <h5 class="b-header">License CC {{ license.toUpperCase() }}</h5>
 
     <license-explanations :license="license" />
@@ -19,6 +19,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "bulma/sass/utilities/_all.sass";
+
 // from http://www.cssarrowplease.com/
 .license-explanation-tooltip {
   position: absolute;
@@ -27,10 +29,23 @@ export default {
   z-index: 10;
   width: 20rem;
   box-shadow: 10px 10px 10px -10px rgba(0,0,0,0.25);
+  @include desktop {
+    margin-left: 20.5rem;
+    margin-top: -2.6rem;
+  }
+  @include touch {
+    margin-top: .5rem;
+  }
 }
 .license-explanation-tooltip:after, .license-explanation-tooltip:before {
-  bottom: 100%;
-  left: 10%;
+  @include desktop {
+    right: 100%;
+    top: 7%;
+  }
+  @include touch {
+    bottom: 100%;
+    left: 10%;
+  }
   border: solid transparent;
   content: " ";
   height: 0;
@@ -41,14 +56,28 @@ export default {
 
 .license-explanation-tooltip:after {
   border-color: rgba(255, 255, 255, 0);
-  border-bottom-color: #ffffff;
   border-width: 10px;
-  margin-left: 258px;
+
+  @include desktop {
+    border-right-color: #ffffff;
+    margin-top: 3px;
+  }
+  @include touch {
+    border-bottom-color: #ffffff;
+    margin-left: 258px;
+  }
 }
 .license-explanation-tooltip:before {
   border-color: rgba(120, 120, 120, 0);
-  border-bottom-color: #D8D8D8;
   border-width: 13px;
-  margin-left: 255px;
+
+  @include desktop {
+    border-right-color: #D8D8D8;
+    margin-top: 0px;
+  }
+  @include touch {
+    border-bottom-color: #D8D8D8;
+    margin-left: 255px;
+  }
 }
 </style>
