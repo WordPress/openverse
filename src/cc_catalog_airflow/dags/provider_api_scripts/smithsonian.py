@@ -31,6 +31,42 @@ DEFAULT_PARAMS = {
     'rows': LIMIT
 }
 RETRIES = 3
+# CREATOR_TYPES should have lower-case strings as keys, and integers as values.
+# The integers given the preference order of the different creator types, with
+# lower being more preferred. No preference is implied between two creator
+# types with the same integer value.
+CREATOR_TYPES = {
+    'artist': 0,
+    'artist/maker': 0,
+    'attributed to': 0,
+    'author': 0,
+    'created_by': 0,
+    'creator': 0,
+    'model maker': 0,
+    'photographer': 0,
+    'photograph by': 0,
+    'written by': 0,
+
+    'architect': 1,
+    'designer': 1,
+
+    'compiled by': 2,
+    'engraver': 2,
+    'etcher': 2,
+    'maker': 2,
+    'silversmith': 2,
+
+    'print maker': 3,
+    'after': 3,
+    'inventor': 0,
+
+    'manufactured by': 4,
+    'manufacturer': 4,
+    'published by': 4,
+    'publisher': 4,
+
+    'patentee': 5,
+}
 
 image_store = image.ImageStore(provider=PROVIDER)
 delayed_requester = requester.DelayedRequester(delay=DELAY)
@@ -209,29 +245,38 @@ def _get_foreign_landing_url(dnr_dict):
     return foreign_landing_url
 
 
-def _get_creator(indexed_structured, freetext):
-    creator_list = indexed_structured.get('name')
-    if not creator_list:
-        creator_list = freetext.get('name', [])
-    creator_string_list = [item for item in creator_list if type(item) == str]
-    if not creator_string_list:
-        creator_string_list = [
-            item['content']
-            for item in creator_list
-            if type(item) == dict and item.get('type', '') == 'personal_main'
-        ]
-    if not creator_string_list:
-        creator_string_list = [
-            item['content']
-            for item in creator_list
-            if type(item) == dict and (
-                    item.get('label', '') == 'Creator'
-                    or item.get('label', '') == 'Artist'
-            )
-        ]
+def _get_creator(
+        indexed_structured,
+        freetext,
+        creator_types=CREATOR_TYPES
+):
+    ordered_freetext_creator_objects = sorted(
+        [
+            i for i in freetext.get('name', [])
+            if type(i) == dict
+            and i.get('label', '').lower() in creator_types
+            and i.get('content')
+        ],
+        key=lambda x: creator_types[x['label'].lower()]
+    )
+    freetext_creator_generator = (
+        c['content'] for c in ordered_freetext_creator_objects
+    )
+    indexed_structured_creator_generator = (
+        i['content'] for i in indexed_structured.get('name', [])
+        if type(i) == dict
+        and i.get('type', '').lower() == 'personal_main'
+        and i.get('content')
+    )
 
-    creator = ' '.join(creator_string_list)
-
+    creator = next(freetext_creator_generator, None)
+    if creator is None:
+        logger.debug(f'No creator found in freetext:  {freetext}')
+        creator = next(indexed_structured_creator_generator, None)
+    if creator is None:
+        logger.debug(
+            f'No creator found in indexed_structured:  {indexed_structured}'
+        )
     return creator
 
 
@@ -244,6 +289,8 @@ def _extract_meta_data(descriptive_non_repeating, freetext):
         if note.get('label') == 'Description':
             description += ' ' + note.get('content', '')
         elif note.get('label') == 'Summary':
+            description += ' ' + note.get('content', '')
+        elif note.get('label') == 'Caption':
             description += ' ' + note.get('content', '')
         elif note.get('label') == 'Label Text':
             label_texts += ' ' + note.get('content', '')
