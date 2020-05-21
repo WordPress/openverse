@@ -1,5 +1,6 @@
 import findIndex from 'lodash.findindex';
-import { TOGGLE_FILTER } from './action-types';
+import { ExperimentData } from '@/abTests/filterVisibilityExperiment';
+import { TOGGLE_FILTER, CONVERT_AB_TEST_EXPERIMENT } from './action-types';
 import { SET_FILTER, SET_PROVIDERS_FILTERS, CLEAR_FILTERS, SET_FILTER_IS_VISIBLE } from './mutation-types';
 import { queryToFilterData, filtersToQueryData } from '../utils/searchQueryTransform';
 import { screenWidth } from '../utils/getBrowserInfo';
@@ -70,13 +71,17 @@ const initialState = (searchParams) => {
 };
 
 const actions = {
-  [TOGGLE_FILTER]({ commit, state }, params) {
+  [TOGGLE_FILTER]({ commit, state, dispatch }, params) {
     const filters = state.filters[params.filterType];
     const codeIdx = findIndex(filters, f => f.code === params.code);
 
     commit(SET_FILTER, {
       codeIdx,
       ...params,
+    });
+
+    dispatch(CONVERT_AB_TEST_EXPERIMENT, {
+      experimentName: ExperimentData.EXPERIMENT_NAME,
     });
   },
 };
