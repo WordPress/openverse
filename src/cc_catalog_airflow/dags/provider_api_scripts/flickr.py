@@ -72,8 +72,6 @@ DEFAULT_QUERY_PARAMS = {
 delayed_requester = DelayedRequester(DELAY)
 image_store_dict = {provider:image.ImageStore(provider=provider) for provider
                     in SUB_PROVIDERS.union({DEFAULT_PROVIDER})}
-image_store = image.ImageStore(provider=DEFAULT_PROVIDER)
-
 
 def main(date):
     logger.info(f'Processing Flickr API for date: {date}')
