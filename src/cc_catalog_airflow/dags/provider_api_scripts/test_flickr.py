@@ -512,3 +512,13 @@ def test_create_tags_list_returns_falsy_empty_tags():
     data = {'id': 'aslkjb', 'tags': ''}
     tags_list = flickr._create_tags_list(data)
     assert not tags_list
+
+
+def test_sub_provider_retrieval():
+    image_list = _get_resource_json('flickr_example_photo_list.json')
+    flickr._process_image_list(image_list)
+
+    assert len(flickr.image_store_dict['NASA HQ PHOTOS']._image_buffer) == 2
+    assert len(flickr.image_store_dict[flickr.DEFAULT_PROVIDER]._image_buffer
+               ) == 28
+
