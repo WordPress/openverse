@@ -407,6 +407,7 @@ describe('Filter Store', () => {
   describe('actions', () => {
     let state = null;
     let commitMock = null;
+    let dispatchMock = null;
     let actions = null;
 
     beforeEach(() => {
@@ -415,6 +416,7 @@ describe('Filter Store', () => {
         ...store.state(''),
       };
       commitMock = jest.fn();
+      dispatchMock = jest.fn();
       actions = store.actions;
     });
 
@@ -426,7 +428,7 @@ describe('Filter Store', () => {
 
       const params = { filterType: 'providers', code: 'flickr' };
 
-      actions[TOGGLE_FILTER]({ commit: commitMock, state }, params);
+      actions[TOGGLE_FILTER]({ commit: commitMock, dispatch: dispatchMock, state }, params);
 
       expect(commitMock).toHaveBeenCalledWith(SET_FILTER, {
         codeIdx: 1,

@@ -77,7 +77,8 @@ export default {
         exp => exp.name === ExperimentData.EXPERIMENT_NAME);
 
       if (idx >= 0) {
-        return this.$store.state.experiments[idx].case === ExperimentData.FILTERS_EXPANDED_EXPERIMENT;
+        const experiment = this.$store.state.experiments[idx];
+        return experiment.case === ExperimentData.FILTERS_EXPANDED_EXPERIMENT;
       }
       return false;
     },
