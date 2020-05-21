@@ -3,8 +3,9 @@
        @click="hideLicenseExplanationVisibility()">
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
-      <button class="filter-visibility-toggle is-white padding-vertical-small">
-        <i v-if="filtersVisible"
+      <button v-if="!filtersExpandedByDefault"
+              class="filter-visibility-toggle is-white padding-vertical-small">
+        <i v-if="areFiltersExpanded"
            class="icon angle-up rotImg is-size-5 has-text-grey-light"
            title="toggle filters visibility" />
         <i v-else
@@ -12,7 +13,7 @@
            title="toggle filters visibility" />
       </button>
     </div>
-    <template v-if="filtersVisible && options">
+    <template v-if="areFiltersExpanded && options">
     <div v-for="(item, index) in options" :key="index" class="margin-top-small">
       <label class="checkbox" :for="item.code">
         <input type="checkbox"
@@ -28,7 +29,7 @@
       <img  v-if="filterType == 'licenses'"
             src="@/assets/help_icon.svg"
             alt="help"
-            class="license-help is-pulled-right padding-top-smallest"
+            class="license-help is-pulled-right padding-top-smallest padding-right-smaller"
             @click.stop="toggleLicenseExplanationVisibility(item.code)" />
 
       <license-explanation-tooltip
@@ -36,7 +37,7 @@
         :license="licenseExplanationCode" />
     </div>
     </template>
-    <template v-if="filtersVisible && filterType === 'mature'">
+    <template v-if="areFiltersExpanded && filterType === 'mature'">
         <label class="checkbox margin-top-small" for="mature">
           <input id="mature"
                  class="filter-checkbox"
@@ -50,6 +51,8 @@
 </template>
 
 <script>
+import findIndex from 'lodash.findindex';
+import { ExperimentData } from '@/abTests/filterVisibilityExperiment';
 import LicenseIcons from '@/components/LicenseIcons';
 import LicenseExplanationTooltip from './LicenseExplanationTooltip';
 
@@ -66,6 +69,21 @@ export default {
       licenseExplanationVisible: false,
       licenseExplanationCode: '',
     };
+  },
+  computed: {
+    filtersExpandedByDefault() {
+      const idx = findIndex(
+        this.$store.state.experiments,
+        exp => exp.name === ExperimentData.EXPERIMENT_NAME);
+
+      if (idx >= 0) {
+        return this.$store.state.experiments[idx].case === ExperimentData.FILTERS_EXPANDED_EXPERIMENT;
+      }
+      return false;
+    },
+    areFiltersExpanded() {
+      return this.filtersExpandedByDefault || this.filtersVisible;
+    },
   },
   methods: {
     onValueChange(e) {
