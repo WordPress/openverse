@@ -18,14 +18,14 @@ delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
 
 HEADERS = {
-    "Accept":"application/json"
+    "Accept": "application/json"
 }
 
 DEFAULT_QUERY_PARAM = {
-    "has_image" : 1,
-	"image_license" : "CC",
-	"page[size]" : LIMIT,
-	"page[number]" : 1
+    "has_image": 1,
+    "image_license": "CC",
+    "page[size]": LIMIT,
+    "page[number]": 1
 }
 
 
@@ -41,13 +41,18 @@ def main():
             query_param=query_param
         )
         if batch_data:
-            image_count = _handle_object_data(batch_data)      
+            image_count = _handle_object_data(batch_data)
             page_number += 1
+            logger.info(
+                f"{image_count} images crawled from page : {page_number}"
+            )
         else:
             condition = False
     logger.info(f"Total pages crawled {page_number}")
-    
-        
+    image_count = image_store.commit()
+    logger.info(f"Total images : {image_count}")
+
+
 def _get_query_param(
         page_number=1,
         default_query_param=DEFAULT_QUERY_PARAM
@@ -75,7 +80,7 @@ def _get_batch_objects(
                 data = response_json.get("data")
                 break
             else:
-                data = None 
+                data = None
         except Exception as e:
             logger.error(f"Failed to due to {e}")
             data = None
@@ -83,12 +88,11 @@ def _get_batch_objects(
 
 
 def _handle_object_data(batch_data):
-    """
-    meta_data left
-    """
+    image_count = 0
     for obj_ in batch_data:
         id_ = obj_.get("id")
         links = obj_.get("links")
+
         if links:
             foreign_landing_url = links.get("self")
         if foreign_landing_url is None:
@@ -98,6 +102,7 @@ def _handle_object_data(batch_data):
             continue
         title = obj_attributes.get("summary_title")
         creator = _get_creator_info(obj_attributes)
+        metadata = _get_metadata(obj_attributes)
         multimedia = obj_attributes.get("multimedia")
         if multimedia is None:
             continue
@@ -113,8 +118,23 @@ def _handle_object_data(batch_data):
             license_version = _get_license_version(source)
             if license_version is None:
                 continue
-            license_, version = license_version.split(" ")
+            license_, version = license_version.lower().split(" ")
+            license_ = license_.replace("cc-", "")
             thumbnail_url = _get_thumbnail_url(processed)
+            image_count = image_store.add_item(
+                    foreign_identifier=id_,
+                    foreign_landing_url=foreign_landing_url,
+                    image_url=image_url,
+                    height=height,
+                    width=width,
+                    license_=license_,
+                    license_version=version,
+                    thumbnail_url=thumbnail_url,
+                    creator=creator,
+                    title=title,
+                    meta_data=metadata
+                    )
+    return image_count
 
 
 def _get_creator_info(obj_attr):
@@ -152,7 +172,7 @@ def _get_thumbnail_url(processed):
     elif processed.get("small_thumbnail"):
         image = processed.get("small_thumbnail").get("location")
     else:
-	    image = None
+        image = None
     thumbnail_url = check_url(image)
     return thumbnail_url
 
@@ -182,15 +202,35 @@ def _get_dimensions(measurements):
 
 
 def _get_license_version(source):
-	license_version = None
-	if source:
-		legal = source.get("legal")
-		if legal:
-			rights = legal.get("rights")
-			if type(rights) == list:
-				license_version = rights[0].get("usage_terms")
-	return license_version
+    license_version = None
+    if source:
+        legal = source.get("legal")
+        if legal:
+            rights = legal.get("rights")
+            if type(rights) == list:
+                license_version = rights[0].get("usage_terms")
+    return license_version
 
 
 def _get_metadata(obj_attr):
-    pass
+    metadata = {}
+    identifier = obj_attr.get("identifier")
+    if type(identifier) == list:
+        metadata["accession number"] = identifier[0].get("value")
+    name = obj_attr.get("name")
+    if type(name) == list:
+        metadata["name"] = name[0].get("value")
+    category = obj_attr.get("categories")
+    if type(category) == list:
+        metadata["category"] = category[0].get("value")
+    creditline = obj_attr.get("legal")
+    if type(creditline) == dict:
+        metadata["creditline"] = creditline.get("credit_line")
+    description = obj_attr.get("description")
+    if type(description) == list:
+        metadata["description"] = description[0].get("value")
+    return metadata
+
+
+if __name__ == "__main__":
+    main()

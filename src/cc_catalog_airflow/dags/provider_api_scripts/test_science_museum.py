@@ -25,10 +25,10 @@ def _get_resource_json(json_name):
 def test_get_query_param_default():
     actual_param = sm._get_query_param()
     expected_param = {
-        "has_image" : 1,
-        "image_license" : "CC",
-        "page[size]" : 100,
-        "page[number]" : 1
+        "has_image": 1,
+        "image_license": "CC",
+        "page[size]": 100,
+        "page[number]": 1
     }
 
     assert actual_param == expected_param
@@ -37,10 +37,10 @@ def test_get_query_param_default():
 def test_get_query_param_offset():
     actual_param = sm._get_query_param(page_number=10)
     expected_param = {
-        "has_image" : 1,
-        "image_license" : "CC",
-        "page[size]" : 100,
-        "page[number]" : 10
+        "has_image": 1,
+        "image_license": "CC",
+        "page[size]": 100,
+        "page[number]": 10
     }
 
     assert actual_param == expected_param
@@ -48,23 +48,23 @@ def test_get_query_param_offset():
 
 def test_get_batch_object_success():
     query_param = {
-    "has_image" : 1,
-	"image_license" : "CC",
-	"page[size]" : 1,
-	"page[number]" : 1
+        "has_image": 1,
+        "image_license": "CC",
+        "page[size]": 1,
+        "page[number]": 1
     }
     response = _get_resource_json("response_success.json")
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response)
     with patch.object(
-        sm.delay_request,
-        'get',
-        return_value=r) as mock_call:
+            sm.delay_request,
+            'get',
+            return_value=r) as mock_call:
         actual_response = sm._get_batch_objects(
             query_param=query_param
         )
-    
+
     expected_response = response.get("data")
 
     assert mock_call.call_count == 1
@@ -73,45 +73,45 @@ def test_get_batch_object_success():
 
 def test_get_batch_object_failure():
     query_param = {
-    "has_image" : 1,
-	"image_license" : "CC",
-	"page[size]" : 1,
-	"page[number]" : 51
+        "has_image": 1,
+        "image_license": "CC",
+        "page[size]": 1,
+        "page[number]": 51
     }
     response = _get_resource_json("response_failure.json")
     r = requests.Response()
     r.status_code = 400
     r.json = MagicMock(return_value=response)
     with patch.object(
-        sm.delay_request,
-        'get',
-        return_value=r) as mock_call:
+            sm.delay_request,
+            'get',
+            return_value=r) as mock_call:
         actual_response = sm._get_batch_objects(
             query_param=query_param
         )
-    
+
     expected_response = None
 
     assert mock_call.call_count == 3
     assert actual_response == expected_response
 
 
-def test_get_batch_object_error():
+def test_get_batch_object_no_response():
     query_param = {
-    "has_image" : 1,
-	"image_license" : "CC",
-	"page[size]" : 1,
-	"page[number]" : 1
-    }   
+        "has_image": 1,
+        "image_license": "CC",
+        "page[size]": 1,
+        "page[number]": 1
+    }
     response = None
     with patch.object(
-        sm.delay_request,
-        'get',
-        return_value=response) as mock_call:
+            sm.delay_request,
+            'get',
+            return_value=response) as mock_call:
         actual_response = sm._get_batch_objects(
             query_param=query_param
         )
-    
+
     expected_response = None
 
     assert mock_call.call_count == 3
@@ -166,9 +166,9 @@ def test_image_info_medium():
 def test_image_info_failure():
     actual_image, actual_height, actual_width = sm._get_image_info({})
 
-    assert actual_image == None
-    assert actual_height == None
-    assert actual_width == None
+    assert actual_image is None
+    assert actual_height is None
+    assert actual_width is None
 
 
 def test_thumbnail_large():
@@ -193,7 +193,7 @@ def test_thumbnail_small():
     thumbnail_small = _get_resource_json("thumbnail_small.json")
     actual_image = sm._get_thumbnail_url(thumbnail_small)
 
-    expected_image = "https://coimages.sciencemuseumgroup.org.uk/images/3/563/small_thumbnail_1999_0299_0001__0002_.jpg"   
+    expected_image = "https://coimages.sciencemuseumgroup.org.uk/images/3/563/small_thumbnail_1999_0299_0001__0002_.jpg"
 
     assert actual_image == expected_image
 
@@ -202,4 +202,95 @@ def test_thumbnail_failure():
     thumbmail = {}
     actual_image = sm._get_thumbnail_url(thumbmail)
 
-    assert actual_image == None
+    assert actual_image is None
+
+
+def test_check_relative_url():
+    rel_url = "3/563/large_thumbnail_1999_0299_0001__0002_.jpg"
+    actual_url = sm.check_url(rel_url)
+    expected_url = "https://coimages.sciencemuseumgroup.org.uk/images/3/563/large_thumbnail_1999_0299_0001__0002_.jpg"
+
+    assert actual_url == expected_url
+
+
+def test_check_complete_url():
+    url = "https://coimages.sciencemuseumgroup.org.uk/images/3/563/large_thumbnail_1999_0299_0001__0002_.jpg"
+    actual_url = sm.check_url(url)
+    expected_url = url
+
+    assert actual_url == expected_url
+
+
+def test_check_url_none():
+    url = None
+    actual_url = sm.check_url(url)
+
+    assert actual_url is None
+
+
+def test_get_dimensions():
+    measurements = _get_resource_json("measurements.json")
+    actual_height, actual_width = sm._get_dimensions(measurements)
+    expected_height, expected_width = (1022, 1536)
+
+    assert actual_height == expected_height
+    assert actual_width == expected_width
+
+
+def test_get_dimensions_none():
+    measurements = None
+    actual_height, actual_width = sm._get_dimensions(measurements)
+
+    assert actual_height is None
+    assert actual_width is None
+
+
+def test_get_license():
+    source = _get_resource_json("license_source.json")
+    actual_license_version = sm._get_license_version(source)
+    expected_license_version = "CC-BY-NC-SA 4.0"
+
+    assert actual_license_version == expected_license_version
+
+
+def test_get_license_none_type1():
+    source = None
+    actual_license_version = sm._get_license_version(source)
+
+    assert actual_license_version is None
+
+
+def test_get_license_none_type2():
+    source = {}
+    actual_license_version = sm._get_license_version(source)
+
+    assert actual_license_version is None
+
+
+def test_get_license_none_type3():
+    source = _get_resource_json("no_license.json")
+    actual_license_version = sm._get_license_version(source)
+
+    assert actual_license_version is None
+
+
+def test_get_metadata():
+    obj_attr = _get_resource_json("object_attr.json")
+    actual_metadata = sm._get_metadata(obj_attr)
+    expected_metadata = _get_resource_json("metadata.json")
+
+    assert actual_metadata == expected_metadata
+
+
+def test_handle_obj_data():
+    object_data = _get_resource_json("objects_data.json")
+    actual_image_count = sm._handle_object_data(object_data)
+
+    assert actual_image_count == 2
+
+
+def test_handle_obj_data_none():
+    object_data = []
+    actual_image_count = sm._handle_object_data(object_data)
+
+    assert actual_image_count == 0
