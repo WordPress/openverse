@@ -33,7 +33,7 @@
     </div>
     <div class="column image-info">
       <div class="margin-vertical-normal">
-        <h4 class="b-header">{{ image.title }}</h4>
+        <h5 class="b-header">{{ image.title }}</h5>
         <span v-if="image.creator" class="caption has-text-weight-semibold">
           by
           <a v-if="image.creator_url" :href="image.creator_url">
