@@ -3,18 +3,23 @@ import render from '../../test-utils/render';
 
 describe('SearchGrid', () => {
   let options = {};
+  let commitMock = null;
 
   beforeEach(() => {
+    commitMock = jest.fn();
     options = {
       propsData: {
         query: { q: 'foo' },
         includeAnalytics: true,
+        isFetchingImages: false,
       },
       mocks: {
         $store: {
           state: {
             imagesCount: 100,
+            imagePage: 1,
           },
+          commit: commitMock,
         },
       },
     };
@@ -27,7 +32,6 @@ describe('SearchGrid', () => {
   });
 
   it('doesnt render load more button if not loading images', () => {
-    options.propsData.isFetchingImages = false;
     const wrapper = render(SearchGrid, options);
     expect(wrapper.find('.load-more').element).toBeDefined();
   });
@@ -42,5 +46,24 @@ describe('SearchGrid', () => {
     options.propsData.isFetchingImages = true;
     const wrapper = render(SearchGrid, options);
     expect(wrapper.find({ name: 'loading-icon' }).vm).toBeDefined();
+  });
+
+  it('doesnt render load more button if not loading images', () => {
+    const wrapper = render(SearchGrid, options);
+    const button = wrapper.find('.button');
+    button.trigger('click');
+
+    expect(wrapper.emitted('onLoadMoreImages')[0]).toEqual([{
+      page: 2,
+      shouldPersistImages: true,
+      ...options.propsData.query,
+    }]);
+  });
+
+  it('sets image to empty array on search changed', () => {
+    const wrapper = render(SearchGrid, options);
+    wrapper.vm.searchChanged();
+
+    expect(commitMock).toHaveBeenCalledWith('SET_IMAGES', { images: [], page: 1 });
   });
 });

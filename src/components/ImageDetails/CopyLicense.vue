@@ -1,6 +1,6 @@
 <template>
   <div class="copy-license margin-vertical-normal">
-    <h5 class="b-header margin-bottom-small">Credit the Creator</h5>
+    <h5 class="b-header margin-bottom-normal">Credit the Creator</h5>
     <section class="tabs" >
         <ul>
           <li :class="tabClass(0, 'tab')">
