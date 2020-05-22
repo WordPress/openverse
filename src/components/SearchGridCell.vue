@@ -19,7 +19,7 @@
         <license-icons :license="image.license"></license-icons>
       </figcaption>
       <figcaption class="overlay overlay__bottom
-                        padding-vertical-smaller padding-horizontal-normal">
+                        padding-vertical-small padding-horizontal-normal">
           <span class="caption has-text-weight-semibold">{{ image.title }}</span>
       </figcaption>
     </figure>
