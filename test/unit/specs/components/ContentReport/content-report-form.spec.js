@@ -54,7 +54,6 @@ describe('ContentReportForm', () => {
   });
 
   it('should render dmca notice', () => {
-    storeState.$store.state.isReportSent = true;
     const wrapper = render(ContentReportForm, options);
     wrapper.setData({ selectedCopyright: true });
     expect(wrapper.find({ name: 'dmca-notice' }).vm).toBeDefined();
@@ -63,7 +62,7 @@ describe('ContentReportForm', () => {
   it('should render other type form', () => {
     const wrapper = render(ContentReportForm, options);
     wrapper.setData({ selectedOther: true });
-    expect(wrapper.find('.other-form').element).toBeDefined();
+    expect(wrapper.find({ name: 'other-issue-form' }).vm).toBeDefined();
   });
 
   it('should navigate to other form', () => {
@@ -73,21 +72,7 @@ describe('ContentReportForm', () => {
 
     const button = wrapper.find('.next-button');
     button.trigger('click');
-    expect(wrapper.find('.other-form').element).toBeDefined();
-  });
-
-  it('should dispatch SEND_CONTENT_REPORT on next when dmca is selected', () => {
-    const wrapper = render(ContentReportForm, options);
-    const radio = wrapper.find('#dmca');
-    radio.setChecked();
-
-    const button = wrapper.find('.next-button');
-    button.trigger('click');
-    expect(dispatchMock).toHaveBeenCalledWith('SEND_CONTENT_REPORT', {
-      identifier: props.imageId,
-      reason: 'dmca',
-      description: '',
-    });
+    expect(wrapper.find({ name: 'other-issue-form' }).vm).toBeDefined();
   });
 
   it('should dispatch SEND_CONTENT_REPORT on next when mature is selected', () => {
@@ -104,18 +89,21 @@ describe('ContentReportForm', () => {
     });
   });
 
+  it('should not dispatch SEND_CONTENT_REPORT on next when dmca is selected', () => {
+    const wrapper = render(ContentReportForm, options);
+    const radio = wrapper.find('#dmca');
+    radio.setChecked();
+
+    const button = wrapper.find('.next-button');
+    button.trigger('click');
+    expect(dispatchMock).not.toHaveBeenCalled();
+  });
+
   it('should dispatch SEND_CONTENT_REPORT on other form submit', () => {
     const wrapper = render(ContentReportForm, options);
-    const radio = wrapper.find('#other');
-    radio.setChecked();
-    wrapper.setData({ selectedOther: true });
-
-    const textarea = wrapper.find('.reason');
-    const description = 'Lorem Ipsum Lorem Ipsum';
-    textarea.setValue(description);
-
-    const button = wrapper.find('.submit-other-button');
-    button.trigger('click');
+    wrapper.setData({ selectedReason: 'other' });
+    const description = 'foo bar';
+    wrapper.vm.sendContentReport(description);
     expect(dispatchMock).toHaveBeenCalledWith('SEND_CONTENT_REPORT', {
       identifier: props.imageId,
       reason: 'other',
