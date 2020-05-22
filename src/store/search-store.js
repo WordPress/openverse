@@ -21,7 +21,6 @@ import {
   SET_COLLECTION_QUERY,
   SET_RELATED_IMAGES,
   IMAGE_NOT_FOUND,
-  RESET_QUERY,
   HANDLE_NO_IMAGES,
 } from './mutation-types';
 import { SEND_SEARCH_QUERY_EVENT, SEND_RESULT_CLICKED_EVENT } from './usage-data-analytics-types';
@@ -240,9 +239,6 @@ const mutations = redirect => ({
   },
   [SET_COLLECTION_QUERY](_state, params) {
     setQuery(_state, params, `/collections/${params.provider}`, redirect);
-  },
-  [RESET_QUERY](_state) {
-    _state.query = initialState('').query;
   },
   [IMAGE_NOT_FOUND]() {
     redirect({ path: '/not-found' }, true);
