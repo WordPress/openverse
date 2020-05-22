@@ -58,7 +58,7 @@ CREATOR_TYPES = {
 
     'print maker': 3,
     'after': 3,
-    'inventor': 0,
+    'inventor': 3,
 
     'manufactured by': 4,
     'manufacturer': 4,
@@ -67,6 +67,8 @@ CREATOR_TYPES = {
 
     'patentee': 5,
 }
+
+DESCRIPTION_TYPES = {'description', 'summary', 'caption'}
 
 image_store = image.ImageStore(provider=PROVIDER)
 delayed_requester = requester.DelayedRequester(delay=DELAY)
@@ -207,24 +209,15 @@ def _build_query_params(
 def _process_response_json(response_json):
     logger.debug('processing response')
     total_images = None
-    rows = response_json.get('response', {}).get('rows', [])
+    rows = _get_row_list(response_json)
     for row in rows:
-        content = row.get('content', {})
-        descriptive_non_repeating = content.get('descriptiveNonRepeating', {})
-        indexed_structured = content.get('indexedStructured', {})
-        freetext = content.get('freetext')
+        image_list = _get_image_list(row)
+        landing_url = _get_foreign_landing_url(row)
+        title = _get_title(row)
+        creator = _get_creator(row)
+        meta_data = _extract_meta_data(row)
+        tags = _extract_tags(row)
 
-        title = row.get('title')
-        landing_url = _get_foreign_landing_url(descriptive_non_repeating)
-        creator = _get_creator(indexed_structured, freetext)
-        meta_data = _extract_meta_data(descriptive_non_repeating, freetext)
-        tags = _extract_tags(indexed_structured)
-
-        image_list = (
-            descriptive_non_repeating
-            .get('online_media', {})
-            .get('media')
-        )
         if image_list is not None:
             total_images = _process_image_list(
                 image_list,
@@ -237,7 +230,26 @@ def _process_response_json(response_json):
     return total_images
 
 
-def _get_foreign_landing_url(dnr_dict):
+def _get_row_list(response_json):
+    rows = response_json.get('response', {}).get('rows')
+    if not rows or type(rows) != list:
+        logger.warning(f'No rows found in response_json: {response_json}')
+        rows = []
+    return rows
+
+
+def _get_image_list(row):
+    return _check_type(
+        _get_descriptive_non_repeating_dict(row)
+        .get('online_media', {})
+        .get('media'),
+        list
+    )
+
+
+def _get_foreign_landing_url(row):
+    logger.debug(f'getting foreign_landing_url from row')
+    dnr_dict = _get_descriptive_non_repeating_dict(row)
     foreign_landing_url = dnr_dict.get('record_link')
     if foreign_landing_url is None:
         foreign_landing_url = dnr_dict.get('guid')
@@ -245,17 +257,22 @@ def _get_foreign_landing_url(dnr_dict):
     return foreign_landing_url
 
 
+def _get_title(row):
+    return row.get('title')
+
+
 def _get_creator(
-        indexed_structured,
-        freetext,
+        row,
         creator_types=CREATOR_TYPES
 ):
+    freetext = _get_freetext_dict(row)
+    indexed_structured = _get_indexed_structured_dict(row)
     ordered_freetext_creator_objects = sorted(
         [
-            i for i in freetext.get('name', [])
+            i for i in _check_type(freetext.get('name'), list)
             if type(i) == dict
-            and i.get('label', '').lower() in creator_types
-            and i.get('content')
+            and _check_type(i.get('label'), str).lower() in creator_types
+            and _check_type(i.get('content'), str)
         ],
         key=lambda x: creator_types[x['label'].lower()]
     )
@@ -263,10 +280,10 @@ def _get_creator(
         c['content'] for c in ordered_freetext_creator_objects
     )
     indexed_structured_creator_generator = (
-        i['content'] for i in indexed_structured.get('name', [])
+        i['content'] for i in _check_type(indexed_structured.get('name'), list)
         if type(i) == dict
-        and i.get('type', '').lower() == 'personal_main'
-        and i.get('content')
+        and _check_type(i.get('type'), str).lower() == 'personal_main'
+        and _check_type(i.get('content'), str)
     )
 
     creator = next(freetext_creator_generator, None)
@@ -280,19 +297,21 @@ def _get_creator(
     return creator
 
 
-def _extract_meta_data(descriptive_non_repeating, freetext):
+def _extract_meta_data(
+        row,
+        description_types=DESCRIPTION_TYPES
+):
+    freetext = _get_freetext_dict(row)
+    descriptive_non_repeating = _get_descriptive_non_repeating_dict(row)
     description = ''
     label_texts = ''
-    notes = freetext.get('notes', [])
+    notes = _check_type(freetext.get('notes'), list)
 
     for note in notes:
-        if note.get('label') == 'Description':
+        label = note.get('label', '')
+        if label.lower() in description_types:
             description += ' ' + note.get('content', '')
-        elif note.get('label') == 'Summary':
-            description += ' ' + note.get('content', '')
-        elif note.get('label') == 'Caption':
-            description += ' ' + note.get('content', '')
-        elif note.get('label') == 'Label Text':
+        elif label.lower() == 'label text':
             label_texts += ' ' + note.get('content', '')
 
     meta_data = {
@@ -307,14 +326,54 @@ def _extract_meta_data(descriptive_non_repeating, freetext):
     return meta_data
 
 
-def _extract_tags(indexed_structured):
-    tags = (
-        indexed_structured.get('date', [])
-        + indexed_structured.get('object_type', [])
-        + indexed_structured.get('topic', [])
-        + indexed_structured.get('place', [])
+def _extract_tags(row):
+    indexed_structured = _get_indexed_structured_dict(row)
+    tags = sum(
+        [
+            _check_type(indexed_structured.get(key), list)
+            for key in ['date', 'object_type', 'topic', 'place']
+        ]
     )
     return tags if tags else None
+
+
+def _get_descriptive_non_repeating_dict(row):
+    logger.debug(f'getting descriptive_non_repeating_dict from row')
+    return _check_type(
+        _get_content_dict(row).get('descriptiveNonRepeating'),
+        dict
+    )
+
+
+def _get_indexed_structured_dict(row):
+    logger.debug(f'getting indexed_structured_dict from row')
+    return _check_type(
+        _get_content_dict(row).get('indexedStructured'),
+        dict
+    )
+
+
+def _get_freetext_dict(row):
+    logger.debug(f'getting indexed_structured_dict from row')
+    return _check_type(_get_content_dict(row).get('freetext'), dict)
+
+
+def _get_content_dict(row):
+    return _check_type(row.get('content'), dict)
+
+
+def _log_missing_pieces(row, **kwargs):
+    for arg in kwargs:
+        if not kwargs[arg]:
+            logger.info(f'Row {row} is missing {arg}')
+
+
+def _check_type(unknown_input, required_type):
+    logger.debug(f'Ensuring {unknown_input} is a truthy {required_type}')
+    if not unknown_input or type(unknown_input) != required_type:
+        logger.warning(f'Not a truthy {required_type}:  {unknown_input}.')
+        unknown_input = required_type()
+    return unknown_input
 
 
 def _process_image_list(
