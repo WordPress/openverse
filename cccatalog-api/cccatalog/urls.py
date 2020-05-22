@@ -75,7 +75,7 @@ After receiving your request, the API sends back an HTTP code as a response.
 | 400           | Bad Request           |  The request could not be understood by the server. Incoming parameters might not be valid |
 | 403           | Unauthorized          |    Forbidden |
 
-""" # noqa
+"""  # noqa
 
 
 logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
