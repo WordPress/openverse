@@ -311,8 +311,7 @@ def _extract_tags(row, tag_types=TAG_TYPES):
         _check_type(indexed_structured.get(key), list)
         for key in tag_types
     )
-    tags = [tag for tag_list in tag_lists_generator for tag in tag_list]
-    return tags if tags else None
+    return [tag for tag_list in tag_lists_generator for tag in tag_list if tag]
 
 
 def _get_descriptive_non_repeating_dict(row):
@@ -335,12 +334,6 @@ def _get_freetext_dict(row):
 
 def _get_content_dict(row):
     return _check_type(row.get('content'), dict)
-
-
-def _log_missing_pieces(row, **kwargs):
-    for arg in kwargs:
-        if not kwargs[arg]:
-            logger.info(f'Row {row} is missing {arg}')
 
 
 def _check_type(unknown_input, required_type):
