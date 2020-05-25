@@ -2,11 +2,11 @@
   <div class="photo columns is-desktop is-marginless">
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
       <a class="is-block photo_breadcrumb has-text-left margin-left-normal
-                margin-bottom-normal has-text-grey"
+                margin-bottom-normal has-text-grey-dark has-text-weight-semibold caption"
           :href="breadCrumbURL"
           @click.prevent="onGoBackToSearchResults"
           v-if="shouldShowBreadcrumb">
-          <img alt="back" class="back margin-right-small" src="@/assets/back_arrow.svg" />
+        <i class="icon chevron-left margin-right-small"/>
           Back to search results
       </a>
       <img @load="onImageLoad"
