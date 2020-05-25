@@ -21,7 +21,7 @@
     </div>
     <div class="margin-bottom-big">
       <h5 class="is-block margin-bottom-small b-header">License</h5>
-      <license-icons :image="image"></license-icons>
+      <license-icons :license="image.license"></license-icons>
       <a class="photo_license body-big" :href="ccLicenseURL">
       {{ fullLicenseName }}
       </a>

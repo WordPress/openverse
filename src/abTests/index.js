@@ -1,12 +1,12 @@
 import { JOINED_AB_TEST_EXPERIMENT } from '@/store/mutation-types';
 import createSixpackSession from './createSixpackSession';
-import filterButtonExperiment from './filterButtonExperiment';
+import filterVisibilityExperiment from './filterVisibilityExperiment';
 
 const setupExperiments = (store) => {
   const session = createSixpackSession(store.state.sessionId);
 
   const experimentPromises = [
-    filterButtonExperiment(session),
+    filterVisibilityExperiment(session),
   ];
 
   return Promise.all(experimentPromises).then(experiments => experiments.map(experiment =>
