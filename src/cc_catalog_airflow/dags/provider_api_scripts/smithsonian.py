@@ -209,7 +209,7 @@ def _process_response_json(response_json):
     rows = _get_row_list(response_json)
     for row in rows:
         image_list = _get_image_list(row)
-        if image_list is not None:
+        if image_list:
             total_images = _process_image_list(
                 image_list,
                 _get_foreign_landing_url(row),
@@ -226,12 +226,9 @@ def _get_row_list(response_json):
 
 
 def _get_image_list(row):
-    return _check_type(
-        _get_descriptive_non_repeating_dict(row)
-        .get('online_media', {})
-        .get('media'),
-        list
-    )
+    dnr_dict = _get_descriptive_non_repeating_dict(row)
+    online_media = _check_type(dnr_dict.get('online_media'), dict)
+    return _check_type(online_media.get('media'), list)
 
 
 def _get_foreign_landing_url(row):
@@ -289,22 +286,23 @@ def _extract_meta_data(row, description_types=DESCRIPTION_TYPES):
     notes = _check_type(freetext.get('notes'), list)
 
     for note in notes:
-        label = note.get('label', '')
-        if label.lower() in description_types:
-            description += ' ' + note.get('content', '')
-        elif label.lower() == 'label text':
-            label_texts += ' ' + note.get('content', '')
+        label = _check_type(note.get('label', ''), str)
+        if label.lower().strip() in description_types:
+            description += ' ' + _check_type(note.get('content', ''), str)
+        elif label.lower().strip() == 'label text':
+            label_texts += ' ' + _check_type(note.get('content', ''), str)
 
     meta_data = {
         'unit_code': descriptive_non_repeating.get('unit_code'),
         'data_source': descriptive_non_repeating.get('data_source')
     }
-    if description:
-        meta_data.update(description=description)
-    if label_texts:
-        meta_data.update(label_texts=label_texts)
 
-    return meta_data
+    if description:
+        meta_data.update(description=description.strip())
+    if label_texts:
+        meta_data.update(label_text=label_texts.strip())
+
+    return {k: v for (k, v) in meta_data.items() if v is not None}
 
 
 def _extract_tags(row, tag_types=TAG_TYPES):
@@ -385,6 +383,6 @@ def _process_image_list(
 if __name__ == '__main__':
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-        level=logging.DEBUG
+        level=logging.INFO
     )
     main()
