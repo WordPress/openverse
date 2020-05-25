@@ -29,7 +29,7 @@ def test_get_hash_prefixes_with_len_one():
 
 
 @pytest.mark.parametrize(
-    "input_int,expect_len,expect_first,expect_last",
+    'input_int,expect_len,expect_first,expect_last',
     [
         (1, 16, '0', 'f'),
         (2, 256, '00', 'ff'),
@@ -235,9 +235,9 @@ def test_process_response_json_with_no_rows_json():
 
 
 def test_process_response_json_uses_required_getters():
-    """
+    '''
     This test only checks for appropriate calls to getter functions
-    """
+    '''
     response_json = {'test key': 'test value'}
     row_list = ['row0', 'row1']
     image_lists = [['image', 'list', 'zero'], ['image', 'list', 'one']]
@@ -308,3 +308,629 @@ def test_get_row_list_with_no_rows():
     response_json = {'not': 'rows'}
     row_list = si._get_row_list(response_json)
     assert row_list == []
+
+
+@pytest.mark.parametrize(
+    'input_row_list,expect_row_list',
+    [
+        ([], []),
+        ('abc', []),  # wrong type
+        ({'key': 'val'}, []),  # wrong type
+        ([{'key', 'val'}], [{'key', 'val'}]),  # nested dict
+        ([{'key1', 'val1'}, 'abc'], [{'key1', 'val1'}, 'abc']),
+    ]
+)
+def test_get_row_list(input_row_list, expect_row_list):
+    response_json = {
+        'status': 200,
+        'responseCode': 1,
+        'response': {
+            'rows': input_row_list,
+            'rowCount': 734,
+            'message': 'content found'
+        }
+    }
+    actual_row_list = si._get_row_list(response_json)
+    assert actual_row_list == expect_row_list
+
+
+@pytest.mark.parametrize(
+    'input_dnr,expect_image_list',
+    [
+        ({}, []),
+        ({'non_media': {'media': ['image1', 'image2']}}, []),
+        ({'online_media': 'wrong type'}, []),
+        ({'online_media': ['wrong', 'type']}, []),
+        ({'online_media': {'media': 'wrong type'}}, []),
+        ({'online_media': {'media': {'wrong': 'type'}}}, []),
+        (
+            {
+                'record_ID': 'siris_arc_291918',
+                'online_media': {
+                    'mediaCount': 1,
+                    'media': ['image1', 'image2']
+                }
+            },
+            ['image1', 'image2']
+        ),
+    ]
+)
+def test_get_image_list(input_dnr, expect_image_list):
+    input_row = {'key': 'val'}
+    with patch.object(
+            si, '_get_descriptive_non_repeating_dict', return_value=input_dnr
+    ) as mock_dnr:
+        actual_image_list = si._get_image_list(input_row)
+    mock_dnr.assert_called_once_with(input_row)
+    assert actual_image_list == expect_image_list
+
+
+@pytest.mark.parametrize(
+    'input_dnr,expect_foreign_landing_url',
+    [
+        ({}, None),
+        (
+            {
+                'guid': 'http://fallback.com',
+                'unit_code': 'NMNHMAMMALS',
+                'record_link': 'http://chooseme.com',
+            },
+            'http://chooseme.com'
+        ),
+        ({'guid': 'http://fallback.com'}, 'http://fallback.com'),
+        ({'no': 'urlhere'}, None),
+    ]
+)
+def test_get_foreign_landing_url(input_dnr, expect_foreign_landing_url):
+    input_row = {'key': 'val'}
+    with patch.object(
+            si, '_get_descriptive_non_repeating_dict', return_value=input_dnr
+    ) as mock_dnr:
+        actual_foreign_landing_url = si._get_foreign_landing_url(input_row)
+    mock_dnr.assert_called_once_with(input_row)
+    assert actual_foreign_landing_url == expect_foreign_landing_url
+
+
+@pytest.mark.parametrize(
+    'input_row,expect_title',
+    [
+        ({}, None),
+        ({'id': 'abcde'}, None),
+        ({'title': 'my Title'}, 'my Title'),
+        ({'id': 'abcde', 'title': 'my Title'}, 'my Title'),
+    ]
+)
+def test_get_title(input_row, expect_title):
+    actual_title = si._get_title(input_row)
+    assert actual_title == expect_title
+
+
+@pytest.mark.parametrize(
+    'input_is,input_ft,expect_creator',
+    [
+        ({}, {}, None),
+        (
+            {'name': ['Alice']},
+            {},
+            None
+        ),
+        (
+            {'name': 'alice'},
+            {},
+            None
+        ),
+        (
+            {'name': [{'type': ['personal', 'main'], 'nocontent': 'Alice'}]},
+            {},
+            None
+        ),
+        (
+            {'name': [{'type': 'personal_main', 'nocontent': 'Alice'}]},
+            {},
+            None
+        ),
+        (
+            {'noname': [{'type': 'personal_main', 'content': 'Alice'}]},
+            {},
+            None
+        ),
+        (
+            {'name': [{'label': 'personal_main', 'content': 'Alice'}]},
+            {},
+            None
+        ),
+        (
+            {'name': [{'type': 'impersonal_main', 'content': 'Alice'}]},
+            {},
+            None
+        ),
+        (
+            {'name': [{'type': 'personal_main', 'content': 'Alice'}]},
+            {'name': 'Bob'},
+            'Alice'
+        ),
+        (
+            {'name': [{'type': 'personal_main', 'content': 'Alice'}]},
+            {'name': ['Bob']},
+            'Alice'
+        ),
+        (
+            {'name': [{'type': 'personal_main', 'content': 'Alice'}]},
+            {'name': [{'label': 'Creator', 'nocontent': 'Bob'}]},
+            'Alice'
+        ),
+        (
+            {'name': [{'type': 'personal_main', 'content': 'Alice'}]},
+            {'name': [{'nolabel': 'Creator', 'content': 'Bob'}]},
+            'Alice'
+        ),
+        (
+            {'name': [{'type': 'personal_main', 'content': 'Alice'}]},
+            {'name': [{'label': 'NotaCreator', 'content': 'Bob'}]},
+            'Alice'
+        ),
+        (
+            {'name': [{'type': 'personal_main', 'content': 'Alice'}]},
+            {'noname': [{'label': 'Creator', 'content': 'Bob'}]},
+            'Alice'
+        ),
+        (
+            {'name': [{'type': 'personal_main', 'content': 'Alice'}]},
+            {'name': [{'label': 'Creator', 'content': 'Bob'}]},
+            'Bob'
+        ),
+        (
+            {},
+            {
+                'name': [
+                    {'label': 'Designer', 'content': 'Alice'},
+                    {'label': 'Creator', 'content': 'Bob'}
+                ]
+            },
+            'Bob'
+        ),
+        (
+            {},
+            {
+                'name': [
+                    {'label': 'AFTER', 'content': 'Bob'},
+                    {'label': 'Designer', 'content': 'Alice'},
+                ]
+            },
+            'Alice'
+        ),
+        (
+            {},
+            {
+                'name': [
+                    {'label': 'AFTER', 'content': 'Bob'},
+                    {'label': 'DESIGNER', 'content': 'Alice'},
+                ]
+            },
+            'Alice'
+        ),
+        (
+            {
+                'name': [
+                    {'type': 'personal_main', 'content': 'Alice'},
+                    {'type': 'corporate_subj', 'content': 'Zoological Park'}
+                ]
+            },
+            {
+                'name': [
+                    {'label': 'Creator', 'content': 'Bob'},
+                    {'label': 'Subject', 'content': 'Zoological Park'}
+                ]
+            },
+            'Bob'
+        )
+    ]
+)
+def test_get_creator(input_is, input_ft, expect_creator):
+    creator_types = {
+        'creator': 0,
+        'designer': 1,
+        'after': 3
+    }
+    input_row = {'test': 'row'}
+    get_is = patch.object(
+            si, '_get_indexed_structured_dict', return_value=input_is
+    )
+    get_ft = patch.object(
+            si, '_get_freetext_dict', return_value=input_ft
+    )
+    with get_is as mock_is, get_ft as mock_ft:
+        actual_creator = si._get_creator(
+            input_row,
+            creator_types=creator_types
+        )
+
+    mock_is.assert_called_once_with(input_row)
+    mock_ft.assert_called_once_with(input_row)
+    assert actual_creator == expect_creator
+
+
+@pytest.mark.parametrize(
+    'input_ft,input_dnr,expect_description',
+    [
+        ({}, {}, None),
+        (
+            {'notes': [{'label': 'notthis', 'content': 'blah'}]},
+            {},
+            None
+        ),
+        (
+            {'notes': 'notalist'},
+            {},
+            None
+        ),
+        (
+            {'notes': [{'label': 'Summary', 'content': 'blah'}]},
+            {},
+            'blah'
+        ),
+        (
+            {
+                'notes': [
+                    {'label': 'Description', 'content': 'blah'},
+                    {'label': 'Summary', 'content': 'blah'},
+                    {'label': 'Description', 'content': 'blah'}
+                ]
+            },
+            {},
+            'blah blah blah'
+        ),
+        (
+            {
+                'notes': [
+                    {'label': 'notDescription', 'content': 'blah'},
+                    {'label': 'Summary', 'content': 'blah'},
+                    {'label': 'Description', 'content': 'blah'}
+                ]
+            },
+            {},
+            'blah blah'
+        ),
+    ]
+)
+def test_ext_meta_data_description(input_ft, input_dnr, expect_description):
+    description_types = {'description', 'summary'}
+    input_row = {'test': 'row'}
+    get_dnr = patch.object(
+            si, '_get_descriptive_non_repeating_dict', return_value=input_dnr
+    )
+    get_ft = patch.object(
+            si, '_get_freetext_dict', return_value=input_ft
+    )
+    with get_dnr as mock_dnr, get_ft as mock_ft:
+        meta_data = si._extract_meta_data(
+            input_row,
+            description_types=description_types
+        )
+    actual_description = meta_data.get('description')
+    mock_dnr.assert_called_once_with(input_row)
+    mock_ft.assert_called_once_with(input_row)
+    assert actual_description == expect_description
+
+
+@pytest.mark.parametrize(
+    'input_ft,input_dnr,expect_label_text',
+    [
+        ({}, {}, None),
+        (
+            {'notes': [{'label': 'notthis', 'content': 'blah'}]},
+            {},
+            None
+        ),
+        (
+            {'notes': 'notalist'},
+            {},
+            None
+        ),
+        (
+            {'notes': [{'label': 'Label Text', 'content': 'blah'}]},
+            {},
+            'blah'
+        ),
+        (
+            {
+                'notes': [
+                    {'label': 'Label Text', 'content': 'blah'},
+                    {'label': 'Summary', 'content': 'halb'},
+                    {'label': 'Description', 'content': 'halb'}
+                ]
+            },
+            {},
+            'blah'
+        ),
+    ]
+)
+def test_ext_meta_data_label_text(input_ft, input_dnr, expect_label_text):
+    input_row = {'test': 'row'}
+    get_dnr = patch.object(
+            si, '_get_descriptive_non_repeating_dict', return_value=input_dnr
+    )
+    get_ft = patch.object(
+            si, '_get_freetext_dict', return_value=input_ft
+    )
+    with get_dnr as mock_dnr, get_ft as mock_ft:
+        meta_data = si._extract_meta_data(input_row)
+    actual_label_text = meta_data.get('label_text')
+    mock_dnr.assert_called_once_with(input_row)
+    mock_ft.assert_called_once_with(input_row)
+    assert actual_label_text == expect_label_text
+
+
+@pytest.mark.parametrize(
+    'input_ft,input_dnr,expect_meta_data',
+    [
+        (
+            {'nothing': 'here'},
+            {'nothing_to': 'see'},
+            {}
+        ),
+        (
+            {},
+            {'unit_code': 'SIA'},
+            {'unit_code': 'SIA'}
+        ),
+        (
+            {},
+            {'data_source': 'Smithsonian Institution Archives'},
+            {'data_source': 'Smithsonian Institution Archives'},
+        ),
+    ]
+)
+def test_extract_meta_data_dnr_fields(input_ft, input_dnr, expect_meta_data):
+    input_row = {'test': 'row'}
+    get_dnr = patch.object(
+            si, '_get_descriptive_non_repeating_dict', return_value=input_dnr
+    )
+    get_ft = patch.object(
+            si, '_get_freetext_dict', return_value=input_ft
+    )
+    with get_dnr as mock_dnr, get_ft as mock_ft:
+        actual_meta_data = si._extract_meta_data(input_row)
+    mock_dnr.assert_called_once_with(input_row)
+    mock_ft.assert_called_once_with(input_row)
+    assert actual_meta_data == expect_meta_data
+
+
+@pytest.mark.parametrize(
+    'input_is,expect_tags',
+    [
+        (
+            {},
+            []
+        ),
+        (
+            {'nothing': 'here'},
+            []
+        ),
+        (
+            {
+                'date': ['', ''],
+                'place': ['Indian Ocean'],
+            },
+            ['Indian Ocean']
+        ),
+        (
+            {
+                'date': ['2000s'],
+                'object_type': ['Holotypes', 'Taxonomic type specimens'],
+                'topic': ['Paleogeneral', 'Protists'],
+                'place': ['Indian Ocean'],
+            },
+            [
+                '2000s', 'Holotypes', 'Taxonomic type specimens',
+                'Paleogeneral', 'Protists', 'Indian Ocean',
+            ]
+        ),
+    ]
+)
+def test_extract_tags(input_is, expect_tags):
+    input_row = {'test': 'row'}
+    get_is = patch.object(
+            si, '_get_indexed_structured_dict', return_value=input_is
+    )
+    with get_is as mock_is:
+        actual_tags = si._extract_tags(input_row)
+    mock_is.assert_called_once_with(input_row)
+    assert actual_tags == expect_tags
+
+
+@pytest.mark.parametrize(
+    'input_row,expect_dnr_dict',
+    [
+        ({}, {}),
+        ({'content': {'key': {'key2', 'val2'}}}, {}),
+        ({'noncontent': {'descriptiveNonRepeating': {'key2': 'val2'}}}, {}),
+        (
+            {'content': {'descriptiveNonRepeating': {'key2': 'val2'}}},
+            {'key2': 'val2'}
+        )
+    ]
+)
+def test_get_descriptive_non_repeating_dict(input_row, expect_dnr_dict):
+    actual_dnr_dict = si._get_descriptive_non_repeating_dict(input_row)
+    assert actual_dnr_dict == expect_dnr_dict
+
+
+@pytest.mark.parametrize(
+    'input_row,expect_ind_struc_dict',
+    [
+        ({}, {}),
+        ({'content': {'key': {'key2', 'val2'}}}, {}),
+        ({'noncontent': {'indexedStructured': {'key2': 'val2'}}}, {}),
+        (
+            {'content': {'indexedStructured': {'key2': 'val2'}}},
+            {'key2': 'val2'}
+        )
+    ]
+)
+def test_get_indexed_structured_dict(input_row, expect_ind_struc_dict):
+    actual_ind_struc_dict = si._get_indexed_structured_dict(input_row)
+    assert actual_ind_struc_dict == expect_ind_struc_dict
+
+
+@pytest.mark.parametrize(
+    'input_row,expect_freetext_dict',
+    [
+        ({}, {}),
+        ({'content': {'key': {'key2', 'val2'}}}, {}),
+        ({'noncontent': {'freetext': {'key2': 'val2'}}}, {}),
+        (
+            {'content': {'freetext': {'key2': 'val2'}}},
+            {'key2': 'val2'}
+        )
+    ]
+)
+def test_get_freetext_dict(input_row, expect_freetext_dict):
+    actual_freetext_dict = si._get_freetext_dict(input_row)
+    assert actual_freetext_dict == expect_freetext_dict
+
+
+
+
+@pytest.mark.parametrize(
+    'input_media,expect_calls',
+    [
+        ([], []),
+        (
+            [
+                {
+                    'thumbnail': 'https://thumbnail.one',
+                    'idsId': 'id_one',
+                    'usage': {
+                        'access': 'CC0'
+                    },
+                    'guid': 'http://gu.id.one',
+                    'type': 'Images',
+                    'content': 'https://image.url.one'
+                },
+                {
+                    'thumbnail': 'https://thumbnail.two',
+                    'idsId': 'id_two',
+                    'usage': {
+                        'access': 'CC0'
+                    },
+                    'guid': 'http://gu.id.two',
+                    'type': 'Images',
+                    'content': 'https://image.url.two'
+                }
+            ],
+            [
+                call(
+                    foreign_landing_url='https://foreignlanding.url',
+                    image_url='https://image.url.one',
+                    thumbnail_url='https://thumbnail.one',
+                    license_url='https://license.url',
+                    foreign_identifier='id_one',
+                    title='The Title',
+                    creator='Alice',
+                    meta_data={'meta': 'data'},
+                    raw_tags=['tag', 'list'],
+                ),
+                call(
+                    foreign_landing_url='https://foreignlanding.url',
+                    image_url='https://image.url.two',
+                    thumbnail_url='https://thumbnail.two',
+                    license_url='https://license.url',
+                    foreign_identifier='id_two',
+                    title='The Title',
+                    creator='Alice',
+                    meta_data={'meta': 'data'},
+                    raw_tags=['tag', 'list'],
+                )
+            ]
+        ),
+        (
+            [
+                {
+                    'thumbnail': 'https://thumbnail.one',
+                    'idsId': 'id_one',
+                    'usage': {
+                        'access': 'CC-BY'
+                    },
+                    'guid': 'http://gu.id.one',
+                    'type': 'Images',
+                    'content': 'https://image.url.one'
+                },
+                {
+                    'thumbnail': 'https://thumbnail.two',
+                    'idsId': 'id_two',
+                    'usage': {
+                        'access': 'CC0'
+                    },
+                    'guid': 'http://gu.id.two',
+                    'type': 'Images',
+                    'content': 'https://image.url.two'
+                }
+            ],
+            [
+                call(
+                    foreign_landing_url='https://foreignlanding.url',
+                    image_url='https://image.url.two',
+                    thumbnail_url='https://thumbnail.two',
+                    license_url='https://license.url',
+                    foreign_identifier='id_two',
+                    title='The Title',
+                    creator='Alice',
+                    meta_data={'meta': 'data'},
+                    raw_tags=['tag', 'list'],
+                )
+            ]
+        ),
+        (
+            [
+                {
+                    'thumbnail': 'https://thumbnail.one',
+                    'idsId': 'id_one',
+                    'usage': {
+                        'access': 'CC0'
+                    },
+                    'guid': 'http://gu.id.one',
+                    'type': 'Images',
+                    'content': 'https://image.url.one'
+                },
+                {
+                    'thumbnail': 'https://thumbnail.two',
+                    'idsId': 'id_two',
+                    'usage': {
+                        'access': 'CC0'
+                    },
+                    'guid': 'http://gu.id.two',
+                    'type': 'Audio',
+                    'content': 'https://image.url.two'
+                }
+            ],
+            [
+                call(
+                    foreign_landing_url='https://foreignlanding.url',
+                    image_url='https://image.url.one',
+                    thumbnail_url='https://thumbnail.one',
+                    license_url='https://license.url',
+                    foreign_identifier='id_one',
+                    title='The Title',
+                    creator='Alice',
+                    meta_data={'meta': 'data'},
+                    raw_tags=['tag', 'list'],
+                )
+            ]
+        )
+    ]
+)
+def test_process_image_list(input_media, expect_calls):
+    with patch.object(
+            si.image_store, 'add_item', return_value=10
+    ) as mock_add_item:
+        si._process_image_list(
+            input_media,
+            foreign_landing_url='https://foreignlanding.url',
+            title='The Title',
+            creator='Alice',
+            meta_data={'meta': 'data'},
+            tags=['tag', 'list'],
+            license_url='https://license.url'
+        )
+    assert expect_calls == mock_add_item.mock_calls
