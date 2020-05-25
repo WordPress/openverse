@@ -69,16 +69,13 @@ CREATOR_TYPES = {
 }
 
 DESCRIPTION_TYPES = {'description', 'summary', 'caption'}
+TAG_TYPES = ['date', 'object_type', 'topic', 'place']
 
 image_store = image.ImageStore(provider=PROVIDER)
 delayed_requester = requester.DelayedRequester(delay=DELAY)
 
 
 def main():
-    logging.basicConfig(
-        format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-        level=logging.INFO
-    )
     for hash_prefix in _get_hash_prefixes(HASH_PREFIX_LENGTH):
         total_rows = _process_hash_prefix(hash_prefix)
         logger.info(f'Total rows for {hash_prefix}:  {total_rows}')
@@ -248,7 +245,7 @@ def _get_image_list(row):
 
 
 def _get_foreign_landing_url(row):
-    logger.debug(f'getting foreign_landing_url from row')
+    logger.debug('Getting foreign_landing_url from row')
     dnr_dict = _get_descriptive_non_repeating_dict(row)
     foreign_landing_url = dnr_dict.get('record_link')
     if foreign_landing_url is None:
@@ -297,10 +294,7 @@ def _get_creator(
     return creator
 
 
-def _extract_meta_data(
-        row,
-        description_types=DESCRIPTION_TYPES
-):
+def _extract_meta_data(row, description_types=DESCRIPTION_TYPES):
     freetext = _get_freetext_dict(row)
     descriptive_non_repeating = _get_descriptive_non_repeating_dict(row)
     description = ''
@@ -326,19 +320,18 @@ def _extract_meta_data(
     return meta_data
 
 
-def _extract_tags(row):
+def _extract_tags(row, tag_types=TAG_TYPES):
     indexed_structured = _get_indexed_structured_dict(row)
-    tags = sum(
-        [
-            _check_type(indexed_structured.get(key), list)
-            for key in ['date', 'object_type', 'topic', 'place']
-        ]
+    tag_lists_generator = (
+        _check_type(indexed_structured.get(key), list)
+        for key in tag_types
     )
+    tags = [tag for tag_list in tag_lists_generator for tag in tag_list]
     return tags if tags else None
 
 
 def _get_descriptive_non_repeating_dict(row):
-    logger.debug(f'getting descriptive_non_repeating_dict from row')
+    logger.debug('Getting descriptive_non_repeating_dict from row')
     return _check_type(
         _get_content_dict(row).get('descriptiveNonRepeating'),
         dict
@@ -346,15 +339,12 @@ def _get_descriptive_non_repeating_dict(row):
 
 
 def _get_indexed_structured_dict(row):
-    logger.debug(f'getting indexed_structured_dict from row')
-    return _check_type(
-        _get_content_dict(row).get('indexedStructured'),
-        dict
-    )
+    logger.debug('Getting indexed_structured_dict from row')
+    return _check_type(_get_content_dict(row).get('indexedStructured'), dict)
 
 
 def _get_freetext_dict(row):
-    logger.debug(f'getting indexed_structured_dict from row')
+    logger.debug('Getting freetext_dict from row')
     return _check_type(_get_content_dict(row).get('freetext'), dict)
 
 
@@ -406,4 +396,8 @@ def _process_image_list(
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
+        level=logging.DEBUG
+    )
     main()
