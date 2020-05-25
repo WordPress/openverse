@@ -1,5 +1,5 @@
 <template>
-  <div class="reuse-survey caption has-text-weight-semibold margin-horizontal-small">
+  <div class="reuse-survey caption has-text-weight-semibold">
     How are you using this image?
     <a :href="formLink" target="_blank" rel="noopener" @click="onReuseSurveyClick">
       Let us know
