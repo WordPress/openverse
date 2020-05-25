@@ -13,13 +13,14 @@
                   :imageURL="imageURL"
                   :providerName="providerName" />
     <report-error v-else-if="reportFailed"/>
+
     <other-issue-form v-else-if="selectedOther"
                       @onBackClick="onBackClick()"
                       @sendContentReport="sendContentReport" />
     <form v-else>
-      <h4 class="b-header">Report this content</h4>
+      <h5 class="b-header margin-bottom-normal">Report this content</h5>
       <fieldset class="margin-bottom-normal">
-        <legend class="margin-bottom-small">What's the issue?</legend>
+        <legend class="margin-bottom-normal">What's the issue?</legend>
 
         <div>
           <input type="radio" name="type" id="dmca" value="dmca" v-model="selectedReason">
@@ -37,14 +38,14 @@
         </div>
       </fieldset>
 
-      <span class="caption has-text-weight-semibold has-text-grey">
+      <span class="caption has-text-weight-semibold has-text-grey margin-bottom-normal">
         For security purposes, CC collects and retains anonymized IP
         addresses of those who complete and submit this form.
       </span>
 
       <button type="button"
               :disabled="selectedReason === null"
-              class="button next-button tiny is-info margin-top-normal is-pulled-right"
+              class="button next-button tiny is-info is-pulled-right"
               @click="onIssueSelected()">
         Next
       </button>
