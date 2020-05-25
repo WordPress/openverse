@@ -14,8 +14,6 @@ The app uses [CC Vocabulary](https://github.com/creativecommons/vocabulary) as a
 
 ## Module structure
 
-Caveat: this section doesn't render well on Github (or any other Markdown viewer). It's better to read this in raw format or in a text editor.
-
 Below is a folder structure in the order recommended to understand how the app and its components are initialized.
 ```
  +-- src/
