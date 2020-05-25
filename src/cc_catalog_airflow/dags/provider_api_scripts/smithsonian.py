@@ -209,20 +209,14 @@ def _process_response_json(response_json):
     rows = _get_row_list(response_json)
     for row in rows:
         image_list = _get_image_list(row)
-        landing_url = _get_foreign_landing_url(row)
-        title = _get_title(row)
-        creator = _get_creator(row)
-        meta_data = _extract_meta_data(row)
-        tags = _extract_tags(row)
-
         if image_list is not None:
             total_images = _process_image_list(
                 image_list,
-                landing_url,
-                title,
-                creator,
-                meta_data,
-                tags
+                _get_foreign_landing_url(row),
+                _get_title(row),
+                _get_creator(row),
+                _extract_meta_data(row),
+                _extract_tags(row)
             )
     return total_images
 
@@ -254,10 +248,7 @@ def _get_title(row):
     return row.get('title')
 
 
-def _get_creator(
-        row,
-        creator_types=CREATOR_TYPES
-):
+def _get_creator(row, creator_types=CREATOR_TYPES):
     freetext = _get_freetext_dict(row)
     indexed_structured = _get_indexed_structured_dict(row)
     ordered_freetext_creator_objects = sorted(
