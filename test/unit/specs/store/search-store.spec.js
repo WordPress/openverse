@@ -9,7 +9,6 @@ import {
   SET_QUERY,
   SET_RELATED_IMAGES,
   IMAGE_NOT_FOUND,
-  RESET_QUERY,
 } from '@/store/mutation-types';
 import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES, FETCH_COLLECTION_IMAGES } from '@/store/action-types';
 
@@ -157,18 +156,6 @@ describe('Search Store', () => {
 
       expect(state.query.q).toBe('bar');
       expect(state.images).toEqual([]);
-    });
-
-    it('RESET_QUERY resets query to empty state', () => {
-      state.query = {
-        q: 'foo',
-        lt: 'commercial',
-      };
-      mutations[RESET_QUERY](state);
-
-      expect(state.query.q).toBe('');
-      expect(state.query.license_type).toBe('');
-      expect(state.isFilterApplied).toBeFalsy();
     });
 
     it('IMAGE_NOT_FOUND redirects to /not-found', () => {

@@ -6,3 +6,5 @@ english_name: CC Search
 technologies: JavaScript, Vue.js
 # Whether this repository should be featured on the CC Open Source site
 featured: true
+# Slack channel name
+slack: 'cc-search'
