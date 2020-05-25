@@ -228,11 +228,7 @@ def _process_response_json(response_json):
 
 
 def _get_row_list(response_json):
-    rows = response_json.get('response', {}).get('rows')
-    if not rows or type(rows) != list:
-        logger.warning(f'No rows found in response_json: {response_json}')
-        rows = []
-    return rows
+    return _check_type(response_json.get('response', {}).get('rows'), list)
 
 
 def _get_image_list(row):
