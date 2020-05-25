@@ -212,16 +212,85 @@ def test_build_query_params():
     }
 
 
-def test_process_response_json():
-    with open(os.path.join(RESOURCES, 'actual_response.json')) as f:
-        response_json = json.loads(f.read())
+def test_process_response_json_with_no_rows_json():
+    response_json = {
+        'status': 200,
+        'responseCode': 1,
+        'response': {
+            'norows': ['abc', 'def'],
+            'rowCount': 2,
+            'message': 'content found'
+        }
+    }
+    patch_process_image_list = patch.object(
+        si,
+        '_process_image_list',
+        return_value=2
+    )
 
-    with patch.object(
-            si.image_store,
-            'add_item',
-            return_value=9
-    ) as mock_add_item:
+    with patch_process_image_list as mock_process_image_list:
         si._process_response_json(response_json)
 
-    for c in mock_add_item.call_args_list:
-        print(c)
+    mock_process_image_list.assert_not_called()
+
+
+def test_process_response_json_uses_row_list_getter_function():
+    """
+    This test only checks for appropriate calls to _get_row_list
+    """
+    response_json = {
+        'test key': 'test value'
+    }
+    patch_get_row_list = patch.object(
+        si,
+        '_get_row_list',
+        return_value=[]
+    )
+
+    with patch_get_row_list as mock_get_row_list:
+        si._process_response_json(response_json)
+
+    mock_get_row_list.assert_called_once_with(response_json)
+
+
+def test_process_response_json_uses_required_getters():
+    """
+    This test only checks for appropriate calls to _get_row_list
+    """
+    response_json = {}
+    patch_get_row_list = patch.object(
+        si,
+        '_get_row_list',
+        return_value=['row1', 'row2']
+    )
+    patch_process_image_list = patch.object(
+        si,
+        '_process_image_list',
+        return_value=2
+    )
+    get_image_list = patch.object(si, '_get_image_list', return_value=None)
+    get_flu = patch.object(si, '_get_foreign_landing_url', return_value=None)
+    get_title = patch.object(si, '_get_title', return_value=None)
+    get_creator = patch.object(si, '_get_creator', return_value=None)
+    ext_meta_data = patch.object(si, '_extract_meta_data', return_value=None)
+    ext_tags = patch.object(si, '_extract_tags', return_value=None)
+
+    with\
+            patch_get_row_list as mock_get_row_list,\
+            get_image_list as mock_get_image_list,\
+            get_flu as mock_get_foreign_landing_url,\
+            get_title as mock_get_title,\
+            get_creator as mock_get_creator,\
+            ext_meta_data as mock_extract_meta_data,\
+            ext_tags as mock_extract_tags,\
+            patch_process_image_list as mock_process_image_list:
+        si._process_response_json(response_json)
+
+    calls_list = [call('row1'), call('row2')]
+    mock_get_row_list.assert_called_once_with(response_json)
+    mock_process_image_list.assert_not_called()
+    mock_get_foreign_landing_url.assert_has_calls(calls_list)
+    mock_get_title.assert_has_calls(calls_list)
+    mock_get_creator.assert_has_calls(calls_list)
+    mock_extract_meta_data.assert_has_calls(calls_list)
+    mock_extract_tags.assert_has_calls(calls_list)
