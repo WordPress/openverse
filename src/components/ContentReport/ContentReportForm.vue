@@ -40,8 +40,8 @@
 
       <button type="button"
               :disabled="selectedReason === null"
-              :class="button next-button tiny is-info is-pulled-right
-              has-background-grey-lighter has-text-grey-light"
+              class="button next-button tiny is-info is-pulled-right
+                     has-background-grey-lighter has-text-grey-light"
               @click="onIssueSelected()">
         Next
       </button>
