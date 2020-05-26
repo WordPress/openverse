@@ -24,7 +24,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-DAG_ID = 'wikimedia_commons_ingestion_workflow'
+DAG_ID = 'wikimedia_ingestion_workflow'
 START_DATE = datetime(1970, 1, 1)
 INGESTION_TASK_TIMEOUT = timedelta(minutes=90)
 
