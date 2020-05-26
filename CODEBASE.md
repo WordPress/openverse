@@ -14,11 +14,9 @@ The app uses [CC Vocabulary](https://github.com/creativecommons/vocabulary) as a
 
 ## Module structure
 
-Caveat: this section doesn't render well on Github (or any other Markdown viewer). It's better to read this in raw format or in a text editor.
-
 Below is a folder structure in the order recommended to understand how the app and its components are initialized.
-
--- src/
+```
+ +-- src/
  |
  |-- main.js
  |     Main entry point of the app. Initializes the base modules such as analytics, stores and routing system. Renders the root component.
@@ -56,7 +54,7 @@ Below is a folder structure in the order recommended to understand how the app a
  |     Where the static assets are stored. Assets include the source providers' logos and the CC license icons SVGs, which are used in the HTML embed feature.
  |     None of these files should be removed, unless a source provider is forever removed, then its logo image can probably be safely deleted.
  |
-
+```
 
 ## Server side rendering
 
