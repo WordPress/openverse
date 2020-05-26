@@ -1,57 +1,28 @@
-from datetime import datetime, timedelta
-
-from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
+"""
+This file configures the Apache Airflow DAG to (re)ingest Flickr data.
+"""
+# airflow DAG (necessary for Airflow to find this file)
+from datetime import datetime
+import logging
 
 from provider_api_scripts import flickr
-from util.operator_util import get_log_operator
+from util.dag_factory import create_provider_api_workflow
+
+logging.basicConfig(
+    format='%(asctime)s: [%(levelname)s - DAG Loader] %(message)s',
+    level=logging.DEBUG)
 
 
-DAG_DEFAULT_ARGS = {
-    'owner': 'data-eng-admin',
-    'depends_on_past': False,
-    'start_date': datetime(1970, 1, 1),
-    'email_on_retry': False,
-    'retries': 3,
-    'retry_delay': timedelta(minutes=15),
-}
+logger = logging.getLogger(__name__)
 
 DAG_ID = 'flickr_workflow'
 
-
-def get_runner_operator(dag):
-    return PythonOperator(
-        task_id='pull_flickr_data',
-        python_callable=flickr.main,
-        op_args=['{{ ds }}'],
-        depends_on_past=False,
-        dag=dag
-    )
-
-
-def create_dag():
-    dag = DAG(
-        dag_id=DAG_ID,
-        default_args=DAG_DEFAULT_ARGS,
-        # It is important that we don't run the Flickr job in parallel;
-        # Otherwise, we might blow through the rate limit
-        concurrency=1,
-        max_active_runs=1,
-        # Flickr has a few images which claim to be uploaded at Unix
-        # Timestamp 0 (1 Jan 1970)
-        start_date=datetime(1970, 1, 1),
-        schedule_interval='@daily',
-        catchup=False,
-    )
-
-    with dag:
-        start_task = get_log_operator(dag, DAG_ID, 'Starting')
-        run_task = get_runner_operator(dag)
-        end_task = get_log_operator(dag, DAG_ID, 'Finished')
-
-        start_task >> run_task >> end_task
-
-    return dag
-
-
-globals()[DAG_ID] = create_dag()
+globals()[DAG_ID] = create_provider_api_workflow(
+    DAG_ID,
+    flickr.main,
+    start_date=datetime(1970, 1, 1),
+    concurrency=1,
+    schedule_string='@daily',
+    dated=True,
+    day_shift=0
+)
