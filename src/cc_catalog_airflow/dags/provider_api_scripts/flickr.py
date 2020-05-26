@@ -262,7 +262,7 @@ def _process_image_data(image_data):
         logger.warning('No foreign_id in image_data!')
     foreign_landing_url = _build_foreign_landing_url(creator_url, foreign_id)
     creator = image_data.get('ownername')
-
+    source = DEFAULT_PROVIDER if creator in image_store_dict else None
     image_store = image_store_dict.get(creator,
                                        image_store_dict[DEFAULT_PROVIDER])
     return image_store.add_item(
@@ -279,6 +279,7 @@ def _process_image_data(image_data):
         title=image_data.get('title'),
         meta_data=_create_meta_data_dict(image_data),
         raw_tags=_create_tags_list(image_data),
+        source=source
     )
 
 

@@ -289,7 +289,8 @@ def test_process_image_data_with_real_example():
             'nature',
             'scuba',
             'underwater'
-        ]
+        ],
+        source=None
     )
     assert total_images == 100
 
