@@ -26,7 +26,7 @@
                       @filterChanged="onUpdateFilter" />
     <filter-check-list v-if="renderProvidersFilter"
                       :options="filters.providers"
-                      title="Collections"
+                      title="Sources"
                       filterType="providers"
                       @filterChanged="onUpdateFilter" />
     <filter-check-list :options="filters.categories"

@@ -1,6 +1,6 @@
-const EXPERIMENT_NAME = 'filter_experiment';
-const ORIGINAL_FILTER_BUTTON_EXPERIMENT = 'original_filter_button_experiment';
-const FILTER_BUTTON_NEW_POSITION_EXPERIMENT = 'filter_button_new_position_experiment';
+const EXPERIMENT_NAME = 'filter_visibility_experiment';
+const FILTERS_EXPANDED_EXPERIMENT = 'filters_expanded_experiment';
+const FILTERS_COLLAPSED_EXPERIMENT = 'filters_collapsed_experiment';
 
 /**
  * Joins the experiment.
@@ -12,13 +12,13 @@ const FILTER_BUTTON_NEW_POSITION_EXPERIMENT = 'filter_button_new_position_experi
 const joinExperiment = (session) => {
   const resultPromise = new Promise((resolve, reject) => {
     session.participate(EXPERIMENT_NAME,
-      [ORIGINAL_FILTER_BUTTON_EXPERIMENT, FILTER_BUTTON_NEW_POSITION_EXPERIMENT],
+      [FILTERS_EXPANDED_EXPERIMENT, FILTERS_COLLAPSED_EXPERIMENT],
       (err, res) => {
         if (err || res.error) {
           reject({
             error: err,
             name: EXPERIMENT_NAME,
-            case: ORIGINAL_FILTER_BUTTON_EXPERIMENT,
+            case: FILTERS_COLLAPSED_EXPERIMENT,
             session,
           });
         }
@@ -39,6 +39,6 @@ const joinExperiment = (session) => {
 export default joinExperiment;
 export const ExperimentData = {
   EXPERIMENT_NAME,
-  ORIGINAL_FILTER_BUTTON_EXPERIMENT,
-  FILTER_BUTTON_NEW_POSITION_EXPERIMENT,
+  FILTERS_EXPANDED_EXPERIMENT,
+  FILTERS_COLLAPSED_EXPERIMENT,
 };
