@@ -12,4 +12,5 @@ jobs:
           docker-compose up -d
       - name: Test
         run: |
+          sleep 10
           docker exec cc_catalog_airflow_webserver_1 /usr/local/airflow/.local/bin/pytest
