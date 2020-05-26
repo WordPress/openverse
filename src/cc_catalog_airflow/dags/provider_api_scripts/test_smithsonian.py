@@ -790,8 +790,6 @@ def test_get_freetext_dict(input_row, expect_freetext_dict):
     assert actual_freetext_dict == expect_freetext_dict
 
 
-
-
 @pytest.mark.parametrize(
     'input_media,expect_calls',
     [

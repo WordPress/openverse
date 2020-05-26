@@ -76,6 +76,13 @@ delayed_requester = requester.DelayedRequester(delay=DELAY)
 
 
 def main():
+    """
+    This script loops through all hash prefixes of a specified length,
+    gathering metadata for each prefix in turn. A 'hash prefix' is
+    defined as a search query that finds all objects whose hash ID
+    starts with some string of hexits of a specified length (e.g.,
+    '0a2*' is a hash prefix of length 3).
+    """
     for hash_prefix in _get_hash_prefixes(HASH_PREFIX_LENGTH):
         total_rows = _process_hash_prefix(hash_prefix)
         logger.info(f'Total rows for {hash_prefix}:  {total_rows}')
@@ -91,13 +98,11 @@ def gather_samples(
     """
     Gather random samples of the rows from each 'unit' at the SI.
 
-    These units are treated separately since they have somewhat different data
-    formats.
+    These units are treated separately since they have somewhat
+    different data formats.
+
+    This function is for gathering test data only, and is untested.
     """
-    logging.basicConfig(
-        format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-        level=logging.INFO
-    )
     now_str = datetime.strftime(datetime.now(), '%Y%m%d%H%M%S')
     sample_dir = os.path.join(target_dir, f'si_samples_{now_str}')
     logger.info(f'Creating sample_dir {sample_dir}')
@@ -118,6 +123,9 @@ def _gather_unit_sample(
         retries=RETRIES,
         endpoint=SEARCH_ENDPOINT
 ):
+    """
+    This function is for gathering test data only, and is untested.
+    """
     logger.info(f'gathering sample for unit {unit}')
     for hash_prefix in [None, 'a', 'aa', 'aaa', 'aaaa', 'aaaaa']:
         query_params = _build_query_params(
@@ -308,8 +316,7 @@ def _extract_meta_data(row, description_types=DESCRIPTION_TYPES):
 def _extract_tags(row, tag_types=TAG_TYPES):
     indexed_structured = _get_indexed_structured_dict(row)
     tag_lists_generator = (
-        _check_type(indexed_structured.get(key), list)
-        for key in tag_types
+        _check_type(indexed_structured.get(key), list) for key in tag_types
     )
     return [tag for tag_list in tag_lists_generator for tag in tag_list if tag]
 
@@ -337,11 +344,40 @@ def _get_content_dict(row):
 
 
 def _check_type(unknown_input, required_type):
-    logger.debug(f'Ensuring {unknown_input} is a truthy {required_type}')
-    if not unknown_input or type(unknown_input) != required_type:
-        logger.debug(f'Not a truthy {required_type}:  {unknown_input}.')
-        unknown_input = required_type()
-    return unknown_input
+    """
+    This function ensures that the input is of the required type.
+
+    Required Arguments:
+
+    unknown_input:  This can be anything
+    required_type:  built-in type name/constructor
+
+    This function will check whether the unknown_input is of type
+    required_type. If it is, it returns the unknown_input value
+    unchanged. If not, will return the DEFAULT VALUE FOR THE TYPE
+    required_type. So, if unknown_input is a float 3.0 and the
+    required_type is int, this function will return 0.
+
+    This function will work for required_type in:
+    str, int, float, complex, list, tuple, dict, set, bool, and bytes.
+
+    This function will create a relatively high-level log message
+    whenever it has to initialize a default value for type
+    required_type.
+    """
+    logger.debug(f"Ensuring {unknown_input} is of type {required_type}")
+    if unknown_input is None:
+        logger.debug(f"{unknown_input} is of type {type(unknown_input)}.")
+        typed_input = required_type()
+    elif type(unknown_input) != required_type:
+        logger.info(
+            f"{unknown_input} is of type {type(unknown_input)}"
+            f" rather than {required_type}."
+        )
+        typed_input = required_type()
+    else:
+        typed_input = unknown_input
+    return typed_input
 
 
 def _process_image_list(
