@@ -80,7 +80,7 @@ def create_provider_api_workflow(
                 day_shift=day_shift
             )
         else:
-            run_task = ops.get_runner_operator(dag, main_function)
+            run_task = ops.get_main_runner_operator(dag, main_function)
         end_task = ops.get_log_operator(dag, dag.dag_id, 'Finished')
 
         start_task >> run_task >> end_task
