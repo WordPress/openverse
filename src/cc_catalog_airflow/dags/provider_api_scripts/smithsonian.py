@@ -339,7 +339,7 @@ def _get_content_dict(row):
 def _check_type(unknown_input, required_type):
     logger.debug(f'Ensuring {unknown_input} is a truthy {required_type}')
     if not unknown_input or type(unknown_input) != required_type:
-        logger.warning(f'Not a truthy {required_type}:  {unknown_input}.')
+        logger.debug(f'Not a truthy {required_type}:  {unknown_input}.')
         unknown_input = required_type()
     return unknown_input
 
