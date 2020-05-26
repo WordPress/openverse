@@ -2,11 +2,11 @@
 This file configures the Apache Airflow DAG to ingest and reingest
 Wikimedia Commons data according to the following strategy:
 
-We run `flickr.main` with a number of different date parameters. For
-each of these parameters, `flickr.main` should ingest the metadata
-associated with photos uploaded on that date.  The dates to ingest are
-calculated using the `util.helpers.get_reingestion_day_list_list`
-method.
+We run `wikimedia_commons.main` with a number of different date
+parameters. For each of these parameters, `wikimedia_commons.main`
+should ingest the metadata associated with photos uploaded on that date.
+The dates to ingest are calculated using the
+`util.helpers.get_reingestion_day_list_list` method.
 """
 # airflow DAG (necessary for Airflow to find this file)
 
