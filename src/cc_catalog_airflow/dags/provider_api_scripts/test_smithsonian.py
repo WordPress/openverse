@@ -791,6 +791,77 @@ def test_get_freetext_dict(input_row, expect_freetext_dict):
 
 
 @pytest.mark.parametrize(
+    'required_type,default_input',
+    [
+        (str, ''),
+        (int, 0),
+        (float, 0.0),
+        (complex, 0j), (list, []),
+        (tuple, ()),
+        (dict, {}),
+        (set, set()),
+        (bool, False),
+        (bytes, b'')
+    ]
+)
+def test_check_type_with_defaults(required_type, default_input):
+    assert si._check_type(default_input, required_type) == default_input
+
+
+@pytest.mark.parametrize(
+    'required_type,good_input',
+    [
+        (str, 'abc'),
+        (int, 5),
+        (float, 1.2),
+        (complex, 3+2j),
+        (list, ['a', 2, 0, False]),
+        (tuple, (1, 0, False)),
+        (dict, {'key': 'val', 'f': False}),
+        (set, {1, False, 'abc'}),
+        (bool, True),
+        (bytes, b'abc')
+    ]
+)
+def test_check_type_with_truthy_good_inputs(required_type, good_input):
+    assert si._check_type(good_input, required_type) == good_input
+
+
+@pytest.mark.parametrize(
+    'required_type,good_indices,default',
+    [
+        (str, (0, 1), ''),
+        (int, (2, 3), 0),
+        (float, (4, 5), 0.0),
+        (complex, (6, 7), 0j),
+        (list, (8, 9), []),
+        (tuple, (10, 11), ()),
+        (dict, (12, 13), {}),
+        (set, (14, 15), set()),
+        (bool, (16, 17), False),
+        (bytes, (18, 19), b'')
+    ]
+)
+def test_check_type_with_bad_inputs(required_type, good_indices, default):
+    bad_input_list = [
+        'abc', '',
+        5, 0,
+        1.2, 0.0,
+        3+2j, 0j,
+        ['a', 2], [],
+        (1, 2), (),
+        {'key': 'val'}, {},
+        {1, 'abc'}, set(),
+        True, False,
+        b'abc', b''
+    ]
+    for i in sorted(good_indices, reverse=True):
+        del bad_input_list[i]
+    for bad_input in bad_input_list:
+        assert si._check_type(bad_input, required_type) == default
+
+
+@pytest.mark.parametrize(
     'input_media,expect_calls',
     [
         ([], []),
