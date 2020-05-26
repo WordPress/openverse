@@ -1,8 +1,12 @@
 from collections import namedtuple
 import json
 import os
+import socket
 import time
+from urllib.parse import urlparse
 
+
+import boto3
 import psycopg2
 import pytest
 
@@ -13,6 +17,11 @@ POSTGRES_CONN_ID = os.getenv('TEST_CONN_ID')
 POSTGRES_TEST_URI = os.getenv('AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING')
 TEST_LOAD_TABLE = f'provider_image_data{TEST_ID}'
 TEST_IMAGE_TABLE = f'image_{TEST_ID}'
+S3_LOCAL_ENDPOINT = os.getenv('S3_LOCAL_ENDPOINT')
+S3_TEST_BUCKET = f'cccatalog-storage-{TEST_ID}'
+ACCESS_KEY = os.getenv('TEST_ACCESS_KEY')
+SECRET_KEY = os.getenv('TEST_SECRET_KEY')
+S3_HOST = socket.gethostbyname(urlparse(S3_LOCAL_ENDPOINT).hostname)
 
 
 RESOURCES = os.path.join(
@@ -155,6 +164,60 @@ def postgres_with_load_and_image_table():
     conn.close()
 
 
+@pytest.fixture
+def empty_s3_bucket(socket_enabled):
+    bucket = boto3.resource(
+        's3',
+        aws_access_key_id=ACCESS_KEY,
+        aws_secret_access_key=SECRET_KEY,
+        endpoint_url=S3_LOCAL_ENDPOINT
+    ).Bucket(S3_TEST_BUCKET)
+
+    def _delete_all_objects():
+        key_list = [{'Key': obj.key} for obj in bucket.objects.all()]
+        if len(list(bucket.objects.all())) > 0:
+            bucket.delete_objects(Delete={'Objects': key_list})
+
+    if bucket.creation_date:
+        _delete_all_objects()
+    else:
+        bucket.create()
+    yield bucket
+    _delete_all_objects()
+
+
+def _load_local_tsv(tmpdir, bucket, tsv_file_name):
+    """
+    This wraps sql.load_local_data_to_intermediate_table so we can test it
+    under various conditions.
+    """
+    tsv_file_path = os.path.join(RESOURCES, tsv_file_name)
+    with open(tsv_file_path) as f:
+        f_data = f.read()
+
+    test_tsv = 'test.tsv'
+    path = tmpdir.join(test_tsv)
+    path.write(f_data)
+
+    sql.load_local_data_to_intermediate_table(
+        POSTGRES_CONN_ID,
+        str(path),
+        TEST_ID
+    )
+
+
+def _load_s3_tsv(tmpdir, bucket, tsv_file_name):
+    tsv_file_path = os.path.join(RESOURCES, tsv_file_name)
+    key = 'path/to/object/{tsv_file_name}'
+    bucket.upload_file(tsv_file_path, key)
+    sql.load_s3_data_to_intermediate_table(
+        POSTGRES_CONN_ID,
+        S3_TEST_BUCKET,
+        key,
+        TEST_ID
+    )
+
+
 def test_create_loading_table_creates_table(postgres):
     postgres_conn_id = POSTGRES_CONN_ID
     identifier = TEST_ID
@@ -178,50 +241,36 @@ def test_create_loading_table_errors_if_run_twice_with_same_id(postgres):
         sql.create_loading_table(postgres_conn_id, identifier)
 
 
-def test_import_data_loads_good_tsv(postgres_with_load_table, tmpdir):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'none_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
-    check_query = f'SELECT COUNT (*) FROM {load_table};'
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
+def test_loaders_load_good_tsv(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
+):
+    load_function(tmpdir, empty_s3_bucket, 'none_missing.tsv')
+    check_query = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
     assert num_rows == 10
 
 
-def test_import_data_deletes_null_url_rows(postgres_with_load_table, tmpdir):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'url_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
+def test_loaders_delete_null_url_rows(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
+):
+    load_function(tmpdir, empty_s3_bucket, 'url_missing.tsv')
+    null_url_check = (
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} WHERE url IS NULL;'
     )
-    null_url_check = f'SELECT COUNT (*) FROM {load_table} WHERE url IS NULL;'
     postgres_with_load_table.cursor.execute(null_url_check)
     null_url_num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -229,31 +278,21 @@ def test_import_data_deletes_null_url_rows(postgres_with_load_table, tmpdir):
     assert remaining_rows == 2
 
 
-def test_import_data_deletes_null_license_rows(
-        postgres_with_load_table, tmpdir
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
+def test_loaders_delete_null_license_rows(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'license_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    load_function(tmpdir, empty_s3_bucket, 'license_missing.tsv')
     license_check = (
-        f'SELECT COUNT (*) FROM {load_table} WHERE license IS NULL;'
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} WHERE license IS NULL;'
     )
     postgres_with_load_table.cursor.execute(license_check)
     null_license_num_rows = postgres_with_load_table.cursor.fetchone()[0]
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -261,34 +300,24 @@ def test_import_data_deletes_null_license_rows(
     assert remaining_rows == 2
 
 
-def test_import_data_deletes_null_foreign_landing_url_rows(
-        postgres_with_load_table, tmpdir
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
+def test_loaders_delete_null_foreign_landing_url_rows(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'foreign_landing_url_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    load_function(tmpdir, empty_s3_bucket, 'foreign_landing_url_missing.tsv')
     foreign_landing_url_check = (
-        f'SELECT COUNT (*) FROM {load_table} '
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} '
         f'WHERE foreign_landing_url IS NULL;'
     )
     postgres_with_load_table.cursor.execute(foreign_landing_url_check)
     null_foreign_landing_url_num_rows = (
         postgres_with_load_table.cursor.fetchone()[0]
     )
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -296,34 +325,24 @@ def test_import_data_deletes_null_foreign_landing_url_rows(
     assert remaining_rows == 3
 
 
-def test_import_data_deletes_null_foreign_identifier_rows(
-        postgres_with_load_table, tmpdir
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
+def test_data_loaders_delete_null_foreign_identifier_rows(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'foreign_identifier_missing.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    load_function(tmpdir, empty_s3_bucket, 'foreign_identifier_missing.tsv')
     foreign_identifier_check = (
-        f'SELECT COUNT (*) FROM {load_table} '
+        f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE} '
         f'WHERE foreign_identifier IS NULL;'
     )
     postgres_with_load_table.cursor.execute(foreign_identifier_check)
     null_foreign_identifier_num_rows = (
         postgres_with_load_table.cursor.fetchone()[0]
     )
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -331,34 +350,24 @@ def test_import_data_deletes_null_foreign_identifier_rows(
     assert remaining_rows == 1
 
 
+@pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
+@pytest.mark.allow_hosts([S3_HOST])
 def test_import_data_deletes_duplicate_foreign_identifier_rows(
-        postgres_with_load_table, tmpdir
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
 ):
-    postgres_conn_id = POSTGRES_CONN_ID
-    identifier = TEST_ID
-    load_table = TEST_LOAD_TABLE
-    tsv_file_name = os.path.join(RESOURCES, 'foreign_identifier_duplicate.tsv')
-    with open(tsv_file_name) as f:
-        f_data = f.read()
-
-    test_tsv = 'test.tsv'
-    path = tmpdir.join(test_tsv)
-    path.write(f_data)
-
-    sql.import_data_to_intermediate_table(
-        postgres_conn_id,
-        str(path),
-        identifier
-    )
+    load_function(tmpdir, empty_s3_bucket, 'foreign_identifier_duplicate.tsv')
     foreign_id_duplicate_check = (
-        f"SELECT COUNT (*) FROM {load_table} "
+        f"SELECT COUNT (*) FROM {TEST_LOAD_TABLE} "
         f"WHERE foreign_identifier='135257';"
     )
     postgres_with_load_table.cursor.execute(foreign_id_duplicate_check)
     foreign_id_duplicate_num_rows = (
         postgres_with_load_table.cursor.fetchone()[0]
     )
-    remaining_row_count = f'SELECT COUNT (*) FROM {load_table};'
+    remaining_row_count = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
     postgres_with_load_table.cursor.execute(remaining_row_count)
     remaining_rows = postgres_with_load_table.cursor.fetchone()[0]
 
@@ -628,6 +637,426 @@ def test_upsert_records_replaces_data(
     assert actual_row[17] == CREATOR_URL_B
     assert actual_row[18] == TITLE_B
     assert actual_row[22] == json.loads(META_DATA_B)
+
+
+def test_upsert_records_does_not_replace_with_nulls(
+        postgres_with_load_and_image_table, tmpdir
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID = 'a'
+    PROVIDER = 'images_provider'
+    SOURCE = 'images_source'
+    WATERMARKED = 'f'
+    IMG_URL = 'https://images.com/a/img.jpg'
+    FILESIZE = 2000
+    TAGS = '["fun", "great"]'
+
+    LAND_URL_A = 'https://images.com/a'
+    THM_URL_A = 'https://images.com/a/img_small.jpg'
+    WIDTH_A = 1000
+    HEIGHT_A = 500
+    LICENSE_A = 'by'
+    VERSION_A = '4.0'
+    CREATOR_A = 'Alice'
+    CREATOR_URL_A = 'https://alice.com'
+    TITLE_A = 'My Great Pic'
+    META_DATA_A = '{"description": "what a cool picture"}'
+
+    LAND_URL_B = 'https://images.com/b'
+    LICENSE_B = 'cc0'
+    VERSION_B = '1.0'
+
+    load_data_query_a = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}','{LAND_URL_A}','{IMG_URL}','{THM_URL_A}',"
+        f"'{WIDTH_A}','{HEIGHT_A}','{FILESIZE}','{LICENSE_A}','{VERSION_A}',"
+        f"'{CREATOR_A}','{CREATOR_URL_A}','{TITLE_A}','{META_DATA_A}',"
+        f"'{TAGS}','{WATERMARKED}','{PROVIDER}','{SOURCE}'"
+        f");"
+    )
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+
+    load_data_query_b = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}','{LAND_URL_B}','{IMG_URL}',null,"
+        f"null,null,null,'{LICENSE_B}','{VERSION_B}',"
+        f"null,null,null,null,"
+        f"'{TAGS}',null,'{PROVIDER}','{SOURCE}'"
+        f");"
+    )
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    actual_row = actual_rows[0]
+    assert len(actual_rows) == 1
+    assert actual_row[8] == LAND_URL_B
+    assert actual_row[10] == THM_URL_A
+    assert actual_row[11] == WIDTH_A
+    assert actual_row[12] == HEIGHT_A
+    assert actual_row[14] == LICENSE_B
+    assert actual_row[15] == VERSION_B
+    assert actual_row[16] == CREATOR_A
+    assert actual_row[17] == CREATOR_URL_A
+    assert actual_row[18] == TITLE_A
+    assert actual_row[22] == json.loads(META_DATA_A)
+
+
+def test_upsert_records_merges_meta_data(
+        postgres_with_load_and_image_table, tmpdir
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID = 'a'
+    PROVIDER = 'images_provider'
+    IMG_URL = 'https://images.com/a/img.jpg'
+    LICENSE = 'by'
+
+    META_DATA_A = '{"description": "a cool picture", "test": "should stay"}'
+    META_DATA_B = '{"description": "I updated my description"}'
+
+    load_data_query_a = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,'{META_DATA_A}',null,null,'{PROVIDER}',null"
+        f");"
+    )
+
+    load_data_query_b = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,'{META_DATA_B}',null,null,'{PROVIDER}',null"
+        f");"
+    )
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    actual_row = actual_rows[0]
+    assert len(actual_rows) == 1
+    expected_meta_data = json.loads(META_DATA_A)
+    expected_meta_data.update(json.loads(META_DATA_B))
+    assert actual_row[22] == expected_meta_data
+
+
+def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
+        postgres_with_load_and_image_table, tmpdir
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID = 'a'
+    PROVIDER = 'images_provider'
+    IMG_URL = 'https://images.com/a/img.jpg'
+    LICENSE = 'by'
+
+    META_DATA_A = '{"description": "a cool picture", "test": "should stay"}'
+    META_DATA_B = '{"description": "I updated my description", "test": null}'
+
+    load_data_query_a = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,'{META_DATA_A}',null,null,'{PROVIDER}',null"
+        f");"
+    )
+
+    load_data_query_b = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,'{META_DATA_B}',null,null,'{PROVIDER}',null"
+        f");"
+    )
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    actual_row = actual_rows[0]
+    assert len(actual_rows) == 1
+    expected_meta_data = {
+        'description': json.loads(META_DATA_B)['description'],
+        'test': json.loads(META_DATA_A)['test']
+    }
+    assert actual_row[22] == expected_meta_data
+
+
+def test_upsert_records_merges_tags(
+        postgres_with_load_and_image_table, tmpdir
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID = 'a'
+    PROVIDER = 'images_provider'
+    IMG_URL = 'https://images.com/a/img.jpg'
+    LICENSE = 'by'
+
+    TAGS_A = json.dumps(
+        [
+            {'name': 'tagone', 'provider': 'test'},
+            {'name': 'tagtwo', 'provider': 'test'}
+        ]
+
+    )
+    TAGS_B = json.dumps(
+        [
+            {'name': 'tagone', 'provider': 'test'},
+            {'name': 'tagthree', 'provider': 'test'}
+        ]
+
+    )
+
+    load_data_query_a = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,'{TAGS_A}',null,'{PROVIDER}',null"
+        f");"
+    )
+
+    load_data_query_b = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,'{TAGS_B}',null,'{PROVIDER}',null"
+        f");"
+    )
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    actual_row = actual_rows[0]
+    assert len(actual_rows) == 1
+    expect_tags = [
+        {'name': 'tagone', 'provider': 'test'},
+        {'name': 'tagtwo', 'provider': 'test'},
+        {'name': 'tagthree', 'provider': 'test'}
+    ]
+    actual_tags = actual_row[23]
+    print('EXPECT:  ', expect_tags)
+    print('ACTUAL:  ', actual_tags)
+    assert len(actual_tags) == 3
+    assert all([t in expect_tags for t in actual_tags])
+    assert all([t in actual_tags for t in expect_tags])
+
+
+def test_upsert_records_does_not_replace_tags_with_null(
+        postgres_with_load_and_image_table, tmpdir
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID = 'a'
+    PROVIDER = 'images_provider'
+    IMG_URL = 'https://images.com/a/img.jpg'
+    LICENSE = 'by'
+
+    TAGS = [
+        {'name': 'tagone', 'provider': 'test'},
+        {'name': 'tagtwo', 'provider': 'test'}
+    ]
+
+    load_data_query_a = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,'{json.dumps(TAGS)}',null,'{PROVIDER}',null"
+        f");"
+    )
+
+    load_data_query_b = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,null,null,'{PROVIDER}',null"
+        f");"
+    )
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    actual_row = actual_rows[0]
+    assert len(actual_rows) == 1
+    expect_tags = [
+        {'name': 'tagone', 'provider': 'test'},
+        {'name': 'tagtwo', 'provider': 'test'},
+    ]
+    actual_tags = actual_row[23]
+    assert len(actual_tags) == 2
+    assert all([t in expect_tags for t in actual_tags])
+    assert all([t in actual_tags for t in expect_tags])
+
+
+def test_upsert_records_replaces_null_tags(
+        postgres_with_load_and_image_table, tmpdir
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID = 'a'
+    PROVIDER = 'images_provider'
+    IMG_URL = 'https://images.com/a/img.jpg'
+    LICENSE = 'by'
+    TAGS = [
+        {'name': 'tagone', 'provider': 'test'},
+        {'name': 'tagtwo', 'provider': 'test'}
+    ]
+    load_data_query_a = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,null,null,'{PROVIDER}',null"
+        f");"
+    )
+    load_data_query_b = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}',null,'{IMG_URL}',null,null,null,null,'{LICENSE}',null,null,"
+        f"null,null,null,'{json.dumps(TAGS)}',null,'{PROVIDER}',null"
+        f");"
+    )
+
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    actual_row = actual_rows[0]
+    assert len(actual_rows) == 1
+    expect_tags = [
+        {'name': 'tagone', 'provider': 'test'},
+        {'name': 'tagtwo', 'provider': 'test'},
+    ]
+    actual_tags = actual_row[23]
+    assert len(actual_tags) == 2
+    assert all([t in expect_tags for t in actual_tags])
+    assert all([t in actual_tags for t in expect_tags])
 
 
 def test_drop_load_table_drops_table(postgres_with_load_table):
