@@ -28,22 +28,65 @@ def test_get_query_param_default():
         "has_image": 1,
         "image_license": "CC",
         "page[size]": 100,
-        "page[number]": 1
+        "page[number]": 0,
+        "date[from]": 0,
+        "date[to]": 1500
     }
 
     assert actual_param == expected_param
 
 
-def test_get_query_param_offset():
-    actual_param = sm._get_query_param(page_number=10)
+def test_get_query_param_offset_page_number():
+    actual_param = sm._get_query_param(
+        page_number=10,
+        from_year=1500,
+        to_year=2000)
     expected_param = {
         "has_image": 1,
         "image_license": "CC",
         "page[size]": 100,
-        "page[number]": 10
+        "page[number]": 10,
+        "date[from]": 1500,
+        "date[to]": 2000
     }
 
     assert actual_param == expected_param
+
+
+def test_page_record_empty():
+    with patch.object(
+            sm,
+            '_get_batch_objects',
+            return_value=[]) as mock_call:
+        with patch.object(
+                sm,
+                '_handle_object_data',
+                return_value=None) as mock_handle:
+            sm._page_records(
+                from_year=0,
+                to_year=1500
+            )
+
+    assert mock_call.call_count == 1
+    assert mock_handle.call_count == 0
+
+
+def test_page_record_failure():
+    with patch.object(
+            sm,
+            '_get_batch_objects',
+            return_value=None) as mock_call:
+        with patch.object(
+                sm,
+                '_handle_object_data',
+                return_value=None) as mock_handle:
+            sm._page_records(
+                from_year=0,
+                to_year=1500
+            )
+
+    assert mock_call.call_count == 1
+    assert mock_handle.call_count == 0
 
 
 def test_get_batch_object_success():
@@ -51,7 +94,9 @@ def test_get_batch_object_success():
         "has_image": 1,
         "image_license": "CC",
         "page[size]": 1,
-        "page[number]": 1
+        "page[number]": 1,
+        "date[from]": 0,
+        "date[to]": 1500
     }
     response = _get_resource_json("response_success.json")
     r = requests.Response()
@@ -76,7 +121,9 @@ def test_get_batch_object_failure():
         "has_image": 1,
         "image_license": "CC",
         "page[size]": 1,
-        "page[number]": 51
+        "page[number]": 51,
+        "date[from]": 0,
+        "date[to]": 1500
     }
     response = _get_resource_json("response_failure.json")
     r = requests.Response()
@@ -90,10 +137,8 @@ def test_get_batch_object_failure():
             query_param=query_param
         )
 
-    expected_response = None
-
     assert mock_call.call_count == 3
-    assert actual_response == expected_response
+    assert actual_response is None
 
 
 def test_get_batch_object_no_response():
@@ -101,7 +146,9 @@ def test_get_batch_object_no_response():
         "has_image": 1,
         "image_license": "CC",
         "page[size]": 1,
-        "page[number]": 1
+        "page[number]": 1,
+        "date[from]": 0,
+        "date[to]": 1500
     }
     response = None
     with patch.object(
@@ -112,10 +159,8 @@ def test_get_batch_object_no_response():
             query_param=query_param
         )
 
-    expected_response = None
-
     assert mock_call.call_count == 3
-    assert actual_response == expected_response
+    assert actual_response is None
 
 
 def test_creator_info_success():

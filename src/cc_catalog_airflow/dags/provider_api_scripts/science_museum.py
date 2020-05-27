@@ -25,40 +25,80 @@ DEFAULT_QUERY_PARAM = {
     "has_image": 1,
     "image_license": "CC",
     "page[size]": LIMIT,
-    "page[number]": 1
+    "page[number]": 0,
+    "date[from]": 0,
+    "date[to]": 1500
 }
+
+YEAR_RANGE = [
+    (0, 1500),
+    (1500, 1750),
+    (1750, 1825),
+    (1825, 1850),
+    (1850, 1875),
+    (1875, 1900),
+    (1900, 1915),
+    (1915, 1940),
+    (1940, 1965),
+    (1965, 1990),
+    (1990, 2020)
+]
+
+# global variable to keep track of records pulled
+RECORD_IDS = []
 
 
 def main():
     logger.info("Begin: Science Museum script")
-    page_number = 1
+    for year_range in YEAR_RANGE:
+        logger.info(f"Running for years {year_range}")
+        from_year, to_year = year_range
+        image_count = _page_records(
+            from_year=from_year,
+            to_year=to_year
+        )
+        logger.info(f"Images pulled till now {image_count}")
+    image_count = image_store.commit()
+    logger.info(f"Total images pulled {image_count}")
+
+
+def _page_records(
+        from_year,
+        to_year
+        ):
+    image_count = 0
+    page_number = 0
     condition = True
     while condition:
         query_param = _get_query_param(
-            page_number=page_number
+            page_number=page_number,
+            from_year=from_year,
+            to_year=to_year
             )
         batch_data = _get_batch_objects(
             query_param=query_param
         )
-        if batch_data:
-            image_count = _handle_object_data(batch_data)
-            page_number += 1
-            logger.info(
-                f"{image_count} images crawled from page : {page_number}"
-            )
+        if type(batch_data) == list:
+            if len(batch_data) > 0:
+                image_count = _handle_object_data(batch_data)
+                page_number += 1
+            else:
+                condition = False
         else:
             condition = False
-    logger.info(f"Total pages crawled {page_number}")
-    image_count = image_store.commit()
-    logger.info(f"Total images : {image_count}")
+    return image_count
 
 
 def _get_query_param(
-        page_number=1,
+        page_number=0,
+        from_year=0,
+        to_year=1500,
         default_query_param=DEFAULT_QUERY_PARAM
         ):
     query_param = default_query_param.copy()
     query_param["page[number]"] = page_number
+    query_param["date[from]"] = from_year
+    query_param["date[to]"] = to_year
     return query_param
 
 
@@ -91,6 +131,9 @@ def _handle_object_data(batch_data):
     image_count = 0
     for obj_ in batch_data:
         id_ = obj_.get("id")
+        if id_ in RECORD_IDS:
+            continue
+        RECORD_IDS.append(id_)
         links = obj_.get("links")
 
         if links:
