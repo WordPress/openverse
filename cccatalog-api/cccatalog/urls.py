@@ -34,13 +34,13 @@ description = """
 Visit https://api.creativecommons.engineering/v0/ to view the legacy
 documentation.*
 
+# Introduction
 The Creative Commons Catalog API ('cccatalog-api') is a system
 that allows programmatic access to public domain digital media. It is our
 ambition to index and catalog billions of Creative Commons works, including
 articles, songs, videos, photographs, paintings, and more. Using this API,
 developers will be able to access the digital commons in their own
 applications.
-
 Please note that there is a rate limit of 5000 requests per day and
 60 requests per minute rate limit in place for anonymous users. This is fine
 for introducing yourself to the API, but we strongly recommend that you obtain
@@ -52,7 +52,30 @@ an API key.
 
 Pull requests are welcome!
 [Contribute on GitHub](https://github.com/creativecommons/cccatalog-api)
-"""
+# System Architecture
+
+![system_architecture](https://raw.githubusercontent.com/creativecommons/cccatalog-api/master/system_architecture.png)
+
+# REST API
+
+## Overview
+The cccatalog REST API allows you to integrate and perform queries to digital\
+media under Creative Commons.
+The API is based on REST principles.It supports GET, POST, and DELETE requests.
+GET request is used to retrieve information from a resource \
+and a POST to update an entity.DELETE removes an entity.
+After receiving your request, the API sends back an HTTP code as a response.
+
+## Possible Response Status Codes
+| Status Code   | Description           | Notes  |
+| ------------- |-------------          | -----  |
+| 200           | OK                    | The request was successful |
+| 204           | OK                    | No Content |
+| 301           | Bad Request           | Moved Permanently |
+| 400           | Bad Request           |  The request could not be understood by the server. Incoming parameters might not be valid |
+| 403           | Unauthorized          |    Forbidden |
+
+"""  # noqa
 
 
 logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
