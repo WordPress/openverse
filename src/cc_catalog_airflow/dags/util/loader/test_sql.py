@@ -12,6 +12,8 @@ import pytest
 
 from util.loader import sql
 
+from psycopg2.errors import InvalidTextRepresentation
+
 TEST_ID = 'testing'
 POSTGRES_CONN_ID = os.getenv('TEST_CONN_ID')
 POSTGRES_TEST_URI = os.getenv('AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING')
@@ -254,6 +256,46 @@ def test_loaders_load_good_tsv(
     postgres_with_load_table.cursor.execute(check_query)
     num_rows = postgres_with_load_table.cursor.fetchone()[0]
     assert num_rows == 10
+
+
+@pytest.mark.parametrize('load_function', [_load_local_tsv])
+def test_delete_less_than_max_malformed_rows(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
+):
+    load_function(tmpdir, empty_s3_bucket, 'malformed_less_than_max_rows.tsv')
+    check_query = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
+    postgres_with_load_table.cursor.execute(check_query)
+    num_rows = postgres_with_load_table.cursor.fetchone()[0]
+    assert num_rows == 6
+
+
+@pytest.mark.parametrize('load_function', [_load_local_tsv])
+def test_delete_max_malformed_rows(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
+):
+    load_function(tmpdir, empty_s3_bucket, 'malformed_max_rows.tsv')
+    check_query = f'SELECT COUNT (*) FROM {TEST_LOAD_TABLE};'
+    postgres_with_load_table.cursor.execute(check_query)
+    num_rows = postgres_with_load_table.cursor.fetchone()[0]
+    assert num_rows == 3
+
+
+@pytest.mark.parametrize('load_function', [_load_local_tsv])
+def test_delete_more_than_max_malformed_rows(
+        postgres_with_load_table,
+        tmpdir,
+        empty_s3_bucket,
+        load_function
+):
+    with pytest.raises(InvalidTextRepresentation):
+        load_function(tmpdir, empty_s3_bucket,
+                      'malformed_more_than_max_rows.tsv')
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
