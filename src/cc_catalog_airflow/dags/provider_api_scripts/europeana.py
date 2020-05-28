@@ -52,7 +52,7 @@ def main(date):
     logger.info(f'Processing Europeana API for date: {date}')
 
     start_timestamp, end_timestamp = _derive_timestamp_pair(date)
-    images_stored = _get_pagewise(start_timestamp, end_timestamp)
+    _get_pagewise(start_timestamp, end_timestamp)
 
     total_images = image_store.commit()
     logger.info(f'Total images: {total_images}')
@@ -83,8 +83,6 @@ def _get_pagewise(start_timestamp, end_timestamp):
 
         else:
             logger.warning('No image data!  Attempting to continue')
-
-    return images_stored
 
 
 def _get_image_list(
@@ -118,10 +116,10 @@ def _get_image_list(
         if image_list is not None:
             break
 
-     if (
-            try_number == max_tries - 1
-            and (image_list is None or next_cursor is None)
-    ):
+    if (
+        try_number == max_tries - 1
+        and (image_list is None or next_cursor is None)
+        ):
         logger.warning('No more tries remaining. Returning None types.')
         return None, None, None
     else:
@@ -169,7 +167,6 @@ def _process_image_list(image_list):
 
 def _process_image_data(image_data):
     logger.debug(f'Processing image data: {image_data}')
-    
     license_url = _get_license_url(image_data.get('rights'))
     image_url = image_data.get('edmIsShownBy')[0]
     foreign_landing_url = _get_foreign_landing_url(image_data)
@@ -253,7 +250,7 @@ def _build_query_param_dict(
         query=f'timestamp_created:[{start_timestamp} TO {end_timestamp}]',
         cursor=cursor,
     )
-    )
+    
 
     return query_param_dict
 
