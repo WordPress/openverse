@@ -34,7 +34,7 @@ def create_dag():
         dag_id=DAG_ID,
         default_args=DAG_DEFAULT_ARGS,
         start_date=datetime(1970, 1, 1),
-        schedule_interval='@monthly',
+        schedule_interval='@daily',
         catchup=False,
     )
 
