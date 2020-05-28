@@ -118,8 +118,10 @@ def _get_image_list(
         if image_list is not None:
             break
 
-    if try_number == max_tries - 1 and (
-            (image_list is None) or (next_cursor is None)):
+     if (
+            try_number == max_tries - 1
+            and (image_list is None or next_cursor is None)
+    ):
         logger.warning('No more tries remaining. Returning None types.')
         return None, None, None
     else:
@@ -217,11 +219,15 @@ def _create_meta_data_dict(
 
 
 def _get_description(image_data):
-    if (image_data.get('dcDescriptionLangAware') is not None and
-    image_data.get('dcDescriptionLangAware').get('en') is not None):
+    if (
+            image_data.get('dcDescriptionLangAware') is not None
+            and image_data.get('dcDescriptionLangAware').get('en') is not None
+    ):
         description = image_data.get('dcDescriptionLangAware').get('en')[0]
-    elif (image_data.get('dcDescriptionLangAware') is not None and
-    image_data.get('dcDescriptionLangAware').get('def') is not None):
+    elif (
+            image_data.get('dcDescriptionLangAware') is not None
+            and image_data.get('dcDescriptionLangAware').get('def') is not None
+    ):
         description = image_data.get('dcDescriptionLangAware').get('def')[0]
     elif image_data.get('dcDescription') is not None:
         description = image_data.get('dcDescription')[0]
@@ -243,12 +249,10 @@ def _build_query_param_dict(
 ):
     query_param_dict = default_query_param.copy()
     query_param_dict.update(
-        {
-            'wskey': api_key,
-            'query': 
-                f'timestamp_created:[{start_timestamp} TO {end_timestamp}]',
-            'cursor': cursor,
-        }
+        wskey=api_key,
+        query=f'timestamp_created:[{start_timestamp} TO {end_timestamp}]',
+        cursor=cursor,
+    )
     )
 
     return query_param_dict
