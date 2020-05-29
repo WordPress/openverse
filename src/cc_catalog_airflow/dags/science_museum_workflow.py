@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 This file configures the Apache Airflow DAG to ingest Science museum data.
 
