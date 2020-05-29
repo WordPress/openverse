@@ -33,9 +33,11 @@ def create_dag():
     dag = DAG(
         dag_id=DAG_ID,
         default_args=DAG_DEFAULT_ARGS,
-        start_date=datetime(2003, 1, 1),
+        concurrency=3,
+        max_active_runs=3,
+        start_date=datetime(2003, 7, 1),
         schedule_interval='@daily',
-        catchup=True,
+        catchup=False,
     )
 
     with dag:

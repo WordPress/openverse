@@ -32,14 +32,6 @@ API_SCRIPT_PATH = os.path.join(AIRFLOW_HOME, 'dags/provider_api_scripts')
 
 
 DAG_VARIABLES = {
-    'met_museum': {
-        SCRIPT: os.path.join(API_SCRIPT_PATH, 'MetMuseum.py'),
-        CRONTAB_STR: '0 9 * * *'
-    },
-    'phylo_pic': {
-        SCRIPT: os.path.join(API_SCRIPT_PATH, 'PhyloPic.py'),
-        CRONTAB_STR: '0 11 * * *'
-    },
     'thingiverse': {
         SCRIPT: os.path.join(API_SCRIPT_PATH, 'Thingiverse.py'),
         CRONTAB_STR: '0 7 * * *'

@@ -7,19 +7,27 @@ services:
       - POSTGRES_USER=deploy
       - POSTGRES_PASSWORD=deploy
       - POSTGRES_DB=openledger
+    env_file: .env
     ports:
       - "5432:5432"
     volumes:
       - /tmp/docker_postgres_data:/var/lib/postgresql/data
 
+  s3:
+    build:
+      context: ./local_s3
+    ports:
+      - "5000:5000"
+
   webserver:
-    build: .
+    build:
+      context: .
+      args:
+        - OUTPUT_DIR=${OUTPUT_DIR}
     env_file: .env
     restart: always
     depends_on:
       - postgres
-    volumes:
-      - ./dags:/usr/local/airflow/dags
+      - s3
     ports:
-      # This prevents conflicting with locally running airflow webserver
-      - "9090:8080"
+      - "${AIRFLOW_PORT}:8080"

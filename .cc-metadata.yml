@@ -6,3 +6,5 @@ english_name: CC Catalog
 technologies: Python, Apache Spark
 # Whether this repository should be featured on the CC Open Source site
 featured: false
+# Slack channel name
+slack: 'cc-dev-catalog'

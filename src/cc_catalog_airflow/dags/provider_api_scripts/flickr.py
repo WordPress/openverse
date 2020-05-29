@@ -35,7 +35,13 @@ PROVIDER = 'flickr'
 API_KEY = os.getenv('FLICKR_API_KEY')
 ENDPOINT = 'https://api.flickr.com/services/rest/'
 PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
-DATE_TYPES = ['taken', 'upload']
+DATE_TYPE = 'upload'
+# DAY_DIVISION is an integer that gives how many equal portions we should
+# divide a 24-hour period into for requesting photo data.  For example,
+# DAY_DIVISION = 24 would mean dividing the day into hours, and requesting the
+# photo data for each hour of the day separately.  This is necessary because
+# if we request too much at once, the API will return fallacious results.
+DAY_DIVISION = 48  # divide into half hour increments
 
 LICENSE_INFO = {
     '1': ('by-nc-sa', '2.0'),
@@ -67,26 +73,52 @@ image_store = image.ImageStore(provider=PROVIDER)
 def main(date):
     logger.info(f'Processing Flickr API for date: {date}')
 
-    start_timestamp, end_timestamp = _derive_timestamp_pair(date)
+    timestamp_pairs = _derive_timestamp_pair_list(date)
+    date_type = DATE_TYPE
 
-    for date_type in DATE_TYPES:
-        logger.info(f'processing date type {date_type}')
-        total_images = _process_date(start_timestamp, end_timestamp, date_type)
+    for start_timestamp, end_timestamp in timestamp_pairs:
+        total_images = _process_interval(
+            start_timestamp,
+            end_timestamp,
+            date_type
+        )
 
     total_images = image_store.commit()
     logger.info(f'Total images: {total_images}')
     logger.info('Terminated!')
 
 
-def _derive_timestamp_pair(date):
-    date_obj = datetime.strptime(date, '%Y-%m-%d')
-    utc_date = date_obj.replace(tzinfo=timezone.utc)
-    start_timestamp = str(int(utc_date.timestamp()))
-    end_timestamp = str(int((utc_date + timedelta(days=1)).timestamp()))
-    return start_timestamp, end_timestamp
+def _derive_timestamp_pair_list(date, day_division=DAY_DIVISION):
+    day_seconds = 86400
+    default_day_division = 48
+    portion = int(day_seconds / day_division)
+    # We double check the day can be evenly divided by the requested division
+    try:
+        assert portion == day_seconds / day_division
+    except AssertionError:
+        logger.warning(
+            f'day_division {day_division} does not divide the day evenly!  '
+            f'Using the default of {default_day_division}'
+        )
+        day_division = default_day_division
+        portion = int(day_seconds / day_division)
+
+    utc_date = datetime.strptime(date, '%Y-%m-%d').replace(tzinfo=timezone.utc)
+
+    def _ts_string(d):
+        return str(int(d.timestamp()))
+
+    pair_list = [
+        (
+            _ts_string(utc_date + timedelta(seconds=i * portion)),
+            _ts_string(utc_date + timedelta(seconds=(i+1) * portion))
+        )
+        for i in range(day_division)
+    ]
+    return pair_list
 
 
-def _process_date(start_timestamp, end_timestamp, date_type):
+def _process_interval(start_timestamp, end_timestamp, date_type):
     total_pages = 1
     page_number = 1
     total_images = 0
@@ -209,6 +241,7 @@ def _extract_image_list_from_json(response_json):
 
 
 def _process_image_list(image_list):
+    total_images = 0
     for image_data in image_list:
         total_images = _process_image_data(image_data)
 
