@@ -1,10 +1,3 @@
-"""
-This file configures the Apache Airflow DAG to ingest Smithsonian data.
-
-We do this by running `provider_api_scripts.smithsonian.main`
-"""
-# airflow DAG (necessary for Airflow to find this file)
-
 from datetime import datetime, timedelta
 import logging
 
