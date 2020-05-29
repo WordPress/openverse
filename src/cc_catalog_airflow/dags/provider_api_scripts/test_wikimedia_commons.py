@@ -44,6 +44,12 @@ def test_get_image_pages_returns_correctly_with_none_json():
     assert actual_result == expect_result
 
 
+def test_get_image_pages_returns_correctly_with_no_pages():
+    expect_result = None
+    actual_result = wmc._get_image_pages({'batch_complete': ''})
+    assert actual_result == expect_result
+
+
 def test_build_query_params_adds_start_and_end():
     actual_qp = wmc._build_query_params(
         'abc', 'def', default_query_params={}

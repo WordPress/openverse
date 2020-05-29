@@ -155,6 +155,9 @@ def _get_image_pages(image_batch):
     if image_batch is not None:
         image_pages = image_batch.get('query', {}).get('pages')
 
+    if image_pages is None:
+        logger.warning(f'No pages in the image_batch: {image_batch}')
+    else:
         logger.info(f'Got {len(image_pages)} pages')
 
     return image_pages
