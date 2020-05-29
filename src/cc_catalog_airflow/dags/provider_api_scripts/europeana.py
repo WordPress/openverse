@@ -117,9 +117,9 @@ def _get_image_list(
             break
 
     if (
-        try_number == max_tries - 1
-        and (image_list is None or next_cursor is None)
-        ):
+            try_number == max_tries - 1
+            and (image_list is None or next_cursor is None)
+    ):
         logger.warning('No more tries remaining. Returning None types.')
         return None, None, None
     else:
@@ -250,8 +250,6 @@ def _build_query_param_dict(
         query=f'timestamp_created:[{start_timestamp} TO {end_timestamp}]',
         cursor=cursor,
     )
-    
-
     return query_param_dict
 
 
