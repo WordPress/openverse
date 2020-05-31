@@ -519,7 +519,11 @@ def test_sub_provider_retrieval():
     image_list = _get_resource_json('flickr_example_photo_list.json')
     flickr._process_image_list(image_list)
 
-    assert len(flickr.image_store_dict['NASA HQ PHOTOS']._image_buffer) == 2
+    assert len(flickr.image_store_dict['nasa']._image_buffer) == 2 and \
+           flickr.image_store_dict['nasa']._PROVIDER == 'nasa'
+    assert len(flickr.image_store_dict['bio_diversity']._image_buffer) == 1 and \
+           flickr.image_store_dict['bio_diversity']._PROVIDER == 'bio_diversity'
     assert len(flickr.image_store_dict[flickr.DEFAULT_PROVIDER]._image_buffer
-               ) == 28
-
+               ) == 27 and \
+           flickr.image_store_dict[flickr.DEFAULT_PROVIDER]._PROVIDER == \
+           flickr.DEFAULT_PROVIDER
