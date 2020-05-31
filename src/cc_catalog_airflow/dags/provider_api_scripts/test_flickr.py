@@ -290,7 +290,7 @@ def test_process_image_data_with_real_example():
             'scuba',
             'underwater'
         ],
-        source=None
+        source=flickr.DEFAULT_PROVIDER
     )
     assert total_images == 100
 
