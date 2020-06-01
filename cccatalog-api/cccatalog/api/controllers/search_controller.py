@@ -122,9 +122,7 @@ def _post_process_results(s, start, end, page_size, search_results,
             # Route all images through a dynamically resizing caching proxy.
             proxied = "https://{}{}".format(
                 request.get_host(),
-                reverse('thumbs', kwargs={
-                    'identifier': "{}".format(res["identifier"])
-                })
+                reverse('thumbs', kwargs={'identifier': res["identifier"]})
             )
             res[THUMBNAIL] = proxied
         results.append(res)
