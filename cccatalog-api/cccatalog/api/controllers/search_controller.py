@@ -120,20 +120,9 @@ def _post_process_results(s, start, end, page_size, search_results,
         to_validate.append(res.url)
         if PROXY_THUMBS:
             # Route all images through a dynamically resizing caching proxy.
-            # If a 3rd party thumbnail is available, in order to save limited
-            # bandwidth and memory resources required for resizing, we'll
-            # proxy the 3rd party thumbnail instead of the full-sized image.
-            if THUMBNAIL in res:
-                to_proxy = THUMBNAIL
-            else:
-                to_proxy = URL
-            original = res[to_proxy]
-            ext = res["url"].split(".")[-1]
             proxied = "https://{}{}".format(
                 request.get_host(),
-                reverse('thumbs', kwargs={
-                    'identifier': "{}.{}".format(res["identifier"], ext)
-                })
+                reverse('thumbs', kwargs={'identifier': res["identifier"]})
             )
             res[THUMBNAIL] = proxied
         results.append(res)
