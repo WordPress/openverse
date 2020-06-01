@@ -41,7 +41,7 @@ const PhotoDetailPage = {
   props: {
     id: {
       type: String,
-      default: ''
+      default: '',
     },
   },
   components: {
@@ -68,7 +68,7 @@ const PhotoDetailPage = {
     imagesCount: 'imagesCount',
     query: 'query',
     tags: 'image.tags',
-    image: 'image'
+    image: 'image',
   }),
   watch: {
     image() {
