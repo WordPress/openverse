@@ -1,11 +1,55 @@
+<template>
+  <div class="photo-detail-page">
+    <header-section showNavSearch="true" />
+    <div>
+      <photo-details :image="image"
+                    :breadCrumbURL="breadCrumbURL"
+                    :shouldShowBreadcrumb="shouldShowBreadcrumb"
+                    :query="query"
+                    :imageWidth="imageWidth"
+                    :imageHeight="imageHeight"
+                    :socialSharingEnabled="socialSharingEnabled"
+                    @onImageLoaded="onImageLoaded" />
+      <div class="padding-normal margin-vertical-big">
+        <photo-tags :tags="tags" :showHeader="true" />
+      </div>
+      <div class="padding-normal margin-vertical-big">
+        <related-images :relatedImages="relatedImages"
+                        :imagesCount="imagesCount"
+                        :query="query"
+                        :filter="filter"
+                        :isPrimaryImageLoaded="isPrimaryImageLoaded" />
+      </div>
+    </div>
+    <footer-section></footer-section>
+  </div>
+</template>
+
+<script>
+import PhotoDetails from '@/components/ImageDetails/PhotoDetails';
+import PhotoTags from '@/components/PhotoTags';
+import RelatedImages from '@/components/RelatedImages';
+import HeaderSection from '@/components/HeaderSection';
+import FooterSection from '@/components/FooterSection';
 import featureFlags from '@/featureFlags';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '@/store/action-types';
 import { SET_IMAGE } from '@/store/mutation-types';
 
 const PhotoDetailPage = {
   name: 'photo-detail-page',
   props: {
-    id: '',
+    id: {
+      type: String,
+      default: ''
+    },
+  },
+  components: {
+    HeaderSection,
+    RelatedImages,
+    FooterSection,
+    PhotoDetails,
+    PhotoTags,
   },
   data: () => ({
     breadCrumbURL: '',
@@ -17,29 +61,15 @@ const PhotoDetailPage = {
     imageHeight: 0,
     socialSharingEnabled: featureFlags.socialSharing,
   }),
-  computed: {
-    filter() {
-      return this.$store.state.query.filter;
-    },
-    images() {
-      return this.$store.state.images;
-    },
-    imagesCount() {
-      return this.$store.state.imagesCount;
-    },
-    query() {
-      return this.$store.state.query;
-    },
-    relatedImages() {
-      return this.$store.state.relatedImages;
-    },
-    tags() {
-      return this.$store.state.image.tags;
-    },
-    image() {
-      return this.$store.state.image;
-    },
-  },
+  computed: mapState({
+    relatedImages: 'relatedImages',
+    filter: 'query.filter',
+    images: 'images',
+    imagesCount: 'imagesCount',
+    query: 'query',
+    tags: 'image.tags',
+    image: 'image'
+  }),
   watch: {
     image() {
       this.getRelatedImages();
@@ -71,10 +101,12 @@ const PhotoDetailPage = {
     });
   },
   methods: {
+    ...mapActions([FETCH_RELATED_IMAGES, FETCH_IMAGE]),
+    ...mapMutations([SET_IMAGE]),
     resetImageOnRouteChanged() {
       this.imageHeight = 0;
       this.imageWidth = 0;
-      this.$store.commit(SET_IMAGE, { image: {} });
+      this.SET_IMAGE({ image: {} });
     },
     onImageLoaded(event) {
       this.imageWidth = event.target.naturalWidth;
@@ -83,11 +115,11 @@ const PhotoDetailPage = {
     },
     getRelatedImages() {
       if (this.image && this.image.id) {
-        this.$store.dispatch(FETCH_RELATED_IMAGES, { id: this.image.id });
+        this.FETCH_RELATED_IMAGES({ id: this.image.id });
       }
     },
     loadImage(id) {
-      return this.$store.dispatch(FETCH_IMAGE, { id });
+      return this.FETCH_IMAGE({ id });
     },
   },
   mounted() {
@@ -102,3 +134,5 @@ const PhotoDetailPage = {
 };
 
 export default PhotoDetailPage;
+</script>
+
