@@ -308,27 +308,18 @@ class Thumbs(APIView):
                              404: 'Not Found'
                          })
     def get(self, request, identifier, format=None):
-        path_element = identifier.split(".")
-        identifier = path_element[0]
-        extname = ""
-        if len(path_element) == 2:
-            extname = path_element[1]
-        elif len(path_element) > 2:
-            return Response(status=400)
         try:
             image = Image.objects.get(identifier=identifier)
-            if extname and image.url.split(".")[-1] != extname:
-                return Response(status=404, data='Not Found')
         except Image.DoesNotExist:
             return Response(status=404, data='Not Found')
 
-        upstream_url = '{proxy_url}/{width}/{original}'.format(
+        proxy_upstream = '{proxy_url}/{width}/{original}'.format(
             proxy_url=THUMBNAIL_PROXY_URL,
             width=THUMBNAIL_WIDTH_PX,
             original=image.url
         )
         try:
-            upstream_response = urlopen(upstream_url)
+            upstream_response = urlopen(proxy_upstream)
             status = upstream_response.status
             content_type = upstream_response.headers.get('Content-Type')
         except HTTPError:
