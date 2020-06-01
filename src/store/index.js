@@ -17,6 +17,7 @@ import UsageDataStore from './usage-data-store';
 import FilterStore from './filter-store';
 import ReportContentStore from './report-content-store';
 import RelatedImagesStore from './related-images-store';
+
 Vue.use(Vuex);
 
 const queryParams = !(typeof window === 'undefined') ? window.location.search : '';
