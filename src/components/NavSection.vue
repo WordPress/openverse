@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar small">
+  <nav aria-label="Primary" class="navbar small">
     <div class="navbar-brand">
       <a class="logo" href="/">
         <img alt="Logo" src="/static/logos/products/search.svg">
