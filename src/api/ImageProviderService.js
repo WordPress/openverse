@@ -83,6 +83,9 @@ const ImageProviderService = {
       WoRMS: {
         logo: 'worms_logo.png',
       },
+      smithsonian: {
+        logo: 'smithsonian_logo.svg',
+      },
     };
 
     return PROVIDER_NAME_LOOKUP[providerName];
