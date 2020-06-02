@@ -101,8 +101,12 @@ class CleanupFunctions:
             below_threshold = False
             if 'accuracy' in tag and tag['accuracy'] < TAG_MIN_CONFIDENCE:
                 below_threshold = True
-            lower_tag = tag['name'].lower()
-            should_filter = _tag_blacklisted(lower_tag) or below_threshold
+            if 'name' in tag:
+                lower_tag = tag['name'].lower()
+                should_filter = _tag_blacklisted(lower_tag) or below_threshold
+            else:
+                log.warning(f'Filtering malformed tag "{tag}" in array "{tags}"')
+                should_filter = True
             if should_filter:
                 update_required = True
             else:
