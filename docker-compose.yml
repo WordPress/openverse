@@ -75,6 +75,7 @@ services:
       DISABLE_GLOBAL_THROTTLING: "True"
       ROOT_SHORTENING_URL: "localhost:8000"
       THUMBNAIL_PROXY_URL: "http://thumbs:8222"
+      DJANGO_SECRET_KEY: "ny#b__$f6ry4wy8oxre97&-68u_0lk3gw(z=d40_dxey3zw0v1"
     stdin_open: true
     tty: true
 

@@ -22,9 +22,7 @@ STATIC_ROOT = "/var/api_static_content/static"
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get(
-    'DJANGO_SECRET_KEY', 'ny#b__$f6ry4wy8oxre97&-68u_0lk3gw(z=d40_dxey3zw0v1'
-)
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 true_strings = ['true', 'True', 't']
