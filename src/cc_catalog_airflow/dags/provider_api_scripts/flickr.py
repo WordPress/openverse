@@ -31,7 +31,7 @@ DELAY = 1.0
 LIMIT = 500
 MAX_TAG_STRING_LENGTH = 2000
 MAX_DESCRIPTION_LENGTH = 2000
-DEFAULT_PROVIDER = 'flickr'
+PROVIDER = 'flickr'
 API_KEY = os.getenv('FLICKR_API_KEY')
 ENDPOINT = 'https://api.flickr.com/services/rest/'
 PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
@@ -42,8 +42,8 @@ DATE_TYPE = 'upload'
 # photo data for each hour of the day separately.  This is necessary because
 # if we request too much at once, the API will return fallacious results.
 DAY_DIVISION = 48 # divide into half hour increments
-# SUB_PROVIDERS is a collection of providers within Flickr which store
-# separately in their own image store.
+# SUB_PROVIDERS is a collection of providers within Flickr which are
+# valuable to a broad audience
 SUB_PROVIDERS = {
     'nasa': {
         '24662369@N07',  # NASA Goddard Photo and Video
@@ -83,10 +83,7 @@ DEFAULT_QUERY_PARAMS = {
 }
 
 delayed_requester = DelayedRequester(DELAY)
-image_store_dict = {
-    provider: image.ImageStore(provider=provider) for
-    provider in set(SUB_PROVIDERS.keys()) | {DEFAULT_PROVIDER}
-}
+image_store = image.ImageStore(provider=PROVIDER)
 
 
 def main(date):
@@ -102,9 +99,8 @@ def main(date):
             date_type
         )
 
-    for provider, image_store in image_store_dict.items():
-        total_images = image_store.commit()
-        logger.info(f'Total images for provider {provider}: {total_images}')
+    total_images = image_store.commit()
+    logger.info(f'Total images: {total_images}')
     logger.info('Terminated!')
 
 
@@ -279,9 +275,8 @@ def _process_image_data(image_data):
     foreign_landing_url = _build_foreign_landing_url(creator_url, foreign_id)
 
     owner = image_data.get('owner').strip()
-    provider = next((s for s in SUB_PROVIDERS if owner in SUB_PROVIDERS[s]),
-                    DEFAULT_PROVIDER)
-    image_store = image_store_dict[provider]
+    source = next((s for s in SUB_PROVIDERS if owner in SUB_PROVIDERS[s]),
+                  PROVIDER)
 
     return image_store.add_item(
         foreign_landing_url=foreign_landing_url,
@@ -297,7 +292,7 @@ def _process_image_data(image_data):
         title=image_data.get('title'),
         meta_data=_create_meta_data_dict(image_data),
         raw_tags=_create_tags_list(image_data),
-        source=DEFAULT_PROVIDER
+        source=source
     )
 
 

@@ -256,7 +256,7 @@ def test_extract_image_list_from_json_returns_nones_given_none_json():
 def test_process_image_data_with_real_example():
     image_data = _get_resource_json('image_data_complete_example.json')
     with patch.object(
-            flickr.image_store_dict[flickr.DEFAULT_PROVIDER],
+            flickr.image_store,
             'add_item',
             return_value=100
     ) as mock_add_item:
@@ -290,7 +290,7 @@ def test_process_image_data_with_real_example():
             'scuba',
             'underwater'
         ],
-        source=flickr.DEFAULT_PROVIDER
+        source=flickr.PROVIDER
     )
     assert total_images == 100
 
@@ -515,15 +515,43 @@ def test_create_tags_list_returns_falsy_empty_tags():
     assert not tags_list
 
 
-def test_sub_provider_retrieval():
-    image_list = _get_resource_json('flickr_example_photo_list.json')
-    flickr._process_image_list(image_list)
+def test_process_image_data_with_sub_provider():
+    image_data = _get_resource_json('image_data_sub_provider_example.json')
+    with patch.object(
+            flickr.image_store,
+            'add_item',
+            return_value=100
+    ) as mock_add_item:
+        total_images = flickr._process_image_data(image_data)
 
-    assert len(flickr.image_store_dict['nasa']._image_buffer) == 2 and \
-           flickr.image_store_dict['nasa']._PROVIDER == 'nasa'
-    assert len(flickr.image_store_dict['bio_diversity']._image_buffer) == 1 and \
-           flickr.image_store_dict['bio_diversity']._PROVIDER == 'bio_diversity'
-    assert len(flickr.image_store_dict[flickr.DEFAULT_PROVIDER]._image_buffer
-               ) == 27 and \
-           flickr.image_store_dict[flickr.DEFAULT_PROVIDER]._PROVIDER == \
-           flickr.DEFAULT_PROVIDER
+    expect_meta_data = {
+        'pub_date': '1590799192',
+        'date_taken': '2020-05-29 13:50:27',
+        'views': '28597',
+        'description': 'A gopher tortoise is seen making its way towards its burrow near Launch Complex 39A as preparations continue for NASA SpaceX Demo-2 mission'
+        }
+
+    mock_add_item.assert_called_once_with(
+        foreign_landing_url='https://www.flickr.com/photos/35067687@N04/49950595947',
+        image_url='https://live.staticflickr.com/65535/49950595947_65a3560ddc_b.jpg',
+        thumbnail_url='https://live.staticflickr.com/65535/49950595947_65a3560ddc_m.jpg',
+        license_='by-nc-sa',
+        license_version='2.0',
+        foreign_identifier='49950595947',
+        width=1024,
+        height=683,
+        creator='NASA HQ PHOTO',
+        creator_url='https://www.flickr.com/photos/35067687@N04',
+        title='SpaceX Demo-2 Preflight (NHQ202005290001)',
+        meta_data=expect_meta_data,
+        raw_tags=[
+            'capecanaveral',
+            'commercialcrewprogram',
+            'gophertortoise',
+            'kennedyspacecenter',
+            'nasa',
+            'spacex'
+        ],
+        source='nasa'
+    )
+    assert total_images == 100
