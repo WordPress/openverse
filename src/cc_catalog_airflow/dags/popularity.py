@@ -6,6 +6,7 @@ import logging as log
 from airflow.hooks.postgres_hook import PostgresHook
 from datetime import datetime, timedelta
 from numbers import Real
+from textwrap import dedent
 
 # Fields indicating popularity expected in the meta_data column
 popularity_fields = [
@@ -23,7 +24,7 @@ POPULARITY_DUMP_DEST = os.path.join(
     os.getenv('OUTPUT_DIR'), 'popularity_dump.tsv'
 )
 NORMALIZED_POPULARITY_DEST = os.path.join(
-    os.getenv('OUTPUT_DIR'), 'popularity_dump.tsv'
+    os.getenv('OUTPUT_DIR'), 'normalized_popularity_dump.tsv'
 )
 
 
@@ -39,33 +40,39 @@ def _compute_percentiles_file(postgres_conn_id):
     cache_expires_date = cached_date + expire_time
     _json['expires'] = cache_expires_date.isoformat()
 
-    percentiles = select_percentiles(postgres_conn_id, popularity_fields, PERCENTILE)
+    percentiles = select_percentiles(
+        postgres_conn_id, popularity_fields, PERCENTILE
+    )
     _json['percentiles'] = percentiles
+    log.info(f'percentile json: {_json}')
     with open(PERCENTILE_FILE_CACHE, 'w+') as percentile_f:
         percentile_f.write(json.dumps(_json))
 
 
-def _get_percentiles(postgres):
+def _get_percentiles(postgres, attempts=0):
     """ Return the PERCENTILEth value for each metric in a dictionary. """
+    if attempts > 1:
+        raise SystemError('Failed to generate percentiles file.')
     try:
         with open(PERCENTILE_FILE_CACHE, 'r') as percentile_f:
             percentiles = json.load(percentile_f)
             for popfield in popularity_fields:
-                if popfield not in percentiles:
+                if popfield not in percentiles['percentiles']:
                     raise KeyError(
-                        'Expected field missing from popularity percentiles '
-                        'file cache'
+                        f'Expected field missing from popularity percentiles '
+                        f'file cache: {popfield}. Actual: {percentiles}'
                     )
             now = datetime.utcnow()
             if datetime.fromisoformat(percentiles['expires']) < now:
                 raise ValueError('Percentile cache expired')
-            return percentiles
+            return percentiles['percentiles']
     except (FileNotFoundError, KeyError, ValueError) as e:
         # If the cache has expired or a field is missing, the cache will be
         # refreshed.
         log.info(f'Recomputing percentiles file because: {e}')
         _compute_percentiles_file(postgres)
-        return _get_percentiles(postgres)
+        attempts += 1
+        return _get_percentiles(postgres, attempts)
 
 
 def _cache_constant(provider, metric, constant):
@@ -155,36 +162,38 @@ def select_percentiles(postgres_conn_id, popularity_fields, percentile):
     Given a list of fields that occur in the `meta_data` column, return the
     percentile for each field.
     """
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id,)
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     field_queries = []
     for field in popularity_fields:
         field_queries.append(
-            f'percentile_disc({percentile}) WITHIN GROUP '
-            f'(ORDER BY meta_data->>{field} AS {field})'
+            f"percentile_disc({percentile}) WITHIN GROUP "
+            f"(ORDER BY meta_data->>'{field}') AS {field}"
         )
     select_predicate = ', '.join(field_queries)
     select = f'SELECT {select_predicate} from image'
     res = postgres.get_records(select)
-    field_percentiles = {field: value for field, value in res}
+    field_percentiles = {
+        field: int(value) for field, value in zip(popularity_fields, res[0])
+    }
     return field_percentiles
 
 
 def dump_selection_to_tsv(postgres_conn_id, query, tsv_file_name):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    postgres.copy_expert(
-        f"COPY ({query}) TO '{tsv_file_name}' "
+    query = dedent(
+        f"COPY ({query}) TO STDOUT "
         f"WITH CSV HEADER DELIMITER E'\t'"
     )
+    postgres.copy_expert(query, tsv_file_name)
 
 
 def main():
-    postgres = PostgresHook(postgres_conn_id=DB_CONN_ID)
     log.info('Starting popularity job. . .')
     percentiles = _get_percentiles(DB_CONN_ID)
     dump_query = _build_popularity_dump_query(popularity_fields)
     log.info('Creating TSV of popularity data. . .')
-    postgres.run(dump_query)
     with open(POPULARITY_DUMP_DEST, 'w+') as in_tsv, \
             open(NORMALIZED_POPULARITY_DEST, 'w+') as out_tsv:
+        dump_selection_to_tsv(DB_CONN_ID, dump_query, POPULARITY_DUMP_DEST)
         _generate_popularity_tsv(in_tsv, out_tsv, percentiles)
     log.info('Finished normalizing popularity scores.')
