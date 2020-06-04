@@ -105,7 +105,7 @@ class CleanupFunctions:
                 lower_tag = tag['name'].lower()
                 should_filter = _tag_blacklisted(lower_tag) or below_threshold
             else:
-                log.warning(f'Filtering malformed tag "{tag}" in array "{tags}"')
+                log.warning(f'Filtering malformed tag "{tag}" in "{tags}"')
                 should_filter = True
             if should_filter:
                 update_required = True
