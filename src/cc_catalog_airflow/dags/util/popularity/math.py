@@ -37,7 +37,7 @@ def compute_constant(percentile: float, percentile_value: Real):
 def get_percentiles(postgres, popularity_fields, attempts=0):
     """ Return the PERCENTILEth value for each metric in a dictionary. """
     if attempts > 1:
-        raise SystemError('Failed to generate percentiles file.')
+        raise RuntimeError('Failed to generate percentiles file.')
     try:
         with open(PERCENTILE_FILE_CACHE, 'r') as percentile_f:
             percentiles = json.load(percentile_f)
@@ -95,9 +95,16 @@ def _get_constant(provider, metric, percentile, value):
 
 def generate_popularity_tsv(input_tsv, output_tsv, percentiles, pop_fields):
     """
+    Compute the popularity score for each image and save it to a CSV. If there
+    are multiple popularity metrics, the average of each normalized score is
+    taken.
+
     :param input_tsv: A file containing raw popularity data.
     :param output_tsv: A file that will serve as the destination for
     normalized popularity data.
+    :param percentiles: A dictionary mapping each field to its PERCENTILEth
+    value
+    :pop_fields: The fields used to compute the popularity score.
     """
     popularity_tsv = csv.DictReader(input_tsv, delimiter='\t')
     fieldnames = ['identifier', 'normalized_popularity']
