@@ -10,7 +10,7 @@
             ['margin-right-small']: true,
             [`cc-${getLicenseIcon(li)}`]: true,
           }"
-          :alt="`${li.toUpperCase()}`"></i>
+          :alt="`${li.toUpperCase()}`"/>
           {{ getLicenseDescription(li) }}
       </span>
     </template>
