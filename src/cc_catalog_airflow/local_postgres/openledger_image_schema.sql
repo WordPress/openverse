@@ -111,12 +111,7 @@ ALTER TABLE ONLY public.image
 
 CREATE INDEX image_9e9f3d70 ON public.image USING btree (provider);
 
-
---
--- Name: image_provider_fid_url_key; Type: INDEX; Schema: public; Owner: deploy
---
-
-CREATE UNIQUE INDEX image_provider_fid_key ON public.image USING btree (provider, md5((foreign_identifier)::text);
+CREATE UNIQUE INDEX image_provider_fid_key ON public.image USING btree (provider, md5((foreign_identifier)::text));
 
 
 --
