@@ -113,17 +113,10 @@ CREATE INDEX image_9e9f3d70 ON public.image USING btree (provider);
 
 
 --
--- Name: image_foreign_identifier_key; Type: INDEX; Schema: public; Owner: deploy
---
-
-CREATE INDEX image_foreign_identifier_key ON public.image USING btree (provider, md5((foreign_identifier)::text));
-
-
---
 -- Name: image_provider_fid_url_key; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE UNIQUE INDEX image_provider_fid_url_key ON public.image USING btree (provider, md5((foreign_identifier)::text), md5((url)::text));
+CREATE UNIQUE INDEX image_provider_fid_key ON public.image USING btree (provider, md5((foreign_identifier)::text);
 
 
 --
