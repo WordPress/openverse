@@ -44,7 +44,7 @@ def _compute_percentiles_file(postgres_conn_id):
         postgres_conn_id, popularity_fields, PERCENTILE
     )
     _json['percentiles'] = percentiles
-    log.info(f'percentile json: {_json}')
+    log.info(f'New percentiles file: {_json}')
     with open(PERCENTILE_FILE_CACHE, 'w+') as percentile_f:
         percentile_f.write(json.dumps(_json))
 
@@ -64,7 +64,9 @@ def _get_percentiles(postgres, attempts=0):
                     )
             now = datetime.utcnow()
             if datetime.fromisoformat(percentiles['expires']) < now:
-                raise ValueError('Percentile cache expired')
+                msg = 'Percentile cache expired and needs to be recomputed'
+                log.info(msg)
+                raise ValueError(msg)
             return percentiles['percentiles']
     except (FileNotFoundError, KeyError, ValueError) as e:
         # If the cache has expired or a field is missing, the cache will be
@@ -100,7 +102,7 @@ def compute_constant(percentile: float, percentile_value: Real):
     return ((1 - percentile) / percentile) * percentile_value
 
 
-def compute_popularity(metric_value, source_constant):
+def compute_popularity(metric_value: Real, source_constant: Real):
     return metric_value / (metric_value + source_constant)
 
 
@@ -187,6 +189,22 @@ def dump_selection_to_tsv(postgres_conn_id, query, tsv_file_name):
     postgres.copy_expert(query, tsv_file_name)
 
 
+def upload_normalized_popularity(postgres_conn_id, in_tsv):
+    """ Write the `normalized_score` field from `in_tsv` to the catalog. """
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    postgres.copy_expert(
+        "CREATE TEMP TABLE temp_popularity "
+        "(identifier uuid, normalized_popularity text); "
+        "COPY temp_popularity FROM STDIN WITH CSV HEADER DELIMITER E'\t'; "
+        "UPDATE image SET meta_data = jsonb_set("
+        "  meta_data, "
+        "  '{normalized_popularity}',"
+        "  temp_popularity.normalized_popularity::jsonb"
+        ") FROM temp_popularity"
+        "  WHERE image.identifier = temp_popularity.identifier;",
+        in_tsv
+    )
+
 def main():
     log.info('Starting popularity job. . .')
     percentiles = _get_percentiles(DB_CONN_ID)
@@ -195,5 +213,7 @@ def main():
     with open(POPULARITY_DUMP_DEST, 'w+') as in_tsv, \
             open(NORMALIZED_POPULARITY_DEST, 'w+') as out_tsv:
         dump_selection_to_tsv(DB_CONN_ID, dump_query, POPULARITY_DUMP_DEST)
+        log.info('Normalizing popularity data. . .')
         _generate_popularity_tsv(in_tsv, out_tsv, percentiles)
-    log.info('Finished normalizing popularity scores.')
+        log.info('Finished normalizing popularity scores. Uploading. . .')
+        upload_normalized_popularity(DB_CONN_ID, NORMALIZED_POPULARITY_DEST)
