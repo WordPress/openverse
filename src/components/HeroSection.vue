@@ -152,6 +152,12 @@ $hero-height: 80vh;
     right: 4rem;
   }
 
+  .locale-block {
+    position: absolute;
+    top: 2.5rem;
+    right: 4rem;
+  }
+
   /* Small only */
   @include mobile {
     height: 80vh;
