@@ -7,7 +7,7 @@ def upload_normalized_popularity(postgres_conn_id, in_tsv):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.copy_expert(
         "CREATE TEMP TABLE temp_popularity "
-        "(identifier uuid, normalized_popularity text); "
+        "  (identifier uuid, normalized_popularity text); "
         "COPY temp_popularity FROM STDIN WITH CSV HEADER DELIMITER E'\t'; "
         "UPDATE image SET meta_data = jsonb_set("
         "  meta_data, "

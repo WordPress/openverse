@@ -106,12 +106,15 @@ def generate_popularity_tsv(input_tsv, output_tsv, percentiles, pop_fields):
     value
     :pop_fields: The fields used to compute the popularity score.
     """
+    input_tsv_length = sum(1 for _ in input_tsv) or -1
+    progress = 0
+    input_tsv.seek(0)
     popularity_tsv = csv.DictReader(input_tsv, delimiter='\t')
     fieldnames = ['identifier', 'normalized_popularity']
-    output_tsv = csv.DictWriter(
+    _output_tsv = csv.DictWriter(
         output_tsv, delimiter='\t', fieldnames=fieldnames
     )
-    output_tsv.writeheader()
+    _output_tsv.writeheader()
     for idx, row in enumerate(popularity_tsv):
         if idx == 0:
             continue
@@ -132,4 +135,11 @@ def generate_popularity_tsv(input_tsv, output_tsv, percentiles, pop_fields):
             'identifier': row['identifier'],
             'normalized_popularity': popularity
         }
-        output_tsv.writerow(output_row)
+        _output_tsv.writerow(output_row)
+        progress += 1
+        # Log progress every 5%
+        if progress % (round(input_tsv_length / 20)) == 0:
+            log.info(
+                f'Popularity calc progress: '
+                f'{round((progress / input_tsv_length) * 100)}%'
+            )
