@@ -33,7 +33,9 @@ def test_gen_tsv():
         generate_popularity_tsv(tsv, output_tsv, percentiles, pop_fields)
         output_tsv.seek(0)
     scores = _parse_normalized_tsv(output_tsv)
+
+    # Scores should be floats ranging from 0 to 100.
     for _, score in scores.items():
         assert 0 < score < 100
-    # The score of the third row should be the average of the first and second.
+    # The score of the third row should be the average of the first and second
     assert statistics.mean([scores[0], scores[1]]) == scores[2]
