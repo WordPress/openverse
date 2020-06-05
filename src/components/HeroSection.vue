@@ -1,37 +1,12 @@
 <template>
   <main class="hero" role="main">
     <div class="hero-center">
-      <h2 class="has-text-centered">Search for content to reuse</h2>
-      <form
-        class="hero_search-form margin-top-bigger"
-        role="search"
-        method="get"
-        action="/search"
-        v-on:submit.prevent="onSubmit"
-      >
-        <div class="is-hidden-touch centered-search-box">
-          <div class="field has-addons">
-            <div class="control">
-              <label for="searchTerm" class="is-sr-only">Search</label>
-              <input
-                required="required"
-                autofocus
-                class="hero_search-input input is-large"
-                type="search"
-                name="q"
-                placeholder="I would like to see..."
-                autocapitalize="none"
-                id="searchTerm"
-                v-model.lazy="form.searchTerm"
-              />
-            </div>
-            <div class="control">
-              <button class="button is-primary big" title="Search">
-                Search
-              </button>
-            </div>
-          </div>
-        </div>
+      <h2 class="has-text-centered">{{ $t('hero') }}</h2>
+      <form class="hero_search-form margin-top-bigger"
+          role="search"
+          method="get"
+          action="/search"
+          v-on:submit.prevent="onSubmit">
         <div class="is-hidden-desktop centered-search-box">
           <div class="field has-addons">
             <div class="control mobile-input">
