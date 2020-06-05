@@ -9,7 +9,7 @@ from util.popularity.sql import select_percentiles
 
 
 PERCENTILE_FILE_CACHE = os.path.join(
-    os.getenv('OUTPUT_DIR'), 'percentiles.json'
+    os.getenv('OUTPUT_DIR', '/tmp/'), 'percentiles.json'
 )
 
 # The percentile used to compute the normalizing constant
@@ -104,7 +104,7 @@ def generate_popularity_tsv(input_tsv, output_tsv, percentiles, pop_fields):
     normalized popularity data.
     :param percentiles: A dictionary mapping each field to its PERCENTILEth
     value
-    :pop_fields: The fields used to compute the popularity score.
+    :param pop_fields: The fields used to compute the popularity score.
     """
     input_tsv_length = sum(1 for _ in input_tsv) or -1
     progress = 0
@@ -115,9 +115,7 @@ def generate_popularity_tsv(input_tsv, output_tsv, percentiles, pop_fields):
         output_tsv, delimiter='\t', fieldnames=fieldnames
     )
     _output_tsv.writeheader()
-    for idx, row in enumerate(popularity_tsv):
-        if idx == 0:
-            continue
+    for row in popularity_tsv:
         normalized_scores = []
         for metric in pop_fields:
             percentile_value = percentiles[metric]
@@ -138,7 +136,8 @@ def generate_popularity_tsv(input_tsv, output_tsv, percentiles, pop_fields):
         _output_tsv.writerow(output_row)
         progress += 1
         # Log progress every 5%
-        if progress % (round(input_tsv_length / 20)) == 0:
+        checkpoint = round(input_tsv_length / 20) or 1
+        if progress % checkpoint == 0:
             log.info(
                 f'Popularity calc progress: '
                 f'{round((progress / input_tsv_length) * 100)}%'

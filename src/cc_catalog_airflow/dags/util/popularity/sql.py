@@ -21,8 +21,8 @@ def upload_normalized_popularity(postgres_conn_id, in_tsv):
 
 def select_percentiles(postgres_conn_id, popularity_fields, percentile):
     """
-    Given a list of fields that occur in the `meta_data` column, return the
-    percentile for each field.
+    Given a list of fields that occur in the `meta_data` column, return a dict
+    mapping each field to its `percentile`th percentile value.
     """
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     field_queries = []
