@@ -397,6 +397,16 @@ def test_attribution():
     assert title in all_data_present.attribution
     assert creator in all_data_present.attribution
 
+def test_license_override():
+    null_license_url = Image(
+        identifier="ab80dbe1-414c-4ee8-9543-f9599312aeb8",
+        title="test",
+        creator="test",
+        license="by",
+        license_version="3.0",
+        meta_data={'license_url': 'null'}
+    )
+    assert null_license_url.license_url is not None
 
 def test_source_search():
     response = requests.get(API_URL + '/v1/images?source=behance',
