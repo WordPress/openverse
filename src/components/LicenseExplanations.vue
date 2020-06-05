@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="license">
     <template v-for="(li, index) in splitLicenses">
       <span class="is-block margin-vertical-small" :key="index">
         <i :class="{
@@ -10,7 +10,7 @@
             ['margin-right-small']: true,
             [`cc-${getLicenseIcon(li)}`]: true,
           }"
-          :alt="`${li.toUpperCase()}`"/>
+          :alt="`${li.toUpperCase()}`"></i>
           {{ getLicenseDescription(li) }}
       </span>
     </template>
