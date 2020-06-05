@@ -227,11 +227,7 @@ def upsert_records_to_image_table(
         INSERT INTO {image_table} AS old ({', '.join(column_inserts.keys())})
         SELECT {', '.join(column_inserts.values())}
         FROM {load_table}
-        ON CONFLICT (
-          {col.PROVIDER},
-          md5(({col.FOREIGN_ID})::text),
-          md5(({col.DIRECT_URL})::text)
-        )
+        ON CONFLICT ({col.PROVIDER}, md5({col.FOREIGN_ID}))
         DO UPDATE SET
           {col.UPDATED_ON} = {NOW},
           {col.LAST_SYNCED} = {NOW},

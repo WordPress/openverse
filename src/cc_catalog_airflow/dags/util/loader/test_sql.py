@@ -91,15 +91,13 @@ CREATE_IMAGE_TABLE_QUERY = (
 )
 
 UNIQUE_CONDITION_QUERY = (
-    f"CREATE UNIQUE INDEX {TEST_IMAGE_TABLE}_provider_fid_url_key"
+    f"CREATE UNIQUE INDEX {TEST_IMAGE_TABLE}_provider_fid_key"
     f" ON public.{TEST_IMAGE_TABLE}"
-    f" USING btree ("
-    f"provider, md5((foreign_identifier)::text), md5((url)::text)"
-    f");"
+    f" USING btree (provider, md5(foreign_identifier));"
 )
 
 DROP_IMAGE_INDEX_QUERY = (
-    f'DROP INDEX IF EXISTS {TEST_IMAGE_TABLE}_provider_fid_url_key;'
+    f'DROP INDEX IF EXISTS {TEST_IMAGE_TABLE}_provider_fid_key;'
 )
 
 
