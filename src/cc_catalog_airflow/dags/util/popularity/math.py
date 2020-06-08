@@ -85,11 +85,11 @@ def _read_percentiles():
     try:
         f = s3.Object(PERCENTILE_S3_BUCKET, PERCENTILE_FILE)
         file_content = f.get()['Body'].read().decode('utf-8')
-        percentiles = json.load(file_content)
+        percentiles = json.loads(file_content)
         return percentiles
     except botocore.exceptions.ClientError:
         log.info('Percentile cache not found.')
-        return None
+        return {}
 
 
 def _update_percentiles_cache(postgres_conn_id, popularity_fields):
@@ -110,6 +110,8 @@ def _update_percentiles_cache(postgres_conn_id, popularity_fields):
 
 
 def _validate_percentiles(percentiles, popularity_fields):
+    if not percentiles:
+        return False
     valid = True
     for popfield in popularity_fields:
         if popfield not in percentiles['percentiles']:
