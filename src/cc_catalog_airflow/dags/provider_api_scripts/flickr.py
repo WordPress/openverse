@@ -19,6 +19,7 @@ import lxml.html as html
 
 from common.requester import DelayedRequester
 from common.storage import image
+from util.loader import provider_details as prov
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -31,10 +32,10 @@ DELAY = 1.0
 LIMIT = 500
 MAX_TAG_STRING_LENGTH = 2000
 MAX_DESCRIPTION_LENGTH = 2000
-PROVIDER = 'flickr'
+PROVIDER = prov.FLICKR_DEFAULT_PROVIDER
 API_KEY = os.getenv('FLICKR_API_KEY')
 ENDPOINT = 'https://api.flickr.com/services/rest/'
-PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
+PHOTO_URL_BASE = prov.FLICKR_PHOTO_URL_BASE
 DATE_TYPE = 'upload'
 # DAY_DIVISION is an integer that gives how many equal portions we should
 # divide a 24-hour period into for requesting photo data.  For example,
@@ -44,20 +45,7 @@ DATE_TYPE = 'upload'
 DAY_DIVISION = 48 # divide into half hour increments
 # SUB_PROVIDERS is a collection of providers within Flickr which are
 # valuable to a broad audience
-SUB_PROVIDERS = {
-    'nasa': {
-        '24662369@N07',  # NASA Goddard Photo and Video
-        '35067687@N04',  # NASA HQ PHOTO
-        '29988733@N04',  # NASA Johnson
-        '28634332@N05',  # NASA's Marshall Space Flight Center
-        '108488366@N07',  # NASAKennedy
-        '136485307@N06',  # Apollo Image Gallery
-        '130608600@N05',  # Official SpaceX Photos
-        },
-    'bio_diversity': {
-        '61021753@N02'  # BioDivLibrary
-    }
-}
+SUB_PROVIDERS = prov.FLICKR_SUB_PROVIDERS
 
 LICENSE_INFO = {
     '1': ('by-nc-sa', '2.0'),

@@ -2,6 +2,7 @@ import logging
 from textwrap import dedent
 from airflow.hooks.postgres_hook import PostgresHook
 from util.loader import column_names as col
+from util.loader import provider_details as prov
 from psycopg2.errors import InvalidTextRepresentation
 
 logger = logging.getLogger(__name__)
@@ -11,22 +12,6 @@ IMAGE_TABLE_NAME = 'image'
 DB_USER_NAME = 'deploy'
 NOW = 'NOW()'
 FALSE = "'f'"
-# SUB_PROVIDERS is a collection of providers within Flickr which are
-# valuable to a broad audience
-SUB_PROVIDERS = {
-    'nasa': {
-        '24662369@N07',  # NASA Goddard Photo and Video
-        '35067687@N04',  # NASA HQ PHOTO
-        '29988733@N04',  # NASA Johnson
-        '28634332@N05',  # NASA's Marshall Space Flight Center
-        '108488366@N07',  # NASAKennedy
-        '136485307@N06',  # Apollo Image Gallery
-        '130608600@N05',  # Official SpaceX Photos
-        },
-    'bio_diversity': {
-        '61021753@N02'  # BioDivLibrary
-    }
-}
 
 
 def create_loading_table(
@@ -335,9 +320,9 @@ def _create_temp_sub_prov_table(
     """
     Populate the intermediary table with the sub providers of interest
     """
-    for sub_prov, user_id_set in SUB_PROVIDERS.items():
+    for sub_prov, user_id_set in prov.FLICKR_SUB_PROVIDERS.items():
         for user_id in user_id_set:
-            creator_url = 'https://www.flickr.com/photos/' + user_id
+            creator_url = prov.FLICKR_PHOTO_URL_BASE + user_id
             postgres.run(
                 dedent(
                     f'''
@@ -359,7 +344,7 @@ def _create_temp_sub_prov_table(
 def update_sub_providers(
         postgres_conn_id,
         image_table=IMAGE_TABLE_NAME,
-        default_provider='flickr'
+        default_provider=prov.FLICKR_DEFAULT_PROVIDER
 ):
     """
     Initially set all source values to the default provider value
