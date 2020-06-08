@@ -45,6 +45,21 @@ NORMALIZED_POPULARITY_DEST = os.path.join(
 )
 
 
+def main():
+    log.info('Starting popularity job. Fetching percentiles. . .')
+    percentiles = get_percentiles(DB_CONN_ID, popularity_fields)
+    dump_query = build_popularity_dump_query(popularity_fields)
+    log.info('Creating TSV of popularity data. . .')
+    with open(POPULARITY_DUMP_DEST, 'w+') as in_tsv, \
+            open(NORMALIZED_POPULARITY_DEST, 'w+') as out_tsv:
+        dump_selection_to_tsv(DB_CONN_ID, dump_query, POPULARITY_DUMP_DEST)
+        log.info('Normalizing popularity data. . .')
+        generate_popularity_tsv(in_tsv, out_tsv, percentiles, popularity_fields)
+        log.info('Finished normalizing popularity scores. Uploading. . .')
+        upload_normalized_popularity(DB_CONN_ID, NORMALIZED_POPULARITY_DEST)
+        log.info('Popularity normalization complete.')
+
+
 def get_runner_operator(dag):
     return PythonOperator(
         task_id="popularity_workflow_task",
@@ -71,18 +86,3 @@ def create_dag():
 
 
 globals()[DAG_ID] = create_dag()
-
-
-def main():
-    log.info('Starting popularity job. Fetching percentiles. . .')
-    percentiles = get_percentiles(DB_CONN_ID, popularity_fields)
-    dump_query = build_popularity_dump_query(popularity_fields)
-    log.info('Creating TSV of popularity data. . .')
-    with open(POPULARITY_DUMP_DEST, 'w+') as in_tsv, \
-            open(NORMALIZED_POPULARITY_DEST, 'w+') as out_tsv:
-        dump_selection_to_tsv(DB_CONN_ID, dump_query, POPULARITY_DUMP_DEST)
-        log.info('Normalizing popularity data. . .')
-        generate_popularity_tsv(in_tsv, out_tsv, percentiles, popularity_fields)
-        log.info('Finished normalizing popularity scores. Uploading. . .')
-        upload_normalized_popularity(DB_CONN_ID, NORMALIZED_POPULARITY_DEST)
-        log.info('Popularity normalization complete.')
