@@ -11,6 +11,22 @@ IMAGE_TABLE_NAME = 'image'
 DB_USER_NAME = 'deploy'
 NOW = 'NOW()'
 FALSE = "'f'"
+# SUB_PROVIDERS is a collection of providers within Flickr which are
+# valuable to a broad audience
+SUB_PROVIDERS = {
+    'nasa': {
+        '24662369@N07',  # NASA Goddard Photo and Video
+        '35067687@N04',  # NASA HQ PHOTO
+        '29988733@N04',  # NASA Johnson
+        '28634332@N05',  # NASA's Marshall Space Flight Center
+        '108488366@N07',  # NASAKennedy
+        '136485307@N06',  # Apollo Image Gallery
+        '130608600@N05',  # Official SpaceX Photos
+        },
+    'bio_diversity': {
+        '61021753@N02'  # BioDivLibrary
+    }
+}
 
 
 def create_loading_table(
@@ -288,3 +304,96 @@ def _delete_malformed_row_in_file(tsv_file_name, line_number):
             if index + 1 != line_number:
                 write_obj.write(line)
 
+
+def _create_temp_sub_prov_table(
+        postgres_conn_id,
+        temp_table='temp_sub_prov_table'
+):
+    """
+    Drop the temporary table if it already exists
+    """
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    postgres.run(f'DROP TABLE IF EXISTS public.{temp_table};')
+
+    """
+    Create intermediary table for sub provider migration
+    """
+    postgres.run(
+        dedent(
+            f'''
+            CREATE TABLE public.{temp_table} (
+              {col.CREATOR_URL} character varying(2000),
+              {col.PROVIDER} character varying(80)
+            );
+            '''
+        )
+    )
+    postgres.run(
+        f'ALTER TABLE public.{temp_table} OWNER TO {DB_USER_NAME};'
+    )
+
+    """
+    Populate the intermediary table with the sub providers of interest
+    """
+    for sub_prov, user_id_set in SUB_PROVIDERS.items():
+        for user_id in user_id_set:
+            creator_url = 'https://www.flickr.com/photos/' + user_id
+            postgres.run(
+                dedent(
+                    f'''
+                    INSERT INTO public.{temp_table} (
+                      {col.CREATOR_URL} ,
+                      {col.PROVIDER}
+                    ) 
+                    VALUES (
+                      '{creator_url}' , 
+                      '{sub_prov}'
+                    );
+                    '''
+                )
+            )
+
+    return temp_table
+
+
+def update_sub_providers(
+        postgres_conn_id,
+        image_table=IMAGE_TABLE_NAME,
+        default_provider='flickr'
+):
+    """
+    Initially set all source values to the default provider value
+    """
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    postgres.run(
+        dedent(
+            f'''
+            UPDATE {image_table}
+            SET {col.SOURCE} = '{default_provider}'
+            WHERE {col.PROVIDER} = '{default_provider}';
+            '''
+        )
+    )
+
+    """
+    Update the source value to appropriate sub provider value for a given set
+    of users
+    """
+    temp_table = _create_temp_sub_prov_table(postgres_conn_id)
+    postgres.run(
+        dedent(
+            f'''
+            UPDATE {image_table}
+            SET {col.SOURCE} = public.{temp_table}.{col.PROVIDER}
+            FROM public.{temp_table}
+            WHERE 
+            {image_table}.{col.CREATOR_URL} = public.{temp_table}.{
+            col.CREATOR_URL};
+            '''
+        )
+    )
+
+    """
+    Drop the temporary table
+    """
+    postgres.run(f'DROP TABLE public.{temp_table};')

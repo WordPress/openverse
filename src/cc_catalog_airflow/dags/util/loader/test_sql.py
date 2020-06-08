@@ -1113,3 +1113,65 @@ def test_drop_load_table_drops_table(postgres_with_load_table):
     postgres_with_load_table.cursor.execute(check_query)
     check_result = postgres_with_load_table.cursor.fetchone()[0]
     assert not check_result
+
+
+def test_create_temp_sub_provider_table(postgres):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = 'temp_sub_prov_table'
+    sql._create_temp_sub_prov_table(postgres_conn_id)
+
+    check_query = (
+        f"SELECT EXISTS ("
+        f"SELECT FROM pg_tables WHERE tablename='{load_table}');"
+    )
+    postgres.cursor.execute(check_query)
+    check_result = postgres.cursor.fetchone()[0]
+    assert check_result
+
+
+def test_update_sub_providers(postgres_with_load_table):
+    postgres_conn_id = POSTGRES_CONN_ID
+    image_table = TEST_LOAD_TABLE
+
+    FID_A = 'a'
+    FID_B = 'b'
+    IMG_URL_A = 'https://images.com/a/img.jpg'
+    IMG_URL_B = 'https://images.com/b/img.jpg'
+    CREATOR_URL_A = 'https://www.flickr.com/photos/29988733@N04'
+    CREATOR_URL_B= 'https://www.flickr.com/photos/other_user'
+    PROVIDER = 'flickr'
+    LICENSE = 'by'
+    TAGS = [
+        {'name': 'tagone', 'provider': 'test'},
+        {'name': 'tagtwo', 'provider': 'test'}
+    ]
+
+    insert_data_query = (
+        f"INSERT INTO {image_table} VALUES"
+        f"('{FID_A}',null,'{IMG_URL_A}',null,null,null,null,'{LICENSE}',null,"
+        f"null,'{CREATOR_URL_A}',null,null,'{json.dumps(TAGS)}',null,"
+        f"'{PROVIDER}',null),"
+        f"('{FID_B}',null,'{IMG_URL_B}',null,null,null,null,'{LICENSE}',null,"
+        f"null,'{CREATOR_URL_B}',null,null,'{json.dumps(TAGS)}',null,"
+        f"'{PROVIDER}',null);"
+    )
+
+    postgres_with_load_table.cursor.execute(insert_data_query)
+    postgres_with_load_table.connection.commit()
+    sql.update_sub_providers(
+        postgres_conn_id,
+        image_table
+    )
+    postgres_with_load_table.connection.commit()
+    postgres_with_load_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_table.cursor.fetchall()
+    assert len(actual_rows) == 2
+
+    for actual_row in actual_rows:
+        if actual_row[0] == 'a':
+            assert actual_row[16] == 'nasa'
+        else:
+            assert actual_row[0] == 'b' and actual_row[16] == 'flickr'
+
