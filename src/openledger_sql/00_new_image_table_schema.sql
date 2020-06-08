@@ -14,9 +14,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
 
 CREATE TABLE public.new_image (
-    created_on timestamp with time zone NOT NULL, updated_on timestamp with time zone NOT NULL,
     identifier uuid PRIMARY KEY DEFAULT public.uuid_generate_v4(),
-    perceptual_hash character varying(255),
+    created_on timestamp with time zone NOT NULL,
+    updated_on timestamp with time zone NOT NULL,
     ingestion_type character varying(80),
     provider character varying(80),
     source character varying(80),
@@ -32,13 +32,11 @@ CREATE TABLE public.new_image (
     creator character varying(2000),
     creator_url character varying(2000),
     title character varying(5000),
-    tags_list character varying(255)[],
-    last_synced_with_source timestamp with time zone,
-    removed_from_source boolean NOT NULL,
     meta_data jsonb,
     tags jsonb,
     watermarked boolean,
-    view_count integer DEFAULT 0 NOT NULL
+    last_synced_with_source timestamp with time zone,
+    removed_from_source boolean NOT NULL
 );
 
 
