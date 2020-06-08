@@ -34,42 +34,23 @@ def compute_constant(percentile: float, percentile_value: Real):
     return ((1 - percentile) / percentile) * percentile_value
 
 
-def get_percentiles(postgres, popularity_fields, attempts=0):
-    """ Return the PERCENTILEth value for each metric in a dictionary. """
-    if attempts > 1:
-        raise RuntimeError('Failed to generate percentiles file.')
+def _read_percentiles():
     try:
         with open(PERCENTILE_FILE_CACHE, 'r') as percentile_f:
             percentiles = json.load(percentile_f)
-            for popfield in popularity_fields:
-                if popfield not in percentiles['percentiles']:
-                    raise KeyError(
-                        f'Expected field missing from popularity percentiles '
-                        f'file cache: {popfield}. Actual: {percentiles}'
-                    )
-            now = datetime.utcnow()
-            if datetime.fromisoformat(percentiles['expires']) < now:
-                msg = 'Percentile cache expired and needs to be recomputed'
-                log.info(msg)
-                raise ValueError(msg)
-            return percentiles['percentiles']
-    except (FileNotFoundError, KeyError, ValueError) as e:
-        # If the cache has expired or a field is missing, the cache will be
-        # refreshed.
-        log.info(f'Recomputing percentiles file because: {e}')
-        _compute_percentiles_file(postgres, popularity_fields)
-        attempts += 1
-        return get_percentiles(postgres, popularity_fields, attempts)
+            return percentiles
+    except FileNotFoundError:
+        log.info('Percentile cache not found.')
+        return None
 
 
-def _compute_percentiles_file(postgres_conn_id, popularity_fields):
+def _update_percentiles_cache(postgres_conn_id, popularity_fields):
     _json = {}
     # Don't recompute the cache for 60 days
     cached_date = datetime.utcnow()
     expire_time = timedelta(days=60)
     cache_expires_date = cached_date + expire_time
     _json['expires'] = cache_expires_date.isoformat()
-
     percentiles = select_percentiles(
         postgres_conn_id, popularity_fields, PERCENTILE
     )
@@ -77,6 +58,35 @@ def _compute_percentiles_file(postgres_conn_id, popularity_fields):
     log.info(f'New percentiles file: {_json}')
     with open(PERCENTILE_FILE_CACHE, 'w+') as percentile_f:
         percentile_f.write(json.dumps(_json))
+
+
+def _validate_percentiles(percentiles, popularity_fields):
+    valid = True
+    for popfield in popularity_fields:
+        if popfield not in percentiles['percentiles']:
+            log.info('Percentile cache missing expected field. Recomputing.')
+            valid = False
+    now = datetime.utcnow()
+    if datetime.fromisoformat(percentiles['expires']) < now:
+        log.info('Percentile cache expired and needs to be recomputed.')
+        valid = False
+    return valid
+
+
+def get_percentiles(postgres, popularity_fields, attempts=0):
+    """ Return the PERCENTILEth value for each metric in a dictionary. """
+    if attempts > 1:
+        raise RuntimeError('Failed to generate percentiles file.')
+    percentiles = _read_percentiles()
+    valid = _validate_percentiles(percentiles, popularity_fields)
+    if not percentiles or not valid:
+        # If the cache has expired or a field is missing, the cache will be
+        # refreshed.
+        _update_percentiles_cache(postgres, popularity_fields)
+        attempts += 1
+        return get_percentiles(postgres, popularity_fields, attempts)
+    else:
+        return percentiles['percentiles']
 
 
 def _cache_constant(provider, metric, constant):

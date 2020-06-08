@@ -1,7 +1,9 @@
 import os
 import io
 import statistics
-from util.popularity.math import generate_popularity_tsv
+from datetime import datetime as dt
+from datetime import timedelta
+from util.popularity.math import generate_popularity_tsv, _validate_percentiles
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'test_resources'
@@ -39,3 +41,33 @@ def test_gen_tsv():
         assert 0 < score < 100
     # The score of the third row should be the average of the first and second
     assert statistics.mean([scores[0], scores[1]]) == scores[2]
+
+
+def test_expire_validation():
+    mocked = {
+        'expires': dt(1928, 12, 7).isoformat(),
+        'percentiles': {'views': 1}
+    }
+    assert not _validate_percentiles(mocked, ['views'])
+
+
+def test_field_validation_missing_field():
+    expires = dt.now() + timedelta(days=1)
+    mocked = {
+        'expires': expires.isoformat(),
+        'percentiles': {
+            'views': 1,
+        }
+    }
+    assert not _validate_percentiles(mocked, ['global_usage_count'])
+
+
+def test_field_validation_all_present():
+    expires = dt.now() + timedelta(days=1)
+    mocked = {
+        'expires': expires.isoformat(),
+        'percentiles': {
+            'views': 1,
+        }
+    }
+    assert _validate_percentiles(mocked, ['views'])
