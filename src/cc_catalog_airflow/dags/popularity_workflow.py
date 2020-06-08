@@ -1,5 +1,8 @@
 import os
 import logging as log
+from datetime import datetime
+from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
 from util.popularity.sql import (
     upload_normalized_popularity, build_popularity_dump_query,
     dump_selection_to_tsv
@@ -7,6 +10,23 @@ from util.popularity.sql import (
 from util.popularity.math import (
     generate_popularity_tsv, get_percentiles
 )
+from util.operator_util import get_log_operator
+"""
+Dump all of the popularity data to the disk, compute the popularity score for
+each row, and load it back into the database.
+
+See `util.popularity.math` for a more complete explanation of how popularity is
+calculated.
+"""
+
+DAG_ID = "popularity_workflow_dag"
+DAG_DEFAULT_ARGS = {
+    'owner': 'data-eng-admin',
+    'depends_on_past': False,
+    'start_date': datetime(2020, 1, 1),
+    'email_on_retry': False,
+    'retries': 0,
+}
 
 # The fields in the `meta_data` column that factor into the popularity data
 # calculation.
@@ -23,6 +43,34 @@ POPULARITY_DUMP_DEST = os.path.join(
 NORMALIZED_POPULARITY_DEST = os.path.join(
     os.getenv('OUTPUT_DIR'), 'normalized_popularity_dump.tsv'
 )
+
+
+def get_runner_operator(dag):
+    return PythonOperator(
+        task_id="popularity_workflow_task",
+        python_callable=main,
+        depends_on_past=False,
+        dag=dag
+    )
+
+
+def create_dag():
+    dag = DAG(
+        dag_id=DAG_ID,
+        default_args=DAG_DEFAULT_ARGS,
+        start_date=datetime(2020, 1, 1),
+        schedule_interval="@monthly",
+        catchup=False
+    )
+    with dag:
+        start_task = get_log_operator(dag, DAG_ID, "Starting")
+        run_task = get_runner_operator(dag)
+        end_task = get_log_operator(dag, DAG_ID, "Finished")
+        start_task >> run_task >> end_task
+    return dag
+
+
+globals()[DAG_ID] = create_dag()
 
 
 def main():
