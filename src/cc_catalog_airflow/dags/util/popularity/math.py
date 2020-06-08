@@ -2,6 +2,8 @@ import csv
 import json
 import logging as log
 import os
+import boto3
+import botocore
 import statistics
 from datetime import datetime, timedelta
 from numbers import Real
@@ -17,7 +19,7 @@ loosely defined as how successful it is on its parent platform. Some examples:
     - an image has been included in 20 different articles
 
 To meaningfully compare these different metrics, we have to "normalize" each
-metric – convert each result to a popularity score. So, the above metrics get
+metric – convert each result to a score from 0 to 100. So, the above metrics get
 turned into:
     - an image has a score of 98
     - an image has a score of 2
@@ -25,8 +27,8 @@ turned into:
     - an image has a score of 0
     - an image has a score of 99
 
-Intuitively, we are determining how much each image deviates from the mean, and
-moving rankings based on it.
+The intuition behind this is that we are trying to determine how much each
+sample deviates from the mean.
 
 The exact definitions:
 For any given metric, the popularity is given by:
@@ -45,12 +47,16 @@ score is given by:
 where x is the number of times the image has appeared in any article. Something
 cited twice will have a score of 0.9189.
     p(2) = (2 / (2 + 0.17647) = 0.918918169
+
+Computing the percentile of each metric is an expensive operation, so we
+only recompute it once every few months under the assumption that the
+distribution of each metric does not change radically from day to day.
 """
 
 
-PERCENTILE_FILE_CACHE = os.path.join(
-    os.getenv('OUTPUT_DIR', '/tmp/'), 'percentiles.json'
-)
+PERCENTILE_S3_BUCKET = os.getenv('PERCENTILE_BUCKET', 'percentiles-cache')
+
+PERCENTILE_FILE = os.getenv('PERCENTILE_FILE', 'percentiles.json')
 
 # The percentile used to compute the normalizing constant
 PERCENTILE = 0.85
@@ -75,16 +81,19 @@ def compute_constant(percentile: float, percentile_value: Real):
 
 
 def _read_percentiles():
+    s3 = boto3.resource('s3')
     try:
-        with open(PERCENTILE_FILE_CACHE, 'r') as percentile_f:
-            percentiles = json.load(percentile_f)
-            return percentiles
-    except FileNotFoundError:
+        f = s3.Object(PERCENTILE_S3_BUCKET, PERCENTILE_FILE)
+        file_content = f.get()['Body'].read().decode('utf-8')
+        percentiles = json.load(file_content)
+        return percentiles
+    except botocore.exceptions.ClientError:
         log.info('Percentile cache not found.')
         return None
 
 
 def _update_percentiles_cache(postgres_conn_id, popularity_fields):
+    s3 = boto3.resource('s3')
     _json = {}
     # Don't recompute the cache for 60 days
     cached_date = datetime.utcnow()
@@ -96,8 +105,8 @@ def _update_percentiles_cache(postgres_conn_id, popularity_fields):
     )
     _json['percentiles'] = percentiles
     log.info(f'New percentiles file: {_json}')
-    with open(PERCENTILE_FILE_CACHE, 'w+') as percentile_f:
-        percentile_f.write(json.dumps(_json))
+    f = s3.Object(PERCENTILE_S3_BUCKET, PERCENTILE_FILE)
+    f.put(Body=bytes(json.dumps(_json).encode('utf-8')))
 
 
 def _validate_percentiles(percentiles, popularity_fields):
@@ -145,7 +154,7 @@ def _get_constant(provider, metric, percentile, value):
 
 def generate_popularity_tsv(input_tsv, output_tsv, percentiles, pop_fields):
     """
-    Compute the popularity score for each image and save it to a CSV. If there
+    Compute the popularity score for each image and save it to a TSV. If there
     are multiple popularity metrics, the average of each normalized score is
     taken.
 

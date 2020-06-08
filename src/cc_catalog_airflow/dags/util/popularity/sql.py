@@ -3,7 +3,9 @@ from airflow.hooks.postgres_hook import PostgresHook
 
 
 def upload_normalized_popularity(postgres_conn_id, in_tsv):
-    """ Write the `normalized_score` field from `in_tsv` to the catalog. """
+    """
+    Write the `normalized_popularity` field from `in_tsv` to the catalog.
+    """
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.copy_expert(
         "CREATE TEMP TABLE temp_popularity "
