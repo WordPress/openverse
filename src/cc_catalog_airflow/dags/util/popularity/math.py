@@ -6,6 +6,46 @@ import statistics
 from datetime import datetime, timedelta
 from numbers import Real
 from util.popularity.sql import select_percentiles
+"""
+In order to improve the quality of images in search results, we want to
+generate a score for each image indicating how "popular" it is. Popularity is
+loosely defined as how successful it is on its parent platform. Some examples:
+    - an image has 20,000 views on Flickr
+    - an image has 7 views on Flickr
+    - an image has been included in a met exhibition 10 times
+    - an image has never been included in an article on Wikipedia
+    - an image has been included in 20 different articles
+
+To meaningfully compare these different metrics, we have to "normalize" each
+metric – convert each result to a popularity score. So, the above metrics get
+turned into:
+    - an image has a score of 98
+    - an image has a score of 2
+    - an image has a score of 85
+    - an image has a score of 0
+    - an image has a score of 99
+
+Intuitively, we are determining how much each image deviates from the mean, and
+moving rankings based on it.
+
+The exact definitions:
+For any given metric, the popularity is given by:
+    popularity(x): x / (x + C), where x is the raw metric and C is a constant.
+
+C is computed for each metric with the formula:
+    C = ((1 - r / r) * V
+where r is a percentile (e.g. .85) and V is a rth percentile value sampled from
+the raw metric.
+
+For example, let's say we are ranking Wikimedia Commons works based on how often
+they are included in Wikipedia articles. The 85th percentile for usages in
+Wikimedia Commons in our database is 1. So, for Wikimedia Commons, the
+score is given by:
+    p(x) = x / (x + 0.17647)
+where x is the number of times the image has appeared in any article. Something
+cited twice will have a score of 0.9189.
+    p(2) = (2 / (2 + 0.17647) = 0.918918169
+"""
 
 
 PERCENTILE_FILE_CACHE = os.path.join(

@@ -60,14 +60,4 @@ def test_field_validation_missing_field():
         }
     }
     assert not _validate_percentiles(mocked, ['global_usage_count'])
-
-
-def test_field_validation_all_present():
-    expires = dt.now() + timedelta(days=1)
-    mocked = {
-        'expires': expires.isoformat(),
-        'percentiles': {
-            'views': 1,
-        }
-    }
     assert _validate_percentiles(mocked, ['views'])
