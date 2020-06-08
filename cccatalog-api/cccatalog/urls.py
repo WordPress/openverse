@@ -41,6 +41,7 @@ ambition to index and catalog billions of Creative Commons works, including
 articles, songs, videos, photographs, paintings, and more. Using this API,
 developers will be able to access the digital commons in their own
 applications.
+
 Please note that there is a rate limit of 5000 requests per day and
 60 requests per minute rate limit in place for anonymous users. This is fine
 for introducing yourself to the API, but we strongly recommend that you obtain
@@ -52,9 +53,6 @@ an API key.
 
 Pull requests are welcome!
 [Contribute on GitHub](https://github.com/creativecommons/cccatalog-api)
-# System Architecture
-
-![system_architecture](https://raw.githubusercontent.com/creativecommons/cccatalog-api/master/system_architecture.png)
 
 # REST API
 
