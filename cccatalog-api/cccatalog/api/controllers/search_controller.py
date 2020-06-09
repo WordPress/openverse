@@ -1,3 +1,6 @@
+import cccatalog.api.models as models
+import logging as log
+import json
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch.exceptions import NotFoundError, RequestError
@@ -7,8 +10,6 @@ from elasticsearch_dsl.query import Query
 from cccatalog import settings
 from django.core.cache import cache
 from django.urls import reverse
-import cccatalog.api.models as models
-import logging as log
 from rest_framework import serializers
 from cccatalog.settings import PROXY_THUMBS
 from cccatalog.api.utils.validate_images import validate_images
@@ -25,7 +26,6 @@ URL = 'url'
 PROVIDER = 'provider'
 DEEP_PAGINATION_ERROR = 'Deep pagination is not allowed.'
 QUERY_SPECIAL_CHARACTER_ERROR = 'Unescaped special characters are not allowed.'
-POPULARITY_BOOST = False
 
 
 class RankFeature(Query):
@@ -291,26 +291,32 @@ def search(search_params, index, page_size, ip, request,
                 tags,
                 term={'field': 'tags.name'}
             )
-    # Boost by popularity metrics
-    if POPULARITY_BOOST:
-        queries = []
-        factors = ['comments', 'views', 'likes']
-        boost_factor = 100 / len(factors)
-        for factor in factors:
-            rank_feature_query = Q(
-                'rank_feature',
-                field=factor,
-                boost=boost_factor
-            )
-            queries.append(rank_feature_query)
-        s = Search().query(
-            Q(
-                'bool',
-                must=s.query,
-                should=queries,
-                minimum_should_match=1
-            )
+    # Tweak rankings by popularity and authority
+    boost_queries = [
+        Q(
+            'rank_feature',
+            field='normalized_popularity',
+            boost=20
+        ),
+        Q(
+            'rank_feature',
+            field='authority_boost',
+            boost=20
+        ),
+        Q(
+            'rank_feature',
+            field='authority_penalty',
+            boost=20
         )
+    ]
+    s = Search().query(
+        Q(
+            'bool',
+            must=s.query,
+            should=boost_queries,
+            minimum_should_match=1
+        )
+    )
 
     # Use highlighting to determine which fields contribute to the selection of
     # top results.
@@ -325,7 +331,8 @@ def search(search_params, index, page_size, ip, request,
     s = s[start:end]
     try:
         search_response = s.execute()
-        log.info(f'query={s.to_dict()}, es_took_ms={search_response.took}')
+        log.info(f'query={json.dumps(s.to_dict())},'
+                 f' es_took_ms={search_response.took}')
     except RequestError as e:
         raise ValueError(e)
     results = _post_process_results(
