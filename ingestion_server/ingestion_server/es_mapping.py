@@ -25,9 +25,6 @@ def create_mapping(table_name):
                             }
                         }
                     },
-                    "view_count": {
-                        "type": "long"
-                    },
                     "provider": {
                         "type": "text",
                         "fields": {
@@ -144,12 +141,6 @@ def create_mapping(table_name):
                         "type": "text",
                         "analyzer": "english"
                     },
-                    "height": {
-                        "type": "integer"
-                    },
-                    "width": {
-                        "type": "integer"
-                    },
                     "extension": {
                         "fields": {
                             "keyword": {
@@ -175,14 +166,15 @@ def create_mapping(table_name):
                         },
                         "type": "text"
                     },
-                    "views": {
+                    "normalized_popularity": {
                         "type": "rank_feature"
                     },
-                    "likes": {
+                    "authority_boost": {
                         "type": "rank_feature"
                     },
-                    "comments": {
-                        "type": "rank_feature"
+                    "authority_penalty": {
+                        "type": "rank_feature",
+                        "positive_score_impact": False
                     },
                     "mature": {
                         "type": "boolean"
