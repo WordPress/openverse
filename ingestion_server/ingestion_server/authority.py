@@ -69,5 +69,5 @@ def get_authority_penalty(provider):
     if provider in authority_types:
         authority_type = authority_types[provider]
         if authority_type in penalize:
-            authority_penalty = penalize[provider]
+            authority_penalty = penalize[authority_type]
     return authority_penalty
