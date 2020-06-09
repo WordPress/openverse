@@ -51,7 +51,7 @@ def test_expire_validation():
     assert not _validate_percentiles(mocked, ['views'])
 
 
-def test_field_validation_missing_field():
+def test_field_validation():
     expires = dt.now() + timedelta(days=1)
     mocked = {
         'expires': expires.isoformat(),
