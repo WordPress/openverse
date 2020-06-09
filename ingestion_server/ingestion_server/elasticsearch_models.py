@@ -216,7 +216,6 @@ class Image(SyncableDocType):
             authority_penalty = get_authority_penalty(provider)
         return authority_penalty
 
-
     @staticmethod
     def parse_detailed_tags(json_tags):
         if json_tags:
