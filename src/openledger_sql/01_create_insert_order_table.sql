@@ -4,3 +4,6 @@ SELECT row_number() OVER (
   ORDER BY updated_on
 ) rn, id
 FROM image;
+
+ALTER TABLE public.image_insert_order ADD CONSTRAINT image_insert_order_pkey (id);
+CREATE INDEX image_insert_order_rn_idx on image_insert_order USING btree (rn);
