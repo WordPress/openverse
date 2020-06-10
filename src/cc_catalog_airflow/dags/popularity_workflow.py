@@ -19,7 +19,7 @@ See `util.popularity.math` for a more complete explanation of how popularity is
 calculated.
 """
 
-DAG_ID = "popularity_workflow_dag"
+DAG_ID = 'popularity_workflow_dag'
 DAG_DEFAULT_ARGS = {
     'owner': 'data-eng-admin',
     'depends_on_past': False,
@@ -62,7 +62,7 @@ def main():
 
 def get_runner_operator(dag):
     return PythonOperator(
-        task_id="popularity_workflow_task",
+        task_id='popularity_workflow_task',
         python_callable=main,
         depends_on_past=False,
         dag=dag
@@ -74,13 +74,13 @@ def create_dag():
         dag_id=DAG_ID,
         default_args=DAG_DEFAULT_ARGS,
         start_date=datetime(2020, 1, 1),
-        schedule_interval="@monthly",
+        schedule_interval='@monthly',
         catchup=False
     )
     with dag:
-        start_task = get_log_operator(dag, DAG_ID, "Starting")
+        start_task = get_log_operator(dag, DAG_ID, 'Starting')
         run_task = get_runner_operator(dag)
-        end_task = get_log_operator(dag, DAG_ID, "Finished")
+        end_task = get_log_operator(dag, DAG_ID, 'Finished')
         start_task >> run_task >> end_task
     return dag
 
