@@ -25,7 +25,7 @@ STATIC_ROOT = "/var/api_static_content/static"
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-true_strings = ['true', 'True', 't']
+true_strings = ['true', 'True', 't', '1']
 DEBUG = os.environ.get('DJANGO_DEBUG_ENABLED', default=False) in true_strings
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
@@ -304,3 +304,6 @@ if EMAIL_HOST_USER or EMAIL_HOST_PASSWORD:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Whether to boost results by authority and popularity
+USE_RANK_FEATURES = os.getenv('USE_RANK_FEATURES', 'False') in true_strings

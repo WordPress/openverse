@@ -291,32 +291,24 @@ def search(search_params, index, page_size, ip, request,
                 tags,
                 term={'field': 'tags.name'}
             )
-    # Tweak rankings by popularity and authority
-    boost_queries = [
-        Q(
-            'rank_feature',
-            field='normalized_popularity',
-            boost=20
-        ),
-        Q(
-            'rank_feature',
-            field='authority_boost',
-            boost=20
-        ),
-        Q(
-            'rank_feature',
-            field='authority_penalty',
-            boost=20
+
+    if settings.USE_RANK_FEATURES:
+        feature_boost = {
+            'normalized_popularity': 20,
+            'authority_boost': 20,
+            'authority_penalty': 20
+        }
+        rank_queries = []
+        for field, boost in feature_boost.items():
+            rank_queries.append(Q('rank_feature', field=field, boost=boost))
+        s = Search().query(
+            Q(
+                'bool',
+                must=s.query,
+                should=rank_queries,
+                minimum_should_match=1
+            )
         )
-    ]
-    s = Search().query(
-        Q(
-            'bool',
-            must=s.query,
-            should=boost_queries,
-            minimum_should_match=1
-        )
-    )
 
     # Use highlighting to determine which fields contribute to the selection of
     # top results.
