@@ -1,3 +1,7 @@
+import cccatalog.api.models as models
+import logging as log
+import json
+import pprint
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch.exceptions import NotFoundError, RequestError
@@ -7,8 +11,6 @@ from elasticsearch_dsl.query import Query
 from cccatalog import settings
 from django.core.cache import cache
 from django.urls import reverse
-import cccatalog.api.models as models
-import logging as log
 from rest_framework import serializers
 from cccatalog.settings import PROXY_THUMBS
 from cccatalog.api.utils.validate_images import validate_images
@@ -25,7 +27,6 @@ URL = 'url'
 PROVIDER = 'provider'
 DEEP_PAGINATION_ERROR = 'Deep pagination is not allowed.'
 QUERY_SPECIAL_CHARACTER_ERROR = 'Unescaped special characters are not allowed.'
-POPULARITY_BOOST = False
 
 
 class RankFeature(Query):
@@ -197,7 +198,7 @@ def search(search_params, index, page_size, ip, request,
     :param filter_dead: Whether dead links should be removed.
     :param page: The results page number.
     :return: Tuple with a List of Hits from elasticsearch, the total count of
-    pages and results.
+    pages, and number of results.
     """
     s = Search(index=index)
     # Apply term filters. Each tuple pairs a filter's parameter name in the API
@@ -215,12 +216,7 @@ def search(search_params, index, page_size, ip, request,
     for tup in filters:
         api_field, elasticsearch_field = tup
         s = _apply_filter(s, search_params, api_field, elasticsearch_field)
-    # Get suggestions for any route
-    s = s.suggest(
-        'get_suggestion',
-        '',
-        term={'field': 'creator'}
-    )
+
     # Exclude mature content unless explicitly enabled by the requester
     if not search_params.data['mature']:
         s = s.exclude('term', mature=True)
@@ -249,34 +245,16 @@ def search(search_params, index, page_size, ip, request,
             query=query,
             fields=search_fields
         )
-        # Get suggestions for term query
-        s = s.suggest(
-            'get_suggestion',
-            query,
-            term={'field': 'creator'}
-        )
     else:
         if 'creator' in search_params.data:
             creator = _quote_escape(search_params.data['creator'])
             s = s.query(
                 'simple_query_string', query=creator, fields=['creator']
             )
-            # Get suggestions for creator
-            s = s.suggest(
-                'get_suggestion',
-                creator,
-                term={'field': 'creator'}
-            )
         if 'title' in search_params.data:
             title = _quote_escape(search_params.data['title'])
             s = s.query(
                 'simple_query_string', query=title, fields=['title']
-            )
-            # Get suggestions for title
-            s = s.suggest(
-                'get_suggestion',
-                title,
-                term={'field': 'title'}
             )
         if 'tags' in search_params.data:
             tags = _quote_escape(search_params.data['tags'])
@@ -285,30 +263,22 @@ def search(search_params, index, page_size, ip, request,
                 fields=['tags.name'],
                 query=tags
             )
-            # Get suggestions for tags
-            s = s.suggest(
-                'get_suggestion',
-                tags,
-                term={'field': 'tags.name'}
-            )
-    # Boost by popularity metrics
-    if POPULARITY_BOOST:
-        queries = []
-        factors = ['comments', 'views', 'likes']
-        boost_factor = 100 / len(factors)
-        for factor in factors:
-            rank_feature_query = Q(
-                'rank_feature',
-                field=factor,
-                boost=boost_factor
-            )
-            queries.append(rank_feature_query)
+
+    if settings.USE_RANK_FEATURES:
+        # TODO These boost values will be refined through experimentation.
+        feature_boost = {
+            'normalized_popularity': 1,
+            'authority_boost': 1,
+            'authority_penalty': 0.1
+        }
+        rank_queries = []
+        for field, boost in feature_boost.items():
+            rank_queries.append(Q('rank_feature', field=field, boost=boost))
         s = Search().query(
             Q(
                 'bool',
                 must=s.query,
-                should=queries,
-                minimum_should_match=1
+                should=rank_queries
             )
         )
 
@@ -325,7 +295,10 @@ def search(search_params, index, page_size, ip, request,
     s = s[start:end]
     try:
         search_response = s.execute()
-        log.info(f'query={s.to_dict()}, es_took_ms={search_response.took}')
+        log.info(f'query={json.dumps(s.to_dict())},'
+                 f' es_took_ms={search_response.took}')
+        if settings.VERBOSE_ES_RESPONSE:
+            log.info(pprint.pprint(search_response.to_dict()))
     except RequestError as e:
         raise ValueError(e)
     results = _post_process_results(
@@ -338,15 +311,12 @@ def search(search_params, index, page_size, ip, request,
         filter_dead
     )
 
-    suggestion = _query_suggestions(search_response)
-
     result_count, page_count = _get_result_and_page_count(
         search_response,
         results,
         page_size
     )
-
-    return results, page_count, result_count, suggestion
+    return results, page_count, result_count
 
 
 def _validate_provider(input_provider):
@@ -357,26 +327,6 @@ def _validate_provider(input_provider):
             "Provider \'{}\' does not exist.".format(input_provider)
         )
     return input_provider.lower()
-
-
-def _query_suggestions(response: Response):
-    """
-    Get suggestions on a misspelt query
-    """
-    res = response.to_dict()
-    if 'suggest' not in res:
-        return None
-    obj_suggestion = res['suggest']
-    if not obj_suggestion['get_suggestion']:
-        suggestion = None
-    else:
-        get_suggestion = obj_suggestion['get_suggestion'][0]
-        suggestions = get_suggestion['options']
-        if not suggestions:
-            suggestion = None
-        else:
-            suggestion = suggestions[0]['text']
-    return suggestion
 
 
 def related_images(uuid, index, request, filter_dead):

@@ -1,6 +1,9 @@
 from enum import Enum, auto
 from elasticsearch_dsl import Integer, DocType, Field
 from ingestion_server.categorize import get_categories
+from ingestion_server.authority import (
+    get_authority_boost, get_authority_penalty
+)
 
 """
 Provides an ORM-like experience for accessing data in Elasticsearch.
@@ -12,6 +15,12 @@ low-level changes to the index must be represented there as well.
 
 class RankFeature(Field):
     name = 'rank_feature'
+
+
+def _constrain_between(value, low, high):
+    ceiling = min(value, high)
+    floor = max(low, ceiling)
+    return floor
 
 
 class SyncableDocType(DocType):
@@ -62,18 +71,11 @@ class Image(SyncableDocType):
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
-        views, comments, likes = None, None, None
-        try:
-            metrics = row[schema['meta_data']]['popularity_metrics']
-            views = int(metrics['views']) + 1
-            likes = int(metrics['likes']) + 1
-            comments = int(metrics['comments']) + 1
-        except (KeyError, TypeError):
-            pass
         provider = row[schema['provider']]
         extension = Image.get_extension(row[schema['url']])
         height = row[schema['height']]
         width = row[schema['width']]
+        meta = row[schema['meta_data']]
         return Image(
             _id=row[schema['id']],
             id=row[schema['id']],
@@ -90,21 +92,16 @@ class Image(SyncableDocType):
             license=row[schema['license']].lower(),
             license_version=row[schema['license_version']],
             foreign_landing_url=row[schema['foreign_landing_url']],
-            view_count=row[schema['view_count']],
-            description=Image.parse_description(row[schema['meta_data']]),
-            height=height,
-            width=width,
+            description=Image.parse_description(meta),
             extension=Image.get_extension(row[schema['url']]),
-            views=views,
-            comments=comments,
-            likes=likes,
             categories=get_categories(extension, provider),
             aspect_ratio=Image.get_aspect_ratio(height, width),
             size=Image.get_size(height, width),
-            license_url=Image.get_license_url(row[schema['meta_data']]),
-            mature=Image.get_maturity(
-                row[schema['meta_data']], row[schema['mature']]
-            )
+            license_url=Image.get_license_url(meta),
+            mature=Image.get_maturity(meta, row[schema['mature']]),
+            normalized_popularity=Image.get_popularity(meta),
+            authority_boost=Image.get_authority_boost(meta, provider),
+            authority_penalty=Image.get_authority_penalty(meta, provider)
         )
 
     @staticmethod
@@ -177,6 +174,47 @@ class Image(SyncableDocType):
         if api_maturity_flag:
             _mature = True
         return _mature
+
+    @staticmethod
+    def get_popularity(meta_data):
+        popularity = None
+        if meta_data and 'normalized_popularity' in meta_data:
+            try:
+                popularity = float(meta_data['normalized_popularity'])
+                popularity = _constrain_between(popularity, low=0, high=100)
+            except (ValueError, TypeError):
+                pass
+        return popularity
+
+    @staticmethod
+    def get_authority_boost(meta_data, provider):
+        authority_boost = None
+        if meta_data and 'authority_boost' in meta_data:
+            try:
+                authority_boost = float(meta_data['authority_boost'])
+                authority_boost = _constrain_between(
+                    authority_boost, low=0, high=100
+                )
+            except (ValueError, TypeError):
+                pass
+        else:
+            authority_boost = get_authority_boost(provider)
+        return authority_boost
+
+    @staticmethod
+    def get_authority_penalty(meta_data, provider):
+        authority_penalty = None
+        if meta_data and 'authority_penalty' in meta_data:
+            try:
+                authority_penalty = float(meta_data['authority_penalty'])
+                authority_penalty = _constrain_between(
+                    authority_penalty, low=0, high=100
+                )
+            except (ValueError, TypeError):
+                pass
+        else:
+            authority_penalty = get_authority_penalty(provider)
+        return authority_penalty
 
     @staticmethod
     def parse_detailed_tags(json_tags):
