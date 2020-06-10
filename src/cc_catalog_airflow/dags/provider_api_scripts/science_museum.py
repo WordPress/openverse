@@ -150,6 +150,9 @@ def _handle_object_data(batch_data):
         if multimedia is None:
             continue
         for image_data in multimedia:
+            foreign_id = image_data.get("admin", {}).get("uid")
+            if foreign_id is None:
+                continue
             processed = image_data.get("processed")
             source = image_data.get("source")
             image_url, height, width = _get_image_info(
@@ -165,7 +168,7 @@ def _handle_object_data(batch_data):
             license_ = license_.replace("cc-", "")
             thumbnail_url = _get_thumbnail_url(processed)
             image_count = image_store.add_item(
-                    foreign_identifier=id_,
+                    foreign_identifier=foreign_id,
                     foreign_landing_url=foreign_landing_url,
                     image_url=image_url,
                     height=height,
