@@ -351,10 +351,6 @@ class ImageSerializer(serializers.Serializer):
 
 class ImageSearchResultsSerializer(serializers.Serializer):
     """ The full image search response. """
-    suggestions = serializers.CharField(
-        required=True,
-        help_text="Suggestions for misspelt search query"
-    )
     result_count = serializers.IntegerField()
     page_count = serializers.IntegerField()
     page_size = serializers.IntegerField()

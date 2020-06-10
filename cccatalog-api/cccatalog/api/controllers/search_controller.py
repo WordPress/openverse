@@ -182,7 +182,7 @@ def _apply_filter(s: Search, search_params, param_name, renamed_param=None):
 
 
 def search(search_params, index, page_size, ip, request,
-           filter_dead, page=1) -> Tuple[List[Hit], int, int, str]:
+           filter_dead, page=1) -> Tuple[List[Hit], int, int]:
     """
     Given a set of keywords and an optional set of filters, perform a ranked
     paginated search.
@@ -198,7 +198,7 @@ def search(search_params, index, page_size, ip, request,
     :param filter_dead: Whether dead links should be removed.
     :param page: The results page number.
     :return: Tuple with a List of Hits from elasticsearch, the total count of
-    pages, number of results, and suggestions.
+    pages, and number of results.
     """
     s = Search(index=index)
     # Apply term filters. Each tuple pairs a filter's parameter name in the API
@@ -216,12 +216,7 @@ def search(search_params, index, page_size, ip, request,
     for tup in filters:
         api_field, elasticsearch_field = tup
         s = _apply_filter(s, search_params, api_field, elasticsearch_field)
-    # Get suggestions for any route
-    s = s.suggest(
-        'get_suggestion',
-        '',
-        term={'field': 'creator'}
-    )
+
     # Exclude mature content unless explicitly enabled by the requester
     if not search_params.data['mature']:
         s = s.exclude('term', mature=True)
@@ -250,34 +245,16 @@ def search(search_params, index, page_size, ip, request,
             query=query,
             fields=search_fields
         )
-        # Get suggestions for term query
-        s = s.suggest(
-            'get_suggestion',
-            query,
-            term={'field': 'creator'}
-        )
     else:
         if 'creator' in search_params.data:
             creator = _quote_escape(search_params.data['creator'])
             s = s.query(
                 'simple_query_string', query=creator, fields=['creator']
             )
-            # Get suggestions for creator
-            s = s.suggest(
-                'get_suggestion',
-                creator,
-                term={'field': 'creator'}
-            )
         if 'title' in search_params.data:
             title = _quote_escape(search_params.data['title'])
             s = s.query(
                 'simple_query_string', query=title, fields=['title']
-            )
-            # Get suggestions for title
-            s = s.suggest(
-                'get_suggestion',
-                title,
-                term={'field': 'title'}
             )
         if 'tags' in search_params.data:
             tags = _quote_escape(search_params.data['tags'])
@@ -285,12 +262,6 @@ def search(search_params, index, page_size, ip, request,
                 'simple_query_string',
                 fields=['tags.name'],
                 query=tags
-            )
-            # Get suggestions for tags
-            s = s.suggest(
-                'get_suggestion',
-                tags,
-                term={'field': 'tags.name'}
             )
 
     if settings.USE_RANK_FEATURES:
@@ -340,14 +311,12 @@ def search(search_params, index, page_size, ip, request,
         filter_dead
     )
 
-    suggestion = _query_suggestions(search_response)
-
     result_count, page_count = _get_result_and_page_count(
         search_response,
         results,
         page_size
     )
-    return results, page_count, result_count, suggestion
+    return results, page_count, result_count
 
 
 def _validate_provider(input_provider):
@@ -358,26 +327,6 @@ def _validate_provider(input_provider):
             "Provider \'{}\' does not exist.".format(input_provider)
         )
     return input_provider.lower()
-
-
-def _query_suggestions(response: Response):
-    """
-    Get suggestions on a misspelt query
-    """
-    res = response.to_dict()
-    if 'suggest' not in res:
-        return None
-    obj_suggestion = res['suggest']
-    if not obj_suggestion['get_suggestion']:
-        suggestion = None
-    else:
-        get_suggestion = obj_suggestion['get_suggestion'][0]
-        suggestions = get_suggestion['options']
-        if not suggestions:
-            suggestion = None
-        else:
-            suggestion = suggestions[0]['text']
-    return suggestion
 
 
 def related_images(uuid, index, request, filter_dead):
