@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import os
 from socket import gethostname, gethostbyname
+true_strings = ['true', 'True', 't', '1']
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +26,6 @@ STATIC_ROOT = "/var/api_static_content/static"
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-true_strings = ['true', 'True', 't', '1']
 DEBUG = os.environ.get('DJANGO_DEBUG_ENABLED', default=False) in true_strings
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
@@ -42,6 +42,8 @@ SHORT_URL_WHITELIST = {
     'localhost:8000'
 }
 SHORT_URL_PATH_WHITELIST = ['/v1/list', '/v1/images/']
+
+
 
 # Intermittently run tasks
 CRON_CLASSES = [
