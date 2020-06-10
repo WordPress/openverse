@@ -296,9 +296,9 @@ def search(search_params, index, page_size, ip, request,
     if settings.USE_RANK_FEATURES:
         # TODO These boost values will be refined through experimentation.
         feature_boost = {
-            'normalized_popularity': 20,
-            'authority_boost': 20,
-            'authority_penalty': 20
+            'normalized_popularity': 1,
+            'authority_boost': 1,
+            'authority_penalty': 0.1
         }
         rank_queries = []
         for field, boost in feature_boost.items():
@@ -307,8 +307,7 @@ def search(search_params, index, page_size, ip, request,
             Q(
                 'bool',
                 must=s.query,
-                should=rank_queries,
-                minimum_should_match=1
+                should=rank_queries
             )
         )
 
