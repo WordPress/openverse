@@ -7,7 +7,7 @@ from psycopg2.errors import InvalidTextRepresentation
 logger = logging.getLogger(__name__)
 
 LOAD_TABLE_NAME_STUB = 'provider_image_data'
-IMAGE_TABLE_NAME = 'image'
+IMAGE_TABLE_NAME = 'new_image'
 DB_USER_NAME = 'deploy'
 NOW = 'NOW()'
 FALSE = "'f'"
