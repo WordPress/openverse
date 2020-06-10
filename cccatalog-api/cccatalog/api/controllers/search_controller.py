@@ -1,6 +1,7 @@
 import cccatalog.api.models as models
 import logging as log
 import json
+import pprint
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch.exceptions import NotFoundError, RequestError
@@ -293,6 +294,7 @@ def search(search_params, index, page_size, ip, request,
             )
 
     if settings.USE_RANK_FEATURES:
+        # TODO These boost values will be refined through experimentation.
         feature_boost = {
             'normalized_popularity': 20,
             'authority_boost': 20,
@@ -325,6 +327,8 @@ def search(search_params, index, page_size, ip, request,
         search_response = s.execute()
         log.info(f'query={json.dumps(s.to_dict())},'
                  f' es_took_ms={search_response.took}')
+        if settings.VERBOSE_ES_RESPONSE:
+            log.info(pprint.pprint(search_response.to_dict()))
     except RequestError as e:
         raise ValueError(e)
     results = _post_process_results(
@@ -344,7 +348,6 @@ def search(search_params, index, page_size, ip, request,
         results,
         page_size
     )
-
     return results, page_count, result_count, suggestion
 
 

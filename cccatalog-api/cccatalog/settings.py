@@ -305,5 +305,8 @@ if EMAIL_HOST_USER or EMAIL_HOST_PASSWORD:
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+# Log full Elasticsearch response
+VERBOSE_ES_RESPONSE = os.getenv('DEBUG_SCORES', 'False') in true_strings
+
 # Whether to boost results by authority and popularity
 USE_RANK_FEATURES = os.getenv('USE_RANK_FEATURES', 'False') in true_strings
