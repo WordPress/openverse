@@ -140,17 +140,17 @@ def get_percentiles(postgres, popularity_fields, attempts=0):
         return percentiles['percentiles']
 
 
-def _cache_constant(provider, metric, constant):
-    constants[f'{provider}_{metric}'] = constant
+def _cache_constant(metric, constant):
+    constants[metric] = constant
 
 
-def _get_constant(provider, metric, percentile, value):
+def _get_constant(metric, percentile, value):
     """ Get the constant from the cache or compute it. """
     try:
-        constant = constants[f'{provider}_{metric}']
+        constant = constants[metric]
     except KeyError:
         constant = compute_constant(percentile, value)
-        _cache_constant(provider, metric, constant)
+        _cache_constant(metric, constant)
     return constant
 
 
@@ -181,7 +181,7 @@ def generate_popularity_tsv(input_tsv, output_tsv, percentiles, pop_fields):
         for metric in pop_fields:
             percentile_value = percentiles[metric]
             constant = _get_constant(
-                row['provider'], metric, PERCENTILE, percentile_value
+                metric, PERCENTILE, percentile_value
             )
             if metric in row:
                 if not row[metric]:
