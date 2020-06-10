@@ -35,7 +35,7 @@ For any given metric, the popularity is given by:
     popularity(x): x / (x + C), where x is the raw metric and C is a constant.
 
 C is computed for each metric with the formula:
-    C = ((1 - r / r) * V)
+    C = (((1 - r) / r) * V)
 where r is a percentile (e.g. .85) and V is a rth percentile value sampled from
 the raw metric.
 
@@ -74,7 +74,7 @@ def compute_constant(percentile: float, percentile_value: Real):
     Compute normalizing constant for each popularity source.
     :param percentile: The target percentile for each source (ex: 0.85)
     :param percentile_value: The value of the percentile (e.g.for
-    `percenile=0.85`, this should be the 85th percentile of the metric)
+    `percentile=0.85`, this should be the 85th percentile of the metric)
     :return: A float representing the constant 'C' in the popularity formula.
     """
     return ((1 - percentile) / percentile) * percentile_value
