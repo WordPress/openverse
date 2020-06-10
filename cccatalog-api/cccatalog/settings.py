@@ -44,7 +44,6 @@ SHORT_URL_WHITELIST = {
 SHORT_URL_PATH_WHITELIST = ['/v1/list', '/v1/images/']
 
 
-
 # Intermittently run tasks
 CRON_CLASSES = [
     'cccatalog.api.utils.scheduled_tasks.SaveCachedTrafficStats'
