@@ -123,6 +123,32 @@ def test_delete_staged_file_deletes_staged_file(tmpdir):
     assert staged_path.check(file=0)
 
 
+def test_delete_staged_file_deletes_all_files_from_staging_dir(tmpdir):
+    tmp_directory = str(tmpdir)
+    staging_subdirectory = paths.STAGING_SUBDIRECTORY
+    identifier = TEST_ID
+    test_tsv = 'test.tsv'
+    staged_path = (
+        tmpdir
+        .mkdir(staging_subdirectory)
+        .mkdir(identifier)
+        .join(test_tsv)
+    )
+    test_non_tsv = 'test.tsv.backup'
+    staged_non_tsv_path = (
+        tmpdir
+        .join(staging_subdirectory)
+        .join(identifier)
+        .join(test_non_tsv)
+    )
+    staged_path.write('')
+    staged_non_tsv_path.write('')
+    paths.delete_staged_file(tmp_directory, identifier)
+
+    assert staged_path.check(file=0)
+    assert staged_non_tsv_path.check(file=0)
+
+
 def test_delete_staged_file_ignores_unidentified_file(tmpdir):
     tmp_directory = str(tmpdir)
     staging_subdirectory = paths.STAGING_SUBDIRECTORY
