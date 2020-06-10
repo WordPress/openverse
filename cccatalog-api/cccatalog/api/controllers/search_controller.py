@@ -181,7 +181,7 @@ def _apply_filter(s: Search, search_params, param_name, renamed_param=None):
 
 
 def search(search_params, index, page_size, ip, request,
-           filter_dead, page=1) -> Tuple[List[Hit], int, int]:
+           filter_dead, page=1) -> Tuple[List[Hit], int, int, str]:
     """
     Given a set of keywords and an optional set of filters, perform a ranked
     paginated search.
@@ -197,7 +197,7 @@ def search(search_params, index, page_size, ip, request,
     :param filter_dead: Whether dead links should be removed.
     :param page: The results page number.
     :return: Tuple with a List of Hits from elasticsearch, the total count of
-    pages and results.
+    pages, number of results, and suggestions.
     """
     s = Search(index=index)
     # Apply term filters. Each tuple pairs a filter's parameter name in the API
