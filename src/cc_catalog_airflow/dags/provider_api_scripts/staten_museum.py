@@ -22,7 +22,7 @@ image_store = ImageStore(provider=PROVIDER)
 
 DEFAULT_QUERY_PARAM = {
     "keys": "*",
-    "filter": "[has_image:true],[public_domain:true]",
+    "filters": "[has_image:true],[public_domain:true]",
     "offset": 0,
     "rows": LIMIT
 }
@@ -30,6 +30,7 @@ DEFAULT_QUERY_PARAM = {
 HEADERS = {
      "Accept": "application/json"
 }
+
 
 def main():
     condition = True
@@ -39,11 +40,14 @@ def main():
         items = _get_batch_items(
             query_params=query_params
             )
-        if len(items) == 0:
-            image_count = _handle_items_data(
-                items
-            )
-            offset += LIMIT
+        if type(items) == list:
+            if len(items) > 0:
+                image_count = _handle_items_data(
+                    items
+                )
+                offset += LIMIT
+            else:
+                condition = False
         else:
             condition = False
     image_count = image_store.commit()
@@ -92,38 +96,80 @@ def _handle_items_data(
         ):
     image_count = 0
     for item in items:
-        image_iiif_id = item.get("image_iiif_id")
-        if image_iiif_id is None:
+        images = _get_images(item)
+        if len(images) == 0:
             continue
         rights = item.get("rights")
         license_, version = _get_license_info(rights)
         if license_ is None and version is None:
             continue
-        object_id = item.get("id")
+        object_id = item.get("object_number")
+        if object_id is None:
+            continue
         foreign_landing_url = landing_page_base + object_id
-        image_url, thumbnail_url = _get_image_url(
-            image_iiif_id
-        )
-        height = item.get("image_height")
-        width = item.get("image_width")
         production = item.get("production")
         creator = _get_creator(production)
         titles = item.get("titles")
         title = _get_title(titles)
-        image_count = image_store.add_item(
-                foreign_identifier=image_iiif_id,
-                foreign_landing_url=foreign_landing_url,
-                image_url=image_url,
-                height=height,
-                width=width,
-                license_=license_,
-                license_version=version,
-                thumbnail_url=thumbnail_url,
-                creator=creator,
-                title=title,
-                meta_data=meta_data,
-        )
+        meta_data = _get_metadata(item)
+        for img in images:
+            image_count = image_store.add_item(
+                    foreign_identifier=img.get("iiif_id"),
+                    foreign_landing_url=foreign_landing_url,
+                    image_url=img.get("image_url"),
+                    height=img.get("height"),
+                    width=img.get("width"),
+                    license_=license_,
+                    license_version=version,
+                    thumbnail_url=img.get("thumbnail"),
+                    creator=creator,
+                    title=title,
+                    meta_data=meta_data,
+                )
     return image_count
+
+
+def _get_images(item):
+    images = []
+    if item.get("image_iiif_id") is not None:
+        iiif_id = item.get("image_iiif_id")
+        image_url, thumbnail_url = _get_image_url(
+            iiif_id
+        )
+        height = item.get("image_height")
+        width = item.get("image_width")
+        images.append(
+            {
+                "iiif_id": iiif_id,
+                "image_url": image_url,
+                "thumbnail": thumbnail_url,
+                "height": height,
+                "width": width,
+            }
+        )
+
+    alternative_images = item.get("alternative_images")
+    if type(alternative_images) == list:
+        for alt_img in alternative_images:
+            if type(alt_img) == dict:
+                iiif_id = alt_img.get("iiif_id")
+                if iiif_id is None:
+                    continue
+                image_url, thumbnail_url = _get_image_url(
+                    iiif_id
+                )
+                height = alt_img.get("height")
+                width = alt_img.get("width")
+                images.append(
+                    {
+                        "iiif_id": iiif_id,
+                        "image_url": image_url,
+                        "thumbnail": thumbnail_url,
+                        "height": height,
+                        "width": width
+                    }
+                )
+    return images
 
 
 def _get_image_url(
@@ -135,15 +181,16 @@ def _get_image_url(
     thumbnail_url = (
         image_iiif_id + f"/full/!{thumbnail_size},/0/default.jpg"
     )
-    print(image_url)
+
     return image_url, thumbnail_url
 
 
 def _get_license_info(rights):
-    if "creativecommons" in rights:
-        license_, version = "cc0", "1.0"
-    else:
-        license_, version = None, None
+    license_, version = None, None
+    if type(rights) == str:
+        if "creativecommons" in rights:
+            license_, version = "cc0", "1.0"
+
     return license_, version
 
 
@@ -164,7 +211,18 @@ def _get_title(titles):
 
 
 def _get_metadata(item):
-    pass
+    meta_data = {}
+    meta_data["created_date"] = item.get("created")
+    collection = item.get("collection")
+    if type(collection) == list:
+        meta_data["collection"] = ','.join(collection)
+    techniques = item.get("techniques")
+    if type(techniques) == list:
+        meta_data["techniques"] = ','.join(techniques)
+    colors = item.get("colors")
+    if type(colors) == list:
+        meta_data["colors"] = ','.join(colors)
+    return meta_data
 
 
 if __name__ == "__main__":
