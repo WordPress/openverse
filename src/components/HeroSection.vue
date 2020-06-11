@@ -2,62 +2,71 @@
   <main class="hero" role="main">
     <div class="hero-center">
       <div class="locale-block"><locale-selector /></div>
-      <h2 class="has-text-centered">{{ $t('hero') }}</h2>
+      <h2 class="has-text-centered">{{ $t('hero.title') }}</h2>
       <form class="hero_search-form margin-top-bigger"
           role="search"
           method="get"
           action="/search"
           v-on:submit.prevent="onSubmit">
-        <div class="is-hidden-desktop centered-search-box">
-          <div class="field has-addons">
-            <div class="control mobile-input">
-              <label for="searchTerm" class="is-sr-only">Search</label>
-              <input
-                required="required"
+      <div class="is-hidden-touch centered-search-box">
+        <div class="field has-addons">
+          <div class="control mobile-input">
+            <input required="required"
+                class="input"
                 autofocus
+                type="search"
+                name="q"
+                :placeholder="$t('hero.search.placeholder')"
+                autocapitalize="none"
+                id="searchTerm"
+                v-model.lazy="form.searchTerm" />
+          </div>
+          <div class="control">
+            <button class="button is-primary big" title="Search">
+              {{$t('hero.search.button')}}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="is-hidden-desktop centered-search-box">
+        <div class="field has-addons">
+          <div class="control mobile-input">
+            <input required="required"
                 class="input"
                 type="search"
                 name="q"
-                placeholder="I would like to see..."
+                :placeholder="$t('hero.search.placeholder')"
                 autocapitalize="none"
                 id="searchTerm"
-                v-model.lazy="form.searchTerm"
-              />
-            </div>
-            <div class="control">
-              <button class="button is-primary small" title="Search">
-                Search
-              </button>
-            </div>
+                v-model.lazy="form.searchTerm" />
+          </div>
+          <div class="control">
+            <button class="button is-primary small" title="Search">
+              {{$t('hero.search.button')}}
+            </button>
           </div>
         </div>
-        <div class="caption has-text-centered margin-top-big">
-          <p>
-            All our content is under Creative Commons licenses.
-            <a
-              href="https://creativecommons.org/share-your-work/licensing-examples/"
-              aria-label="about cc licenses"
+      </div>
+      <div class="caption has-text-centered margin-top-big">
+        <i18n path="hero.caption.content" tag="p">
+          <template v-slot:link>
+            <a href="https://creativecommons.org/share-your-work/licensing-examples/"
               target="_blank"
-              rel="noopener"
-              >Learn more</a
-            >
-            about CC licenses.
-          </p>
-        </div>
-        <home-license-filter />
-      </form>
-    </div>
-
-    <div class="help-links">
-      <span class="margin-right-bigger">
-        Go to the
-        <a
-          href="https://oldsearch.creativecommons.org/"
-          aria-label="old cc search"
-          >old CC Search</a
-        >
-        portal
-      </span>
+              aria-label="about cc licenses"
+              rel="noopener">
+              {{$t('hero.caption.link')}}
+            </a>
+          </template>
+        </i18n>
+      </div>
+      <home-license-filter />
+    </form>
+    <div class="help-links is-hidden-mobile">
+      <i18n path="hero.old-cc-search.label" tag="span" class="margin-right-bigger">
+        <template v-slot:link>
+          <a href="https://oldsearch.creativecommons.org/" aria-label="old cc search">{{ $t('hero.old-cc-search.link') }}</a>
+        </template>
+      </i18n>
     </div>
 
     <img

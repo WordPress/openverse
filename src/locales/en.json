@@ -1,3 +1,54 @@
 {
-    "hero": "Search for content to reuse"
+    "hero": {
+        "title": "Search for content to reuse",
+        "search": {
+            "placeholder": "I would like to see...",
+            "button": "Search"
+        },
+        "caption": {
+            "content": "All our content is under Creative Commons licenses. {link} about CC licenses.",
+            "link": "Learn more"
+        },
+        "license-filter": {
+            "label": "I want something I can"
+        },
+        "old-cc-search": {
+            "label": "Go to the {link} portal",
+            "link": "old CC Search"
+        },
+        "locale": {
+            "label": "Languages available",
+            "icon": "locale"
+        }
+    },
+    "header": {
+        "about": "About",
+        "collections": "Collections",
+        "search-guide": "Search Guide",
+        "feedback": "Feedback",
+        "extension": "Extension"
+    },
+    "footer": {
+        "address": {
+            "title": "Creative Commons",
+            "address": "PO Box 1866, Mountain View CA 94042"
+        },
+        "navigation": {
+            "contact": "Contact",
+            "privacy": "Privacy",
+            "policies": "Policies",
+            "terms": "Terms"
+        },
+        "caption": {
+            "label": "Except where otherwise {noted}, content on this site is licensed under a {attribution}. {icons}",
+            "noted": "noted",
+            "attribution": "Creative Commons Attribution 4.0 International license",
+            "icons": "Icons by Font Awesome."
+        },
+        "donate": {
+            "work": "Our work relies on you!",
+            "help": "Help us keep the internet free and open.",
+            "link": "Donate now"
+        }
+    }
 }

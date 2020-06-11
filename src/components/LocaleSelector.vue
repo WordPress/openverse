@@ -1,6 +1,6 @@
 <template>
     <div class="locale">
-      Languages available
+      {{$t('hero.locale.label')}}
       <div class="control has-icons-left">
         <div class="select">
           <select v-model="$i18n.locale">
@@ -10,7 +10,7 @@
           </select>
         </div>
         <div class="icon globe is-small is-left">
-            <i class="icon globe">locale</i>
+            <i class="icon globe">{{$t('hero.locale.icon')}}</i>
         </div>
       </div>
     </div>

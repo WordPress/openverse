@@ -1,6 +1,6 @@
 <template>
   <div class="home-license-filter margin-top-xl">
-    <span>I want something I can</span>
+    <span>{{$t('hero.license-filter.label')}}</span>
 
     <template v-for="(licenseType, index) in licenseTypes">
       <label
