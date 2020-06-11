@@ -62,6 +62,8 @@ SYNCER_POLL_INTERVAL = int(os.environ.get('SYNCER_POLL_INTERVAL', 60))
 REP_TABLES = os.environ.get('COPY_TABLES', 'image')
 replicate_tables = REP_TABLES.split(',') if ',' in REP_TABLES else [REP_TABLES]
 
+TWELVE_HOURS_SEC = 60 * 60 * 12
+
 
 def elasticsearch_connect(timeout=300):
     """
@@ -105,7 +107,7 @@ def _elasticsearch_connect():
         port=ELASTICSEARCH_PORT,
         connection_class=RequestsHttpConnection,
         http_auth=auth,
-        wait_for_status='yellow'
+        timeout=TWELVE_HOURS_SEC
     )
     es.info()
     return es
