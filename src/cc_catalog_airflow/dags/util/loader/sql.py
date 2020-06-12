@@ -7,7 +7,7 @@ from psycopg2.errors import InvalidTextRepresentation
 logger = logging.getLogger(__name__)
 
 LOAD_TABLE_NAME_STUB = 'provider_image_data'
-IMAGE_TABLE_NAME = 'image'
+IMAGE_TABLE_NAME = 'new_image'
 DB_USER_NAME = 'deploy'
 NOW = 'NOW()'
 FALSE = "'f'"
@@ -32,7 +32,7 @@ def create_loading_table(
               {col.THUMBNAIL} character varying(3000),
               {col.WIDTH} integer,
               {col.HEIGHT} integer,
-              {col.FILESIZE} character varying(100),
+              {col.FILESIZE} integer,
               {col.LICENSE} character varying(50),
               {col.LICENSE_VERSION} character varying(25),
               {col.CREATOR} character varying(2000),
@@ -42,7 +42,8 @@ def create_loading_table(
               {col.TAGS} jsonb,
               {col.WATERMARKED} boolean,
               {col.PROVIDER} character varying(80),
-              {col.SOURCE} character varying(80)
+              {col.SOURCE} character varying(80),
+              {col.INGESTION_TYPE} character varying(80)
             );
             '''
         )
@@ -203,6 +204,7 @@ def upsert_records_to_image_table(
     column_inserts = {
         col.CREATED_ON: NOW,
         col.UPDATED_ON: NOW,
+        col.INGESTION_TYPE: col.INGESTION_TYPE,
         col.PROVIDER: col.PROVIDER,
         col.SOURCE: col.SOURCE,
         col.FOREIGN_ID: col.FOREIGN_ID,
@@ -211,6 +213,7 @@ def upsert_records_to_image_table(
         col.THUMBNAIL: col.THUMBNAIL,
         col.WIDTH: col.WIDTH,
         col.HEIGHT: col.HEIGHT,
+        col.FILESIZE: col.FILESIZE,
         col.LICENSE: col.LICENSE,
         col.LICENSE_VERSION: col.LICENSE_VERSION,
         col.CREATOR: col.CREATOR,
@@ -227,20 +230,19 @@ def upsert_records_to_image_table(
         INSERT INTO {image_table} AS old ({', '.join(column_inserts.keys())})
         SELECT {', '.join(column_inserts.values())}
         FROM {load_table}
-        ON CONFLICT (
-          {col.PROVIDER},
-          md5(({col.FOREIGN_ID})::text),
-          md5(({col.DIRECT_URL})::text)
-        )
+        ON CONFLICT ({col.PROVIDER}, md5({col.FOREIGN_ID}))
         DO UPDATE SET
           {col.UPDATED_ON} = {NOW},
           {col.LAST_SYNCED} = {NOW},
           {col.REMOVED} = {FALSE},
+          {_newest_non_null(col.INGESTION_TYPE)},
+          {_newest_non_null(col.SOURCE)},
           {_newest_non_null(col.LANDING_URL)},
           {_newest_non_null(col.DIRECT_URL)},
           {_newest_non_null(col.THUMBNAIL)},
           {_newest_non_null(col.WIDTH)},
           {_newest_non_null(col.HEIGHT)},
+          {_newest_non_null(col.FILESIZE)},
           {_newest_non_null(col.LICENSE)},
           {_newest_non_null(col.LICENSE_VERSION)},
           {_newest_non_null(col.CREATOR)},
@@ -287,4 +289,3 @@ def _delete_malformed_row_in_file(tsv_file_name, line_number):
         for index, line in enumerate(lines):
             if index + 1 != line_number:
                 write_obj.write(line)
-
