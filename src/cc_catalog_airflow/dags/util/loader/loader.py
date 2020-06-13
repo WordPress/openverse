@@ -1,8 +1,9 @@
-from util.loader import paths, s3, sql
+from util.loader import paths, s3, sql, ingestion_column
 
 
 def load_local_data(output_dir, postgres_conn_id, identifier):
     tsv_file_name = paths.get_staged_file(output_dir, identifier)
+    ingestion_column.check_and_fix_tsv_file(tsv_file_name)
     sql.load_local_data_to_intermediate_table(
         postgres_conn_id,
         tsv_file_name,
@@ -13,6 +14,7 @@ def load_local_data(output_dir, postgres_conn_id, identifier):
 
 def copy_to_s3(output_dir, bucket, identifier, aws_conn_id):
     tsv_file_name = paths.get_staged_file(output_dir, identifier)
+    ingestion_column.check_and_fix_tsv_file(tsv_file_name)
     s3.copy_file_to_s3_staging(identifier, tsv_file_name, bucket, aws_conn_id)
 
 
