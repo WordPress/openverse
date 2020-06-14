@@ -19,6 +19,17 @@ export default {
       this.fetchProviders();
     }
   },
+  metaInfo() {
+    return {
+      meta: [
+        {
+          vmid: 'monetization',
+          name: 'monetization',
+          content: '$ilp.uphold.com/edR8erBDbRyq',
+        },
+      ],
+    };
+  },
 };
 </script>
 
