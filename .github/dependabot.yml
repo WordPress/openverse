@@ -15,7 +15,7 @@ updates:
       interval: 'weekly'
       
   # Enable version updates for Python
-  - package-ecosystem: 'python'
+  - package-ecosystem: 'pip'
     # Look for a `Pipfile` in the `/cccatalog-api` directory
     directory: '/cccatalog-api'
     # Check for updates once a week
