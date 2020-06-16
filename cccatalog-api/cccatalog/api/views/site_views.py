@@ -323,6 +323,7 @@ class Thumbs(APIView):
             status = upstream_response.status
             content_type = upstream_response.headers.get('Content-Type')
         except HTTPError:
+            log.info(f'Failed to render thumbnail: ', exc_info=True)
             return HttpResponse(status=500)
 
         response = HttpResponse(
