@@ -1130,9 +1130,11 @@ def test_create_temp_sub_provider_table(postgres):
     assert check_result
 
 
-def test_update_sub_providers(postgres_with_load_table):
+def test_update_sub_providers(postgres_with_load_and_image_table):
     postgres_conn_id = POSTGRES_CONN_ID
-    image_table = TEST_LOAD_TABLE
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
 
     FID_A = 'a'
     FID_B = 'b'
@@ -1148,7 +1150,7 @@ def test_update_sub_providers(postgres_with_load_table):
     ]
 
     insert_data_query = (
-        f"INSERT INTO {image_table} VALUES"
+        f"INSERT INTO {load_table} VALUES"
         f"('{FID_A}',null,'{IMG_URL_A}',null,null,null,null,'{LICENSE}',null,"
         f"null,'{CREATOR_URL_A}',null,null,'{json.dumps(TAGS)}',null,"
         f"'{PROVIDER}','{PROVIDER}'),"
@@ -1157,21 +1159,32 @@ def test_update_sub_providers(postgres_with_load_table):
         f"'{PROVIDER}','{PROVIDER}');"
     )
 
-    postgres_with_load_table.cursor.execute(insert_data_query)
-    postgres_with_load_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(insert_data_query)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+
     sql.update_sub_providers(
         postgres_conn_id,
         image_table
     )
-    postgres_with_load_table.connection.commit()
-    postgres_with_load_table.cursor.execute(
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
         f"SELECT * FROM {image_table};"
     )
-    actual_rows = postgres_with_load_table.cursor.fetchall()
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
     assert len(actual_rows) == 2
 
     for actual_row in actual_rows:
-        if actual_row[0] == 'a':
-            assert actual_row[16] == 'nasa'
+        if actual_row[6] == 'a':
+            assert actual_row[5] == 'nasa'
         else:
-            assert actual_row[0] == 'b' and actual_row[16] == 'flickr'
+            assert actual_row[6] == 'b' and actual_row[5] == 'flickr'
