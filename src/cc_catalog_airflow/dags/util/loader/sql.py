@@ -327,11 +327,11 @@ def _create_temp_sub_prov_table(
                 dedent(
                     f'''
                     INSERT INTO public.{temp_table} (
-                      {col.CREATOR_URL} ,
+                      {col.CREATOR_URL},
                       {col.PROVIDER}
-                    ) 
+                    )
                     VALUES (
-                      '{creator_url}' , 
+                      '{creator_url}',
                       '{sub_prov}'
                     );
                     '''
@@ -346,24 +346,12 @@ def update_sub_providers(
         image_table=IMAGE_TABLE_NAME,
         default_provider=prov.FLICKR_DEFAULT_PROVIDER
 ):
-    """
-    Initially set all source values to the default provider value
-    """
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    postgres.run(
-        dedent(
-            f'''
-            UPDATE {image_table}
-            SET {col.SOURCE} = '{default_provider}'
-            WHERE {col.PROVIDER} = '{default_provider}';
-            '''
-        )
-    )
 
     """
     Update the source value to appropriate sub provider value for a given set
     of users
     """
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     temp_table = _create_temp_sub_prov_table(postgres_conn_id)
     postgres.run(
         dedent(
@@ -371,9 +359,11 @@ def update_sub_providers(
             UPDATE {image_table}
             SET {col.SOURCE} = public.{temp_table}.{col.PROVIDER}
             FROM public.{temp_table}
-            WHERE 
+            WHERE
             {image_table}.{col.CREATOR_URL} = public.{temp_table}.{
-            col.CREATOR_URL};
+            col.CREATOR_URL}
+            AND
+            {image_table}.{col.PROVIDER} = '{default_provider}';
             '''
         )
     )

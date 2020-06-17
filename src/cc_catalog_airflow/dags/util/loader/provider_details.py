@@ -19,13 +19,14 @@ FLICKR_SUB_PROVIDERS = {
         '29988733@N04',  # NASA Johnson
         '28634332@N05',  # NASA's Marshall Space Flight Center
         '108488366@N07',  # NASAKennedy
-        '136485307@N06',  # Apollo Image Gallery
-        '130608600@N05',  # Official SpaceX Photos
-        },
+        '136485307@N06'  # Apollo Image Gallery
+    },
     'bio_diversity': {
         '61021753@N02'  # BioDivLibrary
+    },
+    'spacex': {
+        '130608600@N05'  # Official SpaceX Photos
     }
 }
 
 FLICKR_PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
-

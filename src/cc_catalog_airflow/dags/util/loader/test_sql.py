@@ -1138,7 +1138,7 @@ def test_update_sub_providers(postgres_with_load_table):
     IMG_URL_A = 'https://images.com/a/img.jpg'
     IMG_URL_B = 'https://images.com/b/img.jpg'
     CREATOR_URL_A = 'https://www.flickr.com/photos/29988733@N04'
-    CREATOR_URL_B= 'https://www.flickr.com/photos/other_user'
+    CREATOR_URL_B = 'https://www.flickr.com/photos/other_user'
     PROVIDER = 'flickr'
     LICENSE = 'by'
     TAGS = [
@@ -1150,10 +1150,10 @@ def test_update_sub_providers(postgres_with_load_table):
         f"INSERT INTO {image_table} VALUES"
         f"('{FID_A}',null,'{IMG_URL_A}',null,null,null,null,'{LICENSE}',null,"
         f"null,'{CREATOR_URL_A}',null,null,'{json.dumps(TAGS)}',null,"
-        f"'{PROVIDER}',null),"
+        f"'{PROVIDER}','{PROVIDER}'),"
         f"('{FID_B}',null,'{IMG_URL_B}',null,null,null,null,'{LICENSE}',null,"
         f"null,'{CREATOR_URL_B}',null,null,'{json.dumps(TAGS)}',null,"
-        f"'{PROVIDER}',null);"
+        f"'{PROVIDER}','{PROVIDER}');"
     )
 
     postgres_with_load_table.cursor.execute(insert_data_query)
@@ -1174,4 +1174,3 @@ def test_update_sub_providers(postgres_with_load_table):
             assert actual_row[16] == 'nasa'
         else:
             assert actual_row[0] == 'b' and actual_row[16] == 'flickr'
-
