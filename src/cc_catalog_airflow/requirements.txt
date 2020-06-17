@@ -10,3 +10,4 @@ ipython
 pytest
 pytest-cov
 pytest-socket
+pytest-mock

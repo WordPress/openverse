@@ -22,10 +22,13 @@ def stage_oldest_tsv_file(
 
 
 def delete_staged_file(output_dir, identifier):
-    tsv_file_name = get_staged_file(output_dir, identifier)
     staging_directory = _get_staging_directory(output_dir, identifier)
-    logger.info(f'Deleting {tsv_file_name}')
-    os.remove(tsv_file_name)
+    staging_directory_files = os.listdir(staging_directory)
+    print(staging_directory_files)
+    for file_name in staging_directory_files:
+        file_path = os.path.join(staging_directory, file_name)
+        logger.info(f'Deleting {file_path}')
+        os.remove(file_path)
     logger.info(f'Deleting {staging_directory}')
     os.rmdir(staging_directory)
 
