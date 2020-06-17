@@ -6,10 +6,10 @@
         <h2>{{ searchTerm }}</h2>
         <span class="caption has-text-weight-semibold"> {{ _imagesCount }}</span>
         <div class="is-pulled-right padding-right-big is-hidden-touch">
-          <search-rating :searchTerm="_query.q" />
+          <search-rating v-if="_query.q" :searchTerm="_query.q" />
         </div>
         <div class="is-hidden-desktop is-block">
-          <search-rating :searchTerm="searchTerm" />
+          <search-rating v-if="_query.q" :searchTerm="searchTerm" />
         </div>
       </div>
       <div class="search-grid-cells">
