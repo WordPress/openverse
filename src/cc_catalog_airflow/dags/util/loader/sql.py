@@ -1,4 +1,6 @@
 import logging
+import psycopg2
+import os
 from textwrap import dedent
 from airflow.hooks.postgres_hook import PostgresHook
 from util.loader import column_names as col
@@ -12,6 +14,8 @@ IMAGE_TABLE_NAME = 'new_image'
 DB_USER_NAME = 'deploy'
 NOW = 'NOW()'
 FALSE = "'f'"
+
+connection_uri = os.getenv('AIRFLOW_CONN_POSTGRES_OPENLEDGER_UPSTREAM')
 
 
 def create_loading_table(
@@ -346,15 +350,33 @@ def _create_temp_sub_prov_table(
 def update_sub_providers(
         postgres_conn_id,
         image_table=IMAGE_TABLE_NAME,
-        default_provider=prov.FLICKR_DEFAULT_PROVIDER
+        default_provider=prov.FLICKR_DEFAULT_PROVIDER,
 ):
 
     """
     Update the source value to appropriate sub provider value for a given set
     of users
     """
+    # ----------------------------- Method A -----------------------------
+    #
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     temp_table = _create_temp_sub_prov_table(postgres_conn_id)
+
+    """
+    Create an index on the creator URL column
+    """
+    postgres.run(
+        dedent(
+            f'''
+                CREATE INDEX IF NOT EXISTS {image_table}_{col.CREATOR_URL}_idx
+                ON public.{image_table} USING btree ({col.CREATOR_URL});
+                '''
+        )
+    )
+
+    """
+    Execute the update query
+    """
     postgres.run(
         dedent(
             f'''
@@ -374,3 +396,100 @@ def update_sub_providers(
     Drop the temporary table
     """
     postgres.run(f'DROP TABLE public.{temp_table};')
+
+    """
+    Drop the index
+    """
+    postgres.run(f'DROP INDEX {image_table}_{col.CREATOR_URL}_idx;')
+
+
+def update_sub_providers_method2(
+        postgres_conn_id,
+        image_table=IMAGE_TABLE_NAME,
+        default_provider=prov.FLICKR_DEFAULT_PROVIDER,
+):
+    # ----------------------------- Method B -----------------------------
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    temp_table = _create_temp_sub_prov_table(postgres_conn_id)
+
+    conn = psycopg2.connect(connection_uri)
+    cursor = conn.cursor()
+    select_query = dedent(
+        f'''
+        SELECT 
+        {col.FOREIGN_ID}, 
+        public.{temp_table}.{col.PROVIDER} AS sub_provider
+        FROM {image_table}
+        INNER JOIN public.{temp_table} 
+        ON
+        {image_table}.{col.CREATOR_URL} = public.{temp_table}.{
+        col.CREATOR_URL}
+        AND
+        {image_table}.{col.PROVIDER} = '{default_provider}';
+        '''
+    )
+
+    cursor.execute(select_query)
+    selected_records = cursor.fetchall()
+
+    for row in selected_records:
+        foreign_id = row[0]
+        sub_provider = row[1]
+        postgres.run(
+            dedent(
+                f'''
+                    UPDATE {image_table}
+                    SET {col.SOURCE} = '{sub_provider}'
+                    WHERE
+                    {image_table}.{col.FOREIGN_ID} = '{foreign_id}'
+                    AND
+                    {image_table}.{col.PROVIDER} = '{default_provider}';
+                    '''
+            )
+        )
+
+    """
+    Drop the temporary table
+    """
+    postgres.run(f'DROP TABLE public.{temp_table};')
+
+
+def update_sub_providers_method3(
+  postgres_conn_id,
+  image_table=IMAGE_TABLE_NAME,
+  default_provider=prov.FLICKR_DEFAULT_PROVIDER,
+):
+    # ----------------------------- Method C -----------------------------
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    temp_table = _create_temp_sub_prov_table(postgres_conn_id)
+
+    postgres.run(
+        dedent(
+            f'''
+            (SELECT 
+            {col.FOREIGN_ID} AS foreign_id, 
+            public.{temp_table}.{col.PROVIDER} AS sub_provider
+            FROM {image_table}
+            INNER JOIN
+            public.{temp_table}
+            ON
+            {image_table}.{col.CREATOR_URL} = public.{temp_table}.{
+            col.CREATOR_URL}
+            AND
+            {image_table}.{col.PROVIDER} = '{default_provider}')
+            LATERAL (
+            UPDATE {image_table}
+            SET {col.SOURCE} = 'sub_provider'
+            WHERE
+            {image_table}.{col.FOREIGN_ID} = 'foreign_id'
+            AND
+            {image_table}.{col.PROVIDER} = '{default_provider}';
+            '''
+        )
+    )
+
+    """
+    Drop the temporary table
+    """
+    postgres.run(f'DROP TABLE public.{temp_table};')
+
