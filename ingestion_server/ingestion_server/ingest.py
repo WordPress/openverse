@@ -242,7 +242,10 @@ def reload_upstream(table, progress=None, finish_time=None):
     copy_data = '''
         DROP TABLE IF EXISTS temp_import_{table};
         CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
+        CREATE TEMP SEQUENCE IF NOT EXISTS image_id_temp_seq;
         ALTER TABLE temp_import_{table} ADD COLUMN IF NOT EXISTS id serial;
+        ALTER TABLE temp_import_{table} ALTER COLUMN id
+          SET DEFAULT nextval('image_id_temp_seq'::regclass);
         INSERT INTO temp_import_{table} ({cols})
         SELECT {cols} from upstream_schema.{table} img
           WHERE NOT EXISTS(
