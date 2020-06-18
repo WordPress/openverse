@@ -246,6 +246,8 @@ def reload_upstream(table, progress=None, finish_time=None):
         ALTER TABLE temp_import_{table} ADD COLUMN IF NOT EXISTS id serial;
         ALTER TABLE temp_import_{table} ALTER COLUMN id
           SET DEFAULT nextval('image_id_temp_seq'::regclass);
+        ALTER TABLE temp_import_{table} ALTER COLUMN view_count
+          SET DEFAULT 0;
         INSERT INTO temp_import_{table} ({cols})
         SELECT {cols} from upstream_schema.{table} img
           WHERE NOT EXISTS(
