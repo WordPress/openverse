@@ -28,9 +28,9 @@ import FooterSection from '@/components/FooterSection';
 import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin';
 
 const MUSEUM_PROVIDERS = [
-  'brooklynmuseum', 'clevelandmuseum', 'digitaltmuseum', 'met', 'museumsvictoria',
-  'nhl', 'rijksmuseum', 'sciencemuseum', 'thorvaldsensmuseum', 'europeana',
-  'statensmuseum',
+  'brooklynmuseum', 'clevelandmuseum', 'digitaltmuseum', 'europeana',
+  'mccordmuseum', 'met', 'museumsvictoria', 'nhl', 'rijksmuseum',
+  'sciencemuseum', 'smithsonian', 'statensmuseum', 'thorvaldsensmuseum',
 ];
 
 const CollectionsPage = {
