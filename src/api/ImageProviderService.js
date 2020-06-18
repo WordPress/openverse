@@ -86,6 +86,21 @@ const ImageProviderService = {
       smithsonian: {
         logo: 'smithsonian_logo.svg',
       },
+      bio_diversity: {
+        logo: 'bhl_logo.png',
+      },
+      europeana: {
+        logo: 'europeana_logo.svg',
+      },
+      nasa: {
+        logo: 'nasa_logo.svg',
+      },
+      statensmuseum: {
+        logo: 'smk_logo.png',
+      },
+      spacex: {
+        logo: 'spacex-logo.svg',
+      },
     };
 
     return PROVIDER_NAME_LOOKUP[providerName];
