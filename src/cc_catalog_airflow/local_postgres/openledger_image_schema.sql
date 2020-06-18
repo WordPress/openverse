@@ -34,10 +34,10 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: image; Type: TABLE; Schema: public; Owner: deploy
+-- Name: old_image; Type: TABLE; Schema: public; Owner: deploy
 --
 
-CREATE TABLE public.image (
+CREATE TABLE public.old_image (
     id integer NOT NULL,
     created_on timestamp with time zone NOT NULL,
     updated_on timestamp with time zone NOT NULL,
@@ -67,13 +67,13 @@ CREATE TABLE public.image (
 );
 
 
-ALTER TABLE public.image OWNER TO deploy;
+ALTER TABLE public.old_image OWNER TO deploy;
 
 --
--- Name: image_id_seq; Type: SEQUENCE; Schema: public; Owner: deploy
+-- Name: old_image_id_seq; Type: SEQUENCE; Schema: public; Owner: deploy
 --
 
-CREATE SEQUENCE public.image_id_seq
+CREATE SEQUENCE public.old_image_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -81,51 +81,51 @@ CREATE SEQUENCE public.image_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.image_id_seq OWNER TO deploy;
+ALTER TABLE public.old_image_id_seq OWNER TO deploy;
 
 --
--- Name: image_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: deploy
+-- Name: old_image_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: deploy
 --
 
-ALTER SEQUENCE public.image_id_seq OWNED BY public.image.id;
-
-
---
--- Name: image id; Type: DEFAULT; Schema: public; Owner: deploy
---
-
-ALTER TABLE ONLY public.image ALTER COLUMN id SET DEFAULT nextval('public.image_id_seq'::regclass);
+ALTER SEQUENCE public.old_image_id_seq OWNED BY public.old_image.id;
 
 
 --
--- Name: image image_pkey; Type: CONSTRAINT; Schema: public; Owner: deploy
+-- Name: old_image id; Type: DEFAULT; Schema: public; Owner: deploy
 --
 
-ALTER TABLE ONLY public.image
-    ADD CONSTRAINT image_pkey PRIMARY KEY (id);
-
-
---
--- Name: image_9e9f3d70; Type: INDEX; Schema: public; Owner: deploy
---
-
-CREATE INDEX image_9e9f3d70 ON public.image USING btree (provider);
-
-CREATE UNIQUE INDEX image_provider_fid_key ON public.image USING btree (provider, md5((foreign_identifier)::text));
+ALTER TABLE ONLY public.old_image ALTER COLUMN id SET DEFAULT nextval('public.old_image_id_seq'::regclass);
 
 
 --
--- Name: image_url_key; Type: INDEX; Schema: public; Owner: deploy
+-- Name: old_image old_image_pkey; Type: CONSTRAINT; Schema: public; Owner: deploy
 --
 
-CREATE INDEX image_url_key ON public.image USING btree (provider, md5((url)::text));
+ALTER TABLE ONLY public.old_image
+    ADD CONSTRAINT old_image_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: old_image_9e9f3d70; Type: INDEX; Schema: public; Owner: deploy
+--
+
+CREATE INDEX old_image_9e9f3d70 ON public.old_image USING btree (provider);
+
+CREATE UNIQUE INDEX old_image_provider_fid_key ON public.old_image USING btree (provider, md5((foreign_identifier)::text));
+
+
+--
+-- Name: old_image_url_key; Type: INDEX; Schema: public; Owner: deploy
+--
+
+CREATE INDEX old_image_url_key ON public.old_image USING btree (provider, md5((url)::text));
 
 
 --
 -- Name: uuid_index; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE INDEX uuid_index ON public.image USING btree (identifier);
+CREATE INDEX uuid_index ON public.old_image USING btree (identifier);
 
 
 --

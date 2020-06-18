@@ -13,7 +13,7 @@ SET default_with_oids = false;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
 
-CREATE TABLE public.new_image (
+CREATE TABLE public.image (
     identifier uuid PRIMARY KEY DEFAULT public.uuid_generate_v4(),
     created_on timestamp with time zone NOT NULL,
     updated_on timestamp with time zone NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE public.new_image (
 );
 
 
-ALTER TABLE public.new_image OWNER TO deploy;
-CREATE UNIQUE INDEX new_image_provider_fid_idx
-  ON public.new_image
+ALTER TABLE public.image OWNER TO deploy;
+CREATE UNIQUE INDEX image_provider_fid_idx
+  ON public.image
   USING btree (provider, md5(foreign_identifier));
