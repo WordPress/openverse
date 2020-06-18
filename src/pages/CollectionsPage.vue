@@ -29,7 +29,8 @@ import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProviders
 
 const MUSEUM_PROVIDERS = [
   'brooklynmuseum', 'clevelandmuseum', 'digitaltmuseum', 'met', 'museumsvictoria',
-  'nhl', 'rijksmuseum', 'sciencemuseum', 'thorvaldsensmuseum',
+  'nhl', 'rijksmuseum', 'sciencemuseum', 'thorvaldsensmuseum', 'europeana',
+  'statensmuseum',
 ];
 
 const CollectionsPage = {
