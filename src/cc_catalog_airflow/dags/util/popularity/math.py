@@ -64,6 +64,9 @@ PERCENTILE = 0.85
 # Cache provider constant so it doesn't need to be recomputed for every row
 constants = {}
 
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY', '')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_KEY', '')
+
 
 def compute_popularity(metric_value: Real, source_constant: Real):
     return metric_value / (metric_value + source_constant)
@@ -81,7 +84,11 @@ def compute_constant(percentile: float, percentile_value: Real):
 
 
 def _read_percentiles():
-    s3 = boto3.resource('s3')
+    s3_session = boto3.Session(
+        aws_access_key_id=AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+    )
+    s3 = s3_session.resource('s3')
     try:
         f = s3.Object(PERCENTILE_S3_BUCKET, PERCENTILE_FILE)
         file_content = f.get()['Body'].read().decode('utf-8')
