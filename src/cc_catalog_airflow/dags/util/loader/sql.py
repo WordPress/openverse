@@ -1,4 +1,5 @@
 import logging
+import ast
 from textwrap import dedent
 from airflow.hooks.postgres_hook import PostgresHook
 from util.loader import column_names as col
@@ -540,3 +541,52 @@ def update_sub_providers_method4(
     Drop the temporary table
     """
     postgres.run(f'DROP TABLE public.{temp_table};')
+
+
+def update_europeana_sub_providers(
+  postgres_conn_id,
+  image_table=IMAGE_TABLE_NAME,
+  default_provider=prov.EUROPEANA_DEFAULT_PROVIDER,
+  sub_providers=prov.EUROPEANA_SUB_PROVIDERS
+):
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+
+    select_query = dedent(
+        f'''
+        SELECT
+        {col.FOREIGN_ID} AS foreign_id,
+        {col.META_DATA} ->> 'dataProvider' AS data_providers
+        FROM {image_table}
+        WHERE {col.PROVIDER} = '{default_provider}';
+        '''
+    )
+
+    selected_records = postgres.get_records(select_query)
+
+    """
+    Filter the records to retain the ones with desired sub providers.
+    Each record in the new list would contain the sub provider name at the end.
+    """
+    filtered_records = []
+    for row in selected_records:
+        data_providers = ast.literal_eval(row[1])
+        source = next((s for s in sub_providers if sub_providers[s] in
+                       data_providers), None)
+        if source is not None:
+            filtered_records.append(row + [source])
+
+    for row in filtered_records:
+        foreign_id = row[0]
+        sub_provider = row[2]
+        postgres.run(
+            dedent(
+                f'''
+                UPDATE {image_table}
+                SET {col.SOURCE} = '{sub_provider}'
+                WHERE
+                {image_table}.{col.PROVIDER} = '{default_provider}'
+                AND
+                MD5({image_table}.{col.FOREIGN_ID}) = MD5('{foreign_id}');
+                '''
+            )
+        )
