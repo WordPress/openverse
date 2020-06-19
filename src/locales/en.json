@@ -50,5 +50,34 @@
             "help": "Help us keep the internet free and open.",
             "link": "Donate now"
         }
+    },
+    "about": {
+        "title": "About CC Search",
+        "description": {
+            "content": "CC Search is a tool that allows openly licensed and public domain works to be discovered and used by everyone. Creative Commons, the nonprofit behind CC Search, is the maker of the {link}, used over 1.4 billion times to help creators share knowledge and creativity online.",
+            "licenses-link": "CC licenses"
+        },
+        "collection": "CC Search searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
+        "planning": {
+            "content": "Currently CC Search only searches images, but we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. Learn more about CC’s {vision} and {roadmap} for CC Search and see what {working}. All of our code is open source ({search}, {catalog-api}, {catalog}) and we {community}",
+            "vision": "2019 vision, strategy",
+            "roadmap": "roadmap",
+            "working": "we’re currently working on",
+            "search": "CC Search",
+            "catalog-api": "CC Catalog API",
+            "catalog": "CC Catalog",
+            "community": "welcome community contribution"
+        },
+        "declaration": {
+            "content": "Please note that CC does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
+            "terms": "CC Terms of Use"
+        },
+        "old-cc-search": "Looking for the old CC Search portal? Visit {link}.",
+        "sources": "Sources",
+        "providers": {
+            "source": "Source",
+            "domain": "Domain",
+            "work": "# CC Licensed Works"
+        }
     }
 }

@@ -50,5 +50,34 @@
             "help": "Aidez-nous à garder Internet gratuit et ouvert.",
             "link": "Faire un don maintenant"
         }
+    },
+    "about": {
+        "title": "À propos de CC Search",
+        "description": {
+            "content": "CC Search est un outil qui permet à tout le monde de découvrir et d'utiliser des œuvres sous licence ouverte et du domaine public. Creative Commons, l'organisation à but non lucratif derrière CC Search, est le créateur du {link}, utilisé plus de 1,4 milliard de fois pour aider les créateurs à partager leurs connaissances et leur créativité en ligne.",
+            "licenses-link": "Licences CC"
+        },
+        "collection": "La recherche CC recherche dans plus de 300 millions d'images à partir d'API ouvertes et de l'ensemble de données {common-crawl}. Il va au-delà de la simple recherche pour regrouper les résultats dans plusieurs référentiels publics dans un seul catalogue et facilite la réutilisation grâce à des fonctionnalités telles que les balises générées par machine et l'attribution en un clic.",
+        "planning": {
+            "content": "Actuellement, CC Search ne recherche que les images, mais nous prévoyons d'ajouter des types de médias supplémentaires tels que les textes ouverts et l'audio, dans le but ultime de fournir un accès à l'ensemble des 1,4 milliard d'œuvres CC sous licence et du domaine public sur le Web. En savoir plus sur la {vision} et la feuille de route de CC pour la recherche CC et voir ce qui fonctionne. Tout notre code est open source ({search}, {catalog-api}, {catalog}) et nous {community}",
+            "vision": "Vision, stratégie 2019",
+            "roadmap": "feuille de route",
+            "working": "nous travaillons actuellement sur",
+            "search": "Recherche CC",
+            "catalog-api": "API de catalogue CC",
+            "catalog": "Catalogue CC",
+            "community": "bienvenue contribution communautaire"
+        },
+        "declaration": {
+            "content": "Veuillez noter que CC ne vérifie pas si les images sont correctement sous licence CC, ou si l'attribution et les autres informations de licence que nous avons agrégées sont exactes ou complètes. Veuillez vérifier indépendamment l'état de la licence et les informations d'attribution avant de réutiliser le contenu. Pour plus de détails, lisez les {terms}.",
+            "terms": "Conditions d'utilisation de CC"
+        },
+        "old-cc-search": "Vous recherchez l'ancien portail de recherche CC? Visitez {link}.",
+        "sources": "Sources",
+        "providers": {
+            "source": "La source",
+            "domain": "Domaine",
+            "work": "# Œuvres sous licence CC"
+        }
     }
 }

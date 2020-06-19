@@ -3,7 +3,7 @@
       {{$t('hero.locale.label')}}
       <div class="control has-icons-left">
         <div class="select">
-          <select v-model="$i18n.locale">
+          <select @change="setLocale($event)" v-model="$i18n.locale">
             <option v-for="locale in locales" :key="locale.name" :value="locale.name">
               {{locale.eng}} - {{locale.native}}
             </option>
@@ -26,6 +26,11 @@ export default {
       locales: getlocales(),
       currentLanguage: 'English',
     };
+  },
+  methods: {
+    setLocale(event) {
+      window.localStorage.setItem('locale', event.target.value);
+    },
   },
 };
 </script>
