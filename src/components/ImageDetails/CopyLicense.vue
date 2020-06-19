@@ -141,10 +141,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "bulma/sass/utilities/_all.sass";
+
 $width: 35rem;
 
 .copy-license {
   width: $width;
+
+  @include mobile{
+    width: auto;
+  }
 }
 
 textarea {
