@@ -252,7 +252,8 @@ def _process_image_list(image_list):
     return total_images
 
 
-def _process_image_data(image_data):
+def _process_image_data(image_data, sub_providers=SUB_PROVIDERS,
+                        provider=PROVIDER):
     logger.debug(f'Processing image data: {image_data}')
     image_url, height, width = _get_image_url(image_data)
     license_, license_version = _get_license(image_data.get('license'))
@@ -263,8 +264,8 @@ def _process_image_data(image_data):
     foreign_landing_url = _build_foreign_landing_url(creator_url, foreign_id)
 
     owner = image_data.get('owner').strip()
-    source = next((s for s in SUB_PROVIDERS if owner in SUB_PROVIDERS[s]),
-                  PROVIDER)
+    source = next((s for s in sub_providers if owner in sub_providers[s]),
+                  provider)
 
     return image_store.add_item(
         foreign_landing_url=foreign_landing_url,
