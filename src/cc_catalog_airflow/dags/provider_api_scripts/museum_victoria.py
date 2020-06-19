@@ -32,17 +32,17 @@ HEADERS = {
 DEFAULT_QUERY_PARAM = {
     "has_image": "yes",
     "perpage": LIMIT,
-    "imagelicense": "cc+by",
+    "imagelicence": "cc+by",
     "page": 0
 }
 
 LICENSE_LIST = [
-    "cc+by",
-    "public+domain",
-    "cc+by-nc",
-    "cc+by-nc-sa",
-    "cc+by-sa",
-    "cc+by-nc-nd"
+    "cc by-nc-nd",
+    "cc by",
+    "public domain",
+    "cc by-nc",
+    "cc by-nc-sa",
+    "cc by-sa",
 ]
 
 RECORDS_IDS = []
@@ -60,6 +60,7 @@ def main():
             results = _get_batch_objects(
                 params=query_params
             )
+            print(results)
             if type(results) == list:
                 if len(results) > 0:
                     image_count = _handle_batch_objects(results)
@@ -77,7 +78,7 @@ def _get_query_params(
         license_type=None,
         page=0
         ):
-    query_params["imagelicense"] = license_type
+    query_params["imagelicence"] = license_type
     query_params["page"] = page
     return query_params
 
@@ -94,6 +95,7 @@ def _get_batch_objects(
             params,
             headers=headers
         )
+        print(response)
         try:
             response_json = response.json()
             if type(response_json) == list:
@@ -122,8 +124,6 @@ def _handle_batch_objects(
         image_data = _get_media_info(media_data)
         if len(image_data) == 0:
             continue
-        print(image_data)
-        print(landing_page)
         for img in image_data:
             image_count = image_store.add_item(
                 foreign_identifier=img.get("image_id"),
