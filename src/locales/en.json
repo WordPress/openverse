@@ -79,5 +79,43 @@
             "domain": "Domain",
             "work": "# CC Licensed Works"
         }
+    },
+    "search-guide": {
+        "title": "CC Search Syntax Guide",
+        "intro": "When you search, you can enter special symbols or words to your search term to make your search results more precise.",
+        "exact": {
+            "title": "Search for an exact match",
+            "content": "Put a word or phrase inside quotes. For example, {link}."
+        },
+        "combine": {
+            "title": "Combining terms",
+            "description": "If you want to combine terms, you can use the following operators to perform more complex queries",
+            "and": "{symbol} signifies AND operation",
+            "or": "{symbol} signifies OR operation",
+            "negate": "{symbol} negates a single token",
+            "prefix": "{symbol} at the end of a term signifies a prefix query",
+            "precedence": "{open} and {close} signify precedence",
+            "fuzziness": "{symbol} after a word signifies edit distance (fuzziness)"
+        },
+        "example": {
+            "and": "Example: {link}{br} This will search for images related to both dog and cat.",
+            "or": "Example: {link}{br} This will search for images related to dog or cat, but not necessarily both.",
+            "negate": {
+                "description": "You can use the {highlight} to exclude a search term from the results.",
+                "content": "Example: {link}{br} This will search for images related to dog but won't include results related to 'pug'"
+            },
+            "prefix": {
+                "description": "You can use the {highlight} to mark a prefix term. This will match anything after the *.",
+                "content": "Example: {link}{br} This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.."
+            },
+            "precedence": {
+                "description": "You can use parentheses {highlight} to specify precedence of terms or combine more complex queries.",
+                "content": "Example: {link}{br} This will search for images that match dogs that are either corgis or labrador."
+            },
+            "fuzziness": {
+                "description": "You can use {highlight} to specify some fuzzy logic to the term according to the {link} — the number of one character changes that need to be made to one string to make it the same as another string.",
+                "content": "Example: {link}{br} This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'."
+            }
+        }
     }
 }

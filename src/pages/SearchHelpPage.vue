@@ -1,167 +1,158 @@
 <template>
-  <div class="page">
-    <header-section showNavSearch="true"></header-section>
-    <main role="main" class="margin-larger">
-      <h2 class="margin-vertical-normal">CC Search Syntax Guide</h2>
-      <p>
-        When you search, you can enter special symbols or words to your search
-        term to make your search results more precise.
-      </p>
+<div class="page">
+  <header-section showNavSearch="true"></header-section>
+  <main role="main" class="margin-larger">
+    <h2 class="margin-vertical-normal">{{$t('search-guide.title')}}</h2>
+    <p>
+      {{$t('search-guide.intro')}}
+    </p>
 
-      <h3 class="margin-vertical-normal">Search for an exact match</h3>
-      <p>
-        Put a word or phrase inside quotes. For example,
-        <a
-          aria-label="quote unquote Claude Monet"
-          href='https://search.creativecommons.org/search?q="Claude%20Monet"'
-        >
-          <em>"Claude Monet"</em> </a
-        >.
-      </p>
+    <h3 class="margin-vertical-normal">{{$t('search-guide.exact.title')}}</h3>
+    <i18n path="search-guide.exact.content" tag="p">
+          <template v-slot:link>
+            <a aria-label="quote unquote Claude Monet" href='https://search.creativecommons.org/search?q="Claude%20Monet"'>
+              <em>"Claude Monet"</em>
+            </a>
+          </template>
+      </i18n>
 
-      <h3 role="region" class="margin-vertical-normal">Combining terms</h3>
+    <h3 role="region" class="margin-vertical-normal">{{$t('search-guide.combine.title')}}</h3>
 
-      <p class="margin-vertical-normal">
-        If you want to combine terms, you can use the following operators to
-        perform more complex queries
-      </p>
+    <p class="margin-vertical-normal">
+      {{$t('search-guide.combine.description')}}
+    </p>
 
-      <ul>
-        <li class="listitem">
-          <code aria-label="plus" class="literal">+</code> signifies AND
-          operation
-        </li>
-        <li class="listitem">
-          <code aria-label="vertical bar" class="literal">|</code> signifies OR
-          operation
-        </li>
-        <li class="listitem">
-          <code aria-label="minus" class="literal">-</code> negates a single
-          token
-        </li>
-        <li class="listitem">
-          <code aria-label="star" class="literal">*</code> at the end of a term
-          signifies a prefix query
-        </li>
-        <li class="listitem">
-          <code aria-label="open paranthesis" class="literal">(</code> and
-          <code aria-label="close paranthesis" class="literal">)</code> signify
-          precedence
-        </li>
-        <li class="listitem">
-          <code aria-label="tilde N" class="literal">~N</code> after a word
-          signifies edit distance (fuzziness)
-        </li>
-      </ul>
+    <ul>
+      <i18n path="search-guide.combine.and" tag="li" class="listitem">
+        <template v-slot:symbol>
+          <code aria-label="plus" class="literal">+</code>
+        </template>
+      </i18n>
+      <i18n path="search-guide.combine.or" tag="li" class="listitem">
+        <template v-slot:symbol>
+          <code aria-label="vertical bar" class="literal">|</code>
+        </template>
+      </i18n>
+      <i18n path="search-guide.combine.negate" tag="li" class="listitem">
+        <template v-slot:symbol>
+          <code aria-label="minus" class="literal">-</code>
+        </template>
+      </i18n>
+      <i18n path="search-guide.combine.prefix" tag="li" class="listitem">
+        <template v-slot:symbol>
+          <code aria-label="star" class="literal">*</code>
+        </template>
+      </i18n>
+      <i18n path="search-guide.combine.precedence" tag="li" class="listitem">
+        <template v-slot:open>
+          <code aria-label="open paranthesis" class="literal">(</code>
+        </template>
+        <template v-slot:close>
+          <code aria-label="close paranthesis" class="literal">)</code>
+        </template>
+      </i18n>
+      <i18n path="search-guide.combine.fuzziness" tag="li" class="listitem">
+        <template v-slot:symbol>
+          <code aria-label="tilde N" class="literal">~N</code>
+        </template>
+      </i18n>
+    </ul>
 
-      <p class="margin-vertical-normal">
-        Example:
-        <a
-          aria-label="dog plus cat"
-          href="https://search.creativecommons.org/search?q=dog%2Bcat"
-        >
+
+    <i18n path="search-guide.example.and" tag="p" class="margin-vertical-normal">
+      <template v-slot:link>
+        <a aria-label="dog plus cat" href='https://search.creativecommons.org/search?q=dog%2Bcat'>
           <em>dog+cat</em>
         </a>
+      </template>
+      <template v-slot:br>
         <br />
-        This will search for images related to both dog and cat.
-      </p>
+      </template>
+    </i18n>
 
-      <p class="margin-vertical-normal">
-        Example:
-        <a
-          aria-label="dog vertical bar cat"
-          href="https://search.creativecommons.org/search?q=dog%7Ccat"
-        >
+    <i18n path="search-guide.example.or" tag="p" class="margin-vertical-normal">
+      <template v-slot:link>
+        <a aria-label="dog vertical bar cat" href='https://search.creativecommons.org/search?q=dog%7Ccat'>
           <em>dog|cat</em>
         </a>
+      </template>
+      <template v-slot:br>
         <br />
-        This will search for images related to dog or cat, but not necessarily
-        both.
-      </p>
+      </template>
+    </i18n>
 
-      <p class="margin-vertical-normal">
-        You can use the
-        <em aria-label="minus operator (signifies NOT)"
-          >- operator (signifies NOT)</em
-        >
-        to exclude a search term from the results.
-      </p>
+    <i18n path="search-guide.example.negate.description" tag="p" class="margin-vertical-normal">
+      <template v-slot:highlight>
+        <em aria-label="minus operator (signifies NOT)">- operator (signifies NOT)</em>
+      </template>
+    </i18n>
 
-      <p class="margin-vertical-normal">
-        Example:
-        <a
-          aria-label="dog minus pug"
-          href="https://search.creativecommons.org/search?q=dog%20-pug"
-        >
+    <i18n path="search-guide.example.negate.content" tag="p" class="margin-vertical-normal">
+      <template v-slot:link>
+        <a aria-label="dog minus pug" href='https://search.creativecommons.org/search?q=dog%20-pug'>
           <em>dog -pug</em>
         </a>
+      </template>
+      <template v-slot:br>
         <br />
-        This will search for images related to dog but won't include results
-        related to "pug"
-      </p>
+      </template>
+    </i18n>
 
-      <p class="margin-vertical-normal">
-        You can use the <em>* operator (wildcard)</em>
-        to mark a prefix term. This will match anything after the *.
-      </p>
+    <i18n path="search-guide.example.prefix.description" tag="p" class="margin-vertical-normal">
+      <template v-slot:highlight>
+        <em>* operator (wildcard)</em>
+      </template>
+    </i18n>
 
-      <p class="margin-vertical-normal">
-        Example:
-        <a
-          aria-label="net star"
-          href="https://search.creativecommons.org/search?q=net%2a"
-        >
+    <i18n path="search-guide.example.negate.content" tag="p" class="margin-vertical-normal">
+      <template v-slot:link>
+        <a aria-label="net star" href='https://search.creativecommons.org/search?q=net%2a'>
           <em>net*</em>
         </a>
+      </template>
+      <template v-slot:br>
         <br />
-        This will search for images matching anything with "net". This might
-        include "network", "Netflix", "Netherlands", etc..
-      </p>
+      </template>
+    </i18n>
 
-      <p class="margin-vertical-normal">
-        You can use parentheses <em>( and )</em>
-        to specify precedence of terms or combine more complex queries.
-      </p>
+    <i18n path="search-guide.example.precedence.description" tag="p" class="margin-vertical-normal">
+      <template v-slot:highlight>
+        <em>( and )</em>
+      </template>
+    </i18n>
 
-      <p class="margin-vertical-normal">
-        Example:
-        <a
-          aria-label="dogs plus open paranthesis corgis vertical bar labrador close paranthesis"
-          href="https://search.creativecommons.org/search?q=dogs%20%2B%20%28corgis%20%7C%20labrador%29"
-        >
+    <i18n path="search-guide.example.negate.content" tag="p" class="margin-vertical-normal">
+      <template v-slot:link>
+        <a aria-label="dogs plus open paranthesis corgis vertical bar labrador close paranthesis" href='https://search.creativecommons.org/search?q=dogs%20%2B%20%28corgis%20%7C%20labrador%29'>
           <em>dogs + (corgis | labrador)</em>
         </a>
+      </template>
+      <template v-slot:br>
         <br />
-        This will search for images that match dogs that are either corgis or
-        labrador.
-      </p>
+      </template>
+    </i18n>
 
-      <p class="margin-vertical-normal">
-        You can use <em aria-label="tilde N">~N</em>
-        to specify some fuzzy logic to the term according to the
-        <a href="http://en.wikipedia.org/wiki/Levenshtein_distance"
-          >Levenshtein Edit Distance</a
-        >
-        — the number of one character changes that need to be made to one string
-        to make it the same as another string.
-      </p>
+    <i18n path="search-guide.example.fuzziness.description" tag="p" class="margin-vertical-normal">
+      <template v-slot:highlight>
+        <em aria-label="tilde N">~N</em>
+      </template>
+      <template v-slot:link>
+        <a href="http://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein Edit Distance</a>
+      </template>
+    </i18n>
 
-      <p class="margin-vertical-normal">
-        Example:
-        <a
-          aria-label="theatre tilde 1"
-          href="https://search.creativecommons.org/search?q=theatre~1"
-        >
+    <i18n path="search-guide.example.fuzziness.content" tag="p" class="margin-vertical-normal">
+      <template v-slot:link>
+        <a aria-label="theatre tilde 1" href='https://search.creativecommons.org/search?q=theatre~1'>
           <em>theatre~1</em>
         </a>
+      </template>
+      <template v-slot:br>
         <br />
-        This will search for images that match strings close to the term
-        "theatre" with a difference of one character. Results might include
-        terms with different spellings like "theater".
-      </p>
-    </main>
-    <footer-section></footer-section>
-  </div>
+      </template>
+    </i18n>
+  </main>
+  <footer-section></footer-section>
 </template>
 
 <script>

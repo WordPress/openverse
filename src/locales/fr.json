@@ -79,5 +79,43 @@
             "domain": "Domaine",
             "work": "# Œuvres sous licence CC"
         }
+    },
+    "search-guide": {
+        "title": "Guide de syntaxe de recherche CC",
+        "intro": "Lorsque vous effectuez une recherche, vous pouvez entrer des symboles ou des mots spéciaux dans votre terme de recherche pour rendre vos résultats de recherche plus précis.",
+        "exact": {
+            "title": "Rechercher une correspondance exacte",
+            "content": "Mettez un mot ou une phrase entre guillemets. Par exemple, {link}."
+        },
+        "combine": {
+            "title": "Combinaison de termes",
+            "description": "Si vous souhaitez combiner des termes, vous pouvez utiliser les opérateurs suivants pour effectuer des requêtes plus complexes",
+            "and": "{symbol} signifie ET opération",
+            "or": "{symbol} signifie OU opération",
+            "negate": "{symbol} annule un seul jeton",
+            "prefix": "{symbol} à la fin d'un terme signifie une requête de préfixe",
+            "precedence": "{open} et {close} signifient la priorité",
+            "fuzziness": "{symbol} après un mot signifie modifier la distance (flou)"
+        },
+        "example": {
+            "and": "Exemple: {link} {br} Ceci recherchera des images liées à la fois au chien et au chat.",
+            "or": "Exemple: {link} {br} Ceci recherchera des images liées au chien ou au chat, mais pas nécessairement les deux.",
+            "negate": {
+                "description": "Vous pouvez utiliser le {highlight} pour exclure un terme de recherche des résultats.",
+                "content": "Exemple: {link} {br} Ceci recherchera les images liées au chien mais n'inclura pas les résultats liés à 'pug'"
+            },
+            "prefix": {
+                "description": "Vous pouvez utiliser le {highlight} pour marquer un terme de préfixe. Cela correspondra à n'importe quoi après le *.",
+                "content": "Exemple: {link} {br} Ceci recherchera des images correspondant à n'importe quoi avec 'net'. Cela peut inclure «réseau», «Netflix», «Pays-Bas», etc."
+            },
+            "precedence": {
+                "description": "Vous pouvez utiliser des parenthèses {highlight} pour spécifier la priorité des termes ou combiner des requêtes plus complexes.",
+                "content": "Exemple: {link} {br} Cela recherchera des images qui correspondent à des chiens corgis ou labrador."
+            },
+            "fuzziness": {
+                "description": "Vous pouvez utiliser {highlight} pour spécifier une logique floue au terme en fonction du {link} - le nombre de modifications d'un caractère qui doivent être apportées à une chaîne pour la rendre identique à une autre chaîne.",
+                "content": "Exemple: {link} {br} Cela recherchera des images qui correspondent à des chaînes proches du terme 'théâtre' avec une différence d'un caractère. Les résultats peuvent inclure des termes avec des orthographes différentes comme «théâtre»."
+            }
+        }
     }
 }
