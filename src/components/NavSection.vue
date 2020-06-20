@@ -32,13 +32,7 @@
             v-model.lazy="form.searchTerm"
           />
           <div class="is-sr-only">
-            <button
-              aria-label="sr search button"
-              tabindex="-1"
-              type="submit"
-              class="button secondary"
-              value="Search"
-            ></button>
+            <button aria-label="sr search button" tabindex="-1" type="submit" class="button secondary" value="Search"></button>
           </div>
         </form>
       </div>
