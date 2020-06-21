@@ -316,18 +316,6 @@ def _create_temp_sub_prov_table(
         )
     )
 
-    """
-    Create an index on the creator URL column
-    """
-    postgres.run(
-        dedent(
-            f'''
-            CREATE INDEX {temp_table}_{col.CREATOR_URL}_idx
-            ON public.{temp_table} USING btree ({col.CREATOR_URL});
-            '''
-        )
-    )
-
     postgres.run(
         f'ALTER TABLE public.{temp_table} OWNER TO {DB_USER_NAME};'
     )
@@ -356,68 +344,11 @@ def _create_temp_sub_prov_table(
     return temp_table
 
 
-def update_sub_providers(
-        postgres_conn_id,
-        image_table=IMAGE_TABLE_NAME,
-        default_provider=prov.FLICKR_DEFAULT_PROVIDER,
-):
-
-    """
-    Update the source value to appropriate sub provider value for a given set
-    of users
-    """
-    # ----------------------------- Method A -----------------------------
-    #
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    temp_table = _create_temp_sub_prov_table(postgres_conn_id)
-
-    """
-    Create an index on the creator URL column
-    """
-    postgres.run(
-        dedent(
-            f'''
-                CREATE INDEX IF NOT EXISTS {image_table}_{col.CREATOR_URL}_idx
-                ON public.{image_table} USING btree ({col.CREATOR_URL});
-                '''
-        )
-    )
-
-    """
-    Execute the update query
-    """
-    postgres.run(
-        dedent(
-            f'''
-            UPDATE {image_table}
-            SET {col.SOURCE} = public.{temp_table}.{col.PROVIDER}
-            FROM public.{temp_table}
-            WHERE
-            {image_table}.{col.CREATOR_URL} = public.{temp_table}.{
-            col.CREATOR_URL}
-            AND
-            {image_table}.{col.PROVIDER} = '{default_provider}';
-            '''
-        )
-    )
-
-    """
-    Drop the temporary table
-    """
-    postgres.run(f'DROP TABLE public.{temp_table};')
-
-    """
-    Drop the index
-    """
-    postgres.run(f'DROP INDEX {image_table}_{col.CREATOR_URL}_idx;')
-
-
-def update_sub_providers_method2(
+def update_flickr_sub_providers(
   postgres_conn_id,
   image_table=IMAGE_TABLE_NAME,
   default_provider=prov.FLICKR_DEFAULT_PROVIDER,
 ):
-    # ----------------------------- Method B -----------------------------
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     temp_table = _create_temp_sub_prov_table(postgres_conn_id)
 
@@ -453,88 +384,6 @@ def update_sub_providers_method2(
                 '''
             )
         )
-
-    """
-    Drop the temporary table
-    """
-    postgres.run(f'DROP TABLE public.{temp_table};')
-
-
-def update_sub_providers_method3(
-  postgres_conn_id,
-  image_table=IMAGE_TABLE_NAME,
-  default_provider=prov.FLICKR_DEFAULT_PROVIDER,
-):
-    # ----------------------------- Method C -----------------------------
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    temp_table = _create_temp_sub_prov_table(postgres_conn_id)
-
-    postgres.run(
-        dedent(
-            f'''
-            (SELECT
-            {col.FOREIGN_ID} AS foreign_id,
-            public.{temp_table}.{col.PROVIDER} AS sub_provider
-            FROM {image_table}
-            INNER JOIN
-            public.{temp_table}
-            ON
-            {image_table}.{col.CREATOR_URL} = public.{temp_table}.{
-            col.CREATOR_URL}
-            AND
-            {image_table}.{col.PROVIDER} = '{default_provider}')
-            LATERAL (
-            UPDATE {image_table}
-            SET {col.SOURCE} = sub_provider
-            WHERE
-            {image_table}.{col.PROVIDER} = '{default_provider}'
-            AND
-            MD5({image_table}.{col.FOREIGN_ID}) = MD5(foreign_id);
-            '''
-        )
-    )
-
-    """
-    Drop the temporary table
-    """
-    postgres.run(f'DROP TABLE public.{temp_table};')
-
-
-def update_sub_providers_method4(
-  postgres_conn_id,
-  image_table=IMAGE_TABLE_NAME,
-  default_provider=prov.FLICKR_DEFAULT_PROVIDER,
-):
-    # ----------------------------- Method D -----------------------------
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    temp_table = _create_temp_sub_prov_table(postgres_conn_id)
-
-    postgres.run(
-        dedent(
-            f'''
-            UPDATE {image_table}
-            SET {col.SOURCE} = sub_provider
-            FROM
-            (SELECT
-            {col.FOREIGN_ID} AS foreign_id,
-            public.{temp_table}.{col.PROVIDER} AS sub_provider
-            FROM {image_table}
-            INNER JOIN
-            public.{temp_table}
-            ON
-            {image_table}.{col.CREATOR_URL} = public.{temp_table}.{
-            col.CREATOR_URL}
-            AND
-            {image_table}.{col.PROVIDER} = '{default_provider}') e1
-            INNER JOIN LATERAL (
-            SELECT * FROM {image_table}
-            WHERE
-            MD5({image_table}.{col.FOREIGN_ID}) = MD5(e1.foreign_id)) e2
-            ON true
-            WHERE MD5({image_table}.{col.FOREIGN_ID}) = MD5(foreign_id);
-            '''
-        )
-    )
 
     """
     Drop the temporary table
