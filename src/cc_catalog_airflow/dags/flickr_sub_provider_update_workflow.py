@@ -31,6 +31,7 @@ DAG_DEFAULT_ARGS = {
     'email_on_retry': False,
     'retries': 2,
     'retry_delay': timedelta(seconds=15),
+    'schedule_interval': None,
 }
 
 
@@ -46,7 +47,8 @@ def create_dag(
         default_args=args,
         concurrency=concurrency,
         max_active_runs=max_active_runs,
-        catchup=False
+        catchup=False,
+        schedule_interval=None,
     )
 
     with dag:
