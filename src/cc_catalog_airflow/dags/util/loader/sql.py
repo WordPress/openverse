@@ -368,6 +368,7 @@ def update_flickr_sub_providers(
     )
 
     selected_records = postgres.get_records(select_query)
+    logger.info(f'Updating {len(selected_records)} records')
 
     for row in selected_records:
         foreign_id = row[0]
