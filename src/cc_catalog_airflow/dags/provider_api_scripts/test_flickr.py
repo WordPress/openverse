@@ -289,7 +289,8 @@ def test_process_image_data_with_real_example():
             'nature',
             'scuba',
             'underwater'
-        ]
+        ],
+        source=flickr.PROVIDER
     )
     assert total_images == 100
 
@@ -512,3 +513,45 @@ def test_create_tags_list_returns_falsy_empty_tags():
     data = {'id': 'aslkjb', 'tags': ''}
     tags_list = flickr._create_tags_list(data)
     assert not tags_list
+
+
+def test_process_image_data_with_sub_provider():
+    image_data = _get_resource_json('image_data_sub_provider_example.json')
+    with patch.object(
+            flickr.image_store,
+            'add_item',
+            return_value=100
+    ) as mock_add_item:
+        total_images = flickr._process_image_data(image_data)
+
+    expect_meta_data = {
+        'pub_date': '1590799192',
+        'date_taken': '2020-05-29 13:50:27',
+        'views': '28597',
+        'description': 'A gopher tortoise is seen making its way towards its burrow near Launch Complex 39A as preparations continue for NASA SpaceX Demo-2 mission'
+        }
+
+    mock_add_item.assert_called_once_with(
+        foreign_landing_url='https://www.flickr.com/photos/35067687@N04/49950595947',
+        image_url='https://live.staticflickr.com/65535/49950595947_65a3560ddc_b.jpg',
+        thumbnail_url='https://live.staticflickr.com/65535/49950595947_65a3560ddc_m.jpg',
+        license_='by-nc-sa',
+        license_version='2.0',
+        foreign_identifier='49950595947',
+        width=1024,
+        height=683,
+        creator='NASA HQ PHOTO',
+        creator_url='https://www.flickr.com/photos/35067687@N04',
+        title='SpaceX Demo-2 Preflight (NHQ202005290001)',
+        meta_data=expect_meta_data,
+        raw_tags=[
+            'capecanaveral',
+            'commercialcrewprogram',
+            'gophertortoise',
+            'kennedyspacecenter',
+            'nasa',
+            'spacex'
+        ],
+        source='nasa'
+    )
+    assert total_images == 100

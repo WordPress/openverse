@@ -2,6 +2,7 @@ import logging
 from textwrap import dedent
 from airflow.hooks.postgres_hook import PostgresHook
 from util.loader import column_names as col
+from util.loader import provider_details as prov
 from psycopg2.errors import InvalidTextRepresentation
 
 logger = logging.getLogger(__name__)
@@ -289,3 +290,103 @@ def _delete_malformed_row_in_file(tsv_file_name, line_number):
         for index, line in enumerate(lines):
             if index + 1 != line_number:
                 write_obj.write(line)
+
+
+def _create_temp_sub_prov_table(
+        postgres_conn_id,
+        temp_table='temp_sub_prov_table'
+):
+    """
+    Drop the temporary table if it already exists
+    """
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    postgres.run(f'DROP TABLE IF EXISTS public.{temp_table};')
+
+    """
+    Create intermediary table for sub provider migration
+    """
+    postgres.run(
+        dedent(
+            f'''
+            CREATE TABLE public.{temp_table} (
+              {col.CREATOR_URL} character varying(2000),
+              {col.PROVIDER} character varying(80)
+            );
+            '''
+        )
+    )
+
+    postgres.run(
+        f'ALTER TABLE public.{temp_table} OWNER TO {DB_USER_NAME};'
+    )
+
+    """
+    Populate the intermediary table with the sub providers of interest
+    """
+    for sub_prov, user_id_set in prov.FLICKR_SUB_PROVIDERS.items():
+        for user_id in user_id_set:
+            creator_url = prov.FLICKR_PHOTO_URL_BASE + user_id
+            postgres.run(
+                dedent(
+                    f'''
+                    INSERT INTO public.{temp_table} (
+                      {col.CREATOR_URL},
+                      {col.PROVIDER}
+                    )
+                    VALUES (
+                      '{creator_url}',
+                      '{sub_prov}'
+                    );
+                    '''
+                )
+            )
+
+    return temp_table
+
+
+def update_flickr_sub_providers(
+  postgres_conn_id,
+  image_table=IMAGE_TABLE_NAME,
+  default_provider=prov.FLICKR_DEFAULT_PROVIDER,
+):
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    temp_table = _create_temp_sub_prov_table(postgres_conn_id)
+
+    select_query = dedent(
+        f'''
+        SELECT
+        {col.FOREIGN_ID} AS foreign_id,
+        public.{temp_table}.{col.PROVIDER} AS sub_provider
+        FROM {image_table}
+        INNER JOIN public.{temp_table}
+        ON
+        {image_table}.{col.CREATOR_URL} = public.{temp_table}.{
+        col.CREATOR_URL}
+        AND
+        {image_table}.{col.PROVIDER} = '{default_provider}';
+        '''
+    )
+
+    selected_records = postgres.get_records(select_query)
+    logger.info(f'Updating {len(selected_records)} records')
+
+    for row in selected_records:
+        foreign_id = row[0]
+        sub_provider = row[1]
+        postgres.run(
+            dedent(
+                f'''
+                UPDATE {image_table}
+                SET {col.SOURCE} = '{sub_provider}'
+                WHERE
+                {image_table}.{col.PROVIDER} = '{default_provider}'
+                AND
+                MD5({image_table}.{col.FOREIGN_ID}) = MD5('{foreign_id}');
+                '''
+            )
+        )
+
+    """
+    Drop the temporary table
+    """
+    postgres.run(f'DROP TABLE public.{temp_table};')
