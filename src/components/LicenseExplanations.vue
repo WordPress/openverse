@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="license">
     <template v-for="(li, index) in splitLicenses">
       <span class="is-block margin-vertical-small" :key="index">
         <i :class="{
