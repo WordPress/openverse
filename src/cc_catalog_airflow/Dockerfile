@@ -1,7 +1,7 @@
 FROM python:3.7-buster
 
 ENV AIRFLOW_HOME=/usr/local/airflow
-ARG OUTPUT_DIR=/tmp/
+ARG OUTPUT_DIR=/tmp/workflow_output/
 ENV PATH=/usr/local/airflow/.local/bin:$PATH
 
 RUN apt-get -yqq update \
