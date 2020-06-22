@@ -1,6 +1,7 @@
 """
-This file configures the Apache Airflow DAG to update the database to reflect
-appropriate sub provider/ default provider names in the source field
+This file configures the Apache Airflow DAG to update the database table to
+reflect appropriate Flickr sub provider/ default provider names in the source
+field
 """
 
 from datetime import datetime, timedelta
@@ -19,7 +20,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-DAG_ID = 'sub_provider_update_workflow'
+DAG_ID = 'flickr_sub_provider_update_workflow'
 DB_CONN_ID = os.getenv('OPENLEDGER_CONN_ID', 'postgres_openledger_testing')
 CONCURRENCY = 5
 
@@ -30,6 +31,7 @@ DAG_DEFAULT_ARGS = {
     'email_on_retry': False,
     'retries': 2,
     'retry_delay': timedelta(seconds=15),
+    'schedule_interval': None,
 }
 
 
@@ -45,12 +47,13 @@ def create_dag(
         default_args=args,
         concurrency=concurrency,
         max_active_runs=max_active_runs,
-        catchup=False
+        catchup=False,
+        schedule_interval=None,
     )
 
     with dag:
         start_task = ops.get_log_operator(dag, dag.dag_id, 'Starting')
-        run_task = operators.get_sub_provider_update_operator(
+        run_task = operators.get_flickr_sub_provider_update_operator(
           dag,
           postgres_conn_id
         )

@@ -1116,22 +1116,7 @@ def test_drop_load_table_drops_table(postgres_with_load_table):
     assert not check_result
 
 
-def test_create_temp_sub_provider_table(postgres):
-    postgres_conn_id = POSTGRES_CONN_ID
-    load_table = 'temp_sub_prov_table'
-    sql._create_temp_sub_prov_table(postgres_conn_id)
-
-    check_query = (
-        f"SELECT EXISTS ("
-        f"SELECT FROM pg_tables WHERE tablename='{load_table}');"
-    )
-    postgres.cursor.execute(check_query)
-    check_result = postgres.cursor.fetchone()[0]
-    assert check_result
-
-
-def test_update_sub_providers(postgres_with_load_and_image_table,
-                              update_method=sql.update_sub_providers):
+def test_update_flickr_sub_providers(postgres_with_load_and_image_table):
     postgres_conn_id = POSTGRES_CONN_ID
     load_table = TEST_LOAD_TABLE
     image_table = TEST_IMAGE_TABLE
@@ -1173,7 +1158,7 @@ def test_update_sub_providers(postgres_with_load_and_image_table,
     )
     postgres_with_load_and_image_table.connection.commit()
 
-    update_method(
+    sql.update_flickr_sub_providers(
         postgres_conn_id,
         image_table
     )
@@ -1189,15 +1174,3 @@ def test_update_sub_providers(postgres_with_load_and_image_table,
             assert actual_row[5] == 'nasa'
         else:
             assert actual_row[6] == 'b' and actual_row[5] == 'flickr'
-
-
-def test_update_sub_providers_alternative_methods(
-  postgres_with_load_and_image_table):
-    # Test the update method which iterates over rows
-    test_update_sub_providers(postgres_with_load_and_image_table,
-                              sql.update_sub_providers_method2)
-
-    # Test the update method using LATERAL JOIN
-    test_update_sub_providers(postgres_with_load_and_image_table,
-                              sql.update_sub_providers_method4)
-
