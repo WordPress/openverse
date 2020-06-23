@@ -32,7 +32,7 @@ HEADERS = {
 DEFAULT_QUERY_PARAM = {
     "has_image": "yes",
     "perpage": LIMIT,
-    "imagelicence": "cc+by",
+    "imagelicence": "cc by",
     "page": 0
 }
 
@@ -60,7 +60,6 @@ def main():
             results = _get_batch_objects(
                 params=query_params
             )
-            print(results)
             if type(results) == list:
                 if len(results) > 0:
                     image_count = _handle_batch_objects(results)
@@ -75,7 +74,7 @@ def main():
 
 def _get_query_params(
         query_params=DEFAULT_QUERY_PARAM,
-        license_type=None,
+        license_type="cc by",
         page=0
         ):
     query_params["imagelicence"] = license_type
@@ -95,7 +94,6 @@ def _get_batch_objects(
             params,
             headers=headers
         )
-        print(response)
         try:
             response_json = response.json()
             if type(response_json) == list:
@@ -124,12 +122,20 @@ def _handle_batch_objects(
         image_data = _get_media_info(media_data)
         if len(image_data) == 0:
             continue
+        meta_data = _get_metadata(obj)
+        title = obj.get("displayTitle")
         for img in image_data:
             image_count = image_store.add_item(
                 foreign_identifier=img.get("image_id"),
                 foreign_landing_url=foreign_landing_url,
                 image_url=img.get("image_url"),
-                license_url=img.get("license_url")
+                height=img.get("height"),
+                width=img.get("width"),
+                license_url=img.get("license_url"),
+                thumbnail_url=img.get("thumbnail"),
+                title=title,
+                creator=img.get("creators"),
+                meta_data=meta_data
             )
     return image_count
 
@@ -139,38 +145,54 @@ def _get_media_info(media_data):
     for media in media_data:
         media_type = media.get("type")
         if media_type == "image":
-            image_url, image_id = _get_image_url_id(
+            image_url, image_id, height, width = _get_image_data(
                 media
             )
             license_url = _get_license_url(
                 media
             )
+            thumbnail_url = media.get("thumbnail", {}).get("uri")
             if (
                 image_url is None or image_id is None or license_url is None
             ):
                 continue
+            creators = _get_creator(media)
             image_data.append(
                 {
                     "image_id": image_id,
                     "image_url": image_url,
-                    "license_url": license_url
+                    "height": height,
+                    "width": width,
+                    "license_url": license_url,
+                    "thumbnail": thumbnail_url,
+                    "creators": creators
                 }
             )
     return image_data
 
 
-def _get_image_url_id(media):
+def _get_image_data(media):
     image_url, image_id = None, None
+    height, width = None, None
     if "large" in media.keys():
         image_url = media.get("large").get("uri")
         image_id = _get_image_id(image_url)
+        height = media.get("large").get("height")
+        width = media.get("large").get("width")
+    
     elif "medium" in media.keys():
         image_url = media.get("medium").get("uri")
         image_id = _get_image_id(image_url)
+        height = media.get("medium").get("height")
+        width = media.get("medium").get("width")
+    
     elif "small" in media.keys():
         image_url = media.get("small").get("uri")
         image_id = _get_image_id(image_url)
-    return image_url, image_id
+        height = media.get("small").get("height")
+        width = media.get("small").get("width")
+    
+    return image_url, image_id, height, width
 
 
 def _get_image_id(image_url):
@@ -187,6 +209,31 @@ def _get_license_url(media):
         if "creativecommons" in uri:
             license_url = uri
     return license_url
+
+
+def _get_metadata(obj):
+    metadata = {}
+
+    metadata["datemodified"] = obj.get("dateModified")
+    metadata["category"] = obj.get("category")
+    metadata["description"] = obj.get("physicalDescription")    
+    
+    keywords = obj.get("keywords")
+    if type(keywords) == list:
+        metadata["keywords"] = ','.join(keywords)
+ 
+    classifications = obj.get("classifications")
+    if type(classifications) == list:
+        metadata["classifications"] = ','.join(classifications)
+
+    return metadata
+
+
+def _get_creator(media):
+    creators = None
+    if type(media.get("creators")) == list:
+        creators = ','.join(media.get("creators"))
+    return creators
 
 
 if __name__ == "__main__":
