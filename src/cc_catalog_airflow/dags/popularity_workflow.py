@@ -36,12 +36,13 @@ popularity_fields = [
 ]
 
 DB_CONN_ID = os.getenv('OPENLEDGER_CONN_ID', 'postgres_openledger_testing')
+POPULARITY_DIR = 'popularity_workflow'
 
 POPULARITY_DUMP_DEST = os.path.join(
-    os.getenv('OUTPUT_DIR'), 'popularity_dump.tsv'
+    os.getenv('OUTPUT_DIR'), POPULARITY_DIR, 'popularity_dump.tsv'
 )
 NORMALIZED_POPULARITY_DEST = os.path.join(
-    os.getenv('OUTPUT_DIR'), 'normalized_popularity_dump.tsv'
+    os.getenv('OUTPUT_DIR'), POPULARITY_DIR, 'normalized_popularity_dump.tsv'
 )
 
 
@@ -54,7 +55,9 @@ def main():
             open(NORMALIZED_POPULARITY_DEST, 'w+') as out_tsv:
         dump_selection_to_tsv(DB_CONN_ID, dump_query, POPULARITY_DUMP_DEST)
         log.info('Normalizing popularity data. . .')
-        generate_popularity_tsv(in_tsv, out_tsv, percentiles, popularity_fields)
+        generate_popularity_tsv(
+            in_tsv, out_tsv, percentiles, popularity_fields
+        )
         log.info('Finished normalizing popularity scores. Uploading. . .')
         upload_normalized_popularity(DB_CONN_ID, NORMALIZED_POPULARITY_DEST)
         log.info('Popularity normalization complete.')

@@ -1,0 +1,15 @@
+{
+    "alternative_images": [
+        {
+          "mime_type": "image/tiff",
+          "iiif_id": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2",
+          "iiif_info": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/info.json",
+          "width": 4073,
+          "height": 1576,
+          "size": 19269857,
+          "thumbnail": "https://iip-thumb.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/!1024,/0/default.jpg",
+          "native": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/full/0/native.jpg",
+          "orientation": "landscape"
+        }
+      ]
+}

@@ -168,3 +168,15 @@ def get_failure_moving_operator(
         trigger_rule=TriggerRule.ONE_SUCCESS,
         dag=dag
     )
+
+
+def get_flickr_sub_provider_update_operator(
+        dag,
+        postgres_conn_id,
+):
+    return PythonOperator(
+        task_id='update_flickr_sub_providers',
+        python_callable=sql.update_flickr_sub_providers,
+        op_args=[postgres_conn_id],
+        dag=dag
+    )
