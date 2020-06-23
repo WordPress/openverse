@@ -380,14 +380,17 @@ def related_images(uuid, index, request, filter_dead):
 
 def get_sources(index):
     """
-    Given an index, find all available data providers and return their counts.
+    Given an index, find all available data sources and return their counts.
 
     :param index: An Elasticsearch index, such as `'image'`.
-    :return: A dictionary mapping providers to the count of their images.`
+    :return: A dictionary mapping sources to the count of their images.`
     """
-    provider_cache_name = 'source-' + index
-    providers = cache.get(key=provider_cache_name)
-    if not providers:
+    source_cache_name = 'source-' + index
+    sources = cache.get(key=source_cache_name)
+    if type(sources) == list:
+        # Invalidate old provider format.
+        cache.delete(key=source_cache_name)
+    if not sources:
         # Don't increase `size` without reading this issue first:
         # https://github.com/elastic/elasticsearch/issues/18838
         size = 100
@@ -409,13 +412,13 @@ def get_sources(index):
             buckets = results['aggregations']['unique_sources']['buckets']
         except NotFoundError:
             buckets = [{'key': 'none_found', 'doc_count': 0}]
-        providers = {result['key']: result['doc_count'] for result in buckets}
+        sources = {result['key']: result['doc_count'] for result in buckets}
         cache.set(
-            key=provider_cache_name,
+            key=source_cache_name,
             timeout=CACHE_TIMEOUT,
-            value=providers
+            value=sources
         )
-    return providers
+    return sources
 
 
 def _elasticsearch_connect():
