@@ -385,7 +385,7 @@ def get_sources(index):
     :param index: An Elasticsearch index, such as `'image'`.
     :return: A dictionary mapping sources to the count of their images.`
     """
-    source_cache_name = 'source-' + index
+    source_cache_name = 'sources-' + index
     sources = cache.get(key=source_cache_name)
     if type(sources) == list:
         # Invalidate old provider format.
