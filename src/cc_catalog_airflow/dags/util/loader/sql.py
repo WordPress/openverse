@@ -420,8 +420,15 @@ def update_europeana_sub_providers(
     filtered_records = []
     for row in selected_records:
         data_providers = ast.literal_eval(row[1])
-        source = next((s for s in sub_providers if sub_providers[s] in
-                       data_providers), None)
+
+        eligible_sub_providers = {s for s in sub_providers if sub_providers[s]
+                                  in data_providers}
+        if len(eligible_sub_providers) > 1:
+            raise Exception(f"More than one sub-provider identified for the "
+                            f"image with foreign ID {row[0]}")
+        source = eligible_sub_providers.pop() if \
+            len(eligible_sub_providers) == 1 else None
+
         if source is not None:
             filtered_records.append(list(row) + [source])
 

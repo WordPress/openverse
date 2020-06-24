@@ -180,8 +180,13 @@ def _process_image_data(image_data, sub_providers=SUB_PROVIDERS,
     meta_data = _create_meta_data_dict(image_data)
 
     data_providers = set(meta_data['dataProvider'])
-    source = next((s for s in sub_providers if sub_providers[s] in
-                   data_providers), provider)
+    eligible_sub_providers = {s for s in sub_providers if sub_providers[s] in
+                              data_providers}
+    if len(eligible_sub_providers) > 1:
+        raise Exception(f"More than one sub-provider identified for the "
+                        f"image with foreign ID {foreign_id}")
+    source = eligible_sub_providers.pop() if len(eligible_sub_providers) == 1 \
+        else provider
 
     return image_store.add_item(
         foreign_landing_url=foreign_landing_url,
