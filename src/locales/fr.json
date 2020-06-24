@@ -124,5 +124,11 @@
         "improve": "Help us Improve",
         "bug": "Signaler un bug",
         "loading": "Chargement..."
+    },
+    "collections": {
+        "title": "Parcourir les collections",
+        "museum": "Collections du musée",
+        "other": "Autres collections",
+        "collection-size": "Taille de la collection: {count} images"
     }
 }

@@ -19,10 +19,13 @@
       </router-link>
     </div>
     <div>
-      <span class="has-text-grey-light has-text-weight-semibold">
-        Collection size:
-        {{ getProviderImageCount(provider.image_count) }} images
-      </span>
+      <i18n path="collections.collection-size"
+            tag="span"
+            class="has-text-grey-light has-text-weight-semibold">
+          <template v-slot:count>
+            {{ getProviderImageCount(provider.image_count) }}
+          </template>
+      </i18n>
     </div>
   </div>
 </template>

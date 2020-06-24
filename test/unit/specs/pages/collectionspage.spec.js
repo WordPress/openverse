@@ -1,7 +1,10 @@
-import CollectionsPage from '@/pages/CollectionsPage'
-import render from '../../test-utils/render'
+import CollectionsPage from '@/pages/CollectionsPage';
+import render from '../../test-utils/render';
+import i18n from '../../test-utils/i18n';
+
 
 describe('CollectionsPage', () => {
+  const $t = key => i18n.messages[key];
   const options = {
     mocks: {
       $store: {
@@ -10,6 +13,7 @@ describe('CollectionsPage', () => {
         },
         dispatch: jest.fn(),
       },
+      $t,
     },
   }
   it('should render correct contents', () => {
