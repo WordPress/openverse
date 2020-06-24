@@ -423,7 +423,7 @@ def update_europeana_sub_providers(
         source = next((s for s in sub_providers if sub_providers[s] in
                        data_providers), None)
         if source is not None:
-            filtered_records.append(row + [source])
+            filtered_records.append(list(row) + [source])
 
     for row in filtered_records:
         foreign_id = row[0]
