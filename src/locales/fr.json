@@ -117,5 +117,12 @@
                 "content": "Exemple: {link} {br} Cela recherchera des images qui correspondent à des chaînes proches du terme 'théâtre' avec une différence d'un caractère. Les résultats peuvent inclure des termes avec des orthographes différentes comme «théâtre»."
             }
         }
+    },
+    "feedback": {
+        "title": "Retour d'information",
+        "description": "Merci d'utiliser CC Search! Nous apprécions vos idées pour améliorer l'outil ci-dessous. Pour fournir des commentaires réguliers des utilisateurs, rejoignez la chaîne {channel} sur {slack}.",
+        "improve": "Help us Improve",
+        "bug": "Signaler un bug",
+        "loading": "Chargement..."
     }
 }

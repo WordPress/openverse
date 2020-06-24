@@ -117,5 +117,12 @@
                 "content": "Example: {link}{br} This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'."
             }
         }
+    },
+    "feedback": {
+        "title": "Feedback",
+        "description": "Thank you for using CC Search! We welcome your ideas for improving the tool below. To provide regular user feedback, join the {channel} channel on {slack}.",
+        "improve": "Help us Improve",
+        "bug": "Report a Bug",
+        "loading": "Loading..."
     }
 }
