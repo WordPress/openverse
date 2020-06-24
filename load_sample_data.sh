@@ -23,4 +23,4 @@ curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model"
 # Ingest and index the data
 curl -XPOST localhost:8001/task -H "Content-Type: application/json" -d '{"model": "image", "action": "INGEST_UPSTREAM"}'
 # Clear source cache since it's out of date after data has been loaded
-docker exec -it cccatalog-api_cache_1 /bin/bash -c "echo \"del :1:providers-image\" | redis-cli"
+docker exec -it cccatalog-api_cache_1 /bin/bash -c "echo \"del :1:sources-image\" | redis-cli"
