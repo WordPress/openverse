@@ -55,19 +55,19 @@ authority_types = {
 }
 
 
-def get_authority_boost(provider):
+def get_authority_boost(source):
     authority_boost = None
-    if provider in authority_types:
-        authority_type = authority_types[provider]
+    if source in authority_types:
+        authority_type = authority_types[source]
         if authority_type in boost:
             authority_boost = boost[authority_type]
     return authority_boost
 
 
-def get_authority_penalty(provider):
+def get_authority_penalty(source):
     authority_penalty = None
-    if provider in authority_types:
-        authority_type = authority_types[provider]
+    if source in authority_types:
+        authority_type = authority_types[source]
         if authority_type in penalize:
             authority_penalty = penalize[authority_type]
     return authority_penalty

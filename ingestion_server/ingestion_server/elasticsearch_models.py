@@ -72,6 +72,7 @@ class Image(SyncableDocType):
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
         provider = row[schema['provider']]
+        source = row[schema['source']]
         extension = Image.get_extension(row[schema['url']])
         height = row[schema['height']]
         width = row[schema['width']]
@@ -87,21 +88,21 @@ class Image(SyncableDocType):
             created_on=row[schema['created_on']],
             url=row[schema['url']],
             thumbnail=row[schema['thumbnail']],
-            provider=row[schema['provider']],
+            provider=provider,
             source=row[schema['source']],
             license=row[schema['license']].lower(),
             license_version=row[schema['license_version']],
             foreign_landing_url=row[schema['foreign_landing_url']],
             description=Image.parse_description(meta),
             extension=Image.get_extension(row[schema['url']]),
-            categories=get_categories(extension, provider),
+            categories=get_categories(extension, source),
             aspect_ratio=Image.get_aspect_ratio(height, width),
             size=Image.get_size(height, width),
             license_url=Image.get_license_url(meta),
             mature=Image.get_maturity(meta, row[schema['mature']]),
             normalized_popularity=Image.get_popularity(meta),
-            authority_boost=Image.get_authority_boost(meta, provider),
-            authority_penalty=Image.get_authority_penalty(meta, provider)
+            authority_boost=Image.get_authority_boost(meta, source),
+            authority_penalty=Image.get_authority_penalty(meta, source)
         )
 
     @staticmethod
@@ -187,7 +188,7 @@ class Image(SyncableDocType):
         return popularity
 
     @staticmethod
-    def get_authority_boost(meta_data, provider):
+    def get_authority_boost(meta_data, source):
         authority_boost = None
         if meta_data and 'authority_boost' in meta_data:
             try:
@@ -198,11 +199,11 @@ class Image(SyncableDocType):
             except (ValueError, TypeError):
                 pass
         else:
-            authority_boost = get_authority_boost(provider)
+            authority_boost = get_authority_boost(source)
         return authority_boost
 
     @staticmethod
-    def get_authority_penalty(meta_data, provider):
+    def get_authority_penalty(meta_data, source):
         authority_penalty = None
         if meta_data and 'authority_penalty' in meta_data:
             try:
@@ -213,7 +214,7 @@ class Image(SyncableDocType):
             except (ValueError, TypeError):
                 pass
         else:
-            authority_penalty = get_authority_penalty(provider)
+            authority_penalty = get_authority_penalty(source)
         return authority_penalty
 
     @staticmethod
