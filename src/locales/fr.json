@@ -130,5 +130,6 @@
         "museum": "Collections du musée",
         "other": "Autres collections",
         "collection-size": "Taille de la collection: {count} images"
-    }
+    },
+    "not-found": "Page non trouvée"
 }
