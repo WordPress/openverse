@@ -18,6 +18,7 @@ import logging
 
 DELAY = 1.0  # time delay (in seconds)
 PROVIDER = 'met'
+ENDPOINT = 'https://collectionapi.metmuseum.org/public/collection/v1/objects'
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -51,23 +52,20 @@ def main(date=None):
     logger.info(f'Total CC0 images recieved {total_images}')
 
 
-def _get_object_ids(date):
+def _get_object_ids(date, endpoint=ENDPOINT):
     query_params = ''
     if date:
         query_params = {
             'metadataDate': date
             }
 
-    endpoint = (
-        'https://collectionapi.metmuseum.org/public/collection/v1/objects'
-    )
     response = _get_response_json(query_params, endpoint)
 
     if response:
         total_object_ids = response['total']
         object_ids = response['objectIDs']
     else:
-        logger.warning(f'No content available')
+        logger.warning('No content available')
         return None
     return [total_object_ids, object_ids]
 
@@ -77,38 +75,9 @@ def _get_response_json(
         endpoint,
         retries=5,
 ):
-    response_json = None
-
-    if retries < 0:
-        logger.error('No retries remaining.  Failure.')
-        raise Exception('Retries exceeded')
-
-    response = delayed_requester.get(
-        endpoint,
-        params=query_params,
-        timeout=60
+    response_json = delayed_requester.get_response_json(
+        endpoint, query_params=query_params, retries=retries
     )
-    if response is not None and response.status_code == 200:
-        try:
-            response_json = response.json()
-        except Exception as e:
-            logger.warning(f'Could not get response_json.\n{e}')
-            response_json = None
-
-    if response_json is None:
-        logger.warning(f'Bad response_json:  {response_json}')
-        logger.warning(
-            'Retrying:\n_get_response_json(\n'
-            f'    {endpoint},\n'
-            f'    {query_params},\n'
-            f'    retries={retries - 1}'
-            ')'
-        )
-        response_json = _get_response_json(
-            query_params,
-            endpoint=endpoint,
-            retries=retries - 1
-        )
 
     return response_json
 
@@ -119,89 +88,50 @@ def _extract_the_data(object_ids):
 
 
 def _get_data_for_image(object_id):
+    object_json = _get_and_validate_object_json(object_id)
+    if not object_json:
+        logger.warning(
+            f'Could not retrieve object_json for object_id:  {object_id}'
+        )
+        return
 
-    endpoint = (
-        'https://collectionapi.metmuseum.org/public/collection/v1/objects/{}'
-        .format(object_id)
+    main_image = object_json.get('primaryImage')
+    main_thumbnail = object_json.get('primaryImageSmall')
+    other_images = object_json.get('additionalImages', [])
+    image_list = (
+        [(main_image, main_thumbnail)]
+        + [(i, None) for i in other_images]
     )
 
-    object_json = _get_response_json(None, endpoint)
-
-    if object_json is None:
-        logger.error('Unable to process object ID : {}'.format(object_id))
-        return None
-
-    isCC0 = object_json.get('isPublicDomain')
-    if isCC0 is None or isCC0 is False:
-        logger.warning('CC0 license not detected')
-        return None
-
-    title = object_json.get('title')
-    creator_name = object_json.get('artistDisplayName')
-    foreign_id = object_id
     meta_data = _create_meta_data(object_json)
-    image_url = object_json.get('primaryImage')
-    foreign_url = object_json.get('objectURL')
 
-    thumbnail = ''
-    if '/original/' in image_url:
-        thumbnail = image_url.replace('/original/', '/web-large/')
-
-    other_images = object_json.get('additionalImages', None)
-
-    if other_images is not None and len(other_images) > 1:
-        extra_image_index = 1
-
-    image_data = {
-        'foreign_landing_url': foreign_url,
-        'image_url': image_url,
-        'thumbnail_url': thumbnail,
-        'foreign_identifier': foreign_id,
-        'creator': creator_name,
-        'title': title,
-        'meta_data': meta_data
-    }
-
-    _process_image_data(image_data)
-
-    if other_images is not None and len(other_images) > 1:
-        for other_image in other_images:
-            foreign_id = '{}-{}'.format(object_id, extra_image_index)
-            image_url = other_image
-            thumbnail = ''
-
-            if image_url:
-                if '/original/' in image_url:
-                    image_url.replace('/original/', '/web-image/')
-
-            image_data = {
-                'foreign_landing_url': foreign_url,
-                'image_url': image_url,
-                'thumbnail_url': thumbnail,
-                'foreign_identifier': foreign_id,
-                'creator': creator_name,
-                'title': title,
-                'meta_data': meta_data
-            }
-
-            _process_image_data(image_data)
+    for img, thumb in image_list:
+        foreign_id = _build_foreign_id(object_id, img)
+        image_store.add_item(
+            foreign_landing_url=object_json.get('objectURL'),
+            image_url=img,
+            thumbnail_url=thumb,
+            license_='cc0',
+            license_version='1.0',
+            foreign_identifier=foreign_id,
+            creator=object_json.get('artistDisplayName'),
+            title=object_json.get('title'),
+            meta_data=meta_data
+        )
 
 
-def _process_image_data(image_data):
-    foreign_id = image_data.get('foreign_identifier')
-    logger.debug(f'Processing object ID: {foreign_id}')
+def _get_and_validate_object_json(object_id, endpoint=ENDPOINT):
+    object_endpoint = f'{endpoint}/{object_id}'
+    object_json = _get_response_json(None, object_endpoint)
+    if not object_json.get('isPublicDomain'):
+        logger.warning('CC0 license not detected')
+        object_json = None
+    return object_json
 
-    image_store.add_item(
-        foreign_landing_url=image_data.get('foreign_landing_url'),
-        image_url=image_data.get('image_url'),
-        thumbnail_url=image_data.get('thumbnail_url'),
-        license_='cc0',
-        license_version='1.0',
-        foreign_identifier=foreign_id,
-        creator=image_data.get('creator'),
-        title=image_data.get('title'),
-        meta_data=image_data.get('meta_data'),
-    )
+
+def _build_foreign_id(object_id, image_url):
+    unique_identifier = image_url.split('/')[-1].split('.')[0]
+    return f'{object_id}-{unique_identifier}'
 
 
 def _create_meta_data(object_json):
