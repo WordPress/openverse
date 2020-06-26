@@ -119,14 +119,14 @@ class CleanupFunctions:
             return None
 
 
-# Define which tables, providers, and fields require cleanup. Map the field
+# Define which tables, sources, and fields require cleanup. Map the field
 # to a cleanup function that returns either a cleaned version of the field
 # or 'None' to signal that no update is required.
 _cleanup_config = {
     'tables': {
         'image': {
-            'providers': {
-                # Applies to all providers.
+            'sources': {
+                # Applies to all sources.
                 '*': {
                     'fields': {
                         'tags': CleanupFunctions.cleanup_tags,
@@ -169,9 +169,9 @@ class TlsTest:
         return True
 
 
-def _clean_data_worker(rows, temp_table, providers_config):
+def _clean_data_worker(rows, temp_table, sources_config):
     log.info('Starting data cleaning worker')
-    global_field_to_func = providers_config['*']['fields']
+    global_field_to_func = sources_config['*']['fields']
     worker_conn = database_connect()
     log.info('Data cleaning worker connected to database')
     write_cur = worker_conn.cursor(cursor_factory=DictCursor)
@@ -180,13 +180,13 @@ def _clean_data_worker(rows, temp_table, providers_config):
     start_time = time.time()
     for row in rows:
         # Map fields that need updating to their cleaning functions
-        provider = row['provider']
+        source = row['source']
         _id = row['id']
-        if provider in providers_config:
-            provider_field_to_func = providers_config[provider]['fields']
-            # Merge provider-local and global function field mappings
+        if source in sources_config:
+            source_field_to_func = sources_config[source]['fields']
+            # Merge source-local and global function field mappings
             fields_to_update = \
-                {**global_field_to_func, **provider_field_to_func}
+                {**global_field_to_func, **source_field_to_func}
         else:
             fields_to_update = global_field_to_func
         # Map fields to their cleaned data
@@ -247,17 +247,17 @@ def clean_image_data(table):
     start_time = time.time()
     table_config = _cleanup_config['tables'][table]
 
-    # Pull data from selected providers only.
-    providers = list(_cleanup_config['tables'][table]['providers'])
+    # Pull data from selected sources only.
+    sources = list(_cleanup_config['tables'][table]['sources'])
 
     # Determine which fields will need updating
     fields_to_clean = set()
-    for p in providers:
-        _fields = list(table_config['providers'][p]['fields'])
+    for p in sources:
+        _fields = list(table_config['sources'][p]['fields'])
         for f in _fields:
             fields_to_clean.add(f)
 
-    cleanup_selection = "SELECT id, provider, {fields} from {table}".format(
+    cleanup_selection = "SELECT id, source, {fields} from {table}".format(
         fields=', '.join(fields_to_clean),
         table='temp_import_{}'.format(table),
     )
@@ -271,7 +271,7 @@ def clean_image_data(table):
         iter_cur.execute(cleanup_selection)
 
         # Clean each field as specified in _cleanup_config.
-        provider_config = table_config['providers']
+        source_config = table_config['sources']
 
         log.info('Fetching first batch')
         batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
@@ -292,7 +292,7 @@ def clean_image_data(table):
                 last_end = end
                 # Arguments for parallel _clean_data_worker calls
                 jobs.append(
-                    (batch[start:end], temp_table, provider_config)
+                    (batch[start:end], temp_table, source_config)
                 )
             pool = multiprocessing.Pool(processes=num_workers)
             log.info('Starting {} cleaning jobs'.format(len(jobs)))

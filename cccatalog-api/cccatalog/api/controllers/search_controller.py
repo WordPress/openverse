@@ -209,7 +209,7 @@ def search(search_params, index, page_size, ip, request,
         ('categories', None),
         ('aspect_ratio', None),
         ('size', None),
-        ('source', 'provider'),
+        ('source', None),
         ('license', 'license__keyword'),
         ('license_type', 'license__keyword')
     ]
@@ -320,7 +320,7 @@ def search(search_params, index, page_size, ip, request,
 
 
 def _validate_provider(input_provider):
-    allowed_providers = list(get_providers('image').keys())
+    allowed_providers = list(get_sources('image').keys())
     lowercase_providers = [x.lower() for x in allowed_providers]
     if input_provider.lower() not in lowercase_providers:
         raise serializers.ValidationError(
@@ -378,27 +378,27 @@ def related_images(uuid, index, request, filter_dead):
     return results, result_count
 
 
-def get_providers(index):
+def get_sources(index):
     """
-    Given an index, find all available data providers and return their counts.
+    Given an index, find all available data sources and return their counts.
 
     :param index: An Elasticsearch index, such as `'image'`.
-    :return: A dictionary mapping providers to the count of their images.`
+    :return: A dictionary mapping sources to the count of their images.`
     """
-    provider_cache_name = 'providers-' + index
-    providers = cache.get(key=provider_cache_name)
-    if type(providers) == list:
+    source_cache_name = 'sources-' + index
+    sources = cache.get(key=source_cache_name)
+    if type(sources) == list:
         # Invalidate old provider format.
-        cache.delete(key=provider_cache_name)
-    if not providers:
+        cache.delete(key=source_cache_name)
+    if not sources:
         # Don't increase `size` without reading this issue first:
         # https://github.com/elastic/elasticsearch/issues/18838
         size = 100
         agg_body = {
             'aggs': {
-                'unique_providers': {
+                'unique_sources': {
                     'terms': {
-                        'field': 'provider.keyword',
+                        'field': 'source.keyword',
                         'size': size,
                         "order": {
                             "_key": "desc"
@@ -409,16 +409,16 @@ def get_providers(index):
         }
         try:
             results = es.search(index=index, body=agg_body, request_cache=True)
-            buckets = results['aggregations']['unique_providers']['buckets']
+            buckets = results['aggregations']['unique_sources']['buckets']
         except NotFoundError:
             buckets = [{'key': 'none_found', 'doc_count': 0}]
-        providers = {result['key']: result['doc_count'] for result in buckets}
+        sources = {result['key']: result['doc_count'] for result in buckets}
         cache.set(
-            key=provider_cache_name,
+            key=source_cache_name,
             timeout=CACHE_TIMEOUT,
-            value=providers
+            value=sources
         )
-    return providers
+    return sources
 
 
 def _elasticsearch_connect():
