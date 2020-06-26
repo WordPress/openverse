@@ -15,7 +15,7 @@ from cccatalog.api.serializers.image_serializers import\
     InputErrorSerializer, ImageSearchQueryStringSerializer,\
     WatermarkQueryStringSerializer, ReportImageSerializer,\
     OembedSerializer
-from cccatalog.settings import THUMBNAIL_PROXY_URL
+from cccatalog.settings import DETAIL_PROXY_URL
 from cccatalog.api.utils.view_count import _get_user_ip
 from cccatalog.api.utils.watermark import watermark
 from django.http.response import HttpResponse, FileResponse
@@ -152,12 +152,11 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     def get(self, request, identifier, format=None, view_count=0):
         """ Get the details of a single list. """
         resp = self.retrieve(request, identifier)
-        # Fix links to creator and foreign landing URLs.
         # Proxy insecure HTTP images at full resolution.
         if 'http://' in resp.data[search_controller.URL]:
             original = resp.data[search_controller.URL]
             secure = '{proxy_url}/{original}'.format(
-                proxy_url=THUMBNAIL_PROXY_URL,
+                proxy_url=DETAIL_PROXY_URL,
                 original=original
             )
             resp.data[search_controller.URL] = secure

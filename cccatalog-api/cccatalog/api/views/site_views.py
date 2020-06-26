@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework import serializers
-from cccatalog.api.controllers.search_controller import get_providers
+from cccatalog.api.controllers.search_controller import get_sources
 from cccatalog.api.serializers.oauth2_serializers import\
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
 from drf_yasg.utils import swagger_auto_schema
@@ -66,23 +66,23 @@ class ImageStats(APIView):
             rec[IDENTIFIER]:
                 (rec[NAME], rec[FILTER], rec[URL]) for rec in provider_data
         }
-        providers = get_providers('image')
+        sources = get_sources('image')
         response = []
-        for provider in providers:
-            if provider in provider_table:
-                display_name, _filter, provider_url = provider_table[provider]
+        for source in sources:
+            if source in provider_table:
+                display_name, _filter, provider_url = provider_table[source]
                 if not _filter:
                     response.append(
                         {
-                            'source_name': provider,
-                            'image_count': providers[provider],
+                            'source_name': source,
+                            'image_count': sources[source],
                             'display_name': display_name,
                             'source_url': provider_url
                         }
                     )
             else:
                 msg = 'provider_identifier missing from content_provider' \
-                      ' table: {}. Check for typos/omissions.'.format(provider)
+                      ' table: {}. Check for typos/omissions.'.format(source)
                 log.error(msg)
         return Response(status=200, data=response)
 

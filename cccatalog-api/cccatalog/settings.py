@@ -159,6 +159,10 @@ PROXY_THUMBS = bool(os.environ.get('PROXY_THUMBS', True))
 THUMBNAIL_PROXY_URL = os.environ.get(
     'THUMBNAIL_PROXY_URL', 'http://localhost:8222'
 )
+# Proxy insecure HTTP images through our internal proxy.
+DETAIL_PROXY_URL = os.environ.get(
+    'DETAIL_PROXY_URL', 'https://api.creativecommons.engineering/t'
+)
 
 THUMBNAIL_WIDTH_PX = 600
 

@@ -15,7 +15,7 @@ class Category(Enum):
 
 
 # Map each provider to a set of categories..
-provider_category = {
+source_category = {
     '__default': [],
     'thorvaldsenmuseum': [Category.DIGITIZED_ARTWORK],
     'svgsilh': [Category.ILLUSTRATION],
@@ -36,11 +36,11 @@ provider_category = {
 }
 
 
-def get_categories(extension, provider):
+def get_categories(extension, source):
     if extension and extension.lower() == 'svg':
         categories = [Category.ILLUSTRATION]
-    elif provider in provider_category:
-        categories = provider_category[provider]
+    elif source in source_category:
+        categories = source_category[source]
     else:
-        categories = provider_category['__default']
+        categories = source_category['__default']
     return [x.name for x in categories]

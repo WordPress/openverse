@@ -1,12 +1,10 @@
 from uuslug import uuslug
 from django.db import models
 from django.utils.html import format_html
-from django.utils.safestring import mark_safe
 from django.contrib.postgres.fields import JSONField, ArrayField
 from cccatalog.api.licenses import ATTRIBUTION, get_license_url
 from oauth2_provider.models import AbstractApplication
 import cccatalog.api.controllers.search_controller as search_controller
-import enum
 
 
 class OpenLedgerModel(models.Model):
@@ -193,7 +191,6 @@ class ImageList(OpenLedgerModel):
 class Tag(OpenLedgerModel):
     foreign_identifier = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=1000, blank=True, null=True)
-    # Source can be a provider/source (like 'openimages', or 'user')
     source = models.CharField(max_length=255, blank=True, null=True)
     slug = models.SlugField(blank=True, null=True, max_length=255)
 
