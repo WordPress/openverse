@@ -41,6 +41,7 @@ LICENSE_LIST = [
 
 RECORDS_IDS = []
 
+
 def main():
     for license_ in LICENSE_LIST:
         logger.info(f"querying for license {license_}")
@@ -81,7 +82,7 @@ def _get_batch_objects(
         params=None,
         headers=HEADERS,
         retries=RETRIES
-    ):
+        ):
     for retry in range(retries):
         response = delay_request.get(
             endpoint,
@@ -97,7 +98,7 @@ def _get_batch_objects(
                 data = None
         except Exception as e:
             data = None
-    return data 
+    return data
 
 
 def _handle_batch_objects(
@@ -173,19 +174,19 @@ def _get_image_data(media):
         image_id = _get_image_id(image_url)
         height = media.get("large").get("height")
         width = media.get("large").get("width")
-    
+
     elif "medium" in media.keys():
         image_url = media.get("medium").get("uri")
         image_id = _get_image_id(image_url)
         height = media.get("medium").get("height")
         width = media.get("medium").get("width")
-    
+
     elif "small" in media.keys():
         image_url = media.get("small").get("uri")
         image_id = _get_image_id(image_url)
         height = media.get("small").get("height")
         width = media.get("small").get("width")
-    
+
     return image_url, image_id, height, width
 
 
@@ -211,12 +212,12 @@ def _get_metadata(obj):
 
     metadata["datemodified"] = obj.get("dateModified")
     metadata["category"] = obj.get("category")
-    metadata["description"] = obj.get("physicalDescription")    
-    
+    metadata["description"] = obj.get("physicalDescription")
+
     keywords = obj.get("keywords")
     if type(keywords) == list:
         metadata["keywords"] = ','.join(keywords)
- 
+
     classifications = obj.get("classifications")
     if type(classifications) == list:
         metadata["classifications"] = ','.join(classifications)

@@ -68,7 +68,7 @@ def test_get_batch_objects_success():
             'get',
             return_value=r) as mock_call:
         actual_response = mv._get_batch_objects(params=query_param)
-    
+
     expected_response = response_success
 
     assert actual_response == expected_response
@@ -88,7 +88,7 @@ def test_get_batch_objects_empty():
             'get',
             return_value=response_empty) as mock_call:
         actual_response = mv._get_batch_objects(params=query_param)
-    
+
     expected_param = []
 
     assert mock_call.call_count == 3
@@ -111,7 +111,7 @@ def test_get_batch_objects_error():
             'get',
             return_value=r) as mock_call:
         actual_response = mv._get_batch_objects(query_param)
-    
+
     assert actual_response is None
     assert mock_call.call_count == 3
 
@@ -119,11 +119,11 @@ def test_get_batch_objects_error():
 def test_get_media_info_success():
     media = _get_resource_json("media_data_success.json")
     actual_image_data = mv._get_media_info(media)
-    
+
     expected_image_data = _get_resource_json("image_data_success.json")
 
     assert actual_image_data == expected_image_data
-    
+
 
 def test_get_media_info_failure():
     media = _get_resource_json("media_data_failure.json")
@@ -136,9 +136,9 @@ def test_get_image_data_large():
     image_data = _get_resource_json("large_image_data.json")
 
     actual_image_url, actual_image_id,\
-    actual_height, actual_width = mv._get_image_data(
-        image_data
-    )
+        actual_height, actual_width = mv._get_image_data(
+            image_data
+        )
 
     assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg"
     assert actual_image_id == "45/329745"
@@ -150,9 +150,9 @@ def test_get_image_data_medium():
     image_data = _get_resource_json("medium_image_data.json")
 
     actual_image_url, actual_image_id,\
-    actual_height, actual_width = mv._get_image_data(
-        image_data
-    )
+        actual_height, actual_width = mv._get_image_data(
+            image_data
+        )
 
     assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-medium.jpg"
     assert actual_image_id == "45/329745"
@@ -164,9 +164,9 @@ def test_get_image_data_small():
     image_data = _get_resource_json("small_image_data.json")
 
     actual_image_url, actual_image_id,\
-    actual_height, actual_width = mv._get_image_data(
-        image_data
-    )
+        actual_height, actual_width = mv._get_image_data(
+            image_data
+        )
 
     assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg"
     assert actual_image_id == "45/329745"
@@ -178,9 +178,9 @@ def test_get_image_data_none():
     image_data = {}
 
     actual_image_url, actual_image_id,\
-    actual_height, actual_width = mv._get_image_data(
-        image_data
-    )
+        actual_height, actual_width = mv._get_image_data(
+            image_data
+        )
 
     assert actual_image_url is None
     assert actual_image_id is None
@@ -222,13 +222,13 @@ def test_get_metadata():
 def test_get_creator():
     media = _get_resource_json("cc_image_data.json")
     actual_creator = mv._get_creator(media)
-    
+
     assert actual_creator == "Photographer: Deb Tout-Smith"
 
 
 def test_handle_batch_objects_success():
     batch_objects = _get_resource_json("batch_objects.json")
-    
+
     with patch.object(
             mv.image_store,
             'add_item') as mock_item:
