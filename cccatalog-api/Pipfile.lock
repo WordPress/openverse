@@ -248,11 +248,11 @@
         },
         "hvac": {
             "hashes": [
-                "sha256:391b558a465d1919a2862926ab9a7c6bef1f2ac2c46daf8dd5115080c42978e4",
-                "sha256:698f37aecb0fe909573e9de5f7707b82c88c867adea4c13dac074141aa02d9f4"
+                "sha256:239f5e262db3bb53d6035c95da46bd072a46ce5eac227149c003fc773462a646",
+                "sha256:d0eebbed370a5ae3f13d47ca74b18413b80f398b7ced1d8f23ec1ae450e51e7a"
             ],
             "index": "pypi",
-            "version": "==0.10.3"
+            "version": "==0.10.4"
         },
         "idna": {
             "hashes": [
