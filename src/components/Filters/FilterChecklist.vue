@@ -54,18 +54,6 @@
         />
       </div>
     </template>
-    <template v-if="areFiltersExpanded && filterType === 'mature'">
-      <label class="checkbox margin-top-small" for="mature">
-        <input
-          id="mature"
-          class="filter-checkbox"
-          type="checkbox"
-          :checked="checked"
-          @change="onValueChange"
-        />
-        Enable Mature Content
-      </label>
-    </template>
   </div>
 </template>
 

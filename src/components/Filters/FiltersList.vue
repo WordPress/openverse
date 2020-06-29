@@ -45,10 +45,6 @@
                       title="Image Size"
                       filterType="sizes"
                       @filterChanged="onUpdateFilter" />
-    <filter-check-list title="Search Settings"
-                      filterType="mature"
-                      :checked="filters.mature"
-                      @filterChanged="onUpdateFilter" />
 
     <div class="margin-normal filter-option small-filter margin-bottom-normal">
       <input type="checkbox" id="creator-chk"

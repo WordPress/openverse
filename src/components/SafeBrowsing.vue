@@ -2,7 +2,7 @@
   <div class="safe-browsing">
     <button
       class="button is-text tiny is-paddingless rating is-shadowless"
-      @click="showForm = !showForm"
+      @click="toggleShowForm"
     >
       <span class="has-color-dark-turquoise"
         >Safe Browsing<i class="icon flag margin-left-small"></i>
@@ -15,7 +15,7 @@
     >
       <button
         class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
-        @click="showForm = !showForm"
+        @click="toggleShowForm"
       >
         <i class="icon cross"></i>
       </button>
@@ -29,8 +29,8 @@
           id="mature"
           class="filter-checkbox"
           type="checkbox"
-          :checked="checked"
-          @change="onValueChange"
+          :value="mature"
+          @change="toggleMature"
         />
         Show Mature Content
       </label>
@@ -39,16 +39,34 @@
 </template>
 
 <script>
+import { TOGGLE_FILTER } from '@/store/action-types';
+
 /**
  * This component displays the mature content filter in a pop-up dialog.
  */
 export default {
+  name: 'safe-browsing',
   data() {
     return {
       showForm: false,
     };
   },
-  name: 'safe-browsing',
+  computed: {
+    mature() {
+      return this.$store.state.filters.mature;
+    },
+  },
+  methods: {
+    toggleShowForm() {
+      this.showForm = !this.showForm;
+    },
+    toggleMature() {
+      this.$store.dispatch(TOGGLE_FILTER, {
+        filterType: 'mature',
+        shouldNavigate: true,
+      });
+    },
+  },
 };
 </script>
 
