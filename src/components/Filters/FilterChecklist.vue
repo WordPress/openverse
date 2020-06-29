@@ -1,51 +1,70 @@
 <template>
-  <div class="filters padding-vertical-big padding-left-big padding-right-normal"
-       @click="hideLicenseExplanationVisibility()">
+  <div
+    class="filters padding-vertical-big padding-left-big padding-right-normal"
+    @click="hideLicenseExplanationVisibility()"
+  >
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
-      <button v-if="!filtersExpandedByDefault"
-              class="filter-visibility-toggle is-white padding-vertical-small">
-        <i v-if="areFiltersExpanded"
-           class="icon angle-up rotImg is-size-5 has-text-grey-light"
-           title="toggle filters visibility" />
-        <i v-else
-           class="icon angle-down is-size-5 has-text-grey-light"
-           title="toggle filters visibility" />
+      <button
+        v-if="!filtersExpandedByDefault"
+        class="filter-visibility-toggle is-white padding-vertical-small"
+      >
+        <i
+          v-if="areFiltersExpanded"
+          class="icon angle-up rotImg is-size-5 has-text-grey-light"
+          title="toggle filters visibility"
+        />
+        <i
+          v-else
+          class="icon angle-down is-size-5 has-text-grey-light"
+          title="toggle filters visibility"
+        />
       </button>
     </div>
     <template v-if="areFiltersExpanded && options">
-    <div v-for="(item, index) in options" :key="index" class="margin-top-small">
-      <label class="checkbox" :for="item.code">
-        <input type="checkbox"
-             class="filter-checkbox margin-right-small"
-             :id="item.code"
-             :key="index"
-             :checked="item.checked"
-             :disabled="disabled"
-             @change="onValueChange" />
-        <license-icons v-if="filterType == 'licenses'" :license="item.code" />
-        {{ item.name }}
-      </label>
-      <img  v-if="filterType == 'licenses'"
-            src="@/assets/help_icon.svg"
-            alt="help"
-            class="license-help is-pulled-right padding-top-smallest padding-right-smaller"
-            @click.stop="toggleLicenseExplanationVisibility(item.code)" />
+      <div
+        v-for="(item, index) in options"
+        :key="index"
+        class="margin-top-small"
+      >
+        <label class="checkbox" :for="item.code">
+          <input
+            type="checkbox"
+            class="filter-checkbox margin-right-small"
+            :id="item.code"
+            :key="index"
+            :checked="item.checked"
+            :disabled="disabled"
+            @change="onValueChange"
+          />
+          <license-icons v-if="filterType == 'licenses'" :license="item.code" />
+          {{ item.name }}
+        </label>
+        <img
+          v-if="filterType == 'licenses'"
+          src="@/assets/help_icon.svg"
+          alt="help"
+          class="license-help is-pulled-right padding-top-smallest padding-right-smaller"
+          @click.stop="toggleLicenseExplanationVisibility(item.code)"
+        />
 
-      <license-explanation-tooltip
-        v-if="shouldRenderLicenseExplanationTooltip(item.code)"
-        :license="licenseExplanationCode" />
-    </div>
+        <license-explanation-tooltip
+          v-if="shouldRenderLicenseExplanationTooltip(item.code)"
+          :license="licenseExplanationCode"
+        />
+      </div>
     </template>
     <template v-if="areFiltersExpanded && filterType === 'mature'">
-        <label class="checkbox margin-top-small" for="mature">
-          <input id="mature"
-                 class="filter-checkbox"
-                 type="checkbox"
-                 :checked="checked"
-                 @change="onValueChange">
-          Enable Mature Content
-        </label>
+      <label class="checkbox margin-top-small" for="mature">
+        <input
+          id="mature"
+          class="filter-checkbox"
+          type="checkbox"
+          :checked="checked"
+          @change="onValueChange"
+        />
+        Enable Mature Content
+      </label>
     </template>
   </div>
 </template>
@@ -74,7 +93,8 @@ export default {
     filtersExpandedByDefault() {
       const idx = findIndex(
         this.$store.state.experiments,
-        exp => exp.name === ExperimentData.EXPERIMENT_NAME);
+        exp => exp.name === ExperimentData.EXPERIMENT_NAME,
+      );
 
       if (idx >= 0) {
         const experiment = this.$store.state.experiments[idx];
@@ -88,7 +108,10 @@ export default {
   },
   methods: {
     onValueChange(e) {
-      this.$emit('filterChanged', { code: e.target.id, filterType: this.$props.filterType });
+      this.$emit('filterChanged', {
+        code: e.target.id,
+        filterType: this.$props.filterType,
+      });
     },
     toggleFilterVisibility() {
       this.filtersVisible = !this.filtersVisible;
@@ -101,7 +124,10 @@ export default {
       this.licenseExplanationVisible = false;
     },
     shouldRenderLicenseExplanationTooltip(licenseCode) {
-      return this.licenseExplanationVisible && this.licenseExplanationCode === licenseCode;
+      return (
+        this.licenseExplanationVisible &&
+        this.licenseExplanationCode === licenseCode
+      );
     },
   },
 };
@@ -113,7 +139,7 @@ export default {
 }
 
 .filters-title {
-  font-size: 1.250em;
+  font-size: 1.25em;
   font-weight: 600;
   font-stretch: normal;
   font-style: normal;
@@ -136,5 +162,4 @@ label {
 .license-help {
   cursor: pointer;
 }
-
 </style>

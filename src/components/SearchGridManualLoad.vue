@@ -50,46 +50,46 @@
 </template>
 
 <script>
-import { SET_IMAGES } from "@/store/mutation-types";
-import SearchGridCell from "@/components/SearchGridCell";
-import LoadingIcon from "@/components/LoadingIcon";
-import SearchRating from "@/components/SearchRating";
-import SafeBrowsing from "@/components/SafeBrowsing";
+import { SET_IMAGES } from '@/store/mutation-types';
+import SearchGridCell from '@/components/SearchGridCell';
+import LoadingIcon from '@/components/LoadingIcon';
+import SearchRating from '@/components/SearchRating';
+import SafeBrowsing from '@/components/SafeBrowsing';
 
 const DEFAULT_PAGE_SIZE = 20;
 
 export default {
-  name: "search-grid-manual-load",
+  name: 'search-grid-manual-load',
   components: {
     SearchGridCell,
     LoadingIcon,
     SearchRating,
-    SafeBrowsing
+    SafeBrowsing,
   },
   data: () => ({
     isDataInitialized: false,
-    shouldContainImages: false
+    shouldContainImages: false,
   }),
   props: {
     imagesCount: {
-      default: 0
+      default: 0,
     },
     images: {
-      default: () => []
+      default: () => [],
     },
     query: {},
     useInfiniteScroll: {
-      default: true
+      default: true,
     },
     includeAnalytics: {
-      default: true
+      default: true,
     },
     includeAddToList: {
-      default: true
+      default: true,
     },
     searchTerm: {
-      default: ""
-    }
+      default: '',
+    },
   },
   computed: {
     imagePage() {
@@ -112,8 +112,8 @@ export default {
         ? this.$store.state.imagesCount
         : this.imagesCount;
       return count >= 10000
-        ? `Over ${count.toLocaleString("en")} images`
-        : `${count.toLocaleString("en")} images`;
+        ? `Over ${count.toLocaleString('en')} images`
+        : `${count.toLocaleString('en')} images`;
     },
     _query() {
       return this.$props.query;
@@ -123,7 +123,7 @@ export default {
     },
     isFinished() {
       return this.currentPage >= this.$store.state.pageCount;
-    }
+    },
   },
   watch: {
     _images: {
@@ -135,14 +135,14 @@ export default {
           }
         }
         this.isDataInitialized = true;
-      }
+      },
     },
     _query: {
       handler() {
         this.searchChanged();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
     handleScalingChange() {
@@ -157,12 +157,12 @@ export default {
       const searchParams = {
         page: this.currentPage + 1,
         shouldPersistImages: true,
-        ...this._query
+        ...this._query,
       };
 
-      this.$emit("onLoadMoreImages", searchParams);
-    }
-  }
+      this.$emit('onLoadMoreImages', searchParams);
+    },
+  },
 };
 </script>
 

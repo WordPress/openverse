@@ -45,10 +45,10 @@
 export default {
   data() {
     return {
-      showForm: false
+      showForm: false,
     };
   },
-  name: "safe-browsing"
+  name: 'safe-browsing',
 };
 </script>
 

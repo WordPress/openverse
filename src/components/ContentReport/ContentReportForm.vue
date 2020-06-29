@@ -88,31 +88,31 @@
 </template>
 
 <script>
-import { SEND_CONTENT_REPORT } from "@/store/action-types";
-import { REPORT_FORM_CLOSED } from "@/store/mutation-types";
-import dmcaNotice from "./DmcaNotice";
-import OtherIssueForm from "./OtherIssueForm";
-import DoneMessage from "./DoneMessage";
-import ReportError from "./ReportError";
+import { SEND_CONTENT_REPORT } from '@/store/action-types';
+import { REPORT_FORM_CLOSED } from '@/store/mutation-types';
+import dmcaNotice from './DmcaNotice';
+import OtherIssueForm from './OtherIssueForm';
+import DoneMessage from './DoneMessage';
+import ReportError from './ReportError';
 
 const dmcaFormUrl =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform";
+  'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform';
 
 export default {
-  name: "content-report-form",
-  props: ["imageId", "imageURL", "providerName"],
+  name: 'content-report-form',
+  props: ['imageId', 'imageURL', 'providerName'],
   components: {
     DoneMessage,
     dmcaNotice,
     ReportError,
-    OtherIssueForm
+    OtherIssueForm,
   },
   data() {
     return {
       selectedReason: null,
       selectedOther: false,
       selectedCopyright: false,
-      dmcaFormUrl
+      dmcaFormUrl,
     };
   },
   computed: {
@@ -121,15 +121,17 @@ export default {
     },
     reportFailed() {
       return this.$store.state.reportFailed;
-    }
+    },
   },
   methods: {
     onIssueSelected() {
-      if (this.selectedReason === "other") {
+      if (this.selectedReason === 'other') {
         this.selectedOther = true;
-      } else if (this.selectedReason === "dmca") {
+      }
+      else if (this.selectedReason === 'dmca') {
         this.selectedCopyright = true;
-      } else {
+      }
+      else {
         this.sendContentReport();
       }
     },
@@ -137,16 +139,16 @@ export default {
       this.selectedOther = false;
       this.selectedCopyright = false;
     },
-    sendContentReport(description = "") {
+    sendContentReport(description = '') {
       this.$store.dispatch(SEND_CONTENT_REPORT, {
         identifier: this.$props.imageId,
         reason: this.selectedReason,
-        description
+        description,
       });
     },
     closeForm() {
       this.$store.commit(REPORT_FORM_CLOSED);
-    }
-  }
+    },
+  },
 };
 </script>

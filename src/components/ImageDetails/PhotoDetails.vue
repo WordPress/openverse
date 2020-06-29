@@ -125,29 +125,29 @@
 </template>
 
 <script>
-import ContentReportForm from "@/components/ContentReport/ContentReportForm";
-import { TOGGLE_REPORT_FORM_VISIBILITY } from "@/store/mutation-types";
+import ContentReportForm from '@/components/ContentReport/ContentReportForm';
+import { TOGGLE_REPORT_FORM_VISIBILITY } from '@/store/mutation-types';
 import {
   SEND_DETAIL_PAGE_EVENT,
-  DETAIL_PAGE_EVENTS
-} from "@/store/usage-data-analytics-types";
-import attributionHtml from "@/utils/attributionHtml";
-import ImageInfo from "./ImageInfo";
-import ImageAttribution from "./ImageAttribution";
-import ImageSocialShare from "./ImageSocialShare";
-import LegalDisclaimer from "./LegalDisclaimer";
-import ReuseSurvey from "./ReuseSurvey";
+  DETAIL_PAGE_EVENTS,
+} from '@/store/usage-data-analytics-types';
+import attributionHtml from '@/utils/attributionHtml';
+import ImageInfo from './ImageInfo';
+import ImageAttribution from './ImageAttribution';
+import ImageSocialShare from './ImageSocialShare';
+import LegalDisclaimer from './LegalDisclaimer';
+import ReuseSurvey from './ReuseSurvey';
 
 export default {
-  name: "photo-details",
+  name: 'photo-details',
   props: [
-    "image",
-    "breadCrumbURL",
-    "shouldShowBreadcrumb",
-    "query",
-    "imageWidth",
-    "imageHeight",
-    "socialSharingEnabled"
+    'image',
+    'breadCrumbURL',
+    'shouldShowBreadcrumb',
+    'query',
+    'imageWidth',
+    'imageHeight',
+    'socialSharingEnabled',
   ],
   components: {
     ImageInfo,
@@ -155,11 +155,11 @@ export default {
     ImageSocialShare,
     LegalDisclaimer,
     ContentReportForm,
-    ReuseSurvey
+    ReuseSurvey,
   },
   data() {
     return {
-      activeTab: 0
+      activeTab: 0,
     };
   },
   computed: {
@@ -171,31 +171,31 @@ export default {
       const version = this.image.license_version;
 
       if (license) {
-        return license.toLowerCase() === "cc0"
+        return license.toLowerCase() === 'cc0'
           ? `${license} ${version}`
           : `CC ${license} ${version}`;
       }
-      return "";
+      return '';
     },
     ccLicenseURL() {
       return `${this.image.license_url}?ref=ccsearch`;
-    }
+    },
   },
   methods: {
     onGoBackToSearchResults() {
       this.$router.push({
-        name: "browse-page",
+        name: 'browse-page',
         query: this.query,
-        params: { location: this.$route.params.location }
+        params: { location: this.$route.params.location },
       });
     },
     onImageLoad(event) {
-      this.$emit("onImageLoaded", event);
+      this.$emit('onImageLoaded', event);
     },
     tabClass(tabIdx, tabClass) {
       return {
         [tabClass]: true,
-        "is-active": tabIdx === this.activeTab
+        'is-active': tabIdx === this.activeTab,
       };
     },
     setActiveTab(tabIdx) {
@@ -211,10 +211,10 @@ export default {
     onPhotoSourceLinkClicked() {
       this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
         eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
-        resultUuid: this.$props.image.id
+        resultUuid: this.$props.image.id,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
