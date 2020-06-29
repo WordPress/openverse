@@ -215,9 +215,6 @@ def reload_upstream(table, progress=None, finish_time=None):
     )
     cols = _get_shared_cols(downstream_db, upstream_db, table)
     query_cols = ','.join(cols)
-    id_idx = cols.index('id')
-    cols[id_idx] = "nextval('image_id_temp_seq'::regclass)"
-    query_cols_nextval = ','.join(cols)
     upstream_db.close()
     # Connect to upstream database and create references to foreign tables.
     log.info('(Re)initializing foreign data wrapper')
@@ -246,14 +243,19 @@ def reload_upstream(table, progress=None, finish_time=None):
         DROP TABLE IF EXISTS temp_import_{table};
         CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
         CREATE TEMP SEQUENCE IF NOT EXISTS image_id_temp_seq;
+        ALTER TABLE temp_import_{table} ADD COLUMN IF NOT EXISTS id serial;
+        ALTER TABLE temp_import_{table} ALTER COLUMN id
+          SET DEFAULT nextval('image_id_temp_seq'::regclass);
+        ALTER TABLE temp_import_{table} ALTER COLUMN view_count
+          SET DEFAULT 0;
         INSERT INTO temp_import_{table} ({cols})
-        SELECT {insert_cols} from upstream_schema.{table} img
+        SELECT {cols} from upstream_schema.{table} img
           WHERE NOT EXISTS(
             SELECT FROM api_deletedimage WHERE identifier = img.identifier
           );
         ALTER TABLE temp_import_{table} ADD PRIMARY KEY (id);
         DROP SERVER upstream CASCADE;
-    '''.format(table=table, cols=query_cols, insert_cols=query_cols_nextval)
+    '''.format(table=table, cols=query_cols)
     create_indices = ';\n'.join(_generate_indices(downstream_db, table))
     remap_constraints = ';\n'.join(_generate_constraints(downstream_db, table))
     go_live = '''
