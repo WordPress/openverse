@@ -352,7 +352,7 @@ describe('Filter Store', () => {
     it('SET_FILTER updates isFilterApplied mature', () => {
       mutations[SET_FILTER](state, { filterType: 'mature' });
 
-      expect(state.isFilterApplied).toBeTruthy();
+      expect(state.isFilterApplied).toBeFalsy();
     });
 
 
