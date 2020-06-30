@@ -112,9 +112,9 @@ describe('Filter Store', () => {
       expect(state.isFilterApplied).toBeTruthy();
     });
 
-    it('isFilterApplied is set to true when mature filter is set', () => {
+    it('isFilterApplied remains false when mature filter is set', () => {
       const state = store.state('?q=landscapes&mature=true');
-      expect(state.isFilterApplied).toBeTruthy();
+      expect(state.isFilterApplied).toBeFalsy();
     });
 
     it('isFilterApplied is set to false when no filter is set', () => {
@@ -352,7 +352,7 @@ describe('Filter Store', () => {
     it('SET_FILTER updates isFilterApplied mature', () => {
       mutations[SET_FILTER](state, { filterType: 'mature' });
 
-      expect(state.isFilterApplied).toBeTruthy();
+      expect(state.isFilterApplied).toBeFalsy();
     });
 
 
@@ -437,4 +437,3 @@ describe('Filter Store', () => {
     });
   });
 });
-
