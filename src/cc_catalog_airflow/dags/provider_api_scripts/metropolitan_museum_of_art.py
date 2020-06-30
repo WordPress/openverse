@@ -91,7 +91,7 @@ def _get_data_for_image(object_id):
     object_json = _get_and_validate_object_json(object_id)
     if not object_json:
         logger.warning(
-            f'Could not retrieve object_json for object_id:  {object_id}'
+            f'Could not retrieve object_json for object_id: {object_id}'
         )
         return
 
