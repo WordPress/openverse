@@ -53,7 +53,7 @@ const hideFiltersIfMobileScreen = () => screenWidth() > MIN_SCREEN_WIDTH_FILTER_
 
 const isFilterApplied = filters => Object.keys(filters).some((filterKey) => {
   if (filterKey === 'searchBy') { return filters.searchBy.creator; }
-  else if (filterKey === 'mature') { return filters.mature; }
+  else if (filterKey === 'mature') { return false; } // this is hardcoded to "false" because we do not show mature in `FilterDisplay.vue` like the other filters
 
   return filters[filterKey].some(filter => filter.checked);
 });
