@@ -55,7 +55,7 @@
         <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
       </span>
     </div>
-    <img class="provider-cloud" src="../assets/logo-cloud.png" alt="A collection of logos ">
+    <img class="logo-cloud" src="../assets/logo-cloud.png" alt="Logos from sources of Creative Commons licensed images">
   </div>
 </template>
 
@@ -126,7 +126,7 @@ export default {
   vertical-align: middle;
 }
 
-.provider-cloud {
+.logo-cloud {
   margin-top: 2rem;
   width: 100%;
   padding-left: 1rem;
