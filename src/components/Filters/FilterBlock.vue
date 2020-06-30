@@ -1,6 +1,6 @@
 <template>
     <button class="filter-block button tiny tag margin-horizontal-smaller"
-            v-if="filterType === 'searchBy' || filterType === 'mature'"
+            v-if="filterType === 'searchBy'"
             role="filter"
             :aria-label="label">
       <span>{{ this.$props.label }}</span>
@@ -9,7 +9,7 @@
             @click="onClickIsolatedFilter"><i class="icon cross" /></span>
     </button>
     <button v-else
-            class="filter-block button tiny tag margin-horizontal-smaller"
+            class="filter-block button tiny tag margin-horizontal-smaller margin-bottom-smaller"
             role="filter"
             :aria-label="label">
       <span>{{ this.$props.label }}</span>
@@ -32,4 +32,3 @@ export default {
   },
 };
 </script>
-

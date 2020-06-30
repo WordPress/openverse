@@ -9,7 +9,6 @@
       <meta name="og:title" content="Creative Commons">
       <meta name="og:image" content="{{ state.image && state.image.url ? state.image.url : 'https://ccsearch.creativecommons.org/static/img/cc-logo_large_black.png'}}">
       <meta name="og:description" content="Empowering the world to share through 6 simple licenses + a global community of advocates for open. ">
-      <meta name="twitter:site" content="https://creativecommons.org">
       <meta property="og:url" content="https://creativecommons.org">
       <meta property="og:site_name" content="Creative Commons">
       <% if (process.env.NODE_ENV == 'production') { %>
@@ -25,9 +24,10 @@
       <div id="app">
       </div>
       <script>
-        // Use production Google Analytics ID if ccsearch is in the URL, otherwise use development/staging ID
+        // Use production Google Analytics ID if search. or ccsearch. is in the URL, otherwise use development/staging ID
         // TODO: Refactor this to use environment variables instead of hardcoding IDs here.
-        var gaID = document.location.hostname.indexOf('ccsearch') >= 0 ? 'UA-2010376-36' : 'UA-2010376-33';
+        var gaID = (document.location.hostname.indexOf('search.') >= 0 ||
+            document.location.hostname.indexOf('ccsearch.')) >= 0 ? 'UA-2010376-33' : 'UA-2010376-36';
         /* eslint-disable */
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

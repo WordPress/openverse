@@ -1,3 +1,8 @@
+/**
+ * decodes some edge cases of Unicode characters with an extra \
+ * See test cases for some examples
+ * @param {string} data
+ */
 export default function decodeData(data) {
   if (data) {
     try {

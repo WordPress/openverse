@@ -1,14 +1,14 @@
 <template>
   <div class="copy-license margin-vertical-normal">
     <h5 class="b-header margin-bottom-small">Credit the Creator</h5>
-    <section class="tabs" >
+    <section class="tabs">
         <ul>
           <li :class="tabClass(0, 'tab')">
             <a class="is-size-6"
                href="#panel0"
                :aria-selected="activeTab == 0"
                @click.prevent="setActiveTab(0)">
-              Text
+              Rich Text
             </a>
           </li>
           <li :class="tabClass(1, 'tab')">
@@ -71,7 +71,11 @@
               by {{ image.creator }}
             </span>
             is licensed under
-            {{ fullLicenseName.toUpperCase() }}
+            {{ fullLicenseName.toUpperCase() }}.
+            To view a copy of this license, visit
+            <template v-if="licenseURL">
+              {{ licenseURL.substring(0, licenseURL.indexOf('?')) }}
+            </template>
           </p>
 
           <copy-button id="copy-attribution-btn"
