@@ -42,8 +42,17 @@ const PhotoDetailPage = {
     PhotoTags,
   },
   mixins: [PhotoDetailMixin],
+  metaInfo() {
+    return {
+      meta: [
+        {
+          vmid: 'monetization',
+          content: null,
+        },
+      ],
+    };
+  },
 };
 
 export default PhotoDetailPage;
 </script>
-

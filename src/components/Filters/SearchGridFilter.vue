@@ -103,7 +103,7 @@ export default {
 
 <style lang="scss" scoped>
 .modal {
-  width: 30rem;
+  width: 21.875rem;
   max-height: 37rem;
   margin: 0px auto;
   background-color: #fff;

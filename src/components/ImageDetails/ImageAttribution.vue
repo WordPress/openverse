@@ -9,9 +9,7 @@
         </a>
         license.
       </span>
-      <template v-for="(license, index) in splitLicenses">
-        <license-explanations :licenseTerm="license" :key="index" />
-      </template>
+      <license-explanations :license="image.license" />
 
       <span class="caption has-text-weight-semibold">
         Read more about the license
@@ -43,12 +41,6 @@ export default {
   computed: {
     licenseURL() {
       return `${this.ccLicenseURL}&atype=rich`;
-    },
-    splitLicenses() {
-      if (!!this.$props.image && !!this.$props.image.license) {
-        return this.$props.image.license.split('-');
-      }
-      return '';
     },
   },
 };

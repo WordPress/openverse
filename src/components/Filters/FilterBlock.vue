@@ -1,6 +1,6 @@
 <template>
     <button class="filter-block button tiny tag margin-horizontal-smaller"
-            v-if="filterType === 'searchBy' || filterType === 'mature'"
+            v-if="filterType === 'searchBy'"
             role="filter"
             :aria-label="label">
       <span>{{ this.$props.label }}</span>
@@ -32,4 +32,3 @@ export default {
   },
 };
 </script>
-

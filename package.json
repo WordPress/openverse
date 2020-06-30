@@ -4,7 +4,6 @@
   "description": "Common Creative search",
   "author": "sebworks",
   "private": true,
-  "type": "module",
   "scripts": {
     "server": "node server.js",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --progress",
@@ -15,6 +14,7 @@
     "qa": "cd test/selenium-webdriver && pipenv run python search_screencaps.py",
     "test": "jest --config test/unit/jest-conf.js",
     "lint": "eslint --ext .js,.vue . test/unit",
+    "lint:fix": "eslint --ext .js,.vue . test/unit --fix",
     "build": "npm run build:app && npm run build:server",
     "build:app": "cross-env NODE_ENV=production webpack",
     "build:server": "webpack --config build/webpack.config.server.js"
@@ -40,6 +40,7 @@
     "vue": "^2.6.11",
     "vue-form": "^4.10.3",
     "vue-masonry": "^0.11.7",
+    "vue-meta": "^2.4.0",
     "vue-router": "^3.1.6",
     "vue-server-renderer": "^2.6.11",
     "vuex": "^3.1.3"
