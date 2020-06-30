@@ -49,12 +49,13 @@
       </div>
       <home-license-filter />
     </form>
-    <div class="help-links is-hidden-mobile">
+    <div class="help-links">
       <span class="margin-right-bigger">
         Go to the
         <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
       </span>
     </div>
+    <img class="provider-cloud" src="../assets/logo-cloud.png" alt="A collection of logos ">
   </div>
 </template>
 
@@ -84,12 +85,9 @@ export default {
 @import "node_modules/bulma/sass/utilities/derived-variables";
 @import "node_modules/bulma/sass/utilities/mixins";
 
-$hero-height: 74vh;
-
 .hero {
   background: #fff;
   position: relative;
-  height: $hero-height;
   background-size: cover;
   display: flex;
   align-items: center;
@@ -115,11 +113,6 @@ $hero-height: 74vh;
   .mobile-input {
     width: 100%;
   }
-
-  /* Small only */
-  @include mobile {
-    height: 80vh;
-  }
 }
 
 .help-links {
@@ -132,4 +125,25 @@ $hero-height: 74vh;
   height: 32px;
   vertical-align: middle;
 }
+
+.provider-cloud {
+  margin-top: 2rem;
+  width: 100%;
+  padding-left: 1rem;
+  height: 120px;
+  object-fit: cover;
+  object-position: left center;
+
+  @include tablet {
+    object-fit: initial;
+    height: auto;
+    padding: 0;
+    margin-top: 4rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(100% - 1rem);
+    max-width: 1400px;
+  }
+}
+
 </style>
