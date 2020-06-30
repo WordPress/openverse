@@ -125,6 +125,26 @@ def test_ImageStore_commit_writes_nothing_if_no_lines_in_buffer():
     image_store.commit()
 
 
+def test_ImageStore_produces_correct_total_images(setup_env):
+    image_store = image.ImageStore(provider='testing_provider')
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image01',
+        image_url='https://images.org/image01.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image02',
+        image_url='https://images.org/image02.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    image_store.add_item(
+        foreign_landing_url='https://images.org/image03',
+        image_url='https://images.org/image03.jpg',
+        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+    )
+    assert image_store.total_images == 3
+
+
 def test_ImageStore_get_image_places_given_args(
         monkeypatch,
         setup_env
