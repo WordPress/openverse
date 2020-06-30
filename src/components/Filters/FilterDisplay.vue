@@ -49,12 +49,12 @@
                         filterType="searchBy"
                         @filterChanged="onUpdateBoolFilter" />
         </span>
-        <span>
+        <!-- <span>
           <filter-block v-if="mature"
                         label="Mature"
                         filterType="mature"
                         @filterChanged="onUpdateBoolFilter" />
-        </span>
+        </span> -->
     </div>
 </template>
 <script>

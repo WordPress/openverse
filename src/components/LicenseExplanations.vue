@@ -1,16 +1,20 @@
 <template>
-  <span class="is-block margin-vertical-small">
-    <i :class="{
-        icon: true,
-        ['has-text-black']: true,
-        ['has-background-white']: true,
-        ['is-size-4']: true,
-        ['margin-right-small']: true,
-        [`cc-${getLicenseIcon(licenseTerm)}`]: true,
-       }"
-      :alt="`${licenseTerm.toUpperCase()}`"/>
-      {{ getLicenseDescription(licenseTerm) }}
-  </span>
+  <div v-if="license">
+    <template v-for="(li, index) in splitLicenses">
+      <span class="is-block margin-vertical-small" :key="index">
+        <i :class="{
+            icon: true,
+            ['has-text-black']: true,
+            ['has-background-white']: true,
+            ['is-size-4']: true,
+            ['margin-right-small']: true,
+            [`cc-${getLicenseIcon(li)}`]: true,
+          }"
+          :alt="`${li.toUpperCase()}`"/>
+          {{ getLicenseDescription(li) }}
+      </span>
+    </template>
+  </div>
 </template>
 
 <script>
@@ -37,7 +41,12 @@ const LicenseExplanations = {
   name: 'license-explanations',
   components: {},
   props: {
-    licenseTerm: '',
+    license: '',
+  },
+  computed: {
+    splitLicenses() {
+      return this.$props.license.split('-');
+    },
   },
   methods: {
     getLicenseIcon(licenseTerm) {

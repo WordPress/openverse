@@ -1,24 +1,21 @@
 <template>
-  <a :href="getLicenseURL(image)"
-      @click.stop="() => false"
-     class="photo-license-icons"
-     target="_blank"
-     rel="noopener noreferrer">
-    <i class="icon cc-logo is-size-4 has-text-black has-background-white" title="CC"></i>
-    <template v-for="(license, index) in getLicenseIcon(image.license)">
+  <span class="photo-license-icons">
+    <i class="icon cc-logo is-size-4 has-text-black has-background-white" title="CC">
+    <!-- Closing i and opening template tag must be adjacent to prevent whitespace -->
+    </i><template v-for="(l, i) in getLicenseIcon(license)">
       <i
-          v-if="license"
+          v-if="l"
           :class="{
             icon: true,
             ['has-text-black']: true,
             ['has-background-white']: true,
             ['is-size-4']: true,
-            [`cc-${license}`]: true,
+            [`cc-${l}`]: true,
           }"
-          :alt="`${license.toUpperCase()}`"
-          :key="index" />
+          :alt="`${l.toUpperCase()}`"
+          :key="i" />
     </template>
-  </a>
+  </span>
 </template>
 
 <script>
@@ -36,8 +33,7 @@ const LicenseIcons = {
   name: 'license-icons',
   components: {},
   props: {
-    image: '',
-    shouldWrapInLink: false,
+    license: '',
   },
   methods: {
     getLicenseIcon(license) {
@@ -46,29 +42,6 @@ const LicenseIcons = {
         licenses = license.split('-');
       }
       return licenses.map(l => APItoIconNameMap[l]);
-    },
-    getLicenseURL(image) {
-      if (!image) {
-        return '';
-      }
-
-      const BASE_URL = 'https://creativecommons.org';
-      let url = `${BASE_URL}/licenses/${image.license}/${image.license_version}`;
-      let license = '';
-
-      if (image.license) {
-        license = image.license;
-      }
-
-      if (license === 'cc0') {
-        this.image.license_version = '1.0';
-        url = `${BASE_URL}/publicdomain/zero/1.0/`;
-      }
-      else if (image.license === 'pdm') {
-        url = `${BASE_URL}/publicdomain/mark/1.0/`;
-      }
-
-      return url;
     },
   },
 };

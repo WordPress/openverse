@@ -54,7 +54,7 @@
     </p>
 
     <p class="margin-vertical-normal">Example:
-      <a href='https://search.creativecommons.org/search?q=dog%2Bcat'>
+      <a href='https://search.creativecommons.org/search?q=dog%7Ccat'>
         <em>dog|cat</em>
       </a>
       <br />

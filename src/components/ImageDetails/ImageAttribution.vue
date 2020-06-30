@@ -2,16 +2,14 @@
   <section class="sidebar_section">
     <div class="photo-attribution margin-bottom-big">
       <h5 class="b-header margin-bottom-big">License</h5>
-      <span id="attribution" class="photo_usage-attribution is-block" ref="photoAttribution">
+      <span class="photo_usage-attribution is-block" ref="photoAttribution">
         This image was marked with a
         <a class="photo_license" :href="licenseURL" target="_blank" rel="noopener">
         {{ fullLicenseName.toUpperCase() }}
         </a>
         license.
       </span>
-      <template v-for="(license, index) in splitLicenses">
-        <license-explanations :licenseTerm="license" :key="index" />
-      </template>
+      <license-explanations :license="image.license" />
 
       <span class="caption has-text-weight-semibold">
         Read more about the license
@@ -43,12 +41,6 @@ export default {
   computed: {
     licenseURL() {
       return `${this.ccLicenseURL}&atype=rich`;
-    },
-    splitLicenses() {
-      if (!!this.$props.image && !!this.$props.image.license) {
-        return this.$props.image.license.split('-');
-      }
-      return '';
     },
   },
 };

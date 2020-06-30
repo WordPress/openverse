@@ -17,6 +17,9 @@ const ImageProviderService = {
       behance: {
         logo: 'behance_logo.svg',
       },
+      bio_diversity: {
+        logo: 'bhl_logo.png',
+      },
       brooklynmuseum: {
         logo: 'brooklyn_museum_logo.png',
       },
@@ -31,6 +34,9 @@ const ImageProviderService = {
       },
       digitaltmuseum: {
         logo: 'digitaltmuseum_logo.png',
+      },
+      europeana: {
+        logo: 'europeana_logo.svg',
       },
       flickr: {
         logo: 'flickr_icon.png',
@@ -50,6 +56,9 @@ const ImageProviderService = {
       museumsvictoria: {
         logo: 'museumvictoria_logo.png',
       },
+      nasa: {
+        logo: 'nasa_logo.svg',
+      },
       nhl: {
         logo: 'nhm_logo.png',
       },
@@ -67,6 +76,15 @@ const ImageProviderService = {
       },
       sketchfab: {
         logo: 'sketchfab_logo.png',
+      },
+      smithsonian: {
+        logo: 'smithsonian_logo.svg',
+      },
+      spacex: {
+        logo: 'spacex-logo.svg',
+      },
+      statensmuseum: {
+        logo: 'smk_logo.png',
       },
       svgsilh: {
         logo: 'svg-silh_logo.png',

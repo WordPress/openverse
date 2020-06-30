@@ -10,7 +10,7 @@ describe('Homepage', () => {
     expect(wrapper.find({ name: 'footer-section' }).vm).toBeDefined();
   });
 
-  it('commits RESET QUERY on mounted', () => {
+  it('commits CLEAR_FILTERS on mounted', () => {
     const options = {
       mocks: {
         $store: {
@@ -20,6 +20,10 @@ describe('Homepage', () => {
     };
     render(Homepage, options);
 
-    expect(options.mocks.$store.commit).toHaveBeenCalledWith('RESET_QUERY');
+    expect(options.mocks.$store.commit).toHaveBeenCalledWith('CLEAR_FILTERS', {
+      isCollectionsPage: false,
+      provider: null,
+      shouldNavigate: false,
+    });
   });
 });

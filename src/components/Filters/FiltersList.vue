@@ -26,7 +26,7 @@
                       @filterChanged="onUpdateFilter" />
     <filter-check-list v-if="renderProvidersFilter"
                       :options="filters.providers"
-                      title="Collections"
+                      title="Sources"
                       filterType="providers"
                       @filterChanged="onUpdateFilter" />
     <filter-check-list :options="filters.categories"
@@ -44,10 +44,6 @@
     <filter-check-list :options="filters.sizes"
                       title="Image Size"
                       filterType="sizes"
-                      @filterChanged="onUpdateFilter" />
-    <filter-check-list title="Search Settings"
-                      filterType="mature"
-                      :checked="filters.mature"
                       @filterChanged="onUpdateFilter" />
 
     <div class="margin-normal filter-option small-filter margin-bottom-normal">
