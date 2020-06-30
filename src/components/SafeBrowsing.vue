@@ -29,7 +29,7 @@
           id="mature"
           class="filter-checkbox"
           type="checkbox"
-          :value="mature"
+          :checked="mature"
           @change="toggleMature"
         />
         Show Mature Content
