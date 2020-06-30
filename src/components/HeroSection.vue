@@ -55,7 +55,9 @@
         <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
       </span>
     </div>
-    <img class="logo-cloud" src="../assets/logo-cloud.png" alt="Logos from sources of Creative Commons licensed images">
+    <img
+      class="logo-cloud"
+      src="../assets/logo-cloud.png" alt="Logos from sources of Creative Commons licensed images">
   </div>
 </template>
 
