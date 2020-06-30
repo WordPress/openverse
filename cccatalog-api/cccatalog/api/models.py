@@ -160,6 +160,11 @@ class ContentProvider(models.Model):
         db_table = 'content_provider'
 
 
+class SourceLogo(models.Model):
+    source = models.OneToOneField(ContentProvider, on_delete=models.CASCADE)
+    image = models.ImageField()
+
+
 class ImageList(OpenLedgerModel):
     title = models.CharField(max_length=2000, help_text="Display name")
     images = models.ManyToManyField(

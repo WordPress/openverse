@@ -59,18 +59,18 @@ class ImageStats(APIView):
                              200: AboutImageResponse(many=True)
                          })
     def get(self, request, format=None):
-        provider_data = ContentProvider \
+        source_data = ContentProvider \
             .objects \
             .values(IDENTIFIER, NAME, FILTER, URL)
-        provider_table = {
+        source_table = {
             rec[IDENTIFIER]:
-                (rec[NAME], rec[FILTER], rec[URL]) for rec in provider_data
+                (rec[NAME], rec[FILTER], rec[URL]) for rec in source_data
         }
         sources = get_sources('image')
         response = []
         for source in sources:
-            if source in provider_table:
-                display_name, _filter, provider_url = provider_table[source]
+            if source in source_table:
+                display_name, _filter, provider_url = source_table[source]
                 if not _filter:
                     response.append(
                         {

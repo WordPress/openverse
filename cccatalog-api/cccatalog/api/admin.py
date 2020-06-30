@@ -1,6 +1,7 @@
 from django.contrib import admin
-from cccatalog.api.models import ImageReport, MatureImage, DeletedImage, \
-    PENDING
+from cccatalog.api.models import (
+    ImageReport, MatureImage, DeletedImage, ContentProvider, SourceLogo, PENDING
+)
 
 
 @admin.register(ImageReport)
@@ -35,3 +36,14 @@ class MatureImageAdmin(admin.ModelAdmin):
 @admin.register(DeletedImage)
 class DeletedImage(admin.ModelAdmin):
     search_fields = ('identifier',)
+
+
+class InlineImage(admin.TabularInline):
+    model = SourceLogo
+
+
+@admin.register(ContentProvider)
+class ProviderAdmin(admin.ModelAdmin):
+    list_display = ('provider_name', 'provider_identifier')
+    search_fields = ('provider_name', 'provider_identifier')
+    inlines = [InlineImage]
