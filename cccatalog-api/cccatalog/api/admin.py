@@ -46,4 +46,5 @@ class InlineImage(admin.TabularInline):
 class ProviderAdmin(admin.ModelAdmin):
     list_display = ('provider_name', 'provider_identifier')
     search_fields = ('provider_name', 'provider_identifier')
+    exclude = ('notes', 'created_on')
     inlines = [InlineImage]

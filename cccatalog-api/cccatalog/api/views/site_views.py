@@ -66,15 +66,13 @@ class ImageStats(APIView):
         source_data = ContentProvider \
             .objects \
             .values(ID, CODENAME, NAME, FILTER, URL)
-        source_table = {
-            s[CODENAME]: (
-                s[ID], s[NAME], s[FILTER], s[URL]
-            ) for s in source_data
-        }
         source_counts = get_sources('image')
         response = []
-        for source in source_table:
-            _id, display_name, filtered, source_url = source_table[source]
+        for source in source_data:
+            _id = source[ID]
+            display_name = source[NAME]
+            filtered = source[FILTER]
+            source_url = source[URL]
             count = source_counts.get(source, None)
             try:
                 source_logo = SourceLogo.objects.get(source_id=_id)
