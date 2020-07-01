@@ -15,6 +15,7 @@ def upload_normalized_popularity(
         f"CREATE TEMP TABLE temp_popularity "
         f"  (identifier uuid, normalized_popularity text); "
         f"COPY temp_popularity FROM STDIN WITH CSV HEADER DELIMITER E'\t'; "
+        f"CREATE INDEX ident_idx ON temp_popularity (identifier);"
         f"UPDATE {image_table} SET meta_data = jsonb_set("
         f"  meta_data, "
         f"  '{{normalized_popularity}}',"
