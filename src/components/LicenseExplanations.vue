@@ -37,15 +37,6 @@ const APItoIconNameMap = {
   pdm: 'pd',
 }
 
-const LicenseTermDescriptions = {
-  by: 'Credit the creator.',
-  nc: 'Noncommercial uses only.',
-  nd: 'No derivatives or adaptations permitted.',
-  sa: 'Share adaptations under the same terms.',
-  cc0: 'This work has been marked as dedicated to the public domain.',
-  pdm: 'This work is marked as being in the public domain.',
-}
-
 const LicenseExplanations = {
   name: 'license-explanations',
   components: {},
@@ -56,13 +47,23 @@ const LicenseExplanations = {
     splitLicenses() {
       return this.$props.license.split('-')
     },
+    LicenseTermDescriptions() {
+      return {
+        by: this.$t('browse-page.license-description.by'),
+        nc: this.$t('browse-page.license-description.nc'),
+        nd: this.$t('browse-page.license-description.nd'),
+        sa: this.$t('browse-page.license-description.sa'),
+        cc0: this.$t('browse-page.license-description.cc0'),
+        pdm: this.$t('browse-page.license-description.pdm'),
+      };
+    },
   },
   methods: {
     getLicenseIcon(licenseTerm) {
       return APItoIconNameMap[licenseTerm]
     },
     getLicenseDescription(licenseTerm) {
-      return LicenseTermDescriptions[licenseTerm]
+      return this.LicenseTermDescriptions[licenseTerm];
     },
   },
 }

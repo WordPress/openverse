@@ -131,5 +131,89 @@
         "other": "Other Collections",
         "collection-size": "Collection size: {count} images"
     },
-    "not-found": "Page Not Found"
+    "not-found": "Page Not Found",
+    "filters": {
+        "title": "Filters",
+        "licenses": {
+            "title": "Licenses",
+            "cc0": "CC0",
+            "pdm": "Public Domain Mark",
+            "by": "BY",
+            "by-sa": "BY-SA",
+            "by-nc": "BY-NC",
+            "by-nd": "BY-ND",
+            "by-nc-sa": "BY-NC-SA",
+            "by-nc-nd": "BY-NC-ND"
+        },
+        "license-types": {
+            "title": "Use",
+            "commercial": "Use commercially",
+            "modification": "Modify or adapt"
+        },
+        "providers": {
+            "title": "Sources"
+        },
+        "categories": {
+            "title": "Image Type",
+            "photograph": "Photographs",
+            "illustration": "Illustrations",
+            "digitized-artwork": "Digitized Artworks"
+        },
+        "extensions": {
+            "title": "File Type",
+            "jpg": "JPEGs",
+            "png": "PNGs",
+            "gif": "GIFs",
+            "svg": "SVGs"
+        },
+        "aspect-ratios": {
+            "title": "Aspect Ratio",
+            "tall": "Tall",
+            "wide": "Wide",
+            "square": "Square"
+        },
+        "sizes": {
+            "title": "Image Size",
+            "small": "Small",
+            "medium": "Medium",
+            "large": "Large"
+        },
+        "mature": {
+            "title": "Search Settings",
+            "enable": "Enable Mature Content"
+        },
+        "creator": {
+            "title": "Search by Creator"
+        }
+    },
+    "filter-list": {
+        "filter-by": "Filter results by",
+        "hide": "Hide filters",
+        "clear": "Clear filters",
+        "show": "Show results"
+    },
+    "browse-page": {
+        "no-more": "No more images :(",
+        "load": "Load more results",
+        "error": "Error fetching images:",
+        "search-rating": {
+            "content": "Are these results relevant?",
+            "yes": "Yes",
+            "no": "No",
+            "feedback": "Thank you for the feedback!"
+        },
+        "search-form": {
+            "placeholder": "Search all images",
+            "collection-placeholder": "Search this collection",
+            "button": "Search"
+        },
+        "license-description": {
+            "by": "Credit the creator.",
+            "nc": "Noncommercial uses only.",
+            "nd": "No derivatives or adaptations permitted.",
+            "sa": "Share adaptations under the same terms.",
+            "cc0": "This work has been marked as dedicated to the public domain.",
+            "pdm": "This work is marked as being in the public domain."
+        }
+    }
 }

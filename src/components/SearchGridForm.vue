@@ -6,13 +6,11 @@
     class="search-form padding-normal"
   >
     <div class="is-flex is-hidden-touch">
-      <button
-        v-if="!isFilterVisible"
-        class="button toggle-filter padding-vertical-normal padding-horizontal-big"
-        type="button"
-        @click.prevent="onToggleSearchGridFilter()"
-      >
-        Filters
+      <button v-if="!isFilterVisible"
+              class="button toggle-filter padding-vertical-normal padding-horizontal-big"
+              type="button"
+              @click.prevent="onToggleSearchGridFilter()">
+        {{ $t('filters.title') }}
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
@@ -38,19 +36,16 @@
             type="submit"
             class="button is-primary"
             @click.prevent="onSubmit"
-            value="Search"
-          />
+            :value="$t('browse-page.search-form.button')" />
         </div>
       </div>
     </div>
     <div class="is-flex is-hidden-desktop">
-      <button
-        v-if="!isFilterVisible"
-        class="button small toggle-filter padding-small"
-        type="button"
-        @click.prevent="onToggleSearchGridFilter()"
-      >
-        Filters
+      <button v-if="!isFilterVisible"
+              class="button small toggle-filter padding-small"
+              type="button"
+              @click.prevent="onToggleSearchGridFilter()">
+        {{ $t('filters.title') }}
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
@@ -72,7 +67,10 @@
           </span>
         </div>
         <div class="control">
-          <input type="submit" class="button is-primary small" value="Search" />
+          <input
+            type="submit"
+            class="button is-primary small"
+            :value="$t('browse-page.search-form.button')" />
         </div>
       </div>
     </div>

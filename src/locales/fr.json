@@ -131,5 +131,89 @@
         "other": "Autres collections",
         "collection-size": "Taille de la collection: {count} images"
     },
-    "not-found": "Page non trouvée"
+    "not-found": "Page non trouvée",
+    "filters": {
+        "title": "Filtres",
+        "licenses": {
+            "title": "Licences",
+            "cc0": "CC0",
+            "pdm": "Public Domain Mark",
+            "by": "BY",
+            "by-sa": "BY-SA",
+            "by-nc": "BY-NC",
+            "by-nd": "BY-ND",
+            "by-nc-sa": "BY-NC-SA",
+            "by-nc-nd": "BY-NC-ND"
+        },
+        "license-types": {
+            "title": "Utilisation",
+            "commercial": "Utiliser commercialement",
+            "modification": "Modifier ou adapter"
+        },
+        "providers": {
+            "title": "Sources"
+        },
+        "categories": {
+            "title": "Type d'image",
+            "photograph": "Photographies",
+            "illustration": "Des illustrations",
+            "digitized-artwork": "Oeuvres numérisées"
+        },
+        "extensions": {
+            "title": "Type de fichier",
+            "jpg": "JPEGs",
+            "png": "PNGs",
+            "gif": "GIFs",
+            "svg": "SVGs"
+        },
+        "aspect-ratios": {
+            "title": "Ratio d'aspect",
+            "tall": "Grand",
+            "wide": "Large",
+            "square": "Carré"
+        },
+        "sizes": {
+            "title": "Taille de l'image",
+            "small": "Petit",
+            "medium": "Moyen",
+            "large": "Grand"
+        },
+        "mature": {
+            "title": "Paramètres de recherche",
+            "enable": "Activer le contenu mature"
+        },
+        "creator": {
+            "title": "Recherche par créateur"
+        }
+    },
+    "filter-list": {
+        "filter-by": "Filtrer les résultats par",
+        "hide": "Masquer les filtres",
+        "clear": "Effacer les filtres",
+        "show": "Montrer les résultats"
+    },
+    "browse-page": {
+        "no-more": "Plus d'images :(",
+        "load": "Charger plus de résultats",
+        "error": "Erreur lors de la récupération des images:",
+        "search-rating": {
+            "content": "Ces résultats sont-ils pertinents?",
+            "yes": "Oui",
+            "no": "Non",
+            "feedback": "Merci pour votre retour!"
+        },
+        "search-form": {
+            "placeholder": "Rechercher toutes les images",
+            "collection-placeholder": "Rechercher dans cette collection",
+            "button": "Chercher"
+        },
+        "license-description": {
+            "by": "Créditez le créateur.",
+            "nc": "Utilisations non commerciales uniquement.",
+            "nd": "Aucun dérivé ou adaptation autorisé.",
+            "sa": "Partagez les adaptations dans les mêmes conditions.",
+            "cc0": "Ce travail a été marqué comme dédié au domaine public.",
+            "pdm": "Ce travail est marqué comme étant dans le domaine public."
+        }
+    }
 }

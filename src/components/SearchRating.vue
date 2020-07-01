@@ -1,25 +1,23 @@
 <template>
   <div class="caption has-text-weight-semibold">
     <div v-if="status == 'NOT_SENT'">
-      <span>Are these results relevant?</span>
+      <span>{{ $t('browse-page.search-rating.content') }}</span>
       <button
         aria-label="relevant result? answer: yes"
-        class="button is-text tiny is-paddingless rating is-shadowless"
-        @click="sendSearchRatingEvent(true)"
-      >
-        Yes
+       class="button is-text tiny is-paddingless rating is-shadowless"
+              @click="sendSearchRatingEvent(true)">
+        {{ $t('browse-page.search-rating.yes') }}
       </button>
       •
       <button
         aria-label="relevant result? answer: no"
-        class="button is-text tiny is-paddingless rating is-shadowless"
-        @click="sendSearchRatingEvent(false)"
-      >
-        No
+      class="button is-text tiny is-paddingless rating is-shadowless"
+              @click="sendSearchRatingEvent(false)">
+        {{ $t('browse-page.search-rating.no') }}
       </button>
     </div>
     <div v-else-if="status == 'SENT'">
-      <span class="thank-you">Thank you for the feedback!</span>
+      <span class="thank-you">{{ $t('browse-page.search-rating.feedback') }}</span>
     </div>
   </div>
 </template>
