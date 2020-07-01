@@ -1,5 +1,5 @@
 import logging
-import ast
+import json
 from textwrap import dedent
 from airflow.hooks.postgres_hook import PostgresHook
 from util.loader import column_names as col
@@ -393,6 +393,56 @@ def update_flickr_sub_providers(
     postgres.run(f'DROP TABLE public.{temp_table};')
 
 
+def _create_temp_europeana_sub_prov_table(
+        postgres_conn_id,
+        temp_table='temp_eur_sub_prov_table'
+):
+    """
+    Drop the temporary table if it already exists
+    """
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    postgres.run(f'DROP TABLE IF EXISTS public.{temp_table};')
+
+    """
+    Create intermediary table for sub provider migration
+    """
+    postgres.run(
+        dedent(
+            f'''
+            CREATE TABLE public.{temp_table} (
+              data_provider character varying(120),
+              sub_provider character varying(80)
+            );
+            '''
+        )
+    )
+
+    postgres.run(
+        f'ALTER TABLE public.{temp_table} OWNER TO {DB_USER_NAME};'
+    )
+
+    """
+    Populate the intermediary table with the sub providers of interest
+    """
+    for sub_prov, data_provider in prov.EUROPEANA_SUB_PROVIDERS.items():
+        postgres.run(
+            dedent(
+                f'''
+                INSERT INTO public.{temp_table} (
+                  data_provider,
+                  sub_provider
+                )
+                VALUES (
+                  '{data_provider}',
+                  '{sub_prov}'
+                );
+                '''
+            )
+        )
+
+    return temp_table
+
+
 def update_europeana_sub_providers(
   postgres_conn_id,
   image_table=IMAGE_TABLE_NAME,
@@ -400,41 +450,44 @@ def update_europeana_sub_providers(
   sub_providers=prov.EUROPEANA_SUB_PROVIDERS
 ):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    temp_table = _create_temp_europeana_sub_prov_table(postgres_conn_id)
 
     select_query = dedent(
         f'''
+        SELECT L.foreign_id, L.data_providers, R.sub_provider
+        FROM(
         SELECT
         {col.FOREIGN_ID} AS foreign_id,
-        {col.META_DATA} ->> 'dataProvider' AS data_providers
+        {col.META_DATA} ->> 'dataProvider' AS data_providers,
+        {col.META_DATA}
         FROM {image_table}
-        WHERE {col.PROVIDER} = '{default_provider}';
+        WHERE {col.PROVIDER} = '{default_provider}'
+        ) L INNER JOIN
+        {temp_table} R ON
+        L.{col.META_DATA} ->'dataProvider' ? R.data_provider;
         '''
     )
 
     selected_records = postgres.get_records(select_query)
 
     """
-    Filter the records to retain the ones with desired sub providers.
-    Each record in the new list would contain the sub provider name at the end.
+    Update each selected row if it corresponds to only one sub-provider.
+    Otherwise an exception is thrown
     """
-    filtered_records = []
     for row in selected_records:
-        data_providers = ast.literal_eval(row[1])
+        foreign_id = row[0]
+        data_providers = json.loads(row[1])
+        sub_provider = row[2]
 
         eligible_sub_providers = {s for s in sub_providers if sub_providers[s]
                                   in data_providers}
         if len(eligible_sub_providers) > 1:
             raise Exception(f"More than one sub-provider identified for the "
-                            f"image with foreign ID {row[0]}")
-        source = eligible_sub_providers.pop() if \
-            len(eligible_sub_providers) == 1 else None
+                            f"image with foreign ID {foreign_id}")
 
-        if source is not None:
-            filtered_records.append(list(row) + [source])
+        assert len(eligible_sub_providers) == 1
+        assert eligible_sub_providers.pop() == sub_provider
 
-    for row in filtered_records:
-        foreign_id = row[0]
-        sub_provider = row[2]
         postgres.run(
             dedent(
                 f'''
