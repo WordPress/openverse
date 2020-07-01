@@ -2,8 +2,12 @@
 This module has a number of public methods which are useful for storage
 operations.
 """
+from functools import lru_cache
 import logging
+import requests
 from urllib.parse import urlparse
+
+import tldextract
 
 from common.storage import constants
 
@@ -46,16 +50,55 @@ def choose_license_and_version(
 
 def validate_url_string(url_string):
     """
-    Checks given `url_string` can be parsed into a URL with scheme and domain
+    Checks given `url_string` can be parsed into a URL with scheme and
+    domain
 
     If not, returns None
     """
-    parse_result = urlparse(url_string)
-    if type(url_string) == str and parse_result.scheme and parse_result.netloc:
-        return url_string
+    if not type(url_string) == str:
+        return
     else:
-        logger.debug('No valid url found in {}'.format(url_string))
+        upgraded_url = add_best_scheme(url_string)
+
+    parse_result = urlparse(upgraded_url)
+    tld = tldextract.extract(upgraded_url)
+
+    if tld.domain and tld.suffix and parse_result.scheme:
+        return upgraded_url
+    else:
+        logger.debug(f'Invalid url {url_string}, upgraded to {upgraded_url}')
         return None
+
+
+def add_best_scheme(url_string):
+    url_no_scheme = (
+        url_string
+        .strip()
+        .strip('http://')
+        .strip('https://')
+        .strip('/')
+    )
+    fqdn = tldextract.extract(url_string).fqdn
+
+    if _test_tls_for_fully_qualified_domain_name(fqdn):
+        upgraded_url = f'https://{url_no_scheme}'
+    else:
+        upgraded_url = f'http://{url_no_scheme}'
+
+    return upgraded_url
+
+
+@lru_cache(maxsize=1024)
+def _test_tls_for_fully_qualified_domain_name(fqdn):
+    logger.info(f'Testing {fqdn} for TLS support')
+    tls_supported = False
+    try:
+        requests.get(f'https://{fqdn}', timeout=2)
+        logger.info(f'{fqdn} supports TLS.')
+        tls_supported = True
+    except Exception as e:
+        logger.info(f'Could not verify TLS support for {fqdn}. Error was\n{e}')
+    return tls_supported
 
 
 def get_source(source, provider):

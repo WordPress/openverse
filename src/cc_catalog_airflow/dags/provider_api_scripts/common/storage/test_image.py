@@ -631,8 +631,13 @@ def test_create_tsv_row_turns_empty_into_nullchar(
 
 
 def test_create_tsv_row_properly_places_entries(
-        setup_env,
+        setup_env, monkeypatch
 ):
+
+    def mock_validate_url(url_string):
+        return url_string
+
+    monkeypatch.setattr(image.util, 'validate_url_string', mock_validate_url)
     image_store = image.ImageStore()
     req_args_dict = {
         'foreign_landing_url': 'https://landing_page.com',

@@ -1,4 +1,8 @@
 import logging
+import requests
+from unittest.mock import patch
+
+import pytest
 
 from common.storage import util
 
@@ -6,6 +10,21 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
     level=logging.DEBUG)
 
+@pytest.fixture
+def clear_tls_cache():
+    util._test_tls_for_fully_qualified_domain_name.cache_clear()
+
+@pytest.fixture
+def get_good(monkeypatch):
+    def mock_get(url, timeout=60):
+        return requests.Response()
+    monkeypatch.setattr(util.requests, 'get', mock_get)
+
+@pytest.fixture
+def get_bad(monkeypatch):
+    def mock_get(url, timeout=60):
+        raise Exception
+    monkeypatch.setattr(util.requests, 'get', mock_get)
 
 def test_choose_license_and_version_prefers_derived_values(monkeypatch):
 
@@ -73,18 +92,51 @@ def test_choose_license_and_version_with_missing_derived_version(monkeypatch):
     assert actual_version == expected_version
 
 
-def test_validate_url_string_discards_without_scheme():
+def test_validate_url_string_adds_http_without_scheme(
+        clear_tls_cache, get_bad
+):
     url_string = 'creativecomons.org'
     actual_validated_url = util.validate_url_string(url_string)
-    expect_validated_url = None
+    expect_validated_url = 'http://creativecomons.org'
     assert actual_validated_url == expect_validated_url
 
 
-def test_validate_url_string_discards_without_domain():
+def test_validate_url_string_nones_with_invalid_structure_domain(
+        clear_tls_cache, get_bad
+):
     url_string = 'https:/abcd'
     actual_validated_url = util.validate_url_string(url_string)
     expect_validated_url = None
     assert actual_validated_url == expect_validated_url
+
+
+def test_validate_url_string_upgrades_scheme(clear_tls_cache, get_good):
+    url_string = 'http://abcd.com'
+    actual_validated_url = util.validate_url_string(url_string)
+    expect_validated_url = 'https://abcd.com'
+    assert actual_validated_url == expect_validated_url
+
+
+def test_validate_url_string_handles_wmc_type_scheme(
+        clear_tls_cache, get_good
+):
+    url_string = '//commons.wikimedia.org/wiki/User:potato'
+    actual_validated_url = util.validate_url_string(url_string)
+    expect_validated_url = 'https://commons.wikimedia.org/wiki/User:potato'
+    assert actual_validated_url == expect_validated_url
+
+
+def test_validate_url_string_caches_tls_support(clear_tls_cache, monkeypatch):
+    url_string = 'commons.wikimedia.org/wiki/User:potato'
+    with patch.object(
+            util.requests, 'get', return_value=requests.Response()
+    ) as mock_get:
+        actual_validated_url_1 = util.validate_url_string(url_string)
+        actual_validated_url_2 = util.validate_url_string(url_string)
+    expect_validated_url = 'https://commons.wikimedia.org/wiki/User:potato'
+    assert actual_validated_url_1 == expect_validated_url
+    assert actual_validated_url_2 == expect_validated_url
+    mock_get.assert_called_once()
 
 
 def test_get_source_preserves_given_both():
@@ -111,7 +163,7 @@ def test_get_source_nones_if_none_given():
     assert actual_source is None
 
 
-def test_get_license_from_url_finds_info_from_path():
+def test_get_license_from_url_finds_info_from_path(get_good):
     path_map = {
         'by/1.0': {'license': 'by', 'version': '1.0'},
         'zero/1.0': {'license': 'cc0', 'version': '1.0'}
@@ -125,7 +177,7 @@ def test_get_license_from_url_finds_info_from_path():
     assert actual_version == expect_version
 
 
-def test_get_license_from_url_finds_correct_nonstandard_info():
+def test_get_license_from_url_finds_correct_nonstandard_info(get_good):
     path_map = {
         'by/1.0': {'license': 'by', 'version': '1.0'},
         'zero/1.0': {'license': 'cc0', 'version': '1.0'}
@@ -139,7 +191,7 @@ def test_get_license_from_url_finds_correct_nonstandard_info():
     assert actual_version == expect_version
 
 
-def test_get_license_from_url_finds_info_from_allcaps_path():
+def test_get_license_from_url_finds_info_from_allcaps_path(get_good):
     path_map = {
         'by/1.0': {'license': 'by', 'version': '1.0'},
         'cc0/1.0': {'license': 'cc0', 'version': '1.0'}
@@ -153,7 +205,7 @@ def test_get_license_from_url_finds_info_from_allcaps_path():
     assert actual_version == expect_version
 
 
-def test_get_license_from_url_nones_wrong_domain():
+def test_get_license_from_url_nones_wrong_domain(get_good):
     path_map = {'by/1.0': {'license': 'by', 'version': '1.0'}}
     actual_license, actual_version = util._get_license_from_url(
         'http://notcreativecommons.org/licenses/by/1.0/',
