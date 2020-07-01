@@ -1,13 +1,11 @@
 <template>
-  <i18n path="photo-details.survey.content"
-        tag="div"
-        class="reuse-survey caption has-text-weight-semibold">
-    <template v-slot:link>
-      <a :href="formLink" target="_blank" rel="noopener" @click="onReuseSurveyClick">
-        {{ $t('photo-details.survey.link') }}
-      </a>
-    </template>
-  </i18n>
+  <div class="reuse-survey caption has-text-weight-semibold">
+    {{ $t('photo-details.survey.content') }}
+    <a :href="formLink" target="_blank" rel="noopener" @click="onReuseSurveyClick">
+      {{ $t('photo-details.survey.link') }}
+    </a>
+    {{ $t('photo-details.survey.answer') }}
+  </div>
 </template>
 
 <script>

@@ -223,7 +223,10 @@
         "reuse": {
             "title": "Réutilisation",
             "license-header": "Licence",
-            "attribution": "Cette image était marquée d'une licence {link}.",
+            "attribution": {
+                "main": "Cette image était marquée d'une",
+                "license": "licence."
+            },
             "license": {
                 "content": "En savoir plus sur la licence {link}",
                 "link": "ici"
@@ -238,8 +241,9 @@
         },
         "share": "Partager",
         "survey": {
-            "content": "Comment utilisez-vous cette image? {link} en répondant à quelques questions.",
-            "link": "Faites le nous savoir"
+            "content": "Comment utilisez-vous cette image?",
+            "link": "Faites le nous savoir",
+            "answer": " en répondant à quelques questions."
         },
         "weblink": "Aller sur le site de l'image",
         "legal-disclaimer": "CC Search regroupe les données des référentiels de contenu ouvert accessibles au public. CC n'héberge pas le contenu et ne vérifie pas que le contenu est correctement sous licence CC ou que les informations d'attribution sont exactes ou complètes. Veuillez suivre le lien vers la source du contenu pour vérifier indépendamment avant réutilisation.",

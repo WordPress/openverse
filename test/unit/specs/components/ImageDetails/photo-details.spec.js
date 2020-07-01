@@ -2,16 +2,17 @@ import PhotoDetails from '@/components/ImageDetails/PhotoDetails'
 import {
   DETAIL_PAGE_EVENTS,
   SEND_DETAIL_PAGE_EVENT,
-} from '@/store/usage-data-analytics-types'
-import render from '../../../test-utils/render'
+} from '@/store/usage-data-analytics-types';
+import render from '../../../test-utils/render';
+import i18n from '../../../test-utils/i18n';
 
 describe('PhotoDetails', () => {
-  let options = null
-  let props = null
-  let storeState = null
-  let commitMock = null
-  let dispatchMock = null
-
+  let options = null;
+  let props = null;
+  let storeState = null;
+  let commitMock = null;
+  let dispatchMock = null;
+  const $t = key => i18n.messages[key];
   beforeEach(() => {
     props = {
       image: {
@@ -46,6 +47,7 @@ describe('PhotoDetails', () => {
       propsData: props,
       mocks: {
         ...storeState,
+        $t,
       },
     }
   })
@@ -129,6 +131,7 @@ describe('PhotoDetails', () => {
         $router: routerMock,
         $route: routeMock,
         ...storeState,
+        $t,
       },
     }
     const wrapper = render(PhotoDetails, opts)

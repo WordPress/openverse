@@ -1,11 +1,11 @@
-import ImageInfo from '@/components/ImageDetails/ImageInfo'
-import render from '../../../test-utils/render'
+import ImageInfo from '@/components/ImageDetails/ImageInfo';
+import render from '../../../test-utils/render';
+import i18n from '../../../test-utils/i18n';
 
 describe('Image Info', () => {
-  let props = null
-  let options = {}
-  let mocks = {}
-
+  let props = null;
+  let options = {};
+  const $t = key => i18n.messages[key];
   beforeEach(() => {
     props = {
       image: {
@@ -38,9 +38,11 @@ describe('Image Info', () => {
 
     options = {
       propsData: props,
-      mocks,
-    }
-  })
+      mocks: {
+        $t,
+      },
+    };
+  });
 
   it('should contain the correct contents', () => {
     const wrapper = render(ImageInfo, options)

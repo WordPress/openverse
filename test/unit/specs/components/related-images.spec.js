@@ -1,24 +1,33 @@
-import RelatedImage from '@/components/RelatedImages'
-import render from '../../test-utils/render'
+import RelatedImage from '@/components/RelatedImages';
+import render from '../../test-utils/render';
+import i18n from '../../test-utils/i18n';
 
 describe('RelatedImage', () => {
   it('should render content when related images are present', () => {
+    const $t = key => i18n.messages[key];
     const options = {
       propsData: {
         relatedImages: ['img1', 'img2'],
       },
-    }
-    const wrapper = render(RelatedImage, options)
-    expect(wrapper.find('.photo_related-images').element).toBeDefined()
-  })
+      mocks: {
+        $t,
+      },
+    };
+    const wrapper = render(RelatedImage, options);
+    expect(wrapper.find('.photo_related-images').element).toBeDefined();
+  });
 
   it('should render nothing when there are no related images', () => {
+    const $t = key => i18n.messages[key];
     const options = {
       propsData: {
         relatedImages: [],
       },
-    }
-    const wrapper = render(RelatedImage, options)
-    expect(wrapper.find('.photo_related-images').element).toBeUndefined()
-  })
-})
+      mocks: {
+        $t,
+      },
+    };
+    const wrapper = render(RelatedImage, options);
+    expect(wrapper.find('.photo_related-images').element).toBeUndefined();
+  });
+});
