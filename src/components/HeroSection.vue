@@ -155,7 +155,16 @@ $hero-height: 80vh;
   .locale-block {
     position: absolute;
     top: 2.5rem;
-    right: 4rem;
+    left: 0;
+    right: 0;
+  }
+
+  @include tablet {
+    .locale-block {
+      top: 2.5rem;
+      left: auto;
+      right: 4rem;
+    }
   }
 
   /* Small only */

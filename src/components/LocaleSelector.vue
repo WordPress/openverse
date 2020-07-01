@@ -36,8 +36,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "node_modules/bulma/sass/utilities/_all";
+
 .icon i {
   padding-top: 0.75rem;
   padding-left: 1.25rem;
+}
+
+@include mobile {
+  .locale {
+    flex-direction: column;
+  }
 }
 </style>
