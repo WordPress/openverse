@@ -293,9 +293,9 @@ def _delete_malformed_row_in_file(tsv_file_name, line_number):
                 write_obj.write(line)
 
 
-def _create_temp_sub_prov_table(
+def _create_temp_flickr_sub_prov_table(
         postgres_conn_id,
-        temp_table='temp_sub_prov_table'
+        temp_table='temp_flickr_sub_prov_table'
 ):
     """
     Drop the temporary table if it already exists
@@ -311,7 +311,7 @@ def _create_temp_sub_prov_table(
             f'''
             CREATE TABLE public.{temp_table} (
               {col.CREATOR_URL} character varying(2000),
-              {col.PROVIDER} character varying(80)
+              sub_provider character varying(80)
             );
             '''
         )
@@ -332,7 +332,7 @@ def _create_temp_sub_prov_table(
                     f'''
                     INSERT INTO public.{temp_table} (
                       {col.CREATOR_URL},
-                      {col.PROVIDER}
+                      sub_provider
                     )
                     VALUES (
                       '{creator_url}',
@@ -351,13 +351,13 @@ def update_flickr_sub_providers(
   default_provider=prov.FLICKR_DEFAULT_PROVIDER,
 ):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    temp_table = _create_temp_sub_prov_table(postgres_conn_id)
+    temp_table = _create_temp_flickr_sub_prov_table(postgres_conn_id)
 
     select_query = dedent(
         f'''
         SELECT
         {col.FOREIGN_ID} AS foreign_id,
-        public.{temp_table}.{col.PROVIDER} AS sub_provider
+        public.{temp_table}.sub_provider AS sub_provider
         FROM {image_table}
         INNER JOIN public.{temp_table}
         ON
