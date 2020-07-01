@@ -78,9 +78,10 @@ class ImageStats(APIView):
             count = source_counts.get(source, None)
             try:
                 source_logo = SourceLogo.objects.get(source_id=_id)
-                logo_url = source_logo.image.url
+                logo_path = source_logo.image.url
+                full_logo_url = request.build_absolute_uri(logo_path)
             except SourceLogo.DoesNotExist:
-                logo_url = None
+                full_logo_url = None
             if not filtered and source in source_counts:
                 response.append(
                     {
@@ -88,7 +89,7 @@ class ImageStats(APIView):
                         'image_count': count,
                         'display_name': display_name,
                         'source_url': source_url,
-                        'logo_url': logo_url
+                        'logo_url': full_logo_url
                     }
                 )
         return Response(status=200, data=response)
