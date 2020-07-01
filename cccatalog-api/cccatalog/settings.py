@@ -19,6 +19,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Where to collect static files in production/development deployments
 STATIC_ROOT = "/var/api_static_content/static"
 
+# Uploads
+MEDIA_ROOT = '/var/api_media/'
+MEDIA_URL = '/media/'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 

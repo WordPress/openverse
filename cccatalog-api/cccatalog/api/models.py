@@ -149,7 +149,7 @@ class DeletedImage(OpenLedgerModel):
 
 
 class ContentProvider(models.Model):
-    provider_identifier = models.CharField(max_length=50)
+    provider_identifier = models.CharField(max_length=50, unique=True)
     provider_name = models.CharField(max_length=250, unique=True)
     created_on = models.DateTimeField(auto_now=False)
     domain_name = models.CharField(max_length=500)
@@ -158,6 +158,11 @@ class ContentProvider(models.Model):
 
     class Meta:
         db_table = 'content_provider'
+
+
+class SourceLogo(models.Model):
+    source = models.OneToOneField(ContentProvider, on_delete=models.CASCADE)
+    image = models.ImageField()
 
 
 class ImageList(OpenLedgerModel):

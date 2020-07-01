@@ -9,22 +9,26 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework import serializers
 from cccatalog.api.controllers.search_controller import get_sources
-from cccatalog.api.serializers.oauth2_serializers import\
+from cccatalog.api.serializers.oauth2_serializers import (
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
+)
 from drf_yasg.utils import swagger_auto_schema
-from cccatalog.api.models import ContentProvider, Image
-from cccatalog.api.models import ThrottledApplication, OAuth2Verification
-from cccatalog.api.utils.throttle import TenPerDay, OnePerSecond,\
-    OneThousandPerMinute
+from cccatalog.api.models import (
+    ContentProvider, Image, ThrottledApplication, OAuth2Verification, SourceLogo
+)
+from cccatalog.api.utils.throttle import (
+    TenPerDay, OnePerSecond, OneThousandPerMinute
+)
 from cccatalog.api.utils.oauth2_helper import get_token_info
 from cccatalog.settings import THUMBNAIL_PROXY_URL, THUMBNAIL_WIDTH_PX
 from django.core.cache import cache
 from django.http import HttpResponse
 
-IDENTIFIER = 'provider_identifier'
+CODENAME = 'provider_identifier'
 NAME = 'provider_name'
 FILTER = 'filter_content'
 URL = 'domain_name'
+ID = 'id'
 
 
 class HealthCheck(APIView):
@@ -59,31 +63,34 @@ class ImageStats(APIView):
                              200: AboutImageResponse(many=True)
                          })
     def get(self, request, format=None):
-        provider_data = ContentProvider \
+        source_data = ContentProvider \
             .objects \
-            .values(IDENTIFIER, NAME, FILTER, URL)
-        provider_table = {
-            rec[IDENTIFIER]:
-                (rec[NAME], rec[FILTER], rec[URL]) for rec in provider_data
-        }
-        sources = get_sources('image')
+            .values(ID, CODENAME, NAME, FILTER, URL)
+        source_counts = get_sources('image')
         response = []
-        for source in sources:
-            if source in provider_table:
-                display_name, _filter, provider_url = provider_table[source]
-                if not _filter:
-                    response.append(
-                        {
-                            'source_name': source,
-                            'image_count': sources[source],
-                            'display_name': display_name,
-                            'source_url': provider_url
-                        }
-                    )
-            else:
-                msg = 'provider_identifier missing from content_provider' \
-                      ' table: {}. Check for typos/omissions.'.format(source)
-                log.error(msg)
+        for source in source_data:
+            source_codename = source[CODENAME]
+            _id = source[ID]
+            display_name = source[NAME]
+            filtered = source[FILTER]
+            source_url = source[URL]
+            count = source_counts.get(source_codename, None)
+            try:
+                source_logo = SourceLogo.objects.get(source_id=_id)
+                logo_path = source_logo.image.url
+                full_logo_url = request.build_absolute_uri(logo_path)
+            except SourceLogo.DoesNotExist:
+                full_logo_url = None
+            if not filtered and source_codename in source_counts:
+                response.append(
+                    {
+                        'source_name': source_codename,
+                        'image_count': count,
+                        'display_name': display_name,
+                        'source_url': source_url,
+                        'logo_url': full_logo_url
+                    }
+                )
         return Response(status=200, data=response)
 
 
