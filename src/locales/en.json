@@ -26,7 +26,8 @@
         "collections": "Collections",
         "search-guide": "Search Guide",
         "feedback": "Feedback",
-        "extension": "Extension"
+        "extension": "Extension",
+        "placeholder": "Search all images"
     },
     "footer": {
         "address": {
@@ -208,12 +209,62 @@
             "button": "Search"
         },
         "license-description": {
+            "title": "License CC",
             "by": "Credit the creator.",
             "nc": "Noncommercial uses only.",
             "nd": "No derivatives or adaptations permitted.",
             "sa": "Share adaptations under the same terms.",
             "cc0": "This work has been marked as dedicated to the public domain.",
             "pdm": "This work is marked as being in the public domain."
+        }
+    },
+    "photo-details": {
+        "back": "Back to search results",
+        "reuse": {
+            "title": "Reuse",
+            "license-header": "License",
+            "attribution": "This image was marked with a {link} license.",
+            "license": {
+                "content": "Read more about the license {link}",
+                "link": "here"
+            } 
+        },
+        "information": {
+            "title": "Information",
+            "dimensions": "Dimensions",
+            "source": "Source",
+            "license": "License",
+            "tags": "Tags"
+        },
+        "share": "Share",
+        "survey": {
+            "content": "How are you using this image? {link} by answering a few questions.",
+            "link": "Let us know"
+        },
+        "weblink": "Go to image's website",
+        "legal-disclaimer": "CC Search aggregates data from publicly available repositories of open content. CC does not host the content and does not verify that the content is properly CC-licensed or that the attribution information is accurate or complete. Please follow the link to the source of the content to independently verify before reuse.",
+        "related-images": "Related Images",
+        "copy": {
+            "copy": "Copy",
+            "copied": "Copied!"
+        },
+        "content-report": {
+            "title": "Report this content",
+            "issue": "What's the issue?",
+            "issue-description": "Please describe the issue for us",
+            "copyright": "Infringes Copyright",
+            "mature": "Contains mature content",
+            "other": "Other",
+            "caption": "For security purposes, CC collects and retains anonymized IP addresses of those who complete and submit this form.",
+            "next": "Next",
+            "back": "Back",
+            "submit": "Submit",
+            "dmca": {
+                "content": "You must fill out this {link} to report copyright infringement. No action will be taken until the form is filled out and submitted.",
+                "provider": "We recommend doing the same at the source, {link}.",
+                "thanks": "Thank you for reporting an issue with the results of CC Search!",
+                "error": "There was an error with the report submission. Please try again."
+            }
         }
     }
 }

@@ -1,16 +1,13 @@
 <template>
-  <div class="reuse-survey caption has-text-weight-semibold">
-    How are you using this image?
-    <a
-      :href="formLink"
-      target="_blank"
-      rel="noopener"
-      @click="onReuseSurveyClick"
-    >
-      Let us know
-    </a>
-    by answering a few questions.
-  </div>
+  <i18n path="photo-details.survey.content"
+        tag="div"
+        class="reuse-survey caption has-text-weight-semibold">
+    <template v-slot:link>
+      <a :href="formLink" target="_blank" rel="noopener" @click="onReuseSurveyClick">
+        {{ $t('photo-details.survey.link') }}
+      </a>
+    </template>
+  </i18n>
 </template>
 
 <script>

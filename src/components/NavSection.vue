@@ -58,11 +58,13 @@ export default {
     showNavSearch: {
       default: false,
     },
-    navSearchPlaceholder: {
-      default: 'Search all images',
-    },
   },
   name: 'nav-section',
+  computed: {
+    navSearchPlaceholder() {
+      return this.$t('header.placeholder');
+    },
+  },
   data: () => ({ form: { searchTerm: '' }, isBurgerMenuActive: false }),
   methods: {
     onSubmit() {

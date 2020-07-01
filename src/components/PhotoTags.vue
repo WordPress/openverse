@@ -1,6 +1,6 @@
 <template>
   <div class="photo_tags" v-if="tags && tags.length">
-    <h3 class="b-header" v-if="showHeader">Tags</h3>
+    <h3 class="b-header" v-if="showHeader">{{ $t('photo-details.information.tags') }}</h3>
     <div class="margin-top-normal">
       <template v-for="(tag, index) in getValidTags()">
         <button

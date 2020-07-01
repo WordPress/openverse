@@ -1,14 +1,14 @@
 <template>
-  <button
-    :id="id"
-    type="button"
-    class="button tiny donate is-paddingless margin-top-normal padding-horizontal-normal"
-    :data-clipboard-target="el"
-  >
-    <span v-if="!success"
-      ><i class="icon cc-share margin-right-small"></i> Copy</span
-    >
-    <span v-else><i class="icon cc-share margin-right-small"></i> Copied!</span>
+  <button :id="id"
+          type="button"
+          class="button tiny donate is-paddingless margin-top-normal padding-horizontal-normal"
+          :data-clipboard-target="el">
+    <span v-if="!success">
+      <i class="icon cc-share margin-right-small"></i> {{ $t('photo-details.copy.copy') }}
+    </span>
+    <span v-else>
+      <i class="icon cc-share margin-right-small"></i> {{ $t('photo-details.copy.copied') }}
+    </span>
   </button>
 </template>
 

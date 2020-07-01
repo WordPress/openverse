@@ -26,7 +26,8 @@
         "collections": "Les collections",
         "search-guide": "Guide de recherche",
         "feedback": "Retour d'information",
-        "extension": "Extension"
+        "extension": "Extension",
+        "placeholder": "Rechercher toutes les images"
     },
     "footer": {
         "address": {
@@ -208,12 +209,62 @@
             "button": "Chercher"
         },
         "license-description": {
+            "title": "Licence CC",
             "by": "Créditez le créateur.",
             "nc": "Utilisations non commerciales uniquement.",
             "nd": "Aucun dérivé ou adaptation autorisé.",
             "sa": "Partagez les adaptations dans les mêmes conditions.",
             "cc0": "Ce travail a été marqué comme dédié au domaine public.",
             "pdm": "Ce travail est marqué comme étant dans le domaine public."
+        }
+    },
+    "photo-details": {
+        "back": "Retour aux résultats de recherche",
+        "reuse": {
+            "title": "Réutilisation",
+            "license-header": "Licence",
+            "attribution": "Cette image était marquée d'une licence {link}.",
+            "license": {
+                "content": "En savoir plus sur la licence {link}",
+                "link": "ici"
+            } 
+        },
+        "information": {
+            "title": "Information",
+            "dimensions": "Dimensions",
+            "source": "La source",
+            "license": "Licence",
+            "tags": "Mots clés"
+        },
+        "share": "Partager",
+        "survey": {
+            "content": "Comment utilisez-vous cette image? {link} en répondant à quelques questions.",
+            "link": "Faites le nous savoir"
+        },
+        "weblink": "Aller sur le site de l'image",
+        "legal-disclaimer": "CC Search regroupe les données des référentiels de contenu ouvert accessibles au public. CC n'héberge pas le contenu et ne vérifie pas que le contenu est correctement sous licence CC ou que les informations d'attribution sont exactes ou complètes. Veuillez suivre le lien vers la source du contenu pour vérifier indépendamment avant réutilisation.",
+        "related-images": "Images associées",
+        "copy": {
+            "copy": "Copie",
+            "copied": "Copié!"
+        },
+        "content-report": {
+            "title": "Signaler ce contenu",
+            "issue": "Quel est le problème?",
+            "issue-description": "Veuillez décrire le problème pour nous",
+            "copyright": "Violation du droit d'auteur",
+            "mature": "Comprend du contenu destiné aux adultes",
+            "other": "Autre",
+            "caption": "Pour des raisons de sécurité, CC recueille et conserve les adresses IP anonymisées de ceux qui remplissent et soumettent ce formulaire.",
+            "next": "Prochain",
+            "back": "Arrière",
+            "submit": "Soumettre",
+            "dmca": {
+                "content": "Vous devez remplir ce {link} pour signaler une violation du droit d'auteur. Aucune action ne sera entreprise tant que le formulaire n'aura pas été rempli et soumis.",
+                "provider": "Nous vous recommandons de faire de même à la source, {link}.",
+                "thanks": "Merci d'avoir signalé un problème avec les résultats de CC Search!",
+                "error": "Une erreur s'est produite lors de la soumission du rapport. Veuillez réessayer."
+            }
         }
     }
 }
