@@ -46,6 +46,7 @@ export default {
 @include mobile {
   .locale {
     flex-direction: column;
+    justify-content: center;
   }
 }
 </style>

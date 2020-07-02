@@ -112,7 +112,7 @@ export default {
 @import 'node_modules/bulma/sass/utilities/derived-variables';
 @import 'node_modules/bulma/sass/utilities/mixins';
 
-$hero-height: 80vh;
+$hero-height: 85vh;
 
 .hero {
   background: #fff;
@@ -165,7 +165,12 @@ $hero-height: 80vh;
 
   /* Small only */
   @include mobile {
-    height: 80vh;
+    height: auto;
+    .locale-block {
+      position: relative;
+      top: 0rem;
+      right: 0rem;
+    }
   }
 }
 
