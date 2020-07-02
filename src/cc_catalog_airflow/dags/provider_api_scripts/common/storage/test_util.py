@@ -10,9 +10,14 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
     level=logging.DEBUG)
 
+# This avoids needing the internet for testing.
+util.tldextract.extract = util.tldextract.TLDExtract(suffix_list_urls=None)
+
+
 @pytest.fixture
 def clear_tls_cache():
     util._test_tls_for_fully_qualified_domain_name.cache_clear()
+
 
 @pytest.fixture
 def get_good(monkeypatch):
@@ -20,11 +25,13 @@ def get_good(monkeypatch):
         return requests.Response()
     monkeypatch.setattr(util.requests, 'get', mock_get)
 
+
 @pytest.fixture
 def get_bad(monkeypatch):
     def mock_get(url, timeout=60):
         raise Exception
     monkeypatch.setattr(util.requests, 'get', mock_get)
+
 
 def test_choose_license_and_version_prefers_derived_values(monkeypatch):
 

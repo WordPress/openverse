@@ -7,6 +7,11 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
     level=logging.DEBUG)
 
+# This avoids needing the internet for testing.
+image.util.tldextract.extract = image.util.tldextract.TLDExtract(
+    suffix_list_urls=None
+)
+
 
 @pytest.fixture
 def setup_env(monkeypatch):
