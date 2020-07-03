@@ -29,7 +29,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-LIMIT = 500
+LIMIT = 250
 # The 10000 is a bit arbitrary, but needs to be larger than the mean
 # number of uses per file (globally) in the response_json, or we will
 # fail without a continuation token.  The largest example seen so far
