@@ -1,6 +1,5 @@
 import logging
 import pytest
-import requests
 
 from common.storage import image
 
