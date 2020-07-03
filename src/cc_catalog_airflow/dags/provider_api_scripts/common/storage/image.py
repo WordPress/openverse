@@ -280,7 +280,7 @@ class ImageStore:
             watermarked,
             source,
     ):
-        license_, license_version = util.choose_license_and_version(
+        license_, license_version, license_url = util.get_license_info(
             license_url=license_url,
             license_=license_,
             license_version=license_version

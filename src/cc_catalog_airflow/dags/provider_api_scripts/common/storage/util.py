@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 LICENSE_PATH_MAP = constants.LICENSE_PATH_MAP
 
 
-def choose_license_and_version(
+def get_license_info(
         license_url=None, license_=None, license_version=None
 ):
     """
@@ -29,7 +29,9 @@ def choose_license_and_version(
     license_:         String representing a CC license.
     license_version:  string URL to a CC license page.  (Will cast floats)
     """
-    derived_license, derived_version = _get_license_from_url(license_url)
+    valid_url, derived_license, derived_version = _get_license_from_url(
+        license_url
+    )
     if derived_license and derived_version:
         # We prefer license and version derived from the license_url, when
         # possible, since we have more control over the string
@@ -38,14 +40,19 @@ def choose_license_and_version(
             'Using derived_license {} and derived_version {}'
             .format(derived_license, derived_version)
         )
-        license_, license_version = derived_license, derived_version
+        final_license, final_version = derived_license, derived_version
     else:
         logger.debug(
             'Using given license_ {} and license_version {}'
             .format(license_, license_version)
         )
+        final_license, final_version = license_, license_version
 
-    return _validate_license_pair(license_, license_version)
+    valid_license, valid_version = _validate_license_pair(
+        final_license, final_version
+    )
+
+    return valid_license, valid_version, valid_url
 
 
 def validate_url_string(url_string):
@@ -71,6 +78,17 @@ def validate_url_string(url_string):
 
 
 def add_best_scheme(url_string):
+    fqdn = tldextract.extract(url_string).fqdn
+
+    if _test_tls_for_fully_qualified_domain_name(fqdn):
+        upgraded_url = _add_url_scheme(url_string, scheme='https')
+    else:
+        upgraded_url = _add_url_scheme(url_string, scheme='http')
+
+    return upgraded_url
+
+
+def _add_url_scheme(url_string, scheme='http'):
     url_no_scheme = (
         url_string
         .strip()
@@ -78,14 +96,7 @@ def add_best_scheme(url_string):
         .strip('https://')
         .strip('/')
     )
-    fqdn = tldextract.extract(url_string).fqdn
-
-    if _test_tls_for_fully_qualified_domain_name(fqdn):
-        upgraded_url = f'https://{url_no_scheme}'
-    else:
-        upgraded_url = f'http://{url_no_scheme}'
-
-    return upgraded_url
+    return f'{scheme}://{url_no_scheme}'
 
 
 @lru_cache(maxsize=1024)
@@ -111,31 +122,82 @@ def get_source(source, provider):
     return source
 
 
-def _get_license_from_url(license_url, path_map=LICENSE_PATH_MAP):
-    license_url = validate_url_string(license_url)
-    if license_url:
-        parsed_license_url = urlparse(license_url)
+def _get_license_from_url(license_url):
+    validated_license_url = _get_valid_cc_license_url(license_url)
+    if validated_license_url is not None:
+        license_, license_version = _get_license_from_validated_url(
+            validated_license_url
+        )
     else:
-        return None, None
+        logger.debug(f'Could not validate license URL {license_url}')
+        license_, license_version = None, None
 
-    license_, license_version = None, None
-    if parsed_license_url.netloc != 'creativecommons.org':
+    if license_ is None or license_version is None:
+        validated_license_url = None
+
+    return validated_license_url, license_, license_version
+
+
+def _get_valid_cc_license_url(license_url):
+    logger.debug(f'Validating license URL {license_url}')
+    if type(license_url) != str:
+        logger.debug(
+            f'License URL is not a string. Type is {type(license_url)}'
+        )
+        return
+
+    https_url = _add_url_scheme(license_url.lower(), 'https')
+    parsed_url = urlparse(https_url)
+
+    if parsed_url.netloc != 'creativecommons.org':
         logger.warning(
             'The license at {} is not issued by Creative Commons.'
             .format(license_url)
         )
-    else:
-        for valid_path in path_map:
-            if valid_path in parsed_license_url.path.lower():
-                license_ = path_map[valid_path]['license']
-                license_version = path_map[valid_path]['version']
+        return
 
-                logger.debug(
-                    'Derived license_: {}, Derived license_version: {}'
-                    .format(license_, license_version)
-                )
+    rewritten_url = _rewrite_url_string(https_url)
+
+    if (
+            rewritten_url is not None
+            and (
+                'licenses' in rewritten_url
+                or 'publicdomain' in rewritten_url
+            )
+    ):
+        validated_license_url = rewritten_url
+    else:
+        validated_license_url = None
+
+    return validated_license_url
+
+
+def _get_license_from_validated_url(license_url, path_map=LICENSE_PATH_MAP):
+    license_, license_version = None, None
+    for valid_path in path_map:
+        if valid_path in license_url:
+            license_ = path_map[valid_path]['license']
+            license_version = path_map[valid_path]['version']
+
+            logger.debug(
+                'Derived license_: {}, Derived license_version: {}'
+                .format(license_, license_version)
+            )
+            break
 
     return license_, license_version
+
+
+@lru_cache(maxsize=1024)
+def _rewrite_url_string(url_string):
+    try:
+        response = requests.get(url_string)
+        rewritten_url = response.url
+        logger.info(f'{url_string} was rewritten to {rewritten_url}')
+    except Exception as e:
+        logger.warning(f'URL {url_string} could not be rewritten. Error: {e}')
+        rewritten_url = None
+    return rewritten_url
 
 
 def _validate_license_pair(
@@ -143,7 +205,6 @@ def _validate_license_pair(
         license_version,
         path_map=LICENSE_PATH_MAP
 ):
-    logger.debug('Path Map: {}'.format(path_map))
     if license_ is None or license_version is None:
         return None, None
     pairs = [(item['license'], item['version']) for item in path_map.values()]
