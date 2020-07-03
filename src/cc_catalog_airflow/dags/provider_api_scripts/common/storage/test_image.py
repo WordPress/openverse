@@ -1,5 +1,6 @@
 import logging
 import pytest
+import tldextract
 
 from common.storage import image
 
@@ -10,7 +11,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # This avoids needing the internet for testing.
-image.util.tldextract.extract = image.util.tldextract.TLDExtract(
+image.licenses.urls.tldextract.extract = tldextract.TLDExtract(
+    suffix_list_urls=None
+)
+image.columns.urls.tldextract.extract = tldextract.TLDExtract(
     suffix_list_urls=None
 )
 
@@ -25,7 +29,7 @@ def mock_rewriter(monkeypatch):
     def mock_rewrite_url_string(url_string):
         return url_string
     monkeypatch.setattr(
-        image.util, '_rewrite_url_string', mock_rewrite_url_string
+        image.licenses, '_rewrite_url_string', mock_rewrite_url_string
     )
 
 
@@ -188,7 +192,7 @@ def test_ImageStore_get_image_places_given_args(
     def mock_license_chooser(license_url, license_, license_version):
         return license_, license_version, license_url
     monkeypatch.setattr(
-        image.util,
+        image.licenses,
         'get_license_info',
         mock_license_chooser
     )
@@ -226,7 +230,7 @@ def test_ImageStore_get_image_calls_license_chooser(
     def mock_license_chooser(license_url, license_, license_version):
         return 'diff_license', None, license_url
     monkeypatch.setattr(
-        image.util,
+        image.licenses,
         'get_license_info',
         mock_license_chooser
     )
@@ -315,7 +319,7 @@ def test_ImageStore_get_image_creates_meta_data_with_valid_license_url(
     def mock_license_chooser(license_url, license_, license_version):
         return license_, license_version, license_url
     monkeypatch.setattr(
-        image.util,
+        image.licenses,
         'get_license_info',
         mock_license_chooser
     )
@@ -349,7 +353,7 @@ def test_ImageStore_get_image_adds_valid_license_url_to_dict_meta_data(
     def mock_license_chooser(license_url, license_, license_version):
         return license_, license_version, license_url
     monkeypatch.setattr(
-        image.util,
+        image.licenses,
         'get_license_info',
         mock_license_chooser
     )
@@ -387,7 +391,7 @@ def test_ImageStore_get_image_nones_invalid_license_url(
     def mock_license_chooser(license_url, license_, license_version):
         return license_, license_version, updated_url
     monkeypatch.setattr(
-        image.util,
+        image.licenses,
         'get_license_info',
         mock_license_chooser
     )
@@ -702,7 +706,9 @@ def test_create_tsv_row_properly_places_entries(
     def mock_validate_url(url_string):
         return url_string
 
-    monkeypatch.setattr(image.util, 'validate_url_string', mock_validate_url)
+    monkeypatch.setattr(
+        image.columns.urls, 'validate_url_string', mock_validate_url
+    )
     image_store = image.ImageStore()
     req_args_dict = {
         'foreign_landing_url': 'https://landing_page.com',

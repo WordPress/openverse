@@ -1,4 +1,4 @@
-from common.storage import util
+from common import urls
 
 from abc import ABC, abstractmethod
 import json
@@ -238,7 +238,7 @@ class URLColumn(Column):
             return None
         else:
             return self._Column__enforce_char_limit(
-                util.validate_url_string(value),
+                urls.validate_url_string(value),
                 self.SIZE,
                 False
             )

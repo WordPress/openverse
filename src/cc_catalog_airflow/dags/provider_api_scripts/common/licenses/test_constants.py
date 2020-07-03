@@ -1,4 +1,4 @@
-from common.storage import constants
+from common.licenses import constants
 
 
 def test_get_license_path_map_comprehenseion(monkeypatch):

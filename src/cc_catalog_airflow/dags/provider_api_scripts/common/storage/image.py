@@ -3,6 +3,7 @@ from datetime import datetime
 import logging
 import os
 
+from common.licenses import licenses
 from common.storage import util
 from common.storage import columns
 
@@ -161,7 +162,7 @@ class ImageStore:
                           Creative Commons website.
         license_:         String representation of a Creative Commons
                           license.  For valid options, see
-                          `storage.constants.LICENSE_PATH_MAP`
+                          `common.license.constants.LICENSE_PATH_MAP`
         license_version:  Version of the given license.
 
         Note on license arguments: These are 'semi-required' in that
@@ -280,7 +281,7 @@ class ImageStore:
             watermarked,
             source,
     ):
-        license_, license_version, license_url = util.get_license_info(
+        license_, license_version, license_url = licenses.get_license_info(
             license_url=license_url,
             license_=license_,
             license_version=license_version
