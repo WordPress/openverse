@@ -141,7 +141,7 @@ def test_get_image_data_large():
         )
 
     assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg"
-    assert actual_image_id == "45/329745"
+    assert actual_image_id == "329745"
     assert actual_height == 2581
     assert actual_width == 2785
 
@@ -155,7 +155,7 @@ def test_get_image_data_medium():
         )
 
     assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-medium.jpg"
-    assert actual_image_id == "45/329745"
+    assert actual_image_id == "329745"
     assert actual_height == 1390
     assert actual_width == 1500
 
@@ -169,7 +169,7 @@ def test_get_image_data_small():
         )
 
     assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg"
-    assert actual_image_id == "45/329745"
+    assert actual_image_id == "329745"
     assert actual_height == 500
     assert actual_width == 540
 
@@ -191,7 +191,7 @@ def test_get_image_data_none():
 def test_get_image_id():
     image_url = "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg"
     actual_image_id = mv._get_image_id(image_url)
-    expected_image_id = "45/329745"
+    expected_image_id = "329745"
 
     assert actual_image_id == expected_image_id
 

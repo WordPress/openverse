@@ -191,9 +191,8 @@ def _get_image_data(media):
 
 
 def _get_image_id(image_url):
-    path = urlparse(image_url).path.split("/")[-2:]
-    unique_string = '/'.join(path)
-    image_id = unique_string.split("-")[0]
+    path = urlparse(image_url).path.split("/")[-1]
+    image_id = path.split("-")[0]
     return image_id
 
 
