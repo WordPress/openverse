@@ -216,6 +216,11 @@
             "sa": "Share adaptations under the same terms.",
             "cc0": "This work has been marked as dedicated to the public domain.",
             "pdm": "This work is marked as being in the public domain."
+        },
+        "safe-browsing": {
+            "title": "Safe Browsing",
+            "caption": "By default, search results will not include results that have been reported as mature by users and sources.",
+            "label": "Show Mature Content"
         }
     },
     "photo-details": {
@@ -230,7 +235,13 @@
             "license": {
                 "content": "Read more about the license {link}",
                 "link": "here"
-            } 
+            },
+            "copy-license": {
+                "title": "Credit the Creator",
+                "rich": "Rich Text",
+                "html": "HTML",
+                "plain": "Plain text"
+            }
         },
         "information": {
             "title": "Information",

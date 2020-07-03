@@ -216,6 +216,11 @@
             "sa": "Partagez les adaptations dans les mêmes conditions.",
             "cc0": "Ce travail a été marqué comme dédié au domaine public.",
             "pdm": "Ce travail est marqué comme étant dans le domaine public."
+        },
+        "safe-browsing": {
+            "title": "Navigation sûre",
+            "caption": "Par défaut, les résultats de recherche n'incluront pas les résultats signalés comme matures par les utilisateurs et les sources.",
+            "label": "Afficher le contenu mature"
         }
     },
     "photo-details": {
@@ -230,7 +235,13 @@
             "license": {
                 "content": "En savoir plus sur la licence {link}",
                 "link": "ici"
-            } 
+            },
+            "copy-license": {
+                "title": "Créditez le créateur",
+                "rich": "Texte riche",
+                "html": "HTML",
+                "plain": "Texte brut"
+            }
         },
         "information": {
             "title": "Information",
