@@ -23,7 +23,8 @@ def validate_url_string(url_string):
 
     If not, returns None
     """
-    if not type(url_string) == str:
+    logger.debug(f'Validating_url {url_string}')
+    if not type(url_string) == str or not url_string:
         return
     else:
         upgraded_url = add_best_scheme(url_string)
@@ -31,17 +32,29 @@ def validate_url_string(url_string):
     parse_result = urlparse(upgraded_url)
     tld = tldextract.extract(upgraded_url)
 
+    logger.debug(f'parse_result.scheme: {parse_result.scheme}')
+    logger.debug(f'tld.domain: {tld.domain}')
+    logger.debug(f'tld.suffix: {tld.suffix}')
+
     if tld.domain and tld.suffix and parse_result.scheme:
         return upgraded_url
+    elif tld.ipv4 and parse_result.scheme:
+        logger.debug(f'Using IP address as URL: {upgraded_url}')
+        return upgraded_url
     else:
-        logger.debug(f'Invalid url {url_string}, upgraded to {upgraded_url}')
+        logger.debug(
+            f'Invalid url {url_string}, attempted upgrade: {upgraded_url}.'
+            ' Returning None'
+        )
         return None
 
 
 def add_best_scheme(url_string):
-    fqdn = tldextract.extract(url_string).fqdn
+    domain_key = tldextract.extract(url_string).fqdn
+    if not domain_key:
+        domain_key = tldextract.extract(url_string).ipv4
 
-    if _test_tls_for_fully_qualified_domain_name(fqdn):
+    if _test_domain_for_tls_support(domain_key):
         upgraded_url = add_url_scheme(url_string, scheme='https')
     else:
         upgraded_url = add_url_scheme(url_string, scheme='http')
@@ -61,15 +74,17 @@ def add_url_scheme(url_string, scheme='http'):
 
 
 @lru_cache(maxsize=1024)
-def _test_tls_for_fully_qualified_domain_name(fqdn):
-    logger.info(f'Testing {fqdn} for TLS support')
+def _test_domain_for_tls_support(domain):
+    logger.info(f'Testing {domain} for TLS support')
     tls_supported = False
     try:
-        requests.get(f'https://{fqdn}', timeout=2)
-        logger.info(f'{fqdn} supports TLS.')
+        requests.get(f'https://{domain}', timeout=2)
+        logger.info(f'{domain} supports TLS.')
         tls_supported = True
     except Exception as e:
-        logger.info(f'Could not verify TLS support for {fqdn}. Error was\n{e}')
+        logger.info(
+            f'Could not verify TLS support for {domain}. Error was\n{e}'
+        )
     return tls_supported
 
 
