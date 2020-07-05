@@ -11,6 +11,7 @@
           <div class="field has-addons">
             <div class="control">
               <input required="required"
+                  autofocus="true"
                   class="hero_search-input input is-large"
                   type="search"
                   name="q"
@@ -28,6 +29,7 @@
           <div class="field has-addons">
             <div class="control mobile-input">
               <input required="required"
+                  autofocus="true"
                   class="input"
                   type="search"
                   name="q"

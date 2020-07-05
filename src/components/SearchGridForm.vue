@@ -14,6 +14,7 @@
         <div class="control has-icons-left margin-left-small">
           <input id="searchInput"
                   required="required"
+                  autofocus="true"
                   class="input is-medium"
                   type="search"
                   ref="search"
@@ -40,6 +41,7 @@
         <div class="control has-icons-left margin-left-small">
           <input id="searchInput"
                   required="required"
+                  autofocus="true"
                   class="input"
                   type="search"
                   ref="search"
