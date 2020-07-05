@@ -500,3 +500,8 @@ def update_europeana_sub_providers(
                 '''
             )
         )
+
+    """
+    Drop the temporary table
+    """
+    postgres.run(f'DROP TABLE public.{temp_table};')
