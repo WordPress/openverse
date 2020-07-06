@@ -15,6 +15,8 @@ import os
 
 from common.storage import image
 from common import requester
+from util.loader import provider_details as prov
+
 logger = logging.getLogger(__name__)
 
 API_KEY = os.getenv('DATA_GOV_API_KEY')
@@ -24,7 +26,9 @@ LIMIT = 1000  # number of rows to pull at once
 API_ROOT = 'https://api.si.edu/openaccess/api/v1.0/'
 SEARCH_ENDPOINT = API_ROOT + 'search'
 UNITS_ENDPOINT = API_ROOT + 'terms/unit_code'
-PROVIDER = 'smithsonian'
+PROVIDER = prov.SMITHSONIAN_DEFAULT_PROVIDER
+# SUB_PROVIDERS is a collection of all providers within smithsonian
+SUB_PROVIDERS = prov.SMITHSONIAN_SUB_PROVIDERS
 ZERO_URL = 'https://creativecommons.org/publicdomain/zero/1.0/'
 DEFAULT_PARAMS = {
     'api_key': API_KEY,
@@ -218,13 +222,16 @@ def _process_response_json(response_json):
     for row in rows:
         image_list = _get_image_list(row)
         if image_list:
+            meta_data = _extract_meta_data(row)
+            source = _extract_source(meta_data)
             total_images = _process_image_list(
                 image_list,
                 _get_foreign_landing_url(row),
                 _get_title(row),
                 _get_creator(row),
-                _extract_meta_data(row),
-                _extract_tags(row)
+                meta_data,
+                _extract_tags(row),
+                source
             )
     return total_images
 
@@ -313,6 +320,16 @@ def _extract_meta_data(row, description_types=DESCRIPTION_TYPES):
     return {k: v for (k, v) in meta_data.items() if v is not None}
 
 
+def _extract_source(meta_data, sub_providers=SUB_PROVIDERS):
+    unit_code = meta_data.get('unit_code').strip()
+    source = next((s for s in sub_providers if unit_code in
+                   sub_providers[s]), None)
+    if source is None:
+        raise Exception(
+            f"An unknown unit code value {unit_code} encountered ")
+    return source
+
+
 def _extract_tags(row, tag_types=TAG_TYPES):
     indexed_structured = _get_indexed_structured_dict(row)
     tag_lists_generator = (
@@ -387,6 +404,7 @@ def _process_image_list(
         creator,
         meta_data,
         tags,
+        source,
         license_url=ZERO_URL
 ):
     total_images = None
@@ -404,7 +422,8 @@ def _process_image_list(
                 title=title,
                 creator=creator,
                 meta_data=meta_data,
-                raw_tags=tags
+                raw_tags=tags,
+                source=source
             )
     return total_images
 
