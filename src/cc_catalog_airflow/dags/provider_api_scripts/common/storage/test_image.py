@@ -29,7 +29,7 @@ def mock_rewriter(monkeypatch):
     def mock_rewrite_url_string(url_string):
         return url_string
     monkeypatch.setattr(
-        image.licenses, '_rewrite_url_string', mock_rewrite_url_string
+        image.licenses.urls, 'rewrite_url_string', mock_rewrite_url_string
     )
 
 

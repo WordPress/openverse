@@ -16,11 +16,6 @@ licenses.urls.tldextract.extract = tldextract.TLDExtract(
 
 
 @pytest.fixture
-def clear_tls_cache():
-    licenses._test_tls_for_fully_qualified_domain_name.cache_clear()
-
-
-@pytest.fixture
 def get_good(monkeypatch):
     def mock_get(url, timeout=60):
         return requests.Response()
@@ -39,7 +34,7 @@ def mock_rewriter(monkeypatch):
     def mock_rewrite_url_string(url_string):
         return url_string
     monkeypatch.setattr(
-        licenses, '_rewrite_url_string', mock_rewrite_url_string
+        licenses.urls, 'rewrite_url_string', mock_rewrite_url_string
     )
 
 

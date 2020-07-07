@@ -62,6 +62,18 @@ def add_best_scheme(url_string):
     return upgraded_url
 
 
+@lru_cache(maxsize=1024)
+def rewrite_url_string(url_string):
+    try:
+        response = requests.get(url_string)
+        rewritten_url = response.url
+        logger.info(f'{url_string} was rewritten to {rewritten_url}')
+    except Exception as e:
+        logger.warning(f'URL {url_string} could not be rewritten. Error: {e}')
+        rewritten_url = None
+    return rewritten_url
+
+
 def add_url_scheme(url_string, scheme='http'):
     url_no_scheme = (
         url_string
@@ -86,15 +98,3 @@ def _test_domain_for_tls_support(domain):
             f'Could not verify TLS support for {domain}. Error was\n{e}'
         )
     return tls_supported
-
-
-@lru_cache(maxsize=1024)
-def _rewrite_url_string(url_string):
-    try:
-        response = requests.get(url_string)
-        rewritten_url = response.url
-        logger.info(f'{url_string} was rewritten to {rewritten_url}')
-    except Exception as e:
-        logger.warning(f'URL {url_string} could not be rewritten. Error: {e}')
-        rewritten_url = None
-    return rewritten_url

@@ -89,7 +89,7 @@ def _get_valid_cc_license_url(license_url):
         )
         return
 
-    rewritten_url = _rewrite_url_string(https_url)
+    rewritten_url = urls.rewrite_url_string(https_url)
 
     if (
             rewritten_url is not None
@@ -119,18 +119,6 @@ def _get_license_from_validated_url(license_url, path_map=LICENSE_PATH_MAP):
             break
 
     return license_, license_version
-
-
-@lru_cache(maxsize=1024)
-def _rewrite_url_string(url_string):
-    try:
-        response = requests.get(url_string)
-        rewritten_url = response.url
-        logger.info(f'{url_string} was rewritten to {rewritten_url}')
-    except Exception as e:
-        logger.warning(f'URL {url_string} could not be rewritten. Error: {e}')
-        rewritten_url = None
-    return rewritten_url
 
 
 def _validate_license_pair(

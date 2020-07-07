@@ -16,7 +16,7 @@ urls.tldextract.extract = urls.tldextract.TLDExtract(suffix_list_urls=None)
 
 @pytest.fixture
 def clear_tls_cache():
-    urls._test_tls_for_fully_qualified_domain_name.cache_clear()
+    urls._test_domain_for_tls_support.cache_clear()
 
 
 @pytest.fixture
