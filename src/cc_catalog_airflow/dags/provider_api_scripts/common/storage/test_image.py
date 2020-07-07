@@ -1,4 +1,6 @@
 import logging
+import requests
+
 import pytest
 import tldextract
 
@@ -31,6 +33,13 @@ def mock_rewriter(monkeypatch):
     monkeypatch.setattr(
         image.licenses.urls, 'rewrite_url_string', mock_rewrite_url_string
     )
+
+
+@pytest.fixture
+def get_good(monkeypatch):
+    def mock_get(url, timeout=60):
+        return requests.Response()
+    monkeypatch.setattr(image.licenses.urls.requests, 'get', mock_get)
 
 
 def test_ImageStore_uses_OUTPUT_DIR_variable(
@@ -602,6 +611,7 @@ def default_image_args(
 
 def test_create_tsv_row_non_none_if_req_fields(
         default_image_args,
+        get_good,
         setup_env,
 ):
     image_store = image.ImageStore()
