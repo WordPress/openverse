@@ -2,6 +2,7 @@
   <section class="sidebar_section social-sharing">
     <social-share-buttons
       :shareURL="shareURL"
+      :imageSourceURL="imageSourceURL"
       :imageURL="imageURL"
       :shareText="shareText"
       :image="image">
@@ -23,11 +24,14 @@ export default {
     shareURL: '',
   }),
   computed: {
-    imageURL() {
+    imageSourceURL() {
       return this.image.foreign_landing_url;
     },
+    imageURL() {
+      return this.image.url;
+    },
     shareText() {
-      return encodeURI(`I found an image through CC Search @creativecommons: ${this.imageURL}`);
+      return encodeURI(`I found an image through CC Search @creativecommons: ${this.imageSourceURL}`);
     },
   },
   mounted() {
