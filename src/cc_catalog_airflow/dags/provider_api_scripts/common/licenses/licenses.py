@@ -16,63 +16,48 @@ logger = logging.getLogger(__name__)
 LICENSE_PATH_MAP = constants.LICENSE_PATH_MAP
 
 
+class InvalidLicenseURLException(Exception):
+    pass
+
+
 def get_license_info(
         license_url=None, license_=None, license_version=None
 ):
     """
-    Returns a valid license pair, preferring one derived from license_url.
-
-    If no such pair can be found, returns None, None.
+    Returns a valid license, version, license URL tuple if possible.
+    Prefers returning a tuple derived from an input license URL. If no
+    such pair can be found, returns None, None.
 
     Three optional arguments:
     license_url:      String URL to a CC license page.
     license_:         String representing a CC license.
     license_version:  string URL to a CC license page.  (Will cast floats)
     """
-    valid_url, derived_license, derived_version = _get_license_from_url(
-        license_url
-    )
-    if derived_license and derived_version:
-        # We prefer license and version derived from the license_url, when
-        # possible, since we have more control over the string
-        # (capitalization, etc.)
+    valid_url = _get_valid_cc_license_url(license_url)
+    logger.debug('Valid URL: {valid_url}')
+
+    if valid_url is not None:
+        chosen_license, chosen_version = _derive_license_from_url(valid_url)
         logger.debug(
             'Using derived_license {} and derived_version {}'
-            .format(derived_license, derived_version)
+            .format(chosen_license, chosen_version)
         )
-        final_license, final_version = derived_license, derived_version
     else:
         logger.debug(
-            'Using given license_ {} and license_version {}'
-            .format(license_, license_version)
+            f'Using given license_ {license_}'
+            f' and license_version {license_version}'
         )
-        final_license, final_version = license_, license_version
+        chosen_license, chosen_version = license_, license_version
 
     valid_license, valid_version = _validate_license_pair(
-        final_license, final_version
+        chosen_license, chosen_version
     )
 
     return valid_license, valid_version, valid_url
 
 
-def _get_license_from_url(license_url):
-    validated_license_url = _get_valid_cc_license_url(license_url)
-    if validated_license_url is not None:
-        license_, license_version = _get_license_from_validated_url(
-            validated_license_url
-        )
-    else:
-        logger.debug(f'Could not validate license URL {license_url}')
-        license_, license_version = None, None
-
-    if license_ is None or license_version is None:
-        validated_license_url = None
-
-    return validated_license_url, license_, license_version
-
-
 def _get_valid_cc_license_url(license_url):
-    logger.debug(f'Validating license URL {license_url}')
+    logger.debug(f'Checking license URL {license_url}')
     if type(license_url) != str:
         logger.debug(
             f'License URL is not a string. Type is {type(license_url)}'
@@ -105,7 +90,7 @@ def _get_valid_cc_license_url(license_url):
     return validated_license_url
 
 
-def _get_license_from_validated_url(license_url, path_map=LICENSE_PATH_MAP):
+def _derive_license_from_url(license_url,  path_map=LICENSE_PATH_MAP):
     license_, license_version = None, None
     for valid_path in path_map:
         if valid_path in license_url:
@@ -117,6 +102,14 @@ def _get_license_from_validated_url(license_url, path_map=LICENSE_PATH_MAP):
                 .format(license_, license_version)
             )
             break
+
+    if not (license_ and license_url):
+        # Ending up here indicates either a bug in our CC License URL repairing
+        # and validating logic, or a missing valid license path in path_map.
+        raise InvalidLicenseURLException(
+            f'{license_url} could not be split into a valid license pair.'
+            f'\npath_map: {path_map}'
+        )
 
     return license_, license_version
 
