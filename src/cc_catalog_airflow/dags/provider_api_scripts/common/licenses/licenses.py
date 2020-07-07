@@ -89,7 +89,7 @@ def _get_valid_cc_license_url(license_url):
         )
         return
 
-    rewritten_url = urls.rewrite_url_string(https_url)
+    rewritten_url = urls.rewrite_redirected_url(https_url)
 
     if (
             rewritten_url is not None

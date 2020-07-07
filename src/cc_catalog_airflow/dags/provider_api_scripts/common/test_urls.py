@@ -35,10 +35,10 @@ def get_bad(monkeypatch):
 
 @pytest.fixture
 def mock_rewriter(monkeypatch):
-    def mock_rewrite_url_string(url_string):
+    def mock_rewrite_redirected_url(url_string):
         return url_string
     monkeypatch.setattr(
-        urls, '_rewrite_url_string', mock_rewrite_url_string
+        urls, '_rewrite_redirected_url', mock_rewrite_redirected_url
     )
 
 

@@ -50,7 +50,7 @@ def validate_url_string(url_string):
 
 
 @lru_cache(maxsize=1024)
-def rewrite_url_string(url_string):
+def rewrite_redirected_url(url_string):
     try:
         response = requests.get(url_string)
         rewritten_url = response.url
