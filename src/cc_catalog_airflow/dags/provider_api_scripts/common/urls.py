@@ -18,10 +18,17 @@ LICENSE_PATH_MAP = constants.LICENSE_PATH_MAP
 
 def validate_url_string(url_string):
     """
-    Checks given `url_string` can be parsed into a URL with scheme and
-    domain
+    Determines whether the given `url_string` is a valid URL with an https
+    scheme.
 
-    If not, returns None
+    If not, attempts to mangle the URL scheme into the desired form,
+    falling back to an http scheme in the event TLS is not supported.
+
+    If all attempts to save the input string fail, returns None
+
+    Required Arguments:
+
+    url_string:  URL (string) which will be validated and/or repaired.
     """
     logger.debug(f'Validating_url {url_string}')
     if not type(url_string) == str or not url_string:
@@ -51,6 +58,11 @@ def validate_url_string(url_string):
 
 @lru_cache(maxsize=1024)
 def rewrite_redirected_url(url_string):
+    """
+    Requests the given `url_string`, and rewrites it to the final URL
+    after any redirects.  Caches the result to avoid repetitive network
+    requests.
+    """
     try:
         response = requests.get(url_string)
         rewritten_url = response.url
@@ -62,6 +74,10 @@ def rewrite_redirected_url(url_string):
 
 
 def add_url_scheme(url_string, scheme='http'):
+    """
+    Replaces the scheme of `url_string` with `scheme`,
+    or adds the given `scheme` if necessary.
+    """
     url_no_scheme = (
         url_string
         .strip()
