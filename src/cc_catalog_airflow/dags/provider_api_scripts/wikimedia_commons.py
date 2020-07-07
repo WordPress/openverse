@@ -90,12 +90,14 @@ def main(date):
         logger.info(f'Continue Token: {continue_token}')
         image_pages = _get_image_pages(image_batch)
         if image_pages:
-            total_images = _process_image_pages(image_pages)
+            _process_image_pages(image_pages)
+            total_images = image_store.total_images
         logger.info(f'Total Images so far: {total_images}')
         if not continue_token:
             break
 
-    total_images = image_store.commit()
+    image_store.commit()
+    total_images = image_store.total_images
     logger.info(f'Total images: {total_images}')
     logger.info('Terminated!')
 
@@ -165,8 +167,7 @@ def _get_image_pages(image_batch):
 
 def _process_image_pages(image_pages):
     for i in image_pages.values():
-        total_images = _process_image_data(i)
-    return total_images
+        _process_image_data(i)
 
 
 def _build_query_params(
@@ -232,7 +233,7 @@ def _process_image_data(image_data):
     image_url = image_info.get('url')
     creator, creator_url = _extract_creator_info(image_info)
 
-    return image_store.add_item(
+    image_store.add_item(
         foreign_landing_url=image_info.get('descriptionshorturl'),
         image_url=image_url,
         license_url=_get_license_url(image_info),
