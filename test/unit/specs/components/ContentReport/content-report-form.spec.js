@@ -38,7 +38,7 @@ describe('ContentReportForm', () => {
 
   it('should contain the correct contents', () => {
     const wrapper = render(ContentReportForm, options);
-    expect(wrapper.find('.report-form').element).toBeDefined();
+    expect(wrapper.find('.arrow-popup').element).toBeDefined();
   });
 
   it('should render report sent', () => {
