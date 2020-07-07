@@ -1,5 +1,5 @@
 <template>
-  <div class="photo columns is-desktop is-marginless">
+  <div class="photo columns is-desktop is-marginless padding-bottom-xl">
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
       <a
         class="is-block photo_breadcrumb has-text-left margin-left-normal
