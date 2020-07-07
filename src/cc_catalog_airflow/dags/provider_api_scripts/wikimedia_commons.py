@@ -53,12 +53,13 @@ DEFAULT_QUERY_PARAMS = {
     'gaidir': 'newer',
     'gailimit': LIMIT,
     'prop': 'imageinfo|globalusage',
-    'iiprop': 'url|user|dimensions|extmetadata',
+    'iiprop': 'url|user|dimensions|extmetadata|mediatype',
     'gulimit': LIMIT,
     'gunamespace': 0,
     'format': 'json',
 }
 PAGES_PATH = ['query', 'pages']
+IMAGE_MEDIATYPES = {'BITMAP'}
 
 delayed_requester = requester.DelayedRequester(DELAY)
 image_store = image.ImageStore(provider=PROVIDER)
@@ -230,6 +231,10 @@ def _process_image_data(image_data):
     foreign_id = image_data.get('pageid')
     logger.debug(f'Processing page ID: {foreign_id}')
     image_info = _get_image_info_dict(image_data)
+    valid_mediatype = _check_mediatype(image_info)
+    if not valid_mediatype:
+        return
+
     image_url = image_info.get('url')
     creator, creator_url = _extract_creator_info(image_info)
 
@@ -254,6 +259,19 @@ def _get_image_info_dict(image_data):
     else:
         image_info = {}
     return image_info
+
+
+def _check_mediatype(image_info, image_mediatypes=IMAGE_MEDIATYPES):
+    valid_mediatype = True
+    image_mediatype = image_info.get('mediatype')
+    if image_mediatype not in image_mediatypes:
+        logger.debug(
+            f'Incorrect mediatype: {image_mediatype} not in {image_mediatypes}'
+        )
+        valid_mediatype = False
+    else:
+        valid_mediatype = True
+    return valid_mediatype
 
 
 def _extract_date_info(image_info):
