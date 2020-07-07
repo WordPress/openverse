@@ -8,6 +8,7 @@
                             @onSearchFilterChanged="onSearchFormSubmit"/>
       </div>
       <div class="column search-grid-ctr">
+        <search-type-tabs />
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit"
                           searchBoxPlaceholder="Search this collection" />
       </div>
@@ -22,12 +23,14 @@ import FooterSection from '@/components/FooterSection';
 import HeaderSection from '@/components/HeaderSection';
 import SearchGridForm from '@/components/SearchGridForm';
 import SearchGridFilter from '@/components/Filters/SearchGridFilter';
+import SearchTypeTabs from '@/components/SearchTypeTabs';
 import CollectionBrowseMixin from '@/pages/mixins/CollectionBrowseMixin';
 
 const CollectionBrowsePage = {
   components: {
     HeaderSection,
     SearchGridForm,
+    SearchTypeTabs,
     FooterSection,
     SearchGridFilter,
   },

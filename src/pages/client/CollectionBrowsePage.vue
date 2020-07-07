@@ -10,6 +10,7 @@
       <div class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit"
                           searchBoxPlaceholder="Search this collection" />
+        <search-type-tabs />
         <search-grid v-if="query.provider"
                      :query="query"
                      :searchTerm="providerName"
@@ -26,6 +27,7 @@ import HeaderSection from '@/components/HeaderSection';
 import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
 import SearchGridFilter from '@/components/Filters/SearchGridFilter';
+import SearchTypeTabs from '@/components/SearchTypeTabs';
 import CollectionBrowseMixin from '@/pages/mixins/CollectionBrowseMixin';
 
 const CollectionBrowsePage = {
@@ -34,6 +36,7 @@ const CollectionBrowsePage = {
     SearchGridForm,
     SearchGridFilter,
     SearchGrid,
+    SearchTypeTabs,
     FooterSection,
   },
   mixins: [CollectionBrowseMixin],
