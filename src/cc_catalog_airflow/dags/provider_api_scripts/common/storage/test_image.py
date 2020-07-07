@@ -31,7 +31,9 @@ def mock_rewriter(monkeypatch):
     def mock_rewrite_redirected_url(url_string):
         return url_string
     monkeypatch.setattr(
-        image.licenses.urls, 'rewrite_redirected_url', mock_rewrite_redirected_url
+        image.licenses.urls,
+        'rewrite_redirected_url',
+        mock_rewrite_redirected_url,
     )
 
 
