@@ -1,60 +1,64 @@
 <template>
   <div class="hero">
-    <h2 class="has-text-centered">Search for content to reuse</h2>
-    <form class="hero_search-form margin-top-bigger"
-          role="search"
-          method="get"
-          action="/search"
-          v-on:submit.prevent="onSubmit">
-      <div class="is-hidden-touch centered-search-box">
-        <div class="field has-addons">
-          <div class="control">
-            <input required="required"
-                class="hero_search-input input is-large"
-                type="search"
-                name="q"
-                placeholder="I would like to see..."
-                autocapitalize="none"
-                id="searchTerm"
-                v-model.lazy="form.searchTerm" />
-          </div>
-          <div class="control">
-            <button class="button is-primary big" title="Search">Search</button>
-          </div>
-        </div>
-      </div>
-      <div class="is-hidden-desktop centered-search-box">
-        <div class="field has-addons">
-          <div class="control mobile-input">
-            <input required="required"
-                class="input"
-                type="search"
-                name="q"
-                placeholder="I would like to see..."
-                autocapitalize="none"
-                id="searchTerm"
-                v-model.lazy="form.searchTerm" />
-          </div>
-          <div class="control">
-            <button class="button is-primary small" title="Search">Search</button>
+    <div class="hero-center">
+      <h2 class="has-text-centered">Search for content to reuse</h2>
+      <form class="hero_search-form margin-top-bigger"
+            role="search"
+            method="get"
+            action="/search"
+            v-on:submit.prevent="onSubmit">
+        <div class="is-hidden-touch centered-search-box">
+          <div class="field has-addons">
+            <div class="control">
+              <input required="required"
+                  class="hero_search-input input is-large"
+                  type="search"
+                  name="q"
+                  placeholder="I would like to see..."
+                  autocapitalize="none"
+                  id="searchTerm"
+                  v-model.lazy="form.searchTerm" />
+            </div>
+            <div class="control">
+              <button class="button is-primary big" title="Search">Search</button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="caption has-text-centered margin-top-big">
-        <p>
-          All our content is under Creative Commons licenses.
-          <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">Learn more</a>
-          about CC licenses.
-        </p>
-      </div>
-      <home-license-filter />
-    </form>
+        <div class="is-hidden-desktop centered-search-box">
+          <div class="field has-addons">
+            <div class="control mobile-input">
+              <input required="required"
+                  class="input"
+                  type="search"
+                  name="q"
+                  placeholder="I would like to see..."
+                  autocapitalize="none"
+                  id="searchTerm"
+                  v-model.lazy="form.searchTerm" />
+            </div>
+            <div class="control">
+              <button class="button is-primary small" title="Search">Search</button>
+            </div>
+          </div>
+        </div>
+        <div class="caption has-text-centered margin-top-big">
+          <p>
+            All our content is under Creative Commons licenses.
+            <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">Learn more</a>
+            about CC licenses.
+          </p>
+        </div>
+        <home-license-filter />
+      </form>
+    </div>
+
     <div class="help-links">
       <span class="margin-right-bigger">
         Go to the
         <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
       </span>
     </div>
+
     <img
       class="logo-cloud"
       src="../assets/logo-cloud.png" alt="Logos from sources of Creative Commons licensed images">
@@ -87,6 +91,8 @@ export default {
 @import "node_modules/bulma/sass/utilities/derived-variables";
 @import "node_modules/bulma/sass/utilities/mixins";
 
+$hero-height: 80vh;
+
 .hero {
   background: #fff;
   position: relative;
@@ -96,6 +102,7 @@ export default {
   justify-content: center;
   flex-direction: column;
   min-height: 300px;
+  height: $hero-height;
 
   .hero_search-form {
     position: relative;
@@ -117,7 +124,12 @@ export default {
   }
 }
 
+.hero-center {
+  margin-top: auto;
+}
+
 .help-links {
+  z-index: 1;
   position: absolute;
   bottom: 1rem;
   left: 1rem;
@@ -129,7 +141,8 @@ export default {
 }
 
 .logo-cloud {
-  margin-top: 2rem;
+  z-index: 0;
+  margin-top: auto;
   width: 100%;
   padding-left: 1rem;
   height: 120px;
