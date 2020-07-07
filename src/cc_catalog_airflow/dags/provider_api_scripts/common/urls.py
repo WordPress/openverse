@@ -27,7 +27,7 @@ def validate_url_string(url_string):
     if not type(url_string) == str or not url_string:
         return
     else:
-        upgraded_url = add_best_scheme(url_string)
+        upgraded_url = _add_best_scheme(url_string)
 
     parse_result = urlparse(upgraded_url)
     tld = tldextract.extract(upgraded_url)
@@ -47,19 +47,6 @@ def validate_url_string(url_string):
             ' Returning None'
         )
         return None
-
-
-def add_best_scheme(url_string):
-    domain_key = tldextract.extract(url_string).fqdn
-    if not domain_key:
-        domain_key = tldextract.extract(url_string).ipv4
-
-    if _test_domain_for_tls_support(domain_key):
-        upgraded_url = add_url_scheme(url_string, scheme='https')
-    else:
-        upgraded_url = add_url_scheme(url_string, scheme='http')
-
-    return upgraded_url
 
 
 @lru_cache(maxsize=1024)
@@ -83,6 +70,19 @@ def add_url_scheme(url_string, scheme='http'):
         .strip('/')
     )
     return f'{scheme}://{url_no_scheme}'
+
+
+def _add_best_scheme(url_string):
+    domain_key = tldextract.extract(url_string).fqdn
+    if not domain_key:
+        domain_key = tldextract.extract(url_string).ipv4
+
+    if _test_domain_for_tls_support(domain_key):
+        upgraded_url = add_url_scheme(url_string, scheme='https')
+    else:
+        upgraded_url = add_url_scheme(url_string, scheme='http')
+
+    return upgraded_url
 
 
 @lru_cache(maxsize=1024)
