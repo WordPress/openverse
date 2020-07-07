@@ -20,6 +20,12 @@ RESOURCES = os.path.join(
 )
 
 
+def _get_resource_json(json_name):
+    with open(os.path.join(RESOURCES, json_name)) as f:
+        resource_json = json.load(f)
+    return resource_json
+
+
 def test_get_hash_prefixes_with_len_one():
     expect_prefix_list = [
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
@@ -1017,3 +1023,33 @@ def test_process_image_list(input_media, expect_calls):
             license_url='https://license.url'
         )
     assert expect_calls == mock_add_item.mock_calls
+
+
+def test_process_image_data_with_sub_provider():
+    response = _get_resource_json('sub_provider_example.json')
+    with patch.object(
+            si.image_store,
+            'add_item',
+            return_value=100
+    ) as mock_add_item:
+        total_images = si._process_response_json(response)
+
+    expect_meta_data = {
+        'unit_code': 'SIA',
+        'data_source': 'Smithsonian Institution Archives'
+    }
+
+    mock_add_item.assert_called_once_with(
+        foreign_landing_url=None,
+        image_url='https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358',
+        thumbnail_url='https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358&max=150',
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/',
+        foreign_identifier='SIA-SIA2010-2358',
+        creator='Gruber, Martin A',
+        title='Views of the National Zoological Park in Washington, DC, showing Elephant',
+        meta_data=expect_meta_data,
+        raw_tags=[
+            '1920s', '1910s', 'Archival materials', 'Photographs', 'Animals'],
+        source='smithsonian_institution_archives'
+    )
+    assert total_images == 100
