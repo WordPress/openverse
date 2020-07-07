@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import AboutPage from '@/pages/AboutPage';
 import HomePage from '@/pages/HomePage';
 import BrowsePage from '@/pages/server/BrowsePage';
-import PhotoDetailPage from '@/pages/server/PhotoDetailPage';
+import PhotoDetailPage from '@/pages/PhotoDetailPage';
 import FeedbackPage from '@/pages/FeedbackPage';
 import CollectionsPage from '@/pages/CollectionsPage';
 import CollectionBrowsePage from '@/pages/server/CollectionBrowsePage';
