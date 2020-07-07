@@ -520,7 +520,7 @@ def update_smithsonian_sub_providers(
     """
     select_query = dedent(
         f'''
-        SELECT foreign_id,
+        SELECT {col.FOREIGN_ID},
         {col.META_DATA} ->> 'unit_code' AS unit_code
         FROM {image_table}
         WHERE
