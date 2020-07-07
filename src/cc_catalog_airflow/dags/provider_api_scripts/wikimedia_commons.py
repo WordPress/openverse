@@ -22,11 +22,6 @@ import lxml.html as html
 import common.requester as requester
 import common.storage.image as image
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
-)
-
 logger = logging.getLogger(__name__)
 
 LIMIT = 500
@@ -360,6 +355,10 @@ def _cleanse_url(url_string):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
+        level=logging.INFO
+    )
     parser = argparse.ArgumentParser(
         description='Wikimedia Commons API Job',
         add_help=True,
