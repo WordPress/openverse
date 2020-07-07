@@ -140,7 +140,8 @@ def _get_media_info(media_data):
     for media in media_data:
         media_type = media.get("type")
         if media_type == "image":
-            image_url, image_id, height, width = _get_image_data(
+            image_id = media.get("id")
+            image_url, height, width = _get_image_data(
                 media
             )
             license_url = _get_license_url(
@@ -167,33 +168,24 @@ def _get_media_info(media_data):
 
 
 def _get_image_data(media):
-    image_url, image_id = None, None
+    image_url = None
     height, width = None, None
     if "large" in media.keys():
         image_url = media.get("large").get("uri")
-        image_id = _get_image_id(image_url)
         height = media.get("large").get("height")
         width = media.get("large").get("width")
 
     elif "medium" in media.keys():
         image_url = media.get("medium").get("uri")
-        image_id = _get_image_id(image_url)
         height = media.get("medium").get("height")
         width = media.get("medium").get("width")
 
     elif "small" in media.keys():
         image_url = media.get("small").get("uri")
-        image_id = _get_image_id(image_url)
         height = media.get("small").get("height")
         width = media.get("small").get("width")
 
-    return image_url, image_id, height, width
-
-
-def _get_image_id(image_url):
-    path = urlparse(image_url).path.split("/")[-1]
-    image_id = path.split("-")[0]
-    return image_id
+    return image_url, height, width
 
 
 def _get_license_url(media):

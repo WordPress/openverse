@@ -135,13 +135,12 @@ def test_get_media_info_failure():
 def test_get_image_data_large():
     image_data = _get_resource_json("large_image_data.json")
 
-    actual_image_url, actual_image_id,\
-        actual_height, actual_width = mv._get_image_data(
+    actual_image_url, actual_height,\
+        actual_width = mv._get_image_data(
             image_data
         )
 
     assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg"
-    assert actual_image_id == "329745"
     assert actual_height == 2581
     assert actual_width == 2785
 
@@ -149,13 +148,12 @@ def test_get_image_data_large():
 def test_get_image_data_medium():
     image_data = _get_resource_json("medium_image_data.json")
 
-    actual_image_url, actual_image_id,\
-        actual_height, actual_width = mv._get_image_data(
+    actual_image_url, actual_height,\
+        actual_width = mv._get_image_data(
             image_data
         )
 
     assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-medium.jpg"
-    assert actual_image_id == "329745"
     assert actual_height == 1390
     assert actual_width == 1500
 
@@ -163,13 +161,12 @@ def test_get_image_data_medium():
 def test_get_image_data_small():
     image_data = _get_resource_json("small_image_data.json")
 
-    actual_image_url, actual_image_id,\
-        actual_height, actual_width = mv._get_image_data(
+    actual_image_url, actual_height,\
+        actual_width = mv._get_image_data(
             image_data
         )
 
     assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg"
-    assert actual_image_id == "329745"
     assert actual_height == 500
     assert actual_width == 540
 
@@ -177,23 +174,14 @@ def test_get_image_data_small():
 def test_get_image_data_none():
     image_data = {}
 
-    actual_image_url, actual_image_id,\
-        actual_height, actual_width = mv._get_image_data(
+    actual_image_url, actual_height, \
+        actual_width = mv._get_image_data(
             image_data
         )
 
     assert actual_image_url is None
-    assert actual_image_id is None
     assert actual_height is None
     assert actual_width is None
-
-
-def test_get_image_id():
-    image_url = "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg"
-    actual_image_id = mv._get_image_id(image_url)
-    expected_image_id = "329745"
-
-    assert actual_image_id == expected_image_id
 
 
 def test_get_license_url():
