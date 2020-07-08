@@ -10,9 +10,7 @@ from elasticsearch_dsl.response import Response, Hit
 from elasticsearch_dsl.query import Query
 from cccatalog import settings
 from django.core.cache import cache
-from django.urls import reverse
 from rest_framework import serializers
-from cccatalog.settings import PROXY_THUMBS
 from cccatalog.api.utils.validate_images import validate_images
 from cccatalog.api.utils.dead_link_mask import get_query_mask, get_query_hash
 from itertools import accumulate
@@ -119,13 +117,6 @@ def _post_process_results(s, start, end, page_size, search_results,
         if hasattr(res.meta, 'highlight'):
             res.fields_matched = dir(res.meta.highlight)
         to_validate.append(res.url)
-        if PROXY_THUMBS:
-            # Route all images through a dynamically resizing caching proxy.
-            proxied = "https://{}{}".format(
-                request.get_host(),
-                reverse('thumbs', kwargs={'identifier': res["identifier"]})
-            )
-            res[THUMBNAIL] = proxied
         results.append(res)
 
     if filter_dead:
