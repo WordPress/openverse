@@ -35,6 +35,7 @@ export default {
   props: {
     shareURL: { default: '' },
     shareText: { default: '' },
+    imageSourceURL: { default: '' },
     imageURL: { default: '' },
     image: {},
   },

@@ -33,8 +33,10 @@ describe('ImageSocialShare', () => {
 
   it('should invoke social share buttons with the right props', () => {
     const wrapper = render(ImageSocialShare, options);
-    const url = options.propsData.image.foreign_landing_url;
+    const sourceURL = options.propsData.image.foreign_landing_url;
+    const url = options.propsData.image.url;
     expect(wrapper.vm.imageURL).toBe(url);
-    expect(wrapper.vm.shareText).toBe(encodeURI(`I found an image through CC Search @creativecommons: ${url}`));
+    expect(wrapper.vm.imageSourceURL).toBe(sourceURL);
+    expect(wrapper.vm.shareText).toBe(encodeURI(`I found an image through CC Search @creativecommons: ${sourceURL}`));
   });
 });
