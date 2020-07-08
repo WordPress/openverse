@@ -1,6 +1,7 @@
 import cccatalog.api.licenses as license_helpers
 from rest_framework import serializers
 from cccatalog.api.licenses import LICENSE_GROUPS, get_license_url
+from django.urls import reverse
 from urllib.parse import urlparse
 from collections import namedtuple
 from cccatalog.api.controllers.search_controller import get_sources
@@ -273,6 +274,7 @@ def _add_protocol(url: str):
 
 class ImageSerializer(serializers.Serializer):
     """ A single image. Used in search results."""
+    requires_context = True
     title = serializers.CharField(required=False)
     id = serializers.CharField(
         required=True,
@@ -287,7 +289,7 @@ class ImageSerializer(serializers.Serializer):
         help_text="Tags with detailed metadata, such as accuracy."
     )
     url = serializers.URLField()
-    thumbnail = serializers.URLField(required=False, allow_blank=True)
+    thumbnail = serializers.SerializerMethodField()
     source = serializers.CharField(required=False, source='provider')
     license = serializers.SerializerMethodField()
     license_version = serializers.CharField(required=False)
@@ -338,6 +340,12 @@ class ImageSerializer(serializers.Serializer):
             return license_helpers.get_license_url(
                 obj.license, obj.license_version, None
             )
+
+    def get_thumbnail(self, obj):
+        request = self.context['request']
+        host = request.get_host()
+        path = reverse('thumbs', kwargs={'identifier': obj.identifier})
+        return f'https://{host}{path}'
 
     def validate_url(self, value):
         return _add_protocol(value)
