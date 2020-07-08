@@ -37,5 +37,11 @@ python-xmp-toolkit = "*"
 deepdiff = "*"
 djangorestframework-xml = "*"
 gevent = "*"
-future = {version = "*",python_version = "<=2.7"}
-ipaddress = {version = "*",python_version = "<=2.7"}
+django-storages = "*"
+boto3 = "*"
+
+[packages.future]
+version = "*"
+
+[packages.ipaddress]
+version = "*"
