@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Where to collect static files in production/development deployments
 STATIC_ROOT = "/var/api_static_content/static"
 
-# Uploads
+# Logo uploads
 MEDIA_ROOT = '/var/api_media/'
 MEDIA_URL = '/media/'
 
@@ -47,6 +47,7 @@ SHORT_URL_WHITELIST = {
 }
 SHORT_URL_PATH_WHITELIST = ['/v1/list', '/v1/images/']
 
+USE_S3 = os.getenv('USE_S3', False)
 
 # Intermittently run tasks
 CRON_CLASSES = [
@@ -71,6 +72,14 @@ INSTALLED_APPS = [
     'corsheaders',
     'sslserver',
 ]
+
+if USE_S3:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    AWS_STORAGE_BUCKET_NAME = os.getenv(
+        'LOGOS_BUCKET', 'cccatalog-api-logos-prod'
+    )
+    AWS_S3_SIGNATURE_VERSION = 's3v4'
+    INSTALLED_APPS.append('storages')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
