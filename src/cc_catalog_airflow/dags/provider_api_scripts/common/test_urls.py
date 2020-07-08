@@ -20,6 +20,11 @@ def clear_tls_cache():
 
 
 @pytest.fixture
+def clear_rewriter_cache():
+    urls.rewrite_redirected_url.cache_clear()
+
+
+@pytest.fixture
 def get_good(monkeypatch):
     def mock_get(url, timeout=60):
         return requests.Response()
@@ -31,15 +36,6 @@ def get_bad(monkeypatch):
     def mock_get(url, timeout=60):
         raise Exception
     monkeypatch.setattr(urls.requests, 'get', mock_get)
-
-
-@pytest.fixture
-def mock_rewriter(monkeypatch):
-    def mock_rewrite_redirected_url(url_string):
-        return url_string
-    monkeypatch.setattr(
-        urls, '_rewrite_redirected_url', mock_rewrite_redirected_url
-    )
 
 
 def test_validate_url_string_adds_http_without_scheme(
@@ -86,4 +82,53 @@ def test_validate_url_string_caches_tls_support(clear_tls_cache, monkeypatch):
     expect_validated_url = 'https://commons.wikimedia.org/wiki/User:potato'
     assert actual_validated_url_1 == expect_validated_url
     assert actual_validated_url_2 == expect_validated_url
+    mock_get.assert_called_once()
+
+
+def test_rewrite_redirected_url_returns_when_ok(
+        clear_rewriter_cache, monkeypatch
+):
+    expect_url = 'https://rewritten.url'
+    r = requests.Response()
+    r.status_code = 200
+    r.url = expect_url
+    monkeypatch.setattr(urls.requests, 'get', lambda *args: r)
+    actual_url = urls.rewrite_redirected_url('https://input.url')
+    assert actual_url == expect_url
+
+
+def test_rewrite_redirected_url_nones_when_not_ok(
+        clear_rewriter_cache, monkeypatch
+):
+    r = requests.Response()
+    r.status_code = 404
+    r.url = 'https://rewritten.url'
+    monkeypatch.setattr(urls.requests, 'get', lambda *args: r)
+    actual_url = urls.rewrite_redirected_url('https://input.url')
+    assert actual_url is None
+
+
+def test_rewrite_redirected_url_nones_when_error_occurs(
+        clear_rewriter_cache, monkeypatch
+):
+    def mock_get(*args):
+        raise Exception
+    monkeypatch.setattr(urls.requests, 'get', mock_get)
+    actual_url = urls.rewrite_redirected_url('https://input.url')
+    assert actual_url is None
+
+
+def test_rewrite_redirected_url_caches_results(
+        clear_rewriter_cache, monkeypatch
+):
+    expect_url = 'https://rewritten.url'
+    r = requests.Response()
+    r.status_code = 200
+    r.url = expect_url
+    input_url = 'https://rewritten.url'
+    with patch.object(urls.requests, 'get', return_value=r) as mock_get:
+        actual_rewritten_url_1 = urls.rewrite_redirected_url(input_url)
+        actual_rewritten_url_2 = urls.rewrite_redirected_url(input_url)
+    assert actual_rewritten_url_1 == expect_url
+    assert actual_rewritten_url_2 == expect_url
     mock_get.assert_called_once()

@@ -65,8 +65,15 @@ def rewrite_redirected_url(url_string):
     """
     try:
         response = requests.get(url_string)
-        rewritten_url = response.url
-        logger.info(f'{url_string} was rewritten to {rewritten_url}')
+        if response.ok:
+            rewritten_url = response.url
+            logger.info(f'{url_string} was rewritten to {rewritten_url}')
+        else:
+            logger.warning(
+                f'URL {url_string} could not be rewritten.'
+                f' Response Code: {response.status_code}'
+            )
+            rewritten_url = None
     except Exception as e:
         logger.warning(f'URL {url_string} could not be rewritten. Error: {e}')
         rewritten_url = None
