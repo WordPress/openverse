@@ -1,5 +1,4 @@
 import logging
-import requests
 
 import pytest
 import tldextract
@@ -13,20 +12,6 @@ logging.basicConfig(
 licenses.urls.tldextract.extract = tldextract.TLDExtract(
     suffix_list_urls=None
 )
-
-
-@pytest.fixture
-def get_good(monkeypatch):
-    def mock_get(url, timeout=60):
-        return requests.Response()
-    monkeypatch.setattr(licenses.requests, 'get', mock_get)
-
-
-@pytest.fixture
-def get_bad(monkeypatch):
-    def mock_get(url, timeout=60):
-        raise Exception
-    monkeypatch.setattr(licenses.requests, 'get', mock_get)
 
 
 @pytest.fixture
@@ -52,7 +37,7 @@ def test_get_license_info_prefers_derived_values(monkeypatch):
         return license_, license_version
 
     monkeypatch.setattr(
-        licenses, '_get_valid_cc_license_url', mock_cc_license_validator
+        licenses, '_get_valid_cc_url', mock_cc_license_validator
     )
 
     monkeypatch.setattr(
@@ -71,6 +56,87 @@ def test_get_license_info_prefers_derived_values(monkeypatch):
     assert actual_license == expected_license
     assert actual_version == expected_version
     assert actual_url == expected_url
+
+
+def test_get_license_info_falls_back_with_invalid_license_url(monkeypatch):
+    expect_license = 'cc0'
+    expect_version = '1.0'
+
+    def mock_cc_license_validator(url_string):
+        return None
+    monkeypatch.setattr(
+        licenses, '_get_valid_cc_url', mock_cc_license_validator
+    )
+
+    actual_license, actual_version, actual_url = licenses.get_license_info(
+        license_url='https://licenses.com/my/license',
+        license_='cc0',
+        license_version='1.0'
+    )
+    assert actual_license == expect_license
+    assert actual_version == expect_version
+    assert actual_url is None
+
+
+def test_get_valid_cc_url_makes_url_lowercase(mock_rewriter):
+    actual_url = licenses._get_valid_cc_url(
+        'http://creativecommons.org/licenses/CC0/1.0/legalcode',
+    )
+    expect_url = actual_url.lower()
+    assert actual_url == expect_url
+
+
+def test_get_valid_cc_url_nones_wrong_domain(mock_rewriter):
+    actual_url = licenses._get_valid_cc_url(
+        'http://notcreativecommons.org/licenses/by/1.0/',
+    )
+    assert actual_url is None
+
+
+def test_get_valid_cc_url_nones_missing_url(mock_rewriter):
+    actual_url = licenses._get_valid_cc_url(None)
+    assert actual_url is None
+
+
+def test_get_valid_cc_url_uses_rewritten_url(monkeypatch):
+    expect_url = 'https://creativecommons.org/licenses/by/1.0/'
+
+    def mock_rewrite_redirected_url(url_string):
+        return expect_url
+
+    monkeypatch.setattr(
+        licenses.urls, 'rewrite_redirected_url', mock_rewrite_redirected_url
+    )
+    actual_url = licenses._get_valid_cc_url(
+        'http://creativecommons.org/a/b/c/d/'
+    )
+    assert actual_url == expect_url
+
+
+def test_get_valid_cc_url_handles_none_rewritten_url(monkeypatch):
+    def mock_rewrite_redirected_url(url_string):
+        return None
+
+    monkeypatch.setattr(
+        licenses.urls, 'rewrite_redirected_url', mock_rewrite_redirected_url
+    )
+    actual_url = licenses._get_valid_cc_url(
+        'http://creativecommons.org/a/b/c/d/'
+    )
+    assert actual_url is None
+
+
+def test_get_valid_cc_url_nones_invalid_rewritten_url(monkeypatch):
+    def mock_rewrite_redirected_url(url_string):
+        return 'https://creativecommons.org/abcljasdf'
+
+    monkeypatch.setattr(
+        licenses.urls, 'rewrite_redirected_url', mock_rewrite_redirected_url
+    )
+    actual_url = licenses._get_valid_cc_url(
+        'http://creativecommons.org/a/b/c/d/'
+    )
+    assert actual_url is None
 
 
 def test_derive_license_from_url_with_license_url_path_mismatch(monkeypatch):
@@ -98,26 +164,6 @@ def test_derive_license_from_url_finds_correct_nonstandard_info(mock_rewriter):
     expect_license, expect_version = 'cc0', '1.0'
     assert actual_license == expect_license
     assert actual_version == expect_version
-
-
-def test_get_valid_cc_url_makes_url_lowercase(mock_rewriter):
-    actual_url = licenses._get_valid_cc_license_url(
-        'http://creativecommons.org/licenses/CC0/1.0/legalcode',
-    )
-    expect_url = actual_url.lower()
-    assert actual_url == expect_url
-
-
-def test_get_valid_cc_license_url_nones_wrong_domain(mock_rewriter):
-    actual_url = licenses._get_valid_cc_license_url(
-        'http://notcreativecommons.org/licenses/by/1.0/',
-    )
-    assert actual_url is None
-
-
-def test_get_valid_cc_license_url_nones_missing_url(mock_rewriter):
-    actual_url = licenses._get_valid_cc_license_url(None)
-    assert actual_url is None
 
 
 def test_validate_license_pair_nones_missing_license():

@@ -78,6 +78,7 @@ def add_url_scheme(url_string, scheme='http'):
     Replaces the scheme of `url_string` with `scheme`,
     or adds the given `scheme` if necessary.
     """
+    logger.debug(f'Adding or changing scheme of {url_string} to {scheme}')
     url_no_scheme = (
         url_string
         .strip()
@@ -85,7 +86,9 @@ def add_url_scheme(url_string, scheme='http'):
         .strip('https://')
         .strip('/')
     )
-    return f'{scheme}://{url_no_scheme}'
+    url_with_scheme = f'{scheme}://{url_no_scheme}'
+    logger.debug(f'URL with scheme: {url_with_scheme}')
+    return url_with_scheme
 
 
 def _add_best_scheme(url_string):
