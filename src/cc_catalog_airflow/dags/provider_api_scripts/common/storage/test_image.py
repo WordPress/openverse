@@ -73,7 +73,7 @@ def test_ImageStore_includes_provider_in_output_file_string(
 def test_ImageStore_add_item_adds_realistic_image_to_buffer(
         setup_env, mock_rewriter
 ):
-    license_url = 'https://creativecommons.org/licenses/cc0/1.0/'
+    license_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
     image_store = image.ImageStore(provider='testing_provider')
     image_store.add_item(
         foreign_landing_url='https://images.org/image01',
@@ -90,22 +90,22 @@ def test_ImageStore_add_item_adds_multiple_images_to_buffer(
     image_store.add_item(
         foreign_landing_url='https://images.org/image01',
         image_url='https://images.org/image01.jpg',
-        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/'
     )
     image_store.add_item(
         foreign_landing_url='https://images.org/image02',
         image_url='https://images.org/image02.jpg',
-        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/'
     )
     image_store.add_item(
         foreign_landing_url='https://images.org/image03',
         image_url='https://images.org/image03.jpg',
-        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/'
     )
     image_store.add_item(
         foreign_landing_url='https://images.org/image04',
         image_url='https://images.org/image04.jpg',
-        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/'
     )
     assert len(image_store._image_buffer) == 4
 
@@ -128,22 +128,22 @@ def test_ImageStore_add_item_flushes_buffer(
     image_store.add_item(
         foreign_landing_url='https://images.org/image01',
         image_url='https://images.org/image01.jpg',
-        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/'
     )
     image_store.add_item(
         foreign_landing_url='https://images.org/image02',
         image_url='https://images.org/image02.jpg',
-        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/'
     )
     image_store.add_item(
         foreign_landing_url='https://images.org/image03',
         image_url='https://images.org/image03.jpg',
-        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/'
     )
     image_store.add_item(
         foreign_landing_url='https://images.org/image04',
         image_url='https://images.org/image04.jpg',
-        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/'
     )
     assert len(image_store._image_buffer) == 1
     with open(tmp_path_full) as f:
@@ -161,17 +161,17 @@ def test_ImageStore_produces_correct_total_images(mock_rewriter, setup_env):
     image_store.add_item(
         foreign_landing_url='https://images.org/image01',
         image_url='https://images.org/image01.jpg',
-        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/'
     )
     image_store.add_item(
         foreign_landing_url='https://images.org/image02',
         image_url='https://images.org/image02.jpg',
-        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/'
     )
     image_store.add_item(
         foreign_landing_url='https://images.org/image03',
         image_url='https://images.org/image03.jpg',
-        license_url='https://creativecommons.org/licenses/cc0/1.0/'
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/'
     )
     assert image_store.total_images == 3
 
