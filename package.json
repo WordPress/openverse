@@ -33,6 +33,7 @@
     "lodash.findindex": "^4.6.0",
     "lodash.isempty": "^4.4.0",
     "masonry-layout": "^4.2.2",
+    "query-string": "^6.13.1",
     "route-cache": "^0.4.4",
     "sixpack-client": "^2.1.0",
     "smoothscroll-polyfill": "^0.4.4",
