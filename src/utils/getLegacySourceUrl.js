@@ -8,6 +8,7 @@ const q = (url, queryObject) => stringifyUrl({ url, query: queryObject }, { skip
 
 /**
  * A mapping of each legacy source with its url builder functions for each content type.
+ * Urls were based off of deta found here: https://github.com/creativecommons/cccatalog-frontend/issues/315
  */
 const legacySourceMap = {
   Europeana: {
