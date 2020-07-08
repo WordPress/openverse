@@ -343,10 +343,9 @@ class ImageSerializer(serializers.Serializer):
 
     def get_thumbnail(self, obj):
         request = self.context['request']
-        proxied = "https://{}{}".format(
-            request.get_host(),
-            reverse('thumbs', kwargs={'identifier': obj.identifier})
-        )
+        host = request.get_host()
+        path = reverse('thumbs', kwargs={'identifier': obj.identifier})
+        proxied = f'https://{host}{path}'
         return proxied
 
 
