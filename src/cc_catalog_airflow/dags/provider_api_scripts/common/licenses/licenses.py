@@ -34,24 +34,23 @@ def get_license_info(
 
     The license URL, if given, will be validated. This function will
     attempt to repair malformed or incorrect license URLs when enough
-    information is available. The CC License URL validation subroutine
-    follows these steps:
+    information is available. The CC URL validation subroutine follows
+    these steps:
 
       0. Ensure the given URL is a string type
       1. Modify the scheme of the URL to https
       2. Ensure the domain of the URL is creativecommons.org
       3. Make a request using the URL, replacing the given URL with the
          resulting URL after redirects (exit if the request fails)
-      4. Ensure 'licenses' or 'publicdomain' is in the URL path
 
-    If the CC License URL validation subroutine succeeds, we try to
-    split the resulting URL appropriately to find a license, version
-    pair and if successful discard the license_, license_version pair
-    given as arguments, since it's likely that the pair derived from the
-    URL is more predictable and likely to be correct than the pair given
-    as arguments.
+    If the CC URL validation subroutine succeeds, we try to split the
+    resulting URL appropriately to find a license, version pair and if
+    successful discard the license_, license_version pair given as
+    arguments, since it's likely that the pair derived from the URL is
+    more predictable and likely to be correct than the pair given as
+    arguments.
 
-    If the CC License URL validation subroutine fails, we validate the
+    If the CC URL validation subroutine fails, we validate the given
     license_, license_version pair against a list of known good pairs.
 
     If we're able to come up with a good license, version pair, we
