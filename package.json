@@ -2,6 +2,13 @@
   "name": "cccatalog-frontend",
   "version": "4.3.2",
   "description": "Common Creative search",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creativecommons/cccatalog-frontend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/creativecommons/cccatalog-frontend/issues"
+  },
   "author": "sebworks",
   "private": true,
   "scripts": {
