@@ -55,7 +55,7 @@
         </div>
         <div :class="tabClass(1, 'tabs-panel')">
           <textarea id="attribution-html"
-                    class="textarea is-family-monospace is-paddingless"
+                    class="textarea monospace is-paddingless"
                     :value="attributionHtml"
                     cols="30" rows="4"
                     readonly="readonly">
@@ -141,10 +141,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "bulma/sass/utilities/_all.sass";
+
 $width: 35rem;
 
 .copy-license {
   width: $width;
+
+  @include mobile{
+    width: auto;
+  }
 }
 
 textarea {

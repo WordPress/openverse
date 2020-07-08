@@ -1,5 +1,8 @@
 import PhotoDetails from '@/components/ImageDetails/PhotoDetails';
-import { DETAIL_PAGE_EVENTS, SEND_DETAIL_PAGE_EVENT } from '@/store/usage-data-analytics-types';
+import {
+  DETAIL_PAGE_EVENTS,
+  SEND_DETAIL_PAGE_EVENT,
+} from '@/store/usage-data-analytics-types';
 import render from '../../../test-utils/render';
 
 describe('PhotoDetails', () => {
@@ -131,7 +134,11 @@ describe('PhotoDetails', () => {
     const wrapper = render(PhotoDetails, opts);
     const link = wrapper.find('.photo_breadcrumb');
     link.trigger('click');
-    expect(routerMock.push).toHaveBeenCalledWith({ name: 'browse-page', query: opts.propsData.query, params: { location: routeMock.params.location } });
+    expect(routerMock.push).toHaveBeenCalledWith({
+      name: 'browse-page',
+      query: opts.propsData.query,
+      params: { location: routeMock.params.location },
+    });
   });
 
   it('should toggle visibility of report form on report button click', () => {

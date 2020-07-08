@@ -25,19 +25,20 @@ export default {
 .license-explanation-tooltip {
   position: absolute;
   background: #ffffff;
-  border: 2px solid #D8D8D8;
+  border: 2px solid #d8d8d8;
   z-index: 10;
   width: 20rem;
-  box-shadow: 10px 10px 10px -10px rgba(0,0,0,0.25);
+  box-shadow: 10px 10px 10px -10px rgba(0, 0, 0, 0.25);
   @include desktop {
     margin-left: 20.5rem;
     margin-top: -2.6rem;
   }
   @include touch {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
   }
 }
-.license-explanation-tooltip:after, .license-explanation-tooltip:before {
+.license-explanation-tooltip:after,
+.license-explanation-tooltip:before {
   @include desktop {
     right: 100%;
     top: 7%;
@@ -72,11 +73,11 @@ export default {
   border-width: 13px;
 
   @include desktop {
-    border-right-color: #D8D8D8;
+    border-right-color: #d8d8d8;
     margin-top: 0px;
   }
   @include touch {
-    border-bottom-color: #D8D8D8;
+    border-bottom-color: #d8d8d8;
     margin-left: 255px;
   }
 }
