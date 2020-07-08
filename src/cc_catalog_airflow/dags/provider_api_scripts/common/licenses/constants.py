@@ -54,7 +54,7 @@ _SPECIAL_CASE_LICENSE_PATHS = {
 
 def _get_license_path_map():
     license_path_map = {
-        path: {'license': path.split('/')[0], 'version': path.split('/')[1]}
+        path: {'license': path.split('/')[1], 'version': path.split('/')[2]}
         for path in _SIMPLE_LICENSE_PATHS
     }
     license_path_map.update(_SPECIAL_CASE_LICENSE_PATHS)
