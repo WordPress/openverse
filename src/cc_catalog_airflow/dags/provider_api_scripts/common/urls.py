@@ -9,11 +9,7 @@ from urllib.parse import urlparse
 
 import tldextract
 
-from common.licenses import constants
-
 logger = logging.getLogger(__name__)
-
-LICENSE_PATH_MAP = constants.LICENSE_PATH_MAP
 
 
 def validate_url_string(url_string):

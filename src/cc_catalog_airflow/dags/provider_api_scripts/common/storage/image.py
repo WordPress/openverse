@@ -162,7 +162,7 @@ class ImageStore:
                           Creative Commons website.
         license_:         String representation of a Creative Commons
                           license.  For valid options, see
-                          `common.license.constants.LICENSE_PATH_MAP`
+                          `common.license.constants.get_license_path_map()`
         license_version:  Version of the given license.  In the case of
                           the `publicdomain` license, which has no
                           version, one shoud pass
