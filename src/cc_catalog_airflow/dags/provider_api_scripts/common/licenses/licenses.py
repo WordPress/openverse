@@ -12,10 +12,7 @@ from common.licenses import constants
 logger = logging.getLogger(__name__)
 
 LICENSE_PATH_MAP = constants.get_license_path_map()
-
-
-class InvalidLicenseURLException(Exception):
-    pass
+REVERSE_LICENSE_PATH_MAP = constants.get_reverse_license_path_map()
 
 
 class IrreversibleLicensePairException(Exception):
@@ -38,60 +35,63 @@ def get_license_info(
 
     The license URL, if given, will be validated. This function will
     attempt to repair malformed or incorrect license URLs when enough
-    information is available. The CC URL validation subroutine follows
-    these steps:
+    information is available.
 
-      0. Ensure the given URL is a string type
-      1. Modify the scheme of the URL to https
-      2. Ensure the domain of the URL is creativecommons.org
-      3. Make a request using the URL, replacing the given URL with the
-         resulting URL after redirects (exit if the request fails)
+    If the license URL is not given, not valid, and irreparable, we try
+    to construct a license URL from the given license_, license_version
+    pair.
 
-    If the CC URL validation subroutine succeeds, we try to split the
-    resulting URL appropriately to find a license, version pair and if
-    successful discard the license_, license_version pair given as
-    arguments, since it's likely that the pair derived from the URL is
-    more predictable and likely to be correct than the pair given as
-    arguments.
+    If we're able to derive a valid license URL, we return the tuple
 
-    If the CC URL validation subroutine fails, we validate the given
-    license_, license_version pair against a list of known good pairs.
+        license_, license_version, license_url
 
-    If we're able to come up with a good license, version pair, we
-    return it, along with the valid license URL (if one could be found).
-    Otherwise, we return None, None, None.
+    with the validated and corrected values.
+
+    Otherwise, we return
+
+      None, None, None
     """
-    valid_cc_url = _get_valid_cc_url(license_url)
-    if valid_cc_url is not None:
-        try:
-            chosen_license, chosen_version = _derive_license_from_url(
-                valid_cc_url
-            )
-            logger.debug(
-                f'Using derived_license {chosen_license}'
-                f' and derived_version {chosen_version}'
-            )
-            valid_cc_license_url = valid_cc_url
-        except InvalidLicenseURLException:
-            valid_cc_license_url = None
-            logger.info(
-                f'Falling back to given license_ {license_}'
-                f' and license_version {license_version}'
-            )
-            chosen_license, chosen_version = license_, license_version
-    else:
+    license_info = _get_license_info_from_url(license_url)
+    if license_info[0] is not None:
         logger.debug(
-            f'Using given license_ {license_}'
+            f'Found derived license {license_info[0]},'
+            f' derived version {license_info[1]},'
+            f' and license_url {license_info[2]}'
+        )
+    else:
+        logger.info(
+            f'Falling back to given license_ {license_}'
             f' and license_version {license_version}'
         )
-        valid_cc_license_url = None
-        chosen_license, chosen_version = license_, license_version
+        license_info = _get_license_info_from_license_pair(
+            license_, license_version
+        )
+    return license_info
 
-    valid_license, valid_version = _validate_license_pair(
-        chosen_license, chosen_version
-    )
 
-    return valid_license, valid_version, valid_cc_license_url
+def _get_license_info_from_url(license_url, path_map=LICENSE_PATH_MAP):
+    cc_url = _get_valid_cc_url(license_url)
+    if cc_url is None:
+        return None, None, None
+
+    license_, license_version = None, None
+    for valid_path in path_map:
+        if valid_path in cc_url:
+            license_, license_version = path_map[valid_path]
+            logger.debug(
+                f'Derived license_: {license_},'
+                f' Derived license_version: {license_version}'
+            )
+            break
+
+    if license_ is None:
+        logger.warning(
+            f'{license_url} could not be split into a valid license pair.'
+            f'\npath_map: {path_map}'
+        )
+        cc_url = None
+
+    return license_, license_version, cc_url
 
 
 def _get_valid_cc_url(license_url):
@@ -129,48 +129,38 @@ def _get_valid_cc_url(license_url):
     return validated_license_url
 
 
-def _derive_license_from_url(license_url,  path_map=LICENSE_PATH_MAP):
-    license_, license_version = None, None
-    for valid_path in path_map:
-        if valid_path in license_url:
-            license_, license_version = path_map[valid_path]
-
-            logger.debug(
-                f'Derived license_: {license_},'
-                f' Derived license_version: {license_version}'
-            )
-            break
-
-    if not license_:
-        raise InvalidLicenseURLException(
-            f'{license_url} could not be split into a valid license pair.'
-            f'\npath_map: {path_map}'
-        )
-
-    return license_, license_version
-
-
-def _validate_license_pair(
-        license_,
-        license_version,
-        path_map=LICENSE_PATH_MAP
+def _get_license_info_from_license_pair(
+        license_, license_version, pair_map=REVERSE_LICENSE_PATH_MAP
 ):
-    if license_ is None or license_version is None:
-        return None, None
+    string_version = _ensure_license_version_string(license_version)
+    license_path = pair_map.get((license_, string_version))
+    logger.debug(f'Derived license_path: {license_path}')
+
+    if license_path is not None:
+        valid_url = _build_license_url(license_path)
+        valid_license, valid_version = license_, string_version
+    else:
+        valid_license, valid_version, valid_url = None, None, None
+
+    return valid_license, valid_version, valid_url
+
+
+def _ensure_license_version_string(license_version):
+    string_license_version = None
     try:
-        if license_version != constants.NO_VERSION:
-            license_version = str(float(license_version))
+        if license_version == constants.NO_VERSION:
+            string_license_version = license_version
+        else:
+            string_license_version = str(float(license_version))
     except Exception as e:
         logger.warning(
             f'Could not recover license_version from {license_version}!'
             f' Error was {e}'
         )
-        return None, None
-    if (license_, license_version) not in path_map.values():
-        logger.warning(
-            f'{license_}, {license_version} is not a valid'
-            f'license_, license_version pair!'
-            f'\nValid pairs are: {list(path_map.values())}'
-        )
-        license_, license_version = None, None
-    return license_, license_version
+    return string_license_version
+
+
+def _build_license_url(license_path):
+    license_path = license_path.strip().strip('/')
+    derived_url = f'https://creativecommons.org/{license_path}/'
+    return urls.rewrite_redirected_url(derived_url)

@@ -23,28 +23,24 @@ def mock_rewriter(monkeypatch):
     )
 
 
+@pytest.fixture
+def mock_cc_url_validator(monkeypatch):
+    def mock_get_valid_cc_url(url_string):
+        return url_string
+    monkeypatch.setattr(
+        licenses, '_get_valid_cc_url', mock_get_valid_cc_url
+    )
+
+
 def test_get_license_info_prefers_derived_values(monkeypatch):
     expected_license, expected_version = 'derivedlicense', '10.0'
     expected_url = 'https://creativecommons.org/licenses/and/so/on'
 
-    def mock_cc_license_validator(url_string):
-        return url_string
-
-    def mock_derive_license(url_string, path_map=None):
-        return expected_license, expected_version
-
-    def mock_validate_pair(license_, license_version):
-        return license_, license_version
+    def mock_get_license_from_url(url_string, path_map=None):
+        return expected_license, expected_version, expected_url
 
     monkeypatch.setattr(
-        licenses, '_get_valid_cc_url', mock_cc_license_validator
-    )
-
-    monkeypatch.setattr(
-        licenses, '_derive_license_from_url', mock_derive_license
-    )
-    monkeypatch.setattr(
-        licenses, '_validate_license_pair', mock_validate_pair
+        licenses, '_get_license_info_from_url', mock_get_license_from_url
     )
 
     actual_license, actual_version, actual_url = licenses.get_license_info(
@@ -139,88 +135,93 @@ def test_get_valid_cc_url_nones_invalid_rewritten_url(monkeypatch):
     assert actual_url is None
 
 
-def test_derive_license_from_url_with_license_url_path_mismatch(monkeypatch):
+def test_get_license_info_from_url_with_license_url_path_mismatch(
+        mock_cc_url_validator,
+        monkeypatch
+):
     license_url = 'https://not.in/path/map'
     path_map = {'publicdomain/zero/1.0': ('cc0', '1.0')}
-    with pytest.raises(licenses.InvalidLicenseURLException):
-        licenses._derive_license_from_url(license_url, path_map=path_map)
-
-
-def test_derive_license_from_url_with_good_license_url(monkeypatch):
-    expected_license, expected_version = 'cc0', '1.0'
-    license_url = 'https://creativecommons.org/publicdomain/zero/1.0'
-    path_map = {'publicdomain/zero/1.0': ('cc0', '1.0')}
-    actual_license, actual_version = licenses._derive_license_from_url(
+    license_info = licenses._get_license_info_from_url(
         license_url, path_map=path_map
     )
-    assert actual_license == expected_license
-    assert actual_version == expected_version
+    assert all([i is None for i in license_info])
 
 
-def test_derive_license_from_url_finds_correct_nonstandard_info(mock_rewriter):
-    actual_license, actual_version = licenses._derive_license_from_url(
-        'http://creativecommons.org/publicdomain/zero/1.0/',
-    )
+def test_get_license_info_from_url_with_good_license_url(
+        mock_cc_url_validator
+):
     expect_license, expect_version = 'cc0', '1.0'
-    assert actual_license == expect_license
-    assert actual_version == expect_version
+    license_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
+    path_map = {'publicdomain/zero/1.0': ('cc0', '1.0')}
+    actual_license_info = licenses._get_license_info_from_url(
+        license_url, path_map=path_map
+    )
+    expect_license_info = (
+        expect_license, expect_version, license_url
+    )
+    assert actual_license_info == expect_license_info
 
 
-def test_validate_license_pair_nones_missing_license():
-    path_map = {'licenses/by/1.0': ('by', '1.0')}
-    actual_license, actual_version = licenses._validate_license_pair(
+def test_get_license_info_from_license_pair_nones_when_missing_license(
+        mock_rewriter
+):
+    pair_map = {('by', '1.0'): 'licenses/by/1.0'}
+    license_info = licenses._get_license_info_from_license_pair(
         None,
         '1.0',
-        path_map
+        pair_map=pair_map
     )
-    expect_license, expect_version = None, None
-    assert actual_license == expect_license
-    assert actual_version == expect_version
+    assert all([i is None for i in license_info])
 
 
-def test_validate_license_pair_nones_missing_version():
-    path_map = {'licenses/by/1.0': ('by', '1.0')}
-    actual_license, actual_version = licenses._validate_license_pair(
+def test_get_license_info_from_license_pair_nones_missing_version(
+        mock_rewriter
+):
+    pair_map = {('by', '1.0'): 'licenses/by/1.0'}
+    license_info = licenses._get_license_info_from_license_pair(
         'by',
         None,
-        path_map
+        pair_map=pair_map
     )
-    expect_license, expect_version = None, None
-    assert actual_license == expect_license
-    assert actual_version == expect_version
+    assert all([i is None for i in license_info])
 
 
-def test_validate_license_pair_handles_float_version():
-    path_map = {'licenses/by/1.0': ('by', '1.0')}
-    actual_license, actual_version = licenses._validate_license_pair(
+def test_validate_license_pair_handles_float_version(mock_rewriter):
+    pair_map = {('by', '1.0'): 'licenses/by/1.0'}
+    actual_license_info = licenses._get_license_info_from_license_pair(
         'by',
         1.0,
-        path_map
+        pair_map=pair_map
     )
-    expect_license, expect_version = 'by', '1.0'
-    assert actual_license == expect_license
-    assert actual_version == expect_version
+    expect_license_info = (
+        'by', '1.0', 'https://creativecommons.org/licenses/by/1.0/'
+    )
+    assert actual_license_info == expect_license_info
 
 
-def test_validate_license_pair_handles_int_version():
-    path_map = {'licenses/by/1.0': ('by', '1.0')}
-    actual_license, actual_version = licenses._validate_license_pair(
+def test_validate_license_pair_handles_int_version(mock_rewriter):
+    pair_map = {('by', '1.0'): 'licenses/by/1.0'}
+    actual_license_info = licenses._get_license_info_from_license_pair(
         'by',
         1,
-        path_map
+        pair_map=pair_map
     )
-    expect_license, expect_version = 'by', '1.0'
-    assert actual_license == expect_license
-    assert actual_version == expect_version
+    expect_license_info = (
+        'by', '1.0', 'https://creativecommons.org/licenses/by/1.0/'
+    )
+    assert actual_license_info == expect_license_info
 
 
-def test_validate_license_pair_handles_none_version():
-    path_map = {'licenses/publicdomain': ('publicdomain', 'N/A')}
-    actual_license, actual_version = licenses._validate_license_pair(
+def test_validate_license_pair_handles_na_version(mock_rewriter):
+    pair_map = {('publicdomain', 'N/A'): 'licenses/publicdomain'}
+    actual_license_info = licenses._get_license_info_from_license_pair(
         'publicdomain',
         'N/A',
-        path_map
+        pair_map=pair_map
     )
-    expect_license, expect_version = 'publicdomain', 'N/A'
-    assert actual_license == expect_license
-    assert actual_version == expect_version
+    expect_license_info = (
+        'publicdomain',
+        'N/A',
+        'https://creativecommons.org/licenses/publicdomain/'
+    )
+    assert actual_license_info == expect_license_info
