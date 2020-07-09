@@ -74,13 +74,12 @@ When you run `npm run server`, Node will run the [server.js](./server.js) script
 
 There are also a few cases of different components for server and client side rendering:
 
-One is the entry file for webpack. You can find them in [clientEntry.js](./src/clientEntry.js) and [serverEntry.js](./src/serverEntry.js). These files are the point of entry of the application, they start the Vue ppp, the store and the router. There are some minor differences between them, such as polyfill loading and client-side state hydration which are done only on the `clientEntry`.
+One is the entry file for webpack. You can find them in [clientEntry.js](./src/clientEntry.js) and [serverEntry.js](./src/serverEntry.js). These files are the point of entry of the application, they start the Vue app, the store and the router. There are some minor differences between them, such as polyfill loading and client-side state hydration which are done only on the `clientEntry`.
 
-Because of legacy issues, there are three pages that have separate server and client versions:
+Because of legacy issues, there are two pages that have separate server and client versions:
 
 * BrowsePage
 * CollectionsBrowsePage
-* PhotoDetailPage
 
 The reason for that is that for some time we used a [JS library](https://www.npmjs.com/package/vue-masonry) to render the image grid. This library used browser specific APIs to render the image grid. Therefore it didn't work on the server renderer. So we had to split those pages into two different versions, one that didn't render the image grid (for the server) and another that did render it (for the client). There is however a [ticket](https://github.com/creativecommons/cccatalog-frontend/issues/934) related to removing this legacy complexity.
 

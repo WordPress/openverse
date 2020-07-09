@@ -6,7 +6,6 @@ import decodeImageData from '@/utils/decodeImageData';
 import {
   FETCH_IMAGES,
   FETCH_IMAGE,
-  FETCH_RELATED_IMAGES,
   FETCH_COLLECTION_IMAGES,
   HANDLE_IMAGE_ERROR,
 } from './action-types';
@@ -19,7 +18,6 @@ import {
   SET_IMAGES,
   SET_QUERY,
   SET_COLLECTION_QUERY,
-  SET_RELATED_IMAGES,
   IMAGE_NOT_FOUND,
   HANDLE_NO_IMAGES,
 } from './mutation-types';
@@ -37,8 +35,6 @@ const initialState = (searchParams) => {
     isFetchingImages: false,
     isFetchingImagesError: true,
     query,
-    relatedImages: [],
-    relatedImagesCount: 0,
   };
 };
 
@@ -131,22 +127,6 @@ const actions = ImageService => ({
         }
       });
   },
-  [FETCH_RELATED_IMAGES]({ commit, dispatch }, params) {
-    commit(FETCH_START_IMAGES);
-    return ImageService.getRelatedImages(params)
-      .then(({ data }) => {
-        commit(FETCH_END_IMAGES);
-        commit(SET_RELATED_IMAGES,
-          { relatedImages: data.results,
-            relatedImagesCount: data.result_count,
-          },
-        );
-        dispatch(HANDLE_NO_IMAGES, data.results);
-      })
-      .catch((error) => {
-        dispatch(HANDLE_IMAGE_ERROR, error);
-      });
-  },
   [FETCH_COLLECTION_IMAGES]({ commit, dispatch }, params) {
     commit(FETCH_START_IMAGES);
     return fetchCollectionImages(commit, params, ImageService)
@@ -216,10 +196,6 @@ const mutations = redirect => ({
   },
   [SET_IMAGE_PAGE](_state, params) {
     _state.imagePage = params.imagePage;
-  },
-  [SET_RELATED_IMAGES](_state, params) {
-    _state.relatedImages = params.relatedImages;
-    _state.relatedImagesCount = params.relatedImagesCount;
   },
   [SET_IMAGES](_state, params) {
     let images = null;
