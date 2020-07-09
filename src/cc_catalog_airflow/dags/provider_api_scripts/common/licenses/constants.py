@@ -124,3 +124,14 @@ def get_license_path_map():
     license_path_map.update(_SPECIAL_CASE_LICENSE_PATHS)
     license_path_map.update(_SPECIAL_CASE_IRREVERSIBLE_LICENSE_PATHS)
     return license_path_map
+
+
+def get_reverse_license_path_map():
+    reverse_map = {
+        _get_license_version_pair_from_path(path): path
+        for path in _SIMPLE_LICENSE_PATHS
+    }
+    reverse_map.update(
+        {pair: path for path, pair in _SPECIAL_CASE_LICENSE_PATHS.items()}
+    )
+    return reverse_map
