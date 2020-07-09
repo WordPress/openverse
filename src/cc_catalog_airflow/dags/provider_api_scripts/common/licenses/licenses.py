@@ -130,8 +130,7 @@ def _derive_license_from_url(license_url,  path_map=LICENSE_PATH_MAP):
     license_, license_version = None, None
     for valid_path in path_map:
         if valid_path in license_url:
-            license_ = path_map[valid_path][0]
-            license_version = path_map[valid_path][1]
+            license_, license_version = path_map[valid_path]
 
             logger.debug(
                 'Derived license_: {}, Derived license_version: {}'
@@ -155,7 +154,6 @@ def _validate_license_pair(
 ):
     if license_ is None or license_version is None:
         return None, None
-    pairs = [(item[0], item[1]) for item in path_map.values()]
     try:
         if license_version != constants.NO_VERSION:
             license_version = str(float(license_version))
@@ -165,11 +163,11 @@ def _validate_license_pair(
             .format(license_version, e)
         )
         return None, None
-    if (license_, license_version) not in pairs:
+    if (license_, license_version) not in path_map.values():
         logger.warning(
             '{}, {} is not a valid license, license_version pair!\n'
             'Valid pairs are:  {}'
-            .format(license_, license_version, pairs)
+            .format(license_, license_version, list(path_map.values()))
         )
         license_, license_version = None, None
     return license_, license_version
