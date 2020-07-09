@@ -24,9 +24,43 @@ import SearchGrid from '@/components/SearchGrid';
 import SearchGridForm from '@/components/SearchGridForm';
 import SearchGridFilter from '@/components/Filters/SearchGridFilter';
 import FilterDisplay from '@/components/Filters/FilterDisplay';
-import BrowsePageMixin from '@/pages/mixins/BrowsePageMixin';
+import { FETCH_IMAGES } from '@/store/action-types';
+import { SET_QUERY } from '@/store/mutation-types';
+import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin';
 
 const BrowsePage = {
+  name: 'browse-page',
+  computed: {
+    query() {
+      return this.$store.state.query;
+    },
+    isFilterVisible() {
+      return this.$store.state.isFilterVisible;
+    },
+  },
+  methods: {
+    getImages(params) {
+      this.$store.dispatch(FETCH_IMAGES, params);
+    },
+    onLoadMoreImages(searchParams) {
+      this.getImages(searchParams);
+    },
+    onSearchFormSubmit(searchParams) {
+      this.$store.commit(SET_QUERY, searchParams);
+    },
+  },
+  mounted() {
+    if (this.query.q && !this.$store.state.images.length) {
+      this.getImages(this.query);
+    }
+  },
+  watch: {
+    query(newQuery) {
+      if (newQuery) {
+        this.getImages(newQuery);
+      }
+    },
+  },
   components: {
     HeaderSection,
     SearchGridForm,
@@ -35,12 +69,12 @@ const BrowsePage = {
     SearchGrid,
     FooterSection,
   },
-  mixins: [BrowsePageMixin],
+  mixins: [ServerPrefetchProvidersMixin],
 };
 
 export default BrowsePage;
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/results-page.scss";
+@import "../styles/results-page.scss";
 </style>

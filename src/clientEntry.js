@@ -4,7 +4,7 @@ import Vue from 'vue';
 import createApp from './main';
 import abTests from './abTests';
 import sentryInit from './sentry/browser';
-import router from './router/client';
+import router from './router';
 
 sentryInit();
 smoothscroll.polyfill();
