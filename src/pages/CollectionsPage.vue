@@ -1,7 +1,7 @@
 <template>
   <div>
     <header-section></header-section>
-    <div class="collections-page padding-larger">
+    <main class="collections-page padding-larger">
       <h1>Browse collections</h1>
       <h2 class="margin-bottom-normal">Museum Collections</h2>
       <div class="providers-list columns is-multiline">
@@ -16,7 +16,7 @@
                           :key="index"
                           :provider="provider" />
       </div>
-    </div>
+    </main>
     <footer-section></footer-section>
   </div>
 </template>
