@@ -163,7 +163,10 @@ class ImageStore:
         license_:         String representation of a Creative Commons
                           license.  For valid options, see
                           `common.license.constants.LICENSE_PATH_MAP`
-        license_version:  Version of the given license.
+        license_version:  Version of the given license.  In the case of
+                          the `publicdomain` license, which has no
+                          version, one shoud pass
+                          `common.license.constants.NO_VERSION` here.
 
         Note on license arguments: These are 'semi-required' in that
         either a valid `license_url` must be given, or a valid

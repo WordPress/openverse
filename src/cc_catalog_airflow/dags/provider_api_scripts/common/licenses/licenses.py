@@ -127,11 +127,14 @@ def _get_valid_cc_url(license_url):
 
 
 def _derive_license_from_url(license_url,  path_map=LICENSE_PATH_MAP):
+    LICENSE = constants.LICENSE
+    VERSION = constants.VERSION
+
     license_, license_version = None, None
     for valid_path in path_map:
         if valid_path in license_url:
-            license_ = path_map[valid_path]['license']
-            license_version = path_map[valid_path]['version']
+            license_ = path_map[valid_path][LICENSE]
+            license_version = path_map[valid_path][VERSION]
 
             logger.debug(
                 'Derived license_: {}, Derived license_version: {}'
@@ -139,7 +142,7 @@ def _derive_license_from_url(license_url,  path_map=LICENSE_PATH_MAP):
             )
             break
 
-    if not (license_ and license_url):
+    if not license_:
         raise InvalidLicenseURLException(
             f'{license_url} could not be split into a valid license pair.'
             f'\npath_map: {path_map}'
@@ -157,7 +160,8 @@ def _validate_license_pair(
         return None, None
     pairs = [(item['license'], item['version']) for item in path_map.values()]
     try:
-        license_version = str(float(license_version))
+        if license_version != constants.NO_VERSION:
+            license_version = str(float(license_version))
     except Exception as e:
         logger.warning(
             'Could not recover license_version from {}!\n{}'

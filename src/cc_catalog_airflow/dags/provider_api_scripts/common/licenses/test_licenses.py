@@ -212,3 +212,17 @@ def test_validate_license_pair_handles_int_version():
     expect_license, expect_version = 'by', '1.0'
     assert actual_license == expect_license
     assert actual_version == expect_version
+
+
+def test_validate_license_pair_handles_none_version():
+    path_map = {
+        'licenses/publicdomain': {'license': 'publicdomain', 'version': 'N/A'}
+    }
+    actual_license, actual_version = licenses._validate_license_pair(
+        'publicdomain',
+        'N/A',
+        path_map
+    )
+    expect_license, expect_version = 'publicdomain', 'N/A'
+    assert actual_license == expect_license
+    assert actual_version == expect_version
