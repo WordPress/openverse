@@ -11,7 +11,7 @@ from common.licenses import constants
 
 logger = logging.getLogger(__name__)
 
-LICENSE_PATH_MAP = constants.LICENSE_PATH_MAP
+LICENSE_PATH_MAP = constants.get_license_path_map()
 
 
 class InvalidLicenseURLException(Exception):
@@ -127,14 +127,11 @@ def _get_valid_cc_url(license_url):
 
 
 def _derive_license_from_url(license_url,  path_map=LICENSE_PATH_MAP):
-    LICENSE = constants.LICENSE
-    VERSION = constants.VERSION
-
     license_, license_version = None, None
     for valid_path in path_map:
         if valid_path in license_url:
-            license_ = path_map[valid_path][LICENSE]
-            license_version = path_map[valid_path][VERSION]
+            license_ = path_map[valid_path][0]
+            license_version = path_map[valid_path][1]
 
             logger.debug(
                 'Derived license_: {}, Derived license_version: {}'
@@ -158,7 +155,7 @@ def _validate_license_pair(
 ):
     if license_ is None or license_version is None:
         return None, None
-    pairs = [(item['license'], item['version']) for item in path_map.values()]
+    pairs = [(item[0], item[1]) for item in path_map.values()]
     try:
         if license_version != constants.NO_VERSION:
             license_version = str(float(license_version))

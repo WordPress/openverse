@@ -141,7 +141,7 @@ def test_get_valid_cc_url_nones_invalid_rewritten_url(monkeypatch):
 
 def test_derive_license_from_url_with_license_url_path_mismatch(monkeypatch):
     license_url = 'https://not.in/path/map'
-    path_map = {'publicdomain/zero/1.0': {'license': 'cc0', 'version': '1.0'}}
+    path_map = {'publicdomain/zero/1.0': ('cc0', '1.0')}
     with pytest.raises(licenses.InvalidLicenseURLException):
         licenses._derive_license_from_url(license_url, path_map=path_map)
 
@@ -149,7 +149,7 @@ def test_derive_license_from_url_with_license_url_path_mismatch(monkeypatch):
 def test_derive_license_from_url_with_good_license_url(monkeypatch):
     expected_license, expected_version = 'cc0', '1.0'
     license_url = 'https://creativecommons.org/publicdomain/zero/1.0'
-    path_map = {'publicdomain/zero/1.0': {'license': 'cc0', 'version': '1.0'}}
+    path_map = {'publicdomain/zero/1.0': ('cc0', '1.0')}
     actual_license, actual_version = licenses._derive_license_from_url(
         license_url, path_map=path_map
     )
@@ -167,7 +167,7 @@ def test_derive_license_from_url_finds_correct_nonstandard_info(mock_rewriter):
 
 
 def test_validate_license_pair_nones_missing_license():
-    path_map = {'licenses/by/1.0': {'license': 'by', 'version': '1.0'}}
+    path_map = {'licenses/by/1.0': ('by', '1.0')}
     actual_license, actual_version = licenses._validate_license_pair(
         None,
         '1.0',
@@ -179,7 +179,7 @@ def test_validate_license_pair_nones_missing_license():
 
 
 def test_validate_license_pair_nones_missing_version():
-    path_map = {'licenses/by/1.0': {'license': 'by', 'version': '1.0'}}
+    path_map = {'licenses/by/1.0': ('by', '1.0')}
     actual_license, actual_version = licenses._validate_license_pair(
         'by',
         None,
@@ -191,7 +191,7 @@ def test_validate_license_pair_nones_missing_version():
 
 
 def test_validate_license_pair_handles_float_version():
-    path_map = {'licenses/by/1.0': {'license': 'by', 'version': '1.0'}}
+    path_map = {'licenses/by/1.0': ('by', '1.0')}
     actual_license, actual_version = licenses._validate_license_pair(
         'by',
         1.0,
@@ -203,7 +203,7 @@ def test_validate_license_pair_handles_float_version():
 
 
 def test_validate_license_pair_handles_int_version():
-    path_map = {'licenses/by/1.0': {'license': 'by', 'version': '1.0'}}
+    path_map = {'licenses/by/1.0': ('by', '1.0')}
     actual_license, actual_version = licenses._validate_license_pair(
         'by',
         1,
@@ -215,9 +215,7 @@ def test_validate_license_pair_handles_int_version():
 
 
 def test_validate_license_pair_handles_none_version():
-    path_map = {
-        'licenses/publicdomain': {'license': 'publicdomain', 'version': 'N/A'}
-    }
+    path_map = {'licenses/publicdomain': ('publicdomain', 'N/A')}
     actual_license, actual_version = licenses._validate_license_pair(
         'publicdomain',
         'N/A',
