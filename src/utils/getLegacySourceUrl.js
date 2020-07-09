@@ -2,7 +2,7 @@ import { stringifyUrl } from 'query-string';
 
 /**
  * Accept a base url and a object of query params, and turn it into a formatted url
- * @example q('https://aol.com', {cool: 'true', fun: 'yes'}) => `https://aol.com?cool=true&fun=yes`
+ * @example q('https://example.com', {cool: 'true', fun: 'yes', other: [1,2,3]}) => `https://example.com?cool=true&fun=yes&other=1,2,3`
  */
 const q = (url, queryObject) => stringifyUrl({ url, query: queryObject }, { skipNull: true, arrayFormat: 'comma' });
 
