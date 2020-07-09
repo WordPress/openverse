@@ -18,6 +18,10 @@ class InvalidLicenseURLException(Exception):
     pass
 
 
+class IrreversibleLicensePairException(Exception):
+    pass
+
+
 def get_license_info(
         license_url=None, license_=None, license_version=None
 ):
@@ -64,8 +68,8 @@ def get_license_info(
                 valid_cc_url
             )
             logger.debug(
-                'Using derived_license {} and derived_version {}'
-                .format(chosen_license, chosen_version)
+                f'Using derived_license {chosen_license}'
+                f' and derived_version {chosen_version}'
             )
             valid_cc_license_url = valid_cc_url
         except InvalidLicenseURLException:
@@ -103,8 +107,7 @@ def _get_valid_cc_url(license_url):
 
     if parsed_url.netloc != 'creativecommons.org':
         logger.info(
-            'The license at {} is not issued by Creative Commons.'
-            .format(license_url)
+            f'The license at {license_url} is not issued by Creative Commons.'
         )
         return
 
@@ -133,8 +136,8 @@ def _derive_license_from_url(license_url,  path_map=LICENSE_PATH_MAP):
             license_, license_version = path_map[valid_path]
 
             logger.debug(
-                'Derived license_: {}, Derived license_version: {}'
-                .format(license_, license_version)
+                f'Derived license_: {license_},'
+                f' Derived license_version: {license_version}'
             )
             break
 
@@ -159,15 +162,15 @@ def _validate_license_pair(
             license_version = str(float(license_version))
     except Exception as e:
         logger.warning(
-            'Could not recover license_version from {}!\n{}'
-            .format(license_version, e)
+            f'Could not recover license_version from {license_version}!'
+            f' Error was {e}'
         )
         return None, None
     if (license_, license_version) not in path_map.values():
         logger.warning(
-            '{}, {} is not a valid license, license_version pair!\n'
-            'Valid pairs are:  {}'
-            .format(license_, license_version, list(path_map.values()))
+            f'{license_}, {license_version} is not a valid'
+            f'license_, license_version pair!'
+            f'\nValid pairs are: {list(path_map.values())}'
         )
         license_, license_version = None, None
     return license_, license_version
