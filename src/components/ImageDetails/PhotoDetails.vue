@@ -39,7 +39,7 @@
         />
       </div>
     </div>
-    <div class="column image-info">
+    <div class="column image-info margin-left-xl">
       <div class="margin-top-normal margin-bottom-small">
         <h5 class="b-header">{{ image.title }}</h5>
         <span v-if="image.creator" class="caption has-text-weight-semibold">
