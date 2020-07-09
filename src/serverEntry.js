@@ -1,6 +1,6 @@
 import createApp from './main';
 import sentryInit from './sentry/server';
-import router from './router/server';
+import router from './router';
 
 
 // This exported function will be called by `bundleRenderer`.
