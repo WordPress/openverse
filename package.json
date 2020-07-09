@@ -1,7 +1,14 @@
 {
   "name": "cccatalog-frontend",
-  "version": "1.0.0",
+  "version": "4.3.2",
   "description": "Common Creative search",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creativecommons/cccatalog-frontend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/creativecommons/cccatalog-frontend/issues"
+  },
   "author": "sebworks",
   "private": true,
   "scripts": {
@@ -14,6 +21,7 @@
     "qa": "cd test/selenium-webdriver && pipenv run python search_screencaps.py",
     "test": "jest --config test/unit/jest-conf.js",
     "lint": "eslint --ext .js,.vue . test/unit",
+    "lint:fix": "eslint --ext .js,.vue . test/unit --fix",
     "build": "npm run build:app && npm run build:server",
     "build:app": "cross-env NODE_ENV=production webpack",
     "build:server": "webpack --config build/webpack.config.server.js"

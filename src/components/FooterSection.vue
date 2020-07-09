@@ -3,7 +3,7 @@
   <div class="container">
     <div class="columns">
       <div class="column">
-        <a aria-label="Creative Commons Home Page" href="https://creativecommons.org" class="main-logo margin-bottom-bigger has-text-white">
+        <a aria-label="home" href="https://creativecommons.org" class="main-logo margin-bottom-bigger has-text-white">
           <svg xmlns="http://www.w3.org/2000/svg"
                preserveAspectRatio="xMidYMid meet"
                viewBox="0 0 304 73">
@@ -20,16 +20,16 @@
         <a href="tel://+1-415-429-6753" class="phone">+1-415-429-6753</a>
 
         <div class="margin-vertical-large">
-          <a aria-label="Instagram" href="https://www.instagram.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
+          <a aria-label="instagram" href="https://www.instagram.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
              <i class="icon instagram margin-right-small is-size-4" />
           </a>
-          <a aria-label="Twitter" href="https://www.twitter.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
+          <a aria-label="twitter" href="https://www.twitter.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
              <i class="icon twitter margin-right-small is-size-4" />
           </a>
-          <a aria-label="Facebook" href="https://www.facebook.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
+          <a aria-label="facebook" href="https://www.facebook.com/creativecommons" class="social has-text-white" target="_blank" rel="noopener">
              <i class="icon facebook margin-right-small is-size-4" />
           </a>
-          <a aria-label="Linkedin" href="https://www.linkedin.com/company/creative-commons/" class="social has-text-white" target="_blank" rel="noopener">
+          <a aria-label="linkedin" href="https://www.linkedin.com/company/creative-commons/" class="social has-text-white" target="_blank" rel="noopener">
              <i class="icon linkedin margin-right-small is-size-4" />
           </a>
         </div>
@@ -71,14 +71,14 @@
         </div>
       </div>
       <div class="column">
-        <div class="donate-section">
+        <aside role="complementary" class="donate-section">
           <h5>Our work relies on you!</h5>
           <p>Help us keep the internet free and open.</p>
           <a class="button small donate" href="http://creativecommons.org/donate">
             <i class="icon cc-letterheart margin-right-small is-size-5 padding-top-smaller" />
             Donate now
           </a>
-        </div>
+        </aside>
       </div>
     </div>
   </div>
