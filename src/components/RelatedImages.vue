@@ -26,6 +26,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import '../styles/photodetails.scss';
+
+  .photo_related-images .search-grid-cells {
+    margin: 10px -10px;
+  }
 </style>
