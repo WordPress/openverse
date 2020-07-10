@@ -119,6 +119,12 @@ def _handle_results(results):
             continue
 
         mods = item_details.get("mods")
+        title = _get_title(
+            mods.get("titleInfo")
+        )
+        creator = _get_creators(
+            mods.get("")
+        )
         capture_count = item_details.get("numResults", {}).get("$")
         captures = item_details.get("sibling_captures", {}).get("capture", [])
         if type(captures) is not list:
@@ -144,10 +150,32 @@ def _handle_results(results):
                 foreign_landing_url=foreign_landing_url,
                 image_url=image_url,
                 license_url=license_url,
-                thumbnail_url=thumbnail_url
+                thumbnail_url=thumbnail_url,
+                title=title,
+                creator=creator
             )
 
     return image_count
+
+
+def _get_title(titleinfo):
+    title = None
+    if type(titleinfo) == list:
+        if len(titleinfo) > 0:
+            title = titleinfo[0].get("title", {}).get("$")
+    return title
+
+
+def _get_creators(creatorinfo):
+    creator = []
+    if type(creatorinfo) == list:
+        if len(creatorinfo) > 0:
+            for info in creatorinfo:
+                creator.append(
+                    info.get("namePart", {}).get("$", "")
+                )
+            creator = '|'.join(creator)
+    return creator
 
 
 def _get_images(
