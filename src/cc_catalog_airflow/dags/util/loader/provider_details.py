@@ -1,8 +1,8 @@
 """
 This file holds the default provider names for each provider API and a
 dictionary of related sub providers. The key of the dictionary reflects
-the sub provider name and the corresponding item is a set of values from the
-API response which helps to identify the sub provider.
+the sub provider name and the corresponding item is a value (or set of values)
+from the API response which helps to identify the sub provider.
 
 Apart from that, this file stores other provider related information which
 might be useful for retrieving sub-providers at the database level and the
@@ -30,3 +30,10 @@ FLICKR_SUB_PROVIDERS = {
 }
 
 FLICKR_PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
+
+# Europeana parameters
+EUROPEANA_DEFAULT_PROVIDER = 'europeana'
+
+EUROPEANA_SUB_PROVIDERS = {
+    'wellcome_collection': "Wellcome Collection"
+}
