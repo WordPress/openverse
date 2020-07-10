@@ -16,6 +16,7 @@ import os
 
 from common.requester import DelayedRequester
 from common.storage import image
+from util.loader import provider_details as prov
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -26,10 +27,12 @@ logger = logging.getLogger(__name__)
 
 DELAY = 1.0
 RESOURCES_PER_REQUEST = '100'
-PROVIDER = 'europeana'
+PROVIDER = prov.EUROPEANA_DEFAULT_PROVIDER
 API_KEY = os.getenv('EUROPEANA_API_KEY')
 ENDPOINT = 'https://www.europeana.eu/api/v2/search.json?'
-
+# SUB_PROVIDERS is a collection of providers within europeana which are
+# valuable to a broad audience
+SUB_PROVIDERS = prov.EUROPEANA_SUB_PROVIDERS
 
 RESOURCE_TYPE = 'IMAGE'
 REUSE_TERMS = ['open', 'restricted']
@@ -165,7 +168,8 @@ def _process_image_list(image_list):
     return total_images
 
 
-def _process_image_data(image_data):
+def _process_image_data(image_data, sub_providers=SUB_PROVIDERS,
+                        provider=PROVIDER):
     logger.debug(f'Processing image data: {image_data}')
     license_url = _get_license_url(image_data.get('rights'))
     image_url = image_data.get('edmIsShownBy')[0]
@@ -175,6 +179,15 @@ def _process_image_data(image_data):
     title = image_data.get('title')[0]
     meta_data = _create_meta_data_dict(image_data)
 
+    data_providers = set(meta_data['dataProvider'])
+    eligible_sub_providers = {s for s in sub_providers if sub_providers[s] in
+                              data_providers}
+    if len(eligible_sub_providers) > 1:
+        raise Exception(f"More than one sub-provider identified for the "
+                        f"image with foreign ID {foreign_id}")
+    source = eligible_sub_providers.pop() if len(eligible_sub_providers) == 1 \
+        else provider
+
     return image_store.add_item(
         foreign_landing_url=foreign_landing_url,
         image_url=image_url,
@@ -183,6 +196,7 @@ def _process_image_data(image_data):
         foreign_identifier=foreign_id,
         title=title,
         meta_data=meta_data,
+        source=source
     )
 
 
