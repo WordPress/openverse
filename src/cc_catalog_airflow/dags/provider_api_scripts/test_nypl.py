@@ -54,7 +54,9 @@ def test_request_handler_search_success():
         "per_page": 1
     }
 
-    response_search_success = _get_resource_json("response_search_success.json")
+    response_search_success = _get_resource_json(
+        "response_search_success.json"
+        )
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_search_success)
@@ -90,10 +92,58 @@ def test_request_handler_search_failure():
                 + "0cabe3d0-3d50-0134-a8e0-00505686a51c",
                 request_type="itemdetails"
             )
-    
+
     expected_response = response_itemdetails_success.get(
         "nyplAPI", {}
     ).get("response")
 
     assert actual_response == expected_response
     assert mock_call.call_count == 1
+
+
+def test_get_images_success():
+    images = _get_resource_json("images.json")
+    actual_image_url, \
+        actual_thumbnail = np._get_images(images)
+
+    assert actual_image_url == "http://images.nypl.org/index.php?id=56738462&t=g&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"
+    assert actual_thumbnail == "http://images.nypl.org/index.php?id=56738462&t=w&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"
+
+
+def test_get_image_failure():
+    images = []
+    actual_image_url, \
+        actual_thumbnail = np._get_images(images)
+
+    assert actual_image_url is None
+    assert actual_thumbnail is None
+
+
+def test_get_title_success():
+    titleinfo = _get_resource_json("title_info_success.json")
+    actual_title = np._get_title(titleinfo)
+    expected_title = "1900 census enumeration districts, Manhattan and Bronx"
+
+    assert actual_title == expected_title
+
+
+def test_get_title_failure():
+    titleinfo = []
+    actual_title = np._get_title(titleinfo)
+
+    assert actual_title is None
+
+
+def test_get_creators_success():
+    creatorinfo = _get_resource_json("creator_info_success.json")
+    actual_creator = np._get_creators(creatorinfo)
+    expected_creator = "Hillman, Barbara|Ohman, August R.|New York Public Library. Local History and Genealogy Division"
+
+    assert actual_creator == expected_creator
+
+
+def test_get_creators_failure():
+    creatorinfo = []
+    actual_creator = np._get_creators(creatorinfo)
+
+    assert actual_creator == []
