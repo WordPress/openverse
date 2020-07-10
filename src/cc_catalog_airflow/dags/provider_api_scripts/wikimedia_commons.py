@@ -22,14 +22,9 @@ import lxml.html as html
 import common.requester as requester
 import common.storage.image as image
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
-)
-
 logger = logging.getLogger(__name__)
 
-LIMIT = 500
+LIMIT = 250
 # The 10000 is a bit arbitrary, but needs to be larger than the mean
 # number of uses per file (globally) in the response_json, or we will
 # fail without a continuation token.  The largest example seen so far
@@ -53,12 +48,13 @@ DEFAULT_QUERY_PARAMS = {
     'gaidir': 'newer',
     'gailimit': LIMIT,
     'prop': 'imageinfo|globalusage',
-    'iiprop': 'url|user|dimensions|extmetadata',
+    'iiprop': 'url|user|dimensions|extmetadata|mediatype',
     'gulimit': LIMIT,
     'gunamespace': 0,
     'format': 'json',
 }
 PAGES_PATH = ['query', 'pages']
+IMAGE_MEDIATYPES = {'BITMAP'}
 
 delayed_requester = requester.DelayedRequester(DELAY)
 image_store = image.ImageStore(provider=PROVIDER)
@@ -90,12 +86,14 @@ def main(date):
         logger.info(f'Continue Token: {continue_token}')
         image_pages = _get_image_pages(image_batch)
         if image_pages:
-            total_images = _process_image_pages(image_pages)
+            _process_image_pages(image_pages)
+            total_images = image_store.total_images
         logger.info(f'Total Images so far: {total_images}')
         if not continue_token:
             break
 
-    total_images = image_store.commit()
+    image_store.commit()
+    total_images = image_store.total_images
     logger.info(f'Total images: {total_images}')
     logger.info('Terminated!')
 
@@ -165,8 +163,7 @@ def _get_image_pages(image_batch):
 
 def _process_image_pages(image_pages):
     for i in image_pages.values():
-        total_images = _process_image_data(i)
-    return total_images
+        _process_image_data(i)
 
 
 def _build_query_params(
@@ -229,10 +226,14 @@ def _process_image_data(image_data):
     foreign_id = image_data.get('pageid')
     logger.debug(f'Processing page ID: {foreign_id}')
     image_info = _get_image_info_dict(image_data)
+    valid_mediatype = _check_mediatype(image_info)
+    if not valid_mediatype:
+        return
+
     image_url = image_info.get('url')
     creator, creator_url = _extract_creator_info(image_info)
 
-    return image_store.add_item(
+    image_store.add_item(
         foreign_landing_url=image_info.get('descriptionshorturl'),
         image_url=image_url,
         license_url=_get_license_url(image_info),
@@ -253,6 +254,19 @@ def _get_image_info_dict(image_data):
     else:
         image_info = {}
     return image_info
+
+
+def _check_mediatype(image_info, image_mediatypes=IMAGE_MEDIATYPES):
+    valid_mediatype = True
+    image_mediatype = image_info.get('mediatype')
+    if image_mediatype not in image_mediatypes:
+        logger.debug(
+            f'Incorrect mediatype: {image_mediatype} not in {image_mediatypes}'
+        )
+        valid_mediatype = False
+    else:
+        valid_mediatype = True
+    return valid_mediatype
 
 
 def _extract_date_info(image_info):
@@ -341,6 +355,10 @@ def _cleanse_url(url_string):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
+        level=logging.INFO
+    )
     parser = argparse.ArgumentParser(
         description='Wikimedia Commons API Job',
         add_help=True,

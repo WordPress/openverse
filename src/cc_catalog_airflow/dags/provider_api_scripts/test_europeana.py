@@ -172,6 +172,7 @@ def test_process_image_data_with_real_example():
         foreign_identifier="/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1",
         title="Claustro del Monasterio de S. Salvador en Oña [Material gráfico]= Cloître du Monastère de S. Salvador à Oña",
         meta_data=expect_meta_data,
+        source=europeana.PROVIDER
     )
     assert total_images == 100
 
@@ -267,3 +268,31 @@ def test_get_description_without_description():
     expect_description = ""
 
     assert europeana._get_description(image_data) == expect_description
+
+
+def test_process_image_data_with_sub_provider():
+    image_data = _get_resource_json('image_data_sub_provider_example.json')
+    with patch.object(
+            europeana.image_store,
+            'add_item',
+            return_value=100
+    ) as mock_add_item:
+        total_images = europeana._process_image_data(image_data)
+
+    expect_meta_data = {
+        'country': ["United Kingdom"],
+        'dataProvider': ["Wellcome Collection"],
+        'description': "Lettering: Greenwich Hospital."
+    }
+
+    mock_add_item.assert_called_once_with(
+        foreign_landing_url="https://wellcomecollection.org/works/zzwnbyhb",
+        image_url="https://iiif.wellcomecollection.org/image/V0013398.jpg/full/512,/0/default.jpg",
+        license_url="http://creativecommons.org/licenses/by/4.0/",
+        thumbnail_url="https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fiiif.wellcomecollection.org%2Fimage%2FV0013398.jpg%2Ffull%2F500%2C%2F0%2Fdefault.jpg&type=IMAGE",
+        foreign_identifier="/9200579/zzwnbyhb",
+        title="Royal Naval Hospital, Greenwich, with ships and rowing boats in the foreground. Engraving.",
+        meta_data=expect_meta_data,
+        source='wellcome_collection'
+    )
+    assert total_images == 100
