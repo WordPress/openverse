@@ -1,7 +1,7 @@
 <template>
 <div class="page">
   <header-section showNavSearch="true"></header-section>
-  <div class="margin-larger">
+  <main class="margin-larger">
     <h2 class="margin-vertical-normal">CC Search Syntax Guide</h2>
     <p>
       When you search, you can enter special symbols or words to your search term
@@ -117,7 +117,7 @@
       This will search for images that match strings close to the term "theatre" with a difference
       of one character. Results might include terms with different spellings like "theater".
     </p>
-  </div>
+  </main>
   <footer-section></footer-section>
 </div>
 </template>

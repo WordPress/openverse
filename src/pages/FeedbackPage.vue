@@ -1,7 +1,7 @@
 <template>
   <div class="feedback-page">
     <header-section showNavSearch="true"></header-section>
-    <div class="margin-larger">
+    <main class="margin-larger">
       <h1 id="feedback">Feedback</h1>
       <p>
         Thank you for using CC Search! We welcome your ideas for improving the tool below.
@@ -49,7 +49,7 @@
           </div>
         </section>
       </div>
-    </div>
+    </main>
     <footer-section></footer-section>
   </div>
 </template>

@@ -7,10 +7,9 @@ import {
   SET_IMAGE_PAGE,
   SET_IMAGES,
   SET_QUERY,
-  SET_RELATED_IMAGES,
   IMAGE_NOT_FOUND,
 } from '@/store/mutation-types';
-import { FETCH_IMAGES, FETCH_IMAGE, FETCH_RELATED_IMAGES, FETCH_COLLECTION_IMAGES } from '@/store/action-types';
+import { FETCH_IMAGES, FETCH_IMAGE, FETCH_COLLECTION_IMAGES } from '@/store/action-types';
 
 
 describe('Search Store', () => {
@@ -23,8 +22,6 @@ describe('Search Store', () => {
       expect(state.isFetchingImages).toBeFalsy();
       expect(state.isFetchingImagesError).toBeTruthy();
       expect(state.query.q).toBe('');
-      expect(state.relatedImages).toHaveLength(0);
-      expect(state.relatedImagesCount).toBe(0);
       expect(state.errorMsg).toBe(null);
     });
 
@@ -42,8 +39,6 @@ describe('Search Store', () => {
       expect(state.query.categories).toBe('gif');
       expect(state.query.size).toBe('large');
       expect(state.query.aspect_ratio).toBe('wide');
-      expect(state.relatedImages).toHaveLength(0);
-      expect(state.relatedImagesCount).toBe(0);
     });
   });
 
@@ -89,14 +84,6 @@ describe('Search Store', () => {
       mutations[SET_IMAGE_PAGE](state, params);
 
       expect(state.imagePage).toBe(params.imagePage);
-    });
-
-    it('SET_RELATED_IMAGES updates state', () => {
-      const params = { relatedImages: ['foo'], relatedImagesCount: 1 };
-      mutations[SET_RELATED_IMAGES](state, params);
-
-      expect(state.relatedImages).toBe(params.relatedImages);
-      expect(state.relatedImagesCount).toBe(params.relatedImagesCount);
     });
 
     it('SET_IMAGES updates state persisting images', () => {
@@ -176,7 +163,6 @@ describe('Search Store', () => {
     beforeEach(() => {
       imageServiceMock = {
         search: jest.fn(() => Promise.resolve({ data: searchData })),
-        getRelatedImages: jest.fn(() => Promise.resolve({ data: searchData })),
         getProviderCollection: jest.fn(() => Promise.resolve({ data: searchData })),
         getImageDetail: jest.fn(() => Promise.resolve({ data: imageDetailData })),
       };
@@ -396,36 +382,6 @@ describe('Search Store', () => {
 
         done();
       });
-    });
-
-    it('FETCH_RELATED_IMAGES on success', (done) => {
-      const params = { id: 'foo' };
-      const action = store.actions(imageServiceMock)[FETCH_RELATED_IMAGES];
-      action({ commit, dispatch }, params).then(() => {
-        expect(commit).toBeCalledWith(FETCH_START_IMAGES);
-        expect(commit).toBeCalledWith(FETCH_END_IMAGES);
-
-        expect(commit).toBeCalledWith(SET_RELATED_IMAGES, {
-          relatedImages: searchData.results,
-          relatedImagesCount: searchData.result_count,
-        });
-
-        expect(imageServiceMock.getRelatedImages).toBeCalledWith(params);
-        done();
-      });
-    });
-
-    it('FETCH_RELATED_IMAGES on error', (done) => {
-      const failedMock = {
-        getRelatedImages: jest.fn(() => Promise.reject('error')),
-      };
-      const params = { id: 'foo' };
-      const action = store.actions(failedMock)[FETCH_RELATED_IMAGES];
-      action({ commit }, params).catch((error) => {
-        expect(commit).toBeCalledWith(FETCH_START_IMAGES);
-        expect(dispatch).toBeCalledWith('HANDLE_IMAGE_ERROR', error);
-      });
-      done();
     });
   });
 });

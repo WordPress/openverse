@@ -1,6 +1,5 @@
-
-import PhotoDetailPage from '@/pages/server/PhotoDetailPage';
-import render from '../../../test-utils/render';
+import PhotoDetailPage from '@/pages/PhotoDetailPage';
+import render from '../../test-utils/render';
 
 describe('PhotoDetailPage', () => {
   const options = {
