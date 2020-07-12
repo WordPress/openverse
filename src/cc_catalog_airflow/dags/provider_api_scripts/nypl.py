@@ -53,9 +53,12 @@ def main():
             params=query_param
         )
         results = request_response.get("result")
-        if results:
-            image_count = _handle_results(results)
-            page = page + 1
+        if type(results) == list:
+            if len(results) > 0:
+                image_count = _handle_results(results)
+                page = page + 1
+            else:
+                condition = False
         else:
             condition = False
     image_store.commit()
@@ -125,6 +128,7 @@ def _handle_results(results):
         creator = _get_creators(
             mods.get("")
         )
+        metadata = _get_metadata(mods)
         capture_count = item_details.get("numResults", {}).get("$")
         captures = item_details.get("sibling_captures", {}).get("capture", [])
         if type(captures) is not list:
@@ -152,7 +156,8 @@ def _handle_results(results):
                 license_url=license_url,
                 thumbnail_url=thumbnail_url,
                 title=title,
-                creator=creator
+                creator=creator,
+                meta_data=metadata
             )
 
     return image_count
@@ -207,6 +212,26 @@ def _get_images(
             break
 
     return image_url, thumbnail_url
+
+
+def _get_metadata(mods):
+    metadata = {}
+    type_of_resource = mods.get("typeOfResource")
+    if type(type_of_resource) == list:
+        if type_of_resource[0].get("usage") == "primary":
+            metadata["type_of_resource"] = type_of_resource[0].get("$")
+
+    metadata["genre"] = mods.get("genre", {}).get("$")
+
+    origin_info = mods.get("originInfo")
+    if type(origin_info) == dict:
+        metadata['date_issued'] = origin_info.get("dateIssued", {}).get("$")
+        metadata["publisher"] = origin_info.get("publisher", {}).get("$")
+
+    metadata["description"] = mods.get("physicalDescription").get(
+        "note").get("$")
+
+    return metadata
 
 
 if __name__ == "__main__":
