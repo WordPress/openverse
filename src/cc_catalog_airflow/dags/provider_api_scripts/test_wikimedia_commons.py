@@ -264,6 +264,23 @@ def test_process_image_data_handles_example_dict():
     )
 
 
+def test_process_image_data_throws_out_invalid_mediatype(monkeypatch):
+    image_data = {'mediatype': 'INVALID'}
+
+    def mock_check_mediatype(image_info):
+        return False
+
+    monkeypatch.setattr(wmc, '_check_mediatype', mock_check_mediatype)
+    with patch.object(
+            wmc.image_store,
+            'add_item',
+            return_value=1
+    ) as mock_add:
+        wmc._process_image_data(image_data)
+
+    mock_add.assert_not_called()
+
+
 def test_get_image_info_dict():
     with open(os.path.join(RESOURCES, 'image_data_example.json')) as f:
         image_data = json.load(f)
@@ -276,6 +293,28 @@ def test_get_image_info_dict():
     actual_image_info = wmc._get_image_info_dict(image_data)
 
     assert actual_image_info == expect_image_info
+
+
+def test_check_mediatype_with_valid_image_info():
+    with open(
+            os.path.join(RESOURCES, 'image_info_from_example_data.json')
+    ) as f:
+        image_info = json.load(f)
+
+    valid_mediatype = wmc._check_mediatype(image_info)
+    assert valid_mediatype is True
+
+
+def test_check_mediatype_with_invalid_mediatype_in_image_info():
+    with open(
+            os.path.join(RESOURCES, 'image_info_from_example_data.json')
+    ) as f:
+        image_info = json.load(f)
+
+    image_info.update(mediatype='INVALIDTYPE')
+
+    valid_mediatype = wmc._check_mediatype(image_info)
+    assert valid_mediatype is False
 
 
 def test_extract_creator_info_handles_plaintext():
