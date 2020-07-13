@@ -221,15 +221,20 @@ def _get_metadata(mods):
         if type_of_resource[0].get("usage") == "primary":
             metadata["type_of_resource"] = type_of_resource[0].get("$")
 
-    metadata["genre"] = mods.get("genre", {}).get("$")
+    if type(mods.get("genre")) == dict:
+        metadata["genre"] = mods.get("genre").get("$")
 
     origin_info = mods.get("originInfo")
     if type(origin_info) == dict:
-        metadata['date_issued'] = origin_info.get("dateIssued", {}).get("$")
-        metadata["publisher"] = origin_info.get("publisher", {}).get("$")
+        if type(origin_info.get("dateIssued")) == dict:
+            metadata['date_issued'] = origin_info.get("dateIssued").get("$")
+        if type(origin_info.get("publisher")) == dict:
+            metadata["publisher"] = origin_info.get("publisher").get("$")
 
-    metadata["description"] = mods.get("physicalDescription").get(
-        "note").get("$")
+    physical_description = mods.get("physicalDescription")
+    if type(physical_description) == dict:
+        if type(physical_description.get("note")) == dict:
+            metadata["description"] = physical_description.get("note").get("$")
 
     return metadata
 
