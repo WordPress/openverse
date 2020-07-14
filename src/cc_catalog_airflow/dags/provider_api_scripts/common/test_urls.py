@@ -62,6 +62,20 @@ def test_validate_url_string_upgrades_scheme(clear_tls_cache, get_good):
     assert actual_validated_url == expect_validated_url
 
 
+def test_validate_url_string_upgrades_ip_address(clear_tls_cache, get_good):
+    url_string = 'http://8.8.8.8'
+    actual_validated_url = urls.validate_url_string(url_string)
+    expect_validated_url = 'https://8.8.8.8'
+    assert actual_validated_url == expect_validated_url
+
+
+def test_validate_url_string_adds_to_ip_address(clear_tls_cache, get_good):
+    url_string = '8.8.8.8'
+    actual_validated_url = urls.validate_url_string(url_string)
+    expect_validated_url = 'https://8.8.8.8'
+    assert actual_validated_url == expect_validated_url
+
+
 def test_validate_url_string_handles_wmc_type_scheme(
         clear_tls_cache, get_good
 ):
