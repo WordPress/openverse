@@ -64,7 +64,7 @@ const LicenseExplanations = {
     },
     getLicenseDeedLink(licenseTerm) {
       return `https://creativecommons.org/licenses/${licenseTerm}/4.0/`;
-    }
+    },
   },
 };
 
