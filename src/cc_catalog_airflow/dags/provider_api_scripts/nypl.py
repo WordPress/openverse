@@ -241,6 +241,3 @@ def _get_metadata(mods):
 
 if __name__ == "__main__":
     main()
-
-
-# http://images.nypl.org/index.php?id=489669&t=w&suffix=510d47dc-3a5e-a3d9-e040-e00a18064a99.001
