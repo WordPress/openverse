@@ -1,8 +1,12 @@
 <template>
   <div v-if="license">
-    <template v-for="(li, index) in splitLicenses">
-      <span class="is-block margin-vertical-small" :key="index">
-        <i :class="{
+    <ul class="margin-vertical-small">
+      <template v-for="(li, index) in splitLicenses">
+        <li :class="{
+          ['margin-vertical-small']: true,
+          ['is-flex']: true
+          }" :key="index">
+          <i :class="{
             icon: true,
             ['has-text-black']: true,
             ['has-background-white']: true,
@@ -11,9 +15,12 @@
             [`cc-${getLicenseIcon(li)}`]: true,
           }"
           :alt="`${li.toUpperCase()}`"/>
-          {{ getLicenseDescription(li) }}
-      </span>
-    </template>
+          <p>{{ getLicenseDescription(li) }}</p>
+        </li>
+      </template>
+    </ul>
+    <p class='caption is-pulled-right margin-small'>Read more about the license
+    <a target='_blank' :href="`${getLicenseDeedLink(license)}`">here</a></p>
   </div>
 </template>
 
@@ -55,6 +62,9 @@ const LicenseExplanations = {
     getLicenseDescription(licenseTerm) {
       return LicenseTermDescriptions[licenseTerm];
     },
+    getLicenseDeedLink(licenseTerm) {
+      return `https://creativecommons.org/licenses/${licenseTerm}/4.0/`;
+    }
   },
 };
 
@@ -63,5 +73,4 @@ export default LicenseExplanations;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-
 </style>
