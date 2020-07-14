@@ -94,7 +94,8 @@ _SIMPLE_IRREVERSIBLE_LICENSE_PATHS = [
 
 _SPECIAL_CASE_LICENSE_PATHS = {
     # This dictionary holds recognized path snippets for which we must
-    # set the license and/or version manually
+    # set the license and/or version manually, and for which we can
+    # recover the path from a valid license_, license_version pair.
     'licenses/by-nd-nc/1.0': ('by-nc-nd', '1.0'),
     'licenses/by-nd-nc/2.0/jp': ('by-nc-nd', '2.0'),
     'licenses/publicdomain': ('publicdomain', NO_VERSION),

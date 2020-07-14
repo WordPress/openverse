@@ -32,7 +32,7 @@ def get_license_info(
     attempt to repair malformed or incorrect license URLs when enough
     information is available.
 
-    If the license URL is not given, not valid, and irreparable, we try
+    If the license URL is not given, or invalid and irreparable, we try
     to construct a license URL from the given license_, license_version
     pair.
 
@@ -65,6 +65,28 @@ def get_license_info(
 
 
 def _get_license_info_from_url(license_url, path_map=LICENSE_PATH_MAP):
+    """
+    We try to extract license info from a given URL.
+
+    Required Arguments:
+
+    license_url:  string from which we'll try to extract license info
+
+    Optional Argument:
+
+    path_map:  dict with keys being string URL paths defining license
+               pairs and values being a tuple (str, str) with the pair
+               defined by the URL path.  See common.licenses.constants
+               for examples.  The default should be all canonical
+               license path stems.
+
+    We first validate that the URL is a valid creativecommons.org URL,
+    then use the paths from the path_map to determine the
+    (license_, license_version) pair corresponding to the URL.
+
+    We return the validated license info if possible,
+    else None, None, None.
+    """
     cc_url = _get_valid_cc_url(license_url)
     if cc_url is None:
         return None, None, None
@@ -90,6 +112,25 @@ def _get_license_info_from_url(license_url, path_map=LICENSE_PATH_MAP):
 
 
 def _get_valid_cc_url(license_url):
+    """
+    Try to get a valid creativecommons.org URL from a given URL.
+
+    Required Argument:
+
+    license_url:  string with a URL to be validated or fixed
+
+    This function enforces:
+      - string type
+      - https scheme
+      - parses into a urllib.parse.ParseResult with
+        netloc=creativecommons.org
+
+    After that, we rewrite the URL to whatever we get redirected to when
+    we make a request using it.
+
+    If all of these validations and the rewriting succeed, we return the
+    rewritten URL. Otherwise, we return None
+    """
     logger.debug(f'Checking license URL {license_url}')
     if type(license_url) != str:
         logger.debug(
@@ -127,6 +168,11 @@ def _get_valid_cc_url(license_url):
 def _get_license_info_from_license_pair(
         license_, license_version, pair_map=REVERSE_LICENSE_PATH_MAP
 ):
+    """
+    Validates a given license pair, and derives a license URL from it.
+
+    Returns both the validated pair and the derived license URL.
+    """
     string_version = _ensure_license_version_string(license_version)
     license_path = pair_map.get((license_, string_version))
     logger.debug(f'Derived license_path: {license_path}')
