@@ -1,4 +1,3 @@
-
 """
 This module has a number of public methods which are useful for working
 with licenses.
@@ -13,10 +12,6 @@ logger = logging.getLogger(__name__)
 
 LICENSE_PATH_MAP = constants.get_license_path_map()
 REVERSE_LICENSE_PATH_MAP = constants.get_reverse_license_path_map()
-
-
-class IrreversibleLicensePairException(Exception):
-    pass
 
 
 def get_license_info(
