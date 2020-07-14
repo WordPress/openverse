@@ -52,8 +52,7 @@ def test_validate_url_string_nones_with_invalid_structure_domain(
 ):
     url_string = 'https:/abcd'
     actual_validated_url = urls.validate_url_string(url_string)
-    expect_validated_url = None
-    assert actual_validated_url == expect_validated_url
+    assert actual_validated_url is None
 
 
 def test_validate_url_string_upgrades_scheme(clear_tls_cache, get_good):
@@ -132,3 +131,38 @@ def test_rewrite_redirected_url_caches_results(
     assert actual_rewritten_url_1 == expect_url
     assert actual_rewritten_url_2 == expect_url
     mock_get.assert_called_once()
+
+
+def test_add_url_scheme_adds_scheme():
+    url_stub = 'creativecommons.org'
+    actual_url = urls.add_url_scheme(url_stub, scheme='https')
+    expect_url = 'https://creativecommons.org'
+    assert actual_url == expect_url
+
+
+def test_add_url_scheme_upgrades_scheme():
+    url_stub = 'http://creativecommons.org'
+    actual_url = urls.add_url_scheme(url_stub, scheme='https')
+    expect_url = 'https://creativecommons.org'
+    assert actual_url == expect_url
+
+
+def test_add_url_scheme_leaves_scheme():
+    url_stub = 'http://creativecommons.org'
+    actual_url = urls.add_url_scheme(url_stub, scheme='http')
+    expect_url = 'http://creativecommons.org'
+    assert actual_url == expect_url
+
+
+def test_add_url_scheme_handles_h():
+    url_stub = 'hreativecommons.org/h'
+    actual_url = urls.add_url_scheme(url_stub, scheme='https')
+    expect_url = 'https://hreativecommons.org/h'
+    assert actual_url == expect_url
+
+
+def test_add_url_scheme_leaves_nonprefix_scheme():
+    url_stub = 'hreativecommons.org/?referer=https://abc.com'
+    actual_url = urls.add_url_scheme(url_stub, scheme='https')
+    expect_url = 'https://hreativecommons.org/?referer=https://abc.com'
+    assert actual_url == expect_url

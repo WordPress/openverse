@@ -4,6 +4,7 @@ verifying and cleaning URLs.
 """
 from functools import lru_cache
 import logging
+import re
 import requests
 from urllib.parse import urlparse
 
@@ -52,7 +53,7 @@ def validate_url_string(url_string):
         return None
 
 
-@lru_cache(maxsize=1024)
+@lru_cache(maxsize=2048)
 def rewrite_redirected_url(url_string):
     """
     Requests the given `url_string`, and rewrites it to the final URL
@@ -82,13 +83,13 @@ def add_url_scheme(url_string, scheme='http'):
     or adds the given `scheme` if necessary.
     """
     logger.debug(f'Adding or changing scheme of {url_string} to {scheme}')
-    url_no_scheme = (
-        url_string
-        .strip()
-        .strip('http://')
-        .strip('https://')
-        .strip('/')
-    )
+    stripped_url = url_string.strip()
+    scheme_pattern = re.compile('https*:/*')
+    scheme_match = scheme_pattern.match(stripped_url)
+    if scheme_match is not None:
+        url_no_scheme = stripped_url[scheme_match.end():].strip('/')
+    else:
+        url_no_scheme = stripped_url.strip('/')
     url_with_scheme = f'{scheme}://{url_no_scheme}'
     logger.debug(f'URL with scheme: {url_with_scheme}')
     return url_with_scheme
