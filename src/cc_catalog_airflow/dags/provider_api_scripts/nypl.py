@@ -56,6 +56,7 @@ def main():
         if type(results) == list:
             if len(results) > 0:
                 image_count = _handle_results(results)
+                logger.info(f"{image_count} images till now")
                 page = page + 1
             else:
                 condition = False
@@ -148,7 +149,7 @@ def _handle_results(results):
                 license_url is None
             ):
                 continue
-            print(image_id + "\n" + image_url + "\n" + license_url)
+
             image_count = image_store.add_item(
                 foreign_identifier=image_id,
                 foreign_landing_url=foreign_landing_url,
