@@ -2,9 +2,9 @@ import { stringifyUrl } from 'query-string';
 
 /**
  * A mapping of each legacy source with its url builder functions for each content type.
- * Urls were based off of deta found here: https://github.com/creativecommons/cccatalog-frontend/issues/315
+ * Urls were based off of data found here: https://github.com/creativecommons/cccatalog-frontend/issues/315
  */
-const legacySourceMap = {
+export const legacySourceMap = {
   Europeana: {
     audio(search) {
       return {
@@ -18,8 +18,12 @@ const legacySourceMap = {
     },
     video(search) {
       return {
-        url: '',
-        query: {},
+        url: 'https://www.europeana.eu/en/search',
+        query: {
+          page: 1,
+          qf: 'TYPE:"VIDEO"',
+          query: `${search.query} AND RIGHTS:*creative* AND NOT RIGHTS:*nc* AND NOT RIGHTS:*nd*`,
+        },
       };
     },
   },
@@ -47,32 +51,72 @@ const legacySourceMap = {
       };
     },
   },
+  // https://www.jamendo.com/legal/creative-commons
   Jamendo: {
-    audio: '',
-  },
-  ccMixter: {
-    audio: '',
-  },
-  SoundCloud: {
-    audio: '',
-  },
-  YouTube: {
-    video: '',
-  },
-  'Google Images': {
-    image(search) {
+    audio(search) {
       return {
-        url: 'https://www.google.com/search',
+        url: 'https://www.jamendo.com/search',
         query: {
-          as_rights:
-            '(cc_publicdomain%7Ccc_attribute%7Ccc_sharealike).-(cc_noncommercial%7Ccc_nonderived)',
           q: search.query,
         },
       };
     },
   },
-  'Open Clip Art Library': {
-    image: '',
+  ccMixter: {
+    audio(search) {
+      return {
+        // no https :(
+        url: 'http://dig.ccmixter.org/search',
+        query: {
+          lic: 'open',
+          searchp: search.query,
+        },
+      };
+    },
+  },
+  SoundCloud: {
+    audio(search) {
+      return {
+        url: 'https://soundcloud.com/search/sounds',
+        query: {
+          q: search.query,
+          'filter.license': 'to_modify_commercially', // @todo: choose which type from the search object
+        },
+      };
+    },
+  },
+  YouTube: {
+    video(search) {
+      return {
+        url: 'https://www.youtube.com/results',
+        query: {
+          search_query: search.query,
+          sp: 'EgIwAQ%253D%253D', // this crazy line filters by cc license
+        },
+      };
+    },
+    'Google Images': {
+      image(search) {
+        return {
+          url: 'https://www.google.com/search',
+          query: {
+            as_rights:
+            '(cc_publicdomain%7Ccc_attribute%7Ccc_sharealike).-(cc_noncommercial%7Ccc_nonderived)',
+            q: search.query,
+          },
+        };
+      },
+    },
+    'Open Clip Art Library': {
+      image(search) {
+        return {
+          url: 'https://www.openclipart.org/search',
+          query: {
+            query: search.query,
+          },
+        };
+      },
+    },
   },
 };
 
