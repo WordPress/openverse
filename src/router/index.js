@@ -22,7 +22,7 @@ Vue.use(VueMeta);
  */
 const resultSubviews = [
   { path: '', component: SearchGrid },
-  { path: 'image', component: SearchGrid, props: route => ({ query: route.query.q }) },
+  { path: 'image', component: SearchGrid },
   { path: 'audio', component: MetaSearchForm, key: 'audio', props: { type: 'audio' } },
   { path: 'video', component: MetaSearchForm, key: 'video', props: { type: 'video' } },
 ];
@@ -32,7 +32,6 @@ const router = new VueRouter({
   routes: [
     {
       path: '/search',
-      name: 'browse-page',
       component: BrowsePage,
       // a meta field
       meta: {
@@ -85,7 +84,7 @@ const router = new VueRouter({
     },
   ],
   scrollBehavior(to) {
-    if (to.name === 'browse-page' && to.params.location) {
+    if ((to.path === '/search' || to.path === '/search/image') && to.params.location) {
       // the setTimeout is for the time it takes it get the images
       // Else the page scrolls up after the images are fetched
       // Disabling linting for the reject argument that isn't used

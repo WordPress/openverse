@@ -15,7 +15,7 @@
           <search-rating v-if="_query.q" :searchTerm="_query.q" />
         </div>
         <div class="is-hidden-desktop is-block">
-          <search-rating v-if="_query.q" :searchTerm="_query.q" />
+          <search-rating v-if="_query.q" :searchTerm="searchTerm" />
         </div>
         <safe-browsing />
       </div>
@@ -87,6 +87,9 @@ export default {
     },
     includeAddToList: {
       default: true,
+    },
+    searchTerm: {
+      default: '',
     },
   },
   computed: {

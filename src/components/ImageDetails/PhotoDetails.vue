@@ -184,7 +184,7 @@ export default {
   methods: {
     onGoBackToSearchResults() {
       this.$router.push({
-        name: 'browse-page',
+        path: '/search',
         query: this.query,
         params: { location: this.$route.params.location },
       });

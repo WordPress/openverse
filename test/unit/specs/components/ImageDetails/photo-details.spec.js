@@ -135,7 +135,7 @@ describe('PhotoDetails', () => {
     const link = wrapper.find('.photo_breadcrumb');
     link.trigger('click');
     expect(routerMock.push).toHaveBeenCalledWith({
-      name: 'browse-page',
+      path: '/search',
       query: opts.propsData.query,
       params: { location: routeMock.params.location },
     });

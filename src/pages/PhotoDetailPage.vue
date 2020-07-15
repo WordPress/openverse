@@ -93,8 +93,9 @@ const PhotoDetailPage = {
     // sets the internal value shouldShowBreadcrumb so that the
     // "back to search results" link is rendered with the correct link
     // to the results page the user was before.
+
     nextPage((_this) => {
-      if (previousPage.name === 'browse-page') {
+      if (previousPage.path === '/search' || previousPage.path === '/search/image') {
         _this.shouldShowBreadcrumb = true; // eslint-disable-line no-param-reassign
         _this.breadCrumbURL = `/search?q=${previousPage.query.q}`; // eslint-disable-line no-param-reassign
       }
@@ -145,4 +146,3 @@ const PhotoDetailPage = {
 
 export default PhotoDetailPage;
 </script>
-
