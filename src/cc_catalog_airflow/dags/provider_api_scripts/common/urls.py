@@ -46,7 +46,7 @@ def validate_url_string(url_string):
         logger.debug(f'Using IP address as URL: {upgraded_url}')
         return upgraded_url
     else:
-        logger.debug(
+        logger.info(
             f'Invalid url {url_string}, attempted upgrade: {upgraded_url}.'
             ' Returning None'
         )

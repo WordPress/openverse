@@ -53,14 +53,22 @@ def get_license_info(
             f' derived version {license_info[1]},'
             f' and license_url {license_info[2]}'
         )
-    else:
-        logger.info(
+    elif license_ is not None:
+        logger.debug(
             f'Falling back to given license_ {license_}'
             f' and license_version {license_version}'
         )
         license_info = _get_license_info_from_license_pair(
             license_, license_version
         )
+    else:
+        logger.debug(
+            f'No valid license_info could be derived.  Inputs were'
+            f' license_: {license_}'
+            f' license_version: {license_version}'
+            f' license_url: {license_url}'
+        )
+        license_info = (None, None, None)
     return license_info
 
 
@@ -191,8 +199,10 @@ def _ensure_license_version_string(license_version):
     try:
         if license_version == constants.NO_VERSION:
             string_license_version = license_version
-        else:
+        elif license_version is not None:
             string_license_version = str(float(license_version))
+        else:
+            logger.debug('license_version is NoneType')
     except Exception as e:
         logger.warning(
             f'Could not recover license_version from {license_version}!'

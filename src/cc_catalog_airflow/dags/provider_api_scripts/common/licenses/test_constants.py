@@ -1,9 +1,6 @@
 from common.licenses import constants
 
 
-from common.licenses import constants
-
-
 def test_get_license_path_map_comprehenseion(monkeypatch):
     example_paths = [
         'licenses/by/1.0',
