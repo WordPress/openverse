@@ -14,6 +14,10 @@ LICENSE_PATH_MAP = constants.get_license_path_map()
 REVERSE_LICENSE_PATH_MAP = constants.get_reverse_license_path_map()
 
 
+class InvalidLicenseURLException(Exception):
+    pass
+
+
 def get_license_info(
         license_url=None, license_=None, license_version=None
 ):
@@ -214,4 +218,9 @@ def _ensure_license_version_string(license_version):
 def _build_license_url(license_path):
     license_path = license_path.strip().strip('/')
     derived_url = f'https://creativecommons.org/{license_path}/'
-    return urls.rewrite_redirected_url(derived_url)
+    rewritten_license_url = urls.rewrite_redirected_url(derived_url)
+    if rewritten_license_url is None:
+        raise InvalidLicenseURLException(
+            f'Failed to rewrite {derived_url}.'
+        )
+    return rewritten_license_url

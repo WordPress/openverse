@@ -1,8 +1,9 @@
 import json
 import logging
 import os
-
 from unittest.mock import patch
+
+import pytest
 
 import raw_pixel as rwp
 
@@ -44,6 +45,7 @@ def test_process_pages_giving_zero():
         assert img_ctr == 0
 
 
+@pytest.mark.skip(reason='This test calls the internet via ImageStore')
 def test_process_image_data():
     r = _get_resource_json("total_images_example.json")
     with patch.object(rwp, "_request_content", return_value=r):

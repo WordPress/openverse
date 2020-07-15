@@ -54,9 +54,12 @@ def test_get_license_info_prefers_derived_values(monkeypatch):
     assert actual_url == expected_url
 
 
-def test_get_license_info_falls_back_with_invalid_license_url(monkeypatch):
+def test_get_license_info_falls_back_with_invalid_license_url(
+        mock_rewriter, monkeypatch,
+):
     expect_license = 'cc0'
     expect_version = '1.0'
+    expect_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
 
     def mock_cc_license_validator(url_string):
         return None
@@ -71,7 +74,7 @@ def test_get_license_info_falls_back_with_invalid_license_url(monkeypatch):
     )
     assert actual_license == expect_license
     assert actual_version == expect_version
-    assert actual_url is None
+    assert actual_url == expect_url
 
 
 def test_get_valid_cc_url_makes_url_lowercase(mock_rewriter):
@@ -225,3 +228,16 @@ def test_validate_license_pair_handles_na_version(mock_rewriter):
         'https://creativecommons.org/licenses/publicdomain/'
     )
     assert actual_license_info == expect_license_info
+
+
+def test_build_license_url_raises_exception_when_derived_url_unrewritable(
+        monkeypatch
+):
+    monkeypatch.setattr(
+        licenses.urls,
+        'rewrite_redirected_url',
+        lambda x: None
+    )
+
+    with pytest.raises(licenses.InvalidLicenseURLException):
+        licenses._build_license_url('abcdefg')
