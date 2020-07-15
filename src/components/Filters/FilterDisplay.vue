@@ -1,5 +1,5 @@
 <template>
-    <div class="filter-display padding-horizontal-normal" aria-live="polite">
+    <div class="filter-display padding-normal" aria-live="polite">
         <span v-if="anyFilterApplied" class="caption has-text-weight-semibold">Filter By</span>
         <span v-for="filter in getFilters('licenses')" :key="filter.code">
           <filter-block :code="filter.code"
