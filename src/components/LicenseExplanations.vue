@@ -19,8 +19,6 @@
         </li>
       </template>
     </ul>
-    <p class='caption is-pulled-right margin-small'>Read more about the license
-    <a target='_blank' :href="`${getLicenseDeedLink(license)}`">here</a></p>
   </div>
 </template>
 
@@ -61,9 +59,6 @@ const LicenseExplanations = {
     },
     getLicenseDescription(licenseTerm) {
       return LicenseTermDescriptions[licenseTerm];
-    },
-    getLicenseDeedLink(licenseTerm) {
-      return `https://creativecommons.org/licenses/${licenseTerm}/4.0/`;
     },
   },
 };

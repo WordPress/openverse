@@ -3,6 +3,11 @@
     <h5 class="b-header">License CC {{ license.toUpperCase() }}:</h5>
 
     <license-explanations :license="license" />
+    <p class='caption is-pulled-right margin-small'>
+      Read more about the license
+      <a target='_blank' :href="`${getLicenseDeedLink(license)}`">here</a>
+    </p>
+
   </div>
 </template>
 
@@ -14,6 +19,11 @@ export default {
   props: ['license'],
   components: {
     LicenseExplanations,
+  },
+  methods: {
+    getLicenseDeedLink(licenseTerm) {
+      return `https://creativecommons.org/licenses/${licenseTerm}/4.0/?ref=ccsearch&atype=rich`;
+    },
   },
 };
 </script>
