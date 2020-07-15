@@ -10,7 +10,6 @@
       <div class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit"
                           searchBoxPlaceholder="Search this collection" />
-        <search-type-tabs />
         <search-grid v-if="query.provider"
                      :query="query"
                      :searchTerm="providerName"

@@ -3,16 +3,15 @@
     <section class="tabs">
       <ul>
         <li v-for="type in contentTypes" :key="type" :class="tabClass(type, 'tab')">
-          <router-link class="is-size-5"
+          <router-link
+              class="is-size-5"
               :to="{ path: `/search/${type}`, query: $route.query }"
-              :aria-selected="activeTab == type"
-              @click.prevent="setActiveTab(type)">
+              :aria-selected="activeTab == type">
             {{ capitalize(type) }}
           </router-link>
         </li>
       </ul>
     </section>
-    <router-view />
   </div>
 </template>
 
@@ -24,8 +23,12 @@ export default {
   data() {
     return {
       contentTypes: ['image', 'audio', 'video'],
-      activeTab: 'image',
     };
+  },
+  computed: {
+    activeTab() {
+      return this.$route.path.split('search/')[1] || 'image';
+    },
   },
   methods: {
     capitalize,
@@ -34,10 +37,6 @@ export default {
         [tabClass]: true,
         'is-active': tabSlug === this.activeTab,
       };
-    },
-    setActiveTab(tabSlug) {
-      this.activeTab = tabSlug;
-      this.$router.push(`search/${tabSlug}`);
     },
   },
 };

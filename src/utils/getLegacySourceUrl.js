@@ -91,7 +91,7 @@ export const legacySourceMap = {
         url: 'https://www.youtube.com/results',
         query: {
           search_query: search.query,
-          sp: 'EgIwAQ%253D%253D', // this crazy line filters by cc license
+          sp: 'EgIwAQ%3D%3D', // this interesting line filters by cc license
         },
       };
     },

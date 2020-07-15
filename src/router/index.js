@@ -10,7 +10,8 @@ import CollectionsPage from '@/pages/CollectionsPage';
 import CollectionBrowsePage from '@/pages/CollectionBrowsePage';
 import SearchHelpPage from '@/pages/SearchHelpPage';
 import NotFoundPage from '@/pages/NotFoundPage';
-import LoadingIcon from '@/components/LoadingIcon';
+import SearchGrid from '@/components/SearchGrid';
+import MetaSearchForm from '@/components/MetaSearchForm';
 import redirectOnEmptySearch from './redirectOnEmptySearch';
 
 Vue.use(VueRouter);
@@ -20,10 +21,10 @@ Vue.use(VueMeta);
  * These are the nested routes for each tab (image, audio, etc.) on the results pages.
  */
 const resultSubviews = [
-  { path: '', component: LoadingIcon, props: route => ({ query: route.query.q }) },
-  { path: 'image', component: LoadingIcon, props: route => ({ query: route.query.q }) },
-  { path: 'audio', component: LoadingIcon, props: route => ({ query: route.query.q }) },
-  { path: 'video', component: LoadingIcon, props: route => ({ query: route.query.q }) },
+  { path: '', component: SearchGrid },
+  { path: 'image', component: SearchGrid, props: route => ({ query: route.query.q }) },
+  { path: 'audio', component: MetaSearchForm, key: 'audio', props: { type: 'audio' } },
+  { path: 'video', component: MetaSearchForm, key: 'video', props: { type: 'video' } },
 ];
 
 const router = new VueRouter({
@@ -71,7 +72,6 @@ const router = new VueRouter({
       name: 'collections-browse-page',
       component: CollectionBrowsePage,
       props: true,
-      children: resultSubviews,
     },
     {
       path: '/',

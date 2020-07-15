@@ -1,8 +1,6 @@
 <template>
   <div>
-    <search-grid-manual-load :query="query"
-                             :searchTerm="searchTerm"
-                             @onLoadMoreImages="onLoadMoreImages" />
+    <search-grid-manual-load :query="query" @onLoadMoreImages="onLoadMoreImages" />
     <ScrollButton :showBtn="showScrollButton " />
   </div>
 </template>
@@ -17,7 +15,7 @@ export default {
     SearchGridManualLoad,
     ScrollButton,
   },
-  props: ['query', 'searchTerm'],
+  props: ['query'],
   data: () => ({
     showScrollButton: false,
   }),

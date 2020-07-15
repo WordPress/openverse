@@ -9,10 +9,10 @@
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
         <search-type-tabs />
         <filter-display :query="query" />
-        <search-grid v-if="query.q"
+        <router-view v-if="query.q"
                      :query="query"
-                     searchTerm=""
-                     @onLoadMoreImages="onLoadMoreImages" />
+                     @onLoadMoreImages="onLoadMoreImages"
+                    :key="$route.path"/>
       </div>
     </div>
     <footer-section></footer-section>
@@ -48,7 +48,7 @@ const BrowsePage = {
       this.getImages(searchParams);
     },
     onSearchFormSubmit(searchParams) {
-      this.$store.commit(SET_QUERY, searchParams);
+      this.$store.commit(SET_QUERY, { ...searchParams, shouldNavigate: false });
     },
   },
   mounted() {

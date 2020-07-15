@@ -15,7 +15,7 @@
           <search-rating v-if="_query.q" :searchTerm="_query.q" />
         </div>
         <div class="is-hidden-desktop is-block">
-          <search-rating v-if="_query.q" :searchTerm="searchTerm" />
+          <search-rating v-if="_query.q" :searchTerm="_query.q" />
         </div>
         <safe-browsing />
       </div>
@@ -30,7 +30,7 @@
       <div class="load-more">
         <button
           v-show="!isFetchingImages && includeAnalytics"
-          class="button margin-bottom-big"
+          class="button margin-bottom-small"
           :disabled="isFinished"
           @click="onLoadMoreImages"
         >
@@ -39,6 +39,7 @@
         </button>
         <loading-icon v-show="isFetchingImages" />
       </div>
+
       <div
         class="search-grid_notification callout alert"
         v-if="isFetchingImagesError"
@@ -86,9 +87,6 @@ export default {
     },
     includeAddToList: {
       default: true,
-    },
-    searchTerm: {
-      default: '',
     },
   },
   computed: {
