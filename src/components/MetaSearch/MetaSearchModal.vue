@@ -1,11 +1,13 @@
 <template>
   <app-modal @close="$emit('close')">
-      <header class="padding-top-bigger padding-left-bigger padding-righr-bigger padding-bottom-small">
+      <header class="padding-top-bigger
+        padding-left-bigger padding-righr-bigger padding-bottom-small">
         <h2>Search images from other sources</h2>
         <p>Click on a source below to directly search other collections of CC-licensed images</p>
       </header>
       <hr />
-      <div class="padding-left-bigger padding-right-bigger padding-bottom-bigger meta-modal-content">
+      <div class="padding-left-bigger
+        padding-right-bigger padding-bottom-bigger meta-modal-content">
         <meta-source-list :type="type" :query="query" />
         <p class="caption has-text-weight-semibold">
           CC Search does not currently index the sources listed above, but through
@@ -22,8 +24,8 @@
 </template>
 
 <script>
-import MetaSourceList from './MetaSourceList';
 import AppModal from '@/components/AppModal';
+import MetaSourceList from './MetaSourceList';
 
 export default {
   name: 'meta-search-modal',

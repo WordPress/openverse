@@ -3,7 +3,11 @@
       <h4 class="b-header margin-bottom-normal">Sources</h4>
       <ul class="buttons">
         <li v-for="source in sources" :key="source">
-          <a target="_blank" rel="nofollow noreferrer" :href="getSourceUrl(source)" class="button small margin-right-small">
+          <a
+            target="_blank"
+            rel="nofollow noreferrer"
+            :href="getSourceUrl(source)"
+            class="button small margin-right-small">
             {{source}}
             <sup class="">
               <i class="margin-left-small icon external-link" />

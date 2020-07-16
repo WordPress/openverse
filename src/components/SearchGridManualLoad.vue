@@ -50,7 +50,11 @@
 
     <p @click="showMetaImageSearch = true">Lorem ipsum dolor set amet</p>
 
-    <meta-search-modal v-show="showMetaImageSearch" @close="showMetaImageSearch = false" type="image" :query="query" />
+    <meta-search-modal
+      v-show="showMetaImageSearch"
+      @close="showMetaImageSearch = false"
+      type="image"
+      :query="query" />
   </section>
 </template>
 
