@@ -26,6 +26,9 @@ FLICKR_SUB_PROVIDERS = {
     },
     'spacex': {
         '130608600@N05'  # Official SpaceX Photos
+    },
+    'woc_tech': {
+        '136629440@N06'  # WOCinTech Chat
     }
 }
 
