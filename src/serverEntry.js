@@ -1,6 +1,6 @@
-import createApp from './main'
-import sentryInit from './sentry/server'
-import router from './router'
+import createApp from './main';
+import sentryInit from './sentry/server';
+import router from './router';
 
 // This exported function will be called by `bundleRenderer`.
 // This is where we perform data-prefetching to determine the
@@ -9,26 +9,26 @@ import router from './router'
 // return a Promise that resolves to the app instance.
 export default context =>
   new Promise((resolve, reject) => {
-    sentryInit()
+    sentryInit();
 
-    const { app, store } = createApp(router)
+    const { app, store } = createApp(router);
 
-    const { url } = context
-    const { fullPath } = router.resolve(url).route
+    const { url } = context;
+    const { fullPath } = router.resolve(url).route;
 
     if (fullPath !== url) {
-      return reject({ url: fullPath })
+      return reject({ url: fullPath });
     }
 
     // set router's location
-    router.push(url)
+    router.push(url);
 
     // wait until router has resolved possible async hooks
     return router.onReady(() => {
-      const matchedComponents = router.getMatchedComponents()
+      const matchedComponents = router.getMatchedComponents();
       // no matched routes
       if (!matchedComponents.length) {
-        return reject({ code: 404 })
+        return reject({ code: 404 });
       }
       // Call fetchData hooks on components matched by the route.
       // A preFetch hook dispatches a store action and returns a Promise,
@@ -41,8 +41,8 @@ export default context =>
             asyncData({
               store,
               route: router.currentRoute,
-            })
-        )
+            }),
+        ),
       )
         .then(() => {
           // After all preFetch hooks are resolved, our store is now
@@ -52,9 +52,9 @@ export default context =>
           // store to pick-up the server-side state without having to duplicate
           // the initial data fetching on the client.
           // eslint-disable-next-line no-param-reassign
-          context.state = store.state
-          resolve(app)
+          context.state = store.state;
+          resolve(app);
         })
-        .catch(reject)
-    }, reject)
-  })
+        .catch(reject);
+    }, reject);
+  });
