@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { TOGGLE_FILTER } from '@/store/action-types';
+import { TOGGLE_FILTER } from '@/store/action-types'
 
 /**
  * This component displays the mature content filter in a pop-up dialog.
@@ -49,25 +49,25 @@ export default {
   data() {
     return {
       showForm: false,
-    };
+    }
   },
   computed: {
     mature() {
-      return this.$store.state.filters.mature;
+      return this.$store.state.filters.mature
     },
   },
   methods: {
     toggleShowForm() {
-      this.showForm = !this.showForm;
+      this.showForm = !this.showForm
     },
     toggleMature() {
       this.$store.dispatch(TOGGLE_FILTER, {
         filterType: 'mature',
         shouldNavigate: true,
-      });
+      })
     },
   },
-};
+}
 </script>
 
 <style>

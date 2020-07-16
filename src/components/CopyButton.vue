@@ -1,15 +1,19 @@
 <template>
-  <button :id="id"
-          type="button"
-          class="button tiny donate is-paddingless margin-top-normal padding-horizontal-normal"
-          :data-clipboard-target="el">
-    <span v-if="!success"><i class="icon cc-share margin-right-small"></i> Copy</span>
+  <button
+    :id="id"
+    type="button"
+    class="button tiny donate is-paddingless margin-top-normal padding-horizontal-normal"
+    :data-clipboard-target="el"
+  >
+    <span v-if="!success"
+      ><i class="icon cc-share margin-right-small"></i> Copy</span
+    >
     <span v-else><i class="icon cc-share margin-right-small"></i> Copied!</span>
   </button>
 </template>
 
 <script>
-import Clipboard from 'clipboard';
+import Clipboard from 'clipboard'
 
 export default {
   name: 'copy-button',
@@ -27,28 +31,27 @@ export default {
   },
   methods: {
     onCopySuccess(e) {
-      this.success = true;
-      this.$emit('copied', { content: e.text });
+      this.success = true
+      this.$emit('copied', { content: e.text })
 
       setTimeout(() => {
-        this.success = false;
-      }, 2000);
+        this.success = false
+      }, 2000)
 
-      e.clearSelection();
+      e.clearSelection()
     },
     onCopyError(e) {
-      this.$emit('copyFailed');
-      e.clearSelection();
+      this.$emit('copyFailed')
+      e.clearSelection()
     },
   },
   mounted() {
-    this.clipboard = new Clipboard(`#${this.$props.id}`);
-    this.clipboard.on('success', this.onCopySuccess);
-    this.clipboard.on('error', this.onCopyError);
+    this.clipboard = new Clipboard(`#${this.$props.id}`)
+    this.clipboard.on('success', this.onCopySuccess)
+    this.clipboard.on('error', this.onCopyError)
   },
   destroyed() {
-    this.clipboard.destroy();
+    this.clipboard.destroy()
   },
-};
+}
 </script>
-

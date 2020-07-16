@@ -3,42 +3,54 @@
     <div class="is-hidden-desktop">
       <div class="overlay">
         <div class="modal">
-          <div :class="{ 'search-filters': true,
-                         'search-filters__visible': isFilterVisible, }">
-            <filters-list :filters="filters"
-                          :isFilterApplied="isFilterApplied"
-                          :licenseTypesDisabled="licenseTypesDisabled"
-                          :licensesDisabled="licensesDisabled"
-                          :renderProvidersFilter="licensesDisabled"
-                          @onUpdateFilter="onUpdateFilter"
-                          @onUpdateSearchByCreator="onUpdateSearchByCreator"
-                          @onToggleSearchGridFilter="onToggleSearchGridFilter"
-                          @onClearFilters="onClearFilters" />
+          <div
+            :class="{
+              'search-filters': true,
+              'search-filters__visible': isFilterVisible,
+            }"
+          >
+            <filters-list
+              :filters="filters"
+              :isFilterApplied="isFilterApplied"
+              :licenseTypesDisabled="licenseTypesDisabled"
+              :licensesDisabled="licensesDisabled"
+              :renderProvidersFilter="licensesDisabled"
+              @onUpdateFilter="onUpdateFilter"
+              @onUpdateSearchByCreator="onUpdateSearchByCreator"
+              @onToggleSearchGridFilter="onToggleSearchGridFilter"
+              @onClearFilters="onClearFilters"
+            />
           </div>
         </div>
       </div>
     </div>
     <div class="is-hidden-touch">
-      <div :class="{ 'search-filters': true,
-                     'search-filters__visible': isFilterVisible, }">
-        <filters-list :filters="filters"
-                      :isFilterApplied="isFilterApplied"
-                      :licenseTypesDisabled="licenseTypesDisabled"
-                      :licensesDisabled="licensesDisabled"
-                      :renderProvidersFilter="renderProvidersFilter"
-                      @onUpdateFilter="onUpdateFilter"
-                      @onUpdateSearchByCreator="onUpdateSearchByCreator"
-                      @onToggleSearchGridFilter="onToggleSearchGridFilter"
-                      @onClearFilters="onClearFilters" />
+      <div
+        :class="{
+          'search-filters': true,
+          'search-filters__visible': isFilterVisible,
+        }"
+      >
+        <filters-list
+          :filters="filters"
+          :isFilterApplied="isFilterApplied"
+          :licenseTypesDisabled="licenseTypesDisabled"
+          :licensesDisabled="licensesDisabled"
+          :renderProvidersFilter="renderProvidersFilter"
+          @onUpdateFilter="onUpdateFilter"
+          @onUpdateSearchByCreator="onUpdateSearchByCreator"
+          @onToggleSearchGridFilter="onToggleSearchGridFilter"
+          @onClearFilters="onClearFilters"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { SET_FILTER_IS_VISIBLE, CLEAR_FILTERS } from '@/store/mutation-types';
-import { TOGGLE_FILTER } from '@/store/action-types';
-import FiltersList from './FiltersList';
+import { SET_FILTER_IS_VISIBLE, CLEAR_FILTERS } from '@/store/mutation-types'
+import { TOGGLE_FILTER } from '@/store/action-types'
+import FiltersList from './FiltersList'
 
 export default {
   name: 'search-grid-filter',
@@ -48,22 +60,22 @@ export default {
   },
   computed: {
     isFilterApplied() {
-      return this.$store.state.isFilterApplied;
+      return this.$store.state.isFilterApplied
     },
     isFilterVisible() {
-      return this.$store.state.isFilterVisible;
+      return this.$store.state.isFilterVisible
     },
     filters() {
-      return this.$store.state.filters;
+      return this.$store.state.filters
     },
     renderProvidersFilter() {
-      return !this.$props.isCollectionsPage;
+      return !this.$props.isCollectionsPage
     },
     licensesDisabled() {
-      return this.$store.state.filters.licenseTypes.some(li => li.checked);
+      return this.$store.state.filters.licenseTypes.some((li) => li.checked)
     },
     licenseTypesDisabled() {
-      return this.$store.state.filters.licenses.some(li => li.checked);
+      return this.$store.state.filters.licenses.some((li) => li.checked)
     },
   },
   methods: {
@@ -74,14 +86,14 @@ export default {
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
         shouldNavigate: true,
-      });
+      })
     },
     onClearFilters() {
       this.$store.commit(CLEAR_FILTERS, {
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
         shouldNavigate: true,
-      });
+      })
     },
     onUpdateSearchByCreator() {
       this.$store.dispatch(TOGGLE_FILTER, {
@@ -89,16 +101,15 @@ export default {
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
         shouldNavigate: true,
-      });
+      })
     },
     onToggleSearchGridFilter() {
-      this.$store.commit(
-        SET_FILTER_IS_VISIBLE,
-        { isFilterVisible: !this.isFilterVisible },
-      );
+      this.$store.commit(SET_FILTER_IS_VISIBLE, {
+        isFilterVisible: !this.isFilterVisible,
+      })
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

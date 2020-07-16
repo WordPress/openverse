@@ -58,10 +58,10 @@
 </template>
 
 <script>
-import findIndex from 'lodash.findindex';
-import { ExperimentData } from '@/abTests/filterVisibilityExperiment';
-import LicenseIcons from '@/components/LicenseIcons';
-import LicenseExplanationTooltip from './LicenseExplanationTooltip';
+import findIndex from 'lodash.findindex'
+import { ExperimentData } from '@/abTests/filterVisibilityExperiment'
+import LicenseIcons from '@/components/LicenseIcons'
+import LicenseExplanationTooltip from './LicenseExplanationTooltip'
 
 export default {
   name: 'filter-check-list',
@@ -75,23 +75,23 @@ export default {
       filtersVisible: false,
       licenseExplanationVisible: false,
       licenseExplanationCode: '',
-    };
+    }
   },
   computed: {
     filtersExpandedByDefault() {
       const idx = findIndex(
         this.$store.state.experiments,
-        exp => exp.name === ExperimentData.EXPERIMENT_NAME,
-      );
+        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
+      )
 
       if (idx >= 0) {
-        const experiment = this.$store.state.experiments[idx];
-        return experiment.case === ExperimentData.FILTERS_EXPANDED_EXPERIMENT;
+        const experiment = this.$store.state.experiments[idx]
+        return experiment.case === ExperimentData.FILTERS_EXPANDED_EXPERIMENT
       }
-      return false;
+      return false
     },
     areFiltersExpanded() {
-      return this.filtersExpandedByDefault || this.filtersVisible;
+      return this.filtersExpandedByDefault || this.filtersVisible
     },
   },
   methods: {
@@ -99,26 +99,26 @@ export default {
       this.$emit('filterChanged', {
         code: e.target.id,
         filterType: this.$props.filterType,
-      });
+      })
     },
     toggleFilterVisibility() {
-      this.filtersVisible = !this.filtersVisible;
+      this.filtersVisible = !this.filtersVisible
     },
     toggleLicenseExplanationVisibility(licenseCode) {
-      this.licenseExplanationVisible = !this.licenseExplanationVisible;
-      this.licenseExplanationCode = licenseCode;
+      this.licenseExplanationVisible = !this.licenseExplanationVisible
+      this.licenseExplanationCode = licenseCode
     },
     hideLicenseExplanationVisibility() {
-      this.licenseExplanationVisible = false;
+      this.licenseExplanationVisible = false
     },
     shouldRenderLicenseExplanationTooltip(licenseCode) {
       return (
         this.licenseExplanationVisible &&
         this.licenseExplanationCode === licenseCode
-      );
+      )
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

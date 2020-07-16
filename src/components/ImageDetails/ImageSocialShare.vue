@@ -2,15 +2,17 @@
   <section class="sidebar_section social-sharing">
     <social-share-buttons
       :shareURL="shareURL"
+      :imageSourceURL="imageSourceURL"
       :imageURL="imageURL"
       :shareText="shareText"
-      :image="image">
+      :image="image"
+    >
     </social-share-buttons>
   </section>
 </template>
 
 <script>
-import SocialShareButtons from './SocialShareButtons';
+import SocialShareButtons from './SocialShareButtons'
 
 export default {
   name: 'image-social-share',
@@ -23,17 +25,21 @@ export default {
     shareURL: '',
   }),
   computed: {
+    imageSourceURL() {
+      return this.image.foreign_landing_url
+    },
     imageURL() {
-      return this.image.foreign_landing_url;
+      return this.image.url
     },
     shareText() {
-      return encodeURI(`I found an image through CC Search @creativecommons: ${this.imageURL}`);
+      return encodeURI(
+        `I found an image through CC Search @creativecommons: ${this.imageSourceURL}`
+      )
     },
   },
   mounted() {
     // for SSR, sets the value with window.location, which is only available on client
-    this.shareURL = window.location.href;
+    this.shareURL = window.location.href
   },
-};
+}
 </script>
-

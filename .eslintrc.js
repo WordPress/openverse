@@ -3,7 +3,7 @@
 module.exports = {
   root: true,
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: 'babel-eslint',
   },
   env: {
     browser: true,
@@ -12,45 +12,59 @@ module.exports = {
   // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
   extends: ['plugin:vue/essential', 'airbnb-base'],
   // required to lint *.vue files
-  plugins: [
-    'vue'
-  ],
+  plugins: ['vue'],
   // check if imports actually resolve
   settings: {
     'import/resolver': {
       webpack: {
-        config: 'build/webpack.config.common.js'
-      }
-    }
+        config: 'build/webpack.config.common.js',
+      },
+    },
   },
   // add your custom rules here
   rules: {
     // don't require .vue extension when importing
-    'import/extensions': ['error', 'always', {
-      js: 'never',
-      vue: 'never'
-    }],
+    'import/extensions': [
+      'error',
+      'always',
+      {
+        js: 'never',
+        vue: 'never',
+      },
+    ],
     // disallow reassignment of function parameters
     // disallow parameter object manipulation except for specific exclusions
-    'no-param-reassign': ['error', {
-      props: true,
-      ignorePropertyModificationsFor: [
-        'state', // for vuex state
-        'acc', // for reduce accumulators
-        'e' // for e.returnvalue
-      ]
-    }],
+    'no-param-reassign': [
+      'error',
+      {
+        props: true,
+        ignorePropertyModificationsFor: [
+          'state', // for vuex state
+          'acc', // for reduce accumulators
+          'e', // for e.returnvalue
+        ],
+      },
+    ],
     'no-underscore-dangle': 'off',
+    semi: 'off',
+    'max-len': 'off',
+    'arrow-parens': 'off',
+    'comma-dangle': 'off',
+    'brace-style': 'off',
+    indent: 'off',
     // allow optionalDependencies
-    'import/no-extraneous-dependencies': ['error', {
-      optionalDependencies: ['test/unit/index.js']
-    }],
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        optionalDependencies: ['test/unit/index.js'],
+      },
+    ],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'brace-style': ["error", "stroustrup", { "allowSingleLine": true }],
+    'no-confusing-arrow': 'off',
   },
-  'globals': {
-    'ga': true
-  }
+  globals: {
+    ga: true,
+  },
 }

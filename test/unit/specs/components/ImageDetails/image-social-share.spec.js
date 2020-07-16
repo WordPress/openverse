@@ -1,9 +1,9 @@
-import ImageSocialShare from '@/components/ImageDetails/ImageSocialShare';
-import render from '../../../test-utils/render';
+import ImageSocialShare from '@/components/ImageDetails/ImageSocialShare'
+import render from '../../../test-utils/render'
 
 describe('ImageSocialShare', () => {
-  let options = null;
-  let props = null;
+  let options = null
+  let props = null
 
   beforeEach(() => {
     props = {
@@ -19,22 +19,28 @@ describe('ImageSocialShare', () => {
         creator: 'John',
         creator_url: 'http://creator.com',
       },
-    };
+    }
 
     options = {
       propsData: props,
-    };
-  });
+    }
+  })
 
   it('should render social buttons', () => {
-    const wrapper = render(ImageSocialShare, options);
-    expect(wrapper.find({ name: 'social-share-buttons' }).exists()).toBeTruthy();
-  });
+    const wrapper = render(ImageSocialShare, options)
+    expect(wrapper.find({ name: 'social-share-buttons' }).exists()).toBeTruthy()
+  })
 
   it('should invoke social share buttons with the right props', () => {
-    const wrapper = render(ImageSocialShare, options);
-    const url = options.propsData.image.foreign_landing_url;
-    expect(wrapper.vm.imageURL).toBe(url);
-    expect(wrapper.vm.shareText).toBe(encodeURI(`I found an image through CC Search @creativecommons: ${url}`));
-  });
-});
+    const wrapper = render(ImageSocialShare, options)
+    const sourceURL = options.propsData.image.foreign_landing_url
+    const url = options.propsData.image.url
+    expect(wrapper.vm.imageURL).toBe(url)
+    expect(wrapper.vm.imageSourceURL).toBe(sourceURL)
+    expect(wrapper.vm.shareText).toBe(
+      encodeURI(
+        `I found an image through CC Search @creativecommons: ${sourceURL}`
+      )
+    )
+  })
+})
