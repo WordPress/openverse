@@ -1,7 +1,10 @@
 <template>
-  <div class="overlay" @click.self="$emit('close')">
+  <div :id={id} class="overlay" @click.self="$emit('close')">
     <div class="modal relative">
-      <button type="button" class="close-button has-color-gray" @click="$emit('close')">
+      <button type="button"
+        class="close-button has-color-gray"
+        @click="$emit('close')"
+        aria-label="close">
         <i class="icon cross" />
       </button>
       <slot default />
@@ -15,6 +18,7 @@
  */
 export default {
   name: 'app-modal',
+  props: ['id'],
 };
 </script>
 

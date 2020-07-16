@@ -27,6 +27,7 @@
         >
         </search-grid-cell>
       </div>
+      <div class="padding-bottom-big">
       <div class="load-more">
         <button
           v-show="!isFetchingImages && includeAnalytics"
@@ -39,6 +40,14 @@
         </button>
         <loading-icon v-show="isFetchingImages" />
       </div>
+        <button
+          aria-controls="meta-search-modal"
+          type="button"
+          @click="showMetaImageSearch = true"
+          class="meta-popup-trigger has-color-tomato text-center caption padding-normal">
+            Not finding what you need? Search other sources
+        </button>
+      </div>
 
       <div
         class="search-grid_notification callout alert"
@@ -48,7 +57,6 @@
       </div>
     </div>
 
-    <p @click="showMetaImageSearch = true">Lorem ipsum dolor set amet</p>
 
     <meta-search-modal
       v-show="showMetaImageSearch"
@@ -286,5 +294,15 @@ label {
 
 .mr-auto {
   margin-right: auto;
+}
+
+.meta-popup-trigger {
+  appearance: none;
+  border:none;
+  background-color: transparent;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+  cursor: pointer;
 }
 </style>

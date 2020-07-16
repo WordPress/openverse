@@ -1,5 +1,5 @@
 <template>
-  <app-modal @close="$emit('close')">
+  <app-modal id="meta-search-modal" @close="$emit('close')">
       <header class="padding-top-bigger
         padding-left-bigger padding-righr-bigger padding-bottom-small">
         <h2>Search images from other sources</h2>
