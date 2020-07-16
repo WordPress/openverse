@@ -15,6 +15,7 @@ The app uses [CC Vocabulary](https://github.com/creativecommons/vocabulary) as a
 ## Module structure
 
 Below is a folder structure in the order recommended to understand how the app and its components are initialized.
+
 ```
  +-- src/
  |
@@ -78,9 +79,9 @@ One is the entry file for webpack. You can find them in [clientEntry.js](./src/c
 
 Because of legacy issues, there are two pages that have separate server and client versions:
 
-* BrowsePage
-* CollectionsBrowsePage
+- BrowsePage
+- CollectionsBrowsePage
 
 The reason for that is that for some time we used a [JS library](https://www.npmjs.com/package/vue-masonry) to render the image grid. This library used browser specific APIs to render the image grid. Therefore it didn't work on the server renderer. So we had to split those pages into two different versions, one that didn't render the image grid (for the server) and another that did render it (for the client). There is however a [ticket](https://github.com/creativecommons/cccatalog-frontend/issues/934) related to removing this legacy complexity.
 
-For this reason we need to be careful about using client specific APIs (such as `window`, `document`, etc.). If those are necessary, it can only run *only* on the client side, otherwise it will break on the server and the user will end up seeing an error message when loading the page.
+For this reason we need to be careful about using client specific APIs (such as `window`, `document`, etc.). If those are necessary, it can only run _only_ on the client side, otherwise it will break on the server and the user will end up seeing an error message when loading the page.

@@ -1,11 +1,11 @@
-import HomeLicenseFilter from '@/components/HomeLicenseFilter';
-import render from '../../test-utils/render';
+import HomeLicenseFilter from '@/components/HomeLicenseFilter'
+import render from '../../test-utils/render'
 
 describe('HomeLicenseFilter', () => {
-  let options = {};
-  let dispatchMock = null;
+  let options = {}
+  let dispatchMock = null
   beforeEach(() => {
-    dispatchMock = jest.fn();
+    dispatchMock = jest.fn()
     options = {
       mocks: {
         $store: {
@@ -20,25 +20,25 @@ describe('HomeLicenseFilter', () => {
           },
         },
       },
-    };
-  });
+    }
+  })
 
   it('renders checkboxes', () => {
-    const wrapper = render(HomeLicenseFilter, options);
-    expect(wrapper.find('#commercial').element).toBeDefined();
-    expect(wrapper.find('#modification').element).toBeDefined();
-  });
+    const wrapper = render(HomeLicenseFilter, options)
+    expect(wrapper.find('#commercial').element).toBeDefined()
+    expect(wrapper.find('#modification').element).toBeDefined()
+  })
 
   it('renders checkboxes', () => {
-    const wrapper = render(HomeLicenseFilter, options);
-    const commercialChk = wrapper.find('#commercial');
+    const wrapper = render(HomeLicenseFilter, options)
+    const commercialChk = wrapper.find('#commercial')
 
-    commercialChk.trigger('click');
+    commercialChk.trigger('click')
 
     expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
       code: 'commercial',
       filterType: 'licenseTypes',
       shouldNavigate: false,
-    });
-  });
-});
+    })
+  })
+})

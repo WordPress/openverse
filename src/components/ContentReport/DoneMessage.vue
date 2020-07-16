@@ -3,9 +3,12 @@
     <span class="is-block padding-horizontal-big has-text-centered">
       Thank you for reporting an issue with the results of CC Search!
     </span>
-    <span class="is-block padding-horizontal-big margin-top-small has-text-centered">
+    <span
+      class="is-block padding-horizontal-big margin-top-small has-text-centered"
+    >
       We recommend doing the same at the source,
-      <a :href="imageURL" target="_blank" rel="noopener">{{ providerName }}</a>.
+      <a :href="imageURL" target="_blank" rel="noopener">{{ providerName }}</a
+      >.
     </span>
   </div>
 </template>
@@ -14,5 +17,5 @@
 export default {
   name: 'done-message',
   props: ['imageURL', 'providerName'],
-};
+}
 </script>

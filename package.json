@@ -86,9 +86,11 @@
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "html-webpack-plugin": "^4.2.0",
+    "husky": "^4.2.5",
     "jest": "^25.4.0",
     "jest-serializer-vue": "^2.0.2",
     "jest-transform-stub": "^2.0.0",
+    "lint-staged": "^10.2.11",
     "mini-css-extract-plugin": "^0.9.0",
     "nightwatch": "^0.9.12",
     "node-notifier": "^5.1.2",
@@ -99,6 +101,7 @@
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.8",
     "postcss-url": "^7.2.1",
+    "prettier": "^2.0.5",
     "rimraf": "^2.6.0",
     "sass-loader": "^8.0.2",
     "selenium-server": "^3.14.0",
@@ -126,5 +129,14 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,vue}": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
+  }
 }

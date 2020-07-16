@@ -1,9 +1,9 @@
-import ApiService from './ApiService';
+import ApiService from './ApiService'
 
 const BugReportService = {
   reportBug(bugReport) {
-    return ApiService.post('/report-bug', bugReport);
+    return ApiService.post('/report-bug', bugReport)
   },
-};
+}
 
-export default BugReportService;
+export default BugReportService
