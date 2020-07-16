@@ -1,7 +1,7 @@
-import BrowsePage from '@/pages/BrowsePage';
-import render from '../../test-utils/render';
 import Vuex from 'vuex';
 import { createLocalVue } from '@vue/test-utils';
+import BrowsePage from '@/pages/BrowsePage';
+import render from '../../test-utils/render';
 
 describe('BrowsePage', () => {
   it('should render correct contents', () => {
