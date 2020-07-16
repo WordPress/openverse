@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import SearchGridManualLoad from '@/components/SearchGridManualLoad';
-import ScrollButton from '@/components/ScrollButton';
+import SearchGridManualLoad from '@/components/SearchGridManualLoad'
+import ScrollButton from '@/components/ScrollButton'
 
 export default {
   name: 'search-grid',
@@ -24,18 +24,18 @@ export default {
   }),
   methods: {
     onLoadMoreImages(searchParams) {
-      this.$emit('onLoadMoreImages', searchParams);
+      this.$emit('onLoadMoreImages', searchParams)
     },
     checkScrollLength() {
-      if (window.scrollY > 70) this.showScrollButton = true;
-      else this.showScrollButton = false;
+      if (window.scrollY > 70) this.showScrollButton = true
+      else this.showScrollButton = false
     },
   },
   mounted() {
-    document.addEventListener('scroll', this.checkScrollLength);
+    document.addEventListener('scroll', this.checkScrollLength)
   },
   beforeDestroy() {
-    document.removeEventListener('scroll', this.checkScrollLength);
+    document.removeEventListener('scroll', this.checkScrollLength)
   },
-};
+}
 </script>

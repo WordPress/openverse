@@ -4,8 +4,13 @@
       <h5 class="b-header margin-bottom-big">License</h5>
       <span class="photo_usage-attribution is-block" ref="photoAttribution">
         This image was marked with a
-        <a class="photo_license" :href="licenseURL" target="_blank" rel="noopener">
-        {{ fullLicenseName.toUpperCase() }}
+        <a
+          class="photo_license"
+          :href="licenseURL"
+          target="_blank"
+          rel="noopener"
+        >
+          {{ fullLicenseName.toUpperCase() }}
         </a>
         license.
       </span>
@@ -14,22 +19,24 @@
       <span class="caption has-text-weight-semibold">
         Read more about the license
         <a :href="licenseURL" target="_blank" rel="noopener">
-        here
+          here
         </a>
       </span>
     </div>
     <div>
-      <copy-license :image="image"
-                    :fullLicenseName="fullLicenseName"
-                    :licenseURL="licenseURL"
-                    :attributionHtml="attributionHtml" />
+      <copy-license
+        :image="image"
+        :fullLicenseName="fullLicenseName"
+        :licenseURL="licenseURL"
+        :attributionHtml="attributionHtml"
+      />
     </div>
   </section>
 </template>
 
 <script>
-import LicenseExplanations from '@/components/LicenseExplanations';
-import CopyLicense from './CopyLicense';
+import LicenseExplanations from '@/components/LicenseExplanations'
+import CopyLicense from './CopyLicense'
 
 export default {
   name: 'image-attribution',
@@ -40,8 +47,8 @@ export default {
   },
   computed: {
     licenseURL() {
-      return `${this.ccLicenseURL}&atype=rich`;
+      return `${this.ccLicenseURL}&atype=rich`
     },
   },
-};
+}
 </script>

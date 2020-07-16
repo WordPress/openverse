@@ -2,7 +2,10 @@
   <div class="browse-page">
     <header-section />
     <div class="search columns">
-      <div class="column is-narrow grid-sidebar is-paddingless" v-if="isFilterVisible">
+      <div
+        class="column is-narrow grid-sidebar is-paddingless"
+        v-if="isFilterVisible"
+      >
         <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
       </div>
       <div class="column search-grid-ctr">
@@ -34,18 +37,18 @@ const BrowsePage = {
   name: 'browse-page',
   computed: {
     query() {
-      return this.$store.state.query;
+      return this.$store.state.query
     },
     isFilterVisible() {
-      return this.$store.state.isFilterVisible;
+      return this.$store.state.isFilterVisible
     },
   },
   methods: {
     getImages(params) {
-      this.$store.dispatch(FETCH_IMAGES, params);
+      this.$store.dispatch(FETCH_IMAGES, params)
     },
     onLoadMoreImages(searchParams) {
-      this.getImages(searchParams);
+      this.getImages(searchParams)
     },
     onSearchFormSubmit(searchParams) {
       this.$store.commit(SET_QUERY, { ...searchParams, shouldNavigate: false });
@@ -53,13 +56,13 @@ const BrowsePage = {
   },
   mounted() {
     if (this.query.q && !this.$store.state.images.length) {
-      this.getImages(this.query);
+      this.getImages(this.query)
     }
   },
   watch: {
     query(newQuery) {
       if (newQuery) {
-        this.getImages(newQuery);
+        this.getImages(newQuery)
       }
     },
   },
@@ -73,11 +76,11 @@ const BrowsePage = {
     FooterSection,
   },
   mixins: [ServerPrefetchProvidersMixin],
-};
+}
 
-export default BrowsePage;
+export default BrowsePage
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/results-page.scss";
+@import '../styles/results-page.scss';
 </style>

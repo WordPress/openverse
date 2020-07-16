@@ -12,11 +12,10 @@ a > em {
 }
 
 .table {
-    table-layout: fixed;
-    width: 100%;
+  table-layout: fixed;
+  width: 100%;
 }
 
 .table.is-bordered td {
-	word-break: break-all;
+  word-break: break-all;
 }
-

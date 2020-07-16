@@ -14,8 +14,8 @@ import SearchGrid from '@/components/SearchGrid';
 import MetaSearchForm from '@/components/MetaSearch/MetaSearchForm';
 import redirectOnEmptySearch from './redirectOnEmptySearch';
 
-Vue.use(VueRouter);
-Vue.use(VueMeta);
+Vue.use(VueRouter)
+Vue.use(VueMeta)
 
 /**
  * These are the nested routes for each tab (image, audio, etc.) on the results pages.
@@ -91,21 +91,21 @@ const router = new VueRouter({
       // eslint-disable-next-line
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve({ x: 0, y: to.params.location });
-        }, 600);
-      });
+          resolve({ x: 0, y: to.params.location })
+        }, 600)
+      })
     }
-    return { x: 0, y: 0 };
+    return { x: 0, y: 0 }
   },
-});
+})
 
 router.afterEach((to) => {
   if (typeof ga !== 'undefined') {
-    ga('set', 'page', to.fullPath);
-    ga('send', 'pageview');
+    ga('set', 'page', to.fullPath)
+    ga('send', 'pageview')
   }
-});
+})
 
-redirectOnEmptySearch(router);
+redirectOnEmptySearch(router)
 
-export default router;
+export default router

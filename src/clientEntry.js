@@ -1,33 +1,34 @@
-import 'delayed-scroll-restoration-polyfill';
-import smoothscroll from 'smoothscroll-polyfill';
-import Vue from 'vue';
-import createApp from './main';
-import abTests from './abTests';
-import sentryInit from './sentry/browser';
-import router from './router';
+import 'delayed-scroll-restoration-polyfill'
+import smoothscroll from 'smoothscroll-polyfill'
+import Vue from 'vue'
+import createApp from './main'
+import abTests from './abTests'
+import sentryInit from './sentry/browser'
+import router from './router'
 
-sentryInit();
-smoothscroll.polyfill();
+sentryInit()
+smoothscroll.polyfill()
 
 // a global mixin that calls `asyncData` when a route component's params change
 Vue.mixin({
   beforeRouteUpdate(to, from, next) {
-    const { asyncData } = this.$options;
+    const { asyncData } = this.$options
     if (asyncData) {
       asyncData({
         store: this.$store,
         route: to,
-      }).then(next).catch(next);
-    }
-    else {
-      next();
+      })
+        .then(next)
+        .catch(next)
+    } else {
+      next()
     }
   },
-});
+})
 
-const { app, store } = createApp(router, window.__INITIAL_STATE__);
+const { app, store } = createApp(router, window.__INITIAL_STATE__)
 
-abTests(store);
+abTests(store)
 
 // wait until router has resolved all async before hooks
 // and async components...
@@ -37,18 +38,21 @@ router.onReady(() => {
   // the data that we already have. Using router.beforeResolve() so that all
   // async components are resolved.
   router.beforeResolve((to, from, next) => {
-    const matched = router.getMatchedComponents(to);
-    const prevMatched = router.getMatchedComponents(from);
-    let diffed = false;
+    const matched = router.getMatchedComponents(to)
+    const prevMatched = router.getMatchedComponents(from)
+    let diffed = false
+    const activated = matched.filter(
+      // eslint-disable-next-line no-return-assign
+      (c, i) => diffed || (diffed = prevMatched[i] !== c)
+    )
     // eslint-disable-next-line no-return-assign
-    const activated = matched.filter((c, i) => diffed || (diffed = (prevMatched[i] !== c)));
-    const asyncDataHooks = activated.map(c => c.asyncData).filter(_ => _);
+    const asyncDataHooks = activated.map((c) => c.asyncData).filter((_) => _)
     if (!asyncDataHooks.length) {
-      return next();
+      return next()
     }
-    return 0;
-  });
+    return 0
+  })
 
   // actually mount to DOM
-  app.$mount('#app');
-});
+  app.$mount('#app')
+})
