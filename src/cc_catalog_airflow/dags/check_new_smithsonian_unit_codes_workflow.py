@@ -6,6 +6,8 @@ dictionary
 
 from datetime import datetime, timedelta
 import logging
+import os
+import util.operator_util as ops
 from airflow import DAG
 
 from util.loader import operators
@@ -19,6 +21,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 DAG_ID = 'check_new_smithsonian_unit_codes_workflow'
+DB_CONN_ID = os.getenv('OPENLEDGER_CONN_ID', 'postgres_openledger_testing')
+CONCURRENCY = 5
 
 DAG_DEFAULT_ARGS = {
     'owner': 'data-eng-admin',
@@ -33,27 +37,29 @@ DAG_DEFAULT_ARGS = {
 
 def create_dag(
         dag_id=DAG_ID,
-        args=DAG_DEFAULT_ARGS
+        args=DAG_DEFAULT_ARGS,
+        concurrency=CONCURRENCY,
+        max_active_runs=CONCURRENCY,
+        postgres_conn_id=DB_CONN_ID
 ):
     dag = DAG(
         dag_id=dag_id,
         default_args=args,
+        concurrency=concurrency,
+        max_active_runs=max_active_runs,
+        catchup=False,
         schedule_interval=None
     )
 
     with dag:
-        check_unit_codes = operators.get_smithsonian_unit_code_operator(
-          dag
+        start_task = ops.get_log_operator(dag, dag.dag_id, 'Starting')
+        run_task = operators.get_smithsonian_unit_code_operator(
+            dag,
+            postgres_conn_id
         )
-        found_new_unit_codes = operators.found_new_unit_codes_switch(
-          dag
-        )
-        no_new_unit_codes = operators.no_new_unit_codes_switch(
-          dag
-        )
+        end_task = ops.get_log_operator(dag, dag.dag_id, 'Finished')
 
-        found_new_unit_codes.set_upstream(check_unit_codes)
-        no_new_unit_codes.set_upstream(check_unit_codes)
+        start_task >> run_task >> end_task
 
     return dag
 
