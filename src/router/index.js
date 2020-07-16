@@ -11,7 +11,7 @@ import CollectionBrowsePage from '@/pages/CollectionBrowsePage';
 import SearchHelpPage from '@/pages/SearchHelpPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import SearchGrid from '@/components/SearchGrid';
-import MetaSearchForm from '@/components/MetaSearchForm';
+import MetaSearchForm from '@/components/MetaSearch/MetaSearchForm';
 import redirectOnEmptySearch from './redirectOnEmptySearch';
 
 Vue.use(VueRouter);

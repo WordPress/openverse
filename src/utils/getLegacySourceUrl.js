@@ -1,4 +1,4 @@
-import { stringifyUrl } from 'query-string';
+import buildUrl from 'build-url';
 
 /**
  * A mapping of each legacy source with its url builder functions for each content type.
@@ -51,11 +51,11 @@ export const legacySourceMap = {
       };
     },
   },
-  // https://www.jamendo.com/legal/creative-commons
   Jamendo: {
+    // https://www.jamendo.com/legal/creative-commons
     audio(search) {
       return {
-        url: 'https://www.jamendo.com/search',
+        url: 'https://www.jamendo.com/search/tracks',
         query: {
           q: search.query,
         },
@@ -95,27 +95,36 @@ export const legacySourceMap = {
         },
       };
     },
-    'Google Images': {
-      image(search) {
-        return {
-          url: 'https://www.google.com/search',
-          query: {
-            as_rights:
-            '(cc_publicdomain%7Ccc_attribute%7Ccc_sharealike).-(cc_noncommercial%7Ccc_nonderived)',
-            q: search.query,
-          },
-        };
-      },
+  },
+  'Google Images': {
+    image(search) {
+      return {
+        url: 'https://www.google.com/search',
+        query: {
+          as_st: 'y',
+          tbs: 'sur:fmc',
+          tbm: 'isch',
+          source: 'hp',
+          biw: '1336',
+          bih: '973',
+          ei: '3sQQX-jBGM2tytMP6oq82AI',
+          gs_lcp: 'CgNpbWcQAzIFCAAQsQMyBQgAELEDMgUIABCxAzIFCAAQsQMyBQgAELEDMgIIADIFCAAQsQMyBQgAELEDMgIIADIFCAAQsQM6CAgAELEDEIMBUMZEWNNFYLpGaAFwAHgAgAFNiAHZAZIBATOYAQCgAQGqAQtnd3Mtd2l6LWltZ7ABAA',
+          sclient: 'img',
+          ved: '0ahUKEwjoqOr_2dLqAhXNlnIEHWoFDysQ4dUDCAY',
+          uact: '5',
+          q: search.query,
+        },
+      };
     },
-    'Open Clip Art Library': {
-      image(search) {
-        return {
-          url: 'https://www.openclipart.org/search',
-          query: {
-            query: search.query,
-          },
-        };
-      },
+  },
+  'Open Clip Art Library': {
+    image(search) {
+      return {
+        url: 'https://www.openclipart.org/search/',
+        query: {
+          query: search.query,
+        },
+      };
     },
   },
 };
@@ -144,10 +153,9 @@ const getLegacySourceUrl = type => (sourceName, search) => {
   const getSourceUrlInfo = source[type];
   if (!getSourceUrlInfo) { throw new Error(`${sourceName} does not offer meta search for ${type}`); }
 
-  return stringifyUrl(getSourceUrlInfo(search), {
-    skipNull: true,
-    arrayFormat: 'comma',
-  });
+  const urlInfo = getSourceUrlInfo(search);
+
+  return buildUrl(urlInfo.url, { queryParams: urlInfo.query });
 };
 
 export default getLegacySourceUrl;
