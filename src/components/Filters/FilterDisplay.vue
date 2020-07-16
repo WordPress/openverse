@@ -1,55 +1,73 @@
 <template>
-    <div class="filter-display padding-normal" aria-live="polite">
-        <span v-if="anyFilterApplied" class="caption has-text-weight-semibold">Filter By</span>
-        <span v-for="filter in getFilters('licenses')" :key="filter.code">
-          <filter-block :code="filter.code"
-                        :label="filter.name"
-                        filterType="licenses"
-                        @filterChanged="onUpdateFilter" />
-        </span>
-        <span v-for="filter in getFilters('licenseTypes')" :key="filter.code">
-          <filter-block :code="filter.code"
-                        :label="filter.name"
-                        filterType="licenseTypes"
-                        @filterChanged="onUpdateFilter" />
-        </span>
-        <span v-for="filter in getFilters('categories')" :key="filter.code">
-          <filter-block :code="filter.code"
-                        :label="filter.name"
-                        filterType="categories"
-                        @filterChanged="onUpdateFilter" />
-        </span>
-        <span v-for="filter in getFilters('extensions')" :key="filter.code">
-          <filter-block :code="filter.code"
-                        :label="filter.name"
-                        filterType="extensions"
-                        @filterChanged="onUpdateFilter" />
-        </span>
-        <span v-for="filter in getFilters('aspectRatios')" :key="filter.code">
-          <filter-block :code="filter.code"
-                        :label="filter.name"
-                        filterType="aspectRatios"
-                        @filterChanged="onUpdateFilter" />
-        </span>
-        <span v-for="filter in getFilters('sizes')" :key="filter.code">
-          <filter-block :code="filter.code"
-                        :label="filter.name"
-                        filterType="sizes"
-                        @filterChanged="onUpdateFilter" />
-        </span>
-        <span v-for="filter in getFilters('providers')" :key="filter.code">
-          <filter-block :code="filter.code"
-                        :label="filter.name"
-                        filterType="providers"
-                        @filterChanged="onUpdateFilter" />
-        </span>
-        <span>
-          <filter-block v-if="searchByCreator"
-                        label="Creator"
-                        filterType="searchBy"
-                        @filterChanged="onUpdateBoolFilter" />
-        </span>
-        <!-- <span>
+  <div class="filter-display padding-normal" aria-live="polite">
+    <span v-if="anyFilterApplied" class="caption has-text-weight-semibold"
+      >Filter By</span
+    >
+    <span v-for="filter in getFilters('licenses')" :key="filter.code">
+      <filter-block
+        :code="filter.code"
+        :label="filter.name"
+        filterType="licenses"
+        @filterChanged="onUpdateFilter"
+      />
+    </span>
+    <span v-for="filter in getFilters('licenseTypes')" :key="filter.code">
+      <filter-block
+        :code="filter.code"
+        :label="filter.name"
+        filterType="licenseTypes"
+        @filterChanged="onUpdateFilter"
+      />
+    </span>
+    <span v-for="filter in getFilters('categories')" :key="filter.code">
+      <filter-block
+        :code="filter.code"
+        :label="filter.name"
+        filterType="categories"
+        @filterChanged="onUpdateFilter"
+      />
+    </span>
+    <span v-for="filter in getFilters('extensions')" :key="filter.code">
+      <filter-block
+        :code="filter.code"
+        :label="filter.name"
+        filterType="extensions"
+        @filterChanged="onUpdateFilter"
+      />
+    </span>
+    <span v-for="filter in getFilters('aspectRatios')" :key="filter.code">
+      <filter-block
+        :code="filter.code"
+        :label="filter.name"
+        filterType="aspectRatios"
+        @filterChanged="onUpdateFilter"
+      />
+    </span>
+    <span v-for="filter in getFilters('sizes')" :key="filter.code">
+      <filter-block
+        :code="filter.code"
+        :label="filter.name"
+        filterType="sizes"
+        @filterChanged="onUpdateFilter"
+      />
+    </span>
+    <span v-for="filter in getFilters('providers')" :key="filter.code">
+      <filter-block
+        :code="filter.code"
+        :label="filter.name"
+        filterType="providers"
+        @filterChanged="onUpdateFilter"
+      />
+    </span>
+    <span>
+      <filter-block
+        v-if="searchByCreator"
+        label="Creator"
+        filterType="searchBy"
+        @filterChanged="onUpdateBoolFilter"
+      />
+    </span>
+    <!-- <span>
           <filter-block v-if="mature"
                         label="Mature"
                         filterType="mature"

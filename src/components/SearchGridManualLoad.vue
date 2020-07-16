@@ -28,24 +28,25 @@
         </search-grid-cell>
       </div>
       <div class="padding-bottom-big">
-      <div class="load-more">
-        <button
-          v-show="!isFetchingImages && includeAnalytics"
-          class="button margin-bottom-small"
-          :disabled="isFinished"
-          @click="onLoadMoreImages"
-        >
-          <span v-if="isFinished">No more images :(</span>
-          <span v-else>Load more results</span>
-        </button>
-        <loading-icon v-show="isFetchingImages" />
-      </div>
+        <div class="load-more">
+          <button
+            v-show="!isFetchingImages && includeAnalytics"
+            class="button margin-bottom-small"
+            :disabled="isFinished"
+            @click="onLoadMoreImages"
+          >
+            <span v-if="isFinished">No more images :(</span>
+            <span v-else>Load more results</span>
+          </button>
+          <loading-icon v-show="isFetchingImages" />
+        </div>
         <button
           aria-controls="meta-search-modal"
           type="button"
           @click="showMetaImageSearch = true"
-          class="meta-popup-trigger has-color-tomato text-center caption padding-normal">
-            Not finding what you need? Search other sources
+          class="meta-popup-trigger has-color-tomato text-center caption padding-normal"
+        >
+          Not finding what you need? Search other sources
         </button>
       </div>
 
@@ -57,22 +58,22 @@
       </div>
     </div>
 
-
     <meta-search-modal
       v-show="showMetaImageSearch"
       @close="showMetaImageSearch = false"
       type="image"
-      :query="query" />
+      :query="query"
+    />
   </section>
 </template>
 
 <script>
-import { SET_IMAGES } from '@/store/mutation-types';
-import SearchGridCell from '@/components/SearchGridCell';
-import LoadingIcon from '@/components/LoadingIcon';
-import SearchRating from '@/components/SearchRating';
-import SafeBrowsing from '@/components/SafeBrowsing';
-import MetaSearchModal from '@/components/MetaSearch/MetaSearchModal';
+import { SET_IMAGES } from '@/store/mutation-types'
+import SearchGridCell from '@/components/SearchGridCell'
+import LoadingIcon from '@/components/LoadingIcon'
+import SearchRating from '@/components/SearchRating'
+import SafeBrowsing from '@/components/SafeBrowsing'
+import MetaSearchModal from '@/components/MetaSearch/MetaSearchModal'
 
 const DEFAULT_PAGE_SIZE = 20
 
@@ -298,7 +299,7 @@ label {
 
 .meta-popup-trigger {
   appearance: none;
-  border:none;
+  border: none;
   background-color: transparent;
   text-align: center;
   display: block;

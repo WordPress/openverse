@@ -99,9 +99,12 @@ const PhotoDetailPage = {
     // to the results page the user was before.
 
     nextPage((_this) => {
-      if (previousPage.path === '/search' || previousPage.path === '/search/image') {
-        _this.shouldShowBreadcrumb = true; // eslint-disable-line no-param-reassign
-        _this.breadCrumbURL = `/search?q=${previousPage.query.q}`; // eslint-disable-line no-param-reassign
+      if (
+        previousPage.path === '/search' ||
+        previousPage.path === '/search/image'
+      ) {
+        _this.shouldShowBreadcrumb = true // eslint-disable-line no-param-reassign
+        _this.breadCrumbURL = `/search?q=${previousPage.query.q}` // eslint-disable-line no-param-reassign
       }
     })
   },

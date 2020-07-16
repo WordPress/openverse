@@ -1,4 +1,4 @@
-import buildUrl from 'build-url';
+import buildUrl from 'build-url'
 
 /**
  * A mapping of each legacy source with its url builder functions for each content type.
@@ -14,7 +14,7 @@ export const legacySourceMap = {
           qf: 'TYPE:"SOUND"',
           query: `${search.query} AND RIGHTS:*creative* AND NOT RIGHTS:*nc* AND NOT RIGHTS:*nd*`,
         },
-      };
+      }
     },
     video(search) {
       return {
@@ -24,7 +24,7 @@ export const legacySourceMap = {
           qf: 'TYPE:"VIDEO"',
           query: `${search.query} AND RIGHTS:*creative* AND NOT RIGHTS:*nc* AND NOT RIGHTS:*nd*`,
         },
-      };
+      }
     },
   },
   'Wikimedia Commons': {
@@ -37,7 +37,7 @@ export const legacySourceMap = {
           title: 'Special:Search',
           'advancedSearch-current': '{"fields":{"filetype":"audio"}}',
         },
-      };
+      }
     },
     video(search) {
       return {
@@ -48,7 +48,7 @@ export const legacySourceMap = {
           title: 'Special:Search',
           'advancedSearch-current': '{"fields":{"filetype":"audio"}}',
         },
-      };
+      }
     },
   },
   Jamendo: {
@@ -59,7 +59,7 @@ export const legacySourceMap = {
         query: {
           q: search.query,
         },
-      };
+      }
     },
   },
   ccMixter: {
@@ -71,7 +71,7 @@ export const legacySourceMap = {
           lic: 'open',
           searchp: search.query,
         },
-      };
+      }
     },
   },
   SoundCloud: {
@@ -82,7 +82,7 @@ export const legacySourceMap = {
           q: search.query,
           'filter.license': 'to_modify_commercially', // @todo: choose which type from the search object
         },
-      };
+      }
     },
   },
   YouTube: {
@@ -93,7 +93,7 @@ export const legacySourceMap = {
           search_query: search.query,
           sp: 'EgIwAQ%3D%3D', // this interesting line filters by cc license
         },
-      };
+      }
     },
   },
   'Google Images': {
@@ -108,13 +108,14 @@ export const legacySourceMap = {
           biw: '1336',
           bih: '973',
           ei: '3sQQX-jBGM2tytMP6oq82AI',
-          gs_lcp: 'CgNpbWcQAzIFCAAQsQMyBQgAELEDMgUIABCxAzIFCAAQsQMyBQgAELEDMgIIADIFCAAQsQMyBQgAELEDMgIIADIFCAAQsQM6CAgAELEDEIMBUMZEWNNFYLpGaAFwAHgAgAFNiAHZAZIBATOYAQCgAQGqAQtnd3Mtd2l6LWltZ7ABAA',
+          gs_lcp:
+            'CgNpbWcQAzIFCAAQsQMyBQgAELEDMgUIABCxAzIFCAAQsQMyBQgAELEDMgIIADIFCAAQsQMyBQgAELEDMgIIADIFCAAQsQM6CAgAELEDEIMBUMZEWNNFYLpGaAFwAHgAgAFNiAHZAZIBATOYAQCgAQGqAQtnd3Mtd2l6LWltZ7ABAA',
           sclient: 'img',
           ved: '0ahUKEwjoqOr_2dLqAhXNlnIEHWoFDysQ4dUDCAY',
           uact: '5',
           q: search.query,
         },
-      };
+      }
     },
   },
   'Open Clip Art Library': {
@@ -124,10 +125,10 @@ export const legacySourceMap = {
         query: {
           query: search.query,
         },
-      };
+      }
     },
   },
-};
+}
 
 /**
  * getLegacySourceUrl
@@ -136,26 +137,28 @@ export const legacySourceMap = {
  * @param {'image'|'audio'|'video'} type The type of media our meta search is for
  *
  *  */
-const getLegacySourceUrl = type => (sourceName, search) => {
+const getLegacySourceUrl = (type) => (sourceName, search) => {
   if (!search) {
     throw new Error(
-      `Please provide a valid query to search ${sourceName} for ${type} files.`,
-    );
+      `Please provide a valid query to search ${sourceName} for ${type} files.`
+    )
   }
 
-  const source = legacySourceMap[sourceName];
+  const source = legacySourceMap[sourceName]
   if (!source) {
     throw new Error(
-      `No data avaliable for provided legacy source: ${sourceName}`,
-    );
+      `No data avaliable for provided legacy source: ${sourceName}`
+    )
   }
 
-  const getSourceUrlInfo = source[type];
-  if (!getSourceUrlInfo) { throw new Error(`${sourceName} does not offer meta search for ${type}`); }
+  const getSourceUrlInfo = source[type]
+  if (!getSourceUrlInfo) {
+    throw new Error(`${sourceName} does not offer meta search for ${type}`)
+  }
 
-  const urlInfo = getSourceUrlInfo(search);
+  const urlInfo = getSourceUrlInfo(search)
 
-  return buildUrl(urlInfo.url, { queryParams: urlInfo.query });
-};
+  return buildUrl(urlInfo.url, { queryParams: urlInfo.query })
+}
 
-export default getLegacySourceUrl;
+export default getLegacySourceUrl

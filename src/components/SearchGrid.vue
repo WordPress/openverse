@@ -3,8 +3,9 @@
     <search-grid-manual-load
       :query="query"
       :searchTerm="searchTerm"
-      @onLoadMoreImages="onLoadMoreImages" />
-    <ScrollButton :showBtn="showScrollButton " />
+      @onLoadMoreImages="onLoadMoreImages"
+    />
+    <ScrollButton :showBtn="showScrollButton" />
   </div>
 </template>
 

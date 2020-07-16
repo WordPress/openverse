@@ -30,15 +30,15 @@
 </template>
 
 <script>
-import FooterSection from '@/components/FooterSection';
-import HeaderSection from '@/components/HeaderSection';
-import SearchGrid from '@/components/SearchGrid';
-import SearchGridForm from '@/components/SearchGridForm';
-import SearchGridFilter from '@/components/Filters/SearchGridFilter';
-import SearchTypeTabs from '@/components/SearchTypeTabs';
-import { FETCH_COLLECTION_IMAGES } from '@/store/action-types';
-import { SET_COLLECTION_QUERY } from '@/store/mutation-types';
-import getProviderName from '@/utils/getProviderName';
+import FooterSection from '@/components/FooterSection'
+import HeaderSection from '@/components/HeaderSection'
+import SearchGrid from '@/components/SearchGrid'
+import SearchGridForm from '@/components/SearchGridForm'
+import SearchGridFilter from '@/components/Filters/SearchGridFilter'
+import SearchTypeTabs from '@/components/SearchTypeTabs'
+import { FETCH_COLLECTION_IMAGES } from '@/store/action-types'
+import { SET_COLLECTION_QUERY } from '@/store/mutation-types'
+import getProviderName from '@/utils/getProviderName'
 
 const CollectionBrowsePage = {
   name: 'collection-browse-page',

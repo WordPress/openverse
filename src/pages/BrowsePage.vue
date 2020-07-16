@@ -12,26 +12,28 @@
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
         <search-type-tabs />
         <filter-display :query="query" />
-        <router-view v-if="query.q"
-                     :query="query"
-                     @onLoadMoreImages="onLoadMoreImages"
-                    :key="$route.path"/>
+        <router-view
+          v-if="query.q"
+          :query="query"
+          @onLoadMoreImages="onLoadMoreImages"
+          :key="$route.path"
+        />
       </div>
     </div>
     <footer-section></footer-section>
   </div>
 </template>
 <script>
-import FooterSection from '@/components/FooterSection';
-import HeaderSection from '@/components/HeaderSection';
-import SearchGrid from '@/components/SearchGrid';
-import SearchGridForm from '@/components/SearchGridForm';
-import SearchGridFilter from '@/components/Filters/SearchGridFilter';
-import SearchTypeTabs from '@/components/SearchTypeTabs';
-import FilterDisplay from '@/components/Filters/FilterDisplay';
-import { FETCH_IMAGES } from '@/store/action-types';
-import { SET_QUERY } from '@/store/mutation-types';
-import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin';
+import FooterSection from '@/components/FooterSection'
+import HeaderSection from '@/components/HeaderSection'
+import SearchGrid from '@/components/SearchGrid'
+import SearchGridForm from '@/components/SearchGridForm'
+import SearchGridFilter from '@/components/Filters/SearchGridFilter'
+import SearchTypeTabs from '@/components/SearchTypeTabs'
+import FilterDisplay from '@/components/Filters/FilterDisplay'
+import { FETCH_IMAGES } from '@/store/action-types'
+import { SET_QUERY } from '@/store/mutation-types'
+import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin'
 
 const BrowsePage = {
   name: 'browse-page',
@@ -51,7 +53,7 @@ const BrowsePage = {
       this.getImages(searchParams)
     },
     onSearchFormSubmit(searchParams) {
-      this.$store.commit(SET_QUERY, { ...searchParams, shouldNavigate: false });
+      this.$store.commit(SET_QUERY, { ...searchParams, shouldNavigate: false })
     },
   },
   mounted() {

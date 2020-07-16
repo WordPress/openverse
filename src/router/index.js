@@ -1,18 +1,18 @@
-import Vue from 'vue';
-import VueMeta from 'vue-meta';
-import VueRouter from 'vue-router';
-import AboutPage from '@/pages/AboutPage';
-import HomePage from '@/pages/HomePage';
-import BrowsePage from '@/pages/BrowsePage';
-import PhotoDetailPage from '@/pages/PhotoDetailPage';
-import FeedbackPage from '@/pages/FeedbackPage';
-import CollectionsPage from '@/pages/CollectionsPage';
-import CollectionBrowsePage from '@/pages/CollectionBrowsePage';
-import SearchHelpPage from '@/pages/SearchHelpPage';
-import NotFoundPage from '@/pages/NotFoundPage';
-import SearchGrid from '@/components/SearchGrid';
-import MetaSearchForm from '@/components/MetaSearch/MetaSearchForm';
-import redirectOnEmptySearch from './redirectOnEmptySearch';
+import Vue from 'vue'
+import VueMeta from 'vue-meta'
+import VueRouter from 'vue-router'
+import AboutPage from '@/pages/AboutPage'
+import HomePage from '@/pages/HomePage'
+import BrowsePage from '@/pages/BrowsePage'
+import PhotoDetailPage from '@/pages/PhotoDetailPage'
+import FeedbackPage from '@/pages/FeedbackPage'
+import CollectionsPage from '@/pages/CollectionsPage'
+import CollectionBrowsePage from '@/pages/CollectionBrowsePage'
+import SearchHelpPage from '@/pages/SearchHelpPage'
+import NotFoundPage from '@/pages/NotFoundPage'
+import SearchGrid from '@/components/SearchGrid'
+import MetaSearchForm from '@/components/MetaSearch/MetaSearchForm'
+import redirectOnEmptySearch from './redirectOnEmptySearch'
 
 Vue.use(VueRouter)
 Vue.use(VueMeta)
@@ -23,9 +23,19 @@ Vue.use(VueMeta)
 const resultSubviews = [
   { path: '', component: SearchGrid },
   { path: 'image', component: SearchGrid },
-  { path: 'audio', component: MetaSearchForm, key: 'audio', props: { type: 'audio' } },
-  { path: 'video', component: MetaSearchForm, key: 'video', props: { type: 'video' } },
-];
+  {
+    path: 'audio',
+    component: MetaSearchForm,
+    key: 'audio',
+    props: { type: 'audio' },
+  },
+  {
+    path: 'video',
+    component: MetaSearchForm,
+    key: 'video',
+    props: { type: 'video' },
+  },
+]
 
 const router = new VueRouter({
   mode: 'history',
@@ -37,7 +47,7 @@ const router = new VueRouter({
       meta: {
         requiresQuery: true,
       },
-      props: route => ({ query: route.query.q }),
+      props: (route) => ({ query: route.query.q }),
       children: resultSubviews,
     },
     {
@@ -84,7 +94,10 @@ const router = new VueRouter({
     },
   ],
   scrollBehavior(to) {
-    if ((to.path === '/search' || to.path === '/search/image') && to.params.location) {
+    if (
+      (to.path === '/search' || to.path === '/search/image') &&
+      to.params.location
+    ) {
       // the setTimeout is for the time it takes it get the images
       // Else the page scrolls up after the images are fetched
       // Disabling linting for the reject argument that isn't used

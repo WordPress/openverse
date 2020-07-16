@@ -1,11 +1,12 @@
 <template>
   <section :key="type" class="padding-normal">
-    <header class=" margin-bottom-large">
+    <header class="margin-bottom-large">
       <h3 class="b-header margin-bottom-small">
-        CC Search does not yet support built-in {{type}} search.
+        CC Search does not yet support built-in {{ type }} search.
       </h3>
       <p>
-        Click on a source below to directly search other collections of CC-licensed {{type}}.
+        Click on a source below to directly search other collections of
+        CC-licensed {{ type }}.
       </p>
     </header>
 
@@ -25,7 +26,7 @@
 </template>
 
 <script>
-import MetaSourceList from './MetaSourceList';
+import MetaSourceList from './MetaSourceList'
 
 export default {
   name: 'meta-search',
@@ -33,7 +34,7 @@ export default {
   components: {
     MetaSourceList,
   },
-};
+}
 </script>
 
 <style>
