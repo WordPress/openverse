@@ -1,24 +1,19 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const path = require('path');
+const path = require('path')
 
 module.exports = {
   rootDir: path.resolve(__dirname, '../../'),
-  moduleFileExtensions: [
-    'js',
-    'json',
-    'vue',
-  ],
+  moduleFileExtensions: ['js', 'json', 'vue'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   transform: {
     '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
     '.*\\.(vue)$': '<rootDir>/node_modules/vue-jest',
-    '.+\\.(css|styl|less|sass|scss|png|jpg|svg|ttf|woff|woff2)$': 'jest-transform-stub',
+    '.+\\.(css|styl|less|sass|scss|png|jpg|svg|ttf|woff|woff2)$':
+      'jest-transform-stub',
   },
-  testPathIgnorePatterns: [
-    '<rootDir>/test/e2e',
-  ],
+  testPathIgnorePatterns: ['<rootDir>/test/e2e'],
   snapshotSerializers: ['<rootDir>/node_modules/jest-serializer-vue'],
   setupFiles: ['<rootDir>/test/unit/setup'],
   mapCoverage: true,
@@ -29,7 +24,5 @@ module.exports = {
     '!src/router/index.js',
     '!**/node_modules/**',
   ],
-  transformIgnorePatterns: [
-    '/node_modules/(?!vue-masonry)',
-  ],
-};
+  transformIgnorePatterns: ['/node_modules/(?!vue-masonry)'],
+}

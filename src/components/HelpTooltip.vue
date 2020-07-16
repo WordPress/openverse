@@ -1,15 +1,13 @@
 <template>
   <tooltip :tooltip="tooltip" tooltipPosition="top">
     <span title="tooltip">
-      <img class='help-icon'
-            src='../assets/help_icon.svg'
-            alt='tooltip' />
+      <img class="help-icon" src="../assets/help_icon.svg" alt="tooltip" />
     </span>
   </tooltip>
 </template>
 
 <script>
-import Tooltip from '@/components/Tooltip';
+import Tooltip from '@/components/Tooltip'
 
 export default {
   name: 'help-tooltip',
@@ -17,9 +15,9 @@ export default {
   components: {
     Tooltip,
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
-  @import '../styles/photodetails.scss';
+@import '../styles/photodetails.scss';
 </style>

@@ -2,8 +2,7 @@
   <div class="photo columns is-desktop is-marginless padding-bottom-xl">
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
       <a
-        class="is-block photo_breadcrumb has-text-left margin-left-normal
-                margin-bottom-normal has-text-grey-dark has-text-weight-semibold caption"
+        class="is-block photo_breadcrumb has-text-left margin-left-normal margin-bottom-normal has-text-grey-dark has-text-weight-semibold caption"
         :href="breadCrumbURL"
         @click.prevent="onGoBackToSearchResults"
         v-if="shouldShowBreadcrumb"
@@ -114,8 +113,7 @@
       >
         Go to image's website
         <i
-          class="icon external-link margin-left-normal is-size-6
-                  padding-top-smaller has-text-grey-lighter"
+          class="icon external-link margin-left-normal is-size-6 padding-top-smaller has-text-grey-lighter"
         />
       </a>
 
@@ -125,18 +123,18 @@
 </template>
 
 <script>
-import ContentReportForm from '@/components/ContentReport/ContentReportForm';
-import { TOGGLE_REPORT_FORM_VISIBILITY } from '@/store/mutation-types';
+import ContentReportForm from '@/components/ContentReport/ContentReportForm'
+import { TOGGLE_REPORT_FORM_VISIBILITY } from '@/store/mutation-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '@/store/usage-data-analytics-types';
-import attributionHtml from '@/utils/attributionHtml';
-import ImageInfo from './ImageInfo';
-import ImageAttribution from './ImageAttribution';
-import ImageSocialShare from './ImageSocialShare';
-import LegalDisclaimer from './LegalDisclaimer';
-import ReuseSurvey from './ReuseSurvey';
+} from '@/store/usage-data-analytics-types'
+import attributionHtml from '@/utils/attributionHtml'
+import ImageInfo from './ImageInfo'
+import ImageAttribution from './ImageAttribution'
+import ImageSocialShare from './ImageSocialShare'
+import LegalDisclaimer from './LegalDisclaimer'
+import ReuseSurvey from './ReuseSurvey'
 
 export default {
   name: 'photo-details',
@@ -160,25 +158,25 @@ export default {
   data() {
     return {
       activeTab: 0,
-    };
+    }
   },
   computed: {
     isReportFormVisible() {
-      return this.$store.state.isReportFormVisible;
+      return this.$store.state.isReportFormVisible
     },
     fullLicenseName() {
-      const license = this.image.license;
-      const version = this.image.license_version;
+      const license = this.image.license
+      const version = this.image.license_version
 
       if (license) {
         return license.toLowerCase() === 'cc0'
           ? `${license} ${version}`
-          : `CC ${license} ${version}`;
+          : `CC ${license} ${version}`
       }
-      return '';
+      return ''
     },
     ccLicenseURL() {
-      return `${this.image.license_url}?ref=ccsearch`;
+      return `${this.image.license_url}?ref=ccsearch`
     },
   },
   methods: {
@@ -187,37 +185,37 @@ export default {
         name: 'browse-page',
         query: this.query,
         params: { location: this.$route.params.location },
-      });
+      })
     },
     onImageLoad(event) {
-      this.$emit('onImageLoaded', event);
+      this.$emit('onImageLoaded', event)
     },
     tabClass(tabIdx, tabClass) {
       return {
         [tabClass]: true,
         'is-active': tabIdx === this.activeTab,
-      };
+      }
     },
     setActiveTab(tabIdx) {
-      this.activeTab = tabIdx;
+      this.activeTab = tabIdx
     },
     attributionHtml() {
-      const licenseURL = `${this.ccLicenseURL}&atype=html`;
-      return attributionHtml(this.image, licenseURL, this.fullLicenseName);
+      const licenseURL = `${this.ccLicenseURL}&atype=html`
+      return attributionHtml(this.image, licenseURL, this.fullLicenseName)
     },
     toggleReportFormVisibility() {
-      this.$store.commit(TOGGLE_REPORT_FORM_VISIBILITY);
+      this.$store.commit(TOGGLE_REPORT_FORM_VISIBILITY)
     },
     onPhotoSourceLinkClicked() {
       this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
         eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
         resultUuid: this.$props.image.id,
-      });
+      })
     },
   },
-};
+}
 </script>
 
 <style lang="scss">
-@import "../../styles/photodetails.scss";
+@import '../../styles/photodetails.scss';
 </style>

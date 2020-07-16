@@ -14,7 +14,7 @@ The frontend app is built using [Vue.JS](https://vuejs.org/), [Babel](https://ba
 
 Run the following commands in order to have the code up and running on your machine:
 
-``` bash
+```bash
 # installs dependencies
 $ npm install
 
@@ -26,7 +26,7 @@ $ npm run dev
 
 Alternatively, you can use Docker to build and run the application. You just have to run:
 
-``` bash
+```bash
 $ docker-compose up
 ```
 
@@ -37,7 +37,8 @@ You don't need to have the CC Search API running locally to be able to run the f
 ## Running tests
 
 You can run the tests by executing:
-``` bash
+
+```bash
 npm run test
 ```
 
@@ -61,4 +62,3 @@ ngrok http 8443 -host-header="localhost:8443"
 ## Deployment
 
 Details about how to deploy the frontend code can be found on the [CC Wiki](https://wikijs.creativecommons.org/tech/cc-search/frontend) (Accessible to CC Staff only).
-

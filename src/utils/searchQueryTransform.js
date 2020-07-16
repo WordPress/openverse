@@ -1,7 +1,7 @@
-import clonedeep from 'lodash.clonedeep';
-import findIndex from 'lodash.findindex';
-import { filterData } from '@/store/filter-store';
-import getParameterByName from './getParameterByName';
+import clonedeep from 'lodash.clonedeep'
+import findIndex from 'lodash.findindex'
+import { filterData } from '@/store/filter-store'
+import getParameterByName from './getParameterByName'
 
 const filterPropertyMappings = {
   licenses: 'license',
@@ -11,7 +11,7 @@ const filterPropertyMappings = {
   aspectRatios: 'aspect_ratio',
   sizes: 'size',
   providers: 'source',
-};
+}
 
 /**
  * joins all the filters which have the checked property `true`
@@ -19,11 +19,11 @@ const filterPropertyMappings = {
  * eg: "by,nd-nc,nc-sa"
  * @param {array} filter
  */
-const filterToString = filter =>
+const filterToString = (filter) =>
   filter
-    .filter(f => f.checked)
-    .map(filterItem => filterItem.code)
-    .join(',');
+    .filter((f) => f.checked)
+    .map((filterItem) => filterItem.code)
+    .join(',')
 
 /**
  * converts the filter store object to the data format accepted by the API,
@@ -31,62 +31,75 @@ const filterToString = filter =>
  * @param {object} filters object containing the filter data that comes from the filter store
  */
 export const filtersToQueryData = (filters) => {
-  const queryDataObject = {};
+  const queryDataObject = {}
   Object.keys(filterPropertyMappings).reduce((queryData, filterDataKey) => {
-    const queryDataKey = filterPropertyMappings[filterDataKey];
+    const queryDataKey = filterPropertyMappings[filterDataKey]
     // eslint-disable-next-line no-param-reassign
-    queryData[queryDataKey] = filterToString(filters[filterDataKey]);
-    return queryData;
-  }, queryDataObject);
+    queryData[queryDataKey] = filterToString(filters[filterDataKey])
+    return queryData
+  }, queryDataObject)
 
-  queryDataObject.searchBy = filters.searchBy.creator ? 'creator' : '';
-  queryDataObject.mature = filters.mature;
+  queryDataObject.searchBy = filters.searchBy.creator ? 'creator' : ''
+  queryDataObject.mature = filters.mature
 
-  return queryDataObject;
-};
+  return queryDataObject
+}
 
-const parseQueryString = (queryString, queryStringParamKey, filterKey, data) => {
-  const queryStringFilters = getParameterByName(queryStringParamKey, queryString).split(',');
+const parseQueryString = (
+  queryString,
+  queryStringParamKey,
+  filterKey,
+  data
+) => {
+  const queryStringFilters = getParameterByName(
+    queryStringParamKey,
+    queryString
+  ).split(',')
   data[filterKey].forEach((filter) => {
-    if (findIndex(queryStringFilters, f => f === filter.code) >= 0) {
+    if (findIndex(queryStringFilters, (f) => f === filter.code) >= 0) {
       // eslint-disable-next-line no-param-reassign
-      filter.checked = true;
+      filter.checked = true
     }
-  });
-};
+  })
+}
 
 /**
  * converts the browser filter query string into the internal filter store data format
  * @param {string} queryString browser filter query string
  */
 export const queryToFilterData = (queryString) => {
-  const filters = clonedeep(filterData);
+  const filters = clonedeep(filterData)
   Object.keys(filterPropertyMappings).forEach((filterDataKey) => {
     if (filterDataKey === 'providers') {
-      const providerParameter = getParameterByName(filterPropertyMappings.providers, queryString);
-      filters.providers = providerParameter === '' ? [] : providerParameter.split(',').map(provider => ({
-        code: provider,
-        checked: true,
-      }));
+      const providerParameter = getParameterByName(
+        filterPropertyMappings.providers,
+        queryString
+      )
+      filters.providers =
+        providerParameter === ''
+          ? []
+          : providerParameter.split(',').map((provider) => ({
+              code: provider,
+              checked: true,
+            }))
+    } else {
+      const queryDataKey = filterPropertyMappings[filterDataKey]
+      parseQueryString(queryString, queryDataKey, filterDataKey, filters)
     }
-    else {
-      const queryDataKey = filterPropertyMappings[filterDataKey];
-      parseQueryString(queryString, queryDataKey, filterDataKey, filters);
-    }
-  });
+  })
 
-  const searchBy = getParameterByName('searchBy', queryString);
+  const searchBy = getParameterByName('searchBy', queryString)
   if (searchBy === 'creator') {
-    filters.searchBy.creator = true;
+    filters.searchBy.creator = true
   }
 
-  const mature = getParameterByName('mature', queryString);
+  const mature = getParameterByName('mature', queryString)
   if (mature) {
-    filters.mature = mature.toLowerCase() === 'true';
+    filters.mature = mature.toLowerCase() === 'true'
   }
 
-  return filters;
-};
+  return filters
+}
 
 /**
  * converts the url query string to the data format accepted by the API.
@@ -99,15 +112,18 @@ export const queryToFilterData = (queryString) => {
  * @param {string} query string
  */
 export const queryStringToQueryData = (queryString) => {
-  const queryDataObject = {};
+  const queryDataObject = {}
   Object.keys(filterPropertyMappings).forEach((filterDataKey) => {
-    const queryDataKey = filterPropertyMappings[filterDataKey];
-    queryDataObject[queryDataKey] = getParameterByName(queryDataKey, queryString);
-  });
+    const queryDataKey = filterPropertyMappings[filterDataKey]
+    queryDataObject[queryDataKey] = getParameterByName(
+      queryDataKey,
+      queryString
+    )
+  })
 
-  queryDataObject.q = getParameterByName('q', queryString);
-  queryDataObject.searchBy = getParameterByName('searchBy', queryString);
-  queryDataObject.mature = getParameterByName('mature', queryString);
+  queryDataObject.q = getParameterByName('q', queryString)
+  queryDataObject.searchBy = getParameterByName('searchBy', queryString)
+  queryDataObject.mature = getParameterByName('mature', queryString)
 
-  return queryDataObject;
-};
+  return queryDataObject
+}

@@ -1,9 +1,9 @@
-import FilterDisplay from '@/components/Filters/FilterDisplay';
-import render from '../../test-utils/render';
+import FilterDisplay from '@/components/Filters/FilterDisplay'
+import render from '../../test-utils/render'
 
 describe('FilterDisplay', () => {
-  let options = null;
-  let filters = null;
+  let options = null
+  let filters = null
 
   beforeEach(() => {
     filters = {
@@ -15,7 +15,7 @@ describe('FilterDisplay', () => {
       sizes: [{ code: 'foo', name: 'bar', checked: false }],
       providers: [{ code: 'foo', name: 'bar', checked: false }],
       searchBy: { creator: false },
-    };
+    }
     options = {
       propsData: {
         query: {
@@ -40,23 +40,23 @@ describe('FilterDisplay', () => {
           dispatch: jest.fn(),
         },
       },
-    };
-  });
+    }
+  })
 
   it('should render correct contents', () => {
-    const wrapper = render(FilterDisplay, options);
-    expect(wrapper.find('.filter-display'));
-  });
+    const wrapper = render(FilterDisplay, options)
+    expect(wrapper.find('.filter-display'))
+  })
 
   it('should render filter if checked', () => {
-    filters.licenses[0].checked = true;
-    const wrapper = render(FilterDisplay, options);
-    expect(wrapper.find({ name: 'filter-block' }).vm).toBeDefined();
-  });
+    filters.licenses[0].checked = true
+    const wrapper = render(FilterDisplay, options)
+    expect(wrapper.find({ name: 'filter-block' }).vm).toBeDefined()
+  })
 
   it('should render filter by caption label', () => {
-    options.mocks.$store.state.isFilterApplied = true;
-    const wrapper = render(FilterDisplay, options);
-    expect(wrapper.find('.caption').element.textContent).toBe('Filter By');
-  });
-});
+    options.mocks.$store.state.isFilterApplied = true
+    const wrapper = render(FilterDisplay, options)
+    expect(wrapper.find('.caption').element.textContent).toBe('Filter By')
+  })
+})
