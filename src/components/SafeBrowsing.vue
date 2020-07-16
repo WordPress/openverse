@@ -5,7 +5,8 @@
       @click="toggleShowForm"
     >
       <span class="has-color-dark-turquoise"
-        >{{ $t('browse-page.safe-browsing.title') }}<i class="icon flag margin-left-small"></i>
+        >{{ $t('browse-page.safe-browsing.title')
+        }}<i class="icon flag margin-left-small"></i>
       </span>
     </button>
 

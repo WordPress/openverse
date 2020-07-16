@@ -27,40 +27,66 @@
       @sendContentReport="sendContentReport"
     />
     <form v-else>
-      <h5 class="b-header margin-bottom-normal">{{ $t('photo-details.content-report.title') }}</h5>
+      <h5 class="b-header margin-bottom-normal">
+        {{ $t('photo-details.content-report.title') }}
+      </h5>
       <fieldset class="margin-bottom-normal">
-        <legend class="margin-bottom-normal">{{ $t('photo-details.content-report.issue') }}</legend>
+        <legend class="margin-bottom-normal">
+          {{ $t('photo-details.content-report.issue') }}
+        </legend>
 
         <div>
-          <input type="radio" name="type" id="dmca" value="dmca" v-model="selectedReason">
+          <input
+            type="radio"
+            name="type"
+            id="dmca"
+            value="dmca"
+            v-model="selectedReason"
+          />
           <label for="dmca" class="margin-left-small">
             {{ $t('photo-details.content-report.copyright') }}
           </label>
         </div>
 
         <div>
-          <input type="radio" name="type" id="mature" value="mature" v-model="selectedReason">
+          <input
+            type="radio"
+            name="type"
+            id="mature"
+            value="mature"
+            v-model="selectedReason"
+          />
           <label for="mature" class="margin-left-small">
             {{ $t('photo-details.content-report.mature') }}
           </label>
         </div>
 
         <div>
-          <input type="radio" name="type" id="other" value="other" v-model="selectedReason">
+          <input
+            type="radio"
+            name="type"
+            id="other"
+            value="other"
+            v-model="selectedReason"
+          />
           <label for="other" class="margin-left-small">
             {{ $t('photo-details.content-report.other') }}
           </label>
         </div>
       </fieldset>
 
-      <span class="caption has-text-weight-semibold has-text-grey margin-bottom-normal">
+      <span
+        class="caption has-text-weight-semibold has-text-grey margin-bottom-normal"
+      >
         {{ $t('photo-details.content-report.caption') }}
       </span>
 
-      <button type="button"
-              :disabled="selectedReason === null"
-              class="button next-button tiny is-info is-pulled-right"
-              @click="onIssueSelected()">
+      <button
+        type="button"
+        :disabled="selectedReason === null"
+        class="button next-button tiny is-info is-pulled-right"
+        @click="onIssueSelected()"
+      >
         {{ $t('photo-details.content-report.next') }}
       </button>
     </form>

@@ -45,11 +45,11 @@
         @click.stop="toggleLicenseExplanationVisibility(item.code)"
       />
 
-      <license-explanation-tooltip
-        v-if="shouldRenderLicenseExplanationTooltip(item.code)"
-        :license="licenseExplanationCode"
-      />
-    </div>
+        <license-explanation-tooltip
+          v-if="shouldRenderLicenseExplanationTooltip(item.code)"
+          :license="licenseExplanationCode"
+        />
+      </div>
     </template>
   </div>
 </template>

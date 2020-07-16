@@ -12,44 +12,47 @@
         <div class="field has-addons">
           <div class="control mobile-input">
             <input required="required"
-                class="input"
+                class="hero_search-input input is-large"
                 autofocus
                 type="search"
                 name="q"
                 :placeholder="$t('hero.search.placeholder')"
                 autocapitalize="none"
                 id="searchTerm"
-                v-model.lazy="form.searchTerm" />
-          </div>
-          <div class="control">
-            <button class="button is-primary big" title="Search">
-              {{$t('hero.search.button')}}
-            </button>
+                v-model.lazy="form.searchTerm"
+              />
+            </div>
+            <div class="control">
+              <button class="button is-primary big" title="Search">
+                {{ $t('hero.search.button') }}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="is-hidden-desktop centered-search-box">
-        <div class="field has-addons">
-          <div class="control mobile-input">
-            <input required="required"
+        <div class="is-hidden-desktop centered-search-box">
+          <div class="field has-addons">
+            <div class="control mobile-input">
+              <input
+                required="required"
                 class="input"
                 type="search"
                 name="q"
                 :placeholder="$t('hero.search.placeholder')"
                 autocapitalize="none"
                 id="searchTerm"
-                v-model.lazy="form.searchTerm" />
-          </div>
-          <div class="control">
-            <button class="button is-primary small" title="Search">
-              {{$t('hero.search.button')}}
-            </button>
+                v-model.lazy="form.searchTerm"
+              />
+            </div>
+            <div class="control">
+              <button class="button is-primary small" title="Search">
+                {{ $t('hero.search.button') }}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="caption has-text-centered margin-top-big">
-        <i18n path="hero.caption.content" tag="p">
-          <template v-slot:link>
+        <div class="caption has-text-centered margin-top-big">
+          <i18n path="hero.caption.content" tag="p">
+            <template v-slot:link>
             <a href="https://creativecommons.org/share-your-work/licensing-examples/"
               target="_blank"
               aria-label="about cc licenses"
@@ -78,9 +81,9 @@
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types';
-import HomeLicenseFilter from './HomeLicenseFilter';
-import LocaleSelector from './LocaleSelector';
+import { SET_QUERY } from '@/store/mutation-types'
+import HomeLicenseFilter from './HomeLicenseFilter'
+import LocaleSelector from './LocaleSelector'
 
 export default {
   name: 'hero-section',

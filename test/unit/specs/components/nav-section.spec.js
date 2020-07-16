@@ -1,7 +1,7 @@
-import NavSection from '@/components/NavSection';
-import { SET_QUERY } from '@/store/mutation-types';
-import render from '../../test-utils/render';
-import i18n from '../../test-utils/i18n';
+import NavSection from '@/components/NavSection'
+import { SET_QUERY } from '@/store/mutation-types'
+import render from '../../test-utils/render'
+import i18n from '../../test-utils/i18n'
 
 describe('NavSection', () => {
   it('should render correct contents', () => {
@@ -10,7 +10,7 @@ describe('NavSection', () => {
   })
 
   it('commits a mutation when the form is submitted', () => {
-    const $t = key => i18n.messages[key];
+    const $t = (key) => i18n.messages[key]
     const storeMock = {
       dispatch: jest.fn(),
       commit: jest.fn(),

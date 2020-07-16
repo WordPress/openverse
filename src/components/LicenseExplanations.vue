@@ -55,7 +55,7 @@ const LicenseExplanations = {
         sa: this.$t('browse-page.license-description.sa'),
         cc0: this.$t('browse-page.license-description.cc0'),
         pdm: this.$t('browse-page.license-description.pdm'),
-      };
+      }
     },
   },
   methods: {
@@ -63,7 +63,7 @@ const LicenseExplanations = {
       return APItoIconNameMap[licenseTerm]
     },
     getLicenseDescription(licenseTerm) {
-      return this.LicenseTermDescriptions[licenseTerm];
+      return this.LicenseTermDescriptions[licenseTerm]
     },
   },
 }

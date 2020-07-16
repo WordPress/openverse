@@ -1,29 +1,35 @@
 <template>
   <form class="other-form">
-      <h4 class="b-header">{{ $t('photo-details.content-report.title') }}</h4>
-      <legend class="margin-bottom-small">
-        {{ $t('photo-details.content-report.issue-description') }}
-      </legend>
-      <textarea class="reason padding-small has-text-weight-semibold"
-                v-model="otherReasonDescription"
-                placeholder="Issue description required (with at least 20 characters)" />
-      <div>
-        <button class="button other-back-button is-text tiny margin-top-normal has-text-grey"
-                @click="onBackClick()">
-          <span>
-            <i class="icon chevron-left margin-right-small"></i>
-            {{ $t('photo-details.content-report.back') }}
-          </span>
-        </button>
+    <h4 class="b-header">{{ $t('photo-details.content-report.title') }}</h4>
+    <legend class="margin-bottom-small">
+      {{ $t('photo-details.content-report.issue-description') }}
+    </legend>
+    <textarea
+      class="reason padding-small has-text-weight-semibold"
+      v-model="otherReasonDescription"
+      placeholder="Issue description required (with at least 20 characters)"
+    />
+    <div>
+      <button
+        class="button other-back-button is-text tiny margin-top-normal has-text-grey"
+        @click="onBackClick()"
+      >
+        <span>
+          <i class="icon chevron-left margin-right-small"></i>
+          {{ $t('photo-details.content-report.back') }}
+        </span>
+      </button>
 
-        <button type="button"
-                :disabled="!descriptionHasMoreThan20Chars"
-                class="button submit-other-button tiny is-info margin-top-normal is-pulled-right"
-                @click="sendContentReport()">
-          {{ $t('photo-details.content-report.submit') }}
-        </button>
-      </div>
-    </form>
+      <button
+        type="button"
+        :disabled="!descriptionHasMoreThan20Chars"
+        class="button submit-other-button tiny is-info margin-top-normal is-pulled-right"
+        @click="sendContentReport()"
+      >
+        {{ $t('photo-details.content-report.submit') }}
+      </button>
+    </div>
+  </form>
 </template>
 
 <script>

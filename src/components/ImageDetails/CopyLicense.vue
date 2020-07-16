@@ -1,6 +1,8 @@
 <template>
   <div class="copy-license margin-vertical-normal">
-    <h5 class="b-header margin-bottom-small">{{ $t('photo-details.reuse.copy-license.title') }}</h5>
+    <h5 class="b-header margin-bottom-small">
+      {{ $t('photo-details.reuse.copy-license.title') }}
+    </h5>
     <section class="tabs">
       <ul role="tablist">
         <li

@@ -62,7 +62,7 @@ export default {
   name: 'nav-section',
   computed: {
     navSearchPlaceholder() {
-      return this.$t('header.placeholder');
+      return this.$t('header.placeholder')
     },
   },
   data: () => ({ form: { searchTerm: '' }, isBurgerMenuActive: false }),

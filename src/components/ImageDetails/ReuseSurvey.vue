@@ -1,7 +1,12 @@
 <template>
   <div class="reuse-survey caption has-text-weight-semibold">
     {{ $t('photo-details.survey.content') }}
-    <a :href="formLink" target="_blank" rel="noopener" @click="onReuseSurveyClick">
+    <a
+      :href="formLink"
+      target="_blank"
+      rel="noopener"
+      @click="onReuseSurveyClick"
+    >
       {{ $t('photo-details.survey.link') }}
     </a>
     {{ $t('photo-details.survey.answer') }}

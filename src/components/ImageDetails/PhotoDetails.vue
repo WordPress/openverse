@@ -2,13 +2,13 @@
   <div class="photo columns is-desktop is-marginless padding-bottom-xl">
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
       <a
-        class="is-block photo_breadcrumb has-text-left margin-left-normal
-                margin-bottom-normal has-text-grey-dark has-text-weight-semibold caption"
-          :href="breadCrumbURL"
-          @click.prevent="onGoBackToSearchResults"
-          v-if="shouldShowBreadcrumb">
-        <i class="icon chevron-left margin-right-small"/>
-          {{ $t('photo-details.back') }}
+        class="is-block photo_breadcrumb has-text-left margin-left-normal margin-bottom-normal has-text-grey-dark has-text-weight-semibold caption"
+        :href="breadCrumbURL"
+        @click.prevent="onGoBackToSearchResults"
+        v-if="shouldShowBreadcrumb"
+      >
+        <i class="icon chevron-left margin-right-small" />
+        {{ $t('photo-details.back') }}
       </a>
       <img
         @load="onImageLoad"
@@ -114,15 +114,18 @@
         </div>
       </section>
 
-      <a v-if="activeTab < 2"
-          :href="image.foreign_landing_url"
-          target="_blank"
-          rel="noopener"
-          class="button is-success margin-bottom-small"
-          @click="onPhotoSourceLinkClicked">
+      <a
+        v-if="activeTab < 2"
+        :href="image.foreign_landing_url"
+        target="_blank"
+        rel="noopener"
+        class="button is-success margin-bottom-small"
+        @click="onPhotoSourceLinkClicked"
+      >
         {{ $t('photo-details.weblink') }}
-        <i class="icon external-link margin-left-normal is-size-6
-                  padding-top-smaller has-text-grey-lighter" />
+        <i
+          class="icon external-link margin-left-normal is-size-6 padding-top-smaller has-text-grey-lighter"
+        />
       </a>
 
       <reuse-survey v-if="activeTab < 2" :image="image" />

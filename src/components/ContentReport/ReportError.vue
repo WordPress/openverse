@@ -1,10 +1,14 @@
 <template>
   <div>
-    <span class="is-block padding-horizontal-big margin-top-large has-text-centered">
+    <span
+      class="is-block padding-horizontal-big margin-top-large has-text-centered"
+    >
       {{ $t('photo-details.content-report.dmca.error') }}
     </span>
-    <button class="button is-text tiny margin-top-normal is-shadowless"
-            @click="onBackClick()">
+    <button
+      class="button is-text tiny margin-top-normal is-shadowless"
+      @click="onBackClick()"
+    >
       <span>
         <i class="icon chevron-left margin-right-small"></i>
         {{ $t('photo-details.content-report.back') }}

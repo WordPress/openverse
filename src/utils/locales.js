@@ -9,8 +9,8 @@ const locales = {
     eng: 'French',
     native: 'Français',
   },
-};
+}
 
 export default function getlocales() {
-  return locales;
+  return locales
 }

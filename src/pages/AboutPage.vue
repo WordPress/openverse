@@ -50,9 +50,9 @@
       <table aria-label="sources table"
         role="region" class="table is-bordered is-striped">
         <thead>
-          <th>{{$t('about.providers.source')}}</th>
-          <th>{{$t('about.providers.domain')}}</th>
-          <th>{{$t('about.providers.work')}}</th>
+          <th>{{ $t('about.providers.source') }}</th>
+          <th>{{ $t('about.providers.domain') }}</th>
+          <th>{{ $t('about.providers.work') }}</th>
         </thead>
         <tbody>
           <tr

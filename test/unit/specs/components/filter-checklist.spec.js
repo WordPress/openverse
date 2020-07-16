@@ -1,11 +1,11 @@
-import FilterChecklist from '@/components/Filters/FilterChecklist';
-import render from '../../test-utils/render';
-import i18n from '../../test-utils/i18n';
+import FilterChecklist from '@/components/Filters/FilterChecklist'
+import render from '../../test-utils/render'
+import i18n from '../../test-utils/i18n'
 
 describe('FilterChecklist', () => {
-  let options = {};
-  let props = null;
-  const $t = key => i18n.messages[key];
+  let options = {}
+  let props = null
+  const $t = (key) => i18n.messages[key]
   const eventData = {
     target: {
       id: 'foo',

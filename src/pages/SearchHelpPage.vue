@@ -13,14 +13,16 @@
             <a aria-label="quote unquote Claude Monet" href='https://search.creativecommons.org/search?q="Claude%20Monet"'>
               <em>"Claude Monet"</em>
             </a>
-          </template>
+        </template>
       </i18n>
 
-    <h3 role="region" class="margin-vertical-normal">{{$t('search-guide.combine.title')}}</h3>
+      <h3 role="region" class="margin-vertical-normal">
+        {{ $t('search-guide.combine.title') }}
+      </h3>
 
-    <p class="margin-vertical-normal">
-      {{$t('search-guide.combine.description')}}
-    </p>
+      <p class="margin-vertical-normal">
+        {{ $t('search-guide.combine.description') }}
+      </p>
 
     <ul>
       <i18n path="search-guide.combine.and" tag="li" class="listitem">

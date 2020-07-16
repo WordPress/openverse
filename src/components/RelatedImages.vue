@@ -1,5 +1,8 @@
 <template>
-  <div class="photo_related-images" v-if="relatedImages && relatedImages.length > 0">
+  <div
+    class="photo_related-images"
+    v-if="relatedImages && relatedImages.length > 0"
+  >
     <h3 class="b-header">{{ $t('photo-details.related-images') }}</h3>
     <search-grid
       :imagesCount="imagesCount"

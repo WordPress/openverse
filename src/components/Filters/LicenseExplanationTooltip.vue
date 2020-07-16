@@ -1,7 +1,8 @@
 <template>
   <div class="license-explanation-tooltip padding-small">
     <h5 class="b-header">
-      {{ $t('browse-page.license-description.title') }} {{ license.toUpperCase() }}
+      {{ $t('browse-page.license-description.title') }}
+      {{ license.toUpperCase() }}
     </h5>
     <license-explanations :license="license" />
     <p class="caption is-pulled-right margin-small">

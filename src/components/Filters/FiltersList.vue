@@ -95,16 +95,20 @@
       {{ $t('filter-list.clear') }}
     </button>
   </div>
-
-  <div v-if="isFilterApplied"
-       class="has-background-white padding-big is-hidden-desktop has-text-centered">
-    <button class="button tiny margin-right-normal" @click="onClearFilters">
-      {{ $t('filter-list.clear') }}
-    </button>
-    <button class="button is-primary tiny"
-            @click="onToggleSearchGridFilter()">
-      {{ $t('filter-list.show') }}
-    </button>
+    <div
+      v-if="isFilterApplied"
+      class="has-background-white padding-big is-hidden-desktop has-text-centered"
+    >
+      <button class="button tiny margin-right-normal" @click="onClearFilters">
+        {{ $t('filter-list.clear') }}
+      </button>
+      <button
+        class="button is-primary tiny"
+        @click="onToggleSearchGridFilter()"
+      >
+        {{ $t('filter-list.show') }}
+      </button>
+    </div>
   </div>
 </template>
 

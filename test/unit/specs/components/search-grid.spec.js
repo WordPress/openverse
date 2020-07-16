@@ -1,11 +1,11 @@
-import SearchGrid from '@/components/SearchGridManualLoad';
-import render from '../../test-utils/render';
-import i18n from '../../test-utils/i18n';
+import SearchGrid from '@/components/SearchGridManualLoad'
+import render from '../../test-utils/render'
+import i18n from '../../test-utils/i18n'
 
 describe('SearchGrid', () => {
-  let options = {};
-  let commitMock = null;
-  const $t = key => i18n.messages[key];
+  let options = {}
+  let commitMock = null
+  const $t = (key) => i18n.messages[key]
   beforeEach(() => {
     commitMock = jest.fn()
     options = {

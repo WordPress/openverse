@@ -25,13 +25,33 @@ export const filterData = {
     { code: 'by-nc-nd', name: 'filters.licenses.by-nc-nd', checked: false },
   ],
   licenseTypes: [
-    { code: 'commercial', name: 'filters.license-types.commercial', checked: false },
-    { code: 'modification', name: 'filters.license-types.modification', checked: false },
+    {
+      code: 'commercial',
+      name: 'filters.license-types.commercial',
+      checked: false,
+    },
+    {
+      code: 'modification',
+      name: 'filters.license-types.modification',
+      checked: false,
+    },
   ],
   categories: [
-    { code: 'photograph', name: 'filters.categories.photograph', checked: false },
-    { code: 'illustration', name: 'filters.categories.illustration', checked: false },
-    { code: 'digitized_artwork', name: 'filters.categories.digitized-artwork', checked: false },
+    {
+      code: 'photograph',
+      name: 'filters.categories.photograph',
+      checked: false,
+    },
+    {
+      code: 'illustration',
+      name: 'filters.categories.illustration',
+      checked: false,
+    },
+    {
+      code: 'digitized_artwork',
+      name: 'filters.categories.digitized-artwork',
+      checked: false,
+    },
   ],
   extensions: [
     { code: 'jpg', name: 'filters.extensions.jpg', checked: false },

@@ -1,11 +1,11 @@
-import CopyButton from '@/components/CopyButton';
-import render from '../../test-utils/render';
-import i18n from '../../test-utils/i18n';
+import CopyButton from '@/components/CopyButton'
+import render from '../../test-utils/render'
+import i18n from '../../test-utils/i18n'
 
 describe('CopyButton', () => {
-  let options = null;
-  let props = null;
-  const $t = key => i18n.messages[key];
+  let options = null
+  let props = null
+  const $t = (key) => i18n.messages[key]
   const eventData = {
     text: 'Foo',
     clearSelection: jest.fn(),
@@ -21,8 +21,8 @@ describe('CopyButton', () => {
       mocks: {
         $t,
       },
-    };
-  });
+    }
+  })
 
   it('should render correct contents', () => {
     const wrapper = render(CopyButton, options)
