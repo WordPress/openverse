@@ -21,7 +21,8 @@
     "qa": "cd test/selenium-webdriver && pipenv run python search_screencaps.py",
     "test": "jest --config test/unit/jest-conf.js",
     "lint": "eslint --ext .js,.vue . test/unit",
-    "lint:fix": "eslint --ext .js,.vue . test/unit --fix",
+    "format": "prettier --write .",
+    "format:test": "prettier --check .",
     "build": "npm run build:app && npm run build:server",
     "build:app": "cross-env NODE_ENV=production webpack",
     "build:server": "webpack --config build/webpack.config.server.js"
@@ -139,6 +140,6 @@
   },
   "lint-staged": {
     "*.{js,vue}": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    ".": "prettier --write"
   }
 }
