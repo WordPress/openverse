@@ -16,16 +16,16 @@
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
-          <input
-            id="searchInput"
-            required="required"
-            class="input is-medium"
-            type="search"
-            ref="search"
-            :placeholder="searchBoxPlaceholder"
-            v-model="searchTermsModel"
-            @keyup.enter="onSubmit"
-          />
+          <label for="searchTerm" class="is-sr-only">Search</label>
+          <input id="searchInput"
+                  required="required"
+                  autofocus="true"
+                  class="input is-medium"
+                  type="search"
+                  ref="search"
+                  :placeholder="searchBoxPlaceholder"
+                  v-model="searchTermsModel"
+                  @keyup.enter="onSubmit" />
           <span class="icon is-medium is-left">
             <i class="icon search is-size-5"></i>
           </span>
@@ -51,16 +51,16 @@
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
-          <input
-            id="searchInput"
-            required="required"
-            class="input"
-            type="search"
-            ref="search"
-            :placeholder="searchBoxPlaceholder"
-            v-model="searchTermsModel"
-            @keyup.enter="onSubmit"
-          />
+          <label for="searchTerm" class="is-sr-only">Search</label>
+          <input id="searchInput"
+                  required="required"
+                  autofocus="true"
+                  class="input"
+                  type="search"
+                  ref="search"
+                  :placeholder="searchBoxPlaceholder"
+                  v-model="searchTermsModel"
+                  @keyup.enter="onSubmit">
           <span class="icon is-left">
             <i class="icon search is-size-6"></i>
           </span>

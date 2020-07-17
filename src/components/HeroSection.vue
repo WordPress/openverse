@@ -12,16 +12,16 @@
         <div class="is-hidden-touch centered-search-box">
           <div class="field has-addons">
             <div class="control">
-              <input
-                required="required"
-                class="hero_search-input input is-large"
-                type="search"
-                name="q"
-                placeholder="I would like to see..."
-                autocapitalize="none"
-                id="searchTerm"
-                v-model.lazy="form.searchTerm"
-              />
+              <label for="searchTerm" class="is-sr-only">Search</label>
+              <input required="required"
+                  autofocus="true"
+                  class="hero_search-input input is-large"
+                  type="search"
+                  name="q"
+                  placeholder="I would like to see..."
+                  autocapitalize="none"
+                  id="searchTerm"
+                  v-model.lazy="form.searchTerm" />
             </div>
             <div class="control">
               <button class="button is-primary big" title="Search">
@@ -33,16 +33,16 @@
         <div class="is-hidden-desktop centered-search-box">
           <div class="field has-addons">
             <div class="control mobile-input">
-              <input
-                required="required"
-                class="input"
-                type="search"
-                name="q"
-                placeholder="I would like to see..."
-                autocapitalize="none"
-                id="searchTerm"
-                v-model.lazy="form.searchTerm"
-              />
+              <label for="searchTerm" class="is-sr-only">Search</label>
+              <input required="required"
+                  autofocus="true"
+                  class="input"
+                  type="search"
+                  name="q"
+                  placeholder="I would like to see..."
+                  autocapitalize="none"
+                  id="searchTerm"
+                  v-model.lazy="form.searchTerm" />
             </div>
             <div class="control">
               <button class="button is-primary small" title="Search">
