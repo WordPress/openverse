@@ -121,7 +121,7 @@ export const legacySourceMap = {
   'Open Clip Art Library': {
     image(search) {
       return {
-        url: 'https://www.openclipart.org/search/',
+        url: 'http://www.openclipart.org/search/',
         query: {
           query: search.query,
         },
