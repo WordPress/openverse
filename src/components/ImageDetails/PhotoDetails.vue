@@ -218,4 +218,11 @@ export default {
 
 <style lang="scss">
 @import '../../styles/photodetails.scss';
+@import 'node_modules/bulma/sass/utilities/_all';
+
+@include touch {
+  .image-info {
+    margin-left: 0 !important;
+  }
+}
 </style>
