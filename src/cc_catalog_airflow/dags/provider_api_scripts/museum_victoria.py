@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 LIMIT = 100
 DELAY = 5.0
 RETRIES = 3
-PROVIDER = "museumvictoria"
+PROVIDER = "museumsvictoria"
 ENDPOINT = "https://collections.museumsvictoria.com.au/api/search"
 LANDING_PAGE = "https://collections.museumsvictoria.com.au/"
 
