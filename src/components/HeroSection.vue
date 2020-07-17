@@ -99,7 +99,9 @@ export default {
   data: () => ({ form: { searchTerm: '' } }),
   mounted() {
     // Autofocus the search input (fallback for browsers without 'autofocus' or other issues)
-    document.querySelector('#searchTerm').focus()
+    if (document.querySelector('#searchTerm')) {
+      document.querySelector('#searchTerm').focus()
+    }
   },
   methods: {
     onSubmit() {
