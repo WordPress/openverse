@@ -305,5 +305,9 @@ label {
   display: block;
   margin: 0 auto;
   cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 </style>

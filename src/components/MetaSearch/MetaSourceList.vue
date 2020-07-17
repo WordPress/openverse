@@ -1,6 +1,8 @@
 <template>
   <div class="margin-bottom-large">
-    <h4 class="b-header margin-bottom-normal">Sources</h4>
+    <component :is="sourceHeadingLevel" class="b-header margin-bottom-normal"
+      >Sources</component
+    >
     <ul class="buttons">
       <li v-for="source in sources" :key="source">
         <a
@@ -24,7 +26,11 @@ import getLegacySourceUrl, { legacySourceMap } from '@/utils/getLegacySourceUrl'
 
 export default {
   name: 'meta-source-list',
-  props: ['type', 'query'],
+  props: {
+    type: { type: String },
+    query: { type: String },
+    sourceHeadingLevel: { type: String, default: 'h4' },
+  },
   methods: {
     getSourceUrl(source) {
       return getLegacySourceUrl(this.type)(source, { query: this.query.q })

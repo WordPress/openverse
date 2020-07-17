@@ -3,7 +3,7 @@
     <header
       class="padding-top-bigger padding-left-bigger padding-righr-bigger padding-bottom-small"
     >
-      <h2>Search images from other sources</h2>
+      <h3>Search images from other sources</h3>
       <p>
         Click on a source below to directly search other collections of
         CC-licensed images
@@ -13,7 +13,39 @@
     <div
       class="padding-left-bigger padding-right-bigger padding-bottom-bigger meta-modal-content"
     >
-      <meta-source-list :type="type" :query="query" />
+      <h5 class="b-header margin-bottom-small">Search</h5>
+
+      <div class="control has-icons-left margin-bottom-big">
+        <input
+          class="input"
+          type="text"
+          placeholder="Search"
+          v-model="editableQuery.q"
+          style="max-width: 400px;"
+        />
+        <span class="icon is-left">
+          <!-- Style issue needs to be fixed for icons: -->
+          <i class="icon search is-size-4" style="padding: 0.8rem;" />
+        </span>
+      </div>
+
+      <h5 for="metaUseCheckboxes" class="b-header margin-bottom-small">Use</h5>
+      <div class="meta-filters margin-bottom-big flex">
+        <label class="margin-right-big"
+          ><input class="margin-right-smaller" type="checkbox" /> Use for
+          commercial purposes</label
+        >
+        <label
+          ><input class="margin-right-smaller" type="checkbox" /> Modify or
+          adapt</label
+        >
+      </div>
+
+      <meta-source-list
+        :type="type"
+        :query="editableQuery"
+        sourceHeadingLevel="h5"
+      />
       <p class="caption has-text-weight-semibold">
         CC Search does not currently index the sources listed above, but through
         this interface is offering convenient access to search services provided
@@ -35,6 +67,11 @@ import MetaSourceList from './MetaSourceList'
 export default {
   name: 'meta-search-modal',
   props: ['type', 'query'],
+  data() {
+    return {
+      editableQuery: { q: this.query.q },
+    }
+  },
   components: {
     AppModal,
     MetaSourceList,
@@ -42,8 +79,17 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import 'node_modules/bulma/sass/utilities/_all';
+
 .meta-modal-content {
   max-width: 46rem;
+}
+
+@include touch {
+  .meta-filters label {
+    display: block;
+    width: 100%;
+  }
 }
 </style>

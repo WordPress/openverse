@@ -3,7 +3,7 @@
     <div class="modal relative">
       <button
         type="button"
-        class="close-button has-color-gray"
+        class="close-button has-color-gray is-size-6 is-size-4-touch"
         @click="$emit('close')"
         aria-label="close"
       >
@@ -58,7 +58,6 @@ export default {
   appearance: none;
   border: none;
   background-color: transparent;
-  font-size: 30px;
   padding: 20px;
   line-height: 1;
   height: auto;
