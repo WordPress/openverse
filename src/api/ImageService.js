@@ -1,16 +1,15 @@
-
-import ApiService from './ApiService';
+import ApiService from './ApiService'
 
 const ImageService = {
   /**
    * Search for images by keyword.
    */
   search(params) {
-    return ApiService.query('images', params);
+    return ApiService.query('images', params)
   },
 
   getProviderCollection(params) {
-    return ApiService.query('images', params);
+    return ApiService.query('images', params)
   },
 
   /**
@@ -19,19 +18,23 @@ const ImageService = {
    */
   getImageDetail(params) {
     if (!params.id) {
-      throw new Error('[RWV] ImageService.getImageDetail() id parameter required to retreive image details.');
+      throw new Error(
+        '[RWV] ImageService.getImageDetail() id parameter required to retreive image details.'
+      )
     }
 
-    return ApiService.get('images', params.id);
+    return ApiService.get('images', params.id)
   },
 
   getRelatedImages(params) {
     if (!params.id) {
-      throw new Error('[RWV] ImageService.getRelatedImages() id parameter required to retreive related images.');
+      throw new Error(
+        '[RWV] ImageService.getRelatedImages() id parameter required to retreive related images.'
+      )
     }
 
-    return ApiService.get('recommendations/images', params.id);
+    return ApiService.get('recommendations/images', params.id)
   },
-};
+}
 
-export default ImageService;
+export default ImageService

@@ -2,15 +2,19 @@
   <div class="hero">
     <div class="hero-center">
       <h2 class="has-text-centered">Search for content to reuse</h2>
-      <form class="hero_search-form margin-top-bigger"
-            role="search"
-            method="get"
-            action="/search"
-            v-on:submit.prevent="onSubmit">
+      <form
+        class="hero_search-form margin-top-bigger"
+        role="search"
+        method="get"
+        action="/search"
+        v-on:submit.prevent="onSubmit"
+      >
         <div class="is-hidden-touch centered-search-box">
           <div class="field has-addons">
             <div class="control">
+              <label for="searchTerm" class="is-sr-only">Search</label>
               <input required="required"
+                  autofocus="true"
                   class="hero_search-input input is-large"
                   type="search"
                   name="q"
@@ -20,14 +24,18 @@
                   v-model.lazy="form.searchTerm" />
             </div>
             <div class="control">
-              <button class="button is-primary big" title="Search">Search</button>
+              <button class="button is-primary big" title="Search">
+                Search
+              </button>
             </div>
           </div>
         </div>
         <div class="is-hidden-desktop centered-search-box">
           <div class="field has-addons">
             <div class="control mobile-input">
+              <label for="searchTerm" class="is-sr-only">Search</label>
               <input required="required"
+                  autofocus="true"
                   class="input"
                   type="search"
                   name="q"
@@ -37,14 +45,21 @@
                   v-model.lazy="form.searchTerm" />
             </div>
             <div class="control">
-              <button class="button is-primary small" title="Search">Search</button>
+              <button class="button is-primary small" title="Search">
+                Search
+              </button>
             </div>
           </div>
         </div>
         <div class="caption has-text-centered margin-top-big">
           <p>
             All our content is under Creative Commons licenses.
-            <a href="https://creativecommons.org/share-your-work/licensing-examples/" target="_blank" rel="noopener">Learn more</a>
+            <a
+              href="https://creativecommons.org/share-your-work/licensing-examples/"
+              target="_blank"
+              rel="noopener"
+              >Learn more</a
+            >
             about CC licenses.
           </p>
         </div>
@@ -55,20 +70,22 @@
     <div class="help-links">
       <span class="margin-right-bigger">
         Go to the
-        <a href="https://oldsearch.creativecommons.org/">old CC Search</a> portal
+        <a href="https://oldsearch.creativecommons.org/">old CC Search</a>
+        portal
       </span>
     </div>
 
     <img
       class="logo-cloud"
-      src="../assets/logo-cloud.png" alt="Logos from sources of Creative Commons licensed images">
+      src="../assets/logo-cloud.png"
+      alt="Logos from sources of Creative Commons licensed images"
+    />
   </div>
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types';
-import HomeLicenseFilter from './HomeLicenseFilter';
-
+import { SET_QUERY } from '@/store/mutation-types'
+import HomeLicenseFilter from './HomeLicenseFilter'
 
 export default {
   name: 'hero-section',
@@ -78,18 +95,20 @@ export default {
   data: () => ({ form: { searchTerm: '' } }),
   methods: {
     onSubmit() {
-      this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm }, shouldNavigate: true });
+      this.$store.commit(SET_QUERY, {
+        query: { q: this.form.searchTerm },
+        shouldNavigate: true,
+      })
     },
   },
-};
+}
 </script>
-
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import "node_modules/bulma/sass/utilities/initial-variables";
-@import "node_modules/bulma/sass/utilities/derived-variables";
-@import "node_modules/bulma/sass/utilities/mixins";
+@import 'node_modules/bulma/sass/utilities/initial-variables';
+@import 'node_modules/bulma/sass/utilities/derived-variables';
+@import 'node_modules/bulma/sass/utilities/mixins';
 
 $hero-height: 80vh;
 
@@ -159,5 +178,4 @@ $hero-height: 80vh;
     max-width: 1400px;
   }
 }
-
 </style>

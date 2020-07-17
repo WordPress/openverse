@@ -1,9 +1,9 @@
-import ImageAttribution from '@/components/ImageDetails/ImageAttribution';
-import render from '../../../test-utils/render';
+import ImageAttribution from '@/components/ImageDetails/ImageAttribution'
+import render from '../../../test-utils/render'
 
 describe('ImageAttribution', () => {
-  let options = null;
-  let props = null;
+  let options = null
+  let props = null
 
   beforeEach(() => {
     props = {
@@ -22,20 +22,20 @@ describe('ImageAttribution', () => {
       ccLicenseURL: 'http://license.com',
       fullLicenseName: 'LICENSE',
       attributionHtml: '<div>attribution</div>',
-    };
+    }
     options = {
       propsData: props,
-    };
-  });
+    }
+  })
 
   it('should contain the correct contents', () => {
-    const wrapper = render(ImageAttribution, options);
-    expect(wrapper.find('.sidebar_section')).toBeDefined();
-  });
+    const wrapper = render(ImageAttribution, options)
+    expect(wrapper.find('.sidebar_section')).toBeDefined()
+  })
 
   it('should return the correct license url', () => {
-    const wrapper = render(ImageAttribution, options);
-    const a = wrapper.find('.photo_license');
-    expect(a.attributes().href).toBe('http://license.com&atype=rich');
-  });
-});
+    const wrapper = render(ImageAttribution, options)
+    const a = wrapper.find('.photo_license')
+    expect(a.attributes().href).toBe('http://license.com&atype=rich')
+  })
+})

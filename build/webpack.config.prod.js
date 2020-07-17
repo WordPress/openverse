@@ -1,14 +1,14 @@
-'use strict';
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
-const helpers = require('./helpers');
-const commonConfig = require('./webpack.config.common');
-const isProd = process.env.NODE_ENV === 'production';
+'use strict'
+const webpack = require('webpack')
+const merge = require('webpack-merge')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
+const helpers = require('./helpers')
+const commonConfig = require('./webpack.config.common')
+const isProd = process.env.NODE_ENV === 'production'
 
 const webpackConfig = merge(commonConfig, {
   mode: 'production',
@@ -16,7 +16,7 @@ const webpackConfig = merge(commonConfig, {
     path: helpers.root('dist'),
     publicPath: '/',
     filename: helpers.assetsPath('/js/[name].[contenthash].js'),
-    chunkFilename: helpers.assetsPath('js/[id].[contenthash].js')
+    chunkFilename: helpers.assetsPath('js/[id].[contenthash].js'),
   },
   devtool: 'source-map',
   optimization: {
@@ -27,14 +27,14 @@ const webpackConfig = merge(commonConfig, {
           preset: ['default', { discardComments: { removeAll: true } }],
         },
         cssProcessorOptions: {
-          map: { inline: false }
-        }
+          map: { inline: false },
+        },
       }),
       new UglifyJSPlugin({
         cache: true,
         parallel: true,
         sourceMap: true,
-      })
+      }),
     ],
     splitChunks: {
       chunks: 'async',
@@ -47,21 +47,21 @@ const webpackConfig = merge(commonConfig, {
       cacheGroups: {
         defaultVendors: {
           test: /[\\/]node_modules[\\/]/,
-          priority: -10
+          priority: -10,
         },
         default: {
           minChunks: 2,
           priority: -20,
-          reuseExistingChunk: true
+          reuseExistingChunk: true,
         },
         styles: {
           test: /\.css$/,
           name: 'styles',
           chunks: 'all',
-          enforce: true
-        }
-      }
-    }
+          enforce: true,
+        },
+      },
+    },
   },
   plugins: [
     new CleanWebpackPlugin(),
@@ -71,17 +71,18 @@ const webpackConfig = merge(commonConfig, {
       sourceMap: true,
     }),
     new webpack.HashedModuleIdsPlugin(),
-    new VueSSRClientPlugin()
-  ]
-});
+    new VueSSRClientPlugin(),
+  ],
+})
 
 if (!isProd) {
-  webpackConfig.devtool = 'source-map';
+  webpackConfig.devtool = 'source-map'
 
   if (process.env.npm_config_report) {
-    const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-    webpackConfig.plugins.push(new BundleAnalyzerPlugin());
+    const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+      .BundleAnalyzerPlugin
+    webpackConfig.plugins.push(new BundleAnalyzerPlugin())
   }
 }
 
-module.exports = webpackConfig;
+module.exports = webpackConfig

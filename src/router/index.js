@@ -1,19 +1,19 @@
-import Vue from 'vue';
-import VueMeta from 'vue-meta';
-import VueRouter from 'vue-router';
-import AboutPage from '@/pages/AboutPage';
-import HomePage from '@/pages/HomePage';
-import BrowsePage from '@/pages/client/BrowsePage';
-import PhotoDetailPage from '@/pages/client/PhotoDetailPage';
-import FeedbackPage from '@/pages/FeedbackPage';
-import CollectionsPage from '@/pages/CollectionsPage';
-import CollectionBrowsePage from '@/pages/client/CollectionBrowsePage';
-import SearchHelpPage from '@/pages/SearchHelpPage';
-import NotFoundPage from '@/pages/NotFoundPage';
-import redirectOnEmptySearch from './redirectOnEmptySearch';
+import Vue from 'vue'
+import VueMeta from 'vue-meta'
+import VueRouter from 'vue-router'
+import AboutPage from '@/pages/AboutPage'
+import HomePage from '@/pages/HomePage'
+import BrowsePage from '@/pages/BrowsePage'
+import PhotoDetailPage from '@/pages/PhotoDetailPage'
+import FeedbackPage from '@/pages/FeedbackPage'
+import CollectionsPage from '@/pages/CollectionsPage'
+import CollectionBrowsePage from '@/pages/CollectionBrowsePage'
+import SearchHelpPage from '@/pages/SearchHelpPage'
+import NotFoundPage from '@/pages/NotFoundPage'
+import redirectOnEmptySearch from './redirectOnEmptySearch'
 
-Vue.use(VueRouter);
-Vue.use(VueMeta);
+Vue.use(VueRouter)
+Vue.use(VueMeta)
 
 const router = new VueRouter({
   mode: 'history',
@@ -26,7 +26,7 @@ const router = new VueRouter({
       meta: {
         requiresQuery: true,
       },
-      props: route => ({ query: route.query.q }),
+      props: (route) => ({ query: route.query.q }),
     },
     {
       path: '/photos/:id',
@@ -79,21 +79,21 @@ const router = new VueRouter({
       // eslint-disable-next-line
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve({ x: 0, y: to.params.location });
-        }, 600);
-      });
+          resolve({ x: 0, y: to.params.location })
+        }, 600)
+      })
     }
-    return { x: 0, y: 0 };
+    return { x: 0, y: 0 }
   },
-});
+})
 
 router.afterEach((to) => {
   if (typeof ga !== 'undefined') {
-    ga('set', 'page', to.fullPath);
-    ga('send', 'pageview');
+    ga('set', 'page', to.fullPath)
+    ga('send', 'pageview')
   }
-});
+})
 
-redirectOnEmptySearch(router);
+redirectOnEmptySearch(router)
 
-export default router;
+export default router

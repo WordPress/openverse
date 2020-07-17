@@ -2,7 +2,7 @@
   <section
     :class="{
       'search-grid': true,
-      'search-grid__contain-images': shouldContainImages
+      'search-grid__contain-images': shouldContainImages,
     }"
     ref="searchGrid"
   >
@@ -50,13 +50,13 @@
 </template>
 
 <script>
-import { SET_IMAGES } from '@/store/mutation-types';
-import SearchGridCell from '@/components/SearchGridCell';
-import LoadingIcon from '@/components/LoadingIcon';
-import SearchRating from '@/components/SearchRating';
-import SafeBrowsing from '@/components/SafeBrowsing';
+import { SET_IMAGES } from '@/store/mutation-types'
+import SearchGridCell from '@/components/SearchGridCell'
+import LoadingIcon from '@/components/LoadingIcon'
+import SearchRating from '@/components/SearchRating'
+import SafeBrowsing from '@/components/SafeBrowsing'
 
-const DEFAULT_PAGE_SIZE = 20;
+const DEFAULT_PAGE_SIZE = 20
 
 export default {
   name: 'search-grid-manual-load',
@@ -93,53 +93,53 @@ export default {
   },
   computed: {
     imagePage() {
-      return this.$store.state.imagePage;
+      return this.$store.state.imagePage
     },
     isFetchingImagesError() {
-      return this.$store.state.isFetchingImagesError;
+      return this.$store.state.isFetchingImagesError
     },
     isFetchingImages() {
-      return this.$store.state.isFetchingImages;
+      return this.$store.state.isFetchingImages
     },
     _images() {
-      return this.useInfiniteScroll ? this.$store.state.images : this.images;
+      return this.useInfiniteScroll ? this.$store.state.images : this.images
     },
     currentPage() {
-      return this.$store.state.imagePage;
+      return this.$store.state.imagePage
     },
     _imagesCount() {
       const count = this.useInfiniteScroll
         ? this.$store.state.imagesCount
-        : this.imagesCount;
+        : this.imagesCount
       return count >= 10000
         ? `Over ${count.toLocaleString('en')} images`
-        : `${count.toLocaleString('en')} images`;
+        : `${count.toLocaleString('en')} images`
     },
     _query() {
-      return this.$props.query;
+      return this.$props.query
     },
     _errorMessage() {
-      return this.$store.state.errorMsg;
+      return this.$store.state.errorMsg
     },
     isFinished() {
-      return this.currentPage >= this.$store.state.pageCount;
+      return this.currentPage >= this.$store.state.pageCount
     },
   },
   watch: {
     _images: {
       handler() {
         if (this.$state) {
-          this.$state.loaded();
+          this.$state.loaded()
           if (this._imagesCount < this.currentPage * DEFAULT_PAGE_SIZE) {
-            this.$state.complete();
+            this.$state.complete()
           }
         }
-        this.isDataInitialized = true;
+        this.isDataInitialized = true
       },
     },
     _query: {
       handler() {
-        this.searchChanged();
+        this.searchChanged()
       },
       deep: true,
     },
@@ -147,28 +147,28 @@ export default {
   methods: {
     handleScalingChange() {
       setTimeout(() => {
-        this.$redrawVueMasonry(); // Some elements end up taking less space
-      }, 100); // One-tenth of a second should be sufficient to calculate new height
+        this.$redrawVueMasonry() // Some elements end up taking less space
+      }, 100) // One-tenth of a second should be sufficient to calculate new height
     },
     searchChanged() {
-      this.$store.commit(SET_IMAGES, { images: [], page: 1 });
+      this.$store.commit(SET_IMAGES, { images: [], page: 1 })
     },
     onLoadMoreImages() {
       const searchParams = {
         page: this.currentPage + 1,
         shouldPersistImages: true,
         ...this._query,
-      };
+      }
 
-      this.$emit('onLoadMoreImages', searchParams);
+      this.$emit('onLoadMoreImages', searchParams)
     },
   },
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import "node_modules/bulma/sass/utilities/_all";
+@import 'node_modules/bulma/sass/utilities/_all';
 
 .button[disabled] {
   opacity: 1;
@@ -211,7 +211,7 @@ export default {
 }
 
 .search-grid:after {
-  content: "";
+  content: '';
   display: block;
   clear: both;
 }
@@ -230,7 +230,7 @@ export default {
 
   @include tablet {
     &:after {
-      content: "";
+      content: '';
       flex-grow: 999999999;
     }
   }

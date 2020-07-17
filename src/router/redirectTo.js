@@ -1,10 +1,9 @@
-const redirectTo = router => (location, replace = false) => {
+const redirectTo = (router) => (location, replace = false) => {
   if (replace) {
-    router.replace(location);
+    router.replace(location)
+  } else {
+    router.push(location)
   }
-  else {
-    router.push(location);
-  }
-};
+}
 
-export default redirectTo;
+export default redirectTo
