@@ -61,7 +61,7 @@ ngrok http 8443 -host-header="localhost:8443"
 
 ## Code Standards
 
-Code is linted with eslint and formatted with prettier. Linting and formatting will automatically run on precommit. You wil need to fix any linting issues before comitting. We reccommend formatting your JavaScript files on save in your text editor. You can learn how to do this in Visual Studio Code [here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode#format-on-save).
+Code is linted with `eslint` and formatted with `prettier`. Linting and formatting will automatically run on precommit. You will need to fix any linting issues before comitting. We reccommend formatting your JavaScript files on save in your text editor. You can learn how to do this in Visual Studio Code [here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode#format-on-save).
 
 ## Deployment
 
