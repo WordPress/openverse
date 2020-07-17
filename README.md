@@ -59,6 +59,10 @@ If you need to run a HTTP version (for example, if you're testing against third-
 ngrok http 8443 -host-header="localhost:8443"
 ```
 
+## Code Standards
+
+Code is linted with eslint and formatted with prettier. Linting and formatting will automatically run on precommit. You wil need to fix any linting issues before comitting. We reccommend formatting your JavaScript files on save in your text editor. You can learn how to do this in Visual Studio Code [here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode#format-on-save).
+
 ## Deployment
 
 Details about how to deploy the frontend code can be found on the [CC Wiki](https://wikijs.creativecommons.org/tech/cc-search/frontend) (Accessible to CC Staff only).
