@@ -13,15 +13,17 @@
           <div class="field has-addons">
             <div class="control">
               <label for="searchTerm" class="is-sr-only">Search</label>
-              <input required="required"
-                  autofocus="true"
-                  class="hero_search-input input is-large"
-                  type="search"
-                  name="q"
-                  placeholder="I would like to see..."
-                  autocapitalize="none"
-                  id="searchTerm"
-                  v-model.lazy="form.searchTerm" />
+              <input
+                required="required"
+                autofocus
+                class="hero_search-input input is-large"
+                type="search"
+                name="q"
+                placeholder="I would like to see..."
+                autocapitalize="none"
+                id="searchTerm"
+                v-model.lazy="form.searchTerm"
+              />
             </div>
             <div class="control">
               <button class="button is-primary big" title="Search">
@@ -34,15 +36,17 @@
           <div class="field has-addons">
             <div class="control mobile-input">
               <label for="searchTerm" class="is-sr-only">Search</label>
-              <input required="required"
-                  autofocus="true"
-                  class="input"
-                  type="search"
-                  name="q"
-                  placeholder="I would like to see..."
-                  autocapitalize="none"
-                  id="searchTerm"
-                  v-model.lazy="form.searchTerm" />
+              <input
+                required="required"
+                autofocus
+                class="input"
+                type="search"
+                name="q"
+                placeholder="I would like to see..."
+                autocapitalize="none"
+                id="searchTerm"
+                v-model.lazy="form.searchTerm"
+              />
             </div>
             <div class="control">
               <button class="button is-primary small" title="Search">
@@ -93,6 +97,10 @@ export default {
     HomeLicenseFilter,
   },
   data: () => ({ form: { searchTerm: '' } }),
+  mounted() {
+    // Autofocus the search input (fallback for browsers without 'autofocus' or other issues)
+    document.querySelector('#searchTerm').focus()
+  },
   methods: {
     onSubmit() {
       this.$store.commit(SET_QUERY, {
