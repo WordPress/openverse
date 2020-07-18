@@ -1,8 +1,6 @@
 <template>
   <div class="margin-bottom-large">
-    <component :is="sourceHeadingLevel" class="b-header margin-bottom-normal"
-      >Sources</component
-    >
+    <h5 class="b-header margin-bottom-small">Sources</h5>
     <ul class="buttons">
       <li v-for="source in sources" :key="source">
         <a
@@ -29,7 +27,6 @@ export default {
   props: {
     type: { type: String },
     query: { type: String },
-    sourceHeadingLevel: { type: String, default: 'h4' },
   },
   methods: {
     getSourceUrl(source) {

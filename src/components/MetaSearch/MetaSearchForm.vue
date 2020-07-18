@@ -1,9 +1,9 @@
 <template>
   <section :key="type" class="padding-normal">
     <header class="margin-bottom-large">
-      <h3 class="b-header margin-bottom-small">
+      <h4 class="b-header margin-bottom-small">
         CC Search does not yet support built-in {{ type }} search.
-      </h3>
+      </h4>
       <p>
         Click on a source below to directly search other collections of
         CC-licensed {{ type }}.

@@ -9,13 +9,13 @@
         CC-licensed images
       </p>
     </header>
-    <hr />
+    <hr class="margin-bottom-bigger" />
     <div
       class="padding-left-bigger padding-right-bigger padding-bottom-bigger meta-modal-content"
     >
       <h5 class="b-header margin-bottom-small">Search</h5>
 
-      <div class="control has-icons-left margin-bottom-big">
+      <div class="control has-icons-left margin-bottom-bigger">
         <input
           class="input"
           type="text"
@@ -25,12 +25,12 @@
         />
         <span class="icon is-left">
           <!-- Style issue needs to be fixed for icons: -->
-          <i class="icon search is-size-4" style="padding: 0.8rem;" />
+          <i class="icon search is-size-5" style="padding: 10px;" />
         </span>
       </div>
 
       <h5 for="metaUseCheckboxes" class="b-header margin-bottom-small">Use</h5>
-      <div class="meta-filters margin-bottom-big flex">
+      <div class="meta-filters margin-bottom-bigger flex">
         <label class="margin-right-big"
           ><input class="margin-right-smaller" type="checkbox" /> Use for
           commercial purposes</label
@@ -41,11 +41,7 @@
         >
       </div>
 
-      <meta-source-list
-        :type="type"
-        :query="editableQuery"
-        sourceHeadingLevel="h5"
-      />
+      <meta-source-list :type="type" :query="editableQuery" />
       <p class="caption has-text-weight-semibold">
         CC Search does not currently index the sources listed above, but through
         this interface is offering convenient access to search services provided
