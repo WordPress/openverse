@@ -159,7 +159,7 @@ def test_get_title_failure():
 def test_get_creators_success():
     creatorinfo = _get_resource_json("creator_info_success.json")
     actual_creator = np._get_creators(creatorinfo)
-    expected_creator = "Hillman, Barbara|Ohman, August R.|New York Public Library. Local History and Genealogy Division"
+    expected_creator = "Hillman, Barbara"
 
     assert actual_creator == expected_creator
 
@@ -168,7 +168,7 @@ def test_get_creators_failure():
     creatorinfo = []
     actual_creator = np._get_creators(creatorinfo)
 
-    assert actual_creator == []
+    assert actual_creator is None
 
 
 def test_get_metadata():

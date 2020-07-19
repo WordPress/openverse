@@ -173,14 +173,13 @@ def _get_title(titleinfo):
 
 
 def _get_creators(creatorinfo):
-    creator = []
+    creator = None
     if type(creatorinfo) == list:
         if len(creatorinfo) > 0:
             for info in creatorinfo:
-                creator.append(
-                    info.get("namePart", {}).get("$", "")
-                )
-            creator = '|'.join(creator)
+                if info.get("usage") == "primary":
+                    creator = info.get("namePart", {}).get("$")
+                    break
     return creator
 
 
