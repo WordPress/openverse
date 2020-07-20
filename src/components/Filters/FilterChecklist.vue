@@ -37,7 +37,10 @@
             :disabled="disabled"
             @change="onValueChange"
           />
-          <license-icons v-if="filterType == 'licenses' && !show(item)" :license="item.code" />
+          <license-icons
+            v-if="filterType == 'licenses' && !show(item)"
+            :license="item.code"
+          />
           {{ item.name }}
         </label>
         <img
@@ -114,15 +117,17 @@ export default {
     show(e) {
       if (this.$props.filterType === 'licenses') {
         const commercial = this.$store.state.filters.licenseTypes.find(
-          item => item.code === 'commercial',
-        );
+          (item) => item.code === 'commercial'
+        )
         const modification = this.$store.state.filters.licenseTypes.find(
-          item => item.code === 'modification',
-        );
-        return (commercial.checked && e.code.includes('nc')) ||
-              (modification.checked && e.code.includes('nd'));
+          (item) => item.code === 'modification'
+        )
+        return (
+          (commercial.checked && e.code.includes('nc')) ||
+          (modification.checked && e.code.includes('nd'))
+        )
       }
-      return this.$props.show;
+      return this.$props.show
     },
     shouldRenderLicenseExplanationTooltip(licenseCode) {
       return (
