@@ -26,11 +26,11 @@ export default {
   name: 'meta-source-list',
   props: {
     type: { type: String },
-    query: { type: String },
+    query: { type: Object },
   },
   methods: {
     getSourceUrl(source) {
-      return getLegacySourceUrl(this.type)(source, { query: this.query.q })
+      return getLegacySourceUrl(this.type)(source, this.query)
     },
   },
   mounted() {

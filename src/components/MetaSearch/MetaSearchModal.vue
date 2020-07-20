@@ -32,12 +32,20 @@
       <h5 for="metaUseCheckboxes" class="b-header margin-bottom-small">Use</h5>
       <div class="meta-filters margin-bottom-bigger flex">
         <label class="margin-right-big"
-          ><input class="margin-right-smaller" type="checkbox" /> Use for
-          commercial purposes</label
+          ><input
+            class="margin-right-smaller"
+            type="checkbox"
+            v-model="editableQuery.filters.commercial"
+          />
+          Use for commercial purposes</label
         >
         <label
-          ><input class="margin-right-smaller" type="checkbox" /> Modify or
-          adapt</label
+          ><input
+            class="margin-right-smaller"
+            type="checkbox"
+            v-model="editableQuery.filters.modify"
+          />
+          Modify or adapt</label
         >
       </div>
 
@@ -65,7 +73,13 @@ export default {
   props: ['type', 'query'],
   data() {
     return {
-      editableQuery: { q: this.query.q },
+      editableQuery: {
+        q: this.query.q,
+        filters: {
+          commercial: this.$store.state.filters.licenseTypes[0].checked,
+          modify: this.$store.state.filters.licenseTypes[1].checked,
+        },
+      },
     }
   },
   components: {

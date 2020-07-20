@@ -11,7 +11,10 @@
       <div class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
         <search-type-tabs />
-        <filter-display :query="query" />
+        <filter-display
+          v-if="$route.path === '/search' || $route.path === '/search/image'"
+          :query="query"
+        />
         <router-view
           v-if="query.q"
           :query="query"

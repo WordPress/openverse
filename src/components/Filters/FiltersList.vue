@@ -69,6 +69,7 @@
       />
 
       <div
+        v-if="activeTab == 'image'"
         class="margin-normal filter-option small-filter margin-bottom-normal"
       >
         <input
@@ -139,7 +140,7 @@ export default {
   computed: {
     activeTab() {
       return this.$route.path.split('search/')[1] || 'image'
-   },
- },
+    },
+  },
 }
 </script>

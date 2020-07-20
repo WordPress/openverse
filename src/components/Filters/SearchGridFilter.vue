@@ -85,14 +85,14 @@ export default {
         filterType,
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: true,
+        shouldNavigate: false,
       })
     },
     onClearFilters() {
       this.$store.commit(CLEAR_FILTERS, {
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: true,
+        shouldNavigate: false,
       })
     },
     onUpdateSearchByCreator() {
@@ -100,7 +100,7 @@ export default {
         filterType: 'searchBy',
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: true,
+        shouldNavigate: false,
       })
     },
     onToggleSearchGridFilter() {

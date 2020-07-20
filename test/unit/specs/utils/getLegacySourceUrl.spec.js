@@ -6,7 +6,7 @@ import getLegacySourceUrl, { legacySourceMap } from '@/utils/getLegacySourceUrl'
  */
 describe('getLegacySourceUrl', () => {
   it('returns a url for each audio source', () => {
-    const search = { query: 'dogs' }
+    const search = { q: 'dogs' }
     const audioSources = Object.keys(legacySourceMap).filter(
       (sourceName) => legacySourceMap[sourceName].audio
     )
@@ -19,7 +19,7 @@ describe('getLegacySourceUrl', () => {
   })
 
   it('returns a url for each video source', () => {
-    const search = { query: 'dogs' }
+    const search = { q: 'dogs' }
     const audioSources = Object.keys(legacySourceMap).filter(
       (sourceName) => legacySourceMap[sourceName].video
     )
@@ -32,7 +32,7 @@ describe('getLegacySourceUrl', () => {
   })
 
   it('returns a url for each image source', () => {
-    const search = { query: 'dogs' }
+    const search = { q: 'dogs' }
     const audioSources = Object.keys(legacySourceMap).filter(
       (sourceName) => legacySourceMap[sourceName].image
     )
@@ -45,7 +45,7 @@ describe('getLegacySourceUrl', () => {
   })
 
   it('throws an error for invalid sources', () => {
-    const search = { query: 'dogs' }
+    const search = { q: 'dogs' }
     const getImageSourceUrl = getLegacySourceUrl('image')
 
     expect(() => {
@@ -54,7 +54,7 @@ describe('getLegacySourceUrl', () => {
   })
 
   it('throws an error for valid sources but an invalid content type', () => {
-    const search = { query: 'dogs' }
+    const search = { q: 'dogs' }
     const getImageSourceUrl = getLegacySourceUrl('paintings')
 
     expect(() => {

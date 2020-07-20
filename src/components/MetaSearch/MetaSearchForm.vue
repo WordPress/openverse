@@ -10,7 +10,7 @@
       </p>
     </header>
 
-    <meta-source-list :type="type" :query="query" />
+    <meta-source-list :type="type" :query="metaQuery" />
 
     <p class="caption has-text-weight-semibold has-color-dark-gray max-w-lg">
       CC Search does not currently index the sources listed above, but through
@@ -33,6 +33,21 @@ export default {
   props: ['type', 'query'],
   components: {
     MetaSourceList,
+  },
+  computed: {
+    metaQuery() {
+      return {
+        q: this.query.q,
+        filters: {
+          commercial: this.query.license_type
+            ? this.query.license_type.includes('commercial')
+            : false,
+          modify: this.query.license_type
+            ? this.query.license_type.includes('modification')
+            : false,
+        },
+      }
+    },
   },
 }
 </script>
