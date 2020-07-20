@@ -79,6 +79,7 @@ class Image(SyncableDocType):
         meta = row[schema['meta_data']]
         try:
             popularity = row[schema['normalized_popularity']]
+            popularity = _constrain_between(popularity, low=0, high=100)
         except KeyError:
             popularity = None
         return Image(
