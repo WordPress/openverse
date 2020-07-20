@@ -5,6 +5,18 @@ import buildUrl from 'build-url'
  * Urls were based off of data found here: https://github.com/creativecommons/cccatalog-frontend/issues/315
  */
 export const legacySourceMap = {
+  ccMixter: {
+    audio(search) {
+      return {
+        // no https :(
+        url: 'http://dig.ccmixter.org/search',
+        query: {
+          lic: 'open',
+          searchp: search.q,
+        },
+      }
+    },
+  },
   Europeana: {
     audio(search) {
       let query = `${search.q} AND RIGHTS:*creative*` // search cc licensed works
@@ -41,82 +53,6 @@ export const legacySourceMap = {
       }
     },
   },
-  'Wikimedia Commons': {
-    audio(search) {
-      return {
-        url: 'https://commons.wikimedia.org/w/index.php',
-        query: {
-          sort: 'relevance',
-          search: `${search.q} filetype:audio`,
-          title: 'Special:Search',
-          'advancedSearch-current': '{"fields":{"filetype":"audio"}}',
-        },
-      }
-    },
-    video(search) {
-      return {
-        url: 'https://commons.wikimedia.org/w/index.php',
-        query: {
-          sort: 'relevance',
-          search: `${search.q} filetype:video`,
-          title: 'Special:Search',
-          'advancedSearch-current': '{"fields":{"filetype":"audio"}}',
-        },
-      }
-    },
-  },
-  Jamendo: {
-    // https://www.jamendo.com/legal/creative-commons
-    audio(search) {
-      return {
-        url: 'https://www.jamendo.com/search/tracks',
-        query: {
-          q: search.q,
-        },
-      }
-    },
-  },
-  ccMixter: {
-    audio(search) {
-      return {
-        // no https :(
-        url: 'http://dig.ccmixter.org/search',
-        query: {
-          lic: 'open',
-          searchp: search.q,
-        },
-      }
-    },
-  },
-  SoundCloud: {
-    audio(search) {
-      let license = 'to_share'
-
-      if (search.filters && search.filters.commercial) {
-        if (search.filters.commercial) license = 'to_use_commercially'
-        if (search.filters.modify) license = 'to_modify_commercially'
-      }
-
-      return {
-        url: 'https://soundcloud.com/search/sounds',
-        query: {
-          q: search.q,
-          'filter.license': license, // @todo: choose which type from the search object
-        },
-      }
-    },
-  },
-  YouTube: {
-    video(search) {
-      return {
-        url: 'https://www.youtube.com/results',
-        query: {
-          search_query: search.q,
-          sp: 'EgIwAQ%3D%3D', // this interesting line filters by cc license
-        },
-      }
-    },
-  },
   'Google Images': {
     // 'sur:fc' // reuse
     // 'sur:fmc' // reuse with modification
@@ -149,12 +85,76 @@ export const legacySourceMap = {
       }
     },
   },
+  Jamendo: {
+    // https://www.jamendo.com/legal/creative-commons
+    audio(search) {
+      return {
+        url: 'https://www.jamendo.com/search/tracks',
+        query: {
+          q: search.q,
+        },
+      }
+    },
+  },
   'Open Clip Art Library': {
     image(search) {
       return {
         url: 'http://www.openclipart.org/search/',
         query: {
           query: search.q,
+        },
+      }
+    },
+  },
+  SoundCloud: {
+    audio(search) {
+      let license = 'to_share'
+
+      if (search.filters && search.filters.commercial) {
+        if (search.filters.commercial) license = 'to_use_commercially'
+        if (search.filters.modify) license = 'to_modify_commercially'
+      }
+
+      return {
+        url: 'https://soundcloud.com/search/sounds',
+        query: {
+          q: search.q,
+          'filter.license': license, // @todo: choose which type from the search object
+        },
+      }
+    },
+  },
+  'Wikimedia Commons': {
+    audio(search) {
+      return {
+        url: 'https://commons.wikimedia.org/w/index.php',
+        query: {
+          sort: 'relevance',
+          search: `${search.q} filetype:audio`,
+          title: 'Special:Search',
+          'advancedSearch-current': '{"fields":{"filetype":"audio"}}',
+        },
+      }
+    },
+    video(search) {
+      return {
+        url: 'https://commons.wikimedia.org/w/index.php',
+        query: {
+          sort: 'relevance',
+          search: `${search.q} filetype:video`,
+          title: 'Special:Search',
+          'advancedSearch-current': '{"fields":{"filetype":"audio"}}',
+        },
+      }
+    },
+  },
+  YouTube: {
+    video(search) {
+      return {
+        url: 'https://www.youtube.com/results',
+        query: {
+          search_query: search.q,
+          sp: 'EgIwAQ%3D%3D', // this interesting line filters by cc license
         },
       }
     },
