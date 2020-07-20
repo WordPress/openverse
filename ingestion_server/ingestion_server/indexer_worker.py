@@ -55,8 +55,15 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
     exists_in_mature_table = exists_in_table.format(
         table='api_matureimage', name='mature'
     )
+    popularity_subquery = '''
+        (SELECT normalized_popularity FROM image_normalized_popularity
+           WHERE identifier = image.identifier
+        )
+    '''
     query = SQL(f'''
-                SELECT *, {exists_in_deleted_table}, {exists_in_mature_table}
+                SELECT *,
+                  {exists_in_deleted_table}, {exists_in_mature_table},
+                  {popularity_subquery}
                 FROM image
                 WHERE id BETWEEN {start_id} AND {end_id}
                 ''')
