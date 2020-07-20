@@ -25,6 +25,7 @@
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
+        v-if="activeTab == 'image'"
         :options="filters.licenses"
         :disabled="licensesDisabled"
         title="Licenses"
@@ -32,31 +33,35 @@
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
-        v-if="renderProvidersFilter"
+        v-if="renderProvidersFilter && activeTab == 'image'"
         :options="filters.providers"
         title="Sources"
         filterType="providers"
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
+        v-if="activeTab == 'image'"
         :options="filters.categories"
         title="Image Type"
         filterType="categories"
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
+        v-if="activeTab == 'image'"
         :options="filters.extensions"
         title="File Type"
         filterType="extensions"
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
+        v-if="activeTab == 'image'"
         :options="filters.aspectRatios"
         title="Aspect Ratio"
         filterType="aspectRatios"
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
+        v-if="activeTab == 'image'"
         :options="filters.sizes"
         title="Image Size"
         filterType="sizes"
@@ -131,5 +136,10 @@ export default {
       this.$emit('onClearFilters')
     },
   },
+  computed: {
+    activeTab() {
+      return this.$route.path.split('search/')[1] || 'image'
+   },
+ },
 }
 </script>
