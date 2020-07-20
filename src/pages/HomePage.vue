@@ -1,7 +1,7 @@
 <template>
   <div class="home-page grid-container full">
     <header-section></header-section>
-    <hero-section role="main"></hero-section>
+    <hero-section></hero-section>
     <footer-section></footer-section>
   </div>
 </template>
