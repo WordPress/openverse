@@ -181,8 +181,7 @@ class TestCleanup:
 
     @staticmethod
     def test_score_constrained():
-        meta = {'normalized_popularity': 200}
-        img = create_mock_image({'meta_data': meta})
+        img = create_mock_image({'normalized_popularity': 200})
         assert img.normalized_popularity == 100
 
     @staticmethod
