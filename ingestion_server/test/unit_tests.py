@@ -180,15 +180,8 @@ class TestCleanup:
         assert result_http == expected_http
 
     @staticmethod
-    def test_normalized_score_override():
-        meta = {'normalized_popularity': 27}
-        img = create_mock_image({'meta_data': meta})
-        assert img.normalized_popularity == 27
-
-    @staticmethod
     def test_score_constrained():
-        meta = {'normalized_popularity': 200}
-        img = create_mock_image({'meta_data': meta})
+        img = create_mock_image({'normalized_popularity': 200})
         assert img.normalized_popularity == 100
 
     @staticmethod

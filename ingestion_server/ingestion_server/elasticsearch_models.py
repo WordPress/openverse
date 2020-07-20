@@ -77,6 +77,11 @@ class Image(SyncableDocType):
         height = row[schema['height']]
         width = row[schema['width']]
         meta = row[schema['meta_data']]
+        try:
+            popularity = row[schema['normalized_popularity']]
+            popularity = _constrain_between(popularity, low=0, high=100)
+        except KeyError:
+            popularity = None
         return Image(
             _id=row[schema['id']],
             id=row[schema['id']],
@@ -100,7 +105,7 @@ class Image(SyncableDocType):
             size=Image.get_size(height, width),
             license_url=Image.get_license_url(meta),
             mature=Image.get_maturity(meta, row[schema['mature']]),
-            normalized_popularity=Image.get_popularity(meta),
+            normalized_popularity=popularity,
             authority_boost=Image.get_authority_boost(meta, source),
             authority_penalty=Image.get_authority_penalty(meta, source)
         )
@@ -175,17 +180,6 @@ class Image(SyncableDocType):
         if api_maturity_flag:
             _mature = True
         return _mature
-
-    @staticmethod
-    def get_popularity(meta_data):
-        popularity = None
-        if meta_data and 'normalized_popularity' in meta_data:
-            try:
-                popularity = float(meta_data['normalized_popularity'])
-                popularity = _constrain_between(popularity, low=0, high=100)
-            except (ValueError, TypeError):
-                pass
-        return popularity
 
     @staticmethod
     def get_authority_boost(meta_data, source):

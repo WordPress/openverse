@@ -230,7 +230,9 @@ def reload_upstream(table, progress=None, finish_time=None):
         CREATE SCHEMA upstream_schema AUTHORIZATION deploy;
 
         IMPORT FOREIGN SCHEMA public
-        LIMIT TO ({table}) FROM SERVER upstream INTO upstream_schema;
+          LIMIT TO (
+            {table}, image_normalized_popularity
+          ) FROM SERVER upstream INTO upstream_schema;
     '''.format(host=UPSTREAM_DB_HOST, passwd=UPSTREAM_DB_PASSWORD, table=table,
                port=UPSTREAM_DB_PORT)
     # 1. Import data into a temporary table
@@ -254,6 +256,10 @@ def reload_upstream(table, progress=None, finish_time=None):
             SELECT FROM api_deletedimage WHERE identifier = img.identifier
           );
         ALTER TABLE temp_import_{table} ADD PRIMARY KEY (id);
+        DROP TABLE IF EXISTS image_normalized_popularity;
+        CREATE TABLE IF NOT EXISTS image_normalized_popularity
+          AS TABLE upstream_schema.image_normalized_popularity;
+        ALTER TABLE image_normalized_popularity ADD PRIMARY KEY (identifier);
         DROP SERVER upstream CASCADE;
     '''.format(table=table, cols=query_cols)
     create_indices = ';\n'.join(_generate_indices(downstream_db, table))
