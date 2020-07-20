@@ -257,7 +257,7 @@ def reload_upstream(table, progress=None, finish_time=None):
           );
         ALTER TABLE temp_import_{table} ADD PRIMARY KEY (id);
         DROP TABLE IF EXISTS image_normalized_popularity;
-        CREATE TABLE IF NOT EXISTS image_normalized_popularity 
+        CREATE TABLE IF NOT EXISTS image_normalized_popularity
           AS TABLE upstream_schema.image_normalized_popularity;
         ALTER TABLE image_normalized_popularity ADD PRIMARY KEY (identifier);
         DROP SERVER upstream CASCADE;
