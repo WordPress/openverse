@@ -1,9 +1,9 @@
 <template>
-  <div class="home-page grid-container full">
-    <header-section></header-section>
-    <hero-section role="main"></hero-section>
-    <footer-section></footer-section>
-  </div>
+<div class="home-page grid-container full">
+  <header-section></header-section>
+  <hero-section></hero-section>
+  <footer-section></footer-section>
+</div>
 </template>
 
 <script>

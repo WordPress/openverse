@@ -1,5 +1,5 @@
 <template>
-  <div class="hero">
+  <div class="hero" role="main">
     <div class="hero-center">
       <h2 class="has-text-centered">Search for content to reuse</h2>
       <form
@@ -15,6 +15,7 @@
               <label for="searchTerm" class="is-sr-only">Search</label>
               <input
                 required="required"
+                role="search"
                 autofocus
                 class="hero_search-input input is-large"
                 type="search"
@@ -38,6 +39,7 @@
               <label for="searchTerm" class="is-sr-only">Search</label>
               <input
                 required="required"
+                role="search"
                 autofocus
                 class="input"
                 type="search"
@@ -60,6 +62,7 @@
             All our content is under Creative Commons licenses.
             <a
               href="https://creativecommons.org/share-your-work/licensing-examples/"
+              aria-label="about cc licenses"
               target="_blank"
               rel="noopener"
               >Learn more</a
@@ -74,8 +77,7 @@
     <div class="help-links">
       <span class="margin-right-bigger">
         Go to the
-        <a href="https://oldsearch.creativecommons.org/">old CC Search</a>
-        portal
+        <a href="https://oldsearch.creativecommons.org/" aria-label="old cc search">old CC Search</a> portal
       </span>
     </div>
 
