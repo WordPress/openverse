@@ -15,7 +15,6 @@
               <label for="searchTerm" class="is-sr-only">Search</label>
               <input
                 required="required"
-                role="search"
                 autofocus
                 class="hero_search-input input is-large"
                 type="search"
@@ -39,7 +38,6 @@
               <label for="searchTerm" class="is-sr-only">Search</label>
               <input
                 required="required"
-                role="search"
                 autofocus
                 class="input"
                 type="search"
@@ -77,7 +75,12 @@
     <div class="help-links">
       <span class="margin-right-bigger">
         Go to the
-        <a href="https://oldsearch.creativecommons.org/" aria-label="old cc search">old CC Search</a> portal
+        <a
+          href="https://oldsearch.creativecommons.org/"
+          aria-label="old cc search"
+          >old CC Search</a
+        >
+        portal
       </span>
     </div>
 

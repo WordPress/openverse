@@ -2,7 +2,11 @@
   <footer class="main-footer">
     <div class="container">
       <div class="columns">
-        <section role="complementary" class="column">
+        <section
+          role="complementary"
+          aria-label="cc contact info"
+          class="column"
+        >
           <a
             aria-label="home"
             href="https://creativecommons.org"
@@ -20,10 +24,19 @@
             <span class="is-block">Creative Commons</span>
             <span>PO Box 1866, Mountain View CA 94042</span>
           </address>
-          <a href="mailto:info@creativecommons.org" aria-label="cc info email" class="mail is-block">
+          <a
+            href="mailto:info@creativecommons.org"
+            aria-label="cc info email"
+            class="mail is-block"
+          >
             info@creativecommons.org
           </a>
-          <a href="tel://+1-415-429-6753" aria-label="cc info telephone" class="phone">+1-415-429-6753</a>
+          <a
+            href="tel://+1-415-429-6753"
+            aria-label="cc info telephone"
+            class="phone"
+            >+1-415-429-6753</a
+          >
 
           <div class="margin-vertical-large">
             <a
@@ -130,7 +143,11 @@
           </div>
         </div>
         <div class="column">
-          <section role="complementary" aria-label="donate section" class="donate-section">
+          <section
+            role="complementary"
+            aria-label="donate section"
+            class="donate-section"
+          >
             <h5>Our work relies on you!</h5>
             <p>Help us keep the internet free and open.</p>
             <a
