@@ -9,6 +9,7 @@
         :query="query"
         :imageWidth="imageWidth"
         :imageHeight="imageHeight"
+        :imageType="imageType"
         :socialSharingEnabled="socialSharingEnabled"
         @onImageLoaded="onImageLoaded"
       />
@@ -30,6 +31,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import PhotoDetails from '@/components/ImageDetails/PhotoDetails'
 import PhotoTags from '@/components/PhotoTags'
 import RelatedImages from '@/components/RelatedImages'
@@ -63,6 +65,7 @@ const PhotoDetailPage = {
     shouldShowBreadcrumb: false,
     imageWidth: 0,
     imageHeight: 0,
+    imageType: 'Unknown',
     socialSharingEnabled: featureFlags.socialSharing,
   }),
   computed: mapState({
@@ -120,6 +123,11 @@ const PhotoDetailPage = {
       this.imageWidth = event.target.naturalWidth
       this.imageHeight = event.target.naturalHeight
       this.isPrimaryImageLoaded = true
+      // Make a HEAD request to get the image content-type header
+      // @todo: Should probably refactor this, just seems too trival to warrant it's own service or class
+      axios.head(event.target.src).then((res) => {
+        this.imageType = res.headers['content-type']
+      })
     },
     getRelatedImages() {
       if (this.image && this.image.id) {
