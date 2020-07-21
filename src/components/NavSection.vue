@@ -25,6 +25,7 @@
           v-on:submit.prevent="onSubmit"
         >
           <input
+            aria-label="search"
             class="input"
             type="search"
             :placeholder="navSearchPlaceholder"
@@ -32,6 +33,8 @@
           />
           <div class="is-sr-only">
             <button
+              aria-label="sr search button"
+              tabindex="0"
               type="submit"
               class="button secondary"
               value="Search"
