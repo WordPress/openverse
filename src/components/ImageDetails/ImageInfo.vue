@@ -1,7 +1,26 @@
 <template>
   <section class="sidebar_section">
     <div class="margin-bottom-big">
-      <h5 class="is-block margin-bottom-small b-header">Dimensions</h5>
+      <dl>
+        <!-- <dt class="margin-bottom-small">Image Type</dt>
+        <dd>{{ JSON.stringify(image) }}</dd> -->
+        <dt class="margin-bottom-small">Dimensions</dt>
+        <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
+        <dt class="margin-bottom-small">Provider</dt>
+        <dd>{{ image.provider }}</dd>
+        <dt class="margin-bottom-small">Source</dt>
+
+        <dd>
+          <a
+            :href="image.foreign_landing_url"
+            target="blank"
+            rel="noopener noreferrer"
+          >
+            {{ image.source }}
+          </a>
+        </dd>
+      </dl>
+      <!-- <h5 class="is-block margin-bottom-small b-header">Dimensions</h5>
       <span class="body-big">
         {{ imageWidth }} &times; {{ imageHeight }} pixels
       </span>
@@ -21,7 +40,7 @@
             :src="getProviderLogo(image.source)"
           />
         </a>
-      </div>
+      </div> -->
     </div>
     <div class="margin-bottom-big">
       <h5 class="is-block margin-bottom-small b-header">License</h5>
@@ -83,6 +102,25 @@ export default {
 
   &:focus {
     background: none !important;
+  }
+}
+
+dl {
+  display: flex;
+  flex-wrap: wrap;
+
+  dt {
+    font-weight: bold;
+    width: 90px;
+    margin-right: 24px;
+
+    &:after {
+      content: ':';
+    }
+  }
+
+  dd {
+    width: calc(100% - 90px - 24px);
   }
 }
 </style>
