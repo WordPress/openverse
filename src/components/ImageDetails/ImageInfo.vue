@@ -2,8 +2,6 @@
   <section class="sidebar_section">
     <div class="margin-bottom-big">
       <dl>
-        <dt class="margin-bottom-small">Image Type</dt>
-        <dd>{{ JSON.stringify(image) }}</dd>
         <dt class="margin-bottom-small">Dimensions</dt>
         <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
         <dt class="margin-bottom-small">Provider</dt>
@@ -20,27 +18,6 @@
           </a>
         </dd>
       </dl>
-      <!-- <h5 class="is-block margin-bottom-small b-header">Dimensions</h5>
-      <span class="body-big">
-        {{ imageWidth }} &times; {{ imageHeight }} pixels
-      </span>
-    </div>
-    <div class="margin-bottom-big">
-      <h5 class="is-block margin-bottom-small b-header">Source</h5>
-      <div class="body-big">
-        <a
-          :href="image.foreign_landing_url"
-          target="blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            class="provider-logo"
-            :alt="image.source"
-            :title="image.source"
-            :src="getProviderLogo(image.source)"
-          />
-        </a>
-      </div> -->
     </div>
     <div class="margin-bottom-big">
       <h5 class="is-block margin-bottom-small b-header">License</h5>
