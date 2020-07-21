@@ -1,27 +1,24 @@
 <template>
   <section class="sidebar_section">
     <div class="margin-bottom-big">
-      <h5 class="is-block margin-bottom-small b-header">Dimensions</h5>
-      <span class="body-big">
-        {{ imageWidth }} &times; {{ imageHeight }} pixels
-      </span>
-    </div>
-    <div class="margin-bottom-big">
-      <h5 class="is-block margin-bottom-small b-header">Source</h5>
-      <div class="body-big">
-        <a
-          :href="image.foreign_landing_url"
-          target="blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            class="provider-logo"
-            :alt="image.source"
-            :title="image.source"
-            :src="getProviderLogo(image.source)"
-          />
-        </a>
-      </div>
+      <dl>
+        <dt class="margin-bottom-small">Type</dt>
+        <dd>{{ prettyImageType }}</dd>
+        <dt class="margin-bottom-small">Dimensions</dt>
+        <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
+        <dt class="margin-bottom-small">Provider</dt>
+        <dd>{{ providerName }}</dd>
+        <dt class="margin-bottom-small">Source</dt>
+        <dd>
+          <a
+            :href="image.foreign_landing_url"
+            target="blank"
+            rel="noopener noreferrer"
+          >
+            {{ sourceName }}
+          </a>
+        </dd>
+      </dl>
     </div>
     <div class="margin-bottom-big">
       <h5 class="is-block margin-bottom-small b-header">License</h5>
@@ -51,6 +48,7 @@ export default {
     'fullLicenseName',
     'imageWidth',
     'imageHeight',
+    'imageType',
   ],
   components: {
     LicenseIcons,
@@ -58,6 +56,18 @@ export default {
   },
   computed: {
     providerName() {
+      return getProviderName(
+        this.$store.state.imageProviders,
+        this.$props.image.provider
+      )
+    },
+    prettyImageType() {
+      if (this.imageType && this.imageType.split('/').length > 1) {
+        return this.imageType.split('/')[1].toUpperCase()
+      }
+      return 'Unknown'
+    },
+    sourceName() {
       return getProviderName(
         this.$store.state.imageProviders,
         this.$props.image.source
@@ -84,5 +94,24 @@ export default {
   &:focus {
     background: none !important;
   }
+}
+
+dl {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+dt {
+  font-weight: bold;
+  width: 90px;
+  margin-right: 24px;
+
+  &:after {
+    content: ':';
+  }
+}
+
+dd {
+  width: calc(100% - 90px - 24px);
 }
 </style>
