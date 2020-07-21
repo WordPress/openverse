@@ -34,7 +34,7 @@
           <div class="is-sr-only">
             <button
               aria-label="sr search button"
-              tabindex="0"
+              tabindex="-1"
               type="submit"
               class="button secondary"
               value="Search"
