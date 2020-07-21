@@ -10,12 +10,16 @@
       </div>
       <div class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
-        <filter-display :query="query" />
-        <search-grid
+        <search-type-tabs />
+        <filter-display
+          v-if="$route.path === '/search' || $route.path === '/search/image'"
+          :query="query"
+        />
+        <router-view
           v-if="query.q"
           :query="query"
-          searchTerm=""
           @onLoadMoreImages="onLoadMoreImages"
+          :key="$route.path"
         />
       </div>
     </div>
@@ -28,6 +32,7 @@ import HeaderSection from '@/components/HeaderSection'
 import SearchGrid from '@/components/SearchGrid'
 import SearchGridForm from '@/components/SearchGridForm'
 import SearchGridFilter from '@/components/Filters/SearchGridFilter'
+import SearchTypeTabs from '@/components/SearchTypeTabs'
 import FilterDisplay from '@/components/Filters/FilterDisplay'
 import { FETCH_IMAGES } from '@/store/action-types'
 import { SET_QUERY } from '@/store/mutation-types'
@@ -51,7 +56,7 @@ const BrowsePage = {
       this.getImages(searchParams)
     },
     onSearchFormSubmit(searchParams) {
-      this.$store.commit(SET_QUERY, searchParams)
+      this.$store.commit(SET_QUERY, { ...searchParams, shouldNavigate: false })
     },
   },
   mounted() {
@@ -71,6 +76,7 @@ const BrowsePage = {
     SearchGridForm,
     FilterDisplay,
     SearchGridFilter,
+    SearchTypeTabs,
     SearchGrid,
     FooterSection,
   },
