@@ -1,5 +1,5 @@
 <template>
-  <div class="hero" role="main">
+  <main class="hero" role="main">
     <div class="hero-center">
       <h2 class="has-text-centered">Search for content to reuse</h2>
       <form
@@ -89,7 +89,7 @@
       src="../assets/logo-cloud.png"
       alt="Logos from sources of Creative Commons licensed images"
     />
-  </div>
+  </main>
 </template>
 
 <script>
