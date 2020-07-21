@@ -2,6 +2,8 @@
   <section class="sidebar_section">
     <div class="margin-bottom-big">
       <dl>
+        <dt class="margin-bottom-small">Type</dt>
+        <dd>{{ prettyImageType }}</dd>
         <dt class="margin-bottom-small">Dimensions</dt>
         <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
         <dt class="margin-bottom-small">Provider</dt>
@@ -46,6 +48,7 @@ export default {
     'fullLicenseName',
     'imageWidth',
     'imageHeight',
+    'imageType',
   ],
   components: {
     LicenseIcons,
@@ -57,6 +60,12 @@ export default {
         this.$store.state.imageProviders,
         this.$props.image.provider
       )
+    },
+    prettyImageType() {
+      if (this.imageType && this.imageType.split('/').length > 1) {
+        return this.imageType.split('/')[1].toUpperCase()
+      }
+      return 'Unknown'
     },
     sourceName() {
       return getProviderName(

@@ -96,6 +96,7 @@
             :fullLicenseName="fullLicenseName"
             :imageWidth="imageWidth"
             :imageHeight="imageHeight"
+            :imageType="imageType"
           />
         </div>
         <div :class="tabClass(2, 'tabs-panel')">
@@ -145,6 +146,7 @@ export default {
     'query',
     'imageWidth',
     'imageHeight',
+    'imageType',
     'socialSharingEnabled',
   ],
   components: {
