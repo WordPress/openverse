@@ -27,24 +27,21 @@
         :key="index"
         class="margin-top-small"
       >
-        <label class="checkbox" :for="item.code" v-if="!show(item)">
+        <label class="checkbox" :for="item.code" :disabled="block(item)">
           <input
             type="checkbox"
             class="filter-checkbox margin-right-small"
             :id="item.code"
             :key="index"
             :checked="item.checked"
-            :disabled="disabled"
+            :disabled="block(item)"
             @change="onValueChange"
           />
-          <license-icons
-            v-if="filterType == 'licenses' && !show(item)"
-            :license="item.code"
-          />
+          <license-icons v-if="filterType == 'licenses'" :license="item.code" />
           {{ item.name }}
         </label>
         <img
-          v-if="filterType == 'licenses' && !show(item)"
+          v-if="filterType == 'licenses'"
           src="@/assets/help_icon.svg"
           alt="help"
           class="license-help is-pulled-right padding-top-smallest padding-right-smaller"
@@ -114,7 +111,20 @@ export default {
     hideLicenseExplanationVisibility() {
       this.licenseExplanationVisible = false
     },
-    show(e) {
+    block(e) {
+      if (this.$props.filterType === 'licenseTypes') {
+        const nc = this.$store.state.filters.licenses.filter((item) =>
+          item.code.includes('nc')
+        )
+        const nd = this.$store.state.filters.licenses.filter((item) =>
+          item.code.includes('nd')
+        )
+        return (
+          (e.code === 'commercial' && nc.some((li) => li.checked)) ||
+          (e.code === 'modification' && nd.some((li) => li.checked))
+        )
+      }
+
       if (this.$props.filterType === 'licenses') {
         const commercial = this.$store.state.filters.licenseTypes.find(
           (item) => item.code === 'commercial'
@@ -127,7 +137,7 @@ export default {
           (modification.checked && e.code.includes('nd'))
         )
       }
-      return this.$props.show
+      return this.$props.disabled
     },
     shouldRenderLicenseExplanationTooltip(licenseCode) {
       return (
