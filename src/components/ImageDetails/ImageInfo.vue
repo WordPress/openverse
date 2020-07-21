@@ -7,7 +7,6 @@
         <dt class="margin-bottom-small">Provider</dt>
         <dd>{{ providerName }}</dd>
         <dt class="margin-bottom-small">Source</dt>
-
         <dd>
           <a
             :href="image.foreign_landing_url"
@@ -91,19 +90,19 @@ export default {
 dl {
   display: flex;
   flex-wrap: wrap;
+}
 
-  dt {
-    font-weight: bold;
-    width: 90px;
-    margin-right: 24px;
+dt {
+  font-weight: bold;
+  width: 90px;
+  margin-right: 24px;
 
-    &:after {
-      content: ':';
-    }
+  &:after {
+    content: ':';
   }
+}
 
-  dd {
-    width: calc(100% - 90px - 24px);
-  }
+dd {
+  width: calc(100% - 90px - 24px);
 }
 </style>
