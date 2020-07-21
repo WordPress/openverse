@@ -2,12 +2,12 @@
   <section class="sidebar_section">
     <div class="margin-bottom-big">
       <dl>
-        <!-- <dt class="margin-bottom-small">Image Type</dt>
-        <dd>{{ JSON.stringify(image) }}</dd> -->
+        <dt class="margin-bottom-small">Image Type</dt>
+        <dd>{{ JSON.stringify(image) }}</dd>
         <dt class="margin-bottom-small">Dimensions</dt>
         <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
         <dt class="margin-bottom-small">Provider</dt>
-        <dd>{{ image.provider }}</dd>
+        <dd>{{ providerName }}</dd>
         <dt class="margin-bottom-small">Source</dt>
 
         <dd>
@@ -16,7 +16,7 @@
             target="blank"
             rel="noopener noreferrer"
           >
-            {{ image.source }}
+            {{ sourceName }}
           </a>
         </dd>
       </dl>
@@ -77,6 +77,12 @@ export default {
   },
   computed: {
     providerName() {
+      return getProviderName(
+        this.$store.state.imageProviders,
+        this.$props.image.provider
+      )
+    },
+    sourceName() {
       return getProviderName(
         this.$store.state.imageProviders,
         this.$props.image.source
