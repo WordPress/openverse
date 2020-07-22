@@ -20,7 +20,18 @@ describe('FilterChecklist', () => {
     }
     options = {
       propsData: props,
-      mocks: {},
+      mocks: {
+        $store: {
+          state: {
+            experiments: [
+              {
+                name: 'filter_expansion',
+                case: 'filters_collapsed',
+              },
+            ],
+          },
+        },
+      },
     }
   })
 
