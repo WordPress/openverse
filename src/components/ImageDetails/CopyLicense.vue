@@ -2,34 +2,31 @@
   <div class="copy-license margin-vertical-normal">
     <h5 class="b-header margin-bottom-small">Credit the Creator</h5>
     <section class="tabs">
-      <ul>
-        <li :class="tabClass(0, 'tab')">
-          <a
-            class="is-size-6"
-            href="#panel0"
-            :aria-selected="activeTab == 0"
-            @click.prevent="setActiveTab(0)"
-          >
+      <ul role="tablist">
+        <li
+          role="tab"
+          :aria-selected="activeTab == 0"
+          :class="tabClass(0, 'tab')"
+        >
+          <a class="is-size-6" href="#panel0" @click.prevent="setActiveTab(0)">
             Rich Text
           </a>
         </li>
-        <li :class="tabClass(1, 'tab')">
-          <a
-            class="is-size-6"
-            href="#panel1"
-            :aria-selected="activeTab == 1"
-            @click.prevent="setActiveTab(1)"
-          >
+        <li
+          role="tab"
+          :aria-selected="activeTab == 1"
+          :class="tabClass(1, 'tab')"
+        >
+          <a class="is-size-6" href="#panel1" @click.prevent="setActiveTab(1)">
             HTML
           </a>
         </li>
-        <li :class="tabClass(2, 'tab')">
-          <a
-            class="is-size-6"
-            href="#panel2"
-            :aria-selected="activeTab == 2"
-            @click.prevent="setActiveTab(2)"
-          >
+        <li
+          role="tab"
+          :aria-selected="activeTab == 2"
+          :class="tabClass(2, 'tab')"
+        >
+          <a class="is-size-6" href="#panel2" @click.prevent="setActiveTab(2)">
             Plain text
           </a>
         </li>

@@ -18,7 +18,12 @@
 
       <span class="caption has-text-weight-semibold">
         Read more about the license
-        <a :href="licenseURL" target="_blank" rel="noopener">
+        <a
+          aria-label="read more about the license"
+          :href="licenseURL"
+          target="_blank"
+          rel="noopener"
+        >
           here
         </a>
       </span>

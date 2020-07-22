@@ -4,7 +4,13 @@
       class="is-block padding-horizontal-big margin-top-large has-text-centered"
     >
       You must fill out this
-      <a :href="dmcaFormUrl" target="_blank" rel="noopener">DMCA form</a>
+      <a
+        aria-label="dmca form"
+        :href="dmcaFormUrl"
+        target="_blank"
+        rel="noopener"
+        >DMCA form</a
+      >
       to report copyright infringement. No action will be taken until the form
       is filled out and submitted.
     </span>
@@ -12,7 +18,12 @@
       class="is-block padding-horizontal-big margin-top-small has-text-centered"
     >
       We recommend doing the same at the source,
-      <a :href="imageURL" target="_blank" rel="noopener">{{ providerName }}</a
+      <a
+        :aria-label="providerName + 'form'"
+        :href="imageURL"
+        target="_blank"
+        rel="noopener"
+        >{{ providerName }}</a
       >.
     </span>
 

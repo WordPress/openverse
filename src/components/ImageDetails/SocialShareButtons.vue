@@ -2,6 +2,7 @@
   <div class="social-share">
     <div class="share-list_social-items">
       <a
+        aria-label="share on facebook"
         class="social-button facebook"
         target="_blank"
         @click="onSocialMediaLinkClick('Facebook')"
@@ -10,6 +11,7 @@
         <i class="icon facebook colored margin-right-normal is-size-1"></i>
       </a>
       <a
+        aria-label="share on twitter"
         class="social-button twitter"
         target="_blank"
         @click="onSocialMediaLinkClick('Twitter')"
@@ -18,6 +20,7 @@
         <i class="icon twitter colored margin-right-normal is-size-1" />
       </a>
       <a
+        aria-label="share on pinterest"
         class="social-button pinterest"
         target="_blank"
         @click="onSocialMediaLinkClick('Pinterest')"

@@ -1,7 +1,7 @@
 <template>
   <div class="photo-detail-page">
     <header-section showNavSearch="true" />
-    <div>
+    <main role="main" aria-label="main content">
       <photo-details
         :image="image"
         :breadCrumbURL="breadCrumbURL"
@@ -16,7 +16,11 @@
       <div class="padding-normal margin-vertical-big">
         <photo-tags :tags="tags" :showHeader="true" />
       </div>
-      <div class="padding-normal margin-vertical-big">
+      <aside
+        role="complementary"
+        aria-label="related images"
+        class="padding-normal margin-vertical-big"
+      >
         <related-images
           :relatedImages="relatedImages"
           :imagesCount="imagesCount"
@@ -24,8 +28,8 @@
           :filter="filter"
           :isPrimaryImageLoaded="isPrimaryImageLoaded"
         />
-      </div>
-    </div>
+      </aside>
+    </main>
     <footer-section></footer-section>
   </div>
 </template>
