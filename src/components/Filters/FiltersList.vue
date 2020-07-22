@@ -1,22 +1,29 @@
 <template>
-  <div>
-    <h4
-      class="padding-top-big padding-left-big padding-right-normal is-inline-block"
-    >
-      Filter results by
-    </h4>
+  <div :class="{ 'scroll-y': filtersExpandedByDefault }">
+    <div>
+      <h4
+        class="padding-top-big padding-left-big padding-right-normal is-inline-block"
+      >
+        Filter results by
+      </h4>
 
-    <button
-      type="button"
-      class="button is-text tiny is-paddingless margin-top-big margin-right-small report is-shadowless is-pulled-right"
-      @click="onToggleSearchGridFilter()"
+      <button
+        type="button"
+        class="button is-text tiny is-paddingless margin-top-big margin-right-small report is-shadowless is-pulled-right"
+        @click="onToggleSearchGridFilter()"
+      >
+        <span class="has-color-tomato is-hidden-touch">Hide filters</span>
+        <span class="margin-right-normal is-size-5 is-hidden-desktop">
+          <i class="icon cross" />
+        </span>
+      </button>
+    </div>
+    <form
+      :class="{
+        'filters-form': true,
+      }"
+      role="list"
     >
-      <span class="has-color-tomato is-hidden-touch">Hide filters</span>
-      <span class="margin-right-normal is-size-5 is-hidden-desktop">
-        <i class="icon cross" />
-      </span>
-    </button>
-    <form class="filters-form" role="list">
       <filter-check-list
         role="listitem"
         :options="filters.licenseTypes"
@@ -118,6 +125,7 @@
 </template>
 
 <script>
+import { ExperimentData } from '@/abTests/experiments/filterExpansion'
 import FilterCheckList from './FilterChecklist'
 
 export default {
@@ -150,6 +158,25 @@ export default {
     activeTab() {
       return this.$route.path.split('search/')[1] || 'image'
     },
+    /**
+     * Check if a filter experiment is active, and if the current case is 'expanded'.
+     * Show filters collapsed by default
+     */
+    filtersExpandedByDefault() {
+      const experiment = this.$store.state.experiments.find(
+        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
+      )
+      return experiment
+        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
+        : false
+    },
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.scroll-y {
+  overflow-y: scroll;
+  height: calc(100vh - 84px);
+}
+</style>

@@ -1,6 +1,6 @@
 import joinExperiment, {
   ExperimentData,
-} from '@/abTests/filterVisibilityExperiment'
+} from '@/abTests/experiments/filterExpansion'
 
 describe('Infinite Loading Experiment', () => {
   let session = {}
@@ -12,7 +12,7 @@ describe('Infinite Loading Experiment', () => {
         .mockImplementation((name, alternatives, callback) =>
           callback(null, {
             alternative: {
-              name: ExperimentData.FILTERS_EXPANDED_EXPERIMENT,
+              name: ExperimentData.FILTERS_COLLAPSED_CASE,
             },
           })
         ),
@@ -23,7 +23,7 @@ describe('Infinite Loading Experiment', () => {
     const result = joinExperiment(session)
     result.then((res) => {
       expect(res.name).toBe(ExperimentData.EXPERIMENT_NAME)
-      expect(res.case).toBe(ExperimentData.FILTERS_EXPANDED_EXPERIMENT)
+      expect(res.case).toBe(ExperimentData.FILTERS_COLLAPSED_CASE)
       expect(res.session).toBe(session)
       done()
     })
@@ -40,7 +40,7 @@ describe('Infinite Loading Experiment', () => {
     const result = joinExperiment(session)
     result.catch((res) => {
       expect(res.name).toBe(ExperimentData.EXPERIMENT_NAME)
-      expect(res.case).toBe(ExperimentData.FILTERS_COLLAPSED_EXPERIMENT)
+      expect(res.case).toBe(ExperimentData.FILTERS_COLLAPSED_CASE)
       expect(res.session).toBe(session)
       done()
     })

@@ -3,7 +3,9 @@
     <header-section />
     <div class="search columns">
       <div
-        class="column is-narrow grid-sidebar is-paddingless"
+        :class="`column is-narrow grid-sidebar is-paddingless ${
+          filtersExpandedByDefault ? 'full-height-sticky' : ''
+        }`"
         v-if="isFilterVisible"
       >
         <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
@@ -37,6 +39,7 @@ import FilterDisplay from '@/components/Filters/FilterDisplay'
 import { FETCH_IMAGES } from '@/store/action-types'
 import { SET_QUERY } from '@/store/mutation-types'
 import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin'
+import { ExperimentData } from '@/abTests/experiments/filterExpansion'
 
 const BrowsePage = {
   name: 'browse-page',
@@ -46,6 +49,18 @@ const BrowsePage = {
     },
     isFilterVisible() {
       return this.$store.state.isFilterVisible
+    },
+    /**
+     * Check if a filter experiment is active, and if the current case is 'expanded'.
+     * Show filters collapsed by default
+     */
+    filtersExpandedByDefault() {
+      const experiment = this.$store.state.experiments.find(
+        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
+      )
+      return experiment
+        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
+        : false
     },
   },
   methods: {
