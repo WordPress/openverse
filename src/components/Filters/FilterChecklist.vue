@@ -27,14 +27,14 @@
         :key="index"
         class="margin-top-small"
       >
-        <label class="checkbox" :for="item.code">
+        <label class="checkbox" :for="item.code" :disabled="block(item)">
           <input
             type="checkbox"
             class="filter-checkbox margin-right-small"
             :id="item.code"
             :key="index"
             :checked="item.checked"
-            :disabled="disabled"
+            :disabled="block(item)"
             @change="onValueChange"
           />
           <license-icons v-if="filterType == 'licenses'" :license="item.code" />
@@ -110,6 +110,34 @@ export default {
     },
     hideLicenseExplanationVisibility() {
       this.licenseExplanationVisible = false
+    },
+    block(e) {
+      if (this.$props.filterType === 'licenseTypes') {
+        const nc = this.$store.state.filters.licenses.filter((item) =>
+          item.code.includes('nc')
+        )
+        const nd = this.$store.state.filters.licenses.filter((item) =>
+          item.code.includes('nd')
+        )
+        return (
+          (e.code === 'commercial' && nc.some((li) => li.checked)) ||
+          (e.code === 'modification' && nd.some((li) => li.checked))
+        )
+      }
+
+      if (this.$props.filterType === 'licenses') {
+        const commercial = this.$store.state.filters.licenseTypes.find(
+          (item) => item.code === 'commercial'
+        )
+        const modification = this.$store.state.filters.licenseTypes.find(
+          (item) => item.code === 'modification'
+        )
+        return (
+          (commercial.checked && e.code.includes('nc')) ||
+          (modification.checked && e.code.includes('nd'))
+        )
+      }
+      return this.$props.disabled
     },
     shouldRenderLicenseExplanationTooltip(licenseCode) {
       return (
