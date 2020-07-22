@@ -1,5 +1,5 @@
 <template>
-  <div class="hero">
+  <main class="hero" role="main">
     <div class="hero-center">
       <h2 class="has-text-centered">Search for content to reuse</h2>
       <form
@@ -60,6 +60,7 @@
             All our content is under Creative Commons licenses.
             <a
               href="https://creativecommons.org/share-your-work/licensing-examples/"
+              aria-label="about cc licenses"
               target="_blank"
               rel="noopener"
               >Learn more</a
@@ -74,7 +75,11 @@
     <div class="help-links">
       <span class="margin-right-bigger">
         Go to the
-        <a href="https://oldsearch.creativecommons.org/">old CC Search</a>
+        <a
+          href="https://oldsearch.creativecommons.org/"
+          aria-label="old cc search"
+          >old CC Search</a
+        >
         portal
       </span>
     </div>
@@ -84,7 +89,7 @@
       src="../assets/logo-cloud.png"
       alt="Logos from sources of Creative Commons licensed images"
     />
-  </div>
+  </main>
 </template>
 
 <script>

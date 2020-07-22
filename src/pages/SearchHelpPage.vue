@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <header-section showNavSearch="true"></header-section>
-    <main class="margin-larger">
+    <main role="main" class="margin-larger">
       <h2 class="margin-vertical-normal">CC Search Syntax Guide</h2>
       <p>
         When you search, you can enter special symbols or words to your search
@@ -11,12 +11,15 @@
       <h3 class="margin-vertical-normal">Search for an exact match</h3>
       <p>
         Put a word or phrase inside quotes. For example,
-        <a href='https://search.creativecommons.org/search?q="Claude%20Monet"'>
+        <a
+          aria-label="quote unquote Claude Monet"
+          href='https://search.creativecommons.org/search?q="Claude%20Monet"'
+        >
           <em>"Claude Monet"</em> </a
         >.
       </p>
 
-      <h3 class="margin-vertical-normal">Combining terms</h3>
+      <h3 role="region" class="margin-vertical-normal">Combining terms</h3>
 
       <p class="margin-vertical-normal">
         If you want to combine terms, you can use the following operators to
@@ -25,31 +28,38 @@
 
       <ul>
         <li class="listitem">
-          <code class="literal">+</code> signifies AND operation
+          <code aria-label="plus" class="literal">+</code> signifies AND
+          operation
         </li>
         <li class="listitem">
-          <code class="literal">|</code> signifies OR operation
+          <code aria-label="vertical bar" class="literal">|</code> signifies OR
+          operation
         </li>
         <li class="listitem">
-          <code class="literal">-</code> negates a single token
+          <code aria-label="minus" class="literal">-</code> negates a single
+          token
         </li>
         <li class="listitem">
-          <code class="literal">*</code> at the end of a term signifies a prefix
-          query
+          <code aria-label="star" class="literal">*</code> at the end of a term
+          signifies a prefix query
         </li>
         <li class="listitem">
-          <code class="literal">(</code> and
-          <code class="literal">)</code> signify precedence
+          <code aria-label="open paranthesis" class="literal">(</code> and
+          <code aria-label="close paranthesis" class="literal">)</code> signify
+          precedence
         </li>
         <li class="listitem">
-          <code class="literal">~N</code> after a word signifies edit distance
-          (fuzziness)
+          <code aria-label="tilde N" class="literal">~N</code> after a word
+          signifies edit distance (fuzziness)
         </li>
       </ul>
 
       <p class="margin-vertical-normal">
         Example:
-        <a href="https://search.creativecommons.org/search?q=dog%2Bcat">
+        <a
+          aria-label="dog plus cat"
+          href="https://search.creativecommons.org/search?q=dog%2Bcat"
+        >
           <em>dog+cat</em>
         </a>
         <br />
@@ -58,7 +68,10 @@
 
       <p class="margin-vertical-normal">
         Example:
-        <a href="https://search.creativecommons.org/search?q=dog%7Ccat">
+        <a
+          aria-label="dog vertical bar cat"
+          href="https://search.creativecommons.org/search?q=dog%7Ccat"
+        >
           <em>dog|cat</em>
         </a>
         <br />
@@ -67,13 +80,19 @@
       </p>
 
       <p class="margin-vertical-normal">
-        You can use the <em>- operator (signifies NOT)</em>
+        You can use the
+        <em aria-label="minus operator (signifies NOT)"
+          >- operator (signifies NOT)</em
+        >
         to exclude a search term from the results.
       </p>
 
       <p class="margin-vertical-normal">
         Example:
-        <a href="https://search.creativecommons.org/search?q=dog%20-pug">
+        <a
+          aria-label="dog minus pug"
+          href="https://search.creativecommons.org/search?q=dog%20-pug"
+        >
           <em>dog -pug</em>
         </a>
         <br />
@@ -88,7 +107,10 @@
 
       <p class="margin-vertical-normal">
         Example:
-        <a href="https://search.creativecommons.org/search?q=net%2a">
+        <a
+          aria-label="net star"
+          href="https://search.creativecommons.org/search?q=net%2a"
+        >
           <em>net*</em>
         </a>
         <br />
@@ -104,6 +126,7 @@
       <p class="margin-vertical-normal">
         Example:
         <a
+          aria-label="dogs plus open paranthesis corgis vertical bar labrador close paranthesis"
           href="https://search.creativecommons.org/search?q=dogs%20%2B%20%28corgis%20%7C%20labrador%29"
         >
           <em>dogs + (corgis | labrador)</em>
@@ -114,7 +137,7 @@
       </p>
 
       <p class="margin-vertical-normal">
-        You can use <em>~N</em>
+        You can use <em aria-label="tilde N">~N</em>
         to specify some fuzzy logic to the term according to the
         <a href="http://en.wikipedia.org/wiki/Levenshtein_distance"
           >Levenshtein Edit Distance</a
@@ -125,7 +148,10 @@
 
       <p class="margin-vertical-normal">
         Example:
-        <a href="https://search.creativecommons.org/search?q=theatre~1">
+        <a
+          aria-label="theatre tilde 1"
+          href="https://search.creativecommons.org/search?q=theatre~1"
+        >
           <em>theatre~1</em>
         </a>
         <br />

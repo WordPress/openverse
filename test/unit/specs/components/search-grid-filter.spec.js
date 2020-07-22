@@ -78,7 +78,7 @@ describe('SearchGridFilter', () => {
       filterType: 'bar',
       isCollectionsPage: props.isCollectionsPage,
       provider: props.provider,
-      shouldNavigate: true,
+      shouldNavigate: false,
     })
   })
 
@@ -89,7 +89,7 @@ describe('SearchGridFilter', () => {
       filterType: 'searchBy',
       isCollectionsPage: props.isCollectionsPage,
       provider: props.provider,
-      shouldNavigate: true,
+      shouldNavigate: false,
     })
   })
 
@@ -99,7 +99,7 @@ describe('SearchGridFilter', () => {
     expect(commitMock).toHaveBeenCalledWith('CLEAR_FILTERS', {
       isCollectionsPage: props.isCollectionsPage,
       provider: props.provider,
-      shouldNavigate: true,
+      shouldNavigate: false,
     })
   })
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="filter-display padding-horizontal-normal" aria-live="polite">
+  <div class="filter-display padding-normal" aria-live="polite">
     <span v-if="anyFilterApplied" class="caption has-text-weight-semibold"
       >Filter By</span
     >
@@ -125,7 +125,7 @@ export default {
         filterType,
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: true,
+        shouldNavigate: false,
       })
     },
     onUpdateBoolFilter({ filterType }) {
@@ -133,7 +133,7 @@ export default {
         filterType,
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: true,
+        shouldNavigate: false,
       })
     },
   },

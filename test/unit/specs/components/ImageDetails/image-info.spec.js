@@ -4,12 +4,14 @@ import render from '../../../test-utils/render'
 describe('Image Info', () => {
   let props = null
   let options = {}
+  let mocks = {}
 
   beforeEach(() => {
     props = {
       image: {
         id: 0,
         title: 'foo',
+        source: 'flickr',
         provider: 'flickr',
         url: 'foo.bar',
         thumbnail: 'http://foo.bar',
@@ -25,12 +27,22 @@ describe('Image Info', () => {
       imageWidth: 500,
     }
 
+    mocks = {
+      $store: {
+        state: {
+          provider: 'flickr',
+          source: 'flickr',
+        },
+      },
+    }
+
     options = {
       propsData: props,
+      mocks,
     }
   })
 
-  it('should contain the corect contents', () => {
+  it('should contain the correct contents', () => {
     const wrapper = render(ImageInfo, options)
     expect(wrapper.find('.sidebar_section').element).toBeDefined()
   })
@@ -43,6 +55,7 @@ describe('Image Info', () => {
 
   it('should display image dimensions', () => {
     const wrapper = render(ImageInfo, options)
+
     expect(wrapper.html()).toContain(`${props.imageWidth}`)
     expect(wrapper.html()).toContain(`${props.imageHeight} pixels`)
   })
