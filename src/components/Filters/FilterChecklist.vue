@@ -6,6 +6,7 @@
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
       <button
+        :aria-label="'filters list for' + title + 'category'"
         v-if="!filtersExpandedByDefault"
         class="filter-visibility-toggle is-white padding-vertical-small"
       >
@@ -41,6 +42,8 @@
           {{ item.name }}
         </label>
         <img
+          aria-label="license explanation"
+          tabindex="0"
           v-if="filterType == 'licenses'"
           src="@/assets/help_icon.svg"
           alt="help"

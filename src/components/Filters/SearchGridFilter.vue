@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <aside role="complementary">
     <div class="is-hidden-desktop">
       <div class="overlay">
         <div class="modal">
@@ -44,7 +44,7 @@
         />
       </div>
     </div>
-  </div>
+  </aside>
 </template>
 
 <script>

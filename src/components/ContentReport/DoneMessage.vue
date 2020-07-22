@@ -7,7 +7,12 @@
       class="is-block padding-horizontal-big margin-top-small has-text-centered"
     >
       We recommend doing the same at the source,
-      <a :href="imageURL" target="_blank" rel="noopener">{{ providerName }}</a
+      <a
+        :aria-label="providerName + 'form'"
+        :href="imageURL"
+        target="_blank"
+        rel="noopener"
+        >{{ providerName }}</a
       >.
     </span>
   </div>

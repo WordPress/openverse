@@ -1,5 +1,10 @@
 <template>
-  <button @click="scrollToTop" v-if="showBtn" class="scroll">
+  <button
+    aria-label="scroll to top"
+    @click="scrollToTop"
+    v-if="showBtn"
+    class="scroll"
+  >
     <i>
       <svg
         width="20"

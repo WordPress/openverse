@@ -18,6 +18,7 @@
         <div class="control has-icons-left margin-left-small">
           <label for="searchTerm" class="is-sr-only">Search</label>
           <input
+            aria-label="search"
             id="searchInput"
             required="required"
             autofocus="true"
@@ -55,7 +56,8 @@
         <div class="control has-icons-left margin-left-small">
           <label for="searchTerm" class="is-sr-only">Search</label>
           <input
-            id="searchInput"
+            aria-label="search"
+            id="searchInputMobile"
             required="required"
             autofocus="true"
             class="input"

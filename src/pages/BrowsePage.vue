@@ -8,7 +8,7 @@
       >
         <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
       </div>
-      <div class="column search-grid-ctr">
+      <main role="main" class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
         <search-type-tabs />
         <filter-display
@@ -21,7 +21,7 @@
           @onLoadMoreImages="onLoadMoreImages"
           :key="$route.path"
         />
-      </div>
+      </main>
     </div>
     <footer-section></footer-section>
   </div>

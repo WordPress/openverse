@@ -1,5 +1,6 @@
 <template>
   <div
+    :aria-label="image.title"
     class="search-grid_item-container"
     :style="`width: ${containerAspect * widthBasis}px;
     flex-grow: ${containerAspect * widthBasis}`"

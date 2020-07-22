@@ -1,16 +1,18 @@
 <template>
   <div>
     <section class="tabs">
-      <ul>
+      <ul role="tablist">
         <li
+          :aria-selected="activeTab == type"
+          role="tab"
           v-for="type in contentTypes"
           :key="type"
           :class="tabClass(type, 'tab')"
         >
           <router-link
+            aria-live="polite"
             class="is-size-5"
             :to="{ path: `/search/${type}`, query: $route.query }"
-            :aria-selected="activeTab == type"
           >
             {{ capitalize(type) }}
           </router-link>
