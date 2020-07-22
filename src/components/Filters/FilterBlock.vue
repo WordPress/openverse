@@ -2,11 +2,11 @@
   <button
     class="filter-block button tiny tag margin-horizontal-smaller"
     v-if="filterType === 'searchBy'"
-    role="filter"
-    :aria-label="label"
+    :aria-label="label + 'filter'"
   >
     <span>{{ this.$props.label }}</span>
     <span
+      aria-label="remove filter"
       class="close margin-left-small"
       tabindex="0"
       @click="onClickIsolatedFilter"
@@ -16,11 +16,14 @@
   <button
     v-else
     class="filter-block button tiny tag margin-horizontal-smaller margin-bottom-smaller"
-    role="filter"
-    :aria-label="label"
+    :aria-label="label + 'filter'"
   >
     <span>{{ this.$props.label }}</span>
-    <span class="close padding-left-normal" tabindex="0" @click="onClick"
+    <span
+      aria-label="remove filter"
+      class="close padding-left-normal"
+      tabindex="0"
+      @click="onClick"
       ><i class="icon cross"
     /></span>
   </button>

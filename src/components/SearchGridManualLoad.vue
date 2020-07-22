@@ -59,6 +59,7 @@
     </div>
 
     <meta-search-modal
+      id="meta-search-modal"
       v-show="showMetaImageSearch"
       @close="showMetaImageSearch = false"
       type="image"

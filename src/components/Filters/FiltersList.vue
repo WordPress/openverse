@@ -16,8 +16,9 @@
         <i class="icon cross" />
       </span>
     </button>
-    <form class="filters-form" role="filter">
+    <form class="filters-form" role="list">
       <filter-check-list
+        role="listitem"
         :options="filters.licenseTypes"
         :disabled="licenseTypesDisabled"
         title="Use"
@@ -25,6 +26,7 @@
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
+        role="listitem"
         v-if="activeTab == 'image'"
         :options="filters.licenses"
         :disabled="licensesDisabled"
@@ -33,6 +35,7 @@
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
+        role="listitem"
         v-if="renderProvidersFilter && activeTab == 'image'"
         :options="filters.providers"
         title="Sources"
@@ -40,6 +43,7 @@
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
+        role="listitem"
         v-if="activeTab == 'image'"
         :options="filters.categories"
         title="Image Type"
@@ -47,6 +51,7 @@
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
+        role="listitem"
         v-if="activeTab == 'image'"
         :options="filters.extensions"
         title="File Type"
@@ -54,6 +59,7 @@
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
+        role="listitem"
         v-if="activeTab == 'image'"
         :options="filters.aspectRatios"
         title="Aspect Ratio"
@@ -61,6 +67,7 @@
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
+        role="listitem"
         v-if="activeTab == 'image'"
         :options="filters.sizes"
         title="Image Size"
@@ -72,13 +79,15 @@
         v-if="activeTab == 'image'"
         class="margin-normal filter-option small-filter margin-bottom-normal"
       >
-        <input
-          type="checkbox"
-          id="creator-chk"
-          :checked="filters.searchBy.creator"
-          @change="onUpdateSearchByCreator"
-        />
-        <label for="creator-chk">Search by Creator</label>
+        <label aria-label="search by creator">
+          <input
+            aria-label="search by creator"
+            type="checkbox"
+            :checked="filters.searchBy.creator"
+            @change="onUpdateSearchByCreator"
+          />
+          Search by Creator
+        </label>
       </div>
     </form>
 
