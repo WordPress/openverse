@@ -6,6 +6,11 @@ const COOKIE_EXPIRY_DAYS = 7
 
 const generateSessionId = () => uuid()
 
+/**
+ * Store a session in in a cookie, to determine which version of an a/b test a user recieves.
+ * The cookie (and therefore the a/b test version), will last for a number of days
+ * determined by `COOKIE_EXPIRY_DAYS`.
+ */
 const saveSessionIdInCookie = (sessionId) =>
   Cookie.set(COOKIE_NAME, sessionId, { expires: COOKIE_EXPIRY_DAYS })
 

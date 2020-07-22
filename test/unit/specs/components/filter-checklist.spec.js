@@ -20,18 +20,7 @@ describe('FilterChecklist', () => {
     }
     options = {
       propsData: props,
-      mocks: {
-        $store: {
-          state: {
-            experiments: [
-              {
-                name: 'filter_visibility_experiment',
-                case: 'filters_collapsed_experiment',
-              },
-            ],
-          },
-        },
-      },
+      mocks: {},
     }
   })
 
@@ -45,30 +34,9 @@ describe('FilterChecklist', () => {
     expect(wrapper.find('.filter-visibility-toggle').element).toBeDefined()
   })
 
-  it('should not render filter visibility toggle button with expanded ab test', () => {
-    options.mocks.$store.state.experiments[0].case =
-      'filters_expanded_experiment'
-    const wrapper = render(FilterChecklist, options)
-    expect(wrapper.find('.filter-visibility-toggle').element).not.toBeDefined()
-  })
-
   it('visibility toggle button should be in collapsed state by default', () => {
     const wrapper = render(FilterChecklist, options)
     expect(wrapper.find('.angle-down').element).toBeDefined()
-  })
-
-  it('shows checklist when visibility toggle button clicked', () => {
-    const wrapper = render(FilterChecklist, options)
-    wrapper.find('.filter-visibility-toggle').trigger('click')
-    expect(wrapper.find('.filter-checkbox').element).toBeDefined()
-    expect(wrapper.find('.angle-up').element).toBeDefined() // toggle image should point up now
-  })
-
-  it('shows checklist with expanded ab test', () => {
-    options.mocks.$store.state.experiments[0].case =
-      'filters_expanded_experiment'
-    const wrapper = render(FilterChecklist, options)
-    expect(wrapper.find('.filter-checkbox').element).toBeDefined()
   })
 
   it('hides checklist when visibility toggle button pressed twice', () => {
