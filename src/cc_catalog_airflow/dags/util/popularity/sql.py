@@ -1,83 +1,62 @@
 from textwrap import dedent
 from airflow.hooks.postgres_hook import PostgresHook
 
-IMAGE_TABLE_NAME = 'old_image'
+POPULARITY_METRICS_TABLE_NAME = "image_popularity_metrics"
+POPULARITY_CONSTANTS_VIEW_NAME = "image_popularity_constants"
+DEFAULT_PERCENTILE = 0.85
+POPULARITY_METRICS = {
+    "flickr": {"metric": "views"},
+    "wikimedia": {"metric": "global_usage_count"},
+}
 
 
-def upload_normalized_popularity(
-        postgres_conn_id, in_tsv, image_table=IMAGE_TABLE_NAME
+def update_image_popularity_metrics(
+    postgres_conn_id, popularity_metrics_table=POPULARITY_METRICS_TABLE_NAME,
 ):
-    """
-    Write the `normalized_popularity` field from `in_tsv` to the catalog.
-    """
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    postgres.copy_expert(
-        f"CREATE TEMP TABLE temp_popularity "
-        f"  (identifier uuid, normalized_popularity text); "
-        f"COPY temp_popularity FROM STDIN WITH CSV HEADER DELIMITER E'\t'; "
-        f"CREATE INDEX ident_idx ON temp_popularity (identifier);"
-        f"UPDATE {image_table} SET meta_data = jsonb_set("
-        f"  meta_data, "
-        f"  '{{normalized_popularity}}',"
-        f"  temp_popularity.normalized_popularity::jsonb"
-        f") FROM temp_popularity"
-        f"  WHERE {image_table}.identifier = temp_popularity.identifier;",
-        in_tsv
-    )
-
-
-def select_percentiles(
-        postgres_conn_id,
-        popularity_fields,
-        percentile,
-        image_table=IMAGE_TABLE_NAME,
-):
-    """
-    Given a list of fields that occur in the `meta_data` column, return a dict
-    mapping each field to its `percentile`th percentile value.
-    """
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    field_queries = []
-    for field in popularity_fields:
-        field_queries.append(
-            f"percentile_disc({percentile}) WITHIN GROUP "
-            f"(ORDER BY meta_data->>'{field}') AS {field}"
-        )
-    select_predicate = ', '.join(field_queries)
-    select = f'SELECT {select_predicate} from {image_table}'
-    res = postgres.get_records(select)
-    field_percentiles = {
-        field: int(value) for field, value in zip(popularity_fields, res[0])
-    }
-    return field_percentiles
-
-
-def build_popularity_dump_query(
-        popularity_fields, image_table=IMAGE_TABLE_NAME
-):
-    """
-    Given a list of fields used in popularity data calculations, build a query
-    returning all rows with at least one popularity metric.
-    """
-    # SELECT predicate for each popularity field
-    selection_qs = []
-    # WHERE predicate excluding null values for each field
-    field_not_null_qs = []
-    for field in popularity_fields:
-        selection_qs.append(f"meta_data->>'{field}' AS {field}")
-        field_not_null_qs.append(f"meta_data->>'{field}' IS NOT NULL")
-    selections = ', '.join(selection_qs)
-    field_not_null = ' OR '.join(field_not_null_qs)
-    return (
-        f"SELECT identifier, provider, {selections} FROM {image_table}"
-        f" WHERE ({field_not_null})"
-    )
-
-
-def dump_selection_to_tsv(postgres_conn_id, query, tsv_file_name):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     query = dedent(
-        f"COPY ({query}) TO STDOUT "
-        f"WITH CSV HEADER DELIMITER E'\t'"
+        f"""
+        INSERT INTO public.{popularity_metrics_table} (
+          provider, metric, percentile
+        ) VALUES
+          {_get_popularity_metric_insert_values_string()}
+        ON CONFLICT (provider)
+        DO UPDATE SET
+          metric=EXCLUDED.metric,
+          percentile=EXCLUDED.percentile
+        ;
+        """
     )
-    postgres.copy_expert(query, tsv_file_name)
+    postgres.run(query)
+
+
+def update_image_popularity_constants(
+        postgres_conn_id,
+        popularity_constants_view=POPULARITY_CONSTANTS_VIEW_NAME,
+):
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    postgres.run(
+        f"REFRESH MATERIALIZED VIEW {popularity_constants_view};"
+    )
+
+
+def _get_popularity_metric_insert_values_string(
+    popularity_metrics=POPULARITY_METRICS,
+    default_percentile=DEFAULT_PERCENTILE,
+):
+    return ",\n  ".join(
+        [
+            _format_popularity_metric_insert_tuple_string(
+                provider,
+                provider_info["metric"],
+                provider_info.get("percentile", default_percentile),
+            )
+            for provider, provider_info in popularity_metrics.items()
+        ]
+    )
+
+
+def _format_popularity_metric_insert_tuple_string(
+    provider, metric, percentile, popularity_metrics=POPULARITY_METRICS,
+):
+    return f"('{provider}', '{metric}', {percentile})"

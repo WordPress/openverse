@@ -1,14 +1,9 @@
-import unittest.mock as mock
-import numbers
-from util.popularity.sql import select_percentiles
+import os
 
+from util.loader import sql
 
-def test_select_percentiles():
-    hook_namespace = 'airflow.hooks.postgres_hook.PostgresHook.get_records'
-    with mock.patch(hook_namespace) as get_records:
-        get_records.return_value = [[1, 10]]
-        percentiles = select_percentiles(
-            None, ['global_usage_count', 'views'], 0.85
-        )
-        assert isinstance(percentiles['global_usage_count'], numbers.Number)
-        assert isinstance(percentiles['views'], numbers.Number)
+TEST_ID = 'testing'
+POSTGRES_CONN_ID = os.getenv('TEST_CONN_ID')
+POSTGRES_TEST_URI = os.getenv('AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING')
+TEST_IMAGE_VIEW = f'image_view_{TEST_ID}'
+
