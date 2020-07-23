@@ -13,7 +13,8 @@ SI_UNIT_CODE_TABLE = 'test_unit_code_table'
 
 CREATE_TABLE_QUERY = (
     f'CREATE TABLE IF NOT EXISTS public.{SI_UNIT_CODE_TABLE} ('
-    f'new_unit_code character varying(80));'
+    f'new_unit_code character varying(80),'
+    f'action character varying(40));'
 )
 
 
@@ -39,9 +40,13 @@ def postgres_with_test_unit_code_table():
 
 def test_alert_new_unit_codes():
     unit_code_set = {'a', 'b', 'c', 'd'}
-    sub_prov_dict = {'sub_prov1': {'a', 'c'}, 'sub_prov2': {'b'}}
+    sub_prov_dict = {'sub_prov1': {'a', 'c'},
+                     'sub_prov2': {'b'},
+                     'sub_prov3': {'e'}
+                     }
 
-    assert si.get_new_unit_codes(unit_code_set, sub_prov_dict) == {'d'}
+    assert si.get_new_and_outdated_unit_codes(unit_code_set,
+                                              sub_prov_dict) == ({'d'}, {'e'})
 
 
 @pytest.mark.enable_socket
@@ -51,8 +56,8 @@ def test_alert_unit_codes_from_api(postgres_with_test_unit_code_table):
 
     with patch.object(
       si,
-      'get_new_unit_codes',
-      return_value={'a', 'b'}
+      'get_new_and_outdated_unit_codes',
+      return_value=({'d'}, {'e'})
     ) as mock_get_unit_codes:
         si.alert_unit_codes_from_api(postgres_conn_id, unit_code_table)
 
@@ -64,4 +69,6 @@ def test_alert_unit_codes_from_api(postgres_with_test_unit_code_table):
     actual_rows = postgres_with_test_unit_code_table.cursor.fetchall()
     postgres_with_test_unit_code_table.connection.commit()
 
-    assert len(actual_rows) > 0
+    assert len(actual_rows) == 2
+    assert ('d', 'add') in actual_rows
+    assert ('e', 'delete') in actual_rows
