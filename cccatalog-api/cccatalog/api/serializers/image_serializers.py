@@ -168,7 +168,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
 
     popularity_boost = serializers.FloatField(required=False)
     authority_boost = serializers.FloatField(required=False)
-    authority_penalty = serializers.FloatField
+    authority_penalty = serializers.FloatField(required=False)
 
     @staticmethod
     def validate_q(value):

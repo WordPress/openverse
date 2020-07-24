@@ -256,11 +256,13 @@ def search(search_params, index, page_size, ip, request,
             )
 
     if settings.USE_RANK_FEATURES:
-        # TODO These boost values will be refined through experimentation.
+        pop_boost = search_params.data.get('popularity_boost', 1)
+        auth_boost = search_params.data.get('authority_boost', 1)
+        auth_penalty = search_params.data.get('authority_penalty', 1)
         feature_boost = {
-            'normalized_popularity': search_params.data['popularity_boost'],
-            'authority_boost': search_params.data['authority_boost'],
-            'authority_penalty': search_params.data['authority_penalty']
+            'normalized_popularity': pop_boost,
+            'authority_boost': auth_boost,
+            'authority_penalty': auth_penalty
         }
         rank_queries = []
         for field, boost in feature_boost.items():
