@@ -1,13 +1,14 @@
 <template>
   <div
+    :aria-label="image.title"
     class="search-grid_item-container"
     :style="`width: ${containerAspect * widthBasis}px;
     flex-grow: ${containerAspect * widthBasis}`"
   >
     <figure class="search-grid_item">
       <i :style="`padding-bottom:${iPadding}%`"></i>
-      <a
-        :href="'/photos/' + image.id"
+      <router-link
+        :to="'/photos/' + image.id"
         @click="onGotoDetailPage($event, image)"
         class="search-grid_image-ctr"
         :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`"
@@ -22,7 +23,7 @@
           :src="getImageUrl(image)"
           @error="onImageLoadError($event, image)"
         />
-      </a>
+      </router-link>
       <figcaption class="overlay overlay__top padding-small">
         <license-icons :license="image.license"></license-icons>
       </figcaption>

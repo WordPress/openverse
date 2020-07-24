@@ -17,15 +17,18 @@
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
           <label for="searchTerm" class="is-sr-only">Search</label>
-          <input id="searchInput"
-                  required="required"
-                  autofocus="true"
-                  class="input is-medium"
-                  type="search"
-                  ref="search"
-                  :placeholder="searchBoxPlaceholder"
-                  v-model="searchTermsModel"
-                  @keyup.enter="onSubmit" />
+          <input
+            aria-label="search"
+            id="searchInput"
+            required="required"
+            autofocus="true"
+            class="input is-medium"
+            type="search"
+            ref="search"
+            :placeholder="searchBoxPlaceholder"
+            v-model="searchTermsModel"
+            @keyup.enter="onSubmit"
+          />
           <span class="icon is-medium is-left">
             <i class="icon search is-size-5"></i>
           </span>
@@ -52,15 +55,18 @@
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
           <label for="searchTerm" class="is-sr-only">Search</label>
-          <input id="searchInput"
-                  required="required"
-                  autofocus="true"
-                  class="input"
-                  type="search"
-                  ref="search"
-                  :placeholder="searchBoxPlaceholder"
-                  v-model="searchTermsModel"
-                  @keyup.enter="onSubmit">
+          <input
+            aria-label="search"
+            id="searchInputMobile"
+            required="required"
+            autofocus="true"
+            class="input"
+            type="search"
+            ref="search"
+            :placeholder="searchBoxPlaceholder"
+            v-model="searchTermsModel"
+            @keyup.enter="onSubmit"
+          />
           <span class="icon is-left">
             <i class="icon search is-size-6"></i>
           </span>

@@ -1,7 +1,7 @@
 <template>
   <div class="photo-detail-page">
     <header-section showNavSearch="true" />
-    <div>
+    <main role="main" aria-label="main content">
       <photo-details
         :image="image"
         :breadCrumbURL="breadCrumbURL"
@@ -9,13 +9,18 @@
         :query="query"
         :imageWidth="imageWidth"
         :imageHeight="imageHeight"
+        :imageType="imageType"
         :socialSharingEnabled="socialSharingEnabled"
         @onImageLoaded="onImageLoaded"
       />
       <div class="padding-normal margin-vertical-big">
         <photo-tags :tags="tags" :showHeader="true" />
       </div>
-      <div class="padding-normal margin-vertical-big">
+      <aside
+        role="complementary"
+        aria-label="related images"
+        class="padding-normal margin-vertical-big"
+      >
         <related-images
           :relatedImages="relatedImages"
           :imagesCount="imagesCount"
@@ -23,13 +28,14 @@
           :filter="filter"
           :isPrimaryImageLoaded="isPrimaryImageLoaded"
         />
-      </div>
-    </div>
+      </aside>
+    </main>
     <footer-section></footer-section>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 import PhotoDetails from '@/components/ImageDetails/PhotoDetails'
 import PhotoTags from '@/components/PhotoTags'
 import RelatedImages from '@/components/RelatedImages'
@@ -63,6 +69,7 @@ const PhotoDetailPage = {
     shouldShowBreadcrumb: false,
     imageWidth: 0,
     imageHeight: 0,
+    imageType: 'Unknown',
     socialSharingEnabled: featureFlags.socialSharing,
   }),
   computed: mapState({
@@ -97,8 +104,12 @@ const PhotoDetailPage = {
     // sets the internal value shouldShowBreadcrumb so that the
     // "back to search results" link is rendered with the correct link
     // to the results page the user was before.
+
     nextPage((_this) => {
-      if (previousPage.name === 'browse-page') {
+      if (
+        previousPage.path === '/search' ||
+        previousPage.path === '/search/image'
+      ) {
         _this.shouldShowBreadcrumb = true // eslint-disable-line no-param-reassign
         _this.breadCrumbURL = `/search?q=${previousPage.query.q}` // eslint-disable-line no-param-reassign
       }
@@ -116,6 +127,11 @@ const PhotoDetailPage = {
       this.imageWidth = event.target.naturalWidth
       this.imageHeight = event.target.naturalHeight
       this.isPrimaryImageLoaded = true
+      // Make a HEAD request to get the image content-type header
+      // @todo: Should probably refactor this, just seems too trival to warrant it's own service or class
+      axios.head(event.target.src).then((res) => {
+        this.imageType = res.headers['content-type']
+      })
     },
     getRelatedImages() {
       if (this.image && this.image.id) {

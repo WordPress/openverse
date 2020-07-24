@@ -49,4 +49,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: #333333;
 }
+
+.full-height-sticky {
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
 </style>

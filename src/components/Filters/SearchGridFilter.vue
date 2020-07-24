@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <aside role="complementary">
     <div class="is-hidden-desktop">
       <div class="overlay">
         <div class="modal">
@@ -44,7 +44,7 @@
         />
       </div>
     </div>
-  </div>
+  </aside>
 </template>
 
 <script>
@@ -85,14 +85,14 @@ export default {
         filterType,
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: true,
+        shouldNavigate: false,
       })
     },
     onClearFilters() {
       this.$store.commit(CLEAR_FILTERS, {
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: true,
+        shouldNavigate: false,
       })
     },
     onUpdateSearchByCreator() {
@@ -100,7 +100,7 @@ export default {
         filterType: 'searchBy',
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: true,
+        shouldNavigate: false,
       })
     },
     onToggleSearchGridFilter() {

@@ -6,6 +6,7 @@
     <div class="filters-title" @click.prevent="toggleFilterVisibility">
       <span>{{ title }}</span>
       <button
+        :aria-label="'filters list for' + title + 'category'"
         v-if="!filtersExpandedByDefault"
         class="filter-visibility-toggle is-white padding-vertical-small"
       >
@@ -27,20 +28,22 @@
         :key="index"
         class="margin-top-small"
       >
-        <label class="checkbox" :for="item.code">
+        <label class="checkbox" :for="item.code" :disabled="block(item)">
           <input
             type="checkbox"
             class="filter-checkbox margin-right-small"
             :id="item.code"
             :key="index"
             :checked="item.checked"
-            :disabled="disabled"
+            :disabled="block(item)"
             @change="onValueChange"
           />
           <license-icons v-if="filterType == 'licenses'" :license="item.code" />
           {{ item.name }}
         </label>
         <img
+          aria-label="license explanation"
+          tabindex="0"
           v-if="filterType == 'licenses'"
           src="@/assets/help_icon.svg"
           alt="help"
@@ -58,8 +61,7 @@
 </template>
 
 <script>
-import findIndex from 'lodash.findindex'
-import { ExperimentData } from '@/abTests/filterVisibilityExperiment'
+import { ExperimentData } from '@/abTests/experiments/filterExpansion'
 import LicenseIcons from '@/components/LicenseIcons'
 import LicenseExplanationTooltip from './LicenseExplanationTooltip'
 
@@ -78,17 +80,15 @@ export default {
     }
   },
   computed: {
+    /**
+     * Check if a filter experiment is active, and if the current case is 'expanded'.
+     * Show filters collapsed by default
+     */
     filtersExpandedByDefault() {
-      const idx = findIndex(
-        this.$store.state.experiments,
+      const experiment = this.$store.state.experiments.find(
         (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
       )
-
-      if (idx >= 0) {
-        const experiment = this.$store.state.experiments[idx]
-        return experiment.case === ExperimentData.FILTERS_EXPANDED_EXPERIMENT
-      }
-      return false
+      return experiment ? experiment.case === ExperimentData.FILTERS : false
     },
     areFiltersExpanded() {
       return this.filtersExpandedByDefault || this.filtersVisible
@@ -110,6 +110,34 @@ export default {
     },
     hideLicenseExplanationVisibility() {
       this.licenseExplanationVisible = false
+    },
+    block(e) {
+      if (this.$props.filterType === 'licenseTypes') {
+        const nc = this.$store.state.filters.licenses.filter((item) =>
+          item.code.includes('nc')
+        )
+        const nd = this.$store.state.filters.licenses.filter((item) =>
+          item.code.includes('nd')
+        )
+        return (
+          (e.code === 'commercial' && nc.some((li) => li.checked)) ||
+          (e.code === 'modification' && nd.some((li) => li.checked))
+        )
+      }
+
+      if (this.$props.filterType === 'licenses') {
+        const commercial = this.$store.state.filters.licenseTypes.find(
+          (item) => item.code === 'commercial'
+        )
+        const modification = this.$store.state.filters.licenseTypes.find(
+          (item) => item.code === 'modification'
+        )
+        return (
+          (commercial.checked && e.code.includes('nc')) ||
+          (modification.checked && e.code.includes('nd'))
+        )
+      }
+      return this.$props.disabled
     },
     shouldRenderLicenseExplanationTooltip(licenseCode) {
       return (

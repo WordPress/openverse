@@ -3,7 +3,9 @@
     <header-section />
     <div class="search columns">
       <div
-        class="column is-narrow grid-sidebar is-paddingless"
+        :class="`column is-narrow grid-sidebar is-paddingless ${
+          filtersExpandedByDefault ? 'full-height-sticky' : ''
+        }`"
         v-if="isFilterVisible"
       >
         <search-grid-filter
@@ -35,9 +37,11 @@ import HeaderSection from '@/components/HeaderSection'
 import SearchGrid from '@/components/SearchGrid'
 import SearchGridForm from '@/components/SearchGridForm'
 import SearchGridFilter from '@/components/Filters/SearchGridFilter'
+import SearchTypeTabs from '@/components/SearchTypeTabs'
 import { FETCH_COLLECTION_IMAGES } from '@/store/action-types'
 import { SET_COLLECTION_QUERY } from '@/store/mutation-types'
 import getProviderName from '@/utils/getProviderName'
+import { ExperimentData } from '@/abTests/experiments/filterExpansion'
 
 const CollectionBrowsePage = {
   name: 'collection-browse-page',
@@ -57,6 +61,18 @@ const CollectionBrowsePage = {
     },
     isFilterVisible() {
       return this.$store.state.isFilterVisible
+    },
+    /**
+     * Check if a filter experiment is active, and if the current case is 'expanded'.
+     * Show filters collapsed by default
+     */
+    filtersExpandedByDefault() {
+      const experiment = this.$store.state.experiments.find(
+        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
+      )
+      return experiment
+        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
+        : false
     },
   },
   methods: {
@@ -90,6 +106,7 @@ const CollectionBrowsePage = {
     SearchGridForm,
     SearchGridFilter,
     SearchGrid,
+    SearchTypeTabs,
     FooterSection,
   },
 }

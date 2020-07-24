@@ -1,5 +1,5 @@
 <template>
-  <div class="hero">
+  <main class="hero" role="main">
     <div class="hero-center">
       <h2 class="has-text-centered">Search for content to reuse</h2>
       <form
@@ -13,15 +13,17 @@
           <div class="field has-addons">
             <div class="control">
               <label for="searchTerm" class="is-sr-only">Search</label>
-              <input required="required"
-                  autofocus="true"
-                  class="hero_search-input input is-large"
-                  type="search"
-                  name="q"
-                  placeholder="I would like to see..."
-                  autocapitalize="none"
-                  id="searchTerm"
-                  v-model.lazy="form.searchTerm" />
+              <input
+                required="required"
+                autofocus
+                class="hero_search-input input is-large"
+                type="search"
+                name="q"
+                placeholder="I would like to see..."
+                autocapitalize="none"
+                id="searchTerm"
+                v-model.lazy="form.searchTerm"
+              />
             </div>
             <div class="control">
               <button class="button is-primary big" title="Search">
@@ -34,15 +36,17 @@
           <div class="field has-addons">
             <div class="control mobile-input">
               <label for="searchTerm" class="is-sr-only">Search</label>
-              <input required="required"
-                  autofocus="true"
-                  class="input"
-                  type="search"
-                  name="q"
-                  placeholder="I would like to see..."
-                  autocapitalize="none"
-                  id="searchTerm"
-                  v-model.lazy="form.searchTerm" />
+              <input
+                required="required"
+                autofocus
+                class="input"
+                type="search"
+                name="q"
+                placeholder="I would like to see..."
+                autocapitalize="none"
+                id="searchTerm"
+                v-model.lazy="form.searchTerm"
+              />
             </div>
             <div class="control">
               <button class="button is-primary small" title="Search">
@@ -56,6 +60,7 @@
             All our content is under Creative Commons licenses.
             <a
               href="https://creativecommons.org/share-your-work/licensing-examples/"
+              aria-label="about cc licenses"
               target="_blank"
               rel="noopener"
               >Learn more</a
@@ -70,7 +75,11 @@
     <div class="help-links">
       <span class="margin-right-bigger">
         Go to the
-        <a href="https://oldsearch.creativecommons.org/">old CC Search</a>
+        <a
+          href="https://oldsearch.creativecommons.org/"
+          aria-label="old cc search"
+          >old CC Search</a
+        >
         portal
       </span>
     </div>
@@ -80,7 +89,7 @@
       src="../assets/logo-cloud.png"
       alt="Logos from sources of Creative Commons licensed images"
     />
-  </div>
+  </main>
 </template>
 
 <script>
@@ -93,6 +102,12 @@ export default {
     HomeLicenseFilter,
   },
   data: () => ({ form: { searchTerm: '' } }),
+  mounted() {
+    // Autofocus the search input (fallback for browsers without 'autofocus' or other issues)
+    if (document.querySelector('#searchTerm')) {
+      document.querySelector('#searchTerm').focus()
+    }
+  },
   methods: {
     onSubmit() {
       this.$store.commit(SET_QUERY, {

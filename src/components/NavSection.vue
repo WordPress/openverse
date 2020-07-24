@@ -1,9 +1,9 @@
 <template>
   <nav aria-label="primary" class="navbar small">
     <div class="navbar-brand">
-      <a class="logo" href="/">
+      <router-link class="logo" to="/">
         <img alt="Logo" src="/static/logos/products/search.svg" />
-      </a>
+      </router-link>
       <a
         role="button"
         :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
@@ -25,6 +25,7 @@
           v-on:submit.prevent="onSubmit"
         >
           <input
+            aria-label="search"
             class="input"
             type="search"
             :placeholder="navSearchPlaceholder"
@@ -32,6 +33,8 @@
           />
           <div class="is-sr-only">
             <button
+              aria-label="sr search button"
+              tabindex="-1"
               type="submit"
               class="button secondary"
               value="Search"
@@ -40,10 +43,14 @@
         </form>
       </div>
       <div class="navbar-end">
-        <a class="navbar-item" href="/about">About</a>
-        <a class="navbar-item" href="/collections">Collections</a>
-        <a class="navbar-item" href="/search-help">Search Guide</a>
-        <a class="navbar-item" href="/feedback">Feedback</a>
+        <router-link class="navbar-item" to="/about">About</router-link>
+        <router-link class="navbar-item" to="/collections"
+          >Collections</router-link
+        >
+        <router-link class="navbar-item" to="/search-help"
+          >Search Guide</router-link
+        >
+        <router-link class="navbar-item" to="/feedback">Feedback</router-link>
         <a
           class="navbar-item"
           href="https://opensource.creativecommons.org/ccsearch-browser-extension/"

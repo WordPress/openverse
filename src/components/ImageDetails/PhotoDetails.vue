@@ -38,43 +38,52 @@
         />
       </div>
     </div>
-    <div class="column image-info margin-left-xl">
+    <div
+      role="region"
+      aria-label="image details"
+      class="column image-info margin-left-xl"
+    >
       <div class="margin-top-normal margin-bottom-small">
         <h5 class="b-header">{{ image.title }}</h5>
         <span v-if="image.creator" class="caption has-text-weight-semibold">
           by
-          <a v-if="image.creator_url" :href="image.creator_url">
+          <a
+            :aria-label="'author' + image.creator"
+            v-if="image.creator_url"
+            :href="image.creator_url"
+          >
             {{ image.creator }}
           </a>
           <span v-else>{{ image.creator }}</span>
         </span>
       </div>
       <section class="tabs">
-        <ul>
-          <li :class="tabClass(0, 'tab')">
-            <a
-              href="#panel0"
-              :aria-selected="activeTab == 0"
-              @click.prevent="setActiveTab(0)"
-            >
+        <ul role="tablist">
+          <li
+            role="tab"
+            :aria-selected="activeTab == 0"
+            :class="tabClass(0, 'tab')"
+          >
+            <a href="#panel0" @click.prevent="setActiveTab(0)">
               Reuse
             </a>
           </li>
-          <li :class="tabClass(1, 'tab')">
-            <a
-              href="#panel1"
-              :aria-selected="activeTab == 1"
-              @click.prevent="setActiveTab(1)"
-            >
+          <li
+            role="tab"
+            :aria-selected="activeTab == 1"
+            :class="tabClass(1, 'tab')"
+          >
+            <a href="#panel1" @click.prevent="setActiveTab(1)">
               Information
             </a>
           </li>
-          <li :class="tabClass(2, 'a')" v-if="socialSharingEnabled">
-            <a
-              href="#panel2"
-              :aria-selected="activeTab == 2"
-              @click.prevent="setActiveTab(2)"
-            >
+          <li
+            role="tab"
+            :aria-selected="activeTab == 2"
+            :class="tabClass(2, 'a')"
+            v-if="socialSharingEnabled"
+          >
+            <a href="#panel2" @click.prevent="setActiveTab(2)">
               Share
             </a>
           </li>
@@ -96,6 +105,7 @@
             :fullLicenseName="fullLicenseName"
             :imageWidth="imageWidth"
             :imageHeight="imageHeight"
+            :imageType="imageType"
           />
         </div>
         <div :class="tabClass(2, 'tabs-panel')">
@@ -145,6 +155,7 @@ export default {
     'query',
     'imageWidth',
     'imageHeight',
+    'imageType',
     'socialSharingEnabled',
   ],
   components: {
@@ -182,7 +193,7 @@ export default {
   methods: {
     onGoBackToSearchResults() {
       this.$router.push({
-        name: 'browse-page',
+        path: '/search',
         query: this.query,
         params: { location: this.$route.params.location },
       })

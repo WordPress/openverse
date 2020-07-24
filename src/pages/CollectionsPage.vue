@@ -1,9 +1,9 @@
 <template>
   <div>
     <header-section></header-section>
-    <main class="collections-page padding-larger">
+    <main role="main" class="collections-page padding-larger">
       <h1>Browse collections</h1>
-      <h2 class="margin-bottom-normal">Museum Collections</h2>
+      <h2 role="region" class="margin-bottom-normal">Museum Collections</h2>
       <div class="providers-list columns is-multiline">
         <collection-item
           v-for="(provider, index) in museumProviders"
@@ -12,7 +12,7 @@
         />
       </div>
       <hr />
-      <h2 class="margin-bottom-normal">Other Collections</h2>
+      <h2 role="region" class="margin-bottom-normal">Other Collections</h2>
       <div class="providers-list columns is-multiline">
         <collection-item
           v-for="(provider, index) in otherProviders"

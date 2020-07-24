@@ -3,21 +3,27 @@
     <header-section />
     <div class="search columns">
       <div
-        class="column is-narrow grid-sidebar is-paddingless"
+        :class="`column is-narrow grid-sidebar is-paddingless ${
+          filtersExpandedByDefault ? 'full-height-sticky' : ''
+        }`"
         v-if="isFilterVisible"
       >
         <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
       </div>
-      <div class="column search-grid-ctr">
+      <main role="main" class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
-        <filter-display :query="query" />
-        <search-grid
+        <search-type-tabs />
+        <filter-display
+          v-if="$route.path === '/search' || $route.path === '/search/image'"
+          :query="query"
+        />
+        <router-view
           v-if="query.q"
           :query="query"
-          searchTerm=""
           @onLoadMoreImages="onLoadMoreImages"
+          :key="$route.path"
         />
-      </div>
+      </main>
     </div>
     <footer-section></footer-section>
   </div>
@@ -28,10 +34,12 @@ import HeaderSection from '@/components/HeaderSection'
 import SearchGrid from '@/components/SearchGrid'
 import SearchGridForm from '@/components/SearchGridForm'
 import SearchGridFilter from '@/components/Filters/SearchGridFilter'
+import SearchTypeTabs from '@/components/SearchTypeTabs'
 import FilterDisplay from '@/components/Filters/FilterDisplay'
 import { FETCH_IMAGES } from '@/store/action-types'
 import { SET_QUERY } from '@/store/mutation-types'
 import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin'
+import { ExperimentData } from '@/abTests/experiments/filterExpansion'
 
 const BrowsePage = {
   name: 'browse-page',
@@ -42,6 +50,18 @@ const BrowsePage = {
     isFilterVisible() {
       return this.$store.state.isFilterVisible
     },
+    /**
+     * Check if a filter experiment is active, and if the current case is 'expanded'.
+     * Show filters collapsed by default
+     */
+    filtersExpandedByDefault() {
+      const experiment = this.$store.state.experiments.find(
+        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
+      )
+      return experiment
+        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
+        : false
+    },
   },
   methods: {
     getImages(params) {
@@ -51,7 +71,7 @@ const BrowsePage = {
       this.getImages(searchParams)
     },
     onSearchFormSubmit(searchParams) {
-      this.$store.commit(SET_QUERY, searchParams)
+      this.$store.commit(SET_QUERY, { ...searchParams, shouldNavigate: false })
     },
   },
   mounted() {
@@ -71,6 +91,7 @@ const BrowsePage = {
     SearchGridForm,
     FilterDisplay,
     SearchGridFilter,
+    SearchTypeTabs,
     SearchGrid,
     FooterSection,
   },

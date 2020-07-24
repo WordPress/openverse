@@ -3,6 +3,7 @@
     <div v-if="status == 'NOT_SENT'">
       <span>Are these results relevant?</span>
       <button
+        aria-label="relevant result? answer: yes"
         class="button is-text tiny is-paddingless rating is-shadowless"
         @click="sendSearchRatingEvent(true)"
       >
@@ -10,6 +11,7 @@
       </button>
       •
       <button
+        aria-label="relevant result? answer: no"
         class="button is-text tiny is-paddingless rating is-shadowless"
         @click="sendSearchRatingEvent(false)"
       >
