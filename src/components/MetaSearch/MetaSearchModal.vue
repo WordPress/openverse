@@ -6,7 +6,8 @@
       <h3>Search images from other sources</h3>
       <p>
         Click on a source below to directly search other collections of
-        CC-licensed images
+        CC-licensed images.<br />Please note that Use filters are not supported
+        for Open Clip Art Library.
       </p>
     </header>
     <hr class="margin-bottom-bigger" />
