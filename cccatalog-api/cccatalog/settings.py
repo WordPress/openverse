@@ -326,4 +326,4 @@ else:
 VERBOSE_ES_RESPONSE = os.getenv('DEBUG_SCORES', 'False') in true_strings
 
 # Whether to boost results by authority and popularity
-USE_RANK_FEATURES = os.getenv('USE_RANK_FEATURES', 'False') in true_strings
+USE_RANK_FEATURES = os.getenv('USE_RANK_FEATURES', 'True') in true_strings

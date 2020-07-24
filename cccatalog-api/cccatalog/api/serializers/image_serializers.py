@@ -166,6 +166,10 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         default=False
     )
 
+    popularity_boost = serializers.FloatField(required=False)
+    authority_boost = serializers.FloatField(required=False)
+    authority_penalty = serializers.FloatField
+
     @staticmethod
     def validate_q(value):
         if len(value) > 200:

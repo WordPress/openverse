@@ -79,8 +79,8 @@ class Image(SyncableDocType):
         meta = row[schema['meta_data']]
         try:
             popularity = row[schema['normalized_popularity']]
-            popularity = _constrain_between(popularity, low=0, high=100)
-        except KeyError:
+            popularity = _constrain_between(popularity, low=1, high=100)
+        except (KeyError, TypeError):
             popularity = None
         return Image(
             _id=row[schema['id']],
@@ -188,7 +188,7 @@ class Image(SyncableDocType):
             try:
                 authority_boost = float(meta_data['authority_boost'])
                 authority_boost = _constrain_between(
-                    authority_boost, low=0, high=100
+                    authority_boost, low=1, high=100
                 )
             except (ValueError, TypeError):
                 pass
@@ -203,7 +203,7 @@ class Image(SyncableDocType):
             try:
                 authority_penalty = float(meta_data['authority_penalty'])
                 authority_penalty = _constrain_between(
-                    authority_penalty, low=0, high=100
+                    authority_penalty, low=1, high=100
                 )
             except (ValueError, TypeError):
                 pass
