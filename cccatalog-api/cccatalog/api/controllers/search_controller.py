@@ -277,10 +277,11 @@ def search(search_params, index, page_size, ip, request,
         )
 
     # Boost exact matches
+    quotes_stripped = search_params.data['q'].replace('"', '')
     exact_match_boost = Q(
         'simple_query_string',
         fields=['title'],
-        query=f"\"{query}\"",
+        query=f"\"{quotes_stripped}\"",
         boost=10000
     )
     s = Search().query(Q(
