@@ -234,7 +234,8 @@ def search(search_params, index, page_size, ip, request,
         s = s.query(
             'simple_query_string',
             query=query,
-            fields=search_fields
+            fields=search_fields,
+            default_operator='AND'
         )
     else:
         if 'creator' in search_params.data:
@@ -256,9 +257,9 @@ def search(search_params, index, page_size, ip, request,
             )
 
     if settings.USE_RANK_FEATURES:
-        pop_boost = search_params.data.get('popularity_boost', 1)
-        auth_boost = search_params.data.get('authority_boost', 1)
-        auth_penalty = search_params.data.get('authority_penalty', 1)
+        pop_boost = search_params.data.get('popularity_boost', 10000)
+        auth_boost = search_params.data.get('authority_boost', 10000)
+        auth_penalty = search_params.data.get('authority_penalty', 0)
         feature_boost = {
             'normalized_popularity': pop_boost,
             'authority_boost': auth_boost,
