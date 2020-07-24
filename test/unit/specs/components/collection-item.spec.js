@@ -7,14 +7,6 @@ describe('CollectionItem', () => {
     source_name: 'met',
     image_count: 10000,
   }
-  it('should render correct contents', () => {
-    const wrapper = render(CollectionItem, {
-      propsData: {
-        provider,
-      },
-    })
-    expect(wrapper.find('a').element.href).toContain('/collections/met')
-  })
 
   it('should format provider count', () => {
     const wrapper = render(CollectionItem, {

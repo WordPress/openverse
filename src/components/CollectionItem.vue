@@ -3,20 +3,20 @@
     class="column is-narrow margin-normal has-background-white provider-card"
   >
     <div>
-      <a
-        :href="'/collections/' + provider.source_name"
+      <router-link
+        :to="'/collections/' + provider.source_name"
         class="provider-name has-text-weight-normal has-text-black"
       >
         {{ provider.display_name }}
-      </a>
+      </router-link>
     </div>
     <div class="provider-logo">
-      <a :href="'/collections/' + provider.source_name">
+      <router-link :to="'/collections/' + provider.source_name">
         <img
           :alt="provider.display_name"
           :src="getProviderLogo(provider.source_name)"
         />
-      </a>
+      </router-link>
     </div>
     <div>
       <span class="has-text-grey-light has-text-weight-semibold">

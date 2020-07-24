@@ -50,7 +50,7 @@
     "vue-form": "^4.10.3",
     "vue-masonry": "^0.11.7",
     "vue-meta": "^2.4.0",
-    "vue-router": "^3.1.6",
+    "vue-router": "^3.3.4",
     "vue-server-renderer": "^2.6.11",
     "vuex": "^3.1.3"
   },
