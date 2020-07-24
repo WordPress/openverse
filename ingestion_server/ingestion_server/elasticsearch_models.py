@@ -106,8 +106,8 @@ class Image(SyncableDocType):
             license_url=Image.get_license_url(meta),
             mature=Image.get_maturity(meta, row[schema['mature']]),
             normalized_popularity=popularity,
-            authority_boost=Image.get_authority_boost(meta, source),
-            authority_penalty=Image.get_authority_penalty(meta, source)
+            authority_boost=Image.get_authority_boost(meta, provider),
+            authority_penalty=Image.get_authority_penalty(meta, provider)
         )
 
     @staticmethod

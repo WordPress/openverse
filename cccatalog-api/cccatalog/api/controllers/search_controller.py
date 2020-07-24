@@ -276,6 +276,20 @@ def search(search_params, index, page_size, ip, request,
             )
         )
 
+    # Boost exact matches
+    exact_match_boost = Q(
+        'simple_query_string',
+        fields=['title'],
+        query=f"\"{query}\"",
+        boost=10000
+    )
+    s = Search().query(Q(
+            'bool',
+            must=s.query,
+            should=exact_match_boost
+        )
+    )
+
     # Use highlighting to determine which fields contribute to the selection of
     # top results.
     s = s.highlight(*search_fields)
@@ -288,6 +302,8 @@ def search(search_params, index, page_size, ip, request,
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
     try:
+        if settings.VERBOSE_ES_RESPONSE:
+            log.info(pprint.pprint(s.to_dict()))
         search_response = s.execute()
         log.info(f'query={json.dumps(s.to_dict())},'
                  f' es_took_ms={search_response.took}')
