@@ -16,7 +16,7 @@ RETRIES = 3
 PROVIDER = "nypl"
 BASE_ENDPOINT = "http://api.repo.nypl.org/api/v1/items/search"
 METADATA_ENDPOINT = "http://api.repo.nypl.org/api/v1/items/item_details/"
-NYPL_API = os.getenv("NYPL_API")
+NYPL_API = os.getenv("NYPL_API_KEY")
 TOKEN = f"Token token={NYPL_API}"
 
 delay_request = DelayedRequester(delay=DELAY)
