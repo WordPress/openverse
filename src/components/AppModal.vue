@@ -27,7 +27,7 @@ export default {
 <style lang="scss" scoped>
 .modal {
   max-width: 80vw;
-  max-height: 80vh;
+  max-height: 84vh;
   margin: 0px auto;
   background-color: #fff;
   border-radius: 2px;
