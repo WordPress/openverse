@@ -1,46 +1,21 @@
 <template>
-  <div style="overflow-x: auto; overflow-y: auto">
-    <div class="is-hidden-desktop">
-      <app-modal @close="onToggleSearchGridFilter" :visible="isFilterVisible">
-        <div
-          :class="{
-            'search-filters': true,
-            'search-filters__visible': isFilterVisible,
-          }"
-        >
-          <filters-list
-            :filters="filters"
-            :isFilterApplied="isFilterApplied"
-            :licenseTypesDisabled="licenseTypesDisabled"
-            :licensesDisabled="licensesDisabled"
-            :renderProvidersFilter="licensesDisabled"
-            @onUpdateFilter="onUpdateFilter"
-            @onUpdateSearchByCreator="onUpdateSearchByCreator"
-            @onToggleSearchGridFilter="onToggleSearchGridFilter"
-            @onClearFilters="onClearFilters"
-          />
-        </div>
-      </app-modal>
-    </div>
-    <div
-      class="is-hidden-touch"
-      :class="{
-        'search-filters': true,
-        'search-filters__visible': isFilterVisible,
-      }"
-    >
-      <filters-list
-        :filters="filters"
-        :isFilterApplied="isFilterApplied"
-        :licenseTypesDisabled="licenseTypesDisabled"
-        :licensesDisabled="licensesDisabled"
-        :renderProvidersFilter="renderProvidersFilter"
-        @onUpdateFilter="onUpdateFilter"
-        @onUpdateSearchByCreator="onUpdateSearchByCreator"
-        @onToggleSearchGridFilter="onToggleSearchGridFilter"
-        @onClearFilters="onClearFilters"
-      />
-    </div>
+  <div
+    :class="{
+      'search-filters': true,
+      'search-filters__visible': isFilterVisible,
+    }"
+  >
+    <filters-list
+      :filters="filters"
+      :isFilterApplied="isFilterApplied"
+      :licenseTypesDisabled="licenseTypesDisabled"
+      :licensesDisabled="licensesDisabled"
+      :renderProvidersFilter="renderProvidersFilter"
+      @onUpdateFilter="onUpdateFilter"
+      @onUpdateSearchByCreator="onUpdateSearchByCreator"
+      @onToggleSearchGridFilter="onToggleSearchGridFilter"
+      @onClearFilters="onClearFilters"
+    />
   </div>
 </template>
 
@@ -48,14 +23,13 @@
 import { SET_FILTER_IS_VISIBLE, CLEAR_FILTERS } from '@/store/mutation-types'
 import { TOGGLE_FILTER } from '@/store/action-types'
 import { ExperimentData } from '@/abTests/experiments/filterExpansion'
-import AppModal from '../AppModal'
 import FiltersList from './FiltersList'
 
 export default {
   name: 'search-grid-filter',
   props: ['isCollectionsPage', 'provider'],
   components: {
-    FiltersList, AppModal
+    FiltersList
   },
   computed: {
     isFilterApplied() {
