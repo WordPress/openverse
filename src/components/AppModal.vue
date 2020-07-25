@@ -1,14 +1,11 @@
 <template>
-  <div :id="{ id }" class="overlay" @click.self="$emit('close')">
-    <div class="modal relative">
-      <button
-        type="button"
-        class="close-button has-color-gray is-size-6 is-size-4-touch"
-        @click="$emit('close')"
-        aria-label="close"
-      >
-        <i class="icon cross" />
-      </button>
+  <div
+    v-if="visible"
+    class="overlay"
+    @click.self="$emit('close')"
+    @keyup="checkKey"
+  >
+    <div class="modal relative" aria-modal="true" role="dialog">
       <slot default />
     </div>
   </div>
@@ -20,14 +17,33 @@
  */
 export default {
   name: 'app-modal',
-  props: ['id'],
+  props: {
+    visible: Boolean
+  },
+  watch: {
+    visible: {
+      handler(to) {
+        if (to) document.addEventListener('keyup', this.checkKey)
+        else document.removeEventListener('keyup', this.checkKey)
+      },
+      immediate: true
+    }
+  },
+  destroyed() {
+    document.removeEventListener('keyup', this.checkKey)
+  },
+  methods: {
+    checkKey(e) {
+      if (e.keyCode === 27) this.$emit('close')
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .modal {
-  max-width: 80vw;
-  max-height: 84vh;
+  width: 21.875rem;
+  max-height: 37rem;
   margin: 0px auto;
   background-color: #fff;
   border-radius: 2px;

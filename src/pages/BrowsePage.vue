@@ -2,14 +2,14 @@
   <div class="browse-page">
     <header-section />
     <div class="search columns">
-      <div
-        :class="`column is-narrow grid-sidebar is-paddingless ${
-          filtersExpandedByDefault ? 'full-height-sticky' : ''
-        }`"
+      <aside
         v-if="isFilterVisible"
+        role="complementary"
+        class="column is-narrow grid-sidebar is-paddingless"
+        :class="filtersExpandedByDefault ? 'full-height-sticky' : ''"
       >
         <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
-      </div>
+      </aside>
       <main role="main" class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
         <search-type-tabs />

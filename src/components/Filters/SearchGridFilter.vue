@@ -1,62 +1,61 @@
 <template>
-  <aside role="complementary">
+  <div style="overflow-x: auto; overflow-y: auto">
     <div class="is-hidden-desktop">
-      <div class="overlay">
-        <div class="modal">
-          <div
-            :class="{
-              'search-filters': true,
-              'search-filters__visible': isFilterVisible,
-            }"
-          >
-            <filters-list
-              :filters="filters"
-              :isFilterApplied="isFilterApplied"
-              :licenseTypesDisabled="licenseTypesDisabled"
-              :licensesDisabled="licensesDisabled"
-              :renderProvidersFilter="licensesDisabled"
-              @onUpdateFilter="onUpdateFilter"
-              @onUpdateSearchByCreator="onUpdateSearchByCreator"
-              @onToggleSearchGridFilter="onToggleSearchGridFilter"
-              @onClearFilters="onClearFilters"
-            />
-          </div>
+      <app-modal @close="onToggleSearchGridFilter" :visible="isFilterVisible">
+        <div
+          :class="{
+            'search-filters': true,
+            'search-filters__visible': isFilterVisible,
+          }"
+        >
+          <filters-list
+            :filters="filters"
+            :isFilterApplied="isFilterApplied"
+            :licenseTypesDisabled="licenseTypesDisabled"
+            :licensesDisabled="licensesDisabled"
+            :renderProvidersFilter="licensesDisabled"
+            @onUpdateFilter="onUpdateFilter"
+            @onUpdateSearchByCreator="onUpdateSearchByCreator"
+            @onToggleSearchGridFilter="onToggleSearchGridFilter"
+            @onClearFilters="onClearFilters"
+          />
         </div>
-      </div>
+      </app-modal>
     </div>
-    <div class="is-hidden-touch">
-      <div
-        :class="{
-          'search-filters': true,
-          'search-filters__visible': isFilterVisible,
-        }"
-      >
-        <filters-list
-          :filters="filters"
-          :isFilterApplied="isFilterApplied"
-          :licenseTypesDisabled="licenseTypesDisabled"
-          :licensesDisabled="licensesDisabled"
-          :renderProvidersFilter="renderProvidersFilter"
-          @onUpdateFilter="onUpdateFilter"
-          @onUpdateSearchByCreator="onUpdateSearchByCreator"
-          @onToggleSearchGridFilter="onToggleSearchGridFilter"
-          @onClearFilters="onClearFilters"
-        />
-      </div>
+    <div
+      class="is-hidden-touch"
+      :class="{
+        'search-filters': true,
+        'search-filters__visible': isFilterVisible,
+      }"
+    >
+      <filters-list
+        :filters="filters"
+        :isFilterApplied="isFilterApplied"
+        :licenseTypesDisabled="licenseTypesDisabled"
+        :licensesDisabled="licensesDisabled"
+        :renderProvidersFilter="renderProvidersFilter"
+        @onUpdateFilter="onUpdateFilter"
+        @onUpdateSearchByCreator="onUpdateSearchByCreator"
+        @onToggleSearchGridFilter="onToggleSearchGridFilter"
+        @onClearFilters="onClearFilters"
+      />
     </div>
-  </aside>
+  </div>
 </template>
 
 <script>
 import { SET_FILTER_IS_VISIBLE, CLEAR_FILTERS } from '@/store/mutation-types'
 import { TOGGLE_FILTER } from '@/store/action-types'
+import { ExperimentData } from '@/abTests/experiments/filterExpansion'
+import AppModal from '../AppModal'
 import FiltersList from './FiltersList'
 
 export default {
   name: 'search-grid-filter',
   props: ['isCollectionsPage', 'provider'],
   components: {
-    FiltersList,
+    FiltersList, AppModal
   },
   computed: {
     isFilterApplied() {
@@ -76,6 +75,14 @@ export default {
     },
     licenseTypesDisabled() {
       return this.$store.state.filters.licenses.some((li) => li.checked)
+    },
+    filtersExpandedByDefault() {
+      const experiment = this.$store.state.experiments.find(
+        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
+      )
+      return experiment
+        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
+        : false
     },
   },
   methods: {
@@ -113,6 +120,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .modal {
   width: 21.875rem;
   max-height: 37rem;
