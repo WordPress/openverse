@@ -90,7 +90,6 @@ def test_request_handler_itemdetail_success():
         actual_response = np._request_handler(
                 endpoint=np.METADATA_ENDPOINT
                 + "0cabe3d0-3d50-0134-a8e0-00505686a51c",
-                request_type="itemdetails"
             )
 
     expected_response = response_itemdetails_success.get(
@@ -195,7 +194,7 @@ def test_handle_results_success():
         with patch.object(
                 np.image_store,
                 'add_item') as mock_item:
-            actual_image_count = np._handle_results(result)
+            np._handle_results(result)
 
     assert mock_item.call_count == 7
 
@@ -212,6 +211,31 @@ def test_handle_results_failure():
         with patch.object(
                 np.image_store,
                 'add_item') as mock_item:
-            actual_image_count = np._handle_results(result)
+            np._handle_results(result)
+
+    assert mock_item.call_count == 0
+
+
+def test_get_capture_detail_success():
+    captures = _get_resource_json("capture_details.json")
+
+    with patch.object(
+            np.image_store,
+            'add_item') as mock_item:
+        np._get_capture_details(
+            captures=captures
+            )
+    assert mock_item.call_count == 7
+
+
+def test_get_capture_detail_failure():
+    captures = []
+
+    with patch.object(
+            np.image_store,
+            'add_item') as mock_item:
+        np._get_capture_details(
+            captures=captures
+            )
 
     assert mock_item.call_count == 0

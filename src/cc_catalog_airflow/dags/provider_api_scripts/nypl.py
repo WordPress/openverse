@@ -1,6 +1,6 @@
 import os
 import logging
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
 
@@ -11,7 +11,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 LIMIT = 500
-DELAY = 5.0
+DELAY = 1.0
 RETRIES = 3
 PROVIDER = "nypl"
 BASE_ENDPOINT = "http://api.repo.nypl.org/api/v1/items/search"
@@ -34,11 +34,11 @@ HEADERS = {
 }
 
 IMAGE_URL_DIMENSIONS = [
-    "t=g", "t=v", "t=q", "t=w", "t=r"
+    "g", "v", "q", "w", "r"
 ]
 
 THUMBNAIL_DIMENSIONS = [
-    "t=w", "t=r", "t=q", "t=f", "t=v", "t=g"
+    "w", "r", "q", "f", "v", "g"
 ]
 
 
@@ -53,13 +53,10 @@ def main():
             params=query_param
         )
         results = request_response.get("result")
-        if type(results) == list:
-            if len(results) > 0:
-                image_count = _handle_results(results)
-                logger.info(f"{image_count} images till now")
-                page = page + 1
-            else:
-                condition = False
+        if type(results) == list and len(results) > 0:
+            _handle_results(results)
+            logger.info(f"{image_store.total_images} images till now")
+            page = page + 1
         else:
             condition = False
     image_store.commit()
@@ -77,7 +74,6 @@ def _get_query_param(
 
 def _request_handler(
         endpoint=BASE_ENDPOINT,
-        request_type="search",
         params=None,
         headers=HEADERS,
         retries=RETRIES
@@ -89,24 +85,18 @@ def _request_handler(
             params=params,
             headers=headers
         )
+        if response.status_code == 200:
+            try:
+                response_json = response.json()
+                response_json = response_json.get("nyplAPI")
+                results = response_json.get("response")
+                break
 
-        try:
-            response_json = response.json()
-            response_json = response_json.get("nyplAPI")
-            response_headers = response_json.get("response", {}).get("headers")
-
-            if request_type == "search" and response_headers is not None:
-                if response_headers.get("code") == "200":
-                    results = response_json.get("response")
-                    break
-
-            elif response_headers is not None:
-                if response_headers.get("code", {}).get("$") == "200":
-                    results = response_json.get("response")
-                    break
-        except Exception as e:
-            logger.warning(f"Request failed due to {e}")
-
+            except Exception as e:
+                logger.warning(f"Request failed due to {e}")
+                results = None
+        else:
+            results = None
     return results
 
 
@@ -117,7 +107,6 @@ def _handle_results(results):
 
         item_details = _request_handler(
             endpoint=METADATA_ENDPOINT+uuid,
-            request_type="item_details"
         )
         if item_details is None:
             continue
@@ -130,56 +119,72 @@ def _handle_results(results):
             mods.get("")
         )
         metadata = _get_metadata(mods)
-        capture_count = item_details.get("numResults", {}).get("$")
+
         captures = item_details.get("sibling_captures", {}).get("capture", [])
         if type(captures) is not list:
             captures = [captures]
 
-        for img in captures:
-            image_id = img.get("imageID", {}).get("$")
-            if image_id is None:
-                continue
-            image_url, thumbnail_url = _get_images(
-                img.get("imageLinks", {}).get("imageLink", [])
-            )
-            foreign_landing_url = img.get("itemLink", {}).get("$")
-            license_url = img.get("rightsStatementURI", {}).get("$")
-            if (
-                image_url is None or foreign_landing_url is None or
-                license_url is None
-            ):
-                continue
+        _get_capture_details(
+            captures=captures,
+            metadata=metadata,
+            creator=creator,
+            title=title
+        )
 
-            image_count = image_store.add_item(
-                foreign_identifier=image_id,
-                foreign_landing_url=foreign_landing_url,
-                image_url=image_url,
-                license_url=license_url,
-                thumbnail_url=thumbnail_url,
-                title=title,
-                creator=creator,
-                meta_data=metadata
-            )
 
-    return image_count
+def _get_capture_details(
+        captures=[],
+        metadata=None,
+        creator=None,
+        title=None
+        ):
+    for img in captures:
+        image_id = img.get("imageID", {}).get("$")
+        if image_id is None:
+            continue
+        image_url, thumbnail_url = _get_images(
+            img.get("imageLinks", {}).get("imageLink", [])
+        )
+        foreign_landing_url = img.get("itemLink", {}).get("$")
+        license_url = img.get("rightsStatementURI", {}).get("$")
+        if (
+            image_url is None or foreign_landing_url is None or
+            license_url is None
+        ):
+            continue
+
+        image_store.add_item(
+            foreign_identifier=image_id,
+            foreign_landing_url=foreign_landing_url,
+            image_url=image_url,
+            license_url=license_url,
+            thumbnail_url=thumbnail_url,
+            title=title,
+            creator=creator,
+            meta_data=metadata
+        )
 
 
 def _get_title(titleinfo):
     title = None
-    if type(titleinfo) == list:
-        if len(titleinfo) > 0:
-            title = titleinfo[0].get("title", {}).get("$")
+    if type(titleinfo) == list and len(titleinfo) > 0:
+        title = titleinfo[0].get("title", {}).get("$")
     return title
 
 
 def _get_creators(creatorinfo):
-    creator = None
     if type(creatorinfo) == list:
-        if len(creatorinfo) > 0:
-            for info in creatorinfo:
-                if info.get("usage") == "primary":
-                    creator = info.get("namePart", {}).get("$")
-                    break
+        primary_creator = (
+            info.get("namePart", {}).get("$")
+            for info in creatorinfo if info.get("usage") == "primary"
+        )
+        creator = next(primary_creator, None)
+    else:
+        creator = None
+
+    if creator is None:
+        logger.warning("No primary creator found")
+
     return creator
 
 
@@ -190,51 +195,53 @@ def _get_images(
         ):
     image_url, thumbnail_url = None, None
     image_type = {
-        urlparse(img.get("$")).query.split("&")[1]: img.get("$")
+        parse_qs(urlparse(img.get("$")).query)['t'][0]: img.get("$")
         for img in images
     }
-    for dimension in image_url_dimensions:
-        if dimension in image_type.keys():
-            image_url = image_type.get(
-                dimension
-                ).replace(
-                    "&download=1", ""
-                    )
-            break
 
-    for dimension in thumbnail_dimensions:
-        if dimension in image_type.keys():
-            thumbnail_url = image_type.get(
-                dimension
-                ).replace(
-                    "&download=1", ""
-                    )
-            break
+    image_url = _get_preferred_image(image_type, image_url_dimensions)
+    thumbnail_url = _get_preferred_image(image_type, thumbnail_dimensions)
 
     return image_url, thumbnail_url
 
 
+def _get_preferred_image(image_type, dimension_list):
+    preferred_image = (
+        image_type.get(dimension).replace("&download=1", "")
+        for dimension in dimension_list
+        if dimension in image_type
+    )
+
+    return next(preferred_image, None)
+
+
 def _get_metadata(mods):
     metadata = {}
+
     type_of_resource = mods.get("typeOfResource")
-    if type(type_of_resource) == list:
-        if type_of_resource[0].get("usage") == "primary":
-            metadata["type_of_resource"] = type_of_resource[0].get("$")
+    if (type(type_of_resource) == list
+            and type_of_resource[0].get("usage") == "primary"):
+        metadata["type_of_resource"] = type_of_resource[0].get("$")
 
     if type(mods.get("genre")) == dict:
         metadata["genre"] = mods.get("genre").get("$")
 
     origin_info = mods.get("originInfo")
-    if type(origin_info) == dict:
-        if type(origin_info.get("dateIssued")) == dict:
-            metadata['date_issued'] = origin_info.get("dateIssued").get("$")
-        if type(origin_info.get("publisher")) == dict:
-            metadata["publisher"] = origin_info.get("publisher").get("$")
+    try:
+        metadata['date_issued'] = origin_info.get("dateIssued").get("$")
+    except AttributeError as e:
+        logger.warning(f"date_issued not found due to {e}")
+
+    try:
+        metadata["publisher"] = origin_info.get("publisher").get("$")
+    except AttributeError as e:
+        logger.warning(f"publisher not found due to {e}")
 
     physical_description = mods.get("physicalDescription")
-    if type(physical_description) == dict:
-        if type(physical_description.get("note")) == dict:
-            metadata["description"] = physical_description.get("note").get("$")
+    try:
+        metadata["description"] = physical_description.get("note").get("$")
+    except AttributeError as e:
+        logger.warning(f"description not found, due to {e}")
 
     return metadata
 
