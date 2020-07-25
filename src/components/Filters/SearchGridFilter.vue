@@ -120,30 +120,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.modal {
-  width: 21.875rem;
-  max-height: 37rem;
-  margin: 0px auto;
-  background-color: #fff;
-  border-radius: 2px;
-  overflow-y: scroll;
-  box-shadow: 0 2px 8px 3px;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-  background: #00000094;
-}
-
 .search-filters {
   display: none;
   height: auto;
