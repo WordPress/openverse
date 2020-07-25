@@ -29,7 +29,7 @@ export default {
   name: 'search-grid-filter',
   props: ['isCollectionsPage', 'provider'],
   components: {
-    FiltersList
+    FiltersList,
   },
   computed: {
     isFilterApplied() {

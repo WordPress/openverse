@@ -4,7 +4,7 @@
     <div class="search columns">
       <div class="is-hidden-desktop">
         <app-modal :visible="isFilterVisible" @close="onToggleSearchGridFilter">
-        <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
+          <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
         </app-modal>
       </div>
       <aside
@@ -105,7 +105,7 @@ const BrowsePage = {
     SearchTypeTabs,
     SearchGrid,
     FooterSection,
-    AppModal
+    AppModal,
   },
   mixins: [ServerPrefetchProvidersMixin],
 }

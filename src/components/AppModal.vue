@@ -18,7 +18,7 @@
 export default {
   name: 'app-modal',
   props: {
-    visible: Boolean
+    visible: Boolean,
   },
   watch: {
     visible: {
@@ -26,8 +26,8 @@ export default {
         if (to) document.addEventListener('keyup', this.checkKey)
         else document.removeEventListener('keyup', this.checkKey)
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   destroyed() {
     document.removeEventListener('keyup', this.checkKey)
@@ -35,8 +35,8 @@ export default {
   methods: {
     checkKey(e) {
       if (e.keyCode === 27) this.$emit('close')
-    }
-  }
+    },
+  },
 }
 </script>
 
