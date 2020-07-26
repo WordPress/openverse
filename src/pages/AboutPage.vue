@@ -1,54 +1,99 @@
 <template>
-<div class="about-page">
-  <header-section showNavSearch="true"></header-section>
-  <main role="main" class="margin-normal">
-    <h2 role="article">{{$t('about.title')}}</h2>
+  <div class="about-page">
+    <header-section showNavSearch="true"></header-section>
+    <main role="main" class="margin-normal">
+      <h2 role="article">{{ $t('about.title') }}</h2>
       <i18n path="about.description.content" tag="p">
-          <template v-slot:link>
-            <a aria-label="cc licenses" href="https://creativecommons.org/share-your-work/licensing-examples/">{{$t('about.description.licenses-link')}}</a>
-          </template>
+        <template v-slot:link>
+          <a
+            aria-label="cc licenses"
+            href="https://creativecommons.org/share-your-work/licensing-examples/"
+            >{{ $t('about.description.licenses-link') }}</a
+          >
+        </template>
       </i18n>
       <i18n path="about.collection" tag="p">
-          <template v-slot:common-crawl>
-            <a aria-label="common crawl" href="http://commoncrawl.org/">Common Crawl</a>
-          </template>
+        <template v-slot:common-crawl>
+          <a aria-label="common crawl" href="http://commoncrawl.org/"
+            >Common Crawl</a
+          >
+        </template>
       </i18n>
       <i18n path="about.planning.content" tag="p">
-          <template v-slot:vision>
-            <a aria-label="cc search vision" href="https://creativecommons.org/2019/03/19/cc-search/">{{$t('about.planning.vision')}}</a>
-          </template>
-          <template v-slot:roadmap>
-            <a aria-label="cc search roadmap" href="https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/edit#heading=h.jih78emira0r">{{$t('about.planning.roadmap')}}</a>
-          </template>
-          <template v-slot:working>
-            <a aria-label="current projects" href="https://github.com/orgs/creativecommons/projects/7">{{$t('about.planning.working')}}</a>
-          </template>
-          <template v-slot:search>
-            <a aria-label="cc search repository" href="https://github.com/creativecommons/cccatalog-frontend/">{{$t('about.planning.search')}}</a>
-          </template>
-          <template v-slot:catalog-api>
-            <a aria-label="cc catalog-api repository" href="https://github.com/creativecommons/cccatalog-api/">{{$t('about.planning.catalog-api')}}</a>
-          </template>
-          <template v-slot:catalog>
-            <a aria-label="cc catalog repository" href="https://github.com/creativecommons/cccatalog/">{{$t('about.planning.catalog')}}</a>
-          </template>
-          <template v-slot:community>
-            <a aria-label="contribution guidelines" href="https://creativecommons.github.io/contributing-code/">{{$t('about.planning.community')}}</a>
-          </template>
+        <template v-slot:vision>
+          <a
+            aria-label="cc search vision"
+            href="https://creativecommons.org/2019/03/19/cc-search/"
+            >{{ $t('about.planning.vision') }}</a
+          >
+        </template>
+        <template v-slot:roadmap>
+          <a
+            aria-label="cc search roadmap"
+            href="https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/edit#heading=h.jih78emira0r"
+            >{{ $t('about.planning.roadmap') }}</a
+          >
+        </template>
+        <template v-slot:working>
+          <a
+            aria-label="current projects"
+            href="https://github.com/orgs/creativecommons/projects/7"
+            >{{ $t('about.planning.working') }}</a
+          >
+        </template>
+        <template v-slot:search>
+          <a
+            aria-label="cc search repository"
+            href="https://github.com/creativecommons/cccatalog-frontend/"
+            >{{ $t('about.planning.search') }}</a
+          >
+        </template>
+        <template v-slot:catalog-api>
+          <a
+            aria-label="cc catalog-api repository"
+            href="https://github.com/creativecommons/cccatalog-api/"
+            >{{ $t('about.planning.catalog-api') }}</a
+          >
+        </template>
+        <template v-slot:catalog>
+          <a
+            aria-label="cc catalog repository"
+            href="https://github.com/creativecommons/cccatalog/"
+            >{{ $t('about.planning.catalog') }}</a
+          >
+        </template>
+        <template v-slot:community>
+          <a
+            aria-label="contribution guidelines"
+            href="https://creativecommons.github.io/contributing-code/"
+            >{{ $t('about.planning.community') }}</a
+          >
+        </template>
       </i18n>
       <i18n path="about.declaration.content" tag="p">
-          <template v-slot:terms>
-            <a aria-label="cc terms of use" href="https://creativecommons.org/terms/">{{$t('about.declaration.terms')}}</a>
-          </template>
+        <template v-slot:terms>
+          <a
+            aria-label="cc terms of use"
+            href="https://creativecommons.org/terms/"
+            >{{ $t('about.declaration.terms') }}</a
+          >
+        </template>
       </i18n>
       <i18n path="about.old-cc-search" tag="p">
-          <template v-slot:link>
-            <a aria-label="old cc search" href="https://oldsearch.creativecommons.org">https://oldsearch.creativecommons.org</a>
-          </template>
+        <template v-slot:link>
+          <a
+            aria-label="old cc search"
+            href="https://oldsearch.creativecommons.org"
+            >https://oldsearch.creativecommons.org</a
+          >
+        </template>
       </i18n>
-      <h3 class="margin-vertical-normal">{{$t('about.sources')}}</h3>
-      <table aria-label="sources table"
-        role="region" class="table is-bordered is-striped">
+      <h3 class="margin-vertical-normal">{{ $t('about.sources') }}</h3>
+      <table
+        aria-label="sources table"
+        role="region"
+        class="table is-bordered is-striped"
+      >
         <thead>
           <th>{{ $t('about.providers.source') }}</th>
           <th>{{ $t('about.providers.domain') }}</th>

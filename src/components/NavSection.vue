@@ -32,18 +32,36 @@
             v-model.lazy="form.searchTerm"
           />
           <div class="is-sr-only">
-            <button aria-label="sr search button" tabindex="-1" type="submit" class="button secondary" value="Search"></button>
+            <button
+              aria-label="sr search button"
+              tabindex="-1"
+              type="submit"
+              class="button secondary"
+              value="Search"
+            ></button>
           </div>
         </form>
       </div>
       <div class="navbar-end">
-        <router-link class="navbar-item" to="/about">{{$t('header.about')}}</router-link>
-        <router-link class="navbar-item" to="/collections">{{$t('header.collections')}}</router-link>
-        <router-link class="navbar-item" to="/search-help">{{$t('header.search-guide')}}</router-link>
-        <router-link class="navbar-item" to="/feedback">{{$t('header.feedback')}}</router-link>
-        <a class="navbar-item" href="https://opensource.creativecommons.org/ccsearch-browser-extension/" target="_blank">
-        {{$t('header.extension')}}
-        <i class="icon external-link" />
+        <router-link class="navbar-item" to="/about">{{
+          $t('header.about')
+        }}</router-link>
+        <router-link class="navbar-item" to="/collections">{{
+          $t('header.collections')
+        }}</router-link>
+        <router-link class="navbar-item" to="/search-help">{{
+          $t('header.search-guide')
+        }}</router-link>
+        <router-link class="navbar-item" to="/feedback">{{
+          $t('header.feedback')
+        }}</router-link>
+        <a
+          class="navbar-item"
+          href="https://opensource.creativecommons.org/ccsearch-browser-extension/"
+          target="_blank"
+        >
+          {{ $t('header.extension') }}
+          <i class="icon external-link" />
         </a>
       </div>
     </div>

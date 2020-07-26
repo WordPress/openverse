@@ -29,15 +29,17 @@
       </div>
       <div class="padding-bottom-big">
         <div class="load-more">
-        <button v-show="!isFetchingImages && includeAnalytics"
-                class="button margin-bottom-big"
-                :disabled="isFinished"
-                @click="onLoadMoreImages">
-          <span v-if="isFinished">{{ $t('browse-page.no-more') }}</span>
-          <span v-else>{{ $t('browse-page.load') }}</span>
-        </button>
-        <loading-icon v-show="isFetchingImages" />
-      </div>
+          <button
+            v-show="!isFetchingImages && includeAnalytics"
+            class="button margin-bottom-big"
+            :disabled="isFinished"
+            @click="onLoadMoreImages"
+          >
+            <span v-if="isFinished">{{ $t('browse-page.no-more') }}</span>
+            <span v-else>{{ $t('browse-page.load') }}</span>
+          </button>
+          <loading-icon v-show="isFetchingImages" />
+        </div>
         <button
           aria-controls="meta-search-modal"
           type="button"
@@ -45,9 +47,13 @@
           class="meta-popup-trigger has-color-tomato text-center caption padding-normal"
         >
           Not finding what you need? Search other sources
-
-      <div class="search-grid_notification callout alert" v-if="isFetchingImagesError">
-        <h5>{{ $t('browse-page.error') }} {{_errorMessage }}</h5>
+        </button>
+      </div>
+      <div
+        class="search-grid_notification callout alert"
+        v-if="isFetchingImagesError"
+      >
+        <h5>{{ $t('browse-page.error') }} {{ _errorMessage }}</h5>
       </div>
     </div>
 

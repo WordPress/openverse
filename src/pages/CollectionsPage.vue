@@ -2,8 +2,10 @@
   <div>
     <header-section></header-section>
     <main role="main" class="collections-page padding-larger">
-      <h1>{{$t('collections.title')}}</h1>
-      <h2 role="region" class="margin-bottom-normal">{{$t('collections.museum')}}</h2>
+      <h1>{{ $t('collections.title') }}</h1>
+      <h2 role="region" class="margin-bottom-normal">
+        {{ $t('collections.museum') }}
+      </h2>
       <div class="providers-list columns is-multiline">
         <collection-item
           v-for="(provider, index) in museumProviders"
@@ -12,7 +14,9 @@
         />
       </div>
       <hr />
-      <h2 role="region" class="margin-bottom-normal">{{$t('collections.other')}}</h2>
+      <h2 role="region" class="margin-bottom-normal">
+        {{ $t('collections.other') }}
+      </h2>
       <div class="providers-list columns is-multiline">
         <collection-item
           v-for="(provider, index) in otherProviders"

@@ -3,15 +3,18 @@
     <div class="hero-center">
       <div class="locale-block"><locale-selector /></div>
       <h2 class="has-text-centered">{{ $t('hero.title') }}</h2>
-      <form class="hero_search-form margin-top-bigger"
-          role="search"
-          method="get"
-          action="/search"
-          v-on:submit.prevent="onSubmit">
-      <div class="is-hidden-touch centered-search-box">
-        <div class="field has-addons">
-          <div class="control mobile-input">
-            <input required="required"
+      <form
+        class="hero_search-form margin-top-bigger"
+        role="search"
+        method="get"
+        action="/search"
+        v-on:submit.prevent="onSubmit"
+      >
+        <div class="is-hidden-touch centered-search-box">
+          <div class="field has-addons">
+            <div class="control mobile-input">
+              <input
+                required="required"
                 class="hero_search-input input is-large"
                 autofocus
                 type="search"
@@ -53,25 +56,35 @@
         <div class="caption has-text-centered margin-top-big">
           <i18n path="hero.caption.content" tag="p">
             <template v-slot:link>
-            <a href="https://creativecommons.org/share-your-work/licensing-examples/"
-              target="_blank"
-              aria-label="about cc licenses"
-              rel="noopener">
-              {{$t('hero.caption.link')}}
-            </a>
+              <a
+                href="https://creativecommons.org/share-your-work/licensing-examples/"
+                target="_blank"
+                aria-label="about cc licenses"
+                rel="noopener"
+              >
+                {{ $t('hero.caption.link') }}
+              </a>
+            </template>
+          </i18n>
+        </div>
+        <home-license-filter />
+      </form>
+      <div class="help-links is-hidden-mobile">
+        <i18n
+          path="hero.old-cc-search.label"
+          tag="span"
+          class="margin-right-bigger"
+        >
+          <template v-slot:link>
+            <a
+              href="https://oldsearch.creativecommons.org/"
+              aria-label="old cc search"
+              >{{ $t('hero.old-cc-search.link') }}</a
+            >
           </template>
         </i18n>
       </div>
-      <home-license-filter />
-    </form>
-    <div class="help-links is-hidden-mobile">
-      <i18n path="hero.old-cc-search.label" tag="span" class="margin-right-bigger">
-        <template v-slot:link>
-          <a href="https://oldsearch.creativecommons.org/" aria-label="old cc search">{{ $t('hero.old-cc-search.link') }}</a>
-        </template>
-      </i18n>
     </div>
-
     <img
       class="logo-cloud"
       src="../assets/logo-cloud.png"

@@ -4,15 +4,19 @@
       <dl>
         <dt class="margin-bottom-small">Type</dt>
         <dd>{{ prettyImageType }}</dd>
-        <dt class="margin-bottom-small">{{ $t('photo-details.information.dimensions') }}</dt>
+        <dt class="margin-bottom-small">
+          {{ $t('photo-details.information.dimensions') }}
+        </dt>
         <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
         <dt class="margin-bottom-small">Provider</dt>
         <dd>{{ providerName }}</dd>
-        <dt class="margin-bottom-small">{{ $t('photo-details.information.source') }}</dt>
+        <dt class="margin-bottom-small">
+          {{ $t('photo-details.information.source') }}
+        </dt>
         <dd>
-        <a
+          <a
             :aria-label="sourceName"
-        :href="image.foreign_landing_url"
+            :href="image.foreign_landing_url"
             target="blank"
             rel="noopener noreferrer"
           >

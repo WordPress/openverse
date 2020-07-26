@@ -23,27 +23,33 @@
       </button>
     </div>
     <template v-if="areFiltersExpanded && options">
-    <div v-for="(item, index) in options" :key="index" class="margin-top-small">
-      <label class="checkbox" :for="item.code" :disabled="block(item)">
-        <input type="checkbox"
-             class="filter-checkbox margin-right-small"
-             :id="item.code"
-             :key="index"
-             :checked="item.checked"
-             :disabled="block(item)"
-             @change="onValueChange" />
-        <license-icons v-if="filterType == 'licenses'" :license="item.code" />
-        {{ $t(item.name) }}
-      </label>
-      <img
-      aria-label="license explanation"
+      <div
+        v-for="(item, index) in options"
+        :key="index"
+        class="margin-top-small"
+      >
+        <label class="checkbox" :for="item.code" :disabled="block(item)">
+          <input
+            type="checkbox"
+            class="filter-checkbox margin-right-small"
+            :id="item.code"
+            :key="index"
+            :checked="item.checked"
+            :disabled="block(item)"
+            @change="onValueChange"
+          />
+          <license-icons v-if="filterType == 'licenses'" :license="item.code" />
+          {{ $t(item.name) }}
+        </label>
+        <img
+          aria-label="license explanation"
           tabindex="0"
-        v-if="filterType == 'licenses'"
-        src="@/assets/help_icon.svg"
-        alt="help"
-        class="license-help is-pulled-right padding-top-smallest padding-right-smaller"
-        @click.stop="toggleLicenseExplanationVisibility(item.code)"
-      />
+          v-if="filterType == 'licenses'"
+          src="@/assets/help_icon.svg"
+          alt="help"
+          class="license-help is-pulled-right padding-top-smallest padding-right-smaller"
+          @click.stop="toggleLicenseExplanationVisibility(item.code)"
+        />
 
         <license-explanation-tooltip
           v-if="shouldRenderLicenseExplanationTooltip(item.code)"

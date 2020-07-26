@@ -18,14 +18,21 @@
       </span>
       <license-explanations :license="image.license" />
 
-      <i18n path="photo-details.reuse.license.content"
-            tag="span"
-            class="caption has-text-weight-semibold">
-          <template v-slot:link>
-            <a aria-label="read more about the license" :href="licenseURL" target="_blank" rel="noopener">
-              {{ $t('photo-details.reuse.license.link') }}
-            </a>
-          </template>
+      <i18n
+        path="photo-details.reuse.license.content"
+        tag="span"
+        class="caption has-text-weight-semibold"
+      >
+        <template v-slot:link>
+          <a
+            aria-label="read more about the license"
+            :href="licenseURL"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ $t('photo-details.reuse.license.link') }}
+          </a>
+        </template>
       </i18n>
     </div>
     <div>

@@ -4,15 +4,17 @@
       <span>{{ $t('browse-page.search-rating.content') }}</span>
       <button
         aria-label="relevant result? answer: yes"
-       class="button is-text tiny is-paddingless rating is-shadowless"
-              @click="sendSearchRatingEvent(true)">
+        class="button is-text tiny is-paddingless rating is-shadowless"
+        @click="sendSearchRatingEvent(true)"
+      >
         {{ $t('browse-page.search-rating.yes') }}
       </button>
       •
       <button
         aria-label="relevant result? answer: no"
-      class="button is-text tiny is-paddingless rating is-shadowless"
-              @click="sendSearchRatingEvent(false)">
+        class="button is-text tiny is-paddingless rating is-shadowless"
+        @click="sendSearchRatingEvent(false)"
+      >
         {{ $t('browse-page.search-rating.no') }}
       </button>
     </div>

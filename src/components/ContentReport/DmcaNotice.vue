@@ -6,7 +6,13 @@
       class="is-block padding-horizontal-big margin-top-large has-text-centered"
     >
       <template v-slot:link>
-        <a aria-label="dmca form" :href="dmcaFormUrl" target="_blank" rel="noopener">DMCA form</a>
+        <a
+          aria-label="dmca form"
+          :href="dmcaFormUrl"
+          target="_blank"
+          rel="noopener"
+          >DMCA form</a
+        >
       </template>
     </i18n>
     <i18n
@@ -15,7 +21,13 @@
       class="is-block padding-horizontal-big margin-top-large has-text-centered"
     >
       <template v-slot:link>
-        <a :aria-label="provider + 'form'" :href="imageURL" target="_blank" rel="noopener">{{ providerName }}</a>.
+        <a
+          :aria-label="provider + 'form'"
+          :href="imageURL"
+          target="_blank"
+          rel="noopener"
+          >{{ providerName }}</a
+        >.
       </template>
     </i18n>
     <button

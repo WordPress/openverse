@@ -9,7 +9,13 @@
       class="is-block padding-horizontal-big margin-top-large has-text-centered"
     >
       <template v-slot:link>
-        <a :aria-label="providerName + 'form'" :href="imageURL" target="_blank" rel="noopener">{{ providerName }}</a>.
+        <a
+          :aria-label="providerName + 'form'"
+          :href="imageURL"
+          target="_blank"
+          rel="noopener"
+          >{{ providerName }}</a
+        >.
       </template>
     </i18n>
   </div>

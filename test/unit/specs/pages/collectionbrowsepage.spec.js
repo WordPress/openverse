@@ -1,6 +1,6 @@
 import CollectionBrowsePage from '@/pages/CollectionBrowsePage'
-import render from '../../test-utils/render';
-import i18n from '../../test-utils/i18n';
+import render from '../../test-utils/render'
+import i18n from '../../test-utils/i18n'
 
 describe('CollectionBrowsePage', () => {
   const $t = (key) => i18n.messages[key]
