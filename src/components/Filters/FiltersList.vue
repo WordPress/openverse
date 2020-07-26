@@ -21,19 +21,6 @@
           </span>
         </button>
       </div>
-
-      <button
-        type="button"
-        class="button is-text tiny is-paddingless margin-top-big margin-right-small report is-shadowless is-pulled-right"
-        @click="onToggleSearchGridFilter()"
-      >
-        <span class="has-color-tomato is-hidden-touch">{{
-          $t('filter-list.hide')
-        }}</span>
-        <span class="margin-right-normal is-size-5 is-hidden-desktop">
-          <i class="icon cross" />
-        </span>
-      </button>
       <form
         :class="{
           'filters-form': true,
