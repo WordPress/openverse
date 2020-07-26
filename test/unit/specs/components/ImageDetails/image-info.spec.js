@@ -27,18 +27,15 @@ describe('Image Info', () => {
       imageWidth: 500,
     }
 
-    mocks = {
-      $store: {
-        state: {
-          provider: 'flickr',
-          source: 'flickr',
-        },
-      },
-    }
-
     options = {
       propsData: props,
       mocks: {
+        $store: {
+          state: {
+            provider: 'flickr',
+            source: 'flickr',
+          },
+        },
         $t,
       },
     }
