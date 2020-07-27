@@ -125,7 +125,7 @@ export default {
         filterType,
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: false,
+        shouldNavigate: true,
       })
     },
     onUpdateBoolFilter({ filterType }) {
@@ -133,7 +133,7 @@ export default {
         filterType,
         isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: false,
+        shouldNavigate: true,
       })
     },
   },

@@ -3,20 +3,20 @@
     class="column is-narrow margin-normal has-background-white provider-card"
   >
     <div>
-      <router-link
-        :to="'/collections/' + provider.source_name"
-        class="provider-name has-text-weight-normal has-text-black"
+      <span
+        class="link provider-name has-text-weight-normal has-text-black"
+        @click="setQuery(provider.source_name)"
       >
         {{ provider.display_name }}
-      </router-link>
+      </span>
     </div>
     <div class="provider-logo">
-      <router-link :to="'/collections/' + provider.source_name">
+      <span class="link" @click="setQuery(provider.source_name)">
         <img
           :alt="provider.display_name"
           :src="getProviderLogo(provider.source_name)"
         />
-      </router-link>
+      </span>
     </div>
     <div>
       <i18n
@@ -33,12 +33,19 @@
 </template>
 
 <script>
+import { SET_QUERY } from '@/store/mutation-types'
 import ImageProviderService from '@/api/ImageProviderService'
 
 export default {
   name: 'collection-item',
   props: ['provider'],
   methods: {
+    setQuery(providerName) {
+      this.$store.commit(SET_QUERY, {
+        query: { q: '', source: providerName },
+        shouldNavigate: true,
+      })
+    },
     getProviderImageCount(imageCount) {
       return imageCount.toLocaleString('en')
     },
@@ -75,7 +82,7 @@ export default {
   white-space: nowrap;
   position: relative;
 
-  a {
+  .link {
     position: absolute;
     top: 50%;
     left: 50%;

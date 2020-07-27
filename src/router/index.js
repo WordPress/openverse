@@ -7,7 +7,6 @@ import BrowsePage from '@/pages/BrowsePage'
 import PhotoDetailPage from '@/pages/PhotoDetailPage'
 import FeedbackPage from '@/pages/FeedbackPage'
 import CollectionsPage from '@/pages/CollectionsPage'
-import CollectionBrowsePage from '@/pages/CollectionBrowsePage'
 import SearchHelpPage from '@/pages/SearchHelpPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import SearchGrid from '@/components/SearchGrid'
@@ -45,7 +44,7 @@ const router = new VueRouter({
       component: BrowsePage,
       // a meta field
       meta: {
-        requiresQuery: true,
+        requiresQuery: false,
       },
       props: (route) => ({ query: route.query.q }),
       children: resultSubviews,
@@ -75,12 +74,6 @@ const router = new VueRouter({
       path: '/collections',
       name: 'collections-page',
       component: CollectionsPage,
-    },
-    {
-      path: '/collections/:provider',
-      name: 'collections-browse-page',
-      component: CollectionBrowsePage,
-      props: true,
     },
     {
       path: '/',
