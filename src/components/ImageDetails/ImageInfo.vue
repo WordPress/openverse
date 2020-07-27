@@ -2,16 +2,17 @@
   <section class="sidebar_section">
     <div class="margin-bottom-big">
       <dl>
-        <dt class="margin-bottom-small">Type</dt>
+        <dt class="margin-bottom-small">Type:</dt>
         <dd>{{ prettyImageType }}</dd>
         <dt class="margin-bottom-small">
-          {{ $t('photo-details.information.dimensions') }}
+          {{ $t('photo-details.information.dimensions') }}:
         </dt>
         <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
-        <dt class="margin-bottom-small">Provider</dt>
+        <dt class="margin-bottom-small">Provider:</dt>
         <dd>{{ providerName }}</dd>
         <dt class="margin-bottom-small">
           {{ $t('photo-details.information.source') }}
+          :
         </dt>
         <dd>
           <a
@@ -112,15 +113,12 @@ dl {
 
 dt {
   font-weight: bold;
-  width: 90px;
+  width: 92px;
   margin-right: 24px;
-
-  &:after {
-    content: ':';
-  }
+  display: inline-block;
 }
 
 dd {
-  width: calc(100% - 90px - 24px);
+  width: calc(100% - 92px - 28px);
 }
 </style>
