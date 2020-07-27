@@ -39,7 +39,7 @@
             @change="onValueChange"
           />
           <license-icons v-if="filterType == 'licenses'" :license="item.code" />
-          {{ item.name }}
+          {{ $t(item.name) }}
         </label>
         <img
           aria-label="license explanation"

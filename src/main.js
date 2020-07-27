@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack-base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import i18n from './i18n'
 import store from './store'
 import GoogleAnalytics from './analytics/GoogleAnalytics'
 
@@ -40,6 +41,7 @@ function createApp(router, __INITIAL_STATE__) {
     el: '#app',
     store: appStore,
     router,
+    i18n,
     render: (h) => h(App),
   })
 

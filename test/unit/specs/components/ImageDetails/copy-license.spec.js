@@ -5,10 +5,12 @@ import {
   SEND_DETAIL_PAGE_EVENT,
 } from '@/store/usage-data-analytics-types'
 import render from '../../../test-utils/render'
+import i18n from '../../../test-utils/i18n'
 
 describe('CopyLicense', () => {
   let options = null
   let props = null
+  const $t = (key) => i18n.messages[key]
   const eventData = {
     content: 'Foo',
   }
@@ -39,6 +41,7 @@ describe('CopyLicense', () => {
         $store: {
           dispatch: dispatchMock,
         },
+        $t,
       },
     }
   })

@@ -8,8 +8,8 @@
           class="column"
         >
           <a
-            aria-label="home"
             href="https://creativecommons.org"
+            aria-label="home"
             class="main-logo margin-bottom-bigger has-text-white"
           >
             <svg
@@ -21,26 +21,16 @@
             </svg>
           </a>
           <address class="margin-bottom-normal">
-            <span class="is-block">Creative Commons</span>
-            <span>PO Box 1866, Mountain View CA 94042</span>
+            <span class="is-block">{{ $t('footer.address.title') }}</span>
+            <span>{{ $t('footer.address.address') }}</span>
           </address>
-          <a
-            href="mailto:info@creativecommons.org"
-            aria-label="cc info email"
-            class="mail is-block"
-          >
+          <a href="mailto:info@creativecommons.org" class="mail is-block">
             info@creativecommons.org
           </a>
-          <a
-            href="tel://+1-415-429-6753"
-            aria-label="cc info telephone"
-            class="phone"
-            >+1-415-429-6753</a
-          >
+          <a href="tel://+1-415-429-6753" class="phone">+1-415-429-6753</a>
 
           <div class="margin-vertical-large">
             <a
-              aria-label="instagram"
               href="https://www.instagram.com/creativecommons"
               class="social has-text-white"
               target="_blank"
@@ -49,7 +39,6 @@
               <i class="icon instagram margin-right-small is-size-4" />
             </a>
             <a
-              aria-label="twitter"
               href="https://www.twitter.com/creativecommons"
               class="social has-text-white"
               target="_blank"
@@ -58,7 +47,6 @@
               <i class="icon twitter margin-right-small is-size-4" />
             </a>
             <a
-              aria-label="facebook"
               href="https://www.facebook.com/creativecommons"
               class="social has-text-white"
               target="_blank"
@@ -66,72 +54,78 @@
             >
               <i class="icon facebook margin-right-small is-size-4" />
             </a>
-            <a
-              aria-label="linkedin"
-              href="https://www.linkedin.com/company/creative-commons/"
-              class="social has-text-white"
-              target="_blank"
-              rel="noopener"
-            >
-              <i class="icon linkedin margin-right-small is-size-4" />
+            <address class="margin-bottom-normal">
+              <span class="is-block">Creative Commons</span>
+              <span>PO Box 1866, Mountain View CA 94042</span>
+            </address>
+            <a href="mailto:info@creativecommons.org" class="mail is-block">
+              info@creativecommons.org
             </a>
           </div>
         </section>
         <div class="column is-half">
-          <nav aria-label="footerlinks" class="footer-navigation">
+          <nav class="footer-navigation">
             <ul class="menu">
               <li>
                 <a
                   class="menu-item"
                   href="https://creativecommons.org/about/contact/"
-                  >Contact</a
+                  >{{ $t('footer.navigation.contact') }}</a
                 >
               </li>
               <li>
-                <a class="menu-item" href="https://creativecommons.org/privacy/"
-                  >Privacy</a
+                <a
+                  class="menu-item"
+                  href="https://creativecommons.org/privacy/"
+                  >{{ $t('footer.navigation.privacy') }}</a
                 >
               </li>
               <li>
                 <a
                   class="menu-item"
                   href="https://creativecommons.org/policies/"
-                  >Policies</a
+                  >{{ $t('footer.navigation.policies') }}</a
                 >
               </li>
               <li>
-                <a class="menu-item" href="https://creativecommons.org/terms/"
-                  >Terms</a
+                <a
+                  class="menu-item"
+                  href="https://creativecommons.org/terms/"
+                  >{{ $t('footer.navigation.terms') }}</a
                 >
               </li>
             </ul>
           </nav>
           <div class="attribution margin-top-bigger">
-            <p class="caption">
-              Except where otherwise
-              <a
-                href="https://creativecommons.org/policies#license"
-                target="_blank"
-                rel="noopener"
-                >noted</a
-              >, content on this site is licensed under a
-              <a
-                href="https://creativecommons.org/licenses/by/4.0/"
-                target="_blank"
-                rel="noopener"
-              >
-                Creative Commons Attribution 4.0 International license </a
-              >.
-              <a
-                href="https://fontawesome.com/"
-                target="_blank"
-                rel="noopener"
-                class="has-text-white"
-              >
-                Icons by Font Awesome.
-              </a>
-            </p>
-
+            <i18n path="footer.caption.label" tag="p" class="caption">
+              <template v-slot:noted>
+                <a
+                  href="https://creativecommons.org/policies#license"
+                  target="_blank"
+                  rel="noopener"
+                  >{{ $t('footer.caption.noted') }}</a
+                >
+              </template>
+              <template v-slot:attribution>
+                <a
+                  href="https://creativecommons.org/licenses/by/4.0/"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {{ $t('footer.caption.attribution') }}
+                </a>
+              </template>
+              <template v-slot:icons>
+                <a
+                  href="https://fontawesome.com/"
+                  target="_blank"
+                  rel="noopener"
+                  class="has-text-white"
+                >
+                  {{ $t('footer.caption.icons') }}
+                </a>
+              </template>
+            </i18n>
             <div class="margin-top-smaller">
               <i
                 class="icon cc-logo margin-right-small is-size-4 is-color-white"
@@ -148,17 +142,16 @@
             aria-label="donate section"
             class="donate-section"
           >
-            <h5>Our work relies on you!</h5>
-            <p>Help us keep the internet free and open.</p>
+            <h5>{{ $t('footer.donate.work') }}</h5>
+            <p>{{ $t('footer.donate.help') }}</p>
             <a
-              aria-label="donate button"
               class="button small donate"
               href="http://creativecommons.org/donate"
             >
               <i
                 class="icon cc-letterheart margin-right-small is-size-5 padding-top-smaller"
               />
-              Donate now
+              {{ $t('footer.donate.link') }}
             </a>
           </section>
         </div>
