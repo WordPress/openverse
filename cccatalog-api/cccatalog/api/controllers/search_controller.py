@@ -237,6 +237,20 @@ def search(search_params, index, page_size, ip, request,
             fields=search_fields,
             default_operator='AND'
         )
+        # Boost exact matches
+        quotes_stripped = query.replace('"', '')
+        exact_match_boost = Q(
+            'simple_query_string',
+            fields=['title'],
+            query=f"\"{quotes_stripped}\"",
+            boost=10000
+        )
+        s = Search().query(Q(
+                'bool',
+                must=s.query,
+                should=exact_match_boost
+            )
+        )
     else:
         if 'creator' in search_params.data:
             creator = _quote_escape(search_params.data['creator'])
@@ -275,21 +289,6 @@ def search(search_params, index, page_size, ip, request,
                 should=rank_queries
             )
         )
-
-    # Boost exact matches
-    quotes_stripped = search_params.data['q'].replace('"', '')
-    exact_match_boost = Q(
-        'simple_query_string',
-        fields=['title'],
-        query=f"\"{quotes_stripped}\"",
-        boost=10000
-    )
-    s = Search().query(Q(
-            'bool',
-            must=s.query,
-            should=exact_match_boost
-        )
-    )
 
     # Use highlighting to determine which fields contribute to the selection of
     # top results.
