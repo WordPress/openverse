@@ -132,8 +132,7 @@ _cleanup_config = {
                         'tags': CleanupFunctions.cleanup_tags,
                         'url': CleanupFunctions.cleanup_url,
                         'creator_url': CleanupFunctions.cleanup_url,
-                        'foreign_landing_url': CleanupFunctions.cleanup_url,
-                        'thumbnail': CleanupFunctions.cleanup_url
+                        'foreign_landing_url': CleanupFunctions.cleanup_url
                     }
                 }
             }
