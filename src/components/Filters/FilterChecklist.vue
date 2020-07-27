@@ -88,7 +88,9 @@ export default {
       const experiment = this.$store.state.experiments.find(
         (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
       )
-      return experiment ? experiment.case === ExperimentData.FILTERS : false
+      return experiment
+        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
+        : false
     },
     areFiltersExpanded() {
       return this.filtersExpandedByDefault || this.filtersVisible
