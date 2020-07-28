@@ -1,14 +1,16 @@
-import NavSection from '@/components/NavSection';
-import { SET_QUERY } from '@/store/mutation-types';
-import render from '../../test-utils/render';
+import NavSection from '@/components/NavSection'
+import { SET_QUERY } from '@/store/mutation-types'
+import render from '../../test-utils/render'
+import i18n from '../../test-utils/i18n'
 
 describe('NavSection', () => {
   it('should render correct contents', () => {
-    const wrapper = render(NavSection);
-    expect(wrapper.find('nav').vm).toBeDefined();
-  });
+    const wrapper = render(NavSection)
+    expect(wrapper.find('nav').vm).toBeDefined()
+  })
 
   it('commits a mutation when the form is submitted', () => {
+    const $t = (key) => i18n.messages[key]
     const storeMock = {
       dispatch: jest.fn(),
       commit: jest.fn(),
@@ -17,7 +19,7 @@ describe('NavSection', () => {
           length: 2,
         },
       },
-    };
+    }
     const opts = {
       propsData: {
         fixedNav: null,
@@ -25,11 +27,15 @@ describe('NavSection', () => {
       },
       mocks: {
         $store: storeMock,
+        $t,
       },
-    };
-    const wrapper = render(NavSection, opts);
-    wrapper.setData({ form: { searchTerm: 'foo' } });
-    wrapper.find('.hero_search-form').trigger('submit');
-    expect(storeMock.commit).toHaveBeenCalledWith(SET_QUERY, { query: { q: 'foo' }, shouldNavigate: true });
-  });
-});
+    }
+    const wrapper = render(NavSection, opts)
+    wrapper.setData({ form: { searchTerm: 'foo' } })
+    wrapper.find('.hero_search-form').trigger('submit')
+    expect(storeMock.commit).toHaveBeenCalledWith(SET_QUERY, {
+      query: { q: 'foo' },
+      shouldNavigate: true,
+    })
+  })
+})

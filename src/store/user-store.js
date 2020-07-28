@@ -1,9 +1,9 @@
-import SessionId from '@/abTests/sessionId';
+import SessionId from '@/abTests/lib/sessionId'
 
 const state = {
   sessionId: SessionId(),
-};
+}
 
 export default {
   state,
-};
+}

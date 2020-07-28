@@ -1,11 +1,15 @@
 <template>
   <div class="photo_tags" v-if="tags && tags.length">
-    <h3 class="b-header" v-if="showHeader">Tags</h3>
+    <h3 class="b-header" v-if="showHeader">
+      {{ $t('photo-details.information.tags') }}
+    </h3>
     <div class="margin-top-normal">
       <template v-for="(tag, index) in getValidTags()">
-        <button class="button tag margin-smaller"
-              :key="index"
-              @click="searchByTagName(tag.name)">
+        <button
+          class="button tag margin-smaller"
+          :key="index"
+          @click="searchByTagName(tag.name)"
+        >
           {{ tag.name }}
         </button>
       </template>
@@ -14,30 +18,33 @@
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types';
+import { SET_QUERY } from '@/store/mutation-types'
 
 export default {
   name: 'photo-tags',
   props: ['tags', 'showHeader'],
   computed: {
     hasClarifaiTags() {
-      return this.$props.tags.some(tag => tag.provider === 'clarifai');
+      return this.$props.tags.some((tag) => tag.provider === 'clarifai')
     },
   },
   methods: {
     isClarifaiTag(provider) {
-      return provider === 'clarifai';
+      return provider === 'clarifai'
     },
     searchByTagName(query) {
-      this.$store.commit(SET_QUERY, { query: { q: query }, shouldNavigate: true });
+      this.$store.commit(SET_QUERY, {
+        query: { q: query },
+        shouldNavigate: true,
+      })
     },
     getValidTags() {
-      return this.$props.tags.filter(tag => !!tag.name);
+      return this.$props.tags.filter((tag) => !!tag.name)
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
-  @import '../styles/photodetails.scss';
+@import '../styles/photodetails.scss';
 </style>

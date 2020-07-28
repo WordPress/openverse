@@ -1,6 +1,6 @@
-const EXPERIMENT_NAME = 'filter_visibility_experiment';
-const FILTERS_EXPANDED_EXPERIMENT = 'filters_expanded_experiment';
-const FILTERS_COLLAPSED_EXPERIMENT = 'filters_collapsed_experiment';
+const EXPERIMENT_NAME = 'filter_expansion'
+const FILTERS_EXPANDED_CASE = 'filters_expanded'
+const FILTERS_COLLAPSED_CASE = 'filters_collapsed'
 
 /**
  * Joins the experiment.
@@ -11,34 +11,36 @@ const FILTERS_COLLAPSED_EXPERIMENT = 'filters_collapsed_experiment';
  */
 const joinExperiment = (session) => {
   const resultPromise = new Promise((resolve, reject) => {
-    session.participate(EXPERIMENT_NAME,
-      [FILTERS_EXPANDED_EXPERIMENT, FILTERS_COLLAPSED_EXPERIMENT],
+    session.participate(
+      EXPERIMENT_NAME,
+      [FILTERS_COLLAPSED_CASE, FILTERS_EXPANDED_CASE],
       (err, res) => {
         if (err || res.error) {
           reject({
             error: err,
             name: EXPERIMENT_NAME,
-            case: FILTERS_COLLAPSED_EXPERIMENT,
+            case: FILTERS_COLLAPSED_CASE,
             session,
-          });
+          })
         }
 
-        const experimentCase = res.alternative.name;
+        const experimentCase = res.alternative.name
 
         resolve({
           name: EXPERIMENT_NAME,
           case: experimentCase,
           session,
-        });
-      });
-  });
+        })
+      }
+    )
+  })
 
-  return resultPromise;
-};
+  return resultPromise
+}
 
-export default joinExperiment;
+export default joinExperiment
 export const ExperimentData = {
   EXPERIMENT_NAME,
-  FILTERS_EXPANDED_EXPERIMENT,
-  FILTERS_COLLAPSED_EXPERIMENT,
-};
+  FILTERS_EXPANDED_CASE,
+  FILTERS_COLLAPSED_CASE,
+}

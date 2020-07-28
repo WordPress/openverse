@@ -1,16 +1,16 @@
 <template>
-<div class="home-page grid-container full">
-  <header-section></header-section>
-  <hero-section></hero-section>
-  <footer-section></footer-section>
-</div>
+  <div class="home-page grid-container full">
+    <header-section></header-section>
+    <hero-section></hero-section>
+    <footer-section></footer-section>
+  </div>
 </template>
 
 <script>
-import HeaderSection from '@/components/HeaderSection';
-import HeroSection from '@/components/HeroSection';
-import FooterSection from '@/components/FooterSection';
-import { CLEAR_FILTERS } from '@/store/mutation-types';
+import HeaderSection from '@/components/HeaderSection'
+import HeroSection from '@/components/HeroSection'
+import FooterSection from '@/components/FooterSection'
+import { CLEAR_FILTERS } from '@/store/mutation-types'
 
 const HomePage = {
   name: 'home-page',
@@ -24,19 +24,18 @@ const HomePage = {
       isCollectionsPage: false,
       provider: null,
       shouldNavigate: false,
-    });
+    })
   },
-};
+}
 
-export default HomePage;
+export default HomePage
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import "node_modules/bulma/sass/utilities/_all";
+@import 'node_modules/bulma/sass/utilities/_all';
 
 .home-page_body {
-
   /* Small only */
   @include mobile {
     margin: 60px 0 30px;
@@ -58,17 +57,15 @@ export default HomePage;
   &:hover {
     transition: opacity 0.2s ease-in;
     opacity: 1;
-
   }
 }
 
 .b1 {
   grid-area: big-top;
-
 }
 
 .b2 {
-  grid-area :small-top;
+  grid-area: small-top;
 }
 
 .b3 {
@@ -80,7 +77,7 @@ export default HomePage;
 }
 
 .footer {
-  position:fixed;
+  position: fixed;
 
   /* Small only */
   @include mobile {

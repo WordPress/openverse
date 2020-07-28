@@ -5,7 +5,8 @@
       @click="toggleShowForm"
     >
       <span class="has-color-dark-turquoise"
-        >Safe Browsing<i class="icon flag margin-left-small"></i>
+        >{{ $t('browse-page.safe-browsing.title')
+        }}<i class="icon flag margin-left-small"></i>
       </span>
     </button>
 
@@ -20,8 +21,7 @@
         <i class="icon cross"></i>
       </button>
       <p class="caption has-text-weight-semibold padding-right-big">
-        By default, search results will not include results that have been
-        reported as mature by users and sources.
+        {{ $t('browse-page.safe-browsing.caption') }}
       </p>
 
       <label class="checkbox margin-top-small" for="mature">
@@ -32,14 +32,14 @@
           :checked="mature"
           @change="toggleMature"
         />
-        Show Mature Content
+        {{ $t('browse-page.safe-browsing.label') }}
       </label>
     </div>
   </div>
 </template>
 
 <script>
-import { TOGGLE_FILTER } from '@/store/action-types';
+import { TOGGLE_FILTER } from '@/store/action-types'
 
 /**
  * This component displays the mature content filter in a pop-up dialog.
@@ -49,25 +49,25 @@ export default {
   data() {
     return {
       showForm: false,
-    };
+    }
   },
   computed: {
     mature() {
-      return this.$store.state.filters.mature;
+      return this.$store.state.filters.mature
     },
   },
   methods: {
     toggleShowForm() {
-      this.showForm = !this.showForm;
+      this.showForm = !this.showForm
     },
     toggleMature() {
       this.$store.dispatch(TOGGLE_FILTER, {
         filterType: 'mature',
         shouldNavigate: true,
-      });
+      })
     },
   },
-};
+}
 </script>
 
 <style>

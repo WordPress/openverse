@@ -1,6 +1,7 @@
 <template>
   <div class="padding-normal is-clearfix arrow-popup">
     <button
+      aria-label="close form"
       class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
       @click="closeForm()"
     >
@@ -26,9 +27,13 @@
       @sendContentReport="sendContentReport"
     />
     <form v-else>
-      <h5 class="b-header margin-bottom-normal">Report this content</h5>
+      <h5 class="b-header margin-bottom-normal">
+        {{ $t('photo-details.content-report.title') }}
+      </h5>
       <fieldset class="margin-bottom-normal">
-        <legend class="margin-bottom-normal">What's the issue?</legend>
+        <legend class="margin-bottom-normal">
+          {{ $t('photo-details.content-report.issue') }}
+        </legend>
 
         <div>
           <input
@@ -38,9 +43,9 @@
             value="dmca"
             v-model="selectedReason"
           />
-          <label for="dmca" class="margin-left-small"
-            >Infringes Copyright</label
-          >
+          <label for="dmca" class="margin-left-small">
+            {{ $t('photo-details.content-report.copyright') }}
+          </label>
         </div>
 
         <div>
@@ -51,9 +56,9 @@
             value="mature"
             v-model="selectedReason"
           />
-          <label for="mature" class="margin-left-small"
-            >Contains mature content</label
-          >
+          <label for="mature" class="margin-left-small">
+            {{ $t('photo-details.content-report.mature') }}
+          </label>
         </div>
 
         <div>
@@ -64,15 +69,16 @@
             value="other"
             v-model="selectedReason"
           />
-          <label for="other" class="margin-left-small">Other</label>
+          <label for="other" class="margin-left-small">
+            {{ $t('photo-details.content-report.other') }}
+          </label>
         </div>
       </fieldset>
 
       <span
         class="caption has-text-weight-semibold has-text-grey margin-bottom-normal"
       >
-        For security purposes, CC collects and retains anonymized IP addresses
-        of those who complete and submit this form.
+        {{ $t('photo-details.content-report.caption') }}
       </span>
 
       <button
@@ -81,22 +87,22 @@
         class="button next-button tiny is-info is-pulled-right"
         @click="onIssueSelected()"
       >
-        Next
+        {{ $t('photo-details.content-report.next') }}
       </button>
     </form>
   </div>
 </template>
 
 <script>
-import { SEND_CONTENT_REPORT } from '@/store/action-types';
-import { REPORT_FORM_CLOSED } from '@/store/mutation-types';
-import dmcaNotice from './DmcaNotice';
-import OtherIssueForm from './OtherIssueForm';
-import DoneMessage from './DoneMessage';
-import ReportError from './ReportError';
+import { SEND_CONTENT_REPORT } from '@/store/action-types'
+import { REPORT_FORM_CLOSED } from '@/store/mutation-types'
+import dmcaNotice from './DmcaNotice'
+import OtherIssueForm from './OtherIssueForm'
+import DoneMessage from './DoneMessage'
+import ReportError from './ReportError'
 
 const dmcaFormUrl =
-  'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform';
+  'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform'
 
 export default {
   name: 'content-report-form',
@@ -113,42 +119,40 @@ export default {
       selectedOther: false,
       selectedCopyright: false,
       dmcaFormUrl,
-    };
+    }
   },
   computed: {
     isReportSent() {
-      return this.$store.state.isReportSent;
+      return this.$store.state.isReportSent
     },
     reportFailed() {
-      return this.$store.state.reportFailed;
+      return this.$store.state.reportFailed
     },
   },
   methods: {
     onIssueSelected() {
       if (this.selectedReason === 'other') {
-        this.selectedOther = true;
-      }
-      else if (this.selectedReason === 'dmca') {
-        this.selectedCopyright = true;
-      }
-      else {
-        this.sendContentReport();
+        this.selectedOther = true
+      } else if (this.selectedReason === 'dmca') {
+        this.selectedCopyright = true
+      } else {
+        this.sendContentReport()
       }
     },
     onBackClick() {
-      this.selectedOther = false;
-      this.selectedCopyright = false;
+      this.selectedOther = false
+      this.selectedCopyright = false
     },
     sendContentReport(description = '') {
       this.$store.dispatch(SEND_CONTENT_REPORT, {
         identifier: this.$props.imageId,
         reason: this.selectedReason,
         description,
-      });
+      })
     },
     closeForm() {
-      this.$store.commit(REPORT_FORM_CLOSED);
+      this.$store.commit(REPORT_FORM_CLOSED)
     },
   },
-};
+}
 </script>

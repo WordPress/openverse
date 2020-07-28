@@ -1,6 +1,6 @@
 {
   "name": "cccatalog-frontend",
-  "version": "4.4.0",
+  "version": "2020.07.1",
   "description": "Common Creative search",
   "repository": {
     "type": "git",
@@ -21,16 +21,18 @@
     "qa": "cd test/selenium-webdriver && pipenv run python search_screencaps.py",
     "test": "jest --config test/unit/jest-conf.js",
     "lint": "eslint --ext .js,.vue . test/unit",
-    "lint:fix": "eslint --ext .js,.vue . test/unit --fix",
+    "format": "prettier --write .",
+    "format:test": "prettier --check .",
     "build": "npm run build:app && npm run build:server",
     "build:app": "cross-env NODE_ENV=production webpack",
     "build:server": "webpack --config build/webpack.config.server.js"
   },
   "dependencies": {
-    "@creativecommons/vocabulary": "1.0.0-beta.14",
+    "@creativecommons/vocabulary": "^2020.7.1",
     "@sentry/browser": "^5.6.0",
     "@sentry/node": "^5.6.0",
     "axios": "^0.18.0",
+    "build-url": "^2.0.0",
     "bulma": "^0.8.0",
     "clipboard": "^2.0.4",
     "delayed-scroll-restoration-polyfill": "^0.1.1",
@@ -46,9 +48,10 @@
     "uuid": "^3.3.2",
     "vue": "^2.6.11",
     "vue-form": "^4.10.3",
+    "vue-i18n": "^8.17.7",
     "vue-masonry": "^0.11.7",
     "vue-meta": "^2.4.0",
-    "vue-router": "^3.1.6",
+    "vue-router": "^3.3.4",
     "vue-server-renderer": "^2.6.11",
     "vuex": "^3.1.3"
   },
@@ -59,6 +62,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-syntax-import-meta": "^7.8.3",
     "@babel/preset-env": "^7.9.5",
+    "@types/jest": "^26.0.4",
     "@vue/test-utils": "^1.0.0-beta.29",
     "autoprefixer": "^7.1.2",
     "babel-core": "^7.0.0-bridge.0",
@@ -86,9 +90,11 @@
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "html-webpack-plugin": "^4.2.0",
+    "husky": "^4.2.5",
     "jest": "^25.4.0",
     "jest-serializer-vue": "^2.0.2",
     "jest-transform-stub": "^2.0.0",
+    "lint-staged": "^10.2.11",
     "mini-css-extract-plugin": "^0.9.0",
     "nightwatch": "^0.9.12",
     "node-notifier": "^5.1.2",
@@ -99,6 +105,7 @@
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.8",
     "postcss-url": "^7.2.1",
+    "prettier": "^2.0.5",
     "rimraf": "^2.6.0",
     "sass-loader": "^8.0.2",
     "selenium-server": "^3.14.0",
@@ -126,5 +133,14 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,vue}": "eslint --cache --fix",
+    ".": "prettier --write"
+  }
 }

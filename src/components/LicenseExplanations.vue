@@ -1,24 +1,33 @@
 <template>
   <div v-if="license">
-    <template v-for="(li, index) in splitLicenses">
-      <span class="is-block margin-vertical-small" :key="index">
-        <i :class="{
-            icon: true,
-            ['has-text-black']: true,
-            ['has-background-white']: true,
-            ['is-size-4']: true,
-            ['margin-right-small']: true,
-            [`cc-${getLicenseIcon(li)}`]: true,
+    <ul class="margin-vertical-small">
+      <template v-for="(li, index) in splitLicenses">
+        <li
+          :class="{
+            ['margin-vertical-small']: true,
+            ['is-flex']: true,
           }"
-          :alt="`${li.toUpperCase()}`"/>
-          {{ getLicenseDescription(li) }}
-      </span>
-    </template>
+          :key="index"
+        >
+          <i
+            :class="{
+              icon: true,
+              ['has-text-black']: true,
+              ['has-background-white']: true,
+              ['is-size-4']: true,
+              ['margin-right-small']: true,
+              [`cc-${getLicenseIcon(li)}`]: true,
+            }"
+            :alt="`${li.toUpperCase()}`"
+          />
+          <p>{{ getLicenseDescription(li) }}</p>
+        </li>
+      </template>
+    </ul>
   </div>
 </template>
 
 <script>
-
 const APItoIconNameMap = {
   by: 'by',
   nc: 'nc',
@@ -26,16 +35,7 @@ const APItoIconNameMap = {
   sa: 'sa',
   cc0: 'zero',
   pdm: 'pd',
-};
-
-const LicenseTermDescriptions = {
-  by: 'Credit the creator.',
-  nc: 'Noncommercial uses only.',
-  nd: 'No derivatives or adaptations permitted.',
-  sa: 'Share adaptations under the same terms.',
-  cc0: 'This work has been marked as dedicated to the public domain.',
-  pdm: 'This work is marked as being in the public domain.',
-};
+}
 
 const LicenseExplanations = {
   name: 'license-explanations',
@@ -45,23 +45,31 @@ const LicenseExplanations = {
   },
   computed: {
     splitLicenses() {
-      return this.$props.license.split('-');
+      return this.$props.license.split('-')
+    },
+    LicenseTermDescriptions() {
+      return {
+        by: this.$t('browse-page.license-description.by'),
+        nc: this.$t('browse-page.license-description.nc'),
+        nd: this.$t('browse-page.license-description.nd'),
+        sa: this.$t('browse-page.license-description.sa'),
+        cc0: this.$t('browse-page.license-description.cc0'),
+        pdm: this.$t('browse-page.license-description.pdm'),
+      }
     },
   },
   methods: {
     getLicenseIcon(licenseTerm) {
-      return APItoIconNameMap[licenseTerm];
+      return APItoIconNameMap[licenseTerm]
     },
     getLicenseDescription(licenseTerm) {
-      return LicenseTermDescriptions[licenseTerm];
+      return this.LicenseTermDescriptions[licenseTerm]
     },
   },
-};
+}
 
-export default LicenseExplanations;
+export default LicenseExplanations
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

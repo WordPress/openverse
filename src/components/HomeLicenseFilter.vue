@@ -1,29 +1,34 @@
 <template>
   <div class="home-license-filter margin-top-xl">
-    <span>I want something I can</span>
-
-    <template v-for="(licenseType, index) in licenseTypes" >
-      <label class="checkbox margin-right-big" :for="licenseType.code" :key="index">
-        <input :id="licenseType.code"
-              type="checkbox"
-              :checked="licenseType.checked"
-              name="lt"
-              :value="licenseType.code"
-              @input="onFilterChanged(licenseType.code)" />
-        {{ licenseType.name }}
+    <span>{{ $t('hero.license-filter.label') }}</span>
+    <template v-for="(licenseType, index) in licenseTypes">
+      <label
+        class="checkbox margin-right-big"
+        :for="licenseType.code"
+        :key="index"
+      >
+        <input
+          :id="licenseType.code"
+          type="checkbox"
+          :checked="licenseType.checked"
+          name="lt"
+          :value="licenseType.code"
+          @input="onFilterChanged(licenseType.code)"
+        />
+        {{ $t(licenseType.name) }}
       </label>
     </template>
   </div>
 </template>
 
 <script>
-import { TOGGLE_FILTER } from '@/store/action-types';
+import { TOGGLE_FILTER } from '@/store/action-types'
 
 export default {
   name: 'license-filter',
   computed: {
     licenseTypes() {
-      return this.$store.state.filters.licenseTypes;
+      return this.$store.state.filters.licenseTypes
     },
   },
   methods: {
@@ -32,10 +37,10 @@ export default {
         code,
         filterType: 'licenseTypes',
         shouldNavigate: false,
-      });
+      })
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

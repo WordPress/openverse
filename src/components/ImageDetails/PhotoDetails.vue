@@ -2,14 +2,13 @@
   <div class="photo columns is-desktop is-marginless padding-bottom-xl">
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
       <a
-        class="is-block photo_breadcrumb has-text-left margin-left-normal
-                margin-bottom-normal has-text-grey-dark has-text-weight-semibold caption"
+        class="is-block photo_breadcrumb has-text-left margin-left-normal margin-bottom-normal has-text-grey-dark has-text-weight-semibold caption"
         :href="breadCrumbURL"
         @click.prevent="onGoBackToSearchResults"
         v-if="shouldShowBreadcrumb"
       >
         <i class="icon chevron-left margin-right-small" />
-        Back to search results
+        {{ $t('photo-details.back') }}
       </a>
       <img
         @load="onImageLoad"
@@ -26,7 +25,8 @@
           @click="toggleReportFormVisibility()"
         >
           <span class="has-color-tomato margin-left-small">
-            <i class="icon flag margin-right-small"></i>Report this content
+            <i class="icon flag margin-right-small"></i>
+            {{ $t('photo-details.content-report.title') }}
           </span>
         </button>
       </div>
@@ -39,44 +39,53 @@
         />
       </div>
     </div>
-    <div class="column image-info">
+    <div
+      role="region"
+      aria-label="image details"
+      class="column image-info margin-left-xl"
+    >
       <div class="margin-top-normal margin-bottom-small">
         <h5 class="b-header">{{ image.title }}</h5>
         <span v-if="image.creator" class="caption has-text-weight-semibold">
           by
-          <a v-if="image.creator_url" :href="image.creator_url">
+          <a
+            :aria-label="'author' + image.creator"
+            v-if="image.creator_url"
+            :href="image.creator_url"
+          >
             {{ image.creator }}
           </a>
           <span v-else>{{ image.creator }}</span>
         </span>
       </div>
       <section class="tabs">
-        <ul>
-          <li :class="tabClass(0, 'tab')">
-            <a
-              href="#panel0"
-              :aria-selected="activeTab == 0"
-              @click.prevent="setActiveTab(0)"
-            >
-              Reuse
+        <ul role="tablist">
+          <li
+            role="tab"
+            :aria-selected="activeTab == 0"
+            :class="tabClass(0, 'tab')"
+          >
+            <a href="#panel0" @click.prevent="setActiveTab(0)">
+              {{ $t('photo-details.reuse.title') }}
             </a>
           </li>
-          <li :class="tabClass(1, 'tab')">
-            <a
-              href="#panel1"
-              :aria-selected="activeTab == 1"
-              @click.prevent="setActiveTab(1)"
-            >
-              Information
+          <li
+            role="tab"
+            :aria-selected="activeTab == 1"
+            :class="tabClass(1, 'tab')"
+          >
+            <a href="#panel1" @click.prevent="setActiveTab(1)">
+              {{ $t('photo-details.information.title') }}
             </a>
           </li>
-          <li :class="tabClass(2, 'a')" v-if="socialSharingEnabled">
-            <a
-              href="#panel2"
-              :aria-selected="activeTab == 2"
-              @click.prevent="setActiveTab(2)"
-            >
-              Share
+          <li
+            role="tab"
+            :aria-selected="activeTab == 2"
+            :class="tabClass(2, 'a')"
+            v-if="socialSharingEnabled"
+          >
+            <a href="#panel2" @click.prevent="setActiveTab(2)">
+              {{ $t('photo-details.share') }}
             </a>
           </li>
         </ul>
@@ -97,6 +106,7 @@
             :fullLicenseName="fullLicenseName"
             :imageWidth="imageWidth"
             :imageHeight="imageHeight"
+            :imageType="imageType"
           />
         </div>
         <div :class="tabClass(2, 'tabs-panel')">
@@ -112,10 +122,9 @@
         class="button is-success margin-bottom-small"
         @click="onPhotoSourceLinkClicked"
       >
-        Go to image's website
+        {{ $t('photo-details.weblink') }}
         <i
-          class="icon external-link margin-left-normal is-size-6
-                  padding-top-smaller has-text-grey-lighter"
+          class="icon external-link margin-left-normal is-size-6 padding-top-smaller has-text-grey-lighter"
         />
       </a>
 
@@ -125,18 +134,18 @@
 </template>
 
 <script>
-import ContentReportForm from '@/components/ContentReport/ContentReportForm';
-import { TOGGLE_REPORT_FORM_VISIBILITY } from '@/store/mutation-types';
+import ContentReportForm from '@/components/ContentReport/ContentReportForm'
+import { TOGGLE_REPORT_FORM_VISIBILITY } from '@/store/mutation-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '@/store/usage-data-analytics-types';
-import attributionHtml from '@/utils/attributionHtml';
-import ImageInfo from './ImageInfo';
-import ImageAttribution from './ImageAttribution';
-import ImageSocialShare from './ImageSocialShare';
-import LegalDisclaimer from './LegalDisclaimer';
-import ReuseSurvey from './ReuseSurvey';
+} from '@/store/usage-data-analytics-types'
+import attributionHtml from '@/utils/attributionHtml'
+import ImageInfo from './ImageInfo'
+import ImageAttribution from './ImageAttribution'
+import ImageSocialShare from './ImageSocialShare'
+import LegalDisclaimer from './LegalDisclaimer'
+import ReuseSurvey from './ReuseSurvey'
 
 export default {
   name: 'photo-details',
@@ -147,6 +156,7 @@ export default {
     'query',
     'imageWidth',
     'imageHeight',
+    'imageType',
     'socialSharingEnabled',
   ],
   components: {
@@ -160,64 +170,71 @@ export default {
   data() {
     return {
       activeTab: 0,
-    };
+    }
   },
   computed: {
     isReportFormVisible() {
-      return this.$store.state.isReportFormVisible;
+      return this.$store.state.isReportFormVisible
     },
     fullLicenseName() {
-      const license = this.image.license;
-      const version = this.image.license_version;
+      const license = this.image.license
+      const version = this.image.license_version
 
       if (license) {
         return license.toLowerCase() === 'cc0'
           ? `${license} ${version}`
-          : `CC ${license} ${version}`;
+          : `CC ${license} ${version}`
       }
-      return '';
+      return ''
     },
     ccLicenseURL() {
-      return `${this.image.license_url}?ref=ccsearch`;
+      return `${this.image.license_url}?ref=ccsearch`
     },
   },
   methods: {
     onGoBackToSearchResults() {
       this.$router.push({
-        name: 'browse-page',
+        path: '/search',
         query: this.query,
         params: { location: this.$route.params.location },
-      });
+      })
     },
     onImageLoad(event) {
-      this.$emit('onImageLoaded', event);
+      this.$emit('onImageLoaded', event)
     },
     tabClass(tabIdx, tabClass) {
       return {
         [tabClass]: true,
         'is-active': tabIdx === this.activeTab,
-      };
+      }
     },
     setActiveTab(tabIdx) {
-      this.activeTab = tabIdx;
+      this.activeTab = tabIdx
     },
     attributionHtml() {
-      const licenseURL = `${this.ccLicenseURL}&atype=html`;
-      return attributionHtml(this.image, licenseURL, this.fullLicenseName);
+      const licenseURL = `${this.ccLicenseURL}&atype=html`
+      return attributionHtml(this.image, licenseURL, this.fullLicenseName)
     },
     toggleReportFormVisibility() {
-      this.$store.commit(TOGGLE_REPORT_FORM_VISIBILITY);
+      this.$store.commit(TOGGLE_REPORT_FORM_VISIBILITY)
     },
     onPhotoSourceLinkClicked() {
       this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
         eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
         resultUuid: this.$props.image.id,
-      });
+      })
     },
   },
-};
+}
 </script>
 
 <style lang="scss">
-@import "../../styles/photodetails.scss";
+@import '../../styles/photodetails.scss';
+@import 'node_modules/bulma/sass/utilities/_all';
+
+@include touch {
+  .image-info {
+    margin-left: 0 !important;
+  }
+}
 </style>

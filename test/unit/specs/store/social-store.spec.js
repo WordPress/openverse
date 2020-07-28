@@ -1,25 +1,25 @@
-import store from '@/store/social-store';
-import { SocialMediaShare } from '@/analytics/events';
+import store from '@/store/social-store'
+import { SocialMediaShare } from '@/analytics/events'
 
 describe('Social Media Store', () => {
   describe('actions', () => {
-    let googleAnalyticsMock = null;
+    let googleAnalyticsMock = null
 
     beforeEach(() => {
       googleAnalyticsMock = {
         sendEvent: jest.fn(),
-      };
-    });
+      }
+    })
 
     it('SOCIAL_MEDIA_SHARE sends social media share event', () => {
       const data = {
         site: 'Facebook',
-      };
-      store.actions(googleAnalyticsMock).SOCIAL_MEDIA_SHARE({}, data);
+      }
+      store.actions(googleAnalyticsMock).SOCIAL_MEDIA_SHARE({}, data)
 
       expect(googleAnalyticsMock.sendEvent).toHaveBeenCalledWith(
-        new SocialMediaShare(data.site),
-      );
-    });
-  });
-});
+        new SocialMediaShare(data.site)
+      )
+    })
+  })
+})
