@@ -116,7 +116,7 @@ def _handle_results(results):
             mods.get("titleInfo")
         )
         creator = _get_creators(
-            mods.get("")
+            mods.get("name")
         )
         metadata = _get_metadata(mods)
 
