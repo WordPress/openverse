@@ -58,13 +58,16 @@
       </div>
     </div>
 
-    <meta-search-modal
-      id="meta-search-modal"
-      v-show="showMetaImageSearch"
+    <app-modal
+      :visible="showMetaImageSearch"
       @close="showMetaImageSearch = false"
-      type="image"
-      :query="query"
-    />
+    >
+      <meta-search-card
+        type="image"
+        :query="query"
+        @close="showMetaImageSearch = false"
+      />
+    </app-modal>
   </section>
 </template>
 
@@ -74,7 +77,8 @@ import SearchGridCell from '@/components/SearchGridCell'
 import LoadingIcon from '@/components/LoadingIcon'
 import SearchRating from '@/components/SearchRating'
 import SafeBrowsing from '@/components/SafeBrowsing'
-import MetaSearchModal from '@/components/MetaSearch/MetaSearchModal'
+import MetaSearchCard from '@/components/MetaSearch/MetaSearchCard'
+import AppModal from '@/components/AppModal'
 
 const DEFAULT_PAGE_SIZE = 20
 
@@ -85,7 +89,8 @@ export default {
     LoadingIcon,
     SearchRating,
     SafeBrowsing,
-    MetaSearchModal,
+    MetaSearchCard,
+    AppModal,
   },
   data: () => ({
     isDataInitialized: false,

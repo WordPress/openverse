@@ -42,13 +42,8 @@ export default {
 
 <style lang="scss" scoped>
 .modal {
-  width: 21.875rem;
-  max-height: 37rem;
   margin: 0px auto;
-  background-color: #fff;
   border-radius: 2px;
-  overflow-x: hidden;
-  overflow-y: scroll;
   box-shadow: 0 2px 8px 3px;
   position: relative;
 }
@@ -70,24 +65,4 @@ export default {
   color: rgb(176, 176, 176);
 }
 
-.close-button {
-  appearance: none;
-  border: none;
-  background-color: transparent;
-  padding: 20px;
-  line-height: 1;
-  height: auto;
-  position: absolute;
-  top: 0;
-  right: 0;
-  cursor: pointer;
-
-  .icon {
-    height: auto;
-  }
-
-  &:hover {
-    color: rgb(120, 120, 120);
-  }
-}
 </style>

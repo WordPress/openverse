@@ -94,12 +94,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import 'bulma/sass/utilities/_all.sass';
+
 .search-filters {
   display: none;
   height: auto;
+
   label {
     color: #333333;
   }
+
+  @include touch {
+    width: 21.875rem;
+    max-height: 37rem;
+    background-color: #fff;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
   &__visible {
     border-top: 1px solid #e8e8e8;
     display: block;

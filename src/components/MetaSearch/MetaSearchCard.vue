@@ -1,5 +1,13 @@
 <template>
-  <app-modal id="meta-search-modal" @close="$emit('close')">
+  <div class="meta-card">
+    <button
+      type="button"
+      class="close-button has-color-gray is-size-6 is-size-4-touch"
+      @click="$emit('close')"
+      aria-label="close"
+    >
+      <i class="icon cross" />
+    </button>
     <header
       class="padding-top-bigger padding-left-bigger padding-righr-bigger padding-bottom-small"
     >
@@ -62,15 +70,14 @@
         site where you found the content.
       </p>
     </div>
-  </app-modal>
+  </div>
 </template>
 
 <script>
-import AppModal from '@/components/AppModal'
 import MetaSourceList from './MetaSourceList'
 
 export default {
-  name: 'meta-search-modal',
+  name: 'meta-search-card',
   props: ['type', 'query'],
   data() {
     return {
@@ -84,7 +91,6 @@ export default {
     }
   },
   components: {
-    AppModal,
     MetaSourceList,
   },
 }
@@ -103,4 +109,32 @@ export default {
     width: 100%;
   }
 }
+
+.meta-card {
+  max-width: 80vw;
+  max-height: 84vh;
+  background-color: #fff;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.close-button {
+  appearance: none;
+  border: none;
+  background-color: transparent;
+  padding: 20px;
+  line-height: 1;
+  height: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  .icon {
+    height: auto;
+  }
+  &:hover {
+    color: rgb(120, 120, 120);
+  }
+}
+
 </style>
