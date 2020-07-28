@@ -51,8 +51,10 @@ body {
 }
 
 .full-height-sticky {
-  height: 100vh;
-  position: sticky;
-  top: 0;
+  @include desktop {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+  }
 }
 </style>
