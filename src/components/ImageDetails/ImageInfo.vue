@@ -11,8 +11,7 @@
         <dt class="margin-bottom-small">Provider:</dt>
         <dd>{{ providerName }}</dd>
         <dt class="margin-bottom-small">
-          {{ $t('photo-details.information.source') }}
-          :
+          {{ $t('photo-details.information.source') }}:
         </dt>
         <dd>
           <a
