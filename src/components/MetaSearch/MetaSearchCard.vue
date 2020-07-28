@@ -136,5 +136,4 @@ export default {
     color: rgb(120, 120, 120);
   }
 }
-
 </style>

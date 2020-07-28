@@ -64,5 +64,4 @@ export default {
 .has-color-gray {
   color: rgb(176, 176, 176);
 }
-
 </style>
