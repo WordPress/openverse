@@ -1,9 +1,11 @@
 <template>
   <section class="sidebar_section">
     <div class="photo-attribution margin-bottom-big">
-      <h5 class="b-header margin-bottom-big">License</h5>
+      <h5 class="b-header margin-bottom-big">
+        {{ $t('photo-details.reuse.license-header') }}
+      </h5>
       <span class="photo_usage-attribution is-block" ref="photoAttribution">
-        This image was marked with a
+        {{ $t('photo-details.reuse.attribution.main') }}
         <a
           class="photo_license"
           :href="licenseURL"
@@ -12,21 +14,26 @@
         >
           {{ fullLicenseName.toUpperCase() }}
         </a>
-        license.
+        {{ $t('photo-details.reuse.attribution.license') }}
       </span>
       <license-explanations :license="image.license" />
 
-      <span class="caption has-text-weight-semibold">
-        Read more about the license
-        <a
-          aria-label="read more about the license"
-          :href="licenseURL"
-          target="_blank"
-          rel="noopener"
-        >
-          here
-        </a>
-      </span>
+      <i18n
+        path="photo-details.reuse.license.content"
+        tag="span"
+        class="caption has-text-weight-semibold"
+      >
+        <template v-slot:link>
+          <a
+            aria-label="read more about the license"
+            :href="licenseURL"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ $t('photo-details.reuse.license.link') }}
+          </a>
+        </template>
+      </i18n>
     </div>
     <div>
       <copy-license

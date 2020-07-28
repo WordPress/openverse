@@ -21,6 +21,7 @@
           }"
           :alt="image.title"
           :src="getImageUrl(image)"
+          @load="getImgDimension"
           @error="onImageLoadError($event, image)"
         />
       </router-link>
@@ -134,13 +135,10 @@ export default {
         element.src = errorImage
       }
     },
-    getImgDimension() {
-      this.imgHeight = this.$refs.img.naturalHeight
-      this.imgWidth = this.$refs.img.naturalWidth
+    getImgDimension(e) {
+      this.imgHeight = e.target.naturalHeight
+      this.imgWidth = e.target.naturalWidth
     },
-  },
-  mounted() {
-    if (!this.image.width) this.getImgDimension()
   },
 }
 </script>

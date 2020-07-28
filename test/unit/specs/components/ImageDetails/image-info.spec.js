@@ -1,11 +1,11 @@
 import ImageInfo from '@/components/ImageDetails/ImageInfo'
 import render from '../../../test-utils/render'
+import i18n from '../../../test-utils/i18n'
 
 describe('Image Info', () => {
   let props = null
   let options = {}
-  let mocks = {}
-
+  const $t = (key) => i18n.messages[key]
   beforeEach(() => {
     props = {
       image: {
@@ -27,18 +27,17 @@ describe('Image Info', () => {
       imageWidth: 500,
     }
 
-    mocks = {
-      $store: {
-        state: {
-          provider: 'flickr',
-          source: 'flickr',
-        },
-      },
-    }
-
     options = {
       propsData: props,
-      mocks,
+      mocks: {
+        $store: {
+          state: {
+            provider: 'flickr',
+            source: 'flickr',
+          },
+        },
+        $t,
+      },
     }
   })
 

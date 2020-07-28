@@ -1,32 +1,35 @@
 <template>
   <div>
-    <span
+    <i18n
+      path="photo-details.content-report.dmca.content"
+      tag="span"
       class="is-block padding-horizontal-big margin-top-large has-text-centered"
     >
-      You must fill out this
-      <a
-        aria-label="dmca form"
-        :href="dmcaFormUrl"
-        target="_blank"
-        rel="noopener"
-        >DMCA form</a
-      >
-      to report copyright infringement. No action will be taken until the form
-      is filled out and submitted.
-    </span>
-    <span
-      class="is-block padding-horizontal-big margin-top-small has-text-centered"
+      <template v-slot:link>
+        <a
+          aria-label="dmca form"
+          :href="dmcaFormUrl"
+          target="_blank"
+          rel="noopener"
+          >DMCA form</a
+        >
+      </template>
+    </i18n>
+    <i18n
+      path="photo-details.content-report.dmca.provider"
+      tag="span"
+      class="is-block padding-horizontal-big margin-top-large has-text-centered"
     >
-      We recommend doing the same at the source,
-      <a
-        :aria-label="providerName + 'form'"
-        :href="imageURL"
-        target="_blank"
-        rel="noopener"
-        >{{ providerName }}</a
-      >.
-    </span>
-
+      <template v-slot:link>
+        <a
+          :aria-label="provider + 'form'"
+          :href="imageURL"
+          target="_blank"
+          rel="noopener"
+          >{{ providerName }}</a
+        >.
+      </template>
+    </i18n>
     <button
       class="button is-text tiny margin-top-normal is-shadowless has-text-grey"
       @click="onBackClick()"

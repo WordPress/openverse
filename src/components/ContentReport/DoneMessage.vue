@@ -1,20 +1,23 @@
 <template>
   <div class="margin-vertical-large">
     <span class="is-block padding-horizontal-big has-text-centered">
-      Thank you for reporting an issue with the results of CC Search!
+      {{ $t('photo-details.content-report.dmca.thanks') }}
     </span>
-    <span
-      class="is-block padding-horizontal-big margin-top-small has-text-centered"
+    <i18n
+      path="photo-details.content-report.dmca.provider"
+      tag="span"
+      class="is-block padding-horizontal-big margin-top-large has-text-centered"
     >
-      We recommend doing the same at the source,
-      <a
-        :aria-label="providerName + 'form'"
-        :href="imageURL"
-        target="_blank"
-        rel="noopener"
-        >{{ providerName }}</a
-      >.
-    </span>
+      <template v-slot:link>
+        <a
+          :aria-label="providerName + 'form'"
+          :href="imageURL"
+          target="_blank"
+          rel="noopener"
+          >{{ providerName }}</a
+        >.
+      </template>
+    </i18n>
   </div>
 </template>
 

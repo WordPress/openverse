@@ -3,13 +3,16 @@
     <span
       class="is-block padding-horizontal-big margin-top-large has-text-centered"
     >
-      There was an error with the report submission. Please try again.
+      {{ $t('photo-details.content-report.dmca.error') }}
     </span>
     <button
       class="button is-text tiny margin-top-normal is-shadowless"
       @click="onBackClick()"
     >
-      <span><i class="icon chevron-left margin-right-small"></i> Back</span>
+      <span>
+        <i class="icon chevron-left margin-right-small"></i>
+        {{ $t('photo-details.content-report.back') }}
+      </span>
     </button>
   </div>
 </template>
