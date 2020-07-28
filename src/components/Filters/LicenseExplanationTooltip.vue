@@ -37,7 +37,7 @@ export default {
   position: absolute;
   background: #ffffff;
   border: 2px solid #d8d8d8;
-  z-index: 10;
+  z-index: 400;
   width: 20rem;
   box-shadow: 10px 10px 10px -10px rgba(0, 0, 0, 0.25);
   @include desktop {
