@@ -1,7 +1,6 @@
 <template>
   <div class="home-license-filter margin-top-xl">
-    <span>I want something I can</span>
-
+    <span>{{ $t('hero.license-filter.label') }}</span>
     <template v-for="(licenseType, index) in licenseTypes">
       <label
         class="checkbox margin-right-big"
@@ -16,7 +15,7 @@
           :value="licenseType.code"
           @input="onFilterChanged(licenseType.code)"
         />
-        {{ licenseType.name }}
+        {{ $t(licenseType.name) }}
       </label>
     </template>
   </div>

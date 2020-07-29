@@ -27,9 +27,13 @@
       @sendContentReport="sendContentReport"
     />
     <form v-else>
-      <h5 class="b-header margin-bottom-normal">Report this content</h5>
+      <h5 class="b-header margin-bottom-normal">
+        {{ $t('photo-details.content-report.title') }}
+      </h5>
       <fieldset class="margin-bottom-normal">
-        <legend class="margin-bottom-normal">What's the issue?</legend>
+        <legend class="margin-bottom-normal">
+          {{ $t('photo-details.content-report.issue') }}
+        </legend>
 
         <div>
           <input
@@ -39,9 +43,9 @@
             value="dmca"
             v-model="selectedReason"
           />
-          <label for="dmca" class="margin-left-small"
-            >Infringes Copyright</label
-          >
+          <label for="dmca" class="margin-left-small">
+            {{ $t('photo-details.content-report.copyright') }}
+          </label>
         </div>
 
         <div>
@@ -52,9 +56,9 @@
             value="mature"
             v-model="selectedReason"
           />
-          <label for="mature" class="margin-left-small"
-            >Contains mature content</label
-          >
+          <label for="mature" class="margin-left-small">
+            {{ $t('photo-details.content-report.mature') }}
+          </label>
         </div>
 
         <div>
@@ -65,15 +69,16 @@
             value="other"
             v-model="selectedReason"
           />
-          <label for="other" class="margin-left-small">Other</label>
+          <label for="other" class="margin-left-small">
+            {{ $t('photo-details.content-report.other') }}
+          </label>
         </div>
       </fieldset>
 
       <span
         class="caption has-text-weight-semibold has-text-grey margin-bottom-normal"
       >
-        For security purposes, CC collects and retains anonymized IP addresses
-        of those who complete and submit this form.
+        {{ $t('photo-details.content-report.caption') }}
       </span>
 
       <button
@@ -82,7 +87,7 @@
         class="button next-button tiny is-info is-pulled-right"
         @click="onIssueSelected()"
       >
-        Next
+        {{ $t('photo-details.content-report.next') }}
       </button>
     </form>
   </div>

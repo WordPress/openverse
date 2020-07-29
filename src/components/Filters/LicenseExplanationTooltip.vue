@@ -1,7 +1,9 @@
 <template>
   <div class="license-explanation-tooltip padding-small">
-    <h5 class="b-header">License CC {{ license.toUpperCase() }}:</h5>
-
+    <h5 class="b-header">
+      {{ $t('browse-page.license-description.title') }}
+      {{ license.toUpperCase() }}
+    </h5>
     <license-explanations :license="license" />
     <p class="caption is-pulled-right margin-small">
       Read more about the license
@@ -35,7 +37,7 @@ export default {
   position: absolute;
   background: #ffffff;
   border: 2px solid #d8d8d8;
-  z-index: 10;
+  z-index: 400;
   width: 20rem;
   box-shadow: 10px 10px 10px -10px rgba(0, 0, 0, 0.25);
   @include desktop {

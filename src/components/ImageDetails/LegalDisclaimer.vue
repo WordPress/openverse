@@ -3,11 +3,7 @@
     <p
       class="caption has-text-left has-text-grey-dark has-text-weight-semibold"
     >
-      CC Search aggregates data from publicly available repositories of open
-      content. CC does not host the content and does not verify that the content
-      is properly CC-licensed or that the attribution information is accurate or
-      complete. Please follow the link to the source of the content to
-      independently verify before reuse.
+      {{ $t('photo-details.legal-disclaimer') }}
     </p>
   </div>
 </template>

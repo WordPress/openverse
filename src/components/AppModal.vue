@@ -82,7 +82,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
-  z-index: 100;
+  z-index: 600;
   background: #00000094;
 }
 

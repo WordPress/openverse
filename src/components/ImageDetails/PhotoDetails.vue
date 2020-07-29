@@ -8,7 +8,7 @@
         v-if="shouldShowBreadcrumb"
       >
         <i class="icon chevron-left margin-right-small" />
-        Back to search results
+        {{ $t('photo-details.back') }}
       </a>
       <img
         @load="onImageLoad"
@@ -25,7 +25,8 @@
           @click="toggleReportFormVisibility()"
         >
           <span class="has-color-tomato margin-left-small">
-            <i class="icon flag margin-right-small"></i>Report this content
+            <i class="icon flag margin-right-small"></i>
+            {{ $t('photo-details.content-report.title') }}
           </span>
         </button>
       </div>
@@ -65,7 +66,7 @@
             :class="tabClass(0, 'tab')"
           >
             <a href="#panel0" @click.prevent="setActiveTab(0)">
-              Reuse
+              {{ $t('photo-details.reuse.title') }}
             </a>
           </li>
           <li
@@ -74,7 +75,7 @@
             :class="tabClass(1, 'tab')"
           >
             <a href="#panel1" @click.prevent="setActiveTab(1)">
-              Information
+              {{ $t('photo-details.information.title') }}
             </a>
           </li>
           <li
@@ -84,7 +85,7 @@
             v-if="socialSharingEnabled"
           >
             <a href="#panel2" @click.prevent="setActiveTab(2)">
-              Share
+              {{ $t('photo-details.share') }}
             </a>
           </li>
         </ul>
@@ -121,7 +122,7 @@
         class="button is-success margin-bottom-small"
         @click="onPhotoSourceLinkClicked"
       >
-        Go to image's website
+        {{ $t('photo-details.weblink') }}
         <i
           class="icon external-link margin-left-normal is-size-6 padding-top-smaller has-text-grey-lighter"
         />

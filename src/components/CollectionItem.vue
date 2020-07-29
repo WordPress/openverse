@@ -19,10 +19,15 @@
       </router-link>
     </div>
     <div>
-      <span class="has-text-grey-light has-text-weight-semibold">
-        Collection size:
-        {{ getProviderImageCount(provider.image_count) }} images
-      </span>
+      <i18n
+        path="collections.collection-size"
+        tag="span"
+        class="has-text-grey-light has-text-weight-semibold"
+      >
+        <template v-slot:count>
+          {{ getProviderImageCount(provider.image_count) }}
+        </template>
+      </i18n>
     </div>
   </div>
 </template>
@@ -41,7 +46,7 @@ export default {
       const provider = ImageProviderService.getProviderInfo(providerName)
       if (provider) {
         const logo = provider.logo
-        const logoUrl = require(`@/assets/${logo}`) // eslint-disable-line global-require, import/no-dynamic-require
+        const logoUrl = this.provider.logo_url || require(`@/assets/${logo}`) // eslint-disable-line global-require, import/no-dynamic-require
 
         return logoUrl
       }
