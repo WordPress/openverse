@@ -3,7 +3,7 @@
     <p class="padding-left-bigger padding-right-bigger">
       Click on a source below to directly search other collections of
       CC-licensed images.<br />Please note that Use filters are not supported
-      for Open Clip Art Library.
+      for Open Clip Art Library or Nappy.
     </p>
     <hr class="margin-bottom-bigger" />
     <div
