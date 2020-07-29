@@ -20,6 +20,12 @@ RESOURCES = os.path.join(
 )
 
 
+def _get_resource_json(json_name):
+    with open(os.path.join(RESOURCES, json_name)) as f:
+        resource_json = json.load(f)
+    return resource_json
+
+
 def test_get_hash_prefixes_with_len_one():
     expect_prefix_list = [
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
@@ -247,6 +253,7 @@ def test_process_response_json_uses_required_getters():
     creator_list = ['creator0', 'creator1']
     metadata_list = ['metadata0', 'metadata1']
     tags_list = ['tags0', 'tags1']
+    source_list = ['source0', 'source1']
 
     get_row_list = patch.object(si, '_get_row_list', return_value=row_list)
     process_image_list = patch.object(
@@ -264,6 +271,9 @@ def test_process_response_json_uses_required_getters():
         si, '_extract_meta_data', side_effect=metadata_list
     )
     ext_tags = patch.object(si, '_extract_tags', side_effect=tags_list)
+    ext_source = patch.object(
+        si, '_extract_source', side_effect=source_list
+    )
 
     with\
             get_row_list as mock_get_row_list,\
@@ -271,8 +281,9 @@ def test_process_response_json_uses_required_getters():
             get_flu as mock_get_foreign_landing_url,\
             get_title as mock_get_title,\
             get_creator as mock_get_creator,\
-            ext_meta_data as mock_extract_meta_data,\
-            ext_tags as mock_extract_tags,\
+            ext_meta_data as mock_extract_meta_data, \
+            ext_tags as mock_extract_tags, \
+            ext_source as mock_extract_source, \
             process_image_list as mock_process_image_list:
         si._process_response_json(response_json)
 
@@ -284,7 +295,8 @@ def test_process_response_json_uses_required_getters():
             title_list[0],
             creator_list[0],
             metadata_list[0],
-            tags_list[0]
+            tags_list[0],
+            source_list[0]
         ),
         call(
             image_lists[1],
@@ -292,7 +304,8 @@ def test_process_response_json_uses_required_getters():
             title_list[1],
             creator_list[1],
             metadata_list[1],
-            tags_list[1]
+            tags_list[1],
+            source_list[1]
         )
     ]
     mock_get_row_list.assert_called_once_with(response_json)
@@ -303,6 +316,7 @@ def test_process_response_json_uses_required_getters():
     assert mock_get_creator.mock_calls == getter_calls_list
     assert mock_extract_meta_data.mock_calls == getter_calls_list
     assert mock_extract_tags.mock_calls == getter_calls_list
+    assert mock_extract_source.mock_calls == [call(m) for m in metadata_list]
 
 
 def test_get_row_list_with_no_rows():
@@ -898,8 +912,9 @@ def test_check_type_with_bad_inputs(required_type, good_indices, default):
                     foreign_identifier='id_one',
                     title='The Title',
                     creator='Alice',
-                    meta_data={'meta': 'data'},
+                    meta_data={'unit_code': 'NMNHBOTANY'},
                     raw_tags=['tag', 'list'],
+                    source='smithsonian_national_museum_of_natural_history',
                 ),
                 call(
                     foreign_landing_url='https://foreignlanding.url',
@@ -909,8 +924,9 @@ def test_check_type_with_bad_inputs(required_type, good_indices, default):
                     foreign_identifier='id_two',
                     title='The Title',
                     creator='Alice',
-                    meta_data={'meta': 'data'},
+                    meta_data={'unit_code': 'NMNHBOTANY'},
                     raw_tags=['tag', 'list'],
+                    source='smithsonian_national_museum_of_natural_history',
                 )
             ]
         ),
@@ -946,8 +962,9 @@ def test_check_type_with_bad_inputs(required_type, good_indices, default):
                     foreign_identifier='id_two',
                     title='The Title',
                     creator='Alice',
-                    meta_data={'meta': 'data'},
+                    meta_data={'unit_code': 'NMNHBOTANY'},
                     raw_tags=['tag', 'list'],
+                    source='smithsonian_national_museum_of_natural_history',
                 )
             ]
         ),
@@ -983,8 +1000,9 @@ def test_check_type_with_bad_inputs(required_type, good_indices, default):
                     foreign_identifier='id_one',
                     title='The Title',
                     creator='Alice',
-                    meta_data={'meta': 'data'},
+                    meta_data={'unit_code': 'NMNHBOTANY'},
                     raw_tags=['tag', 'list'],
+                    source='smithsonian_national_museum_of_natural_history',
                 )
             ]
         )
@@ -999,8 +1017,39 @@ def test_process_image_list(input_media, expect_calls):
             foreign_landing_url='https://foreignlanding.url',
             title='The Title',
             creator='Alice',
-            meta_data={'meta': 'data'},
+            meta_data={'unit_code': 'NMNHBOTANY'},
             tags=['tag', 'list'],
+            source='smithsonian_national_museum_of_natural_history',
             license_url='https://license.url'
         )
     assert expect_calls == mock_add_item.mock_calls
+
+
+def test_process_image_data_with_sub_provider():
+    response = _get_resource_json('sub_provider_example.json')
+    with patch.object(
+            si.image_store,
+            'add_item',
+            return_value=100
+    ) as mock_add_item:
+        total_images = si._process_response_json(response)
+
+    expect_meta_data = {
+        'unit_code': 'SIA',
+        'data_source': 'Smithsonian Institution Archives'
+    }
+
+    mock_add_item.assert_called_once_with(
+        foreign_landing_url=None,
+        image_url='https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358',
+        thumbnail_url='https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358&max=150',
+        license_url='https://creativecommons.org/publicdomain/zero/1.0/',
+        foreign_identifier='SIA-SIA2010-2358',
+        creator='Gruber, Martin A',
+        title='Views of the National Zoological Park in Washington, DC, showing Elephant',
+        meta_data=expect_meta_data,
+        raw_tags=[
+            '1920s', '1910s', 'Archival materials', 'Photographs', 'Animals'],
+        source='smithsonian_institution_archives'
+    )
+    assert total_images == 100

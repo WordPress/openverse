@@ -505,3 +505,56 @@ def update_europeana_sub_providers(
     Drop the temporary table
     """
     postgres.run(f'DROP TABLE public.{temp_table};')
+
+
+def update_smithsonian_sub_providers(
+  postgres_conn_id,
+  image_table=IMAGE_TABLE_NAME,
+  default_provider=prov.SMITHSONIAN_DEFAULT_PROVIDER,
+  sub_providers=prov.SMITHSONIAN_SUB_PROVIDERS
+):
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+
+    """
+    Select all records where the source value is not yet updated
+    """
+    select_query = dedent(
+        f'''
+        SELECT {col.FOREIGN_ID},
+        {col.META_DATA} ->> 'unit_code' AS unit_code
+        FROM {image_table}
+        WHERE
+        {col.PROVIDER} = '{default_provider}'
+        AND
+        {col.SOURCE} = '{default_provider}';
+        '''
+    )
+
+    selected_records = postgres.get_records(select_query)
+
+    """
+    Set the source value of each selected row to the sub-provider value
+    corresponding to unit code. If the unit code is unknown, an error is thrown
+    """
+    for row in selected_records:
+        foreign_id = row[0]
+        unit_code = row[1]
+
+        source = next((s for s in sub_providers if unit_code in
+                       sub_providers[s]), None)
+        if source is None:
+            raise Exception(
+                f"An unknown unit code value {unit_code} encountered ")
+
+        postgres.run(
+            dedent(
+                f'''
+                UPDATE {image_table}
+                SET {col.SOURCE} = '{source}'
+                WHERE
+                {image_table}.{col.PROVIDER} = '{default_provider}'
+                AND
+                MD5({image_table}.{col.FOREIGN_ID}) = MD5('{foreign_id}');
+                '''
+            )
+        )
