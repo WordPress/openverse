@@ -66,9 +66,11 @@ CREATOR_TYPES = {
     'publisher': 4,
 
     'patentee': 5,
+
+    'collector': 6
 }
 
-DESCRIPTION_TYPES = {'description', 'summary', 'caption'}
+DESCRIPTION_TYPES = {'description', 'summary', 'caption', 'notes'}
 TAG_TYPES = ['date', 'object_type', 'topic', 'place']
 
 image_store = image.ImageStore(provider=PROVIDER)
@@ -265,9 +267,7 @@ def _get_creator(row, creator_types=CREATOR_TYPES):
         ],
         key=lambda x: creator_types[x['label'].lower()]
     )
-    freetext_creator_generator = (
-        c['content'] for c in ordered_freetext_creator_objects
-    )
+
     indexed_structured_creator_generator = (
         i['content'] for i in _check_type(indexed_structured.get('name'), list)
         if type(i) == dict
@@ -275,7 +275,19 @@ def _get_creator(row, creator_types=CREATOR_TYPES):
         and _check_type(i.get('content'), str)
     )
 
-    creator = next(freetext_creator_generator, None)
+    if ordered_freetext_creator_objects:
+        c = ordered_freetext_creator_objects.pop(0)
+        priority = creator_types[c['label'].lower()]
+        creator = c['content']
+
+        for c in ordered_freetext_creator_objects:
+            if priority == creator_types[c['label'].lower()]:
+                creator += ', ' + c['content']
+            else:
+                break
+    else:
+        creator = None
+
     if creator is None:
         logger.debug(f'No creator found in freetext:  {freetext}')
         creator = next(indexed_structured_creator_generator, None)
