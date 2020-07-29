@@ -64,8 +64,8 @@ export default {
 .modal {
   position: relative;
   margin: 0px auto;
-  max-width: 80vw;
-  max-height: 84vh;
+  max-width: 85vw;
+  max-height: 85vh;
   overflow-x: hidden;
   overflow-y: auto;
   border-radius: 2px;

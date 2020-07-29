@@ -99,6 +99,8 @@ export default {
 .search-filters {
   display: none;
   height: auto;
+  max-height: 100%;
+  overflow-y: scroll;
 
   label {
     color: #333333;
@@ -108,7 +110,6 @@ export default {
     width: 21.875rem;
     max-height: 37rem;
     overflow-x: hidden;
-    overflow-y: scroll;
   }
 
   &__visible {
