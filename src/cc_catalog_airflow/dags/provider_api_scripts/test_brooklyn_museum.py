@@ -55,11 +55,12 @@ def test_get_response_failure():
     r = requests.Response()
     r.status_code = 500
     r.json = MagicMock(return_value=response_json)
-    with patch.object(bkm.delay_request,
-                      'get',
-                      return_value=r) as mock_get:
-
+    with patch.object(
+            bkm.delay_request,
+            'get',
+            return_value=r) as mock_get:
         actual_data = bkm._get_object_json(query_param=param)
+
     expected_data = None
 
     assert mock_get.call_count == 3
@@ -77,11 +78,13 @@ def test_get_response_success():
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_json)
-    with patch.object(bkm.delay_request,
-                      'get',
-                      return_value=r) as mock_get:
 
+    with patch.object(
+            bkm.delay_request,
+            'get',
+            return_value=r) as mock_get:
         actual_data = bkm._get_object_json(query_param=param)
+
     expected_data = response_json["data"]
     assert mock_get.call_count == 1
     assert actual_data == expected_data
@@ -98,10 +101,11 @@ def test_get_response_nodata():
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_json)
-    with patch.object(bkm.delay_request,
-                      'get',
-                      return_value=r) as mock_get:
 
+    with patch.object(
+            bkm.delay_request,
+            'get',
+            return_value=r) as mock_get:
         actual_data = bkm._get_object_json(query_param=param)
 
     assert len(actual_data) == 0
@@ -113,11 +117,13 @@ def test_object_response_success():
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_json)
-    with patch.object(bkm.delay_request,
-                      'get',
-                      return_value=r) as mock_get:
 
+    with patch.object(
+            bkm.delay_request,
+            'get',
+            return_value=r) as mock_get:
         actual_data = bkm._get_object_json(endpoint=bkm.ENDPOINT+str(1))
+
     expected_data = response_json["data"]
 
     assert mock_get.call_count == 1
@@ -127,44 +133,58 @@ def test_object_response_success():
 def test_process_objects_batch_success():
     batch_objects = _get_resource_json("batch_objects.json")
     response_json = _get_resource_json("object_data.json")
-    with patch.object(bkm,
-                      '_get_object_json',
-                      return_value=response_json) as mock_get:
-        with patch.object(bkm,
-                          '_handle_object_data',
-                          return_value=1) as mock_image:
 
-            actual_image_count = bkm._process_objects_batch(
+    with patch.object(
+            bkm,
+            '_get_object_json',
+            return_value=response_json) as mock_get:
+        with patch.object(
+                bkm.image_store,
+                'add_item') as mock_image:
+            bkm._process_objects_batch(
                 batch_objects
                 )
-    expected_image_count = 1
-    assert actual_image_count == expected_image_count
+
+    assert mock_image.call_count == 1
 
 
 def test_process_objects_batch_failure():
     batch_objects = _get_resource_json("no_batch_objects.json")
-    actual_image_count = bkm._process_objects_batch(batch_objects)
-    expected_image_count = None
+    response_json = _get_resource_json("non_cc_object_data.json")
+    with patch.object(
+            bkm,
+            '_get_object_json',
+            return_value=response_json) as mock_get:
+        with patch.object(
+                bkm.image_store,
+                'add_item') as mock_image:
+            bkm._process_objects_batch(batch_objects)
 
-    assert actual_image_count == expected_image_count
+    assert mock_image.call_count == 0
 
 
 def test_handle_object_data():
     response_json = _get_resource_json("object_data.json")
     license_url = "https://creativecommons.org/licenses/by/3.0/"
-    actual_image_count = bkm._handle_object_data(response_json, license_url)
-    expected_image_count = 1
 
-    assert actual_image_count == expected_image_count
+    with patch.object(
+            bkm.image_store,
+            'add_item') as mock_image:
+        bkm._handle_object_data(response_json, license_url)
+
+    assert mock_image.call_count == 1
 
 
 def test_handle_object_noimage_info():
     response_json = _get_resource_json("object_data_noimage.json")
     license_url = "https://creativecommons.org/licenses/by/3.0/"
-    actual_image_count = bkm._handle_object_data(response_json, license_url)
-    expected_image_count = None
 
-    assert actual_image_count == expected_image_count
+    with patch.object(
+            bkm.image_store,
+            'add_item') as mock_image:
+        bkm._handle_object_data(response_json, license_url)
+
+    assert mock_image.call_count == 0
 
 
 def test_get_image_size():

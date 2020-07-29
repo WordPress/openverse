@@ -11,7 +11,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 LIMIT = 35
-DELAY = 5.0
+DELAY = 1.0
 RETRIES = 3
 PROVIDER = "brooklynmuseum"
 ENDPOINT = "https://www.brooklynmuseum.org/api/v2/object/"
@@ -42,15 +42,14 @@ def main():
             query_param=query_param
             )
         logger.debug(len(objects_batch))
-        if len(objects_batch) > 0:
-            image_count = _process_objects_batch(objects_batch)
-            logger.debug(f"Images till now {image_count}")
+        if type(objects_batch) == list and len(objects_batch) > 0:
+            _process_objects_batch(objects_batch)
+            logger.debug(f"Images till now {image_store.total_images}")
             offset += LIMIT
-            break
         else:
             condition = False
-    total_images = image_store.commit()
-    logger.info(f"Total images recieved {total_images}")
+    image_store.commit()
+    logger.info(f"Total images recieved {image_store.total_images}")
 
 
 def _get_query_param(
@@ -76,20 +75,20 @@ def _get_object_json(
                     )
         try:
             response_json = response.json()
+            if (response_json and
+                    response_json.get("message", "").lower() == "success."):
+                data = response_json.get("data")
+                break
+            else:
+                data = None
         except Exception as e:
             logger.error(f"Error due to {e}")
-            response_json = None
-        if (response_json and
-                response_json.get("message", "").lower() == "success."):
-            data = response_json.get("data")
-            break
-        else:
             data = None
+
     return data
 
 
 def _process_objects_batch(objects_batch):
-    image_count = None
     for object_ in objects_batch:
         rights_info = object_.get("rights_type")
         license_url = _get_license_url(rights_info)
@@ -101,16 +100,13 @@ def _process_objects_batch(objects_batch):
                 )
             if complete_object_data is None:
                 continue
-            image_count = _handle_object_data(
+            _handle_object_data(
                 data=complete_object_data,
                 license_url=license_url
                 )
 
-    return image_count
-
 
 def _handle_object_data(data, license_url):
-    image_count = None
     image_info = data.get("images")
     if image_info is not None:
         id_ = data.get("id", "")
@@ -128,7 +124,7 @@ def _handle_object_data(data, license_url):
                 continue
             height, width = _get_image_sizes(image)
 
-            image_count = image_store.add_item(
+            image_store.add_item(
                     foreign_landing_url=foreign_url,
                     image_url=image_url,
                     license_url=license_url,
@@ -140,8 +136,6 @@ def _handle_object_data(data, license_url):
                     meta_data=metadata,
                     creator=creators
                 )
-
-    return image_count
 
 
 def _get_image_sizes(image):
@@ -182,14 +176,19 @@ def _get_metadata(data):
 
 
 def _get_creators(data):
-    creators = None
     artists_info = data.get("artists")
-    if artists_info is not None:
-        creators = ""
-        for artists in artists_info:
-            creators += artists.get("name") + ","
-        creators = creators[:-1]
-    return creators
+    if type(artists_info) == list:
+        creators_list = (
+            artists.get("name")
+            for artists in artists_info
+            if artists.get("rank") == 1
+        )
+        creator = next(creators_list, None)
+    else:
+        creator = None
+    if creator is None:
+        logger.warning("No creator found")
+    return creator
 
 
 def _get_images(image):
