@@ -153,7 +153,9 @@ class ContentProvider(models.Model):
     provider_name = models.CharField(max_length=250, unique=True)
     created_on = models.DateTimeField(auto_now=False)
     domain_name = models.CharField(max_length=500)
-    filter_content = models.BooleanField(null=False, default=False)
+    filter_content = models.BooleanField(
+        null=False, default=False, verbose_name='Hide content'
+    )
     notes = models.TextField(null=True)
 
     class Meta:
