@@ -41,8 +41,13 @@ export default {
   watch: {
     visible: {
       handler(to) {
-        if (to) document.addEventListener('keyup', this.checkKey)
-        else document.removeEventListener('keyup', this.checkKey)
+        if (typeof document !== 'undefined') {
+          if (to) {
+            document.addEventListener('keyup', this.checkKey)
+          } else {
+            document.removeEventListener('keyup', this.checkKey)
+          }
+        }
       },
       immediate: true,
     },
