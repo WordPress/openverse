@@ -2,14 +2,19 @@
   <div class="browse-page">
     <header-section />
     <div class="search columns">
-      <div
-        :class="`column is-narrow grid-sidebar is-paddingless ${
-          filtersExpandedByDefault ? 'full-height-sticky' : ''
-        }`"
+      <div class="is-hidden-desktop">
+        <app-modal :visible="isFilterVisible" @close="onToggleSearchGridFilter">
+          <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
+        </app-modal>
+      </div>
+      <aside
         v-if="isFilterVisible"
+        role="complementary"
+        class="column is-narrow grid-sidebar is-paddingless is-hidden-touch"
+        :class="filtersExpandedByDefault ? 'full-height-sticky' : ''"
       >
         <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
-      </div>
+      </aside>
       <main role="main" class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
         <search-type-tabs />
@@ -36,8 +41,9 @@ import SearchGridForm from '@/components/SearchGridForm'
 import SearchGridFilter from '@/components/Filters/SearchGridFilter'
 import SearchTypeTabs from '@/components/SearchTypeTabs'
 import FilterDisplay from '@/components/Filters/FilterDisplay'
+import AppModal from '@/components/AppModal'
 import { FETCH_IMAGES } from '@/store/action-types'
-import { SET_QUERY } from '@/store/mutation-types'
+import { SET_QUERY, SET_FILTER_IS_VISIBLE } from '@/store/mutation-types'
 import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin'
 import { ExperimentData } from '@/abTests/experiments/filterExpansion'
 
@@ -73,6 +79,11 @@ const BrowsePage = {
     onSearchFormSubmit(searchParams) {
       this.$store.commit(SET_QUERY, { ...searchParams, shouldNavigate: false })
     },
+    onToggleSearchGridFilter() {
+      this.$store.commit(SET_FILTER_IS_VISIBLE, {
+        isFilterVisible: !this.isFilterVisible,
+      })
+    },
   },
   mounted() {
     if (this.query.q && !this.$store.state.images.length) {
@@ -94,6 +105,7 @@ const BrowsePage = {
     SearchTypeTabs,
     SearchGrid,
     FooterSection,
+    AppModal,
   },
   mixins: [ServerPrefetchProvidersMixin],
 }
