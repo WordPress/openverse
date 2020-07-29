@@ -192,3 +192,15 @@ def get_europeana_sub_provider_update_operator(
         op_args=[postgres_conn_id],
         dag=dag
     )
+
+
+def get_smithsonian_sub_provider_update_operator(
+        dag,
+        postgres_conn_id,
+):
+    return PythonOperator(
+        task_id='update_smithsonian_sub_providers',
+        python_callable=sql.update_smithsonian_sub_providers,
+        op_args=[postgres_conn_id],
+        dag=dag
+    )
