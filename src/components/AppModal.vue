@@ -6,6 +6,22 @@
     @keyup="checkKey"
   >
     <div class="modal relative" aria-modal="true" role="dialog">
+      <header
+        v-if="title"
+        class="modal-header padding-top-bigger padding-left-bigger padding-right-normal padding-bottom-small"
+      >
+        <slot name="header">
+          <h3>{{ title }}</h3>
+        </slot>
+        <button
+          type="button"
+          class="close-button has-color-gray is-size-6 is-size-4-touch"
+          @click="$emit('close')"
+          aria-label="close"
+        >
+          <i class="icon cross" />
+        </button>
+      </header>
       <slot default />
     </div>
   </div>
@@ -19,6 +35,8 @@ export default {
   name: 'app-modal',
   props: {
     visible: Boolean,
+    title: String, // required for titlebar AND close button to show
+    subTitle: String,
   },
   watch: {
     visible: {
@@ -41,11 +59,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import 'node_modules/bulma/sass/utilities/_all';
+
 .modal {
+  position: relative;
   margin: 0px auto;
+  max-width: 80vw;
+  max-height: 84vh;
+  overflow-x: hidden;
+  overflow-y: auto;
   border-radius: 2px;
   box-shadow: 0 2px 8px 3px;
-  position: relative;
+  background-color: #fff;
 }
 
 .overlay {
@@ -63,5 +88,31 @@ export default {
 
 .has-color-gray {
   color: rgb(176, 176, 176);
+}
+
+.modal-header {
+  display: flex;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.close-button {
+  appearance: none;
+  border: none;
+  height: auto;
+  margin: -20px -20px -20px auto;
+  padding: 20px;
+  background-color: transparent;
+  line-height: 1;
+  cursor: pointer;
+  .icon {
+    height: auto;
+  }
+  &:hover {
+    color: rgb(120, 120, 120);
+  }
 }
 </style>

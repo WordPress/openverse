@@ -60,6 +60,7 @@
 
     <app-modal
       :visible="showMetaImageSearch"
+      :title="'Search Images from Other Sources'"
       @close="showMetaImageSearch = false"
     >
       <meta-search-card

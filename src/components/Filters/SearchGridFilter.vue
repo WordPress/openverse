@@ -107,7 +107,6 @@ export default {
   @include touch {
     width: 21.875rem;
     max-height: 37rem;
-    background-color: #fff;
     overflow-x: hidden;
     overflow-y: scroll;
   }

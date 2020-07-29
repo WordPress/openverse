@@ -1,23 +1,10 @@
 <template>
   <div class="meta-card">
-    <button
-      type="button"
-      class="close-button has-color-gray is-size-6 is-size-4-touch"
-      @click="$emit('close')"
-      aria-label="close"
-    >
-      <i class="icon cross" />
-    </button>
-    <header
-      class="padding-top-bigger padding-left-bigger padding-righr-bigger padding-bottom-small"
-    >
-      <h3>Search images from other sources</h3>
-      <p>
-        Click on a source below to directly search other collections of
-        CC-licensed images.<br />Please note that Use filters are not supported
-        for Open Clip Art Library.
-      </p>
-    </header>
+    <p class="padding-left-bigger padding-right-bigger">
+      Click on a source below to directly search other collections of
+      CC-licensed images.<br />Please note that Use filters are not supported
+      for Open Clip Art Library.
+    </p>
     <hr class="margin-bottom-bigger" />
     <div
       class="padding-left-bigger padding-right-bigger padding-bottom-bigger meta-modal-content"
@@ -111,11 +98,8 @@ export default {
 }
 
 .meta-card {
-  max-width: 80vw;
-  max-height: 84vh;
-  background-color: #fff;
+  max-width: 100%;
   overflow-x: hidden;
-  overflow-y: scroll;
 }
 
 .close-button {
