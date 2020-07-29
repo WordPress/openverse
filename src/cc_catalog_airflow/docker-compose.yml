@@ -31,3 +31,8 @@ services:
       - s3
     ports:
       - "${AIRFLOW_PORT}:8080"
+    volumes:
+      - airflow-volume:/tmp/workflow_output
+
+volumes:
+  airflow-volume:

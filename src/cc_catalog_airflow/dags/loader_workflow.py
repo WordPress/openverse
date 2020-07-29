@@ -17,7 +17,7 @@ DAG_ID = 'tsv_to_postgres_loader'
 DB_CONN_ID = os.getenv('OPENLEDGER_CONN_ID', 'postgres_openledger_testing')
 AWS_CONN_ID = os.getenv('AWS_CONN_ID', 'no_aws_conn_id')
 CCCATALOG_STORAGE_BUCKET = os.getenv('CCCATALOG_STORAGE_BUCKET')
-MINIMUM_FILE_AGE_MINUTES = 1
+MINIMUM_FILE_AGE_MINUTES = int(os.getenv('LOADER_FILE_AGE', 15))
 CONCURRENCY = 5
 SCHEDULE_CRON = '* * * * *'
 

@@ -255,6 +255,12 @@ class ImageStore:
         logger.info('Output path: {}'.format(output_path))
         return output_path
 
+    def _get_total_images(self):
+        return self._total_images
+
+    """Get total images for directly using in scripts."""
+    total_images = property(_get_total_images)
+
     def _get_image(
             self,
             foreign_identifier,

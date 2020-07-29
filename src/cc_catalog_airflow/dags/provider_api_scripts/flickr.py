@@ -19,6 +19,7 @@ import lxml.html as html
 
 from common.requester import DelayedRequester
 from common.storage import image
+from util.loader import provider_details as prov
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -31,10 +32,10 @@ DELAY = 1.0
 LIMIT = 500
 MAX_TAG_STRING_LENGTH = 2000
 MAX_DESCRIPTION_LENGTH = 2000
-PROVIDER = 'flickr'
+PROVIDER = prov.FLICKR_DEFAULT_PROVIDER
 API_KEY = os.getenv('FLICKR_API_KEY')
 ENDPOINT = 'https://api.flickr.com/services/rest/'
-PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
+PHOTO_URL_BASE = prov.FLICKR_PHOTO_URL_BASE
 DATE_TYPE = 'upload'
 # DAY_DIVISION is an integer that gives how many equal portions we should
 # divide a 24-hour period into for requesting photo data.  For example,
@@ -42,6 +43,9 @@ DATE_TYPE = 'upload'
 # photo data for each hour of the day separately.  This is necessary because
 # if we request too much at once, the API will return fallacious results.
 DAY_DIVISION = 48 # divide into half hour increments
+# SUB_PROVIDERS is a collection of providers within Flickr which are
+# valuable to a broad audience
+SUB_PROVIDERS = prov.FLICKR_SUB_PROVIDERS
 
 LICENSE_INFO = {
     '1': ('by-nc-sa', '2.0'),
@@ -248,7 +252,8 @@ def _process_image_list(image_list):
     return total_images
 
 
-def _process_image_data(image_data):
+def _process_image_data(image_data, sub_providers=SUB_PROVIDERS,
+                        provider=PROVIDER):
     logger.debug(f'Processing image data: {image_data}')
     image_url, height, width = _get_image_url(image_data)
     license_, license_version = _get_license(image_data.get('license'))
@@ -257,6 +262,10 @@ def _process_image_data(image_data):
     if foreign_id is None:
         logger.warning('No foreign_id in image_data!')
     foreign_landing_url = _build_foreign_landing_url(creator_url, foreign_id)
+
+    owner = image_data.get('owner').strip()
+    source = next((s for s in sub_providers if owner in sub_providers[s]),
+                  provider)
 
     return image_store.add_item(
         foreign_landing_url=foreign_landing_url,
@@ -272,6 +281,7 @@ def _process_image_data(image_data):
         title=image_data.get('title'),
         meta_data=_create_meta_data_dict(image_data),
         raw_tags=_create_tags_list(image_data),
+        source=source
     )
 
 
