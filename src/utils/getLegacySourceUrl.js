@@ -106,6 +106,16 @@ export const legacySourceMap = {
       }
     },
   },
+  Nappy: {
+    image(search) {
+      return {
+        url: 'https://www.nappy.co/',
+        query: {
+          s: search.q,
+        },
+      }
+    },
+  },
   SoundCloud: {
     audio(search) {
       let license = 'to_share'
