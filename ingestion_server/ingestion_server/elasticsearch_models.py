@@ -1,9 +1,7 @@
 from enum import Enum, auto
 from elasticsearch_dsl import Integer, DocType, Field
 from ingestion_server.categorize import get_categories
-from ingestion_server.authority import (
-    get_authority_boost, get_authority_penalty
-)
+from ingestion_server.authority import get_authority_boost
 
 """
 Provides an ORM-like experience for accessing data in Elasticsearch.
@@ -78,10 +76,11 @@ class Image(SyncableDocType):
         width = row[schema['width']]
         meta = row[schema['meta_data']]
         try:
-            popularity = row[schema['normalized_popularity']]
+            popularity = row[schema['standardized_popularity']]
             popularity = _constrain_between(popularity, low=1, high=100)
         except (KeyError, TypeError):
-            popularity = None
+            popularity = 0.001
+        authority_boost = Image.get_authority_boost(meta, provider)
         return Image(
             _id=row[schema['id']],
             id=row[schema['id']],
@@ -106,8 +105,9 @@ class Image(SyncableDocType):
             license_url=Image.get_license_url(meta),
             mature=Image.get_maturity(meta, row[schema['mature']]),
             normalized_popularity=popularity,
-            authority_boost=Image.get_authority_boost(meta, provider),
-            authority_penalty=Image.get_authority_penalty(meta, provider)
+            authority_boost=authority_boost,
+            max_boost=max(popularity, authority_boost),
+            min_boost=min(popularity, authority_boost)
         )
 
     @staticmethod
@@ -183,7 +183,7 @@ class Image(SyncableDocType):
 
     @staticmethod
     def get_authority_boost(meta_data, source):
-        authority_boost = None
+        authority_boost = 0.001
         if meta_data and 'authority_boost' in meta_data:
             try:
                 authority_boost = float(meta_data['authority_boost'])
@@ -195,21 +195,6 @@ class Image(SyncableDocType):
         else:
             authority_boost = get_authority_boost(source)
         return authority_boost
-
-    @staticmethod
-    def get_authority_penalty(meta_data, source):
-        authority_penalty = None
-        if meta_data and 'authority_penalty' in meta_data:
-            try:
-                authority_penalty = float(meta_data['authority_penalty'])
-                authority_penalty = _constrain_between(
-                    authority_penalty, low=1, high=100
-                )
-            except (ValueError, TypeError):
-                pass
-        else:
-            authority_penalty = get_authority_penalty(source)
-        return authority_penalty
 
     @staticmethod
     def parse_detailed_tags(json_tags):
