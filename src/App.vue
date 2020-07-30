@@ -22,6 +22,18 @@ export default {
       this.fetchProviders()
     }
   },
+  mounted() {
+    // Load voocabulary global header from the unpkg CDN!
+    if (typeof document !== 'undefined') {
+      const el = document.createElement('script')
+      el.src = 'https://unpkg.com/@creativecommons/vocabulary/js/vocabulary.js'
+      el.defer = true
+      el.addEventListener('load', () => {
+        window.vocabulary.createGlobalHeader()
+      })
+      document.head.appendChild(el)
+    }
+  },
   metaInfo() {
     return {
       meta: [
