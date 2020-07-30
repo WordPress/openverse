@@ -7,12 +7,10 @@ import BrowsePage from '@/pages/BrowsePage'
 import PhotoDetailPage from '@/pages/PhotoDetailPage'
 import FeedbackPage from '@/pages/FeedbackPage'
 import CollectionsPage from '@/pages/CollectionsPage'
-import CollectionBrowsePage from '@/pages/CollectionBrowsePage'
 import SearchHelpPage from '@/pages/SearchHelpPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import SearchGrid from '@/components/SearchGrid'
 import MetaSearchForm from '@/components/MetaSearch/MetaSearchForm'
-import redirectOnEmptySearch from './redirectOnEmptySearch'
 
 Vue.use(VueRouter)
 Vue.use(VueMeta)
@@ -43,10 +41,6 @@ const router = new VueRouter({
     {
       path: '/search',
       component: BrowsePage,
-      // a meta field
-      meta: {
-        requiresQuery: true,
-      },
       props: (route) => ({ query: route.query.q }),
       children: resultSubviews,
     },
@@ -75,12 +69,6 @@ const router = new VueRouter({
       path: '/collections',
       name: 'collections-page',
       component: CollectionsPage,
-    },
-    {
-      path: '/collections/:provider',
-      name: 'collections-browse-page',
-      component: CollectionBrowsePage,
-      props: true,
     },
     {
       path: '/',
@@ -118,7 +106,5 @@ router.afterEach((to) => {
     ga('send', 'pageview')
   }
 })
-
-redirectOnEmptySearch(router)
 
 export default router

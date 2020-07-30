@@ -32,7 +32,6 @@ describe('SearchGridFilter', () => {
 
     props = {
       showProvidersFilter: true,
-      isCollectionsPage: false,
       provider: undefined,
     }
 
@@ -76,9 +75,8 @@ describe('SearchGridFilter', () => {
     expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
       code: 'foo',
       filterType: 'bar',
-      isCollectionsPage: props.isCollectionsPage,
       provider: props.provider,
-      shouldNavigate: false,
+      shouldNavigate: true,
     })
   })
 
@@ -87,9 +85,8 @@ describe('SearchGridFilter', () => {
     wrapper.vm.onUpdateSearchByCreator()
     expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
       filterType: 'searchBy',
-      isCollectionsPage: props.isCollectionsPage,
       provider: props.provider,
-      shouldNavigate: false,
+      shouldNavigate: true,
     })
   })
 
@@ -97,9 +94,8 @@ describe('SearchGridFilter', () => {
     const wrapper = render(SearchGridFilter, options)
     wrapper.vm.onClearFilters()
     expect(commitMock).toHaveBeenCalledWith('CLEAR_FILTERS', {
-      isCollectionsPage: props.isCollectionsPage,
       provider: props.provider,
-      shouldNavigate: false,
+      shouldNavigate: true,
     })
   })
 

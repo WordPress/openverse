@@ -23,7 +23,6 @@
           :query="query"
         />
         <router-view
-          v-if="query.q"
           :query="query"
           @onLoadMoreImages="onLoadMoreImages"
           :key="$route.path"
@@ -77,7 +76,7 @@ const BrowsePage = {
       this.getImages(searchParams)
     },
     onSearchFormSubmit(searchParams) {
-      this.$store.commit(SET_QUERY, { ...searchParams, shouldNavigate: false })
+      this.$store.commit(SET_QUERY, { ...searchParams, shouldNavigate: true })
     },
     onToggleSearchGridFilter() {
       this.$store.commit(SET_FILTER_IS_VISIBLE, {
@@ -86,7 +85,7 @@ const BrowsePage = {
     },
   },
   mounted() {
-    if (this.query.q && !this.$store.state.images.length) {
+    if (!this.$store.state.images.length) {
       this.getImages(this.query)
     }
   },

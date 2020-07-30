@@ -21,7 +21,6 @@ const HomePage = {
   },
   mounted() {
     this.$store.commit(CLEAR_FILTERS, {
-      isCollectionsPage: false,
       provider: null,
       shouldNavigate: false,
     })
