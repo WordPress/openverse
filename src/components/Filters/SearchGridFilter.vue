@@ -10,7 +10,6 @@
       :isFilterApplied="isFilterApplied"
       :licenseTypesDisabled="licenseTypesDisabled"
       :licensesDisabled="licensesDisabled"
-      :renderProvidersFilter="renderProvidersFilter"
       @onUpdateFilter="onUpdateFilter"
       @onUpdateSearchByCreator="onUpdateSearchByCreator"
       @onToggleSearchGridFilter="onToggleSearchGridFilter"
@@ -27,7 +26,7 @@ import FiltersList from './FiltersList'
 
 export default {
   name: 'search-grid-filter',
-  props: ['isCollectionsPage', 'provider'],
+  props: ['provider'],
   components: {
     FiltersList,
   },
@@ -40,9 +39,6 @@ export default {
     },
     filters() {
       return this.$store.state.filters
-    },
-    renderProvidersFilter() {
-      return !this.$props.isCollectionsPage
     },
     licensesDisabled() {
       return this.$store.state.filters.licenseTypes.some((li) => li.checked)
@@ -64,14 +60,12 @@ export default {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
         filterType,
-        isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
         shouldNavigate: true,
       })
     },
     onClearFilters() {
       this.$store.commit(CLEAR_FILTERS, {
-        isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
         shouldNavigate: true,
       })
@@ -79,7 +73,6 @@ export default {
     onUpdateSearchByCreator() {
       this.$store.dispatch(TOGGLE_FILTER, {
         filterType: 'searchBy',
-        isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
         shouldNavigate: true,
       })

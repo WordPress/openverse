@@ -1,17 +1,15 @@
 <template>
-  <div
+  <a
+    :href="`/search?source=${provider.source_name}`"
     class="column is-narrow margin-normal has-background-white provider-card"
   >
     <div>
-      <span
-        class="link provider-name has-text-weight-normal has-text-black"
-        @click="setQuery(provider.source_name)"
-      >
+      <span class="link provider-name has-text-weight-normal has-text-black">
         {{ provider.display_name }}
       </span>
     </div>
     <div class="provider-logo">
-      <span class="link" @click="setQuery(provider.source_name)">
+      <span class="link">
         <img
           :alt="provider.display_name"
           :src="getProviderLogo(provider.source_name)"
@@ -29,20 +27,24 @@
         </template>
       </i18n>
     </div>
-  </div>
+  </a>
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types'
+import { TOGGLE_FILTER } from '@/store/action-types'
+import { CLEAR_FILTERS } from '@/store/mutation-types'
+
 import ImageProviderService from '@/api/ImageProviderService'
 
 export default {
   name: 'collection-item',
   props: ['provider'],
   methods: {
-    setQuery(providerName) {
-      this.$store.commit(SET_QUERY, {
-        query: { q: '', source: providerName },
+    setFilterAndQuery(providerName) {
+      this.$store.commit(CLEAR_FILTERS, { provider: null })
+      this.$store.dispatch(TOGGLE_FILTER, {
+        filterType: 'providers',
+        code: providerName,
         shouldNavigate: true,
       })
     },
@@ -69,8 +71,14 @@ export default {
   width: 16.5rem;
   border: 2px solid rgb(216, 216, 216);
   &:hover {
+    cursor: pointer;
+    text-decoration: none;
     box-shadow: 10px 10px 2px -5px #e7e7e7;
   }
+}
+
+.provider-card:hover * {
+  text-decoration: none !important;
 }
 
 .provider-name {

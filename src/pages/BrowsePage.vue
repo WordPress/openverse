@@ -85,7 +85,9 @@ const BrowsePage = {
     },
   },
   mounted() {
-    this.getImages(this.query)
+    if (!this.$store.state.images.length) {
+      this.getImages(this.query)
+    }
   },
   watch: {
     query(newQuery) {

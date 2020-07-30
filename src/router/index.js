@@ -11,7 +11,6 @@ import SearchHelpPage from '@/pages/SearchHelpPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import SearchGrid from '@/components/SearchGrid'
 import MetaSearchForm from '@/components/MetaSearch/MetaSearchForm'
-import redirectOnEmptySearch from './redirectOnEmptySearch'
 
 Vue.use(VueRouter)
 Vue.use(VueMeta)
@@ -42,10 +41,6 @@ const router = new VueRouter({
     {
       path: '/search',
       component: BrowsePage,
-      // a meta field
-      meta: {
-        requiresQuery: false,
-      },
       props: (route) => ({ query: route.query.q }),
       children: resultSubviews,
     },
@@ -111,7 +106,5 @@ router.afterEach((to) => {
     ga('send', 'pageview')
   }
 })
-
-redirectOnEmptySearch(router)
 
 export default router

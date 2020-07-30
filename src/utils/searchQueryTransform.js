@@ -29,9 +29,11 @@ const filterToString = (filter) =>
  * converts the filter store object to the data format accepted by the API,
  * which has slightly different property names
  * @param {object} filters object containing the filter data that comes from the filter store
+ * @todo Refactor all of these 'reduce' calls to just use lodash methods :)
  */
-export const filtersToQueryData = (filters) => {
-  const queryDataObject = {}
+export const filtersToQueryData = (filters, hideEmpty = true) => {
+  let queryDataObject = {}
+
   Object.keys(filterPropertyMappings).reduce((queryData, filterDataKey) => {
     const queryDataKey = filterPropertyMappings[filterDataKey]
     // eslint-disable-next-line no-param-reassign
@@ -41,6 +43,19 @@ export const filtersToQueryData = (filters) => {
 
   queryDataObject.searchBy = filters.searchBy.creator ? 'creator' : ''
   queryDataObject.mature = filters.mature
+
+  if (hideEmpty) {
+    queryDataObject = Object.entries(queryDataObject).reduce(
+      (obj, [key, value]) => {
+        if (value) {
+          // eslint-disable-next-line no-param-reassign
+          obj[key] = value
+        }
+        return obj
+      },
+      {}
+    )
+  }
 
   return queryDataObject
 }

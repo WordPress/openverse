@@ -45,7 +45,7 @@
       />
       <filter-check-list
         role="listitem"
-        v-if="renderProvidersFilter && activeTab == 'image'"
+        v-if="activeTab == 'image'"
         :options="filters.providers"
         :title="$t('filters.providers.title')"
         filterType="providers"
@@ -134,7 +134,6 @@ export default {
     'isFilterApplied',
     'licenseTypesDisabled',
     'licensesDisabled',
-    'renderProvidersFilter',
   ],
   components: {
     FilterCheckList,
