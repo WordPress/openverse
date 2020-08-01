@@ -1,6 +1,7 @@
 <template>
   <div class="license-explanation-tooltip padding-small">
-    <h5 class="b-header">License CC {{ license.toUpperCase() }}:</h5>
+    <h5 class="b-header" v-if="license=='cc0' | license =='pdm'"> {{ license.toUpperCase() }}:</h5>
+    <h5 class="b-header" v-else>License CC {{ license.toUpperCase() }}:</h5>
 
     <license-explanations :license="license" />
     <p class='caption is-pulled-right margin-small'>
@@ -14,6 +15,7 @@
 <script>
 import LicenseExplanations from '@/components/LicenseExplanations';
 
+
 export default {
   name: 'license-explanation-tooltip',
   props: ['license'],
@@ -24,7 +26,7 @@ export default {
     getLicenseDeedLink(licenseTerm) {
       return `https://creativecommons.org/licenses/${licenseTerm}/4.0/?ref=ccsearch&atype=rich`;
     },
-  },
+  }
 };
 </script>
 
