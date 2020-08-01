@@ -1,9 +1,13 @@
 name: flake8_lint
 
-on: [push, pull_request]
+on:
+  push:
     paths:
-      # Changes in python files
       - '**.py'
+  pull_request:
+    paths:
+      - '**.py'
+
       
 jobs:
   build:
