@@ -1,18 +1,9 @@
 name: flake8_lint
 
-on:
-  push:
-    # Only run if,
+on: [push, pull_request]
     paths:
       # Changes in python files
-      - '*.py'
-  pull_request:
-    # Only run if,
-    paths:
-      # Changes in python files
-      - '*.py'
-    branches:
-      - master
+      - '**.py'
       
 jobs:
   build:
