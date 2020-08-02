@@ -1,6 +1,6 @@
 <template>
   <div class="license-explanation-tooltip padding-small">
-    <h5 class="b-header" v-if="license==='cc0' | license==='pdm'">
+    <h5 class="b-header" v-if="(license === 'cc0') | (license === 'pdm')">
       {{ license.toUpperCase() }}
     </h5>
     <h5 class="b-header" v-else>
