@@ -141,7 +141,6 @@ export default {
           (modification.checked && e.code.includes('nd'))
         )
       }
-      console.log(this.$props.disabled)
       return this.$props.disabled
     },
     shouldRenderLicenseExplanationTooltip(licenseCode) {
