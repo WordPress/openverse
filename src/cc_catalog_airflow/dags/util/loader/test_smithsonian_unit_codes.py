@@ -59,7 +59,8 @@ def test_alert_unit_codes_from_api(postgres_with_test_unit_code_table):
       'get_new_and_outdated_unit_codes',
       return_value=({'d'}, {'e'})
     ) as mock_get_unit_codes:
-        si.alert_unit_codes_from_api(postgres_conn_id, unit_code_table)
+        with pytest.raises(Exception):
+            si.alert_unit_codes_from_api(postgres_conn_id, unit_code_table)
 
     mock_get_unit_codes.assert_called()
 

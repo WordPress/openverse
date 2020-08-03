@@ -5,25 +5,23 @@ the smithsonian sub-provider dictionary
 
 import logging
 import requests
-import os
 
 from textwrap import dedent
 from airflow.hooks.postgres_hook import PostgresHook
 from util.loader import provider_details as prov
+from provider_api_scripts import smithsonian
 
 logger = logging.getLogger(__name__)
 
-DELAY = 5.0
-API_KEY = os.getenv('DATA_GOV_API_KEY')
-API_ROOT = 'https://api.si.edu/openaccess/api/v1.0/'
-UNITS_ENDPOINT = API_ROOT + 'terms/unit_code'
+DELAY = smithsonian.DELAY
+API_KEY = smithsonian.API_KEY
+API_ROOT = smithsonian.API_ROOT
+UNITS_ENDPOINT = smithsonian.UNITS_ENDPOINT
 PARAMS = {
     'api_key': API_KEY,
     'q': 'online_media_type:Images'
 }
 SUB_PROVIDERS = prov.SMITHSONIAN_SUB_PROVIDERS
-
-DB_USER_NAME = 'deploy'
 SI_UNIT_CODE_TABLE = 'smithsonian_new_unit_codes'
 
 
@@ -42,10 +40,6 @@ def initialise_unit_code_table(postgres_conn_id, unit_code_table):
         );
         '''
       )
-    )
-
-    postgres.run(
-      f'ALTER TABLE public.{unit_code_table} OWNER TO {DB_USER_NAME};'
     )
 
     """
@@ -129,3 +123,13 @@ def alert_unit_codes_from_api(postgres_conn_id,
                 '''
             )
         )
+
+    """
+    Raise exception if human intervention is needed to update the
+    SMITHSONIAN_SUB_PROVIDERS dictionary by checking the entries in the
+    smithsonian_new_unit_codes table
+    """
+    if bool(new_unit_codes) or bool(outdated_unit_codes):
+        raise Exception(
+            f"Please check the smithsonian_new_unit_codes table for necessary "
+            f"updates to the SMITHSONIAN_SUB_PROVIDERS dictionary")
