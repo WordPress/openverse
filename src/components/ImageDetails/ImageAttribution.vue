@@ -20,18 +20,18 @@
       <license-explanations :license="image.license" />
 
       <i18n
-        path="photo-details.reuse.license.content"
+        path="photo-details.reuse.tool.content"
         tag="span"
         class="caption has-text-weight-semibold"
       >
         <template v-slot:link>
           <a
-            aria-label="read more about the license"
+            aria-label="read more about the tool"
             :href="licenseURL"
             target="_blank"
             rel="noopener"
           >
-            {{ $t('photo-details.reuse.license.link') }}
+            {{ $t('photo-details.reuse.tool.link') }}
           </a>
         </template>
       </i18n>
