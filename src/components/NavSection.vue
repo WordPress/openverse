@@ -1,5 +1,5 @@
 <template>
-  <nav aria-label="primary" class="navbar small">
+  <nav aria-label="primary" class="navbar">
     <div class="navbar-brand">
       <router-link class="logo" to="/">
         <img alt="Logo" src="/static/logos/products/search.svg" />
