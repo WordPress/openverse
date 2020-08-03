@@ -52,7 +52,9 @@
         />
 
         <license-explanation-tooltip
-          v-if="shouldRenderLicenseExplanationTooltip(item.code)"
+          v-if="
+            shouldRenderLicenseExplanationTooltip(item.code) && !block(item)
+          "
           :license="licenseExplanationCode"
         />
       </div>
@@ -139,6 +141,7 @@ export default {
           (modification.checked && e.code.includes('nd'))
         )
       }
+      console.log(this.$props.disabled)
       return this.$props.disabled
     },
     shouldRenderLicenseExplanationTooltip(licenseCode) {
