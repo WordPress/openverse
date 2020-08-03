@@ -25,7 +25,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-DELAY = 1.0
+DELAY = 30.0
 RESOURCES_PER_REQUEST = '100'
 PROVIDER = prov.EUROPEANA_DEFAULT_PROVIDER
 API_KEY = os.getenv('EUROPEANA_API_KEY')
