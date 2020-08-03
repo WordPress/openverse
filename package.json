@@ -29,8 +29,8 @@
   },
   "dependencies": {
     "@creativecommons/vocabulary": "^2020.7.1",
-    "@sentry/browser": "^5.6.0",
-    "@sentry/node": "^5.6.0",
+    "@sentry/browser": "^5.20.1",
+    "@sentry/node": "^5.20.1",
     "axios": "^0.18.0",
     "build-url": "^2.0.0",
     "bulma": "^0.8.0",
