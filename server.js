@@ -77,5 +77,5 @@ server.get('*', render)
 
 const port = process.env.PORT || 8080
 server.listen(port, () => {
-  console.log(`server started at localhost:${port}`)
+  console.log(`server started at > http://localhost:${port}`)
 })
