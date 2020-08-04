@@ -2,8 +2,8 @@ import redirectTo from '@/router/redirectTo'
 
 describe('redirectTo', () => {
   const routerMock = {
-    push: jest.fn(),
-    replace: jest.fn(),
+    push: jest.fn(() => Promise.resolve()),
+    replace: jest.fn(() => Promise.resolve()),
   }
   const redirect = redirectTo(routerMock)
 
