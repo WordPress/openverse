@@ -283,11 +283,11 @@ def _get_creator(row, creator_types=CREATOR_TYPES):
     )
 
     if ordered_freetext_creator_objects:
-        c = ordered_freetext_creator_objects[0]
-        priority = creator_types[c['label'].lower()]
+        first_creator_object = ordered_freetext_creator_objects[0]
+        top_priority = creator_types[first_creator_object['label'].lower()]
 
         creators_list = [c['content'] for c in ordered_freetext_creator_objects
-                         if priority == creator_types[c['label'].lower()]]
+                         if top_priority == creator_types[c['label'].lower()]]
 
         creator = '; '.join(creators_list[:-1]) + ' and ' + creators_list[-1] \
             if len(creators_list) > 1 else creators_list[0]
