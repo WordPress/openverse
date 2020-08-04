@@ -16,7 +16,7 @@ includes cleaning up malformed URLs and filtering out undesirable tags.
 CLEANUP_BUFFER_SIZE = DB_BUFFER_SIZE
 
 # Filter out tags that exactly match these terms. All terms should be lowercase.
-TAG_BLACKLIST = {
+TAG_DENYLIST = {
     'no person',
     'squareformat',
     'uploaded:by=flickrmobile',
@@ -26,7 +26,7 @@ TAG_BLACKLIST = {
 
 # Filter out tags that contain the following terms. All entrees should be
 # lowercase.
-TAG_CONTAINS_BLACKLIST = {
+TAG_CONTAINS_DENYLIST = {
     'flickriosapp',
     'uploaded',
     ':',
@@ -48,9 +48,9 @@ TAG_MIN_CONFIDENCE = 0.90
 
 def _tag_blacklisted(tag):
     """ Tag is banned or contains a banned substring. """
-    if tag in TAG_BLACKLIST:
+    if tag in TAG_DENYLIST:
         return True
-    for blacklisted_substring in TAG_CONTAINS_BLACKLIST:
+    for blacklisted_substring in TAG_CONTAINS_DENYLIST:
         if blacklisted_substring in tag:
             return True
     return False

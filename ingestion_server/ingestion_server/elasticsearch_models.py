@@ -79,7 +79,7 @@ class Image(SyncableDocType):
             popularity = row[schema['standardized_popularity']]
             popularity = _constrain_between(popularity, low=1, high=100)
         except (KeyError, TypeError):
-            popularity = 0.001
+            popularity = None
         authority_boost = Image.get_authority_boost(meta, provider)
         return Image(
             _id=row[schema['id']],
@@ -106,8 +106,8 @@ class Image(SyncableDocType):
             mature=Image.get_maturity(meta, row[schema['mature']]),
             normalized_popularity=popularity,
             authority_boost=authority_boost,
-            max_boost=max(popularity, authority_boost),
-            min_boost=min(popularity, authority_boost)
+            max_boost=max(popularity or 1, authority_boost or 1),
+            min_boost=min(popularity or 1, authority_boost or 1)
         )
 
     @staticmethod
@@ -183,7 +183,7 @@ class Image(SyncableDocType):
 
     @staticmethod
     def get_authority_boost(meta_data, source):
-        authority_boost = 0.001
+        authority_boost = None
         if meta_data and 'authority_boost' in meta_data:
             try:
                 authority_boost = float(meta_data['authority_boost'])
