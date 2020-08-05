@@ -172,6 +172,15 @@ def create_image_popularity_constants_view(
     postgres.run(query)
 
 
+def update_image_popularity_constants(
+    postgres_conn_id, popularity_constants_view=POPULARITY_CONSTANTS_VIEW_NAME,
+):
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    postgres.run(
+        f"REFRESH MATERIALIZED VIEW CONCURRENTLY {popularity_constants_view};"
+    )
+
+
 def create_standardized_popularity_function(
         postgres_conn_id,
         function_name=STANDARDIZED_POPULARITY_FUNCTION_NAME,
@@ -194,15 +203,6 @@ def create_standardized_popularity_function(
         """
     )
     postgres.run(query)
-
-
-def update_image_popularity_constants(
-    postgres_conn_id, popularity_constants_view=POPULARITY_CONSTANTS_VIEW_NAME,
-):
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    postgres.run(
-        f"REFRESH MATERIALIZED VIEW CONCURRENTLY {popularity_constants_view};"
-    )
 
 
 def create_image_view(
