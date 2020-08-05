@@ -85,7 +85,7 @@ def _merge_tags(
         cursor.execute(
             f"""
             select {_modify_urls('a.' + COL_IMAGE, cc_table)} from {IMAGE_TABLE_NAME} a
-            where  a.{COL_PROVIDER} = 'sciencemuseum'
+            where  a.{COL_PROVIDER} = 'museumsvictoria'
             """
         )
         for i in cursor.fetchall():
@@ -93,11 +93,11 @@ def _merge_tags(
         cursor.execute(
             f"""
             select {_modify_urls('b.' + COL_IMAGE, cc_table)} from {cc_table} b
-            where  b.{COL_PROVIDER} = 'sciencemuseum'
+            where  b.{COL_PROVIDER} = 'museumsvictoria'
             """
         )
         for j in cursor.fetchall():
-            cc_links.append(j)
+            cc_links.append(j[0])
         # cursor.execute(
         # f"""
         #     UPDATE {IMAGE_TABLE_NAME} a
@@ -113,8 +113,11 @@ def _merge_tags(
         #                   cc_table)}
         # """
         # )
+        print(len(api_links))
+        print(len(cc_links))
         common_links = set(api_links).intersection(set(cc_links))
         print(len(common_links))
+        print(common_links)
         for i in common_links:
             print(i)
     except Exception as e:
