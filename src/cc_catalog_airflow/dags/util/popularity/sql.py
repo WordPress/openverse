@@ -39,14 +39,16 @@ POPULARITY_METRICS = {
 }
 
 
-def clear_image_popularity_relations(
+def drop_image_popularity_relations(
         postgres_conn_id,
         image_view=IMAGE_VIEW_NAME,
         constants=POPULARITY_CONSTANTS_VIEW_NAME,
         metrics=POPULARITY_METRICS_TABLE_NAME,
 ):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    drop_image_view = f"DROP VIEW IF EXISTS public.{image_view} CASCADE;"
+    drop_image_view = (
+        f"DROP MATERIALIZED VIEW IF EXISTS public.{image_view} CASCADE;"
+    )
     drop_popularity_constants = (
         f"DROP MATERIALIZED VIEW IF EXISTS public.{constants} CASCADE;"
     )
@@ -56,6 +58,21 @@ def clear_image_popularity_relations(
     postgres.run(drop_image_view)
     postgres.run(drop_popularity_constants)
     postgres.run(drop_popularity_metrics)
+
+
+def drop_image_popularity_functions(
+        postgres_conn_id,
+        standardized_popularity=STANDARDIZED_POPULARITY_FUNCTION_NAME,
+        popularity_percentile=POPULARITY_PERCENTILE_FUNCTION_NAME,
+):
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    drop_image_view = (
+        f"DROP FUNCTION IF EXISTS public.{standardized_popularity} CASCADE;"
+    )
+    drop_popularity_constants = (
+        f"DROP MATERIALIZED VIEW IF EXISTS public.{constants} CASCADE;"
+    postgres.run(drop_standardized_popularity)
+    postgres.run(drop_popularity_percentile)
 
 
 def create_image_popularity_metrics(
@@ -179,6 +196,15 @@ def create_standardized_popularity_function(
     postgres.run(query)
 
 
+def update_image_popularity_constants(
+    postgres_conn_id, popularity_constants_view=POPULARITY_CONSTANTS_VIEW_NAME,
+):
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    postgres.run(
+        f"REFRESH MATERIALIZED VIEW CONCURRENTLY {popularity_constants_view};"
+    )
+
+
 def create_image_view(
         postgres_conn_id,
         standardized_popularity_func=STANDARDIZED_POPULARITY_FUNCTION_NAME,
@@ -211,15 +237,6 @@ def create_image_view(
     )
     postgres.run(create_view_query)
     postgres.run(add_idx_query)
-
-
-def update_image_popularity_constants(
-    postgres_conn_id, popularity_constants_view=POPULARITY_CONSTANTS_VIEW_NAME,
-):
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    postgres.run(
-        f"REFRESH MATERIALIZED VIEW CONCURRENTLY {popularity_constants_view};"
-    )
 
 
 def update_image_view(
