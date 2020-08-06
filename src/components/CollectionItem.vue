@@ -1,22 +1,20 @@
 <template>
-  <div
+  <a
+    :href="`/search?source=${provider.source_name}`"
     class="column is-narrow margin-normal has-background-white provider-card"
   >
     <div>
-      <router-link
-        :to="'/collections/' + provider.source_name"
-        class="provider-name has-text-weight-normal has-text-black"
-      >
+      <span class="link provider-name has-text-weight-normal has-text-black">
         {{ provider.display_name }}
-      </router-link>
+      </span>
     </div>
     <div class="provider-logo">
-      <router-link :to="'/collections/' + provider.source_name">
+      <span class="link">
         <img
           :alt="provider.display_name"
           :src="getProviderLogo(provider.source_name)"
         />
-      </router-link>
+      </span>
     </div>
     <div>
       <i18n
@@ -29,29 +27,37 @@
         </template>
       </i18n>
     </div>
-  </div>
+  </a>
 </template>
 
 <script>
+import { TOGGLE_FILTER } from '@/store/action-types'
+import { CLEAR_FILTERS } from '@/store/mutation-types'
+
 import ImageProviderService from '@/api/ImageProviderService'
 
 export default {
   name: 'collection-item',
   props: ['provider'],
   methods: {
+    setFilterAndQuery(providerName) {
+      this.$store.commit(CLEAR_FILTERS, { provider: null })
+      this.$store.dispatch(TOGGLE_FILTER, {
+        filterType: 'providers',
+        code: providerName,
+        shouldNavigate: true,
+      })
+    },
     getProviderImageCount(imageCount) {
       return imageCount.toLocaleString('en')
     },
     getProviderLogo(providerName) {
       const provider = ImageProviderService.getProviderInfo(providerName)
-      if (provider) {
-        const logo = provider.logo
-        const logoUrl = this.provider.logo_url || require(`@/assets/${logo}`) // eslint-disable-line global-require, import/no-dynamic-require
+      const logoUrl =
+        this.provider.logo_url ||
+        (provider ? require(`@/assets/${provider.logo}`) : '') // eslint-disable-line global-require, import/no-dynamic-require
 
-        return logoUrl
-      }
-
-      return ''
+      return logoUrl
     },
   },
 }
@@ -62,8 +68,14 @@ export default {
   width: 16.5rem;
   border: 2px solid rgb(216, 216, 216);
   &:hover {
+    cursor: pointer;
+    text-decoration: none;
     box-shadow: 10px 10px 2px -5px #e7e7e7;
   }
+}
+
+.provider-card:hover * {
+  text-decoration: none !important;
 }
 
 .provider-name {
@@ -75,7 +87,7 @@ export default {
   white-space: nowrap;
   position: relative;
 
-  a {
+  .link {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -85,5 +97,14 @@ export default {
   img {
     max-height: 10rem;
   }
+}
+
+// Fallback styles in the rare event logos don't display
+.provider-logo img[src=''] {
+  word-wrap: break-word;
+  white-space: pre-line;
+  text-align: center;
+  font-size: 15px;
+  display: block;
 }
 </style>

@@ -1,11 +1,21 @@
 <template>
   <div class="license-explanation-tooltip padding-small">
-    <h5 class="b-header">
+    <h5 class="b-header" v-if="(license === 'cc0') | (license === 'pdm')">
+      {{ license.toUpperCase() }}
+    </h5>
+    <h5 class="b-header" v-else>
       {{ $t('browse-page.license-description.title') }}
       {{ license.toUpperCase() }}
     </h5>
     <license-explanations :license="license" />
-    <p class="caption is-pulled-right margin-small">
+    <p
+      class="caption is-pulled-right margin-small"
+      v-if="(license === 'cc0') | (license === 'pdm')"
+    >
+      Read more about the tool
+      <a target="_blank" :href="`${getLicenseDeedLink(license)}`">here</a>
+    </p>
+    <p class="caption is-pulled-right margin-small" v-else>
       Read more about the license
       <a target="_blank" :href="`${getLicenseDeedLink(license)}`">here</a>
     </p>

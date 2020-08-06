@@ -121,6 +121,7 @@ const actions = {
 
 function setQuery(state, params, path, redirect) {
   const query = filtersToQueryData(state.filters)
+
   state.isFilterApplied = isFilterApplied(state.filters)
   state.query = {
     q: state.query.q,
@@ -144,12 +145,9 @@ function setFilter(state, params, path, redirect) {
   setQuery(state, params, path, redirect)
 }
 
-const redirectUrl = (params) =>
-  params.isCollectionsPage ? `/collections/${params.provider}` : '/search'
-
 const mutations = (redirect) => ({
   [SET_FILTER](state, params) {
-    return setFilter(state, params, redirectUrl(params), redirect)
+    return setFilter(state, params, '/search', redirect)
   },
   [CLEAR_FILTERS](state, params) {
     const initialFilters = initialState('').filters
@@ -161,7 +159,7 @@ const mutations = (redirect) => ({
       ...initialFilters,
       providers: resetProviders,
     }
-    return setQuery(state, params, redirectUrl(params), redirect)
+    return setQuery(state, params, '/search', redirect)
   },
   [SET_PROVIDERS_FILTERS](state, params) {
     const providers = params.imageProviders

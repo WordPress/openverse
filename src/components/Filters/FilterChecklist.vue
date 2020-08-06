@@ -52,7 +52,9 @@
         />
 
         <license-explanation-tooltip
-          v-if="shouldRenderLicenseExplanationTooltip(item.code)"
+          v-if="
+            shouldRenderLicenseExplanationTooltip(item.code) && !block(item)
+          "
           :license="licenseExplanationCode"
         />
       </div>
