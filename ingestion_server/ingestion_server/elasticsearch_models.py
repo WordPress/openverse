@@ -2,6 +2,7 @@ from enum import Enum, auto
 from elasticsearch_dsl import Integer, DocType, Field
 from ingestion_server.categorize import get_categories
 from ingestion_server.authority import get_authority_boost
+import logging as log
 
 """
 Provides an ORM-like experience for accessing data in Elasticsearch.
@@ -16,6 +17,8 @@ class RankFeature(Field):
 
 
 def _constrain_between(value, low, high):
+    if value is None:
+        return None
     ceiling = min(value, high)
     floor = max(low, ceiling)
     return floor
@@ -75,11 +78,7 @@ class Image(SyncableDocType):
         height = row[schema['height']]
         width = row[schema['width']]
         meta = row[schema['meta_data']]
-        try:
-            popularity = row[schema['standardized_popularity']]
-            popularity = _constrain_between(popularity, low=1, high=100)
-        except (KeyError, TypeError):
-            popularity = None
+        popularity = Image.get_popularity(row[schema['standardized_popularity']])
         authority_boost = Image.get_authority_boost(meta, provider)
         return Image(
             _id=row[schema['id']],
@@ -195,6 +194,13 @@ class Image(SyncableDocType):
         else:
             authority_boost = get_authority_boost(source)
         return authority_boost
+
+    @staticmethod
+    def get_popularity(raw):
+        if not raw:
+            return None
+        popularity = raw * 100
+        return _constrain_between(popularity, low=1, high=100)
 
     @staticmethod
     def parse_detailed_tags(json_tags):
