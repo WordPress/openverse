@@ -66,11 +66,12 @@ def drop_image_popularity_functions(
         popularity_percentile=POPULARITY_PERCENTILE_FUNCTION_NAME,
 ):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    drop_image_view = (
+    drop_standardized_popularity = (
         f"DROP FUNCTION IF EXISTS public.{standardized_popularity} CASCADE;"
     )
-    drop_popularity_constants = (
-        f"DROP MATERIALIZED VIEW IF EXISTS public.{constants} CASCADE;"
+    drop_popularity_percentile = (
+        f"DROP FUNCTION IF EXISTS public.{popularity_percentile} CASCADE;"
+    )
     postgres.run(drop_standardized_popularity)
     postgres.run(drop_popularity_percentile)
 
@@ -156,20 +157,31 @@ def create_image_popularity_constants_view(
 
 ):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    query = dedent(
+    create_view_query = dedent(
         f"""
         CREATE MATERIALIZED VIEW public.{popularity_constants} AS
           WITH popularity_metric_values AS (
             SELECT
             *,
-            {popularity_percentile}({partition}, {metric}, {percentile}) AS val
+            GREATEST(
+              {popularity_percentile}({partition}, {metric}, {percentile}), 1
+            )
+            AS val
             FROM {popularity_metrics}
           )
           SELECT *, ((1 - {percentile}) / {percentile}) * val AS {constant}
           FROM popularity_metric_values;
         """
     )
-    postgres.run(query)
+    add_idx_query = dedent(
+        f"""
+        CREATE UNIQUE INDEX image_view_provider_metric_idx
+          ON public.{popularity_constants}
+          USING btree({partition}, {metric});
+        """
+    )
+    postgres.run(create_view_query)
+    postgres.run(add_idx_query)
 
 
 def update_image_popularity_constants(
@@ -232,7 +244,7 @@ def create_image_view(
           ON public.{image_view_name} ({IDENTIFIER});
         CREATE UNIQUE INDEX image_view_provider_fid_idx
           ON public.{image_view_name}
-          USING btree({PROVIDER}, {FID});
+          USING btree({PROVIDER}, md5({FID}));
         """
     )
     postgres.run(create_view_query)
