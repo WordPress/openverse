@@ -53,14 +53,11 @@ export default {
     },
     getProviderLogo(providerName) {
       const provider = ImageProviderService.getProviderInfo(providerName)
-      if (provider) {
-        const logo = provider.logo
-        const logoUrl = this.provider.logo_url || require(`@/assets/${logo}`) // eslint-disable-line global-require, import/no-dynamic-require
+      const logoUrl =
+        this.provider.logo_url ||
+        (provider ? require(`@/assets/${provider.logo}`) : '') // eslint-disable-line global-require, import/no-dynamic-require
 
-        return logoUrl
-      }
-
-      return ''
+      return logoUrl
     },
   },
 }
@@ -100,5 +97,14 @@ export default {
   img {
     max-height: 10rem;
   }
+}
+
+// Fallback styles in the rare event logos don't display
+.provider-logo img[src=''] {
+  word-wrap: break-word;
+  white-space: pre-line;
+  text-align: center;
+  font-size: 15px;
+  display: block;
 }
 </style>
