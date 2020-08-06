@@ -23,13 +23,16 @@ export default {
     }
   },
   mounted() {
-    // Load voocabulary global header from the unpkg CDN!
+    // Load voocabulary global header from the unpkg CDN and render the global header.
+    // Make sure all of this only happens once.
     if (typeof document !== 'undefined') {
       const el = document.createElement('script')
       el.src = 'https://unpkg.com/@creativecommons/vocabulary/js/vocabulary.js'
       el.defer = true
       el.addEventListener('load', () => {
-        window.vocabulary.createGlobalHeader()
+        if (!document.querySelector('.cc-global-header')) {
+          window.vocabulary.createGlobalHeader()
+        }
       })
       document.head.appendChild(el)
     }
@@ -68,5 +71,10 @@ body {
     position: sticky;
     top: 0;
   }
+}
+
+// override global header styles for now
+.cc-global-header .container {
+  max-width: 100%;
 }
 </style>
