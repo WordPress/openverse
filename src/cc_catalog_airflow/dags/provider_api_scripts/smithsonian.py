@@ -46,35 +46,65 @@ CREATOR_TYPES = {
     'author': 0,
     'created_by': 0,
     'creator': 0,
+    'created by': 0,
     'model maker': 0,
+    'modeler': 0,
     'photographer': 0,
     'photograph by': 0,
     'written by': 0,
 
     'architect': 1,
     'designer': 1,
+    'designed by': 1,
+    'illustrator': 1,
+    'illustrated by': 1,
+    'cartoonist': 1,
+    'weaver': 1,
+    'composer': 1,
+    'composed by': 1,
+    'embroiderer': 1,
+    'landscape architect': 1,
+    'calligrapher': 1,
+    'sculptor': 1,
+    'jeweler': 1,
+    'potter': 1,
+    'ceramist': 1,
 
     'compiled by': 2,
     'engraver': 2,
     'etcher': 2,
     'maker': 2,
     'silversmith': 2,
+    'producer': 2,
+    'produced by': 2,
+    'metal worker': 2,
+    'carver': 2,
+    'cartographer': 2,
 
     'print maker': 3,
+    'painter': 3,
     'after': 3,
     'inventor': 3,
+    'lithographer': 3,
+    'attribution': 3,
+    'former attribution': 3,
 
     'manufactured by': 4,
     'manufacturer': 4,
     'published by': 4,
     'publisher': 4,
+    'editor': 4,
 
     'patentee': 5,
 
     'collector': 6
 }
 
-DESCRIPTION_TYPES = {'description', 'summary', 'caption', 'notes'}
+DESCRIPTION_TYPES = {'description', 'summary', 'caption', 'notes',
+                     'description (brief)', 'description (spanish)',
+                     'description (brief spanish)', 'gallery label',
+                     'exhibition label', 'luce center label',
+                     'publication label', 'new acquisition label'}
 TAG_TYPES = ['date', 'object_type', 'topic', 'place']
 
 image_store = image.ImageStore(provider=PROVIDER)
@@ -271,6 +301,7 @@ def _get_creator(row, creator_types=CREATOR_TYPES):
             if type(i) == dict
             and _check_type(i.get('label'), str).lower() in creator_types
             and _check_type(i.get('content'), str)
+            and 'unknown' not in i.get('content').lower()
         ],
         key=lambda x: creator_types[x['label'].lower()]
     )
