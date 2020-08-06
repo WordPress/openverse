@@ -21,21 +21,19 @@
       <div class="column">
         <section class="tabs margin-top-big">
           <ul role="tablist">
-            <li role="tab" :class="tabClass(0, 'tab')">
+            <li role="tab" :aria-selected="activeTab == 0" :class="tabClass(0, 'tab')">
               <a
                 aria-label="help us improve form"
                 href="#panel0"
-                :aria-selected="activeTab == 0"
                 @click.prevent="setActiveTab(0)"
               >
                 {{ $t('feedback.improve') }}
               </a>
             </li>
-            <li role="tab" :class="tabClass(1, 'tab')">
+            <li role="tab" :aria-selected="activeTab == 1" :class="tabClass(1, 'tab')">
               <a
                 aria-label="report a bug form"
                 href="#panel1"
-                :aria-selected="activeTab == 1"
                 @click.prevent="setActiveTab(1)"
               >
                 {{ $t('feedback.bug') }}
