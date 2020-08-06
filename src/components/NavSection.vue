@@ -1,5 +1,5 @@
 <template>
-  <nav aria-label="primary" class="navbar">
+  <nav :aria-label="$t('header.aria.primary')" class="navbar">
     <div class="navbar-brand">
       <router-link class="logo" to="/">
         <img alt="Logo" src="/static/logos/products/search.svg" />
@@ -7,7 +7,7 @@
       <a
         role="button"
         :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
-        aria-label="menu"
+        :aria-label="$t('header.aria.menu')"
         aria-expanded="false"
         @click="toggleBurgerActive"
       >
@@ -25,7 +25,7 @@
           v-on:submit.prevent="onSubmit"
         >
           <input
-            aria-label="search"
+            :aria-label="$t('header.aria.search')"
             class="input"
             type="search"
             :placeholder="navSearchPlaceholder"
@@ -33,7 +33,7 @@
           />
           <div class="is-sr-only">
             <button
-              aria-label="sr search button"
+              :aria-label="$t('header.aria.sr-search')"
               tabindex="-1"
               type="submit"
               class="button secondary"
@@ -56,6 +56,7 @@
           $t('header.feedback')
         }}</router-link>
         <a
+          :aria-label="$t('header.aria.extension')"
           class="navbar-item"
           href="https://opensource.creativecommons.org/ccsearch-browser-extension/"
           target="_blank"

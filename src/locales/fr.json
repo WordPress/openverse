@@ -19,6 +19,11 @@
     "locale": {
       "label": "Langues disponibles",
       "icon": "lieu"
+    },
+    "aria": {
+      "search": "chercher",
+      "caption": "à propos des licences cc",
+      "old-cc-search": "ancienne recherche cc"
     }
   },
   "header": {
@@ -27,7 +32,14 @@
     "search-guide": "Guide de recherche",
     "feedback": "Retour d'information",
     "extension": "Extension",
-    "placeholder": "Rechercher toutes les images"
+    "placeholder": "Rechercher toutes les images",
+    "aria": {
+      "primary": "primaire",
+      "menu": "menu",
+      "search": "chercher",
+      "sr-search": "bouton de recherche sr",
+      "extension": "extension"
+    }
   },
   "footer": {
     "address": {
@@ -50,6 +62,11 @@
       "work": "Notre travail compte sur vous!",
       "help": "Aidez-nous à garder Internet gratuit et ouvert.",
       "link": "Faire un don maintenant"
+    },
+    "aria": {
+      "contact": "coordonnées cc",
+      "homepage": "page d'accueil",
+      "donate": "section don"
     }
   },
   "about": {

@@ -4,19 +4,21 @@
       <div class="columns">
         <section
           role="complementary"
-          aria-label="cc contact info"
+          :aria-label="$t('footer.aria.contact')"
           class="column"
         >
           <a
+            :aria-label="$t('footer.aria.homepage')"
             href="https://creativecommons.org"
-            aria-label="home"
             class="main-logo margin-bottom-bigger has-text-white"
           >
             <svg
+              aria-labelledby="title"
               xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="xMidYMid meet"
               viewBox="0 0 304 73"
             >
+              <title id="title" lang="en">Logo</title>
               <use href="/static/logos/cc/logomark.svg#logomark"></use>
             </svg>
           </a>
@@ -32,6 +34,7 @@
           <div class="margin-vertical-large">
             <a
               href="https://www.instagram.com/creativecommons"
+              aria-label="instagram"
               class="social has-text-white"
               target="_blank"
               rel="noopener"
@@ -40,6 +43,7 @@
             </a>
             <a
               href="https://www.twitter.com/creativecommons"
+              aria-label="twitter"
               class="social has-text-white"
               target="_blank"
               rel="noopener"
@@ -48,6 +52,7 @@
             </a>
             <a
               href="https://www.facebook.com/creativecommons"
+              aria-label="facebook"
               class="social has-text-white"
               target="_blank"
               rel="noopener"
@@ -139,7 +144,7 @@
         <div class="column">
           <section
             role="complementary"
-            aria-label="donate section"
+            :aria-label="$t('footer.aria.donate')"
             class="donate-section"
           >
             <h5>{{ $t('footer.donate.work') }}</h5>

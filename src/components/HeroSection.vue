@@ -16,6 +16,7 @@
               <input
                 required="required"
                 class="hero_search-input input is-large"
+                :aria-label="$t('hero.aria.search')"
                 autofocus
                 type="search"
                 name="q"
@@ -38,6 +39,7 @@
               <input
                 required="required"
                 class="input"
+                :aria-label="$t('hero.aria.search')"
                 type="search"
                 name="q"
                 :placeholder="$t('hero.search.placeholder')"
@@ -59,7 +61,7 @@
               <a
                 href="https://creativecommons.org/share-your-work/licensing-examples/"
                 target="_blank"
-                aria-label="about cc licenses"
+                :aria-label="$t('hero.aria.caption')"
                 rel="noopener"
               >
                 {{ $t('hero.caption.link') }}
@@ -78,7 +80,7 @@
           <template v-slot:link>
             <a
               href="https://oldsearch.creativecommons.org/"
-              aria-label="old cc search"
+              :aria-label="$t('hero.aria.old-cc-search')"
               >{{ $t('hero.old-cc-search.link') }}</a
             >
           </template>
