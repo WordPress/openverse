@@ -39,6 +39,14 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     {
+      path: '/collections/:collection',
+      redirect: (to) => ({
+        path: '/search',
+        props: (route) => ({ query: route.query.q }),
+        query: { q: '', source: to.params.collection },
+      }),
+    },
+    {
       path: '/search',
       component: BrowsePage,
       props: (route) => ({ query: route.query.q }),
@@ -98,13 +106,6 @@ const router = new VueRouter({
     }
     return { x: 0, y: 0 }
   },
-})
-
-router.afterEach((to) => {
-  if (typeof ga !== 'undefined') {
-    ga('set', 'page', to.fullPath)
-    ga('send', 'pageview')
-  }
 })
 
 export default router
