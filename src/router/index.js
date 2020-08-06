@@ -108,4 +108,11 @@ const router = new VueRouter({
   },
 })
 
+router.afterEach((to) => {
+  if (typeof ga !== 'undefined') {
+    ga('set', 'page', to.fullPath)
+    ga('send', 'pageview')
+  }
+})
+
 export default router
