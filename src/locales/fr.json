@@ -356,7 +356,7 @@
   },
   "meta-search": {
     "sources": "Sources",
-    "caption":"CC Search n'indexe pas actuellement les sources énumérées ci-dessus, mais grâce à cette interface, il offre un accès pratique aux services de recherche fournis par d'autres organisations indépendantes. CC n'a aucun contrôle sur les résultats renvoyés. Ne supposez pas que les résultats affichés dans ce portail de recherche sont sous une licence CC. Vérifiez toujours que l'œuvre est bien sous licence CC en suivant le lien. En cas de doute, vous devez contacter directement le détenteur des droits d'auteur ou essayer de contacter le site où vous avez trouvé le contenu.",
+    "caption": "CC Search n'indexe pas actuellement les sources énumérées ci-dessus, mais grâce à cette interface, il offre un accès pratique aux services de recherche fournis par d'autres organisations indépendantes. CC n'a aucun contrôle sur les résultats renvoyés. Ne supposez pas que les résultats affichés dans ce portail de recherche sont sous une licence CC. Vérifiez toujours que l'œuvre est bien sous licence CC en suivant le lien. En cas de doute, vous devez contacter directement le détenteur des droits d'auteur ou essayer de contacter le site où vous avez trouvé le contenu.",
     "card": {
       "search": "Chercher",
       "caption": "Cliquez sur une source ci-dessous pour rechercher directement d'autres collections d'images sous licence CC.{break}Veuillez noter que les filtres Utiliser ne sont pas pris en charge pour Open Clip Art Library ou Nappy.",

@@ -9,10 +9,7 @@
       <h5 class="b-header margin-bottom-big">
         {{ $t('photo-details.reuse.license-header') }}
       </h5>
-      <i18n
-        path="photo-details.attribution.main"
-        tag="span"
-      >
+      <i18n path="photo-details.attribution.main" tag="span">
         <template v-slot:link>
           <a
             class="photo_license"

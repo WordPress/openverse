@@ -34,7 +34,10 @@
       class="button is-text tiny margin-top-normal is-shadowless has-text-grey"
       @click="onBackClick()"
     >
-      <span><i class="icon chevron-left margin-right-small"></i> {{$t('photo-details.content-report.back')}}</span>
+      <span
+        ><i class="icon chevron-left margin-right-small"></i>
+        {{ $t('photo-details.content-report.back') }}</span
+      >
     </button>
   </div>
 </template>

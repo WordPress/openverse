@@ -1,7 +1,11 @@
 <template>
   <section :key="type" class="padding-normal">
     <header class="margin-bottom-large">
-      <i18n path="meta-search.form.title" tag="h4" class="b-header margin-bottom-small">
+      <i18n
+        path="meta-search.form.title"
+        tag="h4"
+        class="b-header margin-bottom-small"
+      >
         <template v-slot:type>
           {{ type }}
         </template>
@@ -22,7 +26,7 @@
     <meta-source-list :type="type" :query="metaQuery" />
 
     <p class="caption has-text-weight-semibold has-color-dark-gray max-w-lg">
-      {{$t('meta-search.caption')}}
+      {{ $t('meta-search.caption') }}
     </p>
   </section>
 </template>

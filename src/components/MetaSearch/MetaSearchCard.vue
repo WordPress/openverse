@@ -1,6 +1,10 @@
 <template>
   <div class="meta-card">
-    <i18n path="meta-search.card.caption" tag="p" class="padding-left-bigger padding-right-bigger">
+    <i18n
+      path="meta-search.card.caption"
+      tag="p"
+      class="padding-left-bigger padding-right-bigger"
+    >
       <template v-slot:break>
         <br />
       </template>
@@ -9,7 +13,9 @@
     <div
       class="padding-left-bigger padding-right-bigger padding-bottom-bigger meta-modal-content"
     >
-      <h5 class="b-header margin-bottom-small">{{$t('meta-search.card.search')}}</h5>
+      <h5 class="b-header margin-bottom-small">
+        {{ $t('meta-search.card.search') }}
+      </h5>
 
       <div class="control has-icons-left margin-bottom-bigger">
         <input
@@ -25,7 +31,9 @@
         </span>
       </div>
 
-      <h5 for="metaUseCheckboxes" class="b-header margin-bottom-small">{{$t('meta-search.card.checkboxes.title')}}</h5>
+      <h5 for="metaUseCheckboxes" class="b-header margin-bottom-small">
+        {{ $t('meta-search.card.checkboxes.title') }}
+      </h5>
       <div class="meta-filters margin-bottom-bigger flex">
         <label class="margin-right-big"
           ><input
@@ -33,7 +41,7 @@
             type="checkbox"
             v-model="editableQuery.filters.commercial"
           />
-          {{$t('meta-search.card.checkboxes.commercial')}}</label
+          {{ $t('meta-search.card.checkboxes.commercial') }}</label
         >
         <label
           ><input
@@ -41,13 +49,13 @@
             type="checkbox"
             v-model="editableQuery.filters.modify"
           />
-          {{$t('meta-search.card.checkboxes.modify')}}</label
+          {{ $t('meta-search.card.checkboxes.modify') }}</label
         >
       </div>
 
       <meta-source-list :type="type" :query="editableQuery" />
       <p class="caption has-text-weight-semibold">
-        {{$t('meta-search.caption')}}
+        {{ $t('meta-search.caption') }}
       </p>
     </div>
   </div>
