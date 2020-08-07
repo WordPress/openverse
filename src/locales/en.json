@@ -167,6 +167,7 @@
   "not-found": "Page Not Found",
   "filters": {
     "title": "Filters",
+    "filter-by": "Filter By",
     "licenses": {
       "title": "Licenses",
       "cc0": "CC0",
@@ -217,6 +218,10 @@
     },
     "creator": {
       "title": "Search by Creator"
+    },
+    "license-explanation": {
+      "tool": "Read more about the tool {link} here",
+      "license": "Read more about the license {link} here"
     }
   },
   "filter-list": {
@@ -229,6 +234,7 @@
     "no-more": "No more images :(",
     "load": "Load more results",
     "error": "Error fetching images:",
+    "other-source": "Not finding what you need? Search other sources",
     "search-rating": {
       "content": "Are these results relevant?",
       "yes": "Yes",
@@ -253,6 +259,18 @@
       "title": "Safe Browsing",
       "caption": "By default, search results will not include results that have been reported as mature by users and sources.",
       "label": "Show Mature Content"
+    },
+    "aria": {
+      "close": "close",
+      "scroll": "scroll to top",
+      "search": "search",
+      "relevance": {
+        "yes": "relevant result? answer: yes",
+        "no": "relevant result? answer: no"
+      },
+      "remove-filter": "remove filter",
+      "license-explanation": "license explanation",
+      "creator": "search by creator"
     }
   },
   "photo-details": {
@@ -281,6 +299,8 @@
     },
     "information": {
       "title": "Information",
+      "type": "Type:",
+      "provider": "Provider:",
       "dimensions": "Dimensions",
       "source": "Source",
       "license": "License",
@@ -316,6 +336,39 @@
         "thanks": "Thank you for reporting an issue with the results of CC Search!",
         "error": "There was an error with the report submission. Please try again."
       }
+    },
+    "aria": {
+      "close-form": "close form",
+      "dmca": "dmca form",
+      "attribution": {
+        "license": "read more about the license",
+        "tool": "read more about the tool"
+      },
+      "details": "image details",
+      "share": {
+        "facebook": "share on facebook",
+        "twitter": "share on twitter",
+        "pinterest": "share on pinterest"
+      },
+      "main": "main content",
+      "related": "related images"
+    }
+  },
+  "meta-search": {
+    "sources": "Sources",
+    "caption":"CC Search does not currently index the sources listed above, but through this interface is offering convenient access to search services provided by other independent organizations. CC has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. Always verify that the work is actually under a CC license by following the link. If you are in doubt, you should contact the copyright holder directly, or try to contact the site where you found the content.",
+    "card": {
+      "search": "Search",
+      "caption": "Click on a source below to directly search other collections of CC-licensed images.{break}Please note that Use filters are not supported for Open Clip Art Library or Nappy.",
+      "checkboxes": {
+        "title": "Use",
+        "commercial": "Use for commercial purposes",
+        "modify": "Modify or adapt"
+      }
+    },
+    "form": {
+      "title": "CC Search does not yet support built-in {type} search.",
+      "caption": "Click on a source below to directly search other collections of CC-licensed {type}.{break}Please note that Use filters are not supported for {filter}."
     }
   }
 }

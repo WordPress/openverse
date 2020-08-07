@@ -1,6 +1,6 @@
 <template>
   <div class="margin-bottom-large">
-    <h5 class="b-header margin-bottom-small">Sources</h5>
+    <h5 class="b-header margin-bottom-small">{{$t('meta-search.sources')}}</h5>
     <ul class="buttons">
       <li v-for="source in sources" :key="source">
         <a

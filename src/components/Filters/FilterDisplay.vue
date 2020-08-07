@@ -1,7 +1,7 @@
 <template>
   <div class="filter-display padding-normal" aria-live="polite">
     <span v-if="anyFilterApplied" class="caption has-text-weight-semibold"
-      >Filter By</span
+      >{{$t('filters.filter-by')}}</span
     >
     <span v-for="filter in getFilters('licenses')" :key="filter.code">
       <filter-block

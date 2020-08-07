@@ -87,10 +87,10 @@
         v-if="activeTab == 'image'"
         class="margin-normal filter-option small-filter margin-bottom-normal"
       >
-        <label aria-label="search by creator">
+        <label :aria-label="$t('browse-page.aria.creator')">
           <input
             type="checkbox"
-            aria-label="search by creator"
+            :aria-label="$t('browse-page.aria.creator')"
             :checked="filters.searchBy.creator"
             @change="onUpdateSearchByCreator"
           />

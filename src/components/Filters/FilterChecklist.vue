@@ -42,7 +42,7 @@
           {{ $t(item.name) }}
         </label>
         <img
-          aria-label="license explanation"
+          :aria-label="$t('browse-page.aria.license-explanation')"
           tabindex="0"
           v-if="filterType == 'licenses'"
           src="@/assets/help_icon.svg"
