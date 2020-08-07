@@ -96,6 +96,16 @@
       "source": "Source",
       "domain": "Domain",
       "work": "# CC Licensed Works"
+    },
+    "aria": {
+      "licenses": "cc licenses",
+      "vision": "cc search vision",
+      "roadmap": "cc search roadmap",
+      "projects": "current projects",
+      "contribution": "contribution guidelines",
+      "terms": "cc terms of use",
+      "old-cc-search": "old cc search",
+      "sources": "sources table"
     }
   },
   "search-guide": {
@@ -141,7 +151,12 @@
     "description": "Thank you for using CC Search! We welcome your ideas for improving the tool below. To provide regular user feedback, join the {channel} channel on {slack}.",
     "improve": "Help us Improve",
     "bug": "Report a Bug",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "aria": {
+      "cc-usability": "slack cc-usability channel",
+      "improve": "help us improve form",
+      "report-bug": "report a bug form"
+    }
   },
   "collections": {
     "title": "Browse collections",
