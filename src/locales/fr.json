@@ -96,6 +96,16 @@
       "source": "La source",
       "domain": "Domaine",
       "work": "# Œuvres sous licence CC"
+    },
+    "aria": {
+      "licenses": "licences cc",
+      "vision": "vision de recherche cc",
+      "roadmap": "feuille de route de recherche cc",
+      "projects": "projets actuels",
+      "contribution": "directives de contribution",
+      "terms": "conditions d'utilisation cc",
+      "old-cc-search": "ancienne recherche cc",
+      "sources": "table des sources"
     }
   },
   "search-guide": {
@@ -141,7 +151,12 @@
     "description": "Merci d'utiliser CC Search! Nous apprécions vos idées pour améliorer l'outil ci-dessous. Pour fournir des commentaires réguliers des utilisateurs, rejoignez la chaîne {channel} sur {slack}.",
     "improve": "Aidez nous à améliorer",
     "bug": "Signaler un bug",
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "aria": {
+      "cc-usability": "canal d'utilisation cc slack",
+      "improve": "aidez-nous à améliorer la forme",
+      "report-bug": "signaler un formulaire de bogue"
+    }
   },
   "collections": {
     "title": "Parcourir les collections",

@@ -6,13 +6,14 @@
       <i18n path="feedback.description" tag="p">
         <template v-slot:channel>
           <a
-            aria-label="slack cc-usability channel"
+            :aria-label="$t('feedback.aria.cc-usability')"
             href="https://creativecommons.slack.com/messages/CCS9CF2JE/details/"
             >#cc-usability</a
           >
         </template>
         <template v-slot:slack>
           <a
+            aria-label="cc slack"
             href="https://wiki.creativecommons.org/wiki/Slack#How_to_join_Slack"
             >CC Slack</a
           >
@@ -27,7 +28,7 @@
               :class="tabClass(0, 'tab')"
             >
               <a
-                aria-label="help us improve form"
+                :aria-label="$t('feedback.aria.improve')"
                 href="#panel0"
                 @click.prevent="setActiveTab(0)"
               >
@@ -40,7 +41,7 @@
               :class="tabClass(1, 'tab')"
             >
               <a
-                aria-label="report a bug form"
+                :aria-label="$t('feedback.aria.report-bug')"
                 href="#panel1"
                 @click.prevent="setActiveTab(1)"
               >
@@ -52,7 +53,7 @@
         <section class="tabs-content">
           <div :class="tabClass(0, 'tabs-panel')">
             <iframe
-              aria-label="help us improve form"
+              :aria-label="$t('feedback.aria.improve')"
               src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
               width="100%"
               height="998"
@@ -66,7 +67,7 @@
           </div>
           <div :class="tabClass(1, 'tabs-panel')">
             <iframe
-              aria-label="report a bug form"
+              :aria-label="$t('feedback.aria.report-bug')"
               src="https://docs.google.com/forms/d/e/1FAIpQLSeSN1AIG8LrdgIdKpBj4IlPDhu6T5ndZ7z_QcISBu-ITCU0Yw/viewform?embedded=true"
               width="100%"
               height="998"
