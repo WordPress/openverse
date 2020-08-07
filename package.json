@@ -35,6 +35,7 @@
     "axios": "^0.18.0",
     "build-url": "^2.0.0",
     "bulma": "^0.8.0",
+    "case": "^1.6.3",
     "clipboard": "^2.0.4",
     "delayed-scroll-restoration-polyfill": "^0.1.1",
     "express": "^4.17.1",
