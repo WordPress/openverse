@@ -41,7 +41,7 @@
     </div>
     <div
       role="region"
-      aria-label="image details"
+      :aria-label="$t('photo-details.aria.details')"
       class="column image-info margin-left-xl"
     >
       <div class="margin-top-normal margin-bottom-small">

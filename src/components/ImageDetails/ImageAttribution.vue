@@ -9,14 +9,18 @@
       <h5 class="b-header margin-bottom-big">
         {{ $t('photo-details.reuse.license-header') }}
       </h5>
-      This image was marked with<a
-        class="photo_license"
-        :href="licenseURL"
-        target="_blank"
-        rel="noopener"
-      >
-        {{ fullLicenseName.toUpperCase() }}
-      </a>
+      <i18n path="photo-details.attribution.main" tag="span">
+        <template v-slot:link>
+          <a
+            class="photo_license"
+            :href="licenseURL"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ fullLicenseName.toUpperCase() }}
+          </a>
+        </template>
+      </i18n>
       <license-explanations :license="image.license" />
 
       <i18n
@@ -26,7 +30,7 @@
       >
         <template v-slot:link>
           <a
-            aria-label="read more about the tool"
+            :aria-label="$t('photo-details.aria.attribution.tool')"
             :href="licenseURL"
             target="_blank"
             rel="noopener"
@@ -67,7 +71,7 @@
       >
         <template v-slot:link>
           <a
-            aria-label="read more about the license"
+            :aria-label="$t('photo-details.aria.attribution.license')"
             :href="licenseURL"
             target="_blank"
             rel="noopener"

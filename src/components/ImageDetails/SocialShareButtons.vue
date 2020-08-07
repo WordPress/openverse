@@ -2,7 +2,7 @@
   <div class="social-share">
     <div class="share-list_social-items">
       <a
-        aria-label="share on facebook"
+        :aria-label="$t('photo-details.aria.share.facebook')"
         class="social-button facebook"
         target="_blank"
         @click="onSocialMediaLinkClick('Facebook')"
@@ -11,7 +11,7 @@
         <i class="icon facebook colored margin-right-normal is-size-1"></i>
       </a>
       <a
-        aria-label="share on twitter"
+        :aria-label="$t('photo-details.aria.share.twitter')"
         class="social-button twitter"
         target="_blank"
         @click="onSocialMediaLinkClick('Twitter')"
@@ -20,7 +20,7 @@
         <i class="icon twitter colored margin-right-normal is-size-1" />
       </a>
       <a
-        aria-label="share on pinterest"
+        :aria-label="$t('photo-details.aria.share.pinterest')"
         class="social-button pinterest"
         target="_blank"
         @click="onSocialMediaLinkClick('Pinterest')"

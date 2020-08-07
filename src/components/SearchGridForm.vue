@@ -18,7 +18,7 @@
         <div class="control has-icons-left margin-left-small">
           <label for="searchTerm" class="is-sr-only">Search</label>
           <input
-            aria-label="search"
+            :aria-label="$t('browse-page.aria.search')"
             id="searchInput"
             required="required"
             autofocus="true"
@@ -56,7 +56,7 @@
         <div class="control has-icons-left margin-left-small">
           <label for="searchTerm" class="is-sr-only">Search</label>
           <input
-            aria-label="search"
+            :aria-label="$t('browse-page.aria.search')"
             id="searchInputMobile"
             required="required"
             autofocus="true"

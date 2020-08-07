@@ -1,7 +1,7 @@
 <template>
   <div class="padding-normal is-clearfix arrow-popup">
     <button
-      aria-label="close form"
+      :aria-label="$t('photo-details.aria.close-form')"
       class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
       @click="closeForm()"
     >

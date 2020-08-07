@@ -41,12 +41,11 @@
           <loading-icon v-show="isFetchingImages" />
         </div>
         <button
-          aria-controls="meta-search-modal"
           type="button"
           @click="showMetaImageSearch = true"
           class="meta-popup-trigger has-color-tomato text-center caption padding-normal"
         >
-          Not finding what you need? Search other sources
+          {{ $t('browse-page.other-source') }}
         </button>
       </div>
       <div
