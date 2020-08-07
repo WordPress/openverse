@@ -1,6 +1,6 @@
 {
   "name": "cccatalog-frontend",
-  "version": "4.3.2",
+  "version": "2020.08.1",
   "description": "Common Creative search",
   "repository": {
     "type": "git",
@@ -31,11 +31,13 @@
   },
   "dependencies": {
     "@creativecommons/vocabulary": "^2020.7.1",
-    "@sentry/browser": "^5.6.0",
-    "@sentry/node": "^5.6.0",
+    "@sentry/browser": "^5.20.1",
+    "@sentry/integrations": "^5.20.1",
+    "@sentry/node": "^5.20.1",
     "axios": "^0.18.0",
     "build-url": "^2.0.0",
     "bulma": "^0.8.0",
+    "case": "^1.6.3",
     "clipboard": "^2.0.4",
     "cypress": "^4.11.0",
     "delayed-scroll-restoration-polyfill": "^0.1.1",
@@ -51,9 +53,10 @@
     "uuid": "^3.3.2",
     "vue": "^2.6.11",
     "vue-form": "^4.10.3",
+    "vue-i18n": "^8.17.7",
     "vue-masonry": "^0.11.7",
     "vue-meta": "^2.4.0",
-    "vue-router": "^3.1.6",
+    "vue-router": "^3.3.4",
     "vue-server-renderer": "^2.6.11",
     "vuex": "^3.1.3"
   },

@@ -31,12 +31,12 @@
         <div class="load-more">
           <button
             v-show="!isFetchingImages && includeAnalytics"
-            class="button margin-bottom-small"
+            class="button margin-bottom-big"
             :disabled="isFinished"
             @click="onLoadMoreImages"
           >
-            <span v-if="isFinished">No more images :(</span>
-            <span v-else>Load more results</span>
+            <span v-if="isFinished">{{ $t('browse-page.no-more') }}</span>
+            <span v-else>{{ $t('browse-page.load') }}</span>
           </button>
           <loading-icon v-show="isFetchingImages" />
         </div>
@@ -49,22 +49,25 @@
           Not finding what you need? Search other sources
         </button>
       </div>
-
       <div
         class="search-grid_notification callout alert"
         v-if="isFetchingImagesError"
       >
-        <h5>Error fetching images: {{ _errorMessage }}</h5>
+        <h5>{{ $t('browse-page.error') }} {{ _errorMessage }}</h5>
       </div>
     </div>
 
-    <meta-search-modal
-      id="meta-search-modal"
-      v-show="showMetaImageSearch"
+    <app-modal
+      :visible="showMetaImageSearch"
+      :title="'Search Images from Other Sources'"
       @close="showMetaImageSearch = false"
-      type="image"
-      :query="query"
-    />
+    >
+      <meta-search-card
+        type="image"
+        :query="query"
+        @close="showMetaImageSearch = false"
+      />
+    </app-modal>
   </section>
 </template>
 
@@ -74,7 +77,8 @@ import SearchGridCell from '@/components/SearchGridCell'
 import LoadingIcon from '@/components/LoadingIcon'
 import SearchRating from '@/components/SearchRating'
 import SafeBrowsing from '@/components/SafeBrowsing'
-import MetaSearchModal from '@/components/MetaSearch/MetaSearchModal'
+import MetaSearchCard from '@/components/MetaSearch/MetaSearchCard'
+import AppModal from '@/components/AppModal'
 
 const DEFAULT_PAGE_SIZE = 20
 
@@ -85,7 +89,8 @@ export default {
     LoadingIcon,
     SearchRating,
     SafeBrowsing,
-    MetaSearchModal,
+    MetaSearchCard,
+    AppModal,
   },
   data: () => ({
     isDataInitialized: false,

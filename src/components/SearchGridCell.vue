@@ -7,8 +7,8 @@
   >
     <figure class="search-grid_item">
       <i :style="`padding-bottom:${iPadding}%`"></i>
-      <a
-        :href="'/photos/' + image.id"
+      <router-link
+        :to="'/photos/' + image.id"
         @click="onGotoDetailPage($event, image)"
         class="search-grid_image-ctr"
         :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`"
@@ -21,9 +21,10 @@
           }"
           :alt="image.title"
           :src="getImageUrl(image)"
+          @load="getImgDimension"
           @error="onImageLoadError($event, image)"
         />
-      </a>
+      </router-link>
       <figcaption class="overlay overlay__top padding-small">
         <license-icons :license="image.license"></license-icons>
       </figcaption>
@@ -134,13 +135,10 @@ export default {
         element.src = errorImage
       }
     },
-    getImgDimension() {
-      this.imgHeight = this.$refs.img.naturalHeight
-      this.imgWidth = this.$refs.img.naturalWidth
+    getImgDimension(e) {
+      this.imgHeight = e.target.naturalHeight
+      this.imgWidth = e.target.naturalWidth
     },
-  },
-  mounted() {
-    if (!this.image.width) this.getImgDimension()
   },
 }
 </script>

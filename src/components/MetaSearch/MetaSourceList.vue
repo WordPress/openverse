@@ -33,9 +33,6 @@ export default {
       return getLegacySourceUrl(this.type)(source, this.query)
     },
   },
-  mounted() {
-    console.log(legacySourceMap)
-  },
   data() {
     return {
       sources: Object.keys(legacySourceMap).filter(

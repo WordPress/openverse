@@ -1,8 +1,8 @@
 <template>
   <form class="other-form">
-    <h4 class="b-header">Report this content</h4>
+    <h4 class="b-header">{{ $t('photo-details.content-report.title') }}</h4>
     <legend class="margin-bottom-small">
-      Please describe the issue for us
+      {{ $t('photo-details.content-report.issue-description') }}
     </legend>
     <textarea
       class="reason padding-small has-text-weight-semibold"
@@ -14,7 +14,10 @@
         class="button other-back-button is-text tiny margin-top-normal has-text-grey"
         @click="onBackClick()"
       >
-        <span><i class="icon chevron-left margin-right-small"></i> Back</span>
+        <span>
+          <i class="icon chevron-left margin-right-small"></i>
+          {{ $t('photo-details.content-report.back') }}
+        </span>
       </button>
 
       <button
@@ -23,7 +26,7 @@
         class="button submit-other-button tiny is-info margin-top-normal is-pulled-right"
         @click="sendContentReport()"
       >
-        Submit
+        {{ $t('photo-details.content-report.submit') }}
       </button>
     </div>
   </form>

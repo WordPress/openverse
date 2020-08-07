@@ -21,6 +21,8 @@
   width: 21.875rem;
 
   @include touch {
+    position: relative;
     width: 0;
+    height: 0;
   }
 }

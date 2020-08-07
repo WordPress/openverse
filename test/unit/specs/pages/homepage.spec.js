@@ -21,7 +21,6 @@ describe('Homepage', () => {
     render(Homepage, options)
 
     expect(options.mocks.$store.commit).toHaveBeenCalledWith('CLEAR_FILTERS', {
-      isCollectionsPage: false,
       provider: null,
       shouldNavigate: false,
     })

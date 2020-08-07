@@ -1,5 +1,5 @@
 import findIndex from 'lodash.findindex'
-import { ExperimentData } from '@/abTests/filterVisibilityExperiment'
+import { ExperimentData } from '@/abTests/experiments/filterExpansion'
 import { TOGGLE_FILTER, CONVERT_AB_TEST_EXPERIMENT } from './action-types'
 import {
   SET_FILTER,
@@ -15,39 +15,59 @@ import { screenWidth } from '../utils/getBrowserInfo'
 
 export const filterData = {
   licenses: [
-    { code: 'cc0', name: 'CC0', checked: false },
-    { code: 'pdm', name: 'Public Domain Mark', checked: false },
-    { code: 'by', name: 'BY', checked: false },
-    { code: 'by-sa', name: 'BY-SA', checked: false },
-    { code: 'by-nc', name: 'BY-NC', checked: false },
-    { code: 'by-nd', name: 'BY-ND', checked: false },
-    { code: 'by-nc-sa', name: 'BY-NC-SA', checked: false },
-    { code: 'by-nc-nd', name: 'BY-NC-ND', checked: false },
+    { code: 'cc0', name: 'filters.licenses.cc0', checked: false },
+    { code: 'pdm', name: 'filters.licenses.pdm', checked: false },
+    { code: 'by', name: 'filters.licenses.by', checked: false },
+    { code: 'by-sa', name: 'filters.licenses.by-sa', checked: false },
+    { code: 'by-nc', name: 'filters.licenses.by-nc', checked: false },
+    { code: 'by-nd', name: 'filters.licenses.by-nd', checked: false },
+    { code: 'by-nc-sa', name: 'filters.licenses.by-nc-sa', checked: false },
+    { code: 'by-nc-nd', name: 'filters.licenses.by-nc-nd', checked: false },
   ],
   licenseTypes: [
-    { code: 'commercial', name: 'Use commercially', checked: false },
-    { code: 'modification', name: 'Modify or adapt', checked: false },
+    {
+      code: 'commercial',
+      name: 'filters.license-types.commercial',
+      checked: false,
+    },
+    {
+      code: 'modification',
+      name: 'filters.license-types.modification',
+      checked: false,
+    },
   ],
   categories: [
-    { code: 'photograph', name: 'Photographs', checked: false },
-    { code: 'illustration', name: 'Illustrations', checked: false },
-    { code: 'digitized_artwork', name: 'Digitized Artworks', checked: false },
+    {
+      code: 'photograph',
+      name: 'filters.categories.photograph',
+      checked: false,
+    },
+    {
+      code: 'illustration',
+      name: 'filters.categories.illustration',
+      checked: false,
+    },
+    {
+      code: 'digitized_artwork',
+      name: 'filters.categories.digitized-artwork',
+      checked: false,
+    },
   ],
   extensions: [
-    { code: 'jpg', name: 'JPEGs', checked: false },
-    { code: 'png', name: 'PNGs', checked: false },
-    { code: 'gif', name: 'GIFs', checked: false },
-    { code: 'svg', name: 'SVGs', checked: false },
+    { code: 'jpg', name: 'filters.extensions.jpg', checked: false },
+    { code: 'png', name: 'filters.extensions.png', checked: false },
+    { code: 'gif', name: 'filters.extensions.gif', checked: false },
+    { code: 'svg', name: 'filters.extensions.svg', checked: false },
   ],
   aspectRatios: [
-    { code: 'tall', name: 'Tall', checked: false },
-    { code: 'wide', name: 'Wide', checked: false },
-    { code: 'square', name: 'Square', checked: false },
+    { code: 'tall', name: 'filters.aspect-ratios.tall', checked: false },
+    { code: 'wide', name: 'filters.aspect-ratios.wide', checked: false },
+    { code: 'square', name: 'filters.aspect-ratios.square', checked: false },
   ],
   sizes: [
-    { code: 'small', name: 'Small', checked: false },
-    { code: 'medium', name: 'Medium', checked: false },
-    { code: 'large', name: 'Large', checked: false },
+    { code: 'small', name: 'filters.sizes.small', checked: false },
+    { code: 'medium', name: 'filters.sizes.medium', checked: false },
+    { code: 'large', name: 'filters.sizes.large', checked: false },
   ],
   providers: [],
   searchBy: {
@@ -101,6 +121,7 @@ const actions = {
 
 function setQuery(state, params, path, redirect) {
   const query = filtersToQueryData(state.filters)
+
   state.isFilterApplied = isFilterApplied(state.filters)
   state.query = {
     q: state.query.q,
@@ -124,12 +145,9 @@ function setFilter(state, params, path, redirect) {
   setQuery(state, params, path, redirect)
 }
 
-const redirectUrl = (params) =>
-  params.isCollectionsPage ? `/collections/${params.provider}` : '/search'
-
 const mutations = (redirect) => ({
   [SET_FILTER](state, params) {
-    return setFilter(state, params, redirectUrl(params), redirect)
+    return setFilter(state, params, '/search', redirect)
   },
   [CLEAR_FILTERS](state, params) {
     const initialFilters = initialState('').filters
@@ -141,7 +159,7 @@ const mutations = (redirect) => ({
       ...initialFilters,
       providers: resetProviders,
     }
-    return setQuery(state, params, redirectUrl(params), redirect)
+    return setQuery(state, params, '/search', redirect)
   },
   [SET_PROVIDERS_FILTERS](state, params) {
     const providers = params.imageProviders

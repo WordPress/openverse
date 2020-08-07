@@ -2,8 +2,10 @@
   <div>
     <header-section></header-section>
     <main role="main" class="collections-page padding-larger">
-      <h1>Browse collections</h1>
-      <h2 role="region" class="margin-bottom-normal">Museum Collections</h2>
+      <h1>{{ $t('collections.title') }}</h1>
+      <h2 role="region" class="margin-bottom-normal">
+        {{ $t('collections.museum') }}
+      </h2>
       <div class="providers-list columns is-multiline">
         <collection-item
           v-for="(provider, index) in museumProviders"
@@ -12,7 +14,9 @@
         />
       </div>
       <hr />
-      <h2 role="region" class="margin-bottom-normal">Other Collections</h2>
+      <h2 role="region" class="margin-bottom-normal">
+        {{ $t('collections.other') }}
+      </h2>
       <div class="providers-list columns is-multiline">
         <collection-item
           v-for="(provider, index) in otherProviders"
@@ -43,6 +47,25 @@ const MUSEUM_PROVIDERS = [
   'rijksmuseum',
   'sciencemuseum',
   'smithsonian',
+  'smithsonian_national_museum_of_natural_history',
+  'smithsonian_anacostia_museum',
+  'smithsonian_cooper_hewitt_museum',
+  'smithsonian_field_book_project',
+  'smithsonian_freer_gallery_of_art',
+  'smithsonian_gardens',
+  'smithsonian_hirshhorn_museum',
+  'smithsonian_anthropological_archives',
+  'smithsonian_air_and_space_museum',
+  'smithsonian_african_american_history_museum',
+  'smithsonian_american_history_museum',
+  'smithsonian_american_indian_museum',
+  'smithsonian_african_art_museum',
+  'smithsonian_portrait_gallery',
+  'smithsonian_postal_museum',
+  'smithsonian_zoo_and_conservation',
+  'smithsonian_american_art_museum',
+  'smithsonian_institution_archives',
+  'smithsonian_libraries',
   'statensmuseum',
   'thorvaldsensmuseum',
 ]

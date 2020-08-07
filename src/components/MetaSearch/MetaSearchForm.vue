@@ -6,7 +6,8 @@
       </h4>
       <p>
         Click on a source below to directly search other collections of
-        CC-licensed {{ type }}.
+        CC-licensed {{ type }}.<br />Please note that Use filters are not
+        supported for {{ unsupportedByUsefilter }}.
       </p>
     </header>
 
@@ -35,6 +36,13 @@ export default {
     MetaSourceList,
   },
   computed: {
+    unsupportedByUsefilter() {
+      if (this.type === 'audio') {
+        return 'CC Mixter, Jamendo, or Wikimedia Commons'
+      }
+      if (this.type === 'video') return 'Wikimedia Commons or Youtube'
+      return ''
+    },
     metaQuery() {
       return {
         q: this.query.q,

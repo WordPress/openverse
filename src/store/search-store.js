@@ -17,7 +17,6 @@ import {
   SET_IMAGE_PAGE,
   SET_IMAGES,
   SET_QUERY,
-  SET_COLLECTION_QUERY,
   IMAGE_NOT_FOUND,
   HANDLE_NO_IMAGES,
 } from './mutation-types'
@@ -218,9 +217,6 @@ const mutations = (redirect) => ({
   },
   [SET_QUERY](_state, params) {
     setQuery(_state, params, '/search', redirect)
-  },
-  [SET_COLLECTION_QUERY](_state, params) {
-    setQuery(_state, params, `/collections/${params.provider}`, redirect)
   },
   [IMAGE_NOT_FOUND]() {
     redirect({ path: '/not-found' }, true)

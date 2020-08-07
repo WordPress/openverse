@@ -91,7 +91,7 @@ const filterMap = {
 
 export default {
   name: 'filter-display',
-  props: ['query', 'isCollectionsPage', 'provider'],
+  props: ['query', 'provider'],
   components: {
     FilterBlock,
   },
@@ -109,7 +109,10 @@ export default {
   methods: {
     getFilters(filterType) {
       const filterTags = []
-      this.$props.query[filterMap[filterType]].split(',').forEach((filter) => {
+      const activeFilter = this.$props.query[filterMap[filterType]]
+      if (!activeFilter) return []
+
+      activeFilter.split(',').forEach((filter) => {
         const filterObj = this.$store.state.filters[filterType].find(
           (o) => o.code === filter
         )
@@ -123,17 +126,15 @@ export default {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
         filterType,
-        isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: false,
+        shouldNavigate: true,
       })
     },
     onUpdateBoolFilter({ filterType }) {
       this.$store.dispatch(TOGGLE_FILTER, {
         filterType,
-        isCollectionsPage: this.$props.isCollectionsPage,
         provider: this.$props.provider,
-        shouldNavigate: false,
+        shouldNavigate: true,
       })
     },
   },

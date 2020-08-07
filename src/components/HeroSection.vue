@@ -1,7 +1,8 @@
 <template>
   <main class="hero" role="main">
     <div class="hero-center">
-      <h2 class="has-text-centered">Search for content to reuse</h2>
+      <!-- <div class="locale-block"><locale-selector /></div> -->
+      <h2 class="has-text-centered">{{ $t('hero.title') }}</h2>
       <form
         class="hero_search-form margin-top-bigger"
         role="search"
@@ -11,15 +12,15 @@
       >
         <div class="is-hidden-touch centered-search-box">
           <div class="field has-addons">
-            <div class="control">
-              <label for="searchTerm" class="is-sr-only">Search</label>
+            <div class="control mobile-input">
               <input
                 required="required"
-                autofocus
                 class="hero_search-input input is-large"
+                :aria-label="$t('hero.aria.search')"
+                autofocus
                 type="search"
                 name="q"
-                placeholder="I would like to see..."
+                :placeholder="$t('hero.search.placeholder')"
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm"
@@ -27,7 +28,7 @@
             </div>
             <div class="control">
               <button class="button is-primary big" title="Search">
-                Search
+                {{ $t('hero.search.button') }}
               </button>
             </div>
           </div>
@@ -35,14 +36,13 @@
         <div class="is-hidden-desktop centered-search-box">
           <div class="field has-addons">
             <div class="control mobile-input">
-              <label for="searchTerm" class="is-sr-only">Search</label>
               <input
                 required="required"
-                autofocus
                 class="input"
+                :aria-label="$t('hero.aria.search')"
                 type="search"
                 name="q"
-                placeholder="I would like to see..."
+                :placeholder="$t('hero.search.placeholder')"
                 autocapitalize="none"
                 id="searchTerm"
                 v-model.lazy="form.searchTerm"
@@ -50,40 +50,43 @@
             </div>
             <div class="control">
               <button class="button is-primary small" title="Search">
-                Search
+                {{ $t('hero.search.button') }}
               </button>
             </div>
           </div>
         </div>
         <div class="caption has-text-centered margin-top-big">
-          <p>
-            All our content is under Creative Commons licenses.
-            <a
-              href="https://creativecommons.org/share-your-work/licensing-examples/"
-              aria-label="about cc licenses"
-              target="_blank"
-              rel="noopener"
-              >Learn more</a
-            >
-            about CC licenses.
-          </p>
+          <i18n path="hero.caption.content" tag="p">
+            <template v-slot:link>
+              <a
+                href="https://creativecommons.org/share-your-work/licensing-examples/"
+                target="_blank"
+                :aria-label="$t('hero.aria.caption')"
+                rel="noopener"
+              >
+                {{ $t('hero.caption.link') }}
+              </a>
+            </template>
+          </i18n>
         </div>
         <home-license-filter />
       </form>
-    </div>
-
-    <div class="help-links">
-      <span class="margin-right-bigger">
-        Go to the
-        <a
-          href="https://oldsearch.creativecommons.org/"
-          aria-label="old cc search"
-          >old CC Search</a
+      <div class="help-links is-hidden-mobile">
+        <i18n
+          path="hero.old-cc-search.label"
+          tag="span"
+          class="margin-right-bigger"
         >
-        portal
-      </span>
+          <template v-slot:link>
+            <a
+              href="https://oldsearch.creativecommons.org/"
+              :aria-label="$t('hero.aria.old-cc-search')"
+              >{{ $t('hero.old-cc-search.link') }}</a
+            >
+          </template>
+        </i18n>
+      </div>
     </div>
-
     <img
       class="logo-cloud"
       src="../assets/logo-cloud.png"
@@ -95,11 +98,13 @@
 <script>
 import { SET_QUERY } from '@/store/mutation-types'
 import HomeLicenseFilter from './HomeLicenseFilter'
+// import LocaleSelector from './LocaleSelector'
 
 export default {
   name: 'hero-section',
   components: {
     HomeLicenseFilter,
+    // LocaleSelector,
   },
   data: () => ({ form: { searchTerm: '' } }),
   mounted() {
@@ -125,7 +130,7 @@ export default {
 @import 'node_modules/bulma/sass/utilities/derived-variables';
 @import 'node_modules/bulma/sass/utilities/mixins';
 
-$hero-height: 80vh;
+$hero-height: 85vh;
 
 .hero {
   background: #fff;
@@ -139,12 +144,15 @@ $hero-height: 80vh;
 
   .hero_search-form {
     position: relative;
-    max-width: 750px;
     width: 100%;
     padding: 0 0.5em 0 0.5em;
   }
 
   .centered-search-box {
+    justify-content: center;
+  }
+
+  .field {
     justify-content: center;
   }
 
@@ -159,6 +167,29 @@ $hero-height: 80vh;
 
 .hero-center {
   margin-top: auto;
+  .locale-block {
+    position: absolute;
+    top: 2.5rem;
+    right: 4rem;
+  }
+
+  @include tablet {
+    .locale-block {
+      top: 0rem;
+      left: auto;
+      right: 4rem;
+    }
+  }
+
+  /* Small only */
+  @include mobile {
+    height: auto;
+    .locale-block {
+      position: relative;
+      top: 0rem;
+      right: 0rem;
+    }
+  }
 }
 
 .help-links {

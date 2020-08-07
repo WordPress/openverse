@@ -39,7 +39,7 @@
             @change="onValueChange"
           />
           <license-icons v-if="filterType == 'licenses'" :license="item.code" />
-          {{ item.name }}
+          {{ $t(item.name) }}
         </label>
         <img
           aria-label="license explanation"
@@ -49,10 +49,13 @@
           alt="help"
           class="license-help is-pulled-right padding-top-smallest padding-right-smaller"
           @click.stop="toggleLicenseExplanationVisibility(item.code)"
+          v-on:keyup.enter="toggleLicenseExplanationVisibility(item.code)"
         />
 
         <license-explanation-tooltip
-          v-if="shouldRenderLicenseExplanationTooltip(item.code)"
+          v-if="
+            shouldRenderLicenseExplanationTooltip(item.code) && !block(item)
+          "
           :license="licenseExplanationCode"
         />
       </div>
@@ -61,8 +64,7 @@
 </template>
 
 <script>
-import findIndex from 'lodash.findindex'
-import { ExperimentData } from '@/abTests/filterVisibilityExperiment'
+import { ExperimentData } from '@/abTests/experiments/filterExpansion'
 import LicenseIcons from '@/components/LicenseIcons'
 import LicenseExplanationTooltip from './LicenseExplanationTooltip'
 
@@ -81,17 +83,17 @@ export default {
     }
   },
   computed: {
+    /**
+     * Check if a filter experiment is active, and if the current case is 'expanded'.
+     * Show filters collapsed by default
+     */
     filtersExpandedByDefault() {
-      const idx = findIndex(
-        this.$store.state.experiments,
+      const experiment = this.$store.state.experiments.find(
         (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
       )
-
-      if (idx >= 0) {
-        const experiment = this.$store.state.experiments[idx]
-        return experiment.case === ExperimentData.FILTERS_EXPANDED_EXPERIMENT
-      }
-      return false
+      return experiment
+        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
+        : false
     },
     areFiltersExpanded() {
       return this.filtersExpandedByDefault || this.filtersVisible

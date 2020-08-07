@@ -9,9 +9,8 @@ import router from './router'
 // return a Promise that resolves to the app instance.
 export default (context) =>
   new Promise((resolve, reject) => {
-    sentryInit()
-
     const { app, store } = createApp(router)
+    sentryInit()
 
     const { url } = context
     const { fullPath } = router.resolve(url).route

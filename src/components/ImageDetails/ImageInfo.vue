@@ -2,13 +2,17 @@
   <section class="sidebar_section">
     <div class="margin-bottom-big">
       <dl>
-        <dt class="margin-bottom-small">Type</dt>
+        <dt class="margin-bottom-small">Type:</dt>
         <dd>{{ prettyImageType }}</dd>
-        <dt class="margin-bottom-small">Dimensions</dt>
+        <dt class="margin-bottom-small">
+          {{ $t('photo-details.information.dimensions') }}:
+        </dt>
         <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
-        <dt class="margin-bottom-small">Provider</dt>
+        <dt class="margin-bottom-small">Provider:</dt>
         <dd>{{ providerName }}</dd>
-        <dt class="margin-bottom-small">Source</dt>
+        <dt class="margin-bottom-small">
+          {{ $t('photo-details.information.source') }}:
+        </dt>
         <dd>
           <a
             :aria-label="sourceName"
@@ -22,14 +26,18 @@
       </dl>
     </div>
     <div class="margin-bottom-big">
-      <h5 class="is-block margin-bottom-small b-header">License</h5>
+      <h5 class="is-block margin-bottom-small b-header">
+        {{ $t('photo-details.information.license') }}
+      </h5>
       <license-icons :license="image.license"></license-icons>
       <a class="photo_license body-big" :href="ccLicenseURL">
         {{ fullLicenseName }}
       </a>
     </div>
     <div class="margin-bottom-big">
-      <h5 class="is-block margin-bottom-small b-header">Tags</h5>
+      <h5 class="is-block margin-bottom-small b-header">
+        {{ $t('photo-details.information.tags') }}
+      </h5>
       <photo-tags :tags="image.tags" :showHeader="false" />
     </div>
   </section>
@@ -104,15 +112,12 @@ dl {
 
 dt {
   font-weight: bold;
-  width: 90px;
+  width: 92px;
   margin-right: 24px;
-
-  &:after {
-    content: ':';
-  }
+  display: inline-block;
 }
 
 dd {
-  width: calc(100% - 90px - 24px);
+  width: calc(100% - 92px - 28px);
 }
 </style>

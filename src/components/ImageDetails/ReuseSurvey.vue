@@ -1,15 +1,15 @@
 <template>
   <div class="reuse-survey caption has-text-weight-semibold">
-    How are you using this image?
+    {{ $t('photo-details.survey.content') }}
     <a
       :href="formLink"
       target="_blank"
       rel="noopener"
       @click="onReuseSurveyClick"
     >
-      Let us know
+      {{ $t('photo-details.survey.link') }}
     </a>
-    by answering a few questions.
+    {{ $t('photo-details.survey.answer') }}
   </div>
 </template>
 

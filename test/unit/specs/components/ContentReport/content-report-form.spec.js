@@ -1,5 +1,6 @@
 import ContentReportForm from '@/components/ContentReport/ContentReportForm'
 import render from '../../../test-utils/render'
+import i18n from '../../../test-utils/i18n'
 
 describe('ContentReportForm', () => {
   let props = null
@@ -7,7 +8,7 @@ describe('ContentReportForm', () => {
   let storeState = null
   let dispatchMock = null
   let commitMock = null
-
+  const $t = (key) => i18n.messages[key]
   beforeEach(() => {
     props = {
       imageId: 1,
@@ -32,6 +33,7 @@ describe('ContentReportForm', () => {
       propsData: props,
       mocks: {
         ...storeState,
+        $t,
       },
     }
   })

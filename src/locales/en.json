@@ -1,0 +1,306 @@
+{
+  "hero": {
+    "title": "Search for content to reuse",
+    "search": {
+      "placeholder": "I would like to see...",
+      "button": "Search"
+    },
+    "caption": {
+      "content": "All our content is under Creative Commons licenses. {link} about CC licenses.",
+      "link": "Learn more"
+    },
+    "license-filter": {
+      "label": "I want something I can"
+    },
+    "old-cc-search": {
+      "label": "Go to the {link} portal",
+      "link": "old CC Search"
+    },
+    "locale": {
+      "label": "Languages available",
+      "icon": "locale"
+    },
+    "aria": {
+      "search": "search",
+      "caption": "about cc licenses",
+      "old-cc-search": "old cc search"
+    }
+  },
+  "header": {
+    "about": "About",
+    "collections": "Collections",
+    "search-guide": "Search Guide",
+    "feedback": "Feedback",
+    "extension": "Extension",
+    "placeholder": "Search all images",
+    "aria": {
+      "primary": "primary",
+      "menu": "menu",
+      "search": "search",
+      "sr-search": "sr search button",
+      "extension": "extension"
+    }
+  },
+  "footer": {
+    "address": {
+      "title": "Creative Commons",
+      "address": "PO Box 1866, Mountain View CA 94042"
+    },
+    "navigation": {
+      "contact": "Contact",
+      "privacy": "Privacy",
+      "policies": "Policies",
+      "terms": "Terms"
+    },
+    "caption": {
+      "label": "Except where otherwise {noted}, content on this site is licensed under a {attribution}. {icons}",
+      "noted": "noted",
+      "attribution": "Creative Commons Attribution 4.0 International license",
+      "icons": "Icons by Font Awesome."
+    },
+    "donate": {
+      "work": "Our work relies on you!",
+      "help": "Help us keep the internet free and open.",
+      "link": "Donate now"
+    },
+    "aria": {
+      "contact": "cc contact info",
+      "homepage": "homepage",
+      "donate": "donate section"
+    }
+  },
+  "about": {
+    "title": "About CC Search",
+    "description": {
+      "content": "CC Search is a tool that allows openly licensed and public domain works to be discovered and used by everyone. Creative Commons, the nonprofit behind CC Search, is the maker of the {link}, used over 1.4 billion times to help creators share knowledge and creativity online.",
+      "licenses-link": "CC licenses"
+    },
+    "collection": "CC Search searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
+    "planning": {
+      "content": "Currently CC Search only searches images, but we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. Learn more about CC’s {vision} and {roadmap} for CC Search and see what {working}. All of our code is open source ({search}, {catalog-api}, {catalog}) and we {community}",
+      "vision": "2019 vision, strategy",
+      "roadmap": "roadmap",
+      "working": "we’re currently working on",
+      "search": "CC Search",
+      "catalog-api": "CC Catalog API",
+      "catalog": "CC Catalog",
+      "community": "welcome community contribution"
+    },
+    "declaration": {
+      "content": "Please note that CC does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
+      "terms": "CC Terms of Use"
+    },
+    "old-cc-search": "Looking for the old CC Search portal? Visit {link}.",
+    "sources": "Sources",
+    "providers": {
+      "source": "Source",
+      "domain": "Domain",
+      "work": "# CC Licensed Works"
+    }
+  },
+  "search-guide": {
+    "title": "CC Search Syntax Guide",
+    "intro": "When you search, you can enter special symbols or words to your search term to make your search results more precise.",
+    "exact": {
+      "title": "Search for an exact match",
+      "content": "Put a word or phrase inside quotes. For example, {link}."
+    },
+    "combine": {
+      "title": "Combining terms",
+      "description": "If you want to combine terms, you can use the following operators to perform more complex queries",
+      "and": "{symbol} signifies AND operation",
+      "or": "{symbol} signifies OR operation",
+      "negate": "{symbol} negates a single token",
+      "prefix": "{symbol} at the end of a term signifies a prefix query",
+      "precedence": "{open} and {close} signify precedence",
+      "fuzziness": "{symbol} after a word signifies edit distance (fuzziness)"
+    },
+    "example": {
+      "and": "Example: {link}{br} This will search for images related to both dog and cat.",
+      "or": "Example: {link}{br} This will search for images related to dog or cat, but not necessarily both.",
+      "negate": {
+        "description": "You can use the {highlight} to exclude a search term from the results.",
+        "content": "Example: {link}{br} This will search for images related to dog but won't include results related to 'pug'"
+      },
+      "prefix": {
+        "description": "You can use the {highlight} to mark a prefix term. This will match anything after the *.",
+        "content": "Example: {link}{br} This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.."
+      },
+      "precedence": {
+        "description": "You can use parentheses {highlight} to specify precedence of terms or combine more complex queries.",
+        "content": "Example: {link}{br} This will search for images that match dogs that are either corgis or labrador."
+      },
+      "fuzziness": {
+        "description": "You can use {highlight} to specify some fuzzy logic to the term according to the {link} — the number of one character changes that need to be made to one string to make it the same as another string.",
+        "content": "Example: {link}{br} This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'."
+      }
+    }
+  },
+  "feedback": {
+    "title": "Feedback",
+    "description": "Thank you for using CC Search! We welcome your ideas for improving the tool below. To provide regular user feedback, join the {channel} channel on {slack}.",
+    "improve": "Help us Improve",
+    "bug": "Report a Bug",
+    "loading": "Loading..."
+  },
+  "collections": {
+    "title": "Browse collections",
+    "museum": "Museum Collections",
+    "other": "Other Collections",
+    "collection-size": "Collection size: {count} images"
+  },
+  "not-found": "Page Not Found",
+  "filters": {
+    "title": "Filters",
+    "licenses": {
+      "title": "Licenses",
+      "cc0": "CC0",
+      "pdm": "Public Domain Mark",
+      "by": "BY",
+      "by-sa": "BY-SA",
+      "by-nc": "BY-NC",
+      "by-nd": "BY-ND",
+      "by-nc-sa": "BY-NC-SA",
+      "by-nc-nd": "BY-NC-ND"
+    },
+    "license-types": {
+      "title": "Use",
+      "commercial": "Use commercially",
+      "modification": "Modify or adapt"
+    },
+    "providers": {
+      "title": "Sources"
+    },
+    "categories": {
+      "title": "Image Type",
+      "photograph": "Photographs",
+      "illustration": "Illustrations",
+      "digitized-artwork": "Digitized Artworks"
+    },
+    "extensions": {
+      "title": "File Type",
+      "jpg": "JPEGs",
+      "png": "PNGs",
+      "gif": "GIFs",
+      "svg": "SVGs"
+    },
+    "aspect-ratios": {
+      "title": "Aspect Ratio",
+      "tall": "Tall",
+      "wide": "Wide",
+      "square": "Square"
+    },
+    "sizes": {
+      "title": "Image Size",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
+    },
+    "mature": {
+      "title": "Search Settings",
+      "enable": "Enable Mature Content"
+    },
+    "creator": {
+      "title": "Search by Creator"
+    }
+  },
+  "filter-list": {
+    "filter-by": "Filter results by",
+    "hide": "Hide filters",
+    "clear": "Clear filters",
+    "show": "Show results"
+  },
+  "browse-page": {
+    "no-more": "No more images :(",
+    "load": "Load more results",
+    "error": "Error fetching images:",
+    "search-rating": {
+      "content": "Are these results relevant?",
+      "yes": "Yes",
+      "no": "No",
+      "feedback": "Thank you for the feedback!"
+    },
+    "search-form": {
+      "placeholder": "Search all images",
+      "collection-placeholder": "Search this collection",
+      "button": "Search"
+    },
+    "license-description": {
+      "title": "License CC",
+      "by": "Credit the creator.",
+      "nc": "Noncommercial uses only.",
+      "nd": "No derivatives or adaptations permitted.",
+      "sa": "Share adaptations under the same terms.",
+      "cc0": "This work has been marked as dedicated to the public domain.",
+      "pdm": "This work is marked as being in the public domain."
+    },
+    "safe-browsing": {
+      "title": "Safe Browsing",
+      "caption": "By default, search results will not include results that have been reported as mature by users and sources.",
+      "label": "Show Mature Content"
+    }
+  },
+  "photo-details": {
+    "back": "Back to search results",
+    "reuse": {
+      "title": "Reuse",
+      "license-header": "License",
+      "attribution": {
+        "main": "This image was marked with a {link} license.",
+        "license": "license."
+      },
+      "license": {
+        "content": "Read more about the license {link}",
+        "link": "here"
+      },
+      "tool": {
+        "content": "Read more about the tool {link}",
+        "link": "here"
+      },
+      "copy-license": {
+        "title": "Credit the Creator",
+        "rich": "Rich Text",
+        "html": "HTML",
+        "plain": "Plain text"
+      }
+    },
+    "information": {
+      "title": "Information",
+      "dimensions": "Dimensions",
+      "source": "Source",
+      "license": "License",
+      "tags": "Tags"
+    },
+    "share": "Share",
+    "survey": {
+      "content": "How are you using this image?",
+      "link": "Let us know",
+      "answer": "by answering a few questions."
+    },
+    "weblink": "Go to image's website",
+    "legal-disclaimer": "CC Search aggregates data from publicly available repositories of open content. CC does not host the content and does not verify that the content is properly CC-licensed or that the attribution information is accurate or complete. Please follow the link to the source of the content to independently verify before reuse.",
+    "related-images": "Related Images",
+    "copy": {
+      "copy": "Copy",
+      "copied": "Copied!"
+    },
+    "content-report": {
+      "title": "Report this content",
+      "issue": "What's the issue?",
+      "issue-description": "Please describe the issue for us",
+      "copyright": "Infringes Copyright",
+      "mature": "Contains mature content",
+      "other": "Other",
+      "caption": "For security purposes, CC collects and retains anonymized IP addresses of those who complete and submit this form.",
+      "next": "Next",
+      "back": "Back",
+      "submit": "Submit",
+      "dmca": {
+        "content": "You must fill out this {link} to report copyright infringement. No action will be taken until the form is filled out and submitted.",
+        "provider": "We recommend doing the same at the source, {link}.",
+        "thanks": "Thank you for reporting an issue with the results of CC Search!",
+        "error": "There was an error with the report submission. Please try again."
+      }
+    }
+  }
+}

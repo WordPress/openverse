@@ -1,27 +1,36 @@
 <template>
   <div>
-    <h4
-      class="padding-top-big padding-left-big padding-right-normal is-inline-block"
-    >
-      Filter results by
-    </h4>
+    <div class="filterlist-header">
+      <h4
+        class="padding-top-big padding-left-big padding-right-normal is-inline-block"
+      >
+        {{ $t('filter-list.filter-by') }}
+      </h4>
 
-    <button
-      type="button"
-      class="button is-text tiny is-paddingless margin-top-big margin-right-small report is-shadowless is-pulled-right"
-      @click="onToggleSearchGridFilter()"
+      <button
+        type="button"
+        class="button is-text tiny is-paddingless margin-top-big margin-right-small report is-shadowless is-pulled-right"
+        @click="onToggleSearchGridFilter()"
+      >
+        <span class="has-color-tomato is-hidden-touch">{{
+          $t('filter-list.hide')
+        }}</span>
+        <span class="margin-right-normal is-size-5 is-hidden-desktop">
+          <i class="icon cross" />
+        </span>
+      </button>
+    </div>
+    <form
+      :class="{
+        'filters-form': true,
+      }"
+      role="list"
     >
-      <span class="has-color-tomato is-hidden-touch">Hide filters</span>
-      <span class="margin-right-normal is-size-5 is-hidden-desktop">
-        <i class="icon cross" />
-      </span>
-    </button>
-    <form class="filters-form" role="list">
       <filter-check-list
         role="listitem"
         :options="filters.licenseTypes"
         :disabled="licenseTypesDisabled"
-        title="Use"
+        :title="$t('filters.license-types.title')"
         filterType="licenseTypes"
         @filterChanged="onUpdateFilter"
       />
@@ -30,15 +39,15 @@
         v-if="activeTab == 'image'"
         :options="filters.licenses"
         :disabled="licensesDisabled"
-        title="Licenses"
+        :title="$t('filters.licenses.title')"
         filterType="licenses"
         @filterChanged="onUpdateFilter"
       />
       <filter-check-list
         role="listitem"
-        v-if="renderProvidersFilter && activeTab == 'image'"
+        v-if="activeTab == 'image'"
         :options="filters.providers"
-        title="Sources"
+        :title="$t('filters.providers.title')"
         filterType="providers"
         @filterChanged="onUpdateFilter"
       />
@@ -46,7 +55,7 @@
         role="listitem"
         v-if="activeTab == 'image'"
         :options="filters.categories"
-        title="Image Type"
+        :title="$t('filters.categories.title')"
         filterType="categories"
         @filterChanged="onUpdateFilter"
       />
@@ -54,7 +63,7 @@
         role="listitem"
         v-if="activeTab == 'image'"
         :options="filters.extensions"
-        title="File Type"
+        :title="$t('filters.extensions.title')"
         filterType="extensions"
         @filterChanged="onUpdateFilter"
       />
@@ -62,7 +71,7 @@
         role="listitem"
         v-if="activeTab == 'image'"
         :options="filters.aspectRatios"
-        title="Aspect Ratio"
+        :title="$t('filters.aspect-ratios.title')"
         filterType="aspectRatios"
         @filterChanged="onUpdateFilter"
       />
@@ -70,54 +79,52 @@
         role="listitem"
         v-if="activeTab == 'image'"
         :options="filters.sizes"
-        title="Image Size"
+        :title="$t('filters.sizes.title')"
         filterType="sizes"
         @filterChanged="onUpdateFilter"
       />
-
       <div
         v-if="activeTab == 'image'"
         class="margin-normal filter-option small-filter margin-bottom-normal"
       >
         <label aria-label="search by creator">
           <input
-            aria-label="search by creator"
             type="checkbox"
+            aria-label="search by creator"
             :checked="filters.searchBy.creator"
             @change="onUpdateSearchByCreator"
           />
-          Search by Creator
-        </label>
+          {{ $t('filters.creator.title') }}</label
+        >
       </div>
     </form>
-
     <div
       class="margin-big padding-bottom-normal clear-filters is-hidden-touch"
       v-if="isFilterApplied"
     >
       <button class="button tiny" @click="onClearFilters">
-        Clear filters
+        {{ $t('filter-list.clear') }}
       </button>
     </div>
-
     <div
       v-if="isFilterApplied"
       class="has-background-white padding-big is-hidden-desktop has-text-centered"
     >
       <button class="button tiny margin-right-normal" @click="onClearFilters">
-        Clear filters
+        {{ $t('filter-list.clear') }}
       </button>
       <button
         class="button is-primary tiny"
         @click="onToggleSearchGridFilter()"
       >
-        Show results
+        {{ $t('filter-list.show') }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
+import { ExperimentData } from '@/abTests/experiments/filterExpansion'
 import FilterCheckList from './FilterChecklist'
 
 export default {
@@ -127,7 +134,6 @@ export default {
     'isFilterApplied',
     'licenseTypesDisabled',
     'licensesDisabled',
-    'renderProvidersFilter',
   ],
   components: {
     FilterCheckList,
@@ -150,6 +156,25 @@ export default {
     activeTab() {
       return this.$route.path.split('search/')[1] || 'image'
     },
+    /**
+     * Check if a filter experiment is active, and if the current case is 'expanded'.
+     * Show filters collapsed by default
+     */
+    filtersExpandedByDefault() {
+      const experiment = this.$store.state.experiments.find(
+        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
+      )
+      return experiment
+        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
+        : false
+    },
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.scroll-y {
+  overflow-y: scroll;
+  height: calc(100vh - 84px);
+}
+</style>

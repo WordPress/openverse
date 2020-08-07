@@ -6,7 +6,7 @@ import abTests from './abTests'
 import sentryInit from './sentry/browser'
 import router from './router'
 
-sentryInit()
+sentryInit(Vue)
 smoothscroll.polyfill()
 
 // a global mixin that calls `asyncData` when a route component's params change

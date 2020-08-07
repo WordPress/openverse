@@ -176,108 +176,56 @@ describe('Filter Store', () => {
       mutations[SET_FILTER](state, { filterType: 'licenses', codeIdx: 0 })
 
       expect(state.filters.licenses[0].checked).toBeTruthy()
-      expect(state.query).toEqual({
-        q: 'foo',
-        license: state.filters.licenses[0].code,
-        extension: '',
-        categories: '',
-        license_type: '',
-        source: '',
-        searchBy: '',
-        aspect_ratio: '',
-        size: '',
-        mature: false,
-      })
+      expect(state.query).toEqual(
+        expect.objectContaining({ license: state.filters.licenses[0].code })
+      )
     })
 
     it('SET_FILTER updates license type state', () => {
       mutations[SET_FILTER](state, { filterType: 'licenseTypes', codeIdx: 0 })
 
       expect(state.filters.licenseTypes[0].checked).toBeTruthy()
-      expect(state.query).toEqual({
-        q: 'foo',
-        license: '',
-        extension: '',
-        categories: '',
-        license_type: state.filters.licenseTypes[0].code,
-        source: '',
-        searchBy: '',
-        aspect_ratio: '',
-        size: '',
-        mature: false,
-      })
+      expect(state.query).toEqual(
+        expect.objectContaining({
+          license_type: state.filters.licenseTypes[0].code,
+        })
+      )
     })
 
     it('SET_FILTER updates extensions state', () => {
       mutations[SET_FILTER](state, { filterType: 'extensions', codeIdx: 0 })
 
       expect(state.filters.extensions[0].checked).toBeTruthy()
-      expect(state.query).toEqual({
-        q: 'foo',
-        license: '',
-        extension: state.filters.extensions[0].code,
-        categories: '',
-        license_type: '',
-        source: '',
-        searchBy: '',
-        aspect_ratio: '',
-        size: '',
-        mature: false,
-      })
+      expect(state.query).toEqual(
+        expect.objectContaining({ extension: state.filters.extensions[0].code })
+      )
     })
 
     it('SET_FILTER updates image types state', () => {
       mutations[SET_FILTER](state, { filterType: 'categories', codeIdx: 0 })
 
       expect(state.filters.categories[0].checked).toBeTruthy()
-      expect(state.query).toEqual({
-        q: 'foo',
-        license: '',
-        extension: '',
-        categories: state.filters.categories[0].code,
-        license_type: '',
-        source: '',
-        searchBy: '',
-        aspect_ratio: '',
-        size: '',
-        mature: false,
-      })
+      expect(state.query).toEqual(
+        expect.objectContaining({
+          categories: state.filters.categories[0].code,
+        })
+      )
     })
 
     it('SET_FILTER updates search by creator', () => {
       mutations[SET_FILTER](state, { filterType: 'searchBy' })
 
       expect(state.filters.searchBy.creator).toBeTruthy()
-      expect(state.query).toEqual({
-        q: 'foo',
-        license: '',
-        extension: '',
-        categories: '',
-        license_type: '',
-        source: '',
-        searchBy: 'creator',
-        aspect_ratio: '',
-        size: '',
-        mature: false,
-      })
+      expect(state.query).toEqual(
+        expect.objectContaining({ searchBy: 'creator' })
+      )
     })
 
     it('SET_FILTER updates mature', () => {
       mutations[SET_FILTER](state, { filterType: 'mature' })
 
       expect(state.filters.mature).toBeTruthy()
-      expect(state.query).toEqual({
-        q: 'foo',
-        license: '',
-        extension: '',
-        categories: '',
-        license_type: '',
-        source: '',
-        searchBy: '',
-        aspect_ratio: '',
-        size: '',
-        mature: true,
-      })
+      expect(state.query).toEqual(expect.objectContaining({ mature: true }))
     })
 
     it('SET_FILTER toggles mature', () => {
@@ -291,36 +239,20 @@ describe('Filter Store', () => {
       mutations[SET_FILTER](state, { filterType: 'aspectRatios', codeIdx: 0 })
 
       expect(state.filters.aspectRatios[0].checked).toBeTruthy()
-      expect(state.query).toEqual({
-        q: 'foo',
-        license: '',
-        extension: '',
-        categories: '',
-        license_type: '',
-        source: '',
-        searchBy: '',
-        aspect_ratio: state.filters.aspectRatios[0].code,
-        size: '',
-        mature: false,
-      })
+      expect(state.query).toEqual(
+        expect.objectContaining({
+          aspect_ratio: state.filters.aspectRatios[0].code,
+        })
+      )
     })
 
     it('SET_FILTER updates size', () => {
       mutations[SET_FILTER](state, { filterType: 'sizes', codeIdx: 0 })
 
       expect(state.filters.sizes[0].checked).toBeTruthy()
-      expect(state.query).toEqual({
-        q: 'foo',
-        license: '',
-        extension: '',
-        categories: '',
-        license_type: '',
-        source: '',
-        searchBy: '',
-        aspect_ratio: '',
-        size: state.filters.sizes[0].code,
-        mature: false,
-      })
+      expect(state.query).toEqual(
+        expect.objectContaining({ size: state.filters.sizes[0].code })
+      )
     })
 
     it('SET_FILTER redirects to search path and with query object', () => {
@@ -332,21 +264,6 @@ describe('Filter Store', () => {
 
       expect(routePushMock).toHaveBeenCalledWith({
         path: '/search',
-        query: state.query,
-      })
-    })
-
-    it('SET_FILTER redirects to collections path and with query object', () => {
-      mutations[SET_FILTER](state, {
-        filterType: 'categories',
-        codeIdx: 0,
-        isCollectionsPage: true,
-        provider: 'met',
-        shouldNavigate: true,
-      })
-
-      expect(routePushMock).toHaveBeenCalledWith({
-        path: '/collections/met',
         query: state.query,
       })
     })

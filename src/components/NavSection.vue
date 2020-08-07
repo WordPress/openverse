@@ -1,13 +1,13 @@
 <template>
-  <nav aria-label="primary" class="navbar small">
+  <nav :aria-label="$t('header.aria.primary')" class="navbar">
     <div class="navbar-brand">
-      <a class="logo" href="/">
+      <router-link class="logo" to="/">
         <img alt="Logo" src="/static/logos/products/search.svg" />
-      </a>
+      </router-link>
       <a
         role="button"
         :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
-        aria-label="menu"
+        :aria-label="$t('header.aria.menu')"
         aria-expanded="false"
         @click="toggleBurgerActive"
       >
@@ -25,7 +25,7 @@
           v-on:submit.prevent="onSubmit"
         >
           <input
-            aria-label="search"
+            :aria-label="$t('header.aria.search')"
             class="input"
             type="search"
             :placeholder="navSearchPlaceholder"
@@ -33,7 +33,7 @@
           />
           <div class="is-sr-only">
             <button
-              aria-label="sr search button"
+              :aria-label="$t('header.aria.sr-search')"
               tabindex="-1"
               type="submit"
               class="button secondary"
@@ -43,16 +43,25 @@
         </form>
       </div>
       <div class="navbar-end">
-        <a class="navbar-item" href="/about">About</a>
-        <a class="navbar-item" href="/collections">Collections</a>
-        <a class="navbar-item" href="/search-help">Search Guide</a>
-        <a class="navbar-item" href="/feedback">Feedback</a>
+        <router-link class="navbar-item" to="/about">{{
+          $t('header.about')
+        }}</router-link>
+        <router-link class="navbar-item" to="/collections">{{
+          $t('header.collections')
+        }}</router-link>
+        <router-link class="navbar-item" to="/search-help">{{
+          $t('header.search-guide')
+        }}</router-link>
+        <router-link class="navbar-item" to="/feedback">{{
+          $t('header.feedback')
+        }}</router-link>
         <a
+          :aria-label="$t('header.aria.extension')"
           class="navbar-item"
           href="https://opensource.creativecommons.org/ccsearch-browser-extension/"
           target="_blank"
         >
-          Extension
+          {{ $t('header.extension') }}
           <i class="icon external-link" />
         </a>
       </div>
@@ -68,11 +77,13 @@ export default {
     showNavSearch: {
       default: false,
     },
-    navSearchPlaceholder: {
-      default: 'Search all images',
-    },
   },
   name: 'nav-section',
+  computed: {
+    navSearchPlaceholder() {
+      return this.$t('header.placeholder')
+    },
+  },
   data: () => ({ form: { searchTerm: '' }, isBurgerMenuActive: false }),
   methods: {
     onSubmit() {
