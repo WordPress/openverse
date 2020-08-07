@@ -49,6 +49,7 @@
           alt="help"
           class="license-help is-pulled-right padding-top-smallest padding-right-smaller"
           @click.stop="toggleLicenseExplanationVisibility(item.code)"
+          v-on:keyup.enter="toggleLicenseExplanationVisibility(item.code)"
         />
 
         <license-explanation-tooltip
