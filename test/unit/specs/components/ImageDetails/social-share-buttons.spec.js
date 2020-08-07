@@ -5,11 +5,13 @@ import {
   DETAIL_PAGE_EVENTS,
 } from '@/store/usage-data-analytics-types'
 import render from '../../../test-utils/render'
+import i18n from '../../../test-utils/i18n'
 
 describe('SocialShareButtons', () => {
   let options = null
   let props = null
   let storeMock = null
+  const $t = (key) => i18n.messages[key]
 
   beforeEach(() => {
     props = {
@@ -29,6 +31,7 @@ describe('SocialShareButtons', () => {
       propsData: props,
       mocks: {
         $store: storeMock,
+        $t,
       },
     }
   })
