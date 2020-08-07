@@ -88,6 +88,7 @@
     "eslint-loader": "^4.0.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vue-a11y": "0.0.31",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.7.0",
