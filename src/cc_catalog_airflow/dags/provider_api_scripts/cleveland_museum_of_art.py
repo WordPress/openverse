@@ -1,11 +1,12 @@
 import logging
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
+from util.loader import provider_details as prov
 
 LIMIT = 1000
 DELAY = 5.0
 RETRIES = 3
-PROVIDER = 'clevelandmuseum'
+PROVIDER = prov.CLEVELAND_DEFAULT_PROVIDER
 ENDPOINT = 'http://openaccess-api.clevelandart.org/api/artworks/'
 
 delay_request = DelayedRequester(delay=DELAY)

@@ -21,6 +21,7 @@ import lxml.html as html
 
 import common.requester as requester
 import common.storage.image as image
+from util.loader import provider_details as prov
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +34,7 @@ MEAN_GLOBAL_USAGE_LIMIT = 10000
 DELAY = 1
 HOST = 'commons.wikimedia.org'
 ENDPOINT = f'https://{HOST}/w/api.php'
-PROVIDER = 'wikimedia'
+PROVIDER = prov.WIKIMEDIA_DEFAULT_PROVIDER
 CONTACT_EMAIL = os.getenv('WM_SCRIPT_CONTACT')
 UA_STRING = (
     f'CC-Catalog/0.1 (https://creativecommons.org; {CONTACT_EMAIL})'
