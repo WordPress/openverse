@@ -11,24 +11,27 @@
         class="button toggle-filter padding-vertical-normal padding-horizontal-big"
         type="button"
         @click.prevent="onToggleSearchGridFilter()"
+        v-on:keyup.enter.prevent="onToggleSearchGridFilter()"
       >
         {{ $t('filters.title') }}
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
-          <label for="searchTerm" class="is-sr-only">Search</label>
-          <input
-            :aria-label="$t('browse-page.aria.search')"
-            id="searchInput"
-            required="required"
-            autofocus="true"
-            class="input is-medium"
-            type="search"
-            ref="search"
-            :placeholder="searchBoxPlaceholder"
-            v-model="searchTermsModel"
-            @keyup.enter="onSubmit"
-          />
+          <label for="searchInput" class="is-sr-only"
+            >Search
+            <input
+              :aria-label="$t('browse-page.aria.search')"
+              id="searchInput"
+              required="required"
+              autofocus="true"
+              class="input is-medium"
+              type="search"
+              ref="search"
+              :placeholder="searchBoxPlaceholder"
+              v-model="searchTermsModel"
+              @keyup.enter="onSubmit"
+            />
+          </label>
           <span class="icon is-medium is-left">
             <i class="icon search is-size-5"></i>
           </span>
@@ -38,6 +41,7 @@
             type="submit"
             class="button is-primary"
             @click.prevent="onSubmit"
+            v-on:keyup.enter.prevent="onSubmit"
             :value="$t('browse-page.search-form.button')"
           />
         </div>
@@ -49,24 +53,27 @@
         class="button small toggle-filter padding-small"
         type="button"
         @click.prevent="onToggleSearchGridFilter()"
+        v-on:keyup.enter.prevent="onToggleSearchGridFilter()"
       >
         {{ $t('filters.title') }}
       </button>
       <div class="field has-addons search-input">
         <div class="control has-icons-left margin-left-small">
-          <label for="searchTerm" class="is-sr-only">Search</label>
-          <input
-            :aria-label="$t('browse-page.aria.search')"
-            id="searchInputMobile"
-            required="required"
-            autofocus="true"
-            class="input"
-            type="search"
-            ref="search"
-            :placeholder="searchBoxPlaceholder"
-            v-model="searchTermsModel"
-            @keyup.enter="onSubmit"
-          />
+          <label for="searchInputMobile" class="is-sr-only"
+            >Search
+            <input
+              :aria-label="$t('browse-page.aria.search')"
+              id="searchInputMobile"
+              required="required"
+              autofocus="true"
+              class="input"
+              type="search"
+              ref="search"
+              :placeholder="searchBoxPlaceholder"
+              v-model="searchTermsModel"
+              @keyup.enter="onSubmit"
+            />
+          </label>
           <span class="icon is-left">
             <i class="icon search is-size-6"></i>
           </span>

@@ -4,15 +4,19 @@
     <legend class="margin-bottom-small">
       {{ $t('photo-details.content-report.issue-description') }}
     </legend>
-    <textarea
-      class="reason padding-small has-text-weight-semibold"
-      v-model="otherReasonDescription"
-      placeholder="Issue description required (with at least 20 characters)"
-    />
+    <label for="issue">
+      <textarea
+        id="issue"
+        class="reason padding-small has-text-weight-semibold"
+        v-model="otherReasonDescription"
+        placeholder="Issue description required (with at least 20 characters)"
+      />
+    </label>
     <div>
       <button
         class="button other-back-button is-text tiny margin-top-normal has-text-grey"
         @click="onBackClick()"
+        v-on:keyup.enter="onBackClick()"
       >
         <span>
           <i class="icon chevron-left margin-right-small"></i>
@@ -25,6 +29,7 @@
         :disabled="!descriptionHasMoreThan20Chars"
         class="button submit-other-button tiny is-info margin-top-normal is-pulled-right"
         @click="sendContentReport()"
+        v-on:keyup.enter="sendContentReport()"
       >
         {{ $t('photo-details.content-report.submit') }}
       </button>

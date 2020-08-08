@@ -5,10 +5,11 @@
     :tooltip-position="tooltipPosition"
     class="help-tooltip"
     @click="toggleVisibility"
+    v-on:keyup.enter="toggleVisibility"
   >
     <slot></slot>
   </div>
-  <div v-else @click="toggleVisibility">
+  <div v-else @click="toggleVisibility" v-on:keyup.enter="toggleVisibility">
     <slot></slot>
   </div>
 </template>

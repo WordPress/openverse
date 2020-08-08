@@ -10,6 +10,7 @@
         :aria-label="$t('header.aria.menu')"
         aria-expanded="false"
         @click="toggleBurgerActive"
+        v-on:keyup.enter="toggleBurgerActive"
       >
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>

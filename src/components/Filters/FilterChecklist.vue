@@ -2,8 +2,13 @@
   <div
     class="filters padding-vertical-big padding-left-big padding-right-normal"
     @click="hideLicenseExplanationVisibility()"
+    v-on:keyup.enter="hideLicenseExplanationVisibility()"
   >
-    <div class="filters-title" @click.prevent="toggleFilterVisibility">
+    <div
+      class="filters-title"
+      @click.prevent="toggleFilterVisibility"
+      v-on:keyup.enter="toggleFilterVisibility"
+    >
       <span>{{ title }}</span>
       <button
         :aria-label="'filters list for' + title + 'category'"

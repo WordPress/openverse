@@ -17,6 +17,7 @@
           type="button"
           class="close-button has-color-gray is-size-6 is-size-4-touch"
           @click="$emit('close')"
+          v-on:keyup.enter="$emit('close')"
           :aria-label="$t('browse-page.aria.close')"
         >
           <i class="icon cross" />

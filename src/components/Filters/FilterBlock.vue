@@ -11,6 +11,7 @@
       class="close margin-left-small"
       tabindex="0"
       @click="onClickIsolatedFilter"
+      v-on:keyup.enter="onClickIsolatedFilter"
       ><i class="icon cross"
     /></span>
   </button>

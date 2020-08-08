@@ -18,13 +18,16 @@
       </h5>
 
       <div class="control has-icons-left margin-bottom-bigger">
-        <input
-          class="input"
-          type="text"
-          placeholder="Search"
-          v-model="editableQuery.q"
-          style="max-width: 400px;"
-        />
+        <label for="searchTerm">
+          <input
+            id="searchTerm"
+            class="input"
+            type="text"
+            placeholder="Search"
+            v-model="editableQuery.q"
+            style="max-width: 400px;"
+          />
+        </label>
         <span class="icon is-left">
           <!-- Style issue needs to be fixed for icons: -->
           <i class="icon search is-size-5" style="padding: 10px;" />
@@ -35,16 +38,18 @@
         {{ $t('meta-search.card.checkboxes.title') }}
       </h5>
       <div class="meta-filters margin-bottom-bigger flex">
-        <label class="margin-right-big"
+        <label for="commercial-chk" class="margin-right-big"
           ><input
+            id="commercial-chk"
             class="margin-right-smaller"
             type="checkbox"
             v-model="editableQuery.filters.commercial"
           />
           {{ $t('meta-search.card.checkboxes.commercial') }}</label
         >
-        <label
+        <label for="modify-chk"
           ><input
+            id="modify-chk"
             class="margin-right-smaller"
             type="checkbox"
             v-model="editableQuery.filters.modify"
