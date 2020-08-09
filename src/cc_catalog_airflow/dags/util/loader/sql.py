@@ -15,7 +15,7 @@ NOW = 'NOW()'
 FALSE = "'f'"
 OLDEST_PER_PROVIDER = {
     prov.FLICKR_DEFAULT_PROVIDER: '6 months 18 days',
-    prov.EUROPEANA_SUB_PROVIDERS: '3 months 9 days',
+    prov.EUROPEANA_DEFAULT_PROVIDER: '3 months 9 days',
     prov.WIKIMEDIA_DEFAULT_PROVIDER: '6 months 18 days',
     prov.SMITHSONIAN_DEFAULT_PROVIDER: '8 days',
     prov.BROOKLYN_DEFAULT_PROVIDER: '1 month 3 days',
