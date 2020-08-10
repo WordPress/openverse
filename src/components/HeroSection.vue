@@ -1,8 +1,9 @@
 <template>
   <main class="hero" role="main">
-    <div class="hero-center">
+    <div class="hero-center has-text-centered">
       <!-- <div class="locale-block"><locale-selector /></div> -->
-      <h2 class="has-text-centered">{{ $t('hero.title') }}</h2>
+      <h2 class="title is-5 padding-bottom-normal">{{ $t('hero.title') }}</h2>
+      <h5 class="b-header">{{ $t('hero.subtitle') }}</h5>
       <form
         class="hero_search-form margin-top-bigger"
         role="search"

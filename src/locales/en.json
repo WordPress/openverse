@@ -1,6 +1,7 @@
 {
   "hero": {
     "title": "Search for content to reuse",
+    "subtitle": "Browse over 500 million images, available for reuse",
     "search": {
       "placeholder": "I would like to see...",
       "button": "Search"
