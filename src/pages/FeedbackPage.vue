@@ -31,6 +31,7 @@
                 :aria-label="$t('feedback.aria.improve')"
                 href="#panel0"
                 @click.prevent="setActiveTab(0)"
+                v-on:keyup.enter.prevent="setActiveTab(0)"
               >
                 {{ $t('feedback.improve') }}
               </a>
@@ -44,6 +45,7 @@
                 :aria-label="$t('feedback.aria.report-bug')"
                 href="#panel1"
                 @click.prevent="setActiveTab(1)"
+                v-on:keyup.enter.prevent="setActiveTab(1)"
               >
                 {{ $t('feedback.bug') }}
               </a>

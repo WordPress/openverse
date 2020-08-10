@@ -6,6 +6,7 @@
       target="_blank"
       rel="noopener"
       @click="onReuseSurveyClick"
+      v-on:keyup.enter="onReuseSurveyClick"
     >
       {{ $t('photo-details.survey.link') }}
     </a>

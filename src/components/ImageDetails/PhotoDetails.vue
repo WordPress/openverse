@@ -5,6 +5,7 @@
         class="is-block photo_breadcrumb has-text-left margin-left-normal margin-bottom-normal has-text-grey-dark has-text-weight-semibold caption"
         :href="breadCrumbURL"
         @click.prevent="onGoBackToSearchResults"
+        v-on:keyup.enter.prevent="onGoBackToSearchResults"
         v-if="shouldShowBreadcrumb"
       >
         <i class="icon chevron-left margin-right-small" />
@@ -23,6 +24,7 @@
         <button
           class="button is-text tiny is-paddingless report is-shadowless"
           @click="toggleReportFormVisibility()"
+          v-on:keyup.enter="toggleReportFormVisibility()"
         >
           <span class="has-color-tomato margin-left-small">
             <i class="icon flag margin-right-small"></i>
@@ -65,7 +67,11 @@
             :aria-selected="activeTab == 0"
             :class="tabClass(0, 'tab')"
           >
-            <a href="#panel0" @click.prevent="setActiveTab(0)">
+            <a
+              href="#panel0"
+              @click.prevent="setActiveTab(0)"
+              v-on:keyup.enter.prevent="setActiveTab(0)"
+            >
               {{ $t('photo-details.reuse.title') }}
             </a>
           </li>
@@ -74,7 +80,11 @@
             :aria-selected="activeTab == 1"
             :class="tabClass(1, 'tab')"
           >
-            <a href="#panel1" @click.prevent="setActiveTab(1)">
+            <a
+              href="#panel1"
+              @click.prevent="setActiveTab(1)"
+              v-on:keyup.enter.prevent="setActiveTab(1)"
+            >
               {{ $t('photo-details.information.title') }}
             </a>
           </li>
@@ -84,7 +94,11 @@
             :class="tabClass(2, 'a')"
             v-if="socialSharingEnabled"
           >
-            <a href="#panel2" @click.prevent="setActiveTab(2)">
+            <a
+              href="#panel2"
+              @click.prevent="setActiveTab(2)"
+              v-on:keyup.enter.prevent="setActiveTab(2)"
+            >
               {{ $t('photo-details.share') }}
             </a>
           </li>
@@ -121,6 +135,7 @@
         rel="noopener"
         class="button is-success margin-bottom-small"
         @click="onPhotoSourceLinkClicked"
+        v-on:keyup.enter="onPhotoSourceLinkClicked"
       >
         {{ $t('photo-details.weblink') }}
         <i

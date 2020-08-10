@@ -34,6 +34,7 @@
             class="button margin-bottom-big"
             :disabled="isFinished"
             @click="onLoadMoreImages"
+            v-on:keyup.enter="onLoadMoreImages"
           >
             <span v-if="isFinished">{{ $t('browse-page.no-more') }}</span>
             <span v-else>{{ $t('browse-page.load') }}</span>
@@ -43,6 +44,7 @@
         <button
           type="button"
           @click="showMetaImageSearch = true"
+          v-on:keyup.enter="showMetaImageSearch = true"
           class="meta-popup-trigger has-color-tomato text-center caption padding-normal"
         >
           {{ $t('browse-page.other-source') }}

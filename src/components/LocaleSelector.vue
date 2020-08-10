@@ -3,7 +3,7 @@
     {{ $t('hero.locale.label') }}
     <div class="control has-icons-left">
       <div class="select">
-        <select @change="setLocale($event)" v-model="$i18n.locale">
+        <select @blur="setLocale($event)" v-model="$i18n.locale">
           <option
             v-for="locale in locales"
             :key="locale.name"
