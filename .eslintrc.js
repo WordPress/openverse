@@ -60,6 +60,7 @@ module.exports = {
       },
     ],
     'vue-a11y/no-autofocus': 'off',
+    'vue-a11y/click-events-have-key-events': 'off',
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',

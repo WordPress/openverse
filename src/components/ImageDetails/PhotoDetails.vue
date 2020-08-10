@@ -24,7 +24,6 @@
         <button
           class="button is-text tiny is-paddingless report is-shadowless"
           @click="toggleReportFormVisibility()"
-          v-on:keyup.enter="toggleReportFormVisibility()"
         >
           <span class="has-color-tomato margin-left-small">
             <i class="icon flag margin-right-small"></i>
