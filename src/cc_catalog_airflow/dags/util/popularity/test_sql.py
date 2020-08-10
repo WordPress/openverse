@@ -356,6 +356,73 @@ def test_constants_view_handles_zeros_and_missing(postgres_with_image_table):
     )
 
 
+def test_standardized_popularity_function_calculates(
+        postgres_with_image_table
+):
+    image_table = TEST_IMAGE_TABLE
+    data_query = dedent(
+        f"""
+        INSERT INTO {image_table} (
+          created_on, updated_on, provider, foreign_identifier, url,
+          meta_data, license, removed_from_source
+        )
+        VALUES
+          (
+            NOW(), NOW(), 'my_provider', 'fid_a', 'https://test.com/a.jpg',
+            '{{"views": 150, "description": "cats"}}', 'cc0', false
+          ),
+          (
+            NOW(), NOW(), 'diff_provider', 'fid_b', 'https://test.com/b.jpg',
+            '{{"comments": 50, "description": "cats"}}', 'cc0', false
+          ),
+          (
+            NOW(), NOW(), 'other_provider', 'fid_c', 'https://test.com/c.jpg',
+            '{{"likes": 0, "description": "cats"}}', 'cc0', false
+          )
+        ;
+        """
+    )
+    metrics = {
+        "my_provider": {"metric": "views", "percentile": 0.8},
+        "diff_provider": {"metric": "comments", "percentile": 0.5},
+        "other_provider": {"metric": "likes", "percentile": 0.5},
+    }
+    _set_up_std_popularity_func(
+        postgres_with_image_table,
+        data_query,
+        metrics
+    )
+    check_query = f"SELECT * FROM {TEST_CONSTANTS};"
+    postgres_with_image_table.cursor.execute(check_query)
+    print(list(postgres_with_image_table.cursor))
+    arg_list = [
+        ("my_provider", '{"views": 150, "description": "cats"}', 0.8),
+        ("my_provider", '{"views": 0, "description": "cats"}', 0.0),
+        ("my_provider", '{"comments": 100, "description": "cats"}', None),
+        ("diff_provider", '{"comments": 50, "description": "cats"}', 0.5),
+        ("diff_provider", '{"comments": 0, "description": "cats"}', 0.0),
+        ("diff_provider", '{"comments": 150, "description": "cats"}', 0.75),
+        ("diff_provider", '{"comments": 450, "description": "cats"}', 0.9),
+        ("diff_provider", '{"views": 150, "description": "cats"}', None),
+        ("other_provider", '{"likes": 3, "description": "cats"}', 0.75),
+        ("other_provider", '{"likes": 1, "description": "cats"}', 0.5),
+    ]
+    for i in range(len(arg_list)):
+        print(arg_list[i])
+        std_pop_query = dedent(
+            f"""
+            SELECT {TEST_STANDARDIZED_POPULARITY}(
+              '{arg_list[i][0]}',
+              '{arg_list[i][1]}'::jsonb
+            );
+            """
+        )
+        postgres_with_image_table.cursor.execute(std_pop_query)
+        actual_std_pop_val = postgres_with_image_table.cursor.fetchone()[0]
+        expect_std_pop_val = arg_list[i][2]
+        assert actual_std_pop_val == expect_std_pop_val
+
+
 def test_image_view_calculates_std_pop(postgres_with_image_table):
     image_table = TEST_IMAGE_TABLE
     image_view = TEST_IMAGE_VIEW
