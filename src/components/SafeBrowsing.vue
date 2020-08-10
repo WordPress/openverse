@@ -1,9 +1,8 @@
 <template>
-  <div class="safe-browsing">
+  <div class="safe-browsing" @keyup.esc="closeShowForm">
     <button
       class="button is-text tiny is-paddingless rating is-shadowless"
       @click="toggleShowForm"
-      v-on:keyup.enter="toggleShowForm"
     >
       <span class="has-color-dark-turquoise"
         >{{ $t('browse-page.safe-browsing.title')
@@ -18,7 +17,6 @@
       <button
         class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
         @click="toggleShowForm"
-        v-on:keyup.enter="toggleShowForm"
       >
         <i class="icon cross"></i>
       </button>
@@ -61,6 +59,9 @@ export default {
   methods: {
     toggleShowForm() {
       this.showForm = !this.showForm
+    },
+    closeShowForm() {
+      this.showForm = false
     },
     toggleMature() {
       this.$store.dispatch(TOGGLE_FILTER, {
