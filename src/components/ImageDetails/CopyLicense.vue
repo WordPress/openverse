@@ -10,7 +10,12 @@
           :aria-selected="activeTab == 0"
           :class="tabClass(0, 'tab')"
         >
-          <a class="is-size-6" href="#panel0" @click.prevent="setActiveTab(0)">
+          <a
+            class="is-size-6"
+            href="#panel0"
+            @click.prevent="setActiveTab(0)"
+            v-on:keyup.enter.prevent="setActiveTab(0)"
+          >
             {{ $t('photo-details.reuse.copy-license.rich') }}
           </a>
         </li>
@@ -19,7 +24,12 @@
           :aria-selected="activeTab == 1"
           :class="tabClass(1, 'tab')"
         >
-          <a class="is-size-6" href="#panel1" @click.prevent="setActiveTab(1)">
+          <a
+            class="is-size-6"
+            href="#panel1"
+            @click.prevent="setActiveTab(1)"
+            v-on:keyup.enter.prevent="setActiveTab(1)"
+          >
             {{ $t('photo-details.reuse.copy-license.html') }}
           </a>
         </li>
@@ -28,7 +38,12 @@
           :aria-selected="activeTab == 2"
           :class="tabClass(2, 'tab')"
         >
-          <a class="is-size-6" href="#panel2" @click.prevent="setActiveTab(2)">
+          <a
+            class="is-size-6"
+            href="#panel2"
+            @click.prevent="setActiveTab(2)"
+            v-on:keyup.enter.prevent="setActiveTab(2)"
+          >
             {{ $t('photo-details.reuse.copy-license.plain') }}
           </a>
         </li>
@@ -73,15 +88,17 @@
         />
       </div>
       <div :class="tabClass(1, 'tabs-panel')">
-        <textarea
-          id="attribution-html"
-          class="textarea monospace is-paddingless"
-          :value="attributionHtml"
-          cols="30"
-          rows="4"
-          readonly="readonly"
-        >
-        </textarea>
+        <label for="attribution-html">
+          <textarea
+            id="attribution-html"
+            class="textarea monospace is-paddingless"
+            :value="attributionHtml"
+            cols="30"
+            rows="4"
+            readonly="readonly"
+          >
+          </textarea>
+        </label>
         <copy-button
           id="copy-attribution-btn"
           el="#attribution-html"

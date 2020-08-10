@@ -1,9 +1,11 @@
 import ScrollButton from '@/components/ScrollButton'
 import render from '../../test-utils/render'
+import i18n from '../../test-utils/i18n'
 
 describe('Scroll button', () => {
   let props = null
   let options = null
+  const $t = (key) => i18n.messages[key]
 
   beforeEach(() => {
     props = {
@@ -12,6 +14,9 @@ describe('Scroll button', () => {
 
     options = {
       propsData: props,
+      mocks: {
+        $t,
+      },
     }
   })
 
@@ -29,6 +34,7 @@ describe('Scroll button', () => {
   it('should scroll the window up when clicked', () => {
     const mockMethods = {
       scrollToTop: jest.fn(),
+      $t,
     }
     const opts = {
       propsData: {

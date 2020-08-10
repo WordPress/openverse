@@ -7,7 +7,7 @@
     >
       <template v-slot:link>
         <a
-          aria-label="dmca form"
+          :aria-label="$t('photo-details.aria.dmca')"
           :href="dmcaFormUrl"
           target="_blank"
           rel="noopener"
@@ -33,8 +33,12 @@
     <button
       class="button is-text tiny margin-top-normal is-shadowless has-text-grey"
       @click="onBackClick()"
+      v-on:keyup.enter="onBackClick()"
     >
-      <span><i class="icon chevron-left margin-right-small"></i> Back</span>
+      <span
+        ><i class="icon chevron-left margin-right-small"></i>
+        {{ $t('photo-details.content-report.back') }}</span
+      >
     </button>
   </div>
 </template>

@@ -9,6 +9,7 @@
           class="button tag margin-smaller"
           :key="index"
           @click="searchByTagName(tag.name)"
+          v-on:keyup.enter="searchByTagName(tag.name)"
         >
           {{ tag.name }}
         </button>

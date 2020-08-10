@@ -2,8 +2,13 @@
   <div
     class="filters padding-vertical-big padding-left-big padding-right-normal"
     @click="hideLicenseExplanationVisibility()"
+    v-on:keyup.enter="hideLicenseExplanationVisibility()"
   >
-    <div class="filters-title" @click.prevent="toggleFilterVisibility">
+    <div
+      class="filters-title"
+      @click.prevent="toggleFilterVisibility"
+      v-on:keyup.enter="toggleFilterVisibility"
+    >
       <span>{{ title }}</span>
       <button
         :aria-label="'filters list for' + title + 'category'"
@@ -42,7 +47,7 @@
           {{ $t(item.name) }}
         </label>
         <img
-          aria-label="license explanation"
+          :aria-label="$t('browse-page.aria.license-explanation')"
           tabindex="0"
           v-if="filterType == 'licenses'"
           src="@/assets/help_icon.svg"

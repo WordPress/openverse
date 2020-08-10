@@ -7,10 +7,11 @@
   >
     <span>{{ $t(this.$props.label) }}</span>
     <span
-      aria-label="remove filter"
+      :aria-label="$t('browse-page.aria.remove-filter')"
       class="close margin-left-small"
       tabindex="0"
       @click="onClickIsolatedFilter"
+      v-on:keyup.enter="onClickIsolatedFilter"
       ><i class="icon cross"
     /></span>
   </button>

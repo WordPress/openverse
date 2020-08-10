@@ -34,6 +34,7 @@
             class="button margin-bottom-big"
             :disabled="isFinished"
             @click="onLoadMoreImages"
+            v-on:keyup.enter="onLoadMoreImages"
           >
             <span v-if="isFinished">{{ $t('browse-page.no-more') }}</span>
             <span v-else>{{ $t('browse-page.load') }}</span>
@@ -41,12 +42,12 @@
           <loading-icon v-show="isFetchingImages" />
         </div>
         <button
-          aria-controls="meta-search-modal"
           type="button"
           @click="showMetaImageSearch = true"
+          v-on:keyup.enter="showMetaImageSearch = true"
           class="meta-popup-trigger has-color-tomato text-center caption padding-normal"
         >
-          Not finding what you need? Search other sources
+          {{ $t('browse-page.other-source') }}
         </button>
       </div>
       <div

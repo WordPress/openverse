@@ -1,7 +1,7 @@
 <template>
   <div class="photo-detail-page">
     <header-section showNavSearch="true" />
-    <main role="main" aria-label="main content">
+    <main role="main" :aria-label="$t('photo-details.aria.main')">
       <photo-details
         :image="image"
         :breadCrumbURL="breadCrumbURL"
@@ -18,7 +18,7 @@
       </div>
       <aside
         role="complementary"
-        aria-label="related images"
+        :aria-label="$t('photo-details.aria.related')"
         class="padding-normal margin-vertical-big"
       >
         <related-images

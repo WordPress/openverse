@@ -3,17 +3,19 @@
     <div v-if="status == 'NOT_SENT'">
       <span>{{ $t('browse-page.search-rating.content') }}</span>
       <button
-        aria-label="relevant result? answer: yes"
+        :aria-label="$t('browse-page.aria.relevance.yes')"
         class="button is-text tiny is-paddingless rating is-shadowless"
         @click="sendSearchRatingEvent(true)"
+        v-on:keyup.enter="sendSearchRatingEvent(true)"
       >
         {{ $t('browse-page.search-rating.yes') }}
       </button>
       •
       <button
-        aria-label="relevant result? answer: no"
+        :aria-label="$t('browse-page.aria.relevance.no')"
         class="button is-text tiny is-paddingless rating is-shadowless"
         @click="sendSearchRatingEvent(false)"
+        v-on:keyup.enter="sendSearchRatingEvent(false)"
       >
         {{ $t('browse-page.search-rating.no') }}
       </button>
