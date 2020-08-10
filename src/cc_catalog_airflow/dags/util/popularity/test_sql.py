@@ -291,8 +291,64 @@ def test_constants_view_adds_values_and_constants(postgres_with_image_table):
     check_query = f"SELECT * FROM {TEST_CONSTANTS};"
     postgres_with_image_table.cursor.execute(check_query)
     expect_rows = [
-        ("diff_provider", "comments", 0.8, 50.0, 12.5),
-        ("my_provider", "views", 0.5, 50.0, 50.0),
+        ("diff_provider", "comments", 0.8, 50.0, 50.0, 12.5),
+        ("my_provider", "views", 0.5, 50.0, 50.0, 50.0),
+    ]
+    assert (
+        sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
+        == expect_rows
+    )
+
+
+def test_constants_view_handles_zeros_and_missing(postgres_with_image_table):
+    image_table = TEST_IMAGE_TABLE
+    data_query = dedent(
+        f"""
+        INSERT INTO {image_table} (
+          created_on, updated_on, provider, foreign_identifier, url,
+          meta_data, license, removed_from_source
+        )
+        VALUES
+          (
+            NOW(), NOW(), 'my_provider', 'fid_a', 'https://test.com/a.jpg',
+            '{{"views": 0, "description": "cats"}}', 'cc0', false
+          ),
+          (
+            NOW(), NOW(), 'my_provider', 'fid_b', 'https://test.com/b.jpg',
+            '{{"views": 0, "description": "cats"}}', 'cc0', false
+          ),
+          (
+            NOW(), NOW(), 'my_provider', 'fid_c', 'https://test.com/c.jpg',
+            '{{"views": 0, "description": "cats"}}', 'cc0', false
+          ),
+          (
+            NOW(), NOW(), 'my_provider', 'fid_d', 'https://test.com/d.jpg',
+            '{{"views": 0, "description": "cats"}}', 'cc0', false
+          ),
+          (
+            NOW(), NOW(), 'my_provider', 'fid_e', 'https://test.com/e.jpg',
+            '{{"views": 10, "description": "cats"}}', 'cc0', false
+          ),
+          (
+            NOW(), NOW(), 'diff_provider', 'fid_b', 'https://test.com/b.jpg',
+            '{{"views": 50, "description": "cats"}}', 'cc0', false
+          )
+        ;
+        """
+    )
+    metrics = {
+        "my_provider": {"metric": "views", "percentile": 0.8},
+        "diff_provider": {"metric": "comments", "percentile": 0.8},
+    }
+    _set_up_popularity_constants(
+        postgres_with_image_table, data_query, metrics
+    )
+
+    check_query = f"SELECT * FROM {TEST_CONSTANTS};"
+    postgres_with_image_table.cursor.execute(check_query)
+    expect_rows = [
+        ("diff_provider", "comments", 0.8, None, None, None),
+        ("my_provider", "views", 0.8, 0.0, 1.0, 0.25),
     ]
     assert (
         sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])

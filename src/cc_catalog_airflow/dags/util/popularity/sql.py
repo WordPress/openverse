@@ -178,16 +178,26 @@ def create_image_popularity_constants_view(
     create_view_query = dedent(
         f"""
         CREATE MATERIALIZED VIEW public.{popularity_constants} AS
-          WITH popularity_metric_values AS (
-            SELECT
-            *,
-            GREATEST(
-              {popularity_percentile}({PARTITION}, {METRIC}, {PERCENTILE}), 1
+          WITH
+            popularity_metric_raw_values AS (
+              SELECT
+                *,
+                {popularity_percentile}({PARTITION}, {METRIC}, {PERCENTILE})
+                  AS raw_value
+              FROM {popularity_metrics}
+            ),
+            popularity_metric_values AS(
+              SELECT
+                *,
+                CASE
+                  WHEN raw_value=0 THEN
+                    1
+                  ELSE
+                    raw_value
+                END AS value
+              FROM popularity_metric_raw_values
             )
-            AS val
-            FROM {popularity_metrics}
-          )
-          SELECT *, ((1 - {PERCENTILE}) / {PERCENTILE}) * val AS {CONSTANT}
+          SELECT *, ((1 - {PERCENTILE}) / {PERCENTILE}) * value AS {CONSTANT}
           FROM popularity_metric_values;
         """
     )
