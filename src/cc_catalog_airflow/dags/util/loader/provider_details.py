@@ -1,8 +1,8 @@
 """
 This file holds the default provider names for each provider API and a
 dictionary of related sub providers. The key of the dictionary reflects
-the sub provider name and the corresponding item is a set of values from the
-API response which helps to identify the sub provider.
+the sub provider name and the corresponding item is a value (or set of values)
+from the API response which helps to identify the sub provider.
 
 Apart from that, this file stores other provider related information which
 might be useful for retrieving sub-providers at the database level and the
@@ -26,7 +26,90 @@ FLICKR_SUB_PROVIDERS = {
     },
     'spacex': {
         '130608600@N05'  # Official SpaceX Photos
+    },
+    'woc_tech': {
+        '136629440@N06'  # WOCinTech Chat
     }
 }
 
 FLICKR_PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
+
+# Europeana parameters
+EUROPEANA_DEFAULT_PROVIDER = 'europeana'
+
+EUROPEANA_SUB_PROVIDERS = {
+    'wellcome_collection': "Wellcome Collection"
+}
+
+# Smithsonian parameters
+SMITHSONIAN_DEFAULT_PROVIDER = 'smithsonian'
+
+SMITHSONIAN_SUB_PROVIDERS = {
+    'smithsonian_national_museum_of_natural_history': {
+        'NMNHANTHRO',  # NMNH - Paleobiology Dept.
+        'NMNHBIRDS',  # NMNH - Vertebrate Zoology - Birds Division
+        'NMNHBOTANY',  # NMNH - Botany Dept.
+        'NMNHEDUCATION',  # NMNH - Education & Outreach
+        'NMNHENTO',  # NMNH - Entomology Dept.
+        'NMNHFISHES',  # NMNH - Vertebrate Zoology - Fishes Division
+        'NMNHHERPS',  # NMNH - Vertebrate Zoology - Herpetology Division
+        'NMNHINV',  # NMNH - Invertebrate Zoology Dept.
+        'NMNHMAMMALS',  # NMNH - Vertebrate Zoology - Mammals Division
+        'NMNHMINSCI',  # NMNH - Mineral Sciences Dept.
+        'NMNHPALEO'  # NMNH - Paleobiology Dept.
+    },
+    'smithsonian_anacostia_museum': {
+        'ACM'  # Anacostia Community Museum
+    },
+    'smithsonian_cooper_hewitt_museum': {
+        'CHNDM'  # Cooper Hewitt, Smithsonian Design Museum
+    },
+    'smithsonian_field_book_project': {
+        'FBR'  # Smithsonian Field Book Project
+    },
+    'smithsonian_freer_gallery_of_art': {
+        'FSG'  # Freer Gallery of Art and Arthur M. Sackler Gallery
+    },
+    'smithsonian_gardens': {
+        'HAC'  # Smithsonian Gardens
+    },
+    'smithsonian_hirshhorn_museum': {
+        'HMSG'  # Hirshhorn Museum and Sculpture Garden
+    },
+    'smithsonian_anthropological_archives': {
+        'NAA'  # National Anthropological Archives
+    },
+    'smithsonian_air_and_space_museum': {
+        'NASM'  # National Air and Space Museum
+    },
+    'smithsonian_african_american_history_museum': {
+        'NMAAHC'  # National Museum of African American History and Culture
+    },
+    'smithsonian_american_history_museum': {
+        'NMAH'  # National Museum of American History
+    },
+    'smithsonian_american_indian_museum': {
+        'NMAI'  # National Museum of the American Indian
+    },
+    'smithsonian_african_art_museum': {
+        'NMAfA'  # National Museum of African Art
+    },
+    'smithsonian_portrait_gallery': {
+        'NPG'  # National Portrait Gallery
+    },
+    'smithsonian_postal_museum': {
+        'NPM'  # National Postal Museum
+    },
+    'smithsonian_zoo_and_conservation': {
+        'NZP'  # Smithsonian's National Zoo & Conservation Biology Institute
+    },
+    'smithsonian_american_art_museum': {
+        'SAAM'  # Smithsonian American Art Museum
+    },
+    'smithsonian_institution_archives': {
+        'SIA'  # Smithsonian Institution Archives
+    },
+    'smithsonian_libraries': {
+        'SIL'  # Smithsonian Libraries
+    },
+}

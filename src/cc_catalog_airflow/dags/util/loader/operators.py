@@ -5,7 +5,7 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.operators.python_operator import ShortCircuitOperator
 from airflow.utils.trigger_rule import TriggerRule
 
-from util.loader import loader, paths, sql
+from util.loader import loader, paths, sql, smithsonian_unit_codes
 
 logger = logging.getLogger(__name__)
 
@@ -177,6 +177,42 @@ def get_flickr_sub_provider_update_operator(
     return PythonOperator(
         task_id='update_flickr_sub_providers',
         python_callable=sql.update_flickr_sub_providers,
+        op_args=[postgres_conn_id],
+        dag=dag
+    )
+
+
+def get_europeana_sub_provider_update_operator(
+        dag,
+        postgres_conn_id,
+):
+    return PythonOperator(
+        task_id='update_europeana_sub_providers',
+        python_callable=sql.update_europeana_sub_providers,
+        op_args=[postgres_conn_id],
+        dag=dag
+    )
+
+
+def get_smithsonian_sub_provider_update_operator(
+        dag,
+        postgres_conn_id,
+):
+    return PythonOperator(
+        task_id='update_smithsonian_sub_providers',
+        python_callable=sql.update_smithsonian_sub_providers,
+        op_args=[postgres_conn_id],
+        dag=dag
+    )
+
+
+def get_smithsonian_unit_code_operator(
+        dag,
+        postgres_conn_id,
+):
+    return PythonOperator(
+        task_id='check_new_smithsonian_unit_codes',
+        python_callable=smithsonian_unit_codes.alert_unit_codes_from_api,
         op_args=[postgres_conn_id],
         dag=dag
     )
