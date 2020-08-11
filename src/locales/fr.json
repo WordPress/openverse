@@ -1,6 +1,7 @@
 {
   "hero": {
     "title": "Rechercher du contenu à réutiliser",
+    "subtitle": "Parcourez plus de 500 millions d'images, disponibles pour réutilisation",
     "search": {
       "placeholder": "J'aimerais voir...",
       "button": "Chercher"
@@ -19,6 +20,11 @@
     "locale": {
       "label": "Langues disponibles",
       "icon": "lieu"
+    },
+    "aria": {
+      "search": "chercher",
+      "caption": "à propos des licences cc",
+      "old-cc-search": "ancienne recherche cc"
     }
   },
   "header": {
@@ -27,7 +33,14 @@
     "search-guide": "Guide de recherche",
     "feedback": "Retour d'information",
     "extension": "Extension",
-    "placeholder": "Rechercher toutes les images"
+    "placeholder": "Rechercher toutes les images",
+    "aria": {
+      "primary": "primaire",
+      "menu": "menu",
+      "search": "chercher",
+      "sr-search": "bouton de recherche sr",
+      "extension": "extension"
+    }
   },
   "footer": {
     "address": {
@@ -50,6 +63,11 @@
       "work": "Notre travail compte sur vous!",
       "help": "Aidez-nous à garder Internet gratuit et ouvert.",
       "link": "Faire un don maintenant"
+    },
+    "aria": {
+      "contact": "coordonnées cc",
+      "homepage": "page d'accueil",
+      "donate": "section don"
     }
   },
   "about": {
@@ -79,6 +97,16 @@
       "source": "La source",
       "domain": "Domaine",
       "work": "# Œuvres sous licence CC"
+    },
+    "aria": {
+      "licenses": "licences cc",
+      "vision": "vision de recherche cc",
+      "roadmap": "feuille de route de recherche cc",
+      "projects": "projets actuels",
+      "contribution": "directives de contribution",
+      "terms": "conditions d'utilisation cc",
+      "old-cc-search": "ancienne recherche cc",
+      "sources": "table des sources"
     }
   },
   "search-guide": {
@@ -124,7 +152,12 @@
     "description": "Merci d'utiliser CC Search! Nous apprécions vos idées pour améliorer l'outil ci-dessous. Pour fournir des commentaires réguliers des utilisateurs, rejoignez la chaîne {channel} sur {slack}.",
     "improve": "Aidez nous à améliorer",
     "bug": "Signaler un bug",
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "aria": {
+      "cc-usability": "canal d'utilisation cc slack",
+      "improve": "aidez-nous à améliorer la forme",
+      "report-bug": "signaler un formulaire de bogue"
+    }
   },
   "collections": {
     "title": "Parcourir les collections",
@@ -135,6 +168,7 @@
   "not-found": "Page non trouvée",
   "filters": {
     "title": "Filtres",
+    "filter-by": "Filtrer par",
     "licenses": {
       "title": "Licences",
       "cc0": "CC0",
@@ -185,6 +219,10 @@
     },
     "creator": {
       "title": "Recherche par créateur"
+    },
+    "license-explanation": {
+      "tool": "En savoir plus sur l'outil {link} ici",
+      "license": "En savoir plus sur la licence {link} ici"
     }
   },
   "filter-list": {
@@ -197,6 +235,7 @@
     "no-more": "Plus d'images :(",
     "load": "Charger plus de résultats",
     "error": "Erreur lors de la récupération des images:",
+    "other-source": "Tu ne trouves pas ce dont tu as besoin? Rechercher d'autres sources",
     "search-rating": {
       "content": "Ces résultats sont-ils pertinents?",
       "yes": "Oui",
@@ -221,6 +260,18 @@
       "title": "Navigation sûre",
       "caption": "Par défaut, les résultats de recherche n'incluront pas les résultats signalés comme matures par les utilisateurs et les sources.",
       "label": "Afficher le contenu mature"
+    },
+    "aria": {
+      "close": "proche",
+      "scroll": "faire défiler vers le haut",
+      "search": "chercher",
+      "relevance": {
+        "yes": "résultat pertinent? réponse: oui",
+        "no": "résultat pertinent? réponse: non"
+      },
+      "remove-filter": "supprimer le filtre",
+      "license-explanation": "explication de la licence",
+      "creator": "recherche par créateur"
     }
   },
   "photo-details": {
@@ -229,11 +280,15 @@
       "title": "Réutilisation",
       "license-header": "Licence",
       "attribution": {
-        "main": "Cette image était marquée d'une",
+        "main": "Cette image était {link} marquée d'une",
         "license": "licence."
       },
       "license": {
         "content": "En savoir plus sur la licence {link}",
+        "link": "ici"
+      },
+      "tool": {
+        "content": "En savoir plus sur l'outil {link}",
         "link": "ici"
       },
       "copy-license": {
@@ -245,6 +300,8 @@
     },
     "information": {
       "title": "Information",
+      "type": "Type:",
+      "provider": "Fournisseur:",
       "dimensions": "Dimensions",
       "source": "La source",
       "license": "Licence",
@@ -280,6 +337,39 @@
         "thanks": "Merci d'avoir signalé un problème avec les résultats de CC Search!",
         "error": "Une erreur s'est produite lors de la soumission du rapport. Veuillez réessayer."
       }
+    },
+    "aria": {
+      "close-form": "fermer le formulaire",
+      "dmca": "formulaire dmca",
+      "attribution": {
+        "license": "en savoir plus sur la licence",
+        "tool": "en savoir plus sur l'outil"
+      },
+      "details": "détails de l'image",
+      "share": {
+        "facebook": "partager sur facebook",
+        "twitter": "partager sur twitter",
+        "pinterest": "partager sur Pinterest"
+      },
+      "main": "contenu principal",
+      "related": "images associées"
+    }
+  },
+  "meta-search": {
+    "sources": "Sources",
+    "caption": "CC Search n'indexe pas actuellement les sources énumérées ci-dessus, mais grâce à cette interface, il offre un accès pratique aux services de recherche fournis par d'autres organisations indépendantes. CC n'a aucun contrôle sur les résultats renvoyés. Ne supposez pas que les résultats affichés dans ce portail de recherche sont sous une licence CC. Vérifiez toujours que l'œuvre est bien sous licence CC en suivant le lien. En cas de doute, vous devez contacter directement le détenteur des droits d'auteur ou essayer de contacter le site où vous avez trouvé le contenu.",
+    "card": {
+      "search": "Chercher",
+      "caption": "Cliquez sur une source ci-dessous pour rechercher directement d'autres collections d'images sous licence CC.{break}Veuillez noter que les filtres Utiliser ne sont pas pris en charge pour Open Clip Art Library ou Nappy.",
+      "checkboxes": {
+        "title": "Utilisation",
+        "commercial": "Utilisation à des fins commerciales",
+        "modify": "Modifier ou adapter"
+      }
+    },
+    "form": {
+      "title": "CC Search ne prend pas encore en charge la recherche {type} intégrée.",
+      "caption": "Cliquez sur une source ci-dessous pour rechercher directement d'autres collections de {type} sous licence CC.{break}Veuillez noter que l'utilisation de filtres n'est pas prise en charge pour {filter}."
     }
   }
 }

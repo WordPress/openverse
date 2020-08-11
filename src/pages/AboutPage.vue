@@ -6,7 +6,7 @@
       <i18n path="about.description.content" tag="p">
         <template v-slot:link>
           <a
-            aria-label="cc licenses"
+            :aria-label="$t('about.aria.licenses')"
             href="https://creativecommons.org/share-your-work/licensing-examples/"
             >{{ $t('about.description.licenses-link') }}</a
           >
@@ -22,21 +22,21 @@
       <i18n path="about.planning.content" tag="p">
         <template v-slot:vision>
           <a
-            aria-label="cc search vision"
+            :aria-label="$t('about.aria.vision')"
             href="https://creativecommons.org/2019/03/19/cc-search/"
             >{{ $t('about.planning.vision') }}</a
           >
         </template>
         <template v-slot:roadmap>
           <a
-            aria-label="cc search roadmap"
+            :aria-label="$t('about.aria.roadmap')"
             href="https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/edit#heading=h.jih78emira0r"
             >{{ $t('about.planning.roadmap') }}</a
           >
         </template>
         <template v-slot:working>
           <a
-            aria-label="current projects"
+            :aria-label="$t('about.aria.projects')"
             href="https://github.com/orgs/creativecommons/projects/7"
             >{{ $t('about.planning.working') }}</a
           >
@@ -64,7 +64,7 @@
         </template>
         <template v-slot:community>
           <a
-            aria-label="contribution guidelines"
+            :aria-label="$t('about.aria.contribution')"
             href="https://creativecommons.github.io/contributing-code/"
             >{{ $t('about.planning.community') }}</a
           >
@@ -73,7 +73,7 @@
       <i18n path="about.declaration.content" tag="p">
         <template v-slot:terms>
           <a
-            aria-label="cc terms of use"
+            :aria-label="$t('about.aria.terms')"
             href="https://creativecommons.org/terms/"
             >{{ $t('about.declaration.terms') }}</a
           >
@@ -82,7 +82,7 @@
       <i18n path="about.old-cc-search" tag="p">
         <template v-slot:link>
           <a
-            aria-label="old cc search"
+            :aria-label="$t('about.aria.old-cc-search')"
             href="https://oldsearch.creativecommons.org"
             >https://oldsearch.creativecommons.org</a
           >
@@ -90,7 +90,7 @@
       </i18n>
       <h3 class="margin-vertical-normal">{{ $t('about.sources') }}</h3>
       <table
-        aria-label="sources table"
+        :aria-label="$t('about.aria.sources')"
         role="region"
         class="table is-bordered is-striped"
       >

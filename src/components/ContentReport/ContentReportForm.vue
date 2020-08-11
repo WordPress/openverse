@@ -1,9 +1,10 @@
 <template>
   <div class="padding-normal is-clearfix arrow-popup">
     <button
-      aria-label="close form"
+      :aria-label="$t('photo-details.aria.close-form')"
       class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
       @click="closeForm()"
+      v-on:keyup.enter="closeForm()"
     >
       <i class="icon cross"></i>
     </button>
@@ -36,40 +37,40 @@
         </legend>
 
         <div>
-          <input
-            type="radio"
-            name="type"
-            id="dmca"
-            value="dmca"
-            v-model="selectedReason"
-          />
           <label for="dmca" class="margin-left-small">
+            <input
+              type="radio"
+              name="type"
+              id="dmca"
+              value="dmca"
+              v-model="selectedReason"
+            />
             {{ $t('photo-details.content-report.copyright') }}
           </label>
         </div>
 
         <div>
-          <input
-            type="radio"
-            name="type"
-            id="mature"
-            value="mature"
-            v-model="selectedReason"
-          />
           <label for="mature" class="margin-left-small">
+            <input
+              type="radio"
+              name="type"
+              id="mature"
+              value="mature"
+              v-model="selectedReason"
+            />
             {{ $t('photo-details.content-report.mature') }}
           </label>
         </div>
 
         <div>
-          <input
-            type="radio"
-            name="type"
-            id="other"
-            value="other"
-            v-model="selectedReason"
-          />
           <label for="other" class="margin-left-small">
+            <input
+              type="radio"
+              name="type"
+              id="other"
+              value="other"
+              v-model="selectedReason"
+            />
             {{ $t('photo-details.content-report.other') }}
           </label>
         </div>
@@ -86,6 +87,7 @@
         :disabled="selectedReason === null"
         class="button next-button tiny is-info is-pulled-right"
         @click="onIssueSelected()"
+        v-on:keyup.enter="onIssueSelected()"
       >
         {{ $t('photo-details.content-report.next') }}
       </button>

@@ -1,8 +1,9 @@
 <template>
   <main class="hero" role="main">
-    <div class="hero-center">
+    <div class="hero-center has-text-centered">
       <!-- <div class="locale-block"><locale-selector /></div> -->
-      <h2 class="has-text-centered">{{ $t('hero.title') }}</h2>
+      <h2 class="title is-5 padding-bottom-normal">{{ $t('hero.title') }}</h2>
+      <h5 class="b-header">{{ $t('hero.subtitle') }}</h5>
       <form
         class="hero_search-form margin-top-bigger"
         role="search"
@@ -16,6 +17,7 @@
               <input
                 required="required"
                 class="hero_search-input input is-large"
+                :aria-label="$t('hero.aria.search')"
                 autofocus
                 type="search"
                 name="q"
@@ -38,6 +40,7 @@
               <input
                 required="required"
                 class="input"
+                :aria-label="$t('hero.aria.search')"
                 type="search"
                 name="q"
                 :placeholder="$t('hero.search.placeholder')"
@@ -59,7 +62,7 @@
               <a
                 href="https://creativecommons.org/share-your-work/licensing-examples/"
                 target="_blank"
-                aria-label="about cc licenses"
+                :aria-label="$t('hero.aria.caption')"
                 rel="noopener"
               >
                 {{ $t('hero.caption.link') }}
@@ -78,7 +81,7 @@
           <template v-slot:link>
             <a
               href="https://oldsearch.creativecommons.org/"
-              aria-label="old cc search"
+              :aria-label="$t('hero.aria.old-cc-search')"
               >{{ $t('hero.old-cc-search.link') }}</a
             >
           </template>

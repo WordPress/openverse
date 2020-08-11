@@ -8,17 +8,26 @@
       {{ license.toUpperCase() }}
     </h5>
     <license-explanations :license="license" />
-    <p
+    <i18n
+      path="filters.license-explanation.tool"
+      tag="p"
       class="caption is-pulled-right margin-small"
       v-if="(license === 'cc0') | (license === 'pdm')"
     >
-      Read more about the tool
-      <a target="_blank" :href="`${getLicenseDeedLink(license)}`">here</a>
-    </p>
-    <p class="caption is-pulled-right margin-small" v-else>
-      Read more about the license
-      <a target="_blank" :href="`${getLicenseDeedLink(license)}`">here</a>
-    </p>
+      <template v-slot:link>
+        <a target="_blank" :href="`${getLicenseDeedLink(license)}`">here</a>
+      </template>
+    </i18n>
+    <i18n
+      path="filters.license-explanation.license"
+      tag="p"
+      class="caption is-pulled-right margin-small"
+      v-else
+    >
+      <template v-slot:link>
+        <a target="_blank" :href="`${getLicenseDeedLink(license)}`">here</a>
+      </template>
+    </i18n>
   </div>
 </template>
 

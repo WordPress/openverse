@@ -11,6 +11,7 @@
         type="button"
         class="button is-text tiny is-paddingless margin-top-big margin-right-small report is-shadowless is-pulled-right"
         @click="onToggleSearchGridFilter()"
+        v-on:keyup.enter="onToggleSearchGridFilter()"
       >
         <span class="has-color-tomato is-hidden-touch">{{
           $t('filter-list.hide')
@@ -87,10 +88,11 @@
         v-if="activeTab == 'image'"
         class="margin-normal filter-option small-filter margin-bottom-normal"
       >
-        <label aria-label="search by creator">
+        <label for="creator-chk" :aria-label="$t('browse-page.aria.creator')">
           <input
+            id="creator-chk"
             type="checkbox"
-            aria-label="search by creator"
+            :aria-label="$t('browse-page.aria.creator')"
             :checked="filters.searchBy.creator"
             @change="onUpdateSearchByCreator"
           />
@@ -102,7 +104,11 @@
       class="margin-big padding-bottom-normal clear-filters is-hidden-touch"
       v-if="isFilterApplied"
     >
-      <button class="button tiny" @click="onClearFilters">
+      <button
+        class="button tiny"
+        @click="onClearFilters"
+        v-on:keyup.enter="onClearFilters"
+      >
         {{ $t('filter-list.clear') }}
       </button>
     </div>
@@ -110,12 +116,17 @@
       v-if="isFilterApplied"
       class="has-background-white padding-big is-hidden-desktop has-text-centered"
     >
-      <button class="button tiny margin-right-normal" @click="onClearFilters">
+      <button
+        class="button tiny margin-right-normal"
+        @click="onClearFilters"
+        v-on:keyup.enter="onClearFilters"
+      >
         {{ $t('filter-list.clear') }}
       </button>
       <button
         class="button is-primary tiny"
         @click="onToggleSearchGridFilter()"
+        v-on:keyup.enter="onToggleSearchGridFilter()"
       >
         {{ $t('filter-list.show') }}
       </button>

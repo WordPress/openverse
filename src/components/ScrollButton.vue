@@ -1,7 +1,8 @@
 <template>
   <button
-    aria-label="scroll to top"
+    :aria-label="$t('browse-page.aria.scroll')"
     @click="scrollToTop"
+    v-on:keyup.enter="scrollToTop"
     v-if="showBtn"
     class="scroll"
   >

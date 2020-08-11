@@ -1,7 +1,9 @@
 import PhotoDetailPage from '@/pages/PhotoDetailPage'
 import render from '../../test-utils/render'
+import i18n from '../../test-utils/i18n'
 
 describe('PhotoDetailPage', () => {
+  const $t = (key) => i18n.messages[key]
   const options = {
     propsData: {
       query: {
@@ -21,6 +23,7 @@ describe('PhotoDetailPage', () => {
         },
         dispatch: jest.fn(),
       },
+      $t,
     },
   }
   it('should render correct contents', () => {
