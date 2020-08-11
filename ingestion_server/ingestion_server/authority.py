@@ -30,9 +30,9 @@ class AuthorityTypes(Enum):
 # We want to boost curated collections where each image has been vetted for
 # cultural significance.
 boost = {
-    AuthorityTypes.CURATED: 55,
-    AuthorityTypes.SOCIAL_MEDIA: 40,
-    AuthorityTypes.DEFAULT: 50
+    AuthorityTypes.CURATED: 90,
+    AuthorityTypes.SOCIAL_MEDIA: 80,
+    AuthorityTypes.DEFAULT: 85
 }
 authority_types = {
     'flickr': AuthorityTypes.SOCIAL_MEDIA,
