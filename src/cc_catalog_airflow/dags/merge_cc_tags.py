@@ -1,25 +1,17 @@
 """
-    Museum Victoria -- 
-            API urls =     142532
-            CC urls  =     81799
-            Common   =      0
+Script to merge the tags and metadata column from Common crawl data
+to the new provider API data in image table.
 
+Execution : python merge_cc_tags.py -t {cc_table_name}
 
-    Science Museum -- 
-            API links =    62515
-            CC url    =    67390
-            Common    =    22228
-
-    Met Museum :
-            API links =    10574 (Did not run completely )
-            CC urls   =    522488
-            Common    =    9973
+    eg : python merge_cc_tags.py -t science_museum_2020_06_02
 
 """
 import os
 import logging
 import argparse
 import psycopg2
+from textwrap import dedent
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -39,8 +31,8 @@ def _strip_url_schema(url):
     return f"""
             (
              CASE
-             WHEN {url} like 'https://%' THEN LTRIM({url}, 'https://')
-             WHEN {url} like 'http://%' THEN LTRIM({url}, 'http://')
+             WHEN {url} SIMILAR TO 'https://%' THEN LTRIM({url}, 'https://')
+             WHEN {url} SIMILAR TO 'http://%' THEN LTRIM({url}, 'http://')
              ELSE {url}
              END
             )
@@ -82,13 +74,13 @@ def _merge_jsonb_objects(column):
     a JSONB column, taking the newest available non-null value.
     """
     return f'''
-         {column} = COALESCE(
-            b.{column},
-            a.{column},
-            jsonb_strip_nulls(a.{column})
-                || jsonb_strip_nulls(b.{column})
-        )
-        '''
+            {column} = COALESCE(
+                jsonb_strip_nulls(a.{column})
+                    || jsonb_strip_nulls(b.{column}),
+                a.{column},
+                b.{column}
+            )
+            '''
 
 
 def _merge_jsonb_arrays(column):
@@ -97,8 +89,8 @@ def _merge_jsonb_arrays(column):
             SELECT jsonb_agg(DISTINCT x)
             FROM jsonb_array_elements(a.{column} || b.{column}) t(x)
         ),
-        b.{column},
-        a.{column}
+        a.{column},
+        b.{column}
         )'''
 
 
@@ -112,47 +104,28 @@ def _merge_tags(
             CONNECTION_ID
         )
         cursor = db.cursor()
-        api_links = []
-        cc_links = []
-        cursor.execute(
-            f"""
-            select {_modify_urls('a.' + COL_IMAGE, cc_table)} from {IMAGE_TABLE_NAME} a
-            where  a.{COL_PROVIDER} = 'museumsvictoria'
-            """
+        query = dedent(
+                f"""
+                UPDATE {IMAGE_TABLE_NAME} a
+                    SET
+                        {_merge_jsonb_arrays(COL_TAGS)},
+                        {_merge_jsonb_objects(COL_METADATA)}
+                FROM {cc_table} b
+                WHERE
+                a.{COL_PROVIDER} = b.{COL_PROVIDER}
+                AND
+                {_modify_urls('a.'+COL_IMAGE,
+                            cc_table)} = {_modify_urls('b.'+COL_IMAGE,
+                            cc_table)}
+                """
         )
-        for i in cursor.fetchall():
-            api_links.append(i[0])
         cursor.execute(
-            f"""
-            select {_modify_urls('b.' + COL_IMAGE, cc_table)} from {cc_table} b
-            """
+            query
         )
-        for j in cursor.fetchall():
-            cc_links.append(j[0])
-        # cursor.execute(
-        # f"""
-        #     UPDATE {IMAGE_TABLE_NAME} a
-        #         SET
-        #             {_merge_jsonb_arrays(COL_TAGS)},
-        #             {_merge_jsonb_objects(COL_METADATA)}
-        #     FROM {cc_table} b
-        #     WHERE
-        #     a.{COL_PROVIDER} = b.{COL_PROVIDER}
-        #     AND
-        #     {_modify_urls('a.'+COL_IMAGE,
-        #                   cc_table)} = {_modify_urls('b.'+COL_IMAGE,
-        #                   cc_table)}
-        # """
-        # )
-        print(len(api_links))
-        print(len(cc_links))
-        common_links = set(api_links).intersection(set(cc_links))
-        print(len(common_links))
-        # print(common_links)
-        # for i in common_links:
-        #     print(i)
+        db.commit()
     except Exception as e:
         logger.warning(f"Merging failed due to {e}")
+        logger.warning(f"{query}")
         status = "Failure"
     return status
 
@@ -170,17 +143,3 @@ if __name__ == "__main__":
     parse.add_argument("-t", "--Table", required=True, help="Select table")
     args = parse.parse_args()
     main(cc_table=args.Table)
-
-"""
-Science Museum - 
-select RTRIM(SPLIT_PART(REVERSE(LTRIM(a.url, 'https://')), '/', 1), 'medium|large') as api_url, RTRIM(SPLIT_PART(REVERSE(LTRIM(b.url, 'https://')), '/', 1), 'medium|large') as cc_url from image as a , science_museum_2020_06_02 as b
-where
-RTRIM(SPLIT_PART(REVERSE(LTRIM(a.url, 'https://')), '/', 1), 'medium|large') = RTRIM(SPLIT_PART(REVERSE(LTRIM(b.url, 'https://')), '/', 1), 'medium|large') limit 20;
-
-
-
-MET MUSEUM :
-select distinct SPLIT_PART(REVERSE(LTRIM(a.url, 'https://')),'/', 1) as api_url from 
-image as a, met_museum_2020_06_05 as b where SPLIT_PART(REVERSE(LTRIM(a.url, 'https://')),'/', 1)=SPLIT_PART(REVERSE(LTRIM(b.url, 'https://')),'/', 1) and a.provider='met' ;
-
-"""
