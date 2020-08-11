@@ -245,7 +245,8 @@ def search(search_params, index, page_size, ip, request,
             query=f"\"{quotes_stripped}\"",
             boost=10000
         )
-        s = Search().query(Q(
+        s = Search().query(
+            Q(
                 'bool',
                 must=s.query,
                 should=exact_match_boost

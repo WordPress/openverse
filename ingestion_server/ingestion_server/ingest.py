@@ -243,7 +243,8 @@ def reload_upstream(table, progress=None, finish_time=None):
     copy_data = '''
         DROP TABLE IF EXISTS temp_import_{table};
         CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
-        ALTER TABLE temp_import_{table} ADD COLUMN IF NOT EXISTS standardized_popularity double precision;
+        ALTER TABLE temp_import_{table} ADD COLUMN IF NOT EXISTS
+          standardized_popularity double precision;
         CREATE TEMP SEQUENCE IF NOT EXISTS image_id_temp_seq;
         ALTER TABLE temp_import_{table} ADD COLUMN IF NOT EXISTS id serial;
         ALTER TABLE temp_import_{table} ALTER COLUMN id

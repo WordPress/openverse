@@ -78,7 +78,12 @@ class Image(SyncableDocType):
         height = row[schema['height']]
         width = row[schema['width']]
         meta = row[schema['meta_data']]
-        popularity = Image.get_popularity(row[schema['standardized_popularity']])
+        if 'standardized_popularity' in schema:
+            popularity = Image.get_popularity(
+                row[schema['standardized_popularity']]
+            )
+        else:
+            popularity = None
         authority_boost = Image.get_authority_boost(meta, provider)
         return Image(
             _id=row[schema['id']],
