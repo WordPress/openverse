@@ -271,11 +271,8 @@ def search(search_params, index, page_size, ip, request,
             )
 
     if settings.USE_RANK_FEATURES:
-        pop_boost = search_params.data.get('popularity_boost', 10000)
-        auth_boost = search_params.data.get('authority_boost', 10000)
         feature_boost = {
-            'normalized_popularity': pop_boost,
-            'authority_boost': auth_boost
+            'normalized_popularity': 10000
         }
         rank_queries = []
         for field, boost in feature_boost.items():
