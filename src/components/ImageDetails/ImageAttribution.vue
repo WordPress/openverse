@@ -7,7 +7,7 @@
       "
     >
       <h5 class="b-header margin-bottom-big">
-        {{ $t('photo-details.reuse.license-header') }}
+        {{ $t('photo-details.reuse.tool-header') }}
       </h5>
       <i18n path="photo-details.attribution.main" tag="span">
         <template v-slot:link>
