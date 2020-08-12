@@ -87,33 +87,13 @@ def test_image_detail(search_fixture):
     assert response.status_code == 200
 
 
-def test_image_delete_invalid_creds(search_fixture):
-    test_id = search_fixture['results'][0]['id']
-    should_fail = requests.delete(
-        f'{API_URL}/v1/images/{test_id}',
-        auth=('invalid', 'credentials'),
-        verify=False
-    )
-    assert should_fail.status_code == 401
-
-
-def test_image_delete(search_fixture):
-    test_id = search_fixture['results'][0]['id']
-    response = requests.delete(
-        f'{API_URL}/v1/images/{test_id}',
-        auth=('continuous_integration', 'deploydeploy'),
-        verify=False
-    )
-    assert response.status_code == 204
-    deleted_response = requests.get(f'{API_URL}/image/{test_id}')
-    assert deleted_response.status_code == 404
-
 @pytest.fixture
 def test_image_thumb(search_fixture):
     thumbnail_url = search_fixture['results'][0]['thumbnail']
     thumbnail_response = requests.get(thumbnail_url)
     assert thumbnail_response.status_code == 200
     assert thumbnail_response.headers["Content-Type"].startswith("image/")
+
 
 @pytest.fixture
 def link_shortener_fixture(search_fixture):
