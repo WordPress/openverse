@@ -279,6 +279,7 @@
     "reuse": {
       "title": "Reuse",
       "license-header": "License",
+      "tool-header": "Public Domain",
       "attribution": {
         "main": "This image was marked with a {link} license.",
         "license": "license."
