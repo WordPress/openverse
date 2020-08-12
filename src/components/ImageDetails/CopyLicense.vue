@@ -50,12 +50,7 @@
       </ul>
     </section>
     <section class="tabs-content has-background-white padding-normal">
-      <div
-        :class="tabClass(0, 'tabs-panel')"
-        v-if="
-          fullLicenseName.includes('cc0') || fullLicenseName.includes('pdm')
-        "
-      >
+      <div :class="tabClass(0, 'tabs-panel')">
         <span
           id="attribution"
           class="photo_usage-attribution is-block"
@@ -75,44 +70,7 @@
             >
             <span v-else>{{ image.creator }}</span>
           </span>
-          is marked with
-          <a
-            class="photo_license"
-            :href="licenseURL"
-            target="_blank"
-            rel="noopener"
-          >
-            {{ fullLicenseName.toUpperCase() }}
-          </a>
-        </span>
-
-        <copy-button
-          id="copy-attribution-btn"
-          el="#attribution"
-          @copied="onCopyAttribution"
-        />
-      </div>
-      <div :class="tabClass(0, 'tabs-panel')" v-else>
-        <span
-          id="attribution"
-          class="photo_usage-attribution is-block"
-          ref="photoAttribution"
-        >
-          <a :href="image.foreign_landing_url" target="_blank" rel="noopener">{{
-            imageTitle
-          }}</a>
-          <span v-if="image.creator">
-            by
-            <a
-              v-if="image.creator_url"
-              :href="image.creator_url"
-              target="_blank"
-              rel="noopener"
-              >{{ image.creator }}</a
-            >
-            <span v-else>{{ image.creator }}</span>
-          </span>
-          is licensed under
+          {{ isTool ? 'is marked with' : 'is licensed under' }}
           <a
             class="photo_license"
             :href="licenseURL"
@@ -147,33 +105,7 @@
           @copied="onEmbedAttribution"
         />
       </div>
-      <div
-        :class="tabClass(2, 'tabs-panel')"
-        v-if="
-          fullLicenseName.includes('cc0') || fullLicenseName.includes('pdm')
-        "
-      >
-        <p
-          id="attribution-text"
-          class="photo_usage-attribution is-block"
-          ref="photoAttribution"
-        >
-          {{ imageTitle }}
-          <span v-if="image.creator"> by {{ image.creator }} </span>
-          is marked with
-          {{ fullLicenseName.toUpperCase() }}. To view the terms, visit
-          <template v-if="licenseURL">
-            {{ licenseURL.substring(0, licenseURL.indexOf('?')) }}
-          </template>
-        </p>
-
-        <copy-button
-          id="copy-attribution-btn"
-          el="#attribution-text"
-          @copied="onCopyAttribution"
-        />
-      </div>
-      <div :class="tabClass(2, 'tabs-panel')" v-else>
+      <div :class="tabClass(2, 'tabs-panel')">
         <p
           id="attribution-text"
           class="photo_usage-attribution is-block"
@@ -182,8 +114,8 @@
           {{ imageTitle }}
           <span v-if="image.creator"> by {{ image.creator }} </span>
           is licensed under
-          {{ fullLicenseName.toUpperCase() }}. To view a copy of this license,
-          visit
+          {{ fullLicenseName.toUpperCase() }}. To
+          {{ isTool ? 'the terms' : 'view a copy of this license' }}, visit
           <template v-if="licenseURL">
             {{ licenseURL.substring(0, licenseURL.indexOf('?')) }}
           </template>
@@ -219,6 +151,13 @@ export default {
     }
   },
   computed: {
+    // Check if the 'license' is a tool rather than a legal license
+    isTool() {
+      return (
+        this.fullLicenseName.includes('cc0') ||
+        this.fullLicenseName.includes('pdm')
+      )
+    },
     imageTitle() {
       const title = this.$props.image.title
       return title !== 'Image' ? `"${title}"` : 'Image'
