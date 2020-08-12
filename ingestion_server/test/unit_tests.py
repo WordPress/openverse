@@ -182,6 +182,6 @@ class TestCleanup:
     @staticmethod
     def test_rank_feature_verify():
         img = create_mock_image({'standardized_popularity': 200})
-        assert img.normalized_popularity == 100
+        assert img.standardized_popularity == 100
         img2 = create_mock_image({'standardized_popularity': 0})
-        assert img2.normalized_popularity is None
+        assert img2.standardized_popularity is None
