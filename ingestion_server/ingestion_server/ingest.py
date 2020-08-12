@@ -231,7 +231,8 @@ def reload_upstream(table, progress=None, finish_time=None):
         DROP SCHEMA IF EXISTS upstream_schema CASCADE;
         CREATE SCHEMA upstream_schema AUTHORIZATION deploy;
 
-        IMPORT FOREIGN SCHEMA public FROM SERVER upstream INTO upstream_schema;
+        IMPORT FOREIGN SCHEMA public LIMIT TO ({table}_view)
+          FROM SERVER upstream INTO upstream_schema;
     '''.format(host=UPSTREAM_DB_HOST, passwd=UPSTREAM_DB_PASSWORD, table=table,
                port=UPSTREAM_DB_PORT)
     # 1. Import data into a temporary table

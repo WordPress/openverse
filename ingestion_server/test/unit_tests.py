@@ -180,13 +180,8 @@ class TestCleanup:
         assert result_http == expected_http
 
     @staticmethod
-    def test_score_constrained():
-        img = create_mock_image({'normalized_popularity': 200})
+    def test_rank_feature_verify():
+        img = create_mock_image({'standardized_popularity': 200})
         assert img.normalized_popularity == 100
-
-    @staticmethod
-    def test_authority_override():
-        meta = {'authority_boost': 25, 'authority_penalty': 10}
-        img = create_mock_image({'meta_data': meta})
-        assert img.authority_boost == 25
-        assert img.authority_penalty == 10
+        img2 = create_mock_image({'standardized_popularity': 0})
+        assert img2.normalized_popularity is None
