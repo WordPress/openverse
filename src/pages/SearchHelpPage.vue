@@ -2,7 +2,9 @@
   <div class="page">
     <header-section showNavSearch="true"></header-section>
     <main role="main" class="margin-larger">
-      <h2 class="margin-vertical-normal">{{ $t('search-guide.title') }}</h2>
+      <h1 class="title is-2 margin-vertical-normal">
+        {{ $t('search-guide.title') }}
+      </h1>
       <p>
         {{ $t('search-guide.intro') }}
       </p>

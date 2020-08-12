@@ -70,7 +70,7 @@
             >
             <span v-else>{{ image.creator }}</span>
           </span>
-          is licensed under
+          {{ isTool ? 'is marked with' : 'is licensed under' }}
           <a
             class="photo_license"
             :href="licenseURL"
@@ -114,8 +114,8 @@
           {{ imageTitle }}
           <span v-if="image.creator"> by {{ image.creator }} </span>
           is licensed under
-          {{ fullLicenseName.toUpperCase() }}. To view a copy of this license,
-          visit
+          {{ fullLicenseName.toUpperCase() }}. To
+          {{ isTool ? 'the terms' : 'view a copy of this license' }}, visit
           <template v-if="licenseURL">
             {{ licenseURL.substring(0, licenseURL.indexOf('?')) }}
           </template>
@@ -151,6 +151,13 @@ export default {
     }
   },
   computed: {
+    // Check if the 'license' is a tool rather than a legal license
+    isTool() {
+      return (
+        this.fullLicenseName.includes('cc0') ||
+        this.fullLicenseName.includes('pdm')
+      )
+    },
     imageTitle() {
       const title = this.$props.image.title
       return title !== 'Image' ? `"${title}"` : 'Image'
