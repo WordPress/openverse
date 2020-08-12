@@ -10,10 +10,10 @@
           {{ $t('photo-details.information.dimensions') }}:
         </dt>
         <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
-        <dt class="margin-bottom-small">
+        <dt class="margin-bottom-small" v-if="providerName != sourceName">
           {{ $t('photo-details.information.provider') }}
         </dt>
-        <dd>{{ providerName }}</dd>
+        <dd v-if="providerName != sourceName">{{ providerName }}</dd>
         <dt class="margin-bottom-small">
           {{ $t('photo-details.information.source') }}:
         </dt>
