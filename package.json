@@ -28,7 +28,7 @@
     "build:server": "webpack --config build/webpack.config.server.js"
   },
   "dependencies": {
-    "@creativecommons/vocabulary": "^2020.8.3",
+    "@creativecommons/vocabulary": "^2020.8.4",
     "@sentry/browser": "^5.20.1",
     "@sentry/integrations": "^5.20.1",
     "@sentry/node": "^5.20.1",
