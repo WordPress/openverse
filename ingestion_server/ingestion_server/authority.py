@@ -48,7 +48,8 @@ authority_types = {
     'met': AuthorityTypes.CURATED,
     'mccordsmuseum': AuthorityTypes.CURATED,
     'digitaltmuseum': AuthorityTypes.CURATED,
-    'clevelandmuseum': AuthorityTypes.CURATED
+    'clevelandmuseum': AuthorityTypes.CURATED,
+    'brooklynmuseum': AuthorityTypes.CURATED
 }
 
 
