@@ -273,7 +273,7 @@ def search(search_params, index, page_size, ip, request,
 
     if settings.USE_RANK_FEATURES:
         feature_boost = {
-            'normalized_popularity': 10000
+            'standardized_popularity': 10000
         }
         rank_queries = []
         for field, boost in feature_boost.items():

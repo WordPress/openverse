@@ -111,7 +111,7 @@ class Image(SyncableDocType):
             size=Image.get_size(height, width),
             license_url=Image.get_license_url(meta),
             mature=Image.get_maturity(meta, row[schema['mature']]),
-            normalized_popularity=popularity,
+            standardized_popularity=popularity,
             authority_boost=authority_boost,
             max_boost=max(popularity or 1, authority_boost or 1),
             min_boost=min(popularity or 1, authority_boost or 1)

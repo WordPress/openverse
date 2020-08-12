@@ -207,7 +207,7 @@ def index_settings(table_name):
                         },
                         "type": "text"
                     },
-                    "normalized_popularity": {
+                    "standardized_popularity": {
                         "type": "rank_feature"
                     },
                     "authority_boost": {
