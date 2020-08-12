@@ -29,20 +29,6 @@
         </dd>
       </dl>
     </div>
-    <div
-      class="margin-bottom-big"
-      v-if!="
-        (fullLicenseName === 'cc0 1.0') | (fullLicenseName === 'CC pdm 1.0')
-      "
-    >
-      <h5 class="is-block margin-bottom-small b-header">
-        {{ $t('photo-details.information.license') }}
-      </h5>
-      <license-icons :license="image.license"></license-icons>
-      <a class="photo_license body-big" :href="ccLicenseURL">
-        {{ fullLicenseName }}
-      </a>
-    </div>
     <div class="margin-bottom-big">
       <h5 class="is-block margin-bottom-small b-header">
         {{ $t('photo-details.information.tags') }}
@@ -55,7 +41,6 @@
 <script>
 import PhotoTags from '@/components/PhotoTags'
 import getProviderName from '@/utils/getProviderName'
-import LicenseIcons from '@/components/LicenseIcons'
 import getProviderLogo from '@/utils/getProviderLogo'
 
 export default {
@@ -69,7 +54,6 @@ export default {
     'imageType',
   ],
   components: {
-    LicenseIcons,
     PhotoTags,
   },
   computed: {
