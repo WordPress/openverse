@@ -46,12 +46,12 @@ TAG_CONTAINS_DENYLIST = {
 TAG_MIN_CONFIDENCE = 0.90
 
 
-def _tag_blacklisted(tag):
+def _tag_denylisted(tag):
     """ Tag is banned or contains a banned substring. """
     if tag in TAG_DENYLIST:
         return True
-    for blacklisted_substring in TAG_CONTAINS_DENYLIST:
-        if blacklisted_substring in tag:
+    for denylisted_substring in TAG_CONTAINS_DENYLIST:
+        if denylisted_substring in tag:
             return True
     return False
 
@@ -90,7 +90,7 @@ class CleanupFunctions:
     def cleanup_tags(tags):
         """
         Delete tags because they have low accuracy or because they are in the
-        blacklist. If no change is made, return None.
+        denylist. If no change is made, return None.
         :return: A SQL fragment if an update is required or None
         """
         update_required = False
@@ -103,7 +103,7 @@ class CleanupFunctions:
                 below_threshold = True
             if 'name' in tag:
                 lower_tag = tag['name'].lower()
-                should_filter = _tag_blacklisted(lower_tag) or below_threshold
+                should_filter = _tag_denylisted(lower_tag) or below_threshold
             else:
                 log.warning(f'Filtering malformed tag "{tag}" in "{tags}"')
                 should_filter = True
