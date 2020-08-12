@@ -85,6 +85,7 @@
             {{ fullLicenseName.toUpperCase() }}
           </a>
         </span>
+
         <copy-button
           id="copy-attribution-btn"
           el="#attribution"
@@ -121,13 +122,13 @@
             {{ fullLicenseName.toUpperCase() }}
           </a>
         </span>
+
         <copy-button
           id="copy-attribution-btn"
           el="#attribution"
           @copied="onCopyAttribution"
         />
       </div>
-
       <div :class="tabClass(1, 'tabs-panel')">
         <label for="attribution-html">
           <textarea
