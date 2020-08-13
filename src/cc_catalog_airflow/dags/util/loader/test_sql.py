@@ -1303,3 +1303,74 @@ def test_update_smithsonian_sub_providers(postgres_with_load_and_image_table):
         else:
             assert actual_row[6] == 'b' and actual_row[5] == \
                 'smithsonian_national_museum_of_natural_history'
+
+
+def test_image_expiration(postgres_with_load_and_image_table):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID_A = 'a'
+    FID_B = 'b'
+    IMG_URL_A = 'https://images.com/a/img.jpg'
+    IMG_URL_B = 'https://images.com/b/img.jpg'
+    PROVIDER_A = 'smithsonian'
+    PROVIDER_B = 'flickr'
+    LICENSE = 'by-nc-nd'
+
+    insert_data_query = (
+        f"INSERT INTO {load_table} VALUES"
+        f"('{FID_A}',null,'{IMG_URL_A}',null,null,null,null,'{LICENSE}',null,"
+        f"null,null,null,null,null,null,"
+        f"'{PROVIDER_A}','{PROVIDER_A}'),"
+        f"('{FID_B}',null,'{IMG_URL_B}',null,null,null,null,'{LICENSE}',null,"
+        f"null,null,null,null,null,null,"
+        f"'{PROVIDER_B}','{PROVIDER_B}');"
+    )
+
+    postgres_with_load_and_image_table.cursor.execute(insert_data_query)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+
+    postgres_with_load_and_image_table.cursor.execute(
+        f"UPDATE {image_table} SET updated_on = NOW() - INTERVAL '1 year' "
+        f"WHERE provider = 'flickr';"
+    )
+
+    postgres_with_load_and_image_table.connection.commit()
+
+    sql.expire_old_images(
+        postgres_conn_id,
+        PROVIDER_A,
+        image_table=image_table
+    )
+
+    sql.expire_old_images(
+        postgres_conn_id,
+        PROVIDER_B,
+        image_table=image_table
+    )
+
+    postgres_with_load_and_image_table.connection.commit()
+
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    assert len(actual_rows) == 2
+
+    for actual_row in actual_rows:
+        if actual_row[6] == 'a':
+            assert not actual_row[22]
+        else:
+            assert actual_row[6] == 'b' and actual_row[22]

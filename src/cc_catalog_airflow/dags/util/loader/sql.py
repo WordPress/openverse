@@ -576,7 +576,7 @@ def update_smithsonian_sub_providers(
 def expire_old_images(
   postgres_conn_id,
   provider,
-  image_table=IMAGE_TABLE_NAME,
+  image_table=IMAGE_TABLE_NAME
 ):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
 
