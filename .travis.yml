@@ -33,6 +33,6 @@ script:
   - docker logs cccatalog-api_web_1
   - cd ../ingestion_server && pytest test/unit_tests.py
   - cd ../image_get/worker && pipenv run pytest
-  - cd ../../ && docker-compose logs analytics
+  - cd ../../ && docker-compose logs cccatalog-api_web_1
   - cd ./analytics && API_URL='analytics:8090' pytest tests.py --disable-pytest-warnings
-  - cd ../ && docker-compose logs analytics
+  - cd ../ && docker-compose logs cccatalog-api_web_1
