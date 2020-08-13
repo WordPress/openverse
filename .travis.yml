@@ -25,7 +25,7 @@ before_script:
   - docker-compose up -d
   - bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8000/healthcheck)" != "200" ]]; do sleep 10; done'
   - ./load_sample_data.sh
-  - bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8000/v1/images?q=test)" != "200" ]]; do sleep 5; done'
+  - bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8000/v1/images?source=behance)" != "200" ]]; do sleep 5; done'
 script:
   - pycodestyle cccatalog-api/cccatalog --exclude='cccatalog-api/cccatalog/api/migrations' --max-line-length=80 --ignore=E402,E702
   - pycodestyle ingestion_server/ingestion_server --max-line-length=80 --ignore=E402
@@ -33,6 +33,6 @@ script:
   - docker logs cccatalog-api_web_1
   - cd ../ingestion_server && pytest test/unit_tests.py
   - cd ../image_get/worker && pipenv run pytest
-  - cd ../../ && docker-compose logs cccatalog-api_web_1
+  - cd ../../ && docker logs cccatalog-api_web_1
   - cd ./analytics && API_URL='analytics:8090' pytest tests.py --disable-pytest-warnings
   - cd ../ && docker-compose logs analytics
