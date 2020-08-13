@@ -36,7 +36,7 @@
           v-if="isReportFormVisible"
           :imageId="image.id"
           :imageURL="image.foreign_landing_url"
-          :providerName="providerName"
+          :providerName="image.provider"
         />
       </div>
     </div>
