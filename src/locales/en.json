@@ -170,7 +170,7 @@
     "title": "Filters",
     "filter-by": "Filter By",
     "licenses": {
-      "title": "Licenses",
+      "title": "License or Public Domain",
       "cc0": "CC0",
       "pdm": "Public Domain Mark",
       "by": "BY",
@@ -186,7 +186,7 @@
       "modification": "Modify or adapt"
     },
     "providers": {
-      "title": "Sources"
+      "title": "Source"
     },
     "categories": {
       "title": "Image Type",
@@ -279,6 +279,7 @@
     "reuse": {
       "title": "Reuse",
       "license-header": "License",
+      "tool-header": "Public Domain",
       "attribution": {
         "main": "This image was marked with a {link} license.",
         "license": "license."

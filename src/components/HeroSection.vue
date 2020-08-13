@@ -2,7 +2,7 @@
   <main class="hero" role="main">
     <div class="hero-center has-text-centered">
       <!-- <div class="locale-block"><locale-selector /></div> -->
-      <h2 class="title is-5 padding-bottom-normal">{{ $t('hero.title') }}</h2>
+      <h1 class="title is-2 padding-bottom-normal">{{ $t('hero.title') }}</h1>
       <h5 class="b-header">{{ $t('hero.subtitle') }}</h5>
       <form
         class="hero_search-form margin-top-bigger"

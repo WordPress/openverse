@@ -1,6 +1,6 @@
 <template>
   <div class="meta-card">
-    <i18n
+    <!-- <i18n
       path="meta-search.card.caption"
       tag="p"
       class="padding-left-bigger padding-right-bigger"
@@ -8,7 +8,7 @@
       <template v-slot:break>
         <br />
       </template>
-    </i18n>
+    </i18n> -->
     <hr class="margin-bottom-bigger" />
     <div
       class="padding-left-bigger padding-right-bigger padding-bottom-bigger meta-modal-content"
