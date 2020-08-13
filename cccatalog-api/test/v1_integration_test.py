@@ -389,8 +389,11 @@ def test_license_override():
     assert null_license_url.license_url is not None
 
 def test_source_search():
-    response = requests.get(API_URL + '/v1/images?source=behance',
-                            verify=False)
+    response = requests.get(
+        API_URL + '/v1/images?source=behance', verify=False
+    )
+    if response.status_code != 200:
+        print(f'Request failed. Message: {response.body}')
     assert response.status_code == 200
     parsed = json.loads(response.text)
     assert parsed['result_count'] > 0
