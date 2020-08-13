@@ -3,7 +3,7 @@
     <h5 class="b-header margin-bottom-small">
       {{ $t('photo-details.reuse.copy-license.title') }}
     </h5>
-    <section class="tabs">
+    <section class="tabs is-boxed">
       <ul role="tablist">
         <li
           role="tab"
@@ -49,7 +49,7 @@
         </li>
       </ul>
     </section>
-    <section class="tabs-content has-background-white padding-normal">
+    <section class="tabs-content is-boxed">
       <div :class="tabClass(0, 'tabs-panel')">
         <span
           id="attribution"
@@ -205,8 +205,5 @@ textarea {
 
 .copy-attribution {
   margin-left: auto;
-}
-.tabs {
-  margin-bottom: 0;
 }
 </style>
