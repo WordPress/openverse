@@ -128,6 +128,7 @@
       </section>
 
       <a
+        data-testid="source-button"
         v-if="activeTab < 2"
         :href="image.foreign_landing_url"
         target="_blank"
