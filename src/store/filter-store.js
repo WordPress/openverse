@@ -152,9 +152,10 @@ function setFilter(state, params, path, redirect) {
   setQuery(state, params, path, redirect)
 }
 
+// Make sure when redirecting after applying a filter, we stick to the right tab (i.e, "/search/video", "/search/audio", etc.)
 const mutations = (redirect) => ({
   [SET_FILTER](state, params) {
-    return setFilter(state, params, '/search', redirect)
+    return setFilter(state, params, window.location.pathname, redirect)
   },
   [CLEAR_FILTERS](state, params) {
     const initialFilters = initialState('').filters
@@ -166,7 +167,7 @@ const mutations = (redirect) => ({
       ...initialFilters,
       providers: resetProviders,
     }
-    return setQuery(state, params, '/search', redirect)
+    return setQuery(state, params, window.location.pathname, redirect)
   },
   [SET_PROVIDERS_FILTERS](state, params) {
     const providers = params.imageProviders
