@@ -23,7 +23,7 @@
   >
     <span>{{ $t(this.$props.label) }}</span>
     <span
-      class="close margin-left-small"
+      class="close margin-left-small padding-small"
       tabindex="0"
       @click="onClick"
       v-on:keyup.enter="onClick"
