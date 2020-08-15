@@ -5,12 +5,8 @@ on:
     paths:
       - '**.py'
       - '!test_*.py'
-  pull_request:
-    paths:
-      - '**.py'
-      - '!test_*.py'
-
       
+        
 jobs:
   build:
     runs-on: ubuntu-latest
