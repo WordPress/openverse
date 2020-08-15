@@ -1,14 +1,12 @@
-name: flake8_lint
+name: flake8_test_files_lint
 
 on:
   push:
     paths:
-      - '**.py'
-      - '!test_*.py'
+      - 'test_*.py'
   pull_request:
     paths:
-      - '**.py'
-      - '!test_*.py'
+      - 'test_*.py'
 
       
 jobs:
@@ -25,6 +23,7 @@ jobs:
       uses: rbialon/flake8-annotations@v1
     - name: Lint with flake8
       # Lint for only changed files, rather than the entire repository
+      # Ignore max-line-length rule for test files
       run: |
         pip install flake8
-        git diff HEAD^ | flake8 --diff
+        git diff HEAD^ | flake8 --diff --ignore=E501
