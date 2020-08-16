@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 DAG_ID = 'image_expiration_workflow'
 DB_CONN_ID = os.getenv('OPENLEDGER_CONN_ID', 'postgres_openledger_testing')
-CONCURRENCY = 5
+CONCURRENCY = len(sql.OLDEST_PER_PROVIDER)
 
 DAG_DEFAULT_ARGS = {
     'owner': 'data-eng-admin',
@@ -63,10 +63,8 @@ def create_dag(
             run_task_list.append(run_task)
         end_task = ops.get_log_operator(dag, dag.dag_id, 'Finished')
 
-        start_task >> run_task_list[0]
-        for i in range(len(run_task_list) - 1):
-            run_task_list[i] >> run_task_list[i + 1]
-        run_task_list[-1] >> end_task
+        start_task >> run_task_list
+        run_task_list >> end_task
 
     return dag
 
