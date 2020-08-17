@@ -255,7 +255,7 @@ describe('Filter Store', () => {
       )
     })
 
-    it('SET_FILTER redirects to search path and with query object', () => {
+    it('SET_FILTER redirects to current path with query object', () => {
       mutations[SET_FILTER](state, {
         filterType: 'categories',
         codeIdx: 0,
@@ -263,7 +263,7 @@ describe('Filter Store', () => {
       })
 
       expect(routePushMock).toHaveBeenCalledWith({
-        path: '/search',
+        path: '/',
         query: state.query,
       })
     })

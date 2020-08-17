@@ -36,7 +36,7 @@
           v-if="isReportFormVisible"
           :imageId="image.id"
           :imageURL="image.foreign_landing_url"
-          :providerName="providerName"
+          :providerName="image.provider"
         />
       </div>
     </div>
@@ -46,7 +46,7 @@
       class="column image-info margin-left-xl"
     >
       <div class="margin-top-normal margin-bottom-small">
-        <h5 class="b-header">{{ image.title }}</h5>
+        <h1 class="title is-5 b-header">{{ image.title }}</h1>
         <span v-if="image.creator" class="caption has-text-weight-semibold">
           by
           <a
@@ -128,6 +128,7 @@
       </section>
 
       <a
+        data-testid="source-button"
         v-if="activeTab < 2"
         :href="image.foreign_landing_url"
         target="_blank"

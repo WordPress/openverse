@@ -2,7 +2,7 @@
   <div class="about-page">
     <header-section showNavSearch="true"></header-section>
     <main role="main" class="margin-normal">
-      <h2 role="article">{{ $t('about.title') }}</h2>
+      <h1 class="title is-2" role="article">{{ $t('about.title') }}</h1>
       <i18n path="about.description.content" tag="p">
         <template v-slot:link>
           <a

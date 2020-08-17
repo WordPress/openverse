@@ -46,12 +46,6 @@ describe('Image Info', () => {
     expect(wrapper.find('.sidebar_section').element).toBeDefined()
   })
 
-  it('should contain correct information', () => {
-    const wrapper = render(ImageInfo, options)
-    expect(wrapper.html()).toContain(props.image.title)
-    expect(wrapper.find('.photo_license').text()).toBe(props.fullLicenseName)
-  })
-
   it('should display image dimensions', () => {
     const wrapper = render(ImageInfo, options)
 

@@ -9,43 +9,49 @@
         }}<i class="icon flag margin-left-small"></i>
       </span>
     </button>
-
-    <div
-      v-show="showForm"
-      class="padding-normal is-clearfix arrow-popup arrow-popup--anchor-right"
-    >
-      <button
-        class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
-        @click="toggleShowForm"
+    <focus-trap :active="true">
+      <div
+        v-show="showForm"
+        class="padding-normal is-clearfix arrow-popup arrow-popup--anchor-right"
       >
-        <i class="icon cross"></i>
-      </button>
-      <p class="caption has-text-weight-semibold padding-right-big">
-        {{ $t('browse-page.safe-browsing.caption') }}
-      </p>
+        <button
+          class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
+          @click="toggleShowForm"
+        >
+          <i class="icon cross"></i>
+        </button>
+        <p class="caption has-text-weight-semibold padding-right-big">
+          {{ $t('browse-page.safe-browsing.caption') }}
+        </p>
 
-      <label class="checkbox margin-top-small" for="mature">
-        <input
-          id="mature"
-          class="filter-checkbox"
-          type="checkbox"
-          :checked="mature"
-          @change="toggleMature"
-        />
-        {{ $t('browse-page.safe-browsing.label') }}
-      </label>
-    </div>
+        <label class="checkbox margin-top-small" for="mature">
+          <input
+            id="mature"
+            class="filter-checkbox"
+            type="checkbox"
+            :checked="mature"
+            @change="toggleMature"
+            @keyup.enter="toggleMature"
+          />
+          {{ $t('browse-page.safe-browsing.label') }}
+        </label>
+      </div>
+    </focus-trap>
   </div>
 </template>
 
 <script>
 import { TOGGLE_FILTER } from '@/store/action-types'
+import { FocusTrap } from 'focus-trap-vue'
 
 /**
  * This component displays the mature content filter in a pop-up dialog.
  */
 export default {
   name: 'safe-browsing',
+  components: {
+    FocusTrap,
+  },
   data() {
     return {
       showForm: false,

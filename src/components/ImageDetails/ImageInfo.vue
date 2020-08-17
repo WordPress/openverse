@@ -10,10 +10,10 @@
           {{ $t('photo-details.information.dimensions') }}:
         </dt>
         <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
-        <dt class="margin-bottom-small">
+        <dt class="margin-bottom-small" v-if="providerName != sourceName">
           {{ $t('photo-details.information.provider') }}
         </dt>
-        <dd>{{ providerName }}</dd>
+        <dd v-if="providerName != sourceName">{{ providerName }}</dd>
         <dt class="margin-bottom-small">
           {{ $t('photo-details.information.source') }}:
         </dt>
@@ -31,15 +31,6 @@
     </div>
     <div class="margin-bottom-big">
       <h5 class="is-block margin-bottom-small b-header">
-        {{ $t('photo-details.information.license') }}
-      </h5>
-      <license-icons :license="image.license"></license-icons>
-      <a class="photo_license body-big" :href="ccLicenseURL">
-        {{ fullLicenseName }}
-      </a>
-    </div>
-    <div class="margin-bottom-big">
-      <h5 class="is-block margin-bottom-small b-header">
         {{ $t('photo-details.information.tags') }}
       </h5>
       <photo-tags :tags="image.tags" :showHeader="false" />
@@ -50,7 +41,6 @@
 <script>
 import PhotoTags from '@/components/PhotoTags'
 import getProviderName from '@/utils/getProviderName'
-import LicenseIcons from '@/components/LicenseIcons'
 import getProviderLogo from '@/utils/getProviderLogo'
 
 export default {
@@ -64,7 +54,6 @@ export default {
     'imageType',
   ],
   components: {
-    LicenseIcons,
     PhotoTags,
   },
   computed: {
