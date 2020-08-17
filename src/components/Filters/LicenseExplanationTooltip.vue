@@ -15,7 +15,9 @@
       v-if="(license === 'cc0') | (license === 'pdm')"
     >
       <template v-slot:link>
-        <a target="_blank" :href="`${getLicenseDeedLink(license)}`">here</a>
+        <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{
+          $t('filters.license-explanation.link')
+        }}</a>
       </template>
     </i18n>
     <i18n
@@ -25,7 +27,9 @@
       v-else
     >
       <template v-slot:link>
-        <a target="_blank" :href="`${getLicenseDeedLink(license)}`">here</a>
+        <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{
+          $t('filters.license-explanation.link')
+        }}</a>
       </template>
     </i18n>
   </div>

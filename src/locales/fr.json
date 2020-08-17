@@ -221,8 +221,9 @@
       "title": "Recherche par créateur"
     },
     "license-explanation": {
-      "tool": "En savoir plus sur l'outil {link} ici",
-      "license": "En savoir plus sur la licence {link} ici"
+      "tool": "En savoir plus sur l'outil {link}",
+      "license": "En savoir plus sur la licence {link}",
+      "link": "ici"
     }
   },
   "filter-list": {
