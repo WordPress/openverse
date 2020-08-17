@@ -1,9 +1,7 @@
 from enum import Enum, auto
 from elasticsearch_dsl import Integer, DocType, Field
 from ingestion_server.categorize import get_categories
-from ingestion_server.authority import (
-    get_authority_boost, get_authority_penalty
-)
+from ingestion_server.authority import get_authority_boost
 
 """
 Provides an ORM-like experience for accessing data in Elasticsearch.
@@ -17,7 +15,13 @@ class RankFeature(Field):
     name = 'rank_feature'
 
 
-def _constrain_between(value, low, high):
+def _verify_rank_feature(value, low, high):
+    """
+    Rank features must be a positive non-zero float. Our features are scaled
+    from 0 to 100 for fair comparison.
+    """
+    if value is None or value == 0:
+        return None
     ceiling = min(value, high)
     floor = max(low, ceiling)
     return floor
@@ -77,11 +81,13 @@ class Image(SyncableDocType):
         height = row[schema['height']]
         width = row[schema['width']]
         meta = row[schema['meta_data']]
-        try:
-            popularity = row[schema['normalized_popularity']]
-            popularity = _constrain_between(popularity, low=0, high=100)
-        except KeyError:
+        if 'standardized_popularity' in schema:
+            popularity = Image.get_popularity(
+                row[schema['standardized_popularity']]
+            )
+        else:
             popularity = None
+        authority_boost = Image.get_authority_boost(meta, provider)
         return Image(
             _id=row[schema['id']],
             id=row[schema['id']],
@@ -105,9 +111,10 @@ class Image(SyncableDocType):
             size=Image.get_size(height, width),
             license_url=Image.get_license_url(meta),
             mature=Image.get_maturity(meta, row[schema['mature']]),
-            normalized_popularity=popularity,
-            authority_boost=Image.get_authority_boost(meta, source),
-            authority_penalty=Image.get_authority_penalty(meta, source)
+            standardized_popularity=popularity,
+            authority_boost=authority_boost,
+            max_boost=max(popularity or 1, authority_boost or 1),
+            min_boost=min(popularity or 1, authority_boost or 1)
         )
 
     @staticmethod
@@ -187,7 +194,7 @@ class Image(SyncableDocType):
         if meta_data and 'authority_boost' in meta_data:
             try:
                 authority_boost = float(meta_data['authority_boost'])
-                authority_boost = _constrain_between(
+                authority_boost = _verify_rank_feature(
                     authority_boost, low=0, high=100
                 )
             except (ValueError, TypeError):
@@ -197,19 +204,11 @@ class Image(SyncableDocType):
         return authority_boost
 
     @staticmethod
-    def get_authority_penalty(meta_data, source):
-        authority_penalty = None
-        if meta_data and 'authority_penalty' in meta_data:
-            try:
-                authority_penalty = float(meta_data['authority_penalty'])
-                authority_penalty = _constrain_between(
-                    authority_penalty, low=0, high=100
-                )
-            except (ValueError, TypeError):
-                pass
-        else:
-            authority_penalty = get_authority_penalty(source)
-        return authority_penalty
+    def get_popularity(raw):
+        if not raw:
+            return None
+        popularity = raw * 100
+        return _verify_rank_feature(popularity, low=0, high=100)
 
     @staticmethod
     def parse_detailed_tags(json_tags):

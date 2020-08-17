@@ -17,7 +17,7 @@ from psycopg2.sql import SQL, Identifier
 from ingestion_server.qa import create_search_qa_index
 from ingestion_server.elasticsearch_models import \
     database_table_to_elasticsearch_model
-from ingestion_server.es_mapping import create_mapping
+from ingestion_server.es_mapping import index_settings
 from ingestion_server.distributed_reindex_scheduler import \
     schedule_distributed_index
 from collections import deque
@@ -209,7 +209,7 @@ class TableIndexer:
             query = SQL(query_text)
             self.es.indices.create(
                 index=dest_idx,
-                body=create_mapping(table)
+                body=index_settings(table)
             )
             self.replicate(table, dest_idx, query)
 
@@ -415,7 +415,7 @@ class TableIndexer:
         if distributed:
             self.es.indices.create(
                 index=destination_index,
-                body=create_mapping(model_name)
+                body=index_settings(model_name)
             )
             schedule_distributed_index(database_connect(), destination_index)
         else:

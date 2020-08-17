@@ -1,4 +1,4 @@
-def create_mapping(table_name):
+def index_settings(table_name):
     """
     Return the Elasticsearch mapping for a given table in the database.
 
@@ -6,12 +6,53 @@ def create_mapping(table_name):
     :return:
     """
     mapping = {
-        'image': {
+        "image": {
             "settings": {
                 "index": {
                     "number_of_shards": 18,
                     "number_of_replicas": 0,
                     "refresh_interval": "-1"
+                },
+                "analysis": {
+                    "filter": {
+                        "stem_overrides": {
+                            "type": "stemmer_override",
+                            "rules": [
+                                # Override unwanted 'anim' stems
+                                "animals => animal",
+                                "animal => animal",
+                                "anime => anime",
+                                "animate => animate",
+                                "animated => animate"
+                            ]
+                        },
+                        "english_stop": {
+                            "type": "stop",
+                            "stopwords": "_english_"
+                        },
+                        "english_stemmer": {
+                            "type": "stemmer",
+                            "language": "english"
+                        },
+                        "english_possessive_stemmer": {
+                            "type": "stemmer",
+                            "language": "possessive_english"
+                        }
+                    },
+                    "analyzer": {
+                        "custom_english": {
+                            "tokenizer": "standard",
+                            "filter": [
+                                # Stem overrides must appear before the primary
+                                # language stemmer.
+                                "stem_overrides",
+                                "english_possessive_stemmer",
+                                "lowercase",
+                                "english_stop",
+                                "english_stemmer"
+                            ]
+                        }
+                    }
                 }
             },
             "mappings": {
@@ -83,7 +124,7 @@ def create_mapping(table_name):
                                         "ignore_above": 256
                                     }
                                 },
-                                "analyzer": "english"
+                                "analyzer": "custom_english"
                             }
                         }
                     },
@@ -117,7 +158,7 @@ def create_mapping(table_name):
                                 "ignore_above": 256
                             }
                         },
-                        "analyzer": "english"
+                        "analyzer": "custom_english"
                     },
                     "creator": {
                         "type": "text",
@@ -139,7 +180,7 @@ def create_mapping(table_name):
                             }
                         },
                         "type": "text",
-                        "analyzer": "english"
+                        "analyzer": "custom_english"
                     },
                     "extension": {
                         "fields": {
@@ -166,7 +207,7 @@ def create_mapping(table_name):
                         },
                         "type": "text"
                     },
-                    "normalized_popularity": {
+                    "standardized_popularity": {
                         "type": "rank_feature"
                     },
                     "authority_boost": {
@@ -175,6 +216,12 @@ def create_mapping(table_name):
                     "authority_penalty": {
                         "type": "rank_feature",
                         "positive_score_impact": False
+                    },
+                    "max_boost": {
+                        "type": "rank_feature"
+                    },
+                    "min_boost": {
+                        "type": "rank_feature"
                     },
                     "mature": {
                         "type": "boolean"

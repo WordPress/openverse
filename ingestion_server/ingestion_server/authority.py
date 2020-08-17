@@ -24,20 +24,16 @@ boost can be adjusted at search-time.
 class AuthorityTypes(Enum):
     CURATED = auto()
     SOCIAL_MEDIA = auto()
+    DEFAULT = auto()
 
 
 # We want to boost curated collections where each image has been vetted for
 # cultural significance.
 boost = {
-    AuthorityTypes.CURATED: 100
+    AuthorityTypes.CURATED: 90,
+    AuthorityTypes.SOCIAL_MEDIA: 80,
+    AuthorityTypes.DEFAULT: 85
 }
-# Social media sites receive a (light) penalty because the quality
-# of the images is highly variable. High quality results from social media
-# should still float to the top based on popularity metrics.
-penalize = {
-    AuthorityTypes.SOCIAL_MEDIA: 10
-}
-
 authority_types = {
     'flickr': AuthorityTypes.SOCIAL_MEDIA,
     'behance': AuthorityTypes.SOCIAL_MEDIA,
@@ -51,7 +47,9 @@ authority_types = {
     'museumsvictoria': AuthorityTypes.CURATED,
     'met': AuthorityTypes.CURATED,
     'mccordsmuseum': AuthorityTypes.CURATED,
-    'digitaltmuseum': AuthorityTypes.CURATED
+    'digitaltmuseum': AuthorityTypes.CURATED,
+    'clevelandmuseum': AuthorityTypes.CURATED,
+    'brooklynmuseum': AuthorityTypes.CURATED
 }
 
 
@@ -61,13 +59,6 @@ def get_authority_boost(source):
         authority_type = authority_types[source]
         if authority_type in boost:
             authority_boost = boost[authority_type]
+        else:
+            authority_boost = boost[AuthorityTypes.DEFAULT]
     return authority_boost
-
-
-def get_authority_penalty(source):
-    authority_penalty = None
-    if source in authority_types:
-        authority_type = authority_types[source]
-        if authority_type in penalize:
-            authority_penalty = penalize[authority_type]
-    return authority_penalty

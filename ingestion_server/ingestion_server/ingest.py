@@ -30,19 +30,21 @@ UPSTREAM_DB_PORT = os.environ.get('UPSTREAM_DB_PORT', 5432)
 UPSTREAM_DB_PASSWORD = os.environ.get('UPSTREAM_DB_PASSWORD', 'deploy')
 
 
-def _get_shared_cols(conn1, conn2, table: str):
+def _get_shared_cols(downstream, upstream, table: str):
     """
     Given two database connections and a table name, return the list of columns
     that the two tables have in common.
     """
-    with conn1.cursor() as cur1, conn2.cursor() as cur2:
-        get_tables = ("SELECT * FROM {} LIMIT 0".format(table))
-        cur1.execute(get_tables)
+    with downstream.cursor() as cur1, upstream.cursor() as cur2:
+        get_tables = "SELECT * FROM {} LIMIT 0"
+        cur1.execute(get_tables.format(table))
         conn1_cols = set([desc[0] for desc in cur1.description])
-        cur2.execute(get_tables)
+        cur2.execute(get_tables.format(f"{table}_view"))
         conn2_cols = set([desc[0] for desc in cur2.description])
 
     shared = conn1_cols.intersection(conn2_cols)
+    shared.add('standardized_popularity')
+    log.info(f'Shared columns: {shared}')
     return list(shared)
 
 
@@ -229,10 +231,8 @@ def reload_upstream(table, progress=None, finish_time=None):
         DROP SCHEMA IF EXISTS upstream_schema CASCADE;
         CREATE SCHEMA upstream_schema AUTHORIZATION deploy;
 
-        IMPORT FOREIGN SCHEMA public
-          LIMIT TO (
-            {table}, image_normalized_popularity
-          ) FROM SERVER upstream INTO upstream_schema;
+        IMPORT FOREIGN SCHEMA public LIMIT TO ({table}_view)
+          FROM SERVER upstream INTO upstream_schema;
     '''.format(host=UPSTREAM_DB_HOST, passwd=UPSTREAM_DB_PASSWORD, table=table,
                port=UPSTREAM_DB_PORT)
     # 1. Import data into a temporary table
@@ -244,6 +244,8 @@ def reload_upstream(table, progress=None, finish_time=None):
     copy_data = '''
         DROP TABLE IF EXISTS temp_import_{table};
         CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
+        ALTER TABLE temp_import_{table} ADD COLUMN IF NOT EXISTS
+          standardized_popularity double precision;
         CREATE TEMP SEQUENCE IF NOT EXISTS image_id_temp_seq;
         ALTER TABLE temp_import_{table} ADD COLUMN IF NOT EXISTS id serial;
         ALTER TABLE temp_import_{table} ALTER COLUMN id
@@ -251,15 +253,11 @@ def reload_upstream(table, progress=None, finish_time=None):
         ALTER TABLE temp_import_{table} ALTER COLUMN view_count
           SET DEFAULT 0;
         INSERT INTO temp_import_{table} ({cols})
-        SELECT {cols} from upstream_schema.{table} img
+        SELECT {cols} from upstream_schema.{table}_view img
           WHERE NOT EXISTS(
             SELECT FROM api_deletedimage WHERE identifier = img.identifier
           );
         ALTER TABLE temp_import_{table} ADD PRIMARY KEY (id);
-        DROP TABLE IF EXISTS image_normalized_popularity;
-        CREATE TABLE IF NOT EXISTS image_normalized_popularity
-          AS TABLE upstream_schema.image_normalized_popularity;
-        ALTER TABLE image_normalized_popularity ADD PRIMARY KEY (identifier);
         DROP SERVER upstream CASCADE;
     '''.format(table=table, cols=query_cols)
     create_indices = ';\n'.join(_generate_indices(downstream_db, table))

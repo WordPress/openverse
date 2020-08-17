@@ -234,7 +234,23 @@ def search(search_params, index, page_size, ip, request,
         s = s.query(
             'simple_query_string',
             query=query,
-            fields=search_fields
+            fields=search_fields,
+            default_operator='AND'
+        )
+        # Boost exact matches
+        quotes_stripped = query.replace('"', '')
+        exact_match_boost = Q(
+            'simple_query_string',
+            fields=['title'],
+            query=f"\"{quotes_stripped}\"",
+            boost=10000
+        )
+        s = Search().query(
+            Q(
+                'bool',
+                must=s.query,
+                should=exact_match_boost
+            )
         )
     else:
         if 'creator' in search_params.data:
@@ -256,11 +272,8 @@ def search(search_params, index, page_size, ip, request,
             )
 
     if settings.USE_RANK_FEATURES:
-        # TODO These boost values will be refined through experimentation.
         feature_boost = {
-            'normalized_popularity': 1,
-            'authority_boost': 1,
-            'authority_penalty': 0.1
+            'standardized_popularity': 10000
         }
         rank_queries = []
         for field, boost in feature_boost.items():
@@ -285,6 +298,8 @@ def search(search_params, index, page_size, ip, request,
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
     try:
+        if settings.VERBOSE_ES_RESPONSE:
+            log.info(pprint.pprint(s.to_dict()))
         search_response = s.execute()
         log.info(f'query={json.dumps(s.to_dict())},'
                  f' es_took_ms={search_response.took}')
