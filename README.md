@@ -65,7 +65,7 @@ Code is linted with `eslint` and formatted with `prettier`. Linting and formatti
 
 ### Versioning
 
-CC Search uses [CalVer](https://calver.org/) for version numbering, in the `YYYY.0M.Micro` format. `Micro` is bumped whenever there are multiple releases in a month, for example `2020.07.1` is the first release in July 2020, while `2020.07.2` is the second.
+CC Search uses [CalVer](https://calver.org/) for version numbering, in the `YYYY.M.Micro` format. This format is intentionally compatiable with NPM's `semver` parser. `Micro` is bumped whenever there are multiple releases in a month, for example `2020.07.1` is the first release in July 2020, while `2020.07.2` is the second.
 
 ## Deployment
 
