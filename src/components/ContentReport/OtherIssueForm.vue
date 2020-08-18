@@ -27,7 +27,7 @@
       <button
         type="button"
         :disabled="!descriptionHasMoreThan20Chars"
-        class="button submit-other-button tiny is-info margin-top-normal is-pulled-right"
+        class="button submit-other-button tiny is-success margin-top-normal is-pulled-right"
         @click="sendContentReport()"
         v-on:keyup.enter="sendContentReport()"
       >

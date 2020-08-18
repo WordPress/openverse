@@ -32,12 +32,7 @@
         </button>
       </div>
       <div class="margin-top-small has-text-left">
-        <content-report-form
-          v-if="isReportFormVisible"
-          :imageId="image.id"
-          :imageURL="image.foreign_landing_url"
-          :providerName="image.provider"
-        />
+        <content-report-form v-if="isReportFormVisible" :image="image" />
       </div>
     </div>
     <div
