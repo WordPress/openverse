@@ -3,7 +3,7 @@
     "title": "Search for content to reuse",
     "subtitle": "Browse over 500 million images, available for reuse",
     "search": {
-      "placeholder": "I would like to see...",
+      "placeholder": "Search all content",
       "button": "Search"
     },
     "caption": {
@@ -33,7 +33,7 @@
     "search-guide": "Search Guide",
     "feedback": "Feedback",
     "extension": "Extension",
-    "placeholder": "Search all images",
+    "placeholder": "Search all content",
     "aria": {
       "primary": "primary",
       "menu": "menu",
