@@ -113,9 +113,9 @@
         >
           {{ imageTitle }}
           <span v-if="image.creator"> by {{ image.creator }} </span>
-          is licensed under
+          is marked under
           {{ fullLicenseName.toUpperCase() }}. To
-          {{ isTool ? 'the terms' : 'view a copy of this license' }}, visit
+          {{ isTool ? 'view the terms' : 'view a copy of this license' }}, visit
           <template v-if="licenseURL">
             {{ licenseURL.substring(0, licenseURL.indexOf('?')) }}
           </template>
