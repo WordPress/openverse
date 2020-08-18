@@ -147,16 +147,9 @@
             :aria-label="$t('footer.aria.donate')"
             class="donate-section"
           >
-            <span
-              style="
-                font-weight: bold;
-                font-size: 1.25rem;
-                text-transform: uppercase;
-                line-height: 1.3;
-                letter-spacing: 0.02rem;
-              "
-              >{{ $t('footer.donate.work') }}</span
-            >
+            <span class="title is-5 has-text-white">{{
+              $t('footer.donate.work')
+            }}</span>
             <p>{{ $t('footer.donate.help') }}</p>
             <a
               class="button small donate"
