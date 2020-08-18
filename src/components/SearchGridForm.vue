@@ -93,11 +93,6 @@ import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types'
 
 export default {
   name: 'search-grid-form',
-  props: {
-    searchBoxPlaceholder: {
-      default: 'Search all images',
-    },
-  },
   data: () => ({ searchTermsModel: null }),
   computed: {
     searchTerms() {
@@ -108,6 +103,9 @@ export default {
     },
     isFilterApplied() {
       return this.$store.state.isFilterApplied
+    },
+    searchBoxPlaceholder() {
+      return `Search all ${this.$route.path.split('search/')[1]}s`
     },
   },
   methods: {
