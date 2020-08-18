@@ -320,7 +320,7 @@ class Thumbs(APIView):
         except Image.DoesNotExist:
             return Response(status=404, data='Not Found')
 
-        proxy_upstream = '{proxy_url}/{width}/{original}'.format(
+        proxy_upstream = '{proxy_url}/{width},fit/{original}'.format(
             proxy_url=THUMBNAIL_PROXY_URL,
             width=THUMBNAIL_WIDTH_PX,
             original=image.url

@@ -350,7 +350,7 @@ class ImageSerializer(serializers.Serializer):
         request = self.context['request']
         host = request.get_host()
         path = reverse('thumbs', kwargs={'identifier': obj.identifier})
-        return f'https://{host}/600,fit{path}'
+        return f'https://{host}{path}'
 
     def validate_url(self, value):
         return _add_protocol(value)
