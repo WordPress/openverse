@@ -147,7 +147,9 @@
             :aria-label="$t('footer.aria.donate')"
             class="donate-section"
           >
-            <h5>{{ $t('footer.donate.work') }}</h5>
+            <span class="title is-5 has-text-white">{{
+              $t('footer.donate.work')
+            }}</span>
             <p>{{ $t('footer.donate.help') }}</p>
             <a
               class="button small donate"
