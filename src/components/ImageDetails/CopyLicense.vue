@@ -113,7 +113,7 @@
         >
           {{ imageTitle }}
           <span v-if="image.creator"> by {{ image.creator }} </span>
-          is marked under
+          {{ isTool ? 'is marked under' : 'is licensed with' }}
           {{ fullLicenseName.toUpperCase() }}. To
           {{ isTool ? 'view the terms' : 'view a copy of this license' }}, visit
           <template v-if="licenseURL">
