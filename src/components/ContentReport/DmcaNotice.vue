@@ -31,7 +31,7 @@
       </template>
     </i18n>
     <button
-      class="button is-text tiny margin-top-normal is-shadowless has-text-grey"
+      class="button is-text tiny margin-top-normal is-shadowless"
       @click="onBackClick()"
       v-on:keyup.enter="onBackClick()"
     >
