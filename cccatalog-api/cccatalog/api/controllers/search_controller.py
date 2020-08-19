@@ -392,8 +392,14 @@ def get_sources(index):
     :return: A dictionary mapping sources to the count of their images.`
     """
     source_cache_name = 'sources-' + index
-    sources = cache.get(key=source_cache_name)
-    if type(sources) == list:
+    cache_fetch_failed = False
+    try:
+        sources = cache.get(key=source_cache_name)
+    except ValueError:
+        cache_fetch_failed = True
+        sources = None
+        log.warning('Source cache fetch failed due to corruption')
+    if type(sources) == list or cache_fetch_failed:
         # Invalidate old provider format.
         cache.delete(key=source_cache_name)
     if not sources:

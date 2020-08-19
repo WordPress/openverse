@@ -6,6 +6,7 @@ import uuid
 import time
 import cccatalog.settings
 import xml.etree.ElementTree as ET
+import pprint
 from django.db.models import Max
 from django.urls import reverse
 from cccatalog.api.licenses import LICENSE_GROUPS
