@@ -15,7 +15,6 @@ from cccatalog.api.serializers.image_serializers import\
     WatermarkQueryStringSerializer, ReportImageSerializer,\
     OembedSerializer
 from cccatalog.settings import DETAIL_PROXY_URL
-from cccatalog.api.utils.view_count import _get_user_ip
 from cccatalog.api.utils.watermark import watermark
 from django.http.response import HttpResponse, FileResponse
 import cccatalog.api.controllers.search_controller as search_controller
@@ -40,6 +39,21 @@ SUGGESTIONS = 'suggestions'
 RESULT_COUNT = 'result_count'
 PAGE_COUNT = 'page_count'
 PAGE_SIZE = 'page_size'
+
+def _get_user_ip(request):
+    """
+    Read request headers to find the correct IP address.
+    It is assumed that X-Forwarded-For has been sanitized by the load balancer
+    and thus cannot be rewritten by malicious users.
+    :param request: A Django request object.
+    :return: An IP address.
+    """
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 
 class SearchImages(APIView):
