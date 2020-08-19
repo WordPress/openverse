@@ -134,6 +134,17 @@ export const legacySourceMap = {
       }
     },
   },
+  Vimeo: {
+    video(search) {
+      return {
+        url: 'https://vimeo.com/search',
+        query: {
+          license: 'by',
+          q: search.q,
+        },
+      }
+    },
+  },
   'Wikimedia Commons': {
     audio(search) {
       return {
