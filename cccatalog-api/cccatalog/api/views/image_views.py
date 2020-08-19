@@ -40,6 +40,7 @@ RESULT_COUNT = 'result_count'
 PAGE_COUNT = 'page_count'
 PAGE_SIZE = 'page_size'
 
+
 def _get_user_ip(request):
     """
     Read request headers to find the correct IP address.
