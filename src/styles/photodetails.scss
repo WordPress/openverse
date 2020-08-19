@@ -65,6 +65,7 @@
   width: 22rem;
 }
 
+
 @include desktop {
   .arrow-popup.arrow-popup--anchor-right {
     right: 0;
@@ -90,12 +91,16 @@
   border-bottom-color: #ffffff;
   border-width: 10px;
   margin-left: -10px;
+ 
 }
 .arrow-popup:before {
   border-color: rgba(120, 120, 120, 0);
   border-bottom-color: #d8d8d8;
   border-width: 13px;
   margin-left: -13px;
+}
+.arrow-popup::before:hover{
+  background-color:#d8d8d8 ;
 }
 
 @include desktop {
