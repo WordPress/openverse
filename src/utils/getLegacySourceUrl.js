@@ -17,13 +17,13 @@ export const legacySourceMap = {
       }
     },
   },
-  Vimeo:{
+  Vimeo: {
     video(search){
-      return{
+      return {
         url:'https://vimeo.com/search',
-        query:{
-          license:'by',
-          q:search.q
+        query: {
+          license: 'by',
+          q: search.q
         }
       }
     }
