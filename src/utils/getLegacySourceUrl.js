@@ -18,7 +18,7 @@ export const legacySourceMap = {
     },
   },
   Vimeo: {
-    video(search){
+    video(search) {
       return {
         url: 'https://vimeo.com/search',
         query: {
