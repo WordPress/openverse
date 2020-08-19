@@ -2,7 +2,7 @@
   <div class="padding-normal is-clearfix arrow-popup">
     <button
       :aria-label="$t('photo-details.aria.close-form')"
-      class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
+      class="button close-button is-text tiny is-pulled-right is-block has-background-white"
       @click="closeForm()"
       v-on:keyup.enter="closeForm()"
     >

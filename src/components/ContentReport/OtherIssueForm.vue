@@ -14,7 +14,7 @@
     </label>
     <div>
       <button
-        class="button other-back-button is-text tiny margin-top-normal has-text-grey"
+        class="button other-back-button is-text tiny margin-top-normal has-background-white"
         @click="onBackClick()"
         v-on:keyup.enter="onBackClick()"
       >
