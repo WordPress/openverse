@@ -17,6 +17,17 @@ export const legacySourceMap = {
       }
     },
   },
+  Vimeo:{
+    video(search){
+      return{
+        url:'https://vimeo.com/search',
+        query:{
+          license:'by',
+          q:search.q
+        }
+      }
+    }
+  },
   Europeana: {
     audio(search) {
       let query = `${search.q} AND RIGHTS:*creative*` // search cc licensed works
