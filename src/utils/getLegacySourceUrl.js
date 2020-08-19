@@ -20,7 +20,7 @@ export const legacySourceMap = {
   Vimeo: {
     video(search){
       return {
-        url:'https://vimeo.com/search',
+        url: 'https://vimeo.com/search',
         query: {
           license: 'by',
           q: search.q
