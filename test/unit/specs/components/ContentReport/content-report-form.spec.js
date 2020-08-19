@@ -11,8 +11,7 @@ describe('ContentReportForm', () => {
   const $t = (key) => i18n.messages[key]
   beforeEach(() => {
     props = {
-      imageId: 1,
-      imageURL: 'http://foo.bar',
+      image: { id: 1, url: 'http://foo.bar' },
     }
 
     dispatchMock = jest.fn()
@@ -85,7 +84,7 @@ describe('ContentReportForm', () => {
     const button = wrapper.find('.next-button')
     button.trigger('click')
     expect(dispatchMock).toHaveBeenCalledWith('SEND_CONTENT_REPORT', {
-      identifier: props.imageId,
+      identifier: props.image.id,
       reason: 'mature',
       description: '',
     })
@@ -107,7 +106,7 @@ describe('ContentReportForm', () => {
     const description = 'foo bar'
     wrapper.vm.sendContentReport(description)
     expect(dispatchMock).toHaveBeenCalledWith('SEND_CONTENT_REPORT', {
-      identifier: props.imageId,
+      identifier: props.image.id,
       reason: 'other',
       description,
     })
