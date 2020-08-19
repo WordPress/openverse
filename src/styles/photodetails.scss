@@ -99,9 +99,7 @@
   border-width: 13px;
   margin-left: -13px;
 }
-.arrow-popup::before:hover{
-  background-color:#d8d8d8 ;
-}
+
 
 @include desktop {
   .arrow-popup--anchor-right.arrow-popup:after {
