@@ -9,7 +9,6 @@ from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider, DeletedImage, \
     ImageReport
 from cccatalog.api.utils import ccrel
-from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.image_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     InputErrorSerializer, ImageSearchQueryStringSerializer,\
@@ -148,8 +147,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                              200: ImageSerializer,
                              404: 'Not Found'
                          })
-    @track_model_views(Image)
-    def get(self, request, identifier, format=None, view_count=0):
+    def get(self, request, identifier, format=None):
         """ Get the details of a single list. """
         resp = self.retrieve(request, identifier)
         # Proxy insecure HTTP images at full resolution.
