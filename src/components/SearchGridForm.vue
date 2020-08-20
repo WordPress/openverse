@@ -105,7 +105,8 @@ export default {
       return this.$store.state.isFilterApplied
     },
     searchBoxPlaceholder() {
-      return `Search all ${this.$route.path.split('search/')[1]}s`
+      const type = this.$route.path.split('search/')[1] || 'image' // fall back to images
+      return `Search all ${type}s`
     },
   },
   methods: {

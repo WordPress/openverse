@@ -2,7 +2,7 @@
   <div>
     <i18n
       path="photo-details.content-report.dmca.content"
-      tag="span"
+      tag="p"
       class="is-block padding-horizontal-big margin-top-large has-text-centered"
     >
       <template v-slot:link>
@@ -15,10 +15,11 @@
         >
       </template>
     </i18n>
+
     <i18n
       path="photo-details.content-report.dmca.provider"
-      tag="span"
-      class="is-block padding-horizontal-big margin-top-large has-text-centered"
+      tag="p"
+      class="is-block padding-horizontal-big margin-top-normal has-text-centered"
     >
       <template v-slot:link>
         <a
@@ -27,11 +28,12 @@
           target="_blank"
           rel="noopener"
           >{{ providerName }}</a
-        >.
+        >
       </template>
     </i18n>
+
     <button
-      class="button is-text tiny margin-top-normal is-shadowless has-text-grey"
+      class="button is-text tiny margin-top-normal is-shadowless"
       @click="onBackClick()"
       v-on:keyup.enter="onBackClick()"
     >
