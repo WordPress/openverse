@@ -106,7 +106,7 @@
       <i18n
         path="search-guide.example.negate.description"
         tag="p"
-        class="margin-vertical-normal"
+        class="margin-top-normal"
       >
         <template v-slot:highlight>
           <em aria-label="minus operator (signifies NOT)"
@@ -118,7 +118,7 @@
       <i18n
         path="search-guide.example.negate.content"
         tag="p"
-        class="margin-vertical-normal"
+        class="margin-bottom-normal"
       >
         <template v-slot:link>
           <a
@@ -136,7 +136,7 @@
       <i18n
         path="search-guide.example.prefix.description"
         tag="p"
-        class="margin-vertical-normal"
+        class="margin-top-normal"
       >
         <template v-slot:highlight>
           <em>* operator (wildcard)</em>
@@ -144,9 +144,9 @@
       </i18n>
 
       <i18n
-        path="search-guide.example.negate.content"
+        path="search-guide.example.prefix.content"
         tag="p"
-        class="margin-vertical-normal"
+        class="margin-bottom-normal"
       >
         <template v-slot:link>
           <a
@@ -164,7 +164,7 @@
       <i18n
         path="search-guide.example.precedence.description"
         tag="p"
-        class="margin-vertical-normal"
+        class="margin-top-normal"
       >
         <template v-slot:highlight>
           <em>( and )</em>
@@ -172,9 +172,9 @@
       </i18n>
 
       <i18n
-        path="search-guide.example.negate.content"
+        path="search-guide.example.precedence.content"
         tag="p"
-        class="margin-vertical-normal"
+        class="margin-bottom-normal"
       >
         <template v-slot:link>
           <a
@@ -192,7 +192,7 @@
       <i18n
         path="search-guide.example.fuzziness.description"
         tag="p"
-        class="margin-vertical-normal"
+        class="margin-top-normal"
       >
         <template v-slot:highlight>
           <em aria-label="tilde N">~N</em>
@@ -207,7 +207,7 @@
       <i18n
         path="search-guide.example.fuzziness.content"
         tag="p"
-        class="margin-vertical-normal"
+        class="margin-bottom-normal"
       >
         <template v-slot:link>
           <a
