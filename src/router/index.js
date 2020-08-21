@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueMeta from 'vue-meta'
 import VueRouter from 'vue-router'
 import AboutPage from '@/pages/AboutPage'
+import SourcePage from '@/pages/SourcePage'
 import HomePage from '@/pages/HomePage'
 import BrowsePage from '@/pages/BrowsePage'
 import PhotoDetailPage from '@/pages/PhotoDetailPage'
@@ -62,6 +63,11 @@ const router = new VueRouter({
       path: '/about',
       name: 'about-page',
       component: AboutPage,
+    },
+    {
+      path: '/sources',
+      name: 'source-page',
+      component: SourcePage,
     },
     {
       path: '/search-help',
