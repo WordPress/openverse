@@ -49,7 +49,7 @@
             class="body-big margin-vertical-normal"
           >
             <template v-slot:flikr>
-              <a aria-label="flikr" href="#">Flikr</a>
+              <a aria-label="flikr" href="#">Flickr</a>
             </template>
             <template v-slot:smithsonian>
               <a aria-label="smithsonian" href="#">Smithsonian Institute</a>
@@ -61,10 +61,10 @@
             class="body-big margin-vertical-normal"
           >
             <template v-slot:link>
-              <a aria-label="europena" href="#">Europena</a>
+              <a aria-label="europena" href="#">Europeana</a>
             </template>
             <template v-slot:link-api>
-              <a aria-label="europena-api" href="#">Europena API</a>
+              <a aria-label="europena-api" href="#">Europeana API</a>
             </template>
           </i18n>
           <h3 class="b-header">{{ $t('sources.new-content.next') }}</h3>
