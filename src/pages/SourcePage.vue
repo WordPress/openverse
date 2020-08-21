@@ -135,16 +135,4 @@ export default SourcePage
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import '../styles/text-only-page.scss';
-
-.container {
-  display: flex;
-}
-
-.left-half {
-  flex: 2;
-}
-
-.right-half {
-  flex: 2;
-}
 </style>
