@@ -2,7 +2,7 @@
   <div class="padding-normal is-clearfix arrow-popup">
     <button
       :aria-label="$t('photo-details.aria.close-form')"
-      class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
+      class="button close-button is-text tiny is-pulled-right is-block has-background-white"
       @click="closeForm()"
       v-on:keyup.enter="closeForm()"
     >
@@ -10,14 +10,14 @@
     </button>
     <dmca-notice
       v-if="selectedCopyright"
-      :imageURL="imageURL"
+      :imageURL="image.url"
       :providerName="providerName"
       :dmcaFormUrl="dmcaFormUrl"
       @onBackClick="onBackClick()"
     />
     <done-message
       v-else-if="!selectedCopyright && isReportSent"
-      :imageURL="imageURL"
+      :imageURL="image.url"
       :providerName="providerName"
     />
     <report-error v-else-if="reportFailed" />
@@ -76,16 +76,16 @@
         </div>
       </fieldset>
 
-      <span
+      <p
         class="caption has-text-weight-semibold has-text-grey margin-bottom-normal"
       >
         {{ $t('photo-details.content-report.caption') }}
-      </span>
+      </p>
 
       <button
         type="button"
         :disabled="selectedReason === null"
-        class="button next-button tiny is-info is-pulled-right"
+        class="button next-button tiny is-success is-pulled-right"
         @click="onIssueSelected()"
         v-on:keyup.enter="onIssueSelected()"
       >
@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import getProviderName from '@/utils/getProviderName'
 import { SEND_CONTENT_REPORT } from '@/store/action-types'
 import { REPORT_FORM_CLOSED } from '@/store/mutation-types'
 import dmcaNotice from './DmcaNotice'
@@ -108,7 +109,7 @@ const dmcaFormUrl =
 
 export default {
   name: 'content-report-form',
-  props: ['imageId', 'imageURL', 'providerName'],
+  props: ['image'],
   components: {
     DoneMessage,
     dmcaNotice,
@@ -130,6 +131,12 @@ export default {
     reportFailed() {
       return this.$store.state.reportFailed
     },
+    providerName() {
+      return getProviderName(
+        this.$store.state.imageProviders,
+        this.image.provider
+      )
+    },
   },
   methods: {
     onIssueSelected() {
@@ -147,7 +154,7 @@ export default {
     },
     sendContentReport(description = '') {
       this.$store.dispatch(SEND_CONTENT_REPORT, {
-        identifier: this.$props.imageId,
+        identifier: this.$props.image.id,
         reason: this.selectedReason,
         description,
       })
