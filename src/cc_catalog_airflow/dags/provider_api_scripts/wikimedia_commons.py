@@ -305,6 +305,18 @@ def _extract_creator_info(image_info):
     return (artist_text, artist_url)
 
 
+def _extract_category_info(image_info):
+    categories_string = (
+        image_info
+        .get('extmetadata', {})
+        .get('Categories', {})
+        .get('value', '')
+    )
+
+    categories_list = categories_string.split('|')
+    return categories_list
+
+
 def _get_license_url(image_info):
     return (
         image_info
@@ -321,6 +333,7 @@ def _create_meta_data_dict(image_data):
     image_info = _get_image_info_dict(image_data)
     date_originally_created, last_modified_at_source = _extract_date_info(
         image_info)
+    categories_list = _extract_category_info(image_info)
     description = (
         image_info
         .get('extmetadata', {})
@@ -335,6 +348,7 @@ def _create_meta_data_dict(image_data):
     meta_data['global_usage_count'] = global_usage_length
     meta_data['date_originally_created'] = date_originally_created
     meta_data['last_modified_at_source'] = last_modified_at_source
+    meta_data['categories'] = categories_list
     return meta_data
 
 
