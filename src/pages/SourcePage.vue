@@ -82,6 +82,13 @@
               {{ $t('sources.new-content.total-items') }}
             </li>
           </ul>
+          <h5 class="b-header margin-vertical-normal">
+            {{ $t('sources.suggestions') }}
+          </h5>
+          <button class="button is-primary">
+            SUGGEST A NEW SOURCE
+            <i class="margin-left-small icon external-link" />
+          </button>
         </div>
       </div>
     </main>
