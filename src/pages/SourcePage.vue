@@ -48,23 +48,23 @@
             tag="p"
             class="body-big margin-vertical-normal"
           >
-            <template v-slot:flikr>
-              <a aria-label="flikr" href="#">Flickr</a>
+            <template v-slot:flickr>
+              <a aria-label="flickr" href="#">Flickr</a>
             </template>
             <template v-slot:smithsonian>
               <a aria-label="smithsonian" href="#">Smithsonian Institute</a>
             </template>
           </i18n>
           <i18n
-            path="sources.cc-content.europena"
+            path="sources.cc-content.europeana"
             tag="p"
             class="body-big margin-vertical-normal"
           >
             <template v-slot:link>
-              <a aria-label="europena" href="#">Europeana</a>
+              <a aria-label="europeana" href="#">Europeana</a>
             </template>
             <template v-slot:link-api>
-              <a aria-label="europena-api" href="#">Europeana API</a>
+              <a aria-label="europeana-api" href="#">Europeana API</a>
             </template>
           </i18n>
           <h3 class="b-header">{{ $t('sources.new-content.next') }}</h3>
