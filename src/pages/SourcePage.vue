@@ -41,46 +41,45 @@
         <div class="right-half margin-left-large margin-vertical-large">
           <h3 class="b-header">{{ $t('sources.cc-content.where') }}</h3>
           <p class="body-big margin-vertical-normal">
-            There is openly licensed content hosted on millions of domains
-            across the breadth of the internet. Our team systematically
-            identifies providers hosting CC-licensed content. If it’s a good
-            fit, we index that content and make it discoverable through CC
-            Search.
+            {{ $t('sources.cc-content.content') }}
           </p>
-          <p class="body-big margin-vertical-normal">
-            Some providers have multiple different groupings of content within
-            them. Flickr has sources ranging from NASA to personal photography.
-            The Smithsonian Institution comprises a dozen, diverse collections.
-            Wikimedia Commons runs the gamut in terms of content, and is used by
-            several Galleries, Libraries, Archives, and Museums highlighting
-            some or all of their digitized collections.
-          </p>
-          <p class="body-big margin-vertical-normal">
-            CC Search is especially grateful for the work of Europeana, an
-            organization that works to digitize and make discoverable cultural
-            heritage works across Europe. CC Search is able to index hundreds of
-            valuable sources, through a single integration with the Europeana
-            API.
-          </p>
+          <i18n
+            path="sources.cc-content.provider"
+            tag="p"
+            class="body-big margin-vertical-normal"
+          >
+            <template v-slot:flikr>
+              <a aria-label="flikr" href="#">Flikr</a>
+            </template>
+            <template v-slot:smithsonian>
+              <a aria-label="smithsonian" href="#">Smithsonian Institute</a>
+            </template>
+          </i18n>
+          <i18n
+            path="sources.cc-content.europena"
+            tag="p"
+            class="body-big margin-vertical-normal"
+          >
+            <template v-slot:link>
+              <a aria-label="europena" href="#">Europena</a>
+            </template>
+            <template v-slot:link-api>
+              <a aria-label="europena-api" href="#">Europena API</a>
+            </template>
+          </i18n>
           <h3 class="b-header">{{ $t('sources.new-content.next') }}</h3>
           <p class="body-big margin-vertical-normal">
-            We have a never ending list of possible sources to research prior to
-            integration. We ask ourselves questions like:
+            {{ $t('sources.new-content.integrate') }}
           </p>
           <ul>
             <li>
-              What is the impact or importance of this source to our users? If
-              it exists within a provider like Wikimedia Commons, is it valuable
-              for our users to be able to filter by this source directly?
+              {{ $t('sources.new-content.impact') }}
             </li>
             <li>
-              Is licensing and attribution information clearly displayed to
-              enable confident reuse?
+              {{ $t('sources.new-content.reuse') }}
             </li>
             <li>
-              How many new total items or new types of items can we bring to our
-              users through this integration? Some sources are direct
-              integrations, while others may be a source within a source.
+              {{ $t('sources.new-content.total-items') }}
             </li>
           </ul>
         </div>
