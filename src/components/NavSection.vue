@@ -47,6 +47,9 @@
         <router-link class="navbar-item" to="/about">{{
           $t('header.about')
         }}</router-link>
+        <router-link class="navbar-item" to="/sources">{{
+          $t('header.source')
+        }}</router-link>
         <router-link class="navbar-item" to="/collections">{{
           $t('header.collections')
         }}</router-link>
