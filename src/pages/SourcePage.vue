@@ -1,17 +1,25 @@
 <template>
   <div class="about-page">
-    <header-section showNavSearch="true"></header-section>
-    <main role="main" class="margin-normal">
-      <h1 class="title is-2" role="article">{{ $t('sources.title') }}</h1>
-      <div class="container">
-        <div class="left-half">
-          <p class="body-big margin-vertical-large">
-            {{ $t('sources.detail') }}
-          </p>
+    <header-section showNavSearch="true" />
+    <main role="main" class="section">
+      <div class="container is-fluid columns">
+        <header class="column is-full margin-bottom-small">
+          <h1 class="title is-2" role="article">{{ $t('sources.title') }}</h1>
+        </header>
+      </div>
+      <div class="container is-fluid columns is-variable is-4">
+        <div class="column">
+          <i18n path="sources.detail" tag="p" class="body-big">
+            <template v-slot:single-name>
+              <strong>
+                {{ $t('sources.single-name') }}
+              </strong>
+            </template>
+          </i18n>
           <table
             :aria-label="$t('about.aria.sources')"
             role="region"
-            class="table is-bordered is-striped"
+            class="table is-bordered is-striped margin-bottom-large margin-top-normal"
           >
             <thead>
               <th>{{ $t('sources.providers.source') }}</th>
@@ -26,7 +34,7 @@
                 <td>
                   <a
                     :aria-label="imageProvider.display_name"
-                    :href="imageProvider.source_url"
+                    :href="`/search?source=${imageProvider.source_name}`"
                   >
                     {{ imageProvider.source_url }}
                   </a>
@@ -38,7 +46,7 @@
             </tbody>
           </table>
         </div>
-        <div class="right-half margin-left-large margin-vertical-large">
+        <div class="column">
           <h3 class="b-header">{{ $t('sources.cc-content.where') }}</h3>
           <p class="body-big margin-vertical-normal">
             {{ $t('sources.cc-content.content') }}
@@ -92,7 +100,8 @@
         </div>
       </div>
     </main>
-    <footer-section></footer-section>
+
+    <footer-section />
   </div>
 </template>
 
@@ -126,6 +135,7 @@ export default SourcePage
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import '../styles/text-only-page.scss';
+
 .container {
   display: flex;
 }

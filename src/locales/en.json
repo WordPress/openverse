@@ -112,7 +112,8 @@
   },
   "sources": {
     "title": "Sources",
-    "detail": "Clicking on a Source allows you to browse and filter items within that source.",
+    "detail": "Clicking on a {single-name} allows you to browse and filter items within that source.",
+    "single-name": "Source",
     "providers": {
       "source": "Source",
       "item": "Total items"
@@ -130,7 +131,7 @@
       "reuse": "Is licensing and attribution information clearly displayed to enable confident reuse?",
       "total-items": "How many new total items or new types of items can we bring to our users through this integration? Some sources are direct integrations, while others may be a source within a source."
     },
-    "suggestions":"We appreciate suggestions for new sources from our community of users."
+    "suggestions": "We appreciate suggestions for new sources from our community of users."
   },
   "search-guide": {
     "title": "CC Search Syntax Guide",
