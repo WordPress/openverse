@@ -53,18 +53,17 @@ def create_dag(
 
     with dag:
         start_task = ops.get_log_operator(dag, dag.dag_id, 'Starting')
-        run_task_list = []
-        for provider in sql.OLDEST_PER_PROVIDER:
-            run_task = operators.get_image_expiration_operator(
+        run_task_list = [
+            operators.get_image_expiration_operator(
                 dag,
                 postgres_conn_id,
                 provider
             )
-            run_task_list.append(run_task)
+            for provider in sql.OLDEST_PER_PROVIDER
+        ]
         end_task = ops.get_log_operator(dag, dag.dag_id, 'Finished')
 
-        start_task >> run_task_list
-        run_task_list >> end_task
+        start_task >> run_task_list >> end_task
 
     return dag
 
