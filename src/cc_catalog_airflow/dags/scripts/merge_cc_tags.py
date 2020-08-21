@@ -2,9 +2,9 @@
 Script to merge the tags and metadata column from Common crawl data
 to the new provider API data in image table.
 
-Execution : python merge_cc_tags.py -t {cc_table_name}
+Execution : python merge_cc_tags.py -c {cc_table_name} -a {api_table}
 
-    eg : python merge_cc_tags.py -t science_museum_2020_06_02
+    eg : python merge_cc_tags.py -c science_museum_2020_06_02 -a image
 
 """
 import os
@@ -19,7 +19,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-IMAGE_TABLE_NAME = 'image'
 COL_IMAGE = 'url'
 COL_TAGS = 'tags'
 COL_PROVIDER = 'provider'
@@ -96,7 +95,7 @@ def _merge_jsonb_arrays(column):
 
 def _merge_tags(
     cc_table=None,
-    image_table=IMAGE_TABLE_NAME
+    api_table=None
         ):
     try:
         status = "success"
@@ -106,7 +105,7 @@ def _merge_tags(
         cursor = db.cursor()
         query = dedent(
                 f"""
-                UPDATE {IMAGE_TABLE_NAME} a
+                UPDATE {api_table} a
                     SET
                         {_merge_jsonb_arrays(COL_TAGS)},
                         {_merge_jsonb_objects(COL_METADATA)}
@@ -125,21 +124,30 @@ def _merge_tags(
         db.commit()
     except Exception as e:
         logger.warning(f"Merging failed due to {e}")
-        logger.warning(f"{query}")
         status = "Failure"
     return status
 
 
-def main(cc_table):
-    logger.info(f"Merging Common crawl tags from {cc_table}")
+def main(cc_table, api_table):
+    logger.info(f"Merging Common crawl tags from {cc_table} to {api_table}")
     status = _merge_tags(
-            cc_table=cc_table
+            cc_table=cc_table,
+            api_table=api_table
             )
     logger.info(f"Status: {status}")
 
 
 if __name__ == "__main__":
     parse = argparse.ArgumentParser()
-    parse.add_argument("-t", "--Table", required=True, help="Select table")
+    parse.add_argument(
+        "-c", "--CC_table", required=True, help="Select Common crawl table"
+    )
+    parse.add_argument(
+        "-a", "--API_table", required=True,
+        help="Select table with new API data"
+    )
     args = parse.parse_args()
-    main(cc_table=args.Table)
+    main(
+        cc_table=args.CC_table,
+        api_table=args.API_table
+    )
