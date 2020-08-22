@@ -36,7 +36,7 @@
                     :aria-label="imageProvider.display_name"
                     :href="`/search?source=${imageProvider.source_name}`"
                   >
-                    {{ imageProvider.source_url }}
+                    {{ imageProvider.display_name }}
                   </a>
                 </td>
                 <td class="number-cell">
@@ -57,10 +57,12 @@
             class="body-big margin-vertical-normal"
           >
             <template v-slot:flickr>
-              <a aria-label="flickr" href="#">Flickr</a>
+              <a aria-label="flickr" href="https://www.flickr.com/">Flickr</a>
             </template>
             <template v-slot:smithsonian>
-              <a aria-label="smithsonian" href="#">Smithsonian Institute</a>
+              <a aria-label="smithsonian" href="https://naturalhistory.si.edu/"
+                >Smithsonian Institute</a
+              >
             </template>
           </i18n>
           <i18n
@@ -69,34 +71,45 @@
             class="body-big margin-vertical-normal"
           >
             <template v-slot:link>
-              <a aria-label="europeana" href="#">Europeana</a>
+              <a aria-label="europeana" href="https://www.europeana.eu/en"
+                >Europeana</a
+              >
             </template>
             <template v-slot:link-api>
-              <a aria-label="europeana-api" href="#">Europeana API</a>
+              <a
+                aria-label="europeana-api"
+                href="https://pro.europeana.eu/page/apis"
+                >Europeana API</a
+              >
             </template>
           </i18n>
           <h3 class="b-header">{{ $t('sources.new-content.next') }}</h3>
           <p class="body-big margin-vertical-normal">
             {{ $t('sources.new-content.integrate') }}
           </p>
-          <ul>
-            <li>
-              {{ $t('sources.new-content.impact') }}
-            </li>
-            <li>
-              {{ $t('sources.new-content.reuse') }}
-            </li>
-            <li>
-              {{ $t('sources.new-content.total-items') }}
-            </li>
-          </ul>
+          <div class="content">
+            <ul>
+              <li>
+                {{ $t('sources.new-content.impact') }}
+              </li>
+              <li>
+                {{ $t('sources.new-content.reuse') }}
+              </li>
+              <li>
+                {{ $t('sources.new-content.total-items') }}
+              </li>
+            </ul>
+          </div>
           <h5 class="b-header margin-vertical-normal">
             {{ $t('sources.suggestions') }}
           </h5>
-          <button class="button is-primary">
+          <a
+            href="https://github.com/creativecommons/cccatalog/issues/new"
+            class="button is-primary"
+          >
             SUGGEST A NEW SOURCE
             <i class="margin-left-small icon external-link" />
-          </button>
+          </a>
         </div>
       </div>
     </main>
