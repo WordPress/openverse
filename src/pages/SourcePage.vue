@@ -36,7 +36,7 @@
                     :aria-label="imageProvider.display_name"
                     :href="`/search?source=${imageProvider.source_name}`"
                   >
-                    {{ imageProvider.source_url }}
+                    {{ imageProvider.display_name }}
                   </a>
                 </td>
                 <td class="number-cell">
@@ -57,10 +57,12 @@
             class="body-big margin-vertical-normal"
           >
             <template v-slot:flickr>
-              <a aria-label="flickr" href="#">Flickr</a>
+              <a aria-label="flickr" href="https://www.flickr.com/">Flickr</a>
             </template>
             <template v-slot:smithsonian>
-              <a aria-label="smithsonian" href="#">Smithsonian Institute</a>
+              <a aria-label="smithsonian" href="https://naturalhistory.si.edu/"
+                >Smithsonian Institute</a
+              >
             </template>
           </i18n>
           <i18n
@@ -69,10 +71,16 @@
             class="body-big margin-vertical-normal"
           >
             <template v-slot:link>
-              <a aria-label="europeana" href="#">Europeana</a>
+              <a aria-label="europeana" href="https://www.europeana.eu/en"
+                >Europeana</a
+              >
             </template>
             <template v-slot:link-api>
-              <a aria-label="europeana-api" href="#">Europeana API</a>
+              <a
+                aria-label="europeana-api"
+                href="https://pro.europeana.eu/page/apis"
+                >Europeana API</a
+              >
             </template>
           </i18n>
           <h3 class="b-header">{{ $t('sources.new-content.next') }}</h3>
