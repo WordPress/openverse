@@ -87,17 +87,19 @@
           <p class="body-big margin-vertical-normal">
             {{ $t('sources.new-content.integrate') }}
           </p>
-          <ul>
-            <li>
-              {{ $t('sources.new-content.impact') }}
-            </li>
-            <li>
-              {{ $t('sources.new-content.reuse') }}
-            </li>
-            <li>
-              {{ $t('sources.new-content.total-items') }}
-            </li>
-          </ul>
+          <div class="content">
+            <ul>
+              <li>
+                {{ $t('sources.new-content.impact') }}
+              </li>
+              <li>
+                {{ $t('sources.new-content.reuse') }}
+              </li>
+              <li>
+                {{ $t('sources.new-content.total-items') }}
+              </li>
+            </ul>
+          </div>
           <h5 class="b-header margin-vertical-normal">
             {{ $t('sources.suggestions') }}
           </h5>
