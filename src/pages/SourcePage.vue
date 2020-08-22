@@ -103,10 +103,13 @@
           <h5 class="b-header margin-vertical-normal">
             {{ $t('sources.suggestions') }}
           </h5>
-          <button class="button is-primary">
+          <a
+            href="https://github.com/creativecommons/cccatalog/issues/new"
+            class="button is-primary"
+          >
             SUGGEST A NEW SOURCE
             <i class="margin-left-small icon external-link" />
-          </button>
+          </a>
         </div>
       </div>
     </main>
