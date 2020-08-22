@@ -216,7 +216,7 @@ const mutations = (redirect) => ({
     _state.imagePage = params.page || 1
   },
   [SET_QUERY](_state, params) {
-    setQuery(_state, params, '/search', redirect)
+    setQuery(_state, params, window.location.pathname, redirect)
   },
   [IMAGE_NOT_FOUND]() {
     redirect({ path: '/not-found' }, true)
