@@ -146,7 +146,7 @@ describe('Search Store', () => {
       mutations[SET_QUERY](state, params)
 
       expect(routePushMock).toBeCalledWith({
-        path: '/search',
+        path: '/',
         query: params.query,
       })
     })
