@@ -49,11 +49,6 @@ SHORT_URL_PATH_WHITELIST = ['/v1/list', '/v1/images/']
 
 USE_S3 = os.getenv('USE_S3', False)
 
-# Intermittently run tasks
-CRON_CLASSES = [
-    'cccatalog.api.utils.scheduled_tasks.SaveCachedTrafficStats'
-]
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -66,7 +61,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_cron',
     'oauth2_provider',
     'rest_framework',
     'corsheaders',
