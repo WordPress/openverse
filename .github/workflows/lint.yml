@@ -4,8 +4,11 @@ on:
   push:
     paths:
       - '**.py'
+  pull_request:
+    paths:
+      - '**.py'
 
-      
+
 jobs:
   build:
     runs-on: ubuntu-latest
