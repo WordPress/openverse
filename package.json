@@ -47,6 +47,7 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.findindex": "^4.6.0",
     "lodash.isempty": "^4.4.0",
+    "lodash.sortby": "^4.7.0",
     "masonry-layout": "^4.2.2",
     "route-cache": "^0.4.4",
     "sixpack-client": "^2.1.0",
