@@ -16,24 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
-from django.views.generic.base import RedirectView
 from cccatalog.api.views.image_views import SearchImages, ImageDetail,\
     Watermark, RelatedImage, OembedView, ReportImageView
 from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
-    CheckRates, VerifyEmail, Thumbs
+    CheckRates, VerifyEmail, ProxiedImage
 from cccatalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
 from cccatalog.settings import API_VERSION, WATERMARK_ENABLED
-from rest_framework import routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 import rest_framework.permissions
 
 description = """
-*This is the documentation for version 1.0 of the Creative Commons API.
-Visit https://api.creativecommons.engineering/v0/ to view the legacy
-documentation.*
-
 # Introduction
 The Creative Commons Catalog API ('cccatalog-api') is a system
 that allows programmatic access to public domain digital media. It is our
@@ -131,7 +125,7 @@ versioned_paths = [
     ),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
-    path('thumbs/<str:identifier>', Thumbs.as_view(), name='thumbs'),
+    path('thumbs/<str:identifier>', ProxiedImage.as_view(), name='thumbs'),
     path('oembed', OembedView.as_view(), name='oembed')
 ]
 if WATERMARK_ENABLED:

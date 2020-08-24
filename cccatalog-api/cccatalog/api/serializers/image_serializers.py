@@ -166,10 +166,6 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
         default=False
     )
 
-    popularity_boost = serializers.FloatField(required=False)
-    authority_boost = serializers.FloatField(required=False)
-    authority_penalty = serializers.FloatField(required=False)
-
     @staticmethod
     def validate_q(value):
         if len(value) > 200:
@@ -360,6 +356,18 @@ class ImageSerializer(serializers.Serializer):
 
     def validate_foreign_landing_url(self, value):
         return _add_protocol(value)
+
+
+class ProxiedImageSerializer(serializers.Serializer):
+    """
+    We want to show 3rd party content securely and under our own native URLs, so
+    we route some images through our own proxy. We use this same endpoint to
+    generate thumbnails for content.
+    """
+    full_size = serializers.BooleanField(
+        default=False,
+        help_text="If set, do not thumbnail the image."
+    )
 
 
 class ImageSearchResultsSerializer(serializers.Serializer):

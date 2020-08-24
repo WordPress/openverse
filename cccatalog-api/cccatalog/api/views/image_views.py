@@ -14,7 +14,7 @@ from cccatalog.api.serializers.image_serializers import\
     InputErrorSerializer, ImageSearchQueryStringSerializer,\
     WatermarkQueryStringSerializer, ReportImageSerializer,\
     OembedSerializer
-from cccatalog.settings import DETAIL_PROXY_URL
+from rest_framework.reverse import reverse
 from cccatalog.api.utils.watermark import watermark
 from django.http.response import HttpResponse, FileResponse
 import cccatalog.api.controllers.search_controller as search_controller
@@ -167,39 +167,13 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         resp = self.retrieve(request, identifier)
         # Proxy insecure HTTP images at full resolution.
         if 'http://' in resp.data[search_controller.URL]:
-            original = resp.data[search_controller.URL]
-            secure = '{proxy_url}/{original}'.format(
-                proxy_url=DETAIL_PROXY_URL,
-                original=original
+            secure = request.build_absolute_uri(
+                reverse('thumbs', [identifier])
             )
+            secure += '?full_size=True'
             resp.data[search_controller.URL] = secure
 
         return resp
-
-    @swagger_auto_schema(operation_id="image_delete",
-                         operation_description="Delete image of given ID.",
-                         responses={
-                             204: '',
-                             404: 'Not Found'
-                         })
-    def delete(self, request, identifier, format=None):
-        try:
-            image = Image.objects.get(identifier=identifier)
-            es = search_controller.es
-            es.delete(index='image', id=image.id)
-            delete_log = DeletedImage(
-                identifier=image.identifier
-            )
-            image.delete()
-            delete_log.save()
-        except Image.DoesNotExist:
-            return Response(status=404, data='Not Found')
-        # Mark as removed in upstream database
-        image = Image.objects.using('upstream').get(identifier=identifier)
-        image.removed_from_source = True
-        image.save()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 def _save_wrapper(pil_img, exif_bytes, destination):
