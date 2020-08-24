@@ -10,7 +10,8 @@ from rest_framework.views import APIView
 from rest_framework import serializers
 from cccatalog.api.controllers.search_controller import get_sources
 from cccatalog.api.serializers.oauth2_serializers import (
-    OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
+    OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo,
+    ProxiedImageSerializer
 )
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import (
@@ -299,7 +300,7 @@ class CheckRates(APIView):
         return Response(status=200, data=response_data)
 
 
-class Thumbs(APIView):
+class ProxiedImage(APIView):
     """
     Return the thumb of an image.
     """
@@ -307,24 +308,25 @@ class Thumbs(APIView):
     lookup_field = 'identifier'
     queryset = Image.objects.all()
     throttle_classes = [OneThousandPerMinute]
+    swagger_schema = None
 
-    @swagger_auto_schema(operation_id="thumb_lookup",
-                         responses={
-                             200: 'The thumb of an image',
-                             400: 'Bad Request',
-                             404: 'Not Found'
-                         })
     def get(self, request, identifier, format=None):
+        serialized = ProxiedImageSerializer(data=request.data)
         try:
             image = Image.objects.get(identifier=identifier)
         except Image.DoesNotExist:
             return Response(status=404, data='Not Found')
 
-        proxy_upstream = '{proxy_url}/{width},fit/{original}'.format(
-            proxy_url=THUMBNAIL_PROXY_URL,
-            width=THUMBNAIL_WIDTH_PX,
-            original=image.url
-        )
+        if serialized.full_size:
+            proxy_upstream = '{proxy_url}/{original}'.format(
+                proxy_url=THUMBNAIL_PROXY_URL, original=image.url
+            )
+        else:
+            proxy_upstream = '{proxy_url}/{width},fit/{original}'.format(
+                proxy_url=THUMBNAIL_PROXY_URL,
+                width=THUMBNAIL_WIDTH_PX,
+                original=image.url
+            )
         try:
             upstream_response = urlopen(proxy_upstream)
             status = upstream_response.status

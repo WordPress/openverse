@@ -362,6 +362,19 @@ class ImageSerializer(serializers.Serializer):
         return _add_protocol(value)
 
 
+class ProxiedImageSerializer(serializers.Serializer):
+    """
+    We want to show 3rd party content securely and under our own native URLs, so
+    we route some images through our own proxy. We use this same endpoint to
+    generate thumbnails for content.
+    """
+    full_size = serializers.BooleanField(
+        required=False,
+        default=False,
+        help="If set, do not thumbnail the image."
+    )
+
+
 class ImageSearchResultsSerializer(serializers.Serializer):
     """ The full image search response. """
     result_count = serializers.IntegerField()
