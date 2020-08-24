@@ -18,7 +18,8 @@ from typing import Tuple, List, Optional
 from math import ceil
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
-CACHE_TIMEOUT = 60 * 20
+SOURCE_CACHE_TIMEOUT = 60 * 20
+FILTER_CACHE_TIMEOUT = 30
 DEAD_LINK_RATIO = 1 / 2
 THUMBNAIL = 'thumbnail'
 URL = 'url'
@@ -184,7 +185,7 @@ def _exclude_filtered(s: Search):
             .values('provider_identifier')
         cache.set(
             key=filter_cache_key,
-            timeout=CACHE_TIMEOUT,
+            timeout=FILTER_CACHE_TIMEOUT,
             value=filtered_providers
         )
     to_exclude = [f['provider_identifier'] for f in filtered_providers]
@@ -440,7 +441,7 @@ def get_sources(index):
         sources = {result['key']: result['doc_count'] for result in buckets}
         cache.set(
             key=source_cache_name,
-            timeout=CACHE_TIMEOUT,
+            timeout=SOURCE_CACHE_TIMEOUT,
             value=sources
         )
     return sources
