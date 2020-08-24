@@ -28,10 +28,6 @@ from drf_yasg import openapi
 import rest_framework.permissions
 
 description = """
-*This is the documentation for version 1.0 of the Creative Commons API.
-Visit https://api.creativecommons.engineering/v0/ to view the legacy
-documentation.*
-
 # Introduction
 The Creative Commons Catalog API ('cccatalog-api') is a system
 that allows programmatic access to public domain digital media. It is our
