@@ -22,13 +22,31 @@
             class="table is-bordered is-striped margin-bottom-large margin-top-normal"
           >
             <thead>
-              <th>{{ $t('sources.providers.source') }}</th>
-              <th>{{ $t('sources.providers.item') }}</th>
+              <th
+                tabindex="0"
+                @click="sortTable('display_name')"
+                @keypress.enter="sortTable('display_name')"
+              >
+                <span class="table-header-inner">
+                  {{ $t('sources.providers.source') }}
+                  <span class="icon"><i class="icon sort" /></span>
+                </span>
+              </th>
+              <th
+                tabindex="0"
+                @click="sortTable('image_count')"
+                @keypress.enter="sortTable('image_count')"
+              >
+                <span class="table-header-inner">
+                  {{ $t('sources.providers.item') }}
+                  <span class="icon"><i class="icon sort" /></span>
+                </span>
+              </th>
             </thead>
             <tbody>
               <tr
                 role="row"
-                v-for="(imageProvider, index) in imageProviders"
+                v-for="(imageProvider, index) in sortedProviders"
                 :key="index"
               >
                 <td>
@@ -104,10 +122,12 @@
             {{ $t('sources.suggestions') }}
           </h5>
           <a
-            href="https://github.com/creativecommons/cccatalog/issues/new"
-            class="button is-primary"
+            href="https://github.com/creativecommons/cccatalog/issues/new?assignees=&labels=awaiting+triage%2C+ticket+work+required%2C+providers&template=new-source-suggestion.md&title=%5BSource+Suggestion%5D+Insert+source+name+here"
+            class="button is-primary is-uppercase"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            SUGGEST A NEW SOURCE
+            {{ $t('sources.issue-button') }}
             <i class="margin-left-small icon external-link" />
           </a>
         </div>
@@ -122,6 +142,7 @@
 import HeaderSection from '@/components/HeaderSection'
 import FooterSection from '@/components/FooterSection'
 import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin'
+import sortBy from 'lodash.sortby'
 
 const SourcePage = {
   name: 'source-page',
@@ -130,14 +151,37 @@ const SourcePage = {
     HeaderSection,
     FooterSection,
   },
+  data() {
+    return {
+      sort: {
+        direction: 'asc',
+        field: 'display_name',
+      },
+    }
+  },
   computed: {
     imageProviders() {
       return this.$store.state.imageProviders
+    },
+    sortedProviders() {
+      const sorted = sortBy(this.imageProviders, [this.sort.field])
+      return this.sort.direction === 'asc' ? sorted : sorted.reverse()
     },
   },
   methods: {
     getProviderImageCount(imageCount) {
       return imageCount.toLocaleString('en')
+    },
+    sortTable(field) {
+      let direction = 'asc'
+      if (field === this.sort.field) {
+        direction = this.sort.direction === 'asc' ? 'desc' : 'asc'
+      }
+
+      this.sort = {
+        direction,
+        field,
+      }
     },
   },
 }
@@ -148,4 +192,26 @@ export default SourcePage
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import '../styles/text-only-page.scss';
+
+.table.is-bordered {
+  th {
+    cursor: pointer;
+  }
+
+  .table-header-inner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    > .icon {
+      margin-top: -4px;
+    }
+  }
+
+  td,
+  th {
+    word-break: initial;
+  }
+}
 </style>
