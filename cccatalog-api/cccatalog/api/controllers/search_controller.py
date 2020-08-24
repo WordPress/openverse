@@ -171,6 +171,7 @@ def _apply_filter(s: Search, search_params, param_name, renamed_param=None):
     else:
         return s
 
+
 def _exclude_filtered(s: Search):
     """
     Hide data sources from the catalog dynamically.
@@ -190,10 +191,12 @@ def _exclude_filtered(s: Search):
     s = s.exclude('terms', provider=to_exclude)
     return s
 
+
 def _exclude_mature_by_param(s: Search, search_params):
     if not search_params.data['mature']:
         s = s.exclude('term', mature=True)
     return s
+
 
 def search(search_params, index, page_size, ip, request,
            filter_dead, page=1) -> Tuple[List[Hit], int, int]:
