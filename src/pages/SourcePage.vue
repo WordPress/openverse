@@ -198,11 +198,6 @@ export default SourcePage
     cursor: pointer;
   }
 
-  // th:focus,
-  // th:hover {
-  //   background-color: rgb(176, 176, 176);
-  // }
-
   .table-header-inner {
     width: 100%;
     display: flex;
