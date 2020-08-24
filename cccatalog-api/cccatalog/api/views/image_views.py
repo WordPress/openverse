@@ -15,7 +15,6 @@ from cccatalog.api.serializers.image_serializers import\
     WatermarkQueryStringSerializer, ReportImageSerializer,\
     OembedSerializer
 from rest_framework.reverse import reverse
-from cccatalog.api.utils.view_count import _get_user_ip
 from cccatalog.api.utils.watermark import watermark
 from django.http.response import HttpResponse, FileResponse
 import cccatalog.api.controllers.search_controller as search_controller
