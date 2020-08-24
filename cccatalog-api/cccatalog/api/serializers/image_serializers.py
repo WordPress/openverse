@@ -371,7 +371,7 @@ class ProxiedImageSerializer(serializers.Serializer):
     full_size = serializers.BooleanField(
         required=False,
         default=False,
-        help="If set, do not thumbnail the image."
+        help_text="If set, do not thumbnail the image."
     )
 
 

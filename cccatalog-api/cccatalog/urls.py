@@ -20,7 +20,7 @@ from django.views.generic.base import RedirectView
 from cccatalog.api.views.image_views import SearchImages, ImageDetail,\
     Watermark, RelatedImage, OembedView, ReportImageView
 from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
-    CheckRates, VerifyEmail, Thumbs
+    CheckRates, VerifyEmail, ProxiedImage
 from cccatalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
 from cccatalog.settings import API_VERSION, WATERMARK_ENABLED
@@ -131,7 +131,7 @@ versioned_paths = [
     ),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
-    path('thumbs/<str:identifier>', Thumbs.as_view(), name='thumbs'),
+    path('thumbs/<str:identifier>', ProxiedImage.as_view(), name='thumbs'),
     path('oembed', OembedView.as_view(), name='oembed')
 ]
 if WATERMARK_ENABLED:

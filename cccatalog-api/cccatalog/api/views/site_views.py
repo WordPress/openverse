@@ -10,9 +10,9 @@ from rest_framework.views import APIView
 from rest_framework import serializers
 from cccatalog.api.controllers.search_controller import get_sources
 from cccatalog.api.serializers.oauth2_serializers import (
-    OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo,
-    ProxiedImageSerializer
+    OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
 )
+from cccatalog.api.serializers.image_serializers import ProxiedImageSerializer
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import (
     ContentProvider, Image, ThrottledApplication, OAuth2Verification, SourceLogo
