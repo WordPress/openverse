@@ -9,7 +9,6 @@ from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import Image, ContentProvider, DeletedImage, \
     ImageReport
 from cccatalog.api.utils import ccrel
-from cccatalog.api.utils.view_count import track_model_views
 from cccatalog.api.serializers.image_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     InputErrorSerializer, ImageSearchQueryStringSerializer,\
@@ -41,6 +40,22 @@ SUGGESTIONS = 'suggestions'
 RESULT_COUNT = 'result_count'
 PAGE_COUNT = 'page_count'
 PAGE_SIZE = 'page_size'
+
+
+def _get_user_ip(request):
+    """
+    Read request headers to find the correct IP address.
+    It is assumed that X-Forwarded-For has been sanitized by the load balancer
+    and thus cannot be rewritten by malicious users.
+    :param request: A Django request object.
+    :return: An IP address.
+    """
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 
 class SearchImages(APIView):
@@ -148,8 +163,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                              200: ImageSerializer,
                              404: 'Not Found'
                          })
-    @track_model_views(Image)
-    def get(self, request, identifier, format=None, view_count=0):
+    def get(self, request, identifier, format=None):
         """ Get the details of a single list. """
         resp = self.retrieve(request, identifier)
         # Proxy insecure HTTP images at full resolution.
