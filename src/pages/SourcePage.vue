@@ -104,10 +104,10 @@
             {{ $t('sources.suggestions') }}
           </h5>
           <a
-            href="https://github.com/creativecommons/cccatalog/issues/new"
-            class="button is-primary"
+            href="https://github.com/creativecommons/cccatalog/issues/new?assignees=&labels=awaiting+triage%2C+ticket+work+required%2C+providers&template=new-source-suggestion.md&title=%5BSource+Suggestion%5D+Insert+source+name+here"
+            class="button is-primary is-uppercase"
           >
-            SUGGEST A NEW SOURCE
+            {{ $t('sources.issue-button') }}
             <i class="margin-left-small icon external-link" />
           </a>
         </div>
@@ -148,4 +148,10 @@ export default SourcePage
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import '../styles/text-only-page.scss';
+
+.table.is-bordered {
+  td,
+  th {
+  }
+}
 </style>

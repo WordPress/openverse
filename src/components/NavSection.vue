@@ -50,9 +50,6 @@
         <router-link class="navbar-item" to="/sources">{{
           $t('header.source')
         }}</router-link>
-        <router-link class="navbar-item" to="/collections">{{
-          $t('header.collections')
-        }}</router-link>
         <router-link class="navbar-item" to="/search-help">{{
           $t('header.search-guide')
         }}</router-link>

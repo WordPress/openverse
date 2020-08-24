@@ -30,7 +30,6 @@
   "header": {
     "about": "About",
     "source": "Sources",
-    "collections": "Collections",
     "search-guide": "Search Guide",
     "feedback": "Feedback",
     "extension": "Extension",
@@ -131,7 +130,8 @@
       "reuse": "Is licensing and attribution information clearly displayed to enable confident reuse?",
       "total-items": "How many new total items or new types of items can we bring to our users through this integration? Some sources are direct integrations, while others may be a source within a source."
     },
-    "suggestions": "We appreciate suggestions for new sources from our community of users."
+    "suggestions": "We appreciate suggestions for new sources from our community of users.",
+    "issue-button": "Suggest a new source"
   },
   "search-guide": {
     "title": "CC Search Syntax Guide",
