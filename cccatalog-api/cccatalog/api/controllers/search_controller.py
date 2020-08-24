@@ -18,7 +18,8 @@ from typing import Tuple, List, Optional
 from math import ceil
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
-CACHE_TIMEOUT = 60 * 20
+SOURCE_CACHE_TIMEOUT = 60 * 20
+FILTER_CACHE_TIMEOUT = 30
 DEAD_LINK_RATIO = 1 / 2
 THUMBNAIL = 'thumbnail'
 URL = 'url'
@@ -172,6 +173,32 @@ def _apply_filter(s: Search, search_params, param_name, renamed_param=None):
         return s
 
 
+def _exclude_filtered(s: Search):
+    """
+    Hide data sources from the catalog dynamically.
+    """
+    filter_cache_key = 'filtered_providers'
+    filtered_providers = cache.get(key=filter_cache_key)
+    if not filtered_providers:
+        filtered_providers = models.ContentProvider.objects\
+            .filter(filter_content=True)\
+            .values('provider_identifier')
+        cache.set(
+            key=filter_cache_key,
+            timeout=FILTER_CACHE_TIMEOUT,
+            value=filtered_providers
+        )
+    to_exclude = [f['provider_identifier'] for f in filtered_providers]
+    s = s.exclude('terms', provider=to_exclude)
+    return s
+
+
+def _exclude_mature_by_param(s: Search, search_params):
+    if not search_params.data['mature']:
+        s = s.exclude('term', mature=True)
+    return s
+
+
 def search(search_params, index, page_size, ip, request,
            filter_dead, page=1) -> Tuple[List[Hit], int, int]:
     """
@@ -208,23 +235,9 @@ def search(search_params, index, page_size, ip, request,
         api_field, elasticsearch_field = tup
         s = _apply_filter(s, search_params, api_field, elasticsearch_field)
 
-    # Exclude mature content unless explicitly enabled by the requester
-    if not search_params.data['mature']:
-        s = s.exclude('term', mature=True)
-    # Hide data sources from the catalog dynamically.
-    filter_cache_key = 'filtered_providers'
-    filtered_providers = cache.get(key=filter_cache_key)
-    if not filtered_providers:
-        filtered_providers = models.ContentProvider.objects\
-            .filter(filter_content=True)\
-            .values('provider_identifier')
-        cache.set(
-            key=filter_cache_key,
-            timeout=CACHE_TIMEOUT,
-            value=filtered_providers
-        )
-    to_exclude = [f['provider_identifier'] for f in filtered_providers]
-    s = s.exclude('terms', provider=to_exclude)
+    # Exclude mature content and disabled sources
+    s = _exclude_mature_by_param(s, search_params)
+    s = _exclude_filtered(s)
 
     # Search either by generic multimatch or by "advanced search" with
     # individual field-level queries specified.
@@ -360,6 +373,7 @@ def related_images(uuid, index, request, filter_dead):
     )
     # Never show mature content in recommendations.
     s = s.exclude('term', mature=True)
+    s = _exclude_filtered(s)
     page_size = 10
     page = 1
     start, end = _get_query_slice(s, page_size, page, filter_dead)
@@ -427,7 +441,7 @@ def get_sources(index):
         sources = {result['key']: result['doc_count'] for result in buckets}
         cache.set(
             key=source_cache_name,
-            timeout=CACHE_TIMEOUT,
+            timeout=SOURCE_CACHE_TIMEOUT,
             value=sources
         )
     return sources
