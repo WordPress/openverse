@@ -369,7 +369,6 @@ class ProxiedImageSerializer(serializers.Serializer):
     generate thumbnails for content.
     """
     full_size = serializers.BooleanField(
-        required=False,
         default=False,
         help_text="If set, do not thumbnail the image."
     )

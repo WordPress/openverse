@@ -16,7 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
-from django.views.generic.base import RedirectView
 from cccatalog.api.views.image_views import SearchImages, ImageDetail,\
     Watermark, RelatedImage, OembedView, ReportImageView
 from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
@@ -24,7 +23,6 @@ from cccatalog.api.views.site_views import HealthCheck, ImageStats, Register, \
 from cccatalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
 from cccatalog.settings import API_VERSION, WATERMARK_ENABLED
-from rest_framework import routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 import rest_framework.permissions

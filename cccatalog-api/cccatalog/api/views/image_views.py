@@ -15,7 +15,7 @@ from cccatalog.api.serializers.image_serializers import\
     InputErrorSerializer, ImageSearchQueryStringSerializer,\
     WatermarkQueryStringSerializer, ReportImageSerializer,\
     OembedSerializer
-from cccatalog.settings import DETAIL_PROXY_URL
+from rest_framework.reverse import reverse
 from cccatalog.api.utils.view_count import _get_user_ip
 from cccatalog.api.utils.watermark import watermark
 from django.http.response import HttpResponse, FileResponse
@@ -155,8 +155,9 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         # Proxy insecure HTTP images at full resolution.
         if 'http://' in resp.data[search_controller.URL]:
             secure = request.build_absolute_uri(
-                reverse('image-detail', identifier)
+                reverse('thumbs', [identifier])
             )
+            secure += '?full_size=True'
             resp.data[search_controller.URL] = secure
 
         return resp

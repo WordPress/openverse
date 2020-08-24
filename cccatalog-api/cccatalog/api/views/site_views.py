@@ -312,12 +312,13 @@ class ProxiedImage(APIView):
 
     def get(self, request, identifier, format=None):
         serialized = ProxiedImageSerializer(data=request.data)
+        serialized.is_valid()
         try:
             image = Image.objects.get(identifier=identifier)
         except Image.DoesNotExist:
             return Response(status=404, data='Not Found')
 
-        if serialized.full_size:
+        if serialized.data['full_size']:
             proxy_upstream = '{proxy_url}/{original}'.format(
                 proxy_url=THUMBNAIL_PROXY_URL, original=image.url
             )
