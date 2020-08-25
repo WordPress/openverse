@@ -3,9 +3,10 @@ from common.requester import DelayedRequester
 import requests
 import logging
 from urllib.parse import urlparse, parse_qs
+from util.loader import provider_details as prov
 
 DELAY = 1.0  # time delay (in seconds)
-PROVIDER = "rawpixel"
+PROVIDER = prov.RAWPIXEL_DEFAULT_PROVIDER
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",

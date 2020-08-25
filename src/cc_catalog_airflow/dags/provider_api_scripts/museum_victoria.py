@@ -1,6 +1,7 @@
 import logging
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
+from util.loader import provider_details as prov
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 LIMIT = 100
 DELAY = 5.0
 RETRIES = 3
-PROVIDER = "museumsvictoria"
+PROVIDER = prov.VICTORIA_DEFAULT_PROVIDER
 ENDPOINT = "https://collections.museumsvictoria.com.au/api/search"
 LANDING_PAGE = "https://collections.museumsvictoria.com.au/"
 
