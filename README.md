@@ -189,7 +189,7 @@ rm -r /tmp/docker_postgres_data/
 
 ## PySpark development setup
 
-### Prerequesites
+### Prerequisites
 
 ```
 JDK 9.0.1

@@ -260,7 +260,8 @@ def test_process_image_data_handles_example_dict():
         title='File:20120925 PlozevetBretagne LoneTree DSC07971 PtrQs.jpg',
         meta_data={'description': 'SONY DSC', 'global_usage_count': 0,
                    'last_modified_at_source': '2019-09-01 00:38:47',
-                   'date_originally_created': '2012-09-25 16:23:02'}
+                   'date_originally_created': '2012-09-25 16:23:02',
+                   'categories': ['Coasts of Ploz\u00e9vet', 'No QIC by usr:PtrQs', 'Photographs taken with Minolta AF Zoom 28-70mm F2.8 G', 'Self-published work', 'Taken with Sony DSLR-A900', 'Trees in Finist\u00e8re']}
     )
 
 
