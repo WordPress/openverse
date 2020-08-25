@@ -2,11 +2,11 @@ import Vue from 'vue'
 import VueMeta from 'vue-meta'
 import VueRouter from 'vue-router'
 import AboutPage from '@/pages/AboutPage'
+import SourcePage from '@/pages/SourcePage'
 import HomePage from '@/pages/HomePage'
 import BrowsePage from '@/pages/BrowsePage'
 import PhotoDetailPage from '@/pages/PhotoDetailPage'
 import FeedbackPage from '@/pages/FeedbackPage'
-import CollectionsPage from '@/pages/CollectionsPage'
 import SearchHelpPage from '@/pages/SearchHelpPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import SearchGrid from '@/components/SearchGrid'
@@ -38,6 +38,7 @@ const resultSubviews = [
 const router = new VueRouter({
   mode: 'history',
   routes: [
+    // This route is a redirect only
     {
       path: '/collections/:collection',
       redirect: (to) => ({
@@ -64,6 +65,16 @@ const router = new VueRouter({
       component: AboutPage,
     },
     {
+      path: '/sources',
+      name: 'source-page',
+      component: SourcePage,
+    },
+    // redirect only
+    {
+      path: '/collections',
+      redirect: '/sources',
+    },
+    {
       path: '/search-help',
       name: 'search-help-page',
       component: SearchHelpPage,
@@ -72,11 +83,6 @@ const router = new VueRouter({
       path: '/feedback',
       name: 'feedback-page',
       component: FeedbackPage,
-    },
-    {
-      path: '/collections',
-      name: 'collections-page',
-      component: CollectionsPage,
     },
     {
       path: '/',

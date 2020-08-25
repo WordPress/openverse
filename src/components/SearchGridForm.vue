@@ -27,7 +27,8 @@
               type="search"
               ref="search"
               :placeholder="searchBoxPlaceholder"
-              v-model="searchTermsModel"
+              :value="searchTermsModel"
+              @input="onInput"
               @keyup.enter="onSubmit"
             />
           </label>
@@ -93,13 +94,11 @@ import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types'
 
 export default {
   name: 'search-grid-form',
-  props: {
-    searchBoxPlaceholder: {
-      default: 'Search all images',
-    },
-  },
   data: () => ({ searchTermsModel: null }),
   computed: {
+    activeTab() {
+      return this.$route.path.split('search/')[1] || 'image'
+    },
     searchTerms() {
       return this.$store.state.query.q
     },
@@ -109,6 +108,10 @@ export default {
     isFilterApplied() {
       return this.$store.state.isFilterApplied
     },
+    searchBoxPlaceholder() {
+      const type = this.$route.path.split('search/')[1] || 'image' // fall back to images
+      return `Search all ${type}s`
+    },
   },
   methods: {
     onSubmit(e) {
@@ -116,9 +119,22 @@ export default {
       if (this.searchTermsModel) {
         this.$emit('onSearchFormSubmit', {
           query: { q: this.searchTermsModel },
-          shouldNavigate: true,
         })
         this.$refs.search.blur()
+      }
+    },
+    /**
+     * If we're on the audio or video tab, we want to set the search query on change
+     * rather than on submit, so the meta search buttons update live witout the user
+     * having to manually submit a new search term.
+     */
+    onInput(e) {
+      this.searchTermsModel = e.target.value
+
+      if (this.activeTab === 'video' || this.activeTab === 'audio') {
+        this.$emit('onSearchFormSubmit', {
+          query: { q: this.searchTermsModel },
+        })
       }
     },
     onToggleSearchGridFilter() {
