@@ -9,7 +9,7 @@
       </div>
       <div class="container is-fluid columns is-variable is-4">
         <div class="column">
-          <i18n path="sources.detail" tag="p" class="body-big">
+          <i18n path="sources.detail" tag="p">
             <template v-slot:single-name>
               <strong>
                 {{ $t('sources.single-name') }}
@@ -65,7 +65,9 @@
           </table>
         </div>
         <div class="column">
-          <h3 class="b-header">{{ $t('sources.cc-content.where') }}</h3>
+          <h3 class="title subtitle is-normal is-4">
+            {{ $t('sources.cc-content.where') }}
+          </h3>
           <p class="body-big margin-vertical-normal">
             {{ $t('sources.cc-content.content') }}
           </p>
@@ -101,7 +103,9 @@
               >
             </template>
           </i18n>
-          <h3 class="b-header">{{ $t('sources.new-content.next') }}</h3>
+          <h3 class="title subtitle is-normal is-4">
+            {{ $t('sources.new-content.next') }}
+          </h3>
           <p class="body-big margin-vertical-normal">
             {{ $t('sources.new-content.integrate') }}
           </p>
@@ -118,7 +122,7 @@
               </li>
             </ul>
           </div>
-          <h5 class="b-header margin-vertical-normal">
+          <h5 class="title subtitle is-5 margin-vertical-normal">
             {{ $t('sources.suggestions') }}
           </h5>
           <a

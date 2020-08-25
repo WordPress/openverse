@@ -28,7 +28,7 @@
     }
   },
   "header": {
-    "about": "About",
+    "about": "Our Story",
     "source": "Sources",
     "search-guide": "Search Guide",
     "feedback": "Feedback",
@@ -40,7 +40,10 @@
       "search": "search",
       "sr-search": "sr search button",
       "extension": "extension"
-    }
+    },
+    "licenses": "The Licenses",
+    "about-tab": "About",
+    "resources-tab": "Resources"
   },
   "footer": {
     "address": {
