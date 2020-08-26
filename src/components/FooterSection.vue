@@ -149,7 +149,7 @@
               href="http://creativecommons.org/donate"
             >
               <i
-                class="icon cc-letterheart margin-right-small is-size-5 padding-top-smaller"
+                class="icon cc-letterheart-filled margin-right-small is-size-5 padding-top-smaller"
               />
               {{ $t('footer.donate.link') }}
             </a>
