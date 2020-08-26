@@ -201,7 +201,9 @@ def test_ImageStore_get_image_places_given_args(
     }
 
     def mock_license_chooser(license_url, license_, license_version):
-        return license_, license_version, license_url
+        return image.licenses.LicenseInfo(
+            license_, license_version, license_url
+        )
     monkeypatch.setattr(
         image.licenses,
         'get_license_info',
@@ -239,7 +241,9 @@ def test_ImageStore_get_image_calls_license_chooser(
     image_store = image.ImageStore()
 
     def mock_license_chooser(license_url, license_, license_version):
-        return 'diff_license', None, license_url
+        return image.licenses.LicenseInfo(
+            'diff_license', None, license_url
+        )
     monkeypatch.setattr(
         image.licenses,
         'get_license_info',
@@ -321,14 +325,18 @@ def test_ImageStore_get_image_replaces_non_dict_meta_data_with_no_license_url(
         watermarked=None,
         source=None,
     )
-    assert actual_image.meta_data == {'license_url': None}
+    assert actual_image.meta_data == {
+        'license_url': None, 'raw_license_url': None
+    }
 
 
 def test_ImageStore_get_image_creates_meta_data_with_valid_license_url(
         monkeypatch, setup_env
 ):
     def mock_license_chooser(license_url, license_, license_version):
-        return license_, license_version, license_url
+        return image.licenses.LicenseInfo(
+            license_, license_version, license_url
+        )
     monkeypatch.setattr(
         image.licenses,
         'get_license_info',
@@ -355,14 +363,18 @@ def test_ImageStore_get_image_creates_meta_data_with_valid_license_url(
         watermarked=None,
         source=None,
     )
-    assert actual_image.meta_data == {'license_url': license_url}
+    assert actual_image.meta_data == {
+        'license_url': license_url, 'raw_license_url': license_url
+    }
 
 
 def test_ImageStore_get_image_adds_valid_license_url_to_dict_meta_data(
         monkeypatch, setup_env
 ):
     def mock_license_chooser(license_url, license_, license_version):
-        return license_, license_version, license_url
+        return image.licenses.LicenseInfo(
+            license_, license_version, license_url
+        )
     monkeypatch.setattr(
         image.licenses,
         'get_license_info',
@@ -390,17 +402,21 @@ def test_ImageStore_get_image_adds_valid_license_url_to_dict_meta_data(
     )
     assert actual_image.meta_data == {
         'key1': 'val1',
-        'license_url': 'https://license/url'
+        'license_url': 'https://license/url',
+        'raw_license_url': 'https://license/url'
     }
 
 
-def test_ImageStore_get_image_nones_invalid_license_url(
+def test_ImageStore_get_image_fixes_invalid_license_url(
         monkeypatch, setup_env
 ):
+    original_url='https://license/url',
     updated_url = 'https://updatedurl.com'
 
     def mock_license_chooser(license_url, license_, license_version):
-        return license_, license_version, updated_url
+        return image.licenses.LicenseInfo(
+            license_, license_version, updated_url
+        )
     monkeypatch.setattr(
         image.licenses,
         'get_license_info',
@@ -409,7 +425,7 @@ def test_ImageStore_get_image_nones_invalid_license_url(
     image_store = image.ImageStore()
 
     actual_image = image_store._get_image(
-        license_url='https://license/url',
+        license_url=original_url,
         license_='license',
         license_version='1.5',
         foreign_landing_url=None,
@@ -426,7 +442,9 @@ def test_ImageStore_get_image_nones_invalid_license_url(
         watermarked=None,
         source=None,
     )
-    assert actual_image.meta_data == {'license_url': updated_url}
+    assert actual_image.meta_data == {
+        'license_url': updated_url, 'raw_license_url': original_url
+    }
 
 
 def test_ImageStore_get_image_enriches_singleton_tags(

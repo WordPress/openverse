@@ -284,7 +284,7 @@ class ImageStore:
             watermarked,
             source,
     ):
-        license_, license_version, license_url = licenses.get_license_info(
+        valid_license_info = licenses.get_license_info(
             license_url=license_url,
             license_=license_,
             license_version=license_version
@@ -292,7 +292,8 @@ class ImageStore:
         source = util.get_source(source, self._PROVIDER)
         meta_data = self._enrich_meta_data(
             meta_data,
-            license_url=license_url
+            license_url=valid_license_info.url,
+            raw_license_url=license_url
         )
         tags = self._enrich_tags(raw_tags)
 
@@ -301,8 +302,8 @@ class ImageStore:
             foreign_landing_url=foreign_landing_url,
             image_url=image_url,
             thumbnail_url=thumbnail_url,
-            license_=license_,
-            license_version=license_version,
+            license_=valid_license_info.license,
+            license_version=valid_license_info.version,
             width=width,
             height=height,
             filesize=None,
@@ -368,15 +369,19 @@ class ImageStore:
                 return True
         return False
 
-    def _enrich_meta_data(self, meta_data, license_url):
+    def _enrich_meta_data(self, meta_data, license_url, raw_license_url):
         if type(meta_data) != dict:
             logger.debug(
                 '`meta_data` is not a dictionary: {}'.format(meta_data)
             )
-            enriched_meta_data = {'license_url': license_url}
+            enriched_meta_data = {
+                'license_url': license_url, 'raw_license_url': raw_license_url
+            }
         else:
             enriched_meta_data = meta_data
-            enriched_meta_data.update(license_url=license_url)
+            enriched_meta_data.update(
+                license_url=license_url, raw_license_url=raw_license_url
+            )
         return enriched_meta_data
 
     def _enrich_tags(self, raw_tags):

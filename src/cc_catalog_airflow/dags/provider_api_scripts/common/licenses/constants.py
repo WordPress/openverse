@@ -65,8 +65,8 @@ _SIMPLE_LICENSE_PATHS = [
 _SIMPLE_IRREVERSIBLE_LICENSE_PATHS = [
     # This list holds recognized license URL path snippets that split
     # correctly into license_ and license_version, but cannot be
-    # recovered from a license_, license_version pair, because country
-    # info is required to know which path should be used.
+    # recovered from a license_, license_version pair, because
+    # jurisdiction info is required to know which path should be used.
     'licenses/by/2.1/au',
     'licenses/by/2.1/es',
     'licenses/by/2.1/jp',
@@ -113,6 +113,15 @@ _SPECIAL_CASE_IRREVERSIBLE_LICENSE_PATHS = {
 }
 
 
+_SPECIAL_REVERSE_ONLY_PATHS = {
+    # This dictionary describes mappings from version 2.1 licenses
+    # without jurisdiction info (which is needed to define a version 2.1
+    # license) to unported version 2.0 licenses
+    (license_, '2.1'): f'licenses/{license_}/2.0'
+    for license_ in ['by', 'by-nc', 'by-nc-nd', 'by-nc-sa', 'by-nd', 'by-sa']
+}
+
+
 def _get_license_version_pair_from_path(path):
     return path.split('/')[1], path.split('/')[2]
 
@@ -135,4 +144,5 @@ def get_reverse_license_path_map():
     reverse_map.update(
         {pair: path for path, pair in _SPECIAL_CASE_LICENSE_PATHS.items()}
     )
+    reverse_map.update(_SPECIAL_REVERSE_ONLY_PATHS)
     return reverse_map

@@ -2,6 +2,7 @@
 This module has a number of public methods which are useful for working
 with licenses.
 """
+from collections import namedtuple
 import logging
 from urllib.parse import urlparse
 
@@ -16,6 +17,12 @@ REVERSE_LICENSE_PATH_MAP = constants.get_reverse_license_path_map()
 
 class InvalidLicenseURLException(Exception):
     pass
+
+
+LicenseInfo = namedtuple(
+    'LicenseInfo',
+    ['license', 'version', 'url']
+)
 
 
 def get_license_info(
@@ -73,7 +80,7 @@ def get_license_info(
             f' license_url: {license_url}'
         )
         license_info = (None, None, None)
-    return license_info
+    return LicenseInfo(*license_info)
 
 
 def _get_license_info_from_url(license_url, path_map=LICENSE_PATH_MAP):
