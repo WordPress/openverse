@@ -148,16 +148,6 @@ const PhotoDetailPage = {
   serverPrefetch() {
     return this.loadImage(this.$route.params.id)
   },
-  metaInfo() {
-    return {
-      meta: [
-        {
-          vmid: 'monetization',
-          content: null,
-        },
-      ],
-    }
-  },
 }
 
 export default PhotoDetailPage
