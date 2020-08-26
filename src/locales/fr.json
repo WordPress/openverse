@@ -256,8 +256,8 @@
       "cc0": "Ce travail a été marqué comme dédié au domaine public.",
       "pdm": "Ce travail est marqué comme étant dans le domaine public."
     },
-    "safe-browsing": {
-      "title": "Navigation sûre",
+    "safer-browsing": {
+      "title": "Navigation plus sûre",
       "caption": "Par défaut, les résultats de recherche n'incluront pas les résultats signalés comme matures par les utilisateurs et les sources.",
       "label": "Afficher le contenu mature"
     },
