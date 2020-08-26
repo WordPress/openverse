@@ -410,7 +410,7 @@ def test_ImageStore_get_image_adds_valid_license_url_to_dict_meta_data(
 def test_ImageStore_get_image_fixes_invalid_license_url(
         monkeypatch, setup_env
 ):
-    original_url='https://license/url',
+    original_url = 'https://license/url',
     updated_url = 'https://updatedurl.com'
 
     def mock_license_chooser(license_url, license_, license_version):
