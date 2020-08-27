@@ -1,9 +1,10 @@
 <template>
   <nav :aria-label="$t('header.aria.primary')" class="navbar">
     <div class="navbar-brand has-color-white">
-      <router-link class="logo" to="/">
+      <nuxt-link class="logo" to="/">
         <IconSearchLogo fill="currentColor" />
-      </router-link>
+      </nuxt-link>
+
       <a
         role="button"
         :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
@@ -50,13 +51,12 @@
             <i class="icon caret-down" />
           </a>
           <div class="navbar-dropdown">
-            <router-link class="navbar-item" to="/about">{{
+            <nuxt-link class="navbar-item" to="/about">{{
               $t('header.about')
-            }}</router-link>
-            <router-link class="navbar-item" to="/sources">{{
+            }}</nuxt-link>
+            <nuxt-link class="navbar-item" to="/sources">{{
               $t('header.source')
-            }}</router-link>
-
+            }}</nuxt-link>
             <a
               href="https://creativecommons.org/about/cclicenses/"
               target="_blank"
@@ -74,15 +74,15 @@
             <i class="icon caret-down" />
           </a>
           <div class="navbar-dropdown">
-            <router-link class="navbar-item" to="/search-help">{{
+            <nuxt-link class="navbar-item" to="/search-help">{{
               $t('header.search-guide')
-            }}</router-link>
-            <router-link class="navbar-item" to="/meta-search">{{
+            }}</nuxt-link>
+            <nuxt-link class="navbar-item" to="/meta-search">{{
               $t('header.meta-search')
-            }}</router-link>
-            <router-link class="navbar-item" to="/feedback">{{
+            }}</nuxt-link>
+            <nuxt-link class="navbar-item" to="/feedback">{{
               $t('header.feedback')
-            }}</router-link>
+            }}</nuxt-link>
           </div>
         </div>
 
