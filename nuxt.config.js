@@ -64,6 +64,7 @@ export default {
   },
   buildModules: [
     [
+      '@nuxtjs/svg',
       '@nuxtjs/google-analytics',
       {
         id: 'UA-2010376-36', // @todo: Use environment variable to set 'UA-2010376-33' in production

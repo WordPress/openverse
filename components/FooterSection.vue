@@ -12,17 +12,7 @@
             href="https://creativecommons.org"
             class="main-logo margin-bottom-bigger has-text-white"
           >
-            <svg
-              focusable="false"
-              aria-hidden="true"
-              aria-labelledby="title"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="xMidYMid meet"
-              viewBox="0 0 304 73"
-            >
-              <title id="title" lang="en">Logo</title>
-              <use href="/static/logos/cc/logomark.svg#logomark"></use>
-            </svg>
+            <IconCCLogo focusable="false" aria-hidden="true" />
           </a>
           <address class="margin-bottom-normal">
             <span class="is-block">{{ $t('footer.address.title') }}</span>
@@ -163,8 +153,11 @@
 </template>
 
 <script>
+import IconCCLogo from '@creativecommons/vocabulary/assets/logos/cc/logomark.svg?inline'
+
 export default {
   name: 'footer-section',
+  components: { IconCCLogo },
 }
 </script>
 

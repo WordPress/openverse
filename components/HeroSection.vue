@@ -1,5 +1,5 @@
 <template>
-  <main class="hero" role="main">
+  <div class="hero">
     <div class="hero-center has-text-centered">
       <!-- <div class="locale-block"><locale-selector /></div> -->
       <h1 class="title is-2 padding-bottom-normal">{{ $t('hero.title') }}</h1>
@@ -90,20 +90,17 @@
     </div>
     <img
       class="logo-cloud"
-      src="../assets/logo-cloud.png"
+      src="~assets/logo-cloud.png"
       alt="Logos from sources of Creative Commons licensed images"
     />
-  </main>
+  </div>
 </template>
 
 <script>
-import { SET_QUERY } from '../store/mutation-types'
-import HomeLicenseFilter from './HomeLicenseFilter'
+import { SET_QUERY } from '../src/store/mutation-types'
+
 export default {
   name: 'hero-section',
-  components: {
-    HomeLicenseFilter,
-  },
   data: () => ({ form: { searchTerm: '' } }),
   mounted() {
     if (document.querySelector('#searchTerm')) {
