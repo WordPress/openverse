@@ -4,6 +4,8 @@ import logging
 import requests
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 import science_museum as sm
 
 RESOURCES = os.path.join(
@@ -327,6 +329,7 @@ def test_get_metadata():
     assert actual_metadata == expected_metadata
 
 
+@pytest.mark.skip(reason='This test calls the internet via ImageStore')
 def test_handle_obj_data():
     object_data = _get_resource_json("objects_data.json")
     actual_image_count = sm._handle_object_data(object_data)

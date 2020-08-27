@@ -3,6 +3,7 @@ from datetime import datetime
 import logging
 import os
 
+from common.licenses import licenses
 from common.storage import util
 from common.storage import columns
 
@@ -161,8 +162,11 @@ class ImageStore:
                           Creative Commons website.
         license_:         String representation of a Creative Commons
                           license.  For valid options, see
-                          `storage.constants.LICENSE_PATH_MAP`
-        license_version:  Version of the given license.
+                          `common.license.constants.get_license_path_map()`
+        license_version:  Version of the given license.  In the case of
+                          the `publicdomain` license, which has no
+                          version, one shoud pass
+                          `common.license.constants.NO_VERSION` here.
 
         Note on license arguments: These are 'semi-required' in that
         either a valid `license_url` must be given, or a valid
@@ -280,7 +284,7 @@ class ImageStore:
             watermarked,
             source,
     ):
-        license_, license_version = util.choose_license_and_version(
+        valid_license_info = licenses.get_license_info(
             license_url=license_url,
             license_=license_,
             license_version=license_version
@@ -288,7 +292,8 @@ class ImageStore:
         source = util.get_source(source, self._PROVIDER)
         meta_data = self._enrich_meta_data(
             meta_data,
-            license_url=license_url
+            license_url=valid_license_info.url,
+            raw_license_url=license_url
         )
         tags = self._enrich_tags(raw_tags)
 
@@ -297,8 +302,8 @@ class ImageStore:
             foreign_landing_url=foreign_landing_url,
             image_url=image_url,
             thumbnail_url=thumbnail_url,
-            license_=license_,
-            license_version=license_version,
+            license_=valid_license_info.license,
+            license_version=valid_license_info.version,
             width=width,
             height=height,
             filesize=None,
@@ -364,15 +369,19 @@ class ImageStore:
                 return True
         return False
 
-    def _enrich_meta_data(self, meta_data, license_url):
+    def _enrich_meta_data(self, meta_data, license_url, raw_license_url):
         if type(meta_data) != dict:
             logger.debug(
                 '`meta_data` is not a dictionary: {}'.format(meta_data)
             )
-            enriched_meta_data = {'license_url': license_url}
+            enriched_meta_data = {
+                'license_url': license_url, 'raw_license_url': raw_license_url
+            }
         else:
             enriched_meta_data = meta_data
-            enriched_meta_data.update(license_url=license_url)
+            enriched_meta_data.update(
+                license_url=license_url, raw_license_url=raw_license_url
+            )
         return enriched_meta_data
 
     def _enrich_tags(self, raw_tags):
