@@ -80,7 +80,7 @@
             <a aria-label="flickr" href="https://www.flickr.com/">Flickr</a>
           </template>
           <template v-slot:smithsonian>
-            <a aria-label="smithsonian" href="https://naturalhistory.si.edu/"
+            <a aria-label="smithsonian" href="https://www.si.edu/"
               >Smithsonian Institute</a
             >
           </template>
