@@ -41,12 +41,9 @@
 </template>
 
 <script>
-import { TOGGLE_FILTER } from '@/store/action-types'
+import { TOGGLE_FILTER } from '../store/action-types'
 import { FocusTrap } from 'focus-trap-vue'
 
-/**
- * This component displays the mature content filter in a pop-up dialog.
- */
 export default {
   name: 'safer-browsing',
   components: {

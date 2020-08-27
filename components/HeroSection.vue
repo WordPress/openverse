@@ -97,19 +97,15 @@
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types'
+import { SET_QUERY } from '../store/mutation-types'
 import HomeLicenseFilter from './HomeLicenseFilter'
-// import LocaleSelector from './LocaleSelector'
-
 export default {
   name: 'hero-section',
   components: {
     HomeLicenseFilter,
-    // LocaleSelector,
   },
   data: () => ({ form: { searchTerm: '' } }),
   mounted() {
-    // Autofocus the search input (fallback for browsers without 'autofocus' or other issues)
     if (document.querySelector('#searchTerm')) {
       document.querySelector('#searchTerm').focus()
     }

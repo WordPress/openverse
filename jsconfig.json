@@ -1,5 +1,5 @@
 {
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "store/index.js"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

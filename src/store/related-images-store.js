@@ -3,8 +3,8 @@ import {
   FETCH_START_IMAGES,
   HANDLE_NO_IMAGES,
   SET_RELATED_IMAGES,
-} from '@/store/mutation-types'
-import { FETCH_RELATED_IMAGES, HANDLE_IMAGE_ERROR } from '@/store/action-types'
+} from '../store/mutation-types'
+import { FETCH_RELATED_IMAGES, HANDLE_IMAGE_ERROR } from '../store/action-types'
 
 const initialState = {
   relatedImages: [],

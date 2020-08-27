@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { SEND_SEARCH_RATING_EVENT } from '@/store/usage-data-analytics-types'
+import { SEND_SEARCH_RATING_EVENT } from '../store/usage-data-analytics-types'
 
 const Statuses = {
   NOT_SENT: 'NOT_SENT',

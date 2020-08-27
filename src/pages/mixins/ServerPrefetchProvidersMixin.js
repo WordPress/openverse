@@ -1,4 +1,4 @@
-import { FETCH_IMAGE_PROVIDERS } from '@/store/action-types'
+import { FETCH_IMAGE_PROVIDERS } from '../store/action-types'
 
 export default {
   serverPrefetch() {

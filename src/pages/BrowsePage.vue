@@ -41,10 +41,10 @@ import SearchGridFilter from '@/components/Filters/SearchGridFilter'
 import SearchTypeTabs from '@/components/SearchTypeTabs'
 import FilterDisplay from '@/components/Filters/FilterDisplay'
 import AppModal from '@/components/AppModal'
-import { FETCH_IMAGES } from '@/store/action-types'
-import { SET_QUERY, SET_FILTER_IS_VISIBLE } from '@/store/mutation-types'
-import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin'
-import { ExperimentData } from '@/abTests/experiments/filterExpansion'
+import { FETCH_IMAGES } from '../store/action-types'
+import { SET_QUERY, SET_FILTER_IS_VISIBLE } from '../store/mutation-types'
+import ServerPrefetchProvidersMixin from '../pages/mixins/ServerPrefetchProvidersMixin'
+import { ExperimentData } from '../abTests/experiments/filterExpansion'
 
 const BrowsePage = {
   name: 'browse-page',
@@ -55,10 +55,6 @@ const BrowsePage = {
     isFilterVisible() {
       return this.$store.state.isFilterVisible
     },
-    /**
-     * Check if a filter experiment is active, and if the current case is 'expanded'.
-     * Show filters collapsed by default
-     */
     filtersExpandedByDefault() {
       const experiment = this.$store.state.experiments.find(
         (exp) => exp.name === ExperimentData.EXPERIMENT_NAME

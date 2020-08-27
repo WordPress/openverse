@@ -1,8 +1,8 @@
 import isEmpty from 'lodash.isempty'
 import findIndex from 'lodash.findindex'
-import { queryStringToQueryData } from '@/utils/searchQueryTransform'
-import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams'
-import decodeImageData from '@/utils/decodeImageData'
+import { queryStringToQueryData } from '../utils/searchQueryTransform'
+import prepareSearchQueryParams from '../utils/prepareSearchQueryParams'
+import decodeImageData from '../utils/decodeImageData'
 import {
   FETCH_IMAGES,
   FETCH_IMAGE,

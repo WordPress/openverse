@@ -97,8 +97,8 @@
 
 <script>
 import getProviderName from '@/utils/getProviderName'
-import { SEND_CONTENT_REPORT } from '@/store/action-types'
-import { REPORT_FORM_CLOSED } from '@/store/mutation-types'
+import { SEND_CONTENT_REPORT } from '../store/action-types'
+import { REPORT_FORM_CLOSED } from '../store/mutation-types'
 import dmcaNotice from './DmcaNotice'
 import OtherIssueForm from './OtherIssueForm'
 import DoneMessage from './DoneMessage'

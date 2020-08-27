@@ -4,12 +4,12 @@
       :showNavSearch="showNavSearch"
       :navSearchPlaceholder="navSearchPlaceholder"
     />
-    <slot></slot>
+    <slot />
   </header>
 </template>
 
 <script>
-import NavSection from '@/components/NavSection'
+import NavSection from './NavSection'
 
 export default {
   name: 'header-section',

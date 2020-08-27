@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import i18n from './i18n'
-import store from './store'
+import store from '../store'
 import GoogleAnalytics from './analytics/GoogleAnalytics'
 
 function createApp(router, __INITIAL_STATE__) {

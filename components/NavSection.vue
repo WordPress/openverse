@@ -2,7 +2,10 @@
   <nav :aria-label="$t('header.aria.primary')" class="navbar">
     <div class="navbar-brand">
       <router-link class="logo" to="/">
-        <img alt="Logo" src="/static/logos/products/search.svg" />
+        <img
+          alt="Logo"
+          src="@creativecommons/vocabulary/assets/logos/products/search.svg"
+        />
       </router-link>
       <a
         role="button"
@@ -101,7 +104,7 @@
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types'
+import { SET_QUERY } from '../src/store/mutation-types'
 
 export default {
   props: {

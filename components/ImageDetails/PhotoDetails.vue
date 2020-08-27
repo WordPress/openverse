@@ -145,11 +145,11 @@
 
 <script>
 import ContentReportForm from '@/components/ContentReport/ContentReportForm'
-import { TOGGLE_REPORT_FORM_VISIBILITY } from '@/store/mutation-types'
+import { TOGGLE_REPORT_FORM_VISIBILITY } from '../store/mutation-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '@/store/usage-data-analytics-types'
+} from '../store/usage-data-analytics-types'
 import attributionHtml from '@/utils/attributionHtml'
 import ImageInfo from './ImageInfo'
 import ImageAttribution from './ImageAttribution'

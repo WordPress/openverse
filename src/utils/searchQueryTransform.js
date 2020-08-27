@@ -1,6 +1,6 @@
 import clonedeep from 'lodash.clonedeep'
 import findIndex from 'lodash.findindex'
-import { filterData } from '@/store/filter-store'
+import { filterData } from '../store/filter-store'
 import getParameterByName from './getParameterByName'
 
 const filterPropertyMappings = {

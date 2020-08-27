@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { TOGGLE_FILTER } from '@/store/action-types'
+import { TOGGLE_FILTER } from '../store/action-types'
 
 export default {
   name: 'license-filter',

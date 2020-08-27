@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import { TOGGLE_FILTER } from '@/store/action-types'
-import { CLEAR_FILTERS } from '@/store/mutation-types'
+import { TOGGLE_FILTER } from '../store/action-types'
+import { CLEAR_FILTERS } from '../store/mutation-types'
 
 import ImageProviderService from '@/api/ImageProviderService'
 
@@ -55,7 +55,7 @@ export default {
       const provider = ImageProviderService.getProviderInfo(providerName)
       const logoUrl =
         this.provider.logo_url ||
-        (provider ? require(`@/assets/${provider.logo}`) : '') // eslint-disable-line global-require, import/no-dynamic-require
+        (provider ? require(`@/assets/${provider.logo}`) : '')
 
       return logoUrl
     },

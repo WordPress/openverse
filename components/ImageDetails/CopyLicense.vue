@@ -133,11 +133,11 @@
 
 <script>
 import CopyButton from '@/components/CopyButton'
-import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types'
+import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '../store/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '@/store/usage-data-analytics-types'
+} from '../store/usage-data-analytics-types'
 
 export default {
   name: 'copy-license',
@@ -151,7 +151,6 @@ export default {
     }
   },
   computed: {
-    // Check if the 'license' is a tool rather than a legal license
     isTool() {
       return (
         this.fullLicenseName.includes('cc0') ||

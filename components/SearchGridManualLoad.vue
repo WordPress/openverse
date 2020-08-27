@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { SET_IMAGES } from '@/store/mutation-types'
+import { SET_IMAGES } from '../store/mutation-types'
 import SearchGridCell from '@/components/SearchGridCell'
 import LoadingIcon from '@/components/LoadingIcon'
 import SearchRating from '@/components/SearchRating'
@@ -175,8 +175,8 @@ export default {
   methods: {
     handleScalingChange() {
       setTimeout(() => {
-        this.$redrawVueMasonry() // Some elements end up taking less space
-      }, 100) // One-tenth of a second should be sufficient to calculate new height
+        this.$redrawVueMasonry()
+      }, 100)
     },
     searchChanged() {
       this.$store.commit(SET_IMAGES, { images: [], page: 1 })

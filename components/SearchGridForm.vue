@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types'
+import { SET_FILTER_IS_VISIBLE } from '../store/mutation-types'
 
 export default {
   name: 'search-grid-form',
@@ -109,7 +109,7 @@ export default {
       return this.$store.state.isFilterApplied
     },
     searchBoxPlaceholder() {
-      const type = this.$route.path.split('search/')[1] || 'image' // fall back to images
+      const type = this.$route.path.split('search/')[1] || 'image'
       return `Search all ${type}s`
     },
   },
@@ -123,11 +123,6 @@ export default {
         this.$refs.search.blur()
       }
     },
-    /**
-     * If we're on the audio or video tab, we want to set the search query on change
-     * rather than on submit, so the meta search buttons update live witout the user
-     * having to manually submit a new search term.
-     */
     onInput(e) {
       this.searchTermsModel = e.target.value
 

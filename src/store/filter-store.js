@@ -1,5 +1,5 @@
 import findIndex from 'lodash.findindex'
-import { ExperimentData } from '@/abTests/experiments/filterExpansion'
+import { ExperimentData } from '../abTests/experiments/filterExpansion'
 import local from '../utils/local'
 import { TOGGLE_FILTER, CONVERT_AB_TEST_EXPERIMENT } from './action-types'
 import {

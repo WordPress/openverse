@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types'
+import { SET_QUERY } from '../store/mutation-types'
 
 export default {
   name: 'photo-tags',
