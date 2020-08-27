@@ -74,25 +74,11 @@
 
 <script>
 import { SET_IMAGES } from '../src/store/mutation-types'
-import SearchGridCell from '../components/SearchGridCell'
-import LoadingIcon from '../components/LoadingIcon'
-import SearchRating from '../components/SearchRating'
-import SaferBrowsing from '../components/SaferBrowsing'
-import MetaSearchCard from '../components/MetaSearch/MetaSearchCard'
-import AppModal from '../components/AppModal'
 
 const DEFAULT_PAGE_SIZE = 20
 
 export default {
   name: 'search-grid-manual-load',
-  components: {
-    SearchGridCell,
-    LoadingIcon,
-    SearchRating,
-    SaferBrowsing,
-    MetaSearchCard,
-    AppModal,
-  },
   data: () => ({
     isDataInitialized: false,
     shouldContainImages: false,

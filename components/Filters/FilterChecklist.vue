@@ -69,8 +69,8 @@
 </template>
 
 <script>
-import { ExperimentData } from '@/abTests/experiments/filterExpansion'
-import LicenseIcons from '@/components/LicenseIcons'
+import { ExperimentData } from '../../src/abTests/experiments/filterExpansion'
+import LicenseIcons from '../LicenseIcons'
 import LicenseExplanationTooltip from './LicenseExplanationTooltip'
 
 export default {

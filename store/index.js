@@ -17,49 +17,48 @@ import FilterStore from '../src/store/filter-store'
 import ReportContentStore from '../src/store/report-content-store'
 import RelatedImagesStore from '../src/store/related-images-store'
 import { FETCH_IMAGE_PROVIDERS } from '../src/store/action-types'
+import GoogleAnalytics from '../src/analytics/GoogleAnalytics'
 
 const queryParams = !(typeof window === 'undefined')
   ? window.location.search
   : ''
 
-const store = (GoogleAnalytics, router) =>
-  new Vuex.Store({
-    actions: Object.assign(
-      UsageDataStore.actions(UsageDataService),
-      SearchStore.actions(ImageService),
-      FilterStore.actions,
-      ImageProviderStore.actions(ImageProviderService),
-      AttributionStore.actions(GoogleAnalytics),
-      BugReportStore.actions(BugReportService),
-      SocialMediaStore.actions(GoogleAnalytics),
-      ABTestStore.actions,
-      ReportContentStore.actions(ReportService),
-      RelatedImagesStore.actions(ImageService),
-      {
-        async nuxtServerInit({ dispatch }) {
-          await dispatch(FETCH_IMAGE_PROVIDERS)
-        },
-      }
-    ),
-    state: Object.assign(
-      SearchStore.state(queryParams),
-      FilterStore.state(queryParams),
-      ImageProviderStore.state,
-      BugReportStore.state,
-      ABTestStore.state,
-      UserStore.state,
-      ReportContentStore.state,
-      RelatedImagesStore.state
-    ),
-    mutations: Object.assign(
-      SearchStore.mutations(redirectTo(router)),
-      FilterStore.mutations(redirectTo(router)),
-      ImageProviderStore.mutations,
-      BugReportStore.mutations,
-      ABTestStore.mutations,
-      ReportContentStore.mutations,
-      RelatedImagesStore.mutations
-    ),
-  })
+export const actions = Object.assign(
+  UsageDataStore.actions(UsageDataService),
+  SearchStore.actions(ImageService),
+  FilterStore.actions,
+  ImageProviderStore.actions(ImageProviderService),
+  AttributionStore.actions(GoogleAnalytics),
+  BugReportStore.actions(BugReportService),
+  SocialMediaStore.actions(GoogleAnalytics),
+  ABTestStore.actions,
+  ReportContentStore.actions(ReportService),
+  RelatedImagesStore.actions(ImageService),
+  {
+    async nuxtServerInit({ dispatch }) {
+      await dispatch(FETCH_IMAGE_PROVIDERS)
+    },
+  }
+)
 
-export default store
+export const state = () =>
+  Object.assign(
+    SearchStore.state(queryParams),
+    FilterStore.state(queryParams),
+    ImageProviderStore.state,
+    BugReportStore.state,
+    ABTestStore.state,
+    UserStore.state,
+    ReportContentStore.state,
+    RelatedImagesStore.state
+  )
+
+export const mutations = Object.assign(
+  SearchStore.mutations(redirectTo()),
+  FilterStore.mutations(redirectTo()),
+  ImageProviderStore.mutations,
+  BugReportStore.mutations,
+  ABTestStore.mutations,
+  ReportContentStore.mutations,
+  RelatedImagesStore.mutations
+)

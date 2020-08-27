@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import { ExperimentData } from '@/abTests/experiments/filterExpansion'
+import { ExperimentData } from '../../src/abTests/experiments/filterExpansion'
 import FilterCheckList from './FilterChecklist'
 
 export default {

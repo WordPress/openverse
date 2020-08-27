@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { SET_FILTER_IS_VISIBLE } from '../store/mutation-types'
+import { SET_FILTER_IS_VISIBLE } from '../src/store/mutation-types'
 
 export default {
   name: 'search-grid-form',

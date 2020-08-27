@@ -77,7 +77,7 @@
 </template>
 <script>
 import { TOGGLE_FILTER } from '../../src/store/action-types'
-import FilterBlock from '../../src/components/Filters/FilterBlock'
+import FilterBlock from './FilterBlock'
 
 const filterMap = {
   licenses: 'license',

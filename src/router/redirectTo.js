@@ -7,7 +7,8 @@ const handleRouteErrors = (failure) => {
   if (failure.type !== 4) throw Error
 }
 
-const redirectTo = (router) => (location, replace = false) => {
+// @todo Fix Router
+const redirectTo = (router = () => {}) => (location, replace = false) => {
   if (replace) {
     router.replace(location).catch(handleRouteErrors)
   } else {

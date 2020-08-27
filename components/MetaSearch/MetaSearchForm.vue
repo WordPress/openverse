@@ -36,11 +36,14 @@ import MetaSourceList from './MetaSourceList'
 
 export default {
   name: 'meta-search',
-  props: ['type', 'query'],
+  props: ['type'],
   components: {
     MetaSourceList,
   },
   computed: {
+    query() {
+      return this.$store.state.query
+    },
     unsupportedByUsefilter() {
       if (this.type === 'audio') {
         return 'CC Mixter, Jamendo, or Wikimedia Commons'

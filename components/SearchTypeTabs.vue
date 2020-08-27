@@ -9,13 +9,13 @@
           :key="type"
           :class="tabClass(type, 'tab')"
         >
-          <router-link
+          <nuxt-link
             aria-live="polite"
             class="is-size-5"
             :to="{ path: `/search/${type}`, query: $route.query }"
           >
             {{ capitalize(type) }}
-          </router-link>
+          </nuxt-link>
         </li>
       </ul>
     </section>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { capitalize } from '@/utils/formatStrings'
+import { capitalize } from '../src/utils/formatStrings'
 
 export default {
   name: 'search-type-tabs',

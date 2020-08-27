@@ -1,6 +1,5 @@
 <template>
   <div class="browse-page">
-    <header-section />
     <div class="search columns">
       <div class="is-hidden-desktop">
         <app-modal :visible="isFilterVisible" @close="onToggleSearchGridFilter">
@@ -15,35 +14,26 @@
       >
         <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
       </aside>
-      <main role="main" class="column search-grid-ctr">
+      <div class="column search-grid-ctr">
         <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
         <search-type-tabs />
         <filter-display
           v-if="$route.path === '/search' || $route.path === '/search/image'"
           :query="query"
         />
-        <router-view
+        <nuxt-child
           :query="query"
           @onLoadMoreImages="onLoadMoreImages"
           :key="$route.path"
         />
-      </main>
+      </div>
     </div>
-    <footer-section></footer-section>
   </div>
 </template>
 <script>
-import FooterSection from '@/components/FooterSection'
-import HeaderSection from '@/components/HeaderSection'
-import SearchGrid from '@/components/SearchGrid'
-import SearchGridForm from '@/components/SearchGridForm'
-import SearchGridFilter from '@/components/Filters/SearchGridFilter'
-import SearchTypeTabs from '@/components/SearchTypeTabs'
-import FilterDisplay from '@/components/Filters/FilterDisplay'
-import AppModal from '@/components/AppModal'
-import { FETCH_IMAGES } from '../store/action-types'
-import { SET_QUERY, SET_FILTER_IS_VISIBLE } from '../store/mutation-types'
-import { ExperimentData } from '../abTests/experiments/filterExpansion'
+import { FETCH_IMAGES } from '../src/store/action-types'
+import { SET_QUERY, SET_FILTER_IS_VISIBLE } from '../src/store/mutation-types'
+import { ExperimentData } from '../src/abTests/experiments/filterExpansion'
 
 const BrowsePage = {
   name: 'browse-page',
@@ -91,21 +81,11 @@ const BrowsePage = {
       }
     },
   },
-  components: {
-    HeaderSection,
-    SearchGridForm,
-    FilterDisplay,
-    SearchGridFilter,
-    SearchTypeTabs,
-    SearchGrid,
-    FooterSection,
-    AppModal,
-  },
 }
 
 export default BrowsePage
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/results-page.scss';
+@import '../src/styles/results-page.scss';
 </style>
