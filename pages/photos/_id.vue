@@ -1,50 +1,41 @@
 <template>
-  <div class="photo-detail-page">
-    <header-section showNavSearch="true" />
-    <main role="main" :aria-label="$t('photo-details.aria.main')">
-      <photo-details
-        :image="image"
-        :breadCrumbURL="breadCrumbURL"
-        :shouldShowBreadcrumb="shouldShowBreadcrumb"
+  <div :aria-label="$t('photo-details.aria.main')">
+    <photo-details
+      :image="image"
+      :breadCrumbURL="breadCrumbURL"
+      :shouldShowBreadcrumb="shouldShowBreadcrumb"
+      :query="query"
+      :imageWidth="imageWidth"
+      :imageHeight="imageHeight"
+      :imageType="imageType"
+      :socialSharingEnabled="socialSharingEnabled"
+      @onImageLoaded="onImageLoaded"
+    />
+    <div class="padding-normal margin-vertical-big">
+      <photo-tags :tags="tags" :showHeader="true" />
+    </div>
+    <aside
+      role="complementary"
+      :aria-label="$t('photo-details.aria.related')"
+      class="padding-normal margin-vertical-big"
+    >
+      <related-images
+        :relatedImages="relatedImages"
+        :imagesCount="imagesCount"
         :query="query"
-        :imageWidth="imageWidth"
-        :imageHeight="imageHeight"
-        :imageType="imageType"
-        :socialSharingEnabled="socialSharingEnabled"
-        @onImageLoaded="onImageLoaded"
+        :filter="filter"
+        :isPrimaryImageLoaded="isPrimaryImageLoaded"
       />
-      <div class="padding-normal margin-vertical-big">
-        <photo-tags :tags="tags" :showHeader="true" />
-      </div>
-      <aside
-        role="complementary"
-        :aria-label="$t('photo-details.aria.related')"
-        class="padding-normal margin-vertical-big"
-      >
-        <related-images
-          :relatedImages="relatedImages"
-          :imagesCount="imagesCount"
-          :query="query"
-          :filter="filter"
-          :isPrimaryImageLoaded="isPrimaryImageLoaded"
-        />
-      </aside>
-    </main>
-    <footer-section></footer-section>
+    </aside>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import PhotoDetails from '@/components/ImageDetails/PhotoDetails'
-import PhotoTags from '@/components/PhotoTags'
-import RelatedImages from '@/components/RelatedImages'
-import HeaderSection from '@/components/HeaderSection'
-import FooterSection from '@/components/FooterSection'
-import featureFlags from '@/featureFlags'
 import { mapActions, mapMutations, mapState } from 'vuex'
-import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '../store/action-types'
-import { SET_IMAGE } from '../store/mutation-types'
+import featureFlags from '../../src/featureFlags'
+import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '../../src/store/action-types'
+import { SET_IMAGE } from '../../src/store/mutation-types'
 
 const PhotoDetailPage = {
   name: 'photo-detail-page',
@@ -53,13 +44,6 @@ const PhotoDetailPage = {
       type: String,
       default: '',
     },
-  },
-  components: {
-    HeaderSection,
-    RelatedImages,
-    FooterSection,
-    PhotoDetails,
-    PhotoTags,
   },
   data: () => ({
     breadCrumbURL: '',

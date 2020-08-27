@@ -39,9 +39,9 @@
 </template>
 
 <script>
-import PhotoTags from '@/components/PhotoTags'
-import getProviderName from '@/utils/getProviderName'
-import getProviderLogo from '@/utils/getProviderLogo'
+import PhotoTags from '../PhotoTags'
+import getProviderName from '../../src/utils/getProviderName'
+import getProviderLogo from '../../src/utils/getProviderLogo'
 
 export default {
   name: 'image-info',

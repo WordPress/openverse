@@ -38,10 +38,10 @@
 </template>
 
 <script>
-import LicenseIcons from '@/components/LicenseIcons'
-import getProviderLogo from '@/utils/getProviderLogo'
+import LicenseIcons from './LicenseIcons'
+import getProviderLogo from '../src/utils/getProviderLogo'
 
-const errorImage = require('@/assets/image_not_available_placeholder.png')
+const errorImage = require('../assets/image_not_available_placeholder.png')
 
 const minAspect = 3 / 4
 const maxAspect = 16 / 9

@@ -19,9 +19,12 @@
 </template>
 
 <script>
-import { SET_FILTER_IS_VISIBLE, CLEAR_FILTERS } from '../store/mutation-types'
-import { TOGGLE_FILTER } from '../store/action-types'
-import { ExperimentData } from '@/abTests/experiments/filterExpansion'
+import {
+  SET_FILTER_IS_VISIBLE,
+  CLEAR_FILTERS,
+} from '../../src/store/mutation-types'
+import { TOGGLE_FILTER } from '../../src/store/action-types'
+import { ExperimentData } from '../../src/abTests/experiments/filterExpansion'
 import FiltersList from './FiltersList'
 
 export default {

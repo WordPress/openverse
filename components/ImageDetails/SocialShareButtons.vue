@@ -36,11 +36,11 @@
 </template>
 
 <script>
-import { SOCIAL_MEDIA_SHARE } from '../store/action-types'
+import { SOCIAL_MEDIA_SHARE } from '../../src/store/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '../store/usage-data-analytics-types'
+} from '../../src/store/usage-data-analytics-types'
 
 export default {
   name: 'social-share-buttons',

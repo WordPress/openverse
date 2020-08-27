@@ -22,7 +22,9 @@
 </template>
 
 <script>
-import getLegacySourceUrl, { legacySourceMap } from '@/utils/getLegacySourceUrl'
+import getLegacySourceUrl, {
+  legacySourceMap,
+} from '../../src/utils/getLegacySourceUrl'
 
 export default {
   name: 'meta-source-list',

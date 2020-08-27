@@ -18,7 +18,7 @@
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '../store/usage-data-analytics-types'
+} from '../../src/store/usage-data-analytics-types'
 
 export default {
   name: 'reuse-survey',

@@ -96,13 +96,13 @@
 </template>
 
 <script>
-import getProviderName from '@/utils/getProviderName'
-import { SEND_CONTENT_REPORT } from '../store/action-types'
-import { REPORT_FORM_CLOSED } from '../store/mutation-types'
+import getProviderName from '../../src/utils/getProviderName'
 import dmcaNotice from './DmcaNotice'
 import OtherIssueForm from './OtherIssueForm'
 import DoneMessage from './DoneMessage'
 import ReportError from './ReportError'
+import { SEND_CONTENT_REPORT } from '../../src/store/action-types'
+import { REPORT_FORM_CLOSED } from '../../src/store/mutation-types'
 
 const dmcaFormUrl =
   'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform'

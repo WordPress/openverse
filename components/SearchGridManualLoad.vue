@@ -73,13 +73,13 @@
 </template>
 
 <script>
-import { SET_IMAGES } from '../store/mutation-types'
-import SearchGridCell from '@/components/SearchGridCell'
-import LoadingIcon from '@/components/LoadingIcon'
-import SearchRating from '@/components/SearchRating'
-import SaferBrowsing from '@/components/SaferBrowsing'
-import MetaSearchCard from '@/components/MetaSearch/MetaSearchCard'
-import AppModal from '@/components/AppModal'
+import { SET_IMAGES } from '../src/store/mutation-types'
+import SearchGridCell from '../components/SearchGridCell'
+import LoadingIcon from '../components/LoadingIcon'
+import SearchRating from '../components/SearchRating'
+import SaferBrowsing from '../components/SaferBrowsing'
+import MetaSearchCard from '../components/MetaSearch/MetaSearchCard'
+import AppModal from '../components/AppModal'
 
 const DEFAULT_PAGE_SIZE = 20
 
@@ -196,7 +196,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import 'node_modules/bulma/sass/utilities/_all';
+@import 'bulma/sass/utilities/_all';
 
 .button[disabled] {
   opacity: 1;

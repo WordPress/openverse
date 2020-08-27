@@ -1,5 +1,5 @@
 function stringToBoolean(string) {
-  if (string) {
+  if (string && typeof string === 'string') {
     switch (string.toLowerCase().trim()) {
       case 'true':
       case 'yes':

@@ -132,12 +132,15 @@
 </template>
 
 <script>
-import CopyButton from '@/components/CopyButton'
-import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '../store/action-types'
+import CopyButton from '../CopyButton'
+import {
+  COPY_ATTRIBUTION,
+  EMBED_ATTRIBUTION,
+} from '../../src/store/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '../store/usage-data-analytics-types'
+} from '../../src/store/usage-data-analytics-types'
 
 export default {
   name: 'copy-license',

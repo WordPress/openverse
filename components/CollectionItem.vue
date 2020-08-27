@@ -31,10 +31,9 @@
 </template>
 
 <script>
-import { TOGGLE_FILTER } from '../store/action-types'
-import { CLEAR_FILTERS } from '../store/mutation-types'
-
-import ImageProviderService from '@/api/ImageProviderService'
+import { TOGGLE_FILTER } from '../src/store/action-types'
+import { CLEAR_FILTERS } from '../src/store/mutation-types'
+import ImageProviderService from '../src/api/ImageProviderService'
 
 export default {
   name: 'collection-item',

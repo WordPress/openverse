@@ -144,13 +144,13 @@
 </template>
 
 <script>
-import ContentReportForm from '@/components/ContentReport/ContentReportForm'
-import { TOGGLE_REPORT_FORM_VISIBILITY } from '../store/mutation-types'
+import ContentReportForm from '../ContentReport/ContentReportForm'
+import { TOGGLE_REPORT_FORM_VISIBILITY } from '../../src/store/mutation-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '../store/usage-data-analytics-types'
-import attributionHtml from '@/utils/attributionHtml'
+} from '../../src/store/usage-data-analytics-types'
+import attributionHtml from '../../src/utils/attributionHtml'
 import ImageInfo from './ImageInfo'
 import ImageAttribution from './ImageAttribution'
 import ImageSocialShare from './ImageSocialShare'
@@ -239,8 +239,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../styles/photodetails.scss';
-@import 'node_modules/bulma/sass/utilities/_all';
+@import '../../src/styles/photodetails.scss';
+@import 'bulma/sass/utilities/_all';
 
 @include touch {
   .image-info {

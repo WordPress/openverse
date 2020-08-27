@@ -19,8 +19,6 @@
 </template>
 
 <script>
-import SearchGrid from '@/components/SearchGridManualLoad'
-
 export default {
   name: 'related-images',
   props: [
@@ -30,14 +28,11 @@ export default {
     'filter',
     'isPrimaryImageLoaded',
   ],
-  components: {
-    SearchGrid,
-  },
 }
 </script>
 
 <style lang="scss">
-@import '../styles/photodetails.scss';
+@import '../src/styles/photodetails.scss';
 
 .photo_related-images .search-grid-cells {
   margin: 10px -10px;

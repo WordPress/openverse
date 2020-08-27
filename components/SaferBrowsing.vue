@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import { TOGGLE_FILTER } from '../store/action-types'
 import { FocusTrap } from 'focus-trap-vue'
+import { TOGGLE_FILTER } from '../src/store/action-types'
 
 export default {
   name: 'safer-browsing',
