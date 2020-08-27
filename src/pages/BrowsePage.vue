@@ -43,7 +43,6 @@ import FilterDisplay from '@/components/Filters/FilterDisplay'
 import AppModal from '@/components/AppModal'
 import { FETCH_IMAGES } from '../store/action-types'
 import { SET_QUERY, SET_FILTER_IS_VISIBLE } from '../store/mutation-types'
-import ServerPrefetchProvidersMixin from '../pages/mixins/ServerPrefetchProvidersMixin'
 import { ExperimentData } from '../abTests/experiments/filterExpansion'
 
 const BrowsePage = {
@@ -102,7 +101,6 @@ const BrowsePage = {
     FooterSection,
     AppModal,
   },
-  mixins: [ServerPrefetchProvidersMixin],
 }
 
 export default BrowsePage
