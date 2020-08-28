@@ -43,7 +43,7 @@
             :disabled="block(item)"
             @change="onValueChange"
           />
-          <license-icons v-if="filterType == 'licenses'" :license="item.code" />
+          <LicenseIcons v-if="filterType == 'licenses'" :license="item.code" />
           {{ $t(item.name) }}
         </label>
         <img
@@ -57,7 +57,7 @@
           @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
         />
 
-        <license-explanation-tooltip
+        <LicenseExplanationTooltip
           v-if="
             shouldRenderLicenseExplanationTooltip(item.code) && !block(item)
           "

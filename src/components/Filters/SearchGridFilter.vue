@@ -5,7 +5,7 @@
       'search-filters__visible': isFilterVisible,
     }"
   >
-    <filters-list
+    <FiltersList
       :filters="filters"
       :is-filter-applied="isFilterApplied"
       :license-types-disabled="licenseTypesDisabled"

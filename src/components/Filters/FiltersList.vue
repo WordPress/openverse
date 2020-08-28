@@ -27,7 +27,7 @@
       }"
       role="list"
     >
-      <filter-check-list
+      <FilterCheckList
         role="listitem"
         :options="filters.licenseTypes"
         :disabled="licenseTypesDisabled"
@@ -35,7 +35,7 @@
         filter-type="licenseTypes"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
+      <FilterCheckList
         v-if="activeTab == 'image'"
         role="listitem"
         :options="filters.licenses"
@@ -44,7 +44,7 @@
         filter-type="licenses"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
+      <FilterCheckList
         v-if="activeTab == 'image'"
         role="listitem"
         :options="filters.providers"
@@ -52,7 +52,7 @@
         filter-type="providers"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
+      <FilterCheckList
         v-if="activeTab == 'image'"
         role="listitem"
         :options="filters.categories"
@@ -60,7 +60,7 @@
         filter-type="categories"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
+      <FilterCheckList
         v-if="activeTab == 'image'"
         role="listitem"
         :options="filters.extensions"
@@ -68,7 +68,7 @@
         filter-type="extensions"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
+      <FilterCheckList
         v-if="activeTab == 'image'"
         role="listitem"
         :options="filters.aspectRatios"
@@ -76,7 +76,7 @@
         filter-type="aspectRatios"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
+      <FilterCheckList
         v-if="activeTab == 'image'"
         role="listitem"
         :options="filters.sizes"

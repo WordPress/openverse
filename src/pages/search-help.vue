@@ -12,7 +12,7 @@
         <h3 class="margin-top-large">
           {{ $t('search-guide.exact.title') }}
         </h3>
-        <i18n path="search-guide.exact.content" tag="p">
+        <I18n path="search-guide.exact.content" tag="p">
           <template v-slot:link>
             <!-- eslint-disable -->
             <a
@@ -23,7 +23,7 @@
             </a>
             <!-- eslint-enable -->
           </template>
-        </i18n>
+        </I18n>
 
         <h3 role="region" class="margin-vertical-normal">
           {{ $t('search-guide.combine.title') }}
@@ -34,27 +34,27 @@
         </p>
 
         <ul>
-          <i18n path="search-guide.combine.and" tag="li" class="listitem">
+          <I18n path="search-guide.combine.and" tag="li" class="listitem">
             <template v-slot:symbol>
               <code aria-label="plus" class="literal">+</code>
             </template>
-          </i18n>
-          <i18n path="search-guide.combine.or" tag="li" class="listitem">
+          </I18n>
+          <I18n path="search-guide.combine.or" tag="li" class="listitem">
             <template v-slot:symbol>
               <code aria-label="vertical bar" class="literal">|</code>
             </template>
-          </i18n>
-          <i18n path="search-guide.combine.negate" tag="li" class="listitem">
+          </I18n>
+          <I18n path="search-guide.combine.negate" tag="li" class="listitem">
             <template v-slot:symbol>
               <code aria-label="minus" class="literal">-</code>
             </template>
-          </i18n>
-          <i18n path="search-guide.combine.prefix" tag="li" class="listitem">
+          </I18n>
+          <I18n path="search-guide.combine.prefix" tag="li" class="listitem">
             <template v-slot:symbol>
               <code aria-label="star" class="literal">*</code>
             </template>
-          </i18n>
-          <i18n
+          </I18n>
+          <I18n
             path="search-guide.combine.precedence"
             tag="li"
             class="listitem"
@@ -65,15 +65,15 @@
             <template v-slot:close>
               <code aria-label="close paranthesis" class="literal">)</code>
             </template>
-          </i18n>
-          <i18n path="search-guide.combine.fuzziness" tag="li" class="listitem">
+          </I18n>
+          <I18n path="search-guide.combine.fuzziness" tag="li" class="listitem">
             <template v-slot:symbol>
               <code aria-label="tilde N" class="literal">~N</code>
             </template>
-          </i18n>
+          </I18n>
         </ul>
 
-        <i18n
+        <I18n
           path="search-guide.example.and"
           tag="p"
           class="margin-vertical-normal"
@@ -89,9 +89,9 @@
           <template v-slot:br>
             <br />
           </template>
-        </i18n>
+        </I18n>
 
-        <i18n
+        <I18n
           path="search-guide.example.or"
           tag="p"
           class="margin-vertical-normal"
@@ -107,9 +107,9 @@
           <template v-slot:br>
             <br />
           </template>
-        </i18n>
+        </I18n>
 
-        <i18n
+        <I18n
           path="search-guide.example.negate.description"
           tag="p"
           class="margin-top-normal"
@@ -119,9 +119,9 @@
               >- operator (signifies NOT)</em
             >
           </template>
-        </i18n>
+        </I18n>
 
-        <i18n
+        <I18n
           path="search-guide.example.negate.content"
           tag="p"
           class="margin-bottom-normal"
@@ -137,9 +137,9 @@
           <template v-slot:br>
             <br />
           </template>
-        </i18n>
+        </I18n>
 
-        <i18n
+        <I18n
           path="search-guide.example.prefix.description"
           tag="p"
           class="margin-top-normal"
@@ -147,9 +147,9 @@
           <template v-slot:highlight>
             <em>* operator (wildcard)</em>
           </template>
-        </i18n>
+        </I18n>
 
-        <i18n
+        <I18n
           path="search-guide.example.prefix.content"
           tag="p"
           class="margin-bottom-normal"
@@ -165,9 +165,9 @@
           <template v-slot:br>
             <br />
           </template>
-        </i18n>
+        </I18n>
 
-        <i18n
+        <I18n
           path="search-guide.example.precedence.description"
           tag="p"
           class="margin-top-normal"
@@ -175,9 +175,9 @@
           <template v-slot:highlight>
             <em>( and )</em>
           </template>
-        </i18n>
+        </I18n>
 
-        <i18n
+        <I18n
           path="search-guide.example.precedence.content"
           tag="p"
           class="margin-bottom-normal"
@@ -193,9 +193,9 @@
           <template v-slot:br>
             <br />
           </template>
-        </i18n>
+        </I18n>
 
-        <i18n
+        <I18n
           path="search-guide.example.fuzziness.description"
           tag="p"
           class="margin-top-normal"
@@ -208,9 +208,9 @@
               >Levenshtein Edit Distance</a
             >
           </template>
-        </i18n>
+        </I18n>
 
-        <i18n
+        <I18n
           path="search-guide.example.fuzziness.content"
           tag="p"
           class="margin-bottom-normal"
@@ -226,7 +226,7 @@
           <template v-slot:br>
             <br />
           </template>
-        </i18n>
+        </I18n>
       </div>
     </div>
   </div>

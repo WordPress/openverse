@@ -9,7 +9,7 @@
         }}<i class="icon flag margin-left-small" />
       </span>
     </button>
-    <focus-trap :active="true">
+    <FocusTrap :active="true">
       <div
         v-show="showForm"
         class="padding-normal is-clearfix arrow-popup arrow-popup--anchor-right"
@@ -36,7 +36,7 @@
           {{ $t('browse-page.safer-browsing.label') }}
         </label>
       </div>
-    </focus-trap>
+    </FocusTrap>
   </div>
 </template>
 

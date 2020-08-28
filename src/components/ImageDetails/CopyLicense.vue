@@ -81,7 +81,7 @@
           </a>
         </span>
 
-        <copy-button
+        <CopyButton
           id="copy-attribution-btn"
           el="#attribution"
           @copied="onCopyAttribution"
@@ -98,7 +98,7 @@
             readonly="readonly"
           />
         </label>
-        <copy-button
+        <CopyButton
           id="copy-attribution-btn"
           el="#attribution-html"
           @copied="onEmbedAttribution"
@@ -120,7 +120,7 @@
           </template>
         </p>
 
-        <copy-button
+        <CopyButton
           id="copy-attribution-btn"
           el="#attribution-text"
           @copied="onCopyAttribution"

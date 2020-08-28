@@ -1,3 +1,3 @@
 <template>
-  <meta-search-form type="audio" />
+  <MetaSearchForm type="audio" />
 </template>

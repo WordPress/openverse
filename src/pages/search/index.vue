@@ -1,3 +1,3 @@
 <template>
-  <search-grid />
+  <SearchGrid />
 </template>

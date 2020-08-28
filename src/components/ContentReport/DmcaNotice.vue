@@ -1,6 +1,6 @@
 <template>
   <div>
-    <i18n
+    <I18n
       path="photo-details.content-report.dmca.content"
       tag="p"
       class="is-block padding-horizontal-big margin-top-large has-text-centered"
@@ -14,9 +14,9 @@
           >DMCA form</a
         >
       </template>
-    </i18n>
+    </I18n>
 
-    <i18n
+    <I18n
       path="photo-details.content-report.dmca.provider"
       tag="p"
       class="is-block padding-horizontal-big margin-top-normal has-text-centered"
@@ -30,7 +30,7 @@
           >{{ providerName }}</a
         >
       </template>
-    </i18n>
+    </I18n>
 
     <button
       class="button is-text tiny margin-top-normal is-shadowless"

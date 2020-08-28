@@ -2,9 +2,9 @@
   <div class="browse-page">
     <div class="search columns">
       <div class="is-hidden-desktop">
-        <app-modal :visible="isFilterVisible" @close="onToggleSearchGridFilter">
-          <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
-        </app-modal>
+        <AppModal :visible="isFilterVisible" @close="onToggleSearchGridFilter">
+          <SearchGridFilter @onSearchFilterChanged="onSearchFormSubmit" />
+        </AppModal>
       </div>
       <aside
         v-if="isFilterVisible"
@@ -12,16 +12,16 @@
         class="column is-narrow grid-sidebar is-paddingless is-hidden-touch"
         :class="filtersExpandedByDefault ? 'full-height-sticky' : ''"
       >
-        <search-grid-filter @onSearchFilterChanged="onSearchFormSubmit" />
+        <SearchGridFilter @onSearchFilterChanged="onSearchFormSubmit" />
       </aside>
       <div class="column search-grid-ctr">
-        <search-grid-form @onSearchFormSubmit="onSearchFormSubmit" />
-        <search-type-tabs />
-        <filter-display
+        <SearchGridForm @onSearchFormSubmit="onSearchFormSubmit" />
+        <SearchTypeTabs />
+        <FilterDisplay
           v-if="$route.path === '/search' || $route.path === '/search/image'"
           :query="query"
         />
-        <nuxt-child
+        <NuxtChild
           :key="$route.path"
           :query="query"
           @onLoadMoreImages="onLoadMoreImages"

@@ -61,7 +61,7 @@
           </div>
         </div>
         <div class="caption has-text-centered margin-top-big">
-          <i18n path="hero.caption.content" tag="p">
+          <I18n path="hero.caption.content" tag="p">
             <template v-slot:link>
               <a
                 href="https://creativecommons.org/share-your-work/licensing-examples/"
@@ -72,12 +72,12 @@
                 {{ $t('hero.caption.link') }}
               </a>
             </template>
-          </i18n>
+          </I18n>
         </div>
-        <home-license-filter />
+        <HomeLicenseFilter />
       </form>
       <div class="help-links is-hidden-mobile">
-        <i18n
+        <I18n
           path="hero.old-cc-search.label"
           tag="span"
           class="margin-right-bigger"
@@ -89,7 +89,7 @@
               >{{ $t('hero.old-cc-search.link') }}</a
             >
           </template>
-        </i18n>
+        </I18n>
       </div>
     </div>
     <img

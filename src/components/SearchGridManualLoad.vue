@@ -12,15 +12,15 @@
           {{ _imagesCount }}
         </span>
         <div class="is-hidden-touch mr-auto padding-left-big">
-          <search-rating v-if="_query.q" :search-term="_query.q" />
+          <SearchRating v-if="_query.q" :search-term="_query.q" />
         </div>
         <div class="is-hidden-desktop is-block">
-          <search-rating v-if="_query.q" :search-term="searchTerm" />
+          <SearchRating v-if="_query.q" :search-term="searchTerm" />
         </div>
-        <safer-browsing />
+        <SaferBrowsing />
       </div>
       <div class="search-grid-cells">
-        <search-grid-cell
+        <SearchGridCell
           v-for="(image, index) in _images"
           :key="index"
           :image="image"
@@ -38,7 +38,7 @@
             <span v-if="isFinished">{{ $t('browse-page.no-more') }}</span>
             <span v-else>{{ $t('browse-page.load') }}</span>
           </button>
-          <loading-icon v-show="isFetchingImages" />
+          <LoadingIcon v-show="isFetchingImages" />
         </div>
         <button
           type="button"
@@ -57,17 +57,17 @@
       </div>
     </div>
 
-    <app-modal
+    <AppModal
       :visible="showMetaImageSearch"
       :title="'Search Images from Other Sources'"
       @close="showMetaImageSearch = false"
     >
-      <meta-search-card
+      <MetaSearchCard
         type="image"
         :query="query"
         @close="showMetaImageSearch = false"
       />
-    </app-modal>
+    </AppModal>
   </section>
 </template>
 

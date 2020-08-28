@@ -1,10 +1,10 @@
 <template>
   <div class="app">
-    <header-section />
+    <HeaderSection />
     <main role="main">
       <Nuxt />
     </main>
-    <footer-section />
+    <FooterSection />
   </div>
 </template>
 

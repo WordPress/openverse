@@ -7,7 +7,7 @@
   >
     <figure class="search-grid_item">
       <i :style="`padding-bottom:${iPadding}%`" />
-      <router-link
+      <RouterLink
         :to="'/photos/' + image.id"
         class="search-grid_image-ctr"
         :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`"
@@ -24,9 +24,9 @@
           @load="getImgDimension"
           @error="onImageLoadError($event, image)"
         />
-      </router-link>
+      </RouterLink>
       <figcaption class="overlay overlay__top padding-small">
-        <license-icons :license="image.license" />
+        <LicenseIcons :license="image.license" />
       </figcaption>
       <figcaption
         class="overlay overlay__bottom padding-vertical-small padding-horizontal-normal"

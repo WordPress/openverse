@@ -7,8 +7,8 @@
       {{ $t('browse-page.license-description.title') }}
       {{ license.toUpperCase() }}
     </h5>
-    <license-explanations :license="license" />
-    <i18n
+    <LicenseExplanations :license="license" />
+    <I18n
       v-if="(license === 'cc0') | (license === 'pdm')"
       path="filters.license-explanation.tool"
       tag="p"
@@ -19,8 +19,8 @@
           $t('filters.license-explanation.link')
         }}</a>
       </template>
-    </i18n>
-    <i18n
+    </I18n>
+    <I18n
       v-else
       path="filters.license-explanation.license"
       tag="p"
@@ -31,7 +31,7 @@
           $t('filters.license-explanation.link')
         }}</a>
       </template>
-    </i18n>
+    </I18n>
   </div>
 </template>
 

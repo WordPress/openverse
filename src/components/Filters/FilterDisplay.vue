@@ -4,7 +4,7 @@
       >Filter By</span
     >
     <span v-for="filter in getFilters('licenses')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
         filter-type="licenses"
@@ -12,7 +12,7 @@
       />
     </span>
     <span v-for="filter in getFilters('licenseTypes')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
         filter-type="licenseTypes"
@@ -20,7 +20,7 @@
       />
     </span>
     <span v-for="filter in getFilters('categories')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
         filter-type="categories"
@@ -28,7 +28,7 @@
       />
     </span>
     <span v-for="filter in getFilters('extensions')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
         filter-type="extensions"
@@ -36,7 +36,7 @@
       />
     </span>
     <span v-for="filter in getFilters('aspectRatios')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
         filter-type="aspectRatios"
@@ -44,7 +44,7 @@
       />
     </span>
     <span v-for="filter in getFilters('sizes')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
         filter-type="sizes"
@@ -52,7 +52,7 @@
       />
     </span>
     <span v-for="filter in getFilters('providers')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
         filter-type="providers"
@@ -60,7 +60,7 @@
       />
     </span>
     <span>
-      <filter-block
+      <FilterBlock
         v-if="searchByCreator"
         label="Creator"
         filter-type="searchBy"

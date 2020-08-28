@@ -1,9 +1,9 @@
 <template>
-  <tooltip :tooltip="tooltip" tooltip-position="top">
+  <Tooltip :tooltip="tooltip" tooltip-position="top">
     <span title="tooltip">
       <img class="help-icon" src="~/assets/help_icon.svg" alt="tooltip" />
     </span>
-  </tooltip>
+  </Tooltip>
 </template>
 
 <script>

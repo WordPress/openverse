@@ -8,21 +8,21 @@
     >
       <i class="icon cross" />
     </button>
-    <dmca-notice
+    <DmcaNotice
       v-if="selectedCopyright"
       :image-u-r-l="image.url"
       :provider-name="providerName"
       :dmca-form-url="dmcaFormUrl"
       @onBackClick="onBackClick()"
     />
-    <done-message
+    <DoneMessage
       v-else-if="!selectedCopyright && isReportSent"
       :image-u-r-l="image.url"
       :provider-name="providerName"
     />
-    <report-error v-else-if="reportFailed" />
+    <ReportError v-else-if="reportFailed" />
 
-    <other-issue-form
+    <OtherIssueForm
       v-else-if="selectedOther"
       @onBackClick="onBackClick()"
       @sendContentReport="sendContentReport"

@@ -60,7 +60,7 @@
         </div>
       </template>
 
-      <meta-source-list :type="type" :query="editableQuery" />
+      <MetaSourceList :type="type" :query="editableQuery" />
       <p class="caption has-text-weight-semibold">
         {{ $t('meta-search.caption') }}
       </p>

@@ -5,7 +5,7 @@
     @click.self="$emit('close')"
     @keyup="checkKey"
   >
-    <focus-trap :active="true">
+    <FocusTrap :active="true">
       <div class="modal relative" aria-modal="true" role="dialog">
         <header
           v-if="title"
@@ -25,7 +25,7 @@
         </header>
         <slot default />
       </div>
-    </focus-trap>
+    </FocusTrap>
   </div>
 </template>
 

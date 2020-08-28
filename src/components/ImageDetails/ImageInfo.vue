@@ -35,7 +35,7 @@
       <h5 class="is-block margin-bottom-small b-header">
         {{ $t('photo-details.information.tags') }}
       </h5>
-      <photo-tags :tags="image.tags" :show-header="false" />
+      <PhotoTags :tags="image.tags" :show-header="false" />
     </div>
   </section>
 </template>

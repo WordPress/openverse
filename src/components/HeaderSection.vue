@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav-section
+    <NavSection
       :show-nav-search="showNavSearch"
       :nav-search-placeholder="navSearchPlaceholder"
     />

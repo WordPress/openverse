@@ -18,7 +18,7 @@
         @load="onImageLoad"
       />
 
-      <legal-disclaimer />
+      <LegalDisclaimer />
 
       <div class="margin-bottom-smaller has-text-left">
         <button
@@ -32,7 +32,7 @@
         </button>
       </div>
       <div class="margin-top-small has-text-left">
-        <content-report-form v-if="isReportFormVisible" :image="image" />
+        <ContentReportForm v-if="isReportFormVisible" :image="image" />
       </div>
     </div>
     <div
@@ -102,7 +102,7 @@
       </section>
       <section class="photo_info-ctr tabs-content">
         <div :class="tabClass(0, 'tabs-panel')">
-          <image-attribution
+          <ImageAttribution
             :image="image"
             :cc-license-u-r-l="ccLicenseURL"
             :full-license-name="fullLicenseName"
@@ -110,7 +110,7 @@
           />
         </div>
         <div :class="tabClass(1, 'tabs-panel')">
-          <image-info
+          <ImageInfo
             :image="image"
             :cc-license-u-r-l="ccLicenseURL"
             :full-license-name="fullLicenseName"
@@ -120,7 +120,7 @@
           />
         </div>
         <div :class="tabClass(2, 'tabs-panel')">
-          <image-social-share v-if="socialSharingEnabled" :image="image" />
+          <ImageSocialShare v-if="socialSharingEnabled" :image="image" />
         </div>
       </section>
 
@@ -140,7 +140,7 @@
         />
       </a>
 
-      <reuse-survey v-if="activeTab < 2" :image="image" />
+      <ReuseSurvey v-if="activeTab < 2" :image="image" />
     </div>
   </div>
 </template>

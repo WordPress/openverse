@@ -1,9 +1,9 @@
 <template>
   <nav :aria-label="$t('header.aria.primary')" class="navbar">
     <div class="navbar-brand has-color-white">
-      <nuxt-link class="logo" to="/">
+      <NuxtLink class="logo" to="/">
         <IconSearchLogo />
-      </nuxt-link>
+      </NuxtLink>
 
       <a
         role="button"
@@ -51,12 +51,12 @@
             <i class="icon caret-down" />
           </a>
           <div class="navbar-dropdown">
-            <nuxt-link class="navbar-item" to="/about">
+            <NuxtLink class="navbar-item" to="/about">
               {{ $t('header.about') }}
-            </nuxt-link>
-            <nuxt-link class="navbar-item" to="/sources">
+            </NuxtLink>
+            <NuxtLink class="navbar-item" to="/sources">
               {{ $t('header.source') }}
-            </nuxt-link>
+            </NuxtLink>
             <a
               href="https://creativecommons.org/about/cclicenses/"
               target="_blank"
@@ -74,12 +74,12 @@
             <i class="icon caret-down" />
           </a>
           <div class="navbar-dropdown">
-            <nuxt-link class="navbar-item" to="/search-help">
+            <NuxtLink class="navbar-item" to="/search-help">
               {{ $t('header.search-guide') }}
-            </nuxt-link>
-            <nuxt-link class="navbar-item" to="/feedback">
+            </NuxtLink>
+            <NuxtLink class="navbar-item" to="/feedback">
               {{ $t('header.feedback') }}
-            </nuxt-link>
+            </NuxtLink>
           </div>
         </div>
 

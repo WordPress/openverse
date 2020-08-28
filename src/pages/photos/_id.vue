@@ -1,6 +1,6 @@
 <template>
   <div :aria-label="$t('photo-details.aria.main')">
-    <photo-details
+    <PhotoDetails
       :image="image"
       :bread-crumb-u-r-l="breadCrumbURL"
       :should-show-breadcrumb="shouldShowBreadcrumb"
@@ -12,14 +12,14 @@
       @onImageLoaded="onImageLoaded"
     />
     <div class="padding-normal margin-vertical-big">
-      <photo-tags :tags="tags" :show-header="true" />
+      <PhotoTags :tags="tags" :show-header="true" />
     </div>
     <aside
       role="complementary"
       :aria-label="$t('photo-details.aria.related')"
       class="padding-normal margin-vertical-big"
     >
-      <related-images
+      <RelatedImages
         :related-images="relatedImages"
         :images-count="imagesCount"
         :query="query"

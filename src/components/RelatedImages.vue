@@ -6,7 +6,7 @@
     <h3 class="b-header">
       {{ $t('photo-details.related-images') }}
     </h3>
-    <search-grid
+    <SearchGrid
       v-if="isPrimaryImageLoaded === true"
       :images-count="imagesCount"
       :images="relatedImages"

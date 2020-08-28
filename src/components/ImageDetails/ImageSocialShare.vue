@@ -1,6 +1,6 @@
 <template>
   <section class="sidebar_section social-sharing">
-    <social-share-buttons
+    <SocialShareButtons
       :share-u-r-l="shareURL"
       :image-source-u-r-l="imageSourceURL"
       :image-u-r-l="imageURL"

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <search-grid-manual-load
+    <SearchGridManualLoad
       :query="query"
       :search-term="query.q"
       @onLoadMoreImages="onLoadMoreImages"
