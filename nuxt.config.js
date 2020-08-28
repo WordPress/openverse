@@ -6,7 +6,7 @@ const meta = [
   { name: 'og:title', content: 'Creative Commons' },
   {
     name: 'og:image',
-    content: 'https://ccsearch.creativecommons.org/img/cc-logo_large_black.png',
+    content: '/cclogo-shared-image.jpg',
   },
   {
     name: 'og:description',
@@ -35,61 +35,68 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
+// Default html head
+const head = {
+  title: 'CC Search',
+  meta,
+  script: [
+    {
+      hid: 'vocabulary',
+      src: 'https://unpkg.com/@creativecommons/vocabulary/js/vocabulary.js',
+      defer: true,
+      callback: () => {
+        if (!document.querySelector('.cc-global-header')) {
+          window.vocabulary.createGlobalHeader()
+        }
+      },
+    },
+  ],
+}
+
+/**
+ * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.
+ */
+const env = {
+  apiUrl:
+    process.env.API_URL || 'https://api-dev.creativecommons.engineering/v1/',
+  socialSharing: process.env.SOCIAL_SHARING || true,
+}
+
+/*
+ ** Build configuration (extend key extends webpack)
+ */
+const build = {
+  extend(config, ctx) {
+    // Run ESLint on save
+    if (ctx.isDev && ctx.isClient) {
+      config.module.rules.push({
+        enforce: 'pre',
+        test: /\.(js|vue)$/,
+        loader: 'eslint-loader',
+        exclude: /(node_modules)/,
+      })
+    }
+  },
+}
+
 export default {
   srcDir: 'src/',
   buildDir: 'dist/',
   components: true,
   plugins: ['~/plugins/i18n.js'],
   css: ['@creativecommons/vocabulary/scss/vocabulary.scss'],
-  head: {
-    title: 'CC Search',
-    meta,
-    script: [
-      {
-        hid: 'vocabulary',
-        src: 'https://unpkg.com/@creativecommons/vocabulary/js/vocabulary.js',
-        defer: true,
-        callback: () => {
-          if (!document.querySelector('.cc-global-header')) {
-            window.vocabulary.createGlobalHeader()
-          }
-        },
-      },
-    ],
+  head,
+  env,
+  build,
+  buildModules: [['@nuxtjs/svg', '@nuxtjs/google-analytics']],
+  modules: ['@nuxtjs/sentry'],
+  googleAnalytics: {
+    id: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
   },
-  env: {
-    NODE_ENV: 'development',
-    API_URL: 'https://api-dev.creativecommons.engineering/v1/',
-    SENTRY_DSN:
+  sentry: {
+    dsn:
+      process.env.SENTRY_DSN ||
       'https://3f3e05dbe6994c318d1bf1c8bfcf71a1@o288582.ingest.sentry.io/1525413',
-    SOCIAL_SHARING: true,
-  },
-  buildModules: [
-    [
-      '@nuxtjs/svg',
-      '@nuxtjs/google-analytics',
-      {
-        id: 'UA-2010376-36', // @todo: Use environment variable to set 'UA-2010376-33' in production
-      },
-    ],
-  ],
-  /*
-   ** Build configuration
-   */
-  build: {
-    /*
-     ** You can extend webpack config here
-     */
-    extend(config, ctx) {
-      // Run ESLint on save
-      if (ctx.isDev && ctx.isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/,
-        })
-      }
-    },
+    lazy: true,
   },
 }

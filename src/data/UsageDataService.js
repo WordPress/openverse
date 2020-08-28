@@ -1,6 +1,7 @@
 import { createApiService } from './ApiService'
 
-const baseUrl = process.env.API_URL
+const baseUrl = process.env.apiUrl
+
 // Analytics API is available at `http://api.creativecommons.engineering/analytics/`
 // and not `http://api.creativecommons.engineering/v1/analytics
 const ApiService = createApiService(baseUrl.replace('/v1', ''))

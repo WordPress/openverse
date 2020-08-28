@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const DEFAULT_REQUEST_TIMEOUT = 30000
 
-export const createApiService = (baseUrl = process.env.API_URL) => {
+export const createApiService = (baseUrl = process.env.apiUrl) => {
   const client = axios.create({
     baseURL: baseUrl,
     timeout: DEFAULT_REQUEST_TIMEOUT,
