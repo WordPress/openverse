@@ -52,7 +52,7 @@
           </a>
           <div class="navbar-dropdown">
             <nuxt-link class="navbar-item" to="/about">
-              $t('header.about') }}
+              {{ $t('header.about') }}
             </nuxt-link>
             <nuxt-link class="navbar-item" to="/sources">
               {{ $t('header.source') }}
@@ -117,10 +117,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$store.commit(SET_QUERY, {
-        query: { q: this.form.searchTerm },
-        shouldNavigate: true,
-      })
+      this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm } })
     },
     toggleBurgerActive() {
       this.isBurgerMenuActive = !this.isBurgerMenuActive

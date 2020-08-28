@@ -36,7 +36,6 @@ export default {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
         filterType: 'licenseTypes',
-        shouldNavigate: false,
       })
     },
   },

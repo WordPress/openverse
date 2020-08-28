@@ -44,7 +44,6 @@ export default {
       this.$store.dispatch(TOGGLE_FILTER, {
         filterType: 'providers',
         code: providerName,
-        shouldNavigate: true,
       })
     },
     getProviderImageCount(imageCount) {

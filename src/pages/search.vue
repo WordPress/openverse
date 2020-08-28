@@ -40,6 +40,17 @@ import { ExperimentData } from '~/abTests/experiments/filterExpansion'
 
 const BrowsePage = {
   name: 'browse-page',
+  async fetch() {
+    const { q, ...filters } = this.$route.query
+    const query = { q }
+    console.info(filters)
+    this.$store.commit(SET_QUERY, { query })
+
+    if (!this.$store.state.images.length) {
+      await this.$store.dispatch(FETCH_IMAGES, query)
+    }
+  },
+  asyncData() {},
   computed: {
     query() {
       return this.$store.state.query
@@ -64,18 +75,13 @@ const BrowsePage = {
       this.getImages(searchParams)
     },
     onSearchFormSubmit(searchParams) {
-      this.$store.commit(SET_QUERY, { ...searchParams, shouldNavigate: true })
+      this.$store.commit(SET_QUERY, searchParams)
     },
     onToggleSearchGridFilter() {
       this.$store.commit(SET_FILTER_IS_VISIBLE, {
         isFilterVisible: !this.isFilterVisible,
       })
     },
-  },
-  mounted() {
-    if (!this.$store.state.images.length) {
-      this.getImages(this.query)
-    }
   },
   watch: {
     query(newQuery) {

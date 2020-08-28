@@ -34,10 +34,7 @@ export default {
       return provider === 'clarifai'
     },
     searchByTagName(query) {
-      this.$store.commit(SET_QUERY, {
-        query: { q: query },
-        shouldNavigate: true,
-      })
+      this.$store.commit(SET_QUERY, { query: { q: query } })
     },
     getValidTags() {
       return this.$props.tags.filter((tag) => !!tag.name)

@@ -45,17 +45,19 @@ const PhotoDetailPage = {
       default: '',
     },
   },
-  data: () => ({
-    breadCrumbURL: '',
-    hasClarifaiTags: false,
-    imagecountseparator: 'of',
-    isPrimaryImageLoaded: false,
-    shouldShowBreadcrumb: false,
-    imageWidth: 0,
-    imageHeight: 0,
-    imageType: 'Unknown',
-    socialSharingEnabled: featureFlags.socialSharing,
-  }),
+  data() {
+    return {
+      breadCrumbURL: '',
+      hasClarifaiTags: false,
+      imagecountseparator: 'of',
+      isPrimaryImageLoaded: false,
+      shouldShowBreadcrumb: false,
+      imageWidth: 0,
+      imageHeight: 0,
+      imageType: 'Unknown',
+      socialSharingEnabled: featureFlags.socialSharing,
+    }
+  },
   computed: mapState({
     relatedImages: 'relatedImages',
     filter: 'query.filter',
@@ -69,6 +71,12 @@ const PhotoDetailPage = {
     image() {
       this.getRelatedImages()
     },
+  },
+  async fetch() {
+    if (!this.$store.state.image.id) {
+      await this.loadImage(this.$route.params.id)
+    }
+    await this.getRelatedImages()
   },
   beforeRouteUpdate(to, from, next) {
     this.resetImageOnRouteChanged()
@@ -105,21 +113,12 @@ const PhotoDetailPage = {
     },
     getRelatedImages() {
       if (this.image && this.image.id) {
-        this.FETCH_RELATED_IMAGES({ id: this.image.id })
+        this[FETCH_RELATED_IMAGES]({ id: this.image.id })
       }
     },
     loadImage(id) {
-      return this.FETCH_IMAGE({ id })
+      return this[FETCH_IMAGE]({ id })
     },
-  },
-  mounted() {
-    if (!this.$store.state.image.id) {
-      return this.loadImage(this.$route.params.id)
-    }
-    return this.getRelatedImages()
-  },
-  serverPrefetch() {
-    return this.loadImage(this.$route.params.id)
   },
 }
 

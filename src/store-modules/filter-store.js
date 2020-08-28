@@ -1,18 +1,21 @@
 import findIndex from 'lodash.findindex'
-import { ExperimentData } from '../abTests/experiments/filterExpansion'
-import local from '../utils/local'
-import { TOGGLE_FILTER, CONVERT_AB_TEST_EXPERIMENT } from './action-types'
+import { ExperimentData } from '~/abTests/experiments/filterExpansion'
+import local from '~/utils/local'
+import {
+  TOGGLE_FILTER,
+  CONVERT_AB_TEST_EXPERIMENT,
+} from '~/store-modules/action-types'
 import {
   SET_FILTER,
   SET_PROVIDERS_FILTERS,
   CLEAR_FILTERS,
   SET_FILTER_IS_VISIBLE,
-} from './mutation-types'
+} from '~/store-modules/mutation-types'
 import {
-  queryToFilterData,
+  // queryToFilterData,
   filtersToQueryData,
-} from '../utils/searchQueryTransform'
-import { screenWidth } from '../utils/getBrowserInfo'
+} from '~/utils/searchQueryTransform'
+// import { screenWidth } from '../utils/getBrowserInfo'
 
 export const filterData = {
   licenses: [
@@ -78,9 +81,9 @@ export const filterData = {
 }
 
 const FILTER_STATE_STORAGE_KEY = 'ccsearch-filter-visibility'
-const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 800
-const isDesktop = () =>
-  screenWidth() > MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT
+// const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 800
+// const isDesktop = () =>
+//   screenWidth() > MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT
 
 const isFilterApplied = (filters) =>
   Object.keys(filters).some((filterKey) => {
@@ -93,21 +96,15 @@ const isFilterApplied = (filters) =>
     return filters[filterKey].some((filter) => filter.checked)
   })
 
-const localfilterState = () =>
-  local.get(FILTER_STATE_STORAGE_KEY)
-    ? local.get(FILTER_STATE_STORAGE_KEY) === 'true'
-    : true
+// const localfilterState = () =>
+//   local.get(FILTER_STATE_STORAGE_KEY)
+//     ? local.get(FILTER_STATE_STORAGE_KEY) === 'true'
+//     : true
 
-const initialState = (searchParams) => {
-  const filters = queryToFilterData(searchParams)
-
-  const isFilterVisible = isDesktop() ? localfilterState() : false
-  const filtersApplied = isFilterApplied(filters)
-  return {
-    filters,
-    isFilterVisible,
-    isFilterApplied: filtersApplied,
-  }
+const state = {
+  filters: filterData,
+  isFilterVisible: false,
+  isFilterApplied: false,
 }
 
 const actions = {
@@ -126,7 +123,7 @@ const actions = {
   },
 }
 
-function setQuery(state, params, path, redirect) {
+function setQuery(state) {
   const query = filtersToQueryData(state.filters)
 
   state.isFilterApplied = isFilterApplied(state.filters)
@@ -134,12 +131,12 @@ function setQuery(state, params, path, redirect) {
     q: state.query.q,
     ...query,
   }
-  if (params.shouldNavigate === true) {
-    redirect({ path, query: state.query })
-  }
+  // if (params.shouldNavigate === true) {
+  //   redirect({ path, query: state.query })
+  // }
 }
 
-function setFilter(state, params, path, redirect) {
+function setFilter(state, params) {
   if (params.filterType === 'searchBy') {
     state.filters.searchBy.creator = !state.filters.searchBy.creator
   } else if (params.filterType === 'mature') {
@@ -149,16 +146,16 @@ function setFilter(state, params, path, redirect) {
     filters[params.codeIdx].checked = !filters[params.codeIdx].checked
   }
 
-  setQuery(state, params, path, redirect)
+  setQuery(state, params)
 }
 
 // Make sure when redirecting after applying a filter, we stick to the right tab (i.e, "/search/video", "/search/audio", etc.)
-const mutations = (redirect) => ({
+const mutations = {
   [SET_FILTER](state, params) {
-    return setFilter(state, params, window.location.pathname, redirect)
+    return setFilter(state, params)
   },
   [CLEAR_FILTERS](state, params) {
-    const initialFilters = initialState('').filters
+    const initialFilters = state.filters
     const resetProviders = state.filters.providers.map((provider) => ({
       ...provider,
       checked: false,
@@ -167,7 +164,7 @@ const mutations = (redirect) => ({
       ...initialFilters,
       providers: resetProviders,
     }
-    return setQuery(state, params, window.location.pathname, redirect)
+    return setQuery(state, params)
   },
   [SET_PROVIDERS_FILTERS](state, params) {
     const providers = params.imageProviders
@@ -196,10 +193,10 @@ const mutations = (redirect) => ({
     state.isFilterVisible = params.isFilterVisible
     local.set(FILTER_STATE_STORAGE_KEY, params.isFilterVisible)
   },
-})
+}
 
 export default {
-  state: initialState,
+  state,
   actions,
   mutations,
 }

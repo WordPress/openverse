@@ -8,10 +8,7 @@ import { CLEAR_FILTERS } from '~/store-modules/mutation-types'
 const HomePage = {
   name: 'home-page',
   fetch() {
-    this.$store.commit(CLEAR_FILTERS, {
-      provider: null,
-      shouldNavigate: false,
-    })
+    this.$store.commit(CLEAR_FILTERS, { provider: null })
   },
   fetchOnServer: false,
 }

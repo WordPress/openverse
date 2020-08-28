@@ -67,10 +67,7 @@ export default {
       this.showForm = false
     },
     toggleMature() {
-      this.$store.dispatch(TOGGLE_FILTER, {
-        filterType: 'mature',
-        shouldNavigate: true,
-      })
+      this.$store.dispatch(TOGGLE_FILTER, { filterType: 'mature' })
     },
   },
 }

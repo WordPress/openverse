@@ -1,6 +1,5 @@
 import isEmpty from 'lodash.isempty'
 import findIndex from 'lodash.findindex'
-import { queryStringToQueryData } from '../utils/searchQueryTransform'
 import prepareSearchQueryParams from '../utils/prepareSearchQueryParams'
 import decodeImageData from '../utils/decodeImageData'
 import {
@@ -25,25 +24,10 @@ import {
   SEND_RESULT_CLICKED_EVENT,
 } from './usage-data-analytics-types'
 
-const initialState = (searchParams) => {
-  const query = queryStringToQueryData(searchParams)
-  return {
-    errorMsg: null,
-    image: {},
-    imagesCount: 0,
-    pageCount: 0,
-    imagePage: 1,
-    images: [],
-    isFetchingImages: false,
-    isFetchingImagesError: true,
-    query,
-  }
-}
-
-const getSearchPath = () =>
-  window.location.pathname && window.location.pathname.includes('search')
-    ? window.location.pathname
-    : '/search'
+// const getSearchPath = () =>
+//   window.location.pathname && window.location.pathname.includes('search')
+//     ? window.location.pathname
+//     : '/search'
 
 /**
  * hides the search results in case the user is performing a new search.
@@ -178,18 +162,30 @@ const actions = (ImageService) => ({
   },
 })
 
-function setQuery(_state, params, path, redirect) {
+function setQuery(_state, params) {
   const query = Object.assign({}, _state.query, params.query)
   _state.query = query
   _state.images = []
 
-  if (params.shouldNavigate === true) {
-    redirect({ path, query })
-  }
+  // if (params.shouldNavigate === true) {
+  //   redirect({ path, query })
+  // }
+}
+
+const state = {
+  errorMsg: null,
+  image: {},
+  imagesCount: 0,
+  pageCount: 0,
+  imagePage: 1,
+  images: [],
+  isFetchingImages: false,
+  isFetchingImagesError: true,
+  query: {},
 }
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
-const mutations = (redirect) => ({
+const mutations = {
   [FETCH_START_IMAGES](_state) {
     _state.isFetchingImages = true
     _state.isFetchingImagesError = false
@@ -221,15 +217,16 @@ const mutations = (redirect) => ({
     _state.imagePage = params.page || 1
   },
   [SET_QUERY](_state, params) {
-    setQuery(_state, params, getSearchPath(), redirect)
+    setQuery(_state, params)
   },
+  // @todo: fix
   [IMAGE_NOT_FOUND]() {
-    redirect({ path: '/not-found' }, true)
+    // redirect({ path: '/not-found' }, true)
   },
-})
+}
 
 export default {
-  state: initialState,
+  state,
   actions,
   mutations,
 }

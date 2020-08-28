@@ -13,6 +13,15 @@ const filterPropertyMappings = {
   providers: 'source',
 }
 
+// {
+//   license: 'cc0,pdm,by,by-sa,by-nc,by-nd,by-nc-sa,by-nc-nd',
+//   categories: 'photograph,illustration,digitized_artwork',
+//   extension: 'jpg,png',
+//   aspect_ratio: 'square',
+//   size: 'small',
+//   source: 'animaldiversity,bio_diversity,brooklynmuseum,CAPL,clevelandmuseum,deviantart'
+// }
+
 /**
  * joins all the filters which have the checked property `true`
  * to a string separated by commas.

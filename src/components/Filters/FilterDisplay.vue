@@ -127,14 +127,12 @@ export default {
         code,
         filterType,
         provider: this.$props.provider,
-        shouldNavigate: true,
       })
     },
     onUpdateBoolFilter({ filterType }) {
       this.$store.dispatch(TOGGLE_FILTER, {
         filterType,
         provider: this.$props.provider,
-        shouldNavigate: true,
       })
     },
   },
