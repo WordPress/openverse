@@ -2,7 +2,7 @@
   <nav :aria-label="$t('header.aria.primary')" class="navbar">
     <div class="navbar-brand has-color-white">
       <nuxt-link class="logo" to="/">
-        <IconSearchLogo fill="currentColor" />
+        <IconSearchLogo />
       </nuxt-link>
 
       <a
@@ -130,7 +130,12 @@ export default {
 <style lang="scss" scoped>
 /* header */
 .logo {
-  color: inherit;
+  color: black;
+
+  svg {
+    height: 100%;
+    width: auto;
+  }
 }
 
 .hero_search-form {

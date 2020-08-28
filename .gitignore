@@ -20,3 +20,5 @@ selenium-debug.log
 vercel.json
 .eslintcache
 .nuxt
+
+.vercel

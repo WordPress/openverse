@@ -37,9 +37,9 @@ if (process.env.NODE_ENV === 'production') {
 
 export default {
   srcDir: 'src/',
+  buildDir: 'dist/',
   components: true,
   plugins: ['~/plugins/i18n.js'],
-  baseDir: '/src',
   css: ['@creativecommons/vocabulary/scss/vocabulary.scss'],
   head: {
     title: 'CC Search',

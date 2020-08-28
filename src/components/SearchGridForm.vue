@@ -161,7 +161,7 @@ export default {
 .toggle-filter {
   height: 3.875rem;
   text-transform: none;
-  font-size: 13px;
+  font-size: 1rem;
   border: 2px solid #d8d8d8;
   box-sizing: border-box;
   border-radius: 4px;
