@@ -37,20 +37,35 @@ import {
   SET_FILTER_IS_VISIBLE,
 } from '~/store-modules/mutation-types'
 import { ExperimentData } from '~/abTests/experiments/filterExpansion'
+import local from '~/utils/local'
 
 const BrowsePage = {
   name: 'browse-page',
+  scrollToTop: false,
   async fetch() {
+    // eslint-disable-next-line no-unused-vars
     const { q, ...filters } = this.$route.query
     const query = { q }
-    console.info(filters)
-    this.$store.commit(SET_QUERY, { query })
+
+    // Set images on initial server load, not again
+    if (process.server) {
+      this.$store.commit(SET_QUERY, { query })
+    }
 
     if (!this.$store.state.images.length) {
       await this.$store.dispatch(FETCH_IMAGES, query)
     }
   },
-  asyncData() {},
+  mounted() {
+    const localFilterState = () =>
+      local.get(process.env.filterStorageKey)
+        ? local.get(process.env.filterStorageKey) === 'true'
+        : true
+
+    this.$store.commit(SET_FILTER_IS_VISIBLE, {
+      isFilterVisible: localFilterState(),
+    })
+  },
   computed: {
     query() {
       return this.$store.state.query

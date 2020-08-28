@@ -30,7 +30,7 @@ module.exports = {
     'vue/component-name-in-template-casing': [
       'error',
       'PascalCase',
-      { registeredComponentsOnly: false },
+      { registeredComponentsOnly: false, ignores: ['i18n'] },
     ],
     'vue/html-self-closing': [
       'error',

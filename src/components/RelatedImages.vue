@@ -32,7 +32,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~/styles/photodetails.scss';
 
 .photo_related-images .search-grid-cells {

@@ -11,11 +11,7 @@ import {
   CLEAR_FILTERS,
   SET_FILTER_IS_VISIBLE,
 } from '~/store-modules/mutation-types'
-import {
-  // queryToFilterData,
-  filtersToQueryData,
-} from '~/utils/searchQueryTransform'
-// import { screenWidth } from '../utils/getBrowserInfo'
+import { filtersToQueryData } from '~/utils/searchQueryTransform'
 
 export const filterData = {
   licenses: [
@@ -80,11 +76,6 @@ export const filterData = {
   mature: false,
 }
 
-const FILTER_STATE_STORAGE_KEY = 'ccsearch-filter-visibility'
-// const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 800
-// const isDesktop = () =>
-//   screenWidth() > MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT
-
 const isFilterApplied = (filters) =>
   Object.keys(filters).some((filterKey) => {
     if (filterKey === 'searchBy') {
@@ -96,14 +87,9 @@ const isFilterApplied = (filters) =>
     return filters[filterKey].some((filter) => filter.checked)
   })
 
-// const localfilterState = () =>
-//   local.get(FILTER_STATE_STORAGE_KEY)
-//     ? local.get(FILTER_STATE_STORAGE_KEY) === 'true'
-//     : true
-
 const state = {
   filters: filterData,
-  isFilterVisible: false,
+  isFilterVisible: true,
   isFilterApplied: false,
 }
 
@@ -191,7 +177,7 @@ const mutations = {
   },
   [SET_FILTER_IS_VISIBLE](state, params) {
     state.isFilterVisible = params.isFilterVisible
-    local.set(FILTER_STATE_STORAGE_KEY, params.isFilterVisible)
+    local.set(process.env.filterStorageKey, params.isFilterVisible)
   },
 }
 

@@ -33,7 +33,7 @@
             />
           </label>
           <span class="icon is-medium is-left">
-            <i class="icon search is-size-5" />
+            <i class="icon search" />
           </span>
         </div>
         <div class="control">

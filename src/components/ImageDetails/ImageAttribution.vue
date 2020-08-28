@@ -9,7 +9,7 @@
       </h5>
       <LicenseExplanations :license="image.license" />
 
-      <I18n
+      <i18n
         path="photo-details.reuse.tool.content"
         tag="span"
         class="caption has-text-weight-semibold"
@@ -24,13 +24,13 @@
             {{ $t('photo-details.reuse.tool.link') }}
           </a>
         </template>
-      </I18n>
+      </i18n>
     </div>
     <div v-else class="photo-attribution margin-bottom-big">
       <h5 class="b-header margin-bottom-big">
         {{ $t('photo-details.reuse.license-header') }}
       </h5>
-      <I18n
+      <i18n
         ref="photoAttribution"
         path="photo-details.reuse.attribution.main"
         tag="span"
@@ -46,11 +46,11 @@
             {{ fullLicenseName.toUpperCase() }}
           </a>
         </template>
-      </I18n>
+      </i18n>
 
       <LicenseExplanations :license="image.license" />
 
-      <I18n
+      <i18n
         path="photo-details.reuse.license.content"
         tag="span"
         class="caption has-text-weight-semibold"
@@ -65,7 +65,7 @@
             {{ $t('photo-details.reuse.license.link') }}
           </a>
         </template>
-      </I18n>
+      </i18n>
     </div>
     <div>
       <CopyLicense

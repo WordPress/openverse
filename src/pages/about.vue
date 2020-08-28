@@ -6,7 +6,7 @@
           {{ $t('about.title') }}
         </h1>
         <div class="content">
-          <I18n path="about.description.content" tag="p">
+          <i18n path="about.description.content" tag="p">
             <template v-slot:link>
               <a
                 :aria-label="$t('about.aria.licenses')"
@@ -14,15 +14,15 @@
                 >{{ $t('about.description.licenses-link') }}</a
               >
             </template>
-          </I18n>
-          <I18n path="about.collection" tag="p">
+          </i18n>
+          <i18n path="about.collection" tag="p">
             <template v-slot:common-crawl>
               <a aria-label="common crawl" href="http://commoncrawl.org/"
                 >Common Crawl</a
               >
             </template>
-          </I18n>
-          <I18n path="about.planning.content" tag="p">
+          </i18n>
+          <i18n path="about.planning.content" tag="p">
             <template v-slot:vision>
               <a
                 :aria-label="$t('about.aria.vision')"
@@ -72,8 +72,8 @@
                 >{{ $t('about.planning.community') }}</a
               >
             </template>
-          </I18n>
-          <I18n path="about.declaration.content" tag="p">
+          </i18n>
+          <i18n path="about.declaration.content" tag="p">
             <template v-slot:terms>
               <a
                 :aria-label="$t('about.aria.terms')"
@@ -81,8 +81,8 @@
                 >{{ $t('about.declaration.terms') }}</a
               >
             </template>
-          </I18n>
-          <I18n path="about.old-cc-search" tag="p">
+          </i18n>
+          <i18n path="about.old-cc-search" tag="p">
             <template v-slot:link>
               <a
                 :aria-label="$t('about.aria.old-cc-search')"
@@ -90,7 +90,7 @@
                 >https://oldsearch.creativecommons.org</a
               >
             </template>
-          </I18n>
+          </i18n>
           <h2 class="margin-top-large margin-bottom-normal">
             {{ $t('about.sources') }}
           </h2>

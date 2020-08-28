@@ -93,6 +93,7 @@ const env = {
   socialSharing: process.env.SOCIAL_SHARING || true,
   analyticsId: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
   disableAnalytics: process.env.DISABLE_ANALYTICS || false,
+  filterStorageKey: 'ccsearch-filter-visibility',
 }
 
 /*

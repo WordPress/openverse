@@ -9,13 +9,13 @@
     </div>
     <div class="container is-fluid columns is-variable is-4">
       <div class="column">
-        <I18n path="sources.detail" tag="p">
+        <i18n path="sources.detail" tag="p">
           <template v-slot:single-name>
             <strong>
               {{ $t('sources.single-name') }}
             </strong>
           </template>
-        </I18n>
+        </i18n>
         <table
           :aria-label="$t('about.aria.sources')"
           role="region"
@@ -71,7 +71,7 @@
         <p class="body-big margin-vertical-normal">
           {{ $t('sources.cc-content.content') }}
         </p>
-        <I18n
+        <i18n
           path="sources.cc-content.provider"
           tag="p"
           class="body-big margin-vertical-normal"
@@ -84,8 +84,8 @@
               >Smithsonian Institute</a
             >
           </template>
-        </I18n>
-        <I18n
+        </i18n>
+        <i18n
           path="sources.cc-content.europeana"
           tag="p"
           class="body-big margin-vertical-normal"
@@ -102,7 +102,7 @@
               >Europeana API</a
             >
           </template>
-        </I18n>
+        </i18n>
         <h3 class="title subtitle is-normal is-4">
           {{ $t('sources.new-content.next') }}
         </h3>

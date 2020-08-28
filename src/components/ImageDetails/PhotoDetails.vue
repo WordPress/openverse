@@ -146,29 +146,15 @@
 </template>
 
 <script>
-import ContentReportForm from '../ContentReport/ContentReportForm'
 import { TOGGLE_REPORT_FORM_VISIBILITY } from '~/store-modules/mutation-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
 } from '~/store-modules/usage-data-analytics-types'
 import attributionHtml from '~/utils/attributionHtml'
-import ImageInfo from './ImageInfo'
-import ImageAttribution from './ImageAttribution'
-import ImageSocialShare from './ImageSocialShare'
-import LegalDisclaimer from './LegalDisclaimer'
-import ReuseSurvey from './ReuseSurvey'
 
 export default {
   name: 'PhotoDetails',
-  components: {
-    ImageInfo,
-    ImageAttribution,
-    ImageSocialShare,
-    LegalDisclaimer,
-    ContentReportForm,
-    ReuseSurvey,
-  },
   props: [
     'image',
     'breadCrumbURL',
@@ -205,11 +191,7 @@ export default {
   },
   methods: {
     onGoBackToSearchResults() {
-      this.$router.push({
-        path: '/search',
-        query: this.query,
-        params: { location: this.$route.params.location },
-      })
+      this.$router.back()
     },
     onImageLoad(event) {
       this.$emit('onImageLoaded', event)
@@ -240,7 +222,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~/styles/photodetails.scss';
 @import 'bulma/sass/utilities/_all';
 

@@ -17,7 +17,7 @@
       </span>
     </div>
     <div>
-      <I18n
+      <i18n
         path="collections.collection-size"
         tag="span"
         class="has-text-grey-light has-text-weight-semibold"
@@ -25,7 +25,7 @@
         <template v-slot:count>
           {{ getProviderImageCount(provider.image_count) }}
         </template>
-      </I18n>
+      </i18n>
     </div>
   </a>
 </template>

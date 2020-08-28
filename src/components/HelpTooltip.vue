@@ -19,5 +19,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/photodetails.scss';
+@import '~/styles/photodetails.scss';
 </style>

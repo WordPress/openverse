@@ -87,7 +87,7 @@
             </ul>
           </nav>
           <div class="attribution margin-top-bigger">
-            <I18n path="footer.caption.label" tag="p" class="caption">
+            <i18n path="footer.caption.label" tag="p" class="caption">
               <template v-slot:noted>
                 <a
                   href="https://creativecommons.org/policies#license"
@@ -115,7 +115,7 @@
                   {{ $t('footer.caption.icons') }}
                 </a>
               </template>
-            </I18n>
+            </i18n>
             <div class="margin-top-smaller">
               <i
                 class="icon cc-logo margin-right-small is-size-4 is-color-white"

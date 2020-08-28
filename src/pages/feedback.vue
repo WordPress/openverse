@@ -5,7 +5,7 @@
         <h1 id="feedback" class="title is-2">
           {{ $t('feedback.title') }}
         </h1>
-        <I18n path="feedback.description" tag="p" class="margin-bottom-large">
+        <i18n path="feedback.description" tag="p" class="margin-bottom-large">
           <template v-slot:channel>
             <a
               :aria-label="$t('feedback.aria.cc-usability')"
@@ -20,7 +20,7 @@
               >CC Slack</a
             >
           </template>
-        </I18n>
+        </i18n>
         <section class="tabs margin-top-big">
           <ul role="tablist">
             <li

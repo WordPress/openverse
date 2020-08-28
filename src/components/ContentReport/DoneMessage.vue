@@ -3,7 +3,7 @@
     <span class="is-block padding-horizontal-big has-text-centered">
       {{ $t('photo-details.content-report.dmca.thanks') }}
     </span>
-    <I18n
+    <i18n
       path="photo-details.content-report.dmca.provider"
       tag="span"
       class="is-block padding-horizontal-big margin-top-large has-text-centered"
@@ -17,7 +17,7 @@
           >{{ providerName }}</a
         >.
       </template>
-    </I18n>
+    </i18n>
   </div>
 </template>
 

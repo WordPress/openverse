@@ -61,7 +61,7 @@
           </div>
         </div>
         <div class="caption has-text-centered margin-top-big">
-          <I18n path="hero.caption.content" tag="p">
+          <i18n path="hero.caption.content" tag="p">
             <template v-slot:link>
               <a
                 href="https://creativecommons.org/share-your-work/licensing-examples/"
@@ -72,12 +72,12 @@
                 {{ $t('hero.caption.link') }}
               </a>
             </template>
-          </I18n>
+          </i18n>
         </div>
         <HomeLicenseFilter />
       </form>
       <div class="help-links is-hidden-mobile">
-        <I18n
+        <i18n
           path="hero.old-cc-search.label"
           tag="span"
           class="margin-right-bigger"
@@ -89,7 +89,7 @@
               >{{ $t('hero.old-cc-search.link') }}</a
             >
           </template>
-        </I18n>
+        </i18n>
       </div>
     </div>
     <img
@@ -102,6 +102,7 @@
 
 <script>
 import { SET_QUERY } from '~/store-modules/mutation-types'
+import { filtersToQueryData } from '~/utils/searchQueryTransform'
 
 export default {
   name: 'HeroSection',
@@ -114,6 +115,13 @@ export default {
   methods: {
     onSubmit() {
       this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm } })
+      this.$router.push({
+        path: '/search',
+        query: {
+          q: this.form.searchTerm,
+          ...filtersToQueryData(this.$store.state.filters),
+        },
+      })
     },
   },
 }
