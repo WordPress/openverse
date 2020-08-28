@@ -91,6 +91,8 @@ const env = {
   apiUrl:
     process.env.API_URL || 'https://api-dev.creativecommons.engineering/v1/',
   socialSharing: process.env.SOCIAL_SHARING || true,
+  analyticsId: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
+  disableAnalytics: process.env.DISABLE_ANALYTICS || false,
 }
 
 /*
@@ -114,16 +116,13 @@ export default {
   srcDir: 'src/',
   buildDir: 'dist/',
   components: true,
-  plugins: ['~/plugins/i18n.js'],
+  plugins: ['~/plugins/i18n.js', { src: '~plugins/ga.js', mode: 'client' }],
   css: ['@creativecommons/vocabulary/scss/vocabulary.scss'],
   head,
   env,
   build,
-  buildModules: [['@nuxtjs/svg', '@nuxtjs/google-analytics']],
+  buildModules: ['@nuxtjs/svg'],
   modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap'],
-  googleAnalytics: {
-    id: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
-  },
   sentry: {
     dsn:
       process.env.SENTRY_DSN ||

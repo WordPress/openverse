@@ -24,7 +24,6 @@
   "dependencies": {
     "@creativecommons/vocabulary": "^2020.8.7",
     "@nuxt/components": "^1.1.0",
-    "@nuxtjs/google-analytics": "^2.4.0",
     "@nuxtjs/sentry": "^4.3.4",
     "@nuxtjs/sitemap": "^2.4.0",
     "axios": "^0.20.0",

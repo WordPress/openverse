@@ -17,10 +17,6 @@ import RelatedImagesStore from '~/store-modules/related-images-store'
 import { FETCH_IMAGE_PROVIDERS } from '~/store-modules/action-types'
 import GoogleAnalytics from '~/analytics/GoogleAnalytics'
 
-// const queryParams = !(typeof window === 'undefined')
-//   ? window.location.search
-//   : ''
-
 export const actions = Object.assign(
   UsageDataStore.actions(UsageDataService),
   SearchStore.actions(ImageService),

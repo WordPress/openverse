@@ -5,7 +5,7 @@ const actions = (GoogleAnalytics) => ({
   // eslint-disable-next-line no-unused-vars
   [SOCIAL_MEDIA_SHARE]({ commit }, params) {
     const event = SocialMediaShare(params.site)
-    GoogleAnalytics.sendEvent(event)
+    GoogleAnalytics().sendEvent(event)
   },
 })
 
