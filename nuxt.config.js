@@ -120,7 +120,7 @@ export default {
   env,
   build,
   buildModules: [['@nuxtjs/svg', '@nuxtjs/google-analytics']],
-  modules: ['@nuxtjs/sentry'],
+  modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap'],
   googleAnalytics: {
     id: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
   },
