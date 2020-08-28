@@ -1,5 +1,10 @@
 const meta = [
   { charset: 'utf-8' },
+  {
+    name: 'description',
+    content:
+      'A new Creative Commons search tool for creators seeking to discover and reuse free resources with greater ease.',
+  },
   { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   { name: 'twitter:card', content: 'summary_large_image' },
   { name: 'twitter:site', content: '@creativecommons' },
@@ -19,7 +24,7 @@ const meta = [
   },
   {
     name: 'og:site_name',
-    content: 'Creative Commons',
+    content: 'Creative Search',
   },
   {
     vmid: 'monetization',
@@ -39,6 +44,32 @@ if (process.env.NODE_ENV === 'production') {
 const head = {
   title: 'CC Search',
   meta,
+  link: [
+    {
+      rel: 'search',
+      type: 'application/opensearchdescription+xml',
+      title: 'CC Search',
+      href: '/opensearch.xml',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: '/app-icons/cc-site-icon-150x150.png',
+      sizes: '32x32',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: '/app-icons/cc-site-icon-300x300.png',
+      sizes: '192x192',
+    },
+    {
+      rel: 'apple-touch-icon-precomposed',
+      type: 'image/png',
+      href: '/app-icons/cc-site-icon-300x300.png',
+      sizes: '192x192',
+    },
+  ],
   script: [
     {
       hid: 'vocabulary',
