@@ -1,5 +1,5 @@
 import isEmpty from 'lodash.isempty'
-// import findIndex from 'lodash.findindex'
+import findIndex from 'lodash.findindex'
 import prepareSearchQueryParams from '../utils/prepareSearchQueryParams'
 import decodeImageData from '../utils/decodeImageData'
 import {
@@ -21,7 +21,7 @@ import {
 } from './mutation-types'
 import {
   SEND_SEARCH_QUERY_EVENT,
-  // SEND_RESULT_CLICKED_EVENT,
+  SEND_RESULT_CLICKED_EVENT,
 } from './usage-data-analytics-types'
 
 // const getSearchPath = () =>
@@ -100,13 +100,12 @@ const actions = (ImageService) => ({
   },
   // eslint-disable-next-line no-unused-vars
   [FETCH_IMAGE]({ commit, dispatch, state }, params) {
-    // @todo: Only run this on the client-side
-    // dispatch(SEND_RESULT_CLICKED_EVENT, {
-    //   query: state.query.q,
-    //   resultUuid: params.id,
-    //   resultRank: findIndex(state.images, (img) => img.id === params.id),
-    //   sessionId: state.sessionId,
-    // })
+    dispatch(SEND_RESULT_CLICKED_EVENT, {
+      query: state.query.q,
+      resultUuid: params.id,
+      resultRank: findIndex(state.images, (img) => img.id === params.id),
+      sessionId: state.sessionId,
+    })
 
     commit(FETCH_START_IMAGES)
     commit(SET_IMAGE, { image: {} })

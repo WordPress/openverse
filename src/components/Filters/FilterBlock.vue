@@ -5,7 +5,7 @@
     role="filter"
     :aria-label="label + 'filter'"
   >
-    <span>{{ $t(this.$props.label) }}</span>
+    <span>{{ this.$props.label }}</span>
     <span
       :aria-label="$t('browse-page.aria.remove-filter')"
       class="close margin-left-small"

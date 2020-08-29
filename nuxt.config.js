@@ -94,6 +94,7 @@ const env = {
   analyticsId: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
   disableAnalytics: process.env.DISABLE_ANALYTICS || false,
   filterStorageKey: 'ccsearch-filter-visibility',
+  disableApiAnalytics: process.env.DISABLE_API_ANALYTICS || true,
 }
 
 /*

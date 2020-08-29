@@ -44,7 +44,9 @@
             @change="onValueChange"
           />
           <LicenseIcons v-if="filterType == 'licenses'" :license="item.code" />
-          <template v-if="filterType == 'providers'">
+          <template
+            v-if="filterType == 'providers' || filterType == 'searchBy'"
+          >
             {{ item.name }}
           </template>
           <template v-else>
@@ -93,10 +95,6 @@ export default {
     }
   },
   computed: {
-    /**
-     * Check if a filter experiment is active, and if the current case is 'expanded'.
-     * Show filters collapsed by default
-     */
     filtersExpandedByDefault() {
       const experiment = this.$store.state.experiments.find(
         (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
