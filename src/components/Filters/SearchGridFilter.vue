@@ -32,7 +32,6 @@ export default {
   components: {
     FiltersList,
   },
-  props: ['provider'],
   computed: {
     isFilterApplied() {
       return this.$store.state.isFilterApplied
@@ -63,18 +62,14 @@ export default {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
         filterType,
-        provider: this.$props.provider,
       })
     },
     onClearFilters() {
-      this.$store.commit(CLEAR_FILTERS, {
-        provider: this.$props.provider,
-      })
+      this.$store.commit(CLEAR_FILTERS, {})
     },
     onUpdateSearchByCreator() {
       this.$store.dispatch(TOGGLE_FILTER, {
         filterType: 'searchBy',
-        provider: this.$props.provider,
       })
     },
     onToggleSearchGridFilter() {
@@ -101,6 +96,7 @@ export default {
 
   @include touch {
     width: 21.875rem;
+    max-width: 100%;
     max-height: 37rem;
     overflow-x: hidden;
   }

@@ -94,7 +94,7 @@ const isFilterApplied = (filters) =>
 
 const state = {
   filters: filterData,
-  isFilterVisible: true,
+  isFilterVisible: false,
   isFilterApplied: false,
 }
 
@@ -145,7 +145,7 @@ const mutations = {
   [SET_FILTER](state, params) {
     return setFilter(state, params)
   },
-  [CLEAR_FILTERS](state, params) {
+  [CLEAR_FILTERS](state) {
     const initialFilters = filterData
     const resetProviders = state.filters.providers.map((provider) => ({
       ...provider,
@@ -155,7 +155,7 @@ const mutations = {
       ...initialFilters,
       providers: resetProviders,
     }
-    return setQuery(state, params)
+    return setQuery(state)
   },
   [SET_PROVIDERS_FILTERS](state, params) {
     const providers = params.imageProviders

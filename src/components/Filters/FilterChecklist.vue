@@ -44,7 +44,12 @@
             @change="onValueChange"
           />
           <LicenseIcons v-if="filterType == 'licenses'" :license="item.code" />
-          {{ $t(item.name) }}
+          <template v-if="filterType == 'providers'">
+            {{ item.name }}
+          </template>
+          <template v-else>
+            {{ $t(item.name) }}
+          </template>
         </label>
         <img
           v-if="filterType == 'licenses'"

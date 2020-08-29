@@ -34,7 +34,6 @@
 import { FETCH_IMAGES } from '~/store-modules/action-types'
 import {
   SET_QUERY,
-  SET_FILTERS_FROM_URL,
   SET_FILTER_IS_VISIBLE,
 } from '~/store-modules/mutation-types'
 import { ExperimentData } from '~/abTests/experiments/filterExpansion'
@@ -46,11 +45,10 @@ const BrowsePage = {
   name: 'browse-page',
   scrollToTop: false,
   async fetch() {
-    const query = queryStringToQueryData(this.$route.fullPath)
-    // Set the query from the url
+    // Set the query from the url on the server
     if (process.server) {
+      const query = queryStringToQueryData(this.$route.fullPath)
       this.$store.commit(SET_QUERY, { query })
-      this.$store.commit(SET_FILTERS_FROM_URL, { url: this.$route.fullPath })
     }
 
     // load the images!
