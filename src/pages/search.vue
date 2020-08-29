@@ -40,6 +40,7 @@ import {
 import { ExperimentData } from '~/abTests/experiments/filterExpansion'
 import { queryStringToQueryData } from '~/utils/searchQueryTransform'
 import local from '~/utils/local'
+import { screenWidth } from '../utils/getBrowserInfo'
 
 const BrowsePage = {
   name: 'browse-page',
@@ -63,8 +64,12 @@ const BrowsePage = {
         ? local.get(process.env.filterStorageKey) === 'true'
         : true
 
+    const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 800
+    const isDesktop = () =>
+      screenWidth() > MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT
+
     this.$store.commit(SET_FILTER_IS_VISIBLE, {
-      isFilterVisible: localFilterState(),
+      isFilterVisible: isDesktop() ? localFilterState() : false,
     })
   },
   computed: {
