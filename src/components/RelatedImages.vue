@@ -6,7 +6,7 @@
     <h3 class="b-header">
       {{ $t('photo-details.related-images') }}
     </h3>
-    <SearchGrid
+    <SearchGridManualLoad
       v-if="isPrimaryImageLoaded === true"
       :images-count="imagesCount"
       :images="relatedImages"
@@ -31,11 +31,3 @@ export default {
   ],
 }
 </script>
-
-<style lang="scss" scoped>
-@import '~/styles/photodetails.scss';
-
-.photo_related-images .search-grid-cells {
-  margin: 10px -10px;
-}
-</style>

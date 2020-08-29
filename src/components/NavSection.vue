@@ -19,7 +19,7 @@
       </a>
     </div>
     <div :class="{ ['navbar-menu']: true, ['is-active']: isBurgerMenuActive }">
-      <div v-if="showNavSearch === 'true'" class="margin-left-big">
+      <div v-if="showNavSearch" class="margin-left-big">
         <form
           class="hero_search-form"
           role="search"
@@ -118,6 +118,10 @@ export default {
   methods: {
     onSubmit() {
       this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm } })
+      this.$router.push({
+        path: '/search',
+        query: { q: this.form.searchTerm },
+      })
     },
     toggleBurgerActive() {
       this.isBurgerMenuActive = !this.isBurgerMenuActive

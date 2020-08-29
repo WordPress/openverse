@@ -1,9 +1,6 @@
 <template>
   <header>
-    <NavSection
-      :show-nav-search="showNavSearch"
-      :nav-search-placeholder="navSearchPlaceholder"
-    />
+    <NavSection :show-nav-search="showNavSearch" />
     <slot />
   </header>
 </template>
@@ -11,6 +8,6 @@
 <script>
 export default {
   name: 'HeaderSection',
-  props: ['showNavSearch', 'navSearchPlaceholder'],
+  props: { showNavSearch: { type: Boolean, default: false } },
 }
 </script>

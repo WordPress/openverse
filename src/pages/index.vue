@@ -9,7 +9,10 @@ const HomePage = {
   name: 'home-page',
   fetch() {
     // clear filters on every client-side visit to the homepage
-    this.$store.commit(CLEAR_FILTERS, { provider: null })
+    console.log(this.$store.state.filters.licenseTypes)
+    console.log('cleared filters!')
+    this.$store.commit(CLEAR_FILTERS, {})
+    console.log(this.$store.state.filters.licenseTypes)
   },
   fetchOnServer: false,
 }

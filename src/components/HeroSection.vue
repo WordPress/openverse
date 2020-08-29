@@ -129,9 +129,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import 'node_modules/bulma/sass/utilities/initial-variables';
-@import 'node_modules/bulma/sass/utilities/derived-variables';
-@import 'node_modules/bulma/sass/utilities/mixins';
+@import 'bulma/sass/utilities/initial-variables';
+@import 'bulma/sass/utilities/derived-variables';
+@import 'bulma/sass/utilities/mixins';
 
 $hero-height: 85vh;
 

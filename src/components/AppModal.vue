@@ -72,7 +72,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'node_modules/bulma/sass/utilities/_all';
+@import 'bulma/sass/utilities/_all';
 
 .modal {
   position: relative;

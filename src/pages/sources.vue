@@ -144,6 +144,7 @@ import sortBy from 'lodash.sortby'
 
 const SourcePage = {
   name: 'source-page',
+  layout: 'with-nav-search',
   data() {
     return {
       sort: {

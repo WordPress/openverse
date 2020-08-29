@@ -1,3 +1,4 @@
+import deepmerge from 'deepmerge'
 import findIndex from 'lodash.findindex'
 import { ExperimentData } from '~/abTests/experiments/filterExpansion'
 import local from '~/utils/local'
@@ -9,9 +10,13 @@ import {
   SET_FILTER,
   SET_PROVIDERS_FILTERS,
   CLEAR_FILTERS,
+  SET_FILTERS_FROM_URL,
   SET_FILTER_IS_VISIBLE,
 } from '~/store-modules/mutation-types'
-import { filtersToQueryData } from '~/utils/searchQueryTransform'
+import {
+  filtersToQueryData,
+  queryToFilterData,
+} from '~/utils/searchQueryTransform'
 
 export const filterData = {
   licenses: [
@@ -117,9 +122,6 @@ function setQuery(state) {
     q: state.query.q,
     ...query,
   }
-  // if (params.shouldNavigate === true) {
-  //   redirect({ path, query: state.query })
-  // }
 }
 
 function setFilter(state, params) {
@@ -137,11 +139,14 @@ function setFilter(state, params) {
 
 // Make sure when redirecting after applying a filter, we stick to the right tab (i.e, "/search/video", "/search/audio", etc.)
 const mutations = {
+  [SET_FILTERS_FROM_URL](state, params) {
+    state.filters = deepmerge(state.filters, queryToFilterData(params.url))
+  },
   [SET_FILTER](state, params) {
     return setFilter(state, params)
   },
   [CLEAR_FILTERS](state, params) {
-    const initialFilters = state.filters
+    const initialFilters = filterData
     const resetProviders = state.filters.providers.map((provider) => ({
       ...provider,
       checked: false,

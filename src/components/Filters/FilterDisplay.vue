@@ -67,12 +67,6 @@
         @filterChanged="onUpdateBoolFilter"
       />
     </span>
-    <!-- <span>
-          <filter-block v-if="mature"
-                        label="Mature"
-                        filterType="mature"
-                        @filterChanged="onUpdateBoolFilter" />
-        </span> -->
   </div>
 </template>
 <script>
@@ -123,17 +117,10 @@ export default {
       return filterTags
     },
     onUpdateFilter({ code, filterType }) {
-      this.$store.dispatch(TOGGLE_FILTER, {
-        code,
-        filterType,
-        provider: this.$props.provider,
-      })
+      this.$store.dispatch(TOGGLE_FILTER, { code, filterType })
     },
     onUpdateBoolFilter({ filterType }) {
-      this.$store.dispatch(TOGGLE_FILTER, {
-        filterType,
-        provider: this.$props.provider,
-      })
+      this.$store.dispatch(TOGGLE_FILTER, { filterType })
     },
   },
 }

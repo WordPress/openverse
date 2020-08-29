@@ -100,9 +100,11 @@
             class="table is-bordered is-striped margin-bottom-large"
           >
             <thead>
-              <th>{{ $t('about.providers.source') }}</th>
-              <th>{{ $t('about.providers.domain') }}</th>
-              <th>{{ $t('about.providers.work') }}</th>
+              <tr>
+                <th>{{ $t('about.providers.source') }}</th>
+                <th>{{ $t('about.providers.domain') }}</th>
+                <th>{{ $t('about.providers.work') }}</th>
+              </tr>
             </thead>
             <tbody>
               <tr
@@ -134,6 +136,7 @@
 <script>
 const AboutPage = {
   name: 'about-page',
+  layout: 'with-nav-search',
   computed: {
     imageProviders() {
       return this.$store.state.imageProviders

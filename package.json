@@ -31,6 +31,7 @@
     "bulma": "^0.9.0",
     "case": "^1.6.3",
     "clipboard": "^2.0.6",
+    "deepmerge": "^4.2.2",
     "focus-trap": "^5.1.0",
     "focus-trap-vue": "0.0.6",
     "js-cookie": "^2.2.1",

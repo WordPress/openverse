@@ -237,6 +237,7 @@
 
 const SearchHelpPage = {
   name: 'search-help-page',
+  layout: 'with-nav-search',
   computed: {
     imageProviders() {
       return this.$store.state.imageProviders

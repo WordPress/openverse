@@ -34,26 +34,27 @@
 import { FETCH_IMAGES } from '~/store-modules/action-types'
 import {
   SET_QUERY,
+  SET_FILTERS_FROM_URL,
   SET_FILTER_IS_VISIBLE,
 } from '~/store-modules/mutation-types'
 import { ExperimentData } from '~/abTests/experiments/filterExpansion'
+import { queryStringToQueryData } from '~/utils/searchQueryTransform'
 import local from '~/utils/local'
 
 const BrowsePage = {
   name: 'browse-page',
   scrollToTop: false,
   async fetch() {
-    // eslint-disable-next-line no-unused-vars
-    const { q, ...filters } = this.$route.query
-    const query = { q }
-
-    // Set images on initial server load, not again
+    const query = queryStringToQueryData(this.$route.fullPath)
+    // Set the query from the url
     if (process.server) {
       this.$store.commit(SET_QUERY, { query })
+      this.$store.commit(SET_FILTERS_FROM_URL, { url: this.$route.fullPath })
     }
 
+    // load the images!
     if (!this.$store.state.images.length) {
-      await this.$store.dispatch(FETCH_IMAGES, query)
+      await this.$store.dispatch(FETCH_IMAGES, this.$store.state.query)
     }
   },
   mounted() {
@@ -101,6 +102,10 @@ const BrowsePage = {
   watch: {
     query(newQuery) {
       if (newQuery) {
+        this.$router.push({
+          path: this.$route.path,
+          query: this.$store.state.query,
+        })
         this.getImages(newQuery)
       }
     },

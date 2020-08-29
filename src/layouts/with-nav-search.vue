@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <HeaderSection />
+    <HeaderSection :show-nav-search="true" />
     <main role="main">
       <Nuxt />
     </main>

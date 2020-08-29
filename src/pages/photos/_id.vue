@@ -39,6 +39,7 @@ import { SET_IMAGE } from '~/store-modules/mutation-types'
 
 const PhotoDetailPage = {
   name: 'photo-detail-page',
+  layout: 'with-nav-search',
   props: {
     id: {
       type: String,
@@ -75,8 +76,8 @@ const PhotoDetailPage = {
   async fetch() {
     if (!this.$store.state.image.id) {
       await this.loadImage(this.$route.params.id)
+      await this[FETCH_RELATED_IMAGES]({ id: this.image.id })
     }
-    await this.getRelatedImages()
   },
   beforeRouteUpdate(to, from, next) {
     this.resetImageOnRouteChanged()
