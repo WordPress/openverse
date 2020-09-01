@@ -1,6 +1,6 @@
 {
   "name": "cccatalog-frontend",
-  "version": "2020.8.4",
+  "version": "2020.9.1",
   "description": "Common Creative search",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "build:server": "webpack --config build/webpack.config.server.js"
   },
   "dependencies": {
-    "@creativecommons/vocabulary": "^2020.8.6",
+    "@creativecommons/vocabulary": "^2020.8.7",
     "@sentry/browser": "^5.20.1",
     "@sentry/integrations": "^5.20.1",
     "@sentry/node": "^5.20.1",

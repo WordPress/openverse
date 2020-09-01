@@ -59,13 +59,6 @@
             >
               <i class="icon facebook margin-right-small is-size-4" />
             </a>
-            <address class="margin-bottom-normal">
-              <span class="is-block">Creative Commons</span>
-              <span>PO Box 1866, Mountain View CA 94042</span>
-            </address>
-            <a href="mailto:info@creativecommons.org" class="mail is-block">
-              info@creativecommons.org
-            </a>
           </div>
         </section>
         <div class="column is-half">
@@ -156,7 +149,7 @@
               href="http://creativecommons.org/donate"
             >
               <i
-                class="icon cc-letterheart margin-right-small is-size-5 padding-top-smaller"
+                class="icon cc-letterheart-filled margin-right-small is-size-5 padding-top-smaller"
               />
               {{ $t('footer.donate.link') }}
             </a>
