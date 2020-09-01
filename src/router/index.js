@@ -5,6 +5,7 @@ import AboutPage from '@/pages/AboutPage'
 import SourcePage from '@/pages/SourcePage'
 import HomePage from '@/pages/HomePage'
 import BrowsePage from '@/pages/BrowsePage'
+import MetaSearchPage from '@/pages/MetaSearchPage'
 import PhotoDetailPage from '@/pages/PhotoDetailPage'
 import FeedbackPage from '@/pages/FeedbackPage'
 import SearchHelpPage from '@/pages/SearchHelpPage'
@@ -63,6 +64,11 @@ const router = new VueRouter({
       path: '/about',
       name: 'about-page',
       component: AboutPage,
+    },
+    {
+      path: '/meta-search',
+      name: 'meta-search-page',
+      component: MetaSearchPage,
     },
     {
       path: '/sources',
