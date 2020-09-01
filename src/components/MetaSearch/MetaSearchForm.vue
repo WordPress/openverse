@@ -49,6 +49,7 @@ export default {
         return 'CC Mixter, Jamendo, or Wikimedia Commons'
       }
       if (this.type === 'video') return 'Wikimedia Commons or Youtube'
+      if (this.type === 'image') return 'Google Images'
       return ''
     },
     metaQuery() {

@@ -58,9 +58,9 @@ export const legacySourceMap = {
       return {
         url: 'https://www.google.com/search',
         query: {
+          q: search.q,
           tbm: 'isch', // this means 'search images'
           tbs: 'il:cl',
-          q: search.q,
         },
       }
     },

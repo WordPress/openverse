@@ -34,7 +34,7 @@
         </span>
       </div>
 
-      <template v-if="type !== 'image'">
+      <!-- <template v-if="type !== 'image'">
         <h5 for="metaUseCheckboxes" class="b-header margin-bottom-small">
           {{ $t('meta-search.card.checkboxes.title') }}
         </h5>
@@ -58,7 +58,7 @@
             {{ $t('meta-search.card.checkboxes.modify') }}</label
           >
         </div>
-      </template>
+      </template> -->
 
       <MetaSourceList :type="type" :query="editableQuery" />
       <p class="caption has-text-weight-semibold">
