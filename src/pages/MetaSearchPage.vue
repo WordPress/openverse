@@ -12,7 +12,7 @@
               <a aria-label="sources" href="./sources">sources</a>
             </template>
           </i18n>
-          <p>{{ $t('meta-search-page.license') }}</p>
+          <p class="margin-top-small">{{ $t('meta-search-page.license') }}</p>
           <h4 class="b-header margin-top-large">
             {{ $t('meta-search-page.content') }}
           </h4>
@@ -57,7 +57,7 @@
           <i18n
             path="meta-search-page.audio-video.filter"
             tag="p"
-            class="margin-bottom-small"
+            class="margin-vertical-small"
           >
             <template v-slot:use>
               <strong> Use </strong>
