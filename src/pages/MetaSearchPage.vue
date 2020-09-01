@@ -9,7 +9,7 @@
           </h1>
           <i18n path="meta-search-page.intro" tag="p">
             <template v-slot:link>
-              <a aria-label="sources" href="./sources">sources</a>
+              <a aria-label="sources" href="/sources">sources</a>
             </template>
           </i18n>
         </div>
@@ -44,7 +44,7 @@
         </i18n>
         <figure class="image margin-vertical-large">
           <img
-            src="src/assets/meta-search-images.gif"
+            src="@/assets/meta-search-images.gif"
             alt="Meta Search Images - Cars"
           />
         </figure>
@@ -63,7 +63,7 @@
         </i18n>
         <figure class="image margin-vertical-large">
           <img
-            src="src/assets/meta-search-audio.gif"
+            src="@/assets/meta-search-audio.gif"
             alt="Meta Search Audio - Drums"
           />
         </figure>
@@ -96,7 +96,7 @@
         <p>{{ $t('meta-search-page.why.content') }}</p>
         <figure class="image margin-vertical-large">
           <img
-            src="src/assets/cc-meta-search.gif"
+            src="@/assets/cc-meta-search.gif"
             alt="Old CC Meta Search Portal Demo"
           />
         </figure>
