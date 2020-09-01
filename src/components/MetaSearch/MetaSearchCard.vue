@@ -34,29 +34,31 @@
         </span>
       </div>
 
-      <h5 for="metaUseCheckboxes" class="b-header margin-bottom-small">
-        {{ $t('meta-search.card.checkboxes.title') }}
-      </h5>
-      <div class="meta-filters margin-bottom-bigger flex">
-        <label for="commercial-chk" class="margin-right-big"
-          ><input
-            id="commercial-chk"
-            class="margin-right-smaller"
-            type="checkbox"
-            v-model="editableQuery.filters.commercial"
-          />
-          {{ $t('meta-search.card.checkboxes.commercial') }}</label
-        >
-        <label for="modify-chk"
-          ><input
-            id="modify-chk"
-            class="margin-right-smaller"
-            type="checkbox"
-            v-model="editableQuery.filters.modify"
-          />
-          {{ $t('meta-search.card.checkboxes.modify') }}</label
-        >
-      </div>
+      <template v-if="type !== 'image'">
+        <h5 for="metaUseCheckboxes" class="b-header margin-bottom-small">
+          {{ $t('meta-search.card.checkboxes.title') }}
+        </h5>
+        <div class="meta-filters margin-bottom-bigger flex">
+          <label for="commercial-chk" class="margin-right-big"
+            ><input
+              id="commercial-chk"
+              class="margin-right-smaller"
+              type="checkbox"
+              v-model="editableQuery.filters.commercial"
+            />
+            {{ $t('meta-search.card.checkboxes.commercial') }}</label
+          >
+          <label for="modify-chk"
+            ><input
+              id="modify-chk"
+              class="margin-right-smaller"
+              type="checkbox"
+              v-model="editableQuery.filters.modify"
+            />
+            {{ $t('meta-search.card.checkboxes.modify') }}</label
+          >
+        </div>
+      </template>
 
       <meta-source-list :type="type" :query="editableQuery" />
       <p class="caption has-text-weight-semibold">
