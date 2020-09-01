@@ -1,11 +1,11 @@
 <template>
-  <div class="safe-browsing" @keyup.esc="closeShowForm">
+  <div class="safer-browsing" @keyup.esc="closeShowForm">
     <button
       class="button is-text tiny is-paddingless rating is-shadowless"
       @click="toggleShowForm"
     >
       <span class="has-color-dark-turquoise"
-        >{{ $t('browse-page.safe-browsing.title')
+        >{{ $t('browse-page.safer-browsing.title')
         }}<i class="icon flag margin-left-small"></i>
       </span>
     </button>
@@ -21,7 +21,7 @@
           <i class="icon cross"></i>
         </button>
         <p class="caption has-text-weight-semibold padding-right-big">
-          {{ $t('browse-page.safe-browsing.caption') }}
+          {{ $t('browse-page.safer-browsing.caption') }}
         </p>
 
         <label class="checkbox margin-top-small" for="mature">
@@ -33,7 +33,7 @@
             @change="toggleMature"
             @keyup.enter="toggleMature"
           />
-          {{ $t('browse-page.safe-browsing.label') }}
+          {{ $t('browse-page.safer-browsing.label') }}
         </label>
       </div>
     </focus-trap>
@@ -48,7 +48,7 @@ import { FocusTrap } from 'focus-trap-vue'
  * This component displays the mature content filter in a pop-up dialog.
  */
 export default {
-  name: 'safe-browsing',
+  name: 'safer-browsing',
   components: {
     FocusTrap,
   },
@@ -80,11 +80,11 @@ export default {
 </script>
 
 <style>
-.safe-browsing {
+.safer-browsing {
   position: relative;
 }
 
-.safe-browsing > .button.tiny {
+.safer-browsing > .button.tiny {
   font-size: 0.8rem;
 }
 </style>

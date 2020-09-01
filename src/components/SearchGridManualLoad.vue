@@ -17,7 +17,7 @@
         <div class="is-hidden-desktop is-block">
           <search-rating v-if="_query.q" :searchTerm="searchTerm" />
         </div>
-        <safe-browsing />
+        <safer-browsing />
       </div>
       <div class="search-grid-cells">
         <search-grid-cell
@@ -77,7 +77,7 @@ import { SET_IMAGES } from '@/store/mutation-types'
 import SearchGridCell from '@/components/SearchGridCell'
 import LoadingIcon from '@/components/LoadingIcon'
 import SearchRating from '@/components/SearchRating'
-import SafeBrowsing from '@/components/SafeBrowsing'
+import SaferBrowsing from '@/components/SaferBrowsing'
 import MetaSearchCard from '@/components/MetaSearch/MetaSearchCard'
 import AppModal from '@/components/AppModal'
 
@@ -89,7 +89,7 @@ export default {
     SearchGridCell,
     LoadingIcon,
     SearchRating,
-    SafeBrowsing,
+    SaferBrowsing,
     MetaSearchCard,
     AppModal,
   },

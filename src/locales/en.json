@@ -314,8 +314,8 @@
       "cc0": "This work has been marked as dedicated to the public domain.",
       "pdm": "This work is marked as being in the public domain."
     },
-    "safe-browsing": {
-      "title": "Safe Browsing",
+    "safer-browsing": {
+      "title": "Safer Browsing",
       "caption": "By default, search results will not include results that have been reported as mature by users and sources.",
       "label": "Show Mature Content"
     },
