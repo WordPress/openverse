@@ -7,13 +7,17 @@
           <h1 class="title is-2">
             {{ $t('meta-search-page.title') }}
           </h1>
-          <i18n path="meta-search-page.intro" tag="p">
-            <template v-slot:link>
-              <a aria-label="sources" href="/sources">sources</a>
-            </template>
-          </i18n>
         </div>
 
+        <i18n
+          path="meta-search-page.intro"
+          tag="p"
+          class="margin-bottom-normal"
+        >
+          <template v-slot:link>
+            <a aria-label="sources" href="/sources">sources</a>
+          </template>
+        </i18n>
         <p>{{ $t('meta-search-page.license') }}</p>
         <h4 class="b-header">
           {{ $t('meta-search-page.content') }}
