@@ -44,7 +44,7 @@
               <strong> Use </strong>
             </template>
           </i18n>
-          <figure class="image is-320x128">
+          <figure class="image is-2by1">
             <img
               src="src/assets/meta-search-images.gif"
               alt="Meta Search Images- Cars"
@@ -63,7 +63,7 @@
               <strong> Use </strong>
             </template>
           </i18n>
-          <figure class="image is-320x128">
+          <figure class="image is-2by1">
             <img
               src="src/assets/meta-search-audio.gif"
               alt="Meta Search Audio- Drums"
@@ -96,7 +96,7 @@
             {{ $t('meta-search-page.why.title') }}
           </h4>
           <p>{{ $t('meta-search-page.why.content') }}</p>
-          <figure class="image is-320x128">
+          <figure class="image is-2by1">
             <img
               src="src/assets/cc-meta-search.gif"
               alt="Old CC Meta Search Portal Demo"
