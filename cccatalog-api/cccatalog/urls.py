@@ -25,6 +25,7 @@ from cccatalog.api.views.link_views import CreateShortenedLink, \
 from cccatalog.settings import API_VERSION, WATERMARK_ENABLED
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from django.views.generic import RedirectView
 import rest_framework.permissions
 
 description = """
@@ -134,6 +135,7 @@ if WATERMARK_ENABLED:
     )
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/v1')),
     path('admin/', admin.site.urls),
     re_path('healthcheck', HealthCheck.as_view()),
     re_path(
