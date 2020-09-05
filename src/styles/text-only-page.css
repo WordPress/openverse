@@ -1,0 +1,22 @@
+p > em {
+  font-family: monospace;
+  color: #188038;
+  font-style: normal;
+  font-weight: 600;
+}
+
+a > em {
+  font-family: monospace;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.table.is-bordered td {
+  word-break: break-all;
+}
+/*# sourceMappingURL=text-only-page.css.map */

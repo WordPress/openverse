@@ -1,5 +1,6 @@
 import findIndex from 'lodash.findindex'
 import { ExperimentData } from '@/abTests/experiments/filterExpansion'
+import local from '../utils/local'
 import { TOGGLE_FILTER, CONVERT_AB_TEST_EXPERIMENT } from './action-types'
 import {
   SET_FILTER,
@@ -76,8 +77,9 @@ export const filterData = {
   mature: false,
 }
 
+const FILTER_STATE_STORAGE_KEY = 'ccsearch-filter-visibility'
 const MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT = 800
-const hideFiltersIfMobileScreen = () =>
+const isDesktop = () =>
   screenWidth() > MIN_SCREEN_WIDTH_FILTER_VISIBLE_BY_DEFAULT
 
 const isFilterApplied = (filters) =>
@@ -91,10 +93,15 @@ const isFilterApplied = (filters) =>
     return filters[filterKey].some((filter) => filter.checked)
   })
 
+const localfilterState = () =>
+  local.get(FILTER_STATE_STORAGE_KEY)
+    ? local.get(FILTER_STATE_STORAGE_KEY) === 'true'
+    : true
+
 const initialState = (searchParams) => {
   const filters = queryToFilterData(searchParams)
 
-  const isFilterVisible = hideFiltersIfMobileScreen()
+  const isFilterVisible = isDesktop() ? localfilterState() : false
   const filtersApplied = isFilterApplied(filters)
   return {
     filters,
@@ -145,9 +152,10 @@ function setFilter(state, params, path, redirect) {
   setQuery(state, params, path, redirect)
 }
 
+// Make sure when redirecting after applying a filter, we stick to the right tab (i.e, "/search/video", "/search/audio", etc.)
 const mutations = (redirect) => ({
   [SET_FILTER](state, params) {
-    return setFilter(state, params, '/search', redirect)
+    return setFilter(state, params, window.location.pathname, redirect)
   },
   [CLEAR_FILTERS](state, params) {
     const initialFilters = initialState('').filters
@@ -159,7 +167,7 @@ const mutations = (redirect) => ({
       ...initialFilters,
       providers: resetProviders,
     }
-    return setQuery(state, params, '/search', redirect)
+    return setQuery(state, params, window.location.pathname, redirect)
   },
   [SET_PROVIDERS_FILTERS](state, params) {
     const providers = params.imageProviders
@@ -186,6 +194,7 @@ const mutations = (redirect) => ({
   },
   [SET_FILTER_IS_VISIBLE](state, params) {
     state.isFilterVisible = params.isFilterVisible
+    local.set(FILTER_STATE_STORAGE_KEY, params.isFilterVisible)
   },
 })
 

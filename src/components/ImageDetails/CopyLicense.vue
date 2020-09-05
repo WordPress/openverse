@@ -3,7 +3,7 @@
     <h5 class="b-header margin-bottom-small">
       {{ $t('photo-details.reuse.copy-license.title') }}
     </h5>
-    <section class="tabs">
+    <section class="tabs is-boxed">
       <ul role="tablist">
         <li
           role="tab"
@@ -49,7 +49,7 @@
         </li>
       </ul>
     </section>
-    <section class="tabs-content has-background-white padding-normal">
+    <section class="tabs-content is-boxed">
       <div :class="tabClass(0, 'tabs-panel')">
         <span
           id="attribution"
@@ -70,7 +70,7 @@
             >
             <span v-else>{{ image.creator }}</span>
           </span>
-          is licensed under
+          {{ isTool ? 'is marked with' : 'is licensed under' }}
           <a
             class="photo_license"
             :href="licenseURL"
@@ -113,9 +113,9 @@
         >
           {{ imageTitle }}
           <span v-if="image.creator"> by {{ image.creator }} </span>
-          is licensed under
-          {{ fullLicenseName.toUpperCase() }}. To view a copy of this license,
-          visit
+          {{ isTool ? 'is marked under' : 'is licensed with' }}
+          {{ fullLicenseName.toUpperCase() }}. To
+          {{ isTool ? 'view the terms' : 'view a copy of this license' }}, visit
           <template v-if="licenseURL">
             {{ licenseURL.substring(0, licenseURL.indexOf('?')) }}
           </template>
@@ -151,6 +151,13 @@ export default {
     }
   },
   computed: {
+    // Check if the 'license' is a tool rather than a legal license
+    isTool() {
+      return (
+        this.fullLicenseName.includes('cc0') ||
+        this.fullLicenseName.includes('pdm')
+      )
+    },
     imageTitle() {
       const title = this.$props.image.title
       return title !== 'Image' ? `"${title}"` : 'Image'
@@ -198,8 +205,5 @@ textarea {
 
 .copy-attribution {
   margin-left: auto;
-}
-.tabs {
-  margin-bottom: 0;
 }
 </style>

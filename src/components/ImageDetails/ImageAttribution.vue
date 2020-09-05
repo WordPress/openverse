@@ -2,25 +2,11 @@
   <section class="sidebar_section">
     <div
       class="photo-attribution margin-bottom-big"
-      v-if="
-        (fullLicenseName === 'cc0 1.0') | (fullLicenseName === 'CC pdm 1.0')
-      "
+      v-if="fullLicenseName.includes('cc0') || fullLicenseName.includes('pdm')"
     >
       <h5 class="b-header margin-bottom-big">
-        {{ $t('photo-details.reuse.license-header') }}
+        {{ $t('photo-details.reuse.tool-header') }}
       </h5>
-      <i18n path="photo-details.attribution.main" tag="span">
-        <template v-slot:link>
-          <a
-            class="photo_license"
-            :href="licenseURL"
-            target="_blank"
-            rel="noopener"
-          >
-            {{ fullLicenseName.toUpperCase() }}
-          </a>
-        </template>
-      </i18n>
       <license-explanations :license="image.license" />
 
       <i18n

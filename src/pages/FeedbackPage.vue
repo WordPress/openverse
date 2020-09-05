@@ -1,90 +1,92 @@
 <template>
   <div class="feedback-page">
-    <header-section showNavSearch="true"></header-section>
-    <main role="main" class="margin-larger">
-      <h1 id="feedback">{{ $t('feedback.title') }}</h1>
-      <i18n path="feedback.description" tag="p">
-        <template v-slot:channel>
-          <a
-            :aria-label="$t('feedback.aria.cc-usability')"
-            href="https://creativecommons.slack.com/messages/CCS9CF2JE/details/"
-            >#cc-usability</a
-          >
-        </template>
-        <template v-slot:slack>
-          <a
-            aria-label="cc slack"
-            href="https://wiki.creativecommons.org/wiki/Slack#How_to_join_Slack"
-            >CC Slack</a
-          >
-        </template>
-      </i18n>
-      <div class="column">
-        <section class="tabs margin-top-big">
-          <ul role="tablist">
-            <li
-              role="tab"
-              :aria-selected="activeTab == 0"
-              :class="tabClass(0, 'tab')"
-            >
+    <header-section showNavSearch="true" />
+    <main role="main" class="section">
+      <div class="container is-fluid">
+        <div class="padding-bottom-big">
+          <h1 class="title is-2" id="feedback">{{ $t('feedback.title') }}</h1>
+          <i18n path="feedback.description" tag="p" class="margin-bottom-large">
+            <template v-slot:channel>
               <a
+                :aria-label="$t('feedback.aria.cc-usability')"
+                href="https://creativecommons.slack.com/messages/CCS9CF2JE/details/"
+                >#cc-usability</a
+              >
+            </template>
+            <template v-slot:slack>
+              <a
+                aria-label="cc slack"
+                href="https://wiki.creativecommons.org/wiki/Slack#How_to_join_Slack"
+                >CC Slack</a
+              >
+            </template>
+          </i18n>
+          <section class="tabs margin-top-big">
+            <ul role="tablist">
+              <li
+                role="tab"
+                :aria-selected="activeTab == 0"
+                :class="tabClass(0, 'tab')"
+              >
+                <a
+                  :aria-label="$t('feedback.aria.improve')"
+                  href="#panel0"
+                  @click.prevent="setActiveTab(0)"
+                  v-on:keyup.enter.prevent="setActiveTab(0)"
+                >
+                  {{ $t('feedback.improve') }}
+                </a>
+              </li>
+              <li
+                role="tab"
+                :aria-selected="activeTab == 1"
+                :class="tabClass(1, 'tab')"
+              >
+                <a
+                  :aria-label="$t('feedback.aria.report-bug')"
+                  href="#panel1"
+                  @click.prevent="setActiveTab(1)"
+                  v-on:keyup.enter.prevent="setActiveTab(1)"
+                >
+                  {{ $t('feedback.bug') }}
+                </a>
+              </li>
+            </ul>
+          </section>
+          <section class="tabs-content">
+            <div :class="tabClass(0, 'tabs-panel')">
+              <iframe
                 :aria-label="$t('feedback.aria.improve')"
-                href="#panel0"
-                @click.prevent="setActiveTab(0)"
-                v-on:keyup.enter.prevent="setActiveTab(0)"
+                src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
+                width="100%"
+                height="1200"
+                frameborder="0"
+                marginheight="0"
+                marginwidth="0"
+                title="feedback form"
               >
-                {{ $t('feedback.improve') }}
-              </a>
-            </li>
-            <li
-              role="tab"
-              :aria-selected="activeTab == 1"
-              :class="tabClass(1, 'tab')"
-            >
-              <a
+                {{ $t('feedback.loading') }}
+              </iframe>
+            </div>
+            <div :class="tabClass(1, 'tabs-panel')">
+              <iframe
                 :aria-label="$t('feedback.aria.report-bug')"
-                href="#panel1"
-                @click.prevent="setActiveTab(1)"
-                v-on:keyup.enter.prevent="setActiveTab(1)"
+                src="https://docs.google.com/forms/d/e/1FAIpQLSeSN1AIG8LrdgIdKpBj4IlPDhu6T5ndZ7z_QcISBu-ITCU0Yw/viewform?embedded=true"
+                width="100%"
+                height="1600"
+                frameborder="0"
+                marginheight="0"
+                marginwidth="0"
+                title="feedback form"
               >
-                {{ $t('feedback.bug') }}
-              </a>
-            </li>
-          </ul>
-        </section>
-        <section class="tabs-content">
-          <div :class="tabClass(0, 'tabs-panel')">
-            <iframe
-              :aria-label="$t('feedback.aria.improve')"
-              src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
-              width="100%"
-              height="998"
-              frameborder="0"
-              marginheight="0"
-              marginwidth="0"
-              title="feedback form"
-            >
-              {{ $t('feedback.loading') }}
-            </iframe>
-          </div>
-          <div :class="tabClass(1, 'tabs-panel')">
-            <iframe
-              :aria-label="$t('feedback.aria.report-bug')"
-              src="https://docs.google.com/forms/d/e/1FAIpQLSeSN1AIG8LrdgIdKpBj4IlPDhu6T5ndZ7z_QcISBu-ITCU0Yw/viewform?embedded=true"
-              width="100%"
-              height="998"
-              frameborder="0"
-              marginheight="0"
-              marginwidth="0"
-              title="feedback form"
-            >
-              {{ $t('feedback.loading') }}
-            </iframe>
-          </div>
-        </section>
+                {{ $t('feedback.loading') }}
+              </iframe>
+            </div>
+          </section>
+        </div>
       </div>
     </main>
-    <footer-section></footer-section>
+    <footer-section />
   </div>
 </template>
 

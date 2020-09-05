@@ -40,6 +40,11 @@ const initialState = (searchParams) => {
   }
 }
 
+const getSearchPath = () =>
+  window.location.pathname && window.location.pathname.includes('search')
+    ? window.location.pathname
+    : '/search'
+
 /**
  * hides the search results in case the user is performing a new search.
  * This prevents results from a previous search from showing while the
@@ -216,7 +221,7 @@ const mutations = (redirect) => ({
     _state.imagePage = params.page || 1
   },
   [SET_QUERY](_state, params) {
-    setQuery(_state, params, '/search', redirect)
+    setQuery(_state, params, getSearchPath(), redirect)
   },
   [IMAGE_NOT_FOUND]() {
     redirect({ path: '/not-found' }, true)

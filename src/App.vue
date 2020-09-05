@@ -67,6 +67,7 @@ body {
 
 .full-height-sticky {
   @include desktop {
+    z-index: 20;
     height: 100vh;
     position: sticky;
     top: 0;

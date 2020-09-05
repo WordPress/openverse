@@ -5,26 +5,27 @@
     @click.self="$emit('close')"
     @keyup="checkKey"
   >
-    <div class="modal relative" aria-modal="true" role="dialog">
-      <header
-        v-if="title"
-        class="modal-header padding-top-bigger padding-left-bigger padding-right-normal padding-bottom-small"
-      >
-        <slot name="header">
-          <h3>{{ title }}</h3>
-        </slot>
-        <button
-          type="button"
-          class="close-button has-color-gray is-size-6 is-size-4-touch"
-          @click="$emit('close')"
-          v-on:keyup.enter="$emit('close')"
-          :aria-label="$t('browse-page.aria.close')"
+    <focus-trap :active="true">
+      <div class="modal relative" aria-modal="true" role="dialog">
+        <header
+          v-if="title"
+          class="modal-header padding-top-bigger padding-left-bigger padding-right-normal padding-bottom-small"
         >
-          <i class="icon cross" />
-        </button>
-      </header>
-      <slot default />
-    </div>
+          <slot name="header">
+            <h3>{{ title }}</h3>
+          </slot>
+          <button
+            type="button"
+            class="close-button has-color-gray is-size-6 is-size-4-touch"
+            @click="$emit('close')"
+            :aria-label="$t('browse-page.aria.close')"
+          >
+            <i class="icon cross" />
+          </button>
+        </header>
+        <slot default />
+      </div>
+    </focus-trap>
   </div>
 </template>
 
@@ -32,8 +33,14 @@
 /**
  * @todo: This entire component should be moved to vue-vocabulary
  */
+
+import { FocusTrap } from 'focus-trap-vue'
+
 export default {
   name: 'app-modal',
+  components: {
+    FocusTrap,
+  },
   props: {
     visible: Boolean,
     title: String, // required for titlebar AND close button to show

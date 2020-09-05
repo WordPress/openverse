@@ -1,6 +1,6 @@
 {
   "name": "cccatalog-frontend",
-  "version": "2020.08.1",
+  "version": "2020.9.1",
   "description": "Common Creative search",
   "repository": {
     "type": "git",
@@ -20,6 +20,8 @@
     "qa-install": "brew install geckodriver && brew install pipenv && cd test/selenium-webdriver && pipenv install",
     "qa": "cd test/selenium-webdriver && pipenv run python search_screencaps.py",
     "test": "jest --config test/unit/jest-conf.js",
+    "test:e2e": "cypress open",
+    "test:e2e:ci": "cypress run",
     "lint": "eslint --ext .js,.vue . test/unit",
     "format": "prettier --write .",
     "format:test": "prettier --check .",
@@ -28,7 +30,7 @@
     "build:server": "webpack --config build/webpack.config.server.js"
   },
   "dependencies": {
-    "@creativecommons/vocabulary": "^2020.8.3",
+    "@creativecommons/vocabulary": "^2020.8.7",
     "@sentry/browser": "^5.20.1",
     "@sentry/integrations": "^5.20.1",
     "@sentry/node": "^5.20.1",
@@ -39,10 +41,13 @@
     "clipboard": "^2.0.4",
     "delayed-scroll-restoration-polyfill": "^0.1.1",
     "express": "^4.17.1",
+    "focus-trap": "^5.1.0",
+    "focus-trap-vue": "0.0.6",
     "js-cookie": "^2.2.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.findindex": "^4.6.0",
     "lodash.isempty": "^4.4.0",
+    "lodash.sortby": "^4.7.0",
     "masonry-layout": "^4.2.2",
     "route-cache": "^0.4.4",
     "sixpack-client": "^2.1.0",
@@ -79,6 +84,7 @@
     "cross-env": "^7.0.2",
     "cross-spawn": "^5.0.1",
     "css-loader": "^3.5.2",
+    "cypress": "^4.12.1",
     "dotenv-webpack": "^1.7.0",
     "es6-promise": "^4.2.5",
     "eslint": "^6.8.0",
@@ -86,6 +92,7 @@
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-import-resolver-webpack": "^0.8.3",
     "eslint-loader": "^4.0.0",
+    "eslint-plugin-cypress": "^2.11.1",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-vue": "^6.2.2",
     "eslint-plugin-vue-a11y": "0.0.31",
@@ -144,6 +151,6 @@
   },
   "lint-staged": {
     "*.{js,vue}": "eslint --cache --fix",
-    "*": "prettier --write"
+    "*.{js,vue,css,md}": "prettier --write"
   }
 }

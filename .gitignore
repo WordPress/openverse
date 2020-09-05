@@ -6,6 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 /test/unit/coverage/
 /test/e2e/reports/
+/test/e2e/screenshots
+/test/e2e/videos
 /test/selenium-webdriver/geckodriver.log
 /test/selenium-webdriver/screenshots/*
 selenium-debug.log

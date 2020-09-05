@@ -44,18 +44,47 @@
         </form>
       </div>
       <div class="navbar-end">
-        <router-link class="navbar-item" to="/about">{{
-          $t('header.about')
-        }}</router-link>
-        <router-link class="navbar-item" to="/collections">{{
-          $t('header.collections')
-        }}</router-link>
-        <router-link class="navbar-item" to="/search-help">{{
-          $t('header.search-guide')
-        }}</router-link>
-        <router-link class="navbar-item" to="/feedback">{{
-          $t('header.feedback')
-        }}</router-link>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link is-arrowless">
+            {{ $t('header.about-tab') }}
+            <i class="icon caret-down" />
+          </a>
+          <div class="navbar-dropdown">
+            <router-link class="navbar-item" to="/about">{{
+              $t('header.about')
+            }}</router-link>
+            <router-link class="navbar-item" to="/sources">{{
+              $t('header.source')
+            }}</router-link>
+            <router-link class="navbar-item" to="/meta-search">{{
+              $t('header.meta-search')
+            }}</router-link>
+            <a
+              href="https://creativecommons.org/about/cclicenses/"
+              target="_blank"
+              rel="noopener"
+              class="navbar-item"
+              >{{ $t('header.licenses') }}
+              <i class="icon external-link" />
+            </a>
+          </div>
+        </div>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link is-arrowless">
+            {{ $t('header.resources-tab') }}
+            <i class="icon caret-down" />
+          </a>
+          <div class="navbar-dropdown">
+            <router-link class="navbar-item" to="/search-help">{{
+              $t('header.search-guide')
+            }}</router-link>
+            <router-link class="navbar-item" to="/feedback">{{
+              $t('header.feedback')
+            }}</router-link>
+          </div>
+        </div>
+
         <a
           :aria-label="$t('header.aria.extension')"
           class="navbar-item"

@@ -49,4 +49,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.tabs ul {
+  padding-left: 24px;
+}
+</style>
