@@ -13,7 +13,7 @@
             class="main-logo margin-bottom-bigger has-text-white"
           >
             <svg
-              focusable="false" aria-hidden="true
+              focusable="false" aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="xMidYMid meet"
               viewBox="0 0 304 73"
