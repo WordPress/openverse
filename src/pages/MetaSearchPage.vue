@@ -127,7 +127,7 @@ import HeaderSection from '@/components/HeaderSection'
 import FooterSection from '@/components/FooterSection'
 import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin'
 
-const SupportPage = {
+const MetaSearchPage = {
   name: 'meta-search-page',
   mixins: [ServerPrefetchProvidersMixin],
   components: {
@@ -136,7 +136,7 @@ const SupportPage = {
   },
 }
 
-export default SupportPage
+export default MetaSearchPage
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
