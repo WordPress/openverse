@@ -226,7 +226,8 @@
     "free": "If you find it on CC Search, you’re free to reuse it.",
     "public-good": "Like all CC tools, CC Search is a {public-good}, allowing anyone with an internet connection the ability to visit all corners of the world, and find material that they can learn from, reuse, and share freely.",
     "launch": {
-      "title": "CC Search launched on April 30th, 2019. During our first year:",
+      "title": "CC Search launched on April 30th, 2019.",
+      "first":"During our first year:",
       "served": "We have served over 2.8 million users.",
       "host": "Our site hosted visitors from over 230 countries and territories.",
       "users": "Over 500 million+ CC-licensed images were made discoverable in a single place.",
@@ -242,7 +243,7 @@
       "text": "Text, including openly licensed books, poetry, manuscripts, and more.",
       "internalize": "By the end of 2020, we will have internationalization infrastructure in place.",
       "translate": "This will allow our volunteer community of translators to help make CC Search available in additional languages!",
-      "accesibility": "Accessibility features.",
+      "accessibility": "Accessibility features.",
       "smarter": "Smarter search, through additional filters and algorithm improvements.",
       "support": "Support this next, exciting chapter of CC Search."
     },

@@ -4,7 +4,7 @@
     <main role="main" class="section margin-bottom-large">
       <div class="container is-fluid">
         <div class="margin-bottom-large">
-          <h1 class="title is-2">
+          <h1 class="title is-2 margin-bottom-normal">
             {{ $t('support.title') }}
           </h1>
           <p class="margin-bottom-normal">{{ $t('support.inclusive') }}</p>
@@ -47,6 +47,63 @@
               <strong>public good</strong>
             </template>
           </i18n>
+          <h2 class="title subtitle is-3 margin-bottom-normal">
+            {{ $t('support.launch.title') }}
+          </h2>
+          <p class="margin-bottom-normal">{{ $t('support.launch.first') }}</p>
+          <div class="content">
+            <ul>
+              <li>
+                {{ $t('support.launch.served') }}
+              </li>
+              <li>
+                {{ $t('support.launch.host') }}
+              </li>
+              <li>
+                {{ $t('support.launch.users') }}
+              </li>
+              <li>
+                {{ $t('support.launch.visitors') }}
+              </li>
+            </ul>
+            <strong
+              ><p class="margin-bottom-normal">
+                {{ $t('support.launch.education') }}
+              </p></strong
+            >
+            <h2 class="title subtitle is-3 margin-bottom-normal">
+              {{ $t('support.future.title') }}
+            </h2>
+            <p class="margin-bottom-normal">{{ $t('support.future.more') }}</p>
+            <div class="content">
+              <ul>
+                <li>
+                  {{ $t('support.future.culture') }}
+                </li>
+                <li>
+                  {{ $t('support.future.audio') }}
+                </li>
+                <li>
+                  {{ $t('support.future.video') }}
+                </li>
+                <li>
+                  {{ $t('support.future.text') }}
+                </li>
+                <li>
+                  {{ $t('support.future.internalize') }}
+                </li>
+                <li>
+                  {{ $t('support.future.translate') }}
+                </li>
+                <li>
+                  {{ $t('support.future.accessibility') }}
+                </li>
+                <li>
+                  {{ $t('support.future.smarter') }}
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </main>
