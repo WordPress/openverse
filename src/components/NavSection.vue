@@ -56,7 +56,6 @@
             <router-link class="navbar-item" to="/sources">{{
               $t('header.source')
             }}</router-link>
-
             <a
               href="https://creativecommons.org/about/cclicenses/"
               target="_blank"
@@ -85,6 +84,9 @@
             }}</router-link>
           </div>
         </div>
+        <router-link class="navbar-item" to="/support">{{
+          $t('header.support')
+        }}</router-link>
 
         <a
           :aria-label="$t('header.aria.extension')"
