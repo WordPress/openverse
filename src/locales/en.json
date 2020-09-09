@@ -33,7 +33,7 @@
     "search-guide": "Search Guide",
     "meta-search": "Meta Search",
     "feedback": "Feedback",
-    "support": "Support",
+    "support": "Support Us",
     "extension": "Extension",
     "placeholder": "Search all content",
     "aria": {
@@ -218,12 +218,13 @@
     }
   },
   "support": {
+    "title":"Support us",
     "cc":"CC Search is the leading search engine that accurately and reliably indexes works that are known to be openly licensed or in the public domain.",
     "inclusive": "For two decades, Creative Commons, a 501(c)(3) publicly funded nonprofit, has led the movement to increase access to cultural, educational, and creative works in order to help fill knowledge gaps to promote a more equitable, innovative world. As the United Nations Sustainable Development Goals (UNSDG) for Quality Education make clear: “access to inclusive education can help equip locals with the tools required to develop innovative solutions to the world’s greatest problems.”",
-    "work":"The {license} and {public domain} tools now serve as the licensing infrastructure of the open web. They are utilized by cultural institutions, artists, universities, governments, and more to unlock over 2 billion works globally; from {photograph} of French feminist Caroline Rémy to {guide} on creating more accessible digital documents. Thanks to our collaborative efforts with the open community and these institutions, every individual may have digital access to valuable knowledge and priceless works—like the 2.8 million images and nearly two centuries of data released into the public domain by the Smithsonian in early 2020 using CC0, the Creative Commons public domain dedication tool.",
+    "work":"The {license} and {public-domain} tools now serve as the licensing infrastructure of the open web. They are utilized by cultural institutions, artists, universities, governments, and more to unlock over 2 billion works globally; from {photograph} of French feminist Caroline Rémy to {guide} on creating more accessible digital documents. Thanks to our collaborative efforts with the open community and these institutions, every individual may have digital access to valuable knowledge and priceless works—like the 2.8 million images and nearly two centuries of data released into the public domain by the Smithsonian in early 2020 using CC0, the Creative Commons public domain dedication tool.",
     "access":"With this underlying infrastructure in place, which continues to support a growing collection of open access materials, we are tackling the problems of discoverability and accessibility on the web. With CC Search, we are making important collections of openly licensed works easy to find and reuse, regardless of language and location, from a single starting point.",
     "free":"If you find it on CC Search, you’re free to reuse it.",
-    "public good":"Like all CC tools, CC Search is a {public good}, allowing anyone with an internet connection the ability to visit all corners of the world, and find material that they can learn from, reuse, and share freely.",
+    "public-good":"Like all CC tools, CC Search is a {public-good}, allowing anyone with an internet connection the ability to visit all corners of the world, and find material that they can learn from, reuse, and share freely.",
     "launch":{
       "title":"CC Search launched on April 30th, 2019. During our first year:",
       "served":"We have served over 2.8 million users.",
