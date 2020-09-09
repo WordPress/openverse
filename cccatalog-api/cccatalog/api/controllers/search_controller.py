@@ -338,16 +338,6 @@ def search(search_params, index, page_size, ip, request,
     return results, page_count, result_count
 
 
-def _validate_provider(input_provider):
-    allowed_providers = list(get_sources('image').keys())
-    lowercase_providers = [x.lower() for x in allowed_providers]
-    if input_provider.lower() not in lowercase_providers:
-        raise serializers.ValidationError(
-            "Provider \'{}\' does not exist.".format(input_provider)
-        )
-    return input_provider.lower()
-
-
 def related_images(uuid, index, request, filter_dead):
     """
     Given a UUID, find related search results.

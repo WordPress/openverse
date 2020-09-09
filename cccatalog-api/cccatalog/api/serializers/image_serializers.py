@@ -206,15 +206,15 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
             return 20
 
     @staticmethod
-    def validate_source(input_providers):
-        allowed_providers = list(get_sources('image').keys())
+    def validate_source(input_sources):
+        allowed_sources = list(get_sources('image').keys())
 
-        for input_provider in input_providers.split(','):
-            if input_provider not in allowed_providers:
+        for input_source in input_sources.split(','):
+            if input_source not in allowed_sources:
                 raise serializers.ValidationError(
-                    "Provider \'{}\' does not exist.".format(input_providers)
+                    f"Source \'{input_source}\' does not exist."
                 )
-        return input_providers.lower()
+        return input_sources.lower()
 
     @staticmethod
     def validate_extension(value):
