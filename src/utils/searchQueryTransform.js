@@ -1,6 +1,6 @@
 import clonedeep from 'lodash.clonedeep'
 import findIndex from 'lodash.findindex'
-import { filterData } from '../store/filter-store'
+import { filterData } from '~/store-modules/filter-store'
 import getParameterByName from './getParameterByName'
 
 const filterPropertyMappings = {
@@ -36,7 +36,6 @@ export const filtersToQueryData = (filters, hideEmpty = true) => {
 
   Object.keys(filterPropertyMappings).reduce((queryData, filterDataKey) => {
     const queryDataKey = filterPropertyMappings[filterDataKey]
-    // eslint-disable-next-line no-param-reassign
     queryData[queryDataKey] = filterToString(filters[filterDataKey])
     return queryData
   }, queryDataObject)
@@ -48,7 +47,6 @@ export const filtersToQueryData = (filters, hideEmpty = true) => {
     queryDataObject = Object.entries(queryDataObject).reduce(
       (obj, [key, value]) => {
         if (value) {
-          // eslint-disable-next-line no-param-reassign
           obj[key] = value
         }
         return obj
@@ -72,7 +70,6 @@ const parseQueryString = (
   ).split(',')
   data[filterKey].forEach((filter) => {
     if (findIndex(queryStringFilters, (f) => f === filter.code) >= 0) {
-      // eslint-disable-next-line no-param-reassign
       filter.checked = true
     }
   })

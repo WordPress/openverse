@@ -36,8 +36,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export default {
+  srcDir: 'src/',
   components: true,
   plugins: ['~/plugins/i18n.js'],
+  baseDir: '/src',
   css: ['@creativecommons/vocabulary/scss/vocabulary.scss'],
   head: {
     title: 'CC Search',
@@ -71,4 +73,23 @@ export default {
       },
     ],
   ],
+  /*
+   ** Build configuration
+   */
+  build: {
+    /*
+     ** You can extend webpack config here
+     */
+    extend(config, ctx) {
+      // Run ESLint on save
+      if (ctx.isDev && ctx.isClient) {
+        config.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules)/,
+        })
+      }
+    },
+  },
 }

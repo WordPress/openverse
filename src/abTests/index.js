@@ -1,4 +1,4 @@
-import { JOINED_AB_TEST_EXPERIMENT } from '../store/mutation-types'
+import { JOINED_AB_TEST_EXPERIMENT } from '~/store-modules/mutation-types'
 import createSixpackSession from './lib/createSixpackSession'
 import filterExpansion from './experiments/filterExpansion'
 

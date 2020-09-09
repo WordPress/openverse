@@ -1,9 +1,12 @@
 {
-  "include": ["./src/**/*", "store/index.js"],
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "@/*": ["src/*"]
+      "~/*": ["./*"],
+      "@/*": ["./*"],
+      "~~/*": ["./*"],
+      "@@/*": ["./*"]
     }
-  }
+  },
+  "exclude": ["node_modules", ".nuxt", "dist"]
 }
