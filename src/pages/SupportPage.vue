@@ -137,61 +137,61 @@
                 {{ $t('support.launch.visitors') }}
               </li>
             </ul>
-            <strong
-              ><p class="margin-bottom-normal">
-                {{ $t('support.launch.education') }}
-              </p></strong
-            >
-            <h2 class="title subtitle is-3 margin-bottom-normal">
-              {{ $t('support.future.title') }}
-            </h2>
-            <p class="margin-bottom-normal">{{ $t('support.future.more') }}</p>
-            <div class="content">
-              <ul>
-                <li>
-                  {{ $t('support.future.culture') }}
-                </li>
-                <li>
-                  {{ $t('support.future.audio') }}
-                </li>
-                <li>
-                  {{ $t('support.future.video') }}
-                </li>
-                <li>
-                  {{ $t('support.future.text') }}
-                </li>
-                <li>
-                  {{ $t('support.future.internalize') }}
-                </li>
-                <li>
-                  {{ $t('support.future.translate') }}
-                </li>
-                <li>
-                  {{ $t('support.future.accessibility') }}
-                </li>
-                <li>
-                  {{ $t('support.future.smarter') }}
-                </li>
-              </ul>
-            </div>
-            <h2
-              class="title subtitle is-3 margin-bottom-normal has-text-centered"
-            >
-              {{ $t('support.future.support') }}
-            </h2>
-            <div
-              class="field is-grouped is-grouped-centered margin-bottom-medium"
-            >
-              <a class="button normal donate">
-                <i
-                  class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
-                  href="https://www.classy.org/give/297881/#!/donation/checkout"
-                ></i>
-                {{ $t('support.button.donate') }}</a
-              >
-            </div>
-            <p class="margin-bottom-normal">{{ $t('support.grateful') }}</p>
           </div>
+          <strong
+            ><p class="margin-bottom-normal">
+              {{ $t('support.launch.education') }}
+            </p></strong
+          >
+          <h2 class="title subtitle is-3 margin-bottom-normal">
+            {{ $t('support.future.title') }}
+          </h2>
+          <p class="margin-bottom-normal">{{ $t('support.future.more') }}</p>
+          <div class="content">
+            <ul>
+              <li>
+                {{ $t('support.future.culture') }}
+              </li>
+              <li>
+                {{ $t('support.future.audio') }}
+              </li>
+              <li>
+                {{ $t('support.future.video') }}
+              </li>
+              <li>
+                {{ $t('support.future.text') }}
+              </li>
+              <li>
+                {{ $t('support.future.internalize') }}
+              </li>
+              <li>
+                {{ $t('support.future.translate') }}
+              </li>
+              <li>
+                {{ $t('support.future.accessibility') }}
+              </li>
+              <li>
+                {{ $t('support.future.smarter') }}
+              </li>
+            </ul>
+          </div>
+          <h2
+            class="title subtitle is-3 margin-bottom-normal has-text-centered"
+          >
+            {{ $t('support.future.support') }}
+          </h2>
+          <div
+            class="field is-grouped is-grouped-centered margin-bottom-medium"
+          >
+            <a class="button normal donate">
+              <i
+                class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
+                href="https://www.classy.org/give/297881/#!/donation/checkout"
+              ></i>
+              {{ $t('support.button.donate') }}</a
+            >
+          </div>
+          <p class="margin-bottom-normal">{{ $t('support.grateful') }}</p>
         </div>
       </div>
     </main>
