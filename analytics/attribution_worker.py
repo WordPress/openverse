@@ -37,14 +37,15 @@ def parse_message(msg):
     return parsed
 
 
-def save_message(msg, database):
+def save_message(validated_msg: dict, database):
     pass
 
 
 def is_valid(parsed_msg: dict):
     """
     We are only interested in attribution image logs for images that are
-    embedded in domains not owned by Creative Commons.
+    embedded in domains not owned by Creative Commons. We also want to make
+    sure that we're only tracking hits on embedded content.
     """
     try:
         referer = parsed_msg['http_referer']
@@ -56,10 +57,11 @@ def is_valid(parsed_msg: dict):
     return valid
 
 def listen(consumer, database):
-    msg = consumer.poll(timeout=0.1)
-    parsed_msg = parse_message(str(msg.value(), 'utf-8'))
-    if is_valid(parsed_msg):
-        save_message(msg, database)
+    while True:
+        msg = consumer.poll(timeout=0.1)
+        parsed_msg = parse_message(str(msg.value(), 'utf-8'))
+        if is_valid(parsed_msg):
+            save_message(msg, database)
 
 
 if __name__ == '__main__':
