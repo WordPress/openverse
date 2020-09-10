@@ -31,7 +31,7 @@
                     class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
                     href="https://www.classy.org/give/297881/#!/donation/checkout"
                   ></i>
-                  DONATE NOW</a
+                  {{ $t('support.button.donate') }}</a
                 >
               </div>
             </article>
@@ -109,13 +109,13 @@
                 class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
                 href="https://www.classy.org/give/297881/#!/donation/checkout"
               ></i>
-              DONATE NOW</a
+              {{ $t('support.button.donate') }}</a
             >
             <h2 class="title subtitle is-3">or</h2>
             <a
               class="button is-primary normal margin-left-normal"
               href=" https://github.com/sponsors/creativecommons"
-              >SPONSOR US ON GITHUB</a
+              >{{ $t('support.button.sponsor') }}</a
             >
           </div>
           <h2 class="title subtitle is-3 margin-vertical-normal">
@@ -187,7 +187,7 @@
                   class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
                   href="https://www.classy.org/give/297881/#!/donation/checkout"
                 ></i>
-                DONATE NOW</a
+                {{ $t('support.button.donate') }}</a
               >
             </div>
             <p class="margin-bottom-normal">{{ $t('support.grateful') }}</p>
