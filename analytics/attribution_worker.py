@@ -63,7 +63,6 @@ def is_valid(parsed_msg: dict):
         valid = 'creativecommons.org' not in referer and '.svg' in resource
     except KeyError:
         valid = False
-
     return valid
 
 
@@ -78,7 +77,7 @@ def listen(consumer, database):
 if __name__ == '__main__':
     consumer_settings = {
         'bootstrap.servers': settings.KAFKA_HOSTS,
-        'group.id': 'image_handlers',
+        'group.id': 'attribution_streamer',
         'auto.offset.reset': 'earliest'
     }
     c = Consumer(consumer_settings)
