@@ -49,10 +49,7 @@ def is_valid(parsed_msg: dict):
     try:
         referer = parsed_msg['http_referer']
         resource = parsed_msg['resource']
-        if 'creativecommons.org' not in referer and '.svg' in resource:
-            valid = True
-        else:
-            valid = False
+        valid = 'creativecommons.org' not in referer and '.svg' in resource
     except KeyError:
         valid = False
 
