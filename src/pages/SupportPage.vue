@@ -7,6 +7,41 @@
           <h1 class="title is-2 margin-bottom-normal">
             {{ $t('support.title') }}
           </h1>
+          <div class="margin-bottom-normal">
+            <article
+              class="card entry-post entry-image horizontal column is-half is-offset-one-quarter"
+            >
+              <header class="card-image">
+                <figure class="image">
+                  <img src="../assets/support.png" alt="Header image" />
+                </figure>
+              </header>
+              <div class="card-content with-button">
+                <div class="content">
+                  <h2>CC Search</h2>
+                  <span class="subtitle is-italic margin-bottom-normal"
+                    >THE SEARCH ENGINE FOR OPEN MOVEMENT</span
+                  >
+                  <p>
+                    CC Search is the leading search engine that accurately and
+                    reliably indexes works that are known to be openly licensed
+                    or in the public domain.
+                  </p>
+                </div>
+                <a class="button normal donate margin-right-normal">
+                  <i
+                    class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
+                    href="https://www.classy.org/give/297881/#!/donation/checkout"
+                  ></i>
+                  DONATE NOW</a
+                >
+              </div>
+            </article>
+            <p class="has-text-centered is-capitalized">
+              Joy is the simplest form of gratitude... Karl Barth" by Nick
+              Kenrick.. CC BY 2.0
+            </p>
+          </div>
           <p class="margin-bottom-normal">{{ $t('support.inclusive') }}</p>
           <i18n path="support.work" tag="p" class="margin-bottom-normal">
             <template v-slot:license>
@@ -161,13 +196,6 @@ export default MetaSearchPage
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import '../styles/text-only-page.scss';
-
-figure {
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  border: 1px solid black;
-}
 
 h4 {
   margin: 1rem 0;
