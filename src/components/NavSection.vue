@@ -77,6 +77,9 @@
             <NuxtLink class="navbar-item" to="/search-help">
               {{ $t('header.search-guide') }}
             </NuxtLink>
+            <NuxtLink class="navbar-item" to="/meta-search">
+              {{ $t('header.meta-search') }}
+            </NuxtLink>
             <NuxtLink class="navbar-item" to="/feedback">
               {{ $t('header.feedback') }}
             </NuxtLink>

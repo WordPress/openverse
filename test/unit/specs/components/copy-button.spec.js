@@ -1,4 +1,4 @@
-import CopyButton from '@/components/CopyButton'
+import CopyButton from '~/components/CopyButton'
 import render from '../../test-utils/render'
 import i18n from '../../test-utils/i18n'
 

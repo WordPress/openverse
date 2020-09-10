@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import LicenseExplanations from '@/components/LicenseExplanations'
+import LicenseExplanations from '~/components/LicenseExplanations'
 
 export default {
   name: 'LicenseExplanationTooltip',

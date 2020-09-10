@@ -1,4 +1,4 @@
-import FilterDisplay from '@/components/Filters/FilterDisplay'
+import FilterDisplay from '~/components/Filters/FilterDisplay'
 import render from '../../test-utils/render'
 
 describe('FilterDisplay', () => {

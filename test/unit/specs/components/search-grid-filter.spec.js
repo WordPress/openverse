@@ -1,4 +1,4 @@
-import SearchGridFilter from '@/components/Filters/SearchGridFilter'
+import SearchGridFilter from '~/components/Filters/SearchGridFilter'
 import render from '../../test-utils/render'
 
 describe('SearchGridFilter', () => {
@@ -76,7 +76,6 @@ describe('SearchGridFilter', () => {
       code: 'foo',
       filterType: 'bar',
       provider: props.provider,
-      shouldNavigate: true,
     })
   })
 
@@ -86,7 +85,6 @@ describe('SearchGridFilter', () => {
     expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
       filterType: 'searchBy',
       provider: props.provider,
-      shouldNavigate: true,
     })
   })
 
@@ -95,7 +93,6 @@ describe('SearchGridFilter', () => {
     wrapper.vm.onClearFilters()
     expect(commitMock).toHaveBeenCalledWith('CLEAR_FILTERS', {
       provider: props.provider,
-      shouldNavigate: true,
     })
   })
 

@@ -1,12 +1,12 @@
-import store from '@/store/report-content-store'
+import store from '~/store-modules/report-content-store'
 import {
   TOGGLE_REPORT_FORM_VISIBILITY,
   REPORT_SENT,
   REPORT_FORM_CLOSED,
   REPORT_ERROR,
   BACK_TO_REPORT_START,
-} from '@/store/mutation-types'
-import { SEND_CONTENT_REPORT } from '@/store/action-types'
+} from '~/store-modules/mutation-types'
+import { SEND_CONTENT_REPORT } from '~/store-modules/action-types'
 
 describe('Report Content Store', () => {
   describe('state', () => {

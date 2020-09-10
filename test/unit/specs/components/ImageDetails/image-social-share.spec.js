@@ -1,4 +1,4 @@
-import ImageSocialShare from '@/components/ImageDetails/ImageSocialShare'
+import ImageSocialShare from '~/components/ImageDetails/ImageSocialShare'
 import render from '../../../test-utils/render'
 
 describe('ImageSocialShare', () => {

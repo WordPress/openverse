@@ -1,4 +1,4 @@
-import HeroSection from '@/components/HeroSection'
+import HeroSection from '~/components/HeroSection'
 import render from '../../test-utils/render'
 import i18n from '../../test-utils/i18n'
 
@@ -32,7 +32,6 @@ describe('HeroSection', () => {
     form.trigger('submit.prevent')
     expect(commitMock).toHaveBeenCalledWith('SET_QUERY', {
       query: { q: 'me' },
-      shouldNavigate: true,
     })
   })
 })

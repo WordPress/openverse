@@ -1,4 +1,4 @@
-import SearchGrid from '@/components/SearchGridManualLoad'
+import SearchGrid from '~/components/SearchGridManualLoad'
 import render from '../../test-utils/render'
 import i18n from '../../test-utils/i18n'
 
@@ -29,30 +29,30 @@ describe('SearchGrid', () => {
 
   it('should render correct contents', () => {
     const wrapper = render(SearchGrid, options)
-    expect(wrapper.find('section').element).toBeDefined()
-    expect(wrapper.find('.load-more').element).toBeDefined()
+    expect(wrapper.findComponent('section').element).toBeDefined()
+    expect(wrapper.findComponent('.load-more').element).toBeDefined()
   })
 
   it('doesnt render load more button if not loading images', () => {
     const wrapper = render(SearchGrid, options)
-    expect(wrapper.find('.load-more').element).toBeDefined()
+    expect(wrapper.findComponent('.load-more').element).toBeDefined()
   })
 
   it('doesnt render load more button if is loading images', () => {
     options.propsData.isFetchingImages = true
     const wrapper = render(SearchGrid, options)
-    expect(wrapper.find('.load-more').vm).not.toBeDefined()
+    expect(wrapper.findComponent('.load-more').vm).not.toBeDefined()
   })
 
   it('shows loading icon if is loading images', () => {
     options.propsData.isFetchingImages = true
     const wrapper = render(SearchGrid, options)
-    expect(wrapper.find({ name: 'loading-icon' }).vm).toBeDefined()
+    expect(wrapper.findComponent({ name: 'LoadingIcon' }).vm).toBeDefined()
   })
 
   it('doesnt render load more button if not loading images', () => {
     const wrapper = render(SearchGrid, options)
-    const button = wrapper.find('.button')
+    const button = wrapper.findComponent('.button')
     button.trigger('click')
 
     expect(wrapper.emitted('onLoadMoreImages')[0]).toEqual([

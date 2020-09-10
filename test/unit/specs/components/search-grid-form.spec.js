@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 import { createLocalVue } from '@vue/test-utils'
-import SearchGridForm from '@/components/SearchGridForm'
+import SearchGridForm from '~/components/SearchGridForm'
 import render from '../../test-utils/render'
 import i18n from '../../test-utils/i18n'
 

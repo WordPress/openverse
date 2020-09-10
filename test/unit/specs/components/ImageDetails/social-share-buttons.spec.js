@@ -1,9 +1,9 @@
-import SocialShareButtons from '@/components/ImageDetails/SocialShareButtons'
-import { SOCIAL_MEDIA_SHARE } from '@/store/action-types'
+import SocialShareButtons from '~/components/ImageDetails/SocialShareButtons'
+import { SOCIAL_MEDIA_SHARE } from '~/store-modules/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '@/store/usage-data-analytics-types'
+} from '~/store-modules/usage-data-analytics-types'
 import render from '../../../test-utils/render'
 import i18n from '../../../test-utils/i18n'
 

@@ -1,4 +1,4 @@
-import RelatedImage from '@/components/RelatedImages'
+import RelatedImage from '~/components/RelatedImages'
 import render from '../../test-utils/render'
 import i18n from '../../test-utils/i18n'
 

@@ -1,4 +1,4 @@
-import store from '@/store/usage-data-store'
+import store from '~/store-modules/usage-data-store'
 
 describe('Usage Data Store Store', () => {
   describe('actions', () => {

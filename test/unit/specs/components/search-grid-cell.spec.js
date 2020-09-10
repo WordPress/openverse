@@ -1,4 +1,4 @@
-import SearchGridCell from '@/components/SearchGridCell'
+import SearchGridCell from '~/components/SearchGridCell'
 import render from '../../test-utils/render'
 
 describe('SearchGridCell', () => {

@@ -1,4 +1,4 @@
-import ContentReportForm from '@/components/ContentReport/ContentReportForm'
+import ContentReportForm from '~/components/ContentReport/ContentReportForm'
 import render from '../../../test-utils/render'
 import i18n from '../../../test-utils/i18n'
 

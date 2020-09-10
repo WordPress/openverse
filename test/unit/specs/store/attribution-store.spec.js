@@ -1,14 +1,14 @@
-import store from '@/store/attribution-store'
-import { CopyAttribution, EmbedAttribution } from '@/analytics/events'
+import store from '~/store-modules/attribution-store'
+import { CopyAttribution, EmbedAttribution } from '~/analytics/events'
 
 describe('Attribution Store', () => {
   describe('actions', () => {
     let googleAnalyticsMock = null
 
     beforeEach(() => {
-      googleAnalyticsMock = {
+      googleAnalyticsMock = () => ({
         sendEvent: jest.fn(),
-      }
+      })
     })
 
     it('COPY_ATTRIBUTION sends copy event', () => {

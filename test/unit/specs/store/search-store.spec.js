@@ -1,4 +1,4 @@
-import store from '@/store/search-store'
+import store from '~/store-modules/search-store'
 import {
   FETCH_END_IMAGES,
   FETCH_IMAGES_ERROR,
@@ -8,12 +8,12 @@ import {
   SET_IMAGES,
   SET_QUERY,
   IMAGE_NOT_FOUND,
-} from '@/store/mutation-types'
+} from '~/store-modules/mutation-types'
 import {
   FETCH_IMAGES,
   FETCH_IMAGE,
   FETCH_COLLECTION_IMAGES,
-} from '@/store/action-types'
+} from '~/store-modules/action-types'
 
 describe('Search Store', () => {
   describe('state', () => {

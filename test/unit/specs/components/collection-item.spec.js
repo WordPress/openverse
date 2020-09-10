@@ -1,4 +1,4 @@
-import CollectionItem from '@/components/CollectionItem'
+import CollectionItem from '~/components/CollectionItem'
 import render from '../../test-utils/render'
 
 describe('CollectionItem', () => {

@@ -1,4 +1,4 @@
-import FilterChecklist from '@/components/Filters/FilterChecklist'
+import FilterChecklist from '~/components/Filters/FilterChecklist'
 import render from '../../test-utils/render'
 import i18n from '../../test-utils/i18n'
 

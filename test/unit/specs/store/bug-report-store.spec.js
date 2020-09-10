@@ -1,9 +1,9 @@
-import store from '@/store/bug-report-store'
+import store from '~/store-modules/bug-report-store'
 import {
   REPORT_BUG_START,
   REPORT_BUG_END,
   REPORT_BUG_FAILED,
-} from '@/store/mutation-types'
+} from '~/store-modules/mutation-types'
 
 describe('Attribution Store', () => {
   describe('actions', () => {

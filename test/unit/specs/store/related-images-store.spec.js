@@ -1,10 +1,10 @@
-import store from '@/store/related-images-store'
+import store from '~/store-modules/related-images-store'
 import {
   FETCH_END_IMAGES,
   FETCH_START_IMAGES,
   SET_RELATED_IMAGES,
-} from '@/store/mutation-types'
-import { FETCH_RELATED_IMAGES } from '@/store/action-types'
+} from '~/store-modules/mutation-types'
+import { FETCH_RELATED_IMAGES } from '~/store-modules/action-types'
 
 describe('Related Images Store', () => {
   describe('state', () => {

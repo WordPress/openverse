@@ -1,4 +1,4 @@
-import ScrollButton from '@/components/ScrollButton'
+import ScrollButton from '~/components/ScrollButton'
 import render from '../../test-utils/render'
 import i18n from '../../test-utils/i18n'
 

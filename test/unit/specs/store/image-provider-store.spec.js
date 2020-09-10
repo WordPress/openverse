@@ -1,11 +1,11 @@
-import store from '@/store/image-provider-store'
+import store from '~/store-modules/image-provider-store'
 import {
   FETCH_IMAGE_PROVIDERS_END,
   SET_FETCH_IMAGES_ERROR,
   FETCH_IMAGE_PROVIDERS_START,
   SET_IMAGE_PROVIDERS,
-} from '@/store/mutation-types'
-import { FETCH_IMAGE_PROVIDERS } from '@/store/action-types'
+} from '~/store-modules/mutation-types'
+import { FETCH_IMAGE_PROVIDERS } from '~/store-modules/action-types'
 
 describe('Image Provider Store', () => {
   describe('state', () => {

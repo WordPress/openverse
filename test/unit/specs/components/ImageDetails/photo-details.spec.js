@@ -1,8 +1,8 @@
-import PhotoDetails from '@/components/ImageDetails/PhotoDetails'
+import PhotoDetails from '~/components/ImageDetails/PhotoDetails'
 import {
   DETAIL_PAGE_EVENTS,
   SEND_DETAIL_PAGE_EVENT,
-} from '@/store/usage-data-analytics-types'
+} from '~/store-modules/usage-data-analytics-types'
 import render from '../../../test-utils/render'
 import i18n from '../../../test-utils/i18n'
 

@@ -87,7 +87,7 @@ const head = {
 /**
  * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.
  */
-const env = {
+export const env = {
   apiUrl:
     process.env.API_URL || 'https://api-dev.creativecommons.engineering/v1/',
   socialSharing: process.env.SOCIAL_SHARING || true,

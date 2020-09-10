@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import LicenseExplanations from '@/components/LicenseExplanations'
+import LicenseExplanations from '~/components/LicenseExplanations'
 import CopyLicense from './CopyLicense'
 
 export default {
