@@ -3,7 +3,7 @@ import uuid
 import requests
 import os
 import json
-from analytics.attribution_worker import parse_message
+from analytics.attribution_worker import parse_message, is_valid
 """
 End-to-end tests of the analytics server. Run with `pytest -s`.
 """
@@ -76,6 +76,19 @@ def test_detail_event():
     )
     assert bad_response.status_code == 400
 
+
+# Attribution logging tests
+def test_attribution_validation():
+    valid_msg = json.dumps({
+        'http_referer': 'https://alden.page/blog',
+        'request': 'GET /static/img/cc-nd_icon.svg HTTP/1.1'
+    })
+    invalid_msg = json.dumps({
+        'http_referer': 'https://search.creativecommons.org/photos/12345',
+        'request': 'GET /static/img/cc-nd_icon.svg HTTP/1.1'
+    })
+    assert is_valid(parse_message(valid_msg))
+    assert not is_valid(parse_message(invalid_msg))
 
 def test_msg_parsing_noparam():
     test_msg = json.dumps({
