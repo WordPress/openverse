@@ -47,7 +47,22 @@
               <strong>public good</strong>
             </template>
           </i18n>
-          <h2 class="title subtitle is-3 margin-bottom-normal">
+          <div class="field is-grouped is-grouped-centered">
+            <a class="button normal donate margin-right-normal">
+              <i
+                class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
+                href="https://www.classy.org/give/297881/#!/donation/checkout"
+              ></i>
+              DONATE NOW</a
+            >
+            <h2 class="title subtitle is-3">or</h2>
+            <a
+              class="button is-primary normal margin-left-normal"
+              href=" https://github.com/sponsors/creativecommons"
+              >SPONSOR US ON GITHUB</a
+            >
+          </div>
+          <h2 class="title subtitle is-3 margin-vertical-normal">
             {{ $t('support.launch.title') }}
           </h2>
           <p class="margin-bottom-normal">{{ $t('support.launch.first') }}</p>
@@ -102,6 +117,21 @@
                   {{ $t('support.future.smarter') }}
                 </li>
               </ul>
+            </div>
+            <h2
+              class="title subtitle is-3 margin-bottom-normal has-text-centered"
+            >
+              {{ $t('support.future.support') }}
+            </h2>
+            <p class="margin-bottom-normal">{{ $t('support.grateful') }}</p>
+            <div class="field is-grouped is-grouped-centered">
+              <a class="button normal donate margin-right-normal">
+                <i
+                  class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
+                  href="https://www.classy.org/give/297881/#!/donation/checkout"
+                ></i>
+                DONATE NOW</a
+              >
             </div>
           </div>
         </div>
