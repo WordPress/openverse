@@ -4,6 +4,9 @@ import logging as log
 import urllib.parse as urlparse
 from urllib.parse import parse_qs
 from uuid import UUID
+from models import AttributionReferrerEvent
+from sqlalchemy import create_engine
+from sqlalachemy.orm import sessionmaker
 from confluent_kafka import Consumer
 
 
@@ -37,8 +40,15 @@ def parse_message(msg):
     return parsed
 
 
-def save_message(validated_msg: dict, database):
-    pass
+def save_message(validated_msg: dict, session):
+    event = AttributionReferrerEvent(
+        image_uuid=validated_msg['identifier'],
+        full_referer=validated_msg['http_referer'],
+        referer_domain=urlparse.urlparse(validated_msg['http_referer']).netloc,
+        resource=validated_msg['resource']
+    )
+    session.add(event)
+    session.commit()
 
 
 def is_valid(parsed_msg: dict):
@@ -56,6 +66,7 @@ def is_valid(parsed_msg: dict):
 
     return valid
 
+
 def listen(consumer, database):
     while True:
         msg = consumer.poll(timeout=0.1)
@@ -71,4 +82,7 @@ if __name__ == '__main__':
         'auto.offset.reset': 'earliest'
     }
     c = Consumer(consumer_settings)
-    listen(c, database_conn)
+    engine = create_engine(settings.DATABASE_CONNECTION)
+    session_maker = sessionmaker(bind=engine)
+    session = session_maker()
+    listen(c, session)

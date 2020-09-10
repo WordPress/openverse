@@ -74,4 +74,4 @@ class AttributionReferrerEvent(Base, EventMixin):
     full_referer = Column(String)
     referer_domain = Column(String, index=True)
     # The path to the embedded asset on our server. ex: /static/img/cc-by.svg
-    asset = Column(String, index=True)
+    resource = Column(String, index=True)
