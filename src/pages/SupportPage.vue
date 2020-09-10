@@ -19,13 +19,11 @@
               <div class="card-content with-button">
                 <div class="content">
                   <h2>CC Search</h2>
-                  <span class="subtitle is-italic margin-bottom-normal"
-                    >THE SEARCH ENGINE FOR OPEN MOVEMENT</span
+                  <span class="subtitle is-italic margin-bottom-normal">
+                    {{ $t('support.open') }}</span
                   >
                   <p>
-                    CC Search is the leading search engine that accurately and
-                    reliably indexes works that are known to be openly licensed
-                    or in the public domain.
+                    {{ $t('support.cc') }}
                   </p>
                 </div>
                 <a class="button normal donate margin-right-normal">
@@ -37,10 +35,33 @@
                 >
               </div>
             </article>
-            <p class="has-text-centered is-capitalized">
-              Joy is the simplest form of gratitude... Karl Barth" by Nick
-              Kenrick.. CC BY 2.0
-            </p>
+            <i18n
+              path="support.quote"
+              tag="p"
+              class="has-text-centered is-uppercase"
+            >
+              <template v-slot:joy>
+                <a
+                  aria-label="licenses"
+                  href="https://www.flickr.com/photos/33363480@N05/14084531185"
+                  >"Joy is the simplest form of gratitude... Karl Barth"</a
+                >
+              </template>
+              <template v-slot:writer>
+                <a
+                  aria-label="public domain"
+                  href="https://www.flickr.com/photos/33363480@N05"
+                  >Nick Kenrick.</a
+                >
+              </template>
+              <template v-slot:cc>
+                <a
+                  aria-label="photograph"
+                  href="https://creativecommons.org/licenses/by/2.0/?ref=ccsearch&atype=rich"
+                  >CC BY 2.0
+                </a>
+              </template>
+            </i18n>
           </div>
           <p class="margin-bottom-normal">{{ $t('support.inclusive') }}</p>
           <i18n path="support.work" tag="p" class="margin-bottom-normal">
@@ -158,9 +179,10 @@
             >
               {{ $t('support.future.support') }}
             </h2>
-            <p class="margin-bottom-normal">{{ $t('support.grateful') }}</p>
-            <div class="field is-grouped is-grouped-centered">
-              <a class="button normal donate margin-right-normal">
+            <div
+              class="field is-grouped is-grouped-centered margin-bottom-medium"
+            >
+              <a class="button normal donate">
                 <i
                   class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
                   href="https://www.classy.org/give/297881/#!/donation/checkout"
@@ -168,6 +190,7 @@
                 DONATE NOW</a
               >
             </div>
+            <p class="margin-bottom-normal">{{ $t('support.grateful') }}</p>
           </div>
         </div>
       </div>
