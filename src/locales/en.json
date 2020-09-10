@@ -227,7 +227,7 @@
     "access": "With this underlying infrastructure in place, which continues to support a growing collection of open access materials, we are tackling the problems of discoverability and accessibility on the web. With CC Search, we are making important collections of openly licensed works easy to find and reuse, regardless of language and location, from a single starting point.",
     "free": "If you find it on CC Search, you’re free to reuse it.",
     "public-good": "Like all CC tools, CC Search is a {public-good}, allowing anyone with an internet connection the ability to visit all corners of the world, and find material that they can learn from, reuse, and share freely.",
-    "button":{
+    "button": {
       "donate": "Donate Now",
       "sponsor": "Sponsor us on GitHub"
     },
