@@ -69,6 +69,7 @@ class AttributionReferrerEvent(Base, EventMixin):
     site. By parsing server logs, we can determine which work was embedded and
     on which domain it appeared.
     """
+    __tablename__ = "attribution_referrer_event"
 
     image_uuid = Column(UUID, index=True)
     full_referer = Column(String)

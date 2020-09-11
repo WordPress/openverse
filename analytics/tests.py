@@ -90,6 +90,7 @@ def test_attribution_validation():
     assert is_valid(parse_message(valid_msg))
     assert not is_valid(parse_message(invalid_msg))
 
+
 def test_msg_parsing_noparam():
     test_msg = json.dumps({
         'http_referer': 'https://alden.page/blog',
@@ -108,6 +109,7 @@ def test_msg_parsing_valid_param():
     })
     parsed = parse_message(test_msg)
     assert parsed['identifier'] == 'b45c0995-9896-4ba8-838d-096ec4e9cdf4'
+
 
 def test_msg_parsing_invalid_params():
     test_msg = json.dumps({

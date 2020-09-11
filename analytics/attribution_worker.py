@@ -20,11 +20,13 @@ def parse_identifier(resource):
             image_id = query_parsed['image_id'][0]
             identifier = str(UUID(image_id))
         except (KeyError, ValueError, TypeError):
-            pass
+            identifier = None
     return identifier
 
 
 def parse_message(msg):
+    if msg is None:
+        return None
     try:
         decoded = json.loads(msg)
         resource = decoded['request'].split(' ')[1]
@@ -57,6 +59,8 @@ def is_valid(parsed_msg: dict):
     embedded in domains not owned by Creative Commons. We also want to make
     sure that we're only tracking hits on embedded content.
     """
+    if parsed_msg is None:
+        return False
     try:
         referer = parsed_msg['http_referer']
         resource = parsed_msg['resource']
@@ -67,20 +71,33 @@ def is_valid(parsed_msg: dict):
 
 
 def listen(consumer, database):
+    saved = 0
+    ignored = 0
     while True:
-        msg = consumer.poll(timeout=0.1)
+        msg = consumer.poll(timeout=30)
         parsed_msg = parse_message(str(msg.value(), 'utf-8'))
         if is_valid(parsed_msg):
             save_message(msg, database)
+            saved += 1
+        else:
+            ignored += 1
+        if saved + ignored % 100 == 0:
+            log.info(f'Saved {saved} attribution events, ignored {ignored}')
 
 
-if __name__ == '__main__':
+def run_worker():
+    log.basicConfig(
+        filename=settings.ATTRIBUTION_LOGFILE,
+        format='%(asctime)s %(message)s',
+        level=log.INFO
+    )
     consumer_settings = {
         'bootstrap.servers': settings.KAFKA_HOSTS,
         'group.id': 'attribution_streamer',
         'auto.offset.reset': 'earliest'
     }
     c = Consumer(consumer_settings)
+    c.subscribe([settings.KAFKA_TOPIC_NAME])
     engine = create_engine(settings.DATABASE_CONNECTION)
     session_maker = sessionmaker(bind=engine)
     session = session_maker()
