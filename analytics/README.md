@@ -29,6 +29,11 @@ cd analytics
 alembic upgrade head
 ```
 
+## Generating new database migrations
+After updating `models.py`, you will need to produce new database migrations.
+
+`alembic revision --autogenerate -m "A message concisely explaining the purpose of your new migration`
+
 ## Running the tests
 
 ```
