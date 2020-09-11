@@ -44,7 +44,8 @@ def _process_row(tsv_row, image_store_dict=_image_store_dict):
 
 def _get_image_from_row(tsv_row):
     exploded_row = [
-        s if s != "\\N" else None for s in tsv_row.strip().split('\t')
+        s.replace("\\\\", "\\") if s != "\\N" else None
+        for s in tsv_row.strip().split('\t')
     ]
     try:
         row_image = image.Image(*exploded_row)
