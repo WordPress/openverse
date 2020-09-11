@@ -6,7 +6,7 @@ from urllib.parse import parse_qs
 from uuid import UUID
 from models import AttributionReferrerEvent
 from sqlalchemy import create_engine
-from sqlalachemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker
 from confluent_kafka import Consumer
 
 
