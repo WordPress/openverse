@@ -1,4 +1,4 @@
-import analytics.settings as settings
+import settings
 import json
 import logging as log
 import urllib.parse as urlparse
