@@ -13,7 +13,7 @@ jobs:
       uses: docker://takanabe/github-actions-automate-projects:v0.0.1
       if: github.event_name == 'issues'
       env:
-        GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         GITHUB_PROJECT_URL: https://github.com/orgs/creativecommons/projects/10
         GITHUB_PROJECT_COLUMN_NAME: "Pending Review"
     - name: "Automate adding PRs to Active Sprint"
@@ -21,6 +21,6 @@ jobs:
       if: github.event_name == 'pull_request'
       continue-on-error: true
       env:
-        GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         GITHUB_PROJECT_URL: https://github.com/orgs/creativecommons/projects/7
         GITHUB_PROJECT_COLUMN_NAME: "In Progress"
