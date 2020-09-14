@@ -15,6 +15,3 @@ requests = "*"
 pytest = "*"
 falcon-cors = "*"
 confluent-kafka = "*"
-
-[requires]
-python_version = "3.7"
