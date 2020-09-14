@@ -55,7 +55,7 @@ def save_message(validated_msg: dict, session):
 
 
 def scrub_malformed(_json: str):
-    """ Remove some invalid JSON that NGINX spits out """
+    """ Remove some invalid JSON that NGINX sometimes spits out """
     return _json.replace('\"upstream_response_time\":,', '')
 
 
