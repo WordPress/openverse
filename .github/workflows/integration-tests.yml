@@ -26,7 +26,7 @@ jobs:
     - uses: actions/setup-python@v1
     - name: Install dependencies
       run: |
-        pip install pytest
+        pip install pytest pipenv
         sudo apt-get install libexempi3
         PIPENV_PIPFILE=./cccatalog-api/Pipfile pipenv install --system --deploy --dev &
     - name: Start API
