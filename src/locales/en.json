@@ -7,7 +7,7 @@
       "button": "Search"
     },
     "caption": {
-      "content": "All our content is under Creative Commons licenses. {link} about CC licenses.",
+      "content": "All our content is under Creative Commons licenses or in the public domain. {link} about CC licenses and tools.",
       "link": "Learn more"
     },
     "license-filter": {
@@ -33,6 +33,7 @@
     "search-guide": "Search Guide",
     "meta-search": "Meta Search",
     "feedback": "Feedback",
+    "support": "Support Us",
     "extension": "Extension",
     "placeholder": "Search all content",
     "aria": {
@@ -215,6 +216,44 @@
       "improve": "help us improve form",
       "report-bug": "report a bug form"
     }
+  },
+  "support": {
+    "title": "Support us",
+    "open": "THE SEARCH ENGINE FOR OPEN MOVEMENT",
+    "cc": "CC Search is the leading search engine that accurately and reliably indexes works that are known to be openly licensed or in the public domain.",
+    "quote": "{joy} by {writer}.. {cc}",
+    "inclusive": "For two decades, Creative Commons, a 501(c)(3) publicly funded nonprofit, has led the movement to increase access to cultural, educational, and creative works in order to help fill knowledge gaps to promote a more equitable, innovative world. As the United Nations Sustainable Development Goals (UNSDG) for Quality Education make clear: “access to inclusive education can help equip locals with the tools required to develop innovative solutions to the world’s greatest problems.”",
+    "work": "The {license} and {public-domain} tools now serve as the licensing infrastructure of the open web. They are utilized by cultural institutions, artists, universities, governments, and more to unlock over 2 billion works globally; from {photograph} of French feminist Caroline Rémy to {guide} on creating more accessible digital documents. Thanks to our collaborative efforts with the open community and these institutions, every individual may have digital access to valuable knowledge and priceless works—like the 2.8 million images and nearly two centuries of data released into the public domain by the Smithsonian in early 2020 using CC0, the Creative Commons public domain dedication tool.",
+    "access": "With this underlying infrastructure in place, which continues to support a growing collection of open access materials, we are tackling the problems of discoverability and accessibility on the web. With CC Search, we are making important collections of openly licensed works easy to find and reuse, regardless of language and location, from a single starting point.",
+    "free": "If you find it on CC Search, you’re free to reuse it.",
+    "public-good": "Like all CC tools, CC Search is a {public-good}, allowing anyone with an internet connection the ability to visit all corners of the world, and find material that they can learn from, reuse, and share freely.",
+    "button": {
+      "donate": "Donate Now",
+      "sponsor": "Sponsor us on GitHub"
+    },
+    "launch": {
+      "title": "CC Search launched on April 30th, 2019.",
+      "first": "During our first year:",
+      "served": "We have served over 2.8 million users.",
+      "host": "Our site hosted visitors from over 230 countries and territories.",
+      "users": "Over 500 million+ CC-licensed images were made discoverable in a single place.",
+      "visitors": "1 in 3 visitors to CC Search is an educator, and 1 in 4 visitors is a student.",
+      "education": "These users are engaged in the use, creation, and sharing of educational materials, benefiting from easy access to openly licensed work."
+    },
+    "future": {
+      "title": "What will the future bring for CC Search?",
+      "more": "We’re always listening to our community to understand the greatest needs and highest impact features we can develop, alongside watching for newly open digitized collections to help share. We are working hard to include:",
+      "culture": "Storied cultural collections from across the world.",
+      "audio": "Audio, including openly licensed music, sound effects, pronunciations, lectures, podcasts, and audiobooks.",
+      "video": "Video, including openly licensed material for education and entertainment purposes.",
+      "text": "Text, including openly licensed books, poetry, manuscripts, and more.",
+      "internalize": "By the end of 2020, we will have internationalization infrastructure in place.",
+      "translate": "This will allow our volunteer community of translators to help make CC Search available in additional languages!",
+      "accessibility": "Accessibility features.",
+      "smarter": "Smarter search, through additional filters and algorithm improvements.",
+      "support": "Support this next, exciting chapter of CC Search."
+    },
+    "grateful": "We are grateful for the support of Arcadia, Amazon Web Services, Coil, Mozilla, and countless community donors in launching and growing this ambitious project. Thank you for helping us break down barriers to knowledge and culture!"
   },
   "collections": {
     "title": "Browse collections",

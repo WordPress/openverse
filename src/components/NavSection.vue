@@ -56,9 +56,6 @@
             <router-link class="navbar-item" to="/sources">{{
               $t('header.source')
             }}</router-link>
-            <router-link class="navbar-item" to="/meta-search">{{
-              $t('header.meta-search')
-            }}</router-link>
             <a
               href="https://creativecommons.org/about/cclicenses/"
               target="_blank"
@@ -79,11 +76,17 @@
             <router-link class="navbar-item" to="/search-help">{{
               $t('header.search-guide')
             }}</router-link>
+            <router-link class="navbar-item" to="/meta-search">{{
+              $t('header.meta-search')
+            }}</router-link>
             <router-link class="navbar-item" to="/feedback">{{
               $t('header.feedback')
             }}</router-link>
           </div>
         </div>
+        <router-link class="navbar-item" to="/support">{{
+          $t('header.support')
+        }}</router-link>
 
         <a
           :aria-label="$t('header.aria.extension')"
