@@ -29,7 +29,7 @@ def parse_message(msg):
         return None
     try:
         decoded = json.loads(msg)
-        decoded = decoded['message']
+        decoded = json.loads(scrub_malformed(decoded['message']))
         resource = decoded['request'].split(' ')[1]
         _id = parse_identifier(resource)
         parsed = {
@@ -54,6 +54,11 @@ def save_message(validated_msg: dict, session):
     session.commit()
 
 
+def scrub_malformed(_json: str):
+    """ Remove some invalid JSON that NGINX spits out """
+    return _json.replace('\"upstream_response_time\":,', '')
+
+
 def is_valid(parsed_msg: dict):
     """
     We are only interested in attribution image logs for images that are
@@ -74,21 +79,23 @@ def is_valid(parsed_msg: dict):
 def listen(consumer, database):
     saved = 0
     ignored = 0
+    timeout = 30
     while True:
-        msg = consumer.poll(timeout=30)
+        msg = consumer.poll(timeout=timeout)
         if msg:
             parsed_msg = parse_message(str(msg.value(), 'utf-8'))
             if is_valid(parsed_msg):
-                save_message(msg, database)
+                save_message(parsed_msg, database)
                 saved += 1
             else:
                 ignored += 1
         else:
-            if saved + ignored % 100 == 0:
-                log.info(f'Saved {saved} attribution events, ignored {ignored}')
+            log.info('No message received in {timeout}')
+        if saved + ignored % 100 == 0:
+            log.info(f'Saved {saved} attribution events, ignored {ignored}')
 
 
-def run_worker():
+if __name__ == '__main__':
     log.basicConfig(
         filename=settings.ATTRIBUTION_LOGFILE,
         format='%(asctime)s %(message)s',

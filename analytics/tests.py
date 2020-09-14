@@ -78,12 +78,18 @@ def test_detail_event():
 
 
 # Attribution logging tests
+def mock_attribution_event(_json: dict):
+    return json.dumps({
+        'message': json.dumps(_json)
+    })
+
+
 def test_attribution_validation():
-    valid_msg = json.dumps({
+    valid_msg = mock_attribution_event({
         'http_referer': 'https://alden.page/blog',
         'request': 'GET /static/img/cc-nd_icon.svg HTTP/1.1'
     })
-    invalid_msg = json.dumps({
+    invalid_msg = mock_attribution_event({
         'http_referer': 'https://search.creativecommons.org/photos/12345',
         'request': 'GET /static/img/cc-nd_icon.svg HTTP/1.1'
     })
@@ -92,7 +98,7 @@ def test_attribution_validation():
 
 
 def test_msg_parsing_noparam():
-    test_msg = json.dumps({
+    test_msg = mock_attribution_event({
         'http_referer': 'https://alden.page/blog',
         'request': 'GET /static/img/cc-nd_icon.svg HTTP/1.1',
     })
@@ -103,7 +109,7 @@ def test_msg_parsing_noparam():
 
 
 def test_msg_parsing_valid_param():
-    test_msg = json.dumps({
+    test_msg = mock_attribution_event({
         'http_referer': 'https://alden.page/blog',
         'request': 'GET /static/img/cc-nd_icon.svg?image_id=b45c0995-9896-4ba8-838d-096ec4e9cdf4 HTTP/1.1',
     })
@@ -112,7 +118,7 @@ def test_msg_parsing_valid_param():
 
 
 def test_msg_parsing_invalid_params():
-    test_msg = json.dumps({
+    test_msg = mock_attribution_event({
         'http_referer': 'https://alden.page/blog',
         'request': 'GET /static/img/cc-nd_icon.svg?image_id=lol&notreal=param?hi HTTP/1.1',
     })
