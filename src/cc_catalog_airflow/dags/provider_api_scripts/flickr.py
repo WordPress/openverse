@@ -317,9 +317,9 @@ def _url_join(*args):
 def _get_image_url(image_data):
     # prefer large, then medium, then small images
     for size in ['l', 'm', 's']:
-        url_key = 'url_{}'.format(size)
-        height_key = 'height_{}'.format(size)
-        width_key = 'width_{}'.format(size)
+        url_key = f'url_{size}'
+        height_key = f'height_{size}'
+        width_key = f'width_{size}'
         if url_key in image_data:
             return (
                 image_data.get(url_key),

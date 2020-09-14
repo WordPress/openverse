@@ -56,11 +56,11 @@ class SVGSilh(Provider):
                     license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
                     if not license:
-                        logging.warning('License not detected in url: {}'.format(_url))
+                        logging.warning(f'License not detected in url: {_url}'))
                         continue
 
                     elif (license.lower() != 'cc0'):
-                        logging.warning('CC0 license not detected in url: {}'.format(_url))
+                        logging.warning(f'CC0 license not detected in url: {_url}')
                         continue
 
                     self.license            = license
@@ -74,20 +74,20 @@ class SVGSilh(Provider):
                     domain  =  self.validateContent('', domain[0], 'content').split('/png')[0]
 
                 if self.provider.lower()  in domain:
-                    imageURL = '{}{}'.format(domain, self.validateContent('', imageInfo, 'src').replace('svg', 'png'))
+                    imageURL = f'{domain}{self.validateContent('', imageInfo, 'src').replace('svg', 'png')}'
                     self.url = imageURL
 
                 if not self.url:
-                    logging.warning('Image not detected in url: {}'.format(_url))
+                    logging.warning(f'Image not detected in url: {_url}')
                     continue
 
                 foreignURL = item.findChild('a', href=re.compile(r'/image/\d+.html'))
                 if foreignURL:
                     foreignURL              = self.validateContent('', foreignURL, 'href')
-                    self.foreignLandingURL  = '{}{}'.format(domain, foreignURL)
+                    self.foreignLandingURL  = f'{domain}{foreignURL}'
 
                 #get svg
-                self.metaData['svg'] = '{}{}'.format(domain, self.validateContent('', imageInfo, 'src'))
+                self.metaData['svg'] = f'{domain}{self.validateContent('', imageInfo, 'src')}'
 
 
                 tagInfo = item.findChild('p', {'property': 'dct:title'})
@@ -109,6 +109,3 @@ class SVGSilh(Provider):
             return extracted
         else:
             return None
-
-
-

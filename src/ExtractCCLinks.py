@@ -52,13 +52,13 @@ class CCLinks:
         #check index format
         pattern = re.compile('CC-MAIN-\d{4}-\d{2}')
         if not pattern.match(_index):
-            logging.error('Invalid common crawl index format => {}.'.format(_index))
+            logging.error(f'Invalid common crawl index format => {_index}.')
             sys.exit()
 
 
         self.numPartitions  = _ptn
-        self.url            = 'https://commoncrawl.s3.amazonaws.com/crawl-data/{}/wat.paths.gz'.format(self.crawlIndex)
-        self.output         = 'output/{}'.format(self.crawlIndex)
+        self.url            = f'https://commoncrawl.s3.amazonaws.com/crawl-data/{self.crawlIndex}/wat.paths.gz'
+        self.output         = f'output/{self.crawl}'
 
 
     def loadWATFile(self):
@@ -75,7 +75,7 @@ class CCLinks:
         list
             A list of WAT path locations.
         """
-        logging.info('Loading file {}'.format(self.url))
+        logging.info(f'Loading file {self.url}')
 
         try:
             response = requests.get(self.url)
@@ -91,7 +91,7 @@ class CCLinks:
 
         except Exception as e:
             logging.error('There was a problem loading the file.')
-            logging.error('{}: {}'.format(type(e).__name__, e))
+            logging.error(f'{type(e).__name__}: {e}')
             #sys.exit()
 
 
@@ -137,15 +137,15 @@ class CCLinks:
                     s3.Object(bucket, uri.strip()).load()
 
                 except botocore.client.ClientError as e:
-                    logging.warning('{}: {}.'.format(uri.strip(), e.response['Error']['Message']))
+                    logging.warning(f'{uri.strip()}: {e.response['Error']['Message']}.')
                     pass
 
                 else:
                     try:
-                        resp = requests.get('https://commoncrawl.s3.amazonaws.com/{}'.format(uri.strip()), stream=True)
+                        resp = requests.get(f'https://commoncrawl.s3.amazonaws.com/{uri.strip()}', stream=True)
                     except Exception as e:
                         #ConnectionError: HTTPSConnectionPool
-                        logging.error('Exception type: {0}, Message: {1}'.format(type(e).__name__, e))
+                        logging.error(f'Exception type: {type(e).__name__}, Message: {e}')
                         pass
                     else:
 
@@ -156,7 +156,7 @@ class CCLinks:
                                     content = json.loads(record.content_stream().read())
 
                                 except Exception as e:
-                                    logging.warning('JSON payload file: {0}. Exception type: {1}, Message: {2}'.format(uri.strip(), type(e).__name__, e))
+                                    logging.warning(f'JSON payload file: {uri.strip()}. Exception type: {type(e).__name__}, Message: {e}')
                                     pass
 
                                 else:
@@ -186,7 +186,7 @@ class CCLinks:
                                             filter(lambda y: 'creativecommons.org' in y['url'], links))
 
                                     except (KeyError, ValueError) as e:
-                                        logging.error('{}:{}, File:{}'.format(type(e).__name__, e, uri.strip()))
+                                        logging.error(f'{type(e).__name__}:{e}, File:{uri.strip()}')
                                         pass
 
                                     else:

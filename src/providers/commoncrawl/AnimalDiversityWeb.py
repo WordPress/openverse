@@ -22,7 +22,7 @@ class AnimalDiversityWeb(Provider):
 
     def filterData(self, _data, _condition=None):
         #Images can be located in three main content paths: /accounts, /collections, and /site.
-        allowed = list(map(lambda x: '{}{}'.format(self.domain, x), ['/accounts/', '/collections/', '/site/']))
+        allowed = list(map(lambda x: f'{self.domain}{x}', ['/accounts/', '/collections/', '/site/']))
         data    = list(filter(lambda x: x.split('\t')[0].startswith(tuple(allowed)), _data))
         self.data = data
 
@@ -64,7 +64,7 @@ class AnimalDiversityWeb(Provider):
             license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
             if not license:
-                logging.warning('License not detected in url: {}'.format(_url))
+                logging.warning(f'License not detected in url: {_url}')
                 return None
 
             self.license            = license
@@ -75,14 +75,14 @@ class AnimalDiversityWeb(Provider):
             if imgProperty:
                 self.url     = self.validateContent('', imgProperty, 'src')
                 if self.url:
-                    self.url = '{}{}'.format(self.domain.strip('%'), self.url)
+                    self.url = f'{self.domain.strip('%')}{self.url}'
 
                 self.width                      = self.validateContent('', imgProperty, 'data-width')
                 self.height                     = self.validateContent('', imgProperty, 'data-height')
                 otherMetaData['image_alt_text'] = self.validateContent('', imgProperty, 'alt')
 
             else:
-                logging.warning('Image not detected in url: {}'.format(_url))
+                logging.warning(f'Image not detected in url: f{_url}')
                 return None
 
 
@@ -143,7 +143,7 @@ class AnimalDiversityWeb(Provider):
                         if vern:
                             vern = vern.text.strip()
 
-                        classInfo[rank] = '{} / {}'.format(taxon, vern)
+                        classInfo[rank] = f'{taxon} / {vern}'
 
                     otherMetaData[classType] = classInfo
 
@@ -167,7 +167,7 @@ class AnimalDiversityWeb(Provider):
                         vern  = item.find('span', {'class': 'vernacular-name'})
                         if vern:
                             vern = vern.text.strip()
-                        taxa[rank] = '{} / {}'.format(taxon, vern)
+                        taxa[rank] = f'{taxon} / {vern}'
 
                     otherMetaData[relTaxa] = taxa
 

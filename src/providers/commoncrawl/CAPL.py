@@ -55,7 +55,7 @@ class CAPL(Provider):
                 license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
             if not license:
-                logging.warning('License not detected in url: {}'.format(_url))
+                logging.warning(f'License not detected in url: {_url}')
                 return None
 
             self.license            = license
@@ -85,7 +85,7 @@ class CAPL(Provider):
                 self.thumbnail  = self.url.replace('/l/', '/m/')
 
             if not self.url:
-                logging.warning('Image not detected in url: {}'.format(_url))
+                logging.warning(f'Image not detected in url: {_url}')
                 return None
 
 
@@ -114,7 +114,7 @@ class CAPL(Provider):
                     otherMetaData[key]  = self.sanitizeString(title.span.text)
 
             if not self.title:
-                logging.warning('Title not detected in url: {}'.format(_url))
+                logging.warning(f'Title not detected in url: {_url}')
                 return None
 
 
@@ -145,7 +145,7 @@ class CAPL(Provider):
                             license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
                         if not license:
-                            logging.warning('License not detected in url: {}'.format(_url))
+                            logging.warning(f'License not detected in url: {_url}')
                             continue
 
                         self.license            = license
@@ -156,11 +156,11 @@ class CAPL(Provider):
                     if imgURL:
                         lgImage         = self.validateContent('', imgURL, 'href')
                         lgImage         = re.sub(r'(/m/)|(/s/)', '/l/', lgImage)
-                        self.url        = '{}/{}'.format(self.domain, lgImage)
+                        self.url        = f'{self.domain}/{lgImage}'
                         self.thumbnail  = self.url.replace('/l/', '/m/')
 
                     if not self.url:
-                        logging.warning('Image not detected in url: {}'.format(_url))
+                        logging.warning(f'Image not detected in url: {_url}')
                         continue
 
 
@@ -176,11 +176,11 @@ class CAPL(Provider):
                             key                 = re.sub(r'\s+', ' ', key)
                             key                 = re.sub(r'\s', '_', key)
                             key                 = key.replace('(', '').replace(')', '')
-                            key                 = '{}_title'.format(key)
+                            key                 = f'{key}_title'
                             otherMetaData[key]  = self.sanitizeString(title.span.text)
 
                     if not self.title:
-                        logging.warning('Title not detected in url: {}'.format(_url))
+                        logging.warning(f'Title not detected in url: {_url}'))
                         continue
 
                     #get the foreign URL
@@ -189,7 +189,7 @@ class CAPL(Provider):
                         foreignURL = foreignURL.findChildren('a', {'href': True})
                         for fURL in foreignURL:
                             if fURL.text.strip().lower() == 'l':
-                                self.foreignLandingURL = '{}/{}'.format(self.domain, self.validateContent('', fURL, 'href'))
+                                self.foreignLandingURL = f'{self.domain}/{self.validateContent('', fURL, 'href')}'
 
                     #set the foreign ID to the image URL
                     self.foreignIdentifier = self.url
@@ -205,4 +205,3 @@ class CAPL(Provider):
 
 
                 return extracted
-

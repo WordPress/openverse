@@ -24,7 +24,7 @@ class McCordMuseum(Provider):
         try:
             return foreignID.group(1)
         except:
-            logging.error('Identifier not detected in: {}'.format(_str))
+            logging.error(f'Identifier not detected in: {_str}')
             return None
 
 
@@ -65,7 +65,7 @@ class McCordMuseum(Provider):
             license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
             if not license:
-                logging.warning('License not detected in url: {}'.format(_url))
+                logging.warning(f'License not detected in url: {_url}')
                 return None
 
             self.license          = license
@@ -77,7 +77,7 @@ class McCordMuseum(Provider):
             imgSRC          = imgContent.findChild('img')
             self.url        = self.validateContent('', imgSRC, 'src')
             if self.url:
-                self.url    = '{}{}'.format(self.domain.strip('%'), self.url)
+                self.url    = f'{self.domain.strip('%')}{self.url}'
 
 
             self.width      = self.validateContent('', imgSRC, 'width')
@@ -90,14 +90,14 @@ class McCordMuseum(Provider):
                 self.width  = int(float(str(self.width)))
 
             except ValueError:
-                logging.warning('Error extracting the image dimensions => {}'.format(imgSRC))
+                logging.warning(f'Error extracting the image dimensions => {imgSRC}')
                 self.width  = '0' #temporary bug fix
 
             try:
                 self.height = int(float(str(self.height)))
 
             except ValueError:
-                logging.warning('Error extracting the image dimensions => {}'.format(imgSRC))
+                logging.warning(f'Error extracting the image dimensions => {imgSRC}')
                 self.height  = '0' #temporary bug fix
 
 
@@ -107,7 +107,7 @@ class McCordMuseum(Provider):
 
 
         else:
-            logging.warning('Image not detected in url: {}'.format(_url))
+            logging.warning(f'Image not detected in url: {_url}')
             return None
 
 
@@ -123,7 +123,7 @@ class McCordMuseum(Provider):
         if foreignID:
             self.foreignIdentifier = foreignID.strip()
         else:
-            logging.warning('Identifier not detected in: {}'.format(_url))
+            logging.warning(f'Identifier not detected in: {_url}')
             return None
 
 

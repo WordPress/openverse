@@ -19,17 +19,17 @@ DAG_VARIABLES = conf.DAG_VARIABLES
 
 def load_dag_conf(source, DAG_VARIABLES):
     """Validate and load configuration variables"""
-    logging.info('Loading configuration for {}'.format(source))
-    logging.debug('DAG_VARIABLES: {}'.format(DAG_VARIABLES))
-    dag_id = '{}_workflow'.format(source)
+    logging.info(f'Loading configuration for {source}')
+    logging.debug(f'DAG_VARIABLES: {DAG_VARIABLES}')
+    dag_id = f'{source}_workflow'
 
     script_location = DAG_VARIABLES[source].get(SCRIPT)
     try:
         assert os.path.exists(script_location)
     except Exception as e:
         logging.warning(
-            'Invalid script location: {}.  Error:  {}'
-            .format(script_location, e)
+            f'Invalid script location: {script_location}.  Error:  {e}'
+
         )
         script_location = None
 
@@ -38,7 +38,7 @@ def load_dag_conf(source, DAG_VARIABLES):
         croniter(crontab_str)
     except Exception as e:
         logging.warning(
-            'Invalid crontab string: {}. Error: {}'.format(crontab_str, e)
+            f'Invalid crontab string: {crontab_str}. Error: {e}'
         )
         crontab_str = None
 

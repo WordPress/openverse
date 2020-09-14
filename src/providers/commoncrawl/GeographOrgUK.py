@@ -53,7 +53,7 @@ class GeographOrgUK(Provider):
             license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
             if not license:
-                logging.warning('License not detected in url: {}'.format(_url))
+                logging.warning(f'License not detected in url: {_url}')
                 return None
 
             self.license            = license
@@ -72,7 +72,7 @@ class GeographOrgUK(Provider):
                 self.height    = imgHeight
 
             else:
-                logging.warning('Image not detected in url: {}'.format(_url))
+                logging.warning(f'Image not detected in url: {_url}')
                 return None
 
 
@@ -86,7 +86,7 @@ class GeographOrgUK(Provider):
             creatorInfo = soup.find('a', {'rel': 'author', 'href': True})
             if creatorInfo:
                 self.creator        = self.sanitizeString(creatorInfo.text.strip())
-                self.creatorURL     = '{}{}'.format(self.domain.strip('%'), creatorInfo.attrs['href'])
+                self.creatorURL     = f'{self.domain.strip('%')}{creatorInfo.attrs['href']}'
 
 
             #Keywords/tags
@@ -123,7 +123,7 @@ class GeographOrgUK(Provider):
             if foreignID:
                 self.foreignIdentifier = foreignID.strip()
             else:
-                logging.warning('Identifier not detected in: {}'.format(_url))
+                logging.warning(f'Identifier not detected in: {_url}')
                 return None
 
 
@@ -137,4 +137,3 @@ class GeographOrgUK(Provider):
             formatted = list(self.formatOutput)
 
             return formatted
-

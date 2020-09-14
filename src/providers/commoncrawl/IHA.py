@@ -72,7 +72,7 @@ class IHA(Provider):
                     license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
                     if not license:
-                        logger.warning('License not detected in url: {}'.format(_url))
+                        logger.warning(f'License not detected in url: {_url}')
                         continue
 
                     self.license          = license
@@ -94,7 +94,7 @@ class IHA(Provider):
                     self.foreignIdentifier  = self.url
 
                 if self.url.strip() == '':
-                    logger.warning('Image not detected in url: {}'.format(_url))
+                    logger.warning(f'Image not detected in url: {_url}')
                     continue
 
                 #get the attribution info
@@ -114,5 +114,3 @@ class IHA(Provider):
                 extracted.extend(self.formatOutput)
 
         return extracted
-
-

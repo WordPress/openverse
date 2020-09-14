@@ -51,7 +51,7 @@ class DeviantArt(Provider):
             license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
             if not license:
-                logging.warning('License not detected in url: {}'.format(_url))
+                logging.warning(f'License not detected in url: {_url}')
                 return None
 
             self.license          = license
@@ -63,7 +63,7 @@ class DeviantArt(Provider):
             if imgProperty:
                 imageURL    = self.validateContent('', imgProperty, 'content')
                 if 'main/logo/card_black_large.png' in imageURL:
-                    logging.info('Image not available. Image url: {}'.format(_url))
+                    logging.info(f'Image not available. Image url: {_url}')
                     return None
 
                 imgWidth    = self.validateContent('', soup.find('meta', {'property': 'og:image:width'}), 'content')
@@ -73,7 +73,7 @@ class DeviantArt(Provider):
                 self.width      = imgWidth
                 self.height     = imgHeight
             else:
-                logging.warning('Image not detected in url: {}'.format(_url))
+                logging.warning(f'Image not detected in url: {_url}')
                 return None
 
 
@@ -101,7 +101,7 @@ class DeviantArt(Provider):
             if foreignID:
                 self.foreignIdentifier = foreignID.attrs['gmi-deviationid'].strip()
             else:
-                logging.warning('Identifier not detected in: {}'.format(_url))
+                logging.warning(f'Identifier not detected in: {_url}')
                 return None
 
             self.provider   = self.name
@@ -114,4 +114,3 @@ class DeviantArt(Provider):
             formatted = list(self.formatOutput)
 
             return formatted
-

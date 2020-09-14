@@ -69,7 +69,7 @@ class WoRMS(Provider):
 
 
                 if not license:
-                    logging.warning('License not detected in url: {}'.format(_url))
+                    logging.warning(f'License not detected in url: {_url}')
                     return None
 
 
@@ -93,21 +93,21 @@ class WoRMS(Provider):
                     self.title      = self.sanitizeString(imgDetails.attrs['title'].strip())
 
                 else:
-                    logging.warning('Image not detected in url: {}'.format(_url))
+                    logging.warning(f'Image not detected in url: {_url}')
                     return None
 
             try:
                 self.width  = int(float(str(width)))
 
             except ValueError:
-                logging.warning('Error extracting the image dimensions => {}'.format(imgDetails))
+                logging.warning(f'Error extracting the image dimensions => {imgDetails}')
                 self.width  = '0' #temporary bug fix
 
             try:
                 self.height = int(float(str(height)))
 
             except ValueError:
-                logging.warning('Error extracting the image dimensions => {}'.format(imgDetails))
+                logging.warning(f'Error extracting the image dimensions => {imgDetails}')
                 self.height  = '0' #temporary bug fix
 
 

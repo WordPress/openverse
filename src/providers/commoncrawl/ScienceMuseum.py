@@ -59,7 +59,7 @@ class ScienceMuseum(Provider):
                 license     = imgLicense.lower()
 
             if not license:
-                logging.warning('License not detected in url: {}'.format(_url))
+                logging.warning(f'License not detected in url: {_url}')
                 return None
 
             self.license = license
@@ -135,13 +135,10 @@ class ScienceMuseum(Provider):
 
 
                 if self.url == '':
-                    logging.warning('Image not detected in url: {}'.format(_url))
+                    logging.warning(f'Image not detected in url: {_url}')
                     continue
 
                 extracted.extend(self.formatOutput)
 
 
         return extracted
-
-
-

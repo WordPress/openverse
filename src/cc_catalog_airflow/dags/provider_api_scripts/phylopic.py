@@ -54,7 +54,7 @@ def main(date='all'):
         param = {'offset': offset}
 
         image_count = _get_total_images()
-        logger.info('Total images: {}'.format(image_count))
+        logger.info(f'Total images: {image_count}')
 
         while offset <= image_count:
             _add_data_to_buffer(**param)
@@ -63,7 +63,7 @@ def main(date='all'):
 
     else:
         param = {'date': date}
-        logger.info('Processing date: {}'.format(date))
+        logger.info(f'Processing date: {date}')
         _add_data_to_buffer(**param)
 
     image_store.commit()
@@ -121,14 +121,12 @@ def _create_endpoint_for_IDs(**args):
     if args.get('date'):
         # Get a list of objects uploaded/updated on a given date.
         date = args['date']
-        endpoint = 'http://phylopic.org/api/a/image/list/modified/{}'.format(
-                  date)
+        endpoint = f'http://phylopic.org/api/a/image/list/modified/{date}'
 
     else:
         # Get all images and limit the results for each request.
         offset = args['offset']
-        endpoint = 'http://phylopic.org/api/a/image/list/{}/{}'.format(
-                  offset, limit)
+        endpoint = f'http://phylopic.org/api/a/image/list/{offset}/{limit}'
     return endpoint
 
 
@@ -154,7 +152,7 @@ def _get_image_IDs(_endpoint):
 
 
 def _get_meta_data(_uuid):
-    logger.info('Processing UUID: {}'.format(_uuid))
+    logger.info(f'Processing UUID: {_uuid}')
 
     base_url = 'http://phylopic.org'
     img_url = ''
@@ -164,9 +162,9 @@ def _get_meta_data(_uuid):
     foreign_id = ''
     foreign_url = ''
     meta_data = {}
-    endpoint = "http://phylopic.org/api/a/image/{}?options=credit+" \
+    endpoint = f"http://phylopic.org/api/a/image/{_uuid}?options=credit+" \
                "licenseURL+pngFiles+submitted+submitter+taxa+canonicalName" \
-               "+string+firstName+lastName".format(_uuid)
+               "+string+firstName+lastName"
     request = delayed_requester.get_response_json(
         endpoint,
         retries=2
@@ -180,7 +178,7 @@ def _get_meta_data(_uuid):
 
     meta_data['taxa'], title = _get_taxa_details(result)
 
-    foreign_url = '{}/image/{}'.format(base_url, _uuid)
+    foreign_url = f'{base_url}/image/{_uuid}'
 
     (creator, meta_data['credit_line'],
      meta_data['pub_date']) = _get_creator_details(result)
@@ -203,7 +201,7 @@ def _get_creator_details(result):
 
     first_name = result.get('submitter', {}).get('firstName')
     last_name = result.get('submitter', {}).get('lastName')
-    creator = '{} {}'.format(first_name, last_name).strip()
+    creator = f'{first_name} {last_name}'.strip()
 
     if result.get('credit'):
         credit_line = result.get('credit').strip()
@@ -246,18 +244,18 @@ def _get_image_info(result, _uuid):
 
     if len(img) > 0:
         img_url = img[0].get('url')
-        img_url = '{}{}'.format(base_url, img_url)
+        img_url = f'{base_url}{img_url}'
         width = img[0].get('width')
         height = img[0].get('height')
 
     if len(thb) > 0:
         thumbnail_info = thb[0].get('url')
         if thumbnail_info is not None:
-            thumbnail = '{}{}'.format(base_url, thumbnail_info)
+            thumbnail = f'{base_url}{thumbnail_info}'
 
     if img_url == '':
         logging.warning(
-            'Image not detected in url: {}/image/{}'.format(base_url, _uuid))
+            f'Image not detected in url: {base_url}/image/{_uuid}')
         return None, None, None, None
     else:
         return (img_url, width, height, thumbnail)

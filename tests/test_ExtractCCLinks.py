@@ -36,7 +36,7 @@ class Test_CCLinks_v1(unittest.TestCase):
     def setUp(self):
         self.index          = None
         self.watPaths       = open('tests/sample_wat.paths').read().split()
-        self.cclinks.output = 'tests/output/{}/test_parquet'.format(self.cclinks.crawlIndex) #overwrite output directory
+        self.cclinks.output = f'tests/output/{self.cclinks.crawlIndex}/test_parquet' #overwrite output directory
 
         self.warcArchive = WarcArchive()
 
@@ -62,7 +62,7 @@ class Test_CCLinks_v1(unittest.TestCase):
         mockGet.return_value        = MagicMock(status_code=200, content='', url=self.cclinks.url)
 
         response = self.cclinks.loadWATFile()
-        mockGet.assert_called_with('https://commoncrawl.s3.amazonaws.com/crawl-data/{}/wat.paths.gz'.format(self.index))
+        mockGet.assert_called_with(f'https://commoncrawl.s3.amazonaws.com/crawl-data/{self.index}/wat.paths.gz')
         self.assertEqual(type(response), list)
         self.assertEqual(response, self.watPaths)
 
@@ -157,7 +157,7 @@ class Test_CCLinks_v1(unittest.TestCase):
         mockJSON.return_value        = self.warcArchive.content
 
         self.warcRecord              = [self.warcArchive]
-        mockGet.return_value         = MagicMock(raw=self.warcRecord, url='https://commoncrawl.s3.amazonaws.com/{}'.format(self.testKey))
+        mockGet.return_value         = MagicMock(raw=self.warcRecord, url=f'https://commoncrawl.s3.amazonaws.com/{self.testKey}')
         mockWarcio.return_value      = self.warcRecord
 
         self.result = self.cclinks.processFile(self.mockWarcFiles)
@@ -177,7 +177,7 @@ class Test_CCLinks_v1(unittest.TestCase):
 
         self.warcArchive.rec_headers = jsonData['rec_headers']
         self.warcRecord              = [self.warcArchive]
-        mockGet.return_value         = MagicMock(raw=self.warcRecord, url='https://commoncrawl.s3.amazonaws.com/{}'.format(self.testKey))
+        mockGet.return_value         = MagicMock(raw=self.warcRecord, url=f'https://commoncrawl.s3.amazonaws.com/{self.testKey}')
         mockWarcio.return_value      = self.warcRecord
         self.result = self.cclinks.processFile(self.mockWarcFiles)
         self.assertFalse(list(self.result))
@@ -195,7 +195,7 @@ class Test_CCLinks_v2(unittest.TestCase):
 
         #initialize class
         cls.cclinks = CCLinks('CC-MAIN-2018-13', 5)
-        cls.cclinks.output = 'tests/output/{}/parquet'.format(cls.cclinks.crawlIndex)
+        cls.cclinks.output = f'tests/output/{cls.cclinks.crawlIndex}/parquet'
 
         #remove output directory
         if os.path.exists(cls.cclinks.output):
@@ -236,10 +236,10 @@ class Test_CCLinks_v2(unittest.TestCase):
         summary = s.sql('SELECT provider_domain, count(*) AS total, count(distinct content_path) AS unique_content_path, count(distinct content_query_string) AS unique_query_string FROM test_deeds GROUP BY provider_domain ORDER BY total DESC LIMIT 100')
         summary.write.mode('overwrite').format('csv').option('header', 'true').save(self.cclinks.output.replace('parquet', 'summary'))
 
-        fh = open('{}/total'.format(self.cclinks.output.replace('parquet', 'summary')), 'w')
-        fh.write('Total records: {}\r\n'.format(totalLinks))
-        fh.write('Total unique content path: {}\r\n'.format(uniqueContent))
-        fh.write('Total unique query strings: {}\r\n'.format(uniqueContentQuery))
+        fh = open('{self.cclinks.output.replace('parquet', 'summary')}/total', 'w')
+        fh.write(f'Total records: {totalLinks}\r\n')
+        fh.write(f'Total unique content path: {uniqueContent}\r\n')
+        fh.write(f'Total unique query strings: {uniqueContentQuery}\r\n')
         fh.close()
 
 

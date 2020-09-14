@@ -67,14 +67,14 @@ class Provider:
         pattern = re.compile('CC-MAIN-\d{4}-\d{2}')
 
         if not pattern.match(_cc_index):
-            logging.error('Invalid common crawl index format -> {}'.format(_cc_index))
+            logging.error(f'Invalid common crawl index format -> {_cc_index}'))
 
         else:
             self.crawlIndex = _cc_index
 
 
     def __repr__(self):
-        return 'Provider("{}", "{}", "{}")'.format(self.name, self.domain, self.crawlIndex)
+        return f'Provider("{self.name}", "{self.domain}", "{self.crawlIndex}")'
 
 
     def __str__(self):
@@ -157,7 +157,7 @@ class Provider:
         if self.crawlIndex is None:
             raise ValueError('Common Crawl index not specified!')
 
-        return '../../output/{}'.format(self.crawlIndex)
+        return f'../../output/{self.crawlIndex}'
 
 
     @property
@@ -165,7 +165,7 @@ class Provider:
         if self.crawlIndex is None:
             raise ValueError('Common Crawl index not specified!')
 
-        return 'image_data/{}/{}'.format(self.crawlIndex, self.name.lower())
+        return f'image_data/{self.crawlIndex}/{self.name.lower()}'
 
 
     def getForeignID(self, _str):
@@ -174,14 +174,14 @@ class Provider:
         try:
             return foreignID.group(1)
         except:
-            logging.error('Identifier not detected in: {}'.format(_str))
+            logging.error(f'Identifier not detected in: {_str}')
             return None
 
 
     def getLicense(self, _domain, _path, _url):
 
         if 'creativecommons.org' not in _domain:
-            logging.warning('The license for the following work -> {} is not issued by Creative Commons.'.format(_url))
+            logging.warning(f'The license for the following work -> {_url} is not issued by Creative Commons.')
             return [None, None]
 
         pattern   = re.compile('/(licenses|publicdomain)/([a-z\-?]+)/(\d\.\d)/?(.*?)')
@@ -237,8 +237,8 @@ class Provider:
         _length = int(str(_length))
         _file   = str(_file)
 
-        rnge    = 'bytes={}-{}'.format(_offset, (_offset + _length - 1))
-        uri     = 'https://commoncrawl.s3.amazonaws.com/{}'.format(_file)
+        rnge    = f'bytes={_offset}-{(_offset + _length - 1)}'
+        uri     = f'https://commoncrawl.s3.amazonaws.com/{_file}'
 
         try:
             response    = requests.get(uri, headers={'Range': rnge})
@@ -248,7 +248,7 @@ class Provider:
             return fh.read()
 
         except (IOError, Exception) as e:
-            logging.error('{}: {}'.format(type(e).__name__, e))
+            logging.error(f'{type(e).__name__}: {e}')
             return None
 
 
@@ -260,7 +260,7 @@ class Provider:
                             .otherwise(lit(''))).alias('url'), \
                             concat('warc_segment', lit('/warc/'), 'warc_filename').alias('warc_filename'), \
                                      'content_offset', 'deflate_length')\
-                            .where(col('provider_domain').like('%{}'.format(self.domain)))\
+                            .where(col('provider_domain').like(f'%{self.domain}'))\
                             .dropDuplicates(['url'])
 
         providerData = providerDF.rdd.map(lambda row: '\t'.join([str(col) for col in row])).collect() #convert dataframe into a list of tab delimited elements
@@ -351,5 +351,4 @@ class Provider:
                 if metaData:
                     yield metaData
                 else:
-                    logging.warning('Content not found for url: {}, warc file: {}, offset: {}, length: {}.'.format(data[0].strip(), data[1].strip(), data[2].strip(), data[3].strip()))
-
+                    logging.warning(f'Content not found for url: {data[0].strip()}, warc file: {data[1].strip()}, offset: {data[2].strip()}, length: {data[3].strip()}.')

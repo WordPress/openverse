@@ -50,7 +50,7 @@ class ThorvaldsensMuseum(Provider):
             license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
             if not license:
-                logging.warning('License not detected in url: {}'.format(_url))
+                logging.warning(f'License not detected in url: {_url}')
                 return None
 
             self.license            = license
@@ -62,7 +62,7 @@ class ThorvaldsensMuseum(Provider):
 
 
         if not imageURL:
-            logging.warning('Image not detected in url: {}'.format(_url))
+            logging.warning(f'Image not detected in url: {_url}')
             return None
         else:
             self.url        = imageURL
@@ -91,11 +91,3 @@ class ThorvaldsensMuseum(Provider):
 
 
         return self.formatOutput
-
-
-
-
-
-
-
-

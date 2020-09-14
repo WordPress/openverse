@@ -114,7 +114,7 @@ class DigitaltMuseum(Provider):
                     license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
                 if not license:
-                    logging.warning('License not detected in url: {}'.format(_url))
+                    logging.warning(f'License not detected in url: {_url}')
                     continue
 
                 self.license            = license
@@ -128,7 +128,7 @@ class DigitaltMuseum(Provider):
                     imageInfo = item.findChild('a', {'class': 'module__media media--image'})
 
                 if imageInfo:
-                    self.foreignLandingURL = '{}{}'.format(self.domain, self.validateContent('', imageInfo, 'href'))
+                    self.foreignLandingURL = f'{self.domain}{self.validateContent('', imageInfo, 'href')}'
 
                     img = imageInfo.find('img')
                     if img and 'src' in img.attrs:
@@ -139,7 +139,7 @@ class DigitaltMuseum(Provider):
 
 
                 if self.url == '':
-                    logging.warning('Image not detected in url: {}'.format(_url))
+                    logging.warning(f'Image not detected in url: {_url}')
                     continue
 
 
@@ -164,8 +164,3 @@ class DigitaltMuseum(Provider):
 
 
             return extracted
-
-
-
-
-

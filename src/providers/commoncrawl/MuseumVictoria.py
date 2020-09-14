@@ -19,7 +19,7 @@ class MuseumVictoria(Provider):
 
     def filterData(self, _data, _condition=None):
         #Images can be located in four main content paths: /species, /items, /articles, and /specimens.
-        allowed = list(map(lambda x: '{}{}'.format(self.domain, x), ['/species/', '/items/', '/specimens/', '/articles/']))
+        allowed = list(map(lambda x: f'{self.domain}{x}', ['/species/', '/items/', '/specimens/', '/articles/']))
         data    = list(filter(lambda x: x.split('\t')[0].startswith(tuple(allowed)), _data))
         self.data = data
 
@@ -62,7 +62,7 @@ class MuseumVictoria(Provider):
             license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
             if not license:
-                logging.warning('License not detected in url: {}'.format(_url))
+                logging.warning(f'License not detected in url: {_url}')
                 return None
 
             self.license            = license
@@ -82,7 +82,7 @@ class MuseumVictoria(Provider):
                 self.height     = imgHeight
 
             else:
-                logging.warning('Image not detected in url: {}'.format(_url))
+                logging.warning(f'Image not detected in url: {_url}')
                 return None
 
 
@@ -105,12 +105,12 @@ class MuseumVictoria(Provider):
             if foreignID:
                 self.foreignIdentifier = foreignID.strip()
             else:
-                logging.warning('Identifier not detected in: {}'.format(_url))
+                logging.warning(f'Identifier not detected in: {_url}')
                 return None
 
             '''thumbnails  = soup.find_all('div', {'class': 'thumbnail'})
             if thumbnails:
-                thumbnails                          = ['{}{}'.format(self.domain, x.img['src']) for x in thumbnails]
+                thumbnails                          = [f'{self.domain}{x.img['src']}' for x in thumbnails]
                 allImages                           = [x.replace('-thumbnail', '-medium') for x in thumbnails]
                 otherMetaData['thumbnails']         = ','.join(thumbnails)
                 otherMetaData['additional_images']  = ','.join(allImages)'''
@@ -167,7 +167,7 @@ class MuseumVictoria(Provider):
                         del otherMetaData['image_alt_text']
 
                     if 'src' in img.attrs:
-                        self.thumbnail          = '{}{}'.format(self.domain.strip('%'), self.validateContent('', img, 'src'))
+                        self.thumbnail          = f'{self.domain.strip('%')}{self.validateContent('', img, 'src')}'
                         self.url                = self.thumbnail.replace('-thumbnail', '-medium')
                         self.foreignIdentifier  = self.url
 
@@ -175,7 +175,7 @@ class MuseumVictoria(Provider):
                             otherMetaData['image_alt_text'] = self.validateContent('', img, 'alt')
 
                     else:
-                        logging.warning('Image not detected in url: {}'.format(_url))
+                        logging.warning(f'Image not detected in url: {_url}')
                         continue
 
                     self.metaData = otherMetaData
@@ -187,8 +187,3 @@ class MuseumVictoria(Provider):
                 formatted = list(self.formatOutput)
 
                 return formatted
-
-
-
-
-

@@ -53,7 +53,7 @@ class FloraOn(Provider):
                 license, version    = self.getLicense(ccURL.netloc, ccURL.path, _url)
 
                 if not license:
-                    logging.warning('License not detected in url: {}'.format(_url))
+                    logging.warning(f'License not detected in url: {_url}')
                     continue
 
                 self.license            = license
@@ -65,9 +65,9 @@ class FloraOn(Provider):
                     self.url                        = self.validateContent('', imageInfo, 'src')
                     otherMetaData['image_alt_text'] = self.validateContent('', imageInfo, 'alt')
                     if self.url:
-                        self.url = '{}/{}'.format(self.domain.strip('%'), self.url)
+                        self.url = f'{(self.domain.strip('%')}/{self.url}'
                     else:
-                        logging.warning('Image not detected in url: {}'.format(_url))
+                        logging.warning(f'Image not detected in url: {_url}'
                         continue
 
                     imgWidth    = photo.find('input', {'name': 'wid'})
@@ -117,5 +117,3 @@ class FloraOn(Provider):
                     extracted.extend(self.formatOutput)
 
             return extracted
-
-
