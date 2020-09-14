@@ -9,7 +9,7 @@ jobs:
   Style:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/setup-python@v1
+    - uses: actions/setup-python@v2
     - name: Install pycodestyle
       run: pip install pycodestyle
     - name: Checkout
