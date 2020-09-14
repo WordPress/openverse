@@ -6,6 +6,7 @@ import SourcePage from '@/pages/SourcePage'
 import HomePage from '@/pages/HomePage'
 import BrowsePage from '@/pages/BrowsePage'
 import MetaSearchPage from '@/pages/MetaSearchPage'
+import SupportPage from '@/pages/SupportPage'
 import PhotoDetailPage from '@/pages/PhotoDetailPage'
 import FeedbackPage from '@/pages/FeedbackPage'
 import SearchHelpPage from '@/pages/SearchHelpPage'
@@ -89,6 +90,11 @@ const router = new VueRouter({
       path: '/feedback',
       name: 'feedback-page',
       component: FeedbackPage,
+    },
+    {
+      path: '/support',
+      name: 'support-page',
+      component: SupportPage,
     },
     {
       path: '/',
