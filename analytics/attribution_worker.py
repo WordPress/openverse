@@ -29,6 +29,7 @@ def parse_message(msg):
         return None
     try:
         decoded = json.loads(msg)
+        decoded = decoded['message']
         resource = decoded['request'].split(' ')[1]
         _id = parse_identifier(resource)
         parsed = {
@@ -37,7 +38,7 @@ def parse_message(msg):
             'identifier': _id
         }
     except (json.JSONDecodeError, KeyError):
-        log.error(f'Failed to parse {msg}. Reason: ', exc_info=True)
+        log.warning(f'Failed to parse {msg}. Reason: ', exc_info=True)
         parsed = None
     return parsed
 
@@ -75,14 +76,16 @@ def listen(consumer, database):
     ignored = 0
     while True:
         msg = consumer.poll(timeout=30)
-        parsed_msg = parse_message(str(msg.value(), 'utf-8'))
-        if is_valid(parsed_msg):
-            save_message(msg, database)
-            saved += 1
+        if msg:
+            parsed_msg = parse_message(str(msg.value(), 'utf-8'))
+            if is_valid(parsed_msg):
+                save_message(msg, database)
+                saved += 1
+            else:
+                ignored += 1
         else:
-            ignored += 1
-        if saved + ignored % 100 == 0:
-            log.info(f'Saved {saved} attribution events, ignored {ignored}')
+            if saved + ignored % 100 == 0:
+                log.info(f'Saved {saved} attribution events, ignored {ignored}')
 
 
 def run_worker():
