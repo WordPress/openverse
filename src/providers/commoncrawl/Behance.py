@@ -7,7 +7,7 @@ ETL Process:            Identify curated galleries of images that are
 Output:                 TSV file containing images of artworks and their respective meta-data.
 """
 from Provider import *
-
+import logging
 
 logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s - Behance] =======> %(message)s', level=logging.INFO)
 

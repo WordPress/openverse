@@ -7,7 +7,7 @@ ETL Process:            Identify the various artworks that are
 Output:                 TSV file containing images of artworks and their respective meta-data.
 """
 from Provider import *
-
+import logging
 
 logging.basicConfig(format='%(asctime)s - %(name)s: [%(levelname)s - DeviantArt] =======> %(message)s', level=logging.INFO)
 

@@ -49,17 +49,18 @@ class CCLinks:
 
         self.crawlIndex = _index
 
-        #check index format
+        # check index format
         pattern = re.compile('CC-MAIN-\d{4}-\d{2}')
         if not pattern.match(_index):
             logging.error(f'Invalid common crawl index format => {_index}.')
             sys.exit()
 
-
-        self.numPartitions  = _ptn
-        self.url            = f'https://commoncrawl.s3.amazonaws.com/crawl-data/{self.crawlIndex}/wat.paths.gz'
-        self.output         = f'output/{self.crawl}'
-
+        self.numPartitions = _ptn
+        self.url = (
+                        f'https://commoncrawl.s3.amazonaws.com/crawl-data/''
+                        f'{self.crawlIndex}/wat.paths.gz'
+        )
+        self.output = f'output/{self.crawl}'
 
     def loadWATFile(self):
         #load the WAT file paths
@@ -92,8 +93,7 @@ class CCLinks:
         except Exception as e:
             logging.error('There was a problem loading the file.')
             logging.error(f'{type(e).__name__}: {e}')
-            #sys.exit()
-
+            # sys.exit()
 
     def processFile(self, _iterator):
         """
@@ -137,7 +137,8 @@ class CCLinks:
                     s3.Object(bucket, uri.strip()).load()
 
                 except botocore.client.ClientError as e:
-                    logging.warning(f'{uri.strip()}: {e.response['Error']['Message']}.')
+                    logging.warning(f'{uri.strip()}: {e.response['Error']'
+                                    f'['Message']}.')
                     pass
 
                 else:

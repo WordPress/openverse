@@ -162,7 +162,7 @@ def requestContent(_url, _headers=None):
         if response.status_code == requests.codes.ok:
             return response.json()
         else:
-            logging.warning(f'Unable to request URL: {url}. Status code: {response.status_code}')
+            logging.warning(f'Unable to request URL: {_url}. Status code: {response.status_code}')
             return None
 
     except Exception as e:
