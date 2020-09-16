@@ -19,6 +19,7 @@
             class="close-button has-color-gray is-size-6 is-size-4-touch"
             :aria-label="$t('browse-page.aria.close')"
             @click="$emit('close')"
+            @keyup.enter="$emit('close')"
           >
             <i class="icon cross" />
           </button>

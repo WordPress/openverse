@@ -23,7 +23,8 @@
       <div class="margin-bottom-smaller has-text-left">
         <button
           class="button is-text tiny is-paddingless report is-shadowless"
-          @click="toggleReportFormVisibility()"
+          @click.prevent="toggleReportFormVisibility"
+          @keypress.enter.prevent="toggleReportFormVisibility"
         >
           <span class="has-color-tomato margin-left-small">
             <i class="icon flag margin-right-small" />

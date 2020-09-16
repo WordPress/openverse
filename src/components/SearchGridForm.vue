@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue-a11y/no-autofocus -->
   <form
     role="search"
     method="post"
@@ -87,6 +88,7 @@
       </div>
     </div>
   </form>
+  <!-- eslint-enable -->
 </template>
 
 <script>

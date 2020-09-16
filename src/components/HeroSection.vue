@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue-a11y/no-autofocus -->
   <div class="hero">
     <div class="hero-center has-text-centered">
       <!-- <div class="locale-block"><locale-selector /></div> -->
@@ -98,6 +99,7 @@
       alt="Logos from sources of Creative Commons licensed images"
     />
   </div>
+  <!-- eslint-enable -->
 </template>
 
 <script>

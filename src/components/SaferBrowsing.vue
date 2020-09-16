@@ -2,6 +2,7 @@
   <div class="safer-browsing" @keyup.esc="closeShowForm">
     <button
       class="button is-text tiny is-paddingless rating is-shadowless"
+      @keypress.enter="toggleShowForm"
       @click="toggleShowForm"
     >
       <span class="has-color-dark-turquoise"
@@ -16,6 +17,7 @@
       >
         <button
           class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
+          @keypress.enter="toggleShowForm"
           @click="toggleShowForm"
         >
           <i class="icon cross" />
