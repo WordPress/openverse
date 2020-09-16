@@ -9,7 +9,7 @@ jobs:
   Style:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/setup-python@v1
+    - uses: actions/setup-python@v2
     - name: Install pycodestyle
       run: pip install pycodestyle
     - name: Checkout
@@ -40,4 +40,4 @@ jobs:
     - name: Run API tests
       run: cd cccatalog-api && test/run_test.sh
     - name: Run analytics tests
-      run: cd ./analytics && API_URL='analytics:8090' pytest tests.py --disable-pytest-warnings
+      run: cd ./analytics && pipenv install && PYTHONPATH=. API_URL='analytics:8090' pipenv run pytest tests.py --disable-pytest-warnings

@@ -62,3 +62,17 @@ class DetailPageEvent(Base, EventMixin):
 
     result_uuid = Column(UUID, index=True)
     event_type = Column(Enum(DetailPageEvents), index=True)
+
+class AttributionReferrerEvent(Base, EventMixin):
+    """
+    Triggered by a user's browser loading one of our static assets on a non-CC
+    site. By parsing server logs, we can determine which work was embedded and
+    on which domain it appeared.
+    """
+    __tablename__ = "attribution_referrer_event"
+
+    image_uuid = Column(UUID, index=True)
+    full_referer = Column(String)
+    referer_domain = Column(String, index=True)
+    # The path to the embedded asset on our server. ex: /static/img/cc-by.svg
+    resource = Column(String, index=True)
