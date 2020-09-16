@@ -99,8 +99,7 @@ def _get_data_for_image(object_id):
     main_thumbnail = object_json.get('primaryImageSmall')
     other_images = object_json.get('additionalImages', [])
     image_list = (
-        [(main_image, main_thumbnail)]
-        + [(i, None) for i in other_images]
+        [(main_image, main_thumbnail)] + [(i, None) for i in other_images]
     )
 
     meta_data = _create_meta_data(object_json)

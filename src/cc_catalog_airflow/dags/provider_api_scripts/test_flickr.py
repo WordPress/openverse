@@ -173,7 +173,9 @@ def test_build_query_param_dict_default():
         'method': 'flickr.photos.search',
         'media': 'photos',
         'content_type': 1,
-        'extras': 'description,license,date_upload,date_taken,owner_name,tags,o_dims,url_t,url_s,url_m,url_l,views',
+        'extras': (
+            'description,license,date_upload,date_taken,owner_name,tags,'
+            'o_dims,url_t,url_s,url_m,url_l,views'),
         'format': 'json',
         'nojsoncallback': 1,
         'min_test_date': cur_time,
@@ -266,13 +268,20 @@ def test_process_image_data_with_real_example():
         'pub_date': '1581318235',
         'date_taken': '2020-02-10 09:38:16',
         'views': '70',
-        'description': 'We had spectacular underwater scenery with great visibility today despite the big seas and winds at Lord Howe Island.'
+        'description': (
+            'We had spectacular underwater scenery with great visibility '
+            'today despite the big seas and winds at Lord Howe Island.')
     }
 
     mock_add_item.assert_called_once_with(
-        foreign_landing_url='https://www.flickr.com/photos/71925535@N03/49514824541',
-        image_url='https://live.staticflickr.com/65535/49514824541_35d1b4f8db_b.jpg',
-        thumbnail_url='https://live.staticflickr.com/65535/49514824541_35d1b4f8db_m.jpg',
+        foreign_landing_url=(
+            'https://www.flickr.com/photos/71925535@N03/49514824541'),
+        image_url=(
+            'https://live.staticflickr.com/65535/49514824541_35d1b4f8db'
+            '_b.jpg'),
+        thumbnail_url=(
+            'https://live.staticflickr.com/65535/49514824541_35d1b4f8db'
+            '_m.jpg'),
         license_='by-nc-sa',
         license_version='2.0',
         foreign_identifier='49514824541',
@@ -280,7 +289,9 @@ def test_process_image_data_with_real_example():
         height=683,
         creator='Marine Explorer',
         creator_url='https://www.flickr.com/photos/71925535@N03',
-        title='Surveying Ruperts Reef @reeflifesurvey #lapofaus #marineexplorer',
+        title=(
+            'Surveying Ruperts Reef @reeflifesurvey #lapofaus '
+            '#marineexplorer'),
         meta_data=expect_meta_data,
         raw_tags=[
             'australia',
@@ -528,13 +539,21 @@ def test_process_image_data_with_sub_provider():
         'pub_date': '1590799192',
         'date_taken': '2020-05-29 13:50:27',
         'views': '28597',
-        'description': 'A gopher tortoise is seen making its way towards its burrow near Launch Complex 39A as preparations continue for NASA SpaceX Demo-2 mission'
+        'description': (
+            'A gopher tortoise is seen making its way towards its burrow near'
+            ' Launch Complex 39A as preparations continue for NASA SpaceX '
+            'Demo-2 mission')
         }
 
     mock_add_item.assert_called_once_with(
-        foreign_landing_url='https://www.flickr.com/photos/35067687@N04/49950595947',
-        image_url='https://live.staticflickr.com/65535/49950595947_65a3560ddc_b.jpg',
-        thumbnail_url='https://live.staticflickr.com/65535/49950595947_65a3560ddc_m.jpg',
+        foreign_landing_url=(
+            'https://www.flickr.com/photos/35067687@N04/49950595947'),
+        image_url=(
+            'https://live.staticflickr.com/65535/49950595947_65a3560ddc'
+            '_b.jpg'),
+        thumbnail_url=(
+            'https://live.staticflickr.com/65535/49950595947_65a3560ddc'
+            '_m.jpg'),
         license_='by-nc-sa',
         license_version='2.0',
         foreign_identifier='49950595947',

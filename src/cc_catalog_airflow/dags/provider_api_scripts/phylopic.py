@@ -163,8 +163,8 @@ def _get_meta_data(_uuid):
     foreign_url = ''
     meta_data = {}
     endpoint = f"http://phylopic.org/api/a/image/{_uuid}?options=credit+" \
-               "licenseURL+pngFiles+submitted+submitter+taxa+canonicalName" \
-               "+string+firstName+lastName"
+        "licenseURL+pngFiles+submitted+submitter+taxa+canonicalName" \
+        "+string+firstName+lastName"
     request = delayed_requester.get_response_json(
         endpoint,
         retries=2

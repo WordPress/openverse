@@ -115,9 +115,9 @@ def create_dag(
             output_dir
         )
         (
-            stage_oldest_tsv_file
-            >> [create_loading_table, copy_to_s3]
-            >> load_s3_data
+            stage_oldest_tsv_file >>
+            [create_loading_table, copy_to_s3] >>
+            load_s3_data
         )
         [copy_to_s3, load_s3_data] >> one_failed_s3
         [create_loading_table, one_failed_s3] >> load_local_data

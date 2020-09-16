@@ -42,7 +42,7 @@ DATE_TYPE = 'upload'
 # DAY_DIVISION = 24 would mean dividing the day into hours, and requesting the
 # photo data for each hour of the day separately.  This is necessary because
 # if we request too much at once, the API will return fallacious results.
-DAY_DIVISION = 48 # divide into half hour increments
+DAY_DIVISION = 48  # divide into half hour increments
 # SUB_PROVIDERS is a collection of providers within Flickr which are
 # valuable to a broad audience
 SUB_PROVIDERS = prov.FLICKR_SUB_PROVIDERS
@@ -228,8 +228,7 @@ def _build_query_param_dict(
 
 def _extract_image_list_from_json(response_json):
     if (
-            response_json is None
-            or response_json.get('stat') != 'ok'
+            response_json is None or response_json.get('stat') != 'ok'
     ):
         image_page = None
     else:

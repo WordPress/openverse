@@ -209,7 +209,9 @@ def test_build_query_params():
     expect_params = {
         'api_key': 'pass123',
         'rows': 10,
-        'q': f'online_media_type:Images AND media_usage:CC0 AND hash:{hash_prefix}*',
+        'q': (
+            f'online_media_type:Images AND media_usage:CC0 '
+            f'AND hash:{hash_prefix}*'),
         'start': row_offset
     }
     assert acutal_params == expect_params
@@ -1042,11 +1044,15 @@ def test_process_image_data_with_sub_provider():
     mock_add_item.assert_called_once_with(
         foreign_landing_url=None,
         image_url='https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358',
-        thumbnail_url='https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358&max=150',
+        thumbnail_url=(
+            'https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-'
+            '2358&max=150'),
         license_url='https://creativecommons.org/publicdomain/zero/1.0/',
         foreign_identifier='SIA-SIA2010-2358',
         creator='Gruber, Martin A',
-        title='Views of the National Zoological Park in Washington, DC, showing Elephant',
+        title=(
+            'Views of the National Zoological Park in Washington, DC, '
+            'showing Elephant'),
         meta_data=expect_meta_data,
         raw_tags=[
             '1920s', '1910s', 'Archival materials', 'Photographs', 'Animals'],

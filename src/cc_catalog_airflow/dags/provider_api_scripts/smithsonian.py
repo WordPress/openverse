@@ -298,19 +298,19 @@ def _get_creator(row, creator_types=CREATOR_TYPES):
     ordered_freetext_creator_objects = sorted(
         [
             i for i in _check_type(freetext.get('name'), list)
-            if type(i) == dict
-            and _check_type(i.get('label'), str).lower() in creator_types
-            and _check_type(i.get('content'), str)
-            and 'unknown' not in i.get('content').lower()
+            if type(i) == dict and (
+                _check_type(i.get('label'), str).lower() in creator_types) and(
+                _check_type(i.get('content'), str)) and (
+                'unknown' not in i.get('content').lower())
         ],
         key=lambda x: creator_types[x['label'].lower()]
     )
 
     indexed_structured_creator_generator = (
         i['content'] for i in _check_type(indexed_structured.get('name'), list)
-        if type(i) == dict
-        and _check_type(i.get('type'), str).lower() == 'personal_main'
-        and _check_type(i.get('content'), str)
+        if type(i) == dict and (
+            _check_type(i.get('type'), str).lower() == 'personal_main') and (
+            _check_type(i.get('content'), str))
     )
 
     if ordered_freetext_creator_objects:
@@ -453,8 +453,8 @@ def _process_image_list(
     total_images = None
     for image_data in image_list:
         if (
-                image_data.get('type') == 'Images'
-                and image_data.get('usage', {}).get('access') == 'CC0'
+                image_data.get('type') == 'Images' and image_data.get(
+                    'usage', {}).get('access') == 'CC0'
         ):
             total_images = image_store.add_item(
                 foreign_landing_url=foreign_landing_url,

@@ -88,8 +88,8 @@ def test_request_handler_itemdetail_success():
             'get',
             return_value=r) as mock_call:
         actual_response = np._request_handler(
-                endpoint=np.METADATA_ENDPOINT
-                + "0cabe3d0-3d50-0134-a8e0-00505686a51c",
+                endpoint=np.METADATA_ENDPOINT + (
+                    "0cabe3d0-3d50-0134-a8e0-00505686a51c"),
             )
 
     expected_response = response_itemdetails_success.get(
@@ -127,8 +127,12 @@ def test_get_images_success():
     actual_image_url, \
         actual_thumbnail = np._get_images(images)
 
-    assert actual_image_url == "http://images.nypl.org/index.php?id=56738462&t=g&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"
-    assert actual_thumbnail == "http://images.nypl.org/index.php?id=56738462&t=w&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"
+    assert actual_image_url == (
+        "http://images.nypl.org/index.php?id=56738462&t=g&suffix=0cabe3d0-"
+        "3d50-0134-a8e0-00505686a51c.001")
+    assert actual_thumbnail == (
+        "http://images.nypl.org/index.php?id=56738462&t=w&suffix=0cabe3d0-"
+        "3d50-0134-a8e0-00505686a51c.001")
 
 
 def test_get_image_failure():

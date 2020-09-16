@@ -68,11 +68,11 @@ def create_dag(
         end_task = get_log_operator(dag, DAG_ID, 'Finished')
 
         (
-            start_task
-            >> update_metrics
-            >> update_constants
-            >> update_image_view
-            >> end_task
+            start_task >>
+            update_metrics >>
+            update_constants >>
+            update_image_view >>
+            end_task
         )
 
     return dag

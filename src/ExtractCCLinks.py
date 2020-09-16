@@ -1,4 +1,4 @@
-#Common Crawl data extraction
+# Common Crawl data extraction
 """Identify all links to Creative Commons in the web crawl data"""
 
 from pyspark import SparkContext
@@ -25,13 +25,17 @@ from datetime import date, datetime, timedelta
 class CCLinks:
 
     logging.getLogger('ExtractCCLinks')
-    logging.basicConfig(format='%(asctime)s: [%(levelname)s - ExtractCCLinks] =======> %(message)s', level=logging.INFO)
-
+    logging.basicConfig(
+        format=(
+            '%(asctime)s: [%(levelname)s - ExtractCCLinks] '
+            '=======> %(message)s'),
+        level=logging.INFO)
 
     def __init__(self, _index, _ptn=2500):
         """
-        CCLinks constructor: Validate the user-defined index based on Common Crawl's expected format.
-        If the pattern is valid, it generates 1) a url for the WAT path and 2) the location to output the results.
+        CCLinks constructor: Validate the user-defined index based on Common
+        Crawl's expected format. If the pattern is valid, it generates
+        1) a url for the WAT path and 2) the location to output the results.
 
         Parameters
         ------------------
@@ -63,9 +67,10 @@ class CCLinks:
         self.output = f'output/{self.crawl}'
 
     def loadWATFile(self):
-        #load the WAT file paths
+        # load the WAT file paths
         """
-        Make a request for a WAT file using the url, that was defined in the constructor.
+        Make a request for a WAT file using the url, that was defined in the \
+        constructor.
 
         Parameters
         ------------------
@@ -82,9 +87,9 @@ class CCLinks:
             response = requests.get(self.url)
 
             if response.status_code == requests.codes.ok:
-                content     = StringIO(response.content)
-                fh          = gzip.GzipFile(fileobj=content)
-                watPaths    = fh.read().split()
+                content = StringIO(response.content)
+                fh = gzip.GzipFile(fileobj=content)
+                watPaths = fh.read().split()
 
                 return watPaths
             else:
@@ -97,29 +102,39 @@ class CCLinks:
 
     def processFile(self, _iterator):
         """
-        Parse each WAT file to identify domains with a hyperlink to creativecommons.org.
+        Parse each WAT file to identify domains with a hyperlink to
+        creativecommons.org.
 
         Parameters
         ------------------
        _iterator: iterator object
-            The iterator for the RDD partition that was assigned to the current process.
+            The iterator for the RDD partition that was assigned to the current
+            process.
 
         Returns
         ------------------
         list
-            A list of domains and their respective content path and query string, the hyperlink to creative commons (which may reference a license), the location of the domain in the current warc file and a count of the number of links and images.
+            A list of domains and their respective content path and query
+            string, the hyperlink to creative commons (which may reference a
+            license), the location of the domain in the current warc file and
+            a count of the number of links and images.
         """
 
-        logging.basicConfig(format='%(asctime)s: [%(levelname)s - ExtractCCLinks] =======> %(message)s', level=logging.INFO)
+        logging.basicConfig(
+            format=(
+                '%(asctime)s: [%(levelname)s - ExtractCCLinks] '
+                '=======> %(message)s'),
+            level=logging.INFO)
 
         bucket = 'commoncrawl'
 
-        #connect to s3 using boto3
+        # connect to s3 using boto3
         s3 = boto3.resource('s3')
-        #s3.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
+        # s3.meta.client.meta.events.register(
+        #   'choose-signer.s3.*', disable_signing)
 
         try:
-            #verify bucket
+            # verify bucket
             s3.meta.client.head_bucket(Bucket=bucket)
         except botocore.exceptions.ClientError as e:
             error = int(e.response['Error']['Code'])
@@ -129,11 +144,11 @@ class CCLinks:
                 sys.exit()
 
         else:
-            #iterate over the keys and load the respective wat files
+            # iterate over the keys and load the respective wat files
             for uri in _iterator:
 
                 try:
-                    #verify key
+                    # verify key
                     s3.Object(bucket, uri.strip()).load()
 
                 except botocore.client.ClientError as e:
@@ -143,58 +158,107 @@ class CCLinks:
 
                 else:
                     try:
-                        resp = requests.get(f'https://commoncrawl.s3.amazonaws.com/{uri.strip()}', stream=True)
+                        resp = requests.get(
+                            (
+                                f'https://commoncrawl.s3.amazonaws.com/'
+                                f'{uri.strip()}'),
+                            stream=True)
                     except Exception as e:
-                        #ConnectionError: HTTPSConnectionPool
-                        logging.error(f'Exception type: {type(e).__name__}, Message: {e}')
+                        # ConnectionError: HTTPSConnectionPool
+                        logging.error(
+                            f'Exception type: {type(e).__name__},'
+                            f' Message: {e}')
                         pass
                     else:
 
                         for record in ArchiveIterator(resp.raw, arc2warc=True):
-                            if record.rec_headers['Content-Type'] == 'application/json':
+                            if record.rec_headers['Content-Type'] \
+                                    == 'application/json':
 
                                 try:
-                                    content = json.loads(record.content_stream().read())
+                                    content = json.loads(
+                                        record.content_stream().read())
 
                                 except Exception as e:
-                                    logging.warning(f'JSON payload file: {uri.strip()}. Exception type: {type(e).__name__}, Message: {e}')
+                                    logging.warning(
+                                        f'JSON payload file:'
+                                        f' {uri.strip()}. Exception type: '
+                                        f'{type(e).__name__}, Message: {e}')
                                     pass
 
                                 else:
-                                    if content['Envelope']['WARC-Header-Metadata']['WARC-Type'] != 'response':
-                                        continue
-                                    elif 'HTML-Metadata' not in content['Envelope']['Payload-Metadata']['HTTP-Response-Metadata']:
-                                        continue
-                                    elif 'Links' not in content['Envelope']['Payload-Metadata']['HTTP-Response-Metadata']['HTML-Metadata']:
-                                        continue
+                                    if content(
+                                        ['Envelope']
+                                            ['WARC-Header-Metadata']
+                                            ['WARC-Type']) != 'response':
+                                            continue
+                                    elif 'HTML-Metadata' not in content(
+                                        ['Envelope']
+                                            ['Payload-Metadata']
+                                            ['HTTP-Response-Metadata']):
+                                            continue
+                                    elif 'Links' not in content(
+                                        ['Envelope']
+                                            ['Payload-Metadata']
+                                            ['HTTP-Response-Metadata']
+                                            ['HTML-Metadata']):
+                                            continue
 
                                     try:
-                                        segment     = uri.split('/wat/')[0].strip()
-                                        targetURI   = urlparse(content['Envelope']['WARC-Header-Metadata']['WARC-Target-URI'].strip())
-                                        offset      = int(content['Container']['Offset'].strip())
-                                        filename    = content['Container']['Filename'].strip()
-                                        dftLength   = int(content['Container']['Gzip-Metadata']['Deflate-Length'].strip())
+                                        segment = uri.split('/wat/')[0].strip()
+                                        targetURI = urlparse(content(
+                                            ['Envelope']
+                                            ['WARC-Header-Metadata']
+                                            ['WARC-Target-URI']).strip())
+                                        offset = int(content(
+                                            ['Container']
+                                            ['Offset']).strip())
+                                        filename = content(
+                                            ['Container']
+                                            ['Filename']).strip()
+                                        dftLength = int(content(
+                                            ['Container']
+                                            ['Gzip-Metadata']
+                                            ['Deflate-Length']).strip())
 
-                                        links       = filter(lambda x: 'url' in x, content['Envelope']['Payload-Metadata']['HTTP-Response-Metadata']['HTML-Metadata']['Links'])
+                                        links = filter(
+                                            lambda x: 'url' in x, content(
+                                                ['Envelope']
+                                                ['Payload-Metadata']
+                                                ['HTTP-Response-Metadata']
+                                                ['HTML-Metadata']
+                                                ['Links']))
 
-                                        result = map(lambda x: (targetURI.netloc, targetURI.path, targetURI.query, urlparse(x['url']).netloc,
-                                            urlparse(x['url']).path, segment, filename, offset, dftLength,
-                                            json.dumps({
-                                                'Images': len(list(set(map(lambda i: i['url'], filter(lambda z: 'IMG@/src' in z['path'], links))))),
-                                                'Links': Counter(map(lambda l: urlparse(l['url']).netloc, filter(lambda z: 'A@/href' in z['path'] and targetURI.netloc not in z['url'] and urlparse(z['url']).netloc != '', links)))
+                                        result = map(
+                                            lambda x: (
+                                                targetURI.netloc,
+                                                targetURI.path,
+                                                targetURI.query,
+                                                urlparse(x['url']).netloc,
+                                                urlparse(x['url']).path,
+                                                segment, filename, offset,
+                                                dftLength,
+                                                json.dumps({
+                                                    'Images': len(list(set(map(lambda i: i['url'], filter(lambda z: 'IMG@/src' in z['path'], links))))),
+                                                    'Links': Counter(map(lambda l: urlparse(l['url']).netloc, filter(lambda z: 'A@/href' in z['path'] and targetURI.netloc not in z['url'] and urlparse(z['url']).netloc != '', links)))
                                                 })
                                             ),
-                                            filter(lambda y: 'creativecommons.org' in y['url'], links))
+                                            filter(
+                                                lambda y: (
+                                                    'creative'
+                                                    'commons.org') in y['url'],
+                                                links))
 
                                     except (KeyError, ValueError) as e:
-                                        logging.error(f'{type(e).__name__}:{e}, File:{uri.strip()}')
+                                        logging.error(
+                                            f'{type(e).__name__}:'
+                                            f'{e}, File:{uri.strip()}')
                                         pass
 
                                     else:
                                         if result:
                                             for res in result:
                                                 yield res
-
 
     def generateParquet(self, _data):
         """
@@ -203,14 +267,15 @@ class CCLinks:
         Parameters
         ------------------
         _data: generator
-            A list containing the extracted domains and their associated meta-data.
+            A list containing the extracted domains and their associated
+            meta-data.
 
         Returns
         ------------------
         None
         """
 
-        schema  = StructType([
+        schema = StructType([
             StructField('provider_domain', StringType(), True),
             StructField('content_path', StringType(), True),
             StructField('content_query_string', StringType(), True),
@@ -224,22 +289,22 @@ class CCLinks:
         ])
 
         spk = SparkSession.builder.getOrCreate()
-        df  = spk.createDataFrame(_data, schema=schema)
+        df = spk.createDataFrame(_data, schema=schema)
         df.write.format('parquet').mode('overwrite').save(self.output)
 
 
 def main():
-    args        = sys.argv[1]
-    crawlIndex  = args.strip()
+    args = sys.argv[1]
+    crawlIndex = args.strip()
 
     if crawlIndex.lower() == '--default':
-        bucket  = 'commoncrawl'
-        s3      = boto3.client('s3')
+        bucket = 'commoncrawl'
+        s3 = boto3.client('s3')
 
-        #verify bucket
-        contents    = []
-        prefix      = 'cc-index/collections/CC-MAIN-'
-        botoArgs    = {'Bucket': bucket, 'Prefix': prefix}
+        # verify bucket
+        contents = []
+        prefix = 'cc-index/collections/CC-MAIN-'
+        botoArgs = {'Bucket': bucket, 'Prefix': prefix}
 
         while True:
 
@@ -256,29 +321,28 @@ def main():
                         contents.append(str(cIndex))
 
             try:
-                botoArgs['ContinuationToken'] = objects['NextContinuationToken']
+                botoArgs['ContinuationToken'] =\
+                    objects['NextContinuationToken']
             except KeyError:
                 break
 
         if contents:
             crawlIndex = contents[-1]
 
+    sc = SparkContext(appName='ExtractCCLinks')
 
-    sc          = SparkContext(appName='ExtractCCLinks')
-
-    ccLinks     = CCLinks(crawlIndex.upper(), sc.defaultParallelism)
-    watPaths    = ccLinks.loadWATFile()
+    ccLinks = CCLinks(crawlIndex.upper(), sc.defaultParallelism)
+    watPaths = ccLinks.loadWATFile()
 
     if watPaths is None:
         sc.stop()
         sys.exit()
 
-    watRDD      = sc.parallelize(watPaths, ccLinks.numPartitions)
-    result      = watRDD.mapPartitions(ccLinks.processFile)
+    watRDD = sc.parallelize(watPaths, ccLinks.numPartitions)
+    result = watRDD.mapPartitions(ccLinks.processFile)
 
     ccLinks.generateParquet(result)
     sc.stop()
-
 
 
 if __name__ == '__main__':

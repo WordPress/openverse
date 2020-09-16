@@ -84,14 +84,14 @@ def create_dag(
         end_task = get_log_operator(dag, DAG_ID, 'Finished')
 
         (
-            start_task
-            >> [drop_relations, drop_functions]
-            >> create_metrics
-            >> [update_metrics, create_percentile]
-            >> create_constants
-            >> create_popularity
-            >> create_image_view
-            >> end_task
+            start_task >>
+            [drop_relations, drop_functions] >>
+            create_metrics >>
+            [update_metrics, create_percentile] >>
+            create_constants >>
+            create_popularity >>
+            create_image_view >>
+            end_task
         )
 
     return dag

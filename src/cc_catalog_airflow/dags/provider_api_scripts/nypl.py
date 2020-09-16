@@ -220,8 +220,8 @@ def _get_metadata(mods):
     metadata = {}
 
     type_of_resource = mods.get("typeOfResource")
-    if (type(type_of_resource) == list
-            and type_of_resource[0].get("usage") == "primary"):
+    if (type(type_of_resource) == list and (
+            type_of_resource[0].get("usage") == "primary")):
         metadata["type_of_resource"] = type_of_resource[0].get("$")
 
     if type(mods.get("genre")) == dict:

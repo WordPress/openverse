@@ -120,8 +120,8 @@ def _get_image_list(
             break
 
     if (
-            try_number == max_tries - 1
-            and (image_list is None or next_cursor is None)
+            try_number == max_tries - 1 and (
+                image_list is None or next_cursor is None)
     ):
         logger.warning('No more tries remaining. Returning None types.')
         return None, None, None
@@ -144,8 +144,8 @@ def _extract_response_json(response):
 
 def _extract_image_list_from_json(response_json):
     if (
-            response_json is None
-            or str(response_json.get('success')) != "True"
+            response_json is None or str(
+                response_json.get('success')) != "True"
     ):
         image_list, next_cursor, total_number_of_images = None, None, None
     else:
@@ -231,13 +231,14 @@ def _create_meta_data_dict(
 
 def _get_description(image_data):
     if (
-            image_data.get('dcDescriptionLangAware') is not None
-            and image_data.get('dcDescriptionLangAware').get('en') is not None
+            image_data.get('dcDescriptionLangAware') is not None and (
+                image_data.get('dcDescriptionLangAware').get('en') is not None)
     ):
         description = image_data.get('dcDescriptionLangAware').get('en')[0]
     elif (
-            image_data.get('dcDescriptionLangAware') is not None
-            and image_data.get('dcDescriptionLangAware').get('def') is not None
+            image_data.get('dcDescriptionLangAware') is not None and (
+                image_data.get('dcDescriptionLangAware').get('def') is not None
+                )
     ):
         description = image_data.get('dcDescriptionLangAware').get('def')[0]
     elif image_data.get('dcDescription') is not None:

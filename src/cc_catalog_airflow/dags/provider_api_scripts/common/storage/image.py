@@ -251,8 +251,9 @@ class ImageStore:
         if output_file is not None:
             output_file = str(output_file)
         else:
-            output_file = f'{provider}_{datetime.strftime(self._NOW, '%Y%m%d%H%M%S')}.tsv'
-            )
+            output_file = (
+                f'{provider}_{datetime.strftime(self._NOW, "%Y%m%d%H%M%S")}'
+                f'.tsv')
 
         output_path = os.path.join(output_dir, output_file)
         logger.info(f'Output path: {output_path}')

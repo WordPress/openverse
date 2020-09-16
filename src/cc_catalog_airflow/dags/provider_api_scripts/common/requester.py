@@ -81,8 +81,8 @@ class DelayedRequester:
                 response_json = None
 
         if (
-                response_json is None
-                or response_json.get('error') is not None
+                response_json is None or
+                response_json.get('error') is not None
         ):
             logger.warning(f'Bad response_json:  {response_json}')
             logger.warning(

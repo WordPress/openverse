@@ -7,7 +7,8 @@ from unittest.mock import patch, MagicMock
 import brooklyn_museum as bkm
 
 RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), 'tests/resources/brooklynmuseum'
+    os.path.abspath(os.path.dirname(__file__)),
+    'tests/resources/brooklynmuseum'
 )
 
 logging.basicConfig(
@@ -256,8 +257,12 @@ def test_get_no_creators():
 def test_get_images():
     response_json = _get_resource_json("image_details.json")
     actual_image_url, actual_thumbnail_url = bkm._get_images(response_json)
-    expected_image_url = "https://d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/CUR.66.242.29.jpg"
-    expected_thumbnail_url = "https://d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size0_sq/CUR.66.242.29.jpg"
+    expected_image_url = (
+        "https://d1lfxha3ugu3d4.cloudfront.net/images/"
+        "opencollection/objects/size4/CUR.66.242.29.jpg")
+    expected_thumbnail_url = (
+        "https://d1lfxha3ugu3d4.cloudfront.net/images"
+        "/opencollection/objects/size0_sq/CUR.66.242.29.jpg")
 
     assert actual_image_url == expected_image_url
     assert actual_thumbnail_url == expected_thumbnail_url
