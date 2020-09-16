@@ -1,5 +1,5 @@
-from Provider import *
-import logging
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse
 
 
 logging.basicConfig(
@@ -35,13 +35,13 @@ class ThorvaldsensMuseum(Provider):
         """
 
         soup = BeautifulSoup(_html, 'html.parser')
-        otherMetaData = {}
-        src = None
+        # otherMetaData = {}  # Assigned but never used
+        # src = None  # Assigned but never used
         license = None
         version = None
         imageURL = None
-        tags = None
-        extracted = []
+        # tags = None  # Assigned but never used
+        # extracted = []  # Assigned but never used
 
         self.clearFields()
         self.provider = self.name

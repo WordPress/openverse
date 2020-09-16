@@ -7,8 +7,9 @@ ETL Process:            Identify artworks that are available under a Creative
 Output:                 TSV file containing images of artworks and their
                         respective meta-data.
 """
-from Provider import *
-import logging
+
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, re
 
 
 logging.basicConfig(
@@ -44,11 +45,11 @@ class ScienceMuseum(Provider):
 
         soup = BeautifulSoup(_html, 'html.parser')
         otherMetaData = {}
-        src = None
+        # src = None  # Assigned but not used
         license = None
-        version = None
-        imageURL = None
-        tags = None
+        # version = None  # Assigned but not used
+        # imageURL = None  # Assigned but not used
+        # tags = None  # Assigned but not used
         extracted = []
 
         self.clearFields()

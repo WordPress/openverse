@@ -299,9 +299,9 @@ def _get_creator(row, creator_types=CREATOR_TYPES):
         [
             i for i in _check_type(freetext.get('name'), list)
             if type(i) == dict and (
-                _check_type(i.get('label'), str).lower() in creator_types) and(
-                _check_type(i.get('content'), str)) and (
-                'unknown' not in i.get('content').lower())
+             _check_type(i.get('label'), str).lower() in creator_types) and (
+             _check_type(i.get('content'), str)) and (
+             'unknown' not in i.get('content').lower())
         ],
         key=lambda x: creator_types[x['label'].lower()]
     )

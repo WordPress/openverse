@@ -146,8 +146,9 @@ class Provider:
             self.sanitizeString(self.creator) if self.creator else '\\N',
             self.creatorURL if self.creatorURL else '\\N',
             self.sanitizeString(self.title) if self.title else '\\N',
-            json.dumps(self.metaData, ensure_ascii=False) if (
-                self.metaData else '\\N'),
+            json.dumps(
+                self.metaData,
+                ensure_ascii=False) if self.metaData else '\\N',
             json.dumps(self.tags, ensure_ascii=False) if self.tags else '\\N',
             # json.dumps(self.popularityMetrics, ensure_ascii=False) if
             # self.popularityMetrics else '\\N',
@@ -369,5 +370,5 @@ class Provider:
                 else:
                     logging.warning(
                         (f'Content not found for url: {data[0].strip()}, '
-                         f'warc file: {data[1].strip()}, offset: {data[2].'
-                         f'strip()}, length: {data[3].strip()}.'))
+                         f'warc file: {data[1].strip()}, offset: '
+                         f'{data[2].strip()}, length: {data[3].strip()}.'))

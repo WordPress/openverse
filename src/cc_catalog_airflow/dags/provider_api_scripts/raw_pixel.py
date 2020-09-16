@@ -29,8 +29,7 @@ def _request_content(url, query_params=None, headers=None):
         else:
             logger.warning(
                 f"Unable to request URL: {url}. Status code: "
-                "{response.status_code}"
-                )
+                f"{response.status_code}")
             return None
 
     except Exception as e:

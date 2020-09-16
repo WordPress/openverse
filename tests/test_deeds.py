@@ -1,7 +1,9 @@
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SQLContext
-from pyspark.sql.types import *
-from pyspark.sql.functions import *
+# from pyspark.sql.types import *  # * imports create problems with flake8
+from pyspark.sql.types import StructType, StringType, LongType
+# from pyspark.sql.functions import * # * imports create problems with flake8
+from pyspark.sql.functions import StructField
 from gzipstream import GzipStreamFile
 from boto.s3.key import Key
 from urlparse import urlparse
@@ -75,10 +77,10 @@ def get_records(id_, iterator):
 
 @pytest.fixture(scope="session")
 def wat_file(request, spark_context):
-        files = spark_context.textFile("wat.paths.gz")
-        records = files.mapPartitionsWithSplit(get_records) \
-            # .map(lambda x: x)
-        return records
+    files = spark_context.textFile("wat.paths.gz")
+    records = files.mapPartitionsWithSplit(get_records) \
+        # .map(lambda x: x)
+    return records
 
 
 @pytest.fixture(scope="session")

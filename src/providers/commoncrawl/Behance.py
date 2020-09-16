@@ -7,8 +7,9 @@ ETL Process:            Identify curated galleries of images that are
 Output:                 TSV file containing images of artworks and their
                         respective meta-data.
 """
-from Provider import *
-import logging
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse, re
+
 
 logging.basicConfig(
     format=(
@@ -42,10 +43,10 @@ class Behance(Provider):
         """
 
         soup = BeautifulSoup(_html, 'html.parser')
-        src = None
+        # src = None  # Assigned but never used
         license = None
         version = None
-        imageURL = None
+        # imageURL = None  # Assigned but never used
         extracted = []
         otherMetaData = {}
 

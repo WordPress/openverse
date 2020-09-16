@@ -162,6 +162,6 @@ if __name__ == '__main__':
 
     else:
         date = None
-    logger.info(f'Processing images')
+    logger.info('Processing images')
 
     main(date)

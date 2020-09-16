@@ -7,8 +7,10 @@ ETL Process:            Identify images, of the various life forms on earth,
 Output:                 TSV file containing images of artworks and their
                         respective meta-data.
 """
-from Provider import *
-import logging
+
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse, re
+
 
 logging.basicConfig(
     format=(
@@ -51,10 +53,10 @@ class EOL(Provider):
         # is not the most recent version)
         soup = BeautifulSoup(_html, 'html.parser')
         otherMetaData = {}
-        src = None
+        # src = None  # Assigned but never used
         license = None
         version = None
-        imageURL = None
+        # imageURL = None  # Assigned but never used
         tags = None
         extracted = []
 
@@ -101,7 +103,7 @@ class EOL(Provider):
                     if infoURL:
                         sdstrip = self.domain.strip('%')
                         otherMetaData['more_information'] = (
-                            f'{sdstrip}{infoURL.attrs['href']}')
+                            f'{sdstrip}{infoURL.attrs["href"]}')
 
         # get the image
         if '/data_objects/' in _url:
@@ -176,11 +178,11 @@ class EOL(Provider):
                                         otherMetaData[f'{key}_url'] = sourceURL
 
                                 elif key == 'creator':
-                                        self.creator = tmpInfo.text.split(
-                                            ':')[1].strip().replace(
-                                                '\\xa9', '').strip()
-                                        if sourceURL:
-                                            self.creatorURL = sourceURL
+                                    self.creator = tmpInfo.text.split(
+                                        ':')[1].strip().replace(
+                                            '\\xa9', '').strip()
+                                    if sourceURL:
+                                        self.creatorURL = sourceURL
 
             if otherMetaData:
                 self.MetaData = otherMetaData

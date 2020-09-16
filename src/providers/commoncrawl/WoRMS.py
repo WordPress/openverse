@@ -1,6 +1,5 @@
-from Provider import *
-from urllib.parse import parse_qs
-import logging
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse, parse_qs
 
 
 logging.basicConfig(
@@ -36,10 +35,10 @@ class WoRMS(Provider):
 
         soup = BeautifulSoup(_html, 'html.parser')
         otherMetaData = {}
-        src = None
+        # src = None  # Assigned but never used
         license = None
         version = None
-        imageURL = None
+        # imageURL = None  # Assigned but never used
         formatted = []
         width = ''
         height = ''

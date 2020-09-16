@@ -1,5 +1,5 @@
-from Provider import *
-import logging
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse, re
 
 
 logging.basicConfig(
@@ -35,11 +35,11 @@ class CAPL(Provider):
 
         soup = BeautifulSoup(_html, 'html.parser')
         otherMetaData = {}
-        src = None
+        # src = None  # Assigned but never used
         license = None
         version = None
-        imageURL = None
-        tags = None
+        # imageURL = None  # Assigned but never used
+        # tags = None  # Assigned but never used
         extracted = []
 
         # single image
@@ -205,9 +205,10 @@ class CAPL(Provider):
                             foreignURL.findChildren('a', {'href': True}))
                         for fURL in foreignURL:
                             if fURL.text.strip().lower() == 'l':
+                                svctemp = self.validateContent(
+                                    "", fURL, "href")
                                 self.foreignLandingURL = (
-                                    f'{self.domain}/{self.validateContent('', '
-                                    f'fURL, 'href')}')
+                                    f'{self.domain}/{svctemp}')
 
                     # set the foreign ID to the image URL
                     self.foreignIdentifier = self.url

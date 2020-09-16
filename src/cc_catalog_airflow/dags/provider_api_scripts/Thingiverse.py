@@ -11,7 +11,11 @@ Notes:                  https://www.thingiverse.com/developers/getting-started
                         Rate limiting is 300 per 5 minute window.
 """
 
-from modules.etlMods import *
+# from modules.etlMods import *  # *imports create problems with flake8
+import argparse
+from datetime import datetime, timedelta
+from modules.etlMods import (os, logging, time, requestContent, sanitizeString,
+                             json, delayProcessing, writeToFile)
 
 
 MAX_THINGS = 30
@@ -98,8 +102,8 @@ def getMetaData(_thing, _date):
             if ('first_name' in result['creator']) and (
                     'last_name' in result['creator']):
                 creator = (
-                    f'{sanitizeString(result['creator']['first_name'])} '
-                    f'{sanitizeString(result['creator']['last_name'])}')
+                    f'{sanitizeString(result["creator"]["first_name"])} '
+                    f'{sanitizeString(result["creator"]["last_name"])}')
 
             if (creator.strip() == '') and ('name' in result['creator']):
                 creator = sanitizeString(result['creator']['name'])

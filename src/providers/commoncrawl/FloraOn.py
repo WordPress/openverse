@@ -7,8 +7,10 @@ ETL Process:            Identify images of plant species that are available
 Output:                 TSV file containing images of artworks and their
                         respective meta-data.
 """
-from Provider import *
-import logging
+
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse
+
 
 logging.basicConfig(
     format=(
@@ -45,7 +47,7 @@ class FloraOn(Provider):
         otherMetaData = {}
         license = None
         version = None
-        imageURL = None
+        # imageURL = None  # Assigned but never used
         extracted = []
 
         photoList = soup.find('div', {'id': 'fotochooser'})

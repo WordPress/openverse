@@ -8,8 +8,8 @@ Output:                 TSV file containing images of artworks and their
                         respective meta-data.
 """
 
-from Provider import *
-import logging
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse
 
 
 logging.basicConfig(
@@ -46,10 +46,10 @@ class IHA(Provider):
         # is not the most recent version)
         soup = BeautifulSoup(_html, 'html.parser')
         otherMetaData = {}
-        src = None
+        # src = None  # Assigned but never used
         license = None
         version = None
-        imageURL = None
+        # imageURL = None  # Assigned but never used
         tags = None
         extracted = []
 

@@ -136,15 +136,9 @@ def test_process_objects_batch_success():
     response_json = _get_resource_json("object_data.json")
 
     with patch.object(
-            bkm,
-            '_get_object_json',
-            return_value=response_json) as mock_get:
-        with patch.object(
-                bkm.image_store,
-                'add_item') as mock_image:
-            bkm._process_objects_batch(
-                batch_objects
-                )
+            bkm, '_get_object_json', return_value=response_json) as mock_get:
+        with patch.object(bkm.image_store, 'add_item') as mock_image:
+            bkm._process_objects_batch(batch_objects)
 
     assert mock_image.call_count == 1
 
@@ -153,9 +147,7 @@ def test_process_objects_batch_failure():
     batch_objects = _get_resource_json("no_batch_objects.json")
     response_json = _get_resource_json("non_cc_object_data.json")
     with patch.object(
-            bkm,
-            '_get_object_json',
-            return_value=response_json) as mock_get:
+            bkm, '_get_object_json', return_value=response_json) as mock_get:
         with patch.object(
                 bkm.image_store,
                 'add_item') as mock_image:

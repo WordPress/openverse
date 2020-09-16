@@ -1,5 +1,5 @@
-from Provider import *
-import logging
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse, re
 
 
 logging.basicConfig(
@@ -35,8 +35,8 @@ class SVGSilh(Provider):
         """
 
         soup = BeautifulSoup(_html, 'html.parser')
-        otherMetaData = {}
-        src = None
+        # otherMetaData = {}  # Assinged but never used
+        # src = None  # Assigned but never used
         license = None
         version = None
         imageURL = None
@@ -83,8 +83,9 @@ class SVGSilh(Provider):
                         '', domain[0], 'content').split('/png')[0]
 
                 if self.provider.lower() in domain:
-                    imageURL = (f'{domain}{self.validateContent('', '
-                                f'imageInfo, 'src').replace('svg', 'png')}')
+                    svctemp = self.validateContent(
+                        "", imageInfo, "src").replace("svg", "png")
+                    imageURL = f'{domain}{svctemp}'
                     self.url = imageURL
 
                 if not self.url:
@@ -98,8 +99,8 @@ class SVGSilh(Provider):
                     self.foreignLandingURL = f'{domain}{foreignURL}'
 
                 # get svg
-                self.metaData['svg'] = (f'{domain}{self.validateContent('', '
-                                        f'imageInfo, 'src')}')
+                self.metaData['svg'] = (
+                    f'{domain}{self.validateContent("", imageInfo, "src")}')
 
                 tagInfo = item.findChild('p', {'property': 'dct:title'})
                 if tagInfo:

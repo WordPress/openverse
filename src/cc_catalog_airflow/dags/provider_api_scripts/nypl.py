@@ -102,7 +102,7 @@ def _request_handler(
 
 
 def _handle_results(results):
-    image_count = 0
+    # image_count = 0  # Assigned but never used
     for item in results:
         uuid = item.get("uuid")
 

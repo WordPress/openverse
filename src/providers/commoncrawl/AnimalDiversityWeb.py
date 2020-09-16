@@ -8,8 +8,8 @@ ETL Process:            Identify all images that are available under a Creative
 Output:                 TSV file containing images of artworks and their
                         respective meta-data.
 """
-from Provider import *
-import logging
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse, re
 
 logging.basicConfig(
     format=(
@@ -56,10 +56,10 @@ class AnimalDiversityWeb(Provider):
 
         soup = BeautifulSoup(_html, 'html.parser')
         otherMetaData = {}
-        src = None
+        # src = None  # Assigned but never used
         license = None
         version = None
-        imageURL = None
+        # imageURL = None  # Assigned but never used
         formatted = None
 
         self.clearFields()

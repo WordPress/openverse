@@ -4,14 +4,14 @@
 import unittest
 import pyspark
 from pyspark.sql import SQLContext
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import desc
+# from pyspark.sql import SparkSession  # Removed because not used
+# from pyspark.sql.functions import desc  # Removed because not used
 from mock import patch, MagicMock
 from src.ExtractCCLinks import CCLinks
 import shutil
 import os.path
-import botocore
-import json
+# import botocore  # Removed because not used
+# import json  # Removed because not used
 from io import StringIO
 import types
 
@@ -36,7 +36,7 @@ class Test_CCLinks_v1(unittest.TestCase):
         self.index = None
         self.watPaths = open('tests/sample_wat.paths').read().split()
         self.cclinks.output = (f'tests/output/{self.cclinks.crawlIndex}/'
-                                f'test_parquet')  # overwrite output directory
+                               f'test_parquet')  # overwrite output directory
 
         self.warcArchive = WarcArchive()
 
@@ -63,7 +63,7 @@ class Test_CCLinks_v1(unittest.TestCase):
 
         response = self.cclinks.loadWATFile()
         mockGet.assert_called_with(f'https://commoncrawl.s3.amazonaws.com/'
-                                    f'crawl-data/{self.index}/wat.paths.gz')
+                                   f'crawl-data/{self.index}/wat.paths.gz')
         self.assertEqual(type(response), list)
         self.assertEqual(response, self.watPaths)
 
@@ -133,8 +133,8 @@ class Test_CCLinks_v1(unittest.TestCase):
             mockGet, mockBoto3):
         self.testKey = (
             'crawl-data/CC-MAIN-2018-13/segments/'
-            '1521257644271.19/wat/test_CC-MAIN-20180317035630-''
-            20180317055630-00000.warc.wat.gz'
+            '1521257644271.19/wat/test_CC-MAIN-20180317035630-'
+            '20180317055630-00000.warc.wat.gz'
             )
         self.mockWarcFiles = MagicMock()
         self.mockWarcFiles.__iter__.return_value = [self.testKey]
@@ -303,7 +303,7 @@ class Test_CCLinks_v2(unittest.TestCase):
         ).save(self.cclinks.output.replace('parquet', 'summary'))
 
         fh = open(
-            '{self.cclinks.output.replace('parquet', 'summary')}/total', 'w')
+            '{self.cclinks.output.replace("parquet", "summary")}/total', 'w')
         fh.write(f'Total records: {totalLinks}\r\n')
         fh.write(f'Total unique content path: {uniqueContent}\r\n')
         fh.write(f'Total unique query strings: {uniqueContentQuery}\r\n')

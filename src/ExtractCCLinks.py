@@ -2,24 +2,26 @@
 """Identify all links to Creative Commons in the web crawl data"""
 
 from pyspark import SparkContext
-from pyspark.sql import SQLContext
 from pyspark.sql import SparkSession
-from pyspark.sql.types import *
+# from pyspark.sql.types import *  # *imports create problems with flake8
+from pyspark.sql.types import StructType, StringType, LongType
+from pyspark.sql.functions import StructField
 import boto3
 import botocore
-from botocore.handlers import disable_signing
 import gzip
 from urllib.parse import urlparse
 import requests
 from collections import Counter
-import random
 from warcio.archiveiterator import ArchiveIterator
 import ujson as json
 from io import StringIO
 import sys
 import re
 import logging
-from datetime import date, datetime, timedelta
+# from datetime import date, datetime, timedelta  # Removed beacuse unused
+# from pyspark.sql import SQLContext  # Removed because unused
+# from botocore.handlers import disable_signing  # Removed because unused
+# import random  # Removed because not used
 
 
 class CCLinks:
@@ -61,7 +63,7 @@ class CCLinks:
 
         self.numPartitions = _ptn
         self.url = (
-                        f'https://commoncrawl.s3.amazonaws.com/crawl-data/''
+                        f'https://commoncrawl.s3.amazonaws.com/crawl-data/'
                         f'{self.crawlIndex}/wat.paths.gz'
         )
         self.output = f'output/{self.crawl}'
@@ -152,8 +154,8 @@ class CCLinks:
                     s3.Object(bucket, uri.strip()).load()
 
                 except botocore.client.ClientError as e:
-                    logging.warning(f'{uri.strip()}: {e.response['Error']'
-                                    f'['Message']}.')
+                    logging.warning(
+                        f'{uri.strip()}: {e.response["Error"]["Message"]}.')
                     pass
 
                 else:
@@ -188,21 +190,20 @@ class CCLinks:
 
                                 else:
                                     if content(
-                                        ['Envelope']
+                                            ['Envelope']
                                             ['WARC-Header-Metadata']
                                             ['WARC-Type']) != 'response':
-                                            continue
+                                        continue
                                     elif 'HTML-Metadata' not in content(
-                                        ['Envelope']
+                                            ['Envelope']
                                             ['Payload-Metadata']
                                             ['HTTP-Response-Metadata']):
-                                            continue
+                                        continue
                                     elif 'Links' not in content(
-                                        ['Envelope']
-                                            ['Payload-Metadata']
+                                            ['Envelope']['Payload-Metadata']
                                             ['HTTP-Response-Metadata']
                                             ['HTML-Metadata']):
-                                            continue
+                                        continue
 
                                     try:
                                         segment = uri.split('/wat/')[0].strip()
@@ -239,8 +240,27 @@ class CCLinks:
                                                 segment, filename, offset,
                                                 dftLength,
                                                 json.dumps({
-                                                    'Images': len(list(set(map(lambda i: i['url'], filter(lambda z: 'IMG@/src' in z['path'], links))))),
-                                                    'Links': Counter(map(lambda l: urlparse(l['url']).netloc, filter(lambda z: 'A@/href' in z['path'] and targetURI.netloc not in z['url'] and urlparse(z['url']).netloc != '', links)))
+                                                    'Images': (
+                                                        len(list(set(map(
+                                                            lambda i: i['url'],
+                                                            filter(
+                                                                lambda z:
+                                                                'IMG@/src' in
+                                                                    z['path'],
+                                                                    links)))))
+                                                                    ),
+                                                    'Links': Counter(map(
+                                                        lambda l: urlparse(
+                                                            l['url']).netloc,
+                                                        filter(
+                                                            lambda z: 'A@/href'
+                                                            in z['path'] and
+                                                            targetURI.netloc
+                                                            not in z['url'] and
+                                                            urlparse(
+                                                                z['url'])
+                                                            .netloc !=
+                                                            '', links)))
                                                 })
                                             ),
                                             filter(

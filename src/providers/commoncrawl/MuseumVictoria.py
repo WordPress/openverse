@@ -8,8 +8,9 @@ ETL Process:            Identify images and their respective meta data that are
 Output:                 TSV file containing images of artworks and their
                         respective meta-data.
 """
-from Provider import *
-import logging
+
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse, re
 
 
 logging.basicConfig(
@@ -183,7 +184,7 @@ class MuseumVictoria(Provider):
                     if 'src' in img.attrs:
                         sdstrip = self.domain.strip('%')
                         self.thumbnail = (
-                            f'{sdstrip}{self.validateContent('', img, 'src')}')
+                            f'{sdstrip}{self.validateContent("", img, "src")}')
                         self.url = (
                             self.thumbnail.replace('-thumbnail', '-medium'))
                         self.foreignIdentifier = self.url

@@ -9,8 +9,8 @@ Output:                 TSV file containing images of artworks and their
                         respective meta-data.
 """
 
-from Provider import *
-import logging
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse
 
 
 logging.basicConfig(
@@ -92,7 +92,7 @@ class GeographOrgUK(Provider):
             if creatorInfo:
                 self.creator = self.sanitizeString(creatorInfo.text.strip())
                 sdstrip = self.domain.strip('%')
-                self.creatorURL = f'{sdstrip}{creatorInfo.attrs['href']}'
+                self.creatorURL = f'{sdstrip}{creatorInfo.attrs["href"]}'
 
             # Keywords/tags
             tagInfo = soup.find_all('span', {'class': 'tag'})

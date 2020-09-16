@@ -8,9 +8,9 @@ ETL Process:            Identify the various artworks and photographs that are
 Output:                 TSV file containing images of artworks and their
                         respective meta-data.
 """
-from Provider import *
-import logging
 
+# from Provider import *  # *imports create problems with flake8
+from Provider import Provider, logging, BeautifulSoup, urlparse, re
 
 logging.basicConfig(
     format=(
@@ -45,12 +45,12 @@ class DigitaltMuseum(Provider):
         # NB: the HTML for this website has been updated (the common crawl data
         # is not the most recent version)
         soup = BeautifulSoup(_html, 'html.parser')
-        otherMetaData = {}
-        src = None
+        # otherMetaData = {}  # Assigned but never used
+        # src = None  # Assigned but never used
         license = None
         version = None
-        imageURL = None
-        tags = None
+        # imageURL = None  # Assigned but never used
+        # tags = None  # Assigned but never used
         extracted = []
 
         self.clearFields()
@@ -137,8 +137,8 @@ class DigitaltMuseum(Provider):
 
                 if imageInfo:
                     self.foreignLandingURL = (
-                        f'{self.domain}{self.validateContent('', imageInfo, '
-                        f''href')}')
+                        f'{self.domain}'
+                        f'{self.validateContent("", imageInfo, "href")}')
 
                     img = imageInfo.find('img')
                     if img and 'src' in img.attrs:
