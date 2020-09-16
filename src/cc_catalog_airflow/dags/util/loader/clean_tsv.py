@@ -12,8 +12,8 @@ def main(tsv_filename):
     with open(tsv_filename) as f:
         for row in f:
             _process_row(row)
-            for image_store in _image_store_dict.values():
-                image_store.commit()
+        for image_store in _image_store_dict.values():
+            image_store.commit()
 
 
 def _process_row(tsv_row, image_store_dict=_image_store_dict):
