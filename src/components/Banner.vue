@@ -3,8 +3,9 @@
     <div
       class="padding-small"
       style="margin-bottom: 3px; background: #e6f6eb;"
-      v-bind:class="{'change':task.id}">
-    <div class="columns">
+      v-bind:class="{'change':task.id}"
+    >
+      <div class="columns">
         <div class="column section is-8">
           <p class="margin-top-normal">
             If you donate $5 today, and everyone else does the same,
@@ -24,11 +25,7 @@
           >Not today</button>
         </div>
         <div class="column section">
-          <button
-            class="button"
-            v-on:click="onclick"
-            style=" background: #e6f6eb; margin-top: 4px;border: none;"><i class="icon cross"></i>
-          </button>
+          <button class="button is-text" v-on:click="onclick">x</button>
         </div>
       </div>
     </div>
