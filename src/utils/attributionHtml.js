@@ -16,7 +16,7 @@ function attributionHtml(image, ccLicenseURL, fullLicenseName) {
   }
   const licenseLink = ` is licensed under <a href="${ccLicenseURL}" style="margin-right: 5px;">${fullLicenseName.toUpperCase()}</a>`
 
-  let licenseIcons = `<img style="height: inherit;margin-right: 3px;display: inline-block;" src="${baseAssetsPath}/cc_icon.svg" />`
+  let licenseIcons = `<img style="height: inherit;margin-right: 3px;display: inline-block;" src="${baseAssetsPath}/cc_icon.svg?image_id=${image.id}" />`
   if (image.license) {
     licenseIcons += image.license
       .split('-')

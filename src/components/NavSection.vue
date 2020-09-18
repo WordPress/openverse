@@ -85,6 +85,9 @@
             </NuxtLink>
           </div>
         </div>
+        <NuxtLink class="navbar-item" to="/support">
+          {{ $t('header.support') }}
+        </NuxtLink>
 
         <a
           :aria-label="$t('header.aria.extension')"
