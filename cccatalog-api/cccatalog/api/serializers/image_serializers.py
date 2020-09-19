@@ -208,12 +208,10 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     @staticmethod
     def validate_source(input_sources):
         allowed_sources = list(get_sources('image').keys())
-
-        for input_source in input_sources.split(','):
-            if input_source not in allowed_sources:
-                raise serializers.ValidationError(
-                    f"Source \'{input_source}\' does not exist."
-                )
+        input_sources = input_sources.split(',')
+        input_sources= [input_source for input_source in input_sources if input_source in allowed_sources] 
+        input_sources= ','.join(input_sources)
+        
         return input_sources.lower()
 
     @staticmethod
