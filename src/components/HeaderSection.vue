@@ -4,25 +4,19 @@
       :showNavSearch="showNavSearch"
       :navSearchPlaceholder="navSearchPlaceholder"
     />
-    
     <slot></slot>
   </header>
 </template>
-
 <script>
 import NavSection from '@/components/NavSection'
-
-
 export default {
   name: 'header-section',
   components: {
     NavSection
-    
-  },
+    },
   props: ['showHero', 'showNavSearch', 'isHeaderFixed', 'navSearchPlaceholder'],
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 .header {
