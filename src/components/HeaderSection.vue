@@ -2,8 +2,7 @@
   <header>
     <nav-section
       :showNavSearch="showNavSearch"
-      :navSearchPlaceholder="navSearchPlaceholder"
-    />
+      :navSearchPlaceholder="navSearchPlaceholder"/>
     <slot></slot>
   </header>
 </template>
@@ -12,10 +11,8 @@ import NavSection from '@/components/NavSection'
 export default {
   name: 'header-section',
   components: {
-    NavSection
-    },
-  props: ['showHero', 'showNavSearch', 'isHeaderFixed', 'navSearchPlaceholder'],
-}
+    NavSection},
+  props: ['showHero', 'showNavSearch', 'isHeaderFixed', 'navSearchPlaceholder'],}
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
@@ -25,7 +22,6 @@ export default {
   width: 100%;
   max-width: 100%;
 }
-
 .header nav {
   z-index: 10;
 }
