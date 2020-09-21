@@ -4,9 +4,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 
-from commoncrawl_s3_syncer import SyncImageProviders
 from util.operator_util import get_log_operator
-
 
 airflowHome = os.environ['AIRFLOW_HOME']
 
@@ -21,12 +19,24 @@ DAG_DEFAULT_ARGS = {
 
 DAG_ID = "sync_commoncrawl_workflow"
 
+CRAWL_OUTPUT_DIR = os.path.join(os.environ["OUTPUT_DIR"], "common_crawl_tsvs")
+
 
 def get_runner_operator(dag):
-    return BashOperator(task_id="sync_commoncrawl_workflow",
-                        bash_command=f"python {airflowHome}/dags/"
-                        "commoncrawl_s3_syncer/SyncImageProviders.py",
-                        dag=dag)
+    return BashOperator(
+        task_id="sync_commoncrawl_workflow",
+        bash_command=(
+            f"python {airflowHome}/dags/"
+            "commoncrawl_s3_syncer/SyncImageProviders.py"
+        ),
+        dag=dag,
+        env={
+            "S3_BUCKET": os.environ["S3_BUCKET"],
+            "OUTPUT_DIR": CRAWL_OUTPUT_DIR,
+            "AWS_ACCESS_KEY": os.environ["AWS_ACCESS_KEY"],
+            "AWS_SECRET_KEY": os.environ["AWS_SECRET_KEY"],
+            },
+    )
 
 
 def create_dag():
