@@ -114,3 +114,4 @@ class DeviantArt(Provider):
             formatted = list(self.formatOutput)
 
             return formatted
+

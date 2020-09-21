@@ -55,7 +55,7 @@ def get_records(id_, iterator):
 def wat_file(request,spark_context):
         files = spark_context.textFile("wat.paths.gz");
         records = files.mapPartitionsWithSplit(get_records) \
-                #.map(lambda x: x)
+                #.map(lambda x: x) 
         return records
 
 @pytest.fixture(scope="session")
@@ -68,25 +68,25 @@ def data_by_deed(request,wat_file):
                 ret.append ((p.path, data))
         return ret
 
-
+    
     lns = wat_file.map(lambda x: {
-        'data': x,
-        'uri': x ['Envelope']['WARC-Header-Metadata']['WARC-Target-URI'],
+        'data': x, 
+        'uri': x ['Envelope']['WARC-Header-Metadata']['WARC-Target-URI'], 
         'links': filter(lambda y: "creativecommons.org" in y['url'], x['Envelope']['Payload-Metadata']['HTTP-Response-Metadata']['HTML-Metadata']['Links']),
         'value': 1,
         })\
-        .flatMap(lambda x: get_links (x))
+        .flatMap(lambda x: get_links (x)) 
     return lns
 
 @pytest.fixture(scope="session")
 def deed_by_domain (request, data_by_deed, sql_context):
-    def aggregate_by_domain (acc, item):
+    def aggregate_by_domain (acc, item): 
         domain = urlparse(item ['uri']).netloc
         if (domain not in acc):
             acc [domain] = 0
         acc[domain] += 1
         return acc
-    def flat (deed):
+    def flat (deed): 
         return map (lambda domain: (deed [0], domain, deed [1][domain]), deed [1])
         #ret = []
         #for domain in deed [1]:
@@ -99,9 +99,9 @@ def deed_by_domain (request, data_by_deed, sql_context):
 
 
 @pytest.fixture(scope="session")
-def links(request,data_by_deed, sql_context):
-    def reducer (accum, item):
-        a = accum if type(accum) is int else 1
+def links(request,data_by_deed, sql_context): 
+    def reducer (accum, item): 
+        a = accum if type(accum) is int else 1 
         return a + item ['value']
 
     lns = data_by_deed.aggregateByKey (0, reducer, lambda s1,d1: s1 + d1)
@@ -134,4 +134,4 @@ def test_by_domain(deed_by_domain):
 
 @pytest.mark.usefixtures("save_to_sql")
 def test_save_commons_warc (save_to_sql):
-    pass
+    pass 

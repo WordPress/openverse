@@ -188,3 +188,4 @@ class Behance(Provider):
                     extracted.extend(self.formatOutput)
 
         return extracted
+

@@ -352,3 +352,4 @@ class Provider:
                     yield metaData
                 else:
                     logging.warning('Content not found for url: {}, warc file: {}, offset: {}, length: {}.'.format(data[0].strip(), data[1].strip(), data[2].strip(), data[3].strip()))
+
