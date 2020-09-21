@@ -82,6 +82,14 @@
             <router-link class="navbar-item" to="/feedback">{{
               $t('header.feedback')
             }}</router-link>
+            <a
+              href="https://api.creativecommons.engineering/"
+              target="_blank"
+              rel="noopener"
+              class="navbar-item"
+              >{{ $t('API') }}
+              <i class="icon external-link" />
+            </a>
           </div>
         </div>
         <router-link class="navbar-item" to="/support">{{
