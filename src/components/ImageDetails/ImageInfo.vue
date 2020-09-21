@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import PhotoTags from '../PhotoTags'
+import PhotoTags from '~/components/PhotoTags'
 import getProviderName from '~/utils/getProviderName'
 import getProviderLogo from '~/utils/getProviderLogo'
 

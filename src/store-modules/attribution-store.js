@@ -1,4 +1,4 @@
-import { CopyAttribution, EmbedAttribution } from '../analytics/events'
+import { CopyAttribution, EmbedAttribution } from '~/analytics/events'
 import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from './action-types'
 
 const actions = (GoogleAnalytics) => ({

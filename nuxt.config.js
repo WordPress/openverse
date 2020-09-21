@@ -97,33 +97,18 @@ export const env = {
   disableApiAnalytics: process.env.DISABLE_API_ANALYTICS || true,
 }
 
-/*
- ** Build configuration (extend key extends webpack)
- */
-const build = {
-  extend(config, ctx) {
-    // Run ESLint on save
-    if (ctx.isDev && ctx.isClient) {
-      config.module.rules.push({
-        enforce: 'pre',
-        test: /\.(js|vue)$/,
-        loader: 'eslint-loader',
-        exclude: /(node_modules)/,
-      })
-    }
-  },
-}
-
 export default {
   srcDir: 'src/',
   buildDir: 'dist/',
   components: true,
   plugins: ['~/plugins/i18n.js', { src: '~plugins/ga.js', mode: 'client' }],
-  css: ['@creativecommons/vocabulary/scss/vocabulary.scss'],
+  css: [
+    '@creativecommons/vocabulary/scss/vocabulary.scss',
+    '~/styles/global.scss',
+  ],
   head,
   env,
-  build,
-  buildModules: ['@nuxtjs/svg'],
+  buildModules: ['@nuxtjs/svg', '@nuxtjs/eslint-module'],
   modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap'],
   sentry: {
     dsn:

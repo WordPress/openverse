@@ -39,19 +39,17 @@ import {
 import { ExperimentData } from '~/abTests/experiments/filterExpansion'
 import { queryStringToQueryData } from '~/utils/searchQueryTransform'
 import local from '~/utils/local'
-import { screenWidth } from '../utils/getBrowserInfo'
+import { screenWidth } from '~/utils/getBrowserInfo'
 
 const BrowsePage = {
   name: 'browse-page',
   scrollToTop: false,
   async fetch() {
-    // Set the query from the url on the server
     if (process.server) {
       const query = queryStringToQueryData(this.$route.fullPath)
       this.$store.commit(SET_QUERY, { query })
     }
 
-    // load the images!
     if (!this.$store.state.images.length) {
       await this.$store.dispatch(FETCH_IMAGES, this.$store.state.query)
     }

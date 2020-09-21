@@ -1,4 +1,4 @@
-import SessionId from '../abTests/lib/sessionId'
+import SessionId from '~/abTests/lib/sessionId'
 
 const state = {
   sessionId: SessionId(),

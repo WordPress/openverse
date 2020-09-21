@@ -44,9 +44,7 @@
             @change="onValueChange"
           />
           <LicenseIcons v-if="filterType == 'licenses'" :license="item.code" />
-          <template
-            v-if="filterType == 'providers' || filterType == 'searchBy'"
-          >
+          <template v-if="['providers', 'searchBy'].includes(filterType)">
             {{ item.name }}
           </template>
           <template v-else>
@@ -77,8 +75,8 @@
 
 <script>
 import { ExperimentData } from '~/abTests/experiments/filterExpansion'
-import LicenseIcons from '../LicenseIcons'
-import LicenseExplanationTooltip from './LicenseExplanationTooltip'
+import LicenseIcons from '~/components/LicenseIcons'
+import LicenseExplanationTooltip from '~/components/Filters/LicenseExplanationTooltip'
 
 export default {
   name: 'FilterCheckList',

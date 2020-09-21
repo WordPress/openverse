@@ -1,4 +1,4 @@
-import { SocialMediaShare } from '../analytics/events'
+import { SocialMediaShare } from '~/analytics/events'
 import { SOCIAL_MEDIA_SHARE } from './action-types'
 
 const actions = (GoogleAnalytics) => ({

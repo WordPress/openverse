@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import getlocales from '../utils/locales'
+import getlocales from '~/utils/locales'
 
 export default {
   name: 'LocaleSelector',

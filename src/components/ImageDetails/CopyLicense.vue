@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import CopyButton from '../CopyButton'
+import CopyButton from '~/components/CopyButton'
 import {
   COPY_ATTRIBUTION,
   EMBED_ATTRIBUTION,

@@ -121,7 +121,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import '../styles/text-only-page.scss';
+@import '~/styles/text-only-page.scss';
 
 figure {
   max-width: 800px;
