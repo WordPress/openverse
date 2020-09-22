@@ -17,7 +17,7 @@ import socket
 from ingestion_server.state import register_indexing_job
 
 
-client = boto3.client('ec2')
+client = boto3.client('ec2', region_name=os.getenv('AWS_REGION', 'us-east-1'))
 
 
 def schedule_distributed_index(db_conn, target_index):
