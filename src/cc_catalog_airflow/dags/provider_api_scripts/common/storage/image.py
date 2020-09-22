@@ -253,7 +253,8 @@ class ImageStore:
         else:
             output_file = (
                 f'{provider}_{datetime.strftime(self._NOW, "%Y%m%d%H%M%S")}'
-                f'.tsv')
+                f'.tsv'
+            )
 
         output_path = os.path.join(output_dir, output_file)
         logger.info(f'Output path: {output_path}')

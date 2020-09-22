@@ -60,9 +60,8 @@ def test_get_foreign_id_url():
         foreign_id, foreign_url = rwp._get_foreign_id_url(image=result[0])
         assert foreign_id == 2041320
         assert (
-            foreign_url == (
-                "https://www.rawpixel.com/image/2041320/world-map-"
-                "drawn-oval-projection")
+            foreign_url
+            == "https://www.rawpixel.com/image/2041320/world-map-drawn-oval-projection"
         )
 
 
@@ -74,8 +73,8 @@ def test_get_image_properties():
             image=result[0], foreign_url=""
         )
         assert (
-            img_url == (
-                "https://img.rawpixel.com/s3fs-private/rawpixel_images/"
+            img_url
+            == ("https://img.rawpixel.com/s3fs-private/rawpixel_images/"
                 "website_content/pdmaps-loc-06-nam_1.jpg?w=1200&h=630&fit="
                 "crop&dpr=1.5&crop=entropy&fm=pjpg&q=75&vib=3&con=3&usm=15&"
                 "markpad=13&markalpha=90&markscale=10&markx=25&mark=rawpixel"
@@ -85,8 +84,8 @@ def test_get_image_properties():
         assert width == "1200"
         assert height == "630"
         assert (
-            thumbnail == (
-                "https://img.rawpixel.com/s3fs-private/rawpixel_images/"
+            thumbnail
+            == ("https://img.rawpixel.com/s3fs-private/rawpixel_images/"
                 "website_content/pdmaps-loc-06-nam_1.jpg?w=400&dpr=1&fit"
                 "=default&crop=default&auto=format&fm=pjpg&q=75&vib=3&con="
                 "3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=6f33bfab36227436a0f9ad230"

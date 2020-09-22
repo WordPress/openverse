@@ -120,8 +120,8 @@ def _get_image_list(
             break
 
     if (
-            try_number == max_tries - 1 and (
-                image_list is None or next_cursor is None)
+            try_number == max_tries - 1
+            and (image_list is None or next_cursor is None)
     ):
         logger.warning('No more tries remaining. Returning None types.')
         return None, None, None

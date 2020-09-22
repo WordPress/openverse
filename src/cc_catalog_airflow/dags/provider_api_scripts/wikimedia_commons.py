@@ -193,8 +193,9 @@ def _merge_response_jsons(left_json, right_json):
     right_pages = _get_image_pages(right_json)
 
     if (
-            left_pages is None or right_pages is None or left_pages.keys() != (
-                right_pages.keys())
+            left_pages is None
+            or right_pages is None
+            or left_pages.keys() != (right_pages.keys())
     ):
         logger.warning('Cannot merge responses with different pages!')
         merged_json = None

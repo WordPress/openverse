@@ -5,7 +5,9 @@ from util.loader import provider_details as prov
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO)
+    level=logging.INFO
+)
+
 logger = logging.getLogger(__name__)
 
 LIMIT = 100
@@ -64,7 +66,8 @@ def main():
 
 
 def _get_query_params(
-        query_params=DEFAULT_QUERY_PARAM, license_type="cc by", page=0):
+        query_params=DEFAULT_QUERY_PARAM, license_type="cc by", page=0
+):
     query_params["imagelicence"] = license_type
     query_params["page"] = page
     return query_params
@@ -72,7 +75,8 @@ def _get_query_params(
 
 def _get_batch_objects(
         endpoint=ENDPOINT, params=None,
-        headers=HEADERS, retries=RETRIES):
+        headers=HEADERS, retries=RETRIES
+):
     for retry in range(retries):
         response = delay_request.get(
             endpoint,
@@ -86,14 +90,15 @@ def _get_batch_objects(
                 break
             else:
                 data = None
-        except Exception as e:
+        except Exception:
             data = None
     return data
 
 
 def _handle_batch_objects(
         objects,
-        landing_page=LANDING_PAGE):
+        landing_page=LANDING_PAGE
+):
     image_count = 0
     for obj in objects:
         object_id = obj.get("id")
