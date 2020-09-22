@@ -13,10 +13,11 @@
             us.
           </p>
         </div>
+
         <div class="column">
           <button
             type="submit"
-            class="button is-success is-small"
+            class="button is-success is-small position"
             v-on:click="redirect"
           >
             <i
@@ -24,9 +25,10 @@
             />Yes, I’ll donate now
           </button>
         </div>
+
         <div class="column">
           <button
-            class="button is-small"
+            class="button is-small position"
             style="border: none; background: #e6f6eb; color: #008000;"
             v-on:click="onclick"
           >
@@ -34,7 +36,9 @@
           </button>
         </div>
         <div class="column">
-          <button class="button is-text" v-on:click="onclick">x</button>
+          <button class="button is-text button_two" v-on:click="onclick">
+            x
+          </button>
         </div>
       </div>
     </div>
@@ -64,5 +68,15 @@ export default {
 <style scoped>
 .change {
   display: none;
+}
+@media only screen and (max-width: 767px) {
+  .button_two {
+    display: none;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .position {
+    width: 100%;
+  }
 }
 </style>
