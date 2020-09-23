@@ -15,14 +15,16 @@
         </div>
 
         <div class="column">
-          <button
-            type="submit"
-            class="button is-success is-small position"
-            v-on:click="redirect"
-          >
+          <button type="submit" class="button is-success is-small position">
             <i
               class="icon cc-letterheart-filled margin-right-small is-size-5 padding-top-smaller"
-            />Yes, I’ll donate now
+            />
+            <a
+              href="https://www.classy.org/give/297881/#!/donation/checkout"
+              target="_blank"
+              style="color: #000000;"
+              >Yes, I’ll donate now
+            </a>
           </button>
         </div>
 
@@ -36,8 +38,14 @@
           </button>
         </div>
         <div class="column">
-          <button class="button is-text button_two" v-on:click="onclick">
-            x
+          <button
+            class="button is-text button_two"
+            v-on:click="onclick"
+            style="verticle-align: midddle;"
+          >
+            <i
+              class="icon cross margin-right-small is-size-5 padding-top-smaller"
+            />
           </button>
         </div>
       </div>
@@ -46,14 +54,10 @@
 </template>
 <script>
 export default {
-  name: 'Banner',
+  name: 'DonationBanner',
   methods: {
     onclick() {
       this.task.id = true
-    },
-    redirect() {
-      window.location.href =
-        'https://www.classy.org/give/297881/#!/donation/checkout'
     },
   },
   data() {
