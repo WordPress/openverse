@@ -17,12 +17,7 @@ import socket
 from ingestion_server.state import register_indexing_job
 
 
-client = boto3.client(
-    'ec2',
-    region_name=os.getenv('AWS_REGION', 'us-east-1'),
-    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID', None),
-    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY', None)
-)
+client = boto3.client('ec2', region_name=os.getenv('AWS_REGION', 'us-east-1'))
 
 
 def schedule_distributed_index(db_conn, target_index):
