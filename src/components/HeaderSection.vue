@@ -4,20 +4,20 @@
       :showNavSearch="showNavSearch"
       :navSearchPlaceholder="navSearchPlaceholder"
     />
-    <Banner />
+    <DonationBanner />
     <slot></slot>
   </header>
 </template>
 
 <script>
 import NavSection from '@/components/NavSection'
-import Banner from './Banner'
+import DonationBanner from './Banner'
 
 export default {
   name: 'header-section',
   components: {
     NavSection,
-    Banner,
+    DonationBanner,
   },
   props: ['showHero', 'showNavSearch', 'isHeaderFixed', 'navSearchPlaceholder'],
 }
