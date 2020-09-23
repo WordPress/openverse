@@ -19,7 +19,9 @@
               <div class="card-content with-button">
                 <div class="content">
                   <h2>CC Search</h2>
-                  <span class="subtitle is-italic margin-bottom-normal">
+                  <span
+                    class="subtitle is-italic margin-bottom-normal is-uppercase"
+                  >
                     {{ $t('support.open') }}</span
                   >
                   <p>
