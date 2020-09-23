@@ -209,7 +209,7 @@ class ImageSearchQueryStringSerializer(serializers.Serializer):
     def validate_source(input_sources):
         allowed_sources = list(get_sources('image').keys())
         input_sources = input_sources.split(',')
-        input_sources = [x for x in input_sources if x in allowed_sources] 
+        input_sources = [x for x in input_sources if x in allowed_sources]
         input_sources = ','.join(input_sources)
         return input_sources.lower()
 
