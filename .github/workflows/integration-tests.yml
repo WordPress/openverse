@@ -19,7 +19,7 @@ jobs:
     - name: Check ingestion-server style
       run: pycodestyle ingestion_server/ingestion_server --max-line-length=80 --ignore=E402
   Tests:
-    timeout-minutes: 10
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
