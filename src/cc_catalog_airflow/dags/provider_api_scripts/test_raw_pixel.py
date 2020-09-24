@@ -74,13 +74,22 @@ def test_get_image_properties():
         )
         assert (
             img_url
-            == "https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/pdmaps-loc-06-nam_1.jpg?w=1200&h=630&fit=crop&dpr=1.5&crop=entropy&fm=pjpg&q=75&vib=3&con=3&usm=15&markpad=13&markalpha=90&markscale=10&markx=25&mark=rawpixel-watermark.png&cs=srgb&bg=F4F4F3&ixlib=js-2.2.1&s=edbf5b420430b7f118a0093686c40f93"
+            == ("https://img.rawpixel.com/s3fs-private/rawpixel_images/"
+                "website_content/pdmaps-loc-06-nam_1.jpg?w=1200&h=630&fit="
+                "crop&dpr=1.5&crop=entropy&fm=pjpg&q=75&vib=3&con=3&usm=15&"
+                "markpad=13&markalpha=90&markscale=10&markx=25&mark=rawpixel"
+                "-watermark.png&cs=srgb&bg=F4F4F3&ixlib=js-2.2.1&s=edbf5b4204"
+                "30b7f118a0093686c40f93")
         )
         assert width == "1200"
         assert height == "630"
         assert (
             thumbnail
-            == "https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/pdmaps-loc-06-nam_1.jpg?w=400&dpr=1&fit=default&crop=default&auto=format&fm=pjpg&q=75&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=6f33bfab36227436a0f9ad230fc1d64a"
+            == ("https://img.rawpixel.com/s3fs-private/rawpixel_images/"
+                "website_content/pdmaps-loc-06-nam_1.jpg?w=400&dpr=1&fit"
+                "=default&crop=default&auto=format&fm=pjpg&q=75&vib=3&con="
+                "3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=6f33bfab36227436a0f9ad230"
+                "fc1d64a")
         )
 
 

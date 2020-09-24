@@ -299,9 +299,9 @@ def _get_creator(row, creator_types=CREATOR_TYPES):
         [
             i for i in _check_type(freetext.get('name'), list)
             if type(i) == dict
-            and _check_type(i.get('label'), str).lower() in creator_types
-            and _check_type(i.get('content'), str)
-            and 'unknown' not in i.get('content').lower()
+            and (_check_type(i.get('label'), str).lower() in creator_types)
+            and (_check_type(i.get('content'), str))
+            and ('unknown' not in i.get('content').lower())
         ],
         key=lambda x: creator_types[x['label'].lower()]
     )
@@ -309,8 +309,8 @@ def _get_creator(row, creator_types=CREATOR_TYPES):
     indexed_structured_creator_generator = (
         i['content'] for i in _check_type(indexed_structured.get('name'), list)
         if type(i) == dict
-        and _check_type(i.get('type'), str).lower() == 'personal_main'
-        and _check_type(i.get('content'), str)
+        and (_check_type(i.get('type'), str).lower() == 'personal_main')
+        and (_check_type(i.get('content'), str))
     )
 
     if ordered_freetext_creator_objects:

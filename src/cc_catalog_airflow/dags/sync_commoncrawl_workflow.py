@@ -3,10 +3,7 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
-
-from commoncrawl_s3_syncer import SyncImageProviders
 from util.operator_util import get_log_operator
-
 
 airflowHome = os.environ['AIRFLOW_HOME']
 

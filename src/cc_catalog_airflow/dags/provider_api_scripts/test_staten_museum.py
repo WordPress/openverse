@@ -174,8 +174,11 @@ def test_get_image_url():
         image_iif_id
     )
 
-    expected_image_url = "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/max/0/default.jpg"
-    expected_thumbnail = "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/!400,/0/default.jpg"
+    expected_image_url = (
+        "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/max/0/default.jpg")
+    expected_thumbnail = (
+        "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/!400,/0/"
+        "default.jpg")
 
     assert actual_image_url == expected_image_url
     assert actual_thumbnail == expected_thumbnail

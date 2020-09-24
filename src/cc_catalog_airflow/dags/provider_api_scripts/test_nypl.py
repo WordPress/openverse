@@ -7,13 +7,11 @@ from unittest.mock import MagicMock, patch
 import nypl as np
 
 RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), 'tests/resources/nypl'
-)
+    os.path.abspath(os.path.dirname(__file__)), 'tests/resources/nypl')
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.DEBUG
-)
+    level=logging.DEBUG)
 
 
 def _get_resource_json(json_name):
@@ -55,22 +53,16 @@ def test_request_handler_search_success():
     }
 
     response_search_success = _get_resource_json(
-        "response_search_success.json"
-        )
+        "response_search_success.json")
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_search_success)
     with patch.object(
-            np.delay_request,
-            'get',
-            return_value=r) as mock_call:
+            np.delay_request, 'get', return_value=r) as mock_call:
         actual_response = np._request_handler(params=query_param)
 
     expected_response = response_search_success.get(
-        "nyplAPI", {}
-        ).get(
-            "response"
-            )
+        "nyplAPI", {}).get("response")
 
     assert actual_response == expected_response
     assert mock_call.call_count == 1
@@ -78,23 +70,19 @@ def test_request_handler_search_success():
 
 def test_request_handler_itemdetail_success():
     response_itemdetails_success = _get_resource_json(
-        "response_itemdetails_success.json"
-    )
+        "response_itemdetails_success.json")
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_itemdetails_success)
     with patch.object(
-            np.delay_request,
-            'get',
-            return_value=r) as mock_call:
+            np.delay_request, 'get', return_value=r) as mock_call:
         actual_response = np._request_handler(
-                endpoint=np.METADATA_ENDPOINT
-                + "0cabe3d0-3d50-0134-a8e0-00505686a51c",
+                endpoint=np.METADATA_ENDPOINT + (
+                    "0cabe3d0-3d50-0134-a8e0-00505686a51c"),
             )
 
     expected_response = response_itemdetails_success.get(
-        "nyplAPI", {}
-    ).get("response")
+        "nyplAPI", {}).get("response")
 
     assert actual_response == expected_response
     assert mock_call.call_count == 1
@@ -127,8 +115,12 @@ def test_get_images_success():
     actual_image_url, \
         actual_thumbnail = np._get_images(images)
 
-    assert actual_image_url == "http://images.nypl.org/index.php?id=56738462&t=g&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"
-    assert actual_thumbnail == "http://images.nypl.org/index.php?id=56738462&t=w&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"
+    assert actual_image_url == (
+        "http://images.nypl.org/index.php?id=56738462&t=g&suffix=0cabe3d0-"
+        "3d50-0134-a8e0-00505686a51c.001")
+    assert actual_thumbnail == (
+        "http://images.nypl.org/index.php?id=56738462&t=w&suffix=0cabe3d0-"
+        "3d50-0134-a8e0-00505686a51c.001")
 
 
 def test_get_image_failure():
