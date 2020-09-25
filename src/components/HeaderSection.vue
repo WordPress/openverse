@@ -4,7 +4,9 @@
       :showNavSearch="showNavSearch"
       :navSearchPlaceholder="navSearchPlaceholder"
     />
-    <DonationBanner v-show="showDonate" @onDismiss="hideDonate" />
+    <div class="padding-bottom-bigger" v-show="showDonate">
+      <DonationBanner @onDismiss="hideDonate" />
+    </div>
     <slot></slot>
   </header>
 </template>
@@ -23,7 +25,7 @@ export default {
   props: ['showHero', 'showNavSearch', 'isHeaderFixed', 'navSearchPlaceholder'],
   data() {
     return {
-      showDonate: !local.get('hide-location-banner') || true,
+      showDonate: !local.get('hide-location-banner'),
     }
   },
   methods: {

@@ -28,10 +28,12 @@
                     {{ $t('support.cc') }}
                   </p>
                 </div>
-                <a class="button normal donate margin-right-normal">
+                <a
+                  class="button normal donate margin-right-normal"
+                  :href="donationLink"
+                >
                   <i
                     class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
-                    href="https://www.classy.org/give/297881/#!/donation/checkout"
                   ></i>
                   {{ $t('support.button.donate') }}</a
                 >
@@ -105,17 +107,16 @@
               <strong>public good</strong>
             </template>
           </i18n>
-          <div class="field is-grouped is-grouped-centered">
-            <a class="button normal donate margin-right-normal">
+          <div class="field button-row">
+            <a class="button normal donate" :href="donationLink">
               <i
                 class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
-                href="https://www.classy.org/give/297881/#!/donation/checkout"
               ></i>
               {{ $t('support.button.donate') }}</a
             >
-            <h2 class="title subtitle is-3">or</h2>
+            <h2 class="title subtitle is-3 seperator">or</h2>
             <a
-              class="button is-primary normal margin-left-normal"
+              class="button is-primary normal"
               href=" https://github.com/sponsors/creativecommons"
               >{{ $t('support.button.sponsor') }}</a
             >
@@ -182,13 +183,10 @@
           >
             {{ $t('support.future.support') }}
           </h2>
-          <div
-            class="field is-grouped is-grouped-centered margin-bottom-medium"
-          >
-            <a class="button normal donate">
+          <div class="field button-row margin-bottom-medium">
+            <a class="button normal donate" :href="donationLink">
               <i
                 class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
-                href="https://www.classy.org/give/297881/#!/donation/checkout"
               ></i>
               {{ $t('support.button.donate') }}</a
             >
@@ -213,16 +211,40 @@ const MetaSearchPage = {
     HeaderSection,
     FooterSection,
   },
+  data() {
+    return {
+      donationLink: 'https://www.classy.org/give/297881/#!/donation/checkout',
+    }
+  },
 }
 
 export default MetaSearchPage
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
-@import '../styles/text-only-page.scss';
+<style scoped lang="scss">
+@import 'bulma/sass/utilities/_all.sass';
+@import '@/styles/text-only-page.scss';
 
 h4 {
   margin: 1rem 0;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .seperator {
+    margin: 0 1.5rem;
+  }
+
+  @include touch {
+    flex-direction: column;
+
+    .seperator {
+      margin: 0.5rem;
+    }
+  }
 }
 </style>
