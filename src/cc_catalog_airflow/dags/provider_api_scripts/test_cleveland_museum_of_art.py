@@ -4,10 +4,13 @@ import requests
 import os
 from unittest.mock import patch, MagicMock
 
+import pytest
+
 import cleveland_museum_of_art as clm
 
 RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), 'tests/resources/clevelandmuseum'
+    os.path.abspath(os.path.dirname(__file__)),
+    'tests/resources/clevelandmuseum'
 )
 
 logging.basicConfig(
@@ -47,7 +50,8 @@ def test_build_query_param_with_givens():
 def test_get_image_type_web():
     image_data = _get_resource_json('image_type_web.json')
     actual_url, actual_key = clm._get_image_type(image_data)
-    expected_url = "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg"
+    expected_url = (
+        "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg")
     expected_key = "web"
 
     assert actual_url == expected_url
@@ -57,7 +61,9 @@ def test_get_image_type_web():
 def test_get_image_type_print():
     image_data = _get_resource_json('image_type_print.json')
     actual_url, actual_key = clm._get_image_type(image_data)
-    expected_url = "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_print.jpg"
+    expected_url = (
+        "https://openaccess-cdn.clevelandart.org/"
+        "1335.1917/1335.1917_print.jpg")
     expected_key = "print"
 
     assert actual_url == expected_url
@@ -67,7 +73,9 @@ def test_get_image_type_print():
 def test_get_image_type_full():
     image_data = _get_resource_json('image_type_full.json')
     actual_url, actual_key = clm._get_image_type(image_data)
-    expected_url = "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_full.tif"
+    expected_url = (
+        "https://openaccess-cdn.clevelandart.org/"
+        "1335.1917/1335.1917_full.tif")
     expected_key = "full"
 
     assert actual_url == expected_url
@@ -150,6 +158,7 @@ def test_get_response_failure():
     assert mock_get.call_count == 3
 
 
+@pytest.mark.skip(reason='This test calls the internet via ImageStore')
 def test_handle_response():
     response_json = _get_resource_json('handle_response_data.json')
     data = response_json['data']

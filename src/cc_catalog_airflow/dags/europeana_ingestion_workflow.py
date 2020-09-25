@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 DAG_ID = 'europeana_ingestion_workflow'
 START_DATE = datetime(2013, 11, 21)
-INGESTION_TASK_TIMEOUT = timedelta(hours=4)
+INGESTION_TASK_TIMEOUT = timedelta(hours=12)
 
 DAILY_LIST_LENGTH = 7
 ONE_MONTH_LIST_LENGTH = 12

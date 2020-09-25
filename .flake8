@@ -1,0 +1,4 @@
+[flake8]
+per-file-ignores =
+    # Ignore maximum line length rule for test files
+    test_*:E501

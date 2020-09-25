@@ -3,9 +3,10 @@ from common.requester import DelayedRequester
 import requests
 import logging
 from urllib.parse import urlparse, parse_qs
+from util.loader import provider_details as prov
 
 DELAY = 1.0  # time delay (in seconds)
-PROVIDER = "rawpixel"
+PROVIDER = prov.RAWPIXEL_DEFAULT_PROVIDER
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
@@ -19,7 +20,7 @@ image_store = ImageStore(provider=PROVIDER)
 
 
 def _request_content(url, query_params=None, headers=None):
-    logger.info("Processing request: {}".format(url))
+    logger.info(f"Processing request: {url}")
 
     response = delayed_requester.get(url, params=query_params, headers=headers)
     try:
@@ -27,15 +28,13 @@ def _request_content(url, query_params=None, headers=None):
             return response.json()
         else:
             logger.warning(
-                "Unable to request URL: {}. Status code: {}".format(
-                    url, response.status_code
-                )
-            )
+                f"Unable to request URL: {url}. Status code: "
+                f"{response.status_code}")
             return None
 
     except Exception as e:
         logger.error("There was an error with the request.")
-        logger.info("{}: {}".format(type(e).__name__, e))
+        logger.info(f"{type(e).__name__}: {e}")
         return None
 
 
@@ -61,7 +60,7 @@ def _get_foreign_id_url(image):
 
         if not foreign_url:
             logger.warning(
-                "Landing page not detected for image ID: {}".format(foreign_id)
+                f"Landing page not detected for image ID: {foreign_id}"
             )
         return [foreign_id, foreign_url]
     else:
@@ -147,7 +146,7 @@ def _process_pages(total, result, page):
         is_valid = False
 
     while (img_ctr < total) and is_valid:
-        logger.info("Processing page: {}".format(page))
+        logger.info(f"Processing page: {page}")
 
         for img in result:
             total_images = _process_image_data(img)
@@ -175,7 +174,7 @@ def main():
 
     img_ctr = _process_pages(total, result, page=page)
 
-    logger.info("Total images: {}".format(img_ctr))
+    logger.info(f"Total images: {img_ctr}")
 
     image_store.commit()
 

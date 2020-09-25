@@ -1,11 +1,17 @@
 import logging
 import string
+import tldextract
 
 from common.storage import columns
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
     level=logging.DEBUG)
+
+
+columns.urls.tldextract.extract = tldextract.TLDExtract(
+    suffix_list_urls=None
+)
 
 
 class TruncateColumn(columns.Column):

@@ -3,6 +3,7 @@ import logging
 import lxml.html as html
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
+from util.loader import provider_details as prov
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 LIMIT = 35
 DELAY = 1.0
 RETRIES = 3
-PROVIDER = "brooklynmuseum"
+PROVIDER = prov.BROOKLYN_DEFAULT_PROVIDER
 ENDPOINT = "https://www.brooklynmuseum.org/api/v2/object/"
 API_KEY = os.getenv("BROOKLYN_MUSEUM_API_KEY", "nokeyprovided")
 

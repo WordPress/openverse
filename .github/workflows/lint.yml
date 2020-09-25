@@ -2,18 +2,13 @@ name: flake8_lint
 
 on:
   push:
-    # Only run if,
     paths:
-      # Changes in python files
-      - '*.py'
+      - '**.py'
   pull_request:
-    # Only run if,
     paths:
-      # Changes in python files
-      - '*.py'
-    branches:
-      - master
-      
+      - '**.py'
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,5 +24,5 @@ jobs:
     - name: Lint with flake8
       # Lint for only changed files, rather than the entire repository
       run: |
-        pip install flake8
+        pip install flake8>=3.7.0
         git diff HEAD^ | flake8 --diff

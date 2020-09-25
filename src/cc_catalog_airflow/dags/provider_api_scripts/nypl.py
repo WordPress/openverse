@@ -3,6 +3,7 @@ import logging
 from urllib.parse import urlparse, parse_qs
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
+from util.loader import provider_details as prov
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 LIMIT = 500
 DELAY = 1.0
 RETRIES = 3
-PROVIDER = "nypl"
+PROVIDER = prov.NYPL_DEFAULT_PROVIDER
 BASE_ENDPOINT = "http://api.repo.nypl.org/api/v1/items/search"
 METADATA_ENDPOINT = "http://api.repo.nypl.org/api/v1/items/item_details/"
 NYPL_API = os.getenv("NYPL_API_KEY")
@@ -101,7 +102,6 @@ def _request_handler(
 
 
 def _handle_results(results):
-    image_count = 0
     for item in results:
         uuid = item.get("uuid")
 
@@ -219,8 +219,10 @@ def _get_metadata(mods):
     metadata = {}
 
     type_of_resource = mods.get("typeOfResource")
-    if (type(type_of_resource) == list
-            and type_of_resource[0].get("usage") == "primary"):
+    if (
+        type(type_of_resource) == list
+        and (type_of_resource[0].get("usage") == "primary")
+    ):
         metadata["type_of_resource"] = type_of_resource[0].get("$")
 
     if type(mods.get("genre")) == dict:

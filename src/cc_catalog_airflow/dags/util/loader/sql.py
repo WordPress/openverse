@@ -13,6 +13,19 @@ IMAGE_TABLE_NAME = 'image'
 DB_USER_NAME = 'deploy'
 NOW = 'NOW()'
 FALSE = "'f'"
+OLDEST_PER_PROVIDER = {
+    prov.FLICKR_DEFAULT_PROVIDER: '6 months 18 days',
+    prov.EUROPEANA_DEFAULT_PROVIDER: '3 months 9 days',
+    prov.WIKIMEDIA_DEFAULT_PROVIDER: '6 months 18 days',
+    prov.SMITHSONIAN_DEFAULT_PROVIDER: '8 days',
+    prov.BROOKLYN_DEFAULT_PROVIDER: '1 month 3 days',
+    prov.CLEVELAND_DEFAULT_PROVIDER: '1 month 3 days',
+    prov.VICTORIA_DEFAULT_PROVIDER: '1 month 3 days',
+    prov.NYPL_DEFAULT_PROVIDER: '1 month 3 days',
+    prov.RAWPIXEL_DEFAULT_PROVIDER: '1 month 3 days',
+    prov.SCIENCE_DEFAULT_PROVIDER: '1 month 3 days',
+    prov.STATENS_DEFAULT_PROVIDER: '1 month 3 days'
+}
 
 
 def create_loading_table(
@@ -553,6 +566,55 @@ def update_smithsonian_sub_providers(
                 SET {col.SOURCE} = '{source}'
                 WHERE
                 {image_table}.{col.PROVIDER} = '{default_provider}'
+                AND
+                MD5({image_table}.{col.FOREIGN_ID}) = MD5('{foreign_id}');
+                '''
+            )
+        )
+
+
+def expire_old_images(
+  postgres_conn_id,
+  provider,
+  image_table=IMAGE_TABLE_NAME
+):
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+
+    if provider not in OLDEST_PER_PROVIDER:
+        raise Exception(
+            f"Provider value {provider} not defined in the "
+            f"OLDEST_PER_PROVIDER dictionary")
+
+    """
+    Select all records that are outdated
+    """
+    select_query = dedent(
+        f'''
+        SELECT {col.FOREIGN_ID}
+        FROM {image_table}
+        WHERE
+        {col.PROVIDER} = '{provider}'
+        AND
+        {col.UPDATED_ON} < {NOW} - INTERVAL '{OLDEST_PER_PROVIDER[provider]}';
+        '''
+    )
+
+    selected_records = postgres.get_records(select_query)
+
+    """
+    Set the 'removed_from_source' value of each selected row to True to
+    indicate that those images are outdated
+    """
+    for row in selected_records:
+        foreign_id = row[0]
+
+        postgres.run(
+            dedent(
+                f'''
+                UPDATE {image_table}
+                SET {col.REMOVED} = 't'
+                WHERE
+                {image_table}.{col.PROVIDER} = '{provider}'
                 AND
                 MD5({image_table}.{col.FOREIGN_ID}) = MD5('{foreign_id}');
                 '''

@@ -9,9 +9,20 @@ might be useful for retrieving sub-providers at the database level and the
 API level.
 """
 
-# Flickr parameters
+# Default provider names
 FLICKR_DEFAULT_PROVIDER = 'flickr'
+EUROPEANA_DEFAULT_PROVIDER = 'europeana'
+WIKIMEDIA_DEFAULT_PROVIDER = 'wikimedia'
+SMITHSONIAN_DEFAULT_PROVIDER = 'smithsonian'
+BROOKLYN_DEFAULT_PROVIDER = 'brooklynmuseum'
+CLEVELAND_DEFAULT_PROVIDER = 'clevelandmuseum'
+VICTORIA_DEFAULT_PROVIDER = 'museumsvictoria'
+NYPL_DEFAULT_PROVIDER = 'nypl'
+RAWPIXEL_DEFAULT_PROVIDER = 'rawpixel'
+SCIENCE_DEFAULT_PROVIDER = 'sciencemuseum'
+STATENS_DEFAULT_PROVIDER = 'statensmuseum'
 
+# Flickr parameters
 FLICKR_SUB_PROVIDERS = {
     'nasa': {
         '24662369@N07',  # NASA Goddard Photo and Video
@@ -35,15 +46,11 @@ FLICKR_SUB_PROVIDERS = {
 FLICKR_PHOTO_URL_BASE = 'https://www.flickr.com/photos/'
 
 # Europeana parameters
-EUROPEANA_DEFAULT_PROVIDER = 'europeana'
-
 EUROPEANA_SUB_PROVIDERS = {
     'wellcome_collection': "Wellcome Collection"
 }
 
 # Smithsonian parameters
-SMITHSONIAN_DEFAULT_PROVIDER = 'smithsonian'
-
 SMITHSONIAN_SUB_PROVIDERS = {
     'smithsonian_national_museum_of_natural_history': {
         'NMNHANTHRO',  # NMNH - Paleobiology Dept.

@@ -1,13 +1,13 @@
-import argparse
+# import argparse  # Imported but not used
 import json
 import logging
 import os
-import random
+# import random  # Imported but not used
 import re
-import sys
+# import sys  # Imported but not used
 import time
-from datetime import datetime, timedelta
-from urllib.parse import urlparse
+# from datetime import datetime, timedelta  # Imported but not used
+# from urllib.parse import urlparse  # Imported but not used
 
 import requests
 
@@ -53,7 +53,7 @@ def _check_all_arguments_exist(**kwargs):
     all_truthy = True
     for arg in kwargs:
         if not kwargs[arg]:
-            logging.warning('Missing {}'.format(arg))
+            logging.warning(f'Missing {arg}')
             all_truthy = False
     return all_truthy
 
@@ -108,12 +108,12 @@ def create_tsv_list_row(
 
 
 def writeToFile(_data, _name, output_dir=PATH):
-    outputFile = '{}{}'.format(output_dir, _name)
+    outputFile = f'{output_dir}{_name}'
 
     if len(_data) < 1:
         return None
 
-    logging.info('Writing to file => {}'.format(outputFile))
+    logging.info(f'Writing to file => {outputFile}')
 
     with open(outputFile, 'a') as fh:
         for line in _data:
@@ -127,14 +127,14 @@ def sanitizeString(_data):
     else:
         _data = str(_data)
 
-    _data       = _data.strip()
-    _data       = _data.replace('"', "'")
-    _data       = re.sub(r'\n|\r', ' ', _data)
-    #_data      = re.escape(_data)
+    _data = _data.strip()
+    _data = _data.replace('"', "'")
+    _data = re.sub(r'\n|\r', ' ', _data)
+    # _data      = re.escape(_data)
 
-    backspaces  = re.compile('\b+')
-    _data       = backspaces.sub('', _data)
-    _data       = _data.replace('\\', '\\\\')
+    backspaces = re.compile('\b+')
+    _data = backspaces.sub('', _data)
+    _data = _data.replace('\\', '\\\\')
 
     return re.sub(r'\s+', ' ', _data)
 
@@ -142,19 +142,19 @@ def sanitizeString(_data):
 def delayProcessing(_startTime, _maxDelay):
     minDelay = 1.0
 
-    #subtract time elapsed from the requested delay
-    elapsed       = float(time.time()) - float(_startTime)
+    # subtract time elapsed from the requested delay
+    elapsed = float(time.time()) - float(_startTime)
     delayInterval = round(_maxDelay - elapsed, 3)
-    waitTime      = max(minDelay, delayInterval) #time delay between requests.
+    waitTime = max(minDelay, delayInterval)  # time delay between requests.
 
-    logging.info('Time delay: {} second(s)'.format(waitTime))
+    logging.info(f'Time delay: {waitTime} second(s)')
     time.sleep(waitTime)
 
 
 def requestContent(_url, _headers=None):
-    #TODO: pass the request headers and params in a dictionary
+    # TODO: pass the request headers and params in a dictionary
 
-    logging.info('Processing request: {}'.format(_url))
+    logging.info(f'Processing request: {_url}')
 
     try:
         response = requests.get(_url, headers=_headers)
@@ -162,30 +162,35 @@ def requestContent(_url, _headers=None):
         if response.status_code == requests.codes.ok:
             return response.json()
         else:
-            logging.warning('Unable to request URL: {}. Status code: {}'.format(url, response.status_code))
+            logging.warning(
+                f'Unable to request URL: {_url}. Status code:'
+                f'{response.status_code}')
             return None
 
     except Exception as e:
         logging.error('There was an error with the request.')
-        logging.info('{}: {}'.format(type(e).__name__, e))
+        logging.info(f'{type(e).__name__}: {e}')
         return None
 
 
 def getLicense(_domain, _path, _url):
 
     if 'creativecommons.org' not in _domain:
-        logging.warning('The license for the following work -> {} is not issued by Creative Commons.'.format(_url))
+        logging.warning(
+            f'The license for the following work -> {_url} is not issued by'
+            f'Creative Commons.')
         return [None, None]
 
-    pattern   = re.compile(r'/(licenses|publicdomain)/([a-z\-?]+)/(\d\.\d)/?(.*?)')
+    pattern = re.compile(
+                    r'/(licenses|publicdomain)/([a-z\-?]+)/(\d\.\d)/?(.*?)')
     if pattern.match(_path.lower()):
-        result  = re.search(pattern, _path.lower())
+        result = re.search(pattern, _path.lower())
         license = result.group(2).lower().strip()
         version = result.group(3).strip()
 
         if result.group(1) == 'publicdomain':
             if license == 'zero':
-                license = 'cc0';
+                license = 'cc0'
             elif license == 'mark':
                 license = 'pdm'
             else:
@@ -195,7 +200,6 @@ def getLicense(_domain, _path, _url):
         elif (license == ''):
             logging.warning('License not detected!')
             return [None, None]
-
 
         return [license, version]
 

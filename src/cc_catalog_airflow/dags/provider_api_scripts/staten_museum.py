@@ -1,6 +1,7 @@
 import logging
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
+from util.loader import provider_details as prov
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 LIMIT = 2000
 DELAY = 5
 RETRIES = 3
-PROVIDER = "statensmuseum"
+PROVIDER = prov.STATENS_DEFAULT_PROVIDER
 ENDPOINT = "https://api.smk.dk/api/v1/art/search/"
 LANDING_PAGE_BASE_URL = "https://open.smk.dk/en/artwork/image/"
 IMAGE_SIZE = "max"

@@ -107,7 +107,9 @@ def test_get_image_batch(monkeypatch):
         expect_image_batch = json.load(f)
     expect_image_batch.pop('continue')
     expect_continue_token = {
-        'gaicontinue': "20151031230201|Lancelot_'Capability'_BROWN_-_Wilderness_House_Moat_Lane_Hampton_Court_Palace_Hampton_Court_London_KT8_9AR.jpg",
+        'gaicontinue': (
+            "20151031230201|Lancelot_'Capability'_BROWN_-_Wilderness_House_"
+            "Moat_Lane_Hampton_Court_Palace_Hampton_Court_London_KT8_9AR.jpg"),
         'continue': 'gaicontinue||'
     }
 
@@ -249,8 +251,11 @@ def test_process_image_data_handles_example_dict():
         wmc._process_image_data(image_data)
 
     mock_add.assert_called_once_with(
-        foreign_landing_url='https://commons.wikimedia.org/w/index.php?curid=81754323',
-        image_url='https://upload.wikimedia.org/wikipedia/commons/2/25/20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg',
+        foreign_landing_url=(
+            'https://commons.wikimedia.org/w/index.php?curid=81754323'),
+        image_url=(
+            'https://upload.wikimedia.org/wikipedia/commons/2/25/20120925_'
+            'PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg'),
         license_url='https://creativecommons.org/licenses/by-sa/4.0',
         foreign_identifier=81754323,
         width=5514,
@@ -259,8 +264,14 @@ def test_process_image_data_handles_example_dict():
         creator_url='https://commons.wikimedia.org/wiki/User:PtrQs',
         title='File:20120925 PlozevetBretagne LoneTree DSC07971 PtrQs.jpg',
         meta_data={'description': 'SONY DSC', 'global_usage_count': 0,
-                   'last_modified_at_source': '2019-09-01 00:38:47',
-                   'date_originally_created': '2012-09-25 16:23:02'}
+                    'last_modified_at_source': '2019-09-01 00:38:47',
+                    'date_originally_created': '2012-09-25 16:23:02',
+                    'categories': [
+                        'Coasts of Ploz\u00e9vet', 'No QIC by usr:PtrQs',
+                        ('Photographs taken with Minolta AF Zoom '
+                            '28-70mm F2.8 G'),
+                        'Self-published work', 'Taken with Sony DSLR-A900',
+                        'Trees in Finist\u00e8re']}
     )
 
 
@@ -354,7 +365,9 @@ def test_extract_creator_info_handles_internal_wc_link():
         image_info = json.load(f)
     actual_creator, actual_creator_url = wmc._extract_creator_info(image_info)
     expect_creator = 'NotaRealUser'
-    expect_creator_url = 'https://commons.wikimedia.org/w/index.php?title=User:NotaRealUser&action=edit&redlink=1'
+    expect_creator_url = (
+        'https://commons.wikimedia.org/w/index.php?title=User:NotaRealUser&'
+        'action=edit&redlink=1')
     assert expect_creator == actual_creator
     assert expect_creator_url == actual_creator_url
 
@@ -397,7 +410,9 @@ def test_create_meta_data_scrapes_text_from_html_description():
             os.path.join(RESOURCES, 'image_data_html_description.json')
     ) as f:
         image_data = json.load(f)
-    expect_description = 'Identificatie Titel(s):  Allegorie op kunstenaar Francesco Mazzoli, bekend als Parmigianino'
+    expect_description = (
+        'Identificatie Titel(s):  Allegorie op kunstenaar Francesco Mazzoli, '
+        'bekend als Parmigianino')
     actual_description = wmc._create_meta_data_dict(image_data)['description']
     assert actual_description == expect_description
 

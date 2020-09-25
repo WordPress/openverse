@@ -85,8 +85,9 @@ def test_get_image_list_with_realistic_response():
             'get',
             return_value=r
     ) as mock_get:
-        image_list, next_cursor, total_number_of_images = europeana._get_image_list(
-            '1234', '5678', 'test_cursor', max_tries=3
+        image_list, next_cursor, total_number_of_images = (
+            europeana._get_image_list(
+                '1234', '5678', 'test_cursor', max_tries=3)
         )
     expect_image_list = _get_resource_json(
         'europeana_image_list.json')
@@ -118,7 +119,9 @@ def test_build_query_param_dict_default():
         'rows': resources_per_request,
         'media': 'true',
         'start': 1,
-        'qf': [f'TYPE:{resource_type}', 'provider_aggregation_edm_isShownBy:*'],
+        'qf': [
+            f'TYPE:{resource_type}',
+            'provider_aggregation_edm_isShownBy:*'],
         'query': f'timestamp_created:[{start_timestamp} TO {end_timestamp}]',
         'cursor': 'test_cursor',
 
@@ -165,12 +168,22 @@ def test_process_image_data_with_real_example():
     }
 
     mock_add_item.assert_called_once_with(
-        foreign_landing_url="http://bibliotecadigital.jcyl.es/i18n/consulta/registro.cmd?id=26229",
-        image_url="http://bibliotecadigital.jcyl.es/i18n/catalogo_imagenes/imagen_id.cmd?idImagen=102620362",
-        license_url="http://creativecommons.org/publicdomain/zero/1.0/",
-        thumbnail_url="https://api.europeana.eu/api/v2/thumbnail-by-url.json?uri=http%3A%2F%2Fbibliotecadigital.jcyl.es%2Fi18n%2Fcatalogo_imagenes%2Fimagen_id.cmd%3FidImagen%3D102620362&type=IMAGE",
-        foreign_identifier="/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1",
-        title="Claustro del Monasterio de S. Salvador en Oña [Material gráfico]= Cloître du Monastère de S. Salvador à Oña",
+        foreign_landing_url=(
+            "http://bibliotecadigital.jcyl.es/i18n/consulta/registro.cmd?"
+            "id=26229"),
+        image_url=(
+            "http://bibliotecadigital.jcyl.es/i18n/catalogo_imagenes"
+            "/imagen_id.cmd?idImagen=102620362"),
+        license_url=("http://creativecommons.org/publicdomain/zero/1.0/"),
+        thumbnail_url=(
+            "https://api.europeana.eu/api/v2/thumbnail-by-url.json?uri=http"
+            "%3A%2F%2Fbibliotecadigital.jcyl.es%2Fi18n%2Fcatalogo_imagenes%2"
+            "Fimagen_id.cmd%3FidImagen%3D102620362&type=IMAGE"),
+        foreign_identifier=(
+            "/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1"),
+        title=(
+            "Claustro del Monasterio de S. Salvador en Oña [Material gráfico]"
+            "= Cloître du Monastère de S. Salvador à Oña"),
         meta_data=expect_meta_data,
         source=europeana.PROVIDER
     )
@@ -199,7 +212,8 @@ def test_get_license_url_with_multiple_license():
 
 def test_get_foreign_landing_url_with_edmIsShownAt():
     image_data = _get_resource_json('image_data_example.json')
-    expect_url = "http://bibliotecadigital.jcyl.es/i18n/consulta/registro.cmd?id=26229"
+    expect_url = (
+        "http://bibliotecadigital.jcyl.es/i18n/consulta/registro.cmd?id=26229")
 
     assert europeana._get_foreign_landing_url(image_data) == expect_url
 
@@ -207,7 +221,9 @@ def test_get_foreign_landing_url_with_edmIsShownAt():
 def test_get_foreign_landing_url_without_edmIsShownAt():
     image_data = _get_resource_json('image_data_example.json')
     image_data.pop('edmIsShownAt', None)
-    expect_url = "https://www.europeana.eu/item/2022704/lod_oai_bibliotecadigital_jcyl_es_26229_ent1?utm_source=api&utm_medium=api&utm_campaign=test_key"
+    expect_url = (
+        "https://www.europeana.eu/item/2022704/lod_oai_bibliotecadigital_jcyl"
+        "_es_26229_ent1?utm_source=api&utm_medium=api&utm_campaign=test_key")
 
     assert europeana._get_foreign_landing_url(image_data) == expect_url
 
@@ -287,11 +303,18 @@ def test_process_image_data_with_sub_provider():
 
     mock_add_item.assert_called_once_with(
         foreign_landing_url="https://wellcomecollection.org/works/zzwnbyhb",
-        image_url="https://iiif.wellcomecollection.org/image/V0013398.jpg/full/512,/0/default.jpg",
+        image_url=(
+            "https://iiif.wellcomecollection.org/image/V0013398.jpg/full/512,"
+            "/0/default.jpg"),
         license_url="http://creativecommons.org/licenses/by/4.0/",
-        thumbnail_url="https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fiiif.wellcomecollection.org%2Fimage%2FV0013398.jpg%2Ffull%2F500%2C%2F0%2Fdefault.jpg&type=IMAGE",
+        thumbnail_url=(
+            "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%"
+            "2Fiiif.wellcomecollection.org%2Fimage%2FV0013398.jpg%2Ffull%2F"
+            "500%2C%2F0%2Fdefault.jpg&type=IMAGE"),
         foreign_identifier="/9200579/zzwnbyhb",
-        title="Royal Naval Hospital, Greenwich, with ships and rowing boats in the foreground. Engraving.",
+        title=(
+            "Royal Naval Hospital, Greenwich, with ships and rowing boats "
+            "in the foreground. Engraving."),
         meta_data=expect_meta_data,
         source='wellcome_collection'
     )
