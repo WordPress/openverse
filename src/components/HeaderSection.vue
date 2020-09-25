@@ -4,19 +4,36 @@
       :showNavSearch="showNavSearch"
       :navSearchPlaceholder="navSearchPlaceholder"
     />
+    <div class="padding-bottom-bigger" v-show="showDonate">
+      <DonationBanner @onDismiss="hideDonate" />
+    </div>
     <slot></slot>
   </header>
 </template>
 
 <script>
 import NavSection from '@/components/NavSection'
+import local from '@/utils/local'
+import DonationBanner from './DonationBanner'
 
 export default {
   name: 'header-section',
   components: {
     NavSection,
+    DonationBanner,
   },
   props: ['showHero', 'showNavSearch', 'isHeaderFixed', 'navSearchPlaceholder'],
+  data() {
+    return {
+      showDonate: !local.get('hide-location-banner'),
+    }
+  },
+  methods: {
+    hideDonate() {
+      local.set('hide-location-banner', true)
+      this.showDonate = false
+    },
+  },
 }
 </script>
 
