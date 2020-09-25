@@ -45,7 +45,12 @@
     },
     "licenses": "The Licenses",
     "about-tab": "About",
-    "resources-tab": "Resources"
+    "resources-tab": "Resources",
+    "donation-banner": {
+      "description": "If you donate $5 today, and everyone else does the same, we can keep growing our database of freely reusable content. For you. For all of us.",
+      "yes": "Yes, I'll donate now",
+      "no": "Not today"
+    }
   },
   "footer": {
     "address": {

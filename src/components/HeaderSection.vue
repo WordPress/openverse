@@ -4,14 +4,15 @@
       :showNavSearch="showNavSearch"
       :navSearchPlaceholder="navSearchPlaceholder"
     />
-    <DonationBanner />
+    <DonationBanner v-show="showDonate" @onDismiss="hideDonate" />
     <slot></slot>
   </header>
 </template>
 
 <script>
 import NavSection from '@/components/NavSection'
-import DonationBanner from './Banner'
+import local from '@/utils/local'
+import DonationBanner from './DonationBanner'
 
 export default {
   name: 'header-section',
@@ -20,6 +21,17 @@ export default {
     DonationBanner,
   },
   props: ['showHero', 'showNavSearch', 'isHeaderFixed', 'navSearchPlaceholder'],
+  data() {
+    return {
+      showDonate: !local.get('hide-location-banner') || true,
+    }
+  },
+  methods: {
+    hideDonate() {
+      local.set('hide-location-banner', true)
+      this.showDonate = false
+    },
+  },
 }
 </script>
 
