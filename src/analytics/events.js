@@ -11,3 +11,11 @@ export function EmbedAttribution() {
 export function SocialMediaShare(site) {
   return new Event('Social Media', 'Share', site)
 }
+
+export function DonateLinkClick(location) {
+  return new Event('Donation', 'Click', location)
+}
+
+export function DonateBannerClose() {
+  return new Event('Donation', 'Close')
+}
