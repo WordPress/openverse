@@ -149,6 +149,7 @@
             <a
               class="button small donate"
               href="http://creativecommons.org/donate"
+              @click="sendClickEvent"
             >
               <i
                 class="icon cc-letterheart-filled margin-right-small is-size-5 padding-top-smaller"
@@ -163,8 +164,16 @@
 </template>
 
 <script>
+import GoogleAnalytics from '@/analytics/GoogleAnalytics'
+import { DonateLinkClick } from '@/analytics/events'
+
 export default {
   name: 'footer-section',
+  methods: {
+    sendClickEvent() {
+      GoogleAnalytics().sendEvent(DonateLinkClick('footer'))
+    },
+  },
 }
 </script>
 
