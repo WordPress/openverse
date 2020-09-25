@@ -11,8 +11,7 @@ user = User.objects.create_user('continuous_integration', 'test@test.test', 'dep
 user.save()
 "
 EOF
-# Create analytics database
-PGPASSWORD=deploy createdb -h localhost -U deploy analytics
+# Migrate analytics
 docker exec -i $ANALYTICS_CONTAINER_NAME /bin/bash -c 'PYTHONPATH=. pipenv run alembic upgrade head'
 PGPASSWORD=deploy pg_dump -s -t image -U deploy -d openledger -h localhost -p 5432 | PGPASSWORD=deploy psql -U deploy -d openledger -p 5433 -h localhost
 # Load sample data
