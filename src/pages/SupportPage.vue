@@ -30,6 +30,7 @@
                 </div>
                 <a
                   class="button normal donate margin-right-normal"
+                  @click="sendDonationEvent"
                   :href="donationLink"
                 >
                   <i
@@ -108,7 +109,11 @@
             </template>
           </i18n>
           <div class="field button-row">
-            <a class="button normal donate" :href="donationLink">
+            <a
+              @click="sendDonationEvent"
+              class="button normal donate"
+              :href="donationLink"
+            >
               <i
                 class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
               ></i>
@@ -184,7 +189,11 @@
             {{ $t('support.future.support') }}
           </h2>
           <div class="field button-row margin-bottom-medium">
-            <a class="button normal donate" :href="donationLink">
+            <a
+              class="button normal donate"
+              @click="sendDonationEvent"
+              :href="donationLink"
+            >
               <i
                 class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
               ></i>
@@ -203,6 +212,8 @@
 import HeaderSection from '@/components/HeaderSection'
 import FooterSection from '@/components/FooterSection'
 import ServerPrefetchProvidersMixin from '@/pages/mixins/ServerPrefetchProvidersMixin'
+import GoogleAnalytics from '@/analytics/GoogleAnalytics'
+import { DonateLinkClick } from '@/analytics/events'
 
 const MetaSearchPage = {
   name: 'meta-search-page',
@@ -215,6 +226,11 @@ const MetaSearchPage = {
     return {
       donationLink: 'https://www.classy.org/give/297881/#!/donation/checkout',
     }
+  },
+  methods: {
+    sendDonationEvent() {
+      GoogleAnalytics().sendEvent(DonateLinkClick('support-page'))
+    },
   },
 }
 

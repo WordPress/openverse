@@ -9,6 +9,7 @@
         href="https://www.classy.org/give/297881/#!/donation/checkout"
         target="_blank"
         class="button is-success small"
+        @click="sendClickEvent"
       >
         <i
           class="icon cc-letterheart-filled margin-right-small is-size-5 padding-top-smaller"
@@ -23,11 +24,18 @@
 </template>
 
 <script>
+import GoogleAnalytics from '@/analytics/GoogleAnalytics'
+import { DonateLinkClick, DonateBannerClose } from '@/analytics/events'
+
 export default {
   name: 'DonationBanner',
   methods: {
     onDismiss() {
       this.$emit('onDismiss')
+      GoogleAnalytics().sendEvent(DonateBannerClose())
+    },
+    sendClickEvent() {
+      GoogleAnalytics().sendEvent(DonateLinkClick('banner'))
     },
   },
 }
