@@ -68,7 +68,8 @@ $bgColor: #e6f6eb;
   font-family: inherit;
 }
 
-.dismiss-button {
+// double selector to increase specificity (to override other issues)
+.dismiss-button.dismiss-button {
   color: $color-dark-success;
   padding: $space-small calc(#{$space-normal} + 0.2rem) !important;
   white-space: nowrap;
