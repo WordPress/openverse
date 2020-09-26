@@ -12,11 +12,14 @@
         {{ $t('photo-details.back') }}
       </a>
       <img
+        v-show="!sketchFabUid"
         @load="onImageLoad"
         class="photo_image"
         :src="image.url"
         :alt="image.title"
       />
+
+      <SketchFabViewer v-if="sketchFabUid" :uid="sketchFabUid" />
 
       <legal-disclaimer />
 
@@ -151,6 +154,7 @@ import {
   DETAIL_PAGE_EVENTS,
 } from '@/store/usage-data-analytics-types'
 import attributionHtml from '@/utils/attributionHtml'
+import SketchFabViewer from '@/components/SketchFabViewer'
 import ImageInfo from './ImageInfo'
 import ImageAttribution from './ImageAttribution'
 import ImageSocialShare from './ImageSocialShare'
@@ -176,6 +180,7 @@ export default {
     LegalDisclaimer,
     ContentReportForm,
     ReuseSurvey,
+    SketchFabViewer,
   },
   data() {
     return {
@@ -183,6 +188,12 @@ export default {
     }
   },
   computed: {
+    sketchFabUid() {
+      if (this.image.source !== 'sketchfab') return null
+      return this.image.url
+        .split('https://media.sketchfab.com/models/')[1]
+        .split('/')[0]
+    },
     isReportFormVisible() {
       return this.$store.state.isReportFormVisible
     },

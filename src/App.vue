@@ -6,9 +6,11 @@
 
 <script>
 import { FETCH_IMAGE_PROVIDERS } from '@/store/action-types'
+import loadScript from '@/utils/loadScript'
 
 export default {
   name: 'App',
+
   methods: {
     fetchProviders() {
       return this.$store.dispatch(FETCH_IMAGE_PROVIDERS)
@@ -23,19 +25,13 @@ export default {
     }
   },
   mounted() {
+    const cdn = 'https://unpkg.com/@creativecommons/vocabulary/js/vocabulary.js'
+    const header = document.querySelector('.cc-global-header')
     // Load voocabulary global header from the unpkg CDN and render the global header.
     // Make sure all of this only happens once.
-    if (typeof document !== 'undefined') {
-      const el = document.createElement('script')
-      el.src = 'https://unpkg.com/@creativecommons/vocabulary/js/vocabulary.js'
-      el.defer = true
-      el.addEventListener('load', () => {
-        if (!document.querySelector('.cc-global-header')) {
-          window.vocabulary.createGlobalHeader()
-        }
-      })
-      document.head.appendChild(el)
-    }
+    loadScript(cdn).then(() => {
+      if (!header) window.vocabulary.createGlobalHeader()
+    })
   },
   metaInfo() {
     return {
