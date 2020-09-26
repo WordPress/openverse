@@ -21,6 +21,7 @@ NYPL_DEFAULT_PROVIDER = 'nypl'
 RAWPIXEL_DEFAULT_PROVIDER = 'rawpixel'
 SCIENCE_DEFAULT_PROVIDER = 'sciencemuseum'
 STATENS_DEFAULT_PROVIDER = 'statensmuseum'
+WALTERS_DEFAULT_PROVIDER = 'waltersartmuseum'
 
 # Flickr parameters
 FLICKR_SUB_PROVIDERS = {
