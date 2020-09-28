@@ -5,8 +5,9 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-
+import inspect
 from settings import DATABASE_CONNECTION
+import models
 from models import *
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -29,8 +30,21 @@ target_metadata = Base.metadata
 
 
 def include_object(object, name, type_, reflected, compare_to):
-    if type_ == "table" and name == 'Image':
-        return False
+    valid_names = set()
+    for name, obj in inspect.getmembers(models):
+        if inspect.isclass(obj):
+            if hasattr(obj, '__tablename__'):
+                valid_names.add(str(obj.__tablename__))
+    if type_ == "table":
+        if str(object) == "image":
+            print('discarded', name)
+            return False
+        elif str(object) in valid_names:
+            print('included', str(object))
+            return True
+        else:
+            print('discarded', str(object))
+            return False
     else:
         return True
 
