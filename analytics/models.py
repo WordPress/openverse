@@ -1,10 +1,18 @@
 import enum
-from sqlalchemy import Integer, Column, Enum, String, DateTime, Boolean
+from sqlalchemy import Integer, Column, Enum, String, DateTime, Boolean, Float
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
+
+class Image:
+    # Managed by Django ORM; partially duplicated here so we can join
+    # analytics and image data together. This is excluded from migrations.
+    identifier = Column(UUID)
+    source = Column(String)
+    provider = Column(String)
+    title = Column(String)
 
 
 class EventMixin(object):
@@ -56,12 +64,12 @@ class DetailPageEvent(Base, EventMixin):
     """
     Events that happen on result pages, such as clicking an attribution button
     or sharing the result on social media.
-
     """
     __tablename__ = "detail_page_event"
 
     result_uuid = Column(UUID, index=True)
     event_type = Column(Enum(DetailPageEvents), index=True)
+
 
 class AttributionReferrerEvent(Base, EventMixin):
     """
@@ -76,3 +84,72 @@ class AttributionReferrerEvent(Base, EventMixin):
     referer_domain = Column(String, index=True)
     # The path to the embedded asset on our server. ex: /static/img/cc-by.svg
     resource = Column(String, index=True)
+
+# Reports
+
+class UsageReportMixin(object):
+    # Detail page events & clicks
+    results_clicked = Column(Integer)
+    attribution_buttonclicks = Column(Integer)
+    survey_responses = Column(Integer)
+    source_clicked = Column(Integer)
+    creator_clicked = Column(Integer)
+    shared_social = Column(Integer)
+    # Other metrics of interest
+    sessions = Column(Integer)
+    searches = Column(Integer)
+    attribution_referer_hits = Column(Integer)
+    images = Column(Integer)
+    avg_rating = Column(Float)
+    avg_searches_per_session = Column(Float)
+
+
+class DailyUsageReport(Base, EventMixin, UsageReportMixin):
+    """ Tracks statistics for the last 24 hours """
+    __tablename__ = "daily_usage_reports"
+
+
+class AllTimeUsageReport(Base, EventMixin, UsageReportMixin):
+    """ Tracks statistics since we started collecting analytics """
+    __tablename__ = "all_time_usage_reports"
+
+
+class SourceUsageReport(Base, EventMixin):
+    __tablename__ = "daily_source_report"
+
+    source_id = Column(String, index=True)
+    result_clicks = Column(Integer)
+
+
+class DailyAttributionRefererReport(Base, EventMixin):
+    __tablename__ = "daily_attribution_referer_report"
+
+    domain = Column(String, index=True)
+    hits = Column(Integer)
+
+
+class TopSearchesMixin(object):
+    term = Column(String)
+    hits = Column(String)
+
+
+class DailyTopSearches(Base, EventMixin, TopSearchesMixin):
+    __tablename__ = "daily_top_searches"
+
+
+class AllTimeTopSearches(Base, EventMixin, TopSearchesMixin):
+    __tablename__ = "all_time_top_searches"
+
+
+class TopResultsMixin(object):
+    result_uuid = Column(UUID)
+    hits = Column(UUID)
+    source = Column(String)
+
+
+class DailyTopResults(Base, EventMixin):
+    __tablename__ = "daily_top_results"
+
+
+class AllTimeTopResults(Base, EventMixin):
+    __tablename__ = "all_time_top_results"
