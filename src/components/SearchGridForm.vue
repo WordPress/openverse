@@ -33,8 +33,8 @@
               @keyup.enter="onSubmit"
             />
           </label>
-          <span class="icon is-medium is-left">
-            <i class="icon search" />
+          <span class="icon is-medium is-left margin-left-small">
+            <i class="icon search is-size-5" />
           </span>
         </div>
         <div class="control">
@@ -193,15 +193,23 @@ export default {
     width: 100%;
   }
 }
+
 .button .icon {
   height: auto;
 }
 
-.icon .search {
-  padding: 1.3rem;
+.icon {
+  margin-top: auto;
+  margin-bottom: auto;
+  bottom: 0;
+  .search {
+    padding: 1.2rem;
+    max-height: 2.5rem;
+    max-width: 2.5rem;
 
-  @include touch {
-    padding: 0.8rem;
+    @include touch {
+      padding: 0.8rem;
+    }
   }
 }
 </style>

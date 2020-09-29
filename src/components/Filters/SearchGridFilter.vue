@@ -24,7 +24,6 @@ import {
   CLEAR_FILTERS,
 } from '~/store-modules/mutation-types'
 import { TOGGLE_FILTER } from '~/store-modules/action-types'
-import { ExperimentData } from '~/abTests/experiments/filterExpansion'
 import FiltersList from './FiltersList'
 
 export default {
@@ -48,13 +47,13 @@ export default {
     licenseTypesDisabled() {
       return this.$store.state.filters.licenses.some((li) => li.checked)
     },
+    /**
+     * Show filters expanded by default
+     * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
+     */
+
     filtersExpandedByDefault() {
-      const experiment = this.$store.state.experiments.find(
-        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
-      )
-      return experiment
-        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
-        : false
+      return true
     },
   },
   methods: {

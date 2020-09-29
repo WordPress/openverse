@@ -36,7 +36,6 @@ import {
   SET_QUERY,
   SET_FILTER_IS_VISIBLE,
 } from '~/store-modules/mutation-types'
-import { ExperimentData } from '~/abTests/experiments/filterExpansion'
 import { queryStringToQueryData } from '~/utils/searchQueryTransform'
 import local from '~/utils/local'
 import { screenWidth } from '~/utils/getBrowserInfo'
@@ -75,13 +74,13 @@ const BrowsePage = {
     isFilterVisible() {
       return this.$store.state.isFilterVisible
     },
+    /**
+     * Show filters expanded by default
+     * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
+     */
+
     filtersExpandedByDefault() {
-      const experiment = this.$store.state.experiments.find(
-        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
-      )
-      return experiment
-        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
-        : false
+      return true
     },
   },
   methods: {

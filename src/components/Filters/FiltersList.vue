@@ -135,7 +135,6 @@
 </template>
 
 <script>
-import { ExperimentData } from '~/abTests/experiments/filterExpansion'
 import FilterCheckList from './FilterChecklist'
 
 export default {
@@ -154,16 +153,11 @@ export default {
       return this.$route.path.split('search/')[1] || 'image'
     },
     /**
-     * Check if a filter experiment is active, and if the current case is 'expanded'.
-     * Show filters collapsed by default
+     * Show filters expanded by default
+     * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
      */
     filtersExpandedByDefault() {
-      const experiment = this.$store.state.experiments.find(
-        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
-      )
-      return experiment
-        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
-        : false
+      return true
     },
   },
   methods: {

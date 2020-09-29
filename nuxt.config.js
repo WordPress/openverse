@@ -1,3 +1,8 @@
+/**
+ * The default metadata for the site. Can be extended and/or overwritten per page. And even in components!
+ * See the Nuxt.js docs for more info.
+ * {@link https://nuxtjs.org/guides/features/meta-tags-seo Nuxt.js Docs}
+ */
 const meta = [
   { charset: 'utf-8' },
   {
@@ -70,15 +75,18 @@ const head = {
       sizes: '192x192',
     },
   ],
+  /**
+   * This is where vocabulary's JS file is included. May be moved to an import in the future!
+   */
   script: [
     {
       hid: 'vocabulary',
       src: 'https://unpkg.com/@creativecommons/vocabulary/js/vocabulary.js',
       defer: true,
       callback: () => {
-        if (!document.querySelector('.cc-global-header')) {
-          window.vocabulary.createGlobalHeader()
-        }
+        // Initialize the vocabulary global site header if it isn't already
+        if (document.querySelector('.cc-global-header')) return
+        window.vocabulary.createGlobalHeader()
       },
     },
   ],

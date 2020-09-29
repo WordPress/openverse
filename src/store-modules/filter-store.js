@@ -1,11 +1,7 @@
 import deepmerge from 'deepmerge'
 import findIndex from 'lodash.findindex'
-import { ExperimentData } from '~/abTests/experiments/filterExpansion'
 import local from '~/utils/local'
-import {
-  TOGGLE_FILTER,
-  CONVERT_AB_TEST_EXPERIMENT,
-} from '~/store-modules/action-types'
+import { TOGGLE_FILTER } from '~/store-modules/action-types'
 import {
   SET_FILTER,
   SET_PROVIDERS_FILTERS,
@@ -99,18 +95,11 @@ const state = {
 }
 
 const actions = {
-  [TOGGLE_FILTER]({ commit, state, dispatch }, params) {
+  [TOGGLE_FILTER]({ commit, state }, params) {
     const filters = state.filters[params.filterType]
     const codeIdx = findIndex(filters, (f) => f.code === params.code)
 
-    commit(SET_FILTER, {
-      codeIdx,
-      ...params,
-    })
-
-    dispatch(CONVERT_AB_TEST_EXPERIMENT, {
-      experimentName: ExperimentData.EXPERIMENT_NAME,
-    })
+    commit(SET_FILTER, { codeIdx, ...params })
   },
 }
 

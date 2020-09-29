@@ -17,6 +17,10 @@
   vertical-align: middle;
 }
 
+.photo_image.loading {
+  width: 100%;
+}
+
 .photo_image-ctr {
   max-height: 55rem;
   overflow: hidden;
@@ -24,10 +28,11 @@
 
   img {
     position: relative;
-    width: auto;
+    width: 100%;
     height: auto;
     max-height: 44rem;
     max-width: 100%;
+    object-fit: contain;
   }
 
   /* Small only */

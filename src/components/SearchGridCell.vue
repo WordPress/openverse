@@ -15,6 +15,7 @@
       >
         <img
           ref="img"
+          loading="lazy"
           :class="{
             'search-grid_image': true,
             'search-grid_image__fill': !shouldContainImage,

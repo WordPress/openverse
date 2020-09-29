@@ -83,6 +83,14 @@
             <NuxtLink class="navbar-item" to="/feedback">
               {{ $t('header.feedback') }}
             </NuxtLink>
+            <a
+              href="https://api.creativecommons.engineering/"
+              target="_blank"
+              rel="noopener"
+              class="navbar-item"
+              >{{ $t('header.api') }}
+              <i class="icon external-link" />
+            </a>
           </div>
         </div>
         <NuxtLink class="navbar-item" to="/support">

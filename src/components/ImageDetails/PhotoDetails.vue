@@ -11,9 +11,14 @@
         <i class="icon chevron-left margin-right-small" />
         {{ $t('photo-details.back') }}
       </a>
+
       <img
-        class="photo_image"
-        :src="image.url"
+        :class="{ photo_image: true, loading: !isLoaded }"
+        :src="
+          isLoaded
+            ? image.url
+            : `https://api-dev.creativecommons.engineering/v1/thumbs/${$route.params.id}`
+        "
         :alt="image.title"
         @load="onImageLoad"
       />
@@ -172,6 +177,9 @@ export default {
     }
   },
   computed: {
+    isLoaded() {
+      return this.image && this.image.url
+    },
     isReportFormVisible() {
       return this.$store.state.isReportFormVisible
     },

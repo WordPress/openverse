@@ -5,9 +5,9 @@
       @keypress.enter="toggleShowForm"
       @click="toggleShowForm"
     >
-      <span class="has-color-dark-turquoise"
-        >{{ $t('browse-page.safer-browsing.title')
-        }}<i class="icon flag margin-left-small" />
+      <span class="has-color-tomato" style="white-space: nowrap">
+        {{ $t('browse-page.safer-browsing.title') }}
+        <i class="icon flag margin-left-small" />
       </span>
     </button>
     <FocusTrap :active="true">

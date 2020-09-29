@@ -24,10 +24,13 @@
                   {{ $t('support.cc') }}
                 </p>
               </div>
-              <a class="button normal donate margin-right-normal">
+              <a
+                class="button normal donate margin-right-normal"
+                @click="sendDonationEvent"
+                @keypress.enter="sendDonationEvent"
+              >
                 <i
                   class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
-                  href="https://www.classy.org/give/297881/#!/donation/checkout"
                 />
                 {{ $t('support.button.donate') }}</a
               >
@@ -102,10 +105,14 @@
           </template>
         </i18n>
         <div class="field is-grouped is-grouped-centered">
-          <a class="button normal donate margin-right-normal">
+          <a
+            class="button normal donate margin-right-normal"
+            :href="donationLink"
+            @click="sendDonationEvent"
+            @keypress.enter="sendDonationEvent"
+          >
             <i
               class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
-              href="https://www.classy.org/give/297881/#!/donation/checkout"
             />
             {{ $t('support.button.donate') }}</a
           >
@@ -180,7 +187,6 @@
           <a class="button normal donate">
             <i
               class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
-              href="https://www.classy.org/give/297881/#!/donation/checkout"
             />
             {{ $t('support.button.donate') }}</a
           >
@@ -192,8 +198,21 @@
 </template>
 
 <script>
+import { DonateLinkClick } from '@/analytics/events'
+import GoogleAnalytics from '~/analytics/GoogleAnalytics'
+
 export default {
   name: 'MetaSearchPage',
+  data() {
+    return {
+      donationLink: 'https://www.classy.org/give/297881/#!/donation/checkout',
+    }
+  },
+  methods: {
+    sendDonationEvent() {
+      GoogleAnalytics().sendEvent(DonateLinkClick('support-page'))
+    },
+  },
 }
 </script>
 
