@@ -4,7 +4,7 @@ from analytics.models import (
     DailyUsageReport,SourceUsageReport, DailyAttributionRefererReport,
     DailyTopSearches, DailyTopResults
 )
-from sqlalchemy import func, distinct, Integer
+from sqlalchemy import func, distinct, Integer, and_
 from sqlalchemy.sql.expression import cast
 
 
@@ -83,6 +83,7 @@ def generate_usage_report(session, start_time, end_time):
     }
 
 
+
 def generate_source_usage_report(session, start_time, end_time):
     source_usage = session.query(
         Image.source, func.count(ResultClickedEvent.result_uuid)
@@ -112,3 +113,32 @@ def generate_referrer_usage_report(session, start_time, end_time):
         domain, count = res
         res_dict[domain] = count
     return res_dict
+
+
+def generate_top_searches(session, start_time, end_time):
+    top_searches = session.query(
+        SearchEvent.query, func.count(SearchEvent.query)
+    ).filter(
+        SearchEvent.timestamp > start_time,
+        SearchEvent.timestamp < end_time
+    ).group_by(SearchEvent.query).limit(100)
+    res_dict = {}
+    for res in top_searches:
+        query, count = res
+        res_dict[query] = count
+    return res_dict
+
+def generate_top_result_clicks(session, start_time, end_time):
+    top_result_clicks = session.query(
+        Image.identifier,
+        func.count(ResultClickedEvent.result_uuid),
+        Image.source,
+        Image.title
+    ).select_from(Image).join(
+        ResultClickedEvent, ResultClickedEvent.result_uuid == Image.identifier
+    ).filter(
+        ResultClickedEvent.timestamp > start_time,
+        ResultClickedEvent.timestamp < end_time
+    ).group_by(Image.identifier).limit(500).all()
+
+    return top_result_clicks

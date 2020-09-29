@@ -89,8 +89,10 @@ class AttributionReferrerEvent(Base, EventMixin):
 
 # Reports
 
-class UsageReportMixin(object):
-    # Detail page events & clicks
+
+class DailyUsageReport(Base, EventMixin):
+    """ Tracks statistics for the last 24 hours """
+    __tablename__ = "daily_usage_reports"
     results_clicked = Column(Integer)
     attribution_buttonclicks = Column(Integer)
     survey_responses = Column(Integer)
@@ -105,52 +107,28 @@ class UsageReportMixin(object):
     avg_searches_per_session = Column(Float)
 
 
-class DailyUsageReport(Base, EventMixin, UsageReportMixin):
-    """ Tracks statistics for the last 24 hours """
-    __tablename__ = "daily_usage_reports"
-
-
-class AllTimeUsageReport(Base, EventMixin, UsageReportMixin):
-    """ Tracks statistics since we started collecting analytics """
-    __tablename__ = "all_time_usage_reports"
-
-
 class SourceUsageReport(Base, EventMixin):
     __tablename__ = "daily_source_report"
 
     source_id = Column(String, index=True)
-    result_clicks = Column(Integer)
+    result_clicks = Column(Integer, index=True)
 
 
 class DailyAttributionRefererReport(Base, EventMixin):
     __tablename__ = "daily_attribution_referer_report"
 
     domain = Column(String, index=True)
-    hits = Column(Integer)
+    hits = Column(Integer, index=True)
 
 
-class TopSearchesMixin(object):
-    term = Column(String)
-    hits = Column(String)
-
-
-class DailyTopSearches(Base, EventMixin, TopSearchesMixin):
+class DailyTopSearches(Base, EventMixin):
     __tablename__ = "daily_top_searches"
-
-
-class AllTimeTopSearches(Base, EventMixin, TopSearchesMixin):
-    __tablename__ = "all_time_top_searches"
-
-
-class TopResultsMixin(object):
-    result_uuid = Column(UUID)
-    hits = Column(UUID)
-    source = Column(String)
+    term = Column(String, index=True)
+    hits = Column(String, index=True)
 
 
 class DailyTopResults(Base, EventMixin):
     __tablename__ = "daily_top_results"
-
-
-class AllTimeTopResults(Base, EventMixin):
-    __tablename__ = "all_time_top_results"
+    result_uuid = Column(UUID, index=True)
+    hits = Column(UUID, index=True)
+    source = Column(String, index=True)

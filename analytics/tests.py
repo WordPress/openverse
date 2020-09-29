@@ -8,8 +8,9 @@ import json
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from analytics.attribution_worker import parse_message, is_valid
-from analytics.reporting import generate_usage_report,\
-    generate_source_usage_report, generate_referrer_usage_report
+from analytics.report_controller import generate_usage_report,\
+    generate_source_usage_report, generate_referrer_usage_report,\
+    generate_top_searches, generate_top_result_clicks
 from analytics.models import AttributionReferrerEvent
 """
 End-to-end tests of the analytics server. Run with `pytest -s`.
@@ -164,3 +165,14 @@ def test_attribution_embedding():
         session, start_time, end_time
     )
     assert attribution_usage['alden.page'] >= 1
+
+def test_top_searches():
+    start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+    end_time = datetime.datetime.utcnow()
+    top_searches = generate_top_searches(session, start_time, end_time)
+
+def test_top_results():
+    start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+    end_time = datetime.datetime.utcnow()
+    top_results = generate_top_result_clicks(session, start_time, end_time)
+    print(top_results)
