@@ -11,10 +11,13 @@ describe('CopyLicense', () => {
   let options = null
   let props = null
   const $t = (key) => i18n.messages[key]
-  const eventData = {
+  const copyData = {
     type: 'Bar',
-    content: 'Foo',
+    event: {
+      content: 'Foo',
+    },
   }
+
   let dispatchMock = null
 
   beforeEach(() => {
@@ -54,16 +57,16 @@ describe('CopyLicense', () => {
 
   it('should dispatch COPY_ATTRIBUTION', () => {
     const wrapper = render(CopyLicense, options)
-    wrapper.vm.onCopyAttribution(eventData.type, eventData)
+    wrapper.vm.onCopyAttribution(copyData.type, copyData.event)
     expect(dispatchMock).toHaveBeenCalledWith(COPY_ATTRIBUTION, {
-      type: eventData.type,
-      content: eventData.content,
+      type: copyData.type,
+      content: copyData.event.content,
     })
   })
 
   it('should dispatch SEND_DETAIL_PAGE_EVENT on copy attribution', () => {
     const wrapper = render(CopyLicense, options)
-    wrapper.vm.onCopyAttribution(eventData.type, eventData)
+    wrapper.vm.onCopyAttribution(copyData.type, copyData.event)
     expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
       eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
       resultUuid: props.image.id,
