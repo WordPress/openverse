@@ -1,9 +1,8 @@
 from analytics.models import (
     Image, SearchEvent, SearchRatingEvent, ResultClickedEvent, DetailPageEvents,
     AttributionReferrerEvent, DetailPageEvent,
-    DailyUsageReport, AllTimeUsageReport, SourceUsageReport,
-    DailyAttributionRefererReport, DailyTopSearches, AllTimeTopSearches,
-    DailyTopResults, AllTimeTopResults
+    DailyUsageReport,SourceUsageReport, DailyAttributionRefererReport,
+    DailyTopSearches, DailyTopResults
 )
 from sqlalchemy import func, distinct, Integer
 from sqlalchemy.sql.expression import cast
@@ -87,7 +86,9 @@ def generate_usage_report(session, start_time, end_time):
 def generate_source_usage_report(session, start_time, end_time):
     source_usage = session.query(
         Image.source, func.count(ResultClickedEvent.result_uuid)
-    ).select_from(Image).join(ResultClickedEvent, ResultClickedEvent.result_uuid == Image.identifier).filter(
+    ).select_from(Image).join(
+        ResultClickedEvent, ResultClickedEvent.result_uuid == Image.identifier
+    ).filter(
         ResultClickedEvent.timestamp > start_time,
         ResultClickedEvent.timestamp < end_time
     ).group_by(Image.source).all()
@@ -95,4 +96,19 @@ def generate_source_usage_report(session, start_time, end_time):
     for res in source_usage:
         source, count = res
         res_dict[source] = count
+    return res_dict
+
+
+def generate_referrer_usage_report(session, start_time, end_time):
+    attribution_embeddings = session.query(
+        AttributionReferrerEvent.referer_domain,
+        func.count(AttributionReferrerEvent.referer_domain)
+    ).filter(
+        AttributionReferrerEvent.timestamp > start_time,
+        AttributionReferrerEvent.timestamp < end_time,
+    ).group_by(AttributionReferrerEvent.referer_domain)
+    res_dict = {}
+    for res in attribution_embeddings:
+        domain, count = res
+        res_dict[domain] = count
     return res_dict

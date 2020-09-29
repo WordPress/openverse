@@ -9,7 +9,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from analytics.attribution_worker import parse_message, is_valid
 from analytics.reporting import generate_usage_report,\
-    generate_source_usage_report
+    generate_source_usage_report, generate_referrer_usage_report
+from analytics.models import AttributionReferrerEvent
 """
 End-to-end tests of the analytics server. Run with `pytest -s`.
 """
@@ -146,3 +147,20 @@ def test_source_usage():
     end_time = datetime.datetime.utcnow()
     source_usage = generate_source_usage_report(session, start_time, end_time)
     assert source_usage['behance'] >= 1
+
+
+def test_attribution_embedding():
+    start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+    end_time = datetime.datetime.utcnow()
+    event = AttributionReferrerEvent(
+        image_uuid=result_id,
+        full_referer='https://alden.page/blog',
+        referer_domain='alden.page',
+        resource='/static/img/cc-by.svg'
+    )
+    session.add(event)
+    session.commit()
+    attribution_usage = generate_referrer_usage_report(
+        session, start_time, end_time
+    )
+    assert attribution_usage['alden.page'] >= 1
