@@ -79,5 +79,20 @@ def generate_usage_report(session, start_time, end_time):
         'searches': searches,
         'attribution_referer_hits': attribution_referer_hits,
         'avg_rating': avg_rating,
-        'avg_searches_per_session': avg_searches_per_session
+        'avg_searches_per_session': avg_searches_per_session,
+        'timestamp': end_time
     }
+
+
+def generate_source_usage_report(session, start_time, end_time):
+    source_usage = session.query(
+        Image.source, func.count(ResultClickedEvent.result_uuid)
+    ).select_from(Image).join(ResultClickedEvent, ResultClickedEvent.result_uuid == Image.identifier).filter(
+        ResultClickedEvent.timestamp > start_time,
+        ResultClickedEvent.timestamp < end_time
+    ).group_by(Image.source).all()
+
+    res_dict = {}
+    for res in source_usage:
+        source, count = res
+        res_dict[source] = count

@@ -8,7 +8,8 @@ import json
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from analytics.attribution_worker import parse_message, is_valid
-from analytics.reporting import generate_usage_report
+from analytics.reporting import generate_usage_report,\
+    generate_source_usage_report
 """
 End-to-end tests of the analytics server. Run with `pytest -s`.
 """
@@ -16,7 +17,7 @@ End-to-end tests of the analytics server. Run with `pytest -s`.
 
 API_URL = os.getenv('ANALYTICS_SERVER_URL', 'http://localhost:8090')
 session_id = '00000000-0000-0000-0000-000000000000'
-result_id = '11111111-1111-1111-1111-111111111111'
+result_id = '380e1781-bb07-4d6f-aa65-e199ad6d68cb'
 test_query = 'integration test'
 engine = create_engine(settings.DATABASE_CONNECTION)
 session_maker = sessionmaker(bind=engine)
@@ -140,4 +141,8 @@ def test_usage_report():
     report = generate_usage_report(session, start_time, end_time)
 
 
-def test_
+def test_source_usage():
+    start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+    end_time = datetime.datetime.utcnow()
+    source_usage = generate_source_usage_report(session, start_time, end_time)
+    assert source_usage['behance'] >= 1

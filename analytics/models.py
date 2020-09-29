@@ -6,10 +6,11 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-class Image:
+class Image(Base):
     __tablename__ = "image"
     # Managed by Django ORM; partially duplicated here so we can join
     # analytics and image data together. This is excluded from migrations.
+    id = Column(Integer, primary_key=True)
     identifier = Column(UUID)
     source = Column(String)
     provider = Column(String)
