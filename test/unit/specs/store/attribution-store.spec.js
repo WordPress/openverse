@@ -1,5 +1,5 @@
 import store from '@/store/attribution-store'
-import { CopyAttribution, EmbedAttribution } from '@/analytics/events'
+import { CopyAttribution } from '@/analytics/events'
 
 describe('Attribution Store', () => {
   describe('actions', () => {
@@ -13,20 +13,13 @@ describe('Attribution Store', () => {
 
     it('COPY_ATTRIBUTION sends copy event', () => {
       const data = {
+        type: 'HTML Whatever',
         content: '<div>foo</div>',
       }
       store.actions(googleAnalyticsMock).COPY_ATTRIBUTION({}, data)
 
       expect(googleAnalyticsMock.sendEvent).toHaveBeenCalledWith(
-        new CopyAttribution(data.content)
-      )
-    })
-
-    it('EMBED_ATTRIBUTION sends text event', () => {
-      store.actions(googleAnalyticsMock).EMBED_ATTRIBUTION()
-
-      expect(googleAnalyticsMock.sendEvent).toHaveBeenCalledWith(
-        new EmbedAttribution()
+        new CopyAttribution(data.type, data.content)
       )
     })
   })
