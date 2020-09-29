@@ -74,10 +74,8 @@ const PhotoDetailPage = {
     },
   },
   async fetch() {
-    if (!this.$store.state.image.id) {
-      await this.loadImage(this.$route.params.id)
-      await this[FETCH_RELATED_IMAGES]({ id: this.$route.params.id })
-    }
+    await this.loadImage(this.$route.params.id)
+    await this[FETCH_RELATED_IMAGES]({ id: this.$route.params.id })
   },
   beforeRouteUpdate(to, from, next) {
     this.resetImageOnRouteChanged()
