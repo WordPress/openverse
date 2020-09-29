@@ -82,9 +82,9 @@
         </span>
 
         <copy-button
-          id="copy-attribution-btn"
+          id="copyattr-rich"
           el="#attribution"
-          @copied="onCopyAttribution"
+          @copied="(e) => onCopyAttribution('Rich Text', e)"
         />
       </div>
       <div :class="tabClass(1, 'tabs-panel')">
@@ -100,9 +100,9 @@
           </textarea>
         </label>
         <copy-button
-          id="copy-attribution-btn"
+          id="copyattr-html"
           el="#attribution-html"
-          @copied="onEmbedAttribution"
+          @copied="(e) => onCopyAttribution('HTML Embed', e)"
         />
       </div>
       <div :class="tabClass(2, 'tabs-panel')">
@@ -122,9 +122,9 @@
         </p>
 
         <copy-button
-          id="copy-attribution-btn"
+          id="copyattr-plain"
           el="#attribution-text"
-          @copied="onCopyAttribution"
+          @copied="(e) => onCopyAttribution('Plain Text', e)"
         />
       </div>
     </section>
@@ -133,7 +133,7 @@
 
 <script>
 import CopyButton from '@/components/CopyButton'
-import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types'
+import { COPY_ATTRIBUTION } from '@/store/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
@@ -179,16 +179,8 @@ export default {
         resultUuid: this.$props.image.id,
       })
     },
-    onCopyAttribution(e) {
-      this.$store.dispatch(COPY_ATTRIBUTION, {
-        content: e.content,
-      })
-
-      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED)
-    },
-    onEmbedAttribution() {
-      this.$store.dispatch(EMBED_ATTRIBUTION)
-
+    onCopyAttribution(type, event) {
+      this.$store.dispatch(COPY_ATTRIBUTION, { type, content: event.content })
       this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED)
     },
   },
