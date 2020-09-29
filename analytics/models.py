@@ -100,7 +100,6 @@ class UsageReportMixin(object):
     sessions = Column(Integer)
     searches = Column(Integer)
     attribution_referer_hits = Column(Integer)
-    images = Column(Integer)
     avg_rating = Column(Float)
     avg_searches_per_session = Column(Float)
 
