@@ -108,6 +108,7 @@ export const env = {
 export default {
   srcDir: 'src/',
   buildDir: 'dist/',
+  server: { port: 8443 },
   components: true,
   plugins: ['~/plugins/i18n.js', { src: '~plugins/ga.js', mode: 'client' }],
   css: [

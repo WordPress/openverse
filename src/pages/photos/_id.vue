@@ -35,7 +35,7 @@ import axios from 'axios'
 import { mapActions, mapMutations, mapState } from 'vuex'
 import featureFlags from '~/featureFlags'
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '~/store-modules/action-types'
-import { SET_IMAGE } from '~/store-modules/mutation-types'
+import { SET_IMAGE, SET_RELATED_IMAGES } from '~/store-modules/mutation-types'
 
 const PhotoDetailPage = {
   name: 'photo-detail-page',
@@ -74,17 +74,16 @@ const PhotoDetailPage = {
     },
   },
   async fetch() {
-    await this.loadImage(this.$route.params.id)
-    await this[FETCH_RELATED_IMAGES]({ id: this.$route.params.id })
-  },
-  beforeRouteUpdate(to, from, next) {
-    this.resetImageOnRouteChanged()
-    this.loadImage(to.params.id)
-    next()
-  },
-  beforeRouteLeave(to, from, next) {
-    this.resetImageOnRouteChanged()
-    next()
+    // Clear related images if present
+    if (this.relatedImages && this.relatedImages.length > 0) {
+      this.SET_RELATED_IMAGES({ relatedImages: [], relatedImageCount: 0 })
+    }
+
+    // Laad the image + related images in parallel
+    await Promise.all([
+      this.loadImage(this.$route.params.id),
+      this[FETCH_RELATED_IMAGES]({ id: this.$route.params.id }),
+    ])
   },
   beforeRouteEnter(to, from, nextPage) {
     nextPage((_this) => {
@@ -96,12 +95,7 @@ const PhotoDetailPage = {
   },
   methods: {
     ...mapActions([FETCH_RELATED_IMAGES, FETCH_IMAGE]),
-    ...mapMutations([SET_IMAGE]),
-    resetImageOnRouteChanged() {
-      this.imageHeight = 0
-      this.imageWidth = 0
-      this.SET_IMAGE({ image: {} })
-    },
+    ...mapMutations([SET_IMAGE, SET_RELATED_IMAGES]),
     onImageLoaded(event) {
       this.imageWidth = event.target.naturalWidth
       this.imageHeight = event.target.naturalHeight

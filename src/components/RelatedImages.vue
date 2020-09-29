@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="relatedImages && relatedImages.length > 0"
-    class="photo_related-images"
-  >
+  <div class="photo_related-images">
     <h3 class="b-header">
       {{ $t('photo-details.related-images') }}
     </h3>
