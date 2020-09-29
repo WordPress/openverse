@@ -91,8 +91,8 @@ def generate_source_usage_report(session, start_time, end_time):
         ResultClickedEvent.timestamp > start_time,
         ResultClickedEvent.timestamp < end_time
     ).group_by(Image.source).all()
-
     res_dict = {}
     for res in source_usage:
         source, count = res
         res_dict[source] = count
+    return res_dict
