@@ -55,20 +55,20 @@ describe('PhotoDetails', () => {
   it('should render correct contents', () => {
     const wrapper = render(PhotoDetails, options)
     expect(wrapper.find('.photo_image').element).toBeDefined()
-    expect(wrapper.find({ name: 'image-info' }).exists()).toBe(true)
-    expect(wrapper.find({ name: 'image-attribution' }).exists()).toBe(true)
-    expect(wrapper.find({ name: 'image-social-share' }).exists()).toBe(true)
+    expect(wrapper.find({ name: 'ImageInfo' }).exists()).toBe(true)
+    expect(wrapper.find({ name: 'ImageAttribution' }).exists()).toBe(true)
+    expect(wrapper.find({ name: 'ImageSocialShare' }).exists()).toBe(true)
   })
 
   it('should render social sharing buttons', () => {
     const wrapper = render(PhotoDetails, options)
-    expect(wrapper.find({ name: 'image-social-share' }).exists()).toBe(true)
+    expect(wrapper.find({ name: 'ImageSocialShare' }).exists()).toBe(true)
   })
 
   it('should not render social sharing buttons when social sharing is disabled', () => {
     options.propsData.socialSharingEnabled = false
     const wrapper = render(PhotoDetails, options)
-    expect(wrapper.find({ name: 'image-social-share' }).exists()).toBe(false)
+    expect(wrapper.find({ name: 'ImageSocialShare' }).exists()).toBe(false)
   })
 
   it('should generate license name', () => {
@@ -155,14 +155,14 @@ describe('PhotoDetails', () => {
   it(' report form should be invisible by default', () => {
     const wrapper = render(PhotoDetails, options)
 
-    expect(wrapper.find({ name: 'content-report-form' }).vm).not.toBeDefined()
+    expect(wrapper.find({ name: 'ContentReportForm' }).vm).not.toBeDefined()
   })
 
   it(' report form should be visible when isReportFormVisible is true', () => {
     storeState.$store.state.isReportFormVisible = true
     const wrapper = render(PhotoDetails, options)
 
-    expect(wrapper.find({ name: 'content-report-form' }).vm).toBeDefined()
+    expect(wrapper.find({ name: 'ContentReportForm' }).vm).toBeDefined()
   })
 
   it('should dispatch SOURCE_CLICKED on source link clicked', () => {

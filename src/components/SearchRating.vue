@@ -4,7 +4,7 @@
       <span>{{ $t('browse-page.search-rating.content') }}</span>
       <button
         :aria-label="$t('browse-page.aria.relevance.yes')"
-        class="button is-text tiny is-paddingless rating is-shadowless"
+        class="button is-text tiny is-paddingless rating rating-yes is-shadowless"
         @click="sendSearchRatingEvent(true)"
         @keyup.enter="sendSearchRatingEvent(true)"
       >
@@ -13,7 +13,7 @@
       •
       <button
         :aria-label="$t('browse-page.aria.relevance.no')"
-        class="button is-text tiny is-paddingless rating is-shadowless"
+        class="button is-text tiny is-paddingless rating rating-no is-shadowless"
         @click="sendSearchRatingEvent(false)"
         @keyup.enter="sendSearchRatingEvent(false)"
       >

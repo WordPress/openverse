@@ -19,6 +19,7 @@ describe('PhotoDetailPage', () => {
           },
           image: {
             id: 1,
+            tags: ['one', 'two', 'three'],
           },
         },
         dispatch: jest.fn(),
@@ -29,7 +30,7 @@ describe('PhotoDetailPage', () => {
   it('should render correct contents', () => {
     const wrapper = render(PhotoDetailPage, options)
 
-    expect(wrapper.find({ name: 'photo-details' }).vm).toBeDefined()
-    expect(wrapper.find({ name: 'photo-tags' }).vm).toBeDefined()
+    expect(wrapper.find({ name: 'PhotoDetails' }).vm).toBeDefined()
+    expect(wrapper.find({ name: 'PhotoTags' }).vm).toBeDefined()
   })
 })

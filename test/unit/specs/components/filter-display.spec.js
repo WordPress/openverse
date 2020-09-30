@@ -51,7 +51,7 @@ describe('FilterDisplay', () => {
   it('should render filter if checked', () => {
     filters.licenses[0].checked = true
     const wrapper = render(FilterDisplay, options)
-    expect(wrapper.find({ name: 'filter-block' }).vm).toBeDefined()
+    expect(wrapper.find({ name: 'FilterBlock' }).vm).toBeDefined()
   })
 
   it('should render filter by caption label', () => {

@@ -45,25 +45,25 @@ describe('ContentReportForm', () => {
   it('should render report sent', () => {
     storeState.$store.state.isReportSent = true
     const wrapper = render(ContentReportForm, options)
-    expect(wrapper.find({ name: 'done-message' }).vm).toBeDefined()
+    expect(wrapper.find({ name: 'DoneMessage' }).vm).toBeDefined()
   })
 
   it('should render error message', () => {
     storeState.$store.state.reportFailed = true
     const wrapper = render(ContentReportForm, options)
-    expect(wrapper.find({ name: 'report-error' }).vm).toBeDefined()
+    expect(wrapper.find({ name: 'ReportError' }).vm).toBeDefined()
   })
 
   it('should render dmca notice', () => {
     const wrapper = render(ContentReportForm, options)
     wrapper.setData({ selectedCopyright: true })
-    expect(wrapper.find({ name: 'dmca-notice' }).vm).toBeDefined()
+    expect(wrapper.find({ name: 'DmcaNotice' }).vm).toBeDefined()
   })
 
   it('should render other type form', () => {
     const wrapper = render(ContentReportForm, options)
     wrapper.setData({ selectedOther: true })
-    expect(wrapper.find({ name: 'other-issue-form' }).vm).toBeDefined()
+    expect(wrapper.find({ name: 'OtherIssueForm' }).vm).toBeDefined()
   })
 
   it('should navigate to other form', () => {
@@ -73,7 +73,7 @@ describe('ContentReportForm', () => {
 
     const button = wrapper.find('.next-button')
     button.trigger('click')
-    expect(wrapper.find({ name: 'other-issue-form' }).vm).toBeDefined()
+    expect(wrapper.find({ name: 'OtherIssueForm' }).vm).toBeDefined()
   })
 
   it('should dispatch SEND_CONTENT_REPORT on next when mature is selected', () => {

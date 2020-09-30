@@ -13,7 +13,7 @@ describe('BrowsePage', () => {
       mocks: { $route: { path: '/search' } },
     })
 
-    expect(wrapper.find({ name: 'filter-display' }).vm).toBeDefined()
-    expect(wrapper.find({ name: 'search-type-tabs' }).vm).toBeDefined()
+    expect(wrapper.find({ name: 'FilterDisplay' }).vm).toBeDefined()
+    expect(wrapper.find({ name: 'SearchTypeTabs' }).vm).toBeDefined()
   })
 })

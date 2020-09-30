@@ -28,9 +28,10 @@ describe('SearchRating', () => {
 
   it('does not render rating button after clicking it', () => {
     const wrapper = render(SearchRating, options)
-    const button = wrapper.find('.rating')
-    button.trigger('click')
-    expect(wrapper.find('.rating').element).toBeUndefined()
+    const button = wrapper.find('.rating-yes')
+    button.trigger('click').then(() => {
+      expect(wrapper.find('.rating-yes').element).toBeUndefined()
+    })
   })
 
   it('dispatches SEND_SEARCH_RATING_EVENT when clicking rating button', () => {
@@ -47,6 +48,7 @@ describe('SearchRating', () => {
     const wrapper = render(SearchRating, options)
     const button = wrapper.findAll('.rating').wrappers[1]
     button.trigger('click')
+
     expect(dispatchMock).toHaveBeenLastCalledWith('SEND_SEARCH_RATING_EVENT', {
       query: 'foo',
       relevant: false,
@@ -62,12 +64,13 @@ describe('SearchRating', () => {
 
   it('renders neither rating button nor thanks message 1.5s after clicking rating button', (done) => {
     const wrapper = render(SearchRating, options)
-    const button = wrapper.find('.rating')
-    button.trigger('click')
-    setTimeout(() => {
-      expect(wrapper.find('.rating').element).toBeUndefined()
-      expect(wrapper.find('.thank-you').element).toBeUndefined()
-      done()
-    }, 1550)
+    const button = wrapper.find('.rating-no')
+    button.trigger('click').then(() => {
+      setTimeout(() => {
+        expect(wrapper.find('.rating-yes').element).toBeUndefined()
+        expect(wrapper.find('.thank-you').element).toBeUndefined()
+        done()
+      }, 1550)
+    })
   })
 })

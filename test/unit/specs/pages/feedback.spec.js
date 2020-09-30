@@ -1,5 +1,5 @@
 import FeedbackPage from '~/pages/feedback'
-import i18n from '../../../test-utils/i18n'
+import i18n from '../../test-utils/i18n'
 import render from '../../test-utils/render'
 
 describe('Feedback page', () => {

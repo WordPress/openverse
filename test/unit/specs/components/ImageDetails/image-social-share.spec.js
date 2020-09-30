@@ -28,7 +28,9 @@ describe('ImageSocialShare', () => {
 
   it('should render social buttons', () => {
     const wrapper = render(ImageSocialShare, options)
-    expect(wrapper.find({ name: 'social-share-buttons' }).exists()).toBeTruthy()
+    expect(
+      wrapper.findComponent({ name: 'SocialShareButtons' }).exists()
+    ).toBeTruthy()
   })
 
   it('should invoke social share buttons with the right props', () => {

@@ -126,15 +126,14 @@ describe('Filter Store', () => {
 
   describe('mutations', () => {
     let state = null
-    let routePushMock = null
     let mutations = null
 
     beforeEach(() => {
       state = {
         query: { q: 'foo' },
+        ...store.state,
       }
-      routePushMock = jest.fn()
-      mutations = store.mutations(routePushMock)
+      mutations = store.mutations
     })
 
     it('SET_FILTER updates license state', () => {
@@ -222,18 +221,6 @@ describe('Filter Store', () => {
       )
     })
 
-    it('SET_FILTER redirects to current path with query object', () => {
-      mutations[SET_FILTER](state, {
-        filterType: 'categories',
-        codeIdx: 0,
-      })
-
-      expect(routePushMock).toHaveBeenCalledWith({
-        path: '/',
-        query: state.query,
-      })
-    })
-
     it('SET_FILTER updates isFilterApplied with provider', () => {
       state.filters.providers = [{ code: 'met', checked: false }]
       mutations[SET_FILTER](state, { filterType: 'providers', codeIdx: 0 })
@@ -312,6 +299,7 @@ describe('Filter Store', () => {
     beforeEach(() => {
       state = {
         query: { q: 'foo' },
+        ...store.state,
       }
       commitMock = jest.fn()
       dispatchMock = jest.fn()
