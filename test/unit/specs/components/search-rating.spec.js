@@ -6,6 +6,7 @@ describe('SearchRating', () => {
   let options = {}
   let dispatchMock = null
   const $t = (key) => i18n.messages[key]
+
   beforeEach(() => {
     dispatchMock = jest.fn()
     options = {
@@ -37,10 +38,14 @@ describe('SearchRating', () => {
   it('dispatches SEND_SEARCH_RATING_EVENT when clicking rating button', () => {
     const wrapper = render(SearchRating, options)
     const button = wrapper.find('.rating')
-    button.trigger('click')
-    expect(dispatchMock).toHaveBeenLastCalledWith('SEND_SEARCH_RATING_EVENT', {
-      query: 'foo',
-      relevant: true,
+    button.trigger('click').then(() => {
+      expect(dispatchMock).toHaveBeenLastCalledWith(
+        'SEND_SEARCH_RATING_EVENT',
+        {
+          query: 'foo',
+          relevant: true,
+        }
+      )
     })
   })
 
@@ -58,8 +63,9 @@ describe('SearchRating', () => {
   it('should render thanks message after clicking the rating button', () => {
     const wrapper = render(SearchRating, options)
     const button = wrapper.find('.rating')
-    button.trigger('click')
-    expect(wrapper.find('.thank-you').element).toBeDefined()
+    button.trigger('click').then(() => {
+      expect(wrapper.find('.thank-you').element).toBeDefined()
+    })
   })
 
   it('renders neither rating button nor thanks message 1.5s after clicking rating button', (done) => {

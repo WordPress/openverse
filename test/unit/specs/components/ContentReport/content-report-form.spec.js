@@ -37,52 +37,52 @@ describe('ContentReportForm', () => {
     }
   })
 
-  it('should contain the correct contents', () => {
+  it('should contain the correct contents', async () => {
     const wrapper = render(ContentReportForm, options)
     expect(wrapper.find('.arrow-popup').element).toBeDefined()
   })
 
-  it('should render report sent', () => {
+  it('should render report sent', async () => {
     storeState.$store.state.isReportSent = true
     const wrapper = render(ContentReportForm, options)
-    expect(wrapper.find({ name: 'DoneMessage' }).vm).toBeDefined()
+    expect(wrapper.findComponent({ name: 'DoneMessage' }).vm).toBeDefined()
   })
 
-  it('should render error message', () => {
+  it('should render error message', async () => {
     storeState.$store.state.reportFailed = true
     const wrapper = render(ContentReportForm, options)
-    expect(wrapper.find({ name: 'ReportError' }).vm).toBeDefined()
+    expect(wrapper.findComponent({ name: 'ReportError' }).vm).toBeDefined()
   })
 
-  it('should render dmca notice', () => {
+  it('should render dmca notice', async () => {
     const wrapper = render(ContentReportForm, options)
-    wrapper.setData({ selectedCopyright: true })
-    expect(wrapper.find({ name: 'DmcaNotice' }).vm).toBeDefined()
+    await wrapper.setData({ selectedCopyright: true })
+    expect(wrapper.findComponent({ name: 'DmcaNotice' }).vm).toBeDefined()
   })
 
-  it('should render other type form', () => {
+  it('should render other type form', async () => {
     const wrapper = render(ContentReportForm, options)
-    wrapper.setData({ selectedOther: true })
-    expect(wrapper.find({ name: 'OtherIssueForm' }).vm).toBeDefined()
+    await wrapper.setData({ selectedOther: true })
+    expect(wrapper.findComponent({ name: 'OtherIssueForm' }).vm).toBeDefined()
   })
 
-  it('should navigate to other form', () => {
+  it('should navigate to other form', async () => {
     const wrapper = render(ContentReportForm, options)
     const radio = wrapper.find('#other')
-    radio.setChecked()
+    await radio.setChecked()
 
     const button = wrapper.find('.next-button')
-    button.trigger('click')
-    expect(wrapper.find({ name: 'OtherIssueForm' }).vm).toBeDefined()
+    await button.trigger('click')
+    expect(wrapper.findComponent({ name: 'OtherIssueForm' }).vm).toBeDefined()
   })
 
-  it('should dispatch SEND_CONTENT_REPORT on next when mature is selected', () => {
+  it('should dispatch SEND_CONTENT_REPORT on next when mature is selected', async () => {
     const wrapper = render(ContentReportForm, options)
     const radio = wrapper.find('#mature')
-    radio.setChecked()
+    await radio.setChecked()
 
     const button = wrapper.find('.next-button')
-    button.trigger('click')
+    await button.trigger('click')
     expect(dispatchMock).toHaveBeenCalledWith('SEND_CONTENT_REPORT', {
       identifier: props.image.id,
       reason: 'mature',
@@ -90,19 +90,19 @@ describe('ContentReportForm', () => {
     })
   })
 
-  it('should not dispatch SEND_CONTENT_REPORT on next when dmca is selected', () => {
+  it('should not dispatch SEND_CONTENT_REPORT on next when dmca is selected', async () => {
     const wrapper = render(ContentReportForm, options)
     const radio = wrapper.find('#dmca')
-    radio.setChecked()
+    await radio.setChecked()
 
     const button = wrapper.find('.next-button')
-    button.trigger('click')
+    await button.trigger('click')
     expect(dispatchMock).not.toHaveBeenCalled()
   })
 
-  it('should dispatch SEND_CONTENT_REPORT on other form submit', () => {
+  it('should dispatch SEND_CONTENT_REPORT on other form submit', async () => {
     const wrapper = render(ContentReportForm, options)
-    wrapper.setData({ selectedReason: 'other' })
+    await wrapper.setData({ selectedReason: 'other' })
     const description = 'foo bar'
     wrapper.vm.sendContentReport(description)
     expect(dispatchMock).toHaveBeenCalledWith('SEND_CONTENT_REPORT', {
@@ -112,11 +112,11 @@ describe('ContentReportForm', () => {
     })
   })
 
-  it('should close form', () => {
+  it('should close form', async () => {
     const wrapper = render(ContentReportForm, options)
 
     const button = wrapper.find('.close-button')
-    button.trigger('click')
+    await button.trigger('click')
     expect(commitMock).toHaveBeenCalledWith('REPORT_FORM_CLOSED')
   })
 })
