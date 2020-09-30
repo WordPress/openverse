@@ -22,6 +22,9 @@ const i18n = new VueI18n({
 glob('src/components/**/*.vue', (_, matches) => {
   matches.forEach((path) => {
     const name = path.match(/(\w*)\.vue$/)[1]
+    // @todo: These components in the array have loaded .svg files, which aren't working with Jest yet.
+    // Need to figure out a loader solution.
+    if (['FooterSection', 'HeaderSection', 'NavSection'].includes(name)) return
     localVue.component(name, require(`../../../${path}`).default)
   })
 })
