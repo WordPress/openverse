@@ -1,6 +1,6 @@
 <template>
   <header>
-    <NavSection :show-nav-search="showNavSearch" />
+    <NavSection :key="$route.path" :show-nav-search="showNavSearch" />
     <div
       v-show="showDonate"
       :class="{

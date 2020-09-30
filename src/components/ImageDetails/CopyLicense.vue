@@ -132,7 +132,7 @@
 
 <script>
 import CopyButton from '~/components/CopyButton'
-import { COPY_ATTRIBUTION } from '~/store/action-types'
+import { COPY_ATTRIBUTION } from '~/store-modules/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
