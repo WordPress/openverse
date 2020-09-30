@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import LicenseIcons from './LicenseIcons'
+import LicenseIcons from '~/components/LicenseIcons'
 import getProviderLogo from '~/utils/getProviderLogo'
 
 const errorImage = require('~/assets/image_not_available_placeholder.png')
@@ -106,7 +106,6 @@ export default {
         return ''
       }
       const url = image.thumbnail || image.url
-      // fix for blurry panaroma thumbnails
       if (this.imageAspect > panaromaAspect) return toAbsolutePath(url)
       return toAbsolutePath(url)
     },
@@ -117,9 +116,6 @@ export default {
       return getProviderLogo(providerName)
     },
     onGotoDetailPage(event, image) {
-      // doesn't use router to redirect to photo details page in case the user
-      // has the Command (Mac) or Ctrl Key (Windows) pressed, so that they can
-      // open the page on a new tab with either of those keys pressed.
       if (!event.metaKey && !event.ctrlKey) {
         event.preventDefault()
         this.$router.push({
