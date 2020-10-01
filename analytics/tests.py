@@ -165,6 +165,7 @@ def test_attribution_embedding():
     attribution_usage = generate_referrer_usage_report(
         session, start_time, end_time
     )
+    assert attribution_usage[0].hits > 0
 
 
 def test_top_searches():
@@ -178,3 +179,4 @@ def test_top_results():
     start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
     end_time = datetime.datetime.utcnow()
     top_results = generate_top_result_clicks(session, start_time, end_time)
+    assert top_results[0].hits > 0
