@@ -38,7 +38,11 @@
         </button>
       </div>
       <div class="margin-top-small has-text-left">
-        <ContentReportForm v-if="isReportFormVisible" :image="image" />
+        <ContentReportForm
+          v-if="isReportFormVisible"
+          :image="image"
+          data-testid="content-report-form"
+        />
       </div>
     </div>
     <div
@@ -109,6 +113,7 @@
       <section class="photo_info-ctr tabs-content">
         <div :class="tabClass(0, 'tabs-panel')">
           <ImageAttribution
+            data-testid="image-attribution"
             :image="image"
             :cc-license-u-r-l="ccLicenseURL"
             :full-license-name="fullLicenseName"
@@ -117,6 +122,7 @@
         </div>
         <div :class="tabClass(1, 'tabs-panel')">
           <ImageInfo
+            data-testid="image-info"
             :image="image"
             :cc-license-u-r-l="ccLicenseURL"
             :full-license-name="fullLicenseName"
@@ -126,7 +132,11 @@
           />
         </div>
         <div :class="tabClass(2, 'tabs-panel')">
-          <ImageSocialShare v-if="socialSharingEnabled" :image="image" />
+          <ImageSocialShare
+            v-if="socialSharingEnabled"
+            :image="image"
+            data-testid="social-share"
+          />
         </div>
       </section>
 
