@@ -136,6 +136,6 @@ class TopSearchesReport(Base, ReportMixin):
 class TopResultsReport(Base, ReportMixin):
     __tablename__ = "top_results"
     result_uuid = Column(UUID, index=True)
-    hits = Column(UUID, index=True)
+    hits = Column(Integer, index=True)
     source = Column(String, index=True)
     title = Column(String, index=True)

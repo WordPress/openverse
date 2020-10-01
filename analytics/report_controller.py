@@ -1,3 +1,4 @@
+import uuid
 from analytics.models import (
     Image, SearchEvent, SearchRatingEvent, ResultClickedEvent, DetailPageEvents,
     AttributionReferrerEvent, DetailPageEvent,
@@ -118,7 +119,7 @@ def generate_referrer_usage_report(session, start_time, end_time):
     ).filter(
         AttributionReferrerEvent.timestamp > start_time,
         AttributionReferrerEvent.timestamp < end_time,
-    ).group_by(AttributionReferrerEvent.referer_domain)
+    ).group_by(AttributionReferrerEvent.referer_domain).all()
     reports =[]
     for res in attribution_embeddings:
         domain, count = res
@@ -140,7 +141,7 @@ def generate_top_searches(session, start_time, end_time):
     ).filter(
         SearchEvent.timestamp > start_time,
         SearchEvent.timestamp < end_time
-    ).group_by(SearchEvent.query).limit(100)
+    ).group_by(SearchEvent.query).limit(100).all()
     reports = []
     for res in top_searches:
         query, count = res
@@ -170,17 +171,17 @@ def generate_top_result_clicks(session, start_time, end_time):
         ResultClickedEvent.result_uuid,
         Image.title,
         Image.source
-    ).limit(500)
+    ).limit(500).all()
     reports = []
     for res in top_results:
         _uuid, title, source, count = res
         report = TopResultsReport(
-                result_uuid=_uuid,
-                title=title,
-                source=source,
-                hits=count,
-                start_time=start_time,
-                end_time=end_time
+            result_uuid=_uuid,
+            hits=count,
+            source=source,
+            title=title,
+            start_time=start_time,
+            end_time=end_time
         )
         reports.append(report)
         session.add(report)

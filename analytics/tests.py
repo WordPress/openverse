@@ -147,6 +147,8 @@ def test_source_usage():
     start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
     end_time = datetime.datetime.utcnow()
     source_usage = generate_source_usage_report(session, start_time, end_time)
+    assert len(source_usage) > 0
+    assert source_usage[0].result_clicks >= 1
 
 
 def test_attribution_embedding():
@@ -164,10 +166,13 @@ def test_attribution_embedding():
         session, start_time, end_time
     )
 
+
 def test_top_searches():
     start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
     end_time = datetime.datetime.utcnow()
     top_searches = generate_top_searches(session, start_time, end_time)
+    assert top_searches[0].hits > 0
+
 
 def test_top_results():
     start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
