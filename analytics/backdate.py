@@ -11,6 +11,8 @@ from analytics.report_controller import (
 A one-off script for generating analytics reports back to September 2019, when
 we first started collecting analytics data.
 """
+
+
 engine = create_engine(settings.DATABASE_CONNECTION)
 session_maker = sessionmaker(bind=engine)
 session = session_maker()
