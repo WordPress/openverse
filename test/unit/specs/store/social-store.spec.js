@@ -4,11 +4,11 @@ import { SocialMediaShare } from '~/analytics/events'
 describe('Social Media Store', () => {
   describe('actions', () => {
     let googleAnalyticsMock = null
+    let gaInstance = null
 
     beforeEach(() => {
-      googleAnalyticsMock = () => ({
-        sendEvent: jest.fn(),
-      })
+      gaInstance = { sendEvent: jest.fn() }
+      googleAnalyticsMock = jest.fn(() => gaInstance)
     })
 
     it('SOCIAL_MEDIA_SHARE sends social media share event', () => {

@@ -3,9 +3,7 @@ import store from '~/store-modules/usage-data-store'
 describe('Usage Data Store Store', () => {
   describe('actions', () => {
     let usageDataServiceMock = null
-    const data = {
-      foo: 'bar',
-    }
+    const data = { foo: 'bar' }
 
     beforeEach(() => {
       usageDataServiceMock = {

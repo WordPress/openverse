@@ -33,20 +33,20 @@ describe('Related Images Store', () => {
 
   describe('actions', () => {
     const searchData = { results: ['foo'], result_count: 1 }
-    let params = null
+    let imageServiceMock = null
     let commit = null
     let dispatch = null
 
     beforeEach(() => {
-      params = { id: 'foo' }
+      imageServiceMock = {
+        getRelatedImages: jest.fn(() => Promise.resolve({ data: searchData })),
+      }
       commit = jest.fn()
       dispatch = jest.fn()
     })
 
     it('FETCH_RELATED_IMAGES on success', (done) => {
-      const imageServiceMock = {
-        getRelatedImages: jest.fn(() => Promise.resolve({ data: searchData })),
-      }
+      const params = { id: 'foo' }
       const action = store.actions(imageServiceMock)[FETCH_RELATED_IMAGES]
       action({ commit, dispatch }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES)
@@ -66,8 +66,9 @@ describe('Related Images Store', () => {
       const imageServiceMock = {
         getRelatedImages: jest.fn(() => Promise.reject('error')),
       }
+      const params = { id: 'foo' }
       const action = store.actions(imageServiceMock)[FETCH_RELATED_IMAGES]
-      action({ commit }, params).catch((error) => {
+      action({ commit, dispatch }, params).catch((error) => {
         expect(commit).toBeCalledWith(FETCH_START_IMAGES)
         expect(dispatch).toBeCalledWith('HANDLE_IMAGE_ERROR', error)
       })

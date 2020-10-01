@@ -1,3 +1,4 @@
+import stringToBoolean from '~/utils/stringToBoolean'
 import GoogleAnalytics from '~/analytics/GoogleAnalytics'
 
 /* eslint-disable */
@@ -5,7 +6,7 @@ export default ({ app }) => {
   /*
    ** Only run on client-side and only in production mode
    */
-  if (process.env.analytics !== 'DISABLED')
+  if (stringToBoolean(process.env.analytics))
     return /*
      ** Include Google Analytics Script
      */
