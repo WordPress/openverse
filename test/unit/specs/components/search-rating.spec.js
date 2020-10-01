@@ -1,11 +1,9 @@
 import SearchRating from '~/components/SearchRating'
 import render from '../../test-utils/render'
-import i18n from '../../test-utils/i18n'
 
 describe('SearchRating', () => {
   let options = {}
   let dispatchMock = null
-  const $t = (key) => i18n.messages[key]
 
   beforeEach(() => {
     dispatchMock = jest.fn()
@@ -14,7 +12,6 @@ describe('SearchRating', () => {
         $store: {
           dispatch: dispatchMock,
         },
-        $t,
       },
       propsData: {
         searchTerm: 'foo',

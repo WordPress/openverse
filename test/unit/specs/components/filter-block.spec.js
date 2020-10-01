@@ -1,22 +1,15 @@
 import FilterBlock from '~/components/Filters/FilterBlock'
 import render from '../../test-utils/render'
-import i18n from '../../test-utils/i18n'
 
 describe('FilterBlock', () => {
   let options = {}
   let props = null
-  const $t = (key) => i18n.messages[key]
   beforeEach(() => {
     props = {
       filter: [{ code: 'foo', name: 'bar', checked: false }],
       filterType: 'bar',
     }
-    options = {
-      propsData: props,
-      mocks: {
-        $t,
-      },
-    }
+    options = { propsData: props }
   })
 
   it('should render correct contents', () => {

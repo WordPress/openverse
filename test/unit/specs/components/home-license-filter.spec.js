@@ -1,11 +1,9 @@
 import HomeLicenseFilter from '~/components/HomeLicenseFilter'
 import render from '../../test-utils/render'
-import i18n from '../../test-utils/i18n'
 
 describe('HomeLicenseFilter', () => {
   let options = {}
   let dispatchMock = null
-  const $t = (key) => i18n.messages[key]
 
   beforeEach(() => {
     dispatchMock = jest.fn()
@@ -22,7 +20,6 @@ describe('HomeLicenseFilter', () => {
             },
           },
         },
-        $t,
       },
     }
   })

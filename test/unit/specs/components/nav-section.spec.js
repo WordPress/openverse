@@ -1,7 +1,6 @@
 import NavSection from '~/components/NavSection'
 import { SET_QUERY } from '~/store-modules/mutation-types'
 import render from '../../test-utils/render'
-import i18n from '../../test-utils/i18n'
 
 describe('NavSection', () => {
   it('should render correct contents', () => {
@@ -9,8 +8,7 @@ describe('NavSection', () => {
     expect(wrapper.find('nav').vm).toBeDefined()
   })
 
-  it('commits a mutation when the form is submitted', () => {
-    const $t = (key) => i18n.messages[key]
+  it('commits a mutation when the form is submitted', async () => {
     const storeMock = {
       dispatch: jest.fn(),
       commit: jest.fn(),
@@ -25,14 +23,13 @@ describe('NavSection', () => {
         fixedNav: null,
         showNavSearch: 'true',
       },
-      mocks: {
-        $store: storeMock,
-        $t,
-      },
+      mocks: { $store: storeMock },
     }
+
     const wrapper = render(NavSection, opts)
-    wrapper.setData({ form: { searchTerm: 'foo' } })
+    await wrapper.setData({ form: { searchTerm: 'foo' } })
     wrapper.find('.hero_search-form').trigger('submit')
+
     expect(storeMock.commit).toHaveBeenCalledWith(SET_QUERY, {
       query: { q: 'foo' },
     })
