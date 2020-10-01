@@ -16,6 +16,8 @@ logging.basicConfig(
     level=logging.DEBUG
 )
 
+logger = logging.getLogger(__name__)
+
 
 def _get_resource_json(json_resource):
     with open(os.path.join(RESOURCES, json_resource)) as file:
@@ -27,12 +29,12 @@ def _get_resource_json(json_resource):
 def test_get_image_list_retries_with_none_response():
     with patch.object(
             wam.delayed_requester,
-            'get',
+            'get_response_json',
             return_value=None
     ) as mock_get:
         wam._get_image_list('some_class', retries=3)
 
-    assert mock_get.call_count == 3
+    assert mock_get.call_count == 1
 
 
 def test_get_image_list_retries_with_non_ok_response():
@@ -42,12 +44,12 @@ def test_get_image_list_retries_with_non_ok_response():
     r.json = MagicMock(return_value=response_json)
     with patch.object(
             wam.delayed_requester,
-            'get',
-            return_value=r
+            'get_response_json',
+            return_value=r.json()
     ) as mock_get:
         wam._get_image_list('some_class', retries=3)
 
-    assert mock_get.call_count == 3
+    assert mock_get.call_count == 1
 
 
 def test_get_image_list_with_full_response():
@@ -57,12 +59,15 @@ def test_get_image_list_with_full_response():
     r.json = MagicMock(return_value=response_json)
     with patch.object(
             wam.delayed_requester,
-            'get',
-            return_value=r
+            'get_response_json',
+            return_value=r.json()
     ) as mock_get:
         image_list = wam._get_image_list('Manuscripts & Rare Books', retries=3)
 
-    expect_image_list = _get_resource_json('image_list_example.json')
+    # Here image list is same as items list because test example has only one
+    # page and image. In case of more than one pages the image list will be
+    # contain all images of more than one items list.
+    expect_image_list = _get_resource_json('items_list_example.json')
     assert mock_get.call_count == 1
     assert image_list == expect_image_list
 
@@ -102,44 +107,44 @@ def test_build_query_param_given():
 
 
 # _extract_image_list_from_json test suite
-def test_extract_image_list_from_json_returns_expected_output():
+def test_extract_items_list_from_json_returns_expected_output():
     json_response_inpydict_form = _get_resource_json(
         'walters_full_response_example.json'
     )
-    actual_image_list = wam._extract_image_list_from_json(
+    actual_items_list = wam._extract_items_list_from_json(
         json_response_inpydict_form
     )
-    expect_image_list = _get_resource_json('image_list_example.json')
-    assert actual_image_list == expect_image_list
+    expect_items_list = _get_resource_json('items_list_example.json')
+    assert actual_items_list == expect_items_list
 
 
-def test_extract_image_list_from_json_returns_nones_given_false_return_stat():
+def test_extract_items_list_from_json_returns_nones_given_false_return_stat():
     test_dict = {
         "ReturnStatus": False,
         "ReturnCode": 404
     }
-    assert wam._extract_image_list_from_json(test_dict) is None
+    assert wam._extract_items_list_from_json(test_dict) is None
 
 
-def test_extract_image_list_from_json_handles_missing_Items():
+def test_extract_items_list_from_json_handles_missing_Items():
     test_dict = {
         "ReturnStatus": True,
         "ReturnCode": 200
     }
-    assert wam._extract_image_list_from_json(test_dict) is None
+    assert wam._extract_items_list_from_json(test_dict) is None
 
 
-def test_extract_image_list_from_json_handles_missing_imgs_in_Items():
+def test_extract_items_list_from_json_handles_missing_imgs_in_Items():
     test_dict = {
         "Items": [],
         "ReturnStatus": True,
         "ReturnCode": 200
     }
-    assert wam._extract_image_list_from_json(test_dict) is None
+    assert wam._extract_items_list_from_json(test_dict) is None
 
 
-def test_extract_image_list_from_json_returns_nones_given_none_json():
-    assert wam._extract_image_list_from_json(None) is None
+def test_extract_items_list_from_json_returns_nones_given_none_json():
+    assert wam._extract_items_list_from_json(None) is None
 
 
 # _process_image test suite
@@ -177,74 +182,6 @@ def test_process_image_returns_expected_output_given_right_input():
     assert total_images == 100
 
 
-# _get_foreign_landing_url test suite
-def test_get_foreign_landing_url_returns_expected_output_given_right_input():
-    response_json = _get_resource_json('full_image_object.json')
-    actual_url = wam._get_foreign_landing_url(response_json)
-    expected_url = "http://art.thewalters.org/detail/2"
-
-    assert actual_url == expected_url
-
-
-def test_get_foreign_landing_url_returns_none_given_no_foreign_id():
-    response_json = _get_resource_json('no_foreign_landing_url.json')
-    actual_url = wam._get_foreign_landing_url(response_json)
-    expected_url = None
-
-    assert actual_url == expected_url
-
-
-# _get_image_url test suite
-def test_get_image_url_returns_expected_output_given_right_input():
-    response_json = _get_resource_json('full_image_object.json')
-    actual_url = wam._get_image_url(response_json)
-    expected_url = "http://static.thewalters.org/images/CPS_W.569.4a_Fp_DD.jpg"
-
-    assert actual_url == expected_url
-
-
-def test_get_image_url_returns_none_given_no_image_url():
-    response_json = _get_resource_json('no_image_url.json')
-    actual_url = wam._get_image_url(response_json)
-    expected_url = None
-
-    assert actual_url == expected_url
-
-
-# _get_thumbnail_url test suite
-def test_get_thumbnail_url_returns_expected_output_given_right_input():
-    response_json = _get_resource_json('full_image_object.json')
-    actual_url = wam._get_thumbnail_url(response_json)
-    expected_url = "http://static.thewalters.org/images/CPS_W.569.4a_Fp_DD.jpg?width=100"
-
-    assert actual_url == expected_url
-
-
-def test_get_thumbnail_url_returns_none_given_no_thumbnail_url():
-    response_json = _get_resource_json('no_thumbnail_url.json')
-    actual_url = wam._get_thumbnail_url(response_json)
-    expected_url = None
-
-    assert actual_url == expected_url
-
-
-# _get_foreign_id test suite
-def test_get_foreign_id_returns_expected_output_given_right_input():
-    response_json = _get_resource_json('full_image_object.json')
-    actual_fid = wam._get_foreign_id(response_json)
-    expected_fid = "W.569.4A"
-
-    assert actual_fid == expected_fid
-
-
-def test_get_foreign_id_returns_none_given_no_foreign_id():
-    response_json = _get_resource_json('no_foreign_id.json')
-    actual_fid = wam._get_foreign_id(response_json)
-    expected_fid = None
-
-    assert actual_fid == expected_fid
-
-
 # _get_creator_info test suite
 def test_get_creator_info_returns_expected_output_given_right_input():
     response_json = _get_resource_json('full_image_object.json')
@@ -264,23 +201,6 @@ def test_get_creator_info_returns_none_given_no_creator_info():
 
     assert actual_creator == expected_creator
     assert actual_creator_url == expected_creator_url
-
-
-# _get_title test suite
-def test_get_title_returns_expected_output_given_right_input():
-    response_json = _get_resource_json('full_image_object.json')
-    actual_title = wam._get_title(response_json)
-    expected_title = "Leaf from Qur'an"
-
-    assert actual_title == expected_title
-
-
-def test_get_title_returns_none_given_no_title():
-    response_json = _get_resource_json('no_title.json')
-    actual_title = wam._get_title(response_json)
-    expected_title = None
-
-    assert actual_title == expected_title
 
 
 # get_meta_data test suite
