@@ -1,4 +1,3 @@
-import uuid
 from analytics.models import (
     Image, SearchEvent, SearchRatingEvent, ResultClickedEvent, DetailPageEvents,
     AttributionReferrerEvent, DetailPageEvent,
