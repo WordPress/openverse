@@ -11,14 +11,4 @@ describe('RelatedImage', () => {
     const wrapper = render(RelatedImage, options)
     expect(wrapper.find('.photo_related-images').element).toBeDefined()
   })
-
-  it('should render nothing when there are no related images', () => {
-    const options = {
-      propsData: {
-        relatedImages: [],
-      },
-    }
-    const wrapper = render(RelatedImage, options)
-    expect(wrapper.find('.photo_related-images').element).toBeUndefined()
-  })
 })

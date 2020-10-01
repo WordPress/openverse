@@ -3,9 +3,10 @@
     <SearchGridManualLoad
       :query="query"
       :search-term="query.q"
+      data-testid="search-grid"
       @onLoadMoreImages="onLoadMoreImages"
     />
-    <ScrollButton :show-btn="showScrollButton" />
+    <ScrollButton data-testid="scroll-button" :show-btn="showScrollButton" />
   </div>
 </template>
 

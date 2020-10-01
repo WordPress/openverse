@@ -76,7 +76,6 @@ describe('PhotoDetails', () => {
 
   it('should render social sharing buttons', () => {
     const wrapper = render(PhotoDetails, options)
-    console.log(wrapper.html())
     expect(wrapper.find('[data-testid="social-share"]').exists()).toBe(true)
   })
 
