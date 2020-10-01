@@ -67,7 +67,7 @@ def generate_usage_report(session, start_time, end_time):
         avg_searches_per_session = searches / sessions
     except ZeroDivisionError:
         avg_searches_per_session = 0
-    return UsageReport(
+    report = UsageReport(
         results_clicked=results_clicked,
         attribution_buttonclicks=attribution_buttonclicks,
         survey_responses=survey_responses,
@@ -82,6 +82,9 @@ def generate_usage_report(session, start_time, end_time):
         start_time=start_time,
         end_time=end_time
     )
+    session.add(report)
+    session.commit()
+    return report
 
 
 def generate_source_usage_report(session, start_time, end_time):
@@ -93,18 +96,19 @@ def generate_source_usage_report(session, start_time, end_time):
         ResultClickedEvent.timestamp > start_time,
         ResultClickedEvent.timestamp < end_time
     ).group_by(Image.source).all()
-    source_reports = []
+    reports = []
     for res in source_usage:
         source_id, num_clicks = res
-        source_reports.append(
-            SourceUsageReport(
-                source_id=source_id,
-                result_clicks=num_clicks,
-                start_time=start_time,
-                end_time=end_time
-            )
+        report = SourceUsageReport(
+            source_id=source_id,
+            result_clicks=num_clicks,
+            start_time=start_time,
+            end_time=end_time
         )
-    return source_reports
+        reports.append(report)
+        session.add(report)
+    session.commit()
+    return reports
 
 
 def generate_referrer_usage_report(session, start_time, end_time):
@@ -115,16 +119,19 @@ def generate_referrer_usage_report(session, start_time, end_time):
         AttributionReferrerEvent.timestamp > start_time,
         AttributionReferrerEvent.timestamp < end_time,
     ).group_by(AttributionReferrerEvent.referer_domain)
-    domain_reports = []
+    reports =[]
     for res in attribution_embeddings:
         domain, count = res
-        domain_reports.append(
+        report = AttributionRefererReport(
             domain=domain,
             hits=count,
             start_time=start_time,
             end_time=end_time
         )
-    return domain_reports
+        reports.append(report)
+        session.add(report)
+    session.commit()
+    return reports
 
 
 def generate_top_searches(session, start_time, end_time):
@@ -134,16 +141,19 @@ def generate_top_searches(session, start_time, end_time):
         SearchEvent.timestamp > start_time,
         SearchEvent.timestamp < end_time
     ).group_by(SearchEvent.query).limit(100)
-    top_searches_reports = []
+    reports = []
     for res in top_searches:
         query, count = res
-        top_searches_reports.append(
+        report = TopSearchesReport(
             term=query,
             hits=count,
             start_time=start_time,
             end_time=end_time
         )
-    return top_searches_reports
+        reports.append(report)
+        session.add(report)
+    session.commit()
+    return reports
 
 
 def generate_top_result_clicks(session, start_time, end_time):
@@ -161,17 +171,18 @@ def generate_top_result_clicks(session, start_time, end_time):
         Image.title,
         Image.source
     ).limit(500)
-    top_results_reports = []
+    reports = []
     for res in top_results:
         _uuid, title, source, count = res
-        top_results_reports.append(
-            TopResultsReport(
+        report = TopResultsReport(
                 result_uuid=_uuid,
                 title=title,
                 source=source,
                 hits=count,
                 start_time=start_time,
                 end_time=end_time
-            )
         )
-    return top_results_reports
+        reports.append(report)
+        session.add(report)
+    session.commit()
+    return reports
