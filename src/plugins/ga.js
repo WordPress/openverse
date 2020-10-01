@@ -5,7 +5,7 @@ export default ({ app }) => {
   /*
    ** Only run on client-side and only in production mode
    */
-  if (process.env.disableAnalytics)
+  if (process.env.analytics !== 'DISABLED')
     return /*
      ** Include Google Analytics Script
      */

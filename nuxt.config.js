@@ -98,11 +98,11 @@ const head = {
 export const env = {
   apiUrl:
     process.env.API_URL || 'https://api-dev.creativecommons.engineering/v1/',
-  socialSharing: process.env.SOCIAL_SHARING || true,
+  socialSharing: process.env.SOCIAL_SHARING || 'ENABLED',
+  analytics: process.env.ANALYTICS || 'DISABLED',
   analyticsId: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
-  disableAnalytics: process.env.DISABLE_ANALYTICS || false,
   filterStorageKey: 'ccsearch-filter-visibility',
-  disableApiAnalytics: process.env.DISABLE_API_ANALYTICS || true,
+  apiAnalytics: process.env.DISABLE_API_ANALYTICS || 'DISABLED',
 }
 
 export default {

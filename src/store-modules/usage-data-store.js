@@ -7,19 +7,19 @@ import {
 
 const actions = (UsageDataService) => ({
   [SEND_SEARCH_QUERY_EVENT](context, params) {
-    if (process.env.disableApiAnalytics) return
+    if (process.env.apiAnalytics === 'DISABLED') return
     UsageDataService.sendSearchQueryEvent(params)
   },
   [SEND_RESULT_CLICKED_EVENT](context, params) {
-    if (process.env.disableApiAnalytics) return
+    if (process.env.apiAnalytics === 'DISABLED') return
     UsageDataService.sendResultClickedEvent(params)
   },
   [SEND_SEARCH_RATING_EVENT](context, params) {
-    if (process.env.disableApiAnalytics) return
+    if (process.env.apiAnalytics === 'DISABLED') return
     UsageDataService.sendSearchRatingEvent(params)
   },
   [SEND_DETAIL_PAGE_EVENT](context, params) {
-    if (process.env.disableApiAnalytics) return
+    if (process.env.apiAnalytics === 'DISABLED') return
     UsageDataService.sendDetailPageEvent(params)
   },
 })
