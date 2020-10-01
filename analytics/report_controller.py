@@ -83,7 +83,6 @@ def generate_usage_report(session, start_time, end_time):
     }
 
 
-
 def generate_source_usage_report(session, start_time, end_time):
     source_usage = session.query(
         Image.source, func.count(ResultClickedEvent.result_uuid)
@@ -128,17 +127,21 @@ def generate_top_searches(session, start_time, end_time):
         res_dict[query] = count
     return res_dict
 
+
 def generate_top_result_clicks(session, start_time, end_time):
-    top_result_clicks = session.query(
-        Image.identifier,
-        func.count(ResultClickedEvent.result_uuid),
+    top_uuids = session.query(
+        ResultClickedEvent.result_uuid,
+        Image.title,
         Image.source,
-        Image.title
-    ).select_from(Image).join(
-        ResultClickedEvent, ResultClickedEvent.result_uuid == Image.identifier
+        func.count(ResultClickedEvent.result_uuid).label("num_hits"),
     ).filter(
         ResultClickedEvent.timestamp > start_time,
-        ResultClickedEvent.timestamp < end_time
-    ).group_by(Image.identifier).limit(500).all()
+        ResultClickedEvent.timestamp < end_time,
+        ResultClickedEvent.result_uuid == Image.identifier
+    ).group_by(
+        ResultClickedEvent.result_uuid,
+        Image.title,
+        Image.source
+    ).limit(500).all()
 
-    return top_result_clicks
+    return top_uuids

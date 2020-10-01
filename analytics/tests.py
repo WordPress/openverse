@@ -175,4 +175,3 @@ def test_top_results():
     start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
     end_time = datetime.datetime.utcnow()
     top_results = generate_top_result_clicks(session, start_time, end_time)
-    print(top_results)

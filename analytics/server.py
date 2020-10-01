@@ -1,6 +1,6 @@
 import falcon
 from falcon_cors import CORS
-from controller import EventController
+from event_controller import EventController
 
 event_controller = EventController()
 
