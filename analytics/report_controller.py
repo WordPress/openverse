@@ -1,8 +1,8 @@
 from analytics.models import (
     Image, SearchEvent, SearchRatingEvent, ResultClickedEvent, DetailPageEvents,
     AttributionReferrerEvent, DetailPageEvent,
-    DailyUsageReport,SourceUsageReport, DailyAttributionRefererReport,
-    DailyTopSearches, DailyTopResults
+    UsageReport,SourceUsageReport, AttributionRefererReport,
+    TopSearchesReport, TopResultsReport
 )
 from sqlalchemy import func, distinct, Integer, and_
 from sqlalchemy.sql.expression import cast
@@ -67,20 +67,21 @@ def generate_usage_report(session, start_time, end_time):
         avg_searches_per_session = searches / sessions
     except ZeroDivisionError:
         avg_searches_per_session = 0
-    return {
-        'results_clicked': results_clicked,
-        'attribution_buttonclicks': attribution_buttonclicks,
-        'survey_responses': survey_responses,
-        'source_clicked': source_clicked,
-        'creator_clicked': creator_clicked,
-        'shared_social': shared_social,
-        'sessions': sessions,
-        'searches': searches,
-        'attribution_referer_hits': attribution_referer_hits,
-        'avg_rating': avg_rating,
-        'avg_searches_per_session': avg_searches_per_session,
-        'timestamp': end_time
-    }
+    return UsageReport(
+        results_clicked=results_clicked,
+        attribution_buttonclicks=attribution_buttonclicks,
+        survey_responses=survey_responses,
+        source_clicked=source_clicked,
+        creator_clicked=creator_clicked,
+        shared_social=shared_social,
+        sessions=sessions,
+        searches=searches,
+        attribution_referer_hits=attribution_referer_hits,
+        avg_rating=avg_rating,
+        avg_searches_per_session=avg_searches_per_session,
+        start_time=start_time,
+        end_time=end_time
+    )
 
 
 def generate_source_usage_report(session, start_time, end_time):
@@ -92,11 +93,18 @@ def generate_source_usage_report(session, start_time, end_time):
         ResultClickedEvent.timestamp > start_time,
         ResultClickedEvent.timestamp < end_time
     ).group_by(Image.source).all()
-    res_dict = {}
+    source_reports = []
     for res in source_usage:
-        source, count = res
-        res_dict[source] = count
-    return res_dict
+        source_id, num_clicks = res
+        source_reports.append(
+            SourceUsageReport(
+                source_id=source_id,
+                result_clicks=num_clicks,
+                start_time=start_time,
+                end_time=end_time
+            )
+        )
+    return source_reports
 
 
 def generate_referrer_usage_report(session, start_time, end_time):
@@ -107,11 +115,16 @@ def generate_referrer_usage_report(session, start_time, end_time):
         AttributionReferrerEvent.timestamp > start_time,
         AttributionReferrerEvent.timestamp < end_time,
     ).group_by(AttributionReferrerEvent.referer_domain)
-    res_dict = {}
+    domain_reports = []
     for res in attribution_embeddings:
         domain, count = res
-        res_dict[domain] = count
-    return res_dict
+        domain_reports.append(
+            domain=domain,
+            hits=count,
+            start_time=start_time,
+            end_time=end_time
+        )
+    return domain_reports
 
 
 def generate_top_searches(session, start_time, end_time):
@@ -121,15 +134,20 @@ def generate_top_searches(session, start_time, end_time):
         SearchEvent.timestamp > start_time,
         SearchEvent.timestamp < end_time
     ).group_by(SearchEvent.query).limit(100)
-    res_dict = {}
+    top_searches_reports = []
     for res in top_searches:
         query, count = res
-        res_dict[query] = count
-    return res_dict
+        top_searches_reports.append(
+            term=query,
+            hits=count,
+            start_time=start_time,
+            end_time=end_time
+        )
+    return top_searches_reports
 
 
 def generate_top_result_clicks(session, start_time, end_time):
-    top_uuids = session.query(
+    top_results = session.query(
         ResultClickedEvent.result_uuid,
         Image.title,
         Image.source,
@@ -142,6 +160,18 @@ def generate_top_result_clicks(session, start_time, end_time):
         ResultClickedEvent.result_uuid,
         Image.title,
         Image.source
-    ).limit(500).all()
-
-    return top_uuids
+    ).limit(500)
+    top_results_reports = []
+    for res in top_results:
+        _uuid, title, source, count = res
+        top_results_reports.append(
+            TopResultsReport(
+                result_uuid=_uuid,
+                title=title,
+                source=source,
+                hits=count,
+                start_time=start_time,
+                end_time=end_time
+            )
+        )
+    return top_results_reports

@@ -138,3 +138,4 @@ class TopResultsReport(Base, ReportMixin):
     result_uuid = Column(UUID, index=True)
     hits = Column(UUID, index=True)
     source = Column(String, index=True)
+    title = Column(String, index=True)
