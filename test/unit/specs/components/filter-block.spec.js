@@ -24,19 +24,6 @@ describe('FilterBlock', () => {
     expect(wrapper.find('.filter-block').vm).toBeDefined()
   })
 
-  it('should call filterChanged event', () => {
-    const mockMethods = {
-      onClick: jest.fn(),
-    }
-    options.methods = mockMethods
-    const wrapper = render(FilterBlock, options)
-    const close = wrapper.find('.close')
-    expect(close).toBeDefined()
-
-    close.trigger('click')
-    expect(options.methods.onClick).toHaveBeenCalled()
-  })
-
   it('should emit filterChanged event', () => {
     const wrapper = render(FilterBlock, options)
     wrapper.vm.onClick()
