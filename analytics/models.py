@@ -130,7 +130,7 @@ class AttributionRefererReport(Base, ReportMixin):
 class TopSearchesReport(Base, ReportMixin):
     __tablename__ = "top_searches"
     term = Column(String, index=True)
-    hits = Column(String, index=True)
+    hits = Column(Integer, index=True)
 
 
 class TopResultsReport(Base, ReportMixin):

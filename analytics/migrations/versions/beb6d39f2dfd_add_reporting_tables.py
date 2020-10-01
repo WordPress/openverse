@@ -1,8 +1,8 @@
 """Add reporting tables
 
-Revision ID: 1055725624f2
+Revision ID: beb6d39f2dfd
 Revises: 0cd416f5a7d2
-Create Date: 2020-10-01 18:50:09.188207
+Create Date: 2020-10-01 19:43:24.689567
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '1055725624f2'
+revision = 'beb6d39f2dfd'
 down_revision = '0cd416f5a7d2'
 branch_labels = None
 depends_on = None
@@ -63,7 +63,7 @@ def upgrade():
     sa.Column('start_time', sa.DateTime(), nullable=True),
     sa.Column('end_time', sa.DateTime(), nullable=True),
     sa.Column('term', sa.String(), nullable=True),
-    sa.Column('hits', sa.String(), nullable=True),
+    sa.Column('hits', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_top_searches_end_time'), 'top_searches', ['end_time'], unique=False)
