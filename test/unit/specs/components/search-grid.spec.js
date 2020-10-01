@@ -10,11 +10,11 @@ describe('SearchGrid', () => {
       propsData: {
         query: { q: 'foo' },
         includeAnalytics: true,
-        isFetchingImages: false,
       },
       mocks: {
         $store: {
           state: {
+            isFetchingImages: false,
             imagesCount: 100,
             imagePage: 1,
           },
@@ -26,31 +26,32 @@ describe('SearchGrid', () => {
 
   it('should render correct contents', () => {
     const wrapper = render(SearchGrid, options)
-    expect(wrapper.findComponent('section').element).toBeDefined()
-    expect(wrapper.findComponent('.load-more').element).toBeDefined()
+    expect(wrapper.find('section').element).toBeDefined()
+    expect(wrapper.find('.load-more').element).toBeDefined()
   })
 
   it('doesnt render load more button if not loading images', () => {
     const wrapper = render(SearchGrid, options)
-    expect(wrapper.findComponent('.load-more').element).toBeDefined()
+    expect(wrapper.find('.load-more').element).toBeDefined()
   })
 
-  it('doesnt render load more button if is loading images', () => {
-    options.propsData.isFetchingImages = true
+  it("doesn't render load more button if is loading images", () => {
+    options.mocks.$store.state.isFetchingImages = true
     const wrapper = render(SearchGrid, options)
-    expect(wrapper.findComponent('.load-more').vm).not.toBeDefined()
+    expect(wrapper.find('.load-more').vm).not.toBeDefined()
   })
 
   it('shows loading icon if is loading images', () => {
-    options.propsData.isFetchingImages = true
+    options.mocks.$store.state.isFetchingImages = true
+
     const wrapper = render(SearchGrid, options)
-    expect(wrapper.findComponent({ name: 'LoadingIcon' }).vm).toBeDefined()
+    expect(wrapper.findComponent({ name: 'LoadingIcon' })).toBeDefined()
   })
 
-  it('doesnt render load more button if not loading images', () => {
+  it("doesn't render load more button if not loading images", async () => {
     const wrapper = render(SearchGrid, options)
-    const button = wrapper.findComponent('.button')
-    button.trigger('click')
+    const button = wrapper.find('.button')
+    await button.trigger('click')
 
     expect(wrapper.emitted('onLoadMoreImages')[0]).toEqual([
       {
