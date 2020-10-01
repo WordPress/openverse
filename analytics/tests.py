@@ -137,12 +137,6 @@ def test_msg_parsing_invalid_params():
     assert parsed['identifier'] is None
 
 
-def test_usage_report():
-    start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
-    end_time = datetime.datetime.utcnow()
-    report = generate_usage_report(session, start_time, end_time)
-
-
 def test_source_usage():
     start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
     end_time = datetime.datetime.utcnow()
@@ -166,6 +160,18 @@ def test_attribution_embedding():
         session, start_time, end_time
     )
     assert attribution_usage[0].hits > 0
+
+
+def test_usage_report():
+    start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+    end_time = datetime.datetime.utcnow()
+    report = generate_usage_report(session, start_time, end_time)
+    assert report.results_clicked > 0
+    assert report.avg_rating == 1
+    assert report.attribution_referer_hits > 0
+    assert report.creator_clicked == 0
+    assert report.attribution_buttonclicks == 0
+    assert report.shared_social > 0
 
 
 def test_top_searches():
