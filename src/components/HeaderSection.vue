@@ -37,7 +37,6 @@ export default {
         !this.$route.path.startsWith('/photos') &&
         !(this.$route.path === '/search')
       )
-      // !['/search', '/photos'].some((i) => this.$route.path.startsWith(i))
     },
   },
   methods: {
