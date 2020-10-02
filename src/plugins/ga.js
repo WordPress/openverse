@@ -6,7 +6,7 @@ export default ({ app }) => {
   /*
    ** Only run on client-side and only in production mode
    */
-  if (stringToBoolean(process.env.analytics))
+  if (stringToBoolean(process.env.enableGoogleAnalytics))
     return /*
      ** Include Google Analytics Script
      */
@@ -32,7 +32,7 @@ export default ({ app }) => {
   /*
    ** Set the current page
    */
-  ga('create', process.env.analyticsId, 'auto')
+  ga('create', process.env.googleAnalyticsUA, 'auto')
 
   // Initialize helper
   const analytics = GoogleAnalytics()

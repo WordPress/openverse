@@ -99,16 +99,16 @@ export const env = {
   apiUrl:
     process.env.API_URL || 'https://api-dev.creativecommons.engineering/v1/',
   socialSharing: process.env.SOCIAL_SHARING || true,
-  analytics: process.env.ANALYTICS || false,
-  analyticsId: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
+  enableGoogleAnalytics: process.env.ENABLE_GOOGLE_ANALYTICS || false,
+  googleAnalyticsUA: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
   filterStorageKey: 'ccsearch-filter-visibility',
-  apiAnalytics: process.env.DISABLE_API_ANALYTICS || false,
+  enableInternalAnalytics: process.env.ENABLE_INTERNAL_ANALYTICS || false,
 }
 
 export default {
   srcDir: 'src/',
   buildDir: 'dist/',
-  server: { port: 8443 },
+  server: { port: process.env.PORT || 8443 },
   components: true,
   plugins: ['~/plugins/i18n.js', { src: '~plugins/ga.js', mode: 'client' }],
   css: [

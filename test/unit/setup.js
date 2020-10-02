@@ -9,7 +9,7 @@ for (const [key, value] of Object.entries(env)) {
 }
 
 // Make sure api analytics are enabled so we can test them!
-process.env.apiAnalytics = false
+process.env.enableInternalAnalytics = false
 
 Vue.config.productionTip = false
 Vue.config.devtools = false
