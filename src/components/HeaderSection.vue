@@ -33,7 +33,11 @@ export default {
   computed: {
     // Only pad the donation banner when the current route requires it
     needsPadding() {
-      return !['/search', '/photos'].some((i) => this.$route.path.startsWith(i))
+      return (
+        !this.$route.path.startsWith('/photos') &&
+        !(this.$route.path === '/search')
+      )
+      // !['/search', '/photos'].some((i) => this.$route.path.startsWith(i))
     },
   },
   methods: {
