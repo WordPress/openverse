@@ -1,14 +1,31 @@
 import json
 import logging
+import os
 
 from provider_api_scripts.common.storage import image
 
 logger = logging.getLogger(__name__)
 
-_image_store_dict = {}
+
+# This is a workaround for the fact that dict.setdefault is not lazy; it
+# always evaluates the default argument, which means the costly
+# operation of instantiating an ImageStore in our use case.
+class ImageStoreDict(dict):
+
+    def __missing__(self, key):
+        ret = self[key] = image.ImageStore(provider=key)
+        return ret
 
 
-def main(tsv_filename):
+_image_store_dict = ImageStoreDict()
+
+
+def clean_tsv_directory(tsv_directory):
+    for tsv in os.listdir(tsv_directory):
+        clean_tsv(os.path.join(tsv_directory, tsv))
+
+
+def clean_tsv(tsv_filename):
     with open(tsv_filename) as f:
         for row in f:
             _process_row(row)
@@ -16,12 +33,10 @@ def main(tsv_filename):
             image_store.commit()
 
 
-def _process_row(tsv_row, image_store_dict=_image_store_dict):
+def _process_row(tsv_row):
     row_image = _get_image_from_row(tsv_row)
     row_meta_data = _get_json_from_string(row_image.meta_data)
-    image_store = image_store_dict.setdefault(
-        row_image.provider, image.ImageStore(provider=row_image.provider)
-    )
+    image_store = _image_store_dict[row_image.provider]
     image_store.add_item(
         foreign_landing_url=row_image.foreign_landing_url,
         image_url=row_image.image_url,

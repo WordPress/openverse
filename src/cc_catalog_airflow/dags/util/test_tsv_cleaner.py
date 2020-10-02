@@ -8,7 +8,7 @@ RESOURCES = os.path.join(
 )
 
 
-def test_main_cleans_tsv_rows(tmpdir):
+def test_clean_tsv_cleans_tsv_rows(tmpdir):
     tsv_file_path = os.path.join(RESOURCES, "multi_prov.tsv")
 
     expected_calls = [
@@ -73,5 +73,5 @@ def test_main_cleans_tsv_rows(tmpdir):
         "ImageStore",
         autospec=True,
     ) as mock_image_store:
-        tsv_cleaner.main(tsv_file_path)
+        tsv_cleaner.clean_tsv(tsv_file_path)
     mock_image_store.assert_has_calls(expected_calls)
