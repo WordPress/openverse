@@ -186,7 +186,9 @@ def test_image_info_large():
     actual_image, actual_height, actual_width = sm._get_image_info(
         large_image
     )
-    expected_image = "https://coimages.sciencemuseumgroup.org.uk/images/3/563/large_1999_0299_0001__0002_.jpg"
+    expected_image = (
+        "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
+        "large_1999_0299_0001__0002_.jpg")
     expected_height = 1022
     expected_width = 1536
 
@@ -201,7 +203,9 @@ def test_image_info_medium():
         medium_image
     )
 
-    expected_image = "https://coimages.sciencemuseumgroup.org.uk/images/3/563/medium_1999_0299_0001__0002_.jpg"
+    expected_image = (
+        "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
+        "medium_1999_0299_0001__0002_.jpg")
     expected_height = 576
     expected_width = 866
 
@@ -222,7 +226,9 @@ def test_thumbnail_large():
     thumbnail_large = _get_resource_json("thumbnail_large.json")
     actual_image = sm._get_thumbnail_url(thumbnail_large)
 
-    expected_image = "https://coimages.sciencemuseumgroup.org.uk/images/3/563/large_thumbnail_1999_0299_0001__0002_.jpg"
+    expected_image = (
+        "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
+        "large_thumbnail_1999_0299_0001__0002_.jpg")
 
     assert actual_image == expected_image
 
@@ -231,7 +237,9 @@ def test_thumbnail_medium():
     thumbnail_medium = _get_resource_json("thumbnail_medium.json")
     actual_image = sm._get_thumbnail_url(thumbnail_medium)
 
-    expected_image = "https://coimages.sciencemuseumgroup.org.uk/images/3/563/medium_thumbnail_1999_0299_0001__0002_.jpg"
+    expected_image = (
+        "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
+        "medium_thumbnail_1999_0299_0001__0002_.jpg")
 
     assert actual_image == expected_image
 
@@ -240,7 +248,9 @@ def test_thumbnail_small():
     thumbnail_small = _get_resource_json("thumbnail_small.json")
     actual_image = sm._get_thumbnail_url(thumbnail_small)
 
-    expected_image = "https://coimages.sciencemuseumgroup.org.uk/images/3/563/small_thumbnail_1999_0299_0001__0002_.jpg"
+    expected_image = (
+        "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
+        "small_thumbnail_1999_0299_0001__0002_.jpg")
 
     assert actual_image == expected_image
 
@@ -255,13 +265,17 @@ def test_thumbnail_failure():
 def test_check_relative_url():
     rel_url = "3/563/large_thumbnail_1999_0299_0001__0002_.jpg"
     actual_url = sm.check_url(rel_url)
-    expected_url = "https://coimages.sciencemuseumgroup.org.uk/images/3/563/large_thumbnail_1999_0299_0001__0002_.jpg"
+    expected_url = (
+        "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
+        "large_thumbnail_1999_0299_0001__0002_.jpg")
 
     assert actual_url == expected_url
 
 
 def test_check_complete_url():
-    url = "https://coimages.sciencemuseumgroup.org.uk/images/3/563/large_thumbnail_1999_0299_0001__0002_.jpg"
+    url = (
+        "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
+        "large_thumbnail_1999_0299_0001__0002_.jpg")
     actual_url = sm.check_url(url)
     expected_url = url
 

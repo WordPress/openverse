@@ -214,8 +214,7 @@ def _merge_response_jsons(left_json, right_json):
 def _merge_image_pages(left_page, right_page):
     merged_page = deepcopy(left_page)
     merged_globalusage = (
-        left_page['globalusage']
-        + right_page['globalusage']
+        left_page['globalusage'] + right_page['globalusage']
     )
     merged_page.update(right_page)
     merged_page['globalusage'] = merged_globalusage

@@ -131,5 +131,5 @@ def alert_unit_codes_from_api(postgres_conn_id,
     """
     if bool(new_unit_codes) or bool(outdated_unit_codes):
         raise Exception(
-            f"Please check the smithsonian_new_unit_codes table for necessary "
-            f"updates to the SMITHSONIAN_SUB_PROVIDERS dictionary")
+            "Please check the smithsonian_new_unit_codes table for necessary "
+            "updates to the SMITHSONIAN_SUB_PROVIDERS dictionary")

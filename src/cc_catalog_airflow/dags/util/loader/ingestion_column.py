@@ -56,6 +56,5 @@ def _add_ingestion_type(tsv_file_name, source):
                 new_tsv.write(old_line + '\t' + ingestion_type + '\n')
             old_line = old_tsv.readline().strip()
 
-
     os.rename(tsv_file_name, tsv_file_name + '.old')
     os.rename(temp_tsv, tsv_file_name)

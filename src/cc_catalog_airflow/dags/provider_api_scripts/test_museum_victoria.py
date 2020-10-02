@@ -7,7 +7,8 @@ from unittest.mock import MagicMock, patch
 import museum_victoria as mv
 
 RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), 'tests/resources/museumvictoria'
+    os.path.abspath(os.path.dirname(__file__)),
+    'tests/resources/museumvictoria'
 )
 
 logging.basicConfig(
@@ -140,7 +141,9 @@ def test_get_image_data_large():
             image_data
         )
 
-    assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg"
+    assert actual_image_url == (
+        "https://collections.museumsvictoria.com.au/content/media/45/"
+        "329745-large.jpg")
     assert actual_height == 2581
     assert actual_width == 2785
 
@@ -153,7 +156,9 @@ def test_get_image_data_medium():
             image_data
         )
 
-    assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-medium.jpg"
+    assert actual_image_url == (
+        "https://collections.museumsvictoria.com.au/content/media/45/"
+        "329745-medium.jpg")
     assert actual_height == 1390
     assert actual_width == 1500
 
@@ -166,7 +171,9 @@ def test_get_image_data_small():
             image_data
         )
 
-    assert actual_image_url == "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg"
+    assert actual_image_url == (
+        "https://collections.museumsvictoria.com.au/content/media/45/"
+        "329745-small.jpg")
     assert actual_height == 500
     assert actual_width == 540
 

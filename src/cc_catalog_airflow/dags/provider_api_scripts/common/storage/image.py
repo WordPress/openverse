@@ -116,7 +116,7 @@ class ImageStore:
             output_dir=None,
             buffer_length=100
     ):
-        logger.info('Initialized with provider {}'.format(provider))
+        logger.info(f'Initialized with provider {provider}')
         self._image_buffer = []
         self._total_images = 0
         self._PROVIDER = provider
@@ -251,12 +251,13 @@ class ImageStore:
         if output_file is not None:
             output_file = str(output_file)
         else:
-            output_file = '{}_{}.tsv'.format(
-                provider, datetime.strftime(self._NOW, '%Y%m%d%H%M%S')
+            output_file = (
+                f'{provider}_{datetime.strftime(self._NOW, "%Y%m%d%H%M%S")}'
+                f'.tsv'
             )
 
         output_path = os.path.join(output_dir, output_file)
-        logger.info('Output path: {}'.format(output_path))
+        logger.info(f'Output path: {output_path}')
         return output_path
 
     def _get_total_images(self):
@@ -326,7 +327,7 @@ class ImageStore:
         prepared_strings = [
             columns[i].prepare_string(image[i]) for i in range(row_length)
         ]
-        logger.debug('Prepared strings list:\n{}'.format(prepared_strings))
+        logger.debug(f'Prepared strings list:\n{prepared_strings}')
         for i in range(row_length):
             if columns[i].REQUIRED and prepared_strings[i] is None:
                 logger.warning(f'Row missing required {columns[i].NAME}')
@@ -340,15 +341,13 @@ class ImageStore:
         buffer_length = len(self._image_buffer)
         if buffer_length > 0:
             logger.info(
-                'Writing {} lines from buffer to disk.'
-                .format(buffer_length)
+                f'Writing {buffer_length} lines from buffer to disk.'
             )
             with open(self._OUTPUT_PATH, 'a') as f:
                 f.writelines(self._image_buffer)
                 self._image_buffer = []
                 logger.debug(
-                    'Total Images Processed so far:  {}'
-                    .format(self._total_images)
+                    f'Total Images Processed so far:  {self._total_images}'
                 )
         else:
             logger.debug('Empty buffer!  Nothing to write.')
@@ -372,7 +371,7 @@ class ImageStore:
     def _enrich_meta_data(self, meta_data, license_url, raw_license_url):
         if type(meta_data) != dict:
             logger.debug(
-                '`meta_data` is not a dictionary: {}'.format(meta_data)
+                f'`meta_data` is not a dictionary: {meta_data}'
             )
             enriched_meta_data = {
                 'license_url': license_url, 'raw_license_url': raw_license_url
@@ -396,8 +395,8 @@ class ImageStore:
 
     def _format_raw_tag(self, tag):
         if type(tag) == dict and tag.get('name') and tag.get('provider'):
-            logger.debug('Tag already enriched: {}'.format(tag))
+            logger.debug(f'Tag already enriched: {tag}')
             return tag
         else:
-            logger.debug('Enriching tag: {}'.format(tag))
+            logger.debug(f'Enriching tag: {tag}')
             return {'name': tag, 'provider': self._PROVIDER}

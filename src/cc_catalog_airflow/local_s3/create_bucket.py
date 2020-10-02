@@ -26,7 +26,7 @@ BUCKET_NAME = 'cccatalog-storage'
 def main():
     success = _create_local_s3_bucket()
     if not success:
-        logger.error(f'Could not create bucket in local S3')
+        logger.error('Could not create bucket in local S3')
         sys.exit(1)
     else:
         sys.exit(0)

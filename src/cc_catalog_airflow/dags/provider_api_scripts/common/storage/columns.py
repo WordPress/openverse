@@ -44,14 +44,13 @@ class Column(ABC):
     def __enforce_char_limit(self, string, limit, truncate=True):
         if not type(string) == str:
             logger.debug(
-                'Cannot limit characters on non-string type {}.  Input was {}.'
-                .format(type(string), string)
+                f'Cannot limit characters on non-string type {type(string)}.'
+                f'Input was {string}.'
             )
             return None
         if len(string) > limit:
             logger.warning(
-                'String over char limit of {}.  Input was {}.'
-                .format(limit, string)
+                f'String over char limit of {limit}.  Input was {string}.'
             )
             return string[:limit] if truncate else None
         else:
@@ -81,8 +80,7 @@ class IntegerColumn(Column):
             number = str(int(float(value)))
         except Exception as e:
             logger.debug(
-                'input {} is not castable to an int.  The error was {}'
-                .format(value, e)
+                f'input {value} is not castable to an int.  The error was {e}'
             )
             number = None
         return number
@@ -115,7 +113,7 @@ class BooleanColumn(Column):
             if value in bool_map[tf]:
                 return tf
         logger.debug(
-            '{} is not a valid PostgreSQL bool'.format(value)
+            f'{value} is not a valid PostgreSQL bool'
         )
         return None
 
