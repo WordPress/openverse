@@ -19,7 +19,9 @@ DAG_DEFAULT_ARGS = {
 
 DAG_ID = "sync_commoncrawl_workflow"
 
-CRAWL_OUTPUT_DIR = os.path.join(os.environ["OUTPUT_DIR"], "common_crawl_tsvs")
+TSV_SUBDIR = "common_crawl_tsvs/"
+
+CRAWL_OUTPUT_DIR = os.path.join(os.environ["OUTPUT_DIR"], TSV_SUBDIR)
 
 
 def get_runner_operator(dag):
@@ -35,7 +37,7 @@ def get_runner_operator(dag):
             "OUTPUT_DIR": CRAWL_OUTPUT_DIR,
             "AWS_ACCESS_KEY": os.environ["AWS_ACCESS_KEY"],
             "AWS_SECRET_KEY": os.environ["AWS_SECRET_KEY"],
-            },
+        },
     )
 
 
