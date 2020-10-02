@@ -38,21 +38,19 @@ def _process_row(tsv_row, image_store_dict=_image_store_dict):
         meta_data=row_meta_data,
         raw_tags=_get_json_from_string(row_image.tags),
         watermarked=row_image.watermarked,
-        source=row_image.source
+        source=row_image.source,
     )
 
 
 def _get_image_from_row(tsv_row):
     exploded_row = [
         s.replace("\\\\", "\\") if s != "\\N" else None
-        for s in tsv_row.strip().split('\t')
+        for s in tsv_row.strip().split("\t")
     ]
     try:
         row_image = image.Image(*exploded_row)
     except Exception as e:
-        logger.warning(
-            f"Could not unpack row {tsv_row} into valid image: {e}"
-        )
+        logger.warning(f"Could not unpack row {tsv_row} into valid image: {e}")
         row_image = None
     return row_image
 
@@ -67,4 +65,4 @@ def _get_json_from_string(json_str):
 
 
 def _get_license_url_from_row_meta_data(meta_data):
-    return meta_data.get('raw_license_url', meta_data.get('license_url', None))
+    return meta_data.get("raw_license_url", meta_data.get("license_url", None))
