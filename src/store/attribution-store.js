@@ -1,18 +1,12 @@
-import { CopyAttribution, EmbedAttribution } from '@/analytics/events'
-import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from './action-types'
+import { CopyAttribution } from '@/analytics/events'
+import { COPY_ATTRIBUTION } from './action-types'
 
 const actions = (GoogleAnalytics) => ({
-  // eslint-disable-next-line no-unused-vars
-  [COPY_ATTRIBUTION]({ commit }, params) {
-    const event = CopyAttribution(params.content)
-    GoogleAnalytics.sendEvent(event)
-  },
-  [EMBED_ATTRIBUTION]() {
-    const event = EmbedAttribution()
+  [COPY_ATTRIBUTION](_, params) {
+    console.log(params)
+    const event = CopyAttribution(params.type, params.content)
     GoogleAnalytics.sendEvent(event)
   },
 })
 
-export default {
-  actions,
-}
+export default { actions }

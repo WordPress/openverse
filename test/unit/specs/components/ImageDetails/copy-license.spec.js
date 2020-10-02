@@ -1,5 +1,5 @@
 import CopyLicense from '@/components/ImageDetails/CopyLicense'
-import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types'
+import { COPY_ATTRIBUTION } from '@/store/action-types'
 import {
   DETAIL_PAGE_EVENTS,
   SEND_DETAIL_PAGE_EVENT,
@@ -11,9 +11,13 @@ describe('CopyLicense', () => {
   let options = null
   let props = null
   const $t = (key) => i18n.messages[key]
-  const eventData = {
-    content: 'Foo',
+  const copyData = {
+    type: 'Bar',
+    event: {
+      content: 'Foo',
+    },
   }
+
   let dispatchMock = null
 
   beforeEach(() => {
@@ -53,30 +57,16 @@ describe('CopyLicense', () => {
 
   it('should dispatch COPY_ATTRIBUTION', () => {
     const wrapper = render(CopyLicense, options)
-    wrapper.vm.onCopyAttribution(eventData)
+    wrapper.vm.onCopyAttribution(copyData.type, copyData.event)
     expect(dispatchMock).toHaveBeenCalledWith(COPY_ATTRIBUTION, {
-      content: eventData.content,
+      type: copyData.type,
+      content: copyData.event.content,
     })
-  })
-
-  it('should dispatch EMBED_ATTRIBUTION', () => {
-    const wrapper = render(CopyLicense, options)
-    wrapper.vm.onEmbedAttribution()
-    expect(dispatchMock).toHaveBeenCalledWith(EMBED_ATTRIBUTION)
   })
 
   it('should dispatch SEND_DETAIL_PAGE_EVENT on copy attribution', () => {
     const wrapper = render(CopyLicense, options)
-    wrapper.vm.onCopyAttribution(eventData)
-    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
-      eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
-      resultUuid: props.image.id,
-    })
-  })
-
-  it('should dispatch SEND_DETAIL_PAGE_EVENT on embed attribution', () => {
-    const wrapper = render(CopyLicense, options)
-    wrapper.vm.onEmbedAttribution()
+    wrapper.vm.onCopyAttribution(copyData.type, copyData.event)
     expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
       eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
       resultUuid: props.image.id,
