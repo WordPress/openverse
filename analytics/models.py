@@ -105,7 +105,6 @@ class UsageReport(Base, ReportMixin):
     source_clicked = Column(Integer)
     creator_clicked = Column(Integer)
     shared_social = Column(Integer)
-    # Other metrics of interest
     sessions = Column(Integer)
     searches = Column(Integer)
     attribution_referer_hits = Column(Integer)
