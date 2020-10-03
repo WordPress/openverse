@@ -84,7 +84,8 @@ def test_build_query_param_default():
         'apikey': walters_api_key,
         'pageSize': 100,
         'orderBy': 'classification',
-        'classification': None
+        'classification': None,
+        'Page': 1
     }
     assert actual_param_made == expected_param
 
@@ -101,7 +102,8 @@ def test_build_query_param_given():
         'apikey': walters_api_key,
         'pageSize': 100,
         'orderBy': 'classification',
-        'classification': class_param
+        'classification': class_param,
+        'Page': 1
     }
     assert actual_param_made == expected_param
 
