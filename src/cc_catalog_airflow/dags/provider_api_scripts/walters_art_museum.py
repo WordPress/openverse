@@ -18,7 +18,7 @@ from util.loader import provider_details as prov
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.DEBUG
+    level=logging.INFO
 )
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ DELAY = 1
 LIMIT = 250000
 PROVIDER = prov.WALTERS_DEFAULT_PROVIDER
 REQUEST_TYPE = 'objects'
-ENDPOINT = f'http://api.thewalters.org/v1/{REQUEST_TYPE}'
+ENDPOINT = f'https://api.thewalters.org/v1/{REQUEST_TYPE}'
 API_KEY = os.getenv('WALTERS_ART_MUSEUEM_KEY')
 MUSEUM_SITE = "https://art.thewalters.org"
 LICENSE = 'CC0 1.0'
@@ -93,9 +93,11 @@ def _get_image_list(
         retries=5
 ):
     image_list = []
+    page = 1
     cond = True
     while cond:
-        query_params = _build_query_param(class_param)
+        query_params = _build_query_param(class_param=class_param, page=page)
+        page += 1
         json_response_inpydict_form = delayed_requester.get_response_json(
             endpoint=endpoint,
             retries=retries,
@@ -108,7 +110,7 @@ def _get_image_list(
         for img in items_list:
             image_list.append(img)
 
-        if json_response_inpydict_form.get("NextPage") is False:
+        if json_response_inpydict_form.get("NextPage") is not True:
             cond = False
 
     if len(image_list) == 0:
@@ -121,7 +123,8 @@ def _get_image_list(
 def _build_query_param(
         class_param=None,
         default_query_params=DEFAULT_QUERY_PARAMS,
-        apikey=API_KEY
+        apikey=API_KEY,
+        page=1
 ):
     query_params = default_query_params.copy()
     query_params.update(
