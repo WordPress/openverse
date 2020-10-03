@@ -130,7 +130,8 @@ def _build_query_param(
     query_params.update(
         {
             'classification': class_param,
-            'apikey': apikey
+            'apikey': apikey,
+            'Page': page
         }
     )
 
