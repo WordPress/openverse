@@ -26,6 +26,7 @@
               </div>
               <a
                 class="button normal donate margin-right-normal"
+                :href="donationLink"
                 @click="sendDonationEvent"
                 @keypress.enter="sendDonationEvent"
               >
@@ -184,7 +185,7 @@
           {{ $t('support.future.support') }}
         </h2>
         <div class="field is-grouped is-grouped-centered margin-bottom-medium">
-          <a class="button normal donate">
+          <a class="button normal donate" :href="donationLink">
             <i
               class="icon cc-letterheart-filled margin-right-small padding-top-smaller"
             />
