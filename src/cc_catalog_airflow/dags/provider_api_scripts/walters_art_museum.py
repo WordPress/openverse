@@ -54,7 +54,6 @@ QUERY_CLASSIFICATION = [
     'Arms & Armor',
     'Mosaics & Cosmati',
     'Niello',
-    'Paper & Paper-Mache',
     'Wood',
     'Enamels',
     'Manuscripts & Rare Books',
