@@ -119,6 +119,7 @@ export default {
       ttl: process.env.MICROCACHE_DURATION || 60,
     },
   },
+  modern: 'client',
   srcDir: 'src/',
   buildDir: 'dist/',
   server: { port: process.env.PORT || 8443 },
