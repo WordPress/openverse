@@ -1,3 +1,5 @@
+import pkg from './package.json'
+
 /**
  * The default metadata for the site. Can be extended and/or overwritten per page. And even in components!
  * See the Nuxt.js docs for more info.
@@ -106,6 +108,17 @@ export const env = {
 }
 
 export default {
+  // eslint-disable-next-line no-undef
+  version: pkg.version, // used to purge cache :)
+  cache: {
+    pages: ['/'],
+    store: {
+      type: 'redis',
+      host: 'localhost',
+      port: 6379,
+      ttl: process.env.MICROCACHE_DURATION || 60,
+    },
+  },
   srcDir: 'src/',
   buildDir: 'dist/',
   server: { port: process.env.PORT || 8443 },
@@ -118,7 +131,7 @@ export default {
   head,
   env,
   buildModules: ['@nuxtjs/svg', '@nuxtjs/eslint-module'],
-  modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap'],
+  modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap', 'nuxt-ssr-cache'],
   sentry: {
     dsn:
       process.env.SENTRY_DSN ||

@@ -23,7 +23,8 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "format": "prettier --write .",
-    "format:test": "prettier --check ."
+    "format:test": "prettier --check .",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@creativecommons/vocabulary": "^2020.9.2",
@@ -40,8 +41,8 @@
     "case": "^1.6.3",
     "clipboard": "^2.0.6",
     "deepmerge": "^4.2.2",
-    "focus-trap-vue": "0.0.6",
     "focus-trap": "^5.1.0",
+    "focus-trap-vue": "0.0.6",
     "js-cookie": "^2.2.1",
     "lodash.clonedeep": "^4.5.0",
     "lodash.findindex": "^4.6.0",
@@ -49,6 +50,8 @@
     "lodash.sortby": "^4.7.0",
     "node-sass": "^4.14.1",
     "nuxt": "^2.14.6",
+    "nuxt-ssr-cache": "^1.5.2",
+    "patch-package": "^6.2.2",
     "sass-loader": "^10.0.1",
     "sixpack-client": "^2.1.0",
     "uuid": "^8.3.0",
