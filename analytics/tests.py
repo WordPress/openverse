@@ -1,9 +1,17 @@
 import pytest
+import datetime
 import uuid
+import analytics.settings as settings
 import requests
 import os
 import json
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from analytics.attribution_worker import parse_message, is_valid
+from analytics.report_controller import generate_usage_report,\
+    generate_source_usage_report, generate_referrer_usage_report,\
+    generate_top_searches, generate_top_result_clicks
+from analytics.models import AttributionReferrerEvent
 """
 End-to-end tests of the analytics server. Run with `pytest -s`.
 """
@@ -11,8 +19,11 @@ End-to-end tests of the analytics server. Run with `pytest -s`.
 
 API_URL = os.getenv('ANALYTICS_SERVER_URL', 'http://localhost:8090')
 session_id = '00000000-0000-0000-0000-000000000000'
-result_id = '11111111-1111-1111-1111-111111111111'
+result_id = '380e1781-bb07-4d6f-aa65-e199ad6d68cb'
 test_query = 'integration test'
+engine = create_engine(settings.DATABASE_CONNECTION)
+session_maker = sessionmaker(bind=engine)
+session = session_maker()
 
 
 def test_search_event():
@@ -125,3 +136,53 @@ def test_msg_parsing_invalid_params():
     parsed = parse_message(test_msg)
     assert parsed['identifier'] is None
 
+
+def test_source_usage():
+    start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+    end_time = datetime.datetime.utcnow()
+    source_usage = generate_source_usage_report(session, start_time, end_time)
+    assert len(source_usage) > 0
+    assert source_usage[0].result_clicks >= 1
+
+
+def test_attribution_embedding():
+    start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+    end_time = datetime.datetime.utcnow()
+    event = AttributionReferrerEvent(
+        image_uuid=result_id,
+        full_referer='https://alden.page/blog',
+        referer_domain='alden.page',
+        resource='/static/img/cc-by.svg'
+    )
+    session.add(event)
+    session.commit()
+    attribution_usage = generate_referrer_usage_report(
+        session, start_time, end_time
+    )
+    assert attribution_usage[0].hits > 0
+
+
+def test_usage_report():
+    start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+    end_time = datetime.datetime.utcnow()
+    report = generate_usage_report(session, start_time, end_time)
+    assert report.results_clicked > 0
+    assert report.avg_rating == 1
+    assert report.attribution_referer_hits > 0
+    assert report.creator_clicked == 0
+    assert report.attribution_buttonclicks == 0
+    assert report.shared_social > 0
+
+
+def test_top_searches():
+    start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+    end_time = datetime.datetime.utcnow()
+    top_searches = generate_top_searches(session, start_time, end_time)
+    assert top_searches[0].hits > 0
+
+
+def test_top_results():
+    start_time = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+    end_time = datetime.datetime.utcnow()
+    top_results = generate_top_result_clicks(session, start_time, end_time)
+    assert top_results[0].hits > 0
