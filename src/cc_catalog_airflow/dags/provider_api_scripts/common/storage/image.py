@@ -66,8 +66,8 @@ _IMAGE_TSV_COLUMNS = [
     )
 ]
 
-_Image = namedtuple(
-    '_Image',
+Image = namedtuple(
+    'Image',
     [c.NAME for c in _IMAGE_TSV_COLUMNS]
 )
 
@@ -298,7 +298,7 @@ class ImageStore:
         )
         tags = self._enrich_tags(raw_tags)
 
-        return _Image(
+        return Image(
             foreign_identifier=foreign_identifier,
             foreign_landing_url=foreign_landing_url,
             image_url=image_url,

@@ -231,7 +231,7 @@ def test_ImageStore_get_image_places_given_args(
     args_dict.pop('license_url')
     args_dict['provider'] = 'testing_provider'
     args_dict['filesize'] = None
-    assert actual_image == image._Image(**args_dict)
+    assert actual_image == image.Image(**args_dict)
 
 
 def test_ImageStore_get_image_calls_license_chooser(
@@ -635,7 +635,7 @@ def test_create_tsv_row_non_none_if_req_fields(
         setup_env,
 ):
     image_store = image.ImageStore()
-    test_image = image._Image(**default_image_args)
+    test_image = image.Image(**default_image_args)
     actual_row = image_store._create_tsv_row(test_image)
     assert actual_row is not None
 
@@ -647,7 +647,7 @@ def test_create_tsv_row_none_if_no_foreign_landing_url(
     image_store = image.ImageStore()
     image_args = default_image_args
     image_args['foreign_landing_url'] = None
-    test_image = image._Image(**image_args)
+    test_image = image.Image(**image_args)
     expect_row = None
     actual_row = image_store._create_tsv_row(test_image)
     assert expect_row == actual_row
@@ -660,7 +660,7 @@ def test_create_tsv_row_none_if_no_license(
     image_store = image.ImageStore()
     image_args = default_image_args
     image_args['license_'] = None
-    test_image = image._Image(**image_args)
+    test_image = image.Image(**image_args)
     expect_row = None
     actual_row = image_store._create_tsv_row(test_image)
     assert expect_row == actual_row
@@ -673,7 +673,7 @@ def test_create_tsv_row_none_if_no_license_version(
     image_store = image.ImageStore()
     image_args = default_image_args
     image_args['license_version'] = None
-    test_image = image._Image(**image_args)
+    test_image = image.Image(**image_args)
     expect_row = None
     actual_row = image_store._create_tsv_row(test_image)
     assert expect_row == actual_row
@@ -686,7 +686,7 @@ def test_create_tsv_row_returns_none_if_missing_image_url(
     image_store = image.ImageStore()
     image_args = default_image_args
     image_args['image_url'] = None
-    test_image = image._Image(**image_args)
+    test_image = image.Image(**image_args)
     expect_row = None
     actual_row = image_store._create_tsv_row(test_image)
     assert expect_row == actual_row
@@ -702,7 +702,7 @@ def test_create_tsv_row_handles_empty_dict_and_tags(
     image_args = default_image_args
     image_args['meta_data'] = meta_data
     image_args['tags'] = tags
-    test_image = image._Image(**image_args)
+    test_image = image.Image(**image_args)
 
     actual_row = image_store._create_tsv_row(test_image).split('\t')
     actual_meta_data, actual_tags = actual_row[12], actual_row[13]
@@ -717,7 +717,7 @@ def test_create_tsv_row_turns_empty_into_nullchar(
 ):
     image_store = image.ImageStore()
     image_args = default_image_args
-    test_image = image._Image(**image_args)
+    test_image = image.Image(**image_args)
 
     actual_row = image_store._create_tsv_row(test_image).split('\t')
     assert all(
@@ -763,7 +763,7 @@ def test_create_tsv_row_properly_places_entries(
     }
     args_dict.update(req_args_dict)
 
-    test_image = image._Image(**args_dict)
+    test_image = image.Image(**args_dict)
     actual_row = image_store._create_tsv_row(
         test_image
     )
