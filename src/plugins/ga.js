@@ -3,13 +3,14 @@ import GoogleAnalytics from '~/analytics/GoogleAnalytics'
 
 /* eslint-disable */
 export default ({ app }) => {
+  // Exit early if analytics is diasabled
+  if (!stringToBoolean(process.env.enableGoogleAnalytics)) {
+    return
+  }
+
   /*
-   ** Only run on client-side and only in production mode
+   ** Include Google Analytics Script
    */
-  if (stringToBoolean(process.env.enableGoogleAnalytics))
-    return /*
-     ** Include Google Analytics Script
-     */
   ;(function (i, s, o, g, r, a, m) {
     i['GoogleAnalyticsObject'] = r
     ;(i[r] =
