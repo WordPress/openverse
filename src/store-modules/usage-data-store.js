@@ -21,27 +21,27 @@ const handleUsageEvent = (eventName) => (promise) =>
   )
 
 const actions = (UsageDataService) => ({
-  [SEND_SEARCH_QUERY_EVENT](context, params) {
+  async [SEND_SEARCH_QUERY_EVENT](context, params) {
     if (disabled) return
-    handleUsageEvent(SEND_SEARCH_QUERY_EVENT)(
+    await handleUsageEvent(SEND_SEARCH_QUERY_EVENT)(
       UsageDataService.sendSearchQueryEvent(params)
     )
   },
-  [SEND_RESULT_CLICKED_EVENT](context, params) {
+  async [SEND_RESULT_CLICKED_EVENT](context, params) {
     if (disabled) return
-    handleUsageEvent(SEND_RESULT_CLICKED_EVENT)(
+    await handleUsageEvent(SEND_RESULT_CLICKED_EVENT)(
       UsageDataService.sendResultClickedEvent(params)
     )
   },
-  [SEND_SEARCH_RATING_EVENT](context, params) {
+  async [SEND_SEARCH_RATING_EVENT](context, params) {
     if (disabled) return
-    handleUsageEvent(SEND_SEARCH_RATING_EVENT)(
+    await handleUsageEvent(SEND_SEARCH_RATING_EVENT)(
       UsageDataService.sendSearchRatingEvent(params)
     )
   },
-  [SEND_DETAIL_PAGE_EVENT](context, params) {
+  async [SEND_DETAIL_PAGE_EVENT](context, params) {
     if (disabled) return
-    handleUsageEvent(SEND_DETAIL_PAGE_EVENT)(
+    await handleUsageEvent(SEND_DETAIL_PAGE_EVENT)(
       UsageDataService.sendDetailPageEvent(params)
     )
   },

@@ -7,10 +7,10 @@ describe('Usage Data Store Store', () => {
 
     beforeEach(() => {
       usageDataServiceMock = {
-        sendSearchQueryEvent: jest.fn(),
-        sendResultClickedEvent: jest.fn(),
-        sendDetailPageEvent: jest.fn(),
-        sendSearchRatingEvent: jest.fn(),
+        sendSearchQueryEvent: jest.fn(() => Promise.resolve()),
+        sendResultClickedEvent: jest.fn(() => Promise.resolve()),
+        sendDetailPageEvent: jest.fn(() => Promise.resolve()),
+        sendSearchRatingEvent: jest.fn(() => Promise.resolve()),
       }
     })
 
