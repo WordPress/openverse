@@ -1,6 +1,19 @@
 import pkg from './package.json'
 
 /**
+ * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.
+ */
+export const env = {
+  apiUrl:
+    process.env.API_URL || 'https://api-dev.creativecommons.engineering/v1/',
+  socialSharing: process.env.SOCIAL_SHARING || true,
+  enableGoogleAnalytics: process.env.ENABLE_GOOGLE_ANALYTICS || false,
+  googleAnalyticsUA: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
+  filterStorageKey: 'ccsearch-filter-visibility',
+  enableInternalAnalytics: process.env.ENABLE_INTERNAL_ANALYTICS || false,
+}
+
+/**
  * The default metadata for the site. Can be extended and/or overwritten per page. And even in components!
  * See the Nuxt.js docs for more info.
  * {@link https://nuxtjs.org/guides/features/meta-tags-seo Nuxt.js Docs}
@@ -53,6 +66,15 @@ const head = {
   meta,
   link: [
     {
+      rel: 'preconnect',
+      href: env.apiUrl,
+      crossorigin: '',
+    },
+    {
+      rel: 'dns-prefetch',
+      href: env.apiUrl,
+    },
+    {
       rel: 'search',
       type: 'application/opensearchdescription+xml',
       title: 'CC Search',
@@ -94,19 +116,6 @@ const head = {
   ],
 }
 
-/**
- * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.
- */
-export const env = {
-  apiUrl:
-    process.env.API_URL || 'https://api-dev.creativecommons.engineering/v1/',
-  socialSharing: process.env.SOCIAL_SHARING || true,
-  enableGoogleAnalytics: process.env.ENABLE_GOOGLE_ANALYTICS || false,
-  googleAnalyticsUA: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
-  filterStorageKey: 'ccsearch-filter-visibility',
-  enableInternalAnalytics: process.env.ENABLE_INTERNAL_ANALYTICS || false,
-}
-
 export default {
   // eslint-disable-next-line no-undef
   version: pkg.version, // used to purge cache :)
@@ -121,7 +130,7 @@ export default {
   },
   modern: 'client',
   srcDir: 'src/',
-  buildDir: 'dist/',
+  // buildDir: 'dist/',
   server: { port: process.env.PORT || 8443 },
   components: true,
   plugins: ['~/plugins/i18n.js', { src: '~plugins/ga.js', mode: 'client' }],
