@@ -122,9 +122,8 @@ export default {
   cache: {
     pages: ['/'],
     store: {
-      type: 'redis',
-      host: 'localhost',
-      port: 6379,
+      type: 'memory', // 'redis' would be nice
+      max: 100,
       ttl: process.env.MICROCACHE_DURATION || 60,
     },
   },
