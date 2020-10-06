@@ -1,4 +1,4 @@
-import getLegacySourceUrl, { legacySourceMap } from '@/utils/getLegacySourceUrl'
+import getLegacySourceUrl, { legacySourceMap } from '~/utils/getLegacySourceUrl'
 
 /**
  * Note, this doesn *not* test the accuracy of urls in terms of getting the correct results,

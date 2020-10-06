@@ -8,6 +8,7 @@
     ><template v-for="(l, i) in getLicenseIcon(license)">
       <i
         v-if="l"
+        :key="i"
         :class="{
           icon: true,
           ['has-text-black']: true,
@@ -16,7 +17,6 @@
           [`cc-${l}`]: true,
         }"
         :alt="`${l.toUpperCase()}`"
-        :key="i"
       />
     </template>
   </span>

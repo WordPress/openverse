@@ -1,28 +1,33 @@
 <template>
   <div>
-    <search-grid-manual-load
+    <SearchGridManualLoad
       :query="query"
-      :searchTerm="searchTerm"
+      :search-term="query.q"
+      data-testid="search-grid"
       @onLoadMoreImages="onLoadMoreImages"
     />
-    <ScrollButton :showBtn="showScrollButton" />
+    <ScrollButton data-testid="scroll-button" :show-btn="showScrollButton" />
   </div>
 </template>
 
 <script>
-import SearchGridManualLoad from '@/components/SearchGridManualLoad'
-import ScrollButton from '@/components/ScrollButton'
-
 export default {
-  name: 'search-grid',
-  components: {
-    SearchGridManualLoad,
-    ScrollButton,
-  },
-  props: ['query', 'searchTerm'],
+  name: 'SearchGrid',
+  props: ['searchTerm'],
   data: () => ({
     showScrollButton: false,
   }),
+  computed: {
+    query() {
+      return this.$store.state.query
+    },
+  },
+  mounted() {
+    document.addEventListener('scroll', this.checkScrollLength)
+  },
+  beforeDestroy() {
+    document.removeEventListener('scroll', this.checkScrollLength)
+  },
   methods: {
     onLoadMoreImages(searchParams) {
       this.$emit('onLoadMoreImages', searchParams)
@@ -31,12 +36,6 @@ export default {
       if (window.scrollY > 70) this.showScrollButton = true
       else this.showScrollButton = false
     },
-  },
-  mounted() {
-    document.addEventListener('scroll', this.checkScrollLength)
-  },
-  beforeDestroy() {
-    document.removeEventListener('scroll', this.checkScrollLength)
   },
 }
 </script>

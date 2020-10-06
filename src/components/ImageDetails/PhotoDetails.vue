@@ -2,37 +2,47 @@
   <div class="photo columns is-desktop is-marginless padding-bottom-xl">
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
       <a
+        v-if="shouldShowBreadcrumb"
         class="is-block photo_breadcrumb has-text-left margin-left-normal margin-bottom-normal has-text-grey-dark has-text-weight-semibold caption"
         :href="breadCrumbURL"
         @click.prevent="onGoBackToSearchResults"
-        v-on:keyup.enter.prevent="onGoBackToSearchResults"
-        v-if="shouldShowBreadcrumb"
+        @keyup.enter.prevent="onGoBackToSearchResults"
       >
         <i class="icon chevron-left margin-right-small" />
         {{ $t('photo-details.back') }}
       </a>
+
       <img
-        @load="onImageLoad"
-        class="photo_image"
-        :src="image.url"
+        :class="{ photo_image: true, loading: !isLoaded }"
+        :src="
+          isLoaded
+            ? image.url
+            : `https://api-dev.creativecommons.engineering/v1/thumbs/${$route.params.id}`
+        "
         :alt="image.title"
+        @load="onImageLoad"
       />
 
-      <legal-disclaimer />
+      <LegalDisclaimer />
 
       <div class="margin-bottom-smaller has-text-left">
         <button
           class="button is-text tiny is-paddingless report is-shadowless"
-          @click="toggleReportFormVisibility()"
+          @click.prevent="toggleReportFormVisibility"
+          @keypress.enter.prevent="toggleReportFormVisibility"
         >
           <span class="has-color-tomato margin-left-small">
-            <i class="icon flag margin-right-small"></i>
+            <i class="icon flag margin-right-small" />
             {{ $t('photo-details.content-report.title') }}
           </span>
         </button>
       </div>
       <div class="margin-top-small has-text-left">
-        <content-report-form v-if="isReportFormVisible" :image="image" />
+        <ContentReportForm
+          v-if="isReportFormVisible"
+          :image="image"
+          data-testid="content-report-form"
+        />
       </div>
     </div>
     <div
@@ -41,15 +51,17 @@
       class="column image-info margin-left-xl"
     >
       <div class="margin-top-normal margin-bottom-small">
-        <h1 class="title is-5 b-header">{{ image.title }}</h1>
+        <h1 class="title is-5 b-header">
+          {{ image.title }}
+        </h1>
         <span v-if="image.creator" class="caption has-text-weight-semibold">
           by
           <a
-            :aria-label="'author' + image.creator"
             v-if="image.creator_url"
+            :aria-label="'author' + image.creator"
             :href="image.creator_url"
             @click="onPhotoCreatorLinkClicked"
-            v-on:keyup.enter="onPhotoCreatorLinkClicked"
+            @keyup.enter="onPhotoCreatorLinkClicked"
           >
             {{ image.creator }}
           </a>
@@ -66,7 +78,7 @@
             <a
               href="#panel0"
               @click.prevent="setActiveTab(0)"
-              v-on:keyup.enter.prevent="setActiveTab(0)"
+              @keyup.enter.prevent="setActiveTab(0)"
             >
               {{ $t('photo-details.reuse.title') }}
             </a>
@@ -79,21 +91,21 @@
             <a
               href="#panel1"
               @click.prevent="setActiveTab(1)"
-              v-on:keyup.enter.prevent="setActiveTab(1)"
+              @keyup.enter.prevent="setActiveTab(1)"
             >
               {{ $t('photo-details.information.title') }}
             </a>
           </li>
           <li
+            v-if="socialSharingEnabled"
             role="tab"
             :aria-selected="activeTab == 2"
             :class="tabClass(2, 'a')"
-            v-if="socialSharingEnabled"
           >
             <a
               href="#panel2"
               @click.prevent="setActiveTab(2)"
-              v-on:keyup.enter.prevent="setActiveTab(2)"
+              @keyup.enter.prevent="setActiveTab(2)"
             >
               {{ $t('photo-details.share') }}
             </a>
@@ -102,37 +114,43 @@
       </section>
       <section class="photo_info-ctr tabs-content">
         <div :class="tabClass(0, 'tabs-panel')">
-          <image-attribution
+          <ImageAttribution
+            data-testid="image-attribution"
             :image="image"
-            :ccLicenseURL="ccLicenseURL"
-            :fullLicenseName="fullLicenseName"
-            :attributionHtml="attributionHtml()"
+            :cc-license-u-r-l="ccLicenseURL"
+            :full-license-name="fullLicenseName"
+            :attribution-html="attributionHtml()"
           />
         </div>
         <div :class="tabClass(1, 'tabs-panel')">
-          <image-info
+          <ImageInfo
+            data-testid="image-info"
             :image="image"
-            :ccLicenseURL="ccLicenseURL"
-            :fullLicenseName="fullLicenseName"
-            :imageWidth="imageWidth"
-            :imageHeight="imageHeight"
-            :imageType="imageType"
+            :cc-license-u-r-l="ccLicenseURL"
+            :full-license-name="fullLicenseName"
+            :image-width="imageWidth"
+            :image-height="imageHeight"
+            :image-type="imageType"
           />
         </div>
         <div :class="tabClass(2, 'tabs-panel')">
-          <image-social-share v-if="socialSharingEnabled" :image="image" />
+          <ImageSocialShare
+            v-if="socialSharingEnabled"
+            :image="image"
+            data-testid="social-share"
+          />
         </div>
       </section>
 
       <a
-        data-testid="source-button"
         v-if="activeTab < 2"
+        data-testid="source-button"
         :href="image.foreign_landing_url"
         target="_blank"
         rel="noopener"
         class="button is-success margin-bottom-small"
         @click="onPhotoSourceLinkClicked"
-        v-on:keyup.enter="onPhotoSourceLinkClicked"
+        @keyup.enter="onPhotoSourceLinkClicked"
       >
         {{ $t('photo-details.weblink') }}
         <i
@@ -140,27 +158,21 @@
         />
       </a>
 
-      <reuse-survey v-if="activeTab < 2" :image="image" />
+      <ReuseSurvey v-if="activeTab < 2" :image="image" />
     </div>
   </div>
 </template>
 
 <script>
-import ContentReportForm from '@/components/ContentReport/ContentReportForm'
-import { TOGGLE_REPORT_FORM_VISIBILITY } from '@/store/mutation-types'
+import { TOGGLE_REPORT_FORM_VISIBILITY } from '~/store-modules/mutation-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '@/store/usage-data-analytics-types'
-import attributionHtml from '@/utils/attributionHtml'
-import ImageInfo from './ImageInfo'
-import ImageAttribution from './ImageAttribution'
-import ImageSocialShare from './ImageSocialShare'
-import LegalDisclaimer from './LegalDisclaimer'
-import ReuseSurvey from './ReuseSurvey'
+} from '~/store-modules/usage-data-analytics-types'
+import attributionHtml from '~/utils/attributionHtml'
 
 export default {
-  name: 'photo-details',
+  name: 'PhotoDetails',
   props: [
     'image',
     'breadCrumbURL',
@@ -171,20 +183,15 @@ export default {
     'imageType',
     'socialSharingEnabled',
   ],
-  components: {
-    ImageInfo,
-    ImageAttribution,
-    ImageSocialShare,
-    LegalDisclaimer,
-    ContentReportForm,
-    ReuseSurvey,
-  },
   data() {
     return {
       activeTab: 0,
     }
   },
   computed: {
+    isLoaded() {
+      return this.image && this.image.url
+    },
     isReportFormVisible() {
       return this.$store.state.isReportFormVisible
     },
@@ -205,11 +212,7 @@ export default {
   },
   methods: {
     onGoBackToSearchResults() {
-      this.$router.push({
-        path: '/search',
-        query: this.query,
-        params: { location: this.$route.params.location },
-      })
+      this.$router.back()
     },
     onImageLoad(event) {
       this.$emit('onImageLoaded', event)
@@ -246,9 +249,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../../styles/photodetails.scss';
-@import 'node_modules/bulma/sass/utilities/_all';
+<style lang="scss" scoped>
+@import '~/styles/photodetails.scss';
+@import 'bulma/sass/utilities/_all';
 
 @include touch {
   .image-info {

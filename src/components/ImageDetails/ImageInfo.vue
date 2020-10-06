@@ -10,10 +10,12 @@
           {{ $t('photo-details.information.dimensions') }}:
         </dt>
         <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
-        <dt class="margin-bottom-small" v-if="providerName != sourceName">
+        <dt v-if="providerName != sourceName" class="margin-bottom-small">
           {{ $t('photo-details.information.provider') }}
         </dt>
-        <dd v-if="providerName != sourceName">{{ providerName }}</dd>
+        <dd v-if="providerName != sourceName">
+          {{ providerName }}
+        </dd>
         <dt class="margin-bottom-small">
           {{ $t('photo-details.information.source') }}:
         </dt>
@@ -24,7 +26,7 @@
             target="blank"
             rel="noopener noreferrer"
             @click="onPhotoSourceLinkClicked"
-            v-on:keyup.enter="onPhotoSourceLinkClicked"
+            @keyup.enter="onPhotoSourceLinkClicked"
           >
             {{ sourceName }}
           </a>
@@ -35,22 +37,25 @@
       <h5 class="is-block margin-bottom-small b-header">
         {{ $t('photo-details.information.tags') }}
       </h5>
-      <photo-tags :tags="image.tags" :showHeader="false" />
+      <PhotoTags :tags="image.tags" :show-header="false" />
     </div>
   </section>
 </template>
 
 <script>
-import PhotoTags from '@/components/PhotoTags'
-import getProviderName from '@/utils/getProviderName'
-import getProviderLogo from '@/utils/getProviderLogo'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '@/store/usage-data-analytics-types'
+} from '~/store-modules/usage-data-analytics-types'
+import PhotoTags from '~/components/PhotoTags'
+import getProviderName from '~/utils/getProviderName'
+import getProviderLogo from '~/utils/getProviderLogo'
 
 export default {
-  name: 'image-info',
+  name: 'ImageInfo',
+  components: {
+    PhotoTags,
+  },
   props: [
     'image',
     'ccLicenseURL',
@@ -59,9 +64,6 @@ export default {
     'imageHeight',
     'imageType',
   ],
-  components: {
-    PhotoTags,
-  },
   computed: {
     providerName() {
       return getProviderName(

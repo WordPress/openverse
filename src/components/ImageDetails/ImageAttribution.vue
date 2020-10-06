@@ -1,13 +1,13 @@
 <template>
   <section class="sidebar_section">
     <div
-      class="photo-attribution margin-bottom-big"
       v-if="fullLicenseName.includes('cc0') || fullLicenseName.includes('pdm')"
+      class="photo-attribution margin-bottom-big"
     >
       <h5 class="b-header margin-bottom-big">
         {{ $t('photo-details.reuse.tool-header') }}
       </h5>
-      <license-explanations :license="image.license" />
+      <LicenseExplanations :license="image.license" />
 
       <i18n
         path="photo-details.reuse.tool.content"
@@ -26,15 +26,15 @@
         </template>
       </i18n>
     </div>
-    <div class="photo-attribution margin-bottom-big" v-else>
+    <div v-else class="photo-attribution margin-bottom-big">
       <h5 class="b-header margin-bottom-big">
         {{ $t('photo-details.reuse.license-header') }}
       </h5>
       <i18n
+        ref="photoAttribution"
         path="photo-details.reuse.attribution.main"
         tag="span"
         class="photo_usage-attribution is-block"
-        ref="photoAttribution"
       >
         <template v-slot:link>
           <a
@@ -48,7 +48,7 @@
         </template>
       </i18n>
 
-      <license-explanations :license="image.license" />
+      <LicenseExplanations :license="image.license" />
 
       <i18n
         path="photo-details.reuse.license.content"
@@ -68,27 +68,27 @@
       </i18n>
     </div>
     <div>
-      <copy-license
+      <CopyLicense
         :image="image"
-        :fullLicenseName="fullLicenseName"
-        :licenseURL="licenseURL"
-        :attributionHtml="attributionHtml"
+        :full-license-name="fullLicenseName"
+        :license-u-r-l="licenseURL"
+        :attribution-html="attributionHtml"
       />
     </div>
   </section>
 </template>
 
 <script>
-import LicenseExplanations from '@/components/LicenseExplanations'
+import LicenseExplanations from '~/components/LicenseExplanations'
 import CopyLicense from './CopyLicense'
 
 export default {
-  name: 'image-attribution',
-  props: ['id', 'image', 'ccLicenseURL', 'fullLicenseName', 'attributionHtml'],
+  name: 'ImageAttribution',
   components: {
     LicenseExplanations,
     CopyLicense,
   },
+  props: ['id', 'image', 'ccLicenseURL', 'fullLicenseName', 'attributionHtml'],
   computed: {
     licenseURL() {
       return `${this.ccLicenseURL}&atype=rich`

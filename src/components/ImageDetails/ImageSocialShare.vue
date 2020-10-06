@@ -1,13 +1,12 @@
 <template>
   <section class="sidebar_section social-sharing">
-    <social-share-buttons
-      :shareURL="shareURL"
-      :imageSourceURL="imageSourceURL"
-      :imageURL="imageURL"
-      :shareText="shareText"
+    <SocialShareButtons
+      :share-u-r-l="shareURL"
+      :image-source-u-r-l="imageSourceURL"
+      :image-u-r-l="imageURL"
+      :share-text="shareText"
       :image="image"
-    >
-    </social-share-buttons>
+    />
   </section>
 </template>
 
@@ -15,11 +14,11 @@
 import SocialShareButtons from './SocialShareButtons'
 
 export default {
-  name: 'image-social-share',
-  props: ['image'],
+  name: 'ImageSocialShare',
   components: {
     SocialShareButtons,
   },
+  props: ['image'],
   data: () => ({
     // for SSR, initiates it as an empty value
     shareURL: '',

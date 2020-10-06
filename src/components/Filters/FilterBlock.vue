@@ -1,17 +1,17 @@
 <template>
   <button
-    class="filter-block button tiny tag margin-horizontal-smaller"
     v-if="filterType === 'searchBy'"
+    class="filter-block button tiny tag margin-horizontal-smaller"
     role="filter"
     :aria-label="label + 'filter'"
   >
-    <span>{{ $t(this.$props.label) }}</span>
+    <span>{{ this.$props.label }}</span>
     <span
       :aria-label="$t('browse-page.aria.remove-filter')"
       class="close margin-left-small"
       tabindex="0"
       @click="onClickIsolatedFilter"
-      v-on:keyup.enter="onClickIsolatedFilter"
+      @keyup.enter="onClickIsolatedFilter"
       ><i class="icon cross"
     /></span>
   </button>
@@ -26,14 +26,14 @@
       class="close margin-left-small padding-small"
       tabindex="0"
       @click="onClick"
-      v-on:keyup.enter="onClick"
+      @keyup.enter="onClick"
       ><i class="icon cross"
     /></span>
   </button>
 </template>
 <script>
 export default {
-  name: 'filter-block',
+  name: 'FilterBlock',
   props: ['code', 'filterType', 'label'],
   methods: {
     onClick() {

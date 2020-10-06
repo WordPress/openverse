@@ -5,11 +5,11 @@
       'search-filters__visible': isFilterVisible,
     }"
   >
-    <filters-list
+    <FiltersList
       :filters="filters"
-      :isFilterApplied="isFilterApplied"
-      :licenseTypesDisabled="licenseTypesDisabled"
-      :licensesDisabled="licensesDisabled"
+      :is-filter-applied="isFilterApplied"
+      :license-types-disabled="licenseTypesDisabled"
+      :licenses-disabled="licensesDisabled"
       @onUpdateFilter="onUpdateFilter"
       @onUpdateSearchByCreator="onUpdateSearchByCreator"
       @onToggleSearchGridFilter="onToggleSearchGridFilter"
@@ -19,14 +19,15 @@
 </template>
 
 <script>
-import { SET_FILTER_IS_VISIBLE, CLEAR_FILTERS } from '@/store/mutation-types'
-import { TOGGLE_FILTER } from '@/store/action-types'
-import { ExperimentData } from '@/abTests/experiments/filterExpansion'
+import {
+  SET_FILTER_IS_VISIBLE,
+  CLEAR_FILTERS,
+} from '~/store-modules/mutation-types'
+import { TOGGLE_FILTER } from '~/store-modules/action-types'
 import FiltersList from './FiltersList'
 
 export default {
-  name: 'search-grid-filter',
-  props: ['provider'],
+  name: 'SearchGridFilter',
   components: {
     FiltersList,
   },
@@ -46,13 +47,13 @@ export default {
     licenseTypesDisabled() {
       return this.$store.state.filters.licenses.some((li) => li.checked)
     },
+    /**
+     * Show filters expanded by default
+     * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
+     */
+
     filtersExpandedByDefault() {
-      const experiment = this.$store.state.experiments.find(
-        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
-      )
-      return experiment
-        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
-        : false
+      return true
     },
   },
   methods: {
@@ -60,21 +61,14 @@ export default {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
         filterType,
-        provider: this.$props.provider,
-        shouldNavigate: true,
       })
     },
     onClearFilters() {
-      this.$store.commit(CLEAR_FILTERS, {
-        provider: this.$props.provider,
-        shouldNavigate: true,
-      })
+      this.$store.commit(CLEAR_FILTERS, {})
     },
     onUpdateSearchByCreator() {
       this.$store.dispatch(TOGGLE_FILTER, {
         filterType: 'searchBy',
-        provider: this.$props.provider,
-        shouldNavigate: true,
       })
     },
     onToggleSearchGridFilter() {
@@ -101,6 +95,7 @@ export default {
 
   @include touch {
     width: 21.875rem;
+    max-width: 100%;
     max-height: 37rem;
     overflow-x: hidden;
   }

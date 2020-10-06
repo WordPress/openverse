@@ -3,9 +3,9 @@
     <span>{{ $t('hero.license-filter.label') }}</span>
     <template v-for="(licenseType, index) in licenseTypes">
       <label
+        :key="index"
         class="checkbox margin-right-big"
         :for="licenseType.code"
-        :key="index"
       >
         <input
           :id="licenseType.code"
@@ -22,10 +22,10 @@
 </template>
 
 <script>
-import { TOGGLE_FILTER } from '@/store/action-types'
+import { TOGGLE_FILTER } from '~/store-modules/action-types'
 
 export default {
-  name: 'license-filter',
+  name: 'LicenseFilter',
   computed: {
     licenseTypes() {
       return this.$store.state.filters.licenseTypes
@@ -36,7 +36,6 @@ export default {
       this.$store.dispatch(TOGGLE_FILTER, {
         code,
         filterType: 'licenseTypes',
-        shouldNavigate: false,
       })
     },
   },

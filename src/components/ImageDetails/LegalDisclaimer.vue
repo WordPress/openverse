@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'legal-disclaimer',
+  name: 'LegalDisclaimer',
 }
 </script>
 

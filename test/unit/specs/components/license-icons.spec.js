@@ -1,4 +1,4 @@
-import LicenseIcons from '@/components/LicenseIcons'
+import LicenseIcons from '~/components/LicenseIcons'
 import render from '../../test-utils/render'
 
 describe('LicenseIcons', () => {

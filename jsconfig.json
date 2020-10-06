@@ -1,9 +1,10 @@
 {
-  "include": ["./src/**/*"],
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "@/*": ["src/*"]
+      "~/*": ["./*"],
+      "~~/*": ["./*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "dist"]
 }

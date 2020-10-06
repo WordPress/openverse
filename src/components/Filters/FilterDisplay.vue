@@ -4,80 +4,74 @@
       >Filter By</span
     >
     <span v-for="filter in getFilters('licenses')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
-        filterType="licenses"
+        filter-type="licenses"
         @filterChanged="onUpdateFilter"
       />
     </span>
     <span v-for="filter in getFilters('licenseTypes')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
-        filterType="licenseTypes"
+        filter-type="licenseTypes"
         @filterChanged="onUpdateFilter"
       />
     </span>
     <span v-for="filter in getFilters('categories')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
-        filterType="categories"
+        filter-type="categories"
         @filterChanged="onUpdateFilter"
       />
     </span>
     <span v-for="filter in getFilters('extensions')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
-        filterType="extensions"
+        filter-type="extensions"
         @filterChanged="onUpdateFilter"
       />
     </span>
     <span v-for="filter in getFilters('aspectRatios')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
-        filterType="aspectRatios"
+        filter-type="aspectRatios"
         @filterChanged="onUpdateFilter"
       />
     </span>
     <span v-for="filter in getFilters('sizes')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
-        filterType="sizes"
+        filter-type="sizes"
         @filterChanged="onUpdateFilter"
       />
     </span>
     <span v-for="filter in getFilters('providers')" :key="filter.code">
-      <filter-block
+      <FilterBlock
         :code="filter.code"
         :label="filter.name"
-        filterType="providers"
+        filter-type="providers"
         @filterChanged="onUpdateFilter"
       />
     </span>
     <span>
-      <filter-block
+      <FilterBlock
         v-if="searchByCreator"
         label="Creator"
-        filterType="searchBy"
+        filter-type="searchBy"
         @filterChanged="onUpdateBoolFilter"
       />
     </span>
-    <!-- <span>
-          <filter-block v-if="mature"
-                        label="Mature"
-                        filterType="mature"
-                        @filterChanged="onUpdateBoolFilter" />
-        </span> -->
   </div>
 </template>
 <script>
-import { TOGGLE_FILTER } from '@/store/action-types'
-import FilterBlock from '@/components/Filters/FilterBlock'
+import { TOGGLE_FILTER } from '~/store-modules/action-types'
+import FilterBlock from './FilterBlock'
 
 const filterMap = {
   licenses: 'license',
@@ -90,11 +84,11 @@ const filterMap = {
 }
 
 export default {
-  name: 'filter-display',
-  props: ['query', 'provider'],
+  name: 'FilterDisplay',
   components: {
     FilterBlock,
   },
+  props: ['query', 'provider'],
   computed: {
     searchByCreator() {
       return this.$store.state.filters.searchBy.creator
@@ -123,19 +117,10 @@ export default {
       return filterTags
     },
     onUpdateFilter({ code, filterType }) {
-      this.$store.dispatch(TOGGLE_FILTER, {
-        code,
-        filterType,
-        provider: this.$props.provider,
-        shouldNavigate: true,
-      })
+      this.$store.dispatch(TOGGLE_FILTER, { code, filterType })
     },
     onUpdateBoolFilter({ filterType }) {
-      this.$store.dispatch(TOGGLE_FILTER, {
-        filterType,
-        provider: this.$props.provider,
-        shouldNavigate: true,
-      })
+      this.$store.dispatch(TOGGLE_FILTER, { filterType })
     },
   },
 }

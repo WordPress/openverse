@@ -14,7 +14,7 @@
             class="is-size-6"
             href="#panel0"
             @click.prevent="setActiveTab(0)"
-            v-on:keyup.enter.prevent="setActiveTab(0)"
+            @keyup.enter.prevent="setActiveTab(0)"
           >
             {{ $t('photo-details.reuse.copy-license.rich') }}
           </a>
@@ -28,7 +28,7 @@
             class="is-size-6"
             href="#panel1"
             @click.prevent="setActiveTab(1)"
-            v-on:keyup.enter.prevent="setActiveTab(1)"
+            @keyup.enter.prevent="setActiveTab(1)"
           >
             {{ $t('photo-details.reuse.copy-license.html') }}
           </a>
@@ -42,7 +42,7 @@
             class="is-size-6"
             href="#panel2"
             @click.prevent="setActiveTab(2)"
-            v-on:keyup.enter.prevent="setActiveTab(2)"
+            @keyup.enter.prevent="setActiveTab(2)"
           >
             {{ $t('photo-details.reuse.copy-license.plain') }}
           </a>
@@ -53,15 +53,15 @@
       <div :class="tabClass(0, 'tabs-panel')">
         <span
           id="attribution"
-          class="photo_usage-attribution is-block"
           ref="photoAttribution"
+          class="photo_usage-attribution is-block"
         >
           <a
             :href="image.foreign_landing_url"
             target="_blank"
             rel="noopener"
             @click="onPhotoSourceLinkClicked"
-            v-on:keyup.enter="onPhotoSourceLinkClicked"
+            @keyup.enter="onPhotoSourceLinkClicked"
             >{{ imageTitle }}</a
           >
           <span v-if="image.creator">
@@ -72,7 +72,7 @@
               target="_blank"
               rel="noopener"
               @click="onPhotoCreatorLinkClicked"
-              v-on:keyup.enter="onPhotoCreatorLinkClicked"
+              @keyup.enter="onPhotoCreatorLinkClicked"
               >{{ image.creator }}</a
             >
             <span v-else>{{ image.creator }}</span>
@@ -88,7 +88,7 @@
           </a>
         </span>
 
-        <copy-button
+        <CopyButton
           id="copyattr-rich"
           el="#attribution"
           @copied="(e) => onCopyAttribution('Rich Text', e)"
@@ -103,10 +103,9 @@
             cols="30"
             rows="4"
             readonly="readonly"
-          >
-          </textarea>
+          />
         </label>
-        <copy-button
+        <CopyButton
           id="copyattr-html"
           el="#attribution-html"
           @copied="(e) => onCopyAttribution('HTML Embed', e)"
@@ -115,8 +114,8 @@
       <div :class="tabClass(2, 'tabs-panel')">
         <p
           id="attribution-text"
-          class="photo_usage-attribution is-block"
           ref="photoAttribution"
+          class="photo_usage-attribution is-block"
         >
           {{ imageTitle }}
           <span v-if="image.creator"> by {{ image.creator }} </span>
@@ -128,7 +127,7 @@
           </template>
         </p>
 
-        <copy-button
+        <CopyButton
           id="copyattr-plain"
           el="#attribution-text"
           @copied="(e) => onCopyAttribution('Plain Text', e)"
@@ -139,26 +138,25 @@
 </template>
 
 <script>
-import CopyButton from '@/components/CopyButton'
-import { COPY_ATTRIBUTION } from '@/store/action-types'
+import CopyButton from '~/components/CopyButton'
+import { COPY_ATTRIBUTION } from '~/store-modules/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '@/store/usage-data-analytics-types'
+} from '~/store-modules/usage-data-analytics-types'
 
 export default {
-  name: 'copy-license',
-  props: ['image', 'fullLicenseName', 'attributionHtml', 'licenseURL'],
+  name: 'CopyLicense',
   components: {
     CopyButton,
   },
+  props: ['image', 'fullLicenseName', 'attributionHtml', 'licenseURL'],
   data() {
     return {
       activeTab: 0,
     }
   },
   computed: {
-    // Check if the 'license' is a tool rather than a legal license
     isTool() {
       return (
         this.fullLicenseName.includes('cc0') ||

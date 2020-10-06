@@ -1,9 +1,10 @@
 <template>
+  <!-- eslint-disable vue-a11y/no-autofocus -->
   <form
     role="search"
     method="post"
-    @submit.prevent="onSubmit"
     class="search-form padding-normal"
+    @submit.prevent="onSubmit"
   >
     <div class="is-flex is-hidden-touch">
       <button
@@ -11,7 +12,7 @@
         class="button toggle-filter padding-vertical-normal padding-horizontal-big"
         type="button"
         @click.prevent="onToggleSearchGridFilter()"
-        v-on:keyup.enter.prevent="onToggleSearchGridFilter()"
+        @keyup.enter.prevent="onToggleSearchGridFilter()"
       >
         {{ $t('filters.title') }}
       </button>
@@ -19,13 +20,13 @@
         <div class="control has-icons-left margin-left-small">
           <label for="searchInput">
             <input
-              :aria-label="$t('browse-page.aria.search')"
               id="searchInput"
+              ref="search"
+              :aria-label="$t('browse-page.aria.search')"
               required="required"
               autofocus="true"
               class="input is-medium"
               type="search"
-              ref="search"
               :placeholder="searchBoxPlaceholder"
               :value="searchTermsModel"
               @input="onInput"
@@ -33,16 +34,16 @@
             />
           </label>
           <span class="icon is-medium is-left margin-left-small">
-            <i class="icon search is-size-5"></i>
+            <i class="icon search is-size-5" />
           </span>
         </div>
         <div class="control">
           <input
             type="submit"
             class="button is-primary"
-            @click.prevent="onSubmit"
-            v-on:keyup.enter.prevent="onSubmit"
             :value="$t('browse-page.search-form.button')"
+            @click.prevent="onSubmit"
+            @keyup.enter.prevent="onSubmit"
           />
         </div>
       </div>
@@ -53,7 +54,7 @@
         class="button small toggle-filter padding-small"
         type="button"
         @click.prevent="onToggleSearchGridFilter()"
-        v-on:keyup.enter.prevent="onToggleSearchGridFilter()"
+        @keyup.enter.prevent="onToggleSearchGridFilter()"
       >
         {{ $t('filters.title') }}
       </button>
@@ -61,20 +62,20 @@
         <div class="control has-icons-left margin-left-small">
           <label for="searchInputMobile">
             <input
-              :aria-label="$t('browse-page.aria.search')"
               id="searchInputMobile"
+              ref="search"
+              v-model="searchTermsModel"
+              :aria-label="$t('browse-page.aria.search')"
               required="required"
               autofocus="true"
               class="input"
               type="search"
-              ref="search"
               :placeholder="searchBoxPlaceholder"
-              v-model="searchTermsModel"
               @keyup.enter="onSubmit"
             />
           </label>
           <span class="icon is-left">
-            <i class="icon search is-size-6"></i>
+            <i class="icon search is-size-6" />
           </span>
         </div>
         <div class="control">
@@ -87,13 +88,14 @@
       </div>
     </div>
   </form>
+  <!-- eslint-enable -->
 </template>
 
 <script>
-import { SET_FILTER_IS_VISIBLE } from '@/store/mutation-types'
+import { SET_FILTER_IS_VISIBLE } from '~/store-modules/mutation-types'
 
 export default {
-  name: 'search-grid-form',
+  name: 'SearchGridForm',
   data: () => ({ searchTermsModel: null }),
   computed: {
     activeTab() {
@@ -109,9 +111,17 @@ export default {
       return this.$store.state.isFilterApplied
     },
     searchBoxPlaceholder() {
-      const type = this.$route.path.split('search/')[1] || 'image' // fall back to images
+      const type = this.$route.path.split('search/')[1] || 'image'
       return `Search all ${type}s`
     },
+  },
+  watch: {
+    searchTerms: function handler() {
+      this.setFormInput()
+    },
+  },
+  mounted: function handler() {
+    this.setFormInput()
   },
   methods: {
     onSubmit(e) {
@@ -123,11 +133,6 @@ export default {
         this.$refs.search.blur()
       }
     },
-    /**
-     * If we're on the audio or video tab, we want to set the search query on change
-     * rather than on submit, so the meta search buttons update live witout the user
-     * having to manually submit a new search term.
-     */
     onInput(e) {
       this.searchTermsModel = e.target.value
 
@@ -149,14 +154,6 @@ export default {
       this.searchTermsModel = this.searchTerms
     },
   },
-  watch: {
-    searchTerms: function handler() {
-      this.setFormInput()
-    },
-  },
-  mounted: function handler() {
-    this.setFormInput()
-  },
 }
 </script>
 
@@ -166,7 +163,7 @@ export default {
 .toggle-filter {
   height: 3.875rem;
   text-transform: none;
-  font-size: 13px;
+  font-size: 1rem;
   border: 2px solid #d8d8d8;
   box-sizing: border-box;
   border-radius: 4px;

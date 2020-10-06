@@ -18,6 +18,7 @@
 .grid-sidebar {
   padding-top: 0;
   background-color: #fff;
+  max-width: 100%;
   width: 21.875rem;
 
   @include touch {

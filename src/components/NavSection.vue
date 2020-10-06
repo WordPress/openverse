@@ -1,36 +1,37 @@
 <template>
   <nav :aria-label="$t('header.aria.primary')" class="navbar">
-    <div class="navbar-brand">
-      <router-link class="logo" to="/">
-        <img alt="Logo" src="/static/logos/products/search.svg" />
-      </router-link>
+    <div class="navbar-brand has-color-white">
+      <NuxtLink class="logo" to="/">
+        <IconSearchLogo />
+      </NuxtLink>
+
       <a
         role="button"
         :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
         :aria-label="$t('header.aria.menu')"
         aria-expanded="false"
         @click="toggleBurgerActive"
-        v-on:keyup.enter="toggleBurgerActive"
+        @keyup.enter="toggleBurgerActive"
       >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
       </a>
     </div>
     <div :class="{ ['navbar-menu']: true, ['is-active']: isBurgerMenuActive }">
-      <div class="margin-left-big" v-if="showNavSearch === 'true'">
+      <div v-if="showNavSearch" class="margin-left-big">
         <form
           class="hero_search-form"
           role="search"
           method="post"
-          v-on:submit.prevent="onSubmit"
+          @submit.prevent="onSubmit"
         >
           <input
+            v-model.lazy="form.searchTerm"
             :aria-label="$t('header.aria.search')"
             class="input"
             type="search"
             :placeholder="navSearchPlaceholder"
-            v-model.lazy="form.searchTerm"
           />
           <div class="is-sr-only">
             <button
@@ -39,7 +40,7 @@
               type="submit"
               class="button secondary"
               value="Search"
-            ></button>
+            />
           </div>
         </form>
       </div>
@@ -50,12 +51,12 @@
             <i class="icon caret-down" />
           </a>
           <div class="navbar-dropdown">
-            <router-link class="navbar-item" to="/about">{{
-              $t('header.about')
-            }}</router-link>
-            <router-link class="navbar-item" to="/sources">{{
-              $t('header.source')
-            }}</router-link>
+            <NuxtLink class="navbar-item" to="/about">
+              {{ $t('header.about') }}
+            </NuxtLink>
+            <NuxtLink class="navbar-item" to="/sources">
+              {{ $t('header.source') }}
+            </NuxtLink>
             <a
               href="https://creativecommons.org/about/cclicenses/"
               target="_blank"
@@ -73,28 +74,28 @@
             <i class="icon caret-down" />
           </a>
           <div class="navbar-dropdown">
-            <router-link class="navbar-item" to="/search-help">{{
-              $t('header.search-guide')
-            }}</router-link>
-            <router-link class="navbar-item" to="/meta-search">{{
-              $t('header.meta-search')
-            }}</router-link>
-            <router-link class="navbar-item" to="/feedback">{{
-              $t('header.feedback')
-            }}</router-link>
+            <NuxtLink class="navbar-item" to="/search-help">
+              {{ $t('header.search-guide') }}
+            </NuxtLink>
+            <NuxtLink class="navbar-item" to="/meta-search">
+              {{ $t('header.meta-search') }}
+            </NuxtLink>
+            <NuxtLink class="navbar-item" to="/feedback">
+              {{ $t('header.feedback') }}
+            </NuxtLink>
             <a
               href="https://api.creativecommons.engineering/"
               target="_blank"
               rel="noopener"
               class="navbar-item"
-              >{{ $t('API') }}
+              >{{ $t('header.api') }}
               <i class="icon external-link" />
             </a>
           </div>
         </div>
-        <router-link class="navbar-item" to="/support">{{
-          $t('header.support')
-        }}</router-link>
+        <NuxtLink class="navbar-item" to="/support">
+          {{ $t('header.support') }}
+        </NuxtLink>
 
         <a
           :aria-label="$t('header.aria.extension')"
@@ -111,26 +112,29 @@
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types'
+import IconSearchLogo from '@creativecommons/vocabulary/assets/logos/products/search.svg?inline'
+import { SET_QUERY } from '~/store-modules/mutation-types'
 
 export default {
+  name: 'NavSection',
+  components: { IconSearchLogo },
   props: {
     showNavSearch: {
       default: false,
     },
   },
-  name: 'nav-section',
+  data: () => ({ form: { searchTerm: '' }, isBurgerMenuActive: false }),
   computed: {
     navSearchPlaceholder() {
       return this.$t('header.placeholder')
     },
   },
-  data: () => ({ form: { searchTerm: '' }, isBurgerMenuActive: false }),
   methods: {
     onSubmit() {
-      this.$store.commit(SET_QUERY, {
+      this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm } })
+      this.$router.push({
+        path: '/search',
         query: { q: this.form.searchTerm },
-        shouldNavigate: true,
       })
     },
     toggleBurgerActive() {
@@ -143,10 +147,13 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 /* header */
+.logo {
+  color: black;
 
-.logo > img {
-  height: 42px;
-  padding-right: 11px;
+  svg {
+    height: 100%;
+    width: auto;
+  }
 }
 
 .hero_search-form {

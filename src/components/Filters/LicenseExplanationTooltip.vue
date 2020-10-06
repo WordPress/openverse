@@ -1,18 +1,18 @@
 <template>
   <div class="license-explanation-tooltip padding-small">
-    <h5 class="b-header" v-if="(license === 'cc0') | (license === 'pdm')">
+    <h5 v-if="(license === 'cc0') | (license === 'pdm')" class="b-header">
       {{ license.toUpperCase() }}
     </h5>
-    <h5 class="b-header" v-else>
+    <h5 v-else class="b-header">
       {{ $t('browse-page.license-description.title') }}
       {{ license.toUpperCase() }}
     </h5>
-    <license-explanations :license="license" />
+    <LicenseExplanations :license="license" />
     <i18n
+      v-if="(license === 'cc0') | (license === 'pdm')"
       path="filters.license-explanation.tool"
       tag="p"
       class="caption is-pulled-right margin-small"
-      v-if="(license === 'cc0') | (license === 'pdm')"
     >
       <template v-slot:link>
         <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{
@@ -21,10 +21,10 @@
       </template>
     </i18n>
     <i18n
+      v-else
       path="filters.license-explanation.license"
       tag="p"
       class="caption is-pulled-right margin-small"
-      v-else
     >
       <template v-slot:link>
         <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{
@@ -36,14 +36,14 @@
 </template>
 
 <script>
-import LicenseExplanations from '@/components/LicenseExplanations'
+import LicenseExplanations from '~/components/LicenseExplanations'
 
 export default {
-  name: 'license-explanation-tooltip',
-  props: ['license'],
+  name: 'LicenseExplanationTooltip',
   components: {
     LicenseExplanations,
   },
+  props: ['license'],
   methods: {
     getLicenseDeedLink(licenseTerm) {
       if (licenseTerm === 'cc0') {

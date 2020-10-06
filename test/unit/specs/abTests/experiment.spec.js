@@ -1,6 +1,6 @@
 import joinExperiment, {
   ExperimentData,
-} from '@/abTests/experiments/filterExpansion'
+} from '~/abTests/experiments/filterExpansion'
 
 describe('Infinite Loading Experiment', () => {
   let session = {}

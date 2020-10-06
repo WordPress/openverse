@@ -10,13 +10,18 @@
         target="_blank"
         class="button is-success small"
         @click="sendClickEvent"
+        @keypress.enter="sendClickEvent"
       >
         <i
           class="icon cc-letterheart-filled margin-right-small is-size-5 padding-top-smaller"
         />
         {{ $t('header.donation-banner.yes') }}
       </a>
-      <button class="button is-text small dismiss-button" @click="onDismiss">
+      <button
+        class="button is-text small dismiss-button"
+        @click="onDismiss"
+        @keypress.enter="onDismiss"
+      >
         {{ $t('header.donation-banner.no') }}
       </button>
     </div>

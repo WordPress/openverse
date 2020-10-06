@@ -3,19 +3,19 @@
     <section class="tabs">
       <ul role="tablist">
         <li
-          :aria-selected="activeTab == type"
-          role="tab"
           v-for="type in contentTypes"
           :key="type"
+          :aria-selected="activeTab == type"
+          role="tab"
           :class="tabClass(type, 'tab')"
         >
-          <router-link
+          <NuxtLink
             aria-live="polite"
             class="is-size-5"
             :to="{ path: `/search/${type}`, query: $route.query }"
           >
             {{ capitalize(type) }}
-          </router-link>
+          </NuxtLink>
         </li>
       </ul>
     </section>
@@ -23,10 +23,10 @@
 </template>
 
 <script>
-import { capitalize } from '@/utils/formatStrings'
+import { capitalize } from '~/utils/formatStrings'
 
 export default {
-  name: 'search-type-tabs',
+  name: 'SearchTypeTabs',
   data() {
     return {
       contentTypes: ['image', 'audio', 'video'],

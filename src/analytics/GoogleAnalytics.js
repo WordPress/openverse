@@ -29,30 +29,16 @@ function set(field, params) {
   window.ga('set', field, params)
 }
 
-function setCurrentPage(page) {
-  set('page', page)
+function setCurrentPage(to) {
+  set('page', to.fullPath)
 }
 
 const GoogleAnalytics = () => {
   const enabled = isTrackingEnabled()
   return {
-    /**
-     * uses navigator.sendBeacon to send events even if the page is being unloaded
-     * docs at: https://developers.google.com/analytics/devguides/collection/analyticsjs/sending-hits
-     */
-    setTransportBeacon() {
+    sendPageView(to) {
       if (enabled) {
-        set('transport', 'beacon')
-      }
-    },
-    anonymizeIpAddress() {
-      if (enabled) {
-        set('anonymizeIp', true)
-      }
-    },
-    updatePageView(location) {
-      if (enabled) {
-        setCurrentPage(location)
+        setCurrentPage(to)
         sendPageView()
       }
     },

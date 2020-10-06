@@ -12,17 +12,7 @@
             href="https://creativecommons.org"
             class="main-logo margin-bottom-bigger has-text-white"
           >
-            <svg
-              focusable="false"
-              aria-hidden="true"
-              aria-labelledby="title"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="xMidYMid meet"
-              viewBox="0 0 304 73"
-            >
-              <title id="title" lang="en">Logo</title>
-              <use href="/static/logos/cc/logomark.svg#logomark"></use>
-            </svg>
+            <IconCCLogo focusable="false" aria-hidden="true" />
           </a>
           <address class="margin-bottom-normal">
             <span class="is-block">{{ $t('footer.address.title') }}</span>
@@ -150,6 +140,7 @@
               class="button small donate"
               href="http://creativecommons.org/donate"
               @click="sendClickEvent"
+              @keypress.enter="sendClickEvent"
             >
               <i
                 class="icon cc-letterheart-filled margin-right-small is-size-5 padding-top-smaller"
@@ -164,11 +155,15 @@
 </template>
 
 <script>
+import IconCCLogo from '@creativecommons/vocabulary/assets/logos/cc/logomark.svg?inline'
 import GoogleAnalytics from '@/analytics/GoogleAnalytics'
 import { DonateLinkClick } from '@/analytics/events'
 
 export default {
-  name: 'footer-section',
+  name: 'FooterSection',
+  components: {
+    IconCCLogo,
+  },
   methods: {
     sendClickEvent() {
       GoogleAnalytics().sendEvent(DonateLinkClick('footer'))

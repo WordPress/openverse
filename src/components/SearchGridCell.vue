@@ -6,15 +6,16 @@
     flex-grow: ${containerAspect * widthBasis}`"
   >
     <figure class="search-grid_item">
-      <i :style="`padding-bottom:${iPadding}%`"></i>
-      <router-link
+      <i :style="`padding-bottom:${iPadding}%`" />
+      <RouterLink
         :to="'/photos/' + image.id"
-        @click="onGotoDetailPage($event, image)"
         class="search-grid_image-ctr"
         :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`"
+        @click="onGotoDetailPage($event, image)"
       >
         <img
           ref="img"
+          loading="lazy"
           :class="{
             'search-grid_image': true,
             'search-grid_image__fill': !shouldContainImage,
@@ -24,9 +25,9 @@
           @load="getImgDimension"
           @error="onImageLoadError($event, image)"
         />
-      </router-link>
+      </RouterLink>
       <figcaption class="overlay overlay__top padding-small">
-        <license-icons :license="image.license"></license-icons>
+        <LicenseIcons :license="image.license" />
       </figcaption>
       <figcaption
         class="overlay overlay__bottom padding-vertical-small padding-horizontal-normal"
@@ -38,10 +39,10 @@
 </template>
 
 <script>
-import LicenseIcons from '@/components/LicenseIcons'
-import getProviderLogo from '@/utils/getProviderLogo'
+import LicenseIcons from '~/components/LicenseIcons'
+import getProviderLogo from '~/utils/getProviderLogo'
 
-const errorImage = require('@/assets/image_not_available_placeholder.png')
+const errorImage = require('~/assets/image_not_available_placeholder.png')
 
 const minAspect = 3 / 4
 const maxAspect = 16 / 9
@@ -56,11 +57,11 @@ const toAbsolutePath = (url, prefix = 'https://') => {
 }
 
 export default {
-  name: 'search-grid-cell',
-  props: ['image', 'shouldContainImage'],
+  name: 'SearchGridCell',
   components: {
     LicenseIcons,
   },
+  props: ['image', 'shouldContainImage'],
   data() {
     return {
       widthBasis: minRowWidth / maxAspect,
@@ -105,7 +106,6 @@ export default {
         return ''
       }
       const url = image.thumbnail || image.url
-      // fix for blurry panaroma thumbnails
       if (this.imageAspect > panaromaAspect) return toAbsolutePath(url)
       return toAbsolutePath(url)
     },
@@ -116,9 +116,6 @@ export default {
       return getProviderLogo(providerName)
     },
     onGotoDetailPage(event, image) {
-      // doesn't use router to redirect to photo details page in case the user
-      // has the Command (Mac) or Ctrl Key (Windows) pressed, so that they can
-      // open the page on a new tab with either of those keys pressed.
       if (!event.metaKey && !event.ctrlKey) {
         event.preventDefault()
         this.$router.push({
