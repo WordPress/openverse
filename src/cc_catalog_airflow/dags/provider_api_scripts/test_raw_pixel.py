@@ -113,7 +113,7 @@ def test_get_meta_data_given_pinterest_descr_is_present():
             " (ca. 1590) by Joan Oliva. Original from Library of Congress. "
             "Digitally enhanced by rawpixel. | free image by rawpixel.com / "
             "Library of Congress (Source)")
-        expected_meta_data = {"Description": expected_descr_value}
+        expected_meta_data = {"description": expected_descr_value}
         assert meta_data == expected_meta_data
 
 

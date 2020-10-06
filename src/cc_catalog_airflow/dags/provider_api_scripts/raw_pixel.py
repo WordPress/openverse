@@ -92,7 +92,7 @@ def _get_title_owner(image):
 
 def _get_meta_data(image):
     meta_data = {}
-    meta_data["Description"] = image.get("pinterest_description")
+    meta_data["description"] = image.get("pinterest_description")
     return {k: v for k, v in meta_data.items() if v is not None}
 
 
