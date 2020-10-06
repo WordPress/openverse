@@ -102,6 +102,29 @@ def test_get_title_owner():
         assert owner == "Library of Congress"
 
 
+def test_get_meta_data_given_pinterest_descr_is_present():
+    r = _get_resource_json("total_images_example.json")
+    with patch.object(rwp, "_request_content", return_value=r):
+        result = rwp._get_image_list()[1]
+        meta_data = rwp._get_meta_data(image=result[0])
+        expected_descr_value = (
+            "Portolan atlas of the Mediterranean Sea, western Europe, and the"
+            " northwest coast of Africa: World map drawn on an oval projection"
+            " (ca. 1590) by Joan Oliva. Original from Library of Congress. "
+            "Digitally enhanced by rawpixel. | free image by rawpixel.com / "
+            "Library of Congress (Source)")
+        expected_meta_data = {"Description": expected_descr_value}
+        assert meta_data == expected_meta_data
+
+
+def test_get_meta_data_given_no_pinterest_descr():
+    r = _get_resource_json("total_images_but_pinterest_descr_example.json")
+    with patch.object(rwp, "_request_content", return_value=r):
+        result = rwp._get_image_list()[1]
+        meta_data = rwp._get_meta_data(image=result[0])
+        assert meta_data == {}
+
+
 def test_get_tags():
     r = _get_resource_json("total_images_example.json")
     with patch.object(rwp, "_request_content", return_value=r):
