@@ -90,6 +90,12 @@ def _get_title_owner(image):
     return [title, owner]
 
 
+def _get_meta_data(image):
+    meta_data = {}
+    meta_data["description"] = image.get("pinterest_description")
+    return {k: v for k, v in meta_data.items() if v is not None}
+
+
 def _get_tags(image):
     keywords = image.get("keywords_raw")
     if keywords:
@@ -119,9 +125,10 @@ def _process_image_data(image):
     if not img_url:
         return None
     title, owner = _get_title_owner(image)
+    meta_data = _get_meta_data(image)
     tags = _get_tags(image)
 
-    # TODO:How to get license_url, creator_url, meta_data, source, watermarked?
+    # TODO:How to get license_url, creator_url, source, watermarked?
     return image_store.add_item(
         foreign_landing_url=foreign_url,
         image_url=img_url,
@@ -131,6 +138,7 @@ def _process_image_data(image):
         width=str(width) if width else None,
         height=str(height) if height else None,
         title=title if title else None,
+        meta_data=meta_data,
         raw_tags=tags,
         creator=owner,
         thumbnail_url=thumbnail,
