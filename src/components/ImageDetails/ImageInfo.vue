@@ -23,6 +23,8 @@
             :href="image.foreign_landing_url"
             target="blank"
             rel="noopener noreferrer"
+            @click="onPhotoSourceLinkClicked"
+            v-on:keyup.enter="onPhotoSourceLinkClicked"
           >
             {{ sourceName }}
           </a>
@@ -42,6 +44,10 @@
 import PhotoTags from '@/components/PhotoTags'
 import getProviderName from '@/utils/getProviderName'
 import getProviderLogo from '@/utils/getProviderLogo'
+import {
+  SEND_DETAIL_PAGE_EVENT,
+  DETAIL_PAGE_EVENTS,
+} from '@/store/usage-data-analytics-types'
 
 export default {
   name: 'image-info',
@@ -79,6 +85,12 @@ export default {
   methods: {
     getProviderLogo(providerName) {
       return getProviderLogo(providerName)
+    },
+    onPhotoSourceLinkClicked() {
+      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+        eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
+        resultUuid: this.$props.image.id,
+      })
     },
   },
 }

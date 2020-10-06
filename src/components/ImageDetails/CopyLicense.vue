@@ -56,9 +56,14 @@
           class="photo_usage-attribution is-block"
           ref="photoAttribution"
         >
-          <a :href="image.foreign_landing_url" target="_blank" rel="noopener">{{
-            imageTitle
-          }}</a>
+          <a
+            :href="image.foreign_landing_url"
+            target="_blank"
+            rel="noopener"
+            @click="onPhotoSourceLinkClicked"
+            v-on:keyup.enter="onPhotoSourceLinkClicked"
+            >{{ imageTitle }}</a
+          >
           <span v-if="image.creator">
             by
             <a
@@ -66,6 +71,8 @@
               :href="image.creator_url"
               target="_blank"
               rel="noopener"
+              @click="onPhotoCreatorLinkClicked"
+              v-on:keyup.enter="onPhotoCreatorLinkClicked"
               >{{ image.creator }}</a
             >
             <span v-else>{{ image.creator }}</span>
@@ -182,6 +189,18 @@ export default {
     onCopyAttribution(type, event) {
       this.$store.dispatch(COPY_ATTRIBUTION, { type, content: event.content })
       this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED)
+    },
+    onPhotoSourceLinkClicked() {
+      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+        eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
+        resultUuid: this.$props.image.id,
+      })
+    },
+    onPhotoCreatorLinkClicked() {
+      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+        eventType: DETAIL_PAGE_EVENTS.CREATOR_CLICKED,
+        resultUuid: this.$props.image.id,
+      })
     },
   },
 }

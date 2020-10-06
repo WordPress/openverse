@@ -48,6 +48,8 @@
             :aria-label="'author' + image.creator"
             v-if="image.creator_url"
             :href="image.creator_url"
+            @click="onPhotoCreatorLinkClicked"
+            v-on:keyup.enter="onPhotoCreatorLinkClicked"
           >
             {{ image.creator }}
           </a>
@@ -231,6 +233,12 @@ export default {
     onPhotoSourceLinkClicked() {
       this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
         eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
+        resultUuid: this.$props.image.id,
+      })
+    },
+    onPhotoCreatorLinkClicked() {
+      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+        eventType: DETAIL_PAGE_EVENTS.CREATOR_CLICKED,
         resultUuid: this.$props.image.id,
       })
     },
