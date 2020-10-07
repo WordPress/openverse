@@ -4,3 +4,6 @@ services:
   webserver:
     volumes:
       - ./dags:/usr/local/airflow/dags
+    build:
+      args:
+        - REQUIREMENTS_FILE=requirements_dev.txt
