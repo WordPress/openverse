@@ -32,7 +32,7 @@ const SessionId = (cookieName, hasExpirationDate = false) => {
 
   if (!sessionId) {
     sessionId = generateSessionId()
-    saveSessionIdInCookie(sessionId, hasExpirationDate)
+    saveSessionIdInCookie(cookieName, sessionId, hasExpirationDate)
   }
 
   return sessionId
