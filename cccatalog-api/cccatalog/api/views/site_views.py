@@ -81,6 +81,7 @@ class ImageStats(APIView):
             schema=AboutImageResponse(many=True)
         )
     }
+
     @swagger_auto_schema(operation_id='image_stats',
                          operation_description=image_stats_description,
                          responses=image_stats_response)
@@ -170,8 +171,8 @@ class Register(APIView):
     register_api_oauth2_response = {
         "201": openapi.Response(
             description="OK",
-            examples={  # noqa
-                "application/json": {
+            examples={
+                "application/json": {  # noqa
                     "name": "My amazing project",
                     "client_id": "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
                     "client_secret": "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
@@ -180,6 +181,7 @@ class Register(APIView):
             schema=OAuth2RegistrationSuccessful
         )
     }
+
     @swagger_auto_schema(operation_id='register_api_oauth2',
                          operation_description=register_api_oauth2_description,
                          request_body=OAuth2RegistrationSerializer,
@@ -285,6 +287,7 @@ class CheckRates(APIView):
         ```
         """  # noqa
     throttle_classes = (OnePerSecond,)
+
     @swagger_auto_schema(operation_id='key_info',
                          operation_description=key_info_description,
                          responses={

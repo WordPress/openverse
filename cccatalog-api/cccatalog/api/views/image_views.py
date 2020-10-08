@@ -87,11 +87,12 @@ class SearchImages(APIView):
         ```
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1
         ```
+
         """  # noqa
     image_search_response = {
         "200": openapi.Response(
             description="OK",
-            examples={  # noqa
+            examples={
                 "application/json": {
                     "result_count": 77,
                     "page_count": 77,
@@ -101,17 +102,17 @@ class SearchImages(APIView):
                             "title": "File:Well test separator.svg",
                             "id": "36537842-b067-4ca0-ad67-e00ff2e06b2d",
                             "creator": "en:User:Oil&GasIndustry",
-                            "creator_url": "https://en.wikipedia.org/wiki/User:Oil%26GasIndustry",
-                            "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Well_test_separator.svg",
-                            "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/36537842-b067-4ca0-ad67-e00ff2e06b2d",
+                            "creator_url": "https://en.wikipedia.org/wiki/User:Oil%26GasIndustry",  # noqa
+                            "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Well_test_separator.svg",  # noqa
+                            "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/36537842-b067-4ca0-ad67-e00ff2e06b2d",  # noqa
                             "provider": "wikimedia",
                             "source": "wikimedia",
                             "license": "by",
                             "license_version": "3.0",
-                            "license_url": "https://creativecommons.org/licenses/by/3.0",
-                            "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=26229990",
-                            "detail_url": "http://api.creativecommons.engineering/v1/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",
-                            "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",
+                            "license_url": "https://creativecommons.org/licenses/by/3.0",  # noqa
+                            "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=26229990",  # noqa
+                            "detail_url": "http://api.creativecommons.engineering/v1/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",  # noqa
+                            "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",  # noqa
                             "fields_matched": [
                                 "description",
                                 "title"
@@ -124,18 +125,19 @@ class SearchImages(APIView):
         ),
         "400": openapi.Response(
             description="Bad Request",
-            examples={  # noqa
+            examples={
                 "application/json": {
                     "error": "InputError",
-                    "detail": "Invalid input given for fields. 'license' -> License 'PDMNBCG' does not exist.",
+                    "detail": "Invalid input given for fields. 'license' -> License 'PDMNBCG' does not exist.",  # noqa
                     "fields": [
                         "license"
                     ]
-                }
+                }  # noqa
             },
             schema=InputErrorSerializer
         )
     }
+
     @swagger_auto_schema(operation_id='image_search',
                          operation_description=image_search_description,
                          query_serializer=ImageSearchQueryStringSerializer,
@@ -197,7 +199,7 @@ class RelatedImage(APIView):
     recommendations_images_read_response = {
         "200": openapi.Response(
             description="OK",
-            examples={  # noqa
+            examples={
                 "application/json": {
                     "result_count": 10000,
                     "page_count": 0,
@@ -227,7 +229,7 @@ class RelatedImage(APIView):
                             "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d"
                         }
                     ]
-                }
+                }  # noqa
             },
             schema=ImageSerializer
         ),
@@ -240,6 +242,7 @@ class RelatedImage(APIView):
             }
         )
     }
+
     @swagger_auto_schema(operation_id="recommendations_images_read",
                          operation_description=recommendations_images_read_description,
                          responses=recommendations_images_read_response)
@@ -283,7 +286,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     image_detail_response = {
         "200": openapi.Response(
             description="OK",
-            examples={  # noqa
+            examples={
                 "application/json": {
                     "title": "exam test",
                     "id": "7c829a03-fb24-4b57-9b03-65f43ed19395",
@@ -310,7 +313,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                     "height": 167,
                     "width": 500,
                     "attribution": "\"exam test\" by Sean MacEntee is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/."
-                }
+                }  # noqa
             },
             schema=ImageSerializer
         ),
@@ -323,6 +326,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             }
         )
     }
+
     @swagger_auto_schema(operation_id="image_detail",
                          operation_description=image_detail_description,
                          responses=image_detail_response)
@@ -429,7 +433,7 @@ class OembedView(APIView):
     oembed_list_response = {
         "200": openapi.Response(
             description="OK",
-            examples={  # noqa
+            examples={
                 "application/json": {
                     "version": 1,
                     "type": "photo",
@@ -440,7 +444,7 @@ class OembedView(APIView):
                     "author_url": "https://www.flickr.com/photos/18090920@N07",
                     "license_url": "https://creativecommons.org/licenses/by/2.0/"
                 }
-            }
+            } # noqa
         ),
         "404": openapi.Response(
             description="Not Found",
@@ -451,6 +455,7 @@ class OembedView(APIView):
             }
         )
     }
+
     @swagger_auto_schema(operation_id="oembed_list",
                          operation_description=oembed_list_description,
                          query_serializer=OembedSerializer,
