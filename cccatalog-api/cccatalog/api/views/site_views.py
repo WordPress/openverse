@@ -275,12 +275,19 @@ class VerifyEmail(APIView):
 
 
 class CheckRates(APIView):
+    key_info_description = \
     """
     Return information about the rate limit status of your API key.
+ 
+    Example:
+ 
+    ```
+    curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/rate_limit
+    ```
     """
     throttle_classes = (OnePerSecond,)
-
     @swagger_auto_schema(operation_id='key_info',
+                         operation_description=key_info_description,
                          responses={
                              200: OAuth2KeyInfo,
                              403: 'Forbidden'
