@@ -1,7 +1,8 @@
-import SessionId from '~/abTests/lib/sessionId'
+import SessionId from '~/utils/sessionId'
 
 const state = {
-  sessionId: SessionId(),
+  abSessionId: SessionId('abSessionId', true),
+  usageSessionId: SessionId('usageSessionId'),
 }
 
 export default {

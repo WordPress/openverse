@@ -75,7 +75,7 @@ const actions = (ImageService) => ({
     if (!params.page) {
       dispatch(SEND_SEARCH_QUERY_EVENT, {
         query: params.q,
-        sessionId: state.sessionId,
+        sessionId: state.usageSessionId,
       })
     }
 
@@ -104,7 +104,7 @@ const actions = (ImageService) => ({
       query: state.query.q,
       resultUuid: params.id,
       resultRank: findIndex(state.images, (img) => img.id === params.id),
-      sessionId: state.sessionId,
+      sessionId: state.usageSessionId,
     })
 
     commit(FETCH_START_IMAGES)
