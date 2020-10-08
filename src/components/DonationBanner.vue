@@ -32,6 +32,7 @@
 import GoogleAnalytics from '@/analytics/GoogleAnalytics'
 import { DonateLinkClick, DonateBannerClose } from '@/analytics/events'
 import { ExperimentData } from '@/abTests/experiments/donationLanguage'
+import { JOINED_AB_TEST_EXPERIMENT } from '@/store-modules/mutation-types'
 
 export default {
   name: 'DonationBanner',
@@ -49,7 +50,7 @@ export default {
   },
   created() {
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
-      if (mutation.type === 'JOINED_AB_TEST_EXPERIMENT') {
+      if (mutation.type === JOINED_AB_TEST_EXPERIMENT) {
         const experiment = state.experiments.find(
           (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
         )

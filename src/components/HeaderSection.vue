@@ -27,7 +27,7 @@ export default {
   props: { showNavSearch: { type: Boolean, default: false } },
   data() {
     return {
-      showDonate: !local.get('hide-location-banner'),
+      showDonate: !local.get('hide-donation-banner'),
     }
   },
   computed: {
@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     hideDonate() {
-      local.set('hide-location-banner', true)
+      local.set('hide-donation-banner', true)
       this.showDonate = false
     },
   },

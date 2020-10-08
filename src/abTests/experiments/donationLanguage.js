@@ -40,6 +40,6 @@ const joinExperiment = (session) => {
 export default joinExperiment
 export const ExperimentData = {
   EXPERIMENT_NAME,
-  DONATION_PERCENTAGE_CASE,
   DONATION_GENERAL_CASE,
+  DONATION_PERCENTAGE_CASE,
 }
