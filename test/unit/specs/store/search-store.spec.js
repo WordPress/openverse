@@ -156,7 +156,7 @@ describe('Search Store', () => {
       commit = jest.fn()
       dispatch = jest.fn()
       state = {
-        sessionId: 'foo session id',
+        usageSessionId: 'foo session id',
         images: [{ id: 'foo' }, { id: 'bar' }, { id: 'zeta' }],
         query: { q: 'foo query' },
       }
@@ -189,7 +189,7 @@ describe('Search Store', () => {
 
       expect(dispatch).toHaveBeenLastCalledWith('SEND_SEARCH_QUERY_EVENT', {
         query: params.q,
-        sessionId: state.sessionId,
+        sessionId: state.usageSessionId,
       })
     })
 
@@ -200,7 +200,7 @@ describe('Search Store', () => {
 
       expect(dispatch).not.toHaveBeenLastCalledWith('SEND_SEARCH_QUERY_EVENT', {
         query: params.q,
-        sessionId: state.sessionId,
+        sessionId: state.usageSessionId,
       })
     })
 
@@ -363,7 +363,7 @@ describe('Search Store', () => {
         query: state.query.q,
         resultUuid: 'foo',
         resultRank: 0,
-        sessionId: state.sessionId,
+        sessionId: state.usageSessionId,
       })
     })
 

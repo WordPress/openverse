@@ -7,7 +7,7 @@ import { JOINED_AB_TEST_EXPERIMENT } from '~/store-modules/mutation-types'
  */
 const setupExperiments = (store) => {
   // Currently no active A/B Tests
-  // const session = createSixpackSession(store.state.sessionId)
+  // const session = createSixpackSession(store.state.abSessionId)
 
   // List all active experiments here
   const experimentPromises = []
