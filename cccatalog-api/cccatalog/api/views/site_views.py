@@ -56,14 +56,35 @@ class AboutImageResponse(serializers.Serializer):
 
 
 class ImageStats(APIView):
+    image_stats_description = \
     """
     List all providers in the Creative Commons image catalog, in addition to the
     number of images from each data source.
+ 
+    Example:
+ 
+    ```
+    $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
+    ```
     """
+    image_stats_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples={
+                "application/json": {
+                        "source_name": "flickr",
+                        "image_count": 465809213,
+                        "display_name": "Flickr",
+                        "source_url": "https://www.flickr.com",
+                                        
+                }
+            },
+            schema=AboutImageResponse(many=True)
+        )
+    }
     @swagger_auto_schema(operation_id='image_stats',
-                         responses={
-                             200: AboutImageResponse(many=True)
-                         })
+                         operation_description=image_stats_description,
+                         responses=image_stats_response)
     def get(self, request, format=None):
         source_data = ContentProvider \
             .objects \
