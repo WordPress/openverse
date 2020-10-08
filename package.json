@@ -54,7 +54,7 @@
     "patch-package": "^6.2.2",
     "sass-loader": "^10.0.1",
     "sixpack-client": "^2.1.0",
-    "uuid": "^8.3.0",
+    "uuid": "^8.3.1",
     "vue-i18n": "^8.21.0"
   },
   "devDependencies": {

@@ -1,9 +1,9 @@
-import uuid from 'uuid/v4'
+import { v4 as uuidv4 } from 'uuid'
 import Cookie from 'js-cookie'
 
 const COOKIE_EXPIRY_DAYS = 7
 
-const generateSessionId = () => uuid()
+const generateSessionId = () => uuidv4()
 
 /**
  * Store a session in in a cookie for a/b tests and usage analytics. By default
