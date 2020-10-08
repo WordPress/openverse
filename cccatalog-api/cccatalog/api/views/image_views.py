@@ -88,7 +88,7 @@ class SearchImages(APIView):
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1
         ```
 
-        """
+        """ # noqa
     image_search_response = {
         "200": openapi.Response(
             description="OK",
@@ -194,7 +194,7 @@ class RelatedImage(APIView):
         ```
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
         ```
-        """
+        """ # noqa
     recommendations_images_read_response = {
         "200": openapi.Response(
             description="OK",
@@ -280,7 +280,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         ```
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
         ```
-        """
+        """ # noqa
     image_detail_response = {
         "200": openapi.Response(
             description="OK",
@@ -427,7 +427,7 @@ class OembedView(APIView):
         ```
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/oembed?url=https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395
         ```
-        """
+        """ # noqa
     oembed_list_response = {
         "200": openapi.Response(
             description="OK",
@@ -497,6 +497,6 @@ class ReportImageView(CreateAPIView):
     ```
     $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "string"}' https://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
     ```
-    """
+    """ # noqa
     queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer

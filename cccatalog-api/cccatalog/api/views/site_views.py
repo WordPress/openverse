@@ -66,7 +66,7 @@ class ImageStats(APIView):
         ```
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
         ```
-        """
+        """ # noqa
     image_stats_response = {
         "200": openapi.Response(
             description="OK",
@@ -284,7 +284,7 @@ class CheckRates(APIView):
         ```
         curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/rate_limit
         ```
-        """
+        """ # noqa
     throttle_classes = (OnePerSecond,)
 
     @swagger_auto_schema(operation_id='key_info',
