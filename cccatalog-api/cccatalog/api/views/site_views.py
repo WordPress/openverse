@@ -75,7 +75,7 @@ class ImageStats(APIView):
                     "source_name": "flickr",
                     "image_count": 465809213,
                     "display_name": "Flickr",
-                    "source_url": "https://www.flickr.com"     
+                    "source_url": "https://www.flickr.com"
                 }
             },
             schema=AboutImageResponse(many=True)
