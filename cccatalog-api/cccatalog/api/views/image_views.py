@@ -87,12 +87,11 @@ class SearchImages(APIView):
         ```
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1
         ```
-
         """  # noqa
     image_search_response = {
         "200": openapi.Response(
             description="OK",
-            examples={
+            examples={  # noqa
                 "application/json": {
                     "result_count": 77,
                     "page_count": 77,
@@ -119,20 +118,20 @@ class SearchImages(APIView):
                             ]
                         }
                     ]
-                },  # noqa
+                },
             },
             schema=ImageSearchResultsSerializer(many=True)
         ),
         "400": openapi.Response(
             description="Bad Request",
-            examples={
+            examples={  # noqa
                 "application/json": {
                     "error": "InputError",
                     "detail": "Invalid input given for fields. 'license' -> License 'PDMNBCG' does not exist.",
                     "fields": [
                         "license"
                     ]
-                }  # noqa
+                }
             },
             schema=InputErrorSerializer
         )
@@ -198,7 +197,7 @@ class RelatedImage(APIView):
     recommendations_images_read_response = {
         "200": openapi.Response(
             description="OK",
-            examples={
+            examples={  # noqa
                 "application/json": {
                     "result_count": 10000,
                     "page_count": 0,
@@ -228,7 +227,7 @@ class RelatedImage(APIView):
                             "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d"
                         }
                     ]
-                }  # noqa
+                }
             },
             schema=ImageSerializer
         ),
@@ -284,7 +283,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     image_detail_response = {
         "200": openapi.Response(
             description="OK",
-            examples={
+            examples={  # noqa
                 "application/json": {
                     "title": "exam test",
                     "id": "7c829a03-fb24-4b57-9b03-65f43ed19395",
@@ -311,7 +310,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                     "height": 167,
                     "width": 500,
                     "attribution": "\"exam test\" by Sean MacEntee is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/."
-                }  # noqa
+                }
             },
             schema=ImageSerializer
         ),
@@ -430,7 +429,7 @@ class OembedView(APIView):
     oembed_list_response = {
         "200": openapi.Response(
             description="OK",
-            examples={
+            examples={  # noqa
                 "application/json": {
                     "version": 1,
                     "type": "photo",
@@ -441,7 +440,7 @@ class OembedView(APIView):
                     "author_url": "https://www.flickr.com/photos/18090920@N07",
                     "license_url": "https://creativecommons.org/licenses/by/2.0/"
                 }
-            } # noqa
+            }
         ),
         "404": openapi.Response(
             description="Not Found",
