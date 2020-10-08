@@ -1,7 +1,7 @@
 <template>
-  <div class="padding-horizontal-normal padding-vertical-small donation-banner">
+  <div class="padding-horizontal-bigger padding-vertical-small donation-banner">
     <p class="has-text-centered-mobile">
-      {{ $t('header.donation-banner.description') }}
+      {{ donationText }}
     </p>
 
     <div class="donation-banner__actions">
@@ -31,9 +31,35 @@
 <script>
 import GoogleAnalytics from '@/analytics/GoogleAnalytics'
 import { DonateLinkClick, DonateBannerClose } from '@/analytics/events'
+import { ExperimentData } from '@/abTests/experiments/donationLanguage'
 
 export default {
   name: 'DonationBanner',
+  data: function () {
+    return {
+      caseA: true,
+    }
+  },
+  computed: {
+    donationText() {
+      return this.caseA
+        ? this.$t('header.donation-banner.description')
+        : this.$t('header.donation-banner.alternative-description')
+    },
+  },
+  created() {
+    this.unsubscribe = this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'JOINED_AB_TEST_EXPERIMENT') {
+        const experiment = state.experiments.find(
+          (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
+        )
+        this.caseA = experiment.case === ExperimentData.DONATION_GENERAL_CASE
+      }
+    })
+  },
+  beforeDestroy() {
+    this.unsubscribe()
+  },
   methods: {
     onDismiss() {
       this.$emit('onDismiss')
