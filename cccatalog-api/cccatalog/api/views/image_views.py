@@ -88,7 +88,7 @@ class SearchImages(APIView):
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1
         ```
 
-        """ # noqa
+        """  # noqa
     image_search_response = {
         "200": openapi.Response(
             description="OK",
@@ -119,7 +119,7 @@ class SearchImages(APIView):
                             ]
                         }
                     ]
-                },
+                },  # noqa
             },
             schema=ImageSearchResultsSerializer(many=True)
         ),
@@ -132,7 +132,7 @@ class SearchImages(APIView):
                     "fields": [
                         "license"
                     ]
-                }
+                }  # noqa
             },
             schema=InputErrorSerializer
         )
@@ -194,7 +194,7 @@ class RelatedImage(APIView):
         ```
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
         ```
-        """ # noqa
+        """  # noqa
     recommendations_images_read_response = {
         "200": openapi.Response(
             description="OK",
@@ -228,7 +228,7 @@ class RelatedImage(APIView):
                             "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d"
                         }
                     ]
-                }
+                }  # noqa
             },
             schema=ImageSerializer
         ),
@@ -280,7 +280,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         ```
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
         ```
-        """ # noqa
+        """  # noqa
     image_detail_response = {
         "200": openapi.Response(
             description="OK",
@@ -311,7 +311,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                     "height": 167,
                     "width": 500,
                     "attribution": "\"exam test\" by Sean MacEntee is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/."
-                }
+                }  # noqa
             },
             schema=ImageSerializer
         ),
@@ -324,7 +324,6 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             }
         )
     }
-
     @swagger_auto_schema(operation_id="image_detail",
                          operation_description=image_detail_description,
                          responses=image_detail_response)
@@ -427,7 +426,7 @@ class OembedView(APIView):
         ```
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/oembed?url=https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395
         ```
-        """ # noqa
+        """  # noqa
     oembed_list_response = {
         "200": openapi.Response(
             description="OK",
@@ -442,7 +441,7 @@ class OembedView(APIView):
                     "author_url": "https://www.flickr.com/photos/18090920@N07",
                     "license_url": "https://creativecommons.org/licenses/by/2.0/"
                 }
-            }
+            } # noqa
         ),
         "404": openapi.Response(
             description="Not Found",
@@ -497,6 +496,6 @@ class ReportImageView(CreateAPIView):
     ```
     $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "string"}' https://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
     ```
-    """ # noqa
+    """  # noqa
     queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer

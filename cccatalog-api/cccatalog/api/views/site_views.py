@@ -66,17 +66,16 @@ class ImageStats(APIView):
         ```
         $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
         ```
-        """ # noqa
+        """  # noqa
     image_stats_response = {
         "200": openapi.Response(
             description="OK",
             examples={
                 "application/json": {
-                        "source_name": "flickr",
-                        "image_count": 465809213,
-                        "display_name": "Flickr",
-                        "source_url": "https://www.flickr.com",
-                             
+                    "source_name": "flickr",
+                    "image_count": 465809213,
+                    "display_name": "Flickr",
+                    "source_url": "https://www.flickr.com"             
                 }
             },
             schema=AboutImageResponse(many=True)
@@ -166,7 +165,7 @@ class Register(APIView):
  
     **Be advised** that your token will be throttled like an anonymous user
     until the email address has been verified.
-    """  # noqa
+    """   # noqa
     throttle_classes = (TenPerDay,)
     register_api_oauth2_response = {
         "201": openapi.Response(
@@ -177,7 +176,7 @@ class Register(APIView):
                     "client_id": "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
                     "client_secret": "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
                 },
-            },
+            },  # noqa
             schema=OAuth2RegistrationSuccessful
         )
     }
@@ -284,9 +283,8 @@ class CheckRates(APIView):
         ```
         curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/rate_limit
         ```
-        """ # noqa
+        """  # noqa
     throttle_classes = (OnePerSecond,)
-
     @swagger_auto_schema(operation_id='key_info',
                          operation_description=key_info_description,
                          responses={
