@@ -25,6 +25,7 @@ import io
 import libxmp
 import requests
 from PIL import Image as img
+from drf_yasg import openapi
 
 log = logging.getLogger(__name__)
 
@@ -58,28 +59,88 @@ def _get_user_ip(request):
 
 
 class SearchImages(APIView):
+    image_search_description = \
     """
     Search for images by a query string. Optionally, filter results by specific
     licenses, or license "types" (commercial use allowed, modification allowed,
     etc). Results are ranked in order of relevance.
-
+ 
     Refer to the Lucene syntax guide for information on structuring advanced
     searches. https://lucene.apache.org/core/2_9_4/queryparsersyntax.html
-
+ 
     Although there may be millions of relevant records, only the most relevant
     several thousand records can be viewed. This is by design: the search
     endpoint should be used to find the top N most relevant results, not for
     exhaustive search or bulk download of every barely relevant result.
     As such, the caller should not try to access pages beyond `page_count`,
     or else the server will reject the query.
+ 
+    Example using single query parameter:
+ 
+    ```
+    $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
+    ```
+ 
+ 
+    Example using multiple query parameters:
+ 
+    ```
+    $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1
+    ```
+ 
     """
-
+    image_search_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples={
+                "application/json": {
+                    "result_count": 77,
+                    "page_count": 77,
+                    "page_size": 1,
+                    "results": [
+                        {
+                            "title": "File:Well test separator.svg",
+                            "id": "36537842-b067-4ca0-ad67-e00ff2e06b2d",
+                            "creator": "en:User:Oil&GasIndustry",
+                            "creator_url": "https://en.wikipedia.org/wiki/User:Oil%26GasIndustry",
+                            "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Well_test_separator.svg",
+                            "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/36537842-b067-4ca0-ad67-e00ff2e06b2d",
+                            "provider": "wikimedia",
+                            "source": "wikimedia",
+                            "license": "by",
+                            "license_version": "3.0",
+                            "license_url": "https://creativecommons.org/licenses/by/3.0",
+                            "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=26229990",
+                            "detail_url": "http://api.creativecommons.engineering/v1/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",
+                            "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",
+                            "fields_matched": [
+                                "description",
+                                "title"
+                            ]
+                        }
+                    ] 
+                },
+            },
+            schema=ImageSearchResultsSerializer(many=True)
+        ),
+        "400": openapi.Response(
+            description="Bad Request",
+            examples={
+                "application/json": {
+                    "error": "InputError",
+                    "detail": "Invalid input given for fields. 'license' -> License 'PDMNBCG' does not exist.",
+                    "fields": [
+                        "license"
+                    ]
+                }
+            },
+            schema=InputErrorSerializer
+        )
+    }
     @swagger_auto_schema(operation_id='image_search',
+                         operation_description=image_search_description,
                          query_serializer=ImageSearchQueryStringSerializer,
-                         responses={
-                             200: ImageSearchResultsSerializer(many=True),
-                             400: InputErrorSerializer,
-                         })
+                         responses=image_search_response)
     def get(self, request, format=None):
         # Parse and validate query parameters
         params = ImageSearchQueryStringSerializer(data=request.query_params)
@@ -154,14 +215,63 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     lookup_field = 'identifier'
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly]
-
+    image_detail_description = \
+    """
+    Load the details of a particular image ID.
+ 
+    Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
+ 
+    ```
+    $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
+    ```
+    """
+    image_detail_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples={
+                "application/json": {
+                    "title": "exam test",
+                    "id": "7c829a03-fb24-4b57-9b03-65f43ed19395",
+                    "creator": "Sean MacEntee",
+                    "creator_url": "https://www.flickr.com/photos/18090920@N07",
+                    "tags": [
+                        {
+                            "name": "exam"
+                        },
+                        {
+                            "name": "test"
+                        }
+                    ],
+                    "url": "https://live.staticflickr.com/5122/5264886972_3234d62748.jpg",
+                    "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/7c829a03-fb24-4b57-9b03-65f43ed19395",
+                    "provider": "flickr",
+                    "source": "flickr",
+                    "license": "by",
+                    "license_version": "2.0",
+                    "license_url": "https://creativecommons.org/licenses/by/2.0/",
+                    "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/5264886972",
+                    "detail_url": "http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
+                    "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
+                    "height": 167,
+                    "width": 500,
+                    "attribution": "\"exam test\" by Sean MacEntee is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/."
+                }
+            },
+            schema=ImageSerializer
+        ),
+        "404": openapi.Response(
+            description='Not Found',
+            examples={
+                "application/json": {
+                    "detail": "Not found."
+                }
+            }
+        )
+    }
+ 
     @swagger_auto_schema(operation_id="image_detail",
-                         operation_description="Load the details of a"
-                                               " particular image ID.",
-                         responses={
-                             200: ImageSerializer,
-                             404: 'Not Found'
-                         })
+                         operation_description=image_detail_description,
+                         responses=image_detail_response)
     def get(self, request, identifier, format=None):
         """ Get the details of a single list. """
         resp = self.retrieve(request, identifier)
@@ -252,13 +362,45 @@ class Watermark(GenericAPIView):
 
 
 class OembedView(APIView):
-
+    oembed_list_description = \
+    """
+    Retrieve embedded content from a specified URL
+ 
+    Example using URL `https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395`:
+ 
+    ```
+    $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/oembed?url=https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395
+    ```
+    """
+    oembed_list_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples={
+                "application/json": {
+                    "version": 1,
+                    "type": "photo",
+                    "width": 500,
+                    "height": 167,
+                    "title": "exam test",
+                    "author_name": "Sean MacEntee",
+                    "author_url": "https://www.flickr.com/photos/18090920@N07",
+                    "license_url": "https://creativecommons.org/licenses/by/2.0/"
+                }
+            }
+        ),
+        "404": openapi.Response(
+            description="Not Found",
+            examples={
+                "application/json": {
+                    "detail": "An internal server error occurred."
+                }
+            }
+        )
+    }
     @swagger_auto_schema(operation_id="oembed_list",
+                         operation_description=oembed_list_description,
                          query_serializer=OembedSerializer,
-                         responses={
-                             200: '',
-                             404: 'Not Found'
-                         })
+                         responses=oembed_list_response)
     def get(self, request):
         url = request.query_params.get('url', '')
 
@@ -289,5 +431,16 @@ class OembedView(APIView):
 
 
 class ReportImageView(CreateAPIView):
+    """
+    images_report_create
+    
+    Report issue about a particular image ID.
+ 
+    Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
+ 
+    ```
+    $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "string"}' https://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report 
+    ```
+    """
     queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer
