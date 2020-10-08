@@ -64,30 +64,30 @@ class SearchImages(APIView):
     Search for images by a query string. Optionally, filter results by specific
     licenses, or license "types" (commercial use allowed, modification allowed,
     etc). Results are ranked in order of relevance.
- 
+
     Refer to the Lucene syntax guide for information on structuring advanced
     searches. https://lucene.apache.org/core/2_9_4/queryparsersyntax.html
- 
+
     Although there may be millions of relevant records, only the most relevant
     several thousand records can be viewed. This is by design: the search
     endpoint should be used to find the top N most relevant results, not for
     exhaustive search or bulk download of every barely relevant result.
     As such, the caller should not try to access pages beyond `page_count`,
     or else the server will reject the query.
- 
+
     Example using single query parameter:
  
     ```
     $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
     ```
- 
- 
+
+
     Example using multiple query parameters:
- 
+
     ```
     $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1
     ```
- 
+
     """
     image_search_response = {
         "200": openapi.Response(
@@ -118,7 +118,7 @@ class SearchImages(APIView):
                                 "title"
                             ]
                         }
-                    ] 
+                    ]
                 },
             },
             schema=ImageSearchResultsSerializer(many=True)
@@ -188,9 +188,9 @@ class RelatedImage(APIView):
     recommendations_images_read_description = \
     """
     Given an image ID, return images related to the result.
- 
+
     Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
- 
+
     ```
     $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
     ```
@@ -274,9 +274,9 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     image_detail_description = \
     """
     Load the details of a particular image ID.
- 
+
     Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
- 
+
     ```
     $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
     ```
@@ -324,7 +324,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
             }
         )
     }
- 
+
     @swagger_auto_schema(operation_id="image_detail",
                          operation_description=image_detail_description,
                          responses=image_detail_response)
@@ -421,9 +421,9 @@ class OembedView(APIView):
     oembed_list_description = \
     """
     Retrieve embedded content from a specified URL
- 
+
     Example using URL `https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395`:
- 
+
     ```
     $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/oembed?url=https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395
     ```
@@ -489,13 +489,13 @@ class OembedView(APIView):
 class ReportImageView(CreateAPIView):
     """
     images_report_create
-    
+
     Report issue about a particular image ID.
- 
+
     Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
- 
+
     ```
-    $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "string"}' https://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report 
+    $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "string"}' https://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
     ```
     """
     queryset = ImageReport.objects.all()

@@ -60,9 +60,9 @@ class ImageStats(APIView):
     """
     List all providers in the Creative Commons image catalog, in addition to the
     number of images from each data source.
- 
+
     Example:
- 
+
     ```
     $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
     ```
@@ -76,7 +76,7 @@ class ImageStats(APIView):
                         "image_count": 465809213,
                         "display_name": "Flickr",
                         "source_url": "https://www.flickr.com",
-                                        
+                             
                 }
             },
             schema=AboutImageResponse(many=True)
@@ -278,14 +278,15 @@ class CheckRates(APIView):
     key_info_description = \
     """
     Return information about the rate limit status of your API key.
- 
+
     Example:
- 
+
     ```
     curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/rate_limit
     ```
     """
     throttle_classes = (OnePerSecond,)
+
     @swagger_auto_schema(operation_id='key_info',
                          operation_description=key_info_description,
                          responses={
