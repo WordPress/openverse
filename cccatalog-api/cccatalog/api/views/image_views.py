@@ -185,9 +185,65 @@ class SearchImages(APIView):
 
 
 class RelatedImage(APIView):
+    recommendations_images_read_description = \
     """
-    Given a UUID, return images related to the result.
+    Given an image ID, return images related to the result.
+ 
+    Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
+ 
+    ```
+    $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
+    ```
     """
+    recommendations_images_read_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples={
+                "application/json": {
+                    "result_count": 10000,
+                    "page_count": 0,
+                    "results": [
+                        {
+                            "title": "exam tactics",
+                            "id": "610756ec-ae31-4d5e-8f03-8cc52f31b71d",
+                            "creator": "Sean MacEntee",
+                            "creator_url": "https://www.flickr.com/photos/18090920@N07",
+                            "tags": [
+                                {
+                                    "name": "exam"
+                                },
+                                {
+                                    "name": "tactics"
+                                }
+                            ],
+                            "url": "https://live.staticflickr.com/4065/4459771899_07595dc42e.jpg",
+                            "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/610756ec-ae31-4d5e-8f03-8cc52f31b71d",
+                            "provider": "flickr",
+                            "source": "flickr",
+                            "license": "by",
+                            "license_version": "2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/",
+                            "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/4459771899",
+                            "detail_url": "http://api.creativecommons.engineering/v1/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",
+                            "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d"
+                        }
+                    ]
+                }
+            },
+            schema=ImageSerializer
+        ),
+        "404": openapi.Response(
+            description="Not Found",
+            examples={
+                "application/json": {
+                    "detail": "An internal server error occurred."
+                }
+            }
+        )
+    }
+    @swagger_auto_schema(operation_id="recommendations_images_read",
+                         operation_description=recommendations_images_read_description,
+                         responses=recommendations_images_read_response)
     def get(self, request, identifier, format=None):
         related, result_count = search_controller.related_images(
             uuid=identifier,
