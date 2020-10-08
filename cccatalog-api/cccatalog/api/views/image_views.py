@@ -132,7 +132,7 @@ class SearchImages(APIView):
                     "fields": [
                         "license"
                     ]
-                }  # noqa
+                }
             },
             schema=InputErrorSerializer
         )
@@ -208,7 +208,7 @@ class RelatedImage(APIView):
                             "title": "exam tactics",
                             "id": "610756ec-ae31-4d5e-8f03-8cc52f31b71d",
                             "creator": "Sean MacEntee",
-                            "creator_url": "https://www.flickr.com/photos/18090920@N07",
+                            "creator_url": "https://www.flickr.com/photos/18090920@N07",  # noqa
                             "tags": [
                                 {
                                     "name": "exam"
@@ -217,19 +217,19 @@ class RelatedImage(APIView):
                                     "name": "tactics"
                                 }
                             ],
-                            "url": "https://live.staticflickr.com/4065/4459771899_07595dc42e.jpg",
-                            "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/610756ec-ae31-4d5e-8f03-8cc52f31b71d",
+                            "url": "https://live.staticflickr.com/4065/4459771899_07595dc42e.jpg",  # noqa
+                            "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa
                             "provider": "flickr",
                             "source": "flickr",
                             "license": "by",
                             "license_version": "2.0",
-                            "license_url": "https://creativecommons.org/licenses/by/2.0/",
-                            "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/4459771899",
-                            "detail_url": "http://api.creativecommons.engineering/v1/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",
-                            "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d"
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/",  # noqa
+                            "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/4459771899",  # noqa
+                            "detail_url": "http://api.creativecommons.engineering/v1/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa
+                            "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d"  # noqa
                         }
                     ]
-                }  # noqa
+                }
             },
             schema=ImageSerializer
         ),
@@ -244,7 +244,7 @@ class RelatedImage(APIView):
     }
 
     @swagger_auto_schema(operation_id="recommendations_images_read",
-                         operation_description=recommendations_images_read_description,
+                         operation_description=recommendations_images_read_description,   # noqa
                          responses=recommendations_images_read_response)
     def get(self, request, identifier, format=None):
         related, result_count = search_controller.related_images(
@@ -300,20 +300,20 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                             "name": "test"
                         }
                     ],
-                    "url": "https://live.staticflickr.com/5122/5264886972_3234d62748.jpg",
-                    "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/7c829a03-fb24-4b57-9b03-65f43ed19395",
+                    "url": "https://live.staticflickr.com/5122/5264886972_3234d62748.jpg",  # noqa
+                    "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/7c829a03-fb24-4b57-9b03-65f43ed19395",  # noqa
                     "provider": "flickr",
                     "source": "flickr",
                     "license": "by",
                     "license_version": "2.0",
-                    "license_url": "https://creativecommons.org/licenses/by/2.0/",
-                    "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/5264886972",
-                    "detail_url": "http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
-                    "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
+                    "license_url": "https://creativecommons.org/licenses/by/2.0/",  # noqa
+                    "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/5264886972",  # noqa
+                    "detail_url": "http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395",  # noqa
+                    "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395",  # noqa
                     "height": 167,
                     "width": 500,
-                    "attribution": "\"exam test\" by Sean MacEntee is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/."
-                }  # noqa
+                    "attribution": "\"exam test\" by Sean MacEntee is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/."  # noqa
+                }
             },
             schema=ImageSerializer
         ),
@@ -442,9 +442,9 @@ class OembedView(APIView):
                     "title": "exam test",
                     "author_name": "Sean MacEntee",
                     "author_url": "https://www.flickr.com/photos/18090920@N07",
-                    "license_url": "https://creativecommons.org/licenses/by/2.0/"
+                    "license_url": "https://creativecommons.org/licenses/by/2.0/"  # noqa
                 }
-            } # noqa
+            }
         ),
         "404": openapi.Response(
             description="Not Found",

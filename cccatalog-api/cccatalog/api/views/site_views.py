@@ -75,7 +75,7 @@ class ImageStats(APIView):
                     "source_name": "flickr",
                     "image_count": 465809213,
                     "display_name": "Flickr",
-                    "source_url": "https://www.flickr.com"             
+                    "source_url": "https://www.flickr.com"     
                 }
             },
             schema=AboutImageResponse(many=True)
@@ -172,10 +172,10 @@ class Register(APIView):
         "201": openapi.Response(
             description="OK",
             examples={
-                "application/json": {  # noqa
+                "application/json": {
                     "name": "My amazing project",
                     "client_id": "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
-                    "client_secret": "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
+                    "client_secret": "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",  # noqa
                 },
             },
             schema=OAuth2RegistrationSuccessful
