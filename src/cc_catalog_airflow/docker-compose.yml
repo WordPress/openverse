@@ -24,6 +24,7 @@ services:
       context: .
       args:
         - OUTPUT_DIR=${OUTPUT_DIR}
+        - REQUIREMENTS_FILE=requirements_prod.txt
     env_file: .env
     restart: always
     depends_on:
