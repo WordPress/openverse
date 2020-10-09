@@ -124,8 +124,8 @@ versioned_paths = [
         ImageStats.as_view(),
         name='about-image'
     ),
-    # path('link', CreateShortenedLink.as_view(), name='make-link'),
-    # path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
+    path('link', CreateShortenedLink.as_view(), name='make-link'),
+    path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
     path('thumbs/<str:identifier>', ProxiedImage.as_view(), name='thumbs'),
     path('oembed', OembedView.as_view(), name='oembed')
 ]

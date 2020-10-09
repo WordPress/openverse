@@ -175,12 +175,12 @@ class Register(APIView):
                 "application/json": {
                     "name": "My amazing project",
                     "client_id": "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
-                    "client_secret": "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",  # noqa
+                    "client_secret": "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
                 },
             },
             schema=OAuth2RegistrationSuccessful
         )
-    }
+    }  # noqa: E501
 
     @swagger_auto_schema(operation_id='register_api_oauth2',
                          operation_description=register_api_oauth2_description,
@@ -288,12 +288,29 @@ class CheckRates(APIView):
         """  # noqa
     throttle_classes = (OnePerSecond,)
 
+    key_info_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples={
+                "application/json": {
+                    "requests_this_minute": 2,
+                    "requests_today": 40,
+                    "rate_limit_model": "enhanced"
+                }
+            },
+            schema=OAuth2KeyInfo
+        ),
+        "403": openapi.Response(
+            description="Forbidden",
+            examples={
+                "application/json": "Forbidden"
+            }
+        )
+    }
+
     @swagger_auto_schema(operation_id='key_info',
                          operation_description=key_info_description,
-                         responses={
-                             200: OAuth2KeyInfo,
-                             403: 'Forbidden'
-                         })
+                         responses=key_info_response)
     def get(self, request, format=None):
         if not request.auth:
             return Response(status=403, data='Forbidden')
