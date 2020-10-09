@@ -502,20 +502,20 @@ class ReportImageView(CreateAPIView):
         """  # noqa
     queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer
-    # images_report_create_response = {
-    #     "201": openapi.Response(
-    #         description="OK",
-    #         examples={
-    #             "application/json": {
-    #                 "reason": "mature",
-    #                 "identifier": "test",
-    #                 "description": "test"
-    #             }
-    #         },
-    #         schema=ReportImageSerializer
-    #     )
-    # }
+    images_report_create_response = {
+        "201": openapi.Response(
+            description="OK",
+            examples={
+                "application/json": {
+                    "reason": "mature",
+                    "identifier": "test",
+                    "description": "test"
+                }
+            },
+            schema=ReportImageSerializer
+        )
+    }
 
-    # @swagger_auto_schema(operation_id="images_report_create",
-    #                      operation_description=images_report_create_description,
-    #                      responses=images_report_create_response)    
+    @swagger_auto_schema(operation_id="images_report_create",
+                         operation_description=images_report_create_description,
+                         responses=images_report_create_response)
