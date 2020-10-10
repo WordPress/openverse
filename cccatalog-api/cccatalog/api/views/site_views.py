@@ -175,12 +175,13 @@ class Register(APIView):
                 "application/json": {
                     "name": "My amazing project",
                     "client_id": "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
-                    "client_secret": "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
+                    "client_secret": "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfy"
+                                     "t6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
                 },
             },
             schema=OAuth2RegistrationSuccessful
         )
-    }  # noqa: E501
+    }
 
     @swagger_auto_schema(operation_id='register_api_oauth2',
                          operation_description=register_api_oauth2_description,

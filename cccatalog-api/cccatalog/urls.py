@@ -95,22 +95,22 @@ schema_view = get_schema_view(
     permission_classes=(rest_framework.permissions.AllowAny,),
 )
 decorated_report_image_view = \
-   swagger_auto_schema(
-      method='post',
-      responses={
-        "201": openapi.Response(
-            description="OK",
-            examples={
-                "application/json": {
-                    "reason": "mature",
-                    "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395",
-                    "description": "This image contains sensitive content"
-                }
-            },
-            schema=ReportImageSerializer
+    swagger_auto_schema(
+        method='post',
+        responses={
+            "201": openapi.Response(
+                description="OK",
+                examples={
+                    "application/json": {
+                        "reason": "mature",
+                        "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395",
+                        "description": "This image contains sensitive content"
+                    }
+                },
+                schema=ReportImageSerializer
             )
         }
-   )(ReportImageView.as_view())
+    )(ReportImageView.as_view())
 
 versioned_paths = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
