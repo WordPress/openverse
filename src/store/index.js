@@ -16,6 +16,7 @@ import ReportContentStore from '~/store-modules/report-content-store'
 import RelatedImagesStore from '~/store-modules/related-images-store'
 import { FETCH_IMAGE_PROVIDERS } from '~/store-modules/action-types'
 import GoogleAnalytics from '~/analytics/GoogleAnalytics'
+import { setupAbTesting } from '~/abTests'
 
 /**
  * Runs once on the server-side per user session. Useful for global things that need to fire once.
@@ -23,9 +24,8 @@ import GoogleAnalytics from '~/analytics/GoogleAnalytics'
  * @param {import('vuex').ActionContext} VuexContext
  * @param {import('@nuxt/types').Context} NuxtContext
  */
-async function nuxtServerInit({ dispatch }, { req }) {
-  // Here we can access cookie info server-side!
-  console.info(req.headers.cookie)
+async function nuxtServerInit({ dispatch, commit }, { req }) {
+  await setupAbTesting(req.headers.cookie, commit)
   await dispatch(FETCH_IMAGE_PROVIDERS)
 }
 

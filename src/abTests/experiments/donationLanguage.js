@@ -8,6 +8,7 @@ const DONATION_PERCENTAGE_CASE = 'donation_percentage'
  * Returns a Promise, which resolves with the experiment name and selected experiment case.
  * In case of failure, it rejects with the error, the experiment name and a default experiment case
  * @param {*} session Sixpack session object
+ * @returns {Promise<Experiment>}
  */
 const joinExperiment = (session) => {
   const resultPromise = new Promise((resolve, reject) => {
