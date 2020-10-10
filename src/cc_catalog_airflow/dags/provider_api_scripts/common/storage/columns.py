@@ -141,7 +141,7 @@ class JSONColumn(Column):
                other input will be turned into sanitized strings.
         """
         sanitized_json = self._sanitize_json_values(value)
-        return json.dumps(sanitized_json) if sanitized_json else None
+        return json.dumps(sanitized_json, ensure_ascii=False) if sanitized_json else None
 
     def _sanitize_json_values(self, value, recursion_limit=100):
         """
