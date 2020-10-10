@@ -27,6 +27,9 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.views.generic import RedirectView
 import rest_framework.permissions
+from drf_yasg.utils import swagger_auto_schema
+from cccatalog.api.serializers.image_serializers import\
+    ReportImageSerializer
 
 description = """
 # Introduction
@@ -91,6 +94,23 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=(rest_framework.permissions.AllowAny,),
 )
+decorated_report_image_view = \
+   swagger_auto_schema(
+      method='post',
+      responses={
+        "201": openapi.Response(
+            description="OK",
+            examples={
+                "application/json": {
+                    "reason": "mature",
+                    "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395",
+                    "description": "This image contains sensitive content"
+                }
+            },
+            schema=ReportImageSerializer
+            )
+        }
+   )(ReportImageView.as_view())
 
 versioned_paths = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
@@ -110,7 +130,7 @@ versioned_paths = [
     ),
     path(
         'images/<str:identifier>/report',
-        ReportImageView.as_view(),
+        decorated_report_image_view,
         name='report-image'
     ),
     path(

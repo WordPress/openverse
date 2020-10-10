@@ -490,32 +490,16 @@ class OembedView(APIView):
 
 
 class ReportImageView(CreateAPIView):
-    images_report_create_description = \
-        """
-        Report issue about a particular image ID.
+    """
+    images_report_create
+    
+    Report issue about a particular image ID.
 
-        Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
+    Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
 
-        ```
-        $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "string"}' https://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
-        ```
-        """  # noqa
+    ```
+    $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "This image contains sensitive content"}' https://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
+    ```
+    """  # noqa
     queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer
-    images_report_create_response = {
-        "201": openapi.Response(
-            description="OK",
-            examples={
-                "application/json": {
-                    "reason": "mature",
-                    "identifier": "test",
-                    "description": "test"
-                }
-            },
-            schema=ReportImageSerializer
-        )
-    }
-
-    @swagger_auto_schema(operation_id="images_report_create",
-                         operation_description=images_report_create_description,
-                         responses=images_report_create_response)
