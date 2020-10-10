@@ -102,19 +102,28 @@ class SearchImages(APIView):
                             "title": "File:Well test separator.svg",
                             "id": "36537842-b067-4ca0-ad67-e00ff2e06b2d",
                             "creator": "en:User:Oil&GasIndustry",
-                            "creator_url": "https://en.wikipedia.org/wiki/User:Oil%26GasIndustry",
-                            "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Well_test_separator.svg",
-                            "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/36537842-b067-4ca0-ad67"
-                                         "-e00ff2e06b2d",
+                            "creator_url": "https://en.wikipedia.org/wiki"
+                                           "/User:Oil%26GasIndustry",
+                            "url": "https://upload.wikimedia.org/wikipedia"
+                                   "/commons/3/3a/Well_test_separator.svg",
+                            "thumbnail": "https://api.creativecommons"
+                                         ".engineering/v1/thumbs/36537842"
+                                         "-b067-4ca0-ad67-e00ff2e06b2d",
                             "provider": "wikimedia",
                             "source": "wikimedia",
                             "license": "by",
                             "license_version": "3.0",
-                            "license_url": "https://creativecommons.org/licenses/by/3.0",
-                            "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=26229990",
-                            "detail_url": "http://api.creativecommons.engineering/v1/images/36537842-b067-4ca0-ad67"
-                                          "-e00ff2e06b2d",
-                            "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/36537842"
+                            "license_url": "https://creativecommons.org"
+                                           "/licenses/by/3.0",
+                            "foreign_landing_url": "https://commons.wikimedia"
+                                                   ".org/w/index.php?curid"
+                                                   "=26229990",
+                            "detail_url": "http://api.creativecommons"
+                                          ".engineering/v1/images/36537842"
+                                          "-b067-4ca0-ad67-e00ff2e06b2d",
+                            "related_url": "http://api.creativecommons"
+                                           ".engineering/v1/recommendations"
+                                           "/images/36537842"
                                            "-b067-4ca0-ad67-e00ff2e06b2d",
                             "fields_matched": [
                                 "description",
@@ -131,7 +140,8 @@ class SearchImages(APIView):
             examples={
                 "application/json": {
                     "error": "InputError",
-                    "detail": "Invalid input given for fields. 'license' -> License 'PDMNBCG' does not exist.",
+                    "detail": "Invalid input given for fields. 'license' -> "
+                              "License 'PDMNBCG' does not exist.",
                     "fields": [
                         "license"
                     ]
@@ -211,7 +221,8 @@ class RelatedImage(APIView):
                             "title": "exam tactics",
                             "id": "610756ec-ae31-4d5e-8f03-8cc52f31b71d",
                             "creator": "Sean MacEntee",
-                            "creator_url": "https://www.flickr.com/photos/18090920@N07",
+                            "creator_url": "https://www.flickr.com/photos"
+                                           "/18090920@N07",
                             "tags": [
                                 {
                                     "name": "exam"
@@ -220,19 +231,28 @@ class RelatedImage(APIView):
                                     "name": "tactics"
                                 }
                             ],
-                            "url": "https://live.staticflickr.com/4065/4459771899_07595dc42e.jpg",
-                            "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/610756ec-ae31-4d5e-8f03"
-                                         "-8cc52f31b71d",
+                            "url": "https://live.staticflickr.com/4065"
+                                   "/4459771899_07595dc42e.jpg",
+                            "thumbnail": "https://api.creativecommons"
+                                         ".engineering/v1/thumbs/610756ec"
+                                         "-ae31-4d5e-8f03-8cc52f31b71d",
                             "provider": "flickr",
                             "source": "flickr",
                             "license": "by",
                             "license_version": "2.0",
-                            "license_url": "https://creativecommons.org/licenses/by/2.0/",
-                            "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/4459771899",
-                            "detail_url": "http://api.creativecommons.engineering/v1/images/610756ec-ae31-4d5e-8f03"
+                            "license_url": "https://creativecommons.org"
+                                           "/licenses/by/2.0/",
+                            "foreign_landing_url": "https://www.flickr.com"
+                                                   "/photos/18090920@N07"
+                                                   "/4459771899",
+                            "detail_url": "http://api.creativecommons"
+                                          ".engineering/v1/images/610756ec"
+                                          "-ae31-4d5e-8f03"
                                           "-8cc52f31b71d",
-                            "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/610756ec"
-                                           "-ae31-4d5e-8f03-8cc52f31b71d "
+                            "related_url": "http://api.creativecommons"
+                                           ".engineering/v1/recommendations"
+                                           "/images/610756ec"
+                                           "-ae31-4d5e-8f03-8cc52f31b71d"
                         }
                     ]
                 }
@@ -249,8 +269,8 @@ class RelatedImage(APIView):
         )
     }
 
-    @swagger_auto_schema(operation_id="recommendations_images_read",   # noqa: E501
-                         operation_description=recommendations_images_read_description,
+    @swagger_auto_schema(operation_id="recommendations_images_read",
+                         operation_description=recommendations_images_read_description,  # noqa: E501
                          responses=recommendations_images_read_response)
     def get(self, request, identifier, format=None):
         related, result_count = search_controller.related_images(
@@ -306,23 +326,33 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
                             "name": "test"
                         }
                     ],
-                    "url": "https://live.staticflickr.com/5122/5264886972_3234d62748.jpg",
-                    "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/7c829a03-fb24-4b57-9b03"
+                    "url": "https://live.staticflickr.com/5122"
+                           "/5264886972_3234d62748.jpg",
+                    "thumbnail": "https://api.creativecommons.engineering/v1"
+                                 "/thumbs/7c829a03-fb24-4b57-9b03 "
                                  "-65f43ed19395",
                     "provider": "flickr",
                     "source": "flickr",
                     "license": "by",
                     "license_version": "2.0",
-                    "license_url": "https://creativecommons.org/licenses/by/2.0/",
-                    "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/5264886972",
-                    "detail_url": "http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03"
+                    "license_url": "https://creativecommons.org/licenses/by/2"
+                                   ".0/",
+                    "foreign_landing_url": "https://www.flickr.com/photos"
+                                           "/18090920@N07/5264886972",
+                    "detail_url": "http://api.creativecommons.engineering/v1"
+                                  "/images/7c829a03-fb24-4b57-9b03"
                                   "-65f43ed19395",
-                    "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24"
+                    "related_url": "http://api.creativecommons.engineering/v1"
+                                   "/recommendations/images/7c829a03-fb24 "
                                    "-4b57-9b03-65f43ed19395",
                     "height": 167,
                     "width": 500,
-                    "attribution": "\"exam test\" by Sean MacEntee is licensed under CC-BY 2.0. To view a copy of "
-                                   "this license, visit https://creativecommons.org/licenses/by/2.0/. "
+                    "attribution": "\"exam test\" by Sean MacEntee is "
+                                   "licensed under CC-BY 2.0. To view a copy "
+                                   "of "
+                                   "this license, visit "
+                                   "https://creativecommons.org/licenses/by/2"
+                                   ".0/. "
                 }
             },
             schema=ImageSerializer
@@ -452,7 +482,8 @@ class OembedView(APIView):
                     "title": "exam test",
                     "author_name": "Sean MacEntee",
                     "author_url": "https://www.flickr.com/photos/18090920@N07",
-                    "license_url": "https://creativecommons.org/licenses/by/2.0/"
+                    "license_url": "https://creativecommons.org/licenses/by/2"
+                                   ".0/ "
                 }
             }
         ),
