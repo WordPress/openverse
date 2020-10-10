@@ -203,6 +203,14 @@ def test_JSONColumn_prepare_string_returns_json_string(monkeypatch):
     assert actual_json == expect_json
 
 
+def test_JSONColumn_prepare_string_returns_unicode_json_string(monkeypatch):
+    jc = columns.JSONColumn('test', False)
+    D = {'test': u'A unicode \u018e string \xf1'}
+    actual_json = jc.prepare_string(D)
+    expect_json = '{"test": "A unicode Ǝ string ñ"}'
+    assert actual_json == expect_json
+
+
 def test_JSONColumn_sanitize_json_values_handles_flat_dict(monkeypatch):
     jc = columns.JSONColumn('test', False)
 
