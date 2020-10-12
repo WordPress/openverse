@@ -58,7 +58,6 @@
     "vue-i18n": "^8.21.0"
   },
   "devDependencies": {
-    "@nuxt/types": "^2.14.6",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@types/jest": "^26.0.10",
     "@vue/test-utils": "^1.0.4",

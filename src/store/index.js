@@ -16,18 +16,6 @@ import ReportContentStore from '~/store-modules/report-content-store'
 import RelatedImagesStore from '~/store-modules/related-images-store'
 import { FETCH_IMAGE_PROVIDERS } from '~/store-modules/action-types'
 import GoogleAnalytics from '~/analytics/GoogleAnalytics'
-import { setupAbTesting } from '~/abTests'
-
-/**
- * Runs once on the server-side per user session. Useful for global things that need to fire once.
- * View the Nuxt docs {@link https://nuxtjs.org/guide/vuex-store#the-nuxtserverinit-action} for more info.
- * @param {import('vuex').ActionContext} VuexContext
- * @param {import('@nuxt/types').Context} NuxtContext
- */
-async function nuxtServerInit({ dispatch, commit }, { req }) {
-  await setupAbTesting(req.headers.cookie, commit)
-  await dispatch(FETCH_IMAGE_PROVIDERS)
-}
 
 export const actions = Object.assign(
   UsageDataStore.actions(UsageDataService),
@@ -40,7 +28,11 @@ export const actions = Object.assign(
   ABTestStore.actions,
   ReportContentStore.actions(ReportService),
   RelatedImagesStore.actions(ImageService),
-  { nuxtServerInit }
+  {
+    async nuxtServerInit({ dispatch }) {
+      await dispatch(FETCH_IMAGE_PROVIDERS)
+    },
+  }
 )
 
 export const state = () =>
