@@ -32,19 +32,34 @@
 import GoogleAnalytics from '@/analytics/GoogleAnalytics'
 import { DonateLinkClick, DonateBannerClose } from '@/analytics/events'
 import { ExperimentData } from '@/abTests/experiments/donationLanguage'
+import { JOINED_AB_TEST_EXPERIMENT } from '@/store-modules/mutation-types'
 
 export default {
   name: 'DonationBanner',
+  data: function () {
+    return {
+      caseA: true,
+    }
+  },
   computed: {
     donationText() {
-      const isAlternativeCase =
-        this.$store.state.experiments.length &&
-        this.$store.state.experiments[0].case ===
-          ExperimentData.DONATION_PERCENTAGE_CASE
-      return isAlternativeCase
-        ? this.$t('header.donation-banner.alternative-description')
-        : this.$t('header.donation-banner.description')
+      return this.caseA
+        ? this.$t('header.donation-banner.description')
+        : this.$t('header.donation-banner.alternative-description')
     },
+  },
+  created() {
+    this.unsubscribe = this.$store.subscribe((mutation, state) => {
+      if (mutation.type === JOINED_AB_TEST_EXPERIMENT) {
+        const experiment = state.experiments.find(
+          (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
+        )
+        this.caseA = experiment.case === ExperimentData.DONATION_GENERAL_CASE
+      }
+    })
+  },
+  beforeDestroy() {
+    this.unsubscribe()
   },
   methods: {
     onDismiss() {
