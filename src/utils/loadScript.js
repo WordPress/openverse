@@ -7,9 +7,8 @@ export default function loadScript(url = '') {
     const el = document.createElement('script')
     el.src = url
     el.defer = true
-    el.addEventListener('load', () => {
-      resolve()
-    })
+    el.addEventListener('load', resolve)
+    el.addEventListener('error', reject)
     document.head.appendChild(el)
   })
 }

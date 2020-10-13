@@ -47,7 +47,10 @@ export default {
   mounted() {
     this.initSketchfab()
       .then(this.initViewer)
-      .catch((error) => console.error(error))
+      .catch((error) => {
+        console.error(error)
+        this.$emit('failure')
+      })
   },
   methods: {
     /**

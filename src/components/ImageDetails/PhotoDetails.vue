@@ -19,7 +19,11 @@
         :alt="image.title"
       />
 
-      <SketchFabViewer v-if="sketchFabUid" :uid="sketchFabUid" />
+      <SketchFabViewer
+        v-if="sketchFabUid"
+        :uid="sketchFabUid"
+        @failure="sketchFabfailure = true"
+      />
 
       <legal-disclaimer />
 
@@ -184,12 +188,16 @@ export default {
   },
   data() {
     return {
+      sketchFabfailure: false,
       activeTab: 0,
     }
   },
   computed: {
     sketchFabUid() {
-      if (this.image.source !== 'sketchfab') return null
+      if (this.image.source !== 'sketchfab' || this.sketchFabfailure) {
+        return null
+      }
+
       return this.image.url
         .split('https://media.sketchfab.com/models/')[1]
         .split('/')[0]
