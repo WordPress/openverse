@@ -9,19 +9,14 @@
         href="https://www.classy.org/give/297881/#!/donation/checkout"
         target="_blank"
         class="button is-success small"
-        @click="sendClickEvent"
-        @keypress.enter="sendClickEvent"
+        @click="handleDonateClick"
       >
         <i
           class="icon cc-letterheart-filled margin-right-small is-size-5 padding-top-smaller"
         />
         {{ $t('header.donation-banner.yes') }}
       </a>
-      <button
-        class="button is-text small dismiss-button"
-        @click="onDismiss"
-        @keypress.enter="onDismiss"
-      >
+      <button class="button is-text small dismiss-button" @click="onDismiss">
         {{ $t('header.donation-banner.no') }}
       </button>
     </div>
@@ -33,6 +28,7 @@ import GoogleAnalytics from '@/analytics/GoogleAnalytics'
 import { DonateLinkClick, DonateBannerClose } from '@/analytics/events'
 import { ExperimentData } from '@/abTests/experiments/donationLanguage'
 import { JOINED_AB_TEST_EXPERIMENT } from '@/store-modules/mutation-types'
+import { CONVERT_AB_TEST_EXPERIMENT } from '@/store-modules/action-types'
 
 export default {
   name: 'DonationBanner',
@@ -66,7 +62,10 @@ export default {
       this.$emit('onDismiss')
       GoogleAnalytics().sendEvent(DonateBannerClose())
     },
-    sendClickEvent() {
+    handleDonateClick() {
+      this.$store.dispatch(CONVERT_AB_TEST_EXPERIMENT, {
+        experimentName: ExperimentData.EXPERIMENT_NAME,
+      })
       GoogleAnalytics().sendEvent(DonateLinkClick('banner'))
     },
   },
