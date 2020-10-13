@@ -13,6 +13,7 @@
       </a>
 
       <img
+        v-show="!sketchFabUid"
         :class="{ photo_image: true, loading: !isLoaded }"
         :src="
           isLoaded
@@ -21,6 +22,12 @@
         "
         :alt="image.title"
         @load="onImageLoad"
+      />
+
+      <SketchFabViewer
+        v-if="sketchFabUid"
+        :uid="sketchFabUid"
+        @failure="sketchFabfailure = true"
       />
 
       <LegalDisclaimer />
@@ -185,12 +192,22 @@ export default {
   ],
   data() {
     return {
+      sketchFabfailure: false,
       activeTab: 0,
     }
   },
   computed: {
     isLoaded() {
       return this.image && this.image.url
+    },
+    sketchFabUid() {
+      if (this.image.source !== 'sketchfab' || this.sketchFabfailure) {
+        return null
+      }
+
+      return this.image.url
+        .split('https://media.sketchfab.com/models/')[1]
+        .split('/')[0]
     },
     isReportFormVisible() {
       return this.$store.state.isReportFormVisible
