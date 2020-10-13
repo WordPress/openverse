@@ -15,7 +15,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Check API style
-      run: pycodestyle cccatalog-api/cccatalog --exclude='cccatalog-api/cccatalog/api/migrations' --max-line-length=80 --ignore=E402,E702
+      run: pycodestyle cccatalog-api/cccatalog --exclude='cccatalog-api/cccatalog/api/migrations,cccatalog-api/cccatalog/example_responses.py' --max-line-length=80 --ignore=E402,E702
     - name: Check ingestion-server style
       run: pycodestyle ingestion_server/ingestion_server --max-line-length=80 --ignore=E402
   Tests:

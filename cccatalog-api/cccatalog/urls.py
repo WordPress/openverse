@@ -30,6 +30,7 @@ import rest_framework.permissions
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.serializers.image_serializers import\
     ReportImageSerializer
+from cccatalog.example_responses import images_report_create_201_example
 
 description = """
 # Introduction
@@ -57,19 +58,22 @@ Pull requests are welcome!
 ## Overview
 The cccatalog REST API allows you to integrate and perform queries to digital\
 media under Creative Commons.
-The API is based on REST principles.It supports GET, POST, and DELETE requests.
+The API is based on REST principles. It supports GET, POST, and DELETE requests.
 GET request is used to retrieve information from a resource \
-and a POST to update an entity.DELETE removes an entity.
+and a POST to update an entity. DELETE removes an entity.
 After receiving your request, the API sends back an HTTP code as a response.
 
 ## Possible Response Status Codes
 | Status Code   | Description           | Notes  |
 | ------------- |-------------          | -----  |
 | 200           | OK                    | The request was successful |
+| 201           | OK                    | The request was successful |
 | 204           | OK                    | No Content |
 | 301           | Bad Request           | Moved Permanently |
-| 400           | Bad Request           |  The request could not be understood by the server. Incoming parameters might not be valid |
-| 403           | Unauthorized          |    Forbidden |
+| 400           | Bad Request           | The request could not be understood by the server. Incoming parameters might not be valid |
+| 403           | Unauthorized          | Forbidden |
+| 404           | Not Found             | The requested content could not be found by the server |
+| 500           | Internal Server Error | The request could not be processed by the server for an unknown reason |
 
 """  # noqa
 
@@ -94,19 +98,14 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=(rest_framework.permissions.AllowAny,),
 )
+
 decorated_report_image_view = \
     swagger_auto_schema(
         method='post',
         responses={
             "201": openapi.Response(
                 description="OK",
-                examples={
-                    "application/json": {
-                        "reason": "mature",
-                        "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395",
-                        "description": "This image contains sensitive content"
-                    }
-                },
+                examples=images_report_create_201_example,
                 schema=ReportImageSerializer
             )
         }

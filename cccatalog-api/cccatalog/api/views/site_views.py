@@ -25,6 +25,9 @@ from cccatalog.settings import THUMBNAIL_PROXY_URL, THUMBNAIL_WIDTH_PX
 from django.core.cache import cache
 from django.http import HttpResponse
 from drf_yasg import openapi
+from cccatalog.example_responses import register_api_oauth2_201_example,\
+    key_info_200_example, key_info_403_example, key_info_500_example,\
+    image_stats_200_example
 
 CODENAME = 'provider_identifier'
 NAME = 'provider_name'
@@ -70,14 +73,7 @@ class ImageStats(APIView):
     image_stats_response = {
         "200": openapi.Response(
             description="OK",
-            examples={
-                "application/json": {
-                    "source_name": "flickr",
-                    "image_count": 465809213,
-                    "display_name": "Flickr",
-                    "source_url": "https://www.flickr.com"
-                }
-            },
+            examples=image_stats_200_example,
             schema=AboutImageResponse(many=True)
         )
     }
@@ -134,7 +130,7 @@ class Register(APIView):
  
     First, register for a key.
     ```
-    $ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "A description", "email": "example@example.com"}' https://api.creativecommons.engineering/v1/auth_tokens/register
+    $ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "cccatalog-api@creativecommons.org"}' https://api.creativecommons.engineering/v1/auth_tokens/register
     {
         "client_secret" : "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
         "client_id" : "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
@@ -171,16 +167,7 @@ class Register(APIView):
     register_api_oauth2_response = {
         "201": openapi.Response(
             description="OK",
-            examples={
-                "application/json": {
-                    "name": "My amazing project",
-                    "client_id": "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
-                    "client_secret": "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7"
-                                     "GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdz"
-                                     "mmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1i"
-                                     "DetmzMMcxLVELf00BR2e",
-                },
-            },
+            examples=register_api_oauth2_201_example,
             schema=OAuth2RegistrationSuccessful
         )
     }
@@ -294,20 +281,16 @@ class CheckRates(APIView):
     key_info_response = {
         "200": openapi.Response(
             description="OK",
-            examples={
-                "application/json": {
-                    "requests_this_minute": 2,
-                    "requests_today": 40,
-                    "rate_limit_model": "enhanced"
-                }
-            },
+            examples=key_info_200_example,
             schema=OAuth2KeyInfo
         ),
         "403": openapi.Response(
             description="Forbidden",
-            examples={
-                "application/json": "Forbidden"
-            }
+            examples=key_info_403_example
+        ),
+        "500": openapi.Response(
+            description="Internal Server Error",
+            examples=key_info_500_example
         )
     }
 
