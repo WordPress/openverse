@@ -296,18 +296,21 @@ def overwrite_records_in_image_table(
         col.TAGS,
         col.WATERMARKED,
     ]
+    update_set_string = ',\n'.join(
+        [f'{column} = {load_table}.{column}' for column in columns_to_update]
+    )
 
     update_query = dedent(
         f'''
-        UPDATE {image_table} SET ({', '.join(columns_to_update)}) = (
-          SELECT {', '.join(columns_to_update)}
-          FROM {load_table}
-          WHERE
-            {image_table}.{col.PROVIDER} = {load_table}.{col.PROVIDER}
-            AND
-              md5({image_table}.{col.FOREIGN_ID})
-              = md5({load_table}.{col.FOREIGN_ID})
-        );
+        UPDATE {image_table}
+        SET
+        {update_set_string}
+        FROM {load_table}
+        WHERE
+          {image_table}.{col.PROVIDER} = {load_table}.{col.PROVIDER}
+          AND
+          md5({image_table}.{col.FOREIGN_ID})
+            = md5({load_table}.{col.FOREIGN_ID});
         '''
     )
     postgres.run(update_query)
