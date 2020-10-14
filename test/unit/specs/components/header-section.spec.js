@@ -5,6 +5,9 @@ describe('HeaderSection', () => {
   it('should render correct contents', () => {
     const wrapper = render(HeaderSection, {
       mocks: {
+        $store: {
+          state: { abSessionId: '' },
+        },
         $route: {
           path: '',
         },
