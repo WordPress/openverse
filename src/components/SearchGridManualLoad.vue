@@ -1,31 +1,30 @@
 <template>
   <section
+    ref="searchGrid"
     :class="{
       'search-grid': true,
       'search-grid__contain-images': shouldContainImages,
     }"
-    ref="searchGrid"
   >
-    <div class="search-grid_ctr" ref="gridItems">
+    <div ref="gridItems" class="search-grid_ctr">
       <div v-show="!isFetchingImages && includeAnalytics" class="results-meta">
         <span class="caption has-text-weight-semibold">
           {{ _imagesCount }}
         </span>
         <div class="is-hidden-touch mr-auto padding-left-big">
-          <search-rating v-if="_query.q" :searchTerm="_query.q" />
+          <SearchRating v-if="_query.q" :search-term="_query.q" />
         </div>
         <div class="is-hidden-desktop is-block">
-          <search-rating v-if="_query.q" :searchTerm="searchTerm" />
+          <SearchRating v-if="_query.q" :search-term="searchTerm" />
         </div>
-        <safer-browsing />
+        <SaferBrowsing />
       </div>
       <div class="search-grid-cells">
-        <search-grid-cell
+        <SearchGridCell
           v-for="(image, index) in _images"
           :key="index"
           :image="image"
-        >
-        </search-grid-cell>
+        />
       </div>
       <div class="padding-bottom-big">
         <div class="load-more">
@@ -34,70 +33,51 @@
             class="button margin-bottom-big"
             :disabled="isFinished"
             @click="onLoadMoreImages"
-            v-on:keyup.enter="onLoadMoreImages"
+            @keyup.enter="onLoadMoreImages"
           >
             <span v-if="isFinished">{{ $t('browse-page.no-more') }}</span>
             <span v-else>{{ $t('browse-page.load') }}</span>
           </button>
-          <loading-icon v-show="isFetchingImages" />
+          <LoadingIcon v-show="isFetchingImages" />
         </div>
         <button
           type="button"
-          @click="showMetaImageSearch = true"
-          v-on:keyup.enter="showMetaImageSearch = true"
           class="meta-popup-trigger has-color-tomato text-center caption padding-normal"
+          @click="showMetaImageSearch = true"
+          @keyup.enter="showMetaImageSearch = true"
         >
           {{ $t('browse-page.other-source') }}
         </button>
       </div>
       <div
-        class="search-grid_notification callout alert"
         v-if="isFetchingImagesError"
+        class="search-grid_notification callout alert"
       >
         <h5>{{ $t('browse-page.error') }} {{ _errorMessage }}</h5>
       </div>
     </div>
 
-    <app-modal
+    <AppModal
       :visible="showMetaImageSearch"
       :title="'Search Images from Other Sources'"
       @close="showMetaImageSearch = false"
     >
-      <meta-search-card
+      <MetaSearchCard
         type="image"
         :query="query"
         @close="showMetaImageSearch = false"
       />
-    </app-modal>
+    </AppModal>
   </section>
 </template>
 
 <script>
-import { SET_IMAGES } from '@/store/mutation-types'
-import SearchGridCell from '@/components/SearchGridCell'
-import LoadingIcon from '@/components/LoadingIcon'
-import SearchRating from '@/components/SearchRating'
-import SaferBrowsing from '@/components/SaferBrowsing'
-import MetaSearchCard from '@/components/MetaSearch/MetaSearchCard'
-import AppModal from '@/components/AppModal'
+import { SET_IMAGES } from '~/store-modules/mutation-types'
 
 const DEFAULT_PAGE_SIZE = 20
 
 export default {
-  name: 'search-grid-manual-load',
-  components: {
-    SearchGridCell,
-    LoadingIcon,
-    SearchRating,
-    SaferBrowsing,
-    MetaSearchCard,
-    AppModal,
-  },
-  data: () => ({
-    isDataInitialized: false,
-    shouldContainImages: false,
-    showMetaImageSearch: false,
-  }),
+  name: 'SearchGridManualLoad',
   props: {
     imagesCount: {
       default: 0,
@@ -119,6 +99,11 @@ export default {
       default: '',
     },
   },
+  data: () => ({
+    isDataInitialized: false,
+    shouldContainImages: false,
+    showMetaImageSearch: false,
+  }),
   computed: {
     imagePage() {
       return this.$store.state.imagePage
@@ -175,8 +160,8 @@ export default {
   methods: {
     handleScalingChange() {
       setTimeout(() => {
-        this.$redrawVueMasonry() // Some elements end up taking less space
-      }, 100) // One-tenth of a second should be sufficient to calculate new height
+        this.$redrawVueMasonry()
+      }, 100)
     },
     searchChanged() {
       this.$store.commit(SET_IMAGES, { images: [], page: 1 })
@@ -196,7 +181,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import 'node_modules/bulma/sass/utilities/_all';
+@import 'bulma/sass/utilities/_all';
 
 .button[disabled] {
   opacity: 1;

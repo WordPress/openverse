@@ -2,17 +2,17 @@
   <div
     class="filters padding-vertical-big padding-left-big padding-right-normal"
     @click="hideLicenseExplanationVisibility()"
-    v-on:keyup.enter="hideLicenseExplanationVisibility()"
+    @keyup.enter="hideLicenseExplanationVisibility()"
   >
     <div
       class="filters-title"
       @click.prevent="toggleFilterVisibility"
-      v-on:keyup.enter="toggleFilterVisibility"
+      @keyup.enter="toggleFilterVisibility"
     >
       <span>{{ title }}</span>
       <button
-        :aria-label="'filters list for' + title + 'category'"
         v-if="!filtersExpandedByDefault"
+        :aria-label="'filters list for' + title + 'category'"
         class="filter-visibility-toggle is-white padding-vertical-small"
       >
         <i
@@ -35,29 +35,34 @@
       >
         <label class="checkbox" :for="item.code" :disabled="block(item)">
           <input
-            type="checkbox"
-            class="filter-checkbox margin-right-small"
             :id="item.code"
             :key="index"
+            type="checkbox"
+            class="filter-checkbox margin-right-small"
             :checked="item.checked"
             :disabled="block(item)"
             @change="onValueChange"
           />
-          <license-icons v-if="filterType == 'licenses'" :license="item.code" />
-          {{ $t(item.name) }}
+          <LicenseIcons v-if="filterType == 'licenses'" :license="item.code" />
+          <template v-if="['providers', 'searchBy'].includes(filterType)">
+            {{ item.name }}
+          </template>
+          <template v-else>
+            {{ $t(item.name) }}
+          </template>
         </label>
         <img
+          v-if="filterType == 'licenses'"
           :aria-label="$t('browse-page.aria.license-explanation')"
           tabindex="0"
-          v-if="filterType == 'licenses'"
           src="@/assets/help_icon.svg"
           alt="help"
           class="license-help is-pulled-right padding-top-smallest padding-right-smaller"
           @click.stop="toggleLicenseExplanationVisibility(item.code)"
-          v-on:keyup.enter="toggleLicenseExplanationVisibility(item.code)"
+          @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
         />
 
-        <license-explanation-tooltip
+        <LicenseExplanationTooltip
           v-if="
             shouldRenderLicenseExplanationTooltip(item.code) && !block(item)
           "
@@ -69,12 +74,11 @@
 </template>
 
 <script>
-import { ExperimentData } from '@/abTests/experiments/filterExpansion'
-import LicenseIcons from '@/components/LicenseIcons'
-import LicenseExplanationTooltip from './LicenseExplanationTooltip'
+import LicenseIcons from '~/components/LicenseIcons'
+import LicenseExplanationTooltip from '~/components/Filters/LicenseExplanationTooltip'
 
 export default {
-  name: 'filter-check-list',
+  name: 'FilterCheckList',
   components: {
     LicenseIcons,
     LicenseExplanationTooltip,
@@ -89,16 +93,11 @@ export default {
   },
   computed: {
     /**
-     * Check if a filter experiment is active, and if the current case is 'expanded'.
-     * Show filters collapsed by default
+     * Show filters expanded by default
+     * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
      */
     filtersExpandedByDefault() {
-      const experiment = this.$store.state.experiments.find(
-        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
-      )
-      return experiment
-        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
-        : false
+      return true
     },
     areFiltersExpanded() {
       return this.filtersExpandedByDefault || this.filtersVisible

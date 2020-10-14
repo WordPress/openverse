@@ -21,20 +21,20 @@
         <label for="searchTerm">
           <input
             id="searchTerm"
+            v-model="editableQuery.q"
             class="input"
             type="text"
             placeholder="Search"
-            v-model="editableQuery.q"
-            style="max-width: 400px;"
+            style="max-width: 400px"
           />
         </label>
         <span class="icon is-left">
           <!-- Style issue needs to be fixed for icons: -->
-          <i class="icon search is-size-5" style="padding: 10px;" />
+          <i class="icon search is-size-5" style="padding: 10px" />
         </span>
       </div>
 
-      <template v-if="type !== 'image'">
+      <!-- <template v-if="type !== 'image'">
         <h5 for="metaUseCheckboxes" class="b-header margin-bottom-small">
           {{ $t('meta-search.card.checkboxes.title') }}
         </h5>
@@ -42,25 +42,25 @@
           <label for="commercial-chk" class="margin-right-big"
             ><input
               id="commercial-chk"
+              v-model="editableQuery.filters.commercial"
               class="margin-right-smaller"
               type="checkbox"
-              v-model="editableQuery.filters.commercial"
             />
             {{ $t('meta-search.card.checkboxes.commercial') }}</label
           >
           <label for="modify-chk"
             ><input
               id="modify-chk"
+              v-model="editableQuery.filters.modify"
               class="margin-right-smaller"
               type="checkbox"
-              v-model="editableQuery.filters.modify"
             />
             {{ $t('meta-search.card.checkboxes.modify') }}</label
           >
         </div>
-      </template>
+      </template> -->
 
-      <meta-source-list :type="type" :query="editableQuery" />
+      <MetaSourceList :type="type" :query="editableQuery" />
       <p class="caption has-text-weight-semibold">
         {{ $t('meta-search.caption') }}
       </p>
@@ -72,7 +72,10 @@
 import MetaSourceList from './MetaSourceList'
 
 export default {
-  name: 'meta-search-card',
+  name: 'MetaSearchCard',
+  components: {
+    MetaSourceList,
+  },
   props: ['type', 'query'],
   data() {
     return {
@@ -85,14 +88,11 @@ export default {
       },
     }
   },
-  components: {
-    MetaSourceList,
-  },
 }
 </script>
 
 <style lang="scss" scoped>
-@import 'node_modules/bulma/sass/utilities/_all';
+@import 'bulma/sass/utilities/_all';
 
 .meta-modal-content {
   max-width: 46rem;

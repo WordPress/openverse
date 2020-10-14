@@ -6,11 +6,11 @@
     :data-clipboard-target="el"
   >
     <span v-if="!success">
-      <i class="icon cc-share margin-right-small"></i>
+      <i class="icon cc-share margin-right-small" />
       {{ $t('photo-details.copy.copy') }}
     </span>
     <span v-else>
-      <i class="icon cc-share margin-right-small"></i>
+      <i class="icon cc-share margin-right-small" />
       {{ $t('photo-details.copy.copied') }}
     </span>
   </button>
@@ -20,11 +20,7 @@
 import Clipboard from 'clipboard'
 
 export default {
-  name: 'copy-button',
-  data: () => ({
-    success: false,
-    clipboard: null,
-  }),
+  name: 'CopyButton',
   props: {
     el: {
       required: true,
@@ -32,6 +28,18 @@ export default {
     id: {
       required: true,
     },
+  },
+  data: () => ({
+    success: false,
+    clipboard: null,
+  }),
+  mounted() {
+    this.clipboard = new Clipboard(`#${this.$props.id}`)
+    this.clipboard.on('success', this.onCopySuccess)
+    this.clipboard.on('error', this.onCopyError)
+  },
+  destroyed() {
+    this.clipboard.destroy()
   },
   methods: {
     onCopySuccess(e) {
@@ -48,14 +56,6 @@ export default {
       this.$emit('copyFailed')
       e.clearSelection()
     },
-  },
-  mounted() {
-    this.clipboard = new Clipboard(`#${this.$props.id}`)
-    this.clipboard.on('success', this.onCopySuccess)
-    this.clipboard.on('error', this.onCopyError)
-  },
-  destroyed() {
-    this.clipboard.destroy()
   },
 }
 </script>

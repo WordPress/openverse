@@ -6,7 +6,7 @@
       target="_blank"
       rel="noopener"
       @click="onReuseSurveyClick"
-      v-on:keyup.enter="onReuseSurveyClick"
+      @keyup.enter="onReuseSurveyClick"
     >
       {{ $t('photo-details.survey.link') }}
     </a>
@@ -18,13 +18,12 @@
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '@/store/usage-data-analytics-types'
+} from '~/store-modules/usage-data-analytics-types'
 
 export default {
-  name: 'reuse-survey',
+  name: 'ReuseSurvey',
   props: ['image'],
   data: () => ({
-    // for SSR, initiates it as an empty value
     location: '',
   }),
   computed: {
@@ -34,7 +33,6 @@ export default {
     },
   },
   mounted() {
-    // for SSR, sets the value with window.location, which is only available on client
     this.location = window.location.href
   },
   methods: {

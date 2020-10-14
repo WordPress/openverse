@@ -1,10 +1,10 @@
 <template>
   <button
-    :aria-label="$t('browse-page.aria.scroll')"
-    @click="scrollToTop"
-    v-on:keyup.enter="scrollToTop"
     v-if="showBtn"
+    :aria-label="$t('browse-page.aria.scroll')"
     class="scroll"
+    @click="scrollToTop"
+    @keyup.enter="scrollToTop"
   >
     <i>
       <svg

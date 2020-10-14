@@ -14,7 +14,7 @@
             class="is-size-6"
             href="#panel0"
             @click.prevent="setActiveTab(0)"
-            v-on:keyup.enter.prevent="setActiveTab(0)"
+            @keyup.enter.prevent="setActiveTab(0)"
           >
             {{ $t('photo-details.reuse.copy-license.rich') }}
           </a>
@@ -28,7 +28,7 @@
             class="is-size-6"
             href="#panel1"
             @click.prevent="setActiveTab(1)"
-            v-on:keyup.enter.prevent="setActiveTab(1)"
+            @keyup.enter.prevent="setActiveTab(1)"
           >
             {{ $t('photo-details.reuse.copy-license.html') }}
           </a>
@@ -42,7 +42,7 @@
             class="is-size-6"
             href="#panel2"
             @click.prevent="setActiveTab(2)"
-            v-on:keyup.enter.prevent="setActiveTab(2)"
+            @keyup.enter.prevent="setActiveTab(2)"
           >
             {{ $t('photo-details.reuse.copy-license.plain') }}
           </a>
@@ -53,12 +53,17 @@
       <div :class="tabClass(0, 'tabs-panel')">
         <span
           id="attribution"
-          class="photo_usage-attribution is-block"
           ref="photoAttribution"
+          class="photo_usage-attribution is-block"
         >
-          <a :href="image.foreign_landing_url" target="_blank" rel="noopener">{{
-            imageTitle
-          }}</a>
+          <a
+            :href="image.foreign_landing_url"
+            target="_blank"
+            rel="noopener"
+            @click="onPhotoSourceLinkClicked"
+            @keyup.enter="onPhotoSourceLinkClicked"
+            >{{ imageTitle }}</a
+          >
           <span v-if="image.creator">
             by
             <a
@@ -66,6 +71,8 @@
               :href="image.creator_url"
               target="_blank"
               rel="noopener"
+              @click="onPhotoCreatorLinkClicked"
+              @keyup.enter="onPhotoCreatorLinkClicked"
               >{{ image.creator }}</a
             >
             <span v-else>{{ image.creator }}</span>
@@ -81,10 +88,10 @@
           </a>
         </span>
 
-        <copy-button
-          id="copy-attribution-btn"
+        <CopyButton
+          id="copyattr-rich"
           el="#attribution"
-          @copied="onCopyAttribution"
+          @copied="(e) => onCopyAttribution('Rich Text', e)"
         />
       </div>
       <div :class="tabClass(1, 'tabs-panel')">
@@ -96,20 +103,19 @@
             cols="30"
             rows="4"
             readonly="readonly"
-          >
-          </textarea>
+          />
         </label>
-        <copy-button
-          id="copy-attribution-btn"
+        <CopyButton
+          id="copyattr-html"
           el="#attribution-html"
-          @copied="onEmbedAttribution"
+          @copied="(e) => onCopyAttribution('HTML Embed', e)"
         />
       </div>
       <div :class="tabClass(2, 'tabs-panel')">
         <p
           id="attribution-text"
-          class="photo_usage-attribution is-block"
           ref="photoAttribution"
+          class="photo_usage-attribution is-block"
         >
           {{ imageTitle }}
           <span v-if="image.creator"> by {{ image.creator }} </span>
@@ -121,10 +127,10 @@
           </template>
         </p>
 
-        <copy-button
-          id="copy-attribution-btn"
+        <CopyButton
+          id="copyattr-plain"
           el="#attribution-text"
-          @copied="onCopyAttribution"
+          @copied="(e) => onCopyAttribution('Plain Text', e)"
         />
       </div>
     </section>
@@ -132,26 +138,25 @@
 </template>
 
 <script>
-import CopyButton from '@/components/CopyButton'
-import { COPY_ATTRIBUTION, EMBED_ATTRIBUTION } from '@/store/action-types'
+import CopyButton from '~/components/CopyButton'
+import { COPY_ATTRIBUTION } from '~/store-modules/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '@/store/usage-data-analytics-types'
+} from '~/store-modules/usage-data-analytics-types'
 
 export default {
-  name: 'copy-license',
-  props: ['image', 'fullLicenseName', 'attributionHtml', 'licenseURL'],
+  name: 'CopyLicense',
   components: {
     CopyButton,
   },
+  props: ['image', 'fullLicenseName', 'attributionHtml', 'licenseURL'],
   data() {
     return {
       activeTab: 0,
     }
   },
   computed: {
-    // Check if the 'license' is a tool rather than a legal license
     isTool() {
       return (
         this.fullLicenseName.includes('cc0') ||
@@ -179,17 +184,21 @@ export default {
         resultUuid: this.$props.image.id,
       })
     },
-    onCopyAttribution(e) {
-      this.$store.dispatch(COPY_ATTRIBUTION, {
-        content: e.content,
-      })
-
+    onCopyAttribution(type, event) {
+      this.$store.dispatch(COPY_ATTRIBUTION, { type, content: event.content })
       this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED)
     },
-    onEmbedAttribution() {
-      this.$store.dispatch(EMBED_ATTRIBUTION)
-
-      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED)
+    onPhotoSourceLinkClicked() {
+      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+        eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
+        resultUuid: this.$props.image.id,
+      })
+    },
+    onPhotoCreatorLinkClicked() {
+      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+        eventType: DETAIL_PAGE_EVENTS.CREATOR_CLICKED,
+        resultUuid: this.$props.image.id,
+      })
     },
   },
 }

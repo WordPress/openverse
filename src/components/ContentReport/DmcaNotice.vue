@@ -35,10 +35,10 @@
     <button
       class="button is-text tiny margin-top-normal is-shadowless"
       @click="onBackClick()"
-      v-on:keyup.enter="onBackClick()"
+      @keyup.enter="onBackClick()"
     >
       <span
-        ><i class="icon chevron-left margin-right-small"></i>
+        ><i class="icon chevron-left margin-right-small" />
         {{ $t('photo-details.content-report.back') }}</span
       >
     </button>
@@ -47,7 +47,7 @@
 
 <script>
 export default {
-  name: 'dmca-notice',
+  name: 'DmcaNotice',
   props: ['dmcaFormUrl', 'imageURL', 'providerName'],
   methods: {
     onBackClick() {

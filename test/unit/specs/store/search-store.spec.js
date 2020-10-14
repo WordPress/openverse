@@ -1,4 +1,4 @@
-import store from '@/store/search-store'
+import store from '~/store-modules/search-store'
 import {
   FETCH_END_IMAGES,
   FETCH_IMAGES_ERROR,
@@ -8,49 +8,30 @@ import {
   SET_IMAGES,
   SET_QUERY,
   IMAGE_NOT_FOUND,
-} from '@/store/mutation-types'
+} from '~/store-modules/mutation-types'
 import {
   FETCH_IMAGES,
   FETCH_IMAGE,
   FETCH_COLLECTION_IMAGES,
-} from '@/store/action-types'
+} from '~/store-modules/action-types'
 
 describe('Search Store', () => {
   describe('state', () => {
     it('exports default state', () => {
-      const state = store.state('?q=')
+      const state = store.state
       expect(state.imagesCount).toBe(0)
       expect(state.imagePage).toBe(1)
       expect(state.images).toHaveLength(0)
       expect(state.isFetchingImages).toBeFalsy()
       expect(state.isFetchingImagesError).toBeTruthy()
-      expect(state.query.q).toBe('')
+      expect(state.query.q).toBe(undefined)
       expect(state.errorMsg).toBe(null)
-    })
-
-    it('gets query from search params', () => {
-      const state = store.state(
-        '?q=landscapes&source=met&license=by&license_type=all&searchBy=creator&categories=gif&size=large&aspect_ratio=wide'
-      )
-      expect(state.imagesCount).toBe(0)
-      expect(state.imagePage).toBe(1)
-      expect(state.images).toHaveLength(0)
-      expect(state.isFetchingImages).toBeFalsy()
-      expect(state.isFetchingImagesError).toBeTruthy()
-      expect(state.query.q).toBe('landscapes')
-      expect(state.query.source).toBe('met')
-      expect(state.query.license_type).toBe('all')
-      expect(state.query.searchBy).toBe('creator')
-      expect(state.query.categories).toBe('gif')
-      expect(state.query.size).toBe('large')
-      expect(state.query.aspect_ratio).toBe('wide')
     })
   })
 
   describe('mutations', () => {
     let state = null
-    const routePushMock = jest.fn()
-    const mutations = store.mutations(routePushMock)
+    const mutations = store.mutations
 
     beforeEach(() => {
       state = {}
@@ -141,16 +122,6 @@ describe('Search Store', () => {
       expect(state.query.q).toBe(params.query.q)
     })
 
-    it('SET_QUERY pushes route when shouldNavigate is true', () => {
-      const params = { query: { q: 'foo', lt: 'bar' }, shouldNavigate: true }
-      mutations[SET_QUERY](state, params)
-
-      expect(routePushMock).toBeCalledWith({
-        path: '/search',
-        query: params.query,
-      })
-    })
-
     it('SET_QUERY resets images to empty array', () => {
       const params = { query: { q: 'bar' } }
       state.query = {
@@ -161,12 +132,6 @@ describe('Search Store', () => {
 
       expect(state.query.q).toBe('bar')
       expect(state.images).toEqual([])
-    })
-
-    it('IMAGE_NOT_FOUND redirects to /not-found', () => {
-      mutations[IMAGE_NOT_FOUND]()
-
-      expect(routePushMock).toBeCalledWith({ path: '/not-found' }, true)
     })
   })
 
@@ -191,7 +156,7 @@ describe('Search Store', () => {
       commit = jest.fn()
       dispatch = jest.fn()
       state = {
-        sessionId: 'foo session id',
+        usageSessionId: 'foo session id',
         images: [{ id: 'foo' }, { id: 'bar' }, { id: 'zeta' }],
         query: { q: 'foo query' },
       }
@@ -224,7 +189,7 @@ describe('Search Store', () => {
 
       expect(dispatch).toHaveBeenLastCalledWith('SEND_SEARCH_QUERY_EVENT', {
         query: params.q,
-        sessionId: state.sessionId,
+        sessionId: state.usageSessionId,
       })
     })
 
@@ -235,7 +200,7 @@ describe('Search Store', () => {
 
       expect(dispatch).not.toHaveBeenLastCalledWith('SEND_SEARCH_QUERY_EVENT', {
         query: params.q,
-        sessionId: state.sessionId,
+        sessionId: state.usageSessionId,
       })
     })
 
@@ -398,7 +363,7 @@ describe('Search Store', () => {
         query: state.query.q,
         resultUuid: 'foo',
         resultRank: 0,
-        sessionId: state.sessionId,
+        sessionId: state.usageSessionId,
       })
     })
 

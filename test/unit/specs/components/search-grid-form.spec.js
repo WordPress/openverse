@@ -1,11 +1,7 @@
 import Vuex from 'vuex'
 import { createLocalVue } from '@vue/test-utils'
-import SearchGridForm from '@/components/SearchGridForm'
+import SearchGridForm from '~/components/SearchGridForm'
 import render from '../../test-utils/render'
-import i18n from '../../test-utils/i18n'
-
-const $t = (key) => i18n.messages[key]
-
 describe('BrowsePage', () => {
   it('should render correct contents', () => {
     const localVue = createLocalVue()
@@ -13,7 +9,7 @@ describe('BrowsePage', () => {
 
     const wrapper = render(SearchGridForm, {
       localVue,
-      mocks: { $route: { path: '/search' }, $t },
+      mocks: { $route: { path: '/search' } },
     })
 
     expect(wrapper.find('form').vm).toBeDefined()

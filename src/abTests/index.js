@@ -1,16 +1,16 @@
-import { JOINED_AB_TEST_EXPERIMENT } from '@/store/mutation-types'
+import { JOINED_AB_TEST_EXPERIMENT } from '~/store-modules/mutation-types'
 import createSixpackSession from './lib/createSixpackSession'
-import filterExpansion from './experiments/filterExpansion'
+import donationLanguage from '~/abTests/experiments/donationLanguage'
 
 /**
  * Attach each a/b test (aka "experiment") to the sixpack session
  * and commit a vuex mutation for each joined experiment
  */
 const setupExperiments = (store) => {
-  const session = createSixpackSession(store.state.sessionId)
-  // List all active experiments here
-  const experimentPromises = [filterExpansion(session)]
+  const session = createSixpackSession(store.state.abSessionId)
 
+  // List all active experiments here
+  const experimentPromises = [donationLanguage(session)]
   return (
     Promise.all(experimentPromises)
       .then((experiments) =>

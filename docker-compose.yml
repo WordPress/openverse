@@ -3,8 +3,8 @@ services:
   web:
     build: .
     command: npm run dev
-    volumes:
-      - .:/usr/app/
-      - /usr/app/node_modules
     ports:
       - '8443:8443'
+    environment:
+      # HOST is necessary for Nuxt + Docker
+      HOST: 0.0.0.0

@@ -2,23 +2,25 @@
   <div class="safer-browsing" @keyup.esc="closeShowForm">
     <button
       class="button is-text tiny is-paddingless rating is-shadowless"
+      @keypress.enter="toggleShowForm"
       @click="toggleShowForm"
     >
-      <span class="has-color-dark-turquoise"
-        >{{ $t('browse-page.safer-browsing.title')
-        }}<i class="icon flag margin-left-small"></i>
+      <span class="has-color-tomato" style="white-space: nowrap">
+        {{ $t('browse-page.safer-browsing.title') }}
+        <i class="icon flag margin-left-small" />
       </span>
     </button>
-    <focus-trap :active="true">
+    <FocusTrap :active="true">
       <div
         v-show="showForm"
         class="padding-normal is-clearfix arrow-popup arrow-popup--anchor-right"
       >
         <button
           class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
+          @keypress.enter="toggleShowForm"
           @click="toggleShowForm"
         >
-          <i class="icon cross"></i>
+          <i class="icon cross" />
         </button>
         <p class="caption has-text-weight-semibold padding-right-big">
           {{ $t('browse-page.safer-browsing.caption') }}
@@ -36,19 +38,16 @@
           {{ $t('browse-page.safer-browsing.label') }}
         </label>
       </div>
-    </focus-trap>
+    </FocusTrap>
   </div>
 </template>
 
 <script>
-import { TOGGLE_FILTER } from '@/store/action-types'
 import { FocusTrap } from 'focus-trap-vue'
+import { TOGGLE_FILTER } from '~/store-modules/action-types'
 
-/**
- * This component displays the mature content filter in a pop-up dialog.
- */
 export default {
-  name: 'safer-browsing',
+  name: 'SaferBrowsing',
   components: {
     FocusTrap,
   },
@@ -70,10 +69,7 @@ export default {
       this.showForm = false
     },
     toggleMature() {
-      this.$store.dispatch(TOGGLE_FILTER, {
-        filterType: 'mature',
-        shouldNavigate: true,
-      })
+      this.$store.dispatch(TOGGLE_FILTER, { filterType: 'mature' })
     },
   },
 }

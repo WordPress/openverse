@@ -1,4 +1,4 @@
-import prepareSearchQueryParams from '@/utils/prepareSearchQueryParams'
+import prepareSearchQueryParams from '~/utils/prepareSearchQueryParams'
 
 describe('prepareSearchQueryParams', () => {
   it('returns params object clone', () => {

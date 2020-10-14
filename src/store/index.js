@@ -1,62 +1,58 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import redirectTo from '@/router/redirectTo'
-import ImageProviderService from '@/api/ImageProviderService'
-import ImageService from '@/api/ImageService'
-import BugReportService from '@/api/BugReportService'
-import UsageDataService from '@/api/UsageDataService'
-import ReportService from '@/api/ReportService'
-import SearchStore from './search-store'
-import ImageProviderStore from './image-provider-store'
-import AttributionStore from './attribution-store'
-import BugReportStore from './bug-report-store'
-import SocialMediaStore from './social-store'
-import ABTestStore from './abtest-store'
-import UserStore from './user-store'
-import UsageDataStore from './usage-data-store'
-import FilterStore from './filter-store'
-import ReportContentStore from './report-content-store'
-import RelatedImagesStore from './related-images-store'
+import ImageProviderService from '~/data/ImageProviderService'
+import ImageService from '~/data/ImageService'
+import BugReportService from '~/data/BugReportService'
+import UsageDataService from '~/data/UsageDataService'
+import ReportService from '~/data/ReportService'
+import SearchStore from '~/store-modules/search-store'
+import ImageProviderStore from '~/store-modules/image-provider-store'
+import AttributionStore from '~/store-modules/attribution-store'
+import BugReportStore from '~/store-modules/bug-report-store'
+import SocialMediaStore from '~/store-modules/social-store'
+import ABTestStore from '~/store-modules/abtest-store'
+import UserStore from '~/store-modules/user-store'
+import UsageDataStore from '~/store-modules/usage-data-store'
+import FilterStore from '~/store-modules/filter-store'
+import ReportContentStore from '~/store-modules/report-content-store'
+import RelatedImagesStore from '~/store-modules/related-images-store'
+import { FETCH_IMAGE_PROVIDERS } from '~/store-modules/action-types'
+import GoogleAnalytics from '~/analytics/GoogleAnalytics'
 
-Vue.use(Vuex)
+export const actions = Object.assign(
+  UsageDataStore.actions(UsageDataService),
+  SearchStore.actions(ImageService),
+  FilterStore.actions,
+  ImageProviderStore.actions(ImageProviderService),
+  AttributionStore.actions(GoogleAnalytics),
+  BugReportStore.actions(BugReportService),
+  SocialMediaStore.actions(GoogleAnalytics),
+  ABTestStore.actions,
+  ReportContentStore.actions(ReportService),
+  RelatedImagesStore.actions(ImageService),
+  {
+    async nuxtServerInit({ dispatch }) {
+      await dispatch(FETCH_IMAGE_PROVIDERS)
+    },
+  }
+)
 
-const queryParams = !(typeof window === 'undefined')
-  ? window.location.search
-  : ''
+export const state = () =>
+  Object.assign(
+    SearchStore.state,
+    FilterStore.state,
+    ImageProviderStore.state,
+    BugReportStore.state,
+    ABTestStore.state,
+    UserStore.state,
+    ReportContentStore.state,
+    RelatedImagesStore.state
+  )
 
-const store = (GoogleAnalytics, router) =>
-  new Vuex.Store({
-    actions: Object.assign(
-      UsageDataStore.actions(UsageDataService),
-      SearchStore.actions(ImageService),
-      FilterStore.actions,
-      ImageProviderStore.actions(ImageProviderService),
-      AttributionStore.actions(GoogleAnalytics),
-      BugReportStore.actions(BugReportService),
-      SocialMediaStore.actions(GoogleAnalytics),
-      ABTestStore.actions,
-      ReportContentStore.actions(ReportService),
-      RelatedImagesStore.actions(ImageService)
-    ),
-    state: Object.assign(
-      SearchStore.state(queryParams),
-      FilterStore.state(queryParams),
-      ImageProviderStore.state,
-      BugReportStore.state,
-      ABTestStore.state,
-      UserStore.state,
-      ReportContentStore.state,
-      RelatedImagesStore.state
-    ),
-    mutations: Object.assign(
-      SearchStore.mutations(redirectTo(router)),
-      FilterStore.mutations(redirectTo(router)),
-      ImageProviderStore.mutations,
-      BugReportStore.mutations,
-      ABTestStore.mutations,
-      ReportContentStore.mutations,
-      RelatedImagesStore.mutations
-    ),
-  })
-
-export default store
+export const mutations = Object.assign(
+  SearchStore.mutations,
+  FilterStore.mutations,
+  ImageProviderStore.mutations,
+  BugReportStore.mutations,
+  ABTestStore.mutations,
+  ReportContentStore.mutations,
+  RelatedImagesStore.mutations
+)

@@ -1,11 +1,7 @@
 import { Event } from './GoogleAnalytics'
 
-export function CopyAttribution(text) {
-  return new Event('Attribution', 'Copy', text)
-}
-
-export function EmbedAttribution() {
-  return new Event('Attribution', 'Embed HTML')
+export function CopyAttribution(type, text) {
+  return new Event('Attribution Copy', type, text)
 }
 
 export function SocialMediaShare(site) {

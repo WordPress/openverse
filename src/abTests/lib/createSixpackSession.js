@@ -1,11 +1,11 @@
 import sixpack from 'sixpack-client'
-import SessionId from './sessionId'
+import SessionId from '@/utils/sessionId'
 
 const createSixpackSession = (existingSessionId) => {
-  const baseUrl = process.env.API_URL.replace('/v1/', '')
+  const baseUrl = process.env.apiUrl.replace('/v1/', '')
   const SIXPACK_URL = `${baseUrl}/sixpack`
 
-  const sessionId = existingSessionId || SessionId()
+  const sessionId = existingSessionId || SessionId('abSessionId')
   const session = new sixpack.Session({
     client_id: sessionId,
     base_url: SIXPACK_URL,

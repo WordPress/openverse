@@ -1,20 +1,27 @@
 <template>
-  <main class="hero" role="main">
+  <!-- eslint-disable vue-a11y/no-autofocus -->
+  <div class="hero">
     <div class="hero-center has-text-centered">
       <!-- <div class="locale-block"><locale-selector /></div> -->
-      <h1 class="title is-2 padding-bottom-normal">{{ $t('hero.title') }}</h1>
-      <h5 class="b-header">{{ $t('hero.subtitle') }}</h5>
+      <h1 class="title is-2 padding-bottom-normal">
+        {{ $t('hero.title') }}
+      </h1>
+      <h5 class="b-header">
+        {{ $t('hero.subtitle') }}
+      </h5>
       <form
         class="hero_search-form margin-top-bigger"
         role="search"
         method="get"
         action="/search"
-        v-on:submit.prevent="onSubmit"
+        @submit.prevent="onSubmit"
       >
         <div class="is-hidden-touch centered-search-box">
           <div class="field has-addons">
             <div class="control mobile-input">
               <input
+                id="searchTerm"
+                v-model.lazy="form.searchTerm"
                 required="required"
                 class="hero_search-input input is-large"
                 :aria-label="$t('hero.aria.search')"
@@ -23,8 +30,6 @@
                 name="q"
                 :placeholder="$t('hero.search.placeholder')"
                 autocapitalize="none"
-                id="searchTerm"
-                v-model.lazy="form.searchTerm"
               />
             </div>
             <div class="control">
@@ -38,6 +43,8 @@
           <div class="field has-addons">
             <div class="control mobile-input">
               <input
+                id="searchTerm"
+                v-model.lazy="form.searchTerm"
                 required="required"
                 class="input"
                 :aria-label="$t('hero.aria.search')"
@@ -45,8 +52,6 @@
                 name="q"
                 :placeholder="$t('hero.search.placeholder')"
                 autocapitalize="none"
-                id="searchTerm"
-                v-model.lazy="form.searchTerm"
               />
             </div>
             <div class="control">
@@ -70,7 +75,7 @@
             </template>
           </i18n>
         </div>
-        <home-license-filter />
+        <HomeLicenseFilter />
       </form>
       <div class="help-links is-hidden-mobile">
         <i18n
@@ -90,35 +95,34 @@
     </div>
     <img
       class="logo-cloud"
-      src="../assets/logo-cloud.png"
+      src="~/assets/logo-cloud.png"
       alt="Logos from sources of Creative Commons licensed images"
     />
-  </main>
+  </div>
+  <!-- eslint-enable -->
 </template>
 
 <script>
-import { SET_QUERY } from '@/store/mutation-types'
-import HomeLicenseFilter from './HomeLicenseFilter'
-// import LocaleSelector from './LocaleSelector'
+import { SET_QUERY } from '~/store-modules/mutation-types'
+import { filtersToQueryData } from '~/utils/searchQueryTransform'
 
 export default {
-  name: 'hero-section',
-  components: {
-    HomeLicenseFilter,
-    // LocaleSelector,
-  },
+  name: 'HeroSection',
   data: () => ({ form: { searchTerm: '' } }),
   mounted() {
-    // Autofocus the search input (fallback for browsers without 'autofocus' or other issues)
     if (document.querySelector('#searchTerm')) {
       document.querySelector('#searchTerm').focus()
     }
   },
   methods: {
     onSubmit() {
-      this.$store.commit(SET_QUERY, {
-        query: { q: this.form.searchTerm },
-        shouldNavigate: true,
+      this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm } })
+      this.$router.push({
+        path: '/search',
+        query: {
+          q: this.form.searchTerm,
+          ...filtersToQueryData(this.$store.state.filters),
+        },
       })
     },
   },
@@ -127,9 +131,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import 'node_modules/bulma/sass/utilities/initial-variables';
-@import 'node_modules/bulma/sass/utilities/derived-variables';
-@import 'node_modules/bulma/sass/utilities/mixins';
+@import 'bulma/sass/utilities/initial-variables';
+@import 'bulma/sass/utilities/derived-variables';
+@import 'bulma/sass/utilities/mixins';
 
 $hero-height: 85vh;
 

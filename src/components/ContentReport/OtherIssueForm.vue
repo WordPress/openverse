@@ -1,14 +1,16 @@
 <template>
   <form class="other-form">
-    <h4 class="b-header">{{ $t('photo-details.content-report.title') }}</h4>
+    <h4 class="b-header">
+      {{ $t('photo-details.content-report.title') }}
+    </h4>
     <legend class="margin-bottom-small">
       {{ $t('photo-details.content-report.issue-description') }}
     </legend>
     <label for="issue">
       <textarea
         id="issue"
-        class="reason padding-small has-text-weight-semibold"
         v-model="otherReasonDescription"
+        class="reason padding-small has-text-weight-semibold"
         placeholder="Issue description required (with at least 20 characters)"
       />
     </label>
@@ -16,10 +18,10 @@
       <button
         class="button other-back-button is-text tiny margin-top-normal has-background-white"
         @click="onBackClick()"
-        v-on:keyup.enter="onBackClick()"
+        @keyup.enter="onBackClick()"
       >
         <span>
-          <i class="icon chevron-left margin-right-small"></i>
+          <i class="icon chevron-left margin-right-small" />
           {{ $t('photo-details.content-report.back') }}
         </span>
       </button>
@@ -29,7 +31,7 @@
         :disabled="!descriptionHasMoreThan20Chars"
         class="button submit-other-button tiny is-success margin-top-normal is-pulled-right"
         @click="sendContentReport()"
-        v-on:keyup.enter="sendContentReport()"
+        @keyup.enter="sendContentReport()"
       >
         {{ $t('photo-details.content-report.submit') }}
       </button>
@@ -39,7 +41,7 @@
 
 <script>
 export default {
-  name: 'other-issue-form',
+  name: 'OtherIssueForm',
   data() {
     return {
       otherReasonDescription: '',

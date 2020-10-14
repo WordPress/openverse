@@ -5,19 +5,19 @@
         :aria-label="$t('photo-details.aria.share.facebook')"
         class="social-button facebook"
         target="_blank"
-        @click="onSocialMediaLinkClick('Facebook')"
-        v-on:keyup.enter="onSocialMediaLinkClick('Facebook')"
         :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}&description=${shareText}&href=${shareURL}`"
+        @click="onSocialMediaLinkClick('Facebook')"
+        @keyup.enter="onSocialMediaLinkClick('Facebook')"
       >
-        <i class="icon facebook colored margin-right-normal is-size-1"></i>
+        <i class="icon facebook colored margin-right-normal is-size-1" />
       </a>
       <a
         :aria-label="$t('photo-details.aria.share.twitter')"
         class="social-button twitter"
         target="_blank"
-        @click="onSocialMediaLinkClick('Twitter')"
-        v-on:keyup.enter="onSocialMediaLinkClick('Twitter')"
         :href="`https://twitter.com/intent/tweet?text=${shareText}`"
+        @click="onSocialMediaLinkClick('Twitter')"
+        @keyup.enter="onSocialMediaLinkClick('Twitter')"
       >
         <i class="icon twitter colored margin-right-normal is-size-1" />
       </a>
@@ -25,9 +25,9 @@
         :aria-label="$t('photo-details.aria.share.pinterest')"
         class="social-button pinterest"
         target="_blank"
-        @click="onSocialMediaLinkClick('Pinterest')"
-        v-on:keyup.enter="onSocialMediaLinkClick('Pinterest')"
         :href="`https://www.pinterest.com/pin/create/bookmarklet/?media=${imageURL}&description=${shareText}`"
+        @click="onSocialMediaLinkClick('Pinterest')"
+        @keyup.enter="onSocialMediaLinkClick('Pinterest')"
       >
         <i class="icon pinterest colored is-size-1" />
       </a>
@@ -36,14 +36,14 @@
 </template>
 
 <script>
-import { SOCIAL_MEDIA_SHARE } from '@/store/action-types'
+import { SOCIAL_MEDIA_SHARE } from '~/store-modules/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '@/store/usage-data-analytics-types'
+} from '~/store-modules/usage-data-analytics-types'
 
 export default {
-  name: 'social-share-buttons',
+  name: 'SocialShareButtons',
   props: {
     shareURL: { default: '' },
     shareText: { default: '' },

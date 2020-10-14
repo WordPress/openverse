@@ -1,5 +1,5 @@
-import PhotoTags from '@/components/PhotoTags'
-import { SET_QUERY } from '@/store/mutation-types'
+import PhotoTags from '~/components/PhotoTags'
+import { SET_QUERY } from '~/store-modules/mutation-types'
 import render from '../../test-utils/render'
 
 describe('PhotoTags', () => {
@@ -56,7 +56,6 @@ describe('PhotoTags', () => {
     const tagName = wrapper.find('.tag').text()
     expect(storeMock.commit).toHaveBeenCalledWith(SET_QUERY, {
       query: { q: tagName },
-      shouldNavigate: true,
     })
   })
 })

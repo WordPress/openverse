@@ -1,46 +1,46 @@
-import store, { filterData } from '@/store/filter-store'
-import { TOGGLE_FILTER } from '@/store/action-types'
+import store, { filterData } from '~/store-modules/filter-store'
+import { TOGGLE_FILTER } from '~/store-modules/action-types'
 import {
   SET_FILTER,
   SET_PROVIDERS_FILTERS,
   CLEAR_FILTERS,
   SET_FILTER_IS_VISIBLE,
-} from '@/store/mutation-types'
+} from '~/store-modules/mutation-types'
 
 describe('Filter Store', () => {
   describe('state', () => {
     it('state contains licenses', () => {
-      const defaultState = store.state('')
+      const defaultState = store.state
 
       expect(defaultState.filters.licenses).toEqual(filterData.licenses)
     })
 
     it('state contains license types', () => {
-      const defaultState = store.state('')
+      const defaultState = store.state
 
       expect(defaultState.filters.licenseTypes).toEqual(filterData.licenseTypes)
     })
 
     it('state contains image types', () => {
-      const defaultState = store.state('')
+      const defaultState = store.state
 
       expect(defaultState.filters.categories).toEqual(filterData.categories)
     })
 
     it('state contains extensions', () => {
-      const defaultState = store.state('')
+      const defaultState = store.state
 
       expect(defaultState.filters.extensions).toEqual(filterData.extensions)
     })
 
     it('state contains empty providers list', () => {
-      const defaultState = store.state('')
+      const defaultState = store.state
 
       expect(defaultState.filters.providers).toEqual([])
     })
 
     it('state contains search by author', () => {
-      const defaultState = store.state('')
+      const defaultState = store.state
 
       expect(defaultState.filters.searchBy.author).toEqual(
         filterData.searchBy.author
@@ -48,128 +48,45 @@ describe('Filter Store', () => {
     })
 
     it('state contains mature', () => {
-      const defaultState = store.state('')
+      const defaultState = store.state
 
       expect(defaultState.filters.mature).toEqual(filterData.mature)
     })
 
-    it('gets query from search params', () => {
-      const state = store.state(
-        '?q=landscapes&source=met&license=by&license_type=commercial&searchBy=creator'
-      )
-      expect(
-        state.filters.providers.find((x) => x.code === 'met').checked
-      ).toBeTruthy()
-      expect(
-        state.filters.licenses.find((x) => x.code === 'by').checked
-      ).toBeTruthy()
-      expect(
-        state.filters.licenseTypes.find((x) => x.code === 'commercial').checked
-      ).toBeTruthy()
-      expect(state.filters.searchBy.creator).toBeTruthy()
-      expect(state.filters.mature).toBeFalsy()
-    })
+    it('state has filter hidden', () => {
+      const defaultState = store.state
 
-    it('gets mature from search params', () => {
-      const state = store.state('?q=mature=true')
-      expect(state.filters.mature).toBeTruthy()
-    })
-
-    it('gets mature as false from search params', () => {
-      const state = store.state('?q=mature=false')
-      expect(state.filters.mature).toBeFalsy()
-    })
-
-    it('state has filter visible', () => {
-      const defaultState = store.state('')
-
-      expect(defaultState.isFilterVisible).toBeTruthy()
+      expect(defaultState.isFilterVisible).toBeFalsy()
     })
 
     it('state has isFilterApplied default as false', () => {
-      const defaultState = store.state('')
+      const defaultState = store.state
 
       expect(defaultState.isFilterApplied).toBeFalsy()
     })
 
-    it('isFilterApplied is set to true when provider filter is set', () => {
-      const state = store.state(
-        '?q=landscapes&source=met&license=by&license_type='
-      )
-      expect(state.isFilterApplied).toBeTruthy()
-    })
-
-    it('isFilterApplied is set to true when searchBy filter is set', () => {
-      const state = store.state('?q=landscapes&searchBy=creator')
-      expect(state.isFilterApplied).toBeTruthy()
-    })
-
-    it('isFilterApplied is set to true when license type filter is set', () => {
-      const state = store.state('?q=landscapes&license_type=commercial')
-      expect(state.isFilterApplied).toBeTruthy()
-    })
-
-    it('isFilterApplied is set to true when license filter is set', () => {
-      const state = store.state('?q=landscapes&license=by')
-      expect(state.isFilterApplied).toBeTruthy()
-    })
-
-    it('isFilterApplied is set to true when categories filter is set', () => {
-      const state = store.state('?q=landscapes&categories=photograph')
-      expect(state.isFilterApplied).toBeTruthy()
-    })
-
-    it('isFilterApplied is set to true when size filter is set', () => {
-      const state = store.state('?q=landscapes&size=large')
-      expect(state.isFilterApplied).toBeTruthy()
-    })
-
-    it('isFilterApplied is set to true when aspect ratio filter is set', () => {
-      const state = store.state('?q=landscapes&aspect_ratio=tall')
-      expect(state.isFilterApplied).toBeTruthy()
-    })
-
-    it('isFilterApplied remains false when mature filter is set', () => {
-      const state = store.state('?q=landscapes&mature=true')
-      expect(state.isFilterApplied).toBeFalsy()
-    })
-
-    it('isFilterApplied is set to false when no filter is set', () => {
-      const state = store.state('?q=landscapes')
-      expect(state.isFilterApplied).toBeFalsy()
-    })
-
     it('isFilterVisible should be false when innerWidth property is undefined', () => {
       window.innerWidth = undefined
-      const state = store.state('')
+      const state = store.state
       expect(state.isFilterVisible).toBeFalsy()
     })
-
-    it('isFilterVisible should be true when window width is over 800', () => {
-      window.innerWidth = 850
-      const state = store.state('')
-      expect(state.isFilterVisible).toBeTruthy()
-    })
-
     it('isFilterVisible should be false when window width is less then 800', () => {
       window.innerWidth = 500
-      const state = store.state('')
+      const state = store.state
       expect(state.isFilterVisible).toBeFalsy()
     })
   })
 
   describe('mutations', () => {
     let state = null
-    let routePushMock = null
     let mutations = null
 
     beforeEach(() => {
       state = {
         query: { q: 'foo' },
-        ...store.state(''),
+        ...store.state,
       }
-      routePushMock = jest.fn()
-      mutations = store.mutations(routePushMock)
+      mutations = store.mutations
     })
 
     it('SET_FILTER updates license state', () => {
@@ -255,19 +172,6 @@ describe('Filter Store', () => {
       )
     })
 
-    it('SET_FILTER redirects to current path with query object', () => {
-      mutations[SET_FILTER](state, {
-        filterType: 'categories',
-        codeIdx: 0,
-        shouldNavigate: true,
-      })
-
-      expect(routePushMock).toHaveBeenCalledWith({
-        path: '/',
-        query: state.query,
-      })
-    })
-
     it('SET_FILTER updates isFilterApplied with provider', () => {
       state.filters.providers = [{ code: 'met', checked: false }]
       mutations[SET_FILTER](state, { filterType: 'providers', codeIdx: 0 })
@@ -290,7 +194,7 @@ describe('Filter Store', () => {
     it('SET_FILTER updates isFilterApplied mature', () => {
       mutations[SET_FILTER](state, { filterType: 'mature' })
 
-      expect(state.isFilterApplied).toBeFalsy()
+      expect(state.isFilterApplied).toBeTruthy()
     })
 
     it('SET_PROVIDERS_FILTERS merges with existing provider filters', () => {
@@ -311,20 +215,21 @@ describe('Filter Store', () => {
       ])
     })
 
-    it('CLEAR_FILTERS resets filters to initial state', () => {
-      mutations[CLEAR_FILTERS](state, { shouldNavigate: false })
-
-      expect(state.filters).toEqual(store.state('').filters)
+    it('CLEAR_FILTERS resets filters to initial state', async () => {
+      mutations[CLEAR_FILTERS]({
+        query: { q: 'foo' },
+        ...store.state,
+      })
+      expect(state.filters).toEqual(filterData)
     })
 
-    it('CLEAR_FILTERS sets providers filters checked to false', () => {
+    it('CLEAR_FILTERS sets providers filters checked to false', async () => {
       state.filters.providers = [
         { code: 'met', name: 'Metropolitan', checked: true },
         { code: 'flickr', name: 'Flickr', checked: false },
       ]
 
-      mutations[CLEAR_FILTERS](state, { shouldNavigate: false })
-
+      mutations[CLEAR_FILTERS](state)
       expect(state.filters.providers).toEqual([
         { code: 'met', name: 'Metropolitan', checked: false },
         { code: 'flickr', name: 'Flickr', checked: false },
@@ -348,7 +253,7 @@ describe('Filter Store', () => {
     beforeEach(() => {
       state = {
         query: { q: 'foo' },
-        ...store.state(''),
+        ...store.state,
       }
       commitMock = jest.fn()
       dispatchMock = jest.fn()

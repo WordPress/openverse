@@ -4,18 +4,18 @@
       <span>{{ $t('browse-page.search-rating.content') }}</span>
       <button
         :aria-label="$t('browse-page.aria.relevance.yes')"
-        class="button is-text tiny is-paddingless rating is-shadowless"
+        class="button is-text tiny is-paddingless rating rating-yes is-shadowless"
         @click="sendSearchRatingEvent(true)"
-        v-on:keyup.enter="sendSearchRatingEvent(true)"
+        @keyup.enter="sendSearchRatingEvent(true)"
       >
         {{ $t('browse-page.search-rating.yes') }}
       </button>
       •
       <button
         :aria-label="$t('browse-page.aria.relevance.no')"
-        class="button is-text tiny is-paddingless rating is-shadowless"
+        class="button is-text tiny is-paddingless rating rating-no is-shadowless"
         @click="sendSearchRatingEvent(false)"
-        v-on:keyup.enter="sendSearchRatingEvent(false)"
+        @keyup.enter="sendSearchRatingEvent(false)"
       >
         {{ $t('browse-page.search-rating.no') }}
       </button>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { SEND_SEARCH_RATING_EVENT } from '@/store/usage-data-analytics-types'
+import { SEND_SEARCH_RATING_EVENT } from '~/store-modules/usage-data-analytics-types'
 
 const Statuses = {
   NOT_SENT: 'NOT_SENT',
@@ -37,7 +37,7 @@ const Statuses = {
 }
 
 export default {
-  name: 'search-rating',
+  name: 'SearchRating',
   props: ['searchTerm'],
   data() {
     return {
@@ -63,7 +63,7 @@ export default {
 <style lang="scss" scoped>
 .button.rating {
   vertical-align: middle;
-  color: rgb(5, 181, 218);
+  color: #ff6347;
   font-size: 0.8rem;
   text-decoration: none;
   text-transform: none;

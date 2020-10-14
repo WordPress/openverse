@@ -1,28 +1,25 @@
-import SearchGrid from '@/components/SearchGridManualLoad'
+import SearchGrid from '~/components/SearchGridManualLoad'
 import render from '../../test-utils/render'
-import i18n from '../../test-utils/i18n'
-
 describe('SearchGrid', () => {
   let options = {}
   let commitMock = null
-  const $t = (key) => i18n.messages[key]
+
   beforeEach(() => {
     commitMock = jest.fn()
     options = {
       propsData: {
         query: { q: 'foo' },
         includeAnalytics: true,
-        isFetchingImages: false,
       },
       mocks: {
         $store: {
           state: {
+            isFetchingImages: false,
             imagesCount: 100,
             imagePage: 1,
           },
           commit: commitMock,
         },
-        $t,
       },
     }
   })
@@ -38,22 +35,23 @@ describe('SearchGrid', () => {
     expect(wrapper.find('.load-more').element).toBeDefined()
   })
 
-  it('doesnt render load more button if is loading images', () => {
-    options.propsData.isFetchingImages = true
+  it("doesn't render load more button if is loading images", () => {
+    options.mocks.$store.state.isFetchingImages = true
     const wrapper = render(SearchGrid, options)
     expect(wrapper.find('.load-more').vm).not.toBeDefined()
   })
 
   it('shows loading icon if is loading images', () => {
-    options.propsData.isFetchingImages = true
+    options.mocks.$store.state.isFetchingImages = true
+
     const wrapper = render(SearchGrid, options)
-    expect(wrapper.find({ name: 'loading-icon' }).vm).toBeDefined()
+    expect(wrapper.findComponent({ name: 'LoadingIcon' })).toBeDefined()
   })
 
-  it('doesnt render load more button if not loading images', () => {
+  it("doesn't render load more button if not loading images", async () => {
     const wrapper = render(SearchGrid, options)
     const button = wrapper.find('.button')
-    button.trigger('click')
+    await button.trigger('click')
 
     expect(wrapper.emitted('onLoadMoreImages')[0]).toEqual([
       {

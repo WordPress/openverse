@@ -3,11 +3,11 @@
     <ul class="margin-vertical-small">
       <template v-for="(li, index) in splitLicenses">
         <li
+          :key="index"
           :class="{
             ['margin-vertical-small']: true,
             ['is-flex']: true,
           }"
-          :key="index"
         >
           <i
             :class="{

@@ -11,7 +11,7 @@
         type="button"
         class="button is-text tiny is-paddingless margin-top-big margin-right-small report is-shadowless is-pulled-right"
         @click="onToggleSearchGridFilter()"
-        v-on:keyup.enter="onToggleSearchGridFilter()"
+        @keyup.enter="onToggleSearchGridFilter()"
       >
         <span class="has-color-tomato is-hidden-touch">{{
           $t('filter-list.hide')
@@ -27,70 +27,70 @@
       }"
       role="list"
     >
-      <filter-check-list
+      <FilterCheckList
         role="listitem"
         :options="filters.licenseTypes"
         :disabled="licenseTypesDisabled"
         :title="$t('filters.license-types.title')"
-        filterType="licenseTypes"
+        filter-type="licenseTypes"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
-        role="listitem"
+      <FilterCheckList
         v-if="activeTab == 'image'"
+        role="listitem"
         :options="filters.licenses"
         :disabled="licensesDisabled"
         :title="$t('filters.licenses.title')"
-        filterType="licenses"
+        filter-type="licenses"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
-        role="listitem"
+      <FilterCheckList
         v-if="activeTab == 'image'"
+        role="listitem"
         :options="filters.providers"
         :title="$t('filters.providers.title')"
-        filterType="providers"
+        filter-type="providers"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
-        role="listitem"
+      <FilterCheckList
         v-if="activeTab == 'image'"
+        role="listitem"
         :options="filters.categories"
         :title="$t('filters.categories.title')"
-        filterType="categories"
+        filter-type="categories"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
-        role="listitem"
+      <FilterCheckList
         v-if="activeTab == 'image'"
+        role="listitem"
         :options="filters.extensions"
         :title="$t('filters.extensions.title')"
-        filterType="extensions"
+        filter-type="extensions"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
-        role="listitem"
+      <FilterCheckList
         v-if="activeTab == 'image'"
+        role="listitem"
         :options="filters.aspectRatios"
         :title="$t('filters.aspect-ratios.title')"
-        filterType="aspectRatios"
+        filter-type="aspectRatios"
         @filterChanged="onUpdateFilter"
       />
-      <filter-check-list
-        role="listitem"
+      <FilterCheckList
         v-if="activeTab == 'image'"
+        role="listitem"
         :options="filters.sizes"
         :title="$t('filters.sizes.title')"
-        filterType="sizes"
+        filter-type="sizes"
         @filterChanged="onUpdateFilter"
       />
       <div
         v-if="activeTab == 'image'"
         class="margin-normal filter-option small-filter margin-bottom-normal"
       >
-        <label for="creator-chk" :aria-label="$t('browse-page.aria.creator')">
+        <label for="creator" :aria-label="$t('browse-page.aria.creator')">
           <input
-            id="creator-chk"
+            id="creator"
             type="checkbox"
             :aria-label="$t('browse-page.aria.creator')"
             :checked="filters.searchBy.creator"
@@ -101,13 +101,13 @@
       </div>
     </form>
     <div
-      class="margin-big padding-bottom-normal clear-filters is-hidden-touch"
       v-if="isFilterApplied"
+      class="margin-big padding-bottom-normal clear-filters is-hidden-touch"
     >
       <button
         class="button tiny"
         @click="onClearFilters"
-        v-on:keyup.enter="onClearFilters"
+        @keyup.enter="onClearFilters"
       >
         {{ $t('filter-list.clear') }}
       </button>
@@ -119,14 +119,14 @@
       <button
         class="button tiny margin-right-normal"
         @click="onClearFilters"
-        v-on:keyup.enter="onClearFilters"
+        @keyup.enter="onClearFilters"
       >
         {{ $t('filter-list.clear') }}
       </button>
       <button
         class="button is-primary tiny"
         @click="onToggleSearchGridFilter()"
-        v-on:keyup.enter="onToggleSearchGridFilter()"
+        @keyup.enter="onToggleSearchGridFilter()"
       >
         {{ $t('filter-list.show') }}
       </button>
@@ -135,19 +135,30 @@
 </template>
 
 <script>
-import { ExperimentData } from '@/abTests/experiments/filterExpansion'
 import FilterCheckList from './FilterChecklist'
 
 export default {
-  name: 'filters-list',
+  name: 'FiltersList',
+  components: {
+    FilterCheckList,
+  },
   props: [
     'filters',
     'isFilterApplied',
     'licenseTypesDisabled',
     'licensesDisabled',
   ],
-  components: {
-    FilterCheckList,
+  computed: {
+    activeTab() {
+      return this.$route.path.split('search/')[1] || 'image'
+    },
+    /**
+     * Show filters expanded by default
+     * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
+     */
+    filtersExpandedByDefault() {
+      return true
+    },
   },
   methods: {
     onUpdateFilter({ code, filterType }) {
@@ -161,23 +172,6 @@ export default {
     },
     onClearFilters() {
       this.$emit('onClearFilters')
-    },
-  },
-  computed: {
-    activeTab() {
-      return this.$route.path.split('search/')[1] || 'image'
-    },
-    /**
-     * Check if a filter experiment is active, and if the current case is 'expanded'.
-     * Show filters collapsed by default
-     */
-    filtersExpandedByDefault() {
-      const experiment = this.$store.state.experiments.find(
-        (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
-      )
-      return experiment
-        ? experiment.case === ExperimentData.FILTERS_EXPANDED_CASE
-        : false
     },
   },
 }

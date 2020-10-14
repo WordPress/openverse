@@ -41,7 +41,7 @@ jobs:
         run: npm run format:test
 
       - name: Run tests
-        run: npm run unit
+        run: npm run test:unit
 
       - name: Run build
         run: npm run build

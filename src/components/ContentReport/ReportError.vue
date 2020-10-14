@@ -8,10 +8,10 @@
     <button
       class="button is-text tiny margin-top-normal is-shadowless"
       @click="onBackClick()"
-      v-on:keyup.enter="onBackClick()"
+      @keyup.enter="onBackClick()"
     >
       <span>
-        <i class="icon chevron-left margin-right-small"></i>
+        <i class="icon chevron-left margin-right-small" />
         {{ $t('photo-details.content-report.back') }}
       </span>
     </button>
@@ -19,10 +19,10 @@
 </template>
 
 <script>
-import { BACK_TO_REPORT_START } from '@/store/mutation-types'
+import { BACK_TO_REPORT_START } from '~/store-modules/mutation-types'
 
 export default {
-  name: 'report-error',
+  name: 'ReportError',
   methods: {
     onBackClick() {
       this.$store.commit(BACK_TO_REPORT_START)

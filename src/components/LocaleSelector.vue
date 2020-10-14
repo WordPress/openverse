@@ -3,7 +3,7 @@
     {{ $t('hero.locale.label') }}
     <div class="control has-icons-left">
       <div class="select">
-        <select @blur="setLocale($event)" v-model="$i18n.locale">
+        <select v-model="$i18n.locale" @blur="setLocale($event)">
           <option
             v-for="locale in locales"
             :key="locale.name"
@@ -21,10 +21,10 @@
 </template>
 
 <script>
-import getlocales from '../utils/locales'
+import getlocales from '~/utils/locales'
 
 export default {
-  name: 'locale-selector',
+  name: 'LocaleSelector',
   data() {
     return {
       locales: getlocales(),
@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'node_modules/bulma/sass/utilities/_all';
+@import 'bulma/sass/utilities/_all';
 
 .icon i {
   padding-top: 0.75rem;

@@ -23,7 +23,7 @@
       </i18n>
     </header>
 
-    <meta-source-list :type="type" :query="metaQuery" />
+    <MetaSourceList :type="type" :query="metaQuery" />
 
     <p class="caption has-text-weight-semibold has-color-dark-gray max-w-lg">
       {{ $t('meta-search.caption') }}
@@ -35,17 +35,21 @@
 import MetaSourceList from './MetaSourceList'
 
 export default {
-  name: 'meta-search',
-  props: ['type', 'query'],
+  name: 'MetaSearch',
   components: {
     MetaSourceList,
   },
+  props: ['type'],
   computed: {
+    query() {
+      return this.$store.state.query
+    },
     unsupportedByUsefilter() {
       if (this.type === 'audio') {
         return 'CC Mixter, Jamendo, or Wikimedia Commons'
       }
       if (this.type === 'video') return 'Wikimedia Commons or Youtube'
+      if (this.type === 'image') return 'Google Images'
       return ''
     },
     metaQuery() {

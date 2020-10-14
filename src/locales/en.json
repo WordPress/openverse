@@ -46,8 +46,10 @@
     "licenses": "The Licenses",
     "about-tab": "About",
     "resources-tab": "Resources",
+    "api": "API",
     "donation-banner": {
       "description": "If you donate $5 today, and everyone else does the same, we can keep growing our database of freely reusable content. For you. For all of us.",
+      "alternative-description": "Only 1% of people reading this will donate. Be one of them and help us sustain CC Search.",
       "yes": "Yes, I'll donate now",
       "no": "Not today"
     }

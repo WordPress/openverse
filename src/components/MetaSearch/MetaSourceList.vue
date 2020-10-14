@@ -22,18 +22,13 @@
 </template>
 
 <script>
-import getLegacySourceUrl, { legacySourceMap } from '@/utils/getLegacySourceUrl'
+import getLegacySourceUrl, { legacySourceMap } from '~/utils/getLegacySourceUrl'
 
 export default {
-  name: 'meta-source-list',
+  name: 'MetaSourceList',
   props: {
     type: { type: String },
     query: { type: Object },
-  },
-  methods: {
-    getSourceUrl(source) {
-      return getLegacySourceUrl(this.type)(source, this.query)
-    },
   },
   data() {
     return {
@@ -41,6 +36,11 @@ export default {
         (sourceName) => legacySourceMap[sourceName][this.type]
       ),
     }
+  },
+  methods: {
+    getSourceUrl(source) {
+      return getLegacySourceUrl(this.type)(source, this.query)
+    },
   },
 }
 </script>

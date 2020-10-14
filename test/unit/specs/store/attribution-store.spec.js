@@ -1,32 +1,25 @@
-import store from '@/store/attribution-store'
-import { CopyAttribution, EmbedAttribution } from '@/analytics/events'
+import store from '~/store-modules/attribution-store'
+import { CopyAttribution } from '~/analytics/events'
 
 describe('Attribution Store', () => {
   describe('actions', () => {
+    let gaInstance = null
     let googleAnalyticsMock = null
 
     beforeEach(() => {
-      googleAnalyticsMock = {
-        sendEvent: jest.fn(),
-      }
+      gaInstance = { sendEvent: jest.fn() }
+      googleAnalyticsMock = jest.fn(() => gaInstance)
     })
 
     it('COPY_ATTRIBUTION sends copy event', () => {
       const data = {
+        type: 'HTML Whatever',
         content: '<div>foo</div>',
       }
       store.actions(googleAnalyticsMock).COPY_ATTRIBUTION({}, data)
 
-      expect(googleAnalyticsMock.sendEvent).toHaveBeenCalledWith(
-        new CopyAttribution(data.content)
-      )
-    })
-
-    it('EMBED_ATTRIBUTION sends text event', () => {
-      store.actions(googleAnalyticsMock).EMBED_ATTRIBUTION()
-
-      expect(googleAnalyticsMock.sendEvent).toHaveBeenCalledWith(
-        new EmbedAttribution()
+      expect(googleAnalyticsMock().sendEvent).toHaveBeenCalledWith(
+        new CopyAttribution(data.type, data.content)
       )
     })
   })

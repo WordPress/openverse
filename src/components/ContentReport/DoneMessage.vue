@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: 'done-message',
+  name: 'DoneMessage',
   props: ['imageURL', 'providerName'],
 }
 </script>
