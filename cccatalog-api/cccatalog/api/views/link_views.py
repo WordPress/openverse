@@ -18,12 +18,8 @@ class _LinkCreatedResponse(serializers.Serializer):
 
 class CreateShortenedLink(GenericAPIView):
     serializer_class = ShortenedLinkSerializer
+    swagger_schema = None
 
-    @swagger_auto_schema(operation_id="link_create",
-                         responses={
-                             201: _LinkCreatedResponse,
-                             400: "Bad Request"
-                         })
     @throttle_classes([PostRequestThrottler])
     def post(self, request, format=None):
         """ Create a shortened URL. Only domains within the CC Catalog platform
@@ -55,12 +51,8 @@ class CreateShortenedLink(GenericAPIView):
 
 
 class ResolveShortenedLink(APIView):
-    @swagger_auto_schema(operation_id="link_resolve",
-                         responses={
-                             200: None,
-                             301: 'Moved Permanently',
-                             404: 'Not Found'
-                         })
+    swagger_schema = None
+
     def get(self, request, path, format=None):
         """
         Given a shortened URL path, such as 'zb3k0', resolve the full URL

@@ -25,6 +25,12 @@ import io
 import libxmp
 import requests
 from PIL import Image as img
+from drf_yasg import openapi
+from cccatalog.example_responses import image_search_200_example,\
+    image_search_400_example, image_detail_200_example,\
+    image_detail_404_example, oembed_list_200_example,\
+    oembed_list_404_example, recommendations_images_read_200_example,\
+    recommendations_images_read_404_example
 
 log = logging.getLogger(__name__)
 
@@ -58,28 +64,53 @@ def _get_user_ip(request):
 
 
 class SearchImages(APIView):
-    """
-    Search for images by a query string. Optionally, filter results by specific
-    licenses, or license "types" (commercial use allowed, modification allowed,
-    etc). Results are ranked in order of relevance.
+    image_search_description = \
+        """
+        Search for images by a query string. Optionally, filter results by specific
+        licenses, or license "types" (commercial use allowed, modification allowed,
+        etc). Results are ranked in order of relevance.
 
-    Refer to the Lucene syntax guide for information on structuring advanced
-    searches. https://lucene.apache.org/core/2_9_4/queryparsersyntax.html
+        Refer to the Lucene syntax guide for information on structuring advanced
+        searches. https://lucene.apache.org/core/2_9_4/queryparsersyntax.html
 
-    Although there may be millions of relevant records, only the most relevant
-    several thousand records can be viewed. This is by design: the search
-    endpoint should be used to find the top N most relevant results, not for
-    exhaustive search or bulk download of every barely relevant result.
-    As such, the caller should not try to access pages beyond `page_count`,
-    or else the server will reject the query.
-    """
+        Although there may be millions of relevant records, only the most relevant
+        several thousand records can be viewed. This is by design: the search
+        endpoint should be used to find the top N most relevant results, not for
+        exhaustive search or bulk download of every barely relevant result.
+        As such, the caller should not try to access pages beyond `page_count`,
+        or else the server will reject the query.
+
+        Example using single query parameter:
+    
+        ```
+        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
+        ```
+
+
+        Example using multiple query parameters:
+
+        ```
+        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1
+        ```
+
+        """  # noqa
+    image_search_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples=image_search_200_example,
+            schema=ImageSearchResultsSerializer(many=True)
+        ),
+        "400": openapi.Response(
+            description="Bad Request",
+            examples=image_search_400_example,
+            schema=InputErrorSerializer
+        )
+    }
 
     @swagger_auto_schema(operation_id='image_search',
+                         operation_description=image_search_description,
                          query_serializer=ImageSearchQueryStringSerializer,
-                         responses={
-                             200: ImageSearchResultsSerializer(many=True),
-                             400: InputErrorSerializer,
-                         })
+                         responses=image_search_response)
     def get(self, request, format=None):
         # Parse and validate query parameters
         params = ImageSearchQueryStringSerializer(data=request.query_params)
@@ -124,9 +155,31 @@ class SearchImages(APIView):
 
 
 class RelatedImage(APIView):
-    """
-    Given a UUID, return images related to the result.
-    """
+    recommendations_images_read_description = \
+        """
+        Given an image ID, return images related to the result.
+
+        Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
+
+        ```
+        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
+        ```
+        """  # noqa
+    recommendations_images_read_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples=recommendations_images_read_200_example,
+            schema=ImageSerializer
+        ),
+        "404": openapi.Response(
+            description="Not Found",
+            examples=recommendations_images_read_404_example
+        )
+    }
+
+    @swagger_auto_schema(operation_id="recommendations_images_read",
+                         operation_description=recommendations_images_read_description,  # noqa: E501
+                         responses=recommendations_images_read_response)
     def get(self, request, identifier, format=None):
         related, result_count = search_controller.related_images(
             uuid=identifier,
@@ -154,14 +207,31 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     lookup_field = 'identifier'
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly]
+    image_detail_description = \
+        """
+        Load the details of a particular image ID.
+
+        Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
+
+        ```
+        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
+        ```
+        """  # noqa
+    image_detail_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples=image_detail_200_example,
+            schema=ImageSerializer
+        ),
+        "404": openapi.Response(
+            description='Not Found',
+            examples=image_detail_404_example
+        )
+    }
 
     @swagger_auto_schema(operation_id="image_detail",
-                         operation_description="Load the details of a"
-                                               " particular image ID.",
-                         responses={
-                             200: ImageSerializer,
-                             404: 'Not Found'
-                         })
+                         operation_description=image_detail_description,
+                         responses=image_detail_response)
     def get(self, request, identifier, format=None):
         """ Get the details of a single list. """
         resp = self.retrieve(request, identifier)
@@ -252,13 +322,31 @@ class Watermark(GenericAPIView):
 
 
 class OembedView(APIView):
+    oembed_list_description = \
+        """
+        Retrieve embedded content from a specified URL
+
+        Example using URL `https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395`:
+
+        ```
+        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/oembed?url=https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395
+        ```
+        """  # noqa
+    oembed_list_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples=oembed_list_200_example
+        ),
+        "404": openapi.Response(
+            description="Not Found",
+            examples=oembed_list_404_example
+        )
+    }
 
     @swagger_auto_schema(operation_id="oembed_list",
+                         operation_description=oembed_list_description,
                          query_serializer=OembedSerializer,
-                         responses={
-                             200: '',
-                             404: 'Not Found'
-                         })
+                         responses=oembed_list_response)
     def get(self, request):
         url = request.query_params.get('url', '')
 
@@ -289,5 +377,16 @@ class OembedView(APIView):
 
 
 class ReportImageView(CreateAPIView):
+    """
+    images_report_create
+    
+    Report issue about a particular image ID.
+
+    Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
+
+    ```
+    $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "This image contains sensitive content"}' https://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
+    ```
+    """  # noqa
     queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer

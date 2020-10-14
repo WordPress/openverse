@@ -24,6 +24,10 @@ from cccatalog.api.utils.oauth2_helper import get_token_info
 from cccatalog.settings import THUMBNAIL_PROXY_URL, THUMBNAIL_WIDTH_PX
 from django.core.cache import cache
 from django.http import HttpResponse
+from drf_yasg import openapi
+from cccatalog.example_responses import register_api_oauth2_201_example,\
+    key_info_200_example, key_info_403_example, key_info_500_example,\
+    image_stats_200_example
 
 CODENAME = 'provider_identifier'
 NAME = 'provider_name'
@@ -55,14 +59,28 @@ class AboutImageResponse(serializers.Serializer):
 
 
 class ImageStats(APIView):
-    """
-    List all providers in the Creative Commons image catalog, in addition to the
-    number of images from each data source.
-    """
+    image_stats_description = \
+        """
+        List all providers in the Creative Commons image catalog, in addition to the
+        number of images from each data source.
+
+        Example:
+
+        ```
+        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
+        ```
+        """  # noqa
+    image_stats_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples=image_stats_200_example,
+            schema=AboutImageResponse(many=True)
+        )
+    }
+
     @swagger_auto_schema(operation_id='image_stats',
-                         responses={
-                             200: AboutImageResponse(many=True)
-                         })
+                         operation_description=image_stats_description,
+                         responses=image_stats_response)
     def get(self, request, format=None):
         source_data = ContentProvider \
             .objects \
@@ -96,30 +114,31 @@ class ImageStats(APIView):
 
 
 class Register(APIView):
+    register_api_oauth2_description = \
     """
     Register for access to the API via OAuth2. Authenticated users have higher
     rate limits than anonymous users. Additionally, by identifying yourself,
     you can request Creative Commons to adjust your personal rate limit
     depending on your organization's needs.
-
+ 
     Upon registering, you will receive a `client_id` and `client_secret`, which
     you can then use to authenticate using the standard OAuth2 Client
     Credentials flow. You must keep `client_secret` confidential; anybody with
     your `client_secret` can impersonate your application.
-
+ 
     Example registration and authentication flow:
-
+ 
     First, register for a key.
     ```
-    $ curl -XPOST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "A description", "email": "example@example.com"}' https://api.creativecommons.engineering/v1/auth_tokens/register
+    $ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "cccatalog-api@creativecommons.org"}' https://api.creativecommons.engineering/v1/auth_tokens/register
     {
         "client_secret" : "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
         "client_id" : "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
         "name" : "My amazing project"
     }
-
+ 
     ```
-
+ 
     Now, exchange your client credentials for a token.
     ```
     $ curl -X POST -d "client_id=pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda&client_secret=YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e&grant_type=client_credentials" https://api.creativecommons.engineering/v1/auth_tokens/token/
@@ -130,27 +149,33 @@ class Register(APIView):
        "token_type" : "Bearer"
     }
     ```
-
+ 
     Check your email for a verification link. After you have followed the link,
     your API key will be activated.
-
+ 
     Include the `access_token` in the authorization header to use your key in
     your future API requests.
-
+ 
     ```
     $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
     ```
-
+ 
     **Be advised** that your token will be throttled like an anonymous user
     until the email address has been verified.
-    """  # noqa
+    """   # noqa
     throttle_classes = (TenPerDay,)
+    register_api_oauth2_response = {
+        "201": openapi.Response(
+            description="OK",
+            examples=register_api_oauth2_201_example,
+            schema=OAuth2RegistrationSuccessful
+        )
+    }
 
     @swagger_auto_schema(operation_id='register_api_oauth2',
+                         operation_description=register_api_oauth2_description,
                          request_body=OAuth2RegistrationSerializer,
-                         responses={
-                             201: OAuth2RegistrationSuccessful
-                         })
+                         responses=register_api_oauth2_response)
     def post(self, request, format=None):
         # Store the registration information the developer gave us.
         serialized = OAuth2RegistrationSerializer(data=request.data)
@@ -241,16 +266,37 @@ class VerifyEmail(APIView):
 
 
 class CheckRates(APIView):
-    """
-    Return information about the rate limit status of your API key.
-    """
+    key_info_description = \
+        """
+        Return information about the rate limit status of your API key.
+
+        Example:
+
+        ```
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/rate_limit
+        ```
+        """  # noqa
     throttle_classes = (OnePerSecond,)
 
+    key_info_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples=key_info_200_example,
+            schema=OAuth2KeyInfo
+        ),
+        "403": openapi.Response(
+            description="Forbidden",
+            examples=key_info_403_example
+        ),
+        "500": openapi.Response(
+            description="Internal Server Error",
+            examples=key_info_500_example
+        )
+    }
+
     @swagger_auto_schema(operation_id='key_info',
-                         responses={
-                             200: OAuth2KeyInfo,
-                             403: 'Forbidden'
-                         })
+                         operation_description=key_info_description,
+                         responses=key_info_response)
     def get(self, request, format=None):
         if not request.auth:
             return Response(status=403, data='Forbidden')
