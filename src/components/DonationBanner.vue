@@ -1,7 +1,7 @@
 <template>
-  <div class="padding-horizontal-normal padding-vertical-small donation-banner">
+  <div class="padding-horizontal-bigger padding-vertical-small donation-banner">
     <p class="has-text-centered-mobile">
-      {{ $t('header.donation-banner.description') }}
+      {{ donationText }}
     </p>
 
     <div class="donation-banner__actions">
@@ -9,19 +9,14 @@
         href="https://www.classy.org/give/297881/#!/donation/checkout"
         target="_blank"
         class="button is-success small"
-        @click="sendClickEvent"
-        @keypress.enter="sendClickEvent"
+        @click="handleDonateClick"
       >
         <i
           class="icon cc-letterheart-filled margin-right-small is-size-5 padding-top-smaller"
         />
         {{ $t('header.donation-banner.yes') }}
       </a>
-      <button
-        class="button is-text small dismiss-button"
-        @click="onDismiss"
-        @keypress.enter="onDismiss"
-      >
+      <button class="button is-text small dismiss-button" @click="onDismiss">
         {{ $t('header.donation-banner.no') }}
       </button>
     </div>
@@ -31,15 +26,46 @@
 <script>
 import GoogleAnalytics from '@/analytics/GoogleAnalytics'
 import { DonateLinkClick, DonateBannerClose } from '@/analytics/events'
+import { ExperimentData } from '@/abTests/experiments/donationLanguage'
+import { JOINED_AB_TEST_EXPERIMENT } from '@/store-modules/mutation-types'
+import { CONVERT_AB_TEST_EXPERIMENT } from '@/store-modules/action-types'
 
 export default {
   name: 'DonationBanner',
+  data: function () {
+    return {
+      caseA: true,
+    }
+  },
+  computed: {
+    donationText() {
+      return this.caseA
+        ? this.$t('header.donation-banner.description')
+        : this.$t('header.donation-banner.alternative-description')
+    },
+  },
+  created() {
+    this.unsubscribe = this.$store.subscribe((mutation, state) => {
+      if (mutation.type === JOINED_AB_TEST_EXPERIMENT) {
+        const experiment = state.experiments.find(
+          (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
+        )
+        this.caseA = experiment.case === ExperimentData.DONATION_GENERAL_CASE
+      }
+    })
+  },
+  beforeDestroy() {
+    this.unsubscribe()
+  },
   methods: {
     onDismiss() {
       this.$emit('onDismiss')
       GoogleAnalytics().sendEvent(DonateBannerClose())
     },
-    sendClickEvent() {
+    handleDonateClick() {
+      this.$store.dispatch(CONVERT_AB_TEST_EXPERIMENT, {
+        experimentName: ExperimentData.EXPERIMENT_NAME,
+      })
       GoogleAnalytics().sendEvent(DonateLinkClick('banner'))
     },
   },
