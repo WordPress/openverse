@@ -14,10 +14,10 @@ module.exports = {
     // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
     'plugin:vue/recommended',
     'plugin:prettier/recommended',
-    'plugin:vue-a11y/base',
+    'plugin:vuejs-accessibility/recommended',
   ],
   // required to lint *.vue files
-  plugins: ['vue', 'cypress', 'vue-a11y'],
+  plugins: ['vue', 'cypress', 'vuejs-accessibility'],
   // add your custom rules here
   rules: {
     semi: [2, 'never'],

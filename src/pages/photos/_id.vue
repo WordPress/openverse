@@ -15,7 +15,6 @@
       <PhotoTags :tags="tags" :show-header="true" />
     </div>
     <aside
-      role="complementary"
       :aria-label="$t('photo-details.aria.related')"
       class="padding-normal margin-vertical-big"
     >

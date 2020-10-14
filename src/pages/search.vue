@@ -8,7 +8,6 @@
       </div>
       <aside
         v-if="isFilterVisible"
-        role="complementary"
         class="column is-narrow grid-sidebar is-paddingless is-hidden-touch"
         :class="filtersExpandedByDefault ? 'full-height-sticky' : ''"
       >

@@ -69,6 +69,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-vue": "^6.2.2",
     "eslint-plugin-vue-a11y": "0.0.31",
+    "eslint-plugin-vuejs-accessibility": "^0.5.1",
     "glob": "^7.1.6",
     "husky": "^4.2.5",
     "jest": "^26.4.2",
