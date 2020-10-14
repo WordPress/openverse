@@ -17,6 +17,7 @@
 import NavSection from '@/components/NavSection'
 import local from '@/utils/local'
 import DonationBanner from './DonationBanner'
+import abTests from '~/abTests'
 
 export default {
   name: 'HeaderSection',
@@ -38,6 +39,14 @@ export default {
         !(this.$route.path === '/search')
       )
     },
+  },
+  /**
+   * Note: this isn't the ideal place to do this, but we need this to run globally,
+   * client-side, on any initial page visit,and the header is included on every
+   * page so it's an okay place to do it.
+   */
+  beforeMount() {
+    abTests(this.$store)
   },
   methods: {
     hideDonate() {
