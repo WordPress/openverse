@@ -1102,6 +1102,159 @@ def test_upsert_records_replaces_null_tags(
     assert all([t in actual_tags for t in expect_tags])
 
 
+def test_overwrite_records_leaves_dates(
+        postgres_with_load_and_image_table, tmpdir
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID = 'a'
+    LAND_URL = 'https://images.com/a'
+    IMG_URL = 'images.com/a/img.jpg'
+    LICENSE = 'cc0'
+    VERSION = '1.0'
+    PROVIDER = 'images'
+
+    load_data_query = (
+        f"INSERT INTO {load_table} ("
+        f"foreign_identifier, foreign_landing_url, url,"
+        f" license, license_version, provider, source"
+        f") VALUES ("
+        f"'{FID}','{LAND_URL}','{IMG_URL}',"
+        f"'{LICENSE}','{VERSION}','{PROVIDER}', '{PROVIDER}'"
+        f");"
+    )
+    postgres_with_load_and_image_table.cursor.execute(load_data_query)
+    postgres_with_load_and_image_table.connection.commit()
+
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    original_row = postgres_with_load_and_image_table.cursor.fetchall()[0]
+    original_updated_on = original_row[2]
+    original_last_synced = original_row[-2]
+
+    time.sleep(0.001)
+    sql.overwrite_records_in_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    updated_result = postgres_with_load_and_image_table.cursor.fetchall()
+    updated_row = updated_result[0]
+    updated_updated_on = updated_row[2]
+    updated_last_synced = updated_row[-2]
+
+    assert len(updated_result) == 1
+    assert updated_updated_on == original_updated_on
+    assert updated_last_synced == original_last_synced
+
+
+def test_overwrite_records_replaces_data(
+        postgres_with_load_and_image_table, tmpdir
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+    load_table = TEST_LOAD_TABLE
+    image_table = TEST_IMAGE_TABLE
+    identifier = TEST_ID
+
+    FID = 'a'
+    PROVIDER = 'images_provider'
+    SOURCE = 'images_source'
+    WATERMARKED = 'f'
+    FILESIZE = 2000
+    TAGS = '["fun", "great"]'
+
+    IMG_URL_A = 'https://images.com/a/img.jpg'
+    LAND_URL_A = 'https://images.com/a'
+    THM_URL_A = 'https://images.com/a/img_small.jpg'
+    WIDTH_A = 1000
+    HEIGHT_A = 500
+    LICENSE_A = 'by'
+    VERSION_A = '4.0'
+    CREATOR_A = 'Alice'
+    CREATOR_URL_A = 'https://alice.com'
+    TITLE_A = 'My Great Pic'
+    META_DATA_A = '{"description": "what a cool picture"}'
+
+    IMG_URL_B = 'https://images.com/b/img.jpg'
+    LAND_URL_B = 'https://images.com/b'
+    THM_URL_B = 'https://images.com/b/img_small.jpg'
+    WIDTH_B = 2000
+    HEIGHT_B = 1000
+    LICENSE_B = 'cc0'
+    VERSION_B = '1.0'
+    CREATOR_B = 'Bob'
+    CREATOR_URL_B = 'https://bob.com'
+    TITLE_B = 'Bobs Great Pic'
+    META_DATA_B = '{"mydesc": "Bobs cool picture"}'
+
+    load_data_query_a = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}','{LAND_URL_A}','{IMG_URL_A}','{THM_URL_A}',"
+        f"'{WIDTH_A}','{HEIGHT_A}','{FILESIZE}','{LICENSE_A}','{VERSION_A}',"
+        f"'{CREATOR_A}','{CREATOR_URL_A}','{TITLE_A}','{META_DATA_A}',"
+        f"'{TAGS}','{WATERMARKED}','{PROVIDER}','{SOURCE}'"
+        f");"
+    )
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.upsert_records_to_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+
+    load_data_query_b = (
+        f"INSERT INTO {load_table} VALUES("
+        f"'{FID}','{LAND_URL_B}','{IMG_URL_B}','{THM_URL_B}',"
+        f"'{WIDTH_B}','{HEIGHT_B}','{FILESIZE}','{LICENSE_B}','{VERSION_B}',"
+        f"'{CREATOR_B}','{CREATOR_URL_B}','{TITLE_B}','{META_DATA_B}',"
+        f"'{TAGS}','{WATERMARKED}','{PROVIDER}','{SOURCE}'"
+        f");"
+    )
+    postgres_with_load_and_image_table.cursor.execute(
+        f"DELETE FROM {load_table};"
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
+    postgres_with_load_and_image_table.connection.commit()
+    sql.overwrite_records_in_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=image_table
+    )
+    postgres_with_load_and_image_table.connection.commit()
+    postgres_with_load_and_image_table.cursor.execute(
+        f"SELECT * FROM {image_table};"
+    )
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    actual_row = actual_rows[0]
+    assert len(actual_rows) == 1
+    assert actual_row[7] == LAND_URL_B
+    assert actual_row[8] == IMG_URL_B
+    assert actual_row[9] == THM_URL_B
+    assert actual_row[10] == WIDTH_B
+    assert actual_row[11] == HEIGHT_B
+    assert actual_row[13] == LICENSE_B
+    assert actual_row[14] == VERSION_B
+    assert actual_row[15] == CREATOR_B
+    assert actual_row[16] == CREATOR_URL_B
+    assert actual_row[17] == TITLE_B
+    assert actual_row[18] == json.loads(META_DATA_B)
+
+
 def test_drop_load_table_drops_table(postgres_with_load_table):
     postgres_conn_id = POSTGRES_CONN_ID
     identifier = TEST_ID

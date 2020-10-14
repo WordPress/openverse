@@ -271,6 +271,48 @@ def upsert_records_to_image_table(
     postgres.run(upsert_query)
 
 
+def overwrite_records_in_image_table(
+        postgres_conn_id,
+        identifier,
+        image_table=IMAGE_TABLE_NAME
+):
+
+    load_table = _get_load_table_name(identifier)
+    logger.info(f'Updating records in {image_table}.')
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
+    columns_to_update = [
+        col.LANDING_URL,
+        col.DIRECT_URL,
+        col.THUMBNAIL,
+        col.WIDTH,
+        col.HEIGHT,
+        col.FILESIZE,
+        col.LICENSE,
+        col.LICENSE_VERSION,
+        col.CREATOR,
+        col.CREATOR_URL,
+        col.TITLE,
+        col.META_DATA,
+        col.TAGS,
+        col.WATERMARKED,
+    ]
+
+    update_query = dedent(
+        f'''
+        UPDATE {image_table} SET ({', '.join(columns_to_update)}) = (
+          SELECT {', '.join(columns_to_update)}
+          FROM {load_table}
+          WHERE
+            {image_table}.{col.PROVIDER} = {load_table}.{col.PROVIDER}
+            AND
+              md5({image_table}.{col.FOREIGN_ID})
+              = md5({load_table}.{col.FOREIGN_ID})
+        );
+        '''
+    )
+    postgres.run(update_query)
+
+
 def drop_load_table(postgres_conn_id, identifier):
     load_table = _get_load_table_name(identifier)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
