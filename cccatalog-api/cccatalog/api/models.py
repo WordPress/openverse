@@ -312,9 +312,20 @@ class ImageReport(models.Model):
         (DEINDEXED, DEINDEXED),
         (NO_ACTION, NO_ACTION)
     ]
-    identifier = models.UUIDField()
-    reason = models.CharField(max_length=20, choices=REPORT_CHOICES)
-    description = models.TextField(max_length=500, blank=True, null=True)
+    identifier = models.UUIDField(
+        help_text="The ID for image to be reported."
+    )
+    reason = models.CharField(
+        max_length=20,
+        choices=REPORT_CHOICES,
+        help_text="The reason to report image to Creative Commons."
+    )
+    description = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text="The explanation on why image is being reported."
+    )
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default=PENDING
     )
