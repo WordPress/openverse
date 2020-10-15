@@ -2,6 +2,7 @@
 This file holds string constants for the column names in the image
 database, as well as the loading tables in the PostgreSQL DB.
 """
+IDENTIFIER = 'identifier'
 FOREIGN_ID = 'foreign_identifier'
 LANDING_URL = 'foreign_landing_url'
 DIRECT_URL = 'url'

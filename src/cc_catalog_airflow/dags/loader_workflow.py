@@ -4,6 +4,7 @@ import os
 from airflow import DAG
 
 from util.loader import operators
+from util.pg_cleaner import OVERWRITE_DIR
 
 
 logging.basicConfig(
@@ -24,8 +25,6 @@ SCHEDULE_CRON = '* * * * *'
 TIMESTAMP_TEMPLATE = '{{ ts_nodash }}'
 
 OUTPUT_DIR_PATH = os.path.realpath(os.getenv('OUTPUT_DIR', '/tmp/'))
-OVERWRITE_DIR = 'overwrite/'
-
 
 DAG_DEFAULT_ARGS = {
     'owner': 'data-eng-admin',
