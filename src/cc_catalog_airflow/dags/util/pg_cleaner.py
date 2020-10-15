@@ -64,7 +64,7 @@ class ImageStoreDict(dict):
 
 def clean_prefix_loop(postgres_conn_id, prefix, desired_prefix_length=4):
     if len(prefix) >= desired_prefix_length:
-        return clean_rows(postgres_conn_id, prefix)
+        clean_rows(postgres_conn_id, prefix)
     else:
         interfix_length = desired_prefix_length - len(prefix)
         for i in _hex_counter(interfix_length):
@@ -130,17 +130,16 @@ def clean_rows(postgres_conn_id, prefix, image_table=IMAGE_TABLE_NAME):
     try:
         assert total_images_sum == total_rows
     except Exception as e:
-        logger.warn(
+        logger.warning(
             "total_images_sum NOT EQUAL TO total_rows!"
         )
-        logger.warn(
+        logger.warning(
             f"total_images_sum: {total_images_sum}"
         )
-        logger.warn(
+        logger.warning(
             f"total_rows: {total_rows}"
         )
         raise e
-    return len(image_store_dict),
 
 
 def _hex_counter(length):
