@@ -2,14 +2,13 @@
   <div class="browse-page">
     <div class="search columns">
       <div class="is-hidden-desktop">
-        <AppModal :visible="isFilterVisible" @close="onToggleSearchGridFilter">
+        <AppModal v-if="isFilterVisible" @close="onToggleSearchGridFilter">
           <SearchGridFilter @onSearchFilterChanged="onSearchFormSubmit" />
         </AppModal>
       </div>
       <aside
         v-if="isFilterVisible"
-        class="column is-narrow grid-sidebar is-paddingless is-hidden-touch"
-        :class="filtersExpandedByDefault ? 'full-height-sticky' : ''"
+        class="column is-narrow grid-sidebar is-paddingless is-hidden-touch full-height-sticky"
       >
         <SearchGridFilter @onSearchFilterChanged="onSearchFormSubmit" />
       </aside>
@@ -72,14 +71,6 @@ const BrowsePage = {
     },
     isFilterVisible() {
       return this.$store.state.isFilterVisible
-    },
-    /**
-     * Show filters expanded by default
-     * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
-     */
-
-    filtersExpandedByDefault() {
-      return true
     },
   },
   methods: {
