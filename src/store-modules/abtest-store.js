@@ -1,5 +1,6 @@
 import { JOINED_AB_TEST_EXPERIMENT } from './mutation-types'
 import { CONVERT_AB_TEST_EXPERIMENT } from './action-types'
+import { convert } from '~/utils/sixpack'
 
 const state = {
   experiments: [],
@@ -7,14 +8,20 @@ const state = {
 
 const actions = {
   [CONVERT_AB_TEST_EXPERIMENT](context, params) {
-    const abTestData = context.state.experiments.filter(
-      (experiment) => experiment.name === params.experimentName
+    const experiment = context.state.experiments.find(
+      ({ name }) => name === params.name
     )
+    const sessionId = context.state.abSessionId
 
-    if (abTestData.length > 0) {
-      const session = abTestData[0].session
-      session.convert(params.experimentName)
+    if (!experiment) {
+      return
     }
+
+    convert(experiment.name, { sessionId }).catch(() =>
+      console.error(
+        `A/B test ${experiment.name} failed to convert with case ${experiment.case}.`
+      )
+    )
   },
 }
 
