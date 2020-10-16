@@ -46,5 +46,6 @@ module.exports = {
         math: 'always',
       },
     ],
+    'vuejs-accessibility/aria-role': 'warn',
   },
 }
