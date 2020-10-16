@@ -82,43 +82,31 @@ def clean_prefix_loop(postgres_conn_id, prefix, desired_prefix_length=4):
                 time.sleep(delay)
 
 
-def clean_rows(postgres_conn_id, prefix, image_table=IMAGE_TABLE_NAME):
+def clean_rows(postgres_conn_id, prefix):
     """
     This function runs all rows from the image table whose identifier
     starts with the given prefix through the ImageStore class, and
     updates them with the result.
     """
     image_store_dict = ImageStoreDict()
-    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    select_query = _get_select_query_from_prefix(prefix, image_table)
-    selected_rows = postgres.get_records(select_query)
+    selected_rows = _select_records(postgres_conn_id, prefix)
     total_rows = len(selected_rows)
     logger.info(f"Processing {total_rows} rows from prefix {prefix}.")
+    print(selected_rows)
     for record in selected_rows:
-        dirty_row = ImageTableRow(*record)
-        image_store = image_store_dict[(dirty_row.provider, prefix)]
-        image_store.add_item(
-            foreign_landing_url=dirty_row.foreign_landing_url,
-            image_url=dirty_row.image_url,
-            thumbnail_url=dirty_row.thumbnail_url,
-            license_url=tsv_cleaner.get_license_url(dirty_row.meta_data),
-            license_=dirty_row.license_,
-            license_version=dirty_row.license_version,
-            foreign_identifier=dirty_row.foreign_identifier,
-            width=dirty_row.width,
-            height=dirty_row.height,
-            creator=dirty_row.creator,
-            creator_url=dirty_row.creator_url,
-            title=dirty_row.title,
-            meta_data=dirty_row.meta_data,
-            raw_tags=dirty_row.tags,
-            watermarked=dirty_row.watermarked,
-            source=dirty_row.source,
-        )
+        try:
+            _clean_single_row(record, image_store_dict, prefix)
+        except Exception as e:
+            logger.warning(f"Record {record} could not be cleaned!")
+            logger.warning(f"Error cleaning was: {e}")
 
     for image_store in image_store_dict.values():
         image_store.commit()
 
+    _log_and_check_totals(total_rows, image_store_dict)
+
+
+def _log_and_check_totals(total_rows, image_store_dict):
     image_totals = {
         k: v.total_images for k, v in image_store_dict.items()
     }
@@ -142,18 +130,8 @@ def clean_rows(postgres_conn_id, prefix, image_table=IMAGE_TABLE_NAME):
         raise e
 
 
-def _hex_counter(length):
-    max_string = 'f' * length
-    format_string = f'0{length}x'
-    for h in range(int(max_string, 16) + 1):
-        yield format(h, format_string)
-
-
-def _get_select_query_from_prefix(prefix, image_table):
-    """
-    This creates the necessary string to select all rows from the image
-    table where the identifier matches the given prefix.
-    """
+def _select_records(postgres_conn_id, prefix, image_table=IMAGE_TABLE_NAME):
+    postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     min_base_uuid = "00000000-0000-0000-0000-000000000000"
     max_base_uuid = "ffffffff-ffff-ffff-ffff-ffffffffffff"
     min_uuid = prefix + min_base_uuid[len(prefix):]
@@ -174,4 +152,37 @@ def _get_select_query_from_prefix(prefix, image_table):
           {col.IDENTIFIER}<='{max_uuid}'::uuid;
         """
     )
-    return select_query
+    return postgres.get_records(select_query)
+
+
+def _hex_counter(length):
+    max_string = 'f' * length
+    format_string = f'0{length}x'
+    for h in range(int(max_string, 16) + 1):
+        yield format(h, format_string)
+
+
+def _clean_single_row(record, image_store_dict, prefix):
+    dirty_row = ImageTableRow(*record)
+    image_store = image_store_dict[(dirty_row.provider, prefix)]
+    total_images_before = image_store.total_images
+    image_store.add_item(
+        foreign_landing_url=dirty_row.foreign_landing_url,
+        image_url=dirty_row.image_url,
+        thumbnail_url=dirty_row.thumbnail_url,
+        license_url=tsv_cleaner.get_license_url(dirty_row.meta_data),
+        license_=dirty_row.license_,
+        license_version=dirty_row.license_version,
+        foreign_identifier=dirty_row.foreign_identifier,
+        width=dirty_row.width,
+        height=dirty_row.height,
+        creator=dirty_row.creator,
+        creator_url=dirty_row.creator_url,
+        title=dirty_row.title,
+        meta_data=dirty_row.meta_data,
+        raw_tags=dirty_row.tags,
+        watermarked=dirty_row.watermarked,
+        source=dirty_row.source,
+    )
+    if not image_store.total_images - total_images_before == 1:
+        logger.warning(f"Record {dirty_row} could not be cleaned!")

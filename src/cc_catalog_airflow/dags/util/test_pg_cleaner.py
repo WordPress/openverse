@@ -1,5 +1,7 @@
+import datetime
 import os
-from unittest.mock import patch, call
+import psycopg2
+from unittest.mock import patch, call, MagicMock
 
 from airflow.hooks.postgres_hook import PostgresHook
 import pytest
@@ -72,9 +74,46 @@ def _load_tsv(postgres, tmpdir, tsv_file_name):
     postgres.bulk_load(TEST_IMAGE_TABLE, str(path))
 
 
-def test_clean_rows_calls_add_item(tmpdir, postgres_with_image_table):
-    tsv_name = os.path.join(RESOURCES, "image_table_sample.tsv")
-    _load_tsv(postgres_with_image_table, tmpdir, tsv_name)
+def test_clean_single_row_inits_image_store_and_adds_row():
+    row = (
+        '000000ea-9a81-47dd-a83c-a2093ea4741b',
+        datetime.datetime(
+            2020, 10, 12, 18, 11, 57, 791507,
+            tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)
+        ),
+        datetime.datetime(
+            2020, 10, 15, 8, 10, 42, 421899,
+            tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)
+        ),
+        'provider_api', 'smithsonian',
+        'smithsonian_national_museum_of_natural_history',
+        'ark:/65665/m3272d5bfa5716461fbf173e083887621c',
+        'https://n2t.net/ark:/65665/3f07eb37b-d022-4d44-90de-179a4aaf1c82',
+        'https://ids.si.edu/ids/deliveryService/id/ark:/65665/m3272d5bfa5716461fbf173e083887621c',
+        'https://ids.si.edu/ids/deliveryService/id/ark:/65665/m3272d5bfa5716461fbf173e083887621c/90',
+        None, None, None, 'cc0', '1.0', 'Susan Gabriella Stokes', None,
+        'Eriogonum latifolium Sm.',
+        {
+            'unit_code': 'NMNHBOTANY',
+            'data_source': 'NMNH - Botany Dept.',
+            'license_url': 'https://creativecommons.org/publicdomain/zero/1.0/',
+            'raw_license_url': 'https://creativecommons.org/publicdomain/zero/1.0/'
+        },
+        [
+            {'name': '1930s', 'provider': 'smithsonian'},
+            {'name': 'Dicotyledonae', 'provider': 'smithsonian'},
+            {'name': 'United States', 'provider': 'smithsonian'},
+            {'name': 'California', 'provider': 'smithsonian'},
+            {'name': 'North America', 'provider': 'smithsonian'}
+        ],
+        False,
+        datetime.datetime(
+            2020, 10, 15, 8, 10, 42, 421899,
+            tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)
+        ),
+        False,
+    )
+    image_store_dict = pg_cleaner.ImageStoreDict()
     expected_calls = [
         call(
             provider="smithsonian",
@@ -110,16 +149,92 @@ def test_clean_rows_calls_add_item(tmpdir, postgres_with_image_table):
             watermarked=False,
             source="smithsonian_national_museum_of_natural_history",
         ),
-        call().commit(),
     ]
     with patch.object(
-            pg_cleaner.image,
-            "ImageStore",
-            autospec=True,
-    ) as mock_add_item:
-        with pytest.raises(AssertionError):
-            pg_cleaner.clean_rows(
-                POSTGRES_CONN_ID, "000000", image_table=TEST_IMAGE_TABLE
-            )
+            pg_cleaner.image, "ImageStore"
+    ) as mock_image_store:
+        pg_cleaner._clean_single_row(row, image_store_dict, '000000')
 
-    mock_add_item.assert_has_calls(expected_calls)
+    mock_image_store.assert_has_calls(expected_calls)
+
+
+def test_clean_single_row_reuses_image_store_and_adds_row():
+    row = (
+        '000000ea-9a81-47dd-a83c-a2093ea4741b',
+        datetime.datetime(
+            2020, 10, 12, 18, 11, 57, 791507,
+            tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)
+        ),
+        datetime.datetime(
+            2020, 10, 15, 8, 10, 42, 421899,
+            tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)
+        ),
+        'provider_api', 'smithsonian',
+        'smithsonian_national_museum_of_natural_history',
+        'ark:/65665/m3272d5bfa5716461fbf173e083887621c',
+        'https://n2t.net/ark:/65665/3f07eb37b-d022-4d44-90de-179a4aaf1c82',
+        'https://ids.si.edu/ids/deliveryService/id/ark:/65665/m3272d5bfa5716461fbf173e083887621c',
+        'https://ids.si.edu/ids/deliveryService/id/ark:/65665/m3272d5bfa5716461fbf173e083887621c/90',
+        None, None, None, 'cc0', '1.0', 'Susan Gabriella Stokes', None,
+        'Eriogonum latifolium Sm.',
+        {
+            'unit_code': 'NMNHBOTANY',
+            'data_source': 'NMNH - Botany Dept.',
+            'license_url': 'https://creativecommons.org/publicdomain/zero/1.0/',
+            'raw_license_url': 'https://creativecommons.org/publicdomain/zero/1.0/'
+        },
+        [
+            {'name': '1930s', 'provider': 'smithsonian'},
+            {'name': 'Dicotyledonae', 'provider': 'smithsonian'},
+            {'name': 'United States', 'provider': 'smithsonian'},
+            {'name': 'California', 'provider': 'smithsonian'},
+            {'name': 'North America', 'provider': 'smithsonian'}
+        ],
+        False,
+        datetime.datetime(
+            2020, 10, 15, 8, 10, 42, 421899,
+            tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None)
+        ),
+        False,
+    )
+    expected_calls = [
+        call().add_item(
+            foreign_landing_url="https://n2t.net/ark:/65665/3f07eb37b-d022-4d44-90de-179a4aaf1c82",
+            image_url="https://ids.si.edu/ids/deliveryService/id/ark:/65665/m3272d5bfa5716461fbf173e083887621c",
+            thumbnail_url="https://ids.si.edu/ids/deliveryService/id/ark:/65665/m3272d5bfa5716461fbf173e083887621c/90",
+            license_url="https://creativecommons.org/publicdomain/zero/1.0/",
+            license_="cc0",
+            license_version="1.0",
+            foreign_identifier="ark:/65665/m3272d5bfa5716461fbf173e083887621c",
+            width=None,
+            height=None,
+            creator="Susan Gabriella Stokes",
+            creator_url=None,
+            title="Eriogonum latifolium Sm.",
+            meta_data={
+                "unit_code": "NMNHBOTANY",
+                "data_source": "NMNH - Botany Dept.",
+                "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+                "raw_license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+            },
+            raw_tags=[
+                {"name": "1930s", "provider": "smithsonian"},
+                {"name": "Dicotyledonae", "provider": "smithsonian"},
+                {"name": "United States", "provider": "smithsonian"},
+                {"name": "California", "provider": "smithsonian"},
+                {"name": "North America", "provider": "smithsonian"}
+            ],
+            watermarked=False,
+            source="smithsonian_national_museum_of_natural_history",
+        )
+    ]
+    with patch.object(
+            pg_cleaner.image, "ImageStore"
+    ) as mock_image_store:
+        image_store_dict = pg_cleaner.ImageStoreDict()
+        image_store_dict[("smithsonian", "000000")]
+
+    # This checks for reuse, since otherwise it would init a *real* ImageStore
+    # outside of the block, and fail to call mock.add_item.
+    pg_cleaner._clean_single_row(row, image_store_dict, '000000')
+    mock_image_store.assert_has_calls(expected_calls)
