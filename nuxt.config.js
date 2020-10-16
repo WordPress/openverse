@@ -127,9 +127,8 @@ export default {
       ttl: process.env.MICROCACHE_DURATION || 60,
     },
   },
-  modern: 'client',
   srcDir: 'src/',
-  // buildDir: 'dist/',
+  modern: 'client',
   server: { port: process.env.PORT || 8443 },
   components: true,
   plugins: [

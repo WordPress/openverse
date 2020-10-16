@@ -49,11 +49,10 @@
     "lodash.isempty": "^4.4.0",
     "lodash.sortby": "^4.7.0",
     "node-sass": "^4.14.1",
-    "nuxt": "^2.14.6",
+    "nuxt": "^2.14.7",
     "nuxt-ssr-cache": "^1.5.2",
     "patch-package": "^6.2.2",
     "sass-loader": "^10.0.1",
-    "sixpack-client": "^2.1.0",
     "uuid": "^8.3.1",
     "vue-i18n": "^8.21.0"
   },
