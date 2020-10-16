@@ -107,11 +107,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="(imageProvider, index) in imageProviders"
-                :key="index"
-                role="row"
-              >
+              <tr v-for="(imageProvider, index) in imageProviders" :key="index">
                 <td>{{ imageProvider.display_name }}</td>
                 <td>
                   <a

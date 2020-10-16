@@ -1,5 +1,5 @@
 <template>
-  <!-- eslint-disable vue-a11y/no-autofocus -->
+  <!-- eslint-disable vuejs-accessibility/no-autofocus -->
   <div class="hero">
     <div class="hero-center has-text-centered">
       <!-- <div class="locale-block"><locale-selector /></div> -->

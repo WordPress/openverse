@@ -2,7 +2,6 @@
   <button
     v-if="filterType === 'searchBy'"
     class="filter-block button tiny tag margin-horizontal-smaller"
-    role="filter"
     :aria-label="label + 'filter'"
   >
     <span>{{ this.$props.label }}</span>
@@ -18,7 +17,6 @@
   <button
     v-else
     class="filter-block button tiny tag margin-horizontal-smaller margin-bottom-smaller"
-    role="filter"
     :aria-label="label + 'filter'"
   >
     <span>{{ $t(this.$props.label) }}</span>
