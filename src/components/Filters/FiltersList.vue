@@ -21,12 +21,7 @@
         </span>
       </button>
     </div>
-    <form
-      :class="{
-        'filters-form': true,
-      }"
-      role="list"
-    >
+    <form :class="{ 'filters-form': true }" role="list">
       <FilterCheckList
         role="listitem"
         :options="filters.licenseTypes"
@@ -104,11 +99,7 @@
       v-if="isFilterApplied"
       class="margin-big padding-bottom-normal clear-filters is-hidden-touch"
     >
-      <button
-        class="button tiny"
-        @click="onClearFilters"
-        @keyup.enter="onClearFilters"
-      >
+      <button class="button tiny" @click="onClearFilters">
         {{ $t('filter-list.clear') }}
       </button>
     </div>
@@ -116,17 +107,12 @@
       v-if="isFilterApplied"
       class="has-background-white padding-big is-hidden-desktop has-text-centered"
     >
-      <button
-        class="button tiny margin-right-normal"
-        @click="onClearFilters"
-        @keyup.enter="onClearFilters"
-      >
+      <button class="button tiny margin-right-normal" @click="onClearFilters">
         {{ $t('filter-list.clear') }}
       </button>
       <button
         class="button is-primary tiny"
         @click="onToggleSearchGridFilter()"
-        @keyup.enter="onToggleSearchGridFilter()"
       >
         {{ $t('filter-list.show') }}
       </button>
@@ -151,13 +137,6 @@ export default {
   computed: {
     activeTab() {
       return this.$route.path.split('search/')[1] || 'image'
-    },
-    /**
-     * Show filters expanded by default
-     * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
-     */
-    filtersExpandedByDefault() {
-      return true
     },
   },
   methods: {

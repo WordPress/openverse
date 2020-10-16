@@ -1,10 +1,6 @@
 <template>
-  <div
-    v-if="visible"
-    class="overlay"
-    @click.self="$emit('close')"
-    @keyup="checkKey"
-  >
+  <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events -->
+  <div ref="modal" class="overlay app-modal" @click.self="$emit('close')">
     <FocusTrap :active="true">
       <div class="modal relative" aria-modal="true" role="dialog">
         <header
@@ -19,7 +15,7 @@
             class="close-button has-color-gray is-size-6 is-size-4-touch"
             :aria-label="$t('browse-page.aria.close')"
             @click="$emit('close')"
-            @keyup.enter="$emit('close')"
+            @keypress.enter="$emit('close')"
           >
             <i class="icon cross" />
           </button>
@@ -31,42 +27,32 @@
 </template>
 
 <script>
+import { FocusTrap } from 'focus-trap-vue'
+
 /**
  * @todo: This entire component should be moved to vue-vocabulary
  */
-
-import { FocusTrap } from 'focus-trap-vue'
-
 export default {
   name: 'AppModal',
   components: {
     FocusTrap,
   },
   props: {
-    visible: Boolean,
-    title: String, // required for titlebar AND close button to show
+    /** Required for titlebar AND close button to show */
+    title: String,
     subTitle: String,
   },
-  watch: {
-    visible: {
-      handler(to) {
-        if (typeof document !== 'undefined') {
-          if (to) {
-            document.addEventListener('keyup', this.checkKey)
-          } else {
-            document.removeEventListener('keyup', this.checkKey)
-          }
-        }
-      },
-      immediate: true,
-    },
+  mounted() {
+    document.addEventListener('keyup', this.closeOnEsc)
   },
   destroyed() {
-    document.removeEventListener('keyup', this.checkKey)
+    document.removeEventListener('keyup', this.closeOnEsc)
   },
   methods: {
-    checkKey(e) {
-      if (e.keyCode === 27) this.$emit('close')
+    closeOnEsc(e) {
+      if (e.keyCode === 27) {
+        this.$emit('close')
+      }
     },
   },
 }
