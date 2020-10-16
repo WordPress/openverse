@@ -28,7 +28,6 @@ module.exports = {
     'vue/html-closing-bracket-newline': 'off',
     'vue/html-indent': 'off',
     'vue/singleline-html-element-content-newline': 'off',
-    'vue-a11y/click-events-have-key-events': 'warn',
     'vue/component-name-in-template-casing': [
       'error',
       'PascalCase',
