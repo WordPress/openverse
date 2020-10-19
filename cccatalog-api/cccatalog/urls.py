@@ -53,28 +53,6 @@ an API key.
 Pull requests are welcome!
 [Contribute on GitHub](https://github.com/creativecommons/cccatalog-api)
 
-# REST API
-
-## Overview
-The cccatalog REST API allows you to integrate and perform queries to digital\
-media under Creative Commons.
-The API is based on REST principles. It supports GET, POST, and DELETE requests.
-GET request is used to retrieve information from a resource \
-and a POST to update an entity. DELETE removes an entity.
-After receiving your request, the API sends back an HTTP code as a response.
-
-## Possible Response Status Codes
-| Status Code   | Description           | Notes  |
-| ------------- |-------------          | -----  |
-| 200           | OK                    | The request was successful |
-| 201           | OK                    | The request was successful |
-| 204           | OK                    | No Content |
-| 301           | Bad Request           | Moved Permanently |
-| 400           | Bad Request           | The request could not be understood by the server. Incoming parameters might not be valid |
-| 403           | Unauthorized          | Forbidden |
-| 404           | Not Found             | The requested content could not be found by the server |
-| 500           | Internal Server Error | The request could not be processed by the server for an unknown reason |
-
 """  # noqa
 
 
