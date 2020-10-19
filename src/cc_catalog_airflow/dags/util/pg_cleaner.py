@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 OUTPUT_DIR_PATH = os.path.realpath(os.getenv('OUTPUT_DIR', '/tmp/'))
 OVERWRITE_DIR = 'overwrite/'
+DELAY_MINUTES = 1
 
 IMAGE_TABLE_COLS = [
     # These are not precisely the same names as in the DB.
@@ -62,24 +63,44 @@ class ImageStoreDict(dict):
         return ret
 
 
-def clean_prefix_loop(postgres_conn_id, prefix, desired_prefix_length=4):
+class CleaningException(Exception):
+    pass
+
+
+def clean_prefix_loop(
+        postgres_conn_id,
+        prefix,
+        desired_prefix_length=4,
+        delay_minutes=DELAY_MINUTES,
+):
+    failure = False
     if len(prefix) >= desired_prefix_length:
-        clean_rows(postgres_conn_id, prefix)
+        try:
+            clean_rows(postgres_conn_id, prefix)
+        except Exception as e:
+            failure = True
+            logger.error(f"Failed to clean rows with prefix {prefix}")
+            logger.error(f"Exception was {e}")
     else:
         interfix_length = desired_prefix_length - len(prefix)
         for i in _hex_counter(interfix_length):
             start_time = time.time()
-            clean_rows(postgres_conn_id, prefix + i)
+            try:
+                clean_rows(postgres_conn_id, prefix + i)
+            except Exception as e:
+                failure = True
+                logger.error(f"Failed to clean rows with prefix {prefix}")
+                logger.error(f"Exception was {e}")
             total_time = time.time() - start_time
             logger.info(
                 f"Total time:  {total_time} seconds"
             )
-            # We only want to produce one file per minute to avoid
-            # overloading the DB loader
-            delay = 60 - total_time
+            delay = 60 * delay_minutes - total_time
             if delay > 0:
                 logger.info(f"Waiting for {delay} seconds")
                 time.sleep(delay)
+    if failure:
+        raise CleaningException()
 
 
 def clean_rows(postgres_conn_id, prefix):
@@ -92,7 +113,6 @@ def clean_rows(postgres_conn_id, prefix):
     selected_rows = _select_records(postgres_conn_id, prefix)
     total_rows = len(selected_rows)
     logger.info(f"Processing {total_rows} rows from prefix {prefix}.")
-    print(selected_rows)
     for record in selected_rows:
         try:
             _clean_single_row(record, image_store_dict, prefix)
@@ -106,28 +126,11 @@ def clean_rows(postgres_conn_id, prefix):
     _log_and_check_totals(total_rows, image_store_dict)
 
 
-def _log_and_check_totals(total_rows, image_store_dict):
-    image_totals = {
-        k: v.total_images for k, v in image_store_dict.items()
-    }
-    total_images_sum = sum(image_totals.values())
-    logger.info(
-        f"Total images cleaned:  {total_images_sum}"
-    )
-    logger.info(f"Image Totals breakdown:  {image_totals}")
-    try:
-        assert total_images_sum == total_rows
-    except Exception as e:
-        logger.warning(
-            "total_images_sum NOT EQUAL TO total_rows!"
-        )
-        logger.warning(
-            f"total_images_sum: {total_images_sum}"
-        )
-        logger.warning(
-            f"total_rows: {total_rows}"
-        )
-        raise e
+def _hex_counter(length):
+    max_string = 'f' * length
+    format_string = f'0{length}x'
+    for h in range(int(max_string, 16) + 1):
+        yield format(h, format_string)
 
 
 def _select_records(postgres_conn_id, prefix, image_table=IMAGE_TABLE_NAME):
@@ -155,13 +158,6 @@ def _select_records(postgres_conn_id, prefix, image_table=IMAGE_TABLE_NAME):
     return postgres.get_records(select_query)
 
 
-def _hex_counter(length):
-    max_string = 'f' * length
-    format_string = f'0{length}x'
-    for h in range(int(max_string, 16) + 1):
-        yield format(h, format_string)
-
-
 def _clean_single_row(record, image_store_dict, prefix):
     dirty_row = ImageTableRow(*record)
     image_store = image_store_dict[(dirty_row.provider, prefix)]
@@ -185,4 +181,28 @@ def _clean_single_row(record, image_store_dict, prefix):
         source=dirty_row.source,
     )
     if not image_store.total_images - total_images_before == 1:
-        logger.warning(f"Record {dirty_row} could not be cleaned!")
+        logger.warning(f"Record {dirty_row} was not stored!")
+
+
+def _log_and_check_totals(total_rows, image_store_dict):
+    image_totals = {
+        k: v.total_images for k, v in image_store_dict.items()
+    }
+    total_images_sum = sum(image_totals.values())
+    logger.info(
+        f"Total images cleaned:  {total_images_sum}"
+    )
+    logger.info(f"Image Totals breakdown:  {image_totals}")
+    try:
+        assert total_images_sum == total_rows
+    except Exception as e:
+        logger.warning(
+            "total_images_sum NOT EQUAL TO total_rows!"
+        )
+        logger.warning(
+            f"total_images_sum: {total_images_sum}"
+        )
+        logger.warning(
+            f"total_rows: {total_rows}"
+        )
+        raise e
