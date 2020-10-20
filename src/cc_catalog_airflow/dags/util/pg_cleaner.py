@@ -91,7 +91,7 @@ def clean_prefix_loop(
             logger.error(f"Exception was {e}")
     else:
         interfix_length = desired_prefix_length - len(prefix)
-        for i in _hex_counter(interfix_length):
+        for i in hex_counter(interfix_length):
             start_time = time.time()
             try:
                 clean_rows(postgres_conn_id, prefix + i)
@@ -134,7 +134,7 @@ def clean_rows(postgres_conn_id, prefix):
     _log_and_check_totals(total_rows, image_store_dict)
 
 
-def _hex_counter(length):
+def hex_counter(length):
     max_string = 'f' * length
     format_string = f'0{length}x'
     for h in range(int(max_string, 16) + 1):
