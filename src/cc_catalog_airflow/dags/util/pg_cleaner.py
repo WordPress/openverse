@@ -18,8 +18,8 @@ from util.loader.sql import IMAGE_TABLE_NAME
 
 logger = logging.getLogger(__name__)
 
-OUTPUT_DIR_PATH = os.path.realpath(os.getenv('OUTPUT_DIR', '/tmp/'))
-OVERWRITE_DIR = 'overwrite/'
+OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
+OVERWRITE_DIR = "overwrite/"
 DELAY_MINUTES = 1
 
 IMAGE_TABLE_COLS = [
@@ -53,16 +53,15 @@ ImageTableRow = namedtuple("ImageTableRow", IMAGE_TABLE_COLS)
 
 
 class ImageStoreDict(dict):
-
     def __missing__(self, key):
         ret = self[key] = self._init_image_store(key)
         return ret
 
     def _init_image_store(
-            self,
-            key,
-            output_dir=OUTPUT_DIR_PATH,
-            overwrite_dir=OVERWRITE_DIR,
+        self,
+        key,
+        output_dir=OUTPUT_DIR_PATH,
+        overwrite_dir=OVERWRITE_DIR,
     ):
         return image.ImageStore(
             provider=key[0],
@@ -76,10 +75,10 @@ class CleaningException(Exception):
 
 
 def clean_prefix_loop(
-        postgres_conn_id,
-        prefix,
-        desired_prefix_length=4,
-        delay_minutes=DELAY_MINUTES,
+    postgres_conn_id,
+    prefix,
+    desired_prefix_length=4,
+    delay_minutes=DELAY_MINUTES,
 ):
     failure = False
     if len(prefix) >= desired_prefix_length:
@@ -100,9 +99,7 @@ def clean_prefix_loop(
                 logger.error(f"Failed to clean rows with prefix {prefix}")
                 logger.error(f"Exception was {e}")
             total_time = time.time() - start_time
-            logger.info(
-                f"Total time:  {total_time} seconds"
-            )
+            logger.info(f"Total time:  {total_time} seconds")
             delay = 60 * delay_minutes - total_time
             if delay > 0:
                 logger.info(f"Waiting for {delay} seconds")
@@ -135,8 +132,8 @@ def clean_rows(postgres_conn_id, prefix):
 
 
 def hex_counter(length):
-    max_string = 'f' * length
-    format_string = f'0{length}x'
+    max_string = "f" * length
+    format_string = f"0{length}x"
     for h in range(int(max_string, 16) + 1):
         yield format(h, format_string)
 
@@ -145,8 +142,8 @@ def _select_records(postgres_conn_id, prefix, image_table=IMAGE_TABLE_NAME):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     min_base_uuid = "00000000-0000-0000-0000-000000000000"
     max_base_uuid = "ffffffff-ffff-ffff-ffff-ffffffffffff"
-    min_uuid = prefix + min_base_uuid[len(prefix):]
-    max_uuid = prefix + max_base_uuid[len(prefix):]
+    min_uuid = prefix + min_base_uuid[len(prefix) :]
+    max_uuid = prefix + max_base_uuid[len(prefix) :]
     select_query = dedent(
         f"""
         SELECT
@@ -193,24 +190,14 @@ def _clean_single_row(record, image_store_dict, prefix):
 
 
 def _log_and_check_totals(total_rows, image_store_dict):
-    image_totals = {
-        k: v.total_images for k, v in image_store_dict.items()
-    }
+    image_totals = {k: v.total_images for k, v in image_store_dict.items()}
     total_images_sum = sum(image_totals.values())
-    logger.info(
-        f"Total images cleaned:  {total_images_sum}"
-    )
+    logger.info(f"Total images cleaned:  {total_images_sum}")
     logger.info(f"Image Totals breakdown:  {image_totals}")
     try:
         assert total_images_sum == total_rows
     except Exception as e:
-        logger.warning(
-            "total_images_sum NOT EQUAL TO total_rows!"
-        )
-        logger.warning(
-            f"total_images_sum: {total_images_sum}"
-        )
-        logger.warning(
-            f"total_rows: {total_rows}"
-        )
+        logger.warning("total_images_sum NOT EQUAL TO total_rows!")
+        logger.warning(f"total_images_sum: {total_images_sum}")
+        logger.warning(f"total_rows: {total_rows}")
         raise e
