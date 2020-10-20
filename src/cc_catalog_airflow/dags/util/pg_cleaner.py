@@ -55,12 +55,20 @@ ImageTableRow = namedtuple("ImageTableRow", IMAGE_TABLE_COLS)
 class ImageStoreDict(dict):
 
     def __missing__(self, key):
-        ret = self[key] = image.ImageStore(
+        ret = self[key] = self._init_image_store(key)
+        return ret
+
+    def _init_image_store(
+            self,
+            key,
+            output_dir=OUTPUT_DIR_PATH,
+            overwrite_dir=OVERWRITE_DIR,
+    ):
+        return image.ImageStore(
             provider=key[0],
             output_file=f"cleaned_{key[1]}.tsv",
-            output_dir=os.path.join(OUTPUT_DIR_PATH, OVERWRITE_DIR),
+            output_dir=os.path.join(output_dir, overwrite_dir),
         )
-        return ret
 
 
 class CleaningException(Exception):
