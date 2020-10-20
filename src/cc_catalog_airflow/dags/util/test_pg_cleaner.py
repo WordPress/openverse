@@ -554,7 +554,9 @@ def test_clean_single_row_inits_image_store_and_adds_row():
         call(
             provider="smithsonian",
             output_file="cleaned_000000.tsv",
-            output_dir="/tmp/workflow_output/overwrite/",
+            output_dir=os.path.join(
+                pg_cleaner.OUTPUT_DIR_PATH, pg_cleaner.OVERWRITE_DIR,
+            ),
         ),
         call().add_item(
             foreign_landing_url="https://n2t.net/ark:/65665/3f07eb37b-d022-4d44-90de-179a4aaf1c82",
