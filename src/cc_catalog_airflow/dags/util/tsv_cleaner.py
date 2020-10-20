@@ -41,7 +41,7 @@ def _process_row(tsv_row):
         foreign_landing_url=row_image.foreign_landing_url,
         image_url=row_image.image_url,
         thumbnail_url=row_image.thumbnail_url,
-        license_url=_get_license_url_from_row_meta_data(row_meta_data),
+        license_url=get_license_url(row_meta_data),
         license_=row_image.license_,
         license_version=row_image.license_version,
         foreign_identifier=row_image.foreign_identifier,
@@ -79,5 +79,5 @@ def _get_json_from_string(json_str):
     return json_obj
 
 
-def _get_license_url_from_row_meta_data(meta_data):
+def get_license_url(meta_data):
     return meta_data.get("raw_license_url", meta_data.get("license_url", None))
