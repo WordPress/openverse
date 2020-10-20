@@ -1,7 +1,7 @@
 import datetime
 import os
 import psycopg2
-from unittest.mock import patch, call, MagicMock
+from unittest.mock import patch, call
 
 from airflow.hooks.postgres_hook import PostgresHook
 import pytest
