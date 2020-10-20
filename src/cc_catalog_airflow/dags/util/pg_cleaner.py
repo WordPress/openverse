@@ -142,8 +142,8 @@ def _select_records(postgres_conn_id, prefix, image_table=IMAGE_TABLE_NAME):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     min_base_uuid = "00000000-0000-0000-0000-000000000000"
     max_base_uuid = "ffffffff-ffff-ffff-ffff-ffffffffffff"
-    min_uuid = prefix + min_base_uuid[len(prefix) :]
-    max_uuid = prefix + max_base_uuid[len(prefix) :]
+    min_uuid = prefix + min_base_uuid[len(prefix):]
+    max_uuid = prefix + max_base_uuid[len(prefix):]
     select_query = dedent(
         f"""
         SELECT
