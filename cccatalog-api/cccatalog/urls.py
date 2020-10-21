@@ -153,9 +153,7 @@ An authorization framework that enables a third party application to get access 
 
 ## Sensitive content
 Any content that depicts graphic violence, adult content, and hostility or malice against others based on their race, religion, disability, sexual orientation, ethnicity and national origin.
-
 """  # noqa
-
 
 logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
 tos_url = "https://api.creativecommons.engineering/terms_of_service.html"
