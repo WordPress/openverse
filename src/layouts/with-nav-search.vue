@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <HeaderSection :show-nav-search="true" />
-    <main role="main">
+    <main>
       <Nuxt />
     </main>
     <FooterSection />

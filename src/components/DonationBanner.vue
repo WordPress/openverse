@@ -24,38 +24,26 @@
 </template>
 
 <script>
-import GoogleAnalytics from '@/analytics/GoogleAnalytics'
-import { DonateLinkClick, DonateBannerClose } from '@/analytics/events'
-import { ExperimentData } from '@/abTests/experiments/donationLanguage'
-import { JOINED_AB_TEST_EXPERIMENT } from '@/store-modules/mutation-types'
-import { CONVERT_AB_TEST_EXPERIMENT } from '@/store-modules/action-types'
+import GoogleAnalytics from '~/analytics/GoogleAnalytics'
+import { DonateLinkClick, DonateBannerClose } from '~/analytics/events'
+import languageExperiment from '~/abTests/experiments/donationLanguage'
+import { CONVERT_AB_TEST_EXPERIMENT } from '~/store-modules/action-types'
 
 export default {
   name: 'DonationBanner',
-  data: function () {
-    return {
-      caseA: true,
-    }
-  },
   computed: {
+    isDefaultCase() {
+      const experiment = this.$store.state.experiments.find(
+        (exp) => exp.name === languageExperiment.name
+      )
+      if (!experiment) return true
+      return experiment.case === languageExperiment.defaultCase
+    },
     donationText() {
-      return this.caseA
+      return this.isDefaultCase
         ? this.$t('header.donation-banner.description')
         : this.$t('header.donation-banner.alternative-description')
     },
-  },
-  created() {
-    this.unsubscribe = this.$store.subscribe((mutation, state) => {
-      if (mutation.type === JOINED_AB_TEST_EXPERIMENT) {
-        const experiment = state.experiments.find(
-          (exp) => exp.name === ExperimentData.EXPERIMENT_NAME
-        )
-        this.caseA = experiment.case === ExperimentData.DONATION_GENERAL_CASE
-      }
-    })
-  },
-  beforeDestroy() {
-    this.unsubscribe()
   },
   methods: {
     onDismiss() {
@@ -64,7 +52,7 @@ export default {
     },
     handleDonateClick() {
       this.$store.dispatch(CONVERT_AB_TEST_EXPERIMENT, {
-        experimentName: ExperimentData.EXPERIMENT_NAME,
+        name: languageExperiment.name,
       })
       GoogleAnalytics().sendEvent(DonateLinkClick('banner'))
     },

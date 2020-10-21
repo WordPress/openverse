@@ -1,36 +1,45 @@
 import { JOINED_AB_TEST_EXPERIMENT } from '~/store-modules/mutation-types'
-import createSixpackSession from './lib/createSixpackSession'
 import donationLanguage from '~/abTests/experiments/donationLanguage'
+import { participate } from '~/utils/sixpack'
 
 /**
  * Attach each a/b test (aka "experiment") to the sixpack session
- * and commit a vuex mutation for each joined experiment
+ * and commit a vuex mutation for each joined experiment.
+ *
+ * Each experiment is a simple object with the following structure:
+ *
+ * ```js
+ * {
+ *   name: 'experiment_name',
+ *   defaultCase: 'experiment_default_case_name',
+ *   cases: {
+ *     'experiment_default_case_name',
+ *     'any_other_case_names',
+ *     'any_other_case_names',
+ *   },
+ *   traffic_fraction: .10 // an optional number between 0 and 1 (100%)
+ * }
+ * ```
  */
-const setupExperiments = (store) => {
-  const session = createSixpackSession(store.state.abSessionId)
+const abTests = (store) => {
+  const activeExperiments = [donationLanguage]
 
-  // List all active experiments here
-  const experimentPromises = [donationLanguage(session)]
-  return (
-    Promise.all(experimentPromises)
-      .then((experiments) =>
-        experiments.map((experiment) =>
-          store.commit(JOINED_AB_TEST_EXPERIMENT, {
-            name: experiment.name,
-            case: experiment.case,
-            session: experiment.session,
-          })
-        )
-      )
-      // In the case of an error, the user joins the default version of an experiment
-      .catch((error) =>
-        store.commit(JOINED_AB_TEST_EXPERIMENT, {
-          name: error.name,
-          case: error.case,
-          session: error.session,
-        })
-      )
-  )
+  // commit each experiment to Vuex
+  const commitExperiments = (experiments) => {
+    experiments.map((experiment) => {
+      store.commit(JOINED_AB_TEST_EXPERIMENT, {
+        name: experiment.name,
+        case: experiment.case,
+        session: experiment.session,
+      })
+    })
+  }
+
+  return Promise.all(
+    activeExperiments.map((experiment) =>
+      participate(experiment, { sessionId: store.state.abSessionId })
+    )
+  ).then(commitExperiments)
 }
 
-export default setupExperiments
+export default abTests

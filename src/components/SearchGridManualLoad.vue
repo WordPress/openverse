@@ -58,7 +58,7 @@
     </div>
 
     <AppModal
-      :visible="showMetaImageSearch"
+      v-if="showMetaImageSearch"
       :title="'Search Images from Other Sources'"
       @close="showMetaImageSearch = false"
     >

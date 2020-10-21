@@ -1,5 +1,5 @@
 <template>
-  <!-- eslint-disable vue-a11y/no-autofocus -->
+  <!-- eslint-disable vuejs-accessibility/no-autofocus -->
   <form
     role="search"
     method="post"

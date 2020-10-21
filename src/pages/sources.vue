@@ -44,11 +44,7 @@
             </th>
           </thead>
           <tbody>
-            <tr
-              v-for="(imageProvider, index) in sortedProviders"
-              :key="index"
-              role="row"
-            >
+            <tr v-for="(imageProvider, index) in sortedProviders" :key="index">
               <td>
                 <a
                   :aria-label="imageProvider.display_name"
