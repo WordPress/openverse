@@ -18,8 +18,9 @@ from util.loader.sql import IMAGE_TABLE_NAME
 
 logger = logging.getLogger(__name__)
 
-OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
+OUTPUT_DIR = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
 OVERWRITE_DIR = "overwrite/"
+OUTPUT_PATH = os.path.join(OUTPUT_DIR, OVERWRITE_DIR)
 DELAY_MINUTES = 1
 
 IMAGE_TABLE_COLS = [
@@ -60,10 +61,8 @@ class ImageStoreDict(dict):
     def _init_image_store(
         self,
         key,
-        output_dir=OUTPUT_DIR_PATH,
-        overwrite_dir=OVERWRITE_DIR,
+        output_path=OUTPUT_PATH,
     ):
-        output_path = os.path.join(output_dir, overwrite_dir)
         os.makedirs(output_path, exist_ok=True)
         return image.ImageStore(
             provider=key[0],
@@ -189,6 +188,16 @@ def _clean_single_row(record, image_store_dict, prefix):
     )
     if not image_store.total_images - total_images_before == 1:
         logger.warning(f"Record {dirty_row} was not stored!")
+        _save_failure_identifier(dirty_row.identifier)
+
+
+def _save_failure_identifier(identifier, output_path=OUTPUT_PATH):
+    failure_dir = os.path.join(output_path, "cleaning_failures")
+    failure_file = f"fails_{int(time.time()) // 100 * 100}.txt"
+    os.makedirs(failure_dir, exist_ok=True)
+    failure_full_path = os.path.join(failure_dir, failure_file)
+    with open(failure_full_path, "a") as f:
+        f.write(f"{identifier}\n")
 
 
 def _log_and_check_totals(total_rows, image_store_dict):
