@@ -47,11 +47,8 @@ for introducing yourself to the API, but we strongly recommend that you obtain
 an API key as soon as possible. Authorized clients have a higher rate limit
 of 10000 requests per day and 100 requests per minute. Additionally, Creative
 Commons can give your key an even higher limit that fits your application's
-needs. See the `/v1/auth_tokens/register` endpoint for instructions on obtaining
+needs. See the Register and Authenticate section for instructions on obtaining
 an API key.
-
-Pull requests are welcome!
-[Contribute on GitHub](https://github.com/creativecommons/cccatalog-api)
 
 # Register and Authenticate
 
@@ -153,6 +150,18 @@ An authorization framework that enables a third party application to get access 
 
 ## Sensitive content
 Any content that depicts graphic violence, adult content, and hostility or malice against others based on their race, religion, disability, sexual orientation, ethnicity and national origin.
+
+# Contribute
+
+We love pull requests! If you’re interested in [contributing on Github](https://github.com/creativecommons/cccatalog-api), here’s a todo list to get started.
+
+- Read up about [Django REST Framework](https://www.django-rest-framework.org/), which is the framework used to build CC Catalog API
+- Read up about [drf-yasg](https://drf-yasg.readthedocs.io/en/stable/), which is a tool used to generate real Swagger/OpenAPI 2.0 specifications
+- Run the server locally by following this [link](https://github.com/creativecommons/cccatalog-api#running-the-server-locally)
+- Update documentation or codebase
+- Make sure the updates passed the automated tests in this [file](https://github.com/creativecommons/cccatalog-api/blob/master/.github/workflows/integration-tests.yml)
+- Commit and push
+- Create pull request
 """  # noqa
 
 logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
