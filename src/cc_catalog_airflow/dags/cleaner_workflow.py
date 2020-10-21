@@ -17,7 +17,7 @@ DAG_ID = "postgres_image_cleaner"
 DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
 PREFIX_LENGTH = 1
 DESIRED_PREFIX_LENGTH = 3
-CONCURRENCY = 16
+CONCURRENCY = 8
 
 
 def create_id_partitioned_cleaner_dag(

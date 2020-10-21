@@ -63,10 +63,12 @@ class ImageStoreDict(dict):
         output_dir=OUTPUT_DIR_PATH,
         overwrite_dir=OVERWRITE_DIR,
     ):
+        output_path = os.path.join(output_dir, overwrite_dir)
+        os.makedirs(output_path, exist_ok=True)
         return image.ImageStore(
             provider=key[0],
             output_file=f"cleaned_{key[1]}.tsv",
-            output_dir=os.path.join(output_dir, overwrite_dir),
+            output_dir=output_path,
         )
 
 
@@ -172,7 +174,7 @@ def _clean_single_row(record, image_store_dict, prefix):
         image_url=dirty_row.image_url,
         thumbnail_url=dirty_row.thumbnail_url,
         license_url=tsv_cleaner.get_license_url(dirty_row.meta_data),
-        license_=dirty_row.license_,
+        license_=dirty_row.license_.lower(),
         license_version=dirty_row.license_version,
         foreign_identifier=dirty_row.foreign_identifier,
         width=dirty_row.width,
@@ -181,7 +183,7 @@ def _clean_single_row(record, image_store_dict, prefix):
         creator_url=dirty_row.creator_url,
         title=dirty_row.title,
         meta_data=dirty_row.meta_data,
-        raw_tags=dirty_row.tags,
+        raw_tags=[t for t in dirty_row.tags if t],
         watermarked=dirty_row.watermarked,
         source=dirty_row.source,
     )
