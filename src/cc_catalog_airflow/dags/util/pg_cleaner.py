@@ -18,7 +18,9 @@ from util.loader import column_names as col
 from util.loader.sql import IMAGE_TABLE_NAME
 
 logger = logging.getLogger(__name__)
+logging.getLogger(image.__name__).setLevel(logging.WARNING)
 
+MAX_DIR_SIZE = 8 * 1024 ** 3
 OUTPUT_DIR = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
 OVERWRITE_DIR = "overwrite/"
 OUTPUT_PATH = os.path.join(OUTPUT_DIR, OVERWRITE_DIR)
@@ -102,16 +104,9 @@ def clean_prefix_loop(
                 logger.error(f"Exception was {e}")
             total_time = time.time() - start_time
             logger.info(f"Total time:  {total_time} seconds")
-            delay = 60 * delay_minutes - total_time
-            if delay > 0:
-                logger.info(f"Waiting for {delay} seconds")
-                time.sleep(delay)
+            _wait_for_space()
     if failure:
         raise CleaningException()
-
-
-def _wait_for_space_and_time(total_time):
-    pass
 
 
 def clean_rows(postgres_conn_id, prefix):
@@ -135,6 +130,35 @@ def clean_rows(postgres_conn_id, prefix):
         image_store.commit()
 
     _log_and_check_totals(total_rows, image_store_dict)
+
+
+def _wait_for_space(
+        min_polling_frequency=5,
+        max_polling_frequency=120,
+        delay_step=5,
+        max_dir_size=MAX_DIR_SIZE,
+        output_path=OUTPUT_PATH,
+):
+    delay = max_polling_frequency
+    check_dir = Path(output_path)
+    total_wait_time = 0
+    logger.info(f"Waiting for space in {output_path}")
+    while True:
+        du = sum(
+            f.stat().st_size for f in check_dir.glob('**/*') if f.is_file()
+        )
+        if du < max_dir_size:
+            break
+        else:
+            logger.info(
+                f"{output_path} holds {du / 1024**2} MB,"
+                f" but max is {max_dir_size / 1024**2} MB."
+                f" Waiting for {delay} seconds"
+            )
+            time.sleep(delay)
+            total_wait_time += delay
+            delay = max(delay - delay_step, min_polling_frequency)
+    logger.info(f"Total wait time: {total_wait_time} seconds")
 
 
 def hex_counter(length):
