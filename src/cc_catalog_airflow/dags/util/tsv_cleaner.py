@@ -80,4 +80,13 @@ def _get_json_from_string(json_str):
 
 
 def get_license_url(meta_data):
-    return meta_data.get("raw_license_url", meta_data.get("license_url", None))
+    try:
+        license_url = meta_data.get(
+            "raw_license_url", meta_data.get("license_url", None)
+        )
+    except Exception as e:
+        logger.debug(
+            f"Couldn't retrieve license URL from {meta_data}.  Error: {e}"
+        )
+        license_url = None
+    return license_url if license_url else None
