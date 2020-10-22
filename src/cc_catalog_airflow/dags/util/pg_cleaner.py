@@ -6,6 +6,7 @@ class.
 from collections import namedtuple
 import logging
 import os
+from pathlib import Path
 from textwrap import dedent
 import time
 
@@ -109,6 +110,10 @@ def clean_prefix_loop(
         raise CleaningException()
 
 
+def _wait_for_space_and_time(total_time):
+    pass
+
+
 def clean_rows(postgres_conn_id, prefix):
     """
     This function runs all rows from the image table whose identifier
@@ -168,12 +173,14 @@ def _clean_single_row(record, image_store_dict, prefix):
     dirty_row = ImageTableRow(*record)
     image_store = image_store_dict[(dirty_row.provider, prefix)]
     total_images_before = image_store.total_images
+    license_lower = dirty_row.license_.lower() if dirty_row.license_ else None
+    tags_list = [t for t in dirty_row.tags if t] if dirty_row.tags else None
     image_store.add_item(
         foreign_landing_url=dirty_row.foreign_landing_url,
         image_url=dirty_row.image_url,
         thumbnail_url=dirty_row.thumbnail_url,
         license_url=tsv_cleaner.get_license_url(dirty_row.meta_data),
-        license_=dirty_row.license_.lower(),
+        license_=license_lower,
         license_version=dirty_row.license_version,
         foreign_identifier=dirty_row.foreign_identifier,
         width=dirty_row.width,
@@ -182,7 +189,7 @@ def _clean_single_row(record, image_store_dict, prefix):
         creator_url=dirty_row.creator_url,
         title=dirty_row.title,
         meta_data=dirty_row.meta_data,
-        raw_tags=[t for t in dirty_row.tags if t],
+        raw_tags=tags_list,
         watermarked=dirty_row.watermarked,
         source=dirty_row.source,
     )
