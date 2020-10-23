@@ -19,6 +19,7 @@ from util.loader.sql import IMAGE_TABLE_NAME
 
 logger = logging.getLogger(__name__)
 logging.getLogger(image.__name__).setLevel(logging.WARNING)
+logging.getLogger(image.columns.urls.__name__).setLevel(logging.WARNING)
 
 MAX_DIR_SIZE = 8 * 1024 ** 3
 OUTPUT_DIR = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
