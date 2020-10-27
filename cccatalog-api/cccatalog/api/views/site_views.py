@@ -146,7 +146,7 @@ class Register(APIView):
     
     Upon registering, you will receive a `client_id` and `client_secret`, 
     which you can then use to authenticate using the standard OAuth2 Client 
-    Credentials flow.
+    Credentials flow. See the Register and Authenticate section for instructions on registering access to the API via OAuth2.
     <br>
     <blockquote>
         <b>WARNING :</b> You must keep <code>client_secret</code> confidential, 
@@ -156,6 +156,8 @@ class Register(APIView):
     Authenticated users have higher rate limits than anonymous users. 
     Additionally, by identifying yourself, you can request Creative Commons to 
     adjust your personal rate limit depending on your organization's needs.
+
+    You can also refer to Bash's Request Samples for examples on how to use this endpoint.
     """   # noqa
     throttle_classes = (TenPerDay,)
     register_api_oauth2_response = {
