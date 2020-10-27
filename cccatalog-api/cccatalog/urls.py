@@ -124,31 +124,31 @@ $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.cre
 
 # Glossary
 
-## Access Token
+#### Access Token
 A private string that authorizes an application to make API requests 
 
-## API
+#### API
 An abbreviation for Application Programming Interface.
 
-## CC
+#### CC
 An abbreviation for Creative Commons.
 
-## Client ID
+#### Client ID
 A publicly exposed string used by CC Catalog API to identify the application.
 
-## Client Secret
+#### Client Secret
 A private string that authenticates the identity of the application to the CC Catalog API.
 
-## Copyright
+#### Copyright
 A type of intellectual property that gives the owner an exclusive right to reproduce, publish, sell or distribute content.
 
-## Mature content
+#### Mature content
 Any content that requires the audience to be 18 and older.
 
-## OAuth2
+#### OAuth2
 An authorization framework that enables a third party application to get access to an HTTP service.
 
-## Sensitive content
+#### Sensitive content
 Any content that depicts graphic violence, adult content, and hostility or malice against others based on their race, religion, disability, sexual orientation, ethnicity and national origin.
 
 # Contribute
