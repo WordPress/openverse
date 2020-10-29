@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install pytest pipenv
-        sudo apt-get install libexempi3
+        sudo apt-get install libexempi3 librdkafka-dev
         PIPENV_PIPFILE=./cccatalog-api/Pipfile pipenv install --system --deploy --dev &
     - name: Start API
       run: docker-compose up --build -d
