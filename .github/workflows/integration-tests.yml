@@ -40,4 +40,4 @@ jobs:
     - name: Run API tests
       run: cd cccatalog-api && test/run_test.sh
     - name: Run analytics tests
-      run: cd ./analytics && pipenv install && docker exec -i cccatalog-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
+      run: cd ./analytics && docker exec -i cccatalog-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
