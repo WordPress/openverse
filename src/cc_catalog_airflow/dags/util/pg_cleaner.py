@@ -6,6 +6,7 @@ class.
 from collections import namedtuple
 import logging
 import os
+from pathlib import Path
 from textwrap import dedent
 import time
 
@@ -17,9 +18,13 @@ from util.loader import column_names as col
 from util.loader.sql import IMAGE_TABLE_NAME
 
 logger = logging.getLogger(__name__)
+logging.getLogger(image.__name__).setLevel(logging.WARNING)
+logging.getLogger(image.columns.urls.__name__).setLevel(logging.WARNING)
 
-OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
+MAX_DIR_SIZE = 8 * 1024 ** 3
+OUTPUT_DIR = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
 OVERWRITE_DIR = "overwrite/"
+OUTPUT_PATH = os.path.join(OUTPUT_DIR, OVERWRITE_DIR)
 DELAY_MINUTES = 1
 
 IMAGE_TABLE_COLS = [
@@ -60,13 +65,13 @@ class ImageStoreDict(dict):
     def _init_image_store(
         self,
         key,
-        output_dir=OUTPUT_DIR_PATH,
-        overwrite_dir=OVERWRITE_DIR,
+        output_path=OUTPUT_PATH,
     ):
+        os.makedirs(output_path, exist_ok=True)
         return image.ImageStore(
             provider=key[0],
             output_file=f"cleaned_{key[1]}.tsv",
-            output_dir=os.path.join(output_dir, overwrite_dir),
+            output_dir=output_path,
         )
 
 
@@ -100,10 +105,7 @@ def clean_prefix_loop(
                 logger.error(f"Exception was {e}")
             total_time = time.time() - start_time
             logger.info(f"Total time:  {total_time} seconds")
-            delay = 60 * delay_minutes - total_time
-            if delay > 0:
-                logger.info(f"Waiting for {delay} seconds")
-                time.sleep(delay)
+            _wait_for_space()
     if failure:
         raise CleaningException()
 
@@ -129,6 +131,35 @@ def clean_rows(postgres_conn_id, prefix):
         image_store.commit()
 
     _log_and_check_totals(total_rows, image_store_dict)
+
+
+def _wait_for_space(
+        min_polling_frequency=5,
+        max_polling_frequency=120,
+        delay_step=5,
+        max_dir_size=MAX_DIR_SIZE,
+        output_path=OUTPUT_PATH,
+):
+    delay = max_polling_frequency
+    check_dir = Path(output_path)
+    total_wait_time = 0
+    logger.info(f"Waiting for space in {output_path}")
+    while True:
+        du = sum(
+            f.stat().st_size for f in check_dir.glob('**/*') if f.is_file()
+        )
+        if du < max_dir_size:
+            break
+        else:
+            logger.info(
+                f"{output_path} holds {du / 1024**2} MB,"
+                f" but max is {max_dir_size / 1024**2} MB."
+                f" Waiting for {delay} seconds"
+            )
+            time.sleep(delay)
+            total_wait_time += delay
+            delay = max(delay - delay_step, min_polling_frequency)
+    logger.info(f"Total wait time: {total_wait_time} seconds")
 
 
 def hex_counter(length):
@@ -167,12 +198,14 @@ def _clean_single_row(record, image_store_dict, prefix):
     dirty_row = ImageTableRow(*record)
     image_store = image_store_dict[(dirty_row.provider, prefix)]
     total_images_before = image_store.total_images
+    license_lower = dirty_row.license_.lower() if dirty_row.license_ else None
+    tags_list = [t for t in dirty_row.tags if t] if dirty_row.tags else None
     image_store.add_item(
         foreign_landing_url=dirty_row.foreign_landing_url,
         image_url=dirty_row.image_url,
         thumbnail_url=dirty_row.thumbnail_url,
         license_url=tsv_cleaner.get_license_url(dirty_row.meta_data),
-        license_=dirty_row.license_,
+        license_=license_lower,
         license_version=dirty_row.license_version,
         foreign_identifier=dirty_row.foreign_identifier,
         width=dirty_row.width,
@@ -181,12 +214,22 @@ def _clean_single_row(record, image_store_dict, prefix):
         creator_url=dirty_row.creator_url,
         title=dirty_row.title,
         meta_data=dirty_row.meta_data,
-        raw_tags=dirty_row.tags,
+        raw_tags=tags_list,
         watermarked=dirty_row.watermarked,
         source=dirty_row.source,
     )
     if not image_store.total_images - total_images_before == 1:
         logger.warning(f"Record {dirty_row} was not stored!")
+        _save_failure_identifier(dirty_row.identifier)
+
+
+def _save_failure_identifier(identifier, output_path=OUTPUT_PATH):
+    failure_dir = os.path.join(output_path, "cleaning_failures")
+    failure_file = f"fails_{int(time.time()) // 100 * 100}.txt"
+    os.makedirs(failure_dir, exist_ok=True)
+    failure_full_path = os.path.join(failure_dir, failure_file)
+    with open(failure_full_path, "a") as f:
+        f.write(f"{identifier}\n")
 
 
 def _log_and_check_totals(total_rows, image_store_dict):
