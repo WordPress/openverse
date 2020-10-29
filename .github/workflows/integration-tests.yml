@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install pytest pipenv
-        sudo apt-get install libexempi3
+        sudo apt-get install libexempi3 librdkafka-dev
         PIPENV_PIPFILE=./cccatalog-api/Pipfile pipenv install --system --deploy --dev &
     - name: Start API
       run: docker-compose up --build -d
@@ -40,4 +40,4 @@ jobs:
     - name: Run API tests
       run: cd cccatalog-api && test/run_test.sh
     - name: Run analytics tests
-      run: cd ./analytics && pipenv install && PYTHONPATH=. API_URL='analytics:8090' pipenv run pytest tests.py --disable-pytest-warnings
+      run: cd ./analytics && docker exec -i cccatalog-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
