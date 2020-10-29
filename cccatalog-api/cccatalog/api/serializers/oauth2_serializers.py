@@ -10,6 +10,19 @@ class OAuth2RegistrationSerializer(serializers.ModelSerializer):
 
 
 class OAuth2RegistrationSuccessful(serializers.ModelSerializer):
+    name = serializers.CharField(
+        help_text="A unique human-readable name for your application "
+                  "or project requiring access to the CC Catalog API."
+    )
+    client_id = serializers.CharField(
+        help_text="A publicly exposed string used by CC Catalog API "
+                  "to identify the application."
+    )
+    client_secret = serializers.CharField(
+        help_text="A private string that authenticates the identity "
+                  "of the application to the CC Catalog API."
+    )
+
     class Meta:
         model = Application
         fields = ('name', 'client_id', 'client_secret')

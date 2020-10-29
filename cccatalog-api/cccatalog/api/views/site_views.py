@@ -12,7 +12,10 @@ from cccatalog.api.controllers.search_controller import get_sources
 from cccatalog.api.serializers.oauth2_serializers import (
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
 )
-from cccatalog.api.serializers.image_serializers import ProxiedImageSerializer
+from cccatalog.api.serializers.image_serializers import (
+    ProxiedImageSerializer, ForbiddenErrorSerializer,
+    InternalServerErrorSerializer
+)
 from drf_yasg.utils import swagger_auto_schema
 from cccatalog.api.models import (
     ContentProvider, Image, ThrottledApplication, OAuth2Verification, SourceLogo
@@ -28,6 +31,7 @@ from drf_yasg import openapi
 from cccatalog.example_responses import register_api_oauth2_201_example,\
     key_info_200_example, key_info_403_example, key_info_500_example,\
     image_stats_200_example
+from cccatalog.custom_auto_schema import CustomAutoSchema
 
 CODENAME = 'provider_identifier'
 NAME = 'provider_name'
@@ -52,23 +56,32 @@ class HealthCheck(APIView):
 
 class AboutImageResponse(serializers.Serializer):
     """ The full image search response. """
-    source_name = serializers.CharField()
-    image_count = serializers.IntegerField()
-    display_name = serializers.CharField()
-    source_url = serializers.CharField()
+    source_name = serializers.CharField(
+        help_text="The source of the image."
+    )
+    image_count = serializers.IntegerField(
+        help_text="The number of images."
+    )
+    display_name = serializers.CharField(
+        help_text="The name of content provider."
+    )
+    source_url = serializers.CharField(
+        help_text="The actual URL to the `source_name`."
+    )
 
 
 class ImageStats(APIView):
+    swagger_schema = CustomAutoSchema
     image_stats_description = \
         """
-        List all providers in the Creative Commons image catalog, in addition to the
-        number of images from each data source.
+        image_stats is an API endpoint to get a list of all content providers 
+        and their respective number of images in the Creative Commons catalog.
 
-        Example:
+        You can use this endpoint to get details about content providers 
+        such as `source_name`, `image_count`, `display_name`, and `source_url`.
 
-        ```
-        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
-        ```
+        You can refer to Bash's Request Samples for example on how to use
+        this endpoint.
         """  # noqa
     image_stats_response = {
         "200": openapi.Response(
@@ -78,9 +91,21 @@ class ImageStats(APIView):
         )
     }
 
+    image_stats_bash = \
+        """
+        # Get a list of content providers and their image count
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
+        """  # noqa
+
     @swagger_auto_schema(operation_id='image_stats',
                          operation_description=image_stats_description,
-                         responses=image_stats_response)
+                         responses=image_stats_response,
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': image_stats_bash
+                             }
+                         ])
     def get(self, request, format=None):
         source_data = ContentProvider \
             .objects \
@@ -114,54 +139,25 @@ class ImageStats(APIView):
 
 
 class Register(APIView):
+    swagger_schema = CustomAutoSchema
     register_api_oauth2_description = \
     """
-    Register for access to the API via OAuth2. Authenticated users have higher
-    rate limits than anonymous users. Additionally, by identifying yourself,
-    you can request Creative Commons to adjust your personal rate limit
-    depending on your organization's needs.
- 
-    Upon registering, you will receive a `client_id` and `client_secret`, which
-    you can then use to authenticate using the standard OAuth2 Client
-    Credentials flow. You must keep `client_secret` confidential; anybody with
-    your `client_secret` can impersonate your application.
- 
-    Example registration and authentication flow:
- 
-    First, register for a key.
-    ```
-    $ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "cccatalog-api@creativecommons.org"}' https://api.creativecommons.engineering/v1/auth_tokens/register
-    {
-        "client_secret" : "YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e",
-        "client_id" : "pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda",
-        "name" : "My amazing project"
-    }
- 
-    ```
- 
-    Now, exchange your client credentials for a token.
-    ```
-    $ curl -X POST -d "client_id=pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda&client_secret=YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e&grant_type=client_credentials" https://api.creativecommons.engineering/v1/auth_tokens/token/
-    {
-       "access_token" : "DLBYIcfnKfolaXKcmMC8RIDCavc2hW",
-       "scope" : "read write groups",
-       "expires_in" : 36000,
-       "token_type" : "Bearer"
-    }
-    ```
- 
-    Check your email for a verification link. After you have followed the link,
-    your API key will be activated.
- 
-    Include the `access_token` in the authorization header to use your key in
-    your future API requests.
- 
-    ```
-    $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
-    ```
- 
-    **Be advised** that your token will be throttled like an anonymous user
-    until the email address has been verified.
+    register_api_oauth2 is an API endpoint to register access to the API via OAuth2.
+    
+    Upon registering, you will receive a `client_id` and `client_secret`, 
+    which you can then use to authenticate using the standard OAuth2 Client 
+    Credentials flow. See the Register and Authenticate section for instructions on registering access to the API via OAuth2.
+    <br>
+    <blockquote>
+        <b>WARNING :</b> You must keep <code>client_secret</code> confidential, 
+        as anybody with your <code>client_secret</code> can impersonate your application.
+    </blockquote>
+
+    Authenticated users have higher rate limits than anonymous users. 
+    Additionally, by identifying yourself, you can request Creative Commons to 
+    adjust your personal rate limit depending on your organization's needs.
+
+    You can also refer to Bash's Request Samples for examples on how to use this endpoint.
     """   # noqa
     throttle_classes = (TenPerDay,)
     register_api_oauth2_response = {
@@ -172,10 +168,62 @@ class Register(APIView):
         )
     }
 
+    register_api_oauth2_bash = \
+        """
+        # Register for a key
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "cccatalog-api@creativecommons.org"}' https://api.creativecommons.engineering/v1/auth_tokens/register
+        """  # noqa
+
+    register_api_oauth2_request = openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['name', 'description', 'email'],
+        properties={
+            'name': openapi.Schema(
+                title="Name",
+                type=openapi.TYPE_STRING,
+                min_length=1,
+                max_length=150,
+                unique=True,
+                description="A unique human-readable name for your application "
+                            "or project requiring access to the CC Catalog API."
+            ),
+            'description': openapi.Schema(
+                title="Description",
+                type=openapi.TYPE_STRING,
+                min_length=1,
+                max_length=10000,
+                description="A description of what you are trying to achieve "
+                            "with your project using the API. Please provide "
+                            "as much detail as possible!"
+            ),
+            'email': openapi.Schema(
+                title="Email",
+                type=openapi.TYPE_STRING,
+                min_length=1,
+                max_length=254,
+                format=openapi.FORMAT_EMAIL,
+                description="A valid email that we can reach you at if we "
+                            "have any questions about your use case or "
+                            "data consumption."
+            )
+        },
+        example={
+            "name": "My amazing project",
+            "description": "To access CC Catalog API",
+            "email": "cccatalog-api@creativecommons.org"
+        }
+    )
+
     @swagger_auto_schema(operation_id='register_api_oauth2',
                          operation_description=register_api_oauth2_description,
-                         request_body=OAuth2RegistrationSerializer,
-                         responses=register_api_oauth2_response)
+                         request_body=register_api_oauth2_request,
+                         responses=register_api_oauth2_response,
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': register_api_oauth2_bash
+                             }
+                         ])
     def post(self, request, format=None):
         # Store the registration information the developer gave us.
         serialized = OAuth2RegistrationSerializer(data=request.data)
@@ -266,15 +314,22 @@ class VerifyEmail(APIView):
 
 
 class CheckRates(APIView):
+    swagger_schema = CustomAutoSchema
     key_info_description = \
         """
-        Return information about the rate limit status of your API key.
+        key_info is an API endpoint to get information about your API key.
 
-        Example:
+        You can use this endpoint to get information about your API key such as 
+        requests_this_minute, requests_today, and rate_limit_model. 
+        
+        <blockquote>
+            <b>NOTE :</b> If you get a 403 Forbidden response, it means your 
+            access token has expired.
+        </blockquote>
 
-        ```
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/rate_limit
-        ```
+        <br>
+        You can refer to Bash's Request Samples for example on how to use
+        this endpoint.
         """  # noqa
     throttle_classes = (OnePerSecond,)
 
@@ -286,17 +341,31 @@ class CheckRates(APIView):
         ),
         "403": openapi.Response(
             description="Forbidden",
-            examples=key_info_403_example
+            examples=key_info_403_example,
+            schema=ForbiddenErrorSerializer
         ),
         "500": openapi.Response(
             description="Internal Server Error",
-            examples=key_info_500_example
+            examples=key_info_500_example,
+            schema=InternalServerErrorSerializer
         )
     }
 
+    key_info_bash = \
+        """
+        # Get information about your API key
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/rate_limit
+        """  # noqa
+
     @swagger_auto_schema(operation_id='key_info',
                          operation_description=key_info_description,
-                         responses=key_info_response)
+                         responses=key_info_response,
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': key_info_bash
+                             }
+                         ])
     def get(self, request, format=None):
         if not request.auth:
             return Response(status=403, data='Forbidden')

@@ -13,7 +13,7 @@ from cccatalog.api.serializers.image_serializers import\
     ImageSearchResultsSerializer, ImageSerializer,\
     InputErrorSerializer, ImageSearchQueryStringSerializer,\
     WatermarkQueryStringSerializer, ReportImageSerializer,\
-    OembedSerializer
+    OembedSerializer, NotFoundErrorSerializer, OembedResponseSerializer
 from rest_framework.reverse import reverse
 from cccatalog.api.utils.watermark import watermark
 from django.http.response import HttpResponse, FileResponse
@@ -26,11 +26,13 @@ import libxmp
 import requests
 from PIL import Image as img
 from drf_yasg import openapi
-from cccatalog.example_responses import image_search_200_example,\
-    image_search_400_example, image_detail_200_example,\
-    image_detail_404_example, oembed_list_200_example,\
-    oembed_list_404_example, recommendations_images_read_200_example,\
+from cccatalog.example_responses import (
+    image_search_200_example, image_search_400_example,
+    image_detail_200_example, image_detail_404_example, oembed_list_200_example,
+    oembed_list_404_example, recommendations_images_read_200_example,
     recommendations_images_read_404_example
+)
+from cccatalog.custom_auto_schema import CustomAutoSchema
 
 log = logging.getLogger(__name__)
 
@@ -64,35 +66,32 @@ def _get_user_ip(request):
 
 
 class SearchImages(APIView):
+    swagger_schema = CustomAutoSchema
     image_search_description = \
         """
-        Search for images by a query string. Optionally, filter results by specific
-        licenses, or license "types" (commercial use allowed, modification allowed,
-        etc). Results are ranked in order of relevance.
+        image_search is an API endpoint to search images using a query string.
 
-        Refer to the Lucene syntax guide for information on structuring advanced
-        searches. https://lucene.apache.org/core/2_9_4/queryparsersyntax.html
+        By using this endpoint, you can obtain search results based on specified 
+        query and optionally filter results by `license`, `license_type`, 
+        `page`, `page_size`, `creator`, `tags`, `title`, `filter_dead`, 
+        `source`, `extension`, `categories`, `aspect_ratio`, `size`, `mature`, 
+        and `qa`. Results are ranked in order of relevance.
+        
+        Although there may be millions of relevant records, only the most 
+        relevant several thousand records can be viewed. This is by design: 
+        the search endpoint should be used to find the top 10,000 most relevant 
+        results, not for exhaustive search or bulk download of every barely 
+        relevant result. As such, the caller should not try to access pages 
+        beyond `page_count`, or else the server will reject the query.
+        
+        For more precise results, you can go to the 
+        [CC Search Syntax Guide](https://search.creativecommons.org/search-help) 
+        for information about creating queries and 
+        [Apache Lucene Syntax Guide](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
+        for information on structuring advanced searches.
 
-        Although there may be millions of relevant records, only the most relevant
-        several thousand records can be viewed. This is by design: the search
-        endpoint should be used to find the top N most relevant results, not for
-        exhaustive search or bulk download of every barely relevant result.
-        As such, the caller should not try to access pages beyond `page_count`,
-        or else the server will reject the query.
-
-        Example using single query parameter:
-    
-        ```
-        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
-        ```
-
-
-        Example using multiple query parameters:
-
-        ```
-        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1
-        ```
-
+        You can refer to Bash's Request Samples for examples on how to use
+        this endpoint.
         """  # noqa
     image_search_response = {
         "200": openapi.Response(
@@ -107,10 +106,46 @@ class SearchImages(APIView):
         )
     }
 
+    image_search_bash = \
+        """
+        # Example 1: Search for an exact match of Claude Monet
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q="Claude Monet"
+        
+        # Example 2: Search for images related to both dog and cat
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dog+cat
+        
+        # Example 3: Search for images related to dog or cat, but not necessarily both
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dog|cat
+
+        # Example 4: Search for images related to dog but won't include results related to 'pug'
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dog -pug
+        
+        # Example 5: Search for images matching anything with the prefix ‘net’
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=net*
+        
+        # Example 6: Search for images that match dogs that are either corgis or labrador
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dogs + (corgis | labrador)
+        
+        # Example 7: Search for images that match strings close to the term theater with a difference of one character
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=theatre~1
+        
+        # Example 8: Search for images using single query parameter
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
+        
+        # Example 9: Search for images using multiple query parameters
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1   
+        """  # noqa
+
     @swagger_auto_schema(operation_id='image_search',
                          operation_description=image_search_description,
                          query_serializer=ImageSearchQueryStringSerializer,
-                         responses=image_search_response)
+                         responses=image_search_response,
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': image_search_bash
+                             }
+                         ])
     def get(self, request, format=None):
         # Parse and validate query parameters
         params = ImageSearchQueryStringSerializer(data=request.query_params)
@@ -155,15 +190,20 @@ class SearchImages(APIView):
 
 
 class RelatedImage(APIView):
+    swagger_schema = CustomAutoSchema
     recommendations_images_read_description = \
         """
-        Given an image ID, return images related to the result.
+        recommendations_images_read is an API endpoint to get related images 
+        for a specified image ID.
 
-        Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
-
-        ```
-        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
-        ```
+        By using this endpoint, you can get the details of related images such as 
+        `title`, `id`, `creator`, `creator_url`, `tags`, `url`, `thumbnail`, 
+        `provider`, `source`, `license`, `license_version`, `license_url`, 
+        `foreign_landing_url`, `detail_url`, `related_url`, `height`, `weight`, 
+        and `attribution`.
+        
+        You can refer to Bash's Request Samples for example on how to use
+        this endpoint.
         """  # noqa
     recommendations_images_read_response = {
         "200": openapi.Response(
@@ -173,13 +213,34 @@ class RelatedImage(APIView):
         ),
         "404": openapi.Response(
             description="Not Found",
-            examples=recommendations_images_read_404_example
+            examples=recommendations_images_read_404_example,
+            schema=NotFoundErrorSerializer
         )
     }
 
+    recommendations_images_read_bash = \
+        """
+        # Get related images for image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
+        """  # noqa
+
     @swagger_auto_schema(operation_id="recommendations_images_read",
                          operation_description=recommendations_images_read_description,  # noqa: E501
-                         responses=recommendations_images_read_response)
+                         responses=recommendations_images_read_response,
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': recommendations_images_read_bash
+                             }
+                         ],
+                         manual_parameters=[
+                             openapi.Parameter('identifier', openapi.IN_PATH,
+                                               "The unique identifier for "
+                                               "the image.",
+                                               type=openapi.TYPE_STRING,
+                                               required=True),
+                         ]
+                         )
     def get(self, request, identifier, format=None):
         related, result_count = search_controller.related_images(
             uuid=identifier,
@@ -202,6 +263,7 @@ class RelatedImage(APIView):
 
 
 class ImageDetail(GenericAPIView, RetrieveModelMixin):
+    swagger_schema = CustomAutoSchema
     serializer_class = ImageSerializer
     queryset = Image.objects.all()
     lookup_field = 'identifier'
@@ -209,13 +271,17 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     permission_classes = [IsAuthenticatedOrReadOnly]
     image_detail_description = \
         """
-        Load the details of a particular image ID.
+        image_detail is an API endpoint to get the details of a specified 
+        image ID.
 
-        Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
+        By using this endpoint, you can get image details such as `title`, `id`, 
+        `creator`, `creator_url`, `tags`, `url`, `thumbnail`, `provider`, 
+        `source`, `license`, `license_version`, `license_url`, 
+        `foreign_landing_url`, `detail_url`, `related_url`, `height`, `weight`, 
+        and `attribution`.
 
-        ```
-        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
-        ```
+        You can refer to Bash's Request Samples for example on how to use
+        this endpoint.
         """  # noqa
     image_detail_response = {
         "200": openapi.Response(
@@ -225,13 +291,26 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         ),
         "404": openapi.Response(
             description='Not Found',
-            examples=image_detail_404_example
+            examples=image_detail_404_example,
+            schema=NotFoundErrorSerializer
         )
     }
 
+    image_detail_bash = \
+        """
+        # Get the details of image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
+        """  # noqa
+
     @swagger_auto_schema(operation_id="image_detail",
                          operation_description=image_detail_description,
-                         responses=image_detail_response)
+                         responses=image_detail_response,
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': image_detail_bash
+                             }
+                         ])
     def get(self, request, identifier, format=None):
         """ Get the details of a single list. """
         resp = self.retrieve(request, identifier)
@@ -322,31 +401,48 @@ class Watermark(GenericAPIView):
 
 
 class OembedView(APIView):
+    swagger_schema = CustomAutoSchema
     oembed_list_description = \
         """
-        Retrieve embedded content from a specified URL
+        oembed_list is an API endpoint to retrieve embedded content from a 
+        specified image URL.
 
-        Example using URL `https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395`:
+        By using this endpoint, you can retrieve embedded content such as 
+        `version`, `type`, `width`, `height`, `title`, `author_name`, 
+        `author_url`, and `license_url`.
 
-        ```
-        $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/oembed?url=https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395
-        ```
+        You can refer to Bash's Request Samples for example on how to use
+        this endpoint.
         """  # noqa
     oembed_list_response = {
         "200": openapi.Response(
             description="OK",
-            examples=oembed_list_200_example
+            examples=oembed_list_200_example,
+            schema=OembedResponseSerializer
         ),
         "404": openapi.Response(
             description="Not Found",
-            examples=oembed_list_404_example
+            examples=oembed_list_404_example,
+            schema=NotFoundErrorSerializer
         )
     }
+
+    oembed_list_bash = \
+        """
+        # Retrieve embedded content from image URL (https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395)
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/oembed?url=https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395
+        """  # noqa
 
     @swagger_auto_schema(operation_id="oembed_list",
                          operation_description=oembed_list_description,
                          query_serializer=OembedSerializer,
-                         responses=oembed_list_response)
+                         responses=oembed_list_response,
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': oembed_list_bash
+                             }
+                         ])
     def get(self, request):
         url = request.query_params.get('url', '')
 
@@ -380,13 +476,15 @@ class ReportImageView(CreateAPIView):
     """
     images_report_create
     
-    Report issue about a particular image ID.
+    images_report_create is an API endpoint to report an issue about a 
+    specified image ID to Creative Commons.
 
-    Example using image ID `7c829a03-fb24-4b57-9b03-65f43ed19395`:
+    By using this endpoint, you can report an image if it infringes copyright, 
+    contains mature or sensitive content and others.
 
-    ```
-    $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "This image contains sensitive content"}' https://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
-    ```
+    You can refer to Bash's Request Samples for example on how to use
+    this endpoint.
     """  # noqa
+    swagger_schema = CustomAutoSchema
     queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer

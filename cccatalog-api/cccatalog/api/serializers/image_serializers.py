@@ -272,27 +272,55 @@ def _add_protocol(url: str):
 class ImageSerializer(serializers.Serializer):
     """ A single image. Used in search results."""
     requires_context = True
-    title = serializers.CharField(required=False)
+    title = serializers.CharField(
+        help_text="The name of image.",
+        required=False
+    )
     id = serializers.CharField(
         required=True,
         help_text="The unique identifier for the image.",
         source='identifier'
     )
-    creator = serializers.CharField(required=False, allow_blank=True)
-    creator_url = serializers.URLField(required=False)
+    creator = serializers.CharField(
+        help_text="The name of user who creates the image.",
+        required=False,
+        allow_blank=True
+    )
+    creator_url = serializers.URLField(
+        required=False,
+        help_text="A direct link to the image's creator."
+    )
     tags = TagSerializer(
         required=False,
         many=True,
         help_text="Tags with detailed metadata, such as accuracy."
     )
-    url = serializers.URLField()
-    thumbnail = serializers.SerializerMethodField()
-    provider = serializers.CharField(required=False)
-    source = serializers.CharField(required=False)
-    license = serializers.SerializerMethodField()
-    license_version = serializers.CharField(required=False)
-    license_url = serializers.SerializerMethodField()
-    foreign_landing_url = serializers.URLField(required=False)
+    url = serializers.URLField(help_text="A direct link to the image.")
+    thumbnail = serializers.SerializerMethodField(
+        help_text="A direct link to the miniature image."
+    )
+    provider = serializers.CharField(
+        required=False,
+        help_text="The name of data provider."
+    )
+    source = serializers.CharField(
+        required=False,
+        help_text="The name of data source."
+    )
+    license = serializers.SerializerMethodField(
+        help_text="The name of license for the image"
+    )
+    license_version = serializers.CharField(
+        required=False,
+        help_text="The type of license for the image."
+    )
+    license_url = serializers.SerializerMethodField(
+        help_text="A direct link to the image's license."
+    )
+    foreign_landing_url = serializers.URLField(
+        required=False,
+        help_text="A foreign landing link for the image."
+    )
     detail_url = serializers.HyperlinkedIdentityField(
         read_only=True,
         view_name='image-detail',
@@ -369,17 +397,87 @@ class ProxiedImageSerializer(serializers.Serializer):
 
 class ImageSearchResultsSerializer(serializers.Serializer):
     """ The full image search response. """
-    result_count = serializers.IntegerField()
-    page_count = serializers.IntegerField()
-    page_size = serializers.IntegerField()
-    results = ImageSerializer(many=True)
+    result_count = serializers.IntegerField(
+        help_text="The total number of images returned by search result."
+    )
+    page_count = serializers.IntegerField(
+        help_text="The total number of pages returned by search result."
+    )
+    page_size = serializers.IntegerField(
+        help_text="The number of images per page."
+    )
+    results = ImageSerializer(
+        many=True,
+        help_text="An array of images and their details such as `title`, `id`, "
+                  "`creator`, `creator_url`, `url`, `thumbnail`, `provider`, "
+                  "`source`, `license`, `license_version`, `license_url`, "
+                  "`foreign_landing_url`, `detail_url`, `related_url`, "
+                  "and `fields_matched `."
+    )
 
 
 class InputErrorSerializer(serializers.Serializer):
     """ Returned if invalid query parameters are passed. """
-    detail = serializers.CharField()
-    fields = serializers.ListField()
-    error = serializers.CharField()
+    error = serializers.CharField(
+        help_text="The name of error."
+    )
+    detail = serializers.CharField(
+        help_text="The description for error."
+    )
+    fields = serializers.ListField(
+        help_text="List of query parameters that causes error."
+    )
+
+
+class NotFoundErrorSerializer(serializers.Serializer):
+    """ Returned if the requested content could not be found. """
+    detail = serializers.CharField(
+        help_text="The description for error"
+    )
+
+
+class ForbiddenErrorSerializer(serializers.Serializer):
+    """ Returned if access to requested content is forbidden for
+    some reason."""
+    detail = serializers.CharField(
+        help_text="The description for error"
+    )
+
+
+class InternalServerErrorSerializer(serializers.Serializer):
+    """ Returned if the request could not be processed by the server for an
+    unknown reason."""
+    detail = serializers.CharField(
+        help_text="The description for error"
+    )
+
+
+class OembedResponseSerializer(serializers.Serializer):
+    """ The embedded content from a specified image URL. """
+    version = serializers.IntegerField(
+        help_text="The image version."
+    )
+    type = serializers.CharField(
+        help_text="Type of data."
+    )
+    width = serializers.IntegerField(
+        help_text="The width of the image in pixels."
+    )
+    height = serializers.IntegerField(
+        help_text="The height of the image in pixels."
+    )
+    title = serializers.CharField(
+        help_text="The name of image."
+    )
+    author_name = serializers.CharField(
+        help_text="The name of author for image."
+    )
+    author_url = serializers.URLField(
+        help_text="A direct link to the author."
+    )
+    license_url = serializers.URLField(
+        help_text="A direct link to the license for image."
+    )
 
 
 class WatermarkQueryStringSerializer(serializers.Serializer):
@@ -412,7 +510,9 @@ class ReportImageSerializer(serializers.ModelSerializer):
 
 class OembedSerializer(serializers.Serializer):
     """ Parse and validate Oembed parameters. """
-    url = serializers.URLField()
+    url = serializers.URLField(
+        help_text="The link to an image."
+    )
 
     def validate_url(self, value):
         return _add_protocol(value)
