@@ -22,7 +22,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 FILE_DIR = os.path.abspath(os.path.dirname(__file__))
-CORE_INSTANCE_COUNT = 2
+CORE_INSTANCE_COUNT = 100
 AWS_CONN_ID = os.getenv("AWS_CONN_ID", "aws_test")
 BUCKET_V2 = "commonsmapper-v2"
 CONFIG_SH_KEY = "bootstrap/config-py27.sh"
