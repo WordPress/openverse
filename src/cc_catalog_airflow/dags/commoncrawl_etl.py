@@ -4,7 +4,6 @@ import os
 
 from airflow import DAG
 from airflow.hooks.S3_hook import S3Hook
-from airflow.utils.trigger_rule import TriggerRule
 
 from util.etl import operators
 
