@@ -8,8 +8,8 @@ from airflow.hooks.S3_hook import S3Hook
 from util.etl import operators
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
+    level=logging.INFO,
 )
 logger = logging.getLogger(__name__)
 
@@ -30,12 +30,12 @@ EXTRACT_SCRIPT_LOCAL = os.path.join(
 LOG_URI = f"s3://{BUCKET_V2}/logs/airflow_pipeline"
 RAW_PROCESS_JOB_FLOW_NAME = "common_crawl_etl_job_flow"
 DAG_DEFAULT_ARGS = {
-    'owner': 'data-eng-admin',
-    'depends_on_past': False,
-    'start_date': datetime(2019, 1, 15),
-    'email_on_retry': False,
-    'retries': 2,
-    'retry_delay': timedelta(minutes=60),
+    "owner": "data-eng-admin",
+    "depends_on_past": False,
+    "start_date": datetime(2019, 1, 15),
+    "email_on_retry": False,
+    "retries": 2,
+    "retry_delay": timedelta(minutes=60),
 }
 
 JOB_FLOW_OVERRIDES = {
@@ -43,7 +43,7 @@ JOB_FLOW_OVERRIDES = {
     "BootstrapActions": [
         {
             "Name": "pip_install_deps",
-            "ScriptBootstrapAction": {"Path": CONFIG_SH}
+            "ScriptBootstrapAction": {"Path": CONFIG_SH},
         }
     ],
     "Configurations": [
@@ -58,12 +58,13 @@ JOB_FLOW_OVERRIDES = {
                 "spark.network.timeout": "12000s",
                 "spark.executor.cores": "8",
                 "spark.executor.instances": "300",
-                "spark.dynamicAllocation.enabled": "false"
-            }
-        }, {
+                "spark.dynamicAllocation.enabled": "false",
+            },
+        },
+        {
             "Classification": "emrfs-site",
-            "Properties": {"fs.s3.enableServerSideEncryption": "true"}
-        }
+            "Properties": {"fs.s3.enableServerSideEncryption": "true"},
+        },
     ],
     "Instances": {
         "Ec2KeyName": "cc-catalog",
@@ -85,9 +86,9 @@ JOB_FLOW_OVERRIDES = {
                         {
                             "VolumeSpecification": {
                                 "SizeInGB": 32,
-                                "VolumeType": "gp2"
+                                "VolumeType": "gp2",
                             },
-                            "VolumesPerInstance": 1
+                            "VolumesPerInstance": 1,
                         }
                     ]
                 },
@@ -95,7 +96,7 @@ JOB_FLOW_OVERRIDES = {
                 "InstanceRole": "CORE",
                 "InstanceType": "c4.8xlarge",
                 "Market": "SPOT",
-                "Name": "common_crawl_etl_job_flow_core"
+                "Name": "common_crawl_etl_job_flow_core",
             },
             {
                 "EbsConfiguration": {
@@ -103,9 +104,9 @@ JOB_FLOW_OVERRIDES = {
                         {
                             "VolumeSpecification": {
                                 "SizeInGB": 32,
-                                "VolumeType": "gp2"
+                                "VolumeType": "gp2",
                             },
-                            "VolumesPerInstance": 1
+                            "VolumesPerInstance": 1,
                         }
                     ]
                 },
@@ -114,7 +115,7 @@ JOB_FLOW_OVERRIDES = {
                 "InstanceType": "m4.xlarge",
                 "Market": "ON_DEMAND",
                 "Name": "common_crawl_etl_job_flow_master",
-            }
+            },
         ],
         "KeepJobFlowAliveWhenNoSteps": False,
         "TerminationProtected": False,
@@ -136,7 +137,7 @@ JOB_FLOW_OVERRIDES = {
                     "--master",
                     "yarn",
                     EXTRACT_SCRIPT_S3,
-                    "--default"
+                    "--default",
                 ],
                 "Jar": "command-runner.jar",
             },
@@ -147,11 +148,11 @@ JOB_FLOW_OVERRIDES = {
         {"Key": "cc:environment", "Value": "production"},
         {
             "Key": "cc:purpose",
-            "Value": "Find links to CC licensed content in Common Crawl."
+            "Value": "Find links to CC licensed content in Common Crawl.",
         },
         {"Key": "cc:product", "Value": "cccatalog"},
         {"Key": "cc:team", "Value": "cc-search"},
-        {"Key": "Name", "Value": "Common Crawl Data Pipeline"}
+        {"Key": "Name", "Value": "Common Crawl Data Pipeline"},
     ],
     "VisibleToAllUsers": True,
 }
@@ -163,28 +164,31 @@ def load_file_to_s3(local_file, remote_key, bucket, aws_conn_id=AWS_CONN_ID):
 
 
 with DAG(
-        dag_id="commoncrawl_etl_workflow",
-        default_args=DAG_DEFAULT_ARGS,
-        start_date=datetime(1970, 1, 1),
-        schedule_interval=None,
-        concurrency=1,
+    dag_id="commoncrawl_etl_workflow",
+    default_args=DAG_DEFAULT_ARGS,
+    start_date=datetime(1970, 1, 1),
+    schedule_interval=None,
+    concurrency=1,
 ) as dag:
 
     job_start_logger = operators.get_log_operator(dag, "Starting")
 
     cluster_bootstrap_loader = operators.get_load_to_s3_operator(
-        CONFIG_SH_LOCAL, CONFIG_SH_KEY, BUCKET_V2, AWS_CONN_ID,
+        CONFIG_SH_LOCAL,
+        CONFIG_SH_KEY,
+        BUCKET_V2,
+        AWS_CONN_ID,
     )
 
     extract_script_loader = operators.get_load_to_s3_operator(
-        EXTRACT_SCRIPT_LOCAL, EXTRACT_SCRIPT_S3_KEY, BUCKET_V2, AWS_CONN_ID,
+        EXTRACT_SCRIPT_LOCAL,
+        EXTRACT_SCRIPT_S3_KEY,
+        BUCKET_V2,
+        AWS_CONN_ID,
     )
 
     job_flow_creator = operators.get_create_job_flow_operator(
-        RAW_PROCESS_JOB_FLOW_NAME,
-        JOB_FLOW_OVERRIDES,
-        AWS_CONN_ID,
-        EMR_CONN_ID
+        RAW_PROCESS_JOB_FLOW_NAME, JOB_FLOW_OVERRIDES, AWS_CONN_ID, EMR_CONN_ID
     )
 
     job_sensor = operators.get_job_sensor(
@@ -203,6 +207,8 @@ with DAG(
     (
         job_start_logger
         >> [extract_script_loader, cluster_bootstrap_loader]
-        >> job_flow_creator >> job_sensor >> job_flow_terminator
+        >> job_flow_creator
+        >> job_sensor
+        >> job_flow_terminator
     )
     [job_flow_creator, job_sensor, job_flow_terminator] >> job_done_logger

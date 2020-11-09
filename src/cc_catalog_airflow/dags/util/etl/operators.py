@@ -1,8 +1,8 @@
 from airflow.contrib.operators.emr_create_job_flow_operator import (
-    EmrCreateJobFlowOperator
+    EmrCreateJobFlowOperator,
 )
 from airflow.contrib.operators.emr_terminate_job_flow_operator import (
-    EmrTerminateJobFlowOperator
+    EmrTerminateJobFlowOperator,
 )
 from airflow.contrib.sensors.emr_job_flow_sensor import EmrJobFlowSensor
 from airflow.hooks.S3_hook import S3Hook
@@ -20,7 +20,7 @@ def get_log_operator(dag, status):
     return BashOperator(
         task_id=f"log_{dag.dag_id}_{status}",
         bash_command=f"echo {status} {dag.dag_id} at $(date)",
-        trigger_rule=TriggerRule.ALL_SUCCESS
+        trigger_rule=TriggerRule.ALL_SUCCESS,
     )
 
 
@@ -28,12 +28,15 @@ def get_load_to_s3_operator(local_file, s3_key, s3_bucket, aws_conn_id):
     return PythonOperator(
         task_id=f"load_{s3_key.replace('/', '_').replace('.', '_')}_to_s3",
         python_callable=load_file_to_s3,
-        op_args=[local_file, s3_key, s3_bucket, aws_conn_id]
+        op_args=[local_file, s3_key, s3_bucket, aws_conn_id],
     )
 
 
 def get_create_job_flow_operator(
-        job_flow_name, job_flow_overrides, aws_conn_id, emr_conn_id,
+    job_flow_name,
+    job_flow_overrides,
+    aws_conn_id,
+    emr_conn_id,
 ):
     return EmrCreateJobFlowOperator(
         task_id=_get_job_flow_creator_task_id(job_flow_name),
