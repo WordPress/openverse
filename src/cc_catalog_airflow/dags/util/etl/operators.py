@@ -11,7 +11,7 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 
 
-def load_file_to_s3(local_file, remote_key, bucket, aws_conn_id):
+def _load_file_to_s3(local_file, remote_key, bucket, aws_conn_id):
     s3 = S3Hook(aws_conn_id=aws_conn_id)
     s3.load_file(local_file, remote_key, replace=True, bucket_name=bucket)
 
@@ -27,7 +27,7 @@ def get_log_operator(dag, status):
 def get_load_to_s3_operator(local_file, s3_key, s3_bucket, aws_conn_id):
     return PythonOperator(
         task_id=f"load_{s3_key.replace('/', '_').replace('.', '_')}_to_s3",
-        python_callable=load_file_to_s3,
+        python_callable=_load_file_to_s3,
         op_args=[local_file, s3_key, s3_bucket, aws_conn_id],
     )
 
