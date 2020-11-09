@@ -3,17 +3,10 @@ import logging
 import os
 
 from airflow import DAG
-from airflow.contrib.operators.emr_create_job_flow_operator import (
-    EmrCreateJobFlowOperator
-)
-from airflow.contrib.operators.emr_terminate_job_flow_operator import (
-    EmrTerminateJobFlowOperator
-)
-from airflow.contrib.sensors.emr_job_flow_sensor import EmrJobFlowSensor
 from airflow.hooks.S3_hook import S3Hook
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.python_operator import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
+
+from util.etl import operators
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
@@ -24,10 +17,11 @@ logger = logging.getLogger(__name__)
 FILE_DIR = os.path.abspath(os.path.dirname(__file__))
 CORE_INSTANCE_COUNT = 100
 AWS_CONN_ID = os.getenv("AWS_CONN_ID", "aws_test")
+EMR_CONN_ID = os.getenv("EMR_CONN_ID", "emr_test")
 BUCKET_V2 = "commonsmapper-v2"
 CONFIG_SH_KEY = "bootstrap/config-py27.sh"
 CONFIG_SH = f"s3://{BUCKET_V2}/{CONFIG_SH_KEY}"
-EXTRACT_SCRIPT_S3_KEY = "scripts/ExtractCCLinks_testing.py"
+EXTRACT_SCRIPT_S3_KEY = "scripts/ExtractCCLinks.py"
 EXTRACT_SCRIPT_S3 = f"s3://{BUCKET_V2}/{EXTRACT_SCRIPT_S3_KEY}"
 LOCAL_FILES_DIR = os.path.join(FILE_DIR, "util", "etl")
 CONFIG_SH_LOCAL = os.path.join(LOCAL_FILES_DIR, "bootstrap", "config-py27.sh")
@@ -35,7 +29,7 @@ EXTRACT_SCRIPT_LOCAL = os.path.join(
     LOCAL_FILES_DIR, "scripts", "ExtractCCLinks.py"
 )
 LOG_URI = f"s3://{BUCKET_V2}/logs/airflow_pipeline"
-
+RAW_PROCESS_JOB_FLOW_NAME = "common_crawl_etl_job_flow"
 DAG_DEFAULT_ARGS = {
     'owner': 'data-eng-admin',
     'depends_on_past': False,
@@ -74,7 +68,14 @@ JOB_FLOW_OVERRIDES = {
     ],
     "Instances": {
         "Ec2KeyName": "cc-catalog",
-        "Ec2SubnetId": "subnet-d52562fa",
+        "Ec2SubnetIds": [
+            "subnet-8ffebeb0",
+            # "subnet-9210d39d",
+            # "subnet-99d0dcd2",
+            # "subnet-9a7145fe",
+            # "subnet-cf2d5692",
+            # "subnet-d52562fa",
+        ],
         "EmrManagedSlaveSecurityGroup": "sg-0a7b0a7d",
         "EmrManagedMasterSecurityGroup": "sg-226d1c55",
         "InstanceGroups": [
@@ -121,7 +122,7 @@ JOB_FLOW_OVERRIDES = {
     },
     "JobFlowRole": "DataPipelineDefaultResourceRole",
     "LogUri": LOG_URI,
-    "Name": "common_crawl_etl_job_flow",
+    "Name": RAW_PROCESS_JOB_FLOW_NAME,
     "ReleaseLabel": "emr-5.11.0",
     "ScaleDownBehavior": "TERMINATE_AT_TASK_COMPLETION",
     "ServiceRole": "DataPipelineDefaultRole",
@@ -170,62 +171,35 @@ with DAG(
         concurrency=1,
 ) as dag:
 
-    job_start_logger = BashOperator(
-        task_id="log_job_started",
-        bash_command="echo Started ETL Job Flow at $(date)",
-        trigger_rule=TriggerRule.ALL_SUCCESS
+    job_start_logger = operators.get_log_operator(dag, "Starting")
+
+    cluster_bootstrap_loader = operators.get_load_to_s3_operator(
+        CONFIG_SH_LOCAL, CONFIG_SH_KEY, BUCKET_V2, AWS_CONN_ID,
     )
 
-    cluster_bootstrap_loader = PythonOperator(
-        task_id="load_config_script_to_s3",
-        python_callable=load_file_to_s3,
-        op_args=[CONFIG_SH_LOCAL, CONFIG_SH_KEY, BUCKET_V2]
+    extract_script_loader = operators.get_load_to_s3_operator(
+        EXTRACT_SCRIPT_LOCAL, EXTRACT_SCRIPT_S3_KEY, BUCKET_V2, AWS_CONN_ID,
     )
 
-    extract_script_loader = PythonOperator(
-        task_id="load_extract_script_to_s3",
-        python_callable=load_file_to_s3,
-        op_args=[EXTRACT_SCRIPT_LOCAL, EXTRACT_SCRIPT_S3_KEY, BUCKET_V2]
+    job_flow_creator = operators.get_create_job_flow_operator(
+        RAW_PROCESS_JOB_FLOW_NAME,
+        JOB_FLOW_OVERRIDES,
+        AWS_CONN_ID,
+        EMR_CONN_ID
     )
 
-    job_flow_creator = EmrCreateJobFlowOperator(
-        task_id="create_etl_job_flow",
-        job_flow_overrides=JOB_FLOW_OVERRIDES,
-        aws_conn_id=AWS_CONN_ID,
-        emr_conn_id="emr_empty",
+    job_sensor = operators.get_job_sensor(
+        60 * 60 * 7,
+        RAW_PROCESS_JOB_FLOW_NAME,
+        AWS_CONN_ID,
     )
 
-    job_sensor = EmrJobFlowSensor(
-        timeout=60 * 60 * 7,
-        mode="reschedule",
-        task_id="check_job_flow",
-        retries=0,
-        job_flow_id=(
-            "{{"
-            " task_instance.xcom_pull("
-            "task_ids='create_etl_job_flow', key='return_value'"
-            ")"
-            " }}"
-        ),
-        aws_conn_id=AWS_CONN_ID,
+    job_flow_terminator = operators.get_job_terminator(
+        RAW_PROCESS_JOB_FLOW_NAME,
+        AWS_CONN_ID,
     )
-    job_flow_terminator = EmrTerminateJobFlowOperator(
-        task_id="terminate_etl_job_flow",
-        job_flow_id=(
-            "{{"
-            " task_instance.xcom_pull("
-            "task_ids='create_etl_job_flow', key='return_value'"
-            ")"
-            " }}"
-        ),
-        aws_conn_id=AWS_CONN_ID,
-        trigger_rule=TriggerRule.ALL_DONE
-    )
-    job_done_logger = BashOperator(
-        task_id="log_job_done",
-        bash_command="echo Finished ETL Job Flow at $(date)",
-        trigger_rule=TriggerRule.ALL_SUCCESS
-    )
+
+    job_done_logger = operators.get_log_operator(dag, "Finished")
 
     (
         job_start_logger
