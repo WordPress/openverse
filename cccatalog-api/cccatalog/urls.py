@@ -157,6 +157,7 @@ We love pull requests! If you’re interested in [contributing on Github](https:
 
 - Read up about [Django REST Framework](https://www.django-rest-framework.org/), which is the framework used to build CC Catalog API
 - Read up about [drf-yasg](https://drf-yasg.readthedocs.io/en/stable/), which is a tool used to generate real Swagger/OpenAPI 2.0 specifications
+- Read up about Documentation Guidelines, which provides guidelines on how to contribute to documentation, documentation styles and cheat sheet for drf-yasg
 - Run the server locally by following this [link](https://github.com/creativecommons/cccatalog-api#running-the-server-locally)
 - Update documentation or codebase
 - Make sure the updates passed the automated tests in this [file](https://github.com/creativecommons/cccatalog-api/blob/master/.github/workflows/integration-tests.yml)
