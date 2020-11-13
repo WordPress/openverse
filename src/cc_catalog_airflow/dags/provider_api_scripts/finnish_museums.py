@@ -82,9 +82,9 @@ def _build_params(building, default_params=DEFAULT_QUERY_PARAMS, page=1):
 
 def _get_object_list_from_json(json_resp):
     if (
-        json_resp is None
-        or json_resp.get("records") is None
-        or len(json_resp.get("records")) == 0
+        json_resp is None or
+        json_resp.get("records") is None or
+        len(json_resp.get("records")) == 0
     ):
         object_list = None
     else:
@@ -108,7 +108,8 @@ def _process_object(obj, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
     foreign_identifier = obj.get("id")
     title = obj.get("title")
     building = obj.get("buildings")[0].get("value")
-    source = next((s for s in sub_providers if building in sub_providers[s]), provider)
+    source = next((s for s in sub_providers
+                   if building in sub_providers[s]), provider)
     foreign_landing_url = _get_landing(obj)
     raw_tags = obj.get("subjects")
     image_list = obj.get("images")
