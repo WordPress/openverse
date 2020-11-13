@@ -1,4 +1,3 @@
-import os
 import logging
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
@@ -118,6 +117,7 @@ def _process_object(obj, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
         total_images = image_store.add_item(
             license_url=license_url,
             foreign_identifier=foreign_identifier,
+            foreign_landing_url=foreign_landing_url,
             image_url=image_url,
             title=title,
             source=source,
