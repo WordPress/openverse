@@ -22,6 +22,15 @@ RAWPIXEL_DEFAULT_PROVIDER = 'rawpixel'
 SCIENCE_DEFAULT_PROVIDER = 'sciencemuseum'
 STATENS_DEFAULT_PROVIDER = 'statensmuseum'
 WALTERS_DEFAULT_PROVIDER = 'waltersartmuseum'
+FINNISH_DEFAULT_PROVIDER = 'finnishmuseums'
+
+# Finnish parameters
+FINNISH_SUB_PROVIDERS = {
+    'national_museum_of_finland': '0/Suomen kansallismuseo/',
+    'finnish_heritage_agency': '0/Museovirasto/',
+    'satakunnan_museum': '0/SATMUSEO/',
+    'military_museum': '0/SA-kuva/'
+}
 
 # Flickr parameters
 FLICKR_SUB_PROVIDERS = {
