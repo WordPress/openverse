@@ -82,6 +82,7 @@ def _build_params(building, default_params=DEFAULT_QUERY_PARAMS, page=1):
 def _get_object_list_from_json(json_resp):
     if (
         json_resp is None or
+        str(json_resp.get('status')).lower() != 'ok' or
         json_resp.get("records") is None or
         len(json_resp.get("records")) == 0
     ):
