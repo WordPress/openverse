@@ -3,8 +3,6 @@ import logging
 import os
 
 from airflow import DAG
-from airflow.hooks.S3_hook import S3Hook
-from airflow.operators.python_operator import PythonOperator
 
 from util.etl import operators
 
