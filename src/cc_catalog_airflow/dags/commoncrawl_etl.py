@@ -4,6 +4,7 @@ import os
 
 from airflow import DAG
 from airflow.hooks.S3_hook import S3Hook
+from airflow.operators.python_operator import PythonOperator
 
 from util.etl import operators
 
@@ -158,20 +159,26 @@ JOB_FLOW_OVERRIDES = {
 }
 
 
-def load_file_to_s3(local_file, remote_key, bucket, aws_conn_id=AWS_CONN_ID):
-    s3 = S3Hook(aws_conn_id=aws_conn_id)
-    s3.load_file(local_file, remote_key, replace=True, bucket_name=bucket)
-
-
 with DAG(
     dag_id="commoncrawl_etl_workflow",
     default_args=DAG_DEFAULT_ARGS,
     start_date=datetime(1970, 1, 1),
-    schedule_interval=None,
+    schedule_interval="0 0 * * 1",
     concurrency=1,
+    catchup=False,
 ) as dag:
 
     job_start_logger = operators.get_log_operator(dag, "Starting")
+
+    check_for_cc_index = operators.get_check_cc_index_in_s3_sensor(
+        dag,
+        AWS_CONN_ID,
+    )
+
+    check_for_wat_file = operators.get_check_wat_file_in_s3_sensor(
+        dag,
+        AWS_CONN_ID,
+    )
 
     cluster_bootstrap_loader = operators.get_load_to_s3_operator(
         CONFIG_SH_LOCAL,
@@ -206,6 +213,8 @@ with DAG(
 
     (
         job_start_logger
+        >> check_for_cc_index
+        >> check_for_wat_file
         >> [extract_script_loader, cluster_bootstrap_loader]
         >> job_flow_creator
         >> job_sensor

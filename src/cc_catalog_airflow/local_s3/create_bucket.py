@@ -20,11 +20,11 @@ S3 = boto3.resource(
     aws_access_key_id='test_key',
     aws_secret_access_key='test_secret',
 )
-BUCKET_NAME = 'cccatalog-storage'
+BUCKET_LIST = ['cccatalog-storage', 'commonsmapper-v2', 'commonsmapper']
 
 
 def main():
-    success = _create_local_s3_bucket()
+    success = _create_local_s3_buckets()
     if not success:
         logger.error('Could not create bucket in local S3')
         sys.exit(1)
@@ -32,7 +32,14 @@ def main():
         sys.exit(0)
 
 
-def _create_local_s3_bucket(tries=TRIES, s3=S3, bucket_name=BUCKET_NAME):
+def _create_local_s3_buckets(bucket_list=BUCKET_LIST):
+    success = True
+    for bucket in bucket_list:
+        success = min(success, _create_local_s3_bucket(bucket_name=bucket))
+    return success
+
+
+def _create_local_s3_bucket(tries=TRIES, s3=S3, bucket_name=BUCKET_LIST[0]):
     success = False
     for i in range(1, TRIES + 1):
         try:
