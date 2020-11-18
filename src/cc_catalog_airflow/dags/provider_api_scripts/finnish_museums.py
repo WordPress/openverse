@@ -104,7 +104,8 @@ def _process_object_list(object_list):
 
 def _process_object(obj, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
     license = obj.get("imageRights")
-    license_url = license.get("link")
+    if license is not None:
+        license_url = license.get("link")
     foreign_identifier = obj.get("id")
     title = obj.get("title")
     building = obj.get("buildings")[0].get("value")
