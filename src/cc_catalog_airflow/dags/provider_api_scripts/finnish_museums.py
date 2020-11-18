@@ -111,7 +111,8 @@ def _process_object(obj, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
     source = next((s for s in sub_providers
                    if building in sub_providers[s]), provider)
     foreign_landing_url = _get_landing(obj)
-    raw_tags = obj.get("subjects")
+    if obj.get("subjects") is not None:
+        raw_tags = [tag for [tag] in obj.get("subjects")]
     image_list = obj.get("images")
     for img in image_list:
         image_url = _get_image_url(img)
