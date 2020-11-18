@@ -28,8 +28,8 @@ FINNISH_DEFAULT_PROVIDER = 'finnishmuseums'
 FINNISH_SUB_PROVIDERS = {
     'national_museum_of_finland': '0/Suomen kansallismuseo/',
     'finnish_heritage_agency': '0/Museovirasto/',
-    'satakunnan_museum': '0/SATMUSEO/',
-    'military_museum': '0/SA-kuva/'
+    'finnish_satakunnan_museum': '0/SATMUSEO/',
+    'finnish_military_museum': '0/SA-kuva/'
 }
 
 # Flickr parameters

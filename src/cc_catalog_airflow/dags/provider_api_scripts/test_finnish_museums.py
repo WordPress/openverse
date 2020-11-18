@@ -6,11 +6,13 @@ import finnish_museums as fm
 
 
 RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "tests/resources/finnishmuseums"
+    os.path.abspath(os.path.dirname(__file__)),
+    'tests/resources/finnishmuseums'
 )
 
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
+    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
+    level=logging.DEBUG
 )
 
 
@@ -100,10 +102,10 @@ def test_process_object_with_real_example():
         title=("linnunpönttö koivussa"),
         source=("finnish_heritage_agency"),
         raw_tags=[
-            ["koivu"],
-            ["linnunpöntöt"],
-            ["Revonristi"],
-            ["valmistusaika: 11.06.1923"],
+            "koivu",
+            "linnunpöntöt",
+            "Revonristi",
+            "valmistusaika: 11.06.1923",
         ],
     )
     assert total_images == 100
