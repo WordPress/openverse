@@ -95,7 +95,9 @@ def test_process_object_with_real_example():
     mock_add_item.assert_called_once_with(
         license_url=("http://creativecommons.org/licenses/by/4.0/deed.fi"),
         foreign_identifier=("museovirasto.CC0641BB5337F541CBD19169838BAC1F"),
-        foreign_landing_url=('https://www.finna.fi/Record/museovirasto.CC0641BB5337F541CBD19169838BAC1F'),
+        foreign_landing_url=(
+            "https://www.finna.fi/Record/museovirasto.CC0641BB5337F541CBD19169838BAC1F"
+        ),
         image_url=(
             "https://api.finna.fi/Cover/Show?id=museovirasto.CC0641BB5337F541CBD19169838BAC1F&index=0&size=large"
         ),
@@ -125,3 +127,22 @@ def test_get_image_url():
     image_url = fm._get_image_url(response_json)
     expected_image_url = "https://api.finna.fi/Cover/Show?id=museovirasto.CC0641BB5337F541CBD19169838BAC1F&index=0&size=large"
     assert image_url == expected_image_url
+
+
+def test_get_raw_tags():
+    test_obj = {
+        "subjects": [
+            ["koivu"],
+            ["linnunpöntöt"],
+            ["Revonristi"],
+            ["valmistusaika: 11.06.1923"],
+        ]
+    }
+    raw_tags = fm._get_raw_tags(test_obj)
+    expected_raw_tags = [
+        "koivu",
+        "linnunpöntöt",
+        "Revonristi",
+        "valmistusaika: 11.06.1923",
+    ]
+    assert raw_tags == expected_raw_tags

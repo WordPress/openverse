@@ -112,8 +112,7 @@ def _process_object(obj, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
     source = next((s for s in sub_providers
                    if building in sub_providers[s]), provider)
     foreign_landing_url = _get_landing(obj)
-    if obj.get("subjects") is not None:
-        raw_tags = [tag for [tag] in obj.get("subjects")]
+    raw_tags = _get_raw_tags(obj)
     image_list = obj.get("images")
     for img in image_list:
         image_url = _get_image_url(img)
@@ -127,6 +126,16 @@ def _process_object(obj, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
             raw_tags=raw_tags,
         )
     return total_images
+
+
+def _get_raw_tags(obj):
+    raw_tags = []
+    if obj.get("subjects") is None:
+        return None
+    for tag_list in obj.get("subjects"):
+        for tag in tag_list:
+            raw_tags.append(tag)
+    return raw_tags
 
 
 def _get_landing(obj, landing_url=LANDING_URL):
