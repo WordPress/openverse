@@ -103,6 +103,7 @@ def _process_object_list(object_list):
 
 
 def _process_object(obj, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
+    total_images = 0
     license = obj.get("imageRights")
     if license is not None:
         license_url = license.get("link")
