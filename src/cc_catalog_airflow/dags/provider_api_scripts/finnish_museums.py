@@ -36,8 +36,7 @@ def main():
     logger.info("Begin: Finnish museum provider script")
     for building in BUILDINGS:
         logger.info(f"Obtaining Images of building {building}")
-        object_list = _get_object_list(building)
-        _ = _process_object_list(object_list)
+        _get_object_list(building)
 
     total_images = image_store.commit()
     logger.info(f"Total Images received {total_images}")
@@ -45,7 +44,7 @@ def main():
 
 def _get_object_list(building, endpoint=ENDPOINT, retries=RETRIES):
     page = 1
-    obj_list = []
+    total_images = 0
     condition = True
     while condition:
         query_params = _build_params(building=building, page=page)
@@ -57,14 +56,11 @@ def _get_object_list(building, endpoint=ENDPOINT, retries=RETRIES):
         object_list = _get_object_list_from_json(json_resp)
         if object_list is None:
             break
-        for obj in object_list:
-            obj_list.append(obj)
+        total_images = _process_object_list(object_list)
 
-    if len(obj_list) == 0:
-        logger.warning("No more retries .Returning None")
-        return None
-    else:
-        return obj_list
+    if total_images == 0:
+        logger.warning("No more retries ")
+        return
 
 
 def _build_params(building, default_params=DEFAULT_QUERY_PARAMS, page=1):

@@ -36,10 +36,9 @@ def test_get_object_list_with_empty_response():
     with patch.object(
         fm.delayed_requester, "get_response_json", return_value=json_resp
     ) as mock_get:
-        obj_list = fm._get_object_list("some_museum", retries=3)
+        fm._get_object_list("some_museum", retries=3)
 
     assert mock_get.call_count == 1
-    assert obj_list is None
 
 
 def test_build_query_param_default():
