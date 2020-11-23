@@ -18,7 +18,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 DAG_ID = 'finnish_museums_workflow'
-START_DATE = datetime(2020, 11, 23)
+START_DATE = datetime(2020, 9, 1)
 DAGRUN_TIMEOUT = timedelta(hours=24)
 
 globals()[DAG_ID] = create_provider_api_workflow(
