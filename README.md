@@ -44,14 +44,14 @@ docker-compose up
 6. Wait until your CMD or terminal displays that it is starting development server at `http://0.0.0.0:8000/`
 <br/>
 
-![Initialization](https://raw.githubusercontent.com/creativecommons/cccatalog-api/ariessa-patch-1/initialization.PNG)
+![Initialization](initialization.PNG)
 
 7. Open up your browser and type `localhost:8000` in the search tab
  
 8. Make sure you see the local API documentation
 <br/>
 
-![Local API Documentation](https://raw.githubusercontent.com/creativecommons/cccatalog-api/ariessa-patch-1/local_api_documentation.PNG)
+![Local API Documentation](local_api_documentation.PNG)
  
 9. Open a new CMD or terminal and change directory to CC Catalog API
 
@@ -68,7 +68,7 @@ curl localhost:8000/v1/images?q=honey
 12. Make sure you see the following response from the API
 <br/>
 
-![Sample API_Request](https://raw.githubusercontent.com/creativecommons/cccatalog-api/ariessa-patch-1/localhost_request.PNG)
+![Sample API_Request](localhost_request.PNG)
 
 Congratulations! You just run the server locally.
 
