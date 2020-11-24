@@ -8,7 +8,9 @@ and the code is located in the
 [cccatalog](https://github.com/creativecommons/cccatalog) repository.
 
 The CC Catalog powers the CC Catalog API and CC Search. For more details, see
-the main [CC Search](/tech/cc-search) page.
+the main [CC Search](https://github.com/creativecommons/cccatalog-frontend) page.
+
+<br/>
 
 # Data Table
 The main data of the CC Catalog is in the PostgreSQL table `image` (in the
@@ -43,6 +45,7 @@ The main data of the CC Catalog is in the PostgreSQL table `image` (in the
 | watermarked             | boolean                   | script-generated |
 | view_count              | integer                   | unused (initialized to 0) |
 
+<br/>
 
 # Providers
 Providers are sites that host CC-licensed works. We have direct partnerships
@@ -66,6 +69,8 @@ The current providers are
 Providers to review are tracked via Github issues, see the **Resources** section
 for a list of issues.
 
+<br/>
+
 # Resources
 
 * [Common Crawl Providers Review](https://docs.google.com/spreadsheets/d/1Mm-MIgjDkqFIZe1jFLOBRbIhtguueZINRlc3FH2dykY/) spreadsheet
@@ -73,11 +78,14 @@ for a list of issues.
 * [Legal and reputational risk management](https://docs.google.com/document/d/1r5BzWiQkmXePi9m0cX-FLyAgh47Fny8DZTOtdkRTLbM/edit)
 * [CC Catalog Documentation](https://docs.google.com/document/d/1HVrfQRgW3zZ9X7A7k8nbOwR-9liysjPK6MabsOxnPB8/edit)
 
+<br/>
 
 # Data Process Flow & Management
 
 The purpose of CC Catalog is to facilitate the discovery of 1.4 billion CC
 licensed content by leveraging open data from Common Crawl and open APIs.
+
+<br/>
 
 ## Airflow - Workflow Management
 
@@ -90,27 +98,46 @@ The workflows can be been managed from the [Admin Panel][airflow_dashboard].
 
 [airflow_dashboard]: http://airflow.creativecommons.engineering/admin/
 
-### Production deployment
+<br/>
 
-To deploy new Airflow DAGs or Provider API Scripts to production, follow these
-steps:
+### How to Deploy New Airflow DAGs or Provider API Scripts to Production
 
-1. `ssh ec2-user@ec2-54-85-128-241.compute-1.amazonaws.com` (ask Alden or Brent to add your keys if necessary)
-2. `cd cccatalog/src/cc_catalog_airflow`
+1. Log into EC2 instance with Airflow
+> Note:  Ask Alden or Brent to add your keys if necessary
+```
+ssh ec2-user@ec2-54-85-128-241.compute-1.amazonaws.com
+```
+2. Change directory to cc_catalog_airflow
+```
+cd cccatalog/src/cc_catalog_airflow
+```
 3. If necessary, copy environment data from Lastpass to `.env` in this directory.
-4. `git fetch --all`
-5. `git checkout tags/<TAG_ID>`
-6. `./deploy_in_prod.sh`
+4. Fetch all remotes
+```
+git fetch --all
+```
+5. Checkout Git Tag
+```
+git checkout tags/<TAG_ID>
+```
+6. Run script `deploy_in_prod`
+```
+./deploy_in_prod.sh
+```
 7. (optional) Navigate to the [Admin Panel][airflow_dashboard] to see things working (or failing to work, as the case may be).
 
 **Note:**  If you do this while a particular job is running, that job will fail.  But, the context will be saved, so the job should be retried once the new container comes up.
+
+<br/>
 
 ### Weekly airflow log rotation
 
 At the moment, the airflow scheduler logs **absolutely must** be rotated weekly
 in order to avoid filling up the disk (thereby breaking everything that runs on
 the host ec2 instance, even potentially the docker daemon). For instructions see
-[this page](/tech/cc-search/cc-catalog/airflowrotation)
+[this page](docs/airflowrotation.md)
+
+<br/>
 
 ## AWS Managed Services
 * **[Common Crawl Data Pipelines](https://console.aws.amazon.com/datapipeline/home?region=us-east-1)**
@@ -153,9 +180,13 @@ the host ec2 instance, even potentially the docker daemon). For instructions see
 
 * **AWS Key** 
     * Key pair name is cc-catalog. Saved in the Shared-CC Catalog folder in LastPass, filename => **cc-catalog key**.
- 
+
+<br/>
+
 ## Archive 
 * [RSync.net](https://www.rsync.net/) is used to store archived common crawl data. Login info is in LastPass.
+
+<br/>
 
 # Research
 Internal AI policy:
@@ -167,6 +198,8 @@ Internal AI policy:
 
 * [Potential Image Analysis Providers - Google Sheets](https://docs.google.com/spreadsheets/d/1Lw7j8W_QomcEBvjo-908JCmlPliI9nBAxNzBZ-bh0vA/edit#gid=0) (Potential Image Tagging AI Providers)
 * [Open Source Image Tagging Libraries - Google Sheets](https://docs.google.com/spreadsheets/d/1JCFavh0OgIXs0etswWmYKrdmWKy4Pk53qV7OuzSXCPU/edit#gid=0)
+
+<br/>
 
 ## AWS Imagine Grant
 
@@ -201,6 +234,8 @@ Commons and Flickr to use for the project. Note that the metrics are not
 strictly comparable, so we should decide ahead of time what proportion we want
 from each of these sources.
 
+<br/>
+
 ### Regular reingestion of current image information
 
 Currently, we generally only get information about a given image when it is
@@ -215,7 +250,9 @@ source from CC Search.  The strategy is outlined [here][freshness_strategy].
 [aws_grant_2019]: https://drive.google.com/drive/folders/1eXDGbOKnbvfMUcwnLrFg-1I7tCvFfvtN
 [cats_image]: https://commons.wikimedia.org/w/api.php?action=query&prop=globalusage&gulimit=max&gunamespace=0&titles=File:Cat_poster_1.jpg
 [flickr_request]: https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=YOUR_KEY_HERE&min_upload_date=2020-01-22%2013:00:00&max_upload_date=2020-01-22%2013:05:00&license=1&media=photos&content_type=1&extras=description,license,date_upload,date_taken,owner_name,tags,o_dims,views,url_t,url_s,url_m,url_l&per_page=500&format=json&nojsoncallback=1&page=1
-[freshness_strategy]: /tech/cc-search/cc-catalog/image-data-reingestion-strategy
+[freshness_strategy]: docs/image-data-reingestion-strategy.md
+
+<br/>
 
 ## Long term Image ranking ideas.
 
@@ -223,6 +260,8 @@ In the long run, and in order to have 'fair' metrics that are comparable across
 different providers, it may prove fruitful to consider trying to determine,
 e.g., how many times a given image is direct-linked on the internet.  These
 sorts of metrics would probably be easiest to glean from Common Crawl.
+
+<br/>
 
 # Community Involvement
 
