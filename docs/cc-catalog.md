@@ -58,13 +58,13 @@ according to the [CC Search Provider Review Process][cc_search_review].
 
 
 The current providers are
-* [Flickr](/tech/cc-search/cc-catalog/flickr)
-* [Wikimedia Commons](/tech/cc-search/cc-catalog/wikimediacommons)
-* [Thingiverse](/tech/cc-search/cc-catalog/thingiverse)
-* [Met Museum](/tech/cc-search/cc-catalog/metmuseum)
-* [PhyloPic](/tech/cc-search/cc-catalog/phylopic)
-* [Cleveland Museum of Art](/tech/cc-search/cc-catalog/clevelandmuseumofart)
-* [RawPixel](/tech/cc-search/cc-catalog/rawpixel)
+* [Flickr](docs/flickr.md)
+* [Wikimedia Commons](docs/wikimediacommons.md)
+* [Thingiverse](docs/thingiverse.md)
+* [Met Museum](docs/metmuseum.md)
+* [PhyloPic](docs/phylopic.md)
+* [Cleveland Museum of Art](docs/clevelandmuseumofart.md)
+* [RawPixel](docs/rawpixel.md)
 
 Providers to review are tracked via Github issues, see the **Resources** section
 for a list of issues.
@@ -73,10 +73,8 @@ for a list of issues.
 
 # Resources
 
-* [Common Crawl Providers Review](https://docs.google.com/spreadsheets/d/1Mm-MIgjDkqFIZe1jFLOBRbIhtguueZINRlc3FH2dykY/) spreadsheet
 * [Provider identification GitHub tickets](https://github.com/creativecommons/cccatalog/issues?utf8=%E2%9C%93&q=label%3Aproviders+)
-* [Legal and reputational risk management](https://docs.google.com/document/d/1r5BzWiQkmXePi9m0cX-FLyAgh47Fny8DZTOtdkRTLbM/edit)
-* [CC Catalog Documentation](https://docs.google.com/document/d/1HVrfQRgW3zZ9X7A7k8nbOwR-9liysjPK6MabsOxnPB8/edit)
+* [CC Catalog Documentation](cccatalog/docs/)
 
 <br/>
 
@@ -103,7 +101,7 @@ The workflows can be been managed from the [Admin Panel][airflow_dashboard].
 ### How to Deploy New Airflow DAGs or Provider API Scripts to Production
 
 1. Log into EC2 instance with Airflow
-> Note:  Ask Alden or Brent to add your keys if necessary
+> Note:  Ask Brent to add your keys if necessary
 ```
 ssh ec2-user@ec2-54-85-128-241.compute-1.amazonaws.com
 ```
