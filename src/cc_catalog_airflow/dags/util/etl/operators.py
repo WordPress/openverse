@@ -8,12 +8,9 @@ from airflow.contrib.sensors.emr_job_flow_sensor import EmrJobFlowSensor
 from airflow.hooks.S3_hook import S3Hook
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
+from airflow.sensors.s3_prefix_sensor import S3PrefixSensor
+from airflow.sensors.s3_key_sensor import S3KeySensor
 from airflow.utils.trigger_rule import TriggerRule
-
-
-def _load_file_to_s3(local_file, remote_key, bucket, aws_conn_id):
-    s3 = S3Hook(aws_conn_id=aws_conn_id)
-    s3.load_file(local_file, remote_key, replace=True, bucket_name=bucket)
 
 
 def get_log_operator(dag, status):
@@ -21,6 +18,34 @@ def get_log_operator(dag, status):
         task_id=f"log_{dag.dag_id}_{status}",
         bash_command=f"echo {status} {dag.dag_id} at $(date)",
         trigger_rule=TriggerRule.ALL_SUCCESS,
+    )
+
+
+def get_check_cc_index_in_s3_sensor(dag, aws_conn_id):
+    return S3PrefixSensor(
+        task_id="check_for_cc_index",
+        retries=0,
+        aws_conn_id=aws_conn_id,
+        bucket_name="commoncrawl",
+        prefix=f"crawl-data/{_get_cc_index_template()}",
+        poke_interval=60,
+        timeout=60 * 60 * 24 * 3,
+        soft_fail=True,
+        mode="reschedule",
+    )
+
+
+def get_check_wat_file_in_s3_sensor(dag, aws_conn_id):
+    return S3KeySensor(
+        task_id="check_for_wat_file",
+        retries=0,
+        aws_conn_id=aws_conn_id,
+        bucket_name="commoncrawl",
+        bucket_key=f"crawl-data/{_get_cc_index_template()}/wat.paths.gz",
+        poke_interval=60,
+        timeout=60 * 60 * 24 * 3,
+        soft_fail=True,
+        mode="reschedule",
     )
 
 
@@ -38,6 +63,9 @@ def get_create_job_flow_operator(
     aws_conn_id,
     emr_conn_id,
 ):
+    cc_index = _get_cc_index_template()
+    job_flow_overrides["Steps"][0]["HadoopJarStep"]["Args"][-1] = cc_index
+    print(job_flow_overrides)
     return EmrCreateJobFlowOperator(
         task_id=_get_job_flow_creator_task_id(job_flow_name),
         job_flow_overrides=job_flow_overrides,
@@ -53,7 +81,7 @@ def get_job_sensor(timeout, job_flow_name, aws_conn_id):
         mode="reschedule",
         task_id=f"check_{job_flow_name}",
         retries=0,
-        job_flow_id=_get_job_flow_id_template(creator_task_id),
+        job_flow_id=_get_task_return_value_template(creator_task_id),
         aws_conn_id=aws_conn_id,
     )
 
@@ -62,16 +90,25 @@ def get_job_terminator(job_flow_name, aws_conn_id):
     creator_task_id = _get_job_flow_creator_task_id(job_flow_name)
     return EmrTerminateJobFlowOperator(
         task_id=f"terminate_{job_flow_name}",
-        job_flow_id=_get_job_flow_id_template(creator_task_id),
+        job_flow_id=_get_task_return_value_template(creator_task_id),
         aws_conn_id=aws_conn_id,
         trigger_rule=TriggerRule.ALL_DONE,
     )
+
+
+def _load_file_to_s3(local_file, remote_key, bucket, aws_conn_id):
+    s3 = S3Hook(aws_conn_id=aws_conn_id)
+    s3.load_file(local_file, remote_key, replace=True, bucket_name=bucket)
 
 
 def _get_job_flow_creator_task_id(job_flow_name):
     return f"create_{job_flow_name}"
 
 
-def _get_job_flow_id_template(creator_task_id):
-    puller_args = f"task_ids='{creator_task_id}', key='return_value'"
+def _get_cc_index_template():
+    return "CC-MAIN-{{ execution_date.strftime('%Y-%V') }}"
+
+
+def _get_task_return_value_template(task_id):
+    puller_args = f"task_ids='{task_id}', key='return_value'"
     return f"{{{{ task_instance.xcom_pull({puller_args}) }}}}"

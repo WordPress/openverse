@@ -40,9 +40,9 @@ def test_load_file_to_s3_loads_file():
     )
 
 
-def test_get_job_flow_id_template():
+def test_get_task_return_value_template():
     expect_template_string = (
         "{{ task_instance.xcom_pull(task_ids='abc123', key='return_value') }}"
     )
-    actual_template_string = operators._get_job_flow_id_template("abc123")
-    assert actual_template_string == expect_template_string
+    actual_string = operators._get_task_return_value_template("abc123")
+    assert actual_string == expect_template_string
