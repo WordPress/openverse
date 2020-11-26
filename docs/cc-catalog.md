@@ -51,13 +51,9 @@ The main data of the CC Catalog is in the PostgreSQL table `image` (in the
 Providers are sites that host CC-licensed works. We have direct partnerships
 with some of our providers and ingest their content through their public APIs.
 However, we identify new providers mainly through processing [Common
-Crawl](https://commoncrawl.org/) data. Potential providers are reviewed
-according to the [CC Search Provider Review Process][cc_search_review].
+Crawl](https://commoncrawl.org/) data.
 
-[cc_search_review]: https://docs.google.com/document/d/18WE7rKRAIXpTSTJh4RUSc50tSi4KrOP6lIjxrCj-kb8/edit#heading=h.nyxpan77y2x6
-
-
-The current providers are
+The current providers are as follows:
 * [Flickr](docs/flickr.md)
 * [Wikimedia Commons](docs/wikimediacommons.md)
 * [Thingiverse](docs/thingiverse.md)
@@ -192,16 +188,11 @@ Internal AI policy:
 >
 > CC staff will make reasonable efforts during procurement and partnership processes to evaluate service providers to determine how our data or contributions will be used including, without limitation, whether it is used in service of such initiatives. This will include evaluating contractual terms of engagement and requesting modifications that preclude such uses when feasible. If after entering an agreement, it is determined that this is the case, CC management will determine the best course of action, which may involve canceling the service or partnership.
 
-(see [Creative Commons Contracting Philosophy and Processes](https://docs.google.com/document/d/1U9b_VNZrCEN9sKH7ZQ7ljFcCi9eJmai3xf_RqghHCEo/) for background information).
-
-* [Potential Image Analysis Providers - Google Sheets](https://docs.google.com/spreadsheets/d/1Lw7j8W_QomcEBvjo-908JCmlPliI9nBAxNzBZ-bh0vA/edit#gid=0) (Potential Image Tagging AI Providers)
-* [Open Source Image Tagging Libraries - Google Sheets](https://docs.google.com/spreadsheets/d/1JCFavh0OgIXs0etswWmYKrdmWKy4Pk53qV7OuzSXCPU/edit#gid=0)
-
 <br/>
 
 ## AWS Imagine Grant
 
-We received a grant based on the proposal [here][aws_grant_2019]. As an early
+Thankfully, we managed to secure the grant. As an early
 step, we want to determine which images in CC Catalog are the best candidates to
 have tags added to them by Amazon Rekognition.  We would therefore like to
 determine which photos are the most popular on some of our larger providers.  In
@@ -245,7 +236,6 @@ towards 'freshening' the information about recently uploaded images.  This will
 also (in the future) allow us to remove images that were taken down at the
 source from CC Search.  The strategy is outlined [here][freshness_strategy].
 
-[aws_grant_2019]: https://drive.google.com/drive/folders/1eXDGbOKnbvfMUcwnLrFg-1I7tCvFfvtN
 [cats_image]: https://commons.wikimedia.org/w/api.php?action=query&prop=globalusage&gulimit=max&gunamespace=0&titles=File:Cat_poster_1.jpg
 [flickr_request]: https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=YOUR_KEY_HERE&min_upload_date=2020-01-22%2013:00:00&max_upload_date=2020-01-22%2013:05:00&license=1&media=photos&content_type=1&extras=description,license,date_upload,date_taken,owner_name,tags,o_dims,views,url_t,url_s,url_m,url_l&per_page=500&format=json&nojsoncallback=1&page=1
 [freshness_strategy]: docs/image-data-reingestion-strategy.md
