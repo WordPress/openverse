@@ -3,10 +3,22 @@ import json
 import requests
 import os
 from unittest.mock import patch, MagicMock
-
-import pytest
+from common.storage.image import MockImageStore
+from collections import namedtuple
 
 import cleveland_museum_of_art as clm
+
+
+LicenseInfo = namedtuple(
+    'LicenseInfo',
+    ['license', 'version', 'url']
+)
+_license_info = ('cc0', '1.0', 'https://creativecommons.org/publicdomain/zero/1.0/')
+license_info = LicenseInfo(*_license_info)
+clm.image_store = MockImageStore(
+                    provider=clm.PROVIDER,
+                    license_info=license_info
+                    )
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
@@ -158,7 +170,6 @@ def test_get_response_failure():
     assert mock_get.call_count == 3
 
 
-@pytest.mark.skip(reason='This test calls the internet via ImageStore')
 def test_handle_response():
     response_json = _get_resource_json('handle_response_data.json')
     data = response_json['data']

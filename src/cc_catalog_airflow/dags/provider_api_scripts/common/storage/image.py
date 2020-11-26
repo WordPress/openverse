@@ -400,3 +400,78 @@ class ImageStore:
         else:
             logger.debug(f'Enriching tag: {tag}')
             return {'name': tag, 'provider': self._PROVIDER}
+
+
+class MockImageStore(ImageStore):
+    """
+    A class that mocks the role of the ImageStore class. This class replaces
+    all functionality of ImageStore that calls the internet.
+
+    For information about all arguments other than license_info refer to
+    ImageStore class.
+
+    Required init arguments:
+    license_info:       A named tuple consisting of valid license info from
+                        the test script in which MockImageStore is being used.
+    """
+
+    def __init__(
+            self,
+            provider=None,
+            output_file=None,
+            output_dir=None,
+            buffer_length=100,
+            license_info=None
+    ):
+        logger.info(f'Initialized with provider {provider}')
+        super().__init__(provider=provider)
+        self.license_info = license_info
+
+    def _get_image(
+            self,
+            foreign_identifier,
+            foreign_landing_url,
+            image_url,
+            thumbnail_url,
+            width,
+            height,
+            license_url,
+            license_,
+            license_version,
+            creator,
+            creator_url,
+            title,
+            meta_data,
+            raw_tags,
+            watermarked,
+            source,
+    ):
+        valid_license_info = self.license_info
+
+        source = util.get_source(source, self._PROVIDER)
+        meta_data = self._enrich_meta_data(
+            meta_data,
+            license_url=valid_license_info.url,
+            raw_license_url=license_url
+        )
+        tags = self._enrich_tags(raw_tags)
+
+        return Image(
+            foreign_identifier=foreign_identifier,
+            foreign_landing_url=foreign_landing_url,
+            image_url=image_url,
+            thumbnail_url=thumbnail_url,
+            license_=valid_license_info.license,
+            license_version=valid_license_info.version,
+            width=width,
+            height=height,
+            filesize=None,
+            creator=creator,
+            creator_url=creator_url,
+            title=title,
+            meta_data=meta_data,
+            tags=tags,
+            watermarked=watermarked,
+            provider=self._PROVIDER,
+            source=source
+        )

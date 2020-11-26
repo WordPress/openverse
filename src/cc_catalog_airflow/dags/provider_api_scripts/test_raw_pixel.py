@@ -2,10 +2,21 @@ import json
 import logging
 import os
 from unittest.mock import patch
-
-import pytest
+from collections import namedtuple
+from common.storage.image import MockImageStore
 
 import raw_pixel as rwp
+
+LicenseInfo = namedtuple(
+    'LicenseInfo',
+    ['license', 'version', 'url']
+)
+_license_info = ('cc0', '1.0', 'https://creativecommons.org/publicdomain/zero/1.0/')
+license_info = LicenseInfo(*_license_info)
+rwp.image_store = MockImageStore(
+                    provider=rwp.PROVIDER,
+                    license_info=license_info
+                    )
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), "tests/resources/rawpixel"
@@ -45,7 +56,6 @@ def test_process_pages_giving_zero():
         assert img_ctr == 0
 
 
-@pytest.mark.skip(reason='This test calls the internet via ImageStore')
 def test_process_image_data():
     r = _get_resource_json("total_images_example.json")
     with patch.object(rwp, "_request_content", return_value=r):

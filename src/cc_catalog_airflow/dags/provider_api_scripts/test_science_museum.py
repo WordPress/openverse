@@ -3,10 +3,22 @@ import json
 import logging
 import requests
 from unittest.mock import MagicMock, patch
-
-import pytest
+from collections import namedtuple
+from common.storage.image import MockImageStore
 
 import science_museum as sm
+
+LicenseInfo = namedtuple(
+    'LicenseInfo',
+    ['license', 'version', 'url']
+)
+_license_info = ('by-nc-sa', '4.0', 'https://creativecommons.org/licenses/by-nc-sa/4.0/')
+license_info = LicenseInfo(*_license_info)
+sm.image_store = MockImageStore(
+                    provider=sm.PROVIDER,
+                    license_info=license_info
+                    )
+
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'tests/resources/sciencemuseum'
@@ -343,7 +355,6 @@ def test_get_metadata():
     assert actual_metadata == expected_metadata
 
 
-@pytest.mark.skip(reason='This test calls the internet via ImageStore')
 def test_handle_obj_data():
     object_data = _get_resource_json("objects_data.json")
     actual_image_count = sm._handle_object_data(object_data)
