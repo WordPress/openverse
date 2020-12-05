@@ -5,4 +5,4 @@ english_name: CC Catalog API
 # All technologies used
 technologies: Python, Django, Django REST Framework, Elasticsearch
 # Whether this repository should be featured on the CC Open Source site
-featured: true
+featured: false
