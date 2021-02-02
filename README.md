@@ -1,3 +1,5 @@
+## ⚠️ Notice: This project is on hold, and not under active development. We are not accepting new issues or pull requests. You can learn more at: [Upcoming Changes to the CC Open Source Community — Creative Commons Open Source](https://opensource.creativecommons.org/blog/entries/2020-12-07-upcoming-changes-to-community/).
+
 # cccatalog-frontend
 
 ![cccatalog-frontend-ci](https://github.com/creativecommons/cccatalog-frontend/workflows/cccatalog-frontend-ci/badge.svg)
