@@ -1,3 +1,5 @@
+## **Notice: This project has been discontinued and is no longer under active development. We are not currently accepting new issues or pull requests. You can [learn more about changes to the CC Open Source community here.](https://opensource.creativecommons.org/blog/entries/2020-12-07-upcoming-changes-to-community/)
+
 # Creative Commons Catalog API
 [![Build Status](https://travis-ci.org/creativecommons/cccatalog-api.svg?branch=master)](https://travis-ci.org/creativecommons/cccatalog-api)
 ![License](https://img.shields.io/github/license/creativecommons/cccatalog-api.svg?style=flat)
