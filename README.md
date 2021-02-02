@@ -1,4 +1,4 @@
-## **Notice: This project has been discontinued and is no longer under active development. We are not currently accepting new issues or pull requests. You can [learn more about changes to the CC Open Source community here.](https://opensource.creativecommons.org/blog/entries/2020-12-07-upcoming-changes-to-community/)
+## **Notice: This project is on hold, and is not under active development. We are not currently accepting new issues or pull requests. You can [learn more about changes to the CC Open Source community here.](https://opensource.creativecommons.org/blog/entries/2020-12-07-upcoming-changes-to-community/)
 
 # Creative Commons Catalog
 *Mapping the commons towards an open ledger and cc search.*
