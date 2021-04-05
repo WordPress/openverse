@@ -1,43 +1,43 @@
-name: Automated tests
-on:
-  pull_request:
-    branches: [ master ]
-  push:
-    branches: [ master ]
+# name: Automated tests
+# on:
+#   pull_request:
+#     branches: [ master ]
+#   push:
+#     branches: [ master ]
 
-jobs:
-  Style:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/setup-python@v2
-    - name: Install pycodestyle
-      run: pip install pycodestyle
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Check API style
-      run: pycodestyle cccatalog-api/cccatalog --exclude='cccatalog-api/cccatalog/api/migrations,cccatalog-api/cccatalog/example_responses.py' --max-line-length=80 --ignore=E402,E702
-    - name: Check ingestion-server style
-      run: pycodestyle ingestion_server/ingestion_server --max-line-length=80 --ignore=E402
-  Tests:
-    timeout-minutes: 15
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
-    - name: Install dependencies
-      run: |
-        pip install pytest pipenv
-        sudo apt-get install libexempi3 librdkafka-dev
-        PIPENV_PIPFILE=./cccatalog-api/Pipfile pipenv install --system --deploy --dev &
-    - name: Start API
-      run: docker-compose up --build -d
-    - name: Wait for API to come up
-      run: bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8000/healthcheck)" != "200" ]]; do sleep 10; done'
-    - name: Ingest and index test data
-      run: ./load_sample_data.sh
-    - name: Wait for data to be indexed in Elasticsearch
-      run: bash -c 'while [[ "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/image | grep -c image-)" == "0" ]]; do sleep 5 && docker-compose logs; done'
-    - name: Run API tests
-      run: cd cccatalog-api && test/run_test.sh
-    - name: Run analytics tests
-      run: cd ./analytics && docker exec -i cccatalog-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
+# jobs:
+#   Style:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/setup-python@v2
+#     - name: Install pycodestyle
+#       run: pip install pycodestyle
+#     - name: Checkout
+#       uses: actions/checkout@v2
+#     - name: Check API style
+#       run: pycodestyle cccatalog-api/cccatalog --exclude='cccatalog-api/cccatalog/api/migrations,cccatalog-api/cccatalog/example_responses.py' --max-line-length=80 --ignore=E402,E702
+#     - name: Check ingestion-server style
+#       run: pycodestyle ingestion_server/ingestion_server --max-line-length=80 --ignore=E402
+#   Tests:
+#     timeout-minutes: 15
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/setup-python@v1
+#     - name: Install dependencies
+#       run: |
+#         pip install pytest pipenv
+#         sudo apt-get install libexempi3 librdkafka-dev
+#         PIPENV_PIPFILE=./cccatalog-api/Pipfile pipenv install --system --deploy --dev &
+#     - name: Start API
+#       run: docker-compose up --build -d
+#     - name: Wait for API to come up
+#       run: bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8000/healthcheck)" != "200" ]]; do sleep 10; done'
+#     - name: Ingest and index test data
+#       run: ./load_sample_data.sh
+#     - name: Wait for data to be indexed in Elasticsearch
+#       run: bash -c 'while [[ "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/image | grep -c image-)" == "0" ]]; do sleep 5 && docker-compose logs; done'
+#     - name: Run API tests
+#       run: cd cccatalog-api && test/run_test.sh
+#     - name: Run analytics tests
+#       run: cd ./analytics && docker exec -i cccatalog-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
