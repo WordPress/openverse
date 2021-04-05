@@ -1,4 +1,20 @@
-## ⚠️ Notice: This project is on hold, and not under active development. We are not accepting new issues or pull requests. You can learn more at: [Upcoming Changes to the CC Open Source Community — Creative Commons Open Source](https://opensource.creativecommons.org/blog/entries/2020-12-07-upcoming-changes-to-community/).
+This is a temporary repository for the CC Search project while migrating from Automattic to Creative Commons. See all the repositories in the project below:
+
+|Original Repo|Automattic Repo|
+|--|--|
+[creativecommons/cccatalog-frontend](https://github.com/creativecommons/cccatalog-frontend) | [Automattic/ccsearch-frontend](https://github.com/Automattic/ccsearch-frontend)
+[creativecommons/cccatalog](https://github.com/creativecommons/cccatalog) | [Automattic/ccsearch-catalog](https://github.com/Automattic/ccsearch-catalog)
+[creativecommons/cccatalog-api](https://github.com/creativecommons/cccatalog-api) | [Automattic/ccsearch-api](https://github.com/Automattic/ccsearch-api)
+
+
+Repos have been renamed into a `ccsearch-` namespace, for now. All branch names and code has been preserved, with the *following exceptions*:
+
+- GitHub Actions are commented out
+- `CODEOWNERS` files and `.cc-metadata.yml` files are deleted
+
+The rest of this README is the unmodified original readme, which may reference documentation on creativecommons.org, opensource.creativecommons.org, or Creative Commons' internal employee wiki. These references will be updated in time.
+
+---
 
 # Creative Commons Catalog
 *Mapping the commons towards an open ledger and cc search.*
@@ -37,7 +53,7 @@ series of parquet files that contain:
 
 - the domains and its respective content path and query string (i.e. the exact
   webpage that links to creativecommons.org)
-- the CC referenced hyperlink (which may indicate a license), 
+- the CC referenced hyperlink (which may indicate a license),
 - HTML meta data in JSON format which indicates the number of images on each
   webpage and other domains that they reference,
 - the location of the webpage in the WARC file so that the page contents can be
@@ -101,7 +117,7 @@ into the upstream database. It includes some data preprocessing steps.
 
 - [Brooklyn Museum](src/cc_catalog_airflow/dags/provider_api_scripts/BrooklynMuseum.py)
 - [NYPL](src/cc_catalog_airflow/dags/provider_api_scripts/NYPL.py)
-- Cleveland Public Library 
+- Cleveland Public Library
 
 ## Development setup for Airflow and API puller scripts
 
@@ -169,7 +185,7 @@ container via
 docker attach --sig-proxy=false cc_catalog_airflow_webserver_1
 ```
 Attaching in this manner lets you see the output from both the Airflow webserver
-and scheduler, which can be useful for debugging purposes.  To leave the 
+and scheduler, which can be useful for debugging purposes.  To leave the
 container, (but keep it running), press `Ctrl-C` on *nix platforms
 
 To see the Airflow web UI, point your browser to `localhost:9090`.
