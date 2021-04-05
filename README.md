@@ -1,4 +1,20 @@
-## ⚠️ Notice: This project is on hold, and not under active development. We are not accepting new issues or pull requests. You can learn more at: [Upcoming Changes to the CC Open Source Community — Creative Commons Open Source](https://opensource.creativecommons.org/blog/entries/2020-12-07-upcoming-changes-to-community/).
+This is a temporary repository for the CC Search project while migrating from Automattic to Creative Commons. See all the repositories in the project below:
+
+|Original Repo|Automattic Repo|
+|--|--|
+[creativecommons/cccatalog-frontend](https://github.com/creativecommons/cccatalog-frontend) | [Automattic/ccsearch-frontend](https://github.com/Automattic/ccsearch-frontend)
+[creativecommons/cccatalog](https://github.com/creativecommons/cccatalog) | [Automattic/ccsearch-catalog](https://github.com/Automattic/ccsearch-catalog)
+[creativecommons/cccatalog-api](https://github.com/creativecommons/cccatalog-api) | [Automattic/ccsearch-api](https://github.com/Automattic/ccsearch-api)
+
+
+Repos have been renamed into a `ccsearch-` namespace, for now. All branch names and code has been preserved, with the *following exceptions*:
+
+- GitHub Actions are commented out
+- `CODEOWNERS` files and `.cc-metadata.yml` files are deleted
+
+The rest of this README is the unmodified original readme, which may reference documentation on creativecommons.org, opensource.creativecommons.org, or Creative Commons' internal employee wiki. These references will be updated in time.
+
+---
 
 # Creative Commons Catalog API
 [![Build Status](https://travis-ci.org/creativecommons/cccatalog-api.svg?branch=master)](https://travis-ci.org/creativecommons/cccatalog-api)
@@ -49,12 +65,12 @@ docker-compose up
 ![Initialization](initialization.PNG)
 
 7. Open up your browser and type `localhost:8000` in the search tab
- 
+
 8. Make sure you see the local API documentation
 <br/>
 
 ![Local API Documentation](local_api_documentation.PNG)
- 
+
 9. Open a new CMD or terminal and change directory to CC Catalog API
 
 10. Still in the new CMD or terminal, load the sample data
@@ -184,7 +200,7 @@ You can view the custom administration views at the /admin/ endpoint.
 <br/>
 
 ## Contributing
-Pull requests are welcome! Feel free to [join us on Slack](https://slack-signup.creativecommons.org/) and discuss the project with the engineers on #cc-search. 
+Pull requests are welcome! Feel free to [join us on Slack](https://slack-signup.creativecommons.org/) and discuss the project with the engineers on #cc-search.
 
 You are welcome to take any open issue in the tracker labeled [`help wanted`](https://github.com/creativecommons/cccatalog-api/labels/help%20wanted) or [`good first issue`](https://github.com/creativecommons/cccatalog-api/labels/good%20first%20issue); **there's no need to ask for permission in advance**. Other issues are open for contribution as well, but may be less accessible or well defined in comparison to those that are explicitly labeled.
 
