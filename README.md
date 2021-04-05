@@ -1,4 +1,4 @@
-This is a temporary repository for the CC Search project while migrating from Automattic to Creative Commons. See all the repositories in the project below:
+This is a temporary repository for the CC Search project while migrating from Creative Commons to Automattic. See all the repositories in the project below:
 
 |Original Repo|Automattic Repo|
 |--|--|
