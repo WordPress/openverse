@@ -1,13 +1,13 @@
 {
-  "name": "cccatalog-frontend",
+  "name": "ccsearch-frontend",
   "version": "2020.10.2",
-  "description": "Common Creative search",
+  "description": "WP Photos",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativecommons/cccatalog-frontend.git"
+    "url": "git+https://github.com/Automattic/ccsearch-frontend.git"
   },
   "bugs": {
-    "url": "https://github.com/creativecommons/cccatalog-frontend/issues"
+    "url": "https://github.com/Automattic/ccsearch-frontend/issues"
   },
   "author": "sebworks",
   "private": true,
