@@ -8,7 +8,7 @@
       tag="span"
       class="is-block padding-horizontal-big margin-top-large has-text-centered"
     >
-      <template v-slot:link>
+      <template #link>
         <a
           :aria-label="providerName + 'form'"
           :href="imageURL"

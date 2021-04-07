@@ -42,21 +42,21 @@
             tag="p"
             class="has-text-centered is-uppercase"
           >
-            <template v-slot:joy>
+            <template #joy>
               <a
                 aria-label="licenses"
                 href="https://www.flickr.com/photos/33363480@N05/14084531185"
                 >"Joy is the simplest form of gratitude... Karl Barth"</a
               >
             </template>
-            <template v-slot:writer>
+            <template #writer>
               <a
                 aria-label="public domain"
                 href="https://www.flickr.com/photos/33363480@N05"
                 >Nick Kenrick.</a
               >
             </template>
-            <template v-slot:cc>
+            <template #cc>
               <a
                 aria-label="photograph"
                 href="https://creativecommons.org/licenses/by/2.0/?ref=ccsearch&atype=rich"
@@ -67,28 +67,28 @@
         </div>
         <p class="margin-bottom-normal">{{ $t('support.inclusive') }}</p>
         <i18n path="support.work" tag="p" class="margin-bottom-normal">
-          <template v-slot:license>
+          <template #license>
             <a
               aria-label="licenses"
               href="https://creativecommons.org/licenses/"
               >CC License Suite</a
             >
           </template>
-          <template v-slot:public-domain>
+          <template #public-domain>
             <a
               aria-label="public domain"
               href="https://creativecommons.org/publicdomain/"
               >public domain tools</a
             >
           </template>
-          <template v-slot:photograph>
+          <template #photograph>
             <a
               aria-label="photograph"
               href="https://www.parismuseescollections.paris.fr/fr/musee-carnavalet/oeuvres/portrait-de-l-ecrivaine-libertaire-et-feministe-caroline-remy-dite-severine"
               >this photograph</a
             >
           </template>
-          <template v-slot:guide>
+          <template #guide>
             <a
               aria-label="guide"
               href="https://pressbooks.library.ryerson.ca/docs/"
@@ -101,7 +101,7 @@
         </h2>
         <p class="margin-bottom-normal">{{ $t('support.access') }}</p>
         <i18n path="support.public-good" tag="p" class="margin-bottom-normal">
-          <template v-slot:public-good>
+          <template #public-good>
             <strong>public good</strong>
           </template>
         </i18n>

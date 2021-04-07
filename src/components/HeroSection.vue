@@ -63,7 +63,7 @@
         </div>
         <div class="caption has-text-centered margin-top-big">
           <i18n path="hero.caption.content" tag="p">
-            <template v-slot:link>
+            <template #link>
               <a
                 href="https://creativecommons.org/share-your-work/licensing-examples/"
                 target="_blank"
@@ -83,7 +83,7 @@
           tag="span"
           class="margin-right-bigger"
         >
-          <template v-slot:link>
+          <template #link>
             <a
               href="https://oldsearch.creativecommons.org/"
               :aria-label="$t('hero.aria.old-cc-search')"

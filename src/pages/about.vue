@@ -7,7 +7,7 @@
         </h1>
         <div class="content">
           <i18n path="about.description.content" tag="p">
-            <template v-slot:link>
+            <template #link>
               <a
                 :aria-label="$t('about.aria.licenses')"
                 href="https://creativecommons.org/share-your-work/licensing-examples/"
@@ -16,56 +16,56 @@
             </template>
           </i18n>
           <i18n path="about.collection" tag="p">
-            <template v-slot:common-crawl>
+            <template #common-crawl>
               <a aria-label="common crawl" href="http://commoncrawl.org/"
                 >Common Crawl</a
               >
             </template>
           </i18n>
           <i18n path="about.planning.content" tag="p">
-            <template v-slot:vision>
+            <template #vision>
               <a
                 :aria-label="$t('about.aria.vision')"
                 href="https://creativecommons.org/2019/03/19/cc-search/"
                 >{{ $t('about.planning.vision') }}</a
               >
             </template>
-            <template v-slot:roadmap>
+            <template #roadmap>
               <a
                 :aria-label="$t('about.aria.roadmap')"
                 href="https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/edit#heading=h.jih78emira0r"
                 >{{ $t('about.planning.roadmap') }}</a
               >
             </template>
-            <template v-slot:working>
+            <template #working>
               <a
                 :aria-label="$t('about.aria.projects')"
                 href="https://github.com/orgs/creativecommons/projects/7"
                 >{{ $t('about.planning.working') }}</a
               >
             </template>
-            <template v-slot:search>
+            <template #search>
               <a
                 aria-label="cc search repository"
                 href="https://github.com/creativecommons/cccatalog-frontend/"
                 >{{ $t('about.planning.search') }}</a
               >
             </template>
-            <template v-slot:catalog-api>
+            <template #catalog-api>
               <a
                 aria-label="cc catalog-api repository"
                 href="https://github.com/creativecommons/cccatalog-api/"
                 >{{ $t('about.planning.catalog-api') }}</a
               >
             </template>
-            <template v-slot:catalog>
+            <template #catalog>
               <a
                 aria-label="cc catalog repository"
                 href="https://github.com/creativecommons/cccatalog/"
                 >{{ $t('about.planning.catalog') }}</a
               >
             </template>
-            <template v-slot:community>
+            <template #community>
               <a
                 :aria-label="$t('about.aria.contribution')"
                 href="https://creativecommons.github.io/contributing-code/"
@@ -74,7 +74,7 @@
             </template>
           </i18n>
           <i18n path="about.declaration.content" tag="p">
-            <template v-slot:terms>
+            <template #terms>
               <a
                 :aria-label="$t('about.aria.terms')"
                 href="https://creativecommons.org/terms/"
@@ -83,7 +83,7 @@
             </template>
           </i18n>
           <i18n path="about.old-cc-search" tag="p">
-            <template v-slot:link>
+            <template #link>
               <a
                 :aria-label="$t('about.aria.old-cc-search')"
                 href="https://oldsearch.creativecommons.org"

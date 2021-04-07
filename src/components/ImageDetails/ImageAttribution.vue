@@ -14,7 +14,7 @@
         tag="span"
         class="caption has-text-weight-semibold"
       >
-        <template v-slot:link>
+        <template #link>
           <a
             :aria-label="$t('photo-details.aria.attribution.tool')"
             :href="licenseURL"
@@ -36,7 +36,7 @@
         tag="span"
         class="photo_usage-attribution is-block"
       >
-        <template v-slot:link>
+        <template #link>
           <a
             class="photo_license"
             :href="licenseURL"
@@ -55,7 +55,7 @@
         tag="span"
         class="caption has-text-weight-semibold"
       >
-        <template v-slot:link>
+        <template #link>
           <a
             :aria-label="$t('photo-details.aria.attribution.license')"
             :href="licenseURL"

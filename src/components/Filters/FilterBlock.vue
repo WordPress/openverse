@@ -4,7 +4,7 @@
     class="filter-block button tiny tag margin-horizontal-smaller"
     :aria-label="label + 'filter'"
   >
-    <span>{{ this.$props.label }}</span>
+    <span>{{ $props.label }}</span>
     <span
       :aria-label="$t('browse-page.aria.remove-filter')"
       class="close margin-left-small"
@@ -19,7 +19,7 @@
     class="filter-block button tiny tag margin-horizontal-smaller margin-bottom-smaller"
     :aria-label="label + 'filter'"
   >
-    <span>{{ $t(this.$props.label) }}</span>
+    <span>{{ $t($props.label) }}</span>
     <span
       class="close margin-left-small padding-small"
       tabindex="0"

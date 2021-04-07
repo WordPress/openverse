@@ -6,18 +6,18 @@
         tag="h4"
         class="b-header margin-bottom-small"
       >
-        <template v-slot:type>
+        <template #type>
           {{ type }}
         </template>
       </i18n>
       <i18n path="meta-search.form.caption" tag="p">
-        <template v-slot:type>
+        <template #type>
           {{ type }}
         </template>
-        <template v-slot:break>
+        <template #break>
           <br />
         </template>
-        <template v-slot:filter>
+        <template #filter>
           {{ unsupportedByUsefilter }}
         </template>
       </i18n>
