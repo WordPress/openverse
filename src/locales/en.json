@@ -13,18 +13,13 @@
     "license-filter": {
       "label": "I want something I can"
     },
-    "old-cc-search": {
-      "label": "Go to the {link} portal",
-      "link": "old CC Search"
-    },
     "locale": {
       "label": "Languages available",
       "icon": "locale"
     },
     "aria": {
       "search": "search",
-      "caption": "about cc licenses",
-      "old-cc-search": "old cc search"
+      "caption": "about cc licenses"
     }
   },
   "header": {
@@ -103,7 +98,6 @@
       "content": "Please note that CC does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
       "terms": "CC Terms of Use"
     },
-    "old-cc-search": "Looking for the old CC Search portal? Visit {link}.",
     "sources": "Sources",
     "providers": {
       "source": "Source",
@@ -117,7 +111,6 @@
       "projects": "current projects",
       "contribution": "contribution guidelines",
       "terms": "cc terms of use",
-      "old-cc-search": "old cc search",
       "sources": "sources table"
     }
   },
