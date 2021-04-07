@@ -13,18 +13,13 @@
     "license-filter": {
       "label": "Je veux quelque chose que je peux"
     },
-    "old-cc-search": {
-      "label": "Accédez au {link} portail",
-      "link": "ancienne recherche CC"
-    },
     "locale": {
       "label": "Langues disponibles",
       "icon": "lieu"
     },
     "aria": {
       "search": "chercher",
-      "caption": "à propos des licences cc",
-      "old-cc-search": "ancienne recherche cc"
+      "caption": "à propos des licences cc"
     }
   },
   "header": {
@@ -90,7 +85,6 @@
       "content": "Veuillez noter que CC ne vérifie pas si les images sont correctement sous licence CC, ou si l'attribution et les autres informations de licence que nous avons agrégées sont exactes ou complètes. Veuillez vérifier indépendamment l'état de la licence et les informations d'attribution avant de réutiliser le contenu. Pour plus de détails, lisez les {terms}.",
       "terms": "Conditions d'utilisation de CC"
     },
-    "old-cc-search": "Vous recherchez l'ancien portail de recherche CC? Visitez {link}.",
     "sources": "Sources",
     "providers": {
       "source": "La source",
@@ -104,7 +98,6 @@
       "projects": "projets actuels",
       "contribution": "directives de contribution",
       "terms": "conditions d'utilisation cc",
-      "old-cc-search": "ancienne recherche cc",
       "sources": "table des sources"
     }
   },
