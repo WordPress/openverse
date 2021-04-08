@@ -15,11 +15,7 @@
       <img
         v-show="!sketchFabUid"
         :class="{ photo_image: true, loading: !isLoaded }"
-        :src="
-          isLoaded
-            ? image.url
-            : `https://api-dev.creativecommons.engineering/v1/thumbs/${$route.params.id}`
-        "
+        :src="imgUrl"
         :alt="image.title"
         @load="onImageLoad"
       />
@@ -189,6 +185,7 @@ export default {
     'imageHeight',
     'imageType',
     'socialSharingEnabled',
+    'thumbnail',
   ],
   data() {
     return {
@@ -197,8 +194,11 @@ export default {
     }
   },
   computed: {
+    imgUrl() {
+      return this.image && this.image.url ? this.image.url : this.thumbnail
+    },
     isLoaded() {
-      return this.image && this.image.url
+      return this.image && !!this.image.url
     },
     sketchFabUid() {
       if (this.image.source !== 'sketchfab' || this.sketchFabfailure) {
