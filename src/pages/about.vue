@@ -82,15 +82,6 @@
               >
             </template>
           </i18n>
-          <i18n path="about.old-cc-search" tag="p">
-            <template #link>
-              <a
-                :aria-label="$t('about.aria.old-cc-search')"
-                href="https://oldsearch.creativecommons.org"
-                >https://oldsearch.creativecommons.org</a
-              >
-            </template>
-          </i18n>
           <h2 class="margin-top-large margin-bottom-normal">
             {{ $t('about.sources') }}
           </h2>
