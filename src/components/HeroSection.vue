@@ -77,21 +77,6 @@
         </div>
         <HomeLicenseFilter />
       </form>
-      <div class="help-links is-hidden-mobile">
-        <i18n
-          path="hero.old-cc-search.label"
-          tag="span"
-          class="margin-right-bigger"
-        >
-          <template #link>
-            <a
-              href="https://oldsearch.creativecommons.org/"
-              :aria-label="$t('hero.aria.old-cc-search')"
-              >{{ $t('hero.old-cc-search.link') }}</a
-            >
-          </template>
-        </i18n>
-      </div>
     </div>
     <img
       class="logo-cloud"
