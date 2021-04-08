@@ -1,13 +1,12 @@
 This is a temporary repository for the CC Search project while migrating from Creative Commons to Automattic. See all the repositories in the project below:
 
-|Original Repo|Automattic Repo|
-|--|--|
-[creativecommons/cccatalog-frontend](https://github.com/creativecommons/cccatalog-frontend) | [Automattic/ccsearch-frontend](https://github.com/Automattic/ccsearch-frontend)
-[creativecommons/cccatalog](https://github.com/creativecommons/cccatalog) | [Automattic/ccsearch-catalog](https://github.com/Automattic/ccsearch-catalog)
-[creativecommons/cccatalog-api](https://github.com/creativecommons/cccatalog-api) | [Automattic/ccsearch-api](https://github.com/Automattic/ccsearch-api)
+| Original Repo                                                                               | Automattic Repo                                                                 |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| [creativecommons/cccatalog-frontend](https://github.com/creativecommons/cccatalog-frontend) | [Automattic/ccsearch-frontend](https://github.com/Automattic/ccsearch-frontend) |
+| [creativecommons/cccatalog](https://github.com/creativecommons/cccatalog)                   | [Automattic/ccsearch-catalog](https://github.com/Automattic/ccsearch-catalog)   |
+| [creativecommons/cccatalog-api](https://github.com/creativecommons/cccatalog-api)           | [Automattic/ccsearch-api](https://github.com/Automattic/ccsearch-api)           |
 
-
-Repos have been renamed into a `ccsearch-` namespace, for now. All branch names and code has been preserved, with the *following exceptions*:
+Repos have been renamed into a `ccsearch-` namespace, for now. All branch names and code has been preserved, with the _following exceptions_:
 
 - GitHub Actions are commented out
 - `CODEOWNERS` files and `.cc-metadata.yml` files are deleted
