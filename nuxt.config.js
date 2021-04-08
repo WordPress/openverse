@@ -98,21 +98,6 @@ const head = {
       sizes: '192x192',
     },
   ],
-  /**
-   * This is where vocabulary's JS file is included. May be moved to an import in the future!
-   */
-  script: [
-    {
-      hid: 'vocabulary',
-      src: 'https://unpkg.com/@creativecommons/vocabulary/js/vocabulary.js',
-      defer: true,
-      callback: () => {
-        // Initialize the vocabulary global site header if it isn't already
-        if (document.querySelector('.cc-global-header')) return
-        window.vocabulary.createGlobalHeader()
-      },
-    },
-  ],
 }
 
 export default {
