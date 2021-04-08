@@ -1,10 +1,7 @@
 <template>
   <nav :aria-label="$t('header.aria.primary')" class="navbar">
     <div class="navbar-brand has-color-white">
-      <NuxtLink class="logo" to="/">
-        <IconSearchLogo />
-      </NuxtLink>
-
+      <NuxtLink class="logo" to="/">WP Photos</NuxtLink>
       <a
         role="button"
         :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
@@ -112,12 +109,10 @@
 </template>
 
 <script>
-import IconSearchLogo from '@creativecommons/vocabulary/assets/logos/products/search.svg?inline'
 import { SET_QUERY } from '~/store-modules/mutation-types'
 
 export default {
   name: 'NavSection',
-  components: { IconSearchLogo },
   props: {
     showNavSearch: {
       default: false,
@@ -149,10 +144,13 @@ export default {
 /* header */
 .logo {
   color: black;
-
-  svg {
-    height: 100%;
-    width: auto;
+  font-size: 2rem;
+  font-weight: bold;
+  &:link,
+  &:visited,
+  &:hover,
+  &:active {
+    text-decoration: none;
   }
 }
 
