@@ -54,6 +54,7 @@
           </div>
         </section>
         <div class="column is-half">
+          <LocaleSelector />
           <nav class="footer-navigation">
             <ul class="menu">
               <li>

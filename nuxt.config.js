@@ -116,7 +116,6 @@ export default {
   server: { port: process.env.PORT || 8443 },
   components: true,
   plugins: [
-    '~/plugins/i18n.js',
     { src: '~/plugins/ab-test-init.js', mode: 'client' },
     { src: '~plugins/ga.js', mode: 'client' },
   ],
@@ -127,7 +126,17 @@ export default {
   head,
   env,
   buildModules: ['@nuxtjs/svg', '@nuxtjs/eslint-module'],
-  modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap', 'nuxt-ssr-cache'],
+  modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap', 'nuxt-ssr-cache', 'nuxt-i18n'],
+  i18n: {
+    locales: [
+      { code: 'en', name: 'English', file: 'en.json' },
+      { code: 'fr', name: 'French', file: 'fr.json' },
+      { code: 'ru', name: 'Russian', file: 'ru.json' },
+    ],
+    lazy: true,
+    langDir: 'locales',
+    defaultLocale: 'en',
+  },
   sentry: {
     dsn:
       process.env.SENTRY_DSN ||
