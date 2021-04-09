@@ -24,7 +24,9 @@
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "format": "prettier --write .",
     "format:test": "prettier --check .",
-    "postinstall": "patch-package"
+    "lint-staged": "npm run lintfix && npm run format",
+    "postinstall": "patch-package",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@creativecommons/vocabulary": "^2020.9.2",
@@ -86,15 +88,6 @@
     "last 2 versions",
     "not ie <= 8"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,vue}": "eslint --cache --fix",
-    "*.{js,vue,css,md}": "prettier --write"
-  },
   "volta": {
     "node": "12.19.0",
     "npm": "6.14.8"
