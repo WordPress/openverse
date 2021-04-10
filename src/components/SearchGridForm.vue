@@ -6,10 +6,10 @@
     class="search-form padding-normal"
     @submit.prevent="onSubmit"
   >
-    <div class="is-flex is-hidden-touch">
+    <div class="is-flex">
       <button
         v-if="!isFilterVisible"
-        class="button toggle-filter padding-vertical-normal padding-horizontal-big"
+        class="button filter-toggle"
         type="button"
         @click.prevent="onToggleSearchGridFilter()"
         @keyup.enter.prevent="onToggleSearchGridFilter()"
@@ -17,7 +17,7 @@
         {{ $t('filters.title') }}
       </button>
       <div class="field has-addons search-input">
-        <div class="control has-icons-left margin-left-small">
+        <div class="control search-control has-icons-left margin-left-small">
           <label for="searchInput">
             <input
               id="searchInput"
@@ -25,7 +25,7 @@
               :aria-label="$t('browse-page.aria.search')"
               required="required"
               autofocus="true"
-              class="input is-medium"
+              class="search-input__input input"
               type="search"
               :placeholder="searchBoxPlaceholder"
               :value="searchTermsModel"
@@ -33,8 +33,19 @@
               @keyup.enter="onSubmit"
             />
           </label>
-          <span class="icon is-medium is-left margin-left-small">
-            <i class="icon search is-size-5" />
+          <span class="icon is-left">
+            <svg
+              viewBox="0 0 30 30"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              class="icon__svg"
+            >
+              <path
+                d="M29.59 25.94l-5.842-5.842a1.405 1.405 0 00-.996-.41h-.955a12.128 12.128 0 002.578-7.5C24.375 5.455 18.92 0 12.187 0 5.455 0 0 5.455 0 12.188c0 6.732 5.455 12.187 12.188 12.187 2.83 0 5.431-.96 7.5-2.578v.955c0 .375.146.732.41.996l5.841 5.842a1.4 1.4 0 001.987 0l1.658-1.658c.55-.551.55-1.442.006-1.992zm-17.402-6.253a7.496 7.496 0 01-7.5-7.5c0-4.142 3.351-7.5 7.5-7.5 4.142 0 7.5 3.352 7.5 7.5 0 4.143-3.352 7.5-7.5 7.5z"
+                fill="currentColor"
+              />
+            </svg>
           </span>
         </div>
         <div class="control">
@@ -44,45 +55,6 @@
             :value="$t('browse-page.search-form.button')"
             @click.prevent="onSubmit"
             @keyup.enter.prevent="onSubmit"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="is-flex is-hidden-desktop">
-      <button
-        v-if="!isFilterVisible"
-        class="button small toggle-filter padding-small"
-        type="button"
-        @click.prevent="onToggleSearchGridFilter()"
-        @keyup.enter.prevent="onToggleSearchGridFilter()"
-      >
-        {{ $t('filters.title') }}
-      </button>
-      <div class="field has-addons search-input">
-        <div class="control has-icons-left margin-left-small">
-          <label for="searchInputMobile">
-            <input
-              id="searchInputMobile"
-              ref="search"
-              v-model="searchTermsModel"
-              :aria-label="$t('browse-page.aria.search')"
-              required="required"
-              autofocus="true"
-              class="input"
-              type="search"
-              :placeholder="searchBoxPlaceholder"
-              @keyup.enter="onSubmit"
-            />
-          </label>
-          <span class="icon is-left">
-            <i class="icon search is-size-6" />
-          </span>
-        </div>
-        <div class="control">
-          <input
-            type="submit"
-            class="button is-primary small"
-            :value="$t('browse-page.search-form.button')"
           />
         </div>
       </div>
@@ -160,17 +132,18 @@ export default {
 <style lang="scss" scoped>
 @import 'bulma/sass/utilities/_all.sass';
 
-.toggle-filter {
-  height: 3.875rem;
+.filter-toggle {
   text-transform: none;
   font-size: 1rem;
-  border: 2px solid #d8d8d8;
-  box-sizing: border-box;
-  border-radius: 4px;
-  width: 68px;
-
-  &.small {
-    height: 2.5rem;
+  border-color: #d8d8d8;
+  padding: 0.5rem;
+  height: 2.5rem;
+  &:focus:not(:active) {
+    box-shadow: 0 0 0 0.125em rgba(0, 0, 0, 0.25);
+  }
+  @include desktop {
+    height: 3.875rem;
+    padding: 1rem 1.5rem;
   }
 }
 
@@ -182,34 +155,48 @@ export default {
   z-index: 10;
 }
 
+.search-input__input {
+  font-size: 1rem;
+  height: 2.5rem;
+  @include desktop {
+    font-size: 1.43rem;
+    height: 3.875rem;
+  }
+}
 .search-input {
-  width: 70%;
-
-  @include touch {
-    width: 100%;
-  }
-
-  .control:first-child {
-    width: 100%;
+  width: 100%;
+  @include desktop {
+    width: 70%;
   }
 }
 
-.button .icon {
-  height: auto;
-}
-
-.icon {
+span.icon {
   margin-top: auto;
   margin-bottom: auto;
   bottom: 0;
-  .search {
+  @include desktop {
+    margin-left: 0.5rem;
+  }
+}
+.icon.search {
+  padding: 0.8rem;
+  @include desktop {
     padding: 1.2rem;
     max-height: 2.5rem;
     max-width: 2.5rem;
+    font-size: 1.12rem;
+  }
+}
 
-    @include touch {
-      padding: 0.8rem;
-    }
+.control:first-child {
+  width: 100%;
+}
+input.button {
+  font-size: 1rem;
+  padding: 0.5rem calc(1rem + 0.2rem);
+  @include desktop {
+    font-size: 1.43rem;
+    padding: calc(2rem - 0.187rem) 2.5rem;
   }
 }
 </style>
