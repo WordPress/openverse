@@ -92,10 +92,11 @@ const BrowsePage = {
   watch: {
     query(newQuery) {
       if (newQuery) {
-        this.$router.push({
+        const newPath = this.localePath({
           path: this.$route.path,
           query: this.$store.state.query,
         })
+        this.$router.push(newPath)
         this.getImages(newQuery)
       }
     },

@@ -46,7 +46,7 @@
       "description": "If you donate $5 today, and everyone else does the same, we can keep growing our database of freely reusable content. For you. For all of us.",
       "alternative-description": "Only 1% of people reading this will donate. Be one of them and help us sustain CC Search.",
       "yes": "Yes, I'll donate now",
-      "no": "Not today"
+      "no": "Не сегодня"
     }
   },
   "footer": {
@@ -78,7 +78,7 @@
     }
   },
   "about": {
-    "title": "About CC Search",
+    "title": "О Нас",
     "description": {
       "content": "CC Search is a tool that allows openly licensed and public domain works to be discovered and used by everyone. Creative Commons, the nonprofit behind CC Search, is the maker of the {link}, used over 1.4 billion times to help creators share knowledge and creativity online.",
       "licenses-link": "CC licenses"
@@ -262,8 +262,13 @@
     "collection-size": "Collection size: {count} images"
   },
   "not-found": "Page Not Found",
+  "search-tab": {
+    "image": "Изображения",
+    "audio": "Аудио",
+    "video": "Видео"
+  },
   "filters": {
-    "title": "Filters",
+    "title": "Фильтры",
     "filter-by": "Filter By",
     "licenses": {
       "title": "License or Public Domain",
@@ -335,14 +340,14 @@
     "other-source": "Not finding what you need? Search other sources",
     "search-rating": {
       "content": "Are these results relevant?",
-      "yes": "Yes",
-      "no": "No",
+      "yes": "Да",
+      "no": "Нет",
       "feedback": "Thank you for the feedback!"
     },
     "search-form": {
       "placeholder": "Search all images",
       "collection-placeholder": "Search this collection",
-      "button": "Search"
+      "button": "Найти"
     },
     "license-description": {
       "title": "License CC",
@@ -466,8 +471,8 @@
       }
     },
     "form": {
-      "title": "CC Search does not yet support built-in {type} search.",
-      "caption": "Click on a source below to directly search other collections of CC-licensed {type}.{break}Please note that Use filters are not supported for {filter}."
+      "title": "Мы пока еще не поддерживаем поиск {type}.",
+      "caption": "Нажмите на источники ниже чтобы искать напрямую в других коллекциях {type} с лицензиями CC.{break}Please note that Use filters are not supported for {filter}."
     }
   }
 }

@@ -102,13 +102,14 @@ export default {
   methods: {
     onSubmit() {
       this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm } })
-      this.$router.push({
+      const newPath = this.localePath({
         path: '/search',
         query: {
           q: this.form.searchTerm,
           ...filtersToQueryData(this.$store.state.filters),
         },
       })
+      this.$router.push(newPath)
     },
   },
 }

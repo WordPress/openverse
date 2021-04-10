@@ -262,6 +262,11 @@
     "collection-size": "Collection size: {count} images"
   },
   "not-found": "Page Not Found",
+  "search-tab": {
+    "image": "Image",
+    "audio": "Audio",
+    "video": "Video"
+  },
   "filters": {
     "title": "Filters",
     "filter-by": "Filter By",

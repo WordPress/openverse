@@ -12,9 +12,9 @@
           <NuxtLink
             aria-live="polite"
             class="is-size-5"
-            :to="{ path: `/search/${type}`, query: $route.query }"
+            :to="localePath({ path: `/search/${type}`, query: $route.query })"
           >
-            {{ capitalize(type) }}
+            {{ $t(`search-tab.${type}`) }}
           </NuxtLink>
         </li>
       </ul>

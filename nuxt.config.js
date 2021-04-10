@@ -129,13 +129,19 @@ export default {
   modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap', 'nuxt-ssr-cache', 'nuxt-i18n'],
   i18n: {
     locales: [
-      { code: 'en', name: 'English', file: 'en.json' },
       { code: 'fr', name: 'French', file: 'fr.json' },
       { code: 'ru', name: 'Russian', file: 'ru.json' },
+      { code: 'en', name: 'English', file: 'en.json' },
     ],
     lazy: true,
     langDir: 'locales',
+    strategy: 'prefix_and_default',
     defaultLocale: 'en',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      alwaysRedirect: true,
+    },
   },
   sentry: {
     dsn:
