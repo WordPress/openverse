@@ -121,7 +121,7 @@ $hero-height: 85vh;
     border-top-right-radius: 0;
     width: 100%;
     max-width: 100%;
-    @include tablet {
+    @include desktop {
       width: 570px;
       font-size: 1.75rem;
       height: 5.063rem;
@@ -133,7 +133,7 @@ $hero-height: 85vh;
     border-top-left-radius: 0;
     font-size: 1rem;
     padding: 0.5rem 1.2rem;
-    @include tablet {
+    @include desktop {
       font-size: 1.75rem;
       padding: 2.407rem 2.5rem;
     }
@@ -161,7 +161,7 @@ $hero-height: 85vh;
   object-fit: cover;
   object-position: left center;
 
-  @include tablet {
+  @include desktop {
     object-fit: initial;
     height: auto;
     padding: 0;
