@@ -75,52 +75,51 @@
           <span v-else>{{ image.creator }}</span>
         </span>
       </div>
-      <section class="tabs">
-        <ul role="tablist">
-          <li
+      <section class="tabs-lined">
+        <div role="tablist" :aria-label="$t('photo-details.aria.details')">
+          <button
+            id="reuse"
             role="tab"
-            :aria-selected="activeTab == 0"
+            aria-controls="tab-reuse"
+            :aria-selected="activeTab === 0"
             :class="tabClass(0, 'tab')"
+            @click.prevent="setActiveTab(0)"
+            @keyup.enter.prevent="setActiveTab(0)"
           >
-            <a
-              href="#panel0"
-              @click.prevent="setActiveTab(0)"
-              @keyup.enter.prevent="setActiveTab(0)"
-            >
-              {{ $t('photo-details.reuse.title') }}
-            </a>
-          </li>
-          <li
+            {{ $t('photo-details.reuse.title') }}
+          </button>
+          <button
+            id="information"
             role="tab"
-            :aria-selected="activeTab == 1"
+            aria-controls="tab-information"
+            :aria-selected="activeTab === 1"
             :class="tabClass(1, 'tab')"
+            @click.prevent="setActiveTab(1)"
+            @keyup.enter.prevent="setActiveTab(1)"
           >
-            <a
-              href="#panel1"
-              @click.prevent="setActiveTab(1)"
-              @keyup.enter.prevent="setActiveTab(1)"
-            >
-              {{ $t('photo-details.information.title') }}
-            </a>
-          </li>
-          <li
+            {{ $t('photo-details.information.title') }}
+          </button>
+          <button
             v-if="socialSharingEnabled"
+            id="social-sharing"
             role="tab"
+            aria-controls="tab-social-sharing"
             :aria-selected="activeTab == 2"
             :class="tabClass(2, 'a')"
+            @click.prevent="setActiveTab(2)"
+            @keyup.enter.prevent="setActiveTab(2)"
           >
-            <a
-              href="#panel2"
-              @click.prevent="setActiveTab(2)"
-              @keyup.enter.prevent="setActiveTab(2)"
-            >
-              {{ $t('photo-details.share') }}
-            </a>
-          </li>
-        </ul>
-      </section>
-      <section class="photo_info-ctr tabs-content">
-        <div :class="tabClass(0, 'tabs-panel')">
+            {{ $t('photo-details.share') }}
+          </button>
+        </div>
+        <!-- <section class="photo_info-ctr tabs-content">-->
+        <div
+          id="tab-reuse"
+          role="tabpanel"
+          aria-labelledby="reuse"
+          tabindex="0"
+          :class="tabClass(0, 'tabs-panel')"
+        >
           <ImageAttribution
             data-testid="image-attribution"
             :image="image"
@@ -129,7 +128,13 @@
             :attribution-html="attributionHtml()"
           />
         </div>
-        <div :class="tabClass(1, 'tabs-panel')">
+        <div
+          id="tab-information"
+          role="tabpanel"
+          aria-labelledby="information"
+          tabindex="0"
+          :class="tabClass(1, 'tabs-panel')"
+        >
           <ImageInfo
             data-testid="image-info"
             :image="image"
@@ -140,7 +145,13 @@
             :image-type="imageType"
           />
         </div>
-        <div :class="tabClass(2, 'tabs-panel')">
+        <div
+          id="tab-social-sharing"
+          role="tabpanel"
+          aria-labelledby="social-sharing"
+          tabindex="0"
+          :class="tabClass(2, 'tabs-panel')"
+        >
           <ImageSocialShare
             v-if="socialSharingEnabled"
             :image="image"
@@ -269,6 +280,48 @@ export default {
 <style lang="scss" scoped>
 @import '~/styles/photodetails.scss';
 @import 'bulma/sass/utilities/_all';
+
+.tabs-lined {
+  display: flex;
+  flex-direction: column;
+}
+.tabs-lined .tabs-panel {
+  display: none;
+  padding: 2rem 0 0;
+}
+.tabs-lined .tabs-panel.is-active {
+  display: block;
+}
+[role='tablist'] {
+  display: flex;
+  border-bottom: 0.125rem solid #d8d8d8;
+}
+.tab {
+  appearance: none;
+  border-image-source: unset;
+  border-image-outset: unset;
+  border-image-repeat: unset;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin: 0 2rem -0.125rem 0;
+  padding: 0.5rem 0 1rem;
+  position: relative;
+  border-width: 0;
+  background: transparent;
+  border-bottom: 0.25rem solid transparent;
+  color: #333;
+
+  &:first-child {
+    padding-left: 0;
+  }
+  &.is-active,
+  &:hover {
+    border-bottom-color: #333;
+  }
+  &:focus-visible {
+    box-shadow: 0 0 0 0.125rem #d8d8d8;
+  }
+}
 
 @include touch {
   .image-info {
