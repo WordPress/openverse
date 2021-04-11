@@ -1,36 +1,36 @@
 {
   "hero": {
-    "title": "Поиск контента, который можно использовать",
+    "title": "Поиск контента для использования",
     "subtitle": "Просмотр более 500 миллионов изображений, которые можно использовать",
     "search": {
       "placeholder": "Поиск по всему контенту",
-      "button": "Поиск"
+      "button": "Найти"
     },
     "caption": {
-      "content": "All our content is under Creative Commons licenses or in the public domain. {link} about CC licenses and tools.",
-      "link": "Learn more"
+      "content": "Весь наш контент под лицензиями Creative Commons или общественное достояние. {link} о лицензиях и инструментах CC.",
+      "link": "Узнать больше"
     },
     "license-filter": {
-      "label": "I want something I can"
+      "label": "Я хочу найти то, что можно"
     },
     "locale": {
-      "label": "Languages available",
-      "icon": "locale"
+      "label": "Языки",
+      "icon": "локаль"
     },
     "aria": {
-      "search": "search",
-      "caption": "about cc licenses"
+      "search": "поиск",
+      "caption": "о лицензиях cc"
     }
   },
   "header": {
-    "about": "Our Story",
-    "source": "Sources",
-    "search-guide": "Search Guide",
-    "meta-search": "Meta Search",
-    "feedback": "Feedback",
-    "support": "Support Us",
+    "about": "Наша История",
+    "source": "Источники",
+    "search-guide": "Руководство по Поиску",
+    "meta-search": "Мета Поиск",
+    "feedback": "Обратная связь",
+    "support": "Поддержите нас",
     "extension": "Extension",
-    "placeholder": "Search all content",
+    "placeholder": "Поиск по всему контенту",
     "aria": {
       "primary": "primary",
       "menu": "menu",
@@ -39,13 +39,13 @@
       "extension": "extension"
     },
     "licenses": "The Licenses",
-    "about-tab": "About",
-    "resources-tab": "Resources",
+    "about-tab": "О нас",
+    "resources-tab": "Ресурсы",
     "api": "API",
     "donation-banner": {
       "description": "If you donate $5 today, and everyone else does the same, we can keep growing our database of freely reusable content. For you. For all of us.",
       "alternative-description": "Only 1% of people reading this will donate. Be one of them and help us sustain CC Search.",
-      "yes": "Yes, I'll donate now",
+      "yes": "Да, я отправлю сегодня",
       "no": "Не сегодня"
     }
   },
@@ -78,7 +78,7 @@
     }
   },
   "about": {
-    "title": "О Нас",
+    "title": "About CC Search",
     "description": {
       "content": "CC Search is a tool that allows openly licensed and public domain works to be discovered and used by everyone. Creative Commons, the nonprofit behind CC Search, is the maker of the {link}, used over 1.4 billion times to help creators share knowledge and creativity online.",
       "licenses-link": "CC licenses"
@@ -126,7 +126,11 @@
       "where": "Where does the content on CC Search come from?",
       "content": "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through CC Search.",
       "provider": "Some providers have multiple different groupings of content within them. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen, diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections.",
-      "europeana": "CC Search is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. CC Search is able to index hundreds of valuable sources, through a single integration with the {link-api}."
+      "europeana": "CC Search is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. CC Search is able to index hundreds of valuable sources, through a single integration with the {link-api}.",
+      "europeana-link": "Europeana",
+      "europeana-api":  "Europeana API",
+      "smithsonian": "Smithsonian Institute",
+      "flickr": "Flickr"
     },
     "new-content": {
       "next": "How do we decide what sources to add next?",
@@ -141,9 +145,11 @@
   "meta-search-page": {
     "title": "Meta Search",
     "intro": "CC Search is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our {link}.",
+    "link": "sources",
     "license": "The internet is a big place! There are plenty of search portals and collections, hosting CC-licensed and public domain content, which we aren’t able to index or surface results from within the CC Search interface. These are important sources of CC-licensed and public domain content, and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located.",
     "content": "What content types can I search for using the Meta Search feature?",
     "content-types": "Meta Search on CC Search currently supports image, audio, and video search on external sites.",
+    "use": " Use ",
     "images": {
       "title": "How does the Meta Search feature work for Images?",
       "content": "CC Search supports built-in image search. When you enter a query on the CC Search homepage, a page of results will be displayed. Scrolling to the bottom of the page, you have two choices:",
@@ -158,13 +164,16 @@
     },
     "new": {
       "title": "Can I suggest new sources for Meta Search?",
-      "content": "Yes, please! Create an {issue} in our GitHub repository or send us an {email} and tell us about the new sources you’d like to see included."
+      "content": "Yes, please! Create an {issue} in our GitHub repository or send us an {email} and tell us about the new sources you’d like to see included.",
+      "issue": "issue",
+      "email": "email"
     },
     "why": {
       "title": "Why did you build this?",
       "content": "For many years, CC has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. These platforms included Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter, and SoundCloud. The search experience looked like this:",
       "new": "For users of the legacy CC Meta Search site, the Meta Search feature on CC Search will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the Meta Search feature builds on this functionality, allowing us to quickly add new sources to Meta Search as we discover them, and support new content types in the future, as we expand.",
-      "feedback": "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}"
+      "feedback": "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}.",
+      "feedback-link": "feedback"
     }
   },
   "search-guide": {
@@ -207,7 +216,7 @@
   },
   "feedback": {
     "title": "Feedback",
-    "description": "Thank you for using CC Search! We welcome your ideas for improving the tool below. To provide regular user feedback, join the {channel} channel on {slack}.",
+    "description": "Thank you for using CC Search! We welcome your ideas for improving the tool below.",
     "improve": "Help us Improve",
     "bug": "Report a Bug",
     "loading": "Loading...",
@@ -262,6 +271,7 @@
     "collection-size": "Collection size: {count} images"
   },
   "not-found": "Page Not Found",
+  "error-occurred": "An error occurred",
   "search-tab": {
     "image": "Изображения",
     "audio": "Аудио",
@@ -269,7 +279,7 @@
   },
   "filters": {
     "title": "Фильтры",
-    "filter-by": "Filter By",
+    "filter-by": "Отфильтровать по",
     "licenses": {
       "title": "License or Public Domain",
       "cc0": "CC0",
@@ -287,13 +297,13 @@
       "modification": "Modify or adapt"
     },
     "providers": {
-      "title": "Source"
+      "title": "Источник"
     },
     "categories": {
-      "title": "Image Type",
-      "photograph": "Photographs",
-      "illustration": "Illustrations",
-      "digitized-artwork": "Digitized Artworks"
+      "title": "Тип Изображения",
+      "photograph": "Фотографии",
+      "illustration": "Иллюстрации",
+      "digitized-artwork": "Оцифрованные Объекты Искусства"
     },
     "extensions": {
       "title": "File Type",
@@ -328,14 +338,16 @@
     }
   },
   "filter-list": {
-    "filter-by": "Filter results by",
-    "hide": "Hide filters",
-    "clear": "Clear filters",
-    "show": "Show results"
+    "filter-by": "Отфильтровать результаты по",
+    "hide": "Спрятать фильтры",
+    "clear": "Очистить фильтры",
+    "show": "Показать результаты"
   },
   "browse-page": {
+    "result-count": "{count} изображений",
+    "result-count-more": "Более {count} изображений",
     "no-more": "No more images :(",
-    "load": "Load more results",
+    "load": "Загрузить еще",
     "error": "Error fetching images:",
     "other-source": "Not finding what you need? Search other sources",
     "search-rating": {
@@ -347,7 +359,7 @@
     "search-form": {
       "placeholder": "Search all images",
       "collection-placeholder": "Search this collection",
-      "button": "Найти"
+      "button": "Search"
     },
     "license-description": {
       "title": "License CC",
@@ -405,10 +417,11 @@
       "title": "Information",
       "type": "Type:",
       "provider": "Provider:",
-      "dimensions": "Dimensions",
-      "source": "Source",
+      "dimensions": "Dimensions:",
+      "source": "Source:",
       "license": "License",
-      "tags": "Tags"
+      "tags": "Tags",
+      "pixels": "pixels"
     },
     "share": "Share",
     "survey": {
@@ -438,7 +451,8 @@
         "content": "You must fill out this {link} to report copyright infringement. No action will be taken until the form is filled out and submitted.",
         "provider": "We recommend doing the same at the source, {link}.",
         "thanks": "Thank you for reporting an issue with the results of CC Search!",
-        "error": "There was an error with the report submission. Please try again."
+        "error": "There was an error with the report submission. Please try again.",
+        "link": "DMCA form"
       }
     },
     "aria": {
@@ -471,8 +485,8 @@
       }
     },
     "form": {
-      "title": "Мы пока еще не поддерживаем поиск {type}.",
-      "caption": "Нажмите на источники ниже чтобы искать напрямую в других коллекциях {type} с лицензиями CC.{break}Please note that Use filters are not supported for {filter}."
+      "title": "CC Search does not yet support built-in {type} search.",
+      "caption": "Click on a source below to directly search other collections of CC-licensed {type}.{break}Please note that Use filters are not supported for {filter}."
     }
   }
 }
