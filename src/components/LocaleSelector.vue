@@ -17,11 +17,11 @@
       </span>
       <div class="select">
         <select ref="select" aria-labelledby="locale-label" @change="setLocale">
-          <option :key="currentLocale.code" :value="currentLocale.code">
-            {{ currentLocale.name }}
+          <option :key="$i18n.locale" :value="$i18n.locale">
+            {{ $i18n.localeProperties.name }}
           </option>
           <option
-            v-for="locale in availableLocales"
+            v-for="locale in otherAvailableLocales"
             :key="locale.code"
             :value="locale.code"
           >
@@ -50,19 +50,13 @@ export default {
     }
   },
   computed: {
-    currentLocale() {
-      return this.$i18n.locales.filter((i) => i.code === this.$i18n.locale)[0]
-    },
-    availableLocales() {
+    otherAvailableLocales() {
       return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale)
     },
   },
   methods: {
     setLocale(event) {
-      const { target } = event
-      const { value: localeCode } = target
-      this.$i18n.setLocale(localeCode)
-      window.localStorage.setItem('locale', localeCode)
+      this.$i18n.setLocale(event.target.value)
     },
   },
 }

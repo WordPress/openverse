@@ -2,7 +2,6 @@
   <!-- eslint-disable vuejs-accessibility/no-autofocus -->
   <div class="hero">
     <div class="hero-center has-text-centered">
-      <!-- <div class="locale-block"><locale-selector /></div> -->
       <h1 class="title is-2 padding-bottom-normal">
         {{ $t('hero.title') }}
       </h1>

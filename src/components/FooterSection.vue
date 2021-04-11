@@ -18,10 +18,6 @@
             <span class="is-block">{{ $t('footer.address.title') }}</span>
             <span>{{ $t('footer.address.address') }}</span>
           </address>
-          <a href="mailto:info@creativecommons.org" class="mail is-block">
-            info@creativecommons.org
-          </a>
-          <a href="tel://+1-415-429-6753" class="phone">+1-415-429-6753</a>
 
           <div class="margin-vertical-large">
             <a

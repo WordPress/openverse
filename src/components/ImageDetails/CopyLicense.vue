@@ -1,5 +1,7 @@
 <template>
   <div class="copy-license margin-vertical-normal">
+    <!-- TODO: change to accommodate different sentence structures -->
+    <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
     <h5 class="b-header margin-bottom-small">
       {{ $t('photo-details.reuse.copy-license.title') }}
     </h5>

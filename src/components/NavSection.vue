@@ -1,7 +1,9 @@
 <template>
   <nav :aria-label="$t('header.aria.primary')" class="navbar">
     <div class="navbar-brand has-color-white">
+      <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
       <NuxtLink class="logo" :to="localePath('/')">WP Photos</NuxtLink>
+      <!-- eslint-enable -->
       <a
         role="button"
         :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"

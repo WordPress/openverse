@@ -62,7 +62,10 @@
           {{ image.title }}
         </h1>
         <span v-if="image.creator" class="caption has-text-weight-semibold">
+          <!-- TODO: need to change to accommodate sentence order in different languages -->
+          <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
           by
+          <!-- eslint-enable -->
           <a
             v-if="image.creator_url"
             :aria-label="'author' + image.creator"

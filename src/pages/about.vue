@@ -17,9 +17,12 @@
           </i18n>
           <i18n path="about.collection" tag="p">
             <template v-slot:common-crawl>
+              <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
+              -->
               <a aria-label="common crawl" href="http://commoncrawl.org/"
                 >Common Crawl</a
               >
+              <!-- eslint-enable -->
             </template>
           </i18n>
           <i18n path="about.planning.content" tag="p">
@@ -131,7 +134,7 @@ const AboutPage = {
   },
   methods: {
     getProviderImageCount(imageCount) {
-      return imageCount.toLocaleString('en')
+      return imageCount.toLocaleString(this.$i18n.locale)
     },
   },
 }

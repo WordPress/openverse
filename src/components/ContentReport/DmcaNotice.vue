@@ -11,7 +11,7 @@
           :href="dmcaFormUrl"
           target="_blank"
           rel="noopener"
-          >DMCA form</a
+          >{{ $t('photo-details.content-report.dmca.link') }}</a
         >
       </template>
     </i18n>

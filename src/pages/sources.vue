@@ -22,26 +22,28 @@
           class="table is-bordered is-striped margin-bottom-large margin-top-normal"
         >
           <thead>
-            <th
-              tabindex="0"
-              @click="sortTable('display_name')"
-              @keypress.enter="sortTable('display_name')"
-            >
-              <span class="table-header-inner">
-                {{ $t('sources.providers.source') }}
-                <span class="icon"><i class="icon sort" /></span>
-              </span>
-            </th>
-            <th
-              tabindex="0"
-              @click="sortTable('image_count')"
-              @keypress.enter="sortTable('image_count')"
-            >
-              <span class="table-header-inner">
-                {{ $t('sources.providers.item') }}
-                <span class="icon"><i class="icon sort" /></span>
-              </span>
-            </th>
+            <tr>
+              <th
+                tabindex="0"
+                @click="sortTable('display_name')"
+                @keypress.enter="sortTable('display_name')"
+              >
+                <span class="table-header-inner">
+                  {{ $t('sources.providers.source') }}
+                  <span class="icon"><i class="icon sort" /></span>
+                </span>
+              </th>
+              <th
+                tabindex="0"
+                @click="sortTable('image_count')"
+                @keypress.enter="sortTable('image_count')"
+              >
+                <span class="table-header-inner">
+                  {{ $t('sources.providers.item') }}
+                  <span class="icon"><i class="icon sort" /></span>
+                </span>
+              </th>
+            </tr>
           </thead>
           <tbody>
             <tr v-for="(imageProvider, index) in sortedProviders" :key="index">
@@ -73,12 +75,14 @@
           class="body-big margin-vertical-normal"
         >
           <template v-slot:flickr>
-            <a aria-label="flickr" href="https://www.flickr.com/">Flickr</a>
+            <a aria-label="flickr" href="https://www.flickr.com/">{{
+              $t('sources.cc-content.flickr')
+            }}</a>
           </template>
           <template v-slot:smithsonian>
-            <a aria-label="smithsonian" href="https://www.si.edu/"
-              >Smithsonian Institute</a
-            >
+            <a aria-label="smithsonian" href="https://www.si.edu/">{{
+              $t('sources.cc-content.smithsonian')
+            }}</a>
           </template>
         </i18n>
         <i18n
@@ -87,15 +91,15 @@
           class="body-big margin-vertical-normal"
         >
           <template v-slot:link>
-            <a aria-label="europeana" href="https://www.europeana.eu/en"
-              >Europeana</a
-            >
+            <a aria-label="europeana" href="https://www.europeana.eu/en">{{
+              $t('sources.cc-content.europeana-link')
+            }}</a>
           </template>
           <template v-slot:link-api>
             <a
               aria-label="europeana-api"
               href="https://pro.europeana.eu/page/apis"
-              >Europeana API</a
+              >{{ $t('sources.cc-content.europeana-api') }}</a
             >
           </template>
         </i18n>
@@ -160,7 +164,7 @@ const SourcePage = {
   },
   methods: {
     getProviderImageCount(imageCount) {
-      return imageCount.toLocaleString('en')
+      return imageCount.toLocaleString(this.$i18n.locale)
     },
     sortTable(field) {
       let direction = 'asc'
