@@ -7,3 +7,13 @@
     <FooterSection />
   </div>
 </template>
+<script>
+const withNavSearch = {
+  name: 'with-nav-search',
+  layout: 'with-nav-search',
+  head() {
+    return this.$nuxtI18nHead({ addSeoAttributes: true })
+  },
+}
+export default withNavSearch
+</script>

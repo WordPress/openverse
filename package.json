@@ -24,6 +24,7 @@
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "format": "prettier --write .",
     "format:test": "prettier --check .",
+    "vue-i18n-extract": "vue-i18n-extract report -v './src/**/*.?(js|vue)' -l './src/locales/*.?(json)'",
     "postinstall": "patch-package"
   },
   "dependencies": {
@@ -55,15 +56,16 @@
     "patch-package": "^6.2.2",
     "sass-loader": "^10.0.1",
     "uuid": "^8.3.1",
-    "vue-i18n": "^8.21.0"
+    "vue-i18n": "^8.24.3"
   },
   "devDependencies": {
+    "@intlify/eslint-plugin-vue-i18n": "^0.11.1",
     "@nuxt/types": "^2.14.7",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@types/jest": "^26.0.10",
     "@vue/test-utils": "^1.0.4",
     "cypress": "^5.0.0",
-    "eslint": "^7.7.0",
+    "eslint": "^7.24.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-cypress": "^2.11.1",
@@ -76,6 +78,7 @@
     "jest-transform-stub": "^2.0.0",
     "lint-staged": "^10.2.13",
     "prettier": "^2.1.1",
+    "vue-i18n-extract": "^1.2.0",
     "vue-jest": "^3.0.6"
   },
   "engines": {

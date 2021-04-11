@@ -129,9 +129,9 @@ export default {
   modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap', 'nuxt-ssr-cache', 'nuxt-i18n'],
   i18n: {
     locales: [
-      { code: 'fr', name: 'French', file: 'fr.json' },
-      { code: 'ru', name: 'Russian', file: 'ru.json' },
-      { code: 'en', name: 'English', file: 'en.json' },
+      { code: 'fr', iso: 'fr-FR', name: 'French', file: 'fr.json' },
+      { code: 'ru', iso: 'ru-RU', name: 'Russian', file: 'ru.json' },
+      { code: 'en', iso: 'en', name: 'English', file: 'en.json' },
     ],
     lazy: true,
     langDir: 'locales',
@@ -142,6 +142,9 @@ export default {
       cookieKey: 'i18n_redirected',
       alwaysRedirect: true,
     },
+    seo: false,
+    // TODO: change this to the production URL
+    baseUrl: 'http://localhost:8443',
   },
   sentry: {
     dsn:
