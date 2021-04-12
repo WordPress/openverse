@@ -2,6 +2,7 @@
   <div :aria-label="$t('photo-details.aria.main')">
     <PhotoDetails
       :image="image"
+      :thumbnail="thumbnailURL"
       :bread-crumb-u-r-l="breadCrumbURL"
       :should-show-breadcrumb="shouldShowBreadcrumb"
       :query="query"
@@ -72,13 +73,16 @@ const PhotoDetailPage = {
       this.getRelatedImages()
     },
   },
+  async asyncData({ env, route }) {
+    return { thumbnailURL: `${env.apiUrl}thumbs/${route.params.id}` }
+  },
   async fetch() {
     // Clear related images if present
     if (this.relatedImages && this.relatedImages.length > 0) {
       this.SET_RELATED_IMAGES({ relatedImages: [], relatedImageCount: 0 })
     }
 
-    // Laad the image + related images in parallel
+    // Load the image + related images in parallel
     await Promise.all([
       this.loadImage(this.$route.params.id),
       this[FETCH_RELATED_IMAGES]({ id: this.$route.params.id }),
