@@ -14,7 +14,7 @@
       tag="p"
       class="caption is-pulled-right margin-small"
     >
-      <template v-slot:link>
+      <template #link>
         <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{
           $t('filters.license-explanation.link')
         }}</a>
@@ -26,7 +26,7 @@
       tag="p"
       class="caption is-pulled-right margin-small"
     >
-      <template v-slot:link>
+      <template #link>
         <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{
           $t('filters.license-explanation.link')
         }}</a>
