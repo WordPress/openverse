@@ -50,6 +50,6 @@ describe('Image Info', () => {
     const wrapper = render(ImageInfo, options)
 
     expect(wrapper.html()).toContain(`${props.imageWidth}`)
-    expect(wrapper.html()).toContain(`${props.imageHeight} pixels`)
+    expect(wrapper.html()).toContain(`${props.imageHeight}`)
   })
 })
