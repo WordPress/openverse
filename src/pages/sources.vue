@@ -10,7 +10,7 @@
     <div class="container is-fluid columns is-variable is-4">
       <div class="column">
         <i18n path="sources.detail" tag="p">
-          <template v-slot:single-name>
+          <template #single-name>
             <strong>
               {{ $t('sources.single-name') }}
             </strong>
@@ -74,12 +74,12 @@
           tag="p"
           class="body-big margin-vertical-normal"
         >
-          <template v-slot:flickr>
+          <template #flickr>
             <a aria-label="flickr" href="https://www.flickr.com/">{{
               $t('sources.cc-content.flickr')
             }}</a>
           </template>
-          <template v-slot:smithsonian>
+          <template #smithsonian>
             <a aria-label="smithsonian" href="https://www.si.edu/">{{
               $t('sources.cc-content.smithsonian')
             }}</a>
@@ -90,12 +90,12 @@
           tag="p"
           class="body-big margin-vertical-normal"
         >
-          <template v-slot:link>
+          <template #link>
             <a aria-label="europeana" href="https://www.europeana.eu/en">{{
               $t('sources.cc-content.europeana-link')
             }}</a>
           </template>
-          <template v-slot:link-api>
+          <template #link-api>
             <a
               aria-label="europeana-api"
               href="https://pro.europeana.eu/page/apis"

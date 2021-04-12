@@ -13,7 +13,7 @@
           {{ $t('search-guide.exact.title') }}
         </h3>
         <i18n path="search-guide.exact.content" tag="p">
-          <template v-slot:link>
+          <template #link>
             <!-- eslint-disable -->
             <a
               aria-label="quote unquote Claude Monet"
@@ -36,22 +36,22 @@
         <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
         <ul>
           <i18n path="search-guide.combine.and" tag="li" class="listitem">
-            <template v-slot:symbol>
+            <template #symbol>
               <code aria-label="plus" class="literal">+</code>
             </template>
           </i18n>
           <i18n path="search-guide.combine.or" tag="li" class="listitem">
-            <template v-slot:symbol>
+            <template #symbol>
               <code aria-label="vertical bar" class="literal">|</code>
             </template>
           </i18n>
           <i18n path="search-guide.combine.negate" tag="li" class="listitem">
-            <template v-slot:symbol>
+            <template #symbol>
               <code aria-label="minus" class="literal">-</code>
             </template>
           </i18n>
           <i18n path="search-guide.combine.prefix" tag="li" class="listitem">
-            <template v-slot:symbol>
+            <template #symbol>
               <code aria-label="star" class="literal">*</code>
             </template>
           </i18n>
@@ -60,15 +60,15 @@
             tag="li"
             class="listitem"
           >
-            <template v-slot:open>
+            <template #open>
               <code aria-label="open paranthesis" class="literal">(</code>
             </template>
-            <template v-slot:close>
+            <template #close>
               <code aria-label="close paranthesis" class="literal">)</code>
             </template>
           </i18n>
           <i18n path="search-guide.combine.fuzziness" tag="li" class="listitem">
-            <template v-slot:symbol>
+            <template #symbol>
               <code aria-label="tilde N" class="literal">~N</code>
             </template>
           </i18n>
@@ -79,7 +79,7 @@
           tag="p"
           class="margin-vertical-normal"
         >
-          <template v-slot:link>
+          <template #link>
             <a
               aria-label="dog plus cat"
               href="https://search.creativecommons.org/search?q=dog%2Bcat"
@@ -87,7 +87,7 @@
               <em>dog+cat</em>
             </a>
           </template>
-          <template v-slot:br>
+          <template #br>
             <br />
           </template>
         </i18n>
@@ -97,7 +97,7 @@
           tag="p"
           class="margin-vertical-normal"
         >
-          <template v-slot:link>
+          <template #link>
             <a
               aria-label="dog vertical bar cat"
               href="https://search.creativecommons.org/search?q=dog%7Ccat"
@@ -105,7 +105,7 @@
               <em>dog|cat</em>
             </a>
           </template>
-          <template v-slot:br>
+          <template #br>
             <br />
           </template>
         </i18n>
@@ -115,7 +115,7 @@
           tag="p"
           class="margin-top-normal"
         >
-          <template v-slot:highlight>
+          <template #highlight>
             <em aria-label="minus operator (signifies NOT)"
               >- operator (signifies NOT)</em
             >
@@ -127,7 +127,7 @@
           tag="p"
           class="margin-bottom-normal"
         >
-          <template v-slot:link>
+          <template #link>
             <a
               aria-label="dog minus pug"
               href="https://search.creativecommons.org/search?q=dog%20-pug"
@@ -135,7 +135,7 @@
               <em>dog -pug</em>
             </a>
           </template>
-          <template v-slot:br>
+          <template #br>
             <br />
           </template>
         </i18n>
@@ -145,7 +145,7 @@
           tag="p"
           class="margin-top-normal"
         >
-          <template v-slot:highlight>
+          <template #highlight>
             <em>* operator (wildcard)</em>
           </template>
         </i18n>
@@ -155,7 +155,7 @@
           tag="p"
           class="margin-bottom-normal"
         >
-          <template v-slot:link>
+          <template #link>
             <a
               aria-label="net star"
               href="https://search.creativecommons.org/search?q=net%2a"
@@ -163,7 +163,7 @@
               <em>net*</em>
             </a>
           </template>
-          <template v-slot:br>
+          <template #br>
             <br />
           </template>
         </i18n>
@@ -173,7 +173,7 @@
           tag="p"
           class="margin-top-normal"
         >
-          <template v-slot:highlight>
+          <template #highlight>
             <em>( and )</em>
           </template>
         </i18n>
@@ -183,7 +183,7 @@
           tag="p"
           class="margin-bottom-normal"
         >
-          <template v-slot:link>
+          <template #link>
             <a
               aria-label="dogs plus open paranthesis corgis vertical bar labrador close paranthesis"
               href="https://search.creativecommons.org/search?q=dogs%20%2B%20%28corgis%20%7C%20labrador%29"
@@ -191,7 +191,7 @@
               <em>dogs + (corgis | labrador)</em>
             </a>
           </template>
-          <template v-slot:br>
+          <template #br>
             <br />
           </template>
         </i18n>
@@ -201,10 +201,10 @@
           tag="p"
           class="margin-top-normal"
         >
-          <template v-slot:highlight>
+          <template #highlight>
             <em aria-label="tilde N">~N</em>
           </template>
-          <template v-slot:link>
+          <template #link>
             <a href="http://en.wikipedia.org/wiki/Levenshtein_distance"
               >Levenshtein Edit Distance</a
             >
@@ -216,7 +216,7 @@
           tag="p"
           class="margin-bottom-normal"
         >
-          <template v-slot:link>
+          <template #link>
             <a
               aria-label="theatre tilde 1"
               href="https://search.creativecommons.org/search?q=theatre~1"
@@ -224,7 +224,7 @@
               <em>theatre~1</em>
             </a>
           </template>
-          <template v-slot:br>
+          <template #br>
             <br />
           </template>
         </i18n>

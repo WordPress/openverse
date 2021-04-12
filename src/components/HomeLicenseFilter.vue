@@ -13,7 +13,7 @@
           :checked="licenseType.checked"
           name="lt"
           :value="licenseType.code"
-          @input="onFilterChanged(licenseType.code)"
+          @change="onFilterChanged(licenseType.code)"
         />
         {{ $t(licenseType.name) }}
       </label>

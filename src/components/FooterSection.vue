@@ -85,7 +85,7 @@
           </nav>
           <div class="attribution margin-top-bigger">
             <i18n path="footer.caption.label" tag="p" class="caption">
-              <template v-slot:noted>
+              <template #noted>
                 <a
                   href="https://creativecommons.org/policies#license"
                   target="_blank"
@@ -93,7 +93,7 @@
                   >{{ $t('footer.caption.noted') }}</a
                 >
               </template>
-              <template v-slot:attribution>
+              <template #attribution>
                 <a
                   href="https://creativecommons.org/licenses/by/4.0/"
                   target="_blank"
@@ -102,7 +102,7 @@
                   {{ $t('footer.caption.attribution') }}
                 </a>
               </template>
-              <template v-slot:icons>
+              <template #icons>
                 <a
                   href="https://fontawesome.com/"
                   target="_blank"

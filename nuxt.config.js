@@ -114,7 +114,15 @@ export default {
   srcDir: 'src/',
   modern: 'client',
   server: { port: process.env.PORT || 8443 },
-  components: true,
+  components: {
+    dirs: [
+      '~/components',
+      '~/components/ContentReport',
+      '~/components/Filters',
+      '~/components/ImageDetails',
+      '~/components/MetaSearch',
+    ],
+  },
   plugins: [
     { src: '~/plugins/ab-test-init.js', mode: 'client' },
     { src: '~plugins/ga.js', mode: 'client' },

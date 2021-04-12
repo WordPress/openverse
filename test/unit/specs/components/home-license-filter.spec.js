@@ -30,12 +30,11 @@ describe('HomeLicenseFilter', () => {
     expect(wrapper.find('#modification').element).toBeDefined()
   })
 
-  it('renders checkboxes', () => {
+  it('dispatches `TOGGLE_FILTER` when checkboxes selected', async () => {
     const wrapper = render(HomeLicenseFilter, options)
     const commercialChk = wrapper.find('#commercial')
 
-    commercialChk.trigger('click')
-
+    await commercialChk.setChecked(true)
     expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
       code: 'commercial',
       filterType: 'licenseTypes',

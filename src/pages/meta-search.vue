@@ -8,7 +8,7 @@
       </div>
 
       <i18n path="meta-search-page.intro" tag="p" class="margin-bottom-normal">
-        <template v-slot:link>
+        <template #link>
           <a aria-label="sources" href="/sources">{{
             $t('meta-search-page.link')
           }}</a>
@@ -38,7 +38,7 @@
         tag="p"
         class="margin-bottom-small"
       >
-        <template v-slot:use>
+        <template #use>
           <strong>{{ $t('meta-search-page.use') }}</strong>
         </template>
       </i18n>
@@ -57,7 +57,7 @@
         tag="p"
         class="margin-vertical-small"
       >
-        <template v-slot:use>
+        <template #use>
           <strong>{{ $t('meta-search-page.use') }}</strong>
         </template>
       </i18n>
@@ -75,14 +75,14 @@
         tag="p"
         class="margin-bottom-small"
       >
-        <template v-slot:issue>
+        <template #issue>
           <a
             aria-label="issue"
             href="https://github.com/creativecommons/cccatalog/issues/new?assignees=&labels=awaiting+triage%2C+ticket+work+required%2C+providers&template=new-source-suggestion.md&title=%5BSource+Suggestion%5D+Insert+source+name+here"
             >{{ $t('meta-search-page.new.issue') }}</a
           >
         </template>
-        <template v-slot:email>
+        <template #email>
           <a
             aria-label="email"
             href="mailto:support-search@creativecommons.org"
@@ -104,7 +104,7 @@
         {{ $t('meta-search-page.why.new') }}
       </p>
       <i18n path="meta-search-page.why.feedback" tag="p">
-        <template v-slot:feedback>
+        <template #feedback>
           <a
             aria-label="sources"
             href="https://search.creativecommons.org/feedback"

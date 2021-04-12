@@ -5,7 +5,7 @@
       tag="p"
       class="is-block padding-horizontal-big margin-top-large has-text-centered"
     >
-      <template v-slot:link>
+      <template #link>
         <a
           :aria-label="$t('photo-details.aria.dmca')"
           :href="dmcaFormUrl"
@@ -21,7 +21,7 @@
       tag="p"
       class="is-block padding-horizontal-big margin-top-normal has-text-centered"
     >
-      <template v-slot:link>
+      <template #link>
         <a
           :aria-label="provider + 'form'"
           :href="imageURL"
