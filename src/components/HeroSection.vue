@@ -2,64 +2,35 @@
   <!-- eslint-disable vuejs-accessibility/no-autofocus -->
   <div class="hero">
     <div class="hero-center has-text-centered">
-      <!-- <div class="locale-block"><locale-selector /></div> -->
       <h1 class="title is-2 padding-bottom-normal">
         {{ $t('hero.title') }}
       </h1>
-      <h5 class="b-header">
+      <h2 class="title is-5 b-header">
         {{ $t('hero.subtitle') }}
-      </h5>
+      </h2>
       <form
-        class="hero_search-form margin-top-bigger"
+        class="hero-search__form margin-top-bigger"
         role="search"
         method="get"
         action="/search"
         @submit.prevent="onSubmit"
       >
-        <div class="is-hidden-touch centered-search-box">
-          <div class="field has-addons">
-            <div class="control mobile-input">
-              <input
-                id="searchTerm"
-                v-model.lazy="form.searchTerm"
-                required="required"
-                class="hero_search-input input is-large"
-                :aria-label="$t('hero.aria.search')"
-                autofocus
-                type="search"
-                name="q"
-                :placeholder="$t('hero.search.placeholder')"
-                autocapitalize="none"
-              />
-            </div>
-            <div class="control">
-              <button class="button is-primary big" title="Search">
-                {{ $t('hero.search.button') }}
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="is-hidden-desktop centered-search-box">
-          <div class="field has-addons">
-            <div class="control mobile-input">
-              <input
-                id="searchTerm"
-                v-model.lazy="form.searchTerm"
-                required="required"
-                class="input"
-                :aria-label="$t('hero.aria.search')"
-                type="search"
-                name="q"
-                :placeholder="$t('hero.search.placeholder')"
-                autocapitalize="none"
-              />
-            </div>
-            <div class="control">
-              <button class="button is-primary small" title="Search">
-                {{ $t('hero.search.button') }}
-              </button>
-            </div>
-          </div>
+        <div class="hero-search__control">
+          <input
+            id="searchTerm"
+            v-model.lazy="form.searchTerm"
+            required="required"
+            class="hero-search__input input"
+            :aria-label="$t('hero.aria.search')"
+            autofocus
+            type="search"
+            name="q"
+            :placeholder="$t('hero.search.placeholder')"
+            autocapitalize="none"
+          />
+          <button class="hero-search__button button is-primary" title="Search">
+            {{ $t('hero.search.button') }}
+          </button>
         </div>
         <div class="caption has-text-centered margin-top-big">
           <i18n path="hero.caption.content" tag="p">
@@ -131,53 +102,40 @@ $hero-height: 85vh;
   justify-content: center;
   flex-direction: column;
   min-height: $hero-height;
-
-  .hero_search-form {
+}
+.hero-center {
+  margin-top: auto;
+}
+.hero-search {
+  &__form {
     position: relative;
     width: 100%;
     padding: 0 0.5em 0 0.5em;
   }
-
-  .centered-search-box {
-    justify-content: center;
+  &__control {
+    display: flex;
   }
-
-  .field {
-    justify-content: center;
-  }
-
-  .hero_search-input {
-    width: 570px;
-  }
-
-  .mobile-input {
+  &__input {
+    margin-right: -1px;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
     width: 100%;
-  }
-}
-
-.hero-center {
-  margin-top: auto;
-  .locale-block {
-    position: absolute;
-    top: 2.5rem;
-    right: 4rem;
-  }
-
-  @include tablet {
-    .locale-block {
-      top: 0rem;
-      left: auto;
-      right: 4rem;
+    max-width: 100%;
+    @include desktop {
+      width: 570px;
+      font-size: 1.75rem;
+      height: 5.063rem;
+      padding-left: 1.5rem;
     }
   }
-
-  /* Small only */
-  @include mobile {
-    height: auto;
-    .locale-block {
-      position: relative;
-      top: 0rem;
-      right: 0rem;
+  &__button {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    font-size: 1rem;
+    padding: 0.5rem 1.2rem;
+    @include desktop {
+      font-size: 1.75rem;
+      padding: 2.407rem 2.5rem;
     }
   }
 }
@@ -203,7 +161,7 @@ $hero-height: 85vh;
   object-fit: cover;
   object-position: left center;
 
-  @include tablet {
+  @include desktop {
     object-fit: initial;
     height: auto;
     padding: 0;
