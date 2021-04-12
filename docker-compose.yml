@@ -31,7 +31,7 @@ services:
       test: "pg_isready -U deploy -d openledger"
 
   es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
     ports:
       - "9200:9200"
     environment:
@@ -90,7 +90,7 @@ services:
   ingestion-server:
     build: ./ingestion_server/
     command: bash -c 'sleep 20 && supervisord -c config/supervisord.conf'
-    ports: 
+    ports:
       - "8001:8001"
     depends_on:
       - db
@@ -120,7 +120,7 @@ services:
       context: ./ingestion_server/
       dockerfile: Dockerfile-worker
     container_name: indexer-worker
-    ports: 
+    ports:
       - "8002:8002"
     depends_on:
       - db
@@ -144,11 +144,11 @@ services:
     stdin_open: true
     tty: true
 
-  analytics:
-    build: ./analytics/
-    image: analytics
-    container_name: cccatalog-api_analytics_1
-    ports:
-      - "8090:8090"
-    environment:
-      DATABASE_CONN: 'postgres+psycopg2://deploy:deploy@db/openledger'
+  # analytics:
+  #   build: ./analytics/
+  #   image: analytics
+  #   container_name: cccatalog-api_analytics_1
+  #   ports:
+  #     - "8090:8090"
+  #   environment:
+  #     DATABASE_CONN: 'postgres+psycopg2://deploy:deploy@db/openledger'
