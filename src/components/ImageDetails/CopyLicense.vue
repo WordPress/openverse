@@ -3,54 +3,52 @@
     <h5 class="b-header margin-bottom-small">
       {{ $t('photo-details.reuse.copy-license.title') }}
     </h5>
-    <section class="tabs is-boxed">
-      <ul role="tablist">
-        <li
+    <section class="tabs-boxed">
+      <div
+        role="tablist"
+        :aria-label="$t('photo-details.reuse.copy-license.title')"
+      >
+        <button
+          id="rich"
           role="tab"
           :aria-selected="activeTab == 0"
+          aria-controls="tab-rich"
           :class="tabClass(0, 'tab')"
+          @click.prevent="setActiveTab(0)"
+          @keyup.enter.prevent="setActiveTab(0)"
         >
-          <a
-            class="is-size-6"
-            href="#panel0"
-            @click.prevent="setActiveTab(0)"
-            @keyup.enter.prevent="setActiveTab(0)"
-          >
-            {{ $t('photo-details.reuse.copy-license.rich') }}
-          </a>
-        </li>
-        <li
+          {{ $t('photo-details.reuse.copy-license.rich') }}
+        </button>
+        <button
+          id="html"
           role="tab"
           :aria-selected="activeTab == 1"
+          aria-controls="tab-html"
           :class="tabClass(1, 'tab')"
+          @click.prevent="setActiveTab(1)"
+          @keyup.enter.prevent="setActiveTab(1)"
         >
-          <a
-            class="is-size-6"
-            href="#panel1"
-            @click.prevent="setActiveTab(1)"
-            @keyup.enter.prevent="setActiveTab(1)"
-          >
-            {{ $t('photo-details.reuse.copy-license.html') }}
-          </a>
-        </li>
-        <li
+          {{ $t('photo-details.reuse.copy-license.html') }}
+        </button>
+        <button
+          id="text"
           role="tab"
           :aria-selected="activeTab == 2"
+          aria-controls="tab-text"
           :class="tabClass(2, 'tab')"
+          @click.prevent="setActiveTab(2)"
+          @keyup.enter.prevent="setActiveTab(2)"
         >
-          <a
-            class="is-size-6"
-            href="#panel2"
-            @click.prevent="setActiveTab(2)"
-            @keyup.enter.prevent="setActiveTab(2)"
-          >
-            {{ $t('photo-details.reuse.copy-license.plain') }}
-          </a>
-        </li>
-      </ul>
-    </section>
-    <section class="tabs-content is-boxed">
-      <div :class="tabClass(0, 'tabs-panel')">
+          {{ $t('photo-details.reuse.copy-license.plain') }}
+        </button>
+      </div>
+      <div
+        id="tab-rich"
+        aria-labelledby="rich"
+        role="tabpanel"
+        :class="tabClass(0, 'tabs-panel')"
+        tabindex="0"
+      >
         <span
           id="attribution"
           ref="photoAttribution"
@@ -94,7 +92,13 @@
           @copied="(e) => onCopyAttribution('Rich Text', e)"
         />
       </div>
-      <div :class="tabClass(1, 'tabs-panel')">
+      <div
+        id="tab-html"
+        aria-labelledby="html"
+        role="tabpanel"
+        :class="tabClass(1, 'tabs-panel')"
+        tabindex="0"
+      >
         <label for="attribution-html">
           <textarea
             id="attribution-html"
@@ -111,7 +115,13 @@
           @copied="(e) => onCopyAttribution('HTML Embed', e)"
         />
       </div>
-      <div :class="tabClass(2, 'tabs-panel')">
+      <div
+        id="tab-text"
+        aria-labelledby="text"
+        role="tabpanel"
+        :class="tabClass(2, 'tabs-panel')"
+        tabindex="0"
+      >
         <p
           id="attribution-text"
           ref="photoAttribution"
@@ -206,6 +216,51 @@ export default {
 
 <style lang="scss" scoped>
 @import 'bulma/sass/utilities/_all.sass';
+
+.tabs-boxed {
+  display: flex;
+  flex-direction: column;
+}
+.tabs-boxed .tabs-panel {
+  display: none;
+  padding: 1rem;
+  background-color: white;
+  border: 0.125rem solid #d8d8d8;
+}
+.tabs-boxed .tabs-panel.is-active {
+  display: block;
+}
+[role='tablist'] {
+  display: flex;
+  align-self: flex-start;
+}
+.tab {
+  appearance: none;
+  border-image-source: unset;
+  border-image-outset: unset;
+  border-image-repeat: unset;
+  font-weight: 700;
+  font-size: 1rem;
+  background-color: whitesmoke;
+  margin: 0 0 -0.125rem;
+  border: 2px solid #d8d8d8;
+  border-right: 0;
+  padding: 0.5rem 1rem;
+  position: relative;
+
+  &.is-active,
+  &:hover {
+    background-color: white;
+    border-bottom-color: transparent;
+  }
+  &:focus-visible {
+    box-shadow: 0 0 0 0.125rem #d8d8d8;
+  }
+
+  &:last-child {
+    border-right: 0.125rem solid #d8d8d8;
+  }
+}
 
 textarea {
   border: none;
