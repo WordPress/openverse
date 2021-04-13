@@ -8,6 +8,8 @@ import {
   SET_PROVIDERS_FILTERS,
 } from './mutation-types'
 
+import previousImageProviders from '../data/existingImageProviders'
+
 const state = {
   imageProviders: [],
   isFetchingImageProvidersError: false,
@@ -40,6 +42,7 @@ const actions = (ImageProviderService) => ({
       })
       .catch((error) => {
         commit(SET_FETCH_IMAGES_ERROR, { isFetchingImageProvidersError: true })
+        commit(SET_IMAGE_PROVIDERS, { imageProviders: previousImageProviders })
         throw new Error(error)
       })
   },

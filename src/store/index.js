@@ -30,7 +30,13 @@ export const actions = Object.assign(
   RelatedImagesStore.actions(ImageService),
   {
     async nuxtServerInit({ dispatch }) {
-      await dispatch(FETCH_IMAGE_PROVIDERS)
+      try {
+        await dispatch(FETCH_IMAGE_PROVIDERS)
+      } catch (error) {
+        // TODO: What happens if we do not have image providers?
+        // How do we show the error to the user?
+        console.error("Couldn't fetch image providers")
+      }
     },
   }
 )
