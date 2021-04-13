@@ -7,6 +7,11 @@ describe('SearchGrid', () => {
   beforeEach(() => {
     commitMock = jest.fn()
     options = {
+      stubs: {
+        SearchRating: true,
+        SaferBrowsing: true,
+        LoadingIcon: true,
+      },
       propsData: {
         query: { q: 'foo' },
         includeAnalytics: true,
