@@ -45,7 +45,9 @@ describe('SearchGridFilter', () => {
 
   it('should render correct contents', () => {
     const wrapper = render(SearchGridFilter, options)
-    expect(wrapper.find({ name: 'SearchGridFilter' }).element).toBeDefined()
+    expect(
+      wrapper.findComponent({ name: 'SearchGridFilter' }).element
+    ).toBeDefined()
   })
 
   it('should show search filters when isFilterVisible is true', () => {

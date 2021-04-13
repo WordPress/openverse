@@ -9,6 +9,7 @@ describe('HeroSection', () => {
   beforeEach(() => {
     commitMock = jest.fn()
     options = {
+      stubs: { HomeLicenseFilter: true },
       mocks: {
         $router: {
           push: () => {},
@@ -21,7 +22,7 @@ describe('HeroSection', () => {
     }
   })
   it('should render correct contents', () => {
-    const wrapper = render(HeroSection)
+    const wrapper = render(HeroSection, options)
     expect(wrapper.find('.hero').element).toBeDefined()
     expect(wrapper.find('.hero-search__form').element).toBeDefined()
   })
