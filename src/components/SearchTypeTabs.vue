@@ -49,8 +49,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@creativecommons/vocabulary/scss/color';
-@import '@creativecommons/vocabulary/scss/typography';
+@import '~/styles/vocabulary//color';
+@import '~/styles/vocabulary//typography';
 @import '~/styles/tabs.scss';
 .search-tabs {
   margin-left: 1rem;

@@ -281,8 +281,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@creativecommons/vocabulary/scss/color';
-@import '@creativecommons/vocabulary/scss/typography';
+@import '~/styles/vocabulary/color';
+@import '~/styles/vocabulary/typography';
 @import '~/styles/photodetails.scss';
 @import '~/styles/tabs.scss';
 
