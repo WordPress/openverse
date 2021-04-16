@@ -50,10 +50,6 @@
     }
   },
   "footer": {
-    "address": {
-      "title": "Creative Commons",
-      "address": "PO Box 1866, Mountain View CA 94042"
-    },
     "navigation": {
       "contact": "Contact",
       "privacy": "Confidentialité",
@@ -68,12 +64,10 @@
     },
     "donate": {
       "work": "Notre travail compte sur vous!",
-      "help": "Aidez-nous à garder Internet gratuit et ouvert.",
-      "link": "Faire un don maintenant"
+      "help": "Aidez-nous à garder Internet gratuit et ouvert."
     },
     "aria": {
-      "contact": "coordonnées cc",
-      "homepage": "page d'accueil",
+      "contact": "coordonnées",
       "donate": "section don"
     }
   },

@@ -4,7 +4,7 @@ import render from '../../test-utils/render'
 
 describe('NavSection', () => {
   it('should render correct contents', () => {
-    const wrapper = render(NavSection)
+    const wrapper = render(NavSection, { stubs: { NuxtLink: true } })
     expect(wrapper.find('nav').vm).toBeDefined()
   })
 
@@ -18,15 +18,16 @@ describe('NavSection', () => {
         },
       },
     }
-    const opts = {
+    const options = {
       propsData: {
         fixedNav: null,
         showNavSearch: 'true',
       },
-      mocks: { $store: storeMock },
+      mocks: { $store: storeMock, $router: { push: jest.fn() } },
+      stubs: { NuxtLink: true },
     }
 
-    const wrapper = render(NavSection, opts)
+    const wrapper = render(NavSection, options)
     await wrapper.setData({ form: { searchTerm: 'foo' } })
     wrapper.find('.hero_search-form').trigger('submit')
 
