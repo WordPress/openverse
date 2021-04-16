@@ -1,5 +1,6 @@
 @import "../utilities/derived-variables"
 
+// bulma colors.sass
 @each $name, $pair in $colors
   $color: nth($pair, 1)
   .has-text-#{$name}
@@ -37,3 +38,18 @@
     color: $shade !important
   .has-background-#{$name}
     background-color: $shade !important
+
+// Vocabulary color.scss
+// Classes
+$brand-colors: ('tomato': $color-tomato, 'gold': $color-gold, 'forest-green': $color-forest-green, 'dark-turquoise': $color-dark-turquoise, 'dark-slate-blue': $color-dark-slate-blue, 'brighter-dark-slate-blue': $color-brighter-dark-slate-blue, 'dark-slate-gray': $color-dark-slate-gray )
+
+@mixin color-classes($color-namespace, $brand-color)
+  .has-background-#{$color-namespace}
+    background-color: $brand-color
+
+  .has-text-#{$color-namespace},
+  .has-color-#{$color-namespace}
+    color: $brand-color
+
+@each $color-namespace, $brand-color in $brand-colors
+  @include color-classes($color-namespace, $brand-color)

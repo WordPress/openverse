@@ -4,8 +4,7 @@
 @import '../bulma/base/minireset.sass';
 
 // Tokens
-@import './color.scss';
-@import './color_overrides.scss';
+@import '../bulma/helpers/color.sass';
 
 @import './spacing.scss';
 @import './spacing_overrides.scss';

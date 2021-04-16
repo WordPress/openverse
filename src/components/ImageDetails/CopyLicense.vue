@@ -217,7 +217,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/vocabulary/color';
+@import '~/styles/bulma/utilities/_all';
 @import '~/styles/vocabulary/typography';
 @import '~/styles/tabs.scss';
 
