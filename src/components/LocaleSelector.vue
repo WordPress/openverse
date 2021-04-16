@@ -68,6 +68,7 @@ export default {
 @import '@creativecommons/vocabulary/scss/color.scss';
 @import '@creativecommons/vocabulary/scss/spacing.scss';
 .locale-selector {
+  margin-top: $space-big;
   display: flex;
   .lang {
     margin-left: 1rem;

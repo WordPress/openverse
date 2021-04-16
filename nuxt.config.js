@@ -136,11 +136,7 @@ export default {
   buildModules: ['@nuxtjs/svg', '@nuxtjs/eslint-module'],
   modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap', 'nuxt-ssr-cache', 'nuxt-i18n'],
   i18n: {
-    locales: [
-      { code: 'fr', iso: 'fr-FR', name: 'French', file: 'fr.json' },
-      { code: 'ru', iso: 'ru-RU', name: 'Russian', file: 'ru.json' },
-      { code: 'en', iso: 'en', name: 'English', file: 'en.json' },
-    ],
+    locales: [{ code: 'en', iso: 'en', name: 'English', file: 'en.json' }],
     lazy: true,
     langDir: 'locales',
     strategy: 'prefix_and_default',
