@@ -15,6 +15,7 @@ module.exports = {
     'plugin:vue/recommended',
     'plugin:prettier/recommended',
     'plugin:vuejs-accessibility/recommended',
+    'plugin:@intlify/vue-i18n/recommended',
   ],
   // required to lint *.vue files
   plugins: ['vue', 'cypress', 'vuejs-accessibility'],
@@ -46,5 +47,11 @@ module.exports = {
       },
     ],
     'vuejs-accessibility/aria-role': 'warn',
+  },
+  settings: {
+    'vue-i18n': {
+      localeDir: './src/locales/*.{json}',
+      messageSyntaxVersion: '^8.24.3',
+    },
   },
 }

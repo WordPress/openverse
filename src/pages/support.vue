@@ -1,5 +1,6 @@
 <template>
   <div role="main" class="section margin-bottom-large">
+    <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
     <div class="container is-fluid">
       <div class="margin-bottom-large">
         <h1 class="title is-2 margin-bottom-normal">
@@ -195,6 +196,7 @@
         <p class="margin-bottom-normal">{{ $t('support.grateful') }}</p>
       </div>
     </div>
+    <!-- eslint-enable -->
   </div>
 </template>
 

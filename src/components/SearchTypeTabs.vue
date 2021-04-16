@@ -7,7 +7,7 @@
           :id="type"
           :key="type"
           aria-live="polite"
-          :to="{ path: `/search/${type}`, query: $route.query }"
+          :to="localePath({ path: `/search/${type}`, query: $route.query })"
           :aria-selected="activeTab == type"
           :aria-controls="'tab-' + type"
           role="tab"

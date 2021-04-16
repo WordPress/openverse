@@ -9,7 +9,9 @@
 
       <i18n path="meta-search-page.intro" tag="p" class="margin-bottom-normal">
         <template #link>
-          <a aria-label="sources" href="/sources">sources</a>
+          <a aria-label="sources" href="/sources">{{
+            $t('meta-search-page.link')
+          }}</a>
         </template>
       </i18n>
       <p>{{ $t('meta-search-page.license') }}</p>
@@ -37,7 +39,7 @@
         class="margin-bottom-small"
       >
         <template #use>
-          <strong> Use </strong>
+          <strong>{{ $t('meta-search-page.use') }}</strong>
         </template>
       </i18n>
       <figure class="image margin-vertical-large">
@@ -56,7 +58,7 @@
         class="margin-vertical-small"
       >
         <template #use>
-          <strong> Use </strong>
+          <strong>{{ $t('meta-search-page.use') }}</strong>
         </template>
       </i18n>
       <figure class="image margin-vertical-large">
@@ -77,12 +79,14 @@
           <a
             aria-label="issue"
             href="https://github.com/creativecommons/cccatalog/issues/new?assignees=&labels=awaiting+triage%2C+ticket+work+required%2C+providers&template=new-source-suggestion.md&title=%5BSource+Suggestion%5D+Insert+source+name+here"
-            >issue</a
+            >{{ $t('meta-search-page.new.issue') }}</a
           >
         </template>
         <template #email>
-          <a aria-label="email" href="mailto:support-search@creativecommons.org"
-            >email</a
+          <a
+            aria-label="email"
+            href="mailto:support-search@creativecommons.org"
+            >{{ $t('meta-search-page.new.email') }}</a
           >
         </template>
       </i18n>
@@ -104,7 +108,7 @@
           <a
             aria-label="sources"
             href="https://search.creativecommons.org/feedback"
-            >feedback.</a
+            >{{ $t('meta-search-page.why.feedback-link') }}</a
           >
         </template>
       </i18n>

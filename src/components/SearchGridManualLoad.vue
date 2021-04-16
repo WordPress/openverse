@@ -125,8 +125,12 @@ export default {
         ? this.$store.state.imagesCount
         : this.imagesCount
       return count >= 10000
-        ? `Over ${count.toLocaleString('en')} images`
-        : `${count.toLocaleString('en')} images`
+        ? this.$t('browse-page.result-count-more', {
+            count: count.toLocaleString(this.$i18n.locale),
+          })
+        : this.$t('browse-page.result-count', {
+            count: count.toLocaleString(this.$i18n.locale),
+          })
     },
     _query() {
       return this.$props.query

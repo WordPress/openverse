@@ -1,7 +1,9 @@
 <template>
   <nav :aria-label="$t('header.aria.primary')" class="navbar">
     <div class="navbar-brand has-color-white">
-      <NuxtLink class="logo" to="/">WP Photos</NuxtLink>
+      <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
+      <NuxtLink class="logo" :to="localePath('/')">WP Photos</NuxtLink>
+      <!-- eslint-enable -->
       <a
         role="button"
         :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
@@ -48,10 +50,10 @@
             <i class="icon caret-down" />
           </a>
           <div class="navbar-dropdown">
-            <NuxtLink class="navbar-item" to="/about">
+            <NuxtLink class="navbar-item" :to="localePath('/about')">
               {{ $t('header.about') }}
             </NuxtLink>
-            <NuxtLink class="navbar-item" to="/sources">
+            <NuxtLink class="navbar-item" :to="localePath('/sources')">
               {{ $t('header.source') }}
             </NuxtLink>
             <a
@@ -71,13 +73,13 @@
             <i class="icon caret-down" />
           </a>
           <div class="navbar-dropdown">
-            <NuxtLink class="navbar-item" to="/search-help">
+            <NuxtLink class="navbar-item" :to="localePath('/search-help')">
               {{ $t('header.search-guide') }}
             </NuxtLink>
-            <NuxtLink class="navbar-item" to="/meta-search">
+            <NuxtLink class="navbar-item" :to="localePath('/meta-search')">
               {{ $t('header.meta-search') }}
             </NuxtLink>
-            <NuxtLink class="navbar-item" to="/feedback">
+            <NuxtLink class="navbar-item" :to="localePath('/feedback')">
               {{ $t('header.feedback') }}
             </NuxtLink>
             <a
@@ -90,7 +92,7 @@
             </a>
           </div>
         </div>
-        <NuxtLink class="navbar-item" to="/support">
+        <NuxtLink class="navbar-item" :to="localePath('/support')">
           {{ $t('header.support') }}
         </NuxtLink>
 
@@ -127,10 +129,11 @@ export default {
   methods: {
     onSubmit() {
       this.$store.commit(SET_QUERY, { query: { q: this.form.searchTerm } })
-      this.$router.push({
+      const newPath = this.localePath({
         path: '/search',
         query: { q: this.form.searchTerm },
       })
+      this.$router.push(newPath)
     },
     toggleBurgerActive() {
       this.isBurgerMenuActive = !this.isBurgerMenuActive

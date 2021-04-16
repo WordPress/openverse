@@ -15,7 +15,7 @@
           target="_blank"
           rel="noopener"
           >{{ providerName }}</a
-        >.
+        >
       </template>
     </i18n>
   </div>

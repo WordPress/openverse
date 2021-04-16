@@ -4,7 +4,7 @@
       <h1 v-if="error.statusCode === 404">
         {{ $t('not-found') }}
       </h1>
-      <h1 v-else>An error occurred</h1>
+      <h1 v-else>{{ $t('error-occurred') }}</h1>
     </main>
   </div>
 </template>

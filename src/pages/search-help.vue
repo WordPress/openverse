@@ -32,7 +32,8 @@
         <p class="margin-vertical-normal">
           {{ $t('search-guide.combine.description') }}
         </p>
-
+        <!-- TODO: review for i18n to accommodate language sentence structure -->
+        <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
         <ul>
           <i18n path="search-guide.combine.and" tag="li" class="listitem">
             <template #symbol>
@@ -227,6 +228,7 @@
             <br />
           </template>
         </i18n>
+        <!-- eslint-enable -->
       </div>
     </div>
   </div>
