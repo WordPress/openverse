@@ -1,3 +1,3 @@
 <template>
-  <MetaSearchForm type="video" />
+  <MetaSearchForm id="type=video" type="video" />
 </template>

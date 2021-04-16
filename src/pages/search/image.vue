@@ -1,5 +1,5 @@
 <template>
-  <SearchGrid @onLoadMoreImages="onLoadMoreImages" />
+  <SearchGrid id="tab-image" @onLoadMoreImages="onLoadMoreImages" />
 </template>
 
 <script>

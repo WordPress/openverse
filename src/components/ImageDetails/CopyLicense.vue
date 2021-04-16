@@ -3,7 +3,7 @@
     <h5 class="b-header margin-bottom-small">
       {{ $t('photo-details.reuse.copy-license.title') }}
     </h5>
-    <section class="tabs-boxed">
+    <section class="search-tabs boxed">
       <div
         role="tablist"
         :aria-label="$t('photo-details.reuse.copy-license.title')"
@@ -215,52 +215,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'bulma/sass/utilities/_all.sass';
-
-.tabs-boxed {
-  display: flex;
-  flex-direction: column;
-}
-.tabs-boxed .tabs-panel {
-  display: none;
-  padding: 1rem;
-  background-color: white;
-  border: 0.125rem solid #d8d8d8;
-}
-.tabs-boxed .tabs-panel.is-active {
-  display: block;
-}
-[role='tablist'] {
-  display: flex;
-  align-self: flex-start;
-}
-.tab {
-  appearance: none;
-  border-image-source: unset;
-  border-image-outset: unset;
-  border-image-repeat: unset;
-  font-weight: 700;
-  font-size: 1rem;
-  background-color: whitesmoke;
-  margin: 0 0 -0.125rem;
-  border: 2px solid #d8d8d8;
-  border-right: 0;
-  padding: 0.5rem 1rem;
-  position: relative;
-
-  &.is-active,
-  &:hover {
-    background-color: white;
-    border-bottom-color: transparent;
-  }
-  &:focus-visible {
-    box-shadow: 0 0 0 0.125rem #d8d8d8;
-  }
-
-  &:last-child {
-    border-right: 0.125rem solid #d8d8d8;
-  }
-}
+@import '@creativecommons/vocabulary/scss/color';
+@import '@creativecommons/vocabulary/scss/typography';
+@import '~/styles/tabs.scss';
 
 textarea {
   border: none;
