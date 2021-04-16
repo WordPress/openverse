@@ -4,11 +4,11 @@
 .is-paddingless
   padding: 0 !important
 
-$spacing-shortcuts: ("margin": "m", "padding": "p") !default
-$spacing-directions: ("top": "t", "right": "r", "bottom": "b", "left": "l") !default
-$spacing-horizontal: "x" !default
-$spacing-vertical: "y" !default
-$spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5": 1.5rem, "6": 3rem) !default
+$spacing-shortcuts: ('margin': 'margin-','padding': 'padding-')
+$spacing-directions: ('top': 'top', 'right': 'right', 'bottom': 'bottom', 'left': 'left' )
+$spacing-horizontal: 'horizontal'
+$spacing-vertical: 'vertical'
+$spacing-values: ('0': 0, 'smaller': $space-smaller, 'small': $space-small, 'normal': $space-normal, 'big': $space-big, 'bigger': $space-bigger, 'large': $space-large, 'larger': $space-larger, 'xl': $space-xl, 'xxl': $space-xxl)
 
 @each $property, $shortcut in $spacing-shortcuts
   @each $name, $value in $spacing-values

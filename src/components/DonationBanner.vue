@@ -63,7 +63,6 @@ export default {
 <style scoped lang="scss">
 @import '~/styles/bulma/utilities/_all';
 @import '~/styles/bulma/helpers/_all';
-@import '~/styles/vocabulary/spacing';
 
 $bgColor: #e6f6eb;
 

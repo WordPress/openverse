@@ -65,7 +65,7 @@ export default {
 <style lang="scss" scoped>
 @import '~/styles/bulma/utilities/_all';
 @import '~/styles/bulma/helpers/_all';
-@import '~/styles/vocabulary/spacing.scss';
+
 .locale-selector {
   margin-top: $space-big;
   display: flex;

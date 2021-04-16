@@ -6,8 +6,7 @@
 // Tokens
 @import '../bulma/helpers/color.sass';
 
-@import './spacing.scss';
-@import './spacing_overrides.scss';
+@import '../bulma/helpers/spacing.sass';
 
 @import './typography.scss';
 @import './typography_overrides.scss';
@@ -27,21 +26,11 @@
 @import './layout.scss';
 @import './card.scss';
 @import './table.scss';
-@import './tabs.scss';
-@import './notification.scss';
-
-// Navigation
-@import './sidebar_menu';
-@import './table_of_contents.scss';
-@import './table_of_progress';
-@import './breadcrumb.scss';
-@import './pagination.scss';
+@import '../tabs.scss';
 
 // Patterns
-@import './global_header.scss';
 @import './header.scss';
 @import './footer.scss';
-@import './github_corner.scss';
 @import './locale.scss';
 @import './image.scss';
 @import './profile_image.scss';
