@@ -7,7 +7,10 @@
           :aria-label="$t('footer.aria.contact')"
           class="column"
         >
+          <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
           <NuxtLink class="logo" to="/">WP Photos</NuxtLink>
+          <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
+          <LocaleSelector />
         </section>
         <div class="column is-half">
           <div class="attribution margin-top-bigger">

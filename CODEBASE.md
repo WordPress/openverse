@@ -6,7 +6,7 @@ This document will give you a high level overview of the modules and components 
 
 The CC Search frontend is built using [Vue.JS](https://vuejs.org/) as its main view library. The app uses [Vocabulary](https://github.com/creativecommons/vocabulary) for vue components and global CSS.
 
-It uses [NuxtJS](https://nuxtjs.org/) as a meta framework to handle serveral key functions:
+It uses [NuxtJS](https://nuxtjs.org/) as a meta framework to handle several key functions:
 
 - Server Side rendering in production
 - Lifecycle methods for data fetching on client and server-side page loads
@@ -26,6 +26,15 @@ The root of the repository contains several configuration files for code formatt
 
 [`nuxt.config.js`](./nuxt.config.js) is an important file. It contains several key pieces of configuration. You can [read more about the NuxtJS config file here](https://nuxtjs.org/guides/configuration-glossary/configuration-build).
 
-- environment variables are set in the `export const env = {}` object. Varibles are set with camel case names like this `process.env.varNameGoesHere` and their default values are formatted in the more conventional `process.env.VAR_NAME_GOES_HERE` format.
+- environment variables are set in the `export const env = {}` object. Variables are set with camel case names like this `process.env.varNameGoesHere` and their default values are formatted in the more conventional `process.env.VAR_NAME_GOES_HERE` format.
 - Default HTML metadata and Nuxt plugins are added
 - `/src` All JavaScript code lives in the src directory.
+
+## Internationalization
+
+Internationalization (usually abbreviated as i18n) of the site is handled by [Nuxt I18n](https://i18n.nuxtjs.org) module which is integrated with the [vue-i18n](https://kazupon.github.io/vue-i18n/) plugin.
+
+To ensure best experience for international users, make sure to take the following steps when adding new content:
+
+- For new text content, add the translation strings to the [English locale file](./src/locales/en.json) and to any other locale file available, specifying an appropriate key. To use this text, add `{{ $t('<i18nkey>') }}` inside the template or `this.$i18n('<i18nkey>')` in JavaScript.
+- For new routes and paths, use [`localePath` and `localeRoute` as the wrapper for NuxtLink](https://i18n.nuxtjs.org/basic-usage#nuxt-link), so that the correct locale path is used.

@@ -5,22 +5,7 @@
         <h1 id="feedback" class="title is-2">
           {{ $t('feedback.title') }}
         </h1>
-        <i18n path="feedback.description" tag="p" class="margin-bottom-large">
-          <template #channel>
-            <a
-              :aria-label="$t('feedback.aria.cc-usability')"
-              href="https://creativecommons.slack.com/messages/CCS9CF2JE/details/"
-              >#cc-usability</a
-            >
-          </template>
-          <template #slack>
-            <a
-              aria-label="cc slack"
-              href="https://wiki.creativecommons.org/wiki/Slack#How_to_join_Slack"
-              >CC Slack</a
-            >
-          </template>
-        </i18n>
+        <i18n path="feedback.description" tag="p" class="margin-bottom-large" />
         <section class="tabs margin-top-big">
           <ul role="tablist">
             <li

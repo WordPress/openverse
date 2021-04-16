@@ -124,7 +124,6 @@ export default {
     ],
   },
   plugins: [
-    '~/plugins/i18n.js',
     { src: '~/plugins/ab-test-init.js', mode: 'client' },
     { src: '~plugins/ga.js', mode: 'client' },
   ],
@@ -135,7 +134,22 @@ export default {
   head,
   env,
   buildModules: ['@nuxtjs/svg', '@nuxtjs/eslint-module'],
-  modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap', 'nuxt-ssr-cache'],
+  modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap', 'nuxt-ssr-cache', 'nuxt-i18n'],
+  i18n: {
+    locales: [{ code: 'en', iso: 'en', name: 'English', file: 'en.json' }],
+    lazy: true,
+    langDir: 'locales',
+    strategy: 'prefix_and_default',
+    defaultLocale: 'en',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      alwaysRedirect: true,
+    },
+    seo: false,
+    // TODO: change this to the production URL
+    baseUrl: 'http://localhost:8443',
+  },
   sentry: {
     dsn:
       process.env.SENTRY_DSN ||

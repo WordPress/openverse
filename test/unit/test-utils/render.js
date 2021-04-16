@@ -20,7 +20,9 @@ const render = (Component, options = { localVue, i18n }) => {
     const store = new Vuex.Store(sampleStore)
     options.store = store
   }
-
+  if (!options.i18n) {
+    options.i18n = i18n
+  }
   return shallowMount(Component, options)
 }
 

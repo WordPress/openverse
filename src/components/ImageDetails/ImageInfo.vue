@@ -7,9 +7,14 @@
         </dt>
         <dd>{{ prettyImageType }}</dd>
         <dt class="margin-bottom-small">
-          {{ $t('photo-details.information.dimensions') }}:
+          {{ $t('photo-details.information.dimensions') }}
         </dt>
-        <dd>{{ imageWidth }} &times; {{ imageHeight }} pixels</dd>
+        <dd>
+          <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
+          {{ imageWidth }} &times; {{ imageHeight }}
+          <!-- eslint-enable -->
+          {{ $t('photo-details.information.pixels') }}
+        </dd>
         <dt v-if="providerName != sourceName" class="margin-bottom-small">
           {{ $t('photo-details.information.provider') }}
         </dt>
@@ -17,7 +22,7 @@
           {{ providerName }}
         </dd>
         <dt class="margin-bottom-small">
-          {{ $t('photo-details.information.source') }}:
+          {{ $t('photo-details.information.source') }}
         </dt>
         <dd>
           <a

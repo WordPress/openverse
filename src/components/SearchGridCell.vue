@@ -7,8 +7,8 @@
   >
     <figure class="search-grid_item">
       <i :style="`padding-bottom:${iPadding}%`" />
-      <RouterLink
-        :to="'/photos/' + image.id"
+      <NuxtLink
+        :to="localePath('/photos/' + image.id)"
         class="search-grid_image-ctr"
         :style="`width: ${imageWidth}%; top: ${imageTop}%; left:${imageLeft}%;`"
         @click="onGotoDetailPage($event, image)"
@@ -25,7 +25,7 @@
           @load="getImgDimension"
           @error="onImageLoadError($event, image)"
         />
-      </RouterLink>
+      </NuxtLink>
       <figcaption class="overlay overlay__top padding-small">
         <LicenseIcons :license="image.license" />
       </figcaption>
@@ -118,10 +118,11 @@ export default {
     onGotoDetailPage(event, image) {
       if (!event.metaKey && !event.ctrlKey) {
         event.preventDefault()
-        this.$router.push({
+        const detailRoute = this.localeRoute({
           name: 'photo-detail-page',
           params: { id: image.id, location: window.scrollY },
         })
+        this.$router.push(detailRoute)
       }
     },
     onImageLoadError(event, image) {

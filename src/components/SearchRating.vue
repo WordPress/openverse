@@ -1,5 +1,6 @@
 <template>
   <div class="caption has-text-weight-semibold">
+    <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
     <div v-if="status == 'NOT_SENT'">
       <span>{{ $t('browse-page.search-rating.content') }}</span>
       <button

@@ -45,21 +45,16 @@ describe('SearchGridCell', () => {
   })
 
   it('links to the details page', async () => {
-    const routerMock = {
-      push: jest.fn(),
-      params: {
-        location: window.scrollY,
-      },
-    }
+    const localeRouteMock = jest.fn()
     const wrapper = render(SearchGridCell, {
       propsData: props,
-      mocks: { $router: routerMock },
+      mocks: { localeRoute: localeRouteMock },
     })
     const link = wrapper.find('.search-grid_image-ctr')
     await link.trigger('click')
-    expect(routerMock.push).toHaveBeenCalledWith({
+    expect(localeRouteMock).toHaveBeenCalledWith({
       name: 'photo-detail-page',
-      params: { id: 0, location: routerMock.params.location },
+      params: { id: 0, location: 0 },
     })
   })
 })
