@@ -25,24 +25,54 @@ $color-dark-slate-gray: rgb(51, 51, 51) // BRAND COLOR
 $purple:                hsl(271, 100%, 71%) !default // NOT IN VOCABULARY
 
 // Typography
+@import url('https://unpkg.com/@creativecommons/fonts@2020.9.3/css/fonts.css')
 
-$family-sans-serif: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !default
-$family-monospace: monospace !default
-$render-mode: optimizeLegibility !default
+// Families
+$family-roboto-condensed: 'Roboto Condensed', sans-serif
+$family-source-sans-pro: 'Source Sans Pro', sans-serif
+$family-jetbrains-mono: 'JetBrains Mono', monospace
+$family-vocabulary-icons: 'Vocabulary Icons'
 
-$size-1: 3rem !default
-$size-2: 2.5rem !default
-$size-3: 2rem !default
-$size-4: 1.5rem !default
-$size-5: 1.25rem !default
-$size-6: 1rem !default
-$size-7: 0.75rem !default
+$family-system: BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto','Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue','Helvetica', 'Arial', sans-serif
+$family-heading: $family-roboto-condensed
+$family-body: $family-source-sans-pro
+$family-code: $family-jetbrains-mono
+$family-icons: $family-vocabulary-icons
+$family-sans-serif: $family-body
+$family-monospace: $family-code
 
-$weight-light: 300 !default
-$weight-normal: 400 !default
-$weight-medium: 500 !default
-$weight-semibold: 600 !default
-$weight-bold: 700 !default
+$render-mode: optimizeLegibility
+
+// Sizes
+$font-size-h1: 3.56rem
+$font-size-h2: 2.25rem
+$font-size-h3: 1.75rem
+$font-size-h4: 1.43rem
+$font-size-h5: 1.25rem
+$font-size-h6: 1.15rem // Not in Figma, extrapolated
+
+$font-size-value: 4.37rem
+
+$font-size-body-bigger: 1.43rem
+$font-size-body-big: 1.12rem
+$font-size-body-normal: 1rem
+$font-size-body-list: 1rem
+
+$font-size-caption: 0.8rem
+
+$size-1: $font-size-h1
+$size-2: $font-size-h2
+$size-3: $font-size-h3
+$size-4: $font-size-body-bigger // Same as $font-size-h4
+$size-5: $font-size-body-big
+$size-6: $font-size-body-normal
+$size-7: $font-size-caption
+
+$weight-light: 300
+$weight-normal: 400
+$weight-medium: 500
+$weight-semibold: 600
+$weight-bold: 700
 
 // Spacing
 

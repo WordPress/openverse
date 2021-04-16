@@ -281,8 +281,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/bulma/helpers/_all';
-@import '~/styles/vocabulary/typography';
 @import '~/styles/photodetails.scss';
 @import '~/styles/tabs.scss';
 

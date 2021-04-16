@@ -3,18 +3,15 @@
 // Reset
 @import '../bulma/base/minireset.sass';
 
-// Tokens
-@import '../bulma/helpers/color.sass';
-
-@import '../bulma/helpers/spacing.sass';
-
-@import './typography.scss';
-@import './typography_overrides.scss';
-
 // Bulma
 @import '../bulma/utilities/_all.sass';
 @import '../bulma/helpers/_all.sass';
 @import '../bulma/base/generic.sass';
+
+// Tokens
+@import '../bulma/helpers/color.sass';
+@import '../bulma/helpers/spacing.sass';
+@import '../bulma/helpers/typography.sass';
 
 // Elements
 @import './button.scss';
