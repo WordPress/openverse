@@ -36,5 +36,5 @@ Internationalization (usually abbreviated as i18n) of the site is handled by [Nu
 
 To ensure best experience for international users, make sure to take the following steps when adding new content:
 
-- For new text content, add the texts to the [English locale file](./src/locales/en.json) and to any other locale file available, specifying an appropriate key. To use this text, add `{{ $t('<i18nkey>') }}` inside the template or `this.$i18n('<i18nkey>')` in JavaScript.
+- For new text content, add the translation strings to the [English locale file](./src/locales/en.json) and to any other locale file available, specifying an appropriate key. To use this text, add `{{ $t('<i18nkey>') }}` inside the template or `this.$i18n('<i18nkey>')` in JavaScript.
 - For new routes and paths, use [`localePath` and `localeRoute` as the wrapper for NuxtLink](https://i18n.nuxtjs.org/basic-usage#nuxt-link), so that the correct locale path is used.
