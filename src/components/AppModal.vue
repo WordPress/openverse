@@ -92,11 +92,9 @@ export default {
 
 .modal-header {
   display: flex;
-  display: flex;
   justify-content: space-around;
   align-items: flex-start;
   width: 100%;
-  box-sizing: border-box;
 }
 
 .close-button {

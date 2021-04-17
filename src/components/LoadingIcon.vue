@@ -21,7 +21,6 @@ export default {
   height: 64px;
 }
 .lds-ring div {
-  box-sizing: border-box;
   display: block;
   position: absolute;
   width: 51px;
