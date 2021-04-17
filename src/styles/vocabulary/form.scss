@@ -23,16 +23,13 @@ $input-size-large: 1.75rem;
 @mixin form_control {
   font-family: $family-source-sans-pro;
   font-weight: 600;
-
   line-height: 1.3;
-
-  border-width: 0.125rem;
+  border-color: $input-border-color!important;
 }
 
 // Input
 .input {
   @include form_control;
-  box-sizing: border-box;
   height: 2.5em;
   padding-left: $space-small;
 
