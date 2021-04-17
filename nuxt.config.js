@@ -129,6 +129,7 @@ export default {
     { src: '~plugins/ga.js', mode: 'client' },
   ],
   css: [
+    '~/assets/fonts.css',
     '@creativecommons/vocabulary/scss/vocabulary.scss',
     '~/styles/global.scss',
   ],
