@@ -185,7 +185,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-@import '~/styles/bulma/utilities/_all';
+@import '~/styles/bulma/utilities/variables';
 
 .button[disabled] {
   opacity: 1;

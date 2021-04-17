@@ -1,0 +1,305 @@
+@import "../bulma/utilities/controls"
+@import "../bulma/utilities/mixins"
+
+$button-color: $color-dark-gray
+$button-background-color: $scheme-main
+$button-family: $family-secondary
+
+$button-border-color: $color-dark-gray
+$button-border-width: $control-border-width
+
+$button-padding-vertical: 1.813rem
+$button-padding-horizontal: 2.5rem
+
+$button-hover-color: $color-white
+$button-hover-border-color: $color-dark-gray
+$button-hover-background-color: $color-dark-gray
+
+$button-focus-color: $link-focus
+$button-focus-border-color: $link-focus-border
+$button-focus-box-shadow-size: 0 0 0 0.125em
+$button-focus-box-shadow-color: bulmaRgba($link, 0.25)
+
+$button-active-color: $link-active
+$button-active-border-color: $link-active-border
+
+$button-text-color: $text
+$button-text-decoration: underline
+$button-text-hover-background-color: $background
+$button-text-hover-color: $text-strong
+
+$button-disabled-background-color: $scheme-main
+$button-disabled-border-color: $border
+$button-disabled-shadow: none
+$button-disabled-opacity: 0.5
+
+$button-colors: $colors
+
+// The button sizes use mixins so they can be used at different breakpoints
+=button-small
+  &:not(.is-rounded)
+    border-radius: $radius-small
+  font-size: $size-small
+=button-normal
+  font-size: $size-normal
+=button-medium
+  font-size: $size-medium
+=button-large
+  font-size: $size-large
+
+.button
+  @extend %control
+  @extend %unselectable
+  --button-padding-horizontal: #{$button-padding-horizontal}
+  --button-padding-vertical: #{$button-padding-vertical}
+  --button-border-width: #{$button-border-width}
+  text-transform: uppercase
+  font-weight: 600
+  line-height: 0
+  background-color: $button-background-color
+  border-color: $button-border-color
+  border-width: $button-border-width
+  color: $button-color
+  cursor: pointer
+  font-family: $button-family
+  font-size: $size-4
+  justify-content: center
+  padding: var(--button-padding-vertical) var(--button-padding-horizontal)
+  text-align: center
+  white-space: nowrap
+  strong
+    color: inherit
+  .icon
+    &,
+    &.is-small,
+    &.is-medium,
+    &.is-large
+      height: 1.5em
+      width: 1.5em
+    &:first-child:not(:last-child)
+      +ltr-property("margin", calc(#{-1 / 2 * $button-padding-horizontal} - #{$button-border-width}), false)
+      +ltr-property("margin", $button-padding-horizontal / 4)
+    &:last-child:not(:first-child)
+      +ltr-property("margin", $button-padding-horizontal / 4, false)
+      +ltr-property("margin", calc(#{-1 / 2 * $button-padding-horizontal} - #{$button-border-width}))
+    &:first-child:last-child
+      margin-left: calc(-1 / 2 * var(--button-padding-horizontal) - var(--button-border-width))
+      margin-right: calc(-1 / 2 * var(--button-padding-horizontal) - var(--button-border-width))
+  // States
+  &:hover,
+  &.is-hovered
+    background-color: $button-hover-background-color
+    border-color: $button-hover-border-color
+    color: $button-hover-color
+    text-decoration: none
+  &:focus,
+  &.is-focused
+    border-color: $button-focus-border-color
+    color: $button-focus-color
+    &:not(:active)
+      box-shadow: $button-focus-box-shadow-size $button-focus-box-shadow-color
+  &:active,
+  &.is-active
+    border-color: $button-active-border-color
+    color: $button-active-color
+  // Colors
+  &.is-text
+    background-color: transparent
+    border-color: transparent
+    height: auto!important
+    line-height: normal
+    color: $button-text-color
+    text-decoration: none
+    white-space: normal
+    &:hover,
+    &.is-hovered,
+    &:focus,
+    &.is-focused
+      background-color: $button-text-hover-background-color
+      color: $button-text-hover-color
+      text-decoration: underline
+    &:active,
+    &.is-active
+      background-color: transparent
+      color: $button-text-hover-color
+      border-color: transparent
+      box-shadow: none
+    &[disabled],
+    fieldset[disabled] &
+      background-color: transparent
+      border-color: transparent
+      box-shadow: none
+  &.is-success
+    border-color: transparent
+    color: $color-white
+    background-color: $color-forest-green
+    &:hover,
+    &:active
+      background-color: $color-brighter-forest-green
+  &.is-primary
+    border-color: transparent
+    color: $color-white
+    background-color: $color-tomato
+    &:hover,
+    &:active
+      background-color: $color-brighter-tomato
+  &.is-info
+    border-color: transparent
+    color: $color-white
+    background-color: $color-dark-slate-blue
+    &:hover,
+    &:active
+      background-color: $color-brighter-dark-slate-blue
+  &.donate
+    background-color: $color-gold
+    border-color: $color-gold
+    color: $color-black
+
+    &:hover
+      background-color: $color-brighter-gold
+      border-color: $color-brighter-gold
+      color: $color-black
+      text-decoration: none
+
+  // Sizes
+  &.big
+    font-size: 1.75rem
+    --button-padding-horizontal: #{$space-large}
+    --button-padding-vertical: calc(#{$space-large} - 0.093rem)
+  &.small
+    font-size: 1rem
+    --button-padding-horizontal: calc(#{$space-normal} + 0.2rem)
+    --button-padding-vertical: #{space-small}
+  &.tiny
+    font-family: $family-source-sans-pro
+    --button-padding-horizontal: #{$space-small}
+    --button-padding-vertical: 0
+    font-size: 1rem
+    text-transform: none
+    height: 2rem
+  &.tag
+    font-family: $family-source-sans-pro
+    padding: 0 $space-normal
+    font-size: 0.81rem
+    text-transform: none
+    min-height: 1.81rem
+    height: auto
+    line-height: normal
+    white-space: normal
+    border-radius: 18.75rem
+    border: 0.125rem solid $color-light-gray
+    &:hover
+      border-color: $color-dark-gray
+
+    &--removable
+      font-family: $family-source-sans-pro
+      padding: 0 $space-normal
+      font-size: 0.81rem
+      text-transform: none
+      height: 1.81rem
+      border-radius: 18.75rem
+      border: 0.125rem solid $color-light-gray
+      &:hover
+        color: $color-dark-gray
+        background-color: $color-white
+        border: 0.125rem solid $color-dark-gray
+
+      &:hover > .icon
+        color: $color-white
+        background-color: $color-dark-gray
+
+        &:first-child:last-child
+          margin-right: calc(-1rem - 1px)
+
+    &--removable .icon
+      height: 1.56rem
+      width: 1.9rem
+      line-height: 1.56rem
+      font-size: 1rem
+      background-color: $color-white
+      color: $color-light-gray
+      border-top-right-radius: 18.75rem
+      border-bottom-right-radius: 18.75rem
+
+      &:first-child:last-child
+        margin-left: 0.3rem
+        margin-right: -1rem
+
+  // Modifiers
+  &[disabled],
+  fieldset[disabled] &
+    background-color: $button-disabled-background-color
+    border-color: $button-disabled-border-color
+    box-shadow: $button-disabled-shadow
+    opacity: $button-disabled-opacity
+  &.is-fullwidth
+    display: flex
+    width: 100%
+  &.is-loading
+    color: transparent !important
+    pointer-events: none
+    &::after
+      @extend %loader
+      +center(1em)
+      position: absolute !important
+
+.buttons
+  align-items: center
+  display: flex
+  flex-wrap: wrap
+  justify-content: flex-start
+  .button
+    margin-bottom: 0.5rem
+    &:not(:last-child):not(.is-fullwidth)
+      +ltr-property("margin", 0.5rem)
+  &:last-child
+    margin-bottom: -0.5rem
+  &:not(:last-child)
+    margin-bottom: 1rem
+  // Sizes
+  &.are-small
+    .button:not(.is-normal):not(.is-medium):not(.is-large)
+      +button-small
+  &.are-medium
+    .button:not(.is-small):not(.is-normal):not(.is-large)
+      +button-medium
+  &.are-large
+    .button:not(.is-small):not(.is-normal):not(.is-medium)
+      +button-large
+  &.has-addons
+    .button
+      &:not(:first-child)
+        border-bottom-left-radius: 0
+        border-top-left-radius: 0
+      &:not(:last-child)
+        border-bottom-right-radius: 0
+        border-top-right-radius: 0
+        +ltr-property("margin", -1px)
+      &:last-child
+        +ltr-property("margin", 0)
+      &:hover,
+      &.is-hovered
+        z-index: 2
+      &:focus,
+      &.is-focused,
+      &:active,
+      &.is-active,
+      &.is-selected
+        z-index: 3
+        &:hover
+          z-index: 4
+      &.is-expanded
+        flex-grow: 1
+        flex-shrink: 1
+  &.is-centered
+    justify-content: center
+    &:not(.has-addons)
+      .button:not(.is-fullwidth)
+        margin-left: 0.25rem
+        margin-right: 0.25rem
+  &.is-right
+    justify-content: flex-end
+    &:not(.has-addons)
+      .button:not(.is-fullwidth)
+        margin-left: 0.25rem
+        margin-right: 0.25rem

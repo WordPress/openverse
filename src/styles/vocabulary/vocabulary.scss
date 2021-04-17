@@ -8,14 +8,6 @@
 @import '../bulma/helpers/_all.sass';
 @import '../bulma/base/generic.sass';
 
-// Tokens
-@import '../bulma/helpers/color.sass';
-@import '../bulma/helpers/spacing.sass';
-@import '../bulma/helpers/typography.sass';
-
-// Elements
-@import './button.scss';
-
 // Form
 @import './form.scss';
 
@@ -28,9 +20,10 @@
 // Patterns
 @import './header.scss';
 @import './footer.scss';
-@import './locale.scss';
 @import './image.scss';
-@import './profile_image.scss';
 
 // Content
 @import '../bulma/elements/content.sass';
+
+// Elements
+@import './button.sass';

@@ -126,7 +126,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/bulma/utilities/_all.sass';
+@import '~/styles/bulma/utilities/variables';
 
 .filter-toggle {
   text-transform: none;

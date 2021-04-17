@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/bulma/utilities/_all.sass';
+@import '~/styles/bulma/utilities/variables';
 
 // from http://www.cssarrowplease.com/
 .license-explanation-tooltip {

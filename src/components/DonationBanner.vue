@@ -61,8 +61,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '~/styles/bulma/utilities/_all';
-@import '~/styles/bulma/helpers/_all';
+@import '~/styles/bulma/utilities/variables';
 
 $bgColor: #e6f6eb;
 
