@@ -1,3 +1,5 @@
+@import '../bulma/utilities/controls';
+@import '../bulma/utilities/mixins';
 $input-color: $color-dark-slate-gray;
 $input-border-color: $color-light-gray;
 $input-icon-color: $color-light-gray;
@@ -19,46 +21,9 @@ $input-size-large: 1.75rem;
 
 @import '~/styles/bulma/form/_all.sass';
 
-// Form control
-@mixin form_control {
-  font-family: $family-source-sans-pro;
-  font-weight: 600;
-  line-height: 1.3;
-  border-color: $input-border-color !important;
-}
-
-// Input
-.input {
-  @include form_control;
-  height: 2.5em;
-  padding-left: $space-small;
-
-  &.is-medium {
-    font-size: 1.43rem;
-    height: 3.875rem;
-    padding-left: $space-normal;
-  }
-
-  &.is-large {
-    font-size: 1.75rem;
-    height: 5.063rem;
-    padding-left: $space-big;
-  }
-}
-
-// Textarea
-.textarea {
-  @include form_control;
-  box-sizing: border-box;
-  min-height: 6.875em;
-  resize: both;
-}
-
 // Select
 .select {
   select {
-    @include form_control;
-
     option {
       font-weight: 400;
     }
@@ -66,7 +31,6 @@ $input-size-large: 1.75rem;
 
   &:not(.is-multiple):not(.is-loading)::after {
     background: linear-gradient(45deg, $color-black 50%, transparent 50%);
-
     border: none;
     border-radius: 0;
   }
@@ -74,12 +38,6 @@ $input-size-large: 1.75rem;
 
 // Icon support for bulma form controls
 .control {
-  box-sizing: border-box;
-  clear: both;
-  font-size: $input-size-normal;
-  position: relative;
-  text-align: left;
-
   // Modifiers
   &.has-icons-left,
   &.has-icons-right {

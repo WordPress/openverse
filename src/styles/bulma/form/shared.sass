@@ -1,42 +1,52 @@
 @import "../utilities/controls"
 @import "../utilities/mixins"
 
-$form-colors: $colors !default
+$form-colors: $colors
 
-$input-color: $text-strong !default
-$input-background-color: $scheme-main !default
-$input-border-color: $border !default
-$input-height: $control-height !default
-$input-shadow: inset 0 0.0625em 0.125em rgba($scheme-invert, 0.05) !default
-$input-placeholder-color: bulmaRgba($input-color, 0.3) !default
+$input-color: $text-strong
+$input-background-color: $scheme-main
+$input-border-color: $color-light-gray
+$input-height: $control-height
+$input-shadow: inset 0 0.0625em 0.125em rgba($scheme-invert, 0.05)
+$input-placeholder-color: bulmaRgba($input-color, 0.3)
 
-$input-hover-color: $text-strong !default
-$input-hover-border-color: $border-hover !default
+$input-hover-color: $text-strong
+$input-hover-border-color: $color-gray
 
-$input-focus-color: $text-strong !default
-$input-focus-border-color: $link !default
-$input-focus-box-shadow-size: 0 0 0 0.125em !default
-$input-focus-box-shadow-color: bulmaRgba($link, 0.25) !default
+$input-focus-color: $text-strong
+$input-focus-border-color: $color-gray
+$input-focus-box-shadow-size: 0 0 0 0.125em
+$input-focus-box-shadow-color: bulmaRgba($color-dark-slate-gray, 0.25)
 
-$input-disabled-color: $text-light !default
-$input-disabled-background-color: $background !default
-$input-disabled-border-color: $background !default
-$input-disabled-placeholder-color: bulmaRgba($input-disabled-color, 0.3) !default
+$input-disabled-color: $text-light
+$input-disabled-background-color: $background
+$input-disabled-border-color: $background
+$input-disabled-placeholder-color: bulmaRgba($input-disabled-color, 0.3)
 
-$input-arrow: $link !default
+$input-arrow: $color-dark-gray
 
-$input-icon-color: $border !default
-$input-icon-active-color: $text !default
+$input-icon-color: $border
+$input-icon-active-color: $text
 
-$input-radius: $radius !default
+$input-radius: $radius
+
+
+%form-control
+  font-family: $family-source-sans-pro
+  font-weight: 600
+  line-height: 1.3
+  border-color: $input-border-color !important
 
 =input
   @extend %control
+  @extend %form-control
+  height: 2.5em
+  padding-left: $space-small
   background-color: $input-background-color
-  border-color: $input-border-color
+  border-color: $input-border-color!important
   border-radius: $input-radius
   color: $input-color
-  +placeholder
+  &::placeholder
     color: $input-placeholder-color
   &:hover,
   &.is-hovered
@@ -46,7 +56,7 @@ $input-radius: $radius !default
   &:active,
   &.is-active
     border-color: $input-focus-border-color!important
-    box-shadow: $input-focus-box-shadow-size $input-focus-box-shadow-color
+    //box-shadow: $input-focus-box-shadow-size $input-focus-box-shadow-color
   &[disabled],
   fieldset[disabled] &
     background-color: $input-disabled-background-color
@@ -58,3 +68,4 @@ $input-radius: $radius !default
 
 %input
   +input
+

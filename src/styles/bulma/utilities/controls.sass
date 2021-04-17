@@ -12,8 +12,7 @@ $control-padding-vertical: calc(0.5em - #{$control-border-width}) !default
 $control-padding-horizontal: calc(0.75em - #{$control-border-width}) !default
 
 =control
-  -moz-appearance: none
-  -webkit-appearance: none
+  appearance: none
   align-items: center
   border: $control-border-width solid transparent
   border-radius: $control-radius
@@ -26,6 +25,8 @@ $control-padding-horizontal: calc(0.75em - #{$control-border-width}) !default
   padding: $control-padding-vertical $control-padding-horizontal
   position: relative
   vertical-align: top
+  clear: both
+  text-align: left
   // States
   &:focus,
   &.is-focused,
