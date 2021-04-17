@@ -1,4 +1,34 @@
-@import "../utilities/mixins"
+$fullhd: 1248px + (2 * $gap)
+
+@import "../bulma/utilities/mixins"
+
+$container-offset: (2 * $gap) !default
+$container-max-width: $fullhd !default
+
+.container
+  flex-grow: 1
+  margin: 0 auto
+  position: relative
+  width: auto
+  &.is-fluid
+    max-width: none !important
+    padding-left: $gap
+    padding-right: $gap
+    width: 100%
+  +desktop
+    max-width: $desktop - $container-offset
+  +until-widescreen
+    &.is-widescreen:not(.is-max-desktop)
+      max-width: min($widescreen, $container-max-width) - $container-offset
+  +until-fullhd
+    &.is-fullhd:not(.is-max-desktop):not(.is-max-widescreen)
+      max-width: min($fullhd, $container-max-width) - $container-offset
+  +widescreen
+    &:not(.is-max-desktop)
+      max-width: min($widescreen, $container-max-width) - $container-offset
+  +fullhd
+    &:not(.is-max-desktop):not(.is-max-widescreen)
+      max-width: min($fullhd, $container-max-width) - $container-offset
 
 $column-gap: 0.75rem !default
 
@@ -473,41 +503,16 @@ $column-gap: 0.75rem !default
     &.is-desktop
       display: flex
 
-@if $variable-columns
-  .columns.is-variable
-    --columnGap: 0.75rem
-    +ltr-property("margin", calc(-1 * var(--columnGap)), false)
-    +ltr-property("margin", calc(-1 * var(--columnGap)))
-    > .column
-      padding-left: var(--columnGap)
-      padding-right: var(--columnGap)
-    @for $i from 0 through 8
-      &.is-#{$i}
-        --columnGap: #{$i * 0.25rem}
-      +mobile
-        &.is-#{$i}-mobile
-          --columnGap: #{$i * 0.25rem}
-      +tablet
-        &.is-#{$i}-tablet
-          --columnGap: #{$i * 0.25rem}
-      +tablet-only
-        &.is-#{$i}-tablet-only
-          --columnGap: #{$i * 0.25rem}
-      +touch
-        &.is-#{$i}-touch
-          --columnGap: #{$i * 0.25rem}
-      +desktop
-        &.is-#{$i}-desktop
-          --columnGap: #{$i * 0.25rem}
-      +desktop-only
-        &.is-#{$i}-desktop-only
-          --columnGap: #{$i * 0.25rem}
-      +widescreen
-        &.is-#{$i}-widescreen
-          --columnGap: #{$i * 0.25rem}
-      +widescreen-only
-        &.is-#{$i}-widescreen-only
-          --columnGap: #{$i * 0.25rem}
-      +fullhd
-        &.is-#{$i}-fullhd
-          --columnGap: #{$i * 0.25rem}
+$section-padding: 3rem 1.5rem !default
+$section-padding-medium: 9rem 1.5rem !default
+$section-padding-large: 18rem 1.5rem !default
+
+.section
+  padding: $section-padding
+  // Responsiveness
+  +desktop
+    // Sizes
+    &.is-medium
+      padding: $section-padding-medium
+    &.is-large
+      padding: $section-padding-large

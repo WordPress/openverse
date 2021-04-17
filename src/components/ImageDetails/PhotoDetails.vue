@@ -74,7 +74,7 @@
           <span v-else>{{ image.creator }}</span>
         </span>
       </div>
-      <section class="search-tabs">
+      <section class="tabs">
         <div role="tablist" :aria-label="$t('photo-details.aria.details')">
           <button
             id="reuse"

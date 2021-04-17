@@ -5,7 +5,7 @@
     <h5 class="b-header margin-bottom-small">
       {{ $t('photo-details.reuse.copy-license.title') }}
     </h5>
-    <section class="search-tabs boxed">
+    <section class="tabs boxed">
       <div
         role="tablist"
         :aria-label="$t('photo-details.reuse.copy-license.title')"
