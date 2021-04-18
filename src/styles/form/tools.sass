@@ -3,8 +3,6 @@ $label-weight: $weight-bold !default
 
 $help-size: $size-small !default
 
-$label-colors: $form-colors !default
-
 .label
   color: $label-color
   display: block
@@ -24,10 +22,6 @@ $label-colors: $form-colors !default
   display: block
   font-size: $help-size
   margin-top: 0.25rem
-  @each $name, $pair in $label-colors
-    $color: nth($pair, 1)
-    &.is-#{$name}
-      color: $color
 
 // Containers
 
@@ -170,23 +164,36 @@ $label-colors: $form-colors !default
   &.has-icons-right
     .input,
     .select
-      &:focus
+      &:focus,
+      &:hover
         & ~ .icon
-          color: $input-icon-active-color
+          color: $color-gray
+      &:disabled
+        & ~ .icon
+          color: $input-disabled-placeholder-color
       &.is-small ~ .icon
-        font-size: $size-small
+        font-size: $input-size-small
+        height: 2.5em
       &.is-medium ~ .icon
-        font-size: $size-medium
+        font-size: $input-size-medium
+        height: 3.875rem
       &.is-large ~ .icon
-        font-size: $size-large
+        font-size: $input-size-large
+        height: 5.063rem
     .icon
-      color: $input-icon-color
+      color: $color-light-gray
       height: $input-height
       pointer-events: none
       position: absolute
       top: 0
       width: $input-height
       z-index: 4
+      align-items: center
+      display: inline-flex
+      justify-content: center
+    .icon .icon
+      color: inherit
+      position: unset
   &.has-icons-left
     .input,
     .select select

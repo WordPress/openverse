@@ -1,5 +1,3 @@
-$select-colors: $form-colors !default
-
 .select
   display: inline-block
   max-width: 100%
@@ -10,16 +8,14 @@ $select-colors: $form-colors !default
   &:not(.is-multiple):not(.is-loading)
     &::after
       +arrow
-      border-color: $input-arrow
+      background: linear-gradient(45deg, $color-black 50%, transparent 50%)
+      border: none
+      border-radius: 0
       +ltr-position(1.125em)
       z-index: 4
-  &.is-rounded
-    select
-      border-radius: $radius-rounded
-      +ltr-property("padding", 1em, false)
   select
     +input
-    +form-control
+    border-color: $color-light-gray
     cursor: pointer
     display: block
     font-size: 1em
@@ -29,7 +25,7 @@ $select-colors: $form-colors !default
       display: none
     &[disabled]:hover,
     fieldset[disabled] &:hover
-      border-color: $input-disabled-border-color
+      border-color: $color-gray
     &:not([multiple])
       +ltr-property("padding", 2.5em)
     &[multiple]
@@ -41,7 +37,7 @@ $select-colors: $form-colors !default
   // States
   &:not(.is-multiple):not(.is-loading):hover
     &::after
-      border-color: $input-hover-color
+      border-color: $color-dark-slate-gray
   // Sizes
   &.is-small
     +control-small

@@ -1,6 +1,6 @@
-$textarea-padding: $control-padding-horizontal !default
-$textarea-max-height: 40em !default
-$textarea-min-height: 8em !default
+$textarea-padding: $control-padding-horizontal
+$textarea-max-height: 40em
+$textarea-min-height: 8em
 
 %input-textarea
   @extend %input
@@ -38,7 +38,7 @@ $textarea-min-height: 8em !default
 
 .textarea
   @extend %input-textarea
-  +form-control
+  border-color: $color-light-gray
   display: block
   max-width: 100%
   min-width: 100%

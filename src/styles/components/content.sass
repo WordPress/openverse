@@ -1,24 +1,5 @@
 @import "../utilities/mixins"
 
-$content-heading-color: $text-strong !default
-$content-heading-weight: $weight-semibold !default
-$content-heading-line-height: 1.125 !default
-
-$content-blockquote-background-color: $background !default
-$content-blockquote-border-left: 5px solid $border !default
-$content-blockquote-padding: 1.25em 1.5em !default
-
-$content-pre-padding: 1.25em 1.5em !default
-
-$content-table-cell-border: 1px solid $border !default
-$content-table-cell-border-width: 0 0 1px !default
-$content-table-cell-padding: 0.5em 0.75em !default
-$content-table-cell-heading-color: $text-strong !default
-$content-table-head-cell-border-width: 0 0 2px !default
-$content-table-head-cell-color: $text-strong !default
-$content-table-foot-cell-border-width: 2px 0 0 !default
-$content-table-foot-cell-color: $text-strong !default
-
 .content
   +block
   // Inline§
@@ -40,9 +21,9 @@ $content-table-foot-cell-color: $text-strong !default
   h4,
   h5,
   h6
-    color: $content-heading-color
-    font-weight: $content-heading-weight
-    line-height: $content-heading-line-height
+    color: $text-strong
+    font-weight: $weight-semibold
+    line-height: 1.125
   h1
     font-size: 2em
     margin-bottom: 0.5em
@@ -68,9 +49,9 @@ $content-table-foot-cell-color: $text-strong !default
     font-size: 1em
     margin-bottom: 1em
   blockquote
-    background-color: $content-blockquote-background-color
-    +ltr-property("border", $content-blockquote-border-left, false)
-    padding: $content-blockquote-padding
+    background-color: $color-white
+    +ltr-property("border", 5px solid $border, false)
+    padding: 1.25em 1.5em
   ol
     list-style-position: outside
     +ltr-property("margin", 2em, false)
@@ -111,7 +92,7 @@ $content-table-foot-cell-color: $text-strong !default
   pre
     +overflow-touch
     overflow-x: auto
-    padding: $content-pre-padding
+    padding: 1.25em 1.5em
     white-space: pre
     word-wrap: normal
   sup,
@@ -121,24 +102,23 @@ $content-table-foot-cell-color: $text-strong !default
     width: 100%
     td,
     th
-      border: $content-table-cell-border
-      border-width: $content-table-cell-border-width
-      padding: $content-table-cell-padding
+      border-width: 0 0 1px
+      padding: 0.5em 0.75em
       vertical-align: top
     th
-      color: $content-table-cell-heading-color
+      color: $text-strong
       &:not([align])
         text-align: inherit
     thead
       td,
       th
-        border-width: $content-table-head-cell-border-width
-        color: $content-table-head-cell-color
+        border-width: 0 0 2px
+        color: $text-strong
     tfoot
       td,
       th
-        border-width: $content-table-foot-cell-border-width
-        color: $content-table-foot-cell-color
+        border-width: 2px 0 0
+        color: $text-strong
     tbody
       tr
         &:last-child

@@ -1,32 +1,28 @@
 @import "derived-variables"
 
-$control-radius: $radius !default
-$control-radius-small: $radius-small !default
-
 $control-border-width: 0.125rem
-
-$control-height: 2.5em !default
-$control-line-height: 1.5 !default
-
-$control-padding-vertical: calc(0.5em - #{$control-border-width}) !default
-$control-padding-horizontal: calc(0.75em - #{$control-border-width}) !default
+$control-padding-vertical: calc(0.5em - #{$control-border-width})
+$control-padding-horizontal: calc(0.75em - #{$control-border-width})
 
 =control
   appearance: none
   align-items: center
   border: $control-border-width solid transparent
-  border-radius: $control-radius
+  border-radius: $radius
   box-shadow: none
   display: inline-flex
   font-size: $size-normal
-  height: $control-height
+  height: 2.5em
   justify-content: flex-start
-  line-height: $control-line-height
   padding: $control-padding-vertical $control-padding-horizontal
   position: relative
   vertical-align: top
   clear: both
   text-align: left
+  font-family: $family-source-sans-pro
+  font-weight: 600
+  line-height: 1.3
+
   // States
   &:focus,
   &.is-focused,
@@ -39,7 +35,7 @@ $control-padding-horizontal: calc(0.75em - #{$control-border-width}) !default
 
 // The controls sizes use mixins so they can be used at different breakpoints
 =control-small
-  border-radius: $control-radius-small
+  border-radius: $radius-small
   font-size: $size-small
 =control-medium
   font-size: $size-medium

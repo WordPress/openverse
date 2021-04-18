@@ -1,18 +1,4 @@
 @charset "utf-8"
-@import '../utilities/controls'
-@import '../utilities/mixins'
-$input-color: $color-dark-slate-gray
-$input-border-color: $color-light-gray
-$input-icon-color: $color-light-gray
-$input-icon-active-color: $color-gray
-$input-shadow: none
-
-$input-focus-box-shadow-color: none
-$input-focus-border-color: $color-gray
-$input-hover-border-color: $color-gray
-$input-active-border-color: $color-gray
-
-$input-disabled-border-color: $color-gray
 
 // Custom classes not from with bulma
 $input-size-small: $size-small
@@ -25,67 +11,3 @@ $input-size-large: 1.75rem
 @import "input-textarea"
 @import "checkbox-radio"
 @import "select"
-
-
-// Select
-.select
-  select
-    option
-      font-weight: $weight-normal
-
-  &:not(.is-multiple):not(.is-loading)::after
-    background: linear-gradient(45deg, $color-black 50%, transparent 50%)
-    border: none
-    border-radius: 0
-
-// Icon support for bulma form controls
-.control
-  // Modifiers
-  &.has-icons-left,
-  &.has-icons-right
-    .icon
-      align-items: center
-      display: inline-flex
-      justify-content: center
-
-    .icon .icon
-      color: inherit
-      position: unset
-
-    .input,
-    .select
-      &:focus,
-      &:hover
-        & ~ .icon
-          color: $input-icon-active-color
-
-      &:disabled
-        & ~ .icon
-          color: $input-disabled-placeholder-color
-
-      &.is-small ~ .icon
-        font-size: $input-size-small
-        height: 2.5em
-
-      &.is-medium ~ .icon
-        font-size: $input-size-medium
-        height: 3.875rem
-
-      &.is-large ~ .icon
-        font-size: $input-size-large
-        height: 5.063rem
-
-    .icon
-      color: $input-icon-color
-      pointer-events: none
-      position: absolute
-      top: 0
-      z-index: 4
-
-  &.has-icons-left
-    .icon.is-left
-      left: 0
-
-  &.has-icons-right
-    .icon.is-right
-      right: 0
