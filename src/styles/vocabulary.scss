@@ -1,0 +1,29 @@
+@charset "utf-8";
+
+// Reset
+@import 'base/minireset';
+
+// Bulma
+@import 'utilities/all';
+@import 'bulma/helpers/all';
+@import 'bulma/base/generic';
+
+// Form
+@import 'vocabulary/form';
+
+// Layouts
+@import 'vocabulary/layout';
+@import 'bulma/components/card';
+@import 'vocabulary/table';
+@import 'tabs';
+
+// Patterns
+@import 'bulma/components/navbar';
+@import 'vocabulary/footer';
+@import 'vocabulary/image';
+
+// Content
+@import 'bulma/elements/content';
+
+// Elements
+@import 'vocabulary/button';

@@ -92,7 +92,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/bulma/utilities/variables';
+@import '~/styles/utilities/variables';
 
 .meta-modal-content {
   max-width: 46rem;

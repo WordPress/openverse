@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/bulma/utilities/variables';
+@import '~/styles/utilities/variables';
 
 .locale-selector {
   margin-top: $space-big;

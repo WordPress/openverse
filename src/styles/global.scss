@@ -1,4 +1,4 @@
-@import '~/styles/bulma/utilities/variables';
+@import '~/styles/utilities/variables';
 body {
   margin: 0;
   font-family: 'Source Sans Pro', sans-serif;
@@ -17,10 +17,6 @@ body {
   }
 }
 
-// override global header styles for now
-.cc-global-header .container {
-  max-width: 100%;
-}
 
 /**
 * Arrow popup styles
