@@ -2,18 +2,8 @@
 @import "../bulma/utilities/mixins"
 
 $button-color: $color-dark-gray
-$button-background-color: $scheme-main
-$button-family: $family-secondary
 
-$button-border-color: $color-dark-gray
-$button-border-width: $control-border-width
-
-$button-padding-vertical: 1.813rem
-$button-padding-horizontal: 2.5rem
-
-$button-hover-color: $color-white
-$button-hover-border-color: $color-dark-gray
-$button-hover-background-color: $color-dark-gray
+$button-border-width: 0.125rem
 
 $button-focus-color: $link-focus
 $button-focus-border-color: $link-focus-border
@@ -50,19 +40,20 @@ $button-colors: $colors
 .button
   @extend %control
   @extend %unselectable
-  --button-padding-horizontal: #{$button-padding-horizontal}
-  --button-padding-vertical: #{$button-padding-vertical}
+  --button-padding-horizontal: 2.5rem
+  --button-padding-vertical: 1.813rem
   --button-border-width: #{$button-border-width}
+  --button-font-size: #{$size-4}
   text-transform: uppercase
   font-weight: 600
   line-height: 0
-  background-color: $button-background-color
-  border-color: $button-border-color
-  border-width: $button-border-width
+  background-color: $color-white
+  border-color: $color-dark-gray
+  border-width: var(--button-border-width)
   color: $button-color
   cursor: pointer
-  font-family: $button-family
-  font-size: $size-4
+  font-family: $family-secondary
+  font-size: var(--button-font-size)
   justify-content: center
   padding: var(--button-padding-vertical) var(--button-padding-horizontal)
   text-align: center
@@ -77,20 +68,20 @@ $button-colors: $colors
       height: 1.5em
       width: 1.5em
     &:first-child:not(:last-child)
-      +ltr-property("margin", calc(#{-1 / 2 * $button-padding-horizontal} - #{$button-border-width}), false)
-      +ltr-property("margin", $button-padding-horizontal / 4)
+      +ltr-property("margin", calc(-1 / 2 * var(--button-padding-horizontal) - #{$button-border-width}), false)
+      +ltr-property("margin", var(--button-padding-horizontal) / 4)
     &:last-child:not(:first-child)
-      +ltr-property("margin", $button-padding-horizontal / 4, false)
-      +ltr-property("margin", calc(#{-1 / 2 * $button-padding-horizontal} - #{$button-border-width}))
+      +ltr-property("margin", var(--button-padding-horizontal) / 4, false)
+      +ltr-property("margin", calc(-1 / 2 * var(--button-padding-horizontal) - #{$button-border-width}))
     &:first-child:last-child
       margin-left: calc(-1 / 2 * var(--button-padding-horizontal) - var(--button-border-width))
       margin-right: calc(-1 / 2 * var(--button-padding-horizontal) - var(--button-border-width))
   // States
   &:hover,
   &.is-hovered
-    background-color: $button-hover-background-color
-    border-color: $button-hover-border-color
-    color: $button-hover-color
+    background-color: $color-dark-gray
+    border-color: $color-dark-gray
+    color: $color-white
     text-decoration: none
   &:focus,
   &.is-focused
@@ -115,7 +106,7 @@ $button-colors: $colors
     &.is-hovered,
     &:focus,
     &.is-focused
-      background-color: $button-text-hover-background-color
+      background-color: transparent
       color: $button-text-hover-color
       text-decoration: underline
     &:active,
@@ -163,24 +154,25 @@ $button-colors: $colors
 
   // Sizes
   &.big
-    font-size: 1.75rem
+    --button-font-size: 1.75rem
     --button-padding-horizontal: #{$space-large}
     --button-padding-vertical: calc(#{$space-large} - 0.093rem)
   &.small
-    font-size: 1rem
+    --button-font-size: 1rem
     --button-padding-horizontal: calc(#{$space-normal} + 0.2rem)
-    --button-padding-vertical: #{space-small}
+    --button-padding-vertical: #{$space-small}
   &.tiny
     font-family: $family-source-sans-pro
     --button-padding-horizontal: #{$space-small}
     --button-padding-vertical: 0
-    font-size: 1rem
+    --button-font-size: 1rem
     text-transform: none
     height: 2rem
   &.tag
     font-family: $family-source-sans-pro
-    padding: 0 $space-normal
-    font-size: 0.81rem
+    --button-padding-vertical: 0
+    --button-padding-horizontal: #{$space-normal}
+    --button-font-size: 0.81rem
     text-transform: none
     min-height: 1.81rem
     height: auto
@@ -190,40 +182,6 @@ $button-colors: $colors
     border: 0.125rem solid $color-light-gray
     &:hover
       border-color: $color-dark-gray
-
-    &--removable
-      font-family: $family-source-sans-pro
-      padding: 0 $space-normal
-      font-size: 0.81rem
-      text-transform: none
-      height: 1.81rem
-      border-radius: 18.75rem
-      border: 0.125rem solid $color-light-gray
-      &:hover
-        color: $color-dark-gray
-        background-color: $color-white
-        border: 0.125rem solid $color-dark-gray
-
-      &:hover > .icon
-        color: $color-white
-        background-color: $color-dark-gray
-
-        &:first-child:last-child
-          margin-right: calc(-1rem - 1px)
-
-    &--removable .icon
-      height: 1.56rem
-      width: 1.9rem
-      line-height: 1.56rem
-      font-size: 1rem
-      background-color: $color-white
-      color: $color-light-gray
-      border-top-right-radius: 18.75rem
-      border-bottom-right-radius: 18.75rem
-
-      &:first-child:last-child
-        margin-left: 0.3rem
-        margin-right: -1rem
 
   // Modifiers
   &[disabled],
