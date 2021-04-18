@@ -21,17 +21,17 @@ $input-size-medium: 1.43rem
 $input-size-large: 1.75rem
 
 @import "shared"
+@import "tools"
 @import "input-textarea"
 @import "checkbox-radio"
 @import "select"
-@import "file"
-@import "tools"
+
 
 // Select
 .select
   select
     option
-      font-weight: 400
+      font-weight: $weight-normal
 
   &:not(.is-multiple):not(.is-loading)::after
     background: linear-gradient(45deg, $color-black 50%, transparent 50%)

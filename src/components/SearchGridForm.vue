@@ -126,7 +126,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/utilities/variables';
+@import '~/styles/utilities/_all';
 
 .filter-toggle {
   text-transform: none;

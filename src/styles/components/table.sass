@@ -32,7 +32,7 @@ $table-head-background-color: $color-light-gray
 $table-striped-row-even-background-color: $color-lighter-gray
 $table-cell-border: 1px solid $color-light-gray
 .table
-  @extend %block
+  +block
   background-color: $table-background-color
   color: $table-color
   td,
@@ -130,7 +130,7 @@ $table-cell-border: 1px solid $color-light-gray
           background-color: $table-striped-row-even-background-color
 
 .table-container
-  @extend %block
+  +block
   +overflow-touch
   overflow: auto
   overflow-y: hidden

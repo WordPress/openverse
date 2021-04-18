@@ -1,4 +1,4 @@
-@import '~/styles/utilities/variables';
+@import '~/styles/utilities/_all';
 
 $tabs-border-bottom-color: $color-light-gray;
 $tabs-border-bottom-width: 0.125rem;
@@ -31,7 +31,7 @@ $tabs-font-size: 1rem;
     border-image-outset: unset;
     border-image-repeat: unset;
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: $font-size-h5;
     margin: 0 1rem -0.125rem 1rem;
     padding: 0.5rem 0 1rem;
     position: relative;

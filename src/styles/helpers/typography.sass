@@ -107,7 +107,7 @@ $body-font-sizes: ('-bigger': $font-size-body-bigger,'-big': $font-size-body-big
     font-size: $body-font-size
 
 @each $body-name, $body-font-size in $body-font-sizes
-  @include body-typography($body-name, $body-font-size)
+  +body-typography($body-name, $body-font-size)
 
 .caption
   font-size: $font-size-caption
@@ -161,7 +161,7 @@ $header-font-sizes: ('1': $font-size-h1,'2': $font-size-h2,'3': $font-size-h3,'4
     font-size: $header-font-size
 
 @each $header-level, $header-font-size in $header-font-sizes
-  @include header-typography($header-level, $header-font-size)
+  +header-typography($header-level, $header-font-size)
 
 body
   font-family: $family-body

@@ -49,12 +49,12 @@ $font-size-h2: 2.25rem
 $font-size-h3: 1.75rem
 $font-size-h4: 1.43rem
 $font-size-h5: 1.25rem
-$font-size-h6: 1.15rem // Not in Figma, extrapolated
+$font-size-h6: 1.12rem
 
 $font-size-value: 4.37rem
 
-$font-size-body-bigger: 1.43rem
-$font-size-body-big: 1.12rem
+$font-size-body-bigger: $font-size-h4
+$font-size-body-big: $font-size-h6
 $font-size-body-normal: 1rem
 $font-size-body-list: 1rem
 
@@ -63,8 +63,8 @@ $font-size-caption: 0.8rem
 $size-1: $font-size-h1
 $size-2: $font-size-h2
 $size-3: $font-size-h3
-$size-4: $font-size-body-bigger // Same as $font-size-h4
-$size-5: $font-size-body-big
+$size-4: $font-size-h4 // Same size as font-size-body-bigger
+$size-5: $font-size-h6 // Same size as $font-size-body-big
 $size-6: $font-size-body-normal
 $size-7: $font-size-caption
 
@@ -95,24 +95,23 @@ $gap: 32px !default
 // 960, 1152, and 1344 have been chosen because they are divisible by both 12 and 16
 $tablet: 769px !default
 // 960px container + 4rem
-$desktop: 960px + (2 * $gap) !default
+$desktop: 960px + (2 * $gap)
 // 1152px container + 4rem
-$widescreen: 1152px + (2 * $gap) !default
-$widescreen-enabled: true !default
+$widescreen: 1152px + (2 * $gap)
+$widescreen-enabled: true
 // 1344px container + 4rem
-$fullhd: 1344px + (2 * $gap) !default
-$fullhd-enabled: true !default
+$fullhd: 1248px + (2 * $gap)
+$fullhd-enabled: true
 
 // Miscellaneous
 
-$easing: ease-out !default
-$radius-small: 2px !default
-$radius: 4px !default
-$radius-large: 6px !default
-$radius-rounded: 290486px !default
-$speed: 86ms !default
+$easing: ease-out
+$radius-small: 2px
+$radius: 4px
+$radius-large: 6px
+$radius-rounded: 290486px
+$speed: 86ms
 
 // Flags
 
-$variable-columns: true !default
-$rtl: false !default
+$rtl: false

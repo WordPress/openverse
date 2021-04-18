@@ -1,10 +1,7 @@
-@import '~/styles/utilities/variables';
-body {
-
-}
+@import '~/styles/utilities/_all';
 
 .full-height-sticky {
-  @include desktop {
+  +desktop {
     z-index: 20;
     height: 100vh;
     position: sticky;
@@ -25,7 +22,7 @@ body {
   width: 22rem;
 }
 
-@include desktop {
++desktop {
   .arrow-popup.arrow-popup--anchor-right {
     right: 0;
     top: 100%;

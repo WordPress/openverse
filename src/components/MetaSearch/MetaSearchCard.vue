@@ -92,7 +92,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/utilities/variables';
+@import '~/styles/utilities/_all';
 
 .meta-modal-content {
   max-width: 46rem;

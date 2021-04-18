@@ -30,16 +30,15 @@ $input-icon-active-color: $text
 
 $input-radius: $radius
 
-
-%form-control
+@mixin form-control
   font-family: $family-source-sans-pro
   font-weight: 600
   line-height: 1.3
   border-color: $input-border-color !important
 
 =input
-  @extend %control
-  @extend %form-control
+  +control
+  +form-control
   height: 2.5em
   padding-left: $space-small
   background-color: $input-background-color

@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/utilities/variables';
+@import '~/styles/utilities/_all';
 
 .modal {
   position: relative;

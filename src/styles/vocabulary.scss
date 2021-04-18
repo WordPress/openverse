@@ -3,12 +3,12 @@
 // Reset
 @import 'base/minireset';
 
-// Bulma
+// Utilities
 @import 'utilities/all';
 @import 'helpers/all';
-@import 'base/generic';
 
-// Layouts
+// Generic styles and Layout
+@import 'base/generic';
 @import 'base/layout';
 
 // Form

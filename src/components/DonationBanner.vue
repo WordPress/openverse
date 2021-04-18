@@ -61,7 +61,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '~/styles/utilities/variables';
+@import '~/styles/utilities/_all';
 
 $bgColor: #e6f6eb;
 

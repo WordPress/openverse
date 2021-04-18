@@ -100,7 +100,7 @@ a.navbar-item,
   cursor: pointer
   user-select: none
   font-family: $family-roboto-condensed
-  font-size: $font-size-h5
+  font-size: $font-size-body-big
   font-weight: bold
   text-transform: uppercase
   line-height: 1.5
@@ -137,7 +137,7 @@ a.navbar-item,
 .navbar-link:not(.is-arrowless)
   +ltr-property("padding", 2.5em)
   &::after
-    @extend %arrow
+    +arrow
     border-color: $navbar-dropdown-arrow
     margin-top: -0.375em
     +ltr-position(1.125em)

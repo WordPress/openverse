@@ -9,7 +9,7 @@ $select-colors: $form-colors !default
     height: $input-height
   &:not(.is-multiple):not(.is-loading)
     &::after
-      @extend %arrow
+      +arrow
       border-color: $input-arrow
       +ltr-position(1.125em)
       z-index: 4
@@ -18,8 +18,8 @@ $select-colors: $form-colors !default
       border-radius: $radius-rounded
       +ltr-property("padding", 1em, false)
   select
-    @extend %input
-    @extend %form-control
+    +input
+    +form-control
     cursor: pointer
     display: block
     font-size: 1em
@@ -37,26 +37,11 @@ $select-colors: $form-colors !default
       padding: 0
       option
         padding: 0.5em 1em
+        font-weight: $weight-normal
   // States
   &:not(.is-multiple):not(.is-loading):hover
     &::after
       border-color: $input-hover-color
-  // Colors
-  @each $name, $pair in $select-colors
-    $color: nth($pair, 1)
-    &.is-#{$name}
-      &:not(:hover)::after
-        border-color: $color
-      select
-        border-color: $color
-        &:hover,
-        &.is-hovered
-          border-color: bulmaDarken($color, 5%)
-        &:focus,
-        &.is-focused,
-        &:active,
-        &.is-active
-          box-shadow: $input-focus-box-shadow-size bulmaRgba($color, 0.25)
   // Sizes
   &.is-small
     +control-small
@@ -74,7 +59,7 @@ $select-colors: $form-colors !default
       width: 100%
   &.is-loading
     &::after
-      @extend %loader
+      +loader
       margin-top: 0
       position: absolute
       +ltr-position(0.625em)
