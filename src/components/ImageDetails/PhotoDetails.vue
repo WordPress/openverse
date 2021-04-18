@@ -282,7 +282,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '~/styles/photodetails.scss';
-@import '~/styles/tabs.scss';
 
 @include touch {
   .image-info {

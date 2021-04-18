@@ -1,4 +1,4 @@
-@import "../../utilities/mixins"
+@import "../utilities/mixins"
 
 $body-background-color: $scheme-main !default
 $body-size: 16px !default
@@ -8,7 +8,7 @@ $body-family: $family-primary !default
 $body-overflow-x: hidden !default
 $body-overflow-y: scroll !default
 
-$body-color: $text !default
+$body-color: $color-dark-slate-gray
 $body-font-size: 1em !default
 $body-weight: $weight-normal !default
 $body-line-height: 1.5 !default
@@ -70,7 +70,11 @@ body
   font-size: $body-font-size
   font-weight: $body-weight
   line-height: $body-line-height
-
+  margin: 0
+  font-family: 'Source Sans Pro', sans-serif
+  font-display: swap
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
 // Inline
 
 a

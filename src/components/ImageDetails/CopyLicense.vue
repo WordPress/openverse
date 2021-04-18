@@ -217,8 +217,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/tabs.scss';
-
 textarea {
   border: none;
   resize: none;

@@ -5,25 +5,21 @@
 
 // Bulma
 @import 'utilities/all';
-@import 'bulma/helpers/all';
-@import 'bulma/base/generic';
-
-// Form
-@import 'vocabulary/form';
+@import 'helpers/all';
+@import 'base/generic';
 
 // Layouts
-@import 'vocabulary/layout';
-@import 'bulma/components/card';
-@import 'vocabulary/table';
-@import 'tabs';
+@import 'base/layout';
 
-// Patterns
-@import 'bulma/components/navbar';
-@import 'vocabulary/footer';
-@import 'vocabulary/image';
+// Form
+@import 'form/_all';
 
-// Content
-@import 'bulma/elements/content';
-
-// Elements
-@import 'vocabulary/button';
+// Components
+@import 'components/button';
+@import 'components/image';
+@import 'components/navbar';
+@import 'components/footer';
+@import 'components/card';
+@import 'components/tabs';
+@import 'components/table';
+@import 'components/content';
