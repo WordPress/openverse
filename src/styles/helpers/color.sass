@@ -1,4 +1,3 @@
-// bulma colors.sass
 @each $name, $pair in $colors
   $color: nth($pair, 1)
   .has-text-#{$name}
@@ -6,7 +5,7 @@
   a.has-text-#{$name}
     &:hover,
     &:focus
-      color: bulmaDarken($color, 10%) !important
+      color: darkenColor($color, 10%) !important
   .has-background-#{$name}
     background-color: $color !important
   @if length($pair) >= 4
@@ -18,7 +17,7 @@
     a.has-text-#{$name}-light
       &:hover,
       &:focus
-        color: bulmaDarken($color-light, 10%) !important
+        color: darkenColor($color-light, 10%) !important
     .has-background-#{$name}-light
       background-color: $color-light !important
     // Dark
@@ -27,7 +26,7 @@
     a.has-text-#{$name}-dark
       &:hover,
       &:focus
-        color: bulmaLighten($color-dark, 10%) !important
+        color: lightenColor($color-dark, 10%) !important
     .has-background-#{$name}-dark
       background-color: $color-dark !important
 
@@ -37,7 +36,6 @@
   .has-background-#{$name}
     background-color: $shade !important
 
-// Vocabulary color.scss
 // Classes
 $brand-colors: ('tomato': $color-tomato, 'gold': $color-gold, 'forest-green': $color-forest-green, 'dark-turquoise': $color-dark-turquoise, 'dark-slate-blue': $color-dark-slate-blue, 'brighter-dark-slate-blue': $color-brighter-dark-slate-blue, 'dark-slate-gray': $color-dark-slate-gray )
 
