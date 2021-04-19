@@ -8,7 +8,12 @@
       // The color name should be a string
       // and the components either a single color
       // or a colors list with at least one element
-      @if type-of($name) == 'string' and (type-of($components) == 'list' or type-of($components) == 'color') and length($components) >= 1 {
+      @if type-of($name) ==
+        'string' and
+        (type-of($components) == 'list' or type-of($components) == 'color') and
+        length($components) >=
+        1
+      {
         $color-base: null;
         $color-invert: null;
         $color-light: null;
@@ -30,13 +35,13 @@
             $color-light: nth($components, 3);
             $color-dark: nth($components, 4);
           }
-            // If only Invert and Light are provided
+          // If only Invert and Light are provided
           @else if length($components) > 2 {
             $color-invert: nth($components, 2);
             $color-light: nth($components, 3);
             $color-dark: findDarkColor($color-base);
           }
-            // If only Invert is provided
+          // If only Invert is provided
           @else {
             $color-invert: nth($components, 2);
             $color-light: findLightColor($color-base);
@@ -51,48 +56,62 @@
           // We merge this colors elements as map with Bulma's colors map
           // (we can override them this way, no multiple definition for the same name)
           // $merged-colors: map_merge($merged-colors, ($name: ($color-base, $color-invert, $color-light, $color-dark)))
-          $merged-colors: map_merge($merged-colors, ($name: $value));
+          $merged-colors: map_merge(
+            $merged-colors,
+            (
+              $name: $value,
+            )
+          );
         }
       }
     }
   }
-  @return $merged-colors
+  @return $merged-colors;
 }
 
 @function powerNumber($number, $exp) {
   $value: 1;
   @if $exp > 0 {
     @for $i from 1 through $exp {
-      $value: $value * $number
+      $value: $value * $number;
     }
-
   } @else if $exp < 0 {
     @for $i from 1 through -$exp {
       $value: $value / $number;
     }
   }
-  @return $value
+  @return $value;
 }
 
 @function colorLuminance($color) {
   @if type-of($color) != 'color' {
     @return 0.55;
   }
-  $color-rgb: ('red': red($color), 'green': green($color), 'blue': blue($color));
+  $color-rgb: (
+    'red': red($color),
+    'green': green($color),
+    'blue': blue($color),
+  );
   @each $name, $value in $color-rgb {
     $adjusted: 0;
     $value: $value / 255;
     @if $value < 0.03928 {
       $value: $value / 12.92;
     } @else {
-      $value: ($value + .055) / 1.055;
+      $value: ($value + 0.055) / 1.055;
       $value: powerNumber($value, 2);
     }
-    $color-rgb: map-merge($color-rgb, ($name:$value))
+    $color-rgb: map-merge(
+      $color-rgb,
+      (
+        $name: $value,
+      )
+    );
   }
-  @return (map-get($color-rgb, 'red') * .2126) + (map-get($color-rgb, 'green') * .7152) + (map-get($color-rgb, 'blue') * .0722)
+  @return (map-get($color-rgb, 'red') * 0.2126) +
+    (map-get($color-rgb, 'green') * 0.7152) +
+    (map-get($color-rgb, 'blue') * 0.0722);
 }
-
 
 @function findColorInvert($color) {
   @if (colorLuminance($color) > 0.55) {
@@ -110,7 +129,7 @@
     }
     @return change-color($color, $lightness: $l);
   }
-  @return $background
+  @return $background;
 }
 
 @function findDarkColor($color) {
@@ -119,28 +138,28 @@
     $luminance: colorLuminance($color);
     $luminance-delta: (0.53 - $luminance);
     $target-l: round($base-l + ($luminance-delta * 53));
-    @return change-color($color, $lightness: base-l)
+    @return change-color($color, $lightness: base-l);
   }
-  @return $text-strong
+  @return $text-strong;
 }
 
 @function toRgba($color, $alpha) {
   @if type-of($color) != 'color' {
     @return $color;
   }
-  @return rgba($color, $alpha)
+  @return rgba($color, $alpha);
 }
 
 @function bulmaDarken($color, $amount) {
   @if type-of($color) != 'color' {
     @return $color;
   }
-  @return darken($color, $amount)
+  @return darken($color, $amount);
 }
 
 @function bulmaLighten($color, $amount) {
   @if type-of($color) != 'color' {
     @return $color;
   }
-  @return lighten($color, $amount)
+  @return lighten($color, $amount);
 }

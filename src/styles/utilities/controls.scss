@@ -1,4 +1,4 @@
-@import "derived-variables";
+@import 'derived-variables';
 
 $control-border-width: 0.125rem;
 $control-padding-vertical: calc(0.5em - #{$control-border-width});
@@ -29,12 +29,12 @@ $control-padding-horizontal: calc(0.75em - #{$control-border-width});
   &:active,
   &.is-active {
     outline: none;
-}
+  }
   &[disabled],
   fieldset[disabled] & {
     cursor: not-allowed;
-}
-// The controls sizes use mixins so they can be used at different breakpoints
+  }
+  // The controls sizes use mixins so they can be used at different breakpoints
 }
 @mixin control-small {
   border-radius: $radius-small;

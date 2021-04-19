@@ -94,8 +94,48 @@ $size-large: $size-4;
 
 // Lists and maps
 
-$colors: ("white": ($color-white, $color-black), "black": ($color-black, $color-white), "primary": ($primary), "link": ($link), "info": ($info, $color-light-info, $color-dark-info), "success": ($success, $color-light-success, $color-dark-success), "warning": ($warning, $color-light-warning, $color-dark-warning), "danger": ($danger, $color-light-danger, $color-dark-danger));
+$colors: (
+  'white': (
+    $color-white,
+    $color-black,
+  ),
+  'black': (
+    $color-black,
+    $color-white,
+  ),
+  'primary': (
+    $primary,
+  ),
+  'link': (
+    $link,
+  ),
+  'info': (
+    $info,
+    $color-light-info,
+    $color-dark-info,
+  ),
+  'success': (
+    $success,
+    $color-light-success,
+    $color-dark-success,
+  ),
+  'warning': (
+    $warning,
+    $color-light-warning,
+    $color-dark-warning,
+  ),
+  'danger': (
+    $danger,
+    $color-light-danger,
+    $color-dark-danger,
+  ),
+);
 
-$shades: ("grey-dark": $color-dark-gray, "grey": $color-gray, "grey-light": $color-light-gray, "grey-lighter": $color-lighter-gray);
+$shades: (
+  'grey-dark': $color-dark-gray,
+  'grey': $color-gray,
+  'grey-light': $color-light-gray,
+  'grey-lighter': $color-lighter-gray,
+);
 
 $sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7;

@@ -1,9 +1,9 @@
-@import "derived-variables";
+@import 'derived-variables';
 
 @mixin clearfix {
   &::after {
     clear: both;
-    content: " ";
+    content: ' ';
     display: table;
   }
 }
@@ -12,7 +12,7 @@
   @if $height != 0 {
     left: calc(50% - (#{$width} / 2));
     top: calc(50% - (#{$height} / 2));
-  }  @else {
+  } @else {
     left: calc(50% - (#{$width} / 2));
     top: calc(50% - (#{$width} / 2));
   }
@@ -55,7 +55,7 @@
   }
   &:hover {
     background-color: toRgba(black, 0.05);
-  }  // Modifers
+  } // Modifers
   &.is-active {
     span {
       &:nth-child(1) {
@@ -171,23 +171,23 @@
   }
 }
 @mixin ltr-property($property, $spacing, $right: true) {
-  $normal: if($right, "right", "left");
-  $opposite: if($right, "left", "right");
+  $normal: if($right, 'right', 'left');
+  $opposite: if($right, 'left', 'right');
   @if $rtl {
     #{$property}-#{$opposite}: $spacing;
-  }  @else {
+  } @else {
     #{$property}-#{$normal}: $spacing;
   }
 }
 @mixin ltr-position($spacing, $right: true) {
-  $normal: if($right, "right", "left");
-  $opposite: if($right, "left", "right");
+  $normal: if($right, 'right', 'left');
+  $opposite: if($right, 'left', 'right');
   @if $rtl {
     #{$opposite}: $spacing;
-  }  @else {
+  } @else {
     #{$normal}: $spacing;
   }
-}// Placeholders
+} // Placeholders
 
 @mixin unselectable {
   user-select: none;
@@ -197,7 +197,7 @@
   border-radius: 2px;
   border-right: 0;
   border-top: 0;
-  content: " ";
+  content: ' ';
   display: block;
   height: 0.625em;
   margin-top: -0.4375em;
@@ -238,7 +238,7 @@
   &::before,
   &::after {
     background-color: $scheme-main;
-    content: "";
+    content: '';
     display: block;
     left: 50%;
     position: absolute;
@@ -260,7 +260,7 @@
   }
   &:active {
     background-color: toRgba($scheme-invert, 0.4);
-  }  // Sizes
+  } // Sizes
   &.is-small {
     height: 16px;
     max-height: 16px;
@@ -292,7 +292,7 @@
   border-radius: $radius-rounded;
   border-right-color: transparent;
   border-top-color: transparent;
-  content: "";
+  content: '';
   display: block;
   height: 1em;
   position: relative;
