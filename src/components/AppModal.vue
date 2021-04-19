@@ -59,8 +59,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/utilities/_all';
-
 .modal {
   position: relative;
   margin: 0px auto;

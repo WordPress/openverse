@@ -130,7 +130,17 @@ export default {
   css: ['~/styles/vocabulary.scss', '~/styles/global.scss'],
   head,
   env,
-  buildModules: ['@nuxtjs/svg', '@nuxtjs/eslint-module'],
+  buildModules: [
+    '@nuxtjs/style-resources',
+    '@nuxtjs/svg',
+    '@nuxtjs/eslint-module',
+  ],
+  // Load the scss variables into every component:
+  // No need to import them. Since the variables will not exist in the final build,
+  // this doesn't make the built files larger.
+  styleResources: {
+    scss: ['./styles/utilities/all.scss'],
+  },
   modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap', 'nuxt-ssr-cache', 'nuxt-i18n'],
   i18n: {
     locales: [{ code: 'en', iso: 'en', name: 'English', file: 'en.json' }],

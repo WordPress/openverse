@@ -1,0 +1,110 @@
+// Colors
+
+$color-black: hsl(0, 0%, 0%);
+
+$color-dark-gray: rgb(118, 118, 118);
+$color-gray: rgb(176, 176, 176);
+$color-light-gray: rgb(216, 216, 216);
+$color-lighter-gray: rgb(216, 216, 216);
+
+$color-white: rgb(255, 255, 255);
+
+$color-tomato: rgb(226, 54, 0);
+$color-gold: rgb(239, 190, 0);
+$color-forest-green: rgb(0, 131, 0);
+$color-dark-turquoise: rgb(5, 181, 218);
+$color-dark-slate-blue: rgb(60, 92, 153);
+$color-dark-slate-gray: rgb(51, 51, 51); // BRAND COLOR
+$purple: hsl(271, 100%, 71%); // NOT IN VOCABULARY
+
+// Typography
+@import url('https://unpkg.com/@creativecommons/fonts@2020.9.3/css/fonts.css');
+
+// Families
+$family-roboto-condensed: 'Roboto Condensed', sans-serif;
+$family-source-sans-pro: 'Source Sans Pro', sans-serif;
+$family-jetbrains-mono: 'JetBrains Mono', monospace;
+$family-vocabulary-icons: 'Vocabulary Icons';
+
+$family-system: BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto','Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue','Helvetica', 'Arial', sans-serif;
+$family-heading: $family-roboto-condensed;
+$family-body: $family-source-sans-pro;
+$family-code: $family-jetbrains-mono;
+$family-icons: $family-vocabulary-icons;
+$family-sans-serif: $family-body;
+$family-monospace: $family-code;
+
+$render-mode: optimizeLegibility;
+
+// Sizes
+$font-size-h1: 3.56rem;
+$font-size-h2: 2.25rem;
+$font-size-h3: 1.75rem;
+$font-size-h4: 1.43rem;
+$font-size-h5: 1.25rem;
+$font-size-h6: 1.12rem;
+
+$font-size-value: 4.37rem;
+
+$font-size-body-bigger: $font-size-h4;
+$font-size-body-big: $font-size-h6;
+$font-size-body-normal: 1rem;
+$font-size-body-list: 1rem;
+
+$font-size-caption: 0.8rem;
+
+$size-1: $font-size-h1;
+$size-2: $font-size-h2;
+$size-3: $font-size-h3;
+$size-4: $font-size-h4; // Same size as font-size-body-bigger
+$size-5: $font-size-h6; // Same size as $font-size-body-big
+$size-6: $font-size-body-normal;
+$size-7: $font-size-caption;
+
+$weight-light: 300;
+$weight-normal: 400;
+$weight-medium: 500;
+$weight-semibold: 600;
+$weight-bold: 700;
+
+// Spacing
+
+$block-spacing: 1.5rem;
+$space-smaller: 0.25rem;
+$space-small: 0.5rem;
+$space-normal: 1rem;
+$space-big: 1.5rem;
+$space-bigger: 2rem;
+$space-large: 2.5rem;
+$space-larger: 3rem;
+$space-xl: 4rem;
+$space-xxl: 6rem;
+
+
+// Responsiveness
+
+// The container horizontal gap, which acts as the offset for breakpoints
+$gap: 32px;
+// 960, 1152, and 1344 have been chosen because they are divisible by both 12 and 16
+$tablet: 769px;
+// 960px container + 4rem
+$desktop: 960px + (2 * $gap);
+// 1152px container + 4rem
+$widescreen: 1152px + (2 * $gap);
+$widescreen-enabled: true;
+// 1344px container + 4rem
+$fullhd: 1248px + (2 * $gap);
+$fullhd-enabled: true;
+
+// Miscellaneous
+
+$easing: ease-out;
+$radius-small: 2px;
+$radius: 4px;
+$radius-large: 6px;
+$radius-rounded: 290486px;
+$speed: 86ms;
+
+// Flags
+
+$rtl: false;

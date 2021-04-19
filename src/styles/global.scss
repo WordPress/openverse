@@ -1,7 +1,7 @@
-@import '~/styles/utilities/_all';
+@import '~/styles/utilities/all';
 
 .full-height-sticky {
-  +desktop {
+  + desktop {
     z-index: 20;
     height: 100vh;
     position: sticky;
@@ -22,7 +22,7 @@
   width: 22rem;
 }
 
-+desktop {
++ desktop {
   .arrow-popup.arrow-popup--anchor-right {
     right: 0;
     top: 100%;

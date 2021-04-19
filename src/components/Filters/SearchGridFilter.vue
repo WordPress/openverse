@@ -81,8 +81,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/utilities/_all';
-
 .search-filters {
   display: none;
   height: auto;

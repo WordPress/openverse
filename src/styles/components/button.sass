@@ -5,7 +5,7 @@ $button-border-width: 0.125rem
 $button-focus-color: $link-focus
 $button-focus-border-color: $link-focus-border
 $button-focus-box-shadow-size: 0 0 0 0.125em
-$button-focus-box-shadow-color: bulmaRgba($link, 0.25)
+$button-focus-box-shadow-color: toRgba($link, 0.25)
 
 $button-active-color: $link-active
 $button-active-border-color: $link-active-border
@@ -41,6 +41,7 @@ $button-colors: $colors
   --button-padding-vertical: 1.813rem
   --button-border-width: #{$button-border-width}
   --button-font-size: #{$font-size-body-bigger}
+  --button-focused-box-shadow-color: #{toRgba($color-light-gray, 0.3)}
   text-transform: uppercase
   font-weight: 600
   line-height: 0
@@ -77,15 +78,14 @@ $button-colors: $colors
   &:hover,
   &.is-hovered
     background-color: $color-dark-gray
-    border-color: $color-dark-gray
+    border-color: transparent
     color: $color-white
     text-decoration: none
   &:focus,
   &.is-focused
-    border-color: $button-focus-border-color
     color: $button-focus-color
     &:not(:active)
-      box-shadow: $button-focus-box-shadow-size $button-focus-box-shadow-color
+      box-shadow: $button-focus-box-shadow-size var(--button-focused-box-shadow-color)
   &:active,
   &.is-active
     border-color: $button-active-border-color
@@ -121,6 +121,7 @@ $button-colors: $colors
     border-color: transparent
     color: $color-white
     background-color: $color-forest-green
+    --button-focused-box-shadow-color: #{toRgba($color-forest-green, 0.3)}
     &:hover,
     &:active
       background-color: $color-brighter-forest-green
@@ -128,6 +129,7 @@ $button-colors: $colors
     border-color: transparent
     color: $color-white
     background-color: $color-tomato
+    --button-focused-box-shadow-color: #{toRgba($color-tomato, 0.3)}
     &:hover,
     &:active
       background-color: $color-brighter-tomato
@@ -135,19 +137,19 @@ $button-colors: $colors
     border-color: transparent
     color: $color-white
     background-color: $color-dark-slate-blue
+    --button-focused-box-shadow-color: toRgba($color-dark-slate-blue, 0.3)
     &:hover,
     &:active
       background-color: $color-brighter-dark-slate-blue
   &.donate
     background-color: $color-gold
-    border-color: $color-gold
+    border-color: transparent
     color: $color-black
+    --button-focused-box-shadow-color: toRgba($color-gold, 0.3)
 
     &:hover
       background-color: $color-brighter-gold
-      border-color: $color-brighter-gold
       color: $color-black
-      text-decoration: none
 
   // Sizes
   &.big

@@ -58,8 +58,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/utilities/_all';
-
 // from http://www.cssarrowplease.com/
 .license-explanation-tooltip {
   position: absolute;

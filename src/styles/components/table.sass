@@ -1,36 +1,30 @@
 @import "../utilities/mixins"
 
-$table-color: $text-strong !default
-$table-background-color: $scheme-main !default
-
-$table-cell-border: 1px solid $border !default
-$table-cell-border-width: 0 0 1px !default
-$table-cell-padding: 0.5em 0.75em !default
-$table-cell-heading-color: $text-strong !default
-
-$table-head-cell-border-width: 0 0 2px !default
-$table-head-cell-color: $text-strong !default
-$table-foot-cell-border-width: 2px 0 0 !default
-$table-foot-cell-color: $text-strong !default
-
-$table-head-background-color: transparent !default
-$table-body-background-color: transparent !default
-$table-foot-background-color: transparent !default
-
-$table-row-hover-background-color: $scheme-main-bis !default
-
-$table-row-active-background-color: $primary !default
-$table-row-active-color: $primary-invert !default
-
-$table-striped-row-even-background-color: $scheme-main-bis !default
-$table-striped-row-even-hover-background-color: $scheme-main-ter !default
-
-$table-colors: $colors !default
-$table-cell-padding: $space-normal
 $table-color: $color-dark-slate-gray
-$table-head-background-color: $color-light-gray
-$table-striped-row-even-background-color: $color-lighter-gray
+$table-background-color: $scheme-main
+
+$table-cell-border-width: 0 0 1px
+$table-cell-padding: $space-normal
+$table-cell-heading-color: $text-strong
 $table-cell-border: 1px solid $color-light-gray
+
+$table-head-cell-border-width: 0 0 2px
+$table-head-cell-color: $text-strong
+$table-foot-cell-border-width: 2px 0 0
+$table-foot-cell-color: $text-strong
+
+$table-head-background-color: $color-light-gray
+$table-body-background-color: transparent
+$table-foot-background-color: transparent
+
+$table-row-hover-background-color: $color-white
+
+$table-row-active-background-color: $primary
+$table-row-active-color: $color-white
+
+$table-striped-row-even-background-color: $color-lighter-gray
+$table-striped-row-even-hover-background-color: $color-lighter-gray
+
 .table
   +block
   background-color: $table-background-color
@@ -41,14 +35,6 @@ $table-cell-border: 1px solid $color-light-gray
     border-width: $table-cell-border-width
     padding: $table-cell-padding
     vertical-align: top
-    // Colors
-    @each $name, $pair in $table-colors
-      $color: nth($pair, 1)
-      $color-invert: nth($pair, 2)
-      &.is-#{$name}
-        background-color: $color
-        border-color: $color
-        color: $color-invert
     // Modifiers
     &.is-narrow
       white-space: nowrap

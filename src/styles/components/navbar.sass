@@ -1,40 +1,24 @@
 @import "../utilities/mixins"
 
 $navbar-background-color: $scheme-main
-$navbar-box-shadow-size: 0 2px 0 0
-$navbar-box-shadow-color: $background
 $navbar-height: 3.25rem
-$navbar-padding-vertical: 1rem
-$navbar-padding-horizontal: 2rem
 $navbar-z: 30
-$navbar-fixed-z: 30
 
-$navbar-item-color: $text
-$navbar-item-hover-color: $link
-$navbar-item-hover-background-color: $scheme-main-bis
-$navbar-item-active-color: $scheme-invert
+$navbar-item-color: $color-dark-gray
+$navbar-item-hover-color: $color-dark-slate-gray
+$navbar-item-active-color: $color-dark-slate-gray
 $navbar-item-active-background-color: transparent
+$navbar-item-hover-background-color: transparent
 $navbar-item-img-max-height: 1.75rem
 
 $navbar-burger-color: $navbar-item-color
 
-$navbar-tab-hover-background-color: transparent
-$navbar-tab-hover-border-bottom-color: $link
-$navbar-tab-active-color: $link
-$navbar-tab-active-background-color: transparent
-$navbar-tab-active-border-bottom-color: $link
-$navbar-tab-active-border-bottom-style: solid
-$navbar-tab-active-border-bottom-width: 3px
-
+$navbar-dropdown-border-top: none
+$navbar-dropdown-radius: 0
 $navbar-dropdown-background-color: $scheme-main
-$navbar-dropdown-border-top: 2px solid $border
 $navbar-dropdown-offset: -4px
 $navbar-dropdown-arrow: $link
-$navbar-dropdown-radius: $radius-large
 $navbar-dropdown-z: 20
-
-$navbar-dropdown-boxed-radius: $radius-large
-$navbar-dropdown-boxed-shadow: 0 8px 8px bulmaRgba($scheme-invert, 0.1), 0 0 0 1px bulmaRgba($scheme-invert, 0.1)
 
 $navbar-dropdown-item-hover-color: $scheme-invert
 $navbar-dropdown-item-hover-background-color: $background
@@ -44,19 +28,7 @@ $navbar-dropdown-item-active-background-color: $background
 $navbar-divider-background-color: $background
 $navbar-divider-height: 2px
 
-$navbar-bottom-box-shadow-size: 0 -2px 0 0
-
 $navbar-breakpoint: $desktop
-
-
-$navbar-item-color: $color-dark-gray
-$navbar-item-hover-color: $color-dark-slate-gray
-$navbar-item-active-color: $color-dark-slate-gray
-
-$navbar-item-hover-background-color: transparent
-
-$navbar-dropdown-border-top: none
-$navbar-dropdown-radius: 0
 
 .navbar
   background-color: $navbar-background-color
@@ -170,7 +142,7 @@ a.navbar-item,
       display: none
   .navbar-menu
     background-color: $navbar-background-color
-    box-shadow: 0 8px 16px bulmaRgba($scheme-invert, 0.1)
+    box-shadow: 0 8px 16px toRgba($scheme-invert, 0.1)
     padding: 0.5rem 0
     &.is-active
       display: block
@@ -219,7 +191,7 @@ a.navbar-item,
     border-bottom-left-radius: $navbar-dropdown-radius
     border-bottom-right-radius: $navbar-dropdown-radius
     border-top: $navbar-dropdown-border-top
-    box-shadow: 0 8px 8px bulmaRgba($scheme-invert, 0.1)
+    box-shadow: 0 8px 8px toRgba($scheme-invert, 0.1)
     display: none
     font-size: 0.875rem
     +ltr-position(0, false)
@@ -239,18 +211,6 @@ a.navbar-item,
       &.is-active
         background-color: $navbar-dropdown-item-active-background-color
         color: $navbar-dropdown-item-active-color
-    .navbar.is-spaced &,
-    &.is-boxed
-      border-radius: $navbar-dropdown-boxed-radius
-      border-top: none
-      box-shadow: $navbar-dropdown-boxed-shadow
-      display: block
-      opacity: 0
-      pointer-events: none
-      top: calc(100% + (#{$navbar-dropdown-offset}))
-      transform: translateY(-5px)
-      transition-duration: $speed
-      transition-property: opacity, transform
     &.is-right
       left: auto
       right: 0

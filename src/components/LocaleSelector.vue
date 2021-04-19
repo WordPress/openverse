@@ -63,8 +63,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/styles/utilities/_all';
-
 .locale-selector {
   margin-top: $space-big;
   display: flex;
