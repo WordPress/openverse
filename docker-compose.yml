@@ -144,11 +144,11 @@ services:
     stdin_open: true
     tty: true
 
-  # analytics:
-  #   build: ./analytics/
-  #   image: analytics
-  #   container_name: cccatalog-api_analytics_1
-  #   ports:
-  #     - "8090:8090"
-  #   environment:
-  #     DATABASE_CONN: 'postgres+psycopg2://deploy:deploy@db/openledger'
+  analytics:
+    build: ./analytics/
+    image: analytics
+    container_name: cccatalog-api_analytics_1
+    ports:
+      - "8090:8090"
+    environment:
+      DATABASE_CONN: 'postgres+psycopg2://deploy:deploy@db/openledger'
