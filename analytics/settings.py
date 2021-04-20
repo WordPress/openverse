@@ -1,7 +1,7 @@
 import os
 
 DATABASE_CONNECTION = os.getenv(
-    'DATABASE_CONN', 'postgres+psycopg2://deploy:deploy@localhost/openledger'
+    'DATABASE_CONN', 'postgresql+psycopg2://deploy:deploy@localhost/openledger'
 )
 
 # Attribution events stream configuration
