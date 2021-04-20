@@ -73,7 +73,7 @@ docker-compose up
 
 9. Open a new CMD or terminal and change directory to CC Catalog API
 
-10. Still in the new CMD or terminal, load the sample data
+10. Still in the new CMD or terminal, load the sample data. This script requires a local postgres installation to connect to and alter our database.
 ```
 ./load_sample_data.sh
 ```
