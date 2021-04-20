@@ -1,0 +1,97 @@
+$tabs-border-bottom-color: $color-light-gray;
+$tabs-border-bottom-width: 0.125rem;
+$tabs-font-size: 1rem;
+
+.search-tabs {
+  display: flex;
+  flex-direction: column;
+
+  font-size: $tabs-font-size;
+  justify-content: space-between;
+  overflow: hidden;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-family: $family-source-sans-pro;
+  [role='tablist'] {
+    display: flex;
+    border-bottom: $tabs-border-bottom-width solid $tabs-border-bottom-color;
+  }
+  .tabs-panel {
+    display: none;
+    padding: 2rem 0 0;
+    &.is-active {
+      display: block;
+    }
+  }
+
+  .tab {
+    appearance: none;
+    border-image-source: unset;
+    border-image-outset: unset;
+    border-image-repeat: unset;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0 1rem -0.125rem 1rem;
+    padding: 0.5rem 0 1rem;
+    position: relative;
+    border-width: 0;
+    background: transparent;
+    border-bottom: 0.25rem solid transparent;
+    color: #333;
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &.is-active,
+    &:hover {
+      border-bottom-color: #333;
+      text-decoration: none;
+    }
+    &:focus {
+      outline: none;
+    }
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 0.125rem #d8d8d8;
+    }
+  }
+}
+.boxed {
+  [role='tablist'] {
+    display: flex;
+    align-self: flex-start;
+    border-bottom: none;
+  }
+  .tabs-panel {
+    padding: 1rem;
+    background-color: white;
+    border: 0.125rem solid $color-light-gray;
+  }
+  .tab {
+    font-size: 1rem;
+    background-color: whitesmoke;
+    margin: 0 0 -0.125rem;
+    border: 2px solid $color-light-gray;
+    border-right: 0;
+    padding: 0.5rem 1rem;
+
+    &.is-active,
+    &:hover {
+      background-color: white;
+      border-bottom: 0;
+      padding-bottom: 0.625rem;
+    }
+    &:focus-visible {
+      box-shadow: 0 0 0 0.125rem #d8d8d8;
+    }
+    &:first-child {
+      padding-left: 1rem;
+    }
+    &:last-child {
+      border-right: 0.125rem solid #d8d8d8;
+    }
+  }
+}

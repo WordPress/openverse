@@ -1,5 +1,10 @@
 <template>
-  <SearchGrid @onLoadMoreImages="onLoadMoreImages" />
+  <SearchGrid
+    id="tab-image"
+    role="tabpanel"
+    aria-labelledby="image"
+    @onLoadMoreImages="onLoadMoreImages"
+  />
 </template>
 
 <script>

@@ -74,7 +74,7 @@
           <span v-else>{{ image.creator }}</span>
         </span>
       </div>
-      <section class="tabs-lined">
+      <section class="search-tabs">
         <div role="tablist" :aria-label="$t('photo-details.aria.details')">
           <button
             id="reuse"
@@ -281,50 +281,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@creativecommons/vocabulary/scss/color';
+@import '@creativecommons/vocabulary/scss/typography';
 @import '~/styles/photodetails.scss';
-@import 'bulma/sass/utilities/_all';
-
-.tabs-lined {
-  display: flex;
-  flex-direction: column;
-}
-.tabs-lined .tabs-panel {
-  display: none;
-  padding: 2rem 0 0;
-}
-.tabs-lined .tabs-panel.is-active {
-  display: block;
-}
-[role='tablist'] {
-  display: flex;
-  border-bottom: 0.125rem solid #d8d8d8;
-}
-.tab {
-  appearance: none;
-  border-image-source: unset;
-  border-image-outset: unset;
-  border-image-repeat: unset;
-  font-weight: 700;
-  font-size: 1.25rem;
-  margin: 0 2rem -0.125rem 0;
-  padding: 0.5rem 0 1rem;
-  position: relative;
-  border-width: 0;
-  background: transparent;
-  border-bottom: 0.25rem solid transparent;
-  color: #333;
-
-  &:first-child {
-    padding-left: 0;
-  }
-  &.is-active,
-  &:hover {
-    border-bottom-color: #333;
-  }
-  &:focus-visible {
-    box-shadow: 0 0 0 0.125rem #d8d8d8;
-  }
-}
+@import '~/styles/tabs.scss';
 
 @include touch {
   .image-info {
