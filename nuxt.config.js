@@ -127,11 +127,7 @@ export default {
     { src: '~/plugins/ab-test-init.js', mode: 'client' },
     { src: '~plugins/ga.js', mode: 'client' },
   ],
-  css: [
-    '~/assets/fonts.css',
-    '@creativecommons/vocabulary/scss/vocabulary.scss',
-    '~/styles/global.scss',
-  ],
+  css: ['~/assets/fonts.css', '~/styles/global.scss'],
   head,
   env,
   buildModules: [
