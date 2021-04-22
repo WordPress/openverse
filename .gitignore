@@ -1,0 +1,11 @@
+# macOS
+._*
+.DS_Store
+
+# Environments
+.env
+env/
+
+# Editor/IDE configs
+.idea/
+.vscode/
