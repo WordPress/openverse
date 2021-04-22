@@ -1,0 +1,7 @@
+org: Automattic
+repos:
+  infra: ccsearch-infrastructure
+  catalog: ccsearch-catalog
+  api: ccsearch-api
+  frontend: ccsearch-frontend
+  scripts: ccsearch-scripts
