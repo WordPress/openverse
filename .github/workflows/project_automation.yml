@@ -3,7 +3,7 @@ name: Project automation
 on:
   workflow_dispatch:
   schedule:
-  - cron: "0 * * * *" # every hour, on the hour
+  - cron: "*/15 * * * *" # every 15 minutes
 
 env:
   LOGGING_LEVEL: 20 # corresponds to INFO
