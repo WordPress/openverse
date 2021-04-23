@@ -1,14 +1,7 @@
 <template>
   <header>
     <NavSection :key="$route.path" :show-nav-search="showNavSearch" />
-    <div
-      v-show="showDonate"
-      :class="{
-        'padding-bottom-bigger': needsPadding,
-      }"
-    >
-      <DonationBanner @onDismiss="hideDonate" />
-    </div>
+    <DonationBanner @onDismiss="hideDonate" />
     <slot />
   </header>
 </template>
@@ -29,15 +22,6 @@ export default {
     return {
       showDonate: !local.get('hide-donation-banner'),
     }
-  },
-  computed: {
-    // Only pad the donation banner when the current route requires it
-    needsPadding() {
-      return (
-        !this.$route.path.startsWith('/photos') &&
-        !(this.$route.path === '/search')
-      )
-    },
   },
   methods: {
     hideDonate() {
