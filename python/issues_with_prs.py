@@ -15,7 +15,7 @@ from github import (
 from shared.data import get_data
 from shared.github import get_client
 
-logging.basicConfig(level=os.getenv("LOGGING_LEVEL", logging.DEBUG))
+logging.basicConfig(level=int(os.getenv("LOGGING_LEVEL", logging.DEBUG)))
 log = logging.getLogger(__name__)
 
 # region argparse
