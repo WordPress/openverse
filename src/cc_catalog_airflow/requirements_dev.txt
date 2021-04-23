@@ -1,4 +1,4 @@
-apache-airflow[aws,crypto,postgres]==1.10.9
+apache-airflow[amazon,postgres]==1.10.15
 lxml==4.4.2
 python-dateutil==2.8.0
 requests==2.22.0

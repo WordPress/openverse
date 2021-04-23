@@ -294,10 +294,9 @@ def test_constants_view_adds_values_and_constants(postgres_with_image_table):
         ("diff_provider", "comments", 0.8, 50.0, 50.0, 12.5),
         ("my_provider", "views", 0.5, 50.0, 50.0, 50.0),
     ]
-    assert (
-        sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
-        == expect_rows
-    )
+    sorted_rows = sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
+    for (expect_row, sorted_row) in zip(expect_rows, sorted_rows):
+        assert(expect_row == pytest.approx(sorted_row))
 
 
 def test_constants_view_handles_zeros_and_missing(postgres_with_image_table):
@@ -350,10 +349,9 @@ def test_constants_view_handles_zeros_and_missing(postgres_with_image_table):
         ("diff_provider", "comments", 0.8, None, None, None),
         ("my_provider", "views", 0.8, 0.0, 1.0, 0.25),
     ]
-    assert (
-        sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
-        == expect_rows
-    )
+    sorted_rows = sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
+    for (expect_row, sorted_row) in zip(expect_rows, sorted_rows):
+        assert(expect_row == pytest.approx(sorted_row))
 
 
 def test_standardized_popularity_function_calculates(
