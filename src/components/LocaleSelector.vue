@@ -63,10 +63,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'bulma/sass/utilities/_all';
-@import 'bulma/sass/utilities/_all.sass';
-@import '@creativecommons/vocabulary/scss/color.scss';
-@import '@creativecommons/vocabulary/scss/spacing.scss';
 .locale-selector {
   margin-top: $space-big;
   display: flex;

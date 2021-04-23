@@ -1,26 +1,12 @@
-@import 'bulma/sass/utilities/_all.sass';
-
-body {
-  margin: 0;
-  font-family: 'Source Sans Pro', sans-serif;
-  font-display: swap;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #333333;
-}
+@import '~/styles/utilities/all';
 
 .full-height-sticky {
-  @include desktop {
+  + desktop {
     z-index: 20;
     height: 100vh;
     position: sticky;
     top: 0;
   }
-}
-
-// override global header styles for now
-.cc-global-header .container {
-  max-width: 100%;
 }
 
 /**
@@ -36,7 +22,7 @@ body {
   width: 22rem;
 }
 
-@include desktop {
++ desktop {
   .arrow-popup.arrow-popup--anchor-right {
     right: 0;
     top: 100%;

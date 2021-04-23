@@ -126,20 +126,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'bulma/sass/utilities/_all.sass';
-
 .filter-toggle {
   text-transform: none;
   font-size: 1rem;
-  border-color: #d8d8d8;
+  border-color: $color-light-gray;
   padding: 0.5rem;
   height: 2.5rem;
-  &:focus:not(:active) {
-    box-shadow: 0 0 0 0.125em rgba(0, 0, 0, 0.25);
+  &:hover {
+    border-color: transparent;
   }
   @include desktop {
     height: 3.875rem;
-    padding: 1rem 1.5rem;
   }
 }
 
@@ -191,6 +188,7 @@ export default {
   .button {
     font-size: 1rem;
     padding: 0.5rem calc(1rem + 0.2rem);
+    line-height: 0;
     @include desktop {
       font-size: 1.43rem;
       padding: calc(2rem - 0.187rem) 2.5rem;

@@ -1,0 +1,31 @@
+.is-marginless
+  margin: 0 !important
+
+.is-paddingless
+  padding: 0 !important
+
+$spacing-shortcuts: ('margin': 'margin-','padding': 'padding-')
+$spacing-directions: ('top': 'top', 'right': 'right', 'bottom': 'bottom', 'left': 'left' )
+$spacing-horizontal: 'horizontal'
+$spacing-vertical: 'vertical'
+$spacing-values: ('0': 0, 'smaller': $space-smaller, 'small': $space-small, 'normal': $space-normal, 'big': $space-big, 'bigger': $space-bigger, 'large': $space-large, 'larger': $space-larger, 'xl': $space-xl, 'xxl': $space-xxl)
+
+@each $property, $shortcut in $spacing-shortcuts
+  @each $name, $value in $spacing-values
+    // All directions
+    .#{$shortcut}#{$name}
+      #{$property}: $value !important
+    // Cardinal directions
+    @each $direction, $suffix in $spacing-directions
+      .#{$shortcut}#{$suffix}-#{$name}
+        #{$property}-#{$direction}: $value !important
+    // Horizontal axis
+    @if $spacing-horizontal != null
+      .#{$shortcut}#{$spacing-horizontal}-#{$name}
+        #{$property}-left: $value !important
+        #{$property}-right: $value !important
+    // Vertical axis
+    @if $spacing-vertical != null
+      .#{$shortcut}#{$spacing-vertical}-#{$name}
+        #{$property}-top: $value !important
+        #{$property}-bottom: $value !important

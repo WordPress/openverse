@@ -1,0 +1,94 @@
+@function powerNumber($number, $exp) {
+  $value: 1;
+  @if $exp > 0 {
+    @for $i from 1 through $exp {
+      $value: $value * $number;
+    }
+  } @else if $exp < 0 {
+    @for $i from 1 through -$exp {
+      $value: $value / $number;
+    }
+  }
+  @return $value;
+}
+
+@function colorLuminance($color) {
+  @if type-of($color) != 'color' {
+    @return 0.55;
+  }
+  $color-rgb: (
+    'red': red($color),
+    'green': green($color),
+    'blue': blue($color),
+  );
+  @each $name, $value in $color-rgb {
+    $adjusted: 0;
+    $value: $value / 255;
+    @if $value < 0.03928 {
+      $value: $value / 12.92;
+    } @else {
+      $value: ($value + 0.055) / 1.055;
+      $value: powerNumber($value, 2);
+    }
+    $color-rgb: map-merge(
+      $color-rgb,
+      (
+        $name: $value,
+      )
+    );
+  }
+  @return (map-get($color-rgb, 'red') * 0.2126) +
+    (map-get($color-rgb, 'green') * 0.7152) +
+    (map-get($color-rgb, 'blue') * 0.0722);
+}
+
+@function findColorInvert($color) {
+  @if (colorLuminance($color) > 0.55) {
+    @return rgba(#000, 0.7);
+  } @else {
+    @return #fff;
+  }
+}
+
+@function findLightColor($color) {
+  @if type-of($color) == 'color' {
+    $l: 96%;
+    @if lightness($color) > 96% {
+      $l: lightness($color);
+    }
+    @return change-color($color, $lightness: $l);
+  }
+  @return $background;
+}
+
+@function findDarkColor($color) {
+  @if type-of($color) == 'color' {
+    $base-l: 29%;
+    $luminance: colorLuminance($color);
+    $luminance-delta: (0.53 - $luminance);
+    $target-l: round($base-l + ($luminance-delta * 53));
+    @return change-color($color, $lightness: base-l);
+  }
+  @return $text-strong;
+}
+
+@function toRgba($color, $alpha) {
+  @if type-of($color) != 'color' {
+    @return $color;
+  }
+  @return rgba($color, $alpha);
+}
+
+@function darkenColor($color, $amount) {
+  @if type-of($color) != 'color' {
+    @return $color;
+  }
+  @return darken($color, $amount);
+}
+
+@function lightenColor($color, $amount) {
+  @if type-of($color) != 'color' {
+    @return $color;
+  }
+  @return lighten($color, $amount);
+}

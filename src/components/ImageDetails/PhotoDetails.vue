@@ -74,7 +74,7 @@
           <span v-else>{{ image.creator }}</span>
         </span>
       </div>
-      <section class="search-tabs">
+      <section class="tabs">
         <div role="tablist" :aria-label="$t('photo-details.aria.details')">
           <button
             id="reuse"
@@ -281,10 +281,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@creativecommons/vocabulary/scss/color';
-@import '@creativecommons/vocabulary/scss/typography';
 @import '~/styles/photodetails.scss';
-@import '~/styles/tabs.scss';
 
 @include touch {
   .image-info {

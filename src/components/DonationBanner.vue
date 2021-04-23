@@ -61,10 +61,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import 'bulma/sass/utilities/_all.sass';
-@import '@creativecommons/vocabulary/scss/color.scss';
-@import '@creativecommons/vocabulary/scss/spacing.scss';
-
 $bgColor: #e6f6eb;
 
 .donation-banner {

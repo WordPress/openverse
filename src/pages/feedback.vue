@@ -7,39 +7,37 @@
         </h1>
         <i18n path="feedback.description" tag="p" class="margin-bottom-large" />
         <section class="tabs margin-top-big">
-          <ul role="tablist">
-            <li
+          <div role="tablist" :aria-label="$t('feedback.title')">
+            <button
+              id="improve"
               role="tab"
               :aria-selected="activeTab == 0"
+              aria-controls="tab-improve"
               :class="tabClass(0, 'tab')"
+              @click.prevent="setActiveTab(0)"
+              @keyup.enter.prevent="setActiveTab(0)"
             >
-              <a
-                :aria-label="$t('feedback.aria.improve')"
-                href="#panel0"
-                @click.prevent="setActiveTab(0)"
-                @keyup.enter.prevent="setActiveTab(0)"
-              >
-                {{ $t('feedback.improve') }}
-              </a>
-            </li>
-            <li
+              {{ $t('feedback.improve') }}
+            </button>
+            <button
+              id="report"
               role="tab"
               :aria-selected="activeTab == 1"
+              aria-controls="tab-report"
               :class="tabClass(1, 'tab')"
+              @click.prevent="setActiveTab(1)"
+              @keyup.enter.prevent="setActiveTab(1)"
             >
-              <a
-                :aria-label="$t('feedback.aria.report-bug')"
-                href="#panel1"
-                @click.prevent="setActiveTab(1)"
-                @keyup.enter.prevent="setActiveTab(1)"
-              >
-                {{ $t('feedback.bug') }}
-              </a>
-            </li>
-          </ul>
-        </section>
-        <section class="tabs-content">
-          <div :class="tabClass(0, 'tabs-panel')">
+              {{ $t('feedback.bug') }}
+            </button>
+          </div>
+          <div
+            id="tab-improve"
+            aria-labelledby="improve"
+            role="tabpanel"
+            :class="tabClass(0, 'tabs-panel')"
+            tabindex="0"
+          >
             <iframe
               :aria-label="$t('feedback.aria.improve')"
               src="https://docs.google.com/forms/d/e/1FAIpQLSfb_6yq2Md0v6S-XzsyT7p1QVhqr7MWHqInKdyYh4ReaWn4FQ/viewform?embedded=true"
@@ -53,7 +51,13 @@
               {{ $t('feedback.loading') }}
             </iframe>
           </div>
-          <div :class="tabClass(1, 'tabs-panel')">
+          <div
+            id="tab-report"
+            aria-labelledby="report"
+            role="tabpanel"
+            :class="tabClass(1, 'tabs-panel')"
+            tabindex="0"
+          >
             <iframe
               :aria-label="$t('feedback.aria.report-bug')"
               src="https://docs.google.com/forms/d/e/1FAIpQLSeSN1AIG8LrdgIdKpBj4IlPDhu6T5ndZ7z_QcISBu-ITCU0Yw/viewform?embedded=true"

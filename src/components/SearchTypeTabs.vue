@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="search-tabs">
+    <section class="tabs">
       <div role="tablist">
         <NuxtLink
           v-for="type in contentTypes"
@@ -49,10 +49,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@creativecommons/vocabulary/scss/color';
-@import '@creativecommons/vocabulary/scss/typography';
-@import '~/styles/tabs.scss';
-.search-tabs {
+.tabs {
   margin-left: 1rem;
 }
 </style>

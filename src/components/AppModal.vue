@@ -59,8 +59,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'bulma/sass/utilities/_all';
-
 .modal {
   position: relative;
   margin: 0px auto;
@@ -92,11 +90,9 @@ export default {
 
 .modal-header {
   display: flex;
-  display: flex;
   justify-content: space-around;
   align-items: flex-start;
   width: 100%;
-  box-sizing: border-box;
 }
 
 .close-button {
