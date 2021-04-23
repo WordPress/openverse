@@ -18,9 +18,9 @@ def get_client(is_authenticated: bool = True) -> Github:
 
     log.info("Setting up GitHub client")
     if is_authenticated:
-        access_token: typing.Optional[str] = os.getenv("GITHUB_ACCESS_TOKEN")
+        access_token: typing.Optional[str] = os.getenv("ACCESS_TOKEN")
         if access_token is None:
-            log.error("Access token was not found in env.GITHUB_ACCESS_TOKEN.")
+            log.error("Access token was not found in env.ACCESS_TOKEN.")
             raise ValueError("Access token not found")
     else:
         log.debug("Generating a non-authenticated client")
