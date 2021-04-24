@@ -8,7 +8,7 @@
           class="column"
         >
           <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-          <NuxtLink class="logo" to="/">WP Photos</NuxtLink>
+          <NuxtLink class="logo" to="/">WP Open Search</NuxtLink>
           <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
           <LocaleSelector />
         </section>

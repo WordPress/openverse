@@ -20,7 +20,7 @@ The rest of this README is the unmodified original readme, which may reference d
 ![cccatalog-frontend-ci](https://github.com/creativecommons/cccatalog-frontend/workflows/cccatalog-frontend-ci/badge.svg)
 
 WP Open Search is the official web application for the [Creative Commons Catalog API
-](https://github.com/creativecommons/cccatalog-api). WP Photos is an interface to search for content that is licensed under Creative Commons licenses or marked with public domain tools. This repositiory contains all the front-end code.
+](https://github.com/creativecommons/cccatalog-api). WP Open Search is an interface to search for content that is licensed under Creative Commons licenses or marked with public domain tools. This repositiory contains all the front-end code.
 
 The application is avaliable at [search.creativecommons.org](https://search.creativecommons.org/).
 
