@@ -1,7 +1,7 @@
 {
   "name": "ccsearch-frontend",
   "version": "2020.10.2",
-  "description": "WP Photos",
+  "description": "WP Open Search",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Automattic/ccsearch-frontend.git"

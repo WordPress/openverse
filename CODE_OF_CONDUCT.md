@@ -1,7 +1,7 @@
 # Contributor Code of Conduct
 
-The WP Photos team is committed to fostering a welcoming community. This
-project and all other WP Photos open source projects are governed by our
+The WP Open Search team is committed to fostering a welcoming community. This
+project and all other WP Open Search open source projects are governed by our
 [Code of Conduct][code_of_conduct]. Please report unacceptable behavior to
 [conduct@creativecommons.org](mailto:conduct@creativecommons.org) per our
 [reporting guidelines][reporting_guide].

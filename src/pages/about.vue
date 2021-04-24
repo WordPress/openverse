@@ -49,7 +49,7 @@
             </template>
             <template #search>
               <a
-                aria-label="WP Photos repository"
+                aria-label="WP Open Search repository"
                 href="https://github.com/creativecommons/cccatalog-frontend/"
                 >{{ $t('about.planning.search') }}</a
               >

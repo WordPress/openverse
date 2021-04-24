@@ -52,7 +52,7 @@
     <img
       class="logo-cloud"
       src="~/assets/logo-cloud.png"
-      alt="Logos from sources of WP Photos licensed images"
+      alt="Logos from sources of WP Open Search licensed images"
     />
   </div>
   <!-- eslint-enable -->

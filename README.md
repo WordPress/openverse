@@ -1,4 +1,4 @@
-This is a temporary repository for the WP Photos project while migrating from Creative Commons to Automattic. See all the repositories in the project below:
+This is a temporary repository for the WP Open Search project while migrating from Creative Commons to Automattic. See all the repositories in the project below:
 
 | Original Repo                                                                               | Automattic Repo                                                                 |
 | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
@@ -19,7 +19,7 @@ The rest of this README is the unmodified original readme, which may reference d
 
 ![cccatalog-frontend-ci](https://github.com/creativecommons/cccatalog-frontend/workflows/cccatalog-frontend-ci/badge.svg)
 
-WP Photos is the official web application for the [Creative Commons Catalog API
+WP Open Search is the official web application for the [Creative Commons Catalog API
 ](https://github.com/creativecommons/cccatalog-api). WP Photos is an interface to search for content that is licensed under Creative Commons licenses or marked with public domain tools. This repositiory contains all the front-end code.
 
 The application is avaliable at [search.creativecommons.org](https://search.creativecommons.org/).
@@ -52,7 +52,7 @@ docker-compose up
 
 You should now have the application running and accessible at http://localhost:8443.
 
-You don't need to have the WP Photos API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [API](https://api.creativecommons.engineering) that's already publicly available. If you wish, you can change the URL of the API that's used during development by setting the `API_URL` environment variable.
+You don't need to have the WP Open Search API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [API](https://api.creativecommons.engineering) that's already publicly available. If you wish, you can change the URL of the API that's used during development by setting the `API_URL` environment variable.
 
 ### Running tests
 
@@ -64,7 +64,7 @@ npm run test
 
 ### localhost tunneling
 
-If you want to make your local development server accessible to the internet (for testing or showing someone something you're working on), you can use [`ngrok`](https://ngrok.com/). Follow the documentation on the `ngrok` site to install it and set it up. Once you have it installed, get the development server for WP Photos running and in a separate window/tab, run:
+If you want to make your local development server accessible to the internet (for testing or showing someone something you're working on), you can use [`ngrok`](https://ngrok.com/). Follow the documentation on the `ngrok` site to install it and set it up. Once you have it installed, get the development server for WP Open Search running and in a separate window/tab, run:
 
 ```
 # The extra parameters are required to ensure that ngrok redirects to the HTTPS version of the site
@@ -81,13 +81,13 @@ ngrok http 8443 -host-header="localhost:8443"
 
 ## Formatting and Linting
 
-The code in this repository is formatted using `prettier`. If you have prettier setup in your code editor it should work out of the box; otherwise you can use the `npm run lintfix` script to format and fix lint errors in your code. Checks are run to lint your code and validate the formatting on git precomit using [husky](https://github.com/typicode/husky).
+The code in this repository is formatted using `prettier`. If you have prettier setup in your code editor it should work out of the box; otherwise you can use the `npm run lintfix` script to format and fix lint errors in your code. Checks are run to lint your code and validate the formatting on git precommit using [husky](https://github.com/typicode/husky).
 
-You will need to fix any linting issues before comitting. We reccommend formatting your JavaScript files on save in your text editor. You can learn how to do this in Visual Studio Code [here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode#format-on-save).
+You will need to fix any linting issues before committing. We recommend formatting your JavaScript files on save in your text editor. You can learn how to do this in Visual Studio Code [here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode#format-on-save).
 
 ## Versioning
 
-WP Photos uses [CalVer](https://calver.org/) for version numbering, in the `YYYY.M.Micro` format. This format is intentionally compatiable with NPM's `semver` parser. `Micro` is bumped whenever there are multiple releases in a month, for example `2020.07.1` is the first release in July 2020, while `2020.07.2` is the second.
+WP Open Search uses [CalVer](https://calver.org/) for version numbering, in the `YYYY.M.Micro` format. This format is intentionally compatible with NPM's `semver` parser. `Micro` is bumped whenever there are multiple releases in a month, for example `2020.07.1` is the first release in July 2020, while `2020.07.2` is the second.
 
 ## Deployment
 

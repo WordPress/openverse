@@ -4,7 +4,7 @@ This document will give you a high level overview of the modules and components 
 
 ## Dependencies
 
-The WP Photos frontend is built using [Vue.JS](https://vuejs.org/) as its main view library. The app uses [Vocabulary](https://github.com/creativecommons/vocabulary) for vue components and global CSS.
+The WP Open Search frontend is built using [Vue.JS](https://vuejs.org/) as its main view library. The app uses [Vocabulary](https://github.com/creativecommons/vocabulary) for vue components and global CSS.
 
 It uses [NuxtJS](https://nuxtjs.org/) as a meta framework to handle several key functions:
 

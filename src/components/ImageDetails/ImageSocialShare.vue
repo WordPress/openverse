@@ -32,7 +32,7 @@ export default {
     },
     shareText() {
       return encodeURI(
-        `I found an image through WP Photos @creativecommons: ${this.imageSourceURL}`
+        `I found an image through WP Open Search @creativecommons: ${this.imageSourceURL}`
       )
     },
   },
