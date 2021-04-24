@@ -74,7 +74,7 @@
   "about": {
     "title": "About WP Open Search",
     "description": {
-      "content": "WP Open Search is a tool that allows openly licensed and public domain works to be discovered and used by everyone.",
+      "content": "WP Open Search is a tool that allows openly licensed and public domain works to be discovered and used by everyone."
     },
     "collection": "WP Open Search searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
     "planning": {

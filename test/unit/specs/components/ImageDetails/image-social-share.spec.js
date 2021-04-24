@@ -40,9 +40,7 @@ describe('ImageSocialShare', () => {
     expect(wrapper.vm.imageURL).toBe(url)
     expect(wrapper.vm.imageSourceURL).toBe(sourceURL)
     expect(wrapper.vm.shareText).toBe(
-      encodeURI(
-        `I found an image through WP Open Search: ${sourceURL}`
-      )
+      encodeURI(`I found an image through WP Open Search: ${sourceURL}`)
     )
   })
 })
