@@ -20,5 +20,5 @@ ADD ./dags ${AIRFLOW_HOME}/dags
 RUN pip install --user -r ${REQUIREMENTS_FILE}
 
 CMD python wait_for_db.py && \
-  airflow db init && \
+  airflow initdb && \
   (airflow scheduler & airflow webserver)
