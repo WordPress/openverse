@@ -1,6 +1,5 @@
 import argparse
 import logging
-import os
 
 from github import (
     Github,
@@ -14,8 +13,10 @@ from github import (
 
 from shared.data import get_data
 from shared.github import get_client
+from shared.log import configure_logger
 
-logging.basicConfig(level=int(os.getenv("LOGGING_LEVEL", logging.DEBUG)))
+configure_logger()
+
 log = logging.getLogger(__name__)
 
 # region argparse
