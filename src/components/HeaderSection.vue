@@ -1,7 +1,7 @@
 <template>
   <header>
     <NavSection :key="$route.path" :show-nav-search="showNavSearch" />
-    <DonationBanner @onDismiss="hideDonate" />
+    <DonationBanner v-if="showDonate" @onDismiss="hideDonate" />
     <slot />
   </header>
 </template>
