@@ -1,7 +1,7 @@
 <!-- TITLE: Flickr -->
 <!-- SUBTITLE: Information about the provider Flickr -->
 
-We run an hourly job to pull the last hour's uploads from [Flickr](https://www.flickr.com) 
+We run an hourly job to pull the last hour's uploads from [Flickr](https://www.flickr.com)
 
 # Flickr API
 You can find the documentation for Flickr API[here](https://www.flickr.com/services/api/).  We currently use the [flickr.photos.search](https://www.flickr.com/services/api/flickr.photos.search.html) method to query the API.  Here is an example showing the type of query string we use:
@@ -142,3 +142,10 @@ The tags field in the DB is a json field with the following information:
 ]
 ```
 Here, `<tagnameX>` is one of the tags from the $tags field in the API response.  There are a maximum of 20 tags stored in the tags field.
+
+
+## API Key generation
+
+1. Create an account at http://flickr.com/signup
+2. Apply for an API key at https://www.flickr.com/services/apps/create/apply/ (we are thankfully non-commercial)
+3. You should be presented with a `key` and a `secret`. It is reccommended to store these in a password manager for security purposes.
