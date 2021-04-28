@@ -14,8 +14,6 @@ from shared.github import get_client
 from shared.log import configure_logger
 from shared.project import get_org_project, get_project_column
 
-configure_logger()
-
 log = logging.getLogger(__name__)
 
 # region argparse
@@ -107,6 +105,8 @@ def get_issue_cards(col: ProjectColumn) -> list[ProjectCard]:
 
 
 if __name__ == "__main__":
+    configure_logger()
+
     args = parser.parse_args()
 
     log.debug(f"Project number: {args.proj_number}")
