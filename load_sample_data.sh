@@ -16,7 +16,7 @@ docker-compose exec "$CCAPI_SERVICE_NAME" /bin/bash -c "python3 manage.py shell 
 	EOF"
 
 # Migrate analytics
-docker-compose exec "$ANALYTICS_SERVICE_NAME" /bin/bash -c 'PYTHONPATH=. pipenv run alembic upgrade head'
+docker-compose exec "$ANALYTICS_SERVICE_NAME" /bin/bash -c "PYTHONPATH=. pipenv run alembic upgrade head"
 # Copy table `image` from database to upstream database
 docker-compose exec "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "PGPASSWORD=deploy pg_dump -s -t image -U deploy -d openledger -h db | psql -U deploy -d openledger"
 # Load content providers
