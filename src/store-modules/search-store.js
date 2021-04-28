@@ -182,6 +182,7 @@ const state = {
   images: [],
   isFetchingImages: false,
   isFetchingImagesError: true,
+  isImageNotFound: false,
   query: {},
 }
 
@@ -201,6 +202,7 @@ const mutations = {
   },
   [SET_IMAGE](_state, params) {
     _state.image = decodeImageData(params.image)
+    _state.isImageNotFound = false
   },
   [SET_IMAGE_PAGE](_state, params) {
     _state.imagePage = params.imagePage
@@ -220,9 +222,8 @@ const mutations = {
   [SET_QUERY](_state, params) {
     setQuery(_state, params)
   },
-  // @todo: fix
-  [IMAGE_NOT_FOUND]() {
-    // redirect({ path: '/not-found' }, true)
+  [IMAGE_NOT_FOUND](_state) {
+    _state.isImageNotFound = true
   },
 }
 

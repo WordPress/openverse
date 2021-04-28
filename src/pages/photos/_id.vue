@@ -90,7 +90,10 @@ const PhotoDetailPage = {
   },
   beforeRouteEnter(to, from, nextPage) {
     nextPage((_this) => {
-      if (from.path === '/search' || from.path === '/search/image') {
+      if (_this.$store.state.isImageNotFound) {
+        nextPage('/error')
+      }
+      if (from.path === '/search/' || from.path === '/search/image') {
         _this.shouldShowBreadcrumb = true
         _this.breadCrumbURL = from.fullPath
       }
