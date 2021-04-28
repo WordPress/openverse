@@ -1,5 +1,5 @@
 CREATE SCHEMA IF NOT EXISTS aws_s3;
-CREATE LANGUAGE plpython3u;
+CREATE EXTENSION plpython3u;
 
 CREATE OR REPLACE FUNCTION aws_s3.table_import_from_s3 (
   table_name text,
