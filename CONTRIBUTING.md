@@ -2,17 +2,17 @@
 
 Thank you for your interest in contributing to CC Open Source! This document is a set of guidelines to help you contribute to this project.
 
-## Code of Conduct
+<!-- ## Code of Conduct
 
-By participating in this project, you are expected to uphold our [Code of Conduct](https://creativecommons.github.io/community/code-of-conduct/).
+By participating in this project, you are expected to uphold our [Code of Conduct](https://creativecommons.github.io/community/code-of-conduct/). -->
 
 ## Project Documentation
 
 Please consult the [README](./README.md) and [CODEBASE](./CODEBASE.md) files at the root of this repository.
 
-## How to Contribute
+<!-- ## How to Contribute
 
-Please read the processes in our general [Contributing Code](https://creativecommons.github.io/contributing-code/) guidelines on the Creative Common Open Source website. It contains some general instructions that should be followed when contributing to any of the Openverse open-source repositories.
+Please read the processes in our general [Contributing Code](https://creativecommons.github.io/contributing-code/) guidelines on the Creative Common Open Source website. It contains some general instructions that should be followed when contributing to any of the Openverse open-source repositories. -->
 
 ### Bugs
 
