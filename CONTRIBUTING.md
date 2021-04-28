@@ -12,7 +12,7 @@ Please consult the [README](./README.md) and [CODEBASE](./CODEBASE.md) files at 
 
 ## How to Contribute
 
-Please read the processes in our general [Contributing Code](https://creativecommons.github.io/contributing-code/) guidelines on the Creative Common Open Source website. It contains some general instructions that should be followed when contributing to any of the WP Open Search open-source repositories.
+Please read the processes in our general [Contributing Code](https://creativecommons.github.io/contributing-code/) guidelines on the Creative Common Open Source website. It contains some general instructions that should be followed when contributing to any of the Openverse open-source repositories.
 
 ### Bugs
 
@@ -22,7 +22,7 @@ After that, don't forget to tag the issue with the "Bug" label.
 
 ### Proposing changes or new features
 
-If you have an idea of a new feature or change to how the WP Open Search frontend works, please [file an issue](https://github.com/creativecommons/cccatalog-frontend/issues/new?template=feature_request.md) so we can discuss the possibility of that change or new feature being implemented and released in the future. This lets us come to an agreement about the proposed idea before any work is done.
+If you have an idea of a new feature or change to how the Openverse frontend works, please [file an issue](https://github.com/creativecommons/cccatalog-frontend/issues/new?template=feature_request.md) so we can discuss the possibility of that change or new feature being implemented and released in the future. This lets us come to an agreement about the proposed idea before any work is done.
 
 If you'd like to build a new feature but don't have a specific idea, please check our [public roadmap](https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/). Choose something from the pipeline of ideas and follow the same process as above.
 

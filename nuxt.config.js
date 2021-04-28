@@ -22,12 +22,12 @@ const meta = [
   {
     name: 'description',
     content:
-      'A new WP Open Search tool for creators seeking to discover and reuse free resources with greater ease.',
+      'A new Openverse search tool for creators seeking to discover and reuse free resources with greater ease.',
   },
   { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   { name: 'twitter:card', content: 'summary_large_image' },
   { name: 'twitter:site', content: '@creativecommons' },
-  { name: 'og:title', content: 'WP Open Search' },
+  { name: 'og:title', content: 'Openverse' },
   {
     name: 'og:image',
     content: '/cclogo-shared-image.jpg',
@@ -61,7 +61,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // Default html head
 const head = {
-  title: 'WP Open Search',
+  title: 'Openverse',
   meta,
   link: [
     {
@@ -76,7 +76,7 @@ const head = {
     {
       rel: 'search',
       type: 'application/opensearchdescription+xml',
-      title: 'WP Open Search',
+      title: 'Openverse',
       href: '/opensearch.xml',
     },
     {

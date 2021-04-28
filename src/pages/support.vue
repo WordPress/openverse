@@ -17,7 +17,7 @@
             </header>
             <div class="card-content with-button">
               <div class="content">
-                <h2>WP Open Search</h2>
+                <h2>Openverse</h2>
                 <span class="subtitle is-italic margin-bottom-normal">
                   {{ $t('support.open') }}</span
                 >

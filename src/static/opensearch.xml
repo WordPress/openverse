@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
                       xmlns:moz="http://www.mozilla.org/2006/browser/search/">
-    <ShortName>WP Open Search</ShortName>
-    <Description>WP Open Search search tool</Description>
+    <ShortName>Openverse</ShortName>
+    <Description>Openverse search tool</Description>
     <InputEncoding>UTF-8</InputEncoding>
     <Image height="16" width="16" type="image/x-icon">
         "https://ccsearch.creativecommons.org/static/img/cc-icon_large.png"

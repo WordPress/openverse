@@ -1,7 +1,7 @@
 {
   "name": "ccsearch-frontend",
   "version": "2020.10.2",
-  "description": "WP Open Search",
+  "description": "Openverse",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Automattic/ccsearch-frontend.git"
