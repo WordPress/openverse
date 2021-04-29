@@ -5,7 +5,7 @@ import abTests, { activeExperiments } from '~/abTests'
  * @param {import('@nuxt/types').Context} context
  */
 export default function abTestInit(context) {
-  if (activeExperiments) {
+  if (activeExperiments.length > 0) {
     abTests(context.store, activeExperiments)
   }
 }
