@@ -4,3 +4,6 @@
 # Force all files to always use LF line endings so that if a repo is accessed
 # in Unix via a file share from Windows, the files will work
 * text eol=lf
+
+*.png binary
+*.ttf binary
