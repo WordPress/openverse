@@ -57,13 +57,13 @@ jobs:
         python -m pip install --user pipenv
         pipenv install --deploy
 
-    - name: Add PRs to "In progress"
+    - name: Add PRs to "Needs review"
       working-directory: ./python
       run: |
         pipenv run python new_issues_and_prs.py \
         --entity-type "pr" \
         --project-number 3 \
-        --target-column "In progress" \
+        --target-column "Needs review" \
         --period 30
 
   move_issues:
