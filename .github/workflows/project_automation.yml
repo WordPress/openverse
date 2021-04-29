@@ -34,7 +34,7 @@ jobs:
       run: |
         pipenv run python new_issues_and_prs.py \
         --entity-type "issue" \
-        --project-number 242 \
+        --project-number 3 \
         --target-column "Backlog" \
         --period 30
 
@@ -62,7 +62,7 @@ jobs:
       run: |
         pipenv run python new_issues_and_prs.py \
         --entity-type "pr" \
-        --project-number 242 \
+        --project-number 3 \
         --target-column "In progress" \
         --period 30
 
@@ -89,7 +89,7 @@ jobs:
       working-directory: ./python
       run: |
         pipenv run python issues_with_prs.py \
-        --project-number 242 \
+        --project-number 3 \
         --source-column "To do" \
         --target-column "In progress"
 
@@ -97,6 +97,6 @@ jobs:
       working-directory: ./python
       run: |
         pipenv run python issues_with_prs.py \
-        --project-number 242 \
+        --project-number 3 \
         --source-column "Backlog" \
         --target-column "In progress"
