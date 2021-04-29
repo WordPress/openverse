@@ -2,9 +2,10 @@
   <div class="grid-container full">
     <main class="not-found">
       <h1 v-if="error.statusCode === 404">
-        {{ $t('not-found') }}
+        {{ $t('error.not-found') }}
       </h1>
-      <h1 v-else>{{ $t('error-occurred') }}</h1>
+      <h1 v-else>{{ $t('error.occurred') }}</h1>
+      <p>{{ error.message }}</p>
     </main>
   </div>
 </template>
