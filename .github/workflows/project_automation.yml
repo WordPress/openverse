@@ -10,6 +10,62 @@ env:
   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
 jobs:
+  add_issues:
+    name: Add new issues
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      working-directory: ./python
+      run: |
+        python -m pip install --user --upgrade pip
+        python -m pip install --user pipenv
+        pipenv install --deploy
+
+    - name: Add issues to "Backlog"
+      working-directory: ./python
+      run: |
+        pipenv run python new_issues_and_prs.py \
+        --entity-type "issue" \
+        --project-number 242 \
+        --target-column "Backlog" \
+        --period 30
+
+  add_prs:
+    name: Add new PRs
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      working-directory: ./python
+      run: |
+        python -m pip install --user --upgrade pip
+        python -m pip install --user pipenv
+        pipenv install --deploy
+
+    - name: Add PRs to "In progress"
+      working-directory: ./python
+      run: |
+        pipenv run python new_issues_and_prs.py \
+        --entity-type "pr" \
+        --project-number 242 \
+        --target-column "In progress" \
+        --period 30
+
   move_issues:
     name: Move issues to "In Progress"
     runs-on: ubuntu-latest
