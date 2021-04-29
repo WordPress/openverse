@@ -16,7 +16,7 @@
         <SearchGridForm @onSearchFormSubmit="onSearchFormSubmit" />
         <SearchTypeTabs />
         <FilterDisplay
-          v-if="$route.path === '/search' || $route.path === '/search/image'"
+          v-if="$route.path === '/search/' || $route.path === '/search/image'"
           :query="query"
         />
         <NuxtChild
