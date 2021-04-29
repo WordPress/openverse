@@ -8,7 +8,8 @@ export const env = {
   socialSharing: process.env.SOCIAL_SHARING || true,
   enableGoogleAnalytics: process.env.ENABLE_GOOGLE_ANALYTICS || false,
   googleAnalyticsUA: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
-  filterStorageKey: 'ccsearch-filter-visibility',
+  filterStorageKey: 'filter-visibility',
+  notificationStorageKey: 'show-notification',
   enableInternalAnalytics: process.env.ENABLE_INTERNAL_ANALYTICS || false,
 }
 

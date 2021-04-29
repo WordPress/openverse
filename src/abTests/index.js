@@ -1,5 +1,4 @@
 import { JOINED_AB_TEST_EXPERIMENT } from '~/store-modules/mutation-types'
-import donationLanguage from '~/abTests/experiments/donationLanguage'
 import { participate } from '~/utils/sixpack'
 
 /**
@@ -21,9 +20,7 @@ import { participate } from '~/utils/sixpack'
  * }
  * ```
  */
-const abTests = (store) => {
-  const activeExperiments = [donationLanguage]
-
+const abTests = (store, activeExperiments) => {
   // commit each experiment to Vuex
   const commitExperiments = (experiments) => {
     experiments.map((experiment) => {
