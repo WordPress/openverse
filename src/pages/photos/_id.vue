@@ -76,21 +76,30 @@ const PhotoDetailPage = {
   async asyncData({ env, route }) {
     return { thumbnailURL: `${env.apiUrl}thumbs/${route.params.id}` }
   },
-  async fetch() {
+  async fetch({ store, route, error, app }) {
     // Clear related images if present
-    if (this.relatedImages && this.relatedImages.length > 0) {
-      this.SET_RELATED_IMAGES({ relatedImages: [], relatedImageCount: 0 })
+    if (store.state.relatedImages && store.state.relatedImages.length > 0) {
+      await store.dispatch(SET_RELATED_IMAGES, {
+        relatedImages: [],
+        relatedImageCount: 0,
+      })
     }
-
-    // Load the image + related images in parallel
-    await Promise.all([
-      this.loadImage(this.$route.params.id),
-      this[FETCH_RELATED_IMAGES]({ id: this.$route.params.id }),
-    ])
+    try {
+      // Load the image + related images in parallel
+      await Promise.all([
+        store.dispatch(FETCH_IMAGE, { id: route.params.id }),
+        store.dispatch(FETCH_RELATED_IMAGES, { id: route.params.id }),
+      ])
+    } catch (err) {
+      error({
+        statusCode: 404,
+        message: app.i18n.t('error.image-not-found', { id: route.params.id }),
+      })
+    }
   },
   beforeRouteEnter(to, from, nextPage) {
     nextPage((_this) => {
-      if (from.path === '/search' || from.path === '/search/image') {
+      if (from.path === '/search/' || from.path === '/search/image') {
         _this.shouldShowBreadcrumb = true
         _this.breadCrumbURL = from.fullPath
       }
@@ -111,9 +120,6 @@ const PhotoDetailPage = {
       if (this.image && this.image.id) {
         this[FETCH_RELATED_IMAGES]({ id: this.image.id })
       }
-    },
-    loadImage(id) {
-      return this[FETCH_IMAGE]({ id })
     },
   },
 }
