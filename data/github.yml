@@ -1,7 +1,6 @@
-org: Automattic
+org: WordPress
 repos:
-  infra: ccsearch-infrastructure
-  catalog: ccsearch-catalog
-  api: ccsearch-api
-  frontend: ccsearch-frontend
-  scripts: ccsearch-scripts
+  catalog: openverse-catalog
+  api: openverse-api
+  frontend: openverse-frontend
+  scripts: openverse-scripts
