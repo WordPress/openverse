@@ -154,7 +154,7 @@ if __name__ == "__main__":
     log.debug("Found target column")
 
     for entity in new_entities:
-        log.info(f"Creating card for {display_name} {entity.number}")
+        log.info(f"Creating card for {entity.html_url} in {target_column.name}")
         try:
             target_column.create_card(
                 content_id=entity.id,

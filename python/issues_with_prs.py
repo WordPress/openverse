@@ -150,9 +150,9 @@ if __name__ == "__main__":
     cards_to_move = []
     for (issue_card, issue) in issue_cards:
         if issue in issues_with_prs:
-            cards_to_move.append(issue_card)
+            cards_to_move.append((issue_card, issue))
     log.info(f"Found {len(cards_to_move)} cards to move")
 
-    for card in cards_to_move:
-        log.info(f"Moving card {card.id} to {target_column.name}")
-        card.move("bottom", target_column)
+    for (issue_card, issue) in cards_to_move:
+        log.info(f"Moving card for issue {issue.html_url} to {target_column.name}")
+        issue_card.move("bottom", target_column)
