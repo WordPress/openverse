@@ -61,7 +61,7 @@ parser.add_argument(
 
 def get_new_issues(
     gh: Github,
-    org_name: str,
+    org_handle: str,
     repo_names: list[str],
     ent_type: str,
     since: datetime.datetime,
@@ -71,23 +71,23 @@ def get_new_issues(
     that were created after the specified time. This includes PRs.
 
     :param gh: the GitHub client
-    :param org_name: the name of the org in which to look for issues
+    :param org_handle: the name of the org in which to look for issues
     :param repo_names: the name of the repos in which to look for issues
     :param ent_type: whether to retrieve issues or PRs (as issues)
     :param since: the timestamp after which to retrieve
     :return: the list of all retrieved entities
     """
 
-    entity_info = ENTITY_INFO[ent_type]
+    display_name = ENTITY_INFO[ent_type].display_name
     all_entities = []
     for repo_name in repo_names:
-        log.info(f"Looking for {entity_info.display_name}s in {org_name}/{repo_name}")
+        log.info(f"Looking for new {display_name}s in {org_handle}/{repo_name}")
         entities = gh.search_issues(
             query="",
             sort="updated",
             order="desc",
             **{
-                "repo": f"{org_name}/{repo_name}",
+                "repo": f"{org_handle}/{repo_name}",
                 "is": ent_type,
                 "state": "open",
                 "created": f">={since.isoformat()}",
@@ -112,19 +112,19 @@ if __name__ == "__main__":
     since = datetime.datetime.utcnow() - datetime.timedelta(minutes=args.period)
 
     github_info = get_data("github.yml")
-    org_name = github_info["org"]
-    log.info(f"Organization name: {org_name}")
+    org_handle = github_info["org"]
+    log.info(f"Organization handle: {org_handle}")
     repo_names = github_info["repos"].values()
     log.info(f"Repository names: {', '.join(repo_names)}")
 
     gh = get_client()
-    org = gh.get_organization(org_name)
+    org = gh.get_organization(org_handle)
 
     entity_type = args.entity_type
     entity_info = ENTITY_INFO[entity_type]
     new_entities: list[Issue] = get_new_issues(
         gh=gh,
-        org_name=org_name,
+        org_handle=org_handle,
         repo_names=repo_names,
         ent_type=entity_type,
         since=since,

@@ -51,7 +51,7 @@ parser.add_argument(
 
 def get_open_issues_with_prs(
     gh: Github,
-    org_name: str,
+    org_handle: str,
     repo_names: list[str],
 ) -> list[Issue]:
     """
@@ -59,20 +59,22 @@ def get_open_issues_with_prs(
     that have PRs linked to them.
 
     :param gh: the GitHub client
-    :param org_name: the name of the org in which to look for issues
+    :param org_handle: the name of the org in which to look for issues
     :param repo_names: the name of the repos in which to look for issues
     :return: the list of open issues with linked PRs
     """
 
     all_issues = []
     for repo_name in repo_names:
-        log.info(f"Looking for issues with PRs in {org_name}/{repo_name}")
+        log.info(f"Looking for issues with PRs in {org_handle}/{repo_name}")
         issues = gh.search_issues(
             query=f"",
             sort="updated",
             order="desc",
             **{
-                "repo": f"{org_name}/{repo_name}",
+                "repo": f"{org_handle}/{repo_name}",
+                "is": "issue",
+                "state": "open",
                 "linked": "pr",
                 "is": "open",
             },
@@ -114,17 +116,17 @@ if __name__ == "__main__":
     log.debug(f"Target column name: {args.target_col_name}")
 
     github_info = get_data("github.yml")
-    org_name = github_info["org"]
-    log.info(f"Organization name: {org_name}")
+    org_handle = github_info["org"]
+    log.info(f"Organization handle: {org_handle}")
     repo_names = github_info["repos"].values()
     log.info(f"Repository names: {', '.join(repo_names)}")
 
     gh = get_client()
-    org = gh.get_organization(org_name)
+    org = gh.get_organization(org_handle)
 
     issues_with_prs = get_open_issues_with_prs(
         gh=gh,
-        org_name=org_name,
+        org_handle=org_handle,
         repo_names=repo_names,
     )
 
