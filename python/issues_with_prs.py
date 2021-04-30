@@ -69,7 +69,7 @@ def get_open_issues_with_prs(
     for repo_name in repo_names:
         log.info(f"Looking for issues with PRs in {org_handle}/{repo_name}")
         issues = gh.search_issues(
-            query=f"",
+            query="",
             sort="updated",
             order="desc",
             **{
@@ -77,11 +77,15 @@ def get_open_issues_with_prs(
                 "is": "issue",
                 "state": "open",
                 "linked": "pr",
-                "is": "open",
             },
         )
-        all_issues += list(issues)
-    log.info(f"Found {len(all_issues)} open issues with linked PRs")
+        issues = list(issues)
+        log.info(f"Found {len(issues)} issues")
+        for issue in issues:
+            log.info(f"• #{issue.number} | {issue.title}")
+        all_issues += issues
+
+    log.info(f"Found a total of {len(all_issues)} open issues with linked PRs")
     return all_issues
 
 

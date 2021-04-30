@@ -94,9 +94,13 @@ def get_new_issues(
                 "created": f">={since.isoformat()}",
             },
         )
-        all_entities += list(entities)
+        entities = list(entities)
+        log.info(f"Found {len(entities)} {display_name}s")
+        for entity in entities:
+            log.info(f"• #{entity.number} | {entity.title}")
+        all_entities += entities
 
-    log.info(f"Found {len(all_entities)} new {entity_info.display_name}s created")
+    log.info(f"Found a total of {len(all_entities)} new {display_name}s created")
     return all_entities
 
 
