@@ -174,6 +174,8 @@
     "intro": "When you search, you can enter special symbols or words to your search term to make your search results more precise.",
     "exact": {
       "title": "Search for an exact match",
+      "aria-label": "quote unquote Claude Monet",
+      "claude-monet": "\"Claude Monet\"",
       "content": "Put a word or phrase inside quotes. For example, {link}."
     },
     "combine": {
@@ -184,25 +186,55 @@
       "negate": "{symbol} negates a single token",
       "prefix": "{symbol} at the end of a term signifies a prefix query",
       "precedence": "{open} and {close} signify precedence",
-      "fuzziness": "{symbol} after a word signifies edit distance (fuzziness)"
+      "fuzziness": "{symbol} after a word signifies edit distance (fuzziness)",
+      "aria-labels": {
+        "fuzziness": "tilde N",
+        "open": "open parenthesis",
+        "close": "close parenthesis",
+        "star": "star symbol",
+        "minus": "minus symbol",
+        "plus": "plus symbol",
+        "vertical-bar": "vertical bar symbol"
+      }
     },
     "example": {
-      "and": "Example: {link}{br} This will search for images related to both dog and cat.",
-      "or": "Example: {link}{br} This will search for images related to dog or cat, but not necessarily both.",
+      "and": {
+        "description": "Example: {link}{br} This will search for images related to both dog and cat.",
+        "aria-label": "dog plus cat",
+        "example": "dog+cat"
+      },
+      "or": {
+        "description": "Example: {link}{br} This will search for images related to dog or cat, but not necessarily both.",
+        "aria-label": "dog vertical bar cat",
+        "example": "dog|cat"
+      },
       "negate": {
-        "description": "You can use the {highlight} to exclude a search term from the results.",
+        "description": "You can use the {operator} to exclude a search term from the results.",
+        "operator-name": "operator (signifies NOT)",
+        "operator-aria-label": "minus operator (signifies NOT)",
+        "aria-label": "dog minus pug",
+        "example": "dog -pug",
         "content": "Example: {link}{br} This will search for images related to dog but won't include results related to 'pug'"
       },
       "prefix": {
-        "description": "You can use the {highlight} to mark a prefix term. This will match anything after the *.",
+        "description": "You can use the {operator-name} to mark a prefix term. This will match anything after the *.",
+        "operator-name": "operator (wildcard)",
+        "operator-aria-label": "star operator (wildcard)",
+        "aria-label": "net star symbol",
+        "example": "net*",
         "content": "Example: {link}{br} This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.."
       },
       "precedence": {
         "description": "You can use parentheses {highlight} to specify precedence of terms or combine more complex queries.",
+        "aria-label": "dogs plus open parenthesis corgis vertical bar labrador close parenthesis",
+        "example": "dogs + (corgis | labrador)",
         "content": "Example: {link}{br} This will search for images that match dogs that are either corgis or labrador."
       },
       "fuzziness": {
         "description": "You can use {highlight} to specify some fuzzy logic to the term according to the {link} — the number of one character changes that need to be made to one string to make it the same as another string.",
+        "link-text": "Levenshtein Edit Distance",
+        "aria-label": "theatre tilde 1",
+        "example": "theatre~1",
         "content": "Example: {link}{br} This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'."
       }
     }
@@ -386,13 +418,24 @@
   },
   "photo-details": {
     "back": "Back to search results",
+    "creator": "by {name}",
     "reuse": {
       "title": "Reuse",
       "license-header": "License",
       "tool-header": "Public Domain",
+      "image": "Image",
       "attribution": {
         "main": "This image was marked with a {link} license.",
         "license": "license."
+      },
+      "credit": {
+        "text": "{title}{creator}{marked-licensed}{license}{view-legal}",
+        "creator-text": " by {creator-name}",
+        "marked": "is marked with",
+        "licensed": "is licensed under",
+        "view-legal-text": ". To view {terms-copy}visit {URL}",
+        "terms-text": "the terms,",
+        "copy-text": "a copy of this license,"
       },
       "license": {
         "content": "Read more about the license {link}",

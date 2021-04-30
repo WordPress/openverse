@@ -1,7 +1,5 @@
 <template>
   <div class="copy-license margin-vertical-normal">
-    <!-- TODO: change to accommodate different sentence structures -->
-    <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
     <h5 class="b-header margin-bottom-small">
       {{ $t('photo-details.reuse.copy-license.title') }}
     </h5>
@@ -51,42 +49,61 @@
         :class="tabClass(0, 'tabs-panel')"
         tabindex="0"
       >
-        <span
+        <i18n
           id="attribution"
           ref="photoAttribution"
+          path="photo-details.reuse.credit.text"
+          tag="span"
           class="photo_usage-attribution is-block"
         >
-          <a
-            :href="image.foreign_landing_url"
-            target="_blank"
-            rel="noopener"
-            @click="onPhotoSourceLinkClicked"
-            @keyup.enter="onPhotoSourceLinkClicked"
-            >{{ imageTitle }}</a
-          >
-          <span v-if="image.creator">
-            by
+          <template #title>
             <a
-              v-if="image.creator_url"
-              :href="image.creator_url"
+              :href="image.foreign_landing_url"
               target="_blank"
               rel="noopener"
-              @click="onPhotoCreatorLinkClicked"
-              @keyup.enter="onPhotoCreatorLinkClicked"
-              >{{ image.creator }}</a
-            >
-            <span v-else>{{ image.creator }}</span>
-          </span>
-          {{ isTool ? 'is marked with' : 'is licensed under' }}
-          <a
-            class="photo_license"
-            :href="licenseURL"
-            target="_blank"
-            rel="noopener"
+              @click="onPhotoSourceLinkClicked"
+              @keyup.enter="onPhotoSourceLinkClicked"
+              >{{ imageTitle }}</a
+            ></template
           >
-            {{ fullLicenseName.toUpperCase() }}
-          </a>
-        </span>
+          <template #creator>
+            <i18n
+              v-if="image.creator"
+              path="photo-details.reuse.credit.creator-text"
+              tag="span"
+            >
+              <template #creator-name>
+                <a
+                  v-if="image.creator_url"
+                  :href="image.creator_url"
+                  target="_blank"
+                  rel="noopener"
+                  @click="onPhotoCreatorLinkClicked"
+                  @keyup.enter="onPhotoCreatorLinkClicked"
+                  >{{ image.creator }}</a
+                >
+                <span v-else>{{ image.creator }}</span>
+              </template>
+            </i18n>
+          </template>
+          <template #marked-licensed>
+            {{
+              isTool
+                ? $t('photo-details.reuse.credit.marked')
+                : $t('photo-details.reuse.credit.licensed')
+            }}
+          </template>
+          <template #license>
+            <a
+              class="photo_license"
+              :href="licenseURL"
+              target="_blank"
+              rel="noopener"
+            >
+              {{ fullLicenseName.toUpperCase() }}
+            </a>
+          </template>
+        </i18n>
 
         <CopyButton
           id="copyattr-rich"
@@ -124,21 +141,48 @@
         :class="tabClass(2, 'tabs-panel')"
         tabindex="0"
       >
-        <p
+        <i18n
           id="attribution-text"
           ref="photoAttribution"
-          class="photo_usage-attribution is-block"
+          path="photo-details.reuse.credit.text"
+          tag="p"
         >
-          {{ imageTitle }}
-          <span v-if="image.creator"> by {{ image.creator }} </span>
-          {{ isTool ? 'is marked under' : 'is licensed with' }}
-          {{ fullLicenseName.toUpperCase() }}. To
-          {{ isTool ? 'view the terms' : 'view a copy of this license' }}, visit
-          <template v-if="licenseURL">
-            {{ licenseURL.substring(0, licenseURL.indexOf('?')) }}
+          <template #title>
+            {{ imageTitle }}
           </template>
-        </p>
-
+          <template #creator>
+            <i18n
+              v-if="image.creator"
+              path="photo-details.reuse.credit.creator-text"
+            >
+              <template #creator-name>
+                {{ image.creator }}
+              </template>
+            </i18n>
+          </template>
+          <template #marked-licensed>
+            {{
+              isTool
+                ? $t('photo-details.reuse.credit.marked')
+                : $t('photo-details.reuse.credit.licensed')
+            }}
+          </template>
+          <template #license> {{ fullLicenseName.toUpperCase() }}</template>
+          <template #view-legal>
+            <i18n path="photo-details.reuse.credit.view-legal-text">
+              <template #terms-copy>
+                {{
+                  isTool
+                    ? $t('photo-details.reuse.credit.terms-text')
+                    : $t('photo-details.reuse.credit.copy-text')
+                }}
+              </template>
+              <template v-if="licenseURL" #URL>
+                {{ licenseURL.substring(0, licenseURL.indexOf('?')) }}
+              </template>
+            </i18n>
+          </template>
+        </i18n>
         <CopyButton
           id="copyattr-plain"
           el="#attribution-text"
@@ -177,7 +221,9 @@ export default {
     },
     imageTitle() {
       const title = this.$props.image.title
-      return title !== 'Image' ? `"${title}"` : 'Image'
+      return title !== 'Image'
+        ? `"${title}"`
+        : this.$t('photo-details.reuse.image')
     },
   },
   methods: {

@@ -9,50 +9,67 @@
           {{ $t('search-guide.intro') }}
         </p>
 
-        <h3 class="margin-top-large">
+        <h2 class="margin-top-large title is-3">
           {{ $t('search-guide.exact.title') }}
-        </h3>
+        </h2>
         <i18n path="search-guide.exact.content" tag="p">
           <template #link>
             <!-- eslint-disable -->
             <a
-              aria-label="quote unquote Claude Monet"
+              :aria-label="$t('search-guide.exact.aria-label')"
               href='https://search.creativecommons.org/search?q="Claude%20Monet"'
             >
-              <em>"Claude Monet"</em>
+              <em>{{ $t('search-guide.exact.claude-monet') }}</em>
             </a>
             <!-- eslint-enable -->
           </template>
         </i18n>
 
-        <h3 role="region" class="margin-vertical-normal">
+        <h3 class="margin-vertical-normal">
           {{ $t('search-guide.combine.title') }}
         </h3>
 
         <p class="margin-vertical-normal">
           {{ $t('search-guide.combine.description') }}
         </p>
-        <!-- TODO: review for i18n to accommodate language sentence structure -->
         <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
         <ul>
           <i18n path="search-guide.combine.and" tag="li" class="listitem">
             <template #symbol>
-              <code aria-label="plus" class="literal">+</code>
+              <code
+                :aria-label="$t('search-guide.combine.aria-labels.plus')"
+                class="literal"
+                >+</code
+              >
             </template>
           </i18n>
           <i18n path="search-guide.combine.or" tag="li" class="listitem">
             <template #symbol>
-              <code aria-label="vertical bar" class="literal">|</code>
+              <code
+                :aria-label="
+                  $t('search-guide.combine.aria-labels.vertical-bar')
+                "
+                class="literal"
+                >|</code
+              >
             </template>
           </i18n>
           <i18n path="search-guide.combine.negate" tag="li" class="listitem">
             <template #symbol>
-              <code aria-label="minus" class="literal">-</code>
+              <code
+                :aria-label="$t('search-guide.combine.aria-labels.minus')"
+                class="literal"
+                >-</code
+              >
             </template>
           </i18n>
           <i18n path="search-guide.combine.prefix" tag="li" class="listitem">
             <template #symbol>
-              <code aria-label="star" class="literal">*</code>
+              <code
+                :aria-label="$t('search-guide.combine.aria-labels.star')"
+                class="literal"
+                >*</code
+              >
             </template>
           </i18n>
           <i18n
@@ -61,30 +78,42 @@
             class="listitem"
           >
             <template #open>
-              <code aria-label="open paranthesis" class="literal">(</code>
+              <code
+                :aria-label="$t('search-guide.combine.aria-labels.open')"
+                class="literal"
+                >(</code
+              >
             </template>
             <template #close>
-              <code aria-label="close paranthesis" class="literal">)</code>
+              <code
+                :aria-label="$t('search-guide.combine.aria-labels.close')"
+                class="literal"
+                >)</code
+              >
             </template>
           </i18n>
           <i18n path="search-guide.combine.fuzziness" tag="li" class="listitem">
             <template #symbol>
-              <code aria-label="tilde N" class="literal">~N</code>
+              <code
+                :aria-label="$t('search-guide.combine.aria-labels.fuzziness')"
+                class="literal"
+                >~N</code
+              >
             </template>
           </i18n>
         </ul>
 
         <i18n
-          path="search-guide.example.and"
+          path="search-guide.example.and.description"
           tag="p"
           class="margin-vertical-normal"
         >
           <template #link>
             <a
-              aria-label="dog plus cat"
+              :aria-label="$t('search-guide.example.and.aria-label')"
               href="https://search.creativecommons.org/search?q=dog%2Bcat"
             >
-              <em>dog+cat</em>
+              <em>{{ $t('search-guide.example.and.example') }}</em>
             </a>
           </template>
           <template #br>
@@ -99,10 +128,10 @@
         >
           <template #link>
             <a
-              aria-label="dog vertical bar cat"
+              :aria-label="$t('search-guide.example.or.aria-label')"
               href="https://search.creativecommons.org/search?q=dog%7Ccat"
             >
-              <em>dog|cat</em>
+              <em>{{ $t('search-guide.example.or.example') }}</em>
             </a>
           </template>
           <template #br>
@@ -115,9 +144,12 @@
           tag="p"
           class="margin-top-normal"
         >
-          <template #highlight>
-            <em aria-label="minus operator (signifies NOT)"
-              >- operator (signifies NOT)</em
+          <template #operator>
+            <em
+              :aria-label="
+                $t('search-guide.example.negate.operator-aria-label')
+              "
+              >- {{ $t('search-guide.example.negate.operator-name') }}</em
             >
           </template>
         </i18n>
@@ -129,10 +161,10 @@
         >
           <template #link>
             <a
-              aria-label="dog minus pug"
+              :aria-label="$t('search-guide.example.negate.aria-label')"
               href="https://search.creativecommons.org/search?q=dog%20-pug"
             >
-              <em>dog -pug</em>
+              <em>{{ $t('search-guide.example.negate.example') }}</em>
             </a>
           </template>
           <template #br>
@@ -145,8 +177,10 @@
           tag="p"
           class="margin-top-normal"
         >
-          <template #highlight>
-            <em>* operator (wildcard)</em>
+          <template #operator>
+            <em :aria-label="$t('search-guide.example.prefix.aria-label')"
+              >* {{ $t('search-guide.example.prefix.operator-name') }}</em
+            >
           </template>
         </i18n>
 
@@ -157,10 +191,10 @@
         >
           <template #link>
             <a
-              aria-label="net star"
+              :aria-label="$t('search-guide.example.prefix.aria-label')"
               href="https://search.creativecommons.org/search?q=net%2a"
             >
-              <em>net*</em>
+              <em>{{ $t('search-guide.example.prefix.example') }}</em>
             </a>
           </template>
           <template #br>
@@ -185,10 +219,10 @@
         >
           <template #link>
             <a
-              aria-label="dogs plus open paranthesis corgis vertical bar labrador close paranthesis"
+              :aria-label="$t('search-guide.example.precedence.aria-label')"
               href="https://search.creativecommons.org/search?q=dogs%20%2B%20%28corgis%20%7C%20labrador%29"
             >
-              <em>dogs + (corgis | labrador)</em>
+              <em>{{ $t('search-guide.example.precedence.example') }}</em>
             </a>
           </template>
           <template #br>
@@ -205,9 +239,9 @@
             <em aria-label="tilde N">~N</em>
           </template>
           <template #link>
-            <a href="http://en.wikipedia.org/wiki/Levenshtein_distance"
-              >Levenshtein Edit Distance</a
-            >
+            <a href="http://en.wikipedia.org/wiki/Levenshtein_distance">
+              {{ $t('search-guide.example.fuzziness.link-text') }}
+            </a>
           </template>
         </i18n>
 
@@ -218,10 +252,10 @@
         >
           <template #link>
             <a
-              aria-label="theatre tilde 1"
+              :aria-label="$t('search-guide.example.fuzziness.aria-label')"
               href="https://search.creativecommons.org/search?q=theatre~1"
             >
-              <em>theatre~1</em>
+              <em>{{ $t('search-guide.example.fuzziness.example') }}</em>
             </a>
           </template>
           <template #br>
