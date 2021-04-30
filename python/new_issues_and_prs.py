@@ -127,6 +127,8 @@ if __name__ == "__main__":
 
     entity_type = args.entity_type
     entity_info = ENTITY_INFO[entity_type]
+    display_name = entity_info.display_name
+    content_type = entity_info.content_type
     new_entities: list[Issue] = get_new_issues(
         gh=gh,
         org_handle=org_handle,
@@ -135,7 +137,7 @@ if __name__ == "__main__":
         since=since,
     )
     if len(new_entities) == 0:
-        log.warning(f"Found no new {entity_info.display_name}s, stopping")
+        log.warning(f"Found no new {display_name}s, stopping")
         sys.exit()
     if entity_type == "pr":
         new_entities: list[PullRequest] = [
@@ -148,16 +150,14 @@ if __name__ == "__main__":
     log.debug("Found target column")
 
     for entity in new_entities:
-        log.info(f"Creating card for {entity_info.display_name} {entity.number}")
+        log.info(f"Creating card for {display_name} {entity.number}")
         try:
             target_column.create_card(
                 content_id=entity.id,
-                content_type=entity_info.content_type,
+                content_type=content_type,
             )
         except GithubException as ex:
             if "Project already has the associated" in str(ex):
                 log.warning(f"Card already exists")
             else:
-                log.error(
-                    f"Failed to create card for {entity_info.display_name} {entity.number}"
-                )
+                log.error(f"Failed to create card for {display_name} {entity.number}")
