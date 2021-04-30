@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 
 from github import (
     Github,
@@ -129,6 +130,9 @@ if __name__ == "__main__":
         org_handle=org_handle,
         repo_names=repo_names,
     )
+    if len(issues_with_prs) == 0:
+        log.warning("Found no issues with PRs, stopping")
+        sys.exit()
 
     proj = get_org_project(org=org, proj_number=args.proj_number)
     log.info(f"Found project: {proj.name}")

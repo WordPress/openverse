@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import logging
+import sys
 from collections import namedtuple
 
 from github import Github, Issue, GithubException
@@ -129,6 +130,9 @@ if __name__ == "__main__":
         ent_type=entity_type,
         since=since,
     )
+    if len(new_entities) == 0:
+        log.warning(f"Found no new {entity_info.display_name}s, stopping")
+        sys.exit()
     if entity_type == "pr":
         new_entities: list[PullRequest] = [
             entity.as_pull_request() for entity in new_entities
