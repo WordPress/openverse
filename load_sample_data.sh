@@ -1,15 +1,15 @@
 #!/bin/bash
 set -e
-CCAPI_SERVICE_NAME="${CCAPI_SERVICE_NAME:-web}"
+WEB_SERVICE_NAME="${WEB_SERVICE_NAME:-web}"
 ANALYTICS_SERVICE_NAME="${ANALYTICS_SERVICE_NAME:-analytics}"
 CACHE_SERVICE_NAME="${CACHE_SERVICE_NAME:-cache}"
 UPSTREAM_DB_SERVICE_NAME="${UPSTREAM_DB_SERVICE_NAME:-upstream_db}"
 DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
 
 # Set up API database and upstream
-docker-compose exec "$CCAPI_SERVICE_NAME" /bin/bash -c "python3 manage.py migrate --noinput"
+docker-compose exec "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py migrate --noinput"
 # Create a user for integration testing.
-docker-compose exec "$CCAPI_SERVICE_NAME" /bin/bash -c "python3 manage.py shell <<-EOF
+docker-compose exec "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py shell <<-EOF
 	from django.contrib.auth.models import User
 	user = User.objects.create_user('continuous_integration', 'test@test.test', 'deploydeploy')
 	user.save()
