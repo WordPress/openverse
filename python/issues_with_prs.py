@@ -89,7 +89,7 @@ def get_open_issues_with_prs(
     return all_issues
 
 
-def get_issue_cards(col: ProjectColumn) -> list[ProjectCard]:
+def get_issue_cards(col: ProjectColumn) -> list[tuple[ProjectCard, Issue]]:
     """
     Get all cards linked to issues in the given column. This excludes cards that
     either have no links (just notes) or are linked to PRs.
