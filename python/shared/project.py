@@ -19,7 +19,7 @@ def get_org_project(org: Organization, proj_number: int) -> Project:
     :raise: ValueError if no project found with given number
     """
 
-    log.info(f"Getting project {proj_number} in org {org.name}")
+    log.info(f"Getting project {proj_number} in org {org.name or org.login}")
     projects = org.get_projects()
     project = next(proj for proj in projects if proj.number == proj_number)
     if project is None:
