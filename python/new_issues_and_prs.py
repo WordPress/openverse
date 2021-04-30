@@ -4,8 +4,12 @@ import logging
 import sys
 from collections import namedtuple
 
-from github import Github, Issue, GithubException
-from github.PullRequest import PullRequest
+from github import (
+    Github,
+    Issue,
+    PullRequest,
+    GithubException,
+)
 
 from shared.data import get_data
 from shared.github import get_client
