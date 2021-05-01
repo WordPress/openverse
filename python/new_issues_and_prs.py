@@ -108,7 +108,7 @@ def get_new_issues(
     return all_entities
 
 
-if __name__ == "__main__":
+def main():
     configure_logger()
 
     args = parser.parse_args()
@@ -165,3 +165,7 @@ if __name__ == "__main__":
                 log.warning(f"Card already exists")
             else:
                 log.error(f"Failed to create card for {display_name} {entity.number}")
+
+
+if __name__ == "__main__":
+    main()

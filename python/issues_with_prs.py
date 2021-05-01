@@ -111,7 +111,7 @@ def get_issue_cards(col: ProjectColumn) -> list[tuple[ProjectCard, Issue]]:
     return issue_cards
 
 
-if __name__ == "__main__":
+def main():
     configure_logger()
 
     args = parser.parse_args()
@@ -156,3 +156,7 @@ if __name__ == "__main__":
     for (issue_card, issue) in cards_to_move:
         log.info(f"Moving card for issue {issue.html_url} to {target_column.name}")
         issue_card.move("bottom", target_column)
+
+
+if __name__ == "__main__":
+    main()
