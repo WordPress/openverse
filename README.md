@@ -1,7 +1,7 @@
 # Scripts
 
-This repo contains automation scripts used for various workflows around Search
-repositories and processes at Automattic.
+This repo contains automation scripts used for various workflows around 
+Openverse repositories and processes.
 
 ## Repository structure
 
