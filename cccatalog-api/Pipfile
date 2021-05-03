@@ -19,12 +19,12 @@ wsgi-basic-auth = "*"
 grequests = "*"
 requests-oauthlib = "*"
 aws-requests-auth = "*"
-Django = "==2.2.13"
+Django = "==2.2.16"
 Pillow = "*"
 django-cors-headers = "*"
 django-uuslug = "*"
 django-sslserver = "*"
-django-oauth-toolkit = "==1.1.2"
+django-oauth-toolkit = "==1.2.0"
 django-braces = "*"
 django-redis = "*"
 pytest-django = ">=3.5"
@@ -38,9 +38,5 @@ djangorestframework-xml = "*"
 gevent = "*"
 django-storages = "*"
 boto3 = "*"
-
-[packages.future]
-version = "*"
-
-[packages.ipaddress]
-version = "*"
+future = {version = "*"}
+ipaddress = {version = "*"}
