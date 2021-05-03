@@ -1,10 +1,15 @@
 import argparse
 import datetime
 import logging
+import sys
 from collections import namedtuple
 
-from github import Github, Issue, GithubException
-from github.PullRequest import PullRequest
+from github import (
+    Github,
+    Issue,
+    PullRequest,
+    GithubException,
+)
 
 from shared.data import get_data
 from shared.github import get_client
@@ -61,7 +66,7 @@ parser.add_argument(
 
 def get_new_issues(
     gh: Github,
-    org_name: str,
+    org_handle: str,
     repo_names: list[str],
     ent_type: str,
     since: datetime.datetime,
@@ -71,35 +76,39 @@ def get_new_issues(
     that were created after the specified time. This includes PRs.
 
     :param gh: the GitHub client
-    :param org_name: the name of the org in which to look for issues
+    :param org_handle: the name of the org in which to look for issues
     :param repo_names: the name of the repos in which to look for issues
     :param ent_type: whether to retrieve issues or PRs (as issues)
     :param since: the timestamp after which to retrieve
     :return: the list of all retrieved entities
     """
 
-    entity_info = ENTITY_INFO[ent_type]
+    display_name = ENTITY_INFO[ent_type].display_name
     all_entities = []
     for repo_name in repo_names:
-        log.info(f"Looking for {entity_info.display_name}s in {org_name}/{repo_name}")
+        log.info(f"Looking for new {display_name}s in {org_handle}/{repo_name}")
         entities = gh.search_issues(
             query="",
             sort="updated",
             order="desc",
             **{
-                "repo": f"{org_name}/{repo_name}",
+                "repo": f"{org_handle}/{repo_name}",
                 "is": ent_type,
                 "state": "open",
                 "created": f">={since.isoformat()}",
             },
         )
-        all_entities += list(entities)
+        entities = list(entities)
+        log.info(f"Found {len(entities)} {display_name}s")
+        for entity in entities:
+            log.info(f"• #{entity.number} | {entity.title}")
+        all_entities += entities
 
-    log.info(f"Found {len(all_entities)} new {entity_info.display_name}s created")
+    log.info(f"Found a total of {len(all_entities)} new {display_name}s created")
     return all_entities
 
 
-if __name__ == "__main__":
+def main():
     configure_logger()
 
     args = parser.parse_args()
@@ -112,23 +121,28 @@ if __name__ == "__main__":
     since = datetime.datetime.utcnow() - datetime.timedelta(minutes=args.period)
 
     github_info = get_data("github.yml")
-    org_name = github_info["org"]
-    log.info(f"Organization name: {org_name}")
+    org_handle = github_info["org"]
+    log.info(f"Organization handle: {org_handle}")
     repo_names = github_info["repos"].values()
     log.info(f"Repository names: {', '.join(repo_names)}")
 
     gh = get_client()
-    org = gh.get_organization(org_name)
+    org = gh.get_organization(org_handle)
 
     entity_type = args.entity_type
     entity_info = ENTITY_INFO[entity_type]
+    display_name = entity_info.display_name
+    content_type = entity_info.content_type
     new_entities: list[Issue] = get_new_issues(
         gh=gh,
-        org_name=org_name,
+        org_handle=org_handle,
         repo_names=repo_names,
         ent_type=entity_type,
         since=since,
     )
+    if len(new_entities) == 0:
+        log.warning(f"Found no new {display_name}s, stopping")
+        sys.exit()
     if entity_type == "pr":
         new_entities: list[PullRequest] = [
             entity.as_pull_request() for entity in new_entities
@@ -140,16 +154,18 @@ if __name__ == "__main__":
     log.debug("Found target column")
 
     for entity in new_entities:
-        log.info(f"Creating card for {entity_info.display_name} {entity.number}")
+        log.info(f"Creating card for {entity.html_url} in {target_column.name}")
         try:
             target_column.create_card(
                 content_id=entity.id,
-                content_type=entity_info.content_type,
+                content_type=content_type,
             )
         except GithubException as ex:
             if "Project already has the associated" in str(ex):
                 log.warning(f"Card already exists")
             else:
-                log.error(
-                    f"Failed to create card for {entity_info.display_name} {entity.number}"
-                )
+                log.error(f"Failed to create card for {display_name} {entity.number}")
+
+
+if __name__ == "__main__":
+    main()

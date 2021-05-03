@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 
 from github import (
     Github,
@@ -51,7 +52,7 @@ parser.add_argument(
 
 def get_open_issues_with_prs(
     gh: Github,
-    org_name: str,
+    org_handle: str,
     repo_names: list[str],
 ) -> list[Issue]:
     """
@@ -59,30 +60,36 @@ def get_open_issues_with_prs(
     that have PRs linked to them.
 
     :param gh: the GitHub client
-    :param org_name: the name of the org in which to look for issues
+    :param org_handle: the name of the org in which to look for issues
     :param repo_names: the name of the repos in which to look for issues
     :return: the list of open issues with linked PRs
     """
 
     all_issues = []
     for repo_name in repo_names:
-        log.info(f"Looking for issues with PRs in {org_name}/{repo_name}")
+        log.info(f"Looking for issues with PRs in {org_handle}/{repo_name}")
         issues = gh.search_issues(
-            query=f"",
+            query="",
             sort="updated",
             order="desc",
             **{
-                "repo": f"{org_name}/{repo_name}",
+                "repo": f"{org_handle}/{repo_name}",
+                "is": "issue",
+                "state": "open",
                 "linked": "pr",
-                "is": "open",
             },
         )
-        all_issues += list(issues)
-    log.info(f"Found {len(all_issues)} open issues with linked PRs")
+        issues = list(issues)
+        log.info(f"Found {len(issues)} issues")
+        for issue in issues:
+            log.info(f"• #{issue.number} | {issue.title}")
+        all_issues += issues
+
+    log.info(f"Found a total of {len(all_issues)} open issues with linked PRs")
     return all_issues
 
 
-def get_issue_cards(col: ProjectColumn) -> list[ProjectCard]:
+def get_issue_cards(col: ProjectColumn) -> list[tuple[ProjectCard, Issue]]:
     """
     Get all cards linked to issues in the given column. This excludes cards that
     either have no links (just notes) or are linked to PRs.
@@ -104,7 +111,7 @@ def get_issue_cards(col: ProjectColumn) -> list[ProjectCard]:
     return issue_cards
 
 
-if __name__ == "__main__":
+def main():
     configure_logger()
 
     args = parser.parse_args()
@@ -114,19 +121,22 @@ if __name__ == "__main__":
     log.debug(f"Target column name: {args.target_col_name}")
 
     github_info = get_data("github.yml")
-    org_name = github_info["org"]
-    log.info(f"Organization name: {org_name}")
+    org_handle = github_info["org"]
+    log.info(f"Organization handle: {org_handle}")
     repo_names = github_info["repos"].values()
     log.info(f"Repository names: {', '.join(repo_names)}")
 
     gh = get_client()
-    org = gh.get_organization(org_name)
+    org = gh.get_organization(org_handle)
 
     issues_with_prs = get_open_issues_with_prs(
         gh=gh,
-        org_name=org_name,
+        org_handle=org_handle,
         repo_names=repo_names,
     )
+    if len(issues_with_prs) == 0:
+        log.warning("Found no issues with PRs, stopping")
+        sys.exit()
 
     proj = get_org_project(org=org, proj_number=args.proj_number)
     log.info(f"Found project: {proj.name}")
@@ -140,9 +150,13 @@ if __name__ == "__main__":
     cards_to_move = []
     for (issue_card, issue) in issue_cards:
         if issue in issues_with_prs:
-            cards_to_move.append(issue_card)
+            cards_to_move.append((issue_card, issue))
     log.info(f"Found {len(cards_to_move)} cards to move")
 
-    for card in cards_to_move:
-        log.info(f"Moving card {card.id} to {target_column.name}")
-        card.move("bottom", target_column)
+    for (issue_card, issue) in cards_to_move:
+        log.info(f"Moving card for issue {issue.html_url} to {target_column.name}")
+        issue_card.move("bottom", target_column)
+
+
+if __name__ == "__main__":
+    main()
