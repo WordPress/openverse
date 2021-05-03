@@ -22,6 +22,8 @@ services:
     image: postgres:13.2-alpine
     ports:
       - "5433:5432"
+    volumes:
+      - ./sample_data:/sample_data
     environment:
       POSTGRES_DB: "openledger"
       POSTGRES_USER: "deploy"
