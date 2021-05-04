@@ -18,7 +18,6 @@
           <i18n path="about.collection" tag="p">
             <template #common-crawl>
               <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-              -->
               <a aria-label="common crawl" href="http://commoncrawl.org/"
                 >Common Crawl</a
               >
@@ -43,7 +42,7 @@
             <template #working>
               <a
                 :aria-label="$t('about.aria.projects')"
-                href="https://github.com/orgs/creativecommons/projects/7"
+                href="https://github.com/orgs/WordPress/projects/3"
                 >{{ $t('about.planning.working') }}</a
               >
             </template>

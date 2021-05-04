@@ -21,5 +21,5 @@ jobs:
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-          GITHUB_PROJECT_URL: https://github.com/orgs/creativecommons/projects/7
+          GITHUB_PROJECT_URL: https://github.com/orgs/WordPress/projects/3
           GITHUB_PROJECT_COLUMN_NAME: 'In Progress'
