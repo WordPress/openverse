@@ -1,5 +1,3 @@
-
-
 # openverse-frontend
 
 ![openverse-frontend-ci](https://github.com/wordpress/openverse-frontend/workflows/openverse-frontend-ci/badge.svg)
