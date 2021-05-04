@@ -47,6 +47,11 @@
       "alternative-description": "Only 1% of people reading this will donate. Be one of them and help us sustain Openverse.",
       "yes": "Yes, I'll donate now",
       "no": "Not today"
+    },
+    "notification": {
+      "text": "Example notification text",
+      "dismiss": "Dismiss",
+      "okay": "OK"
     }
   },
   "footer": {
@@ -263,8 +268,11 @@
     "other": "Other Collections",
     "collection-size": "Collection size: {count} images"
   },
-  "not-found": "Page Not Found",
-  "error-occurred": "An error occurred",
+  "error": {
+    "not-found": "Page Not Found",
+    "occurred": "An error occurred",
+    "image-not-found": "Couldn't find image with id {id}"
+  },
   "search-tab": {
     "image": "Image",
     "audio": "Audio",

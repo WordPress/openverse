@@ -50,31 +50,31 @@
             <template #search>
               <a
                 aria-label="Openverse repository"
-                href="https://github.com/creativecommons/cccatalog-frontend/"
+                href="https://github.com/wordpress/openverse-frontend/"
                 >{{ $t('about.planning.search') }}</a
               >
             </template>
             <template #catalog-api>
               <a
                 aria-label="cc catalog-api repository"
-                href="https://github.com/creativecommons/cccatalog-api/"
+                href="https://github.com/wordpress/openverse-api/"
                 >{{ $t('about.planning.catalog-api') }}</a
               >
             </template>
             <template #catalog>
               <a
                 aria-label="cc catalog repository"
-                href="https://github.com/creativecommons/cccatalog/"
+                href="https://github.com/wordpress/openverse-catalog/"
                 >{{ $t('about.planning.catalog') }}</a
               >
             </template>
-            <template #community>
+            <!-- <template #community>
               <a
                 :aria-label="$t('about.aria.contribution')"
                 href="https://creativecommons.github.io/contributing-code/"
                 >{{ $t('about.planning.community') }}</a
               >
-            </template>
+            </template> -->
           </i18n>
           <i18n path="about.declaration.content" tag="p">
             <template #terms>

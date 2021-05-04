@@ -220,9 +220,8 @@ const mutations = {
   [SET_QUERY](_state, params) {
     setQuery(_state, params)
   },
-  // @todo: fix
   [IMAGE_NOT_FOUND]() {
-    // redirect({ path: '/not-found' }, true)
+    throw new Error('Image not found')
   },
 }
 

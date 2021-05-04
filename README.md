@@ -1,32 +1,14 @@
-This is a temporary repository for the Openverse project while migrating from Creative Commons to Automattic. See all the repositories in the project below:
+# openverse-frontend
 
-| Original Repo                                                                               | Automattic Repo                                                                 |
-| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| [creativecommons/cccatalog-frontend](https://github.com/creativecommons/cccatalog-frontend) | [Automattic/ccsearch-frontend](https://github.com/Automattic/ccsearch-frontend) |
-| [creativecommons/cccatalog](https://github.com/creativecommons/cccatalog)                   | [Automattic/ccsearch-catalog](https://github.com/Automattic/ccsearch-catalog)   |
-| [creativecommons/cccatalog-api](https://github.com/creativecommons/cccatalog-api)           | [Automattic/ccsearch-api](https://github.com/Automattic/ccsearch-api)           |
+![openverse-frontend-ci](https://github.com/wordpress/openverse-frontend/workflows/openverse-frontend-ci/badge.svg)
 
-Repos have been renamed into a `ccsearch-` namespace, for now. All branch names and code has been preserved, with the _following exceptions_:
+This repository is the frontend UI for accessing and exploring the openly-licensed content provided by the [Openverse API](https://github.com/wordpress/openverse-api).
 
-- GitHub Actions are commented out
-- `CODEOWNERS` files and `.cc-metadata.yml` files are deleted
-
-The rest of this README is the unmodified original readme, which may reference documentation on creativecommons.org, opensource.creativecommons.org, or Creative Commons' internal employee wiki. These references will be updated in time.
-
----
-
-# cccatalog-frontend
-
-![cccatalog-frontend-ci](https://github.com/creativecommons/cccatalog-frontend/workflows/cccatalog-frontend-ci/badge.svg)
-
-Openverse is the official web application for the [Openverse Catalog API
-](https://github.com/creativecommons/cccatalog-api). Openverse is an interface to search for content that is licensed under Creative Commons licenses or marked with public domain tools. This repository contains all the front-end code.
-
-The application is available at [search.creativecommons.org](https://search.creativecommons.org/).
+The application is live at its previous home: [search.creativecommons.org](https://search.creativecommons.org/).
 
 ## Technology
 
-The frontend app is built using [Vue.JS](https://vuejs.org/) and [NuxtJS](https://nuxtjs.org). You can [learn more about the migration to Nuxt.js here](/CODEBASE.md).
+The frontend app is built using [Vue.js](https://vuejs.org/) and [Nuxt.js](https://nuxtjs.org). You can [learn more about the migration to Nuxt.js here](/CODEBASE.md).
 
 ## Local Development
 
@@ -85,8 +67,12 @@ You will need to fix any linting issues before committing. We recommend formatti
 
 ## Versioning
 
-Openverse uses [CalVer](https://calver.org/) for version numbering, in the `YYYY.M.Micro` format. This format is intentionally compatible with NPM's `semver` parser. `Micro` is bumped whenever there are multiple releases in a month, for example `2020.07.1` is the first release in July 2020, while `2020.07.2` is the second.
+Openverse uses [CalVer](https://calver.org/) for version numbering, in the `YYYY.M.Micro` format. This format is intentionally compatiable with NPM's `semver` parser. `Micro` is bumped whenever there are multiple releases in a month, for example `2020.07.1` is the first release in July 2020, while `2020.07.2` is the second.
 
-## Deployment
+## Contributing
 
-Details about how to deploy the frontend code can be found on the [CC Wiki](https://wikijs.creativecommons.org/tech/cc-search/frontend) (Accessible to CC Staff only).
+Pull requests are welcome! Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community members on #openverse.
+
+## Acknowledgments
+
+Openverse, previously known as CC Search, was concieved and built at [Creative Commons](https://creativecommons.org). We thank them for their commitment to open source and openly licensed content, with particular thanks to original team members @kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar, along with their [community of volunteers](https://opensource.creativecommons.org/community/community-team/).
