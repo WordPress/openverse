@@ -1,13 +1,13 @@
 {
-  "name": "cccatalog-frontend",
+  "name": "openverse-frontend",
   "version": "2020.10.2",
   "description": "Common Creative search",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativecommons/cccatalog-frontend.git"
+    "url": "git+https://github.com/wordpress/openverse-frontend.git"
   },
   "bugs": {
-    "url": "https://github.com/creativecommons/cccatalog-frontend/issues"
+    "url": "https://github.com/wordpress/openverse-frontend/issues"
   },
   "author": "sebworks",
   "private": true,

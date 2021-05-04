@@ -1,4 +1,4 @@
-name: cccatalog-frontend-ci
+name: openverse-frontend-ci
 
 on:
   push:

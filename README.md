@@ -1,34 +1,14 @@
-This is a temporary repository for the CC Search project while migrating from Creative Commons to Automattic. See all the repositories in the project below:
+# openverse-frontend
 
-| Original Repo                                                                               | Automattic Repo                                                                 |
-| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| [creativecommons/cccatalog-frontend](https://github.com/creativecommons/cccatalog-frontend) | [Automattic/ccsearch-frontend](https://github.com/Automattic/ccsearch-frontend) |
-| [creativecommons/cccatalog](https://github.com/creativecommons/cccatalog)                   | [Automattic/ccsearch-catalog](https://github.com/Automattic/ccsearch-catalog)   |
-| [creativecommons/cccatalog-api](https://github.com/creativecommons/cccatalog-api)           | [Automattic/ccsearch-api](https://github.com/Automattic/ccsearch-api)           |
+![openverse-frontend-ci](https://github.com/wordpress/openverse-frontend/workflows/openverse-frontend-ci/badge.svg)
 
-Repos have been renamed into a `ccsearch-` namespace, for now. All branch names and code has been preserved, with the _following exceptions_:
+This repository is the frontend UI for accessing and exploring the openly-licensed content provided by the [Openverse API](https://github.com/wordpress/openverse-api).
 
-- GitHub Actions are commented out
-- `CODEOWNERS` files and `.cc-metadata.yml` files are deleted
-
-The rest of this README is the unmodified original readme, which may reference documentation on creativecommons.org, opensource.creativecommons.org, or Creative Commons' internal employee wiki. These references will be updated in time.
-
----
-
-# cccatalog-frontend
-
-![cccatalog-frontend-ci](https://github.com/creativecommons/cccatalog-frontend/workflows/cccatalog-frontend-ci/badge.svg)
-
-CC Search is the official web application for the [Creative Commons Catalog API
-](https://github.com/creativecommons/cccatalog-api). CC Search is an interface to search for content that is licensed under Creative Commons licenses or marked with public domain tools. This repositiory contains all the front-end code.
-
-The application is avaliable at [search.creativecommons.org](https://search.creativecommons.org/).
+The application is live at its previous home: [search.creativecommons.org](https://search.creativecommons.org/).
 
 ## Technology
 
-The frontend app is built using [Vue.JS](https://vuejs.org/) and [NuxtJS](https://nuxtjs.org). You can [learn more about the migration to Nuxt.js here](/CODEBASE.md).
-
-The user interface is powered by [Vocabulary](https://github.com/creativecommons/vocabulary), Creative Common's design system. If you have an issue with colors or a specific ui component, it should probably go in that repository.
+The frontend app is built using [Vue.js](https://vuejs.org/) and [Nuxt.js](https://nuxtjs.org). You can [learn more about the migration to Nuxt.js here](/CODEBASE.md).
 
 ## Local Development
 
@@ -52,7 +32,7 @@ docker-compose up
 
 You should now have the application running and accessible at http://localhost:8443.
 
-You don't need to have the CC Search API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [API](https://api.creativecommons.engineering) that's already publicly available. If you wish, you can change the URL of the API that's used during development by setting the `API_URL` environment variable.
+You don't need to have the Openverse API running locally to be able to run the frontend application. It's configured to communicate, by default, with the [API](https://api.creativecommons.engineering) that's already publicly available. If you wish, you can change the URL of the API that's used during development by setting the `API_URL` environment variable.
 
 ### Running tests
 
@@ -64,7 +44,7 @@ npm run test
 
 ### localhost tunneling
 
-If you want to make your local development server accessible to the internet (for testing or showing someone something you're working on), you can use [`ngrok`](https://ngrok.com/). Follow the documentation on the `ngrok` site to install it and set it up. Once you have it installed, get the development server for CC Search running and in a separate window/tab, run:
+If you want to make your local development server accessible to the internet (for testing or showing someone something you're working on), you can use [`ngrok`](https://ngrok.com/). Follow the documentation on the `ngrok` site to install it and set it up. Once you have it installed, get the development server for Openverse running and in a separate window/tab, run:
 
 ```
 # The extra parameters are required to ensure that ngrok redirects to the HTTPS version of the site
@@ -87,8 +67,8 @@ You will need to fix any linting issues before comitting. We reccommend formatti
 
 ## Versioning
 
-CC Search uses [CalVer](https://calver.org/) for version numbering, in the `YYYY.M.Micro` format. This format is intentionally compatiable with NPM's `semver` parser. `Micro` is bumped whenever there are multiple releases in a month, for example `2020.07.1` is the first release in July 2020, while `2020.07.2` is the second.
+Openverse uses [CalVer](https://calver.org/) for version numbering, in the `YYYY.M.Micro` format. This format is intentionally compatiable with NPM's `semver` parser. `Micro` is bumped whenever there are multiple releases in a month, for example `2020.07.1` is the first release in July 2020, while `2020.07.2` is the second.
 
-## Deployment
+## Acknowledgments
 
-Details about how to deploy the frontend code can be found on the [CC Wiki](https://wikijs.creativecommons.org/tech/cc-search/frontend) (Accessible to CC Staff only).
+Openverse, previously known as CC Search, was concieved and built at [Creative Commons](https://creativecommons.org). We thank them for their commitment to open source and openly licensed content, with particular thanks to original team members @kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar, along with their [community of volunteers](https://opensource.creativecommons.org/community/community-team/).
