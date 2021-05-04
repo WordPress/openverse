@@ -55,12 +55,12 @@ services:
         hard: 65536
 
   web:
-    build: ./cccatalog-api/
-    image: cccatalog_api
+    build: openverse-api/
+    image: openverse_api
     command: python manage.py runserver 0.0.0.0:8000
     container_name: openverse-api_web_1
     volumes:
-      - ./cccatalog-api:/cccatalog-api
+      - ./openverse-api:/openverse-api
     ports:
       - "8000:8000"
       - "4444:4444"

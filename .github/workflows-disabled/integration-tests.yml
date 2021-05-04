@@ -15,7 +15,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Check API style
-      run: pycodestyle cccatalog-api/cccatalog --exclude='cccatalog-api/cccatalog/api/migrations,cccatalog-api/cccatalog/example_responses.py' --max-line-length=80 --ignore=E402,E702
+      run: pycodestyle openverse-api/catalog --exclude='openverse-api/catalog/api/migrations,openverse-api/catalog/example_responses.py' --max-line-length=80 --ignore=E402,E702
     - name: Check ingestion-server style
       run: pycodestyle ingestion_server/ingestion_server --max-line-length=80 --ignore=E402
   Tests:
@@ -28,7 +28,7 @@ jobs:
       run: |
         pip install pytest pipenv
         sudo apt-get install libexempi3 librdkafka-dev
-        PIPENV_PIPFILE=./cccatalog-api/Pipfile pipenv install --system --deploy --dev &
+        PIPENV_PIPFILE=./catalog-api/Pipfile pipenv install --system --deploy --dev &
     - name: Start API
       run: docker-compose up --build -d
     - name: Wait for API to come up
@@ -38,6 +38,6 @@ jobs:
     - name: Wait for data to be indexed in Elasticsearch
       run: bash -c 'while [[ "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/image | grep -c image-)" == "0" ]]; do sleep 5 && docker-compose logs; done'
     - name: Run API tests
-      run: cd cccatalog-api && test/run_test.sh
+      run: cd openverse-api && test/run_test.sh
     - name: Run analytics tests
-      run: cd ./analytics && docker exec -i cccatalog-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
+      run: cd ./analytics && docker exec -i catalog-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
