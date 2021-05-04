@@ -6,7 +6,7 @@
 
 This repository is the frontend UI for accessing and exploring the openly-licensed content provided by the [Openverse API](https://github.com/wordpress/openverse-api).
 
-The application is live at it's previous home: [search.creativecommons.org](https://search.creativecommons.org/).
+The application is live at its previous home: [search.creativecommons.org](https://search.creativecommons.org/).
 
 ## Technology
 
