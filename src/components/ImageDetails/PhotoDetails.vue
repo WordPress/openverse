@@ -57,22 +57,25 @@
         <h1 class="title is-5 b-header">
           {{ image.title }}
         </h1>
-        <span v-if="image.creator" class="caption has-text-weight-semibold">
-          <!-- TODO: need to change to accommodate sentence order in different languages -->
-          <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-          by
-          <!-- eslint-enable -->
-          <a
-            v-if="image.creator_url"
-            :aria-label="'author' + image.creator"
-            :href="image.creator_url"
-            @click="onPhotoCreatorLinkClicked"
-            @keyup.enter="onPhotoCreatorLinkClicked"
-          >
-            {{ image.creator }}
-          </a>
-          <span v-else>{{ image.creator }}</span>
-        </span>
+        <i18n
+          v-if="image.creator"
+          class="caption has-text-weight-semibold"
+          path="photo-details.creator"
+          tag="span"
+        >
+          <template #name>
+            <a
+              v-if="image.creator_url"
+              :aria-label="'author' + image.creator"
+              :href="image.creator_url"
+              @click="onPhotoCreatorLinkClicked"
+              @keyup.enter="onPhotoCreatorLinkClicked"
+            >
+              {{ image.creator }}
+            </a>
+            <span v-else>{{ image.creator }}</span>
+          </template>
+        </i18n>
       </div>
       <section class="tabs">
         <div role="tablist" :aria-label="$t('photo-details.aria.details')">
