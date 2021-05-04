@@ -6,15 +6,15 @@ Interested in improving our documentation? Here’s what you need to know before
 
 ## Introduction
 
-CC Catalog API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a tool that generates real Swagger/OpenAPI 2.0 specifications from a Django Rest Framework API. 
+CC Catalog API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a tool that generates real Swagger/OpenAPI 2.0 specifications from a Django Rest Framework API.
 
 <br/>
 
 ## How to Start Contributing
 
-- Run the server locally by following this [link](https://github.com/creativecommons/cccatalog-api#running-the-server-locally)
+- Run the server locally by following this [link](https://github.com/wordpress/openverse-api#running-the-server-locally)
 - Update documentation
-- Make sure the updates passed the automated tests in this [file](https://github.com/creativecommons/cccatalog-api/blob/master/.github/workflows/integration-tests.yml)
+- Make sure the updates passed the automated tests in this [file](https://github.com/wordpress/openverse-api/blob/master/.github/workflows/integration-tests.yml)
 - Commit and push
 - Create pull request by following [GitHub Repo Guidelines](https://opensource.creativecommons.org/contributing-code/github-repo-guidelines/)
 
@@ -23,7 +23,7 @@ CC Catalog API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a
 ## Documentation Styles
 
 - All documentation must be written in American English with no contractions.
-- Descriptions must be written using simple yet concise explanations. 
+- Descriptions must be written using simple yet concise explanations.
 - Codes are preferred over videos and screenshots.
 
 <br/>
@@ -50,10 +50,10 @@ The description for API endpoint.
 ```
 image_stats_description = \
   """
-  image_stats is an API endpoint to get a list of all content providers 
+  image_stats is an API endpoint to get a list of all content providers
   and their respective number of images in the Creative Commons catalog.
 
-  You can use this endpoint to get details about content providers 
+  You can use this endpoint to get details about content providers
   such as `source_name`, `image_count`, `display_name`, and `source_url`.
 
   You can refer to Bash's Request Samples for example on how to use
@@ -67,7 +67,7 @@ image_stats_description = \
 <br/>
 
 ### Responses
-The response received after submitting an API request. The current API documentation includes response schemas and response samples based on their response codes. 
+The response received after submitting an API request. The current API documentation includes response schemas and response samples based on their response codes.
 
 **Example**
 ```

@@ -11,7 +11,7 @@ For example, let's say that I want to download and index all new images.
 Performance is dependent on the size of the target Elasticsearch cluster, database throughput, and bandwidth available to the ingestion server. The primary bottleneck is indexing to Elasticsearch.
 
 ## How Indexing Works
-![How indexing works](https://github.com/creativecommons/cccatalog-api/blob/master/ingestion_server/howitworks.png)
+![How indexing works](https://github.com/wordpress/openverse-api/blob/master/ingestion_server/howitworks.png)
 
 ## Safety and security considerations
 The server has been designed to fail gracefully in the event of network interruptions, full disks, etc. If a task fails to complete successfully, the whole process is rolled back with zero impact to production.

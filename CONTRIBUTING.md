@@ -24,7 +24,7 @@ Please read the processes in our general [Contributing Code](https://creativecom
 
 ### Bugs
 
-If you find a bug, please open an issue in this repository describing the bug. You can file a bug [here](https://github.com/creativecommons/cccatalog-api/issues/new?template=bug_report.md). You will see a bug report template with the required information you should provide.
+If you find a bug, please open an issue in this repository describing the bug. You can file a bug [here](https://github.com/wordpress/openverse-api/issues/new?template=bug_report.md). You will see a bug report template with the required information you should provide.
 
 After that, don't forget to tag the issue with the "Bug" label.
 
@@ -32,7 +32,7 @@ After that, don't forget to tag the issue with the "Bug" label.
 
 ### Proposing changes or new features
 
-If you have an idea of a new feature or change to how the CC Catalog API works, please [file an issue](https://github.com/creativecommons/cccatalog-api/issues/new?template=feature_request.md) so we can discuss the possibility of that change or new feature being implemented and released in the future. This lets us come to an agreement about the proposed idea before any work is done.
+If you have an idea of a new feature or change to how the CC Catalog API works, please [file an issue](https://github.com/wordpress/openverse-api/issues/new?template=feature_request.md) so we can discuss the possibility of that change or new feature being implemented and released in the future. This lets us come to an agreement about the proposed idea before any work is done.
 
 If you'd like to build a new feature but don't have a specific idea, please check our [public roadmap](https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/). Choose something from the pipeline of ideas and follow the same process as above.
 
@@ -42,7 +42,7 @@ If you'd like to build a new feature but don't have a specific idea, please chec
 
 Before you start writing code, make sure there is an issue open. Pull requests without a link to an existing issue won't be merged.
 
-If you want to get started contributing code to this project but don't know exactly what to work on, we compiled a good list of issues labeled as [`good first issue`](https://github.com/creativecommons/cccatalog-api/labels/good%20first%20issue) which are small in scope and not so complex to solve. There are also issues labeled as [`help wanted`](https://github.com/creativecommons/cccatalog-api/labels/help%20wanted) which can be a bit more complex but are good examples of things we are currently accepting help from the community.
+If you want to get started contributing code to this project but don't know exactly what to work on, we compiled a good list of issues labeled as [`good first issue`](https://github.com/wordpress/openverse-api/labels/good%20first%20issue) which are small in scope and not so complex to solve. There are also issues labeled as [`help wanted`](https://github.com/wordpress/openverse-api/labels/help%20wanted) which can be a bit more complex but are good examples of things we are currently accepting help from the community.
 
 Any code modifications will have to be accompanied by the appropriate unit tests. This will be checked and verified during code review. Once the Pull Request is opened, our CI server will run the unit test suite and run a code linter to verify that the code follows the coding guidelines.
 
