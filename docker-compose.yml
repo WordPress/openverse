@@ -2,6 +2,7 @@ version: '3'
 services:
   db:
     image: postgres:13.2-alpine
+    container_name: openverse-api_db_1
     ports:
       - "5432:5432"
     environment:
@@ -20,6 +21,7 @@ services:
 
   upstream_db:
     image: postgres:13.2-alpine
+    container_name: openverse-api_upstream-db_1
     ports:
       - "5433:5432"
     volumes:
@@ -34,6 +36,7 @@ services:
 
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+    container_name: openverse-api_es_1
     ports:
       - "9200:9200"
     environment:
@@ -55,7 +58,7 @@ services:
     build: ./cccatalog-api/
     image: cccatalog_api
     command: python manage.py runserver 0.0.0.0:8000
-    container_name: cccatalog-api_web_1
+    container_name: openverse-api_web_1
     volumes:
       - ./cccatalog-api:/cccatalog-api
     ports:
@@ -85,12 +88,13 @@ services:
 
   cache:
     image: redis:4.0.10
-    container_name: cccatalog-api_cache_1
+    container_name: openverse-api_cache_1
     ports:
       - "6379:6379"
 
   ingestion-server:
     build: ./ingestion_server/
+    container_name: openverse-api_ingestion-server_1
     command: bash -c 'sleep 20 && supervisord -c config/supervisord.conf'
     ports:
       - "8001:8001"
@@ -121,7 +125,7 @@ services:
     build:
       context: ./ingestion_server/
       dockerfile: Dockerfile-worker
-    container_name: indexer-worker
+    container_name: openverse-api_indexer-worker_1
     ports:
       - "8002:8002"
     depends_on:
@@ -149,7 +153,7 @@ services:
   analytics:
     build: ./analytics/
     image: analytics
-    container_name: cccatalog-api_analytics_1
+    container_name: openverse-api_analytics_1
     ports:
       - "8090:8090"
     environment:
