@@ -50,7 +50,7 @@
             <template #search>
               <a
                 aria-label="cc search repository"
-                href="https://github.com/creativecommons/cccatalog-frontend/"
+                href="https://github.com/wordpress/openverse-frontend/"
                 >{{ $t('about.planning.search') }}</a
               >
             </template>

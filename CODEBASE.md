@@ -4,7 +4,7 @@ This document will give you a high level overview of the modules and components 
 
 ## Dependencies
 
-The CC Search frontend is built using [Vue.js](https://vuejs.org/) as its main view library. The app uses [Vocabulary](https://github.com/creativecommons/vocabulary) for vue components and global CSS.
+The Openverse frontend is built using [Vue.js](https://vuejs.org/) as its main view library. The app uses [Vocabulary](https://github.com/creativecommons/vocabulary) for vue components and global CSS.
 
 It uses [Nuxt.js](https://nuxtjs.org/) as a meta framework to handle several key functions:
 
