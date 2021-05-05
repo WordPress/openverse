@@ -18,9 +18,7 @@ After that, don't forget to tag the issue with the "Bug" label.
 
 ### Proposing changes or new features
 
-If you have an idea of a new feature or change to how the CC Catalog API works, please [file an issue](https://github.com/wordpress/openverse-api/issues/new?template=feature_request.md) so we can discuss the possibility of that change or new feature being implemented and released in the future. This lets us come to an agreement about the proposed idea before any work is done.
-
-If you'd like to build a new feature but don't have a specific idea, please check our [public roadmap](https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/). Choose something from the pipeline of ideas and follow the same process as above.
+If you have an idea of a new feature or change to how the CC Catalog API works, please [start a discussion](https://github.com/WordPress/openverse-api/discussions/new?category=ideas) so we can discuss the possibility of that change or new feature being implemented and released in the future. This lets us come to an agreement about the proposed idea before any work is done.
 
 ### Pull requests
 
