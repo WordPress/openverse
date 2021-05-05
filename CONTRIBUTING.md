@@ -1,14 +1,12 @@
-# Contributing to CC Open Source
+# Contributing to Openverse
 
-Thank you for your interest in contributing to CC Open Source! This document is
+Thank you for your interest in contributing to Openverse! This document is
 a set of guidelines to help you contribute to this project.
 
 ## Code of Conduct
 
 By participating in this project, you are expected to uphold our [Code of
-Conduct][code_of_conduct].
-
-[code_of_conduct]:https://creativecommons.github.io/community/code-of-conduct/
+Conduct](./CODE_OF_CONDUCT.md).
 
 ## Project Documentation
 
@@ -17,15 +15,6 @@ project documentation. If you cannot find the documentation you're
 looking for, please file a GitHub issue with details of what
 you'd like to see documented.
 
-## How to Contribute
-
-Please follow the processes in our general [Contributing Code][contributing]
-guidelines on the Creative Common Open Source website.
-
-[contributing]:https://creativecommons.github.io/contributing-code/
-
 ## Questions or Thoughts?
 
-Talk to us on [one of our community forums][community].
-
-[community]:https://creativecommons.github.io/community/
+Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community memebers on #openverse. We also use [GitHub discussions](https://github.com/WordPress/openverse-api/discussions) for feature requests, troubleshooting, and other 'off-topic' conversations.

@@ -4,14 +4,15 @@
 # Phylopic API
 
 We call the Phylopic API in two different ways:
+
 1. `http://phylopic.org/api/a/image/list/modified/YYYY-MM-DD`
 2. `http://phylopic.org/api/a/image/ITEM_UUID?options=credit+licenseURL+pngFiles+submitted+submitter+taxa+canonicalName+string+firstName+lastName`
 
 We extract a list of UUIDs from the response to the first request, which we then use to construct subsequent requests (of the form shown second above filling in an extracted UUID for `ITEM_UUID`).
 
 The response to a UUID-specified request is a json with the following form:
-```json
 
+```json
 {
   "result": {
     "uid": "311594cf-1cba-441f-951f-4803784a2356",
@@ -67,7 +68,8 @@ The response to a UUID-specified request is a json with the following form:
   "success": true
 }
 ```
-Below is a table showing the mapping from metadata returned by the API to columns in the `image` table in PostgreSQL.  Fields from the above json are preceded by '$' to mark them.
+
+Below is a table showing the mapping from metadata returned by the API to columns in the `image` table in PostgreSQL. Fields from the above json are preceded by '$' to mark them.
 
 ```text
          Column          |    Comes From

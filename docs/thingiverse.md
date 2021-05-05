@@ -3,11 +3,12 @@
 
 # Thingiverse API
 
-The thingiverse API is queried in a number of different ways.  First, to get a list of 'things' to retrieve, and then in a series of steps for each 'thing' in the list.
+The thingiverse API is queried in a number of different ways. First, to get a list of 'things' to retrieve, and then in a series of steps for each 'thing' in the list.
 
 ## Initial API Query
 
 The initial query sends a GET of the form
+
 ```
 https://api.thingiverse.com/newest?access_token=REDACTED&per_page=30&page=1
 ```
@@ -58,17 +59,20 @@ This returns the following json:
   }
 ]
 ```
-The only thing we use from this response is the id for each 'thing'.  These ids are collected, and used to construct the requests in the following stages.
+
+The only thing we use from this response is the id for each 'thing'. These ids are collected, and used to construct the requests in the following stages.
 
 ## Second Stage
+
 Next, the script makes three requests for each 'thing' found in the initialization step, extracting information from each response. These queries are HTTP GET requests:
+
 1. `https://api.thingiverse.com/things/3730558?access_token=REDACTED`
 2. `https://api.thingiverse.com/things/3730558/tags?access_token=REDACTED`
 3. `https://api.thingiverse.com/things/3730558/files?access_token=REDACTED`
 
-In these examples, `3730558` is one of the ids gathered from the first stage.  We will document the information gathered from the response to each query in order.
+In these examples, `3730558` is one of the ids gathered from the first stage. We will document the information gathered from the response to each query in order.
 
-### REQUEST:  `https://api.thingiverse.com/things/3730558?access_token=REDACTED`
+### REQUEST: `https://api.thingiverse.com/things/3730558?access_token=REDACTED`
 
 This request returns a json of the following form:
 
@@ -78,7 +82,8 @@ This request returns a json of the following form:
   "name": "Alfawise U30 - Guida filamento",
   "thumbnail": "https://cdn.thingiverse.com/renders/10/64/d6/81/dd/41ae1bdb59f5a16ec9329a2a7cf65942_thumb_medium.jpg",
   "url": "https://api.thingiverse.com/things/3730558",
-  "public_url": "https://www.thingiverse.com/thing:3730558", "creator": {
+  "public_url": "https://www.thingiverse.com/thing:3730558",
+  "creator": {
     "id": 2712150,
     "name": "scigola",
     "first_name": "Andrea",
@@ -351,6 +356,7 @@ This request returns a json of the following form:
 ```
 
 From the information returned by this request, we extract the following DB fields in the following ways:
+
 ```text
         DB Column        |    Comes From
 -------------------------|-------------------------------
@@ -362,9 +368,10 @@ From the information returned by this request, we extract the following DB field
  title                   | $name
  meta_data               | See below
 ```
-The `meta_data` field contains a json.  Because the json contains information gathered from multiple requests, we will discuss its content [below](## `meta_data` field).
 
-### REQUEST:  `https://api.thingiverse.com/things/3730558/tags?access_token=REDACTED`
+The `meta_data` field contains a json. Because the json contains information gathered from multiple requests, we will discuss its content [below](## `meta_data` field).
+
+### REQUEST: `https://api.thingiverse.com/things/3730558/tags?access_token=REDACTED`
 
 This request returns a json of the following form:
 
@@ -414,6 +421,7 @@ This request returns a json of the following form:
 ```
 
 From the information returned by this request, we construct the `tags` field in the DB, which is a json of the form:
+
 ```json
 [
   {
@@ -426,9 +434,11 @@ From the information returned by this request, we construct the `tags` field in 
   }
 ]
 ```
-Here, `$name{1}` and `$name{2}` represent the name fields from two members of the array in the response.  There will be as many tag objects in the resulting field as there are in the response itself.
 
-### REQUEST:  `https://api.thingiverse.com/things/3730558/files?access_token=REDACTED`
+Here, `$name{1}` and `$name{2}` represent the name fields from two members of the array in the response. There will be as many tag objects in the resulting field as there are in the response itself.
+
+### REQUEST: `https://api.thingiverse.com/things/3730558/files?access_token=REDACTED`
+
 This request returns a json of the following form:
 
 ```json
@@ -655,17 +665,20 @@ We loop through the returned array, and for each image with a non-null `$default
  thumbnail               | $default_image.sizes[i].url (see note below)
  meta_data               | See below
 ```
-For the `url` and `thumbnail` fields, we only consider images of type `$display`, and we prefer `$large` for `url`, and `$medium` for `thumbnail`.  Recall that we will discuss the `meta_data` field [below](## `meta_data` field).
+
+For the `url` and `thumbnail` fields, we only consider images of type `$display`, and we prefer `$large` for `url`, and `$medium` for `thumbnail`. Recall that we will discuss the `meta_data` field [below](## `meta_data` field).
 
 ## `meta_data` field
 
 The `meta_data` field is a json with the following form:
+
 ```
 {
   "3d_model": $r3.default_image.url
   "description": $r1.description
 }
 ```
+
 Here, `$r1` represents the root json returned by the root request for the thing's data, and $`r3` is the json returned by the request to the /files endpoint.
 
-Below is a table collecting the above information about the mapping from metadata returned by the Thingiverse API to columns in the image table in PostgreSQL.  Fields from the above json are preceded by '$' to mark them.
+Below is a table collecting the above information about the mapping from metadata returned by the Thingiverse API to columns in the image table in PostgreSQL. Fields from the above json are preceded by '$' to mark them.

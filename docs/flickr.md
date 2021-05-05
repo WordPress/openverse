@@ -4,7 +4,8 @@
 We run an hourly job to pull the last hour's uploads from [Flickr](https://www.flickr.com)
 
 # Flickr API
-You can find the documentation for Flickr API[here](https://www.flickr.com/services/api/).  We currently use the [flickr.photos.search](https://www.flickr.com/services/api/flickr.photos.search.html) method to query the API.  Here is an example showing the type of query string we use:
+
+You can find the documentation for Flickr API[here](https://www.flickr.com/services/api/). We currently use the [flickr.photos.search](https://www.flickr.com/services/api/flickr.photos.search.html) method to query the API. Here is an example showing the type of query string we use:
 
 ```text
 https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=REDACTED&min_upload_date=2019-11-22%2017:10:00&max_upload_date=2019-11-22%2017:15:00&license=1&media=photos&content_type=1&extras=description,license,date_upload,date_taken,owner_name,tags,o_dims,url_t,url_s,url_m,url_l&per_page=500&format=json&nojsoncallback=1&page=1
@@ -95,9 +96,10 @@ Such a call to the flickr.photos.search method produces a result of the followin
   "stat": "ok"
 }
 ```
+
 # Metadata Mapping
 
-Below is a table showing the mapping from metadata returned by the Flickr API to columns in the image table in PostgreSQL.  Fields from the above json are preceded by '$' to mark them.
+Below is a table showing the mapping from metadata returned by the Flickr API to columns in the image table in PostgreSQL. Fields from the above json are preceded by '$' to mark them.
 
 ```text
         DB Column        |    Comes From
@@ -116,7 +118,9 @@ Below is a table showing the mapping from metadata returned by the Flickr API to
  meta_data               | Specified below
  tags                    | Specified below
 ```
+
 ## metadata field
+
 The metadata field in the DB is a json field with the following information:
 
 ```text
@@ -128,7 +132,9 @@ The metadata field in the DB is a json field with the following information:
 ```
 
 ## tags field
+
 The tags field in the DB is a json field with the following information:
+
 ```text
 [
   {
@@ -141,8 +147,8 @@ The tags field in the DB is a json field with the following information:
   }
 ]
 ```
-Here, `<tagnameX>` is one of the tags from the $tags field in the API response.  There are a maximum of 20 tags stored in the tags field.
 
+Here, `<tagnameX>` is one of the tags from the $tags field in the API response. There are a maximum of 20 tags stored in the tags field.
 
 ## API Key generation
 

@@ -7,7 +7,8 @@ We call the following endpoint from the Cleveland Museum of Art:
 
 `http://openaccess-api.clevelandart.org/api/artworks/?cc0=1&limit=X&skip=Y`
 
-Here, `X` and `Y` are replaced with offset information (e.g., we request only 1000 pieces at a time, and move the offset by 1000 for each request).  Such a request returns a rather large json of the following form:
+Here, `X` and `Y` are replaced with offset information (e.g., we request only 1000 pieces at a time, and move the offset by 1000 for each request). Such a request returns a rather large json of the following form:
+
 ```text
 {
   "info": {
@@ -297,9 +298,10 @@ Here, `X` and `Y` are replaced with offset information (e.g., we request only 10
   ]
 }
 ```
-Note that here, we retrieved the information of only 2 pieces of artwork for brevity, as well as elided some of the returned data.  For the Cleveland Museum's API, the information about each artwork listed is returned in the same json, so one must exercise caution.  Also, we set the license (and consequently version) information in the query string of the request itself.
 
-Below is a table showing the mapping from metadata returned by the API to columns in the `image` table in PostgreSQL.  Fields from the above json are preceded by a `$` to mark them.  Also, we will omit `$data[i]` from the paths, as it is simply the path to a given artwork within the returned json.
+Note that here, we retrieved the information of only 2 pieces of artwork for brevity, as well as elided some of the returned data. For the Cleveland Museum's API, the information about each artwork listed is returned in the same json, so one must exercise caution. Also, we set the license (and consequently version) information in the query string of the request itself.
+
+Below is a table showing the mapping from metadata returned by the API to columns in the `image` table in PostgreSQL. Fields from the above json are preceded by a `$` to mark them. Also, we will omit `$data[i]` from the paths, as it is simply the path to a given artwork within the returned json.
 
 ```text
          Column          |    Comes From
@@ -317,6 +319,7 @@ Below is a table showing the mapping from metadata returned by the API to column
 ```
 
 ## metadata field
+
 The metadata field in the DB is a json field with the following information:
 
 ```text

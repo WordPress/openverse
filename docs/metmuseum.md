@@ -8,7 +8,8 @@ We call the `objects` endpoint from the Met Museum's API in two ways:
 1. `https://collectionapi.metmuseum.org/public/collection/v1/objects/?metadataDate=YYYY-MM-DD`
 2. `https://collectionapi.metmuseum.org/public/collection/v1/objects/XXXXX`
 
-The only information we use from the first type of call is a list of object IDs, which we use in the second call in place of `XXXXX`.  The second type of call returns a json of the following form:
+The only information we use from the first type of call is a list of object IDs, which we use in the second call in place of `XXXXX`. The second type of call returns a json of the following form:
+
 ```json
 {
   "objectID": 786829,
@@ -94,7 +95,7 @@ The only information we use from the first type of call is a list of object IDs,
 }
 ```
 
-Below is a table showing the mapping from metadata returned by the API to columns in the `image` table in PostgreSQL.  Fields from the above json are preceded by '$' to mark them.
+Below is a table showing the mapping from metadata returned by the API to columns in the `image` table in PostgreSQL. Fields from the above json are preceded by '$' to mark them.
 
 ```text
         DB Column        |    Comes From
@@ -109,7 +110,9 @@ Below is a table showing the mapping from metadata returned by the API to column
  title                   | $title
  meta_data               | Specified below
 ```
+
 ## metadata field
+
 The metadata field in the DB is a json field with the following information:
 
 ```text

@@ -1,30 +1,9 @@
-This is a temporary repository for the CC Search project while migrating from Creative Commons to Automattic. See all the repositories in the project below:
+# Openverse Catalog
 
-|Original Repo|Automattic Repo|
-|--|--|
-[creativecommons/cccatalog-frontend](https://github.com/creativecommons/cccatalog-frontend) | [Automattic/ccsearch-frontend](https://github.com/Automattic/ccsearch-frontend)
-[creativecommons/cccatalog](https://github.com/creativecommons/cccatalog) | [Automattic/ccsearch-catalog](https://github.com/Automattic/ccsearch-catalog)
-[creativecommons/cccatalog-api](https://github.com/creativecommons/cccatalog-api) | [Automattic/ccsearch-api](https://github.com/Automattic/ccsearch-api)
-
-
-Repos have been renamed into a `ccsearch-` namespace, for now. All branch names and code has been preserved, with the *following exceptions*:
-
-- GitHub Actions are commented out
-- `CODEOWNERS` files and `.cc-metadata.yml` files are deleted
-
-The rest of this README is the unmodified original readme, which may reference documentation on creativecommons.org, opensource.creativecommons.org, or Creative Commons' internal employee wiki. These references will be updated in time.
-
----
-
-# Creative Commons Catalog
-*Mapping the commons towards an open ledger and cc search.*
-
-## Description
-
-This repository contains the methods used to identify over 1.4 billion Creative
-Commons licensed works. The challenge is that these works are dispersed
+This repository contains the methods used to identify over 1.4 billion Creative Commons licensed works. The challenge is that these works are dispersed
 throughout the web and identifying them requires a combination of techniques.
-Two approaches are currently explored:
+
+Two approaches are currently in use:
 
 1. Web crawl data
 2. Application Programming Interfaces (API Data)
@@ -45,7 +24,7 @@ The data is available in three file formats:
 For more information about these formats, please see the
 [Common Crawl documentation][ccrawl_doc].
 
-CC Catalog uses AWS Data Pipeline service to automatically create an Amazon EMR
+Openverse Catalog uses AWS Data Pipeline service to automatically create an Amazon EMR
 cluster of 100 c4.8xlarge instances that will parse the WAT archives to identify
 all domains that link to creativecommons.org. Due to the volume of data, Apache
 Spark is used to streamline the processing. The output of this methodology is a
@@ -123,7 +102,7 @@ into the upstream database. It includes some data preprocessing steps.
 
 There are a number of scripts in the directory
 [`src/cc_catalog_airflow/dags/provider_api_scripts`][api_scripts] eventually
-loaded into a database to be indexed for searching on CC Search. These run in a
+loaded into a database to be indexed for searching on Openverse Search. These run in a
 different environment than the PySpark portion of the project, and so have their
 own dependency requirements.
 
@@ -136,9 +115,11 @@ versions new enough to use version `3` of Docker Compose `.yml` files.
 
 To set up environment variables, navigate to the
 [`src/cc_catalog_airflow`][cc_airflow] directory, and run
+
 ```shell
 cp env.template .env
 ```
+
 If needed, fill in API keys or other secrets and variables in `.env`. This is
 not needed if you only want to run the tests. There is a
 [`docker-compose.yml`][dockercompose] provided in the
@@ -153,24 +134,25 @@ This results, among other things, in the following running containers:
 - `cc_catalog_airflow_webserver_1`
 - `cc_catalog_airflow_postgres_1`
 
-and some networking setup so that they can communicate.  Note:
+and some networking setup so that they can communicate. Note:
+
 - `cc_catalog_airflow_webserver_1` is running the Apache Airflow daemon, and also
-has a few development tools (e.g., `pytest`) installed.
+  has a few development tools (e.g., `pytest`) installed.
 - `cc_catalog_airflow_postgres_1` is running PostgreSQL, and is setup with some
-databases and tables to emulate the production environment. It also provides a
-database for Airflow to store its running state.
+  databases and tables to emulate the production environment. It also provides a
+  database for Airflow to store its running state.
 - The directory containing the DAG files, as well as dependencies will be
-mounted to the `usr/local/airflow/dags` directory in the container
-`cc_catalog_airflow_webserver_1`.
+  mounted to the `usr/local/airflow/dags` directory in the container
+  `cc_catalog_airflow_webserver_1`.
 
 At this stage, you can run the tests via:
 
 ```shell
 docker exec cc_catalog_airflow_webserver_1 /usr/local/airflow/.local/bin/pytest
 ```
+
 Edits to the source files or tests can be made on your local machine, then tests
 can be run in the container via the above command to see the effects.
-
 
 If you'd like, it's possible to login to the webserver container via
 
@@ -184,19 +166,23 @@ container via
 ```shell
 docker attach --sig-proxy=false cc_catalog_airflow_webserver_1
 ```
+
 Attaching in this manner lets you see the output from both the Airflow webserver
-and scheduler, which can be useful for debugging purposes.  To leave the
-container, (but keep it running), press `Ctrl-C` on *nix platforms
+and scheduler, which can be useful for debugging purposes. To leave the
+container, (but keep it running), press `Ctrl-C` on \*nix platforms
 
 To see the Airflow web UI, point your browser to `localhost:9090`.
 
 If you'd like to bring down the containers, run
+
 ```shell
 docker-compose down
 ```
+
 from the [`src/cc_catalog_airflow`][cc_airflow] directory.
 
 To reset the test DB (wiping out all databases, schemata, and tables), run
+
 ```shell
 docker-compose down
 rm -r /tmp/docker_postgres_data/
@@ -220,15 +206,18 @@ pip install -r requirements.txt
 ```
 
 ### Running the tests
+
 ```
 python -m pytest tests/test_ExtractCCLinks.py
 ```
 
-## Authors
+## Contributing
 
-See the list of [contributors][contrib] who participated in this project.
+Pull requests are welcome! Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community memebers on #openverse.
 
-[contrib]: https://github.com/creativecommons/cccatalog/contributors
+## Acknowledgments
+
+Openverse, previously known as CC Search, was concieved and built at [Creative Commons](https://creativecommons.org). We thank them for their commitment to open source and openly licensed content, with particular thanks to original team members @kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar, along with their [community of volunteers](https://opensource.creativecommons.org/community/community-team/).
 
 ## License
 

@@ -8,7 +8,7 @@ We call the following endpoints from [Wikimedia Commons](https://commons.wikimed
 1. `https://commons.wikimedia.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=40&gaisort=timestamp&gaistart=YYYY-MM-DDT00:00:00Z&gaiend=YYYY-MM-DDT00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json`
 1. `https://commons.wikimedia.org/w/api.php?action=query&generator=allimages&prop=imageinfo&gailimit=40&gaisort=timestamp&gaistart=YYYY-MM-DDT00:00:00Z&gaiend=YYYY-MM-DDT00:00:00Z&iiprop=url|user|dimensions|extmetadata&iiurlwidth=300&format=json&gaicontinue=SOME_PICTURE.jpg`
 
-For both of these, we replace `YYYY-MM-DD` with dates (we only pull data for images uploaded / updated between these dates).  We use the second query if there are more than 40 images between the specified dates, giving a continue location as the next picture (represented by `SOME_PICTURE.jpg`).  These requests each return a json of the following form:
+For both of these, we replace `YYYY-MM-DD` with dates (we only pull data for images uploaded / updated between these dates). We use the second query if there are more than 40 images between the specified dates, giving a continue location as the next picture (represented by `SOME_PICTURE.jpg`). These requests each return a json of the following form:
 
 ```json
 {
@@ -224,7 +224,8 @@ For both of these, we replace `YYYY-MM-DD` with dates (we only pull data for ima
   }
 }
 ```
-We have elided a number of entries for brevity.  Note the `continue.gaicontinue` field in the json.  This will be used in the second request listed above.  Below is a table showing the mapping from the data contained in such a json to columns in the `image` table in PostgreSQL.  Fields from the json are preceded by `$` to mark them.  We have omitted the prefix `query.pages.XXXXXX` (where `XXXXXX` is the key for a given page) since it is identical for each field.
+
+We have elided a number of entries for brevity. Note the `continue.gaicontinue` field in the json. This will be used in the second request listed above. Below is a table showing the mapping from the data contained in such a json to columns in the `image` table in PostgreSQL. Fields from the json are preceded by `$` to mark them. We have omitted the prefix `query.pages.XXXXXX` (where `XXXXXX` is the key for a given page) since it is identical for each field.
 
 ```text
          Column          |    Comes From
@@ -242,9 +243,11 @@ We have elided a number of entries for brevity.  Note the `continue.gaicontinue`
  title                   | $title
  meta_data               | See below
 ```
+
 ## `meta_data` field
 
 The `meta_data` field is a json of the following form:
+
 ```text
 {
   "description": $imageinfo[0].extmetadata.ImageDescription.value (stripped of html tags)

@@ -7,7 +7,8 @@ We call the following endpoint from [rawpixel.com](https://rawpixel.com):
 
 `https://api.rawpixel.com/api/v1/search?freecc0=1&html=0&page=X`
 
-Here `X` is a page offset.  Such a request returns a json of the following form:
+Here `X` is a page offset. Such a request returns a json of the following form:
+
 ```text
 {
   "html": "",
@@ -147,9 +148,10 @@ Here `X` is a page offset.  Such a request returns a json of the following form:
   "cover_image": "https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/pdxmas-nypl-89-chim-a.jpg?w=1200&h=630&fit=crop&dpr=1.5&crop=entropy&fm=pjpg&q=75&vib=3&con=3&usm=15&markpad=13&markalpha=90&markscale=10&markx=25&mark=rawpixel-watermark.png&cs=srgb&bg=F4F4F3&ixlib=js-2.1.2&s=47efeac53d89a3a2d11201f194a9057f"
 }
 ```
-Note that we have elided some of the returned data for brevity.  The rawpixel API returns the information about a number of pictures in the same json, so exercise caution.  Also, for this API, the license information is set by the request, and not extracted from the returned json.
 
-Below is a table showing the mapping from metadata returned by the API to columns in the `image` table in PostgreSQL.  Fields from the above json are preceded by a `$` to mark them.  Also, we will omit `$results[i]` from the paths, as it is simply the path to a given picture's information within the returned json, and would be included in every entry.
+Note that we have elided some of the returned data for brevity. The rawpixel API returns the information about a number of pictures in the same json, so exercise caution. Also, for this API, the license information is set by the request, and not extracted from the returned json.
+
+Below is a table showing the mapping from metadata returned by the API to columns in the `image` table in PostgreSQL. Fields from the above json are preceded by a `$` to mark them. Also, we will omit `$results[i]` from the paths, as it is simply the path to a given picture's information within the returned json, and would be included in every entry.
 
 ```text
          Column          |    Comes From
@@ -168,9 +170,12 @@ Below is a table showing the mapping from metadata returned by the API to column
  meta_data               | Not Used
  tags                    | See below
 ```
+
 The `tags` field consists of a json with the following form:
+
 ```text
 {
   "name": $keywords_raw (split at ',')
   "provider": "rawpixel"
 }
+```
