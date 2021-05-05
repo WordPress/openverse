@@ -56,18 +56,10 @@ CREATE TABLE public.image (
 ALTER TABLE public.image OWNER TO deploy;
 
 --
--- Name: image temp_import_image_pkey; Type: CONSTRAINT; Schema: public; Owner: deploy
---
-
-ALTER TABLE ONLY public.image
-    ADD CONSTRAINT temp_import_image_pkey PRIMARY KEY (id);
-
-
---
 -- Name: temp_import_image_foreign_identifier_idx; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE UNIQUE INDEX temp_import_image_foreign_identifier_idx ON public.image USING btree (foreign_identifier);
+CREATE INDEX temp_import_image_foreign_identifier_idx ON public.image USING btree (foreign_identifier);
 
 
 --
@@ -81,14 +73,14 @@ CREATE INDEX temp_import_image_foreign_identifier_idx1 ON public.image USING btr
 -- Name: temp_import_image_id_idx; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE UNIQUE INDEX temp_import_image_id_idx ON public.image USING btree (id);
+CREATE INDEX temp_import_image_id_idx ON public.image USING btree (id);
 
 
 --
 -- Name: temp_import_image_identifier_idx; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE UNIQUE INDEX temp_import_image_identifier_idx ON public.image USING btree (identifier);
+CREATE INDEX temp_import_image_identifier_idx ON public.image USING btree (identifier);
 
 
 --
@@ -130,7 +122,7 @@ CREATE INDEX temp_import_image_source_idx1 ON public.image USING btree (source v
 -- Name: temp_import_image_url_idx; Type: INDEX; Schema: public; Owner: deploy
 --
 
-CREATE UNIQUE INDEX temp_import_image_url_idx ON public.image USING btree (url);
+CREATE INDEX temp_import_image_url_idx ON public.image USING btree (url);
 
 
 --
