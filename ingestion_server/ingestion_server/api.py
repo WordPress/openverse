@@ -84,7 +84,6 @@ class TaskResource:
             finish_time=finish_time,
             callback_url=callback_url
         )
-        logging.info(f'Task will start: {task}')
         task.start()
         task_id = self.tracker \
             .add_task(task, task_id, action, progress, finish_time)
