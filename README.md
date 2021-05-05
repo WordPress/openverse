@@ -24,30 +24,38 @@ You need to install [Docker](https://docs.docker.com/install/) (with [Docker Com
 1. Run the [Docker daemon](https://docs.docker.com/config/daemon/)
 2. Open your command prompt (CMD) or terminal
 3. Clone Openverse API
+
 ```
 git clone https://github.com/wordpress/openverse-api.git
 ```
+
 4. Change directories with `cd ccatalog-api`
 5. Start Openverse API locally by running the docker containers
+
 ```
 docker-compose up
 ```
+
 6. Wait until your CMD or terminal displays that it is starting development server at `http://0.0.0.0:8000/`
-![Initialization](initialization.PNG)
+   ![Initialization](initialization.PNG)
 7. Open up your browser and type `localhost:8000` in the search tab
 8. Make sure you see the local API documentation
-![Local API Documentation](local_api_documentation.PNG)
+   ![Local API Documentation](local_api_documentation.PNG)
 9. Open a new CMD or terminal and change directory to Openverse Catalog API
 10. Still in the new CMD or terminal, load the sample data. This script requires a local postgres installation to connect to and alter our database.
+
 ```
 ./load_sample_data.sh
 ```
+
 11. Still in the new CMD or terminal, hit the API with a request
+
 ```
 curl localhost:8000/v1/images?q=honey
 ```
+
 12. Make sure you see the following response from the API
-![Sample API_Request](localhost_request.PNG)
+    ![Sample API_Request](localhost_request.PNG)
 
 Congratulations! You just ran the server locally.
 
@@ -100,18 +108,25 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 You can check the health of a live deployment of the API by running the live integration tests.
 
 1. Change directory to the Openverse Catalog API
+
 ```
 cd cccatalog-api
 ```
+
 2. Install all dependencies for Openverse Catalog API
+
 ```
 pipenv install
 ```
+
 3. Launch a new shell session
+
 ```
 pipenv shell
 ```
+
 4. Run API live integration test
+
 ```
 ./test/run_test.sh
 ```
