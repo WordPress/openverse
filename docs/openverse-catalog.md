@@ -247,6 +247,4 @@ sorts of metrics would probably be easiest to glean from Common Crawl.
 
 # Community Involvement
 
-We would like to increase the level of community contribution to CC Catalog. Details can be found at the [CC Catalog Community Involvement][ccc_community_involvement] page.
-
-[ccc_community_involvement]: cc-catalog/cc-catalog-community-involvement
+We would like to increase the level of community contribution to CC Catalog. Details can be found at the [CC Catalog Community Involvement](./openverse-catalog-community-involvement.md) page.
