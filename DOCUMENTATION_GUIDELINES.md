@@ -29,14 +29,17 @@ CC Catalog API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a
 <br/>
 
 ## Cheat Sheet for drf-yasg
+
 This is a quick syntax guide with examples on how to add or update the documentation for API endpoints.
 
 <br/>
 
 ### Operation ID
+
 The name of API endpoint.
 
 **Example**
+
 ```
 @swagger_auto_schema(operation_id='image_stats')
 ```
@@ -44,9 +47,11 @@ The name of API endpoint.
 <br/>
 
 ### Operation Description
+
 The description for API endpoint.
 
 **Example**
+
 ```
 image_stats_description = \
   """
@@ -67,9 +72,11 @@ image_stats_description = \
 <br/>
 
 ### Responses
+
 The response received after submitting an API request. The current API documentation includes response schemas and response samples based on their response codes.
 
 **Example**
+
 ```
 image_stats_200_example = {
   "application/json": {
@@ -96,9 +103,11 @@ image_stats_response = {
 <br/>
 
 ### Request Body
+
 The data sent to the server when submitting an API request.
 
 **Example**
+
 ```
 register_api_oauth2_request = openapi.Schema(
   type=openapi.TYPE_OBJECT,
@@ -149,9 +158,11 @@ register_api_oauth2_request = openapi.Schema(
 <br/>
 
 ### Code Examples
+
 Code examples on how to use the API endpoints. The current API documentation provides code examples in Bash.
 
 **Example**
+
 ```
 image_stats_bash = \
   """
