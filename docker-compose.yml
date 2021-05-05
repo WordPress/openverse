@@ -72,6 +72,7 @@ services:
       - DJANGO_DATABASE_USER=deploy
       - DJANGO_DATABASE_PASSWORD=deploy
       - DJANGO_DATABASE_HOST=db
+      - REDIS_HOST=cache
       - UPSTREAM_DATABASE_HOST=upstream_db
       - PYTHONUNBUFFERED=0
       - DJANGO_DEBUG_ENABLED=True
