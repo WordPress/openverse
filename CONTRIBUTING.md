@@ -34,7 +34,7 @@ Any code modifications will have to be accompanied by the appropriate unit tests
 
 You can check the health of a live deployment of the API by running the live integration tests.
 
-1. Change directory to Openverse Catalog API
+1. Change directory to `cccatalog-api`
 
 ```
 cd cccatalog-api
