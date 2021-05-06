@@ -102,7 +102,7 @@ into the upstream database. It includes some data preprocessing steps.
 
 There are a number of scripts in the directory
 [`src/cc_catalog_airflow/dags/provider_api_scripts`][api_scripts] eventually
-loaded into a database to be indexed for searching on Openverse Search. These run in a
+loaded into a database to be indexed for searching in the Openverse API. These run in a
 different environment than the PySpark portion of the project, and so have their
 own dependency requirements.
 
