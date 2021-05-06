@@ -1,4 +1,4 @@
-cccatalog-api contributors (sorted alphabetically by last name)
+openverse-api contributors (sorted alphabetically by last name)
 ============================================
 
 * **[Liza Daley](https://github.com/lizadaly)**
