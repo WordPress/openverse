@@ -8,7 +8,7 @@ info:
     email: "alden@creativecommons.org"
   license:
     name: "MIT License"
-    url: "https://github.com/creativecommons/openverse-api/blob/master/LICENSE"
+    url: "https://github.com/wordpress/openverse-api/blob/master/LICENSE"
 host: "api.creativecommons.engineering"
 basePath: "/analytics"
 tags:
@@ -35,7 +35,7 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/CreateSearchEvent"
-  
+
       responses:
         400:
           description: "Invalid input"
@@ -56,7 +56,7 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/CreateSearchRatingEvent"
-      
+
       responses:
         201:
           description: "Created"
@@ -119,7 +119,7 @@ definitions:
       session_uuid:
         type: "string"
         example: "12345678-1234-1234-1234-1234567890ab"
-  
+
   CreateSearchRatingEvent:
     type: "object"
     required:
@@ -132,7 +132,7 @@ definitions:
       relevant:
         type: "boolean"
         example: true
-      
+
   CreateResultClickEvent:
     type: "object"
     required:
@@ -155,7 +155,7 @@ definitions:
         type: "string"
         example: "12345678-1234-1234-1234-1234567890ab"
         description: "A unique identifier labeling an anonymous user's session."
-  
+
   CreateDetailPageEvent:
     type: "object"
     required:

@@ -53,8 +53,8 @@ an API key.
 # Register and Authenticate
 
 ## Register for a key
-Before using the CC Catalog API, you need to register access via OAuth2. 
-This can be done using the `/v1/auth_tokens/register` endpoint. 
+Before using the CC Catalog API, you need to register access via OAuth2.
+This can be done using the `/v1/auth_tokens/register` endpoint.
 
 <br>
 Example on how to register for a key
@@ -125,7 +125,7 @@ $ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.cre
 # Glossary
 
 #### Access Token
-A private string that authorizes an application to make API requests 
+A private string that authorizes an application to make API requests
 
 #### API
 An abbreviation for Application Programming Interface.
@@ -153,14 +153,14 @@ Any content that depicts graphic violence, adult content, and hostility or malic
 
 # Contribute
 
-We love pull requests! If you’re interested in [contributing on Github](https://github.com/creativecommons/cccatalog-api), here’s a todo list to get started.
+We love pull requests! If you’re interested in [contributing on Github](https://github.com/wordpress/openverse-api), here’s a todo list to get started.
 
 - Read up about [Django REST Framework](https://www.django-rest-framework.org/), which is the framework used to build CC Catalog API
 - Read up about [drf-yasg](https://drf-yasg.readthedocs.io/en/stable/), which is a tool used to generate real Swagger/OpenAPI 2.0 specifications
 - Read up about Documentation Guidelines, which provides guidelines on how to contribute to documentation, documentation styles and cheat sheet for drf-yasg
-- Run the server locally by following this [link](https://github.com/creativecommons/cccatalog-api#running-the-server-locally)
+- Run the server locally by following this [link](https://github.com/wordpress/openverse-api#running-the-server-locally)
 - Update documentation or codebase
-- Make sure the updates passed the automated tests in this [file](https://github.com/creativecommons/cccatalog-api/blob/master/.github/workflows/integration-tests.yml)
+- Make sure the updates passed the automated tests in this [file](https://github.com/wordpress/openverse-api/blob/master/.github/workflows/integration-tests.yml)
 - Commit and push
 - Create pull request
 """  # noqa
@@ -168,7 +168,7 @@ We love pull requests! If you’re interested in [contributing on Github](https:
 logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
 tos_url = "https://api.creativecommons.engineering/terms_of_service.html"
 license_url =\
-    "https://github.com/creativecommons/catalog-api/blob/master/LICENSE"
+    "https://github.com/wordpress/openverse-api/blob/master/LICENSE"
 schema_view = get_schema_view(
     openapi.Info(
         title="Creative Commons Catalog API",

@@ -1,7 +1,9 @@
 # Ingestion Server
 
 ## Introduction
+
 Ingestion Server is a small private API for copying data from an upstream source and loading it into the CC Catalog API. This is a two step process:
+
 1. The data is copied from the upstream CC Catalog database and into the downstream API database.
 2. Data from the downstream API database gets indexed in Elasticsearch.
 
@@ -11,51 +13,63 @@ For example, let's say that I want to download and index all new images.
 Performance is dependent on the size of the target Elasticsearch cluster, database throughput, and bandwidth available to the ingestion server. The primary bottleneck is indexing to Elasticsearch.
 
 ## How Indexing Works
-![How indexing works](https://github.com/creativecommons/cccatalog-api/blob/master/ingestion_server/howitworks.png)
+
+![How indexing works](https://github.com/wordpress/openverse-api/blob/master/ingestion_server/howitworks.png)
 
 ## Safety and security considerations
+
 The server has been designed to fail gracefully in the event of network interruptions, full disks, etc. If a task fails to complete successfully, the whole process is rolled back with zero impact to production.
 
 The server is designed to be run in a private network only. You must not expose the private Ingestion Server API to the public internet.
 
 ## Running the tests
+
 This runs a simulated environment in Docker containers and ensures that ingestion is working properly.
+
 ```
 mkvirtualenv venv
 source venv/bin/activate
 python test/integration_tests.py
 ```
+
 Set `ENABLE_DETAILED_LOGS` to `True` if more information is needed about the failing test.
 
 ## Configuration
+
 All configuration is performed through environment variables.
 
 #### Required
-* **COPY_TABLES**: A comma-separated list of database tables that should be replicated to Elasticsearch. **Example**: image,text
 
-* ELASTICSEARCH_URL
-* ELASTICSEARCH_PORT
-* DATABASE_HOST
-* DATABASE_USER
-* DATABASE_PASSWORD
-* DATABASE_NAME
-* DATABASE_PORT
+- **COPY_TABLES**: A comma-separated list of database tables that should be replicated to Elasticsearch. **Example**: image,text
+
+- ELASTICSEARCH_URL
+- ELASTICSEARCH_PORT
+- DATABASE_HOST
+- DATABASE_USER
+- DATABASE_PASSWORD
+- DATABASE_NAME
+- DATABASE_PORT
 
 #### Optional
-* **DB_BUFFER_SIZE**: The number of rows to load from the database at once while replicating. **Default**: 100000
+
+- **DB_BUFFER_SIZE**: The number of rows to load from the database at once while replicating. **Default**: 100000
 
 To access a cluster on AWS, define these additional environment variables.
-* AWS_ACCESS_KEY_ID
-* AWS_SECRET_ACCESS_KEY
-* AWS_REGION
+
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- AWS_REGION
 
 ## Mapping database tables to Elasticsearch
+
 In order to synchronize a given table to Elasticsearch, the following requirements must be met:
-* The database table must have an autoincrementing integer primary key named `id`.
-* A SyncableDoctype must be defined in `es_syncer/elasticsearch_models`. The SyncableDoctype must implement the function `database_row_to_elasticsearch_model`.
-* The table name must be mapped to the corresponding Elasticsearch SyncableDoctype in `database_table_to_elasticsearch_model` map.
+
+- The database table must have an autoincrementing integer primary key named `id`.
+- A SyncableDoctype must be defined in `es_syncer/elasticsearch_models`. The SyncableDoctype must implement the function `database_row_to_elasticsearch_model`.
+- The table name must be mapped to the corresponding Elasticsearch SyncableDoctype in `database_table_to_elasticsearch_model` map.
 
 Example from `es_syncer/elasticsearch_models.py`:
+
 ```
 class Image(SyncableDocType):
     title = Text(analyzer="english")
