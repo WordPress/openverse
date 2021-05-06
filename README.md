@@ -41,7 +41,7 @@ docker-compose up
 7. Open up your browser and type `localhost:8000` in the search tab
 8. Make sure you see the local API documentation
    ![Local API Documentation](local_api_documentation.PNG)
-9. Open a new CMD or terminal and change directory to Openverse Catalog API
+9. Open a new CMD or terminal and change directory to `cccatalog-api`
 10. Still in the new CMD or terminal, load the sample data. This script requires a local postgres installation to connect to and alter our database.
 
 ```
@@ -91,14 +91,14 @@ sudo sysctl -p
 
 ### Basic flow of data
 
-Search data is ingested from upstream sources provided by the [data pipeline](https://github.com/creativecommons/openverse). As of the time of writing, this includes data from Common Crawl and multiple 3rd party APIs. Once the data has been scraped and cleaned, it is transferred to the upstream database, indicating that it is ready for production use.
+Search data is ingested from upstream sources provided by the [data pipeline](https://github.com/WordPress/openverse-catalog). As of the time of writing, this includes data from Common Crawl and multiple 3rd party APIs. Once the data has been scraped and cleaned, it is transferred to the upstream database, indicating that it is ready for production use.
 
 Every week, the latest version of the data is automatically bulk copied ("ingested") from the upstream database to the production database by the Ingestion Server. Once the data has been downloaded and indexed inside of the database, the data is indexed in Elasticsearch, at which point the new data can be served up from the Openverse Catalog API servers.
 
 ### Description of subprojects
 
 - _openverse-api_ is a Django Rest Framework API server. For a full description of its capabilities, please see the [browsable documentation](https://api.creativecommons.engineering).
-- _ingestion-server_ is a service for downloading and indexing search data once it has been prepared by the Openverse.Catalog
+- _ingestion-server_ is a service for downloading and indexing search data once it has been prepared by the Openverse Catalog
 - _analytics_ is a Falcon REST API for collecting usage data.
 
 ## Running the tests
@@ -107,7 +107,7 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 
 You can check the health of a live deployment of the API by running the live integration tests.
 
-1. Change directory to the Openverse Catalog API
+1. Change directory to the `cccatalog-api`
 
 ```
 cd cccatalog-api
@@ -115,7 +115,7 @@ cd cccatalog-api
 
 #### On the host
 
-1. Install all dependencies for Openverse Catalog API.
+1. Install all dependencies for Openverse API.
 ```
 pipenv install
 ```
