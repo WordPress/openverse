@@ -1,9 +1,9 @@
-FROM python:3.7-stretch
+FROM python:3.9
 
 ENV PYTHONBUFFERED 1
 
 RUN apt-get update \
-    && apt-get install libexempi3 \
+    && apt-get install libexempi8 \
     && mkdir /cccatalog-api \
     && mkdir -p /var/log/cccatalog-api/cccatalog-api.log
 

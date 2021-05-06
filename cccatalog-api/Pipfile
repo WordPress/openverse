@@ -40,3 +40,6 @@ django-storages = "*"
 boto3 = "*"
 future = {version = "*"}
 ipaddress = {version = "*"}
+
+[requires]
+python_version = "3.9"
