@@ -1,8 +1,5 @@
 # Openverse API
 
-[![Build Status](https://travis-ci.org/WordPress/openverse-api.svg?branch=master)](https://travis-ci.org/WordPress/openverse-api)
-![License](https://img.shields.io/github/license/WordPress/openverse-api.svg?style=flat)
-
 ## Purpose
 
 The Openverse API (`openverse-api`) is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of openly-licensesd works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to access the digital commons in their own applications.
