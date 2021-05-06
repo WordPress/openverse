@@ -2,9 +2,9 @@
 
 This folder contains files that configure GitHub services for the management of the Openverse project.
 
-### Workflows
+## Workflows
 
-#### Project automation
+### Project automation
 
 This workflow supplements the built-in automations of GitHub Projects for moving
 issue and PR cards across columns.
