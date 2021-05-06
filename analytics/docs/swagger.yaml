@@ -8,7 +8,7 @@ info:
     email: "alden@creativecommons.org"
   license:
     name: "MIT License"
-    url: "https://github.com/creativecommons/cccatalog-api/blob/master/LICENSE"
+    url: "https://github.com/creativecommons/openverse-api/blob/master/LICENSE"
 host: "api.creativecommons.engineering"
 basePath: "/analytics"
 tags:

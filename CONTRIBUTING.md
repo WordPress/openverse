@@ -55,7 +55,7 @@ You can check the health of a live deployment of the API by running the live int
 
 1. Change directory to CC Catalog API
 ```
-cd cccatalog-api
+cd openverse-api
 ```
 
 2. Install all dependencies for CC Catalog API
