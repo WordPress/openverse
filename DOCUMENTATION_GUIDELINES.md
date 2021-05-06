@@ -6,7 +6,7 @@ Interested in improving our documentation? Here’s what you need to know before
 
 ## Introduction
 
-CC Catalog API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a tool that generates real Swagger/OpenAPI 2.0 specifications from a Django Rest Framework API.
+Openverse Catalog API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a tool that generates real Swagger/OpenAPI 2.0 specifications from a Django Rest Framework API.
 
 <br/>
 
@@ -56,7 +56,7 @@ The description for API endpoint.
 image_stats_description = \
   """
   image_stats is an API endpoint to get a list of all content providers
-  and their respective number of images in the Creative Commons catalog.
+  and their respective number of images in the Openverse catalog.
 
   You can use this endpoint to get details about content providers
   such as `source_name`, `image_count`, `display_name`, and `source_url`.
