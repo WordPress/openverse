@@ -1,6 +1,7 @@
-# Openverse Scripts
+# .github
 
-This folder contains files that configure GitHub services for the management of the Openverse project.
+This folder contains files that configure GitHub services for the management of
+the Openverse project.
 
 ## Workflows
 
@@ -20,4 +21,6 @@ issue and PR cards across columns.
 
 ## Contributing
 
-Pull requests are welcome! Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community members on #openverse.
+Pull requests are welcome! Feel free to
+[join us on Slack](https://make.wordpress.org/chat/) and discuss the project
+with the engineers and community members on #openverse.
