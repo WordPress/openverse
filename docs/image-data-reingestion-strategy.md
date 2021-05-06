@@ -1,9 +1,9 @@
 <!-- TITLE: Image Data Reingestion Strategy -->
-<!-- SUBTITLE: How to keep information in CC Catalog up-to-date, at different scales -->
+<!-- SUBTITLE: How to keep information in Openverse Catalog up-to-date, at different scales -->
 
 # Goal
 
-In order to keep the data in CC Catalog up to date over time, it is necessary to
+In order to keep the data in Openverse Catalog up to date over time, it is necessary to
 'recheck' the information for each image periodically over time. This makes
 tracking metrics that change with time, e.g., 'views', more sensible. It also
 gives us the possibility of removing images from the index that were removed
@@ -69,7 +69,7 @@ For Wikimedia Commons, we can ingest about 25 days of uploaded image data per
 day. This means it takes around 15 days to ingest the data of all images
 uploaded to Wikimedia Commons in a year (the year 2019 was used to test these
 numbers; other years will differ based on the number of images uploaded in those
-years. I'm not sure whether to expect more or fewer images per year for years
+years. It is not clear whether to expect more or fewer images per year for years
 further back in time).
 
 # Algorithm to choose which days to (re)ingest
