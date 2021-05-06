@@ -18,9 +18,3 @@ issue and PR cards across columns.
 - Add new PRs to the "Needs review" column.
 - Move issues with linked PRs from the columns "Backlog" and "To do" to 
   the "In progress" column.
-
-## Contributing
-
-Pull requests are welcome! Feel free to
-[join us on Slack](https://make.wordpress.org/chat/) and discuss the project
-with the engineers and community members on #openverse.
