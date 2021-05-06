@@ -1,10 +1,10 @@
-# Contributing to CC Open Source
+# Contributing to Openverse
 
-Thank you for your interest in contributing to CC Open Source! This document is a set of guidelines to help you contribute to this project.
+Thank you for your interest in contributing to Openverse! This document is a set of guidelines to help you contribute to this project.
 
 ## Code of Conduct
 
-By participating in this project, you are expected to uphold our [Code of Conduct](https://creativecommons.github.io/community/code-of-conduct/).
+By participating in this project, you are expected to uphold our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 ## Project Documentation
 
@@ -12,7 +12,7 @@ Please consult the [README](./README.md) and [CODEBASE](./CODEBASE.md) files at 
 
 ## How to Contribute
 
-Please read the processes in our general [Contributing Code](https://creativecommons.github.io/contributing-code/) guidelines on the Creative Common Open Source website. It contains some general instructions that should be followed when contributing to any of the Creative Commons open-source repositories.
+Please read the processes in our general [Contributing Code](https://creativecommons.github.io/contributing-code/) guidelines on the Creative Common Open Source website. It contains some general instructions that should be followed when contributing to any of the WP Photos open-source repositories.
 
 ### Bugs
 
@@ -24,7 +24,7 @@ After that, don't forget to tag the issue with the "Bug" label.
 
 If you have an idea of a new feature or change to how the Openverse frontend works, please [file an issue](https://github.com/wordpress/openverse-frontend/issues/new?template=feature_request.md) so we can discuss the possibility of that change or new feature being implemented and released in the future. This lets us come to an agreement about the proposed idea before any work is done.
 
-If you'd like to build a new feature but don't have a specific idea, please check our [public roadmap](https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/). Choose something from the pipeline of ideas and follow the same process as above.
+If you'd like to build a new feature but don't have a specific idea, please check out the historic [public roadmap](https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/). Choose something from the pipeline of ideas and follow the same process as above.
 
 ### Pull requests
 
@@ -44,4 +44,4 @@ You can also configure your editor of choice with a ESLint plugin so you can get
 
 ## Questions or Thoughts?
 
-Talk to us on [our developer mailing list or Slack community](https://creativecommons.github.io/community/).
+Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community memebers on #openverse.

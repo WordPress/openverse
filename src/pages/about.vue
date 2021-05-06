@@ -18,7 +18,6 @@
           <i18n path="about.collection" tag="p">
             <template #common-crawl>
               <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-              -->
               <a aria-label="common crawl" href="http://commoncrawl.org/"
                 >Common Crawl</a
               >
@@ -43,13 +42,13 @@
             <template #working>
               <a
                 :aria-label="$t('about.aria.projects')"
-                href="https://github.com/orgs/creativecommons/projects/7"
+                href="https://github.com/orgs/WordPress/projects/3"
                 >{{ $t('about.planning.working') }}</a
               >
             </template>
             <template #search>
               <a
-                aria-label="cc search repository"
+                aria-label="Openverse repository"
                 href="https://github.com/wordpress/openverse-frontend/"
                 >{{ $t('about.planning.search') }}</a
               >
@@ -57,24 +56,24 @@
             <template #catalog-api>
               <a
                 aria-label="cc catalog-api repository"
-                href="https://github.com/creativecommons/cccatalog-api/"
+                href="https://github.com/wordpress/openverse-api/"
                 >{{ $t('about.planning.catalog-api') }}</a
               >
             </template>
             <template #catalog>
               <a
                 aria-label="cc catalog repository"
-                href="https://github.com/creativecommons/cccatalog/"
+                href="https://github.com/wordpress/openverse-catalog/"
                 >{{ $t('about.planning.catalog') }}</a
               >
             </template>
-            <template #community>
+            <!-- <template #community>
               <a
                 :aria-label="$t('about.aria.contribution')"
                 href="https://creativecommons.github.io/contributing-code/"
                 >{{ $t('about.planning.community') }}</a
               >
-            </template>
+            </template> -->
           </i18n>
           <i18n path="about.declaration.content" tag="p">
             <template #terms>

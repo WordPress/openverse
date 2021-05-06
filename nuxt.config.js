@@ -23,12 +23,12 @@ const meta = [
   {
     name: 'description',
     content:
-      'A new Creative Commons search tool for creators seeking to discover and reuse free resources with greater ease.',
+      'A new Openverse search tool for creators seeking to discover and reuse free resources with greater ease.',
   },
   { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   { name: 'twitter:card', content: 'summary_large_image' },
   { name: 'twitter:site', content: '@creativecommons' },
-  { name: 'og:title', content: 'Creative Commons' },
+  { name: 'og:title', content: 'Openverse' },
   {
     name: 'og:image',
     content: '/cclogo-shared-image.jpg',
@@ -62,7 +62,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // Default html head
 const head = {
-  title: 'CC Search',
+  title: 'Openverse',
   meta,
   link: [
     {
@@ -77,7 +77,7 @@ const head = {
     {
       rel: 'search',
       type: 'application/opensearchdescription+xml',
-      title: 'CC Search',
+      title: 'Openverse',
       href: '/opensearch.xml',
     },
     {

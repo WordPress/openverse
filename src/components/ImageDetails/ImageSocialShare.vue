@@ -32,7 +32,7 @@ export default {
     },
     shareText() {
       return encodeURI(
-        `I found an image through CC Search @creativecommons: ${this.imageSourceURL}`
+        `I found an image through Openverse: ${this.imageSourceURL}`
       )
     },
   },
