@@ -5,7 +5,7 @@ We run an hourly job to pull the last hour's uploads from [Flickr](https://www.f
 
 # Flickr API
 
-You can find the documentation for Flickr API[here](https://www.flickr.com/services/api/). We currently use the [flickr.photos.search](https://www.flickr.com/services/api/flickr.photos.search.html) method to query the API. Here is an example showing the type of query string we use:
+You can find the documentation for Flickr API [here](https://www.flickr.com/services/api/). We currently use the [flickr.photos.search](https://www.flickr.com/services/api/flickr.photos.search.html) method to query the API. Here is an example showing the type of query string we use:
 
 ```text
 https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=REDACTED&min_upload_date=2019-11-22%2017:10:00&max_upload_date=2019-11-22%2017:15:00&license=1&media=photos&content_type=1&extras=description,license,date_upload,date_taken,owner_name,tags,o_dims,url_t,url_s,url_m,url_l&per_page=500&format=json&nojsoncallback=1&page=1
