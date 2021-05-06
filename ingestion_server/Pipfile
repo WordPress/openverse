@@ -21,3 +21,6 @@ boto3 = "*"
 filelock = "*"
 pytest = "*"
 tldextract = "*"
+
+[requires]
+python_version = "3.9"

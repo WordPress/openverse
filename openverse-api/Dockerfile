@@ -1,9 +1,9 @@
-FROM python:3.7-stretch
+FROM python:3.9
 
 ENV PYTHONBUFFERED 1
 
 RUN apt-get update \
-    && apt-get install -y libexempi3 \
+    && apt-get install -y libexempi8 \
     && mkdir /openverse-api \
     && mkdir -p /var/log/openverse-api/openverse-api.log
 
