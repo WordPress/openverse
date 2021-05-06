@@ -29,7 +29,7 @@ You need to install [Docker](https://docs.docker.com/install/) (with [Docker Com
 git clone https://github.com/wordpress/openverse-api.git
 ```
 
-4. Change directories with `cd ccatalog-api`
+4. Change directories with `cd cccatalog-api`
 5. Start Openverse API locally by running the docker containers
 
 ```
