@@ -1,13 +1,13 @@
 # Openverse API
 
-[![Build Status](https://travis-ci.org/wordpress/openverse-api.svg?branch=master)](https://travis-ci.org/wordpress/openverse-api)
-![License](https://img.shields.io/github/license/wordpress/openverse-api.svg?style=flat)
+[![Build Status](https://travis-ci.org/WordPress/openverse-api.svg?branch=master)](https://travis-ci.org/WordPress/openverse-api)
+![License](https://img.shields.io/github/license/WordPress/openverse-api.svg?style=flat)
 
 ## Purpose
 
 The Openverse API (`openverse-api`) is a system that allows programmatic access to public domain digital media. It is our ambition to index and catalog [billions of openly-licensesd works](https://stateof.creativecommons.org/), including articles, songs, videos, photographs, paintings, and more. Using this API, developers will be able to access the digital commons in their own applications.
 
-This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [Openverse Catalog repository](https://github.com/wordpress/openverse-catalog). A front end web application that interfaces with the API can be found at the [Openverse frontend repository](https://github.com/wordpress/openverse-frontend).
+This repository is primarily concerned with back end infrastructure like datastores, servers, and APIs. The pipeline that feeds data into this system can be found in the [Openverse Catalog repository](https://github.com/WordPress/openverse-catalog). A front end web application that interfaces with the API can be found at the [Openverse frontend repository](https://github.com/WordPress/openverse-frontend).
 
 ## API Documentation
 
@@ -26,7 +26,7 @@ You need to install [Docker](https://docs.docker.com/install/) (with [Docker Com
 3. Clone Openverse API
 
 ```
-git clone https://github.com/wordpress/openverse-api.git
+git clone https://github.com/WordPress/openverse-api.git
 ```
 
 4. Change directories with `cd cccatalog-api`
@@ -173,7 +173,7 @@ You can view the custom administration views at the `/admin/` endpoint.
 
 Pull requests are welcome! Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community memebers on #openverse.
 
-You are welcome to take any open issue in the tracker labeled [`help wanted`](https://github.com/wordpress/openverse-api/labels/help%20wanted) or [`good first issue`](https://github.com/wordpress/openverse-api/labels/good%20first%20issue); **there's no need to ask for permission in advance**. Other issues are open for contribution as well, but may be less accessible or well defined in comparison to those that are explicitly labeled.
+You are welcome to take any open issue in the tracker labeled [`help wanted`](https://github.com/WordPress/openverse-api/labels/help%20wanted) or [`good first issue`](https://github.com/WordPress/openverse-api/labels/good%20first%20issue); **there's no need to ask for permission in advance**. Other issues are open for contribution as well, but may be less accessible or well defined in comparison to those that are explicitly labeled.
 
 See the [CONTRIBUTING](CONTRIBUTING.md) file for details.
 
