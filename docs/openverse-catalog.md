@@ -6,10 +6,10 @@
 **Openverse Catalog** is our database of metadata about CC-licensed works from across
 the internet. This data is found and parsed via Common Crawl data and open APIs
 and the code is located in the
-[cccatalog](https://github.com/wordpress/openverse-catalog) repository.
+[openverse-catalog](https://github.com/WordPress/openverse-catalog) repository.
 
 The Openverse Catalog powers the Openverse Catalog API and Openverse Search. For more details, see
-the main [Openverse Search](https://github.com/wordpress/openverse-frontend) page.
+the main [Openverse Search](https://github.com/WordPress/openverse-frontend) page.
 
 # Data Table
 
