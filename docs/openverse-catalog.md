@@ -8,8 +8,8 @@ the internet. This data is found and parsed via Common Crawl data and open APIs
 and the code is located in the
 [openverse-catalog](https://github.com/WordPress/openverse-catalog) repository.
 
-The Openverse Catalog powers the Openverse Catalog API and Openverse Search. For more details, see
-the main [Openverse Search](https://github.com/WordPress/openverse-frontend) page.
+The Openverse Catalog powers the Openverse API, which powers the Openverse frontend. For more details, see
+the main [Openverse Frontend](https://github.com/WordPress/openverse-frontend) repository.
 
 # Data Table
 
