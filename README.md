@@ -1,4 +1,4 @@
-# Scripts
+# Openverse Scripts
 
 This repo contains automation scripts used for various workflows around 
 Openverse repositories and processes.
