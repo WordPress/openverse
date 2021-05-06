@@ -1,19 +1,19 @@
-<!-- TITLE: CC Catalog -->
-<!-- SUBTITLE: Information about the CC Catalog -->
+<!-- TITLE: Openverse Catalog -->
+<!-- SUBTITLE: Information about the Openverse Catalog -->
 
 # About
 
-**CC Catalog** is our database of metadata about CC-licensed works from across
+**Openverse Catalog** is our database of metadata about CC-licensed works from across
 the internet. This data is found and parsed via Common Crawl data and open APIs
 and the code is located in the
 [cccatalog](https://github.com/wordpress/openverse-catalog) repository.
 
-The CC Catalog powers the CC Catalog API and CC Search. For more details, see
-the main [CC Search](https://github.com/wordpress/openverse-frontend) page.
+The Openverse Catalog powers the Openverse Catalog API and Openverse Search. For more details, see
+the main [Openverse Search](https://github.com/wordpress/openverse-frontend) page.
 
 # Data Table
 
-The main data of the CC Catalog is in the PostgreSQL table `image` (in the
+The main data of the Openverse Catalog is in the PostgreSQL table `image` (in the
 `openledger` database). The schema of the table (annotated with source) is:
 
 | Column                  | Type                     | Comes From                                          |
@@ -68,11 +68,11 @@ for a list of issues.
 # Resources
 
 - [Provider identification GitHub tickets](https://github.com/wordpress/openverse-catalog/issues?utf8=%E2%9C%93&q=label%3Aproviders+)
-- [CC Catalog Documentation](cccatalog/docs/)
+- [Openverse Catalog Documentation](openverse-catalog/docs/)
 
 # Data Process Flow & Management
 
-The purpose of CC Catalog is to facilitate the discovery of 1.4 billion CC
+The purpose of Openverse Catalog is to facilitate the discovery of 1.4 billion CC
 licensed content by leveraging open data from Common Crawl and open APIs.
 
 ## Airflow - Workflow Management
@@ -135,7 +135,7 @@ the host ec2 instance, even potentially the docker daemon). For instructions see
   The [Common Crawl](http://commoncrawl.org/) corpus containes petabytes of [web crawl data](http://commoncrawl.org/the-data/get-started/). Common Crawl publishes a new dataset at the end of each month. An EMR cluster of 100 c4.8xlarge is configured to automatically parse the data to identify all domains that link to creativecommons.org. Spot pricing is used to keep the cost of this job under $100 and the number of instances keeps the execution time under 1 hour (±10 minutes). If the execution time increases it may be time to scale up (or out). Benchmarking has shown that the **R3/R4** instance family are also suitable for this job, however the spot pricing fluctuates.
 
   - Name: Common Crawl ETL - Extract all domains that link to creativecommons.org and save the output in Parquet files.
-    Queries can be performed using the data to identify potential providers for inclusion in CC Search. A query has been developed to help with this process and it is saved in Athena
+    Queries can be performed using the data to identify potential providers for inclusion in Openverse Search. A query has been developed to help with this process and it is saved in Athena
   - query name: [Top_CC_Licensed_Domains](https://console.aws.amazon.com/athena/home?force&region=us-east-1#query/saved/4e12dfa7-e310-4847-872a-0ebff12db6ad). This query requires the user to specify the common crawl partition that should be analyzed.
 
   All providers that pass the **Provider Review Process** have been integrated in another data pipeline, which extracts the image URL if it links to a Creative Commons license.
@@ -188,12 +188,12 @@ Internal AI policy:
 
 > Following internal review and discussion, we have concluded that as an organization and team, we do not wish to engage contractors or services in ways that would facilitate the development of military applications of technology. This includes, but is not limited to, the use of data that is supplied by CC through any means in connection with the services that contributes to the training of artificial intelligence and image recognition tools by the service provider.
 >
-> CC staff will make reasonable efforts during procurement and partnership processes to evaluate service providers to determine how our data or contributions will be used including, without limitation, whether it is used in service of such initiatives. This will include evaluating contractual terms of engagement and requesting modifications that preclude such uses when feasible. If after entering an agreement, it is determined that this is the case, CC management will determine the best course of action, which may involve canceling the service or partnership.
+> Openverse staff will make reasonable efforts during procurement and partnership processes to evaluate service providers to determine how our data or contributions will be used including, without limitation, whether it is used in service of such initiatives. This will include evaluating contractual terms of engagement and requesting modifications that preclude such uses when feasible. If after entering an agreement, it is determined that this is the case, Openverse management will determine the best course of action, which may involve canceling the service or partnership.
 
 ## AWS Imagine Grant
 
 Thankfully, we managed to secure the grant. As an early
-step, we want to determine which images in CC Catalog are the best candidates to
+step, we want to determine which images in Openverse Catalog are the best candidates to
 have tags added to them by Amazon Rekognition. We would therefore like to
 determine which photos are the most popular on some of our larger providers. In
 particular, we would like to be able to filter out some images from the
@@ -247,4 +247,4 @@ sorts of metrics would probably be easiest to glean from Common Crawl.
 
 # Community Involvement
 
-We would like to increase the level of community contribution to CC Catalog. Details can be found at the [CC Catalog Community Involvement](./openverse-catalog-community-involvement.md) page.
+We would like to increase the level of community contribution to Openverse Catalog. Details can be found at the [Openverse Catalog Community Involvement](./openverse-catalog-community-involvement.md) page.
