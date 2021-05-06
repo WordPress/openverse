@@ -113,22 +113,28 @@ You can check the health of a live deployment of the API by running the live int
 cd cccatalog-api
 ```
 
-2. Install all dependencies for Openverse Catalog API
+#### On the host
 
+1. Install all dependencies for Openverse Catalog API.
 ```
 pipenv install
 ```
 
-3. Launch a new shell session
-
+2. Run the tests in a Pipenv subshell.
 ```
-pipenv shell
+pipenv run bash ./test/run_test.sh
 ```
 
-4. Run API live integration test
+#### Inside the container
 
+1. Ensure that Docker containers are up. See the section above for instructions.
 ```
-./test/run_test.sh
+docker-compose ps
+```
+
+2. Run the tests in an interactive TTY connected to a `web` container.
+```
+docker-compose exec web bash ./test/run_test.sh
 ```
 
 ### How to Run Ingestion Server tests

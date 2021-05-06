@@ -46,7 +46,7 @@ class TaskResource:
             return "No action supplied in request body."
         if request[ACTION] not in [x.name for x in TaskTypes]:
             return "Invalid action."
-        if request[ACTION] in TaskTypes and SINCE_DATE not in request:
+        if request[ACTION] == TaskTypes.UPDATE_INDEX.name and SINCE_DATE not in request:
             return "Received UPDATE request but no since_date."
 
         return None
