@@ -81,16 +81,23 @@
     "description": {
       "content": "Openverse is a tool that allows openly licensed and public domain works to be discovered and used by everyone."
     },
-    "collection": "Openverse searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
+    "collection": {
+      "content": "Openverse searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
+      "common-crawl": "Common Crawl"
+    },
     "planning": {
-      "content": "Currently Openverse only searches images, but we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. Learn more about our {vision} and {roadmap} for Openverse and see what {working}. All of our code is open source ({search}, {catalog-api}, {catalog}) and we {community}",
-      "vision": "2019 vision, strategy",
-      "roadmap": "roadmap",
-      "working": "we’re currently working on",
+      "content": "Currently Openverse only searches images, with search for audio and video provided through {meta}. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source ({search}, {api}, {catalog}) and we {community}. You can see what {working}.",
+      "meta": "Meta Search",
       "search": "Openverse",
-      "catalog-api": "Openverse Catalog API",
+      "api": "Openverse API",
       "catalog": "Openverse Catalog",
-      "community": "welcome community contribution"
+      "community": "welcome community contribution",
+      "working": "we’re currently working on"
+    },
+    "transfer": {
+      "content": "Openverse is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from {creative-commons} and {wordpress}. We remain committed to our goal of tackling discoverability and accessibility of open access media.",
+      "creative-commons": "Creative Commons",
+      "wordpress": "WordPress"
     },
     "declaration": {
       "content": "Please note that Openverse does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
@@ -103,13 +110,17 @@
       "work": "# CC Licensed Works"
     },
     "aria": {
-      "licenses": "cc licenses",
-      "vision": "Openverse vision",
-      "roadmap": "Openverse roadmap",
-      "projects": "current projects",
-      "contribution": "contribution guidelines",
+      "common-crawl": "Common Crawl",
+      "meta": "meta search",
+      "projects": "Openverse projects",
+      "community": "Make Wordpress community",
       "terms": "Openverse terms of use",
-      "sources": "sources table"
+      "sources": "sources table",
+      "creative-commons": "Creative Commons",
+      "wordpress": "WordPress",
+      "search": "Openverse",
+      "api": "Openverse API",
+      "catalog": "Openverse Catalog"
     }
   },
   "sources": {
