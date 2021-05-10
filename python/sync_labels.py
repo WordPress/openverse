@@ -75,7 +75,7 @@ def main():
     labels = get_labels()
     log.info(f"Synchronizing {len(labels)} standard labels")
     for label in labels:
-        print(f"• {label.qualified_name}")
+        log.info(f"• {label.qualified_name}")
     repos = [org.get_repo(repo_name) for repo_name in repo_names]
     for repo in repos:
         set_labels(repo, get_labels())
