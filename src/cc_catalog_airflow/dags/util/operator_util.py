@@ -1,6 +1,6 @@
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.dummy_operator import DummyOperator
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.bash import BashOperator
+from airflow.operators.dummy import DummyOperator
+from airflow.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 
 

@@ -10,7 +10,7 @@ from pathlib import Path
 from textwrap import dedent
 import time
 
-from airflow.hooks.postgres_hook import PostgresHook
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 from provider_api_scripts.common.storage import image
 from util import tsv_cleaner

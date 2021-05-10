@@ -1,8 +1,8 @@
 import logging
 
-from airflow.operators.dummy_operator import DummyOperator
-from airflow.operators.python_operator import PythonOperator
-from airflow.operators.python_operator import ShortCircuitOperator
+from airflow.operators.dummy import DummyOperator
+from airflow.operators.python import PythonOperator
+from airflow.operators.python import ShortCircuitOperator
 from airflow.utils.trigger_rule import TriggerRule
 
 from util.loader import loader, paths, sql, smithsonian_unit_codes

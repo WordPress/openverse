@@ -3,7 +3,7 @@ from datetime import datetime
 import logging
 import os
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python import PythonOperator
 from util import config, pg_cleaner, operator_util
 
 logging.basicConfig(
