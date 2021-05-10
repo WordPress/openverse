@@ -29,6 +29,3 @@ minimum set of consistent labels.
 **Purpose:**
 Creates the standard list of labels in all repos, updating the color and 
 description where they do not match the standard values.
-
-
-
