@@ -6,37 +6,53 @@
           {{ $t('about.title') }}
         </h1>
         <div class="content">
-          <i18n path="about.description.content" tag="p">
-            <template #link>
-              <a
-                :aria-label="$t('about.aria.licenses')"
-                href="https://creativecommons.org/share-your-work/licensing-examples/"
-                >{{ $t('about.description.licenses-link') }}</a
-              >
-            </template>
-          </i18n>
-          <i18n path="about.collection" tag="p">
+          <p>{{ $t('about.description.content') }}</p>
+
+          <i18n path="about.collection.content" tag="p">
             <template #common-crawl>
-              <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-              <a aria-label="common crawl" href="http://commoncrawl.org/"
-                >Common Crawl</a
+              <a
+                :aria-label="$t('about.aria.common-crawl')"
+                href="http://commoncrawl.org/"
+                >{{ $t('about.collection.common-crawl') }}</a
               >
-              <!-- eslint-enable -->
             </template>
           </i18n>
+
           <i18n path="about.planning.content" tag="p">
-            <template #vision>
-              <a
-                :aria-label="$t('about.aria.vision')"
-                href="https://creativecommons.org/2019/03/19/cc-search/"
-                >{{ $t('about.planning.vision') }}</a
+            <template #meta>
+              <NuxtLink
+                :aria-label="$t('about.aria.meta')"
+                :to="localePath('/meta-search')"
+                >{{ $t('about.planning.meta') }}</NuxtLink
               >
             </template>
-            <template #roadmap>
+            <template #search>
               <a
-                :aria-label="$t('about.aria.roadmap')"
-                href="https://docs.google.com/document/d/19yH2V5K4nzWgEXaZhkzD1egzrRayyDdxlzxZOTCm_pc/edit#heading=h.jih78emira0r"
-                >{{ $t('about.planning.roadmap') }}</a
+                :aria-label="$t('about.aria.search')"
+                href="https://github.com/wordpress/openverse-frontend/"
+                >{{ $t('about.planning.search') }}</a
+              >
+            </template>
+            <template #api>
+              <a
+                :aria-label="$t('about.aria.api')"
+                href="https://github.com/wordpress/openverse-api/"
+                >{{ $t('about.planning.api') }}</a
+              >
+            </template>
+            <template #catalog>
+              <a
+                :aria-label="$t('about.aria.catalog')"
+                href="https://github.com/wordpress/openverse-catalog/"
+                >{{ $t('about.planning.catalog') }}</a
+              >
+            </template>
+            <template #community>
+              <!-- TODO: Update link to team page on Make WordPress -->
+              <a
+                :aria-label="$t('about.aria.community')"
+                href="https://make.wordpress.org/"
+                >{{ $t('about.planning.community') }}</a
               >
             </template>
             <template #working>
@@ -46,35 +62,25 @@
                 >{{ $t('about.planning.working') }}</a
               >
             </template>
-            <template #search>
-              <a
-                aria-label="Openverse repository"
-                href="https://github.com/wordpress/openverse-frontend/"
-                >{{ $t('about.planning.search') }}</a
-              >
-            </template>
-            <template #catalog-api>
-              <a
-                aria-label="cc catalog-api repository"
-                href="https://github.com/wordpress/openverse-api/"
-                >{{ $t('about.planning.catalog-api') }}</a
-              >
-            </template>
-            <template #catalog>
-              <a
-                aria-label="cc catalog repository"
-                href="https://github.com/wordpress/openverse-catalog/"
-                >{{ $t('about.planning.catalog') }}</a
-              >
-            </template>
-            <!-- <template #community>
-              <a
-                :aria-label="$t('about.aria.contribution')"
-                href="https://creativecommons.github.io/contributing-code/"
-                >{{ $t('about.planning.community') }}</a
-              >
-            </template> -->
           </i18n>
+
+          <i18n path="about.transfer.content" tag="p">
+            <template #creative-commons>
+              <a
+                :aria-label="$t('about.aria.creative-commons')"
+                href="https://creativecommons.org/2021/05/03/cc-search-to-join-wordpress/"
+                >{{ $t('about.transfer.creative-commons') }}</a
+              >
+            </template>
+            <template #wordpress>
+              <a
+                :aria-label="$t('about.aria.wordpress')"
+                href="https://ma.tt/2021/04/cc-search-to-join-wordpress-org/"
+                >{{ $t('about.transfer.wordpress') }}</a
+              >
+            </template>
+          </i18n>
+
           <i18n path="about.declaration.content" tag="p">
             <template #terms>
               <a
@@ -84,6 +90,7 @@
               >
             </template>
           </i18n>
+
           <h2 class="margin-top-large margin-bottom-normal">
             {{ $t('about.sources') }}
           </h2>

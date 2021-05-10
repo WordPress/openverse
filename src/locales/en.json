@@ -81,16 +81,23 @@
     "description": {
       "content": "Openverse is a tool that allows openly licensed and public domain works to be discovered and used by everyone."
     },
-    "collection": "Openverse searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
+    "collection": {
+      "content": "Openverse searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
+      "common-crawl": "Common Crawl"
+    },
     "planning": {
-      "content": "Currently Openverse only searches images, but we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. Learn more about our {vision} and {roadmap} for Openverse and see what {working}. All of our code is open source ({search}, {catalog-api}, {catalog}) and we {community}",
-      "vision": "2019 vision, strategy",
-      "roadmap": "roadmap",
-      "working": "we’re currently working on",
+      "content": "Currently Openverse only searches images, with search for audio and video provided through {meta}. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source ({search}, {api}, {catalog}) and we {community}. You can see what {working}.",
+      "meta": "Meta Search",
       "search": "Openverse",
-      "catalog-api": "Openverse Catalog API",
+      "api": "Openverse API",
       "catalog": "Openverse Catalog",
-      "community": "welcome community contribution"
+      "community": "welcome community contribution",
+      "working": "we’re currently working on"
+    },
+    "transfer": {
+      "content": "Openverse is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from {creative-commons} and {wordpress}. We remain committed to our goal of tackling discoverability and accessibility of open access media.",
+      "creative-commons": "Creative Commons",
+      "wordpress": "WordPress"
     },
     "declaration": {
       "content": "Please note that Openverse does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
@@ -103,13 +110,17 @@
       "work": "# CC Licensed Works"
     },
     "aria": {
-      "licenses": "cc licenses",
-      "vision": "Openverse vision",
-      "roadmap": "Openverse roadmap",
-      "projects": "current projects",
-      "contribution": "contribution guidelines",
+      "common-crawl": "Common Crawl",
+      "meta": "meta search",
+      "projects": "Openverse projects",
+      "community": "Make Wordpress community",
       "terms": "Openverse terms of use",
-      "sources": "sources table"
+      "sources": "sources table",
+      "creative-commons": "Creative Commons",
+      "wordpress": "WordPress",
+      "search": "Openverse",
+      "api": "Openverse API",
+      "catalog": "Openverse Catalog"
     }
   },
   "sources": {
@@ -243,56 +254,6 @@
         "content": "Example: {link}{br} This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'."
       }
     }
-  },
-  "feedback": {
-    "title": "Feedback",
-    "description": "Thank you for using Openverse! We welcome your ideas for improving the tool below.",
-    "improve": "Help us Improve",
-    "bug": "Report a Bug",
-    "loading": "Loading...",
-    "aria": {
-      "cc-usability": "slack cc-usability channel",
-      "improve": "help us improve form",
-      "report-bug": "report a bug form"
-    }
-  },
-  "support": {
-    "title": "Support us",
-    "open": "The search engine for the open movement",
-    "cc": "Openverse is the leading search engine that accurately and reliably indexes works that are known to be openly licensed or in the public domain.",
-    "quote": "{joy} by {writer}.. {cc}",
-    "inclusive": "For two decades, Creative Commons, a 501(c)(3) publicly funded nonprofit, has led the movement to increase access to cultural, educational, and creative works in order to help fill knowledge gaps to promote a more equitable, innovative world. As the United Nations Sustainable Development Goals (UNSDG) for Quality Education make clear: “access to inclusive education can help equip locals with the tools required to develop innovative solutions to the world’s greatest problems.”",
-    "work": "The {license} and {public-domain} tools now serve as the licensing infrastructure of the open web. They are utilized by cultural institutions, artists, universities, governments, and more to unlock over 2 billion works globally; from {photograph} of French feminist Caroline Rémy to {guide} on creating more accessible digital documents. Thanks to our collaborative efforts with the open community and these institutions, every individual may have digital access to valuable knowledge and priceless works—like the 2.8 million images and nearly two centuries of data released into the public domain by the Smithsonian in early 2020 using CC0, the Creative Commons public domain dedication tool.",
-    "access": "With this underlying infrastructure in place, which continues to support a growing collection of open access materials, we are tackling the problems of discoverability and accessibility on the web. With Openverse, we are making important collections of openly licensed works easy to find and reuse, regardless of language and location, from a single starting point.",
-    "free": "If you find it on Openverse, you’re free to reuse it.",
-    "public-good": "Like all CC tools, Openverse is a {public-good}, allowing anyone with an internet connection the ability to visit all corners of the world, and find material that they can learn from, reuse, and share freely.",
-    "button": {
-      "donate": "Donate Now",
-      "sponsor": "Sponsor us on GitHub"
-    },
-    "launch": {
-      "title": "Openverse launched on April 30th, 2019.",
-      "first": "During our first year:",
-      "served": "We have served over 2.8 million users.",
-      "host": "Our site hosted visitors from over 230 countries and territories.",
-      "users": "Over 500 million+ CC-licensed images were made discoverable in a single place.",
-      "visitors": "1 in 3 visitors to Openverse is an educator, and 1 in 4 visitors is a student.",
-      "education": "These users are engaged in the use, creation, and sharing of educational materials, benefiting from easy access to openly licensed work."
-    },
-    "future": {
-      "title": "What will the future bring for Openverse?",
-      "more": "We’re always listening to our community to understand the greatest needs and highest impact features we can develop, alongside watching for newly open digitized collections to help share. We are working hard to include:",
-      "culture": "Storied cultural collections from across the world.",
-      "audio": "Audio, including openly licensed music, sound effects, pronunciations, lectures, podcasts, and audiobooks.",
-      "video": "Video, including openly licensed material for education and entertainment purposes.",
-      "text": "Text, including openly licensed books, poetry, manuscripts, and more.",
-      "internalize": "By the end of 2020, we will have internationalization infrastructure in place.",
-      "translate": "This will allow our volunteer community of translators to help make Openverse available in additional languages!",
-      "accessibility": "Accessibility features.",
-      "smarter": "Smarter search, through additional filters and algorithm improvements.",
-      "support": "Support this next, exciting chapter of Openverse."
-    },
-    "grateful": "We are grateful for the support of Arcadia, Amazon Web Services, Coil, Mozilla, and countless community donors in launching and growing this ambitious project. Thank you for helping us break down barriers to knowledge and culture!"
   },
   "collections": {
     "title": "Browse collections",
