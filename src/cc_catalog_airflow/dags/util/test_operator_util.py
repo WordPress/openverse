@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta, timezone
-from unittest.mock import MagicMock
 
 from airflow import DAG
 from airflow.models.taskinstance import TaskInstance

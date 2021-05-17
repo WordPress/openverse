@@ -1,7 +1,7 @@
 import logging
 import json
 from textwrap import dedent
-from airflow.hooks.postgres_hook import PostgresHook
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 from util.loader import column_names as col
 from util.loader import provider_details as prov
 from psycopg2.errors import InvalidTextRepresentation

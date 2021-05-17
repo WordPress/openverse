@@ -7,9 +7,9 @@ dictionary
 from datetime import datetime, timedelta
 import logging
 import os
-import util.operator_util as ops
 from airflow import DAG
 
+import util.operator_util as ops
 from util.loader import operators
 
 

@@ -1,7 +1,6 @@
 import boto3
 import re
 import os
-import sys
 import logging
 import argparse
 from botocore import UNSIGNED

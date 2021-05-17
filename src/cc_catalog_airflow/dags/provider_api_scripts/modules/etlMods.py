@@ -1,13 +1,8 @@
-# import argparse  # Imported but not used
 import json
 import logging
 import os
-# import random  # Imported but not used
 import re
-# import sys  # Imported but not used
 import time
-# from datetime import datetime, timedelta  # Imported but not used
-# from urllib.parse import urlparse  # Imported but not used
 
 import requests
 
@@ -197,7 +192,7 @@ def getLicense(_domain, _path, _url):
                 logging.warning('License not detected!')
                 return [None, None]
 
-        elif (license == ''):
+        elif license == '':
             logging.warning('License not detected!')
             return [None, None]
 

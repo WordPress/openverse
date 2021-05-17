@@ -3,7 +3,7 @@ import os
 import psycopg2
 from unittest.mock import patch, call
 
-from airflow.hooks.postgres_hook import PostgresHook
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 import pytest
 
 from util.loader import test_sql
