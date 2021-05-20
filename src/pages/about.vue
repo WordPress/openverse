@@ -1,8 +1,8 @@
 <template>
   <div class="section">
-    <div class="container is-fluid">
+    <div :class="['container', isEmbedded ? '' : 'is-fluid']">
       <div>
-        <h1 class="title is-2 margin-bottom-large" role="article">
+        <h1 class="title is-2 margin-bottom-large">
           {{ $t('about.title') }}
         </h1>
         <div class="content">
@@ -130,6 +130,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 const AboutPage = {
   name: 'about-page',
   layout({ store }) {
@@ -138,6 +140,7 @@ const AboutPage = {
       : 'with-nav-search'
   },
   computed: {
+    ...mapState(['isEmbedded']),
     imageProviders() {
       return this.$store.state.imageProviders
     },

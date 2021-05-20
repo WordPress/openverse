@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <div class="container is-fluid">
+    <div :class="['container', isEmbedded ? '' : 'is-fluid']">
       <div class="margin-bottom-large">
         <h1 class="title is-2">
           {{ $t('search-guide.title') }}
@@ -271,6 +271,8 @@
 <script>
 /* eslint-disable vue/html-quotes */
 
+import { mapState } from 'vuex'
+
 const SearchHelpPage = {
   name: 'search-help-page',
   layout({ store }) {
@@ -279,9 +281,7 @@ const SearchHelpPage = {
       : 'with-nav-search'
   },
   computed: {
-    imageProviders() {
-      return this.$store.state.imageProviders
-    },
+    ...mapState(['imageProviders', 'isEmbedded']),
   },
   methods: {
     providerSearchLink(providerCode) {

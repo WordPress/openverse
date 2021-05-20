@@ -1,8 +1,8 @@
 <template>
   <div class="section">
-    <div class="container is-fluid columns">
+    <div :class="['container', 'columns', isEmbedded ? '' : 'is-fluid']">
       <header class="column is-full margin-bottom-small">
-        <h1 class="title is-2" role="article">
+        <h1 class="title is-2">
           {{ $t('sources.title') }}
         </h1>
       </header>
@@ -141,6 +141,7 @@
 
 <script>
 import sortBy from 'lodash.sortby'
+import { mapState } from 'vuex'
 
 const SourcePage = {
   name: 'source-page',
@@ -158,9 +159,7 @@ const SourcePage = {
     }
   },
   computed: {
-    imageProviders() {
-      return this.$store.state.imageProviders
-    },
+    ...mapState(['imageProviders', 'isEmbedded']),
     sortedProviders() {
       const sorted = sortBy(this.imageProviders, [this.sort.field])
       return this.sort.direction === 'asc' ? sorted : sorted.reverse()
