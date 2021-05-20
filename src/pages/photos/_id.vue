@@ -39,7 +39,11 @@ import { SET_IMAGE, SET_RELATED_IMAGES } from '~/store-modules/mutation-types'
 
 const PhotoDetailPage = {
   name: 'PhotoDetailPage',
-  layout: 'with-nav-search',
+  layout({ store }) {
+    return store.state.isEmbedded
+      ? 'embedded-with-nav-search'
+      : 'with-nav-search'
+  },
   props: {
     id: {
       type: String,

@@ -40,6 +40,9 @@ import { screenWidth } from '~/utils/getBrowserInfo'
 
 const BrowsePage = {
   name: 'browse-page',
+  layout({ store }) {
+    return store.state.isEmbedded ? 'embedded' : 'default'
+  },
   scrollToTop: false,
   async fetch() {
     if (process.server) {

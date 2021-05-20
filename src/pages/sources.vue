@@ -144,7 +144,11 @@ import sortBy from 'lodash.sortby'
 
 const SourcePage = {
   name: 'source-page',
-  layout: 'with-nav-search',
+  layout({ store }) {
+    return store.state.isEmbedded
+      ? 'embedded-with-nav-search'
+      : 'with-nav-search'
+  },
   data() {
     return {
       sort: {

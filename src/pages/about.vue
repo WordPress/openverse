@@ -132,7 +132,11 @@
 <script>
 const AboutPage = {
   name: 'about-page',
-  layout: 'with-nav-search',
+  layout({ store }) {
+    return store.state.isEmbedded
+      ? 'embedded-with-nav-search'
+      : 'with-nav-search'
+  },
   computed: {
     imageProviders() {
       return this.$store.state.imageProviders

@@ -15,6 +15,7 @@ import FilterStore from '~/store-modules/filter-store'
 import ReportContentStore from '~/store-modules/report-content-store'
 import RelatedImagesStore from '~/store-modules/related-images-store'
 import NotificationStore from '~/store-modules/notification-store'
+import NavStore from '~/store-modules/nav-store'
 import { FETCH_IMAGE_PROVIDERS } from '~/store-modules/action-types'
 import GoogleAnalytics from '~/analytics/GoogleAnalytics'
 
@@ -53,7 +54,8 @@ export const state = () =>
     UserStore.state,
     ReportContentStore.state,
     RelatedImagesStore.state,
-    NotificationStore.state
+    NotificationStore.state,
+    NavStore.state
   )
 
 export const mutations = Object.assign(
@@ -64,5 +66,6 @@ export const mutations = Object.assign(
   ABTestStore.mutations,
   ReportContentStore.mutations,
   RelatedImagesStore.mutations,
-  NotificationStore.mutations
+  NotificationStore.mutations,
+  NavStore.mutations
 )

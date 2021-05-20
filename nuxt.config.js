@@ -115,6 +115,9 @@ export default {
   srcDir: 'src/',
   modern: 'client',
   server: { port: process.env.PORT || 8443 },
+  router: {
+    middleware: 'embed',
+  },
   components: {
     dirs: [
       '~/components',

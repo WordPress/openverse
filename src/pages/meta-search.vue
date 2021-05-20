@@ -119,7 +119,11 @@
 <script>
 export default {
   name: 'MetaSearchPage',
-  layout: 'with-nav-search',
+  layout({ store }) {
+    return store.state.isEmbedded
+      ? 'embedded-with-nav-search'
+      : 'with-nav-search'
+  },
 }
 </script>
 
