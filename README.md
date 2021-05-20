@@ -36,7 +36,7 @@ You don't need to have the Openverse API running locally to be able to run the f
 
 ### Standalone and embedded modes
 
-The application can run in two modes. By default, it runs in embedded mode, which is loaded in an iframe on  [WordPress.org/openverse](https://make.wordpress.org/openverse). It has a small header without logo and no footer.
+The application can run in two modes. By default, it runs in embedded mode, which is loaded in an iframe on [WordPress.org/openverse](https://make.wordpress.org/openverse). It has a small header without logo and no footer.
 The standalone mode which has a large header with logo and a footer, can be enabled by adding `?embedded=false` query parameter to the URL. For example, when running locally, you can go to [http://localhost:8443?embedded=false](http://localhost:8443?embedded=false) to view the standalone application.
 
 ### Running tests
