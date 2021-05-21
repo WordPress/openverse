@@ -272,9 +272,11 @@
 /* eslint-disable vue/html-quotes */
 
 import { mapState } from 'vuex'
+import iframeHeight from '~/mixins/iframeHeight'
 
 const SearchHelpPage = {
   name: 'search-help-page',
+  mixins: [iframeHeight],
   layout({ store }) {
     return store.state.isEmbedded
       ? 'embedded-with-nav-search'

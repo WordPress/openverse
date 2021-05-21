@@ -61,10 +61,14 @@
 <script>
 import { SET_QUERY } from '~/store-modules/mutation-types'
 import { filtersToQueryData } from '~/utils/searchQueryTransform'
+import { mapState } from 'vuex'
 
 export default {
   name: 'HeroSection',
   data: () => ({ form: { searchTerm: '' } }),
+  computed: {
+    ...mapState(['isEmbedded']),
+  },
   mounted() {
     if (document.querySelector('#searchTerm')) {
       document.querySelector('#searchTerm').focus()

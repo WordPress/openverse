@@ -36,9 +36,11 @@ import { mapActions, mapMutations, mapState } from 'vuex'
 import featureFlags from '~/featureFlags'
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '~/store-modules/action-types'
 import { SET_IMAGE, SET_RELATED_IMAGES } from '~/store-modules/mutation-types'
+import iframeHeight from '~/mixins/iframeHeight'
 
 const PhotoDetailPage = {
   name: 'PhotoDetailPage',
+  mixins: [iframeHeight],
   layout({ store }) {
     return store.state.isEmbedded
       ? 'embedded-with-nav-search'

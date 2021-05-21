@@ -118,9 +118,11 @@
 
 <script>
 import { mapState } from 'vuex'
+import iframeHeight from '~/mixins/iframeHeight'
 
 export default {
   name: 'MetaSearchPage',
+  mixins: [iframeHeight],
   layout({ store }) {
     return store.state.isEmbedded
       ? 'embedded-with-nav-search'
