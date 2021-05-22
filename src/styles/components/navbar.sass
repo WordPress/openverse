@@ -29,7 +29,7 @@ $navbar-divider-background-color: $background
 $navbar-divider-height: 2px
 
 $navbar-breakpoint: $tablet
-$wp-fullwidth: 940px
+$wp-max-width: 940px
 
 .navbar
   background-color: $navbar-background-color
@@ -38,11 +38,12 @@ $wp-fullwidth: 940px
   z-index: $navbar-z
   padding: $space-bigger
   &.embedded
+    padding: 0.5rem 0
+    min-height: unset
     +tablet()
-      max-width: $wp-fullwidth
+      max-width: $wp-max-width
       margin-right: auto
       margin-left: auto
-      padding: 0.5rem
 
 .navbar-brand
   align-items: stretch
@@ -79,6 +80,10 @@ $wp-fullwidth: 940px
     width: 100%
     margin-left: 0
     justify-content: space-between
+    > div.navbar-item:first-child > a.navbar-link
+      padding-left: 0
+    > div.navbar-item:last-child > a.navbar-link
+      padding-right: 0
 
 a.navbar-item,
 .navbar-link

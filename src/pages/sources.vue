@@ -1,13 +1,18 @@
 <template>
   <div class="section">
-    <div :class="['container', 'columns', isEmbedded ? '' : 'is-fluid']">
+    <div :class="['container columns', isEmbedded ? '' : 'is-fluid']">
       <header class="column is-full margin-bottom-small">
         <h1 class="title is-2">
           {{ $t('sources.title') }}
         </h1>
       </header>
     </div>
-    <div class="container is-fluid columns is-variable is-4">
+    <div
+      :class="[
+        'container columns is-variable is-4',
+        isEmbedded ? '' : 'is-fluid',
+      ]"
+    >
       <div class="column">
         <i18n path="sources.detail" tag="p">
           <template #single-name>

@@ -92,7 +92,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-$hero-height: 85vh;
+$hero-height-desktop: 85vh;
+$hero-height: 55vh;
 
 .hero {
   background: #fff;
@@ -103,6 +104,9 @@ $hero-height: 85vh;
   justify-content: center;
   flex-direction: column;
   min-height: $hero-height;
+  @include tablet() {
+    min-height: $hero-height-desktop;
+  }
 }
 .hero-center {
   margin-top: auto;
