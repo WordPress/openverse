@@ -5,7 +5,6 @@ import socket
 import time
 from urllib.parse import urlparse
 
-
 import boto3
 import psycopg2
 import pytest

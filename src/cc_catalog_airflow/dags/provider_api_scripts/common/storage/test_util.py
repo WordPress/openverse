@@ -1,6 +1,7 @@
 import logging
 
 from common.storage import util
+
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
     level=logging.DEBUG)

@@ -2,8 +2,8 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
 
 from util.operator_util import get_log_operator
 from util.tsv_cleaner import clean_tsv_directory

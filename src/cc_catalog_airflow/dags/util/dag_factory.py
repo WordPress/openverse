@@ -2,7 +2,7 @@ from copy import deepcopy
 from datetime import datetime, timedelta
 import logging
 from airflow import DAG
-from airflow.utils.helpers import cross_downstream
+from airflow.models.baseoperator import cross_downstream
 import util.operator_util as ops
 import util.config as conf
 

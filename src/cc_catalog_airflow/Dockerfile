@@ -1,4 +1,4 @@
-FROM python:3.7-buster
+FROM python:3.9
 
 ENV AIRFLOW_HOME=/usr/local/airflow
 ARG OUTPUT_DIR=/tmp/workflow_output/
@@ -20,5 +20,6 @@ ADD ./dags ${AIRFLOW_HOME}/dags
 RUN pip install --user -r ${REQUIREMENTS_FILE}
 
 CMD python wait_for_db.py && \
-  airflow initdb && \
+  airflow db init && \
+  airflow users create -r Admin -u airflow -f Air -l Flow -p airflow --email airflow@example.org && \
   (airflow scheduler & airflow webserver)
