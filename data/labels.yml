@@ -119,7 +119,7 @@ groups:
     emoji: "🙏"
     has_emoji_name: false
   - name: staff only
-    description: Restricted to CC staff members
+    description: Restricted to staff members
     emoji: "🔒"
 
 standalone:
