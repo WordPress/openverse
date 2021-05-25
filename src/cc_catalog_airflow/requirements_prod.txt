@@ -1,6 +1,6 @@
 apache-airflow[amazon,postgres]==2.0.2
 boto3==1.15.13
-lxml==4.4.2
+lxml==4.6.3
 psycopg2-binary==2.8.6
 tldextract==2.2.2
 
