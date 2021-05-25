@@ -3,4 +3,4 @@ repos:
   catalog: openverse-catalog
   api: openverse-api
   frontend: openverse-frontend
-  scripts: openverse-scripts
+  main: openverse
