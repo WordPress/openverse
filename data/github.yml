@@ -1,6 +1,6 @@
 org: WordPress
 repos:
+  main: openverse
   catalog: openverse-catalog
   api: openverse-api
   frontend: openverse-frontend
-  scripts: openverse-scripts
