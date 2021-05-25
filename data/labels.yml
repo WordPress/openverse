@@ -1,0 +1,141 @@
+colors:
+  UNFAVOURABLE: 'b60205'
+  NEGATIVE: 'ff9f1c'
+  NEUTRAL: 'ffcc00'
+  POSITIVE: 'cfda2c'
+  FAVOURABLE: '008672'
+  BLACK: '000000'
+  DARKER: '333333'
+  DARK: '666666'
+  MEDIUM: '999999'
+  LIGHT: 'cccccc'
+  LIGHTER: 'eeeeee'
+  WHITE: 'ffffff'
+
+groups:
+- name: priority
+  is_required: true
+  labels:
+  - name: critical
+    color: 'UNFAVOURABLE'
+    description: Must be fixed ASAP
+    emoji: "🟥"
+  - name: high
+    color: 'NEGATIVE'
+    description: Stalls work on the project or its dependents
+    emoji: "🟧"
+  - name: medium
+    color: 'NEUTRAL'
+    description: Not blocking but should be fixed soon
+    emoji: "🟨"
+  - name: low
+    color: 'POSITIVE'
+    description: Low priority and doesn't need to be rushed
+    emoji: "🟩"
+
+- name: status
+  is_required: true
+  labels:
+  - name: ready for work
+    color: 'LIGHT'
+    description: Ready for work
+    emoji: "🏁"
+  - name: blocked
+    color: 'MEDIUM'
+    description: Blocked & therefore, not ready for work
+    emoji: "🚧"
+  - name: ticket work required
+    color: 'DARK'
+    description: Needs more details before it can be worked on
+    emoji: "🧹"
+  - name: label work required
+    color: 'DARK'
+    description: Needs proper labelling before it can be worked on
+    emoji: "🏷"
+  - name: discarded
+    color: 'LIGHTER'
+    description: Will not be worked on
+    emoji: "⛔️"
+  - name: discontinued
+    color: 'LIGHTER'
+    description: Not suitable for work as repo is in maintenance
+    emoji: "🙅"
+  - name: awaiting triage
+    color: 'DARKER'
+    description: Has not been triaged & therefore, not ready for work
+    emoji: "🚦"
+
+- name: goal
+  color: 'ffffff'
+  is_required: true
+  labels:
+  - name: addition
+    description: Addition of new feature
+    emoji: "🌟"
+  - name: improvement
+    description: Improvement to an existing feature
+    emoji: "✨"
+  - name: fix
+    description: Bug fix
+    emoji: "🛠"
+
+- name: aspect
+  color: '04338c'
+  is_required: true
+  labels:
+  - name: text
+    description: Concerns the textual material in the repository
+    emoji: "📄"
+  - name: code
+    description: Concerns the software code in the repository
+    emoji: "💻"
+  - name: interface
+    description: Concerns end-users' experience with the software
+    emoji: "🕹"
+  - name: dx
+    description: Concerns developers' experience with the codebase
+    emoji: "🤖"
+
+- name: talk
+  color: 'f9bbe5'
+  labels:
+  - name: question
+    description: Can be resolved with an answer
+    emoji: "❓"
+  - name: discussion
+    description: Open for discussions and feedback
+    emoji: "💬"
+
+- name: friendliness
+  color: '7f0799'
+  is_prefixed: false
+  labels:
+  - name: good first issue
+    description: New-contributor friendly
+    emoji: "🤗"
+    has_emoji_name: false
+  - name: help wanted
+    description: Open to participation from the community
+    emoji: "🙏"
+    has_emoji_name: false
+  - name: staff only
+    description: Restricted to CC staff members
+    emoji: "🔒"
+
+standalone:
+- name: 'ノಠ益ಠノ彡┻━┻'
+  color: '000000'
+  description: Aaargh!
+  emoji: "🤯"
+
+- name: Hacktoberfest
+  color: '883255'
+  description: Ideal for Hacktoberfest participation
+  emoji: "🎃"
+  has_emoji_name: false
+
+- name: invalid
+  color: 'LIGHTER'
+  description: Inappropriate or invalid (ex. Hacktoberfest spam)
+  emoji: "⛔️"
+  has_emoji_name: false
