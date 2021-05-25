@@ -116,3 +116,9 @@ database_table_to_elasticsearch_model = {
     'image': Image
 }
 ```
+
+# Deployment (last deployed version: 1.20.0)
+
+This docker image is deployed to docker hub. The deployed image is pulled in our production environment. See the [`./publish_release.sh`](publish_release.sh) script for deploying to docker hub. The current docker hub image is [openverse/ingestion_server](https://hub.docker.com/r/openverse/ingestion_server) but the image previously lived at [creativecommons/ingestion_server](https://hub.docker.com/r/creativecommons/ingestion_server)
+
+The version numbering for the docker image is seemigly a standalone semver system, distinct from the repository.
