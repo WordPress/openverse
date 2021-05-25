@@ -17,6 +17,16 @@ export const legacySourceMap = {
       }
     },
   },
+  'EDU images': {
+    image(search) {
+      return {
+        url: 'https://images.all4ed.org',
+        query: {
+          s: search.q,
+        },
+      }
+    },
+  },
   Europeana: {
     audio(search) {
       let query = `${search.q} AND RIGHTS:*creative*` // search cc licensed works
