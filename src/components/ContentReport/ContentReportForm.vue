@@ -105,7 +105,7 @@ import { SEND_CONTENT_REPORT } from '~/store-modules/action-types'
 import { REPORT_FORM_CLOSED } from '~/store-modules/mutation-types'
 
 const dmcaFormUrl =
-  'https://docs.google.com/forms/d/e/1FAIpQLSdZLZpYJGegL8G2FsEAHNsR1nqVx1Wxfp-oj3o0h8rqe9j8dg/viewform'
+  'https://docs.google.com/forms/d/e/1FAIpQLSd0I8GsEbGQLdaX4K_F6V2NbHZqN137WMZgnptUpzwd-kbDKA/viewform'
 
 export default {
   name: 'ContentReportForm',
