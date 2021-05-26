@@ -168,7 +168,7 @@ export default {
   position: relative;
   text-align: left;
   @include desktop {
-    width: 70%;
+    width: 100%;
   }
   .label {
     flex: 1;

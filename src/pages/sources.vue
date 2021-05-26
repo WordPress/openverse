@@ -1,13 +1,18 @@
 <template>
   <div class="section">
-    <div class="container is-fluid columns">
+    <div :class="['container columns', isEmbedded ? '' : 'is-fluid']">
       <header class="column is-full margin-bottom-small">
-        <h1 class="title is-2" role="article">
+        <h1 class="title is-2">
           {{ $t('sources.title') }}
         </h1>
       </header>
     </div>
-    <div class="container is-fluid columns is-variable is-4">
+    <div
+      :class="[
+        'container columns is-variable is-4',
+        isEmbedded ? '' : 'is-fluid',
+      ]"
+    >
       <div class="column">
         <i18n path="sources.detail" tag="p">
           <template #single-name>
@@ -141,10 +146,17 @@
 
 <script>
 import sortBy from 'lodash.sortby'
+import { mapState } from 'vuex'
+import iframeHeight from '~/mixins/iframeHeight'
 
 const SourcePage = {
   name: 'source-page',
-  layout: 'with-nav-search',
+  mixins: [iframeHeight],
+  layout({ store }) {
+    return store.state.isEmbedded
+      ? 'embedded-with-nav-search'
+      : 'with-nav-search'
+  },
   data() {
     return {
       sort: {
@@ -154,9 +166,7 @@ const SourcePage = {
     }
   },
   computed: {
-    imageProviders() {
-      return this.$store.state.imageProviders
-    },
+    ...mapState(['imageProviders', 'isEmbedded']),
     sortedProviders() {
       const sorted = sortBy(this.imageProviders, [this.sort.field])
       return this.sort.direction === 'asc' ? sorted : sorted.reverse()

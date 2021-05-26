@@ -28,7 +28,8 @@ $navbar-dropdown-item-active-background-color: $background
 $navbar-divider-background-color: $background
 $navbar-divider-height: 2px
 
-$navbar-breakpoint: $desktop
+$navbar-breakpoint: $tablet
+$wp-max-width: 940px
 
 .navbar
   background-color: $navbar-background-color
@@ -36,6 +37,13 @@ $navbar-breakpoint: $desktop
   position: relative
   z-index: $navbar-z
   padding: $space-bigger
+  &.embedded
+    padding: 0.5rem 0
+    min-height: unset
+    +tablet()
+      max-width: $wp-max-width
+      margin-right: auto
+      margin-left: auto
 
 .navbar-brand
   align-items: stretch
@@ -67,6 +75,16 @@ $navbar-breakpoint: $desktop
   .icon
     margin-left: $space-small
 
+.navbar.embedded
+  .navbar-end
+    width: 100%
+    margin-left: 0
+    justify-content: space-between
+    > div.navbar-item:first-child > a.navbar-link
+      padding-left: 0
+    > div.navbar-item:last-child > a.navbar-link
+      padding-right: 0
+
 a.navbar-item,
 .navbar-link
   cursor: pointer
@@ -84,6 +102,16 @@ a.navbar-item,
     background-color: $navbar-item-hover-background-color
     color: $navbar-item-hover-color
     text-decoration: none
+
+.navbar.embedded
+  a.navbar-item,
+  .navbar-link
+    font-family: $family-body
+    font-weight: normal
+    color: $navbar-item-hover-color
+    text-transform: none
+    font-size: $font-size-body-normal
+    letter-spacing: normal
 
 .navbar-item
   flex-grow: 0
@@ -184,7 +212,7 @@ a.navbar-item,
   .navbar-end
     justify-content: flex-end
     +ltr-property("margin", auto, false)
-    & > .navbar-item
+    & > .navbar-item:not(:first-child)
       margin-left: $space-large
   .navbar-dropdown
     background-color: $navbar-dropdown-background-color

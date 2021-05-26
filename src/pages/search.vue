@@ -37,9 +37,14 @@ import {
 import { queryStringToQueryData } from '~/utils/searchQueryTransform'
 import local from '~/utils/local'
 import { screenWidth } from '~/utils/getBrowserInfo'
+import iframeHeight from '~/mixins/iframeHeight'
 
 const BrowsePage = {
   name: 'browse-page',
+  mixins: [iframeHeight],
+  layout({ store }) {
+    return store.state.isEmbedded ? 'embedded' : 'default'
+  },
   scrollToTop: false,
   async fetch() {
     if (process.server) {

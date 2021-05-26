@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <div class="container is-fluid">
+    <div :class="['container', isEmbedded ? '' : 'is-fluid']">
       <div class="margin-bottom-large">
         <h1 class="title is-2">
           {{ $t('search-guide.title') }}
@@ -271,13 +271,19 @@
 <script>
 /* eslint-disable vue/html-quotes */
 
+import { mapState } from 'vuex'
+import iframeHeight from '~/mixins/iframeHeight'
+
 const SearchHelpPage = {
   name: 'search-help-page',
-  layout: 'with-nav-search',
+  mixins: [iframeHeight],
+  layout({ store }) {
+    return store.state.isEmbedded
+      ? 'embedded-with-nav-search'
+      : 'with-nav-search'
+  },
   computed: {
-    imageProviders() {
-      return this.$store.state.imageProviders
-    },
+    ...mapState(['imageProviders', 'isEmbedded']),
   },
   methods: {
     providerSearchLink(providerCode) {

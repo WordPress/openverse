@@ -501,9 +501,9 @@ $column-gap: 0.75rem !default
     &.is-desktop
       display: flex
 
-$section-padding: 3rem 1.5rem !default
-$section-padding-medium: 9rem 1.5rem !default
-$section-padding-large: 18rem 1.5rem !default
+$section-padding: 3rem 1.5rem
+$section-padding-medium: 9rem 1.5rem
+$section-padding-large: 18rem 1.5rem
 
 .section
   padding: $section-padding
@@ -514,3 +514,9 @@ $section-padding-large: 18rem 1.5rem !default
       padding: $section-padding-medium
     &.is-large
       padding: $section-padding-large
+
+.embedded .section
+  max-width: calc(940px + 2 * 0.5rem)
+  margin-left: auto
+  margin-right: auto
+  padding: 3rem 0.5rem

@@ -3,7 +3,7 @@
   <div class="hero">
     <div class="hero-center has-text-centered">
       <h1 class="title is-2 padding-bottom-normal">
-        {{ $t('hero.title') }}
+        {{ isEmbedded ? $t('hero.brand') : $t('hero.title') }}
       </h1>
       <h2 class="title is-5 b-header">
         {{ $t('hero.subtitle') }}
@@ -61,10 +61,14 @@
 <script>
 import { SET_QUERY } from '~/store-modules/mutation-types'
 import { filtersToQueryData } from '~/utils/searchQueryTransform'
+import { mapState } from 'vuex'
 
 export default {
   name: 'HeroSection',
   data: () => ({ form: { searchTerm: '' } }),
+  computed: {
+    ...mapState(['isEmbedded']),
+  },
   mounted() {
     if (document.querySelector('#searchTerm')) {
       document.querySelector('#searchTerm').focus()
@@ -88,7 +92,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-$hero-height: 85vh;
+$hero-height-desktop: 85vh;
+$hero-height: 55vh;
 
 .hero {
   background: #fff;
@@ -99,6 +104,9 @@ $hero-height: 85vh;
   justify-content: center;
   flex-direction: column;
   min-height: $hero-height;
+  @include tablet() {
+    min-height: $hero-height-desktop;
+  }
 }
 .hero-center {
   margin-top: auto;

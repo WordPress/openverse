@@ -46,6 +46,7 @@
     "focus-trap-vue": "0.0.6",
     "js-cookie": "^2.2.1",
     "lodash.clonedeep": "^4.5.0",
+    "lodash.debounce": "^4.0.8",
     "lodash.findindex": "^4.6.0",
     "lodash.isempty": "^4.4.0",
     "lodash.sortby": "^4.7.0",
