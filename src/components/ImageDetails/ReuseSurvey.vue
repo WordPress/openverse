@@ -20,6 +20,10 @@ import {
   DETAIL_PAGE_EVENTS,
 } from '~/store-modules/usage-data-analytics-types'
 
+const reuseForm =
+  'https://docs.google.com/forms/d/e/1FAIpQLSegPUDIUj_odzclJhhWRfPumSfbHtXDVDCHqRfFl7ZS8cMn2g/viewform'
+const imageLinkEntry = '2039681354'
+
 export default {
   name: 'ReuseSurvey',
   props: ['image'],
@@ -29,7 +33,7 @@ export default {
   computed: {
     formLink() {
       const location = this.location
-      return `https://docs.google.com/forms/d/e/1FAIpQLSeSApxNMup8Ujt-8Vjv53ngltzhJeaHspMykHCD8VKQ39yXAA/viewform?usp=pp_url&entry.1690035721=${location}`
+      return `${reuseForm}?entry.${imageLinkEntry}=${location}`
     },
   },
   mounted() {
