@@ -123,4 +123,4 @@ This codebase is deployed as Docker image to Docker hub. The deployed image is t
 
 The current Docker hub image is at [openverse/ingestion_server](https://hub.docker.com/r/openverse/ingestion_server) but the image previously lived at [creativecommons/ingestion_server](https://hub.docker.com/r/creativecommons/ingestion_server).
 
-The version numbering for the Docker image appears to be a standalone semver value, seperate from the repository version.
+The version numbering for the Docker image appears to be a standalone semver value, separate from the repository version.
