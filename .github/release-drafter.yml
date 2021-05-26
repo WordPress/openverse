@@ -4,13 +4,13 @@ name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
 categories:
   - title: 'New Features'
-    label: 'feature'
+    label: '🌟 goal: addition'
   - title: 'Improvements'
-    label: 'enhancement'
+    label: '✨ goal: improvement'
   - title: 'Internal Improvements'
-    label: 'internal improvement'
+    label: '🤖 aspect: dx'
   - title: 'Bug Fixes'
-    label: 'bug'
+    label: '🛠 goal: fix'
 change-template: '- $TITLE: #$NUMBER by @$AUTHOR'
 version-resolver:
   major:
@@ -32,4 +32,4 @@ template: |
 
   ## See an issue?
 
-  Does anything look wrong in this release? Please [report a bug](https://github.com/$GITHUB_REPOSITORY/issues/new?labels=bug%2C+awaiting+triage&template=bug_report.md).
+  Does anything look wrong in this release? Please [report a bug](https://github.com/wordpress/openverse-frontend/issues/new?labels=bug%2C+awaiting+triage&template=bug_report.md).
