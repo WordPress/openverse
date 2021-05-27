@@ -1,10 +1,11 @@
-from uuslug import uuslug
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models
 from django.utils.html import format_html
-from django.contrib.postgres.fields import JSONField, ArrayField
-from catalog.api.licenses import ATTRIBUTION, get_license_url
 from oauth2_provider.models import AbstractApplication
+from uuslug import uuslug
+
 import catalog.api.controllers.search_controller as search_controller
+from catalog.api.licenses import ATTRIBUTION, get_license_url
 
 
 class OpenLedgerModel(models.Model):
