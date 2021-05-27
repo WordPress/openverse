@@ -256,6 +256,22 @@
       }
     }
   },
+  "feedback": {
+    "title": "Feedback",
+    "description": {
+      "content": "Thank you for using Openverse! We welcome your ideas for improving the tool below. To provide regular feedback, join the {openverse} channel in the {making-wordpress} Slack workspace.",
+      "openverse": "#openverse",
+      "making-wordpress": "Making WordPress"
+    },
+    "improve": "Help us Improve",
+    "bug": "Report a Bug",
+    "loading": "Loading...",
+    "aria": {
+      "cc-usability": "slack cc-usability channel",
+      "improve": "help us improve form",
+      "report-bug": "report a bug form"
+    }
+  },
   "collections": {
     "title": "Browse collections",
     "museum": "Museum Collections",
