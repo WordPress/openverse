@@ -27,64 +27,33 @@
         <section class="tabs margin-top-big">
           <div role="tablist" :aria-label="$t('feedback.title')">
             <button
-              id="improve"
+              v-for="(name, index) in tabs"
+              :id="name"
+              :key="index"
+              :class="tabClass(index, 'tab')"
               role="tab"
-              :aria-selected="activeTab == 0"
-              aria-controls="tab-improve"
-              :class="tabClass(0, 'tab')"
-              @click.prevent="setActiveTab(0)"
-              @keyup.enter.prevent="setActiveTab(0)"
+              :aria-selected="activeTab === index"
+              :aria-controls="`tab-${name}`"
+              @click.prevent="setActiveTab(index)"
+              @keyup.enter.prevent="setActiveTab(index)"
             >
-              {{ $t('feedback.improve') }}
-            </button>
-            <button
-              id="report"
-              role="tab"
-              :aria-selected="activeTab == 1"
-              aria-controls="tab-report"
-              :class="tabClass(1, 'tab')"
-              @click.prevent="setActiveTab(1)"
-              @keyup.enter.prevent="setActiveTab(1)"
-            >
-              {{ $t('feedback.bug') }}
+              {{ $t(`feedback.${name}`) }}
             </button>
           </div>
           <div
-            id="tab-improve"
-            aria-labelledby="improve"
+            v-for="(name, index) in tabs"
+            :id="`tab-${name}`"
+            :key="index"
+            :class="tabClass(index, 'tabs-panel')"
+            :aria-labelledby="name"
             role="tabpanel"
-            :class="tabClass(0, 'tabs-panel')"
             tabindex="0"
           >
             <iframe
-              :aria-label="$t('feedback.aria.improve')"
-              :src="suggestionForm"
-              width="100%"
-              height="1200"
-              frameborder="0"
-              marginheight="0"
-              marginwidth="0"
-              title="feedback form"
-            >
-              {{ $t('feedback.loading') }}
-            </iframe>
-          </div>
-          <div
-            id="tab-report"
-            aria-labelledby="report"
-            role="tabpanel"
-            :class="tabClass(1, 'tabs-panel')"
-            tabindex="0"
-          >
-            <iframe
-              :aria-label="$t('feedback.aria.report-bug')"
-              :src="bugForm"
-              width="100%"
-              height="1600"
-              frameborder="0"
-              marginheight="0"
-              marginwidth="0"
-              title="feedback form"
+              class="form-iframe"
+              :aria-label="$t(`feedback.aria.${name}`)"
+              :src="forms[name]"
+              :title="`${name} form`"
             >
               {{ $t('feedback.loading') }}
             </iframe>
@@ -107,8 +76,11 @@ export const FeedbackPage = {
   data() {
     return {
       activeTab: 0,
-      bugForm: `${bugForm}?embedded=true`,
-      suggestionForm: `${suggestionForm}?embedded=true`,
+      tabs: ['improve', 'report'],
+      forms: {
+        report: `${bugForm}?embedded=true`,
+        improve: `${suggestionForm}?embedded=true`,
+      },
     }
   },
   methods: {
@@ -137,3 +109,12 @@ export const FeedbackPage = {
 
 export default FeedbackPage
 </script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="scss" scoped>
+.form-iframe {
+  width: 100%;
+  height: 1200px;
+  border: none;
+}
+</style>
