@@ -21,30 +21,18 @@ class OpenLedgerModel(models.Model):
         abstract = True
 
 
-class Image(OpenLedgerModel):
+class AbstractMedia(OpenLedgerModel):
+    """
+    Abstract class to store information common across all media types indexed by
+    Openverse. All concrete media classes should inherit from this class.
+    """
+
+    # ID
     identifier = models.UUIDField(
         unique=True,
         db_index=True,
         help_text="Our unique identifier for a CC work."
     )
-
-    provider = models.CharField(
-        max_length=80,
-        blank=True,
-        null=True,
-        db_index=True,
-        help_text="The content provider, e.g. Flickr, 500px...")
-
-    source = models.CharField(
-        max_length=80,
-        blank=True,
-        null=True,
-        db_index=True,
-        help_text="The source of the data, meaning a particular dataset. Source"
-                  " and provider can be different: the Google Open Images "
-                  "dataset is source=openimages., but provider=Flickr."
-    )
-
     foreign_identifier = models.CharField(
         unique=True,
         max_length=1000,
@@ -54,60 +42,64 @@ class Image(OpenLedgerModel):
         help_text="The identifier provided by the upstream source."
     )
 
+    # Media
+    title = models.CharField(max_length=2000, blank=True, null=True)
     foreign_landing_url = models.CharField(
         max_length=1000,
         blank=True,
         null=True,
         help_text="The landing page of the work."
     )
-
     url = models.URLField(
         unique=True,
         max_length=1000,
         help_text="The actual URL to the image."
     )
-
-    thumbnail = models.URLField(
-        max_length=1000,
-        blank=True,
-        null=True,
-        help_text="The thumbnail for the image, if any."
-    )
-
-    width = models.IntegerField(blank=True, null=True)
-    height = models.IntegerField(blank=True, null=True)
-
     filesize = models.IntegerField(blank=True, null=True)
+    watermarked = models.NullBooleanField(blank=True, null=True)
 
-    license = models.CharField(max_length=50)
-
-    license_version = models.CharField(max_length=25, blank=True, null=True)
-
+    # Creator
     creator = models.CharField(max_length=2000, blank=True, null=True)
-
     creator_url = models.URLField(max_length=2000, blank=True, null=True)
 
-    title = models.CharField(max_length=2000, blank=True, null=True)
+    # Licensing
+    license = models.CharField(max_length=50)
+    license_version = models.CharField(max_length=25, blank=True, null=True)
 
-    tags = JSONField(blank=True, null=True)
-
-    tags_list = ArrayField(
-        models.CharField(max_length=255), blank=True, null=True
+    # Sync
+    provider = models.CharField(
+        max_length=80,
+        blank=True,
+        null=True,
+        db_index=True,
+        help_text="The content provider, e.g. Flickr, 500px...")
+    source = models.CharField(
+        max_length=80,
+        blank=True,
+        null=True,
+        db_index=True,
+        help_text="The source of the data, meaning a particular dataset. Source"
+                  " and provider can be different: the Google Open Images "
+                  "dataset is source=openimages., but provider=Flickr."
     )
-
     last_synced_with_source = models.DateTimeField(
         blank=True,
         null=True,
         db_index=True
     )
-
     removed_from_source = models.BooleanField(default=False)
 
-    meta_data = JSONField(blank=True, null=True)
-
+    # Popularity
     view_count = models.IntegerField(default=0)
 
-    watermarked = models.NullBooleanField(blank=True, null=True)
+    # Tagging
+    tags = JSONField(blank=True, null=True)
+    tags_list = ArrayField(
+        models.CharField(max_length=255), blank=True, null=True
+    )
+
+    # Miscellaneous
+    meta_data = JSONField(blank=True, null=True)
 
     @property
     def license_url(self):
@@ -137,16 +129,42 @@ class Image(OpenLedgerModel):
         return attribution
 
     class Meta:
-        db_table = 'image'
+        """
+        Meta class for all media types indexed by Openverse. All concrete media
+        classes should inherit their Meta class from this.
+        """
         ordering = ['-created_on']
+        abstract = True
 
 
-class DeletedImage(OpenLedgerModel):
+class Image(AbstractMedia):
+    thumbnail = models.URLField(
+        max_length=1000,
+        blank=True,
+        null=True,
+        help_text="The thumbnail for the image, if any."
+    )
+
+    width = models.IntegerField(blank=True, null=True)
+    height = models.IntegerField(blank=True, null=True)
+
+    class Meta(AbstractMedia.Meta):
+        db_table = 'image'
+
+
+class AbstractDeletedMedia(OpenLedgerModel):
     identifier = models.UUIDField(
         unique=True,
         primary_key=True,
         help_text="The identifier of the deleted image."
     )
+
+    class Meta:
+        abstract = True
+
+
+class DeletedImage(AbstractDeletedMedia):
+    pass
 
 
 class ContentProvider(models.Model):
@@ -270,13 +288,19 @@ class OAuth2Verification(models.Model):
     code = models.CharField(max_length=256, db_index=True)
 
 
-class MatureImage(models.Model):
-    """ Stores all images that have been flagged as 'mature'. """
+class AbstractMatureMedia(models.Model):
+    created_on = models.DateTimeField(auto_now_add=True)
     identifier = models.UUIDField(
         unique=True,
         primary_key=True
     )
-    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+
+class MatureImage(AbstractMatureMedia):
+    """ Stores all images that have been flagged as 'mature'. """
 
     def delete(self, *args, **kwargs):
         es = search_controller.es
@@ -300,7 +324,7 @@ DMCA = 'dmca'
 OTHER = 'other'
 
 
-class ImageReport(models.Model):
+class AbstractMediaReport(models.Model):
     REPORT_CHOICES = [
         (MATURE, MATURE),
         (DMCA, DMCA),
@@ -313,6 +337,9 @@ class ImageReport(models.Model):
         (DEINDEXED, DEINDEXED),
         (NO_ACTION, NO_ACTION)
     ]
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
     identifier = models.UUIDField(
         help_text="The ID for image to be reported."
     )
@@ -328,10 +355,16 @@ class ImageReport(models.Model):
         help_text="The explanation on why image is being reported."
     )
     status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default=PENDING
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=PENDING
     )
-    created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        abstract = True
+
+
+class ImageReport(AbstractMediaReport):
     class Meta:
         db_table = 'nsfw_reports'
 
