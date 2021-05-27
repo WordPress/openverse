@@ -269,7 +269,7 @@
     "aria": {
       "cc-usability": "slack cc-usability channel",
       "improve": "help us improve form",
-      "report-bug": "report a bug form"
+      "report": "report a bug form"
     }
   },
   "collections": {
