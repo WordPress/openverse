@@ -16,7 +16,7 @@ Pull requests are welcome! Feel free to
 [join us on Slack](https://make.wordpress.org/chat/) and discuss the project
 with the engineers and community members on #openverse.
 
-You can also keep in touch with progress and the latest updates to the project with our [WordPress contributor group](https://make.wordpress.org/openverse/).
+You can also keep in touch with [progress](https://github.com/orgs/WordPress/projects/3) and the latest updates to the project with our [WordPress contributor group](https://make.wordpress.org/openverse/).
 
 ## What *is* in this repo, then?
 
