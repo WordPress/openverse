@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <div class="container is-fluid">
+    <div :class="['container', isEmbedded ? '' : 'is-fluid']">
       <div class="padding-bottom-big">
         <h1 id="feedback" class="title is-2">
           {{ $t('feedback.title') }}
@@ -65,6 +65,9 @@
 </template>
 
 <script>
+import iframeHeight from '~/mixins/iframeHeight'
+import { mapState } from 'vuex'
+
 const bugForm =
   'https://docs.google.com/forms/d/e/1FAIpQLSenCn-3HoZlCz4vlL2621wjezfu1sPZDaWGe_FtQ1R5-5qR4Q/viewform'
 const suggestionForm =
@@ -72,7 +75,12 @@ const suggestionForm =
 
 export const FeedbackPage = {
   name: 'feedback-page',
-  layout: 'with-nav-search',
+  mixins: [iframeHeight],
+  layout({ store }) {
+    return store.state.isEmbedded
+      ? 'embedded-with-nav-search'
+      : 'with-nav-search'
+  },
   data() {
     return {
       activeTab: 0,
@@ -95,6 +103,7 @@ export const FeedbackPage = {
     },
   },
   computed: {
+    ...mapState(['isEmbedded']),
     isReportingBug() {
       return this.$store.state.isReportingBug
     },

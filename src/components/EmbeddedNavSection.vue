@@ -75,6 +75,9 @@
             <NuxtLink class="navbar-item" :to="localePath('/meta-search')">
               {{ $t('header.meta-search') }}
             </NuxtLink>
+            <NuxtLink class="navbar-item" :to="localePath('/feedback')">
+              {{ $t('header.feedback') }}
+            </NuxtLink>
             <a
               href="https://api.creativecommons.engineering/"
               target="_blank"
