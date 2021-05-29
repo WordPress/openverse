@@ -16,7 +16,12 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.notifyOuterWindow)
-    this.observer.disconnect()
+    // The observer could be null if the user switches from
+    // embedded to standalone version, so we check if it exists
+    // before disconnecting it
+    if (this.observer) {
+      this.observer.disconnect()
+    }
   },
   methods: {
     createResizeObserver() {
