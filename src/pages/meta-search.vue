@@ -105,10 +105,10 @@
       </p>
       <i18n path="meta-search-page.why.feedback" tag="p">
         <template #feedback>
-          <a
-            aria-label="sources"
-            href="https://search.creativecommons.org/feedback"
-            >{{ $t('meta-search-page.why.feedback-link') }}</a
+          <NuxtLink
+            :aria-label="$t('meta-search-page.why.aria-label')"
+            :to="localePath('/feedback')"
+            >{{ $t('meta-search-page.why.feedback-link') }}</NuxtLink
           >
         </template>
       </i18n>

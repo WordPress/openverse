@@ -182,6 +182,7 @@
       "title": "Why did you build this?",
       "content": "For many years, CC has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. These platforms included Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter, and SoundCloud. The search experience looked like this:",
       "new": "For users of the legacy CC Meta Search site, the Meta Search feature on Openverse will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the Meta Search feature builds on this functionality, allowing us to quickly add new sources to Meta Search as we discover them, and support new content types in the future, as we expand.",
+      "aria-label": "feedback",
       "feedback": "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}.",
       "feedback-link": "feedback"
     }
