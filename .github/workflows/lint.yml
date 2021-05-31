@@ -1,0 +1,27 @@
+name: flake8_lint
+
+on:
+  push:
+    paths:
+      - '**.py'
+  pull_request:
+    paths:
+      - '**.py'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9
+    - name: Setup flake8 annotations  # To annotate the errors in the pull request
+      uses: rbialon/flake8-annotations@v1
+    - name: Lint with flake8
+      # Lint only for changed files, rather than the entire repository
+      run: |
+        pip install flake8>=3.7.0
+        git diff HEAD^ | flake8 --diff
