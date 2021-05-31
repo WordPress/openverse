@@ -23,7 +23,7 @@ class AbstractMedia(OpenLedgerModel):
     identifier = models.UUIDField(
         unique=True,
         db_index=True,
-        help_text="Our unique identifier for a CC work."
+        help_text="Our unique identifier for an open-licensed work."
     )
     foreign_identifier = models.CharField(
         unique=True,
@@ -44,7 +44,7 @@ class AbstractMedia(OpenLedgerModel):
     url = models.URLField(
         unique=True,
         max_length=1000,
-        help_text="The actual URL to the image."
+        help_text="The actual URL to the media file."
     )
     filesize = models.IntegerField(blank=True, null=True)
     watermarked = models.NullBooleanField(blank=True, null=True)
@@ -60,15 +60,15 @@ class AbstractMedia(OpenLedgerModel):
         blank=True,
         null=True,
         db_index=True,
-        help_text="The content provider, e.g. Flickr, 500px...")
+        help_text="The content provider, e.g. Flickr, Jamendo...")
     source = models.CharField(
         max_length=80,
         blank=True,
         null=True,
         db_index=True,
-        help_text="The source of the data, meaning a particular dataset. Source"
-                  " and provider can be different: the Google Open Images "
-                  "dataset is source=openimages., but provider=Flickr."
+        help_text="The source of the data, meaning a particular dataset. "
+                  "Source and provider can be different. Eg: the Google Open "
+                  "Images dataset is source=openimages, but provider=flickr."
     )
     last_synced_with_source = models.DateTimeField(
         blank=True,
@@ -147,18 +147,18 @@ class AbstractMediaReport(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     identifier = models.UUIDField(
-        help_text="The ID for image to be reported."
+        help_text="The ID for media to be reported."
     )
     reason = models.CharField(
         max_length=20,
         choices=REPORT_CHOICES,
-        help_text="The reason to report image to Creative Commons."
+        help_text="The reason to report media to Openverse."
     )
     description = models.TextField(
         max_length=500,
         blank=True,
         null=True,
-        help_text="The explanation on why image is being reported."
+        help_text="The explanation on why media is being reported."
     )
     status = models.CharField(
         max_length=20,
@@ -179,7 +179,7 @@ class AbstractDeletedMedia(OpenLedgerModel):
     identifier = models.UUIDField(
         unique=True,
         primary_key=True,
-        help_text="The identifier of the deleted image."
+        help_text="The identifier of the deleted media."
     )
 
     class Meta:
