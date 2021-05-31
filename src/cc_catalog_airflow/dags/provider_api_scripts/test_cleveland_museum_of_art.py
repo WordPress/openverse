@@ -3,11 +3,10 @@ import json
 import requests
 import os
 from unittest.mock import patch, MagicMock
-from common.storage.image import MockImageStore
 from collections import namedtuple
 
 import cleveland_museum_of_art as clm
-
+from common import MockImageStore
 
 LicenseInfo = namedtuple(
     'LicenseInfo',

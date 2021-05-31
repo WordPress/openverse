@@ -14,11 +14,9 @@ import argparse
 from datetime import datetime, timedelta, timezone
 import logging
 import os
-
 import lxml.html as html
 
-from common.requester import DelayedRequester
-from common.storage import image
+from common import DelayedRequester, ImageStore
 from util.loader import provider_details as prov
 
 logging.basicConfig(
@@ -71,7 +69,7 @@ DEFAULT_QUERY_PARAMS = {
 }
 
 delayed_requester = DelayedRequester(DELAY)
-image_store = image.ImageStore(provider=PROVIDER)
+image_store = ImageStore(provider=PROVIDER)
 
 
 def main(date):
