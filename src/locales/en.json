@@ -182,6 +182,7 @@
       "title": "Why did you build this?",
       "content": "For many years, CC has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. These platforms included Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter, and SoundCloud. The search experience looked like this:",
       "new": "For users of the legacy CC Meta Search site, the Meta Search feature on Openverse will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the Meta Search feature builds on this functionality, allowing us to quickly add new sources to Meta Search as we discover them, and support new content types in the future, as we expand.",
+      "aria-label": "feedback",
       "feedback": "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}.",
       "feedback-link": "feedback"
     }
@@ -254,6 +255,22 @@
         "example": "theatre~1",
         "content": "Example: {link}{br} This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'."
       }
+    }
+  },
+  "feedback": {
+    "title": "Feedback",
+    "description": {
+      "content": "Thank you for using Openverse! We welcome your ideas for improving the tool below. To provide regular feedback, join the {openverse} channel in the {making-wordpress} Slack workspace.",
+      "openverse": "#openverse",
+      "making-wordpress": "Making WordPress"
+    },
+    "improve": "Help us Improve",
+    "report": "Report a Bug",
+    "loading": "Loading...",
+    "aria": {
+      "cc-usability": "slack cc-usability channel",
+      "improve": "help us improve form",
+      "report": "report a bug form"
     }
   },
   "collections": {
