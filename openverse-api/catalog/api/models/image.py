@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.html import format_html
 from uuslug import uuslug
 
 import catalog.api.controllers.search_controller as search_controller
@@ -9,10 +8,6 @@ from catalog.api.models.media import (
     AbstractDeletedMedia,
     AbstractMatureMedia,
     AbstractMediaList,
-
-    PENDING,
-    MATURE_FILTERED,
-    DEINDEXED,
 )
 
 
@@ -37,45 +32,15 @@ class ImageReport(AbstractMediaReport):
 
     @property
     def image_url(self):
-        url = f'https://search.creativecommons.org/photos/{self.identifier}'
-        return format_html(f'<a href={url}>{url}</a>')
+        return super(ImageReport, self).url('photos')
 
     def save(self, *args, **kwargs):
-        update_required = {MATURE_FILTERED, DEINDEXED}
-        if self.status in update_required:
-            es = search_controller.es
-            try:
-                img = Image.objects.get(identifier=self.identifier)
-            except Image.DoesNotExist:
-                super(ImageReport, self).save(*args, **kwargs)
-                return
-            es_id = img.id
-            if self.status == MATURE_FILTERED:
-                MatureImage(identifier=self.identifier).save()
-                es.update(
-                    index='image',
-                    id=es_id,
-                    body={'doc': {'mature': True}}
-                )
-            elif self.status == DEINDEXED:
-                # Delete from the API database (we'll still have a copy of the
-                # metadata upstream in the catalog)
-                img.delete()
-                # Add to the deleted images table so we don't reindex it later
-                DeletedImage(identifier=self.identifier).save()
-                # Remove from search results
-                es.delete(index='image', id=es_id)
-            es.indices.refresh(index='image')
-        # All other reports on the same image with the same reason need to be
-        # given the same status. Deindexing an image results in all reports on
-        # the image being marked 'deindexed' regardless of the reason.
-        same_img_reports = ImageReport.objects.filter(
-            identifier=self.identifier,
-            status=PENDING
-        )
-        if self.status != DEINDEXED:
-            same_img_reports = same_img_reports.filter(reason=self.reason)
-        same_img_reports.update(status=self.status)
+        kwargs.update({
+            'index_name': 'image',
+            'media_class': Image,
+            'mature_class': MatureImage,
+            'deleted_class': DeletedImage,
+        })
         super(ImageReport, self).save(*args, **kwargs)
 
 
