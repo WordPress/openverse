@@ -6,6 +6,13 @@ from catalog.api.models.image import (
     MatureImage,
     ImageList,
 )
+from catalog.api.models.audio import (
+    Audio,
+    AudioReport,
+    DeletedAudio,
+    MatureAudio,
+    AudioList,
+)
 from catalog.api.models.media import (
     PENDING,
     MATURE_FILTERED,
