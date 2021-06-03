@@ -1,5 +1,3 @@
-from common.storage.image import ImageStore
-from common.requester import DelayedRequester
 import requests
 import logging
 from urllib.parse import urlparse, parse_qs
