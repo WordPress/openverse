@@ -3,6 +3,8 @@ from common.requester import DelayedRequester
 import requests
 import logging
 from urllib.parse import urlparse, parse_qs
+
+from common import DelayedRequester, ImageStore
 from util.loader import provider_details as prov
 
 DELAY = 1.0  # time delay (in seconds)

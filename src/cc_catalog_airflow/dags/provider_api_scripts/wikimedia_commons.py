@@ -16,11 +16,9 @@ from datetime import datetime, timedelta, timezone
 import logging
 import os
 from urllib.parse import urlparse
-
 import lxml.html as html
 
-import common.requester as requester
-import common.storage.image as image
+from common import DelayedRequester, ImageStore
 from util.loader import provider_details as prov
 
 logger = logging.getLogger(__name__)
@@ -57,8 +55,8 @@ DEFAULT_QUERY_PARAMS = {
 PAGES_PATH = ['query', 'pages']
 IMAGE_MEDIATYPES = {'BITMAP'}
 
-delayed_requester = requester.DelayedRequester(DELAY)
-image_store = image.ImageStore(provider=PROVIDER)
+delayed_requester = DelayedRequester(DELAY)
+image_store = ImageStore(provider=PROVIDER)
 
 
 def main(date):

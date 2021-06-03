@@ -6,7 +6,7 @@ import time
 
 import requests
 
-PATH = os.environ['OUTPUT_DIR']
+PATH = os.environ.get('OUTPUT_DIR', '/tmp')
 
 
 def _sanitize_json_values(unknown_input, recursion_limit=100):
