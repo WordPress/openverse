@@ -1,3 +1,5 @@
+@use "sass:math"
+
 $button-color: $color-dark-gray
 
 $button-border-width: 0.125rem
@@ -39,6 +41,7 @@ $button-colors: $colors
   user-select: none
   --button-padding-horizontal: 2.5rem
   --button-padding-vertical: 1.813rem
+  --button-padding-horizontal-fourth: 0.813rem
   --button-border-width: #{$button-border-width}
   --button-font-size: #{$font-size-body-bigger}
   --button-focused-box-shadow-color: #{toRgba($color-light-gray, 0.3)}
@@ -67,9 +70,9 @@ $button-colors: $colors
       width: 1.5em
     &:first-child:not(:last-child)
       +ltr-property("margin", calc(-1 / 2 * var(--button-padding-horizontal) - #{$button-border-width}), false)
-      +ltr-property("margin", var(--button-padding-horizontal) / 4)
+      +ltr-property("margin", var(--button-padding-horizontal-fourth, 0.2rem))
     &:last-child:not(:first-child)
-      +ltr-property("margin", var(--button-padding-horizontal) / 4, false)
+      +ltr-property("margin", var(--button-padding-horizontal-fourth, 0.2rem), false)
       +ltr-property("margin", calc(-1 / 2 * var(--button-padding-horizontal) - #{$button-border-width}))
     &:first-child:last-child
       margin-left: calc(-1 / 2 * var(--button-padding-horizontal) - var(--button-border-width))

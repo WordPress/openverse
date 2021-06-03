@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @function powerNumber($number, $exp) {
   $value: 1;
   @if $exp > 0 {
@@ -6,7 +8,7 @@
     }
   } @else if $exp < 0 {
     @for $i from 1 through -$exp {
-      $value: $value / $number;
+      $value: math.div($value, $number);
     }
   }
   @return $value;
@@ -23,11 +25,11 @@
   );
   @each $name, $value in $color-rgb {
     $adjusted: 0;
-    $value: $value / 255;
+    $value: math.div($value, 255);
     @if $value < 0.03928 {
-      $value: $value / 12.92;
+      $value: math.div($value, 12.92);
     } @else {
-      $value: ($value + 0.055) / 1.055;
+      $value: math.div($value + 0.055, 1.055);
       $value: powerNumber($value, 2);
     }
     $color-rgb: map-merge(
