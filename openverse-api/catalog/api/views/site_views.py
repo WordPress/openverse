@@ -171,7 +171,7 @@ class Register(APIView):
     register_api_oauth2_bash = \
         """
         # Register for a key
-        curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "openverse-api@creativecommons.org"}' https://api.creativecommons.engineering/v1/auth_tokens/register
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "zack.krida@automattic.com"}' https://api.creativecommons.engineering/v1/auth_tokens/register
         """  # noqa
 
     register_api_oauth2_request = openapi.Schema(
@@ -210,7 +210,7 @@ class Register(APIView):
         example={
             "name": "My amazing project",
             "description": "To access CC Catalog API",
-            "email": "openverse-api@creativecommons.org"
+            "email": "zack.krida@automattic.com"
         }
     )
 

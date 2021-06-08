@@ -145,7 +145,7 @@ register_api_oauth2_request = openapi.Schema(
   example={
     "name": "My amazing project",
     "description": "To access CC Catalog API",
-    "email": "cccatalog-api@creativecommons.org"
+    "email": "czack.krida@automattic.com"
   }
 )
 

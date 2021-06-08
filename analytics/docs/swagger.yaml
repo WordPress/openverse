@@ -5,7 +5,7 @@ info:
   title: "CC Search Usage Data API"
   termsOfService: "https://api.creativecommons.engineering/terms_of_service.html"
   contact:
-    email: "alden@creativecommons.org"
+    email: "zack.krida@automattic.com"
   license:
     name: "MIT License"
     url: "https://github.com/wordpress/openverse-api/blob/master/LICENSE"
