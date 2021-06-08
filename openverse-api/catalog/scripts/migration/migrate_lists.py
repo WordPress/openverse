@@ -17,7 +17,7 @@ def import_lists_to_catalog(parsed_lists):
             'images': _list['images']
         }
         response = requests.post(
-            'http://api.creativecommons.engineering/list',
+            'http://api.openverse.engineering/list',
             data=payload
         )
         if 300 > response.status_code >= 200:

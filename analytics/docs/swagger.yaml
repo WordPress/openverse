@@ -3,13 +3,13 @@ info:
   description: "An API for registering anonymous usage data events in CC Search, which we intend to use to improve the quality of the search results."
   version: "1.0.0"
   title: "CC Search Usage Data API"
-  termsOfService: "https://api.creativecommons.engineering/terms_of_service.html"
+  termsOfService: "https://api.openverse.engineering/terms_of_service.html"
   contact:
     email: "alden@creativecommons.org"
   license:
     name: "MIT License"
     url: "https://github.com/wordpress/openverse-api/blob/master/LICENSE"
-host: "api.creativecommons.engineering"
+host: "api.openverse.engineering"
 basePath: "/analytics"
 tags:
 - name: "Register events"
@@ -185,4 +185,4 @@ definitions:
 
 externalDocs:
   description: "The Creative Commons search API"
-  url: "https://api.creativecommons.engineering"
+  url: "https://api.openverse.engineering"

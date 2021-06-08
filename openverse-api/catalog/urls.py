@@ -60,7 +60,7 @@ This can be done using the `/v1/auth_tokens/register` endpoint.
 Example on how to register for a key
 
 ```
-$ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "openverse-api@creativecommons.org"}' https://api.creativecommons.engineering/v1/auth_tokens/register
+$ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "openverse-api@creativecommons.org"}' https://api.openverse.engineering/v1/auth_tokens/register
 ```
 
 <br>
@@ -86,7 +86,7 @@ This can be done by exchanging your client credentials for a token using the \
 Example on how to authenticate using OAuth2
 
 ```
-$ curl -X POST -d "client_id=pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda&client_secret=YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e&grant_type=client_credentials" https://api.creativecommons.engineering/v1/auth_tokens/token/
+$ curl -X POST -d "client_id=pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda&client_secret=YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e&grant_type=client_credentials" https://api.openverse.engineering/v1/auth_tokens/token/
 ```
 
 <br>
@@ -114,7 +114,7 @@ your future API requests.
 Example
 
 ```
-$ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
+$ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=test
 ```
 <br>
 <blockquote>
@@ -166,7 +166,7 @@ We love pull requests! If you’re interested in [contributing on Github](https:
 """  # noqa
 
 logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
-tos_url = "https://api.creativecommons.engineering/terms_of_service.html"
+tos_url = "https://api.openverse.engineering/terms_of_service.html"
 license_url =\
     "https://github.com/wordpress/openverse-api/blob/master/LICENSE"
 schema_view = get_schema_view(
@@ -189,7 +189,7 @@ schema_view = get_schema_view(
 report_image_bash = \
     """
     # Report an issue about image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
-    curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "This image contains sensitive content"}' https://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
+    curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "This image contains sensitive content"}' https://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
     """  # noqa
 
 report_image_request = openapi.Schema(

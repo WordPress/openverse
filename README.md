@@ -8,7 +8,7 @@ This repository is primarily concerned with back end infrastructure like datasto
 
 ## API Documentation
 
-In the [API documentation](https://api.creativecommons.engineering), you can find more details about the endpoints with examples on how to use them.
+In the [API documentation](https://api.openverse.engineering), you can find more details about the endpoints with examples on how to use them.
 
 ## How to Run the Server Locally
 
@@ -94,7 +94,7 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 
 ### Description of subprojects
 
-- _openverse-api_ is a Django Rest Framework API server. For a full description of its capabilities, please see the [browsable documentation](https://api.creativecommons.engineering).
+- _openverse-api_ is a Django Rest Framework API server. For a full description of its capabilities, please see the [browsable documentation](https://api.openverse.engineering).
 - _ingestion-server_ is a service for downloading and indexing search data once it has been prepared by the Openverse Catalog
 - _analytics_ is a Falcon REST API for collecting usage data.
 

@@ -49,7 +49,7 @@ root path (e.g. localhost:8090/). You may have to tweak `docs/redoc.html` for
 this to work on your local machine.
 
 Alternatively, you can view the production version of the documentation at
-`https://api.creativecommons.engineering/analytics`.
+`https://api.openverse.engineering/analytics`.
 
 ## Contributing / Code Structure
 

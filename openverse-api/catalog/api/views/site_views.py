@@ -94,7 +94,7 @@ class ImageStats(APIView):
     image_stats_bash = \
         """
         # Get a list of content providers and their image count
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/sources
         """  # noqa
 
     @swagger_auto_schema(operation_id='image_stats',
@@ -171,7 +171,7 @@ class Register(APIView):
     register_api_oauth2_bash = \
         """
         # Register for a key
-        curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "openverse-api@creativecommons.org"}' https://api.creativecommons.engineering/v1/auth_tokens/register
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "openverse-api@creativecommons.org"}' https://api.openverse.engineering/v1/auth_tokens/register
         """  # noqa
 
     register_api_oauth2_request = openapi.Schema(
@@ -354,7 +354,7 @@ class CheckRates(APIView):
     key_info_bash = \
         """
         # Get information about your API key
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/rate_limit
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/rate_limit
         """  # noqa
 
     @swagger_auto_schema(operation_id='key_info',

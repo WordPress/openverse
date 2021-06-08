@@ -167,7 +167,7 @@ Code examples on how to use the API endpoints. The current API documentation pro
 image_stats_bash = \
   """
   # Get a list of content providers and their image count
-  curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
+  curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/sources
   """  # noqa
 
 @swagger_auto_schema(operation_id='image_stats',
