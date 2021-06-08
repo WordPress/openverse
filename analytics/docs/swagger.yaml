@@ -184,5 +184,5 @@ definitions:
         description: "The unique identifier for the detail page associated with the event."
 
 externalDocs:
-  description: "The Creative Commons search API"
+  description: "The Openverse API"
   url: "https://api.openverse.engineering"
