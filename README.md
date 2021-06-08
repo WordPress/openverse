@@ -26,7 +26,7 @@ You need to install [Docker](https://docs.docker.com/install/) (with [Docker Com
 git clone https://github.com/WordPress/openverse-api.git
 ```
 
-4. Change directories with `cd copenverse-api`
+4. Change directories with `cd openverse-api`
 5. Start Openverse API locally by running the docker containers
 
 ```
@@ -38,7 +38,7 @@ docker-compose up
 7. Open up your browser and type `localhost:8000` in the search tab
 8. Make sure you see the local API documentation
    ![Local API Documentation](local_api_documentation.PNG)
-9. Open a new CMD or terminal and change directory to `copenverse-api`
+9. Open a new CMD or terminal and change directory to `openverse-api`
 10. Still in the new CMD or terminal, load the sample data. This script requires a local postgres installation to connect to and alter our database.
 
 ```
@@ -104,10 +104,10 @@ Every week, the latest version of the data is automatically bulk copied ("ingest
 
 You can check the health of a live deployment of the API by running the live integration tests.
 
-1. Change directory to the `copenverse-api`
+1. Change directory to the `openverse-api`
 
 ```
-cd copenverse-api
+cd openverse-api
 ```
 
 #### On the host
