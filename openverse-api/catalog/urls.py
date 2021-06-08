@@ -60,7 +60,7 @@ This can be done using the `/v1/auth_tokens/register` endpoint.
 Example on how to register for a key
 
 ```
-$ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "openverse-api@creativecommons.org"}' https://api.creativecommons.engineering/v1/auth_tokens/register
+$ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "zack.krida@automattic.com"}' https://api.creativecommons.engineering/v1/auth_tokens/register
 ```
 
 <br>
@@ -174,7 +174,7 @@ schema_view = get_schema_view(
         title="Creative Commons Catalog API",
         default_version=API_VERSION,
         description=description,
-        contact=openapi.Contact(email="openverse-api@creativecommons.org"),
+        contact=openapi.Contact(email="zack.krida@automattic.com"),
         license=openapi.License(name="MIT License", url=license_url),
         terms_of_service=tos_url,
         x_logo={
