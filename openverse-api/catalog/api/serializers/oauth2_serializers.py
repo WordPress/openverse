@@ -12,15 +12,15 @@ class OAuth2RegistrationSerializer(serializers.ModelSerializer):
 class OAuth2RegistrationSuccessful(serializers.ModelSerializer):
     name = serializers.CharField(
         help_text="A unique human-readable name for your application "
-                  "or project requiring access to the CC Catalog API."
+                  "or project requiring access to the Openverse API."
     )
     client_id = serializers.CharField(
-        help_text="A publicly exposed string used by CC Catalog API "
+        help_text="A publicly exposed string used by Openverse API "
                   "to identify the application."
     )
     client_secret = serializers.CharField(
         help_text="A private string that authenticates the identity "
-                  "of the application to the CC Catalog API."
+                  "of the application to the Openverse API."
     )
 
     class Meta:

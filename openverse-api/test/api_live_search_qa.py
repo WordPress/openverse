@@ -2,13 +2,13 @@ import json
 import requests
 
 """
-Tests to run against a live instance of CC Search with a significant (10M+)
+Tests to run against a live instance of Openverse with a significant (10M+)
 number of records. Quality of search rankings can be affected by the number of
 documents in the search index, so toy examples with five or six documents
 do not accurately model relevance at scale.
 """
 
-API_URL = 'https://api-dev.creativecommons.engineering'
+API_URL = 'https://dev.api.openverse.engineering'
 
 
 def _phrase_in_tags(tags, term):

@@ -21,8 +21,8 @@ designed. Run with the `pytest -s` command from this directory.
 API_URL = os.getenv('INTEGRATION_TEST_URL', 'http://localhost:8000')
 known_apis = {
     'http://localhost:8000': 'LOCAL',
-    'https://api.creativecommons.engineering': 'PRODUCTION',
-    'https://api-dev.creativecommons.engineering': 'TESTING'
+    'https://api.openverse.engineering': 'PRODUCTION',
+    'https://dev.api.openverse.engineering': 'TESTING'
 }
 
 

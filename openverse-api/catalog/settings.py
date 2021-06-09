@@ -33,14 +33,14 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = os.environ.get('DJANGO_DEBUG_ENABLED', default=False) in true_strings
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
-                 'api-dev.creativecommons.engineering',
-                 "api.creativecommons.engineering",
+                 'dev.api.openverse.engineering',
+                 "api.openverse.engineering",
                  gethostname(), gethostbyname(gethostname())]
 
 # Domains that shortened links may point to
 SHORT_URL_WHITELIST = {
-    'api-dev.creativecommons.engineering',
-    'api.creativecommons.engineering',
+    'dev.api.openverse.engineering',
+    'api.openverse.engineering',
     'ccccatalog.herokuapp.com',
     'ccsearch.creativecommons.org',
     'localhost:8000'
@@ -167,7 +167,7 @@ THUMBNAIL_PROXY_URL = os.environ.get(
 )
 # Proxy insecure HTTP images through our internal proxy.
 DETAIL_PROXY_URL = os.environ.get(
-    'DETAIL_PROXY_URL', 'https://api.creativecommons.engineering/t'
+    'DETAIL_PROXY_URL', 'https://api.openverse.engineering/t'
 )
 
 THUMBNAIL_WIDTH_PX = 600

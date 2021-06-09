@@ -3,7 +3,7 @@ import requests
 import json
 import logging as log
 """
-Tools for migrating legacy lists from CC Search Beta to the CC Catalog platform.
+Tools for migrating legacy lists from Openverse Beta to the CC Catalog platform.
 """
 
 
@@ -17,7 +17,7 @@ def import_lists_to_catalog(parsed_lists):
             'images': _list['images']
         }
         response = requests.post(
-            'http://api.creativecommons.engineering/list',
+            'http://api.openverse.engineering/list',
             data=payload
         )
         if 300 > response.status_code >= 200:

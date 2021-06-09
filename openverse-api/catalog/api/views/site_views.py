@@ -94,7 +94,7 @@ class ImageStats(APIView):
     image_stats_bash = \
         """
         # Get a list of content providers and their image count
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/sources
         """  # noqa
 
     @swagger_auto_schema(operation_id='image_stats',
@@ -171,7 +171,7 @@ class Register(APIView):
     register_api_oauth2_bash = \
         """
         # Register for a key
-        curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "zack.krida@automattic.com"}' https://api.creativecommons.engineering/v1/auth_tokens/register
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access Openverse API", "email": "zack.krida@automattic.com"}' https://api.openverse.engineering/v1/auth_tokens/register
         """  # noqa
 
     register_api_oauth2_request = openapi.Schema(
@@ -185,7 +185,7 @@ class Register(APIView):
                 max_length=150,
                 unique=True,
                 description="A unique human-readable name for your application "
-                            "or project requiring access to the CC Catalog API."
+                            "or project requiring access to the Openverse API."
             ),
             'description': openapi.Schema(
                 title="Description",
@@ -209,7 +209,7 @@ class Register(APIView):
         },
         example={
             "name": "My amazing project",
-            "description": "To access CC Catalog API",
+            "description": "To access Openverse API",
             "email": "zack.krida@automattic.com"
         }
     )
@@ -255,7 +255,7 @@ class Register(APIView):
         token = verification.code
         link = request.build_absolute_uri(reverse('verify-email', [token]))
         verification_msg = f"""
-To verify your CC Catalog API credentials, click on the following link:
+To verify your Openverse API credentials, click on the following link:
 
 {link}
 
@@ -265,7 +265,7 @@ If you believe you received this message in error, please disregard it.
             send_mail(
                 subject='Verify your API credentials',
                 message=verification_msg,
-                from_email='noreply-catalog@creativecommons.engineering',
+                from_email='zack.krida@automattic.com',
                 recipient_list=[verification.email],
                 fail_silently=False
             )
@@ -354,7 +354,7 @@ class CheckRates(APIView):
     key_info_bash = \
         """
         # Get information about your API key
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/rate_limit
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/rate_limit
         """  # noqa
 
     @swagger_auto_schema(operation_id='key_info',
