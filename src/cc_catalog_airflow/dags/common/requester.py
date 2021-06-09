@@ -33,24 +33,24 @@ class DelayedRequester:
         params:   Dictionary of query string params
         **kwargs: Optional arguments that will be passed to `requests.get`
          """
-        logger.info(f'Processing request for url: {url}')
-        logger.info(f'Using query parameters {params}')
-        logger.info(f'Using headers {kwargs.get("headers")}')
         self._delay_processing()
         self._last_request = time.time()
         try:
             response = requests.get(url, params=params, **kwargs)
             if response.status_code == requests.codes.ok:
+                logger.info(f'Received response from url {response.url}')
                 return response
             else:
                 logger.warning(
-                    f'Unable to request URL: {url}.  '
+                    f'Unable to request URL: {response.url}.  '
                     f'Status code: {response.status_code}'
                 )
                 return response
         except Exception as e:
-            logger.error('There was an error with the request.')
+            logger.error(f'Error with the request for url: {url}.')
             logger.info(f'{type(e).__name__}: {e}')
+            logger.info(f'Using query parameters {params}')
+            logger.info(f'Using headers {kwargs.get("headers")}')
             return None
 
     def _delay_processing(self):
