@@ -5,6 +5,11 @@ from django.utils.html import format_html
 import catalog.api.controllers.search_controller as search_controller
 from catalog.api.licenses import ATTRIBUTION, get_license_url
 from catalog.api.models.base import OpenLedgerModel
+from catalog.api.models.mixins import (
+    IdentifierMixin,
+    MediaMixin,
+    FileMixin,
+)
 
 PENDING = 'pending_review'
 MATURE_FILTERED = 'mature_filtered'
@@ -16,43 +21,13 @@ DMCA = 'dmca'
 OTHER = 'other'
 
 
-class AbstractMedia(OpenLedgerModel):
+class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     """
     Generic model from which to inherit all media classes. This class stores
     information common to all media types indexed by Openverse.
     """
 
-    identifier = models.UUIDField(
-        unique=True,
-        db_index=True,
-        help_text="Our unique identifier for an open-licensed work."
-    )
-    foreign_identifier = models.CharField(
-        unique=True,
-        max_length=1000,
-        blank=True,
-        null=True,
-        db_index=True,
-        help_text="The identifier provided by the upstream source."
-    )
-
-    title = models.CharField(max_length=2000, blank=True, null=True)
-    foreign_landing_url = models.CharField(
-        max_length=1000,
-        blank=True,
-        null=True,
-        help_text="The landing page of the work."
-    )
-    url = models.URLField(
-        unique=True,
-        max_length=1000,
-        help_text="The actual URL to the media file."
-    )
-    filesize = models.IntegerField(blank=True, null=True)
     watermarked = models.NullBooleanField(blank=True, null=True)
-
-    creator = models.CharField(max_length=2000, blank=True, null=True)
-    creator_url = models.URLField(max_length=2000, blank=True, null=True)
 
     license = models.CharField(max_length=50)
     license_version = models.CharField(max_length=25, blank=True, null=True)
