@@ -47,7 +47,7 @@ class DelayedRequester:
                 )
                 return response
         except Exception as e:
-            logger.error(f'There was an error with the request for url: {url}.')
+            logger.error(f'Error with the request for url: {url}.')
             logger.info(f'{type(e).__name__}: {e}')
             logger.info(f'Using query parameters {params}')
             logger.info(f'Using headers {kwargs.get("headers")}')
