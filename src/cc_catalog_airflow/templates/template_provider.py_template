@@ -55,7 +55,7 @@ ENDPOINT = f'https://{HOST}/{{API PATH}}'
 #  `src/cc_catalog_airflow/dags/util/loader/provider_details.py` file
 PROVIDER = prov.{provider_upper_case}_DEFAULT_PROVIDER
 # TODO: Add the API key to `src/cc_catalog_airflow/env.template`
-#  Do not add your API key value!
+#  Do not hardcode your API key value!
 API_KEY = os.getenv("{provider_upper_case}", "nokeyprovided")
 
 # TODO: Add any headers necessary for API request
