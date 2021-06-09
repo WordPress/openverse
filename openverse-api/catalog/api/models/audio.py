@@ -3,6 +3,7 @@ from django.db import models
 from uuslug import uuslug
 
 import catalog.api.controllers.search_controller as search_controller
+from catalog.api.models import OpenLedgerModel
 from catalog.api.models.media import (
     AbstractMedia,
     AbstractMediaReport,
@@ -10,6 +11,23 @@ from catalog.api.models.media import (
     AbstractMatureMedia,
     AbstractMediaList,
 )
+from catalog.api.models.mixins import (
+    IdentifierMixin,
+    MediaMixin,
+    FileMixin,
+)
+
+
+class AudioSet(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
+    """
+    This is an ordered collection of audio files, such as a podcast series or
+    an album. Not to be confused with AudioList which is a many-to-many
+    collection of audio files, like a playlist or favourites library.
+
+    The FileMixin inherited by this model refers not to audio but album art.
+    """
+
+    pass
 
 
 class Audio(AbstractMedia):
