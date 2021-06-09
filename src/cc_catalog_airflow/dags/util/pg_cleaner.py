@@ -12,7 +12,7 @@ import time
 
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
-from provider_api_scripts.common.storage import image
+from common.storage import image
 from util import tsv_cleaner
 from util.loader import column_names as col
 from util.loader.sql import IMAGE_TABLE_NAME

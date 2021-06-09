@@ -1,8 +1,8 @@
 import os
 import logging
 import lxml.html as html
-from common.requester import DelayedRequester
-from common.storage.image import ImageStore
+
+from common import DelayedRequester, ImageStore
 from util.loader import provider_details as prov
 
 logging.basicConfig(

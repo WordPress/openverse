@@ -12,8 +12,8 @@ Notes:                  http://api.thewalters.org/
 
 import os
 import logging
-import common.requester as requester
-import common.storage.image as image
+
+from common import DelayedRequester, ImageStore
 from util.loader import provider_details as prov
 
 logging.basicConfig(
@@ -68,8 +68,8 @@ QUERY_CLASSIFICATION = [
     'Leather'
 ]
 
-delayed_requester = requester.DelayedRequester(DELAY)
-image_store = image.ImageStore(provider=PROVIDER)
+delayed_requester = DelayedRequester(DELAY)
+image_store = ImageStore(provider=PROVIDER)
 
 
 def main():
@@ -77,7 +77,7 @@ def main():
     logger.info("Begin: Walters Art Museum provider script.")
 
     for class_param in QUERY_CLASSIFICATION:
-        logger.info(f"Obtaining Images of Classfication: {class_param}")
+        logger.info(f"Obtaining Images of Classification: {class_param}")
         image_list = _get_image_list(class_param)
         _ = _process_image_list(image_list)
 

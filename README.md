@@ -49,40 +49,29 @@ The steps above are performed in [`ExtractCCLinks.py`][ex_cc_links].
 various API ETL jobs which pull and process data from a number of open APIs on
 the internet.
 
-### Common API Workflows
+### Daily API Workflows
 
-The Airflow DAGs defined in [`common_api_workflows.py`][api_flows] manage daily
-ETL jobs for the following platforms, by running the linked scripts:
+Workflows that have a `schedule_string='@daily'` parameter are run daily. The DAG 
+workflows run `provider_api_scripts` to load and extract media data from the APIs. 
+Below are some of the daily DAG workflows that run the corresponding `provider_api_scripts` 
+daily:
 
-- [Met Museum](src/cc_catalog_airflow/dags/provider_api_scripts/metropolitan_museum_of_art.py)
-- [PhyloPic](src/cc_catalog_airflow/dags/provider_api_scripts/phylopic.py)
-- [Thingiverse](src/cc_catalog_airflow/dags/provider_api_scripts/Thingiverse.py)
-
-[api_flows]: src/cc_catalog_airflow/dags/common_api_workflows.py
-
-### Other Daily API Workflows
-
-Airflow DAGs, defined in their own files, also run the following scripts daily:
-
-- [Flickr](src/cc_catalog_airflow/dags/provider_api_scripts/flickr.py)
-- [Wikimedia Commons](src/cc_catalog_airflow/dags/provider_api_scripts/wikimedia_commons.py)
-
-In the future, we'll migrate to the latter style of Airflow DAGs and
-accompanying Provider API Scripts.
+- [Met Museum Workflow](src/cc_catalog_airflow/dags/metropolitan_museum_workflow.py) ( [API script](src/cc_catalog_airflow/dags/provider_api_scripts/metropolitan_museum_of_art.py) )
+- [PhyloPic Workflow](src/cc_catalog_airflow/dags/phylopic_workflow.py) ( [API script](src/cc_catalog_airflow/dags/provider_api_scripts/phylopic.py) )
+- [Flickr Workflow](src/cc_catalog_airflow/dags/flickr_workflow.py) ( [API script](src/cc_catalog_airflow/dags/provider_api_scripts/flickr.py) )
+- [Wikimedia Commons Workflow](src/cc_catalog_airflow/dags/wikimedia_workflow.py) ( [Commons API script](src/cc_catalog_airflow/dags/provider_api_scripts/wikimedia_commons.py) )
 
 ### Monthly Workflow
 
-The Airflow DAG defined in [`monthlyWorkflow.py`][mon_flow] handles the monthly
-jobs that are scheduled to run on the 15th day of each month at 16:00 UTC. This
-workflow is reserved for long-running jobs or APIs that do not have date
-filtering capabilities so the data is reprocessed monthly to keep the catalog
-updated. The following tasks are performed:
+Some API ingestion workflows are scheduled to run on the 15th day of each 
+month at 16:00 UTC. These workflows are reserved for long-running jobs or
+APIs that do not have date filtering capabilities so the data is reprocessed 
+monthly to keep the catalog updated. The following tasks are performed monthly:
 
-- [Cleveland Museum of Art](src/cc_catalog_airflow/dags/provider_api_scripts/ClevelandMuseum.py)
-- [RawPixel](src/cc_catalog_airflow/dags/provider_api_scripts/RawPixel.py)
+- [Cleveland Museum of Art](src/cc_catalog_airflow/dags/provider_api_scripts/cleveland_museum_of_art.py)
+- [RawPixel](src/cc_catalog_airflow/dags/provider_api_scripts/raw_pixel.py)
 - [Common Crawl Syncer](src/cc_catalog_airflow/dags/commoncrawl_s3_syncer/SyncImageProviders.py)
 
-[mon_flow]: src/cc_catalog_airflow/dags/monthlyWorkflow.py
 
 ### DB_Loader
 
@@ -92,11 +81,10 @@ into the upstream database. It includes some data preprocessing steps.
 
 [db_loader]: src/cc_catalog_airflow/dags/loader_workflow.py
 
-### Other API Jobs (not in the workflow)
+### Other API Jobs
 
-- [Brooklyn Museum](src/cc_catalog_airflow/dags/provider_api_scripts/BrooklynMuseum.py)
-- [NYPL](src/cc_catalog_airflow/dags/provider_api_scripts/NYPL.py)
-- Cleveland Public Library
+- [Brooklyn Museum](src/cc_catalog_airflow/dags/provider_api_scripts/brooklyn_museum.py)
+- [NYPL](src/cc_catalog_airflow/dags/provider_api_scripts/nypl.py)
 
 ## Development setup for Airflow and API puller scripts
 

@@ -3,7 +3,7 @@ import logging
 import os
 from unittest.mock import patch
 from collections import namedtuple
-from common.storage.image import MockImageStore
+from common import MockImageStore
 
 import raw_pixel as rwp
 
@@ -14,9 +14,9 @@ LicenseInfo = namedtuple(
 _license_info = ('cc0', '1.0', 'https://creativecommons.org/publicdomain/zero/1.0/')
 license_info = LicenseInfo(*_license_info)
 rwp.image_store = MockImageStore(
-                    provider=rwp.PROVIDER,
-                    license_info=license_info
-                    )
+    provider=rwp.PROVIDER,
+    license_info=license_info
+)
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), "tests/resources/rawpixel"
@@ -83,23 +83,23 @@ def test_get_image_properties():
             image=result[0], foreign_url=""
         )
         assert (
-            img_url
-            == ("https://img.rawpixel.com/s3fs-private/rawpixel_images/"
-                "website_content/pdmaps-loc-06-nam_1.jpg?w=1200&h=630&fit="
-                "crop&dpr=1.5&crop=entropy&fm=pjpg&q=75&vib=3&con=3&usm=15&"
-                "markpad=13&markalpha=90&markscale=10&markx=25&mark=rawpixel"
-                "-watermark.png&cs=srgb&bg=F4F4F3&ixlib=js-2.2.1&s=edbf5b4204"
-                "30b7f118a0093686c40f93")
+                img_url
+                == ("https://img.rawpixel.com/s3fs-private/rawpixel_images/"
+                    "website_content/pdmaps-loc-06-nam_1.jpg?w=1200&h=630&fit="
+                    "crop&dpr=1.5&crop=entropy&fm=pjpg&q=75&vib=3&con=3&usm=15&"
+                    "markpad=13&markalpha=90&markscale=10&markx=25&mark=rawpixel"
+                    "-watermark.png&cs=srgb&bg=F4F4F3&ixlib=js-2.2.1&s=edbf5b4204"
+                    "30b7f118a0093686c40f93")
         )
         assert width == "1200"
         assert height == "630"
         assert (
-            thumbnail
-            == ("https://img.rawpixel.com/s3fs-private/rawpixel_images/"
-                "website_content/pdmaps-loc-06-nam_1.jpg?w=400&dpr=1&fit"
-                "=default&crop=default&auto=format&fm=pjpg&q=75&vib=3&con="
-                "3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=6f33bfab36227436a0f9ad230"
-                "fc1d64a")
+                thumbnail
+                == ("https://img.rawpixel.com/s3fs-private/rawpixel_images/"
+                    "website_content/pdmaps-loc-06-nam_1.jpg?w=400&dpr=1&fit"
+                    "=default&crop=default&auto=format&fm=pjpg&q=75&vib=3&con="
+                    "3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=6f33bfab36227436a0f9ad230"
+                    "fc1d64a")
         )
 
 

@@ -1,6 +1,6 @@
 apache-airflow[amazon,postgres]==2.0.2
 boto3==1.15.13
-lxml==4.4.2
+lxml==4.6.3
 psycopg2-binary==2.8.6
 tldextract==2.2.2
 
@@ -38,7 +38,7 @@ dnspython==2.1.0
 docutils==0.17.1
 email-validator==1.1.2
 Flask==1.1.2
-Flask-AppBuilder==3.2.3
+Flask-AppBuilder==3.3.0
 Flask-Babel==1.0.0
 Flask-Caching==1.10.1
 Flask-JWT-Extended==3.25.1
@@ -118,7 +118,7 @@ toml==0.10.2
 traitlets==5.0.5
 typing-extensions==3.10.0.0
 unicodecsv==0.14.1
-urllib3==1.25.11
+urllib3==1.26.5
 watchtower==0.7.3
 wcwidth==0.2.5
 Werkzeug==1.0.1

@@ -4,8 +4,8 @@ import logging
 import requests
 from unittest.mock import MagicMock, patch
 from collections import namedtuple
-from common.storage.image import MockImageStore
 
+from common import MockImageStore
 import science_museum as sm
 
 LicenseInfo = namedtuple(

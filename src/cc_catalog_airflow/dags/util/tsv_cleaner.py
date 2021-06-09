@@ -2,7 +2,7 @@ import json
 import logging
 import os
 
-from provider_api_scripts.common.storage import image
+from common.storage import image
 
 logger = logging.getLogger(__name__)
 

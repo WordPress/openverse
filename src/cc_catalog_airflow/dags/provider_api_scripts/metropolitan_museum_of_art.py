@@ -11,10 +11,9 @@ Notes:                  https://metmuseum.github.io/
 """
 
 import argparse
-import common.requester as requester
-import common.storage.image as image
 import logging
 
+from common import DelayedRequester, ImageStore
 
 DELAY = 1.0  # time delay (in seconds)
 PROVIDER = 'met'
@@ -25,8 +24,8 @@ logging.basicConfig(
     level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-delayed_requester = requester.DelayedRequester(DELAY)
-image_store = image.ImageStore(provider=PROVIDER)
+delayed_requester = DelayedRequester(DELAY)
+image_store = ImageStore(provider=PROVIDER)
 
 
 def main(date=None):
