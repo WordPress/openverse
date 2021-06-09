@@ -3,7 +3,7 @@ import requests
 import json
 import logging as log
 """
-Tools for migrating legacy lists from CC Search Beta to the CC Catalog platform.
+Tools for migrating legacy lists from Openverse Beta to the CC Catalog platform.
 """
 
 

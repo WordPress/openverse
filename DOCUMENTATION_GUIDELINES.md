@@ -120,7 +120,7 @@ register_api_oauth2_request = openapi.Schema(
       max_length=150,
       unique=True,
       description="A unique human-readable name for your application "
-                  "or project requiring access to the CC Catalog API."
+                  "or project requiring access to the Openverse API."
     ),
     'description': openapi.Schema(
       title="Description",
@@ -144,8 +144,8 @@ register_api_oauth2_request = openapi.Schema(
   },
   example={
     "name": "My amazing project",
-    "description": "To access CC Catalog API",
-    "email": "cccatalog-api@creativecommons.org"
+    "description": "To access Openverse API",
+    "email": "zack.krida@automattic.com"
   }
 )
 

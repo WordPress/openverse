@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='OAuth2Registration',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='A unique human-readable name for your application or project requiring access to the CC Catalog API.', max_length=150, unique=True)),
+                ('name', models.CharField(help_text='A unique human-readable name for your application or project requiring access to the Openverse API.', max_length=150, unique=True)),
                 ('description', models.CharField(help_text='A description of what you are trying to achieve with your project using the API. Please provide as much detail as possible!', max_length=10000)),
                 ('email', models.EmailField(help_text='A valid email that we can reach you at if we have any questions about your use case or data consumption.', max_length=254)),
             ],

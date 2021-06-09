@@ -10,7 +10,7 @@ class OAuth2Registration(models.Model):
         max_length=150,
         unique=True,
         help_text="A unique human-readable name for your application or "
-                  "project requiring access to the CC Catalog API."
+                  "project requiring access to the Openverse API."
     )
     description = models.CharField(
         max_length=10000,

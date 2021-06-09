@@ -53,14 +53,14 @@ an API key.
 # Register and Authenticate
 
 ## Register for a key
-Before using the CC Catalog API, you need to register access via OAuth2.
+Before using the Openverse API, you need to register access via OAuth2.
 This can be done using the `/v1/auth_tokens/register` endpoint.
 
 <br>
 Example on how to register for a key
 
 ```
-$ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "openverse-api@creativecommons.org"}' https://api.openverse.engineering/v1/auth_tokens/register
+$ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access Openverse API", "email": "zack.krida@automattic.com"}' https://api.openverse.engineering/v1/auth_tokens/register
 ```
 
 <br>
@@ -77,7 +77,7 @@ Example of successful request
 ```
 
 ## Authenticate
-In order to use the CC Catalog API endpoints, you need to include access token \
+In order to use the Openverse API endpoints, you need to include access token \
 in the header.
 This can be done by exchanging your client credentials for a token using the \
 `v1/auth_tokens/token/` endpoint.
@@ -134,10 +134,10 @@ An abbreviation for Application Programming Interface.
 An abbreviation for Creative Commons.
 
 #### Client ID
-A publicly exposed string used by CC Catalog API to identify the application.
+A publicly exposed string used by Openverse API to identify the application.
 
 #### Client Secret
-A private string that authenticates the identity of the application to the CC Catalog API.
+A private string that authenticates the identity of the application to the Openverse API.
 
 #### Copyright
 A type of intellectual property that gives the owner an exclusive right to reproduce, publish, sell or distribute content.
@@ -155,7 +155,7 @@ Any content that depicts graphic violence, adult content, and hostility or malic
 
 We love pull requests! If you’re interested in [contributing on Github](https://github.com/wordpress/openverse-api), here’s a todo list to get started.
 
-- Read up about [Django REST Framework](https://www.django-rest-framework.org/), which is the framework used to build CC Catalog API
+- Read up about [Django REST Framework](https://www.django-rest-framework.org/), which is the framework used to build Openverse API
 - Read up about [drf-yasg](https://drf-yasg.readthedocs.io/en/stable/), which is a tool used to generate real Swagger/OpenAPI 2.0 specifications
 - Read up about Documentation Guidelines, which provides guidelines on how to contribute to documentation, documentation styles and cheat sheet for drf-yasg
 - Run the server locally by following this [link](https://github.com/wordpress/openverse-api#running-the-server-locally)
@@ -174,7 +174,7 @@ schema_view = get_schema_view(
         title="Creative Commons Catalog API",
         default_version=API_VERSION,
         description=description,
-        contact=openapi.Contact(email="openverse-api@creativecommons.org"),
+        contact=openapi.Contact(email="zack.krida@automattic.com"),
         license=openapi.License(name="MIT License", url=license_url),
         terms_of_service=tos_url,
         x_logo={
