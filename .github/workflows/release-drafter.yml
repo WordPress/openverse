@@ -3,7 +3,7 @@ name: Release Drafter
 on:
   push:
     branches:
-      - develop
+      - $default-branch
 
 jobs:
   update_release_draft:
