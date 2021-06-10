@@ -24,7 +24,7 @@ class BrowseResults(TaskSet):
     @task(10)
     def shorten_link(self):
         _unique = str(uuid.uuid4())
-        image_link = "http://dev.api.openverse.engineering/list/{}"\
+        image_link = "http://api-dev.openverse.engineering/list/{}"\
             .format(_unique)
         self.client.post("/link", {"full_url": image_link})
 

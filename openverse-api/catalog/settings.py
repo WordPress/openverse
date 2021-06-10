@@ -33,13 +33,13 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = os.environ.get('DJANGO_DEBUG_ENABLED', default=False) in true_strings
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
-                 'dev.api.openverse.engineering',
+                 'api-dev.openverse.engineering',
                  "api.openverse.engineering",
                  gethostname(), gethostbyname(gethostname())]
 
 # Domains that shortened links may point to
 SHORT_URL_WHITELIST = {
-    'dev.api.openverse.engineering',
+    'api-dev.openverse.engineering',
     'api.openverse.engineering',
     'ccccatalog.herokuapp.com',
     'ccsearch.creativecommons.org',

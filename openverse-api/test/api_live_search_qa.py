@@ -8,7 +8,7 @@ documents in the search index, so toy examples with five or six documents
 do not accurately model relevance at scale.
 """
 
-API_URL = 'https://dev.api.openverse.engineering'
+API_URL = 'https://api-dev.openverse.engineering'
 
 
 def _phrase_in_tags(tags, term):
