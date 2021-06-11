@@ -62,7 +62,7 @@ class Audio(AbstractMedia):
     duration = models.IntegerField(
         blank=True,
         null=True,
-        help_text='The time length of the audio file in seconds.'
+        help_text='The time length of the audio file in milliseconds.'
     )
     bit_rate = models.IntegerField(
         blank=True,
