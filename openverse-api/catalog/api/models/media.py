@@ -264,3 +264,19 @@ class AbstractMediaList(OpenLedgerModel):
 
     class Meta:
         abstract = True
+
+
+class AbstractAltFile:
+    """
+    This is not a Django model.
+
+    This Python class serves as the schema for an alternative file. An alt file
+    provides alternative qualities, formats and resolutions that are available
+    from the provider that are not canonical.
+
+    The schema of the class must correspond to that of the ``FileMixin`` class.
+    """
+
+    def __init__(self, attrs):
+        self.url = attrs.get('url')
+        self.filesize = attrs.get('filesize')
