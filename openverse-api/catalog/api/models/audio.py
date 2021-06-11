@@ -85,6 +85,18 @@ class Audio(AbstractMedia):
     def alternative_files(self):
         return []  # TODO: Return Python object parsed from `alt_files` field
 
+    @property
+    def duration_in_s(self):
+        return self.duration / 1e3
+
+    @property
+    def sample_rate_in_khz(self):
+        return self.sample_rate / 1e3
+
+    @property
+    def bit_rate_in_kbps(self):
+        return self.bit_rate / 1e3
+
     class Meta:
         db_table = 'audio'
 
