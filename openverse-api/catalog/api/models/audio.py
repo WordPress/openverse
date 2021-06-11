@@ -5,6 +5,7 @@ from uuslug import uuslug
 import catalog.api.controllers.search_controller as search_controller
 from catalog.api.models import OpenLedgerModel
 from catalog.api.models.media import (
+    AbstractAltFile,
     AbstractMedia,
     AbstractMediaReport,
     AbstractDeletedMedia,
@@ -17,6 +18,28 @@ from catalog.api.models.mixins import (
     FileMixin,
 )
 
+
+class AltAudioFile(AbstractAltFile):
+    def __init__(self, attrs):
+        self.bit_rate = attrs.get('bit_rate')
+        self.sample_rate = attrs.get('sample_rate')
+        super(AltAudioFile, self).__init__(attrs)
+
+    @property
+    def sample_rate_in_khz(self):
+        return self.sample_rate / 1e3
+
+    @property
+    def bit_rate_in_kbps(self):
+        return self.bit_rate / 1e3
+
+    def __str__(self):
+        br = self.bit_rate_in_kbps
+        sr = self.sample_rate_in_khz
+        return f'<AltAudioFile {br}kbps / {sr}kHz>'
+
+    def __repr__(self):
+        return str(self)
 
 class AudioSet(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     """
@@ -83,7 +106,9 @@ class Audio(AbstractMedia):
 
     @property
     def alternative_files(self):
-        return []  # TODO: Return Python object parsed from `alt_files` field
+        if hasattr(self.alt_files, '__iter__'):
+            return list(map(lambda val: AltAudioFile(val), self.alt_files))
+        return None
 
     @property
     def duration_in_s(self):
