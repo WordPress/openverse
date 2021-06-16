@@ -7,8 +7,8 @@ from catalog.api.serializers.media_serializers import (
     _add_protocol,
     _validate_enum,
     MediaSearchQueryStringSerializer,
-    MediaSerializer,
     MediaSearchResultsSerializer,
+    MediaSerializer,
 )
 
 
