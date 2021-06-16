@@ -12,10 +12,11 @@ from catalog.api.controllers.search_controller import get_sources
 from catalog.api.serializers.oauth2_serializers import (
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
 )
-from catalog.api.serializers.image_serializers import (
-    ProxiedImageSerializer, ForbiddenErrorSerializer,
-    InternalServerErrorSerializer
+from catalog.api.serializers.error_serializers import (
+    ForbiddenErrorSerializer,
+    InternalServerErrorSerializer,
 )
+from catalog.api.serializers.image_serializers import ProxiedImageSerializer
 from drf_yasg.utils import swagger_auto_schema
 from catalog.api.models import (
     ContentProvider, Image, ThrottledApplication, OAuth2Verification, SourceLogo
