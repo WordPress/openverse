@@ -85,7 +85,7 @@ class Audio(AbstractMedia):
     duration = models.IntegerField(
         blank=True,
         null=True,
-        help_text='The time length of the audio file in milliseconds.'
+        help_text='The time length of the audio file in milliseconds.',
     )
     bit_rate = models.IntegerField(
         blank=True,
@@ -101,7 +101,7 @@ class Audio(AbstractMedia):
     alt_files = JSONField(
         blank=True,
         null=True,
-        help_text='JSON describing alternative files for this audio',
+        help_text='JSON describing alternative files for this audio.',
     )
 
     @property
