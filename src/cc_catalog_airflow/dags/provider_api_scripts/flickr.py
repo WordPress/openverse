@@ -79,7 +79,7 @@ def main(date):
     date_type = DATE_TYPE
 
     for start_timestamp, end_timestamp in timestamp_pairs:
-        total_images = _process_interval(
+        _process_interval(
             start_timestamp,
             end_timestamp,
             date_type
@@ -159,6 +159,8 @@ def _get_image_list(
         endpoint=ENDPOINT,
         max_tries=6  # one original try, plus 5 retries
 ):
+    image_list, total_pages = None, None
+    try_number = 0
     for try_number in range(max_tries):
         query_param_dict = _build_query_param_dict(
             start_timestamp,
@@ -181,9 +183,8 @@ def _get_image_list(
     if try_number == max_tries - 1 and (
             (image_list is None) or (total_pages is None)):
         logger.warning('No more tries remaining. Returning Nonetypes.')
-        return None, None
-    else:
-        return image_list, total_pages
+
+    return image_list, total_pages
 
 
 def _extract_response_json(response):

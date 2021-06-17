@@ -43,7 +43,7 @@ def main():
             )
         if type(items) == list:
             if len(items) > 0:
-                image_count = _handle_items_data(
+                _handle_items_data(
                     items
                 )
                 offset += LIMIT
@@ -72,6 +72,7 @@ def _get_batch_items(
         headers=HEADERS,
         retries=RETRIES
         ):
+    items = None
     for retry in range(retries):
         response = delay_request.get(
             endpoint,
@@ -83,11 +84,8 @@ def _get_batch_items(
             if "items" in response_json.keys():
                 items = response_json.get("items")
                 break
-            else:
-                items = None
         except Exception as e:
             logger.error(f"errored due to {e}")
-            items = None
     return items
 
 
@@ -213,7 +211,9 @@ def _get_title(titles):
 
 def _get_metadata(item):
     meta_data = {}
-    meta_data["created_date"] = item.get("created")
+    created_date = item.get("created")
+    if created_date:
+        meta_data["created_date"] = created_date
     collection = item.get("collection")
     if type(collection) == list:
         meta_data["collection"] = ','.join(collection)

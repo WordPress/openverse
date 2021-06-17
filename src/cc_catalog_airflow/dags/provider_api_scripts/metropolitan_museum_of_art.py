@@ -133,15 +133,15 @@ def _build_foreign_id(object_id, image_url):
 
 
 def _create_meta_data(object_json):
-    meta_data = {}
-
-    meta_data['accession_number'] = object_json.get('accessionNumber', None)
-    meta_data['classification'] = object_json.get('classification', None)
-    meta_data['culture'] = object_json.get('culture', None)
-    meta_data['date'] = object_json.get('objectDate', None)
-    meta_data['medium'] = object_json.get('medium', None)
-    meta_data['credit_line'] = object_json.get('creditLine', None)
-
+    meta_data = {
+        'accession_number': object_json.get('accessionNumber'),
+        'classification': object_json.get('classification'),
+        'culture': object_json.get('culture'),
+        'date': object_json.get('objectDate'),
+        'medium': object_json.get('medium'),
+        'credit_line': object_json.get('creditLine')
+    }
+    meta_data = {k: v for k, v in meta_data.items() if v is not None}
     return meta_data
 
 

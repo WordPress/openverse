@@ -109,6 +109,7 @@ def _get_batch_objects(
         retries=RETRIES,
         query_param=None
         ):
+    data = None
     for retry in range(retries):
         response = delay_request.get(
             endpoint,
@@ -120,11 +121,8 @@ def _get_batch_objects(
             if "data" in response_json.keys():
                 data = response_json.get("data")
                 break
-            else:
-                data = None
         except Exception as e:
             logger.error(f"Failed to due to {e}")
-            data = None
     return data
 
 
@@ -135,10 +133,7 @@ def _handle_object_data(batch_data):
         if id_ in RECORD_IDS:
             continue
         RECORD_IDS.append(id_)
-        links = obj_.get("links")
-
-        if links:
-            foreign_landing_url = links.get("self")
+        foreign_landing_url = obj_.get("links", {}).get("self")
         if foreign_landing_url is None:
             continue
         obj_attributes = obj_.get("attributes")

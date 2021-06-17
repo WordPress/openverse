@@ -90,8 +90,6 @@ def test_get_batch_objects_empty():
             return_value=response_empty) as mock_call:
         actual_response = mv._get_batch_objects(params=query_param)
 
-    expected_param = []
-
     assert mock_call.call_count == 3
     assert actual_response is None
 
@@ -227,6 +225,5 @@ def test_handle_batch_objects_success():
     with patch.object(
             mv.image_store,
             'add_item') as mock_item:
-        actual_image_count = mv._handle_batch_objects(batch_objects)
-
+        mv._handle_batch_objects(batch_objects)
     assert mock_item.call_count == 1

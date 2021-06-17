@@ -100,9 +100,9 @@ def _process_object_list(object_list):
 
 def _process_object(obj, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
     total_images = 0
-    license = obj.get("imageRights")
-    if license is not None:
-        license_url = license.get("link")
+    license_url = obj.get("imageRights", {}).get("link")
+    if license_url is None:
+        return None
     foreign_identifier = obj.get("id")
     title = obj.get("title")
     building = obj.get("buildings")[0].get("value")
@@ -137,9 +137,9 @@ def _get_raw_tags(obj):
 
 def _get_landing(obj, landing_url=LANDING_URL):
     l_url = None
-    id = obj.get("id")
-    if id:
-        l_url = landing_url + id
+    id_ = obj.get("id")
+    if id_:
+        l_url = landing_url + id_
     return l_url
 
 
