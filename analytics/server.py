@@ -73,9 +73,10 @@ class OpenAPISpecResource:
             resp.body = f.read()
 
 origins = [
-    'https://ccsearch.creativecommons.org',
-    'https://ccsearch-dev.creativecommons.org',
-    'https://search.creativecommons.org'
+    # @todo: Switch these to environment variables
+    'https://search.openverse.engineering',
+    'https://search-dev.openverse.engineering',
+    'https://wordpress.org/openverse'
 ]
 cors = CORS(
     allow_origins_list=origins,

@@ -6,7 +6,7 @@ Interested in improving our documentation? Here’s what you need to know before
 
 ## Introduction
 
-Openverse Catalog API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a tool that generates real Swagger/OpenAPI 2.0 specifications from a Django Rest Framework API.
+Openverse API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a tool that generates real Swagger/OpenAPI 2.0 specifications from a Django Rest Framework API.
 
 <br/>
 
