@@ -38,7 +38,7 @@ def fill_template(provider, media_type):
     template_name = 'template_provider.py_template'
     script_template_path = templates_path / template_name
 
-    dags_path = Path('.').parent / 'dags'
+    dags_path = templates_path.parent / 'dags'
     filename = provider.replace(" ", '_').lower()
 
     api_path = dags_path / 'provider_api_scripts'
