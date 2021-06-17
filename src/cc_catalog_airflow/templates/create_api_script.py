@@ -6,7 +6,7 @@ IMAGE_STORE_INIT = 'image_store = ImageStore(provider=PROVIDER)'
 AUDIO_STORE_INIT = 'audio_store = AudioStore(provider=PROVIDER)'
 
 
-def _get_filled_template(template_path, provider, media_type=None):
+def _get_filled_template(template_path, provider, media_type='image'):
     with open(template_path, 'r', encoding='utf8') as template:
         template_string = template.read()
         script_string = template_string.replace(

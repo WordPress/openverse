@@ -31,8 +31,9 @@ You can test your script during development by running it:
 `python -m <your_script_name>.py`
 
 To extract information from html, you can use lxml.html.
-If you need to look at the examples, the best example for dated script is
-`wikimedia_commons.py`, for not dated: `science_museum.py`.
+Recommended examples:
+- For scripts requiring a start date: `wikimedia_commons.py`
+- For scripts without a start date: `science_museum.py`.
 
 ImageStore/AudioStore are the classes that clean the media metadata
 and save it to the disk in form of a tsv file.
