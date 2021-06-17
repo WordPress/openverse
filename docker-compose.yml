@@ -63,6 +63,7 @@ services:
     depends_on:
       - db
       - es
+      - cache
     environment:
       - DJANGO_DATABASE_NAME=openledger
       - DJANGO_DATABASE_USER=deploy
