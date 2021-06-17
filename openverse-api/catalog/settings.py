@@ -41,8 +41,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get('LOAD_BALANCER_URL'),
 SHORT_URL_WHITELIST = {
     'api-dev.openverse.engineering',
     'api.openverse.engineering',
-    'ccccatalog.herokuapp.com',
-    'ccsearch.creativecommons.org',
     'localhost:8000'
 }
 SHORT_URL_PATH_WHITELIST = ['/v1/list', '/v1/images/']

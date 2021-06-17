@@ -33,6 +33,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='imagereport',
             name='reason',
-            field=models.CharField(choices=[('mature', 'mature'), ('dmca', 'dmca'), ('other', 'other')], help_text='The reason to report image to Creative Commons.', max_length=20),
+            field=models.CharField(choices=[('mature', 'mature'), ('dmca', 'dmca'), ('other', 'other')], help_text='The reason to report image to Openverse.', max_length=20),
         ),
     ]

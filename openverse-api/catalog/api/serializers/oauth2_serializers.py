@@ -43,5 +43,5 @@ class OAuth2KeyInfo(serializers.Serializer):
         help_text="The type of rate limit applied to your key. Can be "
                   "'standard' or 'enhanced'; enhanced users enjoy higher rate "
                   "limits than their standard key counterparts. Contact "
-                  "Creative Commons if you need a higher rate limit."
+                  "Openverse if you need a higher rate limit."
     )

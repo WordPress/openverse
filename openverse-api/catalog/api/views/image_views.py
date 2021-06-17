@@ -477,7 +477,7 @@ class ReportImageView(CreateAPIView):
     images_report_create
     
     images_report_create is an API endpoint to report an issue about a 
-    specified image ID to Creative Commons.
+    specified image ID to Openverse.
 
     By using this endpoint, you can report an image if it infringes copyright, 
     contains mature or sensitive content and others.
