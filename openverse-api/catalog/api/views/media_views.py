@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 
 from catalog.api.controllers import search_controller
 from catalog.api.utils.exceptions import input_error_response
+from catalog.custom_auto_schema import CustomAutoSchema
 
 FOREIGN_LANDING_URL = 'foreign_landing_url'
 CREATOR_URL = 'creator_url'
@@ -34,6 +35,7 @@ def _get_user_ip(request):
 
 
 class SearchMedia(APIView):
+    swagger_schema = CustomAutoSchema
     search_description = """
 Although there may be millions of relevant records, only the most 
 relevant several thousand records can be viewed. This is by design: 
