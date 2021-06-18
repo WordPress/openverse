@@ -26,6 +26,7 @@ from catalog.api.examples import (
     image_detail_404_example,
     oembed_list_200_example,
     oembed_list_404_example,
+    recommendations_images_read_curl,
     recommendations_images_read_200_example,
     recommendations_images_read_404_example,
 )
@@ -51,6 +52,7 @@ from catalog.api.views.media_views import (
     RESULT_COUNT,
     PAGE_COUNT,
     SearchMedia,
+    RelatedMedia,
 )
 from catalog.custom_auto_schema import CustomAutoSchema
 
@@ -58,17 +60,19 @@ log = logging.getLogger(__name__)
 
 
 class SearchImages(SearchMedia):
-    swagger_schema = CustomAutoSchema
-    image_search_description = """
+    image_search_description = (
+        """
 image_search is an API endpoint to search images using a query string.
 
 By using this endpoint, you can obtain search results based on specified 
-query and optionally filter results by `license`, `license_type`, 
-`page`, `page_size`, `creator`, `tags`, `title`, `filter_dead`, 
-`source`, `extension`, `categories`, `aspect_ratio`, `size`, `mature`, 
-and `qa`. Results are ranked in order of relevance.
-""" \
-                               f'{SearchMedia.search_description}'  # noqa
+query and optionally filter results by `license`, `license_type`, `page`, 
+`page_size`, `creator`, `tags`, `title`, `filter_dead`, `extension`, `mature`,
+`qa`, `source`, `categories`, `aspect_ratio` and `size`. 
+
+Results are ranked in order of relevance.
+"""
+        f'{SearchMedia.search_description}'
+    )  # noqa
 
     image_search_response = {
         "200": openapi.Response(
@@ -105,22 +109,20 @@ and `qa`. Results are ranked in order of relevance.
         )
 
 
-class RelatedImage(APIView):
-    swagger_schema = CustomAutoSchema
-    recommendations_images_read_description = \
+class RelatedImage(RelatedMedia):
+    recommendations_images_read_description = (
         """
-        recommendations_images_read is an API endpoint to get related images 
-        for a specified image ID.
+recommendations_images_read is an API endpoint to get related images 
+for a specified image ID.
 
-        By using this endpoint, you can get the details of related images such as 
-        `title`, `id`, `creator`, `creator_url`, `tags`, `url`, `thumbnail`, 
-        `provider`, `source`, `license`, `license_version`, `license_url`, 
-        `foreign_landing_url`, `detail_url`, `related_url`, `height`, `weight`, 
-        and `attribution`.
-        
-        You can refer to Bash's Request Samples for example on how to use
-        this endpoint.
-        """  # noqa
+By using this endpoint, you can get the details of related images such as 
+`title`, `id`, `creator`, `creator_url`, `tags`, `url`, `provider`, `source`, 
+`license`, `license_version`, `license_url`, `foreign_landing_url`, 
+`detail_url`, `related_url`, `attribution`, `thumbnail`, `height` and `weight`.
+"""
+        f'{RelatedMedia.recommendations_read_description}'
+    )  # noqa
+
     recommendations_images_read_response = {
         "200": openapi.Response(
             description="OK",
@@ -134,29 +136,23 @@ class RelatedImage(APIView):
         )
     }
 
-    recommendations_images_read_bash = \
-        """
-        # Get related images for image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
-        """  # noqa
-
     @swagger_auto_schema(operation_id="recommendations_images_read",
                          operation_description=recommendations_images_read_description,  # noqa: E501
                          responses=recommendations_images_read_response,
                          code_examples=[
                              {
                                  'lang': 'Bash',
-                                 'source': recommendations_images_read_bash
+                                 'source': recommendations_images_read_curl
                              }
                          ],
                          manual_parameters=[
-                             openapi.Parameter('identifier', openapi.IN_PATH,
-                                               "The unique identifier for "
-                                               "the image.",
-                                               type=openapi.TYPE_STRING,
-                                               required=True),
-                         ]
-                         )
+                             openapi.Parameter(
+                                 'identifier', openapi.IN_PATH,
+                                 "The unique identifier for the image.",
+                                 type=openapi.TYPE_STRING,
+                                 required=True
+                             ),
+                         ])
     def get(self, request, identifier, format=None):
         related, result_count = search_controller.related_images(
             uuid=identifier,
@@ -167,7 +163,9 @@ class RelatedImage(APIView):
 
         context = {'request': request}
         serialized_related = ImageSerializer(
-            related, many=True, context=context
+            related,
+            many=True,
+            context=context
         ).data
         response_data = {
             RESULT_COUNT: result_count,

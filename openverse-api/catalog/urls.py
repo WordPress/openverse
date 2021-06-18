@@ -13,24 +13,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import rest_framework.permissions
+from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path, re_path
-from django.conf.urls import include
-from catalog.api.views.image_views import SearchImages, ImageDetail,\
+from django.views.generic import RedirectView
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.views import get_schema_view
+
+from catalog.api.examples import images_report_create_201_example
+from catalog.api.serializers.image_serializers import \
+    ReportImageSerializer
+from catalog.api.views.audio_views import SearchAudio, RelatedAudio
+from catalog.api.views.image_views import SearchImages, ImageDetail, \
     Watermark, RelatedImage, OembedView, ReportImageView
-from catalog.api.views.site_views import HealthCheck, ImageStats, Register, \
-    CheckRates, VerifyEmail, ProxiedImage
 from catalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
+from catalog.api.views.site_views import HealthCheck, ImageStats, Register, \
+    CheckRates, VerifyEmail, ProxiedImage
 from catalog.settings import API_VERSION, WATERMARK_ENABLED
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-from django.views.generic import RedirectView
-import rest_framework.permissions
-from drf_yasg.utils import swagger_auto_schema
-from catalog.api.serializers.image_serializers import\
-    ReportImageSerializer
-from catalog.example_responses import images_report_create_201_example
 
 description = """
 # Introduction
@@ -167,7 +169,7 @@ We love pull requests! If you’re interested in [contributing on Github](https:
 
 logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
 tos_url = "https://api.creativecommons.engineering/terms_of_service.html"
-license_url =\
+license_url = \
     "https://github.com/wordpress/openverse-api/blob/master/LICENSE"
 schema_view = get_schema_view(
     openapi.Info(
@@ -256,8 +258,18 @@ versioned_paths = [
         r'auth_tokens/',
         include('oauth2_provider.urls', namespace='oauth2_provider')
     ),
+
+    re_path('audio', SearchAudio.as_view(), name='audio'),
     path(
-        'images/<str:identifier>', ImageDetail.as_view(), name='image-detail'
+        'recommendations/audio/<str:identifier>',
+        RelatedAudio.as_view(),
+        name='related-audio'
+    ),
+
+    path(
+        'images/<str:identifier>',
+        ImageDetail.as_view(),
+        name='image-detail'
     ),
     path(
         'images/<str:identifier>/report',
