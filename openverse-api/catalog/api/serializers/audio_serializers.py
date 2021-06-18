@@ -67,7 +67,8 @@ class AudioSerializer(MediaSerializer):
 
     set = serializers.PrimaryKeyRelatedField(
         required=False,
-        help_text='Reference to set of which this track is a part.'
+        help_text='Reference to set of which this track is a part.',
+        read_only=True
     )
 
     genre = serializers.CharField(
