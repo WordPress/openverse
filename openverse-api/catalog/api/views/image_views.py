@@ -47,42 +47,17 @@ from catalog.api.utils import ccrel
 from catalog.api.utils.exceptions import input_error_response
 from catalog.api.utils.watermark import watermark
 from catalog.api.views.media_views import (
-    search_description_boilerplate,
+    RESULTS,
+    RESULT_COUNT,
+    PAGE_COUNT,
+    SearchMedia,
 )
 from catalog.custom_auto_schema import CustomAutoSchema
 
 log = logging.getLogger(__name__)
 
-FOREIGN_LANDING_URL = 'foreign_landing_url'
-CREATOR_URL = 'creator_url'
-RESULTS = 'results'
-PAGE = 'page'
-PAGESIZE = 'page_size'
-FILTER_DEAD = 'filter_dead'
-QA = 'qa'
-SUGGESTIONS = 'suggestions'
-RESULT_COUNT = 'result_count'
-PAGE_COUNT = 'page_count'
-PAGE_SIZE = 'page_size'
 
-
-def _get_user_ip(request):
-    """
-    Read request headers to find the correct IP address.
-    It is assumed that X-Forwarded-For has been sanitized by the load balancer
-    and thus cannot be rewritten by malicious users.
-    :param request: A Django request object.
-    :return: An IP address.
-    """
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
-
-
-class SearchImages(APIView):
+class SearchImages(SearchMedia):
     swagger_schema = CustomAutoSchema
     image_search_description = """
 image_search is an API endpoint to search images using a query string.
@@ -93,7 +68,7 @@ query and optionally filter results by `license`, `license_type`,
 `source`, `extension`, `categories`, `aspect_ratio`, `size`, `mature`, 
 and `qa`. Results are ranked in order of relevance.
 """ \
-                               f'{search_description_boilerplate}'  # noqa
+                               f'{SearchMedia.search_description}'  # noqa
 
     image_search_response = {
         "200": openapi.Response(
@@ -120,45 +95,14 @@ and `qa`. Results are ranked in order of relevance.
                          ])
     def get(self, request, format=None):
         # Parse and validate query parameters
-        params = ImageSearchQueryStringSerializer(data=request.query_params)
-        if not params.is_valid():
-            return input_error_response(params.errors)
-
-        hashed_ip = hash(_get_user_ip(request))
-        page_param = params.data[PAGE]
-        page_size = params.data[PAGESIZE]
-        qa = params.data[QA]
-        filter_dead = params.data[FILTER_DEAD]
-
-        search_index = 'search-qa' if qa else 'image'
-        try:
-            results, num_pages, num_results = search_controller.search(
-                params,
-                search_index,
-                page_size,
-                hashed_ip,
-                request,
-                filter_dead,
-                page=page_param
-            )
-        except ValueError as value_error:
-            return input_error_response(value_error)
-
-        context = {'request': request}
-        serialized_results = ImageSerializer(
-            results, many=True, context=context
-        ).data
-
-        if len(results) < page_size and num_pages == 0:
-            num_results = len(results)
-        response_data = {
-            RESULT_COUNT: num_results,
-            PAGE_COUNT: num_pages,
-            PAGE_SIZE: len(results),
-            RESULTS: serialized_results
-        }
-        serialized_response = ImageSearchResultsSerializer(data=response_data)
-        return Response(status=200, data=serialized_response.initial_data)
+        return self._get(
+            request,
+            'image',
+            'search-qa',
+            ImageSearchQueryStringSerializer,
+            ImageSerializer,
+            ImageSearchResultsSerializer,
+        )
 
 
 class RelatedImage(APIView):
