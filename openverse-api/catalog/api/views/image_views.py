@@ -18,6 +18,17 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import catalog.api.controllers.search_controller as search_controller
+from catalog.api.examples import (
+    image_requests_curl,
+    image_search_200_example,
+    image_search_400_example,
+    image_detail_200_example,
+    image_detail_404_example,
+    oembed_list_200_example,
+    oembed_list_404_example,
+    recommendations_images_read_200_example,
+    recommendations_images_read_404_example,
+)
 from catalog.api.models import Image, ImageReport
 from catalog.api.serializers.error_serializers import (
     InputErrorSerializer,
@@ -36,16 +47,6 @@ from catalog.api.utils import ccrel
 from catalog.api.utils.exceptions import input_error_response
 from catalog.api.utils.watermark import watermark
 from catalog.custom_auto_schema import CustomAutoSchema
-from catalog.example_responses import (
-    image_search_200_example,
-    image_search_400_example,
-    image_detail_200_example,
-    image_detail_404_example,
-    oembed_list_200_example,
-    oembed_list_404_example,
-    recommendations_images_read_200_example,
-    recommendations_images_read_404_example
-)
 
 log = logging.getLogger(__name__)
 
