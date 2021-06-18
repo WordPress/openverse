@@ -25,3 +25,8 @@ image_search_curl = '\n\n'.join([
      f'https://api.creativecommons.engineering/v1/images?q={syntax}')
     for (index, (purpose, syntax)) in enumerate(syntax_examples.items())
 ])
+
+recommendations_images_read_curl = """
+# Get related images for image ID 7c829a03-fb24-4b57-9b03-65f43ed19395
+curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
+"""  # noqa

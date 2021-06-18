@@ -1,5 +1,6 @@
 from catalog.api.examples.audio_requests import (
     audio_search_curl,
+    recommendations_audio_read_curl,
 )
 from catalog.api.examples.audio_responses import (
     audio_search_200_example,
@@ -7,6 +8,7 @@ from catalog.api.examples.audio_responses import (
 )
 from catalog.api.examples.image_requests import (
     image_search_curl,
+    recommendations_images_read_curl,
 )
 from catalog.api.examples.image_responses import (
     image_search_200_example,
