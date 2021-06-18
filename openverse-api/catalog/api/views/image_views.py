@@ -19,7 +19,7 @@ from rest_framework.views import APIView
 
 import catalog.api.controllers.search_controller as search_controller
 from catalog.api.examples import (
-    image_requests_curl,
+    image_search_curl,
     image_search_200_example,
     image_search_400_example,
     image_detail_200_example,
@@ -108,36 +108,6 @@ and `qa`. Results are ranked in order of relevance.
         )
     }
 
-    image_search_bash = \
-        """
-        # Example 1: Search for an exact match of Claude Monet
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q="Claude Monet"
-        
-        # Example 2: Search for images related to both dog and cat
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dog+cat
-        
-        # Example 3: Search for images related to dog or cat, but not necessarily both
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dog|cat
-
-        # Example 4: Search for images related to dog but won't include results related to 'pug'
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dog -pug
-        
-        # Example 5: Search for images matching anything with the prefix ‘net’
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=net*
-        
-        # Example 6: Search for images that match dogs that are either corgis or labrador
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dogs + (corgis | labrador)
-        
-        # Example 7: Search for images that match strings close to the term theater with a difference of one character
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=theatre~1
-        
-        # Example 8: Search for images using single query parameter
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
-        
-        # Example 9: Search for images using multiple query parameters
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1   
-        """  # noqa
-
     @swagger_auto_schema(operation_id='image_search',
                          operation_description=image_search_description,
                          query_serializer=ImageSearchQueryStringSerializer,
@@ -145,7 +115,7 @@ and `qa`. Results are ranked in order of relevance.
                          code_examples=[
                              {
                                  'lang': 'Bash',
-                                 'source': image_search_bash
+                                 'source': image_search_curl
                              }
                          ])
     def get(self, request, format=None):
