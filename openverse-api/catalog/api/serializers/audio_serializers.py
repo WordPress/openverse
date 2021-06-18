@@ -28,8 +28,8 @@ class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
     )
     duration = serializers.CharField(
         label='duration',
-        help_text="A comma separated list of image sizes; available sizes "
-                  "include `shzort`, and `long`.",
+        help_text="A comma separated list of audio lengths; available lengths "
+                  "include `short`, and `long`.",
         required=False
     )
 
