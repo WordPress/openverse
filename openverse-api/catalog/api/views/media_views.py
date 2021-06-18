@@ -97,3 +97,11 @@ endpoint.
         }
         serialized_response = result_serializer(data=response_data)
         return Response(status=200, data=serialized_response.initial_data)
+
+
+class RelatedMedia(APIView):
+    swagger_schema = CustomAutoSchema
+    recommendations_read_description = """
+You can refer to the cURL request samples for examples on how to consume this
+endpoint.
+""" # noqa
