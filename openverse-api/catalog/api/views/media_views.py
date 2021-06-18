@@ -52,7 +52,7 @@ for information on structuring advanced searches.
 
 You can refer to the cURL request samples for examples on how to consume this
 endpoint.
-    """  # noqa
+"""  # noqa
 
     def _get(self,
              request,
