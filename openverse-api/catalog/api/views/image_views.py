@@ -35,11 +35,11 @@ from catalog.api.serializers.error_serializers import (
     NotFoundErrorSerializer,
 )
 from catalog.api.serializers.image_serializers import (
+    ImageSearchQueryStringSerializer,
     ImageSearchResultsSerializer,
     ImageSerializer,
-    ImageSearchQueryStringSerializer,
-    WatermarkQueryStringSerializer,
     ReportImageSerializer,
+    WatermarkQueryStringSerializer,
     OembedSerializer,
     OembedResponseSerializer
 )
