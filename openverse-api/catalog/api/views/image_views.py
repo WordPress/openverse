@@ -46,6 +46,9 @@ from catalog.api.serializers.image_serializers import (
 from catalog.api.utils import ccrel
 from catalog.api.utils.exceptions import input_error_response
 from catalog.api.utils.watermark import watermark
+from catalog.api.views.media_views import (
+    search_description_boilerplate,
+)
 from catalog.custom_auto_schema import CustomAutoSchema
 
 log = logging.getLogger(__name__)
@@ -81,32 +84,17 @@ def _get_user_ip(request):
 
 class SearchImages(APIView):
     swagger_schema = CustomAutoSchema
-    image_search_description = \
-        """
-        image_search is an API endpoint to search images using a query string.
+    image_search_description = """
+image_search is an API endpoint to search images using a query string.
 
-        By using this endpoint, you can obtain search results based on specified 
-        query and optionally filter results by `license`, `license_type`, 
-        `page`, `page_size`, `creator`, `tags`, `title`, `filter_dead`, 
-        `source`, `extension`, `categories`, `aspect_ratio`, `size`, `mature`, 
-        and `qa`. Results are ranked in order of relevance.
-        
-        Although there may be millions of relevant records, only the most 
-        relevant several thousand records can be viewed. This is by design: 
-        the search endpoint should be used to find the top 10,000 most relevant 
-        results, not for exhaustive search or bulk download of every barely 
-        relevant result. As such, the caller should not try to access pages 
-        beyond `page_count`, or else the server will reject the query.
-        
-        For more precise results, you can go to the 
-        [CC Search Syntax Guide](https://search.creativecommons.org/search-help) 
-        for information about creating queries and 
-        [Apache Lucene Syntax Guide](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
-        for information on structuring advanced searches.
+By using this endpoint, you can obtain search results based on specified 
+query and optionally filter results by `license`, `license_type`, 
+`page`, `page_size`, `creator`, `tags`, `title`, `filter_dead`, 
+`source`, `extension`, `categories`, `aspect_ratio`, `size`, `mature`, 
+and `qa`. Results are ranked in order of relevance.
+""" \
+                               f'{search_description_boilerplate}'  # noqa
 
-        You can refer to Bash's Request Samples for examples on how to use
-        this endpoint.
-        """  # noqa
     image_search_response = {
         "200": openapi.Response(
             description="OK",
