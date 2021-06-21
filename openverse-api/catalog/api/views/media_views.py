@@ -17,6 +17,11 @@ RESULT_COUNT = 'result_count'
 PAGE_COUNT = 'page_count'
 PAGE_SIZE = 'page_size'
 
+refer_sample = """
+You can refer to the cURL request samples for examples on how to consume this
+endpoint.
+"""
+
 
 def _get_user_ip(request):
     """
@@ -36,7 +41,8 @@ def _get_user_ip(request):
 
 class SearchMedia(APIView):
     swagger_schema = CustomAutoSchema
-    search_description = """
+    search_description = (
+        """
 Although there may be millions of relevant records, only the most 
 relevant several thousand records can be viewed. This is by design: 
 the search endpoint should be used to find the top 10,000 most relevant 
@@ -49,10 +55,9 @@ For more precise results, you can go to the
 for information about creating queries and 
 [Apache Lucene Syntax Guide](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
 for information on structuring advanced searches.
-
-You can refer to the cURL request samples for examples on how to consume this
-endpoint.
-"""  # noqa
+"""
+        f'{refer_sample}'
+    )  # noqa
 
     def _get(self,
              request,
@@ -103,7 +108,4 @@ endpoint.
 
 class RelatedMedia(APIView):
     swagger_schema = CustomAutoSchema
-    recommendations_read_description = """
-You can refer to the cURL request samples for examples on how to consume this
-endpoint.
-""" # noqa
+    recommendations_read_description = refer_sample
