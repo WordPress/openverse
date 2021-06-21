@@ -9,10 +9,7 @@ from django.http.response import HttpResponse, FileResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.authentication import BasicAuthentication
 from rest_framework.generics import GenericAPIView, CreateAPIView
-from rest_framework.mixins import RetrieveModelMixin
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -22,13 +19,14 @@ from catalog.api.examples import (
     image_search_curl,
     image_search_200_example,
     image_search_400_example,
+    recommendations_images_read_curl,
+    recommendations_images_read_200_example,
+    recommendations_images_read_404_example,
+    image_detail_curl,
     image_detail_200_example,
     image_detail_404_example,
     oembed_list_200_example,
     oembed_list_404_example,
-    recommendations_images_read_curl,
-    recommendations_images_read_200_example,
-    recommendations_images_read_404_example,
 )
 from catalog.api.models import Image, ImageReport
 from catalog.api.serializers.error_serializers import (
@@ -53,6 +51,7 @@ from catalog.api.views.media_views import (
     PAGE_COUNT,
     SearchMedia,
     RelatedMedia,
+    MediaDetail,
 )
 from catalog.custom_auto_schema import CustomAutoSchema
 
@@ -176,27 +175,21 @@ By using this endpoint, you can get the details of related images such as
         return Response(status=200, data=serialized_response.initial_data)
 
 
-class ImageDetail(GenericAPIView, RetrieveModelMixin):
-    swagger_schema = CustomAutoSchema
+class ImageDetail(MediaDetail):
     serializer_class = ImageSerializer
     queryset = Image.objects.all()
-    lookup_field = 'identifier'
-    authentication_classes = [BasicAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    image_detail_description = \
+    image_detail_description = (
         """
-        image_detail is an API endpoint to get the details of a specified 
-        image ID.
+image_detail is an API endpoint to get the details of a specified image ID.
 
-        By using this endpoint, you can get image details such as `title`, `id`, 
-        `creator`, `creator_url`, `tags`, `url`, `thumbnail`, `provider`, 
-        `source`, `license`, `license_version`, `license_url`, 
-        `foreign_landing_url`, `detail_url`, `related_url`, `height`, `weight`, 
-        and `attribution`.
+By using this endpoint, you can image details such as 
+`title`, `id`, `creator`, `creator_url`, `tags`, `url`, `provider`, `source`, 
+`license`, `license_version`, `license_url`, `foreign_landing_url`, 
+`detail_url`, `related_url`, `attribution`, `thumbnail`, `height` and `weight`.
+"""
+        f'{MediaDetail.detail_description}'
+    )  # noqa
 
-        You can refer to Bash's Request Samples for example on how to use
-        this endpoint.
-        """  # noqa
     image_detail_response = {
         "200": openapi.Response(
             description="OK",
@@ -210,23 +203,17 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         )
     }
 
-    image_detail_bash = \
-        """
-        # Get the details of image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
-        """  # noqa
-
     @swagger_auto_schema(operation_id="image_detail",
                          operation_description=image_detail_description,
                          responses=image_detail_response,
                          code_examples=[
                              {
                                  'lang': 'Bash',
-                                 'source': image_detail_bash
+                                 'source': image_detail_curl
                              }
                          ])
     def get(self, request, identifier, format=None):
-        """ Get the details of a single list. """
+        """ Get the details of a single image. """
         resp = self.retrieve(request, identifier)
         # Proxy insecure HTTP images at full resolution.
         if 'http://' in resp.data[search_controller.URL]:

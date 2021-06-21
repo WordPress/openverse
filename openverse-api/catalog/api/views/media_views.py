@@ -1,3 +1,7 @@
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import RetrieveModelMixin
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -109,3 +113,11 @@ for information on structuring advanced searches.
 class RelatedMedia(APIView):
     swagger_schema = CustomAutoSchema
     recommendations_read_description = refer_sample
+
+
+class MediaDetail(GenericAPIView, RetrieveModelMixin):
+    swagger_schema = CustomAutoSchema
+    lookup_field = 'identifier'
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    detail_description = refer_sample
