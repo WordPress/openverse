@@ -83,6 +83,20 @@ class ImageSerializer(MediaSerializer):
         help_text="The width of the image in pixels. Not always available."
     )
 
+    # Hyperlinks
+    detail_url = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='image-detail',
+        lookup_field='identifier',
+        help_text="A direct link to the detail view of this image."
+    )
+    related_url = serializers.HyperlinkedIdentityField(
+        view_name='related-images',
+        lookup_field='identifier',
+        read_only=True,
+        help_text="A link to an endpoint that provides similar images."
+    )
+
     def get_thumbnail(self, obj):
         request = self.context['request']
         host = request.get_host()

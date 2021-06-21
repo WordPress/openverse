@@ -94,6 +94,20 @@ class AudioSerializer(MediaSerializer):
         help_text='JSON describing alternative files for this audio.'
     )
 
+    # Hyperlinks
+    detail_url = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='audio-detail',
+        lookup_field='identifier',
+        help_text="A direct link to the detail view of this audio file."
+    )
+    related_url = serializers.HyperlinkedIdentityField(
+        view_name='related-audio',
+        lookup_field='identifier',
+        read_only=True,
+        help_text="A link to an endpoint that provides similar audio files."
+    )
+
 
 class AudioSearchResultsSerializer(MediaSearchResultsSerializer):
     """ The full audio search response. """

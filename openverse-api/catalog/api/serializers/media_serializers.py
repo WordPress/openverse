@@ -290,18 +290,6 @@ class MediaSerializer(serializers.Serializer):
     )
 
     # Additional fields
-    detail_url = serializers.HyperlinkedIdentityField(
-        read_only=True,
-        view_name='image-detail',
-        lookup_field='identifier',
-        help_text="A direct link to the detail view of this media."
-    )
-    related_url = serializers.HyperlinkedIdentityField(
-        view_name='related-images',
-        lookup_field='identifier',
-        read_only=True,
-        help_text="A link to an endpoint that provides similar media."
-    )
     fields_matched = serializers.ListField(
         required=False,
         help_text="List the fields that matched the query for this result."
