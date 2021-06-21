@@ -13,6 +13,17 @@ from catalog.api.serializers.media_serializers import (
 class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
     """ Parse and validate search query string parameters. """
 
+    """
+    Keep the fields names in sync with the actual fields below as this list is
+    used to generate Swagger documentation.
+    """
+    fields_names = [
+        *MediaSearchQueryStringSerializer.fields_names,
+        'source',
+        'categories',
+        'duration',
+    ]
+
     source = serializers.CharField(
         label="provider",
         help_text="A comma separated list of data sources to search. Valid "
@@ -64,6 +75,22 @@ class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
 
 class AudioSerializer(MediaSerializer):
     """ A single audio file. Used in search results."""
+
+    """
+    Keep the fields names in sync with the actual fields below as this list is
+    used to generate Swagger documentation.
+    """
+    fields_names = [
+        *MediaSerializer.fields_names,
+        'set',
+        'genre',
+        'duration',
+        'bit_rate',
+        'sample_rate',
+        'alt_files',
+        'detail_url',
+        'related_url',
+    ]
 
     set = serializers.PrimaryKeyRelatedField(
         required=False,

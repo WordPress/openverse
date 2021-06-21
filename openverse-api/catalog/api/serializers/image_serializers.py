@@ -14,6 +14,17 @@ from catalog.api.serializers.media_serializers import (
 
 class ImageSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
     """ Parse and validate search query string parameters. """
+    """
+    Keep the fields names in sync with the actual fields below as this list is
+    used to generate Swagger documentation.
+    """
+    fields_names = [
+        *MediaSearchQueryStringSerializer.fields_names,
+        'source',
+        'categories',
+        'aspect_ratio',
+        'size',
+    ]
 
     source = serializers.CharField(
         label="provider",
@@ -70,6 +81,19 @@ class ImageSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
 
 class ImageSerializer(MediaSerializer):
     """ A single image. Used in search results."""
+
+    """
+    Keep the fields names in sync with the actual fields below as this list is
+    used to generate Swagger documentation.
+    """
+    fields_names = [
+        *MediaSerializer.fields_names,
+        'thumbnail',
+        'height',
+        'width',
+        'detail_url',
+        'related_url',
+    ]
 
     thumbnail = serializers.SerializerMethodField(
         help_text="A direct link to the miniature image."

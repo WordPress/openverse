@@ -93,6 +93,24 @@ class MediaSearchQueryStringSerializer(serializers.Serializer):
         DeprecatedParam('pagesize', 'page_size'),
         DeprecatedParam('provider', 'source')
     ]
+    """
+    Keep the fields names in sync with the actual fields below as this list is
+    used to generate Swagger documentation.
+    """
+    fields_names = [
+        'q',
+        'license',
+        'license_type',
+        'page',
+        'page_size',
+        'creator',
+        'tags',
+        'title',
+        'filter_dead',
+        'extension',
+        'mature',
+        'qa',
+    ]
 
     q = serializers.CharField(
         label="query",
@@ -227,6 +245,27 @@ class MediaSerializer(serializers.Serializer):
     This serializer serializes a single media file. The class should be
     inherited by all individual media serializers.
     """
+
+    """
+    Keep the fields names in sync with the actual fields below as this list is
+    used to generate Swagger documentation.
+    """
+    fields_names = [
+        'id',
+        'title',
+        'foreign_landing_url',
+        'creator',
+        'creator_url',
+        'url',
+        'license',
+        'license_version',
+        'license_url',
+        'provider',
+        'source',
+        'tags',
+        'fields_matched',
+        'attribution',
+    ]
 
     requires_context = True
 
