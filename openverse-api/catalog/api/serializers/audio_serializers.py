@@ -13,6 +13,17 @@ from catalog.api.serializers.media_serializers import (
 class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
     """ Parse and validate search query string parameters. """
 
+    """
+    Keep the fields names in sync with the actual fields below as this list is
+    used to generate Swagger documentation.
+    """
+    fields_names = [
+        *MediaSearchQueryStringSerializer.fields_names,
+        'source',
+        'categories',
+        'duration',
+    ]
+
     source = serializers.CharField(
         label="provider",
         help_text="A comma separated list of data sources to search. Valid "
@@ -65,6 +76,22 @@ class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
 class AudioSerializer(MediaSerializer):
     """ A single audio file. Used in search results."""
 
+    """
+    Keep the fields names in sync with the actual fields below as this list is
+    used to generate Swagger documentation.
+    """
+    fields_names = [
+        *MediaSerializer.fields_names,
+        'set',
+        'genre',
+        'duration',
+        'bit_rate',
+        'sample_rate',
+        'alt_files',
+        'detail_url',
+        'related_url',
+    ]
+
     set = serializers.PrimaryKeyRelatedField(
         required=False,
         help_text='Reference to set of which this track is a part.',
@@ -92,6 +119,20 @@ class AudioSerializer(MediaSerializer):
     alt_files = serializers.JSONField(
         required=False,
         help_text='JSON describing alternative files for this audio.'
+    )
+
+    # Hyperlinks
+    detail_url = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='audio-detail',
+        lookup_field='identifier',
+        help_text="A direct link to the detail view of this audio file."
+    )
+    related_url = serializers.HyperlinkedIdentityField(
+        view_name='related-audio',
+        lookup_field='identifier',
+        read_only=True,
+        help_text="A link to an endpoint that provides similar audio files."
     )
 
 

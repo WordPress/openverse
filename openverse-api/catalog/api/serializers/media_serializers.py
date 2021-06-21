@@ -93,6 +93,24 @@ class MediaSearchQueryStringSerializer(serializers.Serializer):
         DeprecatedParam('pagesize', 'page_size'),
         DeprecatedParam('provider', 'source')
     ]
+    """
+    Keep the fields names in sync with the actual fields below as this list is
+    used to generate Swagger documentation.
+    """
+    fields_names = [
+        'q',
+        'license',
+        'license_type',
+        'page',
+        'page_size',
+        'creator',
+        'tags',
+        'title',
+        'filter_dead',
+        'extension',
+        'mature',
+        'qa',
+    ]
 
     q = serializers.CharField(
         label="query",
@@ -228,6 +246,27 @@ class MediaSerializer(serializers.Serializer):
     inherited by all individual media serializers.
     """
 
+    """
+    Keep the fields names in sync with the actual fields below as this list is
+    used to generate Swagger documentation.
+    """
+    fields_names = [
+        'id',
+        'title',
+        'foreign_landing_url',
+        'creator',
+        'creator_url',
+        'url',
+        'license',
+        'license_version',
+        'license_url',
+        'provider',
+        'source',
+        'tags',
+        'fields_matched',
+        'attribution',
+    ]
+
     requires_context = True
 
     # Fields corresponding to IdentifierMixin
@@ -290,18 +329,6 @@ class MediaSerializer(serializers.Serializer):
     )
 
     # Additional fields
-    detail_url = serializers.HyperlinkedIdentityField(
-        read_only=True,
-        view_name='image-detail',
-        lookup_field='identifier',
-        help_text="A direct link to the detail view of this media."
-    )
-    related_url = serializers.HyperlinkedIdentityField(
-        view_name='related-images',
-        lookup_field='identifier',
-        read_only=True,
-        help_text="A link to an endpoint that provides similar media."
-    )
     fields_matched = serializers.ListField(
         required=False,
         help_text="List the fields that matched the query for this result."
