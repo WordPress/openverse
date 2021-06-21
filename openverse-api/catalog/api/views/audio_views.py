@@ -32,6 +32,7 @@ from catalog.api.views.media_views import (
     RESULTS,
     RESULT_COUNT,
     PAGE_COUNT,
+    fields_to_md,
     SearchMedia,
     RelatedMedia,
     MediaDetail,
@@ -42,20 +43,16 @@ log = logging.getLogger(__name__)
 
 
 class SearchAudio(SearchMedia):
-    audio_search_description = (
-        """
-audio_search is an API endpoint to search audio files using a query 
-string.
+    audio_search_description = f"""
+audio_search is an API endpoint to search audio files using a query string.
 
 By using this endpoint, you can obtain search results based on specified 
-query and optionally filter results by `license`, `license_type`, `page`, 
-`page_size`, `creator`, `tags`, `title`, `filter_dead`, `extension`, `mature`, 
-`qa`, `source`, `categories` and `duration`.
+query and optionally filter results by
+{fields_to_md(AudioSearchQueryStringSerializer.fields_names)}.
 
 Results are ranked in order of relevance.
-"""
-        f'{SearchMedia.search_description}'
-    )  # noqa
+
+{SearchMedia.search_description}""" # noqa
 
     audio_search_response = {
         "200": openapi.Response(
@@ -93,19 +90,14 @@ Results are ranked in order of relevance.
 
 
 class RelatedAudio(RelatedMedia):
-    recommendations_audio_read_description = (
-        """
+    recommendations_audio_read_description = f"""
 recommendations_audio_read is an API endpoint to get related audio files 
 for a specified audio ID.
 
 By using this endpoint, you can get the details of related audio such as 
-`title`, `id`, `creator`, `creator_url`, `tags`, `url`, `provider`, `source`,
-`license`, `license_version`, `license_url`, `foreign_landing_url`, 
-`detail_url`, `related_url`, `attribution`, `set`, `genre`, `duration`, 
-`bit_rate`, `sample_rate` and `alt_files`. 
-"""
-        f'{RelatedMedia.recommendations_read_description}'
-    )  # noqa
+{fields_to_md(AudioSerializer.fields_names)}. 
+
+{RelatedMedia.recommendations_read_description}"""  # noqa
 
     recommendations_audio_read_response = {
         "200": openapi.Response(
@@ -181,19 +173,13 @@ class ReportAudioView(CreateAPIView):
 class AudioDetail(MediaDetail):
     serializer_class = AudioSerializer
     queryset = Audio.objects.all()
-
-    audio_detail_description = (
-        """
+    audio_detail_description = f"""
 audio_detail is an API endpoint to get the details of a specified audio ID.
 
-By using this endpoint, you can get audio details such as 
-`title`, `id`, `creator`, `creator_url`, `tags`, `url`, `provider`, `source`,
-`license`, `license_version`, `license_url`, `foreign_landing_url`, 
-`detail_url`, `related_url`, `attribution`, `set`, `genre`, `duration`, 
-`bit_rate`, `sample_rate` and `alt_files`. 
-"""
-        f'{MediaDetail.detail_description}'
-    )  # noqa
+By using this endpoint, you can get audio details such as
+{fields_to_md(AudioSerializer.fields_names)}. 
+
+{MediaDetail.detail_description}"""  # noqa
 
     audio_detail_response = {
         "200": openapi.Response(

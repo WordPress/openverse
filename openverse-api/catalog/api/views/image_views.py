@@ -49,6 +49,7 @@ from catalog.api.views.media_views import (
     RESULTS,
     RESULT_COUNT,
     PAGE_COUNT,
+    fields_to_md,
     SearchMedia,
     RelatedMedia,
     MediaDetail,
@@ -59,19 +60,16 @@ log = logging.getLogger(__name__)
 
 
 class SearchImages(SearchMedia):
-    image_search_description = (
-        """
+    image_search_description = f"""
 image_search is an API endpoint to search images using a query string.
 
-By using this endpoint, you can obtain search results based on specified 
-query and optionally filter results by `license`, `license_type`, `page`, 
-`page_size`, `creator`, `tags`, `title`, `filter_dead`, `extension`, `mature`,
-`qa`, `source`, `categories`, `aspect_ratio` and `size`. 
+By using this endpoint, you can obtain search results based on specified query
+and optionally filter results by
+{fields_to_md(ImageSearchQueryStringSerializer.fields_names)}. 
 
 Results are ranked in order of relevance.
-"""
-        f'{SearchMedia.search_description}'
-    )  # noqa
+
+{SearchMedia.search_description}""" # noqa
 
     image_search_response = {
         "200": openapi.Response(
@@ -109,18 +107,14 @@ Results are ranked in order of relevance.
 
 
 class RelatedImage(RelatedMedia):
-    recommendations_images_read_description = (
-        """
+    recommendations_images_read_description = f"""
 recommendations_images_read is an API endpoint to get related images 
 for a specified image ID.
 
 By using this endpoint, you can get the details of related images such as 
-`title`, `id`, `creator`, `creator_url`, `tags`, `url`, `provider`, `source`, 
-`license`, `license_version`, `license_url`, `foreign_landing_url`, 
-`detail_url`, `related_url`, `attribution`, `thumbnail`, `height` and `weight`.
-"""
-        f'{RelatedMedia.recommendations_read_description}'
-    )  # noqa
+{fields_to_md(ImageSerializer.fields_names)}.
+
+{RelatedMedia.recommendations_read_description}"""  # noqa
 
     recommendations_images_read_response = {
         "200": openapi.Response(
@@ -178,17 +172,13 @@ By using this endpoint, you can get the details of related images such as
 class ImageDetail(MediaDetail):
     serializer_class = ImageSerializer
     queryset = Image.objects.all()
-    image_detail_description = (
-        """
+    image_detail_description = f"""
 image_detail is an API endpoint to get the details of a specified image ID.
 
-By using this endpoint, you can image details such as 
-`title`, `id`, `creator`, `creator_url`, `tags`, `url`, `provider`, `source`, 
-`license`, `license_version`, `license_url`, `foreign_landing_url`, 
-`detail_url`, `related_url`, `attribution`, `thumbnail`, `height` and `weight`.
-"""
-        f'{MediaDetail.detail_description}'
-    )  # noqa
+By using this endpoint, you can image details such as
+{fields_to_md(ImageSerializer.fields_names)}.
+
+{MediaDetail.detail_description}"""  # noqa
 
     image_detail_response = {
         "200": openapi.Response(
