@@ -6,6 +6,8 @@ from catalog.api.examples.audio_requests import (
 from catalog.api.examples.audio_responses import (
     audio_search_200_example,
     audio_search_400_example,
+    audio_detail_200_example,
+    audio_detail_404_example,
     recommendations_audio_read_200_example,
     recommendations_audio_read_404_example,
 )

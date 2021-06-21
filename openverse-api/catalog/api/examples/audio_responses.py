@@ -78,3 +78,15 @@ recommendations_audio_read_404_example = {
         "detail": "An internal server error occurred."
     }
 }
+
+audio_detail_200_example = {
+    "application/json": {
+        # TODO
+    }
+}
+
+audio_detail_404_example = {
+    "application/json": {
+        "detail": "Not found."
+    }
+}
