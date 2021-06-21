@@ -38,69 +38,6 @@ image_search_400_example = {
     }
 }
 
-image_detail_200_example = {
-    "application/json": {
-        "title": "exam test",
-        "id": "7c829a03-fb24-4b57-9b03-65f43ed19395",
-        "creator": "Sean MacEntee",
-        "creator_url": "https://www.flickr.com/photos/18090920@N07",
-        "tags": [
-            {
-                "name": "exam"
-            },
-            {
-                "name": "test"
-            }
-        ],
-        "url": "https://live.staticflickr.com/5122/5264886972_3234d62748.jpg",
-        "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/7c829a03-fb24-4b57-9b03-65f43ed19395",
-        "provider": "flickr",
-        "source": "flickr",
-        "license": "by",
-        "license_version": "2.0",
-        "license_url": "https://creativecommons.org/licenses/by/2.0/",
-        "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/5264886972",
-        "detail_url": "http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
-        "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
-        "height": 167,
-        "width": 500,
-        "attribution": "\"exam test\" by Sean MacEntee is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/"
-    }
-}
-
-image_detail_404_example = {
-    "application/json": {
-        "detail": "Not found."
-    }
-}
-
-images_report_create_201_example = {
-    "application/json": {
-        "reason": "mature",
-        "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395",
-        "description": "This image contains sensitive content"
-    }
-}
-
-oembed_list_200_example = {
-    "application/json": {
-        "version": 1,
-        "type": "photo",
-        "width": 500,
-        "height": 167,
-        "title": "exam test",
-        "author_name": "Sean MacEntee",
-        "author_url": "https://www.flickr.com/photos/18090920@N07",
-        "license_url": "https://creativecommons.org/licenses/by/2.0/"
-    }
-}
-
-oembed_list_404_example = {
-    "application/json": {
-        "detail": "An internal server error occurred."
-    }
-}
-
 recommendations_images_read_200_example = {
     "application/json": {
         "result_count": 10000,
@@ -137,5 +74,68 @@ recommendations_images_read_200_example = {
 recommendations_images_read_404_example = {
     "application/json": {
         "detail": "An internal server error occurred."
+    }
+}
+
+image_detail_200_example = {
+    "application/json": {
+        "title": "exam test",
+        "id": "7c829a03-fb24-4b57-9b03-65f43ed19395",
+        "creator": "Sean MacEntee",
+        "creator_url": "https://www.flickr.com/photos/18090920@N07",
+        "tags": [
+            {
+                "name": "exam"
+            },
+            {
+                "name": "test"
+            }
+        ],
+        "url": "https://live.staticflickr.com/5122/5264886972_3234d62748.jpg",
+        "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/7c829a03-fb24-4b57-9b03-65f43ed19395",
+        "provider": "flickr",
+        "source": "flickr",
+        "license": "by",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/5264886972",
+        "detail_url": "http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
+        "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
+        "height": 167,
+        "width": 500,
+        "attribution": "\"exam test\" by Sean MacEntee is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/"
+    }
+}
+
+image_detail_404_example = {
+    "application/json": {
+        "detail": "Not found."
+    }
+}
+
+oembed_list_200_example = {
+    "application/json": {
+        "version": 1,
+        "type": "photo",
+        "width": 500,
+        "height": 167,
+        "title": "exam test",
+        "author_name": "Sean MacEntee",
+        "author_url": "https://www.flickr.com/photos/18090920@N07",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/"
+    }
+}
+
+oembed_list_404_example = {
+    "application/json": {
+        "detail": "An internal server error occurred."
+    }
+}
+
+images_report_create_201_example = {
+    "application/json": {
+        "reason": "mature",
+        "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395",
+        "description": "This image contains sensitive content"
     }
 }
