@@ -25,7 +25,8 @@ from drf_yasg.views import get_schema_view
 from catalog.api.examples import images_report_create_201_example
 from catalog.api.serializers.image_serializers import \
     ReportImageSerializer
-from catalog.api.views.audio_views import SearchAudio, RelatedAudio
+from catalog.api.views.audio_views import SearchAudio, AudioDetail, \
+    RelatedAudio
 from catalog.api.views.image_views import SearchImages, ImageDetail, \
     Watermark, RelatedImage, OembedView, ReportImageView
 from catalog.api.views.link_views import CreateShortenedLink, \
@@ -259,6 +260,11 @@ versioned_paths = [
         include('oauth2_provider.urls', namespace='oauth2_provider')
     ),
 
+    path(
+        'audio/<str:identifier>',
+        AudioDetail.as_view(),
+        name='audio-detail'
+    ),
     re_path('audio', SearchAudio.as_view(), name='audio'),
     path(
         'recommendations/audio/<str:identifier>',

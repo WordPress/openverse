@@ -13,8 +13,11 @@ from catalog.api.examples import (
     recommendations_audio_read_curl,
     recommendations_audio_read_200_example,
     recommendations_audio_read_404_example,
+    audio_detail_curl,
+    audio_detail_200_example,
+    audio_detail_404_example,
 )
-from catalog.api.models import AudioReport
+from catalog.api.models import Audio, AudioReport
 from catalog.api.serializers.audio_serializers import (
     AudioSearchQueryStringSerializer,
     AudioSearchResultsSerializer,
@@ -31,6 +34,7 @@ from catalog.api.views.media_views import (
     PAGE_COUNT,
     SearchMedia,
     RelatedMedia,
+    MediaDetail,
 )
 from catalog.custom_auto_schema import CustomAutoSchema
 
@@ -172,3 +176,46 @@ class ReportAudioView(CreateAPIView):
     swagger_schema = CustomAutoSchema
     queryset = AudioReport.objects.all()
     serializer_class = ReportAudioSerializer
+
+
+class AudioDetail(MediaDetail):
+    serializer_class = AudioSerializer
+    queryset = Audio.objects.all()
+
+    audio_detail_description = (
+        """
+audio_detail is an API endpoint to get the details of a specified audio ID.
+
+By using this endpoint, you can get audio details such as 
+`title`, `id`, `creator`, `creator_url`, `tags`, `url`, `provider`, `source`,
+`license`, `license_version`, `license_url`, `foreign_landing_url`, 
+`detail_url`, `related_url`, `attribution`, `set`, `genre`, `duration`, 
+`bit_rate`, `sample_rate` and `alt_files`. 
+"""
+        f'{MediaDetail.detail_description}'
+    )  # noqa
+
+    audio_detail_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples=audio_detail_200_example,
+            schema=AudioSerializer),
+        "404": openapi.Response(
+            description="OK",
+            examples=audio_detail_404_example,
+            schema=NotFoundErrorSerializer
+        )
+    }
+
+    @swagger_auto_schema(operation_id='audio_detail',
+                         operation_description=audio_detail_description,
+                         responses=audio_detail_response,
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': audio_detail_curl,
+                             }
+                         ])
+    def get(self, request, identifier, format=None):
+        """ Get the details of a single audio file. """
+        return self.retrieve(request, identifier)
