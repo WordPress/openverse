@@ -76,12 +76,12 @@ class Audio(AbstractMedia):
         db_index=True,
         help_text='The artistic style of this audio file, eg. hip-hop (music) / tech (podcasts).',
     )
-    type = models.CharField(
+    category = models.CharField(
         max_length=80,
         blank=True,
         null=True,
         db_index=True,
-        help_text='',
+        help_text='The category of this audio file, eg. music, podcast, news & audiobook.',
     )
 
     duration = models.IntegerField(
