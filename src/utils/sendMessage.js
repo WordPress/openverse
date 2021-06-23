@@ -1,6 +1,8 @@
 // TODO: set correct targetOrigin of the parent window
 const TARGET_ORIGIN = '*'
-
+const config = {
+  dev: false,
+}
 /**
  * Send message to the outer window. Can only be called on client-side
  * because it uses `window` object.
@@ -9,12 +11,14 @@ const TARGET_ORIGIN = '*'
  * @property {Object} value - the value of event
  */
 export const sendWindowMessage = (message) => {
-  window.parent.postMessage(
-    {
-      debug: config.dev,
-      type: message.type,
-      value: message.value,
-    },
-    TARGET_ORIGIN
-  )
+  if (window.parent !== window) {
+    window.parent.postMessage(
+      {
+        debug: config.dev,
+        type: message.type,
+        value: message.value,
+      },
+      TARGET_ORIGIN
+    )
+  }
 }
