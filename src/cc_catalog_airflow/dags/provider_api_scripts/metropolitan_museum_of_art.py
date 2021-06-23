@@ -48,7 +48,7 @@ def main(date=None):
         _extract_the_data(fetch_the_object_id[1])
 
     total_images = image_store.commit()
-    logger.info(f'Total CC0 images recieved {total_images}')
+    logger.info(f'Total CC0 images received {total_images}')
 
 
 def _get_object_ids(date, endpoint=ENDPOINT):

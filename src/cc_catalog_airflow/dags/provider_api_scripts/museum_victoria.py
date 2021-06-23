@@ -7,7 +7,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
     level=logging.INFO
 )
-
 logger = logging.getLogger(__name__)
 
 LIMIT = 100
@@ -24,7 +23,7 @@ HEADERS = {
     "Accept": "application/json"
 }
 
-DEFAULT_QUERY_PARAM = {
+DEFAULT_QUERY_PARAMS = {
     "has_image": "yes",
     "perpage": LIMIT,
     "imagelicence": "cc by",
@@ -66,8 +65,11 @@ def main():
 
 
 def _get_query_params(
-        query_params=DEFAULT_QUERY_PARAM, license_type="cc by", page=0
+        default_query_params=None, license_type="cc by", page=0
 ):
+    if default_query_params is None:
+        default_query_params = DEFAULT_QUERY_PARAMS
+    query_params = default_query_params.copy()
     query_params["imagelicence"] = license_type
     query_params["page"] = page
     return query_params
@@ -75,8 +77,10 @@ def _get_query_params(
 
 def _get_batch_objects(
         endpoint=ENDPOINT, params=None,
-        headers=HEADERS, retries=RETRIES
+        headers=None, retries=RETRIES
 ):
+    if headers is None:
+        headers = HEADERS.copy()
     data = None
     for retry in range(retries):
         response = delay_request.get(

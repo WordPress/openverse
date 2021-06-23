@@ -12,7 +12,7 @@ ENDPOINT = 'http://openaccess-api.clevelandart.org/api/artworks/'
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
 
-DEFAULT_QUERY_PARAM = {
+DEFAULT_QUERY_PARAMS = {
     'cc': '1',
     'has_image': '1',
     'limit': LIMIT,
@@ -48,8 +48,10 @@ def main():
 
 
 def _build_query_param(offset=0,
-                       default_query_param=DEFAULT_QUERY_PARAM
+                       default_query_param=None
                        ):
+    if default_query_param is None:
+        default_query_param = DEFAULT_QUERY_PARAMS
     query_param = default_query_param.copy()
     query_param.update(
         skip=offset

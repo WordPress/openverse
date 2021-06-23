@@ -21,7 +21,7 @@ THUMBNAIL_SIZE = 400
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
 
-DEFAULT_QUERY_PARAM = {
+DEFAULT_QUERY_PARAMS = {
     "keys": "*",
     "filters": "[has_image:true],[public_domain:true]",
     "offset": 0,
@@ -57,8 +57,10 @@ def main():
 
 def _get_query_param(
         offset=0,
-        default_query_param=DEFAULT_QUERY_PARAM
+        default_query_param=None
         ):
+    if default_query_param is None:
+        default_query_param = DEFAULT_QUERY_PARAMS
     query_params = default_query_param.copy()
     query_params.update(
         offset=offset
@@ -69,9 +71,11 @@ def _get_query_param(
 def _get_batch_items(
         endpoint=ENDPOINT,
         query_params=None,
-        headers=HEADERS,
+        headers=None,
         retries=RETRIES
         ):
+    if headers is None:
+        headers = HEADERS.copy()
     items = None
     for retry in range(retries):
         response = delay_request.get(

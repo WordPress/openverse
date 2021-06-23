@@ -63,7 +63,9 @@ def _get_object_list(building, endpoint=ENDPOINT, retries=RETRIES):
         return
 
 
-def _build_params(building, default_params=DEFAULT_QUERY_PARAMS, page=1):
+def _build_params(building, default_params=None, page=1):
+    if default_params is None:
+        default_params = DEFAULT_QUERY_PARAMS
     query_params = default_params.copy()
     query_params.update(
         {
