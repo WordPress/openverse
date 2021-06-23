@@ -1,4 +1,6 @@
 import debounce from 'lodash.debounce'
+import { sendWindowMessage } from '~/utils/sendMessage'
+import config from '../../nuxt.config.js'
 
 /**
  * When the app is in embedded mode, it passes the full height
@@ -40,8 +42,11 @@ export default {
       )
     },
     notifyOuterWindow(height) {
-      // TODO: set correct targetOrigin of the parent window
-      window.parent.postMessage({ height }, '*')
+      sendWindowMessage({
+        debug: config.dev,
+        type: 'resize',
+        value: { height },
+      })
     },
   },
   watch: {
