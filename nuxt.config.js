@@ -139,6 +139,7 @@ export default {
   ],
   head,
   env,
+  dev: process.env.NODE_ENV !== 'production',
   buildModules: [
     '@nuxtjs/style-resources',
     '@nuxtjs/svg',

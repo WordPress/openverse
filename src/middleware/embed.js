@@ -1,5 +1,6 @@
 import { SET_EMBEDDED } from '~/store-modules/mutation-types'
 import { sendWindowMessage } from '~/utils/sendMessage'
+import config from '../../nuxt.config.js'
 
 /**
  * In embedded mode, the app sends its size and url
@@ -22,6 +23,7 @@ export default function ({ store, query, route }) {
   }
   if (process.client) {
     sendWindowMessage({
+      debug: config.dev,
       type: 'urlChange',
       value: { path: route.fullPath, title: document.title },
     })
