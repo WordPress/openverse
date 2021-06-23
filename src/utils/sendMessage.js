@@ -11,6 +11,7 @@ const TARGET_ORIGIN = '*'
 export const sendWindowMessage = (message) => {
   window.parent.postMessage(
     {
+      debug: config.dev,
       type: message.type,
       value: message.value,
     },
