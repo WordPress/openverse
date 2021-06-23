@@ -1,4 +1,5 @@
 import { SET_EMBEDDED } from '~/store-modules/mutation-types'
+import { sendWindowMessage } from '~/utils/sendMessage'
 
 /**
  * In embedded mode, the app sends its size and url
@@ -19,13 +20,10 @@ export default function ({ store, query, route }) {
     const isEmbedded = query.embedded === 'true'
     store.commit(SET_EMBEDDED, { isEmbedded })
   }
-  if (typeof window !== 'undefined') {
-    window.parent.postMessage(
-      {
-        type: 'urlChange',
-        value: route.path,
-      },
-      '*'
-    )
+  if (process.client) {
+    sendWindowMessage({
+      type: 'urlChange',
+      value: { path: route.fullPath, title: document.title },
+    })
   }
 }

@@ -1,4 +1,5 @@
 import debounce from 'lodash.debounce'
+import { sendWindowMessage } from '~/utils/sendMessage'
 
 /**
  * When the app is in embedded mode, it passes the full height
@@ -40,14 +41,10 @@ export default {
       )
     },
     notifyOuterWindow(height) {
-      // TODO: set correct targetOrigin of the parent window
-      window.parent.postMessage(
-        {
-          type: 'resize',
-          value: height,
-        },
-        '*'
-      )
+      sendWindowMessage({
+        type: 'resize',
+        value: { height },
+      })
     },
   },
   watch: {

@@ -130,6 +130,7 @@ export default {
   plugins: [
     { src: '~/plugins/ab-test-init.js', mode: 'client' },
     { src: '~/plugins/ga.js', mode: 'client' },
+    { src: '~/plugins/message.js' },
   ],
   css: [
     '~/assets/fonts.css',
