@@ -41,7 +41,13 @@ export default {
     },
     notifyOuterWindow(height) {
       // TODO: set correct targetOrigin of the parent window
-      window.parent.postMessage({ height }, '*')
+      window.parent.postMessage(
+        {
+          type: 'resize',
+          value: height,
+        },
+        '*'
+      )
     },
   },
   watch: {
