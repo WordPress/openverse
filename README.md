@@ -70,10 +70,6 @@ The code in this repository is formatted using `prettier`. If you have prettier 
 
 You will need to fix any linting issues before committing. We recommend formatting your JavaScript files on save in your text editor. You can learn how to do this in Visual Studio Code [here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode#format-on-save).
 
-## Versioning
-
-Openverse uses [CalVer](https://calver.org/) for version numbering, in the `YYYY.M.Micro` format. This format is intentionally compatiable with NPM's `semver` parser. `Micro` is bumped whenever there are multiple releases in a month, for example `2020.07.1` is the first release in July 2020, while `2020.07.2` is the second.
-
 ## Contributing
 
 Pull requests are welcome! Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community members on #openverse.
