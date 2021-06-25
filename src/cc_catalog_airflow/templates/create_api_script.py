@@ -14,7 +14,7 @@ def _get_filled_template(template_path, provider, media_type='image'):
         ).replace(
             '{provider_upper_case}', provider.upper()
         ).replace(
-            '{provider}', provider
+            '{provider}', provider.lower()
         )
         if media_type:
             if media_type == 'image':
@@ -63,7 +63,8 @@ def fill_template(provider, media_type, templates_path):
             workflow_template_path, provider
         )
         workflow_file.write(workflow_string)
-        print(f"Airflow workflow file: {workflow_path.relative_to(project_path)}")
+        print("Airflow workflow file: "
+              f"{workflow_path.relative_to(project_path)}")
 
 
 def main():
@@ -83,7 +84,7 @@ def main():
     provider = args.provider
     media_type = args.media
     if media_type not in ['audio', 'image']:
-        print(f"No media type given, assuming it's `image`")
+        print("No media type given, assuming it's `image`")
         media_type = 'image'
     templates_path = Path(__file__).parent
     fill_template(provider, media_type, templates_path)
