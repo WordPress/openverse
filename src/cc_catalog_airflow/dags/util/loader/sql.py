@@ -6,9 +6,11 @@ from util.loader import column_names as col
 from util.loader import provider_details as prov
 from psycopg2.errors import InvalidTextRepresentation
 
+from util.loader.paths import _extract_media_type
+
 logger = logging.getLogger(__name__)
 
-LOAD_TABLE_NAME_STUB = 'provider_image_data'
+LOAD_TABLE_NAME_STUB = 'provider_data_'
 IMAGE_TABLE_NAME = 'image'
 DB_USER_NAME = 'deploy'
 NOW = 'NOW()'
@@ -30,12 +32,18 @@ OLDEST_PER_PROVIDER = {
 
 def create_loading_table(
         postgres_conn_id,
-        identifier
+        identifier,
+        ti,
 ):
     """
     Create intermediary table and indices if they do not exist
     """
-    load_table = _get_load_table_name(identifier)
+    media_type = ti.xcom_pull(
+        task_ids='stage_oldest_tsv_file', key='media_type'
+    )
+    if media_type is None:
+        media_type = 'image'
+    load_table = _get_load_table_name(identifier, media_type=media_type)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(
         dedent(
@@ -100,7 +108,8 @@ def load_local_data_to_intermediate_table(
         identifier,
         max_rows_to_skip=10
 ):
-    load_table = _get_load_table_name(identifier)
+    media_type = _extract_media_type(tsv_file_name)
+    load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f'Loading {tsv_file_name} into {load_table}')
 
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
@@ -129,9 +138,10 @@ def load_s3_data_to_intermediate_table(
         postgres_conn_id,
         bucket,
         s3_key,
-        identifier
+        identifier,
+        media_type='image'
 ):
-    load_table = _get_load_table_name(identifier)
+    load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f'Loading {s3_key} from S3 Bucket {bucket} into {load_table}')
 
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
@@ -156,6 +166,14 @@ def _clean_intermediate_table_data(
         postgres_hook,
         load_table
 ):
+    """
+    Necessary for old TSV files that have not been cleaned up,
+    using `MediaStore` class:
+    Removes any rows without any of the required fields:
+    `url`, `license`, `license_version`, `foreign_id`.
+    Also removes any duplicate rows that have the same `provider`
+    and `foreign_id`.
+    """
     postgres_hook.run(
         f'DELETE FROM {load_table} WHERE {col.DIRECT_URL} IS NULL;'
     )
@@ -182,16 +200,16 @@ def _clean_intermediate_table_data(
     )
 
 
-def upsert_records_to_image_table(
+def upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=IMAGE_TABLE_NAME
+        db_table=IMAGE_TABLE_NAME,
+        media_type='image',
 ):
-
-    def _newest_non_null(column):
+    def _newest_non_null(column: str) -> str:
         return f'{column} = COALESCE(EXCLUDED.{column}, old.{column})'
 
-    def _merge_jsonb_objects(column):
+    def _merge_jsonb_objects(column: str) -> str:
         """
         This function returns SQL that merges the top-level keys of the
         a JSONB column, taking the newest available non-null value.
@@ -203,7 +221,7 @@ def upsert_records_to_image_table(
             old.{column}
           )'''
 
-    def _merge_jsonb_arrays(column):
+    def _merge_jsonb_arrays(column: str) -> str:
         return f'''{column} = COALESCE(
             (
               SELECT jsonb_agg(DISTINCT x)
@@ -213,8 +231,8 @@ def upsert_records_to_image_table(
             old.{column}
           )'''
 
-    load_table = _get_load_table_name(identifier)
-    logger.info(f'Upserting new records into {image_table}.')
+    load_table = _get_load_table_name(identifier, media_type=media_type)
+    logger.info(f'Upserting new records into {db_table}.')
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     column_inserts = {
         col.CREATED_ON: NOW,
@@ -242,7 +260,7 @@ def upsert_records_to_image_table(
     }
     upsert_query = dedent(
         f'''
-        INSERT INTO {image_table} AS old ({', '.join(column_inserts.keys())})
+        INSERT INTO {db_table} AS old ({', '.join(column_inserts.keys())})
         SELECT {', '.join(column_inserts.values())}
         FROM {load_table}
         ON CONFLICT ({col.PROVIDER}, md5({col.FOREIGN_ID}))
@@ -271,14 +289,14 @@ def upsert_records_to_image_table(
     postgres.run(upsert_query)
 
 
-def overwrite_records_in_image_table(
+def overwrite_records_in_db_table(
         postgres_conn_id,
         identifier,
-        image_table=IMAGE_TABLE_NAME
+        db_table=IMAGE_TABLE_NAME,
+        media_type='image'
 ):
-
-    load_table = _get_load_table_name(identifier)
-    logger.info(f'Updating records in {image_table}.')
+    load_table = _get_load_table_name(identifier, media_type=media_type)
+    logger.info(f'Updating records in {db_table}.')
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     columns_to_update = [
         col.LANDING_URL,
@@ -302,31 +320,37 @@ def overwrite_records_in_image_table(
 
     update_query = dedent(
         f'''
-        UPDATE {image_table}
+        UPDATE {db_table}
         SET
         {update_set_string}
         FROM {load_table}
         WHERE
-          {image_table}.{col.PROVIDER} = {load_table}.{col.PROVIDER}
+          {db_table}.{col.PROVIDER} = {load_table}.{col.PROVIDER}
           AND
-          md5({image_table}.{col.FOREIGN_ID})
+          md5({db_table}.{col.FOREIGN_ID})
             = md5({load_table}.{col.FOREIGN_ID});
         '''
     )
     postgres.run(update_query)
 
 
-def drop_load_table(postgres_conn_id, identifier):
-    load_table = _get_load_table_name(identifier)
+def drop_load_table(postgres_conn_id, identifier, ti):
+    media_type = ti.xcom_pull(
+        task_ids='stage_oldest_tsv_file', key='media_type'
+    )
+    if media_type is None:
+        media_type = 'image'
+    load_table = _get_load_table_name(identifier, media_type=media_type)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     postgres.run(f'DROP TABLE {load_table};')
 
 
 def _get_load_table_name(
-        identifier,
-        load_table_name_stub=LOAD_TABLE_NAME_STUB,
-):
-    return f'{load_table_name_stub}{identifier}'
+        identifier: str,
+        media_type: str = 'image',
+        load_table_name_stub: str = LOAD_TABLE_NAME_STUB,
+) -> str:
+    return f'{load_table_name_stub}{media_type}_{identifier}'
 
 
 def _get_malformed_row_in_file(error_msg):

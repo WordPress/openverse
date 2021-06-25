@@ -1,30 +1,55 @@
 from datetime import datetime, timedelta
 import logging
 import os
+from typing import Optional
+
+from airflow.models import TaskInstance
 
 FAILURE_SUBDIRECTORY = 'db_loader_failures'
 STAGING_SUBDIRECTORY = 'db_loader_staging'
+SUPPORTED_MEDIA_TYPES = {'audio', 'image'}
 
 logger = logging.getLogger(__name__)
 
 
 def stage_oldest_tsv_file(
-        output_dir,
-        identifier,
-        minimum_file_age_minutes
-):
+        output_dir: str,
+        identifier: str,
+        minimum_file_age_minutes: int,
+        ti: TaskInstance,
+) -> bool:
+    """
+    Selects the oldest tsv file from the output directory.
+    If the file hasn't changed in `minimum_file_age_minutes`,
+    moves the file to `staging_directory`, and sends an Airflow
+    xcom message with file media_type extracted from the filename.
+    :param output_dir: Directory where temporary tsv files are
+    stored.
+    :param identifier: File identifier, usually timestamp with
+    the time when ingestion for provider started.
+    :param minimum_file_age_minutes: If the file has not been
+    updated in this time, it is safe to assume that ingestion
+    has finished, and we can save the data to the database.
+    :param ti: Airflow Task Instance, used to sent the media_type to
+    downstream tasks
+    :return: True if tsv file was staged, false otherwise
+    """
     staging_directory = _get_staging_directory(output_dir, identifier)
     tsv_file_name = _get_oldest_tsv_file(output_dir, minimum_file_age_minutes)
     tsv_found = tsv_file_name is not None
     if tsv_found:
         _move_file(tsv_file_name, staging_directory)
+        media_type = _extract_media_type(tsv_file_name)
+        ti.xcom_push(key='media_type', value=media_type)
     return tsv_found
 
 
-def delete_staged_file(output_dir, identifier):
+def delete_staged_file(
+        output_dir: str, identifier: str
+) -> None:
     staging_directory = _get_staging_directory(output_dir, identifier)
     staging_directory_files = os.listdir(staging_directory)
-    print(staging_directory_files)
+    logger.debug(f'Files in staging directory: {staging_directory_files}')
     for file_name in staging_directory_files:
         file_path = os.path.join(staging_directory, file_name)
         logger.info(f'Deleting {file_path}')
@@ -34,9 +59,8 @@ def delete_staged_file(output_dir, identifier):
 
 
 def move_staged_files_to_failure_directory(
-        output_dir,
-        identifier
-):
+        output_dir: str, identifier: str
+) -> None:
     staging_directory = _get_staging_directory(output_dir, identifier)
     failure_directory = _get_failure_directory(output_dir, identifier)
     staged_file_list = _get_full_tsv_paths(staging_directory)
@@ -46,7 +70,9 @@ def move_staged_files_to_failure_directory(
     os.rmdir(staging_directory)
 
 
-def get_staged_file(output_dir, identifier):
+def get_staged_file(
+        output_dir: str, identifier: str,
+) -> str:
     staging_directory = _get_staging_directory(output_dir, identifier)
     path_list = _get_full_tsv_paths(staging_directory)
     assert len(path_list) == 1
@@ -54,25 +80,25 @@ def get_staged_file(output_dir, identifier):
 
 
 def _get_staging_directory(
-        output_dir,
-        identifier,
-        staging_subdirectory=STAGING_SUBDIRECTORY,
+        output_dir: str,
+        identifier: str,
+        staging_subdirectory: Optional[str] = STAGING_SUBDIRECTORY,
 ):
     return os.path.join(output_dir, staging_subdirectory, identifier)
 
 
 def _get_failure_directory(
-        output_dir,
-        identifier,
-        failure_subdirectory=FAILURE_SUBDIRECTORY,
+        output_dir: str,
+        identifier: str,
+        failure_subdirectory: Optional[str] = FAILURE_SUBDIRECTORY,
 ):
     return os.path.join(output_dir, failure_subdirectory, identifier)
 
 
 def _get_oldest_tsv_file(
-        directory,
-        minimum_file_age_minutes
-):
+        directory: str,
+        minimum_file_age_minutes: int
+) -> Optional[str]:
     oldest_file_name = None
     logger.info(f'getting files from {directory}')
     path_list = _get_full_tsv_paths(directory)
@@ -109,3 +135,23 @@ def _get_full_tsv_paths(directory):
         for f in os.listdir(directory)
         if f[-4:] == '.tsv'
     ]
+
+
+def _extract_media_type(tsv_file_name: Optional[str]) -> str:
+    """
+    By default, the filename will be:
+    `folder/provider_timestamp.tsv` for older version
+    `folder/provider_<media_type>_timestamp.tsv` for newer version
+    If we cannot extract `media_type`, we return `image`.
+    :param tsv_file_name:
+    :return: media type of the staged file, one of
+    SUPPORTED_MEDIA_TYPES
+    """
+    try:
+        media_type = tsv_file_name.split('/')[-1].split('_')[1]
+        if media_type not in SUPPORTED_MEDIA_TYPES:
+            media_type = 'image'
+    # None or no underscores
+    except (AttributeError, IndexError):
+        media_type = 'image'
+    return media_type

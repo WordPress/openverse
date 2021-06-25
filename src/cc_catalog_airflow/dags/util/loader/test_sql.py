@@ -1,13 +1,17 @@
+import logging
 from collections import namedtuple
 import json
 import os
 import socket
 import time
+from datetime import datetime
 from urllib.parse import urlparse
 
 import boto3
 import psycopg2
 import pytest
+from airflow.models import TaskInstance
+from airflow.operators.dummy import DummyOperator
 
 from util.loader import sql
 
@@ -16,14 +20,13 @@ from psycopg2.errors import InvalidTextRepresentation
 TEST_ID = 'testing'
 POSTGRES_CONN_ID = os.getenv('TEST_CONN_ID')
 POSTGRES_TEST_URI = os.getenv('AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING')
-TEST_LOAD_TABLE = f'provider_image_data{TEST_ID}'
+TEST_LOAD_TABLE = f'provider_data_image_{TEST_ID}'
 TEST_IMAGE_TABLE = f'image_{TEST_ID}'
 S3_LOCAL_ENDPOINT = os.getenv('S3_LOCAL_ENDPOINT')
 S3_TEST_BUCKET = f'cccatalog-storage-{TEST_ID}'
 ACCESS_KEY = os.getenv('TEST_ACCESS_KEY')
 SECRET_KEY = os.getenv('TEST_SECRET_KEY')
 S3_HOST = socket.gethostbyname(urlparse(S3_LOCAL_ENDPOINT).hostname)
-
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'test_resources'
@@ -33,26 +36,26 @@ DROP_LOAD_TABLE_QUERY = f'DROP TABLE IF EXISTS {TEST_LOAD_TABLE} CASCADE;'
 DROP_IMAGE_TABLE_QUERY = f'DROP TABLE IF EXISTS {TEST_IMAGE_TABLE} CASCADE;'
 
 CREATE_LOAD_TABLE_QUERY = (
-        f'CREATE TABLE public.{TEST_LOAD_TABLE} ('
-        f'foreign_identifier character varying(3000), '
-        f'foreign_landing_url character varying(1000), '
-        f'url character varying(3000), '
-        f'thumbnail character varying(3000), '
-        f'width integer, '
-        f'height integer, '
-        f'filesize integer, '
-        f'license character varying(50), '
-        f'license_version character varying(25), '
-        f'creator character varying(2000), '
-        f'creator_url character varying(2000), '
-        f'title character varying(5000), '
-        f'meta_data jsonb, '
-        f'tags jsonb, '
-        f'watermarked boolean, '
-        f'provider character varying(80), '
-        f'source character varying(80), '
-        f'ingestion_type character varying(80)'
-        f');'
+    f'CREATE TABLE public.{TEST_LOAD_TABLE} ('
+    f'foreign_identifier character varying(3000), '
+    f'foreign_landing_url character varying(1000), '
+    f'url character varying(3000), '
+    f'thumbnail character varying(3000), '
+    f'width integer, '
+    f'height integer, '
+    f'filesize integer, '
+    f'license character varying(50), '
+    f'license_version character varying(25), '
+    f'creator character varying(2000), '
+    f'creator_url character varying(2000), '
+    f'title character varying(5000), '
+    f'meta_data jsonb, '
+    f'tags jsonb, '
+    f'watermarked boolean, '
+    f'provider character varying(80), '
+    f'source character varying(80), '
+    f'ingestion_type character varying(80)'
+    f');'
 )
 
 UUID_FUNCTION_QUERY = (
@@ -96,6 +99,10 @@ UNIQUE_CONDITION_QUERY = (
 DROP_IMAGE_INDEX_QUERY = (
     f'DROP INDEX IF EXISTS {TEST_IMAGE_TABLE}_provider_fid_idx;'
 )
+
+op_no_dag = DummyOperator(task_id='op_no_dag')
+naive_datetime = datetime(2016, 1, 1).replace(tzinfo=None)
+ti = TaskInstance(task=op_no_dag, execution_date=naive_datetime)
 
 
 @pytest.fixture
@@ -141,6 +148,8 @@ def postgres_with_load_and_image_table():
     conn = psycopg2.connect(POSTGRES_TEST_URI)
     cur = conn.cursor()
 
+    logging.info(f'dropping load table: {DROP_LOAD_TABLE_QUERY}')
+    logging.info(f'dropping image table: {DROP_IMAGE_TABLE_QUERY}')
     cur.execute(DROP_LOAD_TABLE_QUERY)
     cur.execute(DROP_IMAGE_TABLE_QUERY)
     cur.execute(DROP_IMAGE_INDEX_QUERY)
@@ -219,7 +228,7 @@ def test_create_loading_table_creates_table(postgres):
     postgres_conn_id = POSTGRES_CONN_ID
     identifier = TEST_ID
     load_table = TEST_LOAD_TABLE
-    sql.create_loading_table(postgres_conn_id, identifier)
+    sql.create_loading_table(postgres_conn_id, identifier, ti)
 
     check_query = (
         f"SELECT EXISTS ("
@@ -233,9 +242,9 @@ def test_create_loading_table_creates_table(postgres):
 def test_create_loading_table_errors_if_run_twice_with_same_id(postgres):
     postgres_conn_id = POSTGRES_CONN_ID
     identifier = TEST_ID
-    sql.create_loading_table(postgres_conn_id, identifier)
+    sql.create_loading_table(postgres_conn_id, identifier, ti)
     with pytest.raises(Exception):
-        sql.create_loading_table(postgres_conn_id, identifier)
+        sql.create_loading_table(postgres_conn_id, identifier, ti)
 
 
 @pytest.mark.parametrize('load_function', [_load_local_tsv, _load_s3_tsv])
@@ -449,10 +458,10 @@ def test_upsert_records_inserts_one_record_to_empty_image_table(
     )
     postgres_with_load_and_image_table.cursor.execute(load_data_query)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.cursor.execute(
         f"SELECT * FROM {image_table};"
@@ -515,10 +524,10 @@ def test_upsert_records_inserts_two_records_to_image_table(
         )
         postgres_with_load_and_image_table.cursor.execute(load_data_query)
         postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.cursor.execute(
         f"SELECT * FROM {image_table};"
@@ -555,10 +564,10 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
     postgres_with_load_and_image_table.cursor.execute(load_data_query)
     postgres_with_load_and_image_table.connection.commit()
 
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.cursor.execute(
         f"SELECT * FROM {image_table};"
@@ -568,10 +577,10 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
     original_last_synced = original_row[-2]
 
     time.sleep(0.001)
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.cursor.execute(
         f"SELECT * FROM {image_table};"
@@ -635,10 +644,10 @@ def test_upsert_records_replaces_data(
     )
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
 
@@ -656,10 +665,10 @@ def test_upsert_records_replaces_data(
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -722,10 +731,10 @@ def test_upsert_records_does_not_replace_with_nulls(
     )
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
 
@@ -743,10 +752,10 @@ def test_upsert_records_does_not_replace_with_nulls(
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -798,10 +807,10 @@ def test_upsert_records_merges_meta_data(
     )
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -810,10 +819,10 @@ def test_upsert_records_merges_meta_data(
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -858,10 +867,10 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
     )
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -870,10 +879,10 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -932,10 +941,10 @@ def test_upsert_records_merges_tags(
     )
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -944,10 +953,10 @@ def test_upsert_records_merges_tags(
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -1002,10 +1011,10 @@ def test_upsert_records_does_not_replace_tags_with_null(
     )
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -1014,10 +1023,10 @@ def test_upsert_records_does_not_replace_tags_with_null(
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -1067,10 +1076,10 @@ def test_upsert_records_replaces_null_tags(
 
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -1079,10 +1088,10 @@ def test_upsert_records_replaces_null_tags(
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -1128,10 +1137,10 @@ def test_overwrite_records_leaves_dates(
     postgres_with_load_and_image_table.cursor.execute(load_data_query)
     postgres_with_load_and_image_table.connection.commit()
 
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.cursor.execute(
         f"SELECT * FROM {image_table};"
@@ -1141,10 +1150,10 @@ def test_overwrite_records_leaves_dates(
     original_last_synced = original_row[-2]
 
     time.sleep(0.001)
-    sql.overwrite_records_in_image_table(
+    sql.overwrite_records_in_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.cursor.execute(
         f"SELECT * FROM {image_table};"
@@ -1208,10 +1217,10 @@ def test_overwrite_records_replaces_data(
     )
     postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
 
@@ -1229,10 +1238,10 @@ def test_overwrite_records_replaces_data(
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
-    sql.overwrite_records_in_image_table(
+    sql.overwrite_records_in_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -1258,7 +1267,7 @@ def test_drop_load_table_drops_table(postgres_with_load_table):
     postgres_conn_id = POSTGRES_CONN_ID
     identifier = TEST_ID
     load_table = TEST_LOAD_TABLE
-    sql.drop_load_table(postgres_conn_id, identifier)
+    sql.drop_load_table(postgres_conn_id, identifier, ti)
     check_query = (
         f"SELECT EXISTS ("
         f"SELECT FROM pg_tables WHERE tablename='{load_table}');"
@@ -1299,10 +1308,10 @@ def test_update_flickr_sub_providers(postgres_with_load_and_image_table):
 
     postgres_with_load_and_image_table.cursor.execute(insert_data_query)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -1365,10 +1374,10 @@ def test_update_europeana_sub_providers(postgres_with_load_and_image_table):
 
     postgres_with_load_and_image_table.cursor.execute(insert_data_query)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -1427,10 +1436,10 @@ def test_update_smithsonian_sub_providers(postgres_with_load_and_image_table):
 
     postgres_with_load_and_image_table.cursor.execute(insert_data_query)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
@@ -1483,10 +1492,10 @@ def test_image_expiration(postgres_with_load_and_image_table):
 
     postgres_with_load_and_image_table.cursor.execute(insert_data_query)
     postgres_with_load_and_image_table.connection.commit()
-    sql.upsert_records_to_image_table(
+    sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        image_table=image_table
+        db_table=image_table
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(
