@@ -90,13 +90,13 @@ def main(date):
         image_pages = _get_image_pages(image_batch)
         if image_pages:
             _process_image_pages(image_pages)
-            total_images = image_store.total_images
+            total_images = image_store.total_items
         logger.info(f'Total Images so far: {total_images}')
         if not continue_token:
             break
 
     image_store.commit()
-    total_images = image_store.total_images
+    total_images = image_store.total_items
     logger.info(f'Total images: {total_images}')
     logger.info('Terminated!')
 

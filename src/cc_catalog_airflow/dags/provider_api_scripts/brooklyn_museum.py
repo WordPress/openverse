@@ -45,12 +45,12 @@ def main():
         logger.debug(len(objects_batch))
         if type(objects_batch) == list and len(objects_batch) > 0:
             _process_objects_batch(objects_batch)
-            logger.debug(f"Images till now {image_store.total_images}")
+            logger.debug(f"Images till now {image_store.total_items}")
             offset += LIMIT
         else:
             condition = False
     image_store.commit()
-    logger.info(f"Total images recieved {image_store.total_images}")
+    logger.info(f"Total images received {image_store.total_items}")
 
 
 def _get_query_param(

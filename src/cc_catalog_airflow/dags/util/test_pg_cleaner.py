@@ -1222,7 +1222,7 @@ def test_clean_single_row_doesnt_reuse_wrong_image_store_and_adds_row():
 def test_log_and_check_totals_raises_when_number_of_images_cleaned_is_wrong(
     monkeypatch,
 ):
-    monkeypatch.setattr(pg_cleaner.image.ImageStore, "total_images", 1)
+    monkeypatch.setattr(pg_cleaner.image.ImageStore, "total_items", 1)
     expected_calls = [
         call.info("Total images cleaned:  2"),
         call.info(
@@ -1243,7 +1243,7 @@ def test_log_and_check_totals_raises_when_number_of_images_cleaned_is_wrong(
 
 
 def test_log_and_check_totals_logs(monkeypatch):
-    monkeypatch.setattr(pg_cleaner.image.ImageStore, "total_images", 1)
+    monkeypatch.setattr(pg_cleaner.image.ImageStore, "total_items", 1)
     expected_calls = [
         call.info("Total images cleaned:  2"),
         call.info(

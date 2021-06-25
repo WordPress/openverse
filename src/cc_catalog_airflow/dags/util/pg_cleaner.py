@@ -197,7 +197,7 @@ def _select_records(postgres_conn_id, prefix, image_table=IMAGE_TABLE_NAME):
 def _clean_single_row(record, image_store_dict, prefix):
     dirty_row = ImageTableRow(*record)
     image_store = image_store_dict[(dirty_row.provider, prefix)]
-    total_images_before = image_store.total_images
+    total_images_before = image_store.total_items
     license_lower = dirty_row.license_.lower() if dirty_row.license_ else None
     tags_list = [t for t in dirty_row.tags if t] if dirty_row.tags else None
     image_store.add_item(
@@ -218,7 +218,7 @@ def _clean_single_row(record, image_store_dict, prefix):
         watermarked=dirty_row.watermarked,
         source=dirty_row.source,
     )
-    if not image_store.total_images - total_images_before == 1:
+    if not image_store.total_items - total_images_before == 1:
         logger.warning(f"Record {dirty_row} was not stored!")
         _save_failure_identifier(dirty_row.identifier)
 
@@ -233,7 +233,7 @@ def _save_failure_identifier(identifier, output_path=OUTPUT_PATH):
 
 
 def _log_and_check_totals(total_rows, image_store_dict):
-    image_totals = {k: v.total_images for k, v in image_store_dict.items()}
+    image_totals = {k: v.total_items for k, v in image_store_dict.items()}
     total_images_sum = sum(image_totals.values())
     logger.info(f"Total images cleaned:  {total_images_sum}")
     logger.info(f"Image Totals breakdown:  {image_totals}")
