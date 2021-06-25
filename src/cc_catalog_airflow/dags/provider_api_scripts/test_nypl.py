@@ -106,7 +106,7 @@ def test_request_handler_failure():
         actual_response = np._request_handler(
             params=query_param
         )
-
+    assert mock_call.call_count == 3
     assert actual_response is None
 
 
@@ -189,6 +189,7 @@ def test_handle_results_success():
             np._handle_results(result)
 
     assert mock_item.call_count == 7
+    assert mock_request.call_count == 1
 
 
 def test_handle_results_failure():
@@ -199,7 +200,7 @@ def test_handle_results_failure():
     with patch.object(
             np,
             '_request_handler',
-            return_value=item_response) as mock_request:
+            return_value=item_response):
         with patch.object(
                 np.image_store,
                 'add_item') as mock_item:

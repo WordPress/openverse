@@ -63,7 +63,10 @@ _IMAGE_TSV_COLUMNS = [
     ),
     columns.StringColumn(
         name='source', required=False, size=80, truncate=False
-    )
+    ),
+    columns.StringColumn(
+        name="ingestion_type", required=False, size=80, truncate=False
+    ),
 ]
 
 Image = namedtuple(
@@ -145,7 +148,8 @@ class ImageStore:
             meta_data=None,
             raw_tags=None,
             watermarked='f',
-            source=None
+            source=None,
+            ingestion_type='commoncrawl'
     ):
         """
         Add information for a single image to the ImageStore.
@@ -200,6 +204,9 @@ class ImageStore:
                              and the `provider` argument in the
                              ImageStore init function is the specific
                              provider of the image.
+        ingestion_type:      String showing how the image was ingested:
+                             through an api - 'provider_api' or using the
+                             commoncrawl database - 'commoncrawl'
         """
         image = self._get_image(
             foreign_landing_url=foreign_landing_url,
@@ -217,7 +224,8 @@ class ImageStore:
             meta_data=meta_data,
             raw_tags=raw_tags,
             watermarked=watermarked,
-            source=source
+            source=source,
+            ingestion_type=ingestion_type,
         )
         tsv_row = self._create_tsv_row(image)
         if tsv_row:
@@ -284,6 +292,7 @@ class ImageStore:
             raw_tags,
             watermarked,
             source,
+            ingestion_type
     ):
         valid_license_info = licenses.get_license_info(
             license_url=license_url,
@@ -315,7 +324,8 @@ class ImageStore:
             tags=tags,
             watermarked=watermarked,
             provider=self._PROVIDER,
-            source=source
+            source=source,
+            ingestion_type=ingestion_type
         )
 
     def _create_tsv_row(
@@ -445,6 +455,7 @@ class MockImageStore(ImageStore):
             raw_tags,
             watermarked,
             source,
+            ingestion_type,
     ):
         valid_license_info = self.license_info
 
@@ -473,5 +484,6 @@ class MockImageStore(ImageStore):
             tags=tags,
             watermarked=watermarked,
             provider=self._PROVIDER,
-            source=source
+            source=source,
+            ingestion_type=ingestion_type,
         )

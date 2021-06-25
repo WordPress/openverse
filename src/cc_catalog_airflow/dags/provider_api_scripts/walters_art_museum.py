@@ -20,7 +20,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
     level=logging.INFO
 )
-
 logger = logging.getLogger(__name__)
 
 DELAY = 1
@@ -73,7 +72,6 @@ image_store = ImageStore(provider=PROVIDER)
 
 
 def main():
-
     logger.info("Begin: Walters Art Museum provider script.")
 
     for class_param in QUERY_CLASSIFICATION:
@@ -121,10 +119,12 @@ def _get_image_list(
 
 def _build_query_param(
         class_param=None,
-        default_query_params=DEFAULT_QUERY_PARAMS,
+        default_query_params=None,
         apikey=API_KEY,
         page=1
 ):
+    if default_query_params is None:
+        default_query_params = DEFAULT_QUERY_PARAMS
     query_params = default_query_params.copy()
     query_params.update(
         {
@@ -137,18 +137,17 @@ def _build_query_param(
     return query_params
 
 
-def _extract_items_list_from_json(json_response_inpydict_form):
+def _extract_items_list_from_json(json_response):
     if (
-            json_response_inpydict_form is None
-            or str(
-                json_response_inpydict_form.get('ReturnStatus')
-            ).lower() != 'true'
-            or json_response_inpydict_form.get('Items') is None
-            or len(json_response_inpydict_form.get('Items')) == 0
+            json_response is None
+            or str(json_response.get('ReturnStatus')
+                   ).lower() != 'true'
+            or json_response.get('Items') is None
+            or len(json_response.get('Items')) == 0
     ):
         items_list = None
     else:
-        items_list = json_response_inpydict_form.get('Items')
+        items_list = json_response.get('Items')
 
     return items_list
 
@@ -175,15 +174,15 @@ def _process_image(img):
     meta_data = _get_image_meta_data(img)
 
     return image_store.add_item(
-            foreign_landing_url=foreign_landing_url,
-            image_url=image_url,
-            thumbnail_url=thumbnail_url,
-            license_url=license_url,
-            foreign_identifier=foreign_identifier,
-            creator=creator,
-            creator_url=creator_url,
-            title=title,
-            meta_data=meta_data,
+        foreign_landing_url=foreign_landing_url,
+        image_url=image_url,
+        thumbnail_url=thumbnail_url,
+        license_url=license_url,
+        foreign_identifier=foreign_identifier,
+        creator=creator,
+        creator_url=creator_url,
+        title=title,
+        meta_data=meta_data,
     )
 
 
@@ -191,20 +190,21 @@ def _get_creator_info(img):
     creator, creator_url = None, None
     creator = img.get("Creator")
     if creator:
-        creator_url = (f"{MUSEUM_SITE}/browse/{creator.lower()}")
+        creator_url = f"{MUSEUM_SITE}/browse/{creator.lower()}"
 
     return creator, creator_url
 
 
 def _get_image_meta_data(img):
-    image_meta_data = {}
-    image_meta_data["ObjectNumber"] = img.get("ObjectNumber")
-    image_meta_data["PublicAccessDate"] = img.get("PublicAccessDate")
-    image_meta_data["Collection"] = img.get("Collection")
-    image_meta_data["Medium"] = img.get("Medium")
-    image_meta_data["Classification"] = img.get("Classification")
-    image_meta_data["Description"] = img.get("Description")
-    image_meta_data["CreditLine"] = img.get("CreditLine")
+    image_meta_data = {
+        "ObjectNumber": img.get("ObjectNumber"),
+        "PublicAccessDate": img.get("PublicAccessDate"),
+        "Collection": img.get("Collection"),
+        "Medium": img.get("Medium"),
+        "Classification": img.get("Classification"),
+        "Description": img.get("Description"),
+        "CreditLine": img.get("CreditLine")
+    }
     return {k: v for k, v in image_meta_data.items() if v is not None}
 
 

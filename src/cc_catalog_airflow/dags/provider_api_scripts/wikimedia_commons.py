@@ -22,6 +22,10 @@ from common import DelayedRequester, ImageStore
 from util.loader import provider_details as prov
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
+    level=logging.INFO
+)
 
 LIMIT = 250
 # The 10000 is a bit arbitrary, but needs to be larger than the mean
@@ -108,15 +112,18 @@ def _derive_timestamp_pair(date):
 def _get_image_batch(
         start_timestamp,
         end_timestamp,
-        continue_token={},
+        continue_token=None,
         retries=5
 ):
+    if continue_token is None:
+        continue_token = {}
     query_params = _build_query_params(
         start_timestamp,
         end_timestamp,
         continue_token=continue_token
     )
     image_batch = None
+    new_continue_token = None
     for _ in range(MEAN_GLOBAL_USAGE_LIMIT):
         response_json = (
             delayed_requester.
@@ -130,8 +137,6 @@ def _get_image_batch(
         )
 
         if response_json is None:
-            image_batch = None
-            new_continue_token = None
             break
         else:
             new_continue_token = response_json.pop('continue', {})
@@ -168,9 +173,13 @@ def _process_image_pages(image_pages):
 def _build_query_params(
         start_date,
         end_date,
-        continue_token={},
-        default_query_params=DEFAULT_QUERY_PARAMS,
+        continue_token=None,
+        default_query_params=None,
 ):
+    if continue_token is None:
+        continue_token = {}
+    if default_query_params is None:
+        default_query_params = DEFAULT_QUERY_PARAMS
     query_params = default_query_params.copy()
     query_params.update(
         gaistart=start_date,
@@ -254,8 +263,9 @@ def _get_image_info_dict(image_data):
     return image_info
 
 
-def _check_mediatype(image_info, image_mediatypes=IMAGE_MEDIATYPES):
-    valid_mediatype = True
+def _check_mediatype(image_info, image_mediatypes=None):
+    if image_mediatypes is None:
+        image_mediatypes = IMAGE_MEDIATYPES
     image_mediatype = image_info.get('mediatype')
     if image_mediatype not in image_mediatypes:
         logger.debug(
@@ -281,7 +291,7 @@ def _extract_date_info(image_info):
         .get('DateTime', {})
         .get('value', '')
     )
-    return (date_originally_created, last_modified_at_source)
+    return date_originally_created, last_modified_at_source
 
 
 def _extract_creator_info(image_info):
@@ -293,14 +303,14 @@ def _extract_creator_info(image_info):
     )
 
     if not artist_string:
-        return (None, None)
+        return None, None
 
     artist_elem = html.fromstring(artist_string)
     # We take all text to replicate what is shown on Wikimedia Commons
     artist_text = ''.join(artist_elem.xpath('//text()')).strip()
     url_list = list(artist_elem.iterlinks())
     artist_url = _cleanse_url(url_list[0][2]) if url_list else None
-    return (artist_text, artist_url)
+    return artist_text, artist_url
 
 
 def _extract_category_info(image_info):
@@ -367,10 +377,6 @@ def _cleanse_url(url_string):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(
-        format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-        level=logging.INFO
-    )
     parser = argparse.ArgumentParser(
         description='Wikimedia Commons API Job',
         add_help=True,

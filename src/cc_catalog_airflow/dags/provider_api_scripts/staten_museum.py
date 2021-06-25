@@ -21,7 +21,7 @@ THUMBNAIL_SIZE = 400
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
 
-DEFAULT_QUERY_PARAM = {
+DEFAULT_QUERY_PARAMS = {
     "keys": "*",
     "filters": "[has_image:true],[public_domain:true]",
     "offset": 0,
@@ -43,7 +43,7 @@ def main():
             )
         if type(items) == list:
             if len(items) > 0:
-                image_count = _handle_items_data(
+                _handle_items_data(
                     items
                 )
                 offset += LIMIT
@@ -57,8 +57,10 @@ def main():
 
 def _get_query_param(
         offset=0,
-        default_query_param=DEFAULT_QUERY_PARAM
+        default_query_param=None
         ):
+    if default_query_param is None:
+        default_query_param = DEFAULT_QUERY_PARAMS
     query_params = default_query_param.copy()
     query_params.update(
         offset=offset
@@ -69,9 +71,12 @@ def _get_query_param(
 def _get_batch_items(
         endpoint=ENDPOINT,
         query_params=None,
-        headers=HEADERS,
+        headers=None,
         retries=RETRIES
         ):
+    if headers is None:
+        headers = HEADERS.copy()
+    items = None
     for retry in range(retries):
         response = delay_request.get(
             endpoint,
@@ -83,11 +88,8 @@ def _get_batch_items(
             if "items" in response_json.keys():
                 items = response_json.get("items")
                 break
-            else:
-                items = None
         except Exception as e:
             logger.error(f"errored due to {e}")
-            items = None
     return items
 
 
@@ -213,7 +215,9 @@ def _get_title(titles):
 
 def _get_metadata(item):
     meta_data = {}
-    meta_data["created_date"] = item.get("created")
+    created_date = item.get("created")
+    if created_date:
+        meta_data["created_date"] = created_date
     collection = item.get("collection")
     if type(collection) == list:
         meta_data["collection"] = ','.join(collection)

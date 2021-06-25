@@ -23,7 +23,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
     level=logging.INFO
 )
-
 logger = logging.getLogger(__name__)
 
 DELAY = 1.0
@@ -79,7 +78,7 @@ def main(date):
     date_type = DATE_TYPE
 
     for start_timestamp, end_timestamp in timestamp_pairs:
-        total_images = _process_interval(
+        _process_interval(
             start_timestamp,
             end_timestamp,
             date_type
@@ -159,6 +158,8 @@ def _get_image_list(
         endpoint=ENDPOINT,
         max_tries=6  # one original try, plus 5 retries
 ):
+    image_list, total_pages = None, None
+    try_number = 0
     for try_number in range(max_tries):
         query_param_dict = _build_query_param_dict(
             start_timestamp,
@@ -181,9 +182,8 @@ def _get_image_list(
     if try_number == max_tries - 1 and (
             (image_list is None) or (total_pages is None)):
         logger.warning('No more tries remaining. Returning Nonetypes.')
-        return None, None
-    else:
-        return image_list, total_pages
+
+    return image_list, total_pages
 
 
 def _extract_response_json(response):
@@ -205,10 +205,14 @@ def _build_query_param_dict(
         cur_page,
         date_type,
         api_key=API_KEY,
-        license_info=LICENSE_INFO,
+        license_info=None,
         limit=LIMIT,
-        default_query_param=DEFAULT_QUERY_PARAMS,
+        default_query_param=None,
 ):
+    if license_info is None:
+        license_info = LICENSE_INFO.copy()
+    if default_query_param is None:
+        default_query_param = DEFAULT_QUERY_PARAMS
     query_param_dict = default_query_param.copy()
     query_param_dict.update(
         {
@@ -328,7 +332,9 @@ def _get_image_url(image_data):
     return None, None, None
 
 
-def _get_license(license_id, license_info=LICENSE_INFO):
+def _get_license(license_id, license_info=None):
+    if license_info is None:
+        license_info = LICENSE_INFO.copy()
     license_id = str(license_id)
 
     if license_id not in license_info:

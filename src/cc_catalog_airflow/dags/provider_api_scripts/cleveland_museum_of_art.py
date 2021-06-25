@@ -12,7 +12,7 @@ ENDPOINT = 'http://openaccess-api.clevelandart.org/api/artworks/'
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
 
-DEFAULT_QUERY_PARAM = {
+DEFAULT_QUERY_PARAMS = {
     'cc': '1',
     'has_image': '1',
     'limit': LIMIT,
@@ -48,8 +48,10 @@ def main():
 
 
 def _build_query_param(offset=0,
-                       default_query_param=DEFAULT_QUERY_PARAM
+                       default_query_param=None
                        ):
+    if default_query_param is None:
+        default_query_param = DEFAULT_QUERY_PARAMS
     query_param = default_query_param.copy()
     query_param.update(
         skip=offset
@@ -62,7 +64,7 @@ def _get_response(
                 endpoint=ENDPOINT,
                 retries=RETRIES
                 ):
-    response_json, total_images = None, 0
+    response_json, total_images, tries = None, 0, 0
     for tries in range(retries):
         response = delay_request.get(
                     endpoint,
@@ -89,9 +91,8 @@ def _get_response(
         return response_json, total_images
 
 
-def _handle_response(
-                    batch
-                    ):
+def _handle_response(batch):
+    total_images = 0
     for data in batch:
         license_ = data.get('share_license_status', '').lower()
         if license_ != 'cc0':
@@ -135,39 +136,32 @@ def _handle_response(
     return total_images
 
 
-def _get_image_type(
-                    image_data
-                    ):
+def _get_image_type(image_data):
+    key, image_url = None, None
     if image_data.get('web'):
         key = 'web'
         image_url = image_data.get('web').get('url', None)
     elif image_data.get('print'):
         key = 'print'
         image_url = image_data.get('print').get('url', None)
-
     elif image_data.get('full'):
         key = 'full'
         image_url = image_data.get('full').get('url', None)
-    else:
-        image_url = None
-
-    if image_url is None:
-        key = None
     return image_url, key
 
 
 def _get_metadata(data):
-    metadata = {}
-
-    metadata['accession_number'] = data.get('accession_number', '')
-    metadata['technique'] = data.get('technique', '')
-    metadata['date'] = data.get('creation_date', '')
-    metadata['credit_line'] = data.get('creditline', '')
-    metadata['classification'] = data.get('type', '')
-    metadata['tombstone'] = data.get('tombstone', '')
-    metadata['culture'] = ','.join(
-        [i for i in data.get('culture', []) if i is not None]
-    )
+    metadata = {
+        'accession_number': data.get('accession_number', ''),
+        'technique': data.get('technique', ''),
+        'date': data.get('creation_date', ''),
+        'credit_line': data.get('creditline', ''),
+        'classification': data.get('type', ''),
+        'tombstone': data.get('tombstone', ''),
+        'culture': ','.join(
+            [i for i in data.get('culture', []) if i is not None]
+        )}
+    metadata = {k: v for k, v in metadata.items() if v is not None}
     return metadata
 
 

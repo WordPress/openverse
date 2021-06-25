@@ -22,7 +22,7 @@ HEADERS = {
     "Accept": "application/json"
 }
 
-DEFAULT_QUERY_PARAM = {
+DEFAULT_QUERY_PARAMS = {
     "has_image": 1,
     "image_license": "CC",
     "page[size]": LIMIT,
@@ -94,8 +94,10 @@ def _get_query_param(
         page_number=0,
         from_year=0,
         to_year=1500,
-        default_query_param=DEFAULT_QUERY_PARAM
+        default_query_param=None
         ):
+    if default_query_param is None:
+        default_query_param = DEFAULT_QUERY_PARAMS
     query_param = default_query_param.copy()
     query_param["page[number]"] = page_number
     query_param["date[from]"] = from_year
@@ -105,10 +107,13 @@ def _get_query_param(
 
 def _get_batch_objects(
         endpoint=ENDPOINT,
-        headers=HEADERS,
+        headers=None,
         retries=RETRIES,
         query_param=None
         ):
+    if headers is None:
+        headers = HEADERS.copy()
+    data = None
     for retry in range(retries):
         response = delay_request.get(
             endpoint,
@@ -120,11 +125,8 @@ def _get_batch_objects(
             if "data" in response_json.keys():
                 data = response_json.get("data")
                 break
-            else:
-                data = None
         except Exception as e:
             logger.error(f"Failed to due to {e}")
-            data = None
     return data
 
 
@@ -135,10 +137,7 @@ def _handle_object_data(batch_data):
         if id_ in RECORD_IDS:
             continue
         RECORD_IDS.append(id_)
-        links = obj_.get("links")
-
-        if links:
-            foreign_landing_url = links.get("self")
+        foreign_landing_url = obj_.get("links", {}).get("self")
         if foreign_landing_url is None:
             continue
         obj_attributes = obj_.get("attributes")

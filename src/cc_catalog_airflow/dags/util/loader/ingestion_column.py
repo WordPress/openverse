@@ -5,6 +5,9 @@ PostgreSQL.
 """
 import logging
 import os
+
+from common.storage.image import _IMAGE_TSV_COLUMNS
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,13 +19,25 @@ def check_and_fix_tsv_file(tsv_file_name):
 
     It will also log a warning if the number is completely wrong.
     """
-    logger.info(f'Checking for ingestion_type column in {tsv_file_name}')
-    old_cols_number = 17
+    try:
+        media_type = tsv_file_name.split('/')[-1].split('_')[1]
+    except IndexError:
+        # If no media file is set in the filename, it is
+        # probably image
+        media_type = 'image'
+    old_cols_number = len(_IMAGE_TSV_COLUMNS) - 1
+    if media_type == 'audio':
+        # TODO: when audio is added:
+        # old_cols_number = len(AUDIO_TSV_COLUMNS) - 1
+        old_cols_number = 0
     new_cols_number = old_cols_number + 1
     with open(tsv_file_name) as f:
         test_line = f.readline()
     line_list = [word.strip() for word in test_line.split('\t')]
     if len(line_list) == old_cols_number:
+        # Previously, the last column was 'source'
+        # If source is 'commoncrawl', we set the ingestion_type to
+        # 'commoncrawl', else to 'provider_api'
         _add_ingestion_type(tsv_file_name, line_list[-1])
     elif len(line_list) == new_cols_number:
         logger.info(

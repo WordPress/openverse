@@ -43,7 +43,6 @@ def main(date='all'):
            which running the script will pull data.
     """
 
-    param = None
     offset = 0
 
     logger.info('Begin: PhyloPic API requests')
@@ -114,8 +113,6 @@ def _get_total_images():
 
 def _create_endpoint_for_IDs(**args):
     limit = LIMIT
-    offset = 0
-    endpoint = ''
 
     if args.get('date'):
         # Get a list of objects uploaded/updated on a given date.
@@ -154,12 +151,6 @@ def _get_meta_data(_uuid):
     logger.info(f'Processing UUID: {_uuid}')
 
     base_url = 'http://phylopic.org'
-    img_url = ''
-    thumbnail = ''
-    width = ''
-    height = ''
-    foreign_id = ''
-    foreign_url = ''
     meta_data = {}
     endpoint = f"http://phylopic.org/api/a/image/{_uuid}?options=credit+" \
         "licenseURL+pngFiles+submitted+submitter+taxa+canonicalName" \
@@ -196,17 +187,17 @@ def _get_meta_data(_uuid):
 def _get_creator_details(result):
     credit_line = None
     pub_date = None
-    creator = ''
-
+    creator = None
     first_name = result.get('submitter', {}).get('firstName')
     last_name = result.get('submitter', {}).get('lastName')
-    creator = f'{first_name} {last_name}'.strip()
+    if first_name and last_name:
+        creator = f'{first_name} {last_name}'.strip()
 
     if result.get('credit'):
         credit_line = result.get('credit').strip()
         pub_date = result.get('submitted').strip()
 
-    return (creator, credit_line, pub_date)
+    return creator, credit_line, pub_date
 
 
 def _get_taxa_details(result):
@@ -215,15 +206,14 @@ def _get_taxa_details(result):
     taxa_list = None
     title = ''
     if taxa:
-        taxa = list(filter(
-            lambda x: x.get('canonicalName') is not None, taxa))
-        taxa_list = list(
-            map(lambda x: x.get('canonicalName', {}).get('string', ''), taxa))
+        taxa = [_.get('canonicalName') for _ in taxa
+                if _.get('canonicalName') is not None]
+        taxa_list = [_.get('string', '') for _ in taxa]
 
     if taxa_list:
         title = taxa_list[0]
 
-    return (taxa_list, title)
+    return taxa_list, title
 
 
 def _get_image_info(result, _uuid):
@@ -234,6 +224,8 @@ def _get_image_info(result, _uuid):
     height = ''
 
     image_info = result.get('pngFiles')
+    img = []
+    thb = []
     if image_info:
         img = list(filter(lambda x: (
             int(str(x.get('width', '0'))) >= 257), image_info))
@@ -257,7 +249,7 @@ def _get_image_info(result, _uuid):
             f'Image not detected in url: {base_url}/image/{_uuid}')
         return None, None, None, None
     else:
-        return (img_url, width, height, thumbnail)
+        return img_url, width, height, thumbnail
 
 
 if __name__ == '__main__':

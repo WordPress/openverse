@@ -12,7 +12,6 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
     level=logging.INFO,
 )
-
 logger = logging.getLogger(__name__)
 
 delayed_requester = DelayedRequester(DELAY)
@@ -91,9 +90,11 @@ def _get_title_owner(image):
 
 
 def _get_meta_data(image):
+    description = image.get("pinterest_description")
     meta_data = {}
-    meta_data["description"] = image.get("pinterest_description")
-    return {k: v for k, v in meta_data.items() if v is not None}
+    if description:
+        meta_data["description"] = description
+    return meta_data
 
 
 def _get_tags(image):
@@ -113,7 +114,7 @@ def _get_tags(image):
 
 def _process_image_data(image):
     # verify the license and extract the metadata
-    license = "cc0"
+    license_ = "cc0"
     version = "1.0"
 
     foreign_id, foreign_url = _get_foreign_id_url(image)
@@ -132,7 +133,7 @@ def _process_image_data(image):
     return image_store.add_item(
         foreign_landing_url=foreign_url,
         image_url=img_url,
-        license_=license,
+        license_=license_,
         license_version=str(version),
         foreign_identifier=str(foreign_id),
         width=str(width) if width else None,
