@@ -1,21 +1,20 @@
 """
-Content Provider:       Stocksnap
+Content Provider:       StockSnap
 
 ETL Process:            Use the API to identify all CC-licensed images.
 
 Output:                 TSV file containing the image, the respective
                         meta-data.
 
-Notes:                  {{API URL}}
+Notes:                  https://stocksnap.io/api/
                         No rate limit specified.
 """
 import json
-import os
 import logging
 from urllib.parse import urlparse
 
-from common import DelayedRequester, ImageStore, AudioStore
-from common.licenses.licenses import get_license_info, get_license_info_from_license_pair
+from common import DelayedRequester, ImageStore
+from common.licenses.licenses import get_license_info
 from util.loader import provider_details as prov
 
 """
@@ -47,28 +46,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-LIMIT = 0  # number of items per page in API response
 DELAY = 1  # in seconds
 RETRIES = 3
-HOST = '{{host URL}}'
-ENDPOINT = f'https://{HOST}/{{API PATH}}'
-# TODO: Add Provider constant to the
-#  `src/cc_catalog_airflow/dags/util/loader/provider_details.py` file
+HOST = 'stocksnap.io'
+ENDPOINT = f'https://{HOST}/api/load-photos/date/desc'
+CDN = "https://cdn.stocksnap.io/img-thumbs/960w"
 PROVIDER = prov.STOCKSNAP_DEFAULT_PROVIDER
-# TODO: Add the API key to `src/cc_catalog_airflow/env.template`
-#  Do not hardcode your API key value!
-API_KEY = os.getenv("STOCKSNAP", "nokeyprovided")
+# No API key required.
+# API_KEY = os.getenv("STOCKSNAP", "nokeyprovided")
 
-# TODO: Add any headers necessary for API request
 HEADERS = {
     "Accept": "application/json",
-    "api_key": API_KEY,
 }
-# TODO: Add parameters that are necessary for each API request
-DEFAULT_QUERY_PARAMS = {
-    'format': 'json',
-    'license': 'open-cc-licenses',
-}
+DEFAULT_QUERY_PARAMS = {}
 
 delayed_requester = DelayedRequester(DELAY)
 image_store = ImageStore(provider=PROVIDER)
@@ -91,23 +81,14 @@ def check_and_save_json_for_test(name, data):
         saved_json_counter[name] += 1
 
 
-# TODO: Date parameter is necessary for providers with a lot of
-#  content. For others, we simply ingest all of the content
-#  every time.
 def main():
     """
     This script pulls the data for a given date from the Stocksnap,
     and writes it into a .TSV file to be eventually read
     into our DB.
-
-    {{ TODO: Remove if date is not used }}
-    Required Arguments:
-
-    date:  Date String in the form YYYY-MM-DD.  This is the date for
-           which running the script will pull data. }}
     """
 
-    logger.info("Begin: Stocksnap script")
+    logger.info("Begin: StockSnap script")
     image_count = _get_items()
     logger.info(f"Total images pulled: {image_count}")
     logger.info('Terminated!')
@@ -126,14 +107,12 @@ def _get_query_param(
 
 def _get_items():
     item_count = 0
-    page_number = 0
+    page_number = 1
     should_continue = True
     while should_continue:
-        query_param = _get_query_param(page_number=page_number)
-
-        batch_data = _get_batch_json(
-            query_param=query_param
-        )
+        # query_param = _get_query_param(page_number=page_number)
+        page_endpoint = f"{ENDPOINT}/{page_number}"
+        batch_data = _get_batch_json(endpoint=page_endpoint)
         if isinstance(batch_data, list) and len(batch_data) > 0:
             item_count = _process_item_batch(batch_data)
             page_number += 1
@@ -159,7 +138,7 @@ def _get_batch_json(
     if response_json is None:
         return None
     else:
-        data = response_json.get("data")
+        data = response_json.get("results")
         if data:
             check_and_save_json_for_test('full_response', data)
         else:
@@ -181,7 +160,7 @@ def _process_item_batch(items_batch):
         if item_meta_data is None:
             continue
         image_store.add_item(**item_meta_data)
-    return image_store.total_items
+    return image_store.total_images
 
 
 def _extract_item_data(media_data):
@@ -201,40 +180,28 @@ def _extract_item_data(media_data):
     - thumbnail_url
     - metadata
     - tags
-
-    Optional properties for images:
     - width
     - height
-
-    Optional properties for audio:
-    - duration
     """
     # TODO: remove the code for saving json files from the final script
 
-    try:
-        foreign_landing_url = media_data["links"][0]["url"]
-    except (TypeError, KeyError, AttributeError):
-        print (f"Found no foreign landing url:")
-        print(f"{json.dumps(media_data, indent=2)}")
-        check_and_save_json_for_test('no_foreign_landing_url', media_data)
-        return None
-    # audio_url, duration = _get_audio_info(media_data)
+    foreign_identifier = media_data["img_id"]
+    foreign_landing_url = f"https://{HOST}/photo/{foreign_identifier}"
     image_url, height, width = _get_image_info(media_data)
     if image_url is None:
-        print (f"Found no media url:")
+        print("Found no media url:")
         print(f"{json.dumps(media_data, indent=2)}")
         check_and_save_json_for_test('no_image_url', media_data)
         return None
-    item_license = _get_license(media_data)
+    item_license = _get_license()
     if item_license is None:
-        print (f"Found no item license:")
+        print("Found no item license:")
         print(f"{json.dumps(media_data, indent=2)}")
         check_and_save_json_for_test('no_license', media_data)
         return None
-    foreign_identifier = _get_foreign_identifier(media_data)
     title = _get_title(media_data)
     creator, creator_url = _get_creator_data(media_data)
-    thumbnail = _get_thumbnail_url(media_data)
+    thumbnail = image_url
     metadata = _get_metadata(media_data)
     tags = _get_tags(media_data)
     check_and_save_json_for_test('full_item', media_data)
@@ -249,43 +216,29 @@ def _extract_item_data(media_data):
         'height': height,
         'width': width,
         'thumbnail_url': thumbnail,
-        'item_license': item_license,
-        'metadata': metadata,
-        'tags': tags
+        'license_': item_license.license,
+        'license_version': item_license.version,
+        'meta_data': metadata,
+        'raw_tags': tags
     }
 
 
-def _get_foreign_identifier(media_data):
-    try:
-        return media_data['some_key'][0]['uid']
-    except(TypeError, IndexError, AttributeError):
-        return None
-
-
 def _get_image_info(media_data):
-    width = media_data.get('width')
-    height = media_data.get('height')
-    image_url = media_data.get('image_url')
+    width = media_data.get('img_width')
+    height = media_data.get('img_height')
+    img_id = media_data.get('img_id')
+    image_url = f"{CDN}/{img_id}.jpg"
     return image_url, width, height
-
-def _get_audio_info(media_data):
-    duration = media_data.get('duration')
-    audio_url = media_data.get('audio_url')
-    return audio_url, duration
-
-
-def _get_thumbnail_url(media_data):
-    # TODO: Add correct implementation of _get_thumbnail_url
-    return media_data.get('thumbnail', {}).get('url', None)
 
 
 def _get_creator_data(item):
     # TODO: Add correct implementation of _get_creator_data
-    creator = item.get('creator_key').strip()
-    creator_url = _cleanse_url(
-        item.get('creator_key', {}).get('url')
-    )
-    return creator, creator_url
+    # creator = item.get('creator_key').strip()
+    # creator_url = _cleanse_url(
+    #     item.get('creator_key', {}).get('url')
+    # )
+    # return creator, creator_url
+    return None, None
 
 
 def _get_title(item):
@@ -299,21 +252,20 @@ def _get_metadata(item):
     Metadata may include: description, date created and modified at source,
     categories, popularity statistics.
     """
-    # TODO: Add function to extract metadata from the image_data dictionary
-    #  Do not includes keys without value
+    extras = ["downloads", "page_views", "favorites"]
     metadata = {}
-    some_other_key_value = item.get('some_other_key')
-    if some_other_key_value is not None:
-        metadata['some_other_key'] = some_other_key_value
+    for key in extras:
+        value = item.get(key)
+        if value is not None:
+            metadata[key] = value
     return metadata
 
 
 def _get_tags(item):
-    """What tags do we save???"""
     return item.get('tags')
 
 
-def _get_license(item):
+def _get_license():
     """
     To parse the item license, use `get_license_info` function. It
     returns a namedtuple LicenseInfo(license_url, license, version)
@@ -333,22 +285,8 @@ def _get_license(item):
     are correct, you can use `get_license_info_from_license_pair(
     license_name, license_version)`
     """
-    # TODO: add correct implementation of _get_license
-    # If the provider gives license url:
-    item_license_url = item.get('license_url')
-    item_license = get_license_info(license_url=item_license_url)
-
-    # If the provider gives license name and license version
-    # Note: `publicdomain` does not have version, pass 'N/A' instead
-    item_license_name = item.get('license_name')
-    item_license_version = item.get('license_version')
-    item_license = get_license_info(
-        license_=item_license_name,
-        license_version=item_license_version
-    )
-    if item_license.license is None:
-        return None
-    return item_license
+    item_license_url = "https://creativecommons.org/publicdomain/zero/1.0/"
+    return get_license_info(license_url=item_license_url)
 
 
 def _cleanse_url(url_string):
