@@ -13,6 +13,8 @@ import boto3
 import requests
 from multiprocessing import Value, Process
 from psycopg2.sql import SQL
+
+from ingestion_server.constants import MEDIA_TYPES
 from ingestion_server.indexer import elasticsearch_connect, TableIndexer
 
 
@@ -42,9 +44,10 @@ class HealthcheckResource:
 
 
 def _execute_indexing_task(target_index, start_id, end_id, notify_url):
-    table_name = 'image'
-    if target_index.split('-')[0] == 'audio':
-        table_name = 'audio'
+    # Defaulting to 'image' for backward compatibility
+    table_name = target_index.split('-')[0]
+    if table_name not in MEDIA_TYPES:
+        table_name = 'image'
     elasticsearch = elasticsearch_connect()
     progress = Value('d', 0.0)
     finish_time = Value('d', 0.0)
