@@ -77,12 +77,12 @@ class CleanupFunctions:
             except KeyError:
                 tls_supported = TlsTest.test_tls_supported(url)
                 tls_support[_tld] = tls_supported
-                log.info('Tested domain {}'.format(_tld))
+                log.info(f'Tested domain {_tld}')
 
             if tls_supported:
-                return "'https://{}'".format(url)
+                return f"'https://{url}'"
             else:
-                return "'http://{}'".format(url)
+                return f"'http://{url}'"
         else:
             return None
 
@@ -159,7 +159,7 @@ class TlsTest:
             https = url.replace('http://', 'https://')
             try:
                 res = re.get(https, timeout=2)
-                log.info('{}:{}'.format(https, res.status_code))
+                log.info(f'{https}:{res.status_code}')
                 return 200 <= res.status_code < 400
             except re.RequestException:
                 return False
@@ -174,7 +174,7 @@ def _clean_data_worker(rows, temp_table, sources_config):
     worker_conn = database_connect()
     log.info('Data cleaning worker connected to database')
     write_cur = worker_conn.cursor(cursor_factory=DictCursor)
-    log.info('Cleaning {} rows'.format(len(rows)))
+    log.info(f'Cleaning {len(rows)} rows')
     tls_cache = {}
     start_time = time.time()
     for row in rows:
@@ -205,28 +205,21 @@ def _clean_data_worker(rows, temp_table, sources_config):
         update_field_expressions = []
         for field in cleaned_data:
             update_field_expressions.append(
-                '{field} = {cleaned}'.format(
-                    field=field,
-                    cleaned=cleaned_data[field]
-                )
+                f'{field} = {cleaned_data[field]}'
             )
         if len(update_field_expressions) > 0:
-            update_query = '''
-                UPDATE {temp_table} SET {field_expressions} WHERE id = {_id}
-            '''.format(
-                temp_table=temp_table,
-                field_expressions=', '.join(update_field_expressions),
-                _id=_id
-            )
+            update_query = f"""UPDATE {temp_table} SET 
+            {', '.join(update_field_expressions)} WHERE id = {_id}
+            """
             write_cur.execute(update_query)
-    log.info('TLS cache: {}'.format(tls_cache))
+    log.info(f'TLS cache: {tls_cache}')
     log.info('Worker committing changes...')
     worker_conn.commit()
     write_cur.close()
     worker_conn.close()
     end_time = time.time()
     total_time = end_time - start_time
-    log.info('Worker finished batch in {}'.format(total_time))
+    log.info(f'Worker finished batch in {total_time}')
     return True
 
 
@@ -256,13 +249,11 @@ def clean_image_data(table):
         for f in _fields:
             fields_to_clean.add(f)
 
-    cleanup_selection = "SELECT id, source, {fields} from {table}".format(
-        fields=', '.join(fields_to_clean),
-        table='temp_import_{}'.format(table),
-    )
-    log.info('Running cleanup on selection "{}"'.format(cleanup_selection))
+    cleanup_selection = f"SELECT id, source, "\
+                        f"{', '.join(fields_to_clean)} from temp_import_{table}"
+    log.info(f'Running cleanup on selection "{cleanup_selection}"')
     conn = database_connect(autocommit=True)
-    cursor_name = '{}-{}'.format(table, str(uuid.uuid4()))
+    cursor_name = f'{table}-{uuid.uuid4()}'
     with conn.cursor(
             name=cursor_name, cursor_factory=DictCursor, withhold=True
     ) as iter_cur:
@@ -280,12 +271,12 @@ def clean_image_data(table):
         while batch:
             # Divide updates into jobs for parallel execution.
             batch_start_time = time.time()
-            temp_table = 'temp_import_{}'.format(table)
+            temp_table = f'temp_import_{table}'
             job_size = int(len(batch) / num_workers)
             last_end = -1
             log.info('Dividing work')
             for n in range(1, num_workers + 1):
-                log.info('Scheduling job {}'.format(n))
+                log.info(f'Scheduling job {n}')
                 start = last_end + 1
                 end = job_size * n
                 last_end = end
@@ -294,17 +285,17 @@ def clean_image_data(table):
                     (batch[start:end], temp_table, source_config)
                 )
             pool = multiprocessing.Pool(processes=num_workers)
-            log.info('Starting {} cleaning jobs'.format(len(jobs)))
+            log.info(f'Starting {len(jobs)} cleaning jobs')
             conn.commit()
             pool.starmap(_clean_data_worker, jobs)
             pool.close()
             num_cleaned += len(batch)
             batch_end_time = time.time()
             rate = len(batch) / (batch_end_time - batch_start_time)
-            log.info('Batch finished, records/s: cleanup_rate={}'.format(rate))
+            log.info(f'Batch finished, records/s: cleanup_rate={rate}')
             log.info(
-                'Fetching next batch. Num records cleaned so far: {}'
-                .format(num_cleaned))
+                f'Fetching next batch. Num records cleaned so far: {num_cleaned}'
+            )
             jobs = []
             batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)
     conn.commit()
@@ -312,6 +303,4 @@ def clean_image_data(table):
     conn.close()
     end_time = time.time()
     cleanup_time = end_time - start_time
-    log.info('Cleaned all records in {} seconds'.format(
-        cleanup_time)
-    )
+    log.info(f'Cleaned all records in {cleanup_time} seconds')

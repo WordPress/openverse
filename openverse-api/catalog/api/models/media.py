@@ -99,11 +99,11 @@ class AbstractMedia(OpenLedgerModel):
         _license = str(self.license)
         license_version = str(self.license_version)
         if self.title:
-            title = '"' + str(self.title) + '"'
+            title = f'"{self.title}"'
         else:
             title = 'This work'
         if self.creator:
-            creator = 'by ' + str(self.creator) + ' '
+            creator = f'by {self.creator} '
         else:
             creator = ''
         attribution = ATTRIBUTION.format(

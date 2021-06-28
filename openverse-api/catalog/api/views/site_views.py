@@ -434,21 +434,16 @@ class ProxiedImage(APIView):
             return Response(status=404, data='Not Found')
 
         if serialized.data['full_size']:
-            proxy_upstream = '{proxy_url}/{original}'.format(
-                proxy_url=THUMBNAIL_PROXY_URL, original=image.url
-            )
+            proxy_upstream = f'{THUMBNAIL_PROXY_URL}/{image.url}'
         else:
-            proxy_upstream = '{proxy_url}/{width},fit/{original}'.format(
-                proxy_url=THUMBNAIL_PROXY_URL,
-                width=THUMBNAIL_WIDTH_PX,
-                original=image.url
-            )
+            proxy_upstream = f'{THUMBNAIL_PROXY_URL}/{THUMBNAIL_WIDTH_PX}'\
+                             f',fit/{image.url}'
         try:
             upstream_response = urlopen(proxy_upstream)
             status = upstream_response.status
             content_type = upstream_response.headers.get('Content-Type')
         except HTTPError:
-            log.info(f'Failed to render thumbnail: ', exc_info=True)
+            log.info('Failed to render thumbnail: ', exc_info=True)
             return HttpResponse(status=500)
 
         response = HttpResponse(

@@ -62,7 +62,7 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
                 FROM image
                 WHERE id BETWEEN {start_id} AND {end_id}
                 ''')
-    log.info('Querying {}'.format(query))
+    log.info(f'Querying {query}')
     indexer = TableIndexer(
         elasticsearch, table, progress, finish_time
     )
