@@ -169,7 +169,7 @@ def create_api(log=True):
         handler.setFormatter(formatter)
         root.addHandler(handler)
 
-    _api = falcon.API()
+    _api = falcon.App()
     task_tracker = TaskTracker()
     task_resource = TaskResource(task_tracker)
     get_task_status = TaskStatus(task_tracker)
