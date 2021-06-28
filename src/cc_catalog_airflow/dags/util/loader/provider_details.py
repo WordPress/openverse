@@ -23,6 +23,7 @@ SCIENCE_DEFAULT_PROVIDER = 'sciencemuseum'
 STATENS_DEFAULT_PROVIDER = 'statensmuseum'
 WALTERS_DEFAULT_PROVIDER = 'waltersartmuseum'
 FINNISH_DEFAULT_PROVIDER = 'finnishmuseums'
+STOCKSNAP_DEFAULT_PROVIDER = 'stocksnap'
 
 # Finnish parameters
 FINNISH_SUB_PROVIDERS = {
