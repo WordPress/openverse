@@ -109,7 +109,7 @@ class Audio(AbstractMedia):
     @property
     def alternative_files(self):
         if hasattr(self.alt_files, '__iter__'):
-            return list(map(lambda val: AltAudioFile(val), self.alt_files))
+            return [AltAudioFile(alt_file) for alt_file in self.alt_files]
         return None
 
     @property
