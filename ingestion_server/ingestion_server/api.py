@@ -143,8 +143,9 @@ class WorkerFinishedResource:
                 'All indexer workers finished! Attempting to promote index '
                 f'{target_index}'
             )
+            index_type = target_index.split('-')[0]
             f = indexer.TableIndexer.go_live
-            p = Process(target=f, args=(target_index, 'image'))
+            p = Process(target=f, args=(target_index, index_type))
             p.start()
 
 

@@ -28,10 +28,19 @@ def schedule_distributed_index(db_conn, target_index):
 
 
 def _assign_work(db_conn, workers, target_index):
-    est_records_query = 'SELECT id FROM image ORDER BY id DESC LIMIT 1'
+    """
+    Target index has a form of `image-<uuid>`/`audio-<uuid>`
+    """
+    table_name = target_index.split('-')[0]
+    if not table_name or table_name not in ['image', 'audio']:
+        table_name = 'image'
+    est_records_query = f'SELECT id FROM {table_name} ORDER BY id DESC LIMIT 1'
     with db_conn.cursor() as cur:
         cur.execute(est_records_query)
-        estimated_records = cur.fetchone()[0]
+        try:
+            estimated_records = cur.fetchone()[0]
+        except AttributeError:
+            return None
     records_per_worker = math.floor(estimated_records / len(workers))
 
     worker_url_template = 'http://{}:8002'
