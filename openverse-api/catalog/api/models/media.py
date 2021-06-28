@@ -108,6 +108,8 @@ class AbstractMediaReport(models.Model):
     deleted content.
     """
 
+    BASE_URL = 'https://search.creativecommons.org/'
+
     REPORT_CHOICES = [
         (MATURE, MATURE),
         (DMCA, DMCA),
@@ -147,7 +149,7 @@ class AbstractMediaReport(models.Model):
         abstract = True
 
     def url(self, media_type):
-        url = ('https://search.creativecommons.org/'
+        url = (f'{AbstractMediaReport.BASE_URL}'
                f'{media_type}/'
                f'{self.identifier}')
         return format_html(f'<a href={url}>{url}</a>')
