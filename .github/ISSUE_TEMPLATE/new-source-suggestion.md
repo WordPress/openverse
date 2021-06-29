@@ -2,7 +2,7 @@
 name: New Source Suggestion for CC Search
 about: Tell us about a website or platform with CC-licensed content
 title: "[Source Suggestion] Insert source name here"
-labels: awaiting triage, ticket work required, providers
+labels: "🚦 status: awaiting triage, 🧹 status: ticket work required, ☁️ provider: any"
 assignees: ''
 
 ---

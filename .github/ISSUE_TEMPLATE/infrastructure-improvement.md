@@ -1,7 +1,7 @@
 ---
 name: Infrastructure Improvement Suggestion
 about: Suggest a way to improve our infrastructure
-labels: enhancement, awaiting triage
+labels: "🚦 status: awaiting triage, ✨ goal: improvement"
 title: "[Infrastructure] Replace with Title"
 ---
 
