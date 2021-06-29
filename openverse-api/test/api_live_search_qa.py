@@ -30,7 +30,7 @@ def test_phrase_relevance():
     """
     search_term = 'home office'
     response = requests.get(
-        API_URL + '/image/search?q={}'.format(search_term),
+        f'{API_URL}/image/search?q={search_term}',
         verify=False
     )
     assert response.status_code == 200

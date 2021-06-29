@@ -387,8 +387,7 @@ class Watermark(GenericAPIView):
             except (libxmp.XMPError, AttributeError) as e:
                 # Just send the EXIF-ified file if libxmp fails to add metadata.
                 log.error(
-                    'Failed to add XMP metadata to {}'
-                    .format(image_record.identifier)
+                    f'Failed to add XMP metadata to {image_record.identifier}'
                 )
                 log.error(e)
                 response = HttpResponse(content_type='image/jpeg')

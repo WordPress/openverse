@@ -57,7 +57,7 @@ class TaskResource:
         request_error = self._validate_create_task(raw_body)
         if request_error:
             logging.warning(
-                'Invalid request made. Reason: {}'.format(request_error)
+                f'Invalid request made. Reason: {request_error}'
             )
             resp.status = falcon.HTTP_400
             resp.media = {
@@ -88,7 +88,7 @@ class TaskResource:
         task_id = self.tracker \
             .add_task(task, task_id, action, progress, finish_time)
         base_url = self._get_base_url(req)
-        status_url = base_url + '/task/{}'.format(task_id)
+        status_url = f"{base_url}/task/{task_id}"
         # Give the task a moment to start so we can detect immediate failure.
         # TODO: Use IPC to detect if the job launched successfully instead
         # of giving it 100ms to crash. This is prone to race conditions.

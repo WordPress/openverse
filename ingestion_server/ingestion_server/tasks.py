@@ -107,7 +107,7 @@ class Task(Process):
             indexer.reindex(self.model)
         elif self.task_type == TaskTypes.LOAD_TEST_DATA:
             indexer.load_test_data()
-        logging.info('Task {} exited.'.format(self.task_id))
+        logging.info(f'Task {self.task_id} exited.')
         if self.callback_url:
             try:
                 requests.post(self.callback_url)

@@ -125,12 +125,9 @@ def _full_license(image_info):
 
     license_name = image_info['license'].upper()
     license_version = image_info['license_version'].upper()
+    prefix = '' if license_name == 'CC0' else 'CC '
 
-    return '{prefix}{name} {version}'.format(
-        prefix='' if license_name == 'CC0' else 'CC ',
-        name=license_name,
-        version=license_version
-    )
+    return f'{prefix}{license_name} {license_version}'
 
 
 def _get_attribution_text(image_info):
@@ -145,13 +142,7 @@ def _get_attribution_text(image_info):
     full_license = _full_license(image_info)
 
     return (
-        '"{title}" '
-        'by {creator} '
-        'is licensed under {full_license}.'
-    ).format(
-        title=title,
-        creator=creator,
-        full_license=full_license,
+        f'"{title}" by {creator} is licensed under {full_license}.'
     )
 
 
