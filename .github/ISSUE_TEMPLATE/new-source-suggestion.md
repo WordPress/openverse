@@ -15,3 +15,7 @@ assignees: ''
 
 ## Licenses Provided
 <!-- Which CC licenses or Public Domain tools are in use by the source (if known) -->
+
+## Implementation
+<!-- Replace the [ ] with [x] to check the box. -->
+- [ ] 🙋 I would be interested in implementing this feature.

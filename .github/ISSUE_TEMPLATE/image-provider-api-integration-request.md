@@ -70,3 +70,7 @@ For example Provider API Scripts and accompanying test suites, please see
 - `src/cc_catalog_airflow/dags/provider_api_scripts/test_flickr.py`, or
 - `src/cc_catalog_airflow/dags/provider_api_scripts/wikimedia_commons.py` and
 - `src/cc_catalog_airflow/dags/provider_api_scripts/test_wikimedia_commons.py`.
+
+## Implementation
+<!-- Replace the [ ] with [x] to check the box. -->
+- [ ] 🙋 I would be interested in implementing this feature.
