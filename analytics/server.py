@@ -83,7 +83,7 @@ cors = CORS(
     allow_all_methods=True,
     allow_all_headers=True
 )
-api = falcon.API(middleware=[cors.middleware])
+api = falcon.App(middleware=[cors.middleware])
 api.add_route('/', RedocResource())
 api.add_route('/swagger.yaml', OpenAPISpecResource())
 api.add_route('/search_event', SearchEventResource())
