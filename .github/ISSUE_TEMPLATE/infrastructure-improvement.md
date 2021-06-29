@@ -1,7 +1,7 @@
 ---
 name: Infrastructure Improvement Suggestion
 about: Suggest a way to improve our infrastructure
-labels: enhancement, awaiting triage
+labels: "🚦 status: awaiting triage, ✨ goal: improvement"
 title: "[Infrastructure] Replace with Title"
 ---
 
@@ -19,3 +19,7 @@ title: "[Infrastructure] Replace with Title"
 
 ## Additional context
 <!-- Add any other context about the feature request. -->
+
+## Implementation
+<!-- Replace the [ ] with [x] to check the box. -->
+- [ ] 🙋 I would be interested in implementing this feature.

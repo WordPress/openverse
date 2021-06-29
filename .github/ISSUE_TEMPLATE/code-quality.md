@@ -1,7 +1,7 @@
 ---
 name: Code Quality Improvement Suggestion
 about: Suggest a change that does not add a feature
-labels: awaiting triage
+labels: "🚦 status: awaiting triage"
 title: "[Quality] Replace with Title"
 ---
 
@@ -17,3 +17,6 @@ title: "[Quality] Replace with Title"
 ## Additional context
 <!-- Add any other context suggestion here. -->
 
+## Implementation
+<!-- Replace the [ ] with [x] to check the box. -->
+- [ ] 🙋 I would be interested in implementing this feature.

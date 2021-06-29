@@ -2,7 +2,7 @@
 name: New Source Suggestion for CC Search
 about: Tell us about a website or platform with CC-licensed content
 title: "[Source Suggestion] Insert source name here"
-labels: awaiting triage, ticket work required, providers
+labels: "🚦 status: awaiting triage, 🧹 status: ticket work required, ☁️ provider: any"
 assignees: ''
 
 ---
@@ -15,3 +15,7 @@ assignees: ''
 
 ## Licenses Provided
 <!-- Which CC licenses or Public Domain tools are in use by the source (if known) -->
+
+## Implementation
+<!-- Replace the [ ] with [x] to check the box. -->
+- [ ] 🙋 I would be interested in implementing this feature.
