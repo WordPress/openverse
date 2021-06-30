@@ -31,7 +31,7 @@ jobs:
       run: |
         pip install pytest pipenv
         sudo apt-get install libexempi8 librdkafka-dev
-        PIPENV_PIPFILE=./catalog-api/Pipfile pipenv install --system --deploy --dev &
+        PIPENV_PIPFILE=./openverse-api/Pipfile pipenv install --system --deploy --dev &
     - name: Start API
       run: docker-compose up --build -d
     - name: Wait for API to come up
@@ -43,4 +43,4 @@ jobs:
     - name: Run API tests
       run: cd openverse-api && test/run_test.sh
     - name: Run analytics tests
-      run: cd ./analytics && docker exec -i catalog-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
+      run: cd ./analytics && docker exec -i openverse-api_analytics_1 /bin/bash -c 'PYTHONPATH=. pipenv run pytest tests.py'
