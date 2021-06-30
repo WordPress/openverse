@@ -144,7 +144,7 @@ export default {
   width: 100%;
   top: 0;
   position: sticky;
-  background-color: #f5f5f5;
+  background-color: white;
   z-index: 10;
   display: flex;
 }
