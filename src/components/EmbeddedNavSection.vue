@@ -1,6 +1,6 @@
 <template>
   <nav :aria-label="$t('header.aria.primary')" class="navbar embedded">
-    <NuxtLink to="/" style="align-self: center">
+    <NuxtLink to="/" style="align-self: center; line-height: 0">
       <OpenverseLogo style="height: 24px; padding-right: 24px; width: auto" />
     </NuxtLink>
     <div class="navbar-brand has-color-white">
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import OpenverseLogo from '~/assets/openverse-logo.svg?inline'
+import OpenverseLogo from '~/assets/logo.svg?inline'
 import { SET_QUERY } from '~/store-modules/mutation-types'
 
 export default {

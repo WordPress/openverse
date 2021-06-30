@@ -32,6 +32,8 @@ $navbar-breakpoint: $tablet
 $wp-max-width: 940px
 
 .navbar
+  font-size: 15px
+  font-weight: 600
   display: flex
   justify-content: space-between
   align-items: center
@@ -41,7 +43,7 @@ $wp-max-width: 940px
   z-index: $navbar-z
   padding: $space-bigger
   &.embedded
-    padding: 0.5rem 0
+    padding: 0.5rem 0 0.5rem 0.5rem
     min-height: unset
     +tablet()
       max-width: $wp-max-width
@@ -81,8 +83,7 @@ $wp-max-width: 940px
 
 .navbar.embedded
   .navbar-end
-    width: 100%
-    margin-left: 0
+    margin-left: auto
     justify-content: space-between
     > div.navbar-item:first-child > a.navbar-link
       padding-left: 0
@@ -93,12 +94,8 @@ a.navbar-item,
 .navbar-link
   cursor: pointer
   user-select: none
-  font-family: $family-roboto-condensed
-  font-size: $font-size-body-big
-  font-weight: bold
-  text-transform: uppercase
+  font-family: $family-inter
   line-height: 1.5
-  letter-spacing: 0.02em
   &:focus,
   &:focus-within,
   &:hover,
@@ -111,21 +108,14 @@ a.navbar-item,
   a.navbar-item,
   .navbar-link
     font-family: $family-body
-    font-weight: normal
     color: $navbar-item-hover-color
     text-transform: none
-    font-size: $font-size-body-normal
-    letter-spacing: normal
 
 .navbar-item
   flex-grow: 0
   flex-shrink: 0
-  font-family: $family-roboto-condensed
-  font-size: $font-size-h5
-  font-weight: bold
-  text-transform: uppercase
+  font-family: $family-inter
   line-height: 1.5
-  letter-spacing: 0.02em
   img
     max-height: $navbar-item-img-max-height
   &.has-dropdown
@@ -147,7 +137,6 @@ a.navbar-item,
     +ltr-position(1.125em)
 
 .navbar-dropdown
-  font-size: 0.875rem
   padding-bottom: 0.5rem
   padding-top: 0.5rem
   .navbar-item

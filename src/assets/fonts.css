@@ -1,4 +1,29 @@
 @font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Inter-Regular'), local('Inter Regular') local('Inter'),
+    url('~assets/fonts/Inter-Regular.ttf') format('ttf');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Inter-SemiBold'), local('Inter SemiBold') local('Inter'),
+    url('~assets/fonts/Inter-SemiBold.ttf') format('ttf');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Inter-Bold'), local('Inter Bold') local('Inter'),
+    url('~assets/fonts/Inter-Bold.ttf') format('ttf');
+}
+
+@font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
   font-weight: 400;
@@ -18,57 +43,7 @@
     url('~assets/fonts/JetBrainsMono-Bold.woff') format('woff'),
     url('~assets/fonts/JetBrainsMono-Bold.otf') format('opentype');
 }
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('SourceSansPro'), local('Source Sans Pro'),
-    url('~assets/fonts/SourceSansPro-Regular.woff2') format('woff2'),
-    url('~assets/fonts/SourceSansPro-Regular.woff') format('woff'),
-    url('~assets/fonts/SourceSansPro-Regular.otf') format('opentype');
-}
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: local('SourceSansPro-SemiBold'), local('Source Sans Pro Semi Bold'),
-    url('~assets/fonts/SourceSansPro-SemiBold.woff2') format('woff2'),
-    url('~assets/fonts/SourceSansPro-SemiBold.woff') format('woff'),
-    url('~assets/fonts/SourceSansPro-SemiBold.otf') format('opentype');
-}
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: local('SourceSansPro-Bold'), local('Source Sans Pro Bold'),
-    url('~assets/fonts/SourceSansPro-Bold.woff2') format('woff2'),
-    url('~assets/fonts/SourceSansPro-Bold.woff') format('woff'),
-    url('~assets/fonts/SourceSansPro-Bold.otf') format('opentype');
-}
 
-@font-face {
-  font-family: 'Roboto Condensed';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('RobotoCondensed'), local('Roboto Condensed'),
-    url('~assets/fonts/RobotoCondensed-Regular.woff2') format('woff2'),
-    url('~assets/fonts/RobotoCondensed-Regular.woff') format('woff'),
-    url('~assets/fonts/RobotoCondensed-Regular.otf') format('opentype');
-}
-@font-face {
-  font-family: 'Roboto Condensed';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: local('RobotoCondensed-Bold'), local('Roboto Condensed Bold'),
-    url('~assets/fonts/RobotoCondensed-Bold.woff2') format('woff2'),
-    url('~assets/fonts/RobotoCondensed-Bold.woff') format('woff'),
-    url('~assets/fonts/RobotoCondensed-Bold.otf') format('opentype');
-}
 @font-face {
   font-family: 'Vocabulary Icons';
   font-style: normal;

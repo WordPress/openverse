@@ -68,6 +68,5 @@ export default {
   width: 100%;
   height: 6rem;
   font-size: 13px;
-  font-family: Source Sans Pro;
 }
 </style>

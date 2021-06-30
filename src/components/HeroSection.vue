@@ -5,7 +5,7 @@
       <h1 class="title is-2 padding-bottom-normal">
         {{ $t('hero.title') }}
       </h1>
-      <h2 class="title is-5 b-header">
+      <h2 class="title is-5 b-header has-text-weight-semibold">
         {{ $t('hero.subtitle') }}
       </h2>
       <form
@@ -109,7 +109,7 @@ $hero-height: 55vh;
   }
 }
 .hero-center {
-  margin-top: auto;
+  margin-top: 4rem;
 }
 .hero-search {
   &__form {

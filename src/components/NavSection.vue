@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import OpenverseLogo from '~/assets/openverse-logo.svg?inline'
+import OpenverseLogo from '~/assets/logo.svg?inline'
 import { SET_QUERY } from '~/store-modules/mutation-types'
 
 export default {
