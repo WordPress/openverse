@@ -49,7 +49,7 @@ export default {
 <style lang="scss" scoped>
 .tabs {
   background-color: white;
-  padding-left: 1rem;
+  padding-left: 1.5rem;
   border-bottom: 1px solid $color-transition-gray;
 }
 
