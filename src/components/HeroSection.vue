@@ -3,7 +3,7 @@
   <div class="hero">
     <div class="hero-center has-text-centered">
       <h1 class="title is-2 padding-bottom-normal">
-        {{ isEmbedded ? $t('hero.brand') : $t('hero.title') }}
+        {{ $t('hero.title') }}
       </h1>
       <h2 class="title is-5 b-header">
         {{ $t('hero.subtitle') }}

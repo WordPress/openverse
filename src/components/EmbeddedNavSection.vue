@@ -1,5 +1,8 @@
 <template>
   <nav :aria-label="$t('header.aria.primary')" class="navbar embedded">
+    <NuxtLink to="/" style="align-self: center">
+      <OpenverseLogo style="height: 24px; padding-right: 24px; width: auto" />
+    </NuxtLink>
     <div class="navbar-brand has-color-white">
       <a
         role="button"
@@ -104,10 +107,14 @@
 </template>
 
 <script>
+import OpenverseLogo from '~/assets/openverse-logo.svg?inline'
 import { SET_QUERY } from '~/store-modules/mutation-types'
 
 export default {
   name: 'EmbeddedNavSection',
+  components: {
+    OpenverseLogo,
+  },
   props: {
     showNavSearch: {
       default: false,

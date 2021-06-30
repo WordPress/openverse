@@ -2,7 +2,9 @@
   <nav :aria-label="$t('header.aria.primary')" class="navbar">
     <div class="navbar-brand has-color-white">
       <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-      <NuxtLink class="logo" :to="localePath('/')">Openverse</NuxtLink>
+      <NuxtLink class="logo" :to="localePath('/')">
+        <OpenverseLogo style="height: 24px; padding-right: 24px; width: auto" />
+      </NuxtLink>
       <!-- eslint-enable -->
       <a
         role="button"
@@ -108,10 +110,14 @@
 </template>
 
 <script>
+import OpenverseLogo from '~/assets/openverse-logo.svg?inline'
 import { SET_QUERY } from '~/store-modules/mutation-types'
 
 export default {
   name: 'NavSection',
+  components: {
+    OpenverseLogo,
+  },
   props: {
     showNavSearch: {
       default: false,
