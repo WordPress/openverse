@@ -208,7 +208,7 @@ def _clean_data_worker(rows, temp_table, sources_config):
                 f'{field} = {cleaned_data[field]}'
             )
         if len(update_field_expressions) > 0:
-            update_query = f"""UPDATE {temp_table} SET 
+            update_query = f"""UPDATE {temp_table} SET
             {', '.join(update_field_expressions)} WHERE id = {_id}
             """
             write_cur.execute(update_query)
@@ -294,7 +294,7 @@ def clean_image_data(table):
             rate = len(batch) / (batch_end_time - batch_start_time)
             log.info(f'Batch finished, records/s: cleanup_rate={rate}')
             log.info(
-                f'Fetching next batch. Num records cleaned so far: {num_cleaned}'
+                f'Fetching next batch. Records cleaned so far: {num_cleaned}'
             )
             jobs = []
             batch = iter_cur.fetchmany(size=CLEANUP_BUFFER_SIZE)

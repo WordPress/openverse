@@ -154,7 +154,10 @@ def get_last_item_ids(table):
     # Find the last row added to the database table
     cur.execute(
         SQL(
-            f'SELECT id, identifier FROM {Identifier(table)} ORDER BY id DESC LIMIT 1;'
+            'SELECT id, identifier '
+            f'FROM {Identifier(table)} '
+            'ORDER BY id DESC '
+            'LIMIT 1;'
         )
     )
     last_added_pg_id, last_added_uuid = cur.fetchone()

@@ -46,7 +46,8 @@ class TaskResource:
             return "No action supplied in request body."
         if request[ACTION] not in [x.name for x in TaskTypes]:
             return "Invalid action."
-        if request[ACTION] == TaskTypes.UPDATE_INDEX.name and SINCE_DATE not in request:
+        if request[ACTION] == TaskTypes.UPDATE_INDEX.name and \
+                SINCE_DATE not in request:
             return "Received UPDATE request but no since_date."
 
         return None
@@ -136,6 +137,7 @@ class WorkerFinishedResource:
     For notifying ingestion server that an indexing worker has finished its
     task.
     """
+
     def on_post(self, req, resp):
         target_index = worker_finished(str(req.remote_addr))
         if target_index:
