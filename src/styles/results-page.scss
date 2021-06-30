@@ -4,7 +4,7 @@
 
 .search-grid-ctr {
   padding: 0;
-  background: #f5f5f5;
+  background-color: $color-wp-gray-0;
   min-height: 600px;
 
   @include mobile {
@@ -16,6 +16,7 @@
 .grid-sidebar {
   padding-top: 0;
   background-color: #fff;
+  border-right: 1px solid $color-transition-gray;
   max-width: 100%;
   width: 21.875rem;
 

@@ -42,7 +42,7 @@
         </div>
         <button
           type="button"
-          class="meta-popup-trigger has-color-tomato text-center caption padding-normal"
+          class="meta-popup-trigger has-color-transition-blue text-center caption padding-normal"
           @click="showMetaImageSearch = true"
           @keyup.enter="showMetaImageSearch = true"
         >

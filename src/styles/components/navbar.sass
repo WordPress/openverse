@@ -42,13 +42,15 @@ $wp-max-width: 940px
   position: relative
   z-index: $navbar-z
   padding: $space-bigger
-  &.embedded
-    padding: 0.5rem 0 0.5rem 0.5rem
-    min-height: unset
-    +tablet()
-      max-width: $wp-max-width
-      margin-right: auto
-      margin-left: auto
+
+.navbar.embedded
+  padding: 0.5rem 0 0.5rem 0.5rem
+  min-height: unset
+  +tablet()
+    padding: 0.5rem 0
+    max-width: $wp-max-width
+    margin-right: auto
+    margin-left: auto
 
 .navbar-brand
   align-items: stretch

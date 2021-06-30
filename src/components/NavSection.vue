@@ -3,7 +3,11 @@
     <div class="navbar-brand has-color-white">
       <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
       <NuxtLink class="logo" :to="localePath('/')">
-        <OpenverseLogo style="height: 24px; padding-right: 24px; width: auto" />
+        <img
+          alt="Openverse logo mark"
+          src="~/assets/logo.svg?data"
+          style="height: 24px; padding-right: 24px; width: auto"
+        />
       </NuxtLink>
       <!-- eslint-enable -->
       <a
@@ -110,14 +114,10 @@
 </template>
 
 <script>
-import OpenverseLogo from '~/assets/logo.svg?inline'
 import { SET_QUERY } from '~/store-modules/mutation-types'
 
 export default {
   name: 'NavSection',
-  components: {
-    OpenverseLogo,
-  },
   props: {
     showNavSearch: {
       default: false,

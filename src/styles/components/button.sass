@@ -45,7 +45,6 @@ $button-colors: $colors
   --button-border-width: #{$button-border-width}
   --button-font-size: #{$font-size-body-bigger}
   --button-focused-box-shadow-color: #{toRgba($color-light-gray, 0.3)}
-  text-transform: uppercase
   font-weight: 600
   line-height: 0
   background-color: $color-white
@@ -131,11 +130,11 @@ $button-colors: $colors
   &.is-primary
     border-color: transparent
     color: $color-white
-    background-color: $color-tomato
-    --button-focused-box-shadow-color: #{toRgba($color-tomato, 0.3)}
+    background-color: $color-transition-blue
+    --button-focused-box-shadow-color: #{toRgba($color-transition-blue, 0.3)}
     &:hover,
     &:active
-      background-color: $color-brighter-tomato
+      background-color: lighten($color-transition-blue, 4)
   &.is-info
     border-color: transparent
     color: $color-white
@@ -181,7 +180,7 @@ $button-colors: $colors
     line-height: normal
     white-space: normal
     border-radius: 18.75rem
-    border: 0.125rem solid $color-light-gray
+    border: 1px solid $color-light-gray
     &:hover
       border-color: $color-dark-gray
 
