@@ -30,7 +30,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install pytest pipenv
-        sudo apt-get install libexempi3 librdkafka-dev
+        sudo apt-get install libexempi8 librdkafka-dev
         PIPENV_PIPFILE=./catalog-api/Pipfile pipenv install --system --deploy --dev &
     - name: Start API
       run: docker-compose up --build -d
