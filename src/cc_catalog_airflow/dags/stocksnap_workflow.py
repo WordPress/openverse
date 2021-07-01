@@ -1,5 +1,5 @@
 """
-This file configures the Apache Airflow DAG to (re)ingest Stocksnap data.
+This file configures the Apache Airflow DAG to (re)ingest StockSnap data.
 """
 from datetime import datetime
 import logging
