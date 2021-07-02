@@ -204,7 +204,7 @@ def _get_metadata(item):
 
 
 def _get_tags(item):
-    return item.get('tags')
+    return item.get('keywords')
 
 
 def _get_license():
