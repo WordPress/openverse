@@ -15,7 +15,6 @@ import lxml.html as html
 
 from common import DelayedRequester, ImageStore
 from common.licenses.licenses import get_license_info
-from common.urls import rewrite_redirected_url
 from util.loader import provider_details as prov
 
 
@@ -59,9 +58,8 @@ def check_and_save_json_for_test(name, data):
 
 def main():
     """
-    This script pulls the data for a given date from the StockSnap,
-    and writes it into a .TSV file to be eventually read
-    into our DB.
+    This script pulls all the data from the StockSnap and writes it into a
+    .TSV file to be eventually read into our DB.
     """
 
     logger.info("Begin: StockSnap script")
@@ -82,8 +80,6 @@ def _get_items():
             item_count = _process_item_batch(batch_data)
             page_number += 1
         else:
-            should_continue = False
-        if page_number > 1:
             should_continue = False
     return item_count
 
@@ -124,8 +120,7 @@ def _extract_item_data(media_data):
     """
 
     foreign_identifier = media_data["img_id"]
-    foreign_landing_url = f"https://{HOST}/photo/{foreign_identifier}"
-    foreign_landing_url = rewrite_redirected_url(foreign_landing_url)
+    foreign_landing_url, page = _get_foreign_landing_page(foreign_identifier)
     if foreign_landing_url is None:
         print("Foreign landing url not resolved.")
         return None
@@ -134,7 +129,6 @@ def _extract_item_data(media_data):
         print("Found no image url.")
         return None
     item_license = _get_license()
-    page = _get_landing_page(foreign_landing_url)
     title = _get_title(page)
     creator, creator_url = _get_creator_data(page)
     thumbnail = image_url
@@ -157,17 +151,22 @@ def _extract_item_data(media_data):
     }
 
 
+def _get_foreign_landing_page(foreign_identifier):
+    url = f"https://{HOST}/photo/{foreign_identifier}"
+    final_url, page = None, None
+    response = delayed_requester.get(url)
+    if response:
+        final_url = response.url
+        page = html.document_fromstring(response.text)
+    return final_url, page
+
+
 def _get_image_info(media_data):
     width = media_data.get('img_width')
     height = media_data.get('img_height')
     img_id = media_data.get('img_id')
     image_url = f"{CDN}/{img_id}.jpg"
     return image_url, width, height
-
-
-def _get_landing_page(url):
-    raw_page = delayed_requester.get(url)
-    return html.document_fromstring(raw_page.text)
 
 
 def _get_creator_data(page):
@@ -192,8 +191,7 @@ def _get_title(page):
 
 def _get_metadata(item):
     """
-    Metadata may include: description, date created and modified at source,
-    categories, popularity statistics.
+    Include popularity statistics.
     """
     extras = ["downloads", "page_views", "favorites"]
     metadata = {}
@@ -218,5 +216,3 @@ def _get_license():
 
 if __name__ == '__main__':
     main()
-
-# TODO: Lint your code with pycodestyle
