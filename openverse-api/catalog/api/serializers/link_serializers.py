@@ -35,9 +35,10 @@ class ShortenedLinkSerializer(ModelSerializer):
     """
     full_url = serializers.URLField(
         max_length=1000,
-        help_text="The URL to shorten. Only URLs on the CC Catalog domain will"
-                  f" be accepted. Valid domains: `{settings.SHORT_URL_WHITELIST}`. "
-                  f"Valid paths: `{settings.SHORT_URL_PATH_WHITELIST}`"
+        help_text="The URL to shorten. Only URLs on the Openverse domain will "
+                  "be accepted. "
+                  f"Valid domains: `{settings.SHORT_URL_WHITELIST}`. "
+                  f"Valid paths: `{settings.SHORT_URL_PATH_WHITELIST}`."
     )
 
     class Meta:
