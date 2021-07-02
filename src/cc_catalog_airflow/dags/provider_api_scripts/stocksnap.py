@@ -59,13 +59,14 @@ def check_and_save_json_for_test(name, data):
 
 def main():
     """
-    This script pulls the data for a given date from the Stocksnap,
+    This script pulls the data for a given date from the StockSnap,
     and writes it into a .TSV file to be eventually read
     into our DB.
     """
 
     logger.info("Begin: StockSnap script")
     image_count = _get_items()
+    image_store.commit()
     logger.info(f"Total images pulled: {image_count}")
     logger.info('Terminated!')
 
