@@ -21,9 +21,12 @@ DAG_DEFAULT_ARGS = {
 
 DAG_ID = "sync_commoncrawl_workflow"
 
+DEFAULT_OUTPUT_DIR = '/tmp'
 TSV_SUBDIR = "common_crawl_tsvs/"
 
-CRAWL_OUTPUT_DIR = os.path.join(os.environ["OUTPUT_DIR"], TSV_SUBDIR)
+CRAWL_OUTPUT_DIR = os.path.join(
+    os.environ.get("OUTPUT_DIR", DEFAULT_OUTPUT_DIR), TSV_SUBDIR
+)
 
 
 def get_creator_operator(dag):
