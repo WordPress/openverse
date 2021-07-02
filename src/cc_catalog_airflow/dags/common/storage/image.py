@@ -116,7 +116,7 @@ class ImageStore(MediaStore):
         raw_tags=None,
         watermarked: Optional[str] = "f",
         source: Optional[str] = None,
-        ingestion_type: Optional[str] = 'commoncrawl',
+        ingestion_type: Optional[str] = None,
     ):
         """
         Add information for a single image to the ImageStore.

@@ -47,6 +47,18 @@ AUDIO_TSV_COLUMNS = [
     columns.JSONColumn(
         name='tags', required=False
     ),
+    columns.BooleanColumn(
+        name='watermarked', required=False,
+    ),
+    columns.StringColumn(
+        name='provider', required=False, size=80, truncate=False
+    ),
+    columns.StringColumn(
+        name='source', required=False, size=80, truncate=False
+    ),
+    columns.StringColumn(
+        name="ingestion_type", required=False, size=80, truncate=False
+    ),
     columns.IntegerColumn(
         name='duration', required=False
     ),
@@ -69,15 +81,6 @@ AUDIO_TSV_COLUMNS = [
     columns.JSONColumn(
         # Alternative files: url, filesize, bit_rate, sample_rate
         name='alt_audio_files', required=False
-    ),
-    columns.StringColumn(
-        name='provider', required=False, size=80, truncate=False
-    ),
-    columns.StringColumn(
-        name='source', required=False, size=80, truncate=False
-    ),
-    columns.StringColumn(
-        name="ingestion_type", required=False, size=80, truncate=False
     ),
 ]
 
@@ -126,6 +129,7 @@ class AudioStore(MediaStore):
         title: Optional[str] = None,
         meta_data: Optional[Union[Dict, str]] = None,
         raw_tags: Optional[Union[list, str]] = None,
+        watermarked: Optional[bool] = False,
         duration: Optional[int] = None,
         bit_rate: Optional[int] = None,
         sample_rate: Optional[int] = None,
@@ -137,7 +141,7 @@ class AudioStore(MediaStore):
         set_url: Optional[str] = None,
         alt_audio_files: Optional[Dict] = None,
         source: Optional[str] = None,
-        ingestion_type: Optional[str] = 'commoncrawl',
+        ingestion_type: Optional[str] = None,
     ):
         """
         Add information for a single audio to the AudioStore.
@@ -208,6 +212,7 @@ class AudioStore(MediaStore):
             'title': title,
             'meta_data': meta_data,
             'raw_tags': raw_tags,
+            'watermarked': watermarked,
             'duration': duration,
             'bit_rate': bit_rate,
             'sample_rate': sample_rate,

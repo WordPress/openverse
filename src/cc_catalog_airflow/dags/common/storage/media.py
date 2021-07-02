@@ -30,6 +30,9 @@ TAG_CONTAINS_BLACKLIST = {
     "pdm",
 }
 
+COMMON_CRAWL = 'commoncrawl'
+PROVIDER_API = 'provider_api'
+
 
 class MediaStore(metaclass=abc.ABCMeta):
     """
@@ -137,8 +140,8 @@ class MediaStore(metaclass=abc.ABCMeta):
         and for common metadata we:
         - remove `license_url` and `raw_license_url`,
         - validate `license_` and `license_version`,
-        - enrich `metadata` and `tags`,
-        - remove `raw_tags` are removed,
+        - enrich `metadata`,
+        - replace `raw_tags` with enriched `tags`,
         - validate `source`,
         - add `provider`,
         - add `filesize` (with value of None)
@@ -153,6 +156,14 @@ class MediaStore(metaclass=abc.ABCMeta):
             media_data.get('source'),
             self._PROVIDER
         )
+        # Add ingestion_type column value based on `source`.
+        # The implementation is based on `ingestion_column`
+        if media_data.get('ingestion_type') is None:
+            if media_data['source'] == 'commoncrawl':
+                media_data['ingestion_type'] = 'commoncrawl'
+            else:
+                media_data['ingestion_type'] = 'provider_api'
+
         media_data['tags'] = self._enrich_tags(
             media_data.pop('raw_tags', None)
         )

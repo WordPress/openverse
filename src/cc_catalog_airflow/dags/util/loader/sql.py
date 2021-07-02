@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 LOAD_TABLE_NAME_STUB = 'provider_data_'
 IMAGE_TABLE_NAME = 'image'
+AUDIO_TABLE_NAME = 'audio'
 DB_USER_NAME = 'deploy'
 NOW = 'NOW()'
 FALSE = "'f'"
@@ -45,8 +46,37 @@ def create_loading_table(
         media_type = 'image'
     load_table = _get_load_table_name(identifier, media_type=media_type)
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    postgres.run(
-        dedent(
+    if media_type == 'audio':
+        table_creation_query = dedent(
+            f'''
+            CREATE TABLE public.{load_table} (
+              {col.FOREIGN_ID} character varying(3000),
+              {col.LANDING_URL} character varying(1000),
+              {col.DIRECT_URL} character varying(3000),
+              {col.THUMBNAIL} character varying(3000),
+              {col.FILESIZE} integer,
+              {col.LICENSE} character varying(50),
+              {col.LICENSE_VERSION} character varying(25),
+              {col.CREATOR} character varying(2000),
+              {col.CREATOR_URL} character varying(2000),
+              {col.TITLE} character varying(5000),
+              {col.META_DATA} jsonb,
+              {col.TAGS} jsonb,
+              {col.PROVIDER} character varying(80),
+              {col.SOURCE} character varying(80),
+              {col.INGESTION_TYPE} character varying(80),
+              {col.DURATION} integer,
+              {col.BIT_RATE} integer,
+              {col.SAMPLE_RATE} integer,
+              {col.CATEGORY} character varying(100),
+              {col.GENRE} jsonb,
+              {col.AUDIO_SET} jsonb,
+              {col.ALT_AUDIO_FILES} jsonb
+            );
+            '''
+        )
+    else:
+        table_creation_query = dedent(
             f'''
             CREATE TABLE public.{load_table} (
               {col.FOREIGN_ID} character varying(3000),
@@ -70,7 +100,7 @@ def create_loading_table(
             );
             '''
         )
-    )
+    postgres.run(table_creation_query)
     postgres.run(
         f'ALTER TABLE public.{load_table} OWNER TO {DB_USER_NAME};'
     )
@@ -203,7 +233,7 @@ def _clean_intermediate_table_data(
 def upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        db_table=IMAGE_TABLE_NAME,
+        db_table=None,
         media_type='image',
 ):
     def _newest_non_null(column: str) -> str:
@@ -230,34 +260,66 @@ def upsert_records_to_db_table(
             EXCLUDED.{column},
             old.{column}
           )'''
+    if db_table is None:
+        db_table = AUDIO_TABLE_NAME \
+            if media_type == 'audio' else IMAGE_TABLE_NAME
 
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f'Upserting new records into {db_table}.')
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     column_inserts = {
-        col.CREATED_ON: NOW,
-        col.UPDATED_ON: NOW,
-        col.INGESTION_TYPE: col.INGESTION_TYPE,
-        col.PROVIDER: col.PROVIDER,
-        col.SOURCE: col.SOURCE,
-        col.FOREIGN_ID: col.FOREIGN_ID,
-        col.LANDING_URL: col.LANDING_URL,
-        col.DIRECT_URL: col.DIRECT_URL,
-        col.THUMBNAIL: col.THUMBNAIL,
-        col.WIDTH: col.WIDTH,
-        col.HEIGHT: col.HEIGHT,
-        col.FILESIZE: col.FILESIZE,
-        col.LICENSE: col.LICENSE,
-        col.LICENSE_VERSION: col.LICENSE_VERSION,
-        col.CREATOR: col.CREATOR,
-        col.CREATOR_URL: col.CREATOR_URL,
-        col.TITLE: col.TITLE,
-        col.LAST_SYNCED: NOW,
-        col.REMOVED: FALSE,
-        col.META_DATA: col.META_DATA,
-        col.TAGS: col.TAGS,
-        col.WATERMARKED: col.WATERMARKED
+            col.CREATED_ON: NOW,
+            col.UPDATED_ON: NOW,
+            col.INGESTION_TYPE: col.INGESTION_TYPE,
+            col.PROVIDER: col.PROVIDER,
+            col.SOURCE: col.SOURCE,
+            col.FOREIGN_ID: col.FOREIGN_ID,
+            col.LANDING_URL: col.LANDING_URL,
+            col.DIRECT_URL: col.DIRECT_URL,
+            col.THUMBNAIL: col.THUMBNAIL,
+            col.FILESIZE: col.FILESIZE,
+            col.LICENSE: col.LICENSE,
+            col.LICENSE_VERSION: col.LICENSE_VERSION,
+            col.CREATOR: col.CREATOR,
+            col.CREATOR_URL: col.CREATOR_URL,
+            col.TITLE: col.TITLE,
+            col.LAST_SYNCED: NOW,
+            col.REMOVED: FALSE,
+            col.META_DATA: col.META_DATA,
+            col.TAGS: col.TAGS,
+            col.WATERMARKED: col.WATERMARKED,
     }
+    if media_type == 'audio':
+        column_inserts.update({
+            col.DURATION: col.DURATION,
+            col.BIT_RATE: col.BIT_RATE,
+            col.SAMPLE_RATE: col.SAMPLE_RATE,
+            col.CATEGORY: col.CATEGORY,
+            col.GENRE: col.GENRE,
+            col.AUDIO_SET: col.AUDIO_SET,
+            col.ALT_AUDIO_FILES: col.ALT_AUDIO_FILES,
+        })
+    else:
+        column_inserts.update({
+            col.WIDTH: col.WIDTH,
+            col.HEIGHT: col.HEIGHT,
+        })
+    if media_type == 'audio':
+        media_specific_upsert_query = (
+            f'''{_newest_non_null(col.DURATION)},
+            {_newest_non_null(col.BIT_RATE)},
+            {_newest_non_null(col.SAMPLE_RATE)},
+            {_newest_non_null(col.CATEGORY)},
+            {_merge_jsonb_arrays(col.GENRE)},
+            {_merge_jsonb_objects(col.AUDIO_SET)},
+            {_merge_jsonb_objects(col.ALT_AUDIO_FILES)}
+            '''
+        )
+    else:
+        media_specific_upsert_query = (
+            f'''{_newest_non_null(col.WIDTH)},
+            {_newest_non_null(col.HEIGHT)}'''
+        )
     upsert_query = dedent(
         f'''
         INSERT INTO {db_table} AS old ({', '.join(column_inserts.keys())})
@@ -273,17 +335,16 @@ def upsert_records_to_db_table(
           {_newest_non_null(col.LANDING_URL)},
           {_newest_non_null(col.DIRECT_URL)},
           {_newest_non_null(col.THUMBNAIL)},
-          {_newest_non_null(col.WIDTH)},
-          {_newest_non_null(col.HEIGHT)},
           {_newest_non_null(col.FILESIZE)},
           {_newest_non_null(col.LICENSE)},
           {_newest_non_null(col.LICENSE_VERSION)},
           {_newest_non_null(col.CREATOR)},
           {_newest_non_null(col.CREATOR_URL)},
           {_newest_non_null(col.TITLE)},
-          {_newest_non_null(col.WATERMARKED)},
           {_merge_jsonb_objects(col.META_DATA)},
-          {_merge_jsonb_arrays(col.TAGS)}
+          {_merge_jsonb_arrays(col.TAGS)},
+          {_newest_non_null(col.WATERMARKED)},
+          {media_specific_upsert_query}
         '''
     )
     postgres.run(upsert_query)
@@ -292,28 +353,54 @@ def upsert_records_to_db_table(
 def overwrite_records_in_db_table(
         postgres_conn_id,
         identifier,
-        db_table=IMAGE_TABLE_NAME,
+        db_table=None,
         media_type='image'
 ):
+    if db_table is None:
+        db_table = AUDIO_TABLE_NAME \
+            if media_type == 'audio' else IMAGE_TABLE_NAME
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f'Updating records in {db_table}.')
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    columns_to_update = [
-        col.LANDING_URL,
-        col.DIRECT_URL,
-        col.THUMBNAIL,
-        col.WIDTH,
-        col.HEIGHT,
-        col.FILESIZE,
-        col.LICENSE,
-        col.LICENSE_VERSION,
-        col.CREATOR,
-        col.CREATOR_URL,
-        col.TITLE,
-        col.META_DATA,
-        col.TAGS,
-        col.WATERMARKED,
-    ]
+    if media_type == 'audio':
+        columns_to_update = [
+            col.LANDING_URL,
+            col.DIRECT_URL,
+            col.THUMBNAIL,
+            col.FILESIZE,
+            col.LICENSE,
+            col.LICENSE_VERSION,
+            col.CREATOR,
+            col.CREATOR_URL,
+            col.TITLE,
+            col.META_DATA,
+            col.TAGS,
+            col.WATERMARKED,
+            col.DURATION,
+            col.BIT_RATE,
+            col.SAMPLE_RATE,
+            col.CATEGORY,
+            col.GENRE,
+            col.AUDIO_SET,
+            col.ALT_AUDIO_FILES,
+        ]
+    else:
+        columns_to_update = [
+            col.LANDING_URL,
+            col.DIRECT_URL,
+            col.THUMBNAIL,
+            col.WIDTH,
+            col.HEIGHT,
+            col.FILESIZE,
+            col.LICENSE,
+            col.LICENSE_VERSION,
+            col.CREATOR,
+            col.CREATOR_URL,
+            col.TITLE,
+            col.META_DATA,
+            col.TAGS,
+            col.WATERMARKED,
+        ]
     update_set_string = ',\n'.join(
         [f'{column} = {load_table}.{column}' for column in columns_to_update]
     )
