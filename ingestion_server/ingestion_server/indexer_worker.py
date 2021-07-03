@@ -14,7 +14,7 @@ import requests
 from multiprocessing import Value, Process
 from psycopg2.sql import SQL
 
-from ingestion_server.constants import MEDIA_TYPES
+from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.indexer import elasticsearch_connect, TableIndexer
 
 
