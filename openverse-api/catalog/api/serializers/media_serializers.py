@@ -30,7 +30,7 @@ def _validate_lt(value):
     for _type in license_types:
         if _type not in license_helpers.LICENSE_GROUPS:
             raise serializers.ValidationError(
-                "License type \'{}\' does not exist.".format(_type)
+                f"License type '{_type}' does not exist."
             )
         license_groups.append(license_helpers.LICENSE_GROUPS[_type])
     intersected = set.intersection(*license_groups)
@@ -44,7 +44,7 @@ def _validate_li(value):
     for _license in licenses:
         if _license not in license_helpers.LICENSE_GROUPS['all']:
             raise serializers.ValidationError(
-                "License \'{}\' does not exist.".format(_license)
+                f"License '{_license}' does not exist."
             )
     return value.lower()
 
