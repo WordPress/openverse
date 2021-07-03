@@ -33,7 +33,7 @@ def embed_xmp_bytes(image: io.BytesIO, work_properties):
     # `io.BytesIO` object, we have to use a temporary file and then convert it
     # back.
     # https://github.com/python-xmp-toolkit/python-xmp-toolkit/issues/46
-    filename = '/tmp/{}'.format(uuid.uuid4())
+    filename = f'/tmp/{uuid.uuid4()}'
     with open(filename, 'w+b') as xmp_temp:
         xmp_temp.write(image.getvalue())
         xmp_temp.flush()

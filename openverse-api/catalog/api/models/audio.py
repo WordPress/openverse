@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models
 from uuslug import uuslug
 
@@ -67,19 +67,21 @@ class Audio(AbstractMedia):
         help_text='Ordering of the audio in the set.'
     )
 
-    genre = models.CharField(
-        max_length=80,
-        blank=True,
+    genres = ArrayField(
+        base_field=models.CharField(
+            max_length=80,
+            blank=True,
+        ),
         null=True,
         db_index=True,
-        help_text='',
+        help_text='The artistic style of this audio file, eg. hip-hop (music) / tech (podcasts).',
     )
-    type = models.CharField(
+    category = models.CharField(
         max_length=80,
         blank=True,
         null=True,
         db_index=True,
-        help_text='',
+        help_text='The category of this audio file, eg. music, podcast, news & audiobook.',
     )
 
     duration = models.IntegerField(
@@ -107,7 +109,7 @@ class Audio(AbstractMedia):
     @property
     def alternative_files(self):
         if hasattr(self.alt_files, '__iter__'):
-            return list(map(lambda val: AltAudioFile(val), self.alt_files))
+            return [AltAudioFile(alt_file) for alt_file in self.alt_files]
         return None
 
     @property

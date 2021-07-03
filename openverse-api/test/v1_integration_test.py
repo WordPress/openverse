@@ -6,7 +6,6 @@ import uuid
 import time
 import catalog.settings
 import xml.etree.ElementTree as ET
-import pprint
 from django.db.models import Max
 from django.urls import reverse
 from catalog.api.licenses import LICENSE_GROUPS
@@ -21,21 +20,21 @@ designed. Run with the `pytest -s` command from this directory.
 API_URL = os.getenv('INTEGRATION_TEST_URL', 'http://localhost:8000')
 known_apis = {
     'http://localhost:8000': 'LOCAL',
-    'https://api.creativecommons.engineering': 'PRODUCTION',
-    'https://api-dev.creativecommons.engineering': 'TESTING'
+    'https://api.openverse.engineering': 'PRODUCTION',
+    'https://api-dev.openverse.engineering': 'TESTING'
 }
 
 
 def setup_module():
     if API_URL in known_apis:
         print(
-            '\n\033[1;31;40mTesting {} environment'.format(known_apis[API_URL])
+            f'\n\033[1;31;40mTesting {known_apis[API_URL]} environment'
         )
 
 
 @pytest.fixture
 def search_fixture():
-    response = requests.get(API_URL + '/v1/images?q=dog',
+    response = requests.get(f'{API_URL}/v1/images?q=dog',
                             verify=False)
     assert response.status_code == 200
     parsed = json.loads(response.text)
@@ -46,12 +45,12 @@ def test_search_quotes():
     """
     We want to return a response even if the user messes up quote matching.
     """
-    response = requests.get(API_URL + '/v1/images?q="test', verify=False)
+    response = requests.get(f'{API_URL}/v1/images?q="test', verify=False)
     assert response.status_code == 200
 
 
 def test_search_with_special_characters():
-    response = requests.get(API_URL + '/v1/images?q=dog!', verify=False)
+    response = requests.get(f'{API_URL}/v1/images?q=dog!', verify=False)
     assert response.status_code == 200
 
 
@@ -68,7 +67,7 @@ def test_search_consistency():
     """
     n_pages = 5
     searches = set(
-        requests.get(API_URL + '/v1/images?q=dog;page={}'.format(page),
+        requests.get(f'{API_URL}/v1/images?q=dog;page={page}',
                      verify=False)
         for page in range(1, n_pages)
     )
@@ -84,7 +83,7 @@ def test_search_consistency():
 
 def test_image_detail(search_fixture):
     test_id = search_fixture['results'][0]['id']
-    response = requests.get(API_URL + '/v1/images/{}'.format(test_id), verify=False)
+    response = requests.get(f'{API_URL}/v1/images/{test_id}', verify=False)
     assert response.status_code == 200
 
 
@@ -100,7 +99,7 @@ def test_image_thumb(search_fixture):
 def link_shortener_fixture(search_fixture):
     link_to_shorten = search_fixture['results'][0]['detail_url']
     payload = {"full_url": link_to_shorten}
-    response = requests.post(API_URL + '/v1/link', json=payload, verify=False)
+    response = requests.post(f'{API_URL}/v1/link', json=payload, verify=False)
     assert response.status_code == 200
     return json.loads(response.text)
 
@@ -111,13 +110,13 @@ def test_link_shortener_create(link_shortener_fixture):
 
 def test_link_shortener_resolve(link_shortener_fixture):
     path = link_shortener_fixture['shortened_url'].split('/')[-1]
-    response = requests.get(API_URL + '/v1/link/' + path, allow_redirects=False,
+    response = requests.get(f'{API_URL}/v1/link/{path}', allow_redirects=False,
                             verify=False)
     assert response.status_code == 301
 
 
 def test_stats():
-    response = requests.get(API_URL + '/v1/sources?type=images', verify=False)
+    response = requests.get(f'{API_URL}/v1/sources?type=images', verify=False)
     parsed_response = json.loads(response.text)
     assert response.status_code == 200
     num_images = 0
@@ -137,7 +136,7 @@ def test_list_create(search_fixture):
         'title': 'INTEGRATION TEST',
         'images': [search_fixture['results'][0]['id']]
     }
-    response = requests.post(API_URL + '/list', json=payload, verify=False)
+    response = requests.post(f'{API_URL}/list', json=payload, verify=False)
     parsed_response = json.loads(response.text)
     assert response.status_code == 201
     return parsed_response
@@ -147,7 +146,7 @@ def test_list_create(search_fixture):
 def test_list_detail(test_list_create):
     list_slug = test_list_create['url'].split('/')[-1]
     response = requests.get(
-        API_URL + '/list/{}'.format(list_slug), verify=False
+        f'{API_URL}/list/{list_slug}', verify=False
     )
     assert response.status_code == 200
 
@@ -156,9 +155,9 @@ def test_list_detail(test_list_create):
 def test_list_delete(test_list_create):
     list_slug = test_list_create['url'].split('/')[-1]
     token = test_list_create['auth']
-    headers = {"Authorization": "Token {}".format(token)}
+    headers = {"Authorization": f"Token {token}"}
     response = requests.delete(
-        API_URL + '/list/{}'.format(list_slug),
+        f'{API_URL}/list/{list_slug}',
         headers=headers,
         verify=False
     )
@@ -173,7 +172,7 @@ def test_license_type_filtering():
     modification = LICENSE_GROUPS['modification']
     commercial_and_modification = set.intersection(modification, commercial)
     response = requests.get(
-        API_URL + '/v1/images?q=dog&license_type=commercial,modification',
+        f'{API_URL}/v1/images?q=dog&license_type=commercial,modification',
         verify=False
     )
     parsed = json.loads(response.text)
@@ -184,7 +183,7 @@ def test_license_type_filtering():
 def test_single_license_type_filtering():
     commercial = LICENSE_GROUPS['commercial']
     response = requests.get(
-        API_URL + '/v1/images?q=dog&license_type=commercial', verify=False
+        f'{API_URL}/v1/images?q=dog&license_type=commercial', verify=False
     )
     parsed = json.loads(response.text)
     for result in parsed['results']:
@@ -193,7 +192,7 @@ def test_single_license_type_filtering():
 
 def test_specific_license_filter():
     response = requests.get(
-        API_URL + '/v1/images?q=dog&license=by', verify=False
+        f'{API_URL}/v1/images?q=dog&license=by', verify=False
     )
     parsed = json.loads(response.text)
     for result in parsed['results']:
@@ -207,13 +206,13 @@ def test_creator_quotation_grouping():
     """
     no_quotes = json.loads(
         requests.get(
-            API_URL + '/v1/images?creator=claude%20monet',
+            f'{API_URL}/v1/images?creator=claude%20monet',
             verify=False
         ).text
     )
     quotes = json.loads(
         requests.get(
-            API_URL + '/v1/images?creator="claude%20monet"',
+            f'{API_URL}/v1/images?creator="claude%20monet"',
             verify=False
         ).text
     )
@@ -228,12 +227,12 @@ def test_creator_quotation_grouping():
 @pytest.fixture
 def test_auth_tokens_registration():
     payload = {
-        'name': 'INTEGRATION TEST APPLICATION {}'.format(uuid.uuid4()),
+        'name': f'INTEGRATION TEST APPLICATION {uuid.uuid4()}',
         'description': 'A key for testing the OAuth2 registration process.',
         'email': 'example@example.org'
     }
     response = requests.post(
-        API_URL + '/v1/auth_tokens/register', json=payload, verify=False
+        f'{API_URL}/v1/auth_tokens/register', json=payload, verify=False
     )
     parsed_response = json.loads(response.text)
     assert response.status_code == 201
@@ -244,16 +243,16 @@ def test_auth_tokens_registration():
 def test_auth_token_exchange(test_auth_tokens_registration):
     client_id = test_auth_tokens_registration['client_id']
     client_secret = test_auth_tokens_registration['client_secret']
-    token_exchange_request = \
-        'client_id={_id}&client_secret={secret}&grant_type=client_credentials' \
-        .format(_id=client_id, secret=client_secret)
+    token_exchange_request = f'client_id={client_id}&'\
+                             f'client_secret={client_secret}&'\
+                             'grant_type=client_credentials'
     headers = {
         'content-type': "application/x-www-form-urlencoded",
         'cache-control': "no-cache",
     }
     response = json.loads(
         requests.post(
-            API_URL + '/v1/auth_tokens/token/',
+            f'{API_URL}/v1/auth_tokens/token/',
             data=token_exchange_request,
             headers=headers,
             verify=False
@@ -297,19 +296,19 @@ def django_db_setup():
 
 @pytest.mark.django_db
 def test_auth_email_verification(test_auth_token_exchange, django_db_setup):
-        # This test needs to cheat by looking in the database, so it will be
-        # skipped in non-local environments.
-        if API_URL == 'http://localhost:8000':
-            _id = OAuth2Verification.objects.aggregate(Max('id'))['id__max']
-            verify = OAuth2Verification.objects.get(id=_id)
-            code = verify.code
-            path = reverse('verify-email', args=[code])
-            url = f'{API_URL}{path}'
-            response = requests.get(url)
-            assert response.status_code == 200
-            test_auth_rate_limit_reporting(
-                test_auth_token_exchange, verified=True
-            )
+    # This test needs to cheat by looking in the database, so it will be
+    # skipped in non-local environments.
+    if API_URL == 'http://localhost:8000':
+        _id = OAuth2Verification.objects.aggregate(Max('id'))['id__max']
+        verify = OAuth2Verification.objects.get(id=_id)
+        code = verify.code
+        path = reverse('verify-email', args=[code])
+        url = f'{API_URL}{path}'
+        response = requests.get(url)
+        assert response.status_code == 200
+        test_auth_rate_limit_reporting(
+            test_auth_token_exchange, verified=True
+        )
 
 
 @pytest.mark.skip(reason="Unmaintained feature/grequests ssl recursion bug")
@@ -378,6 +377,7 @@ def test_attribution():
     assert title in all_data_present.attribution
     assert creator in all_data_present.attribution
 
+
 def test_license_override():
     null_license_url = Image(
         identifier="ab80dbe1-414c-4ee8-9543-f9599312aeb8",
@@ -389,9 +389,10 @@ def test_license_override():
     )
     assert null_license_url.license_url is not None
 
+
 def test_source_search():
     response = requests.get(
-        API_URL + '/v1/images?source=behance', verify=False
+        f'{API_URL}/v1/images?source=behance', verify=False
     )
     if response.status_code != 200:
         print(f'Request failed. Message: {response.body}')
@@ -401,7 +402,7 @@ def test_source_search():
 
 
 def test_extension_filter():
-    response = requests.get(API_URL + '/v1/images?q=dog&extension=jpg')
+    response = requests.get(f'{API_URL}/v1/images?q=dog&extension=jpg')
     parsed = json.loads(response.text)
     for result in parsed['results']:
         assert '.jpg' in result['url']
@@ -412,9 +413,10 @@ def search_factory():
     """
     Allows passing url parameters along with a search request.
     """
+
     def _parameterized_search(**kwargs):
         response = requests.get(
-            API_URL + '/v1/images',
+            f'{API_URL}/v1/images',
             params=kwargs,
             verify=False
         )
@@ -513,21 +515,25 @@ def recommendation_factory():
     """
     Allows passing url parameters along with a related images request.
     """
+
     def _parameterized_search(identifier, **kwargs):
         response = requests.get(
-            API_URL + f'/v1/recommendations?type=images&id={identifier}',
+            f'{API_URL}/v1/recommendations?type=images&id={identifier}',
             params=kwargs,
             verify=False
         )
         assert response.status_code == 200
         parsed = response.json()
         return parsed
+
     return _parameterized_search
 
 
 @pytest.mark.skip(reason="Generally, we don't paginate related images, so "
-                    "consistency is less of an issue.")
-def test_related_image_search_page_consistency(recommendation, search_without_dead_links):
+                         "consistency is less of an issue.")
+def test_related_image_search_page_consistency(
+        recommendation, search_without_dead_links
+):
     initial_images = search_without_dead_links(q='*', page_size=10)
     for image in initial_images['results']:
         related = recommendation_factory(image['id'])
@@ -537,7 +543,8 @@ def test_related_image_search_page_consistency(recommendation, search_without_de
 
 def test_oembed_endpoint_for_json():
     response = requests.get(
-        API_URL + '/v1/oembed?url=https%3A//search.creativecommons.org/photos/dac5f6b0-e07a-44a0-a444-7f43d71f9beb'
+        f'{API_URL}/v1/oembed?url=https%3A//'
+        'search.creativecommons.org/photos/dac5f6b0-e07a-44a0-a444-7f43d71f9beb'
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == "application/json"
@@ -549,7 +556,9 @@ def test_oembed_endpoint_for_json():
 
 def test_oembed_endpoint_for_xml():
     response = requests.get(
-        API_URL + '/v1/oembed?url=https%3A//search.creativecommons.org/photos/dac5f6b0-e07a-44a0-a444-7f43d71f9beb&format=xml'
+        f'{API_URL}/v1/oembed?url=https%3A//'
+        'search.creativecommons.org/photos/'
+        'dac5f6b0-e07a-44a0-a444-7f43d71f9beb&format=xml'
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == "application/xml; charset=utf-8"
@@ -566,6 +575,8 @@ def test_report_endpoint():
         'identifier': identifier,
         'reason': 'mature'
     }
-    response = requests.post(API_URL + '/v1/images/{}/report'.format(identifier), json=payload, verify=False)
+    response = requests.post(
+        f'{API_URL}/v1/images/{identifier}/report',
+        json=payload, verify=False)
     assert response.status_code == 201
     return json.loads(response.text)

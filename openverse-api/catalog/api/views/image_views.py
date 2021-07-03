@@ -98,7 +98,7 @@ class SearchImages(APIView):
         beyond `page_count`, or else the server will reject the query.
         
         For more precise results, you can go to the 
-        [CC Search Syntax Guide](https://search.creativecommons.org/search-help) 
+        [Openverse Syntax Guide](https://search.creativecommons.org/search-help) 
         for information about creating queries and 
         [Apache Lucene Syntax Guide](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
         for information on structuring advanced searches.
@@ -122,31 +122,31 @@ class SearchImages(APIView):
     image_search_bash = \
         """
         # Example 1: Search for an exact match of Claude Monet
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q="Claude Monet"
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q="Claude Monet"
         
         # Example 2: Search for images related to both dog and cat
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dog+cat
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=dog+cat
         
         # Example 3: Search for images related to dog or cat, but not necessarily both
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dog|cat
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=dog|cat
 
         # Example 4: Search for images related to dog but won't include results related to 'pug'
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dog -pug
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=dog -pug
         
         # Example 5: Search for images matching anything with the prefix ‘net’
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=net*
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=net*
         
         # Example 6: Search for images that match dogs that are either corgis or labrador
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=dogs + (corgis | labrador)
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=dogs + (corgis | labrador)
         
         # Example 7: Search for images that match strings close to the term theater with a difference of one character
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=theatre~1
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=theatre~1
         
         # Example 8: Search for images using single query parameter
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=test
         
         # Example 9: Search for images using multiple query parameters
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1   
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1   
         """  # noqa
 
     @swagger_auto_schema(operation_id='image_search',
@@ -234,7 +234,7 @@ class RelatedImage(APIView):
     recommendations_images_read_bash = \
         """
         # Get related images for image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
         """  # noqa
 
     @swagger_auto_schema(operation_id="recommendations_images_read",
@@ -312,7 +312,7 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
     image_detail_bash = \
         """
         # Get the details of image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
         """  # noqa
 
     @swagger_auto_schema(operation_id="image_detail",
@@ -400,8 +400,7 @@ class Watermark(GenericAPIView):
             except (libxmp.XMPError, AttributeError) as e:
                 # Just send the EXIF-ified file if libxmp fails to add metadata.
                 log.error(
-                    'Failed to add XMP metadata to {}'
-                        .format(image_record.identifier)
+                    f'Failed to add XMP metadata to {image_record.identifier}'
                 )
                 log.error(e)
                 response = HttpResponse(content_type='image/jpeg')
@@ -443,7 +442,7 @@ class OembedView(APIView):
     oembed_list_bash = \
         """
         # Retrieve embedded content from image URL (https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395)
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/oembed?url=https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/oembed?url=https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395
         """  # noqa
 
     @swagger_auto_schema(operation_id="oembed_list",
@@ -490,7 +489,7 @@ class ReportImageView(CreateAPIView):
     images_report_create
     
     images_report_create is an API endpoint to report an issue about a 
-    specified image ID to Creative Commons.
+    specified image ID to Openverse.
 
     By using this endpoint, you can report an image if it infringes copyright, 
     contains mature or sensitive content and others.

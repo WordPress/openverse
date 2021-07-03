@@ -154,8 +154,11 @@ def get_last_item_ids(table):
     # Find the last row added to the database table
     cur.execute(
         SQL(
-            'SELECT id, identifier FROM {} ORDER BY id DESC LIMIT 1;'
-        ).format(Identifier(table))
+            'SELECT id, identifier '
+            f'FROM {Identifier(table)} '
+            'ORDER BY id DESC '
+            'LIMIT 1;'
+        )
     )
     last_added_pg_id, last_added_uuid = cur.fetchone()
     cur.close()
@@ -180,7 +183,7 @@ class TableIndexer:
         """
         last_pg_id, _ = get_last_item_ids(table)
         if not last_pg_id:
-            log.warning('Tried to sync ' + table + ' but it was empty.')
+            log.warning(f'Tried to sync {table} but it was empty.')
             return
         # Find the last document inserted into elasticsearch
         destination = dest_idx if dest_idx else table
@@ -195,8 +198,7 @@ class TableIndexer:
                      'Replicating everything.')
             last_es_id = 0
         log.info(
-            'highest_db_id, highest_es_id: {}, {}'
-            .format(last_pg_id, last_es_id)
+            f'highest_db_id, highest_es_id: {last_pg_id}, {last_es_id}'
         )
         # Select all documents in-between and replicate to Elasticsearch.
         if last_pg_id > last_es_id:
@@ -265,8 +267,8 @@ class TableIndexer:
                 if not chunk:
                     break
                 log.info(
-                    'PSQL indexer down: batch_size={}, downloaded_per_second={}'
-                    .format(len(chunk), dl_rate)
+                    f'PSQL indexer down: batch_size={len(chunk)}, '
+                    f'downloaded_per_second={dl_rate}'
                 )
                 es_batch = self.pg_chunk_to_es(
                     pg_chunk=chunk,
@@ -276,7 +278,7 @@ class TableIndexer:
                 )
                 push_start_time = time.time()
                 num_docs = len(es_batch)
-                log.info('Pushing {} docs to Elasticsearch.'.format(num_docs))
+                log.info(f'Pushing {num_docs} docs to Elasticsearch.')
                 # Bulk upload to Elasticsearch in parallel.
                 try:
                     self._bulk_upload(es_batch)
@@ -285,16 +287,16 @@ class TableIndexer:
                 upload_time = time.time() - push_start_time
                 upload_rate = len(es_batch) / upload_time
                 log.info(
-                    'Elasticsearch up: batch_size={}, uploaded_per_second={}'
-                    .format(len(es_batch), upload_rate)
+                    f'Elasticsearch up: batch_size={len(es_batch)},'
+                    f' uploaded_per_second={upload_rate}'
                 )
                 num_converted_documents += len(chunk)
                 total_indexed_so_far += len(chunk)
                 if self.progress is not None:
                     self.progress.value = \
                         (total_indexed_so_far / num_to_index) * 100
-            log.info('Synchronized ' + str(num_converted_documents) + ' from '
-                     'table \'' + table + '\' to Elasticsearch')
+            log.info(f"Synchronized {num_converted_documents} from "
+                     f"table '{table}' to Elasticsearch")
             if self.finish_time is not None:
                 self.finish_time.value = \
                     datetime.datetime.utcnow().timestamp()
@@ -376,16 +378,14 @@ class TableIndexer:
             }
             es.indices.update_aliases(index_update)
             log.info(
-                'Updated \'{}\' index alias to point to {}'
-                .format(live_alias, write_index)
+                f"Updated '{live_alias}' index alias to point to {write_index}"
             )
-            log.info('Deleting old index {}'.format(old))
+            log.info(f'Deleting old index {old}')
             es.indices.delete(index=old)
         else:
             es.indices.put_alias(index=write_index, name=live_alias)
             log.info(
-                'Created \'{}\' index alias pointing to {}'
-                .format(live_alias, write_index)
+                f"Created '{live_alias}' index alias pointing to {write_index}"
             )
 
     def listen(self, poll_interval=10):
@@ -424,11 +424,11 @@ class TableIndexer:
 
     def update(self, model_name: str, since_date):
         log.info(
-            'Updating index {} with changes since {}'
-            .format(model_name, since_date)
+            f'Updating index {model_name} with changes since {since_date}'
         )
-        query = SQL('SELECT * FROM {} WHERE updated_on >= \'{}\''
-                    .format(model_name, since_date))
+        query = SQL(
+            f"SELECT * FROM {model_name} WHERE updated_on >= '{since_date}'"
+        )
         self.replicate(model_name, model_name, query)
 
     @staticmethod
@@ -490,7 +490,7 @@ if __name__ == '__main__':
     elasticsearch = elasticsearch_connect()
     syncer = TableIndexer(elasticsearch, replicate_tables)
     if parsed.reindex:
-        log.info('Reindexing {}'.format(parsed.reindex))
+        log.info(f'Reindexing {parsed.reindex}')
         syncer.reindex(parsed.reindex)
     elif parsed.update:
         index, date = parsed.update

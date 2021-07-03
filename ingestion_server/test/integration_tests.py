@@ -71,8 +71,9 @@ class TestIngestion(unittest.TestCase):
                 continue
             logging.info('Successfully connected to databases')
             break
-        with open(this_dir + "/mock_data/mocked_images.csv") as mockfile,\
-                open(this_dir + "/mock_data/{}".format(schemaf)) as schema_file:
+        mockfname = f"{this_dir}/mock_data/mocked_images.csv"
+        schemafname = f"{this_dir}/mock_data/{schemaf}"
+        with open(mockfname) as mockfile, open(schemafname) as schema_file:
             upstream_cur = upstream_db.cursor()
             downstream_cur = downstream_db.cursor()
             schema = schema_file.read()
@@ -80,12 +81,11 @@ class TestIngestion(unittest.TestCase):
             downstream_cur.execute(schema)
             downstream_db.commit()
             upstream_db.commit()
-            upstream_cur\
-                .copy_expert(
-                    """
-                    COPY image FROM '/mock_data/mocked_images.csv'
-                    WITH (FORMAT CSV, DELIMITER ',', QUOTE '"')
-                    """, mockfile)
+            upstream_cur.copy_expert(
+                """
+                COPY image FROM '/mock_data/mocked_images.csv'
+                WITH (FORMAT CSV, DELIMITER ',', QUOTE '"')
+                """, mockfile)
             upstream_db.commit()
             downstream_cur.close()
             upstream_cur.close()
@@ -193,7 +193,7 @@ class TestIngestion(unittest.TestCase):
         req = {
             'model': 'image',
             'action': 'INGEST_UPSTREAM',
-            'callback_url': 'http://{}:58000/task_done'.format(_get_host_ip())
+            'callback_url': f'http://{_get_host_ip()}:58000/task_done'
         }
         res = requests.post('http://localhost:60002/task', json=req)
         stat_msg = "The job should launch successfully and return 202 ACCEPTED."
@@ -235,9 +235,9 @@ class TestIngestion(unittest.TestCase):
         resp_json = resp.json()
         msg = 'There should be one task in the task list now.'
         self.assertEqual(1, len(resp_json), msg)
-    
+
     def test05_removed_from_source_not_indexed(self):
-        id_to_check = 10494466  #Index for which we changed manually False to True
+        id_to_check = 10494466  # Index for which we changed manually False to True
         es = Elasticsearch(
             host='localhost',
             port=60001,
@@ -262,8 +262,9 @@ class TestIngestion(unittest.TestCase):
         )
 
         num_hits = search_response['hits']['total']
-        msg = "id {} should not show up in search results.".format(id_to_check)
+        msg = f"id {id_to_check} should not show up in search results."
         self.assertEqual(0, num_hits, msg)
+
 
 if __name__ == '__main__':
     log_level = logging.INFO if ENABLE_DETAILED_LOGS else logging.CRITICAL
@@ -281,8 +282,7 @@ if __name__ == '__main__':
     print('Starting integration test datastores. . .')
     integration_compose = \
         os.path.join(this_dir, 'integration-test-docker-compose.yml')
-    start_cmd = 'docker-compose -f {} up --build'\
-        .format(integration_compose)
+    start_cmd = f'docker-compose -f {integration_compose} up --build'
     subprocess.Popen(start_cmd, shell=True, stdout=docker_stdout)
 
     # Run tests.
@@ -294,5 +294,5 @@ if __name__ == '__main__':
     finally:
         # Stop Elasticsearch and database. Delete attached volumes.
         TestIngestion.clean_up()
-        stop_cmd = 'docker-compose -f {} down -v'.format(integration_compose)
+        stop_cmd = f'docker-compose -f {integration_compose} down -v'
         subprocess.call(stop_cmd, shell=True, stdout=docker_stdout)

@@ -46,7 +46,8 @@ class TaskResource:
             return "No action supplied in request body."
         if request[ACTION] not in [x.name for x in TaskTypes]:
             return "Invalid action."
-        if request[ACTION] == TaskTypes.UPDATE_INDEX.name and SINCE_DATE not in request:
+        if request[ACTION] == TaskTypes.UPDATE_INDEX.name and \
+                SINCE_DATE not in request:
             return "Received UPDATE request but no since_date."
 
         return None
@@ -57,7 +58,7 @@ class TaskResource:
         request_error = self._validate_create_task(raw_body)
         if request_error:
             logging.warning(
-                'Invalid request made. Reason: {}'.format(request_error)
+                f'Invalid request made. Reason: {request_error}'
             )
             resp.status = falcon.HTTP_400
             resp.media = {
@@ -88,7 +89,7 @@ class TaskResource:
         task_id = self.tracker \
             .add_task(task, task_id, action, progress, finish_time)
         base_url = self._get_base_url(req)
-        status_url = base_url + '/task/{}'.format(task_id)
+        status_url = f"{base_url}/task/{task_id}"
         # Give the task a moment to start so we can detect immediate failure.
         # TODO: Use IPC to detect if the job launched successfully instead
         # of giving it 100ms to crash. This is prone to race conditions.
@@ -136,6 +137,7 @@ class WorkerFinishedResource:
     For notifying ingestion server that an indexing worker has finished its
     task.
     """
+
     def on_post(self, req, resp):
         target_index = worker_finished(str(req.remote_addr))
         if target_index:
@@ -169,7 +171,7 @@ def create_api(log=True):
         handler.setFormatter(formatter)
         root.addHandler(handler)
 
-    _api = falcon.API()
+    _api = falcon.App()
     task_tracker = TaskTracker()
     task_resource = TaskResource(task_tracker)
     get_task_status = TaskStatus(task_tracker)

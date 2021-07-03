@@ -77,16 +77,14 @@ def _generate_indices(conn, table: str):
             on_idx = tokens.index('ON')
             table_name_idx = on_idx + 1
             schema_name, table_name = tokens[table_name_idx].split('.')
-            new_table_name = 'temp_import_{}'.format(table_name)
-            tokens[table_name_idx] = schema_name + '.' + new_table_name
+            tokens[table_name_idx] = f'{schema_name}.temp_import_{table_name}'
             if 'id' not in index:
                 cleaned.append(' '.join(tokens))
 
         return cleaned
 
     # Get all of the old indices from the existing table.
-    get_idxs = "SELECT indexdef FROM pg_indexes WHERE tablename = '{}'"\
-        .format(table)
+    get_idxs = f"SELECT indexdef FROM pg_indexes WHERE tablename = '{table}'"
 
     with conn.cursor() as cur:
         cur.execute(get_idxs)
@@ -137,7 +135,7 @@ def _generate_constraints(conn, table: str):
 
 
 def _is_foreign_key(_statement, table):
-    return 'REFERENCES {}('.format(table) in _statement
+    return f'REFERENCES {table}(' in _statement
 
 
 def _generate_delete_orphans(fk_statement, fk_table):
@@ -155,29 +153,24 @@ def _generate_delete_orphans(fk_statement, fk_table):
     ref_table, ref_field = fk_reference.split('(')
     ref_field = ref_field.replace(')', '')
 
-    del_orphans = '''
+    del_orphans = f'''
         DELETE FROM {fk_table} fk_table WHERE not exists
         (select 1 from temp_import_{ref_table} r
         where r.{ref_field} = fk_table.{fk_field})
-    '''.format(
-        fk_table=fk_table,
-        ref_table=ref_table,
-        fk_field=fk_field,
-        ref_field=ref_field
-    )
+    '''
     return del_orphans
 
 
 def _remap_constraint(name, con_table, fk_statement, table):
     """ Produce ALTER TABLE ... statements for each constraint."""
-    alterations = ['''
-        ALTER TABLE {_table} DROP CONSTRAINT {conname}
-    '''.format(_table=con_table, conname=name)]
+    alterations = [f'''
+        ALTER TABLE {con_table} DROP CONSTRAINT {name}
+    ''']
     # Constraint applies to the table we're replacing
     if con_table == table:
-        alterations.append('''
-            ALTER TABLE {table} ADD {stmnt}
-        '''.format(table=con_table, stmnt=fk_statement))
+        alterations.append(f'''
+            ALTER TABLE {con_table} ADD {fk_statement}
+        ''')
     # Constraint references the table we're replacing. Point it at the new
     # one.
     else:
@@ -185,14 +178,14 @@ def _remap_constraint(name, con_table, fk_statement, table):
         # Point the constraint to the new table.
         reference_idx = tokens.index('REFERENCES') + 1
         table_reference = tokens[reference_idx]
-        match_old_ref = '{}('.format(table)
-        new_ref = 'temp_import_{}('.format(table)
+        match_old_ref = f'{table}('
+        new_ref = f'temp_import_{table}('
         new_reference = table_reference.replace(match_old_ref, new_ref)
         tokens[reference_idx] = new_reference
         con_definition = ' '.join(tokens)
-        create_constraint = '''
-            ALTER TABLE {table} ADD {definition}
-        '''.format(table=con_table, definition=con_definition)
+        create_constraint = f'''
+            ALTER TABLE {con_table} ADD {con_definition}
+        '''
         alterations.append(create_constraint)
     return alterations
 
@@ -241,7 +234,7 @@ def reload_upstream(table, progress=None, finish_time=None):
     # 4. Delete orphaned foreign key references.
     # 5. Clean the data.
     # 6. Promote the temporary table and delete the original.
-    copy_data = '''
+    copy_data = f'''
         DROP TABLE IF EXISTS temp_import_{table};
         CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
         ALTER TABLE temp_import_{table} ADD COLUMN IF NOT EXISTS
@@ -252,20 +245,20 @@ def reload_upstream(table, progress=None, finish_time=None):
           SET DEFAULT nextval('image_id_temp_seq'::regclass);
         ALTER TABLE temp_import_{table} ALTER COLUMN view_count
           SET DEFAULT 0;
-        INSERT INTO temp_import_{table} ({cols})
-        SELECT {cols} from upstream_schema.{table}_view img
+        INSERT INTO temp_import_{table} ({query_cols})
+        SELECT {query_cols} from upstream_schema.{table}_view img
           WHERE NOT EXISTS(
             SELECT FROM api_deletedimage WHERE identifier = img.identifier
           );
         ALTER TABLE temp_import_{table} ADD PRIMARY KEY (id);
         DROP SERVER upstream CASCADE;
-    '''.format(table=table, cols=query_cols)
+    '''
     create_indices = ';\n'.join(_generate_indices(downstream_db, table))
     remap_constraints = ';\n'.join(_generate_constraints(downstream_db, table))
-    go_live = '''
+    go_live = f'''
         DROP TABLE {table};
         ALTER TABLE temp_import_{table} RENAME TO {table};
-    '''.format(table=table)
+    '''
 
     with downstream_db.cursor() as downstream_cur:
         log.info('Copying upstream data...')
@@ -290,7 +283,7 @@ def reload_upstream(table, progress=None, finish_time=None):
         downstream_cur.execute(go_live)
     downstream_db.commit()
     downstream_db.close()
-    log.info('Finished refreshing table \'{}\'.'.format(table))
+    log.info(f"Finished refreshing table '{table}'.")
     _update_progress(progress, 100.0)
     if finish_time:
         finish_time.value = datetime.datetime.utcnow().timestamp()

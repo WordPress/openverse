@@ -9,7 +9,7 @@ class BrowseResults(TaskSet):
     def view_image(self):
         if self.parent.results:
             image_id = random.choice(self.parent.results)['id']
-            self.client.get("/image/{}".format(image_id), name="/image/[id]")
+            self.client.get(f"/image/{image_id}", name="/image/[id]")
 
     @task(10)
     def favorite_images(self):
@@ -24,8 +24,7 @@ class BrowseResults(TaskSet):
     @task(10)
     def shorten_link(self):
         _unique = str(uuid.uuid4())
-        image_link = "http://api-dev.creativecommons.engineering/list/{}"\
-            .format(_unique)
+        image_link = f"http://api-dev.openverse.engineering/list/{_unique}"
         self.client.post("/link", {"full_url": image_link})
 
 
@@ -46,7 +45,7 @@ class UserBehavior(TaskSet):
         query = ','.join(query)
         self.query = query
         response = self.client.get(
-            "/image/search?q={}".format(query),
+            f"/image/search?q={query}",
             name="/image/search?q=[keywords]"
         )
         self.results = json.loads(response.content.decode("utf-8"))['results']

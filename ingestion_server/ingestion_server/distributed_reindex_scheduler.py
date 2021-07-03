@@ -81,7 +81,7 @@ def _prepare_workers():
         _id = instance['InstanceId']
         servers.append(server)
         ids.append(_id)
-    log.info('Selected worker instances {}'.format(servers))
+    log.info(f'Selected worker instances {servers}')
     client.start_instances(InstanceIds=ids)
     return servers
 

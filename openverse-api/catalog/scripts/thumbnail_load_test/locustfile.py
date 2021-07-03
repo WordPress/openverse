@@ -31,7 +31,7 @@ successful vs failed thumbnails.
 
 Optionally rerun the test after the cache has been warmed up.
 """
-PROXY_URL = "https://api-dev.creativecommons.engineering/t/600/"
+PROXY_URL = "https://api-dev.openverse.engineering/t/600/"
 
 url_queue = gevent.queue.Queue()
 provider_counts = defaultdict(int)
