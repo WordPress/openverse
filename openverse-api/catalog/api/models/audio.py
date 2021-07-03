@@ -41,6 +41,7 @@ class AltAudioFile(AbstractAltFile):
     def __repr__(self):
         return str(self)
 
+
 class AudioSet(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     """
     This is an ordered collection of audio files, such as a podcast series or
@@ -74,14 +75,16 @@ class Audio(AbstractMedia):
         ),
         null=True,
         db_index=True,
-        help_text='The artistic style of this audio file, eg. hip-hop (music) / tech (podcasts).',
+        help_text='The artistic style of this audio file, '
+                  'eg. hip-hop (music) / tech (podcasts).',
     )
     category = models.CharField(
         max_length=80,
         blank=True,
         null=True,
         db_index=True,
-        help_text='The category of this audio file, eg. music, podcast, news & audiobook.',
+        help_text='The category of this audio file, '
+                  'eg. music, podcast, news & audiobook.',
     )
 
     duration = models.IntegerField(
