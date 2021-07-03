@@ -6,9 +6,11 @@ import uuid
 import time
 from urllib.parse import urlparse
 from multiprocessing import Value, Process
-from ingestion_server.tasks import TaskTracker, Task, TaskTypes
-from ingestion_server.state import worker_finished, clear_state
+
+from ingestion_server.constants import MEDIA_TYPES
 import ingestion_server.indexer as indexer
+from ingestion_server.state import worker_finished, clear_state
+from ingestion_server.tasks import TaskTracker, Task, TaskTypes
 
 """
 A small RPC API server for scheduling ingestion of upstream data and
@@ -145,8 +147,11 @@ class WorkerFinishedResource:
                 'All indexer workers finished! Attempting to promote index '
                 f'{target_index}'
             )
+            index_type = target_index.split('-')[0]
+            if index_type not in MEDIA_TYPES:
+                index_type = 'image'
             f = indexer.TableIndexer.go_live
-            p = Process(target=f, args=(target_index, 'image'))
+            p = Process(target=f, args=(target_index, index_type))
             p.start()
 
 
