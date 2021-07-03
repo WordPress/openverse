@@ -14,8 +14,9 @@ import os
 import time
 import boto3
 import socket
-from ingestion_server.state import register_indexing_job
 
+from ingestion_server.constants import MEDIA_TYPES
+from ingestion_server.state import register_indexing_job
 
 client = boto3.client('ec2', region_name=os.getenv('AWS_REGION', 'us-east-1'))
 
@@ -28,7 +29,14 @@ def schedule_distributed_index(db_conn, target_index):
 
 
 def _assign_work(db_conn, workers, target_index):
-    est_records_query = 'SELECT id FROM image ORDER BY id DESC LIMIT 1'
+    """
+    Target index has a form of `<media_type>-<uuid>`
+    """
+    table_name = target_index.split('-')[0]
+    # Defaulting to 'image' for backward compatibility
+    if not table_name or table_name not in MEDIA_TYPES:
+        table_name = 'image'
+    est_records_query = f'SELECT id FROM {table_name} ORDER BY id DESC LIMIT 1'
     with db_conn.cursor() as cur:
         cur.execute(est_records_query)
         estimated_records = cur.fetchone()[0]
