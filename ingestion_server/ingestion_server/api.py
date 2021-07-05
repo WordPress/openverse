@@ -7,7 +7,7 @@ import time
 from urllib.parse import urlparse
 from multiprocessing import Value, Process
 
-from ingestion_server.constants import MEDIA_TYPES
+from ingestion_server.constants.media_types import MEDIA_TYPES
 import ingestion_server.indexer as indexer
 from ingestion_server.state import worker_finished, clear_state
 from ingestion_server.tasks import TaskTracker, Task, TaskTypes

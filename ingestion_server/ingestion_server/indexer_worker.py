@@ -14,7 +14,7 @@ import requests
 from multiprocessing import Value, Process
 from psycopg2.sql import SQL
 
-from ingestion_server.constants import MEDIA_TYPES
+from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.indexer import elasticsearch_connect, TableIndexer
 
 
@@ -59,7 +59,8 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
         table_name=table_name
     )
     exists_in_mature_table = exists_in_table.format(
-        table=f'api_mature{table_name}', name='mature'
+        table=f'api_mature{table_name}', name='mature',
+        table_name=table_name,
     )
 
     query = SQL(f'''
