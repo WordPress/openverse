@@ -37,7 +37,7 @@ from catalog.settings import API_VERSION, WATERMARK_ENABLED
 
 description = """
 # Introduction
-The Creative Commons Catalog API ('openverse-api') is a system
+The Openverse API ('openverse-api') is a system
 that allows programmatic access to public domain digital media. It is our
 ambition to index and catalog billions of Creative Commons works, including
 articles, songs, videos, photographs, paintings, and more. Using this API,
@@ -56,14 +56,14 @@ an API key.
 # Register and Authenticate
 
 ## Register for a key
-Before using the CC Catalog API, you need to register access via OAuth2.
+Before using the Openverse API, you need to register access via OAuth2.
 This can be done using the `/v1/auth_tokens/register` endpoint.
 
 <br>
 Example on how to register for a key
 
 ```
-$ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "openverse-api@creativecommons.org"}' https://api.creativecommons.engineering/v1/auth_tokens/register
+$ curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access Openverse API", "email": "zack.krida@automattic.com"}' https://api.openverse.engineering/v1/auth_tokens/register
 ```
 
 <br>
@@ -80,7 +80,7 @@ Example of successful request
 ```
 
 ## Authenticate
-In order to use the CC Catalog API endpoints, you need to include access token \
+In order to use the Openverse API endpoints, you need to include access token \
 in the header.
 This can be done by exchanging your client credentials for a token using the \
 `v1/auth_tokens/token/` endpoint.
@@ -89,7 +89,7 @@ This can be done by exchanging your client credentials for a token using the \
 Example on how to authenticate using OAuth2
 
 ```
-$ curl -X POST -d "client_id=pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda&client_secret=YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e&grant_type=client_credentials" https://api.creativecommons.engineering/v1/auth_tokens/token/
+$ curl -X POST -d "client_id=pm8GMaIXIhkjQ4iDfXLOvVUUcIKGYRnMlZYApbda&client_secret=YhVjvIBc7TuRJSvO2wIi344ez5SEreXLksV7GjalLiKDpxfbiM8qfUb5sNvcwFOhBUVzGNdzmmHvfyt6yU3aGrN6TAbMW8EOkRMOwhyXkN1iDetmzMMcxLVELf00BR2e&grant_type=client_credentials" https://api.openverse.engineering/v1/auth_tokens/token/
 ```
 
 <br>
@@ -117,7 +117,7 @@ your future API requests.
 Example
 
 ```
-$ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.creativecommons.engineering/v1/images?q=test
+$ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=test
 ```
 <br>
 <blockquote>
@@ -137,10 +137,10 @@ An abbreviation for Application Programming Interface.
 An abbreviation for Creative Commons.
 
 #### Client ID
-A publicly exposed string used by CC Catalog API to identify the application.
+A publicly exposed string used by Openverse API to identify the application.
 
 #### Client Secret
-A private string that authenticates the identity of the application to the CC Catalog API.
+A private string that authenticates the identity of the application to the Openverse API.
 
 #### Copyright
 A type of intellectual property that gives the owner an exclusive right to reproduce, publish, sell or distribute content.
@@ -158,7 +158,7 @@ Any content that depicts graphic violence, adult content, and hostility or malic
 
 We love pull requests! If you’re interested in [contributing on Github](https://github.com/wordpress/openverse-api), here’s a todo list to get started.
 
-- Read up about [Django REST Framework](https://www.django-rest-framework.org/), which is the framework used to build CC Catalog API
+- Read up about [Django REST Framework](https://www.django-rest-framework.org/), which is the framework used to build Openverse API
 - Read up about [drf-yasg](https://drf-yasg.readthedocs.io/en/stable/), which is a tool used to generate real Swagger/OpenAPI 2.0 specifications
 - Read up about Documentation Guidelines, which provides guidelines on how to contribute to documentation, documentation styles and cheat sheet for drf-yasg
 - Run the server locally by following this [link](https://github.com/wordpress/openverse-api#running-the-server-locally)
@@ -168,22 +168,23 @@ We love pull requests! If you’re interested in [contributing on Github](https:
 - Create pull request
 """  # noqa
 
-logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
-tos_url = "https://api.creativecommons.engineering/terms_of_service.html"
+# @todo: Reimplement logo once Openverse logomark is finalized
+# logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
+tos_url = "https://api.openverse.engineering/terms_of_service.html"
 license_url = \
     "https://github.com/wordpress/openverse-api/blob/master/LICENSE"
 schema_view = get_schema_view(
     openapi.Info(
-        title="Creative Commons Catalog API",
+        title="Openverse API",
         default_version=API_VERSION,
         description=description,
-        contact=openapi.Contact(email="openverse-api@creativecommons.org"),
+        contact=openapi.Contact(email="zack.krida@automattic.com"),
         license=openapi.License(name="MIT License", url=license_url),
         terms_of_service=tos_url,
-        x_logo={
-            "url": logo_url,
-            "backgroundColor": "#FFFFFF"
-        }
+        # x_logo={
+        #     "url": logo_url,
+        #     "backgroundColor": "#FFFFFF"
+        # }
     ),
     public=True,
     permission_classes=(rest_framework.permissions.AllowAny,),
@@ -192,7 +193,7 @@ schema_view = get_schema_view(
 report_image_bash = \
     """
     # Report an issue about image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
-    curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "This image contains sensitive content"}' https://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
+    curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "This image contains sensitive content"}' https://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
     """  # noqa
 
 report_image_request = openapi.Schema(
@@ -204,7 +205,7 @@ report_image_request = openapi.Schema(
             type=openapi.TYPE_STRING,
             enum=["mature", "dmca", "other"],
             max_length=20,
-            description="The reason to report image to Creative Commons."
+            description="The reason to report image to Openverse."
         ),
         'identifier': openapi.Schema(
             title="Identifier",

@@ -81,12 +81,12 @@ def validate_images(query_hash, start_slice, results, image_urls):
         if status == 429 or status == 403:
             log.warning(
                 'Image validation failed due to rate limiting or blocking. '
-                'Affected URL: {}'.format(image_urls[idx])
+                f'Affected URL: {image_urls[idx]}'
             )
         elif status != 200:
             log.info(
-                'Deleting broken image with ID {} from results.'
-                .format(results[del_idx]['identifier'])
+                f"Deleting broken image with ID "
+                f"{results[del_idx]['identifier']} from results."
             )
             del results[del_idx]
             new_mask[del_idx] = 0
@@ -98,8 +98,8 @@ def validate_images(query_hash, start_slice, results, image_urls):
     save_query_mask(query_hash, new_mask)
 
     end_time = time.time()
-    log.info('Validated images in {} '.format(end_time - start_time))
+    log.info(f'Validated images in {end_time - start_time} ')
 
 
 def _validation_failure(request, exception):
-    log.warning('Failed to validate image! Reason: {}'.format(exception))
+    log.warning(f'Failed to validate image! Reason: {exception}')

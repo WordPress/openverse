@@ -30,7 +30,7 @@ def _validate_lt(value):
     for _type in license_types:
         if _type not in license_helpers.LICENSE_GROUPS:
             raise serializers.ValidationError(
-                "License type \'{}\' does not exist.".format(_type)
+                f"License type '{_type}' does not exist."
             )
         license_groups.append(license_helpers.LICENSE_GROUPS[_type])
     intersected = set.intersection(*license_groups)
@@ -44,7 +44,7 @@ def _validate_li(value):
     for _license in licenses:
         if _license not in license_helpers.LICENSE_GROUPS['all']:
             raise serializers.ValidationError(
-                "License \'{}\' does not exist.".format(_license)
+                f"License '{_license}' does not exist."
             )
     return value.lower()
 
@@ -64,7 +64,7 @@ def _add_protocol(url: str):
     """
     parsed = urlparse(url)
     if parsed.scheme == '':
-        return 'https://' + url
+        return f'https://{url}'
     else:
         return url
 
@@ -120,16 +120,16 @@ class MediaSearchQueryStringSerializer(serializers.Serializer):
     )
     license = serializers.CharField(
         label="licenses",
-        help_text="A comma-separated list of licenses. Example: `by,cc0`."
-                  " Valid inputs: `{}`"
-            .format(list(license_helpers.LICENSE_GROUPS['all'])),
+        help_text="A comma-separated list of licenses. Example: `by,cc0`. "
+                  "Valid inputs: "
+                  f"`{list(license_helpers.LICENSE_GROUPS['all'])}`",
         required=False,
     )
     license_type = serializers.CharField(
         label="license type",
         help_text="A list of license types. "
-                  "Valid inputs: `{}`"
-            .format((list(license_helpers.LICENSE_GROUPS.keys()))),
+                  "Valid inputs: "
+                  f"`{list(license_helpers.LICENSE_GROUPS.keys())}`",
         required=False,
     )
     page = serializers.IntegerField(

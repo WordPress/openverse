@@ -76,11 +76,11 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
         _license = str(self.license)
         license_version = str(self.license_version)
         if self.title:
-            title = '"' + str(self.title) + '"'
+            title = f'"{self.title}"'
         else:
             title = 'This work'
         if self.creator:
-            creator = 'by ' + str(self.creator) + ' '
+            creator = f'by {self.creator} '
         else:
             creator = ''
         attribution = ATTRIBUTION.format(
@@ -107,6 +107,8 @@ class AbstractMediaReport(models.Model):
     here refers to content reports such as mature, copyright-violating or
     deleted content.
     """
+
+    BASE_URL = 'https://search.creativecommons.org/'
 
     REPORT_CHOICES = [
         (MATURE, MATURE),
@@ -147,7 +149,7 @@ class AbstractMediaReport(models.Model):
         abstract = True
 
     def url(self, media_type):
-        url = ('https://search.creativecommons.org/'
+        url = (f'{AbstractMediaReport.BASE_URL}'
                f'{media_type}/'
                f'{self.identifier}')
         return format_html(f'<a href={url}>{url}</a>')

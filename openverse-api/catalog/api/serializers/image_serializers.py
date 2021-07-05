@@ -29,8 +29,8 @@ class ImageSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
     source = serializers.CharField(
         label="provider",
         help_text="A comma separated list of data sources to search. Valid "
-                  "inputs:"
-                  " `{}`".format(list(get_sources('image').keys())),
+                  "inputs: "
+                  f"`{list(get_sources('image').keys())}`",
         required=False
     )
     # Ref: ingestion_server/ingestion_server/categorize.py#Category

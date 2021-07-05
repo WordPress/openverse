@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Ingestion Server is a small private API for copying data from an upstream source and loading it into the CC Catalog API. This is a two step process:
+Ingestion Server is a small private API for copying data from an upstream source and loading it into the Openverse API. This is a two step process:
 
 1. The data is copied from the upstream CC Catalog database and into the downstream API database.
 2. Data from the downstream API database gets indexed in Elasticsearch.

@@ -13,6 +13,8 @@ import boto3
 import requests
 from multiprocessing import Value, Process
 from psycopg2.sql import SQL
+
+from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.indexer import elasticsearch_connect, TableIndexer
 
 
@@ -42,33 +44,38 @@ class HealthcheckResource:
 
 
 def _execute_indexing_task(target_index, start_id, end_id, notify_url):
-    table = 'image'
+    # Defaulting to 'image' for backward compatibility
+    table_name = target_index.split('-')[0]
+    if table_name not in MEDIA_TYPES:
+        table_name = 'image'
     elasticsearch = elasticsearch_connect()
     progress = Value('d', 0.0)
     finish_time = Value('d', 0.0)
     exists_in_table = \
         'exists(SELECT 1 FROM {table} ' \
-        'WHERE identifier = image.identifier) as "{name}"'
+        'WHERE identifier = {table_name}.identifier) as "{name}"'
     exists_in_deleted_table = exists_in_table.format(
-        table='api_deletedimage', name='deleted'
+        table=f'api_deleted{table_name}', name='deleted',
+        table_name=table_name
     )
     exists_in_mature_table = exists_in_table.format(
-        table='api_matureimage', name='mature'
+        table=f'api_mature{table_name}', name='mature',
+        table_name=table_name,
     )
 
     query = SQL(f'''
                 SELECT *,
                   {exists_in_deleted_table}, {exists_in_mature_table}
-                FROM image
+                FROM {table_name}
                 WHERE id BETWEEN {start_id} AND {end_id}
                 ''')
-    log.info('Querying {}'.format(query))
+    log.info(f'Querying {query}')
     indexer = TableIndexer(
-        elasticsearch, table, progress, finish_time
+        elasticsearch, table_name, progress, finish_time
     )
     p = Process(
         target=_launch_reindex,
-        args=(table, target_index, query, indexer, notify_url)
+        args=(table_name, target_index, query, indexer, notify_url)
     )
     p.start()
     log.info('Started indexing task')
@@ -112,6 +119,6 @@ formatter = log.Formatter(
 )
 handler.setFormatter(formatter)
 root.addHandler(handler)
-api = falcon.API()
+api = falcon.App()
 api.add_route('/indexing_task', IndexingJobResource())
 api.add_route('/healthcheck', HealthcheckResource())

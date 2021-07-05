@@ -1,15 +1,15 @@
 swagger: "2.0"
 info:
-  description: "An API for registering anonymous usage data events in CC Search, which we intend to use to improve the quality of the search results."
+  description: "An API for registering anonymous usage data events in Openverse, which we intend to use to improve the quality of the search results."
   version: "1.0.0"
-  title: "CC Search Usage Data API"
-  termsOfService: "https://api.creativecommons.engineering/terms_of_service.html"
+  title: "Openverse Usage Data API"
+  termsOfService: "https://api.openverse.engineering/terms_of_service.html"
   contact:
-    email: "alden@creativecommons.org"
+    email: "zack.krida@automattic.com"
   license:
     name: "MIT License"
     url: "https://github.com/wordpress/openverse-api/blob/master/LICENSE"
-host: "api.creativecommons.engineering"
+host: "api.openverse.engineering"
 basePath: "/analytics"
 tags:
 - name: "Register events"
@@ -184,5 +184,5 @@ definitions:
         description: "The unique identifier for the detail page associated with the event."
 
 externalDocs:
-  description: "The Creative Commons search API"
-  url: "https://api.creativecommons.engineering"
+  description: "The Openverse API"
+  url: "https://api.openverse.engineering"

@@ -27,8 +27,8 @@ class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
     source = serializers.CharField(
         label="provider",
         help_text="A comma separated list of data sources to search. Valid "
-                  "inputs:"
-                  " `{}`".format(list(get_sources('audio').keys())),
+                  "inputs: "
+                  f"`{list(get_sources('audio').keys())}`",
         required=False
     )
     categories = serializers.CharField(

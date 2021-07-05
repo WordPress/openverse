@@ -1,14 +1,14 @@
-# CC Search Analytics
+# Openverse Analytics
 
 ## Purpose
 
-The `analytics` server collects information about anonymous usage of CC Search.
+The `analytics` server collects information about anonymous usage of Openverse.
 We intend to use this information to generate statistics about the quality of
 search results; the API may be extended in the future to produce usage data
 reports.
 
 To minimize risks to privacy, data is only connected to an anonymous session
-UUID, which changes every time that a user visits CC Search. No other
+UUID, which changes every time that a user visits Openverse. No other
 identifying information is collected for analytical purposes. We intend to
 consume this raw data to produce aggregated reports, after which the raw
 data (along with session UUIDs) will be promptly deleted.
@@ -49,7 +49,7 @@ root path (e.g. localhost:8090/). You may have to tweak `docs/redoc.html` for
 this to work on your local machine.
 
 Alternatively, you can view the production version of the documentation at
-`https://api.creativecommons.engineering/analytics`.
+`https://api.openverse.engineering/analytics`.
 
 ## Contributing / Code Structure
 

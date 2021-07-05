@@ -6,7 +6,7 @@ Interested in improving our documentation? Here’s what you need to know before
 
 ## Introduction
 
-Openverse Catalog API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a tool that generates real Swagger/OpenAPI 2.0 specifications from a Django Rest Framework API.
+Openverse API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a tool that generates real Swagger/OpenAPI 2.0 specifications from a Django Rest Framework API.
 
 <br/>
 
@@ -120,7 +120,7 @@ register_api_oauth2_request = openapi.Schema(
       max_length=150,
       unique=True,
       description="A unique human-readable name for your application "
-                  "or project requiring access to the CC Catalog API."
+                  "or project requiring access to the Openverse API."
     ),
     'description': openapi.Schema(
       title="Description",
@@ -145,7 +145,7 @@ register_api_oauth2_request = openapi.Schema(
   example={
     "name": "My amazing project",
     "description": "To access CC Catalog API",
-    "email": "cccatalog-api@creativecommons.org"
+    "email": "zack.krida@automattic.com"
   }
 )
 
@@ -167,7 +167,7 @@ Code examples on how to use the API endpoints. The current API documentation pro
 image_stats_bash = \
   """
   # Get a list of content providers and their image count
-  curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
+  curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/sources
   """  # noqa
 
 @swagger_auto_schema(operation_id='image_stats',

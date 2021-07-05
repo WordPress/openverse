@@ -278,8 +278,7 @@ class Watermark(GenericAPIView):
             except (libxmp.XMPError, AttributeError) as e:
                 # Just send the EXIF-ified file if libxmp fails to add metadata.
                 log.error(
-                    'Failed to add XMP metadata to {}'
-                        .format(image_record.identifier)
+                    f'Failed to add XMP metadata to {image_record.identifier}'
                 )
                 log.error(e)
                 response = HttpResponse(content_type='image/jpeg')
@@ -321,7 +320,7 @@ class OembedView(APIView):
     oembed_list_bash = \
         """
         # Retrieve embedded content from image URL (https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395)
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/oembed?url=https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/oembed?url=https://ccsearch.creativecommons.org/photos/7c829a03-fb24-4b57-9b03-65f43ed19395
         """  # noqa
 
     @swagger_auto_schema(operation_id="oembed_list",
@@ -368,7 +367,7 @@ class ReportImageView(CreateAPIView):
     images_report_create
     
     images_report_create is an API endpoint to report an issue about a 
-    specified image ID to Creative Commons.
+    specified image ID to Openverse.
 
     By using this endpoint, you can report an image if it infringes copyright, 
     contains mature or sensitive content and others.

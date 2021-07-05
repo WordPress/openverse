@@ -76,7 +76,7 @@ class ImageStats(APIView):
     image_stats_description = \
         """
         image_stats is an API endpoint to get a list of all content providers 
-        and their respective number of images in the Creative Commons catalog.
+        and their respective number of images in the Openverse catalog.
 
         You can use this endpoint to get details about content providers 
         such as `source_name`, `image_count`, `display_name`, and `source_url`.
@@ -95,7 +95,7 @@ class ImageStats(APIView):
     image_stats_bash = \
         """
         # Get a list of content providers and their image count
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/sources
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/sources
         """  # noqa
 
     @swagger_auto_schema(operation_id='image_stats',
@@ -155,7 +155,7 @@ class Register(APIView):
     </blockquote>
 
     Authenticated users have higher rate limits than anonymous users. 
-    Additionally, by identifying yourself, you can request Creative Commons to 
+    Additionally, by identifying yourself, you can request Openverse to 
     adjust your personal rate limit depending on your organization's needs.
 
     You can also refer to Bash's Request Samples for examples on how to use this endpoint.
@@ -172,7 +172,7 @@ class Register(APIView):
     register_api_oauth2_bash = \
         """
         # Register for a key
-        curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access CC Catalog API", "email": "openverse-api@creativecommons.org"}' https://api.creativecommons.engineering/v1/auth_tokens/register
+        curl -X POST -H "Content-Type: application/json" -d '{"name": "My amazing project", "description": "To access Openverse API", "email": "zack.krida@automattic.com"}' https://api.openverse.engineering/v1/auth_tokens/register
         """  # noqa
 
     register_api_oauth2_request = openapi.Schema(
@@ -186,7 +186,7 @@ class Register(APIView):
                 max_length=150,
                 unique=True,
                 description="A unique human-readable name for your application "
-                            "or project requiring access to the CC Catalog API."
+                            "or project requiring access to the Openverse API."
             ),
             'description': openapi.Schema(
                 title="Description",
@@ -210,8 +210,8 @@ class Register(APIView):
         },
         example={
             "name": "My amazing project",
-            "description": "To access CC Catalog API",
-            "email": "openverse-api@creativecommons.org"
+            "description": "To access Openverse API",
+            "email": "zack.krida@automattic.com"
         }
     )
 
@@ -256,7 +256,7 @@ class Register(APIView):
         token = verification.code
         link = request.build_absolute_uri(reverse('verify-email', [token]))
         verification_msg = f"""
-To verify your CC Catalog API credentials, click on the following link:
+To verify your Openverse API credentials, click on the following link:
 
 {link}
 
@@ -266,7 +266,7 @@ If you believe you received this message in error, please disregard it.
             send_mail(
                 subject='Verify your API credentials',
                 message=verification_msg,
-                from_email='noreply-catalog@creativecommons.engineering',
+                from_email='zack.krida@automattic.com',
                 recipient_list=[verification.email],
                 fail_silently=False
             )
@@ -355,7 +355,7 @@ class CheckRates(APIView):
     key_info_bash = \
         """
         # Get information about your API key
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/rate_limit
+        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/rate_limit
         """  # noqa
 
     @swagger_auto_schema(operation_id='key_info',
@@ -435,21 +435,16 @@ class ProxiedImage(APIView):
             return Response(status=404, data='Not Found')
 
         if serialized.data['full_size']:
-            proxy_upstream = '{proxy_url}/{original}'.format(
-                proxy_url=THUMBNAIL_PROXY_URL, original=image.url
-            )
+            proxy_upstream = f'{THUMBNAIL_PROXY_URL}/{image.url}'
         else:
-            proxy_upstream = '{proxy_url}/{width},fit/{original}'.format(
-                proxy_url=THUMBNAIL_PROXY_URL,
-                width=THUMBNAIL_WIDTH_PX,
-                original=image.url
-            )
+            proxy_upstream = f'{THUMBNAIL_PROXY_URL}/{THUMBNAIL_WIDTH_PX}'\
+                             f',fit/{image.url}'
         try:
             upstream_response = urlopen(proxy_upstream)
             status = upstream_response.status
             content_type = upstream_response.headers.get('Content-Type')
         except HTTPError:
-            log.info(f'Failed to render thumbnail: ', exc_info=True)
+            log.info('Failed to render thumbnail: ', exc_info=True)
             return HttpResponse(status=500)
 
         response = HttpResponse(
