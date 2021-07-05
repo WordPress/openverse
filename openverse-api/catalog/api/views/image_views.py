@@ -69,7 +69,7 @@ and optionally filter results by
 
 Results are ranked in order of relevance.
 
-{SearchMedia.search_description}""" # noqa
+{SearchMedia.search_description}"""  # noqa
 
     image_search_response = {
         "200": openapi.Response(

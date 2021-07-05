@@ -15,7 +15,8 @@ syntax_examples = {
         'net*',
     "matching dogs that are either corgis or labrador":
         'dogs + (corgis | labrador)',
-    "matching strings close to the term theater with a difference of one character":
+    "matching strings close to the term theater"
+    "with a difference of one character":
         'theatre~1',
 }
 
