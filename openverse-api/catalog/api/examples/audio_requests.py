@@ -22,16 +22,16 @@ syntax_examples = {
 audio_search_curl = '\n\n'.join([
     (f'# Example {index}: Search for audio {purpose}\n'
      'curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" '
-     f'https://api.creativecommons.engineering/v1/audio?q={syntax}')
+     f'https://api.openverse.engineering/v1/audio?q={syntax}')
     for (index, (purpose, syntax)) in enumerate(syntax_examples.items())
 ])
 
 recommendations_audio_read_curl = """
 # Get related audio files for audio ID 7c829a03-fb24-4b57-9b03-65f43ed19395
-curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/audio/7c829a03-fb24-4b57-9b03-65f43ed19395
+curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/recommendations/audio/7c829a03-fb24-4b57-9b03-65f43ed19395
 """  # noqa
 
 audio_detail_curl = """
 # Get the details of audio ID 7c829a03-fb24-4b57-9b03-65f43ed19395
-curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/audio/7c829a03-fb24-4b57-9b03-65f43ed19395
+curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/audio/7c829a03-fb24-4b57-9b03-65f43ed19395
 """  # noqa

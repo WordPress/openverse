@@ -22,16 +22,16 @@ syntax_examples = {
 image_search_curl = '\n\n'.join([
     (f'# Example {index}: Search for images {purpose}\n'
      'curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" '
-     f'https://api.creativecommons.engineering/v1/images?q={syntax}')
+     f'https://api.openverse.engineering/v1/images?q={syntax}')
     for (index, (purpose, syntax)) in enumerate(syntax_examples.items())
 ])
 
 recommendations_images_read_curl = """
 # Get related images for image ID 7c829a03-fb24-4b57-9b03-65f43ed19395
-curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
+curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
 """  # noqa
 
 image_detail_curl = """
 # Get the details of image ID 7c829a03-fb24-4b57-9b03-65f43ed19395
-curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
+curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
 """  # noqa

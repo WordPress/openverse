@@ -10,15 +10,15 @@ image_search_200_example = {
                 "creator": "en:User:Oil&GasIndustry",
                 "creator_url": "https://en.wikipedia.org/wiki/User:Oil%26GasIndustry",
                 "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Well_test_separator.svg",
-                "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/36537842-b067-4ca0-ad67-e00ff2e06b2d",
+                "thumbnail": "https://api.openverse.engineering/v1/thumbs/36537842-b067-4ca0-ad67-e00ff2e06b2d",
                 "provider": "wikimedia",
                 "source": "wikimedia",
                 "license": "by",
                 "license_version": "3.0",
                 "license_url": "https://creativecommons.org/licenses/by/3.0",
                 "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=26229990",
-                "detail_url": "http://api.creativecommons.engineering/v1/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",
-                "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",
+                "detail_url": "http://api.openverse.engineering/v1/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",
+                "related_url": "http://api.openverse.engineering/v1/recommendations/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",
                 "fields_matched": [
                     "description",
                     "title"
@@ -57,15 +57,15 @@ recommendations_images_read_200_example = {
                     }
                 ],
                 "url": "https://live.staticflickr.com/4065/4459771899_07595dc42e.jpg",
-                "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/610756ec-ae31-4d5e-8f03-8cc52f31b71d",
+                "thumbnail": "https://api.openverse.engineering/v1/thumbs/610756ec-ae31-4d5e-8f03-8cc52f31b71d",
                 "provider": "flickr",
                 "source": "flickr",
                 "license": "by",
                 "license_version": "2.0",
                 "license_url": "https://creativecommons.org/licenses/by/2.0/",
                 "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/4459771899",
-                "detail_url": "http://api.creativecommons.engineering/v1/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",
-                "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d"
+                "detail_url": "http://api.openverse.engineering/v1/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",
+                "related_url": "http://api.openverse.engineering/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d"
             }
         ]
     }
@@ -92,15 +92,15 @@ image_detail_200_example = {
             }
         ],
         "url": "https://live.staticflickr.com/5122/5264886972_3234d62748.jpg",
-        "thumbnail": "https://api.creativecommons.engineering/v1/thumbs/7c829a03-fb24-4b57-9b03-65f43ed19395",
+        "thumbnail": "https://api.openverse.engineering/v1/thumbs/7c829a03-fb24-4b57-9b03-65f43ed19395",
         "provider": "flickr",
         "source": "flickr",
         "license": "by",
         "license_version": "2.0",
         "license_url": "https://creativecommons.org/licenses/by/2.0/",
         "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/5264886972",
-        "detail_url": "http://api.creativecommons.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
-        "related_url": "http://api.creativecommons.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
+        "detail_url": "http://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
+        "related_url": "http://api.openverse.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395",
         "height": 167,
         "width": 500,
         "attribution": "\"exam test\" by Sean MacEntee is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/"

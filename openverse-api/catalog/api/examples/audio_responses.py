@@ -16,8 +16,8 @@ audio_search_200_example = {
                 "license_version": "2.0",
                 "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
                 "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=3536953",
-                "detail_url": "http://api.creativecommons.engineering/v1/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
-                "related_url": "http://api.creativecommons.engineering/v1/recommendations/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
+                "detail_url": "http://api.openverse.engineering/v1/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
+                "related_url": "http://api.openverse.engineering/v1/recommendations/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
                 "fields_matched": [
                     "description",
                     "title"
@@ -54,8 +54,8 @@ recommendations_audio_read_200_example = {
                 "license_version": "2.0",
                 "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
                 "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=3536953",
-                "detail_url": "http://api.creativecommons.engineering/v1/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
-                "related_url": "http://api.creativecommons.engineering/v1/recommendations/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
+                "detail_url": "http://api.openverse.engineering/v1/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
+                "related_url": "http://api.openverse.engineering/v1/recommendations/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
                 "fields_matched": [
                     "description",
                     "title"
