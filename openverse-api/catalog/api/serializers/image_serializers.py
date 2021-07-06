@@ -9,6 +9,7 @@ from catalog.api.serializers.media_serializers import (
     MediaSearchQueryStringSerializer,
     MediaSearchResultsSerializer,
     MediaSerializer,
+    AboutMediaSerializer,
 )
 
 
@@ -215,3 +216,13 @@ class OembedSerializer(serializers.Serializer):
 
     def validate_url(self, value):
         return _add_protocol(value)
+
+
+class AboutImageSerializer(AboutMediaSerializer):
+    """
+    Used by `ImageStats`.
+    """
+
+    image_count = serializers.IntegerField(
+        help_text="The number of images."
+    )

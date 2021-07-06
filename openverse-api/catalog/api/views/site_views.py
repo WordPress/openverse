@@ -7,7 +7,6 @@ from django.core.mail import send_mail
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from rest_framework import serializers
 from catalog.api.controllers.search_controller import get_sources
 from catalog.api.serializers.oauth2_serializers import (
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
@@ -16,7 +15,10 @@ from catalog.api.serializers.error_serializers import (
     ForbiddenErrorSerializer,
     InternalServerErrorSerializer,
 )
-from catalog.api.serializers.image_serializers import ProxiedImageSerializer
+from catalog.api.serializers.image_serializers import (
+    ProxiedImageSerializer,
+    AboutImageSerializer,
+)
 from drf_yasg.utils import swagger_auto_schema
 from catalog.api.models import (
     ContentProvider, Image, ThrottledApplication, OAuth2Verification, SourceLogo
@@ -55,22 +57,6 @@ class HealthCheck(APIView):
         return Response('', status=200)
 
 
-class AboutImageResponse(serializers.Serializer):
-    """ The full image search response. """
-    source_name = serializers.CharField(
-        help_text="The source of the image."
-    )
-    image_count = serializers.IntegerField(
-        help_text="The number of images."
-    )
-    display_name = serializers.CharField(
-        help_text="The name of content provider."
-    )
-    source_url = serializers.CharField(
-        help_text="The actual URL to the `source_name`."
-    )
-
-
 class ImageStats(APIView):
     swagger_schema = CustomAutoSchema
     image_stats_description = \
@@ -88,7 +74,7 @@ class ImageStats(APIView):
         "200": openapi.Response(
             description="OK",
             examples=image_stats_200_example,
-            schema=AboutImageResponse(many=True)
+            schema=AboutImageSerializer(many=True)
         )
     }
 
