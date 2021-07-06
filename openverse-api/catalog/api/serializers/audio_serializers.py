@@ -7,6 +7,7 @@ from catalog.api.serializers.media_serializers import (
     MediaSearchQueryStringSerializer,
     MediaSearchResultsSerializer,
     MediaSerializer,
+    AboutMediaSerializer,
 )
 
 
@@ -161,3 +162,13 @@ class ReportAudioSerializer(serializers.ModelSerializer):
                 "Description must be at least be 20 characters long"
             )
         return AudioReport.objects.create(**validated_data)
+
+
+class AboutAudioSerializer(AboutMediaSerializer):
+    """
+    Used by `AudioStats`.
+    """
+
+    audio_count = serializers.IntegerField(
+        help_text="The number of audio files."
+    )
