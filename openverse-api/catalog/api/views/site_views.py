@@ -7,7 +7,6 @@ from django.core.mail import send_mail
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from rest_framework import serializers
 from catalog.api.controllers.search_controller import get_sources
 from catalog.api.serializers.oauth2_serializers import (
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
@@ -53,22 +52,6 @@ class HealthCheck(APIView):
 
     def get(self, request, format=None):
         return Response('', status=200)
-
-
-class AboutImageResponse(serializers.Serializer):
-    """ The full image search response. """
-    source_name = serializers.CharField(
-        help_text="The source of the image."
-    )
-    image_count = serializers.IntegerField(
-        help_text="The number of images."
-    )
-    display_name = serializers.CharField(
-        help_text="The name of content provider."
-    )
-    source_url = serializers.CharField(
-        help_text="The actual URL to the `source_name`."
-    )
 
 
 class ImageStats(APIView):

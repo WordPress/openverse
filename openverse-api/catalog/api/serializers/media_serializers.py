@@ -380,3 +380,19 @@ class MediaSearchResultsSerializer(serializers.Serializer):
     page_size = serializers.IntegerField(
         help_text="The number of images per page."
     )
+
+
+class AboutMediaSerializer(serializers.Serializer):
+    """
+    This serializer represents the response of the media statistics endpoints.
+    """
+
+    source_name = serializers.CharField(
+        help_text="The source of the media."
+    )
+    display_name = serializers.CharField(
+        help_text="The name of content provider."
+    )
+    source_url = serializers.CharField(
+        help_text="The actual URL to the `source_name`."
+    )
