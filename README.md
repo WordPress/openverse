@@ -2,7 +2,7 @@
 
 Openverse is a search engine for openly-licensed media.
 
-This repository **does not** contain most of the codebase. The code is divided into three primary repositories:
+This repository **does not** contain most of the codebase. The code is divided into three primary repositories, and managed via a [GitHub Project Board](https://github.com/orgs/WordPress/projects/3):
 
 - [Front-end](https://github.com/wordpress/openverse-frontend)
 - [Catalog](https://github.com/wordpress/openverse-catalog)
