@@ -15,7 +15,10 @@ from catalog.api.serializers.error_serializers import (
     ForbiddenErrorSerializer,
     InternalServerErrorSerializer,
 )
-from catalog.api.serializers.image_serializers import ProxiedImageSerializer
+from catalog.api.serializers.image_serializers import (
+    ProxiedImageSerializer,
+    AboutImageSerializer,
+)
 from drf_yasg.utils import swagger_auto_schema
 from catalog.api.models import (
     ContentProvider, Image, ThrottledApplication, OAuth2Verification, SourceLogo
@@ -71,7 +74,7 @@ class ImageStats(APIView):
         "200": openapi.Response(
             description="OK",
             examples=image_stats_200_example,
-            schema=AboutImageResponse(many=True)
+            schema=AboutImageSerializer(many=True)
         )
     }
 
