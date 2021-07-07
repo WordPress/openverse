@@ -27,6 +27,8 @@ from catalog.api.examples import (
     image_detail_404_example,
     oembed_list_200_example,
     oembed_list_404_example,
+    image_stats_curl,
+    image_stats_200_example,
 )
 from catalog.api.models import Image, ImageReport
 from catalog.api.serializers.error_serializers import (
@@ -40,7 +42,8 @@ from catalog.api.serializers.image_serializers import (
     ReportImageSerializer,
     WatermarkQueryStringSerializer,
     OembedSerializer,
-    OembedResponseSerializer
+    OembedResponseSerializer,
+    AboutImageSerializer,
 )
 from catalog.api.utils import ccrel
 from catalog.api.utils.exceptions import input_error_response
@@ -53,6 +56,7 @@ from catalog.api.views.media_views import (
     SearchMedia,
     RelatedMedia,
     MediaDetail,
+    MediaStats,
 )
 from catalog.custom_auto_schema import CustomAutoSchema
 
@@ -378,3 +382,31 @@ class ReportImageView(CreateAPIView):
     swagger_schema = CustomAutoSchema
     queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer
+
+
+class ImageStats(MediaStats):
+    image_stats_description = f"""
+image_stats is an API endpoint to get a list of all content providers and their
+respective number of images in the Openverse catalog.
+
+{MediaStats.media_stats_description}"""  # noqa
+
+    image_stats_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples=image_stats_200_example,
+            schema=AboutImageSerializer(many=True)
+        )
+    }
+
+    @swagger_auto_schema(operation_id='image_stats',
+                         operation_description=image_stats_description,
+                         responses=image_stats_response,
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': image_stats_curl,
+                             }
+                         ])
+    def get(self, request, format=None):
+        return self._get(request, 'image')

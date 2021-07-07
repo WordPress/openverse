@@ -26,13 +26,13 @@ from catalog.api.examples import images_report_create_201_example
 from catalog.api.serializers.image_serializers import \
     ReportImageSerializer
 from catalog.api.views.audio_views import SearchAudio, AudioDetail, \
-    RelatedAudio
+    RelatedAudio, AudioStats
 from catalog.api.views.image_views import SearchImages, ImageDetail, \
-    Watermark, RelatedImage, OembedView, ReportImageView
+    Watermark, RelatedImage, OembedView, ReportImageView, ImageStats
 from catalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
-from catalog.api.views.site_views import HealthCheck, ImageStats, Register, \
-    CheckRates, VerifyEmail, ProxiedImage
+from catalog.api.views.site_views import HealthCheck, Register, CheckRates, \
+    VerifyEmail, ProxiedImage
 from catalog.settings import API_VERSION, WATERMARK_ENABLED
 
 description = """
@@ -262,6 +262,11 @@ versioned_paths = [
     ),
 
     path(
+        'audio/stats',
+        AudioStats.as_view(),
+        name='audio-stats'
+    ),
+    path(
         'audio/<str:identifier>',
         AudioDetail.as_view(),
         name='audio-detail'
@@ -273,6 +278,11 @@ versioned_paths = [
         name='related-audio'
     ),
 
+    path(
+        'images/stats',
+        ImageStats.as_view(),
+        name='image-stats'
+    ),
     path(
         'images/<str:identifier>',
         ImageDetail.as_view(),

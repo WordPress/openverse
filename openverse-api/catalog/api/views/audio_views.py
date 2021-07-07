@@ -16,6 +16,8 @@ from catalog.api.examples import (
     audio_detail_curl,
     audio_detail_200_example,
     audio_detail_404_example,
+    audio_stats_curl,
+    audio_stats_200_example,
 )
 from catalog.api.models import Audio, AudioReport
 from catalog.api.serializers.audio_serializers import (
@@ -23,6 +25,7 @@ from catalog.api.serializers.audio_serializers import (
     AudioSearchResultsSerializer,
     AudioSerializer,
     ReportAudioSerializer,
+    AboutAudioSerializer,
 )
 from catalog.api.serializers.error_serializers import (
     InputErrorSerializer,
@@ -36,6 +39,7 @@ from catalog.api.views.media_views import (
     SearchMedia,
     RelatedMedia,
     MediaDetail,
+    MediaStats,
 )
 from catalog.custom_auto_schema import CustomAutoSchema
 
@@ -205,3 +209,31 @@ By using this endpoint, you can get audio details such as
     def get(self, request, identifier, format=None):
         """ Get the details of a single audio file. """
         return self.retrieve(request, identifier)
+
+
+class AudioStats(MediaStats):
+    audio_stats_description = f"""
+audio_stats is an API endpoint to get a list of all content providers and their
+respective number of audio files in the Openverse catalog.
+
+{MediaStats.media_stats_description}"""  # noqa
+
+    audio_stats_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples=audio_stats_200_example,
+            schema=AboutAudioSerializer(many=True)
+        )
+    }
+
+    @swagger_auto_schema(operation_id='audio_stats',
+                         operation_description=audio_stats_description,
+                         responses=audio_stats_response,
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': audio_stats_curl,
+                             }
+                         ])
+    def get(self, request, format=None):
+        return self._get(request, 'audio')
