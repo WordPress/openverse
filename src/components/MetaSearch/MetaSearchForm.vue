@@ -15,15 +15,11 @@
         </template>
       </i18n>
       <i18n path="meta-search.form.caption" tag="p">
-        <template #type>
-          {{ type }}
-        </template>
+        <template #type>{{ type }}</template>
         <template #break>
           <br />
         </template>
-        <template #filter>
-          {{ unsupportedByUsefilter }}
-        </template>
+        <template #filter>{{ unsupportedByUsefilter }}</template>
       </i18n>
     </header>
 
