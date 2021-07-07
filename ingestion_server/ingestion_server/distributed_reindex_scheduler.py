@@ -15,7 +15,7 @@ import time
 import boto3
 import socket
 
-from ingestion_server.constants import MEDIA_TYPES
+from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.state import register_indexing_job
 
 client = boto3.client('ec2', region_name=os.getenv('AWS_REGION', 'us-east-1'))
