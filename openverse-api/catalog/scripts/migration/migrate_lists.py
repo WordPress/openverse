@@ -30,7 +30,7 @@ def import_lists_to_catalog(parsed_lists):
             # isn't accepted in the new API. Skip over them and log it.
             errors.append((_list['title'], response.text))
             continue
-    log.info('Migrated {} lists successfully'.format(success))
+    log.info(f'Migrated {success} lists successfully')
     if errors:
         log.error("The following errors occurred:")
         for error in errors:

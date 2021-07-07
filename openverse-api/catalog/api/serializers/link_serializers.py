@@ -35,10 +35,10 @@ class ShortenedLinkSerializer(ModelSerializer):
     """
     full_url = serializers.URLField(
         max_length=1000,
-        help_text="The URL to shorten. Only URLs on the CC Catalog domain will"
-                  " be accepted. Valid domains: `{}`. "
-                  "Valid paths: `{}`".format(settings.SHORT_URL_WHITELIST,
-                                             settings.SHORT_URL_PATH_WHITELIST)
+        help_text="The URL to shorten. Only URLs on the Openverse domain will "
+                  "be accepted. "
+                  f"Valid domains: `{settings.SHORT_URL_WHITELIST}`. "
+                  f"Valid paths: `{settings.SHORT_URL_PATH_WHITELIST}`."
     )
 
     class Meta:
@@ -62,9 +62,8 @@ class ShortenedLinkSerializer(ModelSerializer):
 
         if not found_allowed_path:
             raise ValidationError(
-                "Illegal path. Valid paths must start with {}".format(
-                    str(settings.SHORT_URL_PATH_WHITELIST)
-                )
+                "Illegal path. Valid paths must start with"
+                f" {settings.SHORT_URL_PATH_WHITELIST}"
             )
 
         return value
