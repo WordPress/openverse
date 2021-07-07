@@ -36,3 +36,8 @@ audio_detail_curl = """
 # Get the details of audio ID 7c829a03-fb24-4b57-9b03-65f43ed19395
 curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/audio/7c829a03-fb24-4b57-9b03-65f43ed19395
 """  # noqa
+
+audio_stats_curl = """
+# Get the 
+curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/audio/stats
+""" # noqa
