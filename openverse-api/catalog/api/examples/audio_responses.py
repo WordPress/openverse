@@ -90,3 +90,14 @@ audio_detail_404_example = {
         "detail": "Not found."
     }
 }
+
+audio_stats_200_example = {
+    "application/json": [
+        {
+            "source_name": "jamendo",
+            "audio_count": 123456789,
+            "display_name": "Jamendo",
+            "source_url": "https://www.jamendo.com"
+        }
+    ]
+}

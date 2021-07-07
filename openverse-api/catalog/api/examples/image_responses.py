@@ -139,3 +139,14 @@ images_report_create_201_example = {
         "description": "This image contains sensitive content"
     }
 }
+
+image_stats_200_example = {
+    "application/json": [
+        {
+            "source_name": "flickr",
+            "image_count": 465809213,
+            "display_name": "Flickr",
+            "source_url": "https://www.flickr.com",
+        }
+    ]
+}

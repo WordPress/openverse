@@ -21,12 +21,3 @@ key_info_403_example = {
 key_info_500_example = {
     "application/json": "Unknown API key rate limit type"
 }
-
-image_stats_200_example = {
-    "application/json": {
-        "source_name": "flickr",
-        "image_count": 465809213,
-        "display_name": "Flickr",
-        "source_url": "https://www.flickr.com"
-    }
-}
