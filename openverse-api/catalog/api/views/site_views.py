@@ -7,7 +7,6 @@ from django.core.mail import send_mail
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from catalog.api.controllers.search_controller import get_sources
 from catalog.api.serializers.oauth2_serializers import (
     OAuth2RegistrationSerializer, OAuth2RegistrationSuccessful, OAuth2KeyInfo
 )
@@ -15,13 +14,12 @@ from catalog.api.serializers.error_serializers import (
     ForbiddenErrorSerializer,
     InternalServerErrorSerializer,
 )
-from catalog.api.serializers.image_serializers import (
-    ProxiedImageSerializer,
-    AboutImageSerializer,
-)
+from catalog.api.serializers.image_serializers import ProxiedImageSerializer
 from drf_yasg.utils import swagger_auto_schema
 from catalog.api.models import (
-    ContentProvider, Image, ThrottledApplication, OAuth2Verification, SourceLogo
+    Image,
+    ThrottledApplication,
+    OAuth2Verification,
 )
 from catalog.api.utils.throttle import (
     TenPerDay, OnePerSecond, OneThousandPerMinute
@@ -31,9 +29,12 @@ from catalog.settings import THUMBNAIL_PROXY_URL, THUMBNAIL_WIDTH_PX
 from django.core.cache import cache
 from django.http import HttpResponse
 from drf_yasg import openapi
-from catalog.example_responses import register_api_oauth2_201_example,\
-    key_info_200_example, key_info_403_example, key_info_500_example,\
-    image_stats_200_example
+from catalog.example_responses import (
+    register_api_oauth2_201_example,
+    key_info_200_example,
+    key_info_403_example,
+    key_info_500_example,
+)
 from catalog.custom_auto_schema import CustomAutoSchema
 
 CODENAME = 'provider_identifier'
