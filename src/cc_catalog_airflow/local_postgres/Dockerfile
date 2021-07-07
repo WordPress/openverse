@@ -8,4 +8,5 @@ ADD 0003_openledger_image_schema.sql /docker-entrypoint-initdb.d
 ADD 0004_openledger_image_view.sql /docker-entrypoint-initdb.d
 ADD 0005_openledger_old_image_schema.sql /docker-entrypoint-initdb.d
 ADD 0006_openledger_audio_schema.sql /docker-entrypoint-initdb.d
+ADD 0007_openledger_audio_view.sql /docker-entrypoint-initdb.d
 RUN apt-get -y update && apt-get -y install python3-boto3 postgresql-plpython3-13

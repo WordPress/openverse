@@ -94,20 +94,20 @@ def postgres_with_image_table():
 def _set_up_image_view(pg, data_query, metrics_dict):
     conn_id = POSTGRES_CONN_ID
     _set_up_std_popularity_func(pg, data_query, metrics_dict)
-    sql.create_image_view(
+    sql.create_media_view(
         conn_id,
         standardized_popularity_func=TEST_STANDARDIZED_POPULARITY,
-        image_table_name=TEST_IMAGE_TABLE,
-        image_view_name=TEST_IMAGE_VIEW,
-        image_view_id_idx=TEST_IMAGE_VIEW_ID_IDX,
-        image_view_provider_fid_idx=TEST_IMAGE_VIEW_PROVIDER_FID_IDX,
+        table_name=TEST_IMAGE_TABLE,
+        db_view_name=TEST_IMAGE_VIEW,
+        db_view_id_idx=TEST_IMAGE_VIEW_ID_IDX,
+        db_view_provider_fid_idx=TEST_IMAGE_VIEW_PROVIDER_FID_IDX,
     )
 
 
 def _set_up_std_popularity_func(pg, data_query, metrics_dict):
     conn_id = POSTGRES_CONN_ID
     _set_up_popularity_constants(pg, data_query, metrics_dict)
-    sql.create_standardized_popularity_function(
+    sql.create_standardized_media_popularity_function(
         conn_id,
         function_name=TEST_STANDARDIZED_POPULARITY,
         popularity_constants=TEST_CONSTANTS,
@@ -120,7 +120,7 @@ def _set_up_popularity_constants(pg, data_query, metrics_dict):
     _set_up_popularity_metrics(metrics_dict)
     pg.cursor.execute(data_query)
     pg.connection.commit()
-    sql.create_image_popularity_constants_view(
+    sql.create_media_popularity_constants_view(
         conn_id,
         popularity_constants=TEST_CONSTANTS,
         popularity_constants_idx=TEST_POPULARITY_CONSTANTS_IDX,
@@ -131,19 +131,19 @@ def _set_up_popularity_constants(pg, data_query, metrics_dict):
 
 def _set_up_popularity_percentile_function():
     conn_id = POSTGRES_CONN_ID
-    sql.create_image_popularity_percentile_function(
+    sql.create_media_popularity_percentile_function(
         conn_id,
         popularity_percentile=TEST_POPULARITY_PERCENTILE,
-        image_table=TEST_IMAGE_TABLE,
+        media_table=TEST_IMAGE_TABLE,
     )
 
 
 def _set_up_popularity_metrics(metrics_dict):
     conn_id = POSTGRES_CONN_ID
-    sql.create_image_popularity_metrics(
+    sql.create_media_popularity_metrics(
         conn_id, popularity_metrics_table=TEST_METRICS,
     )
-    sql.update_image_popularity_metrics(
+    sql.update_media_popularity_metrics(
         conn_id,
         popularity_metrics=metrics_dict,
         popularity_metrics_table=TEST_METRICS,
@@ -453,7 +453,7 @@ def test_image_view_calculates_std_pop(postgres_with_image_table):
     _set_up_image_view(postgres_with_image_table, data_query, metrics)
     check_query = dedent(
         f"""
-        SELECT foreign_identifier, standardized_popularity
+        SELECT foreign_identifier, standardized_image_popularity
         FROM {image_view};
         """
     )

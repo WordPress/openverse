@@ -24,7 +24,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-DAG_ID = 'recreate_image_popularity_calculation'
+DAG_ID = 'recreate_audio_popularity_calculation'
 DB_CONN_ID = os.getenv('OPENLEDGER_CONN_ID', 'postgres_openledger_testing')
 CONCURRENCY = 1
 SCHEDULE_CRON = None
@@ -58,28 +58,28 @@ def create_dag(
     with dag:
         start_task = get_log_operator(dag, DAG_ID, 'Starting')
         drop_relations = operators.drop_media_popularity_relations(
-            dag, postgres_conn_id,
+            dag, postgres_conn_id, 'audio',
         )
         drop_functions = operators.drop_media_popularity_functions(
-            dag, postgres_conn_id,
+            dag, postgres_conn_id, 'audio',
         )
         create_metrics = operators.create_media_popularity_metrics(
-            dag, postgres_conn_id
+            dag, postgres_conn_id, 'audio',
         )
         update_metrics = operators.update_media_popularity_metrics(
-            dag, postgres_conn_id
+            dag, postgres_conn_id, 'audio',
         )
         create_percentile = operators.create_media_popularity_percentile(
-            dag, postgres_conn_id
+            dag, postgres_conn_id, 'audio',
         )
         create_constants = operators.create_media_popularity_constants(
-            dag, postgres_conn_id
+            dag, postgres_conn_id, 'audio',
         )
         create_popularity = operators.create_media_standardized_popularity(
-            dag, postgres_conn_id
+            dag, postgres_conn_id, 'audio',
         )
-        create_image_view = operators.create_db_view(
-            dag, postgres_conn_id
+        create_db_view = operators.create_db_view(
+            dag, postgres_conn_id, 'audio',
         )
         end_task = get_log_operator(dag, DAG_ID, 'Finished')
 
@@ -90,7 +90,7 @@ def create_dag(
             >> [update_metrics, create_percentile]
             >> create_constants
             >> create_popularity
-            >> create_image_view
+            >> create_db_view
             >> end_task
         )
 

@@ -1,53 +1,52 @@
-CREATE TABLE public.image_popularity_metrics (
+CREATE TABLE public.audio_popularity_metrics (
   provider character varying(80) PRIMARY KEY,
   metric character varying(80),
   percentile float
 );
 
 
-INSERT INTO public.image_popularity_metrics (
+INSERT INTO public.audio_popularity_metrics (
   provider, metric, percentile
 ) VALUES
-  ('flickr', 'views', 0.85),
-  ('wikimedia', 'global_usage_count', 0.85);
+  ('jamendo', 'listens', 0.85);
 
 
-CREATE FUNCTION image_popularity_percentile(
+CREATE FUNCTION audio_popularity_percentile(
   provider text, pop_field text, percentile float
 ) RETURNS FLOAT AS $$
   SELECT percentile_disc($3) WITHIN GROUP (
     ORDER BY (meta_data->>$2)::float
   )
-  FROM image WHERE provider=$1;
+  FROM audio WHERE provider=$1;
 $$
 LANGUAGE SQL
 STABLE
 RETURNS NULL ON NULL INPUT;
 
 
-CREATE MATERIALIZED VIEW public.image_popularity_constants AS
+CREATE MATERIALIZED VIEW public.audio_popularity_constants AS
   WITH popularity_metric_values AS (
     SELECT
     *,
-    image_popularity_percentile(provider, metric, percentile) AS val
-    FROM image_popularity_metrics
+    audio_popularity_percentile(provider, metric, percentile) AS val
+    FROM audio_popularity_metrics
   )
   SELECT *, ((1 - percentile) / percentile) * val AS constant
   FROM popularity_metric_values;
 
 
 
-CREATE FUNCTION standardized_image_popularity(provider text, meta_data jsonb)
+CREATE FUNCTION standardized_audio_popularity(provider text, meta_data jsonb)
 RETURNS FLOAT AS $$
   SELECT ($2->>metric)::FLOAT / (($2->>metric)::FLOAT + constant)
-  FROM image_popularity_constants WHERE provider=$1;
+  FROM audio_popularity_constants WHERE provider=$1;
 $$
 LANGUAGE SQL
 STABLE
 RETURNS NULL ON NULL INPUT;
 
 
-CREATE MATERIALIZED VIEW image_view AS
+CREATE MATERIALIZED VIEW audio_view AS
   SELECT
     identifier,
     created_on,
@@ -59,8 +58,13 @@ CREATE MATERIALIZED VIEW image_view AS
     foreign_landing_url,
     url,
     thumbnail,
-    width,
-    height,
+    duration,
+    bit_rate,
+    sample_rate,
+    category,
+    genre,
+    audio_set,
+    alt_audio_files,
     filesize,
     license,
     license_version,
@@ -69,10 +73,9 @@ CREATE MATERIALIZED VIEW image_view AS
     title,
     meta_data,
     tags,
-    watermarked,
     last_synced_with_source,
     removed_from_source,
-    standardized_image_popularity(
-      image.provider, image.meta_data
-    ) AS standardized_image_popularity
-  FROM image;
+    standardized_audio_popularity(
+      audio.provider, audio.meta_data
+    ) AS standardized_audio_popularity
+  FROM audio;

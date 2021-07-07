@@ -1,10 +1,11 @@
 """
-This file defines an Apache Airflow DAG that completely recalculates all
-popularity data, including the percentile values, and also adding any
-new popularity metrics.
+This file defines an Apache Airflow DAG that refreshes the data in
+image_view, but not the underlying tables.  This means the only effect
+of this DAG is to add or update data (including popularity data) for
+images which have been ingested since the last time the view was
+refreshed.
 
-This should be run at least once every 6 months, or whenever a new
-popularity metric is added.
+This should be run once per day.
 """
 from datetime import datetime, timedelta
 import logging
@@ -23,10 +24,12 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-DAG_ID = 'refresh_all_image_popularity_data'
+DAG_ID = 'refresh_audio_view_data'
 DB_CONN_ID = os.getenv('OPENLEDGER_CONN_ID', 'postgres_openledger_testing')
 CONCURRENCY = 1
-SCHEDULE_CRON = '@monthly'
+# We don't run on the first of the month, since the
+# `refresh_all_audio_popularity_data` DAG should run on that day.
+SCHEDULE_CRON = '0 0 2-31 * *'
 
 DAG_DEFAULT_ARGS = {
     'owner': 'data-eng-admin',
@@ -56,24 +59,12 @@ def create_dag(
     )
     with dag:
         start_task = get_log_operator(dag, DAG_ID, 'Starting')
-        update_metrics = operators.update_media_popularity_metrics(
-            dag, postgres_conn_id
-        )
-        update_constants = operators.update_media_popularity_constants(
-            dag, postgres_conn_id
-        )
-        update_image_view = operators.update_db_view(
-            dag, postgres_conn_id
+        update_audio_view = operators.update_db_view(
+            dag, postgres_conn_id, media_type='audio'
         )
         end_task = get_log_operator(dag, DAG_ID, 'Finished')
 
-        (
-            start_task
-            >> update_metrics
-            >> update_constants
-            >> update_image_view
-            >> end_task
-        )
+        start_task >> update_audio_view >> end_task
 
     return dag
 

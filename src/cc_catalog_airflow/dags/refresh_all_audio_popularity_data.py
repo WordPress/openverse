@@ -23,7 +23,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-DAG_ID = 'refresh_all_image_popularity_data'
+DAG_ID = 'refresh_all_audio_popularity_data'
 DB_CONN_ID = os.getenv('OPENLEDGER_CONN_ID', 'postgres_openledger_testing')
 CONCURRENCY = 1
 SCHEDULE_CRON = '@monthly'
@@ -57,13 +57,13 @@ def create_dag(
     with dag:
         start_task = get_log_operator(dag, DAG_ID, 'Starting')
         update_metrics = operators.update_media_popularity_metrics(
-            dag, postgres_conn_id
+            dag, postgres_conn_id, media_type='audio',
         )
         update_constants = operators.update_media_popularity_constants(
-            dag, postgres_conn_id
+            dag, postgres_conn_id, media_type='audio',
         )
         update_image_view = operators.update_db_view(
-            dag, postgres_conn_id
+            dag, postgres_conn_id, media_type='audio',
         )
         end_task = get_log_operator(dag, DAG_ID, 'Finished')
 
