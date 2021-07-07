@@ -27,7 +27,7 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     information common to all media types indexed by Openverse.
     """
 
-    watermarked = models.NullBooleanField(blank=True, null=True)
+    watermarked = models.BooleanField(blank=True, null=True)
 
     license = models.CharField(max_length=50)
     license_version = models.CharField(max_length=25, blank=True, null=True)
