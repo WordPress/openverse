@@ -40,7 +40,7 @@
           </button>
           <LoadingIcon v-show="isFetchingImages" />
         </div>
-        <MetaSearchForm type="image" :query="query" />
+        <MetaSearchForm type="image" :query="query" :supported="true" />
       </div>
       <div
         v-if="isFetchingImagesError"

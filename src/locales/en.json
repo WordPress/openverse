@@ -508,7 +508,8 @@
       }
     },
     "form": {
-      "title": "Openverse does not yet support built-in {type} search.",
+      "unsupported-title": "Openverse does not yet support built-in {type} search.",
+      "supported-title": "Not finding what you're looking for? Try additional {type} sources.",
       "caption": "Click on a source below to directly search other collections of CC-licensed {type}.{break}Please note that Use filters are not supported for {filter}."
     }
   }

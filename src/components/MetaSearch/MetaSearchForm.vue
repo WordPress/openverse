@@ -2,7 +2,11 @@
   <section :key="type" class="padding-big meta-search">
     <header class="margin-bottom-large">
       <i18n
-        path="meta-search.form.title"
+        :path="
+          supported
+            ? 'meta-search.form.supported-title'
+            : 'meta-search.form.unsupported-title'
+        "
         tag="h4"
         class="b-header margin-bottom-small"
       >
@@ -39,7 +43,10 @@ export default {
   components: {
     MetaSourceList,
   },
-  props: ['type'],
+  props: {
+    type: { type: String, required: true },
+    supported: { type: Boolean, default: false },
+  },
   computed: {
     query() {
       return this.$store.state.query
