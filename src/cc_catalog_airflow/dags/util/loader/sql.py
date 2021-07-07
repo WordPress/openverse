@@ -62,6 +62,7 @@ def create_loading_table(
               {col.TITLE} character varying(5000),
               {col.META_DATA} jsonb,
               {col.TAGS} jsonb,
+              {col.WATERMARKED} boolean,
               {col.PROVIDER} character varying(80),
               {col.SOURCE} character varying(80),
               {col.INGESTION_TYPE} character varying(80),
