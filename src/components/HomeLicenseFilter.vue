@@ -1,6 +1,8 @@
 <template>
-  <div class="home-license-filter margin-top-xl">
-    <span>{{ $t('hero.license-filter.label') }}</span>
+  <fieldset class="home-license-filter margin-top-xl">
+    <legend class="is-block margin-bottom-small has-text-weight-medium">
+      {{ $t('hero.license-filter.label') }}
+    </legend>
     <template v-for="(licenseType, index) in licenseTypes">
       <label
         :key="index"
@@ -18,7 +20,7 @@
         {{ $t(licenseType.name) }}
       </label>
     </template>
-  </div>
+  </fieldset>
 </template>
 
 <script>

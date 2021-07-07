@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'Inter';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   font-display: swap;
   src: local('Inter-Regular'), local('Inter Regular') local('Inter'),
     url('~assets/fonts/Inter-Regular.ttf') format('ttf');

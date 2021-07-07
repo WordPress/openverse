@@ -5,11 +5,11 @@
       <h1 class="title is-2 padding-bottom-normal">
         {{ $t('hero.title') }}
       </h1>
-      <h2 class="title is-5 b-header has-text-weight-semibold">
+      <h2 class="title is-5 b-header has-text-weight-medium">
         {{ $t('hero.subtitle') }}
       </h2>
       <form
-        class="hero-search__form margin-top-bigger"
+        class="hero-search__form margin-top-larger"
         role="search"
         method="get"
         action="/search"
@@ -32,7 +32,9 @@
             {{ $t('hero.search.button') }}
           </button>
         </div>
-        <div class="caption has-text-centered margin-top-big">
+        <div
+          class="caption has-text-centered margin-top-big has-text-weight-medium"
+        >
           <i18n path="hero.caption.content" tag="p">
             <template #link>
               <a

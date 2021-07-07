@@ -2,7 +2,7 @@
 
 $button-color: $color-dark-gray
 
-$button-border-width: 0.125rem
+$button-border-width: 1px
 
 $button-focus-color: $link-focus
 $button-focus-border-color: $link-focus-border
@@ -119,14 +119,18 @@ $button-colors: $colors
       background-color: transparent
       border-color: transparent
       box-shadow: none
+  &.is-opaque
+    border-color: $color-transition-gray
+    color: black
+    background-color: transparent
   &.is-success
     border-color: transparent
     color: $color-white
-    background-color: $color-forest-green
-    --button-focused-box-shadow-color: #{toRgba($color-forest-green, 0.3)}
+    background-color: $color-transition-blue
+    --button-focused-box-shadow-color: #{toRgba($color-transition-blue, 0.3)}
     &:hover,
     &:active
-      background-color: $color-brighter-forest-green
+      background-color: darken($color-transition-blue, 15%)
   &.is-primary
     border-color: transparent
     color: $color-white

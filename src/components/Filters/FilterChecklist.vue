@@ -187,4 +187,11 @@ label {
 .license-help {
   cursor: pointer;
 }
+
+.checkbox {
+  display: flex;
+  margin-bottom: 0.75rem;
+  align-items: center;
+  font-size: 14px;
+}
 </style>

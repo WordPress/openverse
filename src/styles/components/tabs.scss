@@ -29,7 +29,7 @@ $tabs-font-size: 1rem;
     border-image-outset: unset;
     border-image-repeat: unset;
     font-weight: 700;
-    font-size: $font-size-h5;
+    font-size: $font-size-body-normal;
     margin: 0 1rem -0.125rem 1rem;
     padding: 0.5rem 0 1rem;
     position: relative;
@@ -71,7 +71,6 @@ $tabs-font-size: 1rem;
   }
   .tab {
     font-size: 1rem;
-    background-color: whitesmoke;
     margin: 0 0 -0.125rem;
     border: 1px solid $color-light-gray;
     border-right: 0;

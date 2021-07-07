@@ -1,8 +1,6 @@
 <template>
-  <div class="margin-top-normal">
-    <p
-      class="caption has-text-left has-text-grey-dark has-text-weight-semibold"
-    >
+  <div class="margin-top-normal margin-bottom-small">
+    <p class="caption has-text-left has-text-grey-dark">
       {{ $t('photo-details.legal-disclaimer') }}
     </p>
   </div>

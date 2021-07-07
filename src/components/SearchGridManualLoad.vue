@@ -30,7 +30,7 @@
         <div class="load-more">
           <button
             v-show="!isFetchingImages && includeAnalytics"
-            class="button margin-bottom-big"
+            class="button"
             :disabled="isFinished"
             @click="onLoadMoreImages"
             @keyup.enter="onLoadMoreImages"
@@ -40,14 +40,7 @@
           </button>
           <LoadingIcon v-show="isFetchingImages" />
         </div>
-        <button
-          type="button"
-          class="meta-popup-trigger has-color-transition-blue text-center caption padding-normal"
-          @click="showMetaImageSearch = true"
-          @keyup.enter="showMetaImageSearch = true"
-        >
-          {{ $t('browse-page.other-source') }}
-        </button>
+        <MetaSearchForm type="image" :query="query" />
       </div>
       <div
         v-if="isFetchingImagesError"
@@ -56,18 +49,6 @@
         <h5>{{ $t('browse-page.error') }} {{ _errorMessage }}</h5>
       </div>
     </div>
-
-    <AppModal
-      v-if="showMetaImageSearch"
-      :title="'Search Images from Other Sources'"
-      @close="showMetaImageSearch = false"
-    >
-      <MetaSearchCard
-        type="image"
-        :query="query"
-        @close="showMetaImageSearch = false"
-      />
-    </AppModal>
   </section>
 </template>
 
@@ -259,7 +240,14 @@ label {
   text-align: center;
 
   button {
+    color: #23282d;
+    margin-top: 2rem;
+    border: 1px solid rgba(35, 40, 45, 0.2);
     font-size: 1.2em;
+
+    &:hover {
+      color: white;
+    }
 
     @include mobile {
       padding: 0.5rem;
@@ -289,19 +277,5 @@ label {
 
 .mr-auto {
   margin-right: auto;
-}
-
-.meta-popup-trigger {
-  appearance: none;
-  border: none;
-  background-color: transparent;
-  text-align: center;
-  display: block;
-  margin: 0 auto;
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
 }
 </style>

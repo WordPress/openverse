@@ -13,9 +13,10 @@
         @click="onToggleSearchGridFilter()"
         @keyup.enter="onToggleSearchGridFilter()"
       >
-        <span class="has-color-transition-blue is-hidden-touch">{{
-          $t('filter-list.hide')
-        }}</span>
+        <span
+          class="has-color-transition-blue is-hidden-touch is-size-7 is-lowercase"
+          >{{ $t('filter-list.hide') }}</span
+        >
         <span class="margin-right-normal is-size-5 is-hidden-desktop">
           <i class="icon cross" />
         </span>
