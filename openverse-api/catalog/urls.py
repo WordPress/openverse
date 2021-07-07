@@ -299,9 +299,9 @@ versioned_paths = [
         name='related-images'
     ),
     re_path('images', SearchImages.as_view(), name='images'),
-    path(
+    path(  # Deprecated
         'sources',
-        ImageStats.as_view(),
+        RedirectView.as_view(pattern_name='image-stats', permanent=True),
         name='about-image'
     ),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
