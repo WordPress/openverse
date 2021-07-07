@@ -37,12 +37,6 @@ from catalog.example_responses import (
 )
 from catalog.custom_auto_schema import CustomAutoSchema
 
-CODENAME = 'provider_identifier'
-NAME = 'provider_name'
-FILTER = 'filter_content'
-URL = 'domain_name'
-ID = 'id'
-
 
 class HealthCheck(APIView):
     """
@@ -56,74 +50,6 @@ class HealthCheck(APIView):
 
     def get(self, request, format=None):
         return Response('', status=200)
-
-
-class ImageStats(APIView):
-    swagger_schema = CustomAutoSchema
-    image_stats_description = \
-        """
-        image_stats is an API endpoint to get a list of all content providers 
-        and their respective number of images in the Openverse catalog.
-
-        You can use this endpoint to get details about content providers 
-        such as `source_name`, `image_count`, `display_name`, and `source_url`.
-
-        You can refer to Bash's Request Samples for example on how to use
-        this endpoint.
-        """  # noqa
-    image_stats_response = {
-        "200": openapi.Response(
-            description="OK",
-            examples=image_stats_200_example,
-            schema=AboutImageSerializer(many=True)
-        )
-    }
-
-    image_stats_bash = \
-        """
-        # Get a list of content providers and their image count
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/sources
-        """  # noqa
-
-    @swagger_auto_schema(operation_id='image_stats',
-                         operation_description=image_stats_description,
-                         responses=image_stats_response,
-                         code_examples=[
-                             {
-                                 'lang': 'Bash',
-                                 'source': image_stats_bash
-                             }
-                         ])
-    def get(self, request, format=None):
-        source_data = ContentProvider \
-            .objects \
-            .values(ID, CODENAME, NAME, FILTER, URL)
-        source_counts = get_sources('image')
-        response = []
-        for source in source_data:
-            source_codename = source[CODENAME]
-            _id = source[ID]
-            display_name = source[NAME]
-            filtered = source[FILTER]
-            source_url = source[URL]
-            count = source_counts.get(source_codename, None)
-            try:
-                source_logo = SourceLogo.objects.get(source_id=_id)
-                logo_path = source_logo.image.url
-                full_logo_url = request.build_absolute_uri(logo_path)
-            except SourceLogo.DoesNotExist:
-                full_logo_url = None
-            if not filtered and source_codename in source_counts:
-                response.append(
-                    {
-                        'source_name': source_codename,
-                        'image_count': count,
-                        'display_name': display_name,
-                        'source_url': source_url,
-                        'logo_url': full_logo_url
-                    }
-                )
-        return Response(status=200, data=response)
 
 
 class Register(APIView):

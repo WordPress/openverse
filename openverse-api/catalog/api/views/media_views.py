@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from catalog.api.controllers import search_controller
+from catalog.api.controllers.search_controller import get_sources
+from catalog.api.models import ContentProvider, SourceLogo
 from catalog.api.utils.exceptions import input_error_response
 from catalog.custom_auto_schema import CustomAutoSchema
 
@@ -135,3 +137,53 @@ class MediaDetail(GenericAPIView, RetrieveModelMixin):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly]
     detail_description = refer_sample
+
+
+class MediaStats(APIView):
+    swagger_schema = CustomAutoSchema
+    media_stats_description = (
+        """
+You can use this endpoint to get details about content providers such as 
+`source_name`, `display_name`, and `source_url` along with a count of the number
+of individual items indexed from them.
+"""  # noqa
+        f'{refer_sample}'
+    )
+
+    def _get(self, request, index_name):
+        CODENAME = 'provider_identifier'
+        NAME = 'provider_name'
+        FILTER = 'filter_content'
+        URL = 'domain_name'
+        ID = 'id'
+
+        source_data = ContentProvider \
+            .objects \
+            .values(ID, CODENAME, NAME, FILTER, URL)
+        source_counts = get_sources(index_name)
+
+        response = []
+        for source in source_data:
+            source_codename = source[CODENAME]
+            _id = source[ID]
+            display_name = source[NAME]
+            filtered = source[FILTER]
+            source_url = source[URL]
+            count = source_counts.get(source_codename, None)
+            try:
+                source_logo = SourceLogo.objects.get(source_id=_id)
+                logo_path = source_logo.image.url
+                full_logo_url = request.build_absolute_uri(logo_path)
+            except SourceLogo.DoesNotExist:
+                full_logo_url = None
+            if not filtered and source_codename in source_counts:
+                response.append(
+                    {
+                        'source_name': source_codename,
+                        f'{index_name}_count': count,
+                        'display_name': display_name,
+                        'source_url': source_url,
+                        'logo_url': full_logo_url
+                    }
+                )
+        return Response(status=200, data=response)
