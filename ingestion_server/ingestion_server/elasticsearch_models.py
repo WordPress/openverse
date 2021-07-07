@@ -32,9 +32,9 @@ class SyncableDocType(DocType):
     Represents tables in the source-of-truth that will be replicated to
     Elasticsearch.
     """
-    # Aggregations can't be performed on the _id meta-column, which necessitates
-    # copying it to this column in the doc. Aggregation is used to find the last
-    # document inserted into Elasticsearch
+    # Aggregations can't be performed on the _id meta-column, which
+    # necessitates copying it to this column in the doc. Aggregation is
+    # used to find the last document inserted into Elasticsearch
     id = Integer()
 
     @staticmethod
@@ -47,15 +47,15 @@ class SyncableDocType(DocType):
         :param schema: A map of each field name to its position in the row.
         :return:
         """
-        raise NotImplemented(
+        raise NotImplementedError(
             'Model is missing database -> Elasticsearch translation.'
         )
 
 
 class Media(SyncableDocType):
     """
-    Represents a media object in Elasticsearch. Note that actual mappings are defined
-    in `ingestion_server.es_mapping`.
+    Represents a media object in Elasticsearch. Note that actual mappings
+    are defined in `ingestion_server.es_mapping`.
     """
 
     class Index:
@@ -63,8 +63,8 @@ class Media(SyncableDocType):
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
-        raise NotImplemented(
-            'Model is missing database row -> Elasticsearch schema translation.'
+        raise NotImplementedError(
+            'Missing database row -> Elasticsearch schema translation.'
         )
 
     @staticmethod
@@ -153,7 +153,7 @@ class Media(SyncableDocType):
         return parsed_tags
 
 
-class Image(SyncableDocType):
+class Image(Media):
     """
     Represents an image in Elasticsearch. Note that actual mappings are defined
     in `ingestion_server.es_mapping`.
@@ -241,7 +241,7 @@ class Image(SyncableDocType):
                 return size.name.lower()
 
 
-class Audio(SyncableDocType):
+class Audio(Media):
     """
     Represents an audio in Elasticsearch. Note that actual mappings are defined
     in `ingestion_server.es_mapping`.
@@ -281,6 +281,9 @@ class Audio(SyncableDocType):
             extension=Audio.get_extension(row[schema['url']]),
             categories=row[schema['category']],
             license_url=Audio.get_license_url(meta),
+            bit_rate=row[schema['bit_rate']],
+            sample_rate=row[schema['sample_rate']],
+            genre=row[schema['genre']],  # Not sure how to map array
             mature=Audio.get_maturity(meta, row[schema['mature']]),
             standardized_popularity=popularity,
             authority_boost=authority_boost,

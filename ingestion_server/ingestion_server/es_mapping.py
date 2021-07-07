@@ -54,193 +54,186 @@ def index_settings(table_name):
         }
     }
     common_mappings = {
-        "mappings": {
-             "properties": {
-                    "license_version": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    },
-                    "provider": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    },
-                    "source": {
-                        "fields": {
-                            "keyword": {
-                                "ignore_above": 256,
-                                "type": "keyword"
-                            }
-                        },
-                        "type": "text"
-                    },
-                    "license": {
-                        "fields": {
-                            "keyword": {
-                                "ignore_above": 256,
-                                "type": "keyword"
-                            }
-                        },
-                        "type": "text"
-                    },
-                    "url": {
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        },
-                        "type": "text"
-                    },
-                    "license_url": {
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        },
-                        "type": "text"
-                    },
-                    "tags": {
-                        "properties": {
-                            "accuracy": {
-                                "type": "float"
-                            },
-                            "name": {
-                                "type": "text",
-                                "fields": {
-                                    "keyword": {
-                                        "type": "keyword",
-                                        "ignore_above": 256
-                                    }
-                                },
-                                "analyzer": "custom_english"
-                            }
-                        }
-                    },
-                    "foreign_landing_url": {
-                        "fields": {
-                            "keyword": {
-                                "ignore_above": 256,
-                                "type": "keyword"
-                            }
-                        },
-                        "type": "text"
-                    },
-                    "id": {
-                        "type": "long"
-                    },
-                    "identifier": {
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        },
-                        "type": "text"
-                    },
-                    "title": {
-                        "type": "text",
-                        "similarity": "boolean",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        },
-                        "analyzer": "custom_english"
-                    },
-                    "creator": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
-                    },
-                    "created_on": {
-                        "type": "date"
-                    },
-                    "description": {
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "similarity": "boolean"
-                            }
-                        },
-                        "type": "text",
-                        "analyzer": "custom_english"
-                    },
-                    "extension": {
-                        "fields": {
-                            "keyword": {
-                                "ignore_above": 8,
-                                "type": "keyword"
-                            }
-                        },
-                        "type": "text"
-                    },
-                    "standardized_popularity": {
-                        "type": "rank_feature"
-                    },
-                    "authority_boost": {
-                        "type": "rank_feature"
-                    },
-                    "authority_penalty": {
-                        "type": "rank_feature",
-                        "positive_score_impact": False
-                    },
-                    "max_boost": {
-                        "type": "rank_feature"
-                    },
-                    "min_boost": {
-                        "type": "rank_feature"
-                    },
-                    "mature": {
-                        "type": "boolean"
+        "properties": {
+            "license_version": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
                     }
                 }
-        }
-    }
-    mapping = {
-        "image": {
-            "mappings": {
-                "properties": {
-                    "aspect_ratio": {
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
-                            }
-                        },
-                        "type": "text"
-                    },
-                    "size": {
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
-                            }
-                        },
-                        "type": "text"
-                    },
+            },
+            "provider": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
                 }
+            },
+            "source": {
+                "fields": {
+                    "keyword": {
+                        "ignore_above": 256,
+                        "type": "keyword"
+                    }
+                },
+                "type": "text"
+            },
+            "license": {
+                "fields": {
+                    "keyword": {
+                        "ignore_above": 256,
+                        "type": "keyword"
+                    }
+                },
+                "type": "text"
+            },
+            "url": {
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                },
+                "type": "text"
+            },
+            "license_url": {
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                },
+                "type": "text"
+            },
+            "tags": {
+                "properties": {
+                    "accuracy": {
+                        "type": "float"
+                    },
+                    "name": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        },
+                        "analyzer": "custom_english"
+                    }
+                }
+            },
+            "foreign_landing_url": {
+                "fields": {
+                    "keyword": {
+                        "ignore_above": 256,
+                        "type": "keyword"
+                    }
+                },
+                "type": "text"
+            },
+            "id": {
+                "type": "long"
+            },
+            "identifier": {
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                },
+                "type": "text"
+            },
+            "title": {
+                "type": "text",
+                "similarity": "boolean",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                },
+                "analyzer": "custom_english"
+            },
+            "creator": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "created_on": {
+                "type": "date"
+            },
+            "description": {
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "similarity": "boolean"
+                    }
+                },
+                "type": "text",
+                "analyzer": "custom_english"
+            },
+            "extension": {
+                "fields": {
+                    "keyword": {
+                        "ignore_above": 8,
+                        "type": "keyword"
+                    }
+                },
+                "type": "text"
+            },
+            "standardized_popularity": {
+                "type": "rank_feature"
+            },
+            "authority_boost": {
+                "type": "rank_feature"
+            },
+            "authority_penalty": {
+                "type": "rank_feature",
+                "positive_score_impact": False
+            },
+            "max_boost": {
+                "type": "rank_feature"
+            },
+            "min_boost": {
+                "type": "rank_feature"
+            },
+            "mature": {
+                "type": "boolean"
             }
+            }
+    }
+    media_properties = {
+        "image": {
+            "aspect_ratio": {
+                "fields": {
+                    "keyword": {
+                        "type": "keyword"
+                    }
+                },
+                "type": "text"
+            },
+            "size": {
+                "fields": {
+                    "keyword": {
+                        "type": "keyword"
+                    }
+                },
+                "type": "text"
+            },
         },
         "audio": {
-            "mappings": {}
         }
     }
     media_mappings = common_mappings.copy()
-    media_mappings.update(mapping[table_name])
+    media_mappings['properties'].update(media_properties[table_name])
     result = {
         "settings": settings.copy(),
         "mappings": media_mappings
