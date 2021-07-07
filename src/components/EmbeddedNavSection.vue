@@ -1,11 +1,13 @@
 <template>
   <nav :aria-label="$t('header.aria.primary')" class="navbar embedded">
     <NuxtLink to="/" style="align-self: center; line-height: 0">
-      <img
+     <img
         alt="Openverse logo mark"
         src="~/assets/logo.svg?data"
-        style="height: 24px; padding-right: 24px; width: auto"
-      />
+        style="padding-right: 24px"
+        width="160"
+        height="24"
+     />
     </NuxtLink>
     <div class="navbar-brand has-color-white">
       <a
