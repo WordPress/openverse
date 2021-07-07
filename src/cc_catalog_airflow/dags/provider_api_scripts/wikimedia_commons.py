@@ -235,8 +235,10 @@ def _process_image_data(image_data):
     image_info = _get_image_info_dict(image_data)
     valid_mediatype = _check_mediatype(image_info)
     if not valid_mediatype:
-        return
-
+        return None
+    license_url = _get_license_url(image_info)
+    if license_url is None:
+        return None
     image_url = image_info.get('url')
     creator, creator_url = _extract_creator_info(image_info)
     title = _extract_title(image_info)
@@ -244,7 +246,7 @@ def _process_image_data(image_data):
     image_store.add_item(
         foreign_landing_url=image_info.get('descriptionshorturl'),
         image_url=image_url,
-        license_url=_get_license_url(image_info),
+        license_url=license_url,
         foreign_identifier=foreign_id,
         width=image_info.get('width'),
         height=image_info.get('height'),
@@ -344,13 +346,28 @@ def _extract_category_info(image_info):
 
 
 def _get_license_url(image_info):
-    return (
+    license_url = (
         image_info
         .get('extmetadata', {})
         .get('LicenseUrl', {})
         .get('value', '')
         .strip()
     )
+    if license_url == '':
+        license_name = (
+            image_info
+            .get('extmetadata', {})
+            .get('LicenseShortName', {})
+            .get('value', '')
+            .lower()
+        )
+        if license_name == 'public_domain':
+            license_url = 'https://creativecommons.org/publicdomain/mark/1.0/'
+        elif license_name == 'pdm-owner':
+            license_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
+        else:
+            license_url = None
+    return license_url
 
 
 def _create_meta_data_dict(image_data):

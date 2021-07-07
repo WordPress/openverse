@@ -412,7 +412,17 @@ def test_get_license_url_handles_missing_license_url():
             os.path.join(RESOURCES, 'image_info_artist_partial_link.json')
     ) as f:
         image_info = json.load(f)
-    expect_license_url = ''
+    expect_license_url = None
+    actual_license_url = wmc._get_license_url(image_info)
+    assert actual_license_url == expect_license_url
+
+
+def test_get_license_url_handles_cc0_license():
+    with open(
+            os.path.join(RESOURCES, 'image_info_cc0.json')
+    ) as f:
+        image_info = json.load(f)
+    expect_license_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
     actual_license_url = wmc._get_license_url(image_info)
     assert actual_license_url == expect_license_url
 
