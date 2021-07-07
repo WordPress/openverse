@@ -77,7 +77,7 @@ class ShortenedLinkSerializer(ModelSerializer):
                 last_url = str(
                     ShortenedLink
                     .objects
-                    .latest(field_name='created_on')
+                    .latest('created_on')
                     .shortened_path
                 )
             except ShortenedLink.DoesNotExist:
