@@ -79,7 +79,7 @@ class AudioSerializer(MediaSerializer):
 
     fields_names = [
         *MediaSerializer.fields_names,
-        'set',
+        'audio_set',
         'genre',
         'duration',
         'bit_rate',
@@ -93,7 +93,7 @@ class AudioSerializer(MediaSerializer):
     used to generate Swagger documentation.
     """
 
-    set = serializers.PrimaryKeyRelatedField(
+    audio_set = serializers.PrimaryKeyRelatedField(
         required=False,
         help_text='Reference to set of which this track is a part.',
         read_only=True
