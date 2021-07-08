@@ -208,7 +208,7 @@ def index_settings(table_name):
             "mature": {
                 "type": "boolean"
             }
-            }
+        }
     }
     media_properties = {
         "image": {
