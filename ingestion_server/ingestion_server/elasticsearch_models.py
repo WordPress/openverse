@@ -290,9 +290,9 @@ class Audio(Media):
         These durations are also hardcoded in the `duration` field in
         openverse-api/catalog/api/serializers/audio_serializers.py.
         """
-        SHORT = 10 * 60 * 1e3  # 10 minutes
-        MEDIUM = 30 * 60 * 1e3  # 30 minutes
-        LONG = float("inf")
+        SHORT = 4 * 60 * 1e3  # under 4 minutes
+        MEDIUM = 20 * 60 * 1e3  # 4 - 20 minutes
+        LONG = float("inf")  # longer than 20 minutes
 
     class Index:
         name = 'audio'
