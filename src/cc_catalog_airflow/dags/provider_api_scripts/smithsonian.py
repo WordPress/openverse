@@ -13,7 +13,11 @@ import json
 import logging
 import os
 
-from common import DelayedRequester, ImageStore
+from common import (
+    LicenseInfo,
+    DelayedRequester,
+    ImageStore
+)
 from util.loader import provider_details as prov
 
 logger = logging.getLogger(__name__)
@@ -474,7 +478,12 @@ def _process_image_list(
                 foreign_landing_url=foreign_landing_url,
                 image_url=image_data.get('content'),
                 thumbnail_url=image_data.get('thumbnail'),
-                license_url=license_url,
+                license_info=LicenseInfo(
+                    'cc0',
+                    '1.0',
+                    'https://creativecommons.org/publicdomain/zero/1.0/',
+                    license_url
+                ),
                 foreign_identifier=image_data.get('idsId'),
                 title=title,
                 creator=creator,

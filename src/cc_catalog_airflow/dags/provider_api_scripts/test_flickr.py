@@ -5,6 +5,7 @@ import requests
 from unittest.mock import patch, MagicMock
 
 import flickr
+from common import LicenseInfo
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'tests/resources/flickr'
@@ -282,8 +283,11 @@ def test_process_image_data_with_real_example():
         thumbnail_url=(
             'https://live.staticflickr.com/65535/49514824541_35d1b4f8db'
             '_m.jpg'),
-        license_='by-nc-sa',
-        license_version='2.0',
+        license_info=LicenseInfo(
+            'by-nc-sa',
+            '2.0',
+            'https://creativecommons.org/licenses/by-nc-sa/2.0/',
+            None),
         foreign_identifier='49514824541',
         width=1024,
         height=683,
@@ -554,8 +558,7 @@ def test_process_image_data_with_sub_provider():
         thumbnail_url=(
             'https://live.staticflickr.com/65535/49950595947_65a3560ddc'
             '_m.jpg'),
-        license_='by-nc-sa',
-        license_version='2.0',
+        license_info=(LicenseInfo('by-nc-sa', '2.0', 'https://creativecommons.org/licenses/by-nc-sa/2.0/', None)),
         foreign_identifier='49950595947',
         width=1024,
         height=683,

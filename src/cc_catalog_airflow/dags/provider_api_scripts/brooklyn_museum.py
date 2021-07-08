@@ -2,7 +2,11 @@ import os
 import logging
 import lxml.html as html
 
-from common import DelayedRequester, ImageStore
+from common import (
+    get_license_info,
+    DelayedRequester,
+    ImageStore
+)
 from util.loader import provider_details as prov
 
 logging.basicConfig(
@@ -125,11 +129,11 @@ def _handle_object_data(data, license_url):
             if image_url is None:
                 continue
             height, width = _get_image_sizes(image)
-
+            license_info = get_license_info(license_url=license_url)
             image_store.add_item(
                     foreign_landing_url=foreign_url,
                     image_url=image_url,
-                    license_url=license_url,
+                    license_info=license_info,
                     foreign_identifier=foreign_id,
                     width=width,
                     height=height,

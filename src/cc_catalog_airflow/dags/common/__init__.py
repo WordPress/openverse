@@ -1,5 +1,8 @@
 # flake8: noqa
-from .licenses import constants, licenses
+from .licenses import constants
+from .licenses.licenses import (
+    get_license_info, LicenseInfo, is_valid_license_info
+)
 from .storage.image import (
     Image, ImageStore, MockImageStore
 )

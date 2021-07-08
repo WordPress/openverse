@@ -4,6 +4,7 @@ from typing import Optional, Dict, Union
 
 from common.storage import columns
 from common.storage.media import MediaStore
+from common.licenses.licenses import LicenseInfo
 
 logger = logging.getLogger(__name__)
 
@@ -119,10 +120,8 @@ class AudioStore(MediaStore):
         self,
         foreign_landing_url: str,
         audio_url: str,
+        license_info: LicenseInfo,
         thumbnail_url: Optional[str] = None,
-        license_url: Optional[str] = None,
-        license_: Optional[str] = None,
-        license_version: Optional[str] = None,
         foreign_identifier: Optional[str] = None,
         creator: Optional[str] = None,
         creator_url: Optional[str] = None,
@@ -147,32 +146,32 @@ class AudioStore(MediaStore):
         Add information for a single audio to the AudioStore.
 
         Required Arguments:
+
         foreign_landing_url:  URL of page where the audio lives on the
                               source website.
         audio_url:            Direct link to the audio file
+        license_info:         LicenseInfo object that has
+                              - the URL of the license for the audio,
+                              - string representation of the license,
+                              - version of the license,
+                              - raw license URL that was by provider,
+                                if different from canonical URL
+        For valid options of license names, see
+        `common.license.constants.get_license_path_map()`.
 
-        Semi-Required Arguments
-        license_url:      URL of the license for the audio on the
-                          Creative Commons website.
-        license_:         String representation of a Creative Commons
-                          license.  For valid options, see
-                          `common.license.constants.get_license_path_map()`
-        license_version:  Version of the given license.  In the case of
-                          the `publicdomain` license, which has no
-                          version, one should pass
-                          `common.license.constants.NO_VERSION` here.
+        To get the LicenseInfo object, use `get_license_info` with either
+        (license_ and license_version) or (license_url) named parameters.
+        In the case of the `publicdomain` license, which has no version,
+        one should pass `common.license.constants.NO_VERSION` here.
 
-        Note on license arguments: These are 'semi-required' in that
-        either a valid `license_url` must be given, or a valid
-        `license_`, `license_version` pair must be given. Otherwise, the
-        audio data will be discarded.
+        Audio data without the required parameters will be discarded.
 
         Optional Arguments:
+
         thumbnail_url:       Direct link to a thumbnail-sized version of
                              the audio
         foreign_identifier:  Unique identifier for the audio on the
                              source site.
-        duration:            in milliseconds
         creator:             The creator of the audio.
         creator_url:         The user page, or home page of the creator.
         title:               Title of the audio.
@@ -182,7 +181,22 @@ class AudioStore(MediaStore):
                              in this dictionary, and `license_url` is
                              given as an argument, the argument will
                              replace the one given in the dictionary.
-        raw_tags:            List of tags associated with the audio
+        raw_tags:            List of tags associated with the audio.
+        watermarked:         True only if audio has a watermark.
+        duration:            in milliseconds
+        bit_rate:            Audio bit rate as int.
+        sample_rate:         Audio sample rate as int.
+        category:            'music', 'sound' or 'podcast'.
+        genre:               List of genres
+        audio_set:           The name of the set (album, pack) the audio
+                             is part of
+        set_position:        Position of the audio in the audio_set
+        set_thumbnail:       URL of the audio_set thumbnail
+        set_url:             URL of the audio_set
+        alt_audio_files:     A dictionary with information about alternative
+                             files for the audio (different formats/ quality).
+                             Dict with the following keys: url, filesize,
+                             bit_rate, sample_rate
         source:              If different from the provider.  This might
                              be the case when we get information from
                              some aggregation of audios.  In this case,
@@ -190,6 +204,7 @@ class AudioStore(MediaStore):
                              and the `provider` argument in the
                              AudioStore init function is the specific
                              provider of the audio.
+        ingestion_type:      set programmatically
         """
 
         audio_set_data = {
@@ -202,10 +217,8 @@ class AudioStore(MediaStore):
         audio_data = {
             'foreign_landing_url': foreign_landing_url,
             'audio_url': audio_url,
+            'license_info': license_info,
             'thumbnail_url': thumbnail_url,
-            'license_url': license_url,
-            'license_': license_,
-            'license_version': license_version,
             'foreign_identifier': foreign_identifier,
             'creator': creator,
             'creator_url': creator_url,

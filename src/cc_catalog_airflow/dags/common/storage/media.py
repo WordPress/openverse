@@ -4,8 +4,8 @@ import logging
 import os
 from typing import Optional, Union
 
+from common.licenses.licenses import is_valid_license_info
 from common.storage import util
-from common.licenses import licenses
 
 logger = logging.getLogger(__name__)
 
@@ -93,53 +93,16 @@ class MediaStore(metaclass=abc.ABCMeta):
         """
         pass
 
-    @staticmethod
-    def validate_license_info(media_data) -> Optional[dict]:
-        """
-        Replaces license properties in media data with validated
-        values. Generates license information based on `license_url`, or
-        pair of `license_` and `license_version` properties of
-        media_data dictionary.
-        Adds `raw_license_url` if the `license_url` has been rewritten
-        either because it was invalid, or to add 'https:',
-        or trailing '/' at the end.
-        Returns `None` if license data is invalid.
-        """
-        license_url = media_data.pop('license_url', None)
-        license_ = media_data.pop('license_', None)
-        license_version = media_data.pop('license_version', None)
-
-        valid_license_info = licenses.get_license_info(
-            license_url=license_url,
-            license_=license_,
-            license_version=license_version
-        )
-
-        if valid_license_info.license is None:
-            logger.debug(
-                f"Invalid image license."
-                f" URL: <{license_url}>,"
-                f" license: {license_},"
-                f" version: {license_version}")
-            return None
-        media_data.update({
-            'license_url': valid_license_info.url,
-            'license_': valid_license_info.license,
-            'license_version': valid_license_info.version,
-        })
-        if valid_license_info.url != license_url:
-            media_data['raw_license_url'] = license_url
-
-        return media_data
-
     def clean_media_metadata(self, **media_data) -> Optional[dict]:
         """
-        Cleans the base media metadata common for all media types.
-        Enriches `meta_data` and `tags`.
+        Cleans and enriches the base media metadata common for all media types.
+        Even though we clean license info in the provider API scripts,
+        we validate it here, too, to make sure we don't have
+        invalid license information in the database.
+
         Returns a dictionary: media_type-specific fields are untouched,
         and for common metadata we:
-        - remove `license_url` and `raw_license_url`,
-        - validate `license_` and `license_version`,
+        - validate `license_info`
         - enrich `metadata`,
         - replace `raw_tags` with enriched `tags`,
         - validate `source`,
@@ -148,10 +111,12 @@ class MediaStore(metaclass=abc.ABCMeta):
 
         Returns None if license is invalid
         """
-        media_data = self.validate_license_info(media_data)
-        if media_data is None:
+        if (
+                media_data['license_info'].license is None
+                or not is_valid_license_info(media_data['license_info'])
+        ):
+            logger.debug("Discarding media due to invalid license")
             return None
-
         media_data['source'] = util.get_source(
             media_data.get('source'),
             self._PROVIDER
@@ -169,10 +134,13 @@ class MediaStore(metaclass=abc.ABCMeta):
         )
         media_data['meta_data'] = self._enrich_meta_data(
             media_data.pop('meta_data', None),
-            media_data.pop('license_url', None),
-            media_data.pop('raw_license_url', None),
+            media_data['license_info'].url,
+            media_data['license_info'].raw_url,
         )
+        media_data['license_'] = media_data['license_info'].license
+        media_data['license_version'] = media_data['license_info'].version
 
+        media_data.pop('license_info', None)
         media_data['provider'] = self._PROVIDER
         media_data['filesize'] = None
         return media_data

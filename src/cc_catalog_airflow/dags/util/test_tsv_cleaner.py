@@ -1,6 +1,7 @@
 import os
 from unittest.mock import patch, call
 
+from common import get_license_info
 from util import tsv_cleaner
 from util.loader.ingestion_column import check_and_fix_tsv_file
 
@@ -18,9 +19,7 @@ def test_clean_tsv_cleans_tsv_rows(tmpdir):
             foreign_landing_url="https://example.com/landing1",
             image_url="https://example.com/image1",
             thumbnail_url="https://example.com/thumbnail1",
-            license_url="https://creativecommons.org/licenses/by/4.0/",
-            license_="by",
-            license_version="4.0",
+            license_info=get_license_info(license_url="https://creativecommons.org/licenses/by/4.0/"),
             foreign_identifier="one",
             width="1000",
             height="500",
@@ -44,9 +43,7 @@ def test_clean_tsv_cleans_tsv_rows(tmpdir):
             foreign_landing_url="https://example.com/landing2",
             image_url="https://example.com/image2",
             thumbnail_url="https://example.com/thumbnail2",
-            license_url="https://creativecommons.org/licenses/by-nc/4.0/",
-            license_="by-nc",
-            license_version="4.0",
+            license_info=get_license_info(license_url="https://creativecommons.org/licenses/by-nc/4.0/"),
             foreign_identifier="two",
             width="1000",
             height="500",

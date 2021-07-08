@@ -2,16 +2,17 @@ import json
 import logging
 import os
 from unittest.mock import patch
-from collections import namedtuple
-from common import MockImageStore
+
+from common import LicenseInfo, MockImageStore
 
 import raw_pixel as rwp
 
-LicenseInfo = namedtuple(
-    'LicenseInfo',
-    ['license', 'version', 'url']
+_license_info = (
+    'cc0',
+    '1.0',
+    'https://creativecommons.org/publicdomain/zero/1.0/',
+    None
 )
-_license_info = ('cc0', '1.0', 'https://creativecommons.org/publicdomain/zero/1.0/')
 license_info = LicenseInfo(*_license_info)
 rwp.image_store = MockImageStore(
     provider=rwp.PROVIDER,
