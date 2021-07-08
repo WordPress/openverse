@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from uuslug import uuslug
 
@@ -103,7 +103,7 @@ class Audio(AbstractMedia):
         help_text='Number in hertz, eg. 44100.',
     )
 
-    alt_files = JSONField(
+    alt_files = models.JSONField(
         blank=True,
         null=True,
         help_text='JSON describing alternative files for this audio.',

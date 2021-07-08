@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.html import format_html
 
@@ -27,7 +27,7 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     information common to all media types indexed by Openverse.
     """
 
-    watermarked = models.NullBooleanField(blank=True, null=True)
+    watermarked = models.BooleanField(blank=True, null=True)
 
     license = models.CharField(max_length=50)
     license_version = models.CharField(max_length=25, blank=True, null=True)
@@ -56,14 +56,14 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
 
     view_count = models.IntegerField(default=0)
 
-    tags = JSONField(blank=True, null=True)
+    tags = models.JSONField(blank=True, null=True)
     tags_list = ArrayField(
         models.CharField(max_length=255),
         blank=True,
         null=True
     )
 
-    meta_data = JSONField(blank=True, null=True)
+    meta_data = models.JSONField(blank=True, null=True)
 
     @property
     def license_url(self):
