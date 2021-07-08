@@ -160,6 +160,10 @@ class Image(Media):
     """
 
     class AspectRatios(Enum):
+        """
+        These aspect ratios are also hardcoded in the `aspect_ratio` field in
+        openverse-api/catalog/api/serializers/image_serializers.py.
+        """
         TALL = auto()
         WIDE = auto()
         SQUARE = auto()
@@ -167,6 +171,9 @@ class Image(Media):
     class ImageSizes(Enum):
         """
         Maximum threshold for each image size band
+
+        These sizes are also hardcoded in the `aspect_ratio` field in
+        openverse-api/catalog/api/serializers/image_serializers.py.
         """
         SMALL = 640 * 480
         MEDIUM = 1600 * 900
