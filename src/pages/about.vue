@@ -48,10 +48,9 @@
               >
             </template>
             <template #community>
-              <!-- TODO: Update link to team page on Make WordPress -->
               <a
                 :aria-label="$t('about.aria.community')"
-                href="https://make.wordpress.org/"
+                href="https://make.wordpress.org/openverse/"
                 >{{ $t('about.planning.community') }}</a
               >
             </template>
