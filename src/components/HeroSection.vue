@@ -142,7 +142,9 @@ $hero-height: 55vh;
     padding: 0.5rem 1.2rem;
     @include desktop {
       font-size: 1.75rem;
-      padding: 2.407rem 2.5rem;
+      padding-left: var(--button-padding-horizontal);
+      padding-right: var(--button-padding-horizontal);
+      height: 5.063rem;
     }
   }
 }
