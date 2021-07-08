@@ -1,5 +1,5 @@
 from enum import Enum, auto
-from elasticsearch_dsl import Integer, DocType, Field
+from elasticsearch_dsl import Integer, Document, Field
 from ingestion_server.categorize import get_categories
 from ingestion_server.authority import get_authority_boost
 
@@ -27,7 +27,7 @@ def _verify_rank_feature(value, low, high):
     return floor
 
 
-class SyncableDocType(DocType):
+class SyncableDocType(Document):
     """
     Represents tables in the source-of-truth that will be replicated to
     Elasticsearch.
