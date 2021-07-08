@@ -88,10 +88,11 @@ $wp-max-width: 940px
   .navbar-end
     margin-left: auto
     justify-content: space-between
-    > div.navbar-item:first-child > a.navbar-link
-      padding-left: 0
-    > div.navbar-item:last-child > a.navbar-link
-      padding-right: 0
+    +tablet()
+      > div.navbar-item:first-child > a.navbar-link
+        padding-left: 0
+      > div.navbar-item:last-child > a.navbar-link
+        padding-right: 0
 
 a.navbar-item,
 .navbar-link
@@ -170,6 +171,7 @@ a.navbar-item,
     padding: 0.5rem 0
     &.is-active
       display: block
+      width: 100%
 
 +from($navbar-breakpoint)
   .navbar,
