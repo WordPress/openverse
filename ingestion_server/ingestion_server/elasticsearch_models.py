@@ -283,6 +283,17 @@ class Audio(Media):
     in `ingestion_server.es_mapping`.
     """
 
+    class Durations(Enum):
+        """
+        Maximum threshold for each audio duration band
+
+        These durations are also hardcoded in the `duration` field in
+        openverse-api/catalog/api/serializers/audio_serializers.py.
+        """
+        SHORT = 10 * 60 * 1e3  # 10 minutes
+        MEDIUM = 30 * 60 * 1e3  # 30 minutes
+        LONG = float("inf")
+
     class Index:
         name = 'audio'
 
@@ -326,6 +337,14 @@ class Audio(Media):
             max_boost=max(popularity or 1, authority_boost or 1),
             min_boost=min(popularity or 1, authority_boost or 1)
         )
+
+    @staticmethod
+    def get_duration(duration):
+        if not duration:
+            return None
+        for length in Audio.Durations:
+            if duration < length.value:
+                return length.name.lower()
 
 
 # Table name -> Elasticsearch model
