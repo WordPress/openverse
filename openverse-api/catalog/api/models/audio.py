@@ -55,14 +55,14 @@ class AudioSet(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
 
 
 class Audio(AbstractMedia):
-    set = models.ForeignKey(
+    audio_set = models.ForeignKey(
         help_text='Reference to set of which this track is a part.',
         to=AudioSet,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
     )
-    set_position = models.IntegerField(
+    audio_set_position = models.IntegerField(
         blank=True,
         null=True,
         help_text='Ordering of the audio in the set.'
