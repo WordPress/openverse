@@ -5,57 +5,58 @@ def index_settings(table_name):
     :param table_name: The name of the table in the upstream database.
     :return:
     """
-    settings = {
-        "index": {
-            "number_of_shards": 18,
-            "number_of_replicas": 0,
-            "refresh_interval": "-1"
-        },
-        "analysis": {
-            "filter": {
-                "stem_overrides": {
-                    "type": "stemmer_override",
-                    "rules": [
-                        # Override unwanted 'anim' stems
-                        "animals => animal",
-                        "animal => animal",
-                        "anime => anime",
-                        "animate => animate",
-                        "animated => animate"
-                    ]
+    mapping = {
+        "image": {
+            "settings": {
+                "index": {
+                    "number_of_shards": 18,
+                    "number_of_replicas": 0,
+                    "refresh_interval": "-1"
                 },
-                "english_stop": {
-                    "type": "stop",
-                    "stopwords": "_english_"
-                },
-                "english_stemmer": {
-                    "type": "stemmer",
-                    "language": "english"
-                },
-                "english_possessive_stemmer": {
-                    "type": "stemmer",
-                    "language": "possessive_english"
+                "analysis": {
+                    "filter": {
+                        "stem_overrides": {
+                            "type": "stemmer_override",
+                            "rules": [
+                                # Override unwanted 'anim' stems
+                                "animals => animal",
+                                "animal => animal",
+                                "anime => anime",
+                                "animate => animate",
+                                "animated => animate"
+                            ]
+                        },
+                        "english_stop": {
+                            "type": "stop",
+                            "stopwords": "_english_"
+                        },
+                        "english_stemmer": {
+                            "type": "stemmer",
+                            "language": "english"
+                        },
+                        "english_possessive_stemmer": {
+                            "type": "stemmer",
+                            "language": "possessive_english"
+                        }
+                    },
+                    "analyzer": {
+                        "custom_english": {
+                            "tokenizer": "standard",
+                            "filter": [
+                                # Stem overrides must appear before the primary
+                                # language stemmer.
+                                "stem_overrides",
+                                "english_possessive_stemmer",
+                                "lowercase",
+                                "english_stop",
+                                "english_stemmer"
+                            ]
+                        }
+                    }
                 }
             },
-            "analyzer": {
-                "custom_english": {
-                    "tokenizer": "standard",
-                    "filter": [
-                        # Stem overrides must appear before the primary
-                        # language stemmer.
-                        "stem_overrides",
-                        "english_possessive_stemmer",
-                        "lowercase",
-                        "english_stop",
-                        "english_stemmer"
-                    ]
-                }
-            }
-        }
-    }
-    common_mappings = {
-        "mappings": {
-             "properties": {
+            "mappings": {
+                "properties": {
                     "license_version": {
                         "type": "text",
                         "fields": {
@@ -190,6 +191,22 @@ def index_settings(table_name):
                         },
                         "type": "text"
                     },
+                    "aspect_ratio": {
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword"
+                            }
+                        },
+                        "type": "text"
+                    },
+                    "size": {
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword"
+                            }
+                        },
+                        "type": "text"
+                    },
                     "standardized_popularity": {
                         "type": "rank_feature"
                     },
@@ -210,39 +227,7 @@ def index_settings(table_name):
                         "type": "boolean"
                     }
                 }
-        }
-    }
-    mapping = {
-        "image": {
-            "mappings": {
-                "properties": {
-                    "aspect_ratio": {
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
-                            }
-                        },
-                        "type": "text"
-                    },
-                    "size": {
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword"
-                            }
-                        },
-                        "type": "text"
-                    },
-                }
             }
-        },
-        "audio": {
-            "mappings": {}
         }
     }
-    media_mappings = common_mappings.copy()
-    media_mappings.update(mapping[table_name])
-    result = {
-        "settings": settings.copy(),
-        "mappings": media_mappings
-    }
-    return result
+    return mapping[table_name]
