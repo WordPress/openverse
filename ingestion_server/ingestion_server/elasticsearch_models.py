@@ -299,43 +299,24 @@ class Audio(Media):
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
-        provider = row[schema['provider']]
         meta = row[schema['meta_data']]
-        if 'standardized_popularity' in schema:
-            popularity = Audio.get_popularity(
-                row[schema['standardized_popularity']]
-            )
-        else:
-            popularity = None
+        provider = row[schema['provider']]
         authority_boost = Audio.get_authority_boost(meta, provider)
+
+        attrs = Image.get_instance_atts(row, schema)
+        popularity = attrs['standardized_popularity']
+
         return Audio(
-            _id=row[schema['id']],
-            id=row[schema['id']],
-            title=row[schema['title']],
-            identifier=row[schema['identifier']],
-            creator=row[schema['creator']],
-            creator_url=row[schema['creator_url']],
-            tags=Audio.parse_detailed_tags(row[schema['tags']]),
-            created_on=row[schema['created_on']],
-            url=row[schema['url']],
-            thumbnail=row[schema['thumbnail']],
-            provider=provider,
-            source=row[schema['source']],
-            license=row[schema['license']].lower(),
-            license_version=row[schema['license_version']],
-            foreign_landing_url=row[schema['foreign_landing_url']],
-            description=Audio.parse_description(meta),
-            extension=Audio.get_extension(row[schema['url']]),
-            categories=row[schema['category']],
-            license_url=Audio.get_license_url(meta),
+            thumbnail=row[schema['thumbnail']], # Refers to album art
             bit_rate=row[schema['bit_rate']],
             sample_rate=row[schema['sample_rate']],
             genre=row[schema['genre']],  # Not sure how to map array
-            mature=Audio.get_maturity(meta, row[schema['mature']]),
-            standardized_popularity=popularity,
+            categories=row[schema['category']],
+
             authority_boost=authority_boost,
             max_boost=max(popularity or 1, authority_boost or 1),
-            min_boost=min(popularity or 1, authority_boost or 1)
+            min_boost=min(popularity or 1, authority_boost or 1),
+            **attrs,
         )
 
     @staticmethod
