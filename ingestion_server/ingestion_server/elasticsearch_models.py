@@ -1,7 +1,9 @@
 from enum import Enum, auto
+
 from elasticsearch_dsl import Integer, Document, Field
-from ingestion_server.categorize import get_categories
+
 from ingestion_server.authority import get_authority_boost
+from ingestion_server.categorize import get_categories
 
 """
 Provides an ORM-like experience for accessing data in Elasticsearch.
