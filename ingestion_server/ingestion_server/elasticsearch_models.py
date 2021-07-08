@@ -70,6 +70,46 @@ class Media(SyncableDocType):
         )
 
     @staticmethod
+    def get_instance_atts(row, schema):
+        meta = row[schema['meta_data']]
+
+        if 'standardized_popularity' in schema:
+            popularity = Media.get_popularity(
+                row[schema['standardized_popularity']]
+            )
+        else:
+            popularity = None
+
+        return {
+            '_id': row[schema['id']],
+            'id': row[schema['id']],
+            'identifier': row[schema['identifier']],
+
+            'title': row[schema['title']],
+            'foreign_landing_url': row[schema['foreign_landing_url']],
+            'description': Media.parse_description(meta),
+
+            'creator': row[schema['creator']],
+            'creator_url': row[schema['creator_url']],
+
+            'url': row[schema['url']],
+            'extension': Media.get_extension(row[schema['url']]),
+
+            'license': row[schema['license']].lower(),
+            'license_version': row[schema['license_version']],
+            'license_url': Media.get_license_url(meta),
+
+            'provider': row[schema['provider']],
+            'source': row[schema['source']],
+
+            'created_on': row[schema['created_on']],
+            'tags': Media.parse_detailed_tags(row[schema['tags']]),
+            'mature': Media.get_maturity(meta, row[schema['mature']]),
+
+            'standardized_popularity': popularity,
+        }
+
+    @staticmethod
     def parse_description(metadata_field):
         """
         Parse the description field from the metadata if available.
@@ -186,46 +226,33 @@ class Image(Media):
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
-        provider = row[schema['provider']]
         source = row[schema['source']]
         extension = Image.get_extension(row[schema['url']])
+        categories = get_categories(extension, source)
+
         height = row[schema['height']]
         width = row[schema['width']]
+        aspect_ratio = Image.get_aspect_ratio(height, width)
+        size = Image.get_size(height, width)
+
         meta = row[schema['meta_data']]
-        if 'standardized_popularity' in schema:
-            popularity = Image.get_popularity(
-                row[schema['standardized_popularity']]
-            )
-        else:
-            popularity = None
+        provider = row[schema['provider']]
         authority_boost = Image.get_authority_boost(meta, provider)
+
+        attrs = Image.get_instance_atts(row, schema)
+        popularity = attrs['standardized_popularity']
+
         return Image(
-            _id=row[schema['id']],
-            id=row[schema['id']],
-            title=row[schema['title']],
-            identifier=row[schema['identifier']],
-            creator=row[schema['creator']],
-            creator_url=row[schema['creator_url']],
-            tags=Image.parse_detailed_tags(row[schema['tags']]),
-            created_on=row[schema['created_on']],
-            url=row[schema['url']],
             thumbnail=row[schema['thumbnail']],
-            provider=provider,
-            source=row[schema['source']],
-            license=row[schema['license']].lower(),
-            license_version=row[schema['license_version']],
-            foreign_landing_url=row[schema['foreign_landing_url']],
-            description=Image.parse_description(meta),
-            extension=Image.get_extension(row[schema['url']]),
-            categories=get_categories(extension, source),
-            aspect_ratio=Image.get_aspect_ratio(height, width),
-            size=Image.get_size(height, width),
-            license_url=Image.get_license_url(meta),
-            mature=Image.get_maturity(meta, row[schema['mature']]),
-            standardized_popularity=popularity,
+
+            categories=categories,
+            aspect_ratio=aspect_ratio,
+            size=size,
+
             authority_boost=authority_boost,
             max_boost=max(popularity or 1, authority_boost or 1),
-            min_boost=min(popularity or 1, authority_boost or 1)
+            min_boost=min(popularity or 1, authority_boost or 1),
+            **attrs,
         )
 
     @staticmethod
