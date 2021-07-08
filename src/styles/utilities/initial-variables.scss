@@ -7,6 +7,10 @@ $color-gray: rgb(176, 176, 176);
 $color-light-gray: rgb(216, 216, 216);
 $color-lighter-gray: rgb(216, 216, 216);
 
+$color-transition-gray: rgba(35, 40, 45, 0.2);
+$color-wp-gray-0: #f6f7f7;
+$color-transition-blue: #3e58e1;
+
 $color-white: rgb(255, 255, 255);
 
 $color-tomato: rgb(226, 54, 0);
@@ -21,16 +25,15 @@ $purple: hsl(271, 100%, 71%); // NOT IN VOCABULARY
 @import url('https://unpkg.com/@creativecommons/fonts@2020.9.3/css/fonts.css');
 
 // Families
-$family-roboto-condensed: 'Roboto Condensed', sans-serif;
-$family-source-sans-pro: 'Source Sans Pro', sans-serif;
+$family-inter: 'Inter', sans-serif;
 $family-jetbrains-mono: 'JetBrains Mono', monospace;
 $family-vocabulary-icons: 'Vocabulary Icons';
 
 $family-system: BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto',
   'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
   'Helvetica', 'Arial', sans-serif;
-$family-heading: $family-roboto-condensed;
-$family-body: $family-source-sans-pro;
+$family-heading: $family-inter;
+$family-body: $family-inter;
 $family-code: $family-jetbrains-mono;
 $family-icons: $family-vocabulary-icons;
 $family-sans-serif: $family-body;
@@ -64,7 +67,7 @@ $size-6: $font-size-body-normal;
 $size-7: $font-size-caption;
 
 $weight-light: 300;
-$weight-normal: 400;
+$weight-normal: 500;
 $weight-medium: 500;
 $weight-semibold: 600;
 $weight-bold: 700;

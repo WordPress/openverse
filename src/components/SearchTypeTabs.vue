@@ -1,23 +1,21 @@
 <template>
-  <div>
-    <section class="tabs">
-      <div role="tablist">
-        <NuxtLink
-          v-for="type in contentTypes"
-          :id="type"
-          :key="type"
-          aria-live="polite"
-          :to="localePath({ path: `/search/${type}`, query: $route.query })"
-          :aria-selected="activeTab == type"
-          :aria-controls="'tab-' + type"
-          role="tab"
-          :class="tabClass(type, 'tab')"
-        >
-          {{ capitalize(type) }}
-        </NuxtLink>
-      </div>
-    </section>
-  </div>
+  <section class="tabs">
+    <div role="tablist">
+      <NuxtLink
+        v-for="type in contentTypes"
+        :id="type"
+        :key="type"
+        aria-live="polite"
+        :to="localePath({ path: `/search/${type}`, query: $route.query })"
+        :aria-selected="activeTab == type"
+        :aria-controls="'tab-' + type"
+        role="tab"
+        :class="tabClass(type, 'tab')"
+      >
+        {{ capitalize(type) }}
+      </NuxtLink>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -50,6 +48,16 @@ export default {
 
 <style lang="scss" scoped>
 .tabs {
-  margin-left: 1rem;
+  background-color: white;
+  padding-left: 1.5rem;
+  border-bottom: 1px solid $color-transition-gray;
+}
+
+.tabs [role='tablist'] {
+  border-bottom: none;
+}
+
+.tab:not(.is-active):not(:hover) {
+  color: #929496;
 }
 </style>

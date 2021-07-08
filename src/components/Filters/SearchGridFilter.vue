@@ -97,10 +97,9 @@ export default {
     max-height: 37rem;
     overflow-x: hidden;
   }
+}
 
-  &__visible {
-    border-top: 1px solid #e8e8e8;
-    display: block;
-  }
+.search-filters__visible {
+  display: block;
 }
 </style>

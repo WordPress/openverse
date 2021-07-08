@@ -1,5 +1,5 @@
 <template>
-  <div class="reuse-survey caption has-text-weight-semibold">
+  <div class="reuse-survey caption margin-top-smaller">
     {{ $t('photo-details.survey.content') }}
     <a
       :href="formLink"

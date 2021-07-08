@@ -64,7 +64,7 @@ export default {
 <style lang="scss" scoped>
 .button.rating {
   vertical-align: middle;
-  color: #ff6347;
+  color: $color-transition-blue;
   font-size: 0.8rem;
   text-decoration: none;
   text-transform: none;

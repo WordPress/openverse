@@ -1,12 +1,10 @@
 <template>
-  <div class="home-license-filter margin-top-xl">
-    <span>{{ $t('hero.license-filter.label') }}</span>
+  <fieldset class="home-license-filter margin-top-xl">
+    <legend>
+      {{ $t('hero.license-filter.label') }}
+    </legend>
     <template v-for="(licenseType, index) in licenseTypes">
-      <label
-        :key="index"
-        class="checkbox margin-right-big"
-        :for="licenseType.code"
-      >
+      <label :key="index" class="checkbox" :for="licenseType.code">
         <input
           :id="licenseType.code"
           type="checkbox"
@@ -18,7 +16,7 @@
         {{ $t(licenseType.name) }}
       </label>
     </template>
-  </div>
+  </fieldset>
 </template>
 
 <script>
@@ -44,15 +42,17 @@ export default {
 
 <style lang="scss" scoped>
 .home-license-filter {
-  text-align: left;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  legend {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
 }
-span {
-  display: block;
-  font-size: 1.25em;
-  font-weight: 600;
-}
-.license-filters {
-  display: inline-block;
+
+.checkbox:not(:last-child) {
+  margin-right: 1.5rem;
 }
 </style>

@@ -5,7 +5,7 @@
       @keypress.enter="toggleShowForm"
       @click="toggleShowForm"
     >
-      <span class="has-color-tomato" style="white-space: nowrap">
+      <span class="has-color-transition-blue" style="white-space: nowrap">
         {{ $t('browse-page.safer-browsing.title') }}
         <i class="icon flag margin-left-small" />
       </span>

@@ -1,5 +1,5 @@
 // Brand
-$color-tomato: rgb(226, 54, 0);
+$color-orange: rgb(226, 54, 0);
 $color-gold: rgb(239, 190, 0);
 $color-forest-green: rgb(0, 131, 0);
 $color-dark-turquoise: rgb(5, 181, 218);
@@ -22,7 +22,7 @@ $color-brighter-tomato: rgb(255, 105, 51);
 $color-brighter-gold: rgb(245, 212, 0);
 $color-brighter-forest-green: rgb(0, 184, 80);
 
-$primary: $color-tomato;
+$primary: $color-transition-blue;
 $info: $color-dark-info;
 $success: $color-forest-green;
 $warning: $color-gold;
@@ -61,7 +61,7 @@ $text-strong: $color-dark-slate-gray;
 
 // Code colors
 
-$code: darken($color-tomato, 15%);
+$code: darken($color-transition-blue, 15%);
 $code-background: $background;
 
 $pre: $text;
@@ -69,7 +69,7 @@ $pre-background: $background;
 
 // Link colors
 
-$link: $color-tomato;
+$link: $color-transition-blue;
 $link-visited: currentColor;
 
 $link-hover: currentColor;

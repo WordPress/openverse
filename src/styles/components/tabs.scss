@@ -10,7 +10,7 @@ $tabs-font-size: 1rem;
   justify-content: space-between;
   overflow: hidden;
   overflow-x: auto;
-  font-family: $family-source-sans-pro;
+  font-family: $family-inter;
   [role='tablist'] {
     display: flex;
     border-bottom: $tabs-border-bottom-width solid $tabs-border-bottom-color;
@@ -29,7 +29,7 @@ $tabs-font-size: 1rem;
     border-image-outset: unset;
     border-image-repeat: unset;
     font-weight: 700;
-    font-size: $font-size-h5;
+    font-size: $font-size-body-normal;
     margin: 0 1rem -0.125rem 1rem;
     padding: 0.5rem 0 1rem;
     position: relative;
@@ -67,13 +67,12 @@ $tabs-font-size: 1rem;
   .tabs-panel {
     padding: 1rem;
     background-color: white;
-    border: 0.125rem solid $color-light-gray;
+    border: 1px solid $color-light-gray;
   }
   .tab {
     font-size: 1rem;
-    background-color: whitesmoke;
     margin: 0 0 -0.125rem;
-    border: 2px solid $color-light-gray;
+    border: 1px solid $color-light-gray;
     border-right: 0;
     padding: 0.5rem 1rem;
 

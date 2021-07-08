@@ -2,7 +2,15 @@
   <nav :aria-label="$t('header.aria.primary')" class="navbar">
     <div class="navbar-brand has-color-white">
       <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-      <NuxtLink class="logo" :to="localePath('/')">Openverse</NuxtLink>
+      <NuxtLink class="logo" :to="localePath('/')">
+        <img
+          alt="Openverse logo mark"
+          src="~/assets/logo.svg?data"
+          style="padding-right: 24px"
+          width="160"
+          height="24"
+        />
+      </NuxtLink>
       <!-- eslint-enable -->
       <a
         role="button"

@@ -1,15 +1,12 @@
 <template>
   <div class="margin-bottom-large">
-    <h5 class="b-header margin-bottom-small">
-      {{ $t('meta-search.sources') }}
-    </h5>
-    <ul class="buttons">
+    <ul class="buttons is-centered margin-top-big">
       <li v-for="source in sources" :key="source">
         <a
           target="_blank"
           rel="nofollow noreferrer"
           :href="getSourceUrl(source)"
-          class="button small margin-right-small"
+          class="button small margin-right-small is-opaque"
         >
           {{ source }}
           <sup class="">

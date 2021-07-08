@@ -2,7 +2,7 @@
 
 $button-color: $color-dark-gray
 
-$button-border-width: 0.125rem
+$button-border-width: 1px
 
 $button-focus-color: $link-focus
 $button-focus-border-color: $link-focus-border
@@ -45,7 +45,6 @@ $button-colors: $colors
   --button-border-width: #{$button-border-width}
   --button-font-size: #{$font-size-body-bigger}
   --button-focused-box-shadow-color: #{toRgba($color-light-gray, 0.3)}
-  text-transform: uppercase
   font-weight: 600
   line-height: 0
   background-color: $color-white
@@ -120,22 +119,26 @@ $button-colors: $colors
       background-color: transparent
       border-color: transparent
       box-shadow: none
+  &.is-opaque
+    border-color: $color-transition-gray
+    color: black
+    background-color: transparent
   &.is-success
     border-color: transparent
     color: $color-white
-    background-color: $color-forest-green
-    --button-focused-box-shadow-color: #{toRgba($color-forest-green, 0.3)}
+    background-color: $color-transition-blue
+    --button-focused-box-shadow-color: #{toRgba($color-transition-blue, 0.3)}
     &:hover,
     &:active
-      background-color: $color-brighter-forest-green
+      background-color: darken($color-transition-blue, 15%)
   &.is-primary
     border-color: transparent
     color: $color-white
-    background-color: $color-tomato
-    --button-focused-box-shadow-color: #{toRgba($color-tomato, 0.3)}
+    background-color: $color-transition-blue
+    --button-focused-box-shadow-color: #{toRgba($color-transition-blue, 0.3)}
     &:hover,
     &:active
-      background-color: $color-brighter-tomato
+      background-color: lighten($color-transition-blue, 4)
   &.is-info
     border-color: transparent
     color: $color-white
@@ -164,14 +167,14 @@ $button-colors: $colors
     --button-padding-horizontal: calc(#{$space-normal} + 0.2rem)
     --button-padding-vertical: #{$space-small}
   &.tiny
-    font-family: $family-source-sans-pro
+    font-family: $family-inter
     --button-padding-horizontal: #{$space-small}
     --button-padding-vertical: 0
     --button-font-size: 1rem
     text-transform: none
     height: 2rem
   &.tag
-    font-family: $family-source-sans-pro
+    font-family: $family-inter
     --button-padding-vertical: 0
     --button-padding-horizontal: #{$space-normal}
     --button-font-size: 0.81rem
@@ -181,7 +184,7 @@ $button-colors: $colors
     line-height: normal
     white-space: normal
     border-radius: 18.75rem
-    border: 0.125rem solid $color-light-gray
+    border: 1px solid $color-light-gray
     &:hover
       border-color: $color-dark-gray
 

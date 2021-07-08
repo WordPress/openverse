@@ -30,11 +30,11 @@
 
       <div class="margin-bottom-smaller has-text-left">
         <button
-          class="button is-text tiny is-paddingless report is-shadowless"
+          class="button is-text tiny is-paddingless report is-shadowless margin-top-small"
           @click.prevent="toggleReportFormVisibility"
           @keypress.enter.prevent="toggleReportFormVisibility"
         >
-          <span class="has-color-tomato margin-left-small">
+          <span class="has-color-transition-blue margin-left-small is-size-7">
             <i class="icon flag margin-right-small" />
             {{ $t('photo-details.content-report.title') }}
           </span>
@@ -51,9 +51,9 @@
     <div
       role="region"
       :aria-label="$t('photo-details.aria.details')"
-      class="column image-info margin-left-xl"
+      class="column image-info margin-left-larger"
     >
-      <div class="margin-top-normal margin-bottom-small">
+      <div class="margin-top-normal margin-bottom-normal">
         <h1 class="title is-5 b-header">
           {{ image.title }}
         </h1>
@@ -168,7 +168,7 @@
         :href="image.foreign_landing_url"
         target="_blank"
         rel="noopener"
-        class="button is-success margin-bottom-small"
+        class="button is-success margin-bottom-small margin-top-normal"
         @click="onPhotoSourceLinkClicked"
         @keyup.enter="onPhotoSourceLinkClicked"
       >

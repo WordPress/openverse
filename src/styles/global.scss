@@ -1,7 +1,7 @@
 @import './utilities/all';
 
 .full-height-sticky {
-  + desktop {
+  @include desktop {
     z-index: 20;
     height: 100vh;
     position: sticky;
@@ -22,7 +22,7 @@
   width: 22rem;
 }
 
-+ desktop {
+@include desktop {
   .arrow-popup.arrow-popup--anchor-right {
     right: 0;
     top: 100%;
@@ -73,4 +73,9 @@
 // override for related image spacing:
 .photo_related-images .search-grid-cells {
   margin: 10px -10px !important;
+}
+
+// border above content area
+main {
+  border-top: 1px solid $color-transition-gray;
 }

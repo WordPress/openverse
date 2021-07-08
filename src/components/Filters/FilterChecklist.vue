@@ -31,7 +31,7 @@
       <div
         v-for="(item, index) in options"
         :key="index"
-        class="margin-top-small"
+        class="margin-top-small filter-checkbox-wrapper"
       >
         <label class="checkbox" :for="item.code" :disabled="block(item)">
           <input
@@ -57,7 +57,7 @@
           tabindex="0"
           src="@/assets/help_icon.svg"
           alt="help"
-          class="license-help is-pulled-right padding-top-smallest padding-right-smaller"
+          class="license-help padding-top-smallest padding-right-smaller"
           @click.stop="toggleLicenseExplanationVisibility(item.code)"
           @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
         />
@@ -186,5 +186,18 @@ label {
 
 .license-help {
   cursor: pointer;
+}
+
+.filter-checkbox-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checkbox {
+  display: flex;
+  margin-bottom: 0.75rem;
+  align-items: center;
+  font-size: 14px;
 }
 </style>
