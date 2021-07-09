@@ -55,86 +55,6 @@ def index_settings(table_name):
     }
     common_mappings = {
         "properties": {
-            "license_version": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
-            },
-            "provider": {
-                "type": "text",
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                }
-            },
-            "source": {
-                "fields": {
-                    "keyword": {
-                        "ignore_above": 256,
-                        "type": "keyword"
-                    }
-                },
-                "type": "text"
-            },
-            "license": {
-                "fields": {
-                    "keyword": {
-                        "ignore_above": 256,
-                        "type": "keyword"
-                    }
-                },
-                "type": "text"
-            },
-            "url": {
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                },
-                "type": "text"
-            },
-            "license_url": {
-                "fields": {
-                    "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    }
-                },
-                "type": "text"
-            },
-            "tags": {
-                "properties": {
-                    "accuracy": {
-                        "type": "float"
-                    },
-                    "name": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        },
-                        "analyzer": "custom_english"
-                    }
-                }
-            },
-            "foreign_landing_url": {
-                "fields": {
-                    "keyword": {
-                        "ignore_above": 256,
-                        "type": "keyword"
-                    }
-                },
-                "type": "text"
-            },
             "id": {
                 "type": "long"
             },
@@ -158,17 +78,14 @@ def index_settings(table_name):
                 },
                 "analyzer": "custom_english"
             },
-            "creator": {
-                "type": "text",
+            "foreign_landing_url": {
                 "fields": {
                     "keyword": {
-                        "type": "keyword",
-                        "ignore_above": 256
+                        "ignore_above": 256,
+                        "type": "keyword"
                     }
-                }
-            },
-            "created_on": {
-                "type": "date"
+                },
+                "type": "text"
             },
             "description": {
                 "fields": {
@@ -180,6 +97,24 @@ def index_settings(table_name):
                 "type": "text",
                 "analyzer": "custom_english"
             },
+            "creator": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "url": {
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                },
+                "type": "text"
+            },
             "extension": {
                 "fields": {
                     "keyword": {
@@ -188,6 +123,74 @@ def index_settings(table_name):
                     }
                 },
                 "type": "text"
+            },
+            "license": {
+                "fields": {
+                    "keyword": {
+                        "ignore_above": 256,
+                        "type": "keyword"
+                    }
+                },
+                "type": "text"
+            },
+            "license_version": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "license_url": {
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                },
+                "type": "text"
+            },
+            "provider": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "source": {
+                "fields": {
+                    "keyword": {
+                        "ignore_above": 256,
+                        "type": "keyword"
+                    }
+                },
+                "type": "text"
+            },
+            "created_on": {
+                "type": "date"
+            },
+            "tags": {
+                "properties": {
+                    "accuracy": {
+                        "type": "float"
+                    },
+                    "name": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        },
+                        "analyzer": "custom_english"
+                    }
+                }
+            },
+            "mature": {
+                "type": "boolean"
             },
             "standardized_popularity": {
                 "type": "rank_feature"
@@ -205,9 +208,6 @@ def index_settings(table_name):
             "min_boost": {
                 "type": "rank_feature"
             },
-            "mature": {
-                "type": "boolean"
-            }
         }
     }
     media_properties = {
