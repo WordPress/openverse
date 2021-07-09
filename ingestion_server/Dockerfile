@@ -9,7 +9,8 @@ RUN apt-get update \
     && apt-get install -y supervisor \
     && mkdir -p /var/log/supervisord/ \
     && chown -R supervisord:supervisord /var/log/supervisord \
-    && mkdir /ingestion_server
+    && mkdir /ingestion_server \
+    && chown -R supervisord:supervisord /ingestion_server
 
 ENV PYTHONPATH=$PYTHONPATH:/ingestion_server/
 
