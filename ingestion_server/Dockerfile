@@ -10,7 +10,8 @@ RUN apt-get update \
     && mkdir -p /var/log/supervisord/ \
     && chown -R supervisord:supervisord /var/log/supervisord \
     && mkdir /ingestion_server \
-    && chown -R supervisord:supervisord /ingestion_server
+    && mkdir /worker_state \
+    && chown -R supervisord:supervisord /worker_state
 
 ENV PYTHONPATH=$PYTHONPATH:/ingestion_server/
 

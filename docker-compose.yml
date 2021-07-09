@@ -114,6 +114,8 @@ services:
       DB_BUFFER_SIZE: '100000'
       COPY_TABLES: 'image'
       SYNCER_POLL_INTERVAL: '60'
+      LOCK_PATH: /worker_state/lock
+      SHELF_PATH: /worker_state/db
     stdin_open: true
     tty: true
 
