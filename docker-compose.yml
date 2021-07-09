@@ -99,7 +99,7 @@ services:
       - es
       - indexer-worker
     volumes:
-      - ./ingestion_server:/ingestion-server
+      - ./ingestion_server:/ingestion_server
     environment:
       PYTHONUNBUFFERED: "0"
       ELASTICSEARCH_URL: 'es'
