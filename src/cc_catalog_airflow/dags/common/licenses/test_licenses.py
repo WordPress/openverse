@@ -177,7 +177,7 @@ def test_get_license_info_from_license_pair_nones_when_missing_license(
         mock_rewriter
 ):
     pair_map = {('by', '1.0'): 'licenses/by/1.0'}
-    license_info = licenses._get_license_info_from_license_pair(
+    license_info = licenses.get_license_info_from_license_pair(
         None,
         '1.0',
         pair_map=pair_map
@@ -189,7 +189,7 @@ def test_get_license_info_from_license_pair_nones_missing_version(
         mock_rewriter
 ):
     pair_map = {('by', '1.0'): 'licenses/by/1.0'}
-    license_info = licenses._get_license_info_from_license_pair(
+    license_info = licenses.get_license_info_from_license_pair(
         'by',
         None,
         pair_map=pair_map
@@ -199,7 +199,7 @@ def test_get_license_info_from_license_pair_nones_missing_version(
 
 def test_validate_license_pair_handles_float_version(mock_rewriter):
     pair_map = {('by', '1.0'): 'licenses/by/1.0'}
-    actual_license_info = licenses._get_license_info_from_license_pair(
+    actual_license_info = licenses.get_license_info_from_license_pair(
         'by',
         1.0,
         pair_map=pair_map
@@ -212,7 +212,7 @@ def test_validate_license_pair_handles_float_version(mock_rewriter):
 
 def test_validate_license_pair_handles_int_version(mock_rewriter):
     pair_map = {('by', '1.0'): 'licenses/by/1.0'}
-    actual_license_info = licenses._get_license_info_from_license_pair(
+    actual_license_info = licenses.get_license_info_from_license_pair(
         'by',
         1,
         pair_map=pair_map
@@ -225,7 +225,7 @@ def test_validate_license_pair_handles_int_version(mock_rewriter):
 
 def test_validate_license_pair_handles_na_version(mock_rewriter):
     pair_map = {('publicdomain', 'N/A'): 'licenses/publicdomain'}
-    actual_license_info = licenses._get_license_info_from_license_pair(
+    actual_license_info = licenses.get_license_info_from_license_pair(
         'publicdomain',
         'N/A',
         pair_map=pair_map

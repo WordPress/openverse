@@ -69,7 +69,7 @@ def get_license_info(
             f'Falling back to given license_ {license_}'
             f' and license_version {license_version}'
         )
-        license_info = _get_license_info_from_license_pair(
+        license_info = get_license_info_from_license_pair(
             license_, license_version
         )
         license_info = (*license_info, license_url)
@@ -190,7 +190,7 @@ def _get_valid_cc_url(license_url) -> Optional[str]:
     return validated_license_url
 
 
-def _get_license_info_from_license_pair(
+def get_license_info_from_license_pair(
     license_, license_version, pair_map=REVERSE_LICENSE_PATH_MAP
 ) -> Tuple[Optional[str], Optional[str], Optional[str]]:
     """
