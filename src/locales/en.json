@@ -124,6 +124,7 @@
     "single-name": "Source",
     "providers": {
       "source": "Source",
+      "domain": "Domain",
       "item": "Total items"
     },
     "cc-content": {

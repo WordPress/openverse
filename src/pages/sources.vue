@@ -1,132 +1,74 @@
 <template>
   <div class="section">
-    <div :class="['container columns', isEmbedded ? '' : 'is-fluid']">
-      <header class="column is-full margin-bottom-small">
-        <h1 class="title is-2">
+    <div :class="['container', isEmbedded ? '' : 'is-fluid']">
+      <div class="margin-bottom-large">
+        <h1 class="title is-2 margin-bottom-large">
           {{ $t('sources.title') }}
         </h1>
-      </header>
-    </div>
-    <div
-      :class="[
-        'container columns is-variable is-4',
-        isEmbedded ? '' : 'is-fluid',
-      ]"
-    >
-      <div class="column">
-        <i18n path="sources.detail" tag="p">
-          <template #single-name>
-            <strong>
-              {{ $t('sources.single-name') }}
-            </strong>
-          </template>
-        </i18n>
-        <table
-          :aria-label="$t('about.aria.sources')"
-          role="region"
-          class="table is-bordered is-striped margin-bottom-large margin-top-normal"
-        >
-          <thead>
-            <tr>
-              <th
-                tabindex="0"
-                @click="sortTable('display_name')"
-                @keypress.enter="sortTable('display_name')"
+        <div class="margin-bottom-large">
+          <h3 class="title subtitle is-normal is-4">
+            {{ $t('sources.cc-content.where') }}
+          </h3>
+          <p class="body-big margin-vertical-normal">
+            {{ $t('sources.cc-content.content') }}
+          </p>
+          <i18n
+            path="sources.cc-content.provider"
+            tag="p"
+            class="body-big margin-vertical-normal"
+          >
+            <template #flickr>
+              <a aria-label="flickr" href="https://www.flickr.com/">{{
+                $t('sources.cc-content.flickr')
+              }}</a>
+            </template>
+            <template #smithsonian>
+              <a aria-label="smithsonian" href="https://www.si.edu/">{{
+                $t('sources.cc-content.smithsonian')
+              }}</a>
+            </template>
+          </i18n>
+          <i18n
+            path="sources.cc-content.europeana"
+            tag="p"
+            class="body-big margin-vertical-normal"
+          >
+            <template #link>
+              <a aria-label="europeana" href="https://www.europeana.eu/en">{{
+                $t('sources.cc-content.europeana-link')
+              }}</a>
+            </template>
+            <template #link-api>
+              <a
+                aria-label="europeana-api"
+                href="https://pro.europeana.eu/page/apis"
+                >{{ $t('sources.cc-content.europeana-api') }}</a
               >
-                <span class="table-header-inner">
-                  {{ $t('sources.providers.source') }}
-                  <span class="icon"><i class="icon sort" /></span>
-                </span>
-              </th>
-              <th
-                tabindex="0"
-                @click="sortTable('image_count')"
-                @keypress.enter="sortTable('image_count')"
-              >
-                <span class="table-header-inner">
-                  {{ $t('sources.providers.item') }}
-                  <span class="icon"><i class="icon sort" /></span>
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(imageProvider, index) in sortedProviders" :key="index">
-              <td>
-                <a
-                  :aria-label="imageProvider.display_name"
-                  :href="`/search?source=${imageProvider.source_name}`"
-                >
-                  {{ imageProvider.display_name }}
-                </a>
-              </td>
-              <td class="number-cell">
-                {{ getProviderImageCount(imageProvider.image_count) }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="column">
-        <h3 class="title subtitle is-normal is-4">
-          {{ $t('sources.cc-content.where') }}
-        </h3>
-        <p class="body-big margin-vertical-normal">
-          {{ $t('sources.cc-content.content') }}
-        </p>
-        <i18n
-          path="sources.cc-content.provider"
-          tag="p"
-          class="body-big margin-vertical-normal"
-        >
-          <template #flickr>
-            <a aria-label="flickr" href="https://www.flickr.com/">{{
-              $t('sources.cc-content.flickr')
-            }}</a>
-          </template>
-          <template #smithsonian>
-            <a aria-label="smithsonian" href="https://www.si.edu/">{{
-              $t('sources.cc-content.smithsonian')
-            }}</a>
-          </template>
-        </i18n>
-        <i18n
-          path="sources.cc-content.europeana"
-          tag="p"
-          class="body-big margin-vertical-normal"
-        >
-          <template #link>
-            <a aria-label="europeana" href="https://www.europeana.eu/en">{{
-              $t('sources.cc-content.europeana-link')
-            }}</a>
-          </template>
-          <template #link-api>
-            <a
-              aria-label="europeana-api"
-              href="https://pro.europeana.eu/page/apis"
-              >{{ $t('sources.cc-content.europeana-api') }}</a
-            >
-          </template>
-        </i18n>
-        <h3 class="title subtitle is-normal is-4">
-          {{ $t('sources.new-content.next') }}
-        </h3>
-        <p class="body-big margin-vertical-normal">
-          {{ $t('sources.new-content.integrate') }}
-        </p>
-        <div class="content">
-          <ul>
-            <li>
-              {{ $t('sources.new-content.impact') }}
-            </li>
-            <li>
-              {{ $t('sources.new-content.reuse') }}
-            </li>
-            <li>
-              {{ $t('sources.new-content.total-items') }}
-            </li>
-          </ul>
+            </template>
+          </i18n>
         </div>
+        <div class="margin-bottom-large">
+          <h3 class="title subtitle is-normal is-4">
+            {{ $t('sources.new-content.next') }}
+          </h3>
+          <p class="body-big margin-vertical-normal">
+            {{ $t('sources.new-content.integrate') }}
+          </p>
+          <div class="content">
+            <ul>
+              <li>
+                {{ $t('sources.new-content.impact') }}
+              </li>
+              <li>
+                {{ $t('sources.new-content.reuse') }}
+              </li>
+              <li>
+                {{ $t('sources.new-content.total-items') }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <h5 class="title subtitle is-5 margin-vertical-normal">
           {{ $t('sources.suggestions') }}
         </h5>
@@ -140,6 +82,68 @@
           <i class="margin-left-small icon external-link" />
         </a>
       </div>
+
+      <i18n path="sources.detail" tag="p">
+        <template #single-name>
+          <strong>
+            {{ $t('sources.single-name') }}
+          </strong>
+        </template>
+      </i18n>
+      <table
+        :aria-label="$t('about.aria.sources')"
+        role="region"
+        class="table is-bordered is-striped margin-bottom-large margin-top-normal"
+      >
+        <thead>
+          <tr>
+            <th
+              tabindex="0"
+              @click="sortTable('display_name')"
+              @keypress.enter="sortTable('display_name')"
+            >
+              <span class="table-header-inner">
+                {{ $t('sources.providers.source') }}
+                <span class="icon"><i class="icon sort" /></span>
+              </span>
+            </th>
+            <th>{{ $t('sources.providers.domain') }}</th>
+            <th
+              tabindex="0"
+              @click="sortTable('image_count')"
+              @keypress.enter="sortTable('image_count')"
+            >
+              <span class="table-header-inner">
+                {{ $t('sources.providers.item') }}
+                <span class="icon"><i class="icon sort" /></span>
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(imageProvider, index) in sortedProviders" :key="index">
+            <td>
+              <a
+                :aria-label="imageProvider.display_name"
+                :href="`/search?source=${imageProvider.source_name}`"
+              >
+                {{ imageProvider.display_name }}
+              </a>
+            </td>
+            <td>
+              <a
+                :aria-label="imageProvider.display_name"
+                :href="imageProvider.source_url"
+              >
+                {{ imageProvider.source_url }}
+              </a>
+            </td>
+            <td class="number-cell">
+              {{ getProviderImageCount(imageProvider.image_count) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
