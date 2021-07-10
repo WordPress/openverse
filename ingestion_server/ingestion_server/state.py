@@ -1,3 +1,4 @@
+import os
 import shelve
 import datetime
 import enum
@@ -12,6 +13,10 @@ each worker, and be notified when the job has finished.
 State is persisted to the disk using shelve. Concurrent writes aren't allowed,
 so all operations need to acquire a lock.
 """
+
+
+lock_path = os.getenv('LOCK_PATH', 'lock')
+shelf_path = os.getenv('SHELF_PATH', 'db')
 
 
 class WorkerStatus(enum.Enum):
@@ -30,7 +35,7 @@ def register_indexing_job(worker_ips, target_index):
     promoted to production after indexing is complete
     :return: Return True if scheduling succeeds
     """
-    with FileLock('lock'), shelve.open('db', writeback=True) as db:
+    with FileLock(lock_path), shelve.open(shelf_path, writeback=True) as db:
         # Wipe last job out if it has finished.
         indexing_in_progress = False
         if 'worker_statuses' in db:
@@ -60,7 +65,7 @@ def worker_finished(worker_ip):
     :param worker_ip: The private IP of the worker.
     :return: The target index if all workers are finished, else False.
     """
-    with FileLock('lock'), shelve.open('db', writeback=True) as db:
+    with FileLock(lock_path), shelve.open(shelf_path, writeback=True) as db:
         try:
             _ = db['worker_statuses'][worker_ip]
             db['worker_statuses'][worker_ip] = WorkerStatus.FINISHED
@@ -81,7 +86,7 @@ def clear_state():
     """
     Forget about all running index jobs. Use with care.
     """
-    with FileLock('lock'), shelve.open('db', writeback=True) as db:
+    with FileLock(lock_path), shelve.open(shelf_path, writeback=True) as db:
         for key in db:
             log.info('Deleting ' + str(db[key]))
             del db[key]

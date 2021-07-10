@@ -132,3 +132,7 @@ ccbot/crawl_plan.yml
 .DS_Store
 *.iml
 .idea
+
+# Ingestion server
+ingestion_server/ingestion_server/db
+ingestion_server/ingestion_server/lock
