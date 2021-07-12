@@ -69,17 +69,19 @@
           </div>
         </div>
 
-        <h5 class="title subtitle is-5 margin-vertical-normal">
+        <h3 class="title subtitle is-4 margin-vertical-normal">
           {{ $t('sources.suggestions') }}
-        </h5>
+        </h3>
         <a
           href="https://github.com/WordPress/openverse-catalog/issues/new?assignees=&labels=%F0%9F%9A%A6+status%3A+awaiting+triage%2C+%F0%9F%A7%B9+status%3A+ticket+work+required%2C+%E2%98%81%EF%B8%8F+provider%3A+any&template=new-source-suggestion.md&title=%5BSource+Suggestion%5D+Insert+source+name+here"
-          class="button is-primary is-uppercase"
+          class="button is-primary padding-vertical-bigger"
           target="_blank"
           rel="noopener noreferrer"
         >
           {{ $t('sources.issue-button') }}
-          <i class="margin-left-small icon external-link" />
+          <i
+            class="icon external-link margin-horizontal-small margin-top-small"
+          />
         </a>
       </div>
 
