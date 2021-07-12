@@ -69,7 +69,7 @@
           </div>
         </div>
 
-        <h3 class="title subtitle is-4 margin-vertical-normal">
+        <h3 class="title subtitle is-3 margin-vertical-normal">
           {{ $t('sources.suggestions') }}
         </h3>
         <a
@@ -84,7 +84,6 @@
           />
         </a>
       </div>
-
       <i18n path="sources.detail" tag="p">
         <template #single-name>
           <strong>
@@ -95,7 +94,7 @@
       <table
         :aria-label="$t('about.aria.sources')"
         role="region"
-        class="table is-bordered is-striped margin-bottom-large margin-top-normal"
+        class="table is-striped margin-bottom-large margin-top-normal"
       >
         <thead>
           <tr>
@@ -124,7 +123,7 @@
         </thead>
         <tbody>
           <tr v-for="(imageProvider, index) in sortedProviders" :key="index">
-            <td>
+            <td class="bold-cell">
               <a
                 :aria-label="imageProvider.display_name"
                 :href="`/search?source=${imageProvider.source_name}`"
@@ -132,7 +131,7 @@
                 {{ imageProvider.display_name }}
               </a>
             </td>
-            <td>
+            <td class="bold-cell">
               <a
                 :aria-label="imageProvider.display_name"
                 :href="imageProvider.source_url"
@@ -200,7 +199,10 @@ export default SourcePage
 <style lang="scss" scoped>
 @import '~/styles/text-only-page.scss';
 
-.table.is-bordered {
+$table-border: 1px solid $color-light-gray;
+$table-border-radius: 4px;
+
+.table {
   th {
     cursor: pointer;
   }
@@ -219,6 +221,47 @@ export default SourcePage
   td,
   th {
     word-break: initial;
+    border-bottom: none;
+    border-top: none;
   }
+
+  /* The following are styles for rounding the table's */
+  border-collapse: separate;
+  border-radius: $table-border-radius;
+
+  th:first-child {
+    border-top-left-radius: $table-border-radius;
+  }
+  th:last-child {
+    border-top-right-radius: $table-border-radius;
+  }
+
+  tr:last-child {
+    td {
+      border-bottom: $table-border;
+    }
+    td:first-child {
+      border-bottom-left-radius: $table-border-radius;
+    }
+    td:last-child {
+      border-bottom-right-radius: $table-border-radius;
+    }
+  }
+
+  td {
+    border-left: $table-border;
+  }
+
+  tr td:last-child {
+    border-right: $table-border;
+  }
+}
+
+.bold-cell {
+  font-weight: 600;
+}
+
+.number-cell {
+  font-weight: 500;
 }
 </style>
