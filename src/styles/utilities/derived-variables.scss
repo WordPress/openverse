@@ -72,7 +72,7 @@ $pre-background: $background;
 $link: $color-transition-blue;
 $link-visited: currentColor;
 
-$link-hover: currentColor;
+$link-hover: $color-transition-blue;
 $link-hover-border: $color-light-gray;
 
 $link-focus: currentColor;
