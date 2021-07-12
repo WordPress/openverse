@@ -9,13 +9,13 @@
           <h3 class="title subtitle is-normal is-4">
             {{ $t('sources.cc-content.where') }}
           </h3>
-          <p class="body-big margin-vertical-normal">
+          <p class="margin-vertical-normal">
             {{ $t('sources.cc-content.content') }}
           </p>
           <i18n
             path="sources.cc-content.provider"
             tag="p"
-            class="body-big margin-vertical-normal"
+            class="margin-vertical-normal"
           >
             <template #flickr>
               <a aria-label="flickr" href="https://www.flickr.com/">{{
@@ -31,7 +31,7 @@
           <i18n
             path="sources.cc-content.europeana"
             tag="p"
-            class="body-big margin-vertical-normal"
+            class="margin-vertical-normal"
           >
             <template #link>
               <a aria-label="europeana" href="https://www.europeana.eu/en">{{
@@ -51,7 +51,7 @@
           <h3 class="title subtitle is-normal is-4">
             {{ $t('sources.new-content.next') }}
           </h3>
-          <p class="body-big margin-vertical-normal">
+          <p class="margin-vertical-normal">
             {{ $t('sources.new-content.integrate') }}
           </p>
           <div class="content">
