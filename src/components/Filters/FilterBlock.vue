@@ -1,7 +1,7 @@
 <template>
   <button
     v-if="filterType === 'searchBy'"
-    class="filter-block button tiny tag margin-horizontal-smaller"
+    class="filter-block button tiny tag"
     :aria-label="label + 'filter'"
   >
     <span>{{ $props.label }}</span>
@@ -16,7 +16,7 @@
   </button>
   <button
     v-else
-    class="filter-block button tiny tag margin-horizontal-smaller margin-bottom-smaller"
+    class="filter-block button tiny tag margin-horizontal-smaller"
     :aria-label="label + 'filter'"
   >
     <span>{{ $t($props.label) }}</span>
@@ -46,3 +46,8 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.filter-block {
+  margin-left: 0.5rem;
+}
+</style>
