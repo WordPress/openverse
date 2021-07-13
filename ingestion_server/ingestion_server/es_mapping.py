@@ -230,6 +230,20 @@ def index_settings(table_name):
             },
         },
         "audio": {
+            "bit_rate": {
+                "type": "integer"
+            },
+            "sample_rate": {
+                "type": "integer"
+            },
+            "genres": {
+                "fields": {
+                    "keyword": {
+                        "type": "keyword"
+                    }
+                },
+                "type": "text"
+            },
         }
     }
     media_mappings = common_mappings.copy()
