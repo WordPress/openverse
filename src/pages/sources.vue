@@ -6,7 +6,7 @@
           {{ $t('sources.title') }}
         </h1>
         <div class="margin-bottom-large">
-          <h3 class="title subtitle is-normal is-4">
+          <h3 class="title subtitle is-normal is-3">
             {{ $t('sources.cc-content.where') }}
           </h3>
           <p class="margin-vertical-normal">
@@ -48,7 +48,7 @@
           </i18n>
         </div>
         <div class="margin-bottom-large">
-          <h3 class="title subtitle is-normal is-4">
+          <h3 class="title subtitle is-normal is-3">
             {{ $t('sources.new-content.next') }}
           </h3>
           <p class="margin-vertical-normal">
@@ -202,7 +202,16 @@ export default SourcePage
 $table-border: 1px solid $color-light-gray;
 $table-border-radius: 4px;
 
-.table {
+.title.is-3 {
+  font-size: 1.1875rem;
+}
+
+.button.is-primary {
+  font-size: 1.1875rem;
+  font-weight: 700;
+}
+
+.table.is-striped {
   th {
     cursor: pointer;
   }
@@ -225,7 +234,7 @@ $table-border-radius: 4px;
     border-top: none;
   }
 
-  /* The following are styles for rounding the table's */
+  /* The following are styles for rounding the table's corners */
   border-collapse: separate;
   border-radius: $table-border-radius;
 
