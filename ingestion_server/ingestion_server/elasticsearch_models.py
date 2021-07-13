@@ -307,11 +307,10 @@ class Audio(Media):
         popularity = attrs['standardized_popularity']
 
         return Audio(
-            thumbnail=row[schema['thumbnail']],  # Refers to album art
             bit_rate=row[schema['bit_rate']],
             sample_rate=row[schema['sample_rate']],
-            genre=row[schema['genre']],  # Not sure how to map array
-            categories=row[schema['category']],
+            genres=row[schema['genres']],  # Not sure how to map array
+            category=row[schema['category']],
 
             authority_boost=authority_boost,
             max_boost=max(popularity or 1, authority_boost or 1),
