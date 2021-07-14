@@ -43,13 +43,19 @@ RELATIVE_UPSTREAM_DB_PORT = int(os.environ.get('RELATIVE_UPSTREAM_DB_PORT', UPST
 def _get_shared_cols(downstream, upstream, table: str):
     """
     Given two database connections and a table name, return the list of columns
-    that the two tables have in common.
+    that the two tables have in common. The upstream table has the "_view"
+    suffix attached to it.
+
+    :param downstream: an open connection to the downstream PostgreSQL database
+    :param upstream: an open connection to the upstream PostgreSQL database
+    :param table: the name of the downstream table
+    :return: a list of the column names that are common to both databases
     """
     with downstream.cursor() as cur1, upstream.cursor() as cur2:
-        get_tables = "SELECT * FROM {} LIMIT 0"
-        cur1.execute(get_tables.format(table))
+        get_tables = SQL('SELECT * FROM {table} LIMIT 0;')
+        cur1.execute(get_tables.format(table=Identifier(table)))
         conn1_cols = set([desc[0] for desc in cur1.description])
-        cur2.execute(get_tables.format(f"{table}_view"))
+        cur2.execute(get_tables.format(table=Identifier(f'{table}_view')))
         conn2_cols = set([desc[0] for desc in cur2.description])
 
     shared = conn1_cols.intersection(conn2_cols)
@@ -94,9 +100,12 @@ def _generate_indices(conn, table: str):
         return cleaned
 
     # Get all of the old indices from the existing table.
-    get_idxs = f"SELECT indexdef FROM pg_indexes WHERE tablename = '{table}'"
-
     with conn.cursor() as cur:
+        get_idxs = SQL(
+            'SELECT indexdef '
+            'FROM pg_indexes '
+            'WHERE tablename = {table};'
+        ).format(table=Literal(table))
         cur.execute(get_idxs)
         idxs = cur.fetchall()
     cleaned_idxs = _clean_idxs(idxs)
@@ -111,13 +120,14 @@ def _generate_constraints(conn, table: str):
     :return: A list of SQL statements.
     """
     # List all active constraints across the database.
-    get_all_constraints = '''
+    get_all_constraints = SQL('''
         SELECT conrelid::regclass AS table, conname, pg_get_constraintdef(c.oid)
-        FROM pg_constraint c
-        JOIN pg_namespace n ON n.oid = c.connamespace
+        FROM pg_constraint AS c
+        JOIN pg_namespace AS n 
+        ON n.oid = c.connamespace
         AND n.nspname = 'public'
         ORDER BY conrelid::regclass::text, contype DESC;
-    '''
+    ''')
     with conn.cursor(cursor_factory=DictCursor) as cur:
         cur.execute(get_all_constraints)
         all_constraints = cur.fetchall()
@@ -163,24 +173,35 @@ def _generate_delete_orphans(fk_statement, fk_table):
     ref_table, ref_field = fk_reference.split('(')
     ref_field = ref_field.replace(')', '')
 
-    del_orphans = f'''
-        DELETE FROM {fk_table} fk_table WHERE not exists
-        (select 1 from temp_import_{ref_table} r
-        where r.{ref_field} = fk_table.{fk_field})
-    '''
+    del_orphans = SQL(
+        'DELETE FROM {fk_table} AS fk_table '
+        'WHERE NOT EXISTS(SELECT 1 FROM {ref_table} AS r '
+        'WHERE {ref_field} = {fk_field});'
+    ).format(
+        fk_table=Identifier(fk_table),
+        ref_table=Identifier(f'temp_import_{ref_table}'),
+        ref_field=Identifier('r', ref_field),
+        fk_field=Identifier('fk_table', fk_field),
+    )
     return del_orphans
 
 
 def _remap_constraint(name, con_table, fk_statement, table):
     """ Produce ALTER TABLE ... statements for each constraint."""
-    alterations = [f'''
-        ALTER TABLE {con_table} DROP CONSTRAINT {name}
-    ''']
+    alterations = [
+        SQL('ALTER TABLE {con_table} DROP CONSTRAINT {name}').format(
+            con_table=Identifier(con_table),
+            name=Identifier(name)
+        )
+    ]
     # Constraint applies to the table we're replacing
     if con_table == table:
-        alterations.append(f'''
-            ALTER TABLE {con_table} ADD {fk_statement}
-        ''')
+        alterations.append(
+            SQL('ALTER TABLE {con_table} ADD {fk_statement}').format(
+                con_table=Identifier(con_table),
+                fk_statement=SQL(fk_statement),
+            )
+        )
     # Constraint references the table we're replacing. Point it at the new
     # one.
     else:
@@ -193,9 +214,12 @@ def _remap_constraint(name, con_table, fk_statement, table):
         new_reference = table_reference.replace(match_old_ref, new_ref)
         tokens[reference_idx] = new_reference
         con_definition = ' '.join(tokens)
-        create_constraint = f'''
-            ALTER TABLE {con_table} ADD {con_definition}
-        '''
+        create_constraint = SQL(
+            'ALTER TABLE {con_table} ADD {con_definition}'
+        ).format(
+            con_table=Identifier(con_table),
+            con_definition=SQL(con_definition)
+        )
         alterations.append(create_constraint)
     return alterations
 
