@@ -8,7 +8,11 @@ from psycopg2.sql import SQL, Identifier, Literal
 
 from ingestion_server.cleanup import clean_image_data
 from ingestion_server.indexer import database_connect
-from psycopg2.extras import DictCursor
+from ingestion_server.queries import (
+    get_fdw_query,
+    get_copy_data_query,
+    get_go_live_query,
+)
 
 """
 Pull the latest copy of a table from the upstream database (aka CC Catalog/the
@@ -226,99 +230,87 @@ def _remap_constraint(name, con_table, fk_statement, table):
 
 def reload_upstream(table, progress=None, finish_time=None):
     """
-    Import updates from the upstream CC Catalog database into the API.
+    Import updates from the upstream CC Catalog database into the API. The
+    process involves the following steps.
+
+    1. Get the list of overlapping columns: ``_get_shared_cols``
+    2. Create FDW for the data transfer
+    3. Import data into a temporary table
+    4. Clean the data
+    5. Recreate indices from the original table
+    6. Recreate constraints from the original table
+    7. Promote the temporary table and delete the original
+
+    This is the main function of this module.
 
     :param table: The upstream table to copy.
     :param progress: multiprocessing.Value float for sharing task progress
     :param finish_time: multiprocessing.Value int for sharing finish timestamp
-    :return:
     """
+
+    # Step 1: Get the list of overlapping columns
     downstream_db = database_connect()
     upstream_db = psycopg2.connect(
-        dbname='openledger',
-        user='deploy',
+        dbname=UPSTREAM_DATABASE_NAME,
+        user=UPSTREAM_DB_USER,
         port=UPSTREAM_DB_PORT,
         password=UPSTREAM_DB_PASSWORD,
         host=UPSTREAM_DB_HOST,
         connect_timeout=5
     )
-    cols = _get_shared_cols(downstream_db, upstream_db, table)
-    query_cols = ','.join(cols)
+    shared_cols = _get_shared_cols(downstream_db, upstream_db, table)
     upstream_db.close()
-    # Connect to upstream database and create references to foreign tables.
-    log.info('(Re)initializing foreign data wrapper')
-    init_fdw = '''
-        CREATE EXTENSION IF NOT EXISTS postgres_fdw;
-        DROP SERVER IF EXISTS upstream CASCADE;
-        CREATE SERVER upstream FOREIGN DATA WRAPPER postgres_fdw
-        OPTIONS (host '{host}', dbname 'openledger', port '{port}');
-
-        CREATE USER MAPPING IF NOT EXISTS FOR deploy SERVER upstream
-        OPTIONS (user 'deploy', password '{passwd}');
-        DROP SCHEMA IF EXISTS upstream_schema CASCADE;
-        CREATE SCHEMA upstream_schema AUTHORIZATION deploy;
-
-        IMPORT FOREIGN SCHEMA public LIMIT TO ({table}_view)
-          FROM SERVER upstream INTO upstream_schema;
-    '''.format(host=UPSTREAM_DB_HOST, passwd=UPSTREAM_DB_PASSWORD, table=table,
-               port=UPSTREAM_DB_PORT)
-    # 1. Import data into a temporary table
-    # 2. Recreate indices from the original table
-    # 3. Recreate constraints from the original table.
-    # 4. Delete orphaned foreign key references.
-    # 5. Clean the data.
-    # 6. Promote the temporary table and delete the original.
-    copy_data = f'''
-        DROP TABLE IF EXISTS temp_import_{table};
-        CREATE TABLE temp_import_{table} (LIKE {table} INCLUDING CONSTRAINTS);
-        ALTER TABLE temp_import_{table} ADD COLUMN IF NOT EXISTS
-          standardized_popularity double precision;
-        CREATE TEMP SEQUENCE IF NOT EXISTS image_id_temp_seq;
-        ALTER TABLE temp_import_{table} ADD COLUMN IF NOT EXISTS id serial;
-        ALTER TABLE temp_import_{table} ALTER COLUMN id
-          SET DEFAULT nextval('image_id_temp_seq'::regclass);
-        ALTER TABLE temp_import_{table} ALTER COLUMN view_count
-          SET DEFAULT 0;
-        INSERT INTO temp_import_{table} ({query_cols})
-        SELECT {query_cols} from upstream_schema.{table}_view img
-          WHERE NOT EXISTS(
-            SELECT FROM api_deletedimage WHERE identifier = img.identifier
-          );
-        ALTER TABLE temp_import_{table} ADD PRIMARY KEY (id);
-        DROP SERVER upstream CASCADE;
-    '''
-    create_indices = ';\n'.join(_generate_indices(downstream_db, table))
-    remap_constraints = ';\n'.join(_generate_constraints(downstream_db, table))
-    go_live = f'''
-        DROP TABLE {table};
-        ALTER TABLE temp_import_{table} RENAME TO {table};
-    '''
 
     with downstream_db.cursor() as downstream_cur:
-        log.info('Copying upstream data...')
+        # Step 2: Create FDW for the data transfer
+        log.info('(Re)initializing foreign data wrapper')
+        init_fdw = get_fdw_query(
+            RELATIVE_UPSTREAM_DB_HOST,
+            RELATIVE_UPSTREAM_DB_PORT,
+            UPSTREAM_DATABASE_NAME,
+            UPSTREAM_DB_USER,
+            UPSTREAM_DB_PASSWORD,
+            f'{table}_view',
+        )
         downstream_cur.execute(init_fdw)
+
+        # Step 3: Import data into a temporary table
+        log.info('Copying upstream data...')
+        copy_data = get_copy_data_query(table, shared_cols)
         downstream_cur.execute(copy_data)
     downstream_db.commit()
     downstream_db.close()
+
     if table != 'audio':
+        # Step 4: Clean the data
+        log.info('Cleaning data...')
         clean_image_data(table)
-        log.info('Cleaning step finished.')
+
     downstream_db = database_connect()
     with downstream_db.cursor() as downstream_cur:
+        # Step 5: Recreate indices from the original table
         log.info('Copying finished! Recreating database indices...')
+        create_indices = ';\n'.join(_generate_indices(downstream_db, table))
         _update_progress(progress, 50.0)
         if create_indices != '':
             downstream_cur.execute(create_indices)
         _update_progress(progress, 70.0)
+
+        # Step 6: Recreate constraints from the original table
         log.info('Done creating indices! Remapping constraints...')
+        remap_constraints = SQL(';\n').join(_generate_constraints(downstream_db, table))
         if remap_constraints != '':
             downstream_cur.execute(remap_constraints)
         _update_progress(progress, 99.0)
+
+        # Step 7: Promote the temporary table and delete the original
         log.info('Done remapping constraints! Going live with new table...')
+        go_live = get_go_live_query(table)
         downstream_cur.execute(go_live)
     downstream_db.commit()
     downstream_db.close()
     log.info(f"Finished refreshing table '{table}'.")
     _update_progress(progress, 100.0)
+
     if finish_time:
         finish_time.value = datetime.datetime.utcnow().timestamp()
