@@ -38,9 +38,15 @@ UPSTREAM_DB_PASSWORD = os.environ.get('UPSTREAM_DB_PASSWORD', 'deploy')
 UPSTREAM_DATABASE_NAME = os.environ.get('UPSTREAM_DATABASE_NAME', 'openledger')
 UPSTREAM_DB_PORT = int(os.environ.get('UPSTREAM_DB_PORT', 5432))
 
-RELATIVE_UPSTREAM_DB_HOST = os.environ.get('RELATIVE_UPSTREAM_DB_HOST', UPSTREAM_DB_HOST)
+RELATIVE_UPSTREAM_DB_HOST = os.environ.get(
+    'RELATIVE_UPSTREAM_DB_HOST',
+    UPSTREAM_DB_HOST
+)
 """The hostname of the upstream DB from the POV of the downstream DB"""
-RELATIVE_UPSTREAM_DB_PORT = int(os.environ.get('RELATIVE_UPSTREAM_DB_PORT', UPSTREAM_DB_PORT))
+RELATIVE_UPSTREAM_DB_PORT = int(os.environ.get(
+    'RELATIVE_UPSTREAM_DB_PORT',
+    UPSTREAM_DB_PORT
+))
 """The port of the upstream DB from the POV of the downstream DB"""
 
 
@@ -127,7 +133,7 @@ def _generate_constraints(conn, table: str):
     get_all_constraints = SQL('''
         SELECT conrelid::regclass AS table, conname, pg_get_constraintdef(c.oid)
         FROM pg_constraint AS c
-        JOIN pg_namespace AS n 
+        JOIN pg_namespace AS n
         ON n.oid = c.connamespace
         AND n.nspname = 'public'
         ORDER BY conrelid::regclass::text, contype DESC;
@@ -298,7 +304,9 @@ def reload_upstream(table, progress=None, finish_time=None):
 
         # Step 6: Recreate constraints from the original table
         log.info('Done creating indices! Remapping constraints...')
-        remap_constraints = SQL(';\n').join(_generate_constraints(downstream_db, table))
+        remap_constraints = SQL(';\n').join(
+            _generate_constraints(downstream_db, table)
+        )
         if remap_constraints != '':
             downstream_cur.execute(remap_constraints)
         _update_progress(progress, 99.0)

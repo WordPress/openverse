@@ -86,7 +86,7 @@ def get_copy_data_query(table: str, columns: list[str]):
         DROP TABLE IF EXISTS {temp_table};
         CREATE TABLE {temp_table} (LIKE {table} INCLUDING CONSTRAINTS);
         CREATE TEMP SEQUENCE IF NOT EXISTS id_temp_seq;
-        
+
         ALTER TABLE {temp_table} ADD COLUMN IF NOT EXISTS
           standardized_popularity double precision;
         ALTER TABLE {temp_table} ADD COLUMN IF NOT EXISTS
@@ -95,15 +95,15 @@ def get_copy_data_query(table: str, columns: list[str]):
           view_count SET DEFAULT 0;
         ALTER TABLE {temp_table} ALTER COLUMN
           id SET DEFAULT nextval('id_temp_seq'::regclass);
-        
+
         INSERT INTO {temp_table} ({columns})
           SELECT {columns} from {upstream_table} AS u
           WHERE NOT EXISTS(
             SELECT FROM {deleted_table} WHERE identifier = u.identifier
           );
-        
+
         ALTER TABLE {temp_table} ADD PRIMARY KEY (id);
-        
+
         DROP SERVER upstream CASCADE;
     ''').format(
         table=Identifier(table),
