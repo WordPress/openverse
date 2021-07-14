@@ -29,8 +29,15 @@ data in place.
 """
 
 UPSTREAM_DB_HOST = os.environ.get('UPSTREAM_DB_HOST', 'upstream_db')
-UPSTREAM_DB_PORT = os.environ.get('UPSTREAM_DB_PORT', 5432)
+UPSTREAM_DB_USER = os.environ.get('UPSTREAM_DB_USER', 'deploy')
 UPSTREAM_DB_PASSWORD = os.environ.get('UPSTREAM_DB_PASSWORD', 'deploy')
+UPSTREAM_DATABASE_NAME = os.environ.get('UPSTREAM_DATABASE_NAME', 'openledger')
+UPSTREAM_DB_PORT = int(os.environ.get('UPSTREAM_DB_PORT', 5432))
+
+RELATIVE_UPSTREAM_DB_HOST = os.environ.get('RELATIVE_UPSTREAM_DB_HOST', UPSTREAM_DB_HOST)
+"""The hostname of the upstream DB from the POV of the downstream DB"""
+RELATIVE_UPSTREAM_DB_PORT = int(os.environ.get('RELATIVE_UPSTREAM_DB_PORT', UPSTREAM_DB_PORT))
+"""The port of the upstream DB from the POV of the downstream DB"""
 
 
 def _get_shared_cols(downstream, upstream, table: str):
