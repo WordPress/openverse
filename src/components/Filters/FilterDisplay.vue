@@ -1,72 +1,70 @@
 <template>
-  <div class="filter-display padding-normal" aria-live="polite">
+  <div class="filter-display" aria-live="polite">
     <span v-if="anyFilterApplied" class="caption has-text-weight-semibold">{{
       $t('filters.filter-by')
     }}</span>
-    <span v-for="filter in getFilters('licenses')" :key="filter.code">
-      <FilterBlock
-        :code="filter.code"
-        :label="filter.name"
-        filter-type="licenses"
-        @filterChanged="onUpdateFilter"
-      />
-    </span>
-    <span v-for="filter in getFilters('licenseTypes')" :key="filter.code">
-      <FilterBlock
-        :code="filter.code"
-        :label="filter.name"
-        filter-type="licenseTypes"
-        @filterChanged="onUpdateFilter"
-      />
-    </span>
-    <span v-for="filter in getFilters('categories')" :key="filter.code">
-      <FilterBlock
-        :code="filter.code"
-        :label="filter.name"
-        filter-type="categories"
-        @filterChanged="onUpdateFilter"
-      />
-    </span>
-    <span v-for="filter in getFilters('extensions')" :key="filter.code">
-      <FilterBlock
-        :code="filter.code"
-        :label="filter.name"
-        filter-type="extensions"
-        @filterChanged="onUpdateFilter"
-      />
-    </span>
-    <span v-for="filter in getFilters('aspectRatios')" :key="filter.code">
-      <FilterBlock
-        :code="filter.code"
-        :label="filter.name"
-        filter-type="aspectRatios"
-        @filterChanged="onUpdateFilter"
-      />
-    </span>
-    <span v-for="filter in getFilters('sizes')" :key="filter.code">
-      <FilterBlock
-        :code="filter.code"
-        :label="filter.name"
-        filter-type="sizes"
-        @filterChanged="onUpdateFilter"
-      />
-    </span>
-    <span v-for="filter in getFilters('providers')" :key="filter.code">
-      <FilterBlock
-        :code="filter.code"
-        :label="filter.name"
-        filter-type="providers"
-        @filterChanged="onUpdateFilter"
-      />
-    </span>
-    <span>
-      <FilterBlock
-        v-if="searchByCreator"
-        label="Creator"
-        filter-type="searchBy"
-        @filterChanged="onUpdateBoolFilter"
-      />
-    </span>
+    <FilterBlock
+      v-for="filter in getFilters('licenses')"
+      :key="filter.code"
+      :code="filter.code"
+      :label="filter.name"
+      filter-type="licenses"
+      @filterChanged="onUpdateFilter"
+    />
+    <FilterBlock
+      v-for="filter in getFilters('licenseTypes')"
+      :key="filter.code"
+      :code="filter.code"
+      :label="filter.name"
+      filter-type="licenseTypes"
+      @filterChanged="onUpdateFilter"
+    />
+    <FilterBlock
+      v-for="filter in getFilters('categories')"
+      :key="filter.code"
+      :code="filter.code"
+      :label="filter.name"
+      filter-type="categories"
+      @filterChanged="onUpdateFilter"
+    />
+    <FilterBlock
+      v-for="filter in getFilters('extensions')"
+      :key="filter.code"
+      :code="filter.code"
+      :label="filter.name"
+      filter-type="extensions"
+      @filterChanged="onUpdateFilter"
+    />
+    <FilterBlock
+      v-for="filter in getFilters('aspectRatios')"
+      :key="filter.code"
+      :code="filter.code"
+      :label="filter.name"
+      filter-type="aspectRatios"
+      @filterChanged="onUpdateFilter"
+    />
+    <FilterBlock
+      v-for="filter in getFilters('sizes')"
+      :key="filter.code"
+      :code="filter.code"
+      :label="filter.name"
+      filter-type="sizes"
+      @filterChanged="onUpdateFilter"
+    />
+    <FilterBlock
+      v-for="filter in getFilters('providers')"
+      :key="filter.code"
+      :code="filter.code"
+      :label="filter.name"
+      filter-type="providers"
+      @filterChanged="onUpdateFilter"
+    />
+    <FilterBlock
+      v-if="searchByCreator"
+      label="Creator"
+      filter-type="searchBy"
+      @filterChanged="onUpdateBoolFilter"
+    />
   </div>
 </template>
 <script>
@@ -125,3 +123,13 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.filter-display {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  .caption {
+    margin-right: 0.5rem;
+  }
+}
+</style>
