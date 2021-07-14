@@ -234,12 +234,12 @@ def reload_upstream(table, progress=None, finish_time=None):
     process involves the following steps.
 
     1. Get the list of overlapping columns: ``_get_shared_cols``
-    2. Create FDW for the data transfer
-    3. Import data into a temporary table
-    4. Clean the data
-    5. Recreate indices from the original table
-    6. Recreate constraints from the original table
-    7. Promote the temporary table and delete the original
+    2. Create FDW for the data transfer: ``get_fdw_query``
+    3. Import data into a temporary table: ``get_copy_data_query``
+    4. Clean the data: ``clean_image_data``
+    5. Recreate indices from the original table: ``_generate_indices``
+    6. Recreate constraints from the original table: ``_generate_constraints``
+    7. Promote the temp table and delete the original: ``get_go_live_query``
 
     This is the main function of this module.
 
