@@ -1,27 +1,32 @@
-import uuid
-import psycopg2
-import os
-import sys
-import logging as log
-import time
 import argparse
 import datetime
+import logging as log
+import os
+import sys
+import time
+import uuid
+from collections import deque
+
 import elasticsearch
+import psycopg2
 from aws_requests_auth.aws_auth import AWSRequestsAuth
-from elasticsearch import Elasticsearch, RequestsHttpConnection, \
-    NotFoundError, helpers
-from elasticsearch.exceptions \
-    import ConnectionError as ElasticsearchConnectionError
+from elasticsearch import (
+    Elasticsearch,
+    RequestsHttpConnection,
+    NotFoundError,
+    helpers,
+)
+from elasticsearch.exceptions import ConnectionError as ESConnectionError
 from elasticsearch_dsl import connections, Search
 from psycopg2.sql import SQL, Identifier, Literal
-from ingestion_server.qa import create_search_qa_index
+
+from ingestion_server.distributed_reindex_scheduler import \
+    schedule_distributed_index
 from ingestion_server.elasticsearch_models import \
     database_table_to_elasticsearch_model
 from ingestion_server.es_mapping import index_settings
-from ingestion_server.distributed_reindex_scheduler import \
-    schedule_distributed_index
+from ingestion_server.qa import create_search_qa_index
 from ingestion_server.queries import get_existence_queries
-from collections import deque
 
 """
 A utility for indexing data to Elasticsearch. For each table to
@@ -74,7 +79,7 @@ def elasticsearch_connect(timeout=300):
     while True:
         try:
             return _elasticsearch_connect()
-        except ElasticsearchConnectionError as e:
+        except ESConnectionError as e:
             log.exception(e)
             log.error('Reconnecting to Elasticsearch in 5 seconds. . .')
             time.sleep(5)
@@ -411,7 +416,7 @@ class TableIndexer:
             try:
                 for table in self.tables_to_watch:
                     self._index_table(table)
-            except ElasticsearchConnectionError:
+            except ESConnectionError:
                 self.es = elasticsearch_connect()
             time.sleep(poll_interval)
 
