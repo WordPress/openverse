@@ -65,12 +65,30 @@ class Media(SyncableDocType):
 
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
+        """
+        Map each row in the downstream database to a Python dictionary that
+        represents a document in the ElasticSearch index.
+
+        :param row: the database row as a tuple obtained by the psycopg2 cursor
+        :param schema: the mapping of database column names to the tuple index
+        :return: a dictionary mapping the row tuple to an ES doc
+        """
+
         raise NotImplementedError(
             'Missing database row -> Elasticsearch schema translation.'
         )
 
     @staticmethod
-    def get_instance_atts(row, schema):
+    def get_instance_attrs(row, schema):
+        """
+        Map the common columns in the database row to a Python dictionary that
+        represents a part of the ES doc.
+
+        :param row: the database row as a tuple obtained by the psycopg2 cursor
+        :param schema: the mapping of database column names to the tuple index
+        :return: the ES sub-document holding the common cols of the row tuple
+        """
+
         meta = row[schema['meta_data']]
 
         if 'standardized_popularity' in schema:
@@ -124,6 +142,9 @@ class Media(SyncableDocType):
 
     @staticmethod
     def get_extension(url):
+        """
+        Get the extension from the last segment of the URL separated by a dot.
+        """
         extension = url.split('.')[-1].lower()
         if '/' in extension or extension is None:
             return None
@@ -239,7 +260,7 @@ class Image(Media):
         provider = row[schema['provider']]
         authority_boost = Image.get_authority_boost(meta, provider)
 
-        attrs = Image.get_instance_atts(row, schema)
+        attrs = Image.get_instance_attrs(row, schema)
         popularity = attrs['standardized_popularity']
 
         return Image(
@@ -303,13 +324,13 @@ class Audio(Media):
         provider = row[schema['provider']]
         authority_boost = Audio.get_authority_boost(meta, provider)
 
-        attrs = Image.get_instance_atts(row, schema)
+        attrs = Image.get_instance_attrs(row, schema)
         popularity = attrs['standardized_popularity']
 
         return Audio(
             bit_rate=row[schema['bit_rate']],
             sample_rate=row[schema['sample_rate']],
-            genres=row[schema['genres']],  # Not sure how to map array
+            genres=row[schema['genres']],
             category=row[schema['category']],
 
             authority_boost=authority_boost,
