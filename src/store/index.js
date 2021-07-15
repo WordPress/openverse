@@ -58,6 +58,8 @@ export const state = () =>
     NavStore.state
   )
 
+export const getters = Object.assign(FilterStore.getters)
+
 export const mutations = Object.assign(
   SearchStore.mutations,
   FilterStore.mutations,

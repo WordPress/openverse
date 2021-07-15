@@ -39,6 +39,15 @@ describe('FilterDisplay', () => {
             filters,
           },
           dispatch: jest.fn(),
+          getters: {
+            getAppliedFilterTags: [
+              {
+                code: 'cc0',
+                filterType: 'license',
+                name: 'filters.licenses.cc0',
+              },
+            ],
+          },
         },
       },
     }
@@ -52,6 +61,7 @@ describe('FilterDisplay', () => {
   it('should render filter if checked', () => {
     filters.licenses[0].checked = true
     const wrapper = render(FilterDisplay, options)
+    console.log(wrapper.html())
     expect(wrapper.findComponent(FilterBlock).vm).toBeDefined()
   })
 
