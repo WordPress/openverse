@@ -73,6 +73,7 @@ CREATE MATERIALIZED VIEW audio_view AS
     title,
     meta_data,
     tags,
+    watermarked,
     last_synced_with_source,
     removed_from_source,
     standardized_audio_popularity(

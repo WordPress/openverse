@@ -40,6 +40,7 @@ CREATE TABLE public.audio (
     title character varying(5000),
     meta_data jsonb,
     tags jsonb,
+    watermarked boolean,
     last_synced_with_source timestamp with time zone,
     removed_from_source boolean NOT NULL
 );
