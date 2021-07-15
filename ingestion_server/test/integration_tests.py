@@ -102,7 +102,6 @@ class TestIngestion(unittest.TestCase):
                 res_json = es_res.json()
                 if res_json['status'] not in ready_stats:
                     continue
-                attempts += 1
             except requests.exceptions.ConnectionError:
                 if attempts > max_attempts:
                     logging.error('Ingestion server timed out. Giving up.')
@@ -110,6 +109,8 @@ class TestIngestion(unittest.TestCase):
                 logging.info('Waiting for ingestion server to come up...')
                 time.sleep(5)
                 continue
+            finally:
+                attempts += 1
             logging.info('Successfully connected to ingestion server')
             break
 
