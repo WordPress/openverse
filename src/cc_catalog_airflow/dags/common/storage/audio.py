@@ -73,7 +73,7 @@ AUDIO_TSV_COLUMNS = [
         name='category', required=False, size=80, truncate=False,
     ),
     columns.JSONColumn(
-        name='genre', required=False,
+        name='genres', required=False,
     ),
     columns.JSONColumn(
         # set name, set thumbnail, position of audio in set, set url
@@ -133,7 +133,7 @@ class AudioStore(MediaStore):
         bit_rate: Optional[int] = None,
         sample_rate: Optional[int] = None,
         category: Optional[str] = None,
-        genre: Optional[str] = None,
+        genres: Optional[str] = None,
         audio_set: Optional[str] = None,
         set_position: Optional[int] = None,
         set_thumbnail: Optional[str] = None,
@@ -187,7 +187,7 @@ class AudioStore(MediaStore):
         bit_rate:            Audio bit rate as int.
         sample_rate:         Audio sample rate as int.
         category:            'music', 'sound' or 'podcast'.
-        genre:               List of genres
+        genres:              List of genres
         audio_set:           The name of the set (album, pack) the audio
                              is part of
         set_position:        Position of the audio in the audio_set
@@ -230,7 +230,7 @@ class AudioStore(MediaStore):
             'bit_rate': bit_rate,
             'sample_rate': sample_rate,
             'category': category,
-            'genre': genre,
+            'genres': genres,
             'audio_set': audio_set_data,
             'alt_audio_files': alt_audio_files,
             'source': source,

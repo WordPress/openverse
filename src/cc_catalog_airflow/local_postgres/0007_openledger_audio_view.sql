@@ -62,7 +62,7 @@ CREATE MATERIALIZED VIEW audio_view AS
     bit_rate,
     sample_rate,
     category,
-    genre,
+    genres,
     audio_set,
     alt_audio_files,
     filesize,

@@ -70,7 +70,7 @@ def create_loading_table(
               {col.BIT_RATE} integer,
               {col.SAMPLE_RATE} integer,
               {col.CATEGORY} character varying(100),
-              {col.GENRE} jsonb,
+              {col.GENRES} jsonb,
               {col.AUDIO_SET} jsonb,
               {col.ALT_AUDIO_FILES} jsonb
             );
@@ -296,7 +296,7 @@ def upsert_records_to_db_table(
             col.BIT_RATE: col.BIT_RATE,
             col.SAMPLE_RATE: col.SAMPLE_RATE,
             col.CATEGORY: col.CATEGORY,
-            col.GENRE: col.GENRE,
+            col.GENRES: col.GENRES,
             col.AUDIO_SET: col.AUDIO_SET,
             col.ALT_AUDIO_FILES: col.ALT_AUDIO_FILES,
         })
@@ -311,7 +311,7 @@ def upsert_records_to_db_table(
             {_newest_non_null(col.BIT_RATE)},
             {_newest_non_null(col.SAMPLE_RATE)},
             {_newest_non_null(col.CATEGORY)},
-            {_merge_jsonb_arrays(col.GENRE)},
+            {_merge_jsonb_arrays(col.GENRES)},
             {_merge_jsonb_objects(col.AUDIO_SET)},
             {_merge_jsonb_objects(col.ALT_AUDIO_FILES)}
             '''
@@ -381,7 +381,7 @@ def overwrite_records_in_db_table(
             col.BIT_RATE,
             col.SAMPLE_RATE,
             col.CATEGORY,
-            col.GENRE,
+            col.GENRES,
             col.AUDIO_SET,
             col.ALT_AUDIO_FILES,
         ]
