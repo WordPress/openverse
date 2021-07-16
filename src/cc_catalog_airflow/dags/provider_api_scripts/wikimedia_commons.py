@@ -18,7 +18,12 @@ import os
 from urllib.parse import urlparse
 import lxml.html as html
 
-from common import DelayedRequester, ImageStore
+from common import (
+    get_license_info,
+    DelayedRequester,
+    ImageStore,
+)
+
 from util.loader import provider_details as prov
 
 logger = logging.getLogger(__name__)
@@ -236,8 +241,8 @@ def _process_image_data(image_data):
     valid_mediatype = _check_mediatype(image_info)
     if not valid_mediatype:
         return None
-    license_url = _get_license_url(image_info)
-    if license_url is None:
+    license_info = _get_license_info(image_info)
+    if license_info.url is None:
         return None
     image_url = image_info.get('url')
     creator, creator_url = _extract_creator_info(image_info)
@@ -246,7 +251,7 @@ def _process_image_data(image_data):
     image_store.add_item(
         foreign_landing_url=image_info.get('descriptionshorturl'),
         image_url=image_url,
-        license_url=license_url,
+        license_info=license_info,
         foreign_identifier=foreign_id,
         width=image_info.get('width'),
         height=image_info.get('height'),
@@ -345,7 +350,7 @@ def _extract_category_info(image_info):
     return categories_list
 
 
-def _get_license_url(image_info):
+def _get_license_info(image_info):
     license_url = (
         image_info
         .get('extmetadata', {})
@@ -367,7 +372,8 @@ def _get_license_url(image_info):
             license_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
         else:
             license_url = None
-    return license_url
+    license_info = get_license_info(license_url=license_url)
+    return license_info
 
 
 def _create_meta_data_dict(image_data):
