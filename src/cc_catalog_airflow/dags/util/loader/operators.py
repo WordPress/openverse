@@ -90,10 +90,10 @@ def get_load_s3_data_operator(
 
 def get_one_failed_switch(
         dag,
-        identifer
+        identifier
 ):
     return DummyOperator(
-        task_id=f'one_failed_{identifer}',
+        task_id=f'one_failed_{identifier}',
         trigger_rule=TriggerRule.ONE_FAILED,
         dag=dag,
     )
@@ -101,10 +101,10 @@ def get_one_failed_switch(
 
 def get_all_failed_switch(
         dag,
-        identifer
+        identifier
 ):
     return DummyOperator(
-        task_id=f'all_failed_{identifer}',
+        task_id=f'all_failed_{identifier}',
         trigger_rule=TriggerRule.ALL_FAILED,
         dag=dag,
     )
@@ -112,10 +112,10 @@ def get_all_failed_switch(
 
 def get_one_success_switch(
         dag,
-        identifer
+        identifier
 ):
     return DummyOperator(
-        task_id=f'one_success_{identifer}',
+        task_id=f'one_success_{identifier}',
         trigger_rule=TriggerRule.ONE_SUCCESS,
         dag=dag,
     )
@@ -123,10 +123,10 @@ def get_one_success_switch(
 
 def get_all_done_switch(
         dag,
-        identifer
+        identifier
 ):
     return DummyOperator(
-        task_id=f'all_done_{identifer}',
+        task_id=f'all_done_{identifier}',
         trigger_rule=TriggerRule.ALL_DONE,
         dag=dag,
     )

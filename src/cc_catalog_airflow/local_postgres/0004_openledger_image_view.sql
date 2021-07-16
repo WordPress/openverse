@@ -37,7 +37,7 @@ CREATE MATERIALIZED VIEW public.image_popularity_constants AS
 
 
 
-CREATE FUNCTION standardized_popularity(provider text, meta_data jsonb)
+CREATE FUNCTION standardized_image_popularity(provider text, meta_data jsonb)
 RETURNS FLOAT AS $$
   SELECT ($2->>metric)::FLOAT / (($2->>metric)::FLOAT + constant)
   FROM image_popularity_constants WHERE provider=$1;
@@ -47,7 +47,7 @@ STABLE
 RETURNS NULL ON NULL INPUT;
 
 
-CREATE VIEW image_view AS
+CREATE MATERIALIZED VIEW image_view AS
   SELECT
     identifier,
     created_on,
@@ -72,7 +72,7 @@ CREATE VIEW image_view AS
     watermarked,
     last_synced_with_source,
     removed_from_source,
-    standardized_popularity(
+    standardized_image_popularity(
       image.provider, image.meta_data
-    ) AS standardized_popularity
+    ) AS standardized_image_popularity
   FROM image;

@@ -1,6 +1,10 @@
 import logging
 
-from common import DelayedRequester, ImageStore
+from common import (
+    get_license_info,
+    DelayedRequester,
+    ImageStore
+)
 from util.loader import provider_details as prov
 
 logging.basicConfig(
@@ -118,13 +122,14 @@ def _handle_batch_objects(
         meta_data = _get_metadata(obj)
         title = obj.get("displayTitle")
         for img in image_data:
+            license_info = get_license_info(license_url=img.get("license_url"))
             image_count = image_store.add_item(
                 foreign_identifier=img.get("image_id"),
                 foreign_landing_url=foreign_landing_url,
                 image_url=img.get("image_url"),
                 height=img.get("height"),
                 width=img.get("width"),
-                license_url=img.get("license_url"),
+                license_info=license_info,
                 thumbnail_url=img.get("thumbnail"),
                 title=title,
                 creator=img.get("creators"),

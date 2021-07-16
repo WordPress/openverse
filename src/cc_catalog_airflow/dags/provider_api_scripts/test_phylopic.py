@@ -4,6 +4,7 @@ import os
 from unittest.mock import patch
 
 import phylopic as pp
+from common import LicenseInfo
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'tests/resources/phylopic'
@@ -203,7 +204,10 @@ def test_create_args():
                       '-4dd5-4785-bf2e-c67dc4d05ca8.1024.png'),
         'thumbnail_url': ('http://phylopic.org/assets/images/submissions/'
                           'e6014244-4dd5-4785-bf2e-c67dc4d05ca8.256.png'),
-        'license_url': 'http://creativecommons.org/publicdomain/zero/1.0/',
+        'license_info': (LicenseInfo(license='cc0',
+                                     version='1.0',
+                                     url='https://creativecommons.org/publicdomain/zero/1.0/',
+                                     raw_url='http://creativecommons.org/publicdomain/zero/1.0/')),
         'width': '1024', 'height': '1024', 'creator': 'Jonathan Wells',
         'title': 'Apicomplexa',
         'meta_data': {'taxa': (['Apicomplexa', 'Plasmodiidae Mesnil 1903',

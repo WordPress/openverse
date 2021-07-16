@@ -56,13 +56,13 @@ def create_dag(
     )
     with dag:
         start_task = get_log_operator(dag, DAG_ID, 'Starting')
-        update_metrics = operators.update_image_popularity_metrics(
+        update_metrics = operators.update_media_popularity_metrics(
             dag, postgres_conn_id
         )
-        update_constants = operators.update_image_popularity_constants(
+        update_constants = operators.update_media_popularity_constants(
             dag, postgres_conn_id
         )
-        update_image_view = operators.update_image_view(
+        update_image_view = operators.update_db_view(
             dag, postgres_conn_id
         )
         end_task = get_log_operator(dag, DAG_ID, 'Finished')

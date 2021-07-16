@@ -57,28 +57,28 @@ def create_dag(
     )
     with dag:
         start_task = get_log_operator(dag, DAG_ID, 'Starting')
-        drop_relations = operators.drop_image_popularity_relations(
+        drop_relations = operators.drop_media_popularity_relations(
             dag, postgres_conn_id,
         )
-        drop_functions = operators.drop_image_popularity_functions(
+        drop_functions = operators.drop_media_popularity_functions(
             dag, postgres_conn_id,
         )
-        create_metrics = operators.create_image_popularity_metrics(
+        create_metrics = operators.create_media_popularity_metrics(
             dag, postgres_conn_id
         )
-        update_metrics = operators.update_image_popularity_metrics(
+        update_metrics = operators.update_media_popularity_metrics(
             dag, postgres_conn_id
         )
-        create_percentile = operators.create_image_popularity_percentile(
+        create_percentile = operators.create_media_popularity_percentile(
             dag, postgres_conn_id
         )
-        create_constants = operators.create_image_popularity_constants(
+        create_constants = operators.create_media_popularity_constants(
             dag, postgres_conn_id
         )
-        create_popularity = operators.create_image_standardized_popularity(
+        create_popularity = operators.create_media_standardized_popularity(
             dag, postgres_conn_id
         )
-        create_image_view = operators.create_image_view(
+        create_image_view = operators.create_db_view(
             dag, postgres_conn_id
         )
         end_task = get_log_operator(dag, DAG_ID, 'Finished')

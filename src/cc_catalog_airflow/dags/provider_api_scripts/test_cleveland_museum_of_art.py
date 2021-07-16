@@ -3,21 +3,25 @@ import json
 import requests
 import os
 from unittest.mock import patch, MagicMock
-from collections import namedtuple
 
-import cleveland_museum_of_art as clm
-from common import MockImageStore
-
-LicenseInfo = namedtuple(
-    'LicenseInfo',
-    ['license', 'version', 'url']
+from common import (
+    LicenseInfo,
+    MockImageStore
 )
-_license_info = ('cc0', '1.0', 'https://creativecommons.org/publicdomain/zero/1.0/')
+import cleveland_museum_of_art as clm
+
+
+_license_info = (
+    'cc0',
+    '1.0',
+    'https://creativecommons.org/publicdomain/zero/1.0/',
+    None,
+)
 license_info = LicenseInfo(*_license_info)
 clm.image_store = MockImageStore(
-                    provider=clm.PROVIDER,
-                    license_info=license_info
-                    )
+    provider=clm.PROVIDER,
+    license_info=license_info,
+)
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
@@ -164,7 +168,7 @@ def test_get_response_failure():
                       'get',
                       return_value=r) as mock_get:
 
-        response_json, total_images = clm._get_response(query_param)
+        clm._get_response(query_param)
 
     assert mock_get.call_count == 3
 

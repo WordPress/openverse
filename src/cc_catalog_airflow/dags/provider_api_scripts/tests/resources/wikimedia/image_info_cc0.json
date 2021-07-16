@@ -1,0 +1,79 @@
+ {
+  "user": "Red panda bot",
+  "size": 2514074,
+  "width": 1685,
+  "height": 1080,
+  "url": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Proud_Of_My_Caring_Mom-Austria_-_Flickr_-_chachasarra.png",
+  "descriptionurl": "https://commons.wikimedia.org/wiki/File:Proud_Of_My_Caring_Mom-Austria_-_Flickr_-_chachasarra.png",
+  "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=107040001",
+  "extmetadata": {
+    "DateTime": {
+      "value": "2021-06-28 01:31:57",
+      "source": "mediawiki-metadata",
+      "hidden": ""
+    },
+    "ObjectName": {
+      "value": "Proud Of My Caring Mom-Austria - Flickr - chachasarra",
+      "source": "mediawiki-metadata",
+      "hidden": ""
+    },
+    "CommonsMetadataExtension": {
+      "value": 1.2,
+      "source": "extension",
+      "hidden": ""
+    },
+    "Categories": {
+      "value": "All media needing categories as of 2021|Flickr files uploaded by Red panda bot|Flickr images missing SDC copyright status|Flickr images missing SDC creator|Flickr images reviewed by FlickreviewR 2|Flickr public domain images needing human review|Media needing categories as of 28 June 2021|PDMark-owner|Photographs taken on 2021-06-01|Photos in Flickr Explore",
+      "source": "commons-categories",
+      "hidden": ""
+    },
+    "Assessments": {
+      "value": "",
+      "source": "commons-categories",
+      "hidden": ""
+    },
+    "ImageDescription": {
+      "value": "Proud Of My Caring Mom-Austria",
+      "source": "commons-desc-page"
+    },
+    "DateTimeOriginal": {
+      "value": "2021-06-01 00:00",
+      "source": "commons-desc-page"
+    },
+    "Credit": {
+      "value": "<a rel=\"nofollow\" class=\"external text\" href=\"https://www.flickr.com/photos/82995800@N06/51268601275/\">Proud Of My Caring Mom-Austria</a>",
+      "source": "commons-desc-page",
+      "hidden": ""
+    },
+    "Artist": {
+      "value": "<a rel=\"nofollow\" class=\"external text\" href=\"https://www.flickr.com/people/82995800@N06\">chachasarra</a>",
+      "source": "commons-desc-page"
+    },
+    "LicenseShortName": {
+      "value": "PDM-owner",
+      "source": "commons-desc-page",
+      "hidden": ""
+    },
+    "UsageTerms": {
+      "value": "Creative Commons Public Domain Mark Owner",
+      "source": "commons-desc-page",
+      "hidden": ""
+    },
+    "AttributionRequired": {
+      "value": "false",
+      "source": "commons-desc-page",
+      "hidden": ""
+    },
+    "Copyrighted": {
+      "value": "True",
+      "source": "commons-desc-page",
+      "hidden": ""
+    },
+    "Restrictions": {
+      "value": "",
+      "source": "commons-desc-page",
+      "hidden": ""
+    }
+  },
+  "mediatype": "BITMAP"
+}

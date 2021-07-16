@@ -1,18 +1,22 @@
 ---
 name: General Feature Request
-about: Suggest an idea for this project
-title: "[Feature] Replace with Title"
-labels: enhancement, awaiting triage
+about: Suggest a new feature or improvements to an existing one
+labels: "✨ goal: improvement, 🚦 status: awaiting triage, 💻 aspect: code, 🟩 priority: low"
+title: "[Feature] <Replace this with actual title>"
 ---
 
-## Problem Description
-<!-- Describe the problem or issue that the proposed feature will solve (e.g., "I wish CC Catalog provided ... ") -->
+## Problem
+<!-- Describe a problem solved by this feature; or delete the section entirely. -->
 
-## Solution Description
-<!-- Describe what you want to happen -->
+## Description
+<!-- Describe the feature and how it solves the problem. -->
 
 ## Alternatives
-<!-- Describe any alternative solutions or features you have considered -->
+<!-- Describe any alternative solutions or features you have considered. How is this feature better? -->
 
 ## Additional context
-<!-- Add any other context about the feature request. -->
+<!-- Add any other context about the feature here; or delete the section entirely. -->
+
+## Implementation
+<!-- Replace the [ ] with [x] to check the box. -->
+- [ ] 🙋 I would be interested in implementing this feature.

@@ -1,4 +1,4 @@
-CREATE FUNCTION standardized_popularity(provider text, meta_data jsonb)
+CREATE FUNCTION standardized_image_popularity(provider text, meta_data jsonb)
 RETURNS FLOAT AS $$
   SELECT ($2->>metric)::FLOAT / (($2->>metric)::FLOAT + constant)
   FROM image_popularity_constants WHERE provider=$1;

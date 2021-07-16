@@ -16,20 +16,20 @@ def _get_filled_template(template_path, provider, media_type='image'):
         ).replace(
             '{provider}', provider.lower()
         )
-        if media_type:
-            if media_type == 'image':
-                media_store_init = IMAGE_STORE_INIT
-                media_store = 'image_store'
-            else:
-                media_store_init = AUDIO_STORE_INIT
-                media_store = 'audio_store'
-            script_string = script_string.replace(
-                'media_store_init',
-                media_store_init
-            ).replace(
-                '{media_store}',
-                media_store
-            )
+        if media_type == 'audio':
+            media_store_init = AUDIO_STORE_INIT
+            media_store = 'audio_store'
+        else:
+            media_store_init = IMAGE_STORE_INIT
+            media_store = 'image_store'
+        script_string = script_string.replace(
+            'media_store_init', media_store_init
+        ).replace(
+            '{media_store}', media_store
+        ).replace(
+            '{media_type}', media_type
+        )
+
         return script_string
 
 
@@ -51,9 +51,14 @@ def fill_template(provider, media_type, templates_path):
         api_script.write(api_script_string)
         print(f"API script: {api_script_path.relative_to(project_path)}")
 
+    template_name = 'template_test.py_template'
+    script_template_path = templates_path / template_name
     test_script_path = api_path / f"test_{filename}.py"
     with open(test_script_path, 'w+', encoding='utf8') as test_script:
-        test_script.write('# TODO: Write your tests!')
+        test_string = _get_filled_template(
+            script_template_path, provider, media_type
+        )
+        test_script.write(test_string)
         print(f"API script test: {test_script_path.relative_to(project_path)}")
 
     workflow_template_path = templates_path / 'workflow.py_template'

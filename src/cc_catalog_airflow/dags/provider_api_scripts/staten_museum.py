@@ -1,6 +1,10 @@
 import logging
 
-from common import DelayedRequester, ImageStore
+from common import (
+    get_license_info,
+    DelayedRequester,
+    ImageStore
+)
 from util.loader import provider_details as prov
 
 logging.basicConfig(
@@ -116,14 +120,17 @@ def _handle_items_data(
         title = _get_title(titles)
         meta_data = _get_metadata(item)
         for img in images:
+            license_info = get_license_info(
+                license_=license_,
+                license_version=version
+            )
             image_count = image_store.add_item(
                     foreign_identifier=img.get("iiif_id"),
                     foreign_landing_url=foreign_landing_url,
                     image_url=img.get("image_url"),
                     height=img.get("height"),
                     width=img.get("width"),
-                    license_=license_,
-                    license_version=version,
+                    license_info=license_info,
                     thumbnail_url=img.get("thumbnail"),
                     creator=creator,
                     title=title,

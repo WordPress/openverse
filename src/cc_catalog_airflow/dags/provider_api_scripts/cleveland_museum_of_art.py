@@ -1,6 +1,10 @@
 import logging
 
-from common import DelayedRequester, ImageStore
+from common import (
+    get_license_info,
+    DelayedRequester,
+    ImageStore
+)
 from util.loader import provider_details as prov
 
 LIMIT = 1000
@@ -120,19 +124,20 @@ def _handle_response(batch):
             creator_name = data.get('creators')[0].get('description', '')
         else:
             creator_name = ''
-
+        license_info = get_license_info(
+            license_=license_, license_version=license_version
+        )
         total_images = image_store.add_item(
-                        foreign_landing_url=foreign_landing_url,
-                        image_url=image_url,
-                        license_=license_,
-                        license_version=license_version,
-                        foreign_identifier=foreign_id,
-                        width=width,
-                        height=height,
-                        title=title,
-                        creator=creator_name,
-                        meta_data=metadata,
-                        )
+            foreign_landing_url=foreign_landing_url,
+            image_url=image_url,
+            license_info=license_info,
+            foreign_identifier=foreign_id,
+            width=width,
+            height=height,
+            title=title,
+            creator=creator_name,
+            meta_data=metadata,
+            )
     return total_images
 
 

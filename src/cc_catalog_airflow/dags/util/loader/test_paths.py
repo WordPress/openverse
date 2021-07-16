@@ -1,10 +1,18 @@
+import datetime
 import time
 
+from airflow.models import TaskInstance
+from airflow.operators.dummy import DummyOperator
 import pytest
 
 from util.loader import paths
 
 TEST_ID = 'testing'
+
+ti = TaskInstance(
+    task=DummyOperator(task_id='op_no_dag'),
+    execution_date=datetime.datetime(2016, 1, 1)
+)
 
 
 def test_stage_oldest_tsv_file_finds_tsv_file(tmpdir):
@@ -14,7 +22,7 @@ def test_stage_oldest_tsv_file_finds_tsv_file(tmpdir):
     path = tmpdir.join(test_tsv)
     path.write('')
     tsv_found = paths.stage_oldest_tsv_file(
-        tmp_directory, identifier, 0
+        tmp_directory, identifier, 0, ti,
     )
 
     assert tsv_found
@@ -27,7 +35,7 @@ def test_stage_oldest_tsv_file_stages_tsv_file(tmpdir):
     test_tsv = 'test.tsv'
     path = tmpdir.join(test_tsv)
     path.write('')
-    paths.stage_oldest_tsv_file(tmp_directory, identifier, 0)
+    paths.stage_oldest_tsv_file(tmp_directory, identifier, 0, ti)
     staged_path = tmpdir.join(staging_subdirectory, identifier, test_tsv)
 
     assert staged_path.check(file=1)
@@ -39,7 +47,7 @@ def test_stage_oldest_tsv_file_removes_staged_file_from_output_dir(tmpdir):
     test_tsv = 'test.tsv'
     path = tmpdir.join(test_tsv)
     path.write('')
-    paths.stage_oldest_tsv_file(tmp_directory, identifier, 0)
+    paths.stage_oldest_tsv_file(tmp_directory, identifier, 0, ti)
 
     assert path.check(file=0)
 
@@ -55,7 +63,7 @@ def test_stage_oldest_tsv_file_stages_older_file(tmpdir):
     time.sleep(0.01)
     path_two = tmpdir.join(test_two_tsv)
     path_two.write('')
-    paths.stage_oldest_tsv_file(tmp_directory, identifier, 0)
+    paths.stage_oldest_tsv_file(tmp_directory, identifier, 0, ti)
     staged_path = tmpdir.join(staging_subdirectory, identifier, test_one_tsv)
     assert staged_path.check(file=1)
 
@@ -71,7 +79,7 @@ def test_stage_oldest_tsv_file_ignores_newer_file(tmpdir):
     time.sleep(0.01)
     path_two = tmpdir.join(test_two_tsv)
     path_two.write('')
-    paths.stage_oldest_tsv_file(tmp_directory, identifier, 0)
+    paths.stage_oldest_tsv_file(tmp_directory, identifier, 0, ti)
     staged_path_two = tmpdir.join(
         staging_subdirectory, identifier, test_two_tsv
     )
@@ -86,7 +94,7 @@ def test_stage_oldest_tsv_file_ignores_non_tsv(tmpdir):
     test = 't'
     path = tmpdir.join(test)
     path.write('')
-    paths.stage_oldest_tsv_file(tmp_directory, identifier, 0)
+    paths.stage_oldest_tsv_file(tmp_directory, identifier, 0, ti)
     staged_path = tmpdir.join(staging_subdirectory, identifier, test)
     assert staged_path.check(file=0)
     assert path.check(file=1)
@@ -99,7 +107,7 @@ def test_stage_oldest_tsv_file_ignores_young_tsv(tmpdir):
     test_tsv = 'test.tsv'
     path = tmpdir.join(test_tsv)
     path.write('')
-    paths.stage_oldest_tsv_file(tmp_directory, identifier, 5)
+    paths.stage_oldest_tsv_file(tmp_directory, identifier, 5, ti)
     staged_path = tmpdir.join(staging_subdirectory, identifier, test_tsv)
 
     assert staged_path.check(file=0)

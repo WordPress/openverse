@@ -14,7 +14,11 @@ from datetime import datetime, timedelta, timezone
 import logging
 import os
 
-from common import DelayedRequester, ImageStore
+from common import (
+    get_license_info,
+    DelayedRequester,
+    ImageStore
+)
 from util.loader import provider_details as prov
 
 logging.basicConfig(
@@ -187,10 +191,12 @@ def _process_image_data(image_data, sub_providers=SUB_PROVIDERS,
     source = eligible_sub_providers.pop() if len(eligible_sub_providers) == 1 \
         else provider
 
+    license_info = get_license_info(license_url=license_url)
+
     return image_store.add_item(
         foreign_landing_url=foreign_landing_url,
         image_url=image_url,
-        license_url=license_url,
+        license_info=license_info,
         thumbnail_url=thumbnail_url,
         foreign_identifier=foreign_id,
         title=title,

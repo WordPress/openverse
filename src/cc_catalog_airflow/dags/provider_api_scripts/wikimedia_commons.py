@@ -18,7 +18,12 @@ import os
 from urllib.parse import urlparse
 import lxml.html as html
 
-from common import DelayedRequester, ImageStore
+from common import (
+    get_license_info,
+    DelayedRequester,
+    ImageStore,
+)
+
 from util.loader import provider_details as prov
 
 logger = logging.getLogger(__name__)
@@ -90,13 +95,13 @@ def main(date):
         image_pages = _get_image_pages(image_batch)
         if image_pages:
             _process_image_pages(image_pages)
-            total_images = image_store.total_images
+            total_images = image_store.total_items
         logger.info(f'Total Images so far: {total_images}')
         if not continue_token:
             break
 
     image_store.commit()
-    total_images = image_store.total_images
+    total_images = image_store.total_items
     logger.info(f'Total images: {total_images}')
     logger.info('Terminated!')
 
@@ -235,21 +240,24 @@ def _process_image_data(image_data):
     image_info = _get_image_info_dict(image_data)
     valid_mediatype = _check_mediatype(image_info)
     if not valid_mediatype:
-        return
-
+        return None
+    license_info = _get_license_info(image_info)
+    if license_info.url is None:
+        return None
     image_url = image_info.get('url')
     creator, creator_url = _extract_creator_info(image_info)
+    title = _extract_title(image_info)
 
     image_store.add_item(
         foreign_landing_url=image_info.get('descriptionshorturl'),
         image_url=image_url,
-        license_url=_get_license_url(image_info),
+        license_info=license_info,
         foreign_identifier=foreign_id,
         width=image_info.get('width'),
         height=image_info.get('height'),
         creator=creator,
         creator_url=creator_url,
-        title=image_data.get('title'),
+        title=title,
         meta_data=_create_meta_data_dict(image_data)
     )
 
@@ -275,6 +283,23 @@ def _check_mediatype(image_info, image_mediatypes=None):
     else:
         valid_mediatype = True
     return valid_mediatype
+
+
+def _extract_title(image_info):
+    # Titles often have 'File:filename.jpg' form
+    # We remove the 'File:' and extension from title
+    name = image_info.get('extmetadata', {}).get('ObjectName', {})
+    title = name.get('value', '')
+    if title is None:
+        title = image_info.get('title')
+    if title.startswith('File:'):
+        title = title.replace('File:', '', 1)
+    last_dot_position = title.rfind('.')
+    if last_dot_position > 0:
+        possible_extension = title[last_dot_position:]
+        if possible_extension.lower() in ['.png', '.jpg', '.jpeg']:
+            title = title[:last_dot_position]
+    return title
 
 
 def _extract_date_info(image_info):
@@ -325,14 +350,30 @@ def _extract_category_info(image_info):
     return categories_list
 
 
-def _get_license_url(image_info):
-    return (
+def _get_license_info(image_info):
+    license_url = (
         image_info
         .get('extmetadata', {})
         .get('LicenseUrl', {})
         .get('value', '')
         .strip()
     )
+    if license_url == '':
+        license_name = (
+            image_info
+            .get('extmetadata', {})
+            .get('LicenseShortName', {})
+            .get('value', '')
+            .lower()
+        )
+        if license_name == 'public_domain':
+            license_url = 'https://creativecommons.org/publicdomain/mark/1.0/'
+        elif license_name == 'pdm-owner':
+            license_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
+        else:
+            license_url = None
+    license_info = get_license_info(license_url=license_url)
+    return license_info
 
 
 def _create_meta_data_dict(image_data):

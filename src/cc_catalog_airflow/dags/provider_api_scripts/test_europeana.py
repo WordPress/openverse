@@ -4,6 +4,7 @@ import os
 import requests
 from unittest.mock import patch, MagicMock
 
+from common import LicenseInfo
 import europeana
 
 RESOURCES = os.path.join(
@@ -174,7 +175,7 @@ def test_process_image_data_with_real_example():
         image_url=(
             "http://bibliotecadigital.jcyl.es/i18n/catalogo_imagenes"
             "/imagen_id.cmd?idImagen=102620362"),
-        license_url=("http://creativecommons.org/publicdomain/zero/1.0/"),
+        license_info=(LicenseInfo('cc0', '1.0', 'https://creativecommons.org/publicdomain/zero/1.0/', 'http://creativecommons.org/publicdomain/zero/1.0/')),
         thumbnail_url=(
             "https://api.europeana.eu/api/v2/thumbnail-by-url.json?uri=http"
             "%3A%2F%2Fbibliotecadigital.jcyl.es%2Fi18n%2Fcatalogo_imagenes%2"
@@ -306,7 +307,12 @@ def test_process_image_data_with_sub_provider():
         image_url=(
             "https://iiif.wellcomecollection.org/image/V0013398.jpg/full/512,"
             "/0/default.jpg"),
-        license_url="http://creativecommons.org/licenses/by/4.0/",
+        license_info=LicenseInfo(
+            'by',
+            '4.0',
+            "https://creativecommons.org/licenses/by/4.0/",
+            "http://creativecommons.org/licenses/by/4.0/"
+        ),
         thumbnail_url=(
             "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%"
             "2Fiiif.wellcomecollection.org%2Fimage%2FV0013398.jpg%2Ffull%2F"

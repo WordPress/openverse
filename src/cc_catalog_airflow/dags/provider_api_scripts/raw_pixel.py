@@ -2,7 +2,11 @@ import requests
 import logging
 from urllib.parse import urlparse, parse_qs
 
-from common import DelayedRequester, ImageStore
+from common import (
+    get_license_info,
+    DelayedRequester,
+    ImageStore
+)
 from util.loader import provider_details as prov
 
 DELAY = 1.0  # time delay (in seconds)
@@ -130,11 +134,13 @@ def _process_image_data(image):
     tags = _get_tags(image)
 
     # TODO:How to get license_url, creator_url, source, watermarked?
+    license_info = get_license_info(
+        license_=license_, license_version=version,
+    )
     return image_store.add_item(
         foreign_landing_url=foreign_url,
         image_url=img_url,
-        license_=license_,
-        license_version=str(version),
+        license_info=license_info,
         foreign_identifier=str(foreign_id),
         width=str(width) if width else None,
         height=str(height) if height else None,

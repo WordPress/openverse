@@ -59,7 +59,7 @@ def create_dag(
     )
     with dag:
         start_task = get_log_operator(dag, DAG_ID, 'Starting')
-        update_image_view = operators.update_image_view(
+        update_image_view = operators.update_db_view(
             dag, postgres_conn_id
         )
         end_task = get_log_operator(dag, DAG_ID, 'Finished')

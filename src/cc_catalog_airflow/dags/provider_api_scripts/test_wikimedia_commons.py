@@ -1,9 +1,10 @@
 import json
 import logging
 import os
-from unittest.mock import patch
+from unittest.mock import patch, call
 
 import wikimedia_commons as wmc
+from common.licenses.licenses import get_license_info
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'tests/resources/wikimedia'
@@ -239,7 +240,23 @@ def test_merge_image_pages_both_have_gu():
     assert actual_merged_page == expect_merged_page
 
 
+def test_extract_title_gets_cleaned_title():
+    image_info = {'extmetadata': {'ObjectName': {'value': 'File:filename.jpg'}}}
+    actual_title = wmc._extract_title(image_info)
+    expected_title = 'filename'
+    assert actual_title == expected_title
+
+    image_info['title'] = 'filename.jpeg'
+    actual_title = wmc._extract_title(image_info)
+    expected_title = 'filename'
+    assert actual_title == expected_title
+
+
 def test_process_image_data_handles_example_dict():
+    """
+    Converts sample json data to correct image metadata,
+    and calls `add_item` once for a valid image.
+    """
     with open(os.path.join(RESOURCES, 'image_data_example.json')) as f:
         image_data = json.load(f)
 
@@ -249,30 +266,44 @@ def test_process_image_data_handles_example_dict():
             return_value=1
     ) as mock_add:
         wmc._process_image_data(image_data)
-
-    mock_add.assert_called_once_with(
+    expected_license_info = get_license_info(
+        license_url='https://creativecommons.org/licenses/by-sa/4.0'
+    )
+    assert mock_add.call_count == 1
+    assert mock_add.call_args == call(
         foreign_landing_url=(
             'https://commons.wikimedia.org/w/index.php?curid=81754323'),
         image_url=(
             'https://upload.wikimedia.org/wikipedia/commons/2/25/20120925_'
             'PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg'),
-        license_url='https://creativecommons.org/licenses/by-sa/4.0',
+        license_info=expected_license_info,
         foreign_identifier=81754323,
         width=5514,
         height=3102,
         creator='PtrQs',
         creator_url='https://commons.wikimedia.org/wiki/User:PtrQs',
-        title='File:20120925 PlozevetBretagne LoneTree DSC07971 PtrQs.jpg',
+        title='20120925 PlozevetBretagne LoneTree DSC07971 PtrQs',
         meta_data={'description': 'SONY DSC', 'global_usage_count': 0,
-                    'last_modified_at_source': '2019-09-01 00:38:47',
                     'date_originally_created': '2012-09-25 16:23:02',
-                    'categories': [
-                        'Coasts of Ploz\u00e9vet', 'No QIC by usr:PtrQs',
-                        ('Photographs taken with Minolta AF Zoom '
-                            '28-70mm F2.8 G'),
-                        'Self-published work', 'Taken with Sony DSLR-A900',
-                        'Trees in Finist\u00e8re']}
+                   'last_modified_at_source': '2019-09-01 00:38:47',
+                   'categories': [
+                       'Coasts of Ploz\u00e9vet', 'No QIC by usr:PtrQs',
+                       ('Photographs taken with Minolta AF Zoom '
+                        '28-70mm F2.8 G'),
+                       'Self-published work', 'Taken with Sony DSLR-A900',
+                       'Trees in Finist\u00e8re']}
     )
+
+
+def test_process_image_data_adds_example_dict():
+    """
+    `_process_image_data` calls `ImageStore.add_item` with valid arguments,
+    and doesn't pass unexpected arguments. Saves the item to the `ImageStore`.
+    """
+    with open(os.path.join(RESOURCES, 'image_data_example.json')) as f:
+        image_data = json.load(f)
+    wmc._process_image_data(image_data)
+    assert wmc.image_store.total_items == 1
 
 
 def test_process_image_data_throws_out_invalid_mediatype(monkeypatch):
@@ -384,14 +415,14 @@ def test_extract_creator_info_handles_link_as_partial_text():
     assert expect_creator_url == actual_creator_url
 
 
-def test_get_license_url_finds_license_url():
+def test_get_license_info_finds_license_url():
     with open(
             os.path.join(RESOURCES, 'image_info_from_example_data.json')
     ) as f:
         image_info = json.load(f)
 
-    expect_license_url = 'https://creativecommons.org/licenses/by-sa/4.0'
-    actual_license_url = wmc._get_license_url(image_info)
+    expect_license_url = 'https://creativecommons.org/licenses/by-sa/4.0/'
+    actual_license_url = wmc._get_license_info(image_info).url
     assert actual_license_url == expect_license_url
 
 
@@ -400,8 +431,18 @@ def test_get_license_url_handles_missing_license_url():
             os.path.join(RESOURCES, 'image_info_artist_partial_link.json')
     ) as f:
         image_info = json.load(f)
-    expect_license_url = ''
-    actual_license_url = wmc._get_license_url(image_info)
+    expect_license_url = None
+    actual_license_url = wmc._get_license_info(image_info).url
+    assert actual_license_url == expect_license_url
+
+
+def test_get_license_url_handles_cc0_license():
+    with open(
+            os.path.join(RESOURCES, 'image_info_cc0.json')
+    ) as f:
+        image_info = json.load(f)
+    expect_license_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
+    actual_license_url = wmc._get_license_info(image_info).url
     assert actual_license_url == expect_license_url
 
 

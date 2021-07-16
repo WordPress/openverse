@@ -2,7 +2,11 @@ import os
 import logging
 from urllib.parse import urlparse, parse_qs
 
-from common import DelayedRequester, ImageStore
+from common import (
+    get_license_info,
+    DelayedRequester,
+    ImageStore
+)
 from util.loader import provider_details as prov
 
 logging.basicConfig(
@@ -56,12 +60,12 @@ def main():
         results = request_response.get("result")
         if type(results) == list and len(results) > 0:
             _handle_results(results)
-            logger.info(f"{image_store.total_images} images till now")
+            logger.info(f"{image_store.total_items} images till now")
             page = page + 1
         else:
             condition = False
     image_store.commit()
-    logger.info(f"total images {image_store.total_images}")
+    logger.info(f"total images {image_store.total_items}")
 
 
 def _get_query_param(
@@ -163,7 +167,7 @@ def _get_capture_details(
             foreign_identifier=image_id,
             foreign_landing_url=foreign_landing_url,
             image_url=image_url,
-            license_url=license_url,
+            license_info=get_license_info(license_url=license_url),
             thumbnail_url=thumbnail_url,
             title=title,
             creator=creator,

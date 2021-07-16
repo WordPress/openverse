@@ -4,8 +4,8 @@ with licenses.
 """
 from collections import namedtuple
 import logging
+from typing import Tuple, Optional
 from urllib.parse import urlparse
-
 from common import urls
 from common.licenses import constants
 
@@ -21,7 +21,7 @@ class InvalidLicenseURLException(Exception):
 
 LicenseInfo = namedtuple(
     'LicenseInfo',
-    ['license', 'version', 'url']
+    ['license', 'version', 'url', 'raw_url']
 )
 
 
@@ -47,15 +47,15 @@ def get_license_info(
     to construct a license URL from the given license_, license_version
     pair.
 
-    If we're able to derive a valid license URL, we return the tuple
+    If we're able to derive a valid license URL, we return the namedtuple
 
-        license_, license_version, license_url
+        LicenseInfo(license, version, url, raw_url)
 
-    with the validated and corrected values.
+    with the validated and corrected values of license, version, url.
 
     Otherwise, we return
 
-      None, None, None
+      LicenseInfo(None, None, None, None)
     """
     license_info = _get_license_info_from_url(license_url)
     if license_info[0] is not None:
@@ -72,6 +72,7 @@ def get_license_info(
         license_info = get_license_info_from_license_pair(
             license_, license_version
         )
+        license_info = (*license_info, license_url)
     else:
         logger.debug(
             f'No valid license_info could be derived.  Inputs were'
@@ -79,11 +80,15 @@ def get_license_info(
             f' license_version: {license_version}'
             f' license_url: {license_url}'
         )
-        license_info = (None, None, None)
+        license_info = None, None, None, None
+    if len(license_info) == 3:
+        license_info = (*license_info, None)
     return LicenseInfo(*license_info)
 
 
-def _get_license_info_from_url(license_url, path_map=LICENSE_PATH_MAP):
+def _get_license_info_from_url(
+    license_url: str, path_map=LICENSE_PATH_MAP
+) -> Tuple[Optional[str], Optional[str], Optional[str], Optional[str]]:
     """
     We try to extract license info from a given URL.
 
@@ -104,11 +109,12 @@ def _get_license_info_from_url(license_url, path_map=LICENSE_PATH_MAP):
     (license_, license_version) pair corresponding to the URL.
 
     We return the validated license info if possible,
-    else None, None, None.
+    else None, None, None, None.
     """
+    raw_url = license_url
     cc_url = _get_valid_cc_url(license_url)
     if cc_url is None:
-        return None, None, None
+        return None, None, None, None
 
     license_, license_version = None, None
     for valid_path in path_map:
@@ -126,11 +132,11 @@ def _get_license_info_from_url(license_url, path_map=LICENSE_PATH_MAP):
             f'\npath_map: {path_map}'
         )
         cc_url = None
+        raw_url = None
+    return license_, license_version, cc_url, raw_url
 
-    return license_, license_version, cc_url
 
-
-def _get_valid_cc_url(license_url):
+def _get_valid_cc_url(license_url) -> Optional[str]:
     """
     Try to get a valid creativecommons.org URL from a given URL.
 
@@ -185,8 +191,8 @@ def _get_valid_cc_url(license_url):
 
 
 def get_license_info_from_license_pair(
-        license_, license_version, pair_map=REVERSE_LICENSE_PATH_MAP
-):
+    license_, license_version, pair_map=REVERSE_LICENSE_PATH_MAP
+) -> Tuple[Optional[str], Optional[str], Optional[str]]:
     """
     Validates a given license pair, and derives a license URL from it.
 
@@ -205,7 +211,7 @@ def get_license_info_from_license_pair(
     return valid_license, valid_version, valid_url
 
 
-def _ensure_license_version_string(license_version):
+def _ensure_license_version_string(license_version) -> Optional[str]:
     string_license_version = None
     try:
         if license_version == constants.NO_VERSION:
@@ -222,7 +228,7 @@ def _ensure_license_version_string(license_version):
     return string_license_version
 
 
-def _build_license_url(license_path):
+def _build_license_url(license_path) -> str:
     license_path = license_path.strip().strip('/')
     derived_url = f'https://creativecommons.org/{license_path}/'
     rewritten_license_url = urls.rewrite_redirected_url(derived_url)
@@ -231,3 +237,15 @@ def _build_license_url(license_path):
             f'Failed to rewrite {derived_url}.'
         )
     return rewritten_license_url
+
+
+def is_valid_license_info(license_info: LicenseInfo) -> bool:
+    base_path = 'https://creativecommons.org/'
+    try:
+        license_path = license_info.url.replace(base_path, '')
+        if license_path[-1] == '/':
+            license_path = license_path[:-1]
+        license_pair = LICENSE_PATH_MAP.get(license_path)
+        return license_pair is not None
+    except AttributeError:
+        return False

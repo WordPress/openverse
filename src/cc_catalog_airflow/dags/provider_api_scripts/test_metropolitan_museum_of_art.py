@@ -5,6 +5,7 @@ import requests
 from unittest.mock import patch, MagicMock
 import pytest
 import metropolitan_museum_of_art as mma
+from common import LicenseInfo
 
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
@@ -124,8 +125,7 @@ def test_get_data_for_image_returns_response_json_when_all_ok(monkeypatch):
         image_url=(
             "https://images.metmuseum.org/CRDImages/as/original/79_2_414b_S1"
             "_sf.jpg"),
-        license_="cc0",
-        license_version="1.0",
+        license_info=(LicenseInfo('cc0', '1.0', 'https://creativecommons.org/publicdomain/zero/1.0/', None)),
         meta_data={
             "accession_number": "79.2.414b",
             "classification": "Ceramics",
@@ -170,8 +170,7 @@ def test_get_data_for_image_returns_response_json_with_additional_images(
             "https://wwwstg.metmuseum.org/art/collection/search/45734"),
         image_url=(
             "https://images.metmuseum.org/CRDImages/as/original/DP251120.jpg"),
-        license_="cc0",
-        license_version="1.0",
+        license_info=(LicenseInfo("cc0", "1.0", 'https://creativecommons.org/publicdomain/zero/1.0/', None)),
         meta_data={
             "accession_number": "36.100.45",
             "classification": "Paintings",
