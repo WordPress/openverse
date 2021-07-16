@@ -88,14 +88,14 @@ def _get_batch_json(
         endpoint=ENDPOINT,
         headers=None,
         retries=RETRIES,
-        query_param=None
+        query_params=None
 ):
     if headers is None:
         headers = HEADERS.copy()
     response_json = delayed_requester.get_response_json(
         endpoint,
         retries,
-        query_param,
+        query_params,
         headers=headers
     )
     if response_json is None:
@@ -144,8 +144,7 @@ def _extract_item_data(media_data):
         'height': height,
         'width': width,
         'thumbnail_url': thumbnail,
-        'license_': item_license.license,
-        'license_version': item_license.version,
+        'license_info': item_license,
         'meta_data': metadata,
         'raw_tags': tags
     }
