@@ -32,6 +32,11 @@ jobs:
         pip install pytest pipenv
         sudo apt-get install libexempi8 librdkafka-dev
         PIPENV_PIPFILE=./openverse-api/Pipfile pipenv install --system --deploy --dev &
+    - name: Pull containers
+      run: docker-compose pull --ignore-pull-failures
+    - name: Cache Docker images
+      uses: satackey/action-docker-layer-caching@v0.0.11
+      continue-on-error: true
     - name: Start API
       run: docker-compose up --build -d
     - name: Wait for API to come up
