@@ -104,12 +104,6 @@
       "content": "Please note that Openverse does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
       "terms": "Openverse Terms of Use"
     },
-    "sources": "Sources",
-    "providers": {
-      "source": "Source",
-      "domain": "Domain",
-      "work": "# CC Licensed Works"
-    },
     "aria": {
       "common-crawl": "Common Crawl",
       "meta": "meta search",
@@ -130,6 +124,7 @@
     "single-name": "Source",
     "providers": {
       "source": "Source",
+      "domain": "Domain",
       "item": "Total items"
     },
     "cc-content": {

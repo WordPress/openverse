@@ -2,7 +2,7 @@
   <div class="section">
     <div :class="['container', isEmbedded ? '' : 'is-fluid']">
       <div class="padding-bottom-big">
-        <h1 id="feedback" class="title is-2">
+        <h1 id="feedback" class="title is-2 margin-bottom-large">
           {{ $t('feedback.title') }}
         </h1>
         <i18n
