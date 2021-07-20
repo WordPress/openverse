@@ -103,7 +103,7 @@ Results are ranked in order of relevance.
         return self._get(
             request,
             'image',
-            'search-qa',
+            'search-qa-image',
             ImageSearchQueryStringSerializer,
             ImageSerializer,
             ImageSearchResultsSerializer,

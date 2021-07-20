@@ -86,7 +86,7 @@ Results are ranked in order of relevance.
         return self._get(
             request,
             'audio',
-            'search-audio-qa',
+            'search-qa-audio',
             AudioSearchQueryStringSerializer,
             AudioSerializer,
             AudioSearchResultsSerializer,
