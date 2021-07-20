@@ -37,18 +37,16 @@ mock_audio_args = {
     'creator_url': 'https://creatorurl.com',
     'title': 'agreatsong',
     'meta_data': {},
-    'watermarked': None,
     'raw_tags': {},
     'watermarked': None,
     'bit_rate': None,
     'sample_rate': None,
     'category': None,
-    'genre': [],
+    'genres': [],
     'audio_set': {},
     'alt_audio_files': [],
     'source': 'testing_source',
     'ingestion_type': 'provider_api',
-
 }
 
 
@@ -232,7 +230,7 @@ def default_audio_args(
         bit_rate=None,
         sample_rate=None,
         category='music',
-        genre=['rock', 'pop'],
+        genres=['rock', 'pop'],
         alt_audio_files=None,
         provider='testing_provider',
         source='testing_source',
@@ -450,7 +448,7 @@ def test_create_tsv_row_properly_places_entries(
         'bit_rate': 16000,
         'sample_rate': 44100,
         'category': 'music',
-        'genre': ['pop', 'rock'],
+        'genres': ['pop', 'rock'],
         'audio_set': {
             'audio_set': 'album',
             'set_position': 1,
