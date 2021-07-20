@@ -25,5 +25,5 @@ CREATE MATERIALIZED VIEW image_view AS
     removed_from_source,
     standardized_image_popularity(
       image.provider, image.meta_data
-    ) AS standardized_image_popularity
+    ) AS standardized_popularity
   FROM image;

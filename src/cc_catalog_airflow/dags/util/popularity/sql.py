@@ -315,7 +315,6 @@ def create_media_view(
         db_view_provider_fid_idx = AUDIO_VIEW_PROVIDER_FID_IDX
         standardized_popularity_func = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
-    STANDARDIZED_POPULARITY = f"standardized_{media_type}_popularity"
     create_view_query = dedent(
         f"""
         CREATE MATERIALIZED VIEW public.{db_view_name} AS
@@ -324,7 +323,7 @@ def create_media_view(
             {standardized_popularity_func}(
               {table_name}.{PARTITION},
               {table_name}.{METADATA_COLUMN}
-            ) AS {STANDARDIZED_POPULARITY}
+            ) AS standardized_popularity
           FROM {table_name};
         """
     )

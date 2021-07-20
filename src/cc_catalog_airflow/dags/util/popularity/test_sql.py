@@ -453,7 +453,7 @@ def test_image_view_calculates_std_pop(postgres_with_image_table):
     _set_up_image_view(postgres_with_image_table, data_query, metrics)
     check_query = dedent(
         f"""
-        SELECT foreign_identifier, standardized_image_popularity
+        SELECT foreign_identifier, standardized_popularity
         FROM {image_view};
         """
     )

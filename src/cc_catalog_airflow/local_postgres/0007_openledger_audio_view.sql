@@ -78,5 +78,5 @@ CREATE MATERIALIZED VIEW audio_view AS
     removed_from_source,
     standardized_audio_popularity(
       audio.provider, audio.meta_data
-    ) AS standardized_audio_popularity
+    ) AS standardized_popularity
   FROM audio;
