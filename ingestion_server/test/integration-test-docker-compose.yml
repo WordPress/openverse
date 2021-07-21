@@ -1,7 +1,7 @@
-# This docker-compose file was generated from /home/alden/code/cccatalog-
+# This docker-compose file was generated from /Users/krysal/codes/openverse-
 # api/ingestion_server/test/../../docker-compose.yml. Do not modify this file
-# directly. Your changes will be overwritten. Last update: 2019-01-09
-# 11:36:00.858884
+# directly. Your changes will be overwritten. Last update: 2021-07-14
+# 20:27:30.193024
 
 services:
   integration-db:
@@ -12,7 +12,7 @@ services:
       POSTGRES_USER: deploy
     healthcheck:
       test: pg_isready -U deploy -d openledger
-    image: postgres:10.3-alpine
+    image: postgres:13.2-alpine
     ports:
     - 60000:5432
     volumes:
@@ -20,6 +20,7 @@ services:
   integration-es:
     environment:
     - xpack.security.enabled=false
+    - discovery.type=single-node
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
     ports:
     - 60001:9200
@@ -43,7 +44,9 @@ services:
       DB_BUFFER_SIZE: '100000'
       ELASTICSEARCH_PORT: '9200'
       ELASTICSEARCH_URL: integration-es
+      LOCK_PATH: /worker_state/lock
       PYTHONUNBUFFERED: '0'
+      SHELF_PATH: /worker_state/db
       SYNCER_POLL_INTERVAL: '60'
       UPSTREAM_DB_HOST: integration-upstream
       UPSTREAM_DB_PORT: 5432
@@ -52,7 +55,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-    - ./ingestion_server:/ingestion-server
+    - ../:/ingestion_server
   integration-upstream:
     environment:
       POSTGRES_DB: openledger
@@ -61,7 +64,7 @@ services:
       POSTGRES_USER: deploy
     healthcheck:
       test: pg_isready -U deploy -d openledger
-    image: postgres:10.3-alpine
+    image: postgres:13.2-alpine
     ports:
     - 59999:5432
     volumes:

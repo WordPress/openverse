@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from uuslug import uuslug
 
@@ -55,14 +55,14 @@ class AudioSet(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
 
 
 class Audio(AbstractMedia):
-    set = models.ForeignKey(
+    audio_set = models.ForeignKey(
         help_text='Reference to set of which this track is a part.',
         to=AudioSet,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
     )
-    set_position = models.IntegerField(
+    audio_set_position = models.IntegerField(
         blank=True,
         null=True,
         help_text='Ordering of the audio in the set.'
@@ -103,7 +103,7 @@ class Audio(AbstractMedia):
         help_text='Number in hertz, eg. 44100.',
     )
 
-    alt_files = JSONField(
+    alt_files = models.JSONField(
         blank=True,
         null=True,
         help_text='JSON describing alternative files for this audio.',

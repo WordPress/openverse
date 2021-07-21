@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('tags', django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True)),
                 ('tags_list', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=255), blank=True, null=True, size=None)),
                 ('meta_data', django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True)),
-                ('set_position', models.IntegerField(blank=True, help_text='Ordering of the audio in the set.', null=True)),
+                ('audio_set_position', models.IntegerField(blank=True, help_text='Ordering of the audio in the set.', null=True)),
                 ('genres', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=80), db_index=True, help_text='The artistic style of this audio file, eg. hip-hop (music) / tech (podcasts).', null=True, size=None)),
                 ('category', models.CharField(blank=True, db_index=True, help_text='The category of this audio file, eg. music, podcast, news & audiobook.', max_length=80, null=True)),
                 ('duration', models.IntegerField(blank=True, help_text='The time length of the audio file in milliseconds.', null=True)),
@@ -121,7 +121,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='audio',
-            name='set',
+            name='audio_set',
             field=models.ForeignKey(blank=True, help_text='Reference to set of which this track is a part.', null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.AudioSet'),
         ),
     ]
