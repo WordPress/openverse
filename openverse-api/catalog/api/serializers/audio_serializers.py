@@ -99,7 +99,8 @@ class AudioSerializer(MediaSerializer):
         read_only=True
     )
 
-    genre = serializers.CharField(
+    genres = serializers.ListField(
+        child=serializers.CharField(),
         required=False,
         help_text=''
     )
