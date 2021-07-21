@@ -1,3 +1,7 @@
+"""
+Also see `openverse-api/constants/media_types.py`
+"""
+
 AUDIO_TYPE = 'audio'
 IMAGE_TYPE = 'image'
 
