@@ -266,8 +266,9 @@ def reload_upstream(table, progress=None, finish_time=None):
         downstream_cur.execute(copy_data)
     downstream_db.commit()
     downstream_db.close()
-    clean_image_data(table)
-    log.info('Cleaning step finished.')
+    if table != 'audio':
+        clean_image_data(table)
+        log.info('Cleaning step finished.')
     downstream_db = database_connect()
     with downstream_db.cursor() as downstream_cur:
         log.info('Copying finished! Recreating database indices...')
