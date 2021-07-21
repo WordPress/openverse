@@ -1,5 +1,6 @@
 from django.db import models
 
+from catalog.api.constants.media_types import MEDIA_TYPES
 from catalog.api.models.base import OpenLedgerModel
 
 
@@ -14,6 +15,10 @@ class ContentProvider(models.Model):
         verbose_name='Hide content'
     )
     notes = models.TextField(null=True)
+    media_type = models.CharField(
+        max_length=80,
+        choices=MEDIA_TYPES,
+    )
 
     class Meta:
         db_table = 'content_provider'
