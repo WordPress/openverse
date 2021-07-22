@@ -8,18 +8,28 @@
           </h2>
         </div>
         <ExtensionBrowsers />
-        <img
+        <!-- eslint-disable vuejs-accessibility/media-has-caption -->
+        <video
+          ref="heroVid"
           class="screenshot"
-          src="https://via.placeholder.com/1200x600"
-          alt="Extension usage"
-        />
+          autoplay
+          loop
+          muted
+          @click="togglePlay"
+        >
+          <source
+            src="~/assets/screenshots/extension_hero_vid.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <!-- eslint-enable vuejs-accessibility/media-has-caption -->
       </div>
     </div>
     <div class="section">
       <div :class="['container', 'features', isEmbedded ? '' : 'is-fluid']">
         <img
           class="screenshot"
-          src="https://via.placeholder.com/520x400"
+          src="~/assets/screenshots/extension_feat_1.png"
           alt="WIP"
         />
         <div class="caption">
@@ -37,13 +47,13 @@
         </div>
         <img
           class="screenshot"
-          src="https://via.placeholder.com/520x400"
+          src="~/assets/screenshots/extension_feat_2.png"
           alt="WIP"
         />
 
         <img
           class="screenshot"
-          src="https://via.placeholder.com/520x400"
+          src="~/assets/screenshots/extension_feat_3.png"
           alt="WIP"
         />
         <div class="caption">
@@ -78,8 +88,23 @@ const AboutPage = {
       ? 'embedded-with-nav-search'
       : 'with-nav-search'
   },
+  data() {
+    return {
+      isPlaying: true,
+    }
+  },
   computed: {
     ...mapState(['isEmbedded']),
+  },
+  methods: {
+    togglePlay() {
+      if (this.isPlaying) {
+        this.$refs.heroVid.pause()
+      } else {
+        this.$refs.heroVid.play()
+      }
+      this.isPlaying = !this.isPlaying
+    },
   },
 }
 
@@ -105,15 +130,9 @@ export default AboutPage
     .screenshot {
       display: block;
 
-      position: relative;
-      bottom: -1px;
-
       width: 100%;
       max-width: $wp-max-width;
       margin: auto;
-
-      filter: drop-shadow(0 -4px 10px rgba(0, 0, 0, 0.1))
-        drop-shadow(0 -20px 33px rgba(0, 0, 0, 0.07));
 
       border-radius: 0.5rem 0.5rem 0 0;
     }
