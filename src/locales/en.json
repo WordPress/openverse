@@ -507,5 +507,11 @@
       "supported-title": "Not finding what you're looking for? Try additional {type} sources.",
       "caption": "Click on a source below to directly search other collections of CC-licensed {type}.{break}Please note that Use filters are not supported for {filter}."
     }
+  },
+  "browsers": {
+    "chrome": "Chrome",
+    "firefox": "Firefox",
+    "opera": "Opera",
+    "edge": "Edge"
   }
 }
