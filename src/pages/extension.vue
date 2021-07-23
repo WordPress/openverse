@@ -39,14 +39,14 @@
           </p>
         </div>
 
-        <div class="caption">
+        <div class="caption reversed">
           <h2>{{ $t('extension.features.bookmark.heading') }}</h2>
           <p class="margin-top-normal">
             {{ $t('extension.features.bookmark.content') }}
           </p>
         </div>
         <img
-          class="screenshot"
+          class="screenshot reversed"
           src="~/assets/screenshots/extension_feat_2.png"
           alt="WIP"
         />
@@ -141,8 +141,10 @@ export default AboutPage
 
 .features {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(3, auto);
+  grid-template-columns: 1fr;
+  @include from($tablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
   gap: 3em;
 
   img {
@@ -155,20 +157,44 @@ export default AboutPage
   .caption {
     display: flex;
     flex-direction: column;
+
+    align-items: center;
     justify-content: center;
 
     h2,
     p {
+      text-align: center;
       max-width: 30rem;
     }
 
-    &:nth-of-type(even) {
-      align-items: flex-end;
+    @include from($tablet) {
+      &:nth-of-type(odd) {
+        align-items: flex-start;
 
-      h2,
-      p {
-        text-align: right;
+        h2,
+        p {
+          text-align: left;
+        }
       }
+
+      &:nth-of-type(even) {
+        align-items: flex-end;
+
+        h2,
+        p {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  @include mobile() {
+    img.reversed {
+      order: 3;
+    }
+
+    .caption.reversed {
+      order: 4;
     }
   }
 }
