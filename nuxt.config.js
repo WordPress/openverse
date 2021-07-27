@@ -134,6 +134,7 @@ export default {
   ],
   css: [
     '~/assets/fonts.css',
+    '~/styles/tailwind.css',
     '~/styles/vocabulary.scss',
     '~/styles/global.scss',
   ],
@@ -141,6 +142,7 @@ export default {
   env,
   dev: process.env.NODE_ENV !== 'production',
   buildModules: [
+    '@nuxtjs/tailwindcss',
     '@nuxtjs/style-resources',
     '@nuxtjs/svg',
     '@nuxtjs/eslint-module',
