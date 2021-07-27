@@ -1,5 +1,4 @@
 module.exports = {
-  mode: 'jit',
   purge: ['src/**/*.{vue,js,jsx,ts,tsx}', './nuxt.config.js'],
   theme: {
     screens: {
