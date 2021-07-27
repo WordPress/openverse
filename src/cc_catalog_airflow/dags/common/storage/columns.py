@@ -241,3 +241,44 @@ class URLColumn(Column):
                 self.SIZE,
                 False
             )
+
+
+class ArrayColumn(Column):
+    """
+    Represents a PostgreSQL column of type Array, which should hold elements
+    of the given BASE_COLUMN type.
+
+    name:           name of the corresponding column in the DB
+    required:       whether the column should be considered required by the
+                    instantiating script.  (Not necessarily mapping to
+                    `not null` columns in the PostgreSQL table)
+    base_column:    type of the elements in the array, another column
+
+    """
+    def __init__(self, name: str, required: bool, base_column: Column):
+        self.BASE_COLUMN = base_column
+        super().__init__(name, required)
+
+    def prepare_string(self, value):
+        """
+        Returns a string representation of an array in the PostgreSQL format:
+        `{<item 1>, <item 2>...}`.
+
+        Apply changes and validations of the corresponding base column type.
+        """
+        input_type = type(value)
+
+        if value is None:
+            return value
+        elif input_type != list:
+            arr_str = self.BASE_COLUMN.prepare_string(value)
+            return "{" + arr_str + "}" if arr_str else None
+
+        values = []
+        for val in value:
+            if val is None:
+                values.append(None)
+            else:
+                values.append(self.BASE_COLUMN.prepare_string(val))
+        arr_str = json.dumps(values, ensure_ascii=False)
+        return "{" + arr_str[1:-1] + "}" if arr_str else None
