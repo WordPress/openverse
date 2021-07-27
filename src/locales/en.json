@@ -338,6 +338,9 @@
     "creator": {
       "title": "Search by Creator"
     },
+    "searchBy": {
+      "creator": "Creator"
+    },
     "license-explanation": {
       "tool": "Read more about the tool {link}",
       "license": "Read more about the license {link}",

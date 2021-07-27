@@ -38,6 +38,7 @@ const filterToString = (filter) =>
  * converts the filter store object to the data format accepted by the API,
  * which has slightly different property names
  * @param {object} filters object containing the filter data that comes from the filter store
+ * @param hideEmpty
  * @todo Refactor all of these 'reduce' calls to just use lodash methods :)
  */
 export const filtersToQueryData = (filters, hideEmpty = true) => {
