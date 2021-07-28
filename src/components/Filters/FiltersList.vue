@@ -7,7 +7,7 @@
 
       <button
         type="button"
-        class="button is-text tiny is-paddingless mt-6 mr-2 report float-right"
+        class="button is-text tiny p-0 mt-6 mr-2 report float-right"
         @click="onToggleSearchGridFilter()"
         @keyup.enter="onToggleSearchGridFilter()"
       >

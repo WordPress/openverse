@@ -8,7 +8,7 @@
       </div>
       <aside
         v-if="isFilterVisible"
-        class="column is-narrow grid-sidebar is-paddingless hidden desk:block full-height-sticky"
+        class="column is-narrow grid-sidebar p-0 hidden desk:block full-height-sticky"
       >
         <SearchGridFilter @onSearchFilterChanged="onSearchFormSubmit" />
       </aside>

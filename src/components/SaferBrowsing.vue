@@ -1,7 +1,7 @@
 <template>
   <div class="safer-browsing" @keyup.esc="closeShowForm">
     <button
-      class="button is-text tiny is-paddingless rating"
+      class="button is-text tiny p-0 rating"
       @keypress.enter="toggleShowForm"
       @click="toggleShowForm"
     >

@@ -30,6 +30,7 @@ module.exports = {
     },
     spacing: {
       // Indexed by multiples of baseline (~ `0.25rem`)
+      0: '0',
       1: '0.25rem',
       2: '0.50rem',
       4: '1.00rem',
