@@ -98,15 +98,9 @@
           </div>
         </div>
 
-        <a
-          :aria-label="$t('header.aria.extension')"
-          class="navbar-item"
-          href="https://opensource.creativecommons.org/ccsearch-browser-extension/"
-          target="_blank"
-        >
+        <NuxtLink class="navbar-item" :to="localePath('/extension')">
           {{ $t('header.extension') }}
-          <i class="icon external-link" />
-        </a>
+        </NuxtLink>
       </div>
     </div>
   </nav>
