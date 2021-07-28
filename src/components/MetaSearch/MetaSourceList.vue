@@ -9,7 +9,7 @@
           class="button small mr-2 is-opaque"
         >
           {{ source }}
-          <sup class="">
+          <sup class="top-0">
             <i class="ml-2 icon external-link" />
           </sup>
         </a>
