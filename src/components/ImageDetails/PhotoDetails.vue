@@ -3,7 +3,7 @@
     <div class="column is-three-fifths photo_image-ctr mt-4">
       <a
         v-if="shouldShowBreadcrumb"
-        class="block photo_breadcrumb has-text-left ml-4 mb-4 text-dark-gray font-semibold caption"
+        class="block photo_breadcrumb text-left ml-4 mb-4 text-dark-gray font-semibold caption"
         :href="breadCrumbURL"
         @click.prevent="onGoBackToSearchResults"
         @keyup.enter.prevent="onGoBackToSearchResults"
@@ -28,7 +28,7 @@
 
       <LegalDisclaimer />
 
-      <div class="mb-1 has-text-left">
+      <div class="mb-1 text-left">
         <button
           class="button is-text tiny is-paddingless report is-shadowless mt-2"
           @click.prevent="toggleReportFormVisibility"
@@ -40,7 +40,7 @@
           </span>
         </button>
       </div>
-      <div class="mt-2 has-text-left">
+      <div class="mt-2 text-left">
         <ContentReportForm
           v-if="isReportFormVisible"
           :image="image"
