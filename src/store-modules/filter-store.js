@@ -1,4 +1,3 @@
-import deepmerge from 'deepmerge'
 import findIndex from 'lodash.findindex'
 import local from '~/utils/local'
 import { TOGGLE_FILTER } from '~/store-modules/action-types'
@@ -94,10 +93,47 @@ const state = {
   isFilterApplied: false,
 }
 
+const getters = {
+  /**
+   * Returns all applied filters in unified format
+   * Mature filter is not returned because it is not displayed
+   * as a filter tag
+   * @param state
+   * @returns {{code: string, name: string, filterType: string}[]}
+   */
+  getAppliedFilterTags: (state) => {
+    let appliedFilters = []
+    Object.keys(state.filters).forEach((filterType) => {
+      if (filterType === 'searchBy') {
+        if (state.filters.searchBy.creator) {
+          appliedFilters.push({
+            code: 'creator',
+            name: 'filters.searchBy.creator',
+            filterType: 'searchBy',
+          })
+        }
+      } else if (filterType !== 'mature') {
+        const newFilters = state.filters[filterType]
+          .filter((f) => f.checked)
+          .map((f) => {
+            return {
+              code: f.code,
+              name: f.name,
+              filterType: filterType,
+            }
+          })
+        appliedFilters = [...appliedFilters, ...newFilters]
+      }
+    })
+    return appliedFilters
+  },
+}
+
 const actions = {
   [TOGGLE_FILTER]({ commit, state }, params) {
-    const filters = state.filters[params.filterType]
-    const codeIdx = findIndex(filters, (f) => f.code === params.code)
+    const { filterType, code } = params
+    const filters = state.filters[filterType]
+    const codeIdx = findIndex(filters, (f) => f.code === code)
 
     commit(SET_FILTER, { codeIdx, ...params })
   },
@@ -113,14 +149,34 @@ function setQuery(state) {
   }
 }
 
+function replaceFilters(state, filterData) {
+  Object.keys(state.filters).forEach((filterType) => {
+    if (filterType === 'mature') {
+      state.filters.mature = filterData.mature
+    } else if (filterType === 'searchBy') {
+      state.filters.searchBy.creator = filterData.searchBy.creator
+    } else if (filterType === 'providers') {
+      filterData.providers.forEach((provider) => {
+        const idx = state.filters.providers.findIndex(
+          (p) => p.code === provider.code
+        )
+        state.filters.providers[idx].checked = provider.checked
+      })
+    } else {
+      state.filters[filterType] = filterData[filterType]
+    }
+  })
+}
+
 function setFilter(state, params) {
-  if (params.filterType === 'searchBy') {
+  const { filterType, codeIdx } = params
+  if (filterType === 'searchBy') {
     state.filters.searchBy.creator = !state.filters.searchBy.creator
-  } else if (params.filterType === 'mature') {
+  } else if (filterType === 'mature') {
     state.filters.mature = !state.filters.mature
   } else {
-    const filters = state.filters[params.filterType]
-    filters[params.codeIdx].checked = !filters[params.codeIdx].checked
+    const filters = state.filters[filterType]
+    filters[codeIdx].checked = !filters[codeIdx].checked
   }
 
   setQuery(state, params)
@@ -129,7 +185,8 @@ function setFilter(state, params) {
 // Make sure when redirecting after applying a filter, we stick to the right tab (i.e, "/search/video", "/search/audio", etc.)
 const mutations = {
   [SET_FILTERS_FROM_URL](state, params) {
-    state.filters = deepmerge(state.filters, queryToFilterData(params.url))
+    replaceFilters(state, queryToFilterData(params.url))
+    state.isFilterApplied = isFilterApplied(state.filters)
   },
   [SET_FILTER](state, params) {
     return setFilter(state, params)
@@ -177,6 +234,7 @@ const mutations = {
 
 export default {
   state,
+  getters,
   actions,
   mutations,
 }

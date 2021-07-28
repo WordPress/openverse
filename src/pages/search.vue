@@ -17,7 +17,6 @@
         <SearchTypeTabs />
         <FilterDisplay
           v-if="$route.path === '/search/' || $route.path === '/search/image'"
-          :query="query"
         />
         <NuxtChild
           :key="$route.path"
@@ -33,6 +32,7 @@ import { FETCH_IMAGES } from '~/store-modules/action-types'
 import {
   SET_QUERY,
   SET_FILTER_IS_VISIBLE,
+  SET_FILTERS_FROM_URL,
 } from '~/store-modules/mutation-types'
 import { queryStringToQueryData } from '~/utils/searchQueryTransform'
 import local from '~/utils/local'
@@ -51,7 +51,7 @@ const BrowsePage = {
       const query = queryStringToQueryData(this.$route.fullPath)
       this.$store.commit(SET_QUERY, { query })
     }
-
+    this.$store.commit(SET_FILTERS_FROM_URL, { url: this.$route.fullPath })
     if (!this.$store.state.images.length) {
       await this.$store.dispatch(FETCH_IMAGES, this.$store.state.query)
     }
