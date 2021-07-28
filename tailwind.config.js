@@ -29,6 +29,11 @@ module.exports = {
       curr: 'currentColor',
     },
     spacing: {
+      // Constants
+      px: '1px',
+      ch: '1ch',
+      ex: '1ex',
+
       // Indexed by multiples of baseline (~ `0.25rem`)
       0: '0',
       1: '0.25rem',
