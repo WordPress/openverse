@@ -14,7 +14,7 @@
         @keyup.enter="onToggleSearchGridFilter()"
       >
         <span
-          class="has-color-transition-blue is-hidden-touch text-sm is-lowercase"
+          class="has-color-transition-blue is-hidden-touch text-sm lowercase"
           >{{ $t('filter-list.hide') }}</span
         >
         <span class="margin-right-normal text-lg is-hidden-desktop">
