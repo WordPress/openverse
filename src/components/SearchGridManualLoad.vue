@@ -14,7 +14,7 @@
         <div class="is-hidden-touch mr-auto padding-left-big">
           <SearchRating v-if="_query.q" :search-term="_query.q" />
         </div>
-        <div class="is-hidden-desktop is-block">
+        <div class="is-hidden-desktop block">
           <SearchRating v-if="_query.q" :search-term="searchTerm" />
         </div>
         <SaferBrowsing />

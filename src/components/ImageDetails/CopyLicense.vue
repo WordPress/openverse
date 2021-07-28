@@ -54,7 +54,7 @@
           ref="photoAttribution"
           path="photo-details.reuse.credit.text"
           tag="span"
-          class="photo_usage-attribution is-block"
+          class="photo_usage-attribution block"
         >
           <template #title>
             <a

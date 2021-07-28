@@ -2,7 +2,7 @@
   <div>
     <div class="filterlist-header">
       <h4
-        class="padding-top-big padding-left-big padding-right-normal is-inline-block"
+        class="padding-top-big padding-left-big padding-right-normal inline-block"
       >
         {{ $t('filter-list.filter-by') }}
       </h4>

@@ -6,7 +6,7 @@
           :key="index"
           :class="{
             ['margin-vertical-small']: true,
-            ['is-flex']: true,
+            ['flex']: true,
           }"
         >
           <i

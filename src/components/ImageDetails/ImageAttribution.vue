@@ -34,7 +34,7 @@
         ref="photoAttribution"
         path="photo-details.reuse.attribution.main"
         tag="span"
-        class="photo_usage-attribution is-block"
+        class="photo_usage-attribution block"
       >
         <template #link>
           <a

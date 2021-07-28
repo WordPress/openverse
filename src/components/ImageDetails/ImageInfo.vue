@@ -39,7 +39,7 @@
       </dl>
     </div>
     <div class="margin-bottom-big">
-      <h5 class="is-block margin-bottom-small b-header">
+      <h5 class="margin-bottom-small b-header">
         {{ $t('photo-details.information.tags') }}
       </h5>
       <PhotoTags :tags="image.tags" :show-header="false" />
