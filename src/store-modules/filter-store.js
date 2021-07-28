@@ -13,6 +13,17 @@ import {
   queryToFilterData,
 } from '~/utils/searchQueryTransform'
 
+const IMAGE_FILTERS = [
+  'licenses',
+  'licenseTypes',
+  'categories',
+  'extensions',
+  'aspectRatios',
+  'sizes',
+  'providers',
+  'searchBy',
+  'mature',
+]
 export const filterData = {
   licenses: [
     { code: 'cc0', name: 'filters.licenses.cc0', checked: false },
@@ -126,6 +137,35 @@ const getters = {
       }
     })
     return appliedFilters
+  },
+  getAllImageFilters: (state) => {
+    let allImageFilters = {}
+    Object.keys(state.filters).forEach((filterType) => {
+      if (IMAGE_FILTERS.includes(filterType)) {
+        if (filterType === 'searchBy') {
+          allImageFilters[filterType] = [
+            {
+              code: 'creator',
+              name: 'filters.creator.title',
+              filterType: 'searchBy',
+              checked: state.filters.searchBy.creator,
+            },
+          ]
+        } else if (filterType !== 'mature') {
+          const newFilters = state.filters[filterType].map((f) => {
+            return {
+              code: f.code,
+              name: f.name,
+              filterType: filterType,
+              checked: f.checked,
+            }
+          })
+          allImageFilters[filterType] = newFilters
+        }
+      }
+    })
+    console.log('getimagefilters returns ', allImageFilters)
+    return allImageFilters
   },
 }
 

@@ -339,6 +339,7 @@
       "title": "Search by Creator"
     },
     "searchBy": {
+      "title": "Search By",
       "creator": "Creator"
     },
     "license-explanation": {

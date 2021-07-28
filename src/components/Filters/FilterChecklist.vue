@@ -1,75 +1,47 @@
 <template>
   <div
-    class="filters padding-vertical-big padding-left-big padding-right-normal"
+    :class="{ ['filters']: true, ['single']: isSingleFilter }"
     @click="hideLicenseExplanationVisibility()"
     @keyup.enter="hideLicenseExplanationVisibility()"
   >
-    <div
-      class="filters-title"
-      @click.prevent="toggleFilterVisibility"
-      @keyup.enter="toggleFilterVisibility"
-    >
-      <span>{{ title }}</span>
-      <button
-        v-if="!filtersExpandedByDefault"
-        :aria-label="'filters list for' + title + 'category'"
-        class="filter-visibility-toggle is-white padding-vertical-small"
-      >
-        <i
-          v-if="areFiltersExpanded"
-          class="icon angle-up rotImg is-size-5 has-text-grey-light"
-          title="toggle filters visibility"
-        />
-        <i
-          v-else
-          class="icon angle-down is-size-5 has-text-grey-light"
-          title="toggle filters visibility"
-        />
-      </button>
-    </div>
-    <template v-if="areFiltersExpanded && options">
-      <div
-        v-for="(item, index) in options"
-        :key="index"
-        class="margin-top-small filter-checkbox-wrapper"
-      >
-        <label class="checkbox" :for="item.code" :disabled="block(item)">
-          <input
-            :id="item.code"
-            :key="index"
-            type="checkbox"
-            class="filter-checkbox margin-right-small"
-            :checked="item.checked"
-            :disabled="block(item)"
-            @change="onValueChange"
-          />
-          <LicenseIcons v-if="filterType == 'licenses'" :license="item.code" />
-          <template v-if="['providers', 'searchBy'].includes(filterType)">
-            {{ item.name }}
-          </template>
-          <template v-else>
-            {{ $t(item.name) }}
-          </template>
-        </label>
-        <img
-          v-if="filterType == 'licenses'"
-          :aria-label="$t('browse-page.aria.license-explanation')"
-          tabindex="0"
-          src="@/assets/help_icon.svg"
-          alt="help"
-          class="license-help padding-top-smallest padding-right-smaller"
-          @click.stop="toggleLicenseExplanationVisibility(item.code)"
-          @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
-        />
+    <h4 v-if="title">{{ title }}</h4>
 
-        <LicenseExplanationTooltip
-          v-if="
-            shouldRenderLicenseExplanationTooltip(item.code) && !block(item)
-          "
-          :license="licenseExplanationCode"
+    <div
+      v-for="(item, index) in options"
+      :key="index"
+      class="margin-top-small filter-checkbox-wrapper"
+    >
+      <label class="checkbox" :for="item.code" :disabled="isDisabled(item)">
+        <input
+          :key="index"
+          :name="item.code"
+          type="checkbox"
+          class="filter-checkbox margin-right-small"
+          :checked="item.checked"
+          :disabled="isDisabled(item)"
+          @change="onValueChange"
         />
-      </div>
-    </template>
+        <LicenseIcons v-if="filterType == 'licenses'" :license="item.code" />
+        {{ itemLabel(item) }}
+      </label>
+      <img
+        v-if="filterType == 'licenses'"
+        :aria-label="$t('browse-page.aria.license-explanation')"
+        tabindex="0"
+        src="@/assets/help_icon.svg"
+        alt="help"
+        class="license-help padding-top-smallest padding-right-smaller"
+        @click.stop="toggleLicenseExplanationVisibility(item.code)"
+        @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
+      />
+
+      <LicenseExplanationTooltip
+        v-if="
+          shouldRenderLicenseExplanationTooltip(item.code) && !isDisabled(item)
+        "
+        :license="licenseExplanationCode"
+      />
+    </div>
   </div>
 </template>
 
@@ -83,7 +55,7 @@ export default {
     LicenseIcons,
     LicenseExplanationTooltip,
   },
-  props: ['options', 'title', 'filterType', 'disabled', 'checked'],
+  props: ['options', 'title', 'filterType'],
   data() {
     return {
       filtersVisible: false,
@@ -96,17 +68,17 @@ export default {
      * Show filters expanded by default
      * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
      */
-    filtersExpandedByDefault() {
-      return true
-    },
-    areFiltersExpanded() {
-      return this.filtersExpandedByDefault || this.filtersVisible
+    isSingleFilter() {
+      return this.filterType == 'searchBy'
     },
   },
   methods: {
+    itemLabel(item) {
+      return this.filterType == 'providers' ? item.name : this.$t(item.name)
+    },
     onValueChange(e) {
       this.$emit('filterChanged', {
-        code: e.target.id,
+        code: e.target.name,
         filterType: this.$props.filterType,
       })
     },
@@ -120,7 +92,7 @@ export default {
     hideLicenseExplanationVisibility() {
       this.licenseExplanationVisible = false
     },
-    block(e) {
+    isDisabled(e) {
       if (this.$props.filterType === 'licenseTypes') {
         const nc = this.$store.state.filters.licenses.filter((item) =>
           item.code.includes('nc')
@@ -161,6 +133,10 @@ export default {
 <style lang="scss" scoped>
 .filters {
   border-bottom: 2px solid rgb(245, 245, 245);
+  padding: 1.5rem 1rem 1.5rem 1.5rem;
+  &.single {
+    padding-left: 1rem;
+  }
 }
 
 .filters-title {
@@ -199,5 +175,8 @@ label {
   margin-bottom: 0.75rem;
   align-items: center;
   font-size: 14px;
+}
+.single .checkbox {
+  font-size: 1rem;
 }
 </style>
