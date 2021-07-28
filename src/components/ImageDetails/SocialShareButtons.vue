@@ -9,7 +9,7 @@
         @click="onSocialMediaLinkClick('Facebook')"
         @keyup.enter="onSocialMediaLinkClick('Facebook')"
       >
-        <i class="icon facebook colored margin-right-normal is-size-1" />
+        <i class="icon facebook colored margin-right-normal text-6xl" />
       </a>
       <a
         :aria-label="$t('photo-details.aria.share.twitter')"
@@ -19,7 +19,7 @@
         @click="onSocialMediaLinkClick('Twitter')"
         @keyup.enter="onSocialMediaLinkClick('Twitter')"
       >
-        <i class="icon twitter colored margin-right-normal is-size-1" />
+        <i class="icon twitter colored margin-right-normal text-6xl" />
       </a>
       <a
         :aria-label="$t('photo-details.aria.share.pinterest')"
@@ -29,7 +29,7 @@
         @click="onSocialMediaLinkClick('Pinterest')"
         @keyup.enter="onSocialMediaLinkClick('Pinterest')"
       >
-        <i class="icon pinterest colored is-size-1" />
+        <i class="icon pinterest colored text-6xl" />
       </a>
     </div>
   </div>

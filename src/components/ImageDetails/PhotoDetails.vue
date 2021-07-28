@@ -34,7 +34,7 @@
           @click.prevent="toggleReportFormVisibility"
           @keypress.enter.prevent="toggleReportFormVisibility"
         >
-          <span class="has-color-transition-blue margin-left-small is-size-7">
+          <span class="has-color-transition-blue margin-left-small text-sm">
             <i class="icon flag margin-right-small" />
             {{ $t('photo-details.content-report.title') }}
           </span>
@@ -174,7 +174,7 @@
       >
         {{ $t('photo-details.weblink') }}
         <i
-          class="icon external-link margin-left-normal is-size-6 padding-top-smaller text-light-gray"
+          class="icon external-link margin-left-normal text-base padding-top-smaller text-light-gray"
         />
       </a>
 

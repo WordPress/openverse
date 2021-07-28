@@ -1,9 +1,6 @@
 <template>
   <span class="photo-license-icons">
-    <i
-      class="icon cc-logo is-size-4 text-black has-background-white"
-      title="CC"
-    >
+    <i class="icon cc-logo text-lgr text-black has-background-white" title="CC">
       <!-- Closing i and opening template tag must be adjacent to prevent whitespace --> </i
     ><template v-for="(l, i) in getLicenseIcon(license)">
       <i
@@ -13,7 +10,7 @@
           icon: true,
           ['text-black']: true,
           ['has-background-white']: true,
-          ['is-size-4']: true,
+          ['text-lgr']: true,
           [`cc-${l}`]: true,
         }"
         :alt="`${l.toUpperCase()}`"

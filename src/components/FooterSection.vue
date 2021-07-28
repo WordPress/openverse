@@ -45,10 +45,10 @@
             </i18n>
             <div class="margin-top-smaller">
               <i
-                class="icon cc-logo margin-right-small is-size-4 is-color-white"
+                class="icon cc-logo margin-right-small text-lgr is-color-white"
               />
               <i
-                class="icon cc-by margin-right-small is-size-4 is-color-white"
+                class="icon cc-by margin-right-small text-lgr is-color-white"
               />
             </div>
           </div>

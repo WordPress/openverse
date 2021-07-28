@@ -14,7 +14,7 @@
               icon: true,
               ['text-black']: true,
               ['bg-white']: true,
-              ['is-size-4']: true,
+              ['text-lgr']: true,
               ['margin-right-small']: true,
               [`cc-${getLicenseIcon(li)}`]: true,
             }"
