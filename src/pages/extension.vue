@@ -69,7 +69,10 @@
       </div>
     </div>
     <div class="section">
-      <div :class="['container', 'conclusion', isEmbedded ? '' : 'is-fluid']">
+      <div
+        class="container conclusion margin-bottom-xxl"
+        :class="[isEmbedded ? '' : 'is-fluid']"
+      >
         <h2>{{ $t('extension.conclusion') }}</h2>
         <ExtensionBrowsers class="margin-top-large" />
       </div>
