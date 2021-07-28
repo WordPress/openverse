@@ -76,9 +76,7 @@
         </div>
       </fieldset>
 
-      <p
-        class="caption has-text-weight-semibold text-gray margin-bottom-normal"
-      >
+      <p class="caption font-semibold text-gray margin-bottom-normal">
         {{ $t('photo-details.content-report.caption') }}
       </p>
 

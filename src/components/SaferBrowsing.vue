@@ -22,7 +22,7 @@
         >
           <i class="icon cross" />
         </button>
-        <p class="caption has-text-weight-semibold padding-right-big">
+        <p class="caption font-semibold padding-right-big">
           {{ $t('browse-page.safer-browsing.caption') }}
         </p>
 

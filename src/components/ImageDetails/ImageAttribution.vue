@@ -12,7 +12,7 @@
       <i18n
         path="photo-details.reuse.tool.content"
         tag="span"
-        class="caption has-text-weight-semibold"
+        class="caption font-semibold"
       >
         <template #link>
           <a
@@ -53,7 +53,7 @@
       <i18n
         path="photo-details.reuse.license.content"
         tag="span"
-        class="caption has-text-weight-semibold"
+        class="caption font-semibold"
       >
         <template #link>
           <a

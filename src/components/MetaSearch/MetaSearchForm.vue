@@ -25,7 +25,7 @@
 
     <MetaSourceList :type="type" :query="metaQuery" />
 
-    <p class="caption has-text-weight-semibold max-w-lg">
+    <p class="caption font-semibold max-w-lg">
       {{ $t('meta-search.caption') }}
     </p>
   </section>

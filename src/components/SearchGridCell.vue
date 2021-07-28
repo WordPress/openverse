@@ -32,7 +32,7 @@
       <figcaption
         class="overlay overlay__bottom padding-vertical-small padding-horizontal-normal"
       >
-        <span class="caption has-text-weight-semibold">{{ image.title }}</span>
+        <span class="caption font-semibold">{{ image.title }}</span>
       </figcaption>
     </figure>
   </div>

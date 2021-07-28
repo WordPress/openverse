@@ -10,7 +10,7 @@
       <textarea
         id="issue"
         v-model="otherReasonDescription"
-        class="reason padding-small has-text-weight-semibold"
+        class="reason padding-small font-semibold"
         placeholder="Issue description required (with at least 20 characters)"
       />
     </label>

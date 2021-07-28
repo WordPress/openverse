@@ -8,7 +8,7 @@
   >
     <div ref="gridItems" class="search-grid_ctr">
       <div v-show="!isFetchingImages && includeAnalytics" class="results-meta">
-        <span class="caption has-text-weight-semibold">
+        <span class="caption font-semibold">
           {{ _imagesCount }}
         </span>
         <div class="is-hidden-touch mr-auto padding-left-big">

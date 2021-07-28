@@ -3,7 +3,7 @@
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
       <a
         v-if="shouldShowBreadcrumb"
-        class="is-block photo_breadcrumb has-text-left margin-left-normal margin-bottom-normal text-dark-gray has-text-weight-semibold caption"
+        class="is-block photo_breadcrumb has-text-left margin-left-normal margin-bottom-normal text-dark-gray font-semibold caption"
         :href="breadCrumbURL"
         @click.prevent="onGoBackToSearchResults"
         @keyup.enter.prevent="onGoBackToSearchResults"
@@ -59,7 +59,7 @@
         </h1>
         <i18n
           v-if="image.creator"
-          class="caption has-text-weight-semibold"
+          class="caption font-semibold"
           path="photo-details.creator"
           tag="span"
         >
