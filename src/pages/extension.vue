@@ -33,14 +33,14 @@
           alt="WIP"
         />
       </figure>
-      <div class="caption">
+      <div class="description">
         <h2>{{ $t('extension.features.search.heading') }}</h2>
         <p class="margin-top-normal">
           {{ $t('extension.features.search.content') }}
         </p>
       </div>
 
-      <div class="caption reversed">
+      <div class="description reversed">
         <h2>{{ $t('extension.features.bookmark.heading') }}</h2>
         <p class="margin-top-normal">
           {{ $t('extension.features.bookmark.content') }}
@@ -61,7 +61,7 @@
           alt="WIP"
         />
       </figure>
-      <div class="caption">
+      <div class="description">
         <h2>{{ $t('extension.features.use.heading') }}</h2>
         <p class="margin-top-normal">
           {{ $t('extension.features.use.content') }}
@@ -182,7 +182,7 @@ $video-actual-width: 1140px; // Video has internal padding
     }
   }
 
-  .caption {
+  .description {
     display: flex;
     flex-direction: column;
 
@@ -221,7 +221,7 @@ $video-actual-width: 1140px; // Video has internal padding
       order: 3;
     }
 
-    .caption.reversed {
+    .description.reversed {
       order: 4;
     }
   }
