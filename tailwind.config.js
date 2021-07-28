@@ -45,7 +45,7 @@ module.exports = {
       sm: '0.80rem',
       base: '1.00rem',
       lg: '1.12rem',
-      lgr: '1.25rem',
+      lgr: '1.43rem',
 
       // Headings, where h[n] => [7-n]xl
       '1xl': '1.12rem',
