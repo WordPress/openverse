@@ -116,7 +116,7 @@ export default AboutPage
   background-color: $color-wp-gray-0;
   border-bottom: 1px solid $color-transition-gray;
 
-  $wp-max-width: 940px;
+  $video-max-width: 1200px;
 
   .container {
     padding-top: 64px;
@@ -131,7 +131,7 @@ export default AboutPage
       display: block;
 
       width: 100%;
-      max-width: $wp-max-width;
+      max-width: $video-max-width;
       margin: auto;
 
       border-radius: 0.5rem 0.5rem 0 0;
