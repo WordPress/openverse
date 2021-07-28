@@ -14,10 +14,10 @@
         @keyup.enter="onToggleSearchGridFilter()"
       >
         <span
-          class="has-color-transition-blue is-hidden-touch text-sm lowercase"
+          class="has-color-transition-blue hidden desk:block text-sm lowercase"
           >{{ $t('filter-list.hide') }}</span
         >
-        <span class="margin-right-normal text-lg is-hidden-desktop">
+        <span class="margin-right-normal text-lg desk:hidden">
           <i class="icon cross" />
         </span>
       </button>
@@ -98,7 +98,7 @@
     </form>
     <div
       v-if="isFilterApplied"
-      class="margin-big padding-bottom-normal clear-filters is-hidden-touch"
+      class="margin-big padding-bottom-normal clear-filters hidden desk:block"
     >
       <button class="button tiny" @click="onClearFilters">
         {{ $t('filter-list.clear') }}
@@ -106,7 +106,7 @@
     </div>
     <div
       v-if="isFilterApplied"
-      class="bg-white padding-big is-hidden-desktop text-center"
+      class="bg-white padding-big desk:hidden text-center"
     >
       <button class="button tiny margin-right-normal" @click="onClearFilters">
         {{ $t('filter-list.clear') }}

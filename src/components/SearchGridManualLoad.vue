@@ -11,10 +11,10 @@
         <span class="caption font-semibold">
           {{ _imagesCount }}
         </span>
-        <div class="is-hidden-touch mr-auto padding-left-big">
+        <div class="hidden desk:block mr-auto padding-left-big">
           <SearchRating v-if="_query.q" :search-term="_query.q" />
         </div>
-        <div class="is-hidden-desktop block">
+        <div class="desk:hidden">
           <SearchRating v-if="_query.q" :search-term="searchTerm" />
         </div>
         <SaferBrowsing />

@@ -1,14 +1,14 @@
 <template>
   <div class="browse-page">
     <div class="search columns">
-      <div class="is-hidden-desktop">
+      <div class="desk:hidden">
         <AppModal v-if="isFilterVisible" @close="onToggleSearchGridFilter">
           <SearchGridFilter @onSearchFilterChanged="onSearchFormSubmit" />
         </AppModal>
       </div>
       <aside
         v-if="isFilterVisible"
-        class="column is-narrow grid-sidebar is-paddingless is-hidden-touch full-height-sticky"
+        class="column is-narrow grid-sidebar is-paddingless hidden desk:block full-height-sticky"
       >
         <SearchGridFilter @onSearchFilterChanged="onSearchFormSubmit" />
       </aside>

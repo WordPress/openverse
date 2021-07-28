@@ -40,7 +40,7 @@
             type="search"
             :placeholder="navSearchPlaceholder"
           />
-          <div class="is-sr-only">
+          <div class="sr-only">
             <button
               :aria-label="$t('header.aria.sr-search')"
               tabindex="-1"
