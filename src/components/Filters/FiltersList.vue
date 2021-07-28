@@ -11,10 +11,9 @@
         @click="onToggleSearchGridFilter()"
         @keyup.enter="onToggleSearchGridFilter()"
       >
-        <span
-          class="has-color-transition-blue hidden desk:block text-sm lowercase"
-          >{{ $t('filter-list.hide') }}</span
-        >
+        <span class="text-trans-blue hidden desk:block text-sm lowercase">{{
+          $t('filter-list.hide')
+        }}</span>
         <span class="mr-4 text-lg desk:hidden">
           <i class="icon cross" />
         </span>

@@ -9,7 +9,7 @@
           </slot>
           <button
             type="button"
-            class="close-button has-color-gray text-lgr desk:text-base"
+            class="close-button text-gray text-lgr desk:text-base"
             :aria-label="$t('browse-page.aria.close')"
             @click="$emit('close')"
             @keypress.enter="$emit('close')"
@@ -79,10 +79,6 @@ export default {
   height: 100%;
   z-index: 600;
   background: #00000094;
-}
-
-.has-color-gray {
-  color: rgb(176, 176, 176);
 }
 
 .modal-header {

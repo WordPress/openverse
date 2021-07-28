@@ -34,7 +34,7 @@
           @click.prevent="toggleReportFormVisibility"
           @keypress.enter.prevent="toggleReportFormVisibility"
         >
-          <span class="has-color-transition-blue ml-2 text-sm">
+          <span class="text-trans-blue ml-2 text-sm">
             <i class="icon flag mr-2" />
             {{ $t('photo-details.content-report.title') }}
           </span>

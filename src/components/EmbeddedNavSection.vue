@@ -9,7 +9,7 @@
         height="24"
       />
     </NuxtLink>
-    <div class="navbar-brand has-color-white">
+    <div class="navbar-brand text-white">
       <a
         role="button"
         :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
