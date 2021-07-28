@@ -275,7 +275,7 @@ def test_create_tsv_row_creates_alt_audio_files(
         '\\N',
         '\\N',
         'music',
-        '["rock", "pop"]',
+        '{"rock", "pop"}',
         '\\N',
         '[{"url": '
         '"http://alternative.com/audio.mp3", "filesize": "123", "bit_rate": "41000", '
@@ -322,7 +322,7 @@ def test_create_tsv_row_creates_audio_set(
         '\\N',
         '\\N',
         'music',
-        '["rock", "pop"]',
+        '{"rock", "pop"}',
         '{"audio_set": "test_audio_set", "set_url": "test.com", '
         '"set_position": "1", "set_thumbnail": "thumbnail.jpg"}',
         '\\N',
@@ -487,7 +487,7 @@ def test_create_tsv_row_properly_places_entries(
         '16000',
         '44100',
         'music',
-        '["pop", "rock"]',
+        '{"pop", "rock"}',
         '{"audio_set": "album", "set_position": "1", "set_url": "https://album.com/", '
         '"set_thumbnail": "https://album.com/thumbnail.jpg"}',
         '\\N',

@@ -70,7 +70,7 @@ def create_loading_table(
               {col.BIT_RATE} integer,
               {col.SAMPLE_RATE} integer,
               {col.CATEGORY} character varying(100),
-              {col.GENRES} jsonb,
+              {col.GENRES} character varying(80)[],
               {col.AUDIO_SET} jsonb,
               {col.ALT_AUDIO_FILES} jsonb
             );

@@ -72,8 +72,10 @@ AUDIO_TSV_COLUMNS = [
     columns.StringColumn(
         name='category', required=False, size=80, truncate=False,
     ),
-    columns.JSONColumn(
-        name='genres', required=False,
+    columns.ArrayColumn(
+        name='genres', required=False, base_column=columns.StringColumn(
+            name='genre', required=False, size=80, truncate=False
+        )
     ),
     columns.JSONColumn(
         # set name, set thumbnail, position of audio in set, set url
@@ -133,7 +135,7 @@ class AudioStore(MediaStore):
         bit_rate: Optional[int] = None,
         sample_rate: Optional[int] = None,
         category: Optional[str] = None,
-        genres: Optional[str] = None,
+        genres: Optional[Union[list, str]] = None,
         audio_set: Optional[str] = None,
         set_position: Optional[int] = None,
         set_thumbnail: Optional[str] = None,
