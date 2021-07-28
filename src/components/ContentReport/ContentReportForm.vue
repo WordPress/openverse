@@ -1,8 +1,8 @@
 <template>
-  <div id="content-report-form" class="p-4 is-clearfix arrow-popup">
+  <div id="content-report-form" class="p-4 arrow-popup">
     <button
       :aria-label="$t('photo-details.aria.close-form')"
-      class="button close-button is-text tiny is-pulled-right block bg-white"
+      class="button close-button is-text tiny float-right block bg-white"
       @click="closeForm()"
       @keyup.enter="closeForm()"
     >
@@ -83,7 +83,7 @@
       <button
         type="button"
         :disabled="selectedReason === null"
-        class="button next-button tiny is-success is-pulled-right"
+        class="button next-button tiny is-success float-right"
         @click="onIssueSelected()"
         @keyup.enter="onIssueSelected()"
       >

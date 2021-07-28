@@ -12,7 +12,7 @@
       v-if="(license === 'cc0') | (license === 'pdm')"
       path="filters.license-explanation.tool"
       tag="p"
-      class="caption is-pulled-right m-2"
+      class="caption float-right m-2"
     >
       <template #link>
         <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{
@@ -24,7 +24,7 @@
       v-else
       path="filters.license-explanation.license"
       tag="p"
-      class="caption is-pulled-right m-2"
+      class="caption float-right m-2"
     >
       <template #link>
         <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{

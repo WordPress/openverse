@@ -30,7 +30,7 @@
 
       <div class="mb-1 text-left">
         <button
-          class="button is-text tiny is-paddingless report is-shadowless mt-2"
+          class="button is-text tiny is-paddingless report mt-2"
           @click.prevent="toggleReportFormVisibility"
           @keypress.enter.prevent="toggleReportFormVisibility"
         >

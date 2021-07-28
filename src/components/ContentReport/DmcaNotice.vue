@@ -33,7 +33,7 @@
     </i18n>
 
     <button
-      class="button is-text tiny mt-4 is-shadowless"
+      class="button is-text tiny mt-4"
       @click="onBackClick()"
       @keyup.enter="onBackClick()"
     >

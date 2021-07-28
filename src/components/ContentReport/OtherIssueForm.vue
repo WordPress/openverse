@@ -29,7 +29,7 @@
       <button
         type="button"
         :disabled="!descriptionHasMoreThan20Chars"
-        class="button submit-other-button tiny is-success mt-4 is-pulled-right"
+        class="button submit-other-button tiny is-success mt-4 float-right"
         @click="sendContentReport()"
         @keyup.enter="sendContentReport()"
       >

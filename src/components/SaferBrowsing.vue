@@ -1,7 +1,7 @@
 <template>
   <div class="safer-browsing" @keyup.esc="closeShowForm">
     <button
-      class="button is-text tiny is-paddingless rating is-shadowless"
+      class="button is-text tiny is-paddingless rating"
       @keypress.enter="toggleShowForm"
       @click="toggleShowForm"
     >
@@ -11,12 +11,9 @@
       </span>
     </button>
     <FocusTrap :active="true">
-      <div
-        v-show="showForm"
-        class="p-4 is-clearfix arrow-popup arrow-popup--anchor-right"
-      >
+      <div v-show="showForm" class="p-4 arrow-popup arrow-popup--anchor-right">
         <button
-          class="button close-button is-text tiny is-pulled-right block text-light-gray"
+          class="button close-button is-text tiny float-right block text-light-gray"
           @keypress.enter="toggleShowForm"
           @click="toggleShowForm"
         >
