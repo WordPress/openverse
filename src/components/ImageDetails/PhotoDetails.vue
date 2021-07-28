@@ -1,5 +1,5 @@
 <template>
-  <div class="photo columns is-desktop m-0 pb-16">
+  <div class="photo columns is-desktop pb-16" :style="{ margin: 0 }">
     <div class="column is-three-fifths photo_image-ctr mt-4">
       <a
         v-if="shouldShowBreadcrumb"
