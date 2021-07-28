@@ -106,7 +106,7 @@
     </div>
     <div
       v-if="isFilterApplied"
-      class="has-background-white padding-big is-hidden-desktop has-text-centered"
+      class="bg-white padding-big is-hidden-desktop has-text-centered"
     >
       <button class="button tiny margin-right-normal" @click="onClearFilters">
         {{ $t('filter-list.clear') }}

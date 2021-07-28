@@ -37,7 +37,7 @@
                   href="https://fontawesome.com/"
                   target="_blank"
                   rel="noopener"
-                  class="has-text-white"
+                  class="text-white"
                 >
                   {{ $t('footer.caption.icons') }}
                 </a>
@@ -59,7 +59,7 @@
             :aria-label="$t('footer.aria.donate')"
             class="donate-section"
           >
-            <span class="title is-5 has-text-white">{{
+            <span class="title is-5 text-white">{{
               $t('footer.donate.work')
             }}</span>
             <p>{{ $t('footer.donate.help') }}</p>

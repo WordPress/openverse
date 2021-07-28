@@ -16,7 +16,7 @@
         class="padding-normal is-clearfix arrow-popup arrow-popup--anchor-right"
       >
         <button
-          class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
+          class="button close-button is-text tiny is-pulled-right is-block text-light-gray"
           @keypress.enter="toggleShowForm"
           @click="toggleShowForm"
         >

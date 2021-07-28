@@ -2,7 +2,7 @@
   <div id="content-report-form" class="padding-normal is-clearfix arrow-popup">
     <button
       :aria-label="$t('photo-details.aria.close-form')"
-      class="button close-button is-text tiny is-pulled-right is-block has-background-white"
+      class="button close-button is-text tiny is-pulled-right is-block bg-white"
       @click="closeForm()"
       @keyup.enter="closeForm()"
     >
@@ -77,7 +77,7 @@
       </fieldset>
 
       <p
-        class="caption has-text-weight-semibold has-text-grey margin-bottom-normal"
+        class="caption has-text-weight-semibold text-gray margin-bottom-normal"
       >
         {{ $t('photo-details.content-report.caption') }}
       </p>

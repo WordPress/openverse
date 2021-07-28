@@ -3,7 +3,7 @@
     <div class="column is-three-fifths photo_image-ctr margin-top-normal">
       <a
         v-if="shouldShowBreadcrumb"
-        class="is-block photo_breadcrumb has-text-left margin-left-normal margin-bottom-normal has-text-grey-dark has-text-weight-semibold caption"
+        class="is-block photo_breadcrumb has-text-left margin-left-normal margin-bottom-normal text-dark-gray has-text-weight-semibold caption"
         :href="breadCrumbURL"
         @click.prevent="onGoBackToSearchResults"
         @keyup.enter.prevent="onGoBackToSearchResults"
@@ -174,7 +174,7 @@
       >
         {{ $t('photo-details.weblink') }}
         <i
-          class="icon external-link margin-left-normal is-size-6 padding-top-smaller has-text-grey-lighter"
+          class="icon external-link margin-left-normal is-size-6 padding-top-smaller text-light-gray"
         />
       </a>
 

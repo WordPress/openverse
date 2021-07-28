@@ -12,8 +12,8 @@
           <i
             :class="{
               icon: true,
-              ['has-text-black']: true,
-              ['has-background-white']: true,
+              ['text-black']: true,
+              ['bg-white']: true,
               ['is-size-4']: true,
               ['margin-right-small']: true,
               [`cc-${getLicenseIcon(li)}`]: true,

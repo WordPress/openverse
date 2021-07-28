@@ -1,7 +1,7 @@
 <template>
   <span class="photo-license-icons">
     <i
-      class="icon cc-logo is-size-4 has-text-black has-background-white"
+      class="icon cc-logo is-size-4 text-black has-background-white"
       title="CC"
     >
       <!-- Closing i and opening template tag must be adjacent to prevent whitespace --> </i
@@ -11,7 +11,7 @@
         :key="i"
         :class="{
           icon: true,
-          ['has-text-black']: true,
+          ['text-black']: true,
           ['has-background-white']: true,
           ['is-size-4']: true,
           [`cc-${l}`]: true,

@@ -17,12 +17,12 @@
       >
         <i
           v-if="areFiltersExpanded"
-          class="icon angle-up rotImg is-size-5 has-text-grey-light"
+          class="icon angle-up rotImg is-size-5 text-light-gray"
           title="toggle filters visibility"
         />
         <i
           v-else
-          class="icon angle-down is-size-5 has-text-grey-light"
+          class="icon angle-down is-size-5 text-light-gray"
           title="toggle filters visibility"
         />
       </button>
