@@ -163,6 +163,7 @@ $video-actual-width: 1140px; // Video has internal padding
     img {
       border-radius: 0.25rem;
 
+      border: 1px solid rgba(30, 30, 30, 0.2);
       filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1))
         drop-shadow(0px 20px 33px rgba(0, 0, 0, 0.07));
 
