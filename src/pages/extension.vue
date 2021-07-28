@@ -25,43 +25,47 @@
         <!-- eslint-enable vuejs-accessibility/media-has-caption -->
       </div>
     </div>
-    <div class="section">
-      <div :class="['container', 'features', isEmbedded ? '' : 'is-fluid']">
+    <div :class="['features', isEmbedded ? '' : 'is-fluid']">
+      <figure>
         <img
           class="screenshot"
           src="~/assets/screenshots/extension_feat_1.png"
           alt="WIP"
         />
-        <div class="caption">
-          <h2>{{ $t('extension.features.search.heading') }}</h2>
-          <p class="margin-top-normal">
-            {{ $t('extension.features.search.content') }}
-          </p>
-        </div>
+      </figure>
+      <div class="caption">
+        <h2>{{ $t('extension.features.search.heading') }}</h2>
+        <p class="margin-top-normal">
+          {{ $t('extension.features.search.content') }}
+        </p>
+      </div>
 
-        <div class="caption reversed">
-          <h2>{{ $t('extension.features.bookmark.heading') }}</h2>
-          <p class="margin-top-normal">
-            {{ $t('extension.features.bookmark.content') }}
-          </p>
-        </div>
+      <div class="caption reversed">
+        <h2>{{ $t('extension.features.bookmark.heading') }}</h2>
+        <p class="margin-top-normal">
+          {{ $t('extension.features.bookmark.content') }}
+        </p>
+      </div>
+      <figure>
         <img
           class="screenshot reversed"
           src="~/assets/screenshots/extension_feat_2.png"
           alt="WIP"
         />
+      </figure>
 
+      <figure>
         <img
           class="screenshot"
           src="~/assets/screenshots/extension_feat_3.png"
           alt="WIP"
         />
-        <div class="caption">
-          <h2>{{ $t('extension.features.use.heading') }}</h2>
-          <p class="margin-top-normal">
-            {{ $t('extension.features.use.content') }}
-          </p>
-        </div>
+      </figure>
+      <div class="caption">
+        <h2>{{ $t('extension.features.use.heading') }}</h2>
+        <p class="margin-top-normal">
+          {{ $t('extension.features.use.content') }}
+        </p>
       </div>
     </div>
     <div class="section">
@@ -112,11 +116,12 @@ export default AboutPage
 </script>
 
 <style lang="scss" scoped>
+$video-max-width: 1200px;
+$video-actual-width: 1140px; // Video has internal padding
+
 .hero-section {
   background-color: $color-wp-gray-0;
   border-bottom: 1px solid $color-transition-gray;
-
-  $video-max-width: 1200px;
 
   .container {
     padding-top: 64px;
@@ -145,13 +150,35 @@ export default AboutPage
   @include from($tablet) {
     grid-template-columns: repeat(2, 1fr);
   }
-  gap: 3em;
+  column-gap: 3rem;
+  row-gap: 7.5em;
 
-  img {
-    border-radius: 0.25rem;
+  padding-top: 7.5em;
+  padding-bottom: 7.5em;
 
-    filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1))
-      drop-shadow(0px 20px 33px rgba(0, 0, 0, 0.07));
+  max-width: $video-actual-width;
+  margin: auto;
+
+  figure {
+    img {
+      border-radius: 0.25rem;
+
+      filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1))
+        drop-shadow(0px 20px 33px rgba(0, 0, 0, 0.07));
+
+      width: 100%;
+      max-width: 30rem;
+    }
+
+    @include from($tablet) {
+      &:nth-of-type(odd) {
+        text-align: left;
+      }
+
+      &:nth-of-type(even) {
+        text-align: right;
+      }
+    }
   }
 
   .caption {
