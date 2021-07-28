@@ -1,16 +1,16 @@
 <template>
-  <div class="margin-bottom-large">
-    <ul class="buttons is-centered margin-top-big">
+  <div class="mb-10">
+    <ul class="buttons is-centered mt-6">
       <li v-for="source in sources" :key="source">
         <a
           target="_blank"
           rel="nofollow noreferrer"
           :href="getSourceUrl(source)"
-          class="button small margin-right-small is-opaque"
+          class="button small mr-2 is-opaque"
         >
           {{ source }}
           <sup class="">
-            <i class="margin-left-small icon external-link" />
+            <i class="ml-2 icon external-link" />
           </sup>
         </a>
       </li>

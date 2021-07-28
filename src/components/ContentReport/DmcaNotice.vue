@@ -3,7 +3,7 @@
     <i18n
       path="photo-details.content-report.dmca.content"
       tag="p"
-      class="block padding-horizontal-big margin-top-large text-center"
+      class="block px-6 mt-10 text-center"
     >
       <template #link>
         <a
@@ -19,7 +19,7 @@
     <i18n
       path="photo-details.content-report.dmca.provider"
       tag="p"
-      class="block padding-horizontal-big margin-top-normal text-center"
+      class="block px-6 mt-4 text-center"
     >
       <template #link>
         <a
@@ -33,12 +33,12 @@
     </i18n>
 
     <button
-      class="button is-text tiny margin-top-normal is-shadowless"
+      class="button is-text tiny mt-4 is-shadowless"
       @click="onBackClick()"
       @keyup.enter="onBackClick()"
     >
       <span
-        ><i class="icon chevron-left margin-right-small" />
+        ><i class="icon chevron-left mr-2" />
         {{ $t('photo-details.content-report.back') }}</span
       >
     </button>

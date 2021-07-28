@@ -2,9 +2,9 @@
   <section class="sidebar_section">
     <div
       v-if="fullLicenseName.includes('cc0') || fullLicenseName.includes('pdm')"
-      class="photo-attribution margin-bottom-big"
+      class="photo-attribution mb-6"
     >
-      <h5 class="b-header margin-bottom-big">
+      <h5 class="b-header mb-6">
         {{ $t('photo-details.reuse.tool-header') }}
       </h5>
       <LicenseExplanations :license="image.license" />
@@ -26,8 +26,8 @@
         </template>
       </i18n>
     </div>
-    <div v-else class="photo-attribution margin-bottom-big">
-      <h5 class="b-header margin-bottom-big">
+    <div v-else class="photo-attribution mb-6">
+      <h5 class="b-header mb-6">
         {{ $t('photo-details.reuse.license-header') }}
       </h5>
       <i18n

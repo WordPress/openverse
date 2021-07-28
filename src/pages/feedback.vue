@@ -1,15 +1,11 @@
 <template>
   <div class="section">
     <div :class="['container', isEmbedded ? '' : 'is-fluid']">
-      <div class="padding-bottom-big">
-        <h1 id="feedback" class="title is-2 margin-bottom-large">
+      <div class="pb-6">
+        <h1 id="feedback" class="title is-2 mb-10">
           {{ $t('feedback.title') }}
         </h1>
-        <i18n
-          path="feedback.description.content"
-          tag="p"
-          class="margin-bottom-large"
-        >
+        <i18n path="feedback.description.content" tag="p" class="mb-6">
           <template #openverse>
             <a
               href="https://wordpress.slack.com/messages/openverse/"
@@ -24,7 +20,7 @@
             >
           </template>
         </i18n>
-        <section class="tabs margin-top-big">
+        <section class="tabs mt-6">
           <div role="tablist" :aria-label="$t('feedback.title')">
             <button
               v-for="(name, index) in tabs"

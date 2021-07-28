@@ -7,7 +7,7 @@
     <span>{{ $props.label }}</span>
     <span
       :aria-label="$t('browse-page.aria.remove-filter')"
-      class="close margin-left-small"
+      class="close ml-2"
       tabindex="0"
       @click="onClickIsolatedFilter"
       @keyup.enter="onClickIsolatedFilter"
@@ -16,12 +16,12 @@
   </button>
   <button
     v-else
-    class="filter-block button tiny tag margin-horizontal-smaller"
+    class="filter-block button tiny tag mx-1"
     :aria-label="label + 'filter'"
   >
     <span>{{ $t($props.label) }}</span>
     <span
-      class="close margin-left-small padding-small"
+      class="close ml-2 p-2"
       tabindex="0"
       @click="onClick"
       @keyup.enter="onClick"

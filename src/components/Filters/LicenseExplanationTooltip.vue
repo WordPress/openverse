@@ -1,5 +1,5 @@
 <template>
-  <div class="license-explanation-tooltip padding-small">
+  <div class="license-explanation-tooltip p-2">
     <h5 v-if="(license === 'cc0') | (license === 'pdm')" class="b-header">
       {{ license.toUpperCase() }}
     </h5>
@@ -12,7 +12,7 @@
       v-if="(license === 'cc0') | (license === 'pdm')"
       path="filters.license-explanation.tool"
       tag="p"
-      class="caption is-pulled-right margin-small"
+      class="caption is-pulled-right m-2"
     >
       <template #link>
         <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{
@@ -24,7 +24,7 @@
       v-else
       path="filters.license-explanation.license"
       tag="p"
-      class="caption is-pulled-right margin-small"
+      class="caption is-pulled-right m-2"
     >
       <template #link>
         <a target="_blank" :href="`${getLicenseDeedLink(license)}`">{{

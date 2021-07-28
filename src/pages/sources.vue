@@ -1,22 +1,18 @@
 <template>
   <div class="section">
     <div :class="['container', isEmbedded ? '' : 'is-fluid']">
-      <div class="margin-bottom-large">
-        <h1 class="title is-2 margin-bottom-large">
+      <div class="mb-10">
+        <h1 class="title is-2 mb-10">
           {{ $t('sources.title') }}
         </h1>
-        <div class="margin-bottom-large">
+        <div class="mb-10">
           <h3 class="title subtitle is-normal is-3">
             {{ $t('sources.cc-content.where') }}
           </h3>
-          <p class="margin-vertical-normal">
+          <p class="my-4">
             {{ $t('sources.cc-content.content') }}
           </p>
-          <i18n
-            path="sources.cc-content.provider"
-            tag="p"
-            class="margin-vertical-normal"
-          >
+          <i18n path="sources.cc-content.provider" tag="p" class="my-4">
             <template #flickr>
               <a aria-label="flickr" href="https://www.flickr.com/">{{
                 $t('sources.cc-content.flickr')
@@ -28,11 +24,7 @@
               }}</a>
             </template>
           </i18n>
-          <i18n
-            path="sources.cc-content.europeana"
-            tag="p"
-            class="margin-vertical-normal"
-          >
+          <i18n path="sources.cc-content.europeana" tag="p" class="my-4">
             <template #link>
               <a aria-label="europeana" href="https://www.europeana.eu/en">{{
                 $t('sources.cc-content.europeana-link')
@@ -47,11 +39,11 @@
             </template>
           </i18n>
         </div>
-        <div class="margin-bottom-large">
+        <div class="mb-10">
           <h3 class="title subtitle is-normal is-3">
             {{ $t('sources.new-content.next') }}
           </h3>
-          <p class="margin-vertical-normal">
+          <p class="my-4">
             {{ $t('sources.new-content.integrate') }}
           </p>
           <div class="content">
@@ -69,19 +61,17 @@
           </div>
         </div>
 
-        <h3 class="title subtitle is-3 margin-vertical-normal">
+        <h3 class="title subtitle is-3 my-4">
           {{ $t('sources.suggestions') }}
         </h3>
         <a
           href="https://github.com/WordPress/openverse-catalog/issues/new?assignees=&labels=%F0%9F%9A%A6+status%3A+awaiting+triage%2C+%F0%9F%A7%B9+status%3A+ticket+work+required%2C+%E2%98%81%EF%B8%8F+provider%3A+any&template=new-source-suggestion.md&title=%5BSource+Suggestion%5D+Insert+source+name+here"
-          class="button is-primary padding-vertical-bigger"
+          class="button is-primary py-8"
           target="_blank"
           rel="noopener noreferrer"
         >
           {{ $t('sources.issue-button') }}
-          <i
-            class="icon external-link margin-horizontal-small margin-top-small"
-          />
+          <i class="icon external-link mx-2 mt-2" />
         </a>
       </div>
       <i18n path="sources.detail" tag="p">
@@ -94,7 +84,7 @@
       <table
         :aria-label="$t('about.aria.sources')"
         role="region"
-        class="table is-striped margin-bottom-large margin-top-normal"
+        class="table is-striped mt-4 mb-10"
       >
         <thead>
           <tr>

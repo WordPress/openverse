@@ -1,14 +1,14 @@
 <template>
-  <div class="photo columns is-desktop is-marginless padding-bottom-xl">
-    <div class="column is-three-fifths photo_image-ctr margin-top-normal">
+  <div class="photo columns is-desktop is-marginless pb-16">
+    <div class="column is-three-fifths photo_image-ctr mt-4">
       <a
         v-if="shouldShowBreadcrumb"
-        class="block photo_breadcrumb has-text-left margin-left-normal margin-bottom-normal text-dark-gray font-semibold caption"
+        class="block photo_breadcrumb has-text-left ml-4 mb-4 text-dark-gray font-semibold caption"
         :href="breadCrumbURL"
         @click.prevent="onGoBackToSearchResults"
         @keyup.enter.prevent="onGoBackToSearchResults"
       >
-        <i class="icon chevron-left margin-right-small" />
+        <i class="icon chevron-left mr-2" />
         {{ $t('photo-details.back') }}
       </a>
 
@@ -28,19 +28,19 @@
 
       <LegalDisclaimer />
 
-      <div class="margin-bottom-smaller has-text-left">
+      <div class="mb-1 has-text-left">
         <button
-          class="button is-text tiny is-paddingless report is-shadowless margin-top-small"
+          class="button is-text tiny is-paddingless report is-shadowless mt-2"
           @click.prevent="toggleReportFormVisibility"
           @keypress.enter.prevent="toggleReportFormVisibility"
         >
-          <span class="has-color-transition-blue margin-left-small text-sm">
-            <i class="icon flag margin-right-small" />
+          <span class="has-color-transition-blue ml-2 text-sm">
+            <i class="icon flag mr-2" />
             {{ $t('photo-details.content-report.title') }}
           </span>
         </button>
       </div>
-      <div class="margin-top-small has-text-left">
+      <div class="mt-2 has-text-left">
         <ContentReportForm
           v-if="isReportFormVisible"
           :image="image"
@@ -51,9 +51,9 @@
     <div
       role="region"
       :aria-label="$t('photo-details.aria.details')"
-      class="column image-info margin-left-larger"
+      class="column image-info ml-12"
     >
-      <div class="margin-top-normal margin-bottom-normal">
+      <div class="my-4">
         <h1 class="title is-5 b-header">
           {{ image.title }}
         </h1>
@@ -168,14 +168,12 @@
         :href="image.foreign_landing_url"
         target="_blank"
         rel="noopener"
-        class="button is-success margin-bottom-small margin-top-normal"
+        class="button is-success mb-2 mt-4"
         @click="onPhotoSourceLinkClicked"
         @keyup.enter="onPhotoSourceLinkClicked"
       >
         {{ $t('photo-details.weblink') }}
-        <i
-          class="icon external-link margin-left-normal text-base padding-top-smaller text-light-gray"
-        />
+        <i class="icon external-link ml-4 text-base pt-1 text-light-gray" />
       </a>
 
       <ReuseSurvey v-if="activeTab < 2" :image="image" />

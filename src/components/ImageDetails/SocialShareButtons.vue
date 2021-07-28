@@ -9,7 +9,7 @@
         @click="onSocialMediaLinkClick('Facebook')"
         @keyup.enter="onSocialMediaLinkClick('Facebook')"
       >
-        <i class="icon facebook colored margin-right-normal text-6xl" />
+        <i class="icon facebook colored mr-4 text-6xl" />
       </a>
       <a
         :aria-label="$t('photo-details.aria.share.twitter')"
@@ -19,7 +19,7 @@
         @click="onSocialMediaLinkClick('Twitter')"
         @keyup.enter="onSocialMediaLinkClick('Twitter')"
       >
-        <i class="icon twitter colored margin-right-normal text-6xl" />
+        <i class="icon twitter colored mr-4 text-6xl" />
       </a>
       <a
         :aria-label="$t('photo-details.aria.share.pinterest')"

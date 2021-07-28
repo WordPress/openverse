@@ -3,10 +3,7 @@
   <div ref="modal" class="overlay app-modal" @click.self="$emit('close')">
     <FocusTrap :active="true">
       <div class="modal relative" aria-modal="true" role="dialog">
-        <header
-          v-if="title"
-          class="modal-header padding-top-bigger padding-left-bigger padding-right-normal padding-bottom-small"
-        >
+        <header v-if="title" class="modal-header pt-8 pl-8 pr-4 pb-2">
           <slot name="header">
             <h3>{{ title }}</h3>
           </slot>

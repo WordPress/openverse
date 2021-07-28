@@ -1,12 +1,12 @@
 <template>
   <section class="sidebar_section">
-    <div class="margin-bottom-big">
+    <div class="mb-6">
       <dl>
-        <dt class="margin-bottom-small">
+        <dt class="mb-2">
           {{ $t('photo-details.information.type') }}
         </dt>
         <dd>{{ prettyImageType }}</dd>
-        <dt class="margin-bottom-small">
+        <dt class="mb-2">
           {{ $t('photo-details.information.dimensions') }}
         </dt>
         <dd>
@@ -15,13 +15,13 @@
           <!-- eslint-enable -->
           {{ $t('photo-details.information.pixels') }}
         </dd>
-        <dt v-if="providerName != sourceName" class="margin-bottom-small">
+        <dt v-if="providerName != sourceName" class="mb-2">
           {{ $t('photo-details.information.provider') }}
         </dt>
         <dd v-if="providerName != sourceName">
           {{ providerName }}
         </dd>
-        <dt class="margin-bottom-small">
+        <dt class="mb-2">
           {{ $t('photo-details.information.source') }}
         </dt>
         <dd>
@@ -38,8 +38,8 @@
         </dd>
       </dl>
     </div>
-    <div class="margin-bottom-big">
-      <h5 class="margin-bottom-small b-header">
+    <div class="mb-6">
+      <h5 class="mb-2 b-header">
         {{ $t('photo-details.information.tags') }}
       </h5>
       <PhotoTags :tags="image.tags" :show-header="false" />

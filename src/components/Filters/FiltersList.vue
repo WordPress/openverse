@@ -1,15 +1,13 @@
 <template>
   <div>
     <div class="filterlist-header">
-      <h4
-        class="padding-top-big padding-left-big padding-right-normal inline-block"
-      >
+      <h4 class="pt-6 pl-6 pr-4 inline-block">
         {{ $t('filter-list.filter-by') }}
       </h4>
 
       <button
         type="button"
-        class="button is-text tiny is-paddingless margin-top-big margin-right-small report is-shadowless is-pulled-right"
+        class="button is-text tiny is-paddingless mt-6 mr-2 report is-shadowless is-pulled-right"
         @click="onToggleSearchGridFilter()"
         @keyup.enter="onToggleSearchGridFilter()"
       >
@@ -17,7 +15,7 @@
           class="has-color-transition-blue hidden desk:block text-sm lowercase"
           >{{ $t('filter-list.hide') }}</span
         >
-        <span class="margin-right-normal text-lg desk:hidden">
+        <span class="mr-4 text-lg desk:hidden">
           <i class="icon cross" />
         </span>
       </button>
@@ -80,10 +78,7 @@
         filter-type="sizes"
         @filterChanged="onUpdateFilter"
       />
-      <div
-        v-if="activeTab == 'image'"
-        class="margin-normal filter-option small-filter margin-bottom-normal"
-      >
+      <div v-if="activeTab == 'image'" class="m-4 filter-option small-filter">
         <label for="creator" :aria-label="$t('browse-page.aria.creator')">
           <input
             id="creator"
@@ -98,17 +93,14 @@
     </form>
     <div
       v-if="isFilterApplied"
-      class="margin-big padding-bottom-normal clear-filters hidden desk:block"
+      class="m-6 pb-4 clear-filters hidden desk:block"
     >
       <button class="button tiny" @click="onClearFilters">
         {{ $t('filter-list.clear') }}
       </button>
     </div>
-    <div
-      v-if="isFilterApplied"
-      class="bg-white padding-big desk:hidden text-center"
-    >
-      <button class="button tiny margin-right-normal" @click="onClearFilters">
+    <div v-if="isFilterApplied" class="bg-white p-6 desk:hidden text-center">
+      <button class="button tiny mr-4" @click="onClearFilters">
         {{ $t('filter-list.clear') }}
       </button>
       <button

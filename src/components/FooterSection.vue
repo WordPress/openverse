@@ -13,7 +13,7 @@
           <LocaleSelector />
         </section>
         <div class="column is-half">
-          <div class="attribution margin-top-bigger">
+          <div class="attribution mt-8">
             <i18n path="footer.caption.label" tag="p" class="caption">
               <template #noted>
                 <a
@@ -43,13 +43,9 @@
                 </a>
               </template>
             </i18n>
-            <div class="margin-top-smaller">
-              <i
-                class="icon cc-logo margin-right-small text-lgr is-color-white"
-              />
-              <i
-                class="icon cc-by margin-right-small text-lgr is-color-white"
-              />
+            <div class="mt-1">
+              <i class="icon cc-logo mr-2 text-lgr is-color-white" />
+              <i class="icon cc-by mr-2 text-lgr is-color-white" />
             </div>
           </div>
         </div>
