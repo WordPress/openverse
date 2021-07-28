@@ -3,7 +3,7 @@
     <i18n
       path="photo-details.content-report.dmca.content"
       tag="p"
-      class="is-block padding-horizontal-big margin-top-large has-text-centered"
+      class="is-block padding-horizontal-big margin-top-large text-center"
     >
       <template #link>
         <a
@@ -19,7 +19,7 @@
     <i18n
       path="photo-details.content-report.dmca.provider"
       tag="p"
-      class="is-block padding-horizontal-big margin-top-normal has-text-centered"
+      class="is-block padding-horizontal-big margin-top-normal text-center"
     >
       <template #link>
         <a

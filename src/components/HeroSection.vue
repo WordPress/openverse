@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable vuejs-accessibility/no-autofocus -->
   <div class="hero">
-    <div class="hero-center has-text-centered">
+    <div class="hero-center text-center">
       <h1 class="title is-2 padding-bottom-normal">
         {{ $t('hero.title') }}
       </h1>
@@ -32,9 +32,7 @@
             {{ $t('hero.search.button') }}
           </button>
         </div>
-        <div
-          class="caption has-text-centered margin-top-big has-text-weight-medium"
-        >
+        <div class="caption margin-top-big has-text-weight-medium">
           <i18n path="hero.caption.content" tag="p">
             <template #link>
               <a

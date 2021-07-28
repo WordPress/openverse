@@ -1,8 +1,6 @@
 <template>
   <div>
-    <span
-      class="is-block padding-horizontal-big margin-top-large has-text-centered"
-    >
+    <span class="is-block padding-horizontal-big margin-top-large text-center">
       {{ $t('photo-details.content-report.dmca.error') }}
     </span>
     <button
