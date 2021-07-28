@@ -67,15 +67,15 @@ $button-colors: $colors
     &.is-large
       height: 1.5em
       width: 1.5em
-    &:first-child:not(:last-child)
-      +ltr-property("margin", calc(-1 / 2 * var(--button-padding-horizontal) - #{$button-border-width}), false)
-      +ltr-property("margin", var(--button-padding-horizontal-fourth, 0.2rem))
-    &:last-child:not(:first-child)
-      +ltr-property("margin", var(--button-padding-horizontal-fourth, 0.2rem), false)
-      +ltr-property("margin", calc(-1 / 2 * var(--button-padding-horizontal) - #{$button-border-width}))
-    &:first-child:last-child
-      margin-left: calc(-1 / 2 * var(--button-padding-horizontal) - var(--button-border-width))
-      margin-right: calc(-1 / 2 * var(--button-padding-horizontal) - var(--button-border-width))
+    //&:first-child:not(:last-child)
+    //  +ltr-property("margin", calc(-1 / 2 * var(--button-padding-horizontal) - #{$button-border-width}), false)
+    //  +ltr-property("margin", var(--button-padding-horizontal-fourth, 0.2rem))
+    //&:last-child:not(:first-child)
+    //  +ltr-property("margin", var(--button-padding-horizontal-fourth, 0.2rem), false)
+    //  +ltr-property("margin", calc(-1 / 2 * var(--button-padding-horizontal) - #{$button-border-width}))
+    //&:first-child:last-child
+    //  margin-left: calc(-1 / 2 * var(--button-padding-horizontal) - var(--button-border-width))
+    //  margin-right: calc(-1 / 2 * var(--button-padding-horizontal) - var(--button-border-width))
   // States
   &:hover,
   &.is-hovered
