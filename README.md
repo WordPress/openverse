@@ -7,6 +7,7 @@ This repository **does not** contain most of the codebase. The code is divided i
 - [Front-end](https://github.com/wordpress/openverse-frontend)
 - [Catalog](https://github.com/wordpress/openverse-catalog)
 - [API](https://github.com/wordpress/openverse-api)
+- [Browser extension](https://github.com/wordpress/openverse-browser-extension)
 
 It is possible we will explore a monorepo structure in the future, but as all the repos are decoupled from each other and use different technologies, we've felt it best to keep them distinct.
 
