@@ -44,7 +44,7 @@ mock_audio_args = {
     'category': None,
     'genres': [],
     'audio_set': {},
-    'alt_audio_files': [],
+    'alt_files': [],
     'source': 'testing_source',
     'ingestion_type': 'provider_api',
 }
@@ -231,27 +231,27 @@ def default_audio_args(
         sample_rate=None,
         category='music',
         genres=['rock', 'pop'],
-        alt_audio_files=None,
+        alt_files=None,
         provider='testing_provider',
         source='testing_source',
         ingestion_type='provider_api',
     )
 
 
-def test_create_tsv_row_creates_alt_audio_files(
+def test_create_tsv_row_creates_alt_files(
         default_audio_args,
         get_good,
         setup_env,
 ):
     audio_store = audio.AudioStore()
     audio_args = default_audio_args.copy()
-    alt_audio_files = [{
+    alt_files = [{
         'url': 'http://alternative.com/audio.mp3',
         'filesize': 123,
         'bit_rate': 41000,
         'sample_rate': '16000'
     }]
-    audio_args['alt_audio_files'] = alt_audio_files
+    audio_args['alt_files'] = alt_files
     test_audio = audio.Audio(**audio_args)
     actual_row = audio_store._create_tsv_row(test_audio)
     expected_row = '\t'.join([
@@ -455,7 +455,7 @@ def test_create_tsv_row_properly_places_entries(
             'set_url': 'https://album.com/',
             'set_thumbnail': 'https://album.com/thumbnail.jpg'
         },
-        'alt_audio_files': None,
+        'alt_files': None,
         'provider': 'testing_provider',
         'source': 'testing_source',
         'ingestion_type': 'provider_api',

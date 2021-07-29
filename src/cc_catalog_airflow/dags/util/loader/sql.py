@@ -72,7 +72,7 @@ def create_loading_table(
               {col.CATEGORY} character varying(100),
               {col.GENRES} character varying(80)[],
               {col.AUDIO_SET} jsonb,
-              {col.ALT_AUDIO_FILES} jsonb
+              {col.ALT_FILES} jsonb
             );
             '''
         )
@@ -309,7 +309,7 @@ def upsert_records_to_db_table(
             col.CATEGORY: col.CATEGORY,
             col.GENRES: col.GENRES,
             col.AUDIO_SET: col.AUDIO_SET,
-            col.ALT_AUDIO_FILES: col.ALT_AUDIO_FILES,
+            col.ALT_FILES: col.ALT_FILES,
         })
     else:
         column_inserts.update({
@@ -324,7 +324,7 @@ def upsert_records_to_db_table(
             {_newest_non_null(col.CATEGORY)},
             {_merge_array(col.GENRES)},
             {_merge_jsonb_objects(col.AUDIO_SET)},
-            {_merge_jsonb_objects(col.ALT_AUDIO_FILES)}
+            {_merge_jsonb_objects(col.ALT_FILES)}
             '''
         )
     else:
@@ -394,7 +394,7 @@ def overwrite_records_in_db_table(
             col.CATEGORY,
             col.GENRES,
             col.AUDIO_SET,
-            col.ALT_AUDIO_FILES,
+            col.ALT_FILES,
         ]
     else:
         columns_to_update = [

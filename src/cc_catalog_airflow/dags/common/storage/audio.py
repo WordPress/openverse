@@ -83,7 +83,7 @@ AUDIO_TSV_COLUMNS = [
     ),
     columns.JSONColumn(
         # Alternative files: url, filesize, bit_rate, sample_rate
-        name='alt_audio_files', required=False
+        name='alt_files', required=False
     ),
 ]
 
@@ -140,7 +140,7 @@ class AudioStore(MediaStore):
         set_position: Optional[int] = None,
         set_thumbnail: Optional[str] = None,
         set_url: Optional[str] = None,
-        alt_audio_files: Optional[Dict] = None,
+        alt_files: Optional[Dict] = None,
         source: Optional[str] = None,
         ingestion_type: Optional[str] = None,
     ):
@@ -195,7 +195,7 @@ class AudioStore(MediaStore):
         set_position:        Position of the audio in the audio_set
         set_thumbnail:       URL of the audio_set thumbnail
         set_url:             URL of the audio_set
-        alt_audio_files:     A dictionary with information about alternative
+        alt_files:           A dictionary with information about alternative
                              files for the audio (different formats/ quality).
                              Dict with the following keys: url, filesize,
                              bit_rate, sample_rate
@@ -234,7 +234,7 @@ class AudioStore(MediaStore):
             'category': category,
             'genres': genres,
             'audio_set': audio_set_data,
-            'alt_audio_files': alt_audio_files,
+            'alt_files': alt_files,
             'source': source,
             'ingestion_type': ingestion_type,
         }
