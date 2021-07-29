@@ -261,6 +261,17 @@ def upsert_records_to_db_table(
             EXCLUDED.{column},
             old.{column}
           )'''
+
+    def _merge_array(column: str) -> str:
+        return f'''{column} = COALESCE(
+            (
+              SELECT array_agg(DISTINCT x)
+              FROM unnest(old.{column} || EXCLUDED.{column}) t(x)
+            ),
+            EXCLUDED.{column},
+            old.{column}
+        )'''
+
     if db_table is None:
         db_table = AUDIO_TABLE_NAME \
             if media_type == 'audio' else IMAGE_TABLE_NAME
@@ -311,7 +322,7 @@ def upsert_records_to_db_table(
             {_newest_non_null(col.BIT_RATE)},
             {_newest_non_null(col.SAMPLE_RATE)},
             {_newest_non_null(col.CATEGORY)},
-            {_merge_jsonb_arrays(col.GENRES)},
+            {_merge_array(col.GENRES)},
             {_merge_jsonb_objects(col.AUDIO_SET)},
             {_merge_jsonb_objects(col.ALT_AUDIO_FILES)}
             '''
