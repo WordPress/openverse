@@ -2,7 +2,7 @@
   <div class="section">
     <div :class="['container', isEmbedded ? '' : 'is-fluid']">
       <div class="pb-6">
-        <h1 id="feedback" class="title is-2 mb-10">
+        <h1 id="feedback" class="text-5xl mb-10">
           {{ $t('feedback.title') }}
         </h1>
         <i18n path="feedback.description.content" tag="p" class="mb-6">

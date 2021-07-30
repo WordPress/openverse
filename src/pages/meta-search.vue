@@ -2,7 +2,7 @@
   <div class="section mb-10">
     <div :class="['container', isEmbedded ? '' : 'is-fluid']">
       <div class="mb-10">
-        <h1 class="title is-2">
+        <h1 class="text-5xl">
           {{ $t('meta-search-page.title') }}
         </h1>
       </div>
@@ -15,13 +15,13 @@
         </template>
       </i18n>
       <p>{{ $t('meta-search-page.license') }}</p>
-      <h4 class="b-header">
+      <h2 class="mt-10 mb-4 text-2xl">
         {{ $t('meta-search-page.content') }}
-      </h4>
+      </h2>
       <p>{{ $t('meta-search-page.content-types') }}</p>
-      <h4 class="b-header">
+      <h2 class="mt-10 mb-4 text-2xl">
         {{ $t('meta-search-page.images.title') }}
-      </h4>
+      </h2>
       <p>{{ $t('meta-search-page.images.content') }}</p>
       <div class="content">
         <ol>
@@ -44,9 +44,9 @@
           alt="Meta Search Images - Cars"
         />
       </figure>
-      <h4 class="b-header mt-10">
+      <h2 class="mt-10 mb-4 text-2xl">
         {{ $t('meta-search-page.audio-video.title') }}
-      </h4>
+      </h2>
       <p>{{ $t('meta-search-page.audio-video.content') }}</p>
       <i18n path="meta-search-page.audio-video.filter" tag="p" class="my-2">
         <template #use>
@@ -59,9 +59,9 @@
           alt="Meta Search Audio - Drums"
         />
       </figure>
-      <h4 class="b-header mt-10">
+      <h2 class="mt-10 mb-4 text-2xl">
         {{ $t('meta-search-page.new.title') }}
-      </h4>
+      </h2>
       <i18n path="meta-search-page.new.content" tag="p" class="mb-2">
         <template #issue>
           <a
@@ -78,9 +78,9 @@
           >
         </template>
       </i18n>
-      <h4 class="b-header mt-10">
+      <h2 class="mt-10 mb-4 text-2xl">
         {{ $t('meta-search-page.why.title') }}
-      </h4>
+      </h2>
       <p>{{ $t('meta-search-page.why.content') }}</p>
       <figure class="image my-10">
         <img

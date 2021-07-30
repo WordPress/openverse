@@ -2,11 +2,11 @@
   <div class="section">
     <div :class="['container', isEmbedded ? '' : 'is-fluid']">
       <div class="mb-10">
-        <h1 class="title is-2 mb-10">
+        <h1 class="text-5xl mb-10">
           {{ $t('sources.title') }}
         </h1>
         <div class="mb-10">
-          <h3 class="title subtitle is-normal is-3">
+          <h3 class="text-2xl">
             {{ $t('sources.cc-content.where') }}
           </h3>
           <p class="my-4">
@@ -40,7 +40,7 @@
           </i18n>
         </div>
         <div class="mb-10">
-          <h3 class="title subtitle is-normal is-3">
+          <h3 class="text-2xl">
             {{ $t('sources.new-content.next') }}
           </h3>
           <p class="my-4">
@@ -61,7 +61,7 @@
           </div>
         </div>
 
-        <h3 class="title subtitle is-3 my-4">
+        <h3 class="text-2xl my-4">
           {{ $t('sources.suggestions') }}
         </h3>
         <a
@@ -191,10 +191,6 @@ export default SourcePage
 
 $table-border: 1px solid $color-light-gray;
 $table-border-radius: 4px;
-
-.title.is-3 {
-  font-size: 1.1875rem;
-}
 
 .button.is-primary {
   font-size: 1.1875rem;

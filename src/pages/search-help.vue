@@ -2,14 +2,14 @@
   <div class="section">
     <div :class="['container', isEmbedded ? '' : 'is-fluid']">
       <div class="mb-10">
-        <h1 class="title is-2">
+        <h1 class="text-5xl">
           {{ $t('search-guide.title') }}
         </h1>
         <p>
           {{ $t('search-guide.intro') }}
         </p>
 
-        <h2 class="mt-10 title is-3">
+        <h2 class="mt-10 text-2xl mb-4">
           {{ $t('search-guide.exact.title') }}
         </h2>
         <i18n path="search-guide.exact.content" tag="p">
@@ -25,9 +25,9 @@
           </template>
         </i18n>
 
-        <h3 class="my-4">
+        <h2 class="my-4 text-2xl">
           {{ $t('search-guide.combine.title') }}
-        </h3>
+        </h2>
 
         <p class="my-4">
           {{ $t('search-guide.combine.description') }}

@@ -54,7 +54,7 @@
       class="column image-info ml-12"
     >
       <div class="my-4">
-        <h1 class="title is-5 b-header">
+        <h1 class="text-2xl">
           {{ image.title }}
         </h1>
         <i18n

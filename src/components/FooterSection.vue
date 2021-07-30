@@ -55,7 +55,7 @@
             :aria-label="$t('footer.aria.donate')"
             class="donate-section"
           >
-            <span class="title is-5 text-white">{{
+            <span class="font-bold text-2xl text-white">{{
               $t('footer.donate.work')
             }}</span>
             <p>{{ $t('footer.donate.help') }}</p>

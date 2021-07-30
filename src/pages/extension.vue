@@ -3,7 +3,7 @@
     <div class="hero-section border-b">
       <div class="container pt-16" :class="[isEmbedded ? '' : 'is-fluid']">
         <div class="intro text-center mx-auto">
-          <h2 class="title is-2 mb-10">
+          <h2 class="text-5xl mb-10">
             {{ $t('extension.description.intro') }}
           </h2>
         </div>
@@ -48,7 +48,9 @@
           class="description flex flex-col justify-center items-center"
           :style="{ '--cell-idx': index * 2 + 1 }"
         >
-          <h2>{{ $t(`extension.features.${feature.key}.heading`) }}</h2>
+          <h2 class="text-5xl">
+            {{ $t(`extension.features.${feature.key}.heading`) }}
+          </h2>
           <p class="mt-4">
             {{ $t(`extension.features.${feature.key}.content`) }}
           </p>
