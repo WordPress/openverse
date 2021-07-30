@@ -61,7 +61,7 @@
         :class="[isEmbedded ? '' : 'is-fluid']"
       >
         <h2 class="text-center mx-auto">{{ $t('extension.conclusion') }}</h2>
-        <ExtensionBrowsers class="margin-top-large" />
+        <ExtensionBrowsers class="mt-6" />
       </div>
     </div>
   </div>
