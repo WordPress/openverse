@@ -372,7 +372,7 @@ class MediaSearchResultsSerializer(serializers.Serializer):
     """
 
     result_count = serializers.IntegerField(
-        help_text="The total number of images returned by search result."
+        help_text="The total number of items returned by search result."
     )
     page_count = serializers.IntegerField(
         help_text="The total number of pages returned by search result."
