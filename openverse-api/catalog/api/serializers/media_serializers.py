@@ -378,7 +378,7 @@ class MediaSearchResultsSerializer(serializers.Serializer):
         help_text="The total number of pages returned by search result."
     )
     page_size = serializers.IntegerField(
-        help_text="The number of images per page."
+        help_text="The number of items per page."
     )
 
 
