@@ -121,7 +121,7 @@
         <label for="attribution-html">
           <textarea
             id="attribution-html"
-            class="textarea monospace p-0"
+            class="textarea font-mono p-0"
             :value="attributionHtml"
             cols="30"
             rows="4"
