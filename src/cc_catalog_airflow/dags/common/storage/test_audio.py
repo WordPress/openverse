@@ -37,18 +37,16 @@ mock_audio_args = {
     'creator_url': 'https://creatorurl.com',
     'title': 'agreatsong',
     'meta_data': {},
-    'watermarked': None,
     'raw_tags': {},
     'watermarked': None,
     'bit_rate': None,
     'sample_rate': None,
     'category': None,
-    'genre': [],
+    'genres': [],
     'audio_set': {},
-    'alt_audio_files': [],
+    'alt_files': [],
     'source': 'testing_source',
     'ingestion_type': 'provider_api',
-
 }
 
 
@@ -232,28 +230,28 @@ def default_audio_args(
         bit_rate=None,
         sample_rate=None,
         category='music',
-        genre=['rock', 'pop'],
-        alt_audio_files=None,
+        genres=['rock', 'pop'],
+        alt_files=None,
         provider='testing_provider',
         source='testing_source',
         ingestion_type='provider_api',
     )
 
 
-def test_create_tsv_row_creates_alt_audio_files(
+def test_create_tsv_row_creates_alt_files(
         default_audio_args,
         get_good,
         setup_env,
 ):
     audio_store = audio.AudioStore()
     audio_args = default_audio_args.copy()
-    alt_audio_files = [{
+    alt_files = [{
         'url': 'http://alternative.com/audio.mp3',
         'filesize': 123,
         'bit_rate': 41000,
         'sample_rate': '16000'
     }]
-    audio_args['alt_audio_files'] = alt_audio_files
+    audio_args['alt_files'] = alt_files
     test_audio = audio.Audio(**audio_args)
     actual_row = audio_store._create_tsv_row(test_audio)
     expected_row = '\t'.join([
@@ -277,7 +275,7 @@ def test_create_tsv_row_creates_alt_audio_files(
         '\\N',
         '\\N',
         'music',
-        '["rock", "pop"]',
+        '{"rock", "pop"}',
         '\\N',
         '[{"url": '
         '"http://alternative.com/audio.mp3", "filesize": "123", "bit_rate": "41000", '
@@ -324,7 +322,7 @@ def test_create_tsv_row_creates_audio_set(
         '\\N',
         '\\N',
         'music',
-        '["rock", "pop"]',
+        '{"rock", "pop"}',
         '{"audio_set": "test_audio_set", "set_url": "test.com", '
         '"set_position": "1", "set_thumbnail": "thumbnail.jpg"}',
         '\\N',
@@ -450,14 +448,14 @@ def test_create_tsv_row_properly_places_entries(
         'bit_rate': 16000,
         'sample_rate': 44100,
         'category': 'music',
-        'genre': ['pop', 'rock'],
+        'genres': ['pop', 'rock'],
         'audio_set': {
             'audio_set': 'album',
             'set_position': 1,
             'set_url': 'https://album.com/',
             'set_thumbnail': 'https://album.com/thumbnail.jpg'
         },
-        'alt_audio_files': None,
+        'alt_files': None,
         'provider': 'testing_provider',
         'source': 'testing_source',
         'ingestion_type': 'provider_api',
@@ -489,7 +487,7 @@ def test_create_tsv_row_properly_places_entries(
         '16000',
         '44100',
         'music',
-        '["pop", "rock"]',
+        '{"pop", "rock"}',
         '{"audio_set": "album", "set_position": "1", "set_url": "https://album.com/", '
         '"set_thumbnail": "https://album.com/thumbnail.jpg"}',
         '\\N',
