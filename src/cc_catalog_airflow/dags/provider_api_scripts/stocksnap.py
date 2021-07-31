@@ -39,23 +39,6 @@ delayed_requester = DelayedRequester(DELAY)
 image_store = ImageStore(provider=PROVIDER)
 
 
-saved_json_counter = {
-    'full_response': 0,
-    'empty_response': 0,
-    'full_item': 0,
-    'no_image_url': 0,
-    'no_foreign_landing_url': 0,
-    'no_license': 0,
-}
-
-
-def check_and_save_json_for_test(name, data):
-    if saved_json_counter[name] == 0:
-        with open(f"{name}.json", "w+", encoding="utf-8") as outf:
-            json.dump(data, outf, indent=2)
-        saved_json_counter[name] += 1
-
-
 def main():
     """
     This script pulls all the data from the StockSnap and writes it into a
@@ -111,22 +94,24 @@ def _process_item_batch(items_batch):
         if item_meta_data is None:
             continue
         image_store.add_item(**item_meta_data)
-    return image_store.total_images
+    return image_store.total_items
 
 
 def _extract_item_data(media_data):
     """
     Extract data for individual image
     """
-
-    foreign_identifier = media_data["img_id"]
-    foreign_landing_url, page = _get_foreign_landing_page(foreign_identifier)
-    if foreign_landing_url is None:
-        print("Foreign landing url not resolved.")
+    try:
+        foreign_id = media_data["img_id"]
+        foreign_landing_url, page = _get_foreign_landing_page(foreign_id)
+    except (TypeError, KeyError, AttributeError):
+        logger.info("Foreign landing url not resolved.")
+        logger.info(f"{json.dumps(media_data, indent=2)}")
         return None
-    image_url, height, width = _get_image_info(media_data)
+    image_url, width, height = _get_image_info(media_data)
     if image_url is None:
-        print("Found no image url.")
+        logger.info("Found no image url.")
+        logger.info(f"{json.dumps(media_data, indent=2)}")
         return None
     item_license = _get_license()
     title = _get_title(page)
@@ -134,11 +119,12 @@ def _extract_item_data(media_data):
     thumbnail = image_url
     metadata = _get_metadata(media_data)
     tags = _get_tags(media_data)
+
     return {
         'title': title,
         'creator': creator,
         'creator_url': creator_url,
-        'foreign_identifier': foreign_identifier,
+        'foreign_identifier': foreign_id,
         'foreign_landing_url': foreign_landing_url,
         'image_url': image_url,
         'height': height,
@@ -169,7 +155,8 @@ def _get_image_info(media_data):
 
 
 def _get_creator_data(page):
-    page.find_class("author")
+    if len(page.find_class("author")) == 0:
+        return None, None
     author_elem = page.find_class("author")[0]
     creator = author_elem.text_content().strip()
     creator_url = None
