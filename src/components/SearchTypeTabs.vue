@@ -12,7 +12,7 @@
         role="tab"
         :class="tabClass(type, 'tab')"
       >
-        {{ capitalize(type) }}
+        {{ tabTitle(type) }}
       </NuxtLink>
     </div>
   </section>
@@ -48,6 +48,9 @@ export default {
         path: `/search/${pathType}`,
         query: this.$route.query,
       })
+    },
+    tabTitle(type) {
+      return this.capitalize(this.$t(`search-tab.${type}`))
     },
   },
 }

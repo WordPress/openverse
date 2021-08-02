@@ -301,6 +301,7 @@
     "image-not-found": "Couldn't find image with id {id}"
   },
   "search-tab": {
+    "all": "All",
     "image": "Image",
     "audio": "Audio",
     "video": "Video"
