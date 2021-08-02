@@ -9,6 +9,7 @@
 
 <script>
 export default {
+  name: 'ImageSearch',
   methods: {
     onLoadMoreImages(searchParams) {
       this.$emit('onLoadMoreImages', searchParams)

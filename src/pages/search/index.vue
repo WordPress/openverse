@@ -1,14 +1,15 @@
 <template>
   <SearchGrid
-    id="tab-image"
+    id="tab-all"
     role="tabpanel"
-    aria-labelledby="image"
+    aria-labelledby="all"
     @onLoadMoreImages="onLoadMoreImages"
   />
 </template>
 
 <script>
 export default {
+  name: 'SearchIndex',
   methods: {
     onLoadMoreImages(searchParams) {
       this.$emit('onLoadMoreImages', searchParams)

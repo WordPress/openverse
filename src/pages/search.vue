@@ -15,14 +15,8 @@
       <div class="column search-grid-ctr">
         <SearchGridForm @onSearchFormSubmit="onSearchFormSubmit" />
         <SearchTypeTabs />
-        <FilterDisplay
-          v-if="$route.path === '/search/' || $route.path === '/search/image'"
-        />
-        <NuxtChild
-          :key="$route.path"
-          :query="query"
-          @onLoadMoreImages="onLoadMoreImages"
-        />
+        <FilterDisplay v-if="shouldShowFilterTags" />
+        <NuxtChild :key="$route.path" @onLoadMoreImages="onLoadMoreImages" />
       </div>
     </div>
   </div>
@@ -92,6 +86,11 @@ const BrowsePage = {
       this.$store.commit(SET_FILTER_IS_VISIBLE, {
         isFilterVisible: !this.isFilterVisible,
       })
+    },
+    shouldShowFilterTags() {
+      return (
+        this.$route.path === '/search/' || this.$route.path === '/search/image'
+      )
     },
   },
   watch: {

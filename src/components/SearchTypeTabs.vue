@@ -6,7 +6,7 @@
         :id="type"
         :key="type"
         aria-live="polite"
-        :to="localePath({ path: `/search/${type}`, query: $route.query })"
+        :to="tabPath(type)"
         :aria-selected="activeTab == type"
         :aria-controls="'tab-' + type"
         role="tab"
@@ -25,12 +25,12 @@ export default {
   name: 'SearchTypeTabs',
   data() {
     return {
-      contentTypes: ['image', 'audio', 'video'],
+      contentTypes: ['all', 'image', 'audio', 'video'],
     }
   },
   computed: {
     activeTab() {
-      return this.$route.path.split('search/')[1] || 'image'
+      return this.$route.path.split('search/')[1] || 'all'
     },
   },
   methods: {
@@ -41,6 +41,13 @@ export default {
         'text-lg': true,
         'is-active': tabSlug === this.activeTab,
       }
+    },
+    tabPath(type) {
+      const pathType = type === 'all' ? '' : type
+      return this.localePath({
+        path: `/search/${pathType}`,
+        query: this.$route.query,
+      })
     },
   },
 }
