@@ -4,44 +4,70 @@
     @click="hideLicenseExplanationVisibility()"
     @keyup.enter="hideLicenseExplanationVisibility()"
   >
-    <h4 v-if="title">{{ title }}</h4>
-
     <div
-      v-for="(item, index) in options"
-      :key="index"
-      class="margin-top-small filter-checkbox-wrapper"
+      v-if="title"
+      class="filters-title"
+      @click.prevent="toggleFilterVisibility"
+      @keyup.enter="toggleFilterVisibility"
     >
-      <label class="checkbox" :for="item.code" :disabled="isDisabled(item)">
-        <input
-          :key="index"
-          :name="item.code"
-          type="checkbox"
-          class="filter-checkbox margin-right-small"
-          :checked="item.checked"
-          :disabled="isDisabled(item)"
-          @change="onValueChange"
+      <h4>{{ title }}</h4>
+      <button
+        v-if="!filtersExpandedByDefault"
+        :aria-label="'filters list for' + title + 'category'"
+        class="filter-visibility-toggle is-white padding-vertical-small"
+      >
+        <i
+          v-if="areFiltersExpanded"
+          class="icon angle-up rotImg is-size-5 has-text-grey-light"
+          title="toggle filters visibility"
         />
-        <LicenseIcons v-if="filterType == 'licenses'" :license="item.code" />
-        {{ itemLabel(item) }}
-      </label>
-      <img
-        v-if="filterType == 'licenses'"
-        :aria-label="$t('browse-page.aria.license-explanation')"
-        tabindex="0"
-        src="@/assets/help_icon.svg"
-        alt="help"
-        class="license-help padding-top-smallest padding-right-smaller"
-        @click.stop="toggleLicenseExplanationVisibility(item.code)"
-        @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
-      />
-
-      <LicenseExplanationTooltip
-        v-if="
-          shouldRenderLicenseExplanationTooltip(item.code) && !isDisabled(item)
-        "
-        :license="licenseExplanationCode"
-      />
+        <i
+          v-else
+          class="icon angle-down is-size-5 has-text-grey-light"
+          title="toggle filters visibility"
+        />
+      </button>
     </div>
+    <template v-if="areFiltersExpanded">
+      <div
+        v-for="(item, index) in options"
+        :key="index"
+        class="filter-checkbox-wrapper"
+      >
+        <!--eslint-disable vuejs-accessibility/label-has-for -->
+        <label class="checkbox" :disabled="isDisabled(item)">
+          <input
+            :key="index"
+            :name="item.code"
+            type="checkbox"
+            class="filter-checkbox margin-right-small"
+            :checked="item.checked"
+            :disabled="isDisabled(item)"
+            @change="onValueChange"
+          />
+          <LicenseIcons v-if="filterType == 'licenses'" :license="item.code" />
+          {{ itemLabel(item) }}
+        </label>
+        <img
+          v-if="filterType == 'licenses'"
+          :aria-label="$t('browse-page.aria.license-explanation')"
+          tabindex="0"
+          src="@/assets/help_icon.svg"
+          alt="help"
+          class="license-help padding-top-smallest padding-right-smaller"
+          @click.stop="toggleLicenseExplanationVisibility(item.code)"
+          @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
+        />
+
+        <LicenseExplanationTooltip
+          v-if="
+            shouldRenderLicenseExplanationTooltip(item.code) &&
+            !isDisabled(item)
+          "
+          :license="licenseExplanationCode"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -68,13 +94,19 @@ export default {
      * Show filters expanded by default
      * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
      */
+    filtersExpandedByDefault() {
+      return true
+    },
+    areFiltersExpanded() {
+      return this.filtersExpandedByDefault || this.filtersVisible
+    },
     isSingleFilter() {
-      return this.filterType == 'searchBy'
+      return this.$props.filterType === 'searchBy'
     },
   },
   methods: {
     itemLabel(item) {
-      return this.filterType == 'providers' ? item.name : this.$t(item.name)
+      return this.filterType === 'providers' ? item.name : this.$t(item.name)
     },
     onValueChange(e) {
       this.$emit('filterChanged', {
@@ -82,6 +114,11 @@ export default {
         filterType: this.$props.filterType,
       })
     },
+    /**
+     * This function is used to hide sub items in filters
+     * It was decided not to use them after a/b tests
+     * TODO: either remove or use if necessary when implementing new designs
+     */
     toggleFilterVisibility() {
       this.filtersVisible = !this.filtersVisible
     },
@@ -134,9 +171,9 @@ export default {
 .filters {
   border-bottom: 2px solid rgb(245, 245, 245);
   padding: 1.5rem 1rem 1.5rem 1.5rem;
-  &.single {
-    padding-left: 1rem;
-  }
+  //&.single {
+  //  padding-left: 1rem;
+  //}
 }
 
 .filters-title {
@@ -147,6 +184,7 @@ export default {
   line-height: 1.5;
   letter-spacing: normal;
   cursor: pointer;
+  margin-bottom: 0.5rem;
 }
 
 .filter-visibility-toggle {
@@ -168,11 +206,11 @@ label {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.75rem;
 }
 
 .checkbox {
   display: flex;
-  margin-bottom: 0.75rem;
   align-items: center;
   font-size: 14px;
 }

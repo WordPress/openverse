@@ -140,30 +140,32 @@ const getters = {
   },
   getAllImageFilters: (state) => {
     let allImageFilters = {}
-    Object.keys(state.filters).forEach((filterType) => {
-      if (IMAGE_FILTERS.includes(filterType)) {
-        if (filterType === 'searchBy') {
-          allImageFilters[filterType] = [
-            {
-              code: 'creator',
-              name: 'filters.creator.title',
-              filterType: 'searchBy',
-              checked: state.filters.searchBy.creator,
-            },
-          ]
-        } else if (filterType !== 'mature') {
-          const newFilters = state.filters[filterType].map((f) => {
-            return {
-              code: f.code,
-              name: f.name,
-              filterType: filterType,
-              checked: f.checked,
-            }
-          })
-          allImageFilters[filterType] = newFilters
-        }
+    IMAGE_FILTERS.forEach((filterType) => {
+      if (filterType === 'searchBy') {
+        allImageFilters.searchBy = [
+          {
+            code: 'creator',
+            name: 'filters.creator.title',
+            filterType: 'searchBy',
+            checked: state.filters.searchBy.creator,
+          },
+        ]
+      } else if (filterType !== 'mature') {
+        // TODO: when adding other media type filters,
+        // convert media-specific filterType to generic typeName
+        // (eg. imageCategories -> categories)
+        const typeName = filterType
+        allImageFilters[typeName] = state.filters[typeName].map((f) => {
+          return {
+            code: f.code,
+            name: f.name,
+            filterType: typeName,
+            checked: f.checked,
+          }
+        })
       }
     })
+    console.log('all image filters: ', allImageFilters)
     return allImageFilters
   },
 }
