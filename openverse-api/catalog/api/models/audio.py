@@ -84,7 +84,7 @@ class Audio(AbstractMedia):
         null=True,
         db_index=True,
         help_text='The category of this audio file, '
-                  'eg. music, podcast, news & audiobook.',
+                  'eg. music, sound_effect, podcast, news & audiobook.',
     )
 
     duration = models.IntegerField(
