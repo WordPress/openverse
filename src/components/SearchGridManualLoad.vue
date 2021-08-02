@@ -143,11 +143,6 @@ export default {
     },
   },
   methods: {
-    handleScalingChange() {
-      setTimeout(() => {
-        this.$redrawVueMasonry()
-      }, 100)
-    },
     searchChanged() {
       this.$store.commit(SET_IMAGES, { images: [], page: 1 })
     },
@@ -195,11 +190,6 @@ export default {
 }
 
 .search-grid_ctr {
-  .masonry-layout {
-    margin: auto;
-    margin-top: 1rem;
-  }
-
   .item {
     width: 320px;
     margin-bottom: 20px;
