@@ -48,10 +48,9 @@
               >
             </template>
             <template #community>
-              <!-- TODO: Update link to team page on Make WordPress -->
               <a
                 :aria-label="$t('about.aria.community')"
-                href="https://make.wordpress.org/"
+                href="https://make.wordpress.org/openverse/"
                 >{{ $t('about.planning.community') }}</a
               >
             </template>
@@ -90,39 +89,6 @@
               >
             </template>
           </i18n>
-
-          <h2 class="margin-top-large margin-bottom-normal">
-            {{ $t('about.sources') }}
-          </h2>
-          <table
-            :aria-label="$t('about.aria.sources')"
-            role="region"
-            class="table is-bordered is-striped margin-bottom-large"
-          >
-            <thead>
-              <tr>
-                <th>{{ $t('about.providers.source') }}</th>
-                <th>{{ $t('about.providers.domain') }}</th>
-                <th>{{ $t('about.providers.work') }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(imageProvider, index) in imageProviders" :key="index">
-                <td>{{ imageProvider.display_name }}</td>
-                <td>
-                  <a
-                    :aria-label="imageProvider.display_name"
-                    :href="imageProvider.source_url"
-                  >
-                    {{ imageProvider.source_url }}
-                  </a>
-                </td>
-                <td class="number-cell">
-                  {{ getProviderImageCount(imageProvider.image_count) }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
@@ -143,14 +109,6 @@ const AboutPage = {
   },
   computed: {
     ...mapState(['isEmbedded']),
-    imageProviders() {
-      return this.$store.state.imageProviders
-    },
-  },
-  methods: {
-    getProviderImageCount(imageCount) {
-      return imageCount.toLocaleString(this.$i18n.locale)
-    },
   },
 }
 

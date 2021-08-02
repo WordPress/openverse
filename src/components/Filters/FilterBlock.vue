@@ -1,25 +1,9 @@
 <template>
   <button
-    v-if="filterType === 'searchBy'"
     class="filter-block button tiny tag margin-horizontal-smaller"
-    :aria-label="label + 'filter'"
+    :aria-label="filterLabel + ' filter'"
   >
-    <span>{{ $props.label }}</span>
-    <span
-      :aria-label="$t('browse-page.aria.remove-filter')"
-      class="close margin-left-small"
-      tabindex="0"
-      @click="onClickIsolatedFilter"
-      @keyup.enter="onClickIsolatedFilter"
-      ><i class="icon cross"
-    /></span>
-  </button>
-  <button
-    v-else
-    class="filter-block button tiny tag margin-horizontal-smaller margin-bottom-smaller"
-    :aria-label="label + 'filter'"
-  >
-    <span>{{ $t($props.label) }}</span>
+    <span>{{ filterLabel }}</span>
     <span
       class="close margin-left-small padding-small"
       tabindex="0"
@@ -33,6 +17,13 @@
 export default {
   name: 'FilterBlock',
   props: ['code', 'filterType', 'label'],
+  computed: {
+    filterLabel() {
+      return this.$props.filterType === 'providers'
+        ? this.$props.label
+        : this.$t(this.$props.label)
+    },
+  },
   methods: {
     onClick() {
       this.$emit('filterChanged', {
@@ -40,9 +31,11 @@ export default {
         filterType: this.$props.filterType,
       })
     },
-    onClickIsolatedFilter() {
-      this.$emit('filterChanged', { filterType: this.$props.filterType })
-    },
   },
 }
 </script>
+<style lang="scss" scoped>
+.filter-block {
+  margin-left: 0.5rem;
+}
+</style>

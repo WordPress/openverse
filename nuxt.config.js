@@ -141,6 +141,7 @@ export default {
   env,
   dev: process.env.NODE_ENV !== 'production',
   buildModules: [
+    '@nuxtjs/tailwindcss',
     '@nuxtjs/style-resources',
     '@nuxtjs/svg',
     '@nuxtjs/eslint-module',
@@ -172,5 +173,9 @@ export default {
       process.env.SENTRY_DSN ||
       'https://3f3e05dbe6994c318d1bf1c8bfcf71a1@o288582.ingest.sentry.io/1525413',
     lazy: true,
+  },
+  tailwindcss: {
+    // https://github.com/nuxt-community/tailwindcss-module/issues/114#issuecomment-698885369
+    configPath: '~~/tailwind.config.js',
   },
 }
