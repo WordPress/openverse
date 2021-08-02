@@ -188,10 +188,11 @@ export default {
   .button {
     font-size: 1rem;
     padding: 0.5rem calc(1rem + 0.2rem);
-    line-height: 0;
     @include desktop {
       font-size: 1.43rem;
-      padding: calc(2rem - 0.187rem) 2.5rem;
+      padding-left: var(--button-padding-horizontal);
+      padding-right: var(--button-padding-horizontal);
+      height: 3.875rem;
     }
   }
 }
