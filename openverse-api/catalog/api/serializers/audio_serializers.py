@@ -35,7 +35,8 @@ class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
     categories = serializers.CharField(
         label="categories",
         help_text="A comma separated list of categories; available categories "
-                  "include `music`, `podcast`, `audiobook`, and `news`.",
+                  "include `music`, `sound_effect`, `podcast`, `audiobook`, "
+                  "and `news`.",
         required=False
     )
     duration = serializers.CharField(
@@ -57,6 +58,7 @@ class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
     def validate_categories(value):
         valid_categories = {
             'music',
+            'sound_effect',
             'podcast',
             'news',
             'audiobook',
