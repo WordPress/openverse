@@ -164,7 +164,6 @@ const getters = {
         }
       }
     })
-    console.log('getimagefilters returns ', allImageFilters)
     return allImageFilters
   },
 }
