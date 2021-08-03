@@ -207,7 +207,10 @@ describe('Filter Store', () => {
 
       state.filters.providers = existingProviderFilters
 
-      mutations[SET_PROVIDERS_FILTERS](state, { imageProviders: providers })
+      mutations[SET_PROVIDERS_FILTERS](state, {
+        mediaType: 'image',
+        providers: providers,
+      })
 
       expect(state.filters.providers).toEqual([
         { code: 'met', name: 'Metropolitan', checked: true },

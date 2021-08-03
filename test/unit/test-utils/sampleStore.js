@@ -1,8 +1,10 @@
 import SearchStore from '~/store-modules/search-store'
-import ImageProviderStore from '~/store-modules/image-provider-store'
+import MediaProviderStore from '~/store-modules/media-provider-store'
 
 const store = {
-  state: Object.assign(SearchStore.state, ImageProviderStore.state),
+  state: Object.assign(SearchStore.state, MediaProviderStore.state),
+  dispatch: jest.fn(),
+  commit: jest.fn(),
 }
 
 export default store

@@ -1,0 +1,78 @@
+{
+  "search": {
+    "application/json": {
+      "result_count": 77,
+      "page_count": 77,
+      "page_size": 1,
+      "results": [
+        {
+          "title": "File:Mozart - Eine kleine Nachtmusik - 1. Allegro.ogg",
+          "id": "36537842-b067-4ca0-ad67-e00ff2e06b2e",
+          "creator": "Wolfgang Amadeus Mozart",
+          "creator_url": "https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg",
+          "provider": "wikimedia",
+          "source": "wikimedia",
+          "license": "by-sa",
+          "license_version": "2.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+          "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=3536953",
+          "detail_url": "http://api.openverse.engineering/v1/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
+          "related_url": "http://api.openverse.engineering/v1/recommendations/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
+          "fields_matched": ["description", "title"]
+        },
+        {
+          "title": "Sax Is My Cardio (Remix)",
+          "id": "12337842-b067-4ca0-ad67-e00ff2e06b2e",
+          "creator": "KUZINMUZIN",
+          "creator_url": "https://www.jamendo.com/artist/484482/kuzinmuzin",
+          "url": "https://mp3d.jamendo.com/?trackid=1848961&format=mp32&from=BAsh%2FLMv%2Bci1uGSULsDEaQ%3D%3D%7CH9B8eTQUjJE7uccjCdcGNQ%3D%3D",
+          "provider": "jamendo",
+          "source": "jamendo",
+          "license": "by-nc-nd",
+          "license_version": "2.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/",
+          "foreign_landing_url": "https://www.jamendo.com/track/1856494/sax-is-my-cardio-remix",
+          "detail_url": "http://api.openverse.engineering/v1/audio/12337842-b067-4ca0-ad67-e00ff2e06b2e",
+          "related_url": "http://api.openverse.engineering/v1/recommendations/audio/12337842-b067-4ca0-ad67-e00ff2e06b2e",
+          "fields_matched": ["description", "title"]
+        }
+      ]
+    }
+  },
+  "related": {
+    "application/json": {
+      "result_count": 10000,
+      "page_count": 0,
+      "results": [
+        {
+          "title": "File:Mozart - Eine kleine Nachtmusik - 1. Allegro.ogg",
+          "id": "36537842-b067-4ca0-ad67-e00ff2e06b2e",
+          "creator": "Wolfgang Amadeus Mozart",
+          "creator_url": "https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg",
+          "provider": "wikimedia",
+          "source": "wikimedia",
+          "license": "by-sa",
+          "license_version": "2.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+          "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=3536953",
+          "detail_url": "http://api.openverse.engineering/v1/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
+          "related_url": "http://api.openverse.engineering/v1/recommendations/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
+          "fields_matched": ["description", "title"],
+          "tags": [
+            {
+              "name": "exam"
+            },
+            {
+              "name": "tactics"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "detail": {
+    "application/json": {}
+  }
+}

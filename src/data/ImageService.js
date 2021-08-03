@@ -13,13 +13,13 @@ const ImageService = {
   },
 
   /**
-   * Retreive image details by Id number.
+   * Retrieve image details by Id number.
    * SSR-called
    */
   getImageDetail(params) {
     if (!params.id) {
       throw new Error(
-        '[RWV] ImageService.getImageDetail() id parameter required to retreive image details.'
+        '[RWV] ImageService.getImageDetail() id parameter required to retrieve image details.'
       )
     }
 
@@ -29,7 +29,7 @@ const ImageService = {
   getRelatedImages(params) {
     if (!params.id) {
       throw new Error(
-        '[RWV] ImageService.getRelatedImages() id parameter required to retreive related images.'
+        '[RWV] ImageService.getRelatedImages() id parameter required to retrieve related images.'
       )
     }
 

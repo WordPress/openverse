@@ -244,27 +244,30 @@ const mutations = {
     return setQuery(state)
   },
   [SET_PROVIDERS_FILTERS](state, params) {
-    const providers = params.imageProviders
+    const { mediaType, providers } = params
     // merge providers from API response with the filters that came from the
     // browse URL search query string and match the checked properties
     // in the store
-    state.filters.providers = providers.map((provider) => {
-      const existingProviderFilterIdx = findIndex(
-        state.filters.providers,
-        (p) => p.code === provider.source_name
-      )
+    // TODO: add audioProvider handling
+    if (mediaType === 'image') {
+      state.filters.providers = providers.map((provider) => {
+        const existingProviderFilterIdx = findIndex(
+          state.filters.providers,
+          (p) => p.code === provider.source_name
+        )
 
-      const checked =
-        existingProviderFilterIdx >= 0
-          ? state.filters.providers[existingProviderFilterIdx].checked
-          : false
+        const checked =
+          existingProviderFilterIdx >= 0
+            ? state.filters.providers[existingProviderFilterIdx].checked
+            : false
 
-      return {
-        code: provider.source_name,
-        name: provider.display_name,
-        checked,
-      }
-    })
+        return {
+          code: provider.source_name,
+          name: provider.display_name,
+          checked,
+        }
+      })
+    }
   },
   [SET_FILTER_IS_VISIBLE](state, params) {
     state.isFilterVisible = params.isFilterVisible

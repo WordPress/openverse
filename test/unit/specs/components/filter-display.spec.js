@@ -61,7 +61,6 @@ describe('FilterDisplay', () => {
   it('should render filter if checked', () => {
     filters.licenses[0].checked = true
     const wrapper = render(FilterDisplay, options)
-    console.log(wrapper.html())
     expect(wrapper.findComponent(FilterBlock).vm).toBeDefined()
   })
 
