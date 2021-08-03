@@ -16,4 +16,9 @@ class Migration(migrations.Migration):
             field=models.CharField(choices=[('audio', 'Audio'), ('image', 'Image')], default='image', max_length=80),
             preserve_default=False,
         ),
+        migrations.AlterField(
+            model_name='contentprovider',
+            name='provider_name',
+            field=models.CharField(max_length=250),
+        ),
     ]

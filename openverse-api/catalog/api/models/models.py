@@ -6,7 +6,7 @@ from catalog.api.models.base import OpenLedgerModel
 
 class ContentProvider(models.Model):
     provider_identifier = models.CharField(max_length=50, unique=True)
-    provider_name = models.CharField(max_length=250, unique=True)
+    provider_name = models.CharField(max_length=250)
     created_on = models.DateTimeField(auto_now=False)
     domain_name = models.CharField(max_length=500)
     filter_content = models.BooleanField(
