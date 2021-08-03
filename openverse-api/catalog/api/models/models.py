@@ -5,6 +5,19 @@ from catalog.api.models.base import OpenLedgerModel
 
 
 class ContentProvider(models.Model):
+    """
+    A content provider instance can only be mapped to a single media type. For
+    providers providing multiple media types, use different identifiers while
+    keeping the same display name.
+
+    For example,
+    - Wikimedia for audio can have
+        ``provider_identifier`` as  wikimedia_audio" and
+        ``provider_name`` as "Wikimedia"
+    - Wikimedia for images can have
+        ``provider_identifier`` as "wikimedia_images" or "wikimedia" and
+        ``provider_name`` as "Wikimedia"
+    """
     provider_identifier = models.CharField(max_length=50, unique=True)
     provider_name = models.CharField(max_length=250)
     created_on = models.DateTimeField(auto_now=False)
