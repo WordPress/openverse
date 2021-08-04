@@ -5,7 +5,7 @@ import {
   SET_MEDIA_PROVIDERS,
   SET_PROVIDER_FETCH_ERROR,
 } from '~/store-modules/mutation-types'
-// import { FETCH_MEDIA_PROVIDERS } from '~/store-modules/action-types'
+import { FETCH_MEDIA_TYPE_PROVIDERS } from '~/store-modules/action-types'
 
 describe('Image Provider Store', () => {
   describe('state', () => {
@@ -58,48 +58,38 @@ describe('Image Provider Store', () => {
     })
   })
 
-  // TODO: Fix the tests
-  // describe('actions', () => {
-  //   const data = [{ source_name: 'foo' }, { source_name: 'bar' }]
-  //   const imageProviderServiceMock = {
-  //     getProviderStats: jest.fn(() => Promise.resolve({ data })),
-  //   }
-  //   const commit = jest.fn()
-  //   const dispatch = jest.fn()
-  //   it('FETCH_MEDIA_PROVIDERS on success', (done) => {
-  //     const action = store.actions(imageProviderServiceMock)[
-  //       FETCH_MEDIA_PROVIDERS
-  //     ]
-  //     action({ commit, dispatch }, { mediaType: 'image' }).then(() => {
-  //       expect(commit).toBeCalledWith(SET_PROVIDER_FETCH_ERROR, {
-  //         error: false,
-  //       })
-  //       expect(commit).toBeCalledWith(FETCH_MEDIA_PROVIDERS_START)
-  //
-  //       expect(imageProviderServiceMock.getProviderStats).toBeCalled()
-  //
-  //       expect(commit).toBeCalledWith(FETCH_MEDIA_PROVIDERS_END)
-  //       expect(commit).toBeCalledWith(SET_MEDIA_PROVIDERS, {
-  //         providers: data,
-  //       })
-  //       done()
-  //     })
-  //   })
+  describe('actions', () => {
+    const data = [{ source_name: 'foo' }, { source_name: 'bar' }]
+    const imageProviderServiceMock = {
+      getProviderStats: jest.fn(() => Promise.resolve({ data })),
+    }
+    const commit = jest.fn()
+    const dispatch = jest.fn()
+    it('FETCH_MEDIA_TYPE_PROVIDERS on success', (done) => {
+      const action = store.actions(
+        imageProviderServiceMock,
+        imageProviderServiceMock
+      )[FETCH_MEDIA_TYPE_PROVIDERS]
+      action({ commit, dispatch }, { mediaType: 'image' }).then(() => {
+        expect(commit).toBeCalledWith(SET_PROVIDER_FETCH_ERROR, {
+          error: false,
+          mediaType: 'image',
+        })
+        expect(commit).toBeCalledWith(FETCH_MEDIA_PROVIDERS_START, {
+          mediaType: 'image',
+        })
 
-  // it('FETCH_MEDIA_PROVIDERS on failure', (done) => {
-  //   const failedServiceMock = {
-  //     getProviderStats: jest.fn(() => Promise.reject('error')),
-  //   }
-  //   const action = store.actions(failedServiceMock, failedServiceMock)[
-  //     FETCH_MEDIA_PROVIDERS
-  //   ]
-  //   action({ commit, dispatch }, { mediaType: 'image' }).catch(() => {
-  //     expect(imageProviderServiceMock.getProviderStats).toBeCalled()
-  //     expect(commit).toBeCalledWith(SET_PROVIDER_FETCH_ERROR, {
-  //       error: true,
-  //     })
-  //     done()
-  //   })
-  // })
-  // })
+        expect(imageProviderServiceMock.getProviderStats).toBeCalled()
+
+        expect(commit).toBeCalledWith(FETCH_MEDIA_PROVIDERS_END, {
+          mediaType: 'image',
+        })
+        expect(commit).toBeCalledWith(SET_MEDIA_PROVIDERS, {
+          mediaType: 'image',
+          providers: data,
+        })
+        done()
+      })
+    })
+  })
 })
