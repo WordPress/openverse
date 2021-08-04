@@ -1,26 +1,32 @@
-import uuid
-import psycopg2
-import os
-import sys
-import logging as log
-import time
 import argparse
 import datetime
+import logging as log
+import os
+import sys
+import time
+import uuid
+from collections import deque
+
 import elasticsearch
+import psycopg2
 from aws_requests_auth.aws_auth import AWSRequestsAuth
-from elasticsearch import Elasticsearch, RequestsHttpConnection, \
-    NotFoundError, helpers
-from elasticsearch.exceptions \
-    import ConnectionError as ElasticsearchConnectionError
+from elasticsearch import (
+    Elasticsearch,
+    RequestsHttpConnection,
+    NotFoundError,
+    helpers,
+)
+from elasticsearch.exceptions import ConnectionError as ESConnectionError
 from elasticsearch_dsl import connections, Search
-from psycopg2.sql import SQL, Identifier
-from ingestion_server.qa import create_search_qa_index
+from psycopg2.sql import SQL, Identifier, Literal
+
+from ingestion_server.distributed_reindex_scheduler import \
+    schedule_distributed_index
 from ingestion_server.elasticsearch_models import \
     database_table_to_elasticsearch_model
 from ingestion_server.es_mapping import index_settings
-from ingestion_server.distributed_reindex_scheduler import \
-    schedule_distributed_index
-from collections import deque
+from ingestion_server.qa import create_search_qa_index
+from ingestion_server.queries import get_existence_queries
 
 """
 A utility for indexing data to Elasticsearch. For each table to
@@ -73,7 +79,7 @@ def elasticsearch_connect(timeout=300):
     while True:
         try:
             return _elasticsearch_connect()
-        except ElasticsearchConnectionError as e:
+        except ESConnectionError as e:
             log.exception(e)
             log.error('Reconnecting to Elasticsearch in 5 seconds. . .')
             time.sleep(5)
@@ -152,14 +158,15 @@ def get_last_item_ids(table):
     pg_conn.set_session(readonly=True)
     cur = pg_conn.cursor()
     # Find the last row added to the database table
-    cur.execute(
-        SQL(
-            'SELECT id, identifier '
-            f'FROM {Identifier(table)} '
-            'ORDER BY id DESC '
-            'LIMIT 1;'
-        )
+    query = SQL(
+        'SELECT id, identifier '
+        'FROM {table} '
+        'ORDER BY id DESC '
+        'LIMIT 1;'
+    ).format(
+        table=Identifier(table),
     )
+    cur.execute(query)
     last_added_pg_id, last_added_uuid = cur.fetchone()
     cur.close()
     pg_conn.close()
@@ -203,12 +210,20 @@ class TableIndexer:
         # Select all documents in-between and replicate to Elasticsearch.
         if last_pg_id > last_es_id:
             log.info(f'Replicating range {last_es_id}-{last_pg_id}')
-            query_text = f'''
-                SELECT * FROM {table}
-                WHERE id BETWEEN {last_es_id} AND {last_pg_id}
-                AND license_version IS NOT NULL
-            '''
-            query = SQL(query_text)
+
+            deleted, mature = get_existence_queries(table)
+            query = SQL(
+                'SELECT *, {deleted}, {mature} '
+                'FROM {table} '
+                'WHERE id BETWEEN {last_es_id} AND {last_pg_id} '
+                'AND license_version IS NOT NULL;'
+            ).format(
+                deleted=deleted,
+                mature=mature,
+                table=Identifier(table),
+                last_es_id=Literal(last_es_id),
+                last_pg_id=Literal(last_pg_id),
+            )
             self.es.indices.create(
                 index=dest_idx,
                 body=index_settings(table)
@@ -401,7 +416,7 @@ class TableIndexer:
             try:
                 for table in self.tables_to_watch:
                     self._index_table(table)
-            except ElasticsearchConnectionError:
+            except ESConnectionError:
                 self.es = elasticsearch_connect()
             time.sleep(poll_interval)
 
@@ -427,7 +442,11 @@ class TableIndexer:
             f'Updating index {model_name} with changes since {since_date}'
         )
         query = SQL(
-            f"SELECT * FROM {model_name} WHERE updated_on >= '{since_date}'"
+            'SELECT * FROM {model_name} '
+            'WHERE updated_on >= {since_date};'
+        ).format(
+            model_name=Identifier(model_name),
+            since_date=Literal(since_date)
         )
         self.replicate(model_name, model_name, query)
 
