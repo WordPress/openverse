@@ -68,11 +68,11 @@ class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
 
     @staticmethod
     def validate_duration(value):
-        valid_ratios = {  # TODO: Finalise duration filters
+        valid_durations = {  # TODO: Finalise duration filters
             'short',
             'long'
         }
-        _validate_enum('aspect ratio', valid_ratios, value)
+        _validate_enum('duration', valid_durations, value)
         return value.lower()
 
 
