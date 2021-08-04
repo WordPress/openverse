@@ -104,7 +104,9 @@ class AudioSerializer(MediaSerializer):
     genres = serializers.ListField(
         child=serializers.CharField(),
         required=False,
-        help_text=''
+        help_text='An array of audio genres such as '
+                  '`rock`, `electronic` for `music` category, or '
+                  '`politics`, `sport`, `education` for `podcast` category'
     )
 
     duration = serializers.IntegerField(
