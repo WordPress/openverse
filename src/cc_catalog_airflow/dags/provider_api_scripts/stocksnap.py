@@ -8,6 +8,7 @@ Output:                 TSV file containing the image, the respective
 
 Notes:                  https://stocksnap.io/api/
                         No rate limit specified. No authentication required.
+                        All images are licensed under CC0.
 """
 import json
 import logging
@@ -37,6 +38,9 @@ DEFAULT_QUERY_PARAMS = {}
 
 delayed_requester = DelayedRequester(DELAY)
 image_store = ImageStore(provider=PROVIDER)
+
+license_url = "https://creativecommons.org/publicdomain/zero/1.0/"
+license_info = get_license_info(license_url=license_url)
 
 
 def main():
@@ -113,8 +117,11 @@ def _extract_item_data(media_data):
         logger.info("Found no image url.")
         logger.info(f"{json.dumps(media_data, indent=2)}")
         return None
-    item_license = _get_license()
-    title = _get_title(page)
+    title = _get_title(media_data)
+    if title is None:
+        logger.info("Found no image title.")
+        logger.info(f"{json.dumps(media_data, indent=2)}")
+        return None
     creator, creator_url = _get_creator_data(page)
     thumbnail = image_url
     metadata = _get_metadata(media_data)
@@ -130,7 +137,7 @@ def _extract_item_data(media_data):
         'height': height,
         'width': width,
         'thumbnail_url': thumbnail,
-        'license_info': item_license,
+        'license_info': license_info,
         'meta_data': metadata,
         'raw_tags': tags
     }
@@ -166,13 +173,15 @@ def _get_creator_data(page):
     return creator, creator_url
 
 
-def _get_title(page):
+def _get_title(item):
     """
     Get the photo's title and transform it to title case, as shown on its page.
     So for example, for "owl bird Photo" it returns "Owl Bird Photo".
     """
-    title_str = page.xpath("//h1/span")[0].text_content()
-    return title_str.title()
+    img_title = item.get("title")
+    if img_title is not None and img_title != "":
+        return img_title.title()
+    return None
 
 
 def _get_metadata(item):
@@ -189,15 +198,7 @@ def _get_metadata(item):
 
 
 def _get_tags(item):
-    return item.get('keywords')
-
-
-def _get_license():
-    """
-    All images are licensed under CC0.
-    """
-    item_license_url = "https://creativecommons.org/publicdomain/zero/1.0/"
-    return get_license_info(license_url=item_license_url)
+    return item.get("keywords")
 
 
 if __name__ == '__main__':
