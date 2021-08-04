@@ -41,7 +41,7 @@ docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "PGPASSWORD=depl
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF
 	ALTER TABLE audio RENAME TO audio_view;
 	ALTER TABLE audio_view ADD COLUMN standardized_popularity double precision, ADD COLUMN ingestion_type varchar(1000), ADD COLUMN audio_set jsonb, ADD COLUMN thumbnail varchar(1000);
-	\copy audio_view (identifier,created_on,updated_on,ingestion_type,provider,source,foreign_identifier,foreign_landing_url,url,thumbnail,duration,bit_rate,sample_rate,category,genres,audio_set,alt_files,filesize,license,license_version,creator,creator_url,title,meta_data,tags,last_synced_with_source,removed_from_source,view_count,standardized_popularity) from './sample_data/sample_audio_data.csv' with (FORMAT csv, HEADER true)
+	\copy audio_view (identifier,created_on,updated_on,ingestion_type,provider,source,foreign_identifier,foreign_landing_url,url,thumbnail,duration,bit_rate,sample_rate,category,genres,audio_set,alt_files,filesize,license,license_version,creator,creator_url,title,meta_data,tags,last_synced_with_source,removed_from_source,standardized_popularity) from './sample_data/sample_audio_data.csv' with (FORMAT csv, HEADER true)
 	EOF"
 
 # Load search quality assurance data.
