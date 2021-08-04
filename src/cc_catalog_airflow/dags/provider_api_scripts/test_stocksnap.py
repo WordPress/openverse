@@ -114,8 +114,8 @@ def test_extract_image_data_handles_example_dict(mock_get):
         'width': 5102,
         'thumbnail_url': image_url,
         'meta_data': {
-            "page_views": 5,
-            "downloads": 0,
+            "page_views": 165,
+            "downloads": 50,
             "favorites": 0,
         },
         'raw_tags': [

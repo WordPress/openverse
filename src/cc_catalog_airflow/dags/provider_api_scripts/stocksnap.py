@@ -27,8 +27,8 @@ logger = logging.getLogger(__name__)
 
 DELAY = 1  # in seconds
 RETRIES = 3
-HOST = 'stocksnap.io'
-ENDPOINT = f'https://{HOST}/api/load-photos/date/desc'
+HOST = "stocksnap.io"
+ENDPOINT = f"https://{HOST}/api/load-photos/date/desc"
 CDN = "https://cdn.stocksnap.io/img-thumbs/960w"
 PROVIDER = prov.STOCKSNAP_DEFAULT_PROVIDER
 HEADERS = {
@@ -103,7 +103,7 @@ def _process_item_batch(items_batch):
 
 def _extract_item_data(media_data):
     """
-    Extract data for individual image
+    Extract data for individual image.
     """
     try:
         foreign_id = media_data["img_id"]
@@ -128,18 +128,18 @@ def _extract_item_data(media_data):
     tags = _get_tags(media_data)
 
     return {
-        'title': title,
-        'creator': creator,
-        'creator_url': creator_url,
-        'foreign_identifier': foreign_id,
-        'foreign_landing_url': foreign_landing_url,
-        'image_url': image_url,
-        'height': height,
-        'width': width,
-        'thumbnail_url': thumbnail,
-        'license_info': license_info,
-        'meta_data': metadata,
-        'raw_tags': tags
+        "title": title,
+        "creator": creator,
+        "creator_url": creator_url,
+        "foreign_identifier": foreign_id,
+        "foreign_landing_url": foreign_landing_url,
+        "image_url": image_url,
+        "height": height,
+        "width": width,
+        "thumbnail_url": thumbnail,
+        "license_info": license_info,
+        "meta_data": metadata,
+        "raw_tags": tags
     }
 
 
@@ -154,9 +154,9 @@ def _get_foreign_landing_page(foreign_identifier):
 
 
 def _get_image_info(media_data):
-    width = media_data.get('img_width')
-    height = media_data.get('img_height')
-    img_id = media_data.get('img_id')
+    width = media_data.get("img_width")
+    height = media_data.get("img_height")
+    img_id = media_data.get("img_id")
     image_url = f"{CDN}/{img_id}.jpg"
     return image_url, width, height
 
@@ -201,5 +201,5 @@ def _get_tags(item):
     return item.get("keywords")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
