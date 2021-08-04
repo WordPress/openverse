@@ -32,7 +32,7 @@ docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy 
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "PGPASSWORD=deploy pg_dump -s -t image -U deploy -d openledger -h db | psql -U deploy -d openledger"
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF
 	ALTER TABLE image RENAME TO image_view;
-	ALTER TABLE image_view ADD COLUMN standardized_popularity double precision;
+	ALTER TABLE image_view ADD COLUMN standardized_popularity double precision, ADD COLUMN ingestion_type varchar(1000);
 	\copy image_view (identifier,created_on,updated_on,ingestion_type,provider,source,foreign_identifier,foreign_landing_url,url,thumbnail,width,height,filesize,license,license_version,creator,creator_url,title,meta_data,tags,watermarked,last_synced_with_source,removed_from_source,standardized_popularity) from './sample_data/sample_data.csv' with (FORMAT csv, HEADER true)
 	EOF"
 
