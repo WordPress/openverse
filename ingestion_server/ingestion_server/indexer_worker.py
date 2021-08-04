@@ -12,10 +12,11 @@ import os
 import boto3
 import requests
 from multiprocessing import Value, Process
-from psycopg2.sql import SQL
+from psycopg2.sql import SQL, Identifier, Literal
 
 from ingestion_server.constants.media_types import MEDIA_TYPES
 from ingestion_server.indexer import elasticsearch_connect, TableIndexer
+from ingestion_server.queries import get_existence_queries
 
 
 ec2_client = boto3.client(
@@ -51,24 +52,19 @@ def _execute_indexing_task(target_index, start_id, end_id, notify_url):
     elasticsearch = elasticsearch_connect()
     progress = Value('d', 0.0)
     finish_time = Value('d', 0.0)
-    exists_in_table = \
-        'exists(SELECT 1 FROM {table} ' \
-        'WHERE identifier = {table_name}.identifier) as "{name}"'
-    exists_in_deleted_table = exists_in_table.format(
-        table=f'api_deleted{table_name}', name='deleted',
-        table_name=table_name
-    )
-    exists_in_mature_table = exists_in_table.format(
-        table=f'api_mature{table_name}', name='mature',
-        table_name=table_name,
-    )
 
-    query = SQL(f'''
-                SELECT *,
-                  {exists_in_deleted_table}, {exists_in_mature_table}
-                FROM {table_name}
-                WHERE id BETWEEN {start_id} AND {end_id}
-                ''')
+    deleted, mature = get_existence_queries(table_name)
+    query = SQL(
+        'SELECT *, {deleted}, {mature} '
+        'FROM {table_name} '
+        'WHERE id BETWEEN {start_id} AND {end_id};'
+    ).format(
+        deleted=deleted,
+        mature=mature,
+        table_name=Identifier(table_name),
+        start_id=Literal(start_id),
+        end_id=Literal(end_id),
+    )
     log.info(f'Querying {query}')
     indexer = TableIndexer(
         elasticsearch, table_name, progress, finish_time

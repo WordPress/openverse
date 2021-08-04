@@ -35,7 +35,8 @@ class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
     categories = serializers.CharField(
         label="categories",
         help_text="A comma separated list of categories; available categories "
-                  "include `music`, `podcast`, `audiobook`, and `news`.",
+                  "include `music`, `sound_effect`, `podcast`, `audiobook`, "
+                  "and `news`.",
         required=False
     )
     duration = serializers.CharField(
@@ -57,6 +58,7 @@ class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
     def validate_categories(value):
         valid_categories = {
             'music',
+            'sound_effect',
             'podcast',
             'news',
             'audiobook',
@@ -66,11 +68,11 @@ class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
 
     @staticmethod
     def validate_duration(value):
-        valid_ratios = {  # TODO: Finalise duration filters
+        valid_durations = {  # TODO: Finalise duration filters
             'short',
             'long'
         }
-        _validate_enum('aspect ratio', valid_ratios, value)
+        _validate_enum('duration', valid_durations, value)
         return value.lower()
 
 
@@ -102,7 +104,9 @@ class AudioSerializer(MediaSerializer):
     genres = serializers.ListField(
         child=serializers.CharField(),
         required=False,
-        help_text=''
+        help_text='An array of audio genres such as '
+                  '`rock`, `electronic` for `music` category, or '
+                  '`politics`, `sport`, `education` for `podcast` category'
     )
 
     duration = serializers.IntegerField(
