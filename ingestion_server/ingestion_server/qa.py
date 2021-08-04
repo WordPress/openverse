@@ -11,7 +11,8 @@ class QAScores(Enum):
 
 
 def create_search_qa_index(table):
-    test_idx = f'search-qa-{table}'  # This changes search-qa for images to search-qa-image
+    # This changes search-qa for images to search-qa-image
+    test_idx = f'search-qa-{table}'
     if table == 'image':
         _phrase_relevance_images(test_idx)
     elif table == 'audio':
