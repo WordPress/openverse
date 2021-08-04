@@ -40,4 +40,4 @@ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openve
 image_stats_curl = """
 # Get the 
 curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/images/stats
-""" # noqa
+"""  # noqa
