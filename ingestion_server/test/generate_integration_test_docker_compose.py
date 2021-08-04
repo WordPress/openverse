@@ -31,6 +31,7 @@ with open(parent_docker_compose, 'r') as docker_compose_file:
         es = docker_compose['services']['es']
         ingestion_server = docker_compose['services']['ingestion-server']
         upstream_db = docker_compose['services']['upstream_db']
+
         # Delete services we're not testing.
         desired_services = {'es', 'db', 'ingestion-server', 'upstream_db'}
         for service in dict(docker_compose['services']):
@@ -55,6 +56,9 @@ with open(parent_docker_compose, 'r') as docker_compose_file:
         ingestion_server['depends_on'] = ['integration-es', 'integration-db']
         ingestion_server['build'] = '../'
 
+        # Set the directory correctly in the volume
+        ingestion_server['volumes'] = ['../:/ingestion_server']
+
         # Create a volume for the mock data
         db['volumes'] = ['./mock_data:/mock_data']
         upstream_db['volumes'] = ['./mock_data:/mock_data']
@@ -67,7 +71,6 @@ with open(parent_docker_compose, 'r') as docker_compose_file:
         docker_compose['services']['integration-es'] = es
         docker_compose['services']['integration-ingestion'] = ingestion_server
         docker_compose['services']['integration-upstream'] = upstream_db
-
 
         # Start the document with a warning message
         warning_message = '\n'.join(textwrap.wrap(

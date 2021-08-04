@@ -324,7 +324,7 @@ class Audio(Media):
         provider = row[schema['provider']]
         authority_boost = Audio.get_authority_boost(meta, provider)
 
-        attrs = Image.get_instance_attrs(row, schema)
+        attrs = Audio.get_instance_attrs(row, schema)
         popularity = attrs['standardized_popularity']
 
         return Audio(
