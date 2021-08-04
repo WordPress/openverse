@@ -33,7 +33,7 @@ docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "PGPASSWORD=depl
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF
 	ALTER TABLE image RENAME TO image_view;
 	ALTER TABLE image_view ADD COLUMN standardized_popularity double precision;
-	\copy image_view (id,created_on,updated_on,identifier,provider,source,foreign_identifier,foreign_landing_url,url,thumbnail,width,height,filesize,license,license_version,creator,creator_url,title,tags_list,last_synced_with_source,removed_from_source,meta_data,tags,watermarked,view_count,standardized_popularity) from './sample_data/sample_data.csv' with (FORMAT csv, HEADER true)
+	\copy image_view (identifier,created_on,updated_on,ingestion_type,provider,source,foreign_identifier,foreign_landing_url,url,thumbnail,width,height,filesize,license,license_version,creator,creator_url,title,meta_data,tags,watermarked,last_synced_with_source,removed_from_source,standardized_popularity) from './sample_data/sample_data.csv' with (FORMAT csv, HEADER true)
 	EOF"
 
 # Load sample data for audio
