@@ -18,6 +18,13 @@ from catalog.api.models import Image, OAuth2Verification
 from catalog.api.utils.watermark import watermark
 
 from test.constants import API_URL
+from test.media_integration import (
+    search,
+    search_quotes,
+    search_special_chars,
+    search_consistency,
+    detail,
+)
 
 
 @pytest.fixture
@@ -29,50 +36,25 @@ def search_fixture():
     return parsed
 
 
+def test_search(search_fixture):
+    search(search_fixture)
+
+
 def test_search_quotes():
-    """
-    We want to return a response even if the user messes up quote matching.
-    """
-    response = requests.get(f'{API_URL}/v1/images?q="test', verify=False)
-    assert response.status_code == 200
+    search_quotes('images', 'dog')
 
 
 def test_search_with_special_characters():
-    response = requests.get(f'{API_URL}/v1/images?q=dog!', verify=False)
-    assert response.status_code == 200
-
-
-def test_search(search_fixture):
-    assert search_fixture['result_count'] > 0
+    search_special_chars('images', 'dog')
 
 
 def test_search_consistency():
-    """
-    Elasticsearch sometimes reaches an inconsistent state, which causes search
-    results to appear differently upon page refresh. This can also introduce
-    image duplicates in subsequent pages. This test ensures that no duplicates
-    appear in the first few pages of a search query.
-    """
     n_pages = 5
-    searches = set(
-        requests.get(f'{API_URL}/v1/images?q=dog;page={page}',
-                     verify=False)
-        for page in range(1, n_pages)
-    )
-
-    images = set()
-    for response in searches:
-        parsed = json.loads(response.text)
-        for result in parsed['results']:
-            image_id = result['id']
-            assert image_id not in images
-            images.add(image_id)
+    search_consistency('images', n_pages)
 
 
 def test_image_detail(search_fixture):
-    test_id = search_fixture['results'][0]['id']
-    response = requests.get(f'{API_URL}/v1/images/{test_id}', verify=False)
-    assert response.status_code == 200
+    detail('images', search_fixture)
 
 
 @pytest.fixture

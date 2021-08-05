@@ -9,6 +9,13 @@ import pytest
 import requests
 
 from test.constants import API_URL
+from test.media_integration import (
+    search,
+    search_quotes,
+    search_special_chars,
+    search_consistency,
+    detail,
+)
 
 @pytest.fixture
 def audio_fixture():
@@ -19,10 +26,21 @@ def audio_fixture():
 
 
 def test_search(audio_fixture):
-    assert audio_fixture['result_count'] > 0
+    search(audio_fixture)
+
+
+def test_search_quotes():
+    search_quotes('audio', 'love')
+
+
+def test_search_with_special_characters():
+    search_special_chars('audio', 'love')
+
+
+def test_search_consistency():
+    n_pages = 5
+    search_consistency('audio', n_pages)
 
 
 def test_audio_detail(audio_fixture):
-    test_id = audio_fixture['results'][0]['id']
-    response = requests.get(f'{API_URL}/v1/audio/{test_id}', verify=False)
-    assert response.status_code == 200
+    detail('audio', audio_fixture)
