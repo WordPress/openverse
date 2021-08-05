@@ -106,7 +106,7 @@ class Task(Process):
             reload_upstream(self.model)
             indexer.reindex(self.model)
         elif self.task_type == TaskTypes.LOAD_TEST_DATA:
-            indexer.load_test_data()
+            indexer.load_test_data(self.model)
         logging.info(f'Task {self.task_id} exited.')
         if self.callback_url:
             try:

@@ -44,7 +44,7 @@ jobs:
     - name: Ingest and index test data
       run: ./load_sample_data.sh
     - name: Wait for data to be indexed in Elasticsearch
-      run: bash -c 'while [[ "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/image | grep -c image-)" == "0" ]]; do sleep 5 && docker-compose logs; done'
+      run: bash -c 'while [[ "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/image | grep -c image-)" == "0" || "$(curl -sb -H "Accept:application/json" http://localhost:9200/_cat/aliases/audio | grep -c audio-)" == "0" ]]; do sleep 5 && docker-compose logs; done'
     - name: Run API tests
       run: cd openverse-api && test/run_test.sh
     - name: Run analytics tests

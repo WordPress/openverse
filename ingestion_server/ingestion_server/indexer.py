@@ -451,9 +451,9 @@ class TableIndexer:
         self.replicate(model_name, model_name, query)
 
     @staticmethod
-    def load_test_data():
+    def load_test_data(table):
         """ Create test indices in Elasticsearch for QA. """
-        create_search_qa_index()
+        create_search_qa_index(table)
 
     @staticmethod
     def pg_chunk_to_es(pg_chunk, columns, origin_table, dest_index):
