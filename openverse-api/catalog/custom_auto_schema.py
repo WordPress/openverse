@@ -1,10 +1,6 @@
 from drf_yasg import openapi
-from drf_yasg.utils import (
-    filter_none, force_real_str, force_serializer_instance, get_consumes,
-    get_produces, guess_response_status, merge_params, no_body,
-    param_list_to_odict
-)
 from drf_yasg.inspectors import SwaggerAutoSchema
+from drf_yasg.utils import filter_none, force_real_str
 
 
 class CustomAutoSchema(SwaggerAutoSchema):

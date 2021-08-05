@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('meta_data', django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True)),
                 ('audio_set_position', models.IntegerField(blank=True, help_text='Ordering of the audio in the set.', null=True)),
                 ('genres', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=80), db_index=True, help_text='The artistic style of this audio file, eg. hip-hop (music) / tech (podcasts).', null=True, size=None)),
-                ('category', models.CharField(blank=True, db_index=True, help_text='The category of this audio file, eg. music, podcast, news & audiobook.', max_length=80, null=True)),
+                ('category', models.CharField(blank=True, db_index=True, help_text='The category of this audio file, eg. music, sound_effect, podcast, news & audiobook.', max_length=80, null=True)),
                 ('duration', models.IntegerField(blank=True, help_text='The time length of the audio file in milliseconds.', null=True)),
                 ('bit_rate', models.IntegerField(blank=True, help_text='Number in bits per second, eg. 128000.', null=True)),
                 ('sample_rate', models.IntegerField(blank=True, help_text='Number in hertz, eg. 44100.', null=True)),

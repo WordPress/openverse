@@ -1,38 +1,51 @@
-from rest_framework.generics import GenericAPIView, CreateAPIView
-from rest_framework.mixins import RetrieveModelMixin
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import serializers, status
-from rest_framework.authentication import BasicAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from drf_yasg.utils import swagger_auto_schema
-from catalog.api.models import Image, ContentProvider, DeletedImage, \
-    ImageReport
-from catalog.api.utils import ccrel
-from catalog.api.serializers.image_serializers import\
-    ImageSearchResultsSerializer, ImageSerializer,\
-    InputErrorSerializer, ImageSearchQueryStringSerializer,\
-    WatermarkQueryStringSerializer, ReportImageSerializer,\
-    OembedSerializer, NotFoundErrorSerializer, OembedResponseSerializer
-from rest_framework.reverse import reverse
-from catalog.api.utils.watermark import watermark
-from django.http.response import HttpResponse, FileResponse
-import catalog.api.controllers.search_controller as search_controller
-from catalog.api.utils.exceptions import input_error_response
-import logging
-import piexif
 import io
+import logging
+
 import libxmp
+import piexif
 import requests
 from PIL import Image as img
+from django.http.response import HttpResponse, FileResponse
 from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.generics import GenericAPIView, CreateAPIView
+from rest_framework.mixins import RetrieveModelMixin
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework.views import APIView
+
+import catalog.api.controllers.search_controller as search_controller
+from catalog.api.models import Image, ImageReport
+from catalog.api.serializers.error_serializers import (
+    InputErrorSerializer,
+    NotFoundErrorSerializer,
+)
+from catalog.api.serializers.image_serializers import (
+    ImageSearchResultsSerializer,
+    ImageSerializer,
+    ImageSearchQueryStringSerializer,
+    WatermarkQueryStringSerializer,
+    ReportImageSerializer,
+    OembedSerializer,
+    OembedResponseSerializer
+)
+from catalog.api.utils import ccrel
+from catalog.api.utils.exceptions import input_error_response
+from catalog.api.utils.watermark import watermark
+from catalog.custom_auto_schema import CustomAutoSchema
 from catalog.example_responses import (
-    image_search_200_example, image_search_400_example,
-    image_detail_200_example, image_detail_404_example, oembed_list_200_example,
-    oembed_list_404_example, recommendations_images_read_200_example,
+    image_search_200_example,
+    image_search_400_example,
+    image_detail_200_example,
+    image_detail_404_example,
+    oembed_list_200_example,
+    oembed_list_404_example,
+    recommendations_images_read_200_example,
     recommendations_images_read_404_example
 )
-from catalog.custom_auto_schema import CustomAutoSchema
 
 log = logging.getLogger(__name__)
 
