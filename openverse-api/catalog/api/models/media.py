@@ -54,7 +54,11 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     )
     removed_from_source = models.BooleanField(default=False)
 
-    view_count = models.IntegerField(default=0)
+    view_count = models.IntegerField(
+        blank=True,
+        null=True,
+        default=0,
+    )
 
     tags = models.JSONField(blank=True, null=True)
     tags_list = ArrayField(
