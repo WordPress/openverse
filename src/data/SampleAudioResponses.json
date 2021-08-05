@@ -1,78 +1,733 @@
 {
   "search": {
-    "application/json": {
-      "result_count": 77,
-      "page_count": 77,
-      "page_size": 1,
-      "results": [
+    "result_count": 2,
+    "page_count": 0,
+    "page_size": 2,
+    "results": [
+      {
+        "id": "8071128a-bebc-4c24-823d-6e26a2e6dfe2",
+        "title": "Soon and Very Soon (Negro Spiritual)",
+        "foreign_landing_url": "https://www.jamendo.com/track/382",
+        "creator": "Les Petits Chanteurs de Montigny",
+        "creator_url": "https://www.jamendo.com/artist/20/pcmontigny",
+        "url": "https://mp3d.jamendo.com/download/track/382/mp32",
+        "license": "by-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "chorale"
+          },
+          {
+            "name": "happy"
+          },
+          {
+            "name": "male"
+          },
+          {
+            "name": "speed_medium"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "fields_matched": [
+          "tags.name"
+        ],
+        "genres": [
+          "classical",
+          "gospel"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/8071128a-bebc-4c24-823d-6e26a2e6dfe2",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/8071128a-bebc-4c24-823d-6e26a2e6dfe2"
+      },
+      {
+      "id": "73e00493-9189-42ed-955b-4f9d26d0d9f4",
+      "title": "Aimons nous...",
+      "foreign_landing_url": "https://www.jamendo.com/track/217",
+      "creator": "David TMX",
+      "creator_url": "https://www.jamendo.com/artist/14/david.tmx",
+      "url": "https://mp3d.jamendo.com/download/track/217/mp32",
+      "license": "by-nc-sa",
+      "license_version": "2.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+      "provider": "jamendo",
+      "source": "jamendo",
+      "tags": [
         {
-          "title": "File:Mozart - Eine kleine Nachtmusik - 1. Allegro.ogg",
-          "id": "36537842-b067-4ca0-ad67-e00ff2e06b2e",
-          "creator": "Wolfgang Amadeus Mozart",
-          "creator_url": "https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart",
-          "url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg",
-          "provider": "wikimedia",
-          "source": "wikimedia",
-          "license": "by-sa",
-          "license_version": "2.0",
-          "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
-          "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=3536953",
-          "detail_url": "http://api.openverse.engineering/v1/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
-          "related_url": "http://api.openverse.engineering/v1/recommendations/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
-          "fields_matched": ["description", "title"]
+          "name": "happy"
         },
         {
-          "title": "Sax Is My Cardio (Remix)",
-          "id": "12337842-b067-4ca0-ad67-e00ff2e06b2e",
-          "creator": "KUZINMUZIN",
-          "creator_url": "https://www.jamendo.com/artist/484482/kuzinmuzin",
-          "url": "https://mp3d.jamendo.com/?trackid=1848961&format=mp32&from=BAsh%2FLMv%2Bci1uGSULsDEaQ%3D%3D%7CH9B8eTQUjJE7uccjCdcGNQ%3D%3D",
-          "provider": "jamendo",
-          "source": "jamendo",
-          "license": "by-nc-nd",
-          "license_version": "2.0",
-          "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/",
-          "foreign_landing_url": "https://www.jamendo.com/track/1856494/sax-is-my-cardio-remix",
-          "detail_url": "http://api.openverse.engineering/v1/audio/12337842-b067-4ca0-ad67-e00ff2e06b2e",
-          "related_url": "http://api.openverse.engineering/v1/recommendations/audio/12337842-b067-4ca0-ad67-e00ff2e06b2e",
-          "fields_matched": ["description", "title"]
+          "name": "male"
+        },
+        {
+          "name": "speed_veryhigh"
+        },
+        {
+          "name": "vocal"
         }
-      ]
+      ],
+      "fields_matched": [
+        "tags.name"
+      ],
+      "genres": [
+        "metal"
+      ],
+      "detail_url": "http://localhost:8000/v1/audio/73e00493-9189-42ed-955b-4f9d26d0d9f4",
+      "related_url": "http://localhost:8000/v1/recommendations/audio/73e00493-9189-42ed-955b-4f9d26d0d9f4"
     }
+    ]
   },
   "related": {
-    "application/json": {
-      "result_count": 10000,
-      "page_count": 0,
-      "results": [
-        {
-          "title": "File:Mozart - Eine kleine Nachtmusik - 1. Allegro.ogg",
-          "id": "36537842-b067-4ca0-ad67-e00ff2e06b2e",
-          "creator": "Wolfgang Amadeus Mozart",
-          "creator_url": "https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart",
-          "url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg",
-          "provider": "wikimedia",
-          "source": "wikimedia",
-          "license": "by-sa",
-          "license_version": "2.0",
-          "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
-          "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=3536953",
-          "detail_url": "http://api.openverse.engineering/v1/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
-          "related_url": "http://api.openverse.engineering/v1/recommendations/audio/36537842-b067-4ca0-ad67-e00ff2e06b2e",
-          "fields_matched": ["description", "title"],
-          "tags": [
-            {
-              "name": "exam"
-            },
-            {
-              "name": "tactics"
-            }
-          ]
-        }
-      ]
-    }
+    "result_count": 100,
+    "page_count": 5,
+    "page_size": 20,
+    "results": [
+      {
+        "id": "deeab14b-f63d-4b41-ac6f-4e3578aff4dd",
+        "title": "Apologies",
+        "foreign_landing_url": "https://www.jamendo.com/track/171",
+        "creator": "TriFace",
+        "creator_url": "https://www.jamendo.com/artist/7/triface",
+        "url": "https://mp3d.jamendo.com/download/track/171/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "speed_high"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "hardcore",
+          "metal",
+          "rock"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/deeab14b-f63d-4b41-ac6f-4e3578aff4dd",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/deeab14b-f63d-4b41-ac6f-4e3578aff4dd"
+      },
+      {
+        "id": "2a362316-ab88-4a78-a4f4-005afe8025a7",
+        "title": "J'm'e FPM",
+        "foreign_landing_url": "https://www.jamendo.com/track/168",
+        "creator": "TriFace",
+        "creator_url": "https://www.jamendo.com/artist/7/triface",
+        "url": "https://mp3d.jamendo.com/download/track/168/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "speed_medium"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "hardcore",
+          "metal",
+          "rock"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/2a362316-ab88-4a78-a4f4-005afe8025a7",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/2a362316-ab88-4a78-a4f4-005afe8025a7"
+      },
+      {
+        "id": "5a1188f7-853b-4f91-9a4c-fea9d4b58ff9",
+        "title": "Mind Asylum",
+        "foreign_landing_url": "https://www.jamendo.com/track/174",
+        "creator": "Skaut",
+        "creator_url": "https://www.jamendo.com/artist/9/skaut",
+        "url": "https://mp3d.jamendo.com/download/track/174/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "speed_high"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "rock"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/5a1188f7-853b-4f91-9a4c-fea9d4b58ff9",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/5a1188f7-853b-4f91-9a4c-fea9d4b58ff9"
+      },
+      {
+        "id": "c289a688-c528-4673-b640-e407e13256fb",
+        "title": "Trio HxC",
+        "foreign_landing_url": "https://www.jamendo.com/track/169",
+        "creator": "TriFace",
+        "creator_url": "https://www.jamendo.com/artist/7/triface",
+        "url": "https://mp3d.jamendo.com/download/track/169/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "speed_medium"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "alternativerock",
+          "hardcore",
+          "metal"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/c289a688-c528-4673-b640-e407e13256fb",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/c289a688-c528-4673-b640-e407e13256fb"
+      },
+      {
+        "id": "8071128a-bebc-4c24-823d-6e26a2e6dfe2",
+        "title": "Soon and Very Soon (Negro Spiritual)",
+        "foreign_landing_url": "https://www.jamendo.com/track/382",
+        "creator": "Les Petits Chanteurs de Montigny",
+        "creator_url": "https://www.jamendo.com/artist/20/pcmontigny",
+        "url": "https://mp3d.jamendo.com/download/track/382/mp32",
+        "license": "by-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "chorale"
+          },
+          {
+            "name": "happy"
+          },
+          {
+            "name": "male"
+          },
+          {
+            "name": "speed_medium"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "classical",
+          "gospel"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/8071128a-bebc-4c24-823d-6e26a2e6dfe2",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/8071128a-bebc-4c24-823d-6e26a2e6dfe2"
+      },
+      {
+        "id": "ca315523-f296-44b5-9e61-646e52c4b621",
+        "title": "The Monster",
+        "foreign_landing_url": "https://www.jamendo.com/track/243",
+        "creator": "Both",
+        "creator_url": "https://www.jamendo.com/artist/5/both",
+        "url": "https://mp3d.jamendo.com/download/track/243/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "female"
+          },
+          {
+            "name": "neutral"
+          },
+          {
+            "name": "speed_medium"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "rock"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/ca315523-f296-44b5-9e61-646e52c4b621",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/ca315523-f296-44b5-9e61-646e52c4b621"
+      },
+      {
+        "id": "60fae2f4-7425-46e0-8e49-fad36fedb8ac",
+        "title": "Jouvencelle",
+        "foreign_landing_url": "https://www.jamendo.com/track/218",
+        "creator": "David TMX",
+        "creator_url": "https://www.jamendo.com/artist/14/david.tmx",
+        "url": "https://mp3d.jamendo.com/download/track/218/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "neutral"
+          },
+          {
+            "name": "speed_medium"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "punk"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/60fae2f4-7425-46e0-8e49-fad36fedb8ac",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/60fae2f4-7425-46e0-8e49-fad36fedb8ac"
+      },
+      {
+        "id": "aa2ea571-fa7d-4fb6-88ef-c0c1c303ce67",
+        "title": "Un Poil De Relifion",
+        "foreign_landing_url": "https://www.jamendo.com/track/170",
+        "creator": "TriFace",
+        "creator_url": "https://www.jamendo.com/artist/7/triface",
+        "url": "https://mp3d.jamendo.com/download/track/170/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "speed_high"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "electronic",
+          "hardcore",
+          "metal"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/aa2ea571-fa7d-4fb6-88ef-c0c1c303ce67",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/aa2ea571-fa7d-4fb6-88ef-c0c1c303ce67"
+      },
+      {
+        "id": "4ab432a6-4587-446a-8d4e-56bc0f3f9dc4",
+        "title": "New Bitch",
+        "foreign_landing_url": "https://www.jamendo.com/track/199",
+        "creator": "TriFace",
+        "creator_url": "https://www.jamendo.com/artist/7/triface",
+        "url": "https://mp3d.jamendo.com/download/track/199/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "speed_veryhigh"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/4ab432a6-4587-446a-8d4e-56bc0f3f9dc4",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/4ab432a6-4587-446a-8d4e-56bc0f3f9dc4"
+      },
+      {
+        "id": "a6222e81-01a2-435e-8a56-0694ca69e2ba",
+        "title": "Croquemitaine",
+        "foreign_landing_url": "https://www.jamendo.com/track/224",
+        "creator": "David TMX",
+        "creator_url": "https://www.jamendo.com/artist/14/david.tmx",
+        "url": "https://mp3d.jamendo.com/download/track/224/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "neutral"
+          },
+          {
+            "name": "speed_veryhigh"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "punk"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/a6222e81-01a2-435e-8a56-0694ca69e2ba",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/a6222e81-01a2-435e-8a56-0694ca69e2ba"
+      },
+      {
+        "id": "e1132e86-8987-41fa-b180-82a319db2865",
+        "title": "Headbanger",
+        "foreign_landing_url": "https://www.jamendo.com/track/229",
+        "creator": "David TMX",
+        "creator_url": "https://www.jamendo.com/artist/14/david.tmx",
+        "url": "https://mp3d.jamendo.com/download/track/229/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "neutral"
+          },
+          {
+            "name": "speed_medium"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "metal"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/e1132e86-8987-41fa-b180-82a319db2865",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/e1132e86-8987-41fa-b180-82a319db2865"
+      },
+      {
+        "id": "509c6689-6d09-4e9e-b146-3e691066599b",
+        "title": "Roads Of Life",
+        "foreign_landing_url": "https://www.jamendo.com/track/348",
+        "creator": "DJ Epsilon",
+        "creator_url": "https://www.jamendo.com/artist/19/djepsilon",
+        "url": "https://mp3d.jamendo.com/download/track/348/mp32",
+        "license": "by-nc-nd",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nd-nc/2.0/jp/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "instrumental"
+          },
+          {
+            "name": "speed_medium"
+          }
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/509c6689-6d09-4e9e-b146-3e691066599b",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/509c6689-6d09-4e9e-b146-3e691066599b"
+      },
+      {
+        "id": "2154afd9-2f8a-40ba-895d-f540664cc4ad",
+        "title": "Papy HxC",
+        "foreign_landing_url": "https://www.jamendo.com/track/200",
+        "creator": "TriFace",
+        "creator_url": "https://www.jamendo.com/artist/7/triface",
+        "url": "https://mp3d.jamendo.com/download/track/200/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "speed_veryhigh"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/2154afd9-2f8a-40ba-895d-f540664cc4ad",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/2154afd9-2f8a-40ba-895d-f540664cc4ad"
+      },
+      {
+        "id": "b05643c0-c41f-4649-bac6-dddbcfa9b79e",
+        "title": "Noxious",
+        "foreign_landing_url": "https://www.jamendo.com/track/230",
+        "creator": "David TMX",
+        "creator_url": "https://www.jamendo.com/artist/14/david.tmx",
+        "url": "https://mp3d.jamendo.com/download/track/230/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "neutral"
+          },
+          {
+            "name": "speed_high"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "metal"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/b05643c0-c41f-4649-bac6-dddbcfa9b79e",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/b05643c0-c41f-4649-bac6-dddbcfa9b79e"
+      },
+      {
+        "id": "e95e2afa-dced-4175-adf7-0cc31db4ae26",
+        "title": "Nocturnes (W.A. Mozart)",
+        "foreign_landing_url": "https://www.jamendo.com/track/389",
+        "creator": "Les Petits Chanteurs de Montigny",
+        "creator_url": "https://www.jamendo.com/artist/20/pcmontigny",
+        "url": "https://mp3d.jamendo.com/download/track/389/mp32",
+        "license": "by-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "enfants"
+          },
+          {
+            "name": "female"
+          },
+          {
+            "name": "neutral"
+          },
+          {
+            "name": "speed_medium"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "choral",
+          "classical"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/e95e2afa-dced-4175-adf7-0cc31db4ae26",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/e95e2afa-dced-4175-adf7-0cc31db4ae26"
+      },
+      {
+        "id": "a55d27fa-10b5-4e01-a114-d5ad1a3acb53",
+        "title": "Take Up Arms",
+        "foreign_landing_url": "https://www.jamendo.com/track/246",
+        "creator": "Both",
+        "creator_url": "https://www.jamendo.com/artist/5/both",
+        "url": "https://mp3d.jamendo.com/download/track/246/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "female"
+          },
+          {
+            "name": "neutral"
+          },
+          {
+            "name": "speed_medium"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "rock"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/a55d27fa-10b5-4e01-a114-d5ad1a3acb53",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/a55d27fa-10b5-4e01-a114-d5ad1a3acb53"
+      },
+      {
+        "id": "5593084c-92b9-4325-ae0c-28ed692cadb3",
+        "title": "Y'a un truc",
+        "foreign_landing_url": "https://www.jamendo.com/track/220",
+        "creator": "David TMX",
+        "creator_url": "https://www.jamendo.com/artist/14/david.tmx",
+        "url": "https://mp3d.jamendo.com/download/track/220/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "neutral"
+          },
+          {
+            "name": "speed_medium"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "punk"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/5593084c-92b9-4325-ae0c-28ed692cadb3",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/5593084c-92b9-4325-ae0c-28ed692cadb3"
+      },
+      {
+        "id": "30b98def-d59f-46ed-ba39-076179f467e1",
+        "title": "Space Sailors",
+        "foreign_landing_url": "https://www.jamendo.com/track/349",
+        "creator": "DJ Epsilon",
+        "creator_url": "https://www.jamendo.com/artist/19/djepsilon",
+        "url": "https://mp3d.jamendo.com/download/track/349/mp32",
+        "license": "by-nc-nd",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nd-nc/2.0/jp/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "instrumental"
+          },
+          {
+            "name": "speed_medium"
+          }
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/30b98def-d59f-46ed-ba39-076179f467e1",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/30b98def-d59f-46ed-ba39-076179f467e1"
+      },
+      {
+        "id": "73e00493-9189-42ed-955b-4f9d26d0d9f4",
+        "title": "Aimons nous...",
+        "foreign_landing_url": "https://www.jamendo.com/track/217",
+        "creator": "David TMX",
+        "creator_url": "https://www.jamendo.com/artist/14/david.tmx",
+        "url": "https://mp3d.jamendo.com/download/track/217/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "happy"
+          },
+          {
+            "name": "male"
+          },
+          {
+            "name": "speed_veryhigh"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "metal"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/73e00493-9189-42ed-955b-4f9d26d0d9f4",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/73e00493-9189-42ed-955b-4f9d26d0d9f4"
+      },
+      {
+        "id": "054145e7-e36c-42ec-a32b-60eb6fe9f801",
+        "title": "L'homme pouce",
+        "foreign_landing_url": "https://www.jamendo.com/track/219",
+        "creator": "David TMX",
+        "creator_url": "https://www.jamendo.com/artist/14/david.tmx",
+        "url": "https://mp3d.jamendo.com/download/track/219/mp32",
+        "license": "by-nc-sa",
+        "license_version": "2.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+        "provider": "jamendo",
+        "source": "jamendo",
+        "tags": [
+          {
+            "name": "male"
+          },
+          {
+            "name": "speed_medium"
+          },
+          {
+            "name": "vocal"
+          }
+        ],
+        "genres": [
+          "metal"
+        ],
+        "detail_url": "http://localhost:8000/v1/audio/054145e7-e36c-42ec-a32b-60eb6fe9f801",
+        "related_url": "http://localhost:8000/v1/recommendations/audio/054145e7-e36c-42ec-a32b-60eb6fe9f801"
+      }
+    ]
   },
   "detail": {
-    "application/json": {}
+    "id": "73e00493-9189-42ed-955b-4f9d26d0d9f4",
+    "title": "Aimons nous...",
+    "foreign_landing_url": "https://www.jamendo.com/track/217",
+    "creator": "David TMX",
+    "creator_url": "https://www.jamendo.com/artist/14/david.tmx",
+    "url": "https://mp3d.jamendo.com/download/track/217/mp32",
+    "license": "by-nc-sa",
+    "license_version": "2.0",
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+    "provider": "jamendo",
+    "source": "jamendo",
+    "tags": [
+      {
+        "name": "happy"
+      },
+      {
+        "name": "male"
+      },
+      {
+        "name": "speed_veryhigh"
+      },
+      {
+        "name": "vocal"
+      }
+    ],
+    "attribution": "\"Aimons nous...\" by David TMX is licensed under CC-BY-NC-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/2.0/.",
+    "audio_set": null,
+    "genres": [
+      "metal"
+    ],
+    "duration": 127000,
+    "bit_rate": null,
+    "sample_rate": null,
+    "alt_files": null,
+    "detail_url": "http://localhost:8000/v1/audio/73e00493-9189-42ed-955b-4f9d26d0d9f4",
+    "related_url": "http://localhost:8000/v1/recommendations/audio/73e00493-9189-42ed-955b-4f9d26d0d9f4"
   }
 }
