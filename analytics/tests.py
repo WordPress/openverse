@@ -19,7 +19,7 @@ End-to-end tests of the analytics server. Run with `pytest -s`.
 
 API_URL = os.getenv('ANALYTICS_SERVER_URL', 'http://localhost:8090')
 session_id = '00000000-0000-0000-0000-000000000000'
-result_id = '380e1781-bb07-4d6f-aa65-e199ad6d68cb'
+result_id = '29cb352c-60c1-41d8-bfa1-7d6f7d955f63'
 test_query = 'integration test'
 engine = create_engine(settings.DATABASE_CONNECTION)
 session_maker = sessionmaker(bind=engine)
@@ -122,10 +122,10 @@ def test_msg_parsing_noparam():
 def test_msg_parsing_valid_param():
     test_msg = mock_attribution_event({
         'http_referer': 'https://alden.page/blog',
-        'request': 'GET /static/img/cc-nd_icon.svg?image_id=b45c0995-9896-4ba8-838d-096ec4e9cdf4 HTTP/1.1',
+        'request': 'GET /static/img/cc-nd_icon.svg?image_id=e48403b1-cf5c-40e6-b6d1-76318c130e12 HTTP/1.1',
     })
     parsed = parse_message(test_msg)
-    assert parsed['identifier'] == 'b45c0995-9896-4ba8-838d-096ec4e9cdf4'
+    assert parsed['identifier'] == 'e48403b1-cf5c-40e6-b6d1-76318c130e12'
 
 
 def test_msg_parsing_invalid_params():
