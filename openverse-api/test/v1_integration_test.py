@@ -206,13 +206,13 @@ def test_creator_quotation_grouping():
     """
     no_quotes = json.loads(
         requests.get(
-            f'{API_URL}/v1/images?creator=claude%20monet',
+            f'{API_URL}/v1/images?creator=william%20ford%stanley',
             verify=False
         ).text
     )
     quotes = json.loads(
         requests.get(
-            f'{API_URL}/v1/images?creator="claude%20monet"',
+            f'{API_URL}/v1/images?creator="william%20ford%stanley"',
             verify=False
         ).text
     )
@@ -221,7 +221,7 @@ def test_creator_quotation_grouping():
     # Did we find only Claude Monet works, or did his lesser known brother Jim
     # Monet sneak into the results?
     for result in quotes['results']:
-        assert 'Claude Monet' in result['creator']
+        assert 'William Ford Stanley' in result['creator']
 
 
 @pytest.fixture
@@ -392,7 +392,7 @@ def test_license_override():
 
 def test_source_search():
     response = requests.get(
-        f'{API_URL}/v1/images?source=behance', verify=False
+        f'{API_URL}/v1/images?source=flickr', verify=False
     )
     if response.status_code != 200:
         print(f'Request failed. Message: {response.body}')
@@ -544,13 +544,14 @@ def test_related_image_search_page_consistency(
 def test_oembed_endpoint_for_json():
     response = requests.get(
         f'{API_URL}/v1/oembed?url=https%3A//'
-        'search.creativecommons.org/photos/dac5f6b0-e07a-44a0-a444-7f43d71f9beb'
+        'search.creativecommons.org/photos/'
+        '29cb352c-60c1-41d8-bfa1-7d6f7d955f63'
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == "application/json"
     parsed = response.json()
-    assert parsed['width'] == 1400
-    assert parsed['height'] == 656
+    assert parsed['width'] == 1276
+    assert parsed['height'] == 1536
     assert parsed['license_url'] == 'https://creativecommons.org/licenses/by-nc-nd/4.0/'
 
 
@@ -558,14 +559,15 @@ def test_oembed_endpoint_for_xml():
     response = requests.get(
         f'{API_URL}/v1/oembed?url=https%3A//'
         'search.creativecommons.org/photos/'
-        'dac5f6b0-e07a-44a0-a444-7f43d71f9beb&format=xml'
+        '29cb352c-60c1-41d8-bfa1-7d6f7d955f63'
+        '&format=xml'
     )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == "application/xml; charset=utf-8"
     response_body_as_xml = ET.fromstring(response.content)
     xml_tree = ET.ElementTree(response_body_as_xml)
-    assert xml_tree.find("width").text == '1400'
-    assert xml_tree.find("height").text == '656'
+    assert xml_tree.find("width").text == '1276'
+    assert xml_tree.find("height").text == '1536'
     assert xml_tree.find("license_url").text == 'https://creativecommons.org/licenses/by-nc-nd/4.0/'
 
 
