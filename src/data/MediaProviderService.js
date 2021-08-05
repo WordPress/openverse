@@ -2,7 +2,7 @@ import ApiService from './ApiService'
 
 /**
  * Service that calls API to get Media Provider stats
- * @param {string} mediaType: 'image' and 'audio' supported
+ * @param {'image'|'audio'} mediaType
  * @constructor
  */
 const MediaProviderService = (mediaType) => ({
