@@ -3,7 +3,7 @@ import pprint
 import json
 import pytest
 from enum import Enum
-from .api_live_integration_test import API_URL
+from .api_live_integration import API_URL
 
 """
 Perform some basic tests to ensure that search rankings work as anticipated.
