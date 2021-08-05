@@ -1,35 +1,23 @@
+"""
+End-to-end API tests. Can be used to verify a live deployment is functioning as
+designed. Run with the `pytest -s` command from this directory.
+"""
+
 import requests
 import json
 import pytest
-import os
 import uuid
 import time
 import catalog.settings
 import xml.etree.ElementTree as ET
 from django.db.models import Max
 from django.urls import reverse
+
 from catalog.api.licenses import LICENSE_GROUPS
 from catalog.api.models import Image, OAuth2Verification
 from catalog.api.utils.watermark import watermark
 
-"""
-End-to-end API tests. Can be used to verify a live deployment is functioning as
-designed. Run with the `pytest -s` command from this directory.
-"""
-
-API_URL = os.getenv('INTEGRATION_TEST_URL', 'http://localhost:8000')
-known_apis = {
-    'http://localhost:8000': 'LOCAL',
-    'https://api.openverse.engineering': 'PRODUCTION',
-    'https://api-dev.openverse.engineering': 'TESTING'
-}
-
-
-def setup_module():
-    if API_URL in known_apis:
-        print(
-            f'\n\033[1;31;40mTesting {known_apis[API_URL]} environment'
-        )
+from test.constants import API_URL
 
 
 @pytest.fixture
