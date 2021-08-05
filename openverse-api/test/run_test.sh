@@ -1,4 +1,11 @@
 #!/bin/bash
+
+red="\e[31m"
+green="\e[32m"
+endcol="\e[0m"
+
+TEST_ARG="${1:-test/}"
+
 # Local environments don't have valid certificates; suppress this warning.
 export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 export INTEGRATION_TEST_URL="http://localhost:8000"
@@ -11,11 +18,14 @@ DJANGO_DATABASE_USER="${DJANGO_DATABASE_USER:-deploy}" \
 DJANGO_DATABASE_PASSWORD="${DJANGO_DATABASE_PASSWORD:-deploy}" \
 DJANGO_DATABASE_HOST="${DJANGO_DATABASE_HOST:-localhost}" \
 REDIS_HOST="${REDIS_HOST:-localhost}" \
-pytest -s --disable-pytest-warnings test/v1_integration_test.py
+pytest -s --disable-pytest-warnings $TEST_ARG
 
 succeeded=$?
-if [ $succeeded != 0 ]; then
-  echo 'Tests failed. Full system logs: '
+if [[ $succeeded -eq 0 ]]; then
+	printf "${green}:-) All tests passed${endcol}\n"
+else
+  printf "Full system logs:\n"
   docker-compose logs
+	printf "${red}:'( Some tests did not pass${endcol}\n"
 fi
 exit $succeeded
