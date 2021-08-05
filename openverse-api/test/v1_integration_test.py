@@ -218,8 +218,7 @@ def test_creator_quotation_grouping():
     )
     # Did quotation marks actually narrow down the search?
     assert len(no_quotes['results']) > len(quotes['results'])
-    # Did we find only Claude Monet works, or did his lesser known brother Jim
-    # Monet sneak into the results?
+    # Did we find only William Ford Stanley works, or also by others?
     for result in quotes['results']:
         assert 'William Ford Stanley' in result['creator']
 
