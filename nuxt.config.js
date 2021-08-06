@@ -152,7 +152,12 @@ export default {
   styleResources: {
     scss: ['./styles/utilities/all.scss'],
   },
-  modules: ['@nuxtjs/sentry', '@nuxtjs/sitemap', 'nuxt-ssr-cache', 'nuxt-i18n'],
+  modules: [
+    '@nuxtjs/sentry',
+    '@nuxtjs/sitemap',
+    'nuxt-ssr-cache',
+    '@nuxtjs/i18n',
+  ],
   i18n: {
     locales: [{ code: 'en', iso: 'en', name: 'English', file: 'en.json' }],
     lazy: true,
@@ -164,7 +169,6 @@ export default {
       cookieKey: 'i18n_redirected',
       alwaysRedirect: true,
     },
-    seo: false,
     // TODO: change this to the production URL
     baseUrl: 'http://localhost:8443',
   },
