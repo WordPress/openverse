@@ -218,7 +218,9 @@ def search(search_params, index, page_size, ip, request,
     :return: Tuple with a List of Hits from elasticsearch, the total count of
     pages, and number of results.
     """
-    s = Search(index=index)
+    search_client = Search(index=index)
+
+    s = search_client
     # Apply term filters. Each tuple pairs a filter's parameter name in the API
     # with its corresponding field in Elasticsearch. "None" means that the
     # names are identical.
@@ -258,7 +260,7 @@ def search(search_params, index, page_size, ip, request,
             query=f"\"{quotes_stripped}\"",
             boost=10000
         )
-        s = Search().query(
+        s = search_client.query(
             Q(
                 'bool',
                 must=s.query,
@@ -291,7 +293,7 @@ def search(search_params, index, page_size, ip, request,
         rank_queries = []
         for field, boost in feature_boost.items():
             rank_queries.append(Q('rank_feature', field=field, boost=boost))
-        s = Search().query(
+        s = search_client.query(
             Q(
                 'bool',
                 must=s.query,
@@ -342,15 +344,17 @@ def related_images(uuid, index, request, filter_dead):
     """
     Given a UUID, find related search results.
     """
+    search_client = Search(index=index)
+
     # Convert UUID to sequential ID.
-    item = Search(index=index)
+    item = search_client
     item = item.query(
         'match',
         identifier=uuid
     )
     _id = item.execute().hits[0].id
 
-    s = Search(index=index)
+    s = search_client
     s = s.query(
         'more_like_this',
         fields=['tags.name', 'title', 'creator'],
