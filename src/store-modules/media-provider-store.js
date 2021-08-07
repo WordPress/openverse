@@ -26,16 +26,7 @@ const sortProviders = (data) => {
   return data.sort((sourceObjectA, sourceObjectB) => {
     const nameA = sourceObjectA.source_name.toUpperCase()
     const nameB = sourceObjectB.source_name.toUpperCase()
-
-    if (nameA < nameB) {
-      return -1
-    }
-
-    if (nameA > nameB) {
-      return 1
-    }
-
-    return 0
+	return nameA.localeCompare(nameB)
   })
 }
 
