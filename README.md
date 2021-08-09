@@ -86,6 +86,8 @@ into the upstream database. It includes some data preprocessing steps.
 - [Brooklyn Museum](src/cc_catalog_airflow/dags/provider_api_scripts/brooklyn_museum.py)
 - [NYPL](src/cc_catalog_airflow/dags/provider_api_scripts/nypl.py)
 
+See each provider API script's notes in their respective [handbook][ov-handbook] entry.
+
 ## Development setup for Airflow and API puller scripts
 
 There are a number of scripts in the directory
@@ -205,10 +207,11 @@ Pull requests are welcome! Feel free to [join us on Slack](https://make.wordpres
 
 ## Acknowledgments
 
-Openverse, previously known as CC Search, was concieved and built at [Creative Commons](https://creativecommons.org). We thank them for their commitment to open source and openly licensed content, with particular thanks to original team members @kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar, along with their [community of volunteers](https://opensource.creativecommons.org/community/community-team/).
+Openverse, previously known as CC Search, was conceived and built at [Creative Commons](https://creativecommons.org). We thank them for their commitment to open source and openly licensed content, with particular thanks to original team members @kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar, along with their [community of volunteers](https://opensource.creativecommons.org/community/community-team/).
 
 ## License
 
 - [`LICENSE`](LICENSE) (Expat/[MIT][mit] License)
 
 [mit]: http://www.opensource.org/licenses/MIT "The MIT License | Open Source Initiative"
+[ov-handbook]: https://make.wordpress.org/openverse/handbook/openverse-handbook/
