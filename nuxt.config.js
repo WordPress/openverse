@@ -171,6 +171,7 @@ export default {
     },
     // TODO: change this to the production URL
     baseUrl: 'http://localhost:8443',
+    vueI18n: '~/plugins/vue-i18n.js',
   },
   sentry: {
     dsn:
