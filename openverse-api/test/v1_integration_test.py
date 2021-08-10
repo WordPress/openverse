@@ -56,18 +56,15 @@ def test_link_shortener_resolve(link_shortener_fixture):
     assert response.status_code == 301
 
 
-def test_stats():
-    response = requests.get(f'{API_URL}/v1/sources?type=images', verify=False)
-    parsed_response = json.loads(response.text)
-    assert response.status_code == 200
-    num_images = 0
-    provider_count = 0
-    for pair in parsed_response:
-        image_count = pair['image_count']
-        num_images += int(image_count)
-        provider_count += 1
-    assert num_images > 0
-    assert provider_count > 0
+def test_old_stats_endpoint():
+    response = requests.get(
+        f'{API_URL}/v1/sources?type=images',
+        allow_redirects=False,
+        verify=False
+    )
+    assert response.status_code == 301
+    assert response.is_permanent_redirect
+    assert response.headers.get('Location') == '/v1/images/stats'
 
 
 @pytest.mark.skip(reason="Disabled feature")
