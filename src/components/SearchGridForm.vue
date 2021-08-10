@@ -78,11 +78,12 @@ export default {
       return this.$store.state.isFilterVisible
     },
     isFilterApplied() {
-      return this.$store.state.isFilterApplied
+      return this.$store.getters.isAnyFilterApplied
     },
     searchBoxPlaceholder() {
-      const type = this.$route.path.split('search/')[1] || 'image'
-      return `Search all ${type}s`
+      return this.$t('browse-page.search-form.placeholder', {
+        type: this.$t(`browse-page.search-form.${this.activeTab}`),
+      })
     },
   },
   watch: {
@@ -106,7 +107,7 @@ export default {
     onInput(e) {
       this.searchTermsModel = e.target.value
 
-      if (this.activeTab === 'video' || this.activeTab === 'audio') {
+      if (this.activeTab === VIDEO || this.activeTab === AUDIO) {
         this.$emit('onSearchFormSubmit', {
           query: { q: this.searchTermsModel },
         })

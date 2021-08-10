@@ -45,11 +45,16 @@
             :disabled="isDisabled(item)"
             @change="onValueChange"
           />
-          <LicenseIcons v-if="filterType == 'licenses'" :license="item.code" />
-          {{ itemLabel(item) }}
+          <LicenseIcons v-if="filterType === 'licenses'" :license="item.code" />
+          <template v-if="needsTranslation(filterType)">
+            {{ $t(item.name) }}
+          </template>
+          <template v-else>
+            {{ item.name }}
+          </template>
         </label>
         <img
-          v-if="filterType == 'licenses'"
+          v-if="filterType === 'licenses'"
           :aria-label="$t('browse-page.aria.license-explanation')"
           tabindex="0"
           src="@/assets/help_icon.svg"
@@ -105,8 +110,8 @@ export default {
     },
   },
   methods: {
-    itemLabel(item) {
-      return this.filterType === 'providers' ? item.name : this.$t(item.name)
+    needsTranslation(filterType) {
+      return !['audioProviders', 'imageProviders'].includes(filterType)
     },
     onValueChange(e) {
       this.$emit('filterChanged', {
@@ -203,13 +208,14 @@ label {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
+  margin-top: 0.5rem;
+  padding-bottom: 0.75rem;
 }
 
 .checkbox {
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .single .checkbox {
   font-size: 1rem;

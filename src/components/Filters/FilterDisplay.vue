@@ -1,10 +1,10 @@
 <template>
   <div class="filter-display" aria-live="polite">
-    <span v-if="anyFilterApplied" class="caption font-semibold">{{
-      $t('filters.filter-by')
-    }}</span>
-    <FilterBlock
-      v-for="filter in getAppliedFilters"
+    <span v-if="isAnyFilterApplied" class="caption has-text-weight-semibold">
+      {{ $t('filters.filter-by') }}</span
+    >
+    <FilterTag
+      v-for="filter in appliedFilterTags"
       :key="filter.code"
       :code="filter.code"
       :label="filter.name"
@@ -15,20 +15,18 @@
 </template>
 <script>
 import { TOGGLE_FILTER } from '~/store-modules/action-types'
-import FilterBlock from './FilterBlock'
 
 export default {
   name: 'FilterDisplay',
-  components: {
-    FilterBlock,
-  },
-  props: ['provider'],
   computed: {
-    getAppliedFilters() {
-      return this.$store.getters.getAppliedFilterTags
+    searchType() {
+      return this.$store.state.searchType
     },
-    anyFilterApplied() {
-      return this.$store.state.isFilterApplied
+    isAnyFilterApplied() {
+      return this.$store.getters.isAnyFilterApplied
+    },
+    appliedFilterTags() {
+      return this.$store.getters.appliedFilterTags
     },
   },
   methods: {
