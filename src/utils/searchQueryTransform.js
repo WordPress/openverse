@@ -17,7 +17,7 @@ const filterPropertyMappings = {
   audioProviders: 'source',
   imageProviders: 'source',
   searchBy: 'searchBy',
-  mature: 'mature',
+  mature: 'mature',zz
 }
 
 const getMediaFilterTypes = (searchType) => {
