@@ -180,7 +180,7 @@ const actions = {
 }
 
 function setQuery(state) {
-  const query = filtersToQueryData(state.filters)
+  const query = filtersToQueryData(state.filters, state.searchType)
 
   state.isFilterApplied = isFilterApplied(state.filters)
   state.query = {

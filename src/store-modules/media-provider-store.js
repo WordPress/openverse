@@ -13,9 +13,7 @@ import {
 
 import previousImageProviders from '../data/existingImageProviders'
 import previousAudioProviders from '../data/existingAudioProviders'
-
-const AUDIO = 'audio'
-const IMAGE = 'image'
+import { AUDIO, IMAGE } from '~/constants/media'
 
 const existingProviders = {
   [AUDIO]: previousAudioProviders,

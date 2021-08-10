@@ -2,6 +2,7 @@ import clonedeep from 'lodash.clonedeep'
 import findIndex from 'lodash.findindex'
 import { filterData } from '~/store-modules/filter-store'
 import getParameterByName from './getParameterByName'
+import { ALL_MEDIA } from '~/constants/media'
 
 const filterPropertyMappings = {
   licenses: 'license',

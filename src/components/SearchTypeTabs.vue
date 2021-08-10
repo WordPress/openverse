@@ -20,17 +20,19 @@
 
 <script>
 import { capitalize } from '~/utils/formatStrings'
+import { ALL_MEDIA, AUDIO, IMAGE, VIDEO } from '~/constants/media'
+import { queryStringToSearchType } from '~/utils/searchQueryTransform'
 
 export default {
   name: 'SearchTypeTabs',
   data() {
     return {
-      contentTypes: ['all', 'image', 'audio', 'video'],
+      contentTypes: [ALL_MEDIA, IMAGE, AUDIO, VIDEO],
     }
   },
   computed: {
     activeTab() {
-      return this.$route.path.split('search/')[1] || 'all'
+      return queryStringToSearchType(this.$route.path)
     },
   },
   methods: {
@@ -43,7 +45,7 @@ export default {
       }
     },
     tabPath(type) {
-      const pathType = type === 'all' ? '' : type
+      const pathType = type === ALL_MEDIA ? '' : type
       return this.localePath({
         path: `/search/${pathType}`,
         query: this.$route.query,

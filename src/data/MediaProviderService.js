@@ -1,8 +1,9 @@
 import ApiService from './ApiService'
+import { IMAGE } from '~/constants/media'
 
 /**
  * Service that calls API to get Media Provider stats
- * @param {'image'|'audio'} mediaType
+ * @param {('image'|'audio')} mediaType
  * @constructor
  */
 const MediaProviderService = (mediaType) => ({
@@ -13,7 +14,7 @@ const MediaProviderService = (mediaType) => ({
   getProviderStats() {
     try {
       // TODO: use the new 'image/stats' endpoint when it is available in API
-      if (mediaType === 'image') {
+      if (mediaType === IMAGE) {
         return ApiService.get('', 'sources')
       }
       return ApiService.get(mediaType, 'stats')

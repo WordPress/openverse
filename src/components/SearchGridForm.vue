@@ -61,13 +61,15 @@
 
 <script>
 import { SET_FILTER_IS_VISIBLE } from '~/store-modules/mutation-types'
+import { queryStringToSearchType } from '~/utils/searchQueryTransform'
+import { AUDIO, VIDEO } from '~/constants/media'
 
 export default {
   name: 'SearchGridForm',
   data: () => ({ searchTermsModel: null }),
   computed: {
     activeTab() {
-      return this.$route.path.split('search/')[1] || 'image'
+      return queryStringToSearchType(this.$route.path)
     },
     searchTerms() {
       return this.$store.state.query.q

@@ -22,7 +22,10 @@
   </div>
 </template>
 <script>
-import { FETCH_IMAGES } from '~/store-modules/action-types'
+import {
+  FETCH_IMAGES,
+  SET_SEARCH_TYPE_FROM_URL,
+} from '~/store-modules/action-types'
 import {
   SET_QUERY,
   SET_FILTER_IS_VISIBLE,
@@ -45,6 +48,9 @@ const BrowsePage = {
       const query = queryStringToQueryData(this.$route.fullPath)
       this.$store.commit(SET_QUERY, { query })
     }
+    await this.$store.dispatch(SET_SEARCH_TYPE_FROM_URL, {
+      url: this.$route.fullPath,
+    })
     this.$store.commit(SET_FILTERS_FROM_URL, { url: this.$route.fullPath })
     if (!this.$store.state.images.length) {
       await this.$store.dispatch(FETCH_IMAGES, this.$store.state.query)

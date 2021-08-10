@@ -18,9 +18,10 @@ import NotificationStore from '~/store-modules/notification-store'
 import NavStore from '~/store-modules/nav-store'
 import { FETCH_MEDIA_PROVIDERS } from '~/store-modules/action-types'
 import GoogleAnalytics from '~/analytics/GoogleAnalytics'
+import { AUDIO, IMAGE } from '~/constants/media'
 
-const AudioProviderService = MediaProviderService('audio')
-const ImageProviderService = MediaProviderService('image')
+const AudioProviderService = MediaProviderService(AUDIO)
+const ImageProviderService = MediaProviderService(IMAGE)
 
 export const actions = Object.assign(
   UsageDataStore.actions(UsageDataService),

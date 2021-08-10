@@ -62,6 +62,7 @@
 import { SET_QUERY } from '~/store-modules/mutation-types'
 import { filtersToQueryData } from '~/utils/searchQueryTransform'
 import { mapState } from 'vuex'
+import { ALL_MEDIA } from '~/constants/media'
 
 export default {
   name: 'HeroSection',
@@ -81,7 +82,7 @@ export default {
         path: '/search',
         query: {
           q: this.form.searchTerm,
-          ...filtersToQueryData(this.$store.state.filters),
+          ...filtersToQueryData(this.$store.state.filters, ALL_MEDIA),
         },
       })
       this.$router.push(newPath)
