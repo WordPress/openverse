@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ ['filters']: true, ['single']: isSingleFilter }"
+    class="filters"
     @click="hideLicenseExplanationVisibility()"
     @keyup.enter="hideLicenseExplanationVisibility()"
   >
@@ -171,9 +171,6 @@ export default {
 .filters {
   border-bottom: 2px solid rgb(245, 245, 245);
   padding: 1.5rem 1rem 1.5rem 1.5rem;
-  //&.single {
-  //  padding-left: 1rem;
-  //}
 }
 
 .filters-title {
