@@ -325,14 +325,29 @@
       "commercial": "Use commercially",
       "modification": "Modify or adapt"
     },
-    "providers": {
+    "image-providers": {
       "title": "Source"
+    },
+    "audio-providers": {
+      "title": "Source"
+    },
+    "audio-categories": {
+      "title": "Audio Category",
+      "music": "Music",
+      "sound-effects": "Sound Effects",
+      "podcast": "Podcast"
     },
     "categories": {
       "title": "Image Type",
       "photograph": "Photographs",
       "illustration": "Illustrations",
       "digitized-artwork": "Digitized Artworks"
+    },
+    "audio-extensions": {
+      "title": "File Type",
+      "mp3": "MP3s",
+      "ogg": "OGGs",
+      "flac": "FLACs"
     },
     "extensions": {
       "title": "File Type",
@@ -356,6 +371,12 @@
     "mature": {
       "title": "Search Settings",
       "enable": "Enable Mature Content"
+    },
+    "durations": {
+      "title": "Durations",
+      "short": "Short",
+      "medium": "Medium",
+      "long": "Long"
     },
     "creator": {
       "title": "Search by Creator"
@@ -395,6 +416,10 @@
     },
     "search-form": {
       "placeholder": "Search all {type}",
+      "image": "images",
+      "audio": "audio",
+      "video": "videos",
+      "all": "content",
       "collection-placeholder": "Search this collection",
       "button": "Search"
     },

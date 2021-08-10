@@ -1,21 +1,13 @@
 <template>
-  <div
+  <FiltersList
     :class="{
       'search-filters': true,
       'search-filters__visible': isFilterVisible,
     }"
-  >
-    <FiltersList
-      :filters="filters"
-      :is-filter-applied="isFilterApplied"
-      :license-types-disabled="licenseTypesDisabled"
-      :licenses-disabled="licensesDisabled"
-      @onUpdateFilter="onUpdateFilter"
-      @onUpdateSearchByCreator="onUpdateSearchByCreator"
-      @onToggleSearchGridFilter="onToggleSearchGridFilter"
-      @onClearFilters="onClearFilters"
-    />
-  </div>
+    @onUpdateFilter="onUpdateFilter"
+    @onToggleSearchGridFilter="onToggleSearchGridFilter"
+    @onClearFilters="onClearFilters"
+  />
 </template>
 
 <script>
