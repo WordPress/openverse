@@ -15,6 +15,7 @@ from test.media_integration import (
     search_special_chars,
     search_consistency,
     detail,
+    stats,
 )
 
 
@@ -48,14 +49,4 @@ def test_image_detail(image_fixture):
 
 
 def test_image_stats():
-    response = requests.get(f'{API_URL}/v1/images/stats', verify=False)
-    parsed_response = json.loads(response.text)
-    assert response.status_code == 200
-    num_images = 0
-    provider_count = 0
-    for pair in parsed_response:
-        image_count = pair['image_count']
-        num_images += int(image_count)
-        provider_count += 1
-    assert num_images > 0
-    assert provider_count > 0
+    stats('images', 'image_count')

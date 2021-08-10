@@ -58,3 +58,17 @@ def detail(media_type, fixture):
     test_id = fixture['results'][0]['id']
     response = requests.get(f'{API_URL}/v1/{media_type}/{test_id}', verify=False)
     assert response.status_code == 200
+
+
+def stats(media_type, count_key):
+    response = requests.get(f'{API_URL}/v1/{media_type}/stats', verify=False)
+    parsed_response = json.loads(response.text)
+    assert response.status_code == 200
+    num_media = 0
+    provider_count = 0
+    for pair in parsed_response:
+        media_count = pair[count_key]
+        num_media += int(media_count)
+        provider_count += 1
+    assert num_media > 0
+    assert provider_count > 0
