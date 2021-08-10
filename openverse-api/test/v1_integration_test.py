@@ -28,7 +28,7 @@ from test.media_integration import (
 
 
 @pytest.fixture
-def search_fixture():
+def image_fixture():
     response = requests.get(f'{API_URL}/v1/images?q=dog',
                             verify=False)
     assert response.status_code == 200
@@ -36,8 +36,8 @@ def search_fixture():
     return parsed
 
 
-def test_search(search_fixture):
-    search(search_fixture)
+def test_search(image_fixture):
+    search(image_fixture)
 
 
 def test_search_quotes():
@@ -53,21 +53,21 @@ def test_search_consistency():
     search_consistency('images', n_pages)
 
 
-def test_image_detail(search_fixture):
-    detail('images', search_fixture)
+def test_image_detail(image_fixture):
+    detail('images', image_fixture)
 
 
 @pytest.fixture
-def test_image_thumb(search_fixture):
-    thumbnail_url = search_fixture['results'][0]['thumbnail']
+def test_image_thumb(image_fixture):
+    thumbnail_url = image_fixture['results'][0]['thumbnail']
     thumbnail_response = requests.get(thumbnail_url)
     assert thumbnail_response.status_code == 200
     assert thumbnail_response.headers["Content-Type"].startswith("image/")
 
 
 @pytest.fixture
-def link_shortener_fixture(search_fixture):
-    link_to_shorten = search_fixture['results'][0]['detail_url']
+def link_shortener_fixture(image_fixture):
+    link_to_shorten = image_fixture['results'][0]['detail_url']
     payload = {"full_url": link_to_shorten}
     response = requests.post(f'{API_URL}/v1/link', json=payload, verify=False)
     assert response.status_code == 200
@@ -101,10 +101,10 @@ def test_stats():
 
 @pytest.mark.skip(reason="Disabled feature")
 @pytest.fixture
-def test_list_create(search_fixture):
+def test_list_create(image_fixture):
     payload = {
         'title': 'INTEGRATION TEST',
-        'images': [search_fixture['results'][0]['id']]
+        'images': [image_fixture['results'][0]['id']]
     }
     response = requests.post(f'{API_URL}/list', json=payload, verify=False)
     parsed_response = json.loads(response.text)
