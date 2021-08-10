@@ -25,7 +25,6 @@ const getMediaFilterTypes = (searchType) => {
     ? [...mediaSpecificFilters.all]
     : [...mediaSpecificFilters.all, ...mediaSpecificFilters[searchType]]
 }
-
 // {
 //   license: 'cc0,pdm,by,by-sa,by-nc,by-nd,by-nc-sa,by-nc-nd',
 //   imageCategories: 'photograph,illustration,digitized_artwork',
