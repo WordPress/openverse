@@ -196,6 +196,7 @@ const state = {
   images: [],
   isFetchingImages: false,
   isFetchingImagesError: true,
+  searchType: ALL_MEDIA,
   query: {},
 }
 
@@ -236,6 +237,9 @@ const mutations = {
   },
   [IMAGE_NOT_FOUND]() {
     throw new Error('Image not found')
+  },
+  [SET_SEARCH_TYPE](_state, params) {
+    _state.searchType = params.searchType
   },
 }
 

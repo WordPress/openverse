@@ -7,13 +7,28 @@ import { ALL_MEDIA } from '~/constants/media'
 const filterPropertyMappings = {
   licenses: 'license',
   licenseTypes: 'license_type',
+  audioCategories: 'categories',
   categories: 'categories',
+  audioExtensions: 'extensions',
   extensions: 'extension',
+  durations: 'duration',
   aspectRatios: 'aspect_ratio',
   sizes: 'size',
-  providers: 'source',
+  audioProviders: 'source',
+  imageProviders: 'source',
+  searchBy: 'searchBy',
 }
-
+const mediaFilters = {
+  all: ['licenses', 'licenseTypes', 'searchBy'],
+  image: [
+    'categories',
+    'extensions',
+    'aspectRatios',
+    'sizes',
+    'imageProviders',
+  ],
+  audio: ['audioCategories', 'audioExtensions', 'durations', 'audioProviders'],
+}
 // {
 //   license: 'cc0,pdm,by,by-sa,by-nc,by-nd,by-nc-sa,by-nc-nd',
 //   categories: 'photograph,illustration,digitized_artwork',
@@ -39,19 +54,30 @@ const filterToString = (filter) =>
  * converts the filter store object to the data format accepted by the API,
  * which has slightly different property names
  * @param {object} filters object containing the filter data that comes from the filter store
+ * @param {string} searchType
  * @param hideEmpty
  * @todo Refactor all of these 'reduce' calls to just use lodash methods :)
  */
-export const filtersToQueryData = (filters, hideEmpty = true) => {
+export const filtersToQueryData = (
+  filters,
+  searchType = ALL_MEDIA,
+  hideEmpty = true
+) => {
   let queryDataObject = {}
-
-  Object.keys(filterPropertyMappings).reduce((queryData, filterDataKey) => {
+  let mediaFilterTypes =
+    searchType === ALL_MEDIA
+      ? [...mediaFilters.all]
+      : [...mediaFilters.all, ...mediaFilters[searchType]]
+  mediaFilterTypes.reduce((queryData, filterDataKey) => {
     const queryDataKey = filterPropertyMappings[filterDataKey]
     queryData[queryDataKey] = filterToString(filters[filterDataKey])
     return queryData
   }, queryDataObject)
 
-  queryDataObject.searchBy = filters.searchBy.creator ? 'creator' : ''
+  // queryDataObject.searchBy = filters.searchBy.find((f) => f.code === 'creator')
+  //   .checked
+  //   ? 'creator'
+  //   : ''
   queryDataObject.mature = filters.mature
 
   if (hideEmpty) {
@@ -87,18 +113,32 @@ const parseQueryString = (
 }
 
 /**
+ * Extract search type from the url. Returns the the last part
+ * of the path between `/search/` and query, or `all` by default.
+ * `/search/?q=test`: all
+ * `/search/image?q=test`: image
+ * @param {string} queryString
+ * @return {('all'|'audio'|'image'|'video')}
+ */
+export const queryStringToSearchType = (queryString) => {
+  const searchTypePattern = /\/search\/(image|audio|video)\?*/
+  let matchedType = queryString.match(searchTypePattern)
+  return matchedType === null ? ALL_MEDIA : matchedType[1]
+}
+
+/**
  * converts the browser filter query string into the internal filter store data format
  * @param {string} queryString browser filter query string
  */
 export const queryToFilterData = (queryString) => {
   const filters = clonedeep(filterData)
   Object.keys(filterPropertyMappings).forEach((filterDataKey) => {
-    if (filterDataKey === 'providers') {
+    if (['audioProviders', 'imageProviders'].includes(filterDataKey)) {
       const providerParameter = getParameterByName(
-        filterPropertyMappings.providers,
+        filterPropertyMappings[filterDataKey],
         queryString
       )
-      filters.providers =
+      filters[filterDataKey] =
         providerParameter === ''
           ? []
           : providerParameter.split(',').map((provider) => ({
@@ -113,7 +153,7 @@ export const queryToFilterData = (queryString) => {
 
   const searchBy = getParameterByName('searchBy', queryString)
   if (searchBy === 'creator') {
-    filters.searchBy.creator = true
+    filters.searchBy.find((f) => f.code === 'creator').checked = true
   }
 
   const mature = getParameterByName('mature', queryString)
@@ -132,7 +172,7 @@ export const queryToFilterData = (queryString) => {
  *
  * TODO: we might be able to refactor to eliminate the need for these two
  * separate functions.
- * @param {string} query string
+ * @param {string} queryString
  */
 export const queryStringToQueryData = (queryString) => {
   const queryDataObject = {}

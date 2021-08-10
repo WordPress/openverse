@@ -38,14 +38,13 @@ const state = {
 }
 
 const actions = (AudioProviderService, ImageProviderService) => ({
-  [FETCH_MEDIA_PROVIDERS]({ dispatch }, params) {
+  async [FETCH_MEDIA_PROVIDERS]({ dispatch }, params) {
     return Promise.all([
       dispatch(FETCH_MEDIA_TYPE_PROVIDERS, { ...params, mediaType: AUDIO }),
       dispatch(FETCH_MEDIA_TYPE_PROVIDERS, { ...params, mediaType: IMAGE }),
     ])
   },
   [FETCH_MEDIA_TYPE_PROVIDERS]({ commit }, params) {
-    console.log('fetching media providers, params: ', params)
     const { mediaType } = params
     commit(SET_PROVIDER_FETCH_ERROR, { mediaType, error: false })
     commit(FETCH_MEDIA_PROVIDERS_START, { mediaType })
