@@ -159,6 +159,7 @@ of individual items indexed from them.
 
         source_data = ContentProvider \
             .objects \
+            .filter(media_type=index_name) \
             .values(ID, CODENAME, NAME, FILTER, URL)
         source_counts = get_sources(index_name)
 
