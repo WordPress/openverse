@@ -1,15 +1,16 @@
 <template>
   <div
-    class="filters py-6 pl-6 pr-4"
+    :class="{ ['filters']: true, ['single']: isSingleFilter }"
     @click="hideLicenseExplanationVisibility()"
     @keyup.enter="hideLicenseExplanationVisibility()"
   >
     <div
+      v-if="title"
       class="filters-title"
       @click.prevent="toggleFilterVisibility"
       @keyup.enter="toggleFilterVisibility"
     >
-      <span>{{ title }}</span>
+      <h4>{{ title }}</h4>
       <button
         v-if="!filtersExpandedByDefault"
         :aria-label="'filters list for' + title + 'category'"
@@ -27,29 +28,25 @@
         />
       </button>
     </div>
-    <template v-if="areFiltersExpanded && options">
+    <template v-if="areFiltersExpanded">
       <div
         v-for="(item, index) in options"
         :key="index"
-        class="mt-2 filter-checkbox-wrapper"
+        class="filter-checkbox-wrapper"
       >
-        <label class="checkbox" :for="item.code" :disabled="block(item)">
+        <!--eslint-disable vuejs-accessibility/label-has-for -->
+        <label class="checkbox" :disabled="isDisabled(item)">
           <input
-            :id="item.code"
             :key="index"
+            :name="item.code"
             type="checkbox"
             class="filter-checkbox mr-2"
             :checked="item.checked"
-            :disabled="block(item)"
+            :disabled="isDisabled(item)"
             @change="onValueChange"
           />
           <LicenseIcons v-if="filterType == 'licenses'" :license="item.code" />
-          <template v-if="['providers', 'searchBy'].includes(filterType)">
-            {{ item.name }}
-          </template>
-          <template v-else>
-            {{ $t(item.name) }}
-          </template>
+          {{ itemLabel(item) }}
         </label>
         <img
           v-if="filterType == 'licenses'"
@@ -64,7 +61,8 @@
 
         <LicenseExplanationTooltip
           v-if="
-            shouldRenderLicenseExplanationTooltip(item.code) && !block(item)
+            shouldRenderLicenseExplanationTooltip(item.code) &&
+            !isDisabled(item)
           "
           :license="licenseExplanationCode"
         />
@@ -83,7 +81,7 @@ export default {
     LicenseIcons,
     LicenseExplanationTooltip,
   },
-  props: ['options', 'title', 'filterType', 'disabled', 'checked'],
+  props: ['options', 'title', 'filterType'],
   data() {
     return {
       filtersVisible: false,
@@ -102,14 +100,25 @@ export default {
     areFiltersExpanded() {
       return this.filtersExpandedByDefault || this.filtersVisible
     },
+    isSingleFilter() {
+      return this.$props.filterType === 'searchBy'
+    },
   },
   methods: {
+    itemLabel(item) {
+      return this.filterType === 'providers' ? item.name : this.$t(item.name)
+    },
     onValueChange(e) {
       this.$emit('filterChanged', {
-        code: e.target.id,
+        code: e.target.name,
         filterType: this.$props.filterType,
       })
     },
+    /**
+     * This function is used to hide sub items in filters
+     * It was decided not to use them after a/b tests
+     * TODO: either remove or use if necessary when implementing new designs
+     */
     toggleFilterVisibility() {
       this.filtersVisible = !this.filtersVisible
     },
@@ -120,7 +129,7 @@ export default {
     hideLicenseExplanationVisibility() {
       this.licenseExplanationVisible = false
     },
-    block(e) {
+    isDisabled(e) {
       if (this.$props.filterType === 'licenseTypes') {
         const nc = this.$store.state.filters.licenses.filter((item) =>
           item.code.includes('nc')
@@ -161,6 +170,10 @@ export default {
 <style lang="scss" scoped>
 .filters {
   border-bottom: 2px solid rgb(245, 245, 245);
+  padding: 1.5rem 1rem 1.5rem 1.5rem;
+  //&.single {
+  //  padding-left: 1rem;
+  //}
 }
 
 .filters-title {
@@ -171,6 +184,7 @@ export default {
   line-height: 1.5;
   letter-spacing: normal;
   cursor: pointer;
+  margin-bottom: 0.5rem;
 }
 
 .filter-visibility-toggle {
@@ -192,12 +206,15 @@ label {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.75rem;
 }
 
 .checkbox {
   display: flex;
-  margin-bottom: 0.75rem;
   align-items: center;
   font-size: 14px;
+}
+.single .checkbox {
+  font-size: 1rem;
 }
 </style>

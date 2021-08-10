@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@nuxt/components": "^2.1.6",
+    "@nuxtjs/i18n": "^7.0.1",
     "@nuxtjs/sentry": "^5.0.3",
     "@nuxtjs/sitemap": "^2.4.0",
     "@nuxtjs/svg": "^0.1.12",
@@ -51,7 +52,6 @@
     "lodash.isempty": "^4.4.0",
     "lodash.sortby": "^4.7.0",
     "nuxt": "^2.15.4",
-    "nuxt-i18n": "^6.23.0",
     "nuxt-ssr-cache": "^1.5.2",
     "patch-package": "^6.4.7",
     "sass": "^1.34.0",

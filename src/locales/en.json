@@ -360,6 +360,7 @@
       "title": "Search by Creator"
     },
     "searchBy": {
+      "title": "Search By",
       "creator": "Creator"
     },
     "license-explanation": {
@@ -375,6 +376,8 @@
     "show": "Show results"
   },
   "browse-page": {
+    "audio-result-count": "no audios | {localeCount} audio | {localeCount} audios",
+    "image-result-count": "no images | {localeCount} image | {localeCount} images",
     "result-count": "{count} images",
     "result-count-more": "Over {count} images",
     "no-more": "No more images :(",
