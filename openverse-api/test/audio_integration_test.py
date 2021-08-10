@@ -17,6 +17,7 @@ from test.media_integration import (
     detail,
 )
 
+
 @pytest.fixture
 def audio_fixture():
     res = requests.get(f'{API_URL}/v1/audio?q=', verify=False)
@@ -44,3 +45,18 @@ def test_search_consistency():
 
 def test_audio_detail(audio_fixture):
     detail('audio', audio_fixture)
+
+
+def test_audio_stats():
+    pass
+    response = requests.get(f'{API_URL}/v1/audio/stats', verify=False)
+    parsed_response = json.loads(response.text)
+    assert response.status_code == 200
+    num_audio = 0
+    provider_count = 0
+    for pair in parsed_response:
+        audio_count = pair['audio_count']
+        num_audio += int(audio_count)
+        provider_count += 1
+    assert num_audio > 0
+    assert provider_count > 0
