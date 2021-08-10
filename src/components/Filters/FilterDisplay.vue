@@ -15,9 +15,11 @@
 </template>
 <script>
 import { TOGGLE_FILTER } from '~/store-modules/action-types'
+import FilterTag from '~/components/Filters/FilterTag'
 
 export default {
   name: 'FilterDisplay',
+  components: { FilterTag },
   computed: {
     searchType() {
       return this.$store.state.searchType

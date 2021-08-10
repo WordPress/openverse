@@ -1,6 +1,6 @@
-import FilterDisplay from '~/components/Filters/FilterDisplay'
 import render from '../../test-utils/render'
-import FilterBlock from '~/components/Filters/FilterBlock'
+import FilterDisplay from '~/components/Filters/FilterDisplay'
+import FilterTag from '~/components/Filters/FilterTag'
 
 describe('FilterDisplay', () => {
   let options = null
@@ -18,17 +18,6 @@ describe('FilterDisplay', () => {
       searchBy: { creator: false },
     }
     options = {
-      propsData: {
-        query: {
-          license: 'cc0',
-          license_type: 'fooType',
-          categories: 'fooCategory',
-          extension: 'fooExtension',
-          aspect_ratio: 'fooRatio',
-          size: 'fooSize',
-          source: 'foo',
-        },
-      },
       mocks: {
         $store: {
           state: {
@@ -40,7 +29,8 @@ describe('FilterDisplay', () => {
           },
           dispatch: jest.fn(),
           getters: {
-            getAppliedFilterTags: [
+            isAnyFilterApplied: true,
+            appliedFilterTags: [
               {
                 code: 'cc0',
                 filterType: 'license',
@@ -61,13 +51,12 @@ describe('FilterDisplay', () => {
   it('should render filter if checked', () => {
     filters.licenses[0].checked = true
     const wrapper = render(FilterDisplay, options)
-    expect(wrapper.findComponent(FilterBlock).vm).toBeDefined()
+    expect(wrapper.findComponent(FilterTag).vm).toBeDefined()
   })
 
   it('should render filter by caption label', () => {
-    options.mocks.$store.state.isFilterApplied = true
     const wrapper = render(FilterDisplay, options)
-    expect(wrapper.find('.caption').element.textContent).toBe(
+    expect(wrapper.find('.caption').element.textContent.trim()).toBe(
       'filters.filter-by'
     )
   })

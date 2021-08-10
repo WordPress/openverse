@@ -20,7 +20,7 @@
       </button>
     </div>
     <form class="filters-form" role="list">
-      <FiltersChecklist
+      <FilterChecklist
         v-for="filterType in filterTypes"
         :key="filterType"
         role="listitem"
@@ -47,12 +47,12 @@
 <script>
 import { kebabize } from '~/utils/formatStrings'
 import { AUDIO, IMAGE } from '~/constants/media'
-import FiltersChecklist from './FiltersChecklist'
+import FilterChecklist from './FilterChecklist'
 
 export default {
   name: 'FiltersList',
   components: {
-    FiltersChecklist,
+    FilterChecklist,
   },
   computed: {
     filters() {

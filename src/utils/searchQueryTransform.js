@@ -9,7 +9,7 @@ const filterPropertyMappings = {
   licenseTypes: 'license_type',
   audioCategories: 'categories',
   categories: 'categories',
-  audioExtensions: 'extensions',
+  audioExtensions: 'extension',
   extensions: 'extension',
   durations: 'duration',
   aspectRatios: 'aspect_ratio',

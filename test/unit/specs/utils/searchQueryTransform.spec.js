@@ -4,6 +4,7 @@ import {
   queryStringToQueryData,
 } from '~/utils/searchQueryTransform'
 import { filterData } from '~/store-modules/filter-store'
+import { IMAGE } from '~/constants/media'
 
 describe('searchQueryTransform', () => {
   it('converts initial filters to query data', () => {
@@ -83,11 +84,11 @@ describe('searchQueryTransform', () => {
         { code: 'medium', name: 'filters.sizes.medium', checked: true },
         { code: 'large', name: 'filters.sizes.large', checked: false },
       ],
-      providers: [
+      imageProviders: [
         { code: 'animaldiversity', checked: true },
         { code: 'brooklynmuseum', checked: true },
       ],
-      searchBy: { creator: true },
+      searchBy: [{ code: 'creator', checked: true }],
       mature: true,
     }
     const expectedQueryData = {
@@ -101,7 +102,7 @@ describe('searchQueryTransform', () => {
       size: 'medium',
       source: 'animaldiversity,brooklynmuseum',
     }
-    const result = filtersToQueryData(filters)
+    const result = filtersToQueryData(filters, IMAGE)
     expect(result).toEqual(expectedQueryData) // toEqual checks for value equality
   })
   it('queryToFilterData blank', () => {
@@ -154,6 +155,23 @@ describe('searchQueryTransform', () => {
           checked: false,
         },
       ],
+      durations: [
+        {
+          checked: false,
+          code: 'short',
+          name: 'filters.durations.short',
+        },
+        {
+          checked: false,
+          code: 'medium',
+          name: 'filters.durations.medium',
+        },
+        {
+          checked: false,
+          code: 'long',
+          name: 'filters.durations.long',
+        },
+      ],
       extensions: [
         { code: 'jpg', name: 'filters.extensions.jpg', checked: true },
         { code: 'png', name: 'filters.extensions.png', checked: false },
@@ -174,11 +192,55 @@ describe('searchQueryTransform', () => {
         { code: 'medium', name: 'filters.sizes.medium', checked: true },
         { code: 'large', name: 'filters.sizes.large', checked: false },
       ],
-      providers: [
+      imageProviders: [
         { code: 'animaldiversity', checked: true },
         { code: 'brooklynmuseum', checked: true },
       ],
-      searchBy: { creator: true },
+      audioCategories: [
+        {
+          checked: false,
+          code: 'music',
+          name: 'filters.audio-categories.music',
+        },
+        {
+          checked: false,
+          code: 'soundEffects',
+          name: 'filters.audio-categories.sound-effects',
+        },
+        {
+          checked: false,
+          code: 'podcast',
+          name: 'filters.audio-categories.podcast',
+        },
+      ],
+      audioExtensions: [
+        {
+          checked: false,
+          code: 'mp3',
+          name: 'filters.audio-extensions.mp3',
+        },
+        {
+          checked: false,
+          code: 'ogg',
+          name: 'filters.audio-extensions.ogg',
+        },
+        {
+          checked: false,
+          code: 'flac',
+          name: 'filters.audio-extensions.flac',
+        },
+      ],
+      audioProviders: [
+        {
+          checked: true,
+          code: 'animaldiversity',
+        },
+        {
+          checked: true,
+          code: 'brooklynmuseum',
+        },
+      ],
+      searchBy: [{ code: 'creator', checked: true, name: 'filters.searchBy.creator' }],
       mature: true,
     }
     const queryString =
@@ -192,6 +254,7 @@ describe('searchQueryTransform', () => {
       license: 'cc0',
       license_type: 'commercial',
       categories: 'photograph',
+      duration: '',
       extension: 'jpg',
       aspect_ratio: 'tall',
       size: 'medium',
