@@ -86,7 +86,7 @@ def test_process_item_batch_handles_example_batch():
             'duration': 144000,
             'foreign_identifier': '732',
             'foreign_landing_url': 'https://www.jamendo.com/track/732',
-            'genre': None,
+            'genres': [],
             'license_info': LicenseInfo(
                 license='by-nc',
                 version='2.0',
@@ -224,7 +224,7 @@ def test_extract_audio_data_handles_example_dict():
         'duration': 144000,
         'foreign_identifier': '732',
         'foreign_landing_url': 'https://www.jamendo.com/track/732',
-        'genre': None,
+        'genres': [],
         'license_info': LicenseInfo(
             license='by-nc',
             version='2.0',
