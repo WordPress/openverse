@@ -15,14 +15,14 @@ urlpatterns = [
         name='image-stats'
     ),
     path(
-        'recommendations/<str:identifier>',
-        RelatedImage.as_view(),
-        name='image-related'
-    ),
-    path(
         '<str:identifier>',
         ImageDetail.as_view(),
         name='image-detail'
+    ),
+    path(
+        '<str:identifier>/recommendations',
+        RelatedImage.as_view(),
+        name='image-related'
     ),
     path(
         '<str:identifier>/report',

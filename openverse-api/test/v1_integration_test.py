@@ -75,7 +75,7 @@ def test_old_related_images_endpoint():
     )
     assert response.status_code == 301
     assert response.is_permanent_redirect
-    assert response.headers.get('Location') == '/v1/images/recommendations/xyz'
+    assert response.headers.get('Location') == '/v1/images/xyz/recommendations'
 
 
 @pytest.mark.skip(reason="Disabled feature")

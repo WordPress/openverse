@@ -14,14 +14,14 @@ urlpatterns = [
         name='audio-stats'
     ),
     path(
-        'recommendations/<str:identifier>',
-        RelatedAudio.as_view(),
-        name='audio-related'
-    ),
-    path(
         '<str:identifier>',
         AudioDetail.as_view(),
         name='audio-detail'
+    ),
+    path(
+        '<str:identifier>/recommendations',
+        RelatedAudio.as_view(),
+        name='audio-related'
     ),
     path(
         '',
