@@ -23,9 +23,8 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 
 from catalog.api.views.image_views import Watermark, OembedView
-from catalog.api.views.link_views import CreateShortenedLink, \
-    ResolveShortenedLink
 from catalog.api.views.site_views import HealthCheck, CheckRates
+from catalog.api.utils.status_code_view import get_status_code_view
 
 from catalog.urls.auth_tokens import urlpatterns as auth_tokens_patterns
 from catalog.urls.audio import urlpatterns as audio_patterns
@@ -188,6 +187,11 @@ schema_view = get_schema_view(
 
 cache_timeout = 0 if settings.DEBUG else 15
 
+discontinuation_message = {
+    'error': 'Gone',
+    'reason': 'This API endpoint has been discontinued.'
+}
+
 versioned_paths = [
     path('rate_limit', CheckRates.as_view(), name='key_info'),
     path('auth_tokens/', include(auth_tokens_patterns)),
@@ -215,8 +219,13 @@ versioned_paths = [
         RedirectView.as_view(pattern_name='image-thumb', permanent=True),
         name='thumbs'
     ),
-    path('link', CreateShortenedLink.as_view(), name='make-link'),
-    path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
+
+    # Discontinued
+    re_path(
+        r'^link/',
+        get_status_code_view(discontinuation_message, 410).as_view(),
+        name='make-link'
+    ),
 ]
 if settings.WATERMARK_ENABLED:
     versioned_paths.append(

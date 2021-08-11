@@ -36,24 +36,15 @@ def test_image_thumb(image_fixture):
     assert thumbnail_response.headers["Content-Type"].startswith("image/")
 
 
-@pytest.fixture
-def link_shortener_fixture(image_fixture):
-    link_to_shorten = image_fixture['results'][0]['detail_url']
-    payload = {"full_url": link_to_shorten}
-    response = requests.post(f'{API_URL}/v1/link', json=payload, verify=False)
-    assert response.status_code == 200
-    return json.loads(response.text)
+def test_link_shortener_create():
+    payload = {'full_url': 'abcd'}
+    response = requests.post(f'{API_URL}/v1/link/', json=payload, verify=False)
+    assert response.status_code == 410
 
 
-def test_link_shortener_create(link_shortener_fixture):
-    assert 'shortened_url' in link_shortener_fixture
-
-
-def test_link_shortener_resolve(link_shortener_fixture):
-    path = link_shortener_fixture['shortened_url'].split('/')[-1]
-    response = requests.get(f'{API_URL}/v1/link/{path}', allow_redirects=False,
-                            verify=False)
-    assert response.status_code == 301
+def test_link_shortener_resolve():
+    response = requests.get(f'{API_URL}/v1/link/abc', verify=False)
+    assert response.status_code == 410
 
 
 @pytest.mark.skip(reason="Disabled feature")
