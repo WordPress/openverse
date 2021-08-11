@@ -33,6 +33,17 @@ def test_old_related_images_endpoint():
     assert response.headers.get('Location') == '/v1/images/xyz/recommendations'
 
 
+def test_old_oembed_endpoint():
+    response = requests.get(
+        f'{API_URL}/v1/oembed?key=value',
+        allow_redirects=False,
+        verify=False
+    )
+    assert response.status_code == 301
+    assert response.is_permanent_redirect
+    assert response.headers.get('Location') == '/v1/images/oembed?key=value'
+
+
 def test_old_thumbs_endpoint():
     response = requests.get(
         f'{API_URL}/v1/thumbs/xyz',

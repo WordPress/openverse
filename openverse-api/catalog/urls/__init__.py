@@ -215,7 +215,11 @@ versioned_paths = [
     ),
     path(
         'oembed',
-        RedirectView.as_view(pattern_name='image-oembed', query_string=True, permanent=True),
+        RedirectView.as_view(
+            pattern_name='image-oembed',
+            query_string=True,
+            permanent=True
+        ),
         name='oembed'
     ),
     path(

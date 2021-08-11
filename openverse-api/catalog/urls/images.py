@@ -7,6 +7,7 @@ from catalog.api.views.image_views import (
     ImageStats,
     ReportImageView,
     ProxiedImage,
+    OembedView,
 )
 
 urlpatterns = [
@@ -14,6 +15,11 @@ urlpatterns = [
         'stats',
         ImageStats.as_view(),
         name='image-stats'
+    ),
+    path(
+        'oembed',
+        OembedView.as_view(),
+        name='image-oembed'
     ),
     path(
         '<str:identifier>',
