@@ -5,6 +5,7 @@ import libxmp
 import piexif
 import requests
 from PIL import Image as img
+from django.conf import settings
 from django.http.response import HttpResponse, FileResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -13,6 +14,8 @@ from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
+from urllib.error import HTTPError
+from urllib.request import urlopen
 
 import catalog.api.controllers.search_controller as search_controller
 from catalog.api.examples import (
@@ -46,8 +49,10 @@ from catalog.api.serializers.image_serializers import (
     OembedSerializer,
     OembedResponseSerializer,
     AboutImageSerializer,
+    ProxiedImageSerializer,
 )
 from catalog.api.utils import ccrel
+from catalog.api.utils.throttle import OneThousandPerMinute
 from catalog.api.utils.exceptions import input_error_response
 from catalog.api.utils.watermark import watermark
 from catalog.api.views.media_views import (
@@ -429,3 +434,43 @@ respective number of images in the Openverse catalog.
                          ])
     def get(self, request, format=None):
         return self._get(request, 'image')
+
+
+class ProxiedImage(APIView):
+    """
+    Return the thumb of an image.
+    """
+
+    lookup_field = 'identifier'
+    queryset = Image.objects.all()
+    throttle_classes = [OneThousandPerMinute]
+    swagger_schema = None
+
+    def get(self, request, identifier, format=None):
+        serialized = ProxiedImageSerializer(data=request.data)
+        serialized.is_valid()
+        try:
+            image = Image.objects.get(identifier=identifier)
+        except Image.DoesNotExist:
+            return Response(status=404, data='Not Found')
+
+        if serialized.data['full_size']:
+            proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/{image.url}'
+        else:
+            proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/{settings.THUMBNAIL_WIDTH_PX}' \
+                             f',fit/{image.url}'
+        try:
+            upstream_response = urlopen(proxy_upstream)
+            status = upstream_response.status
+            content_type = upstream_response.headers.get('Content-Type')
+        except HTTPError:
+            log.info('Failed to render thumbnail: ', exc_info=True)
+            return HttpResponse(status=500)
+
+        response = HttpResponse(
+            upstream_response.read(),
+            status=status,
+            content_type=content_type
+        )
+
+        return response
