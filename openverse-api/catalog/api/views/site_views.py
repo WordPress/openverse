@@ -316,4 +316,3 @@ class CheckRates(APIView):
             'verified': verified
         }
         return Response(status=200, data=response_data)
-

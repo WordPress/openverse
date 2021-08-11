@@ -457,7 +457,8 @@ class ProxiedImage(APIView):
         if serialized.data['full_size']:
             proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/{image.url}'
         else:
-            proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/{settings.THUMBNAIL_WIDTH_PX}' \
+            proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/' \
+                             f'{settings.THUMBNAIL_WIDTH_PX}' \
                              f',fit/{image.url}'
         try:
             upstream_response = urlopen(proxy_upstream)
