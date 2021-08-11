@@ -134,7 +134,7 @@ By using this endpoint, you can get the details of related audio such as
                              ),
                          ])
     def get(self, request, identifier, format=None):
-        related, result_count = search_controller.related_images(
+        related, result_count = search_controller.related_media(
             uuid=identifier,
             index='image',
             request=request,
