@@ -217,7 +217,7 @@ if settings.WATERMARK_ENABLED:
 urlpatterns = [
     path('', RedirectView.as_view(pattern_name='root')),
     path('admin/', admin.site.urls),
-    re_path('healthcheck', HealthCheck.as_view()),
+    path('healthcheck', HealthCheck.as_view()),
 
     # Swagger documentation
     re_path(
@@ -242,5 +242,5 @@ urlpatterns = [
     ),
 
     # API
-    path('v1/', include(versioned_paths))
+    path('v1/', include(versioned_paths)),
 ]
