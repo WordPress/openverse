@@ -159,13 +159,14 @@ def _get_creator_data(page):
 
 def _get_title(item):
     """
-    Get the photo's title and transform it to title case, as shown on its page.
-    So for example, for "owl bird Photo" it returns "Owl Bird Photo".
+    Get the first two photo's tags/keywords to make the title and transform it
+    to title case, as shown on its page.
     """
-    img_title = item.get("title")
-    if img_title is not None and img_title != "":
+    tags = item.get("keywords", [])[:2]
+    if len(tags) > 0:
+        tags.append("Photo")
+        img_title = " ".join(tags)
         return img_title.title()
-    return None
 
 
 def _get_metadata(item):
