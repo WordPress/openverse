@@ -201,7 +201,6 @@ versioned_paths = [
 
     # Images
     path('images/', include(images_patterns)),
-    path('oembed', OembedView.as_view(), name='oembed'),
 
     # Deprecated
     path(
@@ -213,6 +212,11 @@ versioned_paths = [
         'recommendations/images/<str:identifier>',
         RedirectView.as_view(pattern_name='image-related', permanent=True),
         name='related-images',
+    ),
+    path(
+        'oembed',
+        RedirectView.as_view(pattern_name='image-oembed', query_string=True, permanent=True),
+        name='oembed'
     ),
     path(
         'thumbs/<str:identifier>',
