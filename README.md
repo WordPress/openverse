@@ -21,15 +21,23 @@ You can also keep in touch with [progress](https://github.com/orgs/WordPress/pro
 
 ## What *is* in this repo, then?
 
-This repo contains automation scripts used for various workflows around 
-Openverse repositories and processes.
+- This repo contains automation scripts used for various workflows around
+  Openverse repositories and processes.
+- It acts as the top-level meta repository for Openverse project where
+  cross-repo discussions, issues and milestones are defined.
+- It is the source of truth for repository meta-files such as common workflows,
+  and issue and PR templates.
+- It also contains brand assets like logo and icon, along with color and usage
+  guidelines for the same.
 
 ## Repository structure
 
-- **`python/`:** This directory contains scripts written in Python.  
+- **`python/`:** This directory contains scripts written in Python.
   - Use this as the working directory when executing Python scripts.
   - Requires [Pipenv](https://pipenv.pypa.io) as the package manager.
-  
-- **`js/`:** This directory contains scripts written in JavaScript.  
+
+- **`js/`:** This directory contains scripts written in JavaScript.
   - Use this as the working directory when executing JavaScript scripts.
   - Requires [npm](https://www.npmjs.com) as the package manager.
+
+- **`brand/`:** This directory contains brand assets for the project.
