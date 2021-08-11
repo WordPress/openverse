@@ -36,7 +36,7 @@ description = """
 # Introduction
 The Openverse API ('openverse-api') is a system
 that allows programmatic access to public domain digital media. It is our
-ambition to index and catalog billions of Creative Commons works, including
+ambition to index and catalog billions of openly-licensed works, including
 articles, songs, videos, photographs, paintings, and more. Using this API,
 developers will be able to access the digital commons in their own
 applications.
@@ -45,8 +45,8 @@ Please note that there is a rate limit of 5000 requests per day and
 60 requests per minute rate limit in place for anonymous users. This is fine
 for introducing yourself to the API, but we strongly recommend that you obtain
 an API key as soon as possible. Authorized clients have a higher rate limit
-of 10000 requests per day and 100 requests per minute. Additionally, Creative
-Commons can give your key an even higher limit that fits your application's
+of 10000 requests per day and 100 requests per minute. Additionally, Openverse
+can give your key an even higher limit that fits your application's
 needs. See the Register and Authenticate section for instructions on obtaining
 an API key.
 
