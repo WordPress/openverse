@@ -166,10 +166,11 @@ We love pull requests! If you’re interested in [contributing on Github](https:
 """  # noqa
 
 # @todo: Reimplement logo once Openverse logomark is finalized
-# logo_url = "https://mirrors.creativecommons.org/presskit/logos/cc.logo.svg"
 tos_url = "https://api.openverse.engineering/terms_of_service.html"
-license_url =\
-    "https://github.com/wordpress/openverse-api/blob/master/LICENSE"
+logo_url = "https://raw.githubusercontent.com/" \
+           "WordPress/openverse/brand_assets/brand/logo.svg"
+license_url = "https://github.com/" \
+              "WordPress/openverse-api/blob/master/LICENSE"
 schema_view = get_schema_view(
     openapi.Info(
         title="Openverse API",
@@ -178,10 +179,10 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="zack.krida@automattic.com"),
         license=openapi.License(name="MIT License", url=license_url),
         terms_of_service=tos_url,
-        # x_logo={
-        #     "url": logo_url,
-        #     "backgroundColor": "#FFFFFF"
-        # }
+        x_logo={
+            "url": logo_url,
+            "backgroundColor": "#fafafa"
+        }
     ),
     public=True,
     permission_classes=(rest_framework.permissions.AllowAny,),
