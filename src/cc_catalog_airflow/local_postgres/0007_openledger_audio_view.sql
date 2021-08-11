@@ -62,9 +62,9 @@ CREATE MATERIALIZED VIEW audio_view AS
     bit_rate,
     sample_rate,
     category,
-    genre,
+    genres,
     audio_set,
-    alt_audio_files,
+    alt_files,
     filesize,
     license,
     license_version,
@@ -73,9 +73,10 @@ CREATE MATERIALIZED VIEW audio_view AS
     title,
     meta_data,
     tags,
+    watermarked,
     last_synced_with_source,
     removed_from_source,
     standardized_audio_popularity(
       audio.provider, audio.meta_data
-    ) AS standardized_audio_popularity
+    ) AS standardized_popularity
   FROM audio;

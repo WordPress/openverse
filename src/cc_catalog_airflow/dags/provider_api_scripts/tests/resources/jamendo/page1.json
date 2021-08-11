@@ -1,0 +1,201 @@
+[
+  {
+    "id": "730",
+    "name": "Giants",
+    "duration": 136,
+    "artist_id": "92",
+    "artist_name": "Haeresis",
+    "artist_idstr": "haeresis",
+    "album_name": "Opera I",
+    "album_id": "119",
+    "license_ccurl": "http://creativecommons.org/licenses/by-nc/2.0/",
+    "position": 4,
+    "releasedate": "2005-04-12",
+    "album_image": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=730",
+    "audio": "https://mp3d.jamendo.com/?trackid=730&format=mp32&from=3qvpQaRnh2Xki6EPtPKE9Q%3D%3D%7CwO7vlB7s%2F4Ax3zxnu5b7oA%3D%3D",
+    "audiodownload": "https://mp3d.jamendo.com/download/track/730/mp32/",
+    "prourl": "",
+    "shorturl": "https://jamen.do/t/730",
+    "shareurl": "https://www.jamendo.com/track/730",
+    "lyrics": "",
+    "audiodownload_allowed": true,
+    "image": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=730",
+    "musicinfo": {
+      "vocalinstrumental": "instrumental",
+      "speed": "medium",
+      "tags": {
+        "genres": [],
+        "instruments": [],
+        "vartags": []
+      }
+    },
+    "licenses": {
+      "ccnc": "true",
+      "ccnd": "false",
+      "ccsa": "false",
+      "prolicensing": "false",
+      "probackground": "false"
+    },
+    "stats": {
+      "rate_downloads_total": 4668,
+      "rate_listened_total": 5694,
+      "playlisted": 89,
+      "favorited": 66,
+      "likes": 0,
+      "dislikes": 0,
+      "avgnote": 0,
+      "notes": 0
+    }
+  },
+  {
+    "id": "731",
+    "name": "Through the storm",
+    "duration": 202,
+    "artist_id": "92",
+    "artist_name": "Haeresis",
+    "artist_idstr": "haeresis",
+    "album_name": "Opera I",
+    "album_id": "119",
+    "license_ccurl": "http://creativecommons.org/licenses/by-nc/2.0/",
+    "position": 5,
+    "releasedate": "2005-04-12",
+    "album_image": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=731",
+    "audio": "https://mp3d.jamendo.com/?trackid=731&format=mp32&from=SrzQ0HI5HB2acTFp8Erxhw%3D%3D%7C04BHE7pblSM64LS6NT2yMw%3D%3D",
+    "audiodownload": "https://mp3d.jamendo.com/download/track/731/mp32/",
+    "prourl": "",
+    "shorturl": "https://jamen.do/t/731",
+    "shareurl": "https://www.jamendo.com/track/731",
+    "lyrics": "",
+    "audiodownload_allowed": true,
+    "image": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=731",
+    "musicinfo": {
+      "vocalinstrumental": "instrumental",
+      "speed": "medium",
+      "tags": {
+        "genres": [],
+        "instruments": [],
+        "vartags": []
+      }
+    },
+    "licenses": {
+      "ccnc": "true",
+      "ccnd": "false",
+      "ccsa": "false",
+      "prolicensing": "false",
+      "probackground": "false"
+    },
+    "stats": {
+      "rate_downloads_total": 4438,
+      "rate_listened_total": 5625,
+      "playlisted": 92,
+      "favorited": 66,
+      "likes": 0,
+      "dislikes": 0,
+      "avgnote": 0,
+      "notes": 0
+    }
+  },
+  {
+    "id": "732",
+    "name": "Thoughtful",
+    "duration": 144,
+    "artist_id": "92",
+    "artist_name": "Haeresis",
+    "artist_idstr": "haeresis",
+    "album_name": "Opera I",
+    "album_id": "119",
+    "license_ccurl": "http://creativecommons.org/licenses/by-nc/2.0/",
+    "position": 6,
+    "releasedate": "2005-04-12",
+    "album_image": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
+    "audio": "https://mp3d.jamendo.com/?trackid=732&format=mp32&from=WftSCtIfbfXP90c1jNqsfw%3D%3D%7CNzgGctbCMB1xAW8bJE5uEw%3D%3D",
+    "audiodownload": "https://mp3d.jamendo.com/download/track/732/mp32/",
+    "prourl": "",
+    "shorturl": "https://jamen.do/t/732",
+    "shareurl": "https://www.jamendo.com/track/732",
+    "lyrics": "",
+    "audiodownload_allowed": true,
+    "image": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
+    "musicinfo": {
+      "vocalinstrumental": "instrumental",
+      "speed": "medium",
+      "tags": {
+        "genres": [],
+        "instruments": [],
+        "vartags": []
+      }
+    },
+    "licenses": {
+      "ccnc": "true",
+      "ccnd": "false",
+      "ccsa": "false",
+      "prolicensing": "false",
+      "probackground": "false"
+    },
+    "stats": {
+      "rate_downloads_total": 2826,
+      "rate_listened_total": 5616,
+      "playlisted": 92,
+      "favorited": 66,
+      "likes": 0,
+      "dislikes": 0,
+      "avgnote": 0,
+      "notes": 0
+    }
+  },
+  {
+  "id": "287",
+  "name": "Port\u00e9es Disparues (Femmes sans visage)",
+  "duration": 197,
+  "artist_id": "17",
+  "artist_name": "Alchimie",
+  "artist_idstr": "alchimie",
+  "album_name": "Adversit\u00e9",
+  "album_id": "36",
+  "license_ccurl": "http://creativecommons.org/licenses/by-nc-sa/2.0/",
+  "position": 3,
+  "releasedate": "2005-03-24",
+  "album_image": "https://usercontent.jamendo.com?type=album&id=36&width=200&trackid=287",
+  "audio": "https://mp3d.jamendo.com/?trackid=287&format=mp32&from=zfuzxtKcdaSAup2RiA3CLA%3D%3D%7C3sOlsOWdqT2UOTSYkAetgQ%3D%3D",
+  "audiodownload": "https://mp3d.jamendo.com/download/track/287/mp32/",
+  "prourl": "",
+  "shorturl": "https://jamen.do/t/287",
+  "shareurl": "https://www.jamendo.com/track/287",
+  "lyrics": "",
+  "audiodownload_allowed": true,
+  "image": "https://usercontent.jamendo.com?type=album&id=36&width=200&trackid=287",
+  "musicinfo": {
+    "vocalinstrumental": "vocal",
+    "gender": "male",
+    "speed": "medium",
+    "tags": {
+      "genres": [
+        "pop",
+        "rock"
+      ],
+      "instruments": [],
+      "vartags": [
+        "engage"
+      ]
+    }
+  },
+  "licenses": {
+    "ccnc": "true",
+    "ccnd": "false",
+    "ccsa": "true",
+    "prolicensing": "false",
+    "probackground": "false",
+    "cc": "true"
+  },
+  "stats": {
+    "rate_downloads_total": 9092,
+    "rate_listened_total": 6469,
+    "playlisted": 158,
+    "favorited": 104,
+    "likes": 0,
+    "dislikes": 0,
+    "avgnote": 0,
+    "notes": 0
+  }
+}
+]

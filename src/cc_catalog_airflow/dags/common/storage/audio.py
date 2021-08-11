@@ -72,8 +72,10 @@ AUDIO_TSV_COLUMNS = [
     columns.StringColumn(
         name='category', required=False, size=80, truncate=False,
     ),
-    columns.JSONColumn(
-        name='genre', required=False,
+    columns.ArrayColumn(
+        name='genres', required=False, base_column=columns.StringColumn(
+            name='genre', required=False, size=80, truncate=False
+        )
     ),
     columns.JSONColumn(
         # set name, set thumbnail, position of audio in set, set url
@@ -81,7 +83,7 @@ AUDIO_TSV_COLUMNS = [
     ),
     columns.JSONColumn(
         # Alternative files: url, filesize, bit_rate, sample_rate
-        name='alt_audio_files', required=False
+        name='alt_files', required=False
     ),
 ]
 
@@ -133,12 +135,12 @@ class AudioStore(MediaStore):
         bit_rate: Optional[int] = None,
         sample_rate: Optional[int] = None,
         category: Optional[str] = None,
-        genre: Optional[str] = None,
+        genres: Optional[Union[list, str]] = None,
         audio_set: Optional[str] = None,
         set_position: Optional[int] = None,
         set_thumbnail: Optional[str] = None,
         set_url: Optional[str] = None,
-        alt_audio_files: Optional[Dict] = None,
+        alt_files: Optional[Dict] = None,
         source: Optional[str] = None,
         ingestion_type: Optional[str] = None,
     ):
@@ -187,13 +189,13 @@ class AudioStore(MediaStore):
         bit_rate:            Audio bit rate as int.
         sample_rate:         Audio sample rate as int.
         category:            'music', 'sound' or 'podcast'.
-        genre:               List of genres
+        genres:              List of genres
         audio_set:           The name of the set (album, pack) the audio
                              is part of
         set_position:        Position of the audio in the audio_set
         set_thumbnail:       URL of the audio_set thumbnail
         set_url:             URL of the audio_set
-        alt_audio_files:     A dictionary with information about alternative
+        alt_files:           A dictionary with information about alternative
                              files for the audio (different formats/ quality).
                              Dict with the following keys: url, filesize,
                              bit_rate, sample_rate
@@ -230,9 +232,9 @@ class AudioStore(MediaStore):
             'bit_rate': bit_rate,
             'sample_rate': sample_rate,
             'category': category,
-            'genre': genre,
+            'genres': genres,
             'audio_set': audio_set_data,
-            'alt_audio_files': alt_audio_files,
+            'alt_files': alt_files,
             'source': source,
             'ingestion_type': ingestion_type,
         }

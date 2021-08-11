@@ -29,9 +29,9 @@ CREATE TABLE public.audio (
     bit_rate integer,
     sample_rate integer,
     category character varying(200),
-    genre jsonb,
+    genres character varying(80)[],
     audio_set jsonb,
-    alt_audio_files jsonb,
+    alt_files jsonb,
     filesize integer,
     license character varying(50) NOT NULL,
     license_version character varying(25),
@@ -40,6 +40,7 @@ CREATE TABLE public.audio (
     title character varying(5000),
     meta_data jsonb,
     tags jsonb,
+    watermarked boolean,
     last_synced_with_source timestamp with time zone,
     removed_from_source boolean NOT NULL
 );

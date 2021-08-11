@@ -179,7 +179,7 @@ def test_BooleanColumn_prepare_string_casts_falselike():
     assert all([bc.prepare_string(v) == 'f' for v in falselike_values])
 
 
-def test_JSONColumn_prepare_string_nones_empty_list(monkeypatch):
+def test_JSONColumn_prepare_string_nones_empty_list():
     jc = columns.JSONColumn('test', False)
     L = []
     actual_json = jc.prepare_string(L)
@@ -187,7 +187,7 @@ def test_JSONColumn_prepare_string_nones_empty_list(monkeypatch):
     assert actual_json == expect_json
 
 
-def test_JSONColumn_prepare_string_nones_empty_dict(monkeypatch):
+def test_JSONColumn_prepare_string_nones_empty_dict():
     jc = columns.JSONColumn('test', False)
     D = {}
     actual_json = jc.prepare_string(D)
@@ -195,7 +195,7 @@ def test_JSONColumn_prepare_string_nones_empty_dict(monkeypatch):
     assert actual_json == expect_json
 
 
-def test_JSONColumn_prepare_string_returns_json_string(monkeypatch):
+def test_JSONColumn_prepare_string_returns_json_string():
     jc = columns.JSONColumn('test', False)
     D = {'test': 'dict'}
     actual_json = jc.prepare_string(D)
@@ -203,7 +203,7 @@ def test_JSONColumn_prepare_string_returns_json_string(monkeypatch):
     assert actual_json == expect_json
 
 
-def test_JSONColumn_prepare_string_returns_unicode_json_string(monkeypatch):
+def test_JSONColumn_prepare_string_returns_unicode_json_string():
     jc = columns.JSONColumn('test', False)
     D = {'test': u'A unicode \u018e string \xf1'}
     actual_json = jc.prepare_string(D)
@@ -333,3 +333,36 @@ def test_URLColumn_prepare_string_nones_unclean_input(monkeypatch):
     actual_str = uc.prepare_string('test string')
     expect_str = None
     assert actual_str == expect_str
+
+
+def test_ArrayColumn_of_StringColumn_prepare_string_returns_pg_array():
+    ac = columns.ArrayColumn(
+        'test', False, columns.StringColumn(
+            name='test', size=80, required=False, truncate=False
+        )
+    )
+    given_list = ['item1', 'item2']
+    actual_str = ac.prepare_string(given_list)
+    expected_str = '{"item1", "item2"}'
+    assert actual_str == expected_str
+
+
+def test_ArrayColumn_prepare_string_returns_pg_array_from_single_string():
+    ac = columns.ArrayColumn(
+        'test', False, columns.StringColumn(
+            name='test', size=80, required=False, truncate=False
+        )
+    )
+    actual_str = ac.prepare_string('abcdef')
+    expected_str = '{abcdef}'
+    assert actual_str == expected_str
+
+
+def test_ArrayColumn_of_IntegerColumn_prepare_string_returns_pg_array():
+    ac = columns.ArrayColumn(
+        'test', False, columns.IntegerColumn(name='test', required=False)
+    )
+    given_list = [1.1, 22, 3, 456]
+    actual_str = ac.prepare_string(given_list)
+    expected_str = '{"1", "22", "3", "456"}'
+    assert actual_str == expected_str

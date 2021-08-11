@@ -70,9 +70,9 @@ def create_loading_table(
               {col.BIT_RATE} integer,
               {col.SAMPLE_RATE} integer,
               {col.CATEGORY} character varying(100),
-              {col.GENRE} jsonb,
+              {col.GENRES} character varying(80)[],
               {col.AUDIO_SET} jsonb,
-              {col.ALT_AUDIO_FILES} jsonb
+              {col.ALT_FILES} jsonb
             );
             '''
         )
@@ -261,6 +261,17 @@ def upsert_records_to_db_table(
             EXCLUDED.{column},
             old.{column}
           )'''
+
+    def _merge_array(column: str) -> str:
+        return f'''{column} = COALESCE(
+            (
+              SELECT array_agg(DISTINCT x)
+              FROM unnest(old.{column} || EXCLUDED.{column}) t(x)
+            ),
+            EXCLUDED.{column},
+            old.{column}
+        )'''
+
     if db_table is None:
         db_table = AUDIO_TABLE_NAME \
             if media_type == 'audio' else IMAGE_TABLE_NAME
@@ -296,9 +307,9 @@ def upsert_records_to_db_table(
             col.BIT_RATE: col.BIT_RATE,
             col.SAMPLE_RATE: col.SAMPLE_RATE,
             col.CATEGORY: col.CATEGORY,
-            col.GENRE: col.GENRE,
+            col.GENRES: col.GENRES,
             col.AUDIO_SET: col.AUDIO_SET,
-            col.ALT_AUDIO_FILES: col.ALT_AUDIO_FILES,
+            col.ALT_FILES: col.ALT_FILES,
         })
     else:
         column_inserts.update({
@@ -311,9 +322,9 @@ def upsert_records_to_db_table(
             {_newest_non_null(col.BIT_RATE)},
             {_newest_non_null(col.SAMPLE_RATE)},
             {_newest_non_null(col.CATEGORY)},
-            {_merge_jsonb_arrays(col.GENRE)},
+            {_merge_array(col.GENRES)},
             {_merge_jsonb_objects(col.AUDIO_SET)},
-            {_merge_jsonb_objects(col.ALT_AUDIO_FILES)}
+            {_merge_jsonb_objects(col.ALT_FILES)}
             '''
         )
     else:
@@ -381,9 +392,9 @@ def overwrite_records_in_db_table(
             col.BIT_RATE,
             col.SAMPLE_RATE,
             col.CATEGORY,
-            col.GENRE,
+            col.GENRES,
             col.AUDIO_SET,
-            col.ALT_AUDIO_FILES,
+            col.ALT_FILES,
         ]
     else:
         columns_to_update = [
