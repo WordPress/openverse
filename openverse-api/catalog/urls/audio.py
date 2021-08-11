@@ -16,7 +16,7 @@ urlpatterns = [
     path(
         'recommendations/<str:identifier>',
         RelatedAudio.as_view(),
-        name='related-audio'
+        name='audio-related'
     ),
     path(
         '<str:identifier>',

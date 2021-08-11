@@ -17,7 +17,7 @@ urlpatterns = [
     path(
         'recommendations/<str:identifier>',
         RelatedImage.as_view(),
-        name='related-images'
+        name='image-related'
     ),
     path(
         '<str:identifier>',
