@@ -67,6 +67,17 @@ def test_old_stats_endpoint():
     assert response.headers.get('Location') == '/v1/images/stats'
 
 
+def test_old_related_images_endpoint():
+    response = requests.get(
+        f'{API_URL}/v1/recommendations/images/xyz',
+        allow_redirects=False,
+        verify=False
+    )
+    assert response.status_code == 301
+    assert response.is_permanent_redirect
+    assert response.headers.get('Location') == '/v1/images/recommendations/xyz'
+
+
 @pytest.mark.skip(reason="Disabled feature")
 @pytest.fixture
 def test_list_create(image_fixture):

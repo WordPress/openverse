@@ -206,6 +206,11 @@ versioned_paths = [
         RedirectView.as_view(pattern_name='image-stats', permanent=True),
         name='about-image'
     ),
+    path(
+        'recommendations/images/<str:identifier>',
+        RedirectView.as_view(pattern_name='image-related', permanent=True),
+        name='related-images',
+    ),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
 ]
