@@ -126,7 +126,7 @@ class ImageSerializer(MediaSerializer):
     def get_thumbnail(self, obj):
         request = self.context['request']
         host = request.get_host()
-        path = reverse('thumbs', kwargs={'identifier': obj.identifier})
+        path = reverse('image-thumb', kwargs={'identifier': obj.identifier})
         return f'https://{host}{path}'
 
 

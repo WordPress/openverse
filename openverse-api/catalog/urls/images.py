@@ -6,6 +6,7 @@ from catalog.api.views.image_views import (
     RelatedImage,
     ImageStats,
     ReportImageView,
+    ProxiedImage,
 )
 
 urlpatterns = [
@@ -18,6 +19,11 @@ urlpatterns = [
         '<str:identifier>',
         ImageDetail.as_view(),
         name='image-detail'
+    ),
+    path(
+        '<str:identifier>/thumb',
+        ProxiedImage.as_view(),
+        name='image-thumb'
     ),
     path(
         '<str:identifier>/recommendations',

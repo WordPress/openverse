@@ -6,13 +6,13 @@ import piexif
 import requests
 from PIL import Image as img
 from django.conf import settings
+from django.urls import reverse
 from django.http.response import HttpResponse, FileResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.response import Response
-from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from urllib.error import HTTPError
 from urllib.request import urlopen
@@ -220,7 +220,7 @@ By using this endpoint, you can image details such as
         # Proxy insecure HTTP images at full resolution.
         if 'http://' in resp.data[search_controller.URL]:
             secure = request.build_absolute_uri(
-                reverse('thumbs', [identifier])
+                reverse('image-thumb', kwargs={'identifier': identifier})
             )
             secure += '?full_size=True'
             resp.data[search_controller.URL] = secure
