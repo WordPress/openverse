@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 import rest_framework.permissions
+from django.conf import settings
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path, re_path
@@ -176,7 +177,7 @@ license_url = \
 schema_view = get_schema_view(
     openapi.Info(
         title="Openverse API",
-        default_version=API_VERSION,
+        default_version=settings.API_VERSION,
         description=description,
         contact=openapi.Contact(email="zack.krida@automattic.com"),
         license=openapi.License(name="MIT License", url=license_url),
@@ -252,7 +253,7 @@ versioned_paths = [
     path('thumbs/<str:identifier>', ProxiedImage.as_view(), name='thumbs'),
     path('oembed', OembedView.as_view(), name='oembed')
 ]
-if WATERMARK_ENABLED:
+if settings.WATERMARK_ENABLED:
     versioned_paths.append(
         path('watermark/<str:identifier>', Watermark.as_view())
     )
