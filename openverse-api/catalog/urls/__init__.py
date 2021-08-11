@@ -191,6 +191,8 @@ schema_view = get_schema_view(
     permission_classes=(rest_framework.permissions.AllowAny,),
 )
 
+cache_timeout = 0 if settings.DEBUG else 15
+
 versioned_paths = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('auth_tokens/register', Register.as_view(), name='register'),
@@ -262,19 +264,29 @@ urlpatterns = [
     path('', RedirectView.as_view(url='/v1')),
     path('admin/', admin.site.urls),
     re_path('healthcheck', HealthCheck.as_view()),
+
+    # Swagger documentation
     re_path(
         r'^swagger(?P<format>\.json|\.yaml)$',
-        schema_view.without_ui(cache_timeout=None), name='schema-json'
+        schema_view.without_ui(cache_timeout=None),
+        name='schema-json'
     ),
     re_path(
         r'^swagger/$',
-        schema_view.with_ui('swagger', cache_timeout=15),
+        schema_view.with_ui('swagger', cache_timeout=cache_timeout),
         name='schema-swagger-ui'
     ),
     re_path(
         r'^redoc/$',
-        schema_view.with_ui('redoc', cache_timeout=15),
+        schema_view.with_ui('redoc', cache_timeout=cache_timeout),
         name='schema-redoc'
     ),
+    re_path(
+        r'^v1/$',
+        schema_view.with_ui('redoc', cache_timeout=cache_timeout),
+        name='root'
+    ),
+
+    # API
     path('v1/', include(versioned_paths))
 ]
