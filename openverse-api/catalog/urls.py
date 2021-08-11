@@ -168,7 +168,7 @@ We love pull requests! If you’re interested in [contributing on Github](https:
 # @todo: Reimplement logo once Openverse logomark is finalized
 tos_url = "https://api.openverse.engineering/terms_of_service.html"
 logo_url = "https://raw.githubusercontent.com/" \
-           "WordPress/openverse/brand_assets/brand/logo.svg"
+           "WordPress/openverse/master/brand/logo.svg"
 license_url = "https://github.com/" \
               "WordPress/openverse-api/blob/master/LICENSE"
 schema_view = get_schema_view(
