@@ -110,7 +110,7 @@ def _extract_item_data(media_data):
         logger.info("Found no image title.")
         logger.info(f"{json.dumps(media_data, indent=2)}")
         return None
-    creator, creator_url = _get_creator_data(page)
+    creator, creator_url = _get_creator_data(media_data)
     thumbnail = image_url
     metadata = _get_metadata(media_data)
     tags = _get_tags(media_data)
@@ -139,15 +139,18 @@ def _get_image_info(item):
     return image_url, width, height
 
 
-def _get_creator_data(page):
-    if len(page.find_class("author")) == 0:
-        return None, None
-    author_elem = page.find_class("author")[0]
-    creator = author_elem.text_content().strip()
-    creator_url = None
-    href = author_elem.attrib.get('href')
-    if href is not None:
-        creator_url = f"https://{HOST}{href}"
+def _get_creator_data(item):
+    """
+    Get the author's name and website preferring their custom link over the
+    StockSnap profile. The latter is used if the first is not found.
+    """
+    creator = item.get("author_name")
+    creator_url = item.get("author_website")
+    if creator_url is None or creator_url in [
+        "https://stocksnap.io/",
+        "https://stocksnap.io/author/undefined/",
+    ]:
+        creator_url = item.get("author_profile")
     return creator, creator_url
 
 
