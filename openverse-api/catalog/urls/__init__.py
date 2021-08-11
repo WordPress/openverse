@@ -190,63 +190,6 @@ schema_view = get_schema_view(
     permission_classes=(rest_framework.permissions.AllowAny,),
 )
 
-report_image_bash = \
-    """
-    # Report an issue about image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
-    curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "This image contains sensitive content"}' https://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
-    """  # noqa
-
-report_image_request = openapi.Schema(
-    type=openapi.TYPE_OBJECT,
-    required=['reason', 'identifier'],
-    properties={
-        'reason': openapi.Schema(
-            title="Reason",
-            type=openapi.TYPE_STRING,
-            enum=["mature", "dmca", "other"],
-            max_length=20,
-            description="The reason to report image to Openverse."
-        ),
-        'identifier': openapi.Schema(
-            title="Identifier",
-            type=openapi.TYPE_STRING,
-            format=openapi.FORMAT_UUID,
-            description="The ID for image to be reported."
-        ),
-        'description': openapi.Schema(
-            title="Description",
-            type=openapi.TYPE_STRING,
-            max_length=500,
-            nullable=True,
-            description="The explanation on why image is being reported."
-        )
-    },
-    example={
-        "reason": "mature",
-        "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395",
-        "description": "This image contains sensitive content"
-    }
-)
-
-decorated_report_image_view = \
-    swagger_auto_schema(
-        method='post',
-        responses={
-            "201": openapi.Response(
-                description="OK",
-                examples=images_report_create_201_example,
-                schema=ReportImageSerializer
-            )
-        },
-        request_body=report_image_request,
-        code_examples=[
-            {
-                'lang': 'Bash',
-                'source': report_image_bash
-            }
-        ]
-    )(ReportImageView.as_view())
-
 versioned_paths = [
     path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
     path('auth_tokens/register', Register.as_view(), name='register'),

@@ -29,6 +29,8 @@ from catalog.api.examples import (
     oembed_list_404_example,
     image_stats_curl,
     image_stats_200_example,
+    report_image_curl,
+    images_report_create_201_example,
 )
 from catalog.api.models import Image, ImageReport
 from catalog.api.serializers.error_serializers import (
@@ -49,6 +51,7 @@ from catalog.api.utils import ccrel
 from catalog.api.utils.exceptions import input_error_response
 from catalog.api.utils.watermark import watermark
 from catalog.api.views.media_views import (
+    refer_sample,
     RESULTS,
     RESULT_COUNT,
     PAGE_COUNT,
@@ -367,21 +370,37 @@ class OembedView(APIView):
 
 
 class ReportImageView(CreateAPIView):
-    """
-    images_report_create
-    
-    images_report_create is an API endpoint to report an issue about a 
-    specified image ID to Openverse.
+    report_image_description = f"""
+images_report_create is an API endpoint to report an issue about a specified 
+image ID to Openverse.
 
-    By using this endpoint, you can report an image if it infringes copyright, 
-    contains mature or sensitive content and others.
+By using this endpoint, you can report an image if it infringes copyright, 
+contains mature or sensitive content and others.
 
-    You can refer to Bash's Request Samples for example on how to use
-    this endpoint.
-    """  # noqa
+{refer_sample}"""  # noqa
+
     swagger_schema = CustomAutoSchema
     queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer
+
+    @swagger_auto_schema(operation_id='images_report_create',
+                         operation_description=report_image_description,
+                         query_serializer=ReportImageSerializer,
+                         responses={
+                             "201": openapi.Response(
+                                 description="OK",
+                                 examples=images_report_create_201_example,
+                                 schema=ReportImageSerializer
+                             )
+                         },
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': report_image_curl,
+                             }
+                         ])
+    def post(self, request, *args, **kwargs):
+        return super(ReportImageView, self).post(request, *args, **kwargs)
 
 
 class ImageStats(MediaStats):
