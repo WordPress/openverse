@@ -20,21 +20,16 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.views.generic import RedirectView
 from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
 from drf_yasg.views import get_schema_view
 
-from catalog.api.examples import images_report_create_201_example
-from catalog.api.serializers.image_serializers import \
-    ReportImageSerializer
-from catalog.api.views.audio_views import SearchAudio, AudioDetail, \
-    RelatedAudio, AudioStats
-from catalog.api.views.image_views import SearchImages, ImageDetail, \
-    Watermark, RelatedImage, OembedView, ReportImageView, ImageStats
+from catalog.api.views.image_views import Watermark, OembedView
 from catalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
-from catalog.api.views.site_views import HealthCheck, Register, CheckRates, \
-    VerifyEmail, ProxiedImage
-from catalog.settings import API_VERSION, WATERMARK_ENABLED
+from catalog.api.views.site_views import HealthCheck, CheckRates, ProxiedImage
+
+from catalog.urls.auth_tokens import urlpatterns as auth_tokens_patterns
+from catalog.urls.audio import urlpatterns as audio_patterns
+from catalog.urls.images import urlpatterns as images_patterns
 
 description = """
 # Introduction
@@ -194,66 +189,25 @@ schema_view = get_schema_view(
 cache_timeout = 0 if settings.DEBUG else 15
 
 versioned_paths = [
-    path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
-    path('auth_tokens/register', Register.as_view(), name='register'),
     path('rate_limit', CheckRates.as_view(), name='key_info'),
-    path(
-        'auth_tokens/verify/<str:code>',
-        VerifyEmail.as_view(),
-        name='verify-email'
-    ),
-    re_path(
-        r'auth_tokens/',
-        include('oauth2_provider.urls', namespace='oauth2_provider')
-    ),
+    path('auth_tokens/', include(auth_tokens_patterns)),
 
-    path(
-        'audio/stats',
-        AudioStats.as_view(),
-        name='audio-stats'
-    ),
-    path(
-        'audio/<str:identifier>',
-        AudioDetail.as_view(),
-        name='audio-detail'
-    ),
-    re_path('audio', SearchAudio.as_view(), name='audio'),
-    path(
-        'recommendations/audio/<str:identifier>',
-        RelatedAudio.as_view(),
-        name='related-audio'
-    ),
+    # Audio
+    path('audio/', include(audio_patterns)),
 
+    # Images
+    path('images/', include(images_patterns)),
+    path('thumbs/<str:identifier>', ProxiedImage.as_view(), name='thumbs'),
+    path('oembed', OembedView.as_view(), name='oembed'),
+
+    # Deprecated
     path(
-        'images/stats',
-        ImageStats.as_view(),
-        name='image-stats'
-    ),
-    path(
-        'images/<str:identifier>',
-        ImageDetail.as_view(),
-        name='image-detail'
-    ),
-    path(
-        'images/<str:identifier>/report',
-        decorated_report_image_view,
-        name='report-image'
-    ),
-    path(
-        'recommendations/images/<str:identifier>',
-        RelatedImage.as_view(),
-        name='related-images'
-    ),
-    re_path('images', SearchImages.as_view(), name='images'),
-    path(  # Deprecated
         'sources',
         RedirectView.as_view(pattern_name='image-stats', permanent=True),
         name='about-image'
     ),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
-    path('thumbs/<str:identifier>', ProxiedImage.as_view(), name='thumbs'),
-    path('oembed', OembedView.as_view(), name='oembed')
 ]
 if settings.WATERMARK_ENABLED:
     versioned_paths.append(
