@@ -12,7 +12,6 @@ Notes:                  https://stocksnap.io/api/
 """
 import json
 import logging
-import lxml.html as html
 
 from common import DelayedRequester, ImageStore
 from common.licenses.licenses import get_license_info
@@ -105,13 +104,8 @@ def _extract_item_data(media_data):
     """
     Extract data for individual image.
     """
-    try:
-        foreign_id = media_data["img_id"]
-        foreign_landing_url, page = _get_foreign_landing_page(foreign_id)
-    except (TypeError, KeyError, AttributeError):
-        logger.info("Foreign landing url not resolved.")
-        logger.info(f"{json.dumps(media_data, indent=2)}")
-        return None
+    foreign_id = media_data["img_id"]
+    foreign_landing_url = f"https://{HOST}/photo/{foreign_id}"
     image_url, width, height = _get_image_info(media_data)
     if image_url is None:
         logger.info("Found no image url.")
@@ -143,20 +137,10 @@ def _extract_item_data(media_data):
     }
 
 
-def _get_foreign_landing_page(foreign_identifier):
-    url = f"https://{HOST}/photo/{foreign_identifier}"
-    final_url, page = None, None
-    response = delayed_requester.get(url)
-    if response:
-        final_url = response.url
-        page = html.document_fromstring(response.text)
-    return final_url, page
-
-
-def _get_image_info(media_data):
-    width = media_data.get("img_width")
-    height = media_data.get("img_height")
-    img_id = media_data.get("img_id")
+def _get_image_info(item):
+    width = item.get("img_width")
+    height = item.get("img_height")
+    img_id = item.get("img_id")
     image_url = f"{CDN}/{img_id}.jpg"
     return image_url, width, height
 
