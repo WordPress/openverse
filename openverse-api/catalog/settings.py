@@ -10,11 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import os
+from pathlib import Path
 from socket import gethostname, gethostbyname
 true_strings = ['true', 'True', 't', '1']
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Build paths inside the project like this: BASE_DIR.join('dir', 'subdir'...)
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Where to collect static files in production/development deployments
 STATIC_ROOT = "/var/api_static_content/static"
