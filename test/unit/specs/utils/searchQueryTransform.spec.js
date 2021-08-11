@@ -240,7 +240,9 @@ describe('searchQueryTransform', () => {
           code: 'brooklynmuseum',
         },
       ],
-      searchBy: [{ code: 'creator', checked: true, name: 'filters.searchBy.creator' }],
+      searchBy: [
+        { code: 'creator', checked: true, name: 'filters.searchBy.creator' },
+      ],
       mature: true,
     }
     const queryString =
