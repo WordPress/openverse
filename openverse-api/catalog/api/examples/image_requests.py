@@ -38,6 +38,6 @@ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openve
 """  # noqa
 
 image_stats_curl = """
-# Get the 
+# Get the statistics for image sources
 curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/images/stats
 """  # noqa
