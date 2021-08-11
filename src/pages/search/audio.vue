@@ -6,6 +6,7 @@
     aria-labelledby="audio"
   />
 </template>
+
 <script>
 import { UPDATE_SEARCH_TYPE } from '~/store-modules/action-types'
 import { AUDIO } from '~/constants/media'

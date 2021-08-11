@@ -13,9 +13,15 @@ import {
   filtersToQueryData,
   queryToFilterData,
 } from '~/utils/searchQueryTransform'
-import { ALL_MEDIA, AUDIO, IMAGE, supportedMediaTypes } from '~/constants/media'
+import {
+  ALL_MEDIA,
+  AUDIO,
+  IMAGE,
+  VIDEO,
+  supportedMediaTypes,
+} from '~/constants/media'
 
-const mediaFilterKeys = {
+export const mediaFilterKeys = {
   image: [
     'licenses',
     'licenseTypes',
@@ -37,6 +43,7 @@ const mediaFilterKeys = {
     'searchBy',
     'mature',
   ],
+  video: ['licenseTypes'],
   all: ['licenses', 'licenseTypes', 'searchBy', 'mature'],
 }
 const mediaSpecificFilters = {
@@ -48,19 +55,9 @@ const mediaSpecificFilters = {
     'imageProviders',
   ],
   audio: ['audioCategories', 'audioExtensions', 'durations', 'audioProviders'],
+  video: [],
 }
 
-const IMAGE_FILTERS = [
-  'licenses',
-  'licenseTypes',
-  'categories',
-  'extensions',
-  'aspectRatios',
-  'sizes',
-  'providers',
-  'searchBy',
-  'mature',
-]
 export const filterData = {
   licenses: [
     { code: 'cc0', name: 'filters.licenses.cc0', checked: false },
@@ -182,7 +179,7 @@ const getters = {
    */
   appliedFilterTags: (state) => {
     let appliedFilters = []
-    const filterKeys = [...mediaFilterKeys[state.searchType]]
+    const filterKeys = mediaFilterKeys[state.searchType]
     filterKeys.forEach((filterType) => {
       if (filterType !== 'mature') {
         const newFilters = state.filters[filterType]
@@ -212,13 +209,19 @@ const getters = {
   },
   audioFiltersForDisplay: (state) => {
     return getMediaTypeFilters(state, {
-      mediaType: 'audio',
+      mediaType: AUDIO,
       includeMature: false,
     })
   },
   imageFiltersForDisplay: (state) => {
     return getMediaTypeFilters(state, {
       mediaType: IMAGE,
+      includeMature: false,
+    })
+  },
+  videoFiltersForDisplay: (state) => {
+    return getMediaTypeFilters(state, {
+      mediaType: VIDEO,
       includeMature: false,
     })
   },
@@ -244,9 +247,12 @@ function setQuery(state) {
 }
 
 function getMediaTypeFilters(state, { mediaType, includeMature = false }) {
-  let filterKeys = [...mediaFilterKeys[mediaType]]
+  // eslint-disable-next-line no-debugger
+  debugger
+
+  let filterKeys = mediaFilterKeys[mediaType]
   if (!includeMature) {
-    filterKeys.splice(filterKeys.indexOf('mature'), 1)
+    filterKeys = filterKeys.filter((filterKey) => filterKey !== 'mature')
   }
   const mediaTypeFilters = {}
   filterKeys.forEach((filterKey) => {

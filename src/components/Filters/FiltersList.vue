@@ -46,7 +46,7 @@
 
 <script>
 import { kebabize } from '~/utils/formatStrings'
-import { AUDIO, IMAGE } from '~/constants/media'
+import { AUDIO, IMAGE, VIDEO } from '~/constants/media'
 import FilterChecklist from './FilterChecklist'
 
 export default {
@@ -56,11 +56,14 @@ export default {
   },
   computed: {
     filters() {
+      console.log(this.$store.state.searchType)
       switch (this.$store.state.searchType) {
         case AUDIO:
           return this.$store.getters.audioFiltersForDisplay
         case IMAGE:
           return this.$store.getters.imageFiltersForDisplay
+        case VIDEO:
+          return this.$store.getters.videoFiltersForDisplay
         default:
           return this.$store.getters.allFiltersForDisplay
       }

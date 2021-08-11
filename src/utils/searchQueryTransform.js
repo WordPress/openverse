@@ -18,6 +18,7 @@ const filterPropertyMappings = {
   imageProviders: 'source',
   searchBy: 'searchBy',
 }
+// @TODO Can we import this from mediaFilterKeys in `openverse-frontend/src/store-modules/filter-store.js` somehow?
 const mediaFilters = {
   all: ['licenses', 'licenseTypes', 'searchBy'],
   image: [
@@ -28,6 +29,7 @@ const mediaFilters = {
     'imageProviders',
   ],
   audio: ['audioCategories', 'audioExtensions', 'durations', 'audioProviders'],
+  video: ['licenseTypes'],
 }
 // {
 //   license: 'cc0,pdm,by,by-sa,by-nc,by-nd,by-nc-sa,by-nc-nd',
