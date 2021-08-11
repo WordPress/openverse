@@ -23,6 +23,7 @@ SCIENCE_DEFAULT_PROVIDER = 'sciencemuseum'
 STATENS_DEFAULT_PROVIDER = 'statensmuseum'
 WALTERS_DEFAULT_PROVIDER = 'waltersartmuseum'
 FINNISH_DEFAULT_PROVIDER = 'finnishmuseums'
+JAMENDO_DEFAULT_PROVIDER = 'jamendo'
 
 # Finnish parameters
 FINNISH_SUB_PROVIDERS = {
