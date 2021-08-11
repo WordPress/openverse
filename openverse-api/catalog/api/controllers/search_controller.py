@@ -340,7 +340,7 @@ def search(search_params, index, page_size, ip, request,
     return results, page_count, result_count
 
 
-def related_images(uuid, index, request, filter_dead):
+def related_media(uuid, index, request, filter_dead):
     """
     Given a UUID, find related search results.
     """
