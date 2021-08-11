@@ -19,8 +19,8 @@ from util.loader import provider_details as prov
 
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
+    level=logging.INFO,
 )
 logger = logging.getLogger(__name__)
 
@@ -52,7 +52,7 @@ def main():
     image_count = _get_items()
     image_store.commit()
     logger.info(f"Total images pulled: {image_count}")
-    logger.info('Terminated!')
+    logger.info("Terminated!")
 
 
 def _get_items():
@@ -71,18 +71,12 @@ def _get_items():
 
 
 def _get_batch_json(
-        endpoint=ENDPOINT,
-        headers=None,
-        retries=RETRIES,
-        query_params=None
+    endpoint=ENDPOINT, headers=None, retries=RETRIES, query_params=None
 ):
     if headers is None:
         headers = HEADERS.copy()
     response_json = delayed_requester.get_response_json(
-        endpoint,
-        retries,
-        query_params,
-        headers=headers
+        endpoint, retries, query_params, headers=headers
     )
     if response_json is None:
         return None
@@ -133,7 +127,7 @@ def _extract_item_data(media_data):
         "thumbnail_url": thumbnail,
         "license_info": license_info,
         "meta_data": metadata,
-        "raw_tags": tags
+        "raw_tags": tags,
     }
 
 
