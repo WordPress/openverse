@@ -38,6 +38,6 @@ curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openve
 """  # noqa
 
 audio_stats_curl = """
-# Get the 
+# Get the statistics for audio sources
 curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/audio/stats
 """  # noqa
