@@ -2,14 +2,18 @@
 
 Openverse is a search engine for openly-licensed media.
 
-This repository **does not** contain most of the codebase. The code is divided into three primary repositories, and managed via a [GitHub Project Board](https://github.com/orgs/WordPress/projects/3):
+This repository **does not** contain most of the codebase. The code is divided
+into three primary repositories, and managed via a
+[GitHub Project Board](https://github.com/orgs/WordPress/projects/3):
 
 - [Front-end](https://github.com/wordpress/openverse-frontend)
 - [Catalog](https://github.com/wordpress/openverse-catalog)
 - [API](https://github.com/wordpress/openverse-api)
 - [Browser extension](https://github.com/wordpress/openverse-browser-extension)
 
-It is possible we will explore a monorepo structure in the future, but as all the repos are decoupled from each other and use different technologies, we've felt it best to keep them distinct.
+It is possible we will explore a monorepo structure in the future, but as all
+the repos are decoupled from each other and use different technologies, we've
+felt it best to keep them distinct.
 
 ## Contributing
 
@@ -17,7 +21,10 @@ Pull requests are welcome! Feel free to
 [join us on Slack](https://make.wordpress.org/chat/) and discuss the project
 with the engineers and community members on #openverse.
 
-You can also keep in touch with [progress](https://github.com/orgs/WordPress/projects/3) and the latest updates to the project with our [WordPress contributor group](https://make.wordpress.org/openverse/).
+You can also keep in touch with
+[progress](https://github.com/orgs/WordPress/projects/3) and the latest updates
+to the project with our
+[WordPress contributor group](https://make.wordpress.org/openverse/).
 
 ## What *is* in this repo, then?
 
