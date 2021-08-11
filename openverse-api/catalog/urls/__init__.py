@@ -25,7 +25,7 @@ from drf_yasg.views import get_schema_view
 from catalog.api.views.image_views import Watermark, OembedView
 from catalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
-from catalog.api.views.site_views import HealthCheck, CheckRates, ProxiedImage
+from catalog.api.views.site_views import HealthCheck, CheckRates
 
 from catalog.urls.auth_tokens import urlpatterns as auth_tokens_patterns
 from catalog.urls.audio import urlpatterns as audio_patterns
@@ -197,7 +197,6 @@ versioned_paths = [
 
     # Images
     path('images/', include(images_patterns)),
-    path('thumbs/<str:identifier>', ProxiedImage.as_view(), name='thumbs'),
     path('oembed', OembedView.as_view(), name='oembed'),
 
     # Deprecated
@@ -210,6 +209,11 @@ versioned_paths = [
         'recommendations/images/<str:identifier>',
         RedirectView.as_view(pattern_name='image-related', permanent=True),
         name='related-images',
+    ),
+    path(
+        'thumbs/<str:identifier>',
+        RedirectView.as_view(pattern_name='image-thumb', permanent=True),
+        name='thumbs'
     ),
     path('link', CreateShortenedLink.as_view(), name='make-link'),
     path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
