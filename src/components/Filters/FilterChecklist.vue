@@ -14,16 +14,16 @@
       <button
         v-if="!filtersExpandedByDefault"
         :aria-label="'filters list for' + title + 'category'"
-        class="filter-visibility-toggle is-white padding-vertical-small"
+        class="filter-visibility-toggle is-white py-2"
       >
         <i
           v-if="areFiltersExpanded"
-          class="icon angle-up rotImg is-size-5 has-text-grey-light"
+          class="icon angle-up rotImg text-lg text-light-gray"
           title="toggle filters visibility"
         />
         <i
           v-else
-          class="icon angle-down is-size-5 has-text-grey-light"
+          class="icon angle-down text-lg text-light-gray"
           title="toggle filters visibility"
         />
       </button>
@@ -40,7 +40,7 @@
             :key="index"
             :name="item.code"
             type="checkbox"
-            class="filter-checkbox margin-right-small"
+            class="filter-checkbox mr-2"
             :checked="item.checked"
             :disabled="isDisabled(item)"
             @change="onValueChange"
@@ -54,7 +54,7 @@
           tabindex="0"
           src="@/assets/help_icon.svg"
           alt="help"
-          class="license-help padding-top-smallest padding-right-smaller"
+          class="license-help pr-1"
           @click.stop="toggleLicenseExplanationVisibility(item.code)"
           @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
         />

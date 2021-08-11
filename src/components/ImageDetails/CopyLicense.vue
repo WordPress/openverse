@@ -1,6 +1,6 @@
 <template>
-  <div class="copy-license margin-vertical-normal">
-    <h5 class="b-header margin-bottom-normal">
+  <div class="copy-license my-4">
+    <h5 class="b-header mb-4">
       {{ $t('photo-details.reuse.copy-license.title') }}
     </h5>
     <section class="tabs boxed">
@@ -54,7 +54,7 @@
           ref="photoAttribution"
           path="photo-details.reuse.credit.text"
           tag="span"
-          class="photo_usage-attribution is-block"
+          class="photo_usage-attribution block"
         >
           <template #title>
             <a
@@ -121,7 +121,7 @@
         <label for="attribution-html">
           <textarea
             id="attribution-html"
-            class="textarea monospace is-paddingless"
+            class="textarea font-mono p-0"
             :value="attributionHtml"
             cols="30"
             rows="4"

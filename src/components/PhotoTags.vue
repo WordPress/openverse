@@ -3,11 +3,11 @@
     <h3 v-if="showHeader" class="b-header">
       {{ $t('photo-details.information.tags') }}
     </h3>
-    <div class="margin-top-normal">
+    <div class="mt-4">
       <template v-for="(tag, index) in getValidTags()">
         <button
           :key="index"
-          class="button tag margin-smaller"
+          class="button tag m-1"
           @click="searchByTagName(tag.name)"
           @keyup.enter="searchByTagName(tag.name)"
         >

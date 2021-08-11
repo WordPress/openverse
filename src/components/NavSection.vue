@@ -1,6 +1,6 @@
 <template>
   <nav :aria-label="$t('header.aria.primary')" class="navbar">
-    <div class="navbar-brand has-color-white">
+    <div class="navbar-brand text-white">
       <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
       <NuxtLink class="logo" :to="localePath('/')">
         <img
@@ -26,7 +26,7 @@
       </a>
     </div>
     <div :class="{ ['navbar-menu']: true, ['is-active']: isBurgerMenuActive }">
-      <div v-if="showNavSearch" class="margin-left-big">
+      <div v-if="showNavSearch" class="ml-6">
         <form
           class="hero_search-form"
           role="search"
@@ -40,7 +40,7 @@
             type="search"
             :placeholder="navSearchPlaceholder"
           />
-          <div class="is-sr-only">
+          <div class="sr-only">
             <button
               :aria-label="$t('header.aria.sr-search')"
               tabindex="-1"

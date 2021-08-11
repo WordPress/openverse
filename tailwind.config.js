@@ -45,6 +45,7 @@ module.exports = {
       12: '3.00rem',
       16: '4.00rem',
       24: '6.00rem',
+      30: '7.50rem',
     },
     fontSize: {
       // Body

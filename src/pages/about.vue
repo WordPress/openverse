@@ -2,7 +2,7 @@
   <div class="section">
     <div :class="['container', isEmbedded ? '' : 'is-fluid']">
       <div>
-        <h1 class="title is-2 margin-bottom-large">
+        <h1 class="text-5xl mb-10">
           {{ $t('about.title') }}
         </h1>
         <div class="content">

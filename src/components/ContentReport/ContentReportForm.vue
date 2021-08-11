@@ -1,8 +1,8 @@
 <template>
-  <div id="content-report-form" class="padding-normal is-clearfix arrow-popup">
+  <div id="content-report-form" class="p-4 arrow-popup">
     <button
       :aria-label="$t('photo-details.aria.close-form')"
-      class="button close-button is-text tiny is-pulled-right is-block has-background-white"
+      class="button close-button is-text tiny float-right block bg-white"
       @click="closeForm()"
       @keyup.enter="closeForm()"
     >
@@ -28,16 +28,16 @@
       @sendContentReport="sendContentReport"
     />
     <form v-else>
-      <h5 class="b-header margin-bottom-normal">
+      <h5 class="b-header mb-4">
         {{ $t('photo-details.content-report.title') }}
       </h5>
-      <fieldset class="margin-bottom-normal">
-        <legend class="margin-bottom-normal">
+      <fieldset class="mb-4">
+        <legend class="mb-4">
           {{ $t('photo-details.content-report.issue') }}
         </legend>
 
         <div>
-          <label for="dmca" class="margin-left-small">
+          <label for="dmca" class="ml-2">
             <input
               id="dmca"
               v-model="selectedReason"
@@ -50,7 +50,7 @@
         </div>
 
         <div>
-          <label for="mature" class="margin-left-small">
+          <label for="mature" class="ml-2">
             <input
               id="mature"
               v-model="selectedReason"
@@ -63,7 +63,7 @@
         </div>
 
         <div>
-          <label for="other" class="margin-left-small">
+          <label for="other" class="ml-2">
             <input
               id="other"
               v-model="selectedReason"
@@ -76,16 +76,14 @@
         </div>
       </fieldset>
 
-      <p
-        class="caption has-text-weight-semibold has-text-grey margin-bottom-normal"
-      >
+      <p class="caption font-semibold text-gray mb-4">
         {{ $t('photo-details.content-report.caption') }}
       </p>
 
       <button
         type="button"
         :disabled="selectedReason === null"
-        class="button next-button tiny is-success is-pulled-right"
+        class="button next-button tiny is-success float-right"
         @click="onIssueSelected()"
         @keyup.enter="onIssueSelected()"
       >

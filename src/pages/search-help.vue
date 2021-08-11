@@ -1,15 +1,15 @@
 <template>
   <div class="section">
     <div :class="['container', isEmbedded ? '' : 'is-fluid']">
-      <div class="margin-bottom-large">
-        <h1 class="title is-2">
+      <div class="mb-10">
+        <h1 class="text-5xl">
           {{ $t('search-guide.title') }}
         </h1>
         <p>
           {{ $t('search-guide.intro') }}
         </p>
 
-        <h2 class="margin-top-large title is-3">
+        <h2 class="mt-10 text-2xl mb-4">
           {{ $t('search-guide.exact.title') }}
         </h2>
         <i18n path="search-guide.exact.content" tag="p">
@@ -25,11 +25,11 @@
           </template>
         </i18n>
 
-        <h3 class="margin-vertical-normal">
+        <h2 class="my-4 text-2xl">
           {{ $t('search-guide.combine.title') }}
-        </h3>
+        </h2>
 
-        <p class="margin-vertical-normal">
+        <p class="my-4">
           {{ $t('search-guide.combine.description') }}
         </p>
         <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
@@ -103,11 +103,7 @@
           </i18n>
         </ul>
 
-        <i18n
-          path="search-guide.example.and.description"
-          tag="p"
-          class="margin-vertical-normal"
-        >
+        <i18n path="search-guide.example.and.description" tag="p" class="my-4">
           <template #link>
             <a
               :aria-label="$t('search-guide.example.and.aria-label')"
@@ -121,11 +117,7 @@
           </template>
         </i18n>
 
-        <i18n
-          path="search-guide.example.or"
-          tag="p"
-          class="margin-vertical-normal"
-        >
+        <i18n path="search-guide.example.or" tag="p" class="my-4">
           <template #link>
             <a
               :aria-label="$t('search-guide.example.or.aria-label')"
@@ -142,7 +134,7 @@
         <i18n
           path="search-guide.example.negate.description"
           tag="p"
-          class="margin-top-normal"
+          class="mt-4"
         >
           <template #operator>
             <em
@@ -154,11 +146,7 @@
           </template>
         </i18n>
 
-        <i18n
-          path="search-guide.example.negate.content"
-          tag="p"
-          class="margin-bottom-normal"
-        >
+        <i18n path="search-guide.example.negate.content" tag="p" class="mb-4">
           <template #link>
             <a
               :aria-label="$t('search-guide.example.negate.aria-label')"
@@ -175,7 +163,7 @@
         <i18n
           path="search-guide.example.prefix.description"
           tag="p"
-          class="margin-top-normal"
+          class="mt-4"
         >
           <template #operator>
             <em :aria-label="$t('search-guide.example.prefix.aria-label')"
@@ -184,11 +172,7 @@
           </template>
         </i18n>
 
-        <i18n
-          path="search-guide.example.prefix.content"
-          tag="p"
-          class="margin-bottom-normal"
-        >
+        <i18n path="search-guide.example.prefix.content" tag="p" class="mb-4">
           <template #link>
             <a
               :aria-label="$t('search-guide.example.prefix.aria-label')"
@@ -205,7 +189,7 @@
         <i18n
           path="search-guide.example.precedence.description"
           tag="p"
-          class="margin-top-normal"
+          class="mt-4"
         >
           <template #highlight>
             <em>( and )</em>
@@ -215,7 +199,7 @@
         <i18n
           path="search-guide.example.precedence.content"
           tag="p"
-          class="margin-bottom-normal"
+          class="mb-4"
         >
           <template #link>
             <a
@@ -233,7 +217,7 @@
         <i18n
           path="search-guide.example.fuzziness.description"
           tag="p"
-          class="margin-top-normal"
+          class="mt-4"
         >
           <template #highlight>
             <em aria-label="tilde N">~N</em>
@@ -248,7 +232,7 @@
         <i18n
           path="search-guide.example.fuzziness.content"
           tag="p"
-          class="margin-bottom-normal"
+          class="mb-4"
         >
           <template #link>
             <a

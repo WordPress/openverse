@@ -1,6 +1,6 @@
 <template>
-  <section :key="type" class="padding-big meta-search">
-    <header class="margin-bottom-large">
+  <section :key="type" class="p-6 meta-search">
+    <header class="mb-10">
       <i18n
         :path="
           supported
@@ -8,7 +8,7 @@
             : 'meta-search.form.unsupported-title'
         "
         tag="h4"
-        class="b-header margin-bottom-small"
+        class="b-header mb-2"
       >
         <template #type>
           {{ type }}
@@ -25,7 +25,7 @@
 
     <MetaSourceList :type="type" :query="metaQuery" />
 
-    <p class="caption has-text-weight-semibold max-w-lg">
+    <p class="caption font-semibold max-w-lg">
       {{ $t('meta-search.caption') }}
     </p>
   </section>

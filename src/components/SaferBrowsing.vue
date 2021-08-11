@@ -1,32 +1,29 @@
 <template>
   <div class="safer-browsing" @keyup.esc="closeShowForm">
     <button
-      class="button is-text tiny is-paddingless rating is-shadowless"
+      class="button is-text tiny p-0 rating"
       @keypress.enter="toggleShowForm"
       @click="toggleShowForm"
     >
-      <span class="has-color-transition-blue" style="white-space: nowrap">
+      <span class="text-trans-blue" style="white-space: nowrap">
         {{ $t('browse-page.safer-browsing.title') }}
-        <i class="icon flag margin-left-small" />
+        <i class="icon flag ml-2" />
       </span>
     </button>
     <FocusTrap :active="true">
-      <div
-        v-show="showForm"
-        class="padding-normal is-clearfix arrow-popup arrow-popup--anchor-right"
-      >
+      <div v-show="showForm" class="p-4 arrow-popup arrow-popup--anchor-right">
         <button
-          class="button close-button is-text tiny is-pulled-right is-block has-text-grey-light"
+          class="button close-button is-text tiny float-right block text-light-gray"
           @keypress.enter="toggleShowForm"
           @click="toggleShowForm"
         >
           <i class="icon cross" />
         </button>
-        <p class="caption has-text-weight-semibold padding-right-big">
+        <p class="caption font-semibold pr-6">
           {{ $t('browse-page.safer-browsing.caption') }}
         </p>
 
-        <label class="checkbox margin-top-small" for="mature">
+        <label class="checkbox mt-2" for="mature">
           <input
             id="mature"
             class="filter-checkbox"

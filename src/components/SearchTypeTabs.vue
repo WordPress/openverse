@@ -38,7 +38,7 @@ export default {
     tabClass(tabSlug, tabClass) {
       return {
         [tabClass]: true,
-        'is-size-5': true,
+        'text-lg': true,
         'is-active': tabSlug === this.activeTab,
       }
     },

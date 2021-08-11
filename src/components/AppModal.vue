@@ -3,16 +3,13 @@
   <div ref="modal" class="overlay app-modal" @click.self="$emit('close')">
     <FocusTrap :active="true">
       <div class="modal relative" aria-modal="true" role="dialog">
-        <header
-          v-if="title"
-          class="modal-header padding-top-bigger padding-left-bigger padding-right-normal padding-bottom-small"
-        >
+        <header v-if="title" class="modal-header pt-8 pl-8 pr-4 pb-2">
           <slot name="header">
             <h3>{{ title }}</h3>
           </slot>
           <button
             type="button"
-            class="close-button has-color-gray is-size-6 is-size-4-touch"
+            class="close-button text-gray text-lgr desk:text-base"
             :aria-label="$t('browse-page.aria.close')"
             @click="$emit('close')"
             @keypress.enter="$emit('close')"
@@ -82,10 +79,6 @@ export default {
   height: 100%;
   z-index: 600;
   background: #00000094;
-}
-
-.has-color-gray {
-  color: rgb(176, 176, 176);
 }
 
 .modal-header {

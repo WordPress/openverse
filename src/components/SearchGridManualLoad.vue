@@ -8,13 +8,13 @@
   >
     <div ref="gridItems" class="search-grid_ctr">
       <div v-show="!isFetchingImages && includeAnalytics" class="results-meta">
-        <span class="caption has-text-weight-semibold">
+        <span class="caption font-semibold">
           {{ _imagesCount }}
         </span>
-        <div class="is-hidden-touch mr-auto padding-left-big">
+        <div class="hidden desk:block mr-auto pl-6">
           <SearchRating v-if="_query.q" :search-term="_query.q" />
         </div>
-        <div class="is-hidden-desktop is-block">
+        <div class="desk:hidden">
           <SearchRating v-if="_query.q" :search-term="searchTerm" />
         </div>
         <SaferBrowsing />
@@ -26,7 +26,7 @@
           :image="image"
         />
       </div>
-      <div class="padding-bottom-big">
+      <div class="pb-6">
         <div class="load-more">
           <button
             v-show="!isFetchingImages && includeAnalytics"
@@ -263,9 +263,5 @@ label {
   .button.is-text {
     font-size: 0.8rem;
   }
-}
-
-.mr-auto {
-  margin-right: auto;
 }
 </style>

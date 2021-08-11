@@ -1,11 +1,11 @@
 <template>
-  <div class="caption has-text-weight-semibold">
+  <div class="caption font-semibold">
     <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
     <div v-if="status == 'NOT_SENT'">
       <span>{{ $t('browse-page.search-rating.content') }}</span>
       <button
         :aria-label="$t('browse-page.aria.relevance.yes')"
-        class="button is-text tiny is-paddingless rating rating-yes is-shadowless"
+        class="button is-text tiny p-0 rating rating-yes"
         @click="sendSearchRatingEvent(true)"
         @keyup.enter="sendSearchRatingEvent(true)"
       >
@@ -14,7 +14,7 @@
       •
       <button
         :aria-label="$t('browse-page.aria.relevance.no')"
-        class="button is-text tiny is-paddingless rating rating-no is-shadowless"
+        class="button is-text tiny p-0 rating rating-no"
         @click="sendSearchRatingEvent(false)"
         @keyup.enter="sendSearchRatingEvent(false)"
       >

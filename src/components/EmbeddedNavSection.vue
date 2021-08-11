@@ -9,7 +9,7 @@
         height="24"
       />
     </NuxtLink>
-    <div class="navbar-brand has-color-white">
+    <div class="navbar-brand text-white">
       <a
         role="button"
         :class="{ ['navbar-burger']: true, ['is-active']: isBurgerMenuActive }"
@@ -38,7 +38,7 @@
           type="search"
           :placeholder="navSearchPlaceholder"
         />
-        <div class="is-sr-only">
+        <div class="sr-only">
           <button
             :aria-label="$t('header.aria.sr-search')"
             tabindex="-1"

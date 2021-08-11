@@ -1,23 +1,20 @@
 <template>
   <div>
     <div class="filterlist-header">
-      <h4
-        class="padding-top-big padding-left-big padding-right-normal is-inline-block"
-      >
+      <h4 class="pt-6 pl-6 pr-4 inline-block">
         {{ $t('filter-list.filter-by') }}
       </h4>
 
       <button
         type="button"
-        class="button is-text tiny is-paddingless margin-top-big margin-right-small report is-shadowless is-pulled-right"
+        class="button is-text tiny p-0 mt-6 mr-2 report float-right"
         @click="onToggleSearchGridFilter()"
         @keyup.enter="onToggleSearchGridFilter()"
       >
-        <span
-          class="has-color-transition-blue is-hidden-touch is-size-7 is-lowercase"
-          >{{ $t('filter-list.hide') }}</span
-        >
-        <span class="margin-right-normal is-size-5 is-hidden-desktop">
+        <span class="text-trans-blue hidden desk:block text-sm lowercase">{{
+          $t('filter-list.hide')
+        }}</span>
+        <span class="mr-4 text-lg desk:hidden">
           <i class="icon cross" />
         </span>
       </button>

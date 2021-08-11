@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="hero-section">
-      <div :class="['container', isEmbedded ? '' : 'is-fluid']">
-        <div class="intro">
-          <h2 class="title is-2 margin-bottom-large">
+    <div class="hero-section border-b">
+      <div class="container pt-16" :class="[isEmbedded ? '' : 'is-fluid']">
+        <div class="intro text-center mx-auto">
+          <h2 class="text-5xl mb-10">
             {{ $t('extension.description.intro') }}
           </h2>
         </div>
@@ -11,7 +11,7 @@
         <!-- eslint-disable vuejs-accessibility/media-has-caption -->
         <video
           ref="heroVid"
-          class="screenshot"
+          class="screenshot block w-full mx-auto"
           autoplay
           loop
           muted
@@ -25,56 +25,45 @@
         <!-- eslint-enable vuejs-accessibility/media-has-caption -->
       </div>
     </div>
-    <div :class="['features', isEmbedded ? '' : 'is-fluid']">
-      <figure>
-        <img
-          class="screenshot"
-          src="~/assets/screenshots/extension_feat_1.png"
-          alt="WIP"
-        />
-      </figure>
-      <div class="description">
-        <h2>{{ $t('extension.features.search.heading') }}</h2>
-        <p class="margin-top-normal">
-          {{ $t('extension.features.search.content') }}
-        </p>
-      </div>
-
-      <div class="description reversed">
-        <h2>{{ $t('extension.features.bookmark.heading') }}</h2>
-        <p class="margin-top-normal">
-          {{ $t('extension.features.bookmark.content') }}
-        </p>
-      </div>
-      <figure>
-        <img
-          class="screenshot reversed"
-          src="~/assets/screenshots/extension_feat_2.png"
-          alt="WIP"
-        />
-      </figure>
-
-      <figure>
-        <img
-          class="screenshot"
-          src="~/assets/screenshots/extension_feat_3.png"
-          alt="WIP"
-        />
-      </figure>
-      <div class="description">
-        <h2>{{ $t('extension.features.use.heading') }}</h2>
-        <p class="margin-top-normal">
-          {{ $t('extension.features.use.content') }}
-        </p>
-      </div>
+    <div
+      class="features grid grid-cols-1 tab:grid-cols-2 gap-x-12 gap-y-30 py-30 mx-auto"
+      :class="[isEmbedded ? '' : 'is-fluid']"
+    >
+      <template v-for="(feature, index) in features">
+        <figure
+          :key="`figure-${index}`"
+          :data-index="index"
+          class="flex flex-col justify-center items-center"
+          :style="{ '--cell-idx': index * 2 }"
+        >
+          <img
+            class="screenshot w-full rounded border"
+            :src="feature.image"
+            :alt="$t(`extension.features.${feature.key}.heading`)"
+          />
+        </figure>
+        <div
+          :key="`description-${index}`"
+          :data-index="index"
+          class="description flex flex-col justify-center items-center"
+          :style="{ '--cell-idx': index * 2 + 1 }"
+        >
+          <h2 class="text-5xl">
+            {{ $t(`extension.features.${feature.key}.heading`) }}
+          </h2>
+          <p class="mt-4">
+            {{ $t(`extension.features.${feature.key}.content`) }}
+          </p>
+        </div>
+      </template>
     </div>
     <div class="section">
       <div
-        class="container conclusion margin-bottom-xxl"
+        class="container conclusion mb-24"
         :class="[isEmbedded ? '' : 'is-fluid']"
       >
-        <h2>{{ $t('extension.conclusion') }}</h2>
-        <ExtensionBrowsers class="margin-top-large" />
+        <h2 class="text-center mx-auto">{{ $t('extension.conclusion') }}</h2>
+        <ExtensionBrowsers class="mt-6" />
       </div>
     </div>
   </div>
@@ -86,6 +75,10 @@ import iframeHeight from '~/mixins/iframeHeight'
 
 import ExtensionBrowsers from '~/components/ExtensionBrowsers.vue'
 
+import feature1 from '~/assets/screenshots/extension_feat_1.png'
+import feature2 from '~/assets/screenshots/extension_feat_2.png'
+import feature3 from '~/assets/screenshots/extension_feat_3.png'
+
 const AboutPage = {
   name: 'about-page',
   components: { ExtensionBrowsers },
@@ -96,7 +89,13 @@ const AboutPage = {
       : 'with-nav-search'
   },
   data() {
+    const features = [
+      { key: 'search', image: feature1 },
+      { key: 'bookmark', image: feature2 },
+      { key: 'use', image: feature3 },
+    ]
     return {
+      features,
       isPlaying: true,
     }
   },
@@ -124,118 +123,69 @@ $video-actual-width: 1140px; // Video has internal padding
 
 .hero-section {
   background-color: $color-wp-gray-0;
-  border-bottom: 1px solid $color-transition-gray;
+  border-color: $color-transition-gray;
 
   .container {
-    padding-top: 64px;
-
     .intro {
-      text-align: center;
       max-width: 880px;
-      margin: auto;
     }
 
     .screenshot {
-      display: block;
-
-      width: 100%;
       max-width: $video-max-width;
-      margin: auto;
-
-      border-radius: 0.5rem 0.5rem 0 0;
     }
   }
 }
 
 .features {
-  display: grid;
-  grid-template-columns: 1fr;
-  @include from($tablet) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  column-gap: 3rem;
-  row-gap: 7.5em;
-
-  padding-top: 7.5em;
-  padding-bottom: 7.5em;
-
   max-width: $video-actual-width;
-  margin: auto;
 
-  figure {
-    img {
-      border-radius: 0.25rem;
-
-      border: 1px solid rgba(30, 30, 30, 0.2);
-      filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1))
-        drop-shadow(0px 20px 33px rgba(0, 0, 0, 0.07));
-
-      width: 100%;
-      max-width: 30rem;
-    }
+  figure,
+  .description {
+    order: var(--cell-idx);
+    @apply text-center;
 
     @include from($tablet) {
       &:nth-of-type(odd) {
-        text-align: left;
+        @apply text-left items-start;
       }
 
       &:nth-of-type(even) {
-        text-align: right;
+        @apply text-right items-end;
       }
+    }
+  }
+
+  figure {
+    img {
+      border-color: rgba(30, 30, 30, 0.2);
+      filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.1))
+        drop-shadow(0px 20px 33px rgba(0, 0, 0, 0.07));
+      max-width: 30rem;
     }
   }
 
   .description {
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
-    justify-content: center;
-
     h2,
     p {
-      text-align: center;
       max-width: 30rem;
-    }
-
-    @include from($tablet) {
-      &:nth-of-type(odd) {
-        align-items: flex-start;
-
-        h2,
-        p {
-          text-align: left;
-        }
-      }
-
-      &:nth-of-type(even) {
-        align-items: flex-end;
-
-        h2,
-        p {
-          text-align: right;
-        }
-      }
     }
   }
 
-  @include mobile() {
-    img.reversed {
-      order: 3;
+  @include from($tablet) {
+    // Rearrange middle row on two column layouts for zig-zag appearance
+    figure[data-index='1'] {
+      order: 4;
     }
 
-    .description.reversed {
-      order: 4;
+    .description[data-index='1'] {
+      order: 3;
     }
   }
 }
 
 .conclusion {
   h2 {
-    text-align: center;
-
     max-width: 40rem;
-    margin: auto;
   }
 }
 </style>

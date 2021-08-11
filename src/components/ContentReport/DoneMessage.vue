@@ -1,12 +1,12 @@
 <template>
-  <div class="margin-vertical-large">
-    <span class="is-block padding-horizontal-big has-text-centered">
+  <div class="my-10">
+    <span class="block px-6 text-center">
       {{ $t('photo-details.content-report.dmca.thanks') }}
     </span>
     <i18n
       path="photo-details.content-report.dmca.provider"
       tag="span"
-      class="is-block padding-horizontal-big margin-top-large has-text-centered"
+      class="block px-6 mt-10 text-center"
     >
       <template #link>
         <a

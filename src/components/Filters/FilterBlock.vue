@@ -1,11 +1,11 @@
 <template>
   <button
-    class="filter-block button tiny tag margin-horizontal-smaller"
+    class="filter-block button tiny tag mx-1"
     :aria-label="filterLabel + ' filter'"
   >
     <span>{{ filterLabel }}</span>
     <span
-      class="close margin-left-small padding-small"
+      class="close ml-2 p-2"
       tabindex="0"
       @click="onClick"
       @keyup.enter="onClick"

@@ -1,5 +1,5 @@
 <template>
-  <fieldset class="home-license-filter margin-top-xl">
+  <fieldset class="home-license-filter mt-16">
     <legend>
       {{ $t('hero.license-filter.label') }}
     </legend>

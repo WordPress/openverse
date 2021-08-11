@@ -26,13 +26,11 @@
           @error="onImageLoadError($event, image)"
         />
       </NuxtLink>
-      <figcaption class="overlay overlay__top padding-small">
+      <figcaption class="overlay overlay__top p-2">
         <LicenseIcons :license="image.license" />
       </figcaption>
-      <figcaption
-        class="overlay overlay__bottom padding-vertical-small padding-horizontal-normal"
-      >
-        <span class="caption has-text-weight-semibold">{{ image.title }}</span>
+      <figcaption class="overlay overlay__bottom py-2 px-4">
+        <span class="caption font-semibold">{{ image.title }}</span>
       </figcaption>
     </figure>
   </div>

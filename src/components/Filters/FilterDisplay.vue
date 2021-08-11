@@ -1,6 +1,6 @@
 <template>
   <div class="filter-display" aria-live="polite">
-    <span v-if="anyFilterApplied" class="caption has-text-weight-semibold">{{
+    <span v-if="anyFilterApplied" class="caption font-semibold">{{
       $t('filters.filter-by')
     }}</span>
     <FilterBlock

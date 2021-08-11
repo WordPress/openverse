@@ -1,15 +1,15 @@
 <template>
   <!-- eslint-disable vuejs-accessibility/no-autofocus -->
   <div class="hero">
-    <div class="hero-center has-text-centered">
-      <h1 class="title is-2 padding-bottom-normal">
+    <div class="hero-center text-center">
+      <h1 class="text-5xl pb-4">
         {{ $t('hero.title') }}
       </h1>
-      <h2 class="title is-5 b-header has-text-weight-medium">
+      <h2 class="text-2xl font-medium">
         {{ $t('hero.subtitle') }}
       </h2>
       <form
-        class="hero-search__form margin-top-larger"
+        class="hero-search__form mt-12"
         role="search"
         method="get"
         action="/search"
@@ -32,9 +32,7 @@
             {{ $t('hero.search.button') }}
           </button>
         </div>
-        <div
-          class="caption has-text-centered margin-top-big has-text-weight-medium"
-        >
+        <div class="text-sm mt-6 font-medium">
           <i18n path="hero.caption.content" tag="p">
             <template #link>
               <a

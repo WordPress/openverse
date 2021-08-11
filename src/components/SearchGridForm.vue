@@ -3,7 +3,7 @@
   <form
     role="search"
     method="post"
-    class="search-form padding-normal"
+    class="search-form p-4"
     @submit.prevent="onSubmit"
   >
     <button
@@ -16,7 +16,7 @@
       {{ $t('filters.title') }}
     </button>
     <div
-      class="search-field field has-addons control search-control has-icons-left margin-left-small"
+      class="search-field field has-addons control search-control has-icons-left ml-2"
     >
       <label for="searchInput" class="search-field__label control label">
         <input
