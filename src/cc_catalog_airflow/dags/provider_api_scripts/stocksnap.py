@@ -98,7 +98,10 @@ def _extract_item_data(media_data):
     """
     Extract data for individual image.
     """
-    foreign_id = media_data["img_id"]
+    try:
+        foreign_id = media_data["img_id"]
+    except (TypeError, KeyError, AttributeError):
+        return None
     foreign_landing_url = f"https://{HOST}/photo/{foreign_id}"
     image_url, width, height = _get_image_info(media_data)
     if image_url is None:
@@ -144,14 +147,16 @@ def _get_creator_data(item):
     Get the author's name and website preferring their custom link over the
     StockSnap profile. The latter is used if the first is not found.
     """
-    creator = item.get("author_name")
+    creator_name = item.get("author_name")
+    if creator_name is None:
+        return None, None
     creator_url = item.get("author_website")
     if creator_url is None or creator_url in [
         "https://stocksnap.io/",
         "https://stocksnap.io/author/undefined/",
     ]:
         creator_url = item.get("author_profile")
-    return creator, creator_url
+    return creator_name, creator_url
 
 
 def _get_title(item):
