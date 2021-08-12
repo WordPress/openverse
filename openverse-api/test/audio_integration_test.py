@@ -16,6 +16,7 @@ from test.media_integration import (
     search_consistency,
     detail,
     stats,
+    thumb,
 )
 
 
@@ -50,3 +51,8 @@ def test_audio_detail(audio_fixture):
 
 def test_audio_stats():
     stats('audio', 'audio_count')
+
+
+@pytest.mark.skip(reason='No images have audio set image yet')
+def test_audio_thumb(audio_fixture):
+    thumb(audio_fixture)
