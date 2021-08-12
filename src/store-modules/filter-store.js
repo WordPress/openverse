@@ -1,4 +1,6 @@
 import findIndex from 'lodash.findindex'
+import clonedeep from 'lodash.clonedeep'
+
 import local from '~/utils/local'
 import { TOGGLE_FILTER } from '~/store-modules/action-types'
 import {
@@ -319,7 +321,8 @@ const mutations = {
     return setFilter(state, params)
   },
   [CLEAR_FILTERS](state) {
-    const initialFilters = filterData
+    const initialFilters = clonedeep(filterData)
+
     const resetProviders = (mediaType) => {
       return state.filters[`${mediaType}Providers`].map((provider) => ({
         ...provider,
