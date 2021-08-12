@@ -2,6 +2,15 @@
 
 This folder contains brand assets for Openverse.
 
+## `README.md` banner
+
+![banner](banner.svg)
+
+**Dimensions:** 600px &times; 200px
+
+This asset is meant specifically to be used in `README.md` files across the
+Openverse repositories.
+
 ## SVGs
 
 SVGs will automatically take the current color. Use the CSS `color` attribute to
