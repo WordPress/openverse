@@ -1,0 +1,16 @@
+{% extends "drf-yasg/redoc.html" %}
+
+{% block favicon %}
+  <link
+    rel="icon"
+    type="image/svg"
+    href="https://raw.githubusercontent.com/WordPress/openverse/master/brand/icon.svg"/>
+{% endblock %}
+
+{% block extra_styles %}
+  <style>
+    img[alt='logo'] {
+      padding: 20px; /* same as other sidebar items */
+    }
+  </style>
+{% endblock %}
