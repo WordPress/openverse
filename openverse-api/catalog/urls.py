@@ -13,24 +13,27 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import rest_framework.permissions
+from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path, re_path
-from django.conf.urls import include
-from catalog.api.views.image_views import SearchImages, ImageDetail,\
-    Watermark, RelatedImage, OembedView, ReportImageView
-from catalog.api.views.site_views import HealthCheck, ImageStats, Register, \
-    CheckRates, VerifyEmail, ProxiedImage
+from django.views.generic import RedirectView
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.views import get_schema_view
+
+from catalog.api.examples import images_report_create_201_example
+from catalog.api.serializers.image_serializers import \
+    ReportImageSerializer
+from catalog.api.views.audio_views import SearchAudio, AudioDetail, \
+    RelatedAudio, AudioStats
+from catalog.api.views.image_views import SearchImages, ImageDetail, \
+    Watermark, RelatedImage, OembedView, ReportImageView, ImageStats
 from catalog.api.views.link_views import CreateShortenedLink, \
     ResolveShortenedLink
+from catalog.api.views.site_views import HealthCheck, Register, CheckRates, \
+    VerifyEmail, ProxiedImage
 from catalog.settings import API_VERSION, WATERMARK_ENABLED
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-from django.views.generic import RedirectView
-import rest_framework.permissions
-from drf_yasg.utils import swagger_auto_schema
-from catalog.api.serializers.image_serializers import\
-    ReportImageSerializer
-from catalog.example_responses import images_report_create_201_example
 
 description = """
 # Introduction
@@ -167,10 +170,10 @@ We love pull requests! If you’re interested in [contributing on Github](https:
 
 # @todo: Reimplement logo once Openverse logomark is finalized
 tos_url = "https://api.openverse.engineering/terms_of_service.html"
-logo_url = "https://raw.githubusercontent.com/" \
-           "WordPress/openverse/master/brand/logo.svg"
 license_url = "https://github.com/" \
               "WordPress/openverse-api/blob/master/LICENSE"
+logo_url = "https://raw.githubusercontent.com/" \
+           "WordPress/openverse/master/brand/logo.svg"
 schema_view = get_schema_view(
     openapi.Info(
         title="Openverse API",
@@ -258,8 +261,33 @@ versioned_paths = [
         r'auth_tokens/',
         include('oauth2_provider.urls', namespace='oauth2_provider')
     ),
+
     path(
-        'images/<str:identifier>', ImageDetail.as_view(), name='image-detail'
+        'audio/stats',
+        AudioStats.as_view(),
+        name='audio-stats'
+    ),
+    path(
+        'audio/<str:identifier>',
+        AudioDetail.as_view(),
+        name='audio-detail'
+    ),
+    re_path('audio', SearchAudio.as_view(), name='audio'),
+    path(
+        'recommendations/audio/<str:identifier>',
+        RelatedAudio.as_view(),
+        name='related-audio'
+    ),
+
+    path(
+        'images/stats',
+        ImageStats.as_view(),
+        name='image-stats'
+    ),
+    path(
+        'images/<str:identifier>',
+        ImageDetail.as_view(),
+        name='image-detail'
     ),
     path(
         'images/<str:identifier>/report',
@@ -272,9 +300,9 @@ versioned_paths = [
         name='related-images'
     ),
     re_path('images', SearchImages.as_view(), name='images'),
-    path(
+    path(  # Deprecated
         'sources',
-        ImageStats.as_view(),
+        RedirectView.as_view(pattern_name='image-stats', permanent=True),
         name='about-image'
     ),
     path('link', CreateShortenedLink.as_view(), name='make-link'),

@@ -9,103 +9,72 @@ from django.http.response import HttpResponse, FileResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.authentication import BasicAuthentication
 from rest_framework.generics import GenericAPIView, CreateAPIView
-from rest_framework.mixins import RetrieveModelMixin
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import catalog.api.controllers.search_controller as search_controller
+from catalog.api.examples import (
+    image_search_curl,
+    image_search_200_example,
+    image_search_400_example,
+    recommendations_images_read_curl,
+    recommendations_images_read_200_example,
+    recommendations_images_read_404_example,
+    image_detail_curl,
+    image_detail_200_example,
+    image_detail_404_example,
+    oembed_list_200_example,
+    oembed_list_404_example,
+    image_stats_curl,
+    image_stats_200_example,
+)
 from catalog.api.models import Image, ImageReport
 from catalog.api.serializers.error_serializers import (
     InputErrorSerializer,
     NotFoundErrorSerializer,
 )
 from catalog.api.serializers.image_serializers import (
+    ImageSearchQueryStringSerializer,
     ImageSearchResultsSerializer,
     ImageSerializer,
-    ImageSearchQueryStringSerializer,
-    WatermarkQueryStringSerializer,
     ReportImageSerializer,
+    WatermarkQueryStringSerializer,
     OembedSerializer,
-    OembedResponseSerializer
+    OembedResponseSerializer,
+    AboutImageSerializer,
 )
 from catalog.api.utils import ccrel
 from catalog.api.utils.exceptions import input_error_response
 from catalog.api.utils.watermark import watermark
-from catalog.custom_auto_schema import CustomAutoSchema
-from catalog.example_responses import (
-    image_search_200_example,
-    image_search_400_example,
-    image_detail_200_example,
-    image_detail_404_example,
-    oembed_list_200_example,
-    oembed_list_404_example,
-    recommendations_images_read_200_example,
-    recommendations_images_read_404_example
+from catalog.api.views.media_views import (
+    RESULTS,
+    RESULT_COUNT,
+    PAGE_COUNT,
+    fields_to_md,
+    SearchMedia,
+    RelatedMedia,
+    MediaDetail,
+    MediaStats,
 )
+from catalog.custom_auto_schema import CustomAutoSchema
 
 log = logging.getLogger(__name__)
 
-FOREIGN_LANDING_URL = 'foreign_landing_url'
-CREATOR_URL = 'creator_url'
-RESULTS = 'results'
-PAGE = 'page'
-PAGESIZE = 'page_size'
-FILTER_DEAD = 'filter_dead'
-QA = 'qa'
-SUGGESTIONS = 'suggestions'
-RESULT_COUNT = 'result_count'
-PAGE_COUNT = 'page_count'
-PAGE_SIZE = 'page_size'
 
+class SearchImages(SearchMedia):
+    image_search_description = f"""
+image_search is an API endpoint to search images using a query string.
 
-def _get_user_ip(request):
-    """
-    Read request headers to find the correct IP address.
-    It is assumed that X-Forwarded-For has been sanitized by the load balancer
-    and thus cannot be rewritten by malicious users.
-    :param request: A Django request object.
-    :return: An IP address.
-    """
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+By using this endpoint, you can obtain search results based on specified query
+and optionally filter results by
+{fields_to_md(ImageSearchQueryStringSerializer.fields_names)}. 
 
+Results are ranked in order of relevance.
 
-class SearchImages(APIView):
-    swagger_schema = CustomAutoSchema
-    image_search_description = \
-        """
-        image_search is an API endpoint to search images using a query string.
+{SearchMedia.search_description}"""  # noqa
 
-        By using this endpoint, you can obtain search results based on specified 
-        query and optionally filter results by `license`, `license_type`, 
-        `page`, `page_size`, `creator`, `tags`, `title`, `filter_dead`, 
-        `source`, `extension`, `categories`, `aspect_ratio`, `size`, `mature`, 
-        and `qa`. Results are ranked in order of relevance.
-        
-        Although there may be millions of relevant records, only the most 
-        relevant several thousand records can be viewed. This is by design: 
-        the search endpoint should be used to find the top 10,000 most relevant 
-        results, not for exhaustive search or bulk download of every barely 
-        relevant result. As such, the caller should not try to access pages 
-        beyond `page_count`, or else the server will reject the query.
-        
-        For more precise results, you can go to the 
-        [Openverse Syntax Guide](https://search.creativecommons.org/search-help) 
-        for information about creating queries and 
-        [Apache Lucene Syntax Guide](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
-        for information on structuring advanced searches.
-
-        You can refer to Bash's Request Samples for examples on how to use
-        this endpoint.
-        """  # noqa
     image_search_response = {
         "200": openapi.Response(
             description="OK",
@@ -119,36 +88,6 @@ class SearchImages(APIView):
         )
     }
 
-    image_search_bash = \
-        """
-        # Example 1: Search for an exact match of Claude Monet
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q="Claude Monet"
-        
-        # Example 2: Search for images related to both dog and cat
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=dog+cat
-        
-        # Example 3: Search for images related to dog or cat, but not necessarily both
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=dog|cat
-
-        # Example 4: Search for images related to dog but won't include results related to 'pug'
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=dog -pug
-        
-        # Example 5: Search for images matching anything with the prefix ‘net’
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=net*
-        
-        # Example 6: Search for images that match dogs that are either corgis or labrador
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=dogs + (corgis | labrador)
-        
-        # Example 7: Search for images that match strings close to the term theater with a difference of one character
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=theatre~1
-        
-        # Example 8: Search for images using single query parameter
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=test
-        
-        # Example 9: Search for images using multiple query parameters
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" https://api.openverse.engineering/v1/images?q=test&license=pdm,by&categories=illustration&page_size=1&page=1   
-        """  # noqa
-
     @swagger_auto_schema(operation_id='image_search',
                          operation_description=image_search_description,
                          query_serializer=ImageSearchQueryStringSerializer,
@@ -156,68 +95,31 @@ class SearchImages(APIView):
                          code_examples=[
                              {
                                  'lang': 'Bash',
-                                 'source': image_search_bash
+                                 'source': image_search_curl
                              }
                          ])
     def get(self, request, format=None):
         # Parse and validate query parameters
-        params = ImageSearchQueryStringSerializer(data=request.query_params)
-        if not params.is_valid():
-            return input_error_response(params.errors)
-
-        hashed_ip = hash(_get_user_ip(request))
-        page_param = params.data[PAGE]
-        page_size = params.data[PAGESIZE]
-        qa = params.data[QA]
-        filter_dead = params.data[FILTER_DEAD]
-
-        search_index = 'search-qa' if qa else 'image'
-        try:
-            results, num_pages, num_results = search_controller.search(
-                params,
-                search_index,
-                page_size,
-                hashed_ip,
-                request,
-                filter_dead,
-                page=page_param
-            )
-        except ValueError as value_error:
-            return input_error_response(value_error)
-
-        context = {'request': request}
-        serialized_results = ImageSerializer(
-            results, many=True, context=context
-        ).data
-
-        if len(results) < page_size and num_pages == 0:
-            num_results = len(results)
-        response_data = {
-            RESULT_COUNT: num_results,
-            PAGE_COUNT: num_pages,
-            PAGE_SIZE: len(results),
-            RESULTS: serialized_results
-        }
-        serialized_response = ImageSearchResultsSerializer(data=response_data)
-        return Response(status=200, data=serialized_response.initial_data)
+        return self._get(
+            request,
+            'image',
+            'search-qa-image',
+            ImageSearchQueryStringSerializer,
+            ImageSerializer,
+            ImageSearchResultsSerializer,
+        )
 
 
-class RelatedImage(APIView):
-    swagger_schema = CustomAutoSchema
-    recommendations_images_read_description = \
-        """
-        recommendations_images_read is an API endpoint to get related images 
-        for a specified image ID.
+class RelatedImage(RelatedMedia):
+    recommendations_images_read_description = f"""
+recommendations_images_read is an API endpoint to get related images 
+for a specified image ID.
 
-        By using this endpoint, you can get the details of related images such as 
-        `title`, `id`, `creator`, `creator_url`, `tags`, `url`, `thumbnail`, 
-        `provider`, `source`, `license`, `license_version`, `license_url`, 
-        `foreign_landing_url`, `detail_url`, `related_url`, `height`, `weight`, 
-        and `attribution`.
-        
-        You can refer to Bash's Request Samples for example on how to use
-        this endpoint.
-        """  # noqa
+By using this endpoint, you can get the details of related images such as 
+{fields_to_md(ImageSerializer.fields_names)}.
+
+{RelatedMedia.recommendations_read_description}"""  # noqa
+
     recommendations_images_read_response = {
         "200": openapi.Response(
             description="OK",
@@ -231,31 +133,25 @@ class RelatedImage(APIView):
         )
     }
 
-    recommendations_images_read_bash = \
-        """
-        # Get related images for image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
-        """  # noqa
-
     @swagger_auto_schema(operation_id="recommendations_images_read",
                          operation_description=recommendations_images_read_description,  # noqa: E501
                          responses=recommendations_images_read_response,
                          code_examples=[
                              {
                                  'lang': 'Bash',
-                                 'source': recommendations_images_read_bash
+                                 'source': recommendations_images_read_curl
                              }
                          ],
                          manual_parameters=[
-                             openapi.Parameter('identifier', openapi.IN_PATH,
-                                               "The unique identifier for "
-                                               "the image.",
-                                               type=openapi.TYPE_STRING,
-                                               required=True),
-                         ]
-                         )
+                             openapi.Parameter(
+                                 'identifier', openapi.IN_PATH,
+                                 "The unique identifier for the image.",
+                                 type=openapi.TYPE_STRING,
+                                 required=True
+                             ),
+                         ])
     def get(self, request, identifier, format=None):
-        related, result_count = search_controller.related_images(
+        related, result_count = search_controller.related_media(
             uuid=identifier,
             index='image',
             request=request,
@@ -264,7 +160,9 @@ class RelatedImage(APIView):
 
         context = {'request': request}
         serialized_related = ImageSerializer(
-            related, many=True, context=context
+            related,
+            many=True,
+            context=context
         ).data
         response_data = {
             RESULT_COUNT: result_count,
@@ -275,27 +173,17 @@ class RelatedImage(APIView):
         return Response(status=200, data=serialized_response.initial_data)
 
 
-class ImageDetail(GenericAPIView, RetrieveModelMixin):
-    swagger_schema = CustomAutoSchema
+class ImageDetail(MediaDetail):
     serializer_class = ImageSerializer
     queryset = Image.objects.all()
-    lookup_field = 'identifier'
-    authentication_classes = [BasicAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    image_detail_description = \
-        """
-        image_detail is an API endpoint to get the details of a specified 
-        image ID.
+    image_detail_description = f"""
+image_detail is an API endpoint to get the details of a specified image ID.
 
-        By using this endpoint, you can get image details such as `title`, `id`, 
-        `creator`, `creator_url`, `tags`, `url`, `thumbnail`, `provider`, 
-        `source`, `license`, `license_version`, `license_url`, 
-        `foreign_landing_url`, `detail_url`, `related_url`, `height`, `weight`, 
-        and `attribution`.
+By using this endpoint, you can image details such as
+{fields_to_md(ImageSerializer.fields_names)}.
 
-        You can refer to Bash's Request Samples for example on how to use
-        this endpoint.
-        """  # noqa
+{MediaDetail.detail_description}"""  # noqa
+
     image_detail_response = {
         "200": openapi.Response(
             description="OK",
@@ -309,23 +197,17 @@ class ImageDetail(GenericAPIView, RetrieveModelMixin):
         )
     }
 
-    image_detail_bash = \
-        """
-        # Get the details of image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
-        curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
-        """  # noqa
-
     @swagger_auto_schema(operation_id="image_detail",
                          operation_description=image_detail_description,
                          responses=image_detail_response,
                          code_examples=[
                              {
                                  'lang': 'Bash',
-                                 'source': image_detail_bash
+                                 'source': image_detail_curl
                              }
                          ])
     def get(self, request, identifier, format=None):
-        """ Get the details of a single list. """
+        """ Get the details of a single image. """
         resp = self.retrieve(request, identifier)
         # Proxy insecure HTTP images at full resolution.
         if 'http://' in resp.data[search_controller.URL]:
@@ -500,3 +382,31 @@ class ReportImageView(CreateAPIView):
     swagger_schema = CustomAutoSchema
     queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer
+
+
+class ImageStats(MediaStats):
+    image_stats_description = f"""
+image_stats is an API endpoint to get a list of all content providers and their
+respective number of images in the Openverse catalog.
+
+{MediaStats.media_stats_description}"""  # noqa
+
+    image_stats_response = {
+        "200": openapi.Response(
+            description="OK",
+            examples=image_stats_200_example,
+            schema=AboutImageSerializer(many=True)
+        )
+    }
+
+    @swagger_auto_schema(operation_id='image_stats',
+                         operation_description=image_stats_description,
+                         responses=image_stats_response,
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': image_stats_curl,
+                             }
+                         ])
+    def get(self, request, format=None):
+        return self._get(request, 'image')
