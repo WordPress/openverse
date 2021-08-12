@@ -6,5 +6,5 @@ export const ALL_MEDIA = 'all'
 // Media types
 export const mediaTypes = [AUDIO, IMAGE]
 // Media types which support custom filters
-export const supportedMediaTypes = [VIDEO, IMAGE, VIDEO]
+export const supportedMediaTypes = [AUDIO, IMAGE, VIDEO]
 export const allMediaTypes = [ALL_MEDIA, IMAGE, AUDIO, VIDEO]
