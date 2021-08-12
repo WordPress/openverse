@@ -1,6 +1,11 @@
+<p align="center">
+  <img src="https://github.com/WordPress/openverse/raw/main/brand/logo.svg" width="400" style="padding: 40px; margin: 0 auto;" />
+  <br />
+  <br />
+  Openverse is a search engine for openly-licensed media.<br />
+</p>
+  
 # Openverse
-
-Openverse is a search engine for openly-licensed media.
 
 This repository **does not** contain most of the codebase. The code is divided
 into three primary repositories, and managed via a
