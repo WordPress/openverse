@@ -1,6 +1,10 @@
-# Openverse
+<img src="brand/banner.svg" width="100%"/>
 
-Openverse is a search engine for openly-licensed media.
+<p align="center">
+  Openverse is a search engine for openly-licensed media.
+</p>
+  
+# Openverse
 
 This repository **does not** contain most of the codebase. The code is divided
 into three primary repositories, and managed via a
