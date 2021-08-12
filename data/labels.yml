@@ -73,8 +73,11 @@ groups:
     description: Addition of new feature
     emoji: "🌟"
   - name: improvement
-    description: Improvement to an existing feature
+    description: Improvement to an existing user-facing feature
     emoji: "✨"
+  - name: internal improvement
+    description: Improvement that benefits maintainers, not users
+    emoji: "🧰"
   - name: fix
     description: Bug fix
     emoji: "🛠"
