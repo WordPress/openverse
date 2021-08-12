@@ -25,7 +25,6 @@
     "format": "prettier --write .",
     "format:test": "prettier --check .",
     "vue-i18n-extract": "vue-i18n-extract report -v './src/**/*.?(js|vue)' -l './src/locales/*.?(json)'",
-    "lint-staged": "npm run lintfix && npm run format",
     "postinstall": "patch-package",
     "prepare": "husky install"
   },
