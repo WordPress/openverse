@@ -1,8 +1,7 @@
+<img src="brand/banner.svg" width="100%"/>
+
 <p align="center">
-  <img src="https://github.com/WordPress/openverse/raw/main/brand/logo.svg" width="400" style="padding: 40px; margin: 0 auto;" />
-  <br />
-  <br />
-  Openverse is a search engine for openly-licensed media.<br />
+  Openverse is a search engine for openly-licensed media.
 </p>
   
 # Openverse
