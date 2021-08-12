@@ -20,6 +20,7 @@ from catalog.api.examples import (
     audio_stats_200_example,
 )
 from catalog.api.models import Audio, AudioReport
+from catalog.api.serializers.media_serializers import ProxiedImageSerializer
 from catalog.api.serializers.audio_serializers import (
     AudioSearchQueryStringSerializer,
     AudioSearchResultsSerializer,
@@ -40,6 +41,7 @@ from catalog.api.views.media_views import (
     RelatedMedia,
     MediaDetail,
     MediaStats,
+    ImageProxy,
 )
 from catalog.custom_auto_schema import CustomAutoSchema
 
@@ -237,3 +239,27 @@ respective number of audio files in the Openverse catalog.
                          ])
     def get(self, request, format=None):
         return self._get(request, 'audio')
+
+
+class AudioSetArt(ImageProxy):
+    """
+    Return the thumb of the set art of the audio.
+    """
+
+    queryset = Audio.objects.all()
+
+    def get(self, request, identifier, format=None):
+        serialized = ProxiedImageSerializer(data=request.data)
+        serialized.is_valid()
+        try:
+            audio = Audio.objects.get(identifier=identifier)
+            image_url = audio.audio_set.url
+        except Audio.DoesNotExist:
+            return Response(status=404, data='Not Found')
+
+        if serialized.data['full_size']:
+            return self._get(image_url, None)
+        else:
+            return self._get(image_url)
+
+

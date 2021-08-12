@@ -5,6 +5,7 @@ from catalog.api.views.audio_views import (
     AudioDetail,
     RelatedAudio,
     AudioStats,
+    AudioSetArt,
 )
 
 urlpatterns = [
@@ -17,6 +18,11 @@ urlpatterns = [
         '<str:identifier>',
         AudioDetail.as_view(),
         name='audio-detail'
+    ),
+    path(
+        '<str:identifier>/thumb',
+        AudioSetArt.as_view(),
+        name='audio-thumb'
     ),
     path(
         '<str:identifier>/recommendations',
