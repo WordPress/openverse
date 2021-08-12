@@ -2,15 +2,6 @@ import findIndex from 'lodash.findindex'
 import clonedeep from 'lodash.clonedeep'
 
 import local from '~/utils/local'
-import { TOGGLE_FILTER } from '~/store-modules/action-types'
-import {
-  SET_FILTER,
-  SET_PROVIDERS_FILTERS,
-  CLEAR_FILTERS,
-  SET_FILTERS_FROM_URL,
-  SET_FILTER_IS_VISIBLE,
-  UPDATE_FILTERS,
-} from '~/store-modules/mutation-types'
 import {
   filtersToQueryData,
   queryToFilterData,
@@ -22,6 +13,15 @@ import {
   VIDEO,
   supportedMediaTypes,
 } from '~/constants/media'
+import { TOGGLE_FILTER } from '~/store-modules/action-types'
+import {
+  SET_FILTER,
+  SET_PROVIDERS_FILTERS,
+  CLEAR_FILTERS,
+  SET_FILTERS_FROM_URL,
+  SET_FILTER_IS_VISIBLE,
+  UPDATE_FILTERS,
+} from '~/store-modules/mutation-types'
 
 export const mediaFilterKeys = {
   image: [
@@ -249,9 +249,6 @@ function setQuery(state) {
 }
 
 function getMediaTypeFilters(state, { mediaType, includeMature = false }) {
-  // eslint-disable-next-line no-debugger
-  debugger
-
   let filterKeys = mediaFilterKeys[mediaType]
   if (!includeMature) {
     filterKeys = filterKeys.filter((filterKey) => filterKey !== 'mature')

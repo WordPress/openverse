@@ -56,7 +56,6 @@ export default {
   },
   computed: {
     filters() {
-      console.log(this.$store.state.searchType)
       switch (this.$store.state.searchType) {
         case AUDIO:
           return this.$store.getters.audioFiltersForDisplay
