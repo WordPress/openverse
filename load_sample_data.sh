@@ -8,26 +8,19 @@ DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
 
 # Set up API database and upstream
 docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py migrate --noinput"
-# Create a user for integration testing
+# Create a superuser and a user for integration testing
 # Not that the Python code uses 4 spaces for indentation after the tab that is stripped by <<-
 docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py shell <<-EOF
 	from django.contrib.auth.models import User
-	username = 'continuous_integration'
-	if User.objects.filter(username=username).exists():
-	    print(f'User {username} already exists')
-	else:
-	    user = User.objects.create_user(username, 'ci@example.com', 'deploy')
-	    user.save()
-	EOF"
-# Create a superuser for access to the admin UI
-# Not that the Python code uses 4 spaces for indentation after the tab that is stripped by <<-
-docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py shell <<-EOF
-	from django.contrib.auth.models import User
-	username = 'deploy'
-	if User.objects.filter(username=username).exists():
-	    print(f'User {username} already exists')
-	else:
-	    user = User.objects.create_superuser(username, 'deploy@example.com', 'deploy')
+	usernames = ['continuous_integration', 'deploy']
+	for username in usernames:
+	    if User.objects.filter(username=username).exists():
+	        print(f'User {username} already exists')
+	        continue
+	    if username == 'deploy':
+	        user = User.objects.create_superuser(username, f'{username}@example.com', 'deploy')
+	    else:
+	        user = User.objects.create_user(username, f'{username}@example.com', 'deploy')
 	    user.save()
 	EOF"
 
