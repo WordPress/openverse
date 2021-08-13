@@ -255,7 +255,11 @@ class AudioSetArt(ImageProxy):
             audio = Audio.objects.get(identifier=identifier)
             image_url = audio.audio_set.url
         except Audio.DoesNotExist:
-            return Response(status=404, data='Not Found')
+            return Response(status=404, data='Audio not found')
+        except AttributeError:
+            return Response(status=404, data='Audio set not found')
+        if not image_url:
+            return Response(status=404, data='Cover art URL not found')
 
         if serialized.data['full_size']:
             return self._get(image_url, None)
