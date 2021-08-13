@@ -196,5 +196,12 @@ export default {
         },
       },
     ],
+    parameters: {
+      options: {
+        storySort: {
+          order: ['Introduction', ['Openverse UI']],
+        },
+      },
+    },
   },
 }
