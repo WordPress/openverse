@@ -94,7 +94,7 @@ def test_image_delete(search_fixture):
     test_id = search_fixture['results'][0]['id']
     response = requests.delete(
         f'{API_URL}/image/{test_id}',
-        auth=('continuous_integration', 'deploydeploy'),
+        auth=('continuous_integration', 'deploy'),
         verify=False
     )
     assert response.status_code == 204

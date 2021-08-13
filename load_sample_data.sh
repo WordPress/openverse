@@ -8,11 +8,15 @@ DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
 
 # Set up API database and upstream
 docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py migrate --noinput"
-# Create a user for integration testing.
+# Create a user for integration testing
 docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py shell <<-EOF
 	from django.contrib.auth.models import User
-	user = User.objects.create_user('continuous_integration', 'test@test.test', 'deploydeploy')
-	user.save()
+	username = 'continuous_integration'
+	if User.objects.filter(username=username).exists():
+	    print(f'User {username} already exists')
+	else:
+	    user = User.objects.create_user(username, 'ci@example.com', 'deploy')
+	    user.save()
 	EOF"
 
 # Migrate analytics
