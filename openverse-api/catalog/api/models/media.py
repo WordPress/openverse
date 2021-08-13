@@ -101,6 +101,9 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
         Meta class for all media types indexed by Openverse. All concrete media
         classes should inherit their Meta class from this.
         """
+        unique_together = [
+            ['foreign_identifier', 'provider']
+        ]
         ordering = ['-created_on']
         abstract = True
 
