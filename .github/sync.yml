@@ -13,3 +13,5 @@ group: # Openverse
       dest: .github/ISSUE_TEMPLATE/
     - source: .github/PULL_REQUEST_TEMPLATE.md
       dest: .github/PULL_REQUEST_TEMPLATE.md
+    - source: .github/CODEOWNERS
+      dest: .github/CODEOWNERS
