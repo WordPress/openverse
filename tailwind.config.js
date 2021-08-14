@@ -17,6 +17,9 @@ module.exports = {
       'dark-slate-blue': '#3c5c99',
       'trans-blue': '#3e58e1',
 
+      // Brand
+      yellow: '#ffe033',
+
       // Grayscale
       black: 'black',
       'dark-gray': '#767676', // rgb(118, 118, 188)
@@ -24,10 +27,15 @@ module.exports = {
       'light-gray': '#d8d8d8', // rgb(216, 216, 216)
       white: 'white',
 
+      // Semi-transparent
+      'dark-charcoal-04': 'rgba(48, 39, 46, 0.04)',
+      'dark-charcoal-20': 'rgba(48, 39, 46, 0.2)',
+
       // Special keywords
       tx: 'transparent',
       curr: 'currentColor',
     },
+    fill: (theme) => theme('colors'),
     spacing: {
       // Constants
       px: '1px',
