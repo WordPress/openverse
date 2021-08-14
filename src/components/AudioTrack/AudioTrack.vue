@@ -40,10 +40,17 @@
 import Waveform from '~/components/AudioTrack/Waveform.vue'
 import PlayPause from '~/components/AudioTrack/PlayPause.vue'
 
+/**
+ * Displays the waveform and basic information about the track, along with
+ * controls to play, pause or seek to a point on the track.
+ */
 export default {
   name: 'AudioTrack',
   components: { PlayPause, Waveform },
   props: {
+    /**
+     * the information about the track, typically from a track's detail endpoint
+     */
     audio: {
       type: Object,
       required: true,
