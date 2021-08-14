@@ -32,7 +32,7 @@
         :key="index"
         class="transform origin-bottom"
         :class="[
-          spaceBefore(index) < widestWidth
+          spaceBefore(index) < previewBarWidth
             ? 'fill-black'
             : 'fill-dark-charcoal-20',
         ]"
@@ -78,7 +78,7 @@ export default {
     /**
      * the position of the graph that the user is hovering over.
      */
-    previewPercentage: 0,
+    previewPercentage: null,
 
     waveformWidth: 100, // dummy start value
     observer: null, // ResizeObserver
@@ -105,7 +105,7 @@ export default {
       return this.waveformWidth * this.percentage
     },
     previewBarWidth() {
-      return this.waveformWidth * this.previewPercentage
+      return this.waveformWidth * (this.previewPercentage ?? this.percentage)
     },
     widestWidth() {
       return this.previewBarWidth > this.progressBarWidth
@@ -143,7 +143,7 @@ export default {
       this.previewPercentage = this.getPosition(event)
     },
     clearPreviewProgress() {
-      this.previewPercentage = 0
+      this.previewPercentage = null
     },
   },
 }
