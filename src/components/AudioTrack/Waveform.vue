@@ -11,7 +11,7 @@
         x="0"
         y="0"
         :width="progressBarWidth"
-        :height="tallestPeak"
+        height="1"
       />
       <rect
         v-for="(peak, index) in normalizedPeaks"
@@ -83,9 +83,6 @@ export default {
       return this.peaks
     },
 
-    tallestPeak() {
-      return Math.max(...this.normalizedPeaks)
-    },
     viewBox() {
       return `0 0 ${this.waveformWidth} 1`
     },
