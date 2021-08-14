@@ -1,5 +1,10 @@
 <template>
-  <div ref="waveform" class="waveform bg-dark-charcoal-04" @click="setProgress">
+  <div
+    ref="waveform"
+    class="waveform bg-dark-charcoal-04"
+    @click="setProgress"
+    @mousemove="setPreviewProgress"
+  >
     <svg
       class="w-full h-full"
       xmlns="http://www.w3.org/2000/svg"
@@ -15,11 +20,18 @@
         height="1"
       />
       <rect
+        fill="none"
+        x="0"
+        y="0"
+        :width="previewBarWidth"
+        :height="tallestPeak"
+      />
+      <rect
         v-for="(peak, index) in normalizedPeaks"
         :key="index"
         class="transform origin-bottom"
         :class="[
-          spaceBefore(index) < progressBarWidth
+          spaceBefore(index) < widestWidth
             ? 'fill-black'
             : 'fill-dark-charcoal-20',
         ]"
@@ -62,6 +74,10 @@ export default {
      * seekbar of the audio player. A number from 1-100.
      */
     percentage: 0,
+    /**
+     * the position of the graph that the user is hovering over.
+     */
+    previewPercentage: 0,
 
     waveformWidth: 100, // dummy start value
     observer: null, // ResizeObserver
@@ -87,6 +103,14 @@ export default {
     progressBarWidth() {
       return this.waveformWidth * this.percentage
     },
+    previewBarWidth() {
+      return this.waveformWidth * this.previewPercentage
+    },
+    widestWidth() {
+      return this.previewBarWidth > this.progressBarWidth
+        ? this.previewBarWidth
+        : this.progressBarWidth
+    },
   },
   async mounted() {
     this.updateWaveformWidth()
@@ -106,10 +130,16 @@ export default {
     updateWaveformWidth() {
       this.waveformWidth = this.$el.clientWidth
     },
-    setProgress(event) {
+    getPosition(event) {
       const startPosition = this.$refs.waveform.getBoundingClientRect().left
       const newPosition = event.clientX
-      this.percentage = (newPosition - startPosition) / this.waveformWidth
+      return (newPosition - startPosition) / this.waveformWidth
+    },
+    setProgress(event) {
+      this.percentage = this.getPosition(event)
+    },
+    setPreviewProgress(event) {
+      this.previewPercentage = this.getPosition(event)
     },
   },
 }
