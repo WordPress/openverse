@@ -19,6 +19,8 @@ module.exports = {
 
       // Brand
       yellow: '#ffe033',
+      'dark-charcoal': '#30272e',
+      pink: '#c52b9b',
 
       // Grayscale
       black: 'black',

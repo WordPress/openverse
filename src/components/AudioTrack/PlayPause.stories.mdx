@@ -1,0 +1,45 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import PlayPause from '~/components/AudioTrack/PlayPause.vue'
+
+<Meta
+  title="Components/Play-pause toggle"
+  components={PlayPause}
+  argTypes={{
+    toggle: {
+      action: 'toggle',
+    },
+  }}
+/>
+
+export const Template = (args, { argTypes }) => ({
+  template: `<PlayPause v-bind="$props" v-on="$props"/>`,
+  components: { PlayPause },
+  props: Object.keys(argTypes),
+})
+
+# Play-pause toggle
+
+<Description of={PlayPause} />
+
+<ArgsTable of={PlayPause} />
+
+It should be noted that the component emits the `toggle` event with the opposite
+value of its `isPlaying` state.
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      isPlaying: true,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
