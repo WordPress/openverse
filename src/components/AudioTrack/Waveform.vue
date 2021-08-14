@@ -1,5 +1,5 @@
 <template>
-  <div class="waveform bg-dark-charcoal-04">
+  <div ref="waveform" class="waveform bg-dark-charcoal-04" @click="setProgress">
     <svg
       class="w-full h-full"
       xmlns="http://www.w3.org/2000/svg"
@@ -52,19 +52,16 @@ export default {
       default: () => Array.from({ length: 100 }, () => Math.random()),
       validator: (val) => val.every((item) => item >= 0 && item <= 1),
     },
-    /**
-     * the percentage of the graph that has been played; This represents the
-     * seekbar of the audio player.
-     */
-    percentage: {
-      type: Number,
-      validator: (val) => val >= 0 && val <= 100,
-      default: 0,
-    },
   },
   data: () => ({
     barWidth: 2, // px
     barGap: 2, // px
+
+    /**
+     * the percentage of the graph that has been played; This represents the
+     * seekbar of the audio player. A number from 1-100.
+     */
+    percentage: 0,
 
     waveformWidth: 100, // dummy start value
     observer: null, // ResizeObserver
@@ -109,10 +106,10 @@ export default {
     updateWaveformWidth() {
       this.waveformWidth = this.$el.clientWidth
     },
-    seek(event) {
-      const x = event.clientX - this.$el.getBoundingClientRect().x
-      const percentage = x / this.waveformWidth
-      this.$emit('sought', percentage)
+    setProgress(event) {
+      const startPosition = this.$refs.waveform.getBoundingClientRect().left
+      const newPosition = event.clientX
+      this.percentage = (newPosition - startPosition) / this.waveformWidth
     },
   },
 }
