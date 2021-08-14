@@ -1,6 +1,6 @@
 """
-End-to-end API tests for audio. Can be used to verify a live deployment is
-functioning as designed. Run with the `pytest -s` command from this directory.
+Base test cases for all media types.
+These are not tests and cannot be invoked.
 """
 
 import json
