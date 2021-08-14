@@ -1,7 +1,7 @@
 <template>
   <div
     ref="waveform"
-    class="waveform bg-dark-charcoal-04 rounded-sm"
+    class="waveform bg-dark-charcoal-04"
     @click="setProgress"
     @mousemove="setPreviewProgress"
     @mouseleave="clearPreviewProgress"
