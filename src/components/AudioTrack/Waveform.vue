@@ -5,6 +5,7 @@
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="viewBox"
       preserveAspectRatio="none"
+      @click="seek"
     >
       <rect
         class="fill-yellow"
@@ -107,6 +108,11 @@ export default {
     },
     updateWaveformWidth() {
       this.waveformWidth = this.$el.clientWidth
+    },
+    seek(event) {
+      const x = event.clientX - this.$el.getBoundingClientRect().x
+      const percentage = x / this.waveformWidth
+      this.$emit('sought', percentage)
     },
   },
 }

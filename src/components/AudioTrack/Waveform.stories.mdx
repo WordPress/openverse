@@ -8,7 +8,15 @@ import {
 
 import Waveform from '~/components/AudioTrack/Waveform.vue'
 
-<Meta title="Components/Waveform" components={Waveform} />
+<Meta
+  title="Components/Waveform"
+  components={Waveform}
+  argTypes={{
+    sought: {
+      action: 'sought',
+    },
+  }}
+/>
 
 export const Template = (args, { argTypes }) => ({
   template: `<Waveform class="w-full h-30" v-bind="$props" v-on="$props"/>`,
