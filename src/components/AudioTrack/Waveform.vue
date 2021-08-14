@@ -1,9 +1,10 @@
 <template>
   <div
     ref="waveform"
-    class="waveform bg-dark-charcoal-04"
+    class="waveform bg-dark-charcoal-04 rounded-sm"
     @click="setProgress"
     @mousemove="setPreviewProgress"
+    @mouseleave="clearPreviewProgress"
   >
     <svg
       class="w-full h-full"
@@ -140,6 +141,10 @@ export default {
     },
     setPreviewProgress(event) {
       this.previewPercentage = this.getPosition(event)
+    },
+    clearPreviewProgress() {
+      this.previewPercentage = 0
+      console.log('mouseleave!')
     },
   },
 }
