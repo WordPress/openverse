@@ -10,13 +10,14 @@ const filterPropertyMappings = {
   audioCategories: 'categories',
   categories: 'categories',
   audioExtensions: 'extension',
-  extensions: 'extension',
+  imageExtensions: 'extension',
   durations: 'duration',
   aspectRatios: 'aspect_ratio',
   sizes: 'size',
   audioProviders: 'source',
   imageProviders: 'source',
   searchBy: 'searchBy',
+  mature: 'mature',
 }
 
 const getMediaFilterTypes = (searchType) => {
@@ -135,7 +136,7 @@ export const queryToFilterData = (queryString) => {
               code: provider,
               checked: true,
             }))
-    } else {
+    } else if (filterDataKey !== 'mature') {
       const queryDataKey = filterPropertyMappings[filterDataKey]
       parseQueryString(queryString, queryDataKey, filterDataKey, filters)
     }

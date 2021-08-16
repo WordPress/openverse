@@ -349,7 +349,7 @@
       "ogg": "OGGs",
       "flac": "FLACs"
     },
-    "extensions": {
+    "image-extensions": {
       "title": "File Type",
       "jpg": "JPEGs",
       "png": "PNGs",

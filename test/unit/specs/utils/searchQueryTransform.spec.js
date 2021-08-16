@@ -64,11 +64,11 @@ describe('searchQueryTransform', () => {
           checked: false,
         },
       ],
-      extensions: [
-        { code: 'jpg', name: 'filters.extensions.jpg', checked: true },
-        { code: 'png', name: 'filters.extensions.png', checked: false },
-        { code: 'gif', name: 'filters.extensions.gif', checked: false },
-        { code: 'svg', name: 'filters.extensions.svg', checked: false },
+      imageExtensions: [
+        { code: 'jpg', name: 'filters.image-extensions.jpg', checked: true },
+        { code: 'png', name: 'filters.image-extensions.png', checked: false },
+        { code: 'gif', name: 'filters.image-extensions.gif', checked: false },
+        { code: 'svg', name: 'filters.image-extensions.svg', checked: false },
       ],
       aspectRatios: [
         { code: 'tall', name: 'filters.aspect-ratios.tall', checked: true },
@@ -172,11 +172,11 @@ describe('searchQueryTransform', () => {
           name: 'filters.durations.long',
         },
       ],
-      extensions: [
-        { code: 'jpg', name: 'filters.extensions.jpg', checked: true },
-        { code: 'png', name: 'filters.extensions.png', checked: false },
-        { code: 'gif', name: 'filters.extensions.gif', checked: false },
-        { code: 'svg', name: 'filters.extensions.svg', checked: false },
+      imageExtensions: [
+        { code: 'jpg', name: 'filters.image-extensions.jpg', checked: true },
+        { code: 'png', name: 'filters.image-extensions.png', checked: false },
+        { code: 'gif', name: 'filters.image-extensions.gif', checked: false },
+        { code: 'svg', name: 'filters.image-extensions.svg', checked: false },
       ],
       aspectRatios: [
         { code: 'tall', name: 'filters.aspect-ratios.tall', checked: true },
