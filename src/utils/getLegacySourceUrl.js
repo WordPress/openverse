@@ -2,7 +2,7 @@ import buildUrl from 'build-url'
 
 /**
  * A mapping of each legacy source with its url builder functions for each content type.
- * Urls were based off of data found here: https://github.com/wordpress/openverse-frontend/issues/315
+ * Urls were based off of data found here: https://github.com/creativecommons/cccatalog-frontend/issues/315
  */
 export const legacySourceMap = {
   ccMixter: {
