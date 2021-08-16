@@ -376,10 +376,12 @@
     "show": "Show results"
   },
   "browse-page": {
-    "audio-result-count": "no audios | {localeCount} audio | {localeCount} audios",
-    "image-result-count": "no images | {localeCount} image | {localeCount} images",
-    "result-count": "{count} images",
-    "result-count-more": "Over {count} images",
+    "all-result-count": "no results|{localeCount} result|{localeCount} results",
+    "audio-result-count": "no audio results|{localeCount} audio result|{localeCount} audio results",
+    "image-result-count": "no image results|{localeCount} image result|{localeCount} image results",
+    "all-result-count-more": "Over {localeCount} results",
+    "audio-result-count-more": "Over {localeCount} audio results",
+    "image-result-count-more": "Over {localeCount} image results",
     "no-more": "No more images :(",
     "load": "Load more results",
     "error": "Error fetching images:",
