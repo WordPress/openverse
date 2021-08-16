@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework import serializers
 
 from catalog.api.controllers.search_controller import get_sources
@@ -95,6 +96,9 @@ class AudioSerializer(MediaSerializer):
     used to generate Swagger documentation.
     """
 
+    waveform = serializers.SerializerMethodField(
+        help_text='A direct link to the waveform peaks.'
+    )
     audio_set = serializers.PrimaryKeyRelatedField(
         required=False,
         help_text='Reference to set of which this track is a part.',
@@ -140,6 +144,12 @@ class AudioSerializer(MediaSerializer):
         read_only=True,
         help_text="A link to an endpoint that provides similar audio files."
     )
+
+    def get_waveform(self, obj):
+        request = self.context['request']
+        host = request.get_host()
+        path = reverse('audio-waveform', kwargs={'identifier': obj.identifier})
+        return f'https://{host}{path}'
 
 
 class AudioSearchResultsSerializer(MediaSearchResultsSerializer):
