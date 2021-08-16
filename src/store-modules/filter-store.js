@@ -28,7 +28,7 @@ export const mediaFilterKeys = {
   image: [
     'licenses',
     'licenseTypes',
-    'categories',
+    'imageCategories',
     'imageExtensions',
     'aspectRatios',
     'sizes',
@@ -52,7 +52,7 @@ export const mediaFilterKeys = {
 export const mediaSpecificFilters = {
   all: ['licenses', 'licenseTypes', 'searchBy', 'mature'],
   image: [
-    'categories',
+    'imageCategories',
     'imageExtensions',
     'aspectRatios',
     'sizes',
@@ -102,20 +102,20 @@ export const filterData = {
       checked: false,
     },
   ],
-  categories: [
+  imageCategories: [
     {
       code: 'photograph',
-      name: 'filters.categories.photograph',
+      name: 'filters.image-categories.photograph',
       checked: false,
     },
     {
       code: 'illustration',
-      name: 'filters.categories.illustration',
+      name: 'filters.image-categories.illustration',
       checked: false,
     },
     {
       code: 'digitized_artwork',
-      name: 'filters.categories.digitized-artwork',
+      name: 'filters.image-categories.digitized-artwork',
       checked: false,
     },
   ],

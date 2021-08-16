@@ -24,7 +24,9 @@ describe('Filter Store', () => {
     it('state contains image types', () => {
       const defaultState = store.state
 
-      expect(defaultState.filters.categories).toEqual(filterData.categories)
+      expect(defaultState.filters.imageCategories).toEqual(
+        filterData.imageCategories
+      )
     })
 
     it('state contains imageExtensions', () => {
@@ -123,12 +125,15 @@ describe('Filter Store', () => {
     })
 
     it('SET_FILTER updates image types state', () => {
-      mutations[SET_FILTER](state, { filterType: 'categories', codeIdx: 0 })
+      mutations[SET_FILTER](state, {
+        filterType: 'imageCategories',
+        codeIdx: 0,
+      })
 
-      expect(state.filters.categories[0].checked).toBeTruthy()
+      expect(state.filters.imageCategories[0].checked).toBeTruthy()
       expect(state.query).toEqual(
         expect.objectContaining({
-          categories: state.filters.categories[0].code,
+          categories: state.filters.imageCategories[0].code,
         })
       )
     })

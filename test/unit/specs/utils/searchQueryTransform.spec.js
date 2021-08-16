@@ -47,20 +47,20 @@ describe('searchQueryTransform', () => {
           checked: false,
         },
       ],
-      categories: [
+      imageCategories: [
         {
           code: 'photograph',
-          name: 'filters.categories.photograph',
+          name: 'filters.image-categories.photograph',
           checked: true,
         },
         {
           code: 'illustration',
-          name: 'filters.categories.illustration',
+          name: 'filters.image-categories.illustration',
           checked: false,
         },
         {
           code: 'digitized_artwork',
-          name: 'filters.categories.digitized-artwork',
+          name: 'filters.image-categories.digitized-artwork',
           checked: false,
         },
       ],
@@ -138,20 +138,20 @@ describe('searchQueryTransform', () => {
           checked: false,
         },
       ],
-      categories: [
+      imageCategories: [
         {
           code: 'photograph',
-          name: 'filters.categories.photograph',
+          name: 'filters.image-categories.photograph',
           checked: true,
         },
         {
           code: 'illustration',
-          name: 'filters.categories.illustration',
+          name: 'filters.image-categories.illustration',
           checked: false,
         },
         {
           code: 'digitized_artwork',
-          name: 'filters.categories.digitized-artwork',
+          name: 'filters.image-categories.digitized-artwork',
           checked: false,
         },
       ],
@@ -252,7 +252,7 @@ describe('searchQueryTransform', () => {
     expect(result).toEqual(filters) // toEqual checks for value equality
   })
   it('queryStringToQueryData', () => {
-    const filters = {
+    const expectedQueryData = {
       license: 'cc0',
       license_type: 'commercial',
       categories: 'photograph',
@@ -267,6 +267,6 @@ describe('searchQueryTransform', () => {
     const queryString =
       'http://localhost:8443/search/image?q=cat&license=cc0&license_type=commercial&categories=photograph&extension=jpg&aspect_ratio=tall&size=medium&source=animaldiversity,brooklynmuseum&searchBy=creator&mature=true'
     const result = queryStringToQueryData(queryString)
-    expect(result).toEqual(filters)
+    expect(result).toEqual(expectedQueryData)
   })
 })

@@ -8,7 +8,7 @@ const filterPropertyMappings = {
   licenses: 'license',
   licenseTypes: 'license_type',
   audioCategories: 'categories',
-  categories: 'categories',
+  imageCategories: 'categories',
   audioExtensions: 'extension',
   imageExtensions: 'extension',
   durations: 'duration',
@@ -28,8 +28,8 @@ const getMediaFilterTypes = (searchType) => {
 
 // {
 //   license: 'cc0,pdm,by,by-sa,by-nc,by-nd,by-nc-sa,by-nc-nd',
-//   categories: 'photograph,illustration,digitized_artwork',
-//   extension: 'jpg,png',
+//   imageCategories: 'photograph,illustration,digitized_artwork',
+//   imageExtension: 'jpg,png',
 //   aspect_ratio: 'square',
 //   size: 'small',
 //   source: 'animaldiversity,bio_diversity,brooklynmuseum,CAPL,clevelandmuseum,deviantart'
