@@ -8,6 +8,8 @@ import {
 
 import AudioTrack from '~/components/AudioTrack/AudioTrack.vue'
 
+import waveform from './waveform.json'
+
 <Meta title="Components/Audio track" components={AudioTrack} />
 
 # Audio track
@@ -32,6 +34,7 @@ export const Template = (args, { argTypes }) => ({
         creator: 'Wolfgang Amadeus Mozart',
         creatorUrl: 'https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart',
         duration: 355e3,
+        peaks: waveform.points,
       },
     }}
   >
