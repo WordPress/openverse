@@ -2,6 +2,7 @@ import logging
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 
@@ -40,6 +41,12 @@ from catalog.api.views.media_views import (
     RelatedMedia,
     MediaDetail,
     MediaStats,
+)
+from catalog.api.utils.waveform import (
+    download_audio,
+    generate_waveform,
+    process_waveform_output,
+    cleanup,
 )
 from catalog.custom_auto_schema import CustomAutoSchema
 
@@ -237,3 +244,33 @@ respective number of audio files in the Openverse catalog.
                          ])
     def get(self, request, format=None):
         return self._get(request, 'audio')
+
+
+class AudioWaveform(APIView):
+    swagger_schema = None
+
+    def get(self, request, identifier, format=None):
+        try:
+            audio = Audio.objects.get(identifier=identifier)
+        except Audio.DoesNotExist:
+            return Response(status=404, data='Audio not found')
+
+        file_name = None
+        try:
+            file_name = download_audio(audio.url, audio.identifier)
+            awf_out = generate_waveform(file_name, audio.duration)
+            data = process_waveform_output(awf_out)
+
+            return Response(status=200, data={
+                'len': len(data),
+                'points': data,
+            })
+        except Exception as e:
+            return Response(status=500, data={
+                'message': "It's not you, it's me.",
+                'error': str(e)
+            })
+        finally:
+            if file_name is not None:
+                cleanup(file_name)
+
