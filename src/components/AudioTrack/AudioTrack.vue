@@ -4,6 +4,7 @@
       <Waveform
         class="h-30 w-full"
         :percentage="progress"
+        :peaks="audio.peaks"
         @sought="updateSeekbar"
       />
     </div>
