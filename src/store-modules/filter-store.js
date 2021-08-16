@@ -23,6 +23,7 @@ import {
   UPDATE_FILTERS,
 } from '~/store-modules/mutation-types'
 
+// The order of the keys here is the same as in the side filter display
 export const mediaFilterKeys = {
   image: [
     'licenses',
@@ -45,10 +46,11 @@ export const mediaFilterKeys = {
     'searchBy',
     'mature',
   ],
-  video: ['licenseTypes'],
+  video: [],
   all: ['licenses', 'licenseTypes', 'searchBy', 'mature'],
 }
-const mediaSpecificFilters = {
+export const mediaSpecificFilters = {
+  all: ['licenses', 'licenseTypes', 'searchBy', 'mature'],
   image: [
     'categories',
     'extensions',

@@ -256,7 +256,6 @@ describe('searchQueryTransform', () => {
       license: 'cc0',
       license_type: 'commercial',
       categories: 'photograph',
-      duration: '',
       extension: 'jpg',
       aspect_ratio: 'tall',
       size: 'medium',

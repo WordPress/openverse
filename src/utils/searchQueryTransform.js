@@ -1,6 +1,6 @@
 import clonedeep from 'lodash.clonedeep'
 import findIndex from 'lodash.findindex'
-import { filterData } from '~/store-modules/filter-store'
+import { filterData, mediaSpecificFilters } from '~/store-modules/filter-store'
 import getParameterByName from './getParameterByName'
 import { ALL_MEDIA } from '~/constants/media'
 
@@ -18,19 +18,13 @@ const filterPropertyMappings = {
   imageProviders: 'source',
   searchBy: 'searchBy',
 }
-// @TODO Can we import this from mediaFilterKeys in `openverse-frontend/src/store-modules/filter-store.js` somehow?
-const mediaFilters = {
-  all: ['licenses', 'licenseTypes', 'searchBy'],
-  image: [
-    'categories',
-    'extensions',
-    'aspectRatios',
-    'sizes',
-    'imageProviders',
-  ],
-  audio: ['audioCategories', 'audioExtensions', 'durations', 'audioProviders'],
-  video: ['licenseTypes'],
+
+const getMediaFilterTypes = (searchType) => {
+  return searchType === ALL_MEDIA
+    ? [...mediaSpecificFilters.all]
+    : [...mediaSpecificFilters.all, ...mediaSpecificFilters[searchType]]
 }
+
 // {
 //   license: 'cc0,pdm,by,by-sa,by-nc,by-nd,by-nc-sa,by-nc-nd',
 //   categories: 'photograph,illustration,digitized_artwork',
@@ -66,20 +60,14 @@ export const filtersToQueryData = (
   hideEmpty = true
 ) => {
   let queryDataObject = {}
-  let mediaFilterTypes =
-    searchType === ALL_MEDIA
-      ? [...mediaFilters.all]
-      : [...mediaFilters.all, ...mediaFilters[searchType]]
+  let mediaFilterTypes = getMediaFilterTypes(searchType)
+  mediaFilterTypes = mediaFilterTypes.filter((f) => f !== 'mature')
   mediaFilterTypes.reduce((queryData, filterDataKey) => {
     const queryDataKey = filterPropertyMappings[filterDataKey]
     queryData[queryDataKey] = filterToString(filters[filterDataKey])
     return queryData
   }, queryDataObject)
 
-  // queryDataObject.searchBy = filters.searchBy.find((f) => f.code === 'creator')
-  //   .checked
-  //   ? 'creator'
-  //   : ''
   queryDataObject.mature = filters.mature
 
   if (hideEmpty) {
@@ -153,11 +141,6 @@ export const queryToFilterData = (queryString) => {
     }
   })
 
-  const searchBy = getParameterByName('searchBy', queryString)
-  if (searchBy === 'creator') {
-    filters.searchBy.find((f) => f.code === 'creator').checked = true
-  }
-
   const mature = getParameterByName('mature', queryString)
   if (mature) {
     filters.mature = mature.toLowerCase() === 'true'
@@ -178,16 +161,18 @@ export const queryToFilterData = (queryString) => {
  */
 export const queryStringToQueryData = (queryString) => {
   const queryDataObject = {}
-  Object.keys(filterPropertyMappings).forEach((filterDataKey) => {
+  const searchType = queryStringToSearchType(queryString)
+  const filterTypes = getMediaFilterTypes(searchType).filter(
+    (f) => f !== 'mature'
+  )
+  filterTypes.forEach((filterDataKey) => {
     const queryDataKey = filterPropertyMappings[filterDataKey]
     queryDataObject[queryDataKey] = getParameterByName(
       queryDataKey,
       queryString
     )
   })
-
   queryDataObject.q = getParameterByName('q', queryString)
-  queryDataObject.searchBy = getParameterByName('searchBy', queryString)
   queryDataObject.mature = getParameterByName('mature', queryString)
 
   return queryDataObject
