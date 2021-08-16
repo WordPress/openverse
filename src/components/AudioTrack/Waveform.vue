@@ -23,8 +23,9 @@
       <rect
         v-for="(peak, index) in normalizedPeaks"
         :key="index"
-        class="transform origin-bottom"
+        class="transform origin-bottom transition-transform duration-500"
         :class="[
+          isReady ? 'scale-y-100' : 'scale-y-0',
           spaceBefore(index) < previewBarWidth
             ? 'fill-black'
             : 'fill-dark-charcoal-20',
