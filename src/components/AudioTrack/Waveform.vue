@@ -21,13 +21,6 @@
         height="1"
       />
       <rect
-        fill="none"
-        x="0"
-        y="0"
-        :width="previewBarWidth"
-        :height="tallestPeak"
-      />
-      <rect
         v-for="(peak, index) in normalizedPeaks"
         :key="index"
         class="transform origin-bottom"
