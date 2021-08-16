@@ -58,6 +58,27 @@ export default {
       default: () => Array.from({ length: 100 }, () => Math.random()),
       validator: (val) => val.every((item) => item >= 0 && item <= 1),
     },
+    /**
+     * whether the audio metadata has been loaded and is ready to display
+     */
+    isReady: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * the current play time of the audio track
+     */
+    currentTime: {
+      type: Number,
+      default: 0,
+    },
+    /**
+     * the total play time of the audio track
+     */
+    duration: {
+      type: Number,
+      default: 0,
+    },
   },
   data: () => ({
     barWidth: 2, // px
@@ -77,6 +98,10 @@ export default {
     observer: null, // ResizeObserver
   }),
   computed: {
+    percentage() {
+      return this.isReady ? this.currentTime / this.duration : 0
+    },
+
     peakCount() {
       return Math.floor(
         (this.waveformWidth - this.barGap) / (this.barWidth + this.barGap)
