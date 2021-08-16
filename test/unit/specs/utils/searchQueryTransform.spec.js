@@ -1,3 +1,4 @@
+import clonedeep from 'lodash.clonedeep'
 import {
   filtersToQueryData,
   queryToFilterData,
@@ -114,7 +115,7 @@ describe('searchQueryTransform', () => {
     const result = queryToFilterData(query)
     expect(result).toEqual(filters) // toEqual checks for value equality
   })
-  it('queryToFilterData all filters', () => {
+  it('queryToFilterData all image filters', () => {
     const filters = {
       licenses: [
         { code: 'cc0', name: 'filters.licenses.cc0', checked: true },
@@ -162,7 +163,7 @@ describe('searchQueryTransform', () => {
           name: 'filters.durations.short',
         },
         {
-          checked: false,
+          checked: true,
           code: 'medium',
           name: 'filters.durations.medium',
         },
@@ -198,7 +199,7 @@ describe('searchQueryTransform', () => {
       ],
       audioCategories: [
         {
-          checked: false,
+          checked: true,
           code: 'music',
           name: 'filters.audio-categories.music',
         },
@@ -215,7 +216,7 @@ describe('searchQueryTransform', () => {
       ],
       audioExtensions: [
         {
-          checked: false,
+          checked: true,
           code: 'mp3',
           name: 'filters.audio-extensions.mp3',
         },
@@ -233,11 +234,11 @@ describe('searchQueryTransform', () => {
       audioProviders: [
         {
           checked: true,
-          code: 'animaldiversity',
+          code: 'jamendo',
         },
         {
           checked: true,
-          code: 'brooklynmuseum',
+          code: 'wikimedia',
         },
       ],
       searchBy: [
@@ -246,9 +247,13 @@ describe('searchQueryTransform', () => {
       mature: true,
     }
     const queryString =
-      'http://localhost:8443/search/image?q=cat&license=cc0&license_type=commercial&categories=photograph&extension=jpg&aspect_ratio=tall&size=medium&source=animaldiversity,brooklynmuseum&searchBy=creator&mature=true'
-
-    const result = queryToFilterData(queryString)
+      'http://localhost:8443/search/audio?q=cat&license=cc0&license_type=commercial&categories=music&extension=mp3&duration=medium&source=jamendo,wikimedia&searchBy=creator&mature=true'
+    const testFilters = clonedeep(filters)
+    testFilters.audioProviders = [
+      { code: 'jamendo', checked: true },
+      { code: 'wikimedia', checked: true },
+    ]
+    const result = queryToFilterData(queryString, testFilters)
     expect(result).toEqual(filters) // toEqual checks for value equality
   })
   it('queryStringToQueryData', () => {

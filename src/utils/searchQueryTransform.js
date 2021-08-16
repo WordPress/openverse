@@ -118,24 +118,67 @@ export const queryStringToSearchType = (queryString) => {
 }
 
 /**
+ * `source`, `extensions` and `categories` API parameters correspond
+ * to different filters in different media types:
+ * `source` - audioProviders/imageProviders
+ * `extensions` - audioExtensions/imageExtensions
+ * `categories` - audioCategories/imageCategories
+ * This function sets only filters that are possible for current
+ * media type. Eg., for queryString `search/audio?extensions=ogg`
+ * the `audioExtensions.ogg.checked` is set to true,
+ * but for `search/images?extensions=ogg`, the extensions query parameter
+ * is discarded, because `ogg` is not a valid extension for images.
+ * @param filterParameter
+ * @param parameterFilters
+ * @return {*}
+ */
+const getMediaTypeApiFilters = (filterParameter, parameterFilters) => {
+  if (filterParameter !== '') {
+    const parameterValues = filterParameter.split(',')
+    parameterValues.forEach((parameter) => {
+      let existingParameterIdx = parameterFilters.findIndex(
+        (p) => p.code === parameter
+      )
+      if (existingParameterIdx > -1) {
+        parameterFilters[existingParameterIdx] = {
+          ...parameterFilters[existingParameterIdx],
+          checked: true,
+        }
+      }
+    })
+  }
+  return parameterFilters
+}
+
+/**
  * converts the browser filter query string into the internal filter store data format
  * @param {string} queryString browser filter query string
+ * @param {Object} defaultFilters default filters for testing purposes
  */
-export const queryToFilterData = (queryString) => {
-  const filters = clonedeep(filterData)
-  Object.keys(filterPropertyMappings).forEach((filterDataKey) => {
-    if (['audioProviders', 'imageProviders'].includes(filterDataKey)) {
-      const providerParameter = getParameterByName(
+export const queryToFilterData = (queryString, defaultFilters = null) => {
+  const filters = defaultFilters
+    ? clonedeep(defaultFilters)
+    : clonedeep(filterData)
+  const searchType = queryStringToSearchType(queryString)
+  const filterTypes = getMediaFilterTypes(searchType)
+  const differentFiltersWithSameApiParams = [
+    'audioProviders',
+    'imageProviders',
+    'audioExtensions',
+    'imageExtensions',
+    'audioCategories',
+    'imageCategories',
+  ]
+  filterTypes.forEach((filterDataKey) => {
+    if (differentFiltersWithSameApiParams.includes(filterDataKey)) {
+      const parameter = getParameterByName(
         filterPropertyMappings[filterDataKey],
         queryString
       )
-      filters[filterDataKey] =
-        providerParameter === ''
-          ? []
-          : providerParameter.split(',').map((provider) => ({
-              code: provider,
-              checked: true,
-            }))
+      filters[filterDataKey] = getMediaTypeApiFilters(
+        parameter,
+        filters[filterDataKey]
+      )
     } else if (filterDataKey !== 'mature') {
       const queryDataKey = filterPropertyMappings[filterDataKey]
       parseQueryString(queryString, queryDataKey, filterDataKey, filters)
