@@ -1,6 +1,6 @@
 <template>
   <div
-    class="filters"
+    :class="{ ['filters']: true, ['single']: isSingleFilter }"
     @click="hideLicenseExplanationVisibility()"
     @keyup.enter="hideLicenseExplanationVisibility()"
   >
@@ -46,12 +46,7 @@
             @change="onValueChange"
           />
           <LicenseIcons v-if="filterType === 'licenses'" :license="item.code" />
-          <template v-if="needsTranslation(filterType)">
-            {{ $t(item.name) }}
-          </template>
-          <template v-else>
-            {{ item.name }}
-          </template>
+          {{ itemLabel(item) }}
         </label>
         <img
           v-if="filterType === 'licenses'"
@@ -110,8 +105,12 @@ export default {
     },
   },
   methods: {
-    needsTranslation(filterType) {
-      return !['audioProviders', 'imageProviders'].includes(filterType)
+    itemLabel(item) {
+      return ['audioProviders', 'imageProviders'].includes(
+        this.$props.filterType
+      )
+        ? item.name
+        : this.$t(item.name)
     },
     onValueChange(e) {
       this.$emit('filterChanged', {

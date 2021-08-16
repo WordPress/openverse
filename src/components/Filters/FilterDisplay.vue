@@ -1,8 +1,8 @@
 <template>
   <div class="filter-display" aria-live="polite">
-    <span v-if="isAnyFilterApplied" class="caption has-text-weight-semibold">
-      {{ $t('filters.filter-by') }}</span
-    >
+    <span v-if="isAnyFilterApplied" class="caption font-semibold">{{
+      $t('filters.filter-by')
+    }}</span>
     <FilterTag
       v-for="filter in appliedFilterTags"
       :key="filter.code"
