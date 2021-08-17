@@ -17,7 +17,7 @@
         x="0"
         y="0"
         :width="progressBarWidth"
-        height="1.5"
+        height="100%"
       />
       <rect
         v-for="(peak, index) in normalizedPeaks"
@@ -103,6 +103,7 @@ export default {
   data: () => ({
     barWidth: 2, // px
     barGap: 2, // px
+    timestampSpace: 0.5, // % of bar height
 
     /**
      * the position of the graph that the user is hovering over to seek
@@ -131,8 +132,11 @@ export default {
       return this.peaks
     },
 
+    viewBoxHeight() {
+      return 1 + this.timestampSpace
+    },
     viewBox() {
-      return `0 0 ${this.waveformWidth} 1.5`
+      return `0 0 ${this.waveformWidth} ${this.viewBoxHeight}`
     },
 
     progressBarWidth() {
@@ -165,7 +169,7 @@ export default {
       return index * this.barWidth + (index + 1) * this.barGap
     },
     spaceAbove(peak) {
-      return 1.5 - peak
+      return this.viewBoxHeight - peak
     },
 
     updateWaveformWidth() {
