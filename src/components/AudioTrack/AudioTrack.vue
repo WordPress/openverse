@@ -120,12 +120,12 @@ export default {
         this.updateTime()
       }
     },
-    setPlayerState(isPlaying) {
+    async setPlayerState(isPlaying) {
       if (isPlaying) {
-        this.player.play()
+        await this.player.play()
         window.requestAnimationFrame(this.syncTime)
       } else {
-        this.player.pause()
+        await this.player.pause()
       }
     },
 
