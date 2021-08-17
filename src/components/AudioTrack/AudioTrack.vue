@@ -3,7 +3,8 @@
     <div class="waveform-section bg-dark-charcoal-04">
       <Waveform
         class="h-30 w-full"
-        :percentage="progress"
+        :current-time="currentTime"
+        :duration="duration"
         :peaks="audio.peaks"
         @sought="updateSeekbar"
       />
@@ -62,8 +63,9 @@ export default {
     },
   },
   data: () => ({
-    progress: 0,
     player: null, // HTMLAudioElement
+    currentTime: 0,
+    duration: 0,
     isPlaying: false,
   }),
   computed: {
