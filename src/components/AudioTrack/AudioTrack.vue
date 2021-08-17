@@ -3,15 +3,21 @@
     <div class="waveform-section bg-dark-charcoal-04">
       <Waveform
         class="h-30 w-full"
+        :is-ready="isReady"
         :current-time="currentTime"
         :duration="duration"
         :peaks="audio.peaks"
-        @sought="updateSeekbar"
+        @seeked="setPosition"
       />
     </div>
-    <div class="info-section flex flex-row items-end">
-      <PlayPause :is-playing="isPlaying" @toggle="setPlayState" />
-      <div class="info ml-6">
+    <div class="info-section flex flex-row">
+      <PlayPause
+        class="self-start flex-shrink-0"
+        :is-playing="isPlaying"
+        :disabled="!isReady"
+        @toggle="setPlayerState"
+      />
+      <div class="info ml-6 self-end">
         <i18n path="audio-track.title" tag="p">
           <template #title>
             <strong>{{ audio.title }}</strong>
@@ -37,6 +43,12 @@
       controls
       :src="audio.url"
       crossorigin="anonymous"
+      @loadedmetadata="
+        setIsReady()
+        updateTime()
+      "
+      @play="setIsPlaying(true)"
+      @pause="setIsPlaying(false)"
     />
     <!-- eslint-enable vuejs-accessibility/media-has-caption -->
   </div>
@@ -66,6 +78,8 @@ export default {
     player: null, // HTMLAudioElement
     currentTime: 0,
     duration: 0,
+
+    isReady: false,
     isPlaying: false,
   }),
   computed: {
@@ -75,51 +89,52 @@ export default {
      * @returns {string} the duration in a human-friendly format
      */
     durationFmt() {
-      const seconds = (this.audio.duration ?? 0) / 1000 // ms -> s
+      const seconds = (this.audio.duration ?? 0) / 1e3 // ms -> s
       const date = new Date(0)
       date.setSeconds(seconds)
       return date.toISOString().substr(11, 8).replace(/^00:/, '')
-    },
-  },
-  watch: {
-    isPlaying(toVal) {
-      if (!toVal) {
-        return // no animation when playback is paused
-      }
-
-      // smoothly animate the progressbar on the waveform component
-      const loop = () => {
-        this.updateProgressBar()
-        if (this.isPlaying) {
-          // still playing, keep looping
-          window.requestAnimationFrame(loop)
-        }
-      }
-      window.requestAnimationFrame(loop)
     },
   },
   mounted() {
     this.player = this.$refs.audio
   },
   methods: {
-    updateProgressBar() {
-      const elapsed = this.player.currentTime
-      const total = this.player.duration
-      this.progress = elapsed / total
+    updateTime() {
+      this.currentTime = this.player.currentTime
+      this.duration = this.player.duration
     },
-    updateSeekbar(percentage) {
+    syncTime() {
+      if (this.player) {
+        this.updateTime()
+      }
+      if (this.isPlaying) {
+        // still playing, keep looping
+        window.requestAnimationFrame(this.syncTime)
+      }
+    },
+
+    // Subcomponent events
+    setPosition(percentage) {
       if (this.player.duration) {
         this.player.currentTime = this.player.duration * percentage
+        this.updateTime()
       }
-      this.updateProgressBar()
     },
-    setPlayState(isPlaying) {
-      this.isPlaying = isPlaying
-      if (this.isPlaying) {
+    setPlayerState(isPlaying) {
+      if (isPlaying) {
         this.player.play()
+        window.requestAnimationFrame(this.syncTime)
       } else {
         this.player.pause()
       }
+    },
+
+    // HTMLAudioElement events
+    setIsReady() {
+      this.isReady = true
+    },
+    setIsPlaying(isPlaying) {
+      this.isPlaying = isPlaying
     },
   },
 }
