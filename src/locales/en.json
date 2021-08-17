@@ -571,5 +571,8 @@
   },
   "waveform": {
     "loading": "Loading..."
+  },
+  "audio-track": {
+    "title": "{title} by {creator}"
   }
 }

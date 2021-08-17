@@ -11,14 +11,18 @@
     <div class="info-section flex flex-row items-end">
       <PlayPause :is-playing="isPlaying" @toggle="setPlayState" />
       <div class="info ml-6">
-        <p>
-          <strong>{{ audio.title }}</strong> by
-          <a
-            class="text-pink hover:text-pink hover:underline"
-            :href="audio.creatorUrl"
-            >{{ audio.creator }}</a
-          >
-        </p>
+        <i18n path="audio-track.title" tag="p">
+          <template #title>
+            <strong>{{ audio.title }}</strong>
+          </template>
+          <template #creator>
+            <a
+              class="text-pink hover:text-pink hover:underline"
+              :href="audio.creatorUrl"
+              >{{ audio.creator }}</a
+            >
+          </template>
+        </i18n>
         <p class="-mt-2">
           {{ durationFmt }}
         </p>
