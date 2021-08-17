@@ -75,6 +75,16 @@ export const legacySourceMap = {
       }
     },
   },
+  'Images of Empowerment': {
+    image(search) {
+      return {
+        url: 'https://www.imagesofempowerment.org/',
+        query: {
+          s: search.q,
+        },
+      }
+    },
+  },
   Jamendo: {
     // https://www.jamendo.com/legal/creative-commons
     audio(search) {
