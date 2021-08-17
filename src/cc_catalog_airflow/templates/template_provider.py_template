@@ -222,7 +222,6 @@ def _extract_item_data(media_data):
     - genre (list of genres)
     - audio_set (JSON field)
     - alternative audio fields
-
     """
     # TODO: remove the code for saving json files from the final script
 
