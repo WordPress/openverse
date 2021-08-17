@@ -1,6 +1,6 @@
 <template>
   <button
-    class="bg-dark-charcoal h-16 w-16 flex items-center justify-center"
+    class="bg-dark-charcoal h-16 w-16 flex items-center justify-center disabled:opacity-70"
     @click="toggle"
   >
     <svg
