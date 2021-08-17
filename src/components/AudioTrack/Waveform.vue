@@ -1,7 +1,7 @@
 <template>
   <div
     ref="waveform"
-    class="waveform bg-dark-charcoal-04"
+    class="waveform relative bg-dark-charcoal-04 overflow-x-hidden"
     @click="setProgress"
     @mousemove="setPreviewProgress"
     @mouseleave="clearPreviewProgress"
@@ -18,7 +18,7 @@
         x="0"
         y="0"
         :width="progressBarWidth"
-        height="1"
+        height="1.5"
       />
       <rect
         v-for="(peak, index) in normalizedPeaks"
@@ -36,6 +36,20 @@
         :height="peak"
       />
     </svg>
+
+    <div
+      class="current absolute top-2 font-bold text-sm bg-yellow z-10 pr-1 transform -translate-x-full pointer-events-none"
+      :style="{ '--current-time-left': `${progressBarWidth}px` }"
+    >
+      {{ timeFmt(currentTime) }}
+    </div>
+    <div
+      v-if="previewPercentage"
+      class="seek absolute top-2 font-bold text-sm pr-1 transform -translate-x-full pointer-events-none"
+      :style="{ '--seek-time-left': `${previewBarWidth}px` }"
+    >
+      {{ timeFmt(previewPercentage * duration) }}
+    </div>
   </div>
 </template>
 
@@ -118,7 +132,7 @@ export default {
     },
 
     viewBox() {
-      return `0 0 ${this.waveformWidth} 1`
+      return `0 0 ${this.waveformWidth} 1.5`
     },
     progressBarWidth() {
       return this.waveformWidth * this.percentage
@@ -141,11 +155,21 @@ export default {
     this.observer.disconnect()
   },
   methods: {
+    /**
+     * Format the time as hh:mm:ss, dropping the hour part if it is zero.
+     * @returns {string} the duration in a human-friendly format
+     */
+    timeFmt(seconds) {
+      const date = new Date(0)
+      date.setSeconds(seconds)
+      return date.toISOString().substr(11, 8).replace(/^00:/, '')
+    },
+
     spaceBefore(index = this.peakCount) {
       return index * this.barWidth + (index + 1) * this.barGap
     },
     spaceAbove(peak) {
-      return 1 - peak
+      return 1.5 - peak
     },
     updateWaveformWidth() {
       this.waveformWidth = this.$el.clientWidth
@@ -167,3 +191,13 @@ export default {
   },
 }
 </script>
+
+<style scoped lang="css">
+.current {
+  left: var(--current-time-left);
+}
+
+.seek {
+  left: var(--seek-time-left);
+}
+</style>
