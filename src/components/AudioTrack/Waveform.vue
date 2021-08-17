@@ -2,15 +2,25 @@
   <div
     ref="waveform"
     class="waveform relative bg-dark-charcoal-04 overflow-x-hidden"
+    tabIndex="0"
+    role="slider"
+    aria-label="audio seek bar"
+    aria-orientation="horizontal"
+    aria-valuemin="0"
+    :aria-valuemax="duration"
+    :aria-valuenow="currentTime"
+    :aria-valuetext="`${currentTime / 60} seconds`"
+    @keydown.arrow-left="seekJumpBackward"
+    @keydown.arrow-right="seekJumpForward"
+    @mousemove="setSeekProgress"
+    @mouseleave="clearSeekProgress"
+    @click="seek"
   >
     <svg
       class="w-full h-full"
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="viewBox"
       preserveAspectRatio="none"
-      @mousemove="setSeekProgress"
-      @mouseleave="clearSeekProgress"
-      @click="seek"
     >
       <rect
         class="fill-yellow"
@@ -202,6 +212,12 @@ export default {
     },
     seek(event) {
       this.$emit('seeked', this.getPositionPercentage(event))
+    },
+    seekJumpBackward() {
+      this.$emit('jumpSeekedBackward')
+    },
+    seekJumpForward() {
+      this.$emit('jumpSeekedForward')
     },
   },
 }
