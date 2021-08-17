@@ -2,9 +2,6 @@
   <div
     ref="waveform"
     class="waveform relative bg-dark-charcoal-04 overflow-x-hidden"
-    @click="setProgress"
-    @mousemove="setPreviewProgress"
-    @mouseleave="clearPreviewProgress"
   >
     <svg
       class="w-full h-full"
@@ -62,7 +59,7 @@
 </template>
 
 <script>
-import { upsampleArray, downsampleArray } from '~/utils/resampling.js'
+import { downsampleArray, upsampleArray } from '~/utils/resampling.js'
 
 /**
  * Renders an SVG representation of the waveform given a list of heights for the
@@ -137,6 +134,7 @@ export default {
     viewBox() {
       return `0 0 ${this.waveformWidth} 1.5`
     },
+
     progressBarWidth() {
       return this.waveformWidth * this.percentage
     },
@@ -169,16 +167,15 @@ export default {
     spaceAbove(peak) {
       return 1.5 - peak
     },
+
     updateWaveformWidth() {
       this.waveformWidth = this.$el.clientWidth
     },
-    getPosition(event) {
-      const startPosition = this.$refs.waveform.getBoundingClientRect().left
-      const newPosition = event.clientX
-      return (newPosition - startPosition) / this.waveformWidth
-    },
-    setProgress(event) {
-      this.percentage = this.getPosition(event)
+
+    // Event handlers
+    getPositionPercentage(event) {
+      const x = event.clientX - this.$el.getBoundingClientRect().x
+      return x / this.waveformWidth
     },
     setSeekProgress(event) {
       this.seekPercentage = this.getPositionPercentage(event)
