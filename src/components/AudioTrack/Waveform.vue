@@ -11,6 +11,8 @@
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="viewBox"
       preserveAspectRatio="none"
+      @mousemove="setSeekProgress"
+      @mouseleave="clearSeekProgress"
       @click="seek"
     >
       <rect
@@ -26,7 +28,7 @@
         class="transform origin-bottom transition-transform duration-500"
         :class="[
           isReady ? 'scale-y-100' : 'scale-y-0',
-          spaceBefore(index) < previewBarWidth
+          spaceBefore(index) < seekBarWidth
             ? 'fill-black'
             : 'fill-dark-charcoal-20',
         ]"
@@ -50,11 +52,11 @@
       {{ timeFmt(currentTime) }}
     </div>
     <div
-      v-if="previewPercentage"
+      v-if="seekPercentage"
       class="seek absolute top-2 font-bold text-sm pr-1 transform -translate-x-full pointer-events-none"
-      :style="{ '--seek-time-left': `${previewBarWidth}px` }"
+      :style="{ '--seek-time-left': `${seekBarWidth}px` }"
     >
-      {{ timeFmt(previewPercentage * duration) }}
+      {{ timeFmt(seekPercentage * duration) }}
     </div>
   </div>
 </template>
@@ -106,14 +108,9 @@ export default {
     barGap: 2, // px
 
     /**
-     * the percentage of the graph that has been played; This represents the
-     * seekbar of the audio player. A number from 1-100.
+     * the position of the graph that the user is hovering over to seek
      */
-    percentage: 0,
-    /**
-     * the position of the graph that the user is hovering over.
-     */
-    previewPercentage: null,
+    seekPercentage: null,
 
     waveformWidth: 100, // dummy start value
     observer: null, // ResizeObserver
@@ -143,13 +140,8 @@ export default {
     progressBarWidth() {
       return this.waveformWidth * this.percentage
     },
-    previewBarWidth() {
-      return this.waveformWidth * (this.previewPercentage ?? this.percentage)
-    },
-    widestWidth() {
-      return this.previewBarWidth > this.progressBarWidth
-        ? this.previewBarWidth
-        : this.progressBarWidth
+    seekBarWidth() {
+      return this.waveformWidth * (this.seekPercentage ?? this.percentage)
     },
   },
   async mounted() {
@@ -188,11 +180,11 @@ export default {
     setProgress(event) {
       this.percentage = this.getPosition(event)
     },
-    setPreviewProgress(event) {
-      this.previewPercentage = this.getPosition(event)
+    setSeekProgress(event) {
+      this.seekPercentage = this.getPositionPercentage(event)
     },
-    clearPreviewProgress() {
-      this.previewPercentage = null
+    clearSeekProgress() {
+      this.seekPercentage = null
     },
   },
 }
