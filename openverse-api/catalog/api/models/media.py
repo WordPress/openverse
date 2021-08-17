@@ -103,6 +103,12 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
         """
         ordering = ['-created_on']
         abstract = True
+        constraints = [
+            models.UniqueConstraint(
+                fields=['foreign_identifier', 'provider'],
+                name='unique_provider_%(class)s'  # populated by concrete model
+            ),
+        ]
 
 
 class AbstractMediaReport(models.Model):

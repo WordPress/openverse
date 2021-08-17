@@ -17,7 +17,6 @@ class IdentifierMixin(models.Model):
         help_text="Our unique identifier for an open-licensed work."
     )
     foreign_identifier = models.CharField(
-        unique=True,
         max_length=1000,
         blank=True,
         null=True,
