@@ -186,6 +186,9 @@ export default {
     clearSeekProgress() {
       this.seekPercentage = null
     },
+    seek(event) {
+      this.$emit('seeked', this.getPositionPercentage(event))
+    },
   },
 }
 </script>
