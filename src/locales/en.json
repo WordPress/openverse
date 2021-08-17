@@ -568,5 +568,8 @@
     "firefox": "Firefox",
     "opera": "Opera",
     "edge": "Edge"
+  },
+  "waveform": {
+    "loading": "Loading..."
   }
 }

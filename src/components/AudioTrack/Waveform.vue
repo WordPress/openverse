@@ -38,6 +38,12 @@
     </svg>
 
     <div
+      v-if="!isReady"
+      class="absolute inset-x-0 inset-y-0 flex items-center justify-center loading font-bold text-sm"
+    >
+      {{ $t('waveform.loading') }}
+    </div>
+    <div
       class="current absolute top-2 font-bold text-sm bg-yellow z-10 pr-1 transform -translate-x-full pointer-events-none"
       :style="{ '--current-time-left': `${progressBarWidth}px` }"
     >

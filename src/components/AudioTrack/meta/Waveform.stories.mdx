@@ -84,3 +84,19 @@ The waveform always takes the height and width of its container.
 
 Thus the `barWidth` and `barGap` will be maintained even in the case of
 horizontal scaling.
+
+## Loading state
+
+The waveform bars are set to zero height when loading. They will animate up to
+their actual height when the `isReady` prop is set to `true`.
+
+<Canvas>
+  <Story
+    name="Loading"
+    args={{
+      isReady: false,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
