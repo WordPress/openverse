@@ -6,4 +6,5 @@
 * text eol=lf
 
 *.png binary
+*.PNG binary
 *.ttf binary
