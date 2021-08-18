@@ -214,9 +214,11 @@ export default {
       this.$emit('seeked', this.getPositionPercentage(event))
     },
     seekJumpBackward() {
+      this.clearSeekProgress()
       this.$emit('jumpSeekedBackward')
     },
     seekJumpForward() {
+      this.clearSeekProgress()
       this.$emit('jumpSeekedForward')
     },
   },
