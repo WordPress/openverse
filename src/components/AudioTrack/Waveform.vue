@@ -9,7 +9,7 @@
     aria-valuemin="0"
     :aria-valuemax="duration"
     :aria-valuenow="currentTime"
-    :aria-valuetext="`${currentTime / 60} seconds`"
+    :aria-valuetext="`${timeFmt(currentTime)} seconds`"
     @keydown.arrow-left="seekJumpBackward"
     @keydown.arrow-right="seekJumpForward"
     @mousemove="setSeekProgress"
