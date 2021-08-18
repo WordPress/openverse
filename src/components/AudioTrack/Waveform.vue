@@ -43,14 +43,14 @@
       {{ $t('waveform.loading') }}
     </div>
     <div
-      class="current absolute top-2 font-bold text-sm bg-yellow z-10 pr-1 transform -translate-x-full pointer-events-none"
+      class="current absolute top-1 font-bold text-sm bg-yellow z-10 pr-1 transform -translate-x-full pointer-events-none"
       :style="{ '--current-time-left': `${progressBarWidth}px` }"
     >
       {{ timeFmt(currentTime) }}
     </div>
     <div
       v-if="seekPercentage"
-      class="seek absolute top-2 font-bold text-sm pr-1 transform -translate-x-full pointer-events-none"
+      class="seek absolute top-1 font-bold text-sm pr-1 transform -translate-x-full pointer-events-none"
       :style="{ '--seek-time-left': `${seekBarWidth}px` }"
     >
       {{ timeFmt(seekPercentage * duration) }}
@@ -103,7 +103,7 @@ export default {
   data: () => ({
     barWidth: 2, // px
     barGap: 2, // px
-    timestampSpace: 0.5, // % of bar height
+    timestampSpace: 0.33, // % of bar height
 
     /**
      * the position of the graph that the user is hovering over to seek
