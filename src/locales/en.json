@@ -574,5 +574,9 @@
   },
   "audio-track": {
     "title": "{title} by {creator}"
+  },
+  "play-pause": {
+    "play": "Play",
+    "pause": "Pause"
   }
 }
