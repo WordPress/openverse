@@ -2,18 +2,21 @@
   <!-- Copied and modified from Vuetensils to match the existing bulma implementation -->
   <!-- https://github.com/AustinGil/vuetensils/blob/production/src/components/VDropdown/VDropdown.vue -->
   <div
-    :class="['navbar-item has-dropdown is-hoverable', classes.root]"
+    class="navbar-item has-dropdown is-hoverable"
     @mouseenter="isHovered = true"
     @mouseleave="isHovered = false"
     @focus="isFocused = true"
     @blur="isFocused = false"
     @focusout="onFocusout"
   >
-    <a
+    <div
       :aria-expanded="!!isHovered || !!isFocused"
       aria-haspopup="true"
-      :class="['navbar-link is-arrowless', classes.trigger]"
-      href="#"
+      class="navbar-link is-arrowless"
+      role="button"
+      tabindex="0"
+      @keydown.enter="isFocused = !isFocused"
+      @keydown.space.prevent="isFocused = !isFocused"
       @click="isFocused = !isFocused"
       @focus="isFocused = true"
     >
@@ -21,7 +24,7 @@
         {{ text }}
         <i class="icon caret-down" />
       </slot>
-    </a>
+    </div>
 
     <div
       class="navbar-dropdown"
@@ -46,34 +49,11 @@ const Dropdown = {
   name: 'Dropdown',
   props: {
     /**
-     * The toggle button text.
+     * The trigger element text.
      */
     text: {
       type: String,
       default: '',
-    },
-    /**
-     * Where the content should be placed in relation to the button.
-     *
-     * Options: 'bottom', 'top'
-     */
-    position: {
-      type: String,
-      default: 'bottom',
-      validator(value) {
-        return ['top', 'bottom'].includes(value)
-      },
-    },
-    /**
-     * The transition name.
-     */
-    transition: {
-      type: String,
-      default: '',
-    },
-    classes: {
-      type: Object,
-      default: () => ({}),
     },
   },
   data: () => ({
