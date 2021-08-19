@@ -55,6 +55,12 @@
     >
       {{ timeFmt(seekPercentage * duration) }}
     </div>
+    <div
+      v-if="showDuration"
+      class="duration absolute top-1 right-0 px-1 font-bold text-sm pointer-events-none"
+    >
+      {{ timeFmt(duration) }}
+    </div>
   </div>
 </template>
 
@@ -98,6 +104,13 @@ export default {
     duration: {
       type: Number,
       default: 0,
+    },
+    /**
+     * whether to show the duration of the audio at the ending edge
+     */
+    showDuration: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({
@@ -201,5 +214,10 @@ export default {
 
 .seek {
   left: var(--seek-time-left);
+}
+
+.duration {
+  /* opaque equivalent of dark-charcoal-04 on top of white */
+  background-color: rgb(247, 246, 247);
 }
 </style>
