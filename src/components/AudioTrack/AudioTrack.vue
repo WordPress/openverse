@@ -1,6 +1,6 @@
 <template>
   <div class="audio-track">
-    <div class="waveform-section bg-dark-charcoal-04">
+    <div class="waveform-section">
       <Waveform
         class="h-30 w-full"
         :is-ready="isReady"
