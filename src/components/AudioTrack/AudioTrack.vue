@@ -1,6 +1,13 @@
 <template>
   <div class="audio-track">
-    <div class="waveform-section">
+    <div class="waveform-section flex flex-row gap-2">
+      <PlayPause
+        v-if="isCompact"
+        class="flex-shrink-0"
+        :is-playing="isPlaying"
+        :disabled="!isReady"
+        @toggle="setPlayerState"
+      />
       <Waveform
         :class="isCompact ? 'h-20' : 'h-30'"
         :is-ready="isReady"
