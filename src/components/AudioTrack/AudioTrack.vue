@@ -10,14 +10,14 @@
         @seeked="setPosition"
       />
     </div>
-    <div class="info-section flex flex-row">
+    <div class="info-section flex flex-row gap-6">
       <PlayPause
         class="self-start flex-shrink-0"
         :is-playing="isPlaying"
         :disabled="!isReady"
         @toggle="setPlayerState"
       />
-      <div class="info ml-6 self-end">
+      <div class="info self-end">
         <i18n path="audio-track.title" tag="p">
           <template #title>
             <strong>{{ audio.title }}</strong>
