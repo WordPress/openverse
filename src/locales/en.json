@@ -568,5 +568,11 @@
     "firefox": "Firefox",
     "opera": "Opera",
     "edge": "Edge"
+  },
+  "waveform": {
+    "loading": "Loading..."
+  },
+  "audio-track": {
+    "title": "{title} by {creator}"
   }
 }

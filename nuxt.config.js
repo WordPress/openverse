@@ -183,4 +183,25 @@ export default {
     // https://github.com/nuxt-community/tailwindcss-module/issues/114#issuecomment-698885369
     configPath: '~~/tailwind.config.js',
   },
+  storybook: {
+    port: 6006, // standard port for Storybook
+    stories: ['~/**/*.stories.@(mdx|js)'],
+    addons: [
+      {
+        name: '@storybook/addon-essentials',
+        options: {
+          backgrounds: false,
+          viewport: false,
+          toolbars: false,
+        },
+      },
+    ],
+    parameters: {
+      options: {
+        storySort: {
+          order: ['Introduction', ['Openverse UI']],
+        },
+      },
+    },
+  },
 }

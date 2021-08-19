@@ -17,6 +17,11 @@ module.exports = {
       'dark-slate-blue': '#3c5c99',
       'trans-blue': '#3e58e1',
 
+      // Brand
+      yellow: '#ffe033',
+      'dark-charcoal': '#30272e',
+      pink: '#c52b9b',
+
       // Grayscale
       black: 'black',
       'dark-gray': '#767676', // rgb(118, 118, 188)
@@ -24,10 +29,15 @@ module.exports = {
       'light-gray': '#d8d8d8', // rgb(216, 216, 216)
       white: 'white',
 
+      // Semi-transparent
+      'dark-charcoal-04': 'rgba(48, 39, 46, 0.04)',
+      'dark-charcoal-20': 'rgba(48, 39, 46, 0.2)',
+
       // Special keywords
       tx: 'transparent',
       curr: 'currentColor',
     },
+    fill: (theme) => theme('colors'),
     spacing: {
       // Constants
       px: '1px',
@@ -44,6 +54,7 @@ module.exports = {
       10: '2.50rem',
       12: '3.00rem',
       16: '4.00rem',
+      20: '5.00rem',
       24: '6.00rem',
       30: '7.50rem',
     },
@@ -89,7 +100,9 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      opacity: ['disabled'],
+    },
   },
   plugins: [],
 }

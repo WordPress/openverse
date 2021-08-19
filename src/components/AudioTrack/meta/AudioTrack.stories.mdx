@@ -1,0 +1,43 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import AudioTrack from '~/components/AudioTrack/AudioTrack.vue'
+
+import waveform from './waveform.json'
+
+<Meta title="Components/Audio track" components={AudioTrack} />
+
+# Audio track
+
+<Description of={AudioTrack} />
+
+<ArgsTable of={AudioTrack} />
+
+export const Template = (args, { argTypes }) => ({
+  template: `<AudioTrack v-bind="$props" v-on="$props"/>`,
+  props: Object.keys(argTypes),
+})
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      audio: {
+        title: 'Eine kleine Nachtmusik',
+        url:
+          'https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg',
+        creator: 'Wolfgang Amadeus Mozart',
+        creatorUrl: 'https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart',
+        duration: 355e3,
+        peaks: waveform.points,
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
