@@ -1,5 +1,18 @@
 <template>
   <div class="audio-track">
+    <!-- Only visible in compact player -->
+    <div v-if="isCompact" class="info-section flex justify-between">
+      <i18n path="audio-track.title" tag="p">
+        <template #title>
+          <NuxtLink to="#" class="text-pink hover:text-pink hover:underline">
+            {{ audio.title }}</NuxtLink
+          >
+        </template>
+        <template #creator>{{ audio.creator }}</template>
+      </i18n>
+      {{ audio.category }}
+    </div>
+
     <div class="waveform-section flex flex-row gap-2">
       <PlayPause
         v-if="isCompact"
@@ -18,7 +31,9 @@
         @seeked="setPosition"
       />
     </div>
-    <div class="info-section flex flex-row gap-6">
+
+    <!-- Only visible in expanded player -->
+    <div v-if="!isCompact" class="info-section flex flex-row gap-6">
       <PlayPause
         class="self-start flex-shrink-0"
         :is-playing="isPlaying"
