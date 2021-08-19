@@ -14,10 +14,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the stack
         run: |
-          cd ./src/cc_catalog_airflow
+          cd ./openverse_catalog
           cp env.template .env
           docker-compose up -d
       - name: Test
         run: |
           sleep 10
-          docker exec cc_catalog_airflow_webserver_1 /usr/local/airflow/.local/bin/pytest
+          docker exec openverse_catalog_webserver_1 /usr/local/airflow/.local/bin/pytest

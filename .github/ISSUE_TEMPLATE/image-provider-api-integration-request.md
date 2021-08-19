@@ -36,14 +36,14 @@ No development should be done on a Provider API Script until the following info 
 ## General Recommendations for implementation
 <!-- modify this section if necessary -->
 
-- The script should be in the `src/cc_catalog_airflow/dags/provider_api_scripts/` directory.
+- The script should be in the `openverse_catalog/dags/provider_api_scripts/` directory.
 - The script should have a test suite in the same directory.
 - The script must use the `ImageStore` class (Import this from
-  `src/cc_catalog_airflow/dags/provider_api_scripts/common/storage/image.py`).
+  `openverse_catalog/dags/provider_api_scripts/common/storage/image.py`).
 - The script should use the `DelayedRequester` class (Import this from
-  `src/cc_catalog_airflow/dags/provider_api_scripts/common/requester.py`).
+  `openverse_catalog/dags/provider_api_scripts/common/requester.py`).
 - The script must not use anything from
-  `src/cc_catalog_airflow/dags/provider_api_scripts/modules/etlMods.py`, since
+  `openverse_catalog/dags/provider_api_scripts/modules/etlMods.py`, since
   that module is deprecated.
 - If the provider API has can be queried by 'upload date' or something similar,
   the script should take a `--date` parameter when run as a script, giving the
@@ -66,10 +66,10 @@ No development should be done on a Provider API Script until the following info 
 
 For example Provider API Scripts and accompanying test suites, please see
 
-- `src/cc_catalog_airflow/dags/provider_api_scripts/flickr.py` and
-- `src/cc_catalog_airflow/dags/provider_api_scripts/test_flickr.py`, or
-- `src/cc_catalog_airflow/dags/provider_api_scripts/wikimedia_commons.py` and
-- `src/cc_catalog_airflow/dags/provider_api_scripts/test_wikimedia_commons.py`.
+- `openverse_catalog/dags/provider_api_scripts/flickr.py` and
+- `openverse_catalog/dags/provider_api_scripts/test_flickr.py`, or
+- `openverse_catalog/dags/provider_api_scripts/wikimedia_commons.py` and
+- `openverse_catalog/dags/provider_api_scripts/test_wikimedia_commons.py`.
 
 ## Implementation
 <!-- Replace the [ ] with [x] to check the box. -->

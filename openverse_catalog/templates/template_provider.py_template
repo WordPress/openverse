@@ -1,0 +1,393 @@
+"""
+Content Provider:       {provider_title_case}
+
+ETL Process:            Use the API to identify all openly licensed media.
+
+Output:                 TSV file containing the media metadata.
+
+Notes:                  {{API URL}}
+                        No rate limit specified.
+"""
+import json
+import os
+import logging
+from pathlib import Path
+from urllib.parse import urlparse
+
+from common.licenses.licenses import get_license_info, get_license_info_from_license_pair
+from common.requester import DelayedRequester
+from common.storage.image import ImageStore
+from common.storage.audio import AudioStore
+from util.loader import provider_details as prov
+
+"""
+This is template for an API script. Broadly, there are several steps:
+1. Download batches of information for the query for openly-licensed media
+2. For each item in batch, extract the necessary meta data.
+3. Save the metadata using ImageStore.add_item or AudioStore.add_item methods
+
+Try to write small functions that are easier to test. Don't forget to
+write tests, too!
+
+You can test your script during development by running it:
+`python -m <your_script_name>.py`
+
+To extract information from html, you can use lxml.html.
+Recommended examples:
+- For scripts requiring a start date: `wikimedia_commons.py`
+- For scripts without a start date: `science_museum.py`.
+
+ImageStore/AudioStore are the classes that clean the media metadata
+and save it to the disk in form of a tsv file.
+They will save the file to '/tmp' folder on your computer when you run
+this script as is
+"""
+
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
+LIMIT = 0  # number of items per page in API response
+DELAY = 1  # in seconds
+RETRIES = 3
+HOST = '{{host URL}}'
+ENDPOINT = f'https://{HOST}/{{API PATH}}'
+# TODO: Add Provider constant to the
+#  `openverse_catalog/dags/util/loader/provider_details.py` file
+PROVIDER = prov.{provider_upper_case}_DEFAULT_PROVIDER
+# TODO: Add the API key to `openverse_catalog/env.template`
+#  Do not hardcode your API key value!
+API_KEY = os.getenv("{provider_upper_case}", "nokeyprovided")
+
+# TODO: Add any headers necessary for API request
+HEADERS = {
+    "Accept": "application/json",
+    "api_key": API_KEY,
+}
+# TODO: Add parameters that are necessary for each API request
+DEFAULT_QUERY_PARAMS = {
+    'format': 'json',
+    'license': 'open-cc-licenses',
+}
+
+delayed_requester = DelayedRequester(DELAY)
+media_store_init
+
+
+saved_json_counter = {
+    'full_response': 0,
+    'empty_response': 0,
+    'full_item': 0,
+    'no_{media_type}_url': 0,
+    'no_foreign_landing_url': 0,
+    'no_license': 0,
+}
+
+
+def check_and_save_json_for_test(name, data):
+    parent = Path(__file__).parent
+    test_resources_path = parent / 'tests' / 'resources' / {provider}
+    if not Path.is_dir(test_resources_path):
+        Path.mkdir(test_resources_path)
+    if saved_json_counter[name] == 0:
+        with open(f"{name}.json", "w+", encoding="utf-8") as outf:
+            json.dump(data, outf, indent=2)
+        saved_json_counter[name] += 1
+
+
+# TODO: Date parameter is necessary for providers with a lot of
+#  content. For others, we simply ingest all of the content
+#  every time.
+def main():
+    """
+    This script pulls the data for a given date from the {provider_title_case},
+    and writes it into a .TSV file to be eventually read
+    into our DB.
+
+    {{ TODO: Remove if date is not used }}
+    Required Arguments:
+
+    date:  Date String in the form YYYY-MM-DD.  This is the date for
+           which running the script will pull data. }}
+    """
+
+    logger.info("Begin: {provider_title_case} script")
+    {media_type}_count = _get_items()
+    {media_type}_store.commit()
+    logger.info(f"Total {media_type}s pulled: {{media_type}_count}")
+    logger.info('Terminated!')
+
+
+def _get_query_params(
+        page_number=0,
+        default_query_params=None,
+):
+    if default_query_params is None:
+        default_query_params = DEFAULT_QUERY_PARAMS
+    query_params = default_query_params.copy()
+    query_params["page"] = str(page_number)
+    return query_params
+
+
+def _get_items():
+    item_count = 0
+    page_number = 0
+    should_continue = True
+    while should_continue:
+        query_params = _get_query_params(page_number=page_number)
+
+        batch_data = _get_batch_json(
+            query_params=query_params
+        )
+        if isinstance(batch_data, list) and len(batch_data) > 0:
+            item_count = _process_item_batch(batch_data)
+            page_number += 1
+        else:
+            should_continue = False
+    return item_count
+
+
+def _get_batch_json(
+        endpoint=ENDPOINT,
+        headers=None,
+        retries=RETRIES,
+        query_params=None
+):
+    if headers is None:
+        headers = HEADERS
+    response_json = delayed_requester.get_response_json(
+        endpoint,
+        retries,
+        query_params,
+        headers=headers
+    )
+    if response_json is None:
+        return None
+    else:
+        data = response_json.get("data")
+        if data:
+            check_and_save_json_for_test('full_response', data)
+        else:
+            check_and_save_json_for_test('empty_response', data)
+        return data
+
+
+def _process_item_batch(items_batch):
+    for item in items_batch:
+        # For testing purposes, you would need to save json data for single
+        # media objects. To make sure that you test edge cases,
+        # we add the code that saves a json file per each condition:
+        # full, and without one of the required properties.
+        # TODO: save the resulting json files (if any) in the
+        #  `provider_api_scripts/tests/resources/<provider_name>` folder
+        # TODO: remove the code for saving json files from the final script
+
+        item_meta_data = _extract_item_data(item)
+        if item_meta_data is None:
+            continue
+        {media_store}.add_item(**item_meta_data)
+    return {media_store}.total_items
+
+
+def _extract_item_data(media_data):
+    """
+    Extract data for individual item
+    You can view the documentation about media parameters in
+    `AudioStore.add_item` or `ImageStore.add_item` method
+    docstrings.
+    Required properties:
+    - foreign_landing_url
+    - image_url / audio_url
+    - item_license
+
+    Optional properties:
+    - foreign_identifier
+    - title
+    - creator
+    - creator_url
+    - thumbnail_url
+    - metadata
+    - tags
+    - watermarked (false by default)
+
+    Optional properties for images:
+    - width
+    - height
+
+    Optional properties for audio:
+    - duration
+    - bit_rate
+    - sample_rate
+    - category
+    - genre (list of genres)
+    - audio_set (JSON field)
+    - alternative audio fields
+    """
+    # TODO: remove the code for saving json files from the final script
+
+    try:
+        foreign_landing_url = media_data["links"][0]["url"]
+    except (TypeError, KeyError, AttributeError):
+        print(f"Found no foreign landing url:")
+        print(f"{json.dumps(media_data, indent=2)}")
+        check_and_save_json_for_test('no_foreign_landing_url', media_data)
+        return None
+    # TODO: Choose correct line for media type and delete the other:
+    # TODO: Delete the unnecessary _get_media_info function
+    # audio_url, duration = _get_audio_info(media_data)
+    # image_url, height, width = _get_image_info(media_data)
+    if {media_type}_url is None:
+        print(f"Found no media url:")
+        print(f"{json.dumps(media_data, indent=2)}")
+        check_and_save_json_for_test('no_{media_type}_url', media_data)
+        return None
+    item_license = _get_license(media_data)
+    if item_license is None:
+        print(f"Found no item license:")
+        print(f"{json.dumps(media_data, indent=2)}")
+        check_and_save_json_for_test('no_license', media_data)
+        return None
+    foreign_identifier = _get_foreign_identifier(media_data)
+    title = _get_title(media_data)
+    creator, creator_url = _get_creator_data(media_data)
+    thumbnail = _get_thumbnail_url(media_data)
+    metadata = _get_metadata(media_data)
+    tags = _get_tags(media_data)
+    check_and_save_json_for_test('full_item', media_data)
+
+    return {
+        'title': title,
+        'creator': creator,
+        'creator_url': creator_url,
+        'foreign_identifier': foreign_identifier,
+        'foreign_landing_url': foreign_landing_url,
+        '{media_type}_url': {media_type}_url,
+        'height': height,
+        'width': width,
+        'thumbnail_url': thumbnail,
+        'license_': item_license.license,
+        'license_version': item_license.version,
+        'meta_data': metadata,
+        'raw_tags': tags
+    }
+
+
+def _get_foreign_identifier(media_data):
+    try:
+        return media_data['some_key'][0]['uid']
+    except(TypeError, IndexError, AttributeError):
+        return None
+
+
+def _get_image_info(media_data):
+    width = media_data.get('width')
+    height = media_data.get('height')
+    image_url = media_data.get('image_url')
+    return image_url, width, height
+
+def _get_audio_info(media_data):
+    duration = media_data.get('duration')
+    audio_url = media_data.get('audio_url')
+    return audio_url, duration
+
+
+def _get_thumbnail_url(media_data):
+    # TODO: Add correct implementation of _get_thumbnail_url
+    return media_data.get('thumbnail', {}).get('url', None)
+
+
+def _get_creator_data(item):
+    # TODO: Add correct implementation of _get_creator_data
+    creator = item.get('creator_key').strip()
+    creator_url = _cleanse_url(
+        item.get('creator_key', {}).get('url')
+    )
+    return creator, creator_url
+
+
+def _get_title(item):
+    # TODO: Add correct implementation of _get_title
+    title = item.get('title')
+    return title
+
+
+def _get_metadata(item):
+    """
+    Metadata may include: description, date created and modified at source,
+    categories, popularity statistics.
+    """
+    # TODO: Add function to extract metadata from the item dictionary
+    #  Do not includes keys without value
+    metadata = {}
+    some_other_key_value = item.get('some_other_key')
+    if some_other_key_value is not None:
+        metadata['some_other_key'] = some_other_key_value
+    return metadata
+
+
+def _get_tags(item):
+    # TODO: Add correct implementation of _get_tags
+    return item.get('tags')
+
+
+def _get_license(item):
+    """
+    To parse the item license, use `get_license_info` function. It
+    returns a namedtuple LicenseInfo(license_url, license, version)
+
+    It requires either:
+    1) a`license_url` (eg. `https://creativecommons.org/licenses/by/4.0/`)
+    or
+    2)`license_name` and `license_version`
+
+    `license_name` can be one of the following:
+    [ 'by', 'by-nc', 'by-nc-nd', 'by-nc-sa', 'by-nd', 'by-sa',
+    'devnations', 'sampling', 'sampling+',
+    'publicdomain', 'pdm', 'cc0' ]
+
+    To view all possible licenses, look at licenses/constants.
+    To validate that the license_name and license_version you get
+    are correct, you can use `get_license_info_from_license_pair(
+    license_name, license_version)`
+    """
+    # TODO: add correct implementation of _get_license
+    # If the provider gives license url:
+    item_license_url = item.get('license_url')
+    item_license = get_license_info(license_url=item_license_url)
+
+    # If the provider gives license name and license version
+    # Note: `publicdomain` does not have version, pass 'N/A' instead
+    item_license_name = item.get('license_name')
+    item_license_version = item.get('license_version')
+    item_license = get_license_info(
+        license_=item_license_name,
+        license_version=item_license_version
+    )
+    if item_license.license is None:
+        return None
+    return item_license
+
+
+def _cleanse_url(url_string):
+    """
+    Check to make sure that a url is valid, and prepend a protocol if needed
+    """
+
+    parse_result = urlparse(url_string)
+
+    if parse_result.netloc == HOST:
+        parse_result = urlparse(url_string, scheme='https')
+    elif not parse_result.scheme:
+        parse_result = urlparse(url_string, scheme='http')
+
+    if parse_result.netloc or parse_result.path:
+        return parse_result.geturl()
+
+
+if __name__ == '__main__':
+    main()
+
+# TODO: Remove unnecessary comments
+# TODO: Lint your code with pycodestyle

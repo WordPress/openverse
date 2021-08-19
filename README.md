@@ -1,6 +1,7 @@
 # Openverse Catalog
 
-This repository contains the methods used to identify over 1.4 billion Creative Commons licensed works. The challenge is that these works are dispersed
+This repository contains the methods used to identify over 1.4 billion Creative
+Commons licensed works. The challenge is that these works are dispersed
 throughout the web and identifying them requires a combination of techniques.
 
 Two approaches are currently in use:
@@ -41,7 +42,7 @@ series of parquet files that contain:
 The steps above are performed in [`ExtractCCLinks.py`][ex_cc_links].
 
 [ccrawl_doc]: https://commoncrawl.org/the-data/get-started/
-[ex_cc_links]: src/ExtractCCLinks.py
+[ex_cc_links]: archive/ExtractCCLinks.py
 
 ## API Data
 
@@ -56,10 +57,14 @@ workflows run `provider_api_scripts` to load and extract media data from the API
 Below are some of the daily DAG workflows that run the corresponding `provider_api_scripts` 
 daily:
 
-- [Met Museum Workflow](src/cc_catalog_airflow/dags/metropolitan_museum_workflow.py) ( [API script](src/cc_catalog_airflow/dags/provider_api_scripts/metropolitan_museum_of_art.py) )
-- [PhyloPic Workflow](src/cc_catalog_airflow/dags/phylopic_workflow.py) ( [API script](src/cc_catalog_airflow/dags/provider_api_scripts/phylopic.py) )
-- [Flickr Workflow](src/cc_catalog_airflow/dags/flickr_workflow.py) ( [API script](src/cc_catalog_airflow/dags/provider_api_scripts/flickr.py) )
-- [Wikimedia Commons Workflow](src/cc_catalog_airflow/dags/wikimedia_workflow.py) ( [Commons API script](src/cc_catalog_airflow/dags/provider_api_scripts/wikimedia_commons.py) )
+- [Met Museum Workflow](openverse_catalog/dags/metropolitan_museum_workflow.py)
+  ( [API script](openverse_catalog/dags/provider_api_scripts/metropolitan_museum_of_art.py) )
+- [PhyloPic Workflow](openverse_catalog/dags/phylopic_workflow.py)
+  ( [API script](openverse_catalog/dags/provider_api_scripts/phylopic.py) )
+- [Flickr Workflow](openverse_catalog/dags/flickr_workflow.py)
+  ( [API script](openverse_catalog/dags/provider_api_scripts/flickr.py) )
+- [Wikimedia Commons Workflow](openverse_catalog/dags/wikimedia_workflow.py)
+  ( [Commons API script](openverse_catalog/dags/provider_api_scripts/wikimedia_commons.py) )
 
 ### Monthly Workflow
 
@@ -68,10 +73,11 @@ month at 16:00 UTC. These workflows are reserved for long-running jobs or
 APIs that do not have date filtering capabilities so the data is reprocessed 
 monthly to keep the catalog updated. The following tasks are performed monthly:
 
-- [Cleveland Museum of Art](src/cc_catalog_airflow/dags/provider_api_scripts/cleveland_museum_of_art.py)
-- [RawPixel](src/cc_catalog_airflow/dags/provider_api_scripts/raw_pixel.py)
-- [Common Crawl Syncer](src/cc_catalog_airflow/dags/commoncrawl_s3_syncer/SyncImageProviders.py)
-
+- [Cleveland Museum of Art](openverse_catalog/dags/provider_api_scripts/cleveland_museum_of_art.py)
+- [RawPixel](openverse_catalog/dags/provider_api_scripts/raw_pixel.py)
+- [Common Crawl Syncer](openverse_catalog/dags/commoncrawl_scripts/commoncrawl_s3_syncer/SyncImageProviders.py)
+- [Brooklyn Museum](openverse_catalog/dags/provider_api_scripts/brooklyn_museum.py)
+- [NYPL](openverse_catalog/dags/provider_api_scripts/nypl.py)
 
 ### DB_Loader
 
@@ -79,24 +85,21 @@ The Airflow DAG defined in [`loader_workflow.py`][db_loader] runs every minute,
 and loads the oldest file which has not been modified in the last 15 minutes
 into the upstream database. It includes some data preprocessing steps.
 
-[db_loader]: src/cc_catalog_airflow/dags/loader_workflow.py
-
-### Other API Jobs
-
-- [Brooklyn Museum](src/cc_catalog_airflow/dags/provider_api_scripts/brooklyn_museum.py)
-- [NYPL](src/cc_catalog_airflow/dags/provider_api_scripts/nypl.py)
+[db_loader]: openverse_catalog/dags/loader_workflow.py
 
 See each provider API script's notes in their respective [handbook][ov-handbook] entry.
+
+[ov-handbook]: https://make.wordpress.org/openverse/handbook/openverse-handbook/
 
 ## Development setup for Airflow and API puller scripts
 
 There are a number of scripts in the directory
-[`src/cc_catalog_airflow/dags/provider_api_scripts`][api_scripts] eventually
+[`openverse_catalog/dags/provider_api_scripts`][api_scripts] eventually
 loaded into a database to be indexed for searching in the Openverse API. These run in a
 different environment than the PySpark portion of the project, and so have their
 own dependency requirements.
 
-[api_scripts]: src/cc_catalog_airflow/dags/provider_api_scripts
+[api_scripts]: openverse_catalog/dags/provider_api_scripts
 
 ### Development setup
 
@@ -104,7 +107,7 @@ You'll need `docker` and `docker-compose` installed on your machine, with
 versions new enough to use version `3` of Docker Compose `.yml` files.
 
 To set up environment variables, navigate to the
-[`src/cc_catalog_airflow`][cc_airflow] directory, and run
+[`openverse_catalog`][cc_airflow] directory, and run
 
 ```shell
 cp env.template .env
@@ -113,7 +116,7 @@ cp env.template .env
 If needed, fill in API keys or other secrets and variables in `.env`. This is
 not needed if you only want to run the tests. There is a
 [`docker-compose.yml`][dockercompose] provided in the
-[`src/cc_catalog_airflow`][cc_airflow] directory, so from that directory, run
+[`openverse_catalog`][cc_airflow] directory, so from that directory, run
 
 ```shell
 docker-compose up -d
@@ -121,24 +124,24 @@ docker-compose up -d
 
 This results, among other things, in the following running containers:
 
-- `cc_catalog_airflow_webserver_1`
-- `cc_catalog_airflow_postgres_1`
+- `openverse_catalog_webserver_1`
+- `openverse_catalog_postgres_1`
 
 and some networking setup so that they can communicate. Note:
 
-- `cc_catalog_airflow_webserver_1` is running the Apache Airflow daemon, and also
+- `openverse_catalog_webserver_1` is running the Apache Airflow daemon, and also
   has a few development tools (e.g., `pytest`) installed.
-- `cc_catalog_airflow_postgres_1` is running PostgreSQL, and is setup with some
+- `openverse_catalog_postgres_1` is running PostgreSQL, and is setup with some
   databases and tables to emulate the production environment. It also provides a
   database for Airflow to store its running state.
 - The directory containing the DAG files, as well as dependencies will be
   mounted to the `usr/local/airflow/dags` directory in the container
-  `cc_catalog_airflow_webserver_1`.
+  `openverse_catalog_webserver_1`.
 
 At this stage, you can run the tests via:
 
 ```shell
-docker exec cc_catalog_airflow_webserver_1 /usr/local/airflow/.local/bin/pytest
+docker exec openverse_catalog_webserver_1 /usr/local/airflow/.local/bin/pytest
 ```
 
 Edits to the source files or tests can be made on your local machine, then tests
@@ -147,14 +150,14 @@ can be run in the container via the above command to see the effects.
 If you'd like, it's possible to login to the webserver container via
 
 ```shell
-docker exec -it cc_catalog_airflow_webserver_1 /bin/bash
+docker exec -it openverse_catalog_webserver_1 /bin/bash
 ```
 
 It's also possible to attach to the running command process of the webserver
 container via
 
 ```shell
-docker attach --sig-proxy=false cc_catalog_airflow_webserver_1
+docker attach --sig-proxy=false openverse_catalog_webserver_1
 ```
 
 Attaching in this manner lets you see the output from both the Airflow webserver
@@ -169,7 +172,7 @@ If you'd like to bring down the containers, run
 docker-compose down
 ```
 
-from the [`src/cc_catalog_airflow`][cc_airflow] directory.
+from the [`openverse_catalog`][cc_airflow] directory.
 
 To reset the test DB (wiping out all databases, schemata, and tables), run
 
@@ -178,8 +181,8 @@ docker-compose down
 rm -r /tmp/docker_postgres_data/
 ```
 
-[dockercompose]: src/cc_catalog_airflow/docker-compose.yml
-[cc_airflow]: src/cc_catalog_airflow/
+[dockercompose]: openverse_catalog/docker-compose.yml
+[cc_airflow]: openverse_catalog/
 
 ## PySpark development setup
 
@@ -203,15 +206,22 @@ python -m pytest tests/test_ExtractCCLinks.py
 
 ## Contributing
 
-Pull requests are welcome! Feel free to [join us on Slack](https://make.wordpress.org/chat/) and discuss the project with the engineers and community memebers on #openverse.
+Pull requests are welcome! Feel free to [join us on Slack][wp_slack] and discuss the
+project with the engineers and community memebers on #openverse.
 
 ## Acknowledgments
 
-Openverse, previously known as CC Search, was conceived and built at [Creative Commons](https://creativecommons.org). We thank them for their commitment to open source and openly licensed content, with particular thanks to original team members @kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar, along with their [community of volunteers](https://opensource.creativecommons.org/community/community-team/).
+Openverse, previously known as CC Search, was conceived and built at
+[Creative Commons][cc]. We thank them for their commitment to open source and openly
+licensed content, with particular thanks to original team members @kgodey, @annatuma,
+@mathemancer, @aldenstpage, @brenoferreira, and @sclachar, along with their
+[community of volunteers][cc_community].
 
 ## License
 
 - [`LICENSE`](LICENSE) (Expat/[MIT][mit] License)
 
 [mit]: http://www.opensource.org/licenses/MIT "The MIT License | Open Source Initiative"
-[ov-handbook]: https://make.wordpress.org/openverse/handbook/openverse-handbook/
+[wp_slack]: https://make.wordpress.org/chat/
+[cc]: https://creativecommons.org
+[cc_community]: https://opensource.creativecommons.org/community/community-team/
