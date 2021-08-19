@@ -90,11 +90,6 @@ export default Dropdown
 </script>
 
 <style lang="scss">
-.navbar-dropdown {
-  /* Override Bulma's hiding of the dropdown so that it is still focusable */
-  display: block;
-}
-
 .navbar-dropdown:not(.visible) {
   /* Accessible VisuallyHidden styles taken from @wordpress/components. Allows these components to be accessibly hidden from sight while still being focusable */
   clip: rect(1px, 1px, 1px, 1px);
