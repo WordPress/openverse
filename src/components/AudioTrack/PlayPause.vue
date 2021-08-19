@@ -4,7 +4,7 @@
     @click="toggle"
   >
     <svg
-      class="text-white h-6 w-6"
+      class="text-white h-8 w-8"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
     >
