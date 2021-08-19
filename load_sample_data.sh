@@ -8,11 +8,20 @@ DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
 
 # Set up API database and upstream
 docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py migrate --noinput"
-# Create a user for integration testing.
+# Create a superuser and a user for integration testing
+# Not that the Python code uses 4 spaces for indentation after the tab that is stripped by <<-
 docker-compose exec -T "$WEB_SERVICE_NAME" /bin/bash -c "python3 manage.py shell <<-EOF
 	from django.contrib.auth.models import User
-	user = User.objects.create_user('continuous_integration', 'test@test.test', 'deploydeploy')
-	user.save()
+	usernames = ['continuous_integration', 'deploy']
+	for username in usernames:
+	    if User.objects.filter(username=username).exists():
+	        print(f'User {username} already exists')
+	        continue
+	    if username == 'deploy':
+	        user = User.objects.create_superuser(username, f'{username}@example.com', 'deploy')
+	    else:
+	        user = User.objects.create_user(username, f'{username}@example.com', 'deploy')
+	    user.save()
 	EOF"
 
 # Migrate analytics
@@ -20,6 +29,7 @@ docker-compose exec -T "$ANALYTICS_SERVICE_NAME" /bin/bash -c "PYTHONPATH=. pipe
 
 # Load content providers
 docker-compose exec -T "$DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF
+	DELETE FROM content_provider;
 	INSERT INTO content_provider (created_on, provider_identifier, provider_name, domain_name, filter_content, media_type) VALUES
 		(now(), 'flickr', 'Flickr', 'https://www.flickr.com', false, 'image'),
 		(now(), 'rawpixel', 'rawpixel', 'https://www.rawpixel.com', false, 'image'),
@@ -30,15 +40,9 @@ docker-compose exec -T "$DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openle
 	EOF"
 
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d openledger <<-EOF
-	CREATE TABLE content_provider(provider_identifier varchar(50), provider_name varchar(250), created_on timestamp, domain_name varchar(500), filter_content boolean, notes text, media_type varchar(80));
-	INSERT INTO content_provider (created_on, provider_identifier, provider_name, domain_name, filter_content, media_type) VALUES
-		(now(), 'flickr', 'Flickr', 'https://www.flickr.com', false, 'image'),
-		(now(), 'rawpixel', 'rawpixel', 'https://www.rawpixel.com', false, 'image'),
-		(now(), 'sciencemuseum', 'Science Museum', 'https://www.sciencemuseum.org.uk', false, 'image'),
-		(now(), 'stocksnap', 'StockSnap', 'https://stocksnap.io', false, 'image'),
-		(now(), 'wikimedia', 'Wikimedia', 'https://commons.wikimedia.org', false, 'image'),
-		(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio');
+		DROP TABLE IF EXISTS content_provider CASCADE;
 	EOF"
+docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "PGPASSWORD=deploy pg_dump -t content_provider -U deploy -d openledger -h db | psql -U deploy -d openledger"
 
 # Load sample data for images
 docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" /bin/bash -c "PGPASSWORD=deploy pg_dump -s -t image -U deploy -d openledger -h db | psql -U deploy -d openledger"
