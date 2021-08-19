@@ -10,7 +10,7 @@
     @focusout="onFocusout"
   >
     <div
-      :aria-expanded="!!isHovered || !!isFocused"
+      :aria-expanded="isHovered || isFocused"
       aria-haspopup="true"
       class="navbar-link is-arrowless"
       role="button"
@@ -20,15 +20,13 @@
       @click="isFocused = !isFocused"
       @focus="isFocused = true"
     >
-      <slot name="trigger">
-        {{ text }}
-        <i class="icon caret-down" />
-      </slot>
+      {{ text }}
+      <i class="icon caret-down" />
     </div>
 
     <div
       class="navbar-dropdown"
-      :class="{ visible: !!isHovered || !!isFocused }"
+      :class="{ visible: isHovered || isFocused }"
       role="menu"
     >
       <slot :onFocus="onFocus" />
@@ -53,7 +51,7 @@ const Dropdown = {
      */
     text: {
       type: String,
-      default: '',
+      required: true,
     },
   },
   data: () => ({
