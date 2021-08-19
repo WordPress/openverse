@@ -2,11 +2,12 @@
   <div class="audio-track">
     <div class="waveform-section">
       <Waveform
-        class="h-30 w-full"
+        :class="isCompact ? 'h-20' : 'h-30'"
         :is-ready="isReady"
         :current-time="currentTime"
         :duration="duration"
         :peaks="audio.peaks"
+        :show-duration="isCompact"
         @seeked="setPosition"
       />
     </div>
@@ -72,6 +73,14 @@ export default {
     audio: {
       type: Object,
       required: true,
+    },
+    /**
+     * whether to render the player in a compact style; This places the waveform
+     * and the play-pause button on the same line.
+     */
+    isCompact: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({
