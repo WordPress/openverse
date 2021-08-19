@@ -1,0 +1,55 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story
+} from '@storybook/addon-docs'
+
+import MediaTag from '~/components/MediaTag/MediaTag.vue'
+
+<Meta
+  title="Components/Media tag"
+  component={MediaTag}
+/>
+
+export const Template = (args, { argTypes }) => ({
+  template: `<MediaTag v-bind="$props" v-on="$props">Hello</MediaTag>`,
+  components: { MediaTag },
+  props: Object.keys(argTypes),
+})
+
+# Media tag
+
+<Description of={MediaTag} />
+
+<ArgsTable of={MediaTag} />
+
+By default, the component is a transparent wrapper over `<a>` so all attributes
+of the anchor tag element can be applied to it, e.g. `href`.
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      href: 'https://example.com'
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+The root node of the tag can be overridden to a different HTML tag or a Vue
+component, e.g. `NuxtLink`.
+
+<Canvas>
+  <Story
+    name="Custom node"
+    args={{
+      tag: 'NuxtLink',
+      to: '/',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
