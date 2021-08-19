@@ -17,6 +17,7 @@
     "generate": "nuxt generate",
     "start": "nuxt start",
     "test": "jest",
+    "test:watch": "jest --watch",
     "test:unit": "jest",
     "test:e2e": "cypress open",
     "test:e2e:ci": "cypress run",
