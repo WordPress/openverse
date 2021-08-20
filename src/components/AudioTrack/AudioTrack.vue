@@ -1,16 +1,39 @@
 <template>
   <div class="audio-track">
-    <div class="waveform-section">
+    <!-- Only visible in compact player -->
+    <div v-if="isCompact" class="info-section flex justify-between">
+      <i18n path="audio-track.title" tag="p">
+        <template #title>
+          <NuxtLink to="#" class="text-pink hover:text-pink hover:underline">
+            {{ audio.title }}</NuxtLink
+          >
+        </template>
+        <template #creator>{{ audio.creator }}</template>
+      </i18n>
+      {{ audio.category }}
+    </div>
+
+    <div class="waveform-section flex flex-row gap-2">
+      <PlayPause
+        v-if="isCompact"
+        class="flex-shrink-0"
+        :is-playing="isPlaying"
+        :disabled="!isReady"
+        @toggle="setPlayerState"
+      />
       <Waveform
-        class="h-30 w-full"
+        :class="isCompact ? 'h-20' : 'h-30'"
         :is-ready="isReady"
         :current-time="currentTime"
         :duration="duration"
         :peaks="audio.peaks"
+        :show-duration="isCompact"
         @seeked="setPosition"
       />
     </div>
-    <div class="info-section flex flex-row gap-6">
+
+    <!-- Only visible in expanded player -->
+    <div v-if="!isCompact" class="info-section flex flex-row gap-6">
       <PlayPause
         class="self-start flex-shrink-0"
         :is-playing="isPlaying"
@@ -72,6 +95,14 @@ export default {
     audio: {
       type: Object,
       required: true,
+    },
+    /**
+     * whether to render the player in a compact style; This places the waveform
+     * and the play-pause button on the same line.
+     */
+    isCompact: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({
