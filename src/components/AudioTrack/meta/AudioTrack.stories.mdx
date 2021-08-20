@@ -10,14 +10,11 @@ import AudioTrack from '~/components/AudioTrack/AudioTrack.vue'
 
 import waveform from './waveform.json'
 
-<Meta
-  title="Components/Audio track"
-  component={AudioTrack}
-/>
+<Meta title="Components/Audio track" component={AudioTrack} />
 
 export const Template = (args, { argTypes }) => ({
   template: `<AudioTrack v-bind="$props" v-on="$props"/>`,
-  components:{AudioTrack},
+  components: { AudioTrack },
   props: Object.keys(argTypes),
 })
 
@@ -31,7 +28,7 @@ export const defaultArgs = {
     duration: 355e3,
     category: 'Music',
     peaks: waveform.points,
-  }
+  },
 }
 
 # Audio track
@@ -41,10 +38,7 @@ export const defaultArgs = {
 <ArgsTable of={AudioTrack} />
 
 <Canvas>
-  <Story
-    name="Default"
-    args={defaultArgs}
-  >
+  <Story name="Default" args={defaultArgs}>
     {Template.bind({})}
   </Story>
 </Canvas>
