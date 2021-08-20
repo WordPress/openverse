@@ -11,18 +11,23 @@ describe('MediaTag', () => {
     options = { propsData: props }
   })
 
-  it('should render an anchor tag', () => {
-    const wrapper = render(MediaTag, options)
-    expect(wrapper.vm.$props.tag).toEqual('a')
-    expect(wrapper.vm.$el).toBeInstanceOf(HTMLAnchorElement)
-  })
-
-  it('should render the supplied tag', () => {
-    options.propsData.tag = 'span'
-
+  it('should render an span tag by default', () => {
     const wrapper = render(MediaTag, options)
     expect(wrapper.vm.$props.tag).toEqual('span')
     expect(wrapper.vm.$el).toBeInstanceOf(HTMLSpanElement)
+  })
+
+  it('should render the supplied tag', () => {
+    options.propsData = {
+      ...options.propsData,
+      tag: 'a',
+      href: 'https://example.com/',
+    }
+
+    const wrapper = render(MediaTag, options)
+    expect(wrapper.vm.$props.tag).toEqual('a')
+    expect(wrapper.vm.$el).toBeInstanceOf(HTMLAnchorElement)
+    expect(wrapper.vm.$el.href).toEqual('https://example.com/')
   })
 
   it('should render the supplied Vue component', () => {
