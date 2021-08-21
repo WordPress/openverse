@@ -17,7 +17,7 @@
       {{ audio.category }}
     </div>
 
-    <div class="flex flex-row gap-2">
+    <div class="interactive-section flex flex-row gap-2">
       <PlayPause
         v-if="isCompact"
         class="flex-shrink-0"
@@ -26,7 +26,6 @@
         @toggle="setPlayerState"
       />
       <div
-        class="waveform-section"
         @keypress.enter="setPlayerState(!isPlaying)"
         @keypress.space="setPlayerState(!isPlaying)"
       >

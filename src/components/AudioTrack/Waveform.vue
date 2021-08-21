@@ -4,7 +4,7 @@
     class="waveform relative bg-dark-charcoal-04 overflow-x-hidden"
     tabIndex="0"
     role="slider"
-    aria-label="$t('waveform.label')"
+    :aria-label="$t('waveform.label')"
     aria-orientation="horizontal"
     aria-valuemin="0"
     :aria-valuemax="duration"
