@@ -137,6 +137,7 @@ airflow.cfg
 airflow.db
 logs/
 unittests.cfg
+!*/util/test_resources/logs/*
 
 # large SI sample data
 si_samples_*
