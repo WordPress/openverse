@@ -4,7 +4,11 @@
     aria-label="$t('audio-track.aria-label')"
     role="region"
   >
-    <div class="waveform-section">
+    <div
+      class="waveform-section"
+      @keypress.enter="setPlayerState(!isPlaying)"
+      @keypress.space="setPlayerState(!isPlaying)"
+    >
       <Waveform
         class="h-30 w-full"
         :is-ready="isReady"
