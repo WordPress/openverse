@@ -4,21 +4,46 @@
     aria-label="$t('audio-track.aria-label')"
     role="region"
   >
-    <div
-      class="waveform-section"
-      @keypress.enter="setPlayerState(!isPlaying)"
-      @keypress.space="setPlayerState(!isPlaying)"
-    >
-      <Waveform
-        class="h-30 w-full"
-        :is-ready="isReady"
-        :current-time="currentTime"
-        :duration="duration"
-        :peaks="audio.peaks"
-        @seeked="setPosition"
-      />
+    <!-- Only visible in compact player -->
+    <div v-if="isCompact" class="info-section flex justify-between">
+      <i18n path="audio-track.title" tag="p">
+        <template #title>
+          <NuxtLink to="#" class="text-pink hover:text-pink hover:underline">
+            {{ audio.title }}</NuxtLink
+          >
+        </template>
+        <template #creator>{{ audio.creator }}</template>
+      </i18n>
+      {{ audio.category }}
     </div>
-    <div class="info-section flex flex-row gap-6">
+
+    <div class="flex flex-row gap-2">
+      <PlayPause
+        v-if="isCompact"
+        class="flex-shrink-0"
+        :is-playing="isPlaying"
+        :disabled="!isReady"
+        @toggle="setPlayerState"
+      />
+      <div
+        class="waveform-section"
+        @keypress.enter="setPlayerState(!isPlaying)"
+        @keypress.space="setPlayerState(!isPlaying)"
+      >
+        <Waveform
+          :class="isCompact ? 'h-20' : 'h-30'"
+          :is-ready="isReady"
+          :current-time="currentTime"
+          :duration="duration"
+          :peaks="audio.peaks"
+          :show-duration="isCompact"
+          @seeked="setPosition"
+        />
+      </div>
+    </div>
+
+    <!-- Only visible in expanded player -->
+    <div v-if="!isCompact" class="info-section flex flex-row gap-6">
       <PlayPause
         :aria-controls="audio.id"
         class="self-start flex-shrink-0"
@@ -82,6 +107,14 @@ export default {
     audio: {
       type: Object,
       required: true,
+    },
+    /**
+     * whether to render the player in a compact style; This places the waveform
+     * and the play-pause button on the same line.
+     */
+    isCompact: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({

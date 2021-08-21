@@ -10,7 +10,27 @@ import AudioTrack from '~/components/AudioTrack/AudioTrack.vue'
 
 import waveform from './waveform.json'
 
-<Meta title="Components/Audio track" components={AudioTrack} />
+<Meta title="Components/Audio track" component={AudioTrack} />
+
+export const Template = (args, { argTypes }) => ({
+  template: `<AudioTrack v-bind="$props" v-on="$props"/>`,
+  components: { AudioTrack },
+  props: Object.keys(argTypes),
+})
+
+export const defaultArgs = {
+  audio: {
+    id: 196543567,
+    title: 'Eine kleine Nachtmusik',
+    url:
+      'https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg',
+    creator: 'Wolfgang Amadeus Mozart',
+    creatorUrl: 'https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart',
+    duration: 355e3,
+    category: 'Music',
+    peaks: waveform.points,
+  },
+}
 
 # Audio track
 
@@ -18,25 +38,21 @@ import waveform from './waveform.json'
 
 <ArgsTable of={AudioTrack} />
 
-export const Template = (args, { argTypes }) => ({
-  template: `<AudioTrack v-bind="$props" v-on="$props"/>`,
-  props: Object.keys(argTypes),
-})
+<Canvas>
+  <Story name="Default" args={defaultArgs}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+The component can also be rendered in a smaller format, when used in the
+"Related audio" section for example.
 
 <Canvas>
   <Story
-    name="Default"
+    name="Compact"
     args={{
-      audio: {
-        id: 12345432,
-        title: 'Eine kleine Nachtmusik',
-        url:
-          'https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg',
-        creator: 'Wolfgang Amadeus Mozart',
-        creatorUrl: 'https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart',
-        duration: 355e3,
-        peaks: waveform.points,
-      },
+      ...defaultArgs,
+      isCompact: true,
     }}
   >
     {Template.bind({})}
