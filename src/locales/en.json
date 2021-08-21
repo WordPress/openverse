@@ -570,10 +570,13 @@
     "edge": "Edge"
   },
   "waveform": {
-    "loading": "Loading..."
+    "label": "Audio seek bar",
+    "loading": "Loading...",
+    "current-time": "{time} seconds"
   },
   "audio-track": {
-    "title": "{title} by {creator}"
+    "title": "{title} by {creator}",
+    "aria-label": "Audio Player"
   },
   "play-pause": {
     "play": "Play",

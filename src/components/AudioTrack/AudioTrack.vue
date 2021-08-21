@@ -1,6 +1,10 @@
 <template>
-  <div class="audio-track" aria-label="Audio Player" role="region">
-    <div class="waveform-section bg-dark-charcoal-04">
+  <div
+    class="audio-track"
+    aria-label="$t('audio-track.aria-label')"
+    role="region"
+  >
+    <div class="waveform-section">
       <Waveform
         class="h-30 w-full"
         :is-ready="isReady"
@@ -8,13 +12,11 @@
         :duration="duration"
         :peaks="audio.peaks"
         @seeked="setPosition"
-        @jumpSeekedForward="jumpPositionForward"
-        @jumpSeekedBackward="jumpPositionBackward"
       />
     </div>
     <div class="info-section flex flex-row gap-6">
       <PlayPause
-        :aria-controls="ariaIdentifier"
+        :aria-controls="audio.id"
         class="self-start flex-shrink-0"
         :is-playing="isPlaying"
         :disabled="!isReady"
@@ -42,7 +44,7 @@
     <!-- eslint-disable vuejs-accessibility/media-has-caption -->
     <audio
       v-show="false"
-      :id="ariaIdentifier"
+      :id="audio.id"
       ref="audio"
       controls
       :src="audio.url"
@@ -82,9 +84,6 @@ export default {
     player: null, // HTMLAudioElement
     currentTime: 0,
     duration: 0,
-    /** Amount in seconds to jump seek **/
-    seekJumpDuration: 15,
-
     isReady: false,
     isPlaying: false,
   }),
@@ -99,13 +98,6 @@ export default {
       const date = new Date(0)
       date.setSeconds(seconds)
       return date.toISOString().substr(11, 8).replace(/^00:/, '')
-    },
-    /**
-     * A unique string to represent the audio player in aria properties
-     * @returns {string} the id of the audio file prefixed with 'audio-'
-     */
-    ariaIdentifier() {
-      return `audio-${this.audio.id}`
     },
   },
   mounted() {
@@ -132,14 +124,6 @@ export default {
         this.player.currentTime = this.player.duration * percentage
         this.updateTime()
       }
-    },
-    jumpPositionForward() {
-      this.player.currentTime = this.player.currentTime + this.seekJumpDuration
-      this.updateTime()
-    },
-    jumpPositionBackward() {
-      this.player.currentTime = this.player.currentTime - this.seekJumpDuration
-      this.updateTime()
     },
     async setPlayerState(isPlaying) {
       if (isPlaying) {
