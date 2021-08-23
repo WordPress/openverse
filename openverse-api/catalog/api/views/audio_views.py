@@ -268,5 +268,3 @@ class AudioArt(ImageProxy):
             return self._get(image_url, None)
         else:
             return self._get(image_url)
-
-
