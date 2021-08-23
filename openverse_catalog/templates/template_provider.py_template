@@ -88,7 +88,7 @@ saved_json_counter = {
 
 def check_and_save_json_for_test(name, data):
     parent = Path(__file__).parent
-    test_resources_path = parent / 'tests' / 'resources' / {provider}
+    test_resources_path = parent / 'tests' / 'resources' / '{provider}'
     if not Path.is_dir(test_resources_path):
         Path.mkdir(test_resources_path)
     if saved_json_counter[name] == 0:
