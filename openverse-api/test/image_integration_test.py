@@ -17,6 +17,7 @@ from test.media_integration import (
     search_consistency,
     detail,
     stats,
+    thumb,
 )
 
 
@@ -51,6 +52,10 @@ def test_image_detail(image_fixture):
 
 def test_image_stats():
     stats('images', 'image_count')
+
+
+def test_image_thumb(image_fixture):
+    thumb(image_fixture)
 
 
 def test_oembed_endpoint_for_json():

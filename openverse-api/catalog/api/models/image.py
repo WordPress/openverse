@@ -12,13 +12,6 @@ from catalog.api.models.media import (
 
 
 class Image(AbstractMedia):
-    thumbnail = models.URLField(
-        max_length=1000,
-        blank=True,
-        null=True,
-        help_text="The thumbnail for the image, if any."
-    )
-
     width = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
 
