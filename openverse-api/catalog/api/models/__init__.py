@@ -13,6 +13,7 @@ from catalog.api.models.audio import (
     MatureAudio,
     AudioList,
     AltAudioFile,
+    AudioSet,
 )
 from catalog.api.models.media import (
     PENDING,
