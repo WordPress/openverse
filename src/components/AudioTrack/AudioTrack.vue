@@ -1,5 +1,9 @@
 <template>
-  <div class="audio-track">
+  <div
+    class="audio-track"
+    aria-label="$t('audio-track.aria-label')"
+    role="region"
+  >
     <!-- Only visible in compact player -->
     <div v-if="isCompact" class="info-section flex justify-between">
       <i18n path="audio-track.title" tag="p">
@@ -13,7 +17,7 @@
       {{ audio.category }}
     </div>
 
-    <div class="waveform-section flex flex-row gap-2">
+    <div class="interactive-section flex flex-row gap-2">
       <PlayPause
         v-if="isCompact"
         class="flex-shrink-0"
@@ -21,20 +25,26 @@
         :disabled="!isReady"
         @toggle="setPlayerState"
       />
-      <Waveform
-        :class="isCompact ? 'h-20' : 'h-30'"
-        :is-ready="isReady"
-        :current-time="currentTime"
-        :duration="duration"
-        :peaks="audio.peaks"
-        :show-duration="isCompact"
-        @seeked="setPosition"
-      />
+      <div
+        @keypress.enter="setPlayerState(!isPlaying)"
+        @keypress.space="setPlayerState(!isPlaying)"
+      >
+        <Waveform
+          :class="isCompact ? 'h-20' : 'h-30'"
+          :is-ready="isReady"
+          :current-time="currentTime"
+          :duration="duration"
+          :peaks="audio.peaks"
+          :show-duration="isCompact"
+          @seeked="setPosition"
+        />
+      </div>
     </div>
 
     <!-- Only visible in expanded player -->
     <div v-if="!isCompact" class="info-section flex flex-row gap-6">
       <PlayPause
+        :aria-controls="audio.id"
         class="self-start flex-shrink-0"
         :is-playing="isPlaying"
         :disabled="!isReady"
@@ -62,6 +72,7 @@
     <!-- eslint-disable vuejs-accessibility/media-has-caption -->
     <audio
       v-show="false"
+      :id="audio.id"
       ref="audio"
       controls
       :src="audio.url"
@@ -109,7 +120,6 @@ export default {
     player: null, // HTMLAudioElement
     currentTime: 0,
     duration: 0,
-
     isReady: false,
     isPlaying: false,
   }),

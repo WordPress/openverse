@@ -2,15 +2,25 @@
   <div
     ref="waveform"
     class="waveform relative bg-dark-charcoal-04 overflow-x-hidden"
+    tabIndex="0"
+    role="slider"
+    :aria-label="$t('waveform.label')"
+    aria-orientation="horizontal"
+    aria-valuemin="0"
+    :aria-valuemax="duration"
+    :aria-valuenow="currentTime"
+    :aria-valuetext="currentTimeText"
+    @keydown.arrow-left="seekJump"
+    @keydown.arrow-right="seekJump"
+    @mousemove="setSeekProgress"
+    @mouseleave="clearSeekProgress"
+    @click="seek"
   >
     <svg
       class="w-full h-full"
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="viewBox"
       preserveAspectRatio="none"
-      @mousemove="setSeekProgress"
-      @mouseleave="clearSeekProgress"
-      @click="seek"
     >
       <rect
         class="fill-yellow"
@@ -123,12 +133,32 @@ export default {
      */
     seekPercentage: null,
 
+    /**
+     * the length in seconds to seek jump
+     */
+    seekJumpLength: 1,
+    modifiedSeekJumpLength: 15,
+
     waveformWidth: 100, // dummy start value
     observer: null, // ResizeObserver
   }),
   computed: {
     percentage() {
       return this.isReady ? this.currentTime / this.duration : 0
+    },
+
+    // The waveform current time as a text string
+    currentTimeText() {
+      const time = this.timeFmt(this.currentTime)
+      return this.$t('waveform.current-time', { time })
+    },
+
+    // The seekJump length as a % of the track
+    seekJumpPercentage() {
+      return this.isReady ? this.seekJumpLength / this.duration : 0
+    },
+    modifiedSeekJumpPercentage() {
+      return this.isReady ? this.modifiedSeekJumpLength / this.duration : 0
     },
 
     peakCount() {
@@ -202,6 +232,16 @@ export default {
     },
     seek(event) {
       this.$emit('seeked', this.getPositionPercentage(event))
+    },
+    seekJump(event) {
+      this.clearSeekProgress()
+      const { key, shiftKey } = event
+      const amount = shiftKey
+        ? this.modifiedSeekJumpPercentage
+        : this.seekJumpPercentage
+      const seekPercentage =
+        this.percentage + (key.includes('Left') ? -amount : amount)
+      this.$emit('seeked', seekPercentage)
     },
   },
 }
