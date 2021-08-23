@@ -241,9 +241,10 @@ respective number of audio files in the Openverse catalog.
         return self._get(request, 'audio')
 
 
-class AudioSetArt(ImageProxy):
+class AudioArt(ImageProxy):
     """
-    Return the thumb of the set art of the audio.
+    Return the thumbnail of the artwork of the audio. This returns the thumbnail
+    of the audio, falling back to the thumbnail of the audio set.
     """
 
     queryset = Audio.objects.all()
@@ -253,7 +254,9 @@ class AudioSetArt(ImageProxy):
         serialized.is_valid()
         try:
             audio = Audio.objects.get(identifier=identifier)
-            image_url = audio.audio_set.url
+            image_url = audio.thumbnail
+            if not image_url:
+                image_url = audio.audio_set.url
         except Audio.DoesNotExist:
             return Response(status=404, data='Audio not found')
         except AttributeError:
