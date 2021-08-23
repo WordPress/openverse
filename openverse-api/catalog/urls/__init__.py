@@ -14,26 +14,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 import rest_framework.permissions
+from django.conf import settings
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path, re_path
 from django.views.generic import RedirectView
 from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
 from drf_yasg.views import get_schema_view
 
-from catalog.api.examples import images_report_create_201_example
-from catalog.api.serializers.image_serializers import \
-    ReportImageSerializer
-from catalog.api.views.audio_views import SearchAudio, AudioDetail, \
-    RelatedAudio, AudioStats
-from catalog.api.views.image_views import SearchImages, ImageDetail, \
-    Watermark, RelatedImage, OembedView, ReportImageView, ImageStats
-from catalog.api.views.link_views import CreateShortenedLink, \
-    ResolveShortenedLink
-from catalog.api.views.site_views import HealthCheck, Register, CheckRates, \
-    VerifyEmail, ProxiedImage
-from catalog.settings import API_VERSION, WATERMARK_ENABLED
+from catalog.api.views.image_views import Watermark, OembedView
+from catalog.api.views.site_views import HealthCheck, CheckRates
+from catalog.api.utils.status_code_view import get_status_code_view
+
+from catalog.urls.auth_tokens import urlpatterns as auth_tokens_patterns
+from catalog.urls.audio import urlpatterns as audio_patterns
+from catalog.urls.images import urlpatterns as images_patterns
 
 description = """
 # Introduction
@@ -177,7 +172,7 @@ logo_url = "https://raw.githubusercontent.com/" \
 schema_view = get_schema_view(
     openapi.Info(
         title="Openverse API",
-        default_version=API_VERSION,
+        default_version=settings.API_VERSION,
         description=description,
         contact=openapi.Contact(email="zack.krida@automattic.com"),
         license=openapi.License(name="MIT License", url=license_url),
@@ -191,147 +186,88 @@ schema_view = get_schema_view(
     permission_classes=(rest_framework.permissions.AllowAny,),
 )
 
-report_image_bash = \
-    """
-    # Report an issue about image ID (7c829a03-fb24-4b57-9b03-65f43ed19395)
-    curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "This image contains sensitive content"}' https://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
-    """  # noqa
+cache_timeout = 0 if settings.DEBUG else 15
 
-report_image_request = openapi.Schema(
-    type=openapi.TYPE_OBJECT,
-    required=['reason', 'identifier'],
-    properties={
-        'reason': openapi.Schema(
-            title="Reason",
-            type=openapi.TYPE_STRING,
-            enum=["mature", "dmca", "other"],
-            max_length=20,
-            description="The reason to report image to Openverse."
-        ),
-        'identifier': openapi.Schema(
-            title="Identifier",
-            type=openapi.TYPE_STRING,
-            format=openapi.FORMAT_UUID,
-            description="The ID for image to be reported."
-        ),
-        'description': openapi.Schema(
-            title="Description",
-            type=openapi.TYPE_STRING,
-            max_length=500,
-            nullable=True,
-            description="The explanation on why image is being reported."
-        )
-    },
-    example={
-        "reason": "mature",
-        "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395",
-        "description": "This image contains sensitive content"
-    }
-)
-
-decorated_report_image_view = \
-    swagger_auto_schema(
-        method='post',
-        responses={
-            "201": openapi.Response(
-                description="OK",
-                examples=images_report_create_201_example,
-                schema=ReportImageSerializer
-            )
-        },
-        request_body=report_image_request,
-        code_examples=[
-            {
-                'lang': 'Bash',
-                'source': report_image_bash
-            }
-        ]
-    )(ReportImageView.as_view())
+discontinuation_message = {
+    'error': 'Gone',
+    'reason': 'This API endpoint has been discontinued.'
+}
 
 versioned_paths = [
-    path('', schema_view.with_ui('redoc', cache_timeout=None), name='root'),
-    path('auth_tokens/register', Register.as_view(), name='register'),
     path('rate_limit', CheckRates.as_view(), name='key_info'),
-    path(
-        'auth_tokens/verify/<str:code>',
-        VerifyEmail.as_view(),
-        name='verify-email'
-    ),
-    re_path(
-        r'auth_tokens/',
-        include('oauth2_provider.urls', namespace='oauth2_provider')
-    ),
+    path('auth_tokens/', include(auth_tokens_patterns)),
 
-    path(
-        'audio/stats',
-        AudioStats.as_view(),
-        name='audio-stats'
-    ),
-    path(
-        'audio/<str:identifier>',
-        AudioDetail.as_view(),
-        name='audio-detail'
-    ),
-    re_path('audio', SearchAudio.as_view(), name='audio'),
-    path(
-        'recommendations/audio/<str:identifier>',
-        RelatedAudio.as_view(),
-        name='related-audio'
-    ),
+    # Audio
+    path('audio/', include(audio_patterns)),
 
+    # Images
+    path('images/', include(images_patterns)),
+
+    # Deprecated
     path(
-        'images/stats',
-        ImageStats.as_view(),
-        name='image-stats'
-    ),
-    path(
-        'images/<str:identifier>',
-        ImageDetail.as_view(),
-        name='image-detail'
-    ),
-    path(
-        'images/<str:identifier>/report',
-        decorated_report_image_view,
-        name='report-image'
-    ),
-    path(
-        'recommendations/images/<str:identifier>',
-        RelatedImage.as_view(),
-        name='related-images'
-    ),
-    re_path('images', SearchImages.as_view(), name='images'),
-    path(  # Deprecated
         'sources',
         RedirectView.as_view(pattern_name='image-stats', permanent=True),
         name='about-image'
     ),
-    path('link', CreateShortenedLink.as_view(), name='make-link'),
-    path('link/<str:path>', ResolveShortenedLink.as_view(), name='resolve'),
-    path('thumbs/<str:identifier>', ProxiedImage.as_view(), name='thumbs'),
-    path('oembed', OembedView.as_view(), name='oembed')
+    path(
+        'recommendations/images/<str:identifier>',
+        RedirectView.as_view(pattern_name='image-related', permanent=True),
+        name='related-images',
+    ),
+    path(
+        'oembed',
+        RedirectView.as_view(
+            pattern_name='image-oembed',
+            query_string=True,
+            permanent=True
+        ),
+        name='oembed'
+    ),
+    path(
+        'thumbs/<str:identifier>',
+        RedirectView.as_view(pattern_name='image-thumb', permanent=True),
+        name='thumbs'
+    ),
+
+    # Discontinued
+    re_path(
+        r'^link/',
+        get_status_code_view(discontinuation_message, 410).as_view(),
+        name='make-link'
+    ),
 ]
-if WATERMARK_ENABLED:
+if settings.WATERMARK_ENABLED:
     versioned_paths.append(
         path('watermark/<str:identifier>', Watermark.as_view())
     )
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/v1')),
+    path('', RedirectView.as_view(pattern_name='root')),
     path('admin/', admin.site.urls),
-    re_path('healthcheck', HealthCheck.as_view()),
+    path('healthcheck', HealthCheck.as_view()),
+
+    # Swagger documentation
     re_path(
         r'^swagger(?P<format>\.json|\.yaml)$',
-        schema_view.without_ui(cache_timeout=None), name='schema-json'
+        schema_view.without_ui(cache_timeout=None),
+        name='schema-json'
     ),
     re_path(
         r'^swagger/$',
-        schema_view.with_ui('swagger', cache_timeout=15),
+        schema_view.with_ui('swagger', cache_timeout=cache_timeout),
         name='schema-swagger-ui'
     ),
     re_path(
         r'^redoc/$',
-        schema_view.with_ui('redoc', cache_timeout=15),
+        schema_view.with_ui('redoc', cache_timeout=cache_timeout),
         name='schema-redoc'
     ),
-    path('v1/', include(versioned_paths))
+    re_path(
+        r'^v1/$',
+        schema_view.with_ui('redoc', cache_timeout=cache_timeout),
+        name='root'
+    ),
+
+    # API
+    path('v1/', include(versioned_paths)),
 ]

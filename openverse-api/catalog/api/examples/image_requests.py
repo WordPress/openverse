@@ -41,3 +41,8 @@ image_stats_curl = """
 # Get the statistics for image sources
 curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/images/stats
 """  # noqa
+
+report_image_curl = """
+# Report an issue about image ID 7c829a03-fb24-4b57-9b03-65f43ed19395
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "This image contains sensitive content"}' https://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
+"""  # noqa

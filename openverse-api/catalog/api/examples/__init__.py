@@ -18,6 +18,7 @@ from catalog.api.examples.image_requests import (
     recommendations_images_read_curl,
     image_detail_curl,
     image_stats_curl,
+    report_image_curl,
 )
 from catalog.api.examples.image_responses import (
     image_search_200_example,

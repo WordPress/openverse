@@ -135,7 +135,7 @@ class AudioSerializer(MediaSerializer):
         help_text="A direct link to the detail view of this audio file."
     )
     related_url = serializers.HyperlinkedIdentityField(
-        view_name='related-audio',
+        view_name='audio-related',
         lookup_field='identifier',
         read_only=True,
         help_text="A link to an endpoint that provides similar audio files."

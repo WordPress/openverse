@@ -5,14 +5,17 @@ import libxmp
 import piexif
 import requests
 from PIL import Image as img
+from django.conf import settings
+from django.urls import reverse
 from django.http.response import HttpResponse, FileResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.response import Response
-from rest_framework.reverse import reverse
 from rest_framework.views import APIView
+from urllib.error import HTTPError
+from urllib.request import urlopen
 
 import catalog.api.controllers.search_controller as search_controller
 from catalog.api.examples import (
@@ -29,6 +32,8 @@ from catalog.api.examples import (
     oembed_list_404_example,
     image_stats_curl,
     image_stats_200_example,
+    report_image_curl,
+    images_report_create_201_example,
 )
 from catalog.api.models import Image, ImageReport
 from catalog.api.serializers.error_serializers import (
@@ -44,11 +49,14 @@ from catalog.api.serializers.image_serializers import (
     OembedSerializer,
     OembedResponseSerializer,
     AboutImageSerializer,
+    ProxiedImageSerializer,
 )
 from catalog.api.utils import ccrel
+from catalog.api.utils.throttle import OneThousandPerMinute
 from catalog.api.utils.exceptions import input_error_response
 from catalog.api.utils.watermark import watermark
 from catalog.api.views.media_views import (
+    refer_sample,
     RESULTS,
     RESULT_COUNT,
     PAGE_COUNT,
@@ -212,7 +220,7 @@ By using this endpoint, you can image details such as
         # Proxy insecure HTTP images at full resolution.
         if 'http://' in resp.data[search_controller.URL]:
             secure = request.build_absolute_uri(
-                reverse('thumbs', [identifier])
+                reverse('image-thumb', kwargs={'identifier': identifier})
             )
             secure += '?full_size=True'
             resp.data[search_controller.URL] = secure
@@ -367,21 +375,37 @@ class OembedView(APIView):
 
 
 class ReportImageView(CreateAPIView):
-    """
-    images_report_create
-    
-    images_report_create is an API endpoint to report an issue about a 
-    specified image ID to Openverse.
+    report_image_description = f"""
+images_report_create is an API endpoint to report an issue about a specified 
+image ID to Openverse.
 
-    By using this endpoint, you can report an image if it infringes copyright, 
-    contains mature or sensitive content and others.
+By using this endpoint, you can report an image if it infringes copyright, 
+contains mature or sensitive content and others.
 
-    You can refer to Bash's Request Samples for example on how to use
-    this endpoint.
-    """  # noqa
+{refer_sample}"""  # noqa
+
     swagger_schema = CustomAutoSchema
     queryset = ImageReport.objects.all()
     serializer_class = ReportImageSerializer
+
+    @swagger_auto_schema(operation_id='images_report_create',
+                         operation_description=report_image_description,
+                         query_serializer=ReportImageSerializer,
+                         responses={
+                             "201": openapi.Response(
+                                 description="OK",
+                                 examples=images_report_create_201_example,
+                                 schema=ReportImageSerializer
+                             )
+                         },
+                         code_examples=[
+                             {
+                                 'lang': 'Bash',
+                                 'source': report_image_curl,
+                             }
+                         ])
+    def post(self, request, *args, **kwargs):
+        return super(ReportImageView, self).post(request, *args, **kwargs)
 
 
 class ImageStats(MediaStats):
@@ -410,3 +434,44 @@ respective number of images in the Openverse catalog.
                          ])
     def get(self, request, format=None):
         return self._get(request, 'image')
+
+
+class ProxiedImage(APIView):
+    """
+    Return the thumb of an image.
+    """
+
+    lookup_field = 'identifier'
+    queryset = Image.objects.all()
+    throttle_classes = [OneThousandPerMinute]
+    swagger_schema = None
+
+    def get(self, request, identifier, format=None):
+        serialized = ProxiedImageSerializer(data=request.data)
+        serialized.is_valid()
+        try:
+            image = Image.objects.get(identifier=identifier)
+        except Image.DoesNotExist:
+            return Response(status=404, data='Not Found')
+
+        if serialized.data['full_size']:
+            proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/{image.url}'
+        else:
+            proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/' \
+                             f'{settings.THUMBNAIL_WIDTH_PX}' \
+                             f',fit/{image.url}'
+        try:
+            upstream_response = urlopen(proxy_upstream)
+            status = upstream_response.status
+            content_type = upstream_response.headers.get('Content-Type')
+        except HTTPError:
+            log.info('Failed to render thumbnail: ', exc_info=True)
+            return HttpResponse(status=500)
+
+        response = HttpResponse(
+            upstream_response.read(),
+            status=status,
+            content_type=content_type
+        )
+
+        return response

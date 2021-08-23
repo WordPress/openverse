@@ -117,7 +117,7 @@ class ImageSerializer(MediaSerializer):
         help_text="A direct link to the detail view of this image."
     )
     related_url = serializers.HyperlinkedIdentityField(
-        view_name='related-images',
+        view_name='image-related',
         lookup_field='identifier',
         read_only=True,
         help_text="A link to an endpoint that provides similar images."
@@ -126,7 +126,7 @@ class ImageSerializer(MediaSerializer):
     def get_thumbnail(self, obj):
         request = self.context['request']
         host = request.get_host()
-        path = reverse('thumbs', kwargs={'identifier': obj.identifier})
+        path = reverse('image-thumb', kwargs={'identifier': obj.identifier})
         return f'https://{host}{path}'
 
 

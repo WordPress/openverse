@@ -9,7 +9,6 @@ import pytest
 import uuid
 import time
 import catalog.settings
-import xml.etree.ElementTree as ET
 from django.db.models import Max
 from django.urls import reverse
 
@@ -36,35 +35,15 @@ def test_image_thumb(image_fixture):
     assert thumbnail_response.headers["Content-Type"].startswith("image/")
 
 
-@pytest.fixture
-def link_shortener_fixture(image_fixture):
-    link_to_shorten = image_fixture['results'][0]['detail_url']
-    payload = {"full_url": link_to_shorten}
-    response = requests.post(f'{API_URL}/v1/link', json=payload, verify=False)
-    assert response.status_code == 200
-    return json.loads(response.text)
+def test_link_shortener_create():
+    payload = {'full_url': 'abcd'}
+    response = requests.post(f'{API_URL}/v1/link/', json=payload, verify=False)
+    assert response.status_code == 410
 
 
-def test_link_shortener_create(link_shortener_fixture):
-    assert 'shortened_url' in link_shortener_fixture
-
-
-def test_link_shortener_resolve(link_shortener_fixture):
-    path = link_shortener_fixture['shortened_url'].split('/')[-1]
-    response = requests.get(f'{API_URL}/v1/link/{path}', allow_redirects=False,
-                            verify=False)
-    assert response.status_code == 301
-
-
-def test_old_stats_endpoint():
-    response = requests.get(
-        f'{API_URL}/v1/sources?type=images',
-        allow_redirects=False,
-        verify=False
-    )
-    assert response.status_code == 301
-    assert response.is_permanent_redirect
-    assert response.headers.get('Location') == '/v1/images/stats'
+def test_link_shortener_resolve():
+    response = requests.get(f'{API_URL}/v1/link/abc', verify=False)
+    assert response.status_code == 410
 
 
 @pytest.mark.skip(reason="Disabled feature")
@@ -476,36 +455,6 @@ def test_related_image_search_page_consistency(
         related = recommendation_factory(image['id'])
         assert related['result_count'] > 0
         assert len(related['results']) == 10
-
-
-def test_oembed_endpoint_for_json():
-    response = requests.get(
-        f'{API_URL}/v1/oembed?url=https%3A//'
-        'search.creativecommons.org/photos/'
-        '29cb352c-60c1-41d8-bfa1-7d6f7d955f63'
-    )
-    assert response.status_code == 200
-    assert response.headers['Content-Type'] == "application/json"
-    parsed = response.json()
-    assert parsed['width'] == 1276
-    assert parsed['height'] == 1536
-    assert parsed['license_url'] == 'https://creativecommons.org/licenses/by-nc-nd/4.0/'
-
-
-def test_oembed_endpoint_for_xml():
-    response = requests.get(
-        f'{API_URL}/v1/oembed?url=https%3A//'
-        'search.creativecommons.org/photos/'
-        '29cb352c-60c1-41d8-bfa1-7d6f7d955f63'
-        '&format=xml'
-    )
-    assert response.status_code == 200
-    assert response.headers['Content-Type'] == "application/xml; charset=utf-8"
-    response_body_as_xml = ET.fromstring(response.content)
-    xml_tree = ET.ElementTree(response_body_as_xml)
-    assert xml_tree.find("width").text == '1276'
-    assert xml_tree.find("height").text == '1536'
-    assert xml_tree.find("license_url").text == 'https://creativecommons.org/licenses/by-nc-nd/4.0/'
 
 
 def test_report_endpoint():
