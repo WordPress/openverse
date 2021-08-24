@@ -49,10 +49,10 @@
 
     <!-- Timestamps -->
     <div
-      class="current absolute top-1 font-bold text-sm bg-yellow z-10 px-1 transform -translate-x-full pointer-events-none"
-      :style="{ '--current-time-left': `${progressBarWidth}px` }"
+      class="progress absolute top-1 font-bold text-sm bg-yellow z-10 px-1 transform -translate-x-full pointer-events-none"
+      :style="{ '--progress-time-left': `${progressBarWidth}px` }"
     >
-      {{ timeFmt(currentTimestamp) }}
+      {{ timeFmt(progressTimestamp) }}
     </div>
     <div
       v-if="seekFrac"
@@ -224,7 +224,7 @@ export default {
       const frac = isDragging.value ? seekFrac.value : currentFrac.value
       return waveformWidth.value * frac
     })
-    const currentTimestamp = computed(() =>
+    const progressTimestamp = computed(() =>
       isDragging.value ? seekTimestamp.value : props.currentTime
     )
 
@@ -309,7 +309,7 @@ export default {
       spaceAbove,
 
       progressBarWidth,
-      currentTimestamp,
+      progressTimestamp,
 
       seekFrac,
       seekBarWidth,
@@ -339,8 +339,8 @@ export default {
 </script>
 
 <style scoped lang="css">
-.current {
-  left: var(--current-time-left);
+.progress {
+  left: var(--progress-time-left);
 }
 
 .seek {
