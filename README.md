@@ -106,26 +106,28 @@ own dependency requirements.
 You'll need `docker` and `docker-compose` installed on your machine, with
 versions new enough to use version `3` of Docker Compose `.yml` files.
 
+You will also need the [`just`](https://github.com/casey/just#installation) command runner installed.
+
 To set up the local python environment along with the pre-commit hook, run:
 
 ```shell
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
-pre-commit install
+just install
 ```
 
 Optionally, to install dependencies for your editor to introspect stuff about them:
 
 ```shell
-pip install -r openverse_catalog/requirements_dev.txt
+just installcatalog
 ```
+
 
 To set up environment variables, navigate to the
 [`openverse_catalog`][cc_airflow] directory, and run
 
 ```shell
-cp env.template .env
+just makeenv
 ```
 
 If needed, fill in API keys or other secrets and variables in `.env`. This is
@@ -134,7 +136,7 @@ not needed if you only want to run the tests. There is a
 [`openverse_catalog`][cc_airflow] directory, so from that directory, run
 
 ```shell
-docker-compose up -d
+just up
 ```
 
 This results, among other things, in the following running containers:
@@ -156,47 +158,47 @@ and some networking setup so that they can communicate. Note:
 At this stage, you can run the tests via:
 
 ```shell
-docker exec openverse_catalog_webserver_1 /usr/local/airflow/.local/bin/pytest
+just test
 ```
 
 Edits to the source files or tests can be made on your local machine, then tests
 can be run in the container via the above command to see the effects.
 
-If you'd like, it's possible to login to the webserver container via
+If you'd like, it's possible to login to the webserver container via:
 
 ```shell
-docker exec -it openverse_catalog_webserver_1 /bin/bash
+just shell
 ```
 
-It's also possible to attach to the running command process of the webserver
-container via
+If you just need to run an airflow command, you can use the `airflow` recipe. Arguments passed to airflow must be quoted:
 
 ```shell
-docker attach --sig-proxy=false openverse_catalog_webserver_1
+just airflow "config list"
 ```
 
-Attaching in this manner lets you see the output from both the Airflow webserver
-and scheduler, which can be useful for debugging purposes. To leave the
-container, (but keep it running), press `Ctrl-C` on \*nix platforms
+To tail the logs of the running container:
+
+```shell
+just logs
+```
 
 To see the Airflow web UI, point your browser to `localhost:9090`.
 
 If you'd like to bring down the containers, run
 
 ```shell
-docker-compose down
+just down
 ```
-
-from the [`openverse_catalog`][cc_airflow] directory.
 
 To reset the test DB (wiping out all databases, schemata, and tables), run
 
 ```shell
-docker-compose down -v
+just down -v
 ```
 
 `docker volume prune` can also be useful if you've already stopped the running containers, but be warned that it will remove all volumes associated with stopped containers, not just openverse-catalog ones.
 
+[justfile]: justfile
 [dockercompose]: openverse_catalog/docker-compose.yml
 [cc_airflow]: openverse_catalog/
 
