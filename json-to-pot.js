@@ -47,20 +47,20 @@ const findPath = (ob, key) => {
 // msgid untranslated-string
 // msgstr translated-string
 
-function potTime(json) {
+function potTime(json, parent = json) {
   let potFile = ''
   for (const row of Object.entries(json)) {
     let [key, value] = row
     if (typeof value === 'string') {
       potFile = `${potFile}
 
-# ${findPath(json, key)}.${key} ${checkStringForVars(value)}
-msgctxt "${findPath(json, key)}.${key}"
+# ${findPath(parent, key)}.${key} ${checkStringForVars(value)}
+msgctxt "${findPath(parent, key)}.${key}"
 msgid "${value}"
 msgstr ""`
     }
     if (typeof value === 'object') {
-      potFile = `${potFile}${potTime(value)}`
+      potFile = `${potFile}${potTime(value, parent)}`
     }
   }
   return potFile

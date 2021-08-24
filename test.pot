@@ -1,62 +1,62 @@
 
 
-# .brand 
-msgctxt ".brand"
+# hero.brand 
+msgctxt "hero.brand"
 msgid "Openverse"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Search for content to reuse"
 msgstr ""
 
-# .subtitle 
-msgctxt ".subtitle"
+# hero.subtitle 
+msgctxt "hero.subtitle"
 msgid "Browse over 500 million images, available for reuse"
 msgstr ""
 
-# .placeholder 
-msgctxt ".placeholder"
+# hero.search.placeholder 
+msgctxt "hero.search.placeholder"
 msgid "Search all content"
 msgstr ""
 
-# .button 
-msgctxt ".button"
+# hero.search.button 
+msgctxt "hero.search.button"
 msgid "Search"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "All our content is under Creative Commons licenses or in the public domain. {link} about CC licenses and tools."
 msgstr ""
 
-# .link 
-msgctxt ".link"
+# hero.caption.link 
+msgctxt "hero.caption.link"
 msgid "Learn more"
 msgstr ""
 
-# .label 
-msgctxt ".label"
+# hero.license-filter.label 
+msgctxt "hero.license-filter.label"
 msgid "I want something I can"
 msgstr ""
 
-# .label 
-msgctxt ".label"
+# hero.license-filter.label 
+msgctxt "hero.license-filter.label"
 msgid "Languages available"
 msgstr ""
 
-# .icon 
-msgctxt ".icon"
+# hero.locale.icon 
+msgctxt "hero.locale.icon"
 msgid "locale"
 msgstr ""
 
-# .search 
-msgctxt ".search"
+# hero.search 
+msgctxt "hero.search"
 msgid "search"
 msgstr ""
 
-# .caption 
-msgctxt ".caption"
+# hero.caption 
+msgctxt "hero.caption"
 msgid "about cc licenses"
 msgstr ""
 
@@ -65,8 +65,8 @@ msgctxt ".about"
 msgid "Our Story"
 msgstr ""
 
-# .source 
-msgctxt ".source"
+# header.source 
+msgctxt "header.source"
 msgid "Sources"
 msgstr ""
 
@@ -85,8 +85,8 @@ msgctxt ".feedback"
 msgid "Feedback"
 msgstr ""
 
-# .support 
-msgctxt ".support"
+# header.support 
+msgctxt "header.support"
 msgid "Support Us"
 msgstr ""
 
@@ -95,28 +95,28 @@ msgctxt ".extension"
 msgid "Web extension"
 msgstr ""
 
-# .placeholder 
-msgctxt ".placeholder"
+# hero.search.placeholder 
+msgctxt "hero.search.placeholder"
 msgid "Search all content"
 msgstr ""
 
-# .primary 
-msgctxt ".primary"
+# header.aria.primary 
+msgctxt "header.aria.primary"
 msgid "primary"
 msgstr ""
 
-# .menu 
-msgctxt ".menu"
+# header.aria.menu 
+msgctxt "header.aria.menu"
 msgid "menu"
 msgstr ""
 
-# .search 
-msgctxt ".search"
+# hero.search 
+msgctxt "hero.search"
 msgid "search"
 msgstr ""
 
-# .sr-search 
-msgctxt ".sr-search"
+# header.aria.sr-search 
+msgctxt "header.aria.sr-search"
 msgid "sr search button"
 msgstr ""
 
@@ -125,223 +125,223 @@ msgctxt ".extension"
 msgid "extension"
 msgstr ""
 
-# .licenses 
-msgctxt ".licenses"
+# header.licenses 
+msgctxt "header.licenses"
 msgid "The Licenses"
 msgstr ""
 
-# .about-tab 
-msgctxt ".about-tab"
+# header.about-tab 
+msgctxt "header.about-tab"
 msgid "About"
 msgstr ""
 
-# .resources-tab 
-msgctxt ".resources-tab"
+# header.resources-tab 
+msgctxt "header.resources-tab"
 msgid "Resources"
 msgstr ""
 
-# .api 
-msgctxt ".api"
+# header.api 
+msgctxt "header.api"
 msgid "API"
 msgstr ""
 
-# .description 
-msgctxt ".description"
+# header.donation-banner.description 
+msgctxt "header.donation-banner.description"
 msgid "If you donate $5 today, and everyone else does the same, we can keep growing our database of freely reusable content. For you. For all of us."
 msgstr ""
 
-# .alternative-description 
-msgctxt ".alternative-description"
+# header.donation-banner.alternative-description 
+msgctxt "header.donation-banner.alternative-description"
 msgid "Only 1% of people reading this will donate. Be one of them and help us sustain Openverse."
 msgstr ""
 
-# .yes 
-msgctxt ".yes"
+# header.donation-banner.yes 
+msgctxt "header.donation-banner.yes"
 msgid "Yes, I'll donate now"
 msgstr ""
 
-# .no 
-msgctxt ".no"
+# header.donation-banner.no 
+msgctxt "header.donation-banner.no"
 msgid "Not today"
 msgstr ""
 
-# .text 
-msgctxt ".text"
+# header.notification.text 
+msgctxt "header.notification.text"
 msgid "Example notification text"
 msgstr ""
 
-# .dismiss 
-msgctxt ".dismiss"
+# header.notification.dismiss 
+msgctxt "header.notification.dismiss"
 msgid "Dismiss"
 msgstr ""
 
-# .okay 
-msgctxt ".okay"
+# header.notification.okay 
+msgctxt "header.notification.okay"
 msgid "OK"
 msgstr ""
 
-# .contact 
-msgctxt ".contact"
+# footer.navigation.contact 
+msgctxt "footer.navigation.contact"
 msgid "Contact"
 msgstr ""
 
-# .privacy 
-msgctxt ".privacy"
+# footer.navigation.privacy 
+msgctxt "footer.navigation.privacy"
 msgid "Privacy"
 msgstr ""
 
-# .policies 
-msgctxt ".policies"
+# footer.navigation.policies 
+msgctxt "footer.navigation.policies"
 msgid "Policies"
 msgstr ""
 
-# .terms 
-msgctxt ".terms"
+# footer.navigation.terms 
+msgctxt "footer.navigation.terms"
 msgid "Terms"
 msgstr ""
 
-# .label (Do not translate words in curly braces)
-msgctxt ".label"
+# hero.license-filter.label (Do not translate words in curly braces)
+msgctxt "hero.license-filter.label"
 msgid "Except where otherwise {noted}, content on this site is licensed under a {attribution}. {icons}"
 msgstr ""
 
-# .noted 
-msgctxt ".noted"
+# footer.caption.noted 
+msgctxt "footer.caption.noted"
 msgid "noted"
 msgstr ""
 
-# .attribution 
-msgctxt ".attribution"
+# footer.caption.attribution 
+msgctxt "footer.caption.attribution"
 msgid "Creative Commons Attribution 4.0 International license"
 msgstr ""
 
-# .icons 
-msgctxt ".icons"
+# footer.caption.icons 
+msgctxt "footer.caption.icons"
 msgid "Icons by Font Awesome."
 msgstr ""
 
-# .work 
-msgctxt ".work"
+# footer.donate.work 
+msgctxt "footer.donate.work"
 msgid "Our work relies on you!"
 msgstr ""
 
-# .help 
-msgctxt ".help"
+# footer.donate.help 
+msgctxt "footer.donate.help"
 msgid "Help us keep the internet free and open."
 msgstr ""
 
-# .contact 
-msgctxt ".contact"
+# footer.navigation.contact 
+msgctxt "footer.navigation.contact"
 msgid "contact info"
 msgstr ""
 
-# .donate 
-msgctxt ".donate"
+# footer.donate 
+msgctxt "footer.donate"
 msgid "donate section"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "About Openverse"
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "Openverse is a tool that allows openly licensed and public domain works to be discovered and used by everyone."
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "Openverse searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution."
 msgstr ""
 
-# .common-crawl 
-msgctxt ".common-crawl"
+# about.collection.common-crawl 
+msgctxt "about.collection.common-crawl"
 msgid "Common Crawl"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Currently Openverse only searches images, with search for audio and video provided through {meta}. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source ({search}, {api}, {catalog}) and we {community}. You can see what {working}."
 msgstr ""
 
-# .meta 
-msgctxt ".meta"
+# about.planning.meta 
+msgctxt "about.planning.meta"
 msgid "Meta Search"
 msgstr ""
 
-# .search 
-msgctxt ".search"
+# hero.search 
+msgctxt "hero.search"
 msgid "Openverse"
 msgstr ""
 
-# .api 
-msgctxt ".api"
+# header.api 
+msgctxt "header.api"
 msgid "Openverse API"
 msgstr ""
 
-# .catalog 
-msgctxt ".catalog"
+# about.planning.catalog 
+msgctxt "about.planning.catalog"
 msgid "Openverse Catalog"
 msgstr ""
 
-# .community 
-msgctxt ".community"
+# about.planning.community 
+msgctxt "about.planning.community"
 msgid "welcome community contribution"
 msgstr ""
 
-# .working 
-msgctxt ".working"
+# about.planning.working 
+msgctxt "about.planning.working"
 msgid "we’re currently working on"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Openverse is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from {creative-commons} and {wordpress}. We remain committed to our goal of tackling discoverability and accessibility of open access media."
 msgstr ""
 
-# .creative-commons 
-msgctxt ".creative-commons"
+# about.transfer.creative-commons 
+msgctxt "about.transfer.creative-commons"
 msgid "Creative Commons"
 msgstr ""
 
-# .wordpress 
-msgctxt ".wordpress"
+# about.transfer.wordpress 
+msgctxt "about.transfer.wordpress"
 msgid "WordPress"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Please note that Openverse does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}."
 msgstr ""
 
-# .terms 
-msgctxt ".terms"
+# footer.navigation.terms 
+msgctxt "footer.navigation.terms"
 msgid "Openverse Terms of Use"
 msgstr ""
 
-# .common-crawl 
-msgctxt ".common-crawl"
+# about.collection.common-crawl 
+msgctxt "about.collection.common-crawl"
 msgid "Common Crawl"
 msgstr ""
 
-# .meta 
-msgctxt ".meta"
+# about.planning.meta 
+msgctxt "about.planning.meta"
 msgid "meta search"
 msgstr ""
 
-# .projects 
-msgctxt ".projects"
+# about.aria.projects 
+msgctxt "about.aria.projects"
 msgid "Openverse projects"
 msgstr ""
 
-# .community 
-msgctxt ".community"
+# about.planning.community 
+msgctxt "about.planning.community"
 msgid "Make Wordpress community"
 msgstr ""
 
-# .terms 
-msgctxt ".terms"
+# footer.navigation.terms 
+msgctxt "footer.navigation.terms"
 msgid "Openverse terms of use"
 msgstr ""
 
@@ -350,248 +350,248 @@ msgctxt ".sources"
 msgid "sources table"
 msgstr ""
 
-# .creative-commons 
-msgctxt ".creative-commons"
+# about.transfer.creative-commons 
+msgctxt "about.transfer.creative-commons"
 msgid "Creative Commons"
 msgstr ""
 
-# .wordpress 
-msgctxt ".wordpress"
+# about.transfer.wordpress 
+msgctxt "about.transfer.wordpress"
 msgid "WordPress"
 msgstr ""
 
-# .search 
-msgctxt ".search"
+# hero.search 
+msgctxt "hero.search"
 msgid "Openverse"
 msgstr ""
 
-# .api 
-msgctxt ".api"
+# header.api 
+msgctxt "header.api"
 msgid "Openverse API"
 msgstr ""
 
-# .catalog 
-msgctxt ".catalog"
+# about.planning.catalog 
+msgctxt "about.planning.catalog"
 msgid "Openverse Catalog"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Sources"
 msgstr ""
 
-# .detail 
-msgctxt ".detail"
+# sources.detail 
+msgctxt "sources.detail"
 msgid "Clicking on a {single-name} allows you to browse and filter items within that source."
 msgstr ""
 
-# .single-name 
-msgctxt ".single-name"
+# sources.single-name 
+msgctxt "sources.single-name"
 msgid "Source"
 msgstr ""
 
-# .source 
-msgctxt ".source"
+# header.source 
+msgctxt "header.source"
 msgid "Source"
 msgstr ""
 
-# .domain 
-msgctxt ".domain"
+# sources.providers.domain 
+msgctxt "sources.providers.domain"
 msgid "Domain"
 msgstr ""
 
-# .item 
-msgctxt ".item"
+# sources.providers.item 
+msgctxt "sources.providers.item"
 msgid "Total items"
 msgstr ""
 
-# .where 
-msgctxt ".where"
+# sources.cc-content.where 
+msgctxt "sources.cc-content.where"
 msgid "Where does the content on Openverse come from?"
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through Openverse."
 msgstr ""
 
-# .provider (Do not translate words in curly braces)
-msgctxt ".provider"
+# sources.cc-content.provider (Do not translate words in curly braces)
+msgctxt "sources.cc-content.provider"
 msgid "Some providers have multiple different groupings of content within them. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen, diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections."
 msgstr ""
 
-# .europeana (Do not translate words in curly braces)
-msgctxt ".europeana"
+# sources.cc-content.europeana (Do not translate words in curly braces)
+msgctxt "sources.cc-content.europeana"
 msgid "Openverse is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. Openverse is able to index hundreds of valuable sources, through a single integration with the {link-api}."
 msgstr ""
 
-# .europeana-link 
-msgctxt ".europeana-link"
+# sources.cc-content.europeana-link 
+msgctxt "sources.cc-content.europeana-link"
 msgid "Europeana"
 msgstr ""
 
-# .europeana-api 
-msgctxt ".europeana-api"
+# sources.cc-content.europeana-api 
+msgctxt "sources.cc-content.europeana-api"
 msgid "Europeana API"
 msgstr ""
 
-# .smithsonian 
-msgctxt ".smithsonian"
+# sources.cc-content.smithsonian 
+msgctxt "sources.cc-content.smithsonian"
 msgid "Smithsonian Institute"
 msgstr ""
 
-# .flickr 
-msgctxt ".flickr"
+# sources.cc-content.flickr 
+msgctxt "sources.cc-content.flickr"
 msgid "Flickr"
 msgstr ""
 
-# .next 
-msgctxt ".next"
+# sources.new-content.next 
+msgctxt "sources.new-content.next"
 msgid "How do we decide what sources to add next?"
 msgstr ""
 
-# .integrate 
-msgctxt ".integrate"
+# sources.new-content.integrate 
+msgctxt "sources.new-content.integrate"
 msgid "We have a never ending list of possible sources to research prior to integration. We ask ourselves questions like:"
 msgstr ""
 
-# .impact 
-msgctxt ".impact"
+# sources.new-content.impact 
+msgctxt "sources.new-content.impact"
 msgid " What is the impact or importance of this source to our users? If it exists within a provider like Wikimedia Commons, is it valuable for our users to be able to filter by this source directly?"
 msgstr ""
 
-# .reuse 
-msgctxt ".reuse"
+# sources.new-content.reuse 
+msgctxt "sources.new-content.reuse"
 msgid "Is licensing and attribution information clearly displayed to enable confident reuse?"
 msgstr ""
 
-# .total-items 
-msgctxt ".total-items"
+# sources.new-content.total-items 
+msgctxt "sources.new-content.total-items"
 msgid "How many new total items or new types of items can we bring to our users through this integration? Some sources are direct integrations, while others may be a source within a source."
 msgstr ""
 
-# .suggestions 
-msgctxt ".suggestions"
+# sources.suggestions 
+msgctxt "sources.suggestions"
 msgid "We appreciate suggestions for new sources from our community of users."
 msgstr ""
 
-# .issue-button 
-msgctxt ".issue-button"
+# sources.issue-button 
+msgctxt "sources.issue-button"
 msgid "Suggest a new source"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Meta Search"
 msgstr ""
 
-# .intro (Do not translate words in curly braces)
-msgctxt ".intro"
+# meta-search-page.intro (Do not translate words in curly braces)
+msgctxt "meta-search-page.intro"
 msgid "Openverse is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our {link}."
 msgstr ""
 
-# .link 
-msgctxt ".link"
+# hero.caption.link 
+msgctxt "hero.caption.link"
 msgid "sources"
 msgstr ""
 
-# .license 
-msgctxt ".license"
+# meta-search-page.license 
+msgctxt "meta-search-page.license"
 msgid "The internet is a big place! There are plenty of search portals and collections, hosting CC-licensed and public domain content, which we aren’t able to index or surface results from within the Openverse interface. These are important sources of CC-licensed and public domain content, and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located."
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "What content types can I search for using the Meta Search feature?"
 msgstr ""
 
-# .content-types 
-msgctxt ".content-types"
+# meta-search-page.content-types 
+msgctxt "meta-search-page.content-types"
 msgid "Meta Search on Openverse currently supports image, audio, and video search on external sites."
 msgstr ""
 
-# .use 
-msgctxt ".use"
+# meta-search-page.use 
+msgctxt "meta-search-page.use"
 msgid " Use "
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "How does the Meta Search feature work for Images?"
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "Openverse supports built-in image search. When you enter a query on the Openverse homepage, a page of results will be displayed. Scrolling to the bottom of the page, you have two choices:"
 msgstr ""
 
-# .continue 
-msgctxt ".continue"
+# meta-search-page.images.continue 
+msgctxt "meta-search-page.images.continue"
 msgid "Load more results, and continue browsing in Openverse."
 msgstr ""
 
-# .not-finding 
-msgctxt ".not-finding"
+# meta-search-page.images.not-finding 
+msgctxt "meta-search-page.images.not-finding"
 msgid "Click on the link that says “Not finding what you need?” below the image results."
 msgstr ""
 
-# .info (Do not translate words in curly braces)
-msgctxt ".info"
+# meta-search-page.images.info (Do not translate words in curly braces)
+msgctxt "meta-search-page.images.info"
 msgid "When you click on “Not finding what you need?” a modal will load with other sources of CC-licensed and public domain content. Your search query will be preloaded, and if supported, you can select a {use} filter to proactively filter your results. Click on the button for the external source you’d like to search, and your results will open in a new tab."
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "How does the Meta Search feature work for Audio and Video?"
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "Openverse does not yet support built-in audio and video search. For Audio and Video, simply click on the appropriate tab, and you’ll see what sources you can find CC-licensed content on."
 msgstr ""
 
-# .filter (Do not translate words in curly braces)
-msgctxt ".filter"
+# meta-search-page.audio-video.filter (Do not translate words in curly braces)
+msgctxt "meta-search-page.audio-video.filter"
 msgid "The Filters bar on the left includes the {use} filter, which may be supported by some meta search sources. Apply these before clicking on the button for the external source you’d like to search."
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Can I suggest new sources for Meta Search?"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Yes, please! Create an {issue} in our GitHub repository or send us an {email} and tell us about the new sources you’d like to see included."
 msgstr ""
 
-# .issue 
-msgctxt ".issue"
+# meta-search-page.new.issue 
+msgctxt "meta-search-page.new.issue"
 msgid "issue"
 msgstr ""
 
-# .email 
-msgctxt ".email"
+# meta-search-page.new.email 
+msgctxt "meta-search-page.new.email"
 msgid "email"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Why did you build this?"
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "For many years, CC has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. These platforms included Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter, and SoundCloud. The search experience looked like this:"
 msgstr ""
 
-# .new 
-msgctxt ".new"
+# meta-search-page.new 
+msgctxt "meta-search-page.new"
 msgid "For users of the legacy CC Meta Search site, the Meta Search feature on Openverse will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the Meta Search feature builds on this functionality, allowing us to quickly add new sources to Meta Search as we discover them, and support new content types in the future, as we expand."
 msgstr ""
 
-# .aria-label 
-msgctxt ".aria-label"
+# meta-search-page.why.aria-label 
+msgctxt "meta-search-page.why.aria-label"
 msgid "feedback"
 msgstr ""
 
@@ -600,653 +600,653 @@ msgctxt ".feedback"
 msgid "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}."
 msgstr ""
 
-# .feedback-link 
-msgctxt ".feedback-link"
+# meta-search-page.why.feedback-link 
+msgctxt "meta-search-page.why.feedback-link"
 msgid "feedback"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Openverse Syntax Guide"
 msgstr ""
 
-# .intro 
-msgctxt ".intro"
+# meta-search-page.intro 
+msgctxt "meta-search-page.intro"
 msgid "When you search, you can enter special symbols or words to your search term to make your search results more precise."
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Search for an exact match"
 msgstr ""
 
-# .aria-label 
-msgctxt ".aria-label"
+# meta-search-page.why.aria-label 
+msgctxt "meta-search-page.why.aria-label"
 msgid "quote unquote Claude Monet"
 msgstr ""
 
-# .claude-monet 
-msgctxt ".claude-monet"
+# search-guide.exact.claude-monet 
+msgctxt "search-guide.exact.claude-monet"
 msgid ""Claude Monet""
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Put a word or phrase inside quotes. For example, {link}."
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Combining terms"
 msgstr ""
 
-# .description 
-msgctxt ".description"
+# header.donation-banner.description 
+msgctxt "header.donation-banner.description"
 msgid "If you want to combine terms, you can use the following operators to perform more complex queries"
 msgstr ""
 
-# .and (Do not translate words in curly braces)
-msgctxt ".and"
+# search-guide.combine.and (Do not translate words in curly braces)
+msgctxt "search-guide.combine.and"
 msgid "{symbol} signifies AND operation"
 msgstr ""
 
-# .or (Do not translate words in curly braces)
-msgctxt ".or"
+# search-guide.combine.or (Do not translate words in curly braces)
+msgctxt "search-guide.combine.or"
 msgid "{symbol} signifies OR operation"
 msgstr ""
 
-# .negate (Do not translate words in curly braces)
-msgctxt ".negate"
+# search-guide.combine.negate (Do not translate words in curly braces)
+msgctxt "search-guide.combine.negate"
 msgid "{symbol} negates a single token"
 msgstr ""
 
-# .prefix (Do not translate words in curly braces)
-msgctxt ".prefix"
+# search-guide.combine.prefix (Do not translate words in curly braces)
+msgctxt "search-guide.combine.prefix"
 msgid "{symbol} at the end of a term signifies a prefix query"
 msgstr ""
 
-# .precedence (Do not translate words in curly braces)
-msgctxt ".precedence"
+# search-guide.combine.precedence (Do not translate words in curly braces)
+msgctxt "search-guide.combine.precedence"
 msgid "{open} and {close} signify precedence"
 msgstr ""
 
-# .fuzziness (Do not translate words in curly braces)
-msgctxt ".fuzziness"
+# search-guide.combine.fuzziness (Do not translate words in curly braces)
+msgctxt "search-guide.combine.fuzziness"
 msgid "{symbol} after a word signifies edit distance (fuzziness)"
 msgstr ""
 
-# .fuzziness 
-msgctxt ".fuzziness"
+# search-guide.combine.fuzziness 
+msgctxt "search-guide.combine.fuzziness"
 msgid "tilde N"
 msgstr ""
 
-# .open 
-msgctxt ".open"
+# search-guide.combine.aria-labels.open 
+msgctxt "search-guide.combine.aria-labels.open"
 msgid "open parenthesis"
 msgstr ""
 
-# .close 
-msgctxt ".close"
+# search-guide.combine.aria-labels.close 
+msgctxt "search-guide.combine.aria-labels.close"
 msgid "close parenthesis"
 msgstr ""
 
-# .star 
-msgctxt ".star"
+# search-guide.combine.aria-labels.star 
+msgctxt "search-guide.combine.aria-labels.star"
 msgid "star symbol"
 msgstr ""
 
-# .minus 
-msgctxt ".minus"
+# search-guide.combine.aria-labels.minus 
+msgctxt "search-guide.combine.aria-labels.minus"
 msgid "minus symbol"
 msgstr ""
 
-# .plus 
-msgctxt ".plus"
+# search-guide.combine.aria-labels.plus 
+msgctxt "search-guide.combine.aria-labels.plus"
 msgid "plus symbol"
 msgstr ""
 
-# .vertical-bar 
-msgctxt ".vertical-bar"
+# search-guide.combine.aria-labels.vertical-bar 
+msgctxt "search-guide.combine.aria-labels.vertical-bar"
 msgid "vertical bar symbol"
 msgstr ""
 
-# .description (Do not translate words in curly braces)
-msgctxt ".description"
+# header.donation-banner.description (Do not translate words in curly braces)
+msgctxt "header.donation-banner.description"
 msgid "Example: {link}{br} This will search for images related to both dog and cat."
 msgstr ""
 
-# .aria-label 
-msgctxt ".aria-label"
+# meta-search-page.why.aria-label 
+msgctxt "meta-search-page.why.aria-label"
 msgid "dog plus cat"
 msgstr ""
 
-# .example 
-msgctxt ".example"
+# search-guide.example 
+msgctxt "search-guide.example"
 msgid "dog+cat"
 msgstr ""
 
-# .description (Do not translate words in curly braces)
-msgctxt ".description"
+# header.donation-banner.description (Do not translate words in curly braces)
+msgctxt "header.donation-banner.description"
 msgid "Example: {link}{br} This will search for images related to dog or cat, but not necessarily both."
 msgstr ""
 
-# .aria-label 
-msgctxt ".aria-label"
+# meta-search-page.why.aria-label 
+msgctxt "meta-search-page.why.aria-label"
 msgid "dog vertical bar cat"
 msgstr ""
 
-# .example 
-msgctxt ".example"
+# search-guide.example 
+msgctxt "search-guide.example"
 msgid "dog|cat"
 msgstr ""
 
-# .description (Do not translate words in curly braces)
-msgctxt ".description"
+# header.donation-banner.description (Do not translate words in curly braces)
+msgctxt "header.donation-banner.description"
 msgid "You can use the {operator} to exclude a search term from the results."
 msgstr ""
 
-# .operator-name 
-msgctxt ".operator-name"
+# search-guide.example.negate.operator-name 
+msgctxt "search-guide.example.negate.operator-name"
 msgid "operator (signifies NOT)"
 msgstr ""
 
-# .operator-aria-label 
-msgctxt ".operator-aria-label"
+# search-guide.example.negate.operator-aria-label 
+msgctxt "search-guide.example.negate.operator-aria-label"
 msgid "minus operator (signifies NOT)"
 msgstr ""
 
-# .aria-label 
-msgctxt ".aria-label"
+# meta-search-page.why.aria-label 
+msgctxt "meta-search-page.why.aria-label"
 msgid "dog minus pug"
 msgstr ""
 
-# .example 
-msgctxt ".example"
+# search-guide.example 
+msgctxt "search-guide.example"
 msgid "dog -pug"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Example: {link}{br} This will search for images related to dog but won't include results related to 'pug'"
 msgstr ""
 
-# .description 
-msgctxt ".description"
+# header.donation-banner.description 
+msgctxt "header.donation-banner.description"
 msgid "You can use the {operator-name} to mark a prefix term. This will match anything after the *."
 msgstr ""
 
-# .operator-name 
-msgctxt ".operator-name"
+# search-guide.example.negate.operator-name 
+msgctxt "search-guide.example.negate.operator-name"
 msgid "operator (wildcard)"
 msgstr ""
 
-# .operator-aria-label 
-msgctxt ".operator-aria-label"
+# search-guide.example.negate.operator-aria-label 
+msgctxt "search-guide.example.negate.operator-aria-label"
 msgid "star operator (wildcard)"
 msgstr ""
 
-# .aria-label 
-msgctxt ".aria-label"
+# meta-search-page.why.aria-label 
+msgctxt "meta-search-page.why.aria-label"
 msgid "net star symbol"
 msgstr ""
 
-# .example 
-msgctxt ".example"
+# search-guide.example 
+msgctxt "search-guide.example"
 msgid "net*"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Example: {link}{br} This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.."
 msgstr ""
 
-# .description (Do not translate words in curly braces)
-msgctxt ".description"
+# header.donation-banner.description (Do not translate words in curly braces)
+msgctxt "header.donation-banner.description"
 msgid "You can use parentheses {highlight} to specify precedence of terms or combine more complex queries."
 msgstr ""
 
-# .aria-label 
-msgctxt ".aria-label"
+# meta-search-page.why.aria-label 
+msgctxt "meta-search-page.why.aria-label"
 msgid "dogs plus open parenthesis corgis vertical bar labrador close parenthesis"
 msgstr ""
 
-# .example 
-msgctxt ".example"
+# search-guide.example 
+msgctxt "search-guide.example"
 msgid "dogs + (corgis | labrador)"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Example: {link}{br} This will search for images that match dogs that are either corgis or labrador."
 msgstr ""
 
-# .description (Do not translate words in curly braces)
-msgctxt ".description"
+# header.donation-banner.description (Do not translate words in curly braces)
+msgctxt "header.donation-banner.description"
 msgid "You can use {highlight} to specify some fuzzy logic to the term according to the {link} — the number of one character changes that need to be made to one string to make it the same as another string."
 msgstr ""
 
-# .link-text 
-msgctxt ".link-text"
+# search-guide.example.fuzziness.link-text 
+msgctxt "search-guide.example.fuzziness.link-text"
 msgid "Levenshtein Edit Distance"
 msgstr ""
 
-# .aria-label 
-msgctxt ".aria-label"
+# meta-search-page.why.aria-label 
+msgctxt "meta-search-page.why.aria-label"
 msgid "theatre tilde 1"
 msgstr ""
 
-# .example 
-msgctxt ".example"
+# search-guide.example 
+msgctxt "search-guide.example"
 msgid "theatre~1"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Example: {link}{br} This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'."
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Feedback"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Thank you for using Openverse! We welcome your ideas for improving the tool below. To provide regular feedback, join the {openverse} channel in the {making-wordpress} Slack workspace."
 msgstr ""
 
-# .openverse 
-msgctxt ".openverse"
+# feedback.description.openverse 
+msgctxt "feedback.description.openverse"
 msgid "#openverse"
 msgstr ""
 
-# .making-wordpress 
-msgctxt ".making-wordpress"
+# feedback.description.making-wordpress 
+msgctxt "feedback.description.making-wordpress"
 msgid "Making WordPress"
 msgstr ""
 
-# .improve 
-msgctxt ".improve"
+# feedback.improve 
+msgctxt "feedback.improve"
 msgid "Help us Improve"
 msgstr ""
 
-# .report 
-msgctxt ".report"
+# feedback.report 
+msgctxt "feedback.report"
 msgid "Report a Bug"
 msgstr ""
 
-# .loading 
-msgctxt ".loading"
+# feedback.loading 
+msgctxt "feedback.loading"
 msgid "Loading..."
 msgstr ""
 
-# .cc-usability 
-msgctxt ".cc-usability"
+# feedback.aria.cc-usability 
+msgctxt "feedback.aria.cc-usability"
 msgid "slack cc-usability channel"
 msgstr ""
 
-# .improve 
-msgctxt ".improve"
+# feedback.improve 
+msgctxt "feedback.improve"
 msgid "help us improve form"
 msgstr ""
 
-# .report 
-msgctxt ".report"
+# feedback.report 
+msgctxt "feedback.report"
 msgid "report a bug form"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Web extension"
 msgstr ""
 
-# .intro 
-msgctxt ".intro"
+# meta-search-page.intro 
+msgctxt "meta-search-page.intro"
 msgid "A browser extension that lets you search and use open-licensed and public domain images."
 msgstr ""
 
-# .heading 
-msgctxt ".heading"
+# extension.features.search.heading 
+msgctxt "extension.features.search.heading"
 msgid "Search and filter openly-licensed and public domain content"
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "Browse through millions of content and use filters to find what best meets your needs."
 msgstr ""
 
-# .heading 
-msgctxt ".heading"
+# extension.features.search.heading 
+msgctxt "extension.features.search.heading"
 msgid "Bookmark your favorite images without breaking your navigation"
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "Add images to your bookmarks and use them whenever you want without interrupting your navigation. "
 msgstr ""
 
-# .heading 
-msgctxt ".heading"
+# extension.features.search.heading 
+msgctxt "extension.features.search.heading"
 msgid "Use the image and give attribution to the creator easily"
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "Download the image and paste the attribution information on compatible formats."
 msgstr ""
 
-# .conclusion 
-msgctxt ".conclusion"
+# extension.conclusion 
+msgctxt "extension.conclusion"
 msgid "Have your favourite content while browsing the web"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Browse collections"
 msgstr ""
 
-# .museum 
-msgctxt ".museum"
+# collections.museum 
+msgctxt "collections.museum"
 msgid "Museum Collections"
 msgstr ""
 
-# .other 
-msgctxt ".other"
+# collections.other 
+msgctxt "collections.other"
 msgid "Other Collections"
 msgstr ""
 
-# .collection-size (Do not translate words in curly braces)
-msgctxt ".collection-size"
+# collections.collection-size (Do not translate words in curly braces)
+msgctxt "collections.collection-size"
 msgid "Collection size: {count} images"
 msgstr ""
 
-# .not-found 
-msgctxt ".not-found"
+# error.not-found 
+msgctxt "error.not-found"
 msgid "Page Not Found"
 msgstr ""
 
-# .occurred 
-msgctxt ".occurred"
+# error.occurred 
+msgctxt "error.occurred"
 msgid "An error occurred"
 msgstr ""
 
-# .image-not-found (Do not translate words in curly braces)
-msgctxt ".image-not-found"
+# error.image-not-found (Do not translate words in curly braces)
+msgctxt "error.image-not-found"
 msgid "Couldn't find image with id {id}"
 msgstr ""
 
-# .image 
-msgctxt ".image"
+# search-tab.image 
+msgctxt "search-tab.image"
 msgid "Image"
 msgstr ""
 
-# .audio 
-msgctxt ".audio"
+# search-tab.audio 
+msgctxt "search-tab.audio"
 msgid "Audio"
 msgstr ""
 
-# .video 
-msgctxt ".video"
+# search-tab.video 
+msgctxt "search-tab.video"
 msgid "Video"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Filters"
 msgstr ""
 
-# .filter-by 
-msgctxt ".filter-by"
+# filters.filter-by 
+msgctxt "filters.filter-by"
 msgid "Filter By"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "License or Public Domain"
 msgstr ""
 
-# .cc0 
-msgctxt ".cc0"
+# filters.licenses.cc0 
+msgctxt "filters.licenses.cc0"
 msgid "CC0"
 msgstr ""
 
-# .pdm 
-msgctxt ".pdm"
+# filters.licenses.pdm 
+msgctxt "filters.licenses.pdm"
 msgid "Public Domain Mark"
 msgstr ""
 
-# .by 
-msgctxt ".by"
+# filters.licenses.by 
+msgctxt "filters.licenses.by"
 msgid "BY"
 msgstr ""
 
-# .by-sa 
-msgctxt ".by-sa"
+# filters.licenses.by-sa 
+msgctxt "filters.licenses.by-sa"
 msgid "BY-SA"
 msgstr ""
 
-# .by-nc 
-msgctxt ".by-nc"
+# filters.licenses.by-nc 
+msgctxt "filters.licenses.by-nc"
 msgid "BY-NC"
 msgstr ""
 
-# .by-nd 
-msgctxt ".by-nd"
+# filters.licenses.by-nd 
+msgctxt "filters.licenses.by-nd"
 msgid "BY-ND"
 msgstr ""
 
-# .by-nc-sa 
-msgctxt ".by-nc-sa"
+# filters.licenses.by-nc-sa 
+msgctxt "filters.licenses.by-nc-sa"
 msgid "BY-NC-SA"
 msgstr ""
 
-# .by-nc-nd 
-msgctxt ".by-nc-nd"
+# filters.licenses.by-nc-nd 
+msgctxt "filters.licenses.by-nc-nd"
 msgid "BY-NC-ND"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Use"
 msgstr ""
 
-# .commercial 
-msgctxt ".commercial"
+# filters.license-types.commercial 
+msgctxt "filters.license-types.commercial"
 msgid "Use commercially"
 msgstr ""
 
-# .modification 
-msgctxt ".modification"
+# filters.license-types.modification 
+msgctxt "filters.license-types.modification"
 msgid "Modify or adapt"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Source"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Image Type"
 msgstr ""
 
-# .photograph 
-msgctxt ".photograph"
+# filters.categories.photograph 
+msgctxt "filters.categories.photograph"
 msgid "Photographs"
 msgstr ""
 
-# .illustration 
-msgctxt ".illustration"
+# filters.categories.illustration 
+msgctxt "filters.categories.illustration"
 msgid "Illustrations"
 msgstr ""
 
-# .digitized-artwork 
-msgctxt ".digitized-artwork"
+# filters.categories.digitized-artwork 
+msgctxt "filters.categories.digitized-artwork"
 msgid "Digitized Artworks"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "File Type"
 msgstr ""
 
-# .jpg 
-msgctxt ".jpg"
+# filters.extensions.jpg 
+msgctxt "filters.extensions.jpg"
 msgid "JPEGs"
 msgstr ""
 
-# .png 
-msgctxt ".png"
+# filters.extensions.png 
+msgctxt "filters.extensions.png"
 msgid "PNGs"
 msgstr ""
 
-# .gif 
-msgctxt ".gif"
+# filters.extensions.gif 
+msgctxt "filters.extensions.gif"
 msgid "GIFs"
 msgstr ""
 
-# .svg 
-msgctxt ".svg"
+# filters.extensions.svg 
+msgctxt "filters.extensions.svg"
 msgid "SVGs"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Aspect Ratio"
 msgstr ""
 
-# .tall 
-msgctxt ".tall"
+# filters.aspect-ratios.tall 
+msgctxt "filters.aspect-ratios.tall"
 msgid "Tall"
 msgstr ""
 
-# .wide 
-msgctxt ".wide"
+# filters.aspect-ratios.wide 
+msgctxt "filters.aspect-ratios.wide"
 msgid "Wide"
 msgstr ""
 
-# .square 
-msgctxt ".square"
+# filters.aspect-ratios.square 
+msgctxt "filters.aspect-ratios.square"
 msgid "Square"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Image Size"
 msgstr ""
 
-# .small 
-msgctxt ".small"
+# filters.sizes.small 
+msgctxt "filters.sizes.small"
 msgid "Small"
 msgstr ""
 
-# .medium 
-msgctxt ".medium"
+# filters.sizes.medium 
+msgctxt "filters.sizes.medium"
 msgid "Medium"
 msgstr ""
 
-# .large 
-msgctxt ".large"
+# filters.sizes.large 
+msgctxt "filters.sizes.large"
 msgid "Large"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Search Settings"
 msgstr ""
 
-# .enable 
-msgctxt ".enable"
+# filters.mature.enable 
+msgctxt "filters.mature.enable"
 msgid "Enable Mature Content"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Search by Creator"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Search By"
 msgstr ""
 
-# .creator 
-msgctxt ".creator"
+# filters.creator 
+msgctxt "filters.creator"
 msgid "Creator"
 msgstr ""
 
-# .tool (Do not translate words in curly braces)
-msgctxt ".tool"
+# filters.license-explanation.tool (Do not translate words in curly braces)
+msgctxt "filters.license-explanation.tool"
 msgid "Read more about the tool {link}"
 msgstr ""
 
-# .license (Do not translate words in curly braces)
-msgctxt ".license"
+# meta-search-page.license (Do not translate words in curly braces)
+msgctxt "meta-search-page.license"
 msgid "Read more about the license {link}"
 msgstr ""
 
-# .link 
-msgctxt ".link"
+# hero.caption.link 
+msgctxt "hero.caption.link"
 msgid "here"
 msgstr ""
 
-# .filter-by 
-msgctxt ".filter-by"
+# filters.filter-by 
+msgctxt "filters.filter-by"
 msgid "Filter results by"
 msgstr ""
 
-# .hide 
-msgctxt ".hide"
+# filter-list.hide 
+msgctxt "filter-list.hide"
 msgid "Hide filters"
 msgstr ""
 
-# .clear 
-msgctxt ".clear"
+# filter-list.clear 
+msgctxt "filter-list.clear"
 msgid "Clear filters"
 msgstr ""
 
-# .show 
-msgctxt ".show"
+# filter-list.show 
+msgctxt "filter-list.show"
 msgid "Show results"
 msgstr ""
 
-# .all-result-count 
-msgctxt ".all-result-count"
+# browse-page.all-result-count 
+msgctxt "browse-page.all-result-count"
 msgid "no results|{localeCount} result|{localeCount} results"
 msgstr ""
 
-# .audio-result-count 
-msgctxt ".audio-result-count"
+# browse-page.audio-result-count 
+msgctxt "browse-page.audio-result-count"
 msgid "no audio results|{localeCount} audio result|{localeCount} audio results"
 msgstr ""
 
-# .image-result-count 
-msgctxt ".image-result-count"
+# browse-page.image-result-count 
+msgctxt "browse-page.image-result-count"
 msgid "no image results|{localeCount} image result|{localeCount} image results"
 msgstr ""
 
-# .all-result-count-more 
-msgctxt ".all-result-count-more"
+# browse-page.all-result-count-more 
+msgctxt "browse-page.all-result-count-more"
 msgid "Over {localeCount} results"
 msgstr ""
 
-# .audio-result-count-more 
-msgctxt ".audio-result-count-more"
+# browse-page.audio-result-count-more 
+msgctxt "browse-page.audio-result-count-more"
 msgid "Over {localeCount} audio results"
 msgstr ""
 
-# .image-result-count-more 
-msgctxt ".image-result-count-more"
+# browse-page.image-result-count-more 
+msgctxt "browse-page.image-result-count-more"
 msgid "Over {localeCount} image results"
 msgstr ""
 
-# .no-more 
-msgctxt ".no-more"
+# browse-page.no-more 
+msgctxt "browse-page.no-more"
 msgid "No more images :("
 msgstr ""
 
-# .load 
-msgctxt ".load"
+# browse-page.load 
+msgctxt "browse-page.load"
 msgid "Load more results"
 msgstr ""
 
@@ -1255,23 +1255,23 @@ msgctxt ".error"
 msgid "Error fetching images:"
 msgstr ""
 
-# .other-source 
-msgctxt ".other-source"
+# browse-page.other-source 
+msgctxt "browse-page.other-source"
 msgid "Not finding what you need? Search other sources"
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "Are these results relevant?"
 msgstr ""
 
-# .yes 
-msgctxt ".yes"
+# header.donation-banner.yes 
+msgctxt "header.donation-banner.yes"
 msgid "Yes"
 msgstr ""
 
-# .no 
-msgctxt ".no"
+# header.donation-banner.no 
+msgctxt "header.donation-banner.no"
 msgid "No"
 msgstr ""
 
@@ -1280,373 +1280,373 @@ msgctxt ".feedback"
 msgid "Thank you for the feedback!"
 msgstr ""
 
-# .placeholder (Do not translate words in curly braces)
-msgctxt ".placeholder"
+# hero.search.placeholder (Do not translate words in curly braces)
+msgctxt "hero.search.placeholder"
 msgid "Search all {type}"
 msgstr ""
 
-# .collection-placeholder 
-msgctxt ".collection-placeholder"
+# browse-page.search-form.collection-placeholder 
+msgctxt "browse-page.search-form.collection-placeholder"
 msgid "Search this collection"
 msgstr ""
 
-# .button 
-msgctxt ".button"
+# hero.search.button 
+msgctxt "hero.search.button"
 msgid "Search"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "License CC"
 msgstr ""
 
-# .by 
-msgctxt ".by"
+# filters.licenses.by 
+msgctxt "filters.licenses.by"
 msgid "Credit the creator."
 msgstr ""
 
-# .nc 
-msgctxt ".nc"
+# browse-page.license-description.nc 
+msgctxt "browse-page.license-description.nc"
 msgid "Noncommercial uses only."
 msgstr ""
 
-# .nd 
-msgctxt ".nd"
+# browse-page.license-description.nd 
+msgctxt "browse-page.license-description.nd"
 msgid "No derivatives or adaptations permitted."
 msgstr ""
 
-# .sa 
-msgctxt ".sa"
+# browse-page.license-description.sa 
+msgctxt "browse-page.license-description.sa"
 msgid "Share adaptations under the same terms."
 msgstr ""
 
-# .cc0 
-msgctxt ".cc0"
+# filters.licenses.cc0 
+msgctxt "filters.licenses.cc0"
 msgid "This work has been marked as dedicated to the public domain."
 msgstr ""
 
-# .pdm 
-msgctxt ".pdm"
+# filters.licenses.pdm 
+msgctxt "filters.licenses.pdm"
 msgid "This work is marked as being in the public domain."
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Safer Browsing"
 msgstr ""
 
-# .caption 
-msgctxt ".caption"
+# hero.caption 
+msgctxt "hero.caption"
 msgid "By default, search results will not include results that have been reported as mature by users and sources."
 msgstr ""
 
-# .label 
-msgctxt ".label"
+# hero.license-filter.label 
+msgctxt "hero.license-filter.label"
 msgid "Show Mature Content"
 msgstr ""
 
-# .close 
-msgctxt ".close"
+# search-guide.combine.aria-labels.close 
+msgctxt "search-guide.combine.aria-labels.close"
 msgid "close"
 msgstr ""
 
-# .scroll 
-msgctxt ".scroll"
+# browse-page.aria.scroll 
+msgctxt "browse-page.aria.scroll"
 msgid "scroll to top"
 msgstr ""
 
-# .search 
-msgctxt ".search"
+# hero.search 
+msgctxt "hero.search"
 msgid "search"
 msgstr ""
 
-# .yes 
-msgctxt ".yes"
+# header.donation-banner.yes 
+msgctxt "header.donation-banner.yes"
 msgid "relevant result? answer: yes"
 msgstr ""
 
-# .no 
-msgctxt ".no"
+# header.donation-banner.no 
+msgctxt "header.donation-banner.no"
 msgid "relevant result? answer: no"
 msgstr ""
 
-# .remove-filter 
-msgctxt ".remove-filter"
+# browse-page.aria.remove-filter 
+msgctxt "browse-page.aria.remove-filter"
 msgid "remove filter"
 msgstr ""
 
-# .license-explanation 
-msgctxt ".license-explanation"
+# filters.license-explanation 
+msgctxt "filters.license-explanation"
 msgid "license explanation"
 msgstr ""
 
-# .creator 
-msgctxt ".creator"
+# filters.creator 
+msgctxt "filters.creator"
 msgid "search by creator"
 msgstr ""
 
-# .back 
-msgctxt ".back"
+# photo-details.back 
+msgctxt "photo-details.back"
 msgid "Back to search results"
 msgstr ""
 
-# .creator (Do not translate words in curly braces)
-msgctxt ".creator"
+# filters.creator (Do not translate words in curly braces)
+msgctxt "filters.creator"
 msgid "by {name}"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Reuse"
 msgstr ""
 
-# .license-header 
-msgctxt ".license-header"
+# photo-details.reuse.license-header 
+msgctxt "photo-details.reuse.license-header"
 msgid "License"
 msgstr ""
 
-# .tool-header 
-msgctxt ".tool-header"
+# photo-details.reuse.tool-header 
+msgctxt "photo-details.reuse.tool-header"
 msgid "Public Domain"
 msgstr ""
 
-# .image 
-msgctxt ".image"
+# search-tab.image 
+msgctxt "search-tab.image"
 msgid "Image"
 msgstr ""
 
-# .main (Do not translate words in curly braces)
-msgctxt ".main"
+# photo-details.reuse.attribution.main (Do not translate words in curly braces)
+msgctxt "photo-details.reuse.attribution.main"
 msgid "This image was marked with a {link} license."
 msgstr ""
 
-# .license 
-msgctxt ".license"
+# meta-search-page.license 
+msgctxt "meta-search-page.license"
 msgid "license."
 msgstr ""
 
-# .text (Do not translate words in curly braces)
-msgctxt ".text"
+# header.notification.text (Do not translate words in curly braces)
+msgctxt "header.notification.text"
 msgid "{title}{creator}{marked-licensed}{license}{view-legal}"
 msgstr ""
 
-# .creator-text 
-msgctxt ".creator-text"
+# photo-details.reuse.credit.creator-text 
+msgctxt "photo-details.reuse.credit.creator-text"
 msgid " by {creator-name}"
 msgstr ""
 
-# .marked 
-msgctxt ".marked"
+# photo-details.reuse.credit.marked 
+msgctxt "photo-details.reuse.credit.marked"
 msgid "is marked with"
 msgstr ""
 
-# .licensed 
-msgctxt ".licensed"
+# photo-details.reuse.credit.licensed 
+msgctxt "photo-details.reuse.credit.licensed"
 msgid "is licensed under"
 msgstr ""
 
-# .view-legal-text 
-msgctxt ".view-legal-text"
+# photo-details.reuse.credit.view-legal-text 
+msgctxt "photo-details.reuse.credit.view-legal-text"
 msgid ". To view {terms-copy}visit {URL}"
 msgstr ""
 
-# .terms-text 
-msgctxt ".terms-text"
+# photo-details.reuse.credit.terms-text 
+msgctxt "photo-details.reuse.credit.terms-text"
 msgid "the terms,"
 msgstr ""
 
-# .copy-text 
-msgctxt ".copy-text"
+# photo-details.reuse.credit.copy-text 
+msgctxt "photo-details.reuse.credit.copy-text"
 msgid "a copy of this license,"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Read more about the license {link}"
 msgstr ""
 
-# .link 
-msgctxt ".link"
+# hero.caption.link 
+msgctxt "hero.caption.link"
 msgid "here"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "Read more about the tool {link}"
 msgstr ""
 
-# .link 
-msgctxt ".link"
+# hero.caption.link 
+msgctxt "hero.caption.link"
 msgid "here"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Credit the Creator"
 msgstr ""
 
-# .rich 
-msgctxt ".rich"
+# photo-details.reuse.copy-license.rich 
+msgctxt "photo-details.reuse.copy-license.rich"
 msgid "Rich Text"
 msgstr ""
 
-# .html 
-msgctxt ".html"
+# photo-details.reuse.copy-license.html 
+msgctxt "photo-details.reuse.copy-license.html"
 msgid "HTML"
 msgstr ""
 
-# .plain 
-msgctxt ".plain"
+# photo-details.reuse.copy-license.plain 
+msgctxt "photo-details.reuse.copy-license.plain"
 msgid "Plain text"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Information"
 msgstr ""
 
-# .type 
-msgctxt ".type"
+# photo-details.information.type 
+msgctxt "photo-details.information.type"
 msgid "Type:"
 msgstr ""
 
-# .provider 
-msgctxt ".provider"
+# sources.cc-content.provider 
+msgctxt "sources.cc-content.provider"
 msgid "Provider:"
 msgstr ""
 
-# .dimensions 
-msgctxt ".dimensions"
+# photo-details.information.dimensions 
+msgctxt "photo-details.information.dimensions"
 msgid "Dimensions:"
 msgstr ""
 
-# .source 
-msgctxt ".source"
+# header.source 
+msgctxt "header.source"
 msgid "Source:"
 msgstr ""
 
-# .license 
-msgctxt ".license"
+# meta-search-page.license 
+msgctxt "meta-search-page.license"
 msgid "License"
 msgstr ""
 
-# .tags 
-msgctxt ".tags"
+# photo-details.information.tags 
+msgctxt "photo-details.information.tags"
 msgid "Tags"
 msgstr ""
 
-# .pixels 
-msgctxt ".pixels"
+# photo-details.information.pixels 
+msgctxt "photo-details.information.pixels"
 msgid "pixels"
 msgstr ""
 
-# .share 
-msgctxt ".share"
+# photo-details.share 
+msgctxt "photo-details.share"
 msgid "Share"
 msgstr ""
 
-# .content 
-msgctxt ".content"
+# hero.caption.content 
+msgctxt "hero.caption.content"
 msgid "How are you using this image?"
 msgstr ""
 
-# .link 
-msgctxt ".link"
+# hero.caption.link 
+msgctxt "hero.caption.link"
 msgid "Let us know"
 msgstr ""
 
-# .answer 
-msgctxt ".answer"
+# photo-details.survey.answer 
+msgctxt "photo-details.survey.answer"
 msgid "by answering a few questions."
 msgstr ""
 
-# .weblink 
-msgctxt ".weblink"
+# photo-details.weblink 
+msgctxt "photo-details.weblink"
 msgid "Go to image's website"
 msgstr ""
 
-# .legal-disclaimer 
-msgctxt ".legal-disclaimer"
+# photo-details.legal-disclaimer 
+msgctxt "photo-details.legal-disclaimer"
 msgid "Openverse aggregates data from publicly available repositories of open content. Openverse does not host the content and does not verify that the content is properly CC-licensed or that the attribution information is accurate or complete. Please follow the link to the source of the content to independently verify before reuse."
 msgstr ""
 
-# .related-images 
-msgctxt ".related-images"
+# photo-details.related-images 
+msgctxt "photo-details.related-images"
 msgid "Related Images"
 msgstr ""
 
-# .copy 
-msgctxt ".copy"
+# photo-details.copy 
+msgctxt "photo-details.copy"
 msgid "Copy"
 msgstr ""
 
-# .copied 
-msgctxt ".copied"
+# photo-details.copy.copied 
+msgctxt "photo-details.copy.copied"
 msgid "Copied!"
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Report this content"
 msgstr ""
 
-# .issue 
-msgctxt ".issue"
+# meta-search-page.new.issue 
+msgctxt "meta-search-page.new.issue"
 msgid "What's the issue?"
 msgstr ""
 
-# .issue-description 
-msgctxt ".issue-description"
+# photo-details.content-report.issue-description 
+msgctxt "photo-details.content-report.issue-description"
 msgid "Please describe the issue for us"
 msgstr ""
 
-# .copyright 
-msgctxt ".copyright"
+# photo-details.content-report.copyright 
+msgctxt "photo-details.content-report.copyright"
 msgid "Infringes Copyright"
 msgstr ""
 
-# .mature 
-msgctxt ".mature"
+# filters.mature 
+msgctxt "filters.mature"
 msgid "Contains mature content"
 msgstr ""
 
-# .other 
-msgctxt ".other"
+# collections.other 
+msgctxt "collections.other"
 msgid "Other"
 msgstr ""
 
-# .caption 
-msgctxt ".caption"
+# hero.caption 
+msgctxt "hero.caption"
 msgid "For security purposes, Openverse collects and retains anonymized IP addresses of those who complete and submit this form."
 msgstr ""
 
-# .next 
-msgctxt ".next"
+# sources.new-content.next 
+msgctxt "sources.new-content.next"
 msgid "Next"
 msgstr ""
 
-# .back 
-msgctxt ".back"
+# photo-details.back 
+msgctxt "photo-details.back"
 msgid "Back"
 msgstr ""
 
-# .submit 
-msgctxt ".submit"
+# photo-details.content-report.submit 
+msgctxt "photo-details.content-report.submit"
 msgid "Submit"
 msgstr ""
 
-# .content (Do not translate words in curly braces)
-msgctxt ".content"
+# hero.caption.content (Do not translate words in curly braces)
+msgctxt "hero.caption.content"
 msgid "You must fill out this {link} to report copyright infringement. No action will be taken until the form is filled out and submitted."
 msgstr ""
 
-# .provider (Do not translate words in curly braces)
-msgctxt ".provider"
+# sources.cc-content.provider (Do not translate words in curly braces)
+msgctxt "sources.cc-content.provider"
 msgid "We recommend doing the same at the source, {link}."
 msgstr ""
 
-# .thanks 
-msgctxt ".thanks"
+# photo-details.content-report.dmca.thanks 
+msgctxt "photo-details.content-report.dmca.thanks"
 msgid "Thank you for reporting an issue with the results of Openverse!"
 msgstr ""
 
@@ -1655,58 +1655,58 @@ msgctxt ".error"
 msgid "There was an error with the report submission. Please try again."
 msgstr ""
 
-# .link 
-msgctxt ".link"
+# hero.caption.link 
+msgctxt "hero.caption.link"
 msgid "DMCA form"
 msgstr ""
 
-# .close-form 
-msgctxt ".close-form"
+# photo-details.aria.close-form 
+msgctxt "photo-details.aria.close-form"
 msgid "close form"
 msgstr ""
 
-# .dmca 
-msgctxt ".dmca"
+# photo-details.content-report.dmca 
+msgctxt "photo-details.content-report.dmca"
 msgid "dmca form"
 msgstr ""
 
-# .license 
-msgctxt ".license"
+# meta-search-page.license 
+msgctxt "meta-search-page.license"
 msgid "read more about the license"
 msgstr ""
 
-# .tool 
-msgctxt ".tool"
+# filters.license-explanation.tool 
+msgctxt "filters.license-explanation.tool"
 msgid "read more about the tool"
 msgstr ""
 
-# .details 
-msgctxt ".details"
+# photo-details.aria.details 
+msgctxt "photo-details.aria.details"
 msgid "image details"
 msgstr ""
 
-# .facebook 
-msgctxt ".facebook"
+# photo-details.aria.share.facebook 
+msgctxt "photo-details.aria.share.facebook"
 msgid "share on facebook"
 msgstr ""
 
-# .twitter 
-msgctxt ".twitter"
+# photo-details.aria.share.twitter 
+msgctxt "photo-details.aria.share.twitter"
 msgid "share on twitter"
 msgstr ""
 
-# .pinterest 
-msgctxt ".pinterest"
+# photo-details.aria.share.pinterest 
+msgctxt "photo-details.aria.share.pinterest"
 msgid "share on pinterest"
 msgstr ""
 
-# .main 
-msgctxt ".main"
+# photo-details.reuse.attribution.main 
+msgctxt "photo-details.reuse.attribution.main"
 msgid "main content"
 msgstr ""
 
-# .related 
-msgctxt ".related"
+# photo-details.aria.related 
+msgctxt "photo-details.aria.related"
 msgid "related images"
 msgstr ""
 
@@ -1715,67 +1715,67 @@ msgctxt ".sources"
 msgid "Sources"
 msgstr ""
 
-# .caption 
-msgctxt ".caption"
+# hero.caption 
+msgctxt "hero.caption"
 msgid "Openverse does not currently index the sources listed above, but through this interface is offering convenient access to search services provided by other independent organizations. Openverse has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. Always verify that the work is actually under a CC license by following the link. If you are in doubt, you should contact the copyright holder directly, or try to contact the site where you found the content."
 msgstr ""
 
-# .search 
-msgctxt ".search"
+# hero.search 
+msgctxt "hero.search"
 msgid "Not finding what you're looking for? Try additional sources"
 msgstr ""
 
-# .caption (Do not translate words in curly braces)
-msgctxt ".caption"
+# hero.caption (Do not translate words in curly braces)
+msgctxt "hero.caption"
 msgid "Click on a source below to directly search other collections of CC-licensed images.{break}Please note that Use filters are not supported for Open Clip Art Library or Nappy."
 msgstr ""
 
-# .title 
-msgctxt ".title"
+# hero.title 
+msgctxt "hero.title"
 msgid "Use"
 msgstr ""
 
-# .commercial 
-msgctxt ".commercial"
+# filters.license-types.commercial 
+msgctxt "filters.license-types.commercial"
 msgid "Use for commercial purposes"
 msgstr ""
 
-# .modify 
-msgctxt ".modify"
+# meta-search.card.checkboxes.modify 
+msgctxt "meta-search.card.checkboxes.modify"
 msgid "Modify or adapt"
 msgstr ""
 
-# .unsupported-title (Do not translate words in curly braces)
-msgctxt ".unsupported-title"
+# meta-search.form.unsupported-title (Do not translate words in curly braces)
+msgctxt "meta-search.form.unsupported-title"
 msgid "Openverse does not yet support built-in {type} search."
 msgstr ""
 
-# .supported-title (Do not translate words in curly braces)
-msgctxt ".supported-title"
+# meta-search.form.supported-title (Do not translate words in curly braces)
+msgctxt "meta-search.form.supported-title"
 msgid "Not finding what you're looking for? Try additional {type} sources."
 msgstr ""
 
-# .caption (Do not translate words in curly braces)
-msgctxt ".caption"
+# hero.caption (Do not translate words in curly braces)
+msgctxt "hero.caption"
 msgid "Click on a source below to directly search other collections of CC-licensed {type}.{break}Please note that Use filters are not supported for {filter}."
 msgstr ""
 
-# .chrome 
-msgctxt ".chrome"
+# browsers.chrome 
+msgctxt "browsers.chrome"
 msgid "Chrome"
 msgstr ""
 
-# .firefox 
-msgctxt ".firefox"
+# browsers.firefox 
+msgctxt "browsers.firefox"
 msgid "Firefox"
 msgstr ""
 
-# .opera 
-msgctxt ".opera"
+# browsers.opera 
+msgctxt "browsers.opera"
 msgid "Opera"
 msgstr ""
 
-# .edge 
-msgctxt ".edge"
+# browsers.edge 
+msgctxt "browsers.edge"
 msgid "Edge"
 msgstr ""
