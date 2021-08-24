@@ -1,4 +1,4 @@
-DOCKER_FILE := "openverse_catalog/docker-compose.yml"
+DEV_DOCKER_FILES := "--file=openverse_catalog/docker-compose.yml --file=openverse_catalog/docker-compose.override.yml"
 SERVICE := "webserver"
 
 
@@ -12,24 +12,24 @@ dotenv:
 
 
 up: dotenv
-    docker-compose --file={{ DOCKER_FILE }} up -d
+    docker-compose {{ DEV_DOCKER_FILES }} up -d
 
 
 down flags="":
-    docker-compose --file={{ DOCKER_FILE }} down {{ flags }}
+    docker-compose {{ DEV_DOCKER_FILES }} down {{ flags }}
 
 
 logs: dotenv
-    docker-compose --file={{ DOCKER_FILE }} logs -f
+    docker-compose {{ DEV_DOCKER_FILES }} logs -f
 
 
 test: dotenv
-    docker-compose --file={{ DOCKER_FILE }} exec {{ SERVICE }} /usr/local/airflow/.local/bin/pytest
+    docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} /usr/local/airflow/.local/bin/pytest
 
 
 shell: dotenv
-    docker-compose --file={{ DOCKER_FILE }} exec {{ SERVICE }} /bin/bash
+    docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} /bin/bash
 
 
-airflow command: dotenv
-    docker-compose --file={{ DOCKER_FILE }} exec {{ SERVICE }} airflow {{ command }}
+airflow command="": dotenv
+    docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} airflow {{ command }}
