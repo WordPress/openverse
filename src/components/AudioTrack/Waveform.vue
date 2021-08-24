@@ -13,7 +13,7 @@
     @mousedown="handleMouseDown"
     @mousemove="handleMouseMove"
     @mouseup="handleMouseUp"
-    @mouseleave="clearSeekProgress"
+    @mouseleave="handleMouseLeave"
     @keydown.arrow-left="handleArrows"
     @keydown.arrow-right="handleArrows"
   >
@@ -284,6 +284,9 @@ export default {
       startPos = null
       seek(event)
     }
+    const handleMouseLeave = () => {
+      clearSeekProgress()
+    }
 
     /* Keyboard */
 
@@ -297,9 +300,9 @@ export default {
     }
 
     return {
-      el, // template ref
-
       timeFmt,
+
+      el, // template ref
 
       barWidth,
       normalizedPeaks,
@@ -315,13 +318,11 @@ export default {
       seekBarWidth,
       seekTimestamp,
 
-      setSeekProgress,
-      clearSeekProgress,
-
-      isDragging,
       handleMouseDown,
       handleMouseMove,
       handleMouseUp,
+      handleMouseLeave,
+
       handleArrows,
     }
   },
