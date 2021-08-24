@@ -177,8 +177,7 @@ from the [`openverse_catalog`][cc_airflow] directory.
 To reset the test DB (wiping out all databases, schemata, and tables), run
 
 ```shell
-docker-compose down
-rm -r /tmp/docker_postgres_data/
+docker-compose down -v
 ```
 
 [dockercompose]: openverse_catalog/docker-compose.yml
