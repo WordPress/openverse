@@ -141,6 +141,7 @@ export default {
   env,
   dev: process.env.NODE_ENV !== 'production',
   buildModules: [
+    '@nuxtjs/composition-api/module',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/style-resources',
     '@nuxtjs/svg',
