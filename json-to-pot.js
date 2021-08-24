@@ -11,7 +11,7 @@
  msgid untranslated-string
  msgstr translated-string
  */
-
+const getParsedVueFiles = require('./parse-vue-files.js')
 const json = require('./src/locales/en.json')
 const fs = require('fs')
 
@@ -81,6 +81,22 @@ const findPath = (ob, key) => {
   return path.join('.')
 }
 
+const PARSED_VUE_FILES = getParsedVueFiles('./src/**/*.?(js|vue)')
+
+const BASE_URL = 'https://github.com/WordPress/openverse-frontend/blob/main'
+
+/**
+ * Returns the comment with a reference github link to the line where the
+ * string is used, if available. Example:
+ * #: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+ * @param {string} keyPath (eg."hero.title")
+ * @return {string}
+ */
+const getRefComment = (keyPath) => {
+  const keyValue = PARSED_VUE_FILES.find((k) => k.path === keyPath)
+  return keyValue ? `\n#: ${BASE_URL}${keyValue.file}#L${keyValue.line}` : ''
+}
+
 const escapeQuotes = (str) => str.replace(/"/g, '\\"')
 
 // POT Syntax
@@ -94,10 +110,11 @@ function potTime(json, parent = json) {
   for (const row of Object.entries(json)) {
     let [key, value] = row
     if (typeof value === 'string') {
+      const keyPath = `${findPath(parent, key)}.${key}`
       potFile = `${potFile}
 
-# ${findPath(parent, key)}.${key} ${checkStringForVars(value)}
-msgctxt "${findPath(parent, key)}.${key}"
+# ${keyPath} ${checkStringForVars(value)}${getRefComment(keyPath)}
+msgctxt "${keyPath}"
 msgid "${processValue(value)}"
 msgstr ""`
     }
