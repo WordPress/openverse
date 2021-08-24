@@ -134,8 +134,6 @@ export default {
     },
   },
   setup(props, { emit }) {
-    const el = ref(null) // template ref
-
     /* Utils */
 
     /**
@@ -170,6 +168,7 @@ export default {
 
     /* Element dimensions */
 
+    const el = ref(null) // template ref
     const waveformWidth = ref(0)
     const updateWaveformWidth = () => {
       waveformWidth.value = el.value.clientWidth
