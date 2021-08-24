@@ -11,11 +11,11 @@ installcatalog:
     pip install -r openverse_catalog/requirements_dev.txt
 
 
-makeenv:
+dotenv:
     @([ ! -f openverse_catalog/.env ] && cp openverse_catalog/env.template openverse_catalog/.env) || true
 
 
-up: makeenv
+up: dotenv
     docker-compose --file={{ DOCKER_FILE }} up -d
 
 
@@ -23,17 +23,17 @@ down flags="":
     docker-compose --file={{ DOCKER_FILE }} down {{ flags }}
 
 
-logs: makeenv
+logs: dotenv
     docker-compose --file={{ DOCKER_FILE }} logs -f
 
 
-test: makeenv
+test: dotenv
     docker-compose --file={{ DOCKER_FILE }} exec {{ SERVICE }} /usr/local/airflow/.local/bin/pytest
 
 
-shell: makeenv
+shell: dotenv
     docker-compose --file={{ DOCKER_FILE }} exec {{ SERVICE }} /bin/bash
 
 
-airflow command: makeenv
+airflow command: dotenv
     docker-compose --file={{ DOCKER_FILE }} exec {{ SERVICE }} airflow {{ command }}

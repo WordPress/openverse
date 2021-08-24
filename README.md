@@ -127,7 +127,7 @@ To set up environment variables, navigate to the
 [`openverse_catalog`][cc_airflow] directory, and run
 
 ```shell
-just makeenv
+just dotenv
 ```
 
 If needed, fill in API keys or other secrets and variables in `.env`. This is
