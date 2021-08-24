@@ -20,7 +20,12 @@ S3 = boto3.resource(
     aws_access_key_id="test_key",
     aws_secret_access_key="test_secret",
 )
-BUCKET_LIST = ["cccatalog-storage", "commonsmapper-v2", "commonsmapper"]
+BUCKET_LIST = [
+    "openverse-airflow-logs",
+    "cccatalog-storage",
+    "commonsmapper-v2",
+    "commonsmapper",
+]
 
 
 def main():
@@ -32,7 +37,9 @@ def main():
         sys.exit(0)
 
 
-def _create_local_s3_buckets(bucket_list=BUCKET_LIST):
+def _create_local_s3_buckets(bucket_list=None):
+    if bucket_list is None:
+        bucket_list = BUCKET_LIST.copy()
     success = True
     for bucket in bucket_list:
         success = min(success, _create_local_s3_bucket(bucket_name=bucket))
