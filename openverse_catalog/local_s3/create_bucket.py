@@ -41,7 +41,7 @@ def _create_local_s3_buckets(bucket_list=BUCKET_LIST):
 
 def _create_local_s3_bucket(tries=TRIES, s3=S3, bucket_name=BUCKET_LIST[0]):
     success = False
-    for i in range(1, TRIES + 1):
+    for i in range(1, tries + 1):
         try:
             logger.info(
                 f"Attempting to create bucket {bucket_name}"
