@@ -3,12 +3,8 @@ SERVICE := "webserver"
 
 
 install:
-    pip install -r requirements.txt
+    pip install -r requirements.txt -r openverse_catalog/requirements_dev.txt
     pre-commit install
-
-
-installcatalog:
-    pip install -r openverse_catalog/requirements_dev.txt
 
 
 dotenv:
