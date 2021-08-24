@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ['src/**/*.{vue,js,jsx,ts,tsx}', './nuxt.config.js'],
+  purge: ['src/**/*.{vue,js,jsx,ts,tsx,mdx}', './nuxt.config.js'],
   theme: {
     screens: {
       // Determined by the lower bound of screen width
@@ -32,6 +32,7 @@ module.exports = {
       // Semi-transparent
       'dark-charcoal-04': 'rgba(48, 39, 46, 0.04)',
       'dark-charcoal-20': 'rgba(48, 39, 46, 0.2)',
+      'dark-charcoal-60': 'rgba(48, 39, 46, 0.6)',
 
       // Special keywords
       tx: 'transparent',

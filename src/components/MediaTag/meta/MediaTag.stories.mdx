@@ -1,0 +1,46 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import MediaTag from '~/components/MediaTag/MediaTag.vue'
+
+<Meta title="Components/Media tag" component={MediaTag} />
+
+export const Template = (args, { argTypes }) => ({
+  template: `<MediaTag v-bind="$props" v-on="$props">Hello</MediaTag>`,
+  components: { MediaTag },
+  props: Object.keys(argTypes),
+})
+
+# Media tag
+
+<Description of={MediaTag} />
+
+<ArgsTable of={MediaTag} />
+
+By default, the component is a transparent wrapper over `<span>`.
+
+<Canvas>
+  <Story name="Default">{Template.bind({})}</Story>
+</Canvas>
+
+The root node of the tag can be overridden to a different HTML tag or a Vue
+component, e.g. `a` or `NuxtLink`. Any additional classes, such as for hover and
+focus states on interactive elements, can be applied to add to the base styles.
+
+<Canvas>
+  <Story
+    name="Custom node"
+    args={{
+      tag: 'a',
+      href: 'https://wordpress.org/',
+      class: 'hover:bg-dark-charcoal-60 hover:text-white hover:no-underline',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
