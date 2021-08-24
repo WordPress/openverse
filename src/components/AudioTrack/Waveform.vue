@@ -235,13 +235,18 @@ export default {
       const frac = isDragging.value ? seekFrac.value : currentFrac.value
       return waveformWidth.value * frac
     })
+
+    /* Progress timestamp */
+
     const progressTimestampEl = ref(null)
     const progressTimestamp = computed(() =>
       isDragging.value ? seekTimestamp.value : props.currentTime
     )
     const isProgressTimestampCutoff = computed(() => {
       if (!progressTimestampEl.value) return false
-      return progressBarWidth.value < progressTimestampEl.value.offsetWidth
+      const barWidth = progressBarWidth.value
+      const timestampWidth = progressTimestampEl.value.offsetWidth
+      return barWidth < timestampWidth + 2
     })
 
     /* Seek bar */
@@ -251,11 +256,16 @@ export default {
       const frac = seekFrac.value ?? currentFrac.value
       return waveformWidth.value * frac
     })
+
+    /* Seek timestamp */
+
     const seekTimestampEl = ref(null)
     const seekTimestamp = computed(() => seekFrac.value * props.duration)
     const isSeekTimestampCutoff = computed(() => {
       if (!seekTimestampEl.value) return false
-      return seekBarWidth.value < seekTimestampEl.value.offsetWidth
+      const barWidth = seekBarWidth.value
+      const timestampWidth = seekTimestampEl.value.offsetWidth
+      return barWidth < timestampWidth + 2
     })
 
     /* Seeking */
