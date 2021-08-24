@@ -11,7 +11,7 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - /tmp/docker_postgres_data:/var/lib/postgresql/data
+      - postgres-volume:/var/lib/postgresql/data
 
   s3:
     build:
@@ -37,3 +37,4 @@ services:
 
 volumes:
   airflow-volume:
+  postgres-volume:
