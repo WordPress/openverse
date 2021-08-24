@@ -1,7 +1,7 @@
 <template>
   <div>
     <span class="block px-6 mt-10 text-center">
-      {{ $t('photo-details.content-report.dmca.error') }}
+      {{ $t('photo-details.content-report.dmca.submission-error') }}
     </span>
     <button
       class="button is-text tiny mt-4"

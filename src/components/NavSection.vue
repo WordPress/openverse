@@ -58,14 +58,14 @@
             :to="localePath('/about')"
             @focus="onFocus()"
           >
-            {{ $t('header.about') }}
+            {{ $t('header.about-nav-item') }}
           </NuxtLink>
           <NuxtLink
             class="navbar-item"
             :to="localePath('/sources')"
             @focus="onFocus()"
           >
-            {{ $t('header.source') }}
+            {{ $t('header.source-nav-item') }}
           </NuxtLink>
           <a
             href="https://creativecommons.org/about/cclicenses/"
@@ -73,7 +73,7 @@
             rel="noopener"
             class="navbar-item"
             @focus="onFocus()"
-            >{{ $t('header.licenses') }}
+            >{{ $t('header.licenses-nav-item') }}
             <i class="icon external-link" />
           </a>
         </Dropdown>
@@ -84,21 +84,21 @@
             :to="localePath('/search-help')"
             @focus="onFocus()"
           >
-            {{ $t('header.search-guide') }}
+            {{ $t('header.search-guide-nav-item') }}
           </NuxtLink>
           <NuxtLink
             class="navbar-item"
             :to="localePath('/meta-search')"
             @focus="onFocus()"
           >
-            {{ $t('header.meta-search') }}
+            {{ $t('header.meta-search-nav-item') }}
           </NuxtLink>
           <NuxtLink
             class="navbar-item"
             :to="localePath('/feedback')"
             @focus="onFocus()"
           >
-            {{ $t('header.feedback') }}
+            {{ $t('header.feedback-nav-item') }}
           </NuxtLink>
           <a
             href="https://api.creativecommons.engineering/"
@@ -106,18 +106,17 @@
             rel="noopener"
             class="navbar-item"
             @focus="onFocus()"
-            >{{ $t('header.api') }}
+            >{{ $t('header.api-nav-item') }}
             <i class="icon external-link" />
           </a>
         </Dropdown>
 
         <a
-          :aria-label="$t('header.aria.extension')"
           class="navbar-item"
           href="https://opensource.creativecommons.org/ccsearch-browser-extension/"
           target="_blank"
         >
-          {{ $t('header.extension') }}
+          {{ $t('header.extension-nav-item') }}
           <i class="icon external-link" />
         </a>
       </div>
