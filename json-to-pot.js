@@ -42,7 +42,7 @@ const replaceVarsPlaceholders = (string) => {
  * @return {string}
  */
 const processValue = (string) => {
-  return replaceVarsPlaceholders(string)
+  return escapeQuotes(replaceVarsPlaceholders(string))
 }
 
 const findPath = (ob, key) => {
@@ -80,6 +80,8 @@ const findPath = (ob, key) => {
 
   return path.join('.')
 }
+
+const escapeQuotes = (str) => str.replace(/"/g, '\\"')
 
 // POT Syntax
 
