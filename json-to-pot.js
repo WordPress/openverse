@@ -68,4 +68,3 @@ msgstr ""`
 
 const potFile = potTime(json)
 
-console.log(potFile)
