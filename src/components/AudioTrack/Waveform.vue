@@ -24,6 +24,7 @@
       preserveAspectRatio="none"
     >
       <rect
+        v-if="isReady"
         class="fill-yellow"
         x="0"
         y="0"
@@ -48,29 +49,31 @@
     </svg>
 
     <!-- Timestamps -->
-    <div
-      class="progress absolute top-1 font-bold text-sm bg-yellow z-10 px-1 transform -translate-x-full pointer-events-none"
-      :style="{ '--progress-time-left': `${progressBarWidth}px` }"
-    >
-      {{ timeFmt(progressTimestamp) }}
-    </div>
-    <div
-      v-if="seekFrac"
-      class="seek absolute top-1 font-bold text-sm px-1 transform -translate-x-full pointer-events-none"
-      :style="{ '--seek-time-left': `${seekBarWidth}px` }"
-    >
-      {{ timeFmt(seekTimestamp) }}
-    </div>
-    <div
-      v-if="showDuration"
-      class="duration absolute top-1 right-0 px-1 font-bold text-sm pointer-events-none"
-    >
-      {{ timeFmt(duration) }}
-    </div>
+    <template v-if="isReady">
+      <div
+        class="progress absolute top-1 font-bold text-sm bg-yellow z-10 px-1 transform -translate-x-full pointer-events-none"
+        :style="{ '--progress-time-left': `${progressBarWidth}px` }"
+      >
+        {{ timeFmt(progressTimestamp) }}
+      </div>
+      <div
+        v-if="seekFrac"
+        class="seek absolute top-1 font-bold text-sm px-1 transform -translate-x-full pointer-events-none"
+        :style="{ '--seek-time-left': `${seekBarWidth}px` }"
+      >
+        {{ timeFmt(seekTimestamp) }}
+      </div>
+      <div
+        v-if="showDuration"
+        class="duration absolute top-1 right-0 px-1 font-bold text-sm pointer-events-none"
+      >
+        {{ timeFmt(duration) }}
+      </div>
+    </template>
 
     <!-- Loading overlay -->
     <div
-      v-if="!isReady"
+      v-else
       class="absolute inset-x-0 inset-y-0 flex items-center justify-center loading font-bold text-sm"
     >
       {{ $t('waveform.loading') }}
