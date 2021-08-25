@@ -159,7 +159,16 @@ export default {
     '@nuxtjs/i18n',
   ],
   i18n: {
-    locales: [{ code: 'en', iso: 'en', name: 'English', file: 'en.json' }],
+    locales: [
+      { code: 'en', iso: 'en', name: 'English', file: 'en.json' },
+      { code: 'es', iso: 'es', name: 'Spanish', file: 'es.json' },
+      {
+        code: 'es-ve',
+        iso: 'es-ve',
+        name: 'Spanish (Venezuela)',
+        file: 'es-ve.json',
+      },
+    ],
     lazy: true,
     langDir: 'locales',
     strategy: 'prefix_and_default',
@@ -169,7 +178,6 @@ export default {
       cookieKey: 'i18n_redirected',
       alwaysRedirect: true,
     },
-    // TODO: change this to the production URL
     baseUrl: 'http://localhost:8443',
     vueI18n: '~/plugins/vue-i18n.js',
   },
