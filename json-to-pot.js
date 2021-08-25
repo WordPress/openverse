@@ -82,8 +82,6 @@ const findPath = (ob, key) => {
 }
 
 const PARSED_VUE_FILES = getParsedVueFiles('./src/**/*.?(js|vue)')
-
-
 /**
  * Returns the comment with a reference github link to the line where the
  * string is used, if available. Example:
