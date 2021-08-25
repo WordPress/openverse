@@ -31,7 +31,7 @@ const replaceVarsPlaceholders = (string) => {
   if (!containsCurlyWord(string)) {
     return string
   }
-  const variable = /{(?<variable>[a-z-]*)}/g
+  const variable = /{(?<variable>[a-zA-Z-]*)}/g
   return string.replace(variable, `###$<variable>###`)
 }
 
