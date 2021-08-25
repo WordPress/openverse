@@ -1,7 +1,6 @@
-// More about the structure of .po files:
-// https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html#PO-Files
+/* More about the structure of .po files:
+* https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html#PO-Files
 
-/*
  * white-space
  #  translator-comments
  #. extracted-comments
@@ -12,7 +11,7 @@
  msgstr translated-string
  */
 const getParsedVueFiles = require('./parse-vue-files.js')
-const json = require('./src/locales/en.json')
+const json = require('../en.json')
 const fs = require('fs')
 
 const curlyRegex = new RegExp('{[a-z]*}')
@@ -127,7 +126,7 @@ msgstr ""`
 
 const potFile = potTime(json)
 try {
-  const fileName = 'test.pot'
+  const fileName = './src/locales/poFiles/test.pot'
   fs.writeFileSync(fileName, potFile)
   console.log(`Successfully wrote pot file to ${fileName}`)
 } catch (err) {

@@ -68,39 +68,44 @@ msgctxt "hero.caption"
 msgid "about cc licenses"
 msgstr ""
 
-# .about 
-msgctxt ".about"
+# header.about-nav-item 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L59
+msgctxt "header.about-nav-item"
 msgid "Our Story"
 msgstr ""
 
-# header.source 
+# header.source-nav-item 
 #: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L67
-msgctxt "header.source"
+msgctxt "header.source-nav-item"
 msgid "Sources"
 msgstr ""
 
-# .search-guide 
-msgctxt ".search-guide"
+# header.search-guide-nav-item 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L88
+msgctxt "header.search-guide-nav-item"
 msgid "Search Guide"
 msgstr ""
 
-# .meta-search 
-msgctxt ".meta-search"
+# header.meta-search-nav-item 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L96
+msgctxt "header.meta-search-nav-item"
 msgid "Meta Search"
 msgstr ""
 
-# .feedback 
-msgctxt ".feedback"
+# header.feedback-nav-item 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L104
+msgctxt "header.feedback-nav-item"
 msgid "Feedback"
 msgstr ""
 
-# header.support 
-msgctxt "header.support"
+# header.support-nav-item 
+msgctxt "header.support-nav-item"
 msgid "Support Us"
 msgstr ""
 
-# .extension 
-msgctxt ".extension"
+# header.extension-nav-item 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L119
+msgctxt "header.extension-nav-item"
 msgid "Web extension"
 msgstr ""
 
@@ -133,14 +138,9 @@ msgctxt "header.aria.sr-search"
 msgid "sr search button"
 msgstr ""
 
-# .extension 
-msgctxt ".extension"
-msgid "extension"
-msgstr ""
-
-# header.licenses 
+# header.licenses-nav-item 
 #: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L76
-msgctxt "header.licenses"
+msgctxt "header.licenses-nav-item"
 msgid "The Licenses"
 msgstr ""
 
@@ -156,35 +156,15 @@ msgctxt "header.resources-tab"
 msgid "Resources"
 msgstr ""
 
-# header.api 
+# header.api-nav-item 
 #: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L113
-msgctxt "header.api"
+msgctxt "header.api-nav-item"
 msgid "API"
-msgstr ""
-
-# header.donation-banner.description 
-msgctxt "header.donation-banner.description"
-msgid "If you donate $5 today, and everyone else does the same, we can keep growing our database of freely reusable content. For you. For all of us."
-msgstr ""
-
-# header.donation-banner.alternative-description 
-msgctxt "header.donation-banner.alternative-description"
-msgid "Only 1% of people reading this will donate. Be one of them and help us sustain Openverse."
-msgstr ""
-
-# header.donation-banner.yes 
-msgctxt "header.donation-banner.yes"
-msgid "Yes, I'll donate now"
-msgstr ""
-
-# header.donation-banner.no 
-msgctxt "header.donation-banner.no"
-msgid "Not today"
 msgstr ""
 
 # header.notification.text 
 msgctxt "header.notification.text"
-msgid "Example notification text"
+msgid "{example_notification_text}"
 msgstr ""
 
 # header.notification.dismiss 
@@ -304,9 +284,9 @@ msgctxt "hero.search"
 msgid "Openverse"
 msgstr ""
 
-# header.api 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L113
-msgctxt "header.api"
+# about.planning.api 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L40
+msgctxt "about.planning.api"
 msgid "Openverse API"
 msgstr ""
 
@@ -386,8 +366,9 @@ msgctxt "footer.navigation.terms"
 msgid "Openverse terms of use"
 msgstr ""
 
-# .sources 
-msgctxt ".sources"
+# about.aria.sources-table 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L85
+msgctxt "about.aria.sources-table"
 msgid "sources table"
 msgstr ""
 
@@ -408,9 +389,9 @@ msgctxt "hero.search"
 msgid "Openverse"
 msgstr ""
 
-# header.api 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L113
-msgctxt "header.api"
+# about.planning.api 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L40
+msgctxt "about.planning.api"
 msgid "Openverse API"
 msgstr ""
 
@@ -438,9 +419,9 @@ msgctxt "sources.single-name"
 msgid "Source"
 msgstr ""
 
-# header.source 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L67
-msgctxt "header.source"
+# sources.providers.source 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L97
+msgctxt "sources.providers.source"
 msgid "Source"
 msgstr ""
 
@@ -683,8 +664,9 @@ msgctxt "meta-search-page.why.aria-label"
 msgid "feedback"
 msgstr ""
 
-# .feedback (Do not translate words between ###)
-msgctxt ".feedback"
+# meta-search-page.why.feedback-suggestions (Do not translate words between ###)
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L94
+msgctxt "meta-search-page.why.feedback-suggestions"
 msgid "We hope you enjoy, and if you have suggestions for improvement, leave us ###feedback###."
 msgstr ""
 
@@ -736,8 +718,8 @@ msgctxt "hero.title"
 msgid "Combining terms"
 msgstr ""
 
-# header.donation-banner.description 
-msgctxt "header.donation-banner.description"
+# about.description 
+msgctxt "about.description"
 msgid "If you want to combine terms, you can use the following operators to perform more complex queries"
 msgstr ""
 
@@ -819,8 +801,8 @@ msgctxt "search-guide.combine.aria-labels.vertical-bar"
 msgid "vertical bar symbol"
 msgstr ""
 
-# header.donation-banner.description (Do not translate words between ###)
-msgctxt "header.donation-banner.description"
+# about.description (Do not translate words between ###)
+msgctxt "about.description"
 msgid "Example: ###link######br### This will search for images related to both dog and cat."
 msgstr ""
 
@@ -835,8 +817,8 @@ msgctxt "search-guide.example"
 msgid "dog+cat"
 msgstr ""
 
-# header.donation-banner.description (Do not translate words between ###)
-msgctxt "header.donation-banner.description"
+# about.description (Do not translate words between ###)
+msgctxt "about.description"
 msgid "Example: ###link######br### This will search for images related to dog or cat, but not necessarily both."
 msgstr ""
 
@@ -851,8 +833,8 @@ msgctxt "search-guide.example"
 msgid "dog|cat"
 msgstr ""
 
-# header.donation-banner.description (Do not translate words between ###)
-msgctxt "header.donation-banner.description"
+# about.description (Do not translate words between ###)
+msgctxt "about.description"
 msgid "You can use the ###operator### to exclude a search term from the results."
 msgstr ""
 
@@ -885,8 +867,8 @@ msgctxt "hero.caption.content"
 msgid "Example: ###link######br### This will search for images related to dog but won't include results related to 'pug'"
 msgstr ""
 
-# header.donation-banner.description 
-msgctxt "header.donation-banner.description"
+# about.description 
+msgctxt "about.description"
 msgid "You can use the {operator-name} to mark a prefix term. This will match anything after the *."
 msgstr ""
 
@@ -919,8 +901,8 @@ msgctxt "hero.caption.content"
 msgid "Example: ###link######br### This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.."
 msgstr ""
 
-# header.donation-banner.description (Do not translate words between ###)
-msgctxt "header.donation-banner.description"
+# about.description (Do not translate words between ###)
+msgctxt "about.description"
 msgid "You can use parentheses ###highlight### to specify precedence of terms or combine more complex queries."
 msgstr ""
 
@@ -941,8 +923,8 @@ msgctxt "hero.caption.content"
 msgid "Example: ###link######br### This will search for images that match dogs that are either corgis or labrador."
 msgstr ""
 
-# header.donation-banner.description (Do not translate words between ###)
-msgctxt "header.donation-banner.description"
+# about.description (Do not translate words between ###)
+msgctxt "about.description"
 msgid "You can use ###highlight### to specify some fuzzy logic to the term according to the ###link### — the number of one character changes that need to be made to one string to make it the same as another string."
 msgstr ""
 
@@ -1412,8 +1394,9 @@ msgctxt "browse-page.load"
 msgid "Load more results"
 msgstr ""
 
-# .error 
-msgctxt ".error"
+# browse-page.fetching-error 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/SearchGridManualLoad.vue#L49
+msgctxt "browse-page.fetching-error"
 msgid "Error fetching images:"
 msgstr ""
 
@@ -1428,18 +1411,21 @@ msgctxt "hero.caption.content"
 msgid "Are these results relevant?"
 msgstr ""
 
-# header.donation-banner.yes 
-msgctxt "header.donation-banner.yes"
+# browse-page.search-rating.yes 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/SearchRating.vue#L12
+msgctxt "browse-page.search-rating.yes"
 msgid "Yes"
 msgstr ""
 
-# header.donation-banner.no 
-msgctxt "header.donation-banner.no"
+# browse-page.search-rating.no 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/SearchRating.vue#L21
+msgctxt "browse-page.search-rating.no"
 msgid "No"
 msgstr ""
 
-# .feedback 
-msgctxt ".feedback"
+# browse-page.search-rating.feedback-thanks 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/SearchRating.vue#L26
+msgctxt "browse-page.search-rating.feedback-thanks"
 msgid "Thank you for the feedback!"
 msgstr ""
 
@@ -1533,13 +1519,15 @@ msgctxt "hero.search"
 msgid "search"
 msgstr ""
 
-# header.donation-banner.yes 
-msgctxt "header.donation-banner.yes"
+# browse-page.search-rating.yes 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/SearchRating.vue#L12
+msgctxt "browse-page.search-rating.yes"
 msgid "relevant result? answer: yes"
 msgstr ""
 
-# header.donation-banner.no 
-msgctxt "header.donation-banner.no"
+# browse-page.search-rating.no 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/SearchRating.vue#L21
+msgctxt "browse-page.search-rating.no"
 msgid "relevant result? answer: no"
 msgstr ""
 
@@ -1717,9 +1705,9 @@ msgctxt "photo-details.information.dimensions"
 msgid "Dimensions:"
 msgstr ""
 
-# header.source 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L67
-msgctxt "header.source"
+# sources.providers.source 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L97
+msgctxt "sources.providers.source"
 msgid "Source:"
 msgstr ""
 
@@ -1869,8 +1857,9 @@ msgctxt "photo-details.content-report.dmca.thanks"
 msgid "Thank you for reporting an issue with the results of Openverse!"
 msgstr ""
 
-# .error 
-msgctxt ".error"
+# photo-details.content-report.dmca.submission-error 
+#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ContentReport/ReportError.vue#L4
+msgctxt "photo-details.content-report.dmca.submission-error"
 msgid "There was an error with the report submission. Please try again."
 msgstr ""
 
@@ -1937,11 +1926,6 @@ msgstr ""
 #: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/photos/_id.vue#L18
 msgctxt "photo-details.aria.related"
 msgid "related images"
-msgstr ""
-
-# .sources 
-msgctxt ".sources"
-msgid "Sources"
 msgstr ""
 
 # hero.caption 
