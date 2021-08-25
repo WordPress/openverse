@@ -46,7 +46,7 @@
         v-if="isFetchingImagesError"
         class="search-grid_notification callout alert"
       >
-        <h5>{{ $t('browse-page.error') }} {{ _errorMessage }}</h5>
+        <h5>{{ $t('browse-page.fetching-error') }} {{ _errorMessage }}</h5>
       </div>
     </div>
   </section>

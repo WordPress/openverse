@@ -24,33 +24,26 @@
     }
   },
   "header": {
-    "about": "Our Story",
-    "source": "Sources",
-    "search-guide": "Search Guide",
-    "meta-search": "Meta Search",
-    "feedback": "Feedback",
-    "support": "Support Us",
-    "extension": "Web extension",
+    "about-nav-item": "Our Story",
+    "source-nav-item": "Sources",
+    "search-guide-nav-item": "Search Guide",
+    "meta-search-nav-item": "Meta Search",
+    "feedback-nav-item": "Feedback",
+    "support-nav-item": "Support Us",
+    "extension-nav-item": "Web extension",
     "placeholder": "Search all content",
     "aria": {
       "primary": "primary",
       "menu": "menu",
       "search": "search",
-      "sr-search": "sr search button",
-      "extension": "extension"
+      "sr-search": "sr search button"
     },
-    "licenses": "The Licenses",
+    "licenses-nav-item": "The Licenses",
     "about-tab": "About",
     "resources-tab": "Resources",
-    "api": "API",
-    "donation-banner": {
-      "description": "If you donate $5 today, and everyone else does the same, we can keep growing our database of freely reusable content. For you. For all of us.",
-      "alternative-description": "Only 1% of people reading this will donate. Be one of them and help us sustain Openverse.",
-      "yes": "Yes, I'll donate now",
-      "no": "Not today"
-    },
+    "api-nav-item": "API",
     "notification": {
-      "text": "Example notification text",
+      "text": "{example_notification_text}",
       "dismiss": "Dismiss",
       "okay": "OK"
     }
@@ -110,7 +103,7 @@
       "projects": "Openverse projects",
       "community": "Make Wordpress community",
       "terms": "Openverse terms of use",
-      "sources": "sources table",
+      "sources-table": "sources table",
       "creative-commons": "Creative Commons",
       "wordpress": "WordPress",
       "search": "Openverse",
@@ -178,7 +171,7 @@
       "content": "For many years, CC has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. These platforms included Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter, and SoundCloud. The search experience looked like this:",
       "new": "For users of the legacy CC Meta Search site, the Meta Search feature on Openverse will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the Meta Search feature builds on this functionality, allowing us to quickly add new sources to Meta Search as we discover them, and support new content types in the future, as we expand.",
       "aria-label": "feedback",
-      "feedback": "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}.",
+      "feedback-suggestions": "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}.",
       "feedback-link": "feedback"
     }
   },
@@ -384,13 +377,13 @@
     "image-result-count-more": "Over {localeCount} image results",
     "no-more": "No more images :(",
     "load": "Load more results",
-    "error": "Error fetching images:",
+    "fetching-error": "Error fetching images:",
     "other-source": "Not finding what you need? Search other sources",
     "search-rating": {
       "content": "Are these results relevant?",
       "yes": "Yes",
       "no": "No",
-      "feedback": "Thank you for the feedback!"
+      "feedback-thanks": "Thank you for the feedback!"
     },
     "search-form": {
       "placeholder": "Search all {type}",
@@ -498,7 +491,7 @@
         "content": "You must fill out this {link} to report copyright infringement. No action will be taken until the form is filled out and submitted.",
         "provider": "We recommend doing the same at the source, {link}.",
         "thanks": "Thank you for reporting an issue with the results of Openverse!",
-        "error": "There was an error with the report submission. Please try again.",
+        "submission-error": "There was an error with the report submission. Please try again.",
         "link": "DMCA form"
       }
     },
@@ -520,7 +513,6 @@
     }
   },
   "meta-search": {
-    "sources": "Sources",
     "caption": "Openverse does not currently index the sources listed above, but through this interface is offering convenient access to search services provided by other independent organizations. Openverse has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. Always verify that the work is actually under a CC license by following the link. If you are in doubt, you should contact the copyright holder directly, or try to contact the site where you found the content.",
     "card": {
       "search": "Not finding what you're looking for? Try additional sources",
