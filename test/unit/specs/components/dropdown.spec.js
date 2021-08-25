@@ -23,7 +23,6 @@ describe('Dropdown', () => {
     expect(dropdownWrapper.classes()).not.toContain('visible')
   })
 
-  // TODO: fix these focus tests
   it('should be visible when the container is focused', async () => {
     const wrapper = render(Dropdown, options)
     await wrapper.trigger('focus')
