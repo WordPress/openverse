@@ -83,7 +83,6 @@ const findPath = (ob, key) => {
 
 const PARSED_VUE_FILES = getParsedVueFiles('./src/**/*.?(js|vue)')
 
-const BASE_URL = 'https://github.com/WordPress/openverse-frontend/blob/main'
 
 /**
  * Returns the comment with a reference github link to the line where the
@@ -94,7 +93,7 @@ const BASE_URL = 'https://github.com/WordPress/openverse-frontend/blob/main'
  */
 const getRefComment = (keyPath) => {
   const keyValue = PARSED_VUE_FILES.find((k) => k.path === keyPath)
-  return keyValue ? `\n#: ${BASE_URL}${keyValue.file}#L${keyValue.line}` : ''
+  return keyValue ? `\n#: ${keyValue.file}#L${keyValue.line}` : ''
 }
 
 const escapeQuotes = (str) => str.replace(/"/g, '\\"')
