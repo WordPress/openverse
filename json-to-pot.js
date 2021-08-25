@@ -93,7 +93,7 @@ const PARSED_VUE_FILES = getParsedVueFiles('./src/**/*.?(js|vue)')
  */
 const getRefComment = (keyPath) => {
   const keyValue = PARSED_VUE_FILES.find((k) => k.path === keyPath)
-  return keyValue ? `\n#: ${keyValue.file}#L${keyValue.line}` : ''
+  return keyValue ? `\n#: ${keyValue.file}:${keyValue.line}` : ''
 }
 
 const escapeQuotes = (str) => str.replace(/"/g, '\\"')
