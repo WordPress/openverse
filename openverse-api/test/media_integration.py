@@ -1,6 +1,6 @@
 """
-End-to-end API tests for audio. Can be used to verify a live deployment is
-functioning as designed. Run with the `pytest -s` command from this directory.
+Base test cases for all media types.
+These are not tests and cannot be invoked.
 """
 
 import json
@@ -72,3 +72,10 @@ def stats(media_type, count_key):
         provider_count += 1
     assert num_media > 0
     assert provider_count > 0
+
+
+def thumb(fixture):
+    thumbnail_url = fixture['results'][0]['thumbnail'].replace('https:', 'http:')
+    thumbnail_response = requests.get(thumbnail_url)
+    assert thumbnail_response.status_code == 200
+    assert thumbnail_response.headers["Content-Type"].startswith("image/")

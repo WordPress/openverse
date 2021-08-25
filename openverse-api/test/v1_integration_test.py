@@ -27,14 +27,6 @@ def image_fixture():
     return parsed
 
 
-@pytest.fixture
-def test_image_thumb(image_fixture):
-    thumbnail_url = image_fixture['results'][0]['thumbnail']
-    thumbnail_response = requests.get(thumbnail_url)
-    assert thumbnail_response.status_code == 200
-    assert thumbnail_response.headers["Content-Type"].startswith("image/")
-
-
 def test_link_shortener_create():
     payload = {'full_url': 'abcd'}
     response = requests.post(f'{API_URL}/v1/link/', json=payload, verify=False)

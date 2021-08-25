@@ -21,6 +21,7 @@ from catalog.api.examples import (
     audio_stats_200_example,
 )
 from catalog.api.models import Audio, AudioReport
+from catalog.api.serializers.media_serializers import ProxiedImageSerializer
 from catalog.api.serializers.audio_serializers import (
     AudioSearchQueryStringSerializer,
     AudioSearchResultsSerializer,
@@ -41,6 +42,7 @@ from catalog.api.views.media_views import (
     RelatedMedia,
     MediaDetail,
     MediaStats,
+    ImageProxy,
 )
 from catalog.api.utils.waveform import (
     download_audio,
@@ -244,6 +246,35 @@ respective number of audio files in the Openverse catalog.
                          ])
     def get(self, request, format=None):
         return self._get(request, 'audio')
+
+
+class AudioArt(ImageProxy):
+    """
+    Return the thumbnail of the artwork of the audio. This returns the thumbnail
+    of the audio, falling back to the thumbnail of the audio set.
+    """
+
+    queryset = Audio.objects.all()
+
+    def get(self, request, identifier, format=None):
+        serialized = ProxiedImageSerializer(data=request.data)
+        serialized.is_valid()
+        try:
+            audio = Audio.objects.get(identifier=identifier)
+            image_url = audio.thumbnail
+            if not image_url:
+                image_url = audio.audio_set.url
+        except Audio.DoesNotExist:
+            return Response(status=404, data='Audio not found')
+        except AttributeError:
+            return Response(status=404, data='Audio set not found')
+        if not image_url:
+            return Response(status=404, data='Cover art URL not found')
+
+        if serialized.data['full_size']:
+            return self._get(image_url, None)
+        else:
+            return self._get(image_url)
 
 
 class AudioWaveform(APIView):

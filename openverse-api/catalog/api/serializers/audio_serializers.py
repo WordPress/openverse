@@ -96,6 +96,9 @@ class AudioSerializer(MediaSerializer):
     used to generate Swagger documentation.
     """
 
+    thumbnail = serializers.SerializerMethodField(
+        help_text="A direct link to the miniature artwork."
+    )
     waveform = serializers.SerializerMethodField(
         help_text='A direct link to the waveform peaks.'
     )
@@ -144,6 +147,12 @@ class AudioSerializer(MediaSerializer):
         read_only=True,
         help_text="A link to an endpoint that provides similar audio files."
     )
+
+    def get_thumbnail(self, obj):
+        request = self.context['request']
+        host = request.get_host()
+        path = reverse('audio-thumb', kwargs={'identifier': obj.identifier})
+        return f'https://{host}{path}'
 
     def get_waveform(self, obj):
         request = self.context['request']

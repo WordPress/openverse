@@ -6,8 +6,8 @@ from django.views.generic import View
 
 def get_status_code_view(data, status_code=200):
     """
-    Get a class-based that returns the given data and status code on all HTTP
-    methods. Useful for blanket discontinuation of API endpoints.
+    Get a class-based view that returns the given data and status code on all
+    HTTP methods. Useful for blanket discontinuation of API endpoints.
 
     :param data: the dictionary to serialize as the JSON response
     :param status_code: the status code of the returned response

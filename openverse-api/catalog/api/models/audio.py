@@ -127,7 +127,7 @@ class Audio(AbstractMedia):
     def bit_rate_in_kbps(self):
         return self.bit_rate / 1e3
 
-    class Meta:
+    class Meta(AbstractMedia.Meta):
         db_table = 'audio'
 
 

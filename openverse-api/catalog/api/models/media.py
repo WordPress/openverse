@@ -27,6 +27,13 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     information common to all media types indexed by Openverse.
     """
 
+    thumbnail = models.URLField(
+        max_length=1000,
+        blank=True,
+        null=True,
+        help_text="The thumbnail for the media."
+    )
+
     watermarked = models.BooleanField(blank=True, null=True)
 
     license = models.CharField(max_length=50)
@@ -103,6 +110,12 @@ class AbstractMedia(IdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
         """
         ordering = ['-created_on']
         abstract = True
+        constraints = [
+            models.UniqueConstraint(
+                fields=['foreign_identifier', 'provider'],
+                name='unique_provider_%(class)s'  # populated by concrete model
+            ),
+        ]
 
 
 class AbstractMediaReport(models.Model):

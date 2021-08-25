@@ -1,15 +1,24 @@
+import logging
+
+from django.conf import settings
+from django.http.response import HttpResponse
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from urllib.error import HTTPError
+from urllib.request import urlopen
 
 from catalog.api.controllers import search_controller
 from catalog.api.controllers.search_controller import get_sources
 from catalog.api.models import ContentProvider, SourceLogo
 from catalog.api.utils.exceptions import input_error_response
+from catalog.api.utils.throttle import OneThousandPerMinute
 from catalog.custom_auto_schema import CustomAutoSchema
+
+log = logging.getLogger(__name__)
 
 FOREIGN_LANDING_URL = 'foreign_landing_url'
 CREATOR_URL = 'creator_url'
@@ -188,3 +197,33 @@ of individual items indexed from them.
                     }
                 )
         return Response(status=200, data=response)
+
+
+class ImageProxy(APIView):
+    swagger_schema = None
+
+    lookup_field = 'identifier'
+    throttle_classes = [OneThousandPerMinute]
+
+    def _get(self, media_url, width=settings.THUMBNAIL_WIDTH_PX):
+        if width is None:  # full size
+            proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/{media_url}'
+        else:
+            proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/' \
+                             f'{settings.THUMBNAIL_WIDTH_PX},fit/' \
+                             f'{media_url}'
+        try:
+            upstream_response = urlopen(proxy_upstream)
+            status = upstream_response.status
+            content_type = upstream_response.headers.get('Content-Type')
+        except HTTPError:
+            log.info('Failed to render thumbnail: ', exc_info=True)
+            return HttpResponse(status=500)
+
+        response = HttpResponse(
+            upstream_response.read(),
+            status=status,
+            content_type=content_type
+        )
+
+        return response
