@@ -26,6 +26,7 @@
         @toggle="setPlayerState"
       />
       <div
+        class="flex-grow"
         @keypress.enter="setPlayerState(!isPlaying)"
         @keypress.space="setPlayerState(!isPlaying)"
       >
