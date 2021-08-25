@@ -31,55 +31,44 @@ const makeTranslationUrl = (format = 'po') => (localeCode = 'en-gb') =>
  * fetch a json translation from GlotPress
  * @param {string} locale
  */
-function fetchJSONTranslation(locale) {
-  return fetch(makeTranslationUrl('ngx')(locale)).then((res) => res.json())
-}
+const fetchNgxTranslation = (locale) =>
+  fetch(makeTranslationUrl('ngx')(locale)).then((res) => res.json())
 
 /**
  * Write translation strings to a file in the locale directory
  * @param {string} locale
  * @param {any} translations
  */
-function writeLocaleFile(locale, translations) {
-  return writeFile(
+const writeLocaleFile = (locale, translations) =>
+  writeFile(
     process.cwd() + `/src/locales/${locale}.json`,
     JSON.stringify(translations, null, 2)
   )
-}
 
 /**
  * Write a file for each translation object
  * @param {{[locale: string]: {[translation: string]: string}}} translationsByLocale
  */
-async function writeLocaleFiles(translationsByLocale) {
-  return await Promise.all(
+const writeLocaleFiles = (translationsByLocale) =>
+  Promise.all(
     Object.entries(translationsByLocale).map(([locale, translations]) =>
       writeLocaleFile(locale, translations)
     )
   )
-}
 
 /**
  * Write translation files to the "src/locales" directory from
  * the supplied list of locales
  *
- * Logs output if you'd like to test:
- * node get-translations.js | jq
- *
  * @param {string[]} locales
  */
 const fetchAndConvertNGXTranslations = (locales) =>
-  Promise.all(locales.map(fetchJSONTranslation))
+  Promise.all(locales.map(fetchNgxTranslation))
     .then((res) => res.map(ngxJsonToJson))
     .then((res) =>
       // Key translations by their locale, i.e { es: translations, es-ve: translations }
       res.reduce((acc, i, index) => ({ ...acc, [locales[index]]: i }), {})
     )
-    .then((res) => {
-      writeLocaleFiles(res)
-      return res
-    })
+    .then(writeLocaleFiles)
 
-fetchAndConvertNGXTranslations(['es', 'es-ve'])
-  .then(console.log)
-  .catch(console.error)
+fetchAndConvertNGXTranslations(['es', 'es-ve']).then().catch(console.error)
