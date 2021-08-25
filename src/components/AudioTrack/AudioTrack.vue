@@ -31,7 +31,7 @@
       >
         <Waveform
           :class="isCompact ? 'h-20' : 'h-30'"
-          :is-ready="isReady"
+          :message="message ? $t(`audio-track.messages.${message}`) : null"
           :current-time="currentTime"
           :duration="duration"
           :peaks="audio.peaks"
@@ -83,6 +83,7 @@
       "
       @play="setIsPlaying(true)"
       @pause="setIsPlaying(false)"
+      @error="handleError"
     />
     <!-- eslint-enable vuejs-accessibility/media-has-caption -->
   </div>
@@ -120,7 +121,7 @@ export default {
     player: null, // HTMLAudioElement
     currentTime: 0,
     duration: 0,
-    isReady: false,
+    message: 'loading',
     isPlaying: false,
   }),
   computed: {
@@ -134,6 +135,10 @@ export default {
       const date = new Date(0)
       date.setSeconds(seconds)
       return date.toISOString().substr(11, 8).replace(/^00:/, '')
+    },
+
+    isReady() {
+      return this.message === null
     },
   },
   mounted() {
@@ -172,10 +177,27 @@ export default {
 
     // HTMLAudioElement events
     setIsReady() {
-      this.isReady = true
+      this.message = null
     },
     setIsPlaying(isPlaying) {
       this.isPlaying = isPlaying
+    },
+    handleError(event) {
+      const error = event.target.error
+      switch (error.code) {
+        case error.MEDIA_ERR_ABORTED:
+          this.message = 'err_aborted'
+          break
+        case error.MEDIA_ERR_NETWORK:
+          this.message = 'err_network'
+          break
+        case error.MEDIA_ERR_DECODE:
+          this.message = 'err_decode'
+          break
+        case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+          this.message = 'err_unsupported'
+          break
+      }
     },
   },
 }
