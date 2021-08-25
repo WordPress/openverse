@@ -571,7 +571,6 @@
   },
   "waveform": {
     "label": "Audio seek bar",
-    "loading": "Loading...",
     "current-time": "{time} seconds"
   },
   "audio-track": {

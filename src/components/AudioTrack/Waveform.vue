@@ -71,12 +71,12 @@
       </div>
     </template>
 
-    <!-- Loading overlay -->
+    <!-- Message overlay -->
     <div
       v-else
       class="absolute inset-x-0 inset-y-0 flex items-center justify-center loading font-bold text-sm"
     >
-      {{ $t('waveform.loading') }}
+      {{ message }}
     </div>
   </div>
 </template>
@@ -108,11 +108,11 @@ export default {
       validator: (val) => val.every((item) => item >= 0 && item <= 1),
     },
     /**
-     * whether the audio metadata has been loaded and is ready to display
+     * the message to display instead of the waveform; This is useful when
+     * displaying a loading or error state.
      */
-    isReady: {
-      type: Boolean,
-      default: false,
+    message: {
+      type: String,
     },
     /**
      * the current play time of the audio track
@@ -185,6 +185,10 @@ export default {
       observer.disconnect()
     })
 
+    /* State */
+
+    const isReady = computed(() => !props.message)
+
     /* Resampling */
 
     const barWidth = 2
@@ -221,7 +225,7 @@ export default {
     /* Progress bar */
 
     const currentFrac = computed(() =>
-      props.isReady ? props.currentTime / props.duration : 0
+      isReady.value ? props.currentTime / props.duration : 0
     )
     const progressBarWidth = computed(() => {
       const frac = isDragging.value ? seekFrac.value : currentFrac.value
@@ -248,10 +252,10 @@ export default {
      * the seek jump length as a % of the track
      */
     const seekDeltaFrac = computed(() => {
-      return props.isReady ? seekDelta / props.duration : 0
+      return isReady.value ? seekDelta / props.duration : 0
     })
     const modSeekDeltaFrac = computed(() =>
-      props.isReady ? modSeekDelta / props.duration : 0
+      isReady.value ? modSeekDelta / props.duration : 0
     )
     const setSeekProgress = (event) => {
       seekFrac.value = getPositionFrac(event)
@@ -306,6 +310,8 @@ export default {
       timeFmt,
 
       el, // template ref
+
+      isReady,
 
       barWidth,
       normalizedPeaks,
