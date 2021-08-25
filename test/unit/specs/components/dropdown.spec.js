@@ -24,18 +24,18 @@ describe('Dropdown', () => {
   })
 
   // TODO: fix these focus tests
-  // it('should be visible when the container is focused', async () => {
-  //   const wrapper = render(Dropdown, options)
-  //   await wrapper.trigger('focus')
-  //   const dropdownWrapper = wrapper.get('[role="menu"]')
-  //   expect(dropdownWrapper.classes()).toContain('visible')
-  // })
-  //
-  // it('should be visible when the dropdown items are focused', async () => {
-  //   const wrapper = render(Dropdown, options)
-  //   const dropdownItem = wrapper.get('#dropdown-item')
-  //   await dropdownItem.trigger('focus')
-  //   const dropdownWrapper = wrapper.get('[role="menu"]')
-  //   expect(dropdownWrapper.classes()).toContain('visible')
-  // })
+  it('should be visible when the container is focused', async () => {
+    const wrapper = render(Dropdown, options)
+    await wrapper.trigger('focus')
+    const dropdownWrapper = wrapper.get('[role="menu"]')
+    expect(dropdownWrapper.classes()).toContain('visible')
+  })
+
+  it('should be visible when the dropdown items are focused', async () => {
+    const wrapper = render(Dropdown, options)
+    const dropdownItem = wrapper.get('#dropdown-item')
+    await dropdownItem.trigger('focus')
+    const dropdownWrapper = wrapper.get('[role="menu"]')
+    expect(dropdownWrapper.classes()).toContain('visible')
+  })
 })
