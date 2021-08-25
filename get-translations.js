@@ -3,6 +3,7 @@
  * convert to our JSON format, and save in the correct folder.
  */
 const { writeFile } = require('fs/promises')
+const os = require('os')
 const fetch = require('node-fetch')
 const ngxJsonToJson = require('./ngx-json-to-json')
 
@@ -42,7 +43,7 @@ const fetchNgxTranslation = (locale) =>
 const writeLocaleFile = (locale, translations) =>
   writeFile(
     process.cwd() + `/src/locales/${locale}.json`,
-    JSON.stringify(translations, null, 2)
+    JSON.stringify(translations, null, 2) + os.EOL
   )
 
 /**
