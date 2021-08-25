@@ -304,4 +304,3 @@ class AudioWaveform(APIView):
         finally:
             if file_name is not None:
                 cleanup(file_name)
-
