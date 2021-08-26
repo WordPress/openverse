@@ -35,16 +35,30 @@ const makeTranslationUrl = (format = 'po') => (localeCode = 'en-gb') =>
 const fetchNgxTranslation = (locale) =>
   fetch(makeTranslationUrl('ngx')(locale)).then((res) => res.json())
 
+const replacePlaceholders = (json) => {
+  if (typeof json === 'string') {
+    return json.replace(/###([a-zA-Z-]*)###/, '{$1}')
+  }
+  let currentJson = { ...json }
+
+  for (const row of Object.entries(currentJson)) {
+    let [key, value] = row
+    currentJson[key] = replacePlaceholders(value)
+  }
+  return currentJson
+}
 /**
  * Write translation strings to a file in the locale directory
  * @param {string} locale
- * @param {any} translations
+ * @param {any} rawTranslations
  */
-const writeLocaleFile = (locale, translations) =>
-  writeFile(
+const writeLocaleFile = (locale, rawTranslations) => {
+  const translations = replacePlaceholders(rawTranslations)
+  return writeFile(
     process.cwd() + `/src/locales/${locale}.json`,
     JSON.stringify(translations, null, 2) + os.EOL
   )
+}
 
 /**
  * Write a file for each translation object
