@@ -97,6 +97,26 @@ const getRefComment = (keyPath) => {
 
 const escapeQuotes = (str) => str.replace(/"/g, '\\"')
 
+const pot_creation_date = () => {
+  const today = new Date()
+  return `${today.toISOString().split('.')[0]}+00:00`
+}
+
+const POT_FILE_META = `# Copyright (C) 2021
+# This file is distributed under the same license as Openverse.
+msgid ""
+msgstr ""
+"Project-Id-Version: Openverse \\n"
+"Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \\n"
+"POT-Creation-Date: ${pot_creation_date()}\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n"
+"Language-Team: LANGUAGE <LL@li.org>\\n"
+`
+
 // POT Syntax
 
 // msgctxt context
@@ -123,7 +143,7 @@ msgstr ""`
   return potFile
 }
 
-const potFile = potTime(json)
+const potFile = `${POT_FILE_META}${potTime(json)}`
 try {
   const fileName = '../poFiles/test.pot'
   fs.writeFileSync(fileName, potFile)
