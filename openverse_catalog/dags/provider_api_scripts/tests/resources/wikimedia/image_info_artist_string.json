@@ -1,8 +1,8 @@
 {
   "extmetadata": {
     "Artist": {
-      "value": "Artist Name",
-      "source": "commons-desc-page"
+      "source": "commons-desc-page",
+      "value": "Artist Name"
     }
   }
 }

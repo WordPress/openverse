@@ -1,18 +1,18 @@
 {
-    "creator": "Kiyohara Yukinobu",
-    "foreign_identifier": "45734-1",
-    "foreign_landing_url": "https://www.metmuseum.org/art/collection/search/45734",
-    "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP251120.jpg",
-    "license_": "cc0",
-    "license_version": "1.0",
-    "meta_data": {
-        "accession_number": "36.100.45",
-        "classification": "Paintings",
-        "culture": "Japan",
-        "date": "late 17th century",
-        "medium": "Hanging scroll; ink and color on silk",
-        "credit_line": "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936"
-        },
-    "thumbnail_url": "", 
-    "title": "Quail and Millet"
+  "creator": "Kiyohara Yukinobu",
+  "foreign_identifier": "45734-1",
+  "foreign_landing_url": "https://www.metmuseum.org/art/collection/search/45734",
+  "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP251120.jpg",
+  "license_": "cc0",
+  "license_version": "1.0",
+  "meta_data": {
+    "accession_number": "36.100.45",
+    "classification": "Paintings",
+    "credit_line": "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
+    "culture": "Japan",
+    "date": "late 17th century",
+    "medium": "Hanging scroll; ink and color on silk"
+  },
+  "thumbnail_url": "",
+  "title": "Quail and Millet"
 }

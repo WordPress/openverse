@@ -1,147 +1,147 @@
 {
-  "status": 200,
-  "responseCode": 1,
   "response": {
+    "message": "content found",
+    "rowCount": 734,
     "rows": [
       {
-        "id": "edanmdm-siris_arc_291918",
-        "title": "Views of the National Zoological Park in Washington, DC, showing Elephant",
-        "unitCode": "SIA",
-        "type": "edanmdm",
-        "url": "edanmdm:siris_arc_291918",
         "content": {
           "descriptiveNonRepeating": {
-            "record_ID": "siris_arc_291918",
-            "online_media": {
-              "mediaCount": 1,
-              "media": [
-                {
-                  "thumbnail": "https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358&max=150",
-                  "idsId": "SIA-SIA2010-2358",
-                  "usage": {
-                    "access": "CC0",
-                    "text": ""
-                  },
-                  "type": "Images",
-                  "content": "https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358"
-                }
-              ]
-            },
-            "unit_code": "SIA",
-            "title_sort": "VIEWS OF THE NATIONAL ZOOLOGICAL PARK IN WASHINGTON DC SHOWING ELEPHANT",
-            "title": {
-              "label": "Title",
-              "content": "Views of the National Zoological Park in Washington, DC, showing Elephant"
-            },
+            "data_source": "Smithsonian Institution Archives",
             "metadata_usage": {
               "access": "CC0"
             },
-            "data_source": "Smithsonian Institution Archives"
+            "online_media": {
+              "media": [
+                {
+                  "content": "https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358",
+                  "idsId": "SIA-SIA2010-2358",
+                  "thumbnail": "https://ids.si.edu/ids/deliveryService?id=SIA-SIA2010-2358&max=150",
+                  "type": "Images",
+                  "usage": {
+                    "access": "CC0",
+                    "text": ""
+                  }
+                }
+              ],
+              "mediaCount": 1
+            },
+            "record_ID": "siris_arc_291918",
+            "title": {
+              "content": "Views of the National Zoological Park in Washington, DC, showing Elephant",
+              "label": "Title"
+            },
+            "title_sort": "VIEWS OF THE NATIONAL ZOOLOGICAL PARK IN WASHINGTON DC SHOWING ELEPHANT",
+            "unit_code": "SIA"
+          },
+          "freetext": {
+            "dataSource": [
+              {
+                "content": "Smithsonian Institution Archives",
+                "label": "Data Source"
+              }
+            ],
+            "date": [
+              {
+                "content": "1919",
+                "label": "Date"
+              },
+              {
+                "content": "C. 1920-1924",
+                "label": "Date"
+              }
+            ],
+            "identifier": [
+              {
+                "content": "SIA RU007355 [SIA2010-2358]",
+                "label": "Local number"
+              }
+            ],
+            "name": [
+              {
+                "content": "Gruber, Martin A",
+                "label": "Creator"
+              },
+              {
+                "content": "National Zoological Park (U.S.)",
+                "label": "Subject"
+              }
+            ],
+            "notes": [
+              {
+                "content": "Smithsonian Institution Archives, Record Unit 7355, Martin A. Gruber Photograph Collection, Image No. SIA2010-2358",
+                "label": "Cite as"
+              },
+              {
+                "content": "Smithsonian Institution Archives, Capital Gallery, Suite 3000, MRC 507; 600 Maryland Avenue, SW; Washington, DC 20024-2520",
+                "label": "Repository Loc."
+              }
+            ],
+            "objectRights": [
+              {
+                "content": "No access restrictions Many of SIA's holdings are located off-site, and advance notice is recommended to consult a collection. Please email the SIA Reference Team at osiaref@si.edu",
+                "label": "Restrictions & Rights"
+              },
+              {
+                "content": "No Copyright - United States",
+                "label": "Restrictions & Rights"
+              }
+            ],
+            "objectType": [
+              {
+                "content": "Black-and-white photographs",
+                "label": "Type"
+              }
+            ],
+            "topic": [
+              {
+                "content": "Animals",
+                "label": "Topic"
+              }
+            ]
           },
           "indexedStructured": {
             "date": [
               "1920s",
               "1910s"
             ],
+            "name": [
+              {
+                "content": "Gruber, Martin A",
+                "type": "personal_main"
+              },
+              {
+                "content": "National Zoological Park (U.S.)",
+                "type": "corporate_subj"
+              }
+            ],
             "object_type": [
               "Archival materials",
               "Photographs"
             ],
-            "name": [
-              {
-                "type": "personal_main",
-                "content": "Gruber, Martin A"
-              },
-              {
-                "type": "corporate_subj",
-                "content": "National Zoological Park (U.S.)"
-              }
+            "online_media_type": [
+              "Images"
             ],
             "topic": [
               "Animals"
             ],
             "usage_flag": [
               "Personal Paper Deposit"
-            ],
-            "online_media_type": [
-              "Images"
-            ]
-          },
-          "freetext": {
-            "date": [
-              {
-                "label": "Date",
-                "content": "1919"
-              },
-              {
-                "label": "Date",
-                "content": "C. 1920-1924"
-              }
-            ],
-            "identifier": [
-              {
-                "label": "Local number",
-                "content": "SIA RU007355 [SIA2010-2358]"
-              }
-            ],
-            "notes": [
-              {
-                "label": "Cite as",
-                "content": "Smithsonian Institution Archives, Record Unit 7355, Martin A. Gruber Photograph Collection, Image No. SIA2010-2358"
-              },
-              {
-                "label": "Repository Loc.",
-                "content": "Smithsonian Institution Archives, Capital Gallery, Suite 3000, MRC 507; 600 Maryland Avenue, SW; Washington, DC 20024-2520"
-              }
-            ],
-            "name": [
-              {
-                "label": "Creator",
-                "content": "Gruber, Martin A"
-              },
-              {
-                "label": "Subject",
-                "content": "National Zoological Park (U.S.)"
-              }
-            ],
-            "topic": [
-              {
-                "label": "Topic",
-                "content": "Animals"
-              }
-            ],
-            "dataSource": [
-              {
-                "label": "Data Source",
-                "content": "Smithsonian Institution Archives"
-              }
-            ],
-            "objectRights": [
-              {
-                "label": "Restrictions & Rights",
-                "content": "No access restrictions Many of SIA's holdings are located off-site, and advance notice is recommended to consult a collection. Please email the SIA Reference Team at osiaref@si.edu"
-              },
-              {
-                "label": "Restrictions & Rights",
-                "content": "No Copyright - United States"
-              }
-            ],
-            "objectType": [
-              {
-                "label": "Type",
-                "content": "Black-and-white photographs"
-              }
             ]
           }
         },
-        "hash": "fffe9e6a7103a3449d84f3acf75ae7260e1c0386",
         "docSignature": "b943f314acfdbcd3ed740a1c4bb2774f1e0abc24_c58eacf430afa83b10f6a76fc64459d9",
-        "timestamp": "1580116221",
+        "hash": "fffe9e6a7103a3449d84f3acf75ae7260e1c0386",
+        "id": "edanmdm-siris_arc_291918",
         "lastTimeUpdated": "1580116213",
+        "timestamp": "1580116221",
+        "title": "Views of the National Zoological Park in Washington, DC, showing Elephant",
+        "type": "edanmdm",
+        "unitCode": "SIA",
+        "url": "edanmdm:siris_arc_291918",
         "version": ""
       }
-    ],
-    "rowCount": 734,
-    "message": "content found"
-  }
+    ]
+  },
+  "responseCode": 1,
+  "status": 200
 }

@@ -1,1 +1,34 @@
-[{"description": "Cropped .jpeg (1600 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738462&t=q&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Cropped .jpeg (2560 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738462&t=v&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative", "$": "http://images.nypl.org/index.php?id=56738462&t=g&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Cropped .jpeg (760 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738462&t=w&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Cropped .jpeg (300 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738462&t=r&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Cropped .gif (150 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738462&t=t&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Center cropped thumbnail .jpeg (100x100 pixels)", "$": "http://images.nypl.org/index.php?id=56738462&t=b&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Cropped .jpeg (140 pixels tall with variable width)", "$": "http://images.nypl.org/index.php?id=56738462&t=f&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}]
+[
+  {
+    "$": "http://images.nypl.org/index.php?id=56738462&t=q&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+    "description": "Cropped .jpeg (1600 pixels on the long side)"
+  },
+  {
+    "$": "http://images.nypl.org/index.php?id=56738462&t=v&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+    "description": "Cropped .jpeg (2560 pixels on the long side)"
+  },
+  {
+    "$": "http://images.nypl.org/index.php?id=56738462&t=g&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+    "description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative"
+  },
+  {
+    "$": "http://images.nypl.org/index.php?id=56738462&t=w&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+    "description": "Cropped .jpeg (760 pixels on the long side)"
+  },
+  {
+    "$": "http://images.nypl.org/index.php?id=56738462&t=r&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+    "description": "Cropped .jpeg (300 pixels on the long side)"
+  },
+  {
+    "$": "http://images.nypl.org/index.php?id=56738462&t=t&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+    "description": "Cropped .gif (150 pixels on the long side)"
+  },
+  {
+    "$": "http://images.nypl.org/index.php?id=56738462&t=b&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+    "description": "Center cropped thumbnail .jpeg (100x100 pixels)"
+  },
+  {
+    "$": "http://images.nypl.org/index.php?id=56738462&t=f&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+    "description": "Cropped .jpeg (140 pixels tall with variable width)"
+  }
+]

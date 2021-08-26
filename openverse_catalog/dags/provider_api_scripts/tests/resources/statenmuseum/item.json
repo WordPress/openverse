@@ -1,1 +1,104 @@
-{"id": "1170000264_object", "created": "2020-03-21T10:18:17Z", "modified": "2020-03-22T23:31:17Z", "acquisition_date_precision": "1893-12-30", "responsible_department": "Samling og Forskning (KKS)", "collection": ["Gammel bestand"], "distinguishing_features": ["Indhold / Kollation: Tegning i to dele fra episode mellem den engelske og hollandske fl\u00e5de - fandt sted d. 3. el. 10. august 1665"], "dimensions": [{"notes": "256 x 204 mm", "part": "bladmaal", "type": "hojde", "unit": "mm", "value": "64"}, {"notes": "256 x 204 mm", "part": "bladmaal", "type": "bredde", "unit": "mm", "value": "55"}], "documentation": [{"title": "Hollstein's German engravings, etchings and woodcuts 1450-1700 (vol. III), Hans Sebald Beham", "author": "F.W.H. Hollstein", "notes": "e.15", "shelfmark": "22473"}, {"title": "The Illustrated Bartsch 14, Early German Masters, Albrecht Altdorfer, Monogrammists: Albrecht Altdorfer, Monogrammists", "author": "Robert A. Koch", "notes": "14", "shelfmark": "C 36188"}], "inscriptions": [{"content": "Grafikers navn anf\u00f8rt i trykpladen ", "language": "dansk"}], "object_names": [{"name": "kobberstik"}], "production": [{"creator": "Altdorfer, Albrecht", "creator_forename": "Albrecht", "creator_surname": "Altdorfer", "creator_date_of_birth": "1478-01-01T00:00:00.000Z", "creator_date_of_death": "1536-01-01T00:00:00.000Z", "creator_nationality": "tysk", "creator_gender": "MALE", "creator_lref": "1180000107_person"}], "production_date": [{"start": "1479-11-29T00:00:00.000Z", "end": "1537-11-29T00:00:00.000Z", "period": "1479-1537"}], "techniques": ["Kobberstik"], "titles": [{"title": "Jomfru Maria med barnet og Sankt Anne ved vuggen", "type": "DESCRIPT"}], "object_number": "KKS1615", "object_url": "https://api.smk.dk/api/v1/art/?object_number=kks1615", "iiif_manifest": "https://api.smk.dk/api/v1/iiif/manifest/?id=kks1615", "enrichment_url": "https://enrichment.api.smk.dk/api/enrichment/KKS1615", "similar_images_url": "https://similar.api.smk.dk/similar/?object_number=KKS1615", "production_dates_notes": ["verk datering: 1480 - 1538", "Datering f\u00f8lger Altdorfers leve\u00e5r, da v\u00e6rket er udateret"], "public_domain": true, "rights": "https://creativecommons.org/share-your-work/public-domain/cc0/", "on_display": false, "image_mime_type": "image/tiff", "image_iiif_id": "https://iip.smk.dk/iiif/jp2/kks1615.tif.jp2", "image_iiif_info": "https://iip.smk.dk/iiif/jp2/kks1615.tif.jp2/info.json", "image_width": 3076, "image_height": 5141, "image_size": 47466428, "image_thumbnail": "https://iip-thumb.smk.dk/iiif/jp2/kks1615.tif.jp2/full/!1024,/0/default.jpg", "image_native": "https://api.smk.dk/api/v1/download/W3siaW1nX3VybCI6Imh0dHBzOi8vaWlwLnNtay5kay9paWlmL2pwMi9ra3MxNjE1LnRpZi5qcDIvZnVsbC9mdWxsLzAvbmF0aXZlLmpwZyIsInB1YmxpY19kb21haW4iOnRydWUsIm9iamVjdF9udW1iZXIiOiJLS1MxNjE1IiwibnVtIjoiIn1d/KKS1615.jpg", "image_orientation": "portrait", "has_image": true}
+{
+  "acquisition_date_precision": "1893-12-30",
+  "collection": [
+    "Gammel bestand"
+  ],
+  "created": "2020-03-21T10:18:17Z",
+  "dimensions": [
+    {
+      "notes": "256 x 204 mm",
+      "part": "bladmaal",
+      "type": "hojde",
+      "unit": "mm",
+      "value": "64"
+    },
+    {
+      "notes": "256 x 204 mm",
+      "part": "bladmaal",
+      "type": "bredde",
+      "unit": "mm",
+      "value": "55"
+    }
+  ],
+  "distinguishing_features": [
+    "Indhold / Kollation: Tegning i to dele fra episode mellem den engelske og hollandske fl\u00e5de - fandt sted d. 3. el. 10. august 1665"
+  ],
+  "documentation": [
+    {
+      "author": "F.W.H. Hollstein",
+      "notes": "e.15",
+      "shelfmark": "22473",
+      "title": "Hollstein's German engravings, etchings and woodcuts 1450-1700 (vol. III), Hans Sebald Beham"
+    },
+    {
+      "author": "Robert A. Koch",
+      "notes": "14",
+      "shelfmark": "C 36188",
+      "title": "The Illustrated Bartsch 14, Early German Masters, Albrecht Altdorfer, Monogrammists: Albrecht Altdorfer, Monogrammists"
+    }
+  ],
+  "enrichment_url": "https://enrichment.api.smk.dk/api/enrichment/KKS1615",
+  "has_image": true,
+  "id": "1170000264_object",
+  "iiif_manifest": "https://api.smk.dk/api/v1/iiif/manifest/?id=kks1615",
+  "image_height": 5141,
+  "image_iiif_id": "https://iip.smk.dk/iiif/jp2/kks1615.tif.jp2",
+  "image_iiif_info": "https://iip.smk.dk/iiif/jp2/kks1615.tif.jp2/info.json",
+  "image_mime_type": "image/tiff",
+  "image_native": "https://api.smk.dk/api/v1/download/W3siaW1nX3VybCI6Imh0dHBzOi8vaWlwLnNtay5kay9paWlmL2pwMi9ra3MxNjE1LnRpZi5qcDIvZnVsbC9mdWxsLzAvbmF0aXZlLmpwZyIsInB1YmxpY19kb21haW4iOnRydWUsIm9iamVjdF9udW1iZXIiOiJLS1MxNjE1IiwibnVtIjoiIn1d/KKS1615.jpg",
+  "image_orientation": "portrait",
+  "image_size": 47466428,
+  "image_thumbnail": "https://iip-thumb.smk.dk/iiif/jp2/kks1615.tif.jp2/full/!1024,/0/default.jpg",
+  "image_width": 3076,
+  "inscriptions": [
+    {
+      "content": "Grafikers navn anf\u00f8rt i trykpladen ",
+      "language": "dansk"
+    }
+  ],
+  "modified": "2020-03-22T23:31:17Z",
+  "object_names": [
+    {
+      "name": "kobberstik"
+    }
+  ],
+  "object_number": "KKS1615",
+  "object_url": "https://api.smk.dk/api/v1/art/?object_number=kks1615",
+  "on_display": false,
+  "production": [
+    {
+      "creator": "Altdorfer, Albrecht",
+      "creator_date_of_birth": "1478-01-01T00:00:00.000Z",
+      "creator_date_of_death": "1536-01-01T00:00:00.000Z",
+      "creator_forename": "Albrecht",
+      "creator_gender": "MALE",
+      "creator_lref": "1180000107_person",
+      "creator_nationality": "tysk",
+      "creator_surname": "Altdorfer"
+    }
+  ],
+  "production_date": [
+    {
+      "end": "1537-11-29T00:00:00.000Z",
+      "period": "1479-1537",
+      "start": "1479-11-29T00:00:00.000Z"
+    }
+  ],
+  "production_dates_notes": [
+    "verk datering: 1480 - 1538",
+    "Datering f\u00f8lger Altdorfers leve\u00e5r, da v\u00e6rket er udateret"
+  ],
+  "public_domain": true,
+  "responsible_department": "Samling og Forskning (KKS)",
+  "rights": "https://creativecommons.org/share-your-work/public-domain/cc0/",
+  "similar_images_url": "https://similar.api.smk.dk/similar/?object_number=KKS1615",
+  "techniques": [
+    "Kobberstik"
+  ],
+  "titles": [
+    {
+      "title": "Jomfru Maria med barnet og Sankt Anne ved vuggen",
+      "type": "DESCRIPT"
+    }
+  ]
+}

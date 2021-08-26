@@ -1,1 +1,8 @@
-{"offset": 40000, "rows": 1, "found": 32732, "facets": {}, "facets_ranges": {}, "autocomplete": []}
+{
+  "autocomplete": [],
+  "facets": {},
+  "facets_ranges": {},
+  "found": 32732,
+  "offset": 40000,
+  "rows": 1
+}

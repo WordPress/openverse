@@ -1,1 +1,520 @@
-[{"uuid": {"$": "0cabe3d0-3d50-0134-a8e0-00505686a51c"}, "imageLinks": {"imageLink": [{"description": "Cropped .jpeg (1600 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738462&t=q&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Cropped .jpeg (2560 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738462&t=v&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative", "$": "http://images.nypl.org/index.php?id=56738462&t=g&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Cropped .jpeg (760 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738462&t=w&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Cropped .jpeg (300 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738462&t=r&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Cropped .gif (150 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738462&t=t&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Center cropped thumbnail .jpeg (100x100 pixels)", "$": "http://images.nypl.org/index.php?id=56738462&t=b&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}, {"description": "Cropped .jpeg (140 pixels tall with variable width)", "$": "http://images.nypl.org/index.php?id=56738462&t=f&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001"}]}, "typeOfResource": {"$": "cartographic"}, "imageID": {"$": "56738462"}, "sortString": {"$": "0000000001|0000000001|0000000001"}, "itemLink": {"$": "http://digitalcollections.nypl.org/items/0cabe3d0-3d50-0134-a8e0-00505686a51c"}, "highResLink": {"$": "http://link.nypl.org/a8V0YYPvTh6G-Rvga2Rm5wO"}, "orderInSequence": {"$": "1"}, "isPartOfSequence": {"$": "true"}, "totalInSequence": {"$": "7"}, "title": {"$": "1900 census enumeration districts, Manhattan and Bronx"}, "rightsStatement": {"$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."}, "rightsStatementURI": {"$": "https://creativecommons.org/publicdomain/zero/1.0/"}}, {"uuid": {"$": "109156c0-3d50-0134-5d86-00505686a51c"}, "imageLinks": {"imageLink": [{"description": "Cropped .jpeg (1600 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738463&t=q&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001"}, {"description": "Cropped .jpeg (2560 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738463&t=v&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001"}, {"description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative", "$": "http://images.nypl.org/index.php?id=56738463&t=g&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001"}, {"description": "Cropped .jpeg (760 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738463&t=w&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001"}, {"description": "Cropped .jpeg (300 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738463&t=r&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001"}, {"description": "Cropped .gif (150 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738463&t=t&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001"}, {"description": "Center cropped thumbnail .jpeg (100x100 pixels)", "$": "http://images.nypl.org/index.php?id=56738463&t=b&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001"}, {"description": "Cropped .jpeg (140 pixels tall with variable width)", "$": "http://images.nypl.org/index.php?id=56738463&t=f&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001"}]}, "typeOfResource": {"$": "cartographic"}, "imageID": {"$": "56738463"}, "sortString": {"$": "0000000001|0000000001|0000000002"}, "itemLink": {"$": "http://digitalcollections.nypl.org/items/109156c0-3d50-0134-5d86-00505686a51c"}, "highResLink": {"$": "http://link.nypl.org/diMOfGW3QWO_BNV70sLQAAe"}, "orderInSequence": {"$": "2"}, "isPartOfSequence": {"$": "true"}, "totalInSequence": {"$": "7"}, "title": {"$": "1900 census enumeration districts, Manhattan and Bronx"}, "rightsStatement": {"$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."}, "rightsStatementURI": {"$": "https://creativecommons.org/publicdomain/zero/1.0/"}}, {"uuid": {"$": "191dbf00-3d50-0134-442b-00505686a51c"}, "imageLinks": {"imageLink": [{"description": "Cropped .jpeg (1600 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738464&t=q&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001"}, {"description": "Cropped .jpeg (2560 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738464&t=v&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001"}, {"description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative", "$": "http://images.nypl.org/index.php?id=56738464&t=g&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001"}, {"description": "Cropped .jpeg (760 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738464&t=w&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001"}, {"description": "Cropped .jpeg (300 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738464&t=r&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001"}, {"description": "Cropped .gif (150 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738464&t=t&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001"}, {"description": "Center cropped thumbnail .jpeg (100x100 pixels)", "$": "http://images.nypl.org/index.php?id=56738464&t=b&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001"}, {"description": "Cropped .jpeg (140 pixels tall with variable width)", "$": "http://images.nypl.org/index.php?id=56738464&t=f&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001"}]}, "typeOfResource": {"$": "cartographic"}, "imageID": {"$": "56738464"}, "sortString": {"$": "0000000001|0000000001|0000000003"}, "itemLink": {"$": "http://digitalcollections.nypl.org/items/191dbf00-3d50-0134-442b-00505686a51c"}, "highResLink": {"$": "http://link.nypl.org/Q1Ag9Uc1RAu322ujuWq0WQv"}, "orderInSequence": {"$": "3"}, "isPartOfSequence": {"$": "true"}, "totalInSequence": {"$": "7"}, "title": {"$": "1900 census enumeration districts, Manhattan and Bronx"}, "rightsStatement": {"$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."}, "rightsStatementURI": {"$": "https://creativecommons.org/publicdomain/zero/1.0/"}}, {"uuid": {"$": "1dd76eb0-3d50-0134-f755-00505686a51c"}, "imageLinks": {"imageLink": [{"description": "Cropped .jpeg (1600 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738465&t=q&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001"}, {"description": "Cropped .jpeg (2560 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738465&t=v&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001"}, {"description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative", "$": "http://images.nypl.org/index.php?id=56738465&t=g&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001"}, {"description": "Cropped .jpeg (760 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738465&t=w&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001"}, {"description": "Cropped .jpeg (300 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738465&t=r&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001"}, {"description": "Cropped .gif (150 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738465&t=t&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001"}, {"description": "Center cropped thumbnail .jpeg (100x100 pixels)", "$": "http://images.nypl.org/index.php?id=56738465&t=b&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001"}, {"description": "Cropped .jpeg (140 pixels tall with variable width)", "$": "http://images.nypl.org/index.php?id=56738465&t=f&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001"}]}, "typeOfResource": {"$": "cartographic"}, "imageID": {"$": "56738465"}, "sortString": {"$": "0000000001|0000000001|0000000004"}, "itemLink": {"$": "http://digitalcollections.nypl.org/items/1dd76eb0-3d50-0134-f755-00505686a51c"}, "highResLink": {"$": "http://link.nypl.org/MLFyGmvhSUmai_GaI-sf3w5"}, "orderInSequence": {"$": "4"}, "isPartOfSequence": {"$": "true"}, "totalInSequence": {"$": "7"}, "title": {"$": "1900 census enumeration districts, Manhattan and Bronx"}, "rightsStatement": {"$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."}, "rightsStatementURI": {"$": "https://creativecommons.org/publicdomain/zero/1.0/"}}, {"uuid": {"$": "259d1720-3d50-0134-bb67-00505686a51c"}, "imageLinks": {"imageLink": [{"description": "Cropped .jpeg (1600 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738466&t=q&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001"}, {"description": "Cropped .jpeg (2560 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738466&t=v&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001"}, {"description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative", "$": "http://images.nypl.org/index.php?id=56738466&t=g&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001"}, {"description": "Cropped .jpeg (760 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738466&t=w&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001"}, {"description": "Cropped .jpeg (300 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738466&t=r&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001"}, {"description": "Cropped .gif (150 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738466&t=t&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001"}, {"description": "Center cropped thumbnail .jpeg (100x100 pixels)", "$": "http://images.nypl.org/index.php?id=56738466&t=b&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001"}, {"description": "Cropped .jpeg (140 pixels tall with variable width)", "$": "http://images.nypl.org/index.php?id=56738466&t=f&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001"}]}, "typeOfResource": {"$": "cartographic"}, "imageID": {"$": "56738466"}, "sortString": {"$": "0000000001|0000000001|0000000005"}, "itemLink": {"$": "http://digitalcollections.nypl.org/items/259d1720-3d50-0134-bb67-00505686a51c"}, "highResLink": {"$": "http://link.nypl.org/ZepZ1u7bTIWSx9H-LucFBAx"}, "orderInSequence": {"$": "5"}, "isPartOfSequence": {"$": "true"}, "totalInSequence": {"$": "7"}, "title": {"$": "1900 census enumeration districts, Manhattan and Bronx"}, "rightsStatement": {"$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."}, "rightsStatementURI": {"$": "https://creativecommons.org/publicdomain/zero/1.0/"}}, {"uuid": {"$": "29eed1f0-3d50-0134-c4c7-00505686a51c"}, "imageLinks": {"imageLink": [{"description": "Cropped .jpeg (1600 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738467&t=q&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001"}, {"description": "Cropped .jpeg (2560 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738467&t=v&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001"}, {"description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative", "$": "http://images.nypl.org/index.php?id=56738467&t=g&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001"}, {"description": "Cropped .jpeg (760 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738467&t=w&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001"}, {"description": "Cropped .jpeg (300 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738467&t=r&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001"}, {"description": "Cropped .gif (150 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738467&t=t&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001"}, {"description": "Center cropped thumbnail .jpeg (100x100 pixels)", "$": "http://images.nypl.org/index.php?id=56738467&t=b&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001"}, {"description": "Cropped .jpeg (140 pixels tall with variable width)", "$": "http://images.nypl.org/index.php?id=56738467&t=f&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001"}]}, "typeOfResource": {"$": "cartographic"}, "imageID": {"$": "56738467"}, "sortString": {"$": "0000000001|0000000001|0000000006"}, "itemLink": {"$": "http://digitalcollections.nypl.org/items/29eed1f0-3d50-0134-c4c7-00505686a51c"}, "highResLink": {"$": "http://link.nypl.org/xFxk1OkrRZemiZafLAouaQb"}, "orderInSequence": {"$": "6"}, "isPartOfSequence": {"$": "true"}, "totalInSequence": {"$": "7"}, "title": {"$": "1900 census enumeration districts, Manhattan and Bronx"}, "rightsStatement": {"$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."}, "rightsStatementURI": {"$": "https://creativecommons.org/publicdomain/zero/1.0/"}}, {"uuid": {"$": "30278fa0-3d50-0134-5f8d-00505686a51c"}, "imageLinks": {"imageLink": [{"description": "Cropped .jpeg (1600 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738468&t=q&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001"}, {"description": "Cropped .jpeg (2560 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738468&t=v&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001"}, {"description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative", "$": "http://images.nypl.org/index.php?id=56738468&t=g&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001"}, {"description": "Cropped .jpeg (760 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738468&t=w&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001"}, {"description": "Cropped .jpeg (300 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738468&t=r&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001"}, {"description": "Cropped .gif (150 pixels on the long side)", "$": "http://images.nypl.org/index.php?id=56738468&t=t&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001"}, {"description": "Center cropped thumbnail .jpeg (100x100 pixels)", "$": "http://images.nypl.org/index.php?id=56738468&t=b&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001"}, {"description": "Cropped .jpeg (140 pixels tall with variable width)", "$": "http://images.nypl.org/index.php?id=56738468&t=f&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001"}]}, "typeOfResource": {"$": "cartographic"}, "imageID": {"$": "56738468"}, "sortString": {"$": "0000000001|0000000001|0000000007"}, "itemLink": {"$": "http://digitalcollections.nypl.org/items/30278fa0-3d50-0134-5f8d-00505686a51c"}, "highResLink": {"$": "http://link.nypl.org/bNYzRJpRQWuu-O1YZgrnpga"}, "orderInSequence": {"$": "7"}, "isPartOfSequence": {"$": "true"}, "totalInSequence": {"$": "7"}, "title": {"$": "1900 census enumeration districts, Manhattan and Bronx"}, "rightsStatement": {"$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."}, "rightsStatementURI": {"$": "https://creativecommons.org/publicdomain/zero/1.0/"}}]
+[
+  {
+    "highResLink": {
+      "$": "http://link.nypl.org/a8V0YYPvTh6G-Rvga2Rm5wO"
+    },
+    "imageID": {
+      "$": "56738462"
+    },
+    "imageLinks": {
+      "imageLink": [
+        {
+          "$": "http://images.nypl.org/index.php?id=56738462&t=q&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+          "description": "Cropped .jpeg (1600 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738462&t=v&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+          "description": "Cropped .jpeg (2560 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738462&t=g&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+          "description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738462&t=w&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+          "description": "Cropped .jpeg (760 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738462&t=r&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+          "description": "Cropped .jpeg (300 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738462&t=t&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+          "description": "Cropped .gif (150 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738462&t=b&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+          "description": "Center cropped thumbnail .jpeg (100x100 pixels)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738462&t=f&download=1&suffix=0cabe3d0-3d50-0134-a8e0-00505686a51c.001",
+          "description": "Cropped .jpeg (140 pixels tall with variable width)"
+        }
+      ]
+    },
+    "isPartOfSequence": {
+      "$": "true"
+    },
+    "itemLink": {
+      "$": "http://digitalcollections.nypl.org/items/0cabe3d0-3d50-0134-a8e0-00505686a51c"
+    },
+    "orderInSequence": {
+      "$": "1"
+    },
+    "rightsStatement": {
+      "$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."
+    },
+    "rightsStatementURI": {
+      "$": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "sortString": {
+      "$": "0000000001|0000000001|0000000001"
+    },
+    "title": {
+      "$": "1900 census enumeration districts, Manhattan and Bronx"
+    },
+    "totalInSequence": {
+      "$": "7"
+    },
+    "typeOfResource": {
+      "$": "cartographic"
+    },
+    "uuid": {
+      "$": "0cabe3d0-3d50-0134-a8e0-00505686a51c"
+    }
+  },
+  {
+    "highResLink": {
+      "$": "http://link.nypl.org/diMOfGW3QWO_BNV70sLQAAe"
+    },
+    "imageID": {
+      "$": "56738463"
+    },
+    "imageLinks": {
+      "imageLink": [
+        {
+          "$": "http://images.nypl.org/index.php?id=56738463&t=q&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001",
+          "description": "Cropped .jpeg (1600 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738463&t=v&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001",
+          "description": "Cropped .jpeg (2560 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738463&t=g&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001",
+          "description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738463&t=w&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001",
+          "description": "Cropped .jpeg (760 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738463&t=r&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001",
+          "description": "Cropped .jpeg (300 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738463&t=t&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001",
+          "description": "Cropped .gif (150 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738463&t=b&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001",
+          "description": "Center cropped thumbnail .jpeg (100x100 pixels)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738463&t=f&download=1&suffix=109156c0-3d50-0134-5d86-00505686a51c.001",
+          "description": "Cropped .jpeg (140 pixels tall with variable width)"
+        }
+      ]
+    },
+    "isPartOfSequence": {
+      "$": "true"
+    },
+    "itemLink": {
+      "$": "http://digitalcollections.nypl.org/items/109156c0-3d50-0134-5d86-00505686a51c"
+    },
+    "orderInSequence": {
+      "$": "2"
+    },
+    "rightsStatement": {
+      "$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."
+    },
+    "rightsStatementURI": {
+      "$": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "sortString": {
+      "$": "0000000001|0000000001|0000000002"
+    },
+    "title": {
+      "$": "1900 census enumeration districts, Manhattan and Bronx"
+    },
+    "totalInSequence": {
+      "$": "7"
+    },
+    "typeOfResource": {
+      "$": "cartographic"
+    },
+    "uuid": {
+      "$": "109156c0-3d50-0134-5d86-00505686a51c"
+    }
+  },
+  {
+    "highResLink": {
+      "$": "http://link.nypl.org/Q1Ag9Uc1RAu322ujuWq0WQv"
+    },
+    "imageID": {
+      "$": "56738464"
+    },
+    "imageLinks": {
+      "imageLink": [
+        {
+          "$": "http://images.nypl.org/index.php?id=56738464&t=q&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001",
+          "description": "Cropped .jpeg (1600 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738464&t=v&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001",
+          "description": "Cropped .jpeg (2560 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738464&t=g&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001",
+          "description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738464&t=w&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001",
+          "description": "Cropped .jpeg (760 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738464&t=r&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001",
+          "description": "Cropped .jpeg (300 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738464&t=t&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001",
+          "description": "Cropped .gif (150 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738464&t=b&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001",
+          "description": "Center cropped thumbnail .jpeg (100x100 pixels)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738464&t=f&download=1&suffix=191dbf00-3d50-0134-442b-00505686a51c.001",
+          "description": "Cropped .jpeg (140 pixels tall with variable width)"
+        }
+      ]
+    },
+    "isPartOfSequence": {
+      "$": "true"
+    },
+    "itemLink": {
+      "$": "http://digitalcollections.nypl.org/items/191dbf00-3d50-0134-442b-00505686a51c"
+    },
+    "orderInSequence": {
+      "$": "3"
+    },
+    "rightsStatement": {
+      "$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."
+    },
+    "rightsStatementURI": {
+      "$": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "sortString": {
+      "$": "0000000001|0000000001|0000000003"
+    },
+    "title": {
+      "$": "1900 census enumeration districts, Manhattan and Bronx"
+    },
+    "totalInSequence": {
+      "$": "7"
+    },
+    "typeOfResource": {
+      "$": "cartographic"
+    },
+    "uuid": {
+      "$": "191dbf00-3d50-0134-442b-00505686a51c"
+    }
+  },
+  {
+    "highResLink": {
+      "$": "http://link.nypl.org/MLFyGmvhSUmai_GaI-sf3w5"
+    },
+    "imageID": {
+      "$": "56738465"
+    },
+    "imageLinks": {
+      "imageLink": [
+        {
+          "$": "http://images.nypl.org/index.php?id=56738465&t=q&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001",
+          "description": "Cropped .jpeg (1600 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738465&t=v&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001",
+          "description": "Cropped .jpeg (2560 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738465&t=g&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001",
+          "description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738465&t=w&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001",
+          "description": "Cropped .jpeg (760 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738465&t=r&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001",
+          "description": "Cropped .jpeg (300 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738465&t=t&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001",
+          "description": "Cropped .gif (150 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738465&t=b&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001",
+          "description": "Center cropped thumbnail .jpeg (100x100 pixels)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738465&t=f&download=1&suffix=1dd76eb0-3d50-0134-f755-00505686a51c.001",
+          "description": "Cropped .jpeg (140 pixels tall with variable width)"
+        }
+      ]
+    },
+    "isPartOfSequence": {
+      "$": "true"
+    },
+    "itemLink": {
+      "$": "http://digitalcollections.nypl.org/items/1dd76eb0-3d50-0134-f755-00505686a51c"
+    },
+    "orderInSequence": {
+      "$": "4"
+    },
+    "rightsStatement": {
+      "$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."
+    },
+    "rightsStatementURI": {
+      "$": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "sortString": {
+      "$": "0000000001|0000000001|0000000004"
+    },
+    "title": {
+      "$": "1900 census enumeration districts, Manhattan and Bronx"
+    },
+    "totalInSequence": {
+      "$": "7"
+    },
+    "typeOfResource": {
+      "$": "cartographic"
+    },
+    "uuid": {
+      "$": "1dd76eb0-3d50-0134-f755-00505686a51c"
+    }
+  },
+  {
+    "highResLink": {
+      "$": "http://link.nypl.org/ZepZ1u7bTIWSx9H-LucFBAx"
+    },
+    "imageID": {
+      "$": "56738466"
+    },
+    "imageLinks": {
+      "imageLink": [
+        {
+          "$": "http://images.nypl.org/index.php?id=56738466&t=q&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001",
+          "description": "Cropped .jpeg (1600 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738466&t=v&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001",
+          "description": "Cropped .jpeg (2560 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738466&t=g&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001",
+          "description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738466&t=w&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001",
+          "description": "Cropped .jpeg (760 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738466&t=r&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001",
+          "description": "Cropped .jpeg (300 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738466&t=t&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001",
+          "description": "Cropped .gif (150 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738466&t=b&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001",
+          "description": "Center cropped thumbnail .jpeg (100x100 pixels)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738466&t=f&download=1&suffix=259d1720-3d50-0134-bb67-00505686a51c.001",
+          "description": "Cropped .jpeg (140 pixels tall with variable width)"
+        }
+      ]
+    },
+    "isPartOfSequence": {
+      "$": "true"
+    },
+    "itemLink": {
+      "$": "http://digitalcollections.nypl.org/items/259d1720-3d50-0134-bb67-00505686a51c"
+    },
+    "orderInSequence": {
+      "$": "5"
+    },
+    "rightsStatement": {
+      "$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."
+    },
+    "rightsStatementURI": {
+      "$": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "sortString": {
+      "$": "0000000001|0000000001|0000000005"
+    },
+    "title": {
+      "$": "1900 census enumeration districts, Manhattan and Bronx"
+    },
+    "totalInSequence": {
+      "$": "7"
+    },
+    "typeOfResource": {
+      "$": "cartographic"
+    },
+    "uuid": {
+      "$": "259d1720-3d50-0134-bb67-00505686a51c"
+    }
+  },
+  {
+    "highResLink": {
+      "$": "http://link.nypl.org/xFxk1OkrRZemiZafLAouaQb"
+    },
+    "imageID": {
+      "$": "56738467"
+    },
+    "imageLinks": {
+      "imageLink": [
+        {
+          "$": "http://images.nypl.org/index.php?id=56738467&t=q&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001",
+          "description": "Cropped .jpeg (1600 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738467&t=v&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001",
+          "description": "Cropped .jpeg (2560 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738467&t=g&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001",
+          "description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738467&t=w&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001",
+          "description": "Cropped .jpeg (760 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738467&t=r&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001",
+          "description": "Cropped .jpeg (300 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738467&t=t&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001",
+          "description": "Cropped .gif (150 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738467&t=b&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001",
+          "description": "Center cropped thumbnail .jpeg (100x100 pixels)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738467&t=f&download=1&suffix=29eed1f0-3d50-0134-c4c7-00505686a51c.001",
+          "description": "Cropped .jpeg (140 pixels tall with variable width)"
+        }
+      ]
+    },
+    "isPartOfSequence": {
+      "$": "true"
+    },
+    "itemLink": {
+      "$": "http://digitalcollections.nypl.org/items/29eed1f0-3d50-0134-c4c7-00505686a51c"
+    },
+    "orderInSequence": {
+      "$": "6"
+    },
+    "rightsStatement": {
+      "$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."
+    },
+    "rightsStatementURI": {
+      "$": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "sortString": {
+      "$": "0000000001|0000000001|0000000006"
+    },
+    "title": {
+      "$": "1900 census enumeration districts, Manhattan and Bronx"
+    },
+    "totalInSequence": {
+      "$": "7"
+    },
+    "typeOfResource": {
+      "$": "cartographic"
+    },
+    "uuid": {
+      "$": "29eed1f0-3d50-0134-c4c7-00505686a51c"
+    }
+  },
+  {
+    "highResLink": {
+      "$": "http://link.nypl.org/bNYzRJpRQWuu-O1YZgrnpga"
+    },
+    "imageID": {
+      "$": "56738468"
+    },
+    "imageLinks": {
+      "imageLink": [
+        {
+          "$": "http://images.nypl.org/index.php?id=56738468&t=q&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001",
+          "description": "Cropped .jpeg (1600 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738468&t=v&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001",
+          "description": "Cropped .jpeg (2560 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738468&t=g&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001",
+          "description": "a \"full-size\" .jpeg which has the same dimensions as the jpeg2000 (\"J\") derivative"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738468&t=w&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001",
+          "description": "Cropped .jpeg (760 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738468&t=r&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001",
+          "description": "Cropped .jpeg (300 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738468&t=t&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001",
+          "description": "Cropped .gif (150 pixels on the long side)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738468&t=b&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001",
+          "description": "Center cropped thumbnail .jpeg (100x100 pixels)"
+        },
+        {
+          "$": "http://images.nypl.org/index.php?id=56738468&t=f&download=1&suffix=30278fa0-3d50-0134-5f8d-00505686a51c.001",
+          "description": "Cropped .jpeg (140 pixels tall with variable width)"
+        }
+      ]
+    },
+    "isPartOfSequence": {
+      "$": "true"
+    },
+    "itemLink": {
+      "$": "http://digitalcollections.nypl.org/items/30278fa0-3d50-0134-5f8d-00505686a51c"
+    },
+    "orderInSequence": {
+      "$": "7"
+    },
+    "rightsStatement": {
+      "$": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future."
+    },
+    "rightsStatementURI": {
+      "$": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "sortString": {
+      "$": "0000000001|0000000001|0000000007"
+    },
+    "title": {
+      "$": "1900 census enumeration districts, Manhattan and Bronx"
+    },
+    "totalInSequence": {
+      "$": "7"
+    },
+    "typeOfResource": {
+      "$": "cartographic"
+    },
+    "uuid": {
+      "$": "30278fa0-3d50-0134-5f8d-00505686a51c"
+    }
+  }
+]

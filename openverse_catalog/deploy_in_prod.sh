@@ -28,4 +28,3 @@ if [[ "$response" == "YES" && -f .env ]]; then
 else
     echo "Canceling"
 fi
-

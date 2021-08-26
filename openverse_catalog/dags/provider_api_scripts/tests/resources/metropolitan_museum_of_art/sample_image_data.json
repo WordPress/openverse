@@ -1,16 +1,16 @@
 {
-    "foreign_landing_url": "https://wwwstg.metmuseum.org/art/collection/search/45734",
-    "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP251139.jpg",
-    "thumbnail_url": "https://images.metmuseum.org/CRDImages/as/web-large/DP251139.jpg",
-    "license": "cc0",
-    "license_version": "1.0",
-    "foreign_identifier": 45734,
-    "creator": "Kiyohara Yukinobu",
-    "title": "Quail and Millet",
-    "meta_data": {
-        "accession_number": "36.100.45",
-        "classification": "Paintings",
-        "credit_line": "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
-        "culture": "Japan"
-    }
+  "creator": "Kiyohara Yukinobu",
+  "foreign_identifier": 45734,
+  "foreign_landing_url": "https://wwwstg.metmuseum.org/art/collection/search/45734",
+  "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP251139.jpg",
+  "license": "cc0",
+  "license_version": "1.0",
+  "meta_data": {
+    "accession_number": "36.100.45",
+    "classification": "Paintings",
+    "credit_line": "The Howard Mansfield Collection, Purchase, Rogers Fund, 1936",
+    "culture": "Japan"
+  },
+  "thumbnail_url": "https://images.metmuseum.org/CRDImages/as/web-large/DP251139.jpg",
+  "title": "Quail and Millet"
 }

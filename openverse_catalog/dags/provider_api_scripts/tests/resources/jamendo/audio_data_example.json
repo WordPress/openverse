@@ -1,48 +1,48 @@
 {
-    "id": "732",
-    "name": "Thoughtful",
-    "duration": 144,
-    "artist_id": "92",
-    "artist_name": "Haeresis",
-    "artist_idstr": "haeresis",
-    "album_name": "Opera I",
-    "album_id": "119",
-    "license_ccurl": "http://creativecommons.org/licenses/by-nc/2.0/",
-    "position": 6,
-    "releasedate": "2005-04-12",
-    "album_image": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
-    "audio": "https://mp3d.jamendo.com/?trackid=732&format=mp32&from=WftSCtIfbfXP90c1jNqsfw%3D%3D%7CNzgGctbCMB1xAW8bJE5uEw%3D%3D",
-    "audiodownload": "https://mp3d.jamendo.com/download/track/732/mp32/",
-    "prourl": "",
-    "shorturl": "https://jamen.do/t/732",
-    "shareurl": "https://www.jamendo.com/track/732",
-    "lyrics": "",
-    "audiodownload_allowed": true,
-    "image": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
-    "musicinfo": {
-      "vocalinstrumental": "instrumental",
-      "speed": "medium",
-      "tags": {
-        "genres": [],
-        "instruments": [],
-        "vartags": []
-      }
+  "album_id": "119",
+  "album_image": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
+  "album_name": "Opera I",
+  "artist_id": "92",
+  "artist_idstr": "haeresis",
+  "artist_name": "Haeresis",
+  "audio": "https://mp3d.jamendo.com/?trackid=732&format=mp32&from=WftSCtIfbfXP90c1jNqsfw%3D%3D%7CNzgGctbCMB1xAW8bJE5uEw%3D%3D",
+  "audiodownload": "https://mp3d.jamendo.com/download/track/732/mp32/",
+  "audiodownload_allowed": true,
+  "duration": 144,
+  "id": "732",
+  "image": "https://usercontent.jamendo.com?type=album&id=119&width=200&trackid=732",
+  "license_ccurl": "http://creativecommons.org/licenses/by-nc/2.0/",
+  "licenses": {
+    "ccnc": "true",
+    "ccnd": "false",
+    "ccsa": "false",
+    "probackground": "false",
+    "prolicensing": "false"
+  },
+  "lyrics": "",
+  "musicinfo": {
+    "speed": "medium",
+    "tags": {
+      "genres": [],
+      "instruments": [],
+      "vartags": []
     },
-    "licenses": {
-      "ccnc": "true",
-      "ccnd": "false",
-      "ccsa": "false",
-      "prolicensing": "false",
-      "probackground": "false"
-    },
-    "stats": {
-      "rate_downloads_total": 2826,
-      "rate_listened_total": 5616,
-      "playlisted": 92,
-      "favorited": 66,
-      "likes": 0,
-      "dislikes": 0,
-      "avgnote": 0,
-      "notes": 0
-    }
+    "vocalinstrumental": "instrumental"
+  },
+  "name": "Thoughtful",
+  "position": 6,
+  "prourl": "",
+  "releasedate": "2005-04-12",
+  "shareurl": "https://www.jamendo.com/track/732",
+  "shorturl": "https://jamen.do/t/732",
+  "stats": {
+    "avgnote": 0,
+    "dislikes": 0,
+    "favorited": 66,
+    "likes": 0,
+    "notes": 0,
+    "playlisted": 92,
+    "rate_downloads_total": 2826,
+    "rate_listened_total": 5616
   }
+}

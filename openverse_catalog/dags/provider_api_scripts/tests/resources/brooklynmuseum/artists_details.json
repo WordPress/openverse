@@ -1,3 +1,17 @@
 {
-    "artists" : [{"id": 7, "prefix": "", "name": "John La Farge", "suffix": "", "nationality": "American", "role": "Artist", "dates": "American, 1835-1910", "start_year": 1835, "end_year": 1910, "date_added": "2008-05-13", "rank": 1}]
+  "artists": [
+    {
+      "date_added": "2008-05-13",
+      "dates": "American, 1835-1910",
+      "end_year": 1910,
+      "id": 7,
+      "name": "John La Farge",
+      "nationality": "American",
+      "prefix": "",
+      "rank": 1,
+      "role": "Artist",
+      "start_year": 1835,
+      "suffix": ""
+    }
+  ]
 }

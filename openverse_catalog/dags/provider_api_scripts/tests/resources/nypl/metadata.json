@@ -1,7 +1,7 @@
 {
-    "type_of_resource": "cartographic",
-    "genre": "Maps",
-    "date_issued": "1981",
-    "publisher": "New York Public Library, Local History and Genealogy Division",
-    "description": "4 polyester film encapsulations, some containing 2 sheets back-to-back. Accompanying text formatted as 1 large sheet (46 x 59 cm), in one of the encapsulations."
+  "date_issued": "1981",
+  "description": "4 polyester film encapsulations, some containing 2 sheets back-to-back. Accompanying text formatted as 1 large sheet (46 x 59 cm), in one of the encapsulations.",
+  "genre": "Maps",
+  "publisher": "New York Public Library, Local History and Genealogy Division",
+  "type_of_resource": "cartographic"
 }

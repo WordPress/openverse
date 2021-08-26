@@ -1,92 +1,92 @@
 {
-        "pageid": 44672210,
-        "ns": 6,
-        "title": "File:A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History) BHL8403911.jpg",
-        "imagerepository": "local",
-        "imageinfo": [
-          {
-            "user": "Fæ",
-            "size": 287144,
-            "width": 1670,
-            "height": 2766,
-            "url": "https://upload.wikimedia.org/wikipedia/commons/c/c1/A_catalogue_of_the_recent_sea-urchins_%28Echinoidea%29_in_the_collection_of_the_British_Museum_%28Natural_History%29_BHL8403911.jpg",
-            "descriptionurl": "https://commons.wikimedia.org/wiki/File:A_catalogue_of_the_recent_sea-urchins_(Echinoidea)_in_the_collection_of_the_British_Museum_(Natural_History)_BHL8403911.jpg",
-            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672210",
-            "extmetadata": {
-              "DateTime": {
-                "value": "2015-10-31 23:00:44",
-                "source": "mediawiki-metadata",
-                "hidden": ""
-              },
-              "ObjectName": {
-                "value": "A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History) BHL8403911",
-                "source": "mediawiki-metadata",
-                "hidden": ""
-              },
-              "CommonsMetadataExtension": {
-                "value": 1.2,
-                "source": "extension",
-                "hidden": ""
-              },
-              "Categories": {
-                "value": "A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History)|CC-PD-Mark|Files from the Biodiversity Heritage Library|Images uploaded by Fæ|PD-old-70-expired|PD-scan (PD-old-70-expired)",
-                "source": "commons-categories",
-                "hidden": ""
-              },
-              "Assessments": {
-                "value": "",
-                "source": "commons-categories",
-                "hidden": ""
-              },
-              "ImageDescription": {
-                "value": "A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History) /  by Hubert Lyman Clark  ; [with a preface by C. Tate Regan].",
-                "source": "commons-desc-page"
-              },
-              "DateTimeOriginal": {
-                "value": "1925",
-                "source": "commons-desc-page"
-              },
-              "Credit": {
-                "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.biodiversitylibrary.org/pageimage/8403911\">https://www.biodiversitylibrary.org/pageimage/8403911</a>",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "Artist": {
-                "value": "British Museum (Natural History).; Clark, Hubert Lyman",
-                "source": "commons-desc-page"
-              },
-              "LicenseShortName": {
-                "value": "Public domain",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "UsageTerms": {
-                "value": "Public domain",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "AttributionRequired": {
-                "value": "false",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "Copyrighted": {
-                "value": "False",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "Restrictions": {
-                "value": "",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "License": {
-                "value": "pd",
-                "source": "commons-templates",
-                "hidden": ""
-              }
-            }
-          }
-        ],
-        "globalusage": []
+  "globalusage": [],
+  "imageinfo": [
+    {
+      "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672210",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:A_catalogue_of_the_recent_sea-urchins_(Echinoidea)_in_the_collection_of_the_British_Museum_(Natural_History)_BHL8403911.jpg",
+      "extmetadata": {
+        "Artist": {
+          "source": "commons-desc-page",
+          "value": "British Museum (Natural History).; Clark, Hubert Lyman"
+        },
+        "Assessments": {
+          "hidden": "",
+          "source": "commons-categories",
+          "value": ""
+        },
+        "AttributionRequired": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "false"
+        },
+        "Categories": {
+          "hidden": "",
+          "source": "commons-categories",
+          "value": "A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History)|CC-PD-Mark|Files from the Biodiversity Heritage Library|Images uploaded by F\u00e6|PD-old-70-expired|PD-scan (PD-old-70-expired)"
+        },
+        "CommonsMetadataExtension": {
+          "hidden": "",
+          "source": "extension",
+          "value": 1.2
+        },
+        "Copyrighted": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "False"
+        },
+        "Credit": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.biodiversitylibrary.org/pageimage/8403911\">https://www.biodiversitylibrary.org/pageimage/8403911</a>"
+        },
+        "DateTime": {
+          "hidden": "",
+          "source": "mediawiki-metadata",
+          "value": "2015-10-31 23:00:44"
+        },
+        "DateTimeOriginal": {
+          "source": "commons-desc-page",
+          "value": "1925"
+        },
+        "ImageDescription": {
+          "source": "commons-desc-page",
+          "value": "A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History) /  by Hubert Lyman Clark  ; [with a preface by C. Tate Regan]."
+        },
+        "License": {
+          "hidden": "",
+          "source": "commons-templates",
+          "value": "pd"
+        },
+        "LicenseShortName": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "Public domain"
+        },
+        "ObjectName": {
+          "hidden": "",
+          "source": "mediawiki-metadata",
+          "value": "A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History) BHL8403911"
+        },
+        "Restrictions": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": ""
+        },
+        "UsageTerms": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "Public domain"
+        }
+      },
+      "height": 2766,
+      "size": 287144,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/c1/A_catalogue_of_the_recent_sea-urchins_%28Echinoidea%29_in_the_collection_of_the_British_Museum_%28Natural_History%29_BHL8403911.jpg",
+      "user": "F\u00e6",
+      "width": 1670
+    }
+  ],
+  "imagerepository": "local",
+  "ns": 6,
+  "pageid": 44672210,
+  "title": "File:A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History) BHL8403911.jpg"
 }

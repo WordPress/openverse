@@ -1,1 +1,24 @@
-[{"authority": "", "lang": "", "script": "", "type": "", "usage": "primary", "title": {"$": "1900 census enumeration districts, Manhattan and Bronx"}}, {"authority": "", "lang": "", "script": "", "type": "alternative", "title": {"$": "Map of Manhattan"}, "subTitle": {"$": "City of New York"}}]
+[
+  {
+    "authority": "",
+    "lang": "",
+    "script": "",
+    "title": {
+      "$": "1900 census enumeration districts, Manhattan and Bronx"
+    },
+    "type": "",
+    "usage": "primary"
+  },
+  {
+    "authority": "",
+    "lang": "",
+    "script": "",
+    "subTitle": {
+      "$": "City of New York"
+    },
+    "title": {
+      "$": "Map of Manhattan"
+    },
+    "type": "alternative"
+  }
+]

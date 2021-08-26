@@ -1,1 +1,41 @@
-[{"type": "image", "alternativeText": null, "large": {"width": 2387, "height": 3000, "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-large.jpg", "size": 895360}, "medium": {"width": 1194, "height": 1500, "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-medium.jpg", "size": 207241}, "small": {"width": 398, "height": 500, "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-small.jpg", "size": 35208}, "thumbnail": {"width": 250, "height": 250, "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-thumbnail.jpg", "size": 11371}, "dateModified": "2018-02-08T05:30:00Z", "caption": "Diary - David Yuile, 'City of Dunedin' & S.S. 'Albion', 1872", "creators": [], "sources": [], "credit": null, "rightsStatement": "In Copyright / All Rights Reserved", "licence": {"name": "All Rights Reserved", "shortName": "All Rights Reserved", "uri": ""}}]
+[
+  {
+    "alternativeText": null,
+    "caption": "Diary - David Yuile, 'City of Dunedin' & S.S. 'Albion', 1872",
+    "creators": [],
+    "credit": null,
+    "dateModified": "2018-02-08T05:30:00Z",
+    "large": {
+      "height": 3000,
+      "size": 895360,
+      "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-large.jpg",
+      "width": 2387
+    },
+    "licence": {
+      "name": "All Rights Reserved",
+      "shortName": "All Rights Reserved",
+      "uri": ""
+    },
+    "medium": {
+      "height": 1500,
+      "size": 207241,
+      "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-medium.jpg",
+      "width": 1194
+    },
+    "rightsStatement": "In Copyright / All Rights Reserved",
+    "small": {
+      "height": 500,
+      "size": 35208,
+      "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-small.jpg",
+      "width": 398
+    },
+    "sources": [],
+    "thumbnail": {
+      "height": 250,
+      "size": 11371,
+      "uri": "https://collections.museumsvictoria.com.au/content/media/46/765396-thumbnail.jpg",
+      "width": 250
+    },
+    "type": "image"
+  }
+]

@@ -1,1 +1,8 @@
-{"accession_number": "66.242.29", "date": null, "description": null, "medium": "Silk", "credit_line": "Gift of John C. Monks", "classification": "Clothing"}
+{
+  "accession_number": "66.242.29",
+  "classification": "Clothing",
+  "credit_line": "Gift of John C. Monks",
+  "date": null,
+  "description": null,
+  "medium": "Silk"
+}

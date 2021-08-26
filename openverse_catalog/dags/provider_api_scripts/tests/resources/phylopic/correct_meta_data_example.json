@@ -1,49 +1,49 @@
 {
   "result": {
-    "uid": "e9df48fe-68ea-419e-b9df-441e0b208335",
-    "taxa": [
+    "credit": "Jonathan Wells",
+    "licenseURL": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "pngFiles": [
       {
-        "canonicalName": {
-          "uid": "0faa584e-5f44-4520-8c5b-d2e8c7d50292",
-          "string": "Chondrus crispus NODC Taxonomic Code, database (version 8.0) 1996"
-        }
+        "height": 64,
+        "url": "/assets/images/submissions/e9df48fe-68ea-419e-b9df-441e0b208335.64.png",
+        "width": 52
+      },
+      {
+        "height": 128,
+        "url": "/assets/images/submissions/e9df48fe-68ea-419e-b9df-441e0b208335.128.png",
+        "width": 105
+      },
+      {
+        "height": 256,
+        "url": "/assets/images/submissions/e9df48fe-68ea-419e-b9df-441e0b208335.256.png",
+        "width": 211
+      },
+      {
+        "height": 512,
+        "url": "/assets/images/submissions/e9df48fe-68ea-419e-b9df-441e0b208335.512.png",
+        "width": 423
+      },
+      {
+        "height": 1024,
+        "url": "/assets/images/submissions/e9df48fe-68ea-419e-b9df-441e0b208335.1024.png",
+        "width": 847
       }
     ],
     "submitted": "2020-02-26 11:59:53",
-    "credit": "Jonathan Wells",
-    "pngFiles": [
+    "submitter": {
+      "firstName": "Jonathan",
+      "lastName": "Wells",
+      "uid": "8d28b7ec-05f0-4624-8459-b73f1404a7d8"
+    },
+    "taxa": [
       {
-        "url": "/assets/images/submissions/e9df48fe-68ea-419e-b9df-441e0b208335.64.png",
-        "width": 52,
-        "height": 64
-      },
-      {
-        "url": "/assets/images/submissions/e9df48fe-68ea-419e-b9df-441e0b208335.128.png",
-        "width": 105,
-        "height": 128
-      },
-      {
-        "url": "/assets/images/submissions/e9df48fe-68ea-419e-b9df-441e0b208335.256.png",
-        "width": 211,
-        "height": 256
-      },
-      {
-        "url": "/assets/images/submissions/e9df48fe-68ea-419e-b9df-441e0b208335.512.png",
-        "width": 423,
-        "height": 512
-      },
-      {
-        "url": "/assets/images/submissions/e9df48fe-68ea-419e-b9df-441e0b208335.1024.png",
-        "width": 847,
-        "height": 1024
+        "canonicalName": {
+          "string": "Chondrus crispus NODC Taxonomic Code, database (version 8.0) 1996",
+          "uid": "0faa584e-5f44-4520-8c5b-d2e8c7d50292"
+        }
       }
     ],
-    "licenseURL": "http://creativecommons.org/publicdomain/zero/1.0/",
-    "submitter": {
-      "lastName": "Wells",
-      "uid": "8d28b7ec-05f0-4624-8459-b73f1404a7d8",
-      "firstName": "Jonathan"
-    }
+    "uid": "e9df48fe-68ea-419e-b9df-441e0b208335"
   },
   "success": true
 }

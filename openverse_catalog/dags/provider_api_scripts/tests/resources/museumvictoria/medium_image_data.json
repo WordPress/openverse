@@ -1,3 +1,20 @@
 {
-    "medium": {"width": 1500, "height": 1390, "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-medium.jpg", "size": 170943}, "small": {"width": 540, "height": 500, "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg", "size": 20109}, "thumbnail": {"width": 250, "height": 250, "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-thumbnail.jpg", "size": 5282}
+  "medium": {
+    "height": 1390,
+    "size": 170943,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-medium.jpg",
+    "width": 1500
+  },
+  "small": {
+    "height": 500,
+    "size": 20109,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg",
+    "width": 540
+  },
+  "thumbnail": {
+    "height": 250,
+    "size": 5282,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-thumbnail.jpg",
+    "width": 250
+  }
 }

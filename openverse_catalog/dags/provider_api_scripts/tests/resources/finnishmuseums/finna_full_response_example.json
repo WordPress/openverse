@@ -1,817 +1,817 @@
 {
-    "resultCount": 196334,
-    "records": [
+  "records": [
+    {
+      "buildings": [
         {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Kansatieteen kuvakokoelma/",
-                    "translated": "Kansatieteen kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CC0641BB5337F541CBD19169838BAC1F",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CC0641BB5337F541CBD19169838BAC1F&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [
-                {
-                    "name": "Vikstedt, Topi",
-                    "role": "piirtäjä"
-                }
-            ],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "koivu"
-                ],
-                [
-                    "linnunpöntöt"
-                ],
-                [
-                    "Revonristi"
-                ],
-                [
-                    "valmistusaika: 11.06.1923"
-                ]
-            ],
-            "title": "linnunpönttö koivussa"
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
         },
         {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Rakennushistorian kuvakokoelma/",
-                    "translated": "Rakennushistorian kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CC0FC4DAD9C4452A305DF56E3E720942",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CC0FC4DAD9C4452A305DF56E3E720942&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [
-                {
-                    "name": "Rahola, A.",
-                    "role": "kuvaaja"
-                }
-            ],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "linnat"
-                ],
-                [
-                    "seinät"
-                ],
-                [
-                    "Suomi, Turku; Turun linna; Turku, Turun linna, Turun linna, Päälinna, I kerros, N 101  lämpökeskus (14  Polttoainevarasto, Bränsleförrådet [1960])"
-                ],
-                [
-                    "valmistusaika: 1931, valmistusaika marraskuu"
-                ]
-            ],
-            "title": "Turun linnan huoneen 14 eteläseinän syvennys huoneen kaakkoiskulmassa"
-        },
-        {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Historian kuvakokoelma/",
-                    "translated": "Historian kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CC1A758B5DFC28C7B9FBDAE394868856",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CC1A758B5DFC28C7B9FBDAE394868856&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [
-                {
-                    "name": "Pietinen",
-                    "role": "kuvaaja"
-                }
-            ],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "interiöörit"
-                ],
-                [
-                    "näyttelyt"
-                ],
-                [
-                    "ovet"
-                ],
-                [
-                    "Suomi, Helsinki; Helsinki"
-                ],
-                [
-                    "valmistusaika: 1932, valmistusaika kesäkuu"
-                ]
-            ],
-            "title": "Pohjoismaiset rakennuspäivät Kaartin maneesilla"
-        },
-        {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Rakennushistorian kuvakokoelma/",
-                    "translated": "Rakennushistorian kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CC36555FDFADAD766F5D7C41E6058C63",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CC36555FDFADAD766F5D7C41E6058C63&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "lattiat"
-                ],
-                [
-                    "linnat"
-                ],
-                [
-                    "Suomi, Turku; Turun linna; Turku, Turun linna, Turun linna, Päälinna, I kerros,N 102  Vanha leivintupa, ilmastointikonehuone ( 15 Vanha leivintupa, Gamla bagarstugan. Pannuhuone, Pannrummet [1960])"
-                ]
-            ],
-            "title": "Turun linnan huoneen 15 kaakkoiskulman tiililattia"
-        },
-        {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Rakennushistorian kuvakokoelma/",
-                    "translated": "Rakennushistorian kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CC5D8880D8EE35AAB641F8F80A04E9A0",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CC5D8880D8EE35AAB641F8F80A04E9A0&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [
-                {
-                    "name": "Rahola, A.",
-                    "role": "kuvaaja"
-                }
-            ],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "linnat"
-                ],
-                [
-                    "ovet"
-                ],
-                [
-                    "Suomi, Turku; Turun linna; Turku, Turun linna, Turun linna, Päälinna, I kerros,N 102  Vanha leivintupa, ilmastointikonehuone ( 15 Vanha leivintupa, Gamla bagarstugan. Pannuhuone"
-                ],
-                [
-                    "valmistusaika: 1931, valmistusaika marraskuu"
-                ]
-            ],
-            "title": "Turun linnan huoneen 15 pohjoisseinän umpeenmuurattu, ulkopuolelta suippokaarellinen oviaukko"
-        },
-        {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Rakennushistorian kuvakokoelma/",
-                    "translated": "Rakennushistorian kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CC98AFF2FEDCBCAC63C0EE6FF0F4945B",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CC98AFF2FEDCBCAC63C0EE6FF0F4945B&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [
-                {
-                    "name": "Valokuvaamo Welin",
-                    "role": "kuvaaja"
-                }
-            ],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "linnat"
-                ],
-                [
-                    "sisätilat"
-                ],
-                [
-                    "Suomi, Turku; Turun linna; Turku, Turun linna, Turun linna, Päälinna, V kerros, J 503  Kuningattarensali, juhla- ja kokoustila  (54 Kungattarensali, Drottningsalen)"
-                ],
-                [
-                    "valmistusaika: 1958, valmistusaika joulukuu"
-                ]
-            ],
-            "title": "Turun linnan huoneen 54 lämpö- ja ilmastointijohdot"
-        },
-        {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Kansatieteen kuvakokoelma/",
-                    "translated": "Kansatieteen kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CCBAFB9690DE3FEB3FEEB86738063253",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CCBAFB9690DE3FEB3FEEB86738063253&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [
-                {
-                    "name": "Poutvaara, Matti",
-                    "role": "kuvaaja"
-                }
-            ],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "apteekit"
-                ],
-                [
-                    "autot"
-                ],
-                [
-                    "kirkonkylät"
-                ],
-                [
-                    "Suomi, Oripää; Oripää"
-                ],
-                [
-                    "valmistusaika 1960 luku"
-                ]
-            ],
-            "title": "Kuvattu rakennuksia kadun molemmin puolin"
-        },
-        {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Kansatieteen kuvakokoelma/",
-                    "translated": "Kansatieteen kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CCEB4B6ECA299F9C9CE196FA7B77C5E7",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CCEB4B6ECA299F9C9CE196FA7B77C5E7&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [
-                {
-                    "name": "Keinänen, Sigfrid August",
-                    "role": "piirtäjä"
-                }
-            ],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "asuinrakennukset"
-                ],
-                [
-                    "kylät"
-                ],
-                [
-                    "puurakennukset"
-                ],
-                [
-                    "maisema"
-                ],
-                [
-                    "Suomi, Kurkijoki; Kurkijoki"
-                ],
-                [
-                    "valmistusaika: 1885"
-                ]
-            ],
-            "title": "puurakennuksia maisemassa"
-        },
-        {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Rakennushistorian kuvakokoelma/",
-                    "translated": "Rakennushistorian kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CCED2649D29C465F08FC3A454BB32342",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CCED2649D29C465F08FC3A454BB32342&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "ikkunat"
-                ],
-                [
-                    "linnat"
-                ],
-                [
-                    "Suomi, Turku; Turun linna; Turku, Turun linna, Turun linna, Päälinna, II kerros, K 204  Vierastupa, nähtävyys, näyttelytila   (24 Vierastupa, Gäststugan)"
-                ]
-            ],
-            "title": "Turun linnan huoneen 24 eteläseinän läntisen ikkunan ala- ja länsipieli purkamisen jälkeen"
-        },
-        {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Kansatieteen kuvakokoelma/",
-                    "translated": "Kansatieteen kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CD1D79760C22F7F6765582EAABDE3244",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CD1D79760C22F7F6765582EAABDE3244&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [
-                {
-                    "name": "Vikstedt, Topi",
-                    "role": "piirtäjä"
-                }
-            ],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "hautausmaat"
-                ],
-                [
-                    "muistomerkit"
-                ],
-                [
-                    "Suomi, Ahlainen; Ahlainen"
-                ],
-                [
-                    "valmistusaika todennäköisesti 1912"
-                ]
-            ],
-            "title": "hautaristejä Ahlaisten hautausmaalta, detaljit"
-        },
-        {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Historian kuvakokoelma/",
-                    "translated": "Historian kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CD51697FAA7E068D9E68567DDD15AB81",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CD51697FAA7E068D9E68567DDD15AB81&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [
-                {
-                    "name": "Nyblin, Daniel",
-                    "role": "kuvaaja"
-                }
-            ],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "miesten puvut"
-                ],
-                [
-                    "solmiot"
-                ],
-                [
-                    "solmukkeet"
-                ],
-                [
-                    "viikset"
-                ],
-                [
-                    "Suomi, Helsinki; Helsinki"
-                ],
-                [
-                    "valmistusaika: 1903"
-                ]
-            ],
-            "title": "Helsingin Polyteknillisestä instituutista vuonna 1903 valmistuneet koneinsinöörit, Gunnar Nordström kolmannessa rivissä oikealla"
-        },
-        {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Kansatieteen kuvakokoelma/",
-                    "translated": "Kansatieteen kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CD99028D5287AE3A731C807CE62310DC",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CD99028D5287AE3A731C807CE62310DC&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [
-                {
-                    "name": "Tuuliainen, Ester",
-                    "role": "piirtäjä"
-                }
-            ],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "hirsirakennukset"
-                ],
-                [
-                    "tallit"
-                ],
-                [
-                    "Suomi, Ruokolahti, Immala, Hiitola; Ruokolahti, Immala"
-                ],
-                [
-                    "valmistusaika: 27.07.1910"
-                ]
-            ],
-            "title": "Hiitola, huoneen ovi"
-        },
-        {
-            "buildings": [
-                {
-                    "value": "0/Museovirasto/",
-                    "translated": "Museovirasto"
-                },
-                {
-                    "value": "1/Museovirasto/Historian kuvakokoelma/",
-                    "translated": "Historian kuvakokoelma"
-                }
-            ],
-            "formats": [
-                {
-                    "value": "0/Image/",
-                    "translated": "Kuva"
-                },
-                {
-                    "value": "1/Image/Image/",
-                    "translated": "Kuva"
-                }
-            ],
-            "id": "museovirasto.CDCAEA90F6FF020C770FE2820E91ED2F",
-            "imageRights": {
-                "copyright": "CC BY 4.0",
-                "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-                "description": [
-                    "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-                ]
-            },
-            "images": [
-                "/Cover/Show?id=museovirasto.CDCAEA90F6FF020C770FE2820E91ED2F&index=0&size=large"
-            ],
-            "languages": [],
-            "nonPresenterAuthors": [
-                {
-                    "name": "Pietinen",
-                    "role": "kuvaaja"
-                }
-            ],
-            "onlineUrls": [],
-            "presenters": [],
-            "rating": {
-                "average": 0,
-                "count": 0
-            },
-            "series": [],
-            "subjects": [
-                [
-                    "salit"
-                ],
-                [
-                    "interiöörit"
-                ],
-                [
-                    "näyttelyt"
-                ],
-                [
-                    "Suomi, Helsinki; Helsinki"
-                ],
-                [
-                    "valmistusaika: 1932, valmistusaika kesäkuu"
-                ]
-            ],
-            "title": "Pohjoismaiset rakennuspäivät"
+          "translated": "Kansatieteen kuvakokoelma",
+          "value": "1/Museovirasto/Kansatieteen kuvakokoelma/"
         }
-    ],
-    "status": "OK"
-  }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CC0641BB5337F541CBD19169838BAC1F",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CC0641BB5337F541CBD19169838BAC1F&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [
+        {
+          "name": "Vikstedt, Topi",
+          "role": "piirt\u00e4j\u00e4"
+        }
+      ],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "koivu"
+        ],
+        [
+          "linnunp\u00f6nt\u00f6t"
+        ],
+        [
+          "Revonristi"
+        ],
+        [
+          "valmistusaika: 11.06.1923"
+        ]
+      ],
+      "title": "linnunp\u00f6ntt\u00f6 koivussa"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Rakennushistorian kuvakokoelma",
+          "value": "1/Museovirasto/Rakennushistorian kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CC0FC4DAD9C4452A305DF56E3E720942",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CC0FC4DAD9C4452A305DF56E3E720942&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [
+        {
+          "name": "Rahola, A.",
+          "role": "kuvaaja"
+        }
+      ],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "linnat"
+        ],
+        [
+          "sein\u00e4t"
+        ],
+        [
+          "Suomi, Turku; Turun linna; Turku, Turun linna, Turun linna, P\u00e4\u00e4linna, I kerros, N 101  l\u00e4mp\u00f6keskus (14  Polttoainevarasto, Br\u00e4nslef\u00f6rr\u00e5det [1960])"
+        ],
+        [
+          "valmistusaika: 1931, valmistusaika marraskuu"
+        ]
+      ],
+      "title": "Turun linnan huoneen 14 etel\u00e4sein\u00e4n syvennys huoneen kaakkoiskulmassa"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Historian kuvakokoelma",
+          "value": "1/Museovirasto/Historian kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CC1A758B5DFC28C7B9FBDAE394868856",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CC1A758B5DFC28C7B9FBDAE394868856&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [
+        {
+          "name": "Pietinen",
+          "role": "kuvaaja"
+        }
+      ],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "interi\u00f6\u00f6rit"
+        ],
+        [
+          "n\u00e4yttelyt"
+        ],
+        [
+          "ovet"
+        ],
+        [
+          "Suomi, Helsinki; Helsinki"
+        ],
+        [
+          "valmistusaika: 1932, valmistusaika kes\u00e4kuu"
+        ]
+      ],
+      "title": "Pohjoismaiset rakennusp\u00e4iv\u00e4t Kaartin maneesilla"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Rakennushistorian kuvakokoelma",
+          "value": "1/Museovirasto/Rakennushistorian kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CC36555FDFADAD766F5D7C41E6058C63",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CC36555FDFADAD766F5D7C41E6058C63&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "lattiat"
+        ],
+        [
+          "linnat"
+        ],
+        [
+          "Suomi, Turku; Turun linna; Turku, Turun linna, Turun linna, P\u00e4\u00e4linna, I kerros,N 102  Vanha leivintupa, ilmastointikonehuone ( 15 Vanha leivintupa, Gamla bagarstugan. Pannuhuone, Pannrummet [1960])"
+        ]
+      ],
+      "title": "Turun linnan huoneen 15 kaakkoiskulman tiililattia"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Rakennushistorian kuvakokoelma",
+          "value": "1/Museovirasto/Rakennushistorian kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CC5D8880D8EE35AAB641F8F80A04E9A0",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CC5D8880D8EE35AAB641F8F80A04E9A0&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [
+        {
+          "name": "Rahola, A.",
+          "role": "kuvaaja"
+        }
+      ],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "linnat"
+        ],
+        [
+          "ovet"
+        ],
+        [
+          "Suomi, Turku; Turun linna; Turku, Turun linna, Turun linna, P\u00e4\u00e4linna, I kerros,N 102  Vanha leivintupa, ilmastointikonehuone ( 15 Vanha leivintupa, Gamla bagarstugan. Pannuhuone"
+        ],
+        [
+          "valmistusaika: 1931, valmistusaika marraskuu"
+        ]
+      ],
+      "title": "Turun linnan huoneen 15 pohjoissein\u00e4n umpeenmuurattu, ulkopuolelta suippokaarellinen oviaukko"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Rakennushistorian kuvakokoelma",
+          "value": "1/Museovirasto/Rakennushistorian kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CC98AFF2FEDCBCAC63C0EE6FF0F4945B",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CC98AFF2FEDCBCAC63C0EE6FF0F4945B&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [
+        {
+          "name": "Valokuvaamo Welin",
+          "role": "kuvaaja"
+        }
+      ],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "linnat"
+        ],
+        [
+          "sis\u00e4tilat"
+        ],
+        [
+          "Suomi, Turku; Turun linna; Turku, Turun linna, Turun linna, P\u00e4\u00e4linna, V kerros, J 503  Kuningattarensali, juhla- ja kokoustila  (54 Kungattarensali, Drottningsalen)"
+        ],
+        [
+          "valmistusaika: 1958, valmistusaika joulukuu"
+        ]
+      ],
+      "title": "Turun linnan huoneen 54 l\u00e4mp\u00f6- ja ilmastointijohdot"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Kansatieteen kuvakokoelma",
+          "value": "1/Museovirasto/Kansatieteen kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CCBAFB9690DE3FEB3FEEB86738063253",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CCBAFB9690DE3FEB3FEEB86738063253&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [
+        {
+          "name": "Poutvaara, Matti",
+          "role": "kuvaaja"
+        }
+      ],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "apteekit"
+        ],
+        [
+          "autot"
+        ],
+        [
+          "kirkonkyl\u00e4t"
+        ],
+        [
+          "Suomi, Orip\u00e4\u00e4; Orip\u00e4\u00e4"
+        ],
+        [
+          "valmistusaika 1960 luku"
+        ]
+      ],
+      "title": "Kuvattu rakennuksia kadun molemmin puolin"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Kansatieteen kuvakokoelma",
+          "value": "1/Museovirasto/Kansatieteen kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CCEB4B6ECA299F9C9CE196FA7B77C5E7",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CCEB4B6ECA299F9C9CE196FA7B77C5E7&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [
+        {
+          "name": "Kein\u00e4nen, Sigfrid August",
+          "role": "piirt\u00e4j\u00e4"
+        }
+      ],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "asuinrakennukset"
+        ],
+        [
+          "kyl\u00e4t"
+        ],
+        [
+          "puurakennukset"
+        ],
+        [
+          "maisema"
+        ],
+        [
+          "Suomi, Kurkijoki; Kurkijoki"
+        ],
+        [
+          "valmistusaika: 1885"
+        ]
+      ],
+      "title": "puurakennuksia maisemassa"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Rakennushistorian kuvakokoelma",
+          "value": "1/Museovirasto/Rakennushistorian kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CCED2649D29C465F08FC3A454BB32342",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CCED2649D29C465F08FC3A454BB32342&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "ikkunat"
+        ],
+        [
+          "linnat"
+        ],
+        [
+          "Suomi, Turku; Turun linna; Turku, Turun linna, Turun linna, P\u00e4\u00e4linna, II kerros, K 204  Vierastupa, n\u00e4ht\u00e4vyys, n\u00e4yttelytila   (24 Vierastupa, G\u00e4ststugan)"
+        ]
+      ],
+      "title": "Turun linnan huoneen 24 etel\u00e4sein\u00e4n l\u00e4ntisen ikkunan ala- ja l\u00e4nsipieli purkamisen j\u00e4lkeen"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Kansatieteen kuvakokoelma",
+          "value": "1/Museovirasto/Kansatieteen kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CD1D79760C22F7F6765582EAABDE3244",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CD1D79760C22F7F6765582EAABDE3244&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [
+        {
+          "name": "Vikstedt, Topi",
+          "role": "piirt\u00e4j\u00e4"
+        }
+      ],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "hautausmaat"
+        ],
+        [
+          "muistomerkit"
+        ],
+        [
+          "Suomi, Ahlainen; Ahlainen"
+        ],
+        [
+          "valmistusaika todenn\u00e4k\u00f6isesti 1912"
+        ]
+      ],
+      "title": "hautaristej\u00e4 Ahlaisten hautausmaalta, detaljit"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Historian kuvakokoelma",
+          "value": "1/Museovirasto/Historian kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CD51697FAA7E068D9E68567DDD15AB81",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CD51697FAA7E068D9E68567DDD15AB81&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [
+        {
+          "name": "Nyblin, Daniel",
+          "role": "kuvaaja"
+        }
+      ],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "miesten puvut"
+        ],
+        [
+          "solmiot"
+        ],
+        [
+          "solmukkeet"
+        ],
+        [
+          "viikset"
+        ],
+        [
+          "Suomi, Helsinki; Helsinki"
+        ],
+        [
+          "valmistusaika: 1903"
+        ]
+      ],
+      "title": "Helsingin Polyteknillisest\u00e4 instituutista vuonna 1903 valmistuneet koneinsin\u00f6\u00f6rit, Gunnar Nordstr\u00f6m kolmannessa riviss\u00e4 oikealla"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Kansatieteen kuvakokoelma",
+          "value": "1/Museovirasto/Kansatieteen kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CD99028D5287AE3A731C807CE62310DC",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CD99028D5287AE3A731C807CE62310DC&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [
+        {
+          "name": "Tuuliainen, Ester",
+          "role": "piirt\u00e4j\u00e4"
+        }
+      ],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "hirsirakennukset"
+        ],
+        [
+          "tallit"
+        ],
+        [
+          "Suomi, Ruokolahti, Immala, Hiitola; Ruokolahti, Immala"
+        ],
+        [
+          "valmistusaika: 27.07.1910"
+        ]
+      ],
+      "title": "Hiitola, huoneen ovi"
+    },
+    {
+      "buildings": [
+        {
+          "translated": "Museovirasto",
+          "value": "0/Museovirasto/"
+        },
+        {
+          "translated": "Historian kuvakokoelma",
+          "value": "1/Museovirasto/Historian kuvakokoelma/"
+        }
+      ],
+      "formats": [
+        {
+          "translated": "Kuva",
+          "value": "0/Image/"
+        },
+        {
+          "translated": "Kuva",
+          "value": "1/Image/Image/"
+        }
+      ],
+      "id": "museovirasto.CDCAEA90F6FF020C770FE2820E91ED2F",
+      "imageRights": {
+        "copyright": "CC BY 4.0",
+        "description": [
+          "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
+        ],
+        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+      },
+      "images": [
+        "/Cover/Show?id=museovirasto.CDCAEA90F6FF020C770FE2820E91ED2F&index=0&size=large"
+      ],
+      "languages": [],
+      "nonPresenterAuthors": [
+        {
+          "name": "Pietinen",
+          "role": "kuvaaja"
+        }
+      ],
+      "onlineUrls": [],
+      "presenters": [],
+      "rating": {
+        "average": 0,
+        "count": 0
+      },
+      "series": [],
+      "subjects": [
+        [
+          "salit"
+        ],
+        [
+          "interi\u00f6\u00f6rit"
+        ],
+        [
+          "n\u00e4yttelyt"
+        ],
+        [
+          "Suomi, Helsinki; Helsinki"
+        ],
+        [
+          "valmistusaika: 1932, valmistusaika kes\u00e4kuu"
+        ]
+      ],
+      "title": "Pohjoismaiset rakennusp\u00e4iv\u00e4t"
+    }
+  ],
+  "resultCount": 196334,
+  "status": "OK"
+}
