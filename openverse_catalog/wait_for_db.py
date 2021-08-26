@@ -28,9 +28,9 @@ def main():
 def _wait_for_db(tries=TRIES, conn_id=CONN_ID):
     engine = db.create_engine(conn_id)
     success = False
-    for i in range(1, TRIES + 1):
+    logger.info(f'Testing DB connection {conn_id}')
+    for i in range(1, tries + 1):
         try:
-            logger.info(f'Testing DB connection {conn_id}')
             connection = engine.connect()
             connection.close()
             success = True
