@@ -6,6 +6,7 @@ from catalog.api.views.audio_views import (
     RelatedAudio,
     AudioStats,
     AudioArt,
+    AudioWaveform,
 )
 
 urlpatterns = [
@@ -28,6 +29,11 @@ urlpatterns = [
         '<str:identifier>/recommendations',
         RelatedAudio.as_view(),
         name='audio-related'
+    ),
+    path(
+        '<str:identifier>/waveform',
+        AudioWaveform.as_view(),
+        name='audio-waveform'
     ),
     path(
         '',
