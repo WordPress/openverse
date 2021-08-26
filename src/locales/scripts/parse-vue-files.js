@@ -5,15 +5,18 @@ const fs = require('fs')
 const path = require('path')
 const glob = require('glob')
 
+const BASE_PATH = path.dirname(path.dirname(path.dirname(process.cwd())))
+
 function readVueFiles(src) {
   const targetFiles = glob.sync(src)
 
   if (targetFiles.length === 0) {
     throw new Error('vueFiles glob has no files.')
   }
-
+  // Now that the script are inside `src/locales/scripts`,
+  // to get relative URL, the script needs to go up 3 levels
   return targetFiles.map((f) => {
-    const fileName = f.replace(process.cwd(), '')
+    const fileName = f.replace(BASE_PATH, '')
     return {
       fileName,
       path: f,
@@ -98,8 +101,8 @@ function parseVueFiles(vueFilesPath) {
   return extractI18nItemsFromVueFiles(filesList)
 }
 
-const getParsedVueFiles = (vueFiles = '../src/**/*.?(js|vue)') => {
-  const resolvedVueFiles = path.resolve(process.cwd(), vueFiles)
+const getParsedVueFiles = (vueFiles = './**/*.?(js|vue)') => {
+  const resolvedVueFiles = path.resolve(BASE_PATH, vueFiles)
   return parseVueFiles(resolvedVueFiles)
 }
 

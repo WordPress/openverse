@@ -12,7 +12,7 @@
  msgstr translated-string
  */
 const getParsedVueFiles = require('./parse-vue-files.js')
-const json = require('./src/locales/en.json')
+const json = require('../en.json')
 const fs = require('fs')
 
 const curlyRegex = new RegExp('{[a-z]*}')
@@ -81,11 +81,12 @@ const findPath = (ob, key) => {
   return path.join('.')
 }
 
-const PARSED_VUE_FILES = getParsedVueFiles('./src/**/*.?(js|vue)')
+const PARSED_VUE_FILES = getParsedVueFiles('src/**/*.?(js|vue)')
+
 /**
  * Returns the comment with a reference github link to the line where the
  * string is used, if available. Example:
- * #: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+ * #: /components/HeroSection.vue:L6
  * @param {string} keyPath (eg."hero.title")
  * @return {string}
  */
@@ -124,7 +125,7 @@ msgstr ""`
 
 const potFile = potTime(json)
 try {
-  const fileName = 'test.pot'
+  const fileName = '../poFiles/test.pot'
   fs.writeFileSync(fileName, potFile)
   console.log(`Successfully wrote pot file to ${fileName}`)
 } catch (err) {
