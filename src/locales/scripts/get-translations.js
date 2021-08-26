@@ -37,6 +37,9 @@ const fetchNgxTranslation = (locale) =>
   axios.get(makeTranslationUrl('ngx')(locale)).then((res) => res.data)
 
 const replacePlaceholders = (json) => {
+  if (json === null) {
+    return null
+  }
   if (typeof json === 'string') {
     return json.replace(/###([a-zA-Z-]*)###/, '{$1}')
   }

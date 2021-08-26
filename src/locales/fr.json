@@ -93,8 +93,8 @@
   },
   "meta-search": {
     "form": {
-      "supported-title": {},
-      "unsupported-title": {}
+      "supported-title": null,
+      "unsupported-title": null
     },
     "card": {
       "checkboxes": {
@@ -124,7 +124,7 @@
     },
     "reuse": {
       "attribution": {
-        "main": {}
+        "main": null
       },
       "copy-license": {
         "plain": "Texte brut",
@@ -137,7 +137,7 @@
         "view-legal-text": ". Pour voir {terms-copy} visitez ###URL###",
         "licensed": "est sous licence",
         "marked": "est marqué comme",
-        "creator-text": {}
+        "creator-text": null
       },
       "tool-header": "Domaine public",
       "license-header": "Licence"
@@ -153,7 +153,7 @@
     "back": "Retourner aux résultats de recherche",
     "copy": "Copier",
     "related-images": "Images similaires",
-    "legal-disclaimer": {},
+    "legal-disclaimer": null,
     "weblink": "Aller sur le site de l’image",
     "survey": {
       "answer": "en répondant à quelques questions."
@@ -167,42 +167,42 @@
     }
   },
   "meta-search-page": {
-    "license": {},
+    "license": null,
     "new": {
       "email": "e-mail"
     },
-    "intro": {},
+    "intro": null,
     "why": {
       "aria-label": "retour",
       "feedback-link": "retour"
     },
     "audio-video": {
-      "filter": {}
+      "filter": null
     },
     "images": {
-      "info": {},
-      "not-finding": {},
-      "continue": {}
+      "info": null,
+      "not-finding": null,
+      "continue": null
     },
     "use": "Utilisation",
-    "content-types": {}
+    "content-types": null
   },
   "sources": {
     "cc-content": {
-      "provider": {},
+      "provider": null,
       "flickr": "Flickr",
       "smithsonian": "Institut Smithsonian",
       "europeana-api": "API Europeana",
       "europeana-link": "Europeana",
-      "europeana": {},
+      "europeana": null,
       "where": "D‘où provient le contenu d‘Openverse ?"
     },
     "new-content": {
       "next": "Comment décidons-nous des prochaines sources à ajouter ?",
-      "total-items": {},
-      "reuse": {},
-      "impact": {},
-      "integrate": {}
+      "total-items": null,
+      "reuse": null,
+      "impact": null,
+      "integrate": null
     },
     "issue-button": "Suggérer une nouvelle source",
     "suggestions": "Les suggestions de nouvelles sources par notre communauté d’utilisatrices et d’utilisateurs sont les bienvenues.",
@@ -211,7 +211,7 @@
       "domain": "Domaine"
     },
     "single-name": "Source",
-    "detail": {}
+    "detail": null
   },
   "collections": {
     "other": "Autres collections",
@@ -234,12 +234,12 @@
     "other-source": "Vous ne trouvez pas ce que vous cherchez ? Recherchez d‘autres sources",
     "load": "Charger plus de résultats",
     "no-more": "Aucune autre image :(",
-    "image-result-count-more": {},
-    "audio-result-count-more": {},
-    "all-result-count-more": {},
-    "image-result-count": {},
-    "audio-result-count": {},
-    "all-result-count": {}
+    "image-result-count-more": null,
+    "audio-result-count-more": null,
+    "all-result-count-more": null,
+    "image-result-count": null,
+    "audio-result-count": null,
+    "all-result-count": null
   },
   "search-guide": {
     "combine": {
@@ -251,16 +251,16 @@
         "star": "symbole astérisque",
         "open": "ouvrir une parenthèse"
       },
-      "fuzziness": {},
-      "precedence": {},
-      "prefix": {},
-      "negate": {},
-      "or": {},
-      "and": {}
+      "fuzziness": null,
+      "precedence": null,
+      "prefix": null,
+      "negate": null,
+      "or": null,
+      "and": null
     },
     "example": {
       "fuzziness": {
-        "link-text": {}
+        "link-text": null
       },
       "negate": {
         "operator-aria-label": "opérateur moins (pour ne PAS inclure un terme)",

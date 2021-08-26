@@ -1,40 +1,40 @@
 {
   "header": {
     "notification": {
-      "text": {},
+      "text": null,
       "okay": "OK",
       "dismiss": "非表示"
     },
     "source": "ソース",
     "donation-banner": {
-      "no": {},
-      "yes": {},
-      "description": {},
-      "alternative-description": {}
+      "no": null,
+      "yes": null,
+      "description": null,
+      "alternative-description": null
     },
     "api": "API",
     "resources-tab": "リソース",
-    "about-tab": {},
-    "licenses": {},
+    "about-tab": null,
+    "licenses": null,
     "aria": {
-      "sr-search": {},
+      "sr-search": null,
       "menu": "メニュー",
       "primary": "メイン"
     },
-    "support": {}
+    "support": null
   },
   "filters": {
     "creator": "作成者",
     "license-types": {
-      "commercial": {},
-      "modification": {}
+      "commercial": null,
+      "modification": null
     },
-    "license-explanation": {},
+    "license-explanation": null,
     "mature": {
-      "enable": {}
+      "enable": null
     },
     "licenses": {
-      "pdm": {},
+      "pdm": null,
       "cc0": "CC0",
       "by": "BY",
       "by-nc-nd": "BY-NC-ND",
@@ -52,7 +52,7 @@
     "aspect-ratios": {
       "square": "正方形",
       "wide": "幅広",
-      "tall": {}
+      "tall": null
     },
     "extensions": {
       "svg": "SVG",
@@ -61,9 +61,9 @@
       "jpg": "JPEG"
     },
     "categories": {
-      "digitized-artwork": {},
+      "digitized-artwork": null,
       "illustration": "イラスト",
-      "photograph": {}
+      "photograph": null
     }
   },
   "browsers": {
@@ -75,56 +75,56 @@
   "hero": {
     "caption": {
       "link": "詳細",
-      "content": {}
+      "content": null
     },
     "search": {
-      "placeholder": {},
+      "placeholder": null,
       "button": "検索"
     },
-    "title": {},
+    "title": null,
     "license-filter": {
-      "label": {}
+      "label": null
     },
     "locale": {
-      "icon": {}
+      "icon": null
     },
-    "subtitle": {},
+    "subtitle": null,
     "brand": "Openverse"
   },
   "meta-search": {
     "form": {
-      "supported-title": {},
-      "unsupported-title": {}
+      "supported-title": null,
+      "unsupported-title": null
     },
     "card": {
       "checkboxes": {
-        "modify": {}
+        "modify": null
       }
     }
   },
   "": {
-    "sources": {},
-    "error": {},
+    "sources": null,
+    "error": null,
     "feedback": "フィードバック",
-    "extension": {},
+    "extension": null,
     "meta-search": "メタ検索",
-    "search-guide": {},
+    "search-guide": null,
     "about": "ストーリー"
   },
   "photo-details": {
     "aria": {
-      "related": {},
+      "related": null,
       "share": {
-        "pinterest": {},
-        "twitter": {},
-        "facebook": {}
+        "pinterest": null,
+        "twitter": null,
+        "facebook": null
       },
-      "details": {},
-      "close-form": {}
+      "details": null,
+      "close-form": null
     },
     "reuse": {
       "attribution": {
-        "main": {}
+        "main": null
       },
       "copy-license": {
         "plain": "プレーンテキスト",
@@ -132,31 +132,31 @@
         "rich": "リッチテキスト"
       },
       "credit": {
-        "copy-text": {},
-        "terms-text": {},
-        "view-legal-text": {},
-        "licensed": {},
-        "marked": {},
+        "copy-text": null,
+        "terms-text": null,
+        "view-legal-text": null,
+        "licensed": null,
+        "marked": null,
         "creator-text": " by {creator-name}"
       },
-      "tool-header": {},
+      "tool-header": null,
       "license-header": "ライセンス"
     },
     "content-report": {
       "dmca": {
-        "thanks": {}
+        "thanks": null
       },
       "submit": "送信",
-      "copyright": {},
-      "issue-description": {}
+      "copyright": null,
+      "issue-description": null
     },
     "back": "検索結果に戻る",
     "copy": "コピー",
     "related-images": "関連画像",
-    "legal-disclaimer": {},
-    "weblink": {},
+    "legal-disclaimer": null,
+    "weblink": null,
     "survey": {
-      "answer": {}
+      "answer": null
     },
     "share": "シェア",
     "information": {
@@ -167,104 +167,104 @@
     }
   },
   "meta-search-page": {
-    "license": {},
+    "license": null,
     "new": {
       "email": "メール"
     },
-    "intro": {},
+    "intro": null,
     "why": {
       "aria-label": "フィードバック",
       "feedback-link": "フィードバック"
     },
     "audio-video": {
-      "filter": {}
+      "filter": null
     },
     "images": {
-      "info": {},
-      "not-finding": {},
-      "continue": {}
+      "info": null,
+      "not-finding": null,
+      "continue": null
     },
-    "use": {},
-    "content-types": {}
+    "use": null,
+    "content-types": null
   },
   "sources": {
     "cc-content": {
-      "provider": {},
+      "provider": null,
       "flickr": "Flickr",
-      "smithsonian": {},
-      "europeana-api": {},
-      "europeana-link": {},
-      "europeana": {},
-      "where": {}
+      "smithsonian": null,
+      "europeana-api": null,
+      "europeana-link": null,
+      "europeana": null,
+      "where": null
     },
     "new-content": {
-      "next": {},
-      "total-items": {},
-      "reuse": {},
-      "impact": {},
-      "integrate": {}
+      "next": null,
+      "total-items": null,
+      "reuse": null,
+      "impact": null,
+      "integrate": null
     },
-    "issue-button": {},
-    "suggestions": {},
+    "issue-button": null,
+    "suggestions": null,
     "providers": {
       "item": "合計の項目",
       "domain": "ドメイン名"
     },
     "single-name": "ソース",
-    "detail": {}
+    "detail": null
   },
   "collections": {
-    "other": {},
-    "collection-size": {},
+    "other": null,
+    "collection-size": null,
     "museum": "ミュージアムコレクション"
   },
   "browse-page": {
     "aria": {
-      "remove-filter": {},
+      "remove-filter": null,
       "scroll": "トップへ戻る"
     },
     "license-description": {
-      "sa": {},
-      "nd": {},
-      "nc": {}
+      "sa": null,
+      "nd": null,
+      "nc": null
     },
     "search-form": {
-      "collection-placeholder": {}
+      "collection-placeholder": null
     },
-    "other-source": {},
-    "load": {},
-    "no-more": {},
-    "image-result-count-more": {},
-    "audio-result-count-more": {},
-    "all-result-count-more": {},
-    "image-result-count": {},
-    "audio-result-count": {},
-    "all-result-count": {}
+    "other-source": null,
+    "load": null,
+    "no-more": null,
+    "image-result-count-more": null,
+    "audio-result-count-more": null,
+    "all-result-count-more": null,
+    "image-result-count": null,
+    "audio-result-count": null,
+    "all-result-count": null
   },
   "search-guide": {
     "combine": {
       "aria-labels": {
-        "close": {},
-        "vertical-bar": {},
-        "plus": {},
-        "minus": {},
-        "star": {},
-        "open": {}
+        "close": null,
+        "vertical-bar": null,
+        "plus": null,
+        "minus": null,
+        "star": null,
+        "open": null
       },
-      "fuzziness": {},
-      "precedence": {},
-      "prefix": {},
-      "negate": {},
-      "or": {},
-      "and": {}
+      "fuzziness": null,
+      "precedence": null,
+      "prefix": null,
+      "negate": null,
+      "or": null,
+      "and": null
     },
     "example": {
       "fuzziness": {
-        "link-text": {}
+        "link-text": null
       },
       "negate": {
-        "operator-aria-label": {},
-        "operator-name": {}
+        "operator-aria-label": null,
+        "operator-name": null
       }
     },
     "exact": {
@@ -282,15 +282,15 @@
     "image": "画像"
   },
   "error": {
-    "image-not-found": {},
+    "image-not-found": null,
     "occurred": "エラーが発生しました",
     "not-found": "ページが見つかりません"
   },
   "extension": {
-    "conclusion": {},
+    "conclusion": null,
     "features": {
       "search": {
-        "heading": {}
+        "heading": null
       }
     }
   },
@@ -298,11 +298,11 @@
     "report": "バグを報告",
     "improve": "改善にご協力ください",
     "aria": {
-      "cc-usability": {}
+      "cc-usability": null
     },
     "loading": "読み込み中…",
     "description": {
-      "making-wordpress": {},
+      "making-wordpress": null,
       "openverse": "#openverse"
     }
   },
@@ -314,31 +314,31 @@
       "privacy": "プライバシー"
     },
     "donate": {
-      "help": {},
-      "work": {}
+      "help": null,
+      "work": null
     },
     "caption": {
-      "icons": {},
-      "attribution": {},
-      "noted": {}
+      "icons": null,
+      "attribution": null,
+      "noted": null
     }
   },
   "about": {
     "planning": {
-      "community": {},
+      "community": null,
       "meta": "メタ検索",
-      "working": {},
-      "catalog": {}
+      "working": null,
+      "catalog": null
     },
     "aria": {
-      "projects": {}
+      "projects": null
     },
     "transfer": {
       "wordpress": "WordPress",
-      "creative-commons": {}
+      "creative-commons": null
     },
     "collection": {
-      "common-crawl": {}
+      "common-crawl": null
     }
   }
 }

@@ -75,7 +75,7 @@
   "hero": {
     "caption": {
       "link": "Más información",
-      "content": {}
+      "content": null
     },
     "search": {
       "placeholder": "Buscar todos los contenidos",
@@ -93,8 +93,8 @@
   },
   "meta-search": {
     "form": {
-      "supported-title": {},
-      "unsupported-title": {}
+      "supported-title": null,
+      "unsupported-title": null
     },
     "card": {
       "checkboxes": {
@@ -124,7 +124,7 @@
     },
     "reuse": {
       "attribution": {
-        "main": {}
+        "main": null
       },
       "copy-license": {
         "plain": "Texto plano",
@@ -134,10 +134,10 @@
       "credit": {
         "copy-text": "una copia de esta licencia,",
         "terms-text": "los términos,",
-        "view-legal-text": {},
+        "view-legal-text": null,
         "licensed": "está bajo la licencia",
         "marked": "está marcado con",
-        "creator-text": {}
+        "creator-text": null
       },
       "tool-header": "Dominio público",
       "license-header": "Licencia"
@@ -171,16 +171,16 @@
     "new": {
       "email": "correo electrónico"
     },
-    "intro": {},
+    "intro": null,
     "why": {
       "aria-label": "sugerencias",
       "feedback-link": "sugerencias"
     },
     "audio-video": {
-      "filter": {}
+      "filter": null
     },
     "images": {
-      "info": {},
+      "info": null,
       "not-finding": "Haz clic en el enlace que dice «¿No encuentras lo que necesitas?» por debajo de los resultados de imágenes.",
       "continue": "Carga más resultados y sigue navegando en Openverse."
     },
@@ -189,12 +189,12 @@
   },
   "sources": {
     "cc-content": {
-      "provider": {},
+      "provider": null,
       "flickr": "Flickr",
       "smithsonian": "Instituto Smithsonian",
       "europeana-api": "API de Euroepeana",
       "europeana-link": "Europeana",
-      "europeana": {},
+      "europeana": null,
       "where": "¿De dónde proceden los contenidos de Openverse?"
     },
     "new-content": {
@@ -211,11 +211,11 @@
       "domain": "Dominio"
     },
     "single-name": "Origen",
-    "detail": {}
+    "detail": null
   },
   "collections": {
     "other": "Otras colecciones",
-    "collection-size": {},
+    "collection-size": null,
     "museum": "Colecciones del museo"
   },
   "browse-page": {
@@ -234,12 +234,12 @@
     "other-source": "¿No encuentras lo que necesitas? Busca en otras fuentes",
     "load": "Cargar más resultados",
     "no-more": "No hay más imágenes :(",
-    "image-result-count-more": {},
-    "audio-result-count-more": {},
-    "all-result-count-more": {},
-    "image-result-count": {},
-    "audio-result-count": {},
-    "all-result-count": {}
+    "image-result-count-more": null,
+    "audio-result-count-more": null,
+    "all-result-count-more": null,
+    "image-result-count": null,
+    "audio-result-count": null,
+    "all-result-count": null
   },
   "search-guide": {
     "combine": {
@@ -251,12 +251,12 @@
         "star": "simbolo de asterisco",
         "open": "abrir paréntesis"
       },
-      "fuzziness": {},
-      "precedence": {},
-      "prefix": {},
-      "negate": {},
-      "or": {},
-      "and": {}
+      "fuzziness": null,
+      "precedence": null,
+      "prefix": null,
+      "negate": null,
+      "or": null,
+      "and": null
     },
     "example": {
       "fuzziness": {
@@ -282,7 +282,7 @@
     "image": "Imagen"
   },
   "error": {
-    "image-not-found": {},
+    "image-not-found": null,
     "occurred": "Ocurrió un error",
     "not-found": "Página no encontrada"
   },

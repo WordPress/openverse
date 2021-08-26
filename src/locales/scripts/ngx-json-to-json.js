@@ -34,6 +34,7 @@ function ngxJsonToJson(ngxObject) {
 // console.log(
 //   JSON.stringify(
 //     ngxJsonToJson({
+//       'wow.okay.cool': null,
 //       'photo-details.aria.share.pinterest': 'compartir en pinterest',
 //       'photo-details.aria.share.twitter': 'compartir en twitter',
 //       'photo-details.aria.share.facebook': 'compartir en facebook',

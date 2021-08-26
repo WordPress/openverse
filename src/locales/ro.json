@@ -29,12 +29,12 @@
       "commercial": "Folosi comercial",
       "modification": "Modifica sau adapta"
     },
-    "license-explanation": {},
+    "license-explanation": null,
     "mature": {
       "enable": "Activează conținutul matur"
     },
     "licenses": {
-      "pdm": {},
+      "pdm": null,
       "cc0": "CC0",
       "by": "BY",
       "by-nc-nd": "BY-NC-ND",
@@ -61,7 +61,7 @@
       "jpg": "JPEG"
     },
     "categories": {
-      "digitized-artwork": {},
+      "digitized-artwork": null,
       "illustration": "Ilustrații",
       "photograph": "Fotografii"
     }
@@ -93,8 +93,8 @@
   },
   "meta-search": {
     "form": {
-      "supported-title": {},
-      "unsupported-title": {}
+      "supported-title": null,
+      "unsupported-title": null
     },
     "card": {
       "checkboxes": {
@@ -103,8 +103,8 @@
     }
   },
   "": {
-    "sources": {},
-    "error": {},
+    "sources": null,
+    "error": null,
     "feedback": "Impresii",
     "extension": "Extensie web",
     "meta-search": "Căutare meta",
@@ -120,11 +120,11 @@
         "facebook": "partajează pe facebook"
       },
       "details": "detalii imagine",
-      "close-form": {}
+      "close-form": null
     },
     "reuse": {
       "attribution": {
-        "main": {}
+        "main": null
       },
       "copy-license": {
         "plain": "Text simplu",
@@ -132,31 +132,31 @@
         "rich": "Text îmbogățit"
       },
       "credit": {
-        "copy-text": {},
-        "terms-text": {},
-        "view-legal-text": {},
-        "licensed": {},
-        "marked": {},
-        "creator-text": {}
+        "copy-text": null,
+        "terms-text": null,
+        "view-legal-text": null,
+        "licensed": null,
+        "marked": null,
+        "creator-text": null
       },
       "tool-header": "Domeniu public",
       "license-header": "Licență"
     },
     "content-report": {
       "dmca": {
-        "thanks": {}
+        "thanks": null
       },
       "submit": "Trimite",
-      "copyright": {},
-      "issue-description": {}
+      "copyright": null,
+      "issue-description": null
     },
-    "back": {},
+    "back": null,
     "copy": "Copiază",
     "related-images": "Imagini similare",
-    "legal-disclaimer": {},
-    "weblink": {},
+    "legal-disclaimer": null,
+    "weblink": null,
     "survey": {
-      "answer": {}
+      "answer": null
     },
     "share": "Partajează",
     "information": {
@@ -167,56 +167,56 @@
     }
   },
   "meta-search-page": {
-    "license": {},
+    "license": null,
     "new": {
       "email": "email"
     },
-    "intro": {},
+    "intro": null,
     "why": {
       "aria-label": "impresii",
       "feedback-link": "impresii"
     },
     "audio-video": {
-      "filter": {}
+      "filter": null
     },
     "images": {
-      "info": {},
-      "not-finding": {},
-      "continue": {}
+      "info": null,
+      "not-finding": null,
+      "continue": null
     },
     "use": " Utilizează ",
-    "content-types": {}
+    "content-types": null
   },
   "sources": {
     "cc-content": {
-      "provider": {},
+      "provider": null,
       "flickr": "Flickr",
       "smithsonian": "Institutul Smithsonian",
       "europeana-api": "API Europeana",
       "europeana-link": "Europeana",
-      "europeana": {},
-      "where": {}
+      "europeana": null,
+      "where": null
     },
     "new-content": {
-      "next": {},
-      "total-items": {},
-      "reuse": {},
-      "impact": {},
-      "integrate": {}
+      "next": null,
+      "total-items": null,
+      "reuse": null,
+      "impact": null,
+      "integrate": null
     },
     "issue-button": "Sugerează o sursă nouă",
-    "suggestions": {},
+    "suggestions": null,
     "providers": {
       "item": "Total elemente",
       "domain": "Domeniu"
     },
     "single-name": "Sursă",
-    "detail": {}
+    "detail": null
   },
   "collections": {
     "other": "Alte colecții",
     "collection-size": "Dimensiunea colecției: {count} de imagini",
-    "museum": {}
+    "museum": null
   },
   "browse-page": {
     "aria": {
@@ -224,51 +224,51 @@
       "scroll": "derulează în sus"
     },
     "license-description": {
-      "sa": {},
-      "nd": {},
-      "nc": {}
+      "sa": null,
+      "nd": null,
+      "nc": null
     },
     "search-form": {
-      "collection-placeholder": {}
+      "collection-placeholder": null
     },
-    "other-source": {},
-    "load": {},
-    "no-more": {},
-    "image-result-count-more": {},
-    "audio-result-count-more": {},
-    "all-result-count-more": {},
-    "image-result-count": {},
-    "audio-result-count": {},
+    "other-source": null,
+    "load": null,
+    "no-more": null,
+    "image-result-count-more": null,
+    "audio-result-count-more": null,
+    "all-result-count-more": null,
+    "image-result-count": null,
+    "audio-result-count": null,
     "all-result-count": "niciun rezultat|{localeCount} rezultat|###localeCount### rezultate"
   },
   "search-guide": {
     "combine": {
       "aria-labels": {
-        "close": {},
-        "vertical-bar": {},
-        "plus": {},
-        "minus": {},
-        "star": {},
-        "open": {}
+        "close": null,
+        "vertical-bar": null,
+        "plus": null,
+        "minus": null,
+        "star": null,
+        "open": null
       },
-      "fuzziness": {},
-      "precedence": {},
-      "prefix": {},
-      "negate": {},
-      "or": {},
-      "and": {}
+      "fuzziness": null,
+      "precedence": null,
+      "prefix": null,
+      "negate": null,
+      "or": null,
+      "and": null
     },
     "example": {
       "fuzziness": {
-        "link-text": {}
+        "link-text": null
       },
       "negate": {
-        "operator-aria-label": {},
-        "operator-name": {}
+        "operator-aria-label": null,
+        "operator-name": null
       }
     },
     "exact": {
-      "claude-monet": {}
+      "claude-monet": null
     }
   },
   "filter-list": {
@@ -287,10 +287,10 @@
     "not-found": "Pagină negăsită"
   },
   "extension": {
-    "conclusion": {},
+    "conclusion": null,
     "features": {
       "search": {
-        "heading": {}
+        "heading": null
       }
     }
   },
@@ -298,11 +298,11 @@
     "report": "Raportează o eroare",
     "improve": "Ajută-ne să îmbunătățim",
     "aria": {
-      "cc-usability": {}
+      "cc-usability": null
     },
     "loading": "Încarc...",
     "description": {
-      "making-wordpress": {},
+      "making-wordpress": null,
       "openverse": "#openverse"
     }
   },
@@ -325,7 +325,7 @@
   },
   "about": {
     "planning": {
-      "community": {},
+      "community": null,
       "meta": "Căutare meta",
       "working": "în prezent lucrăm la",
       "catalog": "Catalog Openverse"

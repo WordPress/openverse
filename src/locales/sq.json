@@ -9,15 +9,15 @@
     "donation-banner": {
       "no": "Jo Sot",
       "yes": "Po, do të dhuroj tani",
-      "description": {},
-      "alternative-description": {}
+      "description": null,
+      "alternative-description": null
     },
     "api": "API",
     "resources-tab": "Burime",
     "about-tab": "Mbi",
     "licenses": "Licencat",
     "aria": {
-      "sr-search": {},
+      "sr-search": null,
       "menu": "menu",
       "primary": "parësore"
     },
@@ -26,8 +26,8 @@
   "filters": {
     "creator": "Krijues",
     "license-types": {
-      "commercial": {},
-      "modification": {}
+      "commercial": null,
+      "modification": null
     },
     "license-explanation": "Shpjegim licence",
     "mature": {
@@ -36,7 +36,7 @@
     "licenses": {
       "pdm": "Shenjë Përkatësie Publike",
       "cc0": "CC0",
-      "by": {},
+      "by": null,
       "by-nc-nd": "BY-NC-ND",
       "by-nc-sa": "BY-NC-SA",
       "by-nd": "BY-ND",
@@ -58,10 +58,10 @@
       "svg": "SVGra",
       "gif": "GIF-e",
       "png": "PNG-ra",
-      "jpg": {}
+      "jpg": null
     },
     "categories": {
-      "digitized-artwork": {},
+      "digitized-artwork": null,
       "illustration": "Ilustrime",
       "photograph": "Fotografi"
     }
@@ -75,11 +75,11 @@
   "hero": {
     "caption": {
       "link": "Mësoni më tepër",
-      "content": {}
+      "content": null
     },
     "search": {
       "placeholder": "Kërko krejt lëndën",
-      "button": {}
+      "button": null
     },
     "title": "Kërkoni për lëndë për ta ripërdorur",
     "license-filter": {
@@ -88,17 +88,17 @@
     "locale": {
       "icon": "vendore"
     },
-    "subtitle": {},
-    "brand": {}
+    "subtitle": null,
+    "brand": null
   },
   "meta-search": {
     "form": {
-      "supported-title": {},
-      "unsupported-title": {}
+      "supported-title": null,
+      "unsupported-title": null
     },
     "card": {
       "checkboxes": {
-        "modify": {}
+        "modify": null
       }
     }
   },
@@ -107,7 +107,7 @@
     "error": "Gabim në sjellje figurash:",
     "feedback": "Përshtypje",
     "extension": "Zgerim Web",
-    "meta-search": {},
+    "meta-search": null,
     "search-guide": "Udhërrëfyes Kërkimi",
     "about": "Historia Jonë"
   },
@@ -120,11 +120,11 @@
         "facebook": "ndajeni me të tjerët në Facebook"
       },
       "details": "hollësi figure",
-      "close-form": {}
+      "close-form": null
     },
     "reuse": {
       "attribution": {
-        "main": {}
+        "main": null
       },
       "copy-license": {
         "plain": "Tekst i thjeshtë",
@@ -133,18 +133,18 @@
       },
       "credit": {
         "copy-text": "Një kopje e kësaj licence,",
-        "terms-text": {},
-        "view-legal-text": {},
-        "licensed": {},
-        "marked": {},
-        "creator-text": {}
+        "terms-text": null,
+        "view-legal-text": null,
+        "licensed": null,
+        "marked": null,
+        "creator-text": null
       },
       "tool-header": "Përkatësi Publike",
       "license-header": "Licencë"
     },
     "content-report": {
       "dmca": {
-        "thanks": {}
+        "thanks": null
       },
       "submit": "Parashtroje",
       "copyright": "Cenon të Drejta Kopjimi",
@@ -153,10 +153,10 @@
     "back": "Mbrapsht te përfundime kërkimi",
     "copy": "Kopjoje",
     "related-images": "Figura të Afërta",
-    "legal-disclaimer": {},
-    "weblink": {},
+    "legal-disclaimer": null,
+    "weblink": null,
     "survey": {
-      "answer": {}
+      "answer": null
     },
     "share": "Ndajeni me të tjerët",
     "information": {
@@ -167,55 +167,55 @@
     }
   },
   "meta-search-page": {
-    "license": {},
+    "license": null,
     "new": {
       "email": "email"
     },
-    "intro": {},
+    "intro": null,
     "why": {
       "aria-label": "përshtypje",
       "feedback-link": "përshtypje"
     },
     "audio-video": {
-      "filter": {}
+      "filter": null
     },
     "images": {
-      "info": {},
-      "not-finding": {},
-      "continue": {}
+      "info": null,
+      "not-finding": null,
+      "continue": null
     },
-    "use": {},
-    "content-types": {}
+    "use": null,
+    "content-types": null
   },
   "sources": {
     "cc-content": {
-      "provider": {},
-      "flickr": {},
-      "smithsonian": {},
-      "europeana-api": {},
-      "europeana-link": {},
-      "europeana": {},
-      "where": {}
+      "provider": null,
+      "flickr": null,
+      "smithsonian": null,
+      "europeana-api": null,
+      "europeana-link": null,
+      "europeana": null,
+      "where": null
     },
     "new-content": {
-      "next": {},
-      "total-items": {},
-      "reuse": {},
-      "impact": {},
-      "integrate": {}
+      "next": null,
+      "total-items": null,
+      "reuse": null,
+      "impact": null,
+      "integrate": null
     },
-    "issue-button": {},
-    "suggestions": {},
+    "issue-button": null,
+    "suggestions": null,
     "providers": {
-      "item": {},
-      "domain": {}
+      "item": null,
+      "domain": null
     },
-    "single-name": {},
-    "detail": {}
+    "single-name": null,
+    "detail": null
   },
   "collections": {
     "other": "Koleksione të Tjera",
-    "collection-size": {},
+    "collection-size": null,
     "museum": "Koleksione Muzesh"
   },
   "browse-page": {
@@ -224,51 +224,51 @@
       "scroll": "rrëshqit sipër në krye"
     },
     "license-description": {
-      "sa": {},
+      "sa": null,
       "nd": "Nuk lejohen të rrjedhur ose përshtatje.",
       "nc": "Vetëm përdorime jokomerciale"
     },
     "search-form": {
       "collection-placeholder": "Kërko në këtë koleksion"
     },
-    "other-source": {},
+    "other-source": null,
     "load": "Ngarko më tepër përfundime",
     "no-more": "S’ka më figura :(",
-    "image-result-count-more": {},
-    "audio-result-count-more": {},
-    "all-result-count-more": {},
-    "image-result-count": {},
-    "audio-result-count": {},
-    "all-result-count": {}
+    "image-result-count-more": null,
+    "audio-result-count-more": null,
+    "all-result-count-more": null,
+    "image-result-count": null,
+    "audio-result-count": null,
+    "all-result-count": null
   },
   "search-guide": {
     "combine": {
       "aria-labels": {
-        "close": {},
-        "vertical-bar": {},
-        "plus": {},
-        "minus": {},
-        "star": {},
-        "open": {}
+        "close": null,
+        "vertical-bar": null,
+        "plus": null,
+        "minus": null,
+        "star": null,
+        "open": null
       },
-      "fuzziness": {},
-      "precedence": {},
-      "prefix": {},
-      "negate": {},
-      "or": {},
-      "and": {}
+      "fuzziness": null,
+      "precedence": null,
+      "prefix": null,
+      "negate": null,
+      "or": null,
+      "and": null
     },
     "example": {
       "fuzziness": {
-        "link-text": {}
+        "link-text": null
       },
       "negate": {
-        "operator-aria-label": {},
-        "operator-name": {}
+        "operator-aria-label": null,
+        "operator-name": null
       }
     },
     "exact": {
-      "claude-monet": {}
+      "claude-monet": null
     }
   },
   "filter-list": {
@@ -277,20 +277,20 @@
     "hide": "Fshihi filtrat"
   },
   "search-tab": {
-    "video": {},
-    "audio": {},
-    "image": {}
+    "video": null,
+    "audio": null,
+    "image": null
   },
   "error": {
-    "image-not-found": {},
+    "image-not-found": null,
     "occurred": "Ndodhi një gabim",
     "not-found": "Faqe Që S’u Gjet"
   },
   "extension": {
-    "conclusion": {},
+    "conclusion": null,
     "features": {
       "search": {
-        "heading": {}
+        "heading": null
       }
     }
   },
@@ -298,12 +298,12 @@
     "report": "Njoftoni një të Metë",
     "improve": "Ndihmonani të Përmirësohemi",
     "aria": {
-      "cc-usability": {}
+      "cc-usability": null
     },
     "loading": "Po ngarkohet…",
     "description": {
       "making-wordpress": "Ndërtim i WordPress-it",
-      "openverse": {}
+      "openverse": null
     }
   },
   "footer": {
@@ -319,14 +319,14 @@
     },
     "caption": {
       "icons": "Ikona nga Font Awesome.",
-      "attribution": {},
-      "noted": {}
+      "attribution": null,
+      "noted": null
     }
   },
   "about": {
     "planning": {
-      "community": {},
-      "meta": {},
+      "community": null,
+      "meta": null,
       "working": "aktualisht po merremi me",
       "catalog": "Katalog Openverse"
     },
@@ -338,7 +338,7 @@
       "creative-commons": "Creative Commons"
     },
     "collection": {
-      "common-crawl": {}
+      "common-crawl": null
     }
   }
 }

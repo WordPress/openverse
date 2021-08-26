@@ -1,69 +1,69 @@
 {
   "header": {
     "notification": {
-      "text": {},
-      "okay": {},
-      "dismiss": {}
+      "text": null,
+      "okay": null,
+      "dismiss": null
     },
-    "source": {},
+    "source": null,
     "donation-banner": {
-      "no": {},
-      "yes": {},
-      "description": {},
-      "alternative-description": {}
+      "no": null,
+      "yes": null,
+      "description": null,
+      "alternative-description": null
     },
-    "api": {},
-    "resources-tab": {},
-    "about-tab": {},
-    "licenses": {},
+    "api": null,
+    "resources-tab": null,
+    "about-tab": null,
+    "licenses": null,
     "aria": {
-      "sr-search": {},
-      "menu": {},
-      "primary": {}
+      "sr-search": null,
+      "menu": null,
+      "primary": null
     },
-    "support": {}
+    "support": null
   },
   "filters": {
-    "creator": {},
+    "creator": null,
     "license-types": {
-      "commercial": {},
-      "modification": {}
+      "commercial": null,
+      "modification": null
     },
-    "license-explanation": {},
+    "license-explanation": null,
     "mature": {
-      "enable": {}
+      "enable": null
     },
     "licenses": {
-      "pdm": {},
-      "cc0": {},
-      "by": {},
-      "by-nc-nd": {},
-      "by-nc-sa": {},
-      "by-nd": {},
-      "by-nc": {},
-      "by-sa": {}
+      "pdm": null,
+      "cc0": null,
+      "by": null,
+      "by-nc-nd": null,
+      "by-nc-sa": null,
+      "by-nd": null,
+      "by-nc": null,
+      "by-sa": null
     },
-    "filter-by": {},
+    "filter-by": null,
     "sizes": {
-      "large": {},
-      "medium": {},
-      "small": {}
+      "large": null,
+      "medium": null,
+      "small": null
     },
     "aspect-ratios": {
-      "square": {},
-      "wide": {},
-      "tall": {}
+      "square": null,
+      "wide": null,
+      "tall": null
     },
     "extensions": {
-      "svg": {},
-      "gif": {},
-      "png": {},
-      "jpg": {}
+      "svg": null,
+      "gif": null,
+      "png": null,
+      "jpg": null
     },
     "categories": {
-      "digitized-artwork": {},
-      "illustration": {},
-      "photograph": {}
+      "digitized-artwork": null,
+      "illustration": null,
+      "photograph": null
     }
   },
   "browsers": {
@@ -74,27 +74,27 @@
   },
   "hero": {
     "caption": {
-      "link": {},
-      "content": {}
+      "link": null,
+      "content": null
     },
     "search": {
-      "placeholder": {},
-      "button": {}
+      "placeholder": null,
+      "button": null
     },
-    "title": {},
+    "title": null,
     "license-filter": {
-      "label": {}
+      "label": null
     },
     "locale": {
-      "icon": {}
+      "icon": null
     },
-    "subtitle": {},
-    "brand": {}
+    "subtitle": null,
+    "brand": null
   },
   "meta-search": {
     "form": {
-      "supported-title": {},
-      "unsupported-title": {}
+      "supported-title": null,
+      "unsupported-title": null
     },
     "card": {
       "checkboxes": {
@@ -103,13 +103,13 @@
     }
   },
   "": {
-    "sources": {},
-    "error": {},
-    "feedback": {},
-    "extension": {},
-    "meta-search": {},
-    "search-guide": {},
-    "about": {}
+    "sources": null,
+    "error": null,
+    "feedback": null,
+    "extension": null,
+    "meta-search": null,
+    "search-guide": null,
+    "about": null
   },
   "photo-details": {
     "aria": {
@@ -120,225 +120,225 @@
         "facebook": "share on facebook"
       },
       "details": "image details",
-      "close-form": {}
+      "close-form": null
     },
     "reuse": {
       "attribution": {
-        "main": {}
+        "main": null
       },
       "copy-license": {
-        "plain": {},
-        "html": {},
-        "rich": {}
+        "plain": null,
+        "html": null,
+        "rich": null
       },
       "credit": {
-        "copy-text": {},
-        "terms-text": {},
-        "view-legal-text": {},
-        "licensed": {},
-        "marked": {},
-        "creator-text": {}
+        "copy-text": null,
+        "terms-text": null,
+        "view-legal-text": null,
+        "licensed": null,
+        "marked": null,
+        "creator-text": null
       },
-      "tool-header": {},
-      "license-header": {}
+      "tool-header": null,
+      "license-header": null
     },
     "content-report": {
       "dmca": {
-        "thanks": {}
+        "thanks": null
       },
-      "submit": {},
-      "copyright": {},
-      "issue-description": {}
+      "submit": null,
+      "copyright": null,
+      "issue-description": null
     },
-    "back": {},
-    "copy": {},
-    "related-images": {},
-    "legal-disclaimer": {},
-    "weblink": {},
+    "back": null,
+    "copy": null,
+    "related-images": null,
+    "legal-disclaimer": null,
+    "weblink": null,
     "survey": {
-      "answer": {}
+      "answer": null
     },
-    "share": {},
+    "share": null,
     "information": {
-      "pixels": {},
-      "tags": {},
-      "dimensions": {},
-      "type": {}
+      "pixels": null,
+      "tags": null,
+      "dimensions": null,
+      "type": null
     }
   },
   "meta-search-page": {
-    "license": {},
+    "license": null,
     "new": {
-      "email": {}
+      "email": null
     },
-    "intro": {},
+    "intro": null,
     "why": {
-      "aria-label": {},
-      "feedback-link": {}
+      "aria-label": null,
+      "feedback-link": null
     },
     "audio-video": {
-      "filter": {}
+      "filter": null
     },
     "images": {
-      "info": {},
-      "not-finding": {},
-      "continue": {}
+      "info": null,
+      "not-finding": null,
+      "continue": null
     },
-    "use": {},
-    "content-types": {}
+    "use": null,
+    "content-types": null
   },
   "sources": {
     "cc-content": {
-      "provider": {},
-      "flickr": {},
-      "smithsonian": {},
-      "europeana-api": {},
-      "europeana-link": {},
-      "europeana": {},
-      "where": {}
+      "provider": null,
+      "flickr": null,
+      "smithsonian": null,
+      "europeana-api": null,
+      "europeana-link": null,
+      "europeana": null,
+      "where": null
     },
     "new-content": {
-      "next": {},
-      "total-items": {},
-      "reuse": {},
-      "impact": {},
-      "integrate": {}
+      "next": null,
+      "total-items": null,
+      "reuse": null,
+      "impact": null,
+      "integrate": null
     },
-    "issue-button": {},
-    "suggestions": {},
+    "issue-button": null,
+    "suggestions": null,
     "providers": {
-      "item": {},
-      "domain": {}
+      "item": null,
+      "domain": null
     },
-    "single-name": {},
-    "detail": {}
+    "single-name": null,
+    "detail": null
   },
   "collections": {
-    "other": {},
-    "collection-size": {},
-    "museum": {}
+    "other": null,
+    "collection-size": null,
+    "museum": null
   },
   "browse-page": {
     "aria": {
-      "remove-filter": {},
-      "scroll": {}
+      "remove-filter": null,
+      "scroll": null
     },
     "license-description": {
-      "sa": {},
-      "nd": {},
-      "nc": {}
+      "sa": null,
+      "nd": null,
+      "nc": null
     },
     "search-form": {
-      "collection-placeholder": {}
+      "collection-placeholder": null
     },
-    "other-source": {},
-    "load": {},
-    "no-more": {},
-    "image-result-count-more": {},
-    "audio-result-count-more": {},
-    "all-result-count-more": {},
-    "image-result-count": {},
-    "audio-result-count": {},
-    "all-result-count": {}
+    "other-source": null,
+    "load": null,
+    "no-more": null,
+    "image-result-count-more": null,
+    "audio-result-count-more": null,
+    "all-result-count-more": null,
+    "image-result-count": null,
+    "audio-result-count": null,
+    "all-result-count": null
   },
   "search-guide": {
     "combine": {
       "aria-labels": {
-        "close": {},
-        "vertical-bar": {},
-        "plus": {},
-        "minus": {},
-        "star": {},
-        "open": {}
+        "close": null,
+        "vertical-bar": null,
+        "plus": null,
+        "minus": null,
+        "star": null,
+        "open": null
       },
-      "fuzziness": {},
-      "precedence": {},
-      "prefix": {},
-      "negate": {},
-      "or": {},
-      "and": {}
+      "fuzziness": null,
+      "precedence": null,
+      "prefix": null,
+      "negate": null,
+      "or": null,
+      "and": null
     },
     "example": {
       "fuzziness": {
-        "link-text": {}
+        "link-text": null
       },
       "negate": {
-        "operator-aria-label": {},
-        "operator-name": {}
+        "operator-aria-label": null,
+        "operator-name": null
       }
     },
     "exact": {
-      "claude-monet": {}
+      "claude-monet": null
     }
   },
   "filter-list": {
-    "show": {},
-    "clear": {},
-    "hide": {}
+    "show": null,
+    "clear": null,
+    "hide": null
   },
   "search-tab": {
-    "video": {},
-    "audio": {},
-    "image": {}
+    "video": null,
+    "audio": null,
+    "image": null
   },
   "error": {
-    "image-not-found": {},
-    "occurred": {},
-    "not-found": {}
+    "image-not-found": null,
+    "occurred": null,
+    "not-found": null
   },
   "extension": {
-    "conclusion": {},
+    "conclusion": null,
     "features": {
       "search": {
-        "heading": {}
+        "heading": null
       }
     }
   },
   "feedback": {
-    "report": {},
-    "improve": {},
+    "report": null,
+    "improve": null,
     "aria": {
-      "cc-usability": {}
+      "cc-usability": null
     },
-    "loading": {},
+    "loading": null,
     "description": {
-      "making-wordpress": {},
-      "openverse": {}
+      "making-wordpress": null,
+      "openverse": null
     }
   },
   "footer": {
     "navigation": {
-      "terms": {},
-      "contact": {},
-      "policies": {},
-      "privacy": {}
+      "terms": null,
+      "contact": null,
+      "policies": null,
+      "privacy": null
     },
     "donate": {
-      "help": {},
-      "work": {}
+      "help": null,
+      "work": null
     },
     "caption": {
-      "icons": {},
-      "attribution": {},
-      "noted": {}
+      "icons": null,
+      "attribution": null,
+      "noted": null
     }
   },
   "about": {
     "planning": {
-      "community": {},
-      "meta": {},
-      "working": {},
-      "catalog": {}
+      "community": null,
+      "meta": null,
+      "working": null,
+      "catalog": null
     },
     "aria": {
-      "projects": {}
+      "projects": null
     },
     "transfer": {
-      "wordpress": {},
-      "creative-commons": {}
+      "wordpress": null,
+      "creative-commons": null
     },
     "collection": {
-      "common-crawl": {}
+      "common-crawl": null
     }
   }
 }
