@@ -15,7 +15,7 @@ const getParsedVueFiles = require('./parse-vue-files.js')
 const json = require('../en.json')
 const fs = require('fs')
 
-const curlyRegex = new RegExp('{[a-z]*}')
+const curlyRegex = new RegExp('{[a-zA-Z-]*}')
 const containsCurlyWord = (string) => curlyRegex.test(string)
 const checkStringForVars = (string) =>
   containsCurlyWord(string) ? '(Do not translate words between ###)' : ''
@@ -81,7 +81,7 @@ const findPath = (ob, key) => {
   return path.join('.')
 }
 
-const PARSED_VUE_FILES = getParsedVueFiles('src/**/*.?(js|vue)')
+const PARSED_VUE_FILES = getParsedVueFiles('**/*.?(js|vue)')
 
 /**
  * Returns the comment with a reference github link to the line where the
@@ -96,7 +96,14 @@ const getRefComment = (keyPath) => {
 }
 
 const escapeQuotes = (str) => str.replace(/"/g, '\\"')
-
+const pluralizedKeys = [
+  'all-result-count',
+  'audio-result-count',
+  'image-result-count',
+  'all-result-count-more',
+  'audio-result-count-more',
+  'image-result-count-more',
+]
 // POT Syntax
 
 // msgctxt context
@@ -109,12 +116,27 @@ function potTime(json, parent = json) {
     let [key, value] = row
     if (typeof value === 'string') {
       const keyPath = `${findPath(parent, key)}.${key}`
-      potFile = `${potFile}
+      if (pluralizedKeys.includes(key)) {
+        const pluralizedValues = value.split('|')
+        if (pluralizedValues.length === 1) {
+          pluralizedValues.push(pluralizedValues[0])
+        }
+        potFile = `${potFile}
+
+# ${keyPath} ${checkStringForVars(value)}${getRefComment(keyPath)}
+msgctxt "${keyPath}"
+msgid "${processValue(pluralizedValues[0])}"
+msgid_plural "${processValue(pluralizedValues[1])}"
+msgstr[0] ""
+msgstr[1] ""`
+      } else {
+        potFile = `${potFile}
 
 # ${keyPath} ${checkStringForVars(value)}${getRefComment(keyPath)}
 msgctxt "${keyPath}"
 msgid "${processValue(value)}"
 msgstr ""`
+      }
     }
     if (typeof value === 'object') {
       potFile = `${potFile}${potTime(value, parent)}`

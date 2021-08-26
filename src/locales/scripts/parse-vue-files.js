@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const glob = require('glob')
 
-const BASE_PATH = path.dirname(path.dirname(path.dirname(process.cwd())))
+const BASE_PATH = path.dirname(path.dirname(__dirname))
 
 function readVueFiles(src) {
   const targetFiles = glob.sync(src)
@@ -101,7 +101,19 @@ function parseVueFiles(vueFilesPath) {
   return extractI18nItemsFromVueFiles(filesList)
 }
 
-const getParsedVueFiles = (vueFiles = './**/*.?(js|vue)') => {
+/**
+ * Parses all vue files found in the glob paths, and returns an
+ * array of objects with i18n path, line number, and vue file path.
+ * {
+    path: 'browse-page.aria.close',
+    line: 13,
+    file: '/components/AppModal.vue'
+  },
+ * @param {string} vueFiles - glob pattern to find all the vue files,
+ * from the BASE_PATH (`openverse-frontend/src`)
+ * @return {Array<Object>}
+ */
+const getParsedVueFiles = (vueFiles) => {
   const resolvedVueFiles = path.resolve(BASE_PATH, vueFiles)
   return parseVueFiles(resolvedVueFiles)
 }
