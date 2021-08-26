@@ -1,6 +1,6 @@
-apache-airflow[amazon,postgres]==2.1.2
 apache-airflow-providers-amazon
 apache-airflow-providers-postgres
+apache-airflow[amazon,postgres]==2.1.2
 lxml==4.6.3
 psycopg2-binary
 requests-file==1.5.1

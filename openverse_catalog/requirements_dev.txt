@@ -1,10 +1,4 @@
-apache-airflow[amazon,postgres]==2.1.2
-apache-airflow-providers-amazon
-apache-airflow-providers-postgres
-lxml==4.6.3
-requests-file==1.5.1
-psycopg2-binary
-tldextract==3.1.0
+-r requirements_prod.txt
 
 pytest-mock==3.6.1
 pytest-socket==0.4.0
