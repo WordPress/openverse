@@ -1,6 +1,7 @@
-/* More about the structure of .po files:
-* https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html#PO-Files
+// More about the structure of .po files:
+// https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html#PO-Files
 
+/*
  * white-space
  #  translator-comments
  #. extracted-comments
@@ -11,7 +12,7 @@
  msgstr translated-string
  */
 const getParsedVueFiles = require('./parse-vue-files.js')
-const json = require('../en.json')
+const json = require('./src/locales/en.json')
 const fs = require('fs')
 
 const curlyRegex = new RegExp('{[a-z]*}')
@@ -30,7 +31,7 @@ const replaceVarsPlaceholders = (string) => {
   if (!containsCurlyWord(string)) {
     return string
   }
-  const variable = /{(?<variable>[a-z]*)}/g
+  const variable = /{(?<variable>[a-zA-Z-]*)}/g
   return string.replace(variable, `###$<variable>###`)
 }
 
@@ -81,9 +82,6 @@ const findPath = (ob, key) => {
 }
 
 const PARSED_VUE_FILES = getParsedVueFiles('./src/**/*.?(js|vue)')
-
-const BASE_URL = 'https://github.com/WordPress/openverse-frontend/blob/main'
-
 /**
  * Returns the comment with a reference github link to the line where the
  * string is used, if available. Example:
@@ -93,7 +91,7 @@ const BASE_URL = 'https://github.com/WordPress/openverse-frontend/blob/main'
  */
 const getRefComment = (keyPath) => {
   const keyValue = PARSED_VUE_FILES.find((k) => k.path === keyPath)
-  return keyValue ? `\n#: ${BASE_URL}${keyValue.file}#L${keyValue.line}` : ''
+  return keyValue ? `\n#: ${keyValue.file}:${keyValue.line}` : ''
 }
 
 const escapeQuotes = (str) => str.replace(/"/g, '\\"')
@@ -126,7 +124,7 @@ msgstr ""`
 
 const potFile = potTime(json)
 try {
-  const fileName = './src/locales/poFiles/test.pot'
+  const fileName = 'test.pot'
   fs.writeFileSync(fileName, potFile)
   console.log(`Successfully wrote pot file to ${fileName}`)
 } catch (err) {
