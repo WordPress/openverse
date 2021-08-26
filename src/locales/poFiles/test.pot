@@ -6,49 +6,49 @@ msgid "Openverse"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Search for content to reuse"
 msgstr ""
 
 # hero.subtitle 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L9
+#: /src/components/HeroSection.vue:9
 msgctxt "hero.subtitle"
 msgid "Browse over 500 million images, available for reuse"
 msgstr ""
 
 # hero.search.placeholder 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L28
+#: /src/components/HeroSection.vue:28
 msgctxt "hero.search.placeholder"
 msgid "Search all content"
 msgstr ""
 
 # hero.search.button 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L32
+#: /src/components/HeroSection.vue:32
 msgctxt "hero.search.button"
 msgid "Search"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "All our content is under Creative Commons licenses or in the public domain. ###link### about CC licenses and tools."
 msgstr ""
 
 # hero.caption.link 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L44
+#: /src/components/HeroSection.vue:44
 msgctxt "hero.caption.link"
 msgid "Learn more"
 msgstr ""
 
 # hero.license-filter.label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HomeLicenseFilter.vue#L4
+#: /src/components/HomeLicenseFilter.vue:4
 msgctxt "hero.license-filter.label"
 msgid "I want something I can"
 msgstr ""
 
 # hero.license-filter.label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HomeLicenseFilter.vue#L4
+#: /src/components/HomeLicenseFilter.vue:4
 msgctxt "hero.license-filter.label"
 msgid "Languages available"
 msgstr ""
@@ -68,56 +68,61 @@ msgctxt "hero.caption"
 msgid "about cc licenses"
 msgstr ""
 
-# .about 
-msgctxt ".about"
+# header.about-nav-item 
+#: /src/components/EmbeddedNavSection.vue:59
+msgctxt "header.about-nav-item"
 msgid "Our Story"
 msgstr ""
 
-# header.source 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L67
-msgctxt "header.source"
+# header.source-nav-item 
+#: /src/components/EmbeddedNavSection.vue:67
+msgctxt "header.source-nav-item"
 msgid "Sources"
 msgstr ""
 
-# .search-guide 
-msgctxt ".search-guide"
+# header.search-guide-nav-item 
+#: /src/components/EmbeddedNavSection.vue:88
+msgctxt "header.search-guide-nav-item"
 msgid "Search Guide"
 msgstr ""
 
-# .meta-search 
-msgctxt ".meta-search"
+# header.meta-search-nav-item 
+#: /src/components/EmbeddedNavSection.vue:96
+msgctxt "header.meta-search-nav-item"
 msgid "Meta Search"
 msgstr ""
 
-# .feedback 
-msgctxt ".feedback"
+# header.feedback-nav-item 
+#: /src/components/EmbeddedNavSection.vue:104
+msgctxt "header.feedback-nav-item"
 msgid "Feedback"
 msgstr ""
 
-# header.support 
-msgctxt "header.support"
+# header.support-nav-item 
+msgctxt "header.support-nav-item"
 msgid "Support Us"
 msgstr ""
 
-# .extension 
-msgctxt ".extension"
+# header.extension-nav-item 
+#: /src/components/EmbeddedNavSection.vue:119
+msgctxt "header.extension-nav-item"
 msgid "Web extension"
 msgstr ""
 
 # hero.search.placeholder 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L28
+#: /src/components/HeroSection.vue:28
 msgctxt "hero.search.placeholder"
 msgid "Search all content"
 msgstr ""
 
 # header.aria.primary 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L2
+#: /src/components/EmbeddedNavSection.vue:2
 msgctxt "header.aria.primary"
 msgid "primary"
 msgstr ""
 
 # header.aria.menu 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L16
+#: /src/components/EmbeddedNavSection.vue:16
 msgctxt "header.aria.menu"
 msgid "menu"
 msgstr ""
@@ -128,63 +133,38 @@ msgid "search"
 msgstr ""
 
 # header.aria.sr-search 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L43
+#: /src/components/EmbeddedNavSection.vue:43
 msgctxt "header.aria.sr-search"
 msgid "sr search button"
 msgstr ""
 
-# .extension 
-msgctxt ".extension"
-msgid "extension"
-msgstr ""
-
-# header.licenses 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L76
-msgctxt "header.licenses"
+# header.licenses-nav-item 
+#: /src/components/EmbeddedNavSection.vue:76
+msgctxt "header.licenses-nav-item"
 msgid "The Licenses"
 msgstr ""
 
 # header.about-tab 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L52
+#: /src/components/EmbeddedNavSection.vue:52
 msgctxt "header.about-tab"
 msgid "About"
 msgstr ""
 
 # header.resources-tab 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L81
+#: /src/components/EmbeddedNavSection.vue:81
 msgctxt "header.resources-tab"
 msgid "Resources"
 msgstr ""
 
-# header.api 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L113
-msgctxt "header.api"
+# header.api-nav-item 
+#: /src/components/EmbeddedNavSection.vue:113
+msgctxt "header.api-nav-item"
 msgid "API"
-msgstr ""
-
-# header.donation-banner.description 
-msgctxt "header.donation-banner.description"
-msgid "If you donate $5 today, and everyone else does the same, we can keep growing our database of freely reusable content. For you. For all of us."
-msgstr ""
-
-# header.donation-banner.alternative-description 
-msgctxt "header.donation-banner.alternative-description"
-msgid "Only 1% of people reading this will donate. Be one of them and help us sustain Openverse."
-msgstr ""
-
-# header.donation-banner.yes 
-msgctxt "header.donation-banner.yes"
-msgid "Yes, I'll donate now"
-msgstr ""
-
-# header.donation-banner.no 
-msgctxt "header.donation-banner.no"
-msgid "Not today"
 msgstr ""
 
 # header.notification.text 
 msgctxt "header.notification.text"
-msgid "Example notification text"
+msgid "{example_notification_text}"
 msgstr ""
 
 # header.notification.dismiss 
@@ -218,37 +198,37 @@ msgid "Terms"
 msgstr ""
 
 # hero.license-filter.label (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HomeLicenseFilter.vue#L4
+#: /src/components/HomeLicenseFilter.vue:4
 msgctxt "hero.license-filter.label"
 msgid "Except where otherwise ###noted###, content on this site is licensed under a ###attribution###. ###icons###"
 msgstr ""
 
 # footer.caption.noted 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/FooterSection.vue#L23
+#: /src/components/FooterSection.vue:23
 msgctxt "footer.caption.noted"
 msgid "noted"
 msgstr ""
 
 # footer.caption.attribution 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/FooterSection.vue#L32
+#: /src/components/FooterSection.vue:32
 msgctxt "footer.caption.attribution"
 msgid "Creative Commons Attribution 4.0 International license"
 msgstr ""
 
 # footer.caption.icons 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/FooterSection.vue#L42
+#: /src/components/FooterSection.vue:42
 msgctxt "footer.caption.icons"
 msgid "Icons by Font Awesome."
 msgstr ""
 
 # footer.donate.work 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/FooterSection.vue#L59
+#: /src/components/FooterSection.vue:59
 msgctxt "footer.donate.work"
 msgid "Our work relies on you!"
 msgstr ""
 
 # footer.donate.help 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/FooterSection.vue#L61
+#: /src/components/FooterSection.vue:61
 msgctxt "footer.donate.help"
 msgid "Help us keep the internet free and open."
 msgstr ""
@@ -264,37 +244,37 @@ msgid "donate section"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "About Openverse"
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Openverse is a tool that allows openly licensed and public domain works to be discovered and used by everyone."
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Openverse searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution."
 msgstr ""
 
 # about.collection.common-crawl 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L16
+#: /src/pages/about.vue:16
 msgctxt "about.collection.common-crawl"
 msgid "Common Crawl"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Currently Openverse only searches images, with search for audio and video provided through ###meta###. But we plan to add additional media types such as open texts and audio, with the ultimate goal of providing access to all 1.4 billion CC licensed and public domain works on the web. All of our code is open source (###search###, ###api###, ###catalog###) and we ###community###. You can see what ###working###."
 msgstr ""
 
 # about.planning.meta 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L26
+#: /src/pages/about.vue:26
 msgctxt "about.planning.meta"
 msgid "Meta Search"
 msgstr ""
@@ -304,50 +284,50 @@ msgctxt "hero.search"
 msgid "Openverse"
 msgstr ""
 
-# header.api 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L113
-msgctxt "header.api"
+# about.planning.api 
+#: /src/pages/about.vue:40
+msgctxt "about.planning.api"
 msgid "Openverse API"
 msgstr ""
 
 # about.planning.catalog 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L47
+#: /src/pages/about.vue:47
 msgctxt "about.planning.catalog"
 msgid "Openverse Catalog"
 msgstr ""
 
 # about.planning.community 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L54
+#: /src/pages/about.vue:54
 msgctxt "about.planning.community"
 msgid "welcome community contribution"
 msgstr ""
 
 # about.planning.working 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L61
+#: /src/pages/about.vue:61
 msgctxt "about.planning.working"
 msgid "we’re currently working on"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "Openverse is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from {creative-commons} and ###wordpress###. We remain committed to our goal of tackling discoverability and accessibility of open access media."
+msgid "Openverse is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from ###creative-commons### and ###wordpress###. We remain committed to our goal of tackling discoverability and accessibility of open access media."
 msgstr ""
 
 # about.transfer.creative-commons 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L71
+#: /src/pages/about.vue:71
 msgctxt "about.transfer.creative-commons"
 msgid "Creative Commons"
 msgstr ""
 
 # about.transfer.wordpress 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L78
+#: /src/pages/about.vue:78
 msgctxt "about.transfer.wordpress"
 msgid "WordPress"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Please note that Openverse does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the ###terms###."
 msgstr ""
@@ -358,25 +338,25 @@ msgid "Openverse Terms of Use"
 msgstr ""
 
 # about.collection.common-crawl 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L16
+#: /src/pages/about.vue:16
 msgctxt "about.collection.common-crawl"
 msgid "Common Crawl"
 msgstr ""
 
 # about.planning.meta 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L26
+#: /src/pages/about.vue:26
 msgctxt "about.planning.meta"
 msgid "meta search"
 msgstr ""
 
 # about.aria.projects 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L59
+#: /src/pages/about.vue:59
 msgctxt "about.aria.projects"
 msgid "Openverse projects"
 msgstr ""
 
 # about.planning.community 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L54
+#: /src/pages/about.vue:54
 msgctxt "about.planning.community"
 msgid "Make Wordpress community"
 msgstr ""
@@ -386,19 +366,20 @@ msgctxt "footer.navigation.terms"
 msgid "Openverse terms of use"
 msgstr ""
 
-# .sources 
-msgctxt ".sources"
+# about.aria.sources-table 
+#: /src/pages/sources.vue:85
+msgctxt "about.aria.sources-table"
 msgid "sources table"
 msgstr ""
 
 # about.transfer.creative-commons 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L71
+#: /src/pages/about.vue:71
 msgctxt "about.transfer.creative-commons"
 msgid "Creative Commons"
 msgstr ""
 
 # about.transfer.wordpress 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L78
+#: /src/pages/about.vue:78
 msgctxt "about.transfer.wordpress"
 msgid "WordPress"
 msgstr ""
@@ -408,266 +389,266 @@ msgctxt "hero.search"
 msgid "Openverse"
 msgstr ""
 
-# header.api 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L113
-msgctxt "header.api"
+# about.planning.api 
+#: /src/pages/about.vue:40
+msgctxt "about.planning.api"
 msgid "Openverse API"
 msgstr ""
 
 # about.planning.catalog 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/about.vue#L47
+#: /src/pages/about.vue:47
 msgctxt "about.planning.catalog"
 msgid "Openverse Catalog"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Sources"
 msgstr ""
 
 # sources.detail 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L77
+#: /src/pages/sources.vue:77
 msgctxt "sources.detail"
 msgid "Clicking on a {single-name} allows you to browse and filter items within that source."
 msgstr ""
 
 # sources.single-name 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L80
+#: /src/pages/sources.vue:80
 msgctxt "sources.single-name"
 msgid "Source"
 msgstr ""
 
-# header.source 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L67
-msgctxt "header.source"
+# sources.providers.source 
+#: /src/pages/sources.vue:97
+msgctxt "sources.providers.source"
 msgid "Source"
 msgstr ""
 
 # sources.providers.domain 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L101
+#: /src/pages/sources.vue:101
 msgctxt "sources.providers.domain"
 msgid "Domain"
 msgstr ""
 
 # sources.providers.item 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L108
+#: /src/pages/sources.vue:108
 msgctxt "sources.providers.item"
 msgid "Total items"
 msgstr ""
 
 # sources.cc-content.where 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L10
+#: /src/pages/sources.vue:10
 msgctxt "sources.cc-content.where"
 msgid "Where does the content on Openverse come from?"
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through Openverse."
 msgstr ""
 
 # sources.cc-content.provider (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L15
+#: /src/pages/sources.vue:15
 msgctxt "sources.cc-content.provider"
 msgid "Some providers have multiple different groupings of content within them. ###flickr### has sources ranging from NASA to personal photography. The ###smithsonian### comprises a dozen, diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections."
 msgstr ""
 
 # sources.cc-content.europeana (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L27
+#: /src/pages/sources.vue:27
 msgctxt "sources.cc-content.europeana"
-msgid "Openverse is especially grateful for the work of ###link###, an organization that works to digitize and make discoverable cultural heritage works across Europe. Openverse is able to index hundreds of valuable sources, through a single integration with the {link-api}."
+msgid "Openverse is especially grateful for the work of ###link###, an organization that works to digitize and make discoverable cultural heritage works across Europe. Openverse is able to index hundreds of valuable sources, through a single integration with the ###link-api###."
 msgstr ""
 
 # sources.cc-content.europeana-link 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L30
+#: /src/pages/sources.vue:30
 msgctxt "sources.cc-content.europeana-link"
 msgid "Europeana"
 msgstr ""
 
 # sources.cc-content.europeana-api 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L37
+#: /src/pages/sources.vue:37
 msgctxt "sources.cc-content.europeana-api"
 msgid "Europeana API"
 msgstr ""
 
 # sources.cc-content.smithsonian 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L23
+#: /src/pages/sources.vue:23
 msgctxt "sources.cc-content.smithsonian"
 msgid "Smithsonian Institute"
 msgstr ""
 
 # sources.cc-content.flickr 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L18
+#: /src/pages/sources.vue:18
 msgctxt "sources.cc-content.flickr"
 msgid "Flickr"
 msgstr ""
 
 # sources.new-content.next 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L44
+#: /src/pages/sources.vue:44
 msgctxt "sources.new-content.next"
 msgid "How do we decide what sources to add next?"
 msgstr ""
 
 # sources.new-content.integrate 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L47
+#: /src/pages/sources.vue:47
 msgctxt "sources.new-content.integrate"
 msgid "We have a never ending list of possible sources to research prior to integration. We ask ourselves questions like:"
 msgstr ""
 
 # sources.new-content.impact 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L52
+#: /src/pages/sources.vue:52
 msgctxt "sources.new-content.impact"
 msgid " What is the impact or importance of this source to our users? If it exists within a provider like Wikimedia Commons, is it valuable for our users to be able to filter by this source directly?"
 msgstr ""
 
 # sources.new-content.reuse 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L55
+#: /src/pages/sources.vue:55
 msgctxt "sources.new-content.reuse"
 msgid "Is licensing and attribution information clearly displayed to enable confident reuse?"
 msgstr ""
 
 # sources.new-content.total-items 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L58
+#: /src/pages/sources.vue:58
 msgctxt "sources.new-content.total-items"
 msgid "How many new total items or new types of items can we bring to our users through this integration? Some sources are direct integrations, while others may be a source within a source."
 msgstr ""
 
 # sources.suggestions 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L65
+#: /src/pages/sources.vue:65
 msgctxt "sources.suggestions"
 msgid "We appreciate suggestions for new sources from our community of users."
 msgstr ""
 
 # sources.issue-button 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L73
+#: /src/pages/sources.vue:73
 msgctxt "sources.issue-button"
 msgid "Suggest a new source"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Meta Search"
 msgstr ""
 
 # meta-search-page.intro (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L10
+#: /src/pages/meta-search.vue:10
 msgctxt "meta-search-page.intro"
 msgid "Openverse is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our ###link###."
 msgstr ""
 
 # hero.caption.link 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L44
+#: /src/components/HeroSection.vue:44
 msgctxt "hero.caption.link"
 msgid "sources"
 msgstr ""
 
 # meta-search-page.license 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L17
+#: /src/pages/meta-search.vue:17
 msgctxt "meta-search-page.license"
 msgid "The internet is a big place! There are plenty of search portals and collections, hosting CC-licensed and public domain content, which we aren’t able to index or surface results from within the Openverse interface. These are important sources of CC-licensed and public domain content, and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located."
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "What content types can I search for using the Meta Search feature?"
 msgstr ""
 
 # meta-search-page.content-types 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L21
+#: /src/pages/meta-search.vue:21
 msgctxt "meta-search-page.content-types"
 msgid "Meta Search on Openverse currently supports image, audio, and video search on external sites."
 msgstr ""
 
 # meta-search-page.use 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L38
+#: /src/pages/meta-search.vue:38
 msgctxt "meta-search-page.use"
 msgid " Use "
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "How does the Meta Search feature work for Images?"
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Openverse supports built-in image search. When you enter a query on the Openverse homepage, a page of results will be displayed. Scrolling to the bottom of the page, you have two choices:"
 msgstr ""
 
 # meta-search-page.images.continue 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L29
+#: /src/pages/meta-search.vue:29
 msgctxt "meta-search-page.images.continue"
 msgid "Load more results, and continue browsing in Openverse."
 msgstr ""
 
 # meta-search-page.images.not-finding 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L32
+#: /src/pages/meta-search.vue:32
 msgctxt "meta-search-page.images.not-finding"
 msgid "Click on the link that says “Not finding what you need?” below the image results."
 msgstr ""
 
 # meta-search-page.images.info (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L36
+#: /src/pages/meta-search.vue:36
 msgctxt "meta-search-page.images.info"
 msgid "When you click on “Not finding what you need?” a modal will load with other sources of CC-licensed and public domain content. Your search query will be preloaded, and if supported, you can select a ###use### filter to proactively filter your results. Click on the button for the external source you’d like to search, and your results will open in a new tab."
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "How does the Meta Search feature work for Audio and Video?"
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Openverse does not yet support built-in audio and video search. For Audio and Video, simply click on the appropriate tab, and you’ll see what sources you can find CC-licensed content on."
 msgstr ""
 
 # meta-search-page.audio-video.filter (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L51
+#: /src/pages/meta-search.vue:51
 msgctxt "meta-search-page.audio-video.filter"
 msgid "The Filters bar on the left includes the ###use### filter, which may be supported by some meta search sources. Apply these before clicking on the button for the external source you’d like to search."
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Can I suggest new sources for Meta Search?"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Yes, please! Create an ###issue### in our GitHub repository or send us an ###email### and tell us about the new sources you’d like to see included."
 msgstr ""
 
 # meta-search-page.new.issue 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L70
+#: /src/pages/meta-search.vue:70
 msgctxt "meta-search-page.new.issue"
 msgid "issue"
 msgstr ""
 
 # meta-search-page.new.email 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L77
+#: /src/pages/meta-search.vue:77
 msgctxt "meta-search-page.new.email"
 msgid "email"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Why did you build this?"
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "For many years, CC has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. These platforms included Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter, and SoundCloud. The search experience looked like this:"
 msgstr ""
@@ -678,154 +659,155 @@ msgid "For users of the legacy CC Meta Search site, the Meta Search feature on O
 msgstr ""
 
 # meta-search-page.why.aria-label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L97
+#: /src/pages/meta-search.vue:97
 msgctxt "meta-search-page.why.aria-label"
 msgid "feedback"
 msgstr ""
 
-# .feedback (Do not translate words between ###)
-msgctxt ".feedback"
+# meta-search-page.why.feedback-suggestions (Do not translate words between ###)
+#: /src/pages/meta-search.vue:94
+msgctxt "meta-search-page.why.feedback-suggestions"
 msgid "We hope you enjoy, and if you have suggestions for improvement, leave us ###feedback###."
 msgstr ""
 
 # meta-search-page.why.feedback-link 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L99
+#: /src/pages/meta-search.vue:99
 msgctxt "meta-search-page.why.feedback-link"
 msgid "feedback"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Openverse Syntax Guide"
 msgstr ""
 
 # meta-search-page.intro 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L10
+#: /src/pages/meta-search.vue:10
 msgctxt "meta-search-page.intro"
 msgid "When you search, you can enter special symbols or words to your search term to make your search results more precise."
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Search for an exact match"
 msgstr ""
 
 # meta-search-page.why.aria-label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L97
+#: /src/pages/meta-search.vue:97
 msgctxt "meta-search-page.why.aria-label"
 msgid "quote unquote Claude Monet"
 msgstr ""
 
 # search-guide.exact.claude-monet 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L22
+#: /src/pages/search-help.vue:22
 msgctxt "search-guide.exact.claude-monet"
 msgid "\"Claude Monet\""
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Put a word or phrase inside quotes. For example, ###link###."
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Combining terms"
 msgstr ""
 
-# header.donation-banner.description 
-msgctxt "header.donation-banner.description"
+# about.description 
+msgctxt "about.description"
 msgid "If you want to combine terms, you can use the following operators to perform more complex queries"
 msgstr ""
 
 # search-guide.combine.and (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L37
+#: /src/pages/search-help.vue:37
 msgctxt "search-guide.combine.and"
 msgid "###symbol### signifies AND operation"
 msgstr ""
 
 # search-guide.combine.or (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L46
+#: /src/pages/search-help.vue:46
 msgctxt "search-guide.combine.or"
 msgid "###symbol### signifies OR operation"
 msgstr ""
 
 # search-guide.combine.negate (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L57
+#: /src/pages/search-help.vue:57
 msgctxt "search-guide.combine.negate"
 msgid "###symbol### negates a single token"
 msgstr ""
 
 # search-guide.combine.prefix (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L66
+#: /src/pages/search-help.vue:66
 msgctxt "search-guide.combine.prefix"
 msgid "###symbol### at the end of a term signifies a prefix query"
 msgstr ""
 
 # search-guide.combine.precedence (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L75
+#: /src/pages/search-help.vue:75
 msgctxt "search-guide.combine.precedence"
 msgid "###open### and ###close### signify precedence"
 msgstr ""
 
 # search-guide.combine.fuzziness (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L95
+#: /src/pages/search-help.vue:95
 msgctxt "search-guide.combine.fuzziness"
 msgid "###symbol### after a word signifies edit distance (fuzziness)"
 msgstr ""
 
 # search-guide.combine.fuzziness 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L95
+#: /src/pages/search-help.vue:95
 msgctxt "search-guide.combine.fuzziness"
 msgid "tilde N"
 msgstr ""
 
 # search-guide.combine.aria-labels.open 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L82
+#: /src/pages/search-help.vue:82
 msgctxt "search-guide.combine.aria-labels.open"
 msgid "open parenthesis"
 msgstr ""
 
 # search-guide.combine.aria-labels.close 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L89
+#: /src/pages/search-help.vue:89
 msgctxt "search-guide.combine.aria-labels.close"
 msgid "close parenthesis"
 msgstr ""
 
 # search-guide.combine.aria-labels.star 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L69
+#: /src/pages/search-help.vue:69
 msgctxt "search-guide.combine.aria-labels.star"
 msgid "star symbol"
 msgstr ""
 
 # search-guide.combine.aria-labels.minus 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L60
+#: /src/pages/search-help.vue:60
 msgctxt "search-guide.combine.aria-labels.minus"
 msgid "minus symbol"
 msgstr ""
 
 # search-guide.combine.aria-labels.plus 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L40
+#: /src/pages/search-help.vue:40
 msgctxt "search-guide.combine.aria-labels.plus"
 msgid "plus symbol"
 msgstr ""
 
 # search-guide.combine.aria-labels.vertical-bar 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L50
+#: /src/pages/search-help.vue:50
 msgctxt "search-guide.combine.aria-labels.vertical-bar"
 msgid "vertical bar symbol"
 msgstr ""
 
-# header.donation-banner.description (Do not translate words between ###)
-msgctxt "header.donation-banner.description"
+# about.description (Do not translate words between ###)
+msgctxt "about.description"
 msgid "Example: ###link######br### This will search for images related to both dog and cat."
 msgstr ""
 
 # meta-search-page.why.aria-label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L97
+#: /src/pages/meta-search.vue:97
 msgctxt "meta-search-page.why.aria-label"
 msgid "dog plus cat"
 msgstr ""
@@ -835,13 +817,13 @@ msgctxt "search-guide.example"
 msgid "dog+cat"
 msgstr ""
 
-# header.donation-banner.description (Do not translate words between ###)
-msgctxt "header.donation-banner.description"
+# about.description (Do not translate words between ###)
+msgctxt "about.description"
 msgid "Example: ###link######br### This will search for images related to dog or cat, but not necessarily both."
 msgstr ""
 
 # meta-search-page.why.aria-label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L97
+#: /src/pages/meta-search.vue:97
 msgctxt "meta-search-page.why.aria-label"
 msgid "dog vertical bar cat"
 msgstr ""
@@ -851,25 +833,25 @@ msgctxt "search-guide.example"
 msgid "dog|cat"
 msgstr ""
 
-# header.donation-banner.description (Do not translate words between ###)
-msgctxt "header.donation-banner.description"
+# about.description (Do not translate words between ###)
+msgctxt "about.description"
 msgid "You can use the ###operator### to exclude a search term from the results."
 msgstr ""
 
 # search-guide.example.negate.operator-name 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L144
+#: /src/pages/search-help.vue:144
 msgctxt "search-guide.example.negate.operator-name"
 msgid "operator (signifies NOT)"
 msgstr ""
 
 # search-guide.example.negate.operator-aria-label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L142
+#: /src/pages/search-help.vue:142
 msgctxt "search-guide.example.negate.operator-aria-label"
 msgid "minus operator (signifies NOT)"
 msgstr ""
 
 # meta-search-page.why.aria-label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L97
+#: /src/pages/meta-search.vue:97
 msgctxt "meta-search-page.why.aria-label"
 msgid "dog minus pug"
 msgstr ""
@@ -880,30 +862,30 @@ msgid "dog -pug"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Example: ###link######br### This will search for images related to dog but won't include results related to 'pug'"
 msgstr ""
 
-# header.donation-banner.description 
-msgctxt "header.donation-banner.description"
+# about.description 
+msgctxt "about.description"
 msgid "You can use the {operator-name} to mark a prefix term. This will match anything after the *."
 msgstr ""
 
 # search-guide.example.negate.operator-name 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L144
+#: /src/pages/search-help.vue:144
 msgctxt "search-guide.example.negate.operator-name"
 msgid "operator (wildcard)"
 msgstr ""
 
 # search-guide.example.negate.operator-aria-label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L142
+#: /src/pages/search-help.vue:142
 msgctxt "search-guide.example.negate.operator-aria-label"
 msgid "star operator (wildcard)"
 msgstr ""
 
 # meta-search-page.why.aria-label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L97
+#: /src/pages/meta-search.vue:97
 msgctxt "meta-search-page.why.aria-label"
 msgid "net star symbol"
 msgstr ""
@@ -914,18 +896,18 @@ msgid "net*"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Example: ###link######br### This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.."
 msgstr ""
 
-# header.donation-banner.description (Do not translate words between ###)
-msgctxt "header.donation-banner.description"
+# about.description (Do not translate words between ###)
+msgctxt "about.description"
 msgid "You can use parentheses ###highlight### to specify precedence of terms or combine more complex queries."
 msgstr ""
 
 # meta-search-page.why.aria-label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L97
+#: /src/pages/meta-search.vue:97
 msgctxt "meta-search-page.why.aria-label"
 msgid "dogs plus open parenthesis corgis vertical bar labrador close parenthesis"
 msgstr ""
@@ -936,24 +918,24 @@ msgid "dogs + (corgis | labrador)"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Example: ###link######br### This will search for images that match dogs that are either corgis or labrador."
 msgstr ""
 
-# header.donation-banner.description (Do not translate words between ###)
-msgctxt "header.donation-banner.description"
+# about.description (Do not translate words between ###)
+msgctxt "about.description"
 msgid "You can use ###highlight### to specify some fuzzy logic to the term according to the ###link### — the number of one character changes that need to be made to one string to make it the same as another string."
 msgstr ""
 
 # search-guide.example.fuzziness.link-text 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L227
+#: /src/pages/search-help.vue:227
 msgctxt "search-guide.example.fuzziness.link-text"
 msgid "Levenshtein Edit Distance"
 msgstr ""
 
 # meta-search-page.why.aria-label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L97
+#: /src/pages/meta-search.vue:97
 msgctxt "meta-search-page.why.aria-label"
 msgid "theatre tilde 1"
 msgstr ""
@@ -964,31 +946,31 @@ msgid "theatre~1"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Example: ###link######br### This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'."
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Feedback"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
-msgid "Thank you for using Openverse! We welcome your ideas for improving the tool below. To provide regular feedback, join the ###openverse### channel in the {making-wordpress} Slack workspace."
+msgid "Thank you for using Openverse! We welcome your ideas for improving the tool below. To provide regular feedback, join the ###openverse### channel in the ###making-wordpress### Slack workspace."
 msgstr ""
 
 # feedback.description.openverse 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/feedback.vue#L14
+#: /src/pages/feedback.vue:14
 msgctxt "feedback.description.openverse"
 msgid "#openverse"
 msgstr ""
 
 # feedback.description.making-wordpress 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/feedback.vue#L19
+#: /src/pages/feedback.vue:19
 msgctxt "feedback.description.making-wordpress"
 msgid "Making WordPress"
 msgstr ""
@@ -1004,7 +986,7 @@ msgid "Report a Bug"
 msgstr ""
 
 # feedback.loading 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/feedback.vue#L54
+#: /src/pages/feedback.vue:54
 msgctxt "feedback.loading"
 msgid "Loading..."
 msgstr ""
@@ -1025,13 +1007,13 @@ msgid "report a bug form"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Web extension"
 msgstr ""
 
 # meta-search-page.intro 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L10
+#: /src/pages/meta-search.vue:10
 msgctxt "meta-search-page.intro"
 msgid "A browser extension that lets you search and use open-licensed and public domain images."
 msgstr ""
@@ -1042,7 +1024,7 @@ msgid "Search and filter openly-licensed and public domain content"
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Browse through millions of content and use filters to find what best meets your needs."
 msgstr ""
@@ -1053,7 +1035,7 @@ msgid "Bookmark your favorite images without breaking your navigation"
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Add images to your bookmarks and use them whenever you want without interrupting your navigation. "
 msgstr ""
@@ -1064,19 +1046,19 @@ msgid "Use the image and give attribution to the creator easily"
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Download the image and paste the attribution information on compatible formats."
 msgstr ""
 
 # extension.conclusion 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/extension.vue#L65
+#: /src/pages/extension.vue:65
 msgctxt "extension.conclusion"
 msgid "Have your favourite content while browsing the web"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Browse collections"
 msgstr ""
@@ -1097,19 +1079,19 @@ msgid "Collection size: ###count### images"
 msgstr ""
 
 # error.not-found 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/layouts/error.vue#L5
+#: /src/layouts/error.vue:5
 msgctxt "error.not-found"
 msgid "Page Not Found"
 msgstr ""
 
 # error.occurred 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/layouts/error.vue#L7
+#: /src/layouts/error.vue:7
 msgctxt "error.occurred"
 msgid "An error occurred"
 msgstr ""
 
 # error.image-not-found (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/photos/_id.vue#L99
+#: /src/pages/photos/_id.vue:99
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
@@ -1130,19 +1112,19 @@ msgid "Video"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Filters"
 msgstr ""
 
 # filters.filter-by 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/Filters/FilterDisplay.vue#L4
+#: /src/components/Filters/FilterDisplay.vue:4
 msgctxt "filters.filter-by"
 msgid "Filter By"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "License or Public Domain"
 msgstr ""
@@ -1188,7 +1170,7 @@ msgid "BY-NC-ND"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Use"
 msgstr ""
@@ -1204,13 +1186,13 @@ msgid "Modify or adapt"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Source"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Image Type"
 msgstr ""
@@ -1231,7 +1213,7 @@ msgid "Digitized Artworks"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "File Type"
 msgstr ""
@@ -1257,7 +1239,7 @@ msgid "SVGs"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Aspect Ratio"
 msgstr ""
@@ -1278,7 +1260,7 @@ msgid "Square"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Image Size"
 msgstr ""
@@ -1299,7 +1281,7 @@ msgid "Large"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Search Settings"
 msgstr ""
@@ -1310,13 +1292,13 @@ msgid "Enable Mature Content"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Search by Creator"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Search By"
 msgstr ""
@@ -1327,43 +1309,43 @@ msgid "Creator"
 msgstr ""
 
 # filters.license-explanation.tool (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/Filters/LicenseExplanationTooltip.vue#L11
+#: /src/components/Filters/LicenseExplanationTooltip.vue:11
 msgctxt "filters.license-explanation.tool"
 msgid "Read more about the tool ###link###"
 msgstr ""
 
 # meta-search-page.license (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L17
+#: /src/pages/meta-search.vue:17
 msgctxt "meta-search-page.license"
 msgid "Read more about the license ###link###"
 msgstr ""
 
 # hero.caption.link 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L44
+#: /src/components/HeroSection.vue:44
 msgctxt "hero.caption.link"
 msgid "here"
 msgstr ""
 
 # filters.filter-by 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/Filters/FilterDisplay.vue#L4
+#: /src/components/Filters/FilterDisplay.vue:4
 msgctxt "filters.filter-by"
 msgid "Filter results by"
 msgstr ""
 
 # filter-list.hide 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/Filters/FiltersList.vue#L15
+#: /src/components/Filters/FiltersList.vue:15
 msgctxt "filter-list.hide"
 msgid "Hide filters"
 msgstr ""
 
 # filter-list.clear 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/Filters/FiltersList.vue#L36
+#: /src/components/Filters/FiltersList.vue:36
 msgctxt "filter-list.clear"
 msgid "Clear filters"
 msgstr ""
 
 # filter-list.show 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/Filters/FiltersList.vue#L42
+#: /src/components/Filters/FiltersList.vue:42
 msgctxt "filter-list.show"
 msgid "Show results"
 msgstr ""
@@ -1379,7 +1361,7 @@ msgid "no audio results|{localeCount} audio result|{localeCount} audio results"
 msgstr ""
 
 # browse-page.image-result-count 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/SearchGridManualLoad.vue#L112
+#: /src/components/SearchGridManualLoad.vue:112
 msgctxt "browse-page.image-result-count"
 msgid "no image results|{localeCount} image result|{localeCount} image results"
 msgstr ""
@@ -1395,25 +1377,26 @@ msgid "Over {localeCount} audio results"
 msgstr ""
 
 # browse-page.image-result-count-more 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/SearchGridManualLoad.vue#L109
+#: /src/components/SearchGridManualLoad.vue:109
 msgctxt "browse-page.image-result-count-more"
 msgid "Over {localeCount} image results"
 msgstr ""
 
 # browse-page.no-more 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/SearchGridManualLoad.vue#L38
+#: /src/components/SearchGridManualLoad.vue:38
 msgctxt "browse-page.no-more"
 msgid "No more images :("
 msgstr ""
 
 # browse-page.load 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/SearchGridManualLoad.vue#L39
+#: /src/components/SearchGridManualLoad.vue:39
 msgctxt "browse-page.load"
 msgid "Load more results"
 msgstr ""
 
-# .error 
-msgctxt ".error"
+# browse-page.fetching-error 
+#: /src/components/SearchGridManualLoad.vue:49
+msgctxt "browse-page.fetching-error"
 msgid "Error fetching images:"
 msgstr ""
 
@@ -1423,28 +1406,31 @@ msgid "Not finding what you need? Search other sources"
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Are these results relevant?"
 msgstr ""
 
-# header.donation-banner.yes 
-msgctxt "header.donation-banner.yes"
+# browse-page.search-rating.yes 
+#: /src/components/SearchRating.vue:12
+msgctxt "browse-page.search-rating.yes"
 msgid "Yes"
 msgstr ""
 
-# header.donation-banner.no 
-msgctxt "header.donation-banner.no"
+# browse-page.search-rating.no 
+#: /src/components/SearchRating.vue:21
+msgctxt "browse-page.search-rating.no"
 msgid "No"
 msgstr ""
 
-# .feedback 
-msgctxt ".feedback"
+# browse-page.search-rating.feedback-thanks 
+#: /src/components/SearchRating.vue:26
+msgctxt "browse-page.search-rating.feedback-thanks"
 msgid "Thank you for the feedback!"
 msgstr ""
 
 # hero.search.placeholder (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L28
+#: /src/components/HeroSection.vue:28
 msgctxt "hero.search.placeholder"
 msgid "Search all ###type###"
 msgstr ""
@@ -1455,13 +1441,13 @@ msgid "Search this collection"
 msgstr ""
 
 # hero.search.button 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L32
+#: /src/components/HeroSection.vue:32
 msgctxt "hero.search.button"
 msgid "Search"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "License CC"
 msgstr ""
@@ -1472,19 +1458,19 @@ msgid "Credit the creator."
 msgstr ""
 
 # browse-page.license-description.nc 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/LicenseExplanations.vue#L53
+#: /src/components/LicenseExplanations.vue:53
 msgctxt "browse-page.license-description.nc"
 msgid "Noncommercial uses only."
 msgstr ""
 
 # browse-page.license-description.nd 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/LicenseExplanations.vue#L54
+#: /src/components/LicenseExplanations.vue:54
 msgctxt "browse-page.license-description.nd"
 msgid "No derivatives or adaptations permitted."
 msgstr ""
 
 # browse-page.license-description.sa 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/LicenseExplanations.vue#L55
+#: /src/components/LicenseExplanations.vue:55
 msgctxt "browse-page.license-description.sa"
 msgid "Share adaptations under the same terms."
 msgstr ""
@@ -1500,7 +1486,7 @@ msgid "This work is marked as being in the public domain."
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Safer Browsing"
 msgstr ""
@@ -1511,19 +1497,19 @@ msgid "By default, search results will not include results that have been report
 msgstr ""
 
 # hero.license-filter.label 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HomeLicenseFilter.vue#L4
+#: /src/components/HomeLicenseFilter.vue:4
 msgctxt "hero.license-filter.label"
 msgid "Show Mature Content"
 msgstr ""
 
 # search-guide.combine.aria-labels.close 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/search-help.vue#L89
+#: /src/pages/search-help.vue:89
 msgctxt "search-guide.combine.aria-labels.close"
 msgid "close"
 msgstr ""
 
 # browse-page.aria.scroll 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ScrollButton.vue#L4
+#: /src/components/ScrollButton.vue:4
 msgctxt "browse-page.aria.scroll"
 msgid "scroll to top"
 msgstr ""
@@ -1533,13 +1519,15 @@ msgctxt "hero.search"
 msgid "search"
 msgstr ""
 
-# header.donation-banner.yes 
-msgctxt "header.donation-banner.yes"
+# browse-page.search-rating.yes 
+#: /src/components/SearchRating.vue:12
+msgctxt "browse-page.search-rating.yes"
 msgid "relevant result? answer: yes"
 msgstr ""
 
-# header.donation-banner.no 
-msgctxt "header.donation-banner.no"
+# browse-page.search-rating.no 
+#: /src/components/SearchRating.vue:21
+msgctxt "browse-page.search-rating.no"
 msgid "relevant result? answer: no"
 msgstr ""
 
@@ -1559,7 +1547,7 @@ msgid "search by creator"
 msgstr ""
 
 # photo-details.back 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/PhotoDetails.vue#L12
+#: /src/components/ImageDetails/PhotoDetails.vue:12
 msgctxt "photo-details.back"
 msgid "Back to search results"
 msgstr ""
@@ -1570,19 +1558,19 @@ msgid "by ###name###"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Reuse"
 msgstr ""
 
 # photo-details.reuse.license-header 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/ImageAttribution.vue#L31
+#: /src/components/ImageDetails/ImageAttribution.vue:31
 msgctxt "photo-details.reuse.license-header"
 msgid "License"
 msgstr ""
 
 # photo-details.reuse.tool-header 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/ImageAttribution.vue#L8
+#: /src/components/ImageDetails/ImageAttribution.vue:8
 msgctxt "photo-details.reuse.tool-header"
 msgid "Public Domain"
 msgstr ""
@@ -1593,192 +1581,192 @@ msgid "Image"
 msgstr ""
 
 # photo-details.reuse.attribution.main (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/ImageAttribution.vue#L33
+#: /src/components/ImageDetails/ImageAttribution.vue:33
 msgctxt "photo-details.reuse.attribution.main"
 msgid "This image was marked with a ###link### license."
 msgstr ""
 
 # meta-search-page.license 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L17
+#: /src/pages/meta-search.vue:17
 msgctxt "meta-search-page.license"
 msgid "license."
 msgstr ""
 
 # header.notification.text (Do not translate words between ###)
 msgctxt "header.notification.text"
-msgid "###title######creator###{marked-licensed}###license###{view-legal}"
+msgid "###title######creator######marked-licensed######license######view-legal###"
 msgstr ""
 
 # photo-details.reuse.credit.creator-text 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/CopyLicense.vue#L70
+#: /src/components/ImageDetails/CopyLicense.vue:70
 msgctxt "photo-details.reuse.credit.creator-text"
 msgid " by {creator-name}"
 msgstr ""
 
 # photo-details.reuse.credit.marked 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/CopyLicense.vue#L92
+#: /src/components/ImageDetails/CopyLicense.vue:92
 msgctxt "photo-details.reuse.credit.marked"
 msgid "is marked with"
 msgstr ""
 
 # photo-details.reuse.credit.licensed 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/CopyLicense.vue#L93
+#: /src/components/ImageDetails/CopyLicense.vue:93
 msgctxt "photo-details.reuse.credit.licensed"
 msgid "is licensed under"
 msgstr ""
 
 # photo-details.reuse.credit.view-legal-text 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/CopyLicense.vue#L172
+#: /src/components/ImageDetails/CopyLicense.vue:172
 msgctxt "photo-details.reuse.credit.view-legal-text"
 msgid ". To view {terms-copy}visit {URL}"
 msgstr ""
 
 # photo-details.reuse.credit.terms-text 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/CopyLicense.vue#L176
+#: /src/components/ImageDetails/CopyLicense.vue:176
 msgctxt "photo-details.reuse.credit.terms-text"
 msgid "the terms,"
 msgstr ""
 
 # photo-details.reuse.credit.copy-text 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/CopyLicense.vue#L177
+#: /src/components/ImageDetails/CopyLicense.vue:177
 msgctxt "photo-details.reuse.credit.copy-text"
 msgid "a copy of this license,"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Read more about the license ###link###"
 msgstr ""
 
 # hero.caption.link 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L44
+#: /src/components/HeroSection.vue:44
 msgctxt "hero.caption.link"
 msgid "here"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "Read more about the tool ###link###"
 msgstr ""
 
 # hero.caption.link 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L44
+#: /src/components/HeroSection.vue:44
 msgctxt "hero.caption.link"
 msgid "here"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Credit the Creator"
 msgstr ""
 
 # photo-details.reuse.copy-license.rich 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/CopyLicense.vue#L20
+#: /src/components/ImageDetails/CopyLicense.vue:20
 msgctxt "photo-details.reuse.copy-license.rich"
 msgid "Rich Text"
 msgstr ""
 
 # photo-details.reuse.copy-license.html 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/CopyLicense.vue#L31
+#: /src/components/ImageDetails/CopyLicense.vue:31
 msgctxt "photo-details.reuse.copy-license.html"
 msgid "HTML"
 msgstr ""
 
 # photo-details.reuse.copy-license.plain 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/CopyLicense.vue#L42
+#: /src/components/ImageDetails/CopyLicense.vue:42
 msgctxt "photo-details.reuse.copy-license.plain"
 msgid "Plain text"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Information"
 msgstr ""
 
 # photo-details.information.type 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/ImageInfo.vue#L6
+#: /src/components/ImageDetails/ImageInfo.vue:6
 msgctxt "photo-details.information.type"
 msgid "Type:"
 msgstr ""
 
 # sources.cc-content.provider 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L15
+#: /src/pages/sources.vue:15
 msgctxt "sources.cc-content.provider"
 msgid "Provider:"
 msgstr ""
 
 # photo-details.information.dimensions 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/ImageInfo.vue#L10
+#: /src/components/ImageDetails/ImageInfo.vue:10
 msgctxt "photo-details.information.dimensions"
 msgid "Dimensions:"
 msgstr ""
 
-# header.source 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/EmbeddedNavSection.vue#L67
-msgctxt "header.source"
+# sources.providers.source 
+#: /src/pages/sources.vue:97
+msgctxt "sources.providers.source"
 msgid "Source:"
 msgstr ""
 
 # meta-search-page.license 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L17
+#: /src/pages/meta-search.vue:17
 msgctxt "meta-search-page.license"
 msgid "License"
 msgstr ""
 
 # photo-details.information.tags 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/ImageInfo.vue#L43
+#: /src/components/ImageDetails/ImageInfo.vue:43
 msgctxt "photo-details.information.tags"
 msgid "Tags"
 msgstr ""
 
 # photo-details.information.pixels 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/ImageInfo.vue#L16
+#: /src/components/ImageDetails/ImageInfo.vue:16
 msgctxt "photo-details.information.pixels"
 msgid "pixels"
 msgstr ""
 
 # photo-details.share 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/PhotoDetails.vue#L114
+#: /src/components/ImageDetails/PhotoDetails.vue:114
 msgctxt "photo-details.share"
 msgid "Share"
 msgstr ""
 
 # hero.caption.content 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "How are you using this image?"
 msgstr ""
 
 # hero.caption.link 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L44
+#: /src/components/HeroSection.vue:44
 msgctxt "hero.caption.link"
 msgid "Let us know"
 msgstr ""
 
 # photo-details.survey.answer 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/ReuseSurvey.vue#L13
+#: /src/components/ImageDetails/ReuseSurvey.vue:13
 msgctxt "photo-details.survey.answer"
 msgid "by answering a few questions."
 msgstr ""
 
 # photo-details.weblink 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/PhotoDetails.vue#L175
+#: /src/components/ImageDetails/PhotoDetails.vue:175
 msgctxt "photo-details.weblink"
 msgid "Go to image's website"
 msgstr ""
 
 # photo-details.legal-disclaimer 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/LegalDisclaimer.vue#L4
+#: /src/components/ImageDetails/LegalDisclaimer.vue:4
 msgctxt "photo-details.legal-disclaimer"
 msgid "Openverse aggregates data from publicly available repositories of open content. Openverse does not host the content and does not verify that the content is properly CC-licensed or that the attribution information is accurate or complete. Please follow the link to the source of the content to independently verify before reuse."
 msgstr ""
 
 # photo-details.related-images 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/RelatedImages.vue#L4
+#: /src/components/RelatedImages.vue:4
 msgctxt "photo-details.related-images"
 msgid "Related Images"
 msgstr ""
@@ -1789,31 +1777,31 @@ msgid "Copy"
 msgstr ""
 
 # photo-details.copy.copied 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/CopyButton.vue#L14
+#: /src/components/CopyButton.vue:14
 msgctxt "photo-details.copy.copied"
 msgid "Copied!"
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Report this content"
 msgstr ""
 
 # meta-search-page.new.issue 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L70
+#: /src/pages/meta-search.vue:70
 msgctxt "meta-search-page.new.issue"
 msgid "What's the issue?"
 msgstr ""
 
 # photo-details.content-report.issue-description 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ContentReport/OtherIssueForm.vue#L7
+#: /src/components/ContentReport/OtherIssueForm.vue:7
 msgctxt "photo-details.content-report.issue-description"
 msgid "Please describe the issue for us"
 msgstr ""
 
 # photo-details.content-report.copyright 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ContentReport/ContentReportForm.vue#L48
+#: /src/components/ContentReport/ContentReportForm.vue:48
 msgctxt "photo-details.content-report.copyright"
 msgid "Infringes Copyright"
 msgstr ""
@@ -1834,54 +1822,55 @@ msgid "For security purposes, Openverse collects and retains anonymized IP addre
 msgstr ""
 
 # sources.new-content.next 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L44
+#: /src/pages/sources.vue:44
 msgctxt "sources.new-content.next"
 msgid "Next"
 msgstr ""
 
 # photo-details.back 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/PhotoDetails.vue#L12
+#: /src/components/ImageDetails/PhotoDetails.vue:12
 msgctxt "photo-details.back"
 msgid "Back"
 msgstr ""
 
 # photo-details.content-report.submit 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ContentReport/OtherIssueForm.vue#L36
+#: /src/components/ContentReport/OtherIssueForm.vue:36
 msgctxt "photo-details.content-report.submit"
 msgid "Submit"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L36
+#: /src/components/HeroSection.vue:36
 msgctxt "hero.caption.content"
 msgid "You must fill out this ###link### to report copyright infringement. No action will be taken until the form is filled out and submitted."
 msgstr ""
 
 # sources.cc-content.provider (Do not translate words between ###)
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/sources.vue#L15
+#: /src/pages/sources.vue:15
 msgctxt "sources.cc-content.provider"
 msgid "We recommend doing the same at the source, ###link###."
 msgstr ""
 
 # photo-details.content-report.dmca.thanks 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ContentReport/DoneMessage.vue#L4
+#: /src/components/ContentReport/DoneMessage.vue:4
 msgctxt "photo-details.content-report.dmca.thanks"
 msgid "Thank you for reporting an issue with the results of Openverse!"
 msgstr ""
 
-# .error 
-msgctxt ".error"
+# photo-details.content-report.dmca.submission-error 
+#: /src/components/ContentReport/ReportError.vue:4
+msgctxt "photo-details.content-report.dmca.submission-error"
 msgid "There was an error with the report submission. Please try again."
 msgstr ""
 
 # hero.caption.link 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L44
+#: /src/components/HeroSection.vue:44
 msgctxt "hero.caption.link"
 msgid "DMCA form"
 msgstr ""
 
 # photo-details.aria.close-form 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ContentReport/ContentReportForm.vue#L4
+#: /src/components/ContentReport/ContentReportForm.vue:4
 msgctxt "photo-details.aria.close-form"
 msgid "close form"
 msgstr ""
@@ -1892,56 +1881,51 @@ msgid "dmca form"
 msgstr ""
 
 # meta-search-page.license 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/meta-search.vue#L17
+#: /src/pages/meta-search.vue:17
 msgctxt "meta-search-page.license"
 msgid "read more about the license"
 msgstr ""
 
 # filters.license-explanation.tool 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/Filters/LicenseExplanationTooltip.vue#L11
+#: /src/components/Filters/LicenseExplanationTooltip.vue:11
 msgctxt "filters.license-explanation.tool"
 msgid "read more about the tool"
 msgstr ""
 
 # photo-details.aria.details 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/PhotoDetails.vue#L53
+#: /src/components/ImageDetails/PhotoDetails.vue:53
 msgctxt "photo-details.aria.details"
 msgid "image details"
 msgstr ""
 
 # photo-details.aria.share.facebook 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/SocialShareButtons.vue#L5
+#: /src/components/ImageDetails/SocialShareButtons.vue:5
 msgctxt "photo-details.aria.share.facebook"
 msgid "share on facebook"
 msgstr ""
 
 # photo-details.aria.share.twitter 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/SocialShareButtons.vue#L15
+#: /src/components/ImageDetails/SocialShareButtons.vue:15
 msgctxt "photo-details.aria.share.twitter"
 msgid "share on twitter"
 msgstr ""
 
 # photo-details.aria.share.pinterest 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/SocialShareButtons.vue#L25
+#: /src/components/ImageDetails/SocialShareButtons.vue:25
 msgctxt "photo-details.aria.share.pinterest"
 msgid "share on pinterest"
 msgstr ""
 
 # photo-details.reuse.attribution.main 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/ImageDetails/ImageAttribution.vue#L33
+#: /src/components/ImageDetails/ImageAttribution.vue:33
 msgctxt "photo-details.reuse.attribution.main"
 msgid "main content"
 msgstr ""
 
 # photo-details.aria.related 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/pages/photos/_id.vue#L18
+#: /src/pages/photos/_id.vue:18
 msgctxt "photo-details.aria.related"
 msgid "related images"
-msgstr ""
-
-# .sources 
-msgctxt ".sources"
-msgid "Sources"
 msgstr ""
 
 # hero.caption 
@@ -1960,7 +1944,7 @@ msgid "Click on a source below to directly search other collections of CC-licens
 msgstr ""
 
 # hero.title 
-#: https://github.com/WordPress/openverse-frontend/blob/main/src/components/HeroSection.vue#L6
+#: /src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Use"
 msgstr ""
