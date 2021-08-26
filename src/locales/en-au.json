@@ -67,10 +67,10 @@
     }
   },
   "browsers": {
-    "edge": {},
-    "opera": {},
-    "firefox": {},
-    "chrome": {}
+    "edge": "Edge",
+    "opera": "Opera",
+    "firefox": "Firefox",
+    "chrome": "Chrome"
   },
   "hero": {
     "caption": {
@@ -98,7 +98,7 @@
     },
     "card": {
       "checkboxes": {
-        "modify": {}
+        "modify": "Modify or adapt"
       }
     }
   },
@@ -113,13 +113,13 @@
   },
   "photo-details": {
     "aria": {
-      "related": {},
+      "related": "related images",
       "share": {
-        "pinterest": {},
-        "twitter": {},
-        "facebook": {}
+        "pinterest": "share on pinterest",
+        "twitter": "share on twitter",
+        "facebook": "share on facebook"
       },
-      "details": {},
+      "details": "image details",
       "close-form": {}
     },
     "reuse": {

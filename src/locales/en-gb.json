@@ -1,0 +1,344 @@
+{
+  "header": {
+    "notification": {
+      "text": "Example notification text",
+      "okay": "OK",
+      "dismiss": "Dismiss"
+    },
+    "source": "Sources",
+    "donation-banner": {
+      "no": "Not today",
+      "yes": "Yes, I'll donate now",
+      "description": "If you donate £5 today, and everyone else does the same, we can keep growing our database of freely reusable content. For you. For all of us.",
+      "alternative-description": "Only 1% of people reading this will donate. Be one of them and help us sustain Openverse."
+    },
+    "api": "API",
+    "resources-tab": "Resources",
+    "about-tab": "About",
+    "licenses": "The Licences",
+    "aria": {
+      "sr-search": "sr search button",
+      "menu": "menu",
+      "primary": "primary"
+    },
+    "support": "Support Us"
+  },
+  "filters": {
+    "creator": "Creator",
+    "license-types": {
+      "commercial": "Use commercially",
+      "modification": "Modify or adapt"
+    },
+    "license-explanation": "licence explanation",
+    "mature": {
+      "enable": "Enable Mature Content"
+    },
+    "licenses": {
+      "pdm": "Public Domain Mark",
+      "cc0": "CC0",
+      "by": "BY",
+      "by-nc-nd": "BY-NC-ND",
+      "by-nc-sa": "BY-NC-SA",
+      "by-nd": "BY-ND",
+      "by-nc": "BY-NC",
+      "by-sa": "BY-SA"
+    },
+    "filter-by": "Filter By",
+    "sizes": {
+      "large": "Large",
+      "medium": "Medium",
+      "small": "Small"
+    },
+    "aspect-ratios": {
+      "square": "Square",
+      "wide": "Wide",
+      "tall": "Tall"
+    },
+    "extensions": {
+      "svg": "SVGs",
+      "gif": "GIFs",
+      "png": "PNGs",
+      "jpg": "JPEGs"
+    },
+    "categories": {
+      "digitized-artwork": "Digitised Artworks",
+      "illustration": "Illustrations",
+      "photograph": "Photographs"
+    }
+  },
+  "browsers": {
+    "edge": "Edge",
+    "opera": "Opera",
+    "firefox": "Firefox",
+    "chrome": "Chrome"
+  },
+  "hero": {
+    "caption": {
+      "link": "Learn more",
+      "content": {}
+    },
+    "search": {
+      "placeholder": "Search all content",
+      "button": "Search"
+    },
+    "title": "Search for content to reuse",
+    "license-filter": {
+      "label": "I want something I can"
+    },
+    "locale": {
+      "icon": "locale"
+    },
+    "subtitle": "Browse over 500 million images, available for reuse",
+    "brand": "Openverse"
+  },
+  "meta-search": {
+    "form": {
+      "supported-title": {},
+      "unsupported-title": {}
+    },
+    "card": {
+      "checkboxes": {
+        "modify": "Modify or adapt"
+      }
+    }
+  },
+  "": {
+    "sources": "sources table",
+    "error": "Error fetching images:",
+    "feedback": "Feedback",
+    "extension": "Web extension",
+    "meta-search": "Meta Search",
+    "search-guide": "Search Guide",
+    "about": "Our Story"
+  },
+  "photo-details": {
+    "aria": {
+      "related": "related images",
+      "share": {
+        "pinterest": "share on pinterest",
+        "twitter": "share on twitter",
+        "facebook": "share on facebook"
+      },
+      "details": "image details",
+      "close-form": "close form"
+    },
+    "reuse": {
+      "attribution": {
+        "main": {}
+      },
+      "copy-license": {
+        "plain": "Plain text",
+        "html": "HTML",
+        "rich": "Rich Text"
+      },
+      "credit": {
+        "copy-text": "a copy of this licence,",
+        "terms-text": "the terms,",
+        "view-legal-text": {},
+        "licensed": "is licensed under",
+        "marked": "is marked with",
+        "creator-text": {}
+      },
+      "tool-header": "Public Domain",
+      "license-header": "Licence"
+    },
+    "content-report": {
+      "dmca": {
+        "thanks": "Thank you for reporting an issue with the results of Openverse!"
+      },
+      "submit": "Submit",
+      "copyright": "Infringes Copyright",
+      "issue-description": "Please describe the issue for us"
+    },
+    "back": "Back to search results",
+    "copy": "Copy",
+    "related-images": "Related Images",
+    "legal-disclaimer": "Openverse aggregates data from publicly available repositories of open content. Openverse does not host the content and does not verify that the content is properly CC-licensed or that the attribution information is accurate or complete. Please follow the link to the source of the content to independently verify before reuse.",
+    "weblink": "Go to image's website",
+    "survey": {
+      "answer": "by answering a few questions."
+    },
+    "share": "Share",
+    "information": {
+      "pixels": "pixels",
+      "tags": "Tags",
+      "dimensions": "Dimensions:",
+      "type": "Type:"
+    }
+  },
+  "meta-search-page": {
+    "license": "The internet is a big place! There are plenty of search portals and collections, hosting CC-licensed and public domain content, which we aren’t able to index or surface results from within the Openverse interface. These are important sources of CC-licensed and public domain content, and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located.",
+    "new": {
+      "email": "email"
+    },
+    "intro": {},
+    "why": {
+      "aria-label": "feedback",
+      "feedback-link": "feedback"
+    },
+    "audio-video": {
+      "filter": {}
+    },
+    "images": {
+      "info": {},
+      "not-finding": "Click on the link that says “Not finding what you need?” below the image results.",
+      "continue": "Load more results, and continue browsing in Openverse."
+    },
+    "use": " Use ",
+    "content-types": "Meta Search on Openverse currently supports image, audio, and video search on external sites."
+  },
+  "sources": {
+    "cc-content": {
+      "provider": {},
+      "flickr": "Flickr",
+      "smithsonian": "Smithsonian Institute",
+      "europeana-api": "Europeana API",
+      "europeana-link": "Europeana",
+      "europeana": {},
+      "where": "Where does the content on Openverse come from?"
+    },
+    "new-content": {
+      "next": "How do we decide what sources to add next?",
+      "total-items": "How many new total items or new types of items can we bring to our users through this integration? Some sources are direct integrations, while others may be a source within a source.",
+      "reuse": "Is licensing and attribution information clearly displayed to enable confident reuse?",
+      "impact": " What is the impact or importance of this source to our users? If it exists within a provider like Wikimedia Commons, is it valuable for our users to be able to filter by this source directly?",
+      "integrate": "We have a never ending list of possible sources to research prior to integration. We ask ourselves questions like:"
+    },
+    "issue-button": "Suggest a new source",
+    "suggestions": "We appreciate suggestions for new sources from our community of users.",
+    "providers": {
+      "item": "Total items",
+      "domain": "Domain"
+    },
+    "single-name": "Source",
+    "detail": {}
+  },
+  "collections": {
+    "other": "Other Collections",
+    "collection-size": {},
+    "museum": "Museum Collections"
+  },
+  "browse-page": {
+    "aria": {
+      "remove-filter": "remove filter",
+      "scroll": "scroll to top"
+    },
+    "license-description": {
+      "sa": "Share adaptations under the same terms.",
+      "nd": "No derivatives or adaptations permitted.",
+      "nc": "Non-commercial uses only."
+    },
+    "search-form": {
+      "collection-placeholder": "Search this collection"
+    },
+    "other-source": "Not finding what you need? Search other sources",
+    "load": "Load more results",
+    "no-more": "No more images :(",
+    "image-result-count-more": {},
+    "audio-result-count-more": {},
+    "all-result-count-more": {},
+    "image-result-count": {},
+    "audio-result-count": {},
+    "all-result-count": {}
+  },
+  "search-guide": {
+    "combine": {
+      "aria-labels": {
+        "close": "close parenthesis",
+        "vertical-bar": "vertical bar symbol",
+        "plus": "plus symbol",
+        "minus": "minus symbol",
+        "star": "star symbol",
+        "open": "open parenthesis"
+      },
+      "fuzziness": {},
+      "precedence": {},
+      "prefix": {},
+      "negate": {},
+      "or": {},
+      "and": {}
+    },
+    "example": {
+      "fuzziness": {
+        "link-text": "Levenshtein Edit Distance"
+      },
+      "negate": {
+        "operator-aria-label": "minus operator (signifies NOT)",
+        "operator-name": "operator (signifies NOT)"
+      }
+    },
+    "exact": {
+      "claude-monet": "\"Claude Monet\""
+    }
+  },
+  "filter-list": {
+    "show": "Show results",
+    "clear": "Clear filters",
+    "hide": "Hide filters"
+  },
+  "search-tab": {
+    "video": "Video",
+    "audio": "Audio",
+    "image": "Image"
+  },
+  "error": {
+    "image-not-found": {},
+    "occurred": "An error occurred",
+    "not-found": "Page Not Found"
+  },
+  "extension": {
+    "conclusion": "Have your favourite content while browsing the web",
+    "features": {
+      "search": {
+        "heading": "Search and filter openly-licensed and public domain content"
+      }
+    }
+  },
+  "feedback": {
+    "report": "Report a Bug",
+    "improve": "Help us Improve",
+    "aria": {
+      "cc-usability": "slack cc-usability channel"
+    },
+    "loading": "Loading...",
+    "description": {
+      "making-wordpress": "Making WordPress",
+      "openverse": "#openverse"
+    }
+  },
+  "footer": {
+    "navigation": {
+      "terms": "Terms",
+      "contact": "Contact",
+      "policies": "Policies",
+      "privacy": "Privacy"
+    },
+    "donate": {
+      "help": "Help us keep the internet free and open.",
+      "work": "Our work relies on you!"
+    },
+    "caption": {
+      "icons": "Icons by Font Awesome.",
+      "attribution": "Creative Commons Attribution 4.0 International licence",
+      "noted": "noted"
+    }
+  },
+  "about": {
+    "planning": {
+      "community": "welcome community contribution",
+      "meta": "Meta Search",
+      "working": "we’re currently working on",
+      "catalog": "Openverse Catalogue"
+    },
+    "aria": {
+      "projects": "Openverse projects"
+    },
+    "transfer": {
+      "wordpress": "WordPress",
+      "creative-commons": "Creative Commons"
+    },
+    "collection": {
+      "common-crawl": "Common Crawl"
+    }
+  }
+}

@@ -5,23 +5,23 @@
       "okay": {},
       "dismiss": {}
     },
-    "source": {},
+    "source": "Источники",
     "donation-banner": {
       "no": {},
       "yes": {},
       "description": {},
       "alternative-description": {}
     },
-    "api": {},
+    "api": "API",
     "resources-tab": {},
     "about-tab": {},
     "licenses": {},
     "aria": {
-      "sr-search": {},
-      "menu": {},
-      "primary": {}
+      "sr-search": "sr кнопка поиска",
+      "menu": "меню",
+      "primary": "основное"
     },
-    "support": {}
+    "support": "Поддержите нас"
   },
   "filters": {
     "creator": {},
@@ -29,19 +29,19 @@
       "commercial": {},
       "modification": {}
     },
-    "license-explanation": {},
+    "license-explanation": "разъяснение лицензии",
     "mature": {
       "enable": {}
     },
     "licenses": {
-      "pdm": {},
-      "cc0": {},
-      "by": {},
-      "by-nc-nd": {},
-      "by-nc-sa": {},
-      "by-nd": {},
-      "by-nc": {},
-      "by-sa": {}
+      "pdm": "Public Domain Mark",
+      "cc0": "CC0",
+      "by": "BY",
+      "by-nc-nd": "BY-NC-ND",
+      "by-nc-sa": "BY-NC-SA",
+      "by-nd": "BY-ND",
+      "by-nc": "BY-NC",
+      "by-sa": "BY-SA"
     },
     "filter-by": {},
     "sizes": {
@@ -55,10 +55,10 @@
       "tall": {}
     },
     "extensions": {
-      "svg": {},
-      "gif": {},
-      "png": {},
-      "jpg": {}
+      "svg": "SVG",
+      "gif": "GIF",
+      "png": "PNG",
+      "jpg": "JPEG"
     },
     "categories": {
       "digitized-artwork": {},
@@ -67,29 +67,29 @@
     }
   },
   "browsers": {
-    "edge": {},
-    "opera": {},
-    "firefox": {},
-    "chrome": {}
+    "edge": "Edge",
+    "opera": "Opera",
+    "firefox": "Firefox",
+    "chrome": "Chrome"
   },
   "hero": {
     "caption": {
-      "link": {},
-      "content": {}
+      "link": "Узнать больше",
+      "content": "Всё содержимое использует лицензию Creative Commons или Public Domain. Смотрите {link} о лицензии CC и инструментах."
     },
     "search": {
-      "placeholder": {},
-      "button": {}
+      "placeholder": "Поиск по всему содержимому",
+      "button": "Поиск"
     },
     "title": {},
     "license-filter": {
-      "label": {}
+      "label": "Я хочу что-то, с чем можно"
     },
     "locale": {
-      "icon": {}
+      "icon": "локаль"
     },
-    "subtitle": {},
-    "brand": {}
+    "subtitle": "Откройте более 500 миллионов изображений доступных для использования",
+    "brand": "Openverse"
   },
   "meta-search": {
     "form": {
@@ -105,11 +105,11 @@
   "": {
     "sources": {},
     "error": {},
-    "feedback": {},
-    "extension": {},
-    "meta-search": {},
-    "search-guide": {},
-    "about": {}
+    "feedback": "Обратная связь",
+    "extension": "Веб-расширение",
+    "meta-search": "Мета поиск",
+    "search-guide": "Руководство по поиску",
+    "about": "Наша история"
   },
   "photo-details": {
     "aria": {
@@ -124,23 +124,23 @@
     },
     "reuse": {
       "attribution": {
-        "main": {}
+        "main": "Это изображение отмечено как использующее лицензию {link}."
       },
       "copy-license": {
         "plain": {},
-        "html": {},
+        "html": "HTML",
         "rich": {}
       },
       "credit": {
         "copy-text": {},
         "terms-text": {},
         "view-legal-text": {},
-        "licensed": {},
-        "marked": {},
+        "licensed": "лицензировано под",
+        "marked": "отмечено с",
         "creator-text": {}
       },
-      "tool-header": {},
-      "license-header": {}
+      "tool-header": "Public Domain",
+      "license-header": "Лицензия"
     },
     "content-report": {
       "dmca": {
@@ -150,7 +150,7 @@
       "copyright": {},
       "issue-description": {}
     },
-    "back": {},
+    "back": "Назад к результатам поиска",
     "copy": {},
     "related-images": {},
     "legal-disclaimer": {},
@@ -190,7 +190,7 @@
   "sources": {
     "cc-content": {
       "provider": {},
-      "flickr": {},
+      "flickr": "Flickr",
       "smithsonian": {},
       "europeana-api": {},
       "europeana-link": {},
@@ -220,8 +220,8 @@
   },
   "browse-page": {
     "aria": {
-      "remove-filter": {},
-      "scroll": {}
+      "remove-filter": "удалить фильтр",
+      "scroll": "прокрутить наверх"
     },
     "license-description": {
       "sa": {},
@@ -303,7 +303,7 @@
     "loading": {},
     "description": {
       "making-wordpress": {},
-      "openverse": {}
+      "openverse": "#openverse"
     }
   },
   "footer": {
@@ -334,7 +334,7 @@
       "projects": {}
     },
     "transfer": {
-      "wordpress": {},
+      "wordpress": "WordPress",
       "creative-commons": {}
     },
     "collection": {

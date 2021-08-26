@@ -2,32 +2,32 @@
   "header": {
     "notification": {
       "text": {},
-      "okay": {},
-      "dismiss": {}
+      "okay": "OK",
+      "dismiss": "Avfärda"
     },
-    "source": {},
+    "source": "Källor",
     "donation-banner": {
-      "no": {},
-      "yes": {},
+      "no": "Inte idag",
+      "yes": "Ja, jag donerar nu",
       "description": {},
       "alternative-description": {}
     },
-    "api": {},
-    "resources-tab": {},
-    "about-tab": {},
+    "api": "API",
+    "resources-tab": "Resurser",
+    "about-tab": "Om",
     "licenses": {},
     "aria": {
       "sr-search": {},
-      "menu": {},
-      "primary": {}
+      "menu": "meny",
+      "primary": "primär"
     },
-    "support": {}
+    "support": "Stöd oss"
   },
   "filters": {
-    "creator": {},
+    "creator": "Skapare",
     "license-types": {
-      "commercial": {},
-      "modification": {}
+      "commercial": "Använd kommersiellt",
+      "modification": "Ändra eller anpassa"
     },
     "license-explanation": {},
     "mature": {
@@ -43,16 +43,16 @@
       "by-nc": {},
       "by-sa": {}
     },
-    "filter-by": {},
+    "filter-by": "Filtrera efter",
     "sizes": {
-      "large": {},
-      "medium": {},
-      "small": {}
+      "large": "Stor",
+      "medium": "Medium",
+      "small": "Liten"
     },
     "aspect-ratios": {
-      "square": {},
-      "wide": {},
-      "tall": {}
+      "square": "Fyrkant",
+      "wide": "Bred",
+      "tall": "Lång"
     },
     "extensions": {
       "svg": {},
@@ -62,34 +62,34 @@
     },
     "categories": {
       "digitized-artwork": {},
-      "illustration": {},
-      "photograph": {}
+      "illustration": "Illustrationer",
+      "photograph": "Fotografier"
     }
   },
   "browsers": {
-    "edge": {},
-    "opera": {},
-    "firefox": {},
-    "chrome": {}
+    "edge": "Edge",
+    "opera": "Opera",
+    "firefox": "Firefox",
+    "chrome": "Chrome"
   },
   "hero": {
     "caption": {
-      "link": {},
+      "link": "Lär dig mer",
       "content": {}
     },
     "search": {
-      "placeholder": {},
-      "button": {}
+      "placeholder": "Sök i allt innehåll",
+      "button": "Sök"
     },
     "title": {},
     "license-filter": {
       "label": {}
     },
     "locale": {
-      "icon": {}
+      "icon": "språkversion"
     },
     "subtitle": {},
-    "brand": {}
+    "brand": "Openverse"
   },
   "meta-search": {
     "form": {
@@ -104,20 +104,20 @@
   },
   "": {
     "sources": {},
-    "error": {},
-    "feedback": {},
+    "error": "Fel vid hämtning av bilder:",
+    "feedback": "Feedback",
     "extension": {},
     "meta-search": {},
     "search-guide": {},
-    "about": {}
+    "about": "Vår historia"
   },
   "photo-details": {
     "aria": {
-      "related": {},
+      "related": "relaterade bilder",
       "share": {
-        "pinterest": {},
-        "twitter": {},
-        "facebook": {}
+        "pinterest": "dela på pinterest",
+        "twitter": "dela på twitter",
+        "facebook": "dela på facebook"
       },
       "details": {},
       "close-form": {}
@@ -127,54 +127,54 @@
         "main": {}
       },
       "copy-license": {
-        "plain": {},
-        "html": {},
+        "plain": "Oformaterad text",
+        "html": "HTML",
         "rich": {}
       },
       "credit": {
-        "copy-text": {},
+        "copy-text": "en kopia av denna licens,",
         "terms-text": {},
         "view-legal-text": {},
-        "licensed": {},
+        "licensed": "är licenserad under",
         "marked": {},
         "creator-text": {}
       },
-      "tool-header": {},
-      "license-header": {}
+      "tool-header": "Offentlig domän",
+      "license-header": "Licens"
     },
     "content-report": {
       "dmca": {
-        "thanks": {}
+        "thanks": "Tack för att du rapporterar ett problem med resultaten från Openverse!"
       },
-      "submit": {},
+      "submit": "Skicka",
       "copyright": {},
-      "issue-description": {}
+      "issue-description": "Beskriv problemet för oss"
     },
-    "back": {},
-    "copy": {},
-    "related-images": {},
+    "back": "Tillbaka till sökresultaten",
+    "copy": "Kopiera",
+    "related-images": "Relaterade bilder",
     "legal-disclaimer": {},
-    "weblink": {},
+    "weblink": "Gå till bildens webbplats",
     "survey": {
-      "answer": {}
+      "answer": "genom att besvara några få frågor."
     },
-    "share": {},
+    "share": "Dela",
     "information": {
       "pixels": {},
-      "tags": {},
-      "dimensions": {},
-      "type": {}
+      "tags": "Etiketter",
+      "dimensions": "Dimensioner:",
+      "type": "Typ:"
     }
   },
   "meta-search-page": {
     "license": {},
     "new": {
-      "email": {}
+      "email": "e-post"
     },
     "intro": {},
     "why": {
-      "aria-label": {},
-      "feedback-link": {}
+      "aria-label": "feedback",
+      "feedback-link": "feedback"
     },
     "audio-video": {
       "filter": {}
@@ -182,7 +182,7 @@
     "images": {
       "info": {},
       "not-finding": {},
-      "continue": {}
+      "continue": "Ladda fler resultat och fortsätt bläddra i Openverse."
     },
     "use": {},
     "content-types": {}
@@ -190,12 +190,12 @@
   "sources": {
     "cc-content": {
       "provider": {},
-      "flickr": {},
+      "flickr": "Flickr",
       "smithsonian": {},
-      "europeana-api": {},
-      "europeana-link": {},
+      "europeana-api": "Europeana API",
+      "europeana-link": "Europeana",
       "europeana": {},
-      "where": {}
+      "where": "Var kommer innehållet på Openverse ifrån?"
     },
     "new-content": {
       "next": {},
@@ -204,13 +204,13 @@
       "impact": {},
       "integrate": {}
     },
-    "issue-button": {},
+    "issue-button": "Föreslå en ny källa",
     "suggestions": {},
     "providers": {
       "item": {},
-      "domain": {}
+      "domain": "Domän"
     },
-    "single-name": {},
+    "single-name": "Källa",
     "detail": {}
   },
   "collections": {
@@ -221,7 +221,7 @@
   "browse-page": {
     "aria": {
       "remove-filter": {},
-      "scroll": {}
+      "scroll": "rulla till toppen"
     },
     "license-description": {
       "sa": {},
@@ -231,9 +231,9 @@
     "search-form": {
       "collection-placeholder": {}
     },
-    "other-source": {},
-    "load": {},
-    "no-more": {},
+    "other-source": "Hittar du inte det du behöver? Sök andra källor",
+    "load": "Ladda fler resultat",
+    "no-more": "Inga fler bilder :(",
     "image-result-count-more": {},
     "audio-result-count-more": {},
     "all-result-count-more": {},
@@ -272,19 +272,19 @@
     }
   },
   "filter-list": {
-    "show": {},
-    "clear": {},
-    "hide": {}
+    "show": "Visa resultat",
+    "clear": "Rensa filter",
+    "hide": "Dölj filter"
   },
   "search-tab": {
-    "video": {},
-    "audio": {},
-    "image": {}
+    "video": "Video",
+    "audio": "Ljud",
+    "image": "Bild"
   },
   "error": {
     "image-not-found": {},
-    "occurred": {},
-    "not-found": {}
+    "occurred": "Ett fel uppstod",
+    "not-found": "Sidan hittas inte"
   },
   "extension": {
     "conclusion": {},
@@ -295,30 +295,30 @@
     }
   },
   "feedback": {
-    "report": {},
-    "improve": {},
+    "report": "Rapportera ett fel",
+    "improve": "Hjälp oss att förbättra",
     "aria": {
       "cc-usability": {}
     },
-    "loading": {},
+    "loading": "Laddar in …",
     "description": {
       "making-wordpress": {},
-      "openverse": {}
+      "openverse": "#openverse"
     }
   },
   "footer": {
     "navigation": {
       "terms": {},
-      "contact": {},
-      "policies": {},
-      "privacy": {}
+      "contact": "Kontakt",
+      "policies": "Policyer",
+      "privacy": "Integritet"
     },
     "donate": {
       "help": {},
       "work": {}
     },
     "caption": {
-      "icons": {},
+      "icons": "Ikoner av Font Awesome.",
       "attribution": {},
       "noted": {}
     }
@@ -334,8 +334,8 @@
       "projects": {}
     },
     "transfer": {
-      "wordpress": {},
-      "creative-commons": {}
+      "wordpress": "WordPress",
+      "creative-commons": "Creative Commons"
     },
     "collection": {
       "common-crawl": {}

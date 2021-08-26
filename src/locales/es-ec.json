@@ -55,10 +55,10 @@
       "tall": "Alto"
     },
     "extensions": {
-      "svg": "SVG",
-      "gif": "GIF",
-      "png": "PNG",
-      "jpg": "JPEG"
+      "svg": "SVGs",
+      "gif": "GIFs",
+      "png": "PNGs",
+      "jpg": "JPEGs"
     },
     "categories": {
       "digitized-artwork": "Arte digitalizado",
@@ -184,8 +184,8 @@
       "not-finding": "Haz clic en el enlace que dice «¿No encuentras lo que necesitas?» por debajo de los resultados de imágenes.",
       "continue": "Carga más resultados y sigue navegando en Openverse."
     },
-    "use": " Uso ",
-    "content-types": "La búsqueda meta en Openverse actualmente es compatible con búsqueda de imágenes, audio y video en sitios externos."
+    "use": "Uso",
+    "content-types": "La búsqueda meta en Openverse actualmente es compatible con búsqueda de imágenes, audio y vídeo en sitios externos. "
   },
   "sources": {
     "cc-content": {
@@ -277,7 +277,7 @@
     "hide": "Ocultar filtros"
   },
   "search-tab": {
-    "video": "Video",
+    "video": "Vídeo",
     "audio": "Audio",
     "image": "Imagen"
   },

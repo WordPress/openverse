@@ -67,10 +67,10 @@
     }
   },
   "browsers": {
-    "edge": {},
-    "opera": {},
-    "firefox": {},
-    "chrome": {}
+    "edge": "Edge",
+    "opera": "Opera",
+    "firefox": "Firefox",
+    "chrome": "Chrome"
   },
   "hero": {
     "caption": {

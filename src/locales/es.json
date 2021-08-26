@@ -75,7 +75,7 @@
   "hero": {
     "caption": {
       "link": "Más información",
-      "content": "Todo nuestro contenido está bajo licencias Creative Commons o de dominio público. ###link### sobre las licencias CC y las herramientas."
+      "content": "Todo nuestro contenido está bajo licencias Creative Commons o de dominio público. {link} sobre las licencias CC y las herramientas."
     },
     "search": {
       "placeholder": "Buscar todos los contenidos",
@@ -93,8 +93,8 @@
   },
   "meta-search": {
     "form": {
-      "supported-title": "¿No encuentras lo que buscas? Prueba fuentes de ###type### adicionales.",
-      "unsupported-title": "Openverse todavía no es compatible por defecto con la búsqueda de ###type###."
+      "supported-title": "¿No encuentras lo que buscas? Prueba fuentes de {type} adicionales.",
+      "unsupported-title": "Openverse todavía no es compatible por defecto con la búsqueda de {type}."
     },
     "card": {
       "checkboxes": {
@@ -124,7 +124,7 @@
     },
     "reuse": {
       "attribution": {
-        "main": "Esta imagen fue marcada con una licencia ###link###."
+        "main": "Esta imagen fue marcada con una licencia {link}."
       },
       "copy-license": {
         "plain": "Texto plano",
@@ -134,10 +134,10 @@
       "credit": {
         "copy-text": "una copia de esta licencia,",
         "terms-text": "los términos,",
-        "view-legal-text": ". Para ver los ###terms-copy###visit ###URL###",
+        "view-legal-text": ". Para ver los {terms-copy}visit ###URL###",
         "licensed": "está bajo la licencia",
         "marked": "está marcado con",
-        "creator-text": "por ###creator-name###"
+        "creator-text": "por {creator-name}"
       },
       "tool-header": "Dominio público",
       "license-header": "Licencia"
@@ -171,16 +171,16 @@
     "new": {
       "email": "correo electrónico"
     },
-    "intro": "Openverse está basado en un catálogo que indexa contenidos con licencia CC y de dominio público de fuentes seleccionadas. Más información sobre nuestro ###link###.",
+    "intro": "Openverse está basado en un catálogo que indexa contenidos con licencia CC y de dominio público de fuentes seleccionadas. Más información sobre nuestro {link}.",
     "why": {
       "aria-label": "sugerencias",
       "feedback-link": "sugerencias"
     },
     "audio-video": {
-      "filter": "La barra de filtros de la izquierda incluye el filtro ###use###, que puede ser admitido por algunas fuentes de búsqueda meta. Aplícalos antes de hacer clic en el botón de la fuente externa en la que quieres buscar."
+      "filter": "La barra de filtros de la izquierda incluye el filtro {use}, que puede ser admitido por algunas fuentes de búsqueda meta. Aplícalos antes de hacer clic en el botón de la fuente externa en la que quieres buscar."
     },
     "images": {
-      "info": "Cuando hagas clic en «¿No encuentras lo que necesitas?» se cargará una ventana emergente con otras fuentes de contenido con licencia CC y de dominio público. Tu consulta de búsqueda se cargará previamente y, si es compatible, puedes seleccionar un filtro ###use### para filtrar los resultados de forma proactiva. Haz clic en el botón de la fuente externa que quieras buscar y los resultados se abrirán en una nueva pestaña.",
+      "info": "Cuando hagas clic en «¿No encuentras lo que necesitas?» se cargará una ventana emergente con otras fuentes de contenido con licencia CC y de dominio público. Tu consulta de búsqueda se cargará previamente y, si es compatible, puedes seleccionar un filtro {use} para filtrar los resultados de forma proactiva. Haz clic en el botón de la fuente externa que quieras buscar y los resultados se abrirán en una nueva pestaña.",
       "not-finding": "Haz clic en el enlace que dice «¿No encuentras lo que necesitas?» por debajo de los resultados de imágenes.",
       "continue": "Carga más resultados y sigue navegando en Openverse."
     },
@@ -189,12 +189,12 @@
   },
   "sources": {
     "cc-content": {
-      "provider": "Algunos proveedores tienen varias agrupaciones diferentes de contenido dentro de ellos. ###flickr### tiene fuentes que van desde la NASA hasta la fotografía personal. El ###smithsonian### comprende una docena de colecciones diversas. Wikimedia Commons abarca toda la gama de contenidos y es utilizado por varias galerías, bibliotecas, archivos y museos para destacar algunas o todas sus colecciones digitalizadas.",
+      "provider": "Algunos proveedores tienen varias agrupaciones diferentes de contenido dentro de ellos. {flickr} tiene fuentes que van desde la NASA hasta la fotografía personal. El ###smithsonian### comprende una docena de colecciones diversas. Wikimedia Commons abarca toda la gama de contenidos y es utilizado por varias galerías, bibliotecas, archivos y museos para destacar algunas o todas sus colecciones digitalizadas.",
       "flickr": "Flickr",
       "smithsonian": "Instituto Smithsonian",
       "europeana-api": "API de Euroepeana",
       "europeana-link": "Europeana",
-      "europeana": "Openverse agradece especialmente el trabajo de ###link###, una organización que trabaja para digitalizar y hacer localizables las obras del patrimonio cultural en toda Europa. Openverse es capaz de indexar cientos de valiosas fuentes, a través de una única integración con la ###link-api###.",
+      "europeana": "Openverse agradece especialmente el trabajo de {link}, una organización que trabaja para digitalizar y hacer localizables las obras del patrimonio cultural en toda Europa. Openverse es capaz de indexar cientos de valiosas fuentes, a través de una única integración con la ###link-api###.",
       "where": "¿De dónde proceden los contenidos de Openverse?"
     },
     "new-content": {
@@ -211,11 +211,11 @@
       "domain": "Dominio"
     },
     "single-name": "Origen",
-    "detail": "Hacer clic en un ###single-name### te permite navegar y filtrar elementos de esa fuente."
+    "detail": "Hacer clic en un {single-name} te permite navegar y filtrar elementos de esa fuente."
   },
   "collections": {
     "other": "Otras colecciones",
-    "collection-size": "Tamaño de la colección: ###count### imágenes",
+    "collection-size": "Tamaño de la colección: {count} imágenes",
     "museum": "Colecciones del museo"
   },
   "browse-page": {
@@ -234,12 +234,12 @@
     "other-source": "¿No encuentras lo que necesitas? Busca en otras fuentes",
     "load": "Cargar más resultados",
     "no-more": "No hay más imágenes :(",
-    "image-result-count-more": "Más de ###localeCount### resultados de imágenes",
-    "audio-result-count-more": "Más de ###localeCount### resultados de audio",
-    "all-result-count-more": "Más de ###localeCount### resultados",
-    "image-result-count": "ningún resultado de imágenes|###localeCount### resultado de imágenes|###localeCount### resultados de imágenes",
-    "audio-result-count": "ningún resultado de audio|###localeCount### resultado de audio|###localeCount### resultados de audio",
-    "all-result-count": "ningún resultado|###localeCount### resultado|###localeCount### resultados"
+    "image-result-count-more": "Más de {localeCount} resultados de imágenes",
+    "audio-result-count-more": "Más de {localeCount} resultados de audio",
+    "all-result-count-more": "Más de {localeCount} resultados",
+    "image-result-count": "ningún resultado de imágenes|{localeCount} resultado de imágenes|###localeCount### resultados de imágenes",
+    "audio-result-count": "ningún resultado de audio|{localeCount} resultado de audio|###localeCount### resultados de audio",
+    "all-result-count": "ningún resultado|{localeCount} resultado|###localeCount### resultados"
   },
   "search-guide": {
     "combine": {
@@ -251,12 +251,12 @@
         "star": "simbolo de asterisco",
         "open": "abrir paréntesis"
       },
-      "fuzziness": "###symbol### después de una palabra significa distancia de edición (confusión)",
-      "precedence": "###open### y ###close### significa precedencia",
-      "prefix": "###symbol### al final de un término significa un prefijo de la consulta",
-      "negate": "###symbol### niega un único token",
-      "or": "###symbol### significa una operación OR",
-      "and": "###symbol### significa una operación AND"
+      "fuzziness": "{symbol} después de una palabra significa distancia de edición (confusión)",
+      "precedence": "{open} y ###close### significa precedencia",
+      "prefix": "{symbol} al final de un término significa un prefijo de la consulta",
+      "negate": "{symbol} niega un único token",
+      "or": "{symbol} significa una operación OR",
+      "and": "{symbol} significa una operación AND"
     },
     "example": {
       "fuzziness": {
@@ -282,7 +282,7 @@
     "image": "Imagen"
   },
   "error": {
-    "image-not-found": "No se pudo encontrar la imagen con el id ###id###",
+    "image-not-found": "No se pudo encontrar la imagen con el id {id}",
     "occurred": "Ocurrió un error",
     "not-found": "Página no encontrada"
   },

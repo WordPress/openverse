@@ -2,29 +2,29 @@
   "header": {
     "notification": {
       "text": {},
-      "okay": {},
-      "dismiss": {}
+      "okay": "OK",
+      "dismiss": "非表示"
     },
-    "source": {},
+    "source": "ソース",
     "donation-banner": {
       "no": {},
       "yes": {},
       "description": {},
       "alternative-description": {}
     },
-    "api": {},
-    "resources-tab": {},
+    "api": "API",
+    "resources-tab": "リソース",
     "about-tab": {},
     "licenses": {},
     "aria": {
       "sr-search": {},
-      "menu": {},
-      "primary": {}
+      "menu": "メニュー",
+      "primary": "メイン"
     },
     "support": {}
   },
   "filters": {
-    "creator": {},
+    "creator": "作成者",
     "license-types": {
       "commercial": {},
       "modification": {}
@@ -35,51 +35,51 @@
     },
     "licenses": {
       "pdm": {},
-      "cc0": {},
-      "by": {},
-      "by-nc-nd": {},
-      "by-nc-sa": {},
-      "by-nd": {},
-      "by-nc": {},
-      "by-sa": {}
+      "cc0": "CC0",
+      "by": "BY",
+      "by-nc-nd": "BY-NC-ND",
+      "by-nc-sa": "BY-NC-SA",
+      "by-nd": "BY-ND",
+      "by-nc": "BY-NC",
+      "by-sa": "BY-SA"
     },
-    "filter-by": {},
+    "filter-by": "絞り込み",
     "sizes": {
-      "large": {},
-      "medium": {},
-      "small": {}
+      "large": "大",
+      "medium": "中",
+      "small": "小"
     },
     "aspect-ratios": {
-      "square": {},
-      "wide": {},
+      "square": "正方形",
+      "wide": "幅広",
       "tall": {}
     },
     "extensions": {
-      "svg": {},
-      "gif": {},
-      "png": {},
-      "jpg": {}
+      "svg": "SVG",
+      "gif": "GIF",
+      "png": "PNG",
+      "jpg": "JPEG"
     },
     "categories": {
       "digitized-artwork": {},
-      "illustration": {},
+      "illustration": "イラスト",
       "photograph": {}
     }
   },
   "browsers": {
-    "edge": {},
-    "opera": {},
-    "firefox": {},
-    "chrome": {}
+    "edge": "Edge",
+    "opera": "Opera",
+    "firefox": "Firefox",
+    "chrome": "Chrome"
   },
   "hero": {
     "caption": {
-      "link": {},
+      "link": "詳細",
       "content": {}
     },
     "search": {
       "placeholder": {},
-      "button": {}
+      "button": "検索"
     },
     "title": {},
     "license-filter": {
@@ -89,7 +89,7 @@
       "icon": {}
     },
     "subtitle": {},
-    "brand": {}
+    "brand": "Openverse"
   },
   "meta-search": {
     "form": {
@@ -105,11 +105,11 @@
   "": {
     "sources": {},
     "error": {},
-    "feedback": {},
+    "feedback": "フィードバック",
     "extension": {},
-    "meta-search": {},
+    "meta-search": "メタ検索",
     "search-guide": {},
-    "about": {}
+    "about": "ストーリー"
   },
   "photo-details": {
     "aria": {
@@ -127,9 +127,9 @@
         "main": {}
       },
       "copy-license": {
-        "plain": {},
-        "html": {},
-        "rich": {}
+        "plain": "プレーンテキスト",
+        "html": "HTML",
+        "rich": "リッチテキスト"
       },
       "credit": {
         "copy-text": {},
@@ -137,44 +137,44 @@
         "view-legal-text": {},
         "licensed": {},
         "marked": {},
-        "creator-text": {}
+        "creator-text": " by {creator-name}"
       },
       "tool-header": {},
-      "license-header": {}
+      "license-header": "ライセンス"
     },
     "content-report": {
       "dmca": {
         "thanks": {}
       },
-      "submit": {},
+      "submit": "送信",
       "copyright": {},
       "issue-description": {}
     },
-    "back": {},
-    "copy": {},
-    "related-images": {},
+    "back": "検索結果に戻る",
+    "copy": "コピー",
+    "related-images": "関連画像",
     "legal-disclaimer": {},
     "weblink": {},
     "survey": {
       "answer": {}
     },
-    "share": {},
+    "share": "シェア",
     "information": {
-      "pixels": {},
-      "tags": {},
-      "dimensions": {},
-      "type": {}
+      "pixels": "px",
+      "tags": "タグ",
+      "dimensions": "サイズ:",
+      "type": "種類:"
     }
   },
   "meta-search-page": {
     "license": {},
     "new": {
-      "email": {}
+      "email": "メール"
     },
     "intro": {},
     "why": {
-      "aria-label": {},
-      "feedback-link": {}
+      "aria-label": "フィードバック",
+      "feedback-link": "フィードバック"
     },
     "audio-video": {
       "filter": {}
@@ -190,7 +190,7 @@
   "sources": {
     "cc-content": {
       "provider": {},
-      "flickr": {},
+      "flickr": "Flickr",
       "smithsonian": {},
       "europeana-api": {},
       "europeana-link": {},
@@ -207,21 +207,21 @@
     "issue-button": {},
     "suggestions": {},
     "providers": {
-      "item": {},
-      "domain": {}
+      "item": "合計の項目",
+      "domain": "ドメイン名"
     },
-    "single-name": {},
+    "single-name": "ソース",
     "detail": {}
   },
   "collections": {
     "other": {},
     "collection-size": {},
-    "museum": {}
+    "museum": "ミュージアムコレクション"
   },
   "browse-page": {
     "aria": {
       "remove-filter": {},
-      "scroll": {}
+      "scroll": "トップへ戻る"
     },
     "license-description": {
       "sa": {},
@@ -268,23 +268,23 @@
       }
     },
     "exact": {
-      "claude-monet": {}
+      "claude-monet": "\"Claude Monet\""
     }
   },
   "filter-list": {
-    "show": {},
-    "clear": {},
-    "hide": {}
+    "show": "結果を表示",
+    "clear": "フィルターをクリア",
+    "hide": "フィルターを非表示"
   },
   "search-tab": {
-    "video": {},
-    "audio": {},
-    "image": {}
+    "video": "動画",
+    "audio": "音声",
+    "image": "画像"
   },
   "error": {
     "image-not-found": {},
-    "occurred": {},
-    "not-found": {}
+    "occurred": "エラーが発生しました",
+    "not-found": "ページが見つかりません"
   },
   "extension": {
     "conclusion": {},
@@ -295,23 +295,23 @@
     }
   },
   "feedback": {
-    "report": {},
-    "improve": {},
+    "report": "バグを報告",
+    "improve": "改善にご協力ください",
     "aria": {
       "cc-usability": {}
     },
-    "loading": {},
+    "loading": "読み込み中…",
     "description": {
       "making-wordpress": {},
-      "openverse": {}
+      "openverse": "#openverse"
     }
   },
   "footer": {
     "navigation": {
-      "terms": {},
-      "contact": {},
-      "policies": {},
-      "privacy": {}
+      "terms": "ターム",
+      "contact": "お問い合わせ",
+      "policies": "ポリシー",
+      "privacy": "プライバシー"
     },
     "donate": {
       "help": {},
@@ -326,7 +326,7 @@
   "about": {
     "planning": {
       "community": {},
-      "meta": {},
+      "meta": "メタ検索",
       "working": {},
       "catalog": {}
     },
@@ -334,7 +334,7 @@
       "projects": {}
     },
     "transfer": {
-      "wordpress": {},
+      "wordpress": "WordPress",
       "creative-commons": {}
     },
     "collection": {

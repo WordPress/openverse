@@ -4,8 +4,9 @@
  */
 const { writeFile } = require('fs/promises')
 const os = require('os')
-const fetch = require('node-fetch')
+const axios = require('axios')
 const ngxJsonToJson = require('./ngx-json-to-json')
+const localeJSON = require('./localesList.json')
 
 /**
  *
@@ -33,7 +34,7 @@ const makeTranslationUrl = (format = 'po') => (localeCode = 'en-gb') =>
  * @param {string} locale
  */
 const fetchNgxTranslation = (locale) =>
-  fetch(makeTranslationUrl('ngx')(locale)).then((res) => res.json())
+  axios.get(makeTranslationUrl('ngx')(locale)).then((res) => res.data)
 
 const replacePlaceholders = (json) => {
   if (typeof json === 'string') {
@@ -71,19 +72,37 @@ const writeLocaleFiles = (translationsByLocale) =>
     )
   )
 
+// Check if an object is empty
+const isEmpty = (obj) => Object.values(obj).every((x) => x === null)
+
 /**
  * Write translation files to the "src/locales" directory from
  * the supplied list of locales
  *
  * @param {string[]} locales
  */
-const fetchAndConvertNGXTranslations = (locales) =>
-  Promise.all(locales.map(fetchNgxTranslation))
-    .then((res) => res.map(ngxJsonToJson))
-    .then((res) =>
-      // Key translations by their locale, i.e { es: translations, es-ve: translations }
-      res.reduce((acc, i, index) => ({ ...acc, [locales[index]]: i }), {})
-    )
+const fetchAndConvertNGXTranslations = (locales) => {
+  return Promise.allSettled(locales.map(fetchNgxTranslation))
+    .then((res) => {
+      let successfulTranslations = []
+      res.forEach(({ status, value }, index) => {
+        if (status === 'fulfilled' && !isEmpty(value)) {
+          successfulTranslations[locales[index]] = value
+        }
+      })
+      return successfulTranslations
+    })
+    .then((res) => {
+      Object.keys(res).forEach((key) => {
+        res[key] = ngxJsonToJson(res[key])
+      })
+      return res
+    })
     .then(writeLocaleFiles)
+}
 
-fetchAndConvertNGXTranslations(['es', 'es-ve']).then().catch(console.error)
+fetchAndConvertNGXTranslations(Object.values(localeJSON).map((i) => i.slug))
+  .then((res) => {
+    console.log(`Successfully saved ${res.length} translations.`)
+  })
+  .catch(console.error)

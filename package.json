@@ -27,7 +27,8 @@
     "format:test": "prettier --check .",
     "vue-i18n-extract": "vue-i18n-extract report -v './src/**/*.?(js|vue)' -l './src/locales/*.?(json)'",
     "postinstall": "patch-package",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "i18n:get-translations": "node src/locales/scripts/get-translations"
   },
   "dependencies": {
     "@nuxt/components": "^2.1.6",
@@ -97,7 +98,6 @@
     "not ie <= 8"
   ],
   "volta": {
-    "node": "12.19.0",
-    "npm": "6.14.8"
+    "node": "16.8.0"
   }
 }

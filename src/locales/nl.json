@@ -1,27 +1,27 @@
 {
   "header": {
     "notification": {
-      "text": {},
-      "okay": {},
-      "dismiss": {}
+      "text": "Voorbeeld meldingstekst",
+      "okay": "OK",
+      "dismiss": "Negeer"
     },
-    "source": {},
+    "source": "Bronnen",
     "donation-banner": {
-      "no": {},
-      "yes": {},
+      "no": "Vandaag niet",
+      "yes": "Ja, ik doneer nu",
       "description": {},
       "alternative-description": {}
     },
-    "api": {},
-    "resources-tab": {},
-    "about-tab": {},
-    "licenses": {},
+    "api": "API",
+    "resources-tab": "Gegevensbronnen",
+    "about-tab": "Over",
+    "licenses": "De licenties",
     "aria": {
-      "sr-search": {},
-      "menu": {},
-      "primary": {}
+      "sr-search": "sr zoekknop",
+      "menu": "menu",
+      "primary": "primaire"
     },
-    "support": {}
+    "support": "Ondersteun ons"
   },
   "filters": {
     "creator": {},
@@ -67,29 +67,29 @@
     }
   },
   "browsers": {
-    "edge": {},
-    "opera": {},
-    "firefox": {},
-    "chrome": {}
+    "edge": "Edge",
+    "opera": "Opera",
+    "firefox": "Firefox",
+    "chrome": "Chrome"
   },
   "hero": {
     "caption": {
-      "link": {},
+      "link": "Meer weten",
       "content": {}
     },
     "search": {
-      "placeholder": {},
-      "button": {}
+      "placeholder": "Doorzoek alle inhoud",
+      "button": "Zoeken"
     },
-    "title": {},
+    "title": "Zoek naar inhoud om opnieuw te gebruiken",
     "license-filter": {
-      "label": {}
+      "label": "Ik wil iets waarmee ik kan"
     },
     "locale": {
-      "icon": {}
+      "icon": "locale"
     },
     "subtitle": {},
-    "brand": {}
+    "brand": "Openverse"
   },
   "meta-search": {
     "form": {
@@ -105,11 +105,11 @@
   "": {
     "sources": {},
     "error": {},
-    "feedback": {},
-    "extension": {},
-    "meta-search": {},
-    "search-guide": {},
-    "about": {}
+    "feedback": "Terugkoppeling",
+    "extension": "Web extensie",
+    "meta-search": "Meta zoeken",
+    "search-guide": "Zoeken gids",
+    "about": "Ons verhaal"
   },
   "photo-details": {
     "aria": {
@@ -308,17 +308,17 @@
   },
   "footer": {
     "navigation": {
-      "terms": {},
-      "contact": {},
-      "policies": {},
-      "privacy": {}
+      "terms": "Voorwaarden",
+      "contact": "Contact",
+      "policies": "Beleid",
+      "privacy": "Privacy"
     },
     "donate": {
       "help": {},
       "work": {}
     },
     "caption": {
-      "icons": {},
+      "icons": "Iconen door Font Awesome.",
       "attribution": {},
       "noted": {}
     }
@@ -334,8 +334,8 @@
       "projects": {}
     },
     "transfer": {
-      "wordpress": {},
-      "creative-commons": {}
+      "wordpress": "WordPress",
+      "creative-commons": "Creative Commons"
     },
     "collection": {
       "common-crawl": {}
