@@ -1,4 +1,5 @@
 import pkg from './package.json'
+import locales from './src/locales/scripts/validLocales.json'
 
 /**
  * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.
@@ -159,16 +160,7 @@ export default {
     '@nuxtjs/i18n',
   ],
   i18n: {
-    locales: [
-      { code: 'en', iso: 'en', name: 'English', file: 'en.json' },
-      { code: 'es', iso: 'es', name: 'Spanish', file: 'es.json' },
-      {
-        code: 'es-ve',
-        iso: 'es-ve',
-        name: 'Spanish (Venezuela)',
-        file: 'es-ve.json',
-      },
-    ],
+    locales,
     lazy: true,
     langDir: 'locales',
     strategy: 'prefix_and_default',

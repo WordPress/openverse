@@ -342,15 +342,6 @@
     "slug": "art-xemoji",
     "plural_expression": "0"
   },
-  "en_US": {
-    "english_name": "English",
-    "native_name": "English",
-    "lang_code_iso_639_1": "en",
-    "country_code": "us",
-    "slug": "en",
-    "google_code": "en",
-    "facebook_locale": "en_US"
-  },
   "en_AU": {
     "english_name": "English (Australia)",
     "native_name": "English (Australia)",
