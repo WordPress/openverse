@@ -1,0 +1,1840 @@
+{
+  "af": {
+    "english_name": "Afrikaans",
+    "native_name": "Afrikaans",
+    "lang_code_iso_639_1": "af",
+    "lang_code_iso_639_2": "afr",
+    "country_code": "za",
+    "slug": "af",
+    "google_code": "af",
+    "facebook_locale": "af_ZA"
+  },
+  "am": {
+    "english_name": "Amharic",
+    "native_name": "አማርኛ",
+    "lang_code_iso_639_1": "am",
+    "lang_code_iso_639_2": "amh",
+    "country_code": "et",
+    "slug": "am",
+    "facebook_locale": "am_ET"
+  },
+  "arg": {
+    "english_name": "Aragonese",
+    "native_name": "Aragonés",
+    "lang_code_iso_639_1": "an",
+    "lang_code_iso_639_2": "arg",
+    "country_code": "es",
+    "slug": "an"
+  },
+  "ar": {
+    "english_name": "Arabic",
+    "native_name": "العربية",
+    "lang_code_iso_639_1": "ar",
+    "lang_code_iso_639_2": "ara",
+    "slug": "ar",
+    "plural_expression": "(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))))",
+    "google_code": "ar",
+    "facebook_locale": "ar_AR"
+  },
+  "arq": {
+    "english_name": "Algerian Arabic",
+    "native_name": "الدارجة الجزايرية",
+    "lang_code_iso_639_1": "ar",
+    "country_code": "dz",
+    "slug": "arq",
+    "plural_expression": "(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))))"
+  },
+  "ary": {
+    "english_name": "Moroccan Arabic",
+    "native_name": "العربية المغربية",
+    "lang_code_iso_639_1": "ar",
+    "country_code": "ma",
+    "slug": "ary",
+    "plural_expression": "(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))))"
+  },
+  "as": {
+    "english_name": "Assamese",
+    "native_name": "অসমীয়া",
+    "lang_code_iso_639_1": "as",
+    "lang_code_iso_639_2": "asm",
+    "country_code": "in",
+    "slug": "as",
+    "facebook_locale": "as_IN"
+  },
+  "ast": {
+    "english_name": "Asturian",
+    "native_name": "Asturianu",
+    "lang_code_iso_639_2": "ast",
+    "country_code": "es",
+    "slug": "ast"
+  },
+  "az": {
+    "english_name": "Azerbaijani",
+    "native_name": "Azərbaycan dili",
+    "lang_code_iso_639_1": "az",
+    "lang_code_iso_639_2": "aze",
+    "country_code": "az",
+    "slug": "az",
+    "google_code": "az",
+    "facebook_locale": "az_AZ"
+  },
+  "azb": {
+    "english_name": "South Azerbaijani",
+    "native_name": "گؤنئی آذربایجان",
+    "lang_code_iso_639_1": "az",
+    "country_code": "ir",
+    "slug": "azb"
+  },
+  "az_TR": {
+    "english_name": "Azerbaijani (Turkey)",
+    "native_name": "Azərbaycan Türkcəsi",
+    "lang_code_iso_639_1": "az",
+    "lang_code_iso_639_2": "aze",
+    "country_code": "tr",
+    "slug": "az-tr"
+  },
+  "ba": {
+    "english_name": "Bashkir",
+    "native_name": "башҡорт теле",
+    "lang_code_iso_639_1": "ba",
+    "lang_code_iso_639_2": "bak",
+    "slug": "ba"
+  },
+  "bal": {
+    "english_name": "Catalan (Balear)",
+    "native_name": "Català (Balear)",
+    "lang_code_iso_639_2": "bal",
+    "country_code": "es",
+    "slug": "bal"
+  },
+  "bcc": {
+    "english_name": "Balochi Southern",
+    "native_name": "بلوچی مکرانی",
+    "country_code": "pk",
+    "slug": "bcc",
+    "plural_expression": "0"
+  },
+  "bel": {
+    "english_name": "Belarusian",
+    "native_name": "Беларуская мова",
+    "lang_code_iso_639_1": "be",
+    "lang_code_iso_639_2": "bel",
+    "country_code": "by",
+    "slug": "bel",
+    "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
+    "google_code": "be",
+    "facebook_locale": "be_BY"
+  },
+  "bg_BG": {
+    "english_name": "Bulgarian",
+    "native_name": "Български",
+    "lang_code_iso_639_1": "bg",
+    "lang_code_iso_639_2": "bul",
+    "country_code": "bg",
+    "slug": "bg",
+    "google_code": "bg",
+    "facebook_locale": "bg_BG"
+  },
+  "bho": {
+    "english_name": "Bhojpuri",
+    "native_name": "भोजपुरी",
+    "country_code": "in",
+    "slug": "bho"
+  },
+  "bn_BD": {
+    "english_name": "Bengali (Bangladesh)",
+    "native_name": "বাংলা",
+    "lang_code_iso_639_1": "bn",
+    "country_code": "bd",
+    "slug": "bn",
+    "google_code": "bn"
+  },
+  "bn_IN": {
+    "english_name": "Bengali (India)",
+    "native_name": "বাংলা (ভারত)",
+    "lang_code_iso_639_1": "bn",
+    "country_code": "in",
+    "slug": "bn-in",
+    "plural_expression": "n > 1",
+    "google_code": "bn",
+    "facebook_locale": "bn_IN"
+  },
+  "bo": {
+    "english_name": "Tibetan",
+    "native_name": "བོད་ཡིག",
+    "lang_code_iso_639_1": "bo",
+    "lang_code_iso_639_2": "tib",
+    "slug": "bo",
+    "plural_expression": "0"
+  },
+  "bre": {
+    "english_name": "Breton",
+    "native_name": "Brezhoneg",
+    "lang_code_iso_639_1": "br",
+    "lang_code_iso_639_2": "bre",
+    "country_code": "fr",
+    "slug": "br",
+    "plural_expression": "n > 1",
+    "facebook_locale": "br_FR"
+  },
+  "brx": {
+    "english_name": "Bodo",
+    "native_name": "बोडो‎",
+    "country_code": "in",
+    "slug": "brx"
+  },
+  "bs_BA": {
+    "english_name": "Bosnian",
+    "native_name": "Bosanski",
+    "lang_code_iso_639_1": "bs",
+    "lang_code_iso_639_2": "bos",
+    "country_code": "ba",
+    "slug": "bs",
+    "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
+    "google_code": "bs",
+    "facebook_locale": "bs_BA"
+  },
+  "ca": {
+    "english_name": "Catalan",
+    "native_name": "Català",
+    "lang_code_iso_639_1": "ca",
+    "lang_code_iso_639_2": "cat",
+    "slug": "ca",
+    "google_code": "ca",
+    "facebook_locale": "ca_ES"
+  },
+  "ceb": {
+    "english_name": "Cebuano",
+    "native_name": "Cebuano",
+    "lang_code_iso_639_2": "ceb",
+    "country_code": "ph",
+    "slug": "ceb",
+    "facebook_locale": "cx_PH"
+  },
+  "ckb": {
+    "english_name": "Kurdish (Sorani)",
+    "native_name": "كوردی‎",
+    "lang_code_iso_639_1": "ku",
+    "country_code": "iq",
+    "slug": "ckb",
+    "facebook_locale": "cb_IQ"
+  },
+  "co": {
+    "english_name": "Corsican",
+    "native_name": "Corsu",
+    "lang_code_iso_639_1": "co",
+    "lang_code_iso_639_2": "cos",
+    "country_code": "it",
+    "slug": "co"
+  },
+  "cor": {
+    "english_name": "Cornish",
+    "native_name": "Kernewek",
+    "lang_code_iso_639_1": "kw",
+    "lang_code_iso_639_2": "cor",
+    "country_code": "gb",
+    "slug": "cor",
+    "plural_expression": "(n == 0) ? 0 : ((n == 1) ? 1 : (((n % 100 == 2 || n % 100 == 22 || n % 100 == 42 || n % 100 == 62 || n % 100 == 82) || n % 1000 == 0 && (n % 100000 >= 1000 && n % 100000 <= 20000 || n % 100000 == 40000 || n % 100000 == 60000 || n % 100000 == 80000) || n != 0 && n % 1000000 == 100000) ? 2 : ((n % 100 == 3 || n % 100 == 23 || n % 100 == 43 || n % 100 == 63 || n % 100 == 83) ? 3 : ((n != 1 && (n % 100 == 1 || n % 100 == 21 || n % 100 == 41 || n % 100 == 61 || n % 100 == 81)) ? 4 : 5))))"
+  },
+  "cs_CZ": {
+    "english_name": "Czech",
+    "native_name": "Čeština",
+    "lang_code_iso_639_1": "cs",
+    "lang_code_iso_639_2": "ces",
+    "country_code": "cz",
+    "slug": "cs",
+    "plural_expression": "(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2)",
+    "google_code": "cs",
+    "facebook_locale": "cs_CZ"
+  },
+  "cy": {
+    "english_name": "Welsh",
+    "native_name": "Cymraeg",
+    "lang_code_iso_639_1": "cy",
+    "lang_code_iso_639_2": "cym",
+    "country_code": "gb",
+    "slug": "cy",
+    "plural_expression": "(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3",
+    "google_code": "cy",
+    "facebook_locale": "cy_GB"
+  },
+  "da_DK": {
+    "english_name": "Danish",
+    "native_name": "Dansk",
+    "lang_code_iso_639_1": "da",
+    "lang_code_iso_639_2": "dan",
+    "country_code": "dk",
+    "slug": "da",
+    "google_code": "da",
+    "facebook_locale": "da_DK"
+  },
+  "de_DE": {
+    "english_name": "German",
+    "native_name": "Deutsch",
+    "lang_code_iso_639_1": "de",
+    "country_code": "de",
+    "slug": "de",
+    "google_code": "de",
+    "facebook_locale": "de_DE"
+  },
+  "de_AT": {
+    "english_name": "German (Austria)",
+    "native_name": "Deutsch (Österreich)",
+    "lang_code_iso_639_1": "de",
+    "country_code": "de",
+    "slug": "de-at",
+    "google_code": "de"
+  },
+  "de_CH": {
+    "english_name": "German (Switzerland)",
+    "native_name": "Deutsch (Schweiz)",
+    "lang_code_iso_639_1": "de",
+    "country_code": "ch",
+    "slug": "de-ch",
+    "google_code": "de"
+  },
+  "dsb": {
+    "english_name": "Lower Sorbian",
+    "native_name": "Dolnoserbšćina",
+    "lang_code_iso_639_2": "dsb",
+    "country_code": "de",
+    "slug": "dsb",
+    "plural_expression": "(n % 100 == 1) ? 0 : ((n % 100 == 2) ? 1 : ((n % 100 == 3 || n % 100 == 4) ? 2 : 3))"
+  },
+  "dv": {
+    "english_name": "Dhivehi",
+    "native_name": "ދިވެހި",
+    "lang_code_iso_639_1": "dv",
+    "lang_code_iso_639_2": "div",
+    "country_code": "mv",
+    "slug": "dv"
+  },
+  "dzo": {
+    "english_name": "Dzongkha",
+    "native_name": "རྫོང་ཁ",
+    "lang_code_iso_639_1": "dz",
+    "lang_code_iso_639_2": "dzo",
+    "country_code": "bt",
+    "slug": "dzo",
+    "plural_expression": "0"
+  },
+  "ewe": {
+    "english_name": "Ewe",
+    "native_name": "Eʋegbe",
+    "lang_code_iso_639_1": "ee",
+    "lang_code_iso_639_2": "ewe",
+    "country_code": "gh",
+    "slug": "ee"
+  },
+  "el": {
+    "english_name": "Greek",
+    "native_name": "Ελληνικά",
+    "lang_code_iso_639_1": "el",
+    "lang_code_iso_639_2": "ell",
+    "country_code": "gr",
+    "slug": "el",
+    "google_code": "el",
+    "facebook_locale": "el_GR"
+  },
+  "art_xemoji": {
+    "english_name": "Emoji",
+    "lang_code_iso_639_2": "art",
+    "slug": "art-xemoji",
+    "plural_expression": "0"
+  },
+  "en_US": {
+    "english_name": "English",
+    "native_name": "English",
+    "lang_code_iso_639_1": "en",
+    "country_code": "us",
+    "slug": "en",
+    "google_code": "en",
+    "facebook_locale": "en_US"
+  },
+  "en_AU": {
+    "english_name": "English (Australia)",
+    "native_name": "English (Australia)",
+    "lang_code_iso_639_1": "en",
+    "lang_code_iso_639_2": "eng",
+    "country_code": "au",
+    "slug": "en-au",
+    "google_code": "en"
+  },
+  "en_CA": {
+    "english_name": "English (Canada)",
+    "native_name": "English (Canada)",
+    "lang_code_iso_639_1": "en",
+    "lang_code_iso_639_2": "eng",
+    "country_code": "ca",
+    "slug": "en-ca",
+    "google_code": "en"
+  },
+  "en_GB": {
+    "english_name": "English (UK)",
+    "native_name": "English (UK)",
+    "lang_code_iso_639_1": "en",
+    "lang_code_iso_639_2": "eng",
+    "country_code": "gb",
+    "slug": "en-gb",
+    "google_code": "en",
+    "facebook_locale": "en_GB"
+  },
+  "en_NZ": {
+    "english_name": "English (New Zealand)",
+    "native_name": "English (New Zealand)",
+    "lang_code_iso_639_1": "en",
+    "lang_code_iso_639_2": "eng",
+    "country_code": "nz",
+    "slug": "en-nz",
+    "google_code": "en"
+  },
+  "en_ZA": {
+    "english_name": "English (South Africa)",
+    "native_name": "English (South Africa)",
+    "lang_code_iso_639_1": "en",
+    "lang_code_iso_639_2": "eng",
+    "country_code": "za",
+    "slug": "en-za",
+    "google_code": "en"
+  },
+  "eo": {
+    "english_name": "Esperanto",
+    "native_name": "Esperanto",
+    "lang_code_iso_639_1": "eo",
+    "lang_code_iso_639_2": "epo",
+    "slug": "eo",
+    "google_code": "eo",
+    "facebook_locale": "eo_EO"
+  },
+  "es_ES": {
+    "english_name": "Spanish (Spain)",
+    "native_name": "Español",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "es",
+    "slug": "es",
+    "google_code": "es",
+    "facebook_locale": "es_ES"
+  },
+  "es_AR": {
+    "english_name": "Spanish (Argentina)",
+    "native_name": "Español de Argentina",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "ar",
+    "slug": "es-ar",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "es_CL": {
+    "english_name": "Spanish (Chile)",
+    "native_name": "Español de Chile",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "cl",
+    "slug": "es-cl",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "es_CO": {
+    "english_name": "Spanish (Colombia)",
+    "native_name": "Español de Colombia",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "co",
+    "slug": "es-co",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "es_CR": {
+    "english_name": "Spanish (Costa Rica)",
+    "native_name": "Español de Costa Rica",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "cr",
+    "slug": "es-cr",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "es_DO": {
+    "english_name": "Spanish (Dominican Republic)",
+    "native_name": "Español de República Dominicana",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "do",
+    "slug": "es-do",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "es_EC": {
+    "english_name": "Spanish (Ecuador)",
+    "native_name": "Español de Ecuador",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "ec",
+    "slug": "es-ec",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "es_GT": {
+    "english_name": "Spanish (Guatemala)",
+    "native_name": "Español de Guatemala",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "gt",
+    "slug": "es-gt",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "es_HN": {
+    "english_name": "Spanish (Honduras)",
+    "native_name": "Español de Honduras",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "hn",
+    "slug": "es-hn",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "es_MX": {
+    "english_name": "Spanish (Mexico)",
+    "native_name": "Español de México",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "mx",
+    "slug": "es-mx",
+    "google_code": "es",
+    "facebook_locale": "es_MX"
+  },
+  "es_PE": {
+    "english_name": "Spanish (Peru)",
+    "native_name": "Español de Perú",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "pe",
+    "slug": "es-pe",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "es_PR": {
+    "english_name": "Spanish (Puerto Rico)",
+    "native_name": "Español de Puerto Rico",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "pr",
+    "slug": "es-pr",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "es_UY": {
+    "english_name": "Spanish (Uruguay)",
+    "native_name": "Español de Uruguay",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "uy",
+    "slug": "es-uy",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "es_VE": {
+    "english_name": "Spanish (Venezuela)",
+    "native_name": "Español de Venezuela",
+    "lang_code_iso_639_1": "es",
+    "lang_code_iso_639_2": "spa",
+    "country_code": "ve",
+    "slug": "es-ve",
+    "google_code": "es",
+    "facebook_locale": "es_LA"
+  },
+  "et": {
+    "english_name": "Estonian",
+    "native_name": "Eesti",
+    "lang_code_iso_639_1": "et",
+    "lang_code_iso_639_2": "est",
+    "country_code": "ee",
+    "slug": "et",
+    "google_code": "et",
+    "facebook_locale": "et_EE"
+  },
+  "eu": {
+    "english_name": "Basque",
+    "native_name": "Euskara",
+    "lang_code_iso_639_1": "eu",
+    "lang_code_iso_639_2": "eus",
+    "country_code": "es",
+    "slug": "eu",
+    "google_code": "eu",
+    "facebook_locale": "eu_ES"
+  },
+  "fa_IR": {
+    "english_name": "Persian",
+    "native_name": "فارسی",
+    "lang_code_iso_639_1": "fa",
+    "lang_code_iso_639_2": "fas",
+    "slug": "fa",
+    "plural_expression": "n > 1",
+    "google_code": "fa",
+    "facebook_locale": "fa_IR"
+  },
+  "fa_AF": {
+    "english_name": "Persian (Afghanistan)",
+    "native_name": "(فارسی (افغانستان",
+    "lang_code_iso_639_1": "fa",
+    "lang_code_iso_639_2": "fas",
+    "slug": "fa-af",
+    "plural_expression": "n > 1",
+    "google_code": "fa"
+  },
+  "fuc": {
+    "english_name": "Fulah",
+    "native_name": "Pulaar",
+    "lang_code_iso_639_1": "ff",
+    "lang_code_iso_639_2": "fuc",
+    "country_code": "sn",
+    "slug": "fuc"
+  },
+  "fi": {
+    "english_name": "Finnish",
+    "native_name": "Suomi",
+    "lang_code_iso_639_1": "fi",
+    "lang_code_iso_639_2": "fin",
+    "country_code": "fi",
+    "slug": "fi",
+    "google_code": "fi",
+    "facebook_locale": "fi_FI"
+  },
+  "fo": {
+    "english_name": "Faroese",
+    "native_name": "Føroyskt",
+    "lang_code_iso_639_1": "fo",
+    "lang_code_iso_639_2": "fao",
+    "country_code": "fo",
+    "slug": "fo",
+    "facebook_locale": "fo_FO"
+  },
+  "fon": {
+    "english_name": "Fon",
+    "native_name": "fɔ̀ngbè",
+    "lang_code_iso_639_2": "fon",
+    "country_code": "bj",
+    "slug": "fon"
+  },
+  "fr_FR": {
+    "english_name": "French (France)",
+    "native_name": "Français",
+    "lang_code_iso_639_1": "fr",
+    "country_code": "fr",
+    "slug": "fr",
+    "plural_expression": "n > 1",
+    "google_code": "fr",
+    "facebook_locale": "fr_FR"
+  },
+  "fr_BE": {
+    "english_name": "French (Belgium)",
+    "native_name": "Français de Belgique",
+    "lang_code_iso_639_1": "fr",
+    "lang_code_iso_639_2": "fra",
+    "country_code": "be",
+    "slug": "fr-be",
+    "plural_expression": "n > 1"
+  },
+  "fr_CA": {
+    "english_name": "French (Canada)",
+    "native_name": "Français du Canada",
+    "lang_code_iso_639_1": "fr",
+    "lang_code_iso_639_2": "fra",
+    "country_code": "ca",
+    "slug": "fr-ca",
+    "plural_expression": "n > 1",
+    "facebook_locale": "fr_CA"
+  },
+  "frp": {
+    "english_name": "Arpitan",
+    "native_name": "Arpitan",
+    "country_code": "fr",
+    "slug": "frp",
+    "plural_expression": "n > 1"
+  },
+  "fur": {
+    "english_name": "Friulian",
+    "native_name": "Friulian",
+    "lang_code_iso_639_2": "fur",
+    "country_code": "it",
+    "slug": "fur"
+  },
+  "fy": {
+    "english_name": "Frisian",
+    "native_name": "Frysk",
+    "lang_code_iso_639_1": "fy",
+    "lang_code_iso_639_2": "fry",
+    "country_code": "nl",
+    "slug": "fy",
+    "facebook_locale": "fy_NL"
+  },
+  "ga": {
+    "english_name": "Irish",
+    "native_name": "Gaelige",
+    "lang_code_iso_639_1": "ga",
+    "lang_code_iso_639_2": "gle",
+    "country_code": "ie",
+    "slug": "ga",
+    "plural_expression": "(n == 1) ? 0 : ((n == 2) ? 1 : ((n >= 3 && n <= 6) ? 2 : ((n >= 7 && n <= 10) ? 3 : 4)))",
+    "google_code": "ga",
+    "facebook_locale": "ga_IE"
+  },
+  "gax": {
+    "english_name": "Borana-Arsi-Guji Oromo",
+    "native_name": "Afaan Oromoo",
+    "country_code": "et",
+    "slug": "gax",
+    "plural_expression": "n > 1"
+  },
+  "gd": {
+    "english_name": "Scottish Gaelic",
+    "native_name": "Gàidhlig",
+    "lang_code_iso_639_1": "gd",
+    "lang_code_iso_639_2": "gla",
+    "country_code": "gb",
+    "slug": "gd",
+    "plural_expression": "(n == 1 || n == 11) ? 0 : ((n == 2 || n == 12) ? 1 : ((n >= 3 && n <= 10 || n >= 13 && n <= 19) ? 2 : 3))",
+    "google_code": "gd"
+  },
+  "gl_ES": {
+    "english_name": "Galician",
+    "native_name": "Galego",
+    "lang_code_iso_639_1": "gl",
+    "lang_code_iso_639_2": "glg",
+    "country_code": "es",
+    "slug": "gl",
+    "google_code": "gl",
+    "facebook_locale": "gl_ES"
+  },
+  "gu": {
+    "english_name": "Gujarati",
+    "native_name": "ગુજરાતી",
+    "lang_code_iso_639_1": "gu",
+    "lang_code_iso_639_2": "guj",
+    "slug": "gu",
+    "google_code": "gu",
+    "facebook_locale": "gu_IN"
+  },
+  "hat": {
+    "english_name": "Haitian Creole",
+    "native_name": "Kreyol ayisyen",
+    "lang_code_iso_639_1": "ht",
+    "lang_code_iso_639_2": "hat",
+    "country_code": "ht",
+    "slug": "hat"
+  },
+  "hau": {
+    "english_name": "Hausa",
+    "native_name": "Harshen Hausa",
+    "lang_code_iso_639_1": "ha",
+    "lang_code_iso_639_2": "hau",
+    "country_code": "ng",
+    "slug": "hau",
+    "google_code": "ha",
+    "facebook_locale": "ha_NG"
+  },
+  "haw_US": {
+    "english_name": "Hawaiian",
+    "native_name": "Ōlelo Hawaiʻi",
+    "lang_code_iso_639_2": "haw",
+    "country_code": "us",
+    "slug": "haw"
+  },
+  "haz": {
+    "english_name": "Hazaragi",
+    "native_name": "هزاره گی",
+    "country_code": "af",
+    "slug": "haz"
+  },
+  "he_IL": {
+    "english_name": "Hebrew",
+    "native_name": "עִבְרִית",
+    "lang_code_iso_639_1": "he",
+    "country_code": "il",
+    "slug": "he",
+    "google_code": "iw",
+    "facebook_locale": "he_IL"
+  },
+  "hi_IN": {
+    "english_name": "Hindi",
+    "native_name": "हिन्दी",
+    "lang_code_iso_639_1": "hi",
+    "lang_code_iso_639_2": "hin",
+    "country_code": "in",
+    "slug": "hi",
+    "google_code": "hi",
+    "facebook_locale": "hi_IN"
+  },
+  "hr": {
+    "english_name": "Croatian",
+    "native_name": "Hrvatski",
+    "lang_code_iso_639_1": "hr",
+    "lang_code_iso_639_2": "hrv",
+    "country_code": "hr",
+    "slug": "hr",
+    "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
+    "google_code": "hr",
+    "facebook_locale": "hr_HR"
+  },
+  "hsb": {
+    "english_name": "Upper Sorbian",
+    "native_name": "Hornjoserbšćina",
+    "lang_code_iso_639_2": "hsb",
+    "country_code": "de",
+    "slug": "hsb",
+    "plural_expression": "(n % 100 == 1) ? 0 : ((n % 100 == 2) ? 1 : ((n % 100 == 3 || n % 100 == 4) ? 2 : 3))"
+  },
+  "hu_HU": {
+    "english_name": "Hungarian",
+    "native_name": "Magyar",
+    "lang_code_iso_639_1": "hu",
+    "lang_code_iso_639_2": "hun",
+    "country_code": "hu",
+    "slug": "hu",
+    "google_code": "hu",
+    "facebook_locale": "hu_HU"
+  },
+  "hy": {
+    "english_name": "Armenian",
+    "native_name": "Հայերեն",
+    "lang_code_iso_639_1": "hy",
+    "lang_code_iso_639_2": "hye",
+    "country_code": "am",
+    "slug": "hy",
+    "google_code": "hy",
+    "facebook_locale": "hy_AM"
+  },
+  "ibo": {
+    "english_name": "Igbo",
+    "native_name": "Asụsụ Igbo",
+    "lang_code_iso_639_1": "ig",
+    "lang_code_iso_639_2": "ibo",
+    "country_code": "ng",
+    "slug": "ibo",
+    "plural_expression": "0",
+    "google_code": "ig"
+  },
+  "id_ID": {
+    "english_name": "Indonesian",
+    "native_name": "Bahasa Indonesia",
+    "lang_code_iso_639_1": "id",
+    "lang_code_iso_639_2": "ind",
+    "country_code": "id",
+    "slug": "id",
+    "plural_expression": "n > 1",
+    "google_code": "id",
+    "facebook_locale": "id_ID"
+  },
+  "ido": {
+    "english_name": "Ido",
+    "native_name": "Ido",
+    "lang_code_iso_639_1": "io",
+    "lang_code_iso_639_2": "ido",
+    "slug": "ido"
+  },
+  "is_IS": {
+    "english_name": "Icelandic",
+    "native_name": "Íslenska",
+    "lang_code_iso_639_1": "is",
+    "lang_code_iso_639_2": "isl",
+    "country_code": "is",
+    "slug": "is",
+    "plural_expression": "n % 10 != 1 || n % 100 == 11",
+    "google_code": "is",
+    "facebook_locale": "is_IS"
+  },
+  "it_IT": {
+    "english_name": "Italian",
+    "native_name": "Italiano",
+    "lang_code_iso_639_1": "it",
+    "lang_code_iso_639_2": "ita",
+    "country_code": "it",
+    "slug": "it",
+    "google_code": "it",
+    "facebook_locale": "it_IT"
+  },
+  "ja": {
+    "english_name": "Japanese",
+    "native_name": "日本語",
+    "lang_code_iso_639_1": "ja",
+    "country_code": "jp",
+    "slug": "ja",
+    "plural_expression": "0",
+    "google_code": "ja",
+    "facebook_locale": "ja_JP"
+  },
+  "jv_ID": {
+    "english_name": "Javanese",
+    "native_name": "Basa Jawa",
+    "lang_code_iso_639_1": "jv",
+    "lang_code_iso_639_2": "jav",
+    "country_code": "id",
+    "slug": "jv",
+    "google_code": "jw",
+    "facebook_locale": "jv_ID"
+  },
+  "ka_GE": {
+    "english_name": "Georgian",
+    "native_name": "ქართული",
+    "lang_code_iso_639_1": "ka",
+    "lang_code_iso_639_2": "kat",
+    "country_code": "ge",
+    "slug": "ka",
+    "plural_expression": "0",
+    "google_code": "ka",
+    "facebook_locale": "ka_GE"
+  },
+  "kaa": {
+    "english_name": "Karakalpak",
+    "native_name": "Qaraqalpaq tili",
+    "lang_code_iso_639_2": "kaa",
+    "country_code": "uz",
+    "slug": "kaa"
+  },
+  "kab": {
+    "english_name": "Kabyle",
+    "native_name": "Taqbaylit",
+    "lang_code_iso_639_2": "kab",
+    "country_code": "dz",
+    "slug": "kab",
+    "plural_expression": "n > 1"
+  },
+  "kal": {
+    "english_name": "Greenlandic",
+    "native_name": "Kalaallisut",
+    "lang_code_iso_639_1": "kl",
+    "lang_code_iso_639_2": "kal",
+    "country_code": "gl",
+    "slug": "kal"
+  },
+  "kin": {
+    "english_name": "Kinyarwanda",
+    "native_name": "Ikinyarwanda",
+    "lang_code_iso_639_1": "rw",
+    "lang_code_iso_639_2": "kin",
+    "country_code": "rw",
+    "slug": "kin",
+    "facebook_locale": "rw_RW"
+  },
+  "kk": {
+    "english_name": "Kazakh",
+    "native_name": "Қазақ тілі",
+    "lang_code_iso_639_1": "kk",
+    "lang_code_iso_639_2": "kaz",
+    "country_code": "kz",
+    "slug": "kk",
+    "google_code": "kk",
+    "facebook_locale": "kk_KZ"
+  },
+  "km": {
+    "english_name": "Khmer",
+    "native_name": "ភាសាខ្មែរ",
+    "lang_code_iso_639_1": "km",
+    "lang_code_iso_639_2": "khm",
+    "country_code": "kh",
+    "slug": "km",
+    "plural_expression": "0",
+    "google_code": "km",
+    "facebook_locale": "km_KH"
+  },
+  "kmr": {
+    "english_name": "Kurdish (Kurmanji)",
+    "native_name": "Kurdî",
+    "lang_code_iso_639_1": "ku",
+    "country_code": "tr",
+    "slug": "kmr",
+    "facebook_locale": "ku_TR"
+  },
+  "kn": {
+    "english_name": "Kannada",
+    "native_name": "ಕನ್ನಡ",
+    "lang_code_iso_639_1": "kn",
+    "lang_code_iso_639_2": "kan",
+    "country_code": "in",
+    "slug": "kn",
+    "google_code": "kn",
+    "facebook_locale": "kn_IN"
+  },
+  "ko_KR": {
+    "english_name": "Korean",
+    "native_name": "한국어",
+    "lang_code_iso_639_1": "ko",
+    "lang_code_iso_639_2": "kor",
+    "country_code": "kr",
+    "slug": "ko",
+    "plural_expression": "0",
+    "google_code": "ko",
+    "facebook_locale": "ko_KR"
+  },
+  "kir": {
+    "english_name": "Kyrgyz",
+    "native_name": "Кыргызча",
+    "lang_code_iso_639_1": "ky",
+    "lang_code_iso_639_2": "kir",
+    "country_code": "kg",
+    "slug": "kir",
+    "plural_expression": "0",
+    "google_code": "ky"
+  },
+  "lb_LU": {
+    "english_name": "Luxembourgish",
+    "native_name": "Lëtzebuergesch",
+    "lang_code_iso_639_1": "lb",
+    "country_code": "lu",
+    "slug": "lb"
+  },
+  "li": {
+    "english_name": "Limburgish",
+    "native_name": "Limburgs",
+    "lang_code_iso_639_1": "li",
+    "lang_code_iso_639_2": "lim",
+    "country_code": "nl",
+    "slug": "li",
+    "facebook_locale": "li_NL"
+  },
+  "lij": {
+    "english_name": "Ligurian",
+    "native_name": "Lìgure",
+    "country_code": "it",
+    "slug": "lij"
+  },
+  "lin": {
+    "english_name": "Lingala",
+    "native_name": "Ngala",
+    "lang_code_iso_639_1": "ln",
+    "lang_code_iso_639_2": "lin",
+    "country_code": "cd",
+    "slug": "lin",
+    "plural_expression": "n > 1",
+    "facebook_locale": "ln_CD"
+  },
+  "lmo": {
+    "english_name": "Lombard",
+    "native_name": "Lombardo",
+    "country_code": "it",
+    "slug": "lmo"
+  },
+  "lo": {
+    "english_name": "Lao",
+    "native_name": "ພາສາລາວ",
+    "lang_code_iso_639_1": "lo",
+    "lang_code_iso_639_2": "lao",
+    "country_code": "la",
+    "slug": "lo",
+    "plural_expression": "0",
+    "google_code": "lo",
+    "facebook_locale": "lo_LA"
+  },
+  "lt_LT": {
+    "english_name": "Lithuanian",
+    "native_name": "Lietuvių kalba",
+    "lang_code_iso_639_1": "lt",
+    "lang_code_iso_639_2": "lit",
+    "country_code": "lt",
+    "slug": "lt",
+    "plural_expression": "(n % 10 == 1 && (n % 100 < 11 || n % 100 > 19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? 1 : 2)",
+    "google_code": "lt",
+    "facebook_locale": "lt_LT"
+  },
+  "lug": {
+    "english_name": "Luganda",
+    "native_name": "Oluganda",
+    "lang_code_iso_639_1": "lg",
+    "lang_code_iso_639_2": "lug",
+    "country_code": "ug",
+    "slug": "lug"
+  },
+  "lv": {
+    "english_name": "Latvian",
+    "native_name": "Latviešu valoda",
+    "lang_code_iso_639_1": "lv",
+    "lang_code_iso_639_2": "lav",
+    "country_code": "lv",
+    "slug": "lv",
+    "plural_expression": "(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2)",
+    "google_code": "lv",
+    "facebook_locale": "lv_LV"
+  },
+  "mai": {
+    "english_name": "Maithili",
+    "native_name": "मैथिली",
+    "lang_code_iso_639_2": "mai",
+    "country_code": "in",
+    "slug": "mai"
+  },
+  "me_ME": {
+    "english_name": "Montenegrin",
+    "native_name": "Crnogorski jezik",
+    "country_code": "me",
+    "slug": "me",
+    "plural_expression": "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)"
+  },
+  "mfe": {
+    "english_name": "Mauritian Creole",
+    "native_name": "Kreol Morisien",
+    "country_code": "mu",
+    "slug": "mfe",
+    "plural_expression": "0"
+  },
+  "mg_MG": {
+    "english_name": "Malagasy",
+    "native_name": "Malagasy",
+    "lang_code_iso_639_1": "mg",
+    "lang_code_iso_639_2": "mlg",
+    "country_code": "mg",
+    "slug": "mg",
+    "google_code": "mg",
+    "facebook_locale": "mg_MG"
+  },
+  "mk_MK": {
+    "english_name": "Macedonian",
+    "native_name": "Македонски јазик",
+    "lang_code_iso_639_1": "mk",
+    "lang_code_iso_639_2": "mkd",
+    "country_code": "mk",
+    "slug": "mk",
+    "plural_expression": "n % 10 != 1 || n % 100 == 11",
+    "google_code": "mk",
+    "facebook_locale": "mk_MK"
+  },
+  "ml_IN": {
+    "english_name": "Malayalam",
+    "native_name": "മലയാളം",
+    "lang_code_iso_639_1": "ml",
+    "lang_code_iso_639_2": "mal",
+    "country_code": "in",
+    "slug": "ml",
+    "google_code": "ml",
+    "facebook_locale": "ml_IN"
+  },
+  "mlt": {
+    "english_name": "Maltese",
+    "native_name": "Malti",
+    "lang_code_iso_639_1": "mt",
+    "lang_code_iso_639_2": "mlt",
+    "country_code": "mt",
+    "slug": "mlt",
+    "plural_expression": "(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 10) ? 1 : ((n % 100 >= 11 && n % 100 <= 19) ? 2 : 3))",
+    "google_code": "mt",
+    "facebook_locale": "mt_MT"
+  },
+  "mn": {
+    "english_name": "Mongolian",
+    "native_name": "Монгол",
+    "lang_code_iso_639_1": "mn",
+    "lang_code_iso_639_2": "mon",
+    "country_code": "mn",
+    "slug": "mn",
+    "google_code": "mn",
+    "facebook_locale": "mn_MN"
+  },
+  "mr": {
+    "english_name": "Marathi",
+    "native_name": "मराठी",
+    "lang_code_iso_639_1": "mr",
+    "lang_code_iso_639_2": "mar",
+    "slug": "mr",
+    "google_code": "mr",
+    "facebook_locale": "mr_IN"
+  },
+  "mri": {
+    "english_name": "Maori",
+    "native_name": "Te Reo Māori",
+    "lang_code_iso_639_1": "mi",
+    "country_code": "nz",
+    "slug": "mri",
+    "plural_expression": "n > 1",
+    "google_code": "mi"
+  },
+  "ms_MY": {
+    "english_name": "Malay",
+    "native_name": "Bahasa Melayu",
+    "lang_code_iso_639_1": "ms",
+    "lang_code_iso_639_2": "msa",
+    "slug": "ms",
+    "plural_expression": "0",
+    "google_code": "ms",
+    "facebook_locale": "ms_MY"
+  },
+  "my_MM": {
+    "english_name": "Myanmar (Burmese)",
+    "native_name": "ဗမာစာ",
+    "lang_code_iso_639_1": "my",
+    "lang_code_iso_639_2": "mya",
+    "country_code": "mm",
+    "slug": "mya",
+    "google_code": "my"
+  },
+  "ne_NP": {
+    "english_name": "Nepali",
+    "native_name": "नेपाली",
+    "lang_code_iso_639_1": "ne",
+    "lang_code_iso_639_2": "nep",
+    "country_code": "np",
+    "slug": "ne",
+    "google_code": "ne",
+    "facebook_locale": "ne_NP"
+  },
+  "nb_NO": {
+    "english_name": "Norwegian (Bokmål)",
+    "native_name": "Norsk bokmål",
+    "lang_code_iso_639_1": "nb",
+    "lang_code_iso_639_2": "nob",
+    "country_code": "no",
+    "slug": "nb",
+    "google_code": "no",
+    "facebook_locale": "nb_NO"
+  },
+  "nl_NL": {
+    "english_name": "Dutch",
+    "native_name": "Nederlands",
+    "lang_code_iso_639_1": "nl",
+    "lang_code_iso_639_2": "nld",
+    "country_code": "nl",
+    "slug": "nl",
+    "google_code": "nl",
+    "facebook_locale": "nl_NL"
+  },
+  "nl_BE": {
+    "english_name": "Dutch (Belgium)",
+    "native_name": "Nederlands (België)",
+    "lang_code_iso_639_1": "nl",
+    "lang_code_iso_639_2": "nld",
+    "country_code": "be",
+    "slug": "nl-be",
+    "google_code": "nl"
+  },
+  "nn_NO": {
+    "english_name": "Norwegian (Nynorsk)",
+    "native_name": "Norsk nynorsk",
+    "lang_code_iso_639_1": "nn",
+    "lang_code_iso_639_2": "nno",
+    "country_code": "no",
+    "slug": "nn",
+    "google_code": "no",
+    "facebook_locale": "nn_NO"
+  },
+  "nqo": {
+    "english_name": "N’ko",
+    "native_name": "ߒߞߏ",
+    "lang_code_iso_639_2": "nqo",
+    "country_code": "gn",
+    "slug": "nqo"
+  },
+  "oci": {
+    "english_name": "Occitan",
+    "native_name": "Occitan",
+    "lang_code_iso_639_1": "oc",
+    "lang_code_iso_639_2": "oci",
+    "country_code": "fr",
+    "slug": "oci",
+    "plural_expression": "n > 1"
+  },
+  "ory": {
+    "english_name": "Oriya",
+    "native_name": "ଓଡ଼ିଆ",
+    "lang_code_iso_639_1": "or",
+    "lang_code_iso_639_2": "ory",
+    "country_code": "in",
+    "slug": "ory",
+    "facebook_locale": "or_IN"
+  },
+  "os": {
+    "english_name": "Ossetic",
+    "native_name": "Ирон",
+    "lang_code_iso_639_1": "os",
+    "lang_code_iso_639_2": "oss",
+    "slug": "os"
+  },
+  "pa_IN": {
+    "english_name": "Panjabi (India)",
+    "native_name": "ਪੰਜਾਬੀ",
+    "lang_code_iso_639_1": "pa",
+    "lang_code_iso_639_2": "pan",
+    "country_code": "in",
+    "slug": "pa",
+    "plural_expression": "n > 1",
+    "google_code": "pa",
+    "facebook_locale": "pa_IN"
+  },
+  "pa_PK": {
+    "english_name": "Punjabi (Pakistan)",
+    "native_name": "پنجابی",
+    "lang_code_iso_639_1": "pa",
+    "lang_code_iso_639_2": "pan",
+    "country_code": "pk",
+    "slug": "pa-pk",
+    "plural_expression": "n > 1",
+    "google_code": "pa"
+  },
+  "pap_CW": {
+    "english_name": "Papiamento (Curaçao and Bonaire)",
+    "native_name": "Papiamentu",
+    "lang_code_iso_639_2": "pap",
+    "country_code": "cw",
+    "slug": "pap-cw"
+  },
+  "pap_AW": {
+    "english_name": "Papiamento (Aruba)",
+    "native_name": "Papiamento",
+    "lang_code_iso_639_2": "pap",
+    "country_code": "aw",
+    "slug": "pap-aw"
+  },
+  "pcd": {
+    "english_name": "Picard",
+    "native_name": "Ch’ti",
+    "country_code": "fr",
+    "slug": "pcd",
+    "plural_expression": "n > 1"
+  },
+  "pcm": {
+    "english_name": "Nigerian Pidgin",
+    "native_name": "Nigerian Pidgin",
+    "country_code": "ng",
+    "slug": "pcm"
+  },
+  "art_xpirate": {
+    "english_name": "English (Pirate)",
+    "native_name": "English (Pirate)",
+    "lang_code_iso_639_2": "art",
+    "slug": "pirate",
+    "google_code": "xx-pirate",
+    "facebook_locale": "en_PI"
+  },
+  "pl_PL": {
+    "english_name": "Polish",
+    "native_name": "Polski",
+    "lang_code_iso_639_1": "pl",
+    "lang_code_iso_639_2": "pol",
+    "country_code": "pl",
+    "slug": "pl",
+    "plural_expression": "(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
+    "google_code": "pl",
+    "facebook_locale": "pl_PL"
+  },
+  "pt_PT": {
+    "english_name": "Portuguese (Portugal)",
+    "native_name": "Português",
+    "lang_code_iso_639_1": "pt",
+    "country_code": "pt",
+    "slug": "pt",
+    "google_code": "pt-PT",
+    "facebook_locale": "pt_PT"
+  },
+  "pt_PT_ao90": {
+    "english_name": "Portuguese (Portugal, AO90)",
+    "native_name": "Português (AO90)",
+    "lang_code_iso_639_1": "pt",
+    "country_code": "pt",
+    "slug": "pt-ao90",
+    "google_code": "pt-PT"
+  },
+  "pt_AO": {
+    "english_name": "Portuguese (Angola)",
+    "native_name": "Português de Angola",
+    "lang_code_iso_639_1": "pt",
+    "country_code": "ao",
+    "slug": "pt-ao"
+  },
+  "pt_BR": {
+    "english_name": "Portuguese (Brazil)",
+    "native_name": "Português do Brasil",
+    "lang_code_iso_639_1": "pt",
+    "lang_code_iso_639_2": "por",
+    "country_code": "br",
+    "slug": "pt-br",
+    "plural_expression": "n > 1",
+    "google_code": "pt-BR",
+    "facebook_locale": "pt_BR"
+  },
+  "ps": {
+    "english_name": "Pashto",
+    "native_name": "پښتو",
+    "lang_code_iso_639_1": "ps",
+    "lang_code_iso_639_2": "pus",
+    "country_code": "af",
+    "slug": "ps",
+    "facebook_locale": "ps_AF"
+  },
+  "rhg": {
+    "english_name": "Rohingya",
+    "native_name": "Ruáinga",
+    "country_code": "mm",
+    "slug": "rhg",
+    "plural_expression": "0"
+  },
+  "ro_RO": {
+    "english_name": "Romanian",
+    "native_name": "Română",
+    "lang_code_iso_639_1": "ro",
+    "lang_code_iso_639_2": "ron",
+    "country_code": "ro",
+    "slug": "ro",
+    "plural_expression": "(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2)",
+    "google_code": "ro",
+    "facebook_locale": "ro_RO"
+  },
+  "roh": {
+    "english_name": "Romansh",
+    "native_name": "Rumantsch",
+    "lang_code_iso_639_1": "rm",
+    "lang_code_iso_639_2": "roh",
+    "country_code": "ch",
+    "slug": "roh"
+  },
+  "ru_RU": {
+    "english_name": "Russian",
+    "native_name": "Русский",
+    "lang_code_iso_639_1": "ru",
+    "lang_code_iso_639_2": "rus",
+    "country_code": "ru",
+    "slug": "ru",
+    "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
+    "google_code": "ru",
+    "facebook_locale": "ru_RU"
+  },
+  "sah": {
+    "english_name": "Sakha",
+    "native_name": "Сахалыы",
+    "lang_code_iso_639_2": "sah",
+    "country_code": "ru",
+    "slug": "sah"
+  },
+  "sa_IN": {
+    "english_name": "Sanskrit",
+    "native_name": "भारतम्",
+    "lang_code_iso_639_1": "sa",
+    "lang_code_iso_639_2": "san",
+    "country_code": "in",
+    "slug": "sa-in",
+    "facebook_locale": "sa_IN"
+  },
+  "scn": {
+    "english_name": "Sicilian",
+    "native_name": "Sicilianu",
+    "country_code": "it",
+    "slug": "scn"
+  },
+  "si_LK": {
+    "english_name": "Sinhala",
+    "native_name": "සිංහල",
+    "lang_code_iso_639_1": "si",
+    "lang_code_iso_639_2": "sin",
+    "country_code": "lk",
+    "slug": "si",
+    "google_code": "si",
+    "facebook_locale": "si_LK"
+  },
+  "sk_SK": {
+    "english_name": "Slovak",
+    "native_name": "Slovenčina",
+    "lang_code_iso_639_1": "sk",
+    "lang_code_iso_639_2": "slk",
+    "country_code": "sk",
+    "slug": "sk",
+    "plural_expression": "(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2)",
+    "google_code": "sk",
+    "facebook_locale": "sk_SK"
+  },
+  "skr": {
+    "english_name": "Saraiki",
+    "native_name": "سرائیکی",
+    "country_code": "pk",
+    "slug": "skr",
+    "plural_expression": "n > 1"
+  },
+  "sl_SI": {
+    "english_name": "Slovenian",
+    "native_name": "Slovenščina",
+    "lang_code_iso_639_1": "sl",
+    "lang_code_iso_639_2": "slv",
+    "country_code": "si",
+    "slug": "sl",
+    "plural_expression": "(n % 100 == 1) ? 0 : ((n % 100 == 2) ? 1 : ((n % 100 == 3 || n % 100 == 4) ? 2 : 3))",
+    "google_code": "sl",
+    "facebook_locale": "sl_SI"
+  },
+  "sna": {
+    "english_name": "Shona",
+    "native_name": "ChiShona",
+    "lang_code_iso_639_1": "sn",
+    "country_code": "zw",
+    "slug": "sna"
+  },
+  "snd": {
+    "english_name": "Sindhi",
+    "native_name": "سنڌي",
+    "lang_code_iso_639_1": "sd",
+    "lang_code_iso_639_2": "snd",
+    "country_code": "pk",
+    "slug": "snd"
+  },
+  "so_SO": {
+    "english_name": "Somali",
+    "native_name": "Afsoomaali",
+    "lang_code_iso_639_1": "so",
+    "lang_code_iso_639_2": "som",
+    "country_code": "so",
+    "slug": "so",
+    "google_code": "so",
+    "facebook_locale": "so_SO"
+  },
+  "sq": {
+    "english_name": "Albanian",
+    "native_name": "Shqip",
+    "lang_code_iso_639_1": "sq",
+    "lang_code_iso_639_2": "sqi",
+    "country_code": "al",
+    "slug": "sq",
+    "google_code": "sq",
+    "facebook_locale": "sq_AL"
+  },
+  "sq_XK": {
+    "english_name": "Shqip (Kosovo)",
+    "native_name": "Për Kosovën Shqip",
+    "lang_code_iso_639_1": "sq",
+    "country_code": "xk",
+    "slug": "sq-xk"
+  },
+  "sr_RS": {
+    "english_name": "Serbian",
+    "native_name": "Српски језик",
+    "lang_code_iso_639_1": "sr",
+    "lang_code_iso_639_2": "srp",
+    "country_code": "rs",
+    "slug": "sr",
+    "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
+    "google_code": "sr",
+    "facebook_locale": "sr_RS"
+  },
+  "srd": {
+    "english_name": "Sardinian",
+    "native_name": "Sardu",
+    "lang_code_iso_639_1": "sc",
+    "lang_code_iso_639_2": "srd",
+    "country_code": "it",
+    "slug": "srd",
+    "facebook_locale": "sc_IT"
+  },
+  "ssw": {
+    "english_name": "Swati",
+    "native_name": "SiSwati",
+    "lang_code_iso_639_1": "ss",
+    "lang_code_iso_639_2": "ssw",
+    "country_code": "sz",
+    "slug": "ssw"
+  },
+  "su_ID": {
+    "english_name": "Sundanese",
+    "native_name": "Basa Sunda",
+    "lang_code_iso_639_1": "su",
+    "lang_code_iso_639_2": "sun",
+    "country_code": "id",
+    "slug": "su",
+    "plural_expression": "0",
+    "google_code": "su"
+  },
+  "sv_SE": {
+    "english_name": "Swedish",
+    "native_name": "Svenska",
+    "lang_code_iso_639_1": "sv",
+    "lang_code_iso_639_2": "swe",
+    "country_code": "se",
+    "slug": "sv",
+    "google_code": "sv",
+    "facebook_locale": "sv_SE"
+  },
+  "sw": {
+    "english_name": "Swahili",
+    "native_name": "Kiswahili",
+    "lang_code_iso_639_1": "sw",
+    "lang_code_iso_639_2": "swa",
+    "slug": "sw",
+    "google_code": "sw",
+    "facebook_locale": "sw_KE"
+  },
+  "syr": {
+    "english_name": "Syriac",
+    "native_name": "Syriac",
+    "country_code": "iq",
+    "slug": "syr"
+  },
+  "szl": {
+    "english_name": "Silesian",
+    "native_name": "Ślōnskŏ gŏdka",
+    "country_code": "pl",
+    "slug": "szl",
+    "plural_expression": "(n==1 ? 0 : n%10>=2 && n%10<=4 && n%100==20 ? 1 : 2)",
+    "facebook_locale": "sz_PL"
+  },
+  "ta_IN": {
+    "english_name": "Tamil",
+    "native_name": "தமிழ்",
+    "lang_code_iso_639_1": "ta",
+    "lang_code_iso_639_2": "tam",
+    "country_code": "in",
+    "slug": "ta",
+    "google_code": "ta",
+    "facebook_locale": "ta_IN"
+  },
+  "ta_LK": {
+    "english_name": "Tamil (Sri Lanka)",
+    "native_name": "தமிழ்",
+    "lang_code_iso_639_1": "ta",
+    "lang_code_iso_639_2": "tam",
+    "country_code": "lk",
+    "slug": "ta-lk",
+    "google_code": "ta"
+  },
+  "tah": {
+    "english_name": "Tahitian",
+    "native_name": "Reo Tahiti",
+    "lang_code_iso_639_1": "ty",
+    "lang_code_iso_639_2": "tah",
+    "country_code": "pf",
+    "slug": "tah",
+    "plural_expression": "n > 1"
+  },
+  "te": {
+    "english_name": "Telugu",
+    "native_name": "తెలుగు",
+    "lang_code_iso_639_1": "te",
+    "lang_code_iso_639_2": "tel",
+    "slug": "te",
+    "google_code": "te",
+    "facebook_locale": "te_IN"
+  },
+  "tg": {
+    "english_name": "Tajik",
+    "native_name": "Тоҷикӣ",
+    "lang_code_iso_639_1": "tg",
+    "lang_code_iso_639_2": "tgk",
+    "country_code": "tj",
+    "slug": "tg",
+    "google_code": "tg",
+    "facebook_locale": "tg_TJ"
+  },
+  "th": {
+    "english_name": "Thai",
+    "native_name": "ไทย",
+    "lang_code_iso_639_1": "th",
+    "lang_code_iso_639_2": "tha",
+    "slug": "th",
+    "plural_expression": "0",
+    "google_code": "th",
+    "facebook_locale": "th_TH"
+  },
+  "tir": {
+    "english_name": "Tigrinya",
+    "native_name": "ትግርኛ",
+    "lang_code_iso_639_1": "ti",
+    "lang_code_iso_639_2": "tir",
+    "country_code": "er",
+    "slug": "tir",
+    "plural_expression": "0"
+  },
+  "tl": {
+    "english_name": "Tagalog",
+    "native_name": "Tagalog",
+    "lang_code_iso_639_1": "tl",
+    "lang_code_iso_639_2": "tgl",
+    "country_code": "ph",
+    "slug": "tl",
+    "google_code": "tl",
+    "facebook_locale": "tl_PH"
+  },
+  "tr_TR": {
+    "english_name": "Turkish",
+    "native_name": "Türkçe",
+    "lang_code_iso_639_1": "tr",
+    "lang_code_iso_639_2": "tur",
+    "country_code": "tr",
+    "slug": "tr",
+    "plural_expression": "n > 1",
+    "google_code": "tr",
+    "facebook_locale": "tr_TR"
+  },
+  "tt_RU": {
+    "english_name": "Tatar",
+    "native_name": "Татар теле",
+    "lang_code_iso_639_1": "tt",
+    "lang_code_iso_639_2": "tat",
+    "country_code": "ru",
+    "slug": "tt",
+    "plural_expression": "0",
+    "facebook_locale": "tt_RU"
+  },
+  "tuk": {
+    "english_name": "Turkmen",
+    "native_name": "Türkmençe",
+    "lang_code_iso_639_1": "tk",
+    "lang_code_iso_639_2": "tuk",
+    "country_code": "tm",
+    "slug": "tuk",
+    "plural_expression": "n > 1",
+    "facebook_locale": "tk_TM"
+  },
+  "twd": {
+    "english_name": "Tweants",
+    "native_name": "Twents",
+    "country_code": "nl",
+    "slug": "twd"
+  },
+  "tzm": {
+    "english_name": "Tamazight (Central Atlas)",
+    "native_name": "ⵜⴰⵎⴰⵣⵉⵖⵜ",
+    "lang_code_iso_639_2": "tzm",
+    "country_code": "ma",
+    "slug": "tzm",
+    "plural_expression": "n > 1"
+  },
+  "ug_CN": {
+    "english_name": "Uighur",
+    "native_name": "ئۇيغۇرچە",
+    "lang_code_iso_639_1": "ug",
+    "lang_code_iso_639_2": "uig",
+    "country_code": "cn",
+    "slug": "ug"
+  },
+  "uk": {
+    "english_name": "Ukrainian",
+    "native_name": "Українська",
+    "lang_code_iso_639_1": "uk",
+    "lang_code_iso_639_2": "ukr",
+    "country_code": "ua",
+    "slug": "uk",
+    "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
+    "google_code": "uk",
+    "facebook_locale": "uk_UA"
+  },
+  "ur": {
+    "english_name": "Urdu",
+    "native_name": "اردو",
+    "lang_code_iso_639_1": "ur",
+    "lang_code_iso_639_2": "urd",
+    "country_code": "pk",
+    "slug": "ur",
+    "google_code": "ur",
+    "facebook_locale": "ur_PK"
+  },
+  "uz_UZ": {
+    "english_name": "Uzbek",
+    "native_name": "O‘zbekcha",
+    "lang_code_iso_639_1": "uz",
+    "lang_code_iso_639_2": "uzb",
+    "country_code": "uz",
+    "slug": "uz",
+    "plural_expression": "0",
+    "google_code": "uz",
+    "facebook_locale": "uz_UZ"
+  },
+  "vec": {
+    "english_name": "Venetian",
+    "native_name": "Vèneto",
+    "lang_code_iso_639_2": "roa",
+    "country_code": "it",
+    "slug": "vec"
+  },
+  "vi": {
+    "english_name": "Vietnamese",
+    "native_name": "Tiếng Việt",
+    "lang_code_iso_639_1": "vi",
+    "lang_code_iso_639_2": "vie",
+    "country_code": "vn",
+    "slug": "vi",
+    "plural_expression": "0",
+    "google_code": "vi",
+    "facebook_locale": "vi_VN"
+  },
+  "wol": {
+    "english_name": "Wolof",
+    "native_name": "Wolof",
+    "lang_code_iso_639_1": "wo",
+    "lang_code_iso_639_2": "wol",
+    "country_code": "sn",
+    "slug": "wol",
+    "plural_expression": "0"
+  },
+  "xho": {
+    "english_name": "Xhosa",
+    "native_name": "isiXhosa",
+    "lang_code_iso_639_1": "xh",
+    "lang_code_iso_639_2": "xho",
+    "country_code": "za",
+    "slug": "xho",
+    "google_code": "xh",
+    "facebook_locale": "xh_ZA"
+  },
+  "yor": {
+    "english_name": "Yoruba",
+    "native_name": "Yorùbá",
+    "lang_code_iso_639_1": "yo",
+    "lang_code_iso_639_2": "yor",
+    "country_code": "ng",
+    "slug": "yor",
+    "google_code": "yo",
+    "facebook_locale": "yo_NG"
+  },
+  "zgh": {
+    "english_name": "Tamazight",
+    "native_name": "ⵜⴰⵎⴰⵣⵉⵖⵜ",
+    "lang_code_iso_639_2": "zgh",
+    "country_code": "ma",
+    "slug": "zgh",
+    "plural_expression": "n >= 2 && (n < 11 || n > 99)"
+  },
+  "zh_CN": {
+    "english_name": "Chinese (China)",
+    "native_name": "简体中文",
+    "lang_code_iso_639_1": "zh",
+    "lang_code_iso_639_2": "zho",
+    "country_code": "cn",
+    "slug": "zh-cn",
+    "plural_expression": "0",
+    "google_code": "zh-CN",
+    "facebook_locale": "zh_CN"
+  },
+  "zh_HK": {
+    "english_name": "Chinese (Hong Kong)",
+    "native_name": "香港中文版\t",
+    "lang_code_iso_639_1": "zh",
+    "lang_code_iso_639_2": "zho",
+    "country_code": "hk",
+    "slug": "zh-hk",
+    "plural_expression": "0",
+    "facebook_locale": "zh_HK"
+  },
+  "zh_SG": {
+    "english_name": "Chinese (Singapore)",
+    "native_name": "中文",
+    "lang_code_iso_639_1": "zh",
+    "lang_code_iso_639_2": "zho",
+    "country_code": "sg",
+    "slug": "zh-sg",
+    "plural_expression": "0"
+  },
+  "zh_TW": {
+    "english_name": "Chinese (Taiwan)",
+    "native_name": "繁體中文",
+    "lang_code_iso_639_1": "zh",
+    "lang_code_iso_639_2": "zho",
+    "country_code": "tw",
+    "slug": "zh-tw",
+    "plural_expression": "0",
+    "google_code": "zh-TW",
+    "facebook_locale": "zh_TW"
+  },
+  "zul": {
+    "english_name": "Zulu",
+    "native_name": "isiZulu",
+    "lang_code_iso_639_1": "zu",
+    "lang_code_iso_639_2": "zul",
+    "country_code": "za",
+    "slug": "zul",
+    "google_code": "zu"
+  }
+}
