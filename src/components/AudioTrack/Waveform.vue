@@ -51,21 +51,29 @@
     <!-- Timestamps -->
     <template v-if="isReady">
       <div
-        class="progress absolute top-1 font-bold text-sm bg-yellow z-10 px-1 transform -translate-x-full pointer-events-none"
+        ref="progressTimestampEl"
+        class="progress timestamp z-10 bg-yellow transform"
+        :class="[
+          ...(isProgressTimestampCutoff
+            ? ['bg-dark-charcoal-04-opaque']
+            : ['bg-yellow', '-translate-x-full']),
+        ]"
         :style="{ '--progress-time-left': `${progressBarWidth}px` }"
       >
         {{ timeFmt(progressTimestamp) }}
       </div>
       <div
         v-if="seekFrac"
-        class="seek absolute top-1 font-bold text-sm px-1 transform -translate-x-full pointer-events-none"
+        ref="seekTimestampEl"
+        class="seek timestamp transform"
+        :class="{ '-translate-x-full': !isSeekTimestampCutoff }"
         :style="{ '--seek-time-left': `${seekBarWidth}px` }"
       >
         {{ timeFmt(seekTimestamp) }}
       </div>
       <div
         v-if="showDuration"
-        class="duration absolute top-1 right-0 px-1 font-bold text-sm pointer-events-none"
+        class="duration timestamp right-0 bg-dark-charcoal-04-opaque"
       >
         {{ timeFmt(duration) }}
       </div>
@@ -227,9 +235,19 @@ export default {
       const frac = isDragging.value ? seekFrac.value : currentFrac.value
       return waveformWidth.value * frac
     })
+
+    /* Progress timestamp */
+
+    const progressTimestampEl = ref(null)
     const progressTimestamp = computed(() =>
       isDragging.value ? seekTimestamp.value : props.currentTime
     )
+    const isProgressTimestampCutoff = computed(() => {
+      if (!progressTimestampEl.value) return false
+      const barWidth = progressBarWidth.value
+      const timestampWidth = progressTimestampEl.value.offsetWidth
+      return barWidth < timestampWidth + 2
+    })
 
     /* Seek bar */
 
@@ -238,7 +256,17 @@ export default {
       const frac = seekFrac.value ?? currentFrac.value
       return waveformWidth.value * frac
     })
+
+    /* Seek timestamp */
+
+    const seekTimestampEl = ref(null)
     const seekTimestamp = computed(() => seekFrac.value * props.duration)
+    const isSeekTimestampCutoff = computed(() => {
+      if (!seekTimestampEl.value) return false
+      const barWidth = seekBarWidth.value
+      const timestampWidth = seekTimestampEl.value.offsetWidth
+      return barWidth < timestampWidth + 2
+    })
 
     /* Seeking */
 
@@ -316,10 +344,14 @@ export default {
 
       progressBarWidth,
       progressTimestamp,
+      progressTimestampEl,
+      isProgressTimestampCutoff,
 
       seekFrac,
       seekBarWidth,
       seekTimestamp,
+      seekTimestampEl,
+      isSeekTimestampCutoff,
 
       handleMouseDown,
       handleMouseMove,
@@ -343,6 +375,10 @@ export default {
 </script>
 
 <style scoped lang="css">
+.timestamp {
+  @apply absolute top-1 font-bold text-sm px-1 pointer-events-none;
+}
+
 .progress {
   left: var(--progress-time-left);
 }
@@ -351,7 +387,7 @@ export default {
   left: var(--seek-time-left);
 }
 
-.duration {
+.bg-dark-charcoal-04-opaque {
   /* opaque equivalent of dark-charcoal-04 on top of white */
   background-color: rgb(247, 246, 247);
 }
