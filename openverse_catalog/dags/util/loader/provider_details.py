@@ -25,6 +25,7 @@ WALTERS_DEFAULT_PROVIDER = 'waltersartmuseum'
 FINNISH_DEFAULT_PROVIDER = 'finnishmuseums'
 JAMENDO_DEFAULT_PROVIDER = 'jamendo'
 STOCKSNAP_DEFAULT_PROVIDER = 'stocksnap'
+HEALTHCHECK_DEFAULT_PROVIDER = 'healthcheck'
 
 # Finnish parameters
 FINNISH_SUB_PROVIDERS = {
