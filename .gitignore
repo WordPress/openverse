@@ -9,3 +9,6 @@ env/
 # Editor/IDE configs
 .idea/
 .vscode/
+
+# Node
+node_modules

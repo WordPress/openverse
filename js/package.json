@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@octokit/rest": "^18.9.0",
+    "node-fetch": "^2.6.1"
+  }
+}
