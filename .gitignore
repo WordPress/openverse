@@ -25,4 +25,3 @@ vercel.json
 
 src/locales/*.json
 !src/locales/en.json
-src/loceles/sripts/validLocales.json
