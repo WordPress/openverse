@@ -13,4 +13,3 @@ fi
 
 # Lint staged files
 npx lint-staged
-
