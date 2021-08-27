@@ -168,7 +168,7 @@ msgstr ""`
 
 const potFile = `${POT_FILE_META}${potTime(json)}`
 try {
-  const fileName = '../poFiles/test.pot'
+  const fileName = process.cwd() + '/src/locales/poFiles/openverse.pot'
   fs.writeFileSync(fileName, potFile)
   console.log(`Successfully wrote pot file to ${fileName}`)
 } catch (err) {
