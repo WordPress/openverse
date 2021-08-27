@@ -1,5 +1,7 @@
 export default () => {
   return {
+    fallbackLocale: 'en',
+    silentFallbackWarn: true,
     pluralizationRules: {
       /**
        * @param choice {number} a choice index given by the input to $tc: `$tc('path.to.rule', choiceIndex)`

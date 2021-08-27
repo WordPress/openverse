@@ -1,0 +1,98 @@
+[
+  {
+    "code": "en",
+    "name": "English",
+    "iso": "en",
+    "file": "en.json"
+  },
+  {
+    "code": "en-au",
+    "name": "English (Australia)",
+    "iso": "en-ENG",
+    "file": "en-au.json"
+  },
+  {
+    "code": "en-gb",
+    "name": "English (UK)",
+    "iso": "en-ENG",
+    "file": "en-gb.json"
+  },
+  {
+    "code": "en-za",
+    "name": "English (South Africa)",
+    "iso": "en-ENG",
+    "file": "en-za.json"
+  },
+  {
+    "code": "es",
+    "name": "Spanish (Spain)",
+    "iso": "es-SPA",
+    "file": "es.json"
+  },
+  {
+    "code": "es-co",
+    "name": "Spanish (Colombia)",
+    "iso": "es-SPA",
+    "file": "es-co.json"
+  },
+  {
+    "code": "es-ec",
+    "name": "Spanish (Ecuador)",
+    "iso": "es-SPA",
+    "file": "es-ec.json"
+  },
+  {
+    "code": "es-ve",
+    "name": "Spanish (Venezuela)",
+    "iso": "es-SPA",
+    "file": "es-ve.json"
+  },
+  {
+    "code": "fr",
+    "name": "French (France)",
+    "iso": "fr",
+    "file": "fr.json"
+  },
+  {
+    "code": "ja",
+    "name": "Japanese",
+    "iso": "ja",
+    "file": "ja.json"
+  },
+  {
+    "code": "nl",
+    "name": "Dutch",
+    "iso": "nl-NLD",
+    "file": "nl.json"
+  },
+  {
+    "code": "ro",
+    "name": "Romanian",
+    "iso": "ro-RON",
+    "file": "ro.json"
+  },
+  {
+    "code": "ru",
+    "name": "Russian",
+    "iso": "ru-RUS",
+    "file": "ru.json"
+  },
+  {
+    "code": "sq",
+    "name": "Albanian",
+    "iso": "sq-SQI",
+    "file": "sq.json"
+  },
+  {
+    "code": "sv",
+    "name": "Swedish",
+    "iso": "sv-SWE",
+    "file": "sv.json"
+  },
+  {
+    "code": "zh-cn",
+    "name": "Chinese (China)",
+    "iso": "zh-ZHO",
+    "file": "zh-cn.json"
+  }
+]

@@ -1,0 +1,344 @@
+{
+  "header": {
+    "notification": {
+      "text": null,
+      "okay": null,
+      "dismiss": null
+    },
+    "source": null,
+    "donation-banner": {
+      "no": null,
+      "yes": null,
+      "description": null,
+      "alternative-description": null
+    },
+    "api": null,
+    "resources-tab": null,
+    "about-tab": null,
+    "licenses": null,
+    "aria": {
+      "sr-search": null,
+      "menu": null,
+      "primary": null
+    },
+    "support": null
+  },
+  "filters": {
+    "creator": null,
+    "license-types": {
+      "commercial": null,
+      "modification": null
+    },
+    "license-explanation": null,
+    "mature": {
+      "enable": null
+    },
+    "licenses": {
+      "pdm": null,
+      "cc0": null,
+      "by": null,
+      "by-nc-nd": null,
+      "by-nc-sa": null,
+      "by-nd": null,
+      "by-nc": null,
+      "by-sa": null
+    },
+    "filter-by": null,
+    "sizes": {
+      "large": null,
+      "medium": null,
+      "small": null
+    },
+    "aspect-ratios": {
+      "square": null,
+      "wide": null,
+      "tall": null
+    },
+    "extensions": {
+      "svg": null,
+      "gif": null,
+      "png": null,
+      "jpg": null
+    },
+    "categories": {
+      "digitized-artwork": null,
+      "illustration": null,
+      "photograph": null
+    }
+  },
+  "browsers": {
+    "edge": "Edge",
+    "opera": "Opera",
+    "firefox": "Firefox",
+    "chrome": "Chrome"
+  },
+  "hero": {
+    "caption": {
+      "link": null,
+      "content": null
+    },
+    "search": {
+      "placeholder": null,
+      "button": null
+    },
+    "title": null,
+    "license-filter": {
+      "label": null
+    },
+    "locale": {
+      "icon": null
+    },
+    "subtitle": null,
+    "brand": null
+  },
+  "meta-search": {
+    "form": {
+      "supported-title": null,
+      "unsupported-title": null
+    },
+    "card": {
+      "checkboxes": {
+        "modify": "Modify or adapt"
+      }
+    }
+  },
+  "": {
+    "sources": null,
+    "error": null,
+    "feedback": null,
+    "extension": null,
+    "meta-search": null,
+    "search-guide": null,
+    "about": null
+  },
+  "photo-details": {
+    "aria": {
+      "related": "related images",
+      "share": {
+        "pinterest": "share on pinterest",
+        "twitter": "share on twitter",
+        "facebook": "share on facebook"
+      },
+      "details": "image details",
+      "close-form": null
+    },
+    "reuse": {
+      "attribution": {
+        "main": null
+      },
+      "copy-license": {
+        "plain": null,
+        "html": null,
+        "rich": null
+      },
+      "credit": {
+        "copy-text": null,
+        "terms-text": null,
+        "view-legal-text": null,
+        "licensed": null,
+        "marked": null,
+        "creator-text": null
+      },
+      "tool-header": null,
+      "license-header": null
+    },
+    "content-report": {
+      "dmca": {
+        "thanks": null
+      },
+      "submit": null,
+      "copyright": null,
+      "issue-description": null
+    },
+    "back": null,
+    "copy": null,
+    "related-images": null,
+    "legal-disclaimer": null,
+    "weblink": null,
+    "survey": {
+      "answer": null
+    },
+    "share": null,
+    "information": {
+      "pixels": null,
+      "tags": null,
+      "dimensions": null,
+      "type": null
+    }
+  },
+  "meta-search-page": {
+    "license": null,
+    "new": {
+      "email": null
+    },
+    "intro": null,
+    "why": {
+      "aria-label": null,
+      "feedback-link": null
+    },
+    "audio-video": {
+      "filter": null
+    },
+    "images": {
+      "info": null,
+      "not-finding": null,
+      "continue": null
+    },
+    "use": null,
+    "content-types": null
+  },
+  "sources": {
+    "cc-content": {
+      "provider": null,
+      "flickr": null,
+      "smithsonian": null,
+      "europeana-api": null,
+      "europeana-link": null,
+      "europeana": null,
+      "where": null
+    },
+    "new-content": {
+      "next": null,
+      "total-items": null,
+      "reuse": null,
+      "impact": null,
+      "integrate": null
+    },
+    "issue-button": null,
+    "suggestions": null,
+    "providers": {
+      "item": null,
+      "domain": null
+    },
+    "single-name": null,
+    "detail": null
+  },
+  "collections": {
+    "other": null,
+    "collection-size": null,
+    "museum": null
+  },
+  "browse-page": {
+    "aria": {
+      "remove-filter": null,
+      "scroll": null
+    },
+    "license-description": {
+      "sa": null,
+      "nd": null,
+      "nc": null
+    },
+    "search-form": {
+      "collection-placeholder": null
+    },
+    "other-source": null,
+    "load": null,
+    "no-more": null,
+    "image-result-count-more": null,
+    "audio-result-count-more": null,
+    "all-result-count-more": null,
+    "image-result-count": null,
+    "audio-result-count": null,
+    "all-result-count": null
+  },
+  "search-guide": {
+    "combine": {
+      "aria-labels": {
+        "close": null,
+        "vertical-bar": null,
+        "plus": null,
+        "minus": null,
+        "star": null,
+        "open": null
+      },
+      "fuzziness": null,
+      "precedence": null,
+      "prefix": null,
+      "negate": null,
+      "or": null,
+      "and": null
+    },
+    "example": {
+      "fuzziness": {
+        "link-text": null
+      },
+      "negate": {
+        "operator-aria-label": null,
+        "operator-name": null
+      }
+    },
+    "exact": {
+      "claude-monet": null
+    }
+  },
+  "filter-list": {
+    "show": null,
+    "clear": null,
+    "hide": null
+  },
+  "search-tab": {
+    "video": null,
+    "audio": null,
+    "image": null
+  },
+  "error": {
+    "image-not-found": null,
+    "occurred": null,
+    "not-found": null
+  },
+  "extension": {
+    "conclusion": null,
+    "features": {
+      "search": {
+        "heading": null
+      }
+    }
+  },
+  "feedback": {
+    "report": null,
+    "improve": null,
+    "aria": {
+      "cc-usability": null
+    },
+    "loading": null,
+    "description": {
+      "making-wordpress": null,
+      "openverse": null
+    }
+  },
+  "footer": {
+    "navigation": {
+      "terms": null,
+      "contact": null,
+      "policies": null,
+      "privacy": null
+    },
+    "donate": {
+      "help": null,
+      "work": null
+    },
+    "caption": {
+      "icons": null,
+      "attribution": null,
+      "noted": null
+    }
+  },
+  "about": {
+    "planning": {
+      "community": null,
+      "meta": null,
+      "working": null,
+      "catalog": null
+    },
+    "aria": {
+      "projects": null
+    },
+    "transfer": {
+      "wordpress": null,
+      "creative-commons": null
+    },
+    "collection": {
+      "common-crawl": null
+    }
+  }
+}

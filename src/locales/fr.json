@@ -1,0 +1,344 @@
+{
+  "header": {
+    "notification": {
+      "text": "Exemple de texte de notification",
+      "okay": "OK",
+      "dismiss": "Ignorer"
+    },
+    "source": "Sources",
+    "donation-banner": {
+      "no": "Pas aujourd‘hui",
+      "yes": "Oui, je fais un don maintenant",
+      "description": "Si vous donnez 5 dollars aujourd‘hui et que tout le monde fait de même, nous pourrons continuer à développer notre base de données de contenu librement réutilisable. Pour vous. Pour nous tous.",
+      "alternative-description": "Uniquement 1% des personnes qui lisent ceci feront un don. Soyez l‘une d‘entre elles et aidez-nous à faire vivre Openverse."
+    },
+    "api": "API",
+    "resources-tab": "Ressources",
+    "about-tab": "À propos",
+    "licenses": "Les licences",
+    "aria": {
+      "sr-search": "Bouton de recherche sr",
+      "menu": "menu",
+      "primary": "principal"
+    },
+    "support": "Soutenez-nous"
+  },
+  "filters": {
+    "creator": "Créateur·ice",
+    "license-types": {
+      "commercial": "Utilisation commerciale",
+      "modification": "Modifier ou adapter"
+    },
+    "license-explanation": "Détails concernant la licence",
+    "mature": {
+      "enable": "Activer le contenu adulte"
+    },
+    "licenses": {
+      "pdm": "Marque du domaine public",
+      "cc0": "CC0",
+      "by": "BY",
+      "by-nc-nd": "BY-NC-ND",
+      "by-nc-sa": "BY-NC-SA",
+      "by-nd": "BY-ND",
+      "by-nc": "BY-NC",
+      "by-sa": "BY-SA"
+    },
+    "filter-by": "Filtrer par",
+    "sizes": {
+      "large": "Grande",
+      "medium": "Moyenne",
+      "small": "Petite"
+    },
+    "aspect-ratios": {
+      "square": "Carré",
+      "wide": "Extra large",
+      "tall": "Grande"
+    },
+    "extensions": {
+      "svg": "SVG",
+      "gif": "GIF",
+      "png": "PNG",
+      "jpg": "JPEG"
+    },
+    "categories": {
+      "digitized-artwork": "Travail artistique numérisé",
+      "illustration": "Illustrations",
+      "photograph": "Photographies"
+    }
+  },
+  "browsers": {
+    "edge": "Edge",
+    "opera": "Opera",
+    "firefox": "Firefox",
+    "chrome": "Chrome"
+  },
+  "hero": {
+    "caption": {
+      "link": "En savoir plus",
+      "content": "Tout notre contenu est sous licence Creative Commons ou dans le domaine public. {link} à propos des licences et outils CC."
+    },
+    "search": {
+      "placeholder": "Rechercher dans tout le contenu",
+      "button": "Rechercher"
+    },
+    "title": "Rechercher du contenu à réutiliser",
+    "license-filter": {
+      "label": "Je cherche quelque chose que je puisse"
+    },
+    "locale": {
+      "icon": "locale"
+    },
+    "subtitle": "Parcourez plus de 500 millions d‘images, disponibles à être réutilisés",
+    "brand": "Openverse"
+  },
+  "meta-search": {
+    "form": {
+      "supported-title": null,
+      "unsupported-title": null
+    },
+    "card": {
+      "checkboxes": {
+        "modify": "Modifier ou adapter"
+      }
+    }
+  },
+  "": {
+    "sources": "tableau des sources",
+    "error": "Erreur lors de l’extraction des images :",
+    "feedback": "Retours",
+    "extension": "Extension web",
+    "meta-search": "Recherche par métadonnées",
+    "search-guide": "Guide de recherche",
+    "about": "Notre Histoire"
+  },
+  "photo-details": {
+    "aria": {
+      "related": "Images similaires",
+      "share": {
+        "pinterest": "Partager sur Pinterest",
+        "twitter": "Partager sur Twitter",
+        "facebook": "Partager sur Facebook"
+      },
+      "details": "Détails de l’image",
+      "close-form": "fermer le formulaire"
+    },
+    "reuse": {
+      "attribution": {
+        "main": null
+      },
+      "copy-license": {
+        "plain": "Texte brut",
+        "html": "HTML",
+        "rich": "Texte enrichi"
+      },
+      "credit": {
+        "copy-text": "une copie de la licence,",
+        "terms-text": "les conditions,",
+        "view-legal-text": ". Pour voir {terms-copy} visitez ###URL###",
+        "licensed": "est sous licence",
+        "marked": "est marqué comme",
+        "creator-text": null
+      },
+      "tool-header": "Domaine public",
+      "license-header": "Licence"
+    },
+    "content-report": {
+      "dmca": {
+        "thanks": "Merci d’avoir envoyé un signalement concernant les résultats proposés par Openverse !"
+      },
+      "submit": "Valider",
+      "copyright": "Enfreint le copyright",
+      "issue-description": "Veuillez nous décrire le problème"
+    },
+    "back": "Retourner aux résultats de recherche",
+    "copy": "Copier",
+    "related-images": "Images similaires",
+    "legal-disclaimer": null,
+    "weblink": "Aller sur le site de l’image",
+    "survey": {
+      "answer": "en répondant à quelques questions."
+    },
+    "share": "Partager",
+    "information": {
+      "pixels": "pixels",
+      "tags": "Étiquettes",
+      "dimensions": "Dimensions :",
+      "type": "Type :"
+    }
+  },
+  "meta-search-page": {
+    "license": null,
+    "new": {
+      "email": "e-mail"
+    },
+    "intro": null,
+    "why": {
+      "aria-label": "retour",
+      "feedback-link": "retour"
+    },
+    "audio-video": {
+      "filter": null
+    },
+    "images": {
+      "info": null,
+      "not-finding": null,
+      "continue": null
+    },
+    "use": "Utilisation",
+    "content-types": null
+  },
+  "sources": {
+    "cc-content": {
+      "provider": null,
+      "flickr": "Flickr",
+      "smithsonian": "Institut Smithsonian",
+      "europeana-api": "API Europeana",
+      "europeana-link": "Europeana",
+      "europeana": null,
+      "where": "D‘où provient le contenu d‘Openverse ?"
+    },
+    "new-content": {
+      "next": "Comment décidons-nous des prochaines sources à ajouter ?",
+      "total-items": null,
+      "reuse": null,
+      "impact": null,
+      "integrate": null
+    },
+    "issue-button": "Suggérer une nouvelle source",
+    "suggestions": "Les suggestions de nouvelles sources par notre communauté d’utilisatrices et d’utilisateurs sont les bienvenues.",
+    "providers": {
+      "item": "Total d‘éléments",
+      "domain": "Domaine"
+    },
+    "single-name": "Source",
+    "detail": null
+  },
+  "collections": {
+    "other": "Autres collections",
+    "collection-size": "Taille de la collection : {count} images",
+    "museum": "Pièces de musée"
+  },
+  "browse-page": {
+    "aria": {
+      "remove-filter": "Retirer le filtre",
+      "scroll": "Retour en haut"
+    },
+    "license-description": {
+      "sa": "Partagez vos adaptations dans les mêmes conditions.",
+      "nd": "Les dérivés et adaptations ne sont pas permis.",
+      "nc": "Usages non commerciaux uniquement."
+    },
+    "search-form": {
+      "collection-placeholder": "Rechercher dans cette collection"
+    },
+    "other-source": "Vous ne trouvez pas ce que vous cherchez ? Recherchez d‘autres sources",
+    "load": "Charger plus de résultats",
+    "no-more": "Aucune autre image :(",
+    "image-result-count-more": null,
+    "audio-result-count-more": null,
+    "all-result-count-more": null,
+    "image-result-count": null,
+    "audio-result-count": null,
+    "all-result-count": null
+  },
+  "search-guide": {
+    "combine": {
+      "aria-labels": {
+        "close": "fermer la parenthèse",
+        "vertical-bar": "symbole de barre verticale",
+        "plus": "symbole plus",
+        "minus": "symbole moins",
+        "star": "symbole astérisque",
+        "open": "ouvrir une parenthèse"
+      },
+      "fuzziness": null,
+      "precedence": null,
+      "prefix": null,
+      "negate": null,
+      "or": null,
+      "and": null
+    },
+    "example": {
+      "fuzziness": {
+        "link-text": null
+      },
+      "negate": {
+        "operator-aria-label": "opérateur moins (pour ne PAS inclure un terme)",
+        "operator-name": "opérateur (pour ne PAS inclure un terme)"
+      }
+    },
+    "exact": {
+      "claude-monet": "« Claude Monet » "
+    }
+  },
+  "filter-list": {
+    "show": "Afficher les résultats",
+    "clear": "Effacer les filtres",
+    "hide": "Masquer les filtres"
+  },
+  "search-tab": {
+    "video": "Vidéo",
+    "audio": "Son",
+    "image": "Image"
+  },
+  "error": {
+    "image-not-found": "Impossible de trouver l‘image avec l‘ID {id}",
+    "occurred": "Une erreur s’est produite",
+    "not-found": "Page introuvable"
+  },
+  "extension": {
+    "conclusion": "Disposez de votre contenu préféré tout en naviguant sur le web",
+    "features": {
+      "search": {
+        "heading": "Recherchez et filtrez du contenu sous licence ouverte et du contenu du domaine public"
+      }
+    }
+  },
+  "feedback": {
+    "report": "Signaler un bogue",
+    "improve": "Aidez-nous à nous améliorer",
+    "aria": {
+      "cc-usability": "canal Slack cc-usability"
+    },
+    "loading": "Chargement…",
+    "description": {
+      "making-wordpress": "Making WordPress",
+      "openverse": "#openverse"
+    }
+  },
+  "footer": {
+    "navigation": {
+      "terms": "Conditions",
+      "contact": "Contact",
+      "policies": "Politiques",
+      "privacy": "Confidentialité"
+    },
+    "donate": {
+      "help": "Aidez-nous à garder internet libre et ouvert.",
+      "work": "Notre travail repose sur vous !"
+    },
+    "caption": {
+      "icons": "Icônes par Font Awesome.",
+      "attribution": "Licence internationale Creative Commons Attribution 4.0",
+      "noted": "annoté"
+    }
+  },
+  "about": {
+    "planning": {
+      "community": "les contributions de la communauté sont les bienvenues",
+      "meta": "Recherche par métadonnées",
+      "working": "nous travaillons actuellement sur",
+      "catalog": "Catalogue d‘Openverse"
+    },
+    "aria": {
+      "projects": "Projets Openverse"
+    },
+    "transfer": {
+      "wordpress": "WordPress",
+      "creative-commons": "Creative Commons"
+    },
+    "collection": {
+      "common-crawl": "Recherche commune"
+    }
+  }
+}
