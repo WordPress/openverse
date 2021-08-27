@@ -369,9 +369,12 @@
     "show": "Show results"
   },
   "browse-page": {
-    "all-result-count": "no results|{localeCount} result|{localeCount} results",
-    "audio-result-count": "no audio results|{localeCount} audio result|{localeCount} audio results",
-    "image-result-count": "no image results|{localeCount} image result|{localeCount} image results",
+    "all-no-results": "no results",
+    "audio-no-results": "no audio results",
+    "image-no-results": "no image results",
+    "all-result-count": "{localeCount} result|{localeCount} results",
+    "audio-result-count": "{localeCount} audio result|{localeCount} audio results",
+    "image-result-count": "{localeCount} image result|{localeCount} image results",
     "all-result-count-more": "Over {localeCount} results",
     "audio-result-count-more": "Over {localeCount} audio results",
     "image-result-count-more": "Over {localeCount} image results",
