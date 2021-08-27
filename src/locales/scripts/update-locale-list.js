@@ -42,7 +42,8 @@ getLocalesData()
     const wpLocalePattern = /wp_locale *= *'(.*)';/
     rawLocalesData.forEach((rawData) => {
       const wpLocaleMatch = rawData.match(wpLocalePattern)
-      if (wpLocaleMatch) {
+      // ugly check to exclude English from the locales list, so we don't overwrite `en.json` later.
+      if (wpLocaleMatch && wpLocaleMatch[1] !== 'en_US') {
         const wpLocale = wpLocaleMatch[1]
         locales[wpLocale] = {}
         Object.keys(propertyRePatterns).forEach((key) => {
@@ -54,8 +55,9 @@ getLocalesData()
         })
       }
     })
+
     try {
-      const fileName = 'localesList.json'
+      const fileName = process.cwd() + '/src/locales/scripts/localesList.json'
       fs.writeFileSync(fileName, JSON.stringify(locales, null, 2))
       console.log(`Successfully wrote locales list file to ${fileName}`)
     } catch (err) {

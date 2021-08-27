@@ -1,27 +1,180 @@
 {
+  "photo-details": {
+    "content-report": {
+      "dmca": {
+        "thanks": "¡Gracias por informar de un problema con los resultados de Openverse!"
+      },
+      "submit": "Enviar",
+      "copyright": "Infringe derechos de autor",
+      "issue-description": "Por favor, descríbenos el problema"
+    },
+    "aria": {
+      "related": "imágenes relacionadas",
+      "share": {
+        "pinterest": "compartir en pinterest",
+        "twitter": "compartir en twitter",
+        "facebook": "compartir en facebook"
+      },
+      "details": "detalles de la imagen",
+      "close-form": "cerrar formulario"
+    },
+    "reuse": {
+      "attribution": {
+        "main": "Esta imagen fue marcada con una licencia {link}."
+      },
+      "copy-license": {
+        "plain": "Texto plano",
+        "html": "HTML",
+        "rich": "Texto enriquecido"
+      },
+      "credit": {
+        "copy-text": "una copia de esta licencia,",
+        "terms-text": "los términos,",
+        "view-legal-text": ". Para ver los {terms-copy} visita {URL}",
+        "licensed": "está bajo la licencia",
+        "marked": "está marcado con",
+        "creator-text": "por {creator-name}"
+      },
+      "tool-header": "Dominio público",
+      "license-header": "Licencia"
+    },
+    "back": "Volver a los resultados de búsqueda",
+    "copy": "Copiar",
+    "related-images": "Imágenes relacionadas",
+    "legal-disclaimer": "Openverse agrega datos de repositorios de contenido abierto disponibles públicamente. Openverse no aloja el contenido y no verifica que el contenido tenga la debida licencia CC o que la información de atribución sea precisa o completa. Por favor, sigue el enlace a la fuente del contenido para verificarlo de forma independiente antes de reutilizarlo.",
+    "weblink": "Ir a la web de la imagen",
+    "survey": {
+      "answer": "respondiendo unas pocas preguntas."
+    },
+    "share": "Compartir",
+    "information": {
+      "pixels": "píxeles",
+      "tags": "Etiquetas",
+      "dimensions": "Dimensiones:",
+      "type": "Tipo:"
+    }
+  },
+  "sources": {
+    "providers": {
+      "source": "Fuente",
+      "item": "Total de elementos",
+      "domain": "Dominio"
+    },
+    "cc-content": {
+      "provider": "Algunos proveedores tienen varias agrupaciones diferentes de contenido dentro de ellos. {flickr} tiene fuentes que van desde la NASA hasta la fotografía personal. El ###smithsonian### comprende una docena de colecciones diversas. Wikimedia Commons abarca toda la gama de contenidos y es utilizado por varias galerías, bibliotecas, archivos y museos para destacar algunas o todas sus colecciones digitalizadas.",
+      "flickr": "Flickr",
+      "smithsonian": "Instituto Smithsonian",
+      "europeana-api": "API de Euroepeana",
+      "europeana-link": "Europeana",
+      "europeana": "Openverse agradece especialmente el trabajo de {link}, una organización que trabaja para digitalizar y hacer localizables las obras del patrimonio cultural en toda Europa. Openverse es capaz de indexar cientos de valiosas fuentes, a través de una única integración con la ###link-api###.",
+      "where": "¿De dónde proceden los contenidos de Openverse?"
+    },
+    "new-content": {
+      "next": "¿Cómo decidimos cuáles serán las siguientes fuentes a añadir?",
+      "total-items": "¿Cuántos nuevos elementos totales o nuevos tipos de elementos podemos aportar a nuestros usuarios a través de esta integración? Algunas fuentes son integraciones directas, mientras que otras pueden ser una fuente dentro de otra fuente.",
+      "reuse": "¿Se muestra claramente la información sobre la licencia y la atribución para permitir una reutilización segura?",
+      "impact": " ¿Cuál es el impacto o la importancia de esta fuente para nuestros usuarios? Si existe dentro de un proveedor como Wikimedia Commons, ¿es valioso para nuestros usuarios poder filtrar por esta fuente directamente?",
+      "integrate": "Tenemos una lista interminable de posibles fuentes para investigar antes de la integración. Nos hacemos preguntas como:"
+    },
+    "issue-button": "Sugiere una nueva fuente",
+    "suggestions": "Apreciamos sugerencias de nuevas fuentes por parte de nuestra comunidad de usuarios.",
+    "single-name": "Origen",
+    "detail": "Hacer clic en un {single-name} te permite navegar y filtrar elementos dentro de esa fuente."
+  },
+  "browse-page": {
+    "search-rating": {
+      "no": "No",
+      "yes": "Sí",
+      "feedback-thanks": "¡Gracias por tu opinión!"
+    },
+    "fetching-error": "Error al recuperar imágenes:",
+    "aria": {
+      "remove-filter": "quitar filtro",
+      "scroll": "scroll al inicio"
+    },
+    "license-description": {
+      "sa": "Comparte las adaptaciones bajo los mismos términos.",
+      "nd": "No se permiten derivados ni adaptaciones.",
+      "nc": "Solo para uso no comercial."
+    },
+    "search-form": {
+      "collection-placeholder": "Busca en esta colección"
+    },
+    "other-source": "¿No encuentras lo que necesitas? Busca en otras fuentes",
+    "load": "Cargar más resultados",
+    "no-more": "No hay más imágenes :(",
+    "image-result-count-more": "Más de {localeCount} resultados de imágenes",
+    "audio-result-count-more": "Más de {localeCount} resultados de audio",
+    "all-result-count-more": "Más de {localeCount} resultados",
+    "image-result-count": "ningún resultado de imágenes|{localeCount} resultado de imágenes|{localeCount} resultados de imágenes",
+    "audio-result-count": "ningún resultado de audio|{localeCount} resultado de audio|{localeCount} resultados de audio",
+    "all-result-count": "ningún resultado|{localeCount} resultado|{localeCount} resultados"
+  },
+  "about": {
+    "description": "Si quieres combinar términos, puedes usar los siguientes operadores para realizar consultas más complejas",
+    "aria": {
+      "sources-table": "tabla de fuentes",
+      "projects": "Proyectos de Openverse"
+    },
+    "planning": {
+      "api": "API de Openverse",
+      "community": "las contribuciones a la comunidad son bienvenidas",
+      "meta": "Búsqueda meta",
+      "working": "actualmente estamos trabajando en",
+      "catalog": "Catálogo de Openverse"
+    },
+    "transfer": {
+      "wordpress": "WordPress",
+      "creative-commons": "Creative Commons"
+    },
+    "collection": {
+      "common-crawl": "Rastreo Common"
+    }
+  },
+  "meta-search-page": {
+    "why": {
+      "feedback-suggestions": "Esperamos que disfrutes y, si tienes sugerencias para mejorar, déjanos tu {feedback}.",
+      "aria-label": "sugerencias",
+      "feedback-link": "sugerencias"
+    },
+    "license": "¡Internet es un lugar enorme! Hay muchos portales de búsqueda y colecciones que albergan contenido con licencia CC y de dominio público, que no podemos indexar ni mostrar resultados en la interfaz de Openverse. Estas son fuentes importantes de contenido con licencia CC y de dominio público, y queremos asegurarnos de que puedas encontrar los mejores materiales con licencia abierta posibles, independientemente de dónde se encuentren.",
+    "new": {
+      "email": "correo electrónico"
+    },
+    "intro": "Openverse está basado en un catálogo que indexa contenidos con licencia CC y de dominio público de fuentes seleccionadas. Más información sobre nuestro {link}.",
+    "audio-video": {
+      "filter": "La barra de filtros de la izquierda incluye el filtro {use}, que puede ser admitido por algunas fuentes de búsqueda meta. Aplícalos antes de hacer clic en el botón de la fuente externa en la que quieres buscar."
+    },
+    "images": {
+      "info": "Cuando hagas clic en «¿No encuentras lo que necesitas?» se cargará una ventana emergente con otras fuentes de contenido con licencia CC y de dominio público. Tu consulta de búsqueda se cargará previamente y, si es compatible, puedes seleccionar un filtro {use} para filtrar los resultados de forma proactiva. Haz clic en el botón de la fuente externa que quieras buscar y los resultados se abrirán en una nueva pestaña.",
+      "not-finding": "Haz clic en el enlace que dice «¿No encuentras lo que necesitas?» por debajo de los resultados de imágenes.",
+      "continue": "Carga más resultados y sigue navegando en Openverse."
+    },
+    "use": "Uso",
+    "content-types": "La búsqueda meta en Openverse actualmente es compatible con búsqueda de imágenes, audio y vídeo en sitios externos. "
+  },
   "header": {
+    "api-nav-item": "API",
+    "licenses-nav-item": "Las licencias",
+    "extension-nav-item": "Extensión web",
+    "support-nav-item": "Apóyanos",
+    "feedback-nav-item": "Opinión",
+    "meta-search-nav-item": "Búsqueda meta",
+    "search-guide-nav-item": "Guía de búsqueda",
+    "source-nav-item": "Fuentes",
+    "about-nav-item": "Nuestra historia",
     "notification": {
-      "text": "Texto de ejemplo de aviso",
+      "text": "{example_notification_text}",
       "okay": "Aceptar",
       "dismiss": "Descartar"
     },
-    "source": "Fuentes",
-    "donation-banner": {
-      "no": "Hoy no",
-      "yes": "Sí, donaré ahora",
-      "description": "Si donas 5$ hoy, y todo el mundo hace lo mismo, podemos seguir haciendo crecer nuestra base de datos de contenido libremente reutilizable. Para ti. Para todos nosotros.",
-      "alternative-description": "Solo el 1% de la gente que lee esto hará una donación. Sé uno de ellos y ayúdanos a sostener Openverse."
-    },
-    "api": "API",
     "resources-tab": "Recursos",
     "about-tab": "Acerca de",
-    "licenses": "Las licencias",
     "aria": {
       "sr-search": "botón de búsqueda sr",
       "menu": "menú",
       "primary": "principal"
-    },
-    "support": "Apóyanos"
+    }
   },
   "filters": {
     "creator": "Creador",
@@ -102,144 +255,10 @@
       }
     }
   },
-  "": {
-    "sources": "tabla de fuentes",
-    "error": "Error al recuperar imágenes:",
-    "feedback": "Sugerencias",
-    "extension": "Extensión web",
-    "meta-search": "Búsqueda meta",
-    "search-guide": "Guía de búsqueda",
-    "about": "Nuestra historia"
-  },
-  "photo-details": {
-    "aria": {
-      "related": "imágenes relacionadas",
-      "share": {
-        "pinterest": "compartir en pinterest",
-        "twitter": "compartir en twitter",
-        "facebook": "compartir en facebook"
-      },
-      "details": "detalles de la imagen",
-      "close-form": "cerrar formulario"
-    },
-    "reuse": {
-      "attribution": {
-        "main": "Esta imagen fue marcada con una licencia {link}."
-      },
-      "copy-license": {
-        "plain": "Texto plano",
-        "html": "HTML",
-        "rich": "Texto enriquecido"
-      },
-      "credit": {
-        "copy-text": "una copia de esta licencia,",
-        "terms-text": "los términos,",
-        "view-legal-text": ". Para ver los {terms-copy}visit ###URL###",
-        "licensed": "está bajo la licencia",
-        "marked": "está marcado con",
-        "creator-text": "por {creator-name}"
-      },
-      "tool-header": "Dominio público",
-      "license-header": "Licencia"
-    },
-    "content-report": {
-      "dmca": {
-        "thanks": "¡Gracias por informar de un problema con los resultados de Openverse!"
-      },
-      "submit": "Enviar",
-      "copyright": "Infringe derechos de autor",
-      "issue-description": "Por favor, descríbenos el problema"
-    },
-    "back": "Volver a los resultados de búsqueda",
-    "copy": "Copiar",
-    "related-images": "Imágenes relacionadas",
-    "legal-disclaimer": "Openverse agrega datos de repositorios de contenido abierto disponibles públicamente. Openverse no aloja el contenido y no verifica que el contenido tenga la debida licencia CC o que la información de atribución sea precisa o completa. Por favor, sigue el enlace a la fuente del contenido para verificarlo de forma independiente antes de reutilizarlo.",
-    "weblink": "Ir a la web de la imagen",
-    "survey": {
-      "answer": "respondiendo unas pocas preguntas."
-    },
-    "share": "Compartir",
-    "information": {
-      "pixels": "píxeles",
-      "tags": "Etiquetas",
-      "dimensions": "Dimensiones:",
-      "type": "Tipo:"
-    }
-  },
-  "meta-search-page": {
-    "license": "¡Internet es un lugar enorme! Hay muchos portales de búsqueda y colecciones que albergan contenido con licencia CC y de dominio público, que no podemos indexar ni mostrar resultados en la interfaz de Openverse. Estas son fuentes importantes de contenido con licencia CC y de dominio público, y queremos asegurarnos de que puedas encontrar los mejores materiales con licencia abierta posibles, independientemente de dónde se encuentren.",
-    "new": {
-      "email": "correo electrónico"
-    },
-    "intro": "Openverse está basado en un catálogo que indexa contenidos con licencia CC y de dominio público de fuentes seleccionadas. Más información sobre nuestro {link}.",
-    "why": {
-      "aria-label": "sugerencias",
-      "feedback-link": "sugerencias"
-    },
-    "audio-video": {
-      "filter": "La barra de filtros de la izquierda incluye el filtro {use}, que puede ser admitido por algunas fuentes de búsqueda meta. Aplícalos antes de hacer clic en el botón de la fuente externa en la que quieres buscar."
-    },
-    "images": {
-      "info": "Cuando hagas clic en «¿No encuentras lo que necesitas?» se cargará una ventana emergente con otras fuentes de contenido con licencia CC y de dominio público. Tu consulta de búsqueda se cargará previamente y, si es compatible, puedes seleccionar un filtro {use} para filtrar los resultados de forma proactiva. Haz clic en el botón de la fuente externa que quieras buscar y los resultados se abrirán en una nueva pestaña.",
-      "not-finding": "Haz clic en el enlace que dice «¿No encuentras lo que necesitas?» por debajo de los resultados de imágenes.",
-      "continue": "Carga más resultados y sigue navegando en Openverse."
-    },
-    "use": "Uso",
-    "content-types": "La búsqueda meta en Openverse actualmente es compatible con búsqueda de imágenes, audio y vídeo en sitios externos. "
-  },
-  "sources": {
-    "cc-content": {
-      "provider": "Algunos proveedores tienen varias agrupaciones diferentes de contenido dentro de ellos. {flickr} tiene fuentes que van desde la NASA hasta la fotografía personal. El ###smithsonian### comprende una docena de colecciones diversas. Wikimedia Commons abarca toda la gama de contenidos y es utilizado por varias galerías, bibliotecas, archivos y museos para destacar algunas o todas sus colecciones digitalizadas.",
-      "flickr": "Flickr",
-      "smithsonian": "Instituto Smithsonian",
-      "europeana-api": "API de Euroepeana",
-      "europeana-link": "Europeana",
-      "europeana": "Openverse agradece especialmente el trabajo de {link}, una organización que trabaja para digitalizar y hacer localizables las obras del patrimonio cultural en toda Europa. Openverse es capaz de indexar cientos de valiosas fuentes, a través de una única integración con la ###link-api###.",
-      "where": "¿De dónde proceden los contenidos de Openverse?"
-    },
-    "new-content": {
-      "next": "¿Cómo decidimos cuáles serán las siguientes fuentes a añadir?",
-      "total-items": "¿Cuántos nuevos elementos totales o nuevos tipos de elementos podemos aportar a nuestros usuarios a través de esta integración? Algunas fuentes son integraciones directas, mientras que otras pueden ser una fuente dentro de otra fuente.",
-      "reuse": "¿Se muestra claramente la información sobre la licencia y la atribución para permitir una reutilización segura?",
-      "impact": " ¿Cuál es el impacto o la importancia de esta fuente para nuestros usuarios? Si existe dentro de un proveedor como Wikimedia Commons, ¿es valioso para nuestros usuarios poder filtrar por esta fuente directamente?",
-      "integrate": "Tenemos una lista interminable de posibles fuentes para investigar antes de la integración. Nos hacemos preguntas como:"
-    },
-    "issue-button": "Sugiere una nueva fuente",
-    "suggestions": "Apreciamos sugerencias de nuevas fuentes por parte de nuestra comunidad de usuarios.",
-    "providers": {
-      "item": "Total de elementos",
-      "domain": "Dominio"
-    },
-    "single-name": "Origen",
-    "detail": "Hacer clic en un {single-name} te permite navegar y filtrar elementos de esa fuente."
-  },
   "collections": {
     "other": "Otras colecciones",
     "collection-size": "Tamaño de la colección: {count} imágenes",
     "museum": "Colecciones del museo"
-  },
-  "browse-page": {
-    "aria": {
-      "remove-filter": "quitar filtro",
-      "scroll": "scroll al inicio"
-    },
-    "license-description": {
-      "sa": "Comparte las adaptaciones bajo los mismos términos.",
-      "nd": "No se permiten derivados ni adaptaciones.",
-      "nc": "Solo para uso no comercial."
-    },
-    "search-form": {
-      "collection-placeholder": "Busca en esta colección"
-    },
-    "other-source": "¿No encuentras lo que necesitas? Busca en otras fuentes",
-    "load": "Cargar más resultados",
-    "no-more": "No hay más imágenes :(",
-    "image-result-count-more": "Más de {localeCount} resultados de imágenes",
-    "audio-result-count-more": "Más de {localeCount} resultados de audio",
-    "all-result-count-more": "Más de {localeCount} resultados",
-    "image-result-count": "ningún resultado de imágenes|{localeCount} resultado de imágenes|###localeCount### resultados de imágenes",
-    "audio-result-count": "ningún resultado de audio|{localeCount} resultado de audio|###localeCount### resultados de audio",
-    "all-result-count": "ningún resultado|{localeCount} resultado|###localeCount### resultados"
   },
   "search-guide": {
     "combine": {
@@ -321,24 +340,6 @@
       "icons": "Iconos de Font Awesome.",
       "attribution": "Licencia internacional Creative Commons Attribution 4.0",
       "noted": "anotado"
-    }
-  },
-  "about": {
-    "planning": {
-      "community": "las contribuciones a la comunidad son bienvenidas",
-      "meta": "Búsqueda meta",
-      "working": "actualmente estamos trabajando en",
-      "catalog": "Catálogo de Openverse"
-    },
-    "aria": {
-      "projects": "Proyectos de Openverse"
-    },
-    "transfer": {
-      "wordpress": "WordPress",
-      "creative-commons": "Creative Commons"
-    },
-    "collection": {
-      "common-crawl": "Rastreo Common"
     }
   }
 }

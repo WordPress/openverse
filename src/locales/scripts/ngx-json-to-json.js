@@ -25,7 +25,9 @@ const set = require('lodash/set')
  */
 function ngxJsonToJson(ngxObject) {
   const result = {}
-  Object.entries(ngxObject).forEach(([key, value]) => set(result, key, value))
+  Object.entries(ngxObject).forEach(
+    ([key, value]) => value && set(result, key, value)
+  )
   return result
 }
 

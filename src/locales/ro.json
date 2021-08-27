@@ -1,27 +1,17 @@
 {
   "header": {
     "notification": {
-      "text": "Exemplu de text pentru notificare",
+      "text": "{example_notification_text}",
       "okay": "OK",
       "dismiss": "Respinge"
     },
-    "source": "Surse",
-    "donation-banner": {
-      "no": "Nu azi",
-      "yes": "Da, voi dona acum",
-      "description": "Dacă donezi 5$ astăzi și toți ceilalți fac la fel, putem continua să ne dezvoltăm baza de date cu conținut gratuit reutilizabil. Pentru tine. Pentru noi toți.",
-      "alternative-description": "Doar 1% dintre persoanele care citesc asta vor dona. Fii unul dintre ei și ajută-ne să susținem Openverse."
-    },
-    "api": "API",
     "resources-tab": "Resurse",
     "about-tab": "Despre",
-    "licenses": "Licențele",
     "aria": {
       "sr-search": "buton de căutare sr",
       "menu": "meniu",
       "primary": "principal"
-    },
-    "support": "Susține-ne"
+    }
   },
   "filters": {
     "creator": "Creator",
@@ -29,12 +19,7 @@
       "commercial": "Folosi comercial",
       "modification": "Modifica sau adapta"
     },
-    "license-explanation": null,
-    "mature": {
-      "enable": "Activează conținutul matur"
-    },
     "licenses": {
-      "pdm": null,
       "cc0": "CC0",
       "by": "BY",
       "by-nc-nd": "BY-NC-ND",
@@ -44,6 +29,9 @@
       "by-sa": "BY-SA"
     },
     "filter-by": "Filtrează după",
+    "mature": {
+      "enable": "Activează conținutul matur"
+    },
     "sizes": {
       "large": "Mare",
       "medium": "Mediu",
@@ -61,7 +49,6 @@
       "jpg": "JPEG"
     },
     "categories": {
-      "digitized-artwork": null,
       "illustration": "Ilustrații",
       "photograph": "Fotografii"
     }
@@ -92,24 +79,11 @@
     "brand": "Openverse"
   },
   "meta-search": {
-    "form": {
-      "supported-title": null,
-      "unsupported-title": null
-    },
     "card": {
       "checkboxes": {
         "modify": "Modifica sau adapta"
       }
     }
-  },
-  "": {
-    "sources": null,
-    "error": null,
-    "feedback": "Impresii",
-    "extension": "Extensie web",
-    "meta-search": "Căutare meta",
-    "search-guide": "Ghid de căutare",
-    "about": "Povestea noastră"
   },
   "photo-details": {
     "aria": {
@@ -119,157 +93,51 @@
         "twitter": "partajează pe twitter",
         "facebook": "partajează pe facebook"
       },
-      "details": "detalii imagine",
-      "close-form": null
-    },
-    "reuse": {
-      "attribution": {
-        "main": null
-      },
-      "copy-license": {
-        "plain": "Text simplu",
-        "html": "HTML",
-        "rich": "Text îmbogățit"
-      },
-      "credit": {
-        "copy-text": null,
-        "terms-text": null,
-        "view-legal-text": null,
-        "licensed": null,
-        "marked": null,
-        "creator-text": null
-      },
-      "tool-header": "Domeniu public",
-      "license-header": "Licență"
+      "details": "detalii imagine"
     },
     "content-report": {
-      "dmca": {
-        "thanks": null
-      },
-      "submit": "Trimite",
-      "copyright": null,
-      "issue-description": null
+      "submit": "Trimite"
     },
-    "back": null,
     "copy": "Copiază",
     "related-images": "Imagini similare",
-    "legal-disclaimer": null,
-    "weblink": null,
-    "survey": {
-      "answer": null
-    },
     "share": "Partajează",
     "information": {
       "pixels": "pixeli",
       "tags": "Etichete",
       "dimensions": "Dimensiuni:",
       "type": "Tip:"
+    },
+    "reuse": {
+      "copy-license": {
+        "plain": "Text simplu",
+        "html": "HTML",
+        "rich": "Text îmbogățit"
+      },
+      "tool-header": "Domeniu public",
+      "license-header": "Licență"
     }
   },
+  "collections": {
+    "other": "Alte colecții",
+    "collection-size": "Dimensiunea colecției: {count} de imagini"
+  },
   "meta-search-page": {
-    "license": null,
     "new": {
+      "issue": "problemă",
       "email": "email"
     },
-    "intro": null,
     "why": {
       "aria-label": "impresii",
       "feedback-link": "impresii"
     },
-    "audio-video": {
-      "filter": null
-    },
-    "images": {
-      "info": null,
-      "not-finding": null,
-      "continue": null
-    },
-    "use": " Utilizează ",
-    "content-types": null
-  },
-  "sources": {
-    "cc-content": {
-      "provider": null,
-      "flickr": "Flickr",
-      "smithsonian": "Institutul Smithsonian",
-      "europeana-api": "API Europeana",
-      "europeana-link": "Europeana",
-      "europeana": null,
-      "where": null
-    },
-    "new-content": {
-      "next": null,
-      "total-items": null,
-      "reuse": null,
-      "impact": null,
-      "integrate": null
-    },
-    "issue-button": "Sugerează o sursă nouă",
-    "suggestions": null,
-    "providers": {
-      "item": "Total elemente",
-      "domain": "Domeniu"
-    },
-    "single-name": "Sursă",
-    "detail": null
-  },
-  "collections": {
-    "other": "Alte colecții",
-    "collection-size": "Dimensiunea colecției: {count} de imagini",
-    "museum": null
+    "use": " Utilizează "
   },
   "browse-page": {
     "aria": {
       "remove-filter": "înlătură filtrul",
       "scroll": "derulează în sus"
     },
-    "license-description": {
-      "sa": null,
-      "nd": null,
-      "nc": null
-    },
-    "search-form": {
-      "collection-placeholder": null
-    },
-    "other-source": null,
-    "load": null,
-    "no-more": null,
-    "image-result-count-more": null,
-    "audio-result-count-more": null,
-    "all-result-count-more": null,
-    "image-result-count": null,
-    "audio-result-count": null,
-    "all-result-count": "niciun rezultat|{localeCount} rezultat|###localeCount### rezultate"
-  },
-  "search-guide": {
-    "combine": {
-      "aria-labels": {
-        "close": null,
-        "vertical-bar": null,
-        "plus": null,
-        "minus": null,
-        "star": null,
-        "open": null
-      },
-      "fuzziness": null,
-      "precedence": null,
-      "prefix": null,
-      "negate": null,
-      "or": null,
-      "and": null
-    },
-    "example": {
-      "fuzziness": {
-        "link-text": null
-      },
-      "negate": {
-        "operator-aria-label": null,
-        "operator-name": null
-      }
-    },
-    "exact": {
-      "claude-monet": null
-    }
+    "all-result-count": "niciun rezultat|{localeCount} rezultat|{localeCount} rezultate"
   },
   "filter-list": {
     "show": "Arată rezultatele",
@@ -286,25 +154,30 @@
     "occurred": "A apărut o eroare",
     "not-found": "Pagină negăsită"
   },
-  "extension": {
-    "conclusion": null,
-    "features": {
-      "search": {
-        "heading": null
-      }
-    }
-  },
   "feedback": {
     "report": "Raportează o eroare",
     "improve": "Ajută-ne să îmbunătățim",
-    "aria": {
-      "cc-usability": null
-    },
     "loading": "Încarc...",
     "description": {
-      "making-wordpress": null,
       "openverse": "#openverse"
     }
+  },
+  "search-guide": {
+    "example": "câine+pisică"
+  },
+  "sources": {
+    "issue-button": "Sugerează o sursă nouă",
+    "cc-content": {
+      "flickr": "Flickr",
+      "smithsonian": "Institutul Smithsonian",
+      "europeana-api": "API Europeana",
+      "europeana-link": "Europeana"
+    },
+    "providers": {
+      "item": "Total elemente",
+      "domain": "Domeniu"
+    },
+    "single-name": "Sursă"
   },
   "footer": {
     "navigation": {
@@ -324,14 +197,13 @@
     }
   },
   "about": {
+    "aria": {
+      "projects": "Proiecte Openverse"
+    },
     "planning": {
-      "community": null,
       "meta": "Căutare meta",
       "working": "în prezent lucrăm la",
       "catalog": "Catalog Openverse"
-    },
-    "aria": {
-      "projects": "Proiecte Openverse"
     },
     "transfer": {
       "wordpress": "WordPress",

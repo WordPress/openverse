@@ -1,38 +1,14 @@
 {
-  "header": {
-    "notification": {
-      "text": "Exemple de texte de notification",
-      "okay": "OK",
-      "dismiss": "Ignorer"
-    },
-    "source": "Sources",
-    "donation-banner": {
-      "no": "Pas aujourd‘hui",
-      "yes": "Oui, je fais un don maintenant",
-      "description": "Si vous donnez 5 dollars aujourd‘hui et que tout le monde fait de même, nous pourrons continuer à développer notre base de données de contenu librement réutilisable. Pour vous. Pour nous tous.",
-      "alternative-description": "Uniquement 1% des personnes qui lisent ceci feront un don. Soyez l‘une d‘entre elles et aidez-nous à faire vivre Openverse."
-    },
-    "api": "API",
-    "resources-tab": "Ressources",
-    "about-tab": "À propos",
-    "licenses": "Les licences",
-    "aria": {
-      "sr-search": "Bouton de recherche sr",
-      "menu": "menu",
-      "primary": "principal"
-    },
-    "support": "Soutenez-nous"
-  },
   "filters": {
     "creator": "Créateur·ice",
     "license-types": {
       "commercial": "Utilisation commerciale",
       "modification": "Modifier ou adapter"
     },
-    "license-explanation": "Détails concernant la licence",
     "mature": {
       "enable": "Activer le contenu adulte"
     },
+    "license-explanation": "Détails concernant la licence",
     "licenses": {
       "pdm": "Marque du domaine public",
       "cc0": "CC0",
@@ -92,24 +68,11 @@
     "brand": "Openverse"
   },
   "meta-search": {
-    "form": {
-      "supported-title": null,
-      "unsupported-title": null
-    },
     "card": {
       "checkboxes": {
         "modify": "Modifier ou adapter"
       }
     }
-  },
-  "": {
-    "sources": "tableau des sources",
-    "error": "Erreur lors de l’extraction des images :",
-    "feedback": "Retours",
-    "extension": "Extension web",
-    "meta-search": "Recherche par métadonnées",
-    "search-guide": "Guide de recherche",
-    "about": "Notre Histoire"
   },
   "photo-details": {
     "aria": {
@@ -122,26 +85,6 @@
       "details": "Détails de l’image",
       "close-form": "fermer le formulaire"
     },
-    "reuse": {
-      "attribution": {
-        "main": null
-      },
-      "copy-license": {
-        "plain": "Texte brut",
-        "html": "HTML",
-        "rich": "Texte enrichi"
-      },
-      "credit": {
-        "copy-text": "une copie de la licence,",
-        "terms-text": "les conditions,",
-        "view-legal-text": ". Pour voir {terms-copy} visitez ###URL###",
-        "licensed": "est sous licence",
-        "marked": "est marqué comme",
-        "creator-text": null
-      },
-      "tool-header": "Domaine public",
-      "license-header": "Licence"
-    },
     "content-report": {
       "dmca": {
         "thanks": "Merci d’avoir envoyé un signalement concernant les résultats proposés par Openverse !"
@@ -153,7 +96,6 @@
     "back": "Retourner aux résultats de recherche",
     "copy": "Copier",
     "related-images": "Images similaires",
-    "legal-disclaimer": null,
     "weblink": "Aller sur le site de l’image",
     "survey": {
       "answer": "en répondant à quelques questions."
@@ -164,59 +106,57 @@
       "tags": "Étiquettes",
       "dimensions": "Dimensions :",
       "type": "Type :"
+    },
+    "reuse": {
+      "copy-license": {
+        "plain": "Texte brut",
+        "html": "HTML",
+        "rich": "Texte enrichi"
+      },
+      "credit": {
+        "copy-text": "une copie de la licence,",
+        "terms-text": "les conditions,",
+        "licensed": "est sous licence",
+        "marked": "est marqué comme"
+      },
+      "tool-header": "Domaine public",
+      "license-header": "Licence"
     }
   },
-  "meta-search-page": {
-    "license": null,
-    "new": {
-      "email": "e-mail"
-    },
-    "intro": null,
-    "why": {
-      "aria-label": "retour",
-      "feedback-link": "retour"
-    },
-    "audio-video": {
-      "filter": null
-    },
-    "images": {
-      "info": null,
-      "not-finding": null,
-      "continue": null
-    },
-    "use": "Utilisation",
-    "content-types": null
-  },
   "sources": {
+    "new-content": {
+      "next": "Comment décidons-nous des prochaines sources à ajouter ?"
+    },
+    "issue-button": "Suggérer une nouvelle source",
+    "suggestions": "Les suggestions de nouvelles sources par notre communauté d’utilisatrices et d’utilisateurs sont les bienvenues.",
     "cc-content": {
-      "provider": null,
       "flickr": "Flickr",
       "smithsonian": "Institut Smithsonian",
       "europeana-api": "API Europeana",
       "europeana-link": "Europeana",
-      "europeana": null,
       "where": "D‘où provient le contenu d‘Openverse ?"
     },
-    "new-content": {
-      "next": "Comment décidons-nous des prochaines sources à ajouter ?",
-      "total-items": null,
-      "reuse": null,
-      "impact": null,
-      "integrate": null
-    },
-    "issue-button": "Suggérer une nouvelle source",
-    "suggestions": "Les suggestions de nouvelles sources par notre communauté d’utilisatrices et d’utilisateurs sont les bienvenues.",
     "providers": {
       "item": "Total d‘éléments",
       "domain": "Domaine"
     },
-    "single-name": "Source",
-    "detail": null
+    "single-name": "Source"
   },
   "collections": {
     "other": "Autres collections",
     "collection-size": "Taille de la collection : {count} images",
     "museum": "Pièces de musée"
+  },
+  "meta-search-page": {
+    "new": {
+      "issue": "problème",
+      "email": "e-mail"
+    },
+    "why": {
+      "aria-label": "retour",
+      "feedback-link": "retour"
+    },
+    "use": "Utilisation"
   },
   "browse-page": {
     "aria": {
@@ -233,13 +173,7 @@
     },
     "other-source": "Vous ne trouvez pas ce que vous cherchez ? Recherchez d‘autres sources",
     "load": "Charger plus de résultats",
-    "no-more": "Aucune autre image :(",
-    "image-result-count-more": null,
-    "audio-result-count-more": null,
-    "all-result-count-more": null,
-    "image-result-count": null,
-    "audio-result-count": null,
-    "all-result-count": null
+    "no-more": "Aucune autre image :("
   },
   "search-guide": {
     "combine": {
@@ -250,18 +184,9 @@
         "minus": "symbole moins",
         "star": "symbole astérisque",
         "open": "ouvrir une parenthèse"
-      },
-      "fuzziness": null,
-      "precedence": null,
-      "prefix": null,
-      "negate": null,
-      "or": null,
-      "and": null
+      }
     },
     "example": {
-      "fuzziness": {
-        "link-text": null
-      },
       "negate": {
         "operator-aria-label": "opérateur moins (pour ne PAS inclure un terme)",
         "operator-name": "opérateur (pour ne PAS inclure un terme)"
@@ -339,6 +264,19 @@
     },
     "collection": {
       "common-crawl": "Recherche commune"
+    }
+  },
+  "header": {
+    "notification": {
+      "okay": "OK",
+      "dismiss": "Ignorer"
+    },
+    "resources-tab": "Ressources",
+    "about-tab": "À propos",
+    "aria": {
+      "sr-search": "Bouton de recherche sr",
+      "menu": "menu",
+      "primary": "principal"
     }
   }
 }

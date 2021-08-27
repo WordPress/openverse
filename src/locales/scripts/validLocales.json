@@ -1,9 +1,15 @@
 [
   {
-    "code": "en",
-    "name": "English",
-    "iso": "en",
-    "file": "en.json"
+    "code": "cs",
+    "name": "Czech",
+    "iso": "cs-CES",
+    "file": "cs.json"
+  },
+  {
+    "code": "de",
+    "name": "German",
+    "iso": "de",
+    "file": "de.json"
   },
   {
     "code": "en-au",

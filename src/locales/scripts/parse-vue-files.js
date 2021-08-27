@@ -16,7 +16,7 @@ function readVueFiles(src) {
   // Now that the script are inside `src/locales/scripts`,
   // to get relative URL, the script needs to go up 3 levels
   return targetFiles.map((f) => {
-    const fileName = f.replace(BASE_PATH, '')
+    const fileName = f.replace(BASE_PATH, 'src')
     return {
       fileName,
       path: f,

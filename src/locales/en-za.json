@@ -1,38 +1,14 @@
 {
-  "header": {
-    "notification": {
-      "text": "Example notification text",
-      "okay": "OK",
-      "dismiss": "Dismiss"
-    },
-    "source": "Sources",
-    "donation-banner": {
-      "no": "Not today",
-      "yes": "Yes, I'll donate now",
-      "description": "If you donate $5 today, and everyone else does the same, we can keep growing our database of freely reusable content. For you. For all of us.",
-      "alternative-description": "Only 1% of people reading this will donate. Be one of them and help us sustain Openverse."
-    },
-    "api": "API",
-    "resources-tab": "Resources",
-    "about-tab": "About",
-    "licenses": "The Licences",
-    "aria": {
-      "sr-search": "sr search button",
-      "menu": "menu",
-      "primary": "primary"
-    },
-    "support": "Support Us"
-  },
   "filters": {
     "creator": "Creator",
     "license-types": {
       "commercial": "Use commercially",
       "modification": "Modify or adapt"
     },
-    "license-explanation": "licence explanation",
     "mature": {
       "enable": "Enable Mature Content"
     },
+    "license-explanation": "licence explanation",
     "licenses": {
       "pdm": "Public Domain Mark",
       "cc0": "CC0",
@@ -74,8 +50,7 @@
   },
   "hero": {
     "caption": {
-      "link": "Learn more",
-      "content": null
+      "link": "Learn more"
     },
     "search": {
       "placeholder": "Search all content",
@@ -92,24 +67,11 @@
     "brand": "Openverse"
   },
   "meta-search": {
-    "form": {
-      "supported-title": null,
-      "unsupported-title": null
-    },
     "card": {
       "checkboxes": {
         "modify": "Modify or adapt"
       }
     }
-  },
-  "": {
-    "sources": "sources table",
-    "error": "Error fetching images:",
-    "feedback": "Feedback",
-    "extension": "Web extension",
-    "meta-search": "Meta Search",
-    "search-guide": "Search Guide",
-    "about": "Our Story"
   },
   "photo-details": {
     "aria": {
@@ -121,26 +83,6 @@
       },
       "details": "image details",
       "close-form": "close form"
-    },
-    "reuse": {
-      "attribution": {
-        "main": null
-      },
-      "copy-license": {
-        "plain": "Plain text",
-        "html": "HTML",
-        "rich": "Rich Text"
-      },
-      "credit": {
-        "copy-text": "a copy of this licence,",
-        "terms-text": "the terms,",
-        "view-legal-text": null,
-        "licensed": "is licenced under",
-        "marked": "is marked with",
-        "creator-text": null
-      },
-      "tool-header": "Public Domain",
-      "license-header": "Licence"
     },
     "content-report": {
       "dmca": {
@@ -164,6 +106,21 @@
       "tags": "Tags",
       "dimensions": "Dimensions:",
       "type": "Type:"
+    },
+    "reuse": {
+      "copy-license": {
+        "plain": "Plain text",
+        "html": "HTML",
+        "rich": "Rich Text"
+      },
+      "credit": {
+        "copy-text": "a copy of this licence,",
+        "terms-text": "the terms,",
+        "licensed": "is licenced under",
+        "marked": "is marked with"
+      },
+      "tool-header": "Public Domain",
+      "license-header": "Licence"
     }
   },
   "meta-search-page": {
@@ -171,16 +128,11 @@
     "new": {
       "email": "email"
     },
-    "intro": null,
     "why": {
       "aria-label": "feedback",
       "feedback-link": "feedback"
     },
-    "audio-video": {
-      "filter": null
-    },
     "images": {
-      "info": null,
       "not-finding": "Click on the link that says “Not finding what you need?” below the image results.",
       "continue": "Load more results, and continue browsing in Openverse."
     },
@@ -188,15 +140,6 @@
     "content-types": "Meta Search on Openverse currently supports image, audio, and video search on external sites."
   },
   "sources": {
-    "cc-content": {
-      "provider": null,
-      "flickr": "Flickr",
-      "smithsonian": "Smithsonian Institute",
-      "europeana-api": "Europeana API",
-      "europeana-link": "Europeana",
-      "europeana": null,
-      "where": "Where does the content on Openverse come from?"
-    },
     "new-content": {
       "next": "How do we decide what sources to add next?",
       "total-items": "How many new total items or new types of items can we bring to our users through this integration? Some sources are direct integrations, while others may be a source within a source.",
@@ -206,16 +149,21 @@
     },
     "issue-button": "Suggest a new source",
     "suggestions": "We appreciate suggestions for new sources from our community of users.",
+    "cc-content": {
+      "flickr": "Flickr",
+      "smithsonian": "Smithsonian Institute",
+      "europeana-api": "Europeana API",
+      "europeana-link": "Europeana",
+      "where": "Where does the content on Openverse come from?"
+    },
     "providers": {
       "item": "Total items",
       "domain": "Domain"
     },
-    "single-name": "Source",
-    "detail": null
+    "single-name": "Source"
   },
   "collections": {
     "other": "Other Collections",
-    "collection-size": null,
     "museum": "Museum Collections"
   },
   "browse-page": {
@@ -233,13 +181,7 @@
     },
     "other-source": "Not finding what you need? Search other sources",
     "load": "Load more results",
-    "no-more": "No more images :(",
-    "image-result-count-more": null,
-    "audio-result-count-more": null,
-    "all-result-count-more": null,
-    "image-result-count": null,
-    "audio-result-count": null,
-    "all-result-count": null
+    "no-more": "No more images :("
   },
   "search-guide": {
     "combine": {
@@ -250,13 +192,7 @@
         "minus": "minus symbol",
         "star": "star symbol",
         "open": "open parenthesis"
-      },
-      "fuzziness": null,
-      "precedence": null,
-      "prefix": null,
-      "negate": null,
-      "or": null,
-      "and": null
+      }
     },
     "example": {
       "fuzziness": {
@@ -282,7 +218,6 @@
     "image": "Image"
   },
   "error": {
-    "image-not-found": null,
     "occurred": "An error occurred",
     "not-found": "Page Not Found"
   },
@@ -339,6 +274,19 @@
     },
     "collection": {
       "common-crawl": "Common Crawl"
+    }
+  },
+  "header": {
+    "notification": {
+      "okay": "OK",
+      "dismiss": "Dismiss"
+    },
+    "resources-tab": "Resources",
+    "about-tab": "About",
+    "aria": {
+      "sr-search": "sr search button",
+      "menu": "menu",
+      "primary": "primary"
     }
   }
 }
