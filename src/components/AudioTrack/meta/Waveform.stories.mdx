@@ -45,7 +45,6 @@ Here 9 points are upsampled to as many as required to fill the viewport.
     name="Upsampling"
     args={{
       peaks: [0.5, 1, 0.5, 0, 0.5, 1, 0.5, 0, 0.5], // triangular wave with 9 points
-      isReady: true,
       currentTime: 2,
       duration: 10,
       showDuration: true,
@@ -67,7 +66,6 @@ Here 1000 points are downsampled to as many as required to fill the viewport.
         { length: 1000 },
         (_, k) => 0.5 * Math.sin((k * 2 * Math.PI) / 500) + 0.5
       ), // sine wave with 1000 points
-      isReady: true,
       currentTime: 2,
       duration: 10,
       showDuration: true,
@@ -87,16 +85,16 @@ The waveform always takes the height and width of its container.
 Thus the `barWidth` and `barGap` will be maintained even in the case of
 horizontal scaling.
 
-## Loading state
+## Message state
 
-The waveform bars are set to zero height when loading. They will animate up to
-their actual height when the `isReady` prop is set to `true`.
+The waveform bars are set to zero height when the `message` prop is passed. They
+will animate up to their actual height when the prop is unset.
 
 <Canvas>
   <Story
-    name="Loading"
+    name="Message"
     args={{
-      isReady: false,
+      message: 'Hello, World!',
     }}
   >
     {Template.bind({})}

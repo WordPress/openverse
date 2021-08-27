@@ -571,12 +571,18 @@
   },
   "waveform": {
     "label": "Audio seek bar",
-    "loading": "Loading...",
     "current-time": "{time} seconds"
   },
   "audio-track": {
     "title": "{title} by {creator}",
-    "aria-label": "Audio Player"
+    "aria-label": "Audio Player",
+    "messages": {
+      "err_aborted": "You aborted playback.",
+      "err_network": "A network error occurred.",
+      "err_decode": "Could not decode audio.",
+      "err_unsupported": "This audio format is not supported by your browser.",
+      "loading": "Loading..."
+    }
   },
   "play-pause": {
     "play": "Play",
