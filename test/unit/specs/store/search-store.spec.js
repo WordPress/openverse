@@ -1,19 +1,20 @@
 import store from '~/store-modules/search-store'
 import {
-  FETCH_END_IMAGES,
-  FETCH_IMAGES_ERROR,
-  FETCH_START_IMAGES,
   SET_IMAGE,
   SET_IMAGE_PAGE,
-  SET_IMAGES,
+  SET_MEDIA,
   SET_QUERY,
   IMAGE_NOT_FOUND,
+  FETCH_START_MEDIA,
+  FETCH_END_MEDIA,
+  FETCH_MEDIA_ERROR,
 } from '~/store-modules/mutation-types'
 import {
-  FETCH_IMAGES,
   FETCH_IMAGE,
   FETCH_COLLECTION_IMAGES,
+  FETCH_MEDIA,
 } from '~/store-modules/action-types'
+import { IMAGE } from '~/constants/media'
 
 describe('Search Store', () => {
   describe('state', () => {
@@ -22,10 +23,10 @@ describe('Search Store', () => {
       expect(state.imagesCount).toBe(0)
       expect(state.imagePage).toBe(1)
       expect(state.images).toHaveLength(0)
-      expect(state.isFetchingImages).toBeFalsy()
-      expect(state.isFetchingImagesError).toBeTruthy()
+      expect(state.isFetching.images).toBeFalsy()
+      expect(state.isFetchingError.images).toBeTruthy()
       expect(state.query.q).toBe(undefined)
-      expect(state.errorMsg).toBe(null)
+      expect(state.errorMessage).toBe(null)
     })
   })
 
@@ -34,28 +35,35 @@ describe('Search Store', () => {
     const mutations = store.mutations
 
     beforeEach(() => {
-      state = {}
+      state = {
+        isFetching: {},
+        isFetchingError: {},
+        count: {},
+      }
     })
 
-    it('FETCH_START_IMAGES updates state', () => {
-      mutations[FETCH_START_IMAGES](state)
+    it('FETCH_START_MEDIA updates state', () => {
+      mutations[FETCH_START_MEDIA](state, { mediaType: IMAGE })
 
-      expect(state.isFetchingImages).toBeTruthy()
-      expect(state.isFetchingImagesError).toBeFalsy()
+      expect(state.isFetching.images).toBeTruthy()
+      expect(state.isFetchingError.images).toBeFalsy()
     })
 
-    it('FETCH_END_IMAGES updates state', () => {
-      mutations[FETCH_END_IMAGES](state)
+    it('FETCH_END_MEDIA updates state', () => {
+      mutations[FETCH_END_MEDIA](state, { mediaType: IMAGE })
 
-      expect(state.isFetchingImages).toBeFalsy()
+      expect(state.isFetching.images).toBeFalsy()
     })
 
-    it('FETCH_IMAGES_ERROR updates state', () => {
-      mutations[FETCH_IMAGES_ERROR](state, { errorMsg: 'error' })
+    it('FETCH_MEDIA_ERROR updates state', () => {
+      mutations[FETCH_MEDIA_ERROR](state, {
+        mediaType: IMAGE,
+        errorMessage: 'error',
+      })
 
-      expect(state.isFetchingImages).toBeFalsy()
-      expect(state.isFetchingImagesError).toBeTruthy()
-      expect(state.errorMsg).toBe('error')
+      expect(state.isFetching.images).toBeFalsy()
+      expect(state.isFetchingError.images).toBeTruthy()
+      expect(state.errorMessage).toBe('error')
     })
 
     it('SET_IMAGE updates state', () => {
@@ -72,46 +80,48 @@ describe('Search Store', () => {
       expect(state.imagePage).toBe(params.imagePage)
     })
 
-    it('SET_IMAGES updates state persisting images', () => {
+    it('SET_MEDIA updates state persisting images', () => {
       const img1 = { title: 'Foo', creator: 'foo', tags: [] }
       const img2 = { title: 'Bar', creator: 'bar', tags: [] }
       state.images = [img1]
       const params = {
-        images: [img2],
-        imagesCount: 2,
+        media: [img2],
+        mediaCount: 2,
         page: 2,
-        shouldPersistImages: true,
+        shouldPersistMedia: true,
+        mediaType: IMAGE,
       }
-      mutations[SET_IMAGES](state, params)
+      mutations[SET_MEDIA](state, params)
 
       expect(state.images).toEqual([img1, img2])
-      expect(state.imagesCount).toBe(params.imagesCount)
+      expect(state.count.images).toBe(params.mediaCount)
       expect(state.imagePage).toBe(params.page)
     })
 
-    it('SET_IMAGES updates state not persisting images', () => {
+    it('SET_MEDIA updates state not persisting images', () => {
       const img = { title: 'Foo', creator: 'bar', tags: [] }
       state.images = ['img1']
       const params = {
-        images: [img],
-        imagesCount: 2,
+        media: [img],
+        mediaCount: 2,
         page: 2,
-        shouldPersistImages: false,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
       }
-      mutations[SET_IMAGES](state, params)
+      mutations[SET_MEDIA](state, params)
 
       expect(state.images).toEqual([img])
-      expect(state.imagesCount).toBe(params.imagesCount)
+      expect(state.count.images).toBe(params.mediaCount)
       expect(state.imagePage).toBe(params.page)
     })
 
-    it('SET_IMAGES updates state with default count and page', () => {
+    it('SET_MEDIA updates state with default count and page', () => {
       const img = { title: 'Foo', creator: 'bar', tags: [] }
       state.images = ['img1']
-      const params = { images: [img] }
-      mutations[SET_IMAGES](state, params)
+      const params = { media: [img], mediaType: IMAGE }
+      mutations[SET_MEDIA](state, params)
 
-      expect(state.imagesCount).toBe(0)
+      expect(state.count.images).toBe(0)
       expect(state.imagePage).toBe(1)
     })
 
@@ -138,6 +148,7 @@ describe('Search Store', () => {
   describe('actions', () => {
     const searchData = { results: ['foo'], result_count: 1 }
     const imageDetailData = 'imageDetails'
+    let audioServiceMock = null
     let imageServiceMock = null
     let commit = null
     let dispatch = null
@@ -149,7 +160,16 @@ describe('Search Store', () => {
         getProviderCollection: jest.fn(() =>
           Promise.resolve({ data: searchData })
         ),
-        getImageDetail: jest.fn(() =>
+        getMediaDetail: jest.fn(() =>
+          Promise.resolve({ data: imageDetailData })
+        ),
+      }
+      audioServiceMock = {
+        search: jest.fn(() => Promise.resolve({ data: searchData })),
+        getProviderCollection: jest.fn(() =>
+          Promise.resolve({ data: searchData })
+        ),
+        getMediaDetail: jest.fn(() =>
           Promise.resolve({ data: imageDetailData })
         ),
       }
@@ -162,18 +182,26 @@ describe('Search Store', () => {
       }
     })
 
-    it('FETCH_IMAGES on success', (done) => {
-      const params = { q: 'foo', page: 1, shouldPersistImages: false }
-      const action = store.actions(imageServiceMock)[FETCH_IMAGES]
+    it('FETCH_MEDIA on success', (done) => {
+      const params = {
+        q: 'foo',
+        page: 1,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
+      }
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_MEDIA
+      ]
       action({ commit, dispatch, state }, params).then(() => {
-        expect(commit).toBeCalledWith(FETCH_START_IMAGES)
-        expect(commit).toBeCalledWith(FETCH_END_IMAGES)
+        expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
+        expect(commit).toBeCalledWith(FETCH_END_MEDIA, { mediaType: IMAGE })
 
-        expect(commit).toBeCalledWith(SET_IMAGES, {
-          images: searchData.results,
-          imagesCount: searchData.result_count,
-          shouldPersistImages: params.shouldPersistImages,
+        expect(commit).toBeCalledWith(SET_MEDIA, {
+          media: searchData.results,
+          mediaCount: searchData.result_count,
+          shouldPersistMedia: params.shouldPersistMedia,
           page: params.page,
+          mediaType: IMAGE,
         })
 
         expect(imageServiceMock.search).toBeCalledWith(params)
@@ -182,9 +210,11 @@ describe('Search Store', () => {
       })
     })
 
-    it('FETCH_IMAGES dispatches SEND_SEARCH_QUERY_EVENT', () => {
-      const params = { q: 'foo', shouldPersistImages: false }
-      const action = store.actions(imageServiceMock)[FETCH_IMAGES]
+    it('FETCH_MEDIA dispatches SEND_SEARCH_QUERY_EVENT', () => {
+      const params = { q: 'foo', shouldPersistMedia: false, mediaType: IMAGE }
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_MEDIA
+      ]
       action({ commit, dispatch, state }, params)
 
       expect(dispatch).toHaveBeenLastCalledWith('SEND_SEARCH_QUERY_EVENT', {
@@ -194,8 +224,15 @@ describe('Search Store', () => {
     })
 
     it('does not dispatch SEND_SEARCH_QUERY_EVENT if page param is available', () => {
-      const params = { q: 'foo', page: 1, shouldPersistImages: false }
-      const action = store.actions(imageServiceMock)[FETCH_IMAGES]
+      const params = {
+        q: 'foo',
+        page: 1,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
+      }
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_MEDIA
+      ]
       action({ commit, dispatch, state }, params)
 
       expect(dispatch).not.toHaveBeenLastCalledWith('SEND_SEARCH_QUERY_EVENT', {
@@ -205,17 +242,25 @@ describe('Search Store', () => {
     })
 
     it('FETCH_COLLECTION_IMAGES on success', (done) => {
-      const params = { provider: 'met', page: 1, shouldPersistImages: false }
-      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES]
+      const params = {
+        provider: 'met',
+        page: 1,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
+      }
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_COLLECTION_IMAGES
+      ]
       action({ commit, dispatch }, params).then(() => {
-        expect(commit).toBeCalledWith(FETCH_START_IMAGES)
-        expect(commit).toBeCalledWith(FETCH_END_IMAGES)
+        expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
+        expect(commit).toBeCalledWith(FETCH_END_MEDIA, { mediaType: IMAGE })
 
-        expect(commit).toBeCalledWith(SET_IMAGES, {
-          images: searchData.results,
-          imagesCount: searchData.result_count,
-          shouldPersistImages: params.shouldPersistImages,
+        expect(commit).toBeCalledWith(SET_MEDIA, {
+          media: searchData.results,
+          mediaCount: searchData.result_count,
+          shouldPersistMedia: params.shouldPersistMedia,
           page: params.page,
+          mediaType: IMAGE,
         })
 
         const newParams = { ...params, source: params.provider }
@@ -230,9 +275,12 @@ describe('Search Store', () => {
         q: 'nature',
         provider: 'met',
         page: 1,
-        shouldPersistImages: false,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
       }
-      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES]
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_COLLECTION_IMAGES
+      ]
       action({ commit, dispatch }, params).then(() => {
         const newParams = { ...params, source: params.provider }
         delete newParams.provider
@@ -247,9 +295,12 @@ describe('Search Store', () => {
         li: 'by',
         provider: 'met',
         page: 1,
-        shouldPersistImages: false,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
       }
-      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES]
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_COLLECTION_IMAGES
+      ]
       action({ commit, dispatch }, params).then(() => {
         const newParams = { ...params, source: params.provider }
         delete newParams.provider
@@ -264,9 +315,12 @@ describe('Search Store', () => {
         lt: 'commercial',
         provider: 'met',
         page: 1,
-        shouldPersistImages: false,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
       }
-      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES]
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_COLLECTION_IMAGES
+      ]
       action({ commit, dispatch }, params).then(() => {
         const newParams = { ...params, source: params.provider }
         delete newParams.provider
@@ -281,9 +335,12 @@ describe('Search Store', () => {
         q: 'nature',
         provider: 'met',
         page: 1,
-        shouldPersistImages: false,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
       }
-      const action = store.actions(imageServiceMock)[FETCH_COLLECTION_IMAGES]
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_COLLECTION_IMAGES
+      ]
       action({ commit, dispatch }, params).then(() => {
         const newParams = { ...params, source: params.provider }
         delete newParams.provider
@@ -293,14 +350,19 @@ describe('Search Store', () => {
       })
     })
 
-    it('FETCH_IMAGES on error', (done) => {
+    it('FETCH_MEDIA on error', (done) => {
       const failedMock = {
         search: jest.fn(() => Promise.reject('error')),
       }
-      const params = { q: 'foo', page: 1, shouldPersistImages: false }
-      const action = store.actions(failedMock)[FETCH_IMAGES]
+      const params = {
+        q: 'foo',
+        page: 1,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
+      }
+      const action = store.actions(failedMock, failedMock)[FETCH_MEDIA]
       action({ commit, dispatch, state }, params).catch((error) => {
-        expect(commit).toBeCalledWith(FETCH_START_IMAGES)
+        expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
         expect(dispatch).toBeCalledWith('HANDLE_IMAGE_ERROR', error)
       })
       done()
@@ -311,44 +373,78 @@ describe('Search Store', () => {
         getProviderCollection: jest.fn(() => Promise.reject('error')),
         search: jest.fn(() => Promise.reject('error')),
       }
-      const params = { q: 'foo', page: 1, shouldPersistImages: false }
-      const action = store.actions(failedMock)[FETCH_COLLECTION_IMAGES]
+      const params = {
+        q: 'foo',
+        page: 1,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
+      }
+      const action = store.actions(failedMock, failedMock)[
+        FETCH_COLLECTION_IMAGES
+      ]
       action({ commit, dispatch }, params).catch((error) => {
-        expect(commit).toBeCalledWith(FETCH_START_IMAGES)
+        expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
         expect(dispatch).toBeCalledWith('HANDLE_IMAGE_ERROR', error)
       })
       done()
     })
 
-    it('FETCH_IMAGES resets images if page is not defined', (done) => {
-      const params = { q: 'foo', page: undefined, shouldPersistImages: false }
-      const action = store.actions(imageServiceMock)[FETCH_IMAGES]
+    it('FETCH_MEDIA resets images if page is not defined', (done) => {
+      const params = {
+        q: 'foo',
+        page: undefined,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
+      }
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_MEDIA
+      ]
       action({ commit, dispatch, state }, params).then(() => {
-        expect(commit).toBeCalledWith(SET_IMAGES, { images: [] })
+        expect(commit).toBeCalledWith(FETCH_START_MEDIA, {
+          mediaType: IMAGE,
+        })
+
+        expect(commit).toBeCalledWith(FETCH_END_MEDIA, {
+          mediaType: IMAGE,
+        })
+
+        expect(commit).toBeCalledWith(SET_MEDIA, {
+          media: [],
+          mediaType: IMAGE,
+        })
         done()
       })
     })
 
-    it('FETCH_IMAGES does not reset images if page is defined', (done) => {
-      const params = { q: 'foo', page: 1, shouldPersistImages: false }
-      const action = store.actions(imageServiceMock)[FETCH_IMAGES]
+    it('FETCH_MEDIA does not reset images if page is defined', (done) => {
+      const params = {
+        q: 'foo',
+        page: 1,
+        shouldPersistMedia: false,
+        mediaType: IMAGE,
+      }
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_MEDIA
+      ]
       action({ commit, dispatch, state }, params).then(() => {
-        expect(commit).not.toBeCalledWith(SET_IMAGES, { images: [] })
+        expect(commit).not.toBeCalledWith(SET_MEDIA, { media: [] })
         done()
       })
     })
 
     it('FETCH_IMAGE on success', (done) => {
       const params = { id: 'foo' }
-      const action = store.actions(imageServiceMock)[FETCH_IMAGE]
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_IMAGE
+      ]
       action({ commit, dispatch, state }, params).then(() => {
-        expect(commit).toBeCalledWith(FETCH_START_IMAGES)
+        expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
         expect(commit).toBeCalledWith(SET_IMAGE, { image: {} })
-        expect(commit).toBeCalledWith(FETCH_END_IMAGES)
+        expect(commit).toBeCalledWith(FETCH_END_MEDIA, { mediaType: IMAGE })
 
         expect(commit).toBeCalledWith(SET_IMAGE, { image: imageDetailData })
 
-        expect(imageServiceMock.getImageDetail).toBeCalledWith(params)
+        expect(imageServiceMock.getMediaDetail).toBeCalledWith(params)
 
         done()
       })
@@ -356,7 +452,9 @@ describe('Search Store', () => {
 
     it('FETCH_IMAGE dispatches SEND_RESULT_CLICKED_EVENT', () => {
       const params = { id: 'foo' }
-      const action = store.actions(imageServiceMock)[FETCH_IMAGE]
+      const action = store.actions(audioServiceMock, imageServiceMock)[
+        FETCH_IMAGE
+      ]
       action({ commit, dispatch, state }, params)
 
       expect(dispatch).toHaveBeenLastCalledWith('SEND_RESULT_CLICKED_EVENT', {
@@ -369,12 +467,12 @@ describe('Search Store', () => {
 
     it('FETCH_IMAGE on error', (done) => {
       const failedMock = {
-        getImageDetail: jest.fn(() => Promise.reject('error')),
+        getMediaDetail: jest.fn(() => Promise.reject('error')),
       }
       const params = { id: 'foo' }
-      const action = store.actions(failedMock)[FETCH_IMAGE]
+      const action = store.actions(failedMock, failedMock)[FETCH_IMAGE]
       action({ commit, dispatch, state }, params).catch((error) => {
-        expect(commit).toBeCalledWith(FETCH_START_IMAGES)
+        expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
         expect(dispatch).toBeCalledWith('HANDLE_IMAGE_ERROR', error)
       })
       done()
@@ -382,14 +480,14 @@ describe('Search Store', () => {
 
     it('FETCH_IMAGE on 404 doesnt break and commits IMAGE_NOT_FOUND', (done) => {
       const failedMock = {
-        getImageDetail: jest.fn(() =>
+        getMediaDetail: jest.fn(() =>
           Promise.reject({ response: { status: 404 } })
         ),
       }
       const params = { id: 'foo' }
-      const action = store.actions(failedMock)[FETCH_IMAGE]
+      const action = store.actions(failedMock, failedMock)[FETCH_IMAGE]
       action({ commit, dispatch, state }, params).then(() => {
-        expect(commit).toBeCalledWith(FETCH_START_IMAGES)
+        expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
         expect(commit).toBeCalledWith(IMAGE_NOT_FOUND)
 
         done()

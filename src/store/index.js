@@ -26,7 +26,7 @@ const ImageProviderService = MediaProviderService(IMAGE)
 
 export const actions = Object.assign(
   UsageDataStore.actions(UsageDataService),
-  SearchStore.actions(ImageService),
+  SearchStore.actions(AudioService, ImageService),
   FilterStore.actions,
   MediaProviderStore.actions(AudioProviderService, ImageProviderService),
   AttributionStore.actions(GoogleAnalytics),

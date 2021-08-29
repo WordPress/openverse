@@ -6,7 +6,7 @@ import {
 import {
   FETCH_RELATED_MEDIA,
   HANDLE_NO_MEDIA,
-  HANDLE_IMAGE_ERROR,
+  HANDLE_MEDIA_ERROR,
 } from './action-types'
 import { AUDIO, IMAGE } from '~/constants/media'
 
@@ -45,7 +45,10 @@ const actions = (AudioService, ImageService) => ({
         })
       })
       .catch((error) => {
-        dispatch(HANDLE_IMAGE_ERROR, error)
+        dispatch(HANDLE_MEDIA_ERROR, {
+          mediaType: IMAGE,
+          error,
+        })
       })
   },
 })

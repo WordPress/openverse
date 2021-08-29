@@ -23,7 +23,7 @@
 </template>
 <script>
 import {
-  FETCH_IMAGES,
+  FETCH_MEDIA,
   SET_SEARCH_TYPE_FROM_URL,
 } from '~/store-modules/action-types'
 import {
@@ -35,6 +35,7 @@ import { queryStringToQueryData } from '~/utils/searchQueryTransform'
 import local from '~/utils/local'
 import { screenWidth } from '~/utils/getBrowserInfo'
 import iframeHeight from '~/mixins/iframeHeight'
+import { IMAGE } from '~/constants/media'
 
 const BrowsePage = {
   name: 'browse-page',
@@ -53,7 +54,10 @@ const BrowsePage = {
     })
     this.$store.commit(SET_FILTERS_FROM_URL, { url: this.$route.fullPath })
     if (!this.$store.state.images.length) {
-      await this.$store.dispatch(FETCH_IMAGES, this.$store.state.query)
+      await this.$store.dispatch(FETCH_MEDIA, {
+        ...this.$store.state.query,
+        mediaType: IMAGE,
+      })
     }
   },
   mounted() {
@@ -80,7 +84,7 @@ const BrowsePage = {
   },
   methods: {
     getImages(params) {
-      this.$store.dispatch(FETCH_IMAGES, params)
+      this.$store.dispatch(FETCH_MEDIA, { ...params, mediaType: IMAGE })
     },
     onLoadMoreImages(searchParams) {
       this.getImages(searchParams)

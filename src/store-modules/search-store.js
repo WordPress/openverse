@@ -1,27 +1,25 @@
 import isEmpty from 'lodash.isempty'
 import findIndex from 'lodash.findindex'
 import prepareSearchQueryParams from '~/utils/prepareSearchQueryParams'
-import decodeImageData from '~/utils/decodeImageData'
+import decodeMediaData from '~/utils/decodeMediaData'
 import {
-  FETCH_IMAGES,
+  FETCH_MEDIA,
   FETCH_IMAGE,
   FETCH_COLLECTION_IMAGES,
   HANDLE_NO_MEDIA,
-  HANDLE_IMAGE_ERROR,
+  HANDLE_MEDIA_ERROR,
   UPDATE_SEARCH_TYPE,
   SET_SEARCH_TYPE_FROM_URL,
 } from './action-types'
 import {
-  FETCH_END_IMAGES,
   FETCH_END_MEDIA,
-  FETCH_IMAGES_ERROR,
   FETCH_MEDIA_ERROR,
-  FETCH_START_IMAGES,
   FETCH_START_MEDIA,
   IMAGE_NOT_FOUND,
+  SET_AUDIO,
   SET_IMAGE,
   SET_IMAGE_PAGE,
-  SET_IMAGES,
+  SET_MEDIA,
   SET_QUERY,
   SET_SEARCH_TYPE,
   UPDATE_FILTERS,
@@ -45,7 +43,8 @@ import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
  */
 const hideSearchResultsOnNewSearch = (commit, pageNumber) => {
   if (!pageNumber) {
-    commit(SET_IMAGES, { images: [] })
+    commit(SET_MEDIA, { mediaType: IMAGE, media: [] })
+    commit(SET_MEDIA, { mediaType: AUDIO, media: [] })
   }
 }
 
@@ -78,36 +77,74 @@ const fetchCollectionImages = (commit, params, imageService) => {
   return searchMethod(prepareSearchQueryParams(newParams))
 }
 
-const actions = (ImageService) => ({
-  [FETCH_IMAGES]({ commit, dispatch, state }, params) {
+const state = {
+  errorMessage: null,
+  image: {},
+  count: {
+    images: 0,
+    audios: 0,
+  },
+  imagesCount: 0,
+  pageCount: 0,
+  imagePage: 1,
+  images: [],
+  isFetching: {
+    audios: false,
+    images: false,
+  },
+  isFetchingError: {
+    audios: true,
+    images: true,
+  },
+  searchType: ALL_MEDIA,
+  query: {},
+}
+
+/**
+ * @param AudioService
+ * @param ImageService
+ */
+const actions = (AudioService, ImageService) => ({
+  [FETCH_MEDIA]({ commit, dispatch, state }, params) {
     // does not send event if user is paginating for more results
-    if (!params.page) {
+    const { page, mediaType, q, shouldPersistMedia } = params
+    if (!page) {
       dispatch(SEND_SEARCH_QUERY_EVENT, {
-        query: params.q,
+        query: q,
         sessionId: state.usageSessionId,
       })
     }
 
-    commit(FETCH_START_IMAGES)
-    hideSearchResultsOnNewSearch(commit, params.page)
+    commit(FETCH_START_MEDIA, { mediaType })
+    hideSearchResultsOnNewSearch(commit, page)
     const queryParams = prepareSearchQueryParams(params)
-    return ImageService.search(queryParams)
+    let service
+    if (mediaType === IMAGE) {
+      service = ImageService
+    } else if (mediaType === AUDIO) {
+      service = AudioService
+    } else {
+      throw new Error(`Cannot fetch unknown media type "${mediaType}"`)
+    }
+    return service
+      .search(queryParams)
       .then(({ data }) => {
-        commit(FETCH_END_IMAGES)
-        commit(SET_IMAGES, {
-          images: data.results,
-          imagesCount: data.result_count,
+        commit(FETCH_END_MEDIA, { mediaType })
+        commit(SET_MEDIA, {
+          mediaType,
+          media: data.results,
+          mediaCount: data.result_count,
           pageCount: data.page_count,
-          shouldPersistImages: params.shouldPersistImages,
-          page: params.page,
+          shouldPersistMedia: shouldPersistMedia,
+          page: page,
         })
         dispatch(HANDLE_NO_MEDIA, {
           mediaCount: data.results.length,
-          mediaType: IMAGE,
+          mediaType,
         })
       })
       .catch((error) => {
-        dispatch(HANDLE_IMAGE_ERROR, error)
+        dispatch(HANDLE_MEDIA_ERROR, { mediaType, error })
       })
   },
   // eslint-disable-next-line no-unused-vars
@@ -119,31 +156,32 @@ const actions = (ImageService) => ({
       sessionId: state.usageSessionId,
     })
 
-    commit(FETCH_START_IMAGES)
+    commit(FETCH_START_MEDIA, { mediaType: IMAGE })
     commit(SET_IMAGE, { image: {} })
-    return ImageService.getImageDetail(params)
+    return ImageService.getMediaDetail(params)
       .then(({ data }) => {
-        commit(FETCH_END_IMAGES)
+        commit(FETCH_END_MEDIA, { mediaType: IMAGE })
         commit(SET_IMAGE, { image: data })
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {
           commit(IMAGE_NOT_FOUND)
         } else {
-          dispatch(HANDLE_IMAGE_ERROR, error)
+          dispatch(HANDLE_MEDIA_ERROR, { mediaType: IMAGE, error })
         }
       })
   },
   [FETCH_COLLECTION_IMAGES]({ commit, dispatch }, params) {
-    commit(FETCH_START_IMAGES)
+    commit(FETCH_START_MEDIA, { mediaType: IMAGE })
     return fetchCollectionImages(commit, params, ImageService)
       .then(({ data }) => {
-        commit(FETCH_END_IMAGES)
-        commit(SET_IMAGES, {
-          images: data.results,
+        commit(FETCH_END_MEDIA, { mediaType: IMAGE })
+        commit(SET_MEDIA, {
+          mediaType: IMAGE,
+          media: data.results,
           pageCount: data.page_count,
-          imagesCount: data.result_count,
-          shouldPersistImages: params.shouldPersistImages,
+          mediaCount: data.result_count,
+          shouldPersistMedia: params.shouldPersistMedia,
           page: params.page,
         })
         dispatch(HANDLE_NO_MEDIA, {
@@ -152,27 +190,26 @@ const actions = (ImageService) => ({
         })
       })
       .catch((error) => {
-        dispatch(HANDLE_IMAGE_ERROR, error)
+        dispatch(HANDLE_MEDIA_ERROR, { mediaType: IMAGE, error })
       })
   },
-  [HANDLE_IMAGE_ERROR]({ commit }, error) {
+  [HANDLE_MEDIA_ERROR]({ commit }, { mediaType, error }) {
+    let errorMessage
     if (error.response) {
-      if (error.response.status === 500) {
-        commit(FETCH_IMAGES_ERROR, {
-          errorMsg: 'There was a problem with our servers',
-        })
-      } else {
-        commit(FETCH_IMAGES_ERROR, { errorMsg: error.response.message })
-      }
+      errorMessage =
+        error.response.status === 500
+          ? 'There was a problem with our servers'
+          : error.response.message
+      commit(FETCH_MEDIA_ERROR, { mediaType, errorMessage })
     } else {
-      commit(FETCH_IMAGES_ERROR, { errorMsg: error.message })
+      commit(FETCH_MEDIA_ERROR, { mediaType, errorMessage: error.message })
       throw new Error(error)
     }
   },
   [HANDLE_NO_MEDIA]({ commit }, { mediaCount, mediaType }) {
     if (!mediaCount) {
       commit(FETCH_MEDIA_ERROR, {
-        errorMsg: `No ${mediaType} found for this query`,
+        errorMessage: `No ${mediaType} found for this query`,
       })
     }
   },
@@ -196,75 +233,63 @@ function setQuery(_state, params) {
   // }
 }
 
-const state = {
-  errorMsg: null,
-  image: {},
-  imagesCount: 0,
-  pageCount: 0,
-  imagePage: 1,
-  images: [],
-  isFetchingImages: false,
-  isFetchingImagesError: true,
-  searchType: ALL_MEDIA,
-  query: {},
-}
-
 /* eslint no-param-reassign: ["error", { "props": false }] */
 const mutations = {
-  [FETCH_START_IMAGES](_state) {
-    _state.isFetchingImages = true
-    _state.isFetchingImagesError = false
-  },
-  [FETCH_END_IMAGES](_state) {
-    _state.isFetchingImages = false
-  },
   [FETCH_START_MEDIA](_state, { mediaType }) {
     if (mediaType === IMAGE) {
-      _state.isFetchingImages = true
-      _state.isFetchingImagesError = false
+      _state.isFetching.images = true
+      _state.isFetchingError.images = false
     } else if (mediaType === AUDIO) {
       _state.isFetchingAudios = true
-      _state.isFetchingAudiosError = false
+      _state.isFetchingError.audios = false
     }
   },
   [FETCH_END_MEDIA](_state, { mediaType }) {
     mediaType === IMAGE
-      ? (_state.isFetchingImages = false)
-      : (_state.isFetchingAudios = false)
-  },
-  [FETCH_IMAGES_ERROR](_state, params) {
-    _state.isFetchingImagesError = true
-    _state.isFetchingImages = false
-    _state.errorMsg = params.errorMsg
+      ? (_state.isFetching.images = false)
+      : (_state.isFetching.audios = false)
   },
   [FETCH_MEDIA_ERROR](_state, params) {
-    const { mediaType, errorMsg } = params
+    const { mediaType, errorMessage } = params
     if (mediaType === IMAGE) {
-      _state.isFetchingImagesError = true
-      _state.isFetchingImages = false
+      _state.isFetchingError.images = true
+      _state.isFetching.images = false
     } else if (mediaType === AUDIO) {
-      _state.isFetchingAudiosError = true
-      _state.isFetchingAudios = false
+      _state.isFetchingError.audios = true
+      _state.isFetching.audios = false
     }
-    _state.errorMsg = errorMsg
+    _state.errorMessage = errorMessage
+  },
+  [SET_AUDIO](_state, params) {
+    _state.audio = decodeMediaData(params.audio, AUDIO)
   },
   [SET_IMAGE](_state, params) {
-    _state.image = decodeImageData(params.image)
+    _state.image = decodeMediaData(params.image)
   },
   [SET_IMAGE_PAGE](_state, params) {
     _state.imagePage = params.imagePage
   },
-  [SET_IMAGES](_state, params) {
-    let images = null
-    if (params.shouldPersistImages) {
-      images = _state.images.concat(params.images)
+  [SET_MEDIA](_state, params) {
+    const {
+      mediaType,
+      media,
+      mediaCount,
+      pageCount,
+      shouldPersistMedia,
+      page,
+    } = params
+    const mediaPlural = `${mediaType}s`
+    let mediaToSet
+    if (shouldPersistMedia) {
+      mediaToSet = _state[`${mediaType}s`].concat(media)
     } else {
-      images = params.images
+      mediaToSet = media
     }
-    _state.images = images.map((image) => decodeImageData(image))
-    _state.pageCount = params.pageCount
-    _state.imagesCount = params.imagesCount || 0
-    _state.imagePage = params.page || 1
+    mediaToSet = mediaToSet.map((item) => decodeMediaData(item))
+    _state[mediaPlural] = mediaToSet
+    _state.pageCount = pageCount
+    _state.count[mediaPlural] = mediaCount || 0
+    _state[`${mediaType}Page`] = page || 1
   },
   [SET_QUERY](_state, params) {
     setQuery(_state, params)

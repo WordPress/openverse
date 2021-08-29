@@ -3,6 +3,8 @@ import ApiService from './ApiService'
 const ImageService = {
   /**
    * Search for images by keyword.
+   * @param params
+   * @return {Promise<import('axios').AxiosResponse<MediaResult>>}
    */
   search(params) {
     return ApiService.query('images', params)
@@ -16,10 +18,10 @@ const ImageService = {
    * Retrieve image details by Id number.
    * SSR-called
    */
-  getImageDetail(params) {
+  getMediaDetail(params) {
     if (!params.id) {
       throw new Error(
-        '[RWV] ImageService.getImageDetail() id parameter required to retrieve image details.'
+        '[RWV] ImageService.getMediaDetail() id parameter required to retrieve image details.'
       )
     }
 
