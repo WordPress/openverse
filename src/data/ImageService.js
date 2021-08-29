@@ -26,7 +26,7 @@ const ImageService = {
     return ApiService.get('images', params.id)
   },
 
-  getRelatedImages(params) {
+  getRelatedMedia(params) {
     if (!params.id) {
       throw new Error(
         '[RWV] ImageService.getRelatedImages() id parameter required to retrieve related images.'

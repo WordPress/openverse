@@ -1,4 +1,5 @@
 import MediaProviderService from '~/data/MediaProviderService'
+import AudioService from '~/data/AudioService'
 import ImageService from '~/data/ImageService'
 import BugReportService from '~/data/BugReportService'
 import UsageDataService from '~/data/UsageDataService'
@@ -13,7 +14,7 @@ import UserStore from '~/store-modules/user-store'
 import UsageDataStore from '~/store-modules/usage-data-store'
 import FilterStore from '~/store-modules/filter-store'
 import ReportContentStore from '~/store-modules/report-content-store'
-import RelatedImagesStore from '~/store-modules/related-images-store'
+import RelatedMediaStore from '~/store-modules/related-media-store'
 import NotificationStore from '~/store-modules/notification-store'
 import NavStore from '~/store-modules/nav-store'
 import { FETCH_MEDIA_PROVIDERS } from '~/store-modules/action-types'
@@ -33,7 +34,7 @@ export const actions = Object.assign(
   SocialMediaStore.actions(GoogleAnalytics),
   ABTestStore.actions,
   ReportContentStore.actions(ReportService),
-  RelatedImagesStore.actions(ImageService),
+  RelatedMediaStore.actions(AudioService, ImageService),
   NotificationStore.actions,
   {
     async nuxtServerInit({ dispatch }) {
@@ -57,7 +58,7 @@ export const state = () =>
     ABTestStore.state,
     UserStore.state,
     ReportContentStore.state,
-    RelatedImagesStore.state,
+    RelatedMediaStore.state,
     NotificationStore.state,
     NavStore.state
   )
@@ -71,7 +72,7 @@ export const mutations = Object.assign(
   BugReportStore.mutations,
   ABTestStore.mutations,
   ReportContentStore.mutations,
-  RelatedImagesStore.mutations,
+  RelatedMediaStore.mutations,
   NotificationStore.mutations,
   NavStore.mutations
 )

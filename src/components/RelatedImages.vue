@@ -1,5 +1,8 @@
 <template>
-  <div class="photo_related-images">
+  <aside
+    :aria-label="$t('photo-details.aria.related')"
+    class="p-4 my-6 photo_related-images"
+  >
     <h3 class="b-header">
       {{ $t('photo-details.related-images') }}
     </h3>
@@ -13,7 +16,7 @@
       :use-infinite-scroll="false"
       :include-add-to-list="false"
     />
-  </div>
+  </aside>
 </template>
 
 <script>

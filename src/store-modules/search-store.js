@@ -6,15 +6,18 @@ import {
   FETCH_IMAGES,
   FETCH_IMAGE,
   FETCH_COLLECTION_IMAGES,
+  HANDLE_NO_MEDIA,
   HANDLE_IMAGE_ERROR,
   UPDATE_SEARCH_TYPE,
   SET_SEARCH_TYPE_FROM_URL,
 } from './action-types'
 import {
   FETCH_END_IMAGES,
+  FETCH_END_MEDIA,
   FETCH_IMAGES_ERROR,
+  FETCH_MEDIA_ERROR,
   FETCH_START_IMAGES,
-  HANDLE_NO_IMAGES,
+  FETCH_START_MEDIA,
   IMAGE_NOT_FOUND,
   SET_IMAGE,
   SET_IMAGE_PAGE,
@@ -28,7 +31,7 @@ import {
   SEND_RESULT_CLICKED_EVENT,
 } from './usage-data-analytics-types'
 import { queryStringToSearchType } from '~/utils/searchQueryTransform'
-import { ALL_MEDIA } from '~/constants/media'
+import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
 
 // const getSearchPath = () =>
 //   window.location.pathname && window.location.pathname.includes('search')
@@ -98,7 +101,10 @@ const actions = (ImageService) => ({
           shouldPersistImages: params.shouldPersistImages,
           page: params.page,
         })
-        dispatch(HANDLE_NO_IMAGES, data.results)
+        dispatch(HANDLE_NO_MEDIA, {
+          mediaCount: data.results.length,
+          mediaType: IMAGE,
+        })
       })
       .catch((error) => {
         dispatch(HANDLE_IMAGE_ERROR, error)
@@ -140,7 +146,10 @@ const actions = (ImageService) => ({
           shouldPersistImages: params.shouldPersistImages,
           page: params.page,
         })
-        dispatch(HANDLE_NO_IMAGES, data.results)
+        dispatch(HANDLE_NO_MEDIA, {
+          mediaCount: data.results.length,
+          mediaType: IMAGE,
+        })
       })
       .catch((error) => {
         dispatch(HANDLE_IMAGE_ERROR, error)
@@ -160,10 +169,10 @@ const actions = (ImageService) => ({
       throw new Error(error)
     }
   },
-  [HANDLE_NO_IMAGES]({ commit }, data) {
-    if (!data.length) {
-      commit(FETCH_IMAGES_ERROR, {
-        errorMsg: 'No images were found for this query',
+  [HANDLE_NO_MEDIA]({ commit }, { mediaCount, mediaType }) {
+    if (!mediaCount) {
+      commit(FETCH_MEDIA_ERROR, {
+        errorMsg: `No ${mediaType} found for this query`,
       })
     }
   },
@@ -209,10 +218,35 @@ const mutations = {
   [FETCH_END_IMAGES](_state) {
     _state.isFetchingImages = false
   },
+  [FETCH_START_MEDIA](_state, { mediaType }) {
+    if (mediaType === IMAGE) {
+      _state.isFetchingImages = true
+      _state.isFetchingImagesError = false
+    } else if (mediaType === AUDIO) {
+      _state.isFetchingAudios = true
+      _state.isFetchingAudiosError = false
+    }
+  },
+  [FETCH_END_MEDIA](_state, { mediaType }) {
+    mediaType === IMAGE
+      ? (_state.isFetchingImages = false)
+      : (_state.isFetchingAudios = false)
+  },
   [FETCH_IMAGES_ERROR](_state, params) {
     _state.isFetchingImagesError = true
     _state.isFetchingImages = false
     _state.errorMsg = params.errorMsg
+  },
+  [FETCH_MEDIA_ERROR](_state, params) {
+    const { mediaType, errorMsg } = params
+    if (mediaType === IMAGE) {
+      _state.isFetchingImagesError = true
+      _state.isFetchingImages = false
+    } else if (mediaType === AUDIO) {
+      _state.isFetchingAudiosError = true
+      _state.isFetchingAudios = false
+    }
+    _state.errorMsg = errorMsg
   },
   [SET_IMAGE](_state, params) {
     _state.image = decodeImageData(params.image)

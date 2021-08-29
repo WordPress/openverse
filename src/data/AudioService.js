@@ -33,7 +33,7 @@ const AudioService = {
       : ApiService.get('audios', params.id)
   },
 
-  getRelatedAudios(params) {
+  getRelatedMedia(params) {
     if (!params.id) {
       throw new Error(
         '[RWV] AudioService.getRelatedAudios() id parameter required to retrieve related audios.'
