@@ -1,138 +1,138 @@
 {
-        "pageid": 44672185,
-        "ns": 6,
-        "title": "File:2002-04-02 Hauptstraße, Heidelberg IMG 0404.jpg",
-        "imagerepository": "local",
-        "imageinfo": [
-          {
-            "user": "Hasenläufer",
-            "size": 816636,
-            "width": 1563,
-            "height": 1172,
-            "url": "https://upload.wikimedia.org/wikipedia/commons/e/e9/2002-04-02_Hauptstra%C3%9Fe%2C_Heidelberg_IMG_0404.jpg",
-            "descriptionurl": "https://commons.wikimedia.org/wiki/File:2002-04-02_Hauptstra%C3%9Fe,_Heidelberg_IMG_0404.jpg",
-            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672185",
-            "extmetadata": {
-              "DateTime": {
-                "value": "2015-10-31 23:00:22",
-                "source": "mediawiki-metadata",
-                "hidden": ""
-              },
-              "ObjectName": {
-                "value": "2002-04-02 Hauptstraße, Heidelberg IMG 0404",
-                "source": "mediawiki-metadata",
-                "hidden": ""
-              },
-              "CommonsMetadataExtension": {
-                "value": 1.2,
-                "source": "extension",
-                "hidden": ""
-              },
-              "Categories": {
-                "value": "Files by Hasenläufer|Hauptstraße (Heidelberg)|Media with locations|Pages with maps|Photographs taken on 2002-04-02",
-                "source": "commons-categories",
-                "hidden": ""
-              },
-              "Assessments": {
-                "value": "",
-                "source": "commons-categories",
-                "hidden": ""
-              },
-              "GPSLatitude": {
-                "value": "49.411580",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "GPSLongitude": {
-                "value": "8.705512",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "GPSMapDatum": {
-                "value": "WGS-84",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "ImageDescription": {
-                "value": "Blick in die <a href=\"https://de.wikipedia.org/wiki/Hauptstra%C3%9Fe_(Heidelberg)\" class=\"extiw\" title=\"de:Hauptstraße (Heidelberg)\">Hauptstraße</a> in Richtung Westen, etwas westlich des Universitätsplatzes, <a href=\"https://de.wikipedia.org/wiki/Heidelberg\" class=\"extiw\" title=\"de:Heidelberg\">Heidelberg</a>",
-                "source": "commons-desc-page"
-              },
-              "DateTimeOriginal": {
-                "value": "2002-04-02",
-                "source": "commons-desc-page"
-              },
-              "Credit": {
-                "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "Artist": {
-                "value": "<a href=\"//commons.wikimedia.org/wiki/User:Hasenl%C3%A4ufer\" title=\"User:Hasenläufer\">Eckhard Henkel</a>",
-                "source": "commons-desc-page"
-              },
-              "Permission": {
-                "value": "This image is <b>not <a href=\"https://en.wikipedia.org/wiki/Public_domain\" class=\"extiw\" title=\"en:Public domain\">public domain</a></b>. Please respect the copyright protection. It may only be used according to the rules mentioned here. This specifically <b>excludes use in social media</b>, if applicable terms of the licenses listed here not appropriate.",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "LicenseShortName": {
-                "value": "CC BY-SA 3.0 de",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "UsageTerms": {
-                "value": "Creative Commons Attribution-Share Alike 3.0 de",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "AttributionRequired": {
-                "value": "true",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "Attribution": {
-                "value": "Photo: Eckhard Henkel / <a rel=\"nofollow\" class=\"external text\" href=\"http:////commons.wikimedia.org/wiki/File:2002-04-02_Hauptstra%C3%9Fe,_Heidelberg_IMG_0404.jpg\">Wikimedia Commons</a> / <a rel=\"nofollow\" class=\"external text\" href=\"https://creativecommons.org/licenses/by-sa/3.0/de/deed.en\">CC BY-SA 3.0 DE</a>",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "LicenseUrl": {
-                "value": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "Copyrighted": {
-                "value": "True",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "Restrictions": {
-                "value": "",
-                "source": "commons-desc-page",
-                "hidden": ""
-              },
-              "License": {
-                "value": "cc-by-sa-3.0-de",
-                "source": "commons-templates",
-                "hidden": ""
-              }
-            }
-          }
-        ],
-        "globalusage": [
-          {
-            "title": "Heydelberq",
-            "wiki": "az.wikipedia.org",
-            "url": "https://az.wikipedia.org/wiki/Heydelberq"
-          },
-          {
-            "title": "Heidelberg",
-            "wiki": "en.wikipedia.org",
-            "url": "https://en.wikipedia.org/wiki/Heidelberg"
-          },
-          {
-            "title": "Heidelberg",
-            "wiki": "vi.wikipedia.org",
-            "url": "https://vi.wikipedia.org/wiki/Heidelberg"
-          }
-        ]
+  "globalusage": [
+    {
+      "title": "Heydelberq",
+      "url": "https://az.wikipedia.org/wiki/Heydelberq",
+      "wiki": "az.wikipedia.org"
+    },
+    {
+      "title": "Heidelberg",
+      "url": "https://en.wikipedia.org/wiki/Heidelberg",
+      "wiki": "en.wikipedia.org"
+    },
+    {
+      "title": "Heidelberg",
+      "url": "https://vi.wikipedia.org/wiki/Heidelberg",
+      "wiki": "vi.wikipedia.org"
+    }
+  ],
+  "imageinfo": [
+    {
+      "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672185",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:2002-04-02_Hauptstra%C3%9Fe,_Heidelberg_IMG_0404.jpg",
+      "extmetadata": {
+        "Artist": {
+          "source": "commons-desc-page",
+          "value": "<a href=\"//commons.wikimedia.org/wiki/User:Hasenl%C3%A4ufer\" title=\"User:Hasenl\u00e4ufer\">Eckhard Henkel</a>"
+        },
+        "Assessments": {
+          "hidden": "",
+          "source": "commons-categories",
+          "value": ""
+        },
+        "Attribution": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "Photo: Eckhard Henkel / <a rel=\"nofollow\" class=\"external text\" href=\"http:////commons.wikimedia.org/wiki/File:2002-04-02_Hauptstra%C3%9Fe,_Heidelberg_IMG_0404.jpg\">Wikimedia Commons</a> / <a rel=\"nofollow\" class=\"external text\" href=\"https://creativecommons.org/licenses/by-sa/3.0/de/deed.en\">CC BY-SA 3.0 DE</a>"
+        },
+        "AttributionRequired": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "true"
+        },
+        "Categories": {
+          "hidden": "",
+          "source": "commons-categories",
+          "value": "Files by Hasenl\u00e4ufer|Hauptstra\u00dfe (Heidelberg)|Media with locations|Pages with maps|Photographs taken on 2002-04-02"
+        },
+        "CommonsMetadataExtension": {
+          "hidden": "",
+          "source": "extension",
+          "value": 1.2
+        },
+        "Copyrighted": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "True"
+        },
+        "Credit": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+        },
+        "DateTime": {
+          "hidden": "",
+          "source": "mediawiki-metadata",
+          "value": "2015-10-31 23:00:22"
+        },
+        "DateTimeOriginal": {
+          "source": "commons-desc-page",
+          "value": "2002-04-02"
+        },
+        "GPSLatitude": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "49.411580"
+        },
+        "GPSLongitude": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "8.705512"
+        },
+        "GPSMapDatum": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "WGS-84"
+        },
+        "ImageDescription": {
+          "source": "commons-desc-page",
+          "value": "Blick in die <a href=\"https://de.wikipedia.org/wiki/Hauptstra%C3%9Fe_(Heidelberg)\" class=\"extiw\" title=\"de:Hauptstra\u00dfe (Heidelberg)\">Hauptstra\u00dfe</a> in Richtung Westen, etwas westlich des Universit\u00e4tsplatzes, <a href=\"https://de.wikipedia.org/wiki/Heidelberg\" class=\"extiw\" title=\"de:Heidelberg\">Heidelberg</a>"
+        },
+        "License": {
+          "hidden": "",
+          "source": "commons-templates",
+          "value": "cc-by-sa-3.0-de"
+        },
+        "LicenseShortName": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "CC BY-SA 3.0 de"
+        },
+        "LicenseUrl": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en"
+        },
+        "ObjectName": {
+          "hidden": "",
+          "source": "mediawiki-metadata",
+          "value": "2002-04-02 Hauptstra\u00dfe, Heidelberg IMG 0404"
+        },
+        "Permission": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "This image is <b>not <a href=\"https://en.wikipedia.org/wiki/Public_domain\" class=\"extiw\" title=\"en:Public domain\">public domain</a></b>. Please respect the copyright protection. It may only be used according to the rules mentioned here. This specifically <b>excludes use in social media</b>, if applicable terms of the licenses listed here not appropriate."
+        },
+        "Restrictions": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": ""
+        },
+        "UsageTerms": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "Creative Commons Attribution-Share Alike 3.0 de"
+        }
+      },
+      "height": 1172,
+      "size": 816636,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/e/e9/2002-04-02_Hauptstra%C3%9Fe%2C_Heidelberg_IMG_0404.jpg",
+      "user": "Hasenl\u00e4ufer",
+      "width": 1563
+    }
+  ],
+  "imagerepository": "local",
+  "ns": 6,
+  "pageid": 44672185,
+  "title": "File:2002-04-02 Hauptstra\u00dfe, Heidelberg IMG 0404.jpg"
 }

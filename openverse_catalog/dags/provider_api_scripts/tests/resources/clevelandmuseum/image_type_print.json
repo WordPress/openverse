@@ -1,6 +1,9 @@
-{"print": {"url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_print.jpg", 
-        "filename": "1335.1917_print.jpg", 
-        "filesize": "5582485", 
-        "width": "3400", 
-        "height": "2086"}
+{
+  "print": {
+    "filename": "1335.1917_print.jpg",
+    "filesize": "5582485",
+    "height": "2086",
+    "url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_print.jpg",
+    "width": "3400"
+  }
 }

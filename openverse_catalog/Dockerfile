@@ -17,6 +17,8 @@ USER airflow
 RUN mkdir -p ${OUTPUT_DIR}
 WORKDIR  ${AIRFLOW_HOME}
 ADD ./${REQUIREMENTS_FILE} ${AIRFLOW_HOME}
+# Always add the prod req because the dev reqs depend on it for deduplication
+ADD ./requirements_prod.txt ${AIRFLOW_HOME}
 ADD ./wait_for_db.py ${AIRFLOW_HOME}
 ADD ./dags ${AIRFLOW_HOME}/dags
 

@@ -1,102 +1,102 @@
 {
-    "pageid": 81754323,
-    "ns": 6,
-    "title": "File:20120925 PlozevetBretagne LoneTree DSC07971 PtrQs.jpg",
-    "imagerepository": "local",
-    "imageinfo": [
-        {
-            "user": "PtrQs",
-            "size": 11863148,
-            "width": 5514,
-            "height": 3102,
-            "url": "https://upload.wikimedia.org/wikipedia/commons/2/25/20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg",
-            "descriptionurl": "https://commons.wikimedia.org/wiki/File:20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg",
-            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=81754323",
-            "extmetadata": {
-                "DateTime": {
-                    "value": "2019-09-01 00:38:47",
-                    "source": "mediawiki-metadata",
-                    "hidden": ""
-                },
-                "ObjectName": {
-                    "value": "20120925 PlozevetBretagne LoneTree DSC07971 PtrQs",
-                    "source": "mediawiki-metadata",
-                    "hidden": ""
-                },
-                "CommonsMetadataExtension": {
-                    "value": 1.2,
-                    "source": "extension",
-                    "hidden": ""
-                },
-                "Categories": {
-                    "value": "Coasts of Ploz\u00e9vet|No QIC by usr:PtrQs|Photographs taken with Minolta AF Zoom 28-70mm F2.8 G|Self-published work|Taken with Sony DSLR-A900|Trees in Finist\u00e8re",
-                    "source": "commons-categories",
-                    "hidden": ""
-                },
-                "Assessments": {
-                    "value": "",
-                    "source": "commons-categories",
-                    "hidden": ""
-                },
-                "ImageDescription": {
-                    "value": "SONY DSC",
-                    "source": "commons-desc-page"
-                },
-                "DateTimeOriginal": {
-                    "value": "2012-09-25 16:23:02",
-                    "source": "commons-desc-page"
-                },
-                "Credit": {
-                    "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
-                    "source": "commons-desc-page",
-                    "hidden": ""
-                },
-                "Artist": {
-                    "value": "<a href=\"//commons.wikimedia.org/wiki/User:PtrQs\" title=\"User:PtrQs\">PtrQs</a>",
-                    "source": "commons-desc-page"
-                },
-                "LicenseShortName": {
-                    "value": "CC BY-SA 4.0",
-                    "source": "commons-desc-page",
-                    "hidden": ""
-                },
-                "UsageTerms": {
-                    "value": "Creative Commons Attribution-Share Alike 4.0",
-                    "source": "commons-desc-page",
-                    "hidden": ""
-                },
-                "AttributionRequired": {
-                    "value": "true",
-                    "source": "commons-desc-page",
-                    "hidden": ""
-                },
-                "Attribution": {
-                    "value": "Photo by <a href=\"//commons.wikimedia.org/wiki/User:PtrQs\" title=\"User:PtrQs\">PtrQs</a>",
-                    "source": "commons-desc-page",
-                    "hidden": ""
-                },
-                "LicenseUrl": {
-                    "value": "https://creativecommons.org/licenses/by-sa/4.0",
-                    "source": "commons-desc-page",
-                    "hidden": ""
-                },
-                "Copyrighted": {
-                    "value": "True",
-                    "source": "commons-desc-page",
-                    "hidden": ""
-                },
-                "Restrictions": {
-                    "value": "",
-                    "source": "commons-desc-page",
-                    "hidden": ""
-                },
-                "License": {
-                    "value": "cc-by-sa-4.0",
-                    "source": "commons-templates",
-                    "hidden": ""
-                }
-            },
-            "mediatype": "BITMAP"
+  "imageinfo": [
+    {
+      "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=81754323",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg",
+      "extmetadata": {
+        "Artist": {
+          "source": "commons-desc-page",
+          "value": "<a href=\"//commons.wikimedia.org/wiki/User:PtrQs\" title=\"User:PtrQs\">PtrQs</a>"
+        },
+        "Assessments": {
+          "hidden": "",
+          "source": "commons-categories",
+          "value": ""
+        },
+        "Attribution": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "Photo by <a href=\"//commons.wikimedia.org/wiki/User:PtrQs\" title=\"User:PtrQs\">PtrQs</a>"
+        },
+        "AttributionRequired": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "true"
+        },
+        "Categories": {
+          "hidden": "",
+          "source": "commons-categories",
+          "value": "Coasts of Ploz\u00e9vet|No QIC by usr:PtrQs|Photographs taken with Minolta AF Zoom 28-70mm F2.8 G|Self-published work|Taken with Sony DSLR-A900|Trees in Finist\u00e8re"
+        },
+        "CommonsMetadataExtension": {
+          "hidden": "",
+          "source": "extension",
+          "value": 1.2
+        },
+        "Copyrighted": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "True"
+        },
+        "Credit": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+        },
+        "DateTime": {
+          "hidden": "",
+          "source": "mediawiki-metadata",
+          "value": "2019-09-01 00:38:47"
+        },
+        "DateTimeOriginal": {
+          "source": "commons-desc-page",
+          "value": "2012-09-25 16:23:02"
+        },
+        "ImageDescription": {
+          "source": "commons-desc-page",
+          "value": "SONY DSC"
+        },
+        "License": {
+          "hidden": "",
+          "source": "commons-templates",
+          "value": "cc-by-sa-4.0"
+        },
+        "LicenseShortName": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "CC BY-SA 4.0"
+        },
+        "LicenseUrl": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "https://creativecommons.org/licenses/by-sa/4.0"
+        },
+        "ObjectName": {
+          "hidden": "",
+          "source": "mediawiki-metadata",
+          "value": "20120925 PlozevetBretagne LoneTree DSC07971 PtrQs"
+        },
+        "Restrictions": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": ""
+        },
+        "UsageTerms": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "Creative Commons Attribution-Share Alike 4.0"
         }
-    ]
+      },
+      "height": 3102,
+      "mediatype": "BITMAP",
+      "size": 11863148,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/25/20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg",
+      "user": "PtrQs",
+      "width": 5514
+    }
+  ],
+  "imagerepository": "local",
+  "ns": 6,
+  "pageid": 81754323,
+  "title": "File:20120925 PlozevetBretagne LoneTree DSC07971 PtrQs.jpg"
 }

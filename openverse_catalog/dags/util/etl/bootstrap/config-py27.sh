@@ -6,4 +6,3 @@ sudo pip install \
     ujson \
     requests \
     BeautifulSoup
-

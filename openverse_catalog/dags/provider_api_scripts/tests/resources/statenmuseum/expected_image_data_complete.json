@@ -1,16 +1,16 @@
 [
-    {
-        "iiif_id": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.reconstructed.tif.jp2",
-        "image_url": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.reconstructed.tif.jp2/full/max/0/default.jpg",
-        "thumbnail":"https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.reconstructed.tif.jp2/full/!400,/0/default.jpg",
-        "height": 1059,
-        "width": 3887
-    },
-    {
-        "iiif_id": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2",
-        "image_url": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/max/0/default.jpg",
-        "thumbnail":"https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/!400,/0/default.jpg",
-        "height": 1576,
-        "width": 4073
-    }
+  {
+    "height": 1059,
+    "iiif_id": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.reconstructed.tif.jp2",
+    "image_url": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.reconstructed.tif.jp2/full/max/0/default.jpg",
+    "thumbnail": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.reconstructed.tif.jp2/full/!400,/0/default.jpg",
+    "width": 3887
+  },
+  {
+    "height": 1576,
+    "iiif_id": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2",
+    "image_url": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/max/0/default.jpg",
+    "thumbnail": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/!400,/0/default.jpg",
+    "width": 4073
+  }
 ]

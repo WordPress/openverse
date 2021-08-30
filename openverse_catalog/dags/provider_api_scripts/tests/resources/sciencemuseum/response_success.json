@@ -1,1 +1,1264 @@
-{"data": [{"type": "objects", "id": "co85803", "attributes": {"admin": {"added": 1494269229000, "analytics": {"count": {"last": 9, "total": 92}}, "created": 826588800000, "id": "object-85803", "language": "eng", "modified": 1573567088000, "previous_status": "valid and published", "processed": 1589839680667, "source": "smgc", "stream": "smg-online", "uid": "co85803", "uuid": "136fcdaf-5409-32ba-8b7d-88de71be0c69", "version": 43}, "categories": [{"museum": "SCM", "name": "Classical & Medieval Medicine", "value": "SCM - Classical & Medieval Medicine"}], "description": [{"primary": true, "type": "accession register", "value": "Pair of votive breasts, marble, on inscribed slab, Greek, 600BC-200BC"}, {"date": [{"earliest": 2010, "latest": 2010, "primary": true, "value": "2010-05-19"}], "type": "description", "value": "Pair of votive breasts, marble, on inscribed slab, Greek, 600BC-200BC (see note)"}], "identifier": [{"primary": true, "type": "accession number", "value": "A163983"}], "inscription": [{"location": "front", "method": "carved", "note": [{"value": "SB = Short inscription in Greek, translated as \"Epikratea ( dedicated this) to Eilythnia as a votive offering\""}], "type": "inscription"}], "language": ["eng"], "legal": {"legal_status": "loan: wellcome trust"}, "lifecycle": {"creation": [{"date": [{"earliest": 600, "latest": 583, "primary": true, "value": "600-200"}], "maker": [{"@link": {"role": [{"value": "maker"}], "type": "reference"}, "admin": {"id": "agent-21665", "uid": "cp21665", "uuid": "2b819f5a-2e1d-3432-8d8a-a01bf2ab3f86"}, "summary_title": "Unknown maker"}], "places": [{"@link": {"type": "reference"}, "admin": {"id": "place-168", "uid": "cd168", "uuid": "930dae73-d63e-38e5-9440-59f6d55e1276"}, "summary_title": "Greece"}]}]}, "locations": [{"@link": {"type": "literal"}, "admin": {"id": "location-2276070", "uuid": "04eb4ff1-b7e9-37a4-8908-25cc9c530874"}, "facilities": [{"@link": {"type": "reference"}, "admin": {"id": "facility-62029", "uid": "cf62029", "uuid": "c805d997-7510-3365-80fd-1329304c7aca"}, "summary_title": "Science Museum, Medicine: The Wellcome Galleries"}], "level1": "S", "level2": "G30", "level3": "WW05", "level4": "South Side", "name": [{"primary": true, "value": "Science Museum, Medicine: The Wellcome Galleries"}, {"type": "gallery", "value": "Medicine: The Wellcome Galleries"}, {"type": "museum", "value": "Science Museum"}], "purpose": "on display", "summary_title": "Science Museum, Medicine: The Wellcome Galleries", "value": "Science Museum, Medicine: The Wellcome Galleries"}], "measurements": {"dimensions": [{"dimension": "depth", "units": "in", "value": "3 1/16"}, {"dimension": "depth", "units": "mm", "value": "78"}, {"dimension": "height", "units": "in", "value": "6 1/8"}, {"dimension": "height", "units": "mm", "value": "155"}, {"dimension": "width", "units": "in", "value": "10 5/8"}, {"dimension": "width", "units": "mm", "value": "270"}, {"units": "kg", "value": "3.72"}, {"units": "lbs", "value": "8.20124"}, {"units": "mm", "value": "150"}, {"units": "mm", "value": "258"}, {"units": "mm", "value": "67"}], "display": "overall: 155 mm x 270 mm x 78 mm, 3.72 kg"}, "multimedia": [{"@link": {"type": "reference"}, "admin": {"id": "media-57370", "source": "smgi", "uid": "i57370", "uuid": "fb8feef7-7854-3ce4-966e-77b175a919dd"}, "credit": "Science Museum Group Collection", "enhancement": {"rekognition": [{"labels": [{"details": {"confidence": 83.735596}, "value": "Fossil"}], "source": "amazon rekognition"}]}, "for_sale": "0", "identifier": [{"type": "iBase id", "value": "57370"}], "priority": "0.5", "processed": {"large": {"format": "jpeg", "location": "57/370/large_A163983__0001_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 1150}, {"dimension": "width", "units": "pixels", "value": 1536}]}, "modified": 1472030806000, "resizable": true, "type": "image"}, "large_thumbnail": {"format": "jpeg", "location": "https://coimages.sciencemuseumgroup.org.uk/images/57/370/large_thumbnail_A163983__0001_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 240}, {"dimension": "width", "units": "pixels", "value": 321}]}, "modified": 1472030806000, "resizable": true, "type": "image"}, "medium": {"format": "jpeg", "location": "57/370/medium_A163983__0001_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 576}, {"dimension": "width", "units": "pixels", "value": 769}]}, "modified": 1472030806000, "resizable": true, "type": "image"}, "medium_thumbnail": {"format": "jpeg", "location": "57/370/medium_thumbnail_A163983__0001_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 144}, {"dimension": "width", "units": "pixels", "value": 192}]}, "modified": 1472030806000, "resizable": true, "type": "image"}, "small_thumbnail": {"format": "jpeg", "location": "57/370/small_thumbnail_A163983__0001_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 48}, {"dimension": "width", "units": "pixels", "value": 64}]}, "modified": 1472030806000, "resizable": true, "type": "image"}, "zoom": {"format": "pyramid tiff", "location": "57/370/A163983__0001_.ptif", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 5474}, {"dimension": "width", "units": "pixels", "value": 7312}]}, "modified": 1472030806000, "resizable": true, "type": "image"}}, "public_view": "1", "publish": "1", "sort": "2015-06-09 09:02:04.0", "source": {"legal": {"rights": [{"details": "\u00a9 The Board of Trustees of the Science Museum", "usage_terms": "CC-BY-NC-SA 4.0"}]}, "title": [{"type": "caption", "value": "Pair of votive breasts, marble, on inscribed slab, Greek"}, {"type": "main title", "value": "Pair of votive breasts, marble, on inscribed slab, Greek, 600BC-200BC (see note). marble. SCM - Classical & Medieval"}]}, "traffic_light": "Green", "type": {"base": "media", "type": "image"}}, {"@link": {"type": "reference"}, "admin": {"id": "media-57371", "source": "smgi", "uid": "i57371", "uuid": "775a0381-43d6-3415-9b96-c2e842862942"}, "credit": "Science Museum Group Collection", "enhancement": {"rekognition": [{"labels": [{"details": {"confidence": 96.52095}, "value": "Fossil"}, {"details": {"confidence": 91.183174}, "value": "Soil"}, {"details": {"confidence": 80.030785}, "value": "Archaeology"}, {"details": {"confidence": 78.09733}, "value": "Food"}], "source": "amazon rekognition"}]}, "for_sale": "0", "identifier": [{"type": "iBase id", "value": "57371"}], "priority": "0.5", "processed": {"large": {"format": "jpeg", "location": "57/371/large_A163983__0002_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 1150}, {"dimension": "width", "units": "pixels", "value": 1536}]}, "modified": 1472030810000, "resizable": true, "type": "image"}, "large_thumbnail": {"format": "jpeg", "location": "57/371/large_thumbnail_A163983__0002_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 240}, {"dimension": "width", "units": "pixels", "value": 321}]}, "modified": 1472030810000, "resizable": true, "type": "image"}, "medium": {"format": "jpeg", "location": "57/371/medium_A163983__0002_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 576}, {"dimension": "width", "units": "pixels", "value": 769}]}, "modified": 1472030810000, "resizable": true, "type": "image"}, "medium_thumbnail": {"format": "jpeg", "location": "57/371/medium_thumbnail_A163983__0002_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 144}, {"dimension": "width", "units": "pixels", "value": 192}]}, "modified": 1472030810000, "resizable": true, "type": "image"}, "small_thumbnail": {"format": "jpeg", "location": "57/371/small_thumbnail_A163983__0002_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 48}, {"dimension": "width", "units": "pixels", "value": 64}]}, "modified": 1472030810000, "resizable": true, "type": "image"}, "zoom": {"format": "pyramid tiff", "location": "57/371/A163983__0002_.ptif", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 5474}, {"dimension": "width", "units": "pixels", "value": 7312}]}, "modified": 1472030810000, "resizable": true, "type": "image"}}, "public_view": "1", "publish": "1", "sort": "2015-06-09 09:02:30.0", "source": {"legal": {"rights": [{"details": "\u00a9 The Board of Trustees of the Science Museum", "usage_terms": "CC-BY-NC-SA 4.0"}]}, "title": [{"type": "caption", "value": "Pair of votive breasts, marble, on inscribed slab, Greek"}, {"type": "main title", "value": "Pair of votive breasts, marble, on inscribed slab, Greek, 600BC-200BC (see note). marble. SCM - Classical & Medieval"}]}, "traffic_light": "Green", "type": {"base": "media", "type": "image"}}, {"@link": {"type": "reference"}, "admin": {"id": "media-57372", "source": "smgi", "uid": "i57372", "uuid": "dd367412-2a40-3c42-8f95-989848af9d5d"}, "credit": "Science Museum Group Collection", "enhancement": {"rekognition": [{"labels": [{"details": {"confidence": 99.101166}, "value": "Rock"}, {"details": {"confidence": 97.47944}, "value": "Food"}, {"details": {"confidence": 97.47944, "instances": [{"confidence": "94.7952", "region": {"height": 0.57440174, "left": 0.13222317, "top": 0.15846065, "type": "bounding box", "width": 0.70958084}}], "parents": [{"value": "Food"}]}, "value": "Bread"}, {"details": {"confidence": 94.86801, "parents": [{"value": "Bread"}, {"value": "Food"}]}, "value": "Cracker"}], "source": "amazon rekognition"}]}, "for_sale": "0", "identifier": [{"type": "iBase id", "value": "57372"}], "priority": "0.5", "processed": {"large": {"format": "jpeg", "location": "57/372/large_A163983__0003_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 1150}, {"dimension": "width", "units": "pixels", "value": 1536}]}, "modified": 1472030813000, "resizable": true, "type": "image"}, "large_thumbnail": {"format": "jpeg", "location": "57/372/large_thumbnail_A163983__0003_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 240}, {"dimension": "width", "units": "pixels", "value": 321}]}, "modified": 1472030813000, "resizable": true, "type": "image"}, "medium": {"format": "jpeg", "location": "57/372/medium_A163983__0003_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 576}, {"dimension": "width", "units": "pixels", "value": 769}]}, "modified": 1472030813000, "resizable": true, "type": "image"}, "medium_thumbnail": {"format": "jpeg", "location": "57/372/medium_thumbnail_A163983__0003_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 144}, {"dimension": "width", "units": "pixels", "value": 192}]}, "modified": 1472030813000, "resizable": true, "type": "image"}, "small_thumbnail": {"format": "jpeg", "location": "57/372/small_thumbnail_A163983__0003_.jpg", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 48}, {"dimension": "width", "units": "pixels", "value": 64}]}, "modified": 1472030813000, "resizable": true, "type": "image"}, "zoom": {"format": "pyramid tiff", "location": "57/372/A163983__0003_.ptif", "location_is_relative": true, "measurements": {"dimensions": [{"dimension": "height", "units": "pixels", "value": 5474}, {"dimension": "width", "units": "pixels", "value": 7312}]}, "modified": 1472030813000, "resizable": true, "type": "image"}}, "public_view": "1", "publish": "1", "sort": "2015-06-09 09:02:54.0", "source": {"legal": {"rights": [{"details": "\u00a9 The Board of Trustees of the Science Museum", "usage_terms": "CC-BY-NC-SA 4.0"}]}, "title": [{"type": "caption", "value": "Pair of votive breasts, marble, on inscribed slab, Greek"}, {"type": "main title", "value": "Pair of votive breasts, marble, on inscribed slab, Greek, 600BC-200BC (see note). marble. SCM - Classical & Medieval"}]}, "traffic_light": "Green", "type": {"base": "media", "type": "image"}}], "name": [{"primary": true, "value": "votive breast"}], "note": [{"primary": true, "value": "See replica (A636033) of this object [Nick Molteno 19th May 2010]"}], "numbers": {"NUMBER1": "90"}, "options": {"option3": "Bond, Sarah"}, "summary_title": "Pair of votive breasts (votive breast)", "title": [{"primary": true, "value": "Pair of votive breasts"}]}, "relationships": {"places": {"data": [{"type": "places", "id": "cd"}, {"type": "places", "id": "cd168"}]}, "terms": {"data": [{"type": "terms", "id": "ct267502"}]}}, "links": {"self": "https://collection.sciencemuseumgroup.org.uk/objects/co85803/pair-of-votive-breasts-votive-breast"}}], "included": [{"type": "places", "id": "cd", "attributes": {"summary_title": "Unattributed place"}, "links": {"self": "https://collection.sciencemuseumgroup.org.uk/places/cd"}}, {"type": "places", "id": "cd168", "attributes": {"summary_title": "Greece"}, "links": {"self": "https://collection.sciencemuseumgroup.org.uk/places/cd168"}}, {"type": "terms", "id": "ct267502", "attributes": {"summary_title": "votive breast"}, "links": {"self": "https://collection.sciencemuseumgroup.org.uk/terms/ct267502"}}], "links": {"self": "https://collection.sciencemuseumgroup.org.uk/search/date[from]/0/date[to]/1500/images/image_license?page[size]=1&page[number]=1", "first": "https://collection.sciencemuseumgroup.org.uk/search/date[from]/0/date[to]/1500/images/image_license?page[size]=1", "last": "https://collection.sciencemuseumgroup.org.uk/search/date[from]/0/date[to]/1500/images/image_license?page[size]=1&page[number]=3037", "prev": "https://collection.sciencemuseumgroup.org.uk/search/date[from]/0/date[to]/1500/images/image_license?page[size]=1", "next": "https://collection.sciencemuseumgroup.org.uk/search/date[from]/0/date[to]/1500/images/image_license?page[size]=1&page[number]=2"}, "meta": {"total_pages": 3038, "count": {"type": {"all": 3038, "people": 0, "objects": 3038, "documents": 0}}, "filters": {"category": [{"value": "Classical & Medieval Medicine", "count": 2847}, {"value": "Weighing & Measuring", "count": 65}, {"value": "Ethnography and Folk Medicine", "count": 27}, {"value": "Asian Medicine", "count": 15}, {"value": "Glass Technology", "count": 10}, {"value": "Astronomy", "count": 6}, {"value": "Lighting", "count": 6}, {"value": "Pharmacy-ware", "count": 6}, {"value": "Building Construction", "count": 5}, {"value": "Surgery", "count": 4}], "maker": [{"value": "Ancient Egyptian people", "count": 2}, {"value": "Copt", "count": 2}, {"value": ".Unattributed", "count": 1}, {"value": "Elkington and Company", "count": 1}, {"value": "Ibrahim ibn Said Al-Wazzan", "count": 1}, {"value": "Inca people", "count": 1}, {"value": "Ismail ibn al-Razzaz al-Jazari", "count": 1}, {"value": "Knights Templar", "count": 1}, {"value": "Maya", "count": 1}, {"value": "Persian", "count": 1}], "object_type": [{"value": "unguent bottle", "count": 450}, {"value": "flask - bottle", "count": 201}, {"value": "archaeology (roman)", "count": 148}, {"value": "probe - medical", "count": 139}, {"value": "scoop", "count": 121}, {"value": "spatula - medical", "count": 118}, {"value": "needle - piercing tool", "count": 113}, {"value": "statue", "count": 110}, {"value": "pin - fastener", "count": 105}, {"value": "votive foot", "count": 89}], "place": [{"value": "Roman Empire", "count": 38}, {"value": "Europe", "count": 29}, {"value": "Italy", "count": 28}, {"value": "Egypt", "count": 23}, {"value": "Gaza Strip", "count": 17}, {"value": "China", "count": 14}, {"value": "Carthage", "count": 10}, {"value": "Amarna", "count": 7}, {"value": "Cyprus", "count": 7}, {"value": "England", "count": 7}], "user": [{"value": "Hamonic Collection", "count": 186}, {"value": "Evangelista Gorga", "count": 69}, {"value": "Wellcome Institute", "count": 32}, {"value": "Asklepios", "count": 7}, {"value": "Henry William Peek", "count": 4}, {"value": "Christ's Hospital School", "count": 3}, {"value": "Heinrich Schliemann", "count": 3}, {"value": "British Medical Association", "count": 2}, {"value": "Henry Solomon Wellcome", "count": 2}, {"value": "Henry VII Tudor", "count": 2}], "archive": [], "occupation": [], "place_born": [], "organisation": [], "material": [{"value": "complete", "count": 117}, {"value": "bronze", "count": 35}, {"value": "limestone", "count": 20}, {"value": "basalt", "count": 13}, {"value": "earthenware", "count": 12}, {"value": "glass", "count": 10}, {"value": "pottery", "count": 10}, {"value": "head, terracotta", "count": 9}, {"value": "iron", "count": 9}, {"value": "base, wood", "count": 8}], "museum": [{"value": "Science Museum", "displayValue": "Science Museum", "count": 30, "galleries": [{"key": "Medicine: The Wellcome Galleries", "doc_count": 30}]}], "image_license": [{"value": "Non-Commercial Use", "count": 3043}], "has_image": [{"value": "Has Image", "count": 3038}]}}, "inProduction": true}
+{
+  "data": [
+    {
+      "attributes": {
+        "admin": {
+          "added": 1494269229000,
+          "analytics": {
+            "count": {
+              "last": 9,
+              "total": 92
+            }
+          },
+          "created": 826588800000,
+          "id": "object-85803",
+          "language": "eng",
+          "modified": 1573567088000,
+          "previous_status": "valid and published",
+          "processed": 1589839680667,
+          "source": "smgc",
+          "stream": "smg-online",
+          "uid": "co85803",
+          "uuid": "136fcdaf-5409-32ba-8b7d-88de71be0c69",
+          "version": 43
+        },
+        "categories": [
+          {
+            "museum": "SCM",
+            "name": "Classical & Medieval Medicine",
+            "value": "SCM - Classical & Medieval Medicine"
+          }
+        ],
+        "description": [
+          {
+            "primary": true,
+            "type": "accession register",
+            "value": "Pair of votive breasts, marble, on inscribed slab, Greek, 600BC-200BC"
+          },
+          {
+            "date": [
+              {
+                "earliest": 2010,
+                "latest": 2010,
+                "primary": true,
+                "value": "2010-05-19"
+              }
+            ],
+            "type": "description",
+            "value": "Pair of votive breasts, marble, on inscribed slab, Greek, 600BC-200BC (see note)"
+          }
+        ],
+        "identifier": [
+          {
+            "primary": true,
+            "type": "accession number",
+            "value": "A163983"
+          }
+        ],
+        "inscription": [
+          {
+            "location": "front",
+            "method": "carved",
+            "note": [
+              {
+                "value": "SB = Short inscription in Greek, translated as \"Epikratea ( dedicated this) to Eilythnia as a votive offering\""
+              }
+            ],
+            "type": "inscription"
+          }
+        ],
+        "language": [
+          "eng"
+        ],
+        "legal": {
+          "legal_status": "loan: wellcome trust"
+        },
+        "lifecycle": {
+          "creation": [
+            {
+              "date": [
+                {
+                  "earliest": 600,
+                  "latest": 583,
+                  "primary": true,
+                  "value": "600-200"
+                }
+              ],
+              "maker": [
+                {
+                  "@link": {
+                    "role": [
+                      {
+                        "value": "maker"
+                      }
+                    ],
+                    "type": "reference"
+                  },
+                  "admin": {
+                    "id": "agent-21665",
+                    "uid": "cp21665",
+                    "uuid": "2b819f5a-2e1d-3432-8d8a-a01bf2ab3f86"
+                  },
+                  "summary_title": "Unknown maker"
+                }
+              ],
+              "places": [
+                {
+                  "@link": {
+                    "type": "reference"
+                  },
+                  "admin": {
+                    "id": "place-168",
+                    "uid": "cd168",
+                    "uuid": "930dae73-d63e-38e5-9440-59f6d55e1276"
+                  },
+                  "summary_title": "Greece"
+                }
+              ]
+            }
+          ]
+        },
+        "locations": [
+          {
+            "@link": {
+              "type": "literal"
+            },
+            "admin": {
+              "id": "location-2276070",
+              "uuid": "04eb4ff1-b7e9-37a4-8908-25cc9c530874"
+            },
+            "facilities": [
+              {
+                "@link": {
+                  "type": "reference"
+                },
+                "admin": {
+                  "id": "facility-62029",
+                  "uid": "cf62029",
+                  "uuid": "c805d997-7510-3365-80fd-1329304c7aca"
+                },
+                "summary_title": "Science Museum, Medicine: The Wellcome Galleries"
+              }
+            ],
+            "level1": "S",
+            "level2": "G30",
+            "level3": "WW05",
+            "level4": "South Side",
+            "name": [
+              {
+                "primary": true,
+                "value": "Science Museum, Medicine: The Wellcome Galleries"
+              },
+              {
+                "type": "gallery",
+                "value": "Medicine: The Wellcome Galleries"
+              },
+              {
+                "type": "museum",
+                "value": "Science Museum"
+              }
+            ],
+            "purpose": "on display",
+            "summary_title": "Science Museum, Medicine: The Wellcome Galleries",
+            "value": "Science Museum, Medicine: The Wellcome Galleries"
+          }
+        ],
+        "measurements": {
+          "dimensions": [
+            {
+              "dimension": "depth",
+              "units": "in",
+              "value": "3 1/16"
+            },
+            {
+              "dimension": "depth",
+              "units": "mm",
+              "value": "78"
+            },
+            {
+              "dimension": "height",
+              "units": "in",
+              "value": "6 1/8"
+            },
+            {
+              "dimension": "height",
+              "units": "mm",
+              "value": "155"
+            },
+            {
+              "dimension": "width",
+              "units": "in",
+              "value": "10 5/8"
+            },
+            {
+              "dimension": "width",
+              "units": "mm",
+              "value": "270"
+            },
+            {
+              "units": "kg",
+              "value": "3.72"
+            },
+            {
+              "units": "lbs",
+              "value": "8.20124"
+            },
+            {
+              "units": "mm",
+              "value": "150"
+            },
+            {
+              "units": "mm",
+              "value": "258"
+            },
+            {
+              "units": "mm",
+              "value": "67"
+            }
+          ],
+          "display": "overall: 155 mm x 270 mm x 78 mm, 3.72 kg"
+        },
+        "multimedia": [
+          {
+            "@link": {
+              "type": "reference"
+            },
+            "admin": {
+              "id": "media-57370",
+              "source": "smgi",
+              "uid": "i57370",
+              "uuid": "fb8feef7-7854-3ce4-966e-77b175a919dd"
+            },
+            "credit": "Science Museum Group Collection",
+            "enhancement": {
+              "rekognition": [
+                {
+                  "labels": [
+                    {
+                      "details": {
+                        "confidence": 83.735596
+                      },
+                      "value": "Fossil"
+                    }
+                  ],
+                  "source": "amazon rekognition"
+                }
+              ]
+            },
+            "for_sale": "0",
+            "identifier": [
+              {
+                "type": "iBase id",
+                "value": "57370"
+              }
+            ],
+            "priority": "0.5",
+            "processed": {
+              "large": {
+                "format": "jpeg",
+                "location": "57/370/large_A163983__0001_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 1150
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 1536
+                    }
+                  ]
+                },
+                "modified": 1472030806000,
+                "resizable": true,
+                "type": "image"
+              },
+              "large_thumbnail": {
+                "format": "jpeg",
+                "location": "https://coimages.sciencemuseumgroup.org.uk/images/57/370/large_thumbnail_A163983__0001_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 240
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 321
+                    }
+                  ]
+                },
+                "modified": 1472030806000,
+                "resizable": true,
+                "type": "image"
+              },
+              "medium": {
+                "format": "jpeg",
+                "location": "57/370/medium_A163983__0001_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 576
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 769
+                    }
+                  ]
+                },
+                "modified": 1472030806000,
+                "resizable": true,
+                "type": "image"
+              },
+              "medium_thumbnail": {
+                "format": "jpeg",
+                "location": "57/370/medium_thumbnail_A163983__0001_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 144
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 192
+                    }
+                  ]
+                },
+                "modified": 1472030806000,
+                "resizable": true,
+                "type": "image"
+              },
+              "small_thumbnail": {
+                "format": "jpeg",
+                "location": "57/370/small_thumbnail_A163983__0001_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 48
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 64
+                    }
+                  ]
+                },
+                "modified": 1472030806000,
+                "resizable": true,
+                "type": "image"
+              },
+              "zoom": {
+                "format": "pyramid tiff",
+                "location": "57/370/A163983__0001_.ptif",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 5474
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 7312
+                    }
+                  ]
+                },
+                "modified": 1472030806000,
+                "resizable": true,
+                "type": "image"
+              }
+            },
+            "public_view": "1",
+            "publish": "1",
+            "sort": "2015-06-09 09:02:04.0",
+            "source": {
+              "legal": {
+                "rights": [
+                  {
+                    "details": "\u00a9 The Board of Trustees of the Science Museum",
+                    "usage_terms": "CC-BY-NC-SA 4.0"
+                  }
+                ]
+              },
+              "title": [
+                {
+                  "type": "caption",
+                  "value": "Pair of votive breasts, marble, on inscribed slab, Greek"
+                },
+                {
+                  "type": "main title",
+                  "value": "Pair of votive breasts, marble, on inscribed slab, Greek, 600BC-200BC (see note). marble. SCM - Classical & Medieval"
+                }
+              ]
+            },
+            "traffic_light": "Green",
+            "type": {
+              "base": "media",
+              "type": "image"
+            }
+          },
+          {
+            "@link": {
+              "type": "reference"
+            },
+            "admin": {
+              "id": "media-57371",
+              "source": "smgi",
+              "uid": "i57371",
+              "uuid": "775a0381-43d6-3415-9b96-c2e842862942"
+            },
+            "credit": "Science Museum Group Collection",
+            "enhancement": {
+              "rekognition": [
+                {
+                  "labels": [
+                    {
+                      "details": {
+                        "confidence": 96.52095
+                      },
+                      "value": "Fossil"
+                    },
+                    {
+                      "details": {
+                        "confidence": 91.183174
+                      },
+                      "value": "Soil"
+                    },
+                    {
+                      "details": {
+                        "confidence": 80.030785
+                      },
+                      "value": "Archaeology"
+                    },
+                    {
+                      "details": {
+                        "confidence": 78.09733
+                      },
+                      "value": "Food"
+                    }
+                  ],
+                  "source": "amazon rekognition"
+                }
+              ]
+            },
+            "for_sale": "0",
+            "identifier": [
+              {
+                "type": "iBase id",
+                "value": "57371"
+              }
+            ],
+            "priority": "0.5",
+            "processed": {
+              "large": {
+                "format": "jpeg",
+                "location": "57/371/large_A163983__0002_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 1150
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 1536
+                    }
+                  ]
+                },
+                "modified": 1472030810000,
+                "resizable": true,
+                "type": "image"
+              },
+              "large_thumbnail": {
+                "format": "jpeg",
+                "location": "57/371/large_thumbnail_A163983__0002_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 240
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 321
+                    }
+                  ]
+                },
+                "modified": 1472030810000,
+                "resizable": true,
+                "type": "image"
+              },
+              "medium": {
+                "format": "jpeg",
+                "location": "57/371/medium_A163983__0002_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 576
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 769
+                    }
+                  ]
+                },
+                "modified": 1472030810000,
+                "resizable": true,
+                "type": "image"
+              },
+              "medium_thumbnail": {
+                "format": "jpeg",
+                "location": "57/371/medium_thumbnail_A163983__0002_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 144
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 192
+                    }
+                  ]
+                },
+                "modified": 1472030810000,
+                "resizable": true,
+                "type": "image"
+              },
+              "small_thumbnail": {
+                "format": "jpeg",
+                "location": "57/371/small_thumbnail_A163983__0002_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 48
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 64
+                    }
+                  ]
+                },
+                "modified": 1472030810000,
+                "resizable": true,
+                "type": "image"
+              },
+              "zoom": {
+                "format": "pyramid tiff",
+                "location": "57/371/A163983__0002_.ptif",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 5474
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 7312
+                    }
+                  ]
+                },
+                "modified": 1472030810000,
+                "resizable": true,
+                "type": "image"
+              }
+            },
+            "public_view": "1",
+            "publish": "1",
+            "sort": "2015-06-09 09:02:30.0",
+            "source": {
+              "legal": {
+                "rights": [
+                  {
+                    "details": "\u00a9 The Board of Trustees of the Science Museum",
+                    "usage_terms": "CC-BY-NC-SA 4.0"
+                  }
+                ]
+              },
+              "title": [
+                {
+                  "type": "caption",
+                  "value": "Pair of votive breasts, marble, on inscribed slab, Greek"
+                },
+                {
+                  "type": "main title",
+                  "value": "Pair of votive breasts, marble, on inscribed slab, Greek, 600BC-200BC (see note). marble. SCM - Classical & Medieval"
+                }
+              ]
+            },
+            "traffic_light": "Green",
+            "type": {
+              "base": "media",
+              "type": "image"
+            }
+          },
+          {
+            "@link": {
+              "type": "reference"
+            },
+            "admin": {
+              "id": "media-57372",
+              "source": "smgi",
+              "uid": "i57372",
+              "uuid": "dd367412-2a40-3c42-8f95-989848af9d5d"
+            },
+            "credit": "Science Museum Group Collection",
+            "enhancement": {
+              "rekognition": [
+                {
+                  "labels": [
+                    {
+                      "details": {
+                        "confidence": 99.101166
+                      },
+                      "value": "Rock"
+                    },
+                    {
+                      "details": {
+                        "confidence": 97.47944
+                      },
+                      "value": "Food"
+                    },
+                    {
+                      "details": {
+                        "confidence": 97.47944,
+                        "instances": [
+                          {
+                            "confidence": "94.7952",
+                            "region": {
+                              "height": 0.57440174,
+                              "left": 0.13222317,
+                              "top": 0.15846065,
+                              "type": "bounding box",
+                              "width": 0.70958084
+                            }
+                          }
+                        ],
+                        "parents": [
+                          {
+                            "value": "Food"
+                          }
+                        ]
+                      },
+                      "value": "Bread"
+                    },
+                    {
+                      "details": {
+                        "confidence": 94.86801,
+                        "parents": [
+                          {
+                            "value": "Bread"
+                          },
+                          {
+                            "value": "Food"
+                          }
+                        ]
+                      },
+                      "value": "Cracker"
+                    }
+                  ],
+                  "source": "amazon rekognition"
+                }
+              ]
+            },
+            "for_sale": "0",
+            "identifier": [
+              {
+                "type": "iBase id",
+                "value": "57372"
+              }
+            ],
+            "priority": "0.5",
+            "processed": {
+              "large": {
+                "format": "jpeg",
+                "location": "57/372/large_A163983__0003_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 1150
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 1536
+                    }
+                  ]
+                },
+                "modified": 1472030813000,
+                "resizable": true,
+                "type": "image"
+              },
+              "large_thumbnail": {
+                "format": "jpeg",
+                "location": "57/372/large_thumbnail_A163983__0003_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 240
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 321
+                    }
+                  ]
+                },
+                "modified": 1472030813000,
+                "resizable": true,
+                "type": "image"
+              },
+              "medium": {
+                "format": "jpeg",
+                "location": "57/372/medium_A163983__0003_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 576
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 769
+                    }
+                  ]
+                },
+                "modified": 1472030813000,
+                "resizable": true,
+                "type": "image"
+              },
+              "medium_thumbnail": {
+                "format": "jpeg",
+                "location": "57/372/medium_thumbnail_A163983__0003_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 144
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 192
+                    }
+                  ]
+                },
+                "modified": 1472030813000,
+                "resizable": true,
+                "type": "image"
+              },
+              "small_thumbnail": {
+                "format": "jpeg",
+                "location": "57/372/small_thumbnail_A163983__0003_.jpg",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 48
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 64
+                    }
+                  ]
+                },
+                "modified": 1472030813000,
+                "resizable": true,
+                "type": "image"
+              },
+              "zoom": {
+                "format": "pyramid tiff",
+                "location": "57/372/A163983__0003_.ptif",
+                "location_is_relative": true,
+                "measurements": {
+                  "dimensions": [
+                    {
+                      "dimension": "height",
+                      "units": "pixels",
+                      "value": 5474
+                    },
+                    {
+                      "dimension": "width",
+                      "units": "pixels",
+                      "value": 7312
+                    }
+                  ]
+                },
+                "modified": 1472030813000,
+                "resizable": true,
+                "type": "image"
+              }
+            },
+            "public_view": "1",
+            "publish": "1",
+            "sort": "2015-06-09 09:02:54.0",
+            "source": {
+              "legal": {
+                "rights": [
+                  {
+                    "details": "\u00a9 The Board of Trustees of the Science Museum",
+                    "usage_terms": "CC-BY-NC-SA 4.0"
+                  }
+                ]
+              },
+              "title": [
+                {
+                  "type": "caption",
+                  "value": "Pair of votive breasts, marble, on inscribed slab, Greek"
+                },
+                {
+                  "type": "main title",
+                  "value": "Pair of votive breasts, marble, on inscribed slab, Greek, 600BC-200BC (see note). marble. SCM - Classical & Medieval"
+                }
+              ]
+            },
+            "traffic_light": "Green",
+            "type": {
+              "base": "media",
+              "type": "image"
+            }
+          }
+        ],
+        "name": [
+          {
+            "primary": true,
+            "value": "votive breast"
+          }
+        ],
+        "note": [
+          {
+            "primary": true,
+            "value": "See replica (A636033) of this object [Nick Molteno 19th May 2010]"
+          }
+        ],
+        "numbers": {
+          "NUMBER1": "90"
+        },
+        "options": {
+          "option3": "Bond, Sarah"
+        },
+        "summary_title": "Pair of votive breasts (votive breast)",
+        "title": [
+          {
+            "primary": true,
+            "value": "Pair of votive breasts"
+          }
+        ]
+      },
+      "id": "co85803",
+      "links": {
+        "self": "https://collection.sciencemuseumgroup.org.uk/objects/co85803/pair-of-votive-breasts-votive-breast"
+      },
+      "relationships": {
+        "places": {
+          "data": [
+            {
+              "id": "cd",
+              "type": "places"
+            },
+            {
+              "id": "cd168",
+              "type": "places"
+            }
+          ]
+        },
+        "terms": {
+          "data": [
+            {
+              "id": "ct267502",
+              "type": "terms"
+            }
+          ]
+        }
+      },
+      "type": "objects"
+    }
+  ],
+  "inProduction": true,
+  "included": [
+    {
+      "attributes": {
+        "summary_title": "Unattributed place"
+      },
+      "id": "cd",
+      "links": {
+        "self": "https://collection.sciencemuseumgroup.org.uk/places/cd"
+      },
+      "type": "places"
+    },
+    {
+      "attributes": {
+        "summary_title": "Greece"
+      },
+      "id": "cd168",
+      "links": {
+        "self": "https://collection.sciencemuseumgroup.org.uk/places/cd168"
+      },
+      "type": "places"
+    },
+    {
+      "attributes": {
+        "summary_title": "votive breast"
+      },
+      "id": "ct267502",
+      "links": {
+        "self": "https://collection.sciencemuseumgroup.org.uk/terms/ct267502"
+      },
+      "type": "terms"
+    }
+  ],
+  "links": {
+    "first": "https://collection.sciencemuseumgroup.org.uk/search/date[from]/0/date[to]/1500/images/image_license?page[size]=1",
+    "last": "https://collection.sciencemuseumgroup.org.uk/search/date[from]/0/date[to]/1500/images/image_license?page[size]=1&page[number]=3037",
+    "next": "https://collection.sciencemuseumgroup.org.uk/search/date[from]/0/date[to]/1500/images/image_license?page[size]=1&page[number]=2",
+    "prev": "https://collection.sciencemuseumgroup.org.uk/search/date[from]/0/date[to]/1500/images/image_license?page[size]=1",
+    "self": "https://collection.sciencemuseumgroup.org.uk/search/date[from]/0/date[to]/1500/images/image_license?page[size]=1&page[number]=1"
+  },
+  "meta": {
+    "count": {
+      "type": {
+        "all": 3038,
+        "documents": 0,
+        "objects": 3038,
+        "people": 0
+      }
+    },
+    "filters": {
+      "archive": [],
+      "category": [
+        {
+          "count": 2847,
+          "value": "Classical & Medieval Medicine"
+        },
+        {
+          "count": 65,
+          "value": "Weighing & Measuring"
+        },
+        {
+          "count": 27,
+          "value": "Ethnography and Folk Medicine"
+        },
+        {
+          "count": 15,
+          "value": "Asian Medicine"
+        },
+        {
+          "count": 10,
+          "value": "Glass Technology"
+        },
+        {
+          "count": 6,
+          "value": "Astronomy"
+        },
+        {
+          "count": 6,
+          "value": "Lighting"
+        },
+        {
+          "count": 6,
+          "value": "Pharmacy-ware"
+        },
+        {
+          "count": 5,
+          "value": "Building Construction"
+        },
+        {
+          "count": 4,
+          "value": "Surgery"
+        }
+      ],
+      "has_image": [
+        {
+          "count": 3038,
+          "value": "Has Image"
+        }
+      ],
+      "image_license": [
+        {
+          "count": 3043,
+          "value": "Non-Commercial Use"
+        }
+      ],
+      "maker": [
+        {
+          "count": 2,
+          "value": "Ancient Egyptian people"
+        },
+        {
+          "count": 2,
+          "value": "Copt"
+        },
+        {
+          "count": 1,
+          "value": ".Unattributed"
+        },
+        {
+          "count": 1,
+          "value": "Elkington and Company"
+        },
+        {
+          "count": 1,
+          "value": "Ibrahim ibn Said Al-Wazzan"
+        },
+        {
+          "count": 1,
+          "value": "Inca people"
+        },
+        {
+          "count": 1,
+          "value": "Ismail ibn al-Razzaz al-Jazari"
+        },
+        {
+          "count": 1,
+          "value": "Knights Templar"
+        },
+        {
+          "count": 1,
+          "value": "Maya"
+        },
+        {
+          "count": 1,
+          "value": "Persian"
+        }
+      ],
+      "material": [
+        {
+          "count": 117,
+          "value": "complete"
+        },
+        {
+          "count": 35,
+          "value": "bronze"
+        },
+        {
+          "count": 20,
+          "value": "limestone"
+        },
+        {
+          "count": 13,
+          "value": "basalt"
+        },
+        {
+          "count": 12,
+          "value": "earthenware"
+        },
+        {
+          "count": 10,
+          "value": "glass"
+        },
+        {
+          "count": 10,
+          "value": "pottery"
+        },
+        {
+          "count": 9,
+          "value": "head, terracotta"
+        },
+        {
+          "count": 9,
+          "value": "iron"
+        },
+        {
+          "count": 8,
+          "value": "base, wood"
+        }
+      ],
+      "museum": [
+        {
+          "count": 30,
+          "displayValue": "Science Museum",
+          "galleries": [
+            {
+              "doc_count": 30,
+              "key": "Medicine: The Wellcome Galleries"
+            }
+          ],
+          "value": "Science Museum"
+        }
+      ],
+      "object_type": [
+        {
+          "count": 450,
+          "value": "unguent bottle"
+        },
+        {
+          "count": 201,
+          "value": "flask - bottle"
+        },
+        {
+          "count": 148,
+          "value": "archaeology (roman)"
+        },
+        {
+          "count": 139,
+          "value": "probe - medical"
+        },
+        {
+          "count": 121,
+          "value": "scoop"
+        },
+        {
+          "count": 118,
+          "value": "spatula - medical"
+        },
+        {
+          "count": 113,
+          "value": "needle - piercing tool"
+        },
+        {
+          "count": 110,
+          "value": "statue"
+        },
+        {
+          "count": 105,
+          "value": "pin - fastener"
+        },
+        {
+          "count": 89,
+          "value": "votive foot"
+        }
+      ],
+      "occupation": [],
+      "organisation": [],
+      "place": [
+        {
+          "count": 38,
+          "value": "Roman Empire"
+        },
+        {
+          "count": 29,
+          "value": "Europe"
+        },
+        {
+          "count": 28,
+          "value": "Italy"
+        },
+        {
+          "count": 23,
+          "value": "Egypt"
+        },
+        {
+          "count": 17,
+          "value": "Gaza Strip"
+        },
+        {
+          "count": 14,
+          "value": "China"
+        },
+        {
+          "count": 10,
+          "value": "Carthage"
+        },
+        {
+          "count": 7,
+          "value": "Amarna"
+        },
+        {
+          "count": 7,
+          "value": "Cyprus"
+        },
+        {
+          "count": 7,
+          "value": "England"
+        }
+      ],
+      "place_born": [],
+      "user": [
+        {
+          "count": 186,
+          "value": "Hamonic Collection"
+        },
+        {
+          "count": 69,
+          "value": "Evangelista Gorga"
+        },
+        {
+          "count": 32,
+          "value": "Wellcome Institute"
+        },
+        {
+          "count": 7,
+          "value": "Asklepios"
+        },
+        {
+          "count": 4,
+          "value": "Henry William Peek"
+        },
+        {
+          "count": 3,
+          "value": "Christ's Hospital School"
+        },
+        {
+          "count": 3,
+          "value": "Heinrich Schliemann"
+        },
+        {
+          "count": 2,
+          "value": "British Medical Association"
+        },
+        {
+          "count": 2,
+          "value": "Henry Solomon Wellcome"
+        },
+        {
+          "count": 2,
+          "value": "Henry VII Tudor"
+        }
+      ]
+    },
+    "total_pages": 3038
+  }
+}

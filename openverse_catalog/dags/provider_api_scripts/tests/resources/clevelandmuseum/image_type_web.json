@@ -1,7 +1,9 @@
-{"web": {"url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg", 
-        "filename": "1335.1917_web.jpg", 
-        "filesize": "716717",
-         "width": "1263",
-          "height": "775"
-        }
+{
+  "web": {
+    "filename": "1335.1917_web.jpg",
+    "filesize": "716717",
+    "height": "775",
+    "url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg",
+    "width": "1263"
+  }
 }

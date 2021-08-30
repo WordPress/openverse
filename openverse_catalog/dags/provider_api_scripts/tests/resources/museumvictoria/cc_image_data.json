@@ -1,1 +1,44 @@
-{"type": "image", "alternativeText": null, "large": {"width": 2785, "height": 2581, "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg", "size": 890933}, "medium": {"width": 1500, "height": 1390, "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-medium.jpg", "size": 170943}, "small": {"width": 540, "height": 500, "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg", "size": 20109}, "thumbnail": {"width": 250, "height": 250, "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-thumbnail.jpg", "size": 5282}, "id": "media/329745", "dateModified": "2019-07-09T05:51:00Z", "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr - 11 May 1915", "creators": ["Photographer: Deb Tout-Smith"], "sources": ["Museums Victoria"], "credit": null, "rightsStatement": "Copyright Museums Victoria / CC BY", "licence": {"name": "Attribution 4.0 International", "shortName": "CC BY", "uri": "https://creativecommons.org/licenses/by/4.0"}}
+{
+  "alternativeText": null,
+  "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr - 11 May 1915",
+  "creators": [
+    "Photographer: Deb Tout-Smith"
+  ],
+  "credit": null,
+  "dateModified": "2019-07-09T05:51:00Z",
+  "id": "media/329745",
+  "large": {
+    "height": 2581,
+    "size": 890933,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg",
+    "width": 2785
+  },
+  "licence": {
+    "name": "Attribution 4.0 International",
+    "shortName": "CC BY",
+    "uri": "https://creativecommons.org/licenses/by/4.0"
+  },
+  "medium": {
+    "height": 1390,
+    "size": 170943,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-medium.jpg",
+    "width": 1500
+  },
+  "rightsStatement": "Copyright Museums Victoria / CC BY",
+  "small": {
+    "height": 500,
+    "size": 20109,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg",
+    "width": 540
+  },
+  "sources": [
+    "Museums Victoria"
+  ],
+  "thumbnail": {
+    "height": 250,
+    "size": 5282,
+    "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-thumbnail.jpg",
+    "width": 250
+  },
+  "type": "image"
+}

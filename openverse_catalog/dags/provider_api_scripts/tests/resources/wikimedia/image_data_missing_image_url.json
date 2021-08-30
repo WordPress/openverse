@@ -1,1 +1,14 @@
-{"imageinfo": [{"descriptionshorturl": "https://commons.wikimedia.org/descriptionurl", "extmetadata": {"LicenseUrl": {"value": "https://creativecommons.org/licenses/by-sa/4.0", "source": "commons-desc-page", "hidden": ""}}}]}
+{
+  "imageinfo": [
+    {
+      "descriptionshorturl": "https://commons.wikimedia.org/descriptionurl",
+      "extmetadata": {
+        "LicenseUrl": {
+          "hidden": "",
+          "source": "commons-desc-page",
+          "value": "https://creativecommons.org/licenses/by-sa/4.0"
+        }
+      }
+    }
+  ]
+}

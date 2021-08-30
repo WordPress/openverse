@@ -1,0 +1,34 @@
+exclude: &exclude archive
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    exclude: *exclude
+    hooks:
+      - id: trailing-whitespace
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-case-conflict
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-xml
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: check-symlinks
+      - id: mixed-line-ending
+      - id: fix-encoding-pragma
+        args:
+          - --remove
+      - id: pretty-format-json
+        args:
+          - --autofix
+      - id: requirements-txt-fixer
+
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.9.2
+    exclude: *exclude
+    hooks:
+        - id: flake8
+          args:
+            - --per-file-ignores=test_*:E501

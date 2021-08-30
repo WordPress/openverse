@@ -1,5 +1,5 @@
 {
- "message": "Error.",
- "errorCode": "4.09", 
- "data": "The given limit value must be an integer, greater than or equal to 0, and also smaller than 35."
+  "data": "The given limit value must be an integer, greater than or equal to 0, and also smaller than 35.",
+  "errorCode": "4.09",
+  "message": "Error."
 }

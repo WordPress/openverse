@@ -1,1 +1,51 @@
-{"batchcomplete": "", "continue": {"gaicontinue": "next.jpg", "continue": "gaicontinue||"}, "query": {"pages": {"123": {"pageid": 123, "ns": 6, "title": "File:prettypic0.jpg", "imagerepository": "local", "imageinfo": [{"user": "User0", "size": 10000, "width": 5000, "height": 3000, "thumburl": "https://upl.wiki.org/thumburl0", "thumbwidth": 300, "thumbheight": 180, "url": "https://upl.wiki.org/url0", "descriptionurl": "https://comm.wiki.org/desc0", "descriptionshorturl": "https://comm.wiki.org/sml1", "extmetadata": {"ObjectName": {"value": "prettypic0.jpg", "source": "mediawiki-metadata", "hidden": ""}, "ImageDescription": {"value": "description 0", "source": "commons-desc-page"}, "Artist": {"value": "<a href=\"//commons.wikimedia.org/wiki/User:User0\" title=\"User:User0\">User0</a>", "source": "commons-desc-page"}, "LicenseUrl": {"value": "https://creativecommons.org/licenses/by-sa/4.0", "source": "commons-desc-page", "hidden": ""}}}]}}}}
+{
+  "batchcomplete": "",
+  "continue": {
+    "continue": "gaicontinue||",
+    "gaicontinue": "next.jpg"
+  },
+  "query": {
+    "pages": {
+      "123": {
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://comm.wiki.org/sml1",
+            "descriptionurl": "https://comm.wiki.org/desc0",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "<a href=\"//commons.wikimedia.org/wiki/User:User0\" title=\"User:User0\">User0</a>"
+              },
+              "ImageDescription": {
+                "source": "commons-desc-page",
+                "value": "description 0"
+              },
+              "LicenseUrl": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "https://creativecommons.org/licenses/by-sa/4.0"
+              },
+              "ObjectName": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "prettypic0.jpg"
+              }
+            },
+            "height": 3000,
+            "size": 10000,
+            "thumbheight": 180,
+            "thumburl": "https://upl.wiki.org/thumburl0",
+            "thumbwidth": 300,
+            "url": "https://upl.wiki.org/url0",
+            "user": "User0",
+            "width": 5000
+          }
+        ],
+        "imagerepository": "local",
+        "ns": 6,
+        "pageid": 123,
+        "title": "File:prettypic0.jpg"
+      }
+    }
+  }
+}

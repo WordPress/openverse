@@ -1,13 +1,13 @@
 {
   "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=81754323",
   "extmetadata": {
-    "ImageDescription": {
-      "value": "<br><br><big><b>Identificatie</b></big><br><b>Titel(s): </b>Allegorie op kunstenaar Francesco Mazzoli, bekend als Parmigianino",
-      "source": "commons-desc-page"
-    },
     "Artist": {
-      "value": "<a href=\"//commons.wikimedia.org/wiki/User:PtrQs\" title=\"User:PtrQs\">PtrQs</a>",
-      "source": "commons-desc-page"
+      "source": "commons-desc-page",
+      "value": "<a href=\"//commons.wikimedia.org/wiki/User:PtrQs\" title=\"User:PtrQs\">PtrQs</a>"
+    },
+    "ImageDescription": {
+      "source": "commons-desc-page",
+      "value": "<br><br><big><b>Identificatie</b></big><br><b>Titel(s): </b>Allegorie op kunstenaar Francesco Mazzoli, bekend als Parmigianino"
     }
   }
 }

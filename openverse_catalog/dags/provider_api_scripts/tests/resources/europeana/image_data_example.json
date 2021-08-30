@@ -4,7 +4,7 @@
     "Spain"
   ],
   "dataProvider": [
-    "Biblioteca Digital de Castilla y León"
+    "Biblioteca Digital de Castilla y Le\u00f3n"
   ],
   "dcCreator": [
     "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent2",
@@ -19,13 +19,13 @@
     ]
   },
   "dcDescription": [
-    "Sello en seco: España artística y monumental.",
-    "Se trata de la versión coloreada de las láminas utilizadas en: España artística y monumental / obra dirigida y ejecutada por Don Genaro Pérez de Villa-amil.-- Paris : Alberto Hauser, 1842-1850"
+    "Sello en seco: Espa\u00f1a art\u00edstica y monumental.",
+    "Se trata de la versi\u00f3n coloreada de las l\u00e1minas utilizadas en: Espa\u00f1a art\u00edstica y monumental / obra dirigida y ejecutada por Don Genaro P\u00e9rez de Villa-amil.-- Paris : Alberto Hauser, 1842-1850"
   ],
   "dcDescriptionLangAware": {
     "def": [
-      "Sello en seco: España artística y monumental.",
-      "Se trata de la versión coloreada de las láminas utilizadas en: España artística y monumental / obra dirigida y ejecutada por Don Genaro Pérez de Villa-amil.-- Paris : Alberto Hauser, 1842-1850"
+      "Sello en seco: Espa\u00f1a art\u00edstica y monumental.",
+      "Se trata de la versi\u00f3n coloreada de las l\u00e1minas utilizadas en: Espa\u00f1a art\u00edstica y monumental / obra dirigida y ejecutada por Don Genaro P\u00e9rez de Villa-amil.-- Paris : Alberto Hauser, 1842-1850"
     ]
   },
   "dcLanguage": [
@@ -43,7 +43,7 @@
   },
   "dcTitleLangAware": {
     "def": [
-      "Claustro del Monasterio de S. Salvador en Oña [Material gráfico]= Cloître du Monastère de S. Salvador à Oña"
+      "Claustro del Monasterio de S. Salvador en O\u00f1a [Material gr\u00e1fico]= Clo\u00eetre du Monast\u00e8re de S. Salvador \u00e0 O\u00f1a"
     ]
   },
   "dcTypeLangAware": {
@@ -62,21 +62,21 @@
       "def": "Villemin, Charles, fl. 1835-1849"
     },
     {
-      "def": "Pérez Villaamil, Genaro, 1807-1854"
+      "def": "P\u00e9rez Villaamil, Genaro, 1807-1854"
     },
     {
-      "def": "Carderera, Valentín, 1796-1880"
+      "def": "Carderera, Valent\u00edn, 1796-1880"
     },
     {
-      "def": "Monasterio de San Salvador de Oña"
+      "def": "Monasterio de San Salvador de O\u00f1a"
     }
   ],
   "edmAgentLabelLangAware": {
     "es": [
       "Villemin, Charles, fl. 1835-1849",
-      "Pérez Villaamil, Genaro, 1807-1854",
-      "Carderera, Valentín, 1796-1880",
-      "Monasterio de San Salvador de Oña"
+      "P\u00e9rez Villaamil, Genaro, 1807-1854",
+      "Carderera, Valent\u00edn, 1796-1880",
+      "Monasterio de San Salvador de O\u00f1a"
     ]
   },
   "edmConcept": [
@@ -84,12 +84,12 @@
   ],
   "edmConceptLabel": [
     {
-      "def": "Monasterio de San Salvador de Oña-Grabados"
+      "def": "Monasterio de San Salvador de O\u00f1a-Grabados"
     }
   ],
   "edmConceptPrefLabelLangAware": {
     "es": [
-      "Monasterio de San Salvador de Oña-Grabados"
+      "Monasterio de San Salvador de O\u00f1a-Grabados"
     ]
   },
   "edmDatasetName": [
@@ -151,29 +151,25 @@
       "def": "First half of the 19th century"
     },
     {
-      "def": "19й век"
+      "def": "19\u0439 \u0432\u0435\u043a"
     },
     {
-      "def": "Первая половниа 19-го века"
+      "def": "\u041f\u0435\u0440\u0432\u0430\u044f \u043f\u043e\u043b\u043e\u0432\u043d\u0438\u0430 19-\u0433\u043e \u0432\u0435\u043a\u0430"
     },
     {
-      "def": "19e siècle"
+      "def": "19e si\u00e8cle"
     },
     {
-      "def": "2e millénaire après J.-C."
+      "def": "2e mill\u00e9naire apr\u00e8s J.-C."
     },
     {
-      "def": "19e (début)"
+      "def": "19e (d\u00e9but)"
     },
     {
       "def": "19de eeuw"
     }
   ],
   "edmTimespanLabelLangAware": {
-    "ru": [
-      "19й век",
-      "Первая половниа 19-го века"
-    ],
     "def": [
       "1840s",
       "184?",
@@ -192,12 +188,16 @@
       "First half of the 19th century"
     ],
     "fr": [
-      "19e siècle",
-      "2e millénaire après J.-C.",
-      "19e (début)"
+      "19e si\u00e8cle",
+      "2e mill\u00e9naire apr\u00e8s J.-C.",
+      "19e (d\u00e9but)"
     ],
     "nl": [
       "19de eeuw"
+    ],
+    "ru": [
+      "19\u0439 \u0432\u0435\u043a",
+      "\u041f\u0435\u0440\u0432\u0430\u044f \u043f\u043e\u043b\u043e\u0432\u043d\u0438\u0430 19-\u0433\u043e \u0432\u0435\u043a\u0430"
     ]
   },
   "europeanaCollectionName": [
@@ -225,7 +225,7 @@
   "timestamp_update": "2018-01-16T10:52:45.548Z",
   "timestamp_update_epoch": 1516099965548,
   "title": [
-    "Claustro del Monasterio de S. Salvador en Oña [Material gráfico]= Cloître du Monastère de S. Salvador à Oña"
+    "Claustro del Monasterio de S. Salvador en O\u00f1a [Material gr\u00e1fico]= Clo\u00eetre du Monast\u00e8re de S. Salvador \u00e0 O\u00f1a"
   ],
   "type": "IMAGE",
   "ugc": [

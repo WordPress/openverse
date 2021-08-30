@@ -1,0 +1,3 @@
+# for local dev tooling only
+flake8==3.9.2
+pre-commit==2.14.0

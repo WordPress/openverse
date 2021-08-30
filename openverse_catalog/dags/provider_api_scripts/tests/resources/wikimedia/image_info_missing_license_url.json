@@ -1,91 +1,91 @@
 {
-  "user": "PtrQs",
-  "size": 11863148,
-  "width": 5514,
-  "height": 3102,
-  "thumburl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg/300px-20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg",
-  "thumbwidth": 300,
-  "thumbheight": 169,
-  "url": "https://upload.wikimedia.org/wikipedia/commons/2/25/20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg",
-  "descriptionurl": "https://commons.wikimedia.org/wiki/File:20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg",
   "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=81754323",
+  "descriptionurl": "https://commons.wikimedia.org/wiki/File:20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg",
   "extmetadata": {
-    "DateTime": {
-      "value": "2019-09-01 00:38:47",
-      "source": "mediawiki-metadata",
-      "hidden": ""
-    },
-    "ObjectName": {
-      "value": "20120925 PlozevetBretagne LoneTree DSC07971 PtrQs",
-      "source": "mediawiki-metadata",
-      "hidden": ""
-    },
-    "CommonsMetadataExtension": {
-      "value": 1.2,
-      "source": "extension",
-      "hidden": ""
-    },
-    "Categories": {
-      "value": "Coasts of Finistère|Photographs taken with Minolta AF Zoom 28-70mm F2.8 G|Plozévet|Self-published work|Taken with Sony DSLR-A900|Trees in Finistère",
-      "source": "commons-categories",
-      "hidden": ""
+    "Artist": {
+      "source": "commons-desc-page",
+      "value": "<a href=\"//commons.wikimedia.org/wiki/User:PtrQs\" title=\"User:PtrQs\">PtrQs</a>"
     },
     "Assessments": {
-      "value": "",
+      "hidden": "",
       "source": "commons-categories",
-      "hidden": ""
-    },
-    "ImageDescription": {
-      "value": "SONY DSC",
-      "source": "commons-desc-page"
-    },
-    "DateTimeOriginal": {
-      "value": "2012-09-25 16:23:02",
-      "source": "commons-desc-page"
-    },
-    "Credit": {
-      "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
-      "source": "commons-desc-page",
-      "hidden": ""
-    },
-    "Artist": {
-      "value": "<a href=\"//commons.wikimedia.org/wiki/User:PtrQs\" title=\"User:PtrQs\">PtrQs</a>",
-      "source": "commons-desc-page"
-    },
-    "LicenseShortName": {
-      "value": "CC BY-SA 4.0",
-      "source": "commons-desc-page",
-      "hidden": ""
-    },
-    "UsageTerms": {
-      "value": "Creative Commons Attribution-Share Alike 4.0",
-      "source": "commons-desc-page",
-      "hidden": ""
-    },
-    "AttributionRequired": {
-      "value": "true",
-      "source": "commons-desc-page",
-      "hidden": ""
+      "value": ""
     },
     "Attribution": {
-      "value": "Photo by <a href=\"//commons.wikimedia.org/wiki/User:PtrQs\" title=\"User:PtrQs\">PtrQs</a>",
+      "hidden": "",
       "source": "commons-desc-page",
-      "hidden": ""
+      "value": "Photo by <a href=\"//commons.wikimedia.org/wiki/User:PtrQs\" title=\"User:PtrQs\">PtrQs</a>"
+    },
+    "AttributionRequired": {
+      "hidden": "",
+      "source": "commons-desc-page",
+      "value": "true"
+    },
+    "Categories": {
+      "hidden": "",
+      "source": "commons-categories",
+      "value": "Coasts of Finist\u00e8re|Photographs taken with Minolta AF Zoom 28-70mm F2.8 G|Ploz\u00e9vet|Self-published work|Taken with Sony DSLR-A900|Trees in Finist\u00e8re"
+    },
+    "CommonsMetadataExtension": {
+      "hidden": "",
+      "source": "extension",
+      "value": 1.2
     },
     "Copyrighted": {
-      "value": "True",
+      "hidden": "",
       "source": "commons-desc-page",
-      "hidden": ""
+      "value": "True"
     },
-    "Restrictions": {
-      "value": "",
+    "Credit": {
+      "hidden": "",
       "source": "commons-desc-page",
-      "hidden": ""
+      "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+    },
+    "DateTime": {
+      "hidden": "",
+      "source": "mediawiki-metadata",
+      "value": "2019-09-01 00:38:47"
+    },
+    "DateTimeOriginal": {
+      "source": "commons-desc-page",
+      "value": "2012-09-25 16:23:02"
+    },
+    "ImageDescription": {
+      "source": "commons-desc-page",
+      "value": "SONY DSC"
     },
     "License": {
-      "value": "cc-by-sa-4.0",
+      "hidden": "",
       "source": "commons-templates",
-      "hidden": ""
+      "value": "cc-by-sa-4.0"
+    },
+    "LicenseShortName": {
+      "hidden": "",
+      "source": "commons-desc-page",
+      "value": "CC BY-SA 4.0"
+    },
+    "ObjectName": {
+      "hidden": "",
+      "source": "mediawiki-metadata",
+      "value": "20120925 PlozevetBretagne LoneTree DSC07971 PtrQs"
+    },
+    "Restrictions": {
+      "hidden": "",
+      "source": "commons-desc-page",
+      "value": ""
+    },
+    "UsageTerms": {
+      "hidden": "",
+      "source": "commons-desc-page",
+      "value": "Creative Commons Attribution-Share Alike 4.0"
     }
-  }
+  },
+  "height": 3102,
+  "size": 11863148,
+  "thumbheight": 169,
+  "thumburl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg/300px-20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg",
+  "thumbwidth": 300,
+  "url": "https://upload.wikimedia.org/wikipedia/commons/2/25/20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg",
+  "user": "PtrQs",
+  "width": 5514
 }

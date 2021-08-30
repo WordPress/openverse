@@ -1,1 +1,75 @@
-[{"authority": "", "type": "personal", "usage": "primary", "valueURI": "", "namePart": {"$": "Hillman, Barbara"}, "role": {"roleTerm": [{"authority": "marcrelator", "type": "code", "valueURI": "http://id.loc.gov/vocabulary/relators/cre", "$": "cre"}, {"authority": "marcrelator", "type": "text", "valueURI": "http://id.loc.gov/vocabulary/relators/cre", "$": "Creator"}]}}, {"authority": "naf", "type": "personal", "valueURI": "http://id.loc.gov/authorities/names/n78034566", "namePart": {"$": "Ohman, August R."}, "role": {"roleTerm": [{"authority": "marcrelator", "type": "code", "valueURI": "http://id.loc.gov/vocabulary/relators/cre", "$": "cre"}, {"authority": "marcrelator", "type": "text", "valueURI": "http://id.loc.gov/vocabulary/relators/cre", "$": "Creator"}]}}, {"authority": "", "type": "corporate", "valueURI": "", "namePart": {"$": "New York Public Library. Local History and Genealogy Division"}, "role": {"roleTerm": [{"authority": "marcrelator", "type": "code", "valueURI": "http://id.loc.gov/vocabulary/relators/cre", "$": "cre"}, {"authority": "marcrelator", "type": "text", "valueURI": "http://id.loc.gov/vocabulary/relators/cre", "$": "Creator"}]}}]
+[
+  {
+    "authority": "",
+    "namePart": {
+      "$": "Hillman, Barbara"
+    },
+    "role": {
+      "roleTerm": [
+        {
+          "$": "cre",
+          "authority": "marcrelator",
+          "type": "code",
+          "valueURI": "http://id.loc.gov/vocabulary/relators/cre"
+        },
+        {
+          "$": "Creator",
+          "authority": "marcrelator",
+          "type": "text",
+          "valueURI": "http://id.loc.gov/vocabulary/relators/cre"
+        }
+      ]
+    },
+    "type": "personal",
+    "usage": "primary",
+    "valueURI": ""
+  },
+  {
+    "authority": "naf",
+    "namePart": {
+      "$": "Ohman, August R."
+    },
+    "role": {
+      "roleTerm": [
+        {
+          "$": "cre",
+          "authority": "marcrelator",
+          "type": "code",
+          "valueURI": "http://id.loc.gov/vocabulary/relators/cre"
+        },
+        {
+          "$": "Creator",
+          "authority": "marcrelator",
+          "type": "text",
+          "valueURI": "http://id.loc.gov/vocabulary/relators/cre"
+        }
+      ]
+    },
+    "type": "personal",
+    "valueURI": "http://id.loc.gov/authorities/names/n78034566"
+  },
+  {
+    "authority": "",
+    "namePart": {
+      "$": "New York Public Library. Local History and Genealogy Division"
+    },
+    "role": {
+      "roleTerm": [
+        {
+          "$": "cre",
+          "authority": "marcrelator",
+          "type": "code",
+          "valueURI": "http://id.loc.gov/vocabulary/relators/cre"
+        },
+        {
+          "$": "Creator",
+          "authority": "marcrelator",
+          "type": "text",
+          "valueURI": "http://id.loc.gov/vocabulary/relators/cre"
+        }
+      ]
+    },
+    "type": "corporate",
+    "valueURI": ""
+  }
+]

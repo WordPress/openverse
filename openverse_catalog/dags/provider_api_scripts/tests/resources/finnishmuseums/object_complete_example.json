@@ -1,62 +1,62 @@
 {
-    "buildings": [
-        {
-            "value": "0/Museovirasto/",
-            "translated": "Museovirasto"
-        },
-        {
-            "value": "1/Museovirasto/Kansatieteen kuvakokoelma/",
-            "translated": "Kansatieteen kuvakokoelma"
-        }
-    ],
-    "formats": [
-        {
-            "value": "0/Image/",
-            "translated": "Kuva"
-        },
-        {
-            "value": "1/Image/Image/",
-            "translated": "Kuva"
-        }
-    ],
-    "id": "museovirasto.CC0641BB5337F541CBD19169838BAC1F",
-    "imageRights": {
-        "copyright": "CC BY 4.0",
-        "link": "http://creativecommons.org/licenses/by/4.0/deed.fi",
-        "description": [
-            "Kuva on julkaistu Nimeä 4.0 Kansainvälinen (CC BY 4.0)-lisenssillä. Verkkopalvelussa julkaistua näyttökuvaa voi käyttää vapaasti myös kaupallisessa käytössä. Kuvan yhteydessä on mainittava tekijä ja/tai kuvaaja sekä organisaation ja kokoelman nimi. Kuvan käyttäjällä on vastuu tekijänoikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkilökuvien käyttö markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkilön suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheitä. Virheen huomatessanne pyydämme ottamaan yhteyttä Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lisätietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
-        ]
+  "buildings": [
+    {
+      "translated": "Museovirasto",
+      "value": "0/Museovirasto/"
     },
-    "images": [
-        "/Cover/Show?id=museovirasto.CC0641BB5337F541CBD19169838BAC1F&index=0&size=large"
-    ],
-    "languages": [],
-    "nonPresenterAuthors": [
-        {
-            "name": "Vikstedt, Topi",
-            "role": "piirtäjä"
-        }
-    ],
-    "onlineUrls": [],
-    "presenters": [],
-    "rating": {
-        "average": 0,
-        "count": 0
+    {
+      "translated": "Kansatieteen kuvakokoelma",
+      "value": "1/Museovirasto/Kansatieteen kuvakokoelma/"
+    }
+  ],
+  "formats": [
+    {
+      "translated": "Kuva",
+      "value": "0/Image/"
     },
-    "series": [],
-    "subjects": [
-        [
-            "koivu"
-        ],
-        [
-            "linnunpöntöt"
-        ],
-        [
-            "Revonristi"
-        ],
-        [
-            "valmistusaika: 11.06.1923"
-        ]
+    {
+      "translated": "Kuva",
+      "value": "1/Image/Image/"
+    }
+  ],
+  "id": "museovirasto.CC0641BB5337F541CBD19169838BAC1F",
+  "imageRights": {
+    "copyright": "CC BY 4.0",
+    "description": [
+      "Kuva on julkaistu Nime\u00e4 4.0 Kansainv\u00e4linen (CC BY 4.0)-lisenssill\u00e4. Verkkopalvelussa julkaistua n\u00e4ytt\u00f6kuvaa voi k\u00e4ytt\u00e4\u00e4 vapaasti my\u00f6s kaupallisessa k\u00e4yt\u00f6ss\u00e4. Kuvan yhteydess\u00e4 on mainittava tekij\u00e4 ja/tai kuvaaja sek\u00e4 organisaation ja kokoelman nimi. Kuvan k\u00e4ytt\u00e4j\u00e4ll\u00e4 on vastuu tekij\u00e4noikeuksien ja yksityisyyden suojan kunnioittamisesta. Esimerkiksi henkil\u00f6kuvien k\u00e4ytt\u00f6 markkinoinnissa ja/tai mainonnassa on kielletty ilman kuvassa olevan henkil\u00f6n suostumusta. Museovirasto pyrkii julkaisemansa tiedon oikeellisuuteen. Kuvien tiedoissa voi kuitenkin olla puutteellisuuksia ja virheit\u00e4. Virheen huomatessanne pyyd\u00e4mme ottamaan yhteytt\u00e4 Kuvakokoelmien asiakaspalveluun. Kuvia ja tietoja julkaistaessa asiakkaan vastuulla on varmistaa niiden oikeellisuus. Painolaatuiset kuvat ovat maksullisia. Lis\u00e4tietoja tarvittaessa: Museoviraston Kuvakokoelmat (kuvakokoelmat@museovirasto.fi)."
     ],
-    "title": "linnunpönttö koivussa"
+    "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
+  },
+  "images": [
+    "/Cover/Show?id=museovirasto.CC0641BB5337F541CBD19169838BAC1F&index=0&size=large"
+  ],
+  "languages": [],
+  "nonPresenterAuthors": [
+    {
+      "name": "Vikstedt, Topi",
+      "role": "piirt\u00e4j\u00e4"
+    }
+  ],
+  "onlineUrls": [],
+  "presenters": [],
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "series": [],
+  "subjects": [
+    [
+      "koivu"
+    ],
+    [
+      "linnunp\u00f6nt\u00f6t"
+    ],
+    [
+      "Revonristi"
+    ],
+    [
+      "valmistusaika: 11.06.1923"
+    ]
+  ],
+  "title": "linnunp\u00f6ntt\u00f6 koivussa"
 }

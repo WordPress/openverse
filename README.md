@@ -52,9 +52,9 @@ the internet.
 
 ### Daily API Workflows
 
-Workflows that have a `schedule_string='@daily'` parameter are run daily. The DAG 
-workflows run `provider_api_scripts` to load and extract media data from the APIs. 
-Below are some of the daily DAG workflows that run the corresponding `provider_api_scripts` 
+Workflows that have a `schedule_string='@daily'` parameter are run daily. The DAG
+workflows run `provider_api_scripts` to load and extract media data from the APIs.
+Below are some of the daily DAG workflows that run the corresponding `provider_api_scripts`
 daily:
 
 - [Met Museum Workflow](openverse_catalog/dags/metropolitan_museum_workflow.py)
@@ -68,9 +68,9 @@ daily:
 
 ### Monthly Workflow
 
-Some API ingestion workflows are scheduled to run on the 15th day of each 
+Some API ingestion workflows are scheduled to run on the 15th day of each
 month at 16:00 UTC. These workflows are reserved for long-running jobs or
-APIs that do not have date filtering capabilities so the data is reprocessed 
+APIs that do not have date filtering capabilities so the data is reprocessed
 monthly to keep the catalog updated. The following tasks are performed monthly:
 
 - [Cleveland Museum of Art](openverse_catalog/dags/provider_api_scripts/cleveland_museum_of_art.py)
@@ -105,6 +105,21 @@ own dependency requirements.
 
 You'll need `docker` and `docker-compose` installed on your machine, with
 versions new enough to use version `3` of Docker Compose `.yml` files.
+
+To set up the local python environment along with the pre-commit hook, run:
+
+```shell
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+pre-commit install
+```
+
+Optionally, to install dependencies for your editor to introspect stuff about them:
+
+```shell
+pip install -r openverse_catalog/requirements_dev.txt
+```
 
 To set up environment variables, navigate to the
 [`openverse_catalog`][cc_airflow] directory, and run
