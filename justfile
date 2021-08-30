@@ -19,17 +19,17 @@ down flags="":
     docker-compose {{ DEV_DOCKER_FILES }} down {{ flags }}
 
 
-logs: dotenv
+logs: dotenv up
     docker-compose {{ DEV_DOCKER_FILES }} logs -f
 
 
-test: dotenv
+test: dotenv up
     docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} /usr/local/airflow/.local/bin/pytest
 
 
-shell: dotenv
+shell: dotenv up
     docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} /bin/bash
 
 
-airflow command="": dotenv
+airflow command="": dotenv up
     docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} airflow {{ command }}
