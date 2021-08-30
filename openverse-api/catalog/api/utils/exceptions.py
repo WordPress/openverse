@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 """
 Override the presentation of ValidationErrors, which are deeply nested and
@@ -51,3 +52,23 @@ def input_error_response(errors):
             'fields': fields
         }
     )
+
+
+def get_api_exception(error_message, response_code=500, error_code=None):
+    """
+    Returns an instance of a subclass of ``APIException`` with the given error
+    message, error code and response status code.
+
+    The returned object should be used with the ``raise`` keyword.
+
+    :param error_message: the detailed error message shown to the user
+    :param response_code: the HTTP response status code
+    :param error_code: the codename of the error
+    :return: an instance of a subclass of ``APIException``
+    """
+
+    class SubAPIException(APIException):
+        status_code = response_code
+        default_detail = error_message
+        default_code = error_code
+    return SubAPIException()
