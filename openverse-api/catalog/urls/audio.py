@@ -16,22 +16,22 @@ urlpatterns = [
         name='audio-stats'
     ),
     path(
-        '<str:identifier>',
+        '<uuid:identifier>',
         AudioDetail.as_view(),
         name='audio-detail'
     ),
     path(
-        '<str:identifier>/thumb',
+        '<uuid:identifier>/thumb',
         AudioArt.as_view(),
         name='audio-thumb'
     ),
     path(
-        '<str:identifier>/recommendations',
+        '<uuid:identifier>/recommendations',
         RelatedAudio.as_view(),
         name='audio-related'
     ),
     path(
-        '<str:identifier>/waveform',
+        '<uuid:identifier>/waveform',
         AudioWaveform.as_view(),
         name='audio-waveform'
     ),

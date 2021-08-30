@@ -22,22 +22,22 @@ urlpatterns = [
         name='image-oembed'
     ),
     path(
-        '<str:identifier>',
+        '<uuid:identifier>',
         ImageDetail.as_view(),
         name='image-detail'
     ),
     path(
-        '<str:identifier>/thumb',
+        '<uuid:identifier>/thumb',
         ProxiedImage.as_view(),
         name='image-thumb'
     ),
     path(
-        '<str:identifier>/recommendations',
+        '<uuid:identifier>/recommendations',
         RelatedImage.as_view(),
         name='image-related'
     ),
     path(
-        '<str:identifier>/report',
+        '<uuid:identifier>/report',
         ReportImageView.as_view(),
         name='report-image'
     ),
