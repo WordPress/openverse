@@ -1,7 +1,7 @@
 <template>
   <button
     class="filter-block button tiny tag mx-1"
-    :aria-label="filterLabel + ' filter'"
+    :aria-label="$t('filters.filter-tag-aria', { filterLabel: filterLabel })"
   >
     <span>{{ filterLabel }}</span>
     <span

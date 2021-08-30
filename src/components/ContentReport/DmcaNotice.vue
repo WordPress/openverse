@@ -23,7 +23,11 @@
     >
       <template #link>
         <a
-          :aria-label="provider + 'form'"
+          :aria-label="
+            $t('photo-details.aria.provider-report-form', {
+              provider: providerName,
+            })
+          "
           :href="imageURL"
           target="_blank"
           rel="noopener"

@@ -26,7 +26,6 @@
         </dt>
         <dd>
           <a
-            :aria-label="sourceName"
             :href="image.foreign_landing_url"
             target="blank"
             rel="noopener noreferrer"
