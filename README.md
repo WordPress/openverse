@@ -141,6 +141,7 @@ This results, among other things, in the following running containers:
 
 - `openverse_catalog_webserver_1`
 - `openverse_catalog_postgres_1`
+- `openverse_catalog_s3_1`
 
 and some networking setup so that they can communicate. Note:
 
