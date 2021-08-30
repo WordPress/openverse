@@ -188,6 +188,17 @@ class ReportAudioSerializer(serializers.ModelSerializer):
         return AudioReport.objects.create(**validated_data)
 
 
+class AudioWaveformSerializer(serializers.Serializer):
+    len = serializers.SerializerMethodField()
+    points = serializers.ListField(
+        serializers.FloatField(min_value=0, max_value=1)
+    )
+
+    @staticmethod
+    def get_len(obj):
+        return len(obj.get('points', []))
+
+
 class AboutAudioSerializer(AboutMediaSerializer):
     """
     Used by `AudioStats`.
