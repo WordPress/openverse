@@ -103,6 +103,9 @@ module.exports = {
   variants: {
     extend: {
       opacity: ['disabled'],
+      ringColor: ['focus-visible'],
+      ringOffsetWidth: ['focus-visible'],
+      ringWidth: ['focus-visible'],
     },
   },
   plugins: [],
