@@ -175,7 +175,7 @@ If you just need to run an airflow command, you can use the `airflow` recipe. Ar
 just airflow "config list"
 ```
 
-To tail the logs of the running container:
+To follow the logs of the running container:
 
 ```shell
 just logs
