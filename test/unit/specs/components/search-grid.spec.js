@@ -25,6 +25,9 @@ describe('SearchGrid', () => {
             isFetchingError: {
               images: false,
             },
+            count: {
+              images: 100,
+            },
             imagesCount: 100,
             imagePage: 1,
           },

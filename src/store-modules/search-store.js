@@ -4,6 +4,7 @@ import prepareSearchQueryParams from '~/utils/prepareSearchQueryParams'
 import decodeMediaData from '~/utils/decodeMediaData'
 import {
   FETCH_MEDIA,
+  FETCH_AUDIO,
   FETCH_IMAGE,
   FETCH_COLLECTION_IMAGES,
   HANDLE_NO_MEDIA,
@@ -145,6 +146,30 @@ const actions = (AudioService, ImageService) => ({
       })
       .catch((error) => {
         dispatch(HANDLE_MEDIA_ERROR, { mediaType, error })
+      })
+  },
+  // eslint-disable-next-line no-unused-vars
+  [FETCH_AUDIO]({ commit, dispatch, state }, params) {
+    dispatch(SEND_RESULT_CLICKED_EVENT, {
+      query: state.query.q,
+      resultUuid: params.id,
+      resultRank: findIndex(state.images, (img) => img.id === params.id),
+      sessionId: state.usageSessionId,
+    })
+
+    commit(FETCH_START_MEDIA, { mediaType: AUDIO })
+    commit(SET_AUDIO, { audio: {} })
+    return AudioService.getMediaDetail(params)
+      .then(({ data }) => {
+        commit(FETCH_END_MEDIA, { mediaType: AUDIO })
+        commit(SET_AUDIO, { audio: data })
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          commit(IMAGE_NOT_FOUND)
+        } else {
+          dispatch(HANDLE_MEDIA_ERROR, { mediaType: AUDIO, error })
+        }
       })
   },
   // eslint-disable-next-line no-unused-vars

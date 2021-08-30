@@ -642,39 +642,48 @@
     ]
   },
   "detail": {
-    "id": "73e00493-9189-42ed-955b-4f9d26d0d9f4",
-    "title": "Aimons nous...",
-    "foreign_landing_url": "https://www.jamendo.com/track/217",
-    "creator": "David TMX",
-    "creator_url": "https://www.jamendo.com/artist/14/david.tmx",
-    "url": "https://mp3d.jamendo.com/download/track/217/mp32",
+    "id": "242c1a4c-0623-436c-a600-7847412d28b6",
+    "title": "Distance",
+    "foreign_landing_url": "https://www.jamendo.com/track/8561",
+    "creator": "Manu Cornet",
+    "creator_url": "https://www.jamendo.com/artist/1301/manu.cornet",
+    "url": "https://mp3d.jamendo.com/download/track/8561/mp32",
     "license": "by-nc-sa",
-    "license_version": "2.0",
-    "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+    "license_version": "2.5",
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.5/",
     "provider": "jamendo",
     "source": "jamendo",
+    "description": "There is no description available for most of the audios",
     "tags": [
       {
-        "name": "happy"
+        "name": "instrumental"
       },
       {
-        "name": "male"
+        "name": "neutral"
       },
       {
-        "name": "speed_veryhigh"
+        "name": "speed_medium"
       },
       {
-        "name": "vocal"
+        "name": "strings"
+      },
+      {
+        "name": "guitar"
+      },
+      {
+        "name": "lounge"
+      },
+      {
+        "name": "peaceful"
       }
     ],
-    "attribution": "\"Aimons nous...\" by David TMX is licensed under CC-BY-NC-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/2.0/.",
-    "audio_set": null,
-    "genres": ["metal"],
-    "duration": 127000,
-    "bit_rate": null,
-    "sample_rate": null,
-    "alt_files": null,
-    "detail_url": "http://localhost:8000/v1/audio/73e00493-9189-42ed-955b-4f9d26d0d9f4",
-    "related_url": "http://localhost:8000/v1/recommendations/audio/73e00493-9189-42ed-955b-4f9d26d0d9f4"
+    "thumbnail": "https://usercontent.jamendo.com/?type=album&id=1290&width=300&trackid=8561",
+    "waveform": "https://localhost:8000/v1/audio/242c1a4c-0623-436c-a600-7847412d28b6/waveform",
+    "genres": [
+      "jazz",
+      "latinjazz"
+    ],
+    "detail_url": "http://localhost:8000/v1/audio/242c1a4c-0623-436c-a600-7847412d28b6",
+    "related_url": "http://localhost:8000/v1/audio/242c1a4c-0623-436c-a600-7847412d28b6/recommendations"
   }
 }

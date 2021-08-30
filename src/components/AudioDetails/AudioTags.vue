@@ -1,0 +1,43 @@
+<template>
+  <div v-if="tags && tags.length" class="media_tags">
+    <h3 v-if="showHeader" class="b-header">
+      {{ header }}
+    </h3>
+    <div class="mt-4">
+      <button
+        v-for="(tag, index) in getValidTags()"
+        :key="index"
+        class="button tag m-1"
+        @click="searchByTagName(tag.name)"
+        @keyup.enter="searchByTagName(tag.name)"
+      >
+        {{ tag.name }}
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { SET_QUERY } from '~/store-modules/mutation-types'
+
+export default {
+  name: 'AudioTags',
+  props: ['tags', 'header'],
+  computed: {
+    showHeader() {
+      return this.$props.header !== ''
+    },
+  },
+  methods: {
+    isClarifaiTag(provider) {
+      return provider === 'clarifai'
+    },
+    searchByTagName(query) {
+      this.$store.commit(SET_QUERY, { query: { q: query } })
+    },
+    getValidTags() {
+      return this.$props.tags.filter((tag) => !!tag.name)
+    },
+  },
+}
+</script>
