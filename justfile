@@ -1,3 +1,5 @@
+set dotenv-load := false
+
 DEV_DOCKER_FILES := "--file=openverse_catalog/docker-compose.yml --file=openverse_catalog/docker-compose.override.yml"
 SERVICE := "webserver"
 
