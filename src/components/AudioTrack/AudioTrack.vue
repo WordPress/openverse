@@ -1,7 +1,7 @@
 <template>
   <div
     class="audio-track"
-    aria-label="$t('audio-track.aria-label')"
+    :aria-label="$t('audio-track.aria-label')"
     role="region"
   >
     <!-- Only visible in compact player -->

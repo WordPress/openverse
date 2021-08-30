@@ -3,7 +3,7 @@
     <h3 v-if="showHeader" class="b-header">
       {{ header }}
     </h3>
-    <div class="mt-4">
+    <div>
       <button
         v-for="(tag, index) in getValidTags()"
         :key="index"

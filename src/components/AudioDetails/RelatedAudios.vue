@@ -4,18 +4,16 @@
     class="p-4 my-6 photo_related-images"
   >
     <h3 class="b-header">
-      {{ $t('photo-details.related-images') }}
+      {{ $t('audio-details.related-audios') }}
     </h3>
-    <SearchGridManualLoad
-      v-if="isPrimaryImageLoaded === true"
-      :images-count="imagesCount"
-      :images="relatedImages"
-      :query="query"
-      :filter="filter"
-      :include-analytics="false"
-      :use-infinite-scroll="false"
-      :include-add-to-list="false"
-    />
+    <ClientOnly>
+      <AudioTrack
+        v-for="rAudio in relatedAudios"
+        :key="rAudio.id"
+        :audio="rAudio"
+        :is-compact="true"
+      />
+    </ClientOnly>
   </aside>
 </template>
 

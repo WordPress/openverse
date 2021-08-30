@@ -653,6 +653,7 @@
     "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.5/",
     "provider": "jamendo",
     "source": "jamendo",
+    "category": "Music",
     "description": "There is no description available for most of the audios",
     "tags": [
       {
@@ -683,6 +684,11 @@
       "jazz",
       "latinjazz"
     ],
+    "audio_set": {
+      "name": "Distance & Temps",
+      "url": "https://www.jamendo.com/album/1290/distance-and-temps"
+    },
+    "duration": 248000,
     "detail_url": "http://localhost:8000/v1/audio/242c1a4c-0623-436c-a600-7847412d28b6",
     "related_url": "http://localhost:8000/v1/audio/242c1a4c-0623-436c-a600-7847412d28b6/recommendations"
   }

@@ -1,6 +1,8 @@
 <template>
   <div :aria-label="$t('photo-details.aria.main')">
-    <AudioTrack :audio="audio" />
+    <ClientOnly>
+      <AudioTrack :audio="audio" />
+    </ClientOnly>
     <section v-if="!$fetchState.pending" class="audio-page">
       <h4 class="b-header mb-6">Reuse Content</h4>
       <AudioAttribution
@@ -93,9 +95,6 @@ const AudioDetailPage = {
         mediaType: AUDIO,
         id: this.$route.params.id,
       })
-      setTimeout(() => {
-        console.log('timeout over')
-      }, 5000)
     } catch (err) {
       console.log('oops, ', err)
       // this.$error({

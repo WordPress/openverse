@@ -3,42 +3,52 @@
   <section class="audio-info">
     <h4 class="b-header mb-6">Audio information</h4>
     <div class="mb-6 audio-info__grid">
-      <img :src="audio.thumbnail" alt="thumbnail" />
+      <img :src="audio.thumbnail" alt="thumbnail" width="110" height="110" />
       <div class="audio-info__data">
         <p>{{ audio.description }}</p>
+        <AudioTags :tags="audio.tags" :show-header="false" class="mt-6 mb-6" />
         <dl>
-          <dt class="mb-2">
-            {{ $t('photo-details.information.dimensions') }}
-          </dt>
-          <dt v-if="providerName !== sourceName" class="mb-2">
-            {{ $t('photo-details.information.provider') }}
-          </dt>
-          <dd v-if="providerName !== sourceName">
-            {{ providerName }}
-          </dd>
-          <dt class="mb-2">
-            {{ $t('photo-details.information.source') }}
-          </dt>
-          <dd>
-            <a
-              :aria-label="sourceName"
-              :href="audio.foreign_landing_url"
-              target="blank"
-              rel="noopener noreferrer"
-              @click="onPhotoSourceLinkClicked"
-              @keyup.enter="onPhotoSourceLinkClicked"
-            >
-              {{ sourceName }}
-            </a>
-          </dd>
+          <div>
+            <dt>Album</dt>
+            <dd>
+              <a :href="audio.audio_set.url">{{ audio.audio_set.name }}</a>
+            </dd>
+          </div>
+          <div>
+            <dt>
+              {{ $t('media-details.provider-label') }}
+            </dt>
+            <dd>
+              {{ providerName }}
+            </dd>
+          </div>
+          <div>
+            <dt>
+              {{ $t('audio-details.genre-label') }}
+            </dt>
+            <dd>
+              {{ audio.genres.join(', ') }}
+            </dd>
+          </div>
+          <div>
+            <dt>
+              {{ $t('media-details.source-label') }}
+            </dt>
+            <dd>
+              <a
+                :aria-label="sourceName"
+                :href="audio.foreign_landing_url"
+                target="blank"
+                rel="noopener noreferrer"
+                @click="onPhotoSourceLinkClicked"
+                @keyup.enter="onPhotoSourceLinkClicked"
+              >
+                {{ sourceName }}
+              </a>
+            </dd>
+          </div>
         </dl>
       </div>
-    </div>
-    <div class="mb-6">
-      <h5 class="mb-2 b-header">
-        {{ $t('photo-details.information.tags') }}
-      </h5>
-      <AudioTags :tags="audio.tags" :show-header="false" />
     </div>
   </section>
 </template>
@@ -87,7 +97,7 @@ export default {
     onPhotoSourceLinkClicked() {
       this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
         eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
-        resultUuid: this.$props.image.id,
+        resultUuid: this.$props.audio.id,
       })
     },
   },
@@ -97,22 +107,27 @@ export default {
 <style lang="scss" scoped>
 .audio-info__grid {
   display: grid;
-  grid-template-columns: 110px 1fr;
-  grid-gap: 2rem;
+  grid-template-columns: 110px auto;
+  grid-template-rows: repeat(auto-fit, 1fr);
+  grid-gap: 1.5rem;
 }
 dl {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+dl div {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 dt {
-  font-weight: bold;
-  width: 92px;
-  margin-right: 24px;
+  font-weight: 400;
   display: inline-block;
 }
 
 dd {
-  width: calc(100% - 92px - 28px);
+  font-weight: bold;
 }
 </style>
