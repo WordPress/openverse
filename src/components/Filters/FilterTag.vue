@@ -15,13 +15,22 @@
 </template>
 <script>
 export default {
-  name: 'FilterBlock',
-  props: ['code', 'filterType', 'label'],
+  name: 'FilterTag',
+  props: {
+    code: String,
+    filterType: String,
+    label: String,
+  },
   computed: {
+    needsTranslation() {
+      return !['audioProviders', 'imageProviders'].includes(
+        this.$props.filterType
+      )
+    },
     filterLabel() {
-      return this.$props.filterType === 'providers'
-        ? this.$props.label
-        : this.$t(this.$props.label)
+      return this.needsTranslation
+        ? this.$t(this.$props.label)
+        : this.$props.label
     },
   },
   methods: {

@@ -8,27 +8,24 @@
       </div>
       <aside
         v-if="isFilterVisible"
-        class="column is-narrow grid-sidebar p-0 hidden desk:block full-height-sticky"
+        class="column is-narrow grid-sidebar is-hidden-touch full-height-sticky"
       >
         <SearchGridFilter @onSearchFilterChanged="onSearchFormSubmit" />
       </aside>
       <div class="column search-grid-ctr">
         <SearchGridForm @onSearchFormSubmit="onSearchFormSubmit" />
         <SearchTypeTabs />
-        <FilterDisplay
-          v-if="$route.path === '/search/' || $route.path === '/search/image'"
-        />
-        <NuxtChild
-          :key="$route.path"
-          :query="query"
-          @onLoadMoreImages="onLoadMoreImages"
-        />
+        <FilterDisplay v-if="shouldShowFilterTags" />
+        <NuxtChild :key="$route.path" @onLoadMoreImages="onLoadMoreImages" />
       </div>
     </div>
   </div>
 </template>
 <script>
-import { FETCH_IMAGES } from '~/store-modules/action-types'
+import {
+  FETCH_IMAGES,
+  SET_SEARCH_TYPE_FROM_URL,
+} from '~/store-modules/action-types'
 import {
   SET_QUERY,
   SET_FILTER_IS_VISIBLE,
@@ -51,6 +48,9 @@ const BrowsePage = {
       const query = queryStringToQueryData(this.$route.fullPath)
       this.$store.commit(SET_QUERY, { query })
     }
+    await this.$store.dispatch(SET_SEARCH_TYPE_FROM_URL, {
+      url: this.$route.fullPath,
+    })
     this.$store.commit(SET_FILTERS_FROM_URL, { url: this.$route.fullPath })
     if (!this.$store.state.images.length) {
       await this.$store.dispatch(FETCH_IMAGES, this.$store.state.query)
@@ -92,6 +92,11 @@ const BrowsePage = {
       this.$store.commit(SET_FILTER_IS_VISIBLE, {
         isFilterVisible: !this.isFilterVisible,
       })
+    },
+    shouldShowFilterTags() {
+      return (
+        this.$route.path === '/search/' || this.$route.path === '/search/image'
+      )
     },
   },
   watch: {

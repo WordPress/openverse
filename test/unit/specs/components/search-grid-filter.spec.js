@@ -81,15 +81,6 @@ describe('SearchGridFilter', () => {
     })
   })
 
-  it('toggles filter of search by creator', () => {
-    const wrapper = render(SearchGridFilter, options)
-    wrapper.vm.onUpdateSearchByCreator()
-    expect(dispatchMock).toHaveBeenCalledWith('TOGGLE_FILTER', {
-      filterType: 'searchBy',
-      provider: props.provider,
-    })
-  })
-
   it('clears filters', () => {
     const wrapper = render(SearchGridFilter, options)
     wrapper.vm.onClearFilters()

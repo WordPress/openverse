@@ -1,8 +1,8 @@
 import getLegacySourceUrl, { legacySourceMap } from '~/utils/getLegacySourceUrl'
 
 /**
- * Note, this doesn *not* test the accuracy of urls in terms of getting the correct results,
- * but only that a valid url is returned for each avaliable provider
+ * Note: this does not test the health or uptime of URLS, only that
+ * a valid url string with properly-encoded params is returned for each avaliable provider
  */
 describe('getLegacySourceUrl', () => {
   it('returns a url for each audio source', () => {

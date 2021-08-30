@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="filterlist-header">
-      <h4 class="pt-6 pl-6 pr-4 inline-block">
+      <h4>
         {{ $t('filter-list.filter-by') }}
       </h4>
 
@@ -20,18 +20,17 @@
       </button>
     </div>
     <form class="filters-form" role="list">
-      <FilterCheckList
+      <FilterChecklist
         v-for="filterType in filterTypes"
         :key="filterType"
         role="listitem"
         :options="filters[filterType]"
-        :disabled="licenseTypesDisabled"
         :title="filterTypeTitle(filterType)"
         :filter-type="filterType"
         @filterChanged="onUpdateFilter"
       />
     </form>
-    <div v-if="isFilterApplied" class="clear-filters filter-buttons">
+    <div v-if="isAnyFilterApplied" class="clear-filters filter-buttons">
       <button class="button tiny" @click="onClearFilters">
         {{ $t('filter-list.clear') }}
       </button>
@@ -46,47 +45,44 @@
 </template>
 
 <script>
-import FilterCheckList from './FilterChecklist'
+import { kebabize } from '~/utils/formatStrings'
+import { AUDIO, IMAGE, VIDEO } from '~/constants/media'
+import FilterChecklist from './FilterChecklist'
 
 export default {
   name: 'FiltersList',
   components: {
-    FilterCheckList,
+    FilterChecklist,
   },
-  props: ['isFilterApplied', 'licenseTypesDisabled', 'licensesDisabled'],
   computed: {
     filters() {
-      return this.$store.getters.getAllImageFilters
+      switch (this.$store.state.searchType) {
+        case AUDIO:
+          return this.$store.getters.audioFiltersForDisplay
+        case IMAGE:
+          return this.$store.getters.imageFiltersForDisplay
+        case VIDEO:
+          return this.$store.getters.videoFiltersForDisplay
+        default:
+          return this.$store.getters.allFiltersForDisplay
+      }
     },
     filterTypes() {
       return Object.keys(this.filters)
     },
-    activeTab() {
-      return this.$route.path.split('search/')[1] || 'image'
+    isAnyFilterApplied() {
+      return this.$store.getters.isAnyFilterApplied
     },
   },
   methods: {
     filterTypeTitle(filterType) {
-      const kebabize = (str) => {
-        return str
-          .split('')
-          .map((letter, idx) => {
-            return letter.toUpperCase() === letter
-              ? `${idx !== 0 ? '-' : ''}${letter.toLowerCase()}`
-              : letter
-          })
-          .join('')
-      }
-      if (filterType == 'searchBy') {
+      if (filterType === 'searchBy') {
         return ''
       }
       return this.$t(`filters.${kebabize(filterType)}.title`)
     },
     onUpdateFilter({ code, filterType }) {
       this.$emit('onUpdateFilter', { code, filterType })
-    },
-    onUpdateSearchByCreator() {
-      this.$emit('onUpdateSearchByCreator')
     },
     onToggleSearchGridFilter() {
       this.$emit('onToggleSearchGridFilter')
@@ -99,6 +95,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.filterlist-header h4 {
+  display: inline-block;
+  padding: 1.5rem 1rem 0 1.5rem;
+}
 .scroll-y {
   overflow-y: scroll;
   height: calc(100vh - 84px);
@@ -107,8 +107,7 @@ export default {
   padding: 1.5rem;
   text-align: center;
   @include desktop {
-    padding: 0;
-    padding-bottom: 1rem;
+    padding: 0 0 1rem;
     margin: 1.5rem;
   }
 }

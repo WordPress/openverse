@@ -301,6 +301,7 @@
     "image-not-found": "Couldn't find image with id {id}"
   },
   "search-tab": {
+    "all": "All",
     "image": "Image",
     "audio": "Audio",
     "video": "Video"
@@ -324,16 +325,31 @@
       "commercial": "Use commercially",
       "modification": "Modify or adapt"
     },
-    "providers": {
+    "image-providers": {
       "title": "Source"
     },
-    "categories": {
+    "audio-providers": {
+      "title": "Source"
+    },
+    "audio-categories": {
+      "title": "Audio Category",
+      "music": "Music",
+      "sound-effects": "Sound Effects",
+      "podcast": "Podcast"
+    },
+    "image-categories": {
       "title": "Image Type",
       "photograph": "Photographs",
       "illustration": "Illustrations",
       "digitized-artwork": "Digitized Artworks"
     },
-    "extensions": {
+    "audio-extensions": {
+      "title": "File Type",
+      "mp3": "MP3s",
+      "ogg": "OGGs",
+      "flac": "FLACs"
+    },
+    "image-extensions": {
       "title": "File Type",
       "jpg": "JPEGs",
       "png": "PNGs",
@@ -355,6 +371,12 @@
     "mature": {
       "title": "Search Settings",
       "enable": "Enable Mature Content"
+    },
+    "durations": {
+      "title": "Durations",
+      "short": "Short",
+      "medium": "Medium",
+      "long": "Long"
     },
     "creator": {
       "title": "Search by Creator"
@@ -394,6 +416,10 @@
     },
     "search-form": {
       "placeholder": "Search all {type}",
+      "image": "images",
+      "audio": "audio",
+      "video": "videos",
+      "all": "content",
       "collection-placeholder": "Search this collection",
       "button": "Search"
     },
@@ -542,5 +568,24 @@
     "firefox": "Firefox",
     "opera": "Opera",
     "edge": "Edge"
+  },
+  "waveform": {
+    "label": "Audio seek bar",
+    "current-time": "{time} seconds"
+  },
+  "audio-track": {
+    "title": "{title} by {creator}",
+    "aria-label": "Audio Player",
+    "messages": {
+      "err_aborted": "You aborted playback.",
+      "err_network": "A network error occurred.",
+      "err_decode": "Could not decode audio.",
+      "err_unsupported": "This audio format is not supported by your browser.",
+      "loading": "Loading..."
+    }
+  },
+  "play-pause": {
+    "play": "Play",
+    "pause": "Pause"
   }
 }

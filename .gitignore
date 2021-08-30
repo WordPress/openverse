@@ -20,5 +20,6 @@ selenium-debug.log
 vercel.json
 .eslintcache
 .nuxt
-
+.nuxt-storybook
+storybook-static
 .vercel

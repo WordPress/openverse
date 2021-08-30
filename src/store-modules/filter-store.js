@@ -1,5 +1,18 @@
 import findIndex from 'lodash.findindex'
+import clonedeep from 'lodash.clonedeep'
+
 import local from '~/utils/local'
+import {
+  filtersToQueryData,
+  queryToFilterData,
+} from '~/utils/searchQueryTransform'
+import {
+  ALL_MEDIA,
+  AUDIO,
+  IMAGE,
+  VIDEO,
+  supportedMediaTypes,
+} from '~/constants/media'
 import { TOGGLE_FILTER } from '~/store-modules/action-types'
 import {
   SET_FILTER,
@@ -7,23 +20,48 @@ import {
   CLEAR_FILTERS,
   SET_FILTERS_FROM_URL,
   SET_FILTER_IS_VISIBLE,
+  UPDATE_FILTERS,
 } from '~/store-modules/mutation-types'
-import {
-  filtersToQueryData,
-  queryToFilterData,
-} from '~/utils/searchQueryTransform'
 
-const IMAGE_FILTERS = [
-  'licenses',
-  'licenseTypes',
-  'categories',
-  'extensions',
-  'aspectRatios',
-  'sizes',
-  'providers',
-  'searchBy',
-  'mature',
-]
+// The order of the keys here is the same as in the side filter display
+export const mediaFilterKeys = {
+  image: [
+    'licenses',
+    'licenseTypes',
+    'imageCategories',
+    'imageExtensions',
+    'aspectRatios',
+    'sizes',
+    'imageProviders',
+    'searchBy',
+    'mature',
+  ],
+  audio: [
+    'licenses',
+    'licenseTypes',
+    'audioCategories',
+    'audioExtensions',
+    'durations',
+    'audioProviders',
+    'searchBy',
+    'mature',
+  ],
+  video: [],
+  all: ['licenses', 'licenseTypes', 'searchBy', 'mature'],
+}
+export const mediaSpecificFilters = {
+  all: ['licenses', 'licenseTypes', 'searchBy', 'mature'],
+  image: [
+    'imageCategories',
+    'imageExtensions',
+    'aspectRatios',
+    'sizes',
+    'imageProviders',
+  ],
+  audio: ['audioCategories', 'audioExtensions', 'durations', 'audioProviders'],
+  video: [],
+}
+
 export const filterData = {
   licenses: [
     { code: 'cc0', name: 'filters.licenses.cc0', checked: false },
@@ -47,51 +85,83 @@ export const filterData = {
       checked: false,
     },
   ],
-  categories: [
+  audioCategories: [
+    {
+      code: 'music',
+      name: 'filters.audio-categories.music',
+      checked: false,
+    },
+    {
+      code: 'soundEffects',
+      name: 'filters.audio-categories.sound-effects',
+      checked: false,
+    },
+    {
+      code: 'podcast',
+      name: 'filters.audio-categories.podcast',
+      checked: false,
+    },
+  ],
+  imageCategories: [
     {
       code: 'photograph',
-      name: 'filters.categories.photograph',
+      name: 'filters.image-categories.photograph',
       checked: false,
     },
     {
       code: 'illustration',
-      name: 'filters.categories.illustration',
+      name: 'filters.image-categories.illustration',
       checked: false,
     },
     {
       code: 'digitized_artwork',
-      name: 'filters.categories.digitized-artwork',
+      name: 'filters.image-categories.digitized-artwork',
       checked: false,
     },
   ],
-  extensions: [
-    { code: 'jpg', name: 'filters.extensions.jpg', checked: false },
-    { code: 'png', name: 'filters.extensions.png', checked: false },
-    { code: 'gif', name: 'filters.extensions.gif', checked: false },
-    { code: 'svg', name: 'filters.extensions.svg', checked: false },
+  audioExtensions: [
+    { code: 'mp3', name: 'filters.audio-extensions.mp3', checked: false },
+    { code: 'ogg', name: 'filters.audio-extensions.ogg', checked: false },
+    { code: 'flac', name: 'filters.audio-extensions.flac', checked: false },
+  ],
+  imageExtensions: [
+    { code: 'jpg', name: 'filters.image-extensions.jpg', checked: false },
+    { code: 'png', name: 'filters.image-extensions.png', checked: false },
+    { code: 'gif', name: 'filters.image-extensions.gif', checked: false },
+    { code: 'svg', name: 'filters.image-extensions.svg', checked: false },
   ],
   aspectRatios: [
     { code: 'tall', name: 'filters.aspect-ratios.tall', checked: false },
     { code: 'wide', name: 'filters.aspect-ratios.wide', checked: false },
     { code: 'square', name: 'filters.aspect-ratios.square', checked: false },
   ],
+  durations: [
+    { code: 'short', name: 'filters.durations.short', checked: false },
+    { code: 'medium', name: 'filters.durations.medium', checked: false },
+    { code: 'long', name: 'filters.durations.long', checked: false },
+  ],
   sizes: [
     { code: 'small', name: 'filters.sizes.small', checked: false },
     { code: 'medium', name: 'filters.sizes.medium', checked: false },
     { code: 'large', name: 'filters.sizes.large', checked: false },
   ],
-  providers: [],
-  searchBy: {
-    creator: false,
-  },
+  audioProviders: [],
+  imageProviders: [],
+  searchBy: [
+    { code: 'creator', name: 'filters.searchBy.creator', checked: false },
+  ],
   mature: false,
 }
 
-const isFilterApplied = (filters) =>
+/**
+ * Returns true if any of the filters' checked property is true
+ * except for `mature` filter, as it is not displayed as a tag
+ * @param filters
+ * @returns {boolean}
+ */
+const anyFilterApplied = (filters) =>
   Object.keys(filters).some((filterKey) => {
-    if (filterKey === 'searchBy') {
-      return filters.searchBy.creator
-    } else if (filterKey === 'mature') {
+    if (filterKey === 'mature') {
       return false
     } // this is hardcoded to "false" because we do not show mature in `FilterDisplay.vue` like the other filters
 
@@ -101,7 +171,6 @@ const isFilterApplied = (filters) =>
 const state = {
   filters: filterData,
   isFilterVisible: false,
-  isFilterApplied: false,
 }
 
 const getters = {
@@ -112,18 +181,11 @@ const getters = {
    * @param state
    * @returns {{code: string, name: string, filterType: string}[]}
    */
-  getAppliedFilterTags: (state) => {
+  appliedFilterTags: (state) => {
     let appliedFilters = []
-    Object.keys(state.filters).forEach((filterType) => {
-      if (filterType === 'searchBy') {
-        if (state.filters.searchBy.creator) {
-          appliedFilters.push({
-            code: 'creator',
-            name: 'filters.searchBy.creator',
-            filterType: 'searchBy',
-          })
-        }
-      } else if (filterType !== 'mature') {
+    const filterKeys = mediaFilterKeys[state.searchType]
+    filterKeys.forEach((filterType) => {
+      if (filterType !== 'mature') {
         const newFilters = state.filters[filterType]
           .filter((f) => f.checked)
           .map((f) => {
@@ -138,34 +200,34 @@ const getters = {
     })
     return appliedFilters
   },
-  getAllImageFilters: (state) => {
-    let allImageFilters = {}
-    IMAGE_FILTERS.forEach((filterType) => {
-      if (filterType === 'searchBy') {
-        allImageFilters.searchBy = [
-          {
-            code: 'creator',
-            name: 'filters.creator.title',
-            filterType: 'searchBy',
-            checked: state.filters.searchBy.creator,
-          },
-        ]
-      } else if (filterType !== 'mature') {
-        // TODO: when adding other media type filters,
-        // convert media-specific filterType to generic typeName
-        // (eg. imageCategories -> categories)
-        const typeName = filterType
-        allImageFilters[typeName] = state.filters[typeName].map((f) => {
-          return {
-            code: f.code,
-            name: f.name,
-            filterType: typeName,
-            checked: f.checked,
-          }
-        })
-      }
+  isAnyFilterApplied: (state) => {
+    return anyFilterApplied(
+      getMediaTypeFilters(state, { mediaType: state.searchType })
+    )
+  },
+  allFiltersForDisplay: (state) => {
+    return getMediaTypeFilters(state, {
+      mediaType: ALL_MEDIA,
+      includeMature: false,
     })
-    return allImageFilters
+  },
+  audioFiltersForDisplay: (state) => {
+    return getMediaTypeFilters(state, {
+      mediaType: AUDIO,
+      includeMature: false,
+    })
+  },
+  imageFiltersForDisplay: (state) => {
+    return getMediaTypeFilters(state, {
+      mediaType: IMAGE,
+      includeMature: false,
+    })
+  },
+  videoFiltersForDisplay: (state) => {
+    return getMediaTypeFilters(state, {
+      mediaType: VIDEO,
+      includeMature: false,
+    })
   },
 }
 
@@ -180,27 +242,38 @@ const actions = {
 }
 
 function setQuery(state) {
-  const query = filtersToQueryData(state.filters)
+  const query = filtersToQueryData(state.filters, state.searchType)
 
-  state.isFilterApplied = isFilterApplied(state.filters)
   state.query = {
     q: state.query.q,
     ...query,
   }
 }
 
+function getMediaTypeFilters(state, { mediaType, includeMature = false }) {
+  let filterKeys = mediaFilterKeys[mediaType]
+  if (!includeMature) {
+    filterKeys = filterKeys.filter((filterKey) => filterKey !== 'mature')
+  }
+  const mediaTypeFilters = {}
+  filterKeys.forEach((filterKey) => {
+    mediaTypeFilters[filterKey] = state.filters[filterKey]
+  })
+  return mediaTypeFilters
+}
+
 function replaceFilters(state, filterData) {
   Object.keys(state.filters).forEach((filterType) => {
     if (filterType === 'mature') {
       state.filters.mature = filterData.mature
-    } else if (filterType === 'searchBy') {
-      state.filters.searchBy.creator = filterData.searchBy.creator
-    } else if (filterType === 'providers') {
-      filterData.providers.forEach((provider) => {
-        const idx = state.filters.providers.findIndex(
+    } else if (['audioProviders', 'imageProviders'].includes(filterType)) {
+      filterData[filterType].forEach((provider) => {
+        const idx = state.filters[filterType].findIndex(
           (p) => p.code === provider.code
         )
-        state.filters.providers[idx].checked = provider.checked
+        if (idx > -1) {
+          state.filters[filterType][idx].checked = provider.checked
+        }
       })
     } else {
       state.filters[filterType] = filterData[filterType]
@@ -210,9 +283,7 @@ function replaceFilters(state, filterData) {
 
 function setFilter(state, params) {
   const { filterType, codeIdx } = params
-  if (filterType === 'searchBy') {
-    state.filters.searchBy.creator = !state.filters.searchBy.creator
-  } else if (filterType === 'mature') {
+  if (filterType === 'mature') {
     state.filters.mature = !state.filters.mature
   } else {
     const filters = state.filters[filterType]
@@ -224,39 +295,64 @@ function setFilter(state, params) {
 
 // Make sure when redirecting after applying a filter, we stick to the right tab (i.e, "/search/video", "/search/audio", etc.)
 const mutations = {
+  [UPDATE_FILTERS](state) {
+    const mediaTypesToClear = supportedMediaTypes.filter(
+      (media) => media !== state.searchType
+    )
+
+    let filterKeysToClear = []
+    mediaTypesToClear.forEach((mediaType) => {
+      const filterKeys = mediaSpecificFilters[mediaType]
+      filterKeysToClear = [...filterKeysToClear, ...filterKeys]
+    })
+
+    Object.keys(state.filters).forEach((filterType) => {
+      if (filterKeysToClear.includes(filterType)) {
+        state.filters[filterType] = state.filters[filterType].map((f) => ({
+          ...f,
+          checked: false,
+        }))
+      }
+    })
+  },
   [SET_FILTERS_FROM_URL](state, params) {
     replaceFilters(state, queryToFilterData(params.url))
-    state.isFilterApplied = isFilterApplied(state.filters)
   },
   [SET_FILTER](state, params) {
     return setFilter(state, params)
   },
   [CLEAR_FILTERS](state) {
-    const initialFilters = filterData
-    const resetProviders = state.filters.providers.map((provider) => ({
-      ...provider,
-      checked: false,
-    }))
+    const initialFilters = clonedeep(filterData)
+
+    const resetProviders = (mediaType) => {
+      return state.filters[`${mediaType}Providers`].map((provider) => ({
+        ...provider,
+        checked: false,
+      }))
+    }
     state.filters = {
       ...initialFilters,
-      providers: resetProviders,
+      audioProviders: resetProviders(AUDIO),
+      imageProviders: resetProviders(IMAGE),
     }
     return setQuery(state)
   },
   [SET_PROVIDERS_FILTERS](state, params) {
-    const providers = params.imageProviders
+    const { mediaType, providers } = params
     // merge providers from API response with the filters that came from the
     // browse URL search query string and match the checked properties
     // in the store
-    state.filters.providers = providers.map((provider) => {
+    const providersKey = `${mediaType}Providers`
+    const currentProviders = [...state.filters[providersKey]]
+    state.filters[providersKey] = providers.map((provider) => {
       const existingProviderFilterIdx = findIndex(
-        state.filters.providers,
+        currentProviders,
         (p) => p.code === provider.source_name
       )
 
       const checked =
         existingProviderFilterIdx >= 0
-          ? state.filters.providers[existingProviderFilterIdx].checked
+          ? currentProviders[existingProviderFilterIdx].checked
           : false
 
       return {

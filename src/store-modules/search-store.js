@@ -7,22 +7,28 @@ import {
   FETCH_IMAGE,
   FETCH_COLLECTION_IMAGES,
   HANDLE_IMAGE_ERROR,
+  UPDATE_SEARCH_TYPE,
+  SET_SEARCH_TYPE_FROM_URL,
 } from './action-types'
 import {
   FETCH_END_IMAGES,
   FETCH_IMAGES_ERROR,
   FETCH_START_IMAGES,
+  HANDLE_NO_IMAGES,
+  IMAGE_NOT_FOUND,
   SET_IMAGE,
   SET_IMAGE_PAGE,
   SET_IMAGES,
   SET_QUERY,
-  IMAGE_NOT_FOUND,
-  HANDLE_NO_IMAGES,
+  SET_SEARCH_TYPE,
+  UPDATE_FILTERS,
 } from './mutation-types'
 import {
   SEND_SEARCH_QUERY_EVENT,
   SEND_RESULT_CLICKED_EVENT,
 } from './usage-data-analytics-types'
+import { queryStringToSearchType } from '~/utils/searchQueryTransform'
+import { ALL_MEDIA } from '~/constants/media'
 
 // const getSearchPath = () =>
 //   window.location.pathname && window.location.pathname.includes('search')
@@ -161,6 +167,14 @@ const actions = (ImageService) => ({
       })
     }
   },
+  [SET_SEARCH_TYPE_FROM_URL]({ commit }, params) {
+    commit(SET_SEARCH_TYPE, { searchType: queryStringToSearchType(params.url) })
+    commit(UPDATE_FILTERS)
+  },
+  [UPDATE_SEARCH_TYPE]({ commit }, params) {
+    commit(SET_SEARCH_TYPE, { searchType: params.searchType })
+    commit(UPDATE_FILTERS)
+  },
 })
 
 function setQuery(_state, params) {
@@ -182,6 +196,7 @@ const state = {
   images: [],
   isFetchingImages: false,
   isFetchingImagesError: true,
+  searchType: ALL_MEDIA,
   query: {},
 }
 
@@ -222,6 +237,9 @@ const mutations = {
   },
   [IMAGE_NOT_FOUND]() {
     throw new Error('Image not found')
+  },
+  [SET_SEARCH_TYPE](_state, params) {
+    _state.searchType = params.searchType
   },
 }
 

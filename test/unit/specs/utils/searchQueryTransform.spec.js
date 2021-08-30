@@ -1,9 +1,11 @@
+import clonedeep from 'lodash.clonedeep'
 import {
   filtersToQueryData,
   queryToFilterData,
   queryStringToQueryData,
 } from '~/utils/searchQueryTransform'
 import { filterData } from '~/store-modules/filter-store'
+import { IMAGE } from '~/constants/media'
 
 describe('searchQueryTransform', () => {
   it('converts initial filters to query data', () => {
@@ -46,28 +48,28 @@ describe('searchQueryTransform', () => {
           checked: false,
         },
       ],
-      categories: [
+      imageCategories: [
         {
           code: 'photograph',
-          name: 'filters.categories.photograph',
+          name: 'filters.image-categories.photograph',
           checked: true,
         },
         {
           code: 'illustration',
-          name: 'filters.categories.illustration',
+          name: 'filters.image-categories.illustration',
           checked: false,
         },
         {
           code: 'digitized_artwork',
-          name: 'filters.categories.digitized-artwork',
+          name: 'filters.image-categories.digitized-artwork',
           checked: false,
         },
       ],
-      extensions: [
-        { code: 'jpg', name: 'filters.extensions.jpg', checked: true },
-        { code: 'png', name: 'filters.extensions.png', checked: false },
-        { code: 'gif', name: 'filters.extensions.gif', checked: false },
-        { code: 'svg', name: 'filters.extensions.svg', checked: false },
+      imageExtensions: [
+        { code: 'jpg', name: 'filters.image-extensions.jpg', checked: true },
+        { code: 'png', name: 'filters.image-extensions.png', checked: false },
+        { code: 'gif', name: 'filters.image-extensions.gif', checked: false },
+        { code: 'svg', name: 'filters.image-extensions.svg', checked: false },
       ],
       aspectRatios: [
         { code: 'tall', name: 'filters.aspect-ratios.tall', checked: true },
@@ -83,11 +85,11 @@ describe('searchQueryTransform', () => {
         { code: 'medium', name: 'filters.sizes.medium', checked: true },
         { code: 'large', name: 'filters.sizes.large', checked: false },
       ],
-      providers: [
+      imageProviders: [
         { code: 'animaldiversity', checked: true },
         { code: 'brooklynmuseum', checked: true },
       ],
-      searchBy: { creator: true },
+      searchBy: [{ code: 'creator', checked: true }],
       mature: true,
     }
     const expectedQueryData = {
@@ -101,7 +103,7 @@ describe('searchQueryTransform', () => {
       size: 'medium',
       source: 'animaldiversity,brooklynmuseum',
     }
-    const result = filtersToQueryData(filters)
+    const result = filtersToQueryData(filters, IMAGE)
     expect(result).toEqual(expectedQueryData) // toEqual checks for value equality
   })
   it('queryToFilterData blank', () => {
@@ -113,7 +115,7 @@ describe('searchQueryTransform', () => {
     const result = queryToFilterData(query)
     expect(result).toEqual(filters) // toEqual checks for value equality
   })
-  it('queryToFilterData all filters', () => {
+  it('queryToFilterData all image filters', () => {
     const filters = {
       licenses: [
         { code: 'cc0', name: 'filters.licenses.cc0', checked: true },
@@ -137,28 +139,45 @@ describe('searchQueryTransform', () => {
           checked: false,
         },
       ],
-      categories: [
+      imageCategories: [
         {
           code: 'photograph',
-          name: 'filters.categories.photograph',
+          name: 'filters.image-categories.photograph',
           checked: true,
         },
         {
           code: 'illustration',
-          name: 'filters.categories.illustration',
+          name: 'filters.image-categories.illustration',
           checked: false,
         },
         {
           code: 'digitized_artwork',
-          name: 'filters.categories.digitized-artwork',
+          name: 'filters.image-categories.digitized-artwork',
           checked: false,
         },
       ],
-      extensions: [
-        { code: 'jpg', name: 'filters.extensions.jpg', checked: true },
-        { code: 'png', name: 'filters.extensions.png', checked: false },
-        { code: 'gif', name: 'filters.extensions.gif', checked: false },
-        { code: 'svg', name: 'filters.extensions.svg', checked: false },
+      durations: [
+        {
+          checked: false,
+          code: 'short',
+          name: 'filters.durations.short',
+        },
+        {
+          checked: true,
+          code: 'medium',
+          name: 'filters.durations.medium',
+        },
+        {
+          checked: false,
+          code: 'long',
+          name: 'filters.durations.long',
+        },
+      ],
+      imageExtensions: [
+        { code: 'jpg', name: 'filters.image-extensions.jpg', checked: true },
+        { code: 'png', name: 'filters.image-extensions.png', checked: false },
+        { code: 'gif', name: 'filters.image-extensions.gif', checked: false },
+        { code: 'svg', name: 'filters.image-extensions.svg', checked: false },
       ],
       aspectRatios: [
         { code: 'tall', name: 'filters.aspect-ratios.tall', checked: true },
@@ -174,21 +193,71 @@ describe('searchQueryTransform', () => {
         { code: 'medium', name: 'filters.sizes.medium', checked: true },
         { code: 'large', name: 'filters.sizes.large', checked: false },
       ],
-      providers: [
+      imageProviders: [
         { code: 'animaldiversity', checked: true },
         { code: 'brooklynmuseum', checked: true },
       ],
-      searchBy: { creator: true },
+      audioCategories: [
+        {
+          checked: true,
+          code: 'music',
+          name: 'filters.audio-categories.music',
+        },
+        {
+          checked: false,
+          code: 'soundEffects',
+          name: 'filters.audio-categories.sound-effects',
+        },
+        {
+          checked: false,
+          code: 'podcast',
+          name: 'filters.audio-categories.podcast',
+        },
+      ],
+      audioExtensions: [
+        {
+          checked: true,
+          code: 'mp3',
+          name: 'filters.audio-extensions.mp3',
+        },
+        {
+          checked: false,
+          code: 'ogg',
+          name: 'filters.audio-extensions.ogg',
+        },
+        {
+          checked: false,
+          code: 'flac',
+          name: 'filters.audio-extensions.flac',
+        },
+      ],
+      audioProviders: [
+        {
+          checked: true,
+          code: 'jamendo',
+        },
+        {
+          checked: true,
+          code: 'wikimedia',
+        },
+      ],
+      searchBy: [
+        { code: 'creator', checked: true, name: 'filters.searchBy.creator' },
+      ],
       mature: true,
     }
     const queryString =
-      'http://localhost:8443/search/image?q=cat&license=cc0&license_type=commercial&categories=photograph&extension=jpg&aspect_ratio=tall&size=medium&source=animaldiversity,brooklynmuseum&searchBy=creator&mature=true'
-
-    const result = queryToFilterData(queryString)
+      'http://localhost:8443/search/audio?q=cat&license=cc0&license_type=commercial&categories=music&extension=mp3&duration=medium&source=jamendo,wikimedia&searchBy=creator&mature=true'
+    const testFilters = clonedeep(filters)
+    testFilters.audioProviders = [
+      { code: 'jamendo', checked: true },
+      { code: 'wikimedia', checked: true },
+    ]
+    const result = queryToFilterData(queryString, testFilters)
     expect(result).toEqual(filters) // toEqual checks for value equality
   })
   it('queryStringToQueryData', () => {
-    const filters = {
+    const expectedQueryData = {
       license: 'cc0',
       license_type: 'commercial',
       categories: 'photograph',
@@ -203,6 +272,6 @@ describe('searchQueryTransform', () => {
     const queryString =
       'http://localhost:8443/search/image?q=cat&license=cc0&license_type=commercial&categories=photograph&extension=jpg&aspect_ratio=tall&size=medium&source=animaldiversity,brooklynmuseum&searchBy=creator&mature=true'
     const result = queryStringToQueryData(queryString)
-    expect(result).toEqual(filters)
+    expect(result).toEqual(expectedQueryData)
   })
 })

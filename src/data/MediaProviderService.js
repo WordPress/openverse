@@ -1,12 +1,26 @@
 import ApiService from './ApiService'
+import { IMAGE } from '~/constants/media'
 
-const ImageProviderService = {
+/**
+ * Service that calls API to get Media Provider stats
+ * @param {('image'|'audio')} mediaType
+ * @constructor
+ */
+const MediaProviderService = (mediaType) => ({
   /**
-   * Implements an endpoint to get image provider statistics.
+   * Implements an endpoint to get audio provider statistics.
    * SSR-called
    */
   getProviderStats() {
-    return ApiService.get('', 'sources')
+    try {
+      // TODO: use the new 'image/stats' endpoint when it is available in API
+      if (mediaType === IMAGE) {
+        return ApiService.get('', 'sources')
+      }
+      return ApiService.get(mediaType, 'stats')
+    } catch (err) {
+      console.log('Error ', err)
+    }
   },
   getProviderInfo(providerName) {
     const PROVIDER_NAME_LOOKUP = {
@@ -45,6 +59,9 @@ const ImageProviderService = {
       },
       geographorguk: {
         logo: 'geographorguk_logo.gif',
+      },
+      jamendo: {
+        logo: 'jamendo_logo.svg',
       },
       mccordmuseum: {
         logo: 'mccordmuseum_logo.png',
@@ -102,8 +119,8 @@ const ImageProviderService = {
       },
     }
 
-    return PROVIDER_NAME_LOOKUP[providerName]
+    return PROVIDER_NAME_LOOKUP[mediaType][providerName]
   },
-}
+})
 
-export default ImageProviderService
+export default MediaProviderService

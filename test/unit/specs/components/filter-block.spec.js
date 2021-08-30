@@ -1,7 +1,7 @@
-import FilterBlock from '~/components/Filters/FilterBlock'
+import FilterTag from '~/components/Filters/FilterTag'
 import render from '../../test-utils/render'
 
-describe('FilterBlock', () => {
+describe('FilterTag', () => {
   let options = {}
   let props = null
   beforeEach(() => {
@@ -13,12 +13,12 @@ describe('FilterBlock', () => {
   })
 
   it('should render correct contents', () => {
-    const wrapper = render(FilterBlock, options)
+    const wrapper = render(FilterTag, options)
     expect(wrapper.find('.filter-block').vm).toBeDefined()
   })
 
   it('should emit filterChanged event', () => {
-    const wrapper = render(FilterBlock, options)
+    const wrapper = render(FilterTag, options)
     wrapper.vm.onClick()
     expect(wrapper.emitted().filterChanged).toBeTruthy()
   })
