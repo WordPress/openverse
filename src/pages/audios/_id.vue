@@ -1,6 +1,6 @@
 <template>
   <div :aria-label="$t('photo-details.aria.main')">
-    <!--<AudioTrack :audio="audio" />-->
+    <AudioTrack :audio="audio" />
     <section v-if="!$fetchState.pending" class="audio-page">
       <h4 class="b-header mb-6">Reuse Content</h4>
       <AudioAttribution
