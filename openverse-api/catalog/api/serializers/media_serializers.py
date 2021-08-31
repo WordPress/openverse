@@ -97,8 +97,6 @@ class MediaSearchQueryStringSerializer(serializers.Serializer):
         'q',
         'license',
         'license_type',
-        'page',
-        'page_size',
         'creator',
         'tags',
         'title',
@@ -131,17 +129,6 @@ class MediaSearchQueryStringSerializer(serializers.Serializer):
                   "Valid inputs: "
                   f"`{list(license_helpers.LICENSE_GROUPS.keys())}`",
         required=False,
-    )
-    page = serializers.IntegerField(
-        label="page number",
-        help_text="The page number to retrieve.",
-        default=1
-    )
-    page_size = serializers.IntegerField(
-        label="page size",
-        help_text="The number of results to return in the requested page. "
-                  "Should be an integer between 1 and 500.",
-        default=20
     )
     creator = serializers.CharField(
         label="creator",
@@ -204,17 +191,6 @@ class MediaSearchQueryStringSerializer(serializers.Serializer):
         Example: commercial -> ['BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM']
         """
         return _validate_lt(value)
-
-    @staticmethod
-    def validate_page(value):
-        return _validate_page(value)
-
-    @staticmethod
-    def validate_page_size(value):
-        if 1 <= value <= 500:
-            return value
-        else:
-            return 20
 
     def validate_creator(self, value):
         return self.validate_q(value)
