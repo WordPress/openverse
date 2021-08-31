@@ -21,14 +21,14 @@ from django.urls import path, re_path
 from django.views.generic import RedirectView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from rest_framework.routers import SimpleRouter
 
-from catalog.api.views.image_views import Watermark, OembedView
+from catalog.api.views.audio_views import AudioViewSet
+from catalog.api.views.image_views import ImageViewSet
 from catalog.api.views.site_views import HealthCheck, CheckRates
 from catalog.api.utils.status_code_view import get_status_code_view
 
 from catalog.urls.auth_tokens import urlpatterns as auth_tokens_patterns
-from catalog.urls.audio import urlpatterns as audio_patterns
-from catalog.urls.images import urlpatterns as images_patterns
 
 description = """
 # Introduction
@@ -193,15 +193,13 @@ discontinuation_message = {
     'reason': 'This API endpoint has been discontinued.'
 }
 
+router = SimpleRouter()
+router.register('audio', AudioViewSet, basename='audio')
+router.register('images', ImageViewSet, basename='image')
+
 versioned_paths = [
     path('rate_limit', CheckRates.as_view(), name='key_info'),
     path('auth_tokens/', include(auth_tokens_patterns)),
-
-    # Audio
-    path('audio/', include(audio_patterns)),
-
-    # Images
-    path('images/', include(images_patterns)),
 
     # Deprecated
     path(
@@ -235,11 +233,7 @@ versioned_paths = [
         get_status_code_view(discontinuation_message, 410).as_view(),
         name='make-link'
     ),
-]
-if settings.WATERMARK_ENABLED:
-    versioned_paths.append(
-        path('watermark/<str:identifier>', Watermark.as_view())
-    )
+] + router.urls
 
 urlpatterns = [
     path('', RedirectView.as_view(pattern_name='root')),
