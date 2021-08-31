@@ -1,109 +1,20 @@
-import logging
-
-from django.conf import settings
-from django.http.response import HttpResponse
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.viewsets import ReadOnlyModelViewSet
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
+from django.conf import settings
+from django.http.response import HttpResponse
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
+
 from catalog.api.controllers import search_controller
 from catalog.api.controllers.search_controller import get_sources
-from catalog.api.serializers.provider_serializers import ProviderSerializer
-from catalog.api.utils.pagination import StandardPagination
 from catalog.api.models import ContentProvider
+from catalog.api.serializers.provider_serializers import ProviderSerializer
 from catalog.api.utils.exceptions import get_api_exception
+from catalog.api.utils.pagination import StandardPagination
 from catalog.custom_auto_schema import CustomAutoSchema
-
-log = logging.getLogger(__name__)
-
-refer_sample = """
-You can refer to the cURL request samples for examples on how to consume this
-endpoint.
-"""
-
-
-def fields_to_md(field_names):
-    """
-    Create a Markdown representation of the given list of names to use in
-    Swagger documentation.
-
-    :param field_names: the list of field names to convert to Markdown
-    :return: the names as a Markdown string
-    """
-
-    *all_but_last, last = field_names
-    all_but_last = ', '.join([f'`{name}`' for name in all_but_last])
-    return f'{all_but_last} and `{last}`'
-
-
-def _get_user_ip(request):
-    """
-    Read request headers to find the correct IP address.
-    It is assumed that X-Forwarded-For has been sanitized by the load balancer
-    and thus cannot be rewritten by malicious users.
-    :param request: A Django request object.
-    :return: An IP address.
-    """
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
-
-
-class MediaSearch:
-    desc = (
-        """
-Results are ranked in order of relevance and paginated on the basis of the 
-`page` param. The `page_size` param controls the total number of pages.
-
-Although there may be millions of relevant records, only the most
-relevant several thousand records can be viewed. This is by design:
-the search endpoint should be used to find the top 10,000 most relevant
-results, not for exhaustive search or bulk download of every barely
-relevant result. As such, the caller should not try to access pages
-beyond `page_count`, or else the server will reject the query.
-
-For more precise results, you can go to the
-[Openverse Syntax Guide](https://search.creativecommons.org/search-help)
-for information about creating queries and
-[Apache Lucene Syntax Guide](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
-for information on structuring advanced searches.
-"""  # noqa
-        f'{refer_sample}'
-    )
-
-
-class MediaStats:
-    desc = (
-        """
-You can use this endpoint to get details about content providers such as 
-`source_name`, `display_name`, and `source_url` along with a count of the number
-of individual items indexed from them.
-"""  # noqa
-        f'{refer_sample}'
-    )
-
-
-class MediaDetail:
-    desc = refer_sample
-
-
-class MediaRelated:
-    desc = refer_sample
-
-
-class MediaComplain:
-    desc = (
-        """
-By using this endpoint, you can report a file if it infringes copyright,
-contains mature or sensitive content and others.
-"""  # noqa
-        f'{refer_sample}'
-    )
 
 
 class MediaViewSet(ReadOnlyModelViewSet):
@@ -145,10 +56,9 @@ class MediaViewSet(ReadOnlyModelViewSet):
         page = self.paginator.page
 
         params = self.query_serializer_class(data=request.query_params)
-        if not params.is_valid():
-            raise get_api_exception('Input is invalid.', 400)
+        params.is_valid(raise_exception=True)
 
-        hashed_ip = hash(_get_user_ip(request))
+        hashed_ip = hash(self._get_user_ip(request))
         qa = params.validated_data['qa']
         filter_dead = params.validated_data['filter_dead']
 
@@ -205,7 +115,34 @@ class MediaViewSet(ReadOnlyModelViewSet):
         serializer = self.get_serializer(results, many=True)
         return self.get_paginated_response(serializer.data)
 
+    def report(self, request, *_, **__):
+        media = self.get_object()
+        identifier = media.identifier
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            raise get_api_exception('Invalid input.', 400)
+        report = serializer.save(identifier=identifier)
+
+        serializer = self.get_serializer(report)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
     # Helper functions
+
+    @staticmethod
+    def _get_user_ip(request):
+        """
+        Read request headers to find the correct IP address.
+        It is assumed that X-Forwarded-For has been sanitized by the load balancer
+        and thus cannot be rewritten by malicious users.
+        :param request: A Django request object.
+        :return: An IP address.
+        """
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
 
     @staticmethod
     def _get_proxied_image(image_url, width=settings.THUMBNAIL_WIDTH_PX):
