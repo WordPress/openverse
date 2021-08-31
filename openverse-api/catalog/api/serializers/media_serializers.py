@@ -356,6 +356,9 @@ class MediaSearchResultsSerializer(serializers.Serializer):
     page_size = serializers.IntegerField(
         help_text="The number of items per page."
     )
+    page = serializers.IntegerField(
+        help_text="The current page number returned in the response."
+    )
 
 
 class ProxiedImageSerializer(serializers.Serializer):
