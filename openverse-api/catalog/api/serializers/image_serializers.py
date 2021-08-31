@@ -2,6 +2,7 @@ from django.urls import reverse
 from rest_framework import serializers
 
 from catalog.api.controllers.search_controller import get_sources
+from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import Image, ImageReport
 from catalog.api.serializers.media_serializers import (
     _add_protocol,
@@ -137,11 +138,10 @@ class ImageSearchSerializer(MediaSearchSerializer):
     """
     results = ImageSerializer(
         many=True,
-        help_text="An array of images and their details such as `title`, `id`, "
-                  "`creator`, `creator_url`, `url`, `thumbnail`, `provider`, "
-                  "`source`, `license`, `license_version`, `license_url`, "
-                  "`foreign_landing_url`, `detail_url`, `related_url`, "
-                  "and `fields_matched `."
+        help_text=(
+            "An array of images and their details such as "
+            f"{fields_to_md(ImageSerializer.fields_names)}."
+        ),
     )
 
 

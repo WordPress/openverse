@@ -2,6 +2,7 @@ from django.urls import reverse
 from rest_framework import serializers
 
 from catalog.api.controllers.search_controller import get_sources
+from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import AudioReport
 from catalog.api.serializers.media_serializers import (
     _validate_enum,
@@ -168,11 +169,10 @@ class AudioSearchSerializer(MediaSearchSerializer):
     """
     results = AudioSerializer(
         many=True,
-        help_text="An array of audios and their details such as `title`, `id`, "
-                  "`creator`, `creator_url`, `url`, `provider`, `source`, "
-                  "`license`, `license_version`, `license_url`, "
-                  "`foreign_landing_url`, `detail_url`, `related_url`, "
-                  "and `fields_matched `."
+        help_text=(
+            "An array of audios and their details such as "
+            f"{fields_to_md(AudioSerializer.fields_names)}."
+        ),
     )
 
 
