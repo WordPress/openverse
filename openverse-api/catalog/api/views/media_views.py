@@ -9,7 +9,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from catalog.api.controllers import search_controller
-from catalog.api.controllers.search_controller import get_sources
 from catalog.api.models import ContentProvider
 from catalog.api.serializers.provider_serializers import ProviderSerializer
 from catalog.api.utils.exceptions import get_api_exception
@@ -86,7 +85,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
     @action(detail=False,
             serializer_class=ProviderSerializer)
     def stats(self, *_, **__):
-        source_counts = get_sources(self.default_index)
+        source_counts = search_controller.get_sources(self.default_index)
         context = self.get_serializer_context() | {
             'source_counts': source_counts,
         }
