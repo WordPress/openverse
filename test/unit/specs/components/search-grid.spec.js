@@ -25,7 +25,9 @@ describe('SearchGrid', () => {
             isFetchingError: {
               images: false,
             },
-            imagesCount: 100,
+            count: {
+              images: 100,
+            },
             imagePage: 1,
           },
           commit: commitMock,

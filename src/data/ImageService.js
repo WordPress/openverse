@@ -3,8 +3,6 @@ import ApiService from './ApiService'
 const ImageService = {
   /**
    * Search for images by keyword.
-   * @param params
-   * @return {Promise<import('axios').AxiosResponse<MediaResult>>}
    */
   search(params) {
     return ApiService.query('images', params)
