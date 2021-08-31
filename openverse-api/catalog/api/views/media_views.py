@@ -132,8 +132,8 @@ class MediaViewSet(ReadOnlyModelViewSet):
     def _get_user_ip(request):
         """
         Read request headers to find the correct IP address.
-        It is assumed that X-Forwarded-For has been sanitized by the load balancer
-        and thus cannot be rewritten by malicious users.
+        It is assumed that X-Forwarded-For has been sanitized by the load
+        balancer and thus cannot be rewritten by malicious users.
         :param request: A Django request object.
         :return: An IP address.
         """
