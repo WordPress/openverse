@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { kebabize } from '~/utils/formatStrings'
+import { kebabize } from '~/utils/format-strings'
 import { AUDIO, IMAGE, VIDEO } from '~/constants/media'
 import FilterChecklist from './FilterChecklist'
 

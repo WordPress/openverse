@@ -96,7 +96,7 @@ import {
   onMounted,
   ref,
 } from '@nuxtjs/composition-api'
-import { downsampleArray, upsampleArray } from '~/utils/resampling.js'
+import { downsampleArray, upsampleArray } from '~/utils/resampling'
 
 /**
  * Renders an SVG representation of the waveform given a list of heights for the
