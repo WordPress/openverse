@@ -22,10 +22,10 @@ from catalog.api.docs.image_docs import (
 )
 from catalog.api.models import Image
 from catalog.api.serializers.image_serializers import (
-    ImageSearchQueryStringSerializer,
+    ImageSearchRequestSerializer,
     ImageSerializer,
-    ReportImageSerializer,
-    WatermarkQueryStringSerializer,
+    ImageReportSerializer,
+    WatermarkRequestSerializer,
     OembedRequestSerializer,
     OembedSerializer,
 )
@@ -52,7 +52,7 @@ class ImageViewSet(MediaViewSet):
     """
 
     model_class = Image
-    query_serializer_class = ImageSearchQueryStringSerializer
+    query_serializer_class = ImageSearchRequestSerializer
     default_index = 'image'
     qa_index = 'search-qa-image'
 
@@ -111,7 +111,7 @@ class ImageViewSet(MediaViewSet):
         if not settings.WATERMARK_ENABLED:
             raise Http404  # watermark feature is disabled
 
-        params = WatermarkQueryStringSerializer(data=request.query_params)
+        params = WatermarkRequestSerializer(data=request.query_params)
         params.is_valid(raise_exception=True)
 
         image = self.get_object()
@@ -159,7 +159,7 @@ class ImageViewSet(MediaViewSet):
 
     @action(detail=True,
             methods=['post'],
-            serializer_class=ReportImageSerializer)
+            serializer_class=ImageReportSerializer)
     def report(self, *args, **kwargs):
         return super().report(*args, **kwargs)
 

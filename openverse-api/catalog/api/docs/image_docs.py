@@ -32,10 +32,10 @@ from catalog.api.serializers.error_serializers import (
     NotFoundErrorSerializer,
 )
 from catalog.api.serializers.image_serializers import (
-    ImageSearchQueryStringSerializer,
-    ImageSearchResultsSerializer,
+    ImageSearchRequestSerializer,
+    ImageSearchSerializer,
     ImageSerializer,
-    ReportImageSerializer,
+    ImageReportSerializer,
     OembedRequestSerializer,
     OembedSerializer,
 )
@@ -48,7 +48,7 @@ image_search is an API endpoint to search images using a query string.
 
 By using this endpoint, you can obtain search results based on specified query
 and optionally filter results by
-{fields_to_md(ImageSearchQueryStringSerializer.fields_names)}.
+{fields_to_md(ImageSearchRequestSerializer.fields_names)}.
 
 {MediaSearch.desc}"""  # noqa
 
@@ -56,7 +56,7 @@ and optionally filter results by
         "200": openapi.Response(
             description="OK",
             examples=image_search_200_example,
-            schema=ImageSearchResultsSerializer
+            schema=ImageSearchSerializer
         ),
         "400": openapi.Response(
             description="Bad Request",
@@ -75,7 +75,7 @@ and optionally filter results by
     swagger_setup = {
         'operation_id': 'image_search',
         'operation_description': desc,
-        'query_serializer': ImageSearchQueryStringSerializer,
+        'query_serializer': ImageSearchRequestSerializer,
         'responses': responses,
         'code_examples': code_examples,
     }
@@ -200,7 +200,7 @@ contains mature or sensitive content and others.
         "201": openapi.Response(
             description="OK",
             examples=images_report_create_201_example,
-            schema=ReportImageSerializer
+            schema=ImageReportSerializer
         )
     }
 
@@ -214,7 +214,7 @@ contains mature or sensitive content and others.
     swagger_setup = {
         'operation_id': 'image_report',
         'operation_description': desc,
-        'query_serializer': ReportImageSerializer,
+        'query_serializer': ImageReportSerializer,
         'responses': responses,
         'code_examples': code_examples,
     }

@@ -14,9 +14,9 @@ from catalog.api.docs.audio_docs import (
 )
 from catalog.api.models import Audio
 from catalog.api.serializers.audio_serializers import (
-    AudioSearchQueryStringSerializer,
+    AudioSearchRequestSerializer,
     AudioSerializer,
-    ReportAudioSerializer,
+    AudioReportSerializer,
     AudioWaveformSerializer,
 )
 from catalog.api.utils.exceptions import get_api_exception
@@ -45,7 +45,7 @@ class AudioViewSet(MediaViewSet):
     """
 
     model_class = Audio
-    query_serializer_class = AudioSearchQueryStringSerializer
+    query_serializer_class = AudioSearchRequestSerializer
     default_index = 'audio'
     qa_index = 'search-qa-audio'
 
@@ -98,6 +98,6 @@ class AudioViewSet(MediaViewSet):
 
     @action(detail=True,
             methods=['post'],
-            serializer_class=ReportAudioSerializer)
+            serializer_class=AudioReportSerializer)
     def report(self, *args, **kwargs):
         return self._report(*args, **kwargs)

@@ -81,7 +81,7 @@ class TagSerializer(serializers.Serializer):
     )
 
 
-class MediaSearchQueryStringSerializer(serializers.Serializer):
+class MediaSearchRequestSerializer(serializers.Serializer):
     """
     This serializer parses and validates search query string parameters.
     """
@@ -341,7 +341,7 @@ class MediaSerializer(serializers.Serializer):
         return _add_protocol(value)
 
 
-class MediaSearchResultsSerializer(serializers.Serializer):
+class MediaSearchSerializer(serializers.Serializer):
     """
     This serializer serializes the full media search response. The class should
     be inherited by all individual media serializers.

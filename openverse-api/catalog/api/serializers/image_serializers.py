@@ -6,17 +6,17 @@ from catalog.api.models import Image, ImageReport
 from catalog.api.serializers.media_serializers import (
     _add_protocol,
     _validate_enum,
-    MediaSearchQueryStringSerializer,
-    MediaSearchResultsSerializer,
+    MediaSearchRequestSerializer,
+    MediaSearchSerializer,
     MediaSerializer,
 )
 
 
-class ImageSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
+class ImageSearchRequestSerializer(MediaSearchRequestSerializer):
     """ Parse and validate search query string parameters. """
 
     fields_names = [
-        *MediaSearchQueryStringSerializer.fields_names,
+        *MediaSearchRequestSerializer.fields_names,
         'source',
         'categories',
         'aspect_ratio',
@@ -129,7 +129,7 @@ class ImageSerializer(MediaSerializer):
         return f'https://{host}{path}'
 
 
-class ImageSearchResultsSerializer(MediaSearchResultsSerializer):
+class ImageSearchSerializer(MediaSearchSerializer):
     """
     The full image search response.
     This serializer is purely representational and not actually used to
@@ -155,6 +155,22 @@ class OembedRequestSerializer(serializers.Serializer):
     @staticmethod
     def validate_url(value):
         return _add_protocol(value)
+
+
+class ImageReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageReport
+        fields = ('id', 'identifier', 'reason', 'description')
+        read_only_fields = ('id', 'identifier')
+
+    def create(self, validated_data):
+        if validated_data['reason'] == "other" and \
+            ('description' not in validated_data or len(
+                validated_data['description'])) < 20:
+            raise serializers.ValidationError(
+                "Description must be at least be 20 characters long"
+            )
+        return ImageReport.objects.create(**validated_data)
 
 
 class OembedSerializer(serializers.ModelSerializer):
@@ -208,7 +224,7 @@ class OembedSerializer(serializers.ModelSerializer):
         return self.context.get('height', obj.height)
 
 
-class WatermarkQueryStringSerializer(serializers.Serializer):
+class WatermarkRequestSerializer(serializers.Serializer):
     embed_metadata = serializers.BooleanField(
         help_text="Whether to embed ccREL metadata via XMP.",
         default=True
@@ -218,19 +234,3 @@ class WatermarkQueryStringSerializer(serializers.Serializer):
                   " text at the bottom.",
         default=True
     )
-
-
-class ReportImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ImageReport
-        fields = ('id', 'identifier', 'reason', 'description')
-        read_only_fields = ('id', 'identifier',)
-
-    def create(self, validated_data):
-        if validated_data['reason'] == "other" and \
-            ('description' not in validated_data or len(
-                validated_data['description'])) < 20:
-            raise serializers.ValidationError(
-                "Description must be at least be 20 characters long"
-            )
-        return ImageReport.objects.create(**validated_data)

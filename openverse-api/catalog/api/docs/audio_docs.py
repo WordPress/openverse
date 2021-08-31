@@ -24,10 +24,10 @@ from catalog.api.examples import (
     audio_report_create_201_example,
 )
 from catalog.api.serializers.audio_serializers import (
-    AudioSearchQueryStringSerializer,
-    AudioSearchResultsSerializer,
+    AudioSearchRequestSerializer,
+    AudioSearchSerializer,
     AudioSerializer,
-    ReportAudioSerializer,
+    AudioReportSerializer,
 )
 from catalog.api.serializers.error_serializers import (
     InputErrorSerializer,
@@ -42,7 +42,7 @@ audio_search is an API endpoint to search audio files using a query string.
 
 By using this endpoint, you can obtain search results based on specified 
 query and optionally filter results by
-{fields_to_md(AudioSearchQueryStringSerializer.fields_names)}.
+{fields_to_md(AudioSearchRequestSerializer.fields_names)}.
 
 {MediaSearch.desc}"""  # noqa
 
@@ -50,7 +50,7 @@ query and optionally filter results by
         "200": openapi.Response(
             description="OK",
             examples=audio_search_200_example,
-            schema=AudioSearchResultsSerializer(many=True)
+            schema=AudioSearchSerializer(many=True)
         ),
         "400": openapi.Response(
             description="Bad Request",
@@ -69,7 +69,7 @@ query and optionally filter results by
     swagger_setup = {
         'operation_id': 'audio_search',
         'operation_description': desc,
-        'query_serializer': AudioSearchQueryStringSerializer,
+        'query_serializer': AudioSearchRequestSerializer,
         'responses': responses,
         'code_examples': code_examples
     }
@@ -194,7 +194,7 @@ contains mature or sensitive content and others.
         "201": openapi.Response(
             description="OK",
             examples=audio_report_create_201_example,
-            schema=ReportAudioSerializer
+            schema=AudioReportSerializer
         )
     }
 
@@ -208,7 +208,7 @@ contains mature or sensitive content and others.
     swagger_setup = {
         'operation_id': 'audio_report',
         'operation_description': desc,
-        'query_serializer': ReportAudioSerializer,
+        'query_serializer': AudioReportSerializer,
         'responses': responses,
         'code_examples': code_examples,
     }

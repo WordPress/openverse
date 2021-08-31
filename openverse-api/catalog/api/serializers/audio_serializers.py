@@ -5,17 +5,17 @@ from catalog.api.controllers.search_controller import get_sources
 from catalog.api.models import AudioReport
 from catalog.api.serializers.media_serializers import (
     _validate_enum,
-    MediaSearchQueryStringSerializer,
-    MediaSearchResultsSerializer,
+    MediaSearchRequestSerializer,
+    MediaSearchSerializer,
     MediaSerializer,
 )
 
 
-class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
+class AudioSearchRequestSerializer(MediaSearchRequestSerializer):
     """ Parse and validate search query string parameters. """
 
     fields_names = [
-        *MediaSearchQueryStringSerializer.fields_names,
+        *MediaSearchRequestSerializer.fields_names,
         'source',
         'categories',
         'duration',
@@ -160,7 +160,7 @@ class AudioSerializer(MediaSerializer):
         return f'https://{host}{path}'
 
 
-class AudioSearchResultsSerializer(MediaSearchResultsSerializer):
+class AudioSearchSerializer(MediaSearchSerializer):
     """
     The full audio search response.
     This serializer is purely representational and not actually used to
@@ -176,11 +176,11 @@ class AudioSearchResultsSerializer(MediaSearchResultsSerializer):
     )
 
 
-class ReportAudioSerializer(serializers.ModelSerializer):
+class AudioReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = AudioReport
         fields = ('id', 'identifier', 'reason', 'description')
-        read_only_fields = ('id', 'identifier',)
+        read_only_fields = ('id', 'identifier')
 
     def create(self, validated_data):
         if validated_data['reason'] == "other" and \
