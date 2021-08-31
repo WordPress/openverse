@@ -174,45 +174,47 @@ class MediaSearchRequestSerializer(serializers.Serializer):
     )
 
     @staticmethod
-    def validate_q(value):
-        if len(value) > 200:
-            return value[0:199]
-        else:
-            return value
+    def _truncate(value):
+        max_length = 200
+        return value if len(value) <= max_length else value[:max_length]
+
+    def validate_q(self, value):
+        return self._truncate(value)
 
     @staticmethod
     def validate_license(value):
+        """Checks whether license is a valid license code."""
         return _validate_li(value)
 
     @staticmethod
     def validate_license_type(value):
-        """
-        Resolves a list of license types to a list of licenses.
-        Example: commercial -> ['BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM']
-        """
+        """Checks whether license type is a known collection of licenses."""
         return _validate_lt(value)
 
     def validate_creator(self, value):
-        return self.validate_q(value)
+        return self._truncate(value)
 
     def validate_tags(self, value):
-        return self.validate_q(value)
+        return self._truncate(value)
 
     def validate_title(self, value):
-        return self.validate_q(value)
+        return self._truncate(value)
 
     @staticmethod
     def validate_extension(value):
         return value.lower()
 
     def validate(self, data):
+        errors = {}
         for deprecated in self.deprecated_params:
             param, successor = deprecated
             if param in self.initial_data:
-                raise serializers.ValidationError(
-                    f"Parameter '{param}' is deprecated in this release of"
-                    f" the API. Use '{successor}' instead."
+                errors[param] = (
+                    f"Parameter '{param}' is deprecated in this release of the "
+                    f"API. Use '{successor}' instead."
                 )
+        if errors:
+            raise serializers.ValidationError(errors)
         return data
 
 
