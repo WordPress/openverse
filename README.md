@@ -116,12 +116,6 @@ source venv/bin/activate
 just install
 ```
 
-Optionally, to install the catalog dependencies for your editor to introspect stuff about them:
-
-```shell
-just installcatalog
-```
-
 To set up environment variables run:
 
 ```shell
