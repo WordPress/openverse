@@ -41,3 +41,9 @@ audio_stats_curl = """
 # Get the statistics for audio sources
 curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/audio/stats
 """  # noqa
+
+report_audio_curl = """
+# Report an issue about audio ID 7c829a03-fb24-4b57-9b03-65f43ed19395
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "description": "This audio contains sensitive content"}' https://api.openverse.engineering/v1/audio/7c829a03-fb24-4b57-9b03-65f43ed19395/report
+"""  # noqa
+

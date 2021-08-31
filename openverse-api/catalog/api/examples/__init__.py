@@ -3,6 +3,7 @@ from catalog.api.examples.audio_requests import (
     recommendations_audio_read_curl,
     audio_detail_curl,
     audio_stats_curl,
+    report_audio_curl,
 )
 from catalog.api.examples.audio_responses import (
     audio_search_200_example,
@@ -11,6 +12,7 @@ from catalog.api.examples.audio_responses import (
     audio_detail_404_example,
     recommendations_audio_read_200_example,
     recommendations_audio_read_404_example,
+    audio_report_create_201_example,
     audio_stats_200_example,
 )
 from catalog.api.examples.image_requests import (

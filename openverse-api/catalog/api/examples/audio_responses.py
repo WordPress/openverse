@@ -91,6 +91,15 @@ audio_detail_404_example = {
     }
 }
 
+audio_report_create_201_example = {
+    "application/json": {
+        "id": 10,
+        "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395",
+        "reason": "mature",
+        "description": "This audio contains sensitive content"
+    }
+}
+
 audio_stats_200_example = {
     "application/json": [
         {
