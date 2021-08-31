@@ -50,7 +50,7 @@ def test_audio_detail(audio_fixture):
 
 
 def test_audio_stats():
-    stats('audio', 'audio_count')
+    stats('audio')
 
 
 @pytest.mark.skip(reason='No images have audio set image yet')

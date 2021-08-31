@@ -449,14 +449,15 @@ def test_related_image_search_page_consistency(
         assert len(related['results']) == 10
 
 
-def test_report_endpoint():
-    identifier = 'dac5f6b0-e07a-44a0-a444-7f43d71f9beb'
+def test_report_endpoint(image_fixture):
+    identifier = image_fixture['results'][0]['id']
     payload = {
-        'identifier': identifier,
-        'reason': 'mature'
+        'reason': 'mature',
     }
     response = requests.post(
-        f'{API_URL}/v1/images/{identifier}/report',
+        f'{API_URL}/v1/images/{identifier}/report/',
         json=payload, verify=False)
     assert response.status_code == 201
-    return json.loads(response.text)
+    data = json.loads(response.text)
+    assert data['identifier'] == identifier
+    return data

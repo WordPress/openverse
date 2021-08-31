@@ -51,7 +51,7 @@ def test_image_detail(image_fixture):
 
 
 def test_image_stats():
-    stats('images', 'image_count')
+    stats('images')
 
 
 def test_image_thumb(image_fixture):

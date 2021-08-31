@@ -60,7 +60,7 @@ def detail(media_type, fixture):
     assert response.status_code == 200
 
 
-def stats(media_type, count_key):
+def stats(media_type, count_key='media_count'):
     response = requests.get(f'{API_URL}/v1/{media_type}/stats', verify=False)
     parsed_response = json.loads(response.text)
     assert response.status_code == 200
