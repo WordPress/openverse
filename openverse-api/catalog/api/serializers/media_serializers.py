@@ -358,22 +358,6 @@ class MediaSearchResultsSerializer(serializers.Serializer):
     )
 
 
-class AboutMediaSerializer(serializers.Serializer):
-    """
-    This serializer represents the response of the media statistics endpoints.
-    """
-
-    source_name = serializers.CharField(
-        help_text="The source of the media."
-    )
-    display_name = serializers.CharField(
-        help_text="The name of content provider."
-    )
-    source_url = serializers.CharField(
-        help_text="The actual URL to the `source_name`."
-    )
-
-
 class ProxiedImageSerializer(serializers.Serializer):
     """
     We want to show 3rd party content securely and under our own native URLs, so

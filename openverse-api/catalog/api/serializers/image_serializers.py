@@ -9,7 +9,6 @@ from catalog.api.serializers.media_serializers import (
     MediaSearchQueryStringSerializer,
     MediaSearchResultsSerializer,
     MediaSerializer,
-    AboutMediaSerializer,
 )
 
 
@@ -230,13 +229,3 @@ class ReportImageSerializer(serializers.ModelSerializer):
                 "Description must be at least be 20 characters long"
             )
         return ImageReport.objects.create(**validated_data)
-
-
-class AboutImageSerializer(AboutMediaSerializer):
-    """
-    Used by `ImageStats`.
-    """
-
-    image_count = serializers.IntegerField(
-        help_text="The number of images."
-    )

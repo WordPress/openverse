@@ -8,7 +8,6 @@ from catalog.api.serializers.media_serializers import (
     MediaSearchQueryStringSerializer,
     MediaSearchResultsSerializer,
     MediaSerializer,
-    AboutMediaSerializer,
 )
 
 
@@ -197,13 +196,3 @@ class AudioWaveformSerializer(serializers.Serializer):
     @staticmethod
     def get_len(obj):
         return len(obj.get('points', []))
-
-
-class AboutAudioSerializer(AboutMediaSerializer):
-    """
-    Used by `AudioStats`.
-    """
-
-    audio_count = serializers.IntegerField(
-        help_text="The number of audio files."
-    )

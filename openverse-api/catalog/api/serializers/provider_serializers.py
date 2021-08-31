@@ -4,11 +4,24 @@ from catalog.api.models import ContentProvider, SourceLogo
 
 
 class ProviderSerializer(serializers.ModelSerializer):
-    source_name = serializers.CharField(source='provider_identifier')
-    display_name = serializers.CharField(source='provider_name')
-    source_url = serializers.URLField(source='domain_name')
-    logo_url = serializers.SerializerMethodField()
-    media_count = serializers.SerializerMethodField()
+    source_name = serializers.CharField(
+        source='provider_identifier',
+        help_text='The source of the media.',
+    )
+    display_name = serializers.CharField(
+        source='provider_name',
+        help_text='The name of content provider.',
+    )
+    source_url = serializers.URLField(
+        source='domain_name',
+        help_text='The URL of the source.',
+    )
+    logo_url = serializers.SerializerMethodField(
+        help_text='The URL to a logo of the source.',
+    )
+    media_count = serializers.SerializerMethodField(
+        help_text='The number of media items indexed from the source.',
+    )
 
     class Meta:
         model = ContentProvider
