@@ -161,7 +161,11 @@ class AudioSerializer(MediaSerializer):
 
 
 class AudioSearchResultsSerializer(MediaSearchResultsSerializer):
-    """ The full audio search response. """
+    """
+    The full audio search response.
+    This serializer is purely representational and not actually used to
+    serialize the response.
+    """
     results = AudioSerializer(
         many=True,
         help_text="An array of audios and their details such as `title`, `id`, "
@@ -175,7 +179,8 @@ class AudioSearchResultsSerializer(MediaSearchResultsSerializer):
 class ReportAudioSerializer(serializers.ModelSerializer):
     class Meta:
         model = AudioReport
-        fields = ('reason', 'identifier', 'description')
+        fields = ('id', 'identifier', 'reason', 'description')
+        read_only_fields = ('id', 'identifier',)
 
     def create(self, validated_data):
         if validated_data['reason'] == "other" and \

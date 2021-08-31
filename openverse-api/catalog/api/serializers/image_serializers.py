@@ -130,7 +130,11 @@ class ImageSerializer(MediaSerializer):
 
 
 class ImageSearchResultsSerializer(MediaSearchResultsSerializer):
-    """ The full image search response. """
+    """
+    The full image search response.
+    This serializer is purely representational and not actually used to
+    serialize the response.
+    """
     results = ImageSerializer(
         many=True,
         help_text="An array of images and their details such as `title`, `id`, "
@@ -219,7 +223,8 @@ class WatermarkQueryStringSerializer(serializers.Serializer):
 class ReportImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageReport
-        fields = ('reason', 'identifier', 'description')
+        fields = ('id', 'identifier', 'reason', 'description')
+        read_only_fields = ('id', 'identifier',)
 
     def create(self, validated_data):
         if validated_data['reason'] == "other" and \
