@@ -102,7 +102,6 @@ const PhotoDetailPage = {
         }),
       ])
     } catch (err) {
-      console.log('oops, ', err)
       error({
         statusCode: 404,
         message: app.i18n.t('error.image-not-found', { id: route.params.id }),
