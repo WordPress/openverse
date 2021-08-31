@@ -1,4 +1,4 @@
-import MediaProviderService from '~/data/MediaProviderService'
+import MediaProviderService from '~/data/media-provider-service'
 
 export default function getProviderLogo(providerName, mediaType = 'image') {
   const provider = MediaProviderService.getProviderInfo(providerName, mediaType)

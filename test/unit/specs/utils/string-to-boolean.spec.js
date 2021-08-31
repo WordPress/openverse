@@ -1,4 +1,4 @@
-import stringToBoolean from '~/utils/stringToBoolean'
+import stringToBoolean from '~/utils/string-to-boolean'
 
 describe('stringToBoolean', () => {
   it('returns true', () => {

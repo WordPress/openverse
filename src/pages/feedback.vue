@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import iframeHeight from '~/mixins/iframeHeight'
+import iframeHeight from '~/mixins/iframe-height'
 import { mapState } from 'vuex'
 
 const bugForm =

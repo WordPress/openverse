@@ -33,7 +33,7 @@ import { mapActions, mapMutations, mapState } from 'vuex'
 import featureFlags from '~/featureFlags'
 import { FETCH_IMAGE, FETCH_RELATED_IMAGES } from '~/store-modules/action-types'
 import { SET_IMAGE, SET_RELATED_IMAGES } from '~/store-modules/mutation-types'
-import iframeHeight from '~/mixins/iframeHeight'
+import iframeHeight from '~/mixins/iframe-height'
 
 const PhotoDetailPage = {
   name: 'PhotoDetailPage',

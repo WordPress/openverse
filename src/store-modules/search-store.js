@@ -1,7 +1,7 @@
 import isEmpty from 'lodash.isempty'
 import findIndex from 'lodash.findindex'
-import prepareSearchQueryParams from '~/utils/prepareSearchQueryParams'
-import decodeImageData from '~/utils/decodeImageData'
+import prepareSearchQueryParams from '~/utils/prepare-search-query-params'
+import decodeImageData from '~/utils/decode-image-data'
 import {
   FETCH_IMAGES,
   FETCH_IMAGE,
@@ -27,7 +27,7 @@ import {
   SEND_SEARCH_QUERY_EVENT,
   SEND_RESULT_CLICKED_EVENT,
 } from './usage-data-analytics-types'
-import { queryStringToSearchType } from '~/utils/searchQueryTransform'
+import { queryStringToSearchType } from '~/utils/search-query-transform'
 import { ALL_MEDIA } from '~/constants/media'
 
 // const getSearchPath = () =>

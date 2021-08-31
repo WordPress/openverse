@@ -38,7 +38,7 @@
 
 <script>
 import LicenseIcons from '~/components/LicenseIcons'
-import getProviderLogo from '~/utils/getProviderLogo'
+import getProviderLogo from '~/utils/get-provider-logo'
 
 const errorImage = require('~/assets/image_not_available_placeholder.png')
 

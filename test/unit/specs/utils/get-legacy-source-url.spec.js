@@ -1,4 +1,6 @@
-import getLegacySourceUrl, { legacySourceMap } from '~/utils/getLegacySourceUrl'
+import getLegacySourceUrl, {
+  legacySourceMap,
+} from '~/utils/get-legacy-source-url'
 
 /**
  * Note: this does not test the health or uptime of URLS, only that

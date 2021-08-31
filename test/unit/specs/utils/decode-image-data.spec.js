@@ -1,4 +1,4 @@
-import decodeImageData from '~/utils/decodeImageData'
+import decodeImageData from '~/utils/decode-image-data'
 
 describe('decodeImageData', () => {
   it('returns empty string for empty string', () => {

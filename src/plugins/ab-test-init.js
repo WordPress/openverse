@@ -1,4 +1,4 @@
-import abTests, { activeExperiments } from '~/abTests'
+import abTests, { activeExperiments } from '~/ab-tests'
 
 /**
  * Initialize our ab tests on the client-side

@@ -1,4 +1,4 @@
-import decodeData from '~/utils/decodeData'
+import decodeData from '~/utils/decode-data'
 
 export default function decodeImageData(image) {
   return {
