@@ -680,10 +680,7 @@
     ],
     "thumbnail": "https://usercontent.jamendo.com/?type=album&id=1290&width=300&trackid=8561",
     "waveform": "https://localhost:8000/v1/audio/242c1a4c-0623-436c-a600-7847412d28b6/waveform",
-    "genres": [
-      "jazz",
-      "latinjazz"
-    ],
+    "genres": ["jazz", "latinjazz"],
     "audio_set": {
       "name": "Distance & Temps",
       "url": "https://www.jamendo.com/album/1290/distance-and-temps"
@@ -693,4 +690,3 @@
     "related_url": "http://localhost:8000/v1/audio/242c1a4c-0623-436c-a600-7847412d28b6/recommendations"
   }
 }
-
