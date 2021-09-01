@@ -1,16 +1,17 @@
-from datetime import datetime, timedelta
 import os
+from datetime import datetime, timedelta
 
-CRONTAB_STR = 'crontab_str'
-SCRIPT = 'script'
+
+CRONTAB_STR = "crontab_str"
+SCRIPT = "script"
 
 DAG_DEFAULT_ARGS = {
-    'owner': 'data-eng-admin',
-    'depends_on_past': False,
-    'start_date': datetime(2019, 1, 15),
-    'email_on_retry': False,
-    'retries': 3,
-    'retry_delay': timedelta(minutes=15),
+    "owner": "data-eng-admin",
+    "depends_on_past": False,
+    "start_date": datetime(2019, 1, 15),
+    "email_on_retry": False,
+    "retries": 3,
+    "retry_delay": timedelta(minutes=15),
 }
 
 # The DAG_VARIABLES dict holds variables that differentiate the dags
@@ -27,13 +28,13 @@ DAG_DEFAULT_ARGS = {
 # key results in a DAG that runs only when the user clicks 'play' in the
 # airflow interface.
 
-AIRFLOW_HOME = os.getenv('AIRFLOW_HOME')
-API_SCRIPT_PATH = os.path.join(AIRFLOW_HOME, 'dags', 'provider_api_scripts')
+AIRFLOW_HOME = os.getenv("AIRFLOW_HOME")
+API_SCRIPT_PATH = os.path.join(AIRFLOW_HOME, "dags", "provider_api_scripts")
 
 
 DAG_VARIABLES = {
-    'thingiverse': {
-        SCRIPT: os.path.join(API_SCRIPT_PATH, 'Thingiverse.py'),
-        CRONTAB_STR: '0 7 * * *'
+    "thingiverse": {
+        SCRIPT: os.path.join(API_SCRIPT_PATH, "Thingiverse.py"),
+        CRONTAB_STR: "0 7 * * *",
     },
 }

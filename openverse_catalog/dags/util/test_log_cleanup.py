@@ -3,7 +3,8 @@ from pathlib import Path
 
 from util import log_cleanup
 
-TEST_LOGS_FOLDER = Path(__file__).parent / "test_resources" / 'logs'
+
+TEST_LOGS_FOLDER = Path(__file__).parent / "test_resources" / "logs"
 # Total number of logs in the `logs_folder` created
 INITIAL_LOG_FILE_COUNT = 13
 # Number of logs folders in the `test_resources/logs_folder`
@@ -13,10 +14,10 @@ OLD_LOG_FOLDER_COUNT = 2
 NON_DELETED_FILE_COUNT = 1
 ENABLE_DELETE = False
 
-OLD_TIMESTAMP = datetime.fromisoformat('2021-08-10')
-RECENT_TIMESTAMP = datetime.fromisoformat('2021-08-20')
+OLD_TIMESTAMP = datetime.fromisoformat("2021-08-10")
+RECENT_TIMESTAMP = datetime.fromisoformat("2021-08-20")
 
-logs_folder = Path(__file__).parent / 'test_resources' / 'logs'
+logs_folder = Path(__file__).parent / "test_resources" / "logs"
 
 
 def is_older_than_cutoff_by_name(file_or_folder: Path, cutoff: int):
@@ -45,12 +46,14 @@ cutoffs_in_days = calculate_cutoffs()
 
 
 def test_log_cleaner_leaves_new_files():
-    """ If all the log files are newer than the maxLogAgeInDays,
+    """If all the log files are newer than the maxLogAgeInDays,
     no log files are deleted"""
-    log_files_count = len(list(Path.glob(logs_folder, '**/*.log')))
+    log_files_count = len(list(Path.glob(logs_folder, "**/*.log")))
     assert log_files_count == INITIAL_LOG_FILE_COUNT
 
-    deleted_folders = log_cleanup.clean_up(logs_folder, cutoffs_in_days[0], ENABLE_DELETE)
+    deleted_folders = log_cleanup.clean_up(
+        logs_folder, cutoffs_in_days[0], ENABLE_DELETE
+    )
     deleted_count = len(deleted_folders)
     expected_count = 0
 
@@ -60,7 +63,9 @@ def test_log_cleaner_leaves_new_files():
 def test_log_cleaner_deletes_only_old_files():
     """Log cleaner deletes all the log files that are older than
     maxLogAgeInDays, but leaves the files that are newer"""
-    deleted_folders = log_cleanup.clean_up(logs_folder, cutoffs_in_days[1], ENABLE_DELETE)
+    deleted_folders = log_cleanup.clean_up(
+        logs_folder, cutoffs_in_days[1], ENABLE_DELETE
+    )
     deleted_count = len(deleted_folders)
 
     expected_log_count = OLD_LOG_FOLDER_COUNT

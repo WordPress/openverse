@@ -2,30 +2,29 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-
 from provider_api_scripts import europeana
 from util.operator_util import get_log_operator
 
 
 DAG_DEFAULT_ARGS = {
-    'owner': 'data-eng-admin',
-    'depends_on_past': False,
-    'start_date': datetime(1970, 1, 1),
-    'email_on_retry': False,
-    'retries': 3,
-    'retry_delay': timedelta(minutes=15),
+    "owner": "data-eng-admin",
+    "depends_on_past": False,
+    "start_date": datetime(1970, 1, 1),
+    "email_on_retry": False,
+    "retries": 3,
+    "retry_delay": timedelta(minutes=15),
 }
 
-DAG_ID = 'europeana_workflow'
+DAG_ID = "europeana_workflow"
 
 
 def get_runner_operator(dag):
     return PythonOperator(
-        task_id='pull_europeana_data',
+        task_id="pull_europeana_data",
         python_callable=europeana.main,
-        op_args=['{{ ds }}'],
+        op_args=["{{ ds }}"],
         depends_on_past=False,
-        dag=dag
+        dag=dag,
     )
 
 
@@ -34,14 +33,14 @@ def create_dag():
         dag_id=DAG_ID,
         default_args=DAG_DEFAULT_ARGS,
         start_date=datetime(1970, 1, 1),
-        schedule_interval='@daily',
+        schedule_interval="@daily",
         catchup=False,
     )
 
     with dag:
-        start_task = get_log_operator(dag, DAG_ID, 'Starting')
+        start_task = get_log_operator(dag, DAG_ID, "Starting")
         run_task = get_runner_operator(dag)
-        end_task = get_log_operator(dag, DAG_ID, 'Finished')
+        end_task = get_log_operator(dag, DAG_ID, "Finished")
 
         start_task >> run_task >> end_task
 

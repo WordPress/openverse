@@ -5,9 +5,9 @@ from common.requester import DelayedRequester
 from common.storage.image import ImageStore
 from util.loader import provider_details as prov
 
+
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
@@ -27,12 +27,10 @@ DEFAULT_QUERY_PARAMS = {
     "keys": "*",
     "filters": "[has_image:true],[public_domain:true]",
     "offset": 0,
-    "rows": LIMIT
+    "rows": LIMIT,
 }
 
-HEADERS = {
-     "Accept": "application/json"
-}
+HEADERS = {"Accept": "application/json"}
 
 
 def main():
@@ -40,14 +38,10 @@ def main():
     offset = 0
     while condition:
         query_params = _get_query_param(offset=offset)
-        items = _get_batch_items(
-            query_params=query_params
-            )
+        items = _get_batch_items(query_params=query_params)
         if type(items) == list:
             if len(items) > 0:
-                _handle_items_data(
-                    items
-                )
+                _handle_items_data(items)
                 offset += LIMIT
             else:
                 condition = False
@@ -57,34 +51,22 @@ def main():
     logger.info(f"total images collected {image_count}")
 
 
-def _get_query_param(
-        offset=0,
-        default_query_param=None
-        ):
+def _get_query_param(offset=0, default_query_param=None):
     if default_query_param is None:
         default_query_param = DEFAULT_QUERY_PARAMS
     query_params = default_query_param.copy()
-    query_params.update(
-        offset=offset
-    )
+    query_params.update(offset=offset)
     return query_params
 
 
 def _get_batch_items(
-        endpoint=ENDPOINT,
-        query_params=None,
-        headers=None,
-        retries=RETRIES
-        ):
+    endpoint=ENDPOINT, query_params=None, headers=None, retries=RETRIES
+):
     if headers is None:
         headers = HEADERS.copy()
     items = None
     for retry in range(retries):
-        response = delay_request.get(
-            endpoint,
-            query_params,
-            headers=headers
-        )
+        response = delay_request.get(endpoint, query_params, headers=headers)
         try:
             response_json = response.json()
             if "items" in response_json.keys():
@@ -96,9 +78,9 @@ def _get_batch_items(
 
 
 def _handle_items_data(
-        items,
-        landing_page_base=LANDING_PAGE_BASE_URL,
-        ):
+    items,
+    landing_page_base=LANDING_PAGE_BASE_URL,
+):
     image_count = 0
     for item in items:
         images = _get_images(item)
@@ -118,22 +100,19 @@ def _handle_items_data(
         title = _get_title(titles)
         meta_data = _get_metadata(item)
         for img in images:
-            license_info = get_license_info(
-                license_=license_,
-                license_version=version
-            )
+            license_info = get_license_info(license_=license_, license_version=version)
             image_count = image_store.add_item(
-                    foreign_identifier=img.get("iiif_id"),
-                    foreign_landing_url=foreign_landing_url,
-                    image_url=img.get("image_url"),
-                    height=img.get("height"),
-                    width=img.get("width"),
-                    license_info=license_info,
-                    thumbnail_url=img.get("thumbnail"),
-                    creator=creator,
-                    title=title,
-                    meta_data=meta_data,
-                )
+                foreign_identifier=img.get("iiif_id"),
+                foreign_landing_url=foreign_landing_url,
+                image_url=img.get("image_url"),
+                height=img.get("height"),
+                width=img.get("width"),
+                license_info=license_info,
+                thumbnail_url=img.get("thumbnail"),
+                creator=creator,
+                title=title,
+                meta_data=meta_data,
+            )
     return image_count
 
 
@@ -141,9 +120,7 @@ def _get_images(item):
     images = []
     if item.get("image_iiif_id") is not None:
         iiif_id = item.get("image_iiif_id")
-        image_url, thumbnail_url = _get_image_url(
-            iiif_id
-        )
+        image_url, thumbnail_url = _get_image_url(iiif_id)
         height = item.get("image_height")
         width = item.get("image_width")
         images.append(
@@ -163,9 +140,7 @@ def _get_images(item):
                 iiif_id = alt_img.get("iiif_id")
                 if iiif_id is None:
                     continue
-                image_url, thumbnail_url = _get_image_url(
-                    iiif_id
-                )
+                image_url, thumbnail_url = _get_image_url(iiif_id)
                 height = alt_img.get("height")
                 width = alt_img.get("width")
                 images.append(
@@ -174,21 +149,15 @@ def _get_images(item):
                         "image_url": image_url,
                         "thumbnail": thumbnail_url,
                         "height": height,
-                        "width": width
+                        "width": width,
                     }
                 )
     return images
 
 
-def _get_image_url(
-        image_iiif_id,
-        image_size=IMAGE_SIZE,
-        thumbnail_size=THUMBNAIL_SIZE
-        ):
+def _get_image_url(image_iiif_id, image_size=IMAGE_SIZE, thumbnail_size=THUMBNAIL_SIZE):
     image_url = image_iiif_id + f"/full/{image_size}/0/default.jpg"
-    thumbnail_url = (
-        image_iiif_id + f"/full/!{thumbnail_size},/0/default.jpg"
-    )
+    thumbnail_url = image_iiif_id + f"/full/!{thumbnail_size},/0/default.jpg"
 
     return image_url, thumbnail_url
 
@@ -225,13 +194,13 @@ def _get_metadata(item):
         meta_data["created_date"] = created_date
     collection = item.get("collection")
     if type(collection) == list:
-        meta_data["collection"] = ','.join(collection)
+        meta_data["collection"] = ",".join(collection)
     techniques = item.get("techniques")
     if type(techniques) == list:
-        meta_data["techniques"] = ','.join(techniques)
+        meta_data["techniques"] = ",".join(techniques)
     colors = item.get("colors")
     if type(colors) == list:
-        meta_data["colors"] = ','.join(colors)
+        meta_data["colors"] = ",".join(colors)
     return meta_data
 
 

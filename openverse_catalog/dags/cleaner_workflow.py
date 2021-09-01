@@ -1,10 +1,12 @@
-from copy import deepcopy
-from datetime import datetime
 import logging
 import os
+from copy import deepcopy
+from datetime import datetime
+
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from util import config, pg_cleaner, operator_util
+from util import config, operator_util, pg_cleaner
+
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",

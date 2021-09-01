@@ -1,15 +1,15 @@
-import os
 import logging
-from urllib.parse import urlparse, parse_qs
+import os
+from urllib.parse import parse_qs, urlparse
 
 from common.licenses.licenses import get_license_info
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
 from util.loader import provider_details as prov
 
+
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
@@ -29,32 +29,22 @@ DEFAULT_QUERY_PARAMS = {
     "q": "CC_0",
     "field": "use_rtxt_s",
     "page": 1,
-    "per_page": LIMIT
+    "per_page": LIMIT,
 }
 
-HEADERS = {
-    "Authorization": TOKEN
-}
+HEADERS = {"Authorization": TOKEN}
 
-IMAGE_URL_DIMENSIONS = [
-    "g", "v", "q", "w", "r"
-]
+IMAGE_URL_DIMENSIONS = ["g", "v", "q", "w", "r"]
 
-THUMBNAIL_DIMENSIONS = [
-    "w", "r", "q", "f", "v", "g"
-]
+THUMBNAIL_DIMENSIONS = ["w", "r", "q", "f", "v", "g"]
 
 
 def main():
     page = 1
     condition = True
     while condition:
-        query_param = _get_query_param(
-            page=page
-        )
-        request_response = _request_handler(
-            params=query_param
-        )
+        query_param = _get_query_param(page=page)
+        request_response = _request_handler(params=query_param)
         results = request_response.get("result")
         if type(results) == list and len(results) > 0:
             _handle_results(results)
@@ -67,9 +57,9 @@ def main():
 
 
 def _get_query_param(
-        default_query_params=None,
-        page=1,
-        ):
+    default_query_params=None,
+    page=1,
+):
     if default_query_params is None:
         default_query_params = DEFAULT_QUERY_PARAMS
     query_param = default_query_params.copy()
@@ -78,20 +68,13 @@ def _get_query_param(
 
 
 def _request_handler(
-        endpoint=BASE_ENDPOINT,
-        params=None,
-        headers=None,
-        retries=RETRIES
-        ):
+    endpoint=BASE_ENDPOINT, params=None, headers=None, retries=RETRIES
+):
     if headers is None:
         headers = HEADERS.copy()
     results = None
     for retry in range(retries):
-        response = delay_request.get(
-            endpoint,
-            params=params,
-            headers=headers
-        )
+        response = delay_request.get(endpoint, params=params, headers=headers)
         if response.status_code == 200:
             try:
                 response_json = response.json()
@@ -112,18 +95,14 @@ def _handle_results(results):
         uuid = item.get("uuid")
 
         item_details = _request_handler(
-            endpoint=METADATA_ENDPOINT+uuid,
+            endpoint=METADATA_ENDPOINT + uuid,
         )
         if item_details is None:
             continue
 
         mods = item_details.get("mods")
-        title = _get_title(
-            mods.get("titleInfo")
-        )
-        creator = _get_creators(
-            mods.get("name")
-        )
+        title = _get_title(mods.get("titleInfo"))
+        creator = _get_creators(mods.get("name"))
         metadata = _get_metadata(mods)
 
         captures = item_details.get("sibling_captures", {}).get("capture", [])
@@ -131,19 +110,11 @@ def _handle_results(results):
             captures = [captures]
 
         _get_capture_details(
-            captures=captures,
-            metadata=metadata,
-            creator=creator,
-            title=title
+            captures=captures, metadata=metadata, creator=creator, title=title
         )
 
 
-def _get_capture_details(
-        captures=None,
-        metadata=None,
-        creator=None,
-        title=None
-        ):
+def _get_capture_details(captures=None, metadata=None, creator=None, title=None):
     if captures is None:
         captures = []
     for img in captures:
@@ -155,10 +126,7 @@ def _get_capture_details(
         )
         foreign_landing_url = img.get("itemLink", {}).get("$")
         license_url = img.get("rightsStatementURI", {}).get("$")
-        if (
-            image_url is None or foreign_landing_url is None or
-            license_url is None
-        ):
+        if image_url is None or foreign_landing_url is None or license_url is None:
             continue
 
         image_store.add_item(
@@ -169,7 +137,7 @@ def _get_capture_details(
             thumbnail_url=thumbnail_url,
             title=title,
             creator=creator,
-            meta_data=metadata
+            meta_data=metadata,
         )
 
 
@@ -184,7 +152,8 @@ def _get_creators(creatorinfo):
     if type(creatorinfo) == list:
         primary_creator = (
             info.get("namePart", {}).get("$")
-            for info in creatorinfo if info.get("usage") == "primary"
+            for info in creatorinfo
+            if info.get("usage") == "primary"
         )
         creator = next(primary_creator, None)
     else:
@@ -196,18 +165,13 @@ def _get_creators(creatorinfo):
     return creator
 
 
-def _get_images(
-        images,
-        image_url_dimensions=None,
-        thumbnail_dimensions=None
-        ):
+def _get_images(images, image_url_dimensions=None, thumbnail_dimensions=None):
     if thumbnail_dimensions is None:
         thumbnail_dimensions = THUMBNAIL_DIMENSIONS
     if image_url_dimensions is None:
         image_url_dimensions = IMAGE_URL_DIMENSIONS
     image_type = {
-        parse_qs(urlparse(img.get("$")).query)['t'][0]: img.get("$")
-        for img in images
+        parse_qs(urlparse(img.get("$")).query)["t"][0]: img.get("$") for img in images
     }
 
     image_url = _get_preferred_image(image_type, image_url_dimensions)
@@ -230,9 +194,8 @@ def _get_metadata(mods):
     metadata = {}
 
     type_of_resource = mods.get("typeOfResource")
-    if (
-        type(type_of_resource) == list
-        and (type_of_resource[0].get("usage") == "primary")
+    if type(type_of_resource) == list and (
+        type_of_resource[0].get("usage") == "primary"
     ):
         metadata["type_of_resource"] = type_of_resource[0].get("$")
 
@@ -241,7 +204,7 @@ def _get_metadata(mods):
 
     origin_info = mods.get("originInfo")
     try:
-        metadata['date_issued'] = origin_info.get("dateIssued").get("$")
+        metadata["date_issued"] = origin_info.get("dateIssued").get("$")
     except AttributeError as e:
         logger.warning(f"date_issued not found due to {e}")
 

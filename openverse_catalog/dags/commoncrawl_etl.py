@@ -1,10 +1,10 @@
-from datetime import datetime, timedelta
 import logging
 import os
+from datetime import datetime, timedelta
 
 from airflow import DAG
-
 from util.etl import operators
+
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",

@@ -5,6 +5,7 @@ import time
 import boto3
 from botocore.httpsession import EndpointConnectionError
 
+
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
     level=logging.INFO,

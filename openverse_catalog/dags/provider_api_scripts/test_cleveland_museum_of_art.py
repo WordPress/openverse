@@ -1,17 +1,18 @@
-import logging
 import json
-import requests
+import logging
 import os
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import cleveland_museum_of_art as clm
+import requests
 from common.licenses.licenses import LicenseInfo
 from common.storage.image import MockImageStore
 
+
 _license_info = (
-    'cc0',
-    '1.0',
-    'https://creativecommons.org/publicdomain/zero/1.0/',
+    "cc0",
+    "1.0",
+    "https://creativecommons.org/publicdomain/zero/1.0/",
     None,
 )
 license_info = LicenseInfo(*_license_info)
@@ -21,13 +22,11 @@ clm.image_store = MockImageStore(
 )
 
 RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)),
-    'tests/resources/clevelandmuseum'
+    os.path.abspath(os.path.dirname(__file__)), "tests/resources/clevelandmuseum"
 )
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.DEBUG
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
 )
 
 
@@ -39,31 +38,20 @@ def _get_resource_json(json_name):
 
 def test_build_query_param_default():
     actual_param = clm._build_query_param()
-    expected_param = {
-        "cc": "1",
-        "has_image": "1",
-        "limit": 1000,
-        "skip": 0
-    }
+    expected_param = {"cc": "1", "has_image": "1", "limit": 1000, "skip": 0}
     assert actual_param == expected_param
 
 
 def test_build_query_param_with_givens():
     actual_param = clm._build_query_param(offset=1000)
-    expected_param = {
-        "cc": "1",
-        "has_image": "1",
-        "limit": 1000,
-        "skip": 1000
-    }
+    expected_param = {"cc": "1", "has_image": "1", "limit": 1000, "skip": 1000}
     assert actual_param == expected_param
 
 
 def test_get_image_type_web():
-    image_data = _get_resource_json('image_type_web.json')
+    image_data = _get_resource_json("image_type_web.json")
     actual_url, actual_key = clm._get_image_type(image_data)
-    expected_url = (
-        "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg")
+    expected_url = "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg"
     expected_key = "web"
 
     assert actual_url == expected_url
@@ -71,11 +59,11 @@ def test_get_image_type_web():
 
 
 def test_get_image_type_print():
-    image_data = _get_resource_json('image_type_print.json')
+    image_data = _get_resource_json("image_type_print.json")
     actual_url, actual_key = clm._get_image_type(image_data)
     expected_url = (
-        "https://openaccess-cdn.clevelandart.org/"
-        "1335.1917/1335.1917_print.jpg")
+        "https://openaccess-cdn.clevelandart.org/" "1335.1917/1335.1917_print.jpg"
+    )
     expected_key = "print"
 
     assert actual_url == expected_url
@@ -83,11 +71,11 @@ def test_get_image_type_print():
 
 
 def test_get_image_type_full():
-    image_data = _get_resource_json('image_type_full.json')
+    image_data = _get_resource_json("image_type_full.json")
     actual_url, actual_key = clm._get_image_type(image_data)
     expected_url = (
-        "https://openaccess-cdn.clevelandart.org/"
-        "1335.1917/1335.1917_full.tif")
+        "https://openaccess-cdn.clevelandart.org/" "1335.1917/1335.1917_full.tif"
+    )
     expected_key = "full"
 
     assert actual_url == expected_url
@@ -105,27 +93,22 @@ def test_get_image_type_none():
 
 
 def test_get_metadata():
-    data = _get_resource_json('complete_data.json')
+    data = _get_resource_json("complete_data.json")
     actual_metadata = clm._get_metadata(data)
     expected_metadata = _get_resource_json("expect_metadata.json")
     assert actual_metadata == expected_metadata
 
 
 def test_get_response_success():
-    query_param = {"cc": 1,
-                   "has_image": 1,
-                   "limit": 1,
-                   "skip": 30000}
-    response_json = _get_resource_json('response_success.json')
+    query_param = {"cc": 1, "has_image": 1, "limit": 1, "skip": 30000}
+    response_json = _get_resource_json("response_success.json")
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_json)
-    with patch.object(clm.delay_request,
-                      'get',
-                      return_value=r) as mock_get:
+    with patch.object(clm.delay_request, "get", return_value=r) as mock_get:
 
         response_json, total_images = clm._get_response(query_param)
-    expected_response = _get_resource_json('response_success.json')
+    expected_response = _get_resource_json("response_success.json")
 
     assert mock_get.call_count == 1
     assert response_json == expected_response
@@ -133,20 +116,15 @@ def test_get_response_success():
 
 
 def test_get_response_no_data():
-    query_param = {"cc": 1,
-                   "has_image": 1,
-                   "limit": 1,
-                   "skip": 33000}
-    response_json = _get_resource_json('response_no_data.json')
+    query_param = {"cc": 1, "has_image": 1, "limit": 1, "skip": 33000}
+    response_json = _get_resource_json("response_no_data.json")
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_json)
-    with patch.object(clm.delay_request,
-                      'get',
-                      return_value=r) as mock_get:
+    with patch.object(clm.delay_request, "get", return_value=r) as mock_get:
 
         response_json, total_images = clm._get_response(query_param)
-    expected_response = _get_resource_json('response_no_data.json')
+    expected_response = _get_resource_json("response_no_data.json")
 
     assert mock_get.call_count == 1
     assert response_json == expected_response
@@ -154,16 +132,11 @@ def test_get_response_no_data():
 
 
 def test_get_response_failure():
-    query_param = {"cc": 1,
-                   "has_image": 1,
-                   "limit": 1,
-                   "skip": -1}
+    query_param = {"cc": 1, "has_image": 1, "limit": 1, "skip": -1}
     r = requests.Response()
     r.status_code = 500
     r.json = None
-    with patch.object(clm.delay_request,
-                      'get',
-                      return_value=r) as mock_get:
+    with patch.object(clm.delay_request, "get", return_value=r) as mock_get:
 
         clm._get_response(query_param)
 
@@ -171,8 +144,8 @@ def test_get_response_failure():
 
 
 def test_handle_response():
-    response_json = _get_resource_json('handle_response_data.json')
-    data = response_json['data']
+    response_json = _get_resource_json("handle_response_data.json")
+    data = response_json["data"]
     actual_total_images = clm._handle_response(data)
     expected_total_images = 100
 

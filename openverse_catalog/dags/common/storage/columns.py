@@ -1,8 +1,9 @@
-from common import urls
-
-from abc import ABC, abstractmethod
 import json
 import logging
+from abc import ABC, abstractmethod
+
+from common import urls
+
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +15,7 @@ class Column(ABC):
     Each implementation must implement a `prepare_string` method to
     properly format data for a given column type.
     """
+
     def __init__(self, name: str, required: bool):
         self.NAME = name
         self.REQUIRED = required
@@ -33,25 +35,23 @@ class Column(ABC):
         else:
             # We join a split string because it removes all whitespace
             # characters
-            return ' '.join(
+            return " ".join(
                 str(data)
                 .replace('"', "'")
-                .replace('\b', '')
-                .replace('\\', '\\\\')
+                .replace("\b", "")
+                .replace("\\", "\\\\")
                 .split()
             )
 
     def __enforce_char_limit(self, string, limit, truncate=True):
         if not type(string) == str:
             logger.debug(
-                f'Cannot limit characters on non-string type {type(string)}.'
-                f'Input was {string}.'
+                f"Cannot limit characters on non-string type {type(string)}."
+                f"Input was {string}."
             )
             return None
         if len(string) > limit:
-            logger.warning(
-                f'String over char limit of {limit}.  Input was {string}.'
-            )
+            logger.warning(f"String over char limit of {limit}.  Input was {string}.")
             return string[:limit] if truncate else None
         else:
             return string
@@ -79,9 +79,7 @@ class IntegerColumn(Column):
         try:
             number = str(int(float(value)))
         except Exception as e:
-            logger.debug(
-                f'input {value} is not castable to an int.  The error was {e}'
-            )
+            logger.debug(f"input {value} is not castable to an int.  The error was {e}")
             number = None
         return number
 
@@ -106,15 +104,13 @@ class BooleanColumn(Column):
         value: for useful output this should be reasonably castable to a bool.
         """
         bool_map = {
-            't': [True, 'true', 'True', 't', 'T'],
-            'f': [False, 'false', 'False', 'f', 'F']
+            "t": [True, "true", "True", "t", "T"],
+            "f": [False, "false", "False", "f", "F"],
         }
         for tf in bool_map:
             if value in bool_map[tf]:
                 return tf
-        logger.debug(
-            f'{value} is not a valid PostgreSQL bool'
-        )
+        logger.debug(f"{value} is not a valid PostgreSQL bool")
         return None
 
 
@@ -141,8 +137,9 @@ class JSONColumn(Column):
                other input will be turned into sanitized strings.
         """
         sanitized_json = self._sanitize_json_values(value)
-        return json.dumps(sanitized_json,
-                          ensure_ascii=False) if sanitized_json else None
+        return (
+            json.dumps(sanitized_json, ensure_ascii=False) if sanitized_json else None
+        )
 
     def _sanitize_json_values(self, value, recursion_limit=100):
         """
@@ -157,17 +154,13 @@ class JSONColumn(Column):
             return self._Column__sanitize_string(value)
         elif input_type == list:
             return [
-                self._sanitize_json_values(
-                    item,
-                    recursion_limit=recursion_limit - 1
-                )
+                self._sanitize_json_values(item, recursion_limit=recursion_limit - 1)
                 for item in value
             ]
         else:
             return {
                 key: self._sanitize_json_values(
-                    val,
-                    recursion_limit=recursion_limit - 1
+                    val, recursion_limit=recursion_limit - 1
                 )
                 for key, val in value.items()
             }
@@ -200,9 +193,7 @@ class StringColumn(Column):
         Sanitizes input and enforces the character limit, returning a string.
         """
         return self._Column__enforce_char_limit(
-            self._Column__sanitize_string(value),
-            self.SIZE,
-            self.TRUNCATE
+            self._Column__sanitize_string(value), self.SIZE, self.TRUNCATE
         )
 
 
@@ -222,6 +213,7 @@ class URLColumn(Column):
     Note:  Different from StringColumn in that we *never* truncate a URL
            string.
     """
+
     def __init__(self, name: str, required: bool, size: int):
         self.SIZE = size
         super().__init__(name, required)
@@ -237,9 +229,7 @@ class URLColumn(Column):
             return None
         else:
             return self._Column__enforce_char_limit(
-                urls.validate_url_string(value),
-                self.SIZE,
-                False
+                urls.validate_url_string(value), self.SIZE, False
             )
 
 
@@ -255,6 +245,7 @@ class ArrayColumn(Column):
     base_column:    type of the elements in the array, another column
 
     """
+
     def __init__(self, name: str, required: bool, base_column: Column):
         self.BASE_COLUMN = base_column
         super().__init__(name, required)

@@ -1,11 +1,12 @@
 import abc
-from datetime import datetime
 import logging
 import os
+from datetime import datetime
 from typing import Optional, Union
 
 from common.licenses.licenses import is_valid_license_info
 from common.storage import util
+
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +31,8 @@ TAG_CONTAINS_BLACKLIST = {
     "pdm",
 }
 
-COMMON_CRAWL = 'commoncrawl'
-PROVIDER_API = 'provider_api'
+COMMON_CRAWL = "commoncrawl"
+PROVIDER_API = "provider_api"
 
 
 class MediaStore(metaclass=abc.ABCMeta):
@@ -49,15 +50,14 @@ class MediaStore(metaclass=abc.ABCMeta):
     """
 
     def __init__(
-            self,
-            provider: Optional[str] = None,
-            output_file: Optional[str] = None,
-            output_dir: Optional[str] = None,
-            buffer_length: int = 100,
-            media_type: Optional[str] = "generic",
+        self,
+        provider: Optional[str] = None,
+        output_file: Optional[str] = None,
+        output_dir: Optional[str] = None,
+        buffer_length: int = 100,
+        media_type: Optional[str] = "generic",
     ):
-        logger.info(f"Initialized {media_type} MediaStore"
-                    f" with provider {provider}")
+        logger.info(f"Initialized {media_type} MediaStore" f" with provider {provider}")
         self.media_type = media_type
         self._media_buffer = []
         self._total_items = 0
@@ -111,38 +111,32 @@ class MediaStore(metaclass=abc.ABCMeta):
 
         Returns None if license is invalid
         """
-        if (
-                media_data['license_info'].license is None
-                or not is_valid_license_info(media_data['license_info'])
+        if media_data["license_info"].license is None or not is_valid_license_info(
+            media_data["license_info"]
         ):
             logger.debug("Discarding media due to invalid license")
             return None
-        media_data['source'] = util.get_source(
-            media_data.get('source'),
-            self._PROVIDER
-        )
+        media_data["source"] = util.get_source(media_data.get("source"), self._PROVIDER)
         # Add ingestion_type column value based on `source`.
         # The implementation is based on `ingestion_column`
-        if media_data.get('ingestion_type') is None:
-            if media_data['source'] == 'commoncrawl':
-                media_data['ingestion_type'] = 'commoncrawl'
+        if media_data.get("ingestion_type") is None:
+            if media_data["source"] == "commoncrawl":
+                media_data["ingestion_type"] = "commoncrawl"
             else:
-                media_data['ingestion_type'] = 'provider_api'
+                media_data["ingestion_type"] = "provider_api"
 
-        media_data['tags'] = self._enrich_tags(
-            media_data.pop('raw_tags', None)
+        media_data["tags"] = self._enrich_tags(media_data.pop("raw_tags", None))
+        media_data["meta_data"] = self._enrich_meta_data(
+            media_data.pop("meta_data", None),
+            media_data["license_info"].url,
+            media_data["license_info"].raw_url,
         )
-        media_data['meta_data'] = self._enrich_meta_data(
-            media_data.pop('meta_data', None),
-            media_data['license_info'].url,
-            media_data['license_info'].raw_url,
-        )
-        media_data['license_'] = media_data['license_info'].license
-        media_data['license_version'] = media_data['license_info'].version
+        media_data["license_"] = media_data["license_info"].license
+        media_data["license_version"] = media_data["license_info"].version
 
-        media_data.pop('license_info', None)
-        media_data['provider'] = self._PROVIDER
-        media_data['filesize'] = None
+        media_data.pop("license_info", None)
+        media_data["provider"] = self._PROVIDER
+        media_data["filesize"] = None
         return media_data
 
     def commit(self):
@@ -151,10 +145,10 @@ class MediaStore(metaclass=abc.ABCMeta):
         return self.total_items
 
     def _initialize_output_path(
-            self,
-            output_dir: Optional[str],
-            output_file: Optional[str],
-            provider: str,
+        self,
+        output_dir: Optional[str],
+        output_file: Optional[str],
+        provider: str,
     ) -> str:
         """Creates the path for the tsv file.
         If output_dir and output_file ar not given,
@@ -165,25 +159,21 @@ class MediaStore(metaclass=abc.ABCMeta):
             Path of the tsv file to write media data pulled from providers
         """
         if output_dir is None:
-            logger.info("No given output directory. "
-                        "Using OUTPUT_DIR from environment.")
+            logger.info(
+                "No given output directory. " "Using OUTPUT_DIR from environment."
+            )
             output_dir = os.getenv("OUTPUT_DIR")
         if output_dir is None:
             logger.warning(
-                "OUTPUT_DIR is not set in the environment. "
-                "Output will go to /tmp."
+                "OUTPUT_DIR is not set in the environment. " "Output will go to /tmp."
             )
             output_dir = "/tmp"
 
         if output_file is not None:
             output_file = str(output_file)
         else:
-            datetime_string = datetime.strftime(
-                self._NOW, '%Y%m%d%H%M%S')
-            output_file = (
-                f"{provider}_{self.media_type}"
-                f"_{datetime_string}.tsv"
-            )
+            datetime_string = datetime.strftime(self._NOW, "%Y%m%d%H%M%S")
+            output_file = f"{provider}_{self.media_type}" f"_{datetime_string}.tsv"
 
         output_path = os.path.join(output_dir, output_file)
         logger.info(f"Output path: {output_path}")
@@ -206,10 +196,8 @@ class MediaStore(metaclass=abc.ABCMeta):
                 return None
         else:
             return (
-                    "\t".join(
-                        [s if s is not None else "\\N"
-                         for s in prepared_strings])
-                    + "\n"
+                "\t".join([s if s is not None else "\\N" for s in prepared_strings])
+                + "\n"
             )
 
     def _flush_buffer(self) -> int:
@@ -243,8 +231,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         return False
 
     @staticmethod
-    def _enrich_meta_data(
-            meta_data, license_url, raw_license_url) -> dict:
+    def _enrich_meta_data(meta_data, license_url, raw_license_url) -> dict:
         """
         Makes sure that meta_data is a dictionary, and contains
         license_url and raw_license_url

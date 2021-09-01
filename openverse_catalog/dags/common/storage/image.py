@@ -1,68 +1,47 @@
-from collections import namedtuple
 import logging
-from typing import Optional, Dict, Union
+from collections import namedtuple
+from typing import Dict, Optional, Union
 
 from common.licenses.licenses import LicenseInfo
 from common.storage import columns
 from common.storage.media import MediaStore
+
 
 logger = logging.getLogger(__name__)
 
 IMAGE_TSV_COLUMNS = [
     # The order of this list maps to the order of the columns in the TSV.
     columns.StringColumn(
-        name='foreign_identifier', required=False, size=3000, truncate=False
+        name="foreign_identifier", required=False, size=3000, truncate=False
     ),
-    columns.URLColumn(
-        name='foreign_landing_url', required=True, size=1000
-    ),
+    columns.URLColumn(name="foreign_landing_url", required=True, size=1000),
     columns.URLColumn(
         # `url` in DB
-        name='image_url', required=True, size=3000
+        name="image_url",
+        required=True,
+        size=3000,
     ),
     columns.URLColumn(
         # `thumbnail` in DB
-        name='thumbnail_url', required=False, size=3000
+        name="thumbnail_url",
+        required=False,
+        size=3000,
     ),
-    columns.IntegerColumn(
-        name='width', required=False
-    ),
-    columns.IntegerColumn(
-        name='height', required=False
-    ),
-    columns.IntegerColumn(
-        name='filesize', required=False
-    ),
+    columns.IntegerColumn(name="width", required=False),
+    columns.IntegerColumn(name="height", required=False),
+    columns.IntegerColumn(name="filesize", required=False),
+    columns.StringColumn(name="license_", required=True, size=50, truncate=False),
     columns.StringColumn(
-        name='license_', required=True, size=50, truncate=False
+        name="license_version", required=True, size=25, truncate=False
     ),
-    columns.StringColumn(
-        name='license_version', required=True, size=25, truncate=False
-    ),
-    columns.StringColumn(
-        name='creator', required=False, size=2000, truncate=True
-    ),
-    columns.URLColumn(
-        name='creator_url', required=False, size=2000
-    ),
-    columns.StringColumn(
-        name='title', required=False, size=5000, truncate=True
-    ),
-    columns.JSONColumn(
-        name='meta_data', required=False
-    ),
-    columns.JSONColumn(
-        name='tags', required=False
-    ),
-    columns.BooleanColumn(
-        name='watermarked', required=False
-    ),
-    columns.StringColumn(
-        name='provider', required=False, size=80, truncate=False
-    ),
-    columns.StringColumn(
-        name='source', required=False, size=80, truncate=False
-    ),
+    columns.StringColumn(name="creator", required=False, size=2000, truncate=True),
+    columns.URLColumn(name="creator_url", required=False, size=2000),
+    columns.StringColumn(name="title", required=False, size=5000, truncate=True),
+    columns.JSONColumn(name="meta_data", required=False),
+    columns.JSONColumn(name="tags", required=False),
+    columns.BooleanColumn(name="watermarked", required=False),
+    columns.StringColumn(name="provider", required=False, size=80, truncate=False),
+    columns.StringColumn(name="source", required=False, size=80, truncate=False),
     columns.StringColumn(
         name="ingestion_type", required=False, size=80, truncate=False
     ),
@@ -93,11 +72,8 @@ class ImageStore(MediaStore):
         media_type="image",
         tsv_columns=None,
     ):
-        super().__init__(
-            provider, output_file, output_dir, buffer_length, media_type
-        )
-        self.columns = IMAGE_TSV_COLUMNS \
-            if tsv_columns is None else tsv_columns
+        super().__init__(provider, output_file, output_dir, buffer_length, media_type)
+        self.columns = IMAGE_TSV_COLUMNS if tsv_columns is None else tsv_columns
 
     def add_item(
         self,
@@ -172,21 +148,21 @@ class ImageStore(MediaStore):
         """
 
         image_data = {
-            'foreign_landing_url': foreign_landing_url,
-            'image_url': image_url,
-            'thumbnail_url': thumbnail_url,
-            'license_info': license_info,
-            'foreign_identifier': foreign_identifier,
-            'width': width,
-            'height': height,
-            'creator': creator,
-            'creator_url': creator_url,
-            'title': title,
-            'meta_data': meta_data,
-            'raw_tags': raw_tags,
-            'watermarked': watermarked,
-            'source': source,
-            'ingestion_type': ingestion_type
+            "foreign_landing_url": foreign_landing_url,
+            "image_url": image_url,
+            "thumbnail_url": thumbnail_url,
+            "license_info": license_info,
+            "foreign_identifier": foreign_identifier,
+            "width": width,
+            "height": height,
+            "creator": creator,
+            "creator_url": creator_url,
+            "title": title,
+            "meta_data": meta_data,
+            "raw_tags": raw_tags,
+            "watermarked": watermarked,
+            "source": source,
+            "ingestion_type": ingestion_type,
         }
         image = self._get_image(**image_data)
         if image is not None:

@@ -1,6 +1,8 @@
 import logging
-import requests
 import time
+
+import requests
+
 
 logger = logging.getLogger(__name__)
 
@@ -32,70 +34,59 @@ class DelayedRequester:
         url:      URL to make the request as a string.
         params:   Dictionary of query string params
         **kwargs: Optional arguments that will be passed to `requests.get`
-         """
+        """
         self._delay_processing()
         self._last_request = time.time()
         try:
             response = requests.get(url, params=params, **kwargs)
             if response.status_code == requests.codes.ok:
-                logger.info(f'Received response from url {response.url}')
+                logger.info(f"Received response from url {response.url}")
                 return response
             else:
                 logger.warning(
-                    f'Unable to request URL: {response.url}.  '
-                    f'Status code: {response.status_code}'
+                    f"Unable to request URL: {response.url}.  "
+                    f"Status code: {response.status_code}"
                 )
                 return response
         except Exception as e:
-            logger.error(f'Error with the request for url: {url}.')
-            logger.info(f'{type(e).__name__}: {e}')
-            logger.info(f'Using query parameters {params}')
+            logger.error(f"Error with the request for url: {url}.")
+            logger.info(f"{type(e).__name__}: {e}")
+            logger.info(f"Using query parameters {params}")
             logger.info(f'Using headers {kwargs.get("headers")}')
             return None
 
     def _delay_processing(self):
         wait = self._DELAY - (time.time() - self._last_request)
         if wait >= 0:
-            logging.debug(f'Waiting {wait} second(s)')
+            logging.debug(f"Waiting {wait} second(s)")
             time.sleep(wait)
 
-    def get_response_json(
-            self,
-            endpoint,
-            retries=0,
-            query_params=None,
-            **kwargs
-    ):
+    def get_response_json(self, endpoint, retries=0, query_params=None, **kwargs):
         response_json = None
 
         if retries < 0:
-            logger.error('No retries remaining.  Failure.')
-            raise Exception('Retries exceeded')
+            logger.error("No retries remaining.  Failure.")
+            raise Exception("Retries exceeded")
 
         response = self.get(endpoint, params=query_params, **kwargs)
         if response is not None and response.status_code == 200:
             try:
                 response_json = response.json()
             except Exception as e:
-                logger.warning(f'Could not get response_json.\n{e}')
+                logger.warning(f"Could not get response_json.\n{e}")
                 response_json = None
 
-        if (
-                response_json is None or response_json.get('error') is not None
-        ):
-            logger.warning(f'Bad response_json:  {response_json}')
+        if response_json is None or response_json.get("error") is not None:
+            logger.warning(f"Bad response_json:  {response_json}")
             logger.warning(
-                'Retrying:\n_get_response_json(\n'
-                f'    {endpoint},\n'
-                f'    {query_params},\n'
-                f'    retries={retries - 1}'
-                ')'
+                "Retrying:\n_get_response_json(\n"
+                f"    {endpoint},\n"
+                f"    {query_params},\n"
+                f"    retries={retries - 1}"
+                ")"
             )
             response_json = self.get_response_json(
-                endpoint,
-                retries=retries - 1,
-                query_params=query_params,
-                **kwargs
+                endpoint, retries=retries - 1, query_params=query_params, **kwargs
             )
 
         return response_json

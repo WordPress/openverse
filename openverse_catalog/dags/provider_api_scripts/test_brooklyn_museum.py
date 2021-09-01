@@ -1,19 +1,18 @@
-import os
 import json
 import logging
-import requests
-from unittest.mock import patch, MagicMock
+import os
+from unittest.mock import MagicMock, patch
 
 import brooklyn_museum as bkm
+import requests
+
 
 RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)),
-    'tests/resources/brooklynmuseum'
+    os.path.abspath(os.path.dirname(__file__)), "tests/resources/brooklynmuseum"
 )
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.DEBUG
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
 )
 
 
@@ -29,7 +28,7 @@ def test_build_query_param_default():
         "has_images": 1,
         "rights_type_permissive": 1,
         "limit": 35,
-        "offset": 0
+        "offset": 0,
     }
     assert actual_param == expected_param
 
@@ -40,26 +39,18 @@ def test_build_query_param_given():
         "has_images": 1,
         "rights_type_permissive": 1,
         "limit": 35,
-        "offset": 35
+        "offset": 35,
     }
     assert actual_param == expected_param
 
 
 def test_get_response_failure():
-    param = {
-        "has_images": 1,
-        "rights_type_permissive": 1,
-        "limit": -1,
-        "offset": 0
-    }
+    param = {"has_images": 1, "rights_type_permissive": 1, "limit": -1, "offset": 0}
     response_json = _get_resource_json("response_error.json")
     r = requests.Response()
     r.status_code = 500
     r.json = MagicMock(return_value=response_json)
-    with patch.object(
-            bkm.delay_request,
-            'get',
-            return_value=r) as mock_get:
+    with patch.object(bkm.delay_request, "get", return_value=r) as mock_get:
         actual_data = bkm._get_object_json(query_param=param)
 
     expected_data = None
@@ -69,21 +60,13 @@ def test_get_response_failure():
 
 
 def test_get_response_success():
-    param = {
-        "has_images": 1,
-        "rights_type_permissive": 1,
-        "limit": 1,
-        "offset": 0
-    }
+    param = {"has_images": 1, "rights_type_permissive": 1, "limit": 1, "offset": 0}
     response_json = _get_resource_json("response_success.json")
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_json)
 
-    with patch.object(
-            bkm.delay_request,
-            'get',
-            return_value=r) as mock_get:
+    with patch.object(bkm.delay_request, "get", return_value=r) as mock_get:
         actual_data = bkm._get_object_json(query_param=param)
 
     expected_data = response_json["data"]
@@ -92,21 +75,13 @@ def test_get_response_success():
 
 
 def test_get_response_nodata():
-    param = {
-        "has_images": 1,
-        "rights_type_permissive": 1,
-        "limit": 1,
-        "offset": 70000
-    }
+    param = {"has_images": 1, "rights_type_permissive": 1, "limit": 1, "offset": 70000}
     response_json = _get_resource_json("response_nodata.json")
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_json)
 
-    with patch.object(
-            bkm.delay_request,
-            'get',
-            return_value=r) as mock_get:
+    with patch.object(bkm.delay_request, "get", return_value=r) as mock_get:
         actual_data = bkm._get_object_json(query_param=param)
 
     assert len(actual_data) == 0
@@ -119,11 +94,8 @@ def test_object_response_success():
     r.status_code = 200
     r.json = MagicMock(return_value=response_json)
 
-    with patch.object(
-            bkm.delay_request,
-            'get',
-            return_value=r) as mock_get:
-        actual_data = bkm._get_object_json(endpoint=bkm.ENDPOINT+str(1))
+    with patch.object(bkm.delay_request, "get", return_value=r) as mock_get:
+        actual_data = bkm._get_object_json(endpoint=bkm.ENDPOINT + str(1))
 
     expected_data = response_json["data"]
 
@@ -135,9 +107,8 @@ def test_process_objects_batch_success():
     batch_objects = _get_resource_json("batch_objects.json")
     response_json = _get_resource_json("object_data.json")
 
-    with patch.object(
-            bkm, '_get_object_json', return_value=response_json):
-        with patch.object(bkm.image_store, 'add_item') as mock_image:
+    with patch.object(bkm, "_get_object_json", return_value=response_json):
+        with patch.object(bkm.image_store, "add_item") as mock_image:
             bkm._process_objects_batch(batch_objects)
 
     assert mock_image.call_count == 1
@@ -146,11 +117,8 @@ def test_process_objects_batch_success():
 def test_process_objects_batch_failure():
     batch_objects = _get_resource_json("no_batch_objects.json")
     response_json = _get_resource_json("non_cc_object_data.json")
-    with patch.object(
-            bkm, '_get_object_json', return_value=response_json):
-        with patch.object(
-                bkm.image_store,
-                'add_item') as mock_image:
+    with patch.object(bkm, "_get_object_json", return_value=response_json):
+        with patch.object(bkm.image_store, "add_item") as mock_image:
             bkm._process_objects_batch(batch_objects)
 
     assert mock_image.call_count == 0
@@ -160,9 +128,7 @@ def test_handle_object_data():
     response_json = _get_resource_json("object_data.json")
     license_url = "https://creativecommons.org/licenses/by/3.0/"
 
-    with patch.object(
-            bkm.image_store,
-            'add_item') as mock_image:
+    with patch.object(bkm.image_store, "add_item") as mock_image:
         bkm._handle_object_data(response_json, license_url)
 
     assert mock_image.call_count == 1
@@ -172,9 +138,7 @@ def test_handle_object_noimage_info():
     response_json = _get_resource_json("object_data_noimage.json")
     license_url = "https://creativecommons.org/licenses/by/3.0/"
 
-    with patch.object(
-            bkm.image_store,
-            'add_item') as mock_image:
+    with patch.object(bkm.image_store, "add_item") as mock_image:
         bkm._handle_object_data(response_json, license_url)
 
     assert mock_image.call_count == 0
@@ -201,7 +165,7 @@ def test_get_image_no_size():
 def test_get_cc_license_url():
     response_json = _get_resource_json("cc_license_info.json")
     actual_url = bkm._get_license_url(response_json)
-    expected_url = 'https://creativecommons.org/licenses/by/3.0/'
+    expected_url = "https://creativecommons.org/licenses/by/3.0/"
 
     assert actual_url == expected_url
 
@@ -251,10 +215,12 @@ def test_get_images():
     actual_image_url, actual_thumbnail_url = bkm._get_images(response_json)
     expected_image_url = (
         "https://d1lfxha3ugu3d4.cloudfront.net/images/"
-        "opencollection/objects/size4/CUR.66.242.29.jpg")
+        "opencollection/objects/size4/CUR.66.242.29.jpg"
+    )
     expected_thumbnail_url = (
         "https://d1lfxha3ugu3d4.cloudfront.net/images"
-        "/opencollection/objects/size0_sq/CUR.66.242.29.jpg")
+        "/opencollection/objects/size0_sq/CUR.66.242.29.jpg"
+    )
 
     assert actual_image_url == expected_image_url
     assert actual_thumbnail_url == expected_thumbnail_url

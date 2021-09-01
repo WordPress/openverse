@@ -4,24 +4,24 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
-
 from util.operator_util import get_log_operator
 from util.tsv_cleaner import clean_tsv_directory
 
-airflowHome = os.environ['AIRFLOW_HOME']
+
+airflowHome = os.environ["AIRFLOW_HOME"]
 
 DAG_DEFAULT_ARGS = {
-    'owner': 'data-eng-admin',
-    'depends_on_past': False,
-    'start_date': datetime(2020, 1, 15),
-    'email_on_retry': False,
-    'retries': 3,
-    'retry_delay': timedelta(days=1)
+    "owner": "data-eng-admin",
+    "depends_on_past": False,
+    "start_date": datetime(2020, 1, 15),
+    "email_on_retry": False,
+    "retries": 3,
+    "retry_delay": timedelta(days=1),
 }
 
 DAG_ID = "sync_commoncrawl_workflow"
 
-DEFAULT_OUTPUT_DIR = '/tmp'
+DEFAULT_OUTPUT_DIR = "/tmp"
 TSV_SUBDIR = "common_crawl_tsvs/"
 
 CRAWL_OUTPUT_DIR = os.path.join(
@@ -34,7 +34,7 @@ def get_creator_operator(dag):
         task_id="create_tsv_directory",
         python_callable=os.makedirs,
         op_args=[CRAWL_OUTPUT_DIR],
-        op_kwargs={'exist_ok': True},
+        op_kwargs={"exist_ok": True},
         depends_on_past=False,
         dag=dag,
     )
@@ -44,8 +44,7 @@ def get_syncer_operator(dag):
     return BashOperator(
         task_id="sync_commoncrawl_workflow",
         bash_command=(
-            f"python {airflowHome}/dags/"
-            "commoncrawl_s3_syncer/SyncImageProviders.py"
+            f"python {airflowHome}/dags/" "commoncrawl_s3_syncer/SyncImageProviders.py"
         ),
         dag=dag,
         env={
@@ -63,7 +62,7 @@ def get_cleaner_operator(dag):
         python_callable=clean_tsv_directory,
         op_args=[CRAWL_OUTPUT_DIR],
         depends_on_past=False,
-        dag=dag
+        dag=dag,
     )
 
 
@@ -73,7 +72,7 @@ def get_deleter_operator(dag):
         python_callable=_empty_tsv_dir,
         op_args=[CRAWL_OUTPUT_DIR],
         depends_on_past=False,
-        dag=dag
+        dag=dag,
     )
 
 
@@ -88,7 +87,7 @@ def create_dag():
         default_args=DAG_DEFAULT_ARGS,
         start_date=datetime(2020, 1, 15),
         schedule_interval="0 16 15 * *",
-        catchup=False
+        catchup=False,
     )
 
     with dag:

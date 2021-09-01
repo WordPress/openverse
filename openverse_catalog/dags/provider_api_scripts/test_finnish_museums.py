@@ -1,19 +1,18 @@
-import os
 import json
 import logging
+import os
 from unittest.mock import patch
 
 import finnish_museums as fm
 from common.licenses.licenses import LicenseInfo
 
+
 RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)),
-    'tests/resources/finnishmuseums'
+    os.path.abspath(os.path.dirname(__file__)), "tests/resources/finnishmuseums"
 )
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.DEBUG
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
 )
 
 
@@ -93,7 +92,14 @@ def test_process_object_with_real_example():
         total_images = fm._process_object(object_data)
 
     mock_add_item.assert_called_once_with(
-        license_info=(LicenseInfo('by', '4.0', 'https://creativecommons.org/licenses/by/4.0/deed.fi', 'http://creativecommons.org/licenses/by/4.0/deed.fi')),
+        license_info=(
+            LicenseInfo(
+                "by",
+                "4.0",
+                "https://creativecommons.org/licenses/by/4.0/deed.fi",
+                "http://creativecommons.org/licenses/by/4.0/deed.fi",
+            )
+        ),
         foreign_identifier=("museovirasto.CC0641BB5337F541CBD19169838BAC1F"),
         foreign_landing_url=(
             "https://www.finna.fi/Record/museovirasto.CC0641BB5337F541CBD19169838BAC1F"

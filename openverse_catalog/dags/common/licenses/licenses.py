@@ -2,12 +2,14 @@
 This module has a number of public methods which are useful for working
 with licenses.
 """
-from collections import namedtuple
 import logging
-from typing import Tuple, Optional
+from collections import namedtuple
+from typing import Optional, Tuple
 from urllib.parse import urlparse
+
 from common import urls
 from common.licenses import constants
+
 
 logger = logging.getLogger(__name__)
 
@@ -19,15 +21,10 @@ class InvalidLicenseURLException(Exception):
     pass
 
 
-LicenseInfo = namedtuple(
-    'LicenseInfo',
-    ['license', 'version', 'url', 'raw_url']
-)
+LicenseInfo = namedtuple("LicenseInfo", ["license", "version", "url", "raw_url"])
 
 
-def get_license_info(
-        license_url=None, license_=None, license_version=None
-):
+def get_license_info(license_url=None, license_=None, license_version=None):
     """
     Returns a valid license, version, license URL tuple if possible.
 
@@ -60,25 +57,23 @@ def get_license_info(
     license_info = _get_license_info_from_url(license_url)
     if license_info[0] is not None:
         logger.debug(
-            f'Found derived license {license_info[0]},'
-            f' derived version {license_info[1]},'
-            f' and license_url {license_info[2]}'
+            f"Found derived license {license_info[0]},"
+            f" derived version {license_info[1]},"
+            f" and license_url {license_info[2]}"
         )
     elif license_ is not None:
         logger.debug(
-            f'Falling back to given license_ {license_}'
-            f' and license_version {license_version}'
+            f"Falling back to given license_ {license_}"
+            f" and license_version {license_version}"
         )
-        license_info = get_license_info_from_license_pair(
-            license_, license_version
-        )
+        license_info = get_license_info_from_license_pair(license_, license_version)
         license_info = (*license_info, license_url)
     else:
         logger.debug(
-            f'No valid license_info could be derived.  Inputs were'
-            f' license_: {license_}'
-            f' license_version: {license_version}'
-            f' license_url: {license_url}'
+            f"No valid license_info could be derived.  Inputs were"
+            f" license_: {license_}"
+            f" license_version: {license_version}"
+            f" license_url: {license_url}"
         )
         license_info = None, None, None, None
     if len(license_info) == 3:
@@ -121,15 +116,15 @@ def _get_license_info_from_url(
         if valid_path in cc_url:
             license_, license_version = path_map[valid_path]
             logger.debug(
-                f'Derived license_: {license_},'
-                f' Derived license_version: {license_version}'
+                f"Derived license_: {license_},"
+                f" Derived license_version: {license_version}"
             )
             break
 
     if license_ is None:
         logger.warning(
-            f'{license_url} could not be split into a valid license pair.'
-            f'\npath_map: {path_map}'
+            f"{license_url} could not be split into a valid license pair."
+            f"\npath_map: {path_map}"
         )
         cc_url = None
         raw_url = None
@@ -156,35 +151,27 @@ def _get_valid_cc_url(license_url) -> Optional[str]:
     If all of these validations and the rewriting succeed, we return the
     rewritten URL. Otherwise, we return None
     """
-    logger.debug(f'Checking license URL {license_url}')
+    logger.debug(f"Checking license URL {license_url}")
     if type(license_url) != str:
-        logger.debug(
-            f'License URL is not a string. Type is {type(license_url)}'
-        )
+        logger.debug(f"License URL is not a string. Type is {type(license_url)}")
         return
 
-    https_url = urls.add_url_scheme(license_url.lower(), 'https')
+    https_url = urls.add_url_scheme(license_url.lower(), "https")
     parsed_url = urlparse(https_url)
 
-    if parsed_url.netloc != 'creativecommons.org':
-        logger.info(
-            f'The license at {license_url} is not issued by Creative Commons.'
-        )
+    if parsed_url.netloc != "creativecommons.org":
+        logger.info(f"The license at {license_url} is not issued by Creative Commons.")
         return
 
     rewritten_url = urls.rewrite_redirected_url(https_url)
 
-    if (
-            rewritten_url is not None
-            and (
-                'licenses' in rewritten_url
-                or 'publicdomain' in rewritten_url
-            )
+    if rewritten_url is not None and (
+        "licenses" in rewritten_url or "publicdomain" in rewritten_url
     ):
         validated_license_url = rewritten_url
-        logger.debug(f'Rewritten URL {rewritten_url} is valid')
+        logger.debug(f"Rewritten URL {rewritten_url} is valid")
     else:
-        logger.debug(f'Rewritten URL {rewritten_url} is invalid')
+        logger.debug(f"Rewritten URL {rewritten_url} is invalid")
         validated_license_url = None
 
     return validated_license_url
@@ -200,7 +187,7 @@ def get_license_info_from_license_pair(
     """
     string_version = _ensure_license_version_string(license_version)
     license_path = pair_map.get((license_, string_version))
-    logger.debug(f'Derived license_path: {license_path}')
+    logger.debug(f"Derived license_path: {license_path}")
 
     if license_path is not None:
         valid_url = _build_license_url(license_path)
@@ -219,31 +206,29 @@ def _ensure_license_version_string(license_version) -> Optional[str]:
         elif license_version is not None:
             string_license_version = str(float(license_version))
         else:
-            logger.debug('license_version is NoneType')
+            logger.debug("license_version is NoneType")
     except Exception as e:
         logger.warning(
-            f'Could not recover license_version from {license_version}!'
-            f' Error was {e}'
+            f"Could not recover license_version from {license_version}!"
+            f" Error was {e}"
         )
     return string_license_version
 
 
 def _build_license_url(license_path) -> str:
-    license_path = license_path.strip().strip('/')
-    derived_url = f'https://creativecommons.org/{license_path}/'
+    license_path = license_path.strip().strip("/")
+    derived_url = f"https://creativecommons.org/{license_path}/"
     rewritten_license_url = urls.rewrite_redirected_url(derived_url)
     if rewritten_license_url is None:
-        raise InvalidLicenseURLException(
-            f'Failed to rewrite {derived_url}.'
-        )
+        raise InvalidLicenseURLException(f"Failed to rewrite {derived_url}.")
     return rewritten_license_url
 
 
 def is_valid_license_info(license_info: LicenseInfo) -> bool:
-    base_path = 'https://creativecommons.org/'
+    base_path = "https://creativecommons.org/"
     try:
-        license_path = license_info.url.replace(base_path, '')
-        if license_path[-1] == '/':
+        license_path = license_info.url.replace(base_path, "")
+        if license_path[-1] == "/":
             license_path = license_path[:-1]
         license_pair = LICENSE_PATH_MAP.get(license_path)
         return license_pair is not None

@@ -1,11 +1,12 @@
-import requests
 import logging
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, urlparse
 
+import requests
 from common.licenses.licenses import get_license_info
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
 from util.loader import provider_details as prov
+
 
 DELAY = 1.0  # time delay (in seconds)
 PROVIDER = prov.RAWPIXEL_DEFAULT_PROVIDER
@@ -29,8 +30,8 @@ def _request_content(url, query_params=None, headers=None):
             return response.json()
         else:
             logger.warning(
-                f"Unable to request URL: {url}. Status code: "
-                f"{response.status_code}")
+                f"Unable to request URL: {url}. Status code: " f"{response.status_code}"
+            )
             return None
 
     except Exception as e:
@@ -60,9 +61,7 @@ def _get_foreign_id_url(image):
         foreign_url = image.get("url")
 
         if not foreign_url:
-            logger.warning(
-                f"Landing page not detected for image ID: {foreign_id}"
-            )
+            logger.warning(f"Landing page not detected for image ID: {foreign_id}")
         return [foreign_id, foreign_url]
     else:
         return [None, None]
@@ -106,8 +105,7 @@ def _get_tags(image):
         keyword_list = [
             word.strip()
             for word in keyword_list
-            if word.strip()
-            not in ["cc0", "creative commons", "creative commons 0"]
+            if word.strip() not in ["cc0", "creative commons", "creative commons 0"]
         ]
         return keyword_list
     else:
@@ -122,9 +120,7 @@ def _process_image_data(image):
     foreign_id, foreign_url = _get_foreign_id_url(image)
     if not foreign_url:
         return None
-    img_url, width, height, thumbnail = _get_image_properties(
-        image, foreign_url
-    )
+    img_url, width, height, thumbnail = _get_image_properties(image, foreign_url)
     if not img_url:
         return None
     title, owner = _get_title_owner(image)
@@ -133,7 +129,8 @@ def _process_image_data(image):
 
     # TODO:How to get license_url, creator_url, source, watermarked?
     license_info = get_license_info(
-        license_=license_, license_version=version,
+        license_=license_,
+        license_version=version,
     )
     return image_store.add_item(
         foreign_landing_url=foreign_url,

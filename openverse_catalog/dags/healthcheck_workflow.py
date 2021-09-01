@@ -1,17 +1,18 @@
 """
 This file configures the Apache Airflow DAG to (re)ingest Healthcheck data.
 """
+import logging
+
 # airflow DAG (necessary for Airflow to find this file)
 from datetime import datetime
-import logging
 
 from provider_api_scripts import healthcheck
 from util.dag_factory import create_provider_api_workflow
 
 
 logging.basicConfig(
-    format='%(asctime)s: [%(levelname)s - DAG Loader] %(message)s',
-    level=logging.DEBUG)
+    format="%(asctime)s: [%(levelname)s - DAG Loader] %(message)s", level=logging.DEBUG
+)
 logger = logging.getLogger(__name__)
 
 DAG_ID = "healthcheck_workflow"

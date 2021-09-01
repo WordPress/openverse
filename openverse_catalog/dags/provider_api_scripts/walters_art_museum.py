@@ -10,62 +10,58 @@ Notes:                  http://api.thewalters.org/
                         Rate limit: 250000 Per Day Per Key
 """
 
-import os
 import logging
+import os
 
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
 from util.loader import provider_details as prov
 
+
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
 DELAY = 1
 LIMIT = 250000
 PROVIDER = prov.WALTERS_DEFAULT_PROVIDER
-REQUEST_TYPE = 'objects'
-ENDPOINT = f'https://api.thewalters.org/v1/{REQUEST_TYPE}'
-API_KEY = os.getenv('WALTERS_ART_MUSEUEM_KEY')
+REQUEST_TYPE = "objects"
+ENDPOINT = f"https://api.thewalters.org/v1/{REQUEST_TYPE}"
+API_KEY = os.getenv("WALTERS_ART_MUSEUEM_KEY")
 MUSEUM_SITE = "https://art.thewalters.org"
-LICENSE = 'CC0 1.0'
+LICENSE = "CC0 1.0"
 
 # The API takes api_key as a query and not as a header
-DEFAULT_QUERY_PARAMS = {
-    'accept': 'json',
-    'pageSize': 100,
-    'orderBy': 'classification'
-}
+DEFAULT_QUERY_PARAMS = {"accept": "json", "pageSize": 100, "orderBy": "classification"}
 
 QUERY_CLASSIFICATION = [
-    'Miniatures',
-    'Stained & Painted Glass',
-    'Lacquer & Inlay',
-    'Ceramics',
-    'Precious Stones & Gems',
-    'Pearl, Horn, Coral & Shell',
-    'Sculpture',
-    'Textiles',
-    'Painting & Drawing',
-    'Prints',
-    'Coins & Medals',
-    'Arms & Armor',
-    'Mosaics & Cosmati',
-    'Niello',
-    'Wood',
-    'Enamels',
-    'Manuscripts & Rare Books',
-    'Ivory & Bone',
-    'Mummies & Cartonnage',
-    'Timepieces, Clocks & Watches',
-    'Glasswares',
-    'Metal',
-    'Gold, Silver & Jewelry',
-    'Stone',
-    'Resin, Wax & Composite',
-    'Leather'
+    "Miniatures",
+    "Stained & Painted Glass",
+    "Lacquer & Inlay",
+    "Ceramics",
+    "Precious Stones & Gems",
+    "Pearl, Horn, Coral & Shell",
+    "Sculpture",
+    "Textiles",
+    "Painting & Drawing",
+    "Prints",
+    "Coins & Medals",
+    "Arms & Armor",
+    "Mosaics & Cosmati",
+    "Niello",
+    "Wood",
+    "Enamels",
+    "Manuscripts & Rare Books",
+    "Ivory & Bone",
+    "Mummies & Cartonnage",
+    "Timepieces, Clocks & Watches",
+    "Glasswares",
+    "Metal",
+    "Gold, Silver & Jewelry",
+    "Stone",
+    "Resin, Wax & Composite",
+    "Leather",
 ]
 
 delayed_requester = DelayedRequester(DELAY)
@@ -85,11 +81,7 @@ def main():
     logger.info("Terminating Script!")
 
 
-def _get_image_list(
-        class_param,
-        endpoint=ENDPOINT,
-        retries=5
-):
+def _get_image_list(class_param, endpoint=ENDPOINT, retries=5):
     image_list = []
     page = 1
     cond = True
@@ -119,36 +111,26 @@ def _get_image_list(
 
 
 def _build_query_param(
-        class_param=None,
-        default_query_params=None,
-        apikey=API_KEY,
-        page=1
+    class_param=None, default_query_params=None, apikey=API_KEY, page=1
 ):
     if default_query_params is None:
         default_query_params = DEFAULT_QUERY_PARAMS
     query_params = default_query_params.copy()
-    query_params.update(
-        {
-            'classification': class_param,
-            'apikey': apikey,
-            'Page': page
-        }
-    )
+    query_params.update({"classification": class_param, "apikey": apikey, "Page": page})
 
     return query_params
 
 
 def _extract_items_list_from_json(json_response):
     if (
-            json_response is None
-            or str(json_response.get('ReturnStatus')
-                   ).lower() != 'true'
-            or json_response.get('Items') is None
-            or len(json_response.get('Items')) == 0
+        json_response is None
+        or str(json_response.get("ReturnStatus")).lower() != "true"
+        or json_response.get("Items") is None
+        or len(json_response.get("Items")) == 0
     ):
         items_list = None
     else:
-        items_list = json_response.get('Items')
+        items_list = json_response.get("Items")
 
     return items_list
 
@@ -163,7 +145,7 @@ def _process_image_list(image_list):
 
 
 def _process_image(img):
-    logger.debug(f'Processing Image: {img}')
+    logger.debug(f"Processing Image: {img}")
 
     foreign_landing_url = img.get("ResourceURL")
     image_url = img.get("PrimaryImage", {}).get("Raw")
@@ -204,7 +186,7 @@ def _get_image_meta_data(img):
         "Medium": img.get("Medium"),
         "Classification": img.get("Classification"),
         "Description": img.get("Description"),
-        "CreditLine": img.get("CreditLine")
+        "CreditLine": img.get("CreditLine"),
     }
     return {k: v for k, v in image_meta_data.items() if v is not None}
 

@@ -5,9 +5,9 @@ from common.requester import DelayedRequester
 from common.storage.image import ImageStore
 from util.loader import provider_details as prov
 
+
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
@@ -21,8 +21,7 @@ FORMAT_TYPE = "0/Image/"
 API_URL = "https://api.finna.fi"
 LANDING_URL = "https://www.finna.fi/Record/"
 
-BUILDINGS = ["0/Suomen kansallismuseo/",
-             "0/Museovirasto/", "0/SATMUSEO/", "0/SA-kuva/"]
+BUILDINGS = ["0/Suomen kansallismuseo/", "0/Museovirasto/", "0/SATMUSEO/", "0/SA-kuva/"]
 
 DEFAULT_QUERY_PARAMS = {
     "filter[]": [f'format:"{FORMAT_TYPE}"'],
@@ -81,10 +80,10 @@ def _build_params(building, default_params=None, page=1):
 
 def _get_object_list_from_json(json_resp):
     if (
-        json_resp is None or
-        str(json_resp.get('status')).lower() != 'ok' or
-        json_resp.get("records") is None or
-        len(json_resp.get("records")) == 0
+        json_resp is None
+        or str(json_resp.get("status")).lower() != "ok"
+        or json_resp.get("records") is None
+        or len(json_resp.get("records")) == 0
     ):
         object_list = None
     else:
@@ -110,8 +109,7 @@ def _process_object(obj, sub_providers=SUB_PROVIDERS, provider=PROVIDER):
     foreign_identifier = obj.get("id")
     title = obj.get("title")
     building = obj.get("buildings")[0].get("value")
-    source = next((s for s in sub_providers
-                   if building in sub_providers[s]), provider)
+    source = next((s for s in sub_providers if building in sub_providers[s]), provider)
     foreign_landing_url = _get_landing(obj)
     raw_tags = _get_raw_tags(obj)
     image_list = obj.get("images")

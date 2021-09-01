@@ -1,3 +1,6 @@
+from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.providers.amazon.aws.operators.emr_create_job_flow import (
     EmrCreateJobFlowOperator,
 )
@@ -5,11 +8,8 @@ from airflow.providers.amazon.aws.operators.emr_terminate_job_flow import (
     EmrTerminateJobFlowOperator,
 )
 from airflow.providers.amazon.aws.sensors.emr_job_flow import EmrJobFlowSensor
-from airflow.providers.amazon.aws.hooks.s3 import S3Hook
-from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator
-from airflow.providers.amazon.aws.sensors.s3_prefix import S3PrefixSensor
 from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
+from airflow.providers.amazon.aws.sensors.s3_prefix import S3PrefixSensor
 from airflow.utils.trigger_rule import TriggerRule
 
 
