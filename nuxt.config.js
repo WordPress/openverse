@@ -1,5 +1,5 @@
 import pkg from './package.json'
-import locales from './src/locales/scripts/validLocales.json'
+import locales from './src/locales/scripts/valid-locales.json'
 
 /**
  * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.

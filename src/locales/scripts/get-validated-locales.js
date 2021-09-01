@@ -1,5 +1,5 @@
 const fs = require('fs')
-const localesList = require('./localesList.json')
+const localesList = require('./locales-list.json')
 
 /** Build the ISO string for a locale */
 /** TODO: Move! */
@@ -26,7 +26,7 @@ console.log(process.cwd())
 
 try {
   let locales = getValidatedLocales()
-  const fileName = 'validLocales.json'
+  const fileName = 'valid-locales.json'
   fs.writeFileSync(
     process.cwd() + `/src/locales/scripts/` + fileName,
     JSON.stringify(locales, null, 2)

@@ -1,6 +1,6 @@
 // locales.py
 // This script extracts data for locales available in GlotPress, and
-// saves it to `localesList.json`
+// saves it to `locales-list.json`
 
 const axios = require('axios')
 const fs = require('fs')
@@ -57,7 +57,7 @@ getLocalesData()
     })
 
     try {
-      const fileName = process.cwd() + '/src/locales/scripts/localesList.json'
+      const fileName = process.cwd() + '/src/locales/scripts/locales-list.json'
       fs.writeFileSync(fileName, JSON.stringify(locales, null, 2))
       console.log(`Successfully wrote locales list file to ${fileName}`)
     } catch (err) {

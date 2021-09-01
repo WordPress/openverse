@@ -3,7 +3,7 @@
 
 # Generate a new openverse.pot file if en.json has changes
 TRANSFILE=src/locales/en.json
-POTFILE=src/locales/poFiles/openverse.pot
+POTFILE=src/locales/po-files/openverse.pot
 CHANGED=$(git diff --staged --name-only HEAD)
 
 if [[ "$CHANGED" == *"$TRANSFILE"* ]] && [[ "$CHANGED" != *"$POTFILE"* ]]; then

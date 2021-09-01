@@ -6,7 +6,7 @@ const { writeFile } = require('fs/promises')
 const os = require('os')
 const axios = require('axios')
 const ngxJsonToJson = require('./ngx-json-to-json')
-const localeJSON = require('./localesList.json')
+const localeJSON = require('./locales-list.json')
 
 /**
  *
