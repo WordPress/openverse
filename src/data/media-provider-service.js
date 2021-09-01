@@ -1,4 +1,4 @@
-import ApiService from './ApiService'
+import ApiService from './api-service'
 import { IMAGE } from '~/constants/media'
 
 /**

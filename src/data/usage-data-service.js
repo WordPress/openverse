@@ -1,4 +1,4 @@
-import { createApiService } from './ApiService'
+import { createApiService } from './api-service'
 
 const baseUrl = process.env.apiUrl
 

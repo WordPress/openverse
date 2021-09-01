@@ -5,7 +5,7 @@ import local from '~/utils/local'
 import {
   filtersToQueryData,
   queryToFilterData,
-} from '~/utils/searchQueryTransform'
+} from '~/utils/search-query-transform'
 import {
   ALL_MEDIA,
   AUDIO,

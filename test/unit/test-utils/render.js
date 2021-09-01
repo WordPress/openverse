@@ -2,7 +2,7 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import sampleStore from './sampleStore'
+import sampleStore from './sample-store'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)

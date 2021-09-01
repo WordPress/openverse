@@ -71,9 +71,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import iframeHeight from '~/mixins/iframeHeight'
+import iframeHeight from '~/mixins/iframe-height'
 
-import ExtensionBrowsers from '~/components/ExtensionBrowsers.vue'
+import ExtensionBrowsers from '~/components/ExtensionBrowsers'
 
 import feature1 from '~/assets/screenshots/extension_feat_1.png'
 import feature2 from '~/assets/screenshots/extension_feat_2.png'

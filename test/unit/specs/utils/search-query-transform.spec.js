@@ -3,7 +3,7 @@ import {
   filtersToQueryData,
   queryToFilterData,
   queryStringToQueryData,
-} from '~/utils/searchQueryTransform'
+} from '~/utils/search-query-transform'
 import { filterData } from '~/store-modules/filter-store'
 import { IMAGE } from '~/constants/media'
 

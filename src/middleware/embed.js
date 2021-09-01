@@ -1,5 +1,5 @@
 import { SET_EMBEDDED } from '~/store-modules/mutation-types'
-import { sendWindowMessage } from '~/utils/sendMessage'
+import { sendWindowMessage } from '~/utils/send-message'
 import config from '../../nuxt.config.js'
 
 /**
@@ -13,7 +13,7 @@ import config from '../../nuxt.config.js'
  * Messages sent to the outer window have the following format:
  * {type: <event type>, value: <event value>}.
  * Currently, two event types are used:
- * - `resize` sends the height of the window (see `src/mixins/iframeHeight.js`)
+ * - `resize` sends the height of the window (see `src/mixins/iframe-height.js`)
  * - `urlChange` sends the relative path of the URL on every URL change.
  */
 export default function ({ store, query, route }) {

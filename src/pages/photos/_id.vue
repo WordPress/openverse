@@ -28,10 +28,10 @@
 <script>
 import axios from 'axios'
 import { mapActions, mapMutations, mapState } from 'vuex'
-import featureFlags from '~/featureFlags'
+import featureFlags from '~/feature-flags'
 import { FETCH_IMAGE, FETCH_RELATED_MEDIA } from '~/store-modules/action-types'
 import { SET_IMAGE, SET_RELATED_MEDIA } from '~/store-modules/mutation-types'
-import iframeHeight from '~/mixins/iframeHeight'
+import iframeHeight from '~/mixins/iframe-height'
 import { IMAGE } from '~/constants/media'
 
 const PhotoDetailPage = {
@@ -93,7 +93,6 @@ const PhotoDetailPage = {
     }
     try {
       // Load the image + related images in parallel
-      console.log('Trying to load images')
       await Promise.all([
         store.dispatch(FETCH_IMAGE, { id: route.params.id }),
         store.dispatch(FETCH_RELATED_MEDIA, {

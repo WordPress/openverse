@@ -11,8 +11,8 @@ import {
   SET_PROVIDERS_FILTERS,
 } from './mutation-types'
 
-import previousImageProviders from '../data/existingImageProviders'
-import previousAudioProviders from '../data/existingAudioProviders'
+import previousImageProviders from '../data/existing-image-providers'
+import previousAudioProviders from '../data/existing-audio-providers'
 import { AUDIO, IMAGE } from '~/constants/media'
 
 const existingProviders = {

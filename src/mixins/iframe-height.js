@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce'
-import { sendWindowMessage } from '~/utils/sendMessage'
+import { sendWindowMessage } from '~/utils/send-message'
 import config from '../../nuxt.config.js'
 
 /**

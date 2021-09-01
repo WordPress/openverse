@@ -1,6 +1,6 @@
-import abTests from '~/abTests'
+import abTests from '~/ab-tests'
 import { JOINED_AB_TEST_EXPERIMENT } from '~/store-modules/mutation-types'
-import donationLanguage from '~/abTests/experiments/donationLanguage'
+import donationLanguage from '~/ab-tests/experiments/donation-language'
 
 process.env.API_URL = 'http://api.cc.org/v1/'
 

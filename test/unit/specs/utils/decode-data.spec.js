@@ -1,4 +1,4 @@
-import decodeData from '~/utils/decodeData'
+import decodeData from '~/utils/decode-data'
 
 describe('decodeData', () => {
   it('returns empty string for empty string', () => {
