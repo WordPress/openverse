@@ -1,4 +1,4 @@
-name: flake8_lint
+name: linting-and-formatting
 
 on:
   push:
