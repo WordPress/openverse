@@ -53,7 +53,7 @@ const actions = (AudioService, ImageService) => ({
 const mutations = {
   /**
    * @param _state
-   * @param {('image'|'audio')} mediaType
+   * @param {'image'|'audio'} mediaType
    * @param {Array} relatedMedia
    */
   [SET_RELATED_MEDIA](_state, { mediaType, relatedMedia }) {
