@@ -9,19 +9,19 @@ from catalog.api.docs.media_docs import (
     MediaComplain,
 )
 from catalog.api.examples import (
-    audio_search_curl,
+    audio_search_list_curl,
     audio_search_200_example,
     audio_search_400_example,
-    recommendations_audio_read_curl,
-    recommendations_audio_read_200_example,
-    recommendations_audio_read_404_example,
+    audio_stats_curl,
+    audio_stats_200_example,
     audio_detail_curl,
     audio_detail_200_example,
     audio_detail_404_example,
-    audio_stats_curl,
-    audio_stats_200_example,
-    report_audio_curl,
-    audio_report_create_201_example,
+    audio_related_curl,
+    audio_related_200_example,
+    audio_related_404_example,
+    audio_complain_curl,
+    audio_complain_201_example,
 )
 from catalog.api.serializers.audio_serializers import (
     AudioSearchRequestSerializer,
@@ -62,7 +62,7 @@ query and optionally filter results by
     code_examples = [
         {
             'lang': 'Bash',
-            'source': audio_search_curl,
+            'source': audio_search_list_curl,
         },
     ]
 
@@ -155,12 +155,12 @@ By using this endpoint, you can get the details of related audio such as
     responses = {
         "200": openapi.Response(
             description="OK",
-            examples=recommendations_audio_read_200_example,
+            examples=audio_related_200_example,
             schema=AudioSerializer
         ),
         "404": openapi.Response(
             description="Not Found",
-            examples=recommendations_audio_read_404_example,
+            examples=audio_related_404_example,
             schema=NotFoundErrorSerializer
         )
     }
@@ -168,7 +168,7 @@ By using this endpoint, you can get the details of related audio such as
     code_examples = [
         {
             'lang': 'Bash',
-            'source': recommendations_audio_read_curl,
+            'source': audio_related_curl,
         },
     ]
 
@@ -193,7 +193,7 @@ contains mature or sensitive content and others.
     responses = {
         "201": openapi.Response(
             description="OK",
-            examples=audio_report_create_201_example,
+            examples=audio_complain_201_example,
             schema=AudioReportSerializer
         )
     }
@@ -201,7 +201,7 @@ contains mature or sensitive content and others.
     code_examples = [
         {
             'lang': 'Bash',
-            'source': report_audio_curl,
+            'source': audio_complain_curl,
         }
     ]
 

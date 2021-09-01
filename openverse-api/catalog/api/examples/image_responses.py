@@ -1,28 +1,36 @@
+import os
+
+origin = os.getenv('AUDIO_REQ_ORIGIN', 'https://api.openverse.engineering')
+
+identifier = '29cb352c-60c1-41d8-bfa1-7d6f7d955f63'
+
+base_image = {
+    "id": identifier,
+    "title": "Bust of Patroclus (photograph; calotype; salt print)",
+    "foreign_landing_url": "https://collection.sciencemuseumgroup.org.uk/objects/co8554747/bust-of-patroclus-photograph-calotype-salt-print",  # noqa
+    "creator": "William Henry Fox Talbot",
+    "url": "https://coimages.sciencemuseumgroup.org.uk/images/439/67/large_1937_1281_0001__0001_.jpg",  # noqa
+    "license": "by-nc-nd",
+    "license_version": "4.0",
+    "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "provider": "sciencemuseum",
+    "source": "sciencemuseum",
+    "thumbnail": f"{origin}/v1/images/{identifier}/thumb/",
+    "detail_url": f"{origin}/v1/images/{identifier}/",
+    "related_url": f"{origin}/v1/images/{identifier}/related/"
+}
+
 image_search_200_example = {
     "application/json": {
-        "result_count": 77,
-        "page_count": 77,
-        "page_size": 1,
+        "result_count": 1,
+        "page_count": 0,
+        "page_size": 20,
+        "page": 1,
         "results": [
-            {
-                "title": "File:Well test separator.svg",
-                "id": "36537842-b067-4ca0-ad67-e00ff2e06b2d",
-                "creator": "en:User:Oil&GasIndustry",
-                "creator_url": "https://en.wikipedia.org/wiki/User:Oil%26GasIndustry",  # noqa
-                "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Well_test_separator.svg",  # noqa
-                "thumbnail": "https://api.openverse.engineering/v1/thumbs/36537842-b067-4ca0-ad67-e00ff2e06b2d",  # noqa
-                "provider": "wikimedia",
-                "source": "wikimedia",
-                "license": "by",
-                "license_version": "3.0",
-                "license_url": "https://creativecommons.org/licenses/by/3.0",
-                "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=26229990",  # noqa
-                "detail_url": "http://api.openverse.engineering/v1/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",  # noqa
-                "related_url": "http://api.openverse.engineering/v1/recommendations/images/36537842-b067-4ca0-ad67-e00ff2e06b2d",  # noqa
+            base_image | {
                 "fields_matched": [
-                    "description",
                     "title"
-                ]
+                ],
             }
         ]
     },
@@ -38,7 +46,63 @@ image_search_400_example = {
     }
 }
 
-recommendations_images_read_200_example = {
+image_stats_200_example = {
+    "application/json": [
+        {
+            "source_name": "flickr",
+            "display_name": "Flickr",
+            "source_url": "https://www.flickr.com",
+            "logo_url": None,
+            "media_count": 1000
+        },
+        {
+            "source_name": "rawpixel",
+            "display_name": "rawpixel",
+            "source_url": "https://www.rawpixel.com",
+            "logo_url": None,
+            "media_count": 1000
+        },
+        {
+            "source_name": "sciencemuseum",
+            "display_name": "Science Museum",
+            "source_url": "https://www.sciencemuseum.org.uk",
+            "logo_url": None,
+            "media_count": 1000
+        },
+        {
+            "source_name": "stocksnap",
+            "display_name": "StockSnap",
+            "source_url": "https://stocksnap.io",
+            "logo_url": None,
+            "media_count": 1000
+        },
+        {
+            "source_name": "wikimedia",
+            "display_name": "Wikimedia",
+            "source_url": "https://commons.wikimedia.org",
+            "logo_url": None,
+            "media_count": 1000
+        }
+    ]
+}
+
+image_detail_200_example = {
+    "application/json": base_image | {
+        "attribution": "\"Bust of Patroclus (photograph; calotype; salt print)\" by William Henry Fox Talbot is licensed under CC-BY-NC-ND 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/4.0/.",  # noqa
+        "height": 1536,
+        "width": 1276,
+        "tags": None,
+        "creator_url": None,
+    }
+}
+
+image_detail_404_example = {
+    "application/json": {
+        "detail": "Not found."
+    }
+}
+
+image_related_200_example = {
     "application/json": {
         "result_count": 10000,
         "page_count": 0,
@@ -71,83 +135,35 @@ recommendations_images_read_200_example = {
     }
 }
 
-recommendations_images_read_404_example = {
+image_related_404_example = {
     "application/json": {
         "detail": "An internal server error occurred."
     }
 }
 
-image_detail_200_example = {
+image_oembed_200_example = {
     "application/json": {
-        "title": "exam test",
-        "id": "7c829a03-fb24-4b57-9b03-65f43ed19395",
-        "creator": "Sean MacEntee",
-        "creator_url": "https://www.flickr.com/photos/18090920@N07",
-        "tags": [
-            {
-                "name": "exam"
-            },
-            {
-                "name": "test"
-            }
-        ],
-        "url": "https://live.staticflickr.com/5122/5264886972_3234d62748.jpg",
-        "thumbnail": "https://api.openverse.engineering/v1/thumbs/7c829a03-fb24-4b57-9b03-65f43ed19395",  # noqa
-        "provider": "flickr",
-        "source": "flickr",
-        "license": "by",
-        "license_version": "2.0",
-        "license_url": "https://creativecommons.org/licenses/by/2.0/",
-        "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/5264886972",  # noqa
-        "detail_url": "http://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395",  # noqa
-        "related_url": "http://api.openverse.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395",  # noqa
-        "height": 167,
-        "width": 500,
-        "attribution": "\"exam test\" by Sean MacEntee is licensed under CC-BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/"  # noqa
-    }
-}
-
-image_detail_404_example = {
-    "application/json": {
-        "detail": "Not found."
-    }
-}
-
-oembed_list_200_example = {
-    "application/json": {
-        "version": 1,
+        "version": '1.0',
         "type": "photo",
-        "width": 500,
-        "height": 167,
-        "title": "exam test",
-        "author_name": "Sean MacEntee",
-        "author_url": "https://www.flickr.com/photos/18090920@N07",
-        "license_url": "https://creativecommons.org/licenses/by/2.0/"
+        "width": 1276,
+        "height": 1536,
+        "title": "Bust of Patroclus (photograph; calotype; salt print)",
+        "author_name": "William Henry Fox Talbot",
+        "author_url": None,
+        "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
     }
 }
 
-oembed_list_404_example = {
+image_oembed_404_example = {
     "application/json": {
         "detail": "An internal server error occurred."
     }
 }
 
-images_report_create_201_example = {
+image_complain_201_example = {
     "application/json": {
-        "id": 10,
-        "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395",
+        "identifier": identifier,
         "reason": "mature",
         "description": "This image contains sensitive content"
     }
-}
-
-image_stats_200_example = {
-    "application/json": [
-        {
-            "source_name": "flickr",
-            "image_count": 465809213,
-            "display_name": "Flickr",
-            "source_url": "https://www.flickr.com",
-        }
-    ]
 }

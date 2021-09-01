@@ -1,3 +1,11 @@
+import os
+
+token = os.getenv('AUDIO_REQ_TOKEN', 'DLBYIcfnKfolaXKcmMC8RIDCavc2hW')
+origin = os.getenv('AUDIO_REQ_ORIGIN', 'https://api.openverse.engineering')
+
+auth = f'-H "Authorization: Bearer {token}"' if token else ''
+identifier = '440a0240-8b20-49e2-a4e6-6fee550fcc41'
+
 syntax_examples = {
     "using single query parameter":
         'test',
@@ -20,29 +28,37 @@ syntax_examples = {
         'theatre~1',
 }
 
-audio_search_curl = '\n\n'.join([
-    (f'# Example {index}: Search for audio {purpose}\n'
-     'curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" '
-     f'https://api.openverse.engineering/v1/audio?q={syntax}')
-    for (index, (purpose, syntax)) in enumerate(syntax_examples.items())
-])
+audio_search_list_curl = '\n'.join(f"""
+# Example {index}: Search for audio {purpose}
+curl {auth} "{origin}/v1/audio/?q={syntax}"
+""" for (index, (purpose, syntax)) in enumerate(syntax_examples.items()))
 
-recommendations_audio_read_curl = """
-# Get related audio files for audio ID 7c829a03-fb24-4b57-9b03-65f43ed19395
-curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/recommendations/audio/7c829a03-fb24-4b57-9b03-65f43ed19395
-"""  # noqa
+audio_search_curl = f"""
+# Search for music titled "Friend" by Rob Costlow
+curl {auth} "{origin}/v1/audio/?title=Friend&creator=Rob%20Costlow"
+"""
 
-audio_detail_curl = """
-# Get the details of audio ID 7c829a03-fb24-4b57-9b03-65f43ed19395
-curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/audio/7c829a03-fb24-4b57-9b03-65f43ed19395
-"""  # noqa
-
-audio_stats_curl = """
+audio_stats_curl = f"""
 # Get the statistics for audio sources
-curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/audio/stats
-"""  # noqa
+curl {auth} "{origin}/v1/audio/stats/"
+"""
 
-report_audio_curl = """
-# Report an issue about audio ID 7c829a03-fb24-4b57-9b03-65f43ed19395
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "description": "This audio contains sensitive content"}' https://api.openverse.engineering/v1/audio/7c829a03-fb24-4b57-9b03-65f43ed19395/report
+audio_detail_curl = f"""
+# Get the details of audio ID {identifier}
+curl {auth} "{origin}/v1/audio/{identifier}/"
+"""
+
+audio_related_curl = f"""
+# Get related audio files for audio ID {identifier}
+curl {auth} "{origin}/v1/audio/{identifier}/related/"
+"""
+
+audio_complain_curl = f"""
+# Report an issue about audio ID {identifier}
+curl \\
+  -X POST \\
+  -H "Content-Type: application/json" \\
+  {auth} \\
+  -d '{{"reason": "mature", "description": "This audio contains sensitive content"}}' \\
+  "{origin}/v1/audio/{identifier}/report/"
 """  # noqa

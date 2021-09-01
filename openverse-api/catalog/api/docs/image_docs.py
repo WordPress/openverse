@@ -10,22 +10,22 @@ from catalog.api.docs.media_docs import (
     MediaComplain,
 )
 from catalog.api.examples import (
-    image_search_curl,
+    image_search_list_curl,
     image_search_200_example,
     image_search_400_example,
-    recommendations_images_read_curl,
-    recommendations_images_read_200_example,
-    recommendations_images_read_404_example,
+    image_stats_curl,
+    image_stats_200_example,
     image_detail_curl,
     image_detail_200_example,
     image_detail_404_example,
-    image_stats_curl,
-    image_stats_200_example,
-    report_image_curl,
-    images_report_create_201_example,
-    oembed_list_curl,
-    oembed_list_200_example,
-    oembed_list_404_example,
+    image_related_curl,
+    image_related_200_example,
+    image_related_404_example,
+    image_complain_curl,
+    image_complain_201_example,
+    image_oembed_curl,
+    image_oembed_200_example,
+    image_oembed_404_example,
 )
 from catalog.api.serializers.error_serializers import (
     InputErrorSerializer,
@@ -68,7 +68,7 @@ and optionally filter results by
     code_examples = [
         {
             'lang': 'Bash',
-            'source': image_search_curl,
+            'source': image_search_list_curl,
         },
     ]
 
@@ -161,12 +161,12 @@ By using this endpoint, you can get the details of related images such as
     responses = {
         "200": openapi.Response(
             description="OK",
-            examples=recommendations_images_read_200_example,
+            examples=image_related_200_example,
             schema=ImageSerializer
         ),
         "404": openapi.Response(
             description="Not Found",
-            examples=recommendations_images_read_404_example,
+            examples=image_related_404_example,
             schema=NotFoundErrorSerializer
         )
     }
@@ -174,7 +174,7 @@ By using this endpoint, you can get the details of related images such as
     code_examples = [
         {
             'lang': 'Bash',
-            'source': recommendations_images_read_curl
+            'source': image_related_curl
         }
     ]
 
@@ -199,7 +199,7 @@ contains mature or sensitive content and others.
     responses = {
         "201": openapi.Response(
             description="OK",
-            examples=images_report_create_201_example,
+            examples=image_complain_201_example,
             schema=ImageReportSerializer
         )
     }
@@ -207,7 +207,7 @@ contains mature or sensitive content and others.
     code_examples = [
         {
             'lang': 'Bash',
-            'source': report_image_curl,
+            'source': image_complain_curl,
         }
     ]
 
@@ -234,12 +234,12 @@ By using this endpoint, you can retrieve embedded content such as `version`,
     responses = {
         "200": openapi.Response(
             description="OK",
-            examples=oembed_list_200_example,
+            examples=image_oembed_200_example,
             schema=OembedSerializer
         ),
         "404": openapi.Response(
             description="Not Found",
-            examples=oembed_list_404_example,
+            examples=image_oembed_404_example,
             schema=NotFoundErrorSerializer
         )
     }
@@ -247,7 +247,7 @@ By using this endpoint, you can retrieve embedded content such as `version`,
     code_examples = [
         {
             'lang': 'Bash',
-            'source': oembed_list_curl,
+            'source': image_oembed_curl,
         },
     ]
 
