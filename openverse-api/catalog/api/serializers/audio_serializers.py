@@ -179,8 +179,8 @@ class AudioSearchSerializer(MediaSearchSerializer):
 class AudioReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = AudioReport
-        fields = ('id', 'identifier', 'reason', 'description')
-        read_only_fields = ('id', 'identifier')
+        fields = ('identifier', 'reason', 'description')
+        read_only_fields = ('identifier',)
 
     def create(self, validated_data):
         if validated_data['reason'] == "other" and \
