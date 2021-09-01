@@ -16,10 +16,10 @@ const ImageService = {
    * Retrieve image details by Id number.
    * SSR-called
    */
-  getImageDetail(params) {
+  getMediaDetail(params) {
     if (!params.id) {
       throw new Error(
-        '[RWV] ImageService.getImageDetail() id parameter required to retrieve image details.'
+        '[RWV] ImageService.getMediaDetail() id parameter required to retrieve image details.'
       )
     }
 
