@@ -7,7 +7,7 @@ const AudioService = {
   /**
    * Search for audios by keyword.
    * @param {Object} params
-   * @return {Promise<{data: Object}>}
+   * @return {Promise<{data: any}>}
    */
   search(params) {
     return config.dev
@@ -22,8 +22,9 @@ const AudioService = {
   /**
    * Retrieve audio details by Id number.
    * SSR-called
-   * @param {{id: string}} params
-   * @return {Promise<{data: Object}>}
+   * @param {object} params
+   * @param {string} params.id
+   * @return {Promise<{data: any}>}
    */
   getMediaDetail(params) {
     if (!params.id) {
@@ -40,7 +41,8 @@ const AudioService = {
   /**
    * Retrieve related media
    * @param params
-   * @return {Promise<{data: Object}>}
+   * @param {string} params.id
+   * @return {Promise<{data: any}>}
    */
   getRelatedMedia(params) {
     if (!params.id) {
