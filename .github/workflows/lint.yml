@@ -20,10 +20,7 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.9
-    - name: Setup flake8 annotations  # To annotate the errors in the pull request
-      uses: rbialon/flake8-annotations@v1
     - name: Lint
-      # Lint only for changed files, rather than the entire repository
       run: |
         pip install pre-commit
         pre-commit run --all-files

@@ -1,9 +1,8 @@
-exclude: &exclude archive
+exclude: archive
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
-    exclude: *exclude
     hooks:
       - id: trailing-whitespace
       - id: check-docstring-first
@@ -27,7 +26,6 @@ repos:
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.9.1
-    exclude: *exclude
     hooks:
       - id: isort
         name: Run isort to sort imports
@@ -44,7 +42,6 @@ repos:
 
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.9.2
-    exclude: *exclude
     hooks:
         - id: flake8
           args:
@@ -54,7 +51,6 @@ repos:
 
   - repo: https://github.com/ambv/black
     rev: 21.6b0
-    exclude: *exclude
     hooks:
         - id: black
           args:
