@@ -187,7 +187,7 @@ import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
 } from '~/store-modules/usage-data-analytics-types'
-import attributionHtml from '~/utils/attributionHtml'
+import attributionHtml from '~/utils/attribution-html'
 import { getFullLicenseName } from '~/utils/license'
 
 export default {

@@ -1,5 +1,5 @@
-import stringToBoolean from '~/utils/stringToBoolean'
-import GoogleAnalytics from '~/analytics/GoogleAnalytics'
+import stringToBoolean from '~/utils/string-to-boolean'
+import GoogleAnalytics from '~/analytics/google-analytics'
 
 /* eslint-disable */
 export default ({ app }) => {

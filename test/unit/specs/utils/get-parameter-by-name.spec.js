@@ -1,4 +1,4 @@
-import getParameterByName from '~/utils/getParameterByName'
+import getParameterByName from '~/utils/get-parameter-by-name'
 
 describe('getParameterByName', () => {
   const queryStr = '?q=nature&provider=flickr&li=by&lt='

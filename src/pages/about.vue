@@ -97,7 +97,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import iframeHeight from '~/mixins/iframeHeight'
+import iframeHeight from '~/mixins/iframe-height'
 
 const AboutPage = {
   name: 'about-page',

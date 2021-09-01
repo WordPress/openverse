@@ -1,7 +1,7 @@
 import clonedeep from 'lodash.clonedeep'
 import findIndex from 'lodash.findindex'
 import { filterData, mediaSpecificFilters } from '~/store-modules/filter-store'
-import getParameterByName from './getParameterByName'
+import getParameterByName from './get-parameter-by-name'
 import { ALL_MEDIA } from '~/constants/media'
 
 const filterPropertyMappings = {

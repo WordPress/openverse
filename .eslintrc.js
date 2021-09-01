@@ -18,7 +18,7 @@ module.exports = {
     'plugin:@intlify/vue-i18n/recommended',
   ],
   // required to lint *.vue files
-  plugins: ['vue', 'cypress', 'vuejs-accessibility'],
+  plugins: ['vue', 'cypress', 'vuejs-accessibility', 'unicorn'],
   // add your custom rules here
   rules: {
     semi: [2, 'never'],
@@ -47,6 +47,7 @@ module.exports = {
       },
     ],
     'vuejs-accessibility/aria-role': 'warn',
+    'unicorn/filename-case': ['error', { case: 'kebabCase' }],
   },
   settings: {
     'vue-i18n': {

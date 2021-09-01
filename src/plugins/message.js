@@ -1,4 +1,4 @@
-import { sendWindowMessage } from '~/utils/sendMessage'
+import { sendWindowMessage } from '~/utils/send-message'
 import config from '../../nuxt.config.js'
 /**
  * In embedded mode, we need to notify the outer window of the current URL.

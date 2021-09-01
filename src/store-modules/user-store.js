@@ -1,4 +1,4 @@
-import SessionId from '~/utils/sessionId'
+import SessionId from '~/utils/session-id'
 
 const state = {
   abSessionId: SessionId('abSessionId', true),
