@@ -24,19 +24,23 @@ describe('Filter Store', () => {
     it('state contains image types', () => {
       const defaultState = store.state
 
-      expect(defaultState.filters.categories).toEqual(filterData.categories)
+      expect(defaultState.filters.imageCategories).toEqual(
+        filterData.imageCategories
+      )
     })
 
-    it('state contains extensions', () => {
+    it('state contains imageExtensions', () => {
       const defaultState = store.state
 
-      expect(defaultState.filters.extensions).toEqual(filterData.extensions)
+      expect(defaultState.filters.imageExtensions).toEqual(
+        filterData.imageExtensions
+      )
     })
 
     it('state contains empty providers list', () => {
       const defaultState = store.state
 
-      expect(defaultState.filters.providers).toEqual([])
+      expect(defaultState.filters.imageProviders).toEqual([])
     })
 
     it('state contains search by author', () => {
@@ -59,12 +63,6 @@ describe('Filter Store', () => {
       expect(defaultState.isFilterVisible).toBeFalsy()
     })
 
-    it('state has isFilterApplied default as false', () => {
-      const defaultState = store.state
-
-      expect(defaultState.isFilterApplied).toBeFalsy()
-    })
-
     it('isFilterVisible should be false when innerWidth property is undefined', () => {
       window.innerWidth = undefined
       const state = store.state
@@ -80,13 +78,16 @@ describe('Filter Store', () => {
   describe('mutations', () => {
     let state = null
     let mutations = null
+    let getters = null
 
     beforeEach(() => {
       state = {
+        searchType: 'image',
         query: { q: 'foo' },
         ...store.state,
       }
       mutations = store.mutations
+      getters = store.getters
     })
 
     it('SET_FILTER updates license state', () => {
@@ -109,30 +110,38 @@ describe('Filter Store', () => {
       )
     })
 
-    it('SET_FILTER updates extensions state', () => {
-      mutations[SET_FILTER](state, { filterType: 'extensions', codeIdx: 0 })
+    it('SET_FILTER updates imageExtensions state', () => {
+      mutations[SET_FILTER](state, {
+        filterType: 'imageExtensions',
+        codeIdx: 0,
+      })
 
-      expect(state.filters.extensions[0].checked).toBeTruthy()
+      expect(state.filters.imageExtensions[0].checked).toBeTruthy()
       expect(state.query).toEqual(
-        expect.objectContaining({ extension: state.filters.extensions[0].code })
+        expect.objectContaining({
+          extension: state.filters.imageExtensions[0].code,
+        })
       )
     })
 
     it('SET_FILTER updates image types state', () => {
-      mutations[SET_FILTER](state, { filterType: 'categories', codeIdx: 0 })
+      mutations[SET_FILTER](state, {
+        filterType: 'imageCategories',
+        codeIdx: 0,
+      })
 
-      expect(state.filters.categories[0].checked).toBeTruthy()
+      expect(state.filters.imageCategories[0].checked).toBeTruthy()
       expect(state.query).toEqual(
         expect.objectContaining({
-          categories: state.filters.categories[0].code,
+          categories: state.filters.imageCategories[0].code,
         })
       )
     })
 
     it('SET_FILTER updates search by creator', () => {
-      mutations[SET_FILTER](state, { filterType: 'searchBy' })
+      mutations[SET_FILTER](state, { filterType: 'searchBy', codeIdx: 0 })
 
-      expect(state.filters.searchBy.creator).toBeTruthy()
+      expect(state.filters.searchBy[0].checked).toBeTruthy()
       expect(state.query).toEqual(
         expect.objectContaining({ searchBy: 'creator' })
       )
@@ -173,28 +182,22 @@ describe('Filter Store', () => {
     })
 
     it('SET_FILTER updates isFilterApplied with provider', () => {
-      state.filters.providers = [{ code: 'met', checked: false }]
-      mutations[SET_FILTER](state, { filterType: 'providers', codeIdx: 0 })
+      state.filters.imageProviders = [{ code: 'met', checked: false }]
+      mutations[SET_FILTER](state, { filterType: 'imageProviders', codeIdx: 0 })
 
-      expect(state.isFilterApplied).toBeTruthy()
+      expect(getters.isAnyFilterApplied).toBeTruthy()
     })
 
     it('SET_FILTER updates isFilterApplied with license type', () => {
       mutations[SET_FILTER](state, { filterType: 'licenseTypes', codeIdx: 0 })
 
-      expect(state.isFilterApplied).toBeTruthy()
+      expect(getters.isAnyFilterApplied).toBeTruthy()
     })
 
-    it('SET_FILTER updates isFilterApplied with searchBy', () => {
-      mutations[SET_FILTER](state, { filterType: 'searchBy' })
-
-      expect(state.isFilterApplied).toBeTruthy()
-    })
-
-    it('SET_FILTER updates isFilterApplied mature', () => {
+    it('SET_FILTER updates mature', () => {
       mutations[SET_FILTER](state, { filterType: 'mature' })
 
-      expect(state.isFilterApplied).toBeTruthy()
+      expect(state.filters.mature).toBeTruthy()
     })
 
     it('SET_PROVIDERS_FILTERS merges with existing provider filters', () => {
@@ -205,11 +208,14 @@ describe('Filter Store', () => {
         { source_name: 'flickr', display_name: 'Flickr' },
       ]
 
-      state.filters.providers = existingProviderFilters
+      state.filters.imageProviders = existingProviderFilters
 
-      mutations[SET_PROVIDERS_FILTERS](state, { imageProviders: providers })
+      mutations[SET_PROVIDERS_FILTERS](state, {
+        mediaType: 'image',
+        providers: providers,
+      })
 
-      expect(state.filters.providers).toEqual([
+      expect(state.filters.imageProviders).toEqual([
         { code: 'met', name: 'Metropolitan', checked: true },
         { code: 'flickr', name: 'Flickr', checked: false },
       ])
@@ -224,13 +230,13 @@ describe('Filter Store', () => {
     })
 
     it('CLEAR_FILTERS sets providers filters checked to false', async () => {
-      state.filters.providers = [
+      state.filters.imageProviders = [
         { code: 'met', name: 'Metropolitan', checked: true },
         { code: 'flickr', name: 'Flickr', checked: false },
       ]
 
       mutations[CLEAR_FILTERS](state)
-      expect(state.filters.providers).toEqual([
+      expect(state.filters.imageProviders).toEqual([
         { code: 'met', name: 'Metropolitan', checked: false },
         { code: 'flickr', name: 'Flickr', checked: false },
       ])

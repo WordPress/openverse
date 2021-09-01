@@ -4,7 +4,7 @@ import {
   SEND_DETAIL_PAGE_EVENT,
   SEND_SEARCH_RATING_EVENT,
 } from './usage-data-analytics-types'
-import stringToBoolean from '~/utils/stringToBoolean'
+import stringToBoolean from '~/utils/string-to-boolean'
 
 const disabled = !stringToBoolean(process.env.enableInternalAnalytics)
 

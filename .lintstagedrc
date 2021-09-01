@@ -4,5 +4,8 @@
   ],
   ".{js,vue,json}": [
     "prettier --write"
+  ],
+  "*.mdx": [
+    "prettier --write"
   ]
 }

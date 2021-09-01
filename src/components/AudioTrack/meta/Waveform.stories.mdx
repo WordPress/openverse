@@ -1,0 +1,102 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import Waveform from '~/components/AudioTrack/Waveform'
+
+<Meta
+  title="Components/Audio track/Waveform"
+  components={Waveform}
+  argTypes={{
+    seeked: {
+      action: 'seeked',
+    },
+  }}
+/>
+
+export const Template = (args, { argTypes }) => ({
+  template: `<Waveform class="w-full h-30" v-bind="$props" v-on="$props"/>`,
+  components: { Waveform },
+  props: Object.keys(argTypes),
+})
+
+# Waveform
+
+<Description of={Waveform} />
+
+<ArgsTable of={Waveform} />
+
+## Sampling
+
+The waveform can automatically upsample and downsample the peaks data to the
+required number of points, calculated using a combination of `barWidth` and
+`barGap` values.
+
+### Upsampling
+
+Here 9 points are upsampled to as many as required to fill the viewport.
+
+<Canvas>
+  <Story
+    name="Upsampling"
+    args={{
+      peaks: [0.5, 1, 0.5, 0, 0.5, 1, 0.5, 0, 0.5], // triangular wave with 9 points
+      currentTime: 2,
+      duration: 10,
+      showDuration: true,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Downsampling
+
+Here 1000 points are downsampled to as many as required to fill the viewport.
+
+<Canvas>
+  <Story
+    name="Downsampling"
+    args={{
+      peaks: Array.from(
+        { length: 1000 },
+        (_, k) => 0.5 * Math.sin((k * 2 * Math.PI) / 500) + 0.5
+      ), // sine wave with 1000 points
+      currentTime: 2,
+      duration: 10,
+      showDuration: true,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Sizing
+
+The waveform always takes the height and width of its container.
+
+- **Height:** the bars will elongate proportionally to scale vertically
+- **Width:** the number of samples will be adjusted to scale horizontally
+
+Thus the `barWidth` and `barGap` will be maintained even in the case of
+horizontal scaling.
+
+## Message state
+
+The waveform bars are set to zero height when the `message` prop is passed. They
+will animate up to their actual height when the prop is unset.
+
+<Canvas>
+  <Story
+    name="Message"
+    args={{
+      message: 'Hello, World!',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

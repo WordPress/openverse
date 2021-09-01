@@ -1,0 +1,30 @@
+// This is test data
+// TODO: replace with real audio provider data
+const existingAudioProviders = [
+  {
+    source_name: 'europeana',
+    audio_count: 7729617,
+    display_name: 'Europeana',
+    source_url: 'https://www.europeana.eu',
+    logo_url:
+      'https://cccatalog-api-logos-prod.s3.amazonaws.com/Europeana_basic_logo_portrait_black.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAZVTUUPD57IZMX3WF%2F20210412%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210412T062818Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEF4aCXVzLWVhc3QtMSJGMEQCIDQE08O461PZOHVg74AgAMIW545fj%2BsNpvrfN%2BsRYYAIAiA8f21195O%2FcnSIUkjOBySWox1pvr3SiiWp7KiNuyHDqyq9Awi3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDY2NDg5MDgwMDM3OSIM%2BeClfhReaoLyWgZcKpEDRDQBrFC%2F2ElYP9uZ8S%2F26WT0JB01E2xoTYiTFWRI1GkcB%2BsLYyK5SZejiC8LxV41V%2BORG22dd0zoLPVBvFoL7JzeHhOJDT1mAtc8IVM%2BHKvWdyYxNjn69iJCDp3dRbp3ZXN7sB8u6ut7Kp8jRt6jgQRRM4c0PVotdIlntnCF8qB6LciWDT5rFXxww67G3%2F%2F0JHMlJCI53d91dNfguRUx39IlWpQW9c%2FBfNkeBRWXBPzNVn%2FLLWfT%2BDD4EpRKEkGh7a7uBSMOctOSAvBntPsug2REiIG%2BQkHcM3w16x8XNGQPSUFzArJAKpmfBpaCMKJIvbJNWExoAJtcUpL6pR1tyyE68y5Fn1Urml1tugNdvomHGY58bOUwceXaQazE2ccogDDZmzq1fd7GVNX5BaPDzp0mk6pNkjs3zq6nMAIil0rSJSVcsJJKRNJg62kPle7mdqaTl80vdcJoobMkEB0Vd1SNMeYxN%2Bv3ba0r2%2F7pEKlq41U7mp4h1JZrxMsBfHe7tGJdOZK%2BFp26YZbH4vv7tvQw9rHPgwY67AEY9Z3viT%2BW2c6tOqsxTw1wPHFOyzWG9vkTdKKL4oOXXQqvOw5YD7xsG0i3qONTcUhGHfBwABGpFMxieqbokBr0B72gv4AiDZ3vBIqrDr7jg08ZY1I0AHe422VM2cvDUQDDTUa%2FoNQDEIr6CmuhjFL71y8A1QBlXdpBVpfDxjKQ%2BWQD0TYs3xT4G3vsoKWeoFAJ5T3%2Bg7XVpv%2FNpomoG4%2BGDJR1ecufSci5Px%2FqDC3Hi9%2B3NGCf%2BtdXInbtx5CjpacNDvi3cofrL%2BBxJpmljql0YLSU5HjctQnGFP7QR0yyeFK3cj9V7yHcbSCVXg%3D%3D&X-Amz-Signature=b1de5003c19e8b0b53d3067cb5f7ded5f835e5ae01c4e944a45f47c6375df40c',
+  },
+  {
+    source_name: 'jamendo',
+    audio_count: 7729617,
+    display_name: 'Jamendo',
+    source_url: 'https://www.jamendo.com/',
+    logo_url:
+      'https://cccatalog-api-logos-prod.s3.amazonaws.com/Europeana_basic_logo_portrait_black.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAZVTUUPD57IZMX3WF%2F20210412%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210412T062818Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEF4aCXVzLWVhc3QtMSJGMEQCIDQE08O461PZOHVg74AgAMIW545fj%2BsNpvrfN%2BsRYYAIAiA8f21195O%2FcnSIUkjOBySWox1pvr3SiiWp7KiNuyHDqyq9Awi3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDY2NDg5MDgwMDM3OSIM%2BeClfhReaoLyWgZcKpEDRDQBrFC%2F2ElYP9uZ8S%2F26WT0JB01E2xoTYiTFWRI1GkcB%2BsLYyK5SZejiC8LxV41V%2BORG22dd0zoLPVBvFoL7JzeHhOJDT1mAtc8IVM%2BHKvWdyYxNjn69iJCDp3dRbp3ZXN7sB8u6ut7Kp8jRt6jgQRRM4c0PVotdIlntnCF8qB6LciWDT5rFXxww67G3%2F%2F0JHMlJCI53d91dNfguRUx39IlWpQW9c%2FBfNkeBRWXBPzNVn%2FLLWfT%2BDD4EpRKEkGh7a7uBSMOctOSAvBntPsug2REiIG%2BQkHcM3w16x8XNGQPSUFzArJAKpmfBpaCMKJIvbJNWExoAJtcUpL6pR1tyyE68y5Fn1Urml1tugNdvomHGY58bOUwceXaQazE2ccogDDZmzq1fd7GVNX5BaPDzp0mk6pNkjs3zq6nMAIil0rSJSVcsJJKRNJg62kPle7mdqaTl80vdcJoobMkEB0Vd1SNMeYxN%2Bv3ba0r2%2F7pEKlq41U7mp4h1JZrxMsBfHe7tGJdOZK%2BFp26YZbH4vv7tvQw9rHPgwY67AEY9Z3viT%2BW2c6tOqsxTw1wPHFOyzWG9vkTdKKL4oOXXQqvOw5YD7xsG0i3qONTcUhGHfBwABGpFMxieqbokBr0B72gv4AiDZ3vBIqrDr7jg08ZY1I0AHe422VM2cvDUQDDTUa%2FoNQDEIr6CmuhjFL71y8A1QBlXdpBVpfDxjKQ%2BWQD0TYs3xT4G3vsoKWeoFAJ5T3%2Bg7XVpv%2FNpomoG4%2BGDJR1ecufSci5Px%2FqDC3Hi9%2B3NGCf%2BtdXInbtx5CjpacNDvi3cofrL%2BBxJpmljql0YLSU5HjctQnGFP7QR0yyeFK3cj9V7yHcbSCVXg%3D%3D&X-Amz-Signature=b1de5003c19e8b0b53d3067cb5f7ded5f835e5ae01c4e944a45f47c6375df40c',
+  },
+  {
+    source_name: 'wikimedia',
+    audio_count: 44491984,
+    display_name: 'Wikimedia Commons',
+    source_url: 'https://commons.wikimedia.org',
+    logo_url:
+      'https://cccatalog-api-logos-prod.s3.amazonaws.com/1000px-Commons-logo.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAZVTUUPD57IZMX3WF%2F20210412%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210412T062818Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEF4aCXVzLWVhc3QtMSJGMEQCIDQE08O461PZOHVg74AgAMIW545fj%2BsNpvrfN%2BsRYYAIAiA8f21195O%2FcnSIUkjOBySWox1pvr3SiiWp7KiNuyHDqyq9Awi3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDY2NDg5MDgwMDM3OSIM%2BeClfhReaoLyWgZcKpEDRDQBrFC%2F2ElYP9uZ8S%2F26WT0JB01E2xoTYiTFWRI1GkcB%2BsLYyK5SZejiC8LxV41V%2BORG22dd0zoLPVBvFoL7JzeHhOJDT1mAtc8IVM%2BHKvWdyYxNjn69iJCDp3dRbp3ZXN7sB8u6ut7Kp8jRt6jgQRRM4c0PVotdIlntnCF8qB6LciWDT5rFXxww67G3%2F%2F0JHMlJCI53d91dNfguRUx39IlWpQW9c%2FBfNkeBRWXBPzNVn%2FLLWfT%2BDD4EpRKEkGh7a7uBSMOctOSAvBntPsug2REiIG%2BQkHcM3w16x8XNGQPSUFzArJAKpmfBpaCMKJIvbJNWExoAJtcUpL6pR1tyyE68y5Fn1Urml1tugNdvomHGY58bOUwceXaQazE2ccogDDZmzq1fd7GVNX5BaPDzp0mk6pNkjs3zq6nMAIil0rSJSVcsJJKRNJg62kPle7mdqaTl80vdcJoobMkEB0Vd1SNMeYxN%2Bv3ba0r2%2F7pEKlq41U7mp4h1JZrxMsBfHe7tGJdOZK%2BFp26YZbH4vv7tvQw9rHPgwY67AEY9Z3viT%2BW2c6tOqsxTw1wPHFOyzWG9vkTdKKL4oOXXQqvOw5YD7xsG0i3qONTcUhGHfBwABGpFMxieqbokBr0B72gv4AiDZ3vBIqrDr7jg08ZY1I0AHe422VM2cvDUQDDTUa%2FoNQDEIr6CmuhjFL71y8A1QBlXdpBVpfDxjKQ%2BWQD0TYs3xT4G3vsoKWeoFAJ5T3%2Bg7XVpv%2FNpomoG4%2BGDJR1ecufSci5Px%2FqDC3Hi9%2B3NGCf%2BtdXInbtx5CjpacNDvi3cofrL%2BBxJpmljql0YLSU5HjctQnGFP7QR0yyeFK3cj9V7yHcbSCVXg%3D%3D&X-Amz-Signature=1de892a58a0ce08887a10813aa8048055fc9233f3e27eaa1ec0c1a097b5461dd',
+  },
+]
+
+export default existingAudioProviders

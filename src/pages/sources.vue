@@ -142,7 +142,7 @@
 <script>
 import sortBy from 'lodash.sortby'
 import { mapState } from 'vuex'
-import iframeHeight from '~/mixins/iframeHeight'
+import iframeHeight from '~/mixins/iframe-height'
 
 const SourcePage = {
   name: 'source-page',

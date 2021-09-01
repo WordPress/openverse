@@ -1,24 +1,17 @@
 <template>
-  <div
+  <FiltersList
     :class="{
       'search-filters': true,
       'search-filters__visible': isFilterVisible,
     }"
-  >
-    <FiltersList
-      :filters="filters"
-      :is-filter-applied="isFilterApplied"
-      :license-types-disabled="licenseTypesDisabled"
-      :licenses-disabled="licensesDisabled"
-      @onUpdateFilter="onUpdateFilter"
-      @onUpdateSearchByCreator="onUpdateSearchByCreator"
-      @onToggleSearchGridFilter="onToggleSearchGridFilter"
-      @onClearFilters="onClearFilters"
-    />
-  </div>
+    @onUpdateFilter="onUpdateFilter"
+    @onToggleSearchGridFilter="onToggleSearchGridFilter"
+    @onClearFilters="onClearFilters"
+  />
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import {
   SET_FILTER_IS_VISIBLE,
   CLEAR_FILTERS,
@@ -32,21 +25,7 @@ export default {
     FiltersList,
   },
   computed: {
-    isFilterApplied() {
-      return this.$store.state.isFilterApplied
-    },
-    isFilterVisible() {
-      return this.$store.state.isFilterVisible
-    },
-    filters() {
-      return this.$store.state.filters
-    },
-    licensesDisabled() {
-      return this.$store.state.filters.licenseTypes.some((li) => li.checked)
-    },
-    licenseTypesDisabled() {
-      return this.$store.state.filters.licenses.some((li) => li.checked)
-    },
+    ...mapState(['filters', 'isFilterVisible']),
     /**
      * Show filters expanded by default
      * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
@@ -65,11 +44,6 @@ export default {
     },
     onClearFilters() {
       this.$store.commit(CLEAR_FILTERS, {})
-    },
-    onUpdateSearchByCreator() {
-      this.$store.dispatch(TOGGLE_FILTER, {
-        filterType: 'searchBy',
-      })
     },
     onToggleSearchGridFilter() {
       this.$store.commit(SET_FILTER_IS_VISIBLE, {

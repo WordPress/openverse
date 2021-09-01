@@ -33,6 +33,7 @@
 
 <script>
 import MetaSourceList from './MetaSourceList'
+import { AUDIO, IMAGE, VIDEO } from '~/constants/media'
 
 export default {
   name: 'MetaSearch',
@@ -48,11 +49,11 @@ export default {
       return this.$store.state.query
     },
     unsupportedByUsefilter() {
-      if (this.type === 'audio') {
+      if (this.type === AUDIO) {
         return 'CC Mixter, Jamendo, or Wikimedia Commons'
       }
-      if (this.type === 'video') return 'Wikimedia Commons or Youtube'
-      if (this.type === 'image') return 'Google Images'
+      if (this.type === VIDEO) return 'Wikimedia Commons or Youtube'
+      if (this.type === IMAGE) return 'Google Images'
       return ''
     },
     metaQuery() {
