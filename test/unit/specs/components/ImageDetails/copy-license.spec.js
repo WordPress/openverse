@@ -1,4 +1,4 @@
-import CopyLicense from '~/components/ImageDetails/CopyLicense'
+import CopyLicense from '~/components/MediaInfo/CopyLicense'
 import { COPY_ATTRIBUTION } from '~/store-modules/action-types'
 import {
   DETAIL_PAGE_EVENTS,
@@ -24,7 +24,7 @@ describe('CopyLicense', () => {
   beforeEach(() => {
     dispatchMock = jest.fn()
     props = {
-      image: {
+      media: {
         id: 0,
         title: 'foo',
         provider: 'flickr',
@@ -70,7 +70,7 @@ describe('CopyLicense', () => {
     wrapper.vm.onCopyAttribution(copyData.type, copyData.event)
     expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
       eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
-      resultUuid: props.image.id,
+      resultUuid: props.media.id,
     })
   })
 })

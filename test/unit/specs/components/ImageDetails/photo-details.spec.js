@@ -93,7 +93,7 @@ describe('PhotoDetails', () => {
   it('should generate CC-0 license name', () => {
     options.propsData.image.license = 'cc0'
     const wrapper = render(PhotoDetails, options)
-    expect(wrapper.vm.fullLicenseName).toBe('cc0 1.0')
+    expect(wrapper.vm.fullLicenseName).toBe('CC0 1.0')
   })
 
   it('should generate CC-0 license name when license is CC0 uppercase', () => {

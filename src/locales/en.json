@@ -450,17 +450,16 @@
       "creator": "search by creator"
     }
   },
-  "photo-details": {
-    "back": "Back to search results",
-    "creator": "by {name}",
+  "media-details": {
     "reuse": {
-      "title": "Reuse",
-      "license-header": "License",
-      "tool-header": "Public Domain",
       "image": "Image",
-      "attribution": {
-        "main": "This image was marked with a {link} license.",
-        "license": "license."
+      "license": {
+        "content": "Read more about the license {link}",
+        "link": "here"
+      },
+      "tool": {
+        "content": "Read more about the tool {link}",
+        "link": "here"
       },
       "credit": {
         "text": "{title}{creator}{marked-licensed}{license}{view-legal}",
@@ -471,20 +470,25 @@
         "terms-text": "the terms,",
         "copy-text": "a copy of this license,"
       },
-      "license": {
-        "content": "Read more about the license {link}",
-        "link": "here"
-      },
-      "tool": {
-        "content": "Read more about the tool {link}",
-        "link": "here"
-      },
       "copy-license": {
         "title": "Credit the Creator",
         "rich": "Rich Text",
         "html": "HTML",
         "plain": "Plain text"
+      },
+      "license-header": "License",
+      "tool-header": "Public Domain",
+      "attribution": {
+        "main": "This image was marked with a {link} license.",
+        "license": "license."
       }
+    }
+  },
+  "photo-details": {
+    "back": "Back to search results",
+    "creator": "by {name}",
+    "reuse": {
+      "title": "Reuse"
     },
     "information": {
       "title": "Information",
