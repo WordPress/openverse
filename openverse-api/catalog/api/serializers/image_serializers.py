@@ -1,4 +1,3 @@
-from django.urls import reverse
 from rest_framework import serializers
 
 from catalog.api.controllers.search_controller import get_sources
@@ -214,10 +213,10 @@ class OembedSerializer(serializers.ModelSerializer):
             'license_url',
         ]
 
-    def get_width(self, obj):
+    def get_width(self, obj) -> int:
         return self.context.get('width', obj.width)
 
-    def get_height(self, obj):
+    def get_height(self, obj) -> int:
         return self.context.get('height', obj.height)
 
 

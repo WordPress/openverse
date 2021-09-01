@@ -1,3 +1,4 @@
+from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
 from catalog.api.models import ContentProvider, SourceLogo
@@ -33,6 +34,7 @@ class ProviderSerializer(serializers.ModelSerializer):
             'media_count',
         ]
 
+    @swagger_serializer_method(serializer_or_field=serializers.URLField)
     def get_logo_url(self, obj):
         try:
             source_logo = obj.sourcelogo
@@ -43,6 +45,6 @@ class ProviderSerializer(serializers.ModelSerializer):
         if request is not None:
             return request.build_absolute_uri(logo_path)
 
-    def get_media_count(self, obj):
+    def get_media_count(self, obj) -> int:
         source_counts = self.context.get('source_counts')
         return source_counts.get(obj.provider_identifier)

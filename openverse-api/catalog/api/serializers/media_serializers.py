@@ -1,6 +1,7 @@
 from collections import namedtuple
 from urllib.parse import urlparse
 
+from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
 import catalog.api.licenses as license_helpers
@@ -321,6 +322,7 @@ class MediaSerializer(serializers.Serializer):
     def get_license(self, obj):
         return obj.license.lower()
 
+    @swagger_serializer_method(serializer_or_field=serializers.URLField)
     def get_license_url(self, obj):
         if hasattr(obj, 'meta_data'):
             return license_helpers.get_license_url(

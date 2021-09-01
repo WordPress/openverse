@@ -192,5 +192,5 @@ class AudioWaveformSerializer(serializers.Serializer):
     )
 
     @staticmethod
-    def get_len(obj):
+    def get_len(obj) -> int:
         return len(obj.get('points', []))
