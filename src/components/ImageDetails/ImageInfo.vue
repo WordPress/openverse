@@ -53,8 +53,8 @@ import {
   DETAIL_PAGE_EVENTS,
 } from '~/store-modules/usage-data-analytics-types'
 import PhotoTags from '~/components/PhotoTags'
-import getProviderName from '~/utils/getProviderName'
-import getProviderLogo from '~/utils/getProviderLogo'
+import getProviderName from '~/utils/get-provider-name'
+import getProviderLogo from '~/utils/get-provider-logo'
 
 export default {
   name: 'ImageInfo',

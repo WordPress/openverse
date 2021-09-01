@@ -1,5 +1,5 @@
 import { RouterLinkStub } from '@vue/test-utils'
-import MediaTag from '~/components/MediaTag/MediaTag.vue'
+import MediaTag from '~/components/MediaTag/MediaTag'
 import render from '~/../test/unit/test-utils/render'
 
 describe('MediaTag', () => {

@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import GoogleAnalytics from '@/analytics/GoogleAnalytics'
+import GoogleAnalytics from '@/analytics/google-analytics'
 import { DonateLinkClick } from '@/analytics/events'
 
 export default {

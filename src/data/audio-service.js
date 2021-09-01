@@ -1,4 +1,4 @@
-import ApiService from './ApiService'
+import ApiService from './api-service'
 import config from '../../nuxt.config.js'
 import sampleAudioResponses from './sampleAudioResponses.json'
 

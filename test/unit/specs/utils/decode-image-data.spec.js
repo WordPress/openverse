@@ -1,4 +1,4 @@
-import decodeMediaData from '~/utils/decodeMediaData'
+import decodeMediaData from '~/utils/decode-media-data'
 
 describe('decodeImageData', () => {
   it('returns empty string for empty string', () => {

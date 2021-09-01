@@ -19,7 +19,9 @@
 </template>
 
 <script>
-import getLegacySourceUrl, { legacySourceMap } from '~/utils/getLegacySourceUrl'
+import getLegacySourceUrl, {
+  legacySourceMap,
+} from '~/utils/get-legacy-source-url'
 
 export default {
   name: 'MetaSourceList',

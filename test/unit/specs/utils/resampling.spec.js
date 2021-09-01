@@ -1,4 +1,4 @@
-import { downsampleArray, upsampleArray } from '~/utils/resampling.js'
+import { downsampleArray, upsampleArray } from '~/utils/resampling'
 
 describe('upsampleArray', () => {
   const baseArray = [0, 10, 30, 20]
