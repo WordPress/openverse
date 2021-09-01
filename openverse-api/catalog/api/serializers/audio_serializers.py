@@ -1,4 +1,3 @@
-from django.urls import reverse
 from rest_framework import serializers
 
 from catalog.api.controllers.search_controller import get_sources
@@ -96,12 +95,6 @@ class AudioSerializer(MediaSerializer):
     used to generate Swagger documentation.
     """
 
-    thumbnail = serializers.SerializerMethodField(
-        help_text="A direct link to the miniature artwork."
-    )
-    waveform = serializers.SerializerMethodField(
-        help_text='A direct link to the waveform peaks.'
-    )
     audio_set = serializers.PrimaryKeyRelatedField(
         required=False,
         help_text='Reference to set of which this track is a part.',
@@ -135,6 +128,18 @@ class AudioSerializer(MediaSerializer):
     )
 
     # Hyperlinks
+    thumbnail = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='audio-thumb',
+        lookup_field='identifier',
+        help_text="A direct link to the miniature artwork."
+    )
+    waveform = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='audio-waveform',
+        lookup_field='identifier',
+        help_text='A direct link to the waveform peaks.'
+    )
     detail_url = serializers.HyperlinkedIdentityField(
         read_only=True,
         view_name='audio-detail',
@@ -142,23 +147,11 @@ class AudioSerializer(MediaSerializer):
         help_text="A direct link to the detail view of this audio file."
     )
     related_url = serializers.HyperlinkedIdentityField(
+        read_only=True,
         view_name='audio-related',
         lookup_field='identifier',
-        read_only=True,
         help_text="A link to an endpoint that provides similar audio files."
     )
-
-    def get_thumbnail(self, obj):
-        request = self.context['request']
-        host = request.get_host()
-        path = reverse('audio-thumb', kwargs={'identifier': obj.identifier})
-        return f'https://{host}{path}'
-
-    def get_waveform(self, obj):
-        request = self.context['request']
-        host = request.get_host()
-        path = reverse('audio-waveform', kwargs={'identifier': obj.identifier})
-        return f'https://{host}{path}'
 
 
 class AudioSearchSerializer(MediaSearchSerializer):

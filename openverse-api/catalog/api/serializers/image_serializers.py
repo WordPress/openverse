@@ -97,9 +97,6 @@ class ImageSerializer(MediaSerializer):
     used to generate Swagger documentation.
     """
 
-    thumbnail = serializers.SerializerMethodField(
-        help_text="A direct link to the miniature image."
-    )
     height = serializers.IntegerField(
         required=False,
         help_text="The height of the image in pixels. Not always available."
@@ -110,6 +107,12 @@ class ImageSerializer(MediaSerializer):
     )
 
     # Hyperlinks
+    thumbnail = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='image-thumb',
+        lookup_field='identifier',
+        help_text="A direct link to the miniature image."
+    )
     detail_url = serializers.HyperlinkedIdentityField(
         read_only=True,
         view_name='image-detail',
@@ -122,12 +125,6 @@ class ImageSerializer(MediaSerializer):
         read_only=True,
         help_text="A link to an endpoint that provides similar images."
     )
-
-    def get_thumbnail(self, obj):
-        request = self.context['request']
-        host = request.get_host()
-        path = reverse('image-thumb', kwargs={'identifier': obj.identifier})
-        return f'https://{host}{path}'
 
 
 class ImageSearchSerializer(MediaSearchSerializer):
