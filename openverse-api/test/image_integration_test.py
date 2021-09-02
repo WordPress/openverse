@@ -4,10 +4,11 @@ functioning as designed. Run with the `pytest -s` command from this directory.
 """
 
 import json
+import xml.etree.ElementTree as ET
 from urllib.parse import urlencode
+
 import pytest
 import requests
-import xml.etree.ElementTree as ET
 
 from test.constants import API_URL
 from test.media_integration import (
