@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '12.4.0'
+          node-version: '14.17.5'
 
       - name: Cache Node.js modules
         uses: actions/cache@v1

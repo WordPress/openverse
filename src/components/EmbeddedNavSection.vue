@@ -56,7 +56,7 @@
             role="menuitem"
             @focus="onFocus()"
           >
-            {{ $t('header.about') }}
+            {{ $t('header.about-nav-item') }}
           </NuxtLink>
           <NuxtLink
             class="navbar-item"
@@ -64,7 +64,7 @@
             role="menuitem"
             @focus="onFocus()"
           >
-            {{ $t('header.source') }}
+            {{ $t('header.source-nav-item') }}
           </NuxtLink>
           <a
             href="https://creativecommons.org/about/cclicenses/"
@@ -73,7 +73,7 @@
             class="navbar-item"
             role="menuitem"
             @focus="onFocus()"
-            >{{ $t('header.licenses') }}
+            >{{ $t('header.licenses-nav-item') }}
             <i class="icon external-link" />
           </a>
         </Dropdown>
@@ -85,7 +85,7 @@
             role="menuitem"
             @focus="onFocus()"
           >
-            {{ $t('header.search-guide') }}
+            {{ $t('header.search-guide-nav-item') }}
           </NuxtLink>
           <NuxtLink
             class="navbar-item"
@@ -93,7 +93,7 @@
             role="menuitem"
             @focus="onFocus()"
           >
-            {{ $t('header.meta-search') }}
+            {{ $t('header.meta-search-nav-item') }}
           </NuxtLink>
           <NuxtLink
             class="navbar-item"
@@ -101,7 +101,7 @@
             role="menuitem"
             @focus="onFocus()"
           >
-            {{ $t('header.feedback') }}
+            {{ $t('header.feedback-nav-item') }}
           </NuxtLink>
           <a
             href="https://api.creativecommons.engineering/"
@@ -110,13 +110,13 @@
             role="menuitem"
             class="navbar-item"
             @focus="onFocus()"
-            >{{ $t('header.api') }}
+            >{{ $t('header.api-nav-item') }}
             <i class="icon external-link" />
           </a>
         </Dropdown>
 
         <NuxtLink class="navbar-item" :to="localePath('/extension')">
-          {{ $t('header.extension') }}
+          {{ $t('header.extension-nav-item') }}
         </NuxtLink>
       </div>
     </div>

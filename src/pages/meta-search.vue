@@ -91,7 +91,7 @@
       <p class="my-2">
         {{ $t('meta-search-page.why.new') }}
       </p>
-      <i18n path="meta-search-page.why.feedback" tag="p">
+      <i18n path="meta-search-page.why.feedback-suggestions" tag="p">
         <template #feedback>
           <NuxtLink
             :aria-label="$t('meta-search-page.why.aria-label')"

@@ -82,7 +82,7 @@
         </template>
       </i18n>
       <table
-        :aria-label="$t('about.aria.sources')"
+        :aria-label="$t('about.aria.sources-table')"
         role="region"
         class="table is-striped mt-4 mb-10"
       >
