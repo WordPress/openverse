@@ -75,7 +75,7 @@ def stats(media_type, count_key='media_count'):
 
 
 def thumb(fixture):
-    thumbnail_url = fixture['results'][0]['thumbnail'].replace('https:', 'http:')
+    thumbnail_url = fixture['results'][0]['thumbnail']
     thumbnail_response = requests.get(thumbnail_url)
     assert thumbnail_response.status_code == 200
     assert thumbnail_response.headers["Content-Type"].startswith("image/")
