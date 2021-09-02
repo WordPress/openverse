@@ -60,7 +60,12 @@ const mutations = {
    * @param {Array} relatedMedia
    */
   [SET_RELATED_MEDIA](_state, { mediaType, relatedMedia }) {
-    _state.related[`${mediaType}s`] = relatedMedia
+    // TODO: remove audio handling after API related media count is changed
+    if (mediaType === AUDIO) {
+      _state.related.audios = relatedMedia.slice(0, 5)
+    } else {
+      _state.related[`${mediaType}s`] = relatedMedia
+    }
   },
 }
 
