@@ -18,7 +18,7 @@ const fs = require('fs')
 const curlyRegex = new RegExp('{[a-zA-Z-]*}')
 const containsCurlyWord = (string) => curlyRegex.test(string)
 const checkStringForVars = (string) =>
-  containsCurlyWord(string) ? '(Do not translate words between ###)' : ''
+  containsCurlyWord(string) ? ' (Do not translate words between ###)' : ''
 
 /**
  * For GlotPress to display warning when the translators try to
