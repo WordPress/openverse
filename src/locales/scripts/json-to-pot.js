@@ -144,7 +144,7 @@ function potTime(json, parent = json) {
         }
         potFile = `${potFile}
 
-# ${keyPath} ${checkStringForVars(value)}${getRefComment(keyPath)}
+# ${keyPath}${checkStringForVars(value)}${getRefComment(keyPath)}
 msgctxt "${keyPath}"
 msgid "${processValue(pluralizedValues[0])}"
 msgid_plural "${processValue(pluralizedValues[1])}"
