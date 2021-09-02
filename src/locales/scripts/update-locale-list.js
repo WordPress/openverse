@@ -58,7 +58,7 @@ getLocalesData()
 
     try {
       const fileName = process.cwd() + '/src/locales/scripts/locales-list.json'
-      fs.writeFileSync(fileName, JSON.stringify(locales, null, 2))
+      fs.writeFileSync(fileName, JSON.stringify(locales, null, 2) + '\n')
       console.log(`Successfully wrote locales list file to ${fileName}`)
     } catch (err) {
       console.error(err)
