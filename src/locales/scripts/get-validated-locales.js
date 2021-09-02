@@ -29,7 +29,7 @@ try {
   const fileName = 'valid-locales.json'
   fs.writeFileSync(
     process.cwd() + `/src/locales/scripts/` + fileName,
-    JSON.stringify(locales, null, 2)
+    JSON.stringify(locales, null, 2) + '\n'
   )
   console.log(`> Wrote locale metadata for @nuxt/i18n.`)
 } catch (err) {
