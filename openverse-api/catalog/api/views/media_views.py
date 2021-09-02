@@ -83,7 +83,8 @@ class MediaViewSet(ReadOnlyModelViewSet):
     # Extra actions
 
     @action(detail=False,
-            serializer_class=ProviderSerializer)
+            serializer_class=ProviderSerializer,
+            pagination_class=None)
     def stats(self, *_, **__):
         source_counts = search_controller.get_sources(self.default_index)
         context = self.get_serializer_context() | {
