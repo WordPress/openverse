@@ -252,7 +252,7 @@ By using this endpoint, you can retrieve embedded content such as `version`,
     ]
 
     swagger_setup = {
-        'operation_id': "oembed_list",
+        'operation_id': "image_oembed",
         'operation_description': desc,
         'query_serializer': OembedRequestSerializer,
         'responses': responses,
