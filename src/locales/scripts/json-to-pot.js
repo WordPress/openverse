@@ -153,7 +153,7 @@ msgstr[1] ""`
       } else {
         potFile = `${potFile}
 
-# ${keyPath} ${checkStringForVars(value)}${getRefComment(keyPath)}
+# ${keyPath}${checkStringForVars(value)}${getRefComment(keyPath)}
 msgctxt "${keyPath}"
 msgid "${processValue(value)}"
 msgstr ""`
