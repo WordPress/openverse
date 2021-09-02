@@ -1,4 +1,4 @@
-import decodeData from '~/utils/decodeData'
+import decodeData from '~/utils/decode-data'
 import { IMAGE } from '~/constants/media'
 
 export default function decodeMediaData(media, mediaType = IMAGE) {

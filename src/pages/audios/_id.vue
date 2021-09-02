@@ -28,12 +28,12 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex'
-import featureFlags from '~/featureFlags'
+import featureFlags from '~/feature-flags'
 import { FETCH_AUDIO, FETCH_RELATED_MEDIA } from '~/store-modules/action-types'
 import { SET_AUDIO, SET_RELATED_MEDIA } from '~/store-modules/mutation-types'
-import iframeHeight from '~/mixins/iframeHeight'
+import iframeHeight from '~/mixins/iframe-height'
 import { AUDIO } from '~/constants/media'
-import attributionHtml from '~/utils/attributionHtml'
+import attributionHtml from '~/utils/attribution-html'
 
 const AudioDetailPage = {
   name: 'AudioDetailPage',
