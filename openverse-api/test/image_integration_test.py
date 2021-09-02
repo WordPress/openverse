@@ -18,6 +18,7 @@ from test.media_integration import (
     detail,
     stats,
     thumb,
+    report,
 )
 
 
@@ -56,6 +57,10 @@ def test_image_stats():
 
 def test_image_thumb(image_fixture):
     thumb(image_fixture)
+
+
+def test_audio_report(image_fixture):
+    report('images', image_fixture)
 
 
 def test_oembed_endpoint_for_json():

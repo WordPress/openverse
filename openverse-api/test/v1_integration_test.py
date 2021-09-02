@@ -447,17 +447,3 @@ def test_related_image_search_page_consistency(
         related = recommendation_factory(image['id'])
         assert related['result_count'] > 0
         assert len(related['results']) == 10
-
-
-def test_report_endpoint(image_fixture):
-    identifier = image_fixture['results'][0]['id']
-    payload = {
-        'reason': 'mature',
-    }
-    response = requests.post(
-        f'{API_URL}/v1/images/{identifier}/report/',
-        json=payload, verify=False)
-    assert response.status_code == 201
-    data = json.loads(response.text)
-    assert data['identifier'] == identifier
-    return data
