@@ -31,10 +31,10 @@ import {
   SET_FILTER_IS_VISIBLE,
   SET_FILTERS_FROM_URL,
 } from '~/store-modules/mutation-types'
-import { queryStringToQueryData } from '~/utils/searchQueryTransform'
+import { queryStringToQueryData } from '~/utils/search-query-transform'
 import local from '~/utils/local'
-import { screenWidth } from '~/utils/getBrowserInfo'
-import iframeHeight from '~/mixins/iframeHeight'
+import { screenWidth } from '~/utils/get-browser-info'
+import iframeHeight from '~/mixins/iframe-height'
 import { IMAGE } from '~/constants/media'
 
 const BrowsePage = {

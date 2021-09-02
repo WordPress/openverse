@@ -4,7 +4,7 @@
 
 <script>
 import { CLEAR_FILTERS } from '~/store-modules/mutation-types'
-import iframeHeight from '~/mixins/iframeHeight'
+import iframeHeight from '~/mixins/iframe-height'
 
 const HomePage = {
   name: 'home-page',

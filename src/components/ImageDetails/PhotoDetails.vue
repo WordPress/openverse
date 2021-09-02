@@ -106,7 +106,7 @@
             id="social-sharing"
             role="tab"
             aria-controls="tab-social-sharing"
-            :aria-selected="activeTab == 2"
+            :aria-selected="activeTab === 2"
             :class="tabClass(2, 'a')"
             @click.prevent="setActiveTab(2)"
             @keyup.enter.prevent="setActiveTab(2)"
@@ -187,7 +187,8 @@ import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
 } from '~/store-modules/usage-data-analytics-types'
-import attributionHtml from '~/utils/attributionHtml'
+import attributionHtml from '~/utils/attribution-html'
+import { getFullLicenseName } from '~/utils/license'
 
 export default {
   name: 'PhotoDetails',
@@ -228,15 +229,9 @@ export default {
       return this.$store.state.isReportFormVisible
     },
     fullLicenseName() {
-      const license = this.image.license
-      const version = this.image.license_version
-
-      if (license) {
-        return license.toLowerCase() === 'cc0'
-          ? `${license} ${version}`
-          : `CC ${license} ${version}`
-      }
-      return ''
+      return this.image
+        ? getFullLicenseName(this.image.license, this.image.license_version)
+        : ''
     },
     ccLicenseURL() {
       return `${this.image.license_url}?ref=ccsearch`

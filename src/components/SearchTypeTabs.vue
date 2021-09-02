@@ -19,9 +19,9 @@
 </template>
 
 <script>
-import { capitalize } from '~/utils/formatStrings'
+import { capitalize } from '~/utils/format-strings'
 import { ALL_MEDIA, AUDIO, IMAGE, VIDEO } from '~/constants/media'
-import { queryStringToSearchType } from '~/utils/searchQueryTransform'
+import { queryStringToSearchType } from '~/utils/search-query-transform'
 
 export default {
   name: 'SearchTypeTabs',

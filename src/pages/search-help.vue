@@ -256,7 +256,7 @@
 /* eslint-disable vue/html-quotes */
 
 import { mapState } from 'vuex'
-import iframeHeight from '~/mixins/iframeHeight'
+import iframeHeight from '~/mixins/iframe-height'
 
 const SearchHelpPage = {
   name: 'search-help-page',

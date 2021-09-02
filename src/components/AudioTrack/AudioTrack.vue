@@ -91,8 +91,8 @@
 </template>
 
 <script>
-import Waveform from '~/components/AudioTrack/Waveform.vue'
-import PlayPause from '~/components/AudioTrack/PlayPause.vue'
+import Waveform from '~/components/AudioTrack/Waveform'
+import PlayPause from '~/components/AudioTrack/PlayPause'
 
 /**
  * Displays the waveform and basic information about the track, along with

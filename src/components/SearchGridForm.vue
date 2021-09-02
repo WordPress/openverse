@@ -61,7 +61,7 @@
 
 <script>
 import { SET_FILTER_IS_VISIBLE } from '~/store-modules/mutation-types'
-import { queryStringToSearchType } from '~/utils/searchQueryTransform'
+import { queryStringToSearchType } from '~/utils/search-query-transform'
 import { AUDIO, VIDEO } from '~/constants/media'
 
 export default {

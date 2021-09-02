@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import getProviderName from '~/utils/getProviderName'
+import getProviderName from '~/utils/get-provider-name'
 import dmcaNotice from './DmcaNotice'
 import OtherIssueForm from './OtherIssueForm'
 import DoneMessage from './DoneMessage'

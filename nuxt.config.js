@@ -128,6 +128,7 @@ export default {
       '~/components/Filters',
       '~/components/AudioDetails',
       '~/components/ImageDetails',
+      '~/components/MediaInfo',
       '~/components/MetaSearch',
       '~/components/MediaTag',
     ],
