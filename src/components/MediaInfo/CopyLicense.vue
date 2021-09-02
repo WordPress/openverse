@@ -67,7 +67,7 @@
           </template>
           <template #marked-licensed>
             {{
-              isNotLicense
+              isPublicDomain
                 ? $t('media-details.reuse.credit.marked')
                 : $t('media-details.reuse.credit.licensed')
             }}
@@ -140,7 +140,7 @@
           </template>
           <template #marked-licensed>
             {{
-              isNotLicense
+              isPublicDomain
                 ? $t('media-details.reuse.credit.marked')
                 : $t('media-details.reuse.credit.licensed')
             }}
@@ -150,7 +150,7 @@
             <i18n path="media-details.reuse.credit.view-legal-text">
               <template #terms-copy>
                 {{
-                  isNotLicense
+                  isPublicDomain
                     ? $t('media-details.reuse.credit.terms-text')
                     : $t('media-details.reuse.credit.copy-text')
                 }}
@@ -177,7 +177,7 @@ import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
 } from '~/store-modules/usage-data-analytics-types'
-import { checkIsLicense } from '~/utils/license'
+import { isPublicDomain } from '~/utils/license'
 
 export default {
   name: 'CopyLicense',
@@ -198,8 +198,8 @@ export default {
     }
   },
   computed: {
-    isNotLicense() {
-      return !checkIsLicense(this.$props.fullLicenseName)
+    isPublicDomain() {
+      return isPublicDomain(this.$props.fullLicenseName)
     },
     mediaTitle() {
       const title = this.$props.media.title

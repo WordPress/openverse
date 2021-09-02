@@ -1,28 +1,9 @@
 <template>
   <div class="media-attribution">
     <h5 class="b-header mb-6">
-      {{ licenseOrToolHeader }}
+      {{ headerText }}
     </h5>
-    <template v-if="!isLicense">
-      <LicenseElements :license="license" />
-      <i18n
-        path="media-details.reuse.tool.content"
-        tag="span"
-        class="caption font-semibold"
-      >
-        <template #link>
-          <a
-            :aria-label="$t('media-details.aria.attribution.tool')"
-            :href="licenseURL"
-            target="_blank"
-            rel="noopener"
-          >
-            {{ $t('media-details.reuse.tool.link') }}
-          </a>
-        </template>
-      </i18n>
-    </template>
-    <template v-else>
+    <template v-if="isLicense">
       <i18n
         path="media-details.reuse.attribution.main"
         tag="span"
@@ -58,11 +39,30 @@
         </template>
       </i18n>
     </template>
+    <template v-else>
+      <LicenseElements :license="license" />
+      <i18n
+        path="media-details.reuse.tool.content"
+        tag="span"
+        class="caption font-semibold"
+      >
+        <template #link>
+          <a
+            :aria-label="$t('media-details.aria.attribution.tool')"
+            :href="licenseURL"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ $t('media-details.reuse.tool.link') }}
+          </a>
+        </template>
+      </i18n>
+    </template>
   </div>
 </template>
 
 <script>
-import { checkIsLicense } from '~/utils/license'
+import { isLicense } from '~/utils/license'
 
 export default {
   name: 'MediaLicense',
@@ -73,9 +73,9 @@ export default {
   },
   computed: {
     isLicense() {
-      return checkIsLicense(this.$props.license)
+      return isLicense(this.$props.license)
     },
-    licenseOrToolHeader() {
+    headerText() {
       const licenseOrTool = this.isLicense ? 'license' : 'tool'
       return this.$t(`media-details.reuse.${licenseOrTool}-header`)
     },

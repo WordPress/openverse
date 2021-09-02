@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import { checkIsLicense } from '~/utils/license'
-
 export default {
   name: 'ImageAttribution',
   props: {
@@ -28,9 +26,6 @@ export default {
     attributionHtml: String,
   },
   computed: {
-    isLicense() {
-      return checkIsLicense(this.$props.fullLicenseName)
-    },
     licenseURL() {
       return `${this.ccLicenseURL}&atype=rich`
     },

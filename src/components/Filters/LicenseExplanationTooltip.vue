@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { checkIsLicense } from '~/utils/license'
+import { isLicense } from '~/utils/license'
 
 export default {
   name: 'LicenseExplanationTooltip',
@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     isLicense() {
-      return checkIsLicense(this.$props.license)
+      return isLicense(this.$props.license)
     },
   },
   methods: {
