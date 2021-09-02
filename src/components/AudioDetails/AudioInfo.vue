@@ -7,7 +7,7 @@
       <div class="audio-info__data">
         <p>{{ audio.description }}</p>
         <AudioTags :tags="audio.tags" :show-header="false" class="mt-6 mb-6" />
-        <dl>
+        <dl v-if="audio">
           <div>
             <dt>Album</dt>
             <dd>

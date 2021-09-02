@@ -452,6 +452,10 @@
   },
   "media-details": {
     "reuse": {
+      "title": "Reuse content",
+      "license-header": "License",
+      "tool-header": "Public Domain",
+      "audio": "Audio",
       "image": "Image",
       "license": {
         "content": "Read more about the license {link}",
@@ -476,13 +480,13 @@
         "html": "HTML",
         "plain": "Plain text"
       },
-      "license-header": "License",
-      "tool-header": "Public Domain",
       "attribution": {
         "main": "This image was marked with a {link} license.",
         "license": "license."
       }
-    }
+    },
+    "provider-label": "Provider",
+    "source-label": "Source"
   },
   "photo-details": {
     "back": "Back to search results",
@@ -548,10 +552,6 @@
       "main": "main content",
       "related": "related images"
     }
-  },
-  "media-details": {
-    "provider-label": "Provider",
-    "source-label": "Source"
   },
   "audio-details": {
     "genre-label": "Genre",

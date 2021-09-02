@@ -1,11 +1,8 @@
 <template>
-  <aside
-    :aria-label="$t('photo-details.aria.related')"
-    class="p-4 my-6 photo_related-images"
-  >
-    <h3 class="b-header">
+  <aside :aria-label="$t('photo-details.aria.related')">
+    <h4 class="b-header">
       {{ $t('audio-details.related-audios') }}
-    </h3>
+    </h4>
     <ClientOnly>
       <AudioTrack
         v-for="rAudio in relatedAudios"
@@ -20,12 +17,8 @@
 <script>
 export default {
   name: 'RelatedAudios',
-  props: [
-    'relatedAudios',
-    'audiosCount',
-    'query',
-    'filter',
-    'isPrimaryImageLoaded',
-  ],
+  props: {
+    relatedAudios: {},
+  },
 }
 </script>

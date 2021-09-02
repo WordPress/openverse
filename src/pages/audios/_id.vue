@@ -4,22 +4,19 @@
       <AudioTrack :audio="audio" />
     </ClientOnly>
     <section v-if="!$fetchState.pending" class="audio-page">
-      <h4 class="b-header mb-6">Reuse Content</h4>
-      <AudioAttribution
+      <MediaReuse
         data-testid="audio-attribution"
-        :audio="audio"
+        :media="audio"
         :cc-license-u-r-l="ccLicenseURL"
         :full-license-name="fullLicenseName"
         :attribution-html="attributionHtml()"
+        class="audio-reuse"
       />
-      <AudioInfo data-testid="audio-info" :audio="audio" />
-      <AudioTags :tags="tags" header="" class="p-4 my-6" />
+      <AudioInfo data-testid="audio-info" :audio="audio" class="audio-info" />
       <RelatedAudios
         v-if="!$fetchState.pending"
         :related-audios="relatedAudios"
-        :audios-count="relatedAudiosCount"
-        :query="query"
-        :filter="filter"
+        class="audio-related"
       />
     </section>
     <p v-else>Not loaded yet</p>
@@ -34,6 +31,7 @@ import { SET_AUDIO, SET_RELATED_MEDIA } from '~/store-modules/mutation-types'
 import iframeHeight from '~/mixins/iframe-height'
 import { AUDIO } from '~/constants/media'
 import attributionHtml from '~/utils/attribution-html'
+import { getFullLicenseName } from '~/utils/license'
 
 const AudioDetailPage = {
   name: 'AudioDetailPage',
@@ -65,15 +63,7 @@ const AudioDetailPage = {
       return this.$store.state.related.audios
     },
     fullLicenseName() {
-      const license = this.audio.license
-      const version = this.audio.license_version
-
-      if (license) {
-        return license.toLowerCase() === 'cc0'
-          ? `${license} ${version}`
-          : `CC ${license} ${version}`
-      }
-      return ''
+      return getFullLicenseName(this.audio.license, this.audio.license_version)
     },
     ccLicenseURL() {
       return `${this.audio.license_url}?ref=ccsearch`
@@ -167,6 +157,13 @@ export default AudioDetailPage
   padding-right: var(--page-margin, 4rem);
   margin-top: var(--section-gap, 1.5rem);
 }
+.audio-related .info-section {
+  padding-left: 0;
+  padding-right: 0;
+}
+.audio-reuse,
+.audio-related,
 .audio-info {
+  margin-bottom: 4rem;
 }
 </style>

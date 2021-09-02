@@ -4,15 +4,13 @@
       {{ header }}
     </h3>
     <div>
-      <button
+      <MediaTag
         v-for="(tag, index) in getValidTags()"
         :key="index"
-        class="button tag m-1"
-        @click="searchByTagName(tag.name)"
-        @keyup.enter="searchByTagName(tag.name)"
+        class="mr-4"
       >
         {{ tag.name }}
-      </button>
+      </MediaTag>
     </div>
   </div>
 </template>
