@@ -114,18 +114,12 @@
         <tbody>
           <tr v-for="(imageProvider, index) in sortedProviders" :key="index">
             <td class="bold-cell">
-              <a
-                :aria-label="imageProvider.display_name"
-                :href="`/search?source=${imageProvider.source_name}`"
-              >
+              <a :href="`/search?source=${imageProvider.source_name}`">
                 {{ imageProvider.display_name }}
               </a>
             </td>
             <td class="bold-cell">
-              <a
-                :aria-label="imageProvider.display_name"
-                :href="imageProvider.source_url"
-              >
+              <a :href="imageProvider.source_url">
                 {{ imageProvider.source_url }}
               </a>
             </td>

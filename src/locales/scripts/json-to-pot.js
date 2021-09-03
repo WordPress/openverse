@@ -166,7 +166,7 @@ msgstr ""`
   return potFile
 }
 
-const potFile = `${POT_FILE_META}${potTime(json)}`
+const potFile = `${POT_FILE_META}${potTime(json)}\n`
 try {
   const fileName = process.cwd() + '/src/locales/po-files/openverse.pot'
   fs.writeFileSync(fileName, potFile)

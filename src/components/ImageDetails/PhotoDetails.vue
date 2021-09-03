@@ -66,7 +66,9 @@
           <template #name>
             <a
               v-if="image.creator_url"
-              :aria-label="'author' + image.creator"
+              :aria-label="
+                $t('photo-details.aria.creator-url', { creator: image.creator })
+              "
               :href="image.creator_url"
               @click="onPhotoCreatorLinkClicked"
               @keyup.enter="onPhotoCreatorLinkClicked"

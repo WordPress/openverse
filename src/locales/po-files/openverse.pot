@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-01T15:29:56+00:00\n"
+"POT-Creation-Date: 2021-09-02T14:36:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1141,6 +1141,12 @@ msgctxt "filters.filter-by"
 msgid "Filter By"
 msgstr ""
 
+# filters.filter-tag-aria (Do not translate words between ###)
+#: src/components/Filters/FilterTag.vue:4
+msgctxt "filters.filter-tag-aria"
+msgid "###filterLabel### filter"
+msgstr ""
+
 # hero.title
 #: src/components/HeroSection.vue:6
 msgctxt "hero.title"
@@ -1435,6 +1441,12 @@ msgstr ""
 #: src/components/Filters/FiltersList.vue:41
 msgctxt "filter-list.show"
 msgid "Show results"
+msgstr ""
+
+# filter-list.category-aria (Do not translate words between ###)
+#: src/components/Filters/FilterChecklist.vue:16
+msgctxt "filter-list.category-aria"
+msgid "filters list for ###categoryName### category"
 msgstr ""
 
 # browse-page.all-no-results
@@ -1853,7 +1865,7 @@ msgid "License"
 msgstr ""
 
 # photo-details.information.tags
-#: src/components/ImageDetails/ImageInfo.vue:43
+#: src/components/ImageDetails/ImageInfo.vue:42
 msgctxt "photo-details.information.tags"
 msgid "Tags"
 msgstr ""
@@ -1865,7 +1877,7 @@ msgid "pixels"
 msgstr ""
 
 # photo-details.share
-#: src/components/ImageDetails/PhotoDetails.vue:114
+#: src/components/ImageDetails/PhotoDetails.vue:116
 msgctxt "photo-details.share"
 msgid "Share"
 msgstr ""
@@ -1889,7 +1901,7 @@ msgid "by answering a few questions."
 msgstr ""
 
 # photo-details.weblink
-#: src/components/ImageDetails/PhotoDetails.vue:175
+#: src/components/ImageDetails/PhotoDetails.vue:177
 msgctxt "photo-details.weblink"
 msgid "Go to image's website"
 msgstr ""
@@ -2004,6 +2016,11 @@ msgctxt "hero.caption.link"
 msgid "DMCA form"
 msgstr ""
 
+# photo-details.content-report.dmca.aria-form (Do not translate words between ###)
+msgctxt "photo-details.content-report.dmca.aria-form"
+msgid "###provider### form"
+msgstr ""
+
 # photo-details.aria.close-form
 #: src/components/ContentReport/ContentReportForm.vue:4
 msgctxt "photo-details.aria.close-form"
@@ -2061,6 +2078,18 @@ msgstr ""
 #: src/pages/photos/_id.vue:18
 msgctxt "photo-details.aria.related"
 msgid "related images"
+msgstr ""
+
+# photo-details.aria.provider-report-form (Do not translate words between ###)
+#: src/components/ContentReport/DmcaNotice.vue:27
+msgctxt "photo-details.aria.provider-report-form"
+msgid "###provider### form"
+msgstr ""
+
+# photo-details.aria.creator-url (Do not translate words between ###)
+#: src/components/ImageDetails/PhotoDetails.vue:70
+msgctxt "photo-details.aria.creator-url"
+msgid "author ###creator###"
 msgstr ""
 
 # hero.caption

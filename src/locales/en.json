@@ -302,6 +302,7 @@
   "filters": {
     "title": "Filters",
     "filter-by": "Filter By",
+    "filter-tag-aria": "{filterLabel} filter",
     "licenses": {
       "title": "License or Public Domain",
       "cc0": "CC0",
@@ -388,7 +389,8 @@
     "filter-by": "Filter results by",
     "hide": "Hide filters",
     "clear": "Clear filters",
-    "show": "Show results"
+    "show": "Show results",
+    "category-aria": "filters list for {categoryName} category"
   },
   "browse-page": {
     "all-no-results": "no results",
@@ -521,7 +523,8 @@
         "provider": "We recommend doing the same at the source, {link}.",
         "thanks": "Thank you for reporting an issue with the results of Openverse!",
         "submission-error": "There was an error with the report submission. Please try again.",
-        "link": "DMCA form"
+        "link": "DMCA form",
+        "aria-form": "{provider} form"
       }
     },
     "aria": {
@@ -538,7 +541,9 @@
         "pinterest": "share on pinterest"
       },
       "main": "main content",
-      "related": "related images"
+      "related": "related images",
+      "provider-report-form": "{provider} form",
+      "creator-url": "author {creator}"
     }
   },
   "meta-search": {
