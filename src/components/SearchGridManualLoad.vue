@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { SET_IMAGES } from '~/store-modules/mutation-types'
+import { SET_MEDIA } from '~/store-modules/mutation-types'
 
 const DEFAULT_PAGE_SIZE = 20
 
@@ -90,10 +90,10 @@ export default {
       return this.$store.state.imagePage
     },
     isFetchingImagesError() {
-      return this.$store.state.isFetchingImagesError
+      return this.$store.state.isFetchingError.images
     },
     isFetchingImages() {
-      return this.$store.state.isFetchingImages
+      return this.$store.state.isFetching.images
     },
     _images() {
       return this.useInfiniteScroll ? this.$store.state.images : this.images
@@ -103,7 +103,7 @@ export default {
     },
     _imagesCount() {
       const count = this.useInfiniteScroll
-        ? this.$store.state.imagesCount
+        ? this.$store.state.count.images
         : this.imagesCount
       if (count === 0) {
         return this.$t('browse-page.image-no-results')
@@ -120,7 +120,7 @@ export default {
       return this.$props.query
     },
     _errorMessage() {
-      return this.$store.state.errorMsg
+      return this.$store.state.errorMessage
     },
     isFinished() {
       return this.currentPage >= this.$store.state.pageCount
@@ -147,12 +147,12 @@ export default {
   },
   methods: {
     searchChanged() {
-      this.$store.commit(SET_IMAGES, { images: [], page: 1 })
+      this.$store.commit(SET_MEDIA, { media: [], page: 1 })
     },
     onLoadMoreImages() {
       const searchParams = {
         page: this.currentPage + 1,
-        shouldPersistImages: true,
+        shouldPersistMedia: true,
         ...this._query,
       }
 

@@ -1,4 +1,4 @@
-import decodeImageData from '~/utils/decode-image-data'
+import decodeMediaData from '~/utils/decode-media-data'
 
 describe('decodeImageData', () => {
   it('returns empty string for empty string', () => {
@@ -14,6 +14,6 @@ describe('decodeImageData', () => {
       tags: [{ name: 'maß' }],
     }
 
-    expect(decodeImageData(data)).toEqual(expected)
+    expect(decodeMediaData(data)).toEqual(expected)
   })
 })

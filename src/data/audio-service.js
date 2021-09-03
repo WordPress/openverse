@@ -6,10 +6,12 @@ import sampleAudioResponses from './sampleAudioResponses.json'
 const AudioService = {
   /**
    * Search for audios by keyword.
+   * @param {Object} params
+   * @return {Promise<{data: any}>}
    */
   search(params) {
     return config.dev
-      ? Promise.resolve(sampleAudioResponses.search)
+      ? Promise.resolve({ data: sampleAudioResponses.search })
       : ApiService.query('audios', params)
   },
 
@@ -20,27 +22,36 @@ const AudioService = {
   /**
    * Retrieve audio details by Id number.
    * SSR-called
+   * @param {object} params
+   * @param {string} params.id
+   * @return {Promise<{data: any}>}
    */
-  getAudioDetail(params) {
+  getMediaDetail(params) {
     if (!params.id) {
       throw new Error(
-        '[RWV] AudioService.getAudioDetail() id parameter required to retrieve audio details.'
+        '[RWV] AudioService.getMediaDetail() id parameter required to retrieve audio details.'
       )
     }
 
     return config.dev
-      ? Promise.resolve(sampleAudioResponses.detail)
+      ? Promise.resolve({ data: sampleAudioResponses.detail })
       : ApiService.get('audios', params.id)
   },
 
-  getRelatedAudios(params) {
+  /**
+   * Retrieve related media
+   * @param params
+   * @param {string} params.id
+   * @return {Promise<{data: any}>}
+   */
+  getRelatedMedia(params) {
     if (!params.id) {
       throw new Error(
-        '[RWV] AudioService.getRelatedAudios() id parameter required to retrieve related audios.'
+        '[RWV] AudioService.getRelatedMedia() id parameter required to retrieve related audios.'
       )
     }
     return config.dev
-      ? Promise.resolve(sampleAudioResponses.related)
+      ? Promise.resolve({ data: sampleAudioResponses.related })
       : ApiService.get('recommendations/audios', params.id)
   },
 }

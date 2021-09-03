@@ -19,8 +19,15 @@ describe('SearchGrid', () => {
       mocks: {
         $store: {
           state: {
-            isFetchingImages: false,
-            imagesCount: 100,
+            isFetching: {
+              images: false,
+            },
+            isFetchingError: {
+              images: false,
+            },
+            count: {
+              images: 100,
+            },
             imagePage: 1,
           },
           commit: commitMock,
@@ -41,13 +48,13 @@ describe('SearchGrid', () => {
   })
 
   it("doesn't render load more button if is loading images", () => {
-    options.mocks.$store.state.isFetchingImages = true
+    options.mocks.$store.state.isFetching.images = true
     const wrapper = render(SearchGrid, options)
     expect(wrapper.find('.load-more').vm).not.toBeDefined()
   })
 
   it('shows loading icon if is loading images', () => {
-    options.mocks.$store.state.isFetchingImages = true
+    options.mocks.$store.state.isFetching.images = true
 
     const wrapper = render(SearchGrid, options)
     expect(wrapper.findComponent({ name: 'LoadingIcon' })).toBeDefined()
@@ -61,7 +68,7 @@ describe('SearchGrid', () => {
     expect(wrapper.emitted('onLoadMoreImages')[0]).toEqual([
       {
         page: 2,
-        shouldPersistImages: true,
+        shouldPersistMedia: true,
         ...options.propsData.query,
       },
     ])
@@ -71,8 +78,8 @@ describe('SearchGrid', () => {
     const wrapper = render(SearchGrid, options)
     wrapper.vm.searchChanged()
 
-    expect(commitMock).toHaveBeenCalledWith('SET_IMAGES', {
-      images: [],
+    expect(commitMock).toHaveBeenCalledWith('SET_MEDIA', {
+      media: [],
       page: 1,
     })
   })
