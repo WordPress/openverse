@@ -125,6 +125,7 @@ export default {
       '~/components/ContentReport',
       '~/components/Filters',
       '~/components/ImageDetails',
+      '~/components/MediaInfo',
       '~/components/MetaSearch',
     ],
   },

@@ -1,45 +1,25 @@
 <template>
-  <div class="copy-license my-4">
-    <h5 class="b-header mb-4">
-      {{ $t('photo-details.reuse.copy-license.title') }}
+  <div class="copy-license">
+    <h5 class="b-header mb-6">
+      {{ $t('media-details.reuse.copy-license.title') }}
     </h5>
     <section class="tabs boxed">
       <div
         role="tablist"
-        :aria-label="$t('photo-details.reuse.copy-license.title')"
+        :aria-label="$t('media-details.reuse.copy-license.title')"
       >
         <button
-          id="rich"
+          v-for="tab in tabs"
+          :id="tab.id"
+          :key="tab.id"
           role="tab"
-          :aria-selected="activeTab == 0"
-          aria-controls="tab-rich"
-          :class="tabClass(0, 'tab')"
-          @click.prevent="setActiveTab(0)"
-          @keyup.enter.prevent="setActiveTab(0)"
+          :aria-selected="activeTab === tab.id"
+          :aria-controls="`tab-${tab.name}`"
+          :class="tabClass(tab.id, 'tab')"
+          @click.prevent="setActiveTab(tab.id)"
+          @keyup.enter.prevent="setActiveTab(tab.id)"
         >
-          {{ $t('photo-details.reuse.copy-license.rich') }}
-        </button>
-        <button
-          id="html"
-          role="tab"
-          :aria-selected="activeTab == 1"
-          aria-controls="tab-html"
-          :class="tabClass(1, 'tab')"
-          @click.prevent="setActiveTab(1)"
-          @keyup.enter.prevent="setActiveTab(1)"
-        >
-          {{ $t('photo-details.reuse.copy-license.html') }}
-        </button>
-        <button
-          id="text"
-          role="tab"
-          :aria-selected="activeTab == 2"
-          aria-controls="tab-text"
-          :class="tabClass(2, 'tab')"
-          @click.prevent="setActiveTab(2)"
-          @keyup.enter.prevent="setActiveTab(2)"
-        >
-          {{ $t('photo-details.reuse.copy-license.plain') }}
+          {{ $t(`media-details.reuse.copy-license.${tab.name}`) }}
         </button>
       </div>
       <div
@@ -51,52 +31,51 @@
       >
         <i18n
           id="attribution"
-          ref="photoAttribution"
-          path="photo-details.reuse.credit.text"
+          path="media-details.reuse.credit.text"
           tag="span"
           class="photo_usage-attribution block"
         >
           <template #title>
             <a
-              :href="image.foreign_landing_url"
+              :href="media.foreign_landing_url"
               target="_blank"
               rel="noopener"
               @click="onPhotoSourceLinkClicked"
               @keyup.enter="onPhotoSourceLinkClicked"
-              >{{ imageTitle }}</a
+              >{{ mediaTitle }}</a
             ></template
           >
           <template #creator>
             <i18n
-              v-if="image.creator"
-              path="photo-details.reuse.credit.creator-text"
+              v-if="media.creator"
+              path="media-details.reuse.credit.creator-text"
               tag="span"
             >
               <template #creator-name>
                 <a
-                  v-if="image.creator_url"
-                  :href="image.creator_url"
+                  v-if="media.creator_url"
+                  :href="media.creator_url"
                   target="_blank"
                   rel="noopener"
                   @click="onPhotoCreatorLinkClicked"
                   @keyup.enter="onPhotoCreatorLinkClicked"
-                  >{{ image.creator }}</a
+                  >{{ media.creator }}</a
                 >
-                <span v-else>{{ image.creator }}</span>
+                <span v-else>{{ media.creator }}</span>
               </template>
             </i18n>
           </template>
           <template #marked-licensed>
             {{
-              isTool
-                ? $t('photo-details.reuse.credit.marked')
-                : $t('photo-details.reuse.credit.licensed')
+              isPublicDomain
+                ? $t('media-details.reuse.credit.marked')
+                : $t('media-details.reuse.credit.licensed')
             }}
           </template>
           <template #license>
             <a
               class="photo_license"
-              :href="licenseURL"
+              :href="ccLicenseURL"
               target="_blank"
               rel="noopener"
             >
@@ -143,42 +122,41 @@
       >
         <i18n
           id="attribution-text"
-          ref="photoAttribution"
-          path="photo-details.reuse.credit.text"
+          path="media-details.reuse.credit.text"
           tag="p"
         >
           <template #title>
-            {{ imageTitle }}
+            {{ mediaTitle }}
           </template>
           <template #creator>
             <i18n
-              v-if="image.creator"
-              path="photo-details.reuse.credit.creator-text"
+              v-if="media.creator"
+              path="media-details.reuse.credit.creator-text"
             >
               <template #creator-name>
-                {{ image.creator }}
+                {{ media.creator }}
               </template>
             </i18n>
           </template>
           <template #marked-licensed>
             {{
-              isTool
-                ? $t('photo-details.reuse.credit.marked')
-                : $t('photo-details.reuse.credit.licensed')
+              isPublicDomain
+                ? $t('media-details.reuse.credit.marked')
+                : $t('media-details.reuse.credit.licensed')
             }}
           </template>
           <template #license> {{ fullLicenseName.toUpperCase() }}</template>
           <template #view-legal>
-            <i18n path="photo-details.reuse.credit.view-legal-text">
+            <i18n path="media-details.reuse.credit.view-legal-text">
               <template #terms-copy>
                 {{
-                  isTool
-                    ? $t('photo-details.reuse.credit.terms-text')
-                    : $t('photo-details.reuse.credit.copy-text')
+                  isPublicDomain
+                    ? $t('media-details.reuse.credit.terms-text')
+                    : $t('media-details.reuse.credit.copy-text')
                 }}
               </template>
-              <template v-if="licenseURL" #URL>
-                {{ licenseURL.substring(0, licenseURL.indexOf('?')) }}
+              <template v-if="ccLicenseURL" #URL>
+                {{ ccLicenseURL }}
               </template>
             </i18n>
           </template>
@@ -194,36 +172,40 @@
 </template>
 
 <script>
-import CopyButton from '~/components/CopyButton'
 import { COPY_ATTRIBUTION } from '~/store-modules/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
 } from '~/store-modules/usage-data-analytics-types'
+import { isPublicDomain } from '~/utils/license'
 
 export default {
   name: 'CopyLicense',
-  components: {
-    CopyButton,
+  props: {
+    media: {},
+    fullLicenseName: String,
+    attributionHtml: String,
+    ccLicenseURL: String,
   },
-  props: ['image', 'fullLicenseName', 'attributionHtml', 'licenseURL'],
   data() {
     return {
       activeTab: 0,
+      tabs: [
+        { id: 0, name: 'rich' },
+        { id: 1, name: 'html' },
+        { id: 2, name: 'plain' },
+      ],
     }
   },
   computed: {
-    isTool() {
-      return (
-        this.fullLicenseName.includes('cc0') ||
-        this.fullLicenseName.includes('pdm')
-      )
+    isPublicDomain() {
+      return isPublicDomain(this.$props.fullLicenseName)
     },
-    imageTitle() {
-      const title = this.$props.image.title
-      return title !== 'Image'
+    mediaTitle() {
+      const title = this.$props.media.title
+      return !['Audio', 'Image'].includes(title)
         ? `"${title}"`
-        : this.$t('photo-details.reuse.image')
+        : this.$t('media-details.reuse.image')
     },
   },
   methods: {
@@ -239,7 +221,7 @@ export default {
     sendDetailPageEvent(eventType) {
       this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
         eventType,
-        resultUuid: this.$props.image.id,
+        resultUuid: this.$props.media.id,
       })
     },
     onCopyAttribution(type, event) {
@@ -249,13 +231,13 @@ export default {
     onPhotoSourceLinkClicked() {
       this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
         eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
-        resultUuid: this.$props.image.id,
+        resultUuid: this.$props.media.id,
       })
     },
     onPhotoCreatorLinkClicked() {
       this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
         eventType: DETAIL_PAGE_EVENTS.CREATOR_CLICKED,
-        resultUuid: this.$props.image.id,
+        resultUuid: this.$props.media.id,
       })
     },
   },
