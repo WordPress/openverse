@@ -36,6 +36,12 @@
     "file": "es.json"
   },
   {
+    "code": "es-ar",
+    "name": "Spanish (Argentina)",
+    "iso": "es-SPA",
+    "file": "es-ar.json"
+  },
+  {
     "code": "es-co",
     "name": "Spanish (Colombia)",
     "iso": "es-SPA",

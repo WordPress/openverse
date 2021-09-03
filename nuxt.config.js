@@ -162,7 +162,15 @@ export default {
     '@nuxtjs/i18n',
   ],
   i18n: {
-    locales,
+    locales: [
+      {
+        code: 'en',
+        name: 'English',
+        iso: 'en',
+        file: 'en.json',
+      },
+      ...(locales ?? []),
+    ],
     lazy: true,
     langDir: 'locales',
     strategy: 'prefix_and_default',
