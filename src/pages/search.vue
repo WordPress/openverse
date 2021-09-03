@@ -35,7 +35,7 @@ import { queryStringToQueryData } from '~/utils/search-query-transform'
 import local from '~/utils/local'
 import { screenWidth } from '~/utils/get-browser-info'
 import iframeHeight from '~/mixins/iframe-height'
-import { IMAGE } from '~/constants/media'
+import { IMAGE, AUDIO } from '~/constants/media'
 
 const BrowsePage = {
   name: 'browse-page',
@@ -86,6 +86,9 @@ const BrowsePage = {
     getImages(params) {
       this.$store.dispatch(FETCH_MEDIA, { ...params, mediaType: IMAGE })
     },
+    getAudios(params) {
+      this.$store.dispatch(FETCH_MEDIA, { ...params, mediaType: AUDIO })
+    },
     onLoadMoreImages(searchParams) {
       this.getImages(searchParams)
     },
@@ -111,7 +114,11 @@ const BrowsePage = {
           query: this.$store.state.query,
         })
         this.$router.push(newPath)
-        this.getImages(newQuery)
+        if (this.$store.state.searchType == AUDIO) {
+          this.getAudios(newQuery)
+        } else {
+          this.getImages(newQuery)
+        }
       }
     },
   },

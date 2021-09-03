@@ -1,10 +1,8 @@
 <template>
-  <MetaSearchForm
-    id="tab-audio"
-    type="audio"
-    role="tabpanel"
-    aria-labelledby="audio"
-  />
+  <div id="tab-audio" role="tabpanel" aria-labelledby="audio">
+    <AudioResultsList />
+    <MetaSearchForm type="audio" />
+  </div>
 </template>
 
 <script>

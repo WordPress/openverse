@@ -109,7 +109,7 @@ const handleSearchResponse = async (
 }
 
 /**
- * @type {{image: {}, pageCount: number,
+ * @type {{ audios: [], pageCount: number,
  * images: import('./types').ImageDetail[],
  * searchType: string, imagesCount: number, query: {},
  * errorMessage: null, count: {images: number, audios: number},
@@ -119,7 +119,7 @@ const handleSearchResponse = async (
  */
 const state = {
   errorMessage: null,
-  image: {},
+  audios: [],
   count: {
     images: 0,
     audios: 0,
@@ -258,7 +258,7 @@ const mutations = {
       _state.isFetching.images = true
       _state.isFetchingError.images = false
     } else if (mediaType === AUDIO) {
-      _state.isFetchingAudios = true
+      _state.isFetching.audios = true
       _state.isFetchingError.audios = false
     }
   },

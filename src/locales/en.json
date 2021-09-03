@@ -393,9 +393,9 @@
     "category-aria": "filters list for {categoryName} category"
   },
   "browse-page": {
-    "all-no-results": "no results",
-    "audio-no-results": "no audio results",
-    "image-no-results": "no image results",
+    "all-no-results": "No results",
+    "audio-no-results": "No audio results",
+    "image-no-results": "No image results",
     "all-result-count": "{localeCount} result|{localeCount} results",
     "audio-result-count": "{localeCount} audio result|{localeCount} audio results",
     "image-result-count": "{localeCount} image result|{localeCount} image results",
