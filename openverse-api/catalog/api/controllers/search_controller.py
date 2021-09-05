@@ -485,6 +485,8 @@ def _get_result_and_page_count(response_obj: Response, results: List[Hit],
     """
     result_count = response_obj.hits.total.value
     natural_page_count = int(result_count / page_size)
+    if natural_page_count % page_size != 0:
+        natural_page_count += 1
     last_allowed_page = int((5000 + page_size / 2) / page_size)
     page_count = min(natural_page_count, last_allowed_page)
     if len(results) < page_size and page_count == 0:
