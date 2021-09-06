@@ -12,6 +12,7 @@
         ref="dropdownButton"
         type="button"
         class="dropdown-button ml-1 rounded-r-sm rounded-l-none"
+        :class="{ 'dropdown-button-active': isOpen }"
         @click="toggleOpen"
         @keydown.enter="toggleOpen"
         @keydown.space.prevent="toggleOpen"
@@ -113,6 +114,10 @@ export default DropdownButton
 <style lang="css" scoped>
 .dropdown-button {
   @apply flex items-center justify-center bg-pink text-white font-bold p-2 px-4 transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-pink;
+}
+
+.dropdown-button-active {
+  @apply bg-dark-pink;
 }
 
 .dropdown-container {
