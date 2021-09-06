@@ -42,7 +42,7 @@
             : 'fill-dark-charcoal-20',
         ]"
         :x="spaceBefore(index)"
-        :y="spaceAbove(peak)"
+        :y="spaceAbove(index)"
         :width="barWidth"
         :height="peak"
       />
@@ -228,7 +228,7 @@ export default {
       () => `0 0 ${waveformWidth.value} ${viewBoxHeight}`
     )
     const spaceBefore = (index) => index * barWidth + (index + 1) * barGap
-    const spaceAbove = (peak) => viewBoxHeight - peak
+    const spaceAbove = (index) => viewBoxHeight - normalizedPeaks.value[index]
 
     /* Progress bar */
 
