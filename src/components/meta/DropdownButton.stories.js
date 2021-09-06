@@ -12,10 +12,10 @@ export const Default = () => ({
         <button v-bind="buttonProps" class="whitespace-nowrap" @click="onClick">Download {{ activeItem?.name ?? '' }}</button>
       </template>
 
-      <template #items="{ activeItemClass, itemClass, itemA11yProps, toggleOpen }">
+      <template #items="{ activeItemClass, itemClass, itemA11yProps, toggleOpen, onItemKeydown }">
         <ul>
           <li v-for="(item, index) in items" :key="item.name">
-            <button :class="{ [itemClass]: true, [activeItemClass]: item.active }" type="button" v-bind="itemA11yProps" @click="setActive(item); toggleOpen()">{{ item.name }}</button>
+            <button :class="{ [itemClass]: true, [activeItemClass]: item.active }" type="button" v-bind="itemA11yProps" @click="setActive(item); toggleOpen()" @keydown="onItemKeydown">{{ item.name }}</button>
           </li>
         </ul>
       </template>

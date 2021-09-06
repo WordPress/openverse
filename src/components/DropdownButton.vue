@@ -35,6 +35,7 @@
         :item-a11y-props="{ role: 'menuitem' }"
         :toggle-open="toggleOpen"
         :active-item-class="'dropdown-item-active'"
+        :on-item-keydown="onItemKeydown"
       />
     </div>
   </div>
@@ -61,6 +62,11 @@ const DropdownButton = {
     document.removeEventListener('click', this.onClickout)
   },
   methods: {
+    getItems() {
+      return Array.from(
+        this.$refs.dropdownContainer.querySelectorAll('[role="menuitem"]')
+      )
+    },
     onClickout(e) {
       if (
         e.target !== this.$refs.dropdownButton &&
@@ -72,15 +78,31 @@ const DropdownButton = {
     toggleOpen() {
       this.isOpen = !this.isOpen
       if (this.isOpen) {
-        this.focusElement(
-          this.$el.querySelectorAll('[role="menu"] [role="menuitem"]')[0]
-        )
+        this.focusElement(this.getItems()[0])
       } else {
         this.focusElement(this.$refs.dropdownButton)
       }
     },
     focusElement(element) {
       window.setTimeout(() => element.focus(), 0)
+    },
+    onItemKeydown(event) {
+      const items = this.getItems()
+      const itemIndex = items.findIndex((item) => item === event.target)
+      console.log(event)
+      if (event.key === 'ArrowUp') {
+        if (itemIndex === 0) {
+          // don't do anything if pressing up on the first item
+          return
+        }
+        this.focusElement(items[itemIndex - 1])
+      } else if (event.key === 'ArrowDown') {
+        if (itemIndex === items.length - 1) {
+          // don't do anything if pressing down on the last item
+          return
+        }
+        this.focusElement(items[itemIndex + 1])
+      }
     },
   },
 }
