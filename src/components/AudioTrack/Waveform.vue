@@ -37,9 +37,7 @@
         class="transform origin-bottom transition-transform duration-500"
         :class="[
           isReady ? 'scale-y-100' : 'scale-y-0',
-          spaceBefore(index) < seekBarWidth
-            ? 'fill-black'
-            : 'fill-dark-charcoal-20',
+          index <= seekIndex ? 'fill-black' : 'fill-dark-charcoal-20',
         ]"
         :x="spaceBefore(index)"
         :y="spaceAbove(index)"
@@ -265,6 +263,8 @@ export default {
       const frac = seekFrac.value ?? currentFrac.value
       return waveformWidth.value * frac
     })
+    const seekIndex = computed(() => getPeaksInWidth(seekBarWidth.value))
+    const seekSpaceBefore = computed(() => spaceBefore(seekIndex.value))
 
     /* Seek timestamp */
 
@@ -360,6 +360,9 @@ export default {
 
       seekFrac,
       seekBarWidth,
+      seekIndex,
+      seekSpaceBefore,
+
       seekTimestamp,
       seekTimestampEl,
       isSeekTimestampCutoff,
