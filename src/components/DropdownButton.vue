@@ -2,9 +2,12 @@
   <div class="flex flex-col items-end max-w-min">
     <div class="flex" aria-haspopup="menu" :aria-expanded="isOpen">
       <!-- rounded-X-none is required to fight Edge UA styles that apply a 2px border radius to all `button` elements -->
-      <button type="button" class="dropdown-button rounded-l-sm rounded-r-none">
-        <slot name="button-text" />
-      </button>
+      <slot
+        :button-props="{
+          class: 'dropdown-button rounded-l-sm rounded-r-none',
+          type: 'button',
+        }"
+      />
       <button
         ref="dropdownButton"
         type="button"
@@ -69,9 +72,7 @@ const DropdownButton = {
       this.isOpen = !this.isOpen
       if (this.isOpen) {
         this.focusElement(
-          this.$el.querySelector(
-            '[role="menu"] [role="menuitem"]:first-of-type'
-          )
+          this.$el.querySelectorAll('[role="menu"] [role="menuitem"]')[0]
         )
       } else {
         this.focusElement(this.$refs.dropdownButton)
@@ -96,6 +97,6 @@ export default DropdownButton
 }
 
 .dropdown-item {
-  @apply hover:bg-light-gray focus:bg-light-gray px-2 py-1 mb-1 rounded-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-pink;
+  @apply hover:bg-light-gray focus:bg-light-gray px-2 py-1 mb-1 rounded-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-pink;
 }
 </style>
