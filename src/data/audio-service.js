@@ -1,6 +1,6 @@
 import ApiService from './api-service'
 import config from '../../nuxt.config.js'
-import sampleAudioResponses from './sampleAudioResponses.json'
+import sampleAudioResponses from './sample-audio-responses.json'
 
 // TODO: Remove sample responses when Audio API is available
 const AudioService = {
