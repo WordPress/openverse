@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col items-end max-w-min">
-    <div class="flex" aria-haspopup="menu" :aria-expanded="isOpen">
-      <!-- rounded-X-none is required to fight Edge UA styles that apply a 2px border radius to all `button` elements -->
+  <div class="relative block max-w-min">
+    <!-- rounded-X-none is required to fight Edge UA styles that apply a 2px border radius to all `button` elements -->
+    <div class="flex">
       <slot
         :button-props="{
           class: 'dropdown-button rounded-l-sm rounded-r-none',
@@ -13,6 +13,9 @@
         type="button"
         class="dropdown-button ml-1 rounded-r-sm rounded-l-none"
         :class="{ 'dropdown-button-active': isOpen }"
+        aria-haspopup="menu"
+        :aria-label="$t('dropdown-button.aria.arrow-label')"
+        :aria-expanded="isOpen"
         @click="toggleOpen"
         @keydown.enter="toggleOpen"
         @keydown.space.prevent="toggleOpen"
@@ -90,19 +93,37 @@ const DropdownButton = {
     onItemKeydown(event) {
       const items = this.getItems()
       const itemIndex = items.findIndex((item) => item === event.target)
-      console.log(event)
-      if (event.key === 'ArrowUp') {
-        if (itemIndex === 0) {
-          // don't do anything if pressing up on the first item
-          return
+      switch (event.key) {
+        case 'ArrowUp': {
+          if (itemIndex === 0) {
+            // don't do anything if pressing up on the first item
+            return
+          }
+          this.focusElement(items[itemIndex - 1])
+          break
         }
-        this.focusElement(items[itemIndex - 1])
-      } else if (event.key === 'ArrowDown') {
-        if (itemIndex === items.length - 1) {
-          // don't do anything if pressing down on the last item
-          return
+        case 'ArrowDown': {
+          if (itemIndex === items.length - 1) {
+            // don't do anything if pressing down on the last item
+            return
+          }
+          this.focusElement(items[itemIndex + 1])
+          break
         }
-        this.focusElement(items[itemIndex + 1])
+        case 'Escape': {
+          this.toggleOpen()
+          break
+        }
+        case 'Home':
+        case 'PageUp': {
+          this.focusElement(items[0])
+          break
+        }
+        case 'End':
+        case 'PageDown': {
+          this.focusElement(items[items.length - 1])
+          break
+        }
       }
     },
   },
@@ -121,7 +142,7 @@ export default DropdownButton
 }
 
 .dropdown-container {
-  @apply border border-light-gray rounded-sm px-2 pt-2 pb-1 m-2 max-w-min whitespace-nowrap shadow;
+  @apply absolute right-0 z-50 bg-white border border-light-gray rounded-sm px-2 pt-2 pb-1 m-2 max-w-min whitespace-nowrap shadow;
 }
 
 .dropdown-item {

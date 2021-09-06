@@ -591,5 +591,10 @@
   "play-pause": {
     "play": "Play",
     "pause": "Pause"
+  },
+  "dropdown-button": {
+    "aria": {
+      "arrow-label": "Dropdown"
+    }
   }
 }
