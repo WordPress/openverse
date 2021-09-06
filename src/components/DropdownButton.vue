@@ -34,6 +34,7 @@
         :item-class="'dropdown-item'"
         :item-a11y-props="{ role: 'menuitem' }"
         :toggle-open="toggleOpen"
+        :active-item-class="'dropdown-item-active'"
       />
     </div>
   </div>
@@ -97,6 +98,10 @@ export default DropdownButton
 }
 
 .dropdown-item {
-  @apply hover:bg-light-gray focus:bg-light-gray px-2 py-1 mb-1 rounded-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-pink;
+  @apply hover:bg-light-gray px-2 py-1 mb-1 rounded-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-pink;
+}
+
+.dropdown-item-active {
+  @apply bg-light-gray;
 }
 </style>
