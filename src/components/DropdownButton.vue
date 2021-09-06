@@ -92,6 +92,6 @@ export default DropdownButton
 }
 
 .dropdown-item {
-  @apply hover:bg-light-gray focus:bg-light-gray px-2 py-1 mb-1 rounded-sm transition-colors;
+  @apply hover:bg-light-gray focus:bg-light-gray px-2 py-1 mb-1 rounded-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-pink;
 }
 </style>
