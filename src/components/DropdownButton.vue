@@ -20,6 +20,7 @@
     </div>
 
     <div
+      ref="dropdownContainer"
       class="dropdown-container"
       :class="{ hidden: !isOpen }"
       role="menu"
@@ -57,7 +58,10 @@ const DropdownButton = {
   },
   methods: {
     onClickout(e) {
-      if (!this.$el.contains(e.target)) {
+      if (
+        e.target !== this.$refs.dropdownButton &&
+        !this.$refs.dropdownContainer.contains(e.target)
+      ) {
         this.isOpen = false
       }
     },
@@ -70,7 +74,7 @@ const DropdownButton = {
           )
         )
       } else {
-        this.focusElement(this.$refs.dropdownButton.focus())
+        this.focusElement(this.$refs.dropdownButton)
       }
     },
     focusElement(element) {
