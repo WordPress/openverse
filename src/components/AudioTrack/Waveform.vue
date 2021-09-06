@@ -1,7 +1,7 @@
 <template>
   <div
     ref="el"
-    class="waveform relative bg-dark-charcoal-04 overflow-hidden focus:outline-none"
+    class="waveform relative bg-dark-charcoal-04 overflow-hidden rounded-sm focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink"
     tabIndex="0"
     role="slider"
     :aria-label="$t('waveform.label')"
