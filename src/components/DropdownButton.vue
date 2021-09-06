@@ -1,13 +1,14 @@
 <template>
   <div class="flex flex-col items-end max-w-min">
     <div class="flex" aria-haspopup="menu" :aria-expanded="isOpen">
-      <button type="button" class="dropdown-button rounded-l-sm">
+      <!-- rounded-X-none is required to fight Edge UA styles that apply a 2px border radius to all `button` elements -->
+      <button type="button" class="dropdown-button rounded-l-sm rounded-r-none">
         <slot name="button-text" />
       </button>
       <button
         ref="dropdownButton"
         type="button"
-        class="dropdown-button ml-1 rounded-r-sm"
+        class="dropdown-button ml-1 rounded-r-sm rounded-l-none"
         @click="toggleOpen"
         @keydown.enter="toggleOpen"
         @keydown.space.prevent="toggleOpen"
