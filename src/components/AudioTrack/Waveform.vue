@@ -1,7 +1,7 @@
 <template>
   <div
     ref="el"
-    class="waveform relative bg-dark-charcoal-04 overflow-x-hidden"
+    class="waveform relative bg-dark-charcoal-04 overflow-x-hidden focus:outline-none"
     tabIndex="0"
     role="slider"
     :aria-label="$t('waveform.label')"
@@ -45,6 +45,24 @@
         :height="peak"
       />
     </svg>
+
+    <!-- Keyboard focus -->
+    <div
+      class="focus-indicator hidden absolute z-20 top-0 flex flex-col items-center justify-between bg-black h-full"
+      :style="{ width: `${barWidth}px`, left: `${seekSpaceBefore}px` }"
+    >
+      <div
+        v-for="(classes, name) in {
+          top: ['-translate-y-1/2'],
+          bottom: ['translate-y-1/2'],
+        }"
+        :key="name"
+        class="rounded-full bg-black h-2 w-2 transform"
+        :class="classes"
+      >
+        &nbsp;
+      </div>
+    </div>
 
     <!-- Timestamps -->
     <template v-if="isReady">
@@ -404,5 +422,9 @@ export default {
 .bg-dark-charcoal-04-opaque {
   /* opaque equivalent of dark-charcoal-04 on top of white */
   background-color: rgb(247, 246, 247);
+}
+
+.waveform:focus-visible .focus-indicator {
+  display: flex;
 }
 </style>
