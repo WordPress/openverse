@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-02T14:36:29+00:00\n"
+"POT-Creation-Date: 2021-09-06T09:40:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1104,7 +1104,7 @@ msgid "An error occurred"
 msgstr ""
 
 # error.image-not-found (Do not translate words between ###)
-#: src/pages/photos/_id.vue:99
+#: src/pages/photos/_id.vue:106
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
@@ -1402,7 +1402,7 @@ msgid "Creator"
 msgstr ""
 
 # filters.license-explanation.tool (Do not translate words between ###)
-#: src/components/Filters/LicenseExplanationTooltip.vue:11
+#: src/components/Filters/LicenseExplanationTooltip.vue:8
 msgctxt "filters.license-explanation.tool"
 msgid "Read more about the tool ###link###"
 msgstr ""
@@ -1605,19 +1605,16 @@ msgid "Credit the creator."
 msgstr ""
 
 # browse-page.license-description.nc
-#: src/components/LicenseExplanations.vue:53
 msgctxt "browse-page.license-description.nc"
 msgid "Noncommercial uses only."
 msgstr ""
 
 # browse-page.license-description.nd
-#: src/components/LicenseExplanations.vue:54
 msgctxt "browse-page.license-description.nd"
 msgid "No derivatives or adaptations permitted."
 msgstr ""
 
 # browse-page.license-description.sa
-#: src/components/LicenseExplanations.vue:55
 msgctxt "browse-page.license-description.sa"
 msgid "Share adaptations under the same terms."
 msgstr ""
@@ -1693,91 +1690,9 @@ msgctxt "filters.creator"
 msgid "search by creator"
 msgstr ""
 
-# photo-details.back
-#: src/components/ImageDetails/PhotoDetails.vue:12
-msgctxt "photo-details.back"
-msgid "Back to search results"
-msgstr ""
-
-# filters.creator (Do not translate words between ###)
-msgctxt "filters.creator"
-msgid "by ###name###"
-msgstr ""
-
-# hero.title
-#: src/components/HeroSection.vue:6
-msgctxt "hero.title"
-msgid "Reuse"
-msgstr ""
-
-# photo-details.reuse.license-header
-#: src/components/ImageDetails/ImageAttribution.vue:31
-msgctxt "photo-details.reuse.license-header"
-msgid "License"
-msgstr ""
-
-# photo-details.reuse.tool-header
-#: src/components/ImageDetails/ImageAttribution.vue:8
-msgctxt "photo-details.reuse.tool-header"
-msgid "Public Domain"
-msgstr ""
-
 # search-tab.image
 msgctxt "search-tab.image"
 msgid "Image"
-msgstr ""
-
-# photo-details.reuse.attribution.main (Do not translate words between ###)
-#: src/components/ImageDetails/ImageAttribution.vue:33
-msgctxt "photo-details.reuse.attribution.main"
-msgid "This image was marked with a ###link### license."
-msgstr ""
-
-# meta-search-page.license
-#: src/pages/meta-search.vue:17
-msgctxt "meta-search-page.license"
-msgid "license."
-msgstr ""
-
-# header.notification.text (Do not translate words between ###)
-msgctxt "header.notification.text"
-msgid "###title######creator######marked-licensed######license######view-legal###"
-msgstr ""
-
-# photo-details.reuse.credit.creator-text (Do not translate words between ###)
-#: src/components/ImageDetails/CopyLicense.vue:70
-msgctxt "photo-details.reuse.credit.creator-text"
-msgid " by ###creator-name###"
-msgstr ""
-
-# photo-details.reuse.credit.marked
-#: src/components/ImageDetails/CopyLicense.vue:92
-msgctxt "photo-details.reuse.credit.marked"
-msgid "is marked with"
-msgstr ""
-
-# photo-details.reuse.credit.licensed
-#: src/components/ImageDetails/CopyLicense.vue:93
-msgctxt "photo-details.reuse.credit.licensed"
-msgid "is licensed under"
-msgstr ""
-
-# photo-details.reuse.credit.view-legal-text (Do not translate words between ###)
-#: src/components/ImageDetails/CopyLicense.vue:172
-msgctxt "photo-details.reuse.credit.view-legal-text"
-msgid ". To view ###terms-copy###visit ###URL###"
-msgstr ""
-
-# photo-details.reuse.credit.terms-text
-#: src/components/ImageDetails/CopyLicense.vue:176
-msgctxt "photo-details.reuse.credit.terms-text"
-msgid "the terms,"
-msgstr ""
-
-# photo-details.reuse.credit.copy-text
-#: src/components/ImageDetails/CopyLicense.vue:177
-msgctxt "photo-details.reuse.credit.copy-text"
-msgid "a copy of this license,"
 msgstr ""
 
 # hero.caption.content (Do not translate words between ###)
@@ -1804,28 +1719,105 @@ msgctxt "hero.caption.link"
 msgid "here"
 msgstr ""
 
+# header.notification.text (Do not translate words between ###)
+msgctxt "header.notification.text"
+msgid "###title######creator######marked-licensed######license######view-legal###"
+msgstr ""
+
+# media-details.reuse.credit.creator-text (Do not translate words between ###)
+#: src/components/MediaInfo/CopyLicense.vue:49
+msgctxt "media-details.reuse.credit.creator-text"
+msgid " by ###creator-name###"
+msgstr ""
+
+# media-details.reuse.credit.marked
+#: src/components/MediaInfo/CopyLicense.vue:71
+msgctxt "media-details.reuse.credit.marked"
+msgid "is marked with"
+msgstr ""
+
+# media-details.reuse.credit.licensed
+#: src/components/MediaInfo/CopyLicense.vue:72
+msgctxt "media-details.reuse.credit.licensed"
+msgid "is licensed under"
+msgstr ""
+
+# media-details.reuse.credit.view-legal-text (Do not translate words between ###)
+#: src/components/MediaInfo/CopyLicense.vue:150
+msgctxt "media-details.reuse.credit.view-legal-text"
+msgid ". To view ###terms-copy###visit ###URL###"
+msgstr ""
+
+# media-details.reuse.credit.terms-text
+#: src/components/MediaInfo/CopyLicense.vue:154
+msgctxt "media-details.reuse.credit.terms-text"
+msgid "the terms,"
+msgstr ""
+
+# media-details.reuse.credit.copy-text
+#: src/components/MediaInfo/CopyLicense.vue:155
+msgctxt "media-details.reuse.credit.copy-text"
+msgid "a copy of this license,"
+msgstr ""
+
 # hero.title
 #: src/components/HeroSection.vue:6
 msgctxt "hero.title"
 msgid "Credit the Creator"
 msgstr ""
 
-# photo-details.reuse.copy-license.rich
-#: src/components/ImageDetails/CopyLicense.vue:20
-msgctxt "photo-details.reuse.copy-license.rich"
+# media-details.reuse.copy-license.rich
+msgctxt "media-details.reuse.copy-license.rich"
 msgid "Rich Text"
 msgstr ""
 
-# photo-details.reuse.copy-license.html
-#: src/components/ImageDetails/CopyLicense.vue:31
-msgctxt "photo-details.reuse.copy-license.html"
+# media-details.reuse.copy-license.html
+msgctxt "media-details.reuse.copy-license.html"
 msgid "HTML"
 msgstr ""
 
-# photo-details.reuse.copy-license.plain
-#: src/components/ImageDetails/CopyLicense.vue:42
-msgctxt "photo-details.reuse.copy-license.plain"
+# media-details.reuse.copy-license.plain
+msgctxt "media-details.reuse.copy-license.plain"
 msgid "Plain text"
+msgstr ""
+
+# media-details.reuse.license-header
+msgctxt "media-details.reuse.license-header"
+msgid "License"
+msgstr ""
+
+# media-details.reuse.tool-header
+msgctxt "media-details.reuse.tool-header"
+msgid "Public Domain"
+msgstr ""
+
+# media-details.reuse.attribution.main (Do not translate words between ###)
+#: src/components/MediaInfo/MediaLicense.vue:7
+msgctxt "media-details.reuse.attribution.main"
+msgid "This image was marked with a ###link### license."
+msgstr ""
+
+# meta-search-page.license
+#: src/pages/meta-search.vue:17
+msgctxt "meta-search-page.license"
+msgid "license."
+msgstr ""
+
+# photo-details.back
+#: src/components/ImageDetails/PhotoDetails.vue:12
+msgctxt "photo-details.back"
+msgid "Back to search results"
+msgstr ""
+
+# filters.creator (Do not translate words between ###)
+msgctxt "filters.creator"
+msgid "by ###name###"
+msgstr ""
+
+# hero.title
+#: src/components/HeroSection.vue:6
+msgctxt "hero.title"
+msgid "Reuse"
 msgstr ""
 
 # hero.title
@@ -1913,7 +1905,7 @@ msgid "Openverse aggregates data from publicly available repositories of open co
 msgstr ""
 
 # photo-details.related-images
-#: src/components/RelatedImages.vue:4
+#: src/components/RelatedImages.vue:7
 msgctxt "photo-details.related-images"
 msgid "Related Images"
 msgstr ""
@@ -2039,7 +2031,7 @@ msgid "read more about the license"
 msgstr ""
 
 # filters.license-explanation.tool
-#: src/components/Filters/LicenseExplanationTooltip.vue:11
+#: src/components/Filters/LicenseExplanationTooltip.vue:8
 msgctxt "filters.license-explanation.tool"
 msgid "read more about the tool"
 msgstr ""
@@ -2068,14 +2060,14 @@ msgctxt "photo-details.aria.share.pinterest"
 msgid "share on pinterest"
 msgstr ""
 
-# photo-details.reuse.attribution.main
-#: src/components/ImageDetails/ImageAttribution.vue:33
-msgctxt "photo-details.reuse.attribution.main"
+# media-details.reuse.attribution.main
+#: src/components/MediaInfo/MediaLicense.vue:7
+msgctxt "media-details.reuse.attribution.main"
 msgid "main content"
 msgstr ""
 
 # photo-details.aria.related
-#: src/pages/photos/_id.vue:18
+#: src/components/RelatedImages.vue:3
 msgctxt "photo-details.aria.related"
 msgid "related images"
 msgstr ""
