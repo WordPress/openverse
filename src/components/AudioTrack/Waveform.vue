@@ -176,6 +176,14 @@ export default {
       const xPos = getPosition(event)
       return xPos / waveformWidth.value
     }
+    /**
+     * Get the number of peaks that will fit within the given width.
+     * @param {number} width - the number of pixels inside which to count peaks
+     * @returns {number} the number of peaks that can be accommodated
+     */
+    const getPeaksInWidth = (width) => {
+      return Math.floor((width - barGap) / (barWidth + barGap))
+    }
 
     /* Element dimensions */
 
@@ -201,10 +209,7 @@ export default {
 
     const barWidth = 2
     const barGap = 2
-    const peakCount = computed(() => {
-      const count = (waveformWidth.value - barGap) / (barWidth + barGap)
-      return Math.floor(count)
-    })
+    const peakCount = computed(() => getPeaksInWidth(waveformWidth.value))
     const normalizedPeaks = computed(() => {
       const givenLength = props.peaks.length
       const required = peakCount.value
