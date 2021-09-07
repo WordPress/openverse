@@ -1,17 +1,15 @@
 import datetime
 import os
-import psycopg2
-from unittest.mock import patch, call
+from unittest.mock import call, patch
 
-from airflow.providers.postgres.hooks.postgres import PostgresHook
+import psycopg2  # noqa:F401
 import pytest
-
-from util.loader import test_sql
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 from util import pg_cleaner
+from util.loader import test_sql
 
-RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "test_resources"
-)
+
+RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "test_resources")
 
 TEST_IMAGE_TABLE = test_sql.TEST_IMAGE_TABLE
 DROP_IMAGE_TABLE_QUERY = test_sql.DROP_IMAGE_TABLE_QUERY
@@ -53,9 +51,9 @@ def _load_tsv(postgres, tmpdir, tsv_file_name):
 def test_clean_prefix_loop_raises_with_long_prefix(monkeypatch):
     with patch.object(pg_cleaner.time, "sleep") as mock_sleep:
         with patch.object(
-                pg_cleaner,
-                "clean_rows",
-                side_effect=Exception("Super fail!"),
+            pg_cleaner,
+            "clean_rows",
+            side_effect=Exception("Super fail!"),
         ) as mock_cleaner:
             with pytest.raises(pg_cleaner.CleaningException):
                 pg_cleaner.clean_prefix_loop(
@@ -96,9 +94,9 @@ def test_clean_prefix_loop_raises_after_looping(monkeypatch):
     ]
     monkeypatch.setattr(pg_cleaner.time, "sleep", lambda x: None)
     with patch.object(
-            pg_cleaner,
-            "clean_rows",
-            side_effect=Exception("Super fail!"),
+        pg_cleaner,
+        "clean_rows",
+        side_effect=Exception("Super fail!"),
     ) as mock_cleaner:
         with pytest.raises(pg_cleaner.CleaningException):
             pg_cleaner.clean_prefix_loop(
@@ -138,8 +136,8 @@ def test_clean_prefix_loop_loops(monkeypatch):
         call("abc", "3ff"),
     ]
     with patch.object(
-            pg_cleaner,
-            "clean_rows",
+        pg_cleaner,
+        "clean_rows",
     ) as mock_cleaner:
         pg_cleaner.clean_prefix_loop("abc", "3f", desired_prefix_length=3)
 
@@ -152,9 +150,9 @@ def test_clean_rows_continues_when_single_row_fails(monkeypatch):
     monkeypatch.setattr(pg_cleaner, "_log_and_check_totals", lambda x, y: None)
 
     with patch.object(
-            pg_cleaner,
-            "_clean_single_row",
-            side_effect=Exception("cleaning fail!"),
+        pg_cleaner,
+        "_clean_single_row",
+        side_effect=Exception("cleaning fail!"),
     ) as mock_cleaner:
         pg_cleaner.clean_rows("abc", "def")
 
@@ -275,9 +273,7 @@ def test_select_records_gets_one_record(tmpdir, postgres_with_image_table):
     assert actual_records == expect_records
 
 
-def test_select_records_gets_multiple_records(
-        tmpdir, postgres_with_image_table
-):
+def test_select_records_gets_multiple_records(tmpdir, postgres_with_image_table):
     tsv_name = os.path.join(RESOURCES, "image_table_sample.tsv")
     _load_tsv(postgres_with_image_table, tmpdir, tsv_name)
     expect_records = [
@@ -1220,14 +1216,12 @@ def test_clean_single_row_doesnt_reuse_wrong_image_store_and_adds_row():
 
 
 def test_log_and_check_totals_raises_when_number_of_images_cleaned_is_wrong(
-        monkeypatch,
+    monkeypatch,
 ):
     monkeypatch.setattr(pg_cleaner.image.ImageStore, "total_items", 1)
     expected_calls = [
         call.info("Total images cleaned:  2"),
-        call.info(
-            "Image Totals breakdown:  {('abc', '000'): 1, ('def', '000'): 1}"
-        ),
+        call.info("Image Totals breakdown:  {('abc', '000'): 1, ('def', '000'): 1}"),
         call.warning("total_images_sum NOT EQUAL TO total_rows!"),
         call.warning("total_images_sum: 2"),
         call.warning("total_rows: 3"),
@@ -1246,9 +1240,7 @@ def test_log_and_check_totals_logs(monkeypatch):
     monkeypatch.setattr(pg_cleaner.image.ImageStore, "total_items", 1)
     expected_calls = [
         call.info("Total images cleaned:  2"),
-        call.info(
-            "Image Totals breakdown:  {('abc', '000'): 1, ('def', '000'): 1}"
-        ),
+        call.info("Image Totals breakdown:  {('abc', '000'): 1, ('def', '000'): 1}"),
     ]
     image_store_dict = pg_cleaner.ImageStoreDict()
     image_store_dict[("abc", "000")]

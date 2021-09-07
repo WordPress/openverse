@@ -1,20 +1,21 @@
 # airflow DAG (necessary for Airflow to find this file)
 
-from datetime import datetime, timedelta
 import logging
+from datetime import datetime, timedelta
 
 from provider_api_scripts import europeana
 from util.dag_factory import create_day_partitioned_ingestion_dag
 from util.helpers import get_reingestion_day_list_list
 
+
 logging.basicConfig(
-    format='%(asctime)s: [%(levelname)s - DAG Loader] %(message)s',
-    level=logging.DEBUG)
+    format="%(asctime)s: [%(levelname)s - DAG Loader] %(message)s", level=logging.DEBUG
+)
 
 
 logger = logging.getLogger(__name__)
 
-DAG_ID = 'europeana_ingestion_workflow'
+DAG_ID = "europeana_ingestion_workflow"
 START_DATE = datetime(2013, 11, 21)
 INGESTION_TASK_TIMEOUT = timedelta(hours=12)
 
@@ -23,9 +24,7 @@ ONE_MONTH_LIST_LENGTH = 12
 THREE_MONTH_LIST_LENGTH = 40
 
 reingestion_days = get_reingestion_day_list_list(
-    (1, DAILY_LIST_LENGTH),
-    (30, ONE_MONTH_LIST_LENGTH),
-    (90, THREE_MONTH_LIST_LENGTH)
+    (1, DAILY_LIST_LENGTH), (30, ONE_MONTH_LIST_LENGTH), (90, THREE_MONTH_LIST_LENGTH)
 )
 
 globals()[DAG_ID] = create_day_partitioned_ingestion_dag(
@@ -34,5 +33,5 @@ globals()[DAG_ID] = create_day_partitioned_ingestion_dag(
     reingestion_days,
     start_date=START_DATE,
     concurrency=3,
-    ingestion_task_timeout=INGESTION_TASK_TIMEOUT
+    ingestion_task_timeout=INGESTION_TASK_TIMEOUT,
 )

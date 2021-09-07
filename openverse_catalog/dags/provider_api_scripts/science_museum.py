@@ -5,9 +5,9 @@ from common.requester import DelayedRequester
 from common.storage.image import ImageStore
 from util.loader import provider_details as prov
 
+
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
@@ -20,9 +20,7 @@ ENDPOINT = "https://collection.sciencemuseumgroup.org.uk/search/"
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
 
-HEADERS = {
-    "Accept": "application/json"
-}
+HEADERS = {"Accept": "application/json"}
 
 DEFAULT_QUERY_PARAMS = {
     "has_image": 1,
@@ -30,7 +28,7 @@ DEFAULT_QUERY_PARAMS = {
     "page[size]": LIMIT,
     "page[number]": 0,
     "date[from]": 0,
-    "date[to]": 1500
+    "date[to]": 1500,
 }
 
 YEAR_RANGE = [
@@ -44,7 +42,7 @@ YEAR_RANGE = [
     (1915, 1940),
     (1940, 1965),
     (1965, 1990),
-    (1990, 2020)
+    (1990, 2020),
 ]
 
 # global variable to keep track of records pulled
@@ -56,31 +54,21 @@ def main():
     for year_range in YEAR_RANGE:
         logger.info(f"Running for years {year_range}")
         from_year, to_year = year_range
-        image_count = _page_records(
-            from_year=from_year,
-            to_year=to_year
-        )
+        image_count = _page_records(from_year=from_year, to_year=to_year)
         logger.info(f"Images pulled till now {image_count}")
     image_count = image_store.commit()
     logger.info(f"Total images pulled {image_count}")
 
 
-def _page_records(
-        from_year,
-        to_year
-        ):
+def _page_records(from_year, to_year):
     image_count = 0
     page_number = 0
     condition = True
     while condition:
         query_param = _get_query_param(
-            page_number=page_number,
-            from_year=from_year,
-            to_year=to_year
-            )
-        batch_data = _get_batch_objects(
-            query_param=query_param
+            page_number=page_number, from_year=from_year, to_year=to_year
         )
+        batch_data = _get_batch_objects(query_param=query_param)
         if type(batch_data) == list:
             if len(batch_data) > 0:
                 image_count = _handle_object_data(batch_data)
@@ -93,11 +81,8 @@ def _page_records(
 
 
 def _get_query_param(
-        page_number=0,
-        from_year=0,
-        to_year=1500,
-        default_query_param=None
-        ):
+    page_number=0, from_year=0, to_year=1500, default_query_param=None
+):
     if default_query_param is None:
         default_query_param = DEFAULT_QUERY_PARAMS
     query_param = default_query_param.copy()
@@ -108,20 +93,13 @@ def _get_query_param(
 
 
 def _get_batch_objects(
-        endpoint=ENDPOINT,
-        headers=None,
-        retries=RETRIES,
-        query_param=None
-        ):
+    endpoint=ENDPOINT, headers=None, retries=RETRIES, query_param=None
+):
     if headers is None:
         headers = HEADERS.copy()
     data = None
     for retry in range(retries):
-        response = delay_request.get(
-            endpoint,
-            query_param,
-            headers=headers
-        )
+        response = delay_request.get(endpoint, query_param, headers=headers)
         try:
             response_json = response.json()
             if "data" in response_json.keys():
@@ -157,9 +135,7 @@ def _handle_object_data(batch_data):
                 continue
             processed = image_data.get("processed")
             source = image_data.get("source")
-            image_url, height, width = _get_image_info(
-                processed
-            )
+            image_url, height, width = _get_image_info(processed)
             if image_url is None:
                 continue
 
@@ -168,22 +144,20 @@ def _handle_object_data(batch_data):
                 continue
             license_, version = license_version.lower().split(" ")
             license_ = license_.replace("cc-", "")
-            license_info = get_license_info(
-                license_=license_, license_version=version
-            )
+            license_info = get_license_info(license_=license_, license_version=version)
             thumbnail_url = _get_thumbnail_url(processed)
             image_count = image_store.add_item(
-                    foreign_identifier=foreign_id,
-                    foreign_landing_url=foreign_landing_url,
-                    image_url=image_url,
-                    height=height,
-                    width=width,
-                    license_info=license_info,
-                    thumbnail_url=thumbnail_url,
-                    creator=creator,
-                    title=title,
-                    meta_data=metadata
-                    )
+                foreign_identifier=foreign_id,
+                foreign_landing_url=foreign_landing_url,
+                image_url=image_url,
+                height=height,
+                width=width,
+                license_info=license_info,
+                thumbnail_url=thumbnail_url,
+                creator=creator,
+                title=title,
+                meta_data=metadata,
+            )
     return image_count
 
 
@@ -245,9 +219,7 @@ def _get_dimensions(measurements):
         dimensions = measurements.get("dimensions")
         if dimensions:
             for dim in dimensions:
-                height_width[
-                    dim.get("dimension")
-                ] = dim.get("value")
+                height_width[dim.get("dimension")] = dim.get("value")
     return height_width.get("height"), height_width.get("width")
 
 

@@ -3,23 +3,22 @@ import os
 
 from util.loader import ingestion_column as ic
 
+
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s",
     level=logging.DEBUG,
 )
-RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), 'test_resources'
-)
+RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "test_resources")
 
 
 def test_check_and_fix_file_adds_column_to_provider_api_tsv(tmpdir):
-    old_tsv_file_path = os.path.join(RESOURCES, 'old_columns_papis.tsv')
-    new_tsv_file_path = os.path.join(RESOURCES, 'new_columns_papis.tsv')
+    old_tsv_file_path = os.path.join(RESOURCES, "old_columns_papis.tsv")
+    new_tsv_file_path = os.path.join(RESOURCES, "new_columns_papis.tsv")
     with open(old_tsv_file_path) as f:
         old_tsv_data = f.read()
-    test_tsv = 'test.tsv'
+    test_tsv = "test.tsv"
     path = tmpdir.join(test_tsv)
-    backup_path = tmpdir.join(test_tsv + '.old')
+    backup_path = tmpdir.join(test_tsv + ".old")
     path.write(old_tsv_data)
     ic.check_and_fix_tsv_file(path.strpath)
     actual_tsv_data = path.read()
@@ -30,13 +29,13 @@ def test_check_and_fix_file_adds_column_to_provider_api_tsv(tmpdir):
 
 
 def test_check_and_fix_file_adds_column_to_common_crawl_tsv(tmpdir):
-    old_tsv_file_path = os.path.join(RESOURCES, 'old_columns_crawl.tsv')
-    new_tsv_file_path = os.path.join(RESOURCES, 'new_columns_crawl.tsv')
+    old_tsv_file_path = os.path.join(RESOURCES, "old_columns_crawl.tsv")
+    new_tsv_file_path = os.path.join(RESOURCES, "new_columns_crawl.tsv")
     with open(old_tsv_file_path) as f:
         old_tsv_data = f.read()
-    test_tsv = 'test.tsv'
+    test_tsv = "test.tsv"
     path = tmpdir.join(test_tsv)
-    backup_path = tmpdir.join(test_tsv + '.old')
+    backup_path = tmpdir.join(test_tsv + ".old")
     path.write(old_tsv_data)
     ic.check_and_fix_tsv_file(path.strpath)
     actual_tsv_data = path.read()
@@ -47,12 +46,12 @@ def test_check_and_fix_file_adds_column_to_common_crawl_tsv(tmpdir):
 
 
 def test_check_and_fix_file_leaves_unchanged_when_enough_columns_tsv(tmpdir):
-    tsv_file_path = os.path.join(RESOURCES, 'new_columns_papis.tsv')
+    tsv_file_path = os.path.join(RESOURCES, "new_columns_papis.tsv")
     with open(tsv_file_path) as f:
         tsv_data = f.read()
-    test_tsv = 'test.tsv'
+    test_tsv = "test.tsv"
     path = tmpdir.join(test_tsv)
-    backup_path = tmpdir.join(test_tsv + '.old')
+    backup_path = tmpdir.join(test_tsv + ".old")
     path.write(tsv_data)
     ic.check_and_fix_tsv_file(path.strpath)
     actual_tsv_data = path.read()

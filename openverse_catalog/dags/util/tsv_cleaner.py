@@ -5,6 +5,7 @@ import os
 from common.licenses.licenses import get_license_info
 from common.storage import image
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -12,7 +13,6 @@ logger = logging.getLogger(__name__)
 # always evaluates the default argument, which means the costly
 # operation of instantiating an ImageStore in our use case.
 class ImageStoreDict(dict):
-
     def __missing__(self, key):
         ret = self[key] = image.ImageStore(provider=key)
         return ret
@@ -45,7 +45,7 @@ def _process_row(tsv_row):
         license_info=get_license_info(
             license_url=get_license_url(row_meta_data),
             license_=row_image.license_,
-            license_version=row_image.license_version
+            license_version=row_image.license_version,
         ),
         foreign_identifier=row_image.foreign_identifier,
         width=row_image.width,
@@ -88,8 +88,6 @@ def get_license_url(meta_data):
             "raw_license_url", meta_data.get("license_url", None)
         )
     except Exception as e:
-        logger.debug(
-            f"Couldn't retrieve license URL from {meta_data}.  Error: {e}"
-        )
+        logger.debug(f"Couldn't retrieve license URL from {meta_data}.  Error: {e}")
         license_url = None
     return license_url if license_url else None

@@ -5,9 +5,9 @@ from common.requester import DelayedRequester
 from common.storage.image import ImageStore
 from util.loader import provider_details as prov
 
+
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
@@ -21,15 +21,13 @@ LANDING_PAGE = "https://collections.museumsvictoria.com.au/"
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
 
-HEADERS = {
-    "Accept": "application/json"
-}
+HEADERS = {"Accept": "application/json"}
 
 DEFAULT_QUERY_PARAMS = {
     "has_image": "yes",
     "perpage": LIMIT,
     "imagelicence": "cc by",
-    "page": 0
+    "page": 0,
 }
 
 LICENSE_LIST = [
@@ -50,8 +48,7 @@ def main():
         condition = True
         page = 0
         while condition:
-            query_params = _get_query_params(
-                license_type=license_, page=page)
+            query_params = _get_query_params(license_type=license_, page=page)
             results = _get_batch_objects(params=query_params)
 
             if type(results) == list:
@@ -66,9 +63,7 @@ def main():
     logger.info(f"Total images {image_count}")
 
 
-def _get_query_params(
-        default_query_params=None, license_type="cc by", page=0
-):
+def _get_query_params(default_query_params=None, license_type="cc by", page=0):
     if default_query_params is None:
         default_query_params = DEFAULT_QUERY_PARAMS
     query_params = default_query_params.copy()
@@ -77,19 +72,12 @@ def _get_query_params(
     return query_params
 
 
-def _get_batch_objects(
-        endpoint=ENDPOINT, params=None,
-        headers=None, retries=RETRIES
-):
+def _get_batch_objects(endpoint=ENDPOINT, params=None, headers=None, retries=RETRIES):
     if headers is None:
         headers = HEADERS.copy()
     data = None
     for retry in range(retries):
-        response = delay_request.get(
-            endpoint,
-            params,
-            headers=headers
-        )
+        response = delay_request.get(endpoint, params, headers=headers)
         try:
             response_json = response.json()
             if type(response_json) == list:
@@ -100,10 +88,7 @@ def _get_batch_objects(
     return data
 
 
-def _handle_batch_objects(
-        objects,
-        landing_page=LANDING_PAGE
-):
+def _handle_batch_objects(objects, landing_page=LANDING_PAGE):
     image_count = 0
     for obj in objects:
         object_id = obj.get("id")
@@ -131,7 +116,7 @@ def _handle_batch_objects(
                 thumbnail_url=img.get("thumbnail"),
                 title=title,
                 creator=img.get("creators"),
-                meta_data=meta_data
+                meta_data=meta_data,
             )
     return image_count
 
@@ -142,16 +127,10 @@ def _get_media_info(media_data):
         media_type = media.get("type")
         if media_type == "image":
             image_id = media.get("id")
-            image_url, height, width = _get_image_data(
-                media
-            )
-            license_url = _get_license_url(
-                media
-            )
+            image_url, height, width = _get_image_data(media)
+            license_url = _get_license_url(media)
             thumbnail_url = media.get("thumbnail", {}).get("uri")
-            if (
-                image_url is None or image_id is None or license_url is None
-            ):
+            if image_url is None or image_id is None or license_url is None:
                 continue
             creators = _get_creator(media)
             image_data.append(
@@ -162,7 +141,7 @@ def _get_media_info(media_data):
                     "width": width,
                     "license_url": license_url,
                     "thumbnail": thumbnail_url,
-                    "creators": creators
+                    "creators": creators,
                 }
             )
     return image_data
@@ -208,11 +187,11 @@ def _get_metadata(obj):
 
     keywords = obj.get("keywords")
     if type(keywords) == list:
-        metadata["keywords"] = ','.join(keywords)
+        metadata["keywords"] = ",".join(keywords)
 
     classifications = obj.get("classifications")
     if type(classifications) == list:
-        metadata["classifications"] = ','.join(classifications)
+        metadata["classifications"] = ",".join(classifications)
 
     return metadata
 
@@ -220,7 +199,7 @@ def _get_metadata(obj):
 def _get_creator(media):
     creators = None
     if type(media.get("creators")) == list:
-        creators = ','.join(media.get("creators"))
+        creators = ",".join(media.get("creators"))
     return creators
 
 

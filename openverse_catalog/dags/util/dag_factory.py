@@ -1,24 +1,26 @@
+import logging
 from copy import deepcopy
 from datetime import datetime, timedelta
-import logging
+
+import util.config as conf
+import util.operator_util as ops
 from airflow import DAG
 from airflow.models.baseoperator import cross_downstream
-import util.operator_util as ops
-import util.config as conf
+
 
 logger = logging.getLogger(__name__)
 
 
 def create_provider_api_workflow(
-        dag_id,
-        main_function,
-        default_args=conf.DAG_DEFAULT_ARGS,
-        start_date=datetime(1970, 1, 1),
-        concurrency=1,
-        schedule_string='@daily',
-        dated=True,
-        day_shift=0,
-        dagrun_timeout=timedelta(minutes=30),
+    dag_id,
+    main_function,
+    default_args=conf.DAG_DEFAULT_ARGS,
+    start_date=datetime(1970, 1, 1),
+    concurrency=1,
+    schedule_string="@daily",
+    dated=True,
+    day_shift=0,
+    dagrun_timeout=timedelta(minutes=30),
 ):
     """
     This factory method instantiates a DAG that will run the given
@@ -71,17 +73,14 @@ def create_provider_api_workflow(
     )
 
     with dag:
-        start_task = ops.get_log_operator(dag, dag.dag_id, 'Starting')
+        start_task = ops.get_log_operator(dag, dag.dag_id, "Starting")
         if dated:
             run_task = ops.get_dated_main_runner_operator(
-                dag,
-                main_function,
-                dagrun_timeout,
-                day_shift=day_shift
+                dag, main_function, dagrun_timeout, day_shift=day_shift
             )
         else:
             run_task = ops.get_main_runner_operator(dag, main_function)
-        end_task = ops.get_log_operator(dag, dag.dag_id, 'Finished')
+        end_task = ops.get_log_operator(dag, dag.dag_id, "Finished")
 
         start_task >> run_task >> end_task
 
@@ -96,7 +95,7 @@ def create_day_partitioned_ingestion_dag(
     concurrency=1,
     default_args=conf.DAG_DEFAULT_ARGS,
     dagrun_timeout=timedelta(hours=23),
-    ingestion_task_timeout=timedelta(hours=2)
+    ingestion_task_timeout=timedelta(hours=2),
 ):
     """
     Given a `main_function` and `reingestion_day_list_list`, this
@@ -179,30 +178,18 @@ def create_day_partitioned_ingestion_dag(
         concurrency=concurrency,
         max_active_runs=concurrency,
         dagrun_timeout=dagrun_timeout,
-        schedule_interval='@daily',
+        schedule_interval="@daily",
         start_date=start_date,
         catchup=False,
     )
     with dag:
         ingest_operator_list_list = _build_ingest_operator_list_list(
-            reingestion_day_list_list,
-            dag,
-            main_function,
-            ingestion_task_timeout
+            reingestion_day_list_list, dag, main_function, ingestion_task_timeout
         )
-        end_task = ops.get_log_operator(dag, dag.dag_id, 'Finished')
+        end_task = ops.get_log_operator(dag, dag.dag_id, "Finished")
         for i in range(len(ingest_operator_list_list) - 1):
-            wait_operator = ops.get_wait_till_done_operator(
-                dag,
-                f'wait_L{i}'
-            )
-            cross_downstream(
-                ingest_operator_list_list[i],
-                [
-                    wait_operator,
-                    end_task
-                ]
-            )
+            wait_operator = ops.get_wait_till_done_operator(dag, f"wait_L{i}")
+            cross_downstream(ingest_operator_list_list[i], [wait_operator, end_task])
             wait_operator >> ingest_operator_list_list[i + 1]
         ingest_operator_list_list[-1] >> end_task
 
@@ -210,10 +197,7 @@ def create_day_partitioned_ingestion_dag(
 
 
 def _build_ingest_operator_list_list(
-        reingestion_day_list_list,
-        dag,
-        main_function,
-        ingestion_task_timeout
+    reingestion_day_list_list, dag, main_function, ingestion_task_timeout
 ):
     if reingestion_day_list_list[0] != [0]:
         reingestion_day_list_list = [[0]] + reingestion_day_list_list
@@ -224,8 +208,9 @@ def _build_ingest_operator_list_list(
                 main_function,
                 ingestion_task_timeout,
                 day_shift=d,
-                task_id=f'ingest_{d}'
+                task_id=f"ingest_{d}",
             )
             for d in L
-        ] for L in reingestion_day_list_list
+        ]
+        for L in reingestion_day_list_list
     ]

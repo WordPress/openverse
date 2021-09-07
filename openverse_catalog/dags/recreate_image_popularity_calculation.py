@@ -7,45 +7,43 @@ The results are available in the `image_view` materialized view.
 
 This should only be run when new SQL code is deployed for the calculation.
 """
-from datetime import datetime, timedelta
 import logging
 import os
+from datetime import datetime, timedelta
 
 from airflow import DAG
-
-from util.popularity import operators
 from util.operator_util import get_log_operator
+from util.popularity import operators
 
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 
 logger = logging.getLogger(__name__)
 
-DAG_ID = 'recreate_image_popularity_calculation'
-DB_CONN_ID = os.getenv('OPENLEDGER_CONN_ID', 'postgres_openledger_testing')
+DAG_ID = "recreate_image_popularity_calculation"
+DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
 CONCURRENCY = 1
 SCHEDULE_CRON = None
 
 DAG_DEFAULT_ARGS = {
-    'owner': 'data-eng-admin',
-    'depends_on_past': False,
-    'start_date': datetime(2020, 6, 15),
-    'email_on_retry': False,
-    'retries': 2,
-    'retry_delay': timedelta(seconds=3600),
+    "owner": "data-eng-admin",
+    "depends_on_past": False,
+    "start_date": datetime(2020, 6, 15),
+    "email_on_retry": False,
+    "retries": 2,
+    "retry_delay": timedelta(seconds=3600),
 }
 
 
 def create_dag(
-        dag_id=DAG_ID,
-        args=DAG_DEFAULT_ARGS,
-        concurrency=CONCURRENCY,
-        max_active_runs=CONCURRENCY,
-        schedule_cron=SCHEDULE_CRON,
-        postgres_conn_id=DB_CONN_ID,
+    dag_id=DAG_ID,
+    args=DAG_DEFAULT_ARGS,
+    concurrency=CONCURRENCY,
+    max_active_runs=CONCURRENCY,
+    schedule_cron=SCHEDULE_CRON,
+    postgres_conn_id=DB_CONN_ID,
 ):
     dag = DAG(
         dag_id=dag_id,
@@ -53,15 +51,17 @@ def create_dag(
         concurrency=concurrency,
         max_active_runs=max_active_runs,
         schedule_interval=schedule_cron,
-        catchup=False
+        catchup=False,
     )
     with dag:
-        start_task = get_log_operator(dag, DAG_ID, 'Starting')
+        start_task = get_log_operator(dag, DAG_ID, "Starting")
         drop_relations = operators.drop_media_popularity_relations(
-            dag, postgres_conn_id,
+            dag,
+            postgres_conn_id,
         )
         drop_functions = operators.drop_media_popularity_functions(
-            dag, postgres_conn_id,
+            dag,
+            postgres_conn_id,
         )
         create_metrics = operators.create_media_popularity_metrics(
             dag, postgres_conn_id
@@ -78,10 +78,8 @@ def create_dag(
         create_popularity = operators.create_media_standardized_popularity(
             dag, postgres_conn_id
         )
-        create_image_view = operators.create_db_view(
-            dag, postgres_conn_id
-        )
-        end_task = get_log_operator(dag, DAG_ID, 'Finished')
+        create_image_view = operators.create_db_view(dag, postgres_conn_id)
+        end_task = get_log_operator(dag, DAG_ID, "Finished")
 
         (
             start_task

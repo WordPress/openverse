@@ -2,18 +2,17 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-
 from provider_api_scripts import cleveland_museum_of_art
 from util.operator_util import get_log_operator
 
 
 DAG_DEFAULT_ARGS = {
-    'owner': 'data-eng-admin',
-    'depends_on_past': False,
-    'start_date': datetime(2020, 1, 15),
-    'email_on_retry': False,
-    'retries': 3,
-    'retry_delay': timedelta(days=1),
+    "owner": "data-eng-admin",
+    "depends_on_past": False,
+    "start_date": datetime(2020, 1, 15),
+    "email_on_retry": False,
+    "retries": 3,
+    "retry_delay": timedelta(days=1),
 }
 
 DAG_ID = "cleveland_museum_workflow"
@@ -24,7 +23,7 @@ def get_runner_operator(dag):
         task_id="pull_cleveland_data",
         python_callable=cleveland_museum_of_art.main,
         depends_on_past=False,
-        dag=dag
+        dag=dag,
     )
 
 
@@ -34,7 +33,7 @@ def create_dag():
         default_args=DAG_DEFAULT_ARGS,
         start_date=datetime(2020, 1, 15),
         schedule_interval="@monthly",
-        catchup=False
+        catchup=False,
     )
 
     with dag:

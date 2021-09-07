@@ -5,20 +5,20 @@ We do this by running `provider_api_scripts.smithsonian.main`
 """
 # airflow DAG (necessary for Airflow to find this file)
 
-from datetime import datetime, timedelta
 import logging
+from datetime import datetime, timedelta
 
 from provider_api_scripts import smithsonian
 from util.dag_factory import create_provider_api_workflow
 
+
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 
 logger = logging.getLogger(__name__)
 
-DAG_ID = 'smithsonian_workflow'
+DAG_ID = "smithsonian_workflow"
 START_DATE = datetime(2020, 1, 1)
 DAGRUN_TIMEOUT = timedelta(hours=24)
 
@@ -26,7 +26,7 @@ globals()[DAG_ID] = create_provider_api_workflow(
     DAG_ID,
     smithsonian.main,
     start_date=START_DATE,
-    schedule_string='@weekly',
+    schedule_string="@weekly",
     dated=False,
-    dagrun_timeout=DAGRUN_TIMEOUT
+    dagrun_timeout=DAGRUN_TIMEOUT,
 )

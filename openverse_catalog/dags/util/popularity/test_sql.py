@@ -1,11 +1,11 @@
-from collections import namedtuple
 import os
+from collections import namedtuple
 from textwrap import dedent
 
 import psycopg2
 import pytest
-
 from util.popularity import sql
+
 
 TEST_ID = "testing"
 POSTGRES_CONN_ID = os.getenv("TEST_CONN_ID")
@@ -20,9 +20,7 @@ TEST_POPULARITY_CONSTANTS_IDX = "test_popularity_constants_idx"
 TEST_IMAGE_VIEW_ID_IDX = "test_view_id_idx"
 TEST_IMAGE_VIEW_PROVIDER_FID_IDX = "test_view_provider_fid_idx"
 
-UUID_FUNCTION_QUERY = (
-    'CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;'
-)
+UUID_FUNCTION_QUERY = 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;'
 
 DROP_IMAGE_TABLE_QUERY = f"DROP TABLE IF EXISTS {TEST_IMAGE_TABLE} CASCADE;"
 
@@ -141,7 +139,8 @@ def _set_up_popularity_percentile_function():
 def _set_up_popularity_metrics(metrics_dict):
     conn_id = POSTGRES_CONN_ID
     sql.create_media_popularity_metrics(
-        conn_id, popularity_metrics_table=TEST_METRICS,
+        conn_id,
+        popularity_metrics_table=TEST_METRICS,
     )
     sql.update_media_popularity_metrics(
         conn_id,
@@ -284,9 +283,7 @@ def test_constants_view_adds_values_and_constants(postgres_with_image_table):
         "my_provider": {"metric": "views", "percentile": 0.5},
         "diff_provider": {"metric": "comments", "percentile": 0.8},
     }
-    _set_up_popularity_constants(
-        postgres_with_image_table, data_query, metrics
-    )
+    _set_up_popularity_constants(postgres_with_image_table, data_query, metrics)
 
     check_query = f"SELECT * FROM {TEST_CONSTANTS};"
     postgres_with_image_table.cursor.execute(check_query)
@@ -296,7 +293,7 @@ def test_constants_view_adds_values_and_constants(postgres_with_image_table):
     ]
     sorted_rows = sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
     for (expect_row, sorted_row) in zip(expect_rows, sorted_rows):
-        assert(expect_row == pytest.approx(sorted_row))
+        assert expect_row == pytest.approx(sorted_row)
 
 
 def test_constants_view_handles_zeros_and_missing(postgres_with_image_table):
@@ -339,9 +336,7 @@ def test_constants_view_handles_zeros_and_missing(postgres_with_image_table):
         "my_provider": {"metric": "views", "percentile": 0.8},
         "diff_provider": {"metric": "comments", "percentile": 0.8},
     }
-    _set_up_popularity_constants(
-        postgres_with_image_table, data_query, metrics
-    )
+    _set_up_popularity_constants(postgres_with_image_table, data_query, metrics)
 
     check_query = f"SELECT * FROM {TEST_CONSTANTS};"
     postgres_with_image_table.cursor.execute(check_query)
@@ -351,12 +346,10 @@ def test_constants_view_handles_zeros_and_missing(postgres_with_image_table):
     ]
     sorted_rows = sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
     for (expect_row, sorted_row) in zip(expect_rows, sorted_rows):
-        assert(expect_row == pytest.approx(sorted_row))
+        assert expect_row == pytest.approx(sorted_row)
 
 
-def test_standardized_popularity_function_calculates(
-        postgres_with_image_table
-):
+def test_standardized_popularity_function_calculates(postgres_with_image_table):
     image_table = TEST_IMAGE_TABLE
     data_query = dedent(
         f"""
@@ -385,11 +378,7 @@ def test_standardized_popularity_function_calculates(
         "diff_provider": {"metric": "comments", "percentile": 0.5},
         "other_provider": {"metric": "likes", "percentile": 0.5},
     }
-    _set_up_std_popularity_func(
-        postgres_with_image_table,
-        data_query,
-        metrics
-    )
+    _set_up_std_popularity_func(postgres_with_image_table, data_query, metrics)
     check_query = f"SELECT * FROM {TEST_CONSTANTS};"
     postgres_with_image_table.cursor.execute(check_query)
     print(list(postgres_with_image_table.cursor))

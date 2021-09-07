@@ -3,19 +3,19 @@ This file provides the pieces to perform an after-the-fact processing
 of all data in the image table of the upstream DB through the ImageStore
 class.
 """
-from collections import namedtuple
 import logging
 import os
+import time
+from collections import namedtuple
 from pathlib import Path
 from textwrap import dedent
-import time
 
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-
 from common.storage import image
 from util import tsv_cleaner
 from util.loader import column_names as col
 from util.loader.sql import IMAGE_TABLE_NAME
+
 
 logger = logging.getLogger(__name__)
 logging.getLogger(image.__name__).setLevel(logging.WARNING)
@@ -134,20 +134,18 @@ def clean_rows(postgres_conn_id, prefix):
 
 
 def _wait_for_space(
-        min_polling_frequency=5,
-        max_polling_frequency=120,
-        delay_step=5,
-        max_dir_size=MAX_DIR_SIZE,
-        output_path=OUTPUT_PATH,
+    min_polling_frequency=5,
+    max_polling_frequency=120,
+    delay_step=5,
+    max_dir_size=MAX_DIR_SIZE,
+    output_path=OUTPUT_PATH,
 ):
     delay = max_polling_frequency
     check_dir = Path(output_path)
     total_wait_time = 0
     logger.info(f"Waiting for space in {output_path}")
     while True:
-        du = sum(
-            f.stat().st_size for f in check_dir.glob('**/*') if f.is_file()
-        )
+        du = sum(f.stat().st_size for f in check_dir.glob("**/*") if f.is_file())
         if du < max_dir_size:
             break
         else:
@@ -173,8 +171,8 @@ def _select_records(postgres_conn_id, prefix, image_table=IMAGE_TABLE_NAME):
     postgres = PostgresHook(postgres_conn_id=postgres_conn_id)
     min_base_uuid = "00000000-0000-0000-0000-000000000000"
     max_base_uuid = "ffffffff-ffff-ffff-ffff-ffffffffffff"
-    min_uuid = prefix + min_base_uuid[len(prefix):]
-    max_uuid = prefix + max_base_uuid[len(prefix):]
+    min_uuid = prefix + min_base_uuid[len(prefix) :]
+    max_uuid = prefix + max_base_uuid[len(prefix) :]
     select_query = dedent(
         f"""
         SELECT

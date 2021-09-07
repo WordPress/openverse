@@ -6,6 +6,7 @@ from unittest.mock import patch
 import stocksnap
 from common.licenses.licenses import get_license_info
 
+
 RESOURCES = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), "tests/resources/stocksnap"
 )

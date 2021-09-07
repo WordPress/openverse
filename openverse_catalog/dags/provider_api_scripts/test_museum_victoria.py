@@ -1,19 +1,18 @@
-import os
 import json
 import logging
-import requests
+import os
 from unittest.mock import MagicMock, patch
 
 import museum_victoria as mv
+import requests
+
 
 RESOURCES = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)),
-    'tests/resources/museumvictoria'
+    os.path.abspath(os.path.dirname(__file__)), "tests/resources/museumvictoria"
 )
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.DEBUG
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
 )
 
 
@@ -29,23 +28,20 @@ def test_get_query_param_default():
         "has_image": "yes",
         "perpage": 100,
         "imagelicence": "cc by",
-        "page": 0
+        "page": 0,
     }
 
     assert actual_param == expected_param
 
 
 def test_get_query_param_offset():
-    actual_param = mv._get_query_params(
-        license_type="public domain",
-        page=10
-    )
+    actual_param = mv._get_query_params(license_type="public domain", page=10)
 
     expected_param = {
         "has_image": "yes",
         "perpage": 100,
         "imagelicence": "public domain",
-        "page": 10
+        "page": 10,
     }
 
     assert actual_param == expected_param
@@ -56,18 +52,15 @@ def test_get_batch_objects_success():
         "has_image": "yes",
         "perpage": 100,
         "imagelicence": "cc+by",
-        "page": 0
+        "page": 0,
     }
 
-    response_success = _get_resource_json('response_success.json')
+    response_success = _get_resource_json("response_success.json")
     r = requests.Response()
     r.status_code = 200
     r.json = MagicMock(return_value=response_success)
 
-    with patch.object(
-            mv.delay_request,
-            'get',
-            return_value=r) as mock_call:
+    with patch.object(mv.delay_request, "get", return_value=r) as mock_call:
         actual_response = mv._get_batch_objects(params=query_param)
 
     expected_response = response_success
@@ -81,13 +74,12 @@ def test_get_batch_objects_empty():
         "has_image": "yes",
         "perpage": 1,
         "imagelicence": "cc by",
-        "page": 1000
+        "page": 1000,
     }
     response_empty = json.loads("[]")
     with patch.object(
-            mv.delay_request,
-            'get',
-            return_value=response_empty) as mock_call:
+        mv.delay_request, "get", return_value=response_empty
+    ) as mock_call:
         actual_response = mv._get_batch_objects(params=query_param)
 
     assert mock_call.call_count == 3
@@ -95,20 +87,12 @@ def test_get_batch_objects_empty():
 
 
 def test_get_batch_objects_error():
-    query_param = {
-        "has_image": "yes",
-        "perpage": 1,
-        "imagelicence": "cc by",
-        "page": 0
-    }
+    query_param = {"has_image": "yes", "perpage": 1, "imagelicence": "cc by", "page": 0}
 
     r = requests.Response()
     r.status_code = 404
 
-    with patch.object(
-            mv.delay_request,
-            'get',
-            return_value=r) as mock_call:
+    with patch.object(mv.delay_request, "get", return_value=r) as mock_call:
         actual_response = mv._get_batch_objects(query_param)
 
     assert actual_response is None
@@ -134,14 +118,12 @@ def test_get_media_info_failure():
 def test_get_image_data_large():
     image_data = _get_resource_json("large_image_data.json")
 
-    actual_image_url, actual_height,\
-        actual_width = mv._get_image_data(
-            image_data
-        )
+    actual_image_url, actual_height, actual_width = mv._get_image_data(image_data)
 
     assert actual_image_url == (
         "https://collections.museumsvictoria.com.au/content/media/45/"
-        "329745-large.jpg")
+        "329745-large.jpg"
+    )
     assert actual_height == 2581
     assert actual_width == 2785
 
@@ -149,14 +131,12 @@ def test_get_image_data_large():
 def test_get_image_data_medium():
     image_data = _get_resource_json("medium_image_data.json")
 
-    actual_image_url, actual_height,\
-        actual_width = mv._get_image_data(
-            image_data
-        )
+    actual_image_url, actual_height, actual_width = mv._get_image_data(image_data)
 
     assert actual_image_url == (
         "https://collections.museumsvictoria.com.au/content/media/45/"
-        "329745-medium.jpg")
+        "329745-medium.jpg"
+    )
     assert actual_height == 1390
     assert actual_width == 1500
 
@@ -164,14 +144,12 @@ def test_get_image_data_medium():
 def test_get_image_data_small():
     image_data = _get_resource_json("small_image_data.json")
 
-    actual_image_url, actual_height,\
-        actual_width = mv._get_image_data(
-            image_data
-        )
+    actual_image_url, actual_height, actual_width = mv._get_image_data(image_data)
 
     assert actual_image_url == (
         "https://collections.museumsvictoria.com.au/content/media/45/"
-        "329745-small.jpg")
+        "329745-small.jpg"
+    )
     assert actual_height == 500
     assert actual_width == 540
 
@@ -179,10 +157,7 @@ def test_get_image_data_small():
 def test_get_image_data_none():
     image_data = {}
 
-    actual_image_url, actual_height, \
-        actual_width = mv._get_image_data(
-            image_data
-        )
+    actual_image_url, actual_height, actual_width = mv._get_image_data(image_data)
 
     assert actual_image_url is None
     assert actual_height is None
@@ -222,8 +197,6 @@ def test_get_creator():
 def test_handle_batch_objects_success():
     batch_objects = _get_resource_json("batch_objects.json")
 
-    with patch.object(
-            mv.image_store,
-            'add_item') as mock_item:
+    with patch.object(mv.image_store, "add_item") as mock_item:
         mv._handle_batch_objects(batch_objects)
     assert mock_item.call_count == 1

@@ -10,21 +10,22 @@ The dates to ingest are calculated using the
 """
 # airflow DAG (necessary for Airflow to find this file)
 
-from datetime import datetime, timedelta
 import logging
+from datetime import datetime, timedelta
 
 from provider_api_scripts import wikimedia_commons
 from util.dag_factory import create_day_partitioned_ingestion_dag
 from util.helpers import get_reingestion_day_list_list
 
+
 logging.basicConfig(
-    format='%(asctime)s: [%(levelname)s - DAG Loader] %(message)s',
-    level=logging.DEBUG)
+    format="%(asctime)s: [%(levelname)s - DAG Loader] %(message)s", level=logging.DEBUG
+)
 
 
 logger = logging.getLogger(__name__)
 
-DAG_ID = 'wikimedia_ingestion_workflow'
+DAG_ID = "wikimedia_ingestion_workflow"
 START_DATE = datetime(1970, 1, 1)
 INGESTION_TASK_TIMEOUT = timedelta(minutes=90)
 
@@ -37,7 +38,7 @@ reingestion_days = get_reingestion_day_list_list(
     (1, DAILY_LIST_LENGTH),
     (30, ONE_MONTH_LIST_LENGTH),
     (90, THREE_MONTH_LIST_LENGTH),
-    (180, SIX_MONTH_LIST_LENGTH)
+    (180, SIX_MONTH_LIST_LENGTH),
 )
 
 globals()[DAG_ID] = create_day_partitioned_ingestion_dag(
@@ -46,5 +47,5 @@ globals()[DAG_ID] = create_day_partitioned_ingestion_dag(
     reingestion_days,
     start_date=START_DATE,
     concurrency=8,
-    ingestion_task_timeout=INGESTION_TASK_TIMEOUT
+    ingestion_task_timeout=INGESTION_TASK_TIMEOUT,
 )

@@ -1,89 +1,82 @@
-from collections import namedtuple
 import logging
-from typing import Optional, Dict, Union
+from collections import namedtuple
+from typing import Dict, Optional, Union
 
+from common.licenses.licenses import LicenseInfo
 from common.storage import columns
 from common.storage.media import MediaStore
-from common.licenses.licenses import LicenseInfo
+
 
 logger = logging.getLogger(__name__)
 
 AUDIO_TSV_COLUMNS = [
     # The order of this list maps to the order of the columns in the TSV.
     columns.StringColumn(
-        name='foreign_identifier', required=False, size=3000, truncate=False
+        name="foreign_identifier", required=False, size=3000, truncate=False
     ),
-    columns.URLColumn(
-        name='foreign_landing_url', required=True, size=1000
-    ),
+    columns.URLColumn(name="foreign_landing_url", required=True, size=1000),
     columns.URLColumn(
         # `url` in DB
-        name='audio_url', required=True, size=3000
+        name="audio_url",
+        required=True,
+        size=3000,
     ),
     columns.URLColumn(
         # `thumbnail` in DB
-        name='thumbnail_url', required=False, size=3000
+        name="thumbnail_url",
+        required=False,
+        size=3000,
     ),
-    columns.IntegerColumn(
-        name='filesize', required=False
-    ),
+    columns.IntegerColumn(name="filesize", required=False),
+    columns.StringColumn(name="license_", required=True, size=50, truncate=False),
     columns.StringColumn(
-        name='license_', required=True, size=50, truncate=False
+        name="license_version", required=True, size=25, truncate=False
     ),
-    columns.StringColumn(
-        name='license_version', required=True, size=25, truncate=False
-    ),
-    columns.StringColumn(
-        name='creator', required=False, size=2000, truncate=True
-    ),
-    columns.URLColumn(
-        name='creator_url', required=False, size=2000
-    ),
-    columns.StringColumn(
-        name='title', required=False, size=5000, truncate=True
-    ),
-    columns.JSONColumn(
-        name='meta_data', required=False
-    ),
-    columns.JSONColumn(
-        name='tags', required=False
-    ),
+    columns.StringColumn(name="creator", required=False, size=2000, truncate=True),
+    columns.URLColumn(name="creator_url", required=False, size=2000),
+    columns.StringColumn(name="title", required=False, size=5000, truncate=True),
+    columns.JSONColumn(name="meta_data", required=False),
+    columns.JSONColumn(name="tags", required=False),
     columns.BooleanColumn(
-        name='watermarked', required=False,
+        name="watermarked",
+        required=False,
     ),
-    columns.StringColumn(
-        name='provider', required=False, size=80, truncate=False
-    ),
-    columns.StringColumn(
-        name='source', required=False, size=80, truncate=False
-    ),
+    columns.StringColumn(name="provider", required=False, size=80, truncate=False),
+    columns.StringColumn(name="source", required=False, size=80, truncate=False),
     columns.StringColumn(
         name="ingestion_type", required=False, size=80, truncate=False
     ),
+    columns.IntegerColumn(name="duration", required=False),
     columns.IntegerColumn(
-        name='duration', required=False
+        name="bit_rate",
+        required=False,
     ),
     columns.IntegerColumn(
-        name='bit_rate', required=False,
-    ),
-    columns.IntegerColumn(
-        name='sample_rate', required=False,
+        name="sample_rate",
+        required=False,
     ),
     columns.StringColumn(
-        name='category', required=False, size=80, truncate=False,
+        name="category",
+        required=False,
+        size=80,
+        truncate=False,
     ),
     columns.ArrayColumn(
-        name='genres', required=False, base_column=columns.StringColumn(
-            name='genre', required=False, size=80, truncate=False
-        )
+        name="genres",
+        required=False,
+        base_column=columns.StringColumn(
+            name="genre", required=False, size=80, truncate=False
+        ),
     ),
     columns.JSONColumn(
         # set name, set thumbnail, position of audio in set, set url
-        name='audio_set', required=False,
+        name="audio_set",
+        required=False,
     ),
     columns.JSONColumn(
         # Alternative files: url, filesize, bit_rate, sample_rate
-        name='alt_files', required=False
+        name="alt_files",
+        required=False,
     ),
 ]
 
@@ -112,11 +105,8 @@ class AudioStore(MediaStore):
         media_type="audio",
         tsv_columns=None,
     ):
-        super().__init__(
-            provider, output_file, output_dir, buffer_length, media_type
-        )
-        self.columns = AUDIO_TSV_COLUMNS \
-            if tsv_columns is None else tsv_columns
+        super().__init__(provider, output_file, output_dir, buffer_length, media_type)
+        self.columns = AUDIO_TSV_COLUMNS if tsv_columns is None else tsv_columns
 
     def add_item(
         self,
@@ -210,33 +200,33 @@ class AudioStore(MediaStore):
         """
 
         audio_set_data = {
-            'audio_set': audio_set,
-            'set_url': set_url,
-            'set_position': set_position,
-            'set_thumbnail': set_thumbnail
+            "audio_set": audio_set,
+            "set_url": set_url,
+            "set_position": set_position,
+            "set_thumbnail": set_thumbnail,
         }
 
         audio_data = {
-            'foreign_landing_url': foreign_landing_url,
-            'audio_url': audio_url,
-            'license_info': license_info,
-            'thumbnail_url': thumbnail_url,
-            'foreign_identifier': foreign_identifier,
-            'creator': creator,
-            'creator_url': creator_url,
-            'title': title,
-            'meta_data': meta_data,
-            'raw_tags': raw_tags,
-            'watermarked': watermarked,
-            'duration': duration,
-            'bit_rate': bit_rate,
-            'sample_rate': sample_rate,
-            'category': category,
-            'genres': genres,
-            'audio_set': audio_set_data,
-            'alt_files': alt_files,
-            'source': source,
-            'ingestion_type': ingestion_type,
+            "foreign_landing_url": foreign_landing_url,
+            "audio_url": audio_url,
+            "license_info": license_info,
+            "thumbnail_url": thumbnail_url,
+            "foreign_identifier": foreign_identifier,
+            "creator": creator,
+            "creator_url": creator_url,
+            "title": title,
+            "meta_data": meta_data,
+            "raw_tags": raw_tags,
+            "watermarked": watermarked,
+            "duration": duration,
+            "bit_rate": bit_rate,
+            "sample_rate": sample_rate,
+            "category": category,
+            "genres": genres,
+            "audio_set": audio_set_data,
+            "alt_files": alt_files,
+            "source": source,
+            "ingestion_type": ingestion_type,
         }
 
         audio = self._get_audio(**audio_data)

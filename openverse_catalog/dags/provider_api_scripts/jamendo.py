@@ -15,8 +15,8 @@ Notes:                  https://api.jamendo.com/v3.0/tracks/
                         sample rate: 44.1 or 48 kHz
                         channels: 1/2
 """
-import os
 import logging
+import os
 from functools import lru_cache
 
 from common.licenses.licenses import get_license_info
@@ -27,8 +27,7 @@ from util.loader import provider_details as prov
 
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
@@ -36,10 +35,10 @@ LIMIT = 200  # number of items per page in API response
 DELAY = 1  # in seconds
 RETRIES = 3
 
-HOST = 'jamendo.com'
-ENDPOINT = f'https://api.{HOST}/v3.0/tracks'
+HOST = "jamendo.com"
+ENDPOINT = f"https://api.{HOST}/v3.0/tracks"
 PROVIDER = prov.JAMENDO_DEFAULT_PROVIDER
-APP_KEY = os.getenv('JAMENDO_APP_KEY', 'not_set')
+APP_KEY = os.getenv("JAMENDO_APP_KEY", "not_set")
 
 HEADERS = {
     "Accept": "application/json",
@@ -47,12 +46,12 @@ HEADERS = {
 DEFAULT_QUERY_PARAMS = {
     # jsonpretty can have invalid characters in json:
     # \u0009 tab breaks the json
-    'format': 'json',
-    'client_id': APP_KEY,
-    'include': 'musicinfo licenses stats lyrics',
-    'imagesize': 200,
-    'limit': LIMIT,
-    'audioformat': 'mp32',
+    "format": "json",
+    "client_id": APP_KEY,
+    "include": "musicinfo licenses stats lyrics",
+    "imagesize": 200,
+    "limit": LIMIT,
+    "audioformat": "mp32",
 }
 
 delayed_requester = DelayedRequester(DELAY)
@@ -70,17 +69,17 @@ def main():
     audio_count = _get_items()
     audio_store.commit()
     logger.info(f"Total audio pulled: {audio_count}")
-    logger.info('Terminated!')
+    logger.info("Terminated!")
 
 
 def _get_query_params(
-        offset,
-        default_query_params=None,
+    offset,
+    default_query_params=None,
 ):
     if default_query_params is None:
         default_query_params = DEFAULT_QUERY_PARAMS
     query_params = default_query_params.copy()
-    query_params['offset'] = offset
+    query_params["offset"] = offset
     return query_params
 
 
@@ -90,9 +89,7 @@ def _get_items():
     offset = 0
     while should_continue:
         query_params = _get_query_params(offset=offset)
-        batch_data = _get_batch_json(
-            query_params=query_params
-        )
+        batch_data = _get_batch_json(query_params=query_params)
         if isinstance(batch_data, list) and len(batch_data) > 0:
             item_count = _process_item_batch(batch_data)
             offset += LIMIT
@@ -102,18 +99,12 @@ def _get_items():
 
 
 def _get_batch_json(
-        endpoint=ENDPOINT,
-        headers=None,
-        retries=RETRIES,
-        query_params=None
+    endpoint=ENDPOINT, headers=None, retries=RETRIES, query_params=None
 ):
     if headers is None:
         headers = HEADERS
     response_json = delayed_requester.get_response_json(
-        endpoint,
-        retries,
-        query_params,
-        headers=headers
+        endpoint, retries, query_params, headers=headers
     )
     if response_json is None:
         return None
@@ -149,34 +140,34 @@ def _extract_audio_data(media_data):
     metadata = _get_metadata(media_data)
     tags = _get_tags(media_data)
     # Jamendo has only music
-    category = 'music'
+    category = "music"
     genres = _get_genres(media_data)
     audio_set, position, url, set_thumbnail = _get_audio_set_info(media_data)
     return {
-        'title': title,
-        'creator': creator,
-        'creator_url': creator_url,
-        'foreign_identifier': foreign_identifier,
-        'foreign_landing_url': foreign_landing_url,
-        'audio_url': audio_url,
-        'duration': duration,
-        'thumbnail_url': thumbnail,
-        'license_info': item_license,
-        'meta_data': metadata,
-        'raw_tags': tags,
-        'category': category,
-        'genres': genres,
-        'audio_set': audio_set,
-        'set_position': position,
-        'set_url': url,
-        'set_thumbnail': set_thumbnail,
+        "title": title,
+        "creator": creator,
+        "creator_url": creator_url,
+        "foreign_identifier": foreign_identifier,
+        "foreign_landing_url": foreign_landing_url,
+        "audio_url": audio_url,
+        "duration": duration,
+        "thumbnail_url": thumbnail,
+        "license_info": item_license,
+        "meta_data": metadata,
+        "raw_tags": tags,
+        "category": category,
+        "genres": genres,
+        "audio_set": audio_set,
+        "set_position": position,
+        "set_url": url,
+        "set_thumbnail": set_thumbnail,
     }
 
 
 def _get_foreign_identifier(media_data):
     try:
-        return media_data['id']
-    except(TypeError, IndexError, KeyError):
+        return media_data["id"]
+    except (TypeError, IndexError, KeyError):
         return None
 
 
@@ -189,15 +180,12 @@ def _get_audio_info(media_data):
     - download_url
     - duration (in milliseconds)
     """
-    audio_url = media_data.get('audio')
+    audio_url = media_data.get("audio")
     download_url = None
-    if (
-            media_data.get('audiodownload_allowed')
-            and media_data.get('audiodownload')
-    ):
-        audio_url = media_data.get('audiodownload')
-        download_url = media_data.get('audiodownload')
-    duration = media_data.get('duration')
+    if media_data.get("audiodownload_allowed") and media_data.get("audiodownload"):
+        audio_url = media_data.get("audiodownload")
+        download_url = media_data.get("audiodownload")
+    duration = media_data.get("duration")
     if duration:
         duration = int(duration) * 1000
     return audio_url, duration, download_url
@@ -205,29 +193,28 @@ def _get_audio_info(media_data):
 
 def _get_audio_set_info(media_data):
     url = None
-    base_url = 'https://www.jamendo.com/album/'
-    audio_set = media_data.get('album_name')
-    position = media_data.get('position')
-    thumbnail = media_data.get('album_image')
-    set_id = media_data.get('album_id')
+    base_url = "https://www.jamendo.com/album/"
+    audio_set = media_data.get("album_name")
+    position = media_data.get("position")
+    thumbnail = media_data.get("album_image")
+    set_id = media_data.get("album_id")
     if set_id and audio_set:
-        set_slug = audio_set.lower()\
-            .replace(' ', '-')
-        url = _cleanse_url(f'{base_url}{set_id}/{set_slug}')
+        set_slug = audio_set.lower().replace(" ", "-")
+        url = _cleanse_url(f"{base_url}{set_id}/{set_slug}")
     return audio_set, position, url, thumbnail
 
 
 def _get_thumbnail_url(media_data):
-    return media_data.get('image')
+    return media_data.get("image")
 
 
 def _get_creator_data(item):
-    base_url = 'https://www.jamendo.com/artist/'
-    creator_name = item.get('artist_name')
+    base_url = "https://www.jamendo.com/artist/"
+    creator_name = item.get("artist_name")
     if creator_name is None:
         return None, None
-    creator_id = item.get('artist_id')
-    creator_idstr = item.get('artist_idstr')
+    creator_id = item.get("artist_id")
+    creator_idstr = item.get("artist_idstr")
     if creator_id is not None and creator_idstr is not None:
         creator_url = f"{base_url}{creator_id}/{creator_idstr}"
     else:
@@ -236,23 +223,23 @@ def _get_creator_data(item):
 
 
 def _get_title(item):
-    return item.get('name')
+    return item.get("name")
 
 
 def _get_metadata(item):
     metadata = {}
-    lyrics = item.get('lyrics')
+    lyrics = item.get("lyrics")
     if lyrics:
-        metadata['lyrics'] = lyrics
-    downloads_count = item.get('stats', {}).get('rate_download_total', 0)
-    listens_count = item.get('stats', {}).get('rate_listened_total', 0)
-    playlists_count = item.get('stats', {}).get('rate_playlisted_total', 0)
-    release_date = item.get('releasedate')
+        metadata["lyrics"] = lyrics
+    downloads_count = item.get("stats", {}).get("rate_download_total", 0)
+    listens_count = item.get("stats", {}).get("rate_listened_total", 0)
+    playlists_count = item.get("stats", {}).get("rate_playlisted_total", 0)
+    release_date = item.get("releasedate")
     if release_date is not None:
-        metadata['release_date'] = release_date
-    metadata['downloads'] = downloads_count
-    metadata['listens'] = listens_count
-    metadata['playlists'] = playlists_count
+        metadata["release_date"] = release_date
+    metadata["downloads"] = downloads_count
+    metadata["listens"] = listens_count
+    metadata["playlists"] = playlists_count
     return metadata
 
 
@@ -261,32 +248,32 @@ def _get_tags(item):
     # genre
     # instruments
     tags = []
-    musicinfo = item.get('musicinfo')
+    musicinfo = item.get("musicinfo")
     if musicinfo:
-        music_type = musicinfo.get('vocalinstrumental')
+        music_type = musicinfo.get("vocalinstrumental")
         if music_type:
             tags.append(music_type)
-        music_gender = musicinfo.get('gender')
+        music_gender = musicinfo.get("gender")
         if music_gender:
             tags.append(music_gender)
-        music_speed = musicinfo.get('speed')
+        music_speed = musicinfo.get("speed")
         if music_speed:
             tags.append(f"speed_{music_speed}")
-        for tag_name in ['instruments', 'vartags']:
-            tag_value = musicinfo.get('tags', {}).get(tag_name)
+        for tag_name in ["instruments", "vartags"]:
+            tag_value = musicinfo.get("tags", {}).get(tag_name)
             if tag_value:
-                tag_value = [_ for _ in tag_value if _ != 'undefined']
+                tag_value = [_ for _ in tag_value if _ != "undefined"]
                 tags.extend(tag_value)
     return tags
 
 
 def _get_genres(item):
-    genres = item.get('musicinfo', {}).get('tags', {}).get('genres', None)
+    genres = item.get("musicinfo", {}).get("tags", {}).get("genres", None)
     return genres
 
 
 def _get_license(item):
-    item_license_url = item.get('license_ccurl')
+    item_license_url = item.get("license_ccurl")
     item_license = get_license_info(license_url=item_license_url)
     if item_license.license is None:
         return None
@@ -303,5 +290,5 @@ def _cleanse_url(url_string):
     return rewrite_redirected_url(url_string)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

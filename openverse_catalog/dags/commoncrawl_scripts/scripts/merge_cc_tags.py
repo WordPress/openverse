@@ -7,22 +7,23 @@ Execution : python merge_cc_tags.py -c {cc_table_name} -a {api_table}
     eg : python merge_cc_tags.py -c science_museum_2020_06_02 -a image
 
 """
-import os
-import logging
 import argparse
-import psycopg2
+import logging
+import os
 from textwrap import dedent
 
+import psycopg2
+
+
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
-COL_IMAGE = 'url'
-COL_TAGS = 'tags'
-COL_PROVIDER = 'provider'
-COL_METADATA = 'meta_data'
+COL_IMAGE = "url"
+COL_TAGS = "tags"
+COL_PROVIDER = "provider"
+COL_METADATA = "meta_data"
 CONNECTION_ID = os.getenv("AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING")
 
 
@@ -38,10 +39,7 @@ def _strip_url_schema(url):
            """
 
 
-def _modify_urls(
-    url=None,
-    provider_table=None
-):
+def _modify_urls(url=None, provider_table=None):
     if "museums_victoria" in provider_table:
         sub_query = f"""
                         SPLIT_PART({_strip_url_schema(url)}, '-', 1)
@@ -72,39 +70,34 @@ def _merge_jsonb_objects(column):
     This function returns SQL that merges the top-level keys of the
     a JSONB column, taking the newest available non-null value.
     """
-    return f'''
+    return f"""
             {column} = COALESCE(
                 jsonb_strip_nulls(a.{column})
                     || jsonb_strip_nulls(b.{column}),
                 a.{column},
                 b.{column}
             )
-            '''
+            """
 
 
 def _merge_jsonb_arrays(column):
-    return f'''{column} = COALESCE(
+    return f"""{column} = COALESCE(
         (
             SELECT jsonb_agg(DISTINCT x)
             FROM jsonb_array_elements(a.{column} || b.{column}) t(x)
         ),
         a.{column},
         b.{column}
-        )'''
+        )"""
 
 
-def _merge_tags(
-    cc_table=None,
-    api_table=None
-        ):
+def _merge_tags(cc_table=None, api_table=None):
     try:
         status = "success"
-        db = psycopg2.connect(
-            CONNECTION_ID
-        )
+        db = psycopg2.connect(CONNECTION_ID)
         cursor = db.cursor()
         query = dedent(
-                f"""
+            f"""
                 UPDATE {api_table} a
                     SET
                         {_merge_jsonb_arrays(COL_TAGS)},
@@ -118,9 +111,7 @@ def _merge_tags(
                             cc_table)}
                 """
         )
-        cursor.execute(
-            query
-        )
+        cursor.execute(query)
         db.commit()
     except Exception as e:
         logger.warning(f"Merging failed due to {e}")
@@ -130,10 +121,7 @@ def _merge_tags(
 
 def main(cc_table, api_table):
     logger.info(f"Merging Common crawl tags from {cc_table} to {api_table}")
-    status = _merge_tags(
-            cc_table=cc_table,
-            api_table=api_table
-            )
+    status = _merge_tags(cc_table=cc_table, api_table=api_table)
     logger.info(f"Status: {status}")
 
 
@@ -143,11 +131,7 @@ if __name__ == "__main__":
         "-c", "--CC_table", required=True, help="Select Common crawl table"
     )
     parse.add_argument(
-        "-a", "--API_table", required=True,
-        help="Select table with new API data"
+        "-a", "--API_table", required=True, help="Select table with new API data"
     )
     args = parse.parse_args()
-    main(
-        cc_table=args.CC_table,
-        api_table=args.API_table
-    )
+    main(cc_table=args.CC_table, api_table=args.API_table)

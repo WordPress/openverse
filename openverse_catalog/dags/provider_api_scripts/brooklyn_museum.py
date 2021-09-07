@@ -1,15 +1,15 @@
-import os
 import logging
-import lxml.html as html
+import os
 
+import lxml.html as html
 from common.licenses.licenses import get_license_info
 from common.requester import DelayedRequester
 from common.storage.image import ImageStore
 from util.loader import provider_details as prov
 
+
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s:  %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
@@ -23,15 +23,13 @@ API_KEY = os.getenv("BROOKLYN_MUSEUM_API_KEY", "nokeyprovided")
 delay_request = DelayedRequester(delay=DELAY)
 image_store = ImageStore(provider=PROVIDER)
 
-HEADERS = {
-    "api_key": API_KEY
-}
+HEADERS = {"api_key": API_KEY}
 
 DEFAULT_QUERY_PARAMS = {
     "has_images": 1,
     "rights_type_permissive": 1,
     "limit": LIMIT,
-    "offset": 0
+    "offset": 0,
 }
 
 
@@ -41,9 +39,7 @@ def main():
     condition = True
     while condition:
         query_param = _get_query_param(offset=offset)
-        objects_batch = _get_object_json(
-            query_param=query_param
-            )
+        objects_batch = _get_object_json(query_param=query_param)
         logger.debug(len(objects_batch))
         if type(objects_batch) == list and len(objects_batch) > 0:
             _process_objects_batch(objects_batch)
@@ -55,10 +51,7 @@ def main():
     logger.info(f"Total images received {image_store.total_items}")
 
 
-def _get_query_param(
-        offset=0,
-        default_query_param=None
-        ):
+def _get_query_param(offset=0, default_query_param=None):
     if default_query_param is None:
         default_query_param = DEFAULT_QUERY_PARAMS
     query_param = default_query_param.copy()
@@ -67,24 +60,16 @@ def _get_query_param(
 
 
 def _get_object_json(
-        headers=None,
-        endpoint=ENDPOINT,
-        retries=RETRIES,
-        query_param=None
-        ):
+    headers=None, endpoint=ENDPOINT, retries=RETRIES, query_param=None
+):
     if headers is None:
         headers = HEADERS.copy()
     data = None
     for tries in range(retries):
-        response = delay_request.get(
-                    endpoint,
-                    query_param,
-                    headers=headers
-                    )
+        response = delay_request.get(endpoint, query_param, headers=headers)
         try:
             response_json = response.json()
-            if (response_json and
-                    response_json.get("message", "").lower() == "success."):
+            if response_json and response_json.get("message", "").lower() == "success.":
                 data = response_json.get("data")
                 break
         except Exception as e:
@@ -99,15 +84,10 @@ def _process_objects_batch(objects_batch):
         logger.debug(license_url)
         if license_url is not None:
             id_ = object_.get("id", "")
-            complete_object_data = _get_object_json(
-                endpoint=ENDPOINT+str(id_)
-                )
+            complete_object_data = _get_object_json(endpoint=ENDPOINT + str(id_))
             if complete_object_data is None:
                 continue
-            _handle_object_data(
-                data=complete_object_data,
-                license_url=license_url
-                )
+            _handle_object_data(data=complete_object_data, license_url=license_url)
 
 
 def _handle_object_data(data, license_url):
@@ -115,9 +95,7 @@ def _handle_object_data(data, license_url):
     if image_info is not None:
         id_ = data.get("id", "")
         title = data.get("title", "")
-        foreign_url = (
-            f"https://www.brooklynmuseum.org/opencollection/objects/{id_}"
-        )
+        foreign_url = f"https://www.brooklynmuseum.org/opencollection/objects/{id_}"
         metadata = _get_metadata(data)
         creators = _get_creators(data)
 
@@ -129,17 +107,17 @@ def _handle_object_data(data, license_url):
             height, width = _get_image_sizes(image)
             license_info = get_license_info(license_url=license_url)
             image_store.add_item(
-                    foreign_landing_url=foreign_url,
-                    image_url=image_url,
-                    license_info=license_info,
-                    foreign_identifier=foreign_id,
-                    width=width,
-                    height=height,
-                    title=title,
-                    thumbnail_url=thumbnail_url,
-                    meta_data=metadata,
-                    creator=creators
-                )
+                foreign_landing_url=foreign_url,
+                image_url=image_url,
+                license_info=license_info,
+                foreign_identifier=foreign_id,
+                width=width,
+                height=height,
+                title=title,
+                thumbnail_url=thumbnail_url,
+                meta_data=metadata,
+                creator=creators,
+            )
 
 
 def _get_image_sizes(image):
@@ -183,9 +161,7 @@ def _get_creators(data):
     artists_info = data.get("artists")
     if type(artists_info) == list:
         creators_list = (
-            artists.get("name")
-            for artists in artists_info
-            if artists.get("rank") == 1
+            artists.get("name") for artists in artists_info if artists.get("rank") == 1
         )
         creator = next(creators_list, None)
     else:
