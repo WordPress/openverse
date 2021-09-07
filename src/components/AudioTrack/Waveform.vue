@@ -14,8 +14,10 @@
     @mousemove="handleMouseMove"
     @mouseup="handleMouseUp"
     @mouseleave="handleMouseLeave"
-    @keydown.arrow-left="handleArrows"
-    @keydown.arrow-right="handleArrows"
+    @keydown.arrow-left.prevent="handleArrowKeys"
+    @keydown.arrow-right.prevent="handleArrowKeys"
+    @keydown.home.prevent="handlePosKeys(0)"
+    @keydown.end.prevent="handlePosKeys(1)"
   >
     <svg
       class="w-full h-full"
@@ -348,13 +350,24 @@ export default {
 
     /* Keyboard */
 
-    const handleArrows = (event) => {
+    const handlePosKeys = (frac) => {
       clearSeekProgress()
-      const { key, shiftKey } = event
-      const magnitude = shiftKey ? modSeekDeltaFrac.value : seekDeltaFrac.value
-      const direction = key.includes('Left') ? -1 : 1
-      const delta = magnitude * direction
-      emit('seeked', currentFrac.value + delta)
+      emit('seeked', frac)
+    }
+    const handleArrowKeys = (event) => {
+      const { key, shiftKey, metaKey } = event
+      if (metaKey) {
+        // Always false on Windows
+        handlePosKeys(key.includes('Left') ? 0 : 1)
+      } else {
+        clearSeekProgress()
+        const direction = key.includes('Left') ? -1 : 1
+        const magnitude = shiftKey
+          ? modSeekDeltaFrac.value
+          : seekDeltaFrac.value
+        const delta = magnitude * direction
+        emit('seeked', currentFrac.value + delta)
+      }
     }
 
     return {
@@ -390,7 +403,8 @@ export default {
       handleMouseUp,
       handleMouseLeave,
 
-      handleArrows,
+      handlePosKeys,
+      handleArrowKeys,
     }
   },
   computed: {
