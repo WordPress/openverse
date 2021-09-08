@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-03T22:57:44+00:00\n"
+"POT-Creation-Date: 2021-09-08T22:21:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1455,13 +1455,13 @@ msgid "No results"
 msgstr ""
 
 # browse-page.audio-no-results
-#: src/components/AudioResultsList.vue:38
+#: src/components/AudioResultsList.vue:60
 msgctxt "browse-page.audio-no-results"
 msgid "No audio results"
 msgstr ""
 
 # browse-page.image-no-results
-#: src/components/SearchGridManualLoad.vue:111
+#: src/components/SearchGridManualLoad.vue:120
 msgctxt "browse-page.image-no-results"
 msgid "No image results"
 msgstr ""
@@ -1474,7 +1474,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.audio-result-count (Do not translate words between ###)
-#: src/components/AudioResultsList.vue:44
+#: src/components/AudioResultsList.vue:66
 msgctxt "browse-page.audio-result-count"
 msgid "###localeCount### audio result"
 msgid_plural "###localeCount### audio results"
@@ -1482,7 +1482,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.image-result-count (Do not translate words between ###)
-#: src/components/SearchGridManualLoad.vue:117
+#: src/components/SearchGridManualLoad.vue:126
 msgctxt "browse-page.image-result-count"
 msgid "###localeCount### image result"
 msgid_plural "###localeCount### image results"
@@ -1497,7 +1497,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.audio-result-count-more (Do not translate words between ###)
-#: src/components/AudioResultsList.vue:41
+#: src/components/AudioResultsList.vue:63
 msgctxt "browse-page.audio-result-count-more"
 msgid "Over ###localeCount### audio results"
 msgid_plural "Over ###localeCount### audio results"
@@ -1505,27 +1505,27 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.image-result-count-more (Do not translate words between ###)
-#: src/components/SearchGridManualLoad.vue:114
+#: src/components/SearchGridManualLoad.vue:123
 msgctxt "browse-page.image-result-count-more"
 msgid "Over ###localeCount### image results"
 msgid_plural "Over ###localeCount### image results"
 msgstr[0] ""
 msgstr[1] ""
 
-# browse-page.no-more
-#: src/components/SearchGridManualLoad.vue:40
+# browse-page.no-more (Do not translate words between ###)
+#: src/components/AudioResultsList.vue:23
 msgctxt "browse-page.no-more"
-msgid "No more images :("
+msgid "No more ###type### :("
 msgstr ""
 
 # browse-page.load
-#: src/components/SearchGridManualLoad.vue:41
+#: src/components/AudioResultsList.vue:27
 msgctxt "browse-page.load"
 msgid "Load more results"
 msgstr ""
 
 # browse-page.fetching-error
-#: src/components/SearchGridManualLoad.vue:51
+#: src/components/SearchGridManualLoad.vue:53
 msgctxt "browse-page.fetching-error"
 msgid "Error fetching images:"
 msgstr ""
@@ -2160,7 +2160,7 @@ msgid "Audio seek bar"
 msgstr ""
 
 # waveform.current-time (Do not translate words between ###)
-#: src/components/AudioTrack/Waveform.vue:377
+#: src/components/AudioTrack/Waveform.vue:420
 msgctxt "waveform.current-time"
 msgid "###time### seconds"
 msgstr ""

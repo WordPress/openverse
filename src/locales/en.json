@@ -402,7 +402,7 @@
     "all-result-count-more": "Over {localeCount} results",
     "audio-result-count-more": "Over {localeCount} audio results",
     "image-result-count-more": "Over {localeCount} image results",
-    "no-more": "No more images :(",
+    "no-more": "No more {type} :(",
     "load": "Load more results",
     "fetching-error": "Error fetching images:",
     "other-source": "Not finding what you need? Search other sources",

@@ -35,7 +35,11 @@
             @click="onLoadMoreImages"
             @keyup.enter="onLoadMoreImages"
           >
-            <span v-if="isFinished">{{ $t('browse-page.no-more') }}</span>
+            <span v-if="isFinished">{{
+              $t('browse-page.no-more', {
+                type: $t('browse-page.search-form.image'),
+              })
+            }}</span>
             <span v-else>{{ $t('browse-page.load') }}</span>
           </button>
           <LoadingIcon v-show="isFetchingImages" />
@@ -53,7 +57,9 @@
 </template>
 
 <script>
+import { FETCH_MEDIA } from '~/store-modules/action-types'
 import { SET_MEDIA } from '~/store-modules/mutation-types'
+import { IMAGE } from '~/constants/media'
 
 const DEFAULT_PAGE_SIZE = 20
 
@@ -85,10 +91,15 @@ export default {
     shouldContainImages: false,
     showMetaImageSearch: false,
   }),
+  async fetch() {
+    if (!this.$store.state.images.length) {
+      await this.$store.dispatch(FETCH_MEDIA, {
+        ...this.$store.state.query,
+        mediaType: IMAGE,
+      })
+    }
+  },
   computed: {
-    imagePage() {
-      return this.$store.state.imagePage
-    },
     isFetchingImagesError() {
       return this.$store.state.isFetchingError.images
     },
@@ -103,7 +114,7 @@ export default {
     },
     _imagesCount() {
       const count = this.useInfiniteScroll
-        ? this.$store.state.count.images
+        ? this.$store.state.imagesCount
         : this.imagesCount
       if (count === 0) {
         return this.$t('browse-page.image-no-results')
@@ -123,7 +134,7 @@ export default {
       return this.$store.state.errorMessage
     },
     isFinished() {
-      return this.currentPage >= this.$store.state.pageCount
+      return this.currentPage >= this.$store.state.pageCount.images
     },
   },
   watch: {
@@ -164,10 +175,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.button[disabled] {
-  opacity: 1;
-}
-
 .search-grid_layout-control h5 {
   padding-top: 1.36vh;
   font-size: 1rem;
@@ -240,6 +247,12 @@ label {
 
     &:hover {
       color: white;
+    }
+    &:disabled {
+      opacity: 1;
+      &:hover {
+        color: black;
+      }
     }
 
     @include mobile {

@@ -109,25 +109,26 @@ const handleSearchResponse = async (
 }
 
 /**
- * @type {{ audios: [], pageCount: number,
+ * @type {{ audios: import('./types').AudioDetail[],
+ * audiosCount: number, audioPage:number,
  * images: import('./types').ImageDetail[],
- * searchType: string, imagesCount: number, query: {},
- * errorMessage: null, count: {images: number, audios: number},
+ * imagePage: number, imagesCount: number, query: {},
+ * pageCount: {images: number, audios: number},
  * isFetching: {images: boolean, audios: boolean},
  * isFetchingError: {images: boolean, audios: boolean},
- * imagePage: number}}
+ * errorMessage: null, searchType: string, }}
  */
 const state = {
-  errorMessage: null,
   audios: [],
-  count: {
-    images: 0,
-    audios: 0,
-  },
-  imagesCount: 0,
-  pageCount: 0,
-  imagePage: 1,
+  audiosCount: 0,
+  audioPage: 1,
   images: [],
+  imagesCount: 0,
+  imagePage: 1,
+  pageCount: {
+    images: 1,
+    audios: 1,
+  },
   isFetching: {
     audios: false,
     images: false,
@@ -136,6 +137,7 @@ const state = {
     audios: true,
     images: true,
   },
+  errorMessage: null,
   searchType: ALL_MEDIA,
   query: {},
 }
@@ -305,8 +307,8 @@ const mutations = {
     }
     mediaToSet = mediaToSet.map((item) => decodeMediaData(item))
     _state[mediaPlural] = mediaToSet
-    _state.pageCount = pageCount
-    _state.count[mediaPlural] = mediaCount || 0
+    _state.pageCount[mediaPlural] = pageCount
+    _state[`${mediaPlural}Count`] = mediaCount || 0
     _state[`${mediaType}Page`] = page || 1
   },
   [SET_QUERY](_state, params) {

@@ -53,12 +53,6 @@ const BrowsePage = {
       url: this.$route.fullPath,
     })
     this.$store.commit(SET_FILTERS_FROM_URL, { url: this.$route.fullPath })
-    if (!this.$store.state.images.length) {
-      await this.$store.dispatch(FETCH_MEDIA, {
-        ...this.$store.state.query,
-        mediaType: IMAGE,
-      })
-    }
   },
   mounted() {
     const localFilterState = () =>
