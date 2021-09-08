@@ -62,7 +62,7 @@
 <script>
 import { SET_FILTER_IS_VISIBLE } from '~/store-modules/mutation-types'
 import { queryStringToSearchType } from '~/utils/search-query-transform'
-import { AUDIO, VIDEO } from '~/constants/media'
+import { VIDEO } from '~/constants/media'
 
 export default {
   name: 'SearchGridForm',
@@ -106,8 +106,7 @@ export default {
     },
     onInput(e) {
       this.searchTermsModel = e.target.value
-
-      if (this.activeTab === VIDEO || this.activeTab === AUDIO) {
+      if (this.activeTab === VIDEO) {
         this.$emit('onSearchFormSubmit', {
           query: { q: this.searchTermsModel },
         })
