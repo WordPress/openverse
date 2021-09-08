@@ -1,3 +1,5 @@
 .github
 dist
 test/unit/coverage
+.nuxt-storybook
+storybook-static
