@@ -17,7 +17,6 @@
         :aria-label="$t('dropdown-button.aria.arrow-label')"
         :aria-expanded="isOpen"
         @click="toggleOpen"
-        @keydown.enter="toggleOpen"
         @keydown.space.prevent="toggleOpen"
       >
         <svg class="h-2 w-4">
@@ -134,7 +133,7 @@ export default DropdownButton
 
 <style lang="css" scoped>
 .dropdown-button {
-  @apply flex items-center justify-center bg-pink text-white font-bold p-2 px-4 transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-pink;
+  @apply flex items-center justify-center bg-pink text-white font-bold p-2 px-4 transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-pink hover:bg-dark-pink;
 }
 
 .dropdown-button-active {
