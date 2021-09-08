@@ -117,6 +117,7 @@ module.exports = {
       normal: '1.5',
       snug: '1.3',
       tight: '1.2',
+      none: '1.0',
     },
     fontFamily: {
       system: [
