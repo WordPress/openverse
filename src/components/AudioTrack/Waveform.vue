@@ -210,13 +210,16 @@ export default {
     const updateWaveformWidth = () => {
       waveformWidth.value = el.value.clientWidth
     }
-    const observer = new ResizeObserver(updateWaveformWidth)
+    let observer
     onMounted(() => {
+      observer = new ResizeObserver(updateWaveformWidth)
       observer.observe(el.value)
       updateWaveformWidth()
     })
     onBeforeUnmount(() => {
-      observer.disconnect()
+      if (observer) {
+        observer.disconnect()
+      }
     })
 
     /* State */
