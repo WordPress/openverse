@@ -31,6 +31,7 @@
       :class="{ hidden: !isOpen }"
       role="menu"
       :aria-hidden="!isOpen"
+      @focusout="onFocusout"
     >
       <slot
         name="items"
@@ -76,6 +77,11 @@ const DropdownButton = {
         !this.$refs.dropdownContainer.contains(e.target)
       ) {
         this.isOpen = false
+      }
+    },
+    onFocusout(e) {
+      if (!this.$el.contains(e.relatedTarget)) {
+        this.toggleOpen()
       }
     },
     toggleOpen() {
