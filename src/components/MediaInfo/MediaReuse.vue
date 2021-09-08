@@ -35,10 +35,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.media-reuse {
-  margin-top: 4rem;
-  margin-bottom: 4rem;
-}
-</style>

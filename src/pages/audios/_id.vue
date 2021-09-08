@@ -1,9 +1,9 @@
 <template>
-  <div :aria-label="$t('photo-details.aria.main')">
+  <div :aria-label="$t('photo-details.aria.main')" class="audio-page">
     <ClientOnly>
       <AudioTrack :audio="audio" />
     </ClientOnly>
-    <section v-if="!$fetchState.pending" class="audio-page">
+    <template v-if="!$fetchState.pending">
       <MediaReuse
         data-testid="audio-attribution"
         :media="audio"
@@ -12,14 +12,18 @@
         :attribution-html="attributionHtml()"
         class="audio-reuse"
       />
-      <AudioInfo data-testid="audio-info" :audio="audio" class="audio-info" />
-      <RelatedAudios
+      <AudioDetailsTable
+        data-testid="audio-info"
+        :audio="audio"
+        class="audio-info"
+      />
+      <AudioDetailsRelated
         v-if="!$fetchState.pending"
         :related-audios="relatedAudios"
         class="audio-related"
       />
-    </section>
-    <p v-else>Not loaded yet</p>
+    </template>
+    <p v-if="$fetchState.pending">Not loaded yet</p>
   </div>
 </template>
 
@@ -79,6 +83,7 @@ const AudioDetailPage = {
     console.log(JSON.stringify(this.audio, null, 2))
   },
   async fetch() {
+    console.log('fetch', process.env.NODE_ENV, process.server)
     try {
       // Load the related images in parallel
       await this.$store.dispatch(FETCH_RELATED_MEDIA, {
@@ -94,6 +99,7 @@ const AudioDetailPage = {
     }
   },
   async asyncData({ env, store, route, error, app }) {
+    console.log('asyncData', process.env.NODE_ENV, process.server)
     // Clear related audios if present
     if (store.state.related.audios && store.state.related.audios.length > 0) {
       store.commit(SET_RELATED_MEDIA, {
@@ -105,6 +111,7 @@ const AudioDetailPage = {
       await store.dispatch(FETCH_AUDIO, { id: route.params.id })
       return {
         thumbnailURL: `${env.apiUrl}thumbs/${route.params.id}`,
+        id: route.params.id,
       }
     } catch (err) {
       console.log('oops, ', err)
@@ -133,7 +140,7 @@ const AudioDetailPage = {
       console.log('Image loaded', event)
     },
     getRelatedAudios() {
-      console.log('id', this.id, this.audio)
+      console.log('getting related audios id, audio', this.id, this.audio)
 
       if (this.audio && this.audio.id) {
         this[FETCH_RELATED_MEDIA]({ mediaType: AUDIO, id: this.audio.id })
@@ -149,9 +156,8 @@ export default AudioDetailPage
   --page-margin: 4rem;
   --section-gap: 1.5rem;
   margin-top: var(--section-gap, 1.5rem);
-  padding-left: var(--page-margin, 4rem);
-  padding-right: var(--page-margin, 4rem);
 }
+// These changes will need to be added in AudioTrack
 .info-section {
   padding-left: var(--page-margin, 4rem);
   padding-right: var(--page-margin, 4rem);
@@ -161,9 +167,11 @@ export default AudioDetailPage
   padding-left: 0;
   padding-right: 0;
 }
-.audio-reuse,
-.audio-related,
-.audio-info {
-  margin-bottom: 4rem;
+.audio-page > section,
+.audio-page > aside {
+  margin-bottom: var(--page-margin, 4rem);
+  margin-top: var(--section-gap, 1.5rem);
+  padding-left: var(--page-margin, 4rem);
+  padding-right: var(--page-margin, 4rem);
 }
 </style>

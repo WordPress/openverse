@@ -6,9 +6,13 @@
       <img :src="audio.thumbnail" alt="thumbnail" width="110" height="110" />
       <div class="audio-info__data">
         <p>{{ audio.description }}</p>
-        <AudioTags :tags="audio.tags" :show-header="false" class="mt-6 mb-6" />
+        <AudioDetailsTags
+          :tags="audio.tags"
+          :show-header="false"
+          class="mt-6 mb-6"
+        />
         <dl v-if="audio">
-          <div>
+          <div v-if="audio.audio_set">
             <dt>Album</dt>
             <dd>
               <a :href="audio.audio_set.url">{{ audio.audio_set.name }}</a>
@@ -22,7 +26,7 @@
               {{ providerName }}
             </dd>
           </div>
-          <div>
+          <div v-if="audio.genres">
             <dt>
               {{ $t('audio-details.genre-label') }}
             </dt>
