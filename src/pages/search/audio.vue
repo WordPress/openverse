@@ -1,6 +1,6 @@
 <template>
   <div id="tab-audio" role="tabpanel" aria-labelledby="audio">
-    <AudioResultsList />
+    <AudioResultsList :query="query" @onLoadMoreAudios="onLoadMoreAudios" />
     <MetaSearchForm type="audio" :query="query" :supported="true" />
   </div>
 </template>
@@ -18,6 +18,11 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch(UPDATE_SEARCH_TYPE, { searchType: AUDIO })
+  },
+  methods: {
+    onLoadMoreAudios(searchParams) {
+      this.$emit('onLoadMoreItems', searchParams)
+    },
   },
 }
 </script>

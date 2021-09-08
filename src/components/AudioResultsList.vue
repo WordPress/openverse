@@ -16,8 +16,10 @@
     <div class="load-more">
       <button
         v-show="!isFetchingAudios && includeAnalytics"
-        class="button btn-load-more"
+        class="button"
         :disabled="isFinished"
+        @click="onLoadMoreAudios"
+        @keyup.enter="onLoadMoreAudios"
       >
         <span v-if="isFinished">{{
           $t('browse-page.no-more', {
@@ -38,6 +40,7 @@ import { AUDIO } from '~/constants/media'
 export default {
   name: 'AudioResultsList',
   props: {
+    query: {},
     includeAnalytics: {
       default: true,
     },
@@ -78,6 +81,16 @@ export default {
     },
     isFinished() {
       return this.currentPage >= this.$store.state.pageCount.audios
+    },
+  },
+  methods: {
+    onLoadMoreAudios() {
+      const searchParams = {
+        page: this.currentPage + 1,
+        shouldPersistMedia: true,
+        ...this.query,
+      }
+      this.$emit('onLoadMoreAudios', searchParams)
     },
   },
 }
