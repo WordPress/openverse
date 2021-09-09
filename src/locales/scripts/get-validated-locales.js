@@ -7,6 +7,8 @@ const getValidatedLocales = () => {
       code: locale.slug,
       name: locale.english_name,
       iso: locale.lang_code_iso_639_1,
+      wpLocale: locale.wp_locale,
+      dir: locale.text_direction,
       file: `${locale.slug}.json`,
     }))
     .filter((i) => fs.existsSync(process.cwd() + `/src/locales/${i.file}`))
