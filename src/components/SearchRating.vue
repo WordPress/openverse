@@ -23,7 +23,7 @@
     </div>
     <div v-else-if="status == 'SENT'">
       <span class="thank-you">{{
-        $t('browse-page.search-rating.feedback')
+        $t('browse-page.search-rating.feedback-thanks')
       }}</span>
     </div>
   </div>

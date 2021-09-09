@@ -13,7 +13,7 @@
       <h4>{{ title }}</h4>
       <button
         v-if="!filtersExpandedByDefault"
-        :aria-label="'filters list for' + title + 'category'"
+        :aria-label="$t('filter-list.category-aria', { categoryName: title })"
         class="filter-visibility-toggle is-white py-2"
       >
         <i

@@ -7,7 +7,9 @@ export default function decodeMediaData(media, mediaType = IMAGE) {
     creator: decodeData(media.creator),
     title: decodeData(media.title)
       ? decodeData(media.title)
-      : `${mediaType[0].toUpperCase()}${mediaType.slice(1)}`,
+      : mediaType === IMAGE
+      ? 'Image'
+      : 'Audio',
     tags: media.tags
       ? media.tags.map((tag) => ({ ...tag, name: decodeData(tag.name) }))
       : [],

@@ -31,6 +31,7 @@ import {
 } from './usage-data-analytics-types'
 import { queryStringToSearchType } from '~/utils/search-query-transform'
 import { ALL_MEDIA, AUDIO, IMAGE } from '~/constants/media'
+
 // const getSearchPath = () =>
 //   window.location.pathname && window.location.pathname.includes('search')
 //     ? window.location.pathname
@@ -77,6 +78,45 @@ const fetchCollectionImages = (commit, params, imageService) => {
   return searchMethod(prepareSearchQueryParams(newParams))
 }
 
+/**
+ * With the API response: set loading to false, set the
+ * store `images` or `audios` property to the result,
+ * and handle possible errors
+ * @param {import('vuex').Commit} commit
+ * @param {import('vuex').Dispatch} dispatch
+ * @param {import('./types').MediaResult} data
+ * @param {Object} params
+ * @param {'image'|'audio'} params.mediaType
+ * @param {boolean} params.shouldPersistMedia
+ * @param {number} params.page
+ */
+const handleSearchResponse = async (
+  commit,
+  dispatch,
+  data,
+  { mediaType, shouldPersistMedia, page }
+) => {
+  commit(FETCH_END_MEDIA, { mediaType })
+  commit(SET_MEDIA, {
+    mediaType,
+    media: data.results,
+    mediaCount: data.result_count,
+    pageCount: data.page_count,
+    shouldPersistMedia: shouldPersistMedia,
+    page: page,
+  })
+  return dispatch(HANDLE_NO_MEDIA, mediaType)
+}
+
+/**
+ * @type {{image: {}, pageCount: number,
+ * images: import('./types').ImageDetail[],
+ * searchType: string, imagesCount: number, query: {},
+ * errorMessage: null, count: {images: number, audios: number},
+ * isFetching: {images: boolean, audios: boolean},
+ * isFetchingError: {images: boolean, audios: boolean},
+ * imagePage: number}}
+ */
 const state = {
   errorMessage: null,
   image: {},
@@ -101,13 +141,13 @@ const state = {
 }
 
 /**
- * @param AudioService
- * @param ImageService
+ * @param {Object} AudioService
+ * @param {Object} ImageService
  */
 const actions = (AudioService, ImageService) => ({
   [FETCH_MEDIA]({ commit, dispatch, state }, params) {
     // does not send event if user is paginating for more results
-    const { page, mediaType, q, shouldPersistMedia } = params
+    const { page, mediaType, q } = params
     if (!page) {
       dispatch(SEND_SEARCH_QUERY_EVENT, {
         query: q,
@@ -128,21 +168,10 @@ const actions = (AudioService, ImageService) => ({
     }
     return service
       .search(queryParams)
-      .then(({ data }) => {
-        commit(FETCH_END_MEDIA, { mediaType })
-        commit(SET_MEDIA, {
-          mediaType,
-          media: data.results,
-          mediaCount: data.result_count,
-          pageCount: data.page_count,
-          shouldPersistMedia: shouldPersistMedia,
-          page: page,
-        })
-        dispatch(HANDLE_NO_MEDIA, {
-          mediaCount: data.results.length,
-          mediaType,
-        })
-      })
+      .then(
+        async ({ data }) =>
+          await handleSearchResponse(commit, dispatch, data, params)
+      )
       .catch((error) => {
         dispatch(HANDLE_MEDIA_ERROR, { mediaType, error })
       })
@@ -198,21 +227,10 @@ const actions = (AudioService, ImageService) => ({
   [FETCH_COLLECTION_IMAGES]({ commit, dispatch }, params) {
     commit(FETCH_START_MEDIA, { mediaType: IMAGE })
     return fetchCollectionImages(commit, params, ImageService)
-      .then(({ data }) => {
-        commit(FETCH_END_MEDIA, { mediaType: IMAGE })
-        commit(SET_MEDIA, {
-          mediaType: IMAGE,
-          media: data.results,
-          pageCount: data.page_count,
-          mediaCount: data.result_count,
-          shouldPersistMedia: params.shouldPersistMedia,
-          page: params.page,
-        })
-        dispatch(HANDLE_NO_MEDIA, {
-          mediaCount: data.results.length,
-          mediaType: IMAGE,
-        })
-      })
+      .then(
+        async ({ data }) =>
+          await handleSearchResponse(commit, dispatch, data, params)
+      )
       .catch((error) => {
         dispatch(HANDLE_MEDIA_ERROR, { mediaType: IMAGE, error })
       })

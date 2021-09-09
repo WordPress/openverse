@@ -59,6 +59,12 @@ module.exports = {
       24: '6.00rem',
       30: '7.50rem',
     },
+    ringWidth: {
+      DEFAULT: '1.5px',
+    },
+    ringOffsetWidth: {
+      2: '2px',
+    },
     fontSize: {
       // Body
       sm: '0.80rem',

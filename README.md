@@ -18,6 +18,9 @@ Run the following commands in order to have the code up and running on your mach
 # installs dependencies
 npm install
 
+# sets up required i18n files
+npm run i18n:get-translations
+
 # Builds and serves assets with hot-reload
 npm run dev
 ```

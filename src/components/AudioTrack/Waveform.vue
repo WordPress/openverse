@@ -1,7 +1,7 @@
 <template>
   <div
     ref="el"
-    class="waveform relative bg-dark-charcoal-04 overflow-x-hidden"
+    class="waveform relative bg-dark-charcoal-04 overflow-hidden rounded-sm focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink"
     tabIndex="0"
     role="slider"
     :aria-label="$t('waveform.label')"
@@ -14,8 +14,10 @@
     @mousemove="handleMouseMove"
     @mouseup="handleMouseUp"
     @mouseleave="handleMouseLeave"
-    @keydown.arrow-left="handleArrows"
-    @keydown.arrow-right="handleArrows"
+    @keydown.arrow-left.prevent="handleArrowKeys"
+    @keydown.arrow-right.prevent="handleArrowKeys"
+    @keydown.home.prevent="handlePosKeys(0)"
+    @keydown.end.prevent="handlePosKeys(1)"
   >
     <svg
       class="w-full h-full"
@@ -37,16 +39,32 @@
         class="transform origin-bottom transition-transform duration-500"
         :class="[
           isReady ? 'scale-y-100' : 'scale-y-0',
-          spaceBefore(index) < seekBarWidth
-            ? 'fill-black'
-            : 'fill-dark-charcoal-20',
+          index <= seekIndex ? 'fill-black' : 'fill-dark-charcoal-20',
         ]"
         :x="spaceBefore(index)"
-        :y="spaceAbove(peak)"
+        :y="spaceAbove(index)"
         :width="barWidth"
         :height="peak"
       />
     </svg>
+
+    <!-- Keyboard focus -->
+    <div
+      class="focus-indicator hidden absolute z-20 top-0 flex flex-col items-center justify-between bg-black h-full"
+      :style="{ width: `${barWidth}px`, left: `${seekSpaceBefore}px` }"
+    >
+      <div
+        v-for="(classes, name) in {
+          top: ['-translate-y-1/2'],
+          bottom: ['translate-y-1/2'],
+        }"
+        :key="name"
+        class="rounded-full bg-black h-2 w-2 transform"
+        :class="classes"
+      >
+        &nbsp;
+      </div>
+    </div>
 
     <!-- Timestamps -->
     <template v-if="isReady">
@@ -176,6 +194,14 @@ export default {
       const xPos = getPosition(event)
       return xPos / waveformWidth.value
     }
+    /**
+     * Get the number of peaks that will fit within the given width.
+     * @param {number} width - the number of pixels inside which to count peaks
+     * @returns {number} the number of peaks that can be accommodated
+     */
+    const getPeaksInWidth = (width) => {
+      return Math.floor((width - barGap) / (barWidth + barGap))
+    }
 
     /* Element dimensions */
 
@@ -184,13 +210,16 @@ export default {
     const updateWaveformWidth = () => {
       waveformWidth.value = el.value.clientWidth
     }
-    const observer = new ResizeObserver(updateWaveformWidth)
+    let observer
     onMounted(() => {
+      observer = new ResizeObserver(updateWaveformWidth)
       observer.observe(el.value)
       updateWaveformWidth()
     })
     onBeforeUnmount(() => {
-      observer.disconnect()
+      if (observer) {
+        observer.disconnect()
+      }
     })
 
     /* State */
@@ -201,10 +230,7 @@ export default {
 
     const barWidth = 2
     const barGap = 2
-    const peakCount = computed(() => {
-      const count = (waveformWidth.value - barGap) / (barWidth + barGap)
-      return Math.floor(count)
-    })
+    const peakCount = computed(() => getPeaksInWidth(waveformWidth.value))
     const normalizedPeaks = computed(() => {
       const givenLength = props.peaks.length
       const required = peakCount.value
@@ -228,7 +254,7 @@ export default {
       () => `0 0 ${waveformWidth.value} ${viewBoxHeight}`
     )
     const spaceBefore = (index) => index * barWidth + (index + 1) * barGap
-    const spaceAbove = (peak) => viewBoxHeight - peak
+    const spaceAbove = (index) => viewBoxHeight - normalizedPeaks.value[index]
 
     /* Progress bar */
 
@@ -260,6 +286,8 @@ export default {
       const frac = seekFrac.value ?? currentFrac.value
       return waveformWidth.value * frac
     })
+    const seekIndex = computed(() => getPeaksInWidth(seekBarWidth.value))
+    const seekSpaceBefore = computed(() => spaceBefore(seekIndex.value))
 
     /* Seek timestamp */
 
@@ -325,13 +353,24 @@ export default {
 
     /* Keyboard */
 
-    const handleArrows = (event) => {
+    const handlePosKeys = (frac) => {
       clearSeekProgress()
-      const { key, shiftKey } = event
-      const magnitude = shiftKey ? modSeekDeltaFrac.value : seekDeltaFrac.value
-      const direction = key.includes('Left') ? -1 : 1
-      const delta = magnitude * direction
-      emit('seeked', currentFrac.value + delta)
+      emit('seeked', frac)
+    }
+    const handleArrowKeys = (event) => {
+      const { key, shiftKey, metaKey } = event
+      if (metaKey) {
+        // Always false on Windows
+        handlePosKeys(key.includes('Left') ? 0 : 1)
+      } else {
+        clearSeekProgress()
+        const direction = key.includes('Left') ? -1 : 1
+        const magnitude = shiftKey
+          ? modSeekDeltaFrac.value
+          : seekDeltaFrac.value
+        const delta = magnitude * direction
+        emit('seeked', currentFrac.value + delta)
+      }
     }
 
     return {
@@ -355,6 +394,9 @@ export default {
 
       seekFrac,
       seekBarWidth,
+      seekIndex,
+      seekSpaceBefore,
+
       seekTimestamp,
       seekTimestampEl,
       isSeekTimestampCutoff,
@@ -364,7 +406,8 @@ export default {
       handleMouseUp,
       handleMouseLeave,
 
-      handleArrows,
+      handlePosKeys,
+      handleArrowKeys,
     }
   },
   computed: {
@@ -396,5 +439,9 @@ export default {
 .bg-dark-charcoal-04-opaque {
   /* opaque equivalent of dark-charcoal-04 on top of white */
   background-color: rgb(247, 246, 247);
+}
+
+.waveform:focus-visible .focus-indicator {
+  display: flex;
 }
 </style>

@@ -99,10 +99,6 @@ export default {
   display: inline-block;
   padding: 1.5rem 1rem 0 1.5rem;
 }
-.scroll-y {
-  overflow-y: scroll;
-  height: calc(100vh - 84px);
-}
 .filter-buttons {
   padding: 1.5rem;
   text-align: center;

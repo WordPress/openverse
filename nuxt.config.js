@@ -1,4 +1,5 @@
 import pkg from './package.json'
+import locales from './src/locales/scripts/valid-locales.json'
 
 /**
  * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.
@@ -165,7 +166,15 @@ export default {
     '@nuxtjs/i18n',
   ],
   i18n: {
-    locales: [{ code: 'en', iso: 'en', name: 'English', file: 'en.json' }],
+    locales: [
+      {
+        code: 'en',
+        name: 'English',
+        iso: 'en',
+        file: 'en.json',
+      },
+      ...(locales ?? []),
+    ],
     lazy: true,
     langDir: 'locales',
     strategy: 'prefix_and_default',
@@ -175,7 +184,6 @@ export default {
       cookieKey: 'i18n_redirected',
       alwaysRedirect: true,
     },
-    // TODO: change this to the production URL
     baseUrl: 'http://localhost:8443',
     vueI18n: '~/plugins/vue-i18n.js',
   },

@@ -1,6 +1,8 @@
 {
   "*.{js,vue}": [
-    "eslint --fix",
+    "eslint --fix"
+  ],
+  ".{js,vue,json}": [
     "prettier --write"
   ],
   "*.mdx": [

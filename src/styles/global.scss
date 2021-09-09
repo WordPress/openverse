@@ -1,14 +1,5 @@
 @import './utilities/all';
 
-.full-height-sticky {
-  @include desktop {
-    z-index: 20;
-    height: 100vh;
-    position: sticky;
-    top: 0;
-  }
-}
-
 /**
 * Arrow popup styles
 * @todo: Move when this is made into a proper component
