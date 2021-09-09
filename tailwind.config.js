@@ -66,19 +66,58 @@ module.exports = {
       2: '2px',
     },
     fontSize: {
-      // Body
-      sm: '0.80rem',
-      base: '1.00rem',
+      // Deprecated
       lg: '1.12rem',
       lgr: '1.43rem',
 
       // Headings, where h[n] => [7-n]xl
-      '1xl': '1.12rem',
-      '2xl': '1.25rem',
-      '3xl': '1.43rem',
-      '4xl': '1.75rem',
-      '5xl': '2.25rem',
-      '6xl': '3.56rem',
+      '6xl': [
+        '2.2857142857rem', // 32px
+        '1.3', // 130%
+      ],
+      '5xl': [
+        '2.0000000000rem', // 28px
+        '1.3', // 130%
+      ],
+      '4xl': [
+        '1.7142857143rem', // 24px
+        '1.3', // 130%
+      ],
+      '3xl': [
+        '1.3571428571rem', // 19px
+        '1.3', // 130%
+      ],
+      '2xl': [
+        '1.1428571429rem', // 16px
+        '1.3', // 130%
+      ],
+
+      // Content
+      base: [
+        '1.0000000000rem', // 14px
+        '1.5', // 150%
+      ],
+      sm: [
+        // small, eg. label
+        '0.9285714286rem', // 13px
+        '1.3', // 130%
+      ],
+      sr: [
+        // smaller, eg. caption, category
+        '0.8571428571rem', // 12px
+        '1.3', // 130%
+      ],
+      xs: [
+        // extra small, eg. time
+        '0.7857142857rem', // 11px
+        '1.2', // 120%
+      ],
+    },
+    lineHeights: {
+      normal: '1.5',
+      snug: '1.3',
+      tight: '1.2',
+      none: '1.0',
     },
     fontFamily: {
       system: [
