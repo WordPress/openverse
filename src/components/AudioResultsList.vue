@@ -13,7 +13,7 @@
         :is-compact="true"
       />
     </div>
-    <div class="load-more">
+    <div v-if="!isFetchingAudiosError" class="load-more">
       <button
         v-show="!isFetchingAudios && includeAnalytics"
         class="button"
@@ -29,6 +29,16 @@
         <span v-else>{{ $t('browse-page.load') }}</span>
       </button>
       <LoadingIcon v-show="isFetchingAudios" />
+    </div>
+    <div v-if="isFetchingAudiosError" class="m-auto w-1/2 text-center pt-6">
+      <h5>
+        {{
+          $t('browse-page.fetching-error', {
+            type: $t('browse-page.search-form.audio'),
+          })
+        }}
+        {{ errorMessage }}
+      </h5>
     </div>
   </section>
 </template>
@@ -82,6 +92,9 @@ export default {
     isFinished() {
       return this.currentPage >= this.$store.state.pageCount.audios
     },
+    errorMessage() {
+      return this.$store.state.errorMessage
+    },
   },
   methods: {
     onLoadMoreAudios() {
@@ -131,7 +144,7 @@ export default {
 }
 
 .results-meta {
-  @apply px-6 py-2;
+  @apply px-6 pt-2;
 
   @include desktop {
     display: flex;

@@ -26,8 +26,21 @@
           :image="image"
         />
       </div>
+      <div
+        v-if="isFetchingImagesError"
+        class="search-grid_notification callout alert"
+      >
+        <h5>
+          {{
+            $t('browse-page.fetching-error', {
+              type: $t('browse-page.search-form.audio'),
+            })
+          }}
+          {{ _errorMessage }}
+        </h5>
+      </div>
       <div class="pb-6">
-        <div class="load-more">
+        <div v-if="!isFetchingImagesError" class="load-more">
           <button
             v-show="!isFetchingImages && includeAnalytics"
             class="button"
@@ -45,12 +58,6 @@
           <LoadingIcon v-show="isFetchingImages" />
         </div>
         <MetaSearchForm type="image" :query="query" :supported="true" />
-      </div>
-      <div
-        v-if="isFetchingImagesError"
-        class="search-grid_notification callout alert"
-      >
-        <h5>{{ $t('browse-page.fetching-error') }} {{ _errorMessage }}</h5>
       </div>
     </div>
   </section>
@@ -266,9 +273,7 @@ label {
 }
 
 .results-meta {
-  padding-top: 0.6rem;
-  padding-left: 1.3rem;
-  padding-right: 1.3rem;
+  @apply px-6 pt-2;
 
   @include desktop {
     display: flex;
