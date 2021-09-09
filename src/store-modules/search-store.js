@@ -126,8 +126,8 @@ const state = {
   imagesCount: 0,
   imagePage: 1,
   pageCount: {
-    images: 1,
-    audios: 1,
+    images: 0,
+    audios: 0,
   },
   isFetching: {
     audios: false,
@@ -294,9 +294,9 @@ const mutations = {
       mediaType,
       media,
       mediaCount,
+      page,
       pageCount,
       shouldPersistMedia,
-      page,
     } = params
     const mediaPlural = `${mediaType}s`
     let mediaToSet
@@ -307,9 +307,9 @@ const mutations = {
     }
     mediaToSet = mediaToSet.map((item) => decodeMediaData(item))
     _state[mediaPlural] = mediaToSet
-    _state.pageCount[mediaPlural] = pageCount
     _state[`${mediaPlural}Count`] = mediaCount || 0
     _state[`${mediaType}Page`] = page || 1
+    _state.pageCount[mediaPlural] = pageCount
   },
   [SET_QUERY](_state, params) {
     setQuery(_state, params)
