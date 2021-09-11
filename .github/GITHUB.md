@@ -29,6 +29,14 @@ whether they are marked as draft or ready.
 **PR:** opened, converted_to_draft, ready_for_review
 **Dispatch:** disabled
 
+### PR label check
+
+This workflow ensures that all PRs have one label from each of the groups 
+'aspect' and 'goal' applied on them. 
+
+**PR:** opened, edited, labeled, unlabeled, synchronize
+**Dispatch:** disabled
+
 ### Label sync
 
 This workflow ensures that all repos associated with the project have the
