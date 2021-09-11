@@ -1,0 +1,25 @@
+name: PR label check
+
+on:
+  pull_request:
+    types:
+    - opened
+    - edited
+    - labeled
+    - unlabeled
+    - synchronize
+
+jobs:
+  check_labels:
+    name: Check required labels
+    runs-on: ubuntu-latest
+    steps:
+    - name: Ensure aspect labels
+      uses: sugarshin/required-labels-action@v0.3.1
+      with:
+        required_oneof: '💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface'
+
+    - name: Ensure goal labels
+      uses: sugarshin/required-labels-action@v0.3.1
+      with:
+        required_oneof: '🌟 goal: addition,🛠 goal: fix,✨ goal: improvement,🧰 goal: internal improvement'
