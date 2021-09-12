@@ -100,7 +100,7 @@
     <!-- Message overlay -->
     <div
       v-else
-      class="absolute inset-x-0 inset-y-0 flex items-center justify-center loading font-bold text-sm"
+      class="absolute inset-x-0 inset-y-0 flex items-center justify-center loading font-bold text-xs"
     >
       {{ message }}
     </div>
@@ -425,7 +425,7 @@ export default {
 
 <style scoped lang="css">
 .timestamp {
-  @apply absolute top-1 font-bold text-sm px-1 pointer-events-none;
+  @apply absolute top-1 font-bold text-xs px-1 pointer-events-none;
 }
 
 .progress {
