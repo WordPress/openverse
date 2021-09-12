@@ -2,7 +2,7 @@
   <button
     type="button"
     class="flex items-center justify-center bg-dark-charcoal h-20 w-20 rounded-sm transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink"
-    @click="toggle"
+    @click="handleClick"
   >
     <span class="sr-only">{{ label }}</span>
     <svg
@@ -28,12 +28,17 @@ import pauseIcon from '~/assets/icons/pause.svg'
  */
 export default {
   name: 'PlayPause',
+  model: {
+    prop: 'status',
+    event: 'toggle',
+  },
   props: {
     /**
-     * whether the media associated with the button is currently playing
+     * the playing/paused status of the audio
      */
-    isPlaying: {
-      type: Boolean,
+    status: {
+      type: String,
+      validator: (val) => ['playing', 'paused'].includes(val),
     },
   },
   data: () => ({
@@ -43,13 +48,16 @@ export default {
     },
   }),
   computed: {
+    isPlaying() {
+      return this.status === 'playing'
+    },
     label() {
       return this.$t(this.isPlaying ? 'play-pause.pause' : 'play-pause.play')
     },
   },
   methods: {
-    toggle() {
-      this.$emit('toggle', !this.isPlaying)
+    handleClick() {
+      this.$emit('toggle', this.isPlaying ? 'paused' : 'playing')
     },
   },
 }
