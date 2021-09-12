@@ -17,6 +17,7 @@ import ReportContentStore from '~/store-modules/report-content-store'
 import RelatedMediaStore from '~/store-modules/related-media-store'
 import NotificationStore from '~/store-modules/notification-store'
 import NavStore from '~/store-modules/nav-store'
+import ActiveMediaStore from '~/store-modules/active-media-store'
 import { FETCH_MEDIA_PROVIDERS } from '~/store-modules/action-types'
 import GoogleAnalytics from '~/analytics/google-analytics'
 import { AUDIO, IMAGE } from '~/constants/media'
@@ -60,7 +61,8 @@ export const state = () =>
     ReportContentStore.state,
     RelatedMediaStore.state,
     NotificationStore.state,
-    NavStore.state
+    NavStore.state,
+    ActiveMediaStore.state
   )
 
 export const getters = Object.assign(FilterStore.getters)
@@ -74,5 +76,6 @@ export const mutations = Object.assign(
   ReportContentStore.mutations,
   RelatedMediaStore.mutations,
   NotificationStore.mutations,
-  NavStore.mutations
+  NavStore.mutations,
+  ActiveMediaStore.mutations
 )
