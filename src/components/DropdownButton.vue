@@ -62,25 +62,22 @@ const DropdownButton = {
   beforeDestroy() {
     document.removeEventListener('click', this.onClickout)
   },
-  beforeUnmount() {
-    document.removeEventListener('click', this.onClickout)
-  },
   methods: {
     getItems() {
       return Array.from(
         this.$refs.dropdownContainer.querySelectorAll('[role="menuitem"]')
       )
     },
-    onClickout(e) {
+    onClickout(event) {
       if (
-        e.target !== this.$refs.dropdownButton &&
-        !this.$refs.dropdownContainer.contains(e.target)
+        event.target !== this.$refs.dropdownButton &&
+        !this.$refs.dropdownContainer.contains(event.target)
       ) {
         this.isOpen = false
       }
     },
-    onFocusout(e) {
-      if (!this.$el.contains(e.relatedTarget)) {
+    onFocusout(event) {
+      if (!this.$el.contains(event.relatedTarget)) {
         this.toggleOpen()
       }
     },
