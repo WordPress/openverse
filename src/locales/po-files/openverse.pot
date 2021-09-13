@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-13T09:35:58+00:00\n"
+"POT-Creation-Date: 2021-09-13T11:36:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2213,4 +2213,44 @@ msgstr ""
 # play-pause.pause
 msgctxt "play-pause.pause"
 msgid "Pause"
+msgstr ""
+
+# filters.licenses.cc0
+msgctxt "filters.licenses.cc0"
+msgid "CC0"
+msgstr ""
+
+# filters.licenses.pdm
+msgctxt "filters.licenses.pdm"
+msgid "Public Domain Mark"
+msgstr ""
+
+# filters.licenses.by
+msgctxt "filters.licenses.by"
+msgid "BY"
+msgstr ""
+
+# filters.licenses.by-sa
+msgctxt "filters.licenses.by-sa"
+msgid "BY-SA"
+msgstr ""
+
+# filters.licenses.by-nc
+msgctxt "filters.licenses.by-nc"
+msgid "BY-NC"
+msgstr ""
+
+# filters.licenses.by-nd
+msgctxt "filters.licenses.by-nd"
+msgid "BY-ND"
+msgstr ""
+
+# filters.licenses.by-nc-sa
+msgctxt "filters.licenses.by-nc-sa"
+msgid "BY-NC-SA"
+msgstr ""
+
+# filters.licenses.by-nc-nd
+msgctxt "filters.licenses.by-nc-nd"
+msgid "BY-NC-ND"
 msgstr ""
