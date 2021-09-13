@@ -22,6 +22,21 @@ import wavWaveform from './wav-waveform.json'
       options: ['ogg', 'mp3', 'flac', 'wav'],
       control: 'select',
     },
+    layout: {
+      defaultValue: 'full',
+      options: ['full', 'box', 'row'],
+      control: 'select',
+    },
+    size: {
+      defaultValue: 'm',
+      options: ['s', 'm', 'l', 'xl'],
+      control: 'select',
+    },
+    aspect: {
+      defaultValue: 'regular',
+      options: ['regular', 'wide'],
+      control: 'select',
+    },
     audio: {
       control: false,
     },
