@@ -11,16 +11,11 @@
       :aspect="aspect"
     >
       <template #controller>
-        <AudioController
-          v-model="status"
-          waveform-classes="h-30"
-          :audio="audio"
-          @ready="handleReady"
-        />
+        <AudioController v-model="status" :audio="audio" @ready="handleReady" />
       </template>
 
       <template #play-pause>
-        <PlayPause v-model="status" class="h-16 w-16" :disabled="!isReady" />
+        <PlayPause v-model="status" :disabled="!isReady" />
       </template>
     </Component>
   </div>
@@ -28,7 +23,7 @@
 
 <script>
 import { computed, ref } from '@nuxtjs/composition-api'
-import PlayPause from '~/components/AudioTrack/PlayPause'
+import PlayPause from '~/components/AudioTrack/PlayPause.vue'
 import AudioController from '~/components/AudioTrack/AudioController.vue'
 import Full from '~/components/AudioTrack/layouts/Full.vue'
 

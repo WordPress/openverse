@@ -1,8 +1,6 @@
 <template>
   <div class="full-track w-full">
-    <div class="waveform h-30">
-      <slot name="controller" />
-    </div>
+    <slot name="controller" />
 
     <div class="flex flex-row space-between mx-16 my-6">
       <div class="left-content flex flex-row items-center gap-6">
@@ -28,3 +26,13 @@ export default {
   props: ['audio'],
 }
 </script>
+
+<style>
+.full-track .waveform {
+  @apply h-30 rounded-sm;
+}
+
+.full-track .play-pause {
+  @apply h-14 w-14 rounded-sm;
+}
+</style>
