@@ -77,11 +77,25 @@
     "file": "fr.json"
   },
   {
+    "code": "gl",
+    "name": "Galician",
+    "iso": "gl",
+    "wpLocale": "gl_ES",
+    "file": "gl.json"
+  },
+  {
     "code": "id",
     "name": "Indonesian",
     "iso": "id",
     "wpLocale": "id_ID",
     "file": "id.json"
+  },
+  {
+    "code": "it",
+    "name": "Italian",
+    "iso": "it",
+    "wpLocale": "it_IT",
+    "file": "it.json"
   },
   {
     "code": "ja",

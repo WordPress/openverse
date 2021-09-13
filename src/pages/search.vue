@@ -16,7 +16,7 @@
         <SearchGridForm @onSearchFormSubmit="onSearchFormSubmit" />
         <SearchTypeTabs />
         <FilterDisplay v-if="shouldShowFilterTags" />
-        <NuxtChild :key="$route.path" @onLoadMoreImages="onLoadMoreImages" />
+        <NuxtChild :key="$route.path" @onLoadMoreItems="onLoadMoreItems" />
       </div>
     </div>
   </div>
@@ -36,7 +36,7 @@ import local from '~/utils/local'
 import { screenWidth } from '~/utils/get-browser-info'
 import iframeHeight from '~/mixins/iframe-height'
 import i18nSync from '~/mixins/i18n-sync'
-import { IMAGE } from '~/constants/media'
+import { ALL_MEDIA, IMAGE } from '~/constants/media'
 
 const BrowsePage = {
   name: 'browse-page',
@@ -54,12 +54,6 @@ const BrowsePage = {
       url: this.$route.fullPath,
     })
     this.$store.commit(SET_FILTERS_FROM_URL, { url: this.$route.fullPath })
-    if (!this.$store.state.images.length) {
-      await this.$store.dispatch(FETCH_MEDIA, {
-        ...this.$store.state.query,
-        mediaType: IMAGE,
-      })
-    }
   },
   mounted() {
     const localFilterState = () =>
@@ -82,13 +76,19 @@ const BrowsePage = {
     isFilterVisible() {
       return this.$store.state.isFilterVisible
     },
+    mediaType() {
+      // Default to IMAGE until media search/index is generalized
+      return this.$store.state.searchType != ALL_MEDIA
+        ? this.$store.state.searchType
+        : IMAGE
+    },
   },
   methods: {
-    getImages(params) {
-      this.$store.dispatch(FETCH_MEDIA, { ...params, mediaType: IMAGE })
+    getMediaItems(params, mediaType) {
+      this.$store.dispatch(FETCH_MEDIA, { ...params, mediaType })
     },
-    onLoadMoreImages(searchParams) {
-      this.getImages(searchParams)
+    onLoadMoreItems(searchParams) {
+      this.getMediaItems(searchParams, this.mediaType)
     },
     onSearchFormSubmit(searchParams) {
       this.$store.commit(SET_QUERY, searchParams)
@@ -112,7 +112,7 @@ const BrowsePage = {
           query: this.$store.state.query,
         })
         this.$router.push(newPath)
-        this.getImages(newQuery)
+        this.getMediaItems(newQuery, this.mediaType)
       }
     },
   },

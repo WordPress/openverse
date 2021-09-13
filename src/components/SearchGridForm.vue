@@ -3,7 +3,7 @@
   <form
     role="search"
     method="post"
-    class="search-form p-4"
+    class="search-form p-4 z-30"
     @submit.prevent="onSubmit"
   >
     <button
@@ -62,7 +62,7 @@
 <script>
 import { SET_FILTER_IS_VISIBLE } from '~/store-modules/mutation-types'
 import { queryStringToSearchType } from '~/utils/search-query-transform'
-import { AUDIO, VIDEO } from '~/constants/media'
+import { VIDEO } from '~/constants/media'
 
 export default {
   name: 'SearchGridForm',
@@ -106,8 +106,7 @@ export default {
     },
     onInput(e) {
       this.searchTermsModel = e.target.value
-
-      if (this.activeTab === VIDEO || this.activeTab === AUDIO) {
+      if (this.activeTab === VIDEO) {
         this.$emit('onSearchFormSubmit', {
           query: { q: this.searchTermsModel },
         })
@@ -148,7 +147,6 @@ export default {
   top: 0;
   position: sticky;
   background-color: white;
-  z-index: 10;
   display: flex;
 }
 
