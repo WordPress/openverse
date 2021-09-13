@@ -1,7 +1,7 @@
 <template>
   <div class="license text-dark-charcoal-70">
     <span class="icons text-lg">
-      <i v-if="isCC" class="icon mr-px cc-logo" title="CC" /><i
+      <i v-if="isCC" class="icon mr-1 cc-logo" title="CC" /><i
         v-for="(name, index) in icons"
         :key="index"
         class="icon mr-px"
