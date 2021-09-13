@@ -156,7 +156,9 @@ export const Multiple = () => ({
       <AudioTrack
         v-for="(audio, key) in formatExamples"
         :key="key"
-        :audio="audioObj(audio)"/>
+        class="mb-8"
+        :audio="audioObj(audio)"
+        layout="row"/>
     </div>
   `,
   components: { AudioTrack },
