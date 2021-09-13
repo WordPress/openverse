@@ -31,17 +31,41 @@ export const Template = (args, { argTypes }) => ({
 <ArgsTable of={PlayPause} />
 
 It should be noted that the component emits the `toggle` event with the opposite
-value of its `isPlaying` state.
+value of its `status` state. The buttons don't have any dimensions so a pair
+of `h-*` and `w-*` classes are needed.
 
 <Canvas>
   <Story
     name="Default"
     args={{
-      isPlaying: true,
+      status: 'playing',
+      class: ['h-16', 'w-16'],
     }}
   >
     {Template.bind({})}
   </Story>
+</Canvas>
+
+The recommended way to use it is with `v-model` mapping to a `String` that can
+either be `'playing'` or `'paused'`.
+
+export const vModelTemplate = () => ({
+  template: `
+    <div>
+      <PlayPause class="h-16 w-16" v-model="status" />
+      {{ status }}
+    </div>
+  `,
+  components: { PlayPause },
+  data() {
+    return {
+      status: 'paused',
+    }
+  },
+})
+
+<Canvas>
+  <Story name="v-model">{vModelTemplate.bind({})}</Story>
 </Canvas>
 
 The component is a transparent wrapper over `<button>` so all attributes of the
@@ -52,6 +76,7 @@ button element can be applied to it, e.g. `disabled`.
     name="Disabled"
     args={{
       disabled: true,
+      class: ['h-16', 'w-16'],
     }}
   >
     {Template.bind({})}
