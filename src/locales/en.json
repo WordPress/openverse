@@ -593,6 +593,12 @@
     "play": "Play",
     "pause": "Pause"
   },
+  "audio-categories": {
+    "title": "Audio Category",
+    "music": "Music",
+    "sound-effects": "Sound Effects",
+    "podcast": "Podcast"
+  },
   "license-names": {
     "cc0": "CC0",
     "pdm": "Public Domain Mark",
