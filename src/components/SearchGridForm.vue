@@ -3,7 +3,7 @@
   <form
     role="search"
     method="post"
-    class="search-form p-4"
+    class="search-form p-4 z-30"
     @submit.prevent="onSubmit"
   >
     <button
@@ -147,7 +147,6 @@ export default {
   top: 0;
   position: sticky;
   background-color: white;
-  z-index: 10;
   display: flex;
 }
 
