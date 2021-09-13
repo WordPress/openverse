@@ -5,7 +5,10 @@
       :class="isSmall ? 'w-20 mr-4' : 'w-30 mr-6'"
       :audio="audio"
     />
-    <div class="flex" :class="isSmall ? 'flex-row gap-8' : 'flex-col gap-4'">
+    <div
+      class="flex"
+      :class="isSmall ? 'flex-row gap-8' : 'flex-col justify-between'"
+    >
       <div class="flex-shrink-0">
         <p class="font-heading font-semibold text-2xl">{{ audio.title }}</p>
 
@@ -24,15 +27,15 @@
               <template #creator>{{ audio.creator }}</template>
             </i18n>
             <span v-if="!isSmall">
-              • {{ audio.duration }} • {{ audio.category }}
+              • {{ timeFmt(audio.duration) }} • {{ audio.category }}
             </span>
           </div>
 
           <div class="part-b">
             <template v-if="isSmall">
-              {{ audio.duration }} • {{ audio.category }} •
+              {{ timeFmt(audio.duration) }} • {{ audio.category }} •
             </template>
-            {{ audio.license }}
+            <License class="inline" :license="audio.license" />
           </div>
         </div>
       </div>
@@ -47,16 +50,29 @@
 <script>
 import { computed } from '@nuxtjs/composition-api'
 import AudioThumb from '~/components/AudioTrack/AudioThumb.vue'
+import License from '~/components/License/License.vue'
 
 export default {
   name: 'Row',
-  components: { AudioThumb },
+  components: { AudioThumb, License },
   props: ['audio', 'size'],
   setup(props) {
     const isSmall = computed(() => props.size === 's')
 
+    /**
+     * Format the time as hh:mm:ss, dropping the hour part if it is zero.
+     * @param {number} ms - the number of milliseconds in the duration
+     * @returns {string} the duration in a human-friendly format
+     */
+    const timeFmt = (ms) => {
+      const date = new Date(0)
+      date.setSeconds(ms / 1e3)
+      return date.toISOString().substr(11, 8).replace(/^00:/, '')
+    }
+
     return {
       isSmall,
+      timeFmt,
     }
   },
 }
