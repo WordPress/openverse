@@ -28,10 +28,13 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import featureFlags from '~/feature-flags'
-import { FETCH_AUDIO, FETCH_RELATED_MEDIA } from '~/store-modules/action-types'
-import { SET_AUDIO, SET_RELATED_MEDIA } from '~/store-modules/mutation-types'
+import {
+  FETCH_AUDIO,
+  FETCH_RELATED_MEDIA,
+  RESET_RELATED_MEDIA,
+} from '~/store-modules/action-types'
 import iframeHeight from '~/mixins/iframe-height'
 import { AUDIO } from '~/constants/media'
 import attributionHtml from '~/utils/attribution-html'
@@ -75,38 +78,19 @@ const AudioDetailPage = {
   },
   watch: {
     audio() {
-      console.log('audio changed')
       this.getRelatedAudios()
     },
   },
-  mounted() {
-    console.log(JSON.stringify(this.audio, null, 2))
-  },
   async fetch() {
-    console.log('fetch', process.env.NODE_ENV, process.server)
-    try {
-      // Load the related images in parallel
-      await this.$store.dispatch(FETCH_RELATED_MEDIA, {
-        mediaType: AUDIO,
-        id: this.$route.params.id,
-      })
-    } catch (err) {
-      console.log('oops, ', err)
-      // this.$error({
-      //   statusCode: 404,
-      //   message: app.i18n.t('error.image-not-found', { id: route.params.id }),
-      // })
-    }
+    // Load the related images
+    await this[FETCH_RELATED_MEDIA]({
+      mediaType: AUDIO,
+      id: this.$route.params.id,
+    })
   },
   async asyncData({ env, store, route, error, app }) {
-    console.log('asyncData', process.env.NODE_ENV, process.server)
     // Clear related audios if present
-    if (store.state.related.audios && store.state.related.audios.length > 0) {
-      store.commit(SET_RELATED_MEDIA, {
-        mediaType: AUDIO,
-        relatedMedia: [],
-      })
-    }
+    await store.dispatch(RESET_RELATED_MEDIA, { mediaType: AUDIO })
     try {
       await store.dispatch(FETCH_AUDIO, { id: route.params.id })
       return {
@@ -114,10 +98,12 @@ const AudioDetailPage = {
         id: route.params.id,
       }
     } catch (err) {
-      console.log('oops, ', err)
       error({
         statusCode: 404,
-        message: app.i18n.t('error.image-not-found', { id: route.params.id }),
+        message: app.i18n.t('error.media-not-found', {
+          mediaType: AUDIO,
+          id: route.params.id,
+        }),
       })
     }
   },
@@ -131,7 +117,6 @@ const AudioDetailPage = {
   },
   methods: {
     ...mapActions([FETCH_AUDIO, FETCH_RELATED_MEDIA]),
-    ...mapMutations([SET_AUDIO]),
     attributionHtml() {
       const licenseURL = `${this.ccLicenseURL}&atype=html`
       return attributionHtml(this.audio, licenseURL, this.fullLicenseName)

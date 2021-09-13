@@ -4,6 +4,7 @@ import {
   SET_RELATED_MEDIA,
 } from './mutation-types'
 import {
+  RESET_RELATED_MEDIA,
   FETCH_RELATED_MEDIA,
   HANDLE_NO_MEDIA,
   HANDLE_MEDIA_ERROR,
@@ -50,6 +51,13 @@ const actions = (AudioService, ImageService) => ({
           error,
         })
       })
+  },
+  [RESET_RELATED_MEDIA]({ commit }, params) {
+    const { mediaType } = params
+    commit(SET_RELATED_MEDIA, {
+      mediaType,
+      relatedMedia: [],
+    })
   },
 })
 

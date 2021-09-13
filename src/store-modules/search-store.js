@@ -16,7 +16,7 @@ import {
   FETCH_END_MEDIA,
   FETCH_MEDIA_ERROR,
   FETCH_START_MEDIA,
-  IMAGE_NOT_FOUND,
+  MEDIA_NOT_FOUND,
   SET_AUDIO,
   SET_IMAGE,
   SET_IMAGE_PAGE,
@@ -194,7 +194,7 @@ const actions = (AudioService, ImageService) => ({
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {
-          commit(IMAGE_NOT_FOUND)
+          commit(MEDIA_NOT_FOUND, { mediaType: AUDIO })
         } else {
           dispatch(HANDLE_MEDIA_ERROR, { mediaType: AUDIO, error })
         }
@@ -218,7 +218,7 @@ const actions = (AudioService, ImageService) => ({
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {
-          commit(IMAGE_NOT_FOUND)
+          commit(MEDIA_NOT_FOUND, { mediaType: IMAGE })
         } else {
           dispatch(HANDLE_MEDIA_ERROR, { mediaType: IMAGE, error })
         }
@@ -336,8 +336,8 @@ const mutations = {
   [SET_QUERY](_state, params) {
     setQuery(_state, params)
   },
-  [IMAGE_NOT_FOUND]() {
-    throw new Error('Image not found')
+  [MEDIA_NOT_FOUND](params) {
+    throw new Error(`Media of type ${params.mediaType} not found`)
   },
   [SET_SEARCH_TYPE](_state, params) {
     _state.searchType = params.searchType
