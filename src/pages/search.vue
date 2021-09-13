@@ -35,11 +35,12 @@ import { queryStringToQueryData } from '~/utils/search-query-transform'
 import local from '~/utils/local'
 import { screenWidth } from '~/utils/get-browser-info'
 import iframeHeight from '~/mixins/iframe-height'
+import i18nSync from '~/mixins/i18n-sync'
 import { ALL_MEDIA, IMAGE } from '~/constants/media'
 
 const BrowsePage = {
   name: 'browse-page',
-  mixins: [iframeHeight],
+  mixins: [iframeHeight, i18nSync],
   layout({ store }) {
     return store.state.isEmbedded ? 'embedded' : 'default'
   },

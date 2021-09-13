@@ -7,7 +7,8 @@
     "country_code": "za",
     "slug": "af",
     "google_code": "af",
-    "facebook_locale": "af_ZA"
+    "facebook_locale": "af_ZA",
+    "wp_locale": "af"
   },
   "am": {
     "english_name": "Amharic",
@@ -16,7 +17,8 @@
     "lang_code_iso_639_2": "amh",
     "country_code": "et",
     "slug": "am",
-    "facebook_locale": "am_ET"
+    "facebook_locale": "am_ET",
+    "wp_locale": "am"
   },
   "arg": {
     "english_name": "Aragonese",
@@ -24,7 +26,8 @@
     "lang_code_iso_639_1": "an",
     "lang_code_iso_639_2": "arg",
     "country_code": "es",
-    "slug": "an"
+    "slug": "an",
+    "wp_locale": "arg"
   },
   "ar": {
     "english_name": "Arabic",
@@ -34,7 +37,9 @@
     "slug": "ar",
     "plural_expression": "(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))))",
     "google_code": "ar",
-    "facebook_locale": "ar_AR"
+    "facebook_locale": "ar_AR",
+    "text_direction": "rtl",
+    "wp_locale": "ar"
   },
   "arq": {
     "english_name": "Algerian Arabic",
@@ -42,7 +47,9 @@
     "lang_code_iso_639_1": "ar",
     "country_code": "dz",
     "slug": "arq",
-    "plural_expression": "(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))))"
+    "plural_expression": "(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))))",
+    "text_direction": "rtl",
+    "wp_locale": "arq"
   },
   "ary": {
     "english_name": "Moroccan Arabic",
@@ -50,7 +57,9 @@
     "lang_code_iso_639_1": "ar",
     "country_code": "ma",
     "slug": "ary",
-    "plural_expression": "(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))))"
+    "plural_expression": "(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))))",
+    "text_direction": "rtl",
+    "wp_locale": "ary"
   },
   "as": {
     "english_name": "Assamese",
@@ -59,14 +68,16 @@
     "lang_code_iso_639_2": "asm",
     "country_code": "in",
     "slug": "as",
-    "facebook_locale": "as_IN"
+    "facebook_locale": "as_IN",
+    "wp_locale": "as"
   },
   "ast": {
     "english_name": "Asturian",
     "native_name": "Asturianu",
     "lang_code_iso_639_2": "ast",
     "country_code": "es",
-    "slug": "ast"
+    "slug": "ast",
+    "wp_locale": "ast"
   },
   "az": {
     "english_name": "Azerbaijani",
@@ -76,14 +87,17 @@
     "country_code": "az",
     "slug": "az",
     "google_code": "az",
-    "facebook_locale": "az_AZ"
+    "facebook_locale": "az_AZ",
+    "wp_locale": "az"
   },
   "azb": {
     "english_name": "South Azerbaijani",
     "native_name": "گؤنئی آذربایجان",
     "lang_code_iso_639_1": "az",
     "country_code": "ir",
-    "slug": "azb"
+    "slug": "azb",
+    "text_direction": "rtl",
+    "wp_locale": "azb"
   },
   "az_TR": {
     "english_name": "Azerbaijani (Turkey)",
@@ -91,28 +105,33 @@
     "lang_code_iso_639_1": "az",
     "lang_code_iso_639_2": "aze",
     "country_code": "tr",
-    "slug": "az-tr"
+    "slug": "az-tr",
+    "wp_locale": "az_TR"
   },
   "ba": {
     "english_name": "Bashkir",
     "native_name": "башҡорт теле",
     "lang_code_iso_639_1": "ba",
     "lang_code_iso_639_2": "bak",
-    "slug": "ba"
+    "slug": "ba",
+    "wp_locale": "ba"
   },
   "bal": {
     "english_name": "Catalan (Balear)",
     "native_name": "Català (Balear)",
     "lang_code_iso_639_2": "bal",
     "country_code": "es",
-    "slug": "bal"
+    "slug": "bal",
+    "wp_locale": "bal"
   },
   "bcc": {
     "english_name": "Balochi Southern",
     "native_name": "بلوچی مکرانی",
     "country_code": "pk",
     "slug": "bcc",
-    "plural_expression": "0"
+    "plural_expression": "0",
+    "text_direction": "rtl",
+    "wp_locale": "bcc"
   },
   "bel": {
     "english_name": "Belarusian",
@@ -123,7 +142,8 @@
     "slug": "bel",
     "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
     "google_code": "be",
-    "facebook_locale": "be_BY"
+    "facebook_locale": "be_BY",
+    "wp_locale": "bel"
   },
   "bg_BG": {
     "english_name": "Bulgarian",
@@ -133,13 +153,15 @@
     "country_code": "bg",
     "slug": "bg",
     "google_code": "bg",
-    "facebook_locale": "bg_BG"
+    "facebook_locale": "bg_BG",
+    "wp_locale": "bg_BG"
   },
   "bho": {
     "english_name": "Bhojpuri",
     "native_name": "भोजपुरी",
     "country_code": "in",
-    "slug": "bho"
+    "slug": "bho",
+    "wp_locale": "bho"
   },
   "bn_BD": {
     "english_name": "Bengali (Bangladesh)",
@@ -147,7 +169,8 @@
     "lang_code_iso_639_1": "bn",
     "country_code": "bd",
     "slug": "bn",
-    "google_code": "bn"
+    "google_code": "bn",
+    "wp_locale": "bn_BD"
   },
   "bn_IN": {
     "english_name": "Bengali (India)",
@@ -157,7 +180,8 @@
     "slug": "bn-in",
     "plural_expression": "n > 1",
     "google_code": "bn",
-    "facebook_locale": "bn_IN"
+    "facebook_locale": "bn_IN",
+    "wp_locale": "bn_IN"
   },
   "bo": {
     "english_name": "Tibetan",
@@ -165,7 +189,8 @@
     "lang_code_iso_639_1": "bo",
     "lang_code_iso_639_2": "tib",
     "slug": "bo",
-    "plural_expression": "0"
+    "plural_expression": "0",
+    "wp_locale": "bo"
   },
   "bre": {
     "english_name": "Breton",
@@ -175,13 +200,15 @@
     "country_code": "fr",
     "slug": "br",
     "plural_expression": "n > 1",
-    "facebook_locale": "br_FR"
+    "facebook_locale": "br_FR",
+    "wp_locale": "bre"
   },
   "brx": {
     "english_name": "Bodo",
     "native_name": "बोडो‎",
     "country_code": "in",
-    "slug": "brx"
+    "slug": "brx",
+    "wp_locale": "brx"
   },
   "bs_BA": {
     "english_name": "Bosnian",
@@ -192,7 +219,8 @@
     "slug": "bs",
     "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
     "google_code": "bs",
-    "facebook_locale": "bs_BA"
+    "facebook_locale": "bs_BA",
+    "wp_locale": "bs_BA"
   },
   "ca": {
     "english_name": "Catalan",
@@ -201,7 +229,8 @@
     "lang_code_iso_639_2": "cat",
     "slug": "ca",
     "google_code": "ca",
-    "facebook_locale": "ca_ES"
+    "facebook_locale": "ca_ES",
+    "wp_locale": "ca"
   },
   "ceb": {
     "english_name": "Cebuano",
@@ -209,7 +238,8 @@
     "lang_code_iso_639_2": "ceb",
     "country_code": "ph",
     "slug": "ceb",
-    "facebook_locale": "cx_PH"
+    "facebook_locale": "cx_PH",
+    "wp_locale": "ceb"
   },
   "ckb": {
     "english_name": "Kurdish (Sorani)",
@@ -217,7 +247,9 @@
     "lang_code_iso_639_1": "ku",
     "country_code": "iq",
     "slug": "ckb",
-    "facebook_locale": "cb_IQ"
+    "facebook_locale": "cb_IQ",
+    "text_direction": "rtl",
+    "wp_locale": "ckb"
   },
   "co": {
     "english_name": "Corsican",
@@ -225,7 +257,8 @@
     "lang_code_iso_639_1": "co",
     "lang_code_iso_639_2": "cos",
     "country_code": "it",
-    "slug": "co"
+    "slug": "co",
+    "wp_locale": "co"
   },
   "cor": {
     "english_name": "Cornish",
@@ -234,7 +267,8 @@
     "lang_code_iso_639_2": "cor",
     "country_code": "gb",
     "slug": "cor",
-    "plural_expression": "(n == 0) ? 0 : ((n == 1) ? 1 : (((n % 100 == 2 || n % 100 == 22 || n % 100 == 42 || n % 100 == 62 || n % 100 == 82) || n % 1000 == 0 && (n % 100000 >= 1000 && n % 100000 <= 20000 || n % 100000 == 40000 || n % 100000 == 60000 || n % 100000 == 80000) || n != 0 && n % 1000000 == 100000) ? 2 : ((n % 100 == 3 || n % 100 == 23 || n % 100 == 43 || n % 100 == 63 || n % 100 == 83) ? 3 : ((n != 1 && (n % 100 == 1 || n % 100 == 21 || n % 100 == 41 || n % 100 == 61 || n % 100 == 81)) ? 4 : 5))))"
+    "plural_expression": "(n == 0) ? 0 : ((n == 1) ? 1 : (((n % 100 == 2 || n % 100 == 22 || n % 100 == 42 || n % 100 == 62 || n % 100 == 82) || n % 1000 == 0 && (n % 100000 >= 1000 && n % 100000 <= 20000 || n % 100000 == 40000 || n % 100000 == 60000 || n % 100000 == 80000) || n != 0 && n % 1000000 == 100000) ? 2 : ((n % 100 == 3 || n % 100 == 23 || n % 100 == 43 || n % 100 == 63 || n % 100 == 83) ? 3 : ((n != 1 && (n % 100 == 1 || n % 100 == 21 || n % 100 == 41 || n % 100 == 61 || n % 100 == 81)) ? 4 : 5))))",
+    "wp_locale": "cor"
   },
   "cs_CZ": {
     "english_name": "Czech",
@@ -245,7 +279,8 @@
     "slug": "cs",
     "plural_expression": "(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2)",
     "google_code": "cs",
-    "facebook_locale": "cs_CZ"
+    "facebook_locale": "cs_CZ",
+    "wp_locale": "cs_CZ"
   },
   "cy": {
     "english_name": "Welsh",
@@ -256,7 +291,8 @@
     "slug": "cy",
     "plural_expression": "(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3",
     "google_code": "cy",
-    "facebook_locale": "cy_GB"
+    "facebook_locale": "cy_GB",
+    "wp_locale": "cy"
   },
   "da_DK": {
     "english_name": "Danish",
@@ -266,7 +302,8 @@
     "country_code": "dk",
     "slug": "da",
     "google_code": "da",
-    "facebook_locale": "da_DK"
+    "facebook_locale": "da_DK",
+    "wp_locale": "da_DK"
   },
   "de_DE": {
     "english_name": "German",
@@ -275,7 +312,8 @@
     "country_code": "de",
     "slug": "de",
     "google_code": "de",
-    "facebook_locale": "de_DE"
+    "facebook_locale": "de_DE",
+    "wp_locale": "de_DE"
   },
   "de_AT": {
     "english_name": "German (Austria)",
@@ -283,7 +321,8 @@
     "lang_code_iso_639_1": "de",
     "country_code": "de",
     "slug": "de-at",
-    "google_code": "de"
+    "google_code": "de",
+    "wp_locale": "de_AT"
   },
   "de_CH": {
     "english_name": "German (Switzerland)",
@@ -291,7 +330,8 @@
     "lang_code_iso_639_1": "de",
     "country_code": "ch",
     "slug": "de-ch",
-    "google_code": "de"
+    "google_code": "de",
+    "wp_locale": "de_CH"
   },
   "dsb": {
     "english_name": "Lower Sorbian",
@@ -299,7 +339,8 @@
     "lang_code_iso_639_2": "dsb",
     "country_code": "de",
     "slug": "dsb",
-    "plural_expression": "(n % 100 == 1) ? 0 : ((n % 100 == 2) ? 1 : ((n % 100 == 3 || n % 100 == 4) ? 2 : 3))"
+    "plural_expression": "(n % 100 == 1) ? 0 : ((n % 100 == 2) ? 1 : ((n % 100 == 3 || n % 100 == 4) ? 2 : 3))",
+    "wp_locale": "dsb"
   },
   "dv": {
     "english_name": "Dhivehi",
@@ -307,7 +348,9 @@
     "lang_code_iso_639_1": "dv",
     "lang_code_iso_639_2": "div",
     "country_code": "mv",
-    "slug": "dv"
+    "slug": "dv",
+    "text_direction": "rtl",
+    "wp_locale": "dv"
   },
   "dzo": {
     "english_name": "Dzongkha",
@@ -316,7 +359,8 @@
     "lang_code_iso_639_2": "dzo",
     "country_code": "bt",
     "slug": "dzo",
-    "plural_expression": "0"
+    "plural_expression": "0",
+    "wp_locale": "dzo"
   },
   "ewe": {
     "english_name": "Ewe",
@@ -324,7 +368,8 @@
     "lang_code_iso_639_1": "ee",
     "lang_code_iso_639_2": "ewe",
     "country_code": "gh",
-    "slug": "ee"
+    "slug": "ee",
+    "wp_locale": "ewe"
   },
   "el": {
     "english_name": "Greek",
@@ -334,13 +379,15 @@
     "country_code": "gr",
     "slug": "el",
     "google_code": "el",
-    "facebook_locale": "el_GR"
+    "facebook_locale": "el_GR",
+    "wp_locale": "el"
   },
   "art_xemoji": {
     "english_name": "Emoji",
     "lang_code_iso_639_2": "art",
     "slug": "art-xemoji",
-    "plural_expression": "0"
+    "plural_expression": "0",
+    "wp_locale": "art_xemoji"
   },
   "en_AU": {
     "english_name": "English (Australia)",
@@ -349,7 +396,8 @@
     "lang_code_iso_639_2": "eng",
     "country_code": "au",
     "slug": "en-au",
-    "google_code": "en"
+    "google_code": "en",
+    "wp_locale": "en_AU"
   },
   "en_CA": {
     "english_name": "English (Canada)",
@@ -358,7 +406,8 @@
     "lang_code_iso_639_2": "eng",
     "country_code": "ca",
     "slug": "en-ca",
-    "google_code": "en"
+    "google_code": "en",
+    "wp_locale": "en_CA"
   },
   "en_GB": {
     "english_name": "English (UK)",
@@ -368,7 +417,8 @@
     "country_code": "gb",
     "slug": "en-gb",
     "google_code": "en",
-    "facebook_locale": "en_GB"
+    "facebook_locale": "en_GB",
+    "wp_locale": "en_GB"
   },
   "en_NZ": {
     "english_name": "English (New Zealand)",
@@ -377,7 +427,8 @@
     "lang_code_iso_639_2": "eng",
     "country_code": "nz",
     "slug": "en-nz",
-    "google_code": "en"
+    "google_code": "en",
+    "wp_locale": "en_NZ"
   },
   "en_ZA": {
     "english_name": "English (South Africa)",
@@ -386,7 +437,8 @@
     "lang_code_iso_639_2": "eng",
     "country_code": "za",
     "slug": "en-za",
-    "google_code": "en"
+    "google_code": "en",
+    "wp_locale": "en_ZA"
   },
   "eo": {
     "english_name": "Esperanto",
@@ -395,7 +447,8 @@
     "lang_code_iso_639_2": "epo",
     "slug": "eo",
     "google_code": "eo",
-    "facebook_locale": "eo_EO"
+    "facebook_locale": "eo_EO",
+    "wp_locale": "eo"
   },
   "es_ES": {
     "english_name": "Spanish (Spain)",
@@ -405,7 +458,8 @@
     "country_code": "es",
     "slug": "es",
     "google_code": "es",
-    "facebook_locale": "es_ES"
+    "facebook_locale": "es_ES",
+    "wp_locale": "es_ES"
   },
   "es_AR": {
     "english_name": "Spanish (Argentina)",
@@ -415,7 +469,8 @@
     "country_code": "ar",
     "slug": "es-ar",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_AR"
   },
   "es_CL": {
     "english_name": "Spanish (Chile)",
@@ -425,7 +480,8 @@
     "country_code": "cl",
     "slug": "es-cl",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_CL"
   },
   "es_CO": {
     "english_name": "Spanish (Colombia)",
@@ -435,7 +491,8 @@
     "country_code": "co",
     "slug": "es-co",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_CO"
   },
   "es_CR": {
     "english_name": "Spanish (Costa Rica)",
@@ -445,7 +502,8 @@
     "country_code": "cr",
     "slug": "es-cr",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_CR"
   },
   "es_DO": {
     "english_name": "Spanish (Dominican Republic)",
@@ -455,7 +513,8 @@
     "country_code": "do",
     "slug": "es-do",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_DO"
   },
   "es_EC": {
     "english_name": "Spanish (Ecuador)",
@@ -465,7 +524,8 @@
     "country_code": "ec",
     "slug": "es-ec",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_EC"
   },
   "es_GT": {
     "english_name": "Spanish (Guatemala)",
@@ -475,7 +535,8 @@
     "country_code": "gt",
     "slug": "es-gt",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_GT"
   },
   "es_HN": {
     "english_name": "Spanish (Honduras)",
@@ -485,7 +546,8 @@
     "country_code": "hn",
     "slug": "es-hn",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_HN"
   },
   "es_MX": {
     "english_name": "Spanish (Mexico)",
@@ -495,7 +557,8 @@
     "country_code": "mx",
     "slug": "es-mx",
     "google_code": "es",
-    "facebook_locale": "es_MX"
+    "facebook_locale": "es_MX",
+    "wp_locale": "es_MX"
   },
   "es_PE": {
     "english_name": "Spanish (Peru)",
@@ -505,7 +568,8 @@
     "country_code": "pe",
     "slug": "es-pe",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_PE"
   },
   "es_PR": {
     "english_name": "Spanish (Puerto Rico)",
@@ -515,7 +579,8 @@
     "country_code": "pr",
     "slug": "es-pr",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_PR"
   },
   "es_UY": {
     "english_name": "Spanish (Uruguay)",
@@ -525,7 +590,8 @@
     "country_code": "uy",
     "slug": "es-uy",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_UY"
   },
   "es_VE": {
     "english_name": "Spanish (Venezuela)",
@@ -535,7 +601,8 @@
     "country_code": "ve",
     "slug": "es-ve",
     "google_code": "es",
-    "facebook_locale": "es_LA"
+    "facebook_locale": "es_LA",
+    "wp_locale": "es_VE"
   },
   "et": {
     "english_name": "Estonian",
@@ -545,7 +612,8 @@
     "country_code": "ee",
     "slug": "et",
     "google_code": "et",
-    "facebook_locale": "et_EE"
+    "facebook_locale": "et_EE",
+    "wp_locale": "et"
   },
   "eu": {
     "english_name": "Basque",
@@ -555,7 +623,8 @@
     "country_code": "es",
     "slug": "eu",
     "google_code": "eu",
-    "facebook_locale": "eu_ES"
+    "facebook_locale": "eu_ES",
+    "wp_locale": "eu"
   },
   "fa_IR": {
     "english_name": "Persian",
@@ -565,7 +634,9 @@
     "slug": "fa",
     "plural_expression": "n > 1",
     "google_code": "fa",
-    "facebook_locale": "fa_IR"
+    "facebook_locale": "fa_IR",
+    "text_direction": "rtl",
+    "wp_locale": "fa_IR"
   },
   "fa_AF": {
     "english_name": "Persian (Afghanistan)",
@@ -574,7 +645,9 @@
     "lang_code_iso_639_2": "fas",
     "slug": "fa-af",
     "plural_expression": "n > 1",
-    "google_code": "fa"
+    "google_code": "fa",
+    "text_direction": "rtl",
+    "wp_locale": "fa_AF"
   },
   "fuc": {
     "english_name": "Fulah",
@@ -582,7 +655,8 @@
     "lang_code_iso_639_1": "ff",
     "lang_code_iso_639_2": "fuc",
     "country_code": "sn",
-    "slug": "fuc"
+    "slug": "fuc",
+    "wp_locale": "fuc"
   },
   "fi": {
     "english_name": "Finnish",
@@ -592,7 +666,8 @@
     "country_code": "fi",
     "slug": "fi",
     "google_code": "fi",
-    "facebook_locale": "fi_FI"
+    "facebook_locale": "fi_FI",
+    "wp_locale": "fi"
   },
   "fo": {
     "english_name": "Faroese",
@@ -601,14 +676,16 @@
     "lang_code_iso_639_2": "fao",
     "country_code": "fo",
     "slug": "fo",
-    "facebook_locale": "fo_FO"
+    "facebook_locale": "fo_FO",
+    "wp_locale": "fo"
   },
   "fon": {
     "english_name": "Fon",
     "native_name": "fɔ̀ngbè",
     "lang_code_iso_639_2": "fon",
     "country_code": "bj",
-    "slug": "fon"
+    "slug": "fon",
+    "wp_locale": "fon"
   },
   "fr_FR": {
     "english_name": "French (France)",
@@ -618,7 +695,8 @@
     "slug": "fr",
     "plural_expression": "n > 1",
     "google_code": "fr",
-    "facebook_locale": "fr_FR"
+    "facebook_locale": "fr_FR",
+    "wp_locale": "fr_FR"
   },
   "fr_BE": {
     "english_name": "French (Belgium)",
@@ -627,7 +705,8 @@
     "lang_code_iso_639_2": "fra",
     "country_code": "be",
     "slug": "fr-be",
-    "plural_expression": "n > 1"
+    "plural_expression": "n > 1",
+    "wp_locale": "fr_BE"
   },
   "fr_CA": {
     "english_name": "French (Canada)",
@@ -637,21 +716,24 @@
     "country_code": "ca",
     "slug": "fr-ca",
     "plural_expression": "n > 1",
-    "facebook_locale": "fr_CA"
+    "facebook_locale": "fr_CA",
+    "wp_locale": "fr_CA"
   },
   "frp": {
     "english_name": "Arpitan",
     "native_name": "Arpitan",
     "country_code": "fr",
     "slug": "frp",
-    "plural_expression": "n > 1"
+    "plural_expression": "n > 1",
+    "wp_locale": "frp"
   },
   "fur": {
     "english_name": "Friulian",
     "native_name": "Friulian",
     "lang_code_iso_639_2": "fur",
     "country_code": "it",
-    "slug": "fur"
+    "slug": "fur",
+    "wp_locale": "fur"
   },
   "fy": {
     "english_name": "Frisian",
@@ -660,7 +742,8 @@
     "lang_code_iso_639_2": "fry",
     "country_code": "nl",
     "slug": "fy",
-    "facebook_locale": "fy_NL"
+    "facebook_locale": "fy_NL",
+    "wp_locale": "fy"
   },
   "ga": {
     "english_name": "Irish",
@@ -671,14 +754,16 @@
     "slug": "ga",
     "plural_expression": "(n == 1) ? 0 : ((n == 2) ? 1 : ((n >= 3 && n <= 6) ? 2 : ((n >= 7 && n <= 10) ? 3 : 4)))",
     "google_code": "ga",
-    "facebook_locale": "ga_IE"
+    "facebook_locale": "ga_IE",
+    "wp_locale": "ga"
   },
   "gax": {
     "english_name": "Borana-Arsi-Guji Oromo",
     "native_name": "Afaan Oromoo",
     "country_code": "et",
     "slug": "gax",
-    "plural_expression": "n > 1"
+    "plural_expression": "n > 1",
+    "wp_locale": "gax"
   },
   "gd": {
     "english_name": "Scottish Gaelic",
@@ -688,7 +773,8 @@
     "country_code": "gb",
     "slug": "gd",
     "plural_expression": "(n == 1 || n == 11) ? 0 : ((n == 2 || n == 12) ? 1 : ((n >= 3 && n <= 10 || n >= 13 && n <= 19) ? 2 : 3))",
-    "google_code": "gd"
+    "google_code": "gd",
+    "wp_locale": "gd"
   },
   "gl_ES": {
     "english_name": "Galician",
@@ -698,7 +784,8 @@
     "country_code": "es",
     "slug": "gl",
     "google_code": "gl",
-    "facebook_locale": "gl_ES"
+    "facebook_locale": "gl_ES",
+    "wp_locale": "gl_ES"
   },
   "gu": {
     "english_name": "Gujarati",
@@ -707,7 +794,8 @@
     "lang_code_iso_639_2": "guj",
     "slug": "gu",
     "google_code": "gu",
-    "facebook_locale": "gu_IN"
+    "facebook_locale": "gu_IN",
+    "wp_locale": "gu"
   },
   "hat": {
     "english_name": "Haitian Creole",
@@ -715,7 +803,8 @@
     "lang_code_iso_639_1": "ht",
     "lang_code_iso_639_2": "hat",
     "country_code": "ht",
-    "slug": "hat"
+    "slug": "hat",
+    "wp_locale": "hat"
   },
   "hau": {
     "english_name": "Hausa",
@@ -725,20 +814,24 @@
     "country_code": "ng",
     "slug": "hau",
     "google_code": "ha",
-    "facebook_locale": "ha_NG"
+    "facebook_locale": "ha_NG",
+    "wp_locale": "hau"
   },
   "haw_US": {
     "english_name": "Hawaiian",
     "native_name": "Ōlelo Hawaiʻi",
     "lang_code_iso_639_2": "haw",
     "country_code": "us",
-    "slug": "haw"
+    "slug": "haw",
+    "wp_locale": "haw_US"
   },
   "haz": {
     "english_name": "Hazaragi",
     "native_name": "هزاره گی",
     "country_code": "af",
-    "slug": "haz"
+    "slug": "haz",
+    "text_direction": "rtl",
+    "wp_locale": "haz"
   },
   "he_IL": {
     "english_name": "Hebrew",
@@ -747,7 +840,9 @@
     "country_code": "il",
     "slug": "he",
     "google_code": "iw",
-    "facebook_locale": "he_IL"
+    "facebook_locale": "he_IL",
+    "text_direction": "rtl",
+    "wp_locale": "he_IL"
   },
   "hi_IN": {
     "english_name": "Hindi",
@@ -757,7 +852,8 @@
     "country_code": "in",
     "slug": "hi",
     "google_code": "hi",
-    "facebook_locale": "hi_IN"
+    "facebook_locale": "hi_IN",
+    "wp_locale": "hi_IN"
   },
   "hr": {
     "english_name": "Croatian",
@@ -768,7 +864,8 @@
     "slug": "hr",
     "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
     "google_code": "hr",
-    "facebook_locale": "hr_HR"
+    "facebook_locale": "hr_HR",
+    "wp_locale": "hr"
   },
   "hsb": {
     "english_name": "Upper Sorbian",
@@ -776,7 +873,8 @@
     "lang_code_iso_639_2": "hsb",
     "country_code": "de",
     "slug": "hsb",
-    "plural_expression": "(n % 100 == 1) ? 0 : ((n % 100 == 2) ? 1 : ((n % 100 == 3 || n % 100 == 4) ? 2 : 3))"
+    "plural_expression": "(n % 100 == 1) ? 0 : ((n % 100 == 2) ? 1 : ((n % 100 == 3 || n % 100 == 4) ? 2 : 3))",
+    "wp_locale": "hsb"
   },
   "hu_HU": {
     "english_name": "Hungarian",
@@ -786,7 +884,8 @@
     "country_code": "hu",
     "slug": "hu",
     "google_code": "hu",
-    "facebook_locale": "hu_HU"
+    "facebook_locale": "hu_HU",
+    "wp_locale": "hu_HU"
   },
   "hy": {
     "english_name": "Armenian",
@@ -796,7 +895,8 @@
     "country_code": "am",
     "slug": "hy",
     "google_code": "hy",
-    "facebook_locale": "hy_AM"
+    "facebook_locale": "hy_AM",
+    "wp_locale": "hy"
   },
   "ibo": {
     "english_name": "Igbo",
@@ -806,7 +906,8 @@
     "country_code": "ng",
     "slug": "ibo",
     "plural_expression": "0",
-    "google_code": "ig"
+    "google_code": "ig",
+    "wp_locale": "ibo"
   },
   "id_ID": {
     "english_name": "Indonesian",
@@ -817,14 +918,16 @@
     "slug": "id",
     "plural_expression": "n > 1",
     "google_code": "id",
-    "facebook_locale": "id_ID"
+    "facebook_locale": "id_ID",
+    "wp_locale": "id_ID"
   },
   "ido": {
     "english_name": "Ido",
     "native_name": "Ido",
     "lang_code_iso_639_1": "io",
     "lang_code_iso_639_2": "ido",
-    "slug": "ido"
+    "slug": "ido",
+    "wp_locale": "ido"
   },
   "is_IS": {
     "english_name": "Icelandic",
@@ -835,7 +938,8 @@
     "slug": "is",
     "plural_expression": "n % 10 != 1 || n % 100 == 11",
     "google_code": "is",
-    "facebook_locale": "is_IS"
+    "facebook_locale": "is_IS",
+    "wp_locale": "is_IS"
   },
   "it_IT": {
     "english_name": "Italian",
@@ -845,7 +949,8 @@
     "country_code": "it",
     "slug": "it",
     "google_code": "it",
-    "facebook_locale": "it_IT"
+    "facebook_locale": "it_IT",
+    "wp_locale": "it_IT"
   },
   "ja": {
     "english_name": "Japanese",
@@ -855,7 +960,8 @@
     "slug": "ja",
     "plural_expression": "0",
     "google_code": "ja",
-    "facebook_locale": "ja_JP"
+    "facebook_locale": "ja_JP",
+    "wp_locale": "ja"
   },
   "jv_ID": {
     "english_name": "Javanese",
@@ -865,7 +971,8 @@
     "country_code": "id",
     "slug": "jv",
     "google_code": "jw",
-    "facebook_locale": "jv_ID"
+    "facebook_locale": "jv_ID",
+    "wp_locale": "jv_ID"
   },
   "ka_GE": {
     "english_name": "Georgian",
@@ -876,14 +983,16 @@
     "slug": "ka",
     "plural_expression": "0",
     "google_code": "ka",
-    "facebook_locale": "ka_GE"
+    "facebook_locale": "ka_GE",
+    "wp_locale": "ka_GE"
   },
   "kaa": {
     "english_name": "Karakalpak",
     "native_name": "Qaraqalpaq tili",
     "lang_code_iso_639_2": "kaa",
     "country_code": "uz",
-    "slug": "kaa"
+    "slug": "kaa",
+    "wp_locale": "kaa"
   },
   "kab": {
     "english_name": "Kabyle",
@@ -891,7 +1000,8 @@
     "lang_code_iso_639_2": "kab",
     "country_code": "dz",
     "slug": "kab",
-    "plural_expression": "n > 1"
+    "plural_expression": "n > 1",
+    "wp_locale": "kab"
   },
   "kal": {
     "english_name": "Greenlandic",
@@ -899,7 +1009,8 @@
     "lang_code_iso_639_1": "kl",
     "lang_code_iso_639_2": "kal",
     "country_code": "gl",
-    "slug": "kal"
+    "slug": "kal",
+    "wp_locale": "kal"
   },
   "kin": {
     "english_name": "Kinyarwanda",
@@ -908,7 +1019,8 @@
     "lang_code_iso_639_2": "kin",
     "country_code": "rw",
     "slug": "kin",
-    "facebook_locale": "rw_RW"
+    "facebook_locale": "rw_RW",
+    "wp_locale": "kin"
   },
   "kk": {
     "english_name": "Kazakh",
@@ -918,7 +1030,8 @@
     "country_code": "kz",
     "slug": "kk",
     "google_code": "kk",
-    "facebook_locale": "kk_KZ"
+    "facebook_locale": "kk_KZ",
+    "wp_locale": "kk"
   },
   "km": {
     "english_name": "Khmer",
@@ -929,7 +1042,8 @@
     "slug": "km",
     "plural_expression": "0",
     "google_code": "km",
-    "facebook_locale": "km_KH"
+    "facebook_locale": "km_KH",
+    "wp_locale": "km"
   },
   "kmr": {
     "english_name": "Kurdish (Kurmanji)",
@@ -937,7 +1051,8 @@
     "lang_code_iso_639_1": "ku",
     "country_code": "tr",
     "slug": "kmr",
-    "facebook_locale": "ku_TR"
+    "facebook_locale": "ku_TR",
+    "wp_locale": "kmr"
   },
   "kn": {
     "english_name": "Kannada",
@@ -947,7 +1062,8 @@
     "country_code": "in",
     "slug": "kn",
     "google_code": "kn",
-    "facebook_locale": "kn_IN"
+    "facebook_locale": "kn_IN",
+    "wp_locale": "kn"
   },
   "ko_KR": {
     "english_name": "Korean",
@@ -958,7 +1074,8 @@
     "slug": "ko",
     "plural_expression": "0",
     "google_code": "ko",
-    "facebook_locale": "ko_KR"
+    "facebook_locale": "ko_KR",
+    "wp_locale": "ko_KR"
   },
   "kir": {
     "english_name": "Kyrgyz",
@@ -968,14 +1085,16 @@
     "country_code": "kg",
     "slug": "kir",
     "plural_expression": "0",
-    "google_code": "ky"
+    "google_code": "ky",
+    "wp_locale": "kir"
   },
   "lb_LU": {
     "english_name": "Luxembourgish",
     "native_name": "Lëtzebuergesch",
     "lang_code_iso_639_1": "lb",
     "country_code": "lu",
-    "slug": "lb"
+    "slug": "lb",
+    "wp_locale": "lb_LU"
   },
   "li": {
     "english_name": "Limburgish",
@@ -984,13 +1103,15 @@
     "lang_code_iso_639_2": "lim",
     "country_code": "nl",
     "slug": "li",
-    "facebook_locale": "li_NL"
+    "facebook_locale": "li_NL",
+    "wp_locale": "li"
   },
   "lij": {
     "english_name": "Ligurian",
     "native_name": "Lìgure",
     "country_code": "it",
-    "slug": "lij"
+    "slug": "lij",
+    "wp_locale": "lij"
   },
   "lin": {
     "english_name": "Lingala",
@@ -1000,13 +1121,15 @@
     "country_code": "cd",
     "slug": "lin",
     "plural_expression": "n > 1",
-    "facebook_locale": "ln_CD"
+    "facebook_locale": "ln_CD",
+    "wp_locale": "lin"
   },
   "lmo": {
     "english_name": "Lombard",
     "native_name": "Lombardo",
     "country_code": "it",
-    "slug": "lmo"
+    "slug": "lmo",
+    "wp_locale": "lmo"
   },
   "lo": {
     "english_name": "Lao",
@@ -1017,7 +1140,8 @@
     "slug": "lo",
     "plural_expression": "0",
     "google_code": "lo",
-    "facebook_locale": "lo_LA"
+    "facebook_locale": "lo_LA",
+    "wp_locale": "lo"
   },
   "lt_LT": {
     "english_name": "Lithuanian",
@@ -1028,7 +1152,8 @@
     "slug": "lt",
     "plural_expression": "(n % 10 == 1 && (n % 100 < 11 || n % 100 > 19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? 1 : 2)",
     "google_code": "lt",
-    "facebook_locale": "lt_LT"
+    "facebook_locale": "lt_LT",
+    "wp_locale": "lt_LT"
   },
   "lug": {
     "english_name": "Luganda",
@@ -1036,7 +1161,8 @@
     "lang_code_iso_639_1": "lg",
     "lang_code_iso_639_2": "lug",
     "country_code": "ug",
-    "slug": "lug"
+    "slug": "lug",
+    "wp_locale": "lug"
   },
   "lv": {
     "english_name": "Latvian",
@@ -1047,28 +1173,32 @@
     "slug": "lv",
     "plural_expression": "(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2)",
     "google_code": "lv",
-    "facebook_locale": "lv_LV"
+    "facebook_locale": "lv_LV",
+    "wp_locale": "lv"
   },
   "mai": {
     "english_name": "Maithili",
     "native_name": "मैथिली",
     "lang_code_iso_639_2": "mai",
     "country_code": "in",
-    "slug": "mai"
+    "slug": "mai",
+    "wp_locale": "mai"
   },
   "me_ME": {
     "english_name": "Montenegrin",
     "native_name": "Crnogorski jezik",
     "country_code": "me",
     "slug": "me",
-    "plural_expression": "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)"
+    "plural_expression": "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)",
+    "wp_locale": "me_ME"
   },
   "mfe": {
     "english_name": "Mauritian Creole",
     "native_name": "Kreol Morisien",
     "country_code": "mu",
     "slug": "mfe",
-    "plural_expression": "0"
+    "plural_expression": "0",
+    "wp_locale": "mfe"
   },
   "mg_MG": {
     "english_name": "Malagasy",
@@ -1078,7 +1208,8 @@
     "country_code": "mg",
     "slug": "mg",
     "google_code": "mg",
-    "facebook_locale": "mg_MG"
+    "facebook_locale": "mg_MG",
+    "wp_locale": "mg_MG"
   },
   "mk_MK": {
     "english_name": "Macedonian",
@@ -1089,7 +1220,8 @@
     "slug": "mk",
     "plural_expression": "n % 10 != 1 || n % 100 == 11",
     "google_code": "mk",
-    "facebook_locale": "mk_MK"
+    "facebook_locale": "mk_MK",
+    "wp_locale": "mk_MK"
   },
   "ml_IN": {
     "english_name": "Malayalam",
@@ -1099,7 +1231,8 @@
     "country_code": "in",
     "slug": "ml",
     "google_code": "ml",
-    "facebook_locale": "ml_IN"
+    "facebook_locale": "ml_IN",
+    "wp_locale": "ml_IN"
   },
   "mlt": {
     "english_name": "Maltese",
@@ -1110,7 +1243,8 @@
     "slug": "mlt",
     "plural_expression": "(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 10) ? 1 : ((n % 100 >= 11 && n % 100 <= 19) ? 2 : 3))",
     "google_code": "mt",
-    "facebook_locale": "mt_MT"
+    "facebook_locale": "mt_MT",
+    "wp_locale": "mlt"
   },
   "mn": {
     "english_name": "Mongolian",
@@ -1120,7 +1254,8 @@
     "country_code": "mn",
     "slug": "mn",
     "google_code": "mn",
-    "facebook_locale": "mn_MN"
+    "facebook_locale": "mn_MN",
+    "wp_locale": "mn"
   },
   "mr": {
     "english_name": "Marathi",
@@ -1129,7 +1264,8 @@
     "lang_code_iso_639_2": "mar",
     "slug": "mr",
     "google_code": "mr",
-    "facebook_locale": "mr_IN"
+    "facebook_locale": "mr_IN",
+    "wp_locale": "mr"
   },
   "mri": {
     "english_name": "Maori",
@@ -1138,7 +1274,8 @@
     "country_code": "nz",
     "slug": "mri",
     "plural_expression": "n > 1",
-    "google_code": "mi"
+    "google_code": "mi",
+    "wp_locale": "mri"
   },
   "ms_MY": {
     "english_name": "Malay",
@@ -1148,7 +1285,8 @@
     "slug": "ms",
     "plural_expression": "0",
     "google_code": "ms",
-    "facebook_locale": "ms_MY"
+    "facebook_locale": "ms_MY",
+    "wp_locale": "ms_MY"
   },
   "my_MM": {
     "english_name": "Myanmar (Burmese)",
@@ -1157,7 +1295,8 @@
     "lang_code_iso_639_2": "mya",
     "country_code": "mm",
     "slug": "mya",
-    "google_code": "my"
+    "google_code": "my",
+    "wp_locale": "my_MM"
   },
   "ne_NP": {
     "english_name": "Nepali",
@@ -1167,7 +1306,8 @@
     "country_code": "np",
     "slug": "ne",
     "google_code": "ne",
-    "facebook_locale": "ne_NP"
+    "facebook_locale": "ne_NP",
+    "wp_locale": "ne_NP"
   },
   "nb_NO": {
     "english_name": "Norwegian (Bokmål)",
@@ -1177,7 +1317,8 @@
     "country_code": "no",
     "slug": "nb",
     "google_code": "no",
-    "facebook_locale": "nb_NO"
+    "facebook_locale": "nb_NO",
+    "wp_locale": "nb_NO"
   },
   "nl_NL": {
     "english_name": "Dutch",
@@ -1187,7 +1328,8 @@
     "country_code": "nl",
     "slug": "nl",
     "google_code": "nl",
-    "facebook_locale": "nl_NL"
+    "facebook_locale": "nl_NL",
+    "wp_locale": "nl_NL"
   },
   "nl_BE": {
     "english_name": "Dutch (Belgium)",
@@ -1196,7 +1338,8 @@
     "lang_code_iso_639_2": "nld",
     "country_code": "be",
     "slug": "nl-be",
-    "google_code": "nl"
+    "google_code": "nl",
+    "wp_locale": "nl_BE"
   },
   "nn_NO": {
     "english_name": "Norwegian (Nynorsk)",
@@ -1206,14 +1349,17 @@
     "country_code": "no",
     "slug": "nn",
     "google_code": "no",
-    "facebook_locale": "nn_NO"
+    "facebook_locale": "nn_NO",
+    "wp_locale": "nn_NO"
   },
   "nqo": {
     "english_name": "N’ko",
     "native_name": "ߒߞߏ",
     "lang_code_iso_639_2": "nqo",
     "country_code": "gn",
-    "slug": "nqo"
+    "slug": "nqo",
+    "text_direction": "rtl",
+    "wp_locale": "nqo"
   },
   "oci": {
     "english_name": "Occitan",
@@ -1222,7 +1368,8 @@
     "lang_code_iso_639_2": "oci",
     "country_code": "fr",
     "slug": "oci",
-    "plural_expression": "n > 1"
+    "plural_expression": "n > 1",
+    "wp_locale": "oci"
   },
   "ory": {
     "english_name": "Oriya",
@@ -1231,14 +1378,16 @@
     "lang_code_iso_639_2": "ory",
     "country_code": "in",
     "slug": "ory",
-    "facebook_locale": "or_IN"
+    "facebook_locale": "or_IN",
+    "wp_locale": "ory"
   },
   "os": {
     "english_name": "Ossetic",
     "native_name": "Ирон",
     "lang_code_iso_639_1": "os",
     "lang_code_iso_639_2": "oss",
-    "slug": "os"
+    "slug": "os",
+    "wp_locale": "os"
   },
   "pa_IN": {
     "english_name": "Panjabi (India)",
@@ -1249,7 +1398,8 @@
     "slug": "pa",
     "plural_expression": "n > 1",
     "google_code": "pa",
-    "facebook_locale": "pa_IN"
+    "facebook_locale": "pa_IN",
+    "wp_locale": "pa_IN"
   },
   "pa_PK": {
     "english_name": "Punjabi (Pakistan)",
@@ -1259,34 +1409,39 @@
     "country_code": "pk",
     "slug": "pa-pk",
     "plural_expression": "n > 1",
-    "google_code": "pa"
+    "google_code": "pa",
+    "wp_locale": "pa_PK"
   },
   "pap_CW": {
     "english_name": "Papiamento (Curaçao and Bonaire)",
     "native_name": "Papiamentu",
     "lang_code_iso_639_2": "pap",
     "country_code": "cw",
-    "slug": "pap-cw"
+    "slug": "pap-cw",
+    "wp_locale": "pap_CW"
   },
   "pap_AW": {
     "english_name": "Papiamento (Aruba)",
     "native_name": "Papiamento",
     "lang_code_iso_639_2": "pap",
     "country_code": "aw",
-    "slug": "pap-aw"
+    "slug": "pap-aw",
+    "wp_locale": "pap_AW"
   },
   "pcd": {
     "english_name": "Picard",
     "native_name": "Ch’ti",
     "country_code": "fr",
     "slug": "pcd",
-    "plural_expression": "n > 1"
+    "plural_expression": "n > 1",
+    "wp_locale": "pcd"
   },
   "pcm": {
     "english_name": "Nigerian Pidgin",
     "native_name": "Nigerian Pidgin",
     "country_code": "ng",
-    "slug": "pcm"
+    "slug": "pcm",
+    "wp_locale": "pcm"
   },
   "art_xpirate": {
     "english_name": "English (Pirate)",
@@ -1294,7 +1449,8 @@
     "lang_code_iso_639_2": "art",
     "slug": "pirate",
     "google_code": "xx-pirate",
-    "facebook_locale": "en_PI"
+    "facebook_locale": "en_PI",
+    "wp_locale": "art_xpirate"
   },
   "pl_PL": {
     "english_name": "Polish",
@@ -1305,7 +1461,8 @@
     "slug": "pl",
     "plural_expression": "(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
     "google_code": "pl",
-    "facebook_locale": "pl_PL"
+    "facebook_locale": "pl_PL",
+    "wp_locale": "pl_PL"
   },
   "pt_PT": {
     "english_name": "Portuguese (Portugal)",
@@ -1314,7 +1471,8 @@
     "country_code": "pt",
     "slug": "pt",
     "google_code": "pt-PT",
-    "facebook_locale": "pt_PT"
+    "facebook_locale": "pt_PT",
+    "wp_locale": "pt_PT"
   },
   "pt_PT_ao90": {
     "english_name": "Portuguese (Portugal, AO90)",
@@ -1322,14 +1480,16 @@
     "lang_code_iso_639_1": "pt",
     "country_code": "pt",
     "slug": "pt-ao90",
-    "google_code": "pt-PT"
+    "google_code": "pt-PT",
+    "wp_locale": "pt_PT_ao90"
   },
   "pt_AO": {
     "english_name": "Portuguese (Angola)",
     "native_name": "Português de Angola",
     "lang_code_iso_639_1": "pt",
     "country_code": "ao",
-    "slug": "pt-ao"
+    "slug": "pt-ao",
+    "wp_locale": "pt_AO"
   },
   "pt_BR": {
     "english_name": "Portuguese (Brazil)",
@@ -1340,7 +1500,8 @@
     "slug": "pt-br",
     "plural_expression": "n > 1",
     "google_code": "pt-BR",
-    "facebook_locale": "pt_BR"
+    "facebook_locale": "pt_BR",
+    "wp_locale": "pt_BR"
   },
   "ps": {
     "english_name": "Pashto",
@@ -1349,14 +1510,17 @@
     "lang_code_iso_639_2": "pus",
     "country_code": "af",
     "slug": "ps",
-    "facebook_locale": "ps_AF"
+    "facebook_locale": "ps_AF",
+    "text_direction": "rtl",
+    "wp_locale": "ps"
   },
   "rhg": {
     "english_name": "Rohingya",
     "native_name": "Ruáinga",
     "country_code": "mm",
     "slug": "rhg",
-    "plural_expression": "0"
+    "plural_expression": "0",
+    "wp_locale": "rhg"
   },
   "ro_RO": {
     "english_name": "Romanian",
@@ -1367,7 +1531,8 @@
     "slug": "ro",
     "plural_expression": "(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2)",
     "google_code": "ro",
-    "facebook_locale": "ro_RO"
+    "facebook_locale": "ro_RO",
+    "wp_locale": "ro_RO"
   },
   "roh": {
     "english_name": "Romansh",
@@ -1375,7 +1540,8 @@
     "lang_code_iso_639_1": "rm",
     "lang_code_iso_639_2": "roh",
     "country_code": "ch",
-    "slug": "roh"
+    "slug": "roh",
+    "wp_locale": "roh"
   },
   "ru_RU": {
     "english_name": "Russian",
@@ -1386,14 +1552,16 @@
     "slug": "ru",
     "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
     "google_code": "ru",
-    "facebook_locale": "ru_RU"
+    "facebook_locale": "ru_RU",
+    "wp_locale": "ru_RU"
   },
   "sah": {
     "english_name": "Sakha",
     "native_name": "Сахалыы",
     "lang_code_iso_639_2": "sah",
     "country_code": "ru",
-    "slug": "sah"
+    "slug": "sah",
+    "wp_locale": "sah"
   },
   "sa_IN": {
     "english_name": "Sanskrit",
@@ -1402,13 +1570,15 @@
     "lang_code_iso_639_2": "san",
     "country_code": "in",
     "slug": "sa-in",
-    "facebook_locale": "sa_IN"
+    "facebook_locale": "sa_IN",
+    "wp_locale": "sa_IN"
   },
   "scn": {
     "english_name": "Sicilian",
     "native_name": "Sicilianu",
     "country_code": "it",
-    "slug": "scn"
+    "slug": "scn",
+    "wp_locale": "scn"
   },
   "si_LK": {
     "english_name": "Sinhala",
@@ -1418,7 +1588,8 @@
     "country_code": "lk",
     "slug": "si",
     "google_code": "si",
-    "facebook_locale": "si_LK"
+    "facebook_locale": "si_LK",
+    "wp_locale": "si_LK"
   },
   "sk_SK": {
     "english_name": "Slovak",
@@ -1429,14 +1600,17 @@
     "slug": "sk",
     "plural_expression": "(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2)",
     "google_code": "sk",
-    "facebook_locale": "sk_SK"
+    "facebook_locale": "sk_SK",
+    "wp_locale": "sk_SK"
   },
   "skr": {
     "english_name": "Saraiki",
     "native_name": "سرائیکی",
     "country_code": "pk",
     "slug": "skr",
-    "plural_expression": "n > 1"
+    "plural_expression": "n > 1",
+    "text_direction": "rtl",
+    "wp_locale": "skr"
   },
   "sl_SI": {
     "english_name": "Slovenian",
@@ -1447,14 +1621,16 @@
     "slug": "sl",
     "plural_expression": "(n % 100 == 1) ? 0 : ((n % 100 == 2) ? 1 : ((n % 100 == 3 || n % 100 == 4) ? 2 : 3))",
     "google_code": "sl",
-    "facebook_locale": "sl_SI"
+    "facebook_locale": "sl_SI",
+    "wp_locale": "sl_SI"
   },
   "sna": {
     "english_name": "Shona",
     "native_name": "ChiShona",
     "lang_code_iso_639_1": "sn",
     "country_code": "zw",
-    "slug": "sna"
+    "slug": "sna",
+    "wp_locale": "sna"
   },
   "snd": {
     "english_name": "Sindhi",
@@ -1462,7 +1638,9 @@
     "lang_code_iso_639_1": "sd",
     "lang_code_iso_639_2": "snd",
     "country_code": "pk",
-    "slug": "snd"
+    "slug": "snd",
+    "text_direction": "rtl",
+    "wp_locale": "snd"
   },
   "so_SO": {
     "english_name": "Somali",
@@ -1472,7 +1650,8 @@
     "country_code": "so",
     "slug": "so",
     "google_code": "so",
-    "facebook_locale": "so_SO"
+    "facebook_locale": "so_SO",
+    "wp_locale": "so_SO"
   },
   "sq": {
     "english_name": "Albanian",
@@ -1482,14 +1661,16 @@
     "country_code": "al",
     "slug": "sq",
     "google_code": "sq",
-    "facebook_locale": "sq_AL"
+    "facebook_locale": "sq_AL",
+    "wp_locale": "sq"
   },
   "sq_XK": {
     "english_name": "Shqip (Kosovo)",
     "native_name": "Për Kosovën Shqip",
     "lang_code_iso_639_1": "sq",
     "country_code": "xk",
-    "slug": "sq-xk"
+    "slug": "sq-xk",
+    "wp_locale": "sq_XK"
   },
   "sr_RS": {
     "english_name": "Serbian",
@@ -1500,7 +1681,8 @@
     "slug": "sr",
     "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
     "google_code": "sr",
-    "facebook_locale": "sr_RS"
+    "facebook_locale": "sr_RS",
+    "wp_locale": "sr_RS"
   },
   "srd": {
     "english_name": "Sardinian",
@@ -1509,7 +1691,8 @@
     "lang_code_iso_639_2": "srd",
     "country_code": "it",
     "slug": "srd",
-    "facebook_locale": "sc_IT"
+    "facebook_locale": "sc_IT",
+    "wp_locale": "srd"
   },
   "ssw": {
     "english_name": "Swati",
@@ -1517,7 +1700,8 @@
     "lang_code_iso_639_1": "ss",
     "lang_code_iso_639_2": "ssw",
     "country_code": "sz",
-    "slug": "ssw"
+    "slug": "ssw",
+    "wp_locale": "ssw"
   },
   "su_ID": {
     "english_name": "Sundanese",
@@ -1527,7 +1711,8 @@
     "country_code": "id",
     "slug": "su",
     "plural_expression": "0",
-    "google_code": "su"
+    "google_code": "su",
+    "wp_locale": "su_ID"
   },
   "sv_SE": {
     "english_name": "Swedish",
@@ -1537,7 +1722,8 @@
     "country_code": "se",
     "slug": "sv",
     "google_code": "sv",
-    "facebook_locale": "sv_SE"
+    "facebook_locale": "sv_SE",
+    "wp_locale": "sv_SE"
   },
   "sw": {
     "english_name": "Swahili",
@@ -1546,13 +1732,15 @@
     "lang_code_iso_639_2": "swa",
     "slug": "sw",
     "google_code": "sw",
-    "facebook_locale": "sw_KE"
+    "facebook_locale": "sw_KE",
+    "wp_locale": "sw"
   },
   "syr": {
     "english_name": "Syriac",
     "native_name": "Syriac",
     "country_code": "iq",
-    "slug": "syr"
+    "slug": "syr",
+    "wp_locale": "syr"
   },
   "szl": {
     "english_name": "Silesian",
@@ -1560,7 +1748,8 @@
     "country_code": "pl",
     "slug": "szl",
     "plural_expression": "(n==1 ? 0 : n%10>=2 && n%10<=4 && n%100==20 ? 1 : 2)",
-    "facebook_locale": "sz_PL"
+    "facebook_locale": "sz_PL",
+    "wp_locale": "szl"
   },
   "ta_IN": {
     "english_name": "Tamil",
@@ -1570,7 +1759,8 @@
     "country_code": "in",
     "slug": "ta",
     "google_code": "ta",
-    "facebook_locale": "ta_IN"
+    "facebook_locale": "ta_IN",
+    "wp_locale": "ta_IN"
   },
   "ta_LK": {
     "english_name": "Tamil (Sri Lanka)",
@@ -1579,7 +1769,8 @@
     "lang_code_iso_639_2": "tam",
     "country_code": "lk",
     "slug": "ta-lk",
-    "google_code": "ta"
+    "google_code": "ta",
+    "wp_locale": "ta_LK"
   },
   "tah": {
     "english_name": "Tahitian",
@@ -1588,7 +1779,8 @@
     "lang_code_iso_639_2": "tah",
     "country_code": "pf",
     "slug": "tah",
-    "plural_expression": "n > 1"
+    "plural_expression": "n > 1",
+    "wp_locale": "tah"
   },
   "te": {
     "english_name": "Telugu",
@@ -1597,7 +1789,8 @@
     "lang_code_iso_639_2": "tel",
     "slug": "te",
     "google_code": "te",
-    "facebook_locale": "te_IN"
+    "facebook_locale": "te_IN",
+    "wp_locale": "te"
   },
   "tg": {
     "english_name": "Tajik",
@@ -1607,7 +1800,8 @@
     "country_code": "tj",
     "slug": "tg",
     "google_code": "tg",
-    "facebook_locale": "tg_TJ"
+    "facebook_locale": "tg_TJ",
+    "wp_locale": "tg"
   },
   "th": {
     "english_name": "Thai",
@@ -1617,7 +1811,8 @@
     "slug": "th",
     "plural_expression": "0",
     "google_code": "th",
-    "facebook_locale": "th_TH"
+    "facebook_locale": "th_TH",
+    "wp_locale": "th"
   },
   "tir": {
     "english_name": "Tigrinya",
@@ -1626,7 +1821,8 @@
     "lang_code_iso_639_2": "tir",
     "country_code": "er",
     "slug": "tir",
-    "plural_expression": "0"
+    "plural_expression": "0",
+    "wp_locale": "tir"
   },
   "tl": {
     "english_name": "Tagalog",
@@ -1636,7 +1832,8 @@
     "country_code": "ph",
     "slug": "tl",
     "google_code": "tl",
-    "facebook_locale": "tl_PH"
+    "facebook_locale": "tl_PH",
+    "wp_locale": "tl"
   },
   "tr_TR": {
     "english_name": "Turkish",
@@ -1647,7 +1844,8 @@
     "slug": "tr",
     "plural_expression": "n > 1",
     "google_code": "tr",
-    "facebook_locale": "tr_TR"
+    "facebook_locale": "tr_TR",
+    "wp_locale": "tr_TR"
   },
   "tt_RU": {
     "english_name": "Tatar",
@@ -1657,7 +1855,8 @@
     "country_code": "ru",
     "slug": "tt",
     "plural_expression": "0",
-    "facebook_locale": "tt_RU"
+    "facebook_locale": "tt_RU",
+    "wp_locale": "tt_RU"
   },
   "tuk": {
     "english_name": "Turkmen",
@@ -1667,13 +1866,15 @@
     "country_code": "tm",
     "slug": "tuk",
     "plural_expression": "n > 1",
-    "facebook_locale": "tk_TM"
+    "facebook_locale": "tk_TM",
+    "wp_locale": "tuk"
   },
   "twd": {
     "english_name": "Tweants",
     "native_name": "Twents",
     "country_code": "nl",
-    "slug": "twd"
+    "slug": "twd",
+    "wp_locale": "twd"
   },
   "tzm": {
     "english_name": "Tamazight (Central Atlas)",
@@ -1681,7 +1882,8 @@
     "lang_code_iso_639_2": "tzm",
     "country_code": "ma",
     "slug": "tzm",
-    "plural_expression": "n > 1"
+    "plural_expression": "n > 1",
+    "wp_locale": "tzm"
   },
   "ug_CN": {
     "english_name": "Uighur",
@@ -1689,7 +1891,9 @@
     "lang_code_iso_639_1": "ug",
     "lang_code_iso_639_2": "uig",
     "country_code": "cn",
-    "slug": "ug"
+    "slug": "ug",
+    "text_direction": "rtl",
+    "wp_locale": "ug_CN"
   },
   "uk": {
     "english_name": "Ukrainian",
@@ -1700,7 +1904,8 @@
     "slug": "uk",
     "plural_expression": "(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2)",
     "google_code": "uk",
-    "facebook_locale": "uk_UA"
+    "facebook_locale": "uk_UA",
+    "wp_locale": "uk"
   },
   "ur": {
     "english_name": "Urdu",
@@ -1710,7 +1915,9 @@
     "country_code": "pk",
     "slug": "ur",
     "google_code": "ur",
-    "facebook_locale": "ur_PK"
+    "facebook_locale": "ur_PK",
+    "text_direction": "rtl",
+    "wp_locale": "ur"
   },
   "uz_UZ": {
     "english_name": "Uzbek",
@@ -1721,14 +1928,16 @@
     "slug": "uz",
     "plural_expression": "0",
     "google_code": "uz",
-    "facebook_locale": "uz_UZ"
+    "facebook_locale": "uz_UZ",
+    "wp_locale": "uz_UZ"
   },
   "vec": {
     "english_name": "Venetian",
     "native_name": "Vèneto",
     "lang_code_iso_639_2": "roa",
     "country_code": "it",
-    "slug": "vec"
+    "slug": "vec",
+    "wp_locale": "vec"
   },
   "vi": {
     "english_name": "Vietnamese",
@@ -1739,7 +1948,8 @@
     "slug": "vi",
     "plural_expression": "0",
     "google_code": "vi",
-    "facebook_locale": "vi_VN"
+    "facebook_locale": "vi_VN",
+    "wp_locale": "vi"
   },
   "wol": {
     "english_name": "Wolof",
@@ -1748,7 +1958,8 @@
     "lang_code_iso_639_2": "wol",
     "country_code": "sn",
     "slug": "wol",
-    "plural_expression": "0"
+    "plural_expression": "0",
+    "wp_locale": "wol"
   },
   "xho": {
     "english_name": "Xhosa",
@@ -1758,7 +1969,8 @@
     "country_code": "za",
     "slug": "xho",
     "google_code": "xh",
-    "facebook_locale": "xh_ZA"
+    "facebook_locale": "xh_ZA",
+    "wp_locale": "xho"
   },
   "yor": {
     "english_name": "Yoruba",
@@ -1768,7 +1980,8 @@
     "country_code": "ng",
     "slug": "yor",
     "google_code": "yo",
-    "facebook_locale": "yo_NG"
+    "facebook_locale": "yo_NG",
+    "wp_locale": "yor"
   },
   "zgh": {
     "english_name": "Tamazight",
@@ -1776,7 +1989,8 @@
     "lang_code_iso_639_2": "zgh",
     "country_code": "ma",
     "slug": "zgh",
-    "plural_expression": "n >= 2 && (n < 11 || n > 99)"
+    "plural_expression": "n >= 2 && (n < 11 || n > 99)",
+    "wp_locale": "zgh"
   },
   "zh_CN": {
     "english_name": "Chinese (China)",
@@ -1787,7 +2001,8 @@
     "slug": "zh-cn",
     "plural_expression": "0",
     "google_code": "zh-CN",
-    "facebook_locale": "zh_CN"
+    "facebook_locale": "zh_CN",
+    "wp_locale": "zh_CN"
   },
   "zh_HK": {
     "english_name": "Chinese (Hong Kong)",
@@ -1797,7 +2012,8 @@
     "country_code": "hk",
     "slug": "zh-hk",
     "plural_expression": "0",
-    "facebook_locale": "zh_HK"
+    "facebook_locale": "zh_HK",
+    "wp_locale": "zh_HK"
   },
   "zh_SG": {
     "english_name": "Chinese (Singapore)",
@@ -1806,7 +2022,8 @@
     "lang_code_iso_639_2": "zho",
     "country_code": "sg",
     "slug": "zh-sg",
-    "plural_expression": "0"
+    "plural_expression": "0",
+    "wp_locale": "zh_SG"
   },
   "zh_TW": {
     "english_name": "Chinese (Taiwan)",
@@ -1817,7 +2034,8 @@
     "slug": "zh-tw",
     "plural_expression": "0",
     "google_code": "zh-TW",
-    "facebook_locale": "zh_TW"
+    "facebook_locale": "zh_TW",
+    "wp_locale": "zh_TW"
   },
   "zul": {
     "english_name": "Zulu",
@@ -1826,6 +2044,7 @@
     "lang_code_iso_639_2": "zul",
     "country_code": "za",
     "slug": "zul",
-    "google_code": "zu"
+    "google_code": "zu",
+    "wp_locale": "zul"
   }
 }

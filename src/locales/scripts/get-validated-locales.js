@@ -1,22 +1,14 @@
 const fs = require('fs')
 const localesList = require('./locales-list.json')
 
-/** Build the ISO string for a locale */
-/** TODO: Move! */
-const buildISO = (locale) => {
-  let iso = `${locale.lang_code_iso_639_1}`
-  if (locale.lang_code_iso_639_2) {
-    iso = `${iso}-${locale.lang_code_iso_639_2.toUpperCase()}`
-  }
-  return iso
-}
-
 const getValidatedLocales = () => {
   return Object.values(localesList)
     .map((locale) => ({
       code: locale.slug,
       name: locale.english_name,
-      iso: buildISO(locale),
+      iso: locale.lang_code_iso_639_1,
+      wpLocale: locale.wp_locale,
+      dir: locale.text_direction,
       file: `${locale.slug}.json`,
     }))
     .filter((i) => fs.existsSync(process.cwd() + `/src/locales/${i.file}`))

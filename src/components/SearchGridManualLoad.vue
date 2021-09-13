@@ -68,8 +68,6 @@ import { FETCH_MEDIA } from '~/store-modules/action-types'
 import { SET_MEDIA } from '~/store-modules/mutation-types'
 import { IMAGE } from '~/constants/media'
 
-const DEFAULT_PAGE_SIZE = 20
-
 export default {
   name: 'SearchGridManualLoad',
   props: {
@@ -145,17 +143,6 @@ export default {
     },
   },
   watch: {
-    _images: {
-      handler() {
-        if (this.$state) {
-          this.$state.loaded()
-          if (this._imagesCount < this.currentPage * DEFAULT_PAGE_SIZE) {
-            this.$state.complete()
-          }
-        }
-        this.isDataInitialized = true
-      },
-    },
     _query: {
       handler() {
         this.searchChanged()
@@ -182,37 +169,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.search-grid_layout-control h5 {
-  padding-top: 1.36vh;
-  font-size: 1rem;
-  display: inline-block;
-}
-
-.search-grid_layout-control h5 {
-  margin-right: 10px;
-}
-
-.search-grid_layout-control {
-  text-align: right;
-
-  fieldset {
-    display: inline;
-    margin-right: 5px;
-  }
-}
-
-.infinite-loading-container {
-  margin-top: 30px;
-  width: 100%;
-}
-
-.search-grid_ctr {
-  .item {
-    width: 320px;
-    margin-bottom: 20px;
-  }
-}
-
 .search-grid:after {
   content: '';
   display: block;

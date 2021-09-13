@@ -173,7 +173,7 @@ export default {
     ],
     lazy: true,
     langDir: 'locales',
-    strategy: 'prefix_and_default',
+    strategy: 'no_prefix',
     defaultLocale: 'en',
     detectBrowserLanguage: {
       useCookie: true,
