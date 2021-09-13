@@ -9,9 +9,9 @@
         <slot name="play-pause" />
 
         <div class="audio-info">
-          <p class="text-3xl font-heading font-semibold">
+          <h1 class="text-3xl font-heading font-semibold">
             {{ audio.title }}
-          </p>
+          </h1>
           <p class="text-base leading-snug mt-1">{{ audio.creator }}</p>
         </div>
       </div>
