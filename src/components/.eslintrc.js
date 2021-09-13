@@ -3,7 +3,7 @@ module.exports = {
   rules: {
     'unicorn/filename-case': [
       'error',
-      { case: 'pascalCase', ignore: ['.eslintrc.js'] },
+      { case: 'pascalCase', ignore: ['.eslintrc.js', '.*\\.stories\\.js'] },
     ],
   },
 }
