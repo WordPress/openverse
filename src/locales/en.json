@@ -586,7 +586,8 @@
       "err_decode": "Could not decode audio.",
       "err_unsupported": "This audio format is not supported by your browser.",
       "loading": "Loading..."
-    }
+    },
+    "creator": "by {creator}"
   },
   "play-pause": {
     "play": "Play",

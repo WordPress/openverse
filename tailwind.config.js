@@ -33,6 +33,7 @@ module.exports = {
       'dark-charcoal-04': 'rgba(48, 39, 46, 0.04)',
       'dark-charcoal-20': 'rgba(48, 39, 46, 0.2)',
       'dark-charcoal-60': 'rgba(48, 39, 46, 0.6)',
+      'dark-charcoal-70': 'rgba(48, 39, 46, 0.7)',
 
       // Special keywords
       tx: 'transparent',
@@ -44,6 +45,8 @@ module.exports = {
       px: '1px',
       ch: '1ch',
       ex: '1ex',
+      half: '50%',
+      full: '100%',
 
       // Indexed by multiples of baseline (~ `0.25rem`)
       0: '0',
@@ -119,6 +122,11 @@ module.exports = {
       snug: '1.3',
       tight: '1.2',
       none: '1.0',
+    },
+    flexGrow: {
+      0: 0,
+      DEFAULT: 1,
+      2: 2,
     },
     fontFamily: {
       system: [

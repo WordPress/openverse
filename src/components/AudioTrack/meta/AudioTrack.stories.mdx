@@ -113,14 +113,25 @@ export const Template = (args, { argTypes }) => ({
   <Story name="Default">{Template.bind({})}</Story>
 </Canvas>
 
-The component can also be rendered in a smaller format, when used in the
-"Related audio" section for example.
+The component can also be rendered in a multiple different layouts, by
+specifying a `layout`. The layout can further by customised by the `size` and
+`aspect` props.
 
 <Canvas>
   <Story
-    name="Compact"
+    name="Row (small)"
     args={{
-      isCompact: true,
+      layout: 'row',
+      size: 's',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Row (medium)"
+    args={{
+      layout: 'row',
+      size: 'm',
     }}
   >
     {Template.bind({})}
