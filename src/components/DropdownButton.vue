@@ -136,7 +136,7 @@ export default DropdownButton
 
 <style lang="css" scoped>
 .dropdown-button {
-  @apply flex items-center justify-center bg-pink text-white font-bold p-2 px-4 transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-pink hover:bg-dark-pink;
+  @apply flex items-center justify-center bg-pink text-white font-bold p-2 px-4 transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink hover:bg-dark-pink;
 }
 
 .dropdown-button-active {
@@ -148,7 +148,7 @@ export default DropdownButton
 }
 
 .dropdown-item {
-  @apply hover:bg-light-gray px-2 py-1 mb-1 rounded-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-pink;
+  @apply hover:bg-light-gray px-2 py-1 mb-1 rounded-sm transition-colors focus:outline-none focus:ring focus:ring-offset-2 focus:ring-pink;
 }
 
 .dropdown-item-active {
