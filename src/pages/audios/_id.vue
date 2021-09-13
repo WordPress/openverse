@@ -1,29 +1,25 @@
 <template>
   <div :aria-label="$t('photo-details.aria.main')" class="audio-page">
-    <ClientOnly>
-      <AudioTrack :audio="audio" />
-    </ClientOnly>
-    <template v-if="!$fetchState.pending">
-      <MediaReuse
-        data-testid="audio-attribution"
-        :media="audio"
-        :cc-license-u-r-l="ccLicenseURL"
-        :full-license-name="fullLicenseName"
-        :attribution-html="attributionHtml()"
-        class="audio-reuse"
-      />
-      <AudioDetailsTable
-        data-testid="audio-info"
-        :audio="audio"
-        class="audio-info"
-      />
-      <AudioDetailsRelated
-        v-if="!$fetchState.pending"
-        :related-audios="relatedAudios"
-        class="audio-related"
-      />
-    </template>
-    <p v-if="$fetchState.pending">Not loaded yet</p>
+    <AudioTrack :audio="audio" />
+    <MediaReuse
+      data-testid="audio-attribution"
+      :media="audio"
+      :license-u-r-l="openverseLicenseURL"
+      :full-license-name="fullLicenseName"
+      :attribution-html="attributionHtml()"
+      class="px-16 mb-16 mt-6"
+    />
+    <AudioDetailsTable
+      data-testid="audio-info"
+      :audio="audio"
+      class="px-16 mb-16 mt-6"
+    />
+    <AudioDetailsRelated
+      v-if="!$fetchState.pending"
+      :related-audios="relatedAudios"
+      class="px-16 mb-16 mt-6"
+    />
+    <p v-else>{{ $t('media-details.loading') }}</p>
   </div>
 </template>
 
@@ -72,8 +68,8 @@ const AudioDetailPage = {
     fullLicenseName() {
       return getFullLicenseName(this.audio.license, this.audio.license_version)
     },
-    ccLicenseURL() {
-      return `${this.audio.license_url}?ref=ccsearch`
+    openverseLicenseURL() {
+      return `${this.audio.license_url}?ref=openverse`
     },
   },
   watch: {
@@ -118,15 +114,10 @@ const AudioDetailPage = {
   methods: {
     ...mapActions([FETCH_AUDIO, FETCH_RELATED_MEDIA]),
     attributionHtml() {
-      const licenseURL = `${this.ccLicenseURL}&atype=html`
+      const licenseURL = `${this.openverseLicenseURL}&atype=html`
       return attributionHtml(this.audio, licenseURL, this.fullLicenseName)
     },
-    onAudioLoaded(event) {
-      console.log('Image loaded', event)
-    },
     getRelatedAudios() {
-      console.log('getting related audios id, audio', this.id, this.audio)
-
       if (this.audio && this.audio.id) {
         this[FETCH_RELATED_MEDIA]({ mediaType: AUDIO, id: this.audio.id })
       }
@@ -136,27 +127,3 @@ const AudioDetailPage = {
 
 export default AudioDetailPage
 </script>
-<style lang="scss">
-.audio-page {
-  --page-margin: 4rem;
-  --section-gap: 1.5rem;
-  margin-top: var(--section-gap, 1.5rem);
-}
-// These changes will need to be added in AudioTrack
-.info-section {
-  padding-left: var(--page-margin, 4rem);
-  padding-right: var(--page-margin, 4rem);
-  margin-top: var(--section-gap, 1.5rem);
-}
-.audio-related .info-section {
-  padding-left: 0;
-  padding-right: 0;
-}
-.audio-page > section,
-.audio-page > aside {
-  margin-bottom: var(--page-margin, 4rem);
-  margin-top: var(--section-gap, 1.5rem);
-  padding-left: var(--page-margin, 4rem);
-  padding-right: var(--page-margin, 4rem);
-}
-</style>

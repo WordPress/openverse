@@ -291,7 +291,10 @@
   "error": {
     "not-found": "Page Not Found",
     "occurred": "An error occurred",
-    "image-not-found": "Couldn't find image with id {id}"
+    "image-not-found": "Couldn't find image with id {id}",
+    "media-not-found": "Couldn't find {mediaType} with id {id}",
+    "image": "image",
+    "audio": "audio"
   },
   "search-tab": {
     "all": "All",
@@ -484,7 +487,8 @@
       }
     },
     "provider-label": "Provider",
-    "source-label": "Source"
+    "source-label": "Source",
+    "loading": "Loading..."
   },
   "photo-details": {
     "back": "Back to search results",

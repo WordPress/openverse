@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-06T09:40:52+00:00\n"
+"POT-Creation-Date: 2021-09-13T09:52:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1109,18 +1109,34 @@ msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
 
+# error.media-not-found (Do not translate words between ###)
+#: src/pages/audios/_id.vue:99
+msgctxt "error.media-not-found"
+msgid "Couldn't find ###mediaType### with id ###id###"
+msgstr ""
+
+# error.image
+msgctxt "error.image"
+msgid "image"
+msgstr ""
+
+# error.audio
+msgctxt "error.audio"
+msgid "audio"
+msgstr ""
+
 # search-tab.all
 msgctxt "search-tab.all"
 msgid "All"
 msgstr ""
 
-# search-tab.image
-msgctxt "search-tab.image"
+# error.image
+msgctxt "error.image"
 msgid "Image"
 msgstr ""
 
-# search-tab.audio
-msgctxt "search-tab.audio"
+# error.audio
+msgctxt "error.audio"
 msgid "Audio"
 msgstr ""
 
@@ -1562,13 +1578,13 @@ msgctxt "hero.search.placeholder"
 msgid "Search all ###type###"
 msgstr ""
 
-# search-tab.image
-msgctxt "search-tab.image"
+# error.image
+msgctxt "error.image"
 msgid "images"
 msgstr ""
 
-# search-tab.audio
-msgctxt "search-tab.audio"
+# error.audio
+msgctxt "error.audio"
 msgid "audio"
 msgstr ""
 
@@ -1690,8 +1706,29 @@ msgctxt "filters.creator"
 msgid "search by creator"
 msgstr ""
 
-# search-tab.image
-msgctxt "search-tab.image"
+# hero.title
+#: src/components/HeroSection.vue:6
+msgctxt "hero.title"
+msgid "Reuse content"
+msgstr ""
+
+# media-details.reuse.license-header
+msgctxt "media-details.reuse.license-header"
+msgid "License"
+msgstr ""
+
+# media-details.reuse.tool-header
+msgctxt "media-details.reuse.tool-header"
+msgid "Public Domain"
+msgstr ""
+
+# error.audio
+msgctxt "error.audio"
+msgid "Audio"
+msgstr ""
+
+# error.image
+msgctxt "error.image"
 msgid "Image"
 msgstr ""
 
@@ -1781,16 +1818,6 @@ msgctxt "media-details.reuse.copy-license.plain"
 msgid "Plain text"
 msgstr ""
 
-# media-details.reuse.license-header
-msgctxt "media-details.reuse.license-header"
-msgid "License"
-msgstr ""
-
-# media-details.reuse.tool-header
-msgctxt "media-details.reuse.tool-header"
-msgid "Public Domain"
-msgstr ""
-
 # media-details.reuse.attribution.main (Do not translate words between ###)
 #: src/components/MediaInfo/MediaLicense.vue:7
 msgctxt "media-details.reuse.attribution.main"
@@ -1801,6 +1828,24 @@ msgstr ""
 #: src/pages/meta-search.vue:17
 msgctxt "meta-search-page.license"
 msgid "license."
+msgstr ""
+
+# media-details.provider-label
+#: src/components/AudioDetails/Table.vue:23
+msgctxt "media-details.provider-label"
+msgid "Provider"
+msgstr ""
+
+# media-details.source-label
+#: src/components/AudioDetails/Table.vue:39
+msgctxt "media-details.source-label"
+msgid "Source"
+msgstr ""
+
+# feedback.loading
+#: src/pages/feedback.vue:54
+msgctxt "feedback.loading"
+msgid "Loading..."
 msgstr ""
 
 # photo-details.back
@@ -2067,7 +2112,7 @@ msgid "main content"
 msgstr ""
 
 # photo-details.aria.related
-#: src/components/RelatedImages.vue:3
+#: src/components/AudioDetails/Related.vue:2
 msgctxt "photo-details.aria.related"
 msgid "related images"
 msgstr ""
@@ -2082,6 +2127,18 @@ msgstr ""
 #: src/components/ImageDetails/PhotoDetails.vue:70
 msgctxt "photo-details.aria.creator-url"
 msgid "author ###creator###"
+msgstr ""
+
+# audio-details.genre-label
+#: src/components/AudioDetails/Table.vue:31
+msgctxt "audio-details.genre-label"
+msgid "Genre"
+msgstr ""
+
+# audio-details.related-audios
+#: src/components/AudioDetails/Related.vue:4
+msgctxt "audio-details.related-audios"
+msgid "Related audios"
 msgstr ""
 
 # hero.caption
@@ -2157,7 +2214,7 @@ msgid "Audio seek bar"
 msgstr ""
 
 # waveform.current-time (Do not translate words between ###)
-#: src/components/AudioTrack/Waveform.vue:377
+#: src/components/AudioTrack/Waveform.vue:420
 msgctxt "waveform.current-time"
 msgid "###time### seconds"
 msgstr ""
