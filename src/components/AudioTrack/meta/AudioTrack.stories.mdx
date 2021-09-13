@@ -125,3 +125,35 @@ The component is capable of playing audio in many formats, but this largely
 depends on the browser and engine. Refer to
 ['Can I use...'](https://caniuse.com/?search=audio%20format) for more up-to-date
 information on browser compatibility.
+
+## Single active player
+
+The audio players use a centralised store for holding the details of the active
+media, enabling only one player to be active at any given time.
+
+export const Multiple = () => ({
+  template: `
+    <div>
+      <AudioTrack
+        v-for="(audio, key) in formatExamples"
+        :key="key"
+        :audio="audioObj(audio)"/>
+    </div>
+  `,
+  components: { AudioTrack },
+  data() {
+    return { formatExamples }
+  },
+  methods: {
+    audioObj(audio) {
+      return {
+        ...commonAttrs(),
+        ...audio,
+      }
+    },
+  },
+})
+
+<Canvas>
+  <Story name="Multiple">{Multiple.bind({})}</Story>
+</Canvas>
