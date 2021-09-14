@@ -1,4 +1,5 @@
 name: Meta file sync
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#meta-file-sync
 
 on:
   workflow_dispatch:

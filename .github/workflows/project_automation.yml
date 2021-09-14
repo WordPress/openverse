@@ -1,4 +1,5 @@
 name: Project automation
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#project-automation
 
 on:
   workflow_dispatch:

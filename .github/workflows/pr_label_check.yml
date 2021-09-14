@@ -1,0 +1,30 @@
+name: PR label check
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#pr-label-check
+
+on:
+  pull_request:
+    types:
+    - opened
+    - edited
+    - labeled
+    - unlabeled
+    - synchronize
+
+jobs:
+  check_aspect_label:
+    name: Check aspect label
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check aspect label
+      uses: sugarshin/required-labels-action@v0.3.1
+      with:
+        required_oneof: '💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface'
+
+  check_goal_label:
+    name: Check goal label
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check goal label
+      uses: sugarshin/required-labels-action@v0.3.1
+      with:
+        required_oneof: '🌟 goal: addition,🛠 goal: fix,✨ goal: improvement,🧰 goal: internal improvement'
