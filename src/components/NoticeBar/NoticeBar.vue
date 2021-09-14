@@ -9,7 +9,8 @@
 
 <script>
 /**
- * Displays notices is a yellow strip. It on
+ * Displays notices is a yellow strip. The onus of positioning this bar is on
+ * the parent component.
  */
 export default {
   name: 'NoticeBar',
