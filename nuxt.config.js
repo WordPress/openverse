@@ -133,6 +133,7 @@ export default {
     { src: '~/plugins/ab-test-init.js', mode: 'client' },
     { src: '~/plugins/ga.js', mode: 'client' },
     { src: '~/plugins/url-change.js' },
+    { src: '~/plugins/migration-notice.js' },
   ],
   css: [
     '~/assets/fonts.css',
