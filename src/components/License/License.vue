@@ -16,6 +16,11 @@
 </template>
 
 <script>
+import {
+  ALL_LICENCES,
+  CC_LICENSES,
+  LICENSE_ICON_MAPPING,
+} from '~/constants/license.js'
 import { computed } from '@nuxtjs/composition-api'
 
 /**
@@ -32,32 +37,14 @@ export default {
     license: {
       type: String,
       required: true,
-      validator: (val) =>
-        [
-          'by',
-          'by-sa',
-          'by-nd',
-          'by-nc',
-          'by-nc-sa',
-          'by-nc-nd',
-          'cc0',
-          'pdm',
-        ].includes(val),
+      validator: (val) => ALL_LICENCES.includes(val),
     },
   },
   setup(props) {
-    const iconNames = {
-      by: 'by',
-      nc: 'nc',
-      nd: 'nd',
-      sa: 'sa',
-      cc0: 'zero',
-      pdm: 'pd',
-    }
     const icons = computed(() =>
-      props.license.split(/[-\s]/).map((term) => iconNames[term])
+      props.license.split(/[-\s]/).map((term) => LICENSE_ICON_MAPPING[term])
     )
-    const isCC = computed(() => !['cc0', 'pdm'].includes(props.license))
+    const isCC = computed(() => CC_LICENSES.includes(props.license))
 
     return {
       icons,
