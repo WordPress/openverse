@@ -1,4 +1,5 @@
 name: New PR automation
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#new-pr-automation
 
 on:
   pull_request:
