@@ -117,7 +117,7 @@ export default {
   modern: 'client',
   server: { port: process.env.PORT || 8443 },
   router: {
-    middleware: 'embed',
+    middleware: 'middleware',
   },
   components: {
     dirs: [
