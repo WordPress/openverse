@@ -1,4 +1,5 @@
 name: PR label check
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#pr-label-check
 
 on:
   pull_request:
