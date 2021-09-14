@@ -99,7 +99,7 @@ groups:
     description: Concerns developers' experience with the codebase
     emoji: "🤖"
   - name: a11y
-    description: Concerns related to the projects accessibility
+    description: Concerns related to the project's accessibility
     emoji: ♿️
 
 - name: talk
