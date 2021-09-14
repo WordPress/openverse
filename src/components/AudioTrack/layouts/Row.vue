@@ -1,5 +1,5 @@
 <template>
-  <div class="row-track flex flex-row" :class="`size-${size}`">
+  <article class="row-track flex flex-row" :class="`size-${size}`">
     <AudioThumb
       class="flex-shrink-0"
       :class="isSmall ? 'w-20 mr-4' : 'w-30 mr-6'"
@@ -10,7 +10,11 @@
       :class="isSmall ? 'flex-row gap-8' : 'flex-col justify-between'"
     >
       <div class="flex-shrink-0">
-        <p class="font-heading font-semibold text-2xl">{{ audio.title }}</p>
+        <NuxtLink
+          :to="localePath(`/audio/${audio.id}`)"
+          class="font-heading font-semibold text-2xl"
+          >{{ audio.title }}</NuxtLink
+        >
 
         <div
           class="flex leading-snug text-dark-charcoal-70 mt-2"
@@ -46,7 +50,7 @@
         <slot name="controller" />
       </div>
     </div>
-  </div>
+  </article>
 </template>
 
 <script>
@@ -59,7 +63,7 @@ export default {
   components: { AudioThumb, License },
   props: ['audio', 'size'],
   setup(props) {
-    const isSmall = computed(() => props.size === 's')
+    /* Utils */
 
     /**
      * Format the time as hh:mm:ss, dropping the hour part if it is zero.
@@ -72,9 +76,12 @@ export default {
       return date.toISOString().substr(11, 8).replace(/^00:/, '')
     }
 
+    const isSmall = computed(() => props.size === 's')
+
     return {
-      isSmall,
       timeFmt,
+
+      isSmall,
     }
   },
 }
