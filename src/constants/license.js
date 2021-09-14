@@ -16,6 +16,6 @@ export const LICENSE_ICON_MAPPING = {
   nc: 'nc',
   nd: 'nd',
   sa: 'sa',
-  cc0: 'zero',
-  pdm: 'pd',
+  cc0: 'cc0',
+  pdm: 'pdm',
 }
