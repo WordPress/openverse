@@ -1,5 +1,5 @@
 <template>
-  <DropdownButton>
+  <DropdownButton v-if="filesizes">
     <template #default="{ buttonProps }">
       <a
         v-bind="buttonProps"
@@ -12,7 +12,7 @@
           {{ selectedFormat.extension_name }}
         </span>
         <span class="ml-1 font-thin">{{
-          getFormatSize(selectedFormat.filesize)
+          getFormatSize(selectedFormat.extension_name)
         }}</span>
       </a>
     </template>
@@ -45,7 +45,7 @@
             @keydown="onItemKeydown"
           >
             <span class="font-bold mr-2">{{ format.extension_name }}</span>
-            <span>{{ getFormatSize(format.filesize) }}</span>
+            <span>{{ getFormatSize(format.extension_name) }}</span>
           </button>
         </li>
       </ul>
@@ -55,6 +55,7 @@
 
 <script>
 import filesize from 'filesize'
+import axios from 'axios'
 
 const LS_DOWNLOAD_FORMAT_EXTENSION_KEY = 'openverse:download-format-extension'
 
@@ -83,10 +84,33 @@ export default {
       }
     }
 
-    return { selectedFormat: format }
+    return { selectedFormat: format, filesizes: null }
+  },
+  async fetch() {
+    const extensionsToFilesizes = await Promise.all(
+      this.formats.map(async (format) => {
+        try {
+          const response = await axios.head(format.download_url)
+          return [format.extension_name, response.headers['content-length']]
+        } catch (e) {
+          return [format.extension_name, undefined]
+        }
+      })
+    )
+
+    this.filesizes = extensionsToFilesizes.reduce(
+      (acc, [extensionName, filesize]) => ({
+        ...acc,
+        [extensionName]: filesize,
+      }),
+      {}
+    )
   },
   methods: {
-    getFormatSize(size) {
+    getFormatSize(extensionName) {
+      const size = this.filesizes?.[extensionName] ?? undefined
+      if (typeof size === 'undefined') return ''
+
       return filesize(size, { locale: this.$i18n.locale })
     },
     setSelectedFormat(format) {
