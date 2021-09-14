@@ -6,7 +6,7 @@ import { SET_REFERRED } from '~/store-modules/mutation-types.js'
  * plugin checks the presence of the param and updates the store.
  */
 export default function ({ query, store }) {
-  if ('referrer' in query && query.referrer) {
+  if (query.referrer) {
     const isReferredFromCc = query.referrer.includes('creativecommons.org')
     store.commit(SET_REFERRED, { isReferredFromCc })
   }
