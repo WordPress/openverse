@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <MigrationNotice v-if="isReferredFromCc" />
+    <MigrationNotice v-show="isReferredFromCc" />
     <HeaderSection :show-nav-search="true" />
     <main class="embedded">
       <Nuxt />
