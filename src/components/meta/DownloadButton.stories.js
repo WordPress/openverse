@@ -9,7 +9,6 @@ export const Default = () => ({
   template: `<DownloadButton :file-name="fileName" :formats="formats" />`,
   components: { DownloadButton },
   data: () => ({
-    fileName: '01 - Paul Werner - Let Me Hear You I - Let Me Hear You I',
     formats: [
       {
         extension_name: 'MP3 98kbs',

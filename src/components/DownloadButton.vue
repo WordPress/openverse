@@ -5,7 +5,7 @@
         v-bind="buttonProps"
         class="whitespace-nowrap"
         :href="selectedFormat.download_url"
-        :download="downloadName"
+        download=""
       >
         <span>{{ $t('download-button.download') }}</span>
         <span class="ml-4 selected-format">
@@ -69,10 +69,6 @@ export default {
         return formats.every((format) => properties.every((p) => p in format))
       },
     },
-    fileName: {
-      type: String,
-      required: true,
-    },
   },
   data() {
     const savedFormatExtension =
@@ -89,11 +85,6 @@ export default {
 
     return { selectedFormat: format }
   },
-  computed: {
-    downloadName() {
-      return `${this.fileName} - ${this.selectedFormat.extension_name}`
-    },
-  },
   methods: {
     getFormatSize(size) {
       return filesize(size, { locale: this.$i18n.locale })
@@ -105,7 +96,6 @@ export default {
       )
       this.selectedFormat = format
     },
-    onClick() {},
   },
 }
 </script>
