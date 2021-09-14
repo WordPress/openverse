@@ -56,6 +56,7 @@
 <script>
 import filesize from 'filesize'
 import axios from 'axios'
+import local from '~/utils/local'
 
 const LS_DOWNLOAD_FORMAT_EXTENSION_KEY = 'openverse:download-format-extension'
 
@@ -73,7 +74,7 @@ export default {
   },
   data() {
     const savedFormatExtension =
-      localStorage.getItem(LS_DOWNLOAD_FORMAT_EXTENSION_KEY) ?? null
+      local.get(LS_DOWNLOAD_FORMAT_EXTENSION_KEY) ?? null
     let format = this.formats[0]
     if (savedFormatExtension) {
       const found = this.formats.find(
@@ -114,10 +115,7 @@ export default {
       return filesize(size, { locale: this.$i18n.locale })
     },
     setSelectedFormat(format) {
-      localStorage.setItem(
-        LS_DOWNLOAD_FORMAT_EXTENSION_KEY,
-        format.extension_name
-      )
+      local.set(LS_DOWNLOAD_FORMAT_EXTENSION_KEY, format.extension_name)
       this.selectedFormat = format
     },
   },
