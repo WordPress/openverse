@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     onLoadMoreImages(searchParams) {
-      this.$emit('onLoadMoreImages', searchParams)
+      this.$emit('onLoadMoreItems', searchParams)
     },
   },
 }

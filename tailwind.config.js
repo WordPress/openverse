@@ -22,6 +22,9 @@ module.exports = {
       'dark-charcoal': '#30272e',
       pink: '#c52b9b',
 
+      // Active
+      'dark-pink': '#7c2264',
+
       // Grayscale
       black: 'black',
       'dark-gray': '#767676', // rgb(118, 118, 188)

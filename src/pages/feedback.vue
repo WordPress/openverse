@@ -62,6 +62,7 @@
 
 <script>
 import iframeHeight from '~/mixins/iframe-height'
+import i18nSync from '~/mixins/i18n-sync'
 import { mapState } from 'vuex'
 
 const bugForm =
@@ -71,7 +72,7 @@ const suggestionForm =
 
 export const FeedbackPage = {
   name: 'feedback-page',
-  mixins: [iframeHeight],
+  mixins: [iframeHeight, i18nSync],
   layout({ store }) {
     return store.state.isEmbedded
       ? 'embedded-with-nav-search'
