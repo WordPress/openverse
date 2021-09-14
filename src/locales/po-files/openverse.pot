@@ -2397,4 +2397,9 @@ msgstr ""
 #: src/components/MigrationNotice.vue:10
 msgctxt "migration-notice.read"
 msgid "Read more"
+
+# download-button.download
+#: src/components/DownloadButton.vue:10
+msgctxt "download-button.download"
+msgid "Download"
 msgstr ""
