@@ -1,7 +1,7 @@
 <template>
   <NoticeBar>
     {{ $t('migration-notice.intro') }}
-    <i18n tag="p" path="migration-notice.more">
+    <i18n tag="span" path="migration-notice.more">
       <template #read-more>
         <a
           class="text-dark-blue hover:text-dark-blue underline"
