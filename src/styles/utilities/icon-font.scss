@@ -1,4 +1,8 @@
-// Copied from: https://raw.githubusercontent.com/creativecommons/vocabulary/main/packages/fonts/src/styles/vocabulary_icons.scss
+/**
+ * This icon font is deprecated. If you are looking here to implement a new icon,
+ * please use an SVG instead. SVGs can be easily copy and pasted from Figma.
+ * Copied from: https://raw.githubusercontent.com/creativecommons/vocabulary/main/packages/fonts/src/styles/vocabulary_icons.scss
+ */
 
 @font-face {
   font-family: 'Vocabulary Icons';
@@ -13,8 +17,6 @@
 i.icon {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'Vocabulary Icons', monospace !important;
-  speak: none;
-
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -23,16 +25,8 @@ i.icon {
   line-height: 1;
 
   letter-spacing: 0;
-  -webkit-font-feature-settings: 'liga';
-  -moz-font-feature-settings: 'liga=1';
-  -moz-font-feature-settings: 'liga';
-  -ms-font-feature-settings: 'liga' 1;
   font-feature-settings: 'liga';
-  -webkit-font-variant-ligatures: discretionary-ligatures;
   font-variant-ligatures: discretionary-ligatures;
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   vertical-align: middle;
 }
 
