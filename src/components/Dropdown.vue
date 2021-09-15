@@ -89,7 +89,10 @@ export default Dropdown
 
 <style lang="scss">
 .navbar-dropdown:not(.visible) {
-  /* Accessible VisuallyHidden styles taken from @wordpress/components. Allows these components to be accessibly hidden from sight while still being focusable */
+  /**
+   * Accessible VisuallyHidden styles taken from @wordpress/components. Allows these components to be
+   * accessibly hidden from sight while still being focusable
+   */
   clip: rect(1px, 1px, 1px, 1px);
   height: 1px;
   left: -2px;
