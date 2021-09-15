@@ -6,7 +6,7 @@ export default {
 }
 
 export const Default = () => ({
-  template: `<DownloadButton :file-name="fileName" :formats="formats" />`,
+  template: `<DownloadButton :formats="formats" />`,
   components: { DownloadButton },
   data: () => ({
     formats: [

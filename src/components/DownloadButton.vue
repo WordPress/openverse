@@ -42,7 +42,7 @@
               setSelectedFormat(format)
               toggleOpen()
             "
-            @keydown="onItemKeydown"
+            @keydown="onItemKeydown($event)"
           >
             <span class="font-bold mr-2">{{ format.extension_name }}</span>
             <span>{{ getFormatSize(format.extension_name) }}</span>
@@ -57,17 +57,19 @@
 import filesize from 'filesize'
 import axios from 'axios'
 import local from '~/utils/local'
+import DropdownButton from '~/components/DropdownButton'
 
 const LS_DOWNLOAD_FORMAT_EXTENSION_KEY = 'openverse:download-format-extension'
 
 export default {
   name: 'DownloadButton',
+  components: { DropdownButton },
   props: {
     formats: {
       type: Array,
       required: true,
       validator: (formats) => {
-        const properties = ['extension_name', 'download_url', 'filesize']
+        const properties = ['extension_name', 'download_url']
         return formats.every((format) => properties.every((p) => p in format))
       },
     },
