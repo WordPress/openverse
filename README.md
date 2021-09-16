@@ -36,6 +36,11 @@ You can also keep in touch with
 to the project with our
 [WordPress contributor group](https://make.wordpress.org/openverse/).
 
+### Helpful links for new contributors
+
+- [Good first issues](https://github.com/search?q=label%3A%22good+first+issue%22+state%3Aopen+is%3Aissue+repo%3Awordpress%2Fopenverse+repo%3Awordpress%2Fopenverse-frontend+repo%3Awordpress%2Fopenverse-api+repo%3Awordpress%2Fopenverse-catalog+label%3A%22good+first+issue%22+state%3Aopen+repo%3Awordpress%2Fopenverse&type=Issues)
+- [Openverse handbook](https://make.wordpress.org/openverse/handbook/openverse-handbook/)
+
 ## What *is* in this repo, then?
 
 - This repo contains automation scripts used for various workflows around
