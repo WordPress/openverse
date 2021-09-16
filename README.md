@@ -16,10 +16,10 @@ This repository **does not** contain most of the codebase. The code is divided
 into individual repositories, and managed via a
 [GitHub Project Board](https://github.com/orgs/WordPress/projects/3):
 
-- [Frontend](https://github.com/wordpress/openverse-frontend) | The public search engine at <a href="https://wordpress.org/openverse">wp.org/openverse</a>, built with Vue.js and Nuxt.js.
-- [Catalog](https://github.com/wordpress/openverse-catalog) | The Apache Airflow-powered system for downloading and storing Openverse's metadata.
-- [API](https://github.com/wordpress/openverse-api) | The Django REST API for querying the catalog data, used by the frontend.
-- [Browser extension](https://github.com/wordpress/openverse-browser-extension) | An extension to view Openverse images directly in your web browser.
+- [Frontend](https://github.com/wordpress/openverse-frontend) | The public search engine at <a href="https://wordpress.org/openverse">wp.org/openverse</a>, built with Vue.js and Nuxt.js
+- [Catalog](https://github.com/wordpress/openverse-catalog) | The Apache Airflow-powered system for downloading and storing Openverse's metadata
+- [API](https://github.com/wordpress/openverse-api) | The Django REST API for querying the catalog data, used by the frontend
+- [Browser extension](https://github.com/wordpress/openverse-browser-extension) | An extension to view Openverse images directly in your web browser
 
 It is possible we will explore a monorepo structure in the future, but since all
 the repos are decoupled from each other and use different technologies, we've
