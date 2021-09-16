@@ -13,12 +13,17 @@ dotenv:
     @([ ! -f openverse_catalog/.env ] && cp openverse_catalog/env.template openverse_catalog/.env) || true
 
 
-up: dotenv
-    docker-compose {{ DEV_DOCKER_FILES }} up -d
+up flags="": dotenv
+    docker-compose {{ DEV_DOCKER_FILES }} up -d {{ flags }}
 
 
 down flags="":
     docker-compose {{ DEV_DOCKER_FILES }} down {{ flags }}
+
+
+recreate:
+    @just down -v
+    @just up "--force-recreate --build"
 
 
 logs: dotenv up
