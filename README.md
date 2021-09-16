@@ -1,21 +1,25 @@
 <img src="brand/banner.svg" width="100%"/>
 
 <p align="center">
+  <a href="https://github.com/orgs/WordPress/projects/3">Project Board</a> | <a href="make.wordpress.org/openverse/">Community Site</a> | <a href="https://make.wordpress.org/chat/">Join #openverse on Slack</a> | <a href="https://make.wordpress.org/openverse/handbook/openverse-handbook/">Handbook</a>
+</p>
+
+<p align="center">
   Openverse is a search engine for openly-licensed media.
 </p>
   
 # Openverse
 
 This repository **does not** contain most of the codebase. The code is divided
-into three primary repositories, and managed via a
+into individual repositories, and managed via a
 [GitHub Project Board](https://github.com/orgs/WordPress/projects/3):
 
-- [Front-end](https://github.com/wordpress/openverse-frontend)
-- [Catalog](https://github.com/wordpress/openverse-catalog)
-- [API](https://github.com/wordpress/openverse-api)
-- [Browser extension](https://github.com/wordpress/openverse-browser-extension)
+- [Frontend](https://github.com/wordpress/openverse-frontend) | The public search engine at <a href="https://wordpress.org/openverse">wp.org/openverse</a>, built with Vue.js and Nuxt.js.
+- [Catalog](https://github.com/wordpress/openverse-catalog) | The Apache Airflow-powered system for downloading and storing Openverse's metadata.
+- [API](https://github.com/wordpress/openverse-api) | The Django REST API for querying the catalog data, used by the frontend.
+- [Browser extension](https://github.com/wordpress/openverse-browser-extension) | An extension to view Openverse images directly in your web browser.
 
-It is possible we will explore a monorepo structure in the future, but as all
+It is possible we will explore a monorepo structure in the future, but since all
 the repos are decoupled from each other and use different technologies, we've
 felt it best to keep them distinct.
 
@@ -23,7 +27,7 @@ felt it best to keep them distinct.
 
 Pull requests are welcome! Feel free to
 [join us on Slack](https://make.wordpress.org/chat/) and discuss the project
-with the engineers and community members on #openverse.
+with the engineers and community members in the #openverse channel.
 
 You can also keep in touch with
 [progress](https://github.com/orgs/WordPress/projects/3) and the latest updates
