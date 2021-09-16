@@ -10,12 +10,21 @@
       :size="size"
       :aspect="aspect"
     >
-      <template #controller>
-        <AudioController v-model="status" :audio="audio" @ready="handleReady" />
+      <template #controller="controllerProps">
+        <AudioController
+          v-model="status"
+          v-bind="controllerProps"
+          :audio="audio"
+          @ready="handleReady"
+        />
       </template>
 
-      <template #play-pause>
-        <PlayPause v-model="status" :disabled="!isReady" />
+      <template #play-pause="playPauseProps">
+        <PlayPause
+          v-model="status"
+          v-bind="playPauseProps"
+          :disabled="!isReady"
+        />
       </template>
     </Component>
   </div>
@@ -23,8 +32,10 @@
 
 <script>
 import { computed, ref } from '@nuxtjs/composition-api'
+
 import PlayPause from '~/components/AudioTrack/PlayPause.vue'
 import AudioController from '~/components/AudioTrack/AudioController.vue'
+
 import Full from '~/components/AudioTrack/layouts/Full.vue'
 import Row from '~/components/AudioTrack/layouts/Row.vue'
 
