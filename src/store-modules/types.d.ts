@@ -55,3 +55,8 @@ export type ImageDetail = {
   related_url: string
   fields_matched?: string[]
 }
+
+export interface ActiveMediaState {
+  activeMediaType: 'image' | 'audio' | null
+  activeMediaId: string | null
+}
