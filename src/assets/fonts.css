@@ -43,14 +43,3 @@
     url('~assets/fonts/JetBrainsMono-Bold.woff') format('woff'),
     url('~assets/fonts/JetBrainsMono-Bold.otf') format('opentype');
 }
-
-@font-face {
-  font-family: 'Vocabulary Icons';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('RobotoCondensed-Bold'), local('Roboto Condensed Bold'),
-    url('~assets/fonts/RobotoCondensed-Bold.woff2') format('woff2'),
-    url('~assets/fonts/RobotoCondensed-Bold.woff') format('woff'),
-    url('~assets/fonts/RobotoCondensed-Bold.otf') format('opentype');
-}

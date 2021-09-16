@@ -117,7 +117,7 @@ export default {
   modern: 'client',
   server: { port: process.env.PORT || 8443 },
   router: {
-    middleware: 'embed',
+    middleware: 'middleware',
   },
   components: {
     dirs: [
@@ -132,7 +132,8 @@ export default {
   plugins: [
     { src: '~/plugins/ab-test-init.js', mode: 'client' },
     { src: '~/plugins/ga.js', mode: 'client' },
-    { src: '~/plugins/message.js' },
+    { src: '~/plugins/url-change.js' },
+    { src: '~/plugins/migration-notice.js' },
   ],
   css: [
     '~/assets/fonts.css',

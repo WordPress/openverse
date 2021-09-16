@@ -16,6 +16,7 @@ module.exports = {
       'dark-turquoise': '#05b5da',
       'dark-slate-blue': '#3c5c99',
       'trans-blue': '#3e58e1',
+      'dark-blue': '#23282d',
 
       // Brand
       yellow: '#ffe033',

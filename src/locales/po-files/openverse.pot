@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-14T02:05:30+00:00\n"
+"POT-Creation-Date: 2021-09-16T17:26:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1104,7 +1104,7 @@ msgid "An error occurred"
 msgstr ""
 
 # error.image-not-found (Do not translate words between ###)
-#: src/pages/photos/_id.vue:107
+#: src/pages/photos/_id.vue:104
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
@@ -2283,4 +2283,22 @@ msgstr ""
 #: src/components/DropdownButton.vue:17
 msgctxt "dropdown-button.aria.arrow-label"
 msgid "Dropdown"
+msgstr ""
+
+# meta-search-page.intro
+#: src/pages/meta-search.vue:10
+msgctxt "meta-search-page.intro"
+msgid "CC Search is now called Openverse and joins WordPress as an open source project."
+msgstr ""
+
+# migration-notice.more (Do not translate words between ###)
+#: src/components/MigrationNotice.vue:4
+msgctxt "migration-notice.more"
+msgid "###read-more### about this announcement."
+msgstr ""
+
+# migration-notice.read
+#: src/components/MigrationNotice.vue:10
+msgctxt "migration-notice.read"
+msgid "Read more"
 msgstr ""

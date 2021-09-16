@@ -1,4 +1,5 @@
 name: New issue automation
+# ℹ️ https://github.com/WordPress/openverse/blob/main/.github/GITHUB.md#new-issue-automation
 
 on:
   issues:
