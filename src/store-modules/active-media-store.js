@@ -16,8 +16,9 @@ const mutations = {
   /**
    * Set the active media item.
    * @param {import('./types').ActiveMediaState} _state
-   * @param {'image' | 'audio' | null} type - the nature of the active media item
-   * @param {string} id - the ID of the active media item
+   * @param {object} payload
+   * @param {'image' | 'audio' | null} payload.type - the nature of the active media item
+   * @param {string} payload.id - the ID of the active media item
    */
   [SET_ACTIVE_MEDIA_ITEM](_state, { type, id }) {
     _state.activeMediaType = type
