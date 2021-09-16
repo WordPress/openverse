@@ -1,12 +1,12 @@
 <template>
   <button
     type="button"
-    class="play-pause flex items-center justify-center bg-dark-charcoal transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink"
+    class="play-pause flex items-center justify-center bg-dark-charcoal text-white transition-shadow duration-100 ease-linear disabled:opacity-70 focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink"
     @click="handleClick"
   >
     <span class="sr-only">{{ label }}</span>
     <svg
-      class="text-white h-8 w-8"
+      class="h-8 w-8"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       aria-hidden="true"
