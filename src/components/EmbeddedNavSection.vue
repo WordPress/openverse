@@ -104,7 +104,7 @@
             {{ $t('header.feedback-nav-item') }}
           </NuxtLink>
           <a
-            href="https://api.creativecommons.engineering/v1/"
+            href="https://api.openverse.engineering/v1/"
             target="_blank"
             rel="noopener"
             role="menuitem"
