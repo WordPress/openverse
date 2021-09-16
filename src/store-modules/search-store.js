@@ -109,25 +109,26 @@ const handleSearchResponse = async (
 }
 
 /**
- * @type {{image: {}, pageCount: number,
+ * @type {{ audios: import('./types').AudioDetail[],
+ * audiosCount: number, audioPage:number,
  * images: import('./types').ImageDetail[],
- * searchType: string, imagesCount: number, query: {},
- * errorMessage: null, count: {images: number, audios: number},
+ * imagePage: number, imagesCount: number, query: {},
+ * pageCount: {images: number, audios: number},
  * isFetching: {images: boolean, audios: boolean},
  * isFetchingError: {images: boolean, audios: boolean},
- * imagePage: number}}
+ * errorMessage: null, searchType: string, }}
  */
 const state = {
-  errorMessage: null,
-  image: {},
-  count: {
+  audios: [],
+  audiosCount: 0,
+  audioPage: 1,
+  images: [],
+  imagesCount: 0,
+  imagePage: 1,
+  pageCount: {
     images: 0,
     audios: 0,
   },
-  imagesCount: 0,
-  pageCount: 0,
-  imagePage: 1,
-  images: [],
   isFetching: {
     audios: false,
     images: false,
@@ -136,6 +137,7 @@ const state = {
     audios: true,
     images: true,
   },
+  errorMessage: null,
   searchType: ALL_MEDIA,
   query: {},
 }
@@ -282,7 +284,7 @@ const mutations = {
       _state.isFetching.images = true
       _state.isFetchingError.images = false
     } else if (mediaType === AUDIO) {
-      _state.isFetchingAudios = true
+      _state.isFetching.audios = true
       _state.isFetchingError.audios = false
     }
   },
@@ -316,9 +318,9 @@ const mutations = {
       mediaType,
       media,
       mediaCount,
+      page,
       pageCount,
       shouldPersistMedia,
-      page,
     } = params
     const mediaPlural = `${mediaType}s`
     let mediaToSet
@@ -329,9 +331,9 @@ const mutations = {
     }
     mediaToSet = mediaToSet.map((item) => decodeMediaData(item))
     _state[mediaPlural] = mediaToSet
-    _state.pageCount = pageCount
-    _state.count[mediaPlural] = mediaCount || 0
+    _state[`${mediaPlural}Count`] = mediaCount || 0
     _state[`${mediaType}Page`] = page || 1
+    _state.pageCount[mediaPlural] = pageCount
   },
   [SET_QUERY](_state, params) {
     setQuery(_state, params)

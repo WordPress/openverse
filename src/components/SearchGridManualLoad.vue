@@ -26,8 +26,21 @@
           :image="image"
         />
       </div>
+      <div
+        v-if="isFetchingImagesError"
+        class="search-grid_notification callout alert"
+      >
+        <h5>
+          {{
+            $t('browse-page.fetching-error', {
+              type: $t('browse-page.search-form.audio'),
+            })
+          }}
+          {{ _errorMessage }}
+        </h5>
+      </div>
       <div class="pb-6">
-        <div class="load-more">
+        <div v-if="!isFetchingImagesError" class="load-more">
           <button
             v-show="!isFetchingImages && includeAnalytics"
             class="button"
@@ -35,27 +48,25 @@
             @click="onLoadMoreImages"
             @keyup.enter="onLoadMoreImages"
           >
-            <span v-if="isFinished">{{ $t('browse-page.no-more') }}</span>
+            <span v-if="isFinished">{{
+              $t('browse-page.no-more', {
+                type: $t('browse-page.search-form.image'),
+              })
+            }}</span>
             <span v-else>{{ $t('browse-page.load') }}</span>
           </button>
           <LoadingIcon v-show="isFetchingImages" />
         </div>
         <MetaSearchForm type="image" :query="query" :supported="true" />
       </div>
-      <div
-        v-if="isFetchingImagesError"
-        class="search-grid_notification callout alert"
-      >
-        <h5>{{ $t('browse-page.fetching-error') }} {{ _errorMessage }}</h5>
-      </div>
     </div>
   </section>
 </template>
 
 <script>
+import { FETCH_MEDIA } from '~/store-modules/action-types'
 import { SET_MEDIA } from '~/store-modules/mutation-types'
-
-const DEFAULT_PAGE_SIZE = 20
+import { IMAGE } from '~/constants/media'
 
 export default {
   name: 'SearchGridManualLoad',
@@ -85,10 +96,15 @@ export default {
     shouldContainImages: false,
     showMetaImageSearch: false,
   }),
+  async fetch() {
+    if (!this.$store.state.images.length) {
+      await this.$store.dispatch(FETCH_MEDIA, {
+        ...this.$store.state.query,
+        mediaType: IMAGE,
+      })
+    }
+  },
   computed: {
-    imagePage() {
-      return this.$store.state.imagePage
-    },
     isFetchingImagesError() {
       return this.$store.state.isFetchingError.images
     },
@@ -103,7 +119,7 @@ export default {
     },
     _imagesCount() {
       const count = this.useInfiniteScroll
-        ? this.$store.state.count.images
+        ? this.$store.state.imagesCount
         : this.imagesCount
       if (count === 0) {
         return this.$t('browse-page.image-no-results')
@@ -123,21 +139,10 @@ export default {
       return this.$store.state.errorMessage
     },
     isFinished() {
-      return this.currentPage >= this.$store.state.pageCount
+      return this.currentPage >= this.$store.state.pageCount.images
     },
   },
   watch: {
-    _images: {
-      handler() {
-        if (this.$state) {
-          this.$state.loaded()
-          if (this._imagesCount < this.currentPage * DEFAULT_PAGE_SIZE) {
-            this.$state.complete()
-          }
-        }
-        this.isDataInitialized = true
-      },
-    },
     _query: {
       handler() {
         this.searchChanged()
@@ -164,41 +169,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.button[disabled] {
-  opacity: 1;
-}
-
-.search-grid_layout-control h5 {
-  padding-top: 1.36vh;
-  font-size: 1rem;
-  display: inline-block;
-}
-
-.search-grid_layout-control h5 {
-  margin-right: 10px;
-}
-
-.search-grid_layout-control {
-  text-align: right;
-
-  fieldset {
-    display: inline;
-    margin-right: 5px;
-  }
-}
-
-.infinite-loading-container {
-  margin-top: 30px;
-  width: 100%;
-}
-
-.search-grid_ctr {
-  .item {
-    width: 320px;
-    margin-bottom: 20px;
-  }
-}
-
 .search-grid:after {
   content: '';
   display: block;
@@ -241,6 +211,12 @@ label {
     &:hover {
       color: white;
     }
+    &:disabled {
+      opacity: 1;
+      &:hover {
+        color: black;
+      }
+    }
 
     @include mobile {
       padding: 0.5rem;
@@ -253,9 +229,7 @@ label {
 }
 
 .results-meta {
-  padding-top: 0.6rem;
-  padding-left: 1.3rem;
-  padding-right: 1.3rem;
+  @apply px-6 pt-2;
 
   @include desktop {
     display: flex;

@@ -7,12 +7,16 @@
   </div>
 </template>
 <script>
-const defaultPage = {
-  name: 'default',
-  layout: 'default',
+import iframeHeight from '~/mixins/iframe-height'
+import i18nSync from '~/mixins/i18n-sync'
+
+const embeddedPage = {
+  name: 'embedded',
+  mixins: [iframeHeight, i18nSync],
+  layout: 'embedded',
   head() {
     return this.$nuxtI18nHead({ addSeoAttributes: true })
   },
 }
-export default defaultPage
+export default embeddedPage
 </script>

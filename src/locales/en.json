@@ -396,18 +396,18 @@
     "category-aria": "filters list for {categoryName} category"
   },
   "browse-page": {
-    "all-no-results": "no results",
-    "audio-no-results": "no audio results",
-    "image-no-results": "no image results",
+    "all-no-results": "No results",
+    "audio-no-results": "No audio results",
+    "image-no-results": "No image results",
     "all-result-count": "{localeCount} result|{localeCount} results",
     "audio-result-count": "{localeCount} audio result|{localeCount} audio results",
     "image-result-count": "{localeCount} image result|{localeCount} image results",
     "all-result-count-more": "Over {localeCount} results",
     "audio-result-count-more": "Over {localeCount} audio results",
     "image-result-count-more": "Over {localeCount} image results",
-    "no-more": "No more images :(",
+    "no-more": "No more {type} :(",
     "load": "Load more results",
-    "fetching-error": "Error fetching images:",
+    "fetching-error": "Error fetching {type}:",
     "other-source": "Not finding what you need? Search other sources",
     "search-rating": {
       "content": "Are these results relevant?",
@@ -603,5 +603,10 @@
   "play-pause": {
     "play": "Play",
     "pause": "Pause"
+  },
+  "dropdown-button": {
+    "aria": {
+      "arrow-label": "Dropdown"
+    }
   }
 }

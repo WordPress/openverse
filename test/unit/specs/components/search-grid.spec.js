@@ -25,8 +25,8 @@ describe('SearchGrid', () => {
             isFetchingError: {
               images: false,
             },
-            count: {
-              images: 100,
+            pageCount: {
+              images: 5,
             },
             imagesCount: 100,
             imagePage: 1,
@@ -43,7 +43,7 @@ describe('SearchGrid', () => {
     expect(wrapper.find('.load-more').element).toBeDefined()
   })
 
-  it('doesnt render load more button if not loading images', () => {
+  it("doesn't render load more button if not loading images", () => {
     const wrapper = render(SearchGrid, options)
     expect(wrapper.find('.load-more').element).toBeDefined()
   })

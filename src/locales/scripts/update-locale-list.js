@@ -33,6 +33,8 @@ getLocalesData()
       'plural_expression',
       'google_code',
       'facebook_locale',
+      'text_direction',
+      'wp_locale',
     ]
     const propertyRePatterns = {}
     properties.forEach((prop) => {

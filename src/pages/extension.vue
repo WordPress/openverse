@@ -71,7 +71,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import iframeHeight from '~/mixins/iframe-height'
 
 import ExtensionBrowsers from '~/components/ExtensionBrowsers'
 
@@ -82,7 +81,6 @@ import feature3 from '~/assets/screenshots/extension_feat_3.png'
 const AboutPage = {
   name: 'about-page',
   components: { ExtensionBrowsers },
-  mixins: [iframeHeight],
   layout({ store }) {
     return store.state.isEmbedded
       ? 'embedded-with-nav-search'

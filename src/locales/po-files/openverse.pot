@@ -1467,18 +1467,19 @@ msgstr ""
 
 # browse-page.all-no-results
 msgctxt "browse-page.all-no-results"
-msgid "no results"
+msgid "No results"
 msgstr ""
 
 # browse-page.audio-no-results
+#: src/components/AudioResultsList.vue:73
 msgctxt "browse-page.audio-no-results"
-msgid "no audio results"
+msgid "No audio results"
 msgstr ""
 
 # browse-page.image-no-results
-#: src/components/SearchGridManualLoad.vue:109
+#: src/components/SearchGridManualLoad.vue:127
 msgctxt "browse-page.image-no-results"
-msgid "no image results"
+msgid "No image results"
 msgstr ""
 
 # browse-page.all-result-count (Do not translate words between ###)
@@ -1489,6 +1490,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.audio-result-count (Do not translate words between ###)
+#: src/components/AudioResultsList.vue:79
 msgctxt "browse-page.audio-result-count"
 msgid "###localeCount### audio result"
 msgid_plural "###localeCount### audio results"
@@ -1496,7 +1498,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.image-result-count (Do not translate words between ###)
-#: src/components/SearchGridManualLoad.vue:115
+#: src/components/SearchGridManualLoad.vue:133
 msgctxt "browse-page.image-result-count"
 msgid "###localeCount### image result"
 msgid_plural "###localeCount### image results"
@@ -1511,6 +1513,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.audio-result-count-more (Do not translate words between ###)
+#: src/components/AudioResultsList.vue:76
 msgctxt "browse-page.audio-result-count-more"
 msgid "Over ###localeCount### audio results"
 msgid_plural "Over ###localeCount### audio results"
@@ -1518,29 +1521,29 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.image-result-count-more (Do not translate words between ###)
-#: src/components/SearchGridManualLoad.vue:112
+#: src/components/SearchGridManualLoad.vue:130
 msgctxt "browse-page.image-result-count-more"
 msgid "Over ###localeCount### image results"
 msgid_plural "Over ###localeCount### image results"
 msgstr[0] ""
 msgstr[1] ""
 
-# browse-page.no-more
-#: src/components/SearchGridManualLoad.vue:38
+# browse-page.no-more (Do not translate words between ###)
+#: src/components/AudioResultsList.vue:25
 msgctxt "browse-page.no-more"
-msgid "No more images :("
+msgid "No more ###type### :("
 msgstr ""
 
 # browse-page.load
-#: src/components/SearchGridManualLoad.vue:39
+#: src/components/AudioResultsList.vue:29
 msgctxt "browse-page.load"
 msgid "Load more results"
 msgstr ""
 
-# browse-page.fetching-error
-#: src/components/SearchGridManualLoad.vue:49
+# browse-page.fetching-error (Do not translate words between ###)
+#: src/components/AudioResultsList.vue:36
 msgctxt "browse-page.fetching-error"
-msgid "Error fetching images:"
+msgid "Error fetching ###type###:"
 msgstr ""
 
 # browse-page.other-source
@@ -2265,4 +2268,10 @@ msgstr ""
 # play-pause.pause
 msgctxt "play-pause.pause"
 msgid "Pause"
+msgstr ""
+
+# dropdown-button.aria.arrow-label
+#: src/components/DropdownButton.vue:17
+msgctxt "dropdown-button.aria.arrow-label"
+msgid "Dropdown"
 msgstr ""
