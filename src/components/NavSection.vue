@@ -101,7 +101,7 @@
             {{ $t('header.feedback-nav-item') }}
           </NuxtLink>
           <a
-            href="https://api.creativecommons.engineering/"
+            href="https://api.creativecommons.engineering/v1/"
             target="_blank"
             rel="noopener"
             class="navbar-item"
