@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'AudioThumb',
+  name: 'AudioThumbnail',
   props: {
     audio: {
       type: Object,

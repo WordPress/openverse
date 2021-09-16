@@ -1,6 +1,6 @@
 <template>
   <article class="row-track flex flex-row" :class="`size-${size}`">
-    <AudioThumb
+    <AudioThumbnail
       class="flex-shrink-0"
       :class="isSmall ? 'w-20 mr-4' : 'w-30 mr-6'"
       :audio="audio"
@@ -55,12 +55,12 @@
 
 <script>
 import { computed } from '@nuxtjs/composition-api'
-import AudioThumb from '~/components/AudioTrack/AudioThumb.vue'
+import AudioThumbnail from '~/components/AudioTrack/AudioThumbnail.vue'
 import License from '~/components/License/License.vue'
 
 export default {
   name: 'Row',
-  components: { AudioThumb, License },
+  components: { AudioThumbnail, License },
   props: ['audio', 'size'],
   setup(props) {
     /* Utils */
