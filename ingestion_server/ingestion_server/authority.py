@@ -23,6 +23,7 @@ boost can be adjusted at search-time.
 
 class AuthorityTypes(Enum):
     CURATED = auto()
+    CULTURAL_INSTITUTION = auto()
     SOCIAL_MEDIA = auto()
     DEFAULT = auto()
 
@@ -30,9 +31,10 @@ class AuthorityTypes(Enum):
 # We want to boost curated collections where each image has been vetted for
 # cultural significance.
 boost = {
-    AuthorityTypes.CURATED: 90,
-    AuthorityTypes.SOCIAL_MEDIA: 80,
-    AuthorityTypes.DEFAULT: 85
+    AuthorityTypes.CURATED: 85,
+    AuthorityTypes.CULTURAL_INSTITUTION: 90,
+    AuthorityTypes.SOCIAL_MEDIA: 75,
+    AuthorityTypes.DEFAULT: 80
 }
 authority_types = {
     'flickr': AuthorityTypes.SOCIAL_MEDIA,
@@ -40,16 +42,17 @@ authority_types = {
     'thingiverse': AuthorityTypes.SOCIAL_MEDIA,
     'sketchfab': AuthorityTypes.SOCIAL_MEDIA,
     'deviantart': AuthorityTypes.SOCIAL_MEDIA,
-    'thorvaldsensmuseum': AuthorityTypes.CURATED,
-    'svgsilh': AuthorityTypes.CURATED,
-    'smithsonian': AuthorityTypes.CURATED,
-    'rijksmuseum': AuthorityTypes.CURATED,
-    'museumsvictoria': AuthorityTypes.CURATED,
-    'met': AuthorityTypes.CURATED,
-    'mccordsmuseum': AuthorityTypes.CURATED,
-    'digitaltmuseum': AuthorityTypes.CURATED,
-    'clevelandmuseum': AuthorityTypes.CURATED,
-    'brooklynmuseum': AuthorityTypes.CURATED
+    'thorvaldsensmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
+    'svgsilh': AuthorityTypes.CULTURAL_INSTITUTION,
+    'smithsonian': AuthorityTypes.CULTURAL_INSTITUTION,
+    'rijksmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
+    'museumsvictoria': AuthorityTypes.CULTURAL_INSTITUTION,
+    'met': AuthorityTypes.CULTURAL_INSTITUTION,
+    'mccordsmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
+    'digitaltmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
+    'clevelandmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
+    'brooklynmuseum': AuthorityTypes.CULTURAL_INSTITUTION,
+    'stocksnap': AuthorityTypes.CURATED
 }
 
 
