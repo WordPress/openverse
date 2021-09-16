@@ -88,27 +88,27 @@ export default {
 </script>
 
 <style>
-.play-pause {
+.row-track .play-pause {
   @apply rounded-tl-sm rounded-bl-sm flex-shrink-0;
 }
 
-.waveform {
+.row-track .waveform {
   @apply rounded-tr-sm rounded-br-sm;
 }
 
-.size-s .play-pause {
+.row-track.size-s .play-pause {
   @apply h-20 w-20;
 }
 
-.size-s .waveform {
+.row-track.size-s .waveform {
   @apply h-20;
 }
 
-.size-m .play-pause {
+.row-track.size-m .play-pause {
   @apply h-14 w-14;
 }
 
-.size-m .waveform {
+.row-track.size-m .waveform {
   @apply h-14;
 }
 </style>
