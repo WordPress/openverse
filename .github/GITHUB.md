@@ -55,3 +55,12 @@ truth, it creates PRs to resolve any differences.
 **Cron:** [at 00:00](https://crontab.guru/#0_0_*_*_*)  
 **Push:** Glob `.github/**`  
 **Dispatch:** enabled
+
+### Weekly updates
+
+This workflow creates a draft post on the Make Openverse site once a week 
+outlining the closed issues and merged PRs of the preceding week. The post can
+be reviewed manually and then published.
+
+**Cron:** [at 00:01 on Monday](https://crontab.guru/#1_0_*_*_1)
+**Dispatch:** enabled
