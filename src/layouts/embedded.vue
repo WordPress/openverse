@@ -9,14 +9,17 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import iframeHeight from '~/mixins/iframe-height'
+import i18nSync from '~/mixins/i18n-sync'
 
-const defaultPage = {
-  name: 'default',
-  layout: 'default',
+const embeddedPage = {
+  name: 'embedded',
+  layout: 'embedded',
+  mixins: [iframeHeight, i18nSync],
   head() {
     return this.$nuxtI18nHead({ addSeoAttributes: true })
   },
   computed: mapState(['isReferredFromCc']),
 }
-export default defaultPage
+export default embeddedPage
 </script>
