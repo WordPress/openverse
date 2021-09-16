@@ -30,8 +30,8 @@ logs: dotenv up
     docker-compose {{ DEV_DOCKER_FILES }} logs -f
 
 
-test: dotenv up
-    docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} /usr/local/airflow/.local/bin/pytest
+test pytestargs="": dotenv up
+    docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} /usr/local/airflow/.local/bin/pytest {{ pytestargs }}
 
 
 shell: dotenv up
