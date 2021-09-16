@@ -1,7 +1,7 @@
 <img src="brand/banner.svg" width="100%"/>
 
 <p align="center">
-  <a href="https://github.com/orgs/WordPress/projects/3">Project Board</a> | <a href="make.wordpress.org/openverse/">Community Site</a> | <a href="https://make.wordpress.org/chat/">Join #openverse on Slack</a> | <a href="https://make.wordpress.org/openverse/handbook/openverse-handbook/">Handbook</a>
+  <a href="https://github.com/orgs/WordPress/projects/3">Project Board</a> | <a href="make.wordpress.org/openverse/">Community Site</a> | <a href="https://make.wordpress.org/chat/">Join #openverse on Slack</a> | <a href="https://make.wordpress.org/openverse/handbook/openverse-handbook/">Handbook</a> | <a href="https://www.figma.com/files/project/31962071/Openverse?fuid=979162431688906882">Figma</a>
 </p>
 
 <p align="center">
