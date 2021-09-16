@@ -1,10 +1,8 @@
 <template>
   <article class="row-track flex flex-row" :class="`size-${size}`">
-    <AudioThumbnail
-      class="flex-shrink-0"
-      :class="isSmall ? 'w-20 mr-4' : 'w-30 mr-6'"
-      :audio="audio"
-    />
+    <div class="flex-shrink-0" :class="isSmall ? 'w-20 mr-4' : 'w-30 mr-6'">
+      <AudioThumbnail :audio="audio" />
+    </div>
     <div
       class="flex"
       :class="isSmall ? 'flex-row gap-8' : 'flex-col justify-between'"
