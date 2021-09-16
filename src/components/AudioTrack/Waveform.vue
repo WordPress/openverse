@@ -70,7 +70,7 @@
     <template v-if="isReady">
       <div
         ref="progressTimestampEl"
-        class="progress timestamp z-10 bg-yellow transform"
+        class="progress timestamp z-10 transform"
         :class="[
           ...(isProgressTimestampCutoff
             ? ['bg-dark-charcoal-04-opaque']
