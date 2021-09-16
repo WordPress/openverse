@@ -10,6 +10,8 @@
   
 # Openverse
 
+Openverse is a powerful search engine for GPL-compatiable images, audio, and more. Openverse is live at <a href="https://wordpress.org/openverse">wp.org/openverse</a>. 
+
 This repository **does not** contain most of the codebase. The code is divided
 into individual repositories, and managed via a
 [GitHub Project Board](https://github.com/orgs/WordPress/projects/3):
