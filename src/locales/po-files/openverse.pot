@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-13T09:52:08+00:00\n"
+"POT-Creation-Date: 2021-09-17T14:19:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1104,13 +1104,13 @@ msgid "An error occurred"
 msgstr ""
 
 # error.image-not-found (Do not translate words between ###)
-#: src/pages/photos/_id.vue:106
+#: src/pages/photos/_id.vue:104
 msgctxt "error.image-not-found"
 msgid "Couldn't find image with id ###id###"
 msgstr ""
 
 # error.media-not-found (Do not translate words between ###)
-#: src/pages/audios/_id.vue:99
+#: src/pages/audio/_id.vue:99
 msgctxt "error.media-not-found"
 msgid "Couldn't find ###mediaType### with id ###id###"
 msgstr ""
@@ -1477,7 +1477,7 @@ msgid "No audio results"
 msgstr ""
 
 # browse-page.image-no-results
-#: src/components/SearchGridManualLoad.vue:127
+#: src/components/SearchGridManualLoad.vue:125
 msgctxt "browse-page.image-no-results"
 msgid "No image results"
 msgstr ""
@@ -1498,7 +1498,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.image-result-count (Do not translate words between ###)
-#: src/components/SearchGridManualLoad.vue:133
+#: src/components/SearchGridManualLoad.vue:131
 msgctxt "browse-page.image-result-count"
 msgid "###localeCount### image result"
 msgid_plural "###localeCount### image results"
@@ -1521,7 +1521,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # browse-page.image-result-count-more (Do not translate words between ###)
-#: src/components/SearchGridManualLoad.vue:130
+#: src/components/SearchGridManualLoad.vue:128
 msgctxt "browse-page.image-result-count-more"
 msgid "Over ###localeCount### image results"
 msgid_plural "Over ###localeCount### image results"
@@ -1834,13 +1834,11 @@ msgid "license."
 msgstr ""
 
 # media-details.provider-label
-#: src/components/AudioDetails/Table.vue:23
 msgctxt "media-details.provider-label"
 msgid "Provider"
 msgstr ""
 
 # media-details.source-label
-#: src/components/AudioDetails/Table.vue:39
 msgctxt "media-details.source-label"
 msgid "Source"
 msgstr ""
@@ -2133,7 +2131,6 @@ msgid "author ###creator###"
 msgstr ""
 
 # audio-details.genre-label
-#: src/components/AudioDetails/Table.vue:31
 msgctxt "audio-details.genre-label"
 msgid "Genre"
 msgstr ""
@@ -2142,6 +2139,48 @@ msgstr ""
 #: src/components/AudioDetails/Related.vue:4
 msgctxt "audio-details.related-audios"
 msgid "Related audios"
+msgstr ""
+
+# audio-details.table.album
+#: src/components/AudioDetails/Table.vue:16
+msgctxt "audio-details.table.album"
+msgid "Album"
+msgstr ""
+
+# audio-details.table.category
+#: src/components/AudioDetails/Table.vue:22
+msgctxt "audio-details.table.category"
+msgid "Type"
+msgstr ""
+
+# audio-details.table.sample-rate
+#: src/components/AudioDetails/Table.vue:29
+msgctxt "audio-details.table.sample-rate"
+msgid "Sample Rate"
+msgstr ""
+
+# audio-details.table.filetype
+#: src/components/AudioDetails/Table.vue:37
+msgctxt "audio-details.table.filetype"
+msgid "Format"
+msgstr ""
+
+# sources.cc-content.provider
+#: src/pages/sources.vue:15
+msgctxt "sources.cc-content.provider"
+msgid "Provider"
+msgstr ""
+
+# sources.providers.source
+#: src/pages/sources.vue:97
+msgctxt "sources.providers.source"
+msgid "Source"
+msgstr ""
+
+# audio-details.table.genre
+#: src/components/AudioDetails/Table.vue:61
+msgctxt "audio-details.table.genre"
+msgid "Genre"
 msgstr ""
 
 # hero.caption

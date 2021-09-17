@@ -560,7 +560,16 @@
   },
   "audio-details": {
     "genre-label": "Genre",
-    "related-audios": "Related audios"
+    "related-audios": "Related audios",
+    "table": {
+      "album": "Album",
+      "category": "Type",
+      "sample-rate": "Sample Rate",
+      "filetype": "Format",
+      "provider": "Provider",
+      "source": "Source",
+      "genre": "Genre"
+    }
   },
   "meta-search": {
     "caption": "Openverse does not currently index the sources listed above, but through this interface is offering convenient access to search services provided by other independent organizations. Openverse has no control over the results that are returned. Do not assume that the results displayed in this search portal are under a CC license. Always verify that the work is actually under a CC license by following the link. If you are in doubt, you should contact the copyright holder directly, or try to contact the site where you found the content.",

@@ -7,7 +7,7 @@ import locales from './src/locales/scripts/valid-locales.json'
 export const env = {
   apiUrl:
     process.env.API_URL ||
-    'http://localhost:8000/v1/' ||
+    // 'http://localhost:8000/v1/' ||
     'https://api.creativecommons.engineering/v1/',
   socialSharing: process.env.SOCIAL_SHARING || true,
   enableGoogleAnalytics: process.env.ENABLE_GOOGLE_ANALYTICS || false,

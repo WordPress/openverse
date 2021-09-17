@@ -1,16 +1,15 @@
 <template>
   <aside :aria-label="$t('photo-details.aria.related')">
-    <h4 class="b-header">
+    <h4 class="b-header mb-6">
       {{ $t('audio-details.related-audios') }}
     </h4>
-    <ClientOnly>
-      <AudioTrack
-        v-for="rAudio in relatedAudios"
-        :key="rAudio.id"
-        :audio="rAudio"
-        :is-compact="true"
-      />
-    </ClientOnly>
+    <AudioTrack
+      v-for="audio in relatedAudios"
+      :key="audio.id"
+      :audio="audio"
+      :is-compact="true"
+      class="mb-12"
+    />
   </aside>
 </template>
 

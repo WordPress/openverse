@@ -13,42 +13,55 @@
         />
         <dl v-if="audio">
           <div v-if="audio.audio_set">
-            <dt>Album</dt>
+            <dt>{{ $t('audio-details.table.album') }}</dt>
             <dd>
               <a :href="audio.audio_set.url">{{ audio.audio_set.name }}</a>
             </dd>
           </div>
+          <div v-if="audio.category">
+            <dt>{{ $t('audio-details.table.category') }}</dt>
+            <dd>
+              <a :href="audio.audio_set.url">{{ audio.category }}</a>
+            </dd>
+          </div>
+          <div v-if="audio.sample_rate">
+            <dt>
+              {{ $t('audio-details.table.sample-rate') }}
+            </dt>
+            <dd>
+              {{ audio.sample_rate }}
+            </dd>
+          </div>
+          <div v-if="audio.filetype">
+            <dt>
+              {{ $t('audio-details.table.filetype') }}
+            </dt>
+            <dd>
+              {{ audio.filetype.toUpperCase() }}
+            </dd>
+          </div>
           <div>
             <dt>
-              {{ $t('media-details.provider-label') }}
+              {{ $t('audio-details.table.provider') }}
             </dt>
             <dd>
               {{ providerName }}
             </dd>
           </div>
+          <div v-if="audio.source">
+            <dt>
+              {{ $t('audio-details.table.source') }}
+            </dt>
+            <dd>
+              {{ sourceName }}
+            </dd>
+          </div>
           <div v-if="audio.genres">
             <dt>
-              {{ $t('audio-details.genre-label') }}
+              {{ $t('audio-details.table.genre') }}
             </dt>
             <dd>
               {{ audio.genres.join(', ') }}
-            </dd>
-          </div>
-          <div>
-            <dt>
-              {{ $t('media-details.source-label') }}
-            </dt>
-            <dd>
-              <a
-                :aria-label="sourceName"
-                :href="audio.foreign_landing_url"
-                target="blank"
-                rel="noopener noreferrer"
-                @click="onPhotoSourceLinkClicked"
-                @keyup.enter="onPhotoSourceLinkClicked"
-              >
-                {{ sourceName }}
-              </a>
             </dd>
           </div>
         </dl>
@@ -58,28 +71,11 @@
 </template>
 
 <script>
-import {
-  SEND_DETAIL_PAGE_EVENT,
-  DETAIL_PAGE_EVENTS,
-} from '~/store-modules/usage-data-analytics-types'
 import getProviderName from '~/utils/get-provider-name'
-import getProviderLogo from '~/utils/get-provider-logo'
 
 export default {
-  name: 'AudioInfo',
-  props: ['audio', 'ccLicenseURL', 'fullLicenseName'],
-  data: () => ({
-    fields: [
-      'album',
-      'category',
-      'mood',
-      'sample_rate',
-      'language',
-      'format',
-      'source',
-      'upload_date',
-    ],
-  }),
+  name: 'AudioDetailsTable',
+  props: ['audio'],
   computed: {
     providerName() {
       return getProviderName(
@@ -94,17 +90,6 @@ export default {
       )
     },
   },
-  methods: {
-    getProviderLogo(providerName) {
-      return getProviderLogo(providerName)
-    },
-    onPhotoSourceLinkClicked() {
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
-        eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
-        resultUuid: this.$props.audio.id,
-      })
-    },
-  },
 }
 </script>
 
@@ -117,13 +102,12 @@ export default {
 }
 dl {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-gap: 1.5rem;
 }
 dl div {
   display: flex;
   flex-direction: column;
-  padding-left: 1rem;
-  padding-right: 1rem;
 }
 
 dt {

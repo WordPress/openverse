@@ -1,23 +1,23 @@
 <template>
   <div :aria-label="$t('photo-details.aria.main')" class="audio-page">
-    <AudioTrack :audio="audio" />
+    <AudioTrack :audio="audio" class="main-track" />
     <MediaReuse
       data-testid="audio-attribution"
       :media="audio"
       :license-u-r-l="openverseLicenseURL"
       :full-license-name="fullLicenseName"
       :attribution-html="attributionHtml()"
-      class="px-16 mb-16 mt-6"
+      class="my-16 px-4 tab:px-0"
     />
     <AudioDetailsTable
       data-testid="audio-info"
       :audio="audio"
-      class="px-16 mb-16 mt-6"
+      class="my-16 px-4 desk:px-0"
     />
     <AudioDetailsRelated
       v-if="!$fetchState.pending"
       :related-audios="relatedAudios"
-      class="px-16 mb-16 mt-6"
+      class="my-16 px-4 desk:px-0"
     />
     <p v-else>{{ $t('media-details.loading') }}</p>
   </div>
@@ -127,3 +127,21 @@ const AudioDetailPage = {
 
 export default AudioDetailPage
 </script>
+<style>
+.audio-page {
+  --wp-max-width: 940px;
+}
+.audio-page section,
+.audio-page aside {
+  max-width: var(--wp-max-width);
+  margin-right: auto;
+  margin-left: auto;
+}
+.audio-page .main-track .info-section {
+  @apply mt-6;
+  max-width: var(--wp-max-width);
+  margin-right: auto;
+  margin-left: auto;
+  @apply px-4 tab:px-0;
+}
+</style>

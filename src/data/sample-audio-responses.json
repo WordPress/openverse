@@ -27,9 +27,6 @@
             "name": "male"
           },
           {
-            "name": "speed_medium"
-          },
-          {
             "name": "vocal"
           }
         ],
@@ -56,9 +53,6 @@
           },
           {
             "name": "male"
-          },
-          {
-            "name": "speed_veryhigh"
           },
           {
             "name": "vocal"
@@ -93,9 +87,6 @@
             "name": "male"
           },
           {
-            "name": "speed_high"
-          },
-          {
             "name": "vocal"
           }
         ],
@@ -120,9 +111,6 @@
             "name": "male"
           },
           {
-            "name": "speed_medium"
-          },
-          {
             "name": "vocal"
           }
         ],
@@ -143,9 +131,6 @@
         "provider": "jamendo",
         "source": "jamendo",
         "tags": [
-          {
-            "name": "speed_high"
-          },
           {
             "name": "vocal"
           }
@@ -169,9 +154,6 @@
         "tags": [
           {
             "name": "male"
-          },
-          {
-            "name": "speed_medium"
           },
           {
             "name": "vocal"
@@ -204,9 +186,6 @@
             "name": "male"
           },
           {
-            "name": "speed_medium"
-          },
-          {
             "name": "vocal"
           }
         ],
@@ -232,9 +211,6 @@
           },
           {
             "name": "neutral"
-          },
-          {
-            "name": "speed_medium"
           },
           {
             "name": "vocal"
@@ -264,9 +240,6 @@
             "name": "neutral"
           },
           {
-            "name": "speed_medium"
-          },
-          {
             "name": "vocal"
           }
         ],
@@ -289,9 +262,6 @@
         "tags": [
           {
             "name": "male"
-          },
-          {
-            "name": "speed_high"
           },
           {
             "name": "vocal"
@@ -318,9 +288,6 @@
             "name": "male"
           },
           {
-            "name": "speed_veryhigh"
-          },
-          {
             "name": "vocal"
           }
         ],
@@ -345,9 +312,6 @@
           },
           {
             "name": "neutral"
-          },
-          {
-            "name": "speed_veryhigh"
           },
           {
             "name": "vocal"
@@ -377,9 +341,6 @@
             "name": "neutral"
           },
           {
-            "name": "speed_medium"
-          },
-          {
             "name": "vocal"
           }
         ],
@@ -402,9 +363,6 @@
         "tags": [
           {
             "name": "instrumental"
-          },
-          {
-            "name": "speed_medium"
           }
         ],
         "detail_url": "http://localhost:8000/v1/audio/509c6689-6d09-4e9e-b146-3e691066599b",
@@ -425,9 +383,6 @@
         "tags": [
           {
             "name": "male"
-          },
-          {
-            "name": "speed_veryhigh"
           },
           {
             "name": "vocal"
@@ -454,9 +409,6 @@
           },
           {
             "name": "neutral"
-          },
-          {
-            "name": "speed_high"
           },
           {
             "name": "vocal"
@@ -489,9 +441,6 @@
             "name": "neutral"
           },
           {
-            "name": "speed_medium"
-          },
-          {
             "name": "vocal"
           }
         ],
@@ -517,9 +466,6 @@
           },
           {
             "name": "neutral"
-          },
-          {
-            "name": "speed_medium"
           },
           {
             "name": "vocal"
@@ -549,9 +495,6 @@
             "name": "neutral"
           },
           {
-            "name": "speed_medium"
-          },
-          {
             "name": "vocal"
           }
         ],
@@ -574,9 +517,6 @@
         "tags": [
           {
             "name": "instrumental"
-          },
-          {
-            "name": "speed_medium"
           }
         ],
         "detail_url": "http://localhost:8000/v1/audio/30b98def-d59f-46ed-ba39-076179f467e1",
@@ -600,9 +540,6 @@
           },
           {
             "name": "male"
-          },
-          {
-            "name": "speed_veryhigh"
           },
           {
             "name": "vocal"
@@ -629,9 +566,6 @@
             "name": "male"
           },
           {
-            "name": "speed_medium"
-          },
-          {
             "name": "vocal"
           }
         ],
@@ -654,6 +588,8 @@
     "provider": "jamendo",
     "source": "jamendo",
     "category": "Music",
+    "filetype": "mp3",
+    "sample_rate": "1.67",
     "description": "There is no description available for most of the audios",
     "tags": [
       {
@@ -661,9 +597,6 @@
       },
       {
         "name": "neutral"
-      },
-      {
-        "name": "speed_medium"
       },
       {
         "name": "strings"
