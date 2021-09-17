@@ -10,7 +10,7 @@
       @click.prevent="toggleFilterVisibility"
       @keyup.enter="toggleFilterVisibility"
     >
-      <h4>{{ title }}</h4>
+      <h4 class="filter-heading">{{ title }}</h4>
       <button
         v-if="!filtersExpandedByDefault"
         :aria-label="$t('filter-list.category-aria', { categoryName: title })"
@@ -48,16 +48,28 @@
           <LicenseIcons v-if="filterType === 'licenses'" :license="item.code" />
           {{ itemLabel(item) }}
         </label>
-        <img
+        <svg
           v-if="filterType === 'licenses'"
+          width="24"
+          height="20"
+          viewBox="0 0 24 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
           :aria-label="$t('browse-page.aria.license-explanation')"
           tabindex="0"
-          src="@/assets/help_icon.svg"
           alt="help"
           class="license-help pr-1"
           @click.stop="toggleLicenseExplanationVisibility(item.code)"
           @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
-        />
+        >
+          <circle cx="12" cy="10" r="8" stroke="#1E1E1E" stroke-width="1.5" />
+          <path
+            d="M9.75 8.25C9.75 7.00736 10.7574 6 12 6C13.2426 6 14.25 7.00736 14.25 8.25C14.25 9.40828 13.3748 10.3621 12.2496 10.4863C12.1124 10.5015 12 10.6119 12 10.75V12"
+            stroke="#1E1E1E"
+            stroke-width="1.5"
+          />
+          <path d="M12 13V14.5" stroke="#1E1E1E" stroke-width="1.5" />
+        </svg>
 
         <LicenseExplanationTooltip
           v-if="
@@ -173,8 +185,7 @@ export default {
 
 <style lang="scss" scoped>
 .filters {
-  border-bottom: 2px solid rgb(245, 245, 245);
-  padding: 1.5rem 1rem 1.5rem 1.5rem;
+  padding: 1rem 1.5rem 1rem 52px;
 }
 
 .filters-title {
@@ -186,6 +197,12 @@ export default {
   letter-spacing: normal;
   cursor: pointer;
   margin-bottom: 0.5rem;
+}
+
+.filter-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
 }
 
 .filter-visibility-toggle {
@@ -201,22 +218,28 @@ label {
 
 .license-help {
   cursor: pointer;
+  padding: 0;
 }
 
 .filter-checkbox-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 0.5rem;
-  padding-bottom: 0.75rem;
+  margin-top: 0.8rem;
 }
 
 .checkbox {
   display: flex;
   align-items: center;
   font-size: 0.875rem;
+  font-weight: 500;
 }
+.checkbox input {
+  width: 20px;
+  height: 20px;
+}
+
 .single .checkbox {
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 </style>

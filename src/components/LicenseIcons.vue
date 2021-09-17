@@ -55,4 +55,8 @@ export default LicenseIcons
   vertical-align: middle;
   margin-right: 0.3rem;
 }
+.photo-license-icons {
+  display: inline-block;
+  margin-right: 3px;
+}
 </style>
