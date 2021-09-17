@@ -1434,13 +1434,13 @@ msgstr ""
 # filter-list.clear
 #: src/components/Filters/FiltersList.vue:35
 msgctxt "filter-list.clear"
-msgid "Clear filters"
+msgid "clear filters"
 msgstr ""
 
 # filter-list.show
 #: src/components/Filters/FiltersList.vue:41
 msgctxt "filter-list.show"
-msgid "Show results"
+msgid "show results"
 msgstr ""
 
 # filter-list.category-aria (Do not translate words between ###)
