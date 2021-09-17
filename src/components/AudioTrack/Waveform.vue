@@ -1,7 +1,7 @@
 <template>
   <div
     ref="el"
-    class="waveform relative bg-dark-charcoal-04 overflow-hidden rounded-sm focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink"
+    class="waveform relative bg-dark-charcoal-04 overflow-hidden focus:outline-none focus-visible:ring focus-visible:ring-offset-2 focus-visible:ring-pink"
     tabIndex="0"
     role="slider"
     :aria-label="$t('waveform.label')"
@@ -70,7 +70,7 @@
     <template v-if="isReady">
       <div
         ref="progressTimestampEl"
-        class="progress timestamp z-10 bg-yellow transform"
+        class="progress timestamp z-10 transform"
         :class="[
           ...(isProgressTimestampCutoff
             ? ['bg-dark-charcoal-04-opaque']
@@ -100,7 +100,7 @@
     <!-- Message overlay -->
     <div
       v-else
-      class="absolute inset-x-0 inset-y-0 flex items-center justify-center loading font-bold text-sm"
+      class="absolute inset-x-0 inset-y-0 flex items-center justify-center loading font-bold text-xs"
     >
       {{ message }}
     </div>
@@ -425,7 +425,7 @@ export default {
 
 <style scoped lang="css">
 .timestamp {
-  @apply absolute top-1 font-bold text-sm px-1 pointer-events-none;
+  @apply absolute top-1 font-bold text-xs px-1 pointer-events-none;
 }
 
 .progress {

@@ -1,0 +1,34 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from '@storybook/addon-docs'
+
+import NoticeBar from '~/components/NoticeBar/NoticeBar'
+
+<Meta title="Components/Notice bar" component={NoticeBar} />
+
+export const Template = (args, { argTypes }) => ({
+  template: `<NoticeBar>{{ text }}</NoticeBar>`,
+  components: { NoticeBar },
+  props: Object.keys(argTypes),
+})
+
+# Notice bar
+
+<Description of={NoticeBar} />
+
+<ArgsTable of={NoticeBar} />
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      text: 'Your text goes here.',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

@@ -1,4 +1,10 @@
-# openverse-frontend
+<img src="https://github.com/WordPress/openverse/raw/main/brand/banner.svg" width="100%"/>
+
+<p align="center">
+  <a href="https://github.com/orgs/WordPress/projects/3">Project Board</a> | <a href="https://make.wordpress.org/openverse/">Community Site</a> | <a href="https://make.wordpress.org/chat/">#openverse @ Slack</a> | <a href="https://make.wordpress.org/openverse/handbook/openverse-handbook/">Handbook</a> | <a href="https://www.figma.com/files/project/31962071/Openverse?fuid=979162431688906882">Figma</a>
+</p>
+
+# Openverse Frontend
 
 ![openverse-frontend-ci](https://github.com/wordpress/openverse-frontend/workflows/openverse-frontend-ci/badge.svg)
 

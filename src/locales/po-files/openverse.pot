@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2021-09-17T14:19:21+00:00\n"
+"POT-Creation-Date: 2021-09-16T17:26:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2299,6 +2299,11 @@ msgctxt "feedback.loading"
 msgid "Loading..."
 msgstr ""
 
+# filters.creator (Do not translate words between ###)
+msgctxt "filters.creator"
+msgid "by ###creator###"
+msgstr ""
+
 # play-pause.play
 msgctxt "play-pause.play"
 msgid "Play"
@@ -2309,8 +2314,87 @@ msgctxt "play-pause.pause"
 msgid "Pause"
 msgstr ""
 
+# hero.title
+#: src/components/HeroSection.vue:6
+msgctxt "hero.title"
+msgid "Audio Category"
+msgstr ""
+
+# filters.audio-categories.music
+msgctxt "filters.audio-categories.music"
+msgid "Music"
+msgstr ""
+
+# filters.audio-categories.sound-effects
+msgctxt "filters.audio-categories.sound-effects"
+msgid "Sound Effects"
+msgstr ""
+
+# filters.audio-categories.podcast
+msgctxt "filters.audio-categories.podcast"
+msgid "Podcast"
+msgstr ""
+
+# filters.licenses.cc0
+msgctxt "filters.licenses.cc0"
+msgid "CC0"
+msgstr ""
+
+# filters.licenses.pdm
+msgctxt "filters.licenses.pdm"
+msgid "Public Domain Mark"
+msgstr ""
+
+# filters.licenses.by
+msgctxt "filters.licenses.by"
+msgid "BY"
+msgstr ""
+
+# filters.licenses.by-sa
+msgctxt "filters.licenses.by-sa"
+msgid "BY-SA"
+msgstr ""
+
+# filters.licenses.by-nc
+msgctxt "filters.licenses.by-nc"
+msgid "BY-NC"
+msgstr ""
+
+# filters.licenses.by-nd
+msgctxt "filters.licenses.by-nd"
+msgid "BY-ND"
+msgstr ""
+
+# filters.licenses.by-nc-sa
+msgctxt "filters.licenses.by-nc-sa"
+msgid "BY-NC-SA"
+msgstr ""
+
+# filters.licenses.by-nc-nd
+msgctxt "filters.licenses.by-nc-nd"
+msgid "BY-NC-ND"
+msgstr ""
+
 # dropdown-button.aria.arrow-label
 #: src/components/DropdownButton.vue:17
 msgctxt "dropdown-button.aria.arrow-label"
 msgid "Dropdown"
+msgstr ""
+
+# meta-search-page.intro
+#: src/pages/meta-search.vue:10
+msgctxt "meta-search-page.intro"
+msgid "CC Search is now called Openverse and joins WordPress as an open source project."
+msgstr ""
+
+# migration-notice.more (Do not translate words between ###)
+#: src/components/MigrationNotice.vue:4
+msgctxt "migration-notice.more"
+msgid "###read-more### about this announcement."
+msgstr ""
+
+# migration-notice.read
+#: src/components/MigrationNotice.vue:10
+msgctxt "migration-notice.read"
+msgid "Read more"
 msgstr ""
