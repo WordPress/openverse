@@ -137,11 +137,11 @@ export default AudioDetailPage
   margin-right: auto;
   margin-left: auto;
 }
-.audio-page .main-track .info-section {
+.audio-page .full-track .mx-16 {
   @apply mt-6;
+  @apply px-4 tab:px-0;
   max-width: var(--wp-max-width);
   margin-right: auto;
   margin-left: auto;
-  @apply px-4 tab:px-0;
 }
 </style>

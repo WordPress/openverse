@@ -8,6 +8,7 @@
       :key="audio.id"
       :audio="audio"
       :is-compact="true"
+      layout="row"
       class="mb-12"
     />
   </aside>
