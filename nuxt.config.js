@@ -12,6 +12,8 @@ export const env = {
   filterStorageKey: 'openverse-filter-visibility',
   notificationStorageKey: 'openverse-show-notification',
   enableInternalAnalytics: process.env.ENABLE_INTERNAL_ANALYTICS || false,
+  /** Feature flag to enable non-image media */
+  allMediaFeature: process.env.ALL_MEDIA_FEATURE || true,
 }
 
 /**

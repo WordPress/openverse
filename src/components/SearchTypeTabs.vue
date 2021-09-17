@@ -26,8 +26,12 @@ import { queryStringToSearchType } from '~/utils/search-query-transform'
 export default {
   name: 'SearchTypeTabs',
   data() {
+    let contentTypes = [IMAGE, AUDIO, VIDEO]
+    if (process.env.allMediaFeature) {
+      contentTypes.unshift(ALL_MEDIA)
+    }
     return {
-      contentTypes: [ALL_MEDIA, IMAGE, AUDIO, VIDEO],
+      contentTypes,
     }
   },
   computed: {
