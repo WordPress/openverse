@@ -1,6 +1,6 @@
 import pkg from './package.json'
 import locales from './src/locales/scripts/valid-locales.json'
-import stringToBoolean from '~/utils/string-to-boolean'
+import stringToBoolean from './src/utils/string-to-boolean'
 
 /**
  * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.
