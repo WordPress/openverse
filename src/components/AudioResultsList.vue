@@ -10,7 +10,8 @@
         v-for="audio in audios"
         :key="audio.id"
         :audio="audio"
-        :is-compact="true"
+        :size="audioTrackSize"
+        layout="row"
       />
     </div>
     <div v-if="!isFetchingAudiosError" class="load-more">
@@ -65,18 +66,16 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'audios',
-      'isFetching.audios',
-      'isFetchingError.audios',
-      'errorMessage',
-    ]),
+    ...mapState(['audios', 'errorMessage', 'isFilterVisible']),
     ...mapState({
-      resultsCount: 'count',
+      isFetchingAudios: 'isFetching.audios',
+      isFetchingAudiosError: 'isFetchingError.audios',
+      resultsCount: 'audiosCount',
       currentPage: 'audioPage',
+      audioPageCount: 'pageCount.audios',
     }),
     audiosCount() {
-      const count = this.resultsCount.audios
+      const count = this.resultsCount
       if (count === 0) {
         return this.$t('browse-page.audio-no-results')
       }
@@ -89,7 +88,10 @@ export default {
           })
     },
     isFinished() {
-      return this.currentPage >= this.$store.state.pageCount.audios
+      return this.currentPage >= this.audioPageCount
+    },
+    audioTrackSize() {
+      return this.isFilterVisible ? 'm' : 's'
     },
   },
   methods: {
