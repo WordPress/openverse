@@ -13,20 +13,25 @@ dotenv:
     @([ ! -f openverse_catalog/.env ] && cp openverse_catalog/env.template openverse_catalog/.env) || true
 
 
-up: dotenv
-    docker-compose {{ DEV_DOCKER_FILES }} up -d
+up flags="": dotenv
+    docker-compose {{ DEV_DOCKER_FILES }} up -d {{ flags }}
 
 
 down flags="":
     docker-compose {{ DEV_DOCKER_FILES }} down {{ flags }}
 
 
+recreate:
+    @just down -v
+    @just up "--force-recreate --build"
+
+
 logs: dotenv up
     docker-compose {{ DEV_DOCKER_FILES }} logs -f
 
 
-test: dotenv up
-    docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} /usr/local/airflow/.local/bin/pytest
+test pytestargs="": dotenv up
+    docker-compose {{ DEV_DOCKER_FILES }} exec {{ SERVICE }} /usr/local/airflow/.local/bin/pytest {{ pytestargs }}
 
 
 shell: dotenv up
