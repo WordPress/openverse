@@ -2,35 +2,30 @@ import {
   FETCH_END_MEDIA,
   FETCH_START_MEDIA,
   SET_RELATED_MEDIA,
-} from '../constants/mutation-types'
+} from '~/constants/mutation-types'
 import {
   FETCH_RELATED_MEDIA,
   HANDLE_NO_MEDIA,
   HANDLE_MEDIA_ERROR,
-} from '../constants/action-types'
-import { AUDIO, IMAGE } from '~/constants/media'
+} from '~/constants/action-types'
+import AudioService from '~/data/audio-service'
+import ImageService from '~/data/image-service'
 
-const initialState = {
-  related: {
-    images: [],
-    audios: [],
-  },
-}
+export const state = () => ({
+  images: [],
+  audios: [],
+})
 
-const actions = (AudioService, ImageService) => ({
+export const actionsCreator = (services) => ({
   [FETCH_RELATED_MEDIA]({ commit, dispatch }, params) {
     const { mediaType } = params
     commit(FETCH_START_MEDIA, { mediaType })
-    let service
-    if (mediaType === AUDIO) {
-      service = AudioService
-    } else if (mediaType === IMAGE) {
-      service = ImageService
-    } else {
+    if (!Object.keys(services).includes(mediaType)) {
       throw new Error(
         `Unsupported media type ${mediaType} for related media fetching`
       )
     }
+    const service = services[mediaType]
     return service
       .getRelatedMedia(params)
       .then(({ data }) => {
@@ -46,26 +41,33 @@ const actions = (AudioService, ImageService) => ({
       })
       .catch((error) => {
         dispatch(HANDLE_MEDIA_ERROR, {
-          mediaType: IMAGE,
+          mediaType,
           error,
         })
       })
   },
 })
 
-const mutations = {
+const services = {
+  AUDIO: AudioService,
+  IMAGE: ImageService,
+}
+
+export const actions = actionsCreator(services)
+
+export const mutations = {
   /**
    * @param _state
    * @param {'image'|'audio'} mediaType
    * @param {Array} relatedMedia
    */
   [SET_RELATED_MEDIA](_state, { mediaType, relatedMedia }) {
-    _state.related[`${mediaType}s`] = relatedMedia
+    _state[`${mediaType}s`] = relatedMedia
   },
 }
 
 export default {
-  state: initialState,
-  actions,
+  state,
   mutations,
+  actions,
 }
