@@ -1,5 +1,9 @@
 <template>
-  <div class="license-explanation-tooltip p-2">
+  <div
+    ref="tooltip"
+    class="license-explanation-tooltip p-2"
+    :style="inlineStyle"
+  >
     <h5 v-if="!isLicense" class="b-header mb-4">
       {{ isLicense ? $t('browse-page.license-description.title') : '' }}
       {{ license.toUpperCase() }}
@@ -44,10 +48,59 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      isMounted: false,
+      tooltipBeforeBorderWidth: 13,
+      tooltipBeforeTop: 10,
+    }
+  },
   computed: {
     isLicense() {
       return isLicense(this.$props.license)
     },
+    inlineStyle() {
+      const styleObject = {}
+
+      if (this.isMounted) {
+        if (event) {
+          const helpIconBounding = event.target.getBoundingClientRect()
+          const helpIconLeft = helpIconBounding.x
+          const helpIconTop = helpIconBounding.y
+          const helpIconWidth = helpIconBounding.width
+          const helpIconHeight = helpIconBounding.height
+          const helpIconTopRelative = event.target.offsetTop
+          const helpIconWidthNoPadding = event.target.width
+
+          const computedProperties = {
+            '--desktop-tooltip-top': `${Math.round(
+              helpIconTop -
+                this.tooltipBeforeTop -
+                this.tooltipBeforeBorderWidth / 2
+            )}px`,
+            '--desktop-tooltip-left': `${
+              Math.round(helpIconLeft + helpIconWidth) +
+              this.tooltipBeforeBorderWidth
+            }px`,
+            '--touch-tooltip-top': `${Math.round(
+              helpIconTopRelative + helpIconHeight + this.tooltipBeforeTop
+            )}px`,
+            '--touch-tooltip-right': `calc(1rem - ${Math.round(
+              helpIconWidth / 2 - (helpIconWidth - helpIconWidthNoPadding)
+            )}px)`,
+            '--tooltip-before-top': `${this.tooltipBeforeTop}px`,
+            '--tooltip-before-border-width': `${this.tooltipBeforeBorderWidth}px`,
+          }
+
+          Object.assign(styleObject, computedProperties)
+        }
+      }
+
+      return styleObject
+    },
+  },
+  mounted() {
+    this.isMounted = true
   },
   methods: {
     getLicenseDeedLink(licenseTerm) {
@@ -72,18 +125,19 @@ export default {
   width: 20rem;
   box-shadow: 10px 10px 10px -10px rgba(0, 0, 0, 0.25);
   @include desktop {
-    margin-left: 20.5rem;
-    margin-top: -2.6rem;
+    top: var(--desktop-tooltip-top);
+    left: var(--desktop-tooltip-left);
   }
   @include touch {
-    margin-top: 0.5rem;
+    top: var(--touch-tooltip-top);
+    right: var(--touch-tooltip-right);
   }
 }
 .license-explanation-tooltip:after,
 .license-explanation-tooltip:before {
   @include desktop {
     right: 100%;
-    top: 7%;
+    top: var(--tooltip-before-top);
   }
   @include touch {
     bottom: 100%;
@@ -112,7 +166,7 @@ export default {
 }
 .license-explanation-tooltip:before {
   border-color: rgba(120, 120, 120, 0);
-  border-width: 13px;
+  border-width: var(--tooltip-before-border-width);
 
   @include desktop {
     border-right-color: #d8d8d8;
