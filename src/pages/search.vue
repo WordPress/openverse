@@ -80,11 +80,11 @@ const BrowsePage = {
     ...mapActions({
       fetchMedia: `${FETCH_MEDIA}`,
       setSearchTypeFromUrl: `${SET_SEARCH_TYPE_FROM_URL}`,
-      setFiltersFromUrl: `${SET_FILTERS_FROM_URL}`,
     }),
     ...mapMutations({
       setQuery: `${SET_QUERY}`,
       setFilterVisibility: `${SET_FILTER_IS_VISIBLE}`,
+      setFiltersFromUrl: `${SET_FILTERS_FROM_URL}`,
     }),
     getMediaItems(params, mediaType) {
       this.fetchMedia({ ...params, mediaType })

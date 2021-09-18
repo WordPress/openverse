@@ -55,8 +55,16 @@ describe('Related Images Store', () => {
       })
       const action = actions[FETCH_RELATED_MEDIA]
       action({ commit, dispatch }, params).then(() => {
-        expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
-        expect(commit).toBeCalledWith(FETCH_END_MEDIA, { mediaType: IMAGE })
+        expect(commit).toBeCalledWith(
+          FETCH_START_MEDIA,
+          { mediaType: IMAGE },
+          { root: true }
+        )
+        expect(commit).toBeCalledWith(
+          FETCH_END_MEDIA,
+          { mediaType: IMAGE },
+          { root: true }
+        )
 
         expect(commit).toBeCalledWith(SET_RELATED_MEDIA, {
           mediaType: IMAGE,
