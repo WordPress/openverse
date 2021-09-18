@@ -68,7 +68,7 @@ export default {
   name: 'HeroSection',
   data: () => ({ form: { searchTerm: '' } }),
   computed: {
-    ...mapState(['isEmbedded']),
+    ...mapState({ isEmbedded: (state) => state.isEmbedded }),
   },
   mounted() {
     if (document.querySelector('#searchTerm')) {

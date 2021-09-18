@@ -9,7 +9,12 @@ describe('BrowsePage', () => {
 
     const wrapper = render(SearchGridForm, {
       localVue,
-      mocks: { $route: { path: '/search' } },
+      mocks: {
+        $route: {
+          path: '/search',
+          $store: { state: { isFilterVisible: true } },
+        },
+      },
     })
 
     expect(wrapper.find('form').vm).toBeDefined()

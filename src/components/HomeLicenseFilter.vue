@@ -20,18 +20,20 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 import { TOGGLE_FILTER } from '~/store-modules/action-types'
 
 export default {
   name: 'LicenseFilter',
   computed: {
-    licenseTypes() {
-      return this.$store.state.filters.licenseTypes
-    },
+    ...mapState({
+      licenseTypes: (state) => state.filters.licenseTypes,
+    }),
   },
   methods: {
+    ...mapActions({ toggleFilter: `${TOGGLE_FILTER}` }),
     onFilterChanged(code) {
-      this.$store.dispatch(TOGGLE_FILTER, {
+      this.toggleFilter({
         code,
         filterType: 'licenseTypes',
       })

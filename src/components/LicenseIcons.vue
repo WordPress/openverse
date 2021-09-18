@@ -31,7 +31,6 @@ const APItoIconNameMap = {
 
 const LicenseIcons = {
   name: 'license-icons',
-  components: {},
   props: {
     license: '',
   },

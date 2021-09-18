@@ -11,21 +11,20 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import {
   SET_FILTER_IS_VISIBLE,
   CLEAR_FILTERS,
 } from '~/store-modules/mutation-types'
 import { TOGGLE_FILTER } from '~/store-modules/action-types'
-import FiltersList from './FiltersList'
 
 export default {
   name: 'SearchGridFilter',
-  components: {
-    FiltersList,
-  },
   computed: {
-    ...mapState(['filters', 'isFilterVisible']),
+    ...mapState({
+      filters: (state) => state.filters,
+      isFilterVisible: (state) => state.isFilterVisible,
+    }),
     /**
      * Show filters expanded by default
      * @todo: The A/B test is over and we're going with the expanded view. Can remove a lot of this old test logic
@@ -36,17 +35,21 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      toggleFilter: `${TOGGLE_FILTER}`,
+    }),
+    ...mapMutations({
+      setFilterVisible: `${SET_FILTER_IS_VISIBLE}`,
+      clearFilters: `${CLEAR_FILTERS}`,
+    }),
     onUpdateFilter({ code, filterType }) {
-      this.$store.dispatch(TOGGLE_FILTER, {
-        code,
-        filterType,
-      })
+      this.toggleFilter({ code, filterType })
     },
     onClearFilters() {
-      this.$store.commit(CLEAR_FILTERS, {})
+      this.clearFilters()
     },
     onToggleSearchGridFilter() {
-      this.$store.commit(SET_FILTER_IS_VISIBLE, {
+      this.setFilterVisible({
         isFilterVisible: !this.isFilterVisible,
       })
     },

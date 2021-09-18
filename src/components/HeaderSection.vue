@@ -18,6 +18,11 @@ export default {
   props: {
     showNavSearch: { type: Boolean, default: false },
   },
-  computed: mapState(['showNotification', 'isEmbedded']),
+  computed: {
+    ...mapState({
+      showNotification: (state) => state.showNotification,
+      isEmbedded: (state) => state.isEmbedded,
+    }),
+  },
 }
 </script>

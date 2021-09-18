@@ -134,24 +134,21 @@ export default {
       this.licenseExplanationVisible = false
     },
     isDisabled(e) {
+      const licenses = this.$store.state.filters.licenses
       if (this.$props.filterType === 'licenseTypes') {
-        const nc = this.$store.state.filters.licenses.filter((item) =>
-          item.code.includes('nc')
-        )
-        const nd = this.$store.state.filters.licenses.filter((item) =>
-          item.code.includes('nd')
-        )
+        const nc = licenses.filter((item) => item.code.includes('nc'))
+        const nd = licenses.filter((item) => item.code.includes('nd'))
         return (
           (e.code === 'commercial' && nc.some((li) => li.checked)) ||
           (e.code === 'modification' && nd.some((li) => li.checked))
         )
       }
-
+      const licenseTypes = this.$store.state.filters.licenseTypes
       if (this.$props.filterType === 'licenses') {
-        const commercial = this.$store.state.filters.licenseTypes.find(
+        const commercial = licenseTypes.find(
           (item) => item.code === 'commercial'
         )
-        const modification = this.$store.state.filters.licenseTypes.find(
+        const modification = licenseTypes.find(
           (item) => item.code === 'modification'
         )
         return (

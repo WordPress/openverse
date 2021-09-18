@@ -16,20 +16,16 @@
 <script>
 import { TOGGLE_FILTER } from '~/store-modules/action-types'
 import FilterTag from '~/components/Filters/FilterTag'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'FilterDisplay',
   components: { FilterTag },
   computed: {
-    searchType() {
-      return this.$store.state.searchType
-    },
-    isAnyFilterApplied() {
-      return this.$store.getters.isAnyFilterApplied
-    },
-    appliedFilterTags() {
-      return this.$store.getters.appliedFilterTags
-    },
+    ...mapGetters({
+      appliedFilterTags: 'appliedFilterTags',
+      isAnyFilterApplied: 'isAnyFilterApplied',
+    }),
   },
   methods: {
     onUpdateFilter({ code, filterType }) {

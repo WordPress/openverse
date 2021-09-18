@@ -60,18 +60,16 @@ const PhotoDetailPage = {
   },
   computed: {
     ...mapState({
-      filter: 'query.filter',
-      images: 'images',
-      query: 'query',
-      tags: 'image.tags',
-      image: 'image',
+      filter: (state) => state.query.filter,
+      images: (state) => state.images,
+      query: (state) => state.query,
+      tags: (state) => state.image.tags,
+      image: (state) => state.image,
     }),
-    relatedImagesCount() {
-      return this.$store.state.related.images.length
-    },
-    relatedImages() {
-      return this.$store.state.related.images
-    },
+    ...mapState({
+      relatedImagesCount: (state) => state.images.length,
+      relatedImages: (state) => state.images,
+    }),
   },
   watch: {
     image() {
@@ -114,7 +112,8 @@ const PhotoDetailPage = {
     })
   },
   methods: {
-    ...mapActions([FETCH_RELATED_MEDIA, FETCH_IMAGE]),
+    ...mapActions([FETCH_RELATED_MEDIA]),
+    ...mapActions([FETCH_IMAGE]),
     ...mapMutations([SET_IMAGE]),
     onImageLoaded(event) {
       this.imageWidth = event.target.naturalWidth

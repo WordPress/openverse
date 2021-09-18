@@ -77,9 +77,6 @@ export default {
     isFilterVisible() {
       return this.$store.state.isFilterVisible
     },
-    isFilterApplied() {
-      return this.$store.getters.isAnyFilterApplied
-    },
     searchBoxPlaceholder() {
       return this.$t('browse-page.search-form.placeholder', {
         type: this.$t(`browse-page.search-form.${this.activeTab}`),
