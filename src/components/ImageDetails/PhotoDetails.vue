@@ -184,7 +184,7 @@
 </template>
 
 <script>
-import { TOGGLE_REPORT_FORM_VISIBILITY } from '~/store-modules/mutation-types'
+import { TOGGLE_REPORT_FORM_VISIBILITY } from '~/constants/mutation-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,

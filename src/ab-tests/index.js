@@ -1,4 +1,4 @@
-import { JOINED_AB_TEST_EXPERIMENT } from '~/store-modules/mutation-types'
+import { JOINED_AB_TEST_EXPERIMENT } from '~/constants/mutation-types'
 import { participate } from '~/utils/sixpack'
 
 export const activeExperiments = []

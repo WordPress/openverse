@@ -1,5 +1,5 @@
 import { CopyAttribution } from '~/analytics/events'
-import { COPY_ATTRIBUTION } from './action-types'
+import { COPY_ATTRIBUTION } from '../constants/action-types'
 
 const actions = (GoogleAnalytics) => ({
   [COPY_ATTRIBUTION](_, params) {

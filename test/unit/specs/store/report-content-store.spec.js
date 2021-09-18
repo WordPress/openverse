@@ -5,8 +5,8 @@ import {
   REPORT_FORM_CLOSED,
   REPORT_ERROR,
   BACK_TO_REPORT_START,
-} from '~/store-modules/mutation-types'
-import { SEND_CONTENT_REPORT } from '~/store-modules/action-types'
+} from '~/constants/mutation-types'
+import { SEND_CONTENT_REPORT } from '~/constants/action-types'
 
 describe('Report Content Store', () => {
   describe('state', () => {

@@ -32,7 +32,7 @@ import { computed, ref, useStore, watch } from '@nuxtjs/composition-api'
 import {
   SET_ACTIVE_MEDIA_ITEM,
   UNSET_ACTIVE_MEDIA_ITEM,
-} from '~/store-modules/mutation-types'
+} from '~/constants/mutation-types'
 
 /**
  * Controls the interaction between the parent Vue component, the underlying

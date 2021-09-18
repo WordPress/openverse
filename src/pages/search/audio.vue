@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { UPDATE_SEARCH_TYPE } from '~/store-modules/action-types'
+import { UPDATE_SEARCH_TYPE } from '~/constants/action-types'
 import { AUDIO } from '~/constants/media'
 
 export default {

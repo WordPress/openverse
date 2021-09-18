@@ -8,12 +8,12 @@ import {
   FETCH_START_MEDIA,
   FETCH_END_MEDIA,
   FETCH_MEDIA_ERROR,
-} from '~/store-modules/mutation-types'
+} from '~/constants/mutation-types'
 import {
   FETCH_IMAGE,
   FETCH_COLLECTION_IMAGES,
   FETCH_MEDIA,
-} from '~/store-modules/action-types'
+} from '~/constants/action-types'
 import { IMAGE } from '~/constants/media'
 
 describe('Search Store', () => {

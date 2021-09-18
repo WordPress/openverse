@@ -4,8 +4,8 @@ import {
   FETCH_MEDIA_PROVIDERS_START,
   SET_MEDIA_PROVIDERS,
   SET_PROVIDER_FETCH_ERROR,
-} from '~/store-modules/mutation-types'
-import { FETCH_MEDIA_TYPE_PROVIDERS } from '~/store-modules/action-types'
+} from '~/constants/mutation-types'
+import { FETCH_MEDIA_TYPE_PROVIDERS } from '~/constants/action-types'
 
 describe('Image Provider Store', () => {
   describe('state', () => {

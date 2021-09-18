@@ -1,5 +1,5 @@
 import SocialShareButtons from '~/components/ImageDetails/SocialShareButtons'
-import { SOCIAL_MEDIA_SHARE } from '~/store-modules/action-types'
+import { SOCIAL_MEDIA_SHARE } from '~/constants/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,

@@ -64,8 +64,8 @@
 </template>
 
 <script>
-import { FETCH_MEDIA } from '~/store-modules/action-types'
-import { SET_MEDIA } from '~/store-modules/mutation-types'
+import { FETCH_MEDIA } from '~/constants/action-types'
+import { SET_MEDIA } from '~/constants/mutation-types'
 import { IMAGE } from '~/constants/media'
 import { mapActions, mapMutations, mapState } from 'vuex'
 

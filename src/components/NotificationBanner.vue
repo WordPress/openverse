@@ -35,7 +35,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { SET_SHOW_NOTIFICATION } from '~/store-modules/mutation-types'
+import { SET_SHOW_NOTIFICATION } from '~/constants/mutation-types'
 
 export default {
   name: 'NotificationBanner',

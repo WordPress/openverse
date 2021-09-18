@@ -15,8 +15,8 @@ import { mapActions, mapMutations, mapState } from 'vuex'
 import {
   SET_FILTER_IS_VISIBLE,
   CLEAR_FILTERS,
-} from '~/store-modules/mutation-types'
-import { TOGGLE_FILTER } from '~/store-modules/action-types'
+} from '~/constants/mutation-types'
+import { TOGGLE_FILTER } from '~/constants/action-types'
 
 export default {
   name: 'SearchGridFilter',

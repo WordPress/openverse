@@ -1,4 +1,4 @@
-import { SET_SHOW_NOTIFICATION } from '~/store-modules/mutation-types'
+import { SET_SHOW_NOTIFICATION } from '~/constants/mutation-types'
 import local from '~/utils/local'
 
 const state = {

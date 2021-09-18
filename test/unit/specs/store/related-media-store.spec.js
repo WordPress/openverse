@@ -3,8 +3,8 @@ import {
   FETCH_END_MEDIA,
   FETCH_START_MEDIA,
   SET_RELATED_MEDIA,
-} from '~/store-modules/mutation-types'
-import { FETCH_RELATED_MEDIA } from '~/store-modules/action-types'
+} from '~/constants/mutation-types'
+import { FETCH_RELATED_MEDIA } from '~/constants/action-types'
 import { IMAGE } from '~/constants/media'
 
 describe('Related Images Store', () => {

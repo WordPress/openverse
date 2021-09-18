@@ -1,10 +1,10 @@
-import { REPORT_BUG } from './action-types'
+import { REPORT_BUG } from '../constants/action-types'
 
 import {
   REPORT_BUG_START,
   REPORT_BUG_END,
   REPORT_BUG_FAILED,
-} from './mutation-types'
+} from '../constants/mutation-types'
 
 const actions = (bugReportService) => ({
   // eslint-disable-next-line no-unused-vars

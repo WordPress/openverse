@@ -3,7 +3,7 @@ import {
   REPORT_BUG_START,
   REPORT_BUG_END,
   REPORT_BUG_FAILED,
-} from '~/store-modules/mutation-types'
+} from '~/constants/mutation-types'
 
 describe('Attribution Store', () => {
   describe('actions', () => {

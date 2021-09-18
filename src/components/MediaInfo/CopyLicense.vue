@@ -172,7 +172,7 @@
 </template>
 
 <script>
-import { COPY_ATTRIBUTION } from '~/store-modules/action-types'
+import { COPY_ATTRIBUTION } from '~/constants/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,

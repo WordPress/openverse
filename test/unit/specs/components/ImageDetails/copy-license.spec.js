@@ -1,5 +1,5 @@
 import CopyLicense from '~/components/MediaInfo/CopyLicense'
-import { COPY_ATTRIBUTION } from '~/store-modules/action-types'
+import { COPY_ATTRIBUTION } from '~/constants/action-types'
 import {
   DETAIL_PAGE_EVENTS,
   SEND_DETAIL_PAGE_EVENT,

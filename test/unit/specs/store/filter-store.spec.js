@@ -1,11 +1,11 @@
 import store, { filterData } from '~/store-modules/filter-store'
-import { TOGGLE_FILTER } from '~/store-modules/action-types'
+import { TOGGLE_FILTER } from '~/constants/action-types'
 import {
   SET_FILTER,
   SET_PROVIDERS_FILTERS,
   CLEAR_FILTERS,
   SET_FILTER_IS_VISIBLE,
-} from '~/store-modules/mutation-types'
+} from '~/constants/mutation-types'
 
 describe('Filter Store', () => {
   describe('state', () => {

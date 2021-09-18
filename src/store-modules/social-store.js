@@ -1,5 +1,5 @@
 import { SocialMediaShare } from '~/analytics/events'
-import { SOCIAL_MEDIA_SHARE } from './action-types'
+import { SOCIAL_MEDIA_SHARE } from '../constants/action-types'
 
 const actions = (GoogleAnalytics) => ({
   // eslint-disable-next-line no-unused-vars

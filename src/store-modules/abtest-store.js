@@ -1,5 +1,5 @@
-import { JOINED_AB_TEST_EXPERIMENT } from './mutation-types'
-import { CONVERT_AB_TEST_EXPERIMENT } from './action-types'
+import { JOINED_AB_TEST_EXPERIMENT } from '../constants/mutation-types'
+import { CONVERT_AB_TEST_EXPERIMENT } from '../constants/action-types'
 import { convert } from '~/utils/sixpack'
 
 const state = {

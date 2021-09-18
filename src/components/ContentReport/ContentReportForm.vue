@@ -99,8 +99,8 @@ import dmcaNotice from './DmcaNotice'
 import OtherIssueForm from './OtherIssueForm'
 import DoneMessage from './DoneMessage'
 import ReportError from './ReportError'
-import { SEND_CONTENT_REPORT } from '~/store-modules/action-types'
-import { REPORT_FORM_CLOSED } from '~/store-modules/mutation-types'
+import { SEND_CONTENT_REPORT } from '~/constants/action-types'
+import { REPORT_FORM_CLOSED } from '~/constants/mutation-types'
 
 const dmcaFormUrl =
   'https://docs.google.com/forms/d/e/1FAIpQLSd0I8GsEbGQLdaX4K_F6V2NbHZqN137WMZgnptUpzwd-kbDKA/viewform'

@@ -2,12 +2,12 @@ import {
   FETCH_END_MEDIA,
   FETCH_START_MEDIA,
   SET_RELATED_MEDIA,
-} from './mutation-types'
+} from '../constants/mutation-types'
 import {
   FETCH_RELATED_MEDIA,
   HANDLE_NO_MEDIA,
   HANDLE_MEDIA_ERROR,
-} from './action-types'
+} from '../constants/action-types'
 import { AUDIO, IMAGE } from '~/constants/media'
 
 const initialState = {

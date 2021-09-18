@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { CLEAR_FILTERS } from '~/store-modules/mutation-types'
+import { CLEAR_FILTERS } from '~/constants/mutation-types'
 
 const HomePage = {
   name: 'home-page',

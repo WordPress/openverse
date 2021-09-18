@@ -1,4 +1,4 @@
-import { SET_REFERRED } from '~/store-modules/mutation-types.js'
+import { SET_REFERRED } from '~/constants/mutation-types.js'
 
 /**
  * If the URL contains a referral parameter pointing containing

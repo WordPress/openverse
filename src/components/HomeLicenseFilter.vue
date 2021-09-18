@@ -21,7 +21,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { TOGGLE_FILTER } from '~/store-modules/action-types'
+import { TOGGLE_FILTER } from '~/constants/action-types'
 
 export default {
   name: 'LicenseFilter',

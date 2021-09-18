@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { FETCH_MEDIA } from '~/store-modules/action-types'
+import { FETCH_MEDIA } from '~/constants/action-types'
 import { AUDIO } from '~/constants/media'
 import { mapActions, mapState } from 'vuex'
 

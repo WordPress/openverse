@@ -22,15 +22,12 @@
   </div>
 </template>
 <script>
-import {
-  FETCH_MEDIA,
-  SET_SEARCH_TYPE_FROM_URL,
-} from '~/store-modules/action-types'
+import { FETCH_MEDIA, SET_SEARCH_TYPE_FROM_URL } from '~/constants/action-types'
 import {
   SET_QUERY,
   SET_FILTER_IS_VISIBLE,
   SET_FILTERS_FROM_URL,
-} from '~/store-modules/mutation-types'
+} from '~/constants/mutation-types'
 import { queryStringToQueryData } from '~/utils/search-query-transform'
 import local from '~/utils/local'
 import { screenWidth } from '~/utils/get-browser-info'

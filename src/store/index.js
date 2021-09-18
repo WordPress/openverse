@@ -18,7 +18,7 @@ import RelatedMediaStore from '~/store-modules/related-media-store'
 import NotificationStore from '~/store-modules/notification-store'
 import NavStore from '~/store-modules/nav-store'
 import ActiveMediaStore from '~/store-modules/active-media-store'
-import { FETCH_MEDIA_PROVIDERS } from '~/store-modules/action-types'
+import { FETCH_MEDIA_PROVIDERS } from '~/constants/action-types'
 import GoogleAnalytics from '~/analytics/google-analytics'
 import { AUDIO, IMAGE } from '~/constants/media'
 

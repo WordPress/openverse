@@ -11,7 +11,7 @@ import {
   HANDLE_MEDIA_ERROR,
   UPDATE_SEARCH_TYPE,
   SET_SEARCH_TYPE_FROM_URL,
-} from './action-types'
+} from '../constants/action-types'
 import {
   FETCH_END_MEDIA,
   FETCH_MEDIA_ERROR,
@@ -24,7 +24,7 @@ import {
   SET_QUERY,
   SET_SEARCH_TYPE,
   UPDATE_FILTERS,
-} from './mutation-types'
+} from '../constants/mutation-types'
 import {
   SEND_SEARCH_QUERY_EVENT,
   SEND_RESULT_CLICKED_EVENT,

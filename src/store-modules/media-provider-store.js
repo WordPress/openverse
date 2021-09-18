@@ -1,7 +1,7 @@
 import {
   FETCH_MEDIA_TYPE_PROVIDERS,
   FETCH_MEDIA_PROVIDERS,
-} from './action-types'
+} from '../constants/action-types'
 
 import {
   SET_PROVIDER_FETCH_ERROR,
@@ -9,7 +9,7 @@ import {
   FETCH_MEDIA_PROVIDERS_START,
   SET_MEDIA_PROVIDERS,
   SET_PROVIDERS_FILTERS,
-} from './mutation-types'
+} from '../constants/mutation-types'
 
 import previousImageProviders from '../data/existing-image-providers'
 import previousAudioProviders from '../data/existing-audio-providers'

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { BACK_TO_REPORT_START } from '~/store-modules/mutation-types'
+import { BACK_TO_REPORT_START } from '~/constants/mutation-types'
 
 export default {
   name: 'ReportError',

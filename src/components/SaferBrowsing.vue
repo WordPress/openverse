@@ -41,7 +41,7 @@
 
 <script>
 import { FocusTrap } from 'focus-trap-vue'
-import { TOGGLE_FILTER } from '~/store-modules/action-types'
+import { TOGGLE_FILTER } from '~/constants/action-types'
 import { mapActions } from 'vuex'
 
 export default {

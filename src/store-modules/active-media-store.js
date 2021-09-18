@@ -1,7 +1,7 @@
 import {
   SET_ACTIVE_MEDIA_ITEM,
   UNSET_ACTIVE_MEDIA_ITEM,
-} from './mutation-types'
+} from '../constants/mutation-types'
 
 /**
  * Stores information about the active media item.

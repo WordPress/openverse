@@ -14,7 +14,7 @@
   </div>
 </template>
 <script>
-import { TOGGLE_FILTER } from '~/store-modules/action-types'
+import { TOGGLE_FILTER } from '~/constants/action-types'
 import FilterTag from '~/components/Filters/FilterTag'
 import { mapGetters } from 'vuex'
 

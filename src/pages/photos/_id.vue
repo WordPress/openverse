@@ -29,8 +29,8 @@
 import axios from 'axios'
 import { mapActions, mapMutations, mapState } from 'vuex'
 import featureFlags from '~/feature-flags'
-import { FETCH_IMAGE, FETCH_RELATED_MEDIA } from '~/store-modules/action-types'
-import { SET_IMAGE, SET_RELATED_MEDIA } from '~/store-modules/mutation-types'
+import { FETCH_IMAGE, FETCH_RELATED_MEDIA } from '~/constants/action-types'
+import { SET_IMAGE, SET_RELATED_MEDIA } from '~/constants/mutation-types'
 import { IMAGE } from '~/constants/media'
 
 const PhotoDetailPage = {
