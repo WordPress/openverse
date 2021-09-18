@@ -17,7 +17,7 @@ export const state = () => ({
   audios: [],
 })
 
-export const actionsCreator = (services) => ({
+export const createActions = (services) => ({
   [FETCH_RELATED_MEDIA]({ commit, dispatch }, params) {
     const { mediaType } = params
     commit(FETCH_START_MEDIA, { mediaType }, { root: true })
@@ -62,7 +62,7 @@ const services = {
   [IMAGE]: ImageService,
 }
 
-export const actions = actionsCreator(services)
+export const actions = createActions(services)
 
 export const mutations = {
   /**

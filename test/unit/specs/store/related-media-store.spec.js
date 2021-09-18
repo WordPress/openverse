@@ -1,4 +1,4 @@
-import store, { actionsCreator } from '~/store/related'
+import store, { createActions } from '~/store/related'
 import {
   FETCH_END_MEDIA,
   FETCH_START_MEDIA,
@@ -50,7 +50,7 @@ describe('Related Images Store', () => {
 
     it('FETCH_RELATED_MEDIA on success', (done) => {
       const params = { id: 'foo', mediaType: IMAGE }
-      const actions = actionsCreator({
+      const actions = createActions({
         [IMAGE]: imageServiceMock,
       })
       const action = actions[FETCH_RELATED_MEDIA]
@@ -81,7 +81,7 @@ describe('Related Images Store', () => {
         getRelatedMedia: jest.fn(() => Promise.reject('error')),
       }
       const params = { id: 'foo', mediaType: IMAGE }
-      const actions = actionsCreator({
+      const actions = createActions({
         [IMAGE]: imageServiceMock,
       })
       const action = actions[FETCH_RELATED_MEDIA]

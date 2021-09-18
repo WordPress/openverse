@@ -1,5 +1,6 @@
 import { JOINED_AB_TEST_EXPERIMENT } from '~/constants/mutation-types'
 import { participate } from '~/utils/sixpack'
+import { ABTEST } from '~/constants/store-modules'
 
 export const activeExperiments = []
 
@@ -28,7 +29,7 @@ const abTests = async (store, activeExperiments) => {
   // commit each experiment to Vuex
   const commitExperiments = (experiments) => {
     experiments.map((experiment) => {
-      store.commit(JOINED_AB_TEST_EXPERIMENT, {
+      store.commit(`${ABTEST}/${JOINED_AB_TEST_EXPERIMENT}`, {
         name: experiment.name,
         case: experiment.case,
         session: experiment.session,

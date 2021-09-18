@@ -9,7 +9,6 @@ import MediaProviderStore from '~/store-modules/media-provider-store'
 import AttributionStore from '~/store-modules/attribution-store'
 import BugReportStore from '~/store-modules/bug-report-store'
 import SocialMediaStore from '~/store-modules/social-store'
-import ABTestStore from '~/store-modules/abtest-store'
 import UserStore from '~/store-modules/user-store'
 import UsageDataStore from '~/store-modules/usage-data-store'
 import FilterStore from '~/store-modules/filter-store'
@@ -32,7 +31,6 @@ export const actions = Object.assign(
   AttributionStore.actions(GoogleAnalytics),
   BugReportStore.actions(BugReportService),
   SocialMediaStore.actions(GoogleAnalytics),
-  ABTestStore.actions,
   ReportContentStore.actions(ReportService),
   NotificationStore.actions,
   {
@@ -54,7 +52,6 @@ export const state = () =>
     FilterStore.state,
     MediaProviderStore.state,
     BugReportStore.state,
-    ABTestStore.state,
     UserStore.state,
     ReportContentStore.state,
     NotificationStore.state,
@@ -69,7 +66,6 @@ export const mutations = Object.assign(
   FilterStore.mutations,
   MediaProviderStore.mutations,
   BugReportStore.mutations,
-  ABTestStore.mutations,
   ReportContentStore.mutations,
   NotificationStore.mutations,
   NavStore.mutations,
