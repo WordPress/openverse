@@ -21,7 +21,7 @@ export default {
   computed: {
     ...mapState({
       showNotification: (state) => state.showNotification,
-      isEmbedded: (state) => state.isEmbedded,
+      isEmbedded: (state) => state.nav.isEmbedded,
     }),
   },
 }

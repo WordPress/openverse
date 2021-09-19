@@ -37,7 +37,7 @@ import { RELATED } from '~/constants/store-modules'
 const PhotoDetailPage = {
   name: 'PhotoDetailPage',
   layout({ store }) {
-    return store.state.isEmbedded
+    return store.state.nav.isEmbedded
       ? 'embedded-with-nav-search'
       : 'with-nav-search'
   },

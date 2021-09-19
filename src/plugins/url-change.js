@@ -8,7 +8,7 @@ import config from '../../nuxt.config.js'
  */
 export default function ({ app, store }) {
   app.router.onReady(() => {
-    if (process.client && store.state.isEmbedded) {
+    if (process.client && store.state.nav.isEmbedded) {
       sendWindowMessage({
         debug: config.dev,
         type: 'urlChange',

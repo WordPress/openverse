@@ -9,9 +9,9 @@ import UsageDataStore from '~/store-modules/usage-data-store'
 import FilterStore from '~/store-modules/filter-store'
 import ReportContentStore from '~/store-modules/report-content-store'
 import NotificationStore from '~/store-modules/notification-store'
-import NavStore from '~/store-modules/nav-store'
 import { FETCH_MEDIA_PROVIDERS } from '~/constants/action-types'
 import GoogleAnalytics from '~/analytics/google-analytics'
+import { PROVIDER } from '~/constants/store-modules'
 
 export const actions = Object.assign(
   UsageDataStore.actions(UsageDataService),
@@ -23,7 +23,7 @@ export const actions = Object.assign(
   {
     async nuxtServerInit({ dispatch }) {
       try {
-        await dispatch(FETCH_MEDIA_PROVIDERS)
+        await dispatch(`${PROVIDER}/${FETCH_MEDIA_PROVIDERS}`)
       } catch (error) {
         // TODO: What happens if we do not have image providers?
         // How do we show the error to the user?
@@ -39,8 +39,7 @@ export const state = () =>
     FilterStore.state,
     UserStore.state,
     ReportContentStore.state,
-    NotificationStore.state,
-    NavStore.state
+    NotificationStore.state
   )
 
 export const getters = Object.assign(FilterStore.getters)
@@ -49,6 +48,5 @@ export const mutations = Object.assign(
   SearchStore.mutations,
   FilterStore.mutations,
   ReportContentStore.mutations,
-  NotificationStore.mutations,
-  NavStore.mutations
+  NotificationStore.mutations
 )

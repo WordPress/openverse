@@ -10,7 +10,7 @@ import config from '../../nuxt.config.js'
 export default {
   data: () => ({ height: 0, observer: null }),
   mounted() {
-    if (this.$store.state.isEmbedded) {
+    if (this.$store.state.nav.isEmbedded) {
       this.notifyOuterWindow(document.documentElement.scrollHeight)
       this.observer = this.createResizeObserver()
       this.observer.observe(document.documentElement)

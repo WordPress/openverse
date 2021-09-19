@@ -6,7 +6,7 @@ describe('HeaderSection', () => {
     const wrapper = render(HeaderSection, {
       mocks: {
         $store: {
-          state: { abSessionId: '' },
+          state: { abSessionId: '', nav: { isEmbedded: true } },
         },
         $route: {
           path: '',
