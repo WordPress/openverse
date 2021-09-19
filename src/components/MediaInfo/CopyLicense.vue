@@ -176,9 +176,9 @@ import { COPY_ATTRIBUTION } from '~/constants/action-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '~/store-modules/usage-data-analytics-types'
+} from '~/constants/usage-data-analytics-types'
 import { isPublicDomain } from '~/utils/license'
-import { ATTRIBUTION } from '~/constants/store-modules'
+import { ATTRIBUTION, USAGE_DATA } from '~/constants/store-modules'
 
 export default {
   name: 'CopyLicense',
@@ -220,7 +220,7 @@ export default {
       this.activeTab = tabIdx
     },
     sendDetailPageEvent(eventType) {
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+      this.$store.dispatch(`${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`, {
         eventType,
         resultUuid: this.$props.media.id,
       })
@@ -233,13 +233,13 @@ export default {
       this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED)
     },
     onPhotoSourceLinkClicked() {
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+      this.sendDetailPageEvent({
         eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
         resultUuid: this.$props.media.id,
       })
     },
     onPhotoCreatorLinkClicked() {
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
+      this.sendDetailPageEvent({
         eventType: DETAIL_PAGE_EVENTS.CREATOR_CLICKED,
         resultUuid: this.$props.media.id,
       })

@@ -11,7 +11,7 @@ export const actions = {
     const experiment = context.state.experiments.find(
       ({ name }) => name === params.name
     )
-    const sessionId = context.state.abSessionId
+    const sessionId = context.state.user.abSessionId
 
     if (!experiment) {
       return

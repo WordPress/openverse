@@ -12,7 +12,9 @@ describe('AB Tests', () => {
     store = {
       commit: jest.fn(),
       state: {
-        sessionId: 'foo',
+        user: {
+          sessionId: 'foo',
+        },
       },
     }
   })

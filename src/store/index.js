@@ -1,20 +1,13 @@
 import AudioService from '~/data/audio-service'
 import ImageService from '~/data/image-service'
-import UsageDataService from '~/data/usage-data-service'
 import SearchStore from '~/store-modules/search-store'
-import SocialMediaStore from '~/store-modules/social-store'
-import UserStore from '~/store-modules/user-store'
-import UsageDataStore from '~/store-modules/usage-data-store'
 import FilterStore from '~/store-modules/filter-store'
 import { FETCH_MEDIA_PROVIDERS } from '~/constants/action-types'
-import GoogleAnalytics from '~/analytics/google-analytics'
 import { PROVIDER } from '~/constants/store-modules'
 
 export const actions = Object.assign(
-  UsageDataStore.actions(UsageDataService),
   SearchStore.actions(AudioService, ImageService),
   FilterStore.actions,
-  SocialMediaStore.actions(GoogleAnalytics),
   {
     async nuxtServerInit({ dispatch }) {
       try {
@@ -28,8 +21,7 @@ export const actions = Object.assign(
   }
 )
 
-export const state = () =>
-  Object.assign(SearchStore.state, FilterStore.state, UserStore.state)
+export const state = () => Object.assign(SearchStore.state, FilterStore.state)
 
 export const getters = Object.assign(FilterStore.getters)
 

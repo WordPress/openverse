@@ -38,7 +38,7 @@ const abTests = async (store, activeExperiments) => {
   }
   const experiments = await Promise.all(
     activeExperiments.map((experiment) =>
-      participate(experiment, { sessionId: store.state.abSessionId })
+      participate(experiment, { sessionId: store.state.user.abSessionId })
     )
   )
   commitExperiments(experiments)

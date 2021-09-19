@@ -83,7 +83,7 @@ const PhotoDetailPage = {
   async fetch({ store, route, error, app }) {
     // Clear related images if present
     if (store.state.related.images && store.state.related.images.length > 0) {
-      await store.dispatch(`${RELATED}/${SET_RELATED_MEDIA}`, {
+      store.commit(`${RELATED}/${SET_RELATED_MEDIA}`, {
         mediaType: IMAGE,
         relatedMedia: [],
       })

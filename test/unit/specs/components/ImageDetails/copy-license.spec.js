@@ -3,11 +3,11 @@ import { COPY_ATTRIBUTION } from '~/constants/action-types'
 import {
   DETAIL_PAGE_EVENTS,
   SEND_DETAIL_PAGE_EVENT,
-} from '~/store-modules/usage-data-analytics-types'
+} from '~/constants/usage-data-analytics-types'
 
 import render from '../../../test-utils/render'
 import i18n from '../../../test-utils/i18n'
-import { ATTRIBUTION } from '~/constants/store-modules'
+import { ATTRIBUTION, USAGE_DATA } from '~/constants/store-modules'
 
 describe('CopyLicense', () => {
   let options = null
@@ -72,9 +72,12 @@ describe('CopyLicense', () => {
   it('should dispatch SEND_DETAIL_PAGE_EVENT on copy attribution', () => {
     const wrapper = render(CopyLicense, options)
     wrapper.vm.onCopyAttribution(copyData.type, copyData.event)
-    expect(dispatchMock).toHaveBeenCalledWith(SEND_DETAIL_PAGE_EVENT, {
-      eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
-      resultUuid: props.media.id,
-    })
+    expect(dispatchMock).toHaveBeenCalledWith(
+      `${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`,
+      {
+        eventType: DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED,
+        resultUuid: props.media.id,
+      }
+    )
   })
 })

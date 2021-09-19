@@ -1,5 +1,7 @@
 import SearchRating from '~/components/SearchRating'
 import render from '../../test-utils/render'
+import { USAGE_DATA } from '~/constants/store-modules'
+import { SEND_SEARCH_RATING_EVENT } from '~/constants/usage-data-analytics-types'
 
 describe('SearchRating', () => {
   let options = {}
@@ -36,10 +38,13 @@ describe('SearchRating', () => {
     const button = wrapper.find('.rating')
     await button.trigger('click')
 
-    expect(dispatchMock).toHaveBeenLastCalledWith('SEND_SEARCH_RATING_EVENT', {
-      query: 'foo',
-      relevant: true,
-    })
+    expect(dispatchMock).toHaveBeenLastCalledWith(
+      `${USAGE_DATA}/${SEND_SEARCH_RATING_EVENT}`,
+      {
+        query: 'foo',
+        relevant: true,
+      }
+    )
   })
 
   it('dispatches SEND_SEARCH_RATING_EVENT when clicking rating button with relevant as false', async () => {
@@ -47,10 +52,13 @@ describe('SearchRating', () => {
     const button = wrapper.findAll('.rating').wrappers[1]
     await button.trigger('click')
 
-    expect(dispatchMock).toHaveBeenLastCalledWith('SEND_SEARCH_RATING_EVENT', {
-      query: 'foo',
-      relevant: false,
-    })
+    expect(dispatchMock).toHaveBeenLastCalledWith(
+      `${USAGE_DATA}/${SEND_SEARCH_RATING_EVENT}`,
+      {
+        query: 'foo',
+        relevant: false,
+      }
+    )
   })
 
   it('should render thanks message after clicking the rating button', async () => {

@@ -4,9 +4,12 @@ import render from '../../test-utils/render'
 describe('HeaderSection', () => {
   it('should render correct contents', () => {
     const wrapper = render(HeaderSection, {
+      stubs: {
+        EmbeddedNavSection: true,
+      },
       mocks: {
         $store: {
-          state: { abSessionId: '', nav: { isEmbedded: true } },
+          state: { user: { abSessionId: '' }, nav: { isEmbedded: true } },
         },
         $route: {
           path: '',
