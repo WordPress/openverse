@@ -6,7 +6,6 @@ import UsageDataService from '~/data/usage-data-service'
 import ReportService from '~/data/report-service'
 import SearchStore from '~/store-modules/search-store'
 import MediaProviderStore from '~/store-modules/media-provider-store'
-import AttributionStore from '~/store-modules/attribution-store'
 import BugReportStore from '~/store-modules/bug-report-store'
 import SocialMediaStore from '~/store-modules/social-store'
 import UserStore from '~/store-modules/user-store'
@@ -15,7 +14,6 @@ import FilterStore from '~/store-modules/filter-store'
 import ReportContentStore from '~/store-modules/report-content-store'
 import NotificationStore from '~/store-modules/notification-store'
 import NavStore from '~/store-modules/nav-store'
-import ActiveMediaStore from '~/store-modules/active-media-store'
 import { FETCH_MEDIA_PROVIDERS } from '~/constants/action-types'
 import GoogleAnalytics from '~/analytics/google-analytics'
 import { AUDIO, IMAGE } from '~/constants/media'
@@ -28,7 +26,6 @@ export const actions = Object.assign(
   SearchStore.actions(AudioService, ImageService),
   FilterStore.actions,
   MediaProviderStore.actions(AudioProviderService, ImageProviderService),
-  AttributionStore.actions(GoogleAnalytics),
   BugReportStore.actions(BugReportService),
   SocialMediaStore.actions(GoogleAnalytics),
   ReportContentStore.actions(ReportService),
@@ -55,8 +52,7 @@ export const state = () =>
     UserStore.state,
     ReportContentStore.state,
     NotificationStore.state,
-    NavStore.state,
-    ActiveMediaStore.state
+    NavStore.state
   )
 
 export const getters = Object.assign(FilterStore.getters)
@@ -68,6 +64,5 @@ export const mutations = Object.assign(
   BugReportStore.mutations,
   ReportContentStore.mutations,
   NotificationStore.mutations,
-  NavStore.mutations,
-  ActiveMediaStore.mutations
+  NavStore.mutations
 )

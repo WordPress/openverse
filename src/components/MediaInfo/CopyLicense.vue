@@ -178,6 +178,7 @@ import {
   DETAIL_PAGE_EVENTS,
 } from '~/store-modules/usage-data-analytics-types'
 import { isPublicDomain } from '~/utils/license'
+import { ATTRIBUTION } from '~/constants/store-modules'
 
 export default {
   name: 'CopyLicense',
@@ -225,7 +226,10 @@ export default {
       })
     },
     onCopyAttribution(type, event) {
-      this.$store.dispatch(COPY_ATTRIBUTION, { type, content: event.content })
+      this.$store.dispatch(`${ATTRIBUTION}/${COPY_ATTRIBUTION}`, {
+        type,
+        content: event.content,
+      })
       this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.ATTRIBUTION_CLICKED)
     },
     onPhotoSourceLinkClicked() {

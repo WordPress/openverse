@@ -78,8 +78,8 @@ export default {
 
     const isActiveTrack = computed(
       () =>
-        store.state.activeMediaType === 'audio' &&
-        store.state.activeMediaId === props.audio.id
+        store.state['active-media'].type === 'audio' &&
+        store.state['active-media'].id === props.audio.id
     )
     // Sync status from parent to player and store
     watch(
@@ -107,7 +107,7 @@ export default {
     )
     // Sync status from store to parent
     watch(
-      () => [store.state.activeMediaType, store.state.activeMediaId],
+      () => [store.state['active-media'].type, store.state['active-media'].id],
       () => {
         const status = isActiveTrack.value ? 'playing' : 'paused'
         emit('change', status)

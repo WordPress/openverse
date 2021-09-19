@@ -84,7 +84,7 @@ const fetchCollectionImages = (commit, params, imageService) => {
  * and handle possible errors
  * @param {import('vuex').Commit} commit
  * @param {import('vuex').Dispatch} dispatch
- * @param {import('./types').MediaResult} data
+ * @param {import('../store/types').MediaResult} data
  * @param {Object} params
  * @param {'image'|'audio'} params.mediaType
  * @param {boolean} params.shouldPersistMedia
@@ -109,7 +109,7 @@ const handleSearchResponse = async (
 }
 
 /**
- * @type {{ audios: import('./types').AudioDetail[],
+ * @type {{ audios: import('../store/types').AudioDetail[],
  * audiosCount: number, audioPage:number,
  * images: import('./types').ImageDetail[],
  * imagePage: number, imagesCount: number, query: {},

@@ -7,6 +7,7 @@ import {
 
 import render from '../../../test-utils/render'
 import i18n from '../../../test-utils/i18n'
+import { ATTRIBUTION } from '~/constants/store-modules'
 
 describe('CopyLicense', () => {
   let options = null
@@ -59,10 +60,13 @@ describe('CopyLicense', () => {
   it('should dispatch COPY_ATTRIBUTION', () => {
     const wrapper = render(CopyLicense, options)
     wrapper.vm.onCopyAttribution(copyData.type, copyData.event)
-    expect(dispatchMock).toHaveBeenCalledWith(COPY_ATTRIBUTION, {
-      type: copyData.type,
-      content: copyData.event.content,
-    })
+    expect(dispatchMock).toHaveBeenCalledWith(
+      `${ATTRIBUTION}/${COPY_ATTRIBUTION}`,
+      {
+        type: copyData.type,
+        content: copyData.event.content,
+      }
+    )
   })
 
   it('should dispatch SEND_DETAIL_PAGE_EVENT on copy attribution', () => {
