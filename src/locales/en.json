@@ -388,8 +388,8 @@
   "filter-list": {
     "filter-by": "Filter results by",
     "hide": "Hide filters",
-    "clear": "clear filters",
-    "show": "show results",
+    "clear": "Clear filters",
+    "show": "Show results",
     "category-aria": "filters list for {categoryName} category"
   },
   "browse-page": {
