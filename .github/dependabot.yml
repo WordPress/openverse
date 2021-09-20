@@ -16,6 +16,7 @@ updates:
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
+      - "dependencies"
       
   # Enable version updates for Python libs in Openverse API
   - package-ecosystem: 'pip'
@@ -27,6 +28,8 @@ updates:
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
+      - "dependencies"
+      - "python"
       
   # Enable version updates for Python libs in ingestion server
   - package-ecosystem: 'pip'
@@ -38,3 +41,5 @@ updates:
     labels:
       - "💻 aspect: code"
       - "🧰 goal: internal improvement"
+      - "dependencies"
+      - "python"
