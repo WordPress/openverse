@@ -149,10 +149,10 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setMedia: `${SET_MEDIA}`,
+      setMedia: SET_MEDIA,
     }),
     ...mapActions({
-      fetchMedia: `${FETCH_MEDIA}`,
+      fetchMedia: FETCH_MEDIA,
     }),
     searchChanged() {
       this.setMedia({ media: [], page: 1 })

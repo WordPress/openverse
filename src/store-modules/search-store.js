@@ -11,7 +11,7 @@ import {
   HANDLE_MEDIA_ERROR,
   UPDATE_SEARCH_TYPE,
   SET_SEARCH_TYPE_FROM_URL,
-} from '../constants/action-types'
+} from '~/constants/action-types'
 import {
   FETCH_END_MEDIA,
   FETCH_MEDIA_ERROR,

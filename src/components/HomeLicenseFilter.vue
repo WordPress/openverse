@@ -31,7 +31,7 @@ export default {
     }),
   },
   methods: {
-    ...mapActions({ toggleFilter: `${TOGGLE_FILTER}` }),
+    ...mapActions({ toggleFilter: TOGGLE_FILTER }),
     onFilterChanged(code) {
       this.toggleFilter({
         code,
