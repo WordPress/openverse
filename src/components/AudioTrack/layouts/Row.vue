@@ -53,7 +53,7 @@
 
 <script>
 import { computed } from '@nuxtjs/composition-api'
-import AudioThumbnail from '~/components/AudioTrack/AudioThumbnail.vue'
+import AudioThumbnail from '~/components/AudioThumbnail/AudioThumbnail.vue'
 import License from '~/components/License/License.vue'
 
 export default {
