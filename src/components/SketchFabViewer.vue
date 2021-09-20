@@ -1,5 +1,5 @@
 <template>
-  <div class="sketchfab-viewer image is-16by9">
+  <div class="sketchfab-viewer image is-sketchfab-viewer">
     <!-- <div v-if="loading">Loading...</div> -->
     <iframe
       id="sketchfab-iframe"
@@ -68,3 +68,20 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.image {
+  display: block;
+}
+.is-sketchfab-viewer {
+  padding-top: 56.25%;
+}
+.has-ratio {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+</style>
