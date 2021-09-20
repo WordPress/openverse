@@ -22,10 +22,7 @@ export default {
   name: 'FilterDisplay',
   components: { FilterTag },
   computed: {
-    ...mapGetters([
-      'appliedFilterTags',
-      'isAnyFilterApplied',
-    ]),
+    ...mapGetters(['appliedFilterTags', 'isAnyFilterApplied']),
   },
   methods: {
     onUpdateFilter({ code, filterType }) {

@@ -81,7 +81,7 @@ export default {
     LicenseIcons,
     LicenseExplanationTooltip,
   },
-  props: ['options', 'title', 'filterType'],
+  props: ['options', 'title', 'filterType', 'disabled'],
   data() {
     return {
       filtersVisible: false,
@@ -133,27 +133,29 @@ export default {
     hideLicenseExplanationVisibility() {
       this.licenseExplanationVisible = false
     },
-    isDisabled(e) {
-      const licenses = this.$store.state.filters.licenses
+    getFilterTypeValue(filterKey, val) {
+      return this.$store.state.filters[filterKey].filter((item) =>
+        item.code.includes(val)
+      )
+    },
+    isDisabled(item) {
       if (this.$props.filterType === 'licenseTypes') {
-        const nc = licenses.filter((item) => item.code.includes('nc'))
-        const nd = licenses.filter((item) => item.code.includes('nd'))
+        const nc = this.getFilterTypeValue('licenses', 'nc')
+        const nd = this.getFilterTypeValue('licenses', 'nd')
         return (
-          (e.code === 'commercial' && nc.some((li) => li.checked)) ||
-          (e.code === 'modification' && nd.some((li) => li.checked))
+          (item.code === 'commercial' && nc.some((li) => li.checked)) ||
+          (item.code === 'modification' && nd.some((li) => li.checked))
         )
       }
-      const licenseTypes = this.$store.state.filters.licenseTypes
       if (this.$props.filterType === 'licenses') {
-        const commercial = licenseTypes.find(
-          (item) => item.code === 'commercial'
-        )
-        const modification = licenseTypes.find(
-          (item) => item.code === 'modification'
+        const commercial = this.getFilterTypeValue('licenseTypes', 'commercial')
+        const modification = this.getFilterTypeValue(
+          'licenseTypes',
+          'modification'
         )
         return (
-          (commercial.checked && e.code.includes('nc')) ||
-          (modification.checked && e.code.includes('nd'))
+          (commercial.checked && item.code.includes('nc')) ||
+          (modification.checked && item.code.includes('nd'))
         )
       }
       return this.$props.disabled

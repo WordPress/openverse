@@ -11,7 +11,7 @@ const HomePage = {
     return store.state.isEmbedded ? 'embedded' : 'default'
   },
   beforeMount() {
-    this.$store.commit(`${CLEAR_FILTERS}`)
+    this.$store.commit(CLEAR_FILTERS)
   },
 }
 

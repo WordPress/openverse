@@ -36,11 +36,11 @@ export default {
   },
   methods: {
     ...mapActions({
-      toggleFilter: `${TOGGLE_FILTER}`,
+      toggleFilter: TOGGLE_FILTER,
     }),
     ...mapMutations({
-      setFilterVisible: `${SET_FILTER_IS_VISIBLE}`,
-      clearFilters: `${CLEAR_FILTERS}`,
+      setFilterVisible: SET_FILTER_IS_VISIBLE,
+      clearFilters: CLEAR_FILTERS,
     }),
     onUpdateFilter({ code, filterType }) {
       this.toggleFilter({ code, filterType })

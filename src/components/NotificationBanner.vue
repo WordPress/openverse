@@ -1,21 +1,21 @@
 <template>
   <div class="notification__wrapper">
     <p class="notification__text">
-      {{ $t(notificationText) }}
+      {{ $t(text) }}
     </p>
     <div class="notification__actions">
       <button
-        v-if="notificationOkay"
+        v-if="!!okayLabel"
         class="button is-success small"
         @click="handleOkayClick"
       >
-        {{ $t(notificationOkay) }}
+        {{ $t(okayLabel) }}
       </button>
       <button
         class="button is-text small dismiss-button"
         @click="handleDismissClick"
       >
-        <span v-if="notificationDismiss">{{ $t(notificationDismiss) }}</span>
+        <span v-if="!!dismissLabel">{{ $t(dismissLabel) }}</span>
         <svg
           v-else
           viewBox="0 0 30 30"
@@ -48,13 +48,12 @@ export default {
   },
   methods: {
     handleDismissClick() {
-      this.$store.commit(`${SET_SHOW_NOTIFICATION}`, {
+      this.$store.commit(SET_SHOW_NOTIFICATION, {
         showNotification: false,
       })
     },
     handleOkayClick() {
-      let NOTIFICATION_ACTION
-      this.$store.dispatch(`${NOTIFICATION_ACTION}`)
+      this.$store.dispatch('NOTIFICATION_ACTION')
     },
   },
 }

@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchMedia: `${FETCH_MEDIA}`,
+      fetchMedia: FETCH_MEDIA,
     }),
     onLoadMoreAudios() {
       const searchParams = {
