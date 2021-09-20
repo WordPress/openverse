@@ -67,14 +67,14 @@ export default {
   computed: {
     ...mapState({
       audios: (state) => state.audios,
-      audiosCount: (state) => state.count.audios,
+      audioResultsCount: (state) => state.count.audios,
       currentPage: (state) => state.audioPage,
       isFetchingAudios: (state) => state.isFetching.audios,
       isFetchingAudiosError: (state) => state.isFetchingError.audios,
       errorMessage: (state) => state.errorMessage,
     }),
     audiosCount() {
-      const count = this.audiosCount
+      const count = this.audioResultsCount
       if (count === 0) {
         return this.$t('browse-page.audio-no-results')
       }
