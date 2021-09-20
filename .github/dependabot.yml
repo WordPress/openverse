@@ -6,19 +6,35 @@
 version: 2
 
 updates:
-  # Enable version updates for Docker
+  # Enable version updates for Docker containers in Openverse API
   - package-ecosystem: 'docker'
     # Look for a `Dockerfile` in the `/openverse-api` directory
     directory: '/openverse-api'
     # Check for updates once a week
     schedule:
       interval: 'weekly'
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
       
-  # Enable version updates for Python
+  # Enable version updates for Python libs in Openverse API
   - package-ecosystem: 'pip'
     # Look for a `Pipfile` in the `/openverse-api` directory
     directory: '/openverse-api'
     # Check for updates once a week
     schedule:
       interval: 'weekly'
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
       
+  # Enable version updates for Python libs in ingestion server
+  - package-ecosystem: 'pip'
+    # Look for a `Pipfile` in the `/ingestion_server` directory
+    directory: '/ingestion_server'
+    # Check for updates once a week
+    schedule:
+      interval: 'weekly'
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
