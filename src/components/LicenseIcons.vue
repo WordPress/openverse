@@ -1,7 +1,7 @@
 <template>
   <span class="photo-license-icons">
     <i
-      class="icon cc-logo text-lgr text-black has-background-white filter-icons"
+      class="icon cc-logo text-lgr text-black has-background-white filter-icon"
       title="CC"
     >
       <!-- Closing i and opening template tag must be adjacent to prevent whitespace --> </i
@@ -60,6 +60,6 @@ export default LicenseIcons
 }
 .photo-license-icons {
   display: inline-block;
-  margin-right: 3px;
+  margin-right: 0.188rem;
 }
 </style>
