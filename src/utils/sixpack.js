@@ -6,7 +6,7 @@ export const participate = (
     sessionId,
     traffic_fraction,
     force,
-    base_url = process.env.apiUrl.replace('/v1', '/sixpack'),
+    base_url = process.env.apiUrl.replace('/v1/', '/sixpack'),
     timeout = 3000,
   }
 ) => {

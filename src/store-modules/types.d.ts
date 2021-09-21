@@ -31,7 +31,8 @@ export type AudioDetail = {
   sample_rate?: number
   alt_files?: any
   detail_url: string
-  related_url: string
+  related_url: string,
+  filetype?: string
 }
 
 /**

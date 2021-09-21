@@ -4,7 +4,7 @@ import {
   SET_IMAGE_PAGE,
   SET_MEDIA,
   SET_QUERY,
-  IMAGE_NOT_FOUND,
+  MEDIA_NOT_FOUND,
   FETCH_START_MEDIA,
   FETCH_END_MEDIA,
   FETCH_MEDIA_ERROR,
@@ -485,7 +485,7 @@ describe('Search Store', () => {
       done()
     })
 
-    it('FETCH_IMAGE on 404 doesnt break and commits IMAGE_NOT_FOUND', (done) => {
+    it('FETCH_IMAGE on 404 doesnt break and commits MEDIA_NOT_FOUND', (done) => {
       const failedMock = {
         getMediaDetail: jest.fn(() =>
           Promise.reject({ response: { status: 404 } })
@@ -495,7 +495,7 @@ describe('Search Store', () => {
       const action = store.actions(failedMock, failedMock)[FETCH_IMAGE]
       action({ commit, dispatch, state }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
-        expect(commit).toBeCalledWith(IMAGE_NOT_FOUND)
+        expect(commit).toBeCalledWith(MEDIA_NOT_FOUND, { mediaType: IMAGE })
 
         done()
       })

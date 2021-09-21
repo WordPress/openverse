@@ -11,7 +11,7 @@
       <CopyLicense
         :media="media"
         :full-license-name="fullLicenseName"
-        :cc-license-u-r-l="ccLicenseURL"
+        :license-u-r-l="licenseURL"
         :attribution-html="attributionHtml"
         class="column"
       />
@@ -24,21 +24,9 @@ export default {
   name: 'MediaReuse',
   props: {
     media: {},
-    ccLicenseURL: String,
+    licenseURL: String,
     fullLicenseName: String,
     attributionHtml: String,
   },
-  computed: {
-    licenseURL() {
-      return `${this.$props.ccLicenseURL}`
-    },
-  },
 }
 </script>
-
-<style scoped>
-.media-reuse {
-  margin-top: 4rem;
-  margin-bottom: 4rem;
-}
-</style>
