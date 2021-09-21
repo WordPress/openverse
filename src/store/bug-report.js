@@ -1,13 +1,13 @@
-import { REPORT_BUG } from '../constants/action-types'
+import BugReportService from '~/data/bug-report-service'
+import { REPORT_BUG } from '~/constants/action-types'
 
 import {
   REPORT_BUG_START,
   REPORT_BUG_END,
   REPORT_BUG_FAILED,
-} from '../constants/mutation-types'
+} from '~/constants/mutation-types'
 
-const actions = (bugReportService) => ({
-  // eslint-disable-next-line no-unused-vars
+export const createActions = (bugReportService) => ({
   [REPORT_BUG]({ commit }, params) {
     commit(REPORT_BUG_START)
     bugReportService
@@ -17,14 +17,16 @@ const actions = (bugReportService) => ({
   },
 })
 
-const state = {
+export const actions = createActions(BugReportService)
+
+export const state = () => ({
   isReportingBug: false,
   bugReported: false,
   bugReportFailed: false,
-}
+})
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
-const mutations = {
+export const mutations = {
   [REPORT_BUG_START](_state) {
     _state.isReportingBug = true
   },
@@ -39,7 +41,7 @@ const mutations = {
 }
 
 export default {
-  actions,
-  mutations,
   state,
+  mutations,
+  actions,
 }

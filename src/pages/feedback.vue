@@ -71,7 +71,7 @@ const suggestionForm =
 export const FeedbackPage = {
   name: 'feedback-page',
   layout({ store }) {
-    return store.state.isEmbedded
+    return store.state.nav.isEmbedded
       ? 'embedded-with-nav-search'
       : 'with-nav-search'
   },
@@ -97,16 +97,12 @@ export const FeedbackPage = {
     },
   },
   computed: {
-    ...mapState(['isEmbedded']),
-    isReportingBug() {
-      return this.$store.state.isReportingBug
-    },
-    bugReported() {
-      return this.$store.state.bugReported
-    },
-    bugReportFailed() {
-      return this.$store.state.bugReportFailed
-    },
+    ...mapState({
+      isEmbedded: (state) => state.nav.isEmbedded,
+      isReportingBug: (state) => state['bug-report'].isReportingBug,
+      bugReported: (state) => state['bug-report'].bugReported,
+      bugReportFailed: (state) => state['bug-report'].bugReportFailed,
+    }),
   },
 }
 

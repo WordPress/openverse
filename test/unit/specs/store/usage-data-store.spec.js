@@ -1,8 +1,10 @@
-import store from '~/store-modules/usage-data-store'
+import { createActions } from '~/store/usage-data'
+import { SEND_SEARCH_QUERY_EVENT } from '~/constants/usage-data-analytics-types'
 
 describe('Usage Data Store Store', () => {
   describe('actions', () => {
     let usageDataServiceMock = null
+    let store = {}
     const data = { foo: 'bar' }
 
     beforeEach(() => {
@@ -12,10 +14,13 @@ describe('Usage Data Store Store', () => {
         sendDetailPageEvent: jest.fn(() => Promise.resolve()),
         sendSearchRatingEvent: jest.fn(() => Promise.resolve()),
       }
+      store = {
+        actions: createActions(usageDataServiceMock),
+      }
     })
 
     it('SEND_SEARCH_QUERY_EVENT sends search query event', () => {
-      store.actions(usageDataServiceMock).SEND_SEARCH_QUERY_EVENT({}, data)
+      store.actions[SEND_SEARCH_QUERY_EVENT]({}, data)
 
       expect(usageDataServiceMock.sendSearchQueryEvent).toHaveBeenCalledWith(
         data
@@ -23,7 +28,7 @@ describe('Usage Data Store Store', () => {
     })
 
     it('SEND_RESULT_CLICKED_EVENT sends result clicked event', () => {
-      store.actions(usageDataServiceMock).SEND_RESULT_CLICKED_EVENT({}, data)
+      store.actions.SEND_RESULT_CLICKED_EVENT({}, data)
 
       expect(usageDataServiceMock.sendResultClickedEvent).toHaveBeenCalledWith(
         data
@@ -31,7 +36,7 @@ describe('Usage Data Store Store', () => {
     })
 
     it('SEND_DETAIL_PAGE_EVENT sends detail page event', () => {
-      store.actions(usageDataServiceMock).SEND_DETAIL_PAGE_EVENT({}, data)
+      store.actions.SEND_DETAIL_PAGE_EVENT({}, data)
 
       expect(usageDataServiceMock.sendDetailPageEvent).toHaveBeenCalledWith(
         data
@@ -39,7 +44,7 @@ describe('Usage Data Store Store', () => {
     })
 
     it('SEND_SEARCH_RATING_EVENT sends result clicked event', () => {
-      store.actions(usageDataServiceMock).SEND_SEARCH_RATING_EVENT({}, data)
+      store.actions.SEND_SEARCH_RATING_EVENT({}, data)
 
       expect(usageDataServiceMock.sendSearchRatingEvent).toHaveBeenCalledWith(
         data

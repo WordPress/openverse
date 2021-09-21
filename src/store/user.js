@@ -1,10 +1,6 @@
 import SessionId from '~/utils/session-id'
 
-const state = {
+export const state = () => ({
   abSessionId: SessionId('abSessionId', true),
   usageSessionId: SessionId('usageSessionId'),
-}
-
-export default {
-  state,
-}
+})

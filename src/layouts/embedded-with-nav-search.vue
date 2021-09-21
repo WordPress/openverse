@@ -19,7 +19,9 @@ const embeddedWithNavSearch = {
   head() {
     return this.$nuxtI18nHead({ addSeoAttributes: true })
   },
-  computed: mapState(['isReferredFromCc']),
+  computed: mapState({
+    isReferredFromCc: (state) => state.nav.isReferredFromCc,
+  }),
 }
 export default embeddedWithNavSearch
 </script>

@@ -15,6 +15,11 @@ import {
   FETCH_MEDIA,
 } from '~/constants/action-types'
 import { IMAGE } from '~/constants/media'
+import {
+  SEND_RESULT_CLICKED_EVENT,
+  SEND_SEARCH_QUERY_EVENT,
+} from '~/constants/usage-data-analytics-types'
+import { USAGE_DATA } from '~/constants/store-modules'
 
 describe('Search Store', () => {
   describe('state', () => {
@@ -160,6 +165,7 @@ describe('Search Store', () => {
     let commit = null
     let dispatch = null
     let state = {}
+    let rootState = {}
 
     beforeEach(() => {
       imageServiceMock = {
@@ -183,10 +189,11 @@ describe('Search Store', () => {
       commit = jest.fn()
       dispatch = jest.fn()
       state = {
-        usageSessionId: 'foo session id',
         images: [{ id: 'foo' }, { id: 'bar' }, { id: 'zeta' }],
         query: { q: 'foo query' },
       }
+      rootState = { user: { usageSessionId: 'foo' } }
+      store.rootState = rootState
     })
 
     it('FETCH_MEDIA on success', (done) => {
@@ -222,12 +229,15 @@ describe('Search Store', () => {
       const action = store.actions(audioServiceMock, imageServiceMock)[
         FETCH_MEDIA
       ]
-      action({ commit, dispatch, state }, params)
+      action({ commit, dispatch, state, rootState }, params)
 
-      expect(dispatch).toHaveBeenLastCalledWith('SEND_SEARCH_QUERY_EVENT', {
-        query: params.q,
-        sessionId: state.usageSessionId,
-      })
+      expect(dispatch).toHaveBeenLastCalledWith(
+        `${USAGE_DATA}/${SEND_SEARCH_QUERY_EVENT}`,
+        {
+          query: params.q,
+          sessionId: rootState.user.usageSessionId,
+        }
+      )
     })
 
     it('does not dispatch SEND_SEARCH_QUERY_EVENT if page param is available', () => {
@@ -406,7 +416,7 @@ describe('Search Store', () => {
       const action = store.actions(audioServiceMock, imageServiceMock)[
         FETCH_MEDIA
       ]
-      action({ commit, dispatch, state }, params).then(() => {
+      action({ commit, dispatch, state, rootState }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_MEDIA, {
           mediaType: IMAGE,
         })
@@ -444,7 +454,7 @@ describe('Search Store', () => {
       const action = store.actions(audioServiceMock, imageServiceMock)[
         FETCH_IMAGE
       ]
-      action({ commit, dispatch, state }, params).then(() => {
+      action({ commit, dispatch, state, rootState }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
         expect(commit).toBeCalledWith(SET_IMAGE, { image: {} })
         expect(commit).toBeCalledWith(FETCH_END_MEDIA, { mediaType: IMAGE })
@@ -462,14 +472,17 @@ describe('Search Store', () => {
       const action = store.actions(audioServiceMock, imageServiceMock)[
         FETCH_IMAGE
       ]
-      action({ commit, dispatch, state }, params)
+      action({ commit, dispatch, state, rootState }, params)
 
-      expect(dispatch).toHaveBeenLastCalledWith('SEND_RESULT_CLICKED_EVENT', {
-        query: state.query.q,
-        resultUuid: 'foo',
-        resultRank: 0,
-        sessionId: state.usageSessionId,
-      })
+      expect(dispatch).toHaveBeenLastCalledWith(
+        `${USAGE_DATA}/${SEND_RESULT_CLICKED_EVENT}`,
+        {
+          query: state.query.q,
+          resultUuid: 'foo',
+          resultRank: 0,
+          sessionId: rootState.user.usageSessionId,
+        }
+      )
     })
 
     it('FETCH_IMAGE on error', (done) => {
@@ -478,7 +491,7 @@ describe('Search Store', () => {
       }
       const params = { id: 'foo' }
       const action = store.actions(failedMock, failedMock)[FETCH_IMAGE]
-      action({ commit, dispatch, state }, params).catch((error) => {
+      action({ commit, dispatch, state, rootState }, params).catch((error) => {
         expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
         expect(dispatch).toBeCalledWith('HANDLE_IMAGE_ERROR', error)
       })
@@ -493,7 +506,7 @@ describe('Search Store', () => {
       }
       const params = { id: 'foo' }
       const action = store.actions(failedMock, failedMock)[FETCH_IMAGE]
-      action({ commit, dispatch, state }, params).then(() => {
+      action({ commit, dispatch, state, rootState }, params).then(() => {
         expect(commit).toBeCalledWith(FETCH_START_MEDIA, { mediaType: IMAGE })
         expect(commit).toBeCalledWith(IMAGE_NOT_FOUND)
 

@@ -37,7 +37,7 @@ import { mapActions, mapMutations } from 'vuex'
 const BrowsePage = {
   name: 'browse-page',
   layout({ store }) {
-    return store.state.isEmbedded ? 'embedded' : 'default'
+    return store.state.nav.isEmbedded ? 'embedded' : 'default'
   },
   scrollToTop: false,
   async fetch() {

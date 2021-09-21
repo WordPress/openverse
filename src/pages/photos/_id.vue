@@ -32,11 +32,12 @@ import featureFlags from '~/feature-flags'
 import { FETCH_IMAGE, FETCH_RELATED_MEDIA } from '~/constants/action-types'
 import { SET_IMAGE, SET_RELATED_MEDIA } from '~/constants/mutation-types'
 import { IMAGE } from '~/constants/media'
+import { RELATED } from '~/constants/store-modules'
 
 const PhotoDetailPage = {
   name: 'PhotoDetailPage',
   layout({ store }) {
-    return store.state.isEmbedded
+    return store.state.nav.isEmbedded
       ? 'embedded-with-nav-search'
       : 'with-nav-search'
   },
@@ -66,7 +67,7 @@ const PhotoDetailPage = {
       tags: (state) => state.image.tags,
       image: (state) => state.image,
     }),
-    ...mapState({
+    ...mapState(RELATED, {
       relatedImagesCount: (state) => state.images.length,
       relatedImages: (state) => state.images,
     }),
@@ -82,7 +83,7 @@ const PhotoDetailPage = {
   async fetch({ store, route, error, app }) {
     // Clear related images if present
     if (store.state.related.images && store.state.related.images.length > 0) {
-      await store.dispatch(SET_RELATED_MEDIA, {
+      store.commit(`${RELATED}/${SET_RELATED_MEDIA}`, {
         mediaType: IMAGE,
         relatedMedia: [],
       })
@@ -90,8 +91,8 @@ const PhotoDetailPage = {
     try {
       // Load the image + related images in parallel
       await Promise.all([
-        store.dispatch(FETCH_IMAGE, { id: route.params.id }),
-        store.dispatch(FETCH_RELATED_MEDIA, {
+        store.dispatch(`${FETCH_IMAGE}`, { id: route.params.id }),
+        store.dispatch(`${RELATED}/${FETCH_RELATED_MEDIA}`, {
           mediaType: IMAGE,
           id: route.params.id,
         }),
@@ -112,7 +113,7 @@ const PhotoDetailPage = {
     })
   },
   methods: {
-    ...mapActions([FETCH_RELATED_MEDIA]),
+    ...mapActions({ fetchRelatedMedia: `${RELATED}/${FETCH_RELATED_MEDIA}` }),
     ...mapActions([FETCH_IMAGE]),
     ...mapMutations([SET_IMAGE]),
     onImageLoaded(event) {
@@ -125,7 +126,7 @@ const PhotoDetailPage = {
     },
     getRelatedImages() {
       if (this.image && this.image.id) {
-        this[FETCH_RELATED_MEDIA]({ mediaType: IMAGE, id: this.image.id })
+        this.fetchRelatedMedia({ mediaType: IMAGE, id: this.image.id })
       }
     },
   },

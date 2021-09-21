@@ -1,4 +1,4 @@
-import store from '~/store-modules/report-content-store'
+import store, { createActions } from '~/store/report-content'
 import {
   TOGGLE_REPORT_FORM_VISIBILITY,
   REPORT_SENT,
@@ -11,7 +11,7 @@ import { SEND_CONTENT_REPORT } from '~/constants/action-types'
 describe('Report Content Store', () => {
   describe('state', () => {
     it('exports default state', () => {
-      const state = store.state
+      const state = store.state()
       expect(state.isReportFormVisible).toBeFalsy()
       expect(state.isReportSent).toBeFalsy()
       expect(state.reportFailed).toBeFalsy()
@@ -77,7 +77,7 @@ describe('Report Content Store', () => {
       reportServiceMock = { sendReport: jest.fn(() => Promise.resolve({})) }
       commit = jest.fn()
 
-      actions = store.actions(reportServiceMock)
+      actions = createActions(reportServiceMock)
     })
 
     it('SEND_CONTENT_REPORT on success', (done) => {
@@ -92,7 +92,7 @@ describe('Report Content Store', () => {
 
     it('SEND_CONTENT_REPORT on failure', (done) => {
       reportServiceMock = { sendReport: jest.fn(() => Promise.reject({})) }
-      actions = store.actions(reportServiceMock)
+      actions = createActions(reportServiceMock)
 
       const params = { foo: 'bar' }
       const action = actions[SEND_CONTENT_REPORT]

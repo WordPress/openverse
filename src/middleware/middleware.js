@@ -1,6 +1,7 @@
 import { SET_EMBEDDED, SET_REFERRED } from '~/constants/mutation-types'
 import { sendWindowMessage } from '~/utils/send-message'
 import config from '../../nuxt.config.js'
+import { NAV } from '~/constants/store-modules'
 
 /**
  * In embedded mode, the app sends its size and url
@@ -19,7 +20,7 @@ import config from '../../nuxt.config.js'
 export default function ({ store, query, route }) {
   if ('embedded' in query) {
     const isEmbedded = query.embedded === 'true'
-    store.commit(SET_EMBEDDED, { isEmbedded })
+    store.commit(`${NAV}/${SET_EMBEDDED}`, { isEmbedded })
   }
   if (process.client) {
     sendWindowMessage({
@@ -29,7 +30,7 @@ export default function ({ store, query, route }) {
     })
   }
 
-  if (store.state.isReferredFromCc) {
-    store.commit(SET_REFERRED, { isReferredFromCc: false })
+  if (store.state.nav.isReferredFromCc) {
+    store.commit(`${NAV}/${SET_REFERRED}`, { isReferredFromCc: false })
   }
 }

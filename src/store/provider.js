@@ -1,3 +1,7 @@
+import MediaProviderService from '~/data/media-provider-service'
+import previousImageProviders from '../data/existing-image-providers'
+import previousAudioProviders from '../data/existing-audio-providers'
+import { AUDIO, IMAGE } from '~/constants/media'
 import {
   FETCH_MEDIA_TYPE_PROVIDERS,
   FETCH_MEDIA_PROVIDERS,
@@ -11,9 +15,8 @@ import {
   SET_PROVIDERS_FILTERS,
 } from '~/constants/mutation-types'
 
-import previousImageProviders from '../data/existing-image-providers'
-import previousAudioProviders from '../data/existing-audio-providers'
-import { AUDIO, IMAGE } from '~/constants/media'
+const AudioProviderService = MediaProviderService(AUDIO)
+const ImageProviderService = MediaProviderService(IMAGE)
 
 const existingProviders = {
   [AUDIO]: previousAudioProviders,
@@ -28,16 +31,16 @@ const sortProviders = (data) => {
   })
 }
 
-const state = {
+export const state = () => ({
   audioProviders: [],
   imageProviders: [],
   isFetchingAudioProvidersError: false,
   isFetchingImageProvidersError: false,
   isFetchingAudioProviders: false,
   isFetchingImageProviders: false,
-}
+})
 
-const actions = (AudioProviderService, ImageProviderService) => ({
+export const createActions = (services) => ({
   async [FETCH_MEDIA_PROVIDERS]({ dispatch }, params) {
     return Promise.all([
       dispatch(FETCH_MEDIA_TYPE_PROVIDERS, { ...params, mediaType: AUDIO }),
@@ -48,8 +51,7 @@ const actions = (AudioProviderService, ImageProviderService) => ({
     const { mediaType } = params
     commit(SET_PROVIDER_FETCH_ERROR, { mediaType, error: false })
     commit(FETCH_MEDIA_PROVIDERS_START, { mediaType })
-    const providerService =
-      mediaType === AUDIO ? AudioProviderService : ImageProviderService
+    const providerService = services[mediaType]
     let sortedProviders
     return providerService
       .getProviderStats()
@@ -69,16 +71,25 @@ const actions = (AudioProviderService, ImageProviderService) => ({
           mediaType,
           providers: sortedProviders,
         })
-        commit(SET_PROVIDERS_FILTERS, {
-          mediaType,
-          providers: sortedProviders,
-        })
+        commit(
+          `${SET_PROVIDERS_FILTERS}`,
+          {
+            mediaType,
+            providers: sortedProviders,
+          },
+          { root: true }
+        )
       })
   },
 })
 
+export const actions = createActions({
+  [IMAGE]: ImageProviderService,
+  [AUDIO]: AudioProviderService,
+})
+
 /* eslint no-param-reassign: ["error", { "props": false }] */
-const mutations = {
+export const mutations = {
   [FETCH_MEDIA_PROVIDERS_START](_state, { mediaType }) {
     if (mediaType === AUDIO) {
       _state.isFetchingAudioProviders = true
@@ -107,6 +118,6 @@ const mutations = {
 
 export default {
   state,
-  actions,
   mutations,
+  actions,
 }

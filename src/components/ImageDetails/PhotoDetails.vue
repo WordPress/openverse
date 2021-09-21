@@ -188,9 +188,10 @@ import { TOGGLE_REPORT_FORM_VISIBILITY } from '~/constants/mutation-types'
 import {
   SEND_DETAIL_PAGE_EVENT,
   DETAIL_PAGE_EVENTS,
-} from '~/store-modules/usage-data-analytics-types'
+} from '~/constants/usage-data-analytics-types'
 import attributionHtml from '~/utils/attribution-html'
 import { getFullLicenseName } from '~/utils/license'
+import { REPORT_CONTENT, USAGE_DATA } from '~/constants/store-modules'
 
 export default {
   name: 'PhotoDetails',
@@ -240,6 +241,13 @@ export default {
     },
   },
   methods: {
+    sendDetailPageEvent(eventType) {
+      const eventData = {
+        eventType,
+        resultUuid: this.$props.image.id,
+      }
+      this.$store.dispatch(`${USAGE_DATA}/${SEND_DETAIL_PAGE_EVENT}`, eventData)
+    },
     onGoBackToSearchResults() {
       this.$router.back()
     },
@@ -260,19 +268,13 @@ export default {
       return attributionHtml(this.image, licenseURL, this.fullLicenseName)
     },
     toggleReportFormVisibility() {
-      this.$store.commit(TOGGLE_REPORT_FORM_VISIBILITY)
+      this.$store.commit(`${REPORT_CONTENT}/${TOGGLE_REPORT_FORM_VISIBILITY}`)
     },
     onPhotoSourceLinkClicked() {
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
-        eventType: DETAIL_PAGE_EVENTS.SOURCE_CLICKED,
-        resultUuid: this.$props.image.id,
-      })
+      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.SOURCE_CLICKED)
     },
     onPhotoCreatorLinkClicked() {
-      this.$store.dispatch(SEND_DETAIL_PAGE_EVENT, {
-        eventType: DETAIL_PAGE_EVENTS.CREATOR_CLICKED,
-        resultUuid: this.$props.image.id,
-      })
+      this.sendDetailPageEvent(DETAIL_PAGE_EVENTS.CREATOR_CLICKED)
     },
   },
 }
