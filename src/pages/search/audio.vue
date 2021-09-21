@@ -1,7 +1,11 @@
 <template>
   <div id="tab-audio" role="tabpanel" aria-labelledby="audio">
-    <AudioResultsList :query="query" @onLoadMoreAudios="onLoadMoreAudios" />
-    <MetaSearchForm type="audio" :query="query" :supported="true" />
+    <AudioResultsList
+      v-if="supported"
+      :query="query"
+      @onLoadMoreAudios="onLoadMoreAudios"
+    />
+    <MetaSearchForm type="audio" :query="query" :supported="supported" />
   </div>
 </template>
 
@@ -11,6 +15,12 @@ import { AUDIO } from '~/constants/media'
 
 export default {
   name: 'AudioSearch',
+  data() {
+    return {
+      // Only show audio results if non-image results are supported
+      supported: process.env.allMediaFeature,
+    }
+  },
   computed: {
     query() {
       return this.$store.state.query
@@ -21,6 +31,7 @@ export default {
   },
   methods: {
     onLoadMoreAudios(searchParams) {
+      if (!this.supported) return
       this.$emit('onLoadMoreItems', searchParams)
     },
   },
