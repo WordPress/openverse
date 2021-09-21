@@ -7,15 +7,15 @@ from catalog.api.models import ContentProvider, SourceLogo
 class ProviderSerializer(serializers.ModelSerializer):
     source_name = serializers.CharField(
         source='provider_identifier',
-        help_text='The source of the media.',
+        help_text='The source of the media, e.g. flickr',
     )
     display_name = serializers.CharField(
         source='provider_name',
-        help_text='The name of content provider.',
+        help_text='The name of content provider, e.g. Flickr',
     )
     source_url = serializers.URLField(
         source='domain_name',
-        help_text='The URL of the source.',
+        help_text='The URL of the source, e.g. https://www.flickr.com',
     )
     logo_url = serializers.SerializerMethodField(
         help_text='The URL to a logo of the source.',
