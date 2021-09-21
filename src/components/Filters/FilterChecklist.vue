@@ -48,28 +48,30 @@
           <LicenseIcons v-if="filterType === 'licenses'" :license="item.code" />
           {{ itemLabel(item) }}
         </label>
-        <svg
-          v-if="filterType === 'licenses'"
-          width="24"
-          height="20"
-          viewBox="0 0 24 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          :aria-label="$t('browse-page.aria.license-explanation')"
-          tabindex="0"
-          alt="help"
-          class="license-help pr-1"
-          @click.stop="toggleLicenseExplanationVisibility(item.code)"
-          @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
-        >
-          <circle cx="12" cy="10" r="8" stroke="#1E1E1E" stroke-width="1.5" />
-          <path
-            d="M9.75 8.25C9.75 7.00736 10.7574 6 12 6C13.2426 6 14.25 7.00736 14.25 8.25C14.25 9.40828 13.3748 10.3621 12.2496 10.4863C12.1124 10.5015 12 10.6119 12 10.75V12"
-            stroke="#1E1E1E"
-            stroke-width="1.5"
-          />
-          <path d="M12 13V14.5" stroke="#1E1E1E" stroke-width="1.5" />
-        </svg>
+        <button class="appearance-none">
+          <svg
+            v-if="filterType === 'licenses'"
+            width="24"
+            height="20"
+            viewBox="0 0 24 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            :aria-label="$t('browse-page.aria.license-explanation')"
+            tabindex="0"
+            alt="help"
+            class="license-help pr-1"
+            @click.stop="toggleLicenseExplanationVisibility(item.code)"
+            @keyup.enter="toggleLicenseExplanationVisibility(item.code)"
+          >
+            <circle cx="12" cy="10" r="8" stroke="#1E1E1E" stroke-width="1.5" />
+            <path
+              d="M9.75 8.25C9.75 7.00736 10.7574 6 12 6C13.2426 6 14.25 7.00736 14.25 8.25C14.25 9.40828 13.3748 10.3621 12.2496 10.4863C12.1124 10.5015 12 10.6119 12 10.75V12"
+              stroke="#1E1E1E"
+              stroke-width="1.5"
+            />
+            <path d="M12 13V14.5" stroke="#1E1E1E" stroke-width="1.5" />
+          </svg>
+        </button>
 
         <LicenseExplanationTooltip
           v-if="
@@ -185,7 +187,7 @@ export default {
 
 <style lang="scss" scoped>
 .filters {
-  padding: 1rem 1.5rem 1rem 52px;
+  padding: 1rem 1.5rem 1rem 3.25rem;
 }
 
 .filters-title {
@@ -202,7 +204,7 @@ export default {
 .filter-heading {
   font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 }
 
 .filter-visibility-toggle {
@@ -235,8 +237,8 @@ label {
   font-weight: 500;
 }
 .checkbox input {
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .single .checkbox {

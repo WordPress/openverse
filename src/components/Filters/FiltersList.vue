@@ -104,9 +104,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-left: 52px;
-  padding-top: 31px;
-  padding-bottom: 16px;
+  padding-left: 3.25rem;
+  padding-top: 1.938rem;
+  padding-bottom: 1rem;
   margin: 0;
 }
 .filterlist-header h4 {
@@ -130,7 +130,7 @@ export default {
 }
 
 #hide-filters-button {
-  font-size: 13px;
+  font-size: 0.813rem;
   font-weight: 500;
   margin-top: auto;
   margin-bottom: auto;
@@ -151,13 +151,6 @@ export default {
   justify-content: space-between;
   margin: 0;
   padding-top: 1rem;
-  padding-left: 52px;
-}
-
-.filter-buttons button {
-  width: 118px;
-  height: 48px;
-  font-size: 13px;
-  font-weight: 500;
+  padding-left: 3.25rem;
 }
 </style>
