@@ -237,7 +237,7 @@ label {
   font-weight: 500;
 }
 .checkbox input {
-  width: 1.25rem;
+  min-width: 1.25rem;
   height: 1.25rem;
 }
 

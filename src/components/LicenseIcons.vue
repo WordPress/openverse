@@ -15,6 +15,7 @@
           ['has-background-white']: true,
           ['text-lgr']: true,
           [`cc-${l}`]: true,
+          ['filter-icon']: true,
         }"
         :alt="`${l.toUpperCase()}`"
       />
