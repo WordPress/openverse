@@ -1,17 +1,22 @@
 import pkg from './package.json'
 import locales from './src/locales/scripts/valid-locales.json'
+import stringToBoolean from './src/utils/string-to-boolean'
 
 /**
  * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.
  */
 export const env = {
-  apiUrl: process.env.API_URL || 'https://api.openverse.engineering/v1/',
-  socialSharing: process.env.SOCIAL_SHARING || true,
-  enableGoogleAnalytics: process.env.ENABLE_GOOGLE_ANALYTICS || false,
-  googleAnalyticsUA: process.env.GOOGLE_ANALYTICS_UA || 'UA-2010376-36',
+  apiUrl: process.env.API_URL ?? 'https://api.openverse.engineering/v1/',
+  socialSharing: stringToBoolean(process.env.SOCIAL_SHARING) ?? true,
+  enableGoogleAnalytics:
+    stringToBoolean(process.env.ENABLE_GOOGLE_ANALYTICS) ?? false,
+  googleAnalyticsUA: process.env.GOOGLE_ANALYTICS_UA ?? 'UA-2010376-36',
   filterStorageKey: 'openverse-filter-visibility',
   notificationStorageKey: 'openverse-show-notification',
-  enableInternalAnalytics: process.env.ENABLE_INTERNAL_ANALYTICS || false,
+  enableInternalAnalytics:
+    stringToBoolean(process.env.ENABLE_INTERNAL_ANALYTICS) ?? false,
+  /** Feature flag to enable non-image media */
+  allMediaFeature: stringToBoolean(process.env.ALL_MEDIA_FEATURE) ?? true,
 }
 
 /**
