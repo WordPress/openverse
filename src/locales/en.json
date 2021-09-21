@@ -641,6 +641,9 @@
     "read": "Read more"
   },
   "download-button": {
+    "aria": {
+      "dropdown-label": "Select the download file format"
+    },
     "download": "Download"
   }
 }

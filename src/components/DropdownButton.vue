@@ -14,7 +14,7 @@
         class="dropdown-button ml-1 rounded-r-sm rounded-l-none"
         :class="{ 'dropdown-button-active': isOpen }"
         aria-haspopup="menu"
-        :aria-label="$t('dropdown-button.aria.arrow-label')"
+        :aria-label="safeDropdownAriaLabel"
         :aria-expanded="isOpen"
         @click="toggleOpen"
         @keydown.space.prevent="toggleOpen"
@@ -50,12 +50,22 @@ import caretDown from '~/assets/icons/caret-down.svg'
 
 const DropdownButton = {
   name: 'DropdownButton',
-  data: () => ({
-    isOpen: false,
-    icons: {
-      caretDown,
+  props: {
+    dropdownAriaLabel: {
+      type: String,
+      required: false,
     },
-  }),
+  },
+  data() {
+    return {
+      isOpen: false,
+      icons: {
+        caretDown,
+      },
+      safeDropdownAriaLabel:
+        this.dropdownAriaLabel || this.$t('dropdown-button.aria.arrow-label'),
+    }
+  },
   mounted() {
     document.addEventListener('click', this.onClickout)
   },
