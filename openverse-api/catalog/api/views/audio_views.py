@@ -1,290 +1,84 @@
 import logging
 
-from drf_yasg import openapi
+from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from catalog.api.controllers import search_controller
-from catalog.api.examples import (
-    audio_search_curl,
-    audio_search_200_example,
-    audio_search_400_example,
-    recommendations_audio_read_curl,
-    recommendations_audio_read_200_example,
-    recommendations_audio_read_404_example,
-    audio_detail_curl,
-    audio_detail_200_example,
-    audio_detail_404_example,
-    audio_stats_curl,
-    audio_stats_200_example,
+from catalog.api.docs.audio_docs import (
+    AudioSearch,
+    AudioStats,
+    AudioDetail,
+    AudioRelated,
+    AudioComplain,
 )
-from catalog.api.models import Audio, AudioReport
-from catalog.api.serializers.media_serializers import ProxiedImageSerializer
+from catalog.api.models import Audio
 from catalog.api.serializers.audio_serializers import (
-    AudioSearchQueryStringSerializer,
-    AudioSearchResultsSerializer,
+    AudioSearchRequestSerializer,
     AudioSerializer,
-    ReportAudioSerializer,
-    AboutAudioSerializer,
+    AudioReportSerializer,
+    AudioWaveformSerializer,
 )
-from catalog.api.serializers.error_serializers import (
-    InputErrorSerializer,
-    NotFoundErrorSerializer,
-)
-from catalog.api.views.media_views import (
-    RESULTS,
-    RESULT_COUNT,
-    PAGE_COUNT,
-    fields_to_md,
-    SearchMedia,
-    RelatedMedia,
-    MediaDetail,
-    MediaStats,
-    ImageProxy,
-)
+from catalog.api.utils.exceptions import get_api_exception
+from catalog.api.utils.throttle import OneThousandPerMinute
 from catalog.api.utils.waveform import (
     download_audio,
     generate_waveform,
     process_waveform_output,
     cleanup,
 )
-from catalog.custom_auto_schema import CustomAutoSchema
+from catalog.api.views.media_views import MediaViewSet
 
 log = logging.getLogger(__name__)
 
 
-class SearchAudio(SearchMedia):
-    audio_search_description = f"""
-audio_search is an API endpoint to search audio files using a query string.
-
-By using this endpoint, you can obtain search results based on specified 
-query and optionally filter results by
-{fields_to_md(AudioSearchQueryStringSerializer.fields_names)}.
-
-Results are ranked in order of relevance.
-
-{SearchMedia.search_description}"""  # noqa
-
-    audio_search_response = {
-        "200": openapi.Response(
-            description="OK",
-            examples=audio_search_200_example,
-            schema=AudioSearchResultsSerializer(many=True)
-        ),
-        "400": openapi.Response(
-            description="Bad Request",
-            examples=audio_search_400_example,
-            schema=InputErrorSerializer
-        ),
-    }
-
-    @swagger_auto_schema(operation_id='audio_search',
-                         operation_description=audio_search_description,
-                         query_serializer=AudioSearchQueryStringSerializer,
-                         responses=audio_search_response,
-                         code_examples=[
-                             {
-                                 'lang': 'Bash',
-                                 'source': audio_search_curl
-                             }
-                         ])
-    def get(self, request, fmt=None):
-        # Parse and validate query parameters
-        return self._get(
-            request,
-            'audio',
-            'search-qa-audio',
-            AudioSearchQueryStringSerializer,
-            AudioSerializer,
-            AudioSearchResultsSerializer,
-        )
-
-
-class RelatedAudio(RelatedMedia):
-    recommendations_audio_read_description = f"""
-recommendations_audio_read is an API endpoint to get related audio files 
-for a specified audio ID.
-
-By using this endpoint, you can get the details of related audio such as 
-{fields_to_md(AudioSerializer.fields_names)}. 
-
-{RelatedMedia.recommendations_read_description}"""  # noqa
-
-    recommendations_audio_read_response = {
-        "200": openapi.Response(
-            description="OK",
-            examples=recommendations_audio_read_200_example,
-            schema=AudioSerializer
-        ),
-        "404": openapi.Response(
-            description="Not Found",
-            examples=recommendations_audio_read_404_example,
-            schema=NotFoundErrorSerializer
-        )
-    }
-
-    @swagger_auto_schema(operation_id="recommendations_audio_read",
-                         operation_description=recommendations_audio_read_description,  # noqa: E501
-                         responses=recommendations_audio_read_response,
-                         code_examples=[
-                             {
-                                 'lang': 'Bash',
-                                 'source': recommendations_audio_read_curl
-                             }
-                         ],
-                         manual_parameters=[
-                             openapi.Parameter(
-                                 'identifier', openapi.IN_PATH,
-                                 "The unique identifier for the audio.",
-                                 type=openapi.TYPE_STRING,
-                                 required=True
-                             ),
-                         ])
-    def get(self, request, identifier, format=None):
-        related, result_count = search_controller.related_media(
-            uuid=identifier,
-            index='audio',
-            request=request,
-            filter_dead=True
-        )
-
-        context = {'request': request}
-        serialized_related = AudioSerializer(
-            related,
-            many=True,
-            context=context
-        ).data
-        response_data = {
-            RESULT_COUNT: result_count,
-            PAGE_COUNT: 0,
-            RESULTS: serialized_related
-        }
-        serialized_response = AudioSearchResultsSerializer(data=response_data)
-        return Response(status=200, data=serialized_response.initial_data)
-
-
-class ReportAudioView(CreateAPIView):
+@method_decorator(swagger_auto_schema(**AudioSearch.swagger_setup), 'list')
+@method_decorator(swagger_auto_schema(**AudioStats.swagger_setup), 'stats')
+@method_decorator(swagger_auto_schema(**AudioDetail.swagger_setup), 'retrieve')
+@method_decorator(swagger_auto_schema(**AudioRelated.swagger_setup), 'related')
+@method_decorator(swagger_auto_schema(**AudioComplain.swagger_setup), 'report')
+@method_decorator(swagger_auto_schema(auto_schema=None), 'thumbnail')
+@method_decorator(swagger_auto_schema(auto_schema=None), 'waveform')
+class AudioViewSet(MediaViewSet):
     """
-    audio_report_create
+    Viewset for all endpoints pertaining to audio.
+    """
 
-    audio_report_create is an API endpoint to report an issue about a 
-    specified audio ID to Creative Commons.
+    model_class = Audio
+    query_serializer_class = AudioSearchRequestSerializer
+    default_index = 'audio'
+    qa_index = 'search-qa-audio'
 
-    By using this endpoint, you can report an audio file if it infringes 
-    copyright, contains mature or sensitive content and others.
-
-    You can refer to Bash's Request Samples for example on how to use
-    this endpoint.
-    """  # noqa
-    swagger_schema = CustomAutoSchema
-    queryset = AudioReport.objects.all()
-    serializer_class = ReportAudioSerializer
-
-
-class AudioDetail(MediaDetail):
     serializer_class = AudioSerializer
-    queryset = Audio.objects.all()
-    audio_detail_description = f"""
-audio_detail is an API endpoint to get the details of a specified audio ID.
 
-By using this endpoint, you can get audio details such as
-{fields_to_md(AudioSerializer.fields_names)}. 
+    # Extra actions
 
-{MediaDetail.detail_description}"""  # noqa
+    @action(detail=True,
+            url_path='thumb',
+            url_name='thumb',
+            throttle_classes=[OneThousandPerMinute])
+    def thumbnail(self, request, *_, **__):
+        audio = self.get_object()
 
-    audio_detail_response = {
-        "200": openapi.Response(
-            description="OK",
-            examples=audio_detail_200_example,
-            schema=AudioSerializer),
-        "404": openapi.Response(
-            description="OK",
-            examples=audio_detail_404_example,
-            schema=NotFoundErrorSerializer
-        )
-    }
-
-    @swagger_auto_schema(operation_id='audio_detail',
-                         operation_description=audio_detail_description,
-                         responses=audio_detail_response,
-                         code_examples=[
-                             {
-                                 'lang': 'Bash',
-                                 'source': audio_detail_curl,
-                             }
-                         ])
-    def get(self, request, identifier, format=None):
-        """ Get the details of a single audio file. """
-        return self.retrieve(request, identifier)
-
-
-class AudioStats(MediaStats):
-    audio_stats_description = f"""
-audio_stats is an API endpoint to get a list of all content providers and their
-respective number of audio files in the Openverse catalog.
-
-{MediaStats.media_stats_description}"""  # noqa
-
-    audio_stats_response = {
-        "200": openapi.Response(
-            description="OK",
-            examples=audio_stats_200_example,
-            schema=AboutAudioSerializer(many=True)
-        )
-    }
-
-    @swagger_auto_schema(operation_id='audio_stats',
-                         operation_description=audio_stats_description,
-                         responses=audio_stats_response,
-                         code_examples=[
-                             {
-                                 'lang': 'Bash',
-                                 'source': audio_stats_curl,
-                             }
-                         ])
-    def get(self, request, format=None):
-        return self._get(request, 'audio')
-
-
-class AudioArt(ImageProxy):
-    """
-    Return the thumbnail of the artwork of the audio. This returns the thumbnail
-    of the audio, falling back to the thumbnail of the audio set.
-    """
-
-    queryset = Audio.objects.all()
-
-    def get(self, request, identifier, format=None):
-        serialized = ProxiedImageSerializer(data=request.data)
-        serialized.is_valid()
-        try:
-            audio = Audio.objects.get(identifier=identifier)
-            image_url = audio.thumbnail
-            if not image_url:
-                image_url = audio.audio_set.url
-        except Audio.DoesNotExist:
-            return Response(status=404, data='Audio not found')
-        except AttributeError:
-            return Response(status=404, data='Audio set not found')
+        image_url = None
+        if thumbnail := audio.thumbnail:
+            image_url = thumbnail
+        elif audio.audio_set and (thumbnail := audio.audio_set.url):
+            image_url = thumbnail
         if not image_url:
-            return Response(status=404, data='Cover art URL not found')
+            raise get_api_exception('Could not find artwork.', 404)
 
-        if serialized.data['full_size']:
-            return self._get(image_url, None)
+        is_full_size = request.query_params.get('full_size', False)
+        if is_full_size:
+            return self._get_proxied_image(image_url, None)
         else:
-            return self._get(image_url)
+            return self._get_proxied_image(image_url)
 
-
-class AudioWaveform(APIView):
-    swagger_schema = None
-
-    def get(self, request, identifier, format=None):
-        try:
-            audio = Audio.objects.get(identifier=identifier)
-        except Audio.DoesNotExist:
-            return Response(status=404, data='Audio not found')
+    @action(detail=True,
+            serializer_class=AudioWaveformSerializer,
+            throttle_classes=[OneThousandPerMinute])
+    def waveform(self, *_, **__):
+        audio = self.get_object()
 
         file_name = None
         try:
@@ -292,15 +86,18 @@ class AudioWaveform(APIView):
             awf_out = generate_waveform(file_name, audio.duration)
             data = process_waveform_output(awf_out)
 
-            return Response(status=200, data={
-                'len': len(data),
-                'points': data,
-            })
+            obj = {'points': data}
+            serializer = self.get_serializer(obj)
+
+            return Response(status=200, data=serializer.data)
         except Exception as e:
-            return Response(status=500, data={
-                'message': "It's not you, it's me.",
-                'error': str(e)
-            })
+            raise get_api_exception(getattr(e, 'message', str(e)))
         finally:
             if file_name is not None:
                 cleanup(file_name)
+
+    @action(detail=True,
+            methods=['post'],
+            serializer_class=AudioReportSerializer)
+    def report(self, *args, **kwargs):
+        return super().report(*args, **kwargs)

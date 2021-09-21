@@ -1,23 +1,22 @@
-from django.urls import reverse
 from rest_framework import serializers
 
 from catalog.api.controllers.search_controller import get_sources
-from catalog.api.models import ImageReport
+from catalog.api.docs.media_docs import fields_to_md
+from catalog.api.models import Image, ImageReport
 from catalog.api.serializers.media_serializers import (
     _add_protocol,
     _validate_enum,
-    MediaSearchQueryStringSerializer,
-    MediaSearchResultsSerializer,
+    MediaSearchRequestSerializer,
+    MediaSearchSerializer,
     MediaSerializer,
-    AboutMediaSerializer,
 )
 
 
-class ImageSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
+class ImageSearchRequestSerializer(MediaSearchRequestSerializer):
     """ Parse and validate search query string parameters. """
 
     fields_names = [
-        *MediaSearchQueryStringSerializer.fields_names,
+        *MediaSearchRequestSerializer.fields_names,
         'source',
         'categories',
         'aspect_ratio',
@@ -97,9 +96,6 @@ class ImageSerializer(MediaSerializer):
     used to generate Swagger documentation.
     """
 
-    thumbnail = serializers.SerializerMethodField(
-        help_text="A direct link to the miniature image."
-    )
     height = serializers.IntegerField(
         required=False,
         help_text="The height of the image in pixels. Not always available."
@@ -110,6 +106,12 @@ class ImageSerializer(MediaSerializer):
     )
 
     # Hyperlinks
+    thumbnail = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='image-thumb',
+        lookup_field='identifier',
+        help_text="A direct link to the miniature image."
+    )
     detail_url = serializers.HyperlinkedIdentityField(
         read_only=True,
         view_name='image-detail',
@@ -123,69 +125,39 @@ class ImageSerializer(MediaSerializer):
         help_text="A link to an endpoint that provides similar images."
     )
 
-    def get_thumbnail(self, obj):
-        request = self.context['request']
-        host = request.get_host()
-        path = reverse('image-thumb', kwargs={'identifier': obj.identifier})
-        return f'https://{host}{path}'
 
-
-class ImageSearchResultsSerializer(MediaSearchResultsSerializer):
-    """ The full image search response. """
+class ImageSearchSerializer(MediaSearchSerializer):
+    """
+    The full image search response.
+    This serializer is purely representational and not actually used to
+    serialize the response.
+    """
     results = ImageSerializer(
         many=True,
-        help_text="An array of images and their details such as `title`, `id`, "
-                  "`creator`, `creator_url`, `url`, `thumbnail`, `provider`, "
-                  "`source`, `license`, `license_version`, `license_url`, "
-                  "`foreign_landing_url`, `detail_url`, `related_url`, "
-                  "and `fields_matched `."
+        help_text=(
+            "An array of images and their details such as "
+            f"{fields_to_md(ImageSerializer.fields_names)}."
+        ),
     )
 
 
-class OembedResponseSerializer(serializers.Serializer):
-    """ The embedded content from a specified image URL. """
-    version = serializers.IntegerField(
-        help_text="The image version."
-    )
-    type = serializers.CharField(
-        help_text="Type of data."
-    )
-    width = serializers.IntegerField(
-        help_text="The width of the image in pixels."
-    )
-    height = serializers.IntegerField(
-        help_text="The height of the image in pixels."
-    )
-    title = serializers.CharField(
-        help_text="The name of image."
-    )
-    author_name = serializers.CharField(
-        help_text="The name of author for image."
-    )
-    author_url = serializers.URLField(
-        help_text="A direct link to the author."
-    )
-    license_url = serializers.URLField(
-        help_text="A direct link to the license for image."
+class OembedRequestSerializer(serializers.Serializer):
+    """ Parse and validate Oembed parameters. """
+    url = serializers.CharField(
+        help_text="The link to an image.",
+        required=True,
     )
 
-
-class WatermarkQueryStringSerializer(serializers.Serializer):
-    embed_metadata = serializers.BooleanField(
-        help_text="Whether to embed ccREL metadata via XMP.",
-        default=True
-    )
-    watermark = serializers.BooleanField(
-        help_text="Whether to draw a frame around the image with attribution"
-                  " text at the bottom.",
-        default=True
-    )
+    @staticmethod
+    def validate_url(value):
+        return _add_protocol(value)
 
 
-class ReportImageSerializer(serializers.ModelSerializer):
+class ImageReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageReport
-        fields = ('reason', 'identifier', 'description')
+        fields = ('identifier', 'reason', 'description')
+        read_only_fields = ('identifier',)
 
     def create(self, validated_data):
         if validated_data['reason'] == "other" and \
@@ -197,21 +169,64 @@ class ReportImageSerializer(serializers.ModelSerializer):
         return ImageReport.objects.create(**validated_data)
 
 
-class OembedSerializer(serializers.Serializer):
-    """ Parse and validate Oembed parameters. """
-    url = serializers.URLField(
-        help_text="The link to an image."
+class OembedSerializer(serializers.ModelSerializer):
+    """ The embedded content from a specified image URL. """
+    version = serializers.ReadOnlyField(
+        help_text="The image version.",
+        default='1.0',
+    )
+    type = serializers.ReadOnlyField(
+        help_text="Type of data.",
+        default='photo',
+    )
+    width = serializers.SerializerMethodField(
+        help_text="The width of the image in pixels."
+    )
+    height = serializers.SerializerMethodField(
+        help_text="The height of the image in pixels."
+    )
+    title = serializers.CharField(
+        help_text="The name of image."
+    )
+    author_name = serializers.CharField(
+        help_text="The name of author for image.",
+        source='creator',
+    )
+    author_url = serializers.URLField(
+        help_text="A direct link to the author.",
+        source='creator_url',
+    )
+    license_url = serializers.URLField(
+        help_text="A direct link to the license for image."
     )
 
-    def validate_url(self, value):
-        return _add_protocol(value)
+    class Meta:
+        model = Image
+        fields = [
+            'version',
+            'type',
+            'width',
+            'height',
+            'title',
+            'author_name',
+            'author_url',
+            'license_url',
+        ]
+
+    def get_width(self, obj) -> int:
+        return self.context.get('width', obj.width)
+
+    def get_height(self, obj) -> int:
+        return self.context.get('height', obj.height)
 
 
-class AboutImageSerializer(AboutMediaSerializer):
-    """
-    Used by `ImageStats`.
-    """
-
-    image_count = serializers.IntegerField(
-        help_text="The number of images."
+class WatermarkRequestSerializer(serializers.Serializer):
+    embed_metadata = serializers.BooleanField(
+        help_text="Whether to embed ccREL metadata via XMP.",
+        default=True
+    )
+    watermark = serializers.BooleanField(
+        help_text="Whether to draw a frame around the image with attribution"
+                  " text at the bottom.",
+        default=True
     )

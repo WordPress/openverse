@@ -1,108 +1,67 @@
-import logging
-
-from django.conf import settings
-from django.http.response import HttpResponse
-from rest_framework.authentication import BasicAuthentication
-from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import RetrieveModelMixin
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
+from django.conf import settings
+from django.http.response import HttpResponse
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
+
 from catalog.api.controllers import search_controller
-from catalog.api.controllers.search_controller import get_sources
-from catalog.api.models import ContentProvider, SourceLogo
-from catalog.api.utils.exceptions import input_error_response
-from catalog.api.utils.throttle import OneThousandPerMinute
+from catalog.api.models import ContentProvider
+from catalog.api.serializers.provider_serializers import ProviderSerializer
+from catalog.api.utils.exceptions import get_api_exception
+from catalog.api.utils.pagination import StandardPagination
 from catalog.custom_auto_schema import CustomAutoSchema
 
-log = logging.getLogger(__name__)
 
-FOREIGN_LANDING_URL = 'foreign_landing_url'
-CREATOR_URL = 'creator_url'
-RESULTS = 'results'
-PAGE = 'page'
-PAGESIZE = 'page_size'
-FILTER_DEAD = 'filter_dead'
-QA = 'qa'
-SUGGESTIONS = 'suggestions'
-RESULT_COUNT = 'result_count'
-PAGE_COUNT = 'page_count'
-PAGE_SIZE = 'page_size'
-
-refer_sample = """
-You can refer to the cURL request samples for examples on how to consume this
-endpoint.
-"""
-
-
-def fields_to_md(field_names):
-    """
-    Create a Markdown representation of the given list of names to use in
-    Swagger documentation.
-
-    :param field_names: the list of field names to convert to Markdown
-    :return: the names as a Markdown string
-    """
-
-    *all_but_last, last = field_names
-    all_but_last = ', '.join([f'`{name}`' for name in all_but_last])
-    return f'{all_but_last} and `{last}`'
-
-
-def _get_user_ip(request):
-    """
-    Read request headers to find the correct IP address.
-    It is assumed that X-Forwarded-For has been sanitized by the load balancer
-    and thus cannot be rewritten by malicious users.
-    :param request: A Django request object.
-    :return: An IP address.
-    """
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
-
-
-class SearchMedia(APIView):
+class MediaViewSet(ReadOnlyModelViewSet):
     swagger_schema = CustomAutoSchema
-    search_description = (
-        """
-Although there may be millions of relevant records, only the most
-relevant several thousand records can be viewed. This is by design:
-the search endpoint should be used to find the top 10,000 most relevant
-results, not for exhaustive search or bulk download of every barely
-relevant result. As such, the caller should not try to access pages
-beyond `page_count`, or else the server will reject the query.
 
-For more precise results, you can go to the
-[Openverse Syntax Guide](https://search.creativecommons.org/search-help)
-for information about creating queries and
-[Apache Lucene Syntax Guide](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)
-for information on structuring advanced searches.
-"""  # noqa
-        f'{refer_sample}'
-    )
+    lookup_field = 'identifier'
+    # TODO: https://github.com/encode/django-rest-framework/pull/6789
+    lookup_value_regex = r'[0-9a-f\-]{36}'  # highly simplified approximation
 
-    def _get(self,
-             request,
-             default_index, qa_index,
-             query_serializer, media_serializer, result_serializer):
-        params = query_serializer(data=request.query_params)
-        if not params.is_valid():
-            return input_error_response(params.errors)
+    pagination_class = StandardPagination
 
-        hashed_ip = hash(_get_user_ip(request))
-        page_param = params.data[PAGE]
-        page_size = params.data[PAGESIZE]
-        qa = params.data[QA]
-        filter_dead = params.data[FILTER_DEAD]
+    # Populate these in the corresponding subclass
+    model_class = None
+    query_serializer_class = None
+    default_index = None
+    qa_index = None
 
-        search_index = qa_index if qa else default_index
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        required_fields = [
+            self.model_class,
+            self.query_serializer_class,
+            self.default_index,
+            self.qa_index,
+        ]
+        if any(val is None for val in required_fields):
+            msg = 'Viewset fields are not completely populated.'
+            raise ValueError(msg)
+
+    def get_queryset(self):
+        return self.model_class.objects.all()
+
+    # Standard actions
+
+    def list(self, request, *_, **__):
+        self.paginator.page_size = request.query_params.get('page_size')
+        page_size = self.paginator.page_size
+        self.paginator.page = request.query_params.get('page')
+        page = self.paginator.page
+
+        params = self.query_serializer_class(data=request.query_params)
+        params.is_valid(raise_exception=True)
+
+        hashed_ip = hash(self._get_user_ip(request))
+        qa = params.validated_data['qa']
+        filter_dead = params.validated_data['filter_dead']
+
+        search_index = self.qa_index if qa else self.default_index
         try:
             results, num_pages, num_results = search_controller.search(
                 params,
@@ -111,114 +70,94 @@ for information on structuring advanced searches.
                 hashed_ip,
                 request,
                 filter_dead,
-                page=page_param
+                page,
             )
-        except ValueError as value_error:
-            return input_error_response(value_error)
+            self.paginator.page_count = num_pages
+            self.paginator.result_count = num_results
+        except ValueError as e:
+            raise get_api_exception(getattr(e, 'message', str(e)))
 
-        context = {'request': request}
-        serialized_results = media_serializer(
-            results,
-            many=True,
-            context=context
-        ).data
+        serializer = self.get_serializer(results, many=True)
+        return self.get_paginated_response(serializer.data)
 
-        if len(results) < page_size and num_pages == 0:
-            num_results = len(results)
-        response_data = {
-            RESULT_COUNT: num_results,
-            PAGE_COUNT: num_pages,
-            PAGE_SIZE: len(results),
-            RESULTS: serialized_results
+    # Extra actions
+
+    @action(detail=False,
+            serializer_class=ProviderSerializer,
+            pagination_class=None)
+    def stats(self, *_, **__):
+        source_counts = search_controller.get_sources(self.default_index)
+        context = self.get_serializer_context() | {
+            'source_counts': source_counts,
         }
-        serialized_response = result_serializer(data=response_data)
-        return Response(status=200, data=serialized_response.initial_data)
 
-
-class RelatedMedia(APIView):
-    swagger_schema = CustomAutoSchema
-    recommendations_read_description = refer_sample
-
-
-class MediaDetail(GenericAPIView, RetrieveModelMixin):
-    swagger_schema = CustomAutoSchema
-    lookup_field = 'identifier'
-    authentication_classes = [BasicAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    detail_description = refer_sample
-
-
-class MediaStats(APIView):
-    swagger_schema = CustomAutoSchema
-    media_stats_description = (
-        """
-You can use this endpoint to get details about content providers such as 
-`source_name`, `display_name`, and `source_url` along with a count of the number
-of individual items indexed from them.
-"""  # noqa
-        f'{refer_sample}'
-    )
-
-    def _get(self, request, index_name):
-        CODENAME = 'provider_identifier'
-        NAME = 'provider_name'
-        FILTER = 'filter_content'
-        URL = 'domain_name'
-        ID = 'id'
-
-        source_data = ContentProvider \
+        providers = ContentProvider \
             .objects \
-            .filter(media_type=index_name) \
-            .values(ID, CODENAME, NAME, FILTER, URL)
-        source_counts = get_sources(index_name)
+            .filter(media_type=self.default_index, filter_content=False)
+        serializer = self.get_serializer(providers, many=True, context=context)
+        return Response(serializer.data)
 
-        response = []
-        for source in source_data:
-            source_codename = source[CODENAME]
-            _id = source[ID]
-            display_name = source[NAME]
-            filtered = source[FILTER]
-            source_url = source[URL]
-            count = source_counts.get(source_codename, None)
-            try:
-                source_logo = SourceLogo.objects.get(source_id=_id)
-                logo_path = source_logo.image.url
-                full_logo_url = request.build_absolute_uri(logo_path)
-            except SourceLogo.DoesNotExist:
-                full_logo_url = None
-            if not filtered and source_codename in source_counts:
-                response.append(
-                    {
-                        'source_name': source_codename,
-                        f'{index_name}_count': count,
-                        'display_name': display_name,
-                        'source_url': source_url,
-                        'logo_url': full_logo_url
-                    }
-                )
-        return Response(status=200, data=response)
+    @action(detail=True)
+    def related(self, request, identifier=None, *_, **__):
+        try:
+            results, num_results = search_controller.related_media(
+                uuid=identifier,
+                index=self.default_index,
+                request=request,
+                filter_dead=True
+            )
+            self.paginator.result_count = num_results
+            self.paginator.page_count = 1
+            self.paginator.page_size = num_results
+        except ValueError as e:
+            raise get_api_exception(getattr(e, 'message', str(e)))
 
+        serializer = self.get_serializer(results, many=True)
+        return self.get_paginated_response(serializer.data)
 
-class ImageProxy(APIView):
-    swagger_schema = None
+    def report(self, request, *_, **__):
+        media = self.get_object()
+        identifier = media.identifier
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            raise get_api_exception('Invalid input.', 400)
+        report = serializer.save(identifier=identifier)
 
-    lookup_field = 'identifier'
-    throttle_classes = [OneThousandPerMinute]
+        serializer = self.get_serializer(report)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    def _get(self, media_url, width=settings.THUMBNAIL_WIDTH_PX):
+    # Helper functions
+
+    @staticmethod
+    def _get_user_ip(request):
+        """
+        Read request headers to find the correct IP address.
+        It is assumed that X-Forwarded-For has been sanitized by the load
+        balancer and thus cannot be rewritten by malicious users.
+        :param request: A Django request object.
+        :return: An IP address.
+        """
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+    @staticmethod
+    def _get_proxied_image(image_url, width=settings.THUMBNAIL_WIDTH_PX):
         if width is None:  # full size
-            proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/{media_url}'
+            proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/{image_url}'
         else:
             proxy_upstream = f'{settings.THUMBNAIL_PROXY_URL}/' \
                              f'{settings.THUMBNAIL_WIDTH_PX},fit/' \
-                             f'{media_url}'
+                             f'{image_url}'
         try:
             upstream_response = urlopen(proxy_upstream)
             status = upstream_response.status
             content_type = upstream_response.headers.get('Content-Type')
         except HTTPError:
-            log.info('Failed to render thumbnail: ', exc_info=True)
-            return HttpResponse(status=500)
+            raise get_api_exception('Failed to render thumbnail.')
 
         response = HttpResponse(
             upstream_response.read(),

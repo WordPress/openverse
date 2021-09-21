@@ -1,22 +1,21 @@
-from django.urls import reverse
 from rest_framework import serializers
 
 from catalog.api.controllers.search_controller import get_sources
+from catalog.api.docs.media_docs import fields_to_md
 from catalog.api.models import AudioReport
 from catalog.api.serializers.media_serializers import (
     _validate_enum,
-    MediaSearchQueryStringSerializer,
-    MediaSearchResultsSerializer,
+    MediaSearchRequestSerializer,
+    MediaSearchSerializer,
     MediaSerializer,
-    AboutMediaSerializer,
 )
 
 
-class AudioSearchQueryStringSerializer(MediaSearchQueryStringSerializer):
+class AudioSearchRequestSerializer(MediaSearchRequestSerializer):
     """ Parse and validate search query string parameters. """
 
     fields_names = [
-        *MediaSearchQueryStringSerializer.fields_names,
+        *MediaSearchRequestSerializer.fields_names,
         'source',
         'categories',
         'duration',
@@ -96,12 +95,6 @@ class AudioSerializer(MediaSerializer):
     used to generate Swagger documentation.
     """
 
-    thumbnail = serializers.SerializerMethodField(
-        help_text="A direct link to the miniature artwork."
-    )
-    waveform = serializers.SerializerMethodField(
-        help_text='A direct link to the waveform peaks.'
-    )
     audio_set = serializers.PrimaryKeyRelatedField(
         required=False,
         help_text='Reference to set of which this track is a part.',
@@ -135,6 +128,18 @@ class AudioSerializer(MediaSerializer):
     )
 
     # Hyperlinks
+    thumbnail = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='audio-thumb',
+        lookup_field='identifier',
+        help_text="A direct link to the miniature artwork."
+    )
+    waveform = serializers.HyperlinkedIdentityField(
+        read_only=True,
+        view_name='audio-waveform',
+        lookup_field='identifier',
+        help_text='A direct link to the waveform peaks.'
+    )
     detail_url = serializers.HyperlinkedIdentityField(
         read_only=True,
         view_name='audio-detail',
@@ -142,41 +147,33 @@ class AudioSerializer(MediaSerializer):
         help_text="A direct link to the detail view of this audio file."
     )
     related_url = serializers.HyperlinkedIdentityField(
+        read_only=True,
         view_name='audio-related',
         lookup_field='identifier',
-        read_only=True,
         help_text="A link to an endpoint that provides similar audio files."
     )
 
-    def get_thumbnail(self, obj):
-        request = self.context['request']
-        host = request.get_host()
-        path = reverse('audio-thumb', kwargs={'identifier': obj.identifier})
-        return f'https://{host}{path}'
 
-    def get_waveform(self, obj):
-        request = self.context['request']
-        host = request.get_host()
-        path = reverse('audio-waveform', kwargs={'identifier': obj.identifier})
-        return f'https://{host}{path}'
-
-
-class AudioSearchResultsSerializer(MediaSearchResultsSerializer):
-    """ The full audio search response. """
+class AudioSearchSerializer(MediaSearchSerializer):
+    """
+    The full audio search response.
+    This serializer is purely representational and not actually used to
+    serialize the response.
+    """
     results = AudioSerializer(
         many=True,
-        help_text="An array of audios and their details such as `title`, `id`, "
-                  "`creator`, `creator_url`, `url`, `provider`, `source`, "
-                  "`license`, `license_version`, `license_url`, "
-                  "`foreign_landing_url`, `detail_url`, `related_url`, "
-                  "and `fields_matched `."
+        help_text=(
+            "An array of audios and their details such as "
+            f"{fields_to_md(AudioSerializer.fields_names)}."
+        ),
     )
 
 
-class ReportAudioSerializer(serializers.ModelSerializer):
+class AudioReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = AudioReport
-        fields = ('reason', 'identifier', 'description')
+        fields = ('identifier', 'reason', 'description')
+        read_only_fields = ('identifier',)
 
     def create(self, validated_data):
         if validated_data['reason'] == "other" and \
@@ -188,11 +185,12 @@ class ReportAudioSerializer(serializers.ModelSerializer):
         return AudioReport.objects.create(**validated_data)
 
 
-class AboutAudioSerializer(AboutMediaSerializer):
-    """
-    Used by `AudioStats`.
-    """
-
-    audio_count = serializers.IntegerField(
-        help_text="The number of audio files."
+class AudioWaveformSerializer(serializers.Serializer):
+    len = serializers.SerializerMethodField()
+    points = serializers.ListField(
+        serializers.FloatField(min_value=0, max_value=1)
     )
+
+    @staticmethod
+    def get_len(obj) -> int:
+        return len(obj.get('points', []))

@@ -1,6 +1,7 @@
 from collections import namedtuple
 from urllib.parse import urlparse
 
+from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
 import catalog.api.licenses as license_helpers
@@ -81,7 +82,7 @@ class TagSerializer(serializers.Serializer):
     )
 
 
-class MediaSearchQueryStringSerializer(serializers.Serializer):
+class MediaSearchRequestSerializer(serializers.Serializer):
     """
     This serializer parses and validates search query string parameters.
     """
@@ -97,8 +98,6 @@ class MediaSearchQueryStringSerializer(serializers.Serializer):
         'q',
         'license',
         'license_type',
-        'page',
-        'page_size',
         'creator',
         'tags',
         'title',
@@ -131,17 +130,6 @@ class MediaSearchQueryStringSerializer(serializers.Serializer):
                   "Valid inputs: "
                   f"`{list(license_helpers.LICENSE_GROUPS.keys())}`",
         required=False,
-    )
-    page = serializers.IntegerField(
-        label="page number",
-        help_text="The page number to retrieve.",
-        default=1
-    )
-    page_size = serializers.IntegerField(
-        label="page size",
-        help_text="The number of results to return in the requested page. "
-                  "Should be an integer between 1 and 500.",
-        default=20
     )
     creator = serializers.CharField(
         label="creator",
@@ -187,56 +175,47 @@ class MediaSearchQueryStringSerializer(serializers.Serializer):
     )
 
     @staticmethod
-    def validate_q(value):
-        if len(value) > 200:
-            return value[0:199]
-        else:
-            return value
+    def _truncate(value):
+        max_length = 200
+        return value if len(value) <= max_length else value[:max_length]
+
+    def validate_q(self, value):
+        return self._truncate(value)
 
     @staticmethod
     def validate_license(value):
+        """Checks whether license is a valid license code."""
         return _validate_li(value)
 
     @staticmethod
     def validate_license_type(value):
-        """
-        Resolves a list of license types to a list of licenses.
-        Example: commercial -> ['BY', 'BY-SA', 'BY-ND', 'CC0', 'PDM']
-        """
+        """Checks whether license type is a known collection of licenses."""
         return _validate_lt(value)
 
-    @staticmethod
-    def validate_page(value):
-        return _validate_page(value)
-
-    @staticmethod
-    def validate_page_size(value):
-        if 1 <= value <= 500:
-            return value
-        else:
-            return 20
-
     def validate_creator(self, value):
-        return self.validate_q(value)
+        return self._truncate(value)
 
     def validate_tags(self, value):
-        return self.validate_q(value)
+        return self._truncate(value)
 
     def validate_title(self, value):
-        return self.validate_q(value)
+        return self._truncate(value)
 
     @staticmethod
     def validate_extension(value):
         return value.lower()
 
     def validate(self, data):
+        errors = {}
         for deprecated in self.deprecated_params:
             param, successor = deprecated
             if param in self.initial_data:
-                raise serializers.ValidationError(
-                    f"Parameter '{param}' is deprecated in this release of"
-                    f" the API. Use '{successor}' instead."
+                errors[param] = (
+                    f"Parameter '{param}' is deprecated in this release of the "
+                    f"API. Use '{successor}' instead."
                 )
+        if errors:
+            raise serializers.ValidationError(errors)
         return data
 
 
@@ -343,6 +322,7 @@ class MediaSerializer(serializers.Serializer):
     def get_license(self, obj):
         return obj.license.lower()
 
+    @swagger_serializer_method(serializer_or_field=serializers.URLField)
     def get_license_url(self, obj):
         if hasattr(obj, 'meta_data'):
             return license_helpers.get_license_url(
@@ -365,7 +345,7 @@ class MediaSerializer(serializers.Serializer):
         return _add_protocol(value)
 
 
-class MediaSearchResultsSerializer(serializers.Serializer):
+class MediaSearchSerializer(serializers.Serializer):
     """
     This serializer serializes the full media search response. The class should
     be inherited by all individual media serializers.
@@ -380,31 +360,6 @@ class MediaSearchResultsSerializer(serializers.Serializer):
     page_size = serializers.IntegerField(
         help_text="The number of items per page."
     )
-
-
-class AboutMediaSerializer(serializers.Serializer):
-    """
-    This serializer represents the response of the media statistics endpoints.
-    """
-
-    source_name = serializers.CharField(
-        help_text="The source of the media."
-    )
-    display_name = serializers.CharField(
-        help_text="The name of content provider."
-    )
-    source_url = serializers.CharField(
-        help_text="The actual URL to the `source_name`."
-    )
-
-
-class ProxiedImageSerializer(serializers.Serializer):
-    """
-    We want to show 3rd party content securely and under our own native URLs, so
-    we route some images through our own proxy. We use this same endpoint to
-    generate thumbnails for content.
-    """
-    full_size = serializers.BooleanField(
-        default=False,
-        help_text="If set, do not thumbnail the image."
+    page = serializers.IntegerField(
+        help_text="The current page number returned in the response."
     )

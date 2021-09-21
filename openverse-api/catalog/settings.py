@@ -125,6 +125,7 @@ REST_FRAMEWORK = {
         'enhanced_oauth2_client_credentials_sustained': '20000/day',
         'enhanced_oauth2_client_credentials_burst': '200/min'
     },
+    'EXCEPTION_HANDLER': 'catalog.api.utils.exceptions.exception_handler',
 }
 
 if os.environ.get('DISABLE_GLOBAL_THROTTLING', default=False) in true_strings:

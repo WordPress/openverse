@@ -3,19 +3,19 @@ End-to-end API tests. Can be used to verify a live deployment is functioning as
 designed. Run with the `pytest -s` command from this directory.
 """
 
-import requests
 import json
-import pytest
-import uuid
 import time
-import catalog.settings
+import uuid
+
+import pytest
+import requests
 from django.db.models import Max
 from django.urls import reverse
 
+import catalog.settings
 from catalog.api.licenses import LICENSE_GROUPS
 from catalog.api.models import Image, OAuth2Verification
 from catalog.api.utils.watermark import watermark
-
 from test.constants import API_URL
 
 
@@ -151,8 +151,8 @@ def test_auth_tokens_registration():
 def test_auth_token_exchange(test_auth_tokens_registration):
     client_id = test_auth_tokens_registration['client_id']
     client_secret = test_auth_tokens_registration['client_secret']
-    token_exchange_request = f'client_id={client_id}&'\
-                             f'client_secret={client_secret}&'\
+    token_exchange_request = f'client_id={client_id}&' \
+                             f'client_secret={client_secret}&' \
                              'grant_type=client_credentials'
     headers = {
         'content-type': "application/x-www-form-urlencoded",
@@ -331,6 +331,7 @@ def search_factory():
         assert response.status_code == 200
         parsed = response.json()
         return parsed
+
     return _parameterized_search
 
 
@@ -339,8 +340,10 @@ def search_with_dead_links(search_factory):
     """
     Here we pass filter_dead = False.
     """
+
     def _search_with_dead_links(**kwargs):
         return search_factory(filter_dead=False, **kwargs)
+
     return _search_with_dead_links
 
 
@@ -349,8 +352,10 @@ def search_without_dead_links(search_factory):
     """
     Here we pass filter_dead = True.
     """
+
     def _search_without_dead_links(**kwargs):
         return search_factory(filter_dead=True, **kwargs)
+
     return _search_without_dead_links
 
 
@@ -440,23 +445,11 @@ def recommendation_factory():
 @pytest.mark.skip(reason="Generally, we don't paginate related images, so "
                          "consistency is less of an issue.")
 def test_related_image_search_page_consistency(
-        recommendation, search_without_dead_links
+    recommendation,
+    search_without_dead_links
 ):
     initial_images = search_without_dead_links(q='*', page_size=10)
     for image in initial_images['results']:
         related = recommendation_factory(image['id'])
         assert related['result_count'] > 0
         assert len(related['results']) == 10
-
-
-def test_report_endpoint():
-    identifier = 'dac5f6b0-e07a-44a0-a444-7f43d71f9beb'
-    payload = {
-        'identifier': identifier,
-        'reason': 'mature'
-    }
-    response = requests.post(
-        f'{API_URL}/v1/images/{identifier}/report',
-        json=payload, verify=False)
-    assert response.status_code == 201
-    return json.loads(response.text)

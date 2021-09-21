@@ -4,10 +4,11 @@ functioning as designed. Run with the `pytest -s` command from this directory.
 """
 
 import json
+import xml.etree.ElementTree as ET
 from urllib.parse import urlencode
+
 import pytest
 import requests
-import xml.etree.ElementTree as ET
 
 from test.constants import API_URL
 from test.media_integration import (
@@ -18,6 +19,7 @@ from test.media_integration import (
     detail,
     stats,
     thumb,
+    report,
 )
 
 
@@ -51,11 +53,15 @@ def test_image_detail(image_fixture):
 
 
 def test_image_stats():
-    stats('images', 'image_count')
+    stats('images')
 
 
 def test_image_thumb(image_fixture):
     thumb(image_fixture)
+
+
+def test_audio_report(image_fixture):
+    report('images', image_fixture)
 
 
 def test_oembed_endpoint_for_json():

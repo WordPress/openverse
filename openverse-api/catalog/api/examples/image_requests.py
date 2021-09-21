@@ -1,3 +1,11 @@
+import os
+
+token = os.getenv('AUDIO_REQ_TOKEN', 'DLBYIcfnKfolaXKcmMC8RIDCavc2hW')
+origin = os.getenv('AUDIO_REQ_ORIGIN', 'https://api.openverse.engineering')
+
+auth = f'-H "Authorization: Bearer {token}"' if token else ''
+identifier = '29cb352c-60c1-41d8-bfa1-7d6f7d955f63'
+
 syntax_examples = {
     "using single query parameter":
         'test',
@@ -20,29 +28,42 @@ syntax_examples = {
         'theatre~1',
 }
 
-image_search_curl = '\n\n'.join([
-    (f'# Example {index}: Search for images {purpose}\n'
-     'curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" '
-     f'https://api.openverse.engineering/v1/images?q={syntax}')
-    for (index, (purpose, syntax)) in enumerate(syntax_examples.items())
-])
+image_search_list_curl = '\n'.join(f"""
+# Example {index}: Search for images {purpose}
+curl {auth} "{origin}/v1/images?q={syntax}"
+""" for (index, (purpose, syntax)) in enumerate(syntax_examples.items()))
 
-recommendations_images_read_curl = """
-# Get related images for image ID 7c829a03-fb24-4b57-9b03-65f43ed19395
-curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/recommendations/images/7c829a03-fb24-4b57-9b03-65f43ed19395
-"""  # noqa
+image_search_curl = f"""
+# Search for images titled "Bust" by Talbot
+curl {auth} "{origin}/v1/images/?title=Bust&creator=Talbot"
+"""
 
-image_detail_curl = """
-# Get the details of image ID 7c829a03-fb24-4b57-9b03-65f43ed19395
-curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395
-"""  # noqa
-
-image_stats_curl = """
+image_stats_curl = f"""
 # Get the statistics for image sources
-curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/images/stats
+curl {auth} "{origin}/v1/images/stats/"
+"""
+
+image_detail_curl = f"""
+# Get the details of image ID {identifier}
+curl {auth} "{origin}/v1/images/{identifier}/"
+"""
+
+image_related_curl = f"""
+# Get related images for image ID {identifier}
+curl {auth} "{origin}/v1/images/{identifier}/related/"
+"""
+
+image_complain_curl = f"""
+# Report an issue about image ID {identifier}
+curl \\
+  -X POST \\
+  -H "Content-Type: application/json" \\
+  {auth} \\
+  -d '{{"reason": "mature", "description": "This image contains sensitive content"}}' \\
+  "{origin}/v1/images/{identifier}/report/"
 """  # noqa
 
-report_image_curl = """
-# Report an issue about image ID 7c829a03-fb24-4b57-9b03-65f43ed19395
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" -d '{"reason": "mature", "identifier": "7c829a03-fb24-4b57-9b03-65f43ed19395", "description": "This image contains sensitive content"}' https://api.openverse.engineering/v1/images/7c829a03-fb24-4b57-9b03-65f43ed19395/report
+image_oembed_curl = f"""
+# Retrieve embedded content from image URL (https://wordpress.org/openverse/photos/{identifier})
+curl {auth} "{origin}/v1/images/oembed/?url=https://wordpress.org/openverse/photos/{identifier}"
 """  # noqa
