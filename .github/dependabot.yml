@@ -8,8 +8,8 @@ version: 2
 updates:
   # Enable version updates for Docker containers in Openverse API
   - package-ecosystem: 'docker'
-    # Look for a `Dockerfile` in the `/openverse-api` directory
-    directory: '/openverse-api'
+    # Look for a `Dockerfile` in the `/openverse_api` directory
+    directory: '/openverse_api'
     # Check for updates once a week
     schedule:
       interval: 'weekly'
@@ -20,8 +20,8 @@ updates:
       
   # Enable version updates for Python libs in Openverse API
   - package-ecosystem: 'pip'
-    # Look for a `Pipfile` in the `/openverse-api` directory
-    directory: '/openverse-api'
+    # Look for a `Pipfile` in the `/openverse_api` directory
+    directory: '/openverse_api'
     # Check for updates once a week
     schedule:
       interval: 'weekly'
